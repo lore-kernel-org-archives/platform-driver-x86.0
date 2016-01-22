@@ -1,195 +1,78 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH 3/4] Add support for deep sleep control.
-Date: Thu, 21 Jan 2016 18:04:59 -0600
-Message-ID: <1453421100-12984-4-git-send-email-mario_limonciello@dell.com>
-References: <1453421100-12984-1-git-send-email-mario_limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1453421100-12984-1-git-send-email-mario_limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
+Date: Thu, 21 Jan 2016 16:13:32 -0800
+Message-ID: <CALCETrX+8JRb0hTw4OSh9mQuov4LbyUXC3+y4FtXpwJTTwCwEA@mail.gmail.com>
+References: <cover.1447479930.git.luto@kernel.org> <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org>
+ <20151121000636.GG7413@malice.jf.intel.com> <CALCETrVz+4CX=rjY5OZfCSGQDcgW1oQe6t8d9940ubQKDv-Eqg@mail.gmail.com>
+ <20151122020414.GR16374@dell.com> <20151123145351.GG24147@pali>
+ <20160121101711.GY7192@pali> <56A17306.3010503@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f180.google.com ([209.85.214.180]:32814 "EHLO
+	mail-ob0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750900AbcAVANw convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 21 Jan 2016 19:13:52 -0500
+Received: by mail-ob0-f180.google.com with SMTP id is5so49656343obc.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jan 2016 16:13:52 -0800 (PST)
+In-Reply-To: <56A17306.3010503@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario_limonciello@dell.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Dominguez, Jared" <Jared_Dominguez@dell.com>, Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-This allows configuration the system for wakeup with a controller.
+On Thu, Jan 21, 2016 at 4:08 PM, Mario Limonciello
+<mario_limonciello@dell.com> wrote:
+>
+>
+> On 01/21/2016 04:17 AM, Pali Roh=C3=A1r wrote:
+>> On Monday 23 November 2015 15:53:51 Pali Roh=C3=A1r wrote:
+>>> On Saturday 21 November 2015 20:04:15 D. Jared Dominguez wrote:
+>>>> On Fri, Nov 20, 2015 at 06:12:58PM -0600, Andy Lutomirski wrote:
+>>>>> Jared, want to give us some guidance as to whether this code is
+>>>>> correct at all and, if so, whether we should actually send a
+>>>>> KEY_RFKILL event from dell-wmi when the key is pressed?
+>>>>>
+>>>>> IOW, should we allow dell-wmi to handle rfkill or should we wait =
+for
+>>>>> the other mechanism?
+>>>>>
+>>>>> --Andy
+>>>> I'm adding Mario since he's worked on our client systems much long=
+er and
+>>>> knows more about the correct behavior for our hotkeys. I've not ye=
+t read
+>>>> through any of our documentation about our hotkey behavior so woul=
+dn't be as
+>>>> qualified to answer that. Note that both Mario and I are on vacati=
+on until
+>>>> the 30th, so he may not reply until then.
+>>>>
+>>>> --Jared
+>>>>
+>>> Jared, thanks for your input! When you or Mario are back from vacat=
+ion,
+>>> can you look at it? Or if you do not have much time, can you provid=
+e
+>>> documentation (or some snippets), so somebody else can update drive=
+r to
+>>> work correctly?
+>> Hi Jared & Mario, I believe you are back from vacation, can you look=
+ at it?
+>>
+> Pali,
+>
+> I understand that intel-hid will be making it in at this point.  If I=
+'m
+> not mistaken, it should be handling this portion.
+>
+> Andy,
+>
+> Is that right now?  Or is this on a different topic?
+>
 
-Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
----
- drivers/platform/x86/alienware-wmi.c | 103 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 102 insertions(+), 1 deletion(-)
+I think that's right.  And intel-hid is in Linus' tree now.
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index e6f6322..e66c34d 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -1,7 +1,7 @@
- /*
-  * Alienware AlienFX control
-  *
-- * Copyright (C) 2014 Dell Inc <mario_limonciello@dell.com>
-+ * Copyright (C) 2014-2016 Dell Inc <mario_limonciello@dell.com>
-  *
-  *  This program is free software; you can redistribute it and/or modify
-  *  it under the terms of the GNU General Public License as published by
-@@ -34,6 +34,8 @@
- #define WMAX_METHOD_ZONE_CONTROL	0x4
- #define WMAX_METHOD_HDMI_CABLE		0x5
- #define WMAX_METHOD_AMPLIFIER_CABLE	0x6
-+#define WMAX_METHOD_DEEP_SLEEP_CONTROL	0x0B
-+#define WMAX_METHOD_DEEP_SLEEP_STATUS	0x0C
- 
- MODULE_AUTHOR("Mario Limonciello <mario_limonciello@dell.com>");
- MODULE_DESCRIPTION("Alienware special feature control");
-@@ -62,6 +64,7 @@ struct quirk_entry {
- 	u8 num_zones;
- 	u8 hdmi_mux;
- 	u8 amplifier;
-+	u8 deepslp;
- };
- 
- static struct quirk_entry *quirks;
-@@ -70,24 +73,28 @@ static struct quirk_entry quirk_unknown = {
- 	.num_zones = 2,
- 	.hdmi_mux = 0,
- 	.amplifier = 0,
-+	.deepslp = 0,
- };
- 
- static struct quirk_entry quirk_x51_r1_r2 = {
- 	.num_zones = 3,
- 	.hdmi_mux = 0,
- 	.amplifier = 0,
-+	.deepslp = 0,
- };
- 
- static struct quirk_entry quirk_x51_r3 = {
- 	.num_zones = 4,
- 	.hdmi_mux = 0,
- 	.amplifier = 1,
-+	.deepslp = 0,
- };
- 
- static struct quirk_entry quirk_asm100 = {
- 	.num_zones = 2,
- 	.hdmi_mux = 1,
- 	.amplifier = 0,
-+	.deepslp = 0,
- };
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -650,6 +657,93 @@ error_create_amplifier:
- 	return ret;
- }
- 
-+/* Deep Sleep Control support
-+ * - Modifies BIOS setting for deep sleep control allowing extra wakeup events
-+*/
-+static ssize_t show_deepsleep_status(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	acpi_status status;
-+	u32 out_data;
-+	struct wmax_basic_args in_args = {
-+		.arg = 0,
-+	};
-+	status =
-+	    alienware_wmax_command(&in_args, WMAX_METHOD_DEEP_SLEEP_STATUS,
-+				   (u32 *) &out_data);
-+	if (ACPI_SUCCESS(status)) {
-+		if (out_data == 0)
-+			return scnprintf(buf, PAGE_SIZE,
-+					 "[disabled] s5 s5_s4\n");
-+		else if (out_data == 1)
-+			return scnprintf(buf, PAGE_SIZE,
-+					 "disabled [s5] s5_s4\n");
-+		else if (out_data == 2)
-+			return scnprintf(buf, PAGE_SIZE,
-+					 "disabled s5 [s5_s4]\n");
-+	}
-+	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
-+	return scnprintf(buf, PAGE_SIZE, "disabled s5 s5_s4 [unknown]\n");
-+}
-+
-+static ssize_t toggle_deepsleep(struct device *dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	acpi_status status;
-+	struct wmax_basic_args args;
-+
-+	if (strcmp(buf, "disabled\n") == 0)
-+		args.arg = 0;
-+	else if (strcmp(buf, "s5\n") == 0)
-+		args.arg = 1;
-+	else
-+		args.arg = 2;
-+	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
-+
-+	status =
-+	    alienware_wmax_command(&args, WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
-+
-+	if (ACPI_FAILURE(status))
-+		pr_err
-+		    ("alienware-wmi: deep sleep control failed: results: %u\n",
-+		     status);
-+	return count;
-+}
-+
-+static DEVICE_ATTR(deepsleep, S_IRUGO | S_IWUSR, show_deepsleep_status,
-+		   toggle_deepsleep);
-+
-+static struct attribute *deepsleep_attrs[] = {
-+	&dev_attr_deepsleep.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group deepsleep_attribute_group = {
-+	.name = "deepsleep",
-+	.attrs = deepsleep_attrs,
-+};
-+
-+static void remove_deepsleep(struct platform_device *dev)
-+{
-+	if (quirks->deepslp > 0)
-+		sysfs_remove_group(&dev->dev.kobj, &deepsleep_attribute_group);
-+}
-+
-+static int create_deepsleep(struct platform_device *dev)
-+{
-+	int ret;
-+
-+	ret = sysfs_create_group(&dev->dev.kobj, &deepsleep_attribute_group);
-+	if (ret)
-+		goto error_create_deepsleep;
-+	return 0;
-+
-+error_create_deepsleep:
-+	remove_deepsleep(dev);
-+	return ret;
-+}
-+
- static int __init alienware_wmi_init(void)
- {
- 	int ret;
-@@ -691,6 +785,12 @@ static int __init alienware_wmi_init(void)
- 			goto fail_prep_amplifier;
- 	}
- 
-+	if (quirks->deepslp > 0) {
-+		ret = create_deepsleep(platform_device);
-+		if (ret)
-+			goto fail_prep_deepsleep;
-+	}
-+
- 	ret = alienware_zone_init(platform_device);
- 	if (ret)
- 		goto fail_prep_zones;
-@@ -699,6 +799,7 @@ static int __init alienware_wmi_init(void)
- 
- fail_prep_zones:
- 	alienware_zone_exit(platform_device);
-+fail_prep_deepsleep:
- fail_prep_amplifier:
- fail_prep_hdmi:
- 	platform_device_del(platform_device);
--- 
-1.9.1
+--Andy
