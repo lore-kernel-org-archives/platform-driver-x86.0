@@ -1,69 +1,53 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
-Date: Fri, 22 Jan 2016 18:11:49 +0100
-Message-ID: <201601221811.49782@pali>
-References: <cover.1447479930.git.luto@kernel.org> <20160122082602.GK7192@pali> <56A2518A.5070500@dell.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 700 to no_hw_rfkill dmi
+ list
+Date: Fri, 22 Jan 2016 23:27:31 -0800
+Message-ID: <20160123072731.GI1979@malice.jf.intel.com>
+References: <1453145573-15600-1-git-send-email-jwboyer@fedoraproject.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart11634623.5OaQWHqRIU";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f44.google.com ([74.125.82.44]:35686 "EHLO
-	mail-wm0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754616AbcAVRLx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jan 2016 12:11:53 -0500
-Received: by mail-wm0-f44.google.com with SMTP id r129so221591337wmr.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Jan 2016 09:11:52 -0800 (PST)
-In-Reply-To: <56A2518A.5070500@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: "Dominguez, Jared" <Jared_Dominguez@dell.com>, Andy Lutomirski <luto@amacapital.net>, Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1453145573-15600-1-git-send-email-jwboyer@fedoraproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Boyer <jwboyer@fedoraproject.org>
+Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart11634623.5OaQWHqRIU
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 18, 2016 at 02:32:53PM -0500, Josh Boyer wrote:
+> Like the Yoga 900 models the Lenovo Yoga 700 does not have a
+> hw rfkill switch, and trying to read the hw rfkill switch through the
+> ideapad module causes it to always reported blocking breaking wifi.
+> 
+> This commit adds the Lenovo Yoga 700 to the no_hw_rfkill dmi list, fixing
+> the wifi breakage.
+> 
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1295272
+> Tested-by: <dinyar.rabady+spam@gmail.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+> ---
+> 
+> This applies to the for-next branch of the platform-x86-drivers tree
+> 
+> 
+>  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index d28db0e793df..51178626305d 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -900,6 +900,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>  		},
+>  	},
+>  	{
+> +		.ident = "Lenogo Yoga 700",
 
-On Friday 22 January 2016 16:58:02 Mario Limonciello wrote:
-> On 01/22/2016 02:26 AM, Pali Roh=C3=A1r wrote:
-> > On Thursday 21 January 2016 18:08:38 Mario Limonciello wrote:
-> > Hi Mario! Thats truth, but we still needs to know all codes which
-> > dell-wmi should ignore (because they will be handled by intel-hid).
-> >=20
-> > Currently Andy's patch adds three codes which are not specified in
-> > vendor-specific DMI table.
-> >=20
-> > Do you such table of key events which can ACPI/BIOS/WMI send to OS?
->=20
-> Hi Pali,
->=20
-> Andy conversed with us privately on this, and we double checked with
-> our BIOS team on the EC source code for these items that aren't
-> mentioned in the DMI table.
-> This should now be complete as of current EC feature support.
->=20
-> Thanks,
+Josh,
 
-Great! Thank you for info.
+Is this a typo? "Lenogo"? Please tell me it's a typo.... :-)
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart11634623.5OaQWHqRIU
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlaiYtUACgkQi/DJPQPkQ1JFhwCeOyHVLea/hGFvOzyDLgGcpwCU
-I9wAnR7zM9JeWFuBJrktXHaRmoZMjL+O
-=8xVg
------END PGP SIGNATURE-----
-
---nextPart11634623.5OaQWHqRIU--
+-- 
+Darren Hart
+Intel Open Source Technology Center
