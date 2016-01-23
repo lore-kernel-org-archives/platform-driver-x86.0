@@ -1,76 +1,106 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel]
- linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c: 2 * bad shift ?
-Date: Thu, 4 Feb 2016 14:28:50 -0200
-Message-ID: <20160204162850.GA29602@khazad-dum.debian.net>
-References: <DUB128-W24662478169DFCC5C275139CF20@phx.gbl>
+From: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Remove logging for "Unsupported
+	brightness interface"
+Date: Sat, 23 Jan 2016 00:28:23 +0000
+Message-ID: <CANpvso5EHVvFeOmi312cf4wDrZavZZFegMvNyj7ZzoBNMcpr8g@mail.gmail.com>
+References: <CANpvso6S3jH0qYoPRmoNAc7sCsRd4UkosfzXFBAuLLUuZaPKCw@mail.gmail.com>
+	<CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
+	<1453384483.1258747.498568498.27762FC4@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:45761 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S964869AbcBDQ2x (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Feb 2016 11:28:53 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id A64682095C
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Feb 2016 11:28:52 -0500 (EST)
+Content-Type: multipart/mixed; boundary="===============1279042732219941179=="
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1453384483.1258747.498568498.27762FC4-2RFepEojUI2N1INw9kWLP6GC3tUn3ZHUQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
+
+--===============1279042732219941179==
+Content-Type: multipart/alternative; boundary=001a1148ea88e3eb9d0529f56957
+
+--001a1148ea88e3eb9d0529f56957
+Content-Type: text/plain; charset=UTF-8
+
+Message gets logged on machines that are well supported.
+
+Signed-off-by: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c
+b/drivers/platform/x86/thinkpad_acpi.c
+index a268a7a..4eb41aa 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6661,7 +6661,6 @@ static void __init
+tpacpi_detect_brightness_capabilities(void)
+                pr_info("detected a 8-level brightness capable ThinkPad\n");
+                break;
+        default:
+-               pr_info("Unsupported brightness interface\n");
+                tp_features.bright_unkfw = 1;
+                bright_maxlvl = b - 1;
+        }
+-- 
+2.5.0
+
+--001a1148ea88e3eb9d0529f56957
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div><span style=3D"color:rgb(8=
+0,0,80);font-size:12.8px">Message gets logged on machines that are well sup=
+ported.</span><br></div><div><br></div><div>Signed-off-by: Eric Curtin &lt;=
+<a href=3D"mailto:ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;</d=
+iv><div>---</div><div>=C2=A0drivers/platform/x86/thinkpad_acpi.c | 1 -</div=
+><div>=C2=A01 file changed, 1 deletion(-)</div><div><br></div><div>diff --g=
+it a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_a=
+cpi.c</div><div>index a268a7a..4eb41aa 100644</div><div>--- a/drivers/platf=
+orm/x86/thinkpad_acpi.c</div><div>+++ b/drivers/platform/x86/thinkpad_acpi.=
+c</div><div>@@ -6661,7 +6661,6 @@ static void __init tpacpi_detect_brightne=
+ss_capabilities(void)</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 pr_info(&quot;detected a 8-level brightness capable ThinkPad\=
+n&quot;);</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ break;</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 default:</div><div>- =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_info(&quot;Unsupported brightn=
+ess interface\n&quot;);</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 tp_features.bright_unkfw =3D 1;</div><div>=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bright_maxlvl =3D b - 1;</div><div>=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 }</div><div>--=C2=A0</div><div>2.5.0</div><div>=
+<br></div></div></div>
+
+--001a1148ea88e3eb9d0529f56957--
+
+
+--===============1279042732219941179==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <DUB128-W24662478169DFCC5C275139CF20@phx.gbl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Binderman <dcb314@hotmail.com>
-Cc: "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Mon, 04 Jan 2016, David Binderman wrote:
-> 1.
->=20
-> [linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c:2297] -> [linux-4=
-=2E4-rc8/drivers/platform/x86/thinkpad_acpi.c:3694]: (warning) Shifting=
- 32-bit value by 51 bits is undefined behaviour. See condition at line =
-3694.
->=20
-> Source code at line 2297 is
->=20
-> =A0=A0=A0 if (hotkey_user_mask & (1 << scancode))
->=20
-> and at 3694 is
->=20
-> =A0=A0=A0 if (scancode> 0 && scancode <=3D TPACPI_HOTKEY_MAP_LEN) {
->=20
-> Maybe new code
->=20
-> =A0=A0=A0 if (hotkey_user_mask & (1UL << scancode))
->=20
-> is better.
+------------------------------------------------------------------------------
+Site24x7 APM Insight: Get Deep Visibility into Application Performance
+APM + Mobile APM + RUM: Monitor 3 App instances at just $35/Month
+Monitor end-to-end web transactions and take corrective actions now
+Troubleshoot faster and improve end-user experience. Signup Now!
+http://pubads.g.doubleclick.net/gampad/clk?id=272487151&iu=/4140
+--===============1279042732219941179==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-You are correct that this is buggy.  Thank you for the report!
+_______________________________________________
+ibm-acpi-devel mailing list
+ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
 
-Scancodes 32 (0x20) and above were added to the keymap to support the
-adaptative keyboard in the X1 carbon (which Lenovo has since abandoned)=
-=2E
-They are not present in the legacy firmware event mask (which is what t=
-hat
-shift addresses).
-
-We could just always issue the hotkey event for these scan codes, and i=
-f the
-user doesn't want such an event, he can use the standard interfaces to =
-set
-the keycode in the keymap to KEY_RESERVED.
-
-I will just read up a bit on the patches and ML discussions that result=
-ed in
-this change to check if there is a new firmware event mask we should be
-checking, and prepare a fix.
-
-I will need help from someone that has an adaptative keyboard to test t=
-he
-patches, though.
-
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+--===============1279042732219941179==--
