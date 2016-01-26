@@ -1,55 +1,47 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v2 01/16] dell-laptop: extract SMBIOS-related code to a
- separate module
-Date: Tue, 26 Jan 2016 14:33:46 +0100
-Message-ID: <20160126133346.GA23823@eudyptula.hq.kempniu.pl>
-References: <1453472848-3118-2-git-send-email-kernel@kempniu.pl>
- <201601241024.msPP2mSE%fengguang.wu@intel.com>
+From: Eric Curtin <ericcurtin17@gmail.com>
+Subject: Re: [PATCH] Remove logging for "Unsupported brightness interface"
+Date: Tue, 26 Jan 2016 19:39:59 +0000
+Message-ID: <CANpvso4nAQS=PZ9a50K3M45XYV2KCJjz3BKfWtsOTFfzQ3jtcw@mail.gmail.com>
+References: <CANpvso6S3jH0qYoPRmoNAc7sCsRd4UkosfzXFBAuLLUuZaPKCw@mail.gmail.com>
+	<CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
+	<1453384483.1258747.498568498.27762FC4@webmail.messagingengine.com>
+	<CANpvso5EHVvFeOmi312cf4wDrZavZZFegMvNyj7ZzoBNMcpr8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201601241024.msPP2mSE%fengguang.wu@intel.com>
+In-Reply-To: <CANpvso5EHVvFeOmi312cf4wDrZavZZFegMvNyj7ZzoBNMcpr8g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, ibm-acpi@hmh.eng.br, Kernel development list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> Hi Micha=C5=82,
->=20
-> [auto build test ERROR on platform-drivers-x86/for-next]
-> [also build test ERROR on v4.4 next-20160122]
-> [if your patch is applied to the wrong git tree, please drop us a not=
-e to help improving the system]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Micha-K-pie/Common-D=
-ell-SMBIOS-API/20160122-223550
-> base:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x=
-86.git for-next
-> config: x86_64-randconfig-n0-01240935 (attached as .config)
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Dx86_64=20
->=20
-> All errors (new ones prefixed by >>):
->=20
->    drivers/platform/x86/dell-smbios.c: In function 'dell_send_request=
-':
-> >> drivers/platform/x86/dell-smbios.c:71:16: error: implicit declarat=
-ion of function 'virt_to_phys' [-Werror=3Dimplicit-function-declaration=
-]
->      command.ebx =3D virt_to_phys(buffer);
->                    ^
->    cc1: some warnings being treated as errors
+On 23 January 2016 at 00:28, Eric Curtin <ericcurtin17@gmail.com> wrote:
+> Message gets logged on machines that are well supported.
+>
+> Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index a268a7a..4eb41aa 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6661,7 +6661,6 @@ static void __init
+> tpacpi_detect_brightness_capabilities(void)
+>                 pr_info("detected a 8-level brightness capable ThinkPad\n");
+>                 break;
+>         default:
+> -               pr_info("Unsupported brightness interface\n");
+>                 tp_features.bright_unkfw = 1;
+>                 bright_maxlvl = b - 1;
+>         }
+> --
+> 2.5.0
+>
 
-Nice catch, turns out I missed the <linux/io.h> include in
-dell-smbios.c, but that only causes errors for non-SMP builds.
+Hi Guys,
 
-I'll keep that in mind for v3 of this series, if it happens.  If not,
-I'll post a v3 of just this patch once the rest of the series gets
-acked.
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+This patch doesn't appear on any of the Linux kernel archive sites.
+Could somebody enlighten me why this is so?
