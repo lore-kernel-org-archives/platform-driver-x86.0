@@ -1,47 +1,40 @@
-From: Eric Curtin <ericcurtin17@gmail.com>
-Subject: Re: [PATCH] Remove logging for "Unsupported brightness interface"
-Date: Tue, 26 Jan 2016 19:39:59 +0000
-Message-ID: <CANpvso4nAQS=PZ9a50K3M45XYV2KCJjz3BKfWtsOTFfzQ3jtcw@mail.gmail.com>
-References: <CANpvso6S3jH0qYoPRmoNAc7sCsRd4UkosfzXFBAuLLUuZaPKCw@mail.gmail.com>
-	<CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
-	<1453384483.1258747.498568498.27762FC4@webmail.messagingengine.com>
-	<CANpvso5EHVvFeOmi312cf4wDrZavZZFegMvNyj7ZzoBNMcpr8g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANpvso5EHVvFeOmi312cf4wDrZavZZFegMvNyj7ZzoBNMcpr8g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, ibm-acpi@hmh.eng.br, Kernel development list <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] intel-hid: fix incorrect entries in intel_hid_keymap
+Date: Wed, 27 Jan 2016 21:35:00 +0800
+Message-ID: <1453901700-20418-1-git-send-email-alex.hung@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:38649 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932145AbcA0NfL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 Jan 2016 08:35:11 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
+Cc: luto@amacapital.net, pbludov@gmail.com
 
-On 23 January 2016 at 00:28, Eric Curtin <ericcurtin17@gmail.com> wrote:
-> Message gets logged on machines that are well supported.
->
-> Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index a268a7a..4eb41aa 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6661,7 +6661,6 @@ static void __init
-> tpacpi_detect_brightness_capabilities(void)
->                 pr_info("detected a 8-level brightness capable ThinkPad\n");
->                 break;
->         default:
-> -               pr_info("Unsupported brightness interface\n");
->                 tp_features.bright_unkfw = 1;
->                 bright_maxlvl = b - 1;
->         }
-> --
-> 2.5.0
->
+intel_hid_keymap contains a duplicate entry for KEY_HOME and an
+incorrect HID index for KEY_PAGEDOWN
 
-Hi Guys,
+Reported-by: Pavel Bludov <pbludov@gmail.com>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-This patch doesn't appear on any of the Linux kernel archive sites.
-Could somebody enlighten me why this is so?
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 20f0ad9..e20f23e 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -41,8 +41,7 @@ static const struct key_entry intel_hid_keymap[] = {
+ 	{ KE_KEY, 4, { KEY_HOME } },
+ 	{ KE_KEY, 5, { KEY_END } },
+ 	{ KE_KEY, 6, { KEY_PAGEUP } },
+-	{ KE_KEY, 4, { KEY_PAGEDOWN } },
+-	{ KE_KEY, 4, { KEY_HOME } },
++	{ KE_KEY, 7, { KEY_PAGEDOWN } },
+ 	{ KE_KEY, 8, { KEY_RFKILL } },
+ 	{ KE_KEY, 9, { KEY_POWER } },
+ 	{ KE_KEY, 11, { KEY_SLEEP } },
+-- 
+2.5.0
