@@ -1,43 +1,114 @@
 From: Eric Curtin <ericcurtin17@gmail.com>
-Subject: Re: Family emergencies, getting caught up
-Date: Sat, 30 Jan 2016 16:42:21 +0000
-Message-ID: <CANpvso6Sj3PVBSg6TyO7Mkx-hLQd2Esbn3nrDHEK_=q+xUwCAg@mail.gmail.com>
-References: <20160130162807.GA1749@malice.jf.intel.com>
+Subject: Re: [PATCH] Remove ambiguous logging for "Unsupported brightness interface"
+Date: Sat, 30 Jan 2016 16:55:59 +0000
+Message-ID: <CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A@mail.gmail.com>
+References: <CANpvso5_jzOgRv25isy0x6HJcTgKP4dabSH-_a5fM-uihdAUYw@mail.gmail.com>
+	<1453937211.10099.31.camel@perches.com>
+	<20160130122045.GA14919@khazad-dum.debian.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:32838 "EHLO
-	mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932286AbcA3QmW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 30 Jan 2016 11:42:22 -0500
-Received: by mail-wm0-f46.google.com with SMTP id l66so19293717wml.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Jan 2016 08:42:22 -0800 (PST)
-In-Reply-To: <20160130162807.GA1749@malice.jf.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Azael Avalos <coproscefalo@gmail.com>, Andy Lutomirski <luto@amacapital.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160130122045.GA14919@khazad-dum.debian.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Joe Perches <joe@perches.com>, platform-driver-x86@vger.kernel.org, Kernel development list <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 30 January 2016 at 16:28, Darren Hart <dvhart@infradead.org> wrote:
-> Linux Platform Driver x86 contributors: We had a death in my extended family and
-> a series of less severe emergencies happen all at once. I've been unable to
-> attend to patches for week or so, and some patches have been on hold waiting for
-> the merge window to close.
+On 30 January 2016 at 12:20, Henrique de Moraes Holschuh <hmh@hmh.eng.br> wrote:
+> On Wed, 27 Jan 2016, Joe Perches wrote:
+>> On Wed, 2016-01-27 at 22:14 +0000, Eric Curtin wrote:
+>> > Message gets logged on machines that are well supported.
+>> >
+>> > Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
+>> > ---
+>> >  drivers/platform/x86/thinkpad_acpi.c | 1 -
+>> >  1 file changed, 1 deletion(-)
+>> >
+>> > diff --git a/drivers/platform/x86/thinkpad_acpi.c
+>> > b/drivers/platform/x86/thinkpad_acpi.c
+>> > index a268a7a..4eb41aa 100644
+>> > --- a/drivers/platform/x86/thinkpad_acpi.c
+>> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> > @@ -6661,7 +6661,6 @@ static void __init
+>> > tpacpi_detect_brightness_capabilities(void)
+>> >                 pr_info("detected a 8-level brightness capable
+>> > ThinkPad\n");
+>> >                 break;
+>> >         default:
+>> > -               pr_info("Unsupported brightness interface\n");
+>> >                 tp_features.bright_unkfw = 1;
+>> >                 bright_maxlvl = b - 1;
+>> >         }
+>>
+>> Perhaps this should be something like this instead:
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index a268a7a..bd12c71 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -6653,18 +6653,16 @@ static void __init tpacpi_detect_brightness_capabilities(void)
+>>       switch (b) {
+>>       case 16:
+>>               bright_maxlvl = 15;
+>> -             pr_info("detected a 16-level brightness capable ThinkPad\n");
+>>               break;
+>>       case 8:
+>>       case 0:
+>>               bright_maxlvl = 7;
+>> -             pr_info("detected a 8-level brightness capable ThinkPad\n");
+>>               break;
+>>       default:
+>> -             pr_info("Unsupported brightness interface\n");
+>>               tp_features.bright_unkfw = 1;
+>>               bright_maxlvl = b - 1;
+>>       }
+>> +     pr_info("detected %u brightness levels\n", bright_maxlvl + 1);
+>>  }
 >
-> I apologize for the delay, and am starting to work through the backlog now. If
-> you haven't heard back from me on a patch by next weekend (Feb 7), please
-> resend.
->
-> Thanks,
+> This can be made pr_debug, since we're touching it...
 >
 > --
-> Darren Hart
-> Intel Open Source Technology Center
+>   "One disk to rule them all, One disk to find them. One disk to bring
+>   them all and in the darkness grind them. In the Land of Redmond
+>   where the shadows lie." -- The Silicon Valley Tarot
+>   Henrique Holschuh
 
+"Unsupported brightness interface" message gets logged on
+ machines that are well supported.
 
-Sorry to hear that Darren, that's terrible news. Family comes first
-always, this is just code at the end of the day.
+Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I''m resubmitting a patch with updates as requested by Henrique de
-Moraes Holschuh, in the next few minutes.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c
+b/drivers/platform/x86/thinkpad_acpi.c
+index a268a7a..e305ab5 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6653,18 +6653,16 @@ static void __init
+tpacpi_detect_brightness_capabilities(void)
+        switch (b) {
+        case 16:
+                bright_maxlvl = 15;
+-               pr_info("detected a 16-level brightness capable ThinkPad\n");
+                break;
+        case 8:
+        case 0:
+                bright_maxlvl = 7;
+-               pr_info("detected a 8-level brightness capable ThinkPad\n");
+                break;
+        default:
+-               pr_info("Unsupported brightness interface\n");
+                tp_features.bright_unkfw = 1;
+                bright_maxlvl = b - 1;
+        }
++       pr_debug("detected %u brightness levels\n", bright_maxlvl + 1);
+ }
+
+ static int __init brightness_init(struct ibm_init_struct *iibm)
+-- 
+2.5.0
