@@ -1,76 +1,142 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v4] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-Date: Sat, 30 Jan 2016 09:17:47 -0800
-Message-ID: <CALCETrVZ06EpseG9Rkr59rB4QboAJhMEremQrQ1oLxxNrDTKWA@mail.gmail.com>
-References: <a343d7d11816d86d04c51505f6e33c5b99086ff6.1453244706.git.luto@kernel.org>
- <20160120194050.GL7192@pali> <CALCETrUqH7FLPyHasx020vyjZNtTdVSk+0LJKcGjXyj+iwE8Dw@mail.gmail.com>
- <20160130170411.GB1749@malice.jf.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/4] Add support for new platform, X51-R3
+Date: Sat, 30 Jan 2016 09:23:20 -0800
+Message-ID: <20160130172320.GA9269@malice.jf.intel.com>
+References: <1453421100-12984-1-git-send-email-mario_limonciello@dell.com>
+ <1453421100-12984-2-git-send-email-mario_limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160130170411.GB1749@malice.jf.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, Jon Eyolfson <jon@eyl.io>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:49202 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932215AbcA3RYx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 30 Jan 2016 12:24:53 -0500
+Content-Disposition: inline
+In-Reply-To: <1453421100-12984-2-git-send-email-mario_limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario_limonciello@dell.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 30, 2016 at 9:04 AM, Darren Hart <dvhart@infradead.org> wro=
-te:
-> On Wed, Jan 20, 2016 at 12:46:23PM -0800, Andy Lutomirski wrote:
->> On Wed, Jan 20, 2016 at 11:40 AM, Pali Roh=C3=A1r <pali.rohar@gmail.=
-com> wrote:
->> > On Tuesday 19 January 2016 15:07:47 Andy Lutomirski wrote:
->> >> The XPS 13 9350 sends WMI keypress events that aren't enumerated =
-in
->> >> the DMI table.  Add a table listing them.  To avoid breaking thin=
-gs
->> >> that worked before, these un-enumerated hotkeys won't be used if =
-the
->> >> DMI table maps them to something else.
->> >>
->> >> FWIW, it appears that the DMI table may be a legacy thing and we
->> >> might want to rethink how we handle events in general.  As an
->> >> example, a whole lot of things map to KEY_PROG3 via the DMI table=
-=2E
->> >>
->> >> So far, this doesn't send keypress events for any of the new
->> >> events.  Depnding on whether we figure out exactly what needs to
->> >> happen to get the wireless button working in time for Linux 4.5,
->> >> we might want to temporarily handle it in dell-wmi.
->> >>
->> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> >
->> > Looks good,
->> >
->> > Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->>
->> Darren, if/when you apply this, can you fix up the last paragraph of
->> the commit message?
->>
->>     This doesn't send keypress events for any of the new
->>     events, as no models appear to require it.
->>
->> I wrote the old text before intel-hid landed.
->>
->> --Andy
->
-> This had some problems applying to 4.5-rc1 (refactoring of handle_dmi=
-_...). I've
-> done the merge, it builds, but I can't test it. Please have a look at=
- the
-> dell-wmi branch and let me know if this is correct and working as exp=
-ected.
->
+On Thu, Jan 21, 2016 at 06:04:57PM -0600, Mario Limonciello wrote:
 
-It's probably okay, but I think you applied it out of order.  This
-patch was intended to be applied after the handle_dmi_xyz fixes.  If
-you back this one out, apply those, and then re-apply this, it should
-apply cleanly.
+Hi Mario,
 
---Andy
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you for patch submission.
+
+Please remember to always include a commit message body describing your patch in
+more detail than the single line subject. It should provide enough detail to get
+someone unfamiliar with these changes to understand why they were needed  and
+how you intended to go about fixing it. This is the context needed to review the
+patch.
+
+In addition to adding X51 R3 as a separate platform from the previous X51 Family
+(no R1 R2), this patch also appears to introduce various whitespace changes. Any
+change made within the patch should read back to some comment in the changelog.
+
+> Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
+> ---
+>  drivers/platform/x86/alienware-wmi.c | 44 ++++++++++++++++++++++++------------
+>  1 file changed, 29 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+> index 1e1e594..dcd4f81 100644
+> --- a/drivers/platform/x86/alienware-wmi.c
+> +++ b/drivers/platform/x86/alienware-wmi.c
+> @@ -69,11 +69,16 @@ static struct quirk_entry quirk_unknown = {
+>  	.hdmi_mux = 0,
+>  };
+>  
+> -static struct quirk_entry quirk_x51_family = {
+> +static struct quirk_entry quirk_x51_r1_r2 = {
+>  	.num_zones = 3,
+>  	.hdmi_mux = 0.
+>  };
+>  
+> +static struct quirk_entry quirk_x51_r3 = {
+> +	.num_zones = 4,
+> +	.hdmi_mux = 0,
+> +};
+> +
+>  static struct quirk_entry quirk_asm100 = {
+>  	.num_zones = 2,
+>  	.hdmi_mux = 1,
+> @@ -88,12 +93,12 @@ static int __init dmi_matched(const struct dmi_system_id *dmi)
+>  static const struct dmi_system_id alienware_quirks[] __initconst = {
+>  	{
+>  	 .callback = dmi_matched,
+> -	 .ident = "Alienware X51 R1",
+> +	 .ident = "Alienware X51 R3",
+>  	 .matches = {
+>  		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+> +		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+>  		     },
+> -	 .driver_data = &quirk_x51_family,
+> +	 .driver_data = &quirk_x51_r3,
+>  	 },
+>  	{
+>  	 .callback = dmi_matched,
+> @@ -102,17 +107,26 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
+>  		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+>  		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+>  		     },
+> -	 .driver_data = &quirk_x51_family,
+> +	 .driver_data = &quirk_x51_r1_r2,
+> +	 },
+> +	{
+> +	 .callback = dmi_matched,
+> +	 .ident = "Alienware X51 R1",
+> +	 .matches = {
+> +		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
+> +		     },
+> +	 .driver_data = &quirk_x51_r1_r2,
+>  	 },
+>  	{
+> -		.callback = dmi_matched,
+> -		.ident = "Alienware ASM100",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
+> -		},
+> -		.driver_data = &quirk_asm100,
+> -	},
+> +	 .callback = dmi_matched,
+> +	 .ident = "Alienware ASM100",
+> +	 .matches = {
+> +		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> +		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM100"),
+> +		     },
+> +	 .driver_data = &quirk_asm100,
+> +	 },
+>  	{}
+>  };
+>  
+> @@ -477,7 +491,7 @@ static ssize_t show_hdmi_cable(struct device *dev,
+>  	};
+>  	status =
+>  	    alienware_hdmi_command(&in_args, WMAX_METHOD_HDMI_CABLE,
+> -				   (u32 *) &out_data);
+> +				   (u32 *) & out_data);
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 0)
+>  			return scnprintf(buf, PAGE_SIZE,
+> @@ -500,7 +514,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+>  	};
+>  	status =
+>  	    alienware_hdmi_command(&in_args, WMAX_METHOD_HDMI_STATUS,
+> -				   (u32 *) &out_data);
+> +				   (u32 *) & out_data);
+>  
+>  	if (ACPI_SUCCESS(status)) {
+>  		if (out_data == 1)
+> -- 
+> 1.9.1
+> 
+> 
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
