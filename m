@@ -1,104 +1,113 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v4] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-Date: Sat, 30 Jan 2016 09:58:57 -0800
-Message-ID: <CALCETrVTvxXngMxg4Vnxma74NRU=EvXczPFfqCH=zTZ4CMnJ7g@mail.gmail.com>
-References: <a343d7d11816d86d04c51505f6e33c5b99086ff6.1453244706.git.luto@kernel.org>
- <20160120194050.GL7192@pali> <CALCETrUqH7FLPyHasx020vyjZNtTdVSk+0LJKcGjXyj+iwE8Dw@mail.gmail.com>
- <20160130170411.GB1749@malice.jf.intel.com> <CALCETrVZ06EpseG9Rkr59rB4QboAJhMEremQrQ1oLxxNrDTKWA@mail.gmail.com>
- <20160130174545.GD9269@malice.jf.intel.com> <20160130175640.GA1862@malice.jf.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v3] dmi: Make dmi_walk and dmi_walk_early return real
+ error codes
+Date: Sat, 30 Jan 2016 10:05:17 -0800
+Message-ID: <20160130180517.GB1862@malice.jf.intel.com>
+References: <0e75e48f9944d14ed914342a4780c199095ad747.1453247603.git.luto@kernel.org>
+ <20160122101222.3a29841d@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160130175640.GA1862@malice.jf.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, Jon Eyolfson <jon@eyl.io>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:53687 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932920AbcA3SFT (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 30 Jan 2016 13:05:19 -0500
+Content-Disposition: inline
+In-Reply-To: <20160122101222.3a29841d@endymion.delvare>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Jan 30, 2016 at 9:56 AM, Darren Hart <dvhart@infradead.org> wro=
-te:
-> On Sat, Jan 30, 2016 at 09:45:45AM -0800, Darren Hart wrote:
->> On Sat, Jan 30, 2016 at 09:17:47AM -0800, Andy Lutomirski wrote:
->> > On Sat, Jan 30, 2016 at 9:04 AM, Darren Hart <dvhart@infradead.org=
-> wrote:
->> > > On Wed, Jan 20, 2016 at 12:46:23PM -0800, Andy Lutomirski wrote:
->> > >> On Wed, Jan 20, 2016 at 11:40 AM, Pali Roh=C3=A1r <pali.rohar@g=
-mail.com> wrote:
->> > >> > On Tuesday 19 January 2016 15:07:47 Andy Lutomirski wrote:
->> > >> >> The XPS 13 9350 sends WMI keypress events that aren't enumer=
-ated in
->> > >> >> the DMI table.  Add a table listing them.  To avoid breaking=
- things
->> > >> >> that worked before, these un-enumerated hotkeys won't be use=
-d if the
->> > >> >> DMI table maps them to something else.
->> > >> >>
->> > >> >> FWIW, it appears that the DMI table may be a legacy thing an=
-d we
->> > >> >> might want to rethink how we handle events in general.  As a=
-n
->> > >> >> example, a whole lot of things map to KEY_PROG3 via the DMI =
-table.
->> > >> >>
->> > >> >> So far, this doesn't send keypress events for any of the new
->> > >> >> events.  Depnding on whether we figure out exactly what need=
-s to
->> > >> >> happen to get the wireless button working in time for Linux =
-4.5,
->> > >> >> we might want to temporarily handle it in dell-wmi.
->> > >> >>
->> > >> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> > >> >
->> > >> > Looks good,
->> > >> >
->> > >> > Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> > >>
->> > >> Darren, if/when you apply this, can you fix up the last paragra=
-ph of
->> > >> the commit message?
->> > >>
->> > >>     This doesn't send keypress events for any of the new
->> > >>     events, as no models appear to require it.
->> > >>
->> > >> I wrote the old text before intel-hid landed.
->> > >>
->> > >> --Andy
->> > >
->> > > This had some problems applying to 4.5-rc1 (refactoring of handl=
-e_dmi_...). I've
->> > > done the merge, it builds, but I can't test it. Please have a lo=
-ok at the
->> > > dell-wmi branch and let me know if this is correct and working a=
-s expected.
->> > >
->> >
->> > It's probably okay, but I think you applied it out of order.  This
->> > patch was intended to be applied after the handle_dmi_xyz fixes.  =
-If
->> > you back this one out, apply those, and then re-apply this, it sho=
-uld
->> > apply cleanly.
->> >
->> > --Andy
->>
->> Ah, thanks. Sometimes that gets lost in the INBOX, I was starting to=
- think the
->> same thing as I went through the patchwork list though. I'll back it=
- out and do
->> that. Thanks!
->
-> Turns out I wasn't Cc'd on the dependent dmi fixes series. Please inc=
-lude me on
-> Cc for patches where I show up as a maintainer.
->
+On Fri, Jan 22, 2016 at 10:12:22AM +0100, Jean Delvare wrote:
+> Hi Andy,
+> 
+> Sorry for the delay.
+> 
+> On Tue, 19 Jan 2016 15:54:46 -0800, Andy Lutomirski wrote:
+> > Currently they return -1 on error, which will confuse callers if
+> > they try to interpret it as a normal negative error code.
+> > 
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > ---
+> > 
+> > Changes from v3:
+> 
+> You mean from v2...
+> 
+> >  - Split out from the series it was in.
+> >  - Use -ENXIO for "there's no DMI".
+> >  - Also fix docs and !DMI case.
+> > 
+> > Changes from v2:
+> 
+> ... and from v1.
+> 
+> >  - Total rewrite.
+> > 
+> > drivers/firmware/dmi_scan.c | 9 +++++----
+> >  include/linux/dmi.h         | 2 +-
+> >  2 files changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> > index 0e08e665f715..0418fed261bb 100644
+> > --- a/drivers/firmware/dmi_scan.c
+> > +++ b/drivers/firmware/dmi_scan.c
+> > @@ -144,7 +144,7 @@ static int __init dmi_walk_early(void (*decode)(const struct dmi_header *,
+> >  
+> >  	buf = dmi_early_remap(dmi_base, orig_dmi_len);
+> >  	if (buf == NULL)
+> > -		return -1;
+> > +		return -ENOMEM;
+> >  
+> >  	dmi_decode_table(buf, decode, NULL);
+> >  
+> > @@ -970,7 +970,8 @@ EXPORT_SYMBOL(dmi_get_date);
+> >   *	@decode: Callback function
+> >   *	@private_data: Private data to be passed to the callback function
+> >   *
+> > - *	Returns -1 when the DMI table can't be reached, 0 on success.
+> > + *	Returns 0 on success, -ENXIO if DMI is not selected or not present,
+> > + *	or a different negative error code if DMI walking fails.
+> 
+> Returning an error from DMI walking isn't yet implemented so this is
+> confusing. If it ever is, most likely it will be implemented as a
+> separate function. Or were you only referring to the -ENOMEM case below?
+> 
+> >   */
+> >  int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+> >  	     void *private_data)
+> > @@ -978,11 +979,11 @@ int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+> >  	u8 *buf;
+> >  
+> >  	if (!dmi_available)
+> > -		return -1;
+> > +		return -ENOENT;
+> 
+> Should be -ENXIO as documented above? Not that I really understand how
+> "No such device or address" is going to be a helpful error message for
+> the user. What's wrong with -ENOTSUP I suggested earlier?
+> 
 
-Oops.  I cc'd platform-driver-x86@vger.kernel.org and assumed that was
-sufficient.  Sorry.
+Andy,
 
---Andy
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I understand this correctly, this is the first of 5 patches, and this one has
+some unanswered questions from Jean here. If this patch gets respun, the
+following are also impacted:
+
+dell-wmi: Stop storing pointers to DMI tables
+dell-wmi, dell-laptop: select DMI
+dell-wmi: Clean up hotkey table size check
+dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
+
+Is that correct?
+
+If so, please close on this patch with Jean, and resend the series of 5 together
+and be sure to include me on Cc.
+
+Thanks,
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
