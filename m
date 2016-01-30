@@ -1,60 +1,77 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH v3] dmi: Make dmi_walk and dmi_walk_early return real
- error codes
-Date: Sat, 30 Jan 2016 20:18:50 +0100
-Message-ID: <20160130201850.3fd167e9@endymion.delvare>
-References: <0e75e48f9944d14ed914342a4780c199095ad747.1453247603.git.luto@kernel.org>
-	<20160122101222.3a29841d@endymion.delvare>
-	<20160130180517.GB1862@malice.jf.intel.com>
-	<CALCETrXbvv2nQ6XJSocbEukoFQbWd437jaRQ4WjGigxjrMNtGw@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH] Remove ambiguous logging for
+ "Unsupported brightness interface"
+Date: Sat, 30 Jan 2016 17:49:59 -0200
+Message-ID: <20160130194958.GB2468@khazad-dum.debian.net>
+References: <CANpvso5_jzOgRv25isy0x6HJcTgKP4dabSH-_a5fM-uihdAUYw@mail.gmail.com>
+	<1453937211.10099.31.camel@perches.com>
+	<20160130122045.GA14919@khazad-dum.debian.net>
+	<CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:42943 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751315AbcA3TSx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 30 Jan 2016 14:18:53 -0500
-In-Reply-To: <CALCETrXbvv2nQ6XJSocbEukoFQbWd437jaRQ4WjGigxjrMNtGw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 30 Jan 2016 10:13:09 -0800, Andy Lutomirski wrote:
-> On Sat, Jan 30, 2016 at 10:05 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > If I understand this correctly, this is the first of 5 patches, and this one has
-> > some unanswered questions from Jean here. If this patch gets respun, the
-> > following are also impacted:
-> >
-> > dell-wmi: Stop storing pointers to DMI tables
-> > dell-wmi, dell-laptop: select DMI
-> > dell-wmi: Clean up hotkey table size check
-> > dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-> >
-> > Is that correct?
+On Sat, 30 Jan 2016, Eric Curtin wrote:
+> "Unsupported brightness interface" message gets logged on
+>  machines that are well supported.
 > 
-> Not really.  It's just the three patches here:
+> Signed-off-by: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/8503
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index a268a7a..e305ab5 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6653,18 +6653,16 @@ static void __init
+> tpacpi_detect_brightness_capabilities(void)
+>         switch (b) {
+>         case 16:
+>                 bright_maxlvl = 15;
+> -               pr_info("detected a 16-level brightness capable ThinkPad\n");
+>                 break;
+>         case 8:
+>         case 0:
+>                 bright_maxlvl = 7;
+> -               pr_info("detected a 8-level brightness capable ThinkPad\n");
+>                 break;
+>         default:
+> -               pr_info("Unsupported brightness interface\n");
+>                 tp_features.bright_unkfw = 1;
+>                 bright_maxlvl = b - 1;
+>         }
+> +       pr_debug("detected %u brightness levels\n", bright_maxlvl + 1);
+>  }
 > 
-> This patch (the dmi_walk error code one) is no longer really related.
-> Due to Jean's earlier comment about what happens if DMI isn't enabled
-> at all, I no longer propagate the error code from dmi_walk in
-> dell-wmi, so the error code won't have any effect.  (Instead I just
-> warn and let the driver load in legacy mode, which matches the current
-> behavior.)
-> 
-> I think the way to go is for the v3 "dell-wmi: DMI misuse fixes"
-> series to go in through your tree, and I'll hash out the error code
-> thing separately with Jean.
-> 
-> Does that seem sensible?
+>  static int __init brightness_init(struct ibm_init_struct *iibm)
 
-Yes, I agree that this patch is independent from the dell-wmi patch
-series now.
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 
 -- 
-Jean Delvare
-SUSE L3 Support
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+Site24x7 APM Insight: Get Deep Visibility into Application Performance
+APM + Mobile APM + RUM: Monitor 3 App instances at just $35/Month
+Monitor end-to-end web transactions and take corrective actions now
+Troubleshoot faster and improve end-user experience. Signup Now!
+http://pubads.g.doubleclick.net/gampad/clk?id=267308311&iu=/4140
