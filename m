@@ -1,77 +1,130 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH] Remove ambiguous logging for
- "Unsupported brightness interface"
-Date: Sat, 30 Jan 2016 17:49:59 -0200
-Message-ID: <20160130194958.GB2468@khazad-dum.debian.net>
-References: <CANpvso5_jzOgRv25isy0x6HJcTgKP4dabSH-_a5fM-uihdAUYw@mail.gmail.com>
-	<1453937211.10099.31.camel@perches.com>
-	<20160130122045.GA14919@khazad-dum.debian.net>
-	<CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A@mail.gmail.com>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 00/12] Enable GPU switching on pre-retina
+	MacBook Pro
+Date: Mon, 1 Feb 2016 23:49:44 +0100
+Message-ID: <20160201224944.GA12944@wunner.de>
+References: <cover.1452525860.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <cover.1452525860.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/nouveau>
+List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Paul Hordiienko <pvt.gord-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, intel-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, William Brown <william-n62phY/1UFdqFZ3NbRY2NA@public.gmane.org>, Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 30 Jan 2016, Eric Curtin wrote:
-> "Unsupported brightness interface" message gets logged on
->  machines that are well supported.
-> 
-> Signed-off-by: Eric Curtin <ericcurtin17-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index a268a7a..e305ab5 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6653,18 +6653,16 @@ static void __init
-> tpacpi_detect_brightness_capabilities(void)
->         switch (b) {
->         case 16:
->                 bright_maxlvl = 15;
-> -               pr_info("detected a 16-level brightness capable ThinkPad\n");
->                 break;
->         case 8:
->         case 0:
->                 bright_maxlvl = 7;
-> -               pr_info("detected a 8-level brightness capable ThinkPad\n");
->                 break;
->         default:
-> -               pr_info("Unsupported brightness interface\n");
->                 tp_features.bright_unkfw = 1;
->                 bright_maxlvl = b - 1;
->         }
-> +       pr_debug("detected %u brightness levels\n", bright_maxlvl + 1);
->  }
-> 
->  static int __init brightness_init(struct ibm_init_struct *iibm)
-
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
-
-------------------------------------------------------------------------------
-Site24x7 APM Insight: Get Deep Visibility into Application Performance
-APM + Mobile APM + RUM: Monitor 3 App instances at just $35/Month
-Monitor end-to-end web transactions and take corrective actions now
-Troubleshoot faster and improve end-user experience. Signup Now!
-http://pubads.g.doubleclick.net/gampad/clk?id=267308311&iu=/4140
+SGksCgpPbiBNb24sIEphbiAxMSwgMjAxNiBhdCAwODowOToyMFBNICswMTAwLCBMdWthcyBXdW5u
+ZXIgd3JvdGU6Cj4gRW5hYmxlIEdQVSBzd2l0Y2hpbmcgb24gdGhlIHByZS1yZXRpbmEgTWFjQm9v
+ayBQcm8gKDIwMDggLSAyMDEzKSwgdjUuCgpUaGlzIHNlcmllcyBoYXNuJ3Qgc2VlbiBhbnkgcmV2
+aWV3cyBvciBhY2tzIHVuZm9ydHVuYXRlbHkuCkFueSB0YWtlcnM/CgpNZXJnaW5nIHRoaXMgd291
+bGQgYWxsb3cgZmRvICM2MTExNSB0byBiZSBjbG9zZWQKKGN1cnJlbnRseSBhc3NpZ25lZCB0byBp
+bnRlbC1nZngpLgoKRldJVyB0aGlzIHNlcmllcyBoYXMgaW4gdGhlIG1lYW50aW1lIGJlZW4gdGVz
+dGVkIGJ5IG1vcmUgZm9sa3M6CgpUZXN0ZWQtYnk6IFBpZXJyZSBNb3JlYXUgPHBpZXJyZS5tb3Jy
+b3dAZnJlZS5mcj4KICAgIFtNQlAgIDUsMyAyMDA5ICBudmlkaWEgTUNQNzkgKyBHOTYgICAgICAg
+IHByZS1yZXRpbmEgIDE1Il0KVGVzdGVkLWJ5OiBQYXVsIEhvcmRpaWVua28gPHB2dC5nb3JkQGdt
+YWlsLmNvbT4KICAgIFtNQlAgIDYsMiAyMDEwICBpbnRlbCBJTEsgKyBudmlkaWEgR1QyMTYgIHBy
+ZS1yZXRpbmEgIDE1Il0KVGVzdGVkLWJ5OiBXaWxsaWFtIEJyb3duIDx3aWxsaWFtQGJsYWNraGF0
+cy5uZXQuYXU+CiAgICBbTUJQICA4LDIgMjAxMSAgaW50ZWwgU05CICsgYW1kIHR1cmtzICAgICBw
+cmUtcmV0aW5hICAxNSJdClRlc3RlZC1ieTogTHVrYXMgV3VubmVyIDxsdWthc0B3dW5uZXIuZGU+
+CiAgICBbTUJQICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlhIEdLMTA3ICBwcmUtcmV0aW5h
+ICAxNSJdCgpPbiB0aGUgbGF0dGVyIHRocmVlIG1vZGVscyBpdCB3b3JrZWQgZmluZS4gT24gUGll
+cnJlIE1vcmVhdSdzIG1hY2hpbmUKdGhlIGRpc2NyZXRlIG52aWRpYSBHOTYgbG9ja3MgdXAgd2hl
+biB3b2tlbi4gVGhpcyBoYXBwZW5lZCBpbiB0aGUgcGFzdAphcyB3ZWxsIGJ1dCBub3Qgb24gdGhl
+IGZpcnN0IHdha2UgYnV0IG9ubHkgb24gdGhlIDEwdGggb3Igc28uIFNpbmNlIGl0CndvcmtzIGZp
+bmUgb24gdGhlIEdUMjE2IGFuZCBHSzEwNywgSSdtIGd1ZXNzaW5nIHdlJ3ZlIGdvdCBhIHJlZ3Jl
+c3Npb24KaW4gdGhlIHdha2V1cCBjb2RlIGZvciB0aGUgRzk2IHdoaWNoIGlzIHNvbWVob3cgdHJp
+Z2dlcmVkIGJ5IHRoaXMgcGF0Y2gKc2V0IChtb3JlIHNwZWNpZmljYWxseTogdHJpZ2dlcmVkIGJ5
+IGJlaW5nIGFibGUgdG8gcmV0cmlldmUgdGhlIHByb3BlcgpwYW5lbCByZXNvbHV0aW9uIGFuZCBj
+b25maWd1cmUgYSBjcnRjKS4gSXQgbmVlZHMgdG8gYmUgZml4ZWQgYnV0IGlzbid0CmEgc2hvd3N0
+b3BwZXIgZm9yIHRoaXMgc2VyaWVzIElNSE8uIChBcmd1YWJseSBiZWluZyBhYmxlIHRvIHJldHJp
+ZXZlCkVESUQgYnV0IHRoZW4gbG9ja2luZyB1cCBvbiBzd2l0Y2hpbmcgaXNuJ3QgcmVhbGx5IHdv
+cnNlIHRoYW4gbm90IGJlaW5nCmFibGUgdG8gcmV0cmlldmUgRURJRCBpbiB0aGUgZmlyc3QgcGxh
+Y2UuKQoKVGhhbmtzLAoKTHVrYXMKCj4gCj4gVGhlIG1haW4gb2JzdGFjbGUgb24gdGhlc2UgbWFj
+aGluZXMgaXMgdGhhdCB0aGUgcGFuZWwgbW9kZSBpbiBWQklPUwo+IGlzIGJvZ3VzLiBGb3J0dW5h
+dGVseSBnbXV4IGNhbiBzd2l0Y2ggRERDIGluZGVwZW5kZW50bHkgZnJvbSB0aGUKPiBkaXNwbGF5
+LCB0aGVyZWJ5IGFsbG93aW5nIHRoZSBpbmFjdGl2ZSBHUFUgdG8gcHJvYmUgdGhlIHBhbmVsJ3Mg
+RURJRC4KPiAKPiBJbiBzaG9ydCwgdmdhX3N3aXRjaGVyb28gYW5kIGFwcGxlLWdtdXggYXJlIGFt
+ZW5kZWQgd2l0aCBob29rcyB0bwo+IHN3aXRjaCBEREMsIERSTSBjb3JlIGlzIGFtZW5kZWQgd2l0
+aCBhIGRybV9nZXRfZWRpZF9zd2l0Y2hlcm9vKCkgaGVscGVyLAo+IGFuZCByZWxldmFudCBkcml2
+ZXJzIGFyZSBhbWVuZGVkIHRvIGNhbGwgdGhhdCBmb3IgTFZEUyBvdXRwdXRzLgo+IAo+IFRoZSBy
+ZXRpbmEgTWFjQm9vayBQcm8gKDIwMTIgLSBwcmVzZW50KSB1c2VzIGVEUCBhbmQgY2Fubm90IHN3
+aXRjaAo+IEFVWCBpbmRlcGVuZGVudGx5IGZyb20gdGhlIG1haW4gbGluay4gVGhlIG1haW4gb2Jz
+dGFjbGUgdGhlcmUgaXMgbGluawo+IHRyYWluaW5nLCBJJ20gY3VycmVudGx5IHdvcmtpbmcgb24g
+dGhpcywgaXQgd2lsbCBiZSBhZGRyZXNzZWQgaW4gYQo+IGZ1dHVyZSBwYXRjaCBzZXQuCj4gCj4g
+VGhpcyBzZXJpZXMgaXMgYWxzbyByZXZpZXdhYmxlIG9uIEdpdEh1YjoKPiBodHRwczovL2dpdGh1
+Yi5jb20vbDFrL2xpbnV4L2NvbW1pdHMvbWJwX3N3aXRjaGVyb29fdjUKPiAKPiBDaGFuZ2VzOgo+
+IAo+ICogTmV3IHBhdGNoIFswMS8xMl06IHZnYV9zd2l0Y2hlcm9vIGhhbmRsZXIgZmxhZ3MKPiAg
+IEFsZXggRGV1Y2hlciBhc2tlZCBpZiB0aGlzIHNlcmllcyBtaWdodCByZWdyZXNzIG9uIG5vbi1B
+cHBsZSBsYXB0b3BzLgo+ICAgVG8gYWRkcmVzcyB0aGlzIGNvbmNlcm4sIEkgbGV0IGhhbmRsZXJz
+IGRlY2xhcmUgdGhlaXIgY2FwYWJpbGl0aWVzIGluCj4gICBhIGJpdG1hc2suIERSTSBkcml2ZXJz
+IGNhbGwgZHJtX2dldF9lZGlkX3N3aXRjaGVyb28oKSBvbmx5IGlmIHRoZQo+ICAgaGFuZGxlciBo
+YXMgc2V0IHRoZSBWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQyBmbGFnLgo+ICAgQ3VycmVu
+dGx5IGp1c3Qgb25lIG90aGVyIGZsYWcgaXMgZGVmaW5lZCB3aGljaCBpcyB1c2VkIG9uIHJldGlu
+YXMuCj4gCj4gKiBDaGFuZ2VkIHBhdGNoIFswMi8xMl06IHZnYV9zd2l0Y2hlcm9vIEREQyBsb2Nr
+aW5nCj4gICBSZW5hbWUgZGRjX2xvY2sgdG8gbXV4X2h3X2xvY2ssIHN1Z2dlc3RlZCBieSBEYW5p
+ZWwgVmV0dGVyLgo+IAo+ICogTmV3IHBhdGNoIFswMy8xMl06IHRyYWNrIHN3aXRjaCBzdGF0ZSBv
+ZiBhcHBsZS1nbXV4Cj4gICBGaXhlcyBhIGJ1ZyBpbiBwcmV2aW91cyB2ZXJzaW9ucyBvZiB0aGlz
+IHNlcmllcyB3aGljaCBvY2N1cnJlZCBpZgo+ICAgdGhlIHN5c3RlbSB3YXMgc3VzcGVuZGVkIHdo
+aWxlIEREQyB3YXMgdGVtcG9yYXJpbHkgc3dpdGNoZWQ6Cj4gICBPbiByZXN1bWUgRERDIHdhcyBz
+d2l0Y2hlZCB0byB0aGUgd3JvbmcgR1BVLgo+IAo+ICogTmV3IHBhdGNoZXMgWzA5LzEyIC0gMTIv
+MTJdOiBkZWZlcnJlZCBwcm9iaW5nCj4gICBQcmV2aW91c2x5IEkgdXNlZCBjb25uZWN0b3IgcmVw
+cm9iaW5nIGlmIHRoZSBpbmFjdGl2ZSBHUFUncyBkcml2ZXIKPiAgIGxvYWRlZCBiZWZvcmUgZ211
+eC4gSSd2ZSBkaXRjaGVkIHRoYXQgaW4gZmF2b3Igb2YgZGVmZXJyZWQgZHJpdmVyCj4gICBwcm9i
+aW5nLCB3aGljaCBpcyBtdWNoIHNpbXBsZXIuIFRoYW5rcyB0byBEYW5pZWwgVmV0dGVyIGZvciB0
+aGUKPiAgIHN1Z2dlc3Rpb24uCj4gCj4gQ2F1dGlvbjogUGF0Y2ggWzA5LzEyXSBkZXBlbmRzIG9u
+IGEgbmV3IGFjcGlfZGV2X3ByZXNlbnQoKSBBUEkgd2hpY2gKPiB3aWxsIGxhbmQgaW4gNC41IHZp
+YSBSYWZhZWwgSi4gV3lzb2NraSdzIHRyZWUuCj4gCj4gSSB3b3VsZCBwYXJ0aWN1bGFybHkgYmUg
+aW50ZXJlc3RlZCBpbiBmZWVkYmFjayBvbiB0aGUgaGFuZGxlciBmbGFncwo+IHBhdGNoIFswMS8x
+Ml0uIEknbSBub3QgMTAwJSBoYXBweSB3aXRoIHRoZSBudW1iZXIgb2YgY2hhcmFjdGVycwo+IHJl
+cXVpcmVkIHRvIHF1ZXJ5IHRoZSBmbGFncyAoZS5nLjogaWYgKHZnYV9zd2l0Y2hlcm9vX2hhbmRs
+ZXJfZmxhZ3MoKSAmCj4gVkdBX1NXSVRDSEVST09fQ0FOX1NXSVRDSF9EREMpKSwgYnV0IGZhaWxl
+ZCB0byBjb21lIHVwIHdpdGggc29tZXRoaW5nCj4gc2hvcnRlci4gVGhpZXJyeSBSZWRpbmcgdXNl
+ZCBhIHN0cnVjdCBvZiBib29scyBpbnN0ZWFkIG9mIGEgYml0bWFzawo+IGZvciBoaXMgcmVjZW50
+IGRybV9kcF9saW5rX2NhcHMgcGF0Y2hlcy4gTWF5YmUgdXNlIHRoYXQgaW5zdGVhZD8KPiBodHRw
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LURlY2VtYmVy
+LzA5NzAyNS5odG1sCj4gCj4gVGhhbmtzLAo+IAo+IEx1a2FzCj4gCj4gCj4gTHVrYXMgV3VubmVy
+ICgxMik6Cj4gICB2Z2Ffc3dpdGNoZXJvbzogQWRkIGhhbmRsZXIgZmxhZ3MgaW5mcmFzdHJ1Y3R1
+cmUKPiAgIHZnYV9zd2l0Y2hlcm9vOiBBZGQgc3VwcG9ydCBmb3Igc3dpdGNoaW5nIG9ubHkgdGhl
+IEREQwo+ICAgYXBwbGUtZ211eDogVHJhY2sgc3dpdGNoIHN0YXRlCj4gICBhcHBsZS1nbXV4OiBB
+ZGQgc3dpdGNoX2RkYyBzdXBwb3J0Cj4gICBkcm0vZWRpZDogU3dpdGNoIEREQyB3aGVuIHJlYWRp
+bmcgdGhlIEVESUQKPiAgIGRybS9pOTE1OiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJ
+RAo+ICAgZHJtL25vdXZlYXU6IFN3aXRjaCBEREMgd2hlbiByZWFkaW5nIHRoZSBFRElECj4gICBk
+cm0vcmFkZW9uOiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAo+ICAgYXBwbGUtZ211
+eDogQWRkIGhlbHBlciBmb3IgcHJlc2VuY2UgZGV0ZWN0Cj4gICBkcm0vaTkxNTogRGVmZXIgcHJv
+YmUgaWYgZ211eCBpcyBwcmVzZW50IGJ1dCBpdHMgZHJpdmVyIGlzbid0Cj4gICBkcm0vbm91dmVh
+dTogRGVmZXIgcHJvYmUgaWYgZ211eCBpcyBwcmVzZW50IGJ1dCBpdHMgZHJpdmVyIGlzbid0Cj4g
+ICBkcm0vcmFkZW9uOiBEZWZlciBwcm9iZSBpZiBnbXV4IGlzIHByZXNlbnQgYnV0IGl0cyBkcml2
+ZXIgaXNuJ3QKPiAKPiAgRG9jdW1lbnRhdGlvbi9Eb2NCb29rL2dwdS50bXBsICAgICAgICAgICAg
+ICAgICAgIHwgICA1ICsKPiAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2F0cHhf
+aGFuZGxlci5jIHwgICAzICstCj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAyNiArKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X2Ry
+di5jICAgICAgICAgICAgICAgICAgfCAgMTIgKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2lu
+dGVsX2x2ZHMuYyAgICAgICAgICAgICAgICB8ICAgOCArLQo+ICBkcml2ZXJzL2dwdS9kcm0vbm91
+dmVhdS9ub3V2ZWF1X2FjcGkuYyAgICAgICAgICAgfCAgIDIgKy0KPiAgZHJpdmVycy9ncHUvZHJt
+L25vdXZlYXUvbm91dmVhdV9jb25uZWN0b3IuYyAgICAgIHwgIDIxICsrKy0KPiAgZHJpdmVycy9n
+cHUvZHJtL25vdXZlYXUvbm91dmVhdV9kcm0uYyAgICAgICAgICAgIHwgIDExICsrKwo+ICBkcml2
+ZXJzL2dwdS9kcm0vcmFkZW9uL3JhZGVvbl9hdHB4X2hhbmRsZXIuYyAgICAgfCAgIDMgKy0KPiAg
+ZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fY29ubmVjdG9ycy5jICAgICAgIHwgICA2ICsr
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2Rydi5jICAgICAgICAgICAgICB8ICAx
+MSArKysKPiAgZHJpdmVycy9ncHUvdmdhL3ZnYV9zd2l0Y2hlcm9vLmMgICAgICAgICAgICAgICAg
+IHwgMTE5ICsrKysrKysrKysrKysrKysrKysrKystCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2Fw
+cGxlLWdtdXguYyAgICAgICAgICAgICAgICB8IDExMSArKysrKysrKysrKysrKysrLS0tLS0KPiAg
+aW5jbHVkZS9kcm0vZHJtX2NydGMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsK
+PiAgaW5jbHVkZS9saW51eC9hcHBsZS1nbXV4LmggICAgICAgICAgICAgICAgICAgICAgIHwgIDM5
+ICsrKysrKysrCj4gIGluY2x1ZGUvbGludXgvdmdhX3N3aXRjaGVyb28uaCAgICAgICAgICAgICAg
+ICAgICB8ICAzNiArKysrKystCj4gIDE2IGZpbGVzIGNoYW5nZWQsIDM4MiBpbnNlcnRpb25zKCsp
+LCAzMyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvYXBw
+bGUtZ211eC5oCj4gCj4gLS0gCj4gMS44LjUuMiAoQXBwbGUgR2l0LTQ4KQo+IApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpOb3V2ZWF1IG1haWxpbmcgbGlz
+dApOb3V2ZWF1QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vbm91dmVhdQo=
