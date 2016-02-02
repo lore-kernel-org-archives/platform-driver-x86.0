@@ -1,52 +1,51 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 4/5] Add support for deep sleep control.
-Date: Tue, 2 Feb 2016 12:47:28 -0800
-Message-ID: <20160202204728.GF1779@malice.jf.intel.com>
-References: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
- <1454380131-24662-5-git-send-email-mario_limonciello@dell.com>
- <20160202173208.GC1779@malice.jf.intel.com>
- <56B0F0D2.10606@dell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: [PATCH v3 0/6] alienware-wmi: new platform and feature support
+Date: Tue,  2 Feb 2016 15:38:51 -0600
+Message-ID: <1454449137-16478-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:58061 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933907AbcBBUra (ORCPT
+Received: from ausxippc101.us.dell.com ([143.166.85.207]:15375 "EHLO
+	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753046AbcBBVm7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Feb 2016 15:47:30 -0500
-Content-Disposition: inline
-In-Reply-To: <56B0F0D2.10606@dell.com>
+	Tue, 2 Feb 2016 16:42:59 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 
-On Tue, Feb 02, 2016 at 12:09:22PM -0600, Mario Limonciello wrote:
-> 
-> 
-> On 02/02/2016 11:32 AM, Darren Hart wrote:
-> > On Mon, Feb 01, 2016 at 08:28:50PM -0600, Mario Limonciello wrote:
-> >> This allows configuration the system for wakeup with a controller.
-> > Hrm, I'm happy to clean up English grammar in commit messages... but I'm
-> > struggling with the intent of the above... Is this correct:
-> >
-> > Allow for user configuration, via sysfs, for wakeup with a controller.
-> >
-> > If so, great - but also, what do we mean by "with a controller" ?
-> 
-> I see how this is confusing to someone who isn't in the know what's
-> going on.
-> A better description is:
-> 
-> Allow for user configuration of BIOS settings that allow the system to
-> turned on via HID devices.
-> 
-> If that's concise enough I'll update in next submission.
+I've got some extensions for the alienware-wmi driver that have
+been introduced for a few new platforms and can be controlled via the WMI
+interface.
 
-Yes, that's better. I think meant "... to be turned on ...". Otherwise, good.
+Changes from V2:
+- add alienware-wmi to subjects (all patches)
+- fix indentation on 2 changing comments (patch 3/6)
+- remove goto error on amplifier creation (patch 3/6)
+- clarify commit message (patch 4/6)
+- fix line wrapping on some long lines (patch 4/6)
+- remove goto error on deep sleep creation (patch 4/6)
+- whitespace improvements in other parts of the driver (patch 6/6)
 
-Thanks,
+Changes from V1:
+- Make sure whitespace changes are in their own patch
+- Add commit descriptions to all patches
+- Allow one line to go over 80 characters in deep sleep control patch
+  Other patches may have some areas that avoid going over 80 characters
+  still, but this matches the style of the existing driver.  If you would
+  like these to go over 80 characters as well, please comment which areas
+  this is OK.
+
+
+Mario Limonciello (6):
+  alienware-wmi: Clean up whitespace for ASM100 platform
+  alienware-wmi: Add support for new platform: X51-R3
+  alienware-wmi: Add initial support for alienware graphics amplifier.
+  alienware-wmi: Add support for deep sleep control.
+  alienware-wmi: Add support for two new systems: ASM200 and ASM201.
+  alienware-wmi: whitespace improvements
+
+ drivers/platform/x86/alienware-wmi.c | 291 +++++++++++++++++++++++++++++------
+ 1 file changed, 247 insertions(+), 44 deletions(-)
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+1.9.1
