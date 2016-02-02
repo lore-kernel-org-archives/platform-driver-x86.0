@@ -1,103 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 5/5] Add support for two new systems: ASM200 and
- ASM201.
-Date: Tue, 2 Feb 2016 09:38:42 -0800
-Message-ID: <20160202173842.GD1779@malice.jf.intel.com>
+Subject: Re: [PATCH v2 0/5] alienware-wmi new platform and feature support
+Date: Tue, 2 Feb 2016 09:39:27 -0800
+Message-ID: <20160202173927.GE1779@malice.jf.intel.com>
 References: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
- <1454380131-24662-6-git-send-email-mario_limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:56925 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:57536 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755750AbcBBRio (ORCPT
+	with ESMTP id S1756702AbcBBRj3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Feb 2016 12:38:44 -0500
+	Tue, 2 Feb 2016 12:39:29 -0500
 Content-Disposition: inline
-In-Reply-To: <1454380131-24662-6-git-send-email-mario_limonciello@dell.com>
+In-Reply-To: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario_limonciello@dell.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Mon, Feb 01, 2016 at 08:28:51PM -0600, Mario Limonciello wrote:
-> Both of these systems support:
-> * 2 lighting control zones
-> * HDMI mux control
-> * deep sleep control (to enable wakup from controller)
+On Mon, Feb 01, 2016 at 08:28:46PM -0600, Mario Limonciello wrote:
+> I've got some extensions for the alienware-wmi driver that have
+> been introduced for a few new platforms and can be controlled via the WMI
+> interface.
 > 
-> The ASM201 also supports the external graphics amplifier.
+> Changes from V1:
+>  - Make sure whitespace changes are in their own patch
+>  - Add commit descriptions to all patches
+>  - Allow one line to go over 80 characters in deep sleep control patch
+>    Other patches may have some areas that avoid going over 80 characters
+>    still, but this matches the style of the existing driver.  If you would
+>    like these to go over 80 characters as well, please comment which areas
+>    this is OK.
 
-Nit on the subject:
+This made it much easier to review. Thank you Mario. A few changes requested,
+and a couple questions for you regarding intent/best-practice.
 
-[file|platform]: subject
-
-e.g.
-
-alienware-wmi: Add support for two new systems: ASM200 and ASM201
-
-This keeps the log consistent and aligns with Linus' merge comments.
-
-> 
-> Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
-> ---
->  drivers/platform/x86/alienware-wmi.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-> index f5ebcae..577fefa 100644
-> --- a/drivers/platform/x86/alienware-wmi.c
-> +++ b/drivers/platform/x86/alienware-wmi.c
-> @@ -97,6 +97,20 @@ static struct quirk_entry quirk_asm100 = {
->  	.deepslp = 0,
->  };
->  
-> +static struct quirk_entry quirk_asm200 = {
-> +	.num_zones = 2,
-> +	.hdmi_mux = 1,
-> +	.amplifier = 0,
-> +	.deepslp = 1,
-> +};
-> +
-> +static struct quirk_entry quirk_asm201 = {
-> +	.num_zones = 2,
-> +	.hdmi_mux = 1,
-> +	.amplifier = 1,
-> +	.deepslp = 1,
-> +};
-> +
->  static int __init dmi_matched(const struct dmi_system_id *dmi)
->  {
->  	quirks = dmi->driver_data;
-> @@ -140,6 +154,24 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
->  		     },
->  	 .driver_data = &quirk_asm100,
->  	 },
-> +	{
-> +	 .callback = dmi_matched,
-> +	 .ident = "Alienware ASM200",
-> +	 .matches = {
-> +		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-> +		     },
-> +	 .driver_data = &quirk_asm200,
-> +	 },
-> +	{
-> +	 .callback = dmi_matched,
-> +	 .ident = "Alienware ASM201",
-> +	 .matches = {
-> +		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-> +		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-> +		     },
-> +	 .driver_data = &quirk_asm201,
-> +	 },
->  	{}
->  };
->  
-> -- 
-> 1.9.1
-> 
-> 
+Thanks!
 
 -- 
 Darren Hart
