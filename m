@@ -1,259 +1,141 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH v2 3/5] Add initial support for alienware graphics amplifier.
-Date: Mon,  1 Feb 2016 20:28:49 -0600
-Message-ID: <1454380131-24662-4-git-send-email-mario_limonciello@dell.com>
-References: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
+From: Pierre Moreau <pierre.morrow-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v5 00/12] Enable GPU switching on pre-retina
+	MacBook Pro
+Date: Tue, 2 Feb 2016 07:33:46 +0100
+Message-ID: <2BD95D20-32C1-4029-BD33-AFA4FF278A65@free.fr>
+References: <cover.1452525860.git.lukas@wunner.de>
+ <20160201224944.GA12944@wunner.de>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20160201224944.GA12944-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/nouveau>
+List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Paul Hordiienko <pvt.gord-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, intel-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, William Brown <william-n62phY/1UFdqFZ3NbRY2NA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The alienware graphics amplifier is a device that provides external
-access to a full PCIe slot, USB hub, and additional control zone.
-
-This patch enables support for reading status whether the cable is
-plugged in as well as for setting the colors in the new zone.
-
-Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
----
- drivers/platform/x86/alienware-wmi.c | 110 +++++++++++++++++++++++++++++------
- 1 file changed, 91 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 8e8ea4f..e6f6322 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -33,6 +33,7 @@
- #define WMAX_METHOD_BRIGHTNESS		0x3
- #define WMAX_METHOD_ZONE_CONTROL	0x4
- #define WMAX_METHOD_HDMI_CABLE		0x5
-+#define WMAX_METHOD_AMPLIFIER_CABLE	0x6
- 
- MODULE_AUTHOR("Mario Limonciello <mario_limonciello@dell.com>");
- MODULE_DESCRIPTION("Alienware special feature control");
-@@ -60,6 +61,7 @@ enum WMAX_CONTROL_STATES {
- struct quirk_entry {
- 	u8 num_zones;
- 	u8 hdmi_mux;
-+	u8 amplifier;
- };
- 
- static struct quirk_entry *quirks;
-@@ -67,21 +69,25 @@ static struct quirk_entry *quirks;
- static struct quirk_entry quirk_unknown = {
- 	.num_zones = 2,
- 	.hdmi_mux = 0,
-+	.amplifier = 0,
- };
- 
- static struct quirk_entry quirk_x51_r1_r2 = {
- 	.num_zones = 3,
--	.hdmi_mux = 0.
-+	.hdmi_mux = 0,
-+	.amplifier = 0,
- };
- 
- static struct quirk_entry quirk_x51_r3 = {
- 	.num_zones = 4,
- 	.hdmi_mux = 0,
-+	.amplifier = 1,
- };
- 
- static struct quirk_entry quirk_asm100 = {
- 	.num_zones = 2,
- 	.hdmi_mux = 1,
-+	.amplifier = 0,
- };
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -147,7 +153,7 @@ struct wmax_brightness_args {
- 	u32 percentage;
- };
- 
--struct hdmi_args {
-+struct wmax_basic_args {
- 	u8 arg;
- };
- 
-@@ -232,16 +238,16 @@ static int alienware_update_led(struct platform_zone *zone)
- 	char *guid;
- 	struct acpi_buffer input;
- 	struct legacy_led_args legacy_args;
--	struct wmax_led_args wmax_args;
-+	struct wmax_led_args wmax_basic_args;
- 	if (interface == WMAX) {
--		wmax_args.led_mask = 1 << zone->location;
--		wmax_args.colors = zone->colors;
--		wmax_args.state = lighting_control_state;
-+		wmax_basic_args.led_mask = 1 << zone->location;
-+		wmax_basic_args.colors = zone->colors;
-+		wmax_basic_args.state = lighting_control_state;
- 		guid = WMAX_CONTROL_GUID;
- 		method_id = WMAX_METHOD_ZONE_CONTROL;
- 
--		input.length = (acpi_size) sizeof(wmax_args);
--		input.pointer = &wmax_args;
-+		input.length = (acpi_size) sizeof(wmax_basic_args);
-+		input.pointer = &wmax_basic_args;
- 	} else {
- 		legacy_args.colors = zone->colors;
- 		legacy_args.brightness = global_brightness;
-@@ -449,11 +455,7 @@ static void alienware_zone_exit(struct platform_device *dev)
- 	kfree(zone_attrs);
- }
- 
--/*
--	The HDMI mux sysfs node indicates the status of the HDMI input mux.
--	It can toggle between standard system GPU output and HDMI input.
--*/
--static acpi_status alienware_hdmi_command(struct hdmi_args *in_args,
-+static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
- 					  u32 command, int *out_data)
- {
- 	acpi_status status;
-@@ -481,16 +483,20 @@ static acpi_status alienware_hdmi_command(struct hdmi_args *in_args,
- 
- }
- 
-+/*
-+ *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
-+ *	It can toggle between standard system GPU output and HDMI input.
-+*/
- static ssize_t show_hdmi_cable(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
- 	acpi_status status;
- 	u32 out_data;
--	struct hdmi_args in_args = {
-+	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
- 	status =
--	    alienware_hdmi_command(&in_args, WMAX_METHOD_HDMI_CABLE,
-+	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_CABLE,
- 				   (u32 *) &out_data);
- 	if (ACPI_SUCCESS(status)) {
- 		if (out_data == 0)
-@@ -509,11 +515,11 @@ static ssize_t show_hdmi_source(struct device *dev,
- {
- 	acpi_status status;
- 	u32 out_data;
--	struct hdmi_args in_args = {
-+	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
- 	status =
--	    alienware_hdmi_command(&in_args, WMAX_METHOD_HDMI_STATUS,
-+	    alienware_wmax_command(&in_args, WMAX_METHOD_HDMI_STATUS,
- 				   (u32 *) &out_data);
- 
- 	if (ACPI_SUCCESS(status)) {
-@@ -533,7 +539,7 @@ static ssize_t toggle_hdmi_source(struct device *dev,
- 				  const char *buf, size_t count)
- {
- 	acpi_status status;
--	struct hdmi_args args;
-+	struct wmax_basic_args args;
- 	if (strcmp(buf, "gpu\n") == 0)
- 		args.arg = 1;
- 	else if (strcmp(buf, "input\n") == 0)
-@@ -542,7 +548,7 @@ static ssize_t toggle_hdmi_source(struct device *dev,
- 		args.arg = 3;
- 	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
- 
--	status = alienware_hdmi_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL);
-+	status = alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL);
- 
- 	if (ACPI_FAILURE(status))
- 		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
-@@ -585,6 +591,65 @@ error_create_hdmi:
- 	return ret;
- }
- 
-+/* Alienware GFX amplifier support
-+ * - Currently supports reading cable status
-+ * - Leaving expansion room to possibly support dock/undock events later
-+*/
-+static ssize_t show_amplifier_status(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	acpi_status status;
-+	u32 out_data;
-+	struct wmax_basic_args in_args = {
-+		.arg = 0,
-+	};
-+	status =
-+	    alienware_wmax_command(&in_args, WMAX_METHOD_AMPLIFIER_CABLE,
-+				   (u32 *) &out_data);
-+	if (ACPI_SUCCESS(status)) {
-+		if (out_data == 0)
-+			return scnprintf(buf, PAGE_SIZE,
-+					 "[unconnected] connected unknown\n");
-+		else if (out_data == 1)
-+			return scnprintf(buf, PAGE_SIZE,
-+					 "unconnected [connected] unknown\n");
-+	}
-+	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
-+	return scnprintf(buf, PAGE_SIZE, "unconnected connected [unknown]\n");
-+}
-+
-+static DEVICE_ATTR(status, S_IRUGO, show_amplifier_status, NULL);
-+
-+static struct attribute *amplifier_attrs[] = {
-+	&dev_attr_status.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group amplifier_attribute_group = {
-+	.name = "amplifier",
-+	.attrs = amplifier_attrs,
-+};
-+
-+static void remove_amplifier(struct platform_device *dev)
-+{
-+	if (quirks->amplifier > 0)
-+		sysfs_remove_group(&dev->dev.kobj, &amplifier_attribute_group);
-+}
-+
-+static int create_amplifier(struct platform_device *dev)
-+{
-+	int ret;
-+
-+	ret = sysfs_create_group(&dev->dev.kobj, &amplifier_attribute_group);
-+	if (ret)
-+		goto error_create_amplifier;
-+	return 0;
-+
-+error_create_amplifier:
-+	remove_amplifier(dev);
-+	return ret;
-+}
-+
- static int __init alienware_wmi_init(void)
- {
- 	int ret;
-@@ -620,6 +685,12 @@ static int __init alienware_wmi_init(void)
- 			goto fail_prep_hdmi;
- 	}
- 
-+	if (quirks->amplifier > 0) {
-+		ret = create_amplifier(platform_device);
-+		if (ret)
-+			goto fail_prep_amplifier;
-+	}
-+
- 	ret = alienware_zone_init(platform_device);
- 	if (ret)
- 		goto fail_prep_zones;
-@@ -628,6 +699,7 @@ static int __init alienware_wmi_init(void)
- 
- fail_prep_zones:
- 	alienware_zone_exit(platform_device);
-+fail_prep_amplifier:
- fail_prep_hdmi:
- 	platform_device_del(platform_device);
- fail_platform_device2:
--- 
-1.9.1
+SGVsbG8gYWxsLAoKPiBPbiAwMSBGZWIgMjAxNiwgYXQgMjM6NDksIEx1a2FzIFd1bm5lciA8bHVr
+YXNAd3VubmVyLmRlPiB3cm90ZToKPiAKPiBIaSwKPiAKPj4gT24gTW9uLCBKYW4gMTEsIDIwMTYg
+YXQgMDg6MDk6MjBQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdyb3RlOgo+PiBFbmFibGUgR1BVIHN3
+aXRjaGluZyBvbiB0aGUgcHJlLXJldGluYSBNYWNCb29rIFBybyAoMjAwOCAtIDIwMTMpLCB2NS4K
+PiAKPiBUaGlzIHNlcmllcyBoYXNuJ3Qgc2VlbiBhbnkgcmV2aWV3cyBvciBhY2tzIHVuZm9ydHVu
+YXRlbHkuCj4gQW55IHRha2Vycz8KPiAKPiBNZXJnaW5nIHRoaXMgd291bGQgYWxsb3cgZmRvICM2
+MTExNSB0byBiZSBjbG9zZWQKPiAoY3VycmVudGx5IGFzc2lnbmVkIHRvIGludGVsLWdmeCkuCj4g
+Cj4gRldJVyB0aGlzIHNlcmllcyBoYXMgaW4gdGhlIG1lYW50aW1lIGJlZW4gdGVzdGVkIGJ5IG1v
+cmUgZm9sa3M6Cj4gCj4gVGVzdGVkLWJ5OiBQaWVycmUgTW9yZWF1IDxwaWVycmUubW9ycm93QGZy
+ZWUuZnI+Cj4gICAgW01CUCAgNSwzIDIwMDkgIG52aWRpYSBNQ1A3OSArIEc5NiAgICAgICAgcHJl
+LXJldGluYSAgMTUiXQo+IFRlc3RlZC1ieTogUGF1bCBIb3JkaWllbmtvIDxwdnQuZ29yZEBnbWFp
+bC5jb20+Cj4gICAgW01CUCAgNiwyIDIwMTAgIGludGVsIElMSyArIG52aWRpYSBHVDIxNiAgcHJl
+LXJldGluYSAgMTUiXQo+IFRlc3RlZC1ieTogV2lsbGlhbSBCcm93biA8d2lsbGlhbUBibGFja2hh
+dHMubmV0LmF1Pgo+ICAgIFtNQlAgIDgsMiAyMDExICBpbnRlbCBTTkIgKyBhbWQgdHVya3MgICAg
+IHByZS1yZXRpbmEgIDE1Il0KPiBUZXN0ZWQtYnk6IEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVy
+LmRlPgo+ICAgIFtNQlAgIDksMSAyMDEyICBpbnRlbCBJVkIgKyBudmlkaWEgR0sxMDcgIHByZS1y
+ZXRpbmEgIDE1Il0KPiAKPiBPbiB0aGUgbGF0dGVyIHRocmVlIG1vZGVscyBpdCB3b3JrZWQgZmlu
+ZS4gT24gUGllcnJlIE1vcmVhdSdzIG1hY2hpbmUKPiB0aGUgZGlzY3JldGUgbnZpZGlhIEc5NiBs
+b2NrcyB1cCB3aGVuIHdva2VuLiBUaGlzIGhhcHBlbmVkIGluIHRoZSBwYXN0Cj4gYXMgd2VsbCBi
+dXQgbm90IG9uIHRoZSBmaXJzdCB3YWtlIGJ1dCBvbmx5IG9uIHRoZSAxMHRoIG9yIHNvLiBTaW5j
+ZSBpdAo+IHdvcmtzIGZpbmUgb24gdGhlIEdUMjE2IGFuZCBHSzEwNywgSSdtIGd1ZXNzaW5nIHdl
+J3ZlIGdvdCBhIHJlZ3Jlc3Npb24KPiBpbiB0aGUgd2FrZXVwIGNvZGUgZm9yIHRoZSBHOTYgd2hp
+Y2ggaXMgc29tZWhvdyB0cmlnZ2VyZWQgYnkgdGhpcyBwYXRjaAo+IHNldCAobW9yZSBzcGVjaWZp
+Y2FsbHk6IHRyaWdnZXJlZCBieSBiZWluZyBhYmxlIHRvIHJldHJpZXZlIHRoZSBwcm9wZXIKPiBw
+YW5lbCByZXNvbHV0aW9uIGFuZCBjb25maWd1cmUgYSBjcnRjKS4gSXQgbmVlZHMgdG8gYmUgZml4
+ZWQgYnV0IGlzbid0Cj4gYSBzaG93c3RvcHBlciBmb3IgdGhpcyBzZXJpZXMgSU1ITy4gKEFyZ3Vh
+Ymx5IGJlaW5nIGFibGUgdG8gcmV0cmlldmUKPiBFRElEIGJ1dCB0aGVuIGxvY2tpbmcgdXAgb24g
+c3dpdGNoaW5nIGlzbid0IHJlYWxseSB3b3JzZSB0aGFuIG5vdCBiZWluZwo+IGFibGUgdG8gcmV0
+cmlldmUgRURJRCBpbiB0aGUgZmlyc3QgcGxhY2UuKQoKSSB3b3VsZCBzYXkgaXQgaXMgc2xpZ2h0
+bHkgd29yc2UsIHNpbmNlIHRoZSBvbmx5ICJkb3duc2lkZSIgb2Ygbm90IHJldHJpZXZpbmcgdGhl
+IEVESUQgbWVhbnMgIFRUWSBpcyBzZXQgdG8gYSBkZWZhdWx0IHJlc29sdXRpb24gcmF0aGVyIHRo
+YW4gdGhlIHNjcmVlbiByZXNvbHV0aW9uLCBidXQgdGhpcyBpcyBmaXhlZCB3aGVuIHN0YXJ0aW5n
+IFguCk9uIHRoZSBvdGhlciBoYW5kLCBzaW5jZSBEUklfUFJJTUUgd29ya3MgZmluZSBvbiB0aGUg
+bGFwdG9wLCB0aGVyZSBpc24ndCBtdWNoIHJlYXNvbiB0byBzd2l0Y2ggYmV0d2VlbiBjYXJkcy4g
+CgpJJ2xsIGhhdmUgYSBsb29rIGF0IHRoZSByZXN1bWUgdGhpcyB3ZWVrLCBub3cgdGhhdCBGT1NE
+RU0gaXMgb2ZmIG15IHRvZG8gbGlzdC4gCgpSZWdhcmRzLApQaWVycmUKCgo+IAo+IFRoYW5rcywK
+PiAKPiBMdWthcwo+IAo+PiAKPj4gVGhlIG1haW4gb2JzdGFjbGUgb24gdGhlc2UgbWFjaGluZXMg
+aXMgdGhhdCB0aGUgcGFuZWwgbW9kZSBpbiBWQklPUwo+PiBpcyBib2d1cy4gRm9ydHVuYXRlbHkg
+Z211eCBjYW4gc3dpdGNoIEREQyBpbmRlcGVuZGVudGx5IGZyb20gdGhlCj4+IGRpc3BsYXksIHRo
+ZXJlYnkgYWxsb3dpbmcgdGhlIGluYWN0aXZlIEdQVSB0byBwcm9iZSB0aGUgcGFuZWwncyBFRElE
+Lgo+PiAKPj4gSW4gc2hvcnQsIHZnYV9zd2l0Y2hlcm9vIGFuZCBhcHBsZS1nbXV4IGFyZSBhbWVu
+ZGVkIHdpdGggaG9va3MgdG8KPj4gc3dpdGNoIEREQywgRFJNIGNvcmUgaXMgYW1lbmRlZCB3aXRo
+IGEgZHJtX2dldF9lZGlkX3N3aXRjaGVyb28oKSBoZWxwZXIsCj4+IGFuZCByZWxldmFudCBkcml2
+ZXJzIGFyZSBhbWVuZGVkIHRvIGNhbGwgdGhhdCBmb3IgTFZEUyBvdXRwdXRzLgo+PiAKPj4gVGhl
+IHJldGluYSBNYWNCb29rIFBybyAoMjAxMiAtIHByZXNlbnQpIHVzZXMgZURQIGFuZCBjYW5ub3Qg
+c3dpdGNoCj4+IEFVWCBpbmRlcGVuZGVudGx5IGZyb20gdGhlIG1haW4gbGluay4gVGhlIG1haW4g
+b2JzdGFjbGUgdGhlcmUgaXMgbGluawo+PiB0cmFpbmluZywgSSdtIGN1cnJlbnRseSB3b3JraW5n
+IG9uIHRoaXMsIGl0IHdpbGwgYmUgYWRkcmVzc2VkIGluIGEKPj4gZnV0dXJlIHBhdGNoIHNldC4K
+Pj4gCj4+IFRoaXMgc2VyaWVzIGlzIGFsc28gcmV2aWV3YWJsZSBvbiBHaXRIdWI6Cj4+IGh0dHBz
+Oi8vZ2l0aHViLmNvbS9sMWsvbGludXgvY29tbWl0cy9tYnBfc3dpdGNoZXJvb192NQo+PiAKPj4g
+Q2hhbmdlczoKPj4gCj4+ICogTmV3IHBhdGNoIFswMS8xMl06IHZnYV9zd2l0Y2hlcm9vIGhhbmRs
+ZXIgZmxhZ3MKPj4gIEFsZXggRGV1Y2hlciBhc2tlZCBpZiB0aGlzIHNlcmllcyBtaWdodCByZWdy
+ZXNzIG9uIG5vbi1BcHBsZSBsYXB0b3BzLgo+PiAgVG8gYWRkcmVzcyB0aGlzIGNvbmNlcm4sIEkg
+bGV0IGhhbmRsZXJzIGRlY2xhcmUgdGhlaXIgY2FwYWJpbGl0aWVzIGluCj4+ICBhIGJpdG1hc2su
+IERSTSBkcml2ZXJzIGNhbGwgZHJtX2dldF9lZGlkX3N3aXRjaGVyb28oKSBvbmx5IGlmIHRoZQo+
+PiAgaGFuZGxlciBoYXMgc2V0IHRoZSBWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQyBmbGFn
+Lgo+PiAgQ3VycmVudGx5IGp1c3Qgb25lIG90aGVyIGZsYWcgaXMgZGVmaW5lZCB3aGljaCBpcyB1
+c2VkIG9uIHJldGluYXMuCj4+IAo+PiAqIENoYW5nZWQgcGF0Y2ggWzAyLzEyXTogdmdhX3N3aXRj
+aGVyb28gRERDIGxvY2tpbmcKPj4gIFJlbmFtZSBkZGNfbG9jayB0byBtdXhfaHdfbG9jaywgc3Vn
+Z2VzdGVkIGJ5IERhbmllbCBWZXR0ZXIuCj4+IAo+PiAqIE5ldyBwYXRjaCBbMDMvMTJdOiB0cmFj
+ayBzd2l0Y2ggc3RhdGUgb2YgYXBwbGUtZ211eAo+PiAgRml4ZXMgYSBidWcgaW4gcHJldmlvdXMg
+dmVyc2lvbnMgb2YgdGhpcyBzZXJpZXMgd2hpY2ggb2NjdXJyZWQgaWYKPj4gIHRoZSBzeXN0ZW0g
+d2FzIHN1c3BlbmRlZCB3aGlsZSBEREMgd2FzIHRlbXBvcmFyaWx5IHN3aXRjaGVkOgo+PiAgT24g
+cmVzdW1lIEREQyB3YXMgc3dpdGNoZWQgdG8gdGhlIHdyb25nIEdQVS4KPj4gCj4+ICogTmV3IHBh
+dGNoZXMgWzA5LzEyIC0gMTIvMTJdOiBkZWZlcnJlZCBwcm9iaW5nCj4+ICBQcmV2aW91c2x5IEkg
+dXNlZCBjb25uZWN0b3IgcmVwcm9iaW5nIGlmIHRoZSBpbmFjdGl2ZSBHUFUncyBkcml2ZXIKPj4g
+IGxvYWRlZCBiZWZvcmUgZ211eC4gSSd2ZSBkaXRjaGVkIHRoYXQgaW4gZmF2b3Igb2YgZGVmZXJy
+ZWQgZHJpdmVyCj4+ICBwcm9iaW5nLCB3aGljaCBpcyBtdWNoIHNpbXBsZXIuIFRoYW5rcyB0byBE
+YW5pZWwgVmV0dGVyIGZvciB0aGUKPj4gIHN1Z2dlc3Rpb24uCj4+IAo+PiBDYXV0aW9uOiBQYXRj
+aCBbMDkvMTJdIGRlcGVuZHMgb24gYSBuZXcgYWNwaV9kZXZfcHJlc2VudCgpIEFQSSB3aGljaAo+
+PiB3aWxsIGxhbmQgaW4gNC41IHZpYSBSYWZhZWwgSi4gV3lzb2NraSdzIHRyZWUuCj4+IAo+PiBJ
+IHdvdWxkIHBhcnRpY3VsYXJseSBiZSBpbnRlcmVzdGVkIGluIGZlZWRiYWNrIG9uIHRoZSBoYW5k
+bGVyIGZsYWdzCj4+IHBhdGNoIFswMS8xMl0uIEknbSBub3QgMTAwJSBoYXBweSB3aXRoIHRoZSBu
+dW1iZXIgb2YgY2hhcmFjdGVycwo+PiByZXF1aXJlZCB0byBxdWVyeSB0aGUgZmxhZ3MgKGUuZy46
+IGlmICh2Z2Ffc3dpdGNoZXJvb19oYW5kbGVyX2ZsYWdzKCkgJgo+PiBWR0FfU1dJVENIRVJPT19D
+QU5fU1dJVENIX0REQykpLCBidXQgZmFpbGVkIHRvIGNvbWUgdXAgd2l0aCBzb21ldGhpbmcKPj4g
+c2hvcnRlci4gVGhpZXJyeSBSZWRpbmcgdXNlZCBhIHN0cnVjdCBvZiBib29scyBpbnN0ZWFkIG9m
+IGEgYml0bWFzawo+PiBmb3IgaGlzIHJlY2VudCBkcm1fZHBfbGlua19jYXBzIHBhdGNoZXMuIE1h
+eWJlIHVzZSB0aGF0IGluc3RlYWQ/Cj4+IGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJj
+aGl2ZXMvZHJpLWRldmVsLzIwMTUtRGVjZW1iZXIvMDk3MDI1Lmh0bWwKPj4gCj4+IFRoYW5rcywK
+Pj4gCj4+IEx1a2FzCj4+IAo+PiAKPj4gTHVrYXMgV3VubmVyICgxMik6Cj4+ICB2Z2Ffc3dpdGNo
+ZXJvbzogQWRkIGhhbmRsZXIgZmxhZ3MgaW5mcmFzdHJ1Y3R1cmUKPj4gIHZnYV9zd2l0Y2hlcm9v
+OiBBZGQgc3VwcG9ydCBmb3Igc3dpdGNoaW5nIG9ubHkgdGhlIEREQwo+PiAgYXBwbGUtZ211eDog
+VHJhY2sgc3dpdGNoIHN0YXRlCj4+ICBhcHBsZS1nbXV4OiBBZGQgc3dpdGNoX2RkYyBzdXBwb3J0
+Cj4+ICBkcm0vZWRpZDogU3dpdGNoIEREQyB3aGVuIHJlYWRpbmcgdGhlIEVESUQKPj4gIGRybS9p
+OTE1OiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAo+PiAgZHJtL25vdXZlYXU6IFN3
+aXRjaCBEREMgd2hlbiByZWFkaW5nIHRoZSBFRElECj4+ICBkcm0vcmFkZW9uOiBTd2l0Y2ggRERD
+IHdoZW4gcmVhZGluZyB0aGUgRURJRAo+PiAgYXBwbGUtZ211eDogQWRkIGhlbHBlciBmb3IgcHJl
+c2VuY2UgZGV0ZWN0Cj4+ICBkcm0vaTkxNTogRGVmZXIgcHJvYmUgaWYgZ211eCBpcyBwcmVzZW50
+IGJ1dCBpdHMgZHJpdmVyIGlzbid0Cj4+ICBkcm0vbm91dmVhdTogRGVmZXIgcHJvYmUgaWYgZ211
+eCBpcyBwcmVzZW50IGJ1dCBpdHMgZHJpdmVyIGlzbid0Cj4+ICBkcm0vcmFkZW9uOiBEZWZlciBw
+cm9iZSBpZiBnbXV4IGlzIHByZXNlbnQgYnV0IGl0cyBkcml2ZXIgaXNuJ3QKPj4gCj4+IERvY3Vt
+ZW50YXRpb24vRG9jQm9vay9ncHUudG1wbCAgICAgICAgICAgICAgICAgICB8ICAgNSArCj4+IGRy
+aXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hdHB4X2hhbmRsZXIuYyB8ICAgMyArLQo+
+PiBkcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgMjYg
+KysrKysKPj4gZHJpdmVycy9ncHUvZHJtL2k5MTUvaTkxNV9kcnYuYyAgICAgICAgICAgICAgICAg
+IHwgIDEyICsrKwo+PiBkcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF9sdmRzLmMgICAgICAgICAg
+ICAgICAgfCAgIDggKy0KPj4gZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbm91dmVhdV9hY3BpLmMg
+ICAgICAgICAgIHwgICAyICstCj4+IGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfY29u
+bmVjdG9yLmMgICAgICB8ICAyMSArKystCj4+IGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZl
+YXVfZHJtLmMgICAgICAgICAgICB8ICAxMSArKysKPj4gZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9y
+YWRlb25fYXRweF9oYW5kbGVyLmMgICAgIHwgICAzICstCj4+IGRyaXZlcnMvZ3B1L2RybS9yYWRl
+b24vcmFkZW9uX2Nvbm5lY3RvcnMuYyAgICAgICB8ICAgNiArKwo+PiBkcml2ZXJzL2dwdS9kcm0v
+cmFkZW9uL3JhZGVvbl9kcnYuYyAgICAgICAgICAgICAgfCAgMTEgKysrCj4+IGRyaXZlcnMvZ3B1
+L3ZnYS92Z2Ffc3dpdGNoZXJvby5jICAgICAgICAgICAgICAgICB8IDExOSArKysrKysrKysrKysr
+KysrKysrKysrLQo+PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMgICAgICAgICAg
+ICAgICAgfCAxMTEgKysrKysrKysrKysrKysrKy0tLS0tCj4+IGluY2x1ZGUvZHJtL2RybV9jcnRj
+LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4+IGluY2x1ZGUvbGludXgvYXBw
+bGUtZ211eC5oICAgICAgICAgICAgICAgICAgICAgICB8ICAzOSArKysrKysrKwo+PiBpbmNsdWRl
+L2xpbnV4L3ZnYV9zd2l0Y2hlcm9vLmggICAgICAgICAgICAgICAgICAgfCAgMzYgKysrKysrLQo+
+PiAxNiBmaWxlcyBjaGFuZ2VkLCAzODIgaW5zZXJ0aW9ucygrKSwgMzMgZGVsZXRpb25zKC0pCj4+
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2FwcGxlLWdtdXguaAo+PiAKPj4gLS0g
+Cj4+IDEuOC41LjIgKEFwcGxlIEdpdC00OCkKPj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCk5vdXZlYXUgbWFpbGluZyBsaXN0Ck5vdXZlYXVAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9ub3V2ZWF1Cg==
