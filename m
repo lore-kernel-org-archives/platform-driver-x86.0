@@ -1,43 +1,84 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH v5 00/12] Enable GPU switching on pre-retina MacBook Pro
-Date: Tue, 2 Feb 2016 11:19:30 +1000
-Message-ID: <CAPM=9txx1cheG2mpyFAqbY7Rr36eNT81qHPFBaXyL45-Kb+WKw@mail.gmail.com>
-References: <cover.1452525860.git.lukas@wunner.de>
-	<20160201224944.GA12944@wunner.de>
-	<CAPM=9tyO56NFhL9Fd2v4BKcWJsrTPo0TDStm_t94h=j2v0vZNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: [PATCH v2 2/5] Add support for new platform: X51-R3
+Date: Mon,  1 Feb 2016 20:28:48 -0600
+Message-ID: <1454380131-24662-3-git-send-email-mario_limonciello@dell.com>
+References: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35714 "EHLO
-	mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751539AbcBBBTb (ORCPT
+Received: from ausc60ps301.us.dell.com ([143.166.148.206]:24798 "EHLO
+	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754070AbcBBCc6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 1 Feb 2016 20:19:31 -0500
-Received: by mail-lf0-f66.google.com with SMTP id j99so5628117lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Feb 2016 17:19:30 -0800 (PST)
-In-Reply-To: <CAPM=9tyO56NFhL9Fd2v4BKcWJsrTPo0TDStm_t94h=j2v0vZNw@mail.gmail.com>
+	Mon, 1 Feb 2016 21:32:58 -0500
+In-Reply-To: <1454380131-24662-1-git-send-email-mario_limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Paul Hordiienko <pvt.gord@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, William Brown <william@blackhats.net.au>, Seth Forshee <seth.forshee@canonical.com>, Ben Skeggs <bskeggs@redhat.com>, nouveau <nouveau@lists.freedesktop.org>, Alex Deucher <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, Thierry Reding <treding@nvidia.com>, Darren Hart <dvhart@infradead.org>
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 
-On 2 February 2016 at 11:10, Dave Airlie <airlied@gmail.com> wrote:
-> On 2 February 2016 at 08:49, Lukas Wunner <lukas@wunner.de> wrote:
->> Hi,
->>
->> On Mon, Jan 11, 2016 at 08:09:20PM +0100, Lukas Wunner wrote:
->>> Enable GPU switching on the pre-retina MacBook Pro (2008 - 2013), v5.
->>
->> This series hasn't seen any reviews or acks unfortunately.
->> Any takers?
->
-> Has the tree this depends on been merged? I got these patches and applied
-> them to drm-next and found I needed some acpi patches.
->
-> Can you start pushing these to github or somewhere and putting the link
-> here?
+The X51-R3 is in the X51 family.  It includes 3 internal
+lighting zones as well as is the first AW desktop that
+includes support for a graphics amplifier.
 
-just noticed you have a link, so it was just if the prereqs are
-getting merged I'm interested in :-)
+Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
+---
+ drivers/platform/x86/alienware-wmi.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-Dave.
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index a8750ed..8e8ea4f 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -69,11 +69,16 @@ static struct quirk_entry quirk_unknown = {
+ 	.hdmi_mux = 0,
+ };
+ 
+-static struct quirk_entry quirk_x51_family = {
++static struct quirk_entry quirk_x51_r1_r2 = {
+ 	.num_zones = 3,
+ 	.hdmi_mux = 0.
+ };
+ 
++static struct quirk_entry quirk_x51_r3 = {
++	.num_zones = 4,
++	.hdmi_mux = 0,
++};
++
+ static struct quirk_entry quirk_asm100 = {
+ 	.num_zones = 2,
+ 	.hdmi_mux = 1,
+@@ -88,12 +93,12 @@ static int __init dmi_matched(const struct dmi_system_id *dmi)
+ static const struct dmi_system_id alienware_quirks[] __initconst = {
+ 	{
+ 	 .callback = dmi_matched,
+-	 .ident = "Alienware X51 R1",
++	 .ident = "Alienware X51 R3",
+ 	 .matches = {
+ 		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
++		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R3"),
+ 		     },
+-	 .driver_data = &quirk_x51_family,
++	 .driver_data = &quirk_x51_r3,
+ 	 },
+ 	{
+ 	 .callback = dmi_matched,
+@@ -102,7 +107,16 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
+ 		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+ 		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51 R2"),
+ 		     },
+-	 .driver_data = &quirk_x51_family,
++	 .driver_data = &quirk_x51_r1_r2,
++	 },
++	{
++	 .callback = dmi_matched,
++	 .ident = "Alienware X51 R1",
++	 .matches = {
++		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++		     DMI_MATCH(DMI_PRODUCT_NAME, "Alienware X51"),
++		     },
++	 .driver_data = &quirk_x51_r1_r2,
+ 	 },
+ 	{
+ 	 .callback = dmi_matched,
+-- 
+1.9.1
