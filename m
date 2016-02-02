@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH v3 5/6] alienware-wmi: Add support for two new systems: ASM200 and ASM201.
-Date: Tue,  2 Feb 2016 15:38:56 -0600
-Message-ID: <1454449137-16478-6-git-send-email-mario_limonciello@dell.com>
+Subject: [PATCH v3 6/6] alienware-wmi: whitespace improvements
+Date: Tue,  2 Feb 2016 15:38:57 -0600
+Message-ID: <1454449137-16478-7-git-send-email-mario_limonciello@dell.com>
 References: <1454449137-16478-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1454449137-16478-1-git-send-email-mario_limonciello@dell.com>
@@ -10,67 +10,84 @@ To: dvhart@infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Both of these systems support:
-* 2 lighting control zones
-* HDMI mux control
-* deep sleep control (to enable wakup from controller)
-
-The ASM201 also supports the external graphics amplifier.
+These were some items that were pointed out in previous patches that
+weren't caught be previous reviewers, but should be applied to other
+parts of the driver as well.
 
 Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
 ---
- drivers/platform/x86/alienware-wmi.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/platform/x86/alienware-wmi.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 55967dc..0cbcda1 100644
+index 0cbcda1..536fee6 100644
 --- a/drivers/platform/x86/alienware-wmi.c
 +++ b/drivers/platform/x86/alienware-wmi.c
-@@ -97,6 +97,20 @@ static struct quirk_entry quirk_asm100 = {
- 	.deepslp = 0,
- };
+@@ -229,7 +229,7 @@ static u8 global_brightness;
  
-+static struct quirk_entry quirk_asm200 = {
-+	.num_zones = 2,
-+	.hdmi_mux = 1,
-+	.amplifier = 0,
-+	.deepslp = 1,
-+};
-+
-+static struct quirk_entry quirk_asm201 = {
-+	.num_zones = 2,
-+	.hdmi_mux = 1,
-+	.amplifier = 1,
-+	.deepslp = 1,
-+};
-+
- static int __init dmi_matched(const struct dmi_system_id *dmi)
+ /*
+  * Helpers used for zone control
+-*/
++ */
+ static int parse_rgb(const char *buf, struct platform_zone *zone)
  {
- 	quirks = dmi->driver_data;
-@@ -140,6 +154,24 @@ static const struct dmi_system_id alienware_quirks[] __initconst = {
- 		     },
- 	 .driver_data = &quirk_asm100,
- 	 },
-+	{
-+	 .callback = dmi_matched,
-+	 .ident = "Alienware ASM200",
-+	 .matches = {
-+		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-+		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM200"),
-+		     },
-+	 .driver_data = &quirk_asm200,
-+	 },
-+	{
-+	 .callback = dmi_matched,
-+	 .ident = "Alienware ASM201",
-+	 .matches = {
-+		     DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-+		     DMI_MATCH(DMI_PRODUCT_NAME, "ASM201"),
-+		     },
-+	 .driver_data = &quirk_asm201,
-+	 },
- 	{}
- };
+ 	long unsigned int rgb;
+@@ -269,7 +269,7 @@ static struct platform_zone *match_zone(struct device_attribute *attr)
+ 
+ /*
+  * Individual RGB zone control
+-*/
++ */
+ static int alienware_update_led(struct platform_zone *zone)
+ {
+ 	int method_id;
+@@ -342,7 +342,7 @@ static ssize_t zone_set(struct device *dev, struct device_attribute *attr,
+ 
+ /*
+  * LED Brightness (Global)
+-*/
++ */
+ static int wmax_brightness(int brightness)
+ {
+ 	acpi_status status;
+@@ -386,7 +386,7 @@ static struct led_classdev global_led = {
+ 
+ /*
+  * Lighting control state device attribute (Global)
+-*/
++ */
+ static ssize_t show_control_state(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
+ {
+@@ -590,14 +590,12 @@ static ssize_t toggle_hdmi_source(struct device *dev,
+ 	status = alienware_wmax_command(&args, WMAX_METHOD_HDMI_SOURCE, NULL);
+ 
+ 	if (ACPI_FAILURE(status))
+-		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
+-		       status);
++		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", status);
+ 	return count;
+ }
+ 
+ static DEVICE_ATTR(cable, S_IRUGO, show_hdmi_cable, NULL);
+-static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
+-		   toggle_hdmi_source);
++static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source, toggle_hdmi_source);
+ 
+ static struct attribute *hdmi_attrs[] = {
+ 	&dev_attr_cable.attr,
+@@ -622,11 +620,7 @@ static int create_hdmi(struct platform_device *dev)
+ 
+ 	ret = sysfs_create_group(&dev->dev.kobj, &hdmi_attribute_group);
+ 	if (ret)
+-		goto error_create_hdmi;
+-	return 0;
+-
+-error_create_hdmi:
+-	remove_hdmi(dev);
++		remove_hdmi(dev);
+ 	return ret;
+ }
  
 -- 
 1.9.1
