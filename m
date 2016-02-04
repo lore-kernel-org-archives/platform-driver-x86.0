@@ -1,61 +1,76 @@
-From: David Binderman <dcb314-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
-Subject: linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c: 2 * bad shift ?
-Date: Mon, 4 Jan 2016 17:42:47 +0000
-Message-ID: <DUB128-W24662478169DFCC5C275139CF20@phx.gbl>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel]
+ linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c: 2 * bad shift ?
+Date: Thu, 4 Feb 2016 14:28:50 -0200
+Message-ID: <20160204162850.GA29602@khazad-dum.debian.net>
+References: <DUB128-W24662478169DFCC5C275139CF20@phx.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:45761 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S964869AbcBDQ2x (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 4 Feb 2016 11:28:53 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id A64682095C
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Feb 2016 11:28:52 -0500 (EST)
+Content-Disposition: inline
+In-Reply-To: <DUB128-W24662478169DFCC5C275139CF20@phx.gbl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: David Binderman <dcb314@hotmail.com>
+Cc: "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-hello there,
+On Mon, 04 Jan 2016, David Binderman wrote:
+> 1.
+>=20
+> [linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c:2297] -> [linux-4=
+=2E4-rc8/drivers/platform/x86/thinkpad_acpi.c:3694]: (warning) Shifting=
+ 32-bit value by 51 bits is undefined behaviour. See condition at line =
+3694.
+>=20
+> Source code at line 2297 is
+>=20
+> =A0=A0=A0 if (hotkey_user_mask & (1 << scancode))
+>=20
+> and at 3694 is
+>=20
+> =A0=A0=A0 if (scancode> 0 && scancode <=3D TPACPI_HOTKEY_MAP_LEN) {
+>=20
+> Maybe new code
+>=20
+> =A0=A0=A0 if (hotkey_user_mask & (1UL << scancode))
+>=20
+> is better.
 
-1.
+You are correct that this is buggy.  Thank you for the report!
 
-[linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c:2297] -> [linux-4.4-rc8=
-/drivers/platform/x86/thinkpad_acpi.c:3694]: (warning) Shifting 32-bit valu=
-e by 51 bits is undefined behaviour. See condition at line 3694.
+Scancodes 32 (0x20) and above were added to the keymap to support the
+adaptative keyboard in the X1 carbon (which Lenovo has since abandoned)=
+=2E
+They are not present in the legacy firmware event mask (which is what t=
+hat
+shift addresses).
 
-Source code at line 2297 is
+We could just always issue the hotkey event for these scan codes, and i=
+f the
+user doesn't want such an event, he can use the standard interfaces to =
+set
+the keycode in the keymap to KEY_RESERVED.
 
-=A0=A0=A0 if (hotkey_user_mask & (1 << scancode))
+I will just read up a bit on the patches and ML discussions that result=
+ed in
+this change to check if there is a new firmware event mask we should be
+checking, and prepare a fix.
 
-and at 3694 is
+I will need help from someone that has an adaptative keyboard to test t=
+he
+patches, though.
 
-=A0=A0=A0 if (scancode> 0 && scancode <=3D TPACPI_HOTKEY_MAP_LEN) {
-
-Maybe new code
-
-=A0=A0=A0 if (hotkey_user_mask & (1UL << scancode))
-
-is better.
-
-2.
-
-[linux-4.4-rc8/drivers/platform/x86/thinkpad_acpi.c:3696] -> [linux-4.4-rc8=
-/drivers/platform/x86/thinkpad_acpi.c:3694]: (warning) Shifting 32-bit valu=
-e by 51 bits is undefined behaviour. See condition at line 3694.
-
-Duplicate.
-
-Regards
-
-David Binderman
- 		 	   		  =
-
----------------------------------------------------------------------------=
----
-Site24x7 APM Insight: Get Deep Visibility into Application Performance
-APM + Mobile APM + RUM: Monitor 3 App instances at just $35/Month
-Monitor end-to-end web transactions and take corrective actions now
-Troubleshoot faster and improve end-user experience. Signup Now!
-http://pubads.g.doubleclick.net/gampad/clk?id=3D272487151&iu=3D/4140
+--=20
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
