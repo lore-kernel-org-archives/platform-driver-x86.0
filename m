@@ -1,33 +1,47 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba_acpi: Add a module parameter to disable hotkeys
- registration
-Date: Sun, 7 Feb 2016 12:33:02 -0800
-Message-ID: <20160207203302.GJ1779@malice.jf.intel.com>
-References: <1453751538-18993-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH v2 00/16] Common Dell SMBIOS API
+Date: Sun, 7 Feb 2016 12:34:06 -0800
+Message-ID: <20160207203406.GK1779@malice.jf.intel.com>
+References: <1453472848-3118-1-git-send-email-kernel@kempniu.pl>
+ <20160122144851.GN7192@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:44127 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750997AbcBGUeN (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 7 Feb 2016 15:34:13 -0500
 Content-Disposition: inline
-In-Reply-To: <1453751538-18993-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20160122144851.GN7192@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jan 25, 2016 at 12:52:18PM -0700, Azael Avalos wrote:
-> Some laptop models have working hotkeys without the need of the driver
-> to activate them.
-> 
-> This patch adds a module parameter to tell the driver not to register
-> the hotkeys.
-> 
-> The new parameter is useful in DE less installations or where the DE
-> does not handle the hotkeys (see bug 99501).
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+On Fri, Jan 22, 2016 at 03:48:51PM +0100, Pali Roh=C3=A1r wrote:
+> On Friday 22 January 2016 15:27:12 Micha=C5=82 K=C4=99pie=C5=84 wrote=
+:
+> > Note:
+> >=20
+> >     In this series (both v1 and v2) I tried to stick to the overall
+> >     concept used in dell-laptop, but in the v1 thread me and Pali a=
+lso
+> >     briefly discussed his alternative ideas [1][2] as to what this =
+API
+> >     could look like, so feel free to suggest a different approach.
+> >=20
+> > [1] http://www.spinics.net/lists/platform-driver-x86/msg08260.html
+> > [2] http://www.spinics.net/lists/platform-driver-x86/msg08268.html
+>=20
+> I would like to hear opinion about dell-smbios API also from other
+> people. Darren, can you look and comment it?
 
-Merged to testing. Thanks.
+Sorry for the long delay folks. I'm just about caught up. I'll get to t=
+his by
+tomorrow at the latest.
 
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
