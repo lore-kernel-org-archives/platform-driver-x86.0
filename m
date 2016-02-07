@@ -1,129 +1,45 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] Remove ambiguous logging for "Unsupported brightness
- interface"
-Date: Sun, 7 Feb 2016 12:13:24 -0800
-Message-ID: <20160207201324.GH1779@malice.jf.intel.com>
-References: <CANpvso5_jzOgRv25isy0x6HJcTgKP4dabSH-_a5fM-uihdAUYw@mail.gmail.com>
- <1453937211.10099.31.camel@perches.com>
- <20160130122045.GA14919@khazad-dum.debian.net>
- <CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] toshiba_acpi: Add support for Cooling Method
+Date: Sun, 7 Feb 2016 12:24:36 -0800
+Message-ID: <20160207202436.GI1779@malice.jf.intel.com>
+References: <1453746551-17496-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43271 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:43679 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754080AbcBGUN2 (ORCPT
+	with ESMTP id S1750997AbcBGUYg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 7 Feb 2016 15:13:28 -0500
+	Sun, 7 Feb 2016 15:24:36 -0500
 Content-Disposition: inline
-In-Reply-To: <CANpvso5wg_Zz7VSRDeKamx0XCCcjr3y+i2UKNFLe+BZEofEG_A@mail.gmail.com>
+In-Reply-To: <1453746551-17496-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Eric Curtin <ericcurtin17@gmail.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Joe Perches <joe@perches.com>, platform-driver-x86@vger.kernel.org, Kernel development list <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Jan 30, 2016 at 04:55:59PM +0000, Eric Curtin wrote:
-> On 30 January 2016 at 12:20, Henrique de Moraes Holschuh <hmh@hmh.eng.br> wrote:
-> > On Wed, 27 Jan 2016, Joe Perches wrote:
-> >> On Wed, 2016-01-27 at 22:14 +0000, Eric Curtin wrote:
-> >> > Message gets logged on machines that are well supported.
-> >> >
-> >> > Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
-> >> > ---
-> >> >  drivers/platform/x86/thinkpad_acpi.c | 1 -
-> >> >  1 file changed, 1 deletion(-)
-> >> >
-> >> > diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> >> > b/drivers/platform/x86/thinkpad_acpi.c
-> >> > index a268a7a..4eb41aa 100644
-> >> > --- a/drivers/platform/x86/thinkpad_acpi.c
-> >> > +++ b/drivers/platform/x86/thinkpad_acpi.c
-> >> > @@ -6661,7 +6661,6 @@ static void __init
-> >> > tpacpi_detect_brightness_capabilities(void)
-> >> >                 pr_info("detected a 8-level brightness capable
-> >> > ThinkPad\n");
-> >> >                 break;
-> >> >         default:
-> >> > -               pr_info("Unsupported brightness interface\n");
-> >> >                 tp_features.bright_unkfw = 1;
-> >> >                 bright_maxlvl = b - 1;
-> >> >         }
-> >>
-> >> Perhaps this should be something like this instead:
-> >> ---
-> >>  drivers/platform/x86/thinkpad_acpi.c | 4 +---
-> >>  1 file changed, 1 insertion(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> >> index a268a7a..bd12c71 100644
-> >> --- a/drivers/platform/x86/thinkpad_acpi.c
-> >> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> >> @@ -6653,18 +6653,16 @@ static void __init tpacpi_detect_brightness_capabilities(void)
-> >>       switch (b) {
-> >>       case 16:
-> >>               bright_maxlvl = 15;
-> >> -             pr_info("detected a 16-level brightness capable ThinkPad\n");
-> >>               break;
-> >>       case 8:
-> >>       case 0:
-> >>               bright_maxlvl = 7;
-> >> -             pr_info("detected a 8-level brightness capable ThinkPad\n");
-> >>               break;
-> >>       default:
-> >> -             pr_info("Unsupported brightness interface\n");
-> >>               tp_features.bright_unkfw = 1;
-> >>               bright_maxlvl = b - 1;
-> >>       }
-> >> +     pr_info("detected %u brightness levels\n", bright_maxlvl + 1);
-> >>  }
-> >
-> > This can be made pr_debug, since we're touching it...
-> >
-> > --
-> >   "One disk to rule them all, One disk to find them. One disk to bring
-> >   them all and in the darkness grind them. In the Land of Redmond
-> >   where the shadows lie." -- The Silicon Valley Tarot
-> >   Henrique Holschuh
+On Mon, Jan 25, 2016 at 11:29:09AM -0700, Azael Avalos wrote:
+> These patches add support for the Cooling Method feature found in most
+> Toshiba laptops, allowing userspace to control the desired cooling method,
+> which are the following:
+> 0 - Maximum Performance
+> 1 - Peformance
+> 2 - Battery Optimized
 > 
-> "Unsupported brightness interface" message gets logged on
->  machines that are well supported.
+> The Cooling Method feature basically controls the speed of the system fan,
+> setting the speed (and quietness) according to the selected method.
 > 
-> Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> The default value at every boot is zero (Maximum Performance), on Windows,
+> Toshiba provides hooks to the power management system, allowing
+> the user to change it according to their needs and/or the AC adapter state.
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index a268a7a..e305ab5 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6653,18 +6653,16 @@ static void __init
-> tpacpi_detect_brightness_capabilities(void)
->         switch (b) {
->         case 16:
->                 bright_maxlvl = 15;
-> -               pr_info("detected a 16-level brightness capable ThinkPad\n");
->                 break;
->         case 8:
->         case 0:
->                 bright_maxlvl = 7;
-> -               pr_info("detected a 8-level brightness capable ThinkPad\n");
->                 break;
->         default:
-> -               pr_info("Unsupported brightness interface\n");
->                 tp_features.bright_unkfw = 1;
->                 bright_maxlvl = b - 1;
->         }
-> +       pr_debug("detected %u brightness levels\n", bright_maxlvl + 1);
+> 
+> Azael Avalos (3):
+>   toshiba_acpi: Add support for cooling method feature
+>   toshiba_acpi: Add sysfs entries for th Cooling Method feature
+>   Documentation/ABI: Update sysfs-driver-toshiba_acpi file
 
-This patch is malformed, has whitespace issues, and doesn't apply. Please apply
-all patches before sending them to the list.
-
-Given it's trivial, I made the change manually and have queued this up to the
-testing branch.
-
-Thanks,
+Queued to testing, thank you Azael.
 
 -- 
 Darren Hart
