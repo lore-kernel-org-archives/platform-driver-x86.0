@@ -1,68 +1,61 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 5/5] asus-wmi: Add quirk_no_rfkill for the Asus Z550MA
-Date: Mon, 8 Feb 2016 13:03:38 -0800
-Message-ID: <20160208210338.GR1779@malice.jf.intel.com>
-References: <1454951123-27470-1-git-send-email-jprvita@endlessm.com>
- <1454951123-27470-6-git-send-email-jprvita@endlessm.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2 00/16] Common Dell SMBIOS API
+Date: Mon, 8 Feb 2016 22:04:32 +0100
+Message-ID: <201602082204.32958@pali>
+References: <1453472848-3118-1-git-send-email-kernel@kempniu.pl> <20160208192920.GA10110@kroah.com> <20160208204646.GQ1779@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart5623993.q72nXXMmEq";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42782 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754995AbcBHVDj (ORCPT
+Received: from mail-wm0-f42.google.com ([74.125.82.42]:37591 "EHLO
+	mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754413AbcBHVEf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Feb 2016 16:03:39 -0500
-Content-Disposition: inline
-In-Reply-To: <1454951123-27470-6-git-send-email-jprvita@endlessm.com>
+	Mon, 8 Feb 2016 16:04:35 -0500
+In-Reply-To: <20160208204646.GQ1779@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Feb 08, 2016 at 12:05:23PM -0500, Jo=E3o Paulo Rechi Vita wrote=
-:
+--nextPart5623993.q72nXXMmEq
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-I'm waiting for the RFKILL reviews to complete, but quickly, patches 4 =
-and 5
-require a commit message. There is always something you can add here, f=
-or
-example, do these not have a switch or is it handled by a different dri=
-ver? Etc.
+On Monday 08 February 2016 21:46:46 Darren Hart wrote:
+> Pali, are you happy enough with this to add your reviewed-by?
 
-> Signed-off-by: Jo=E3o Paulo Rechi Vita <jprvita@endlessm.com>
-> Reported-by: Ming Shuo Chiu <chiu@endlessm.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x8=
-6/asus-nb-wmi.c
-> index 4ded187..5adb842 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -328,6 +328,15 @@ static const struct dmi_system_id asus_quirks[] =
-=3D {
->  		},
->  		.driver_data =3D &quirk_no_rfkill,
->  	},
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "ASUSTeK COMPUTER INC. Z550MA",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Z550MA"),
-> +		},
-> +		.driver_data =3D &quirk_no_rfkill,
-> +	},
->  	{},
->  };
-> =20
-> --=20
-> 2.5.0
->=20
->=20
+There was dicussion about dell-smbios API which you probably missed in
+tons of other emails. It has subject:
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+"[PATCH 01/14] dell-laptop: extract SMBIOS-related code to a separate modul=
+e"
+
+And you can find it in archive at:
+http://www.spinics.net/lists/linux-leds/msg05379.html
+
+I wanted to hear your opinion about this API and I'm not 100% fine with
+it but on other side it is not easy to design better... Maybe you could
+have better idea.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart5623993.q72nXXMmEq
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAla5AuAACgkQi/DJPQPkQ1LzHACdFEHdbVl4mz4h4ZnDbCBykjHr
+OYYAoJOylyg73vcTTlDAT6v2yHcG06j0
+=pZGG
+-----END PGP SIGNATURE-----
+
+--nextPart5623993.q72nXXMmEq--
