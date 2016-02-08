@@ -1,47 +1,53 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 00/16] Common Dell SMBIOS API
-Date: Sun, 7 Feb 2016 12:34:06 -0800
-Message-ID: <20160207203406.GK1779@malice.jf.intel.com>
-References: <1453472848-3118-1-git-send-email-kernel@kempniu.pl>
- <20160122144851.GN7192@pali>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [PATCH 0/9] RFKill airplane-mode indicator
+Date: Mon,  8 Feb 2016 10:41:27 -0500
+Message-ID: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:44127 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750997AbcBGUeN (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 7 Feb 2016 15:34:13 -0500
-Content-Disposition: inline
-In-Reply-To: <20160122144851.GN7192@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 22, 2016 at 03:48:51PM +0100, Pali Roh=C3=A1r wrote:
-> On Friday 22 January 2016 15:27:12 Micha=C5=82 K=C4=99pie=C5=84 wrote=
-:
-> > Note:
-> >=20
-> >     In this series (both v1 and v2) I tried to stick to the overall
-> >     concept used in dell-laptop, but in the v1 thread me and Pali a=
-lso
-> >     briefly discussed his alternative ideas [1][2] as to what this =
-API
-> >     could look like, so feel free to suggest a different approach.
-> >=20
-> > [1] http://www.spinics.net/lists/platform-driver-x86/msg08260.html
-> > [2] http://www.spinics.net/lists/platform-driver-x86/msg08268.html
->=20
-> I would like to hear opinion about dell-smbios API also from other
-> people. Darren, can you look and comment it?
+This series implements an airplane-mode indicator LED trigger, which ca=
+n be
+used by platform drivers. The default policy have have airplane-mode se=
+t when
+all the radios known by RFKill are OFF, and unset otherwise. This polic=
+y can be
+overwritten by userspace using the new operations _AIRPLANE_MODE_ACQUIR=
+E,
+_AIRPLANE_MODE_RELEASE, and _AIRPLANE_MODE_CHANGE. When the airplane-mo=
+de
+indicator state changes, userspace gets notifications through the RFKil=
+l
+control misc device (/dev/rfkill).
 
-Sorry for the long delay folks. I'm just about caught up. I'll get to t=
-his by
-tomorrow at the latest.
+The series also contains a few general fixes and improvements to the su=
+bsystem.
+
+Jo=C3=A3o Paulo Rechi Vita (9):
+  rfkill: Improve documentation language
+  rfkill: Remove extra blank line
+  rfkill: Point to the correct deprecated doc location
+  rfkill: Move "state" sysfs file back to stable
+  rfkill: Factor rfkill_global_states[].cur assignments
+  rfkill: Add documentation about LED triggers
+  rfkill: Create "rfkill-airplane_mode" LED trigger
+  rfkill: Userspace control for airplane mode
+  rfkill: Notify userspace of airplane-mode state changes
+
+ Documentation/ABI/obsolete/sysfs-class-rfkill |  20 ----
+ Documentation/ABI/stable/sysfs-class-rfkill   |  27 ++++-
+ Documentation/rfkill.txt                      |  17 +++
+ include/uapi/linux/rfkill.h                   |   3 +
+ net/rfkill/core.c                             | 144 ++++++++++++++++++=
++++-----
+ 5 files changed, 164 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/ABI/obsolete/sysfs-class-rfkill
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+2.5.0
+
