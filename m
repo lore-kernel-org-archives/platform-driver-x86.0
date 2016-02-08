@@ -1,90 +1,65 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a
- separate module
-Date: Mon, 8 Feb 2016 13:42:10 -0800
-Message-ID: <20160208214210.GT1779@malice.jf.intel.com>
-References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
- <1452607380-20861-2-git-send-email-kernel@kempniu.pl>
- <20160116151922.GA5060@pali>
- <20160120092107.GA3247@eudyptula.hq.kempniu.pl>
- <20160121083559.GM7192@pali>
- <20160121130603.GA4360@eudyptula.hq.kempniu.pl>
- <20160121131450.GE7192@pali>
- <20160121133921.GA4626@eudyptula.hq.kempniu.pl>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/9] rfkill: Improve documentation language
+Date: Tue, 9 Feb 2016 09:37:32 +1100
+Message-ID: <CAGRGNgX7ANq_dTSkRCqnU2H5DQsLCf5Ni7M-n7Z_RSieOf=mOw@mail.gmail.com>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com> <1454946096-9752-2-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:60323 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755450AbcBHVmQ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Feb 2016 16:42:16 -0500
-Content-Disposition: inline
-In-Reply-To: <20160121133921.GA4626@eudyptula.hq.kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454946096-9752-2-git-send-email-jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 21, 2016 at 02:39:21PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
-wrote:
-> > Another idea:
-> >=20
-> > What about passing struct calling_interface_buffer from caller allo=
-cated
-> > memory (either from stack or kernel alloc) to dell-smbios which wil=
-l
-> > copy it into own buffer under 4GB and then pass it to dcdbas?
-> >=20
-> > This will avoid to use that get/release function and there will be =
-only
-> > one send_request.
->=20
-> Well, yes, these two functions could then be ripped out, but the call=
-ers
-> would have to do the error checking on their own.  Of course that's n=
-ot
-> a bad thing per se, but it changes the currently used concept.
->=20
-> > But I will let decision for API to other people as I do not know wh=
-at
-> > the best API to use here...
->=20
-> In order to avoid delaying this any further, I'll post a v2 soon and
-> hopefully it'll be good enough for your Acked-by.  If it turns out mo=
-re
-> people have misgivings about it, I'll adjust the code.
->=20
+Hi Jo=C3=A3o,
 
-It seems to me the question is primarily over whether or not the interf=
-ace
-protects a shared resource (a common buffer) or if that buffer should b=
-e
-independent for every caller.
+On Tue, Feb 9, 2016 at 2:41 AM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gma=
+il.com> wrote:
+> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-I favor minimal and incremental change and avoiding complexity where it=
- is not
-needed. I don't believe there is anything performance critical in any o=
-f these
-paths, e.g. nothing requires a better response time than about 100ms an=
-d nothing
-is likely to occur at a frequency above 10Hz or so.
+Looks right to me.
 
-Assuming the above is an accurate view, I don't see any reason to go be=
-yond the
-minimal change to the existing SMBIOS code to make it a usable API. If =
-the need
-arises, we can always make such optimizations and performance improveme=
-nts
-later. This is an internal API and we can change it whenever we need to=
- so long
-as we update the call sites.
+Reviewed-by: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Does anyone have a compelling reason to look for changes to the v2 subm=
-itted by
-Micha=C5=82?
+> ---
+>  net/rfkill/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+> index a805831..ffbc375 100644
+> --- a/net/rfkill/core.c
+> +++ b/net/rfkill/core.c
+> @@ -282,8 +282,8 @@ static void rfkill_set_block(struct rfkill *rfkil=
+l, bool blocked)
+>         spin_lock_irqsave(&rfkill->lock, flags);
+>         if (err) {
+>                 /*
+> -                * Failed -- reset status to _prev, this may be diffe=
+rent
+> -                * from what set set _PREV to earlier in this functio=
+n
+> +                * Failed -- reset status to _PREV, which may be diff=
+erent
+> +                * from what we have set _PREV to earlier in this fun=
+ction
+>                  * if rfkill_set_sw_state was invoked.
+>                  */
+>                 if (rfkill->state & RFKILL_BLOCK_SW_PREV)
+> --
+> 2.5.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-wirel=
+ess" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
