@@ -1,61 +1,78 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
-Date: Mon, 8 Feb 2016 12:22:32 -0500
-Message-ID: <CA+A7VXVrbixa+DqiOfzuBkCTVy+f0GOTqiMqXs1sekXu1Q7ekQ@mail.gmail.com>
-References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
- <1454946096-9752-9-git-send-email-jprvita@endlessm.com> <1454947887.5325.8.camel@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 00/12] Enable GPU switching on pre-retina MacBook Pro
+Date: Mon, 8 Feb 2016 10:10:00 -0800
+Message-ID: <20160208181000.GL1779@malice.jf.intel.com>
+References: <cover.1452525860.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f195.google.com ([209.85.161.195]:35989 "EHLO
-	mail-yw0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751482AbcBHRiW convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Feb 2016 12:38:22 -0500
-In-Reply-To: <1454947887.5325.8.camel@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Williams <dcbw@redhat.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>, Ben Skeggs <bskeggs@redhat.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, Thierry Reding <treding@nvidia.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 8 February 2016 at 11:11, Dan Williams <dcbw@redhat.com> wrote:
-> On Mon, 2016-02-08 at 10:41 -0500, Jo=C3=A3o Paulo Rechi Vita wrote:
->> Provide an interface for the airplane-mode indicator be controlled
->> from
->> userspace. User has to first acquire the control through
->> RFKILL_OP_AIRPLANE_MODE_ACQUIRE and keep the fd open for the whole
->> time
->> it wants to be in control of the indicator. Closing the fd or using
->> RFKILL_OP_AIRPLANE_MODE_RELEASE restores the default policy.
->>
->> To change state of the indicator, the RFKILL_OP_AIRPLANE_MODE_CHANGE
->> operation is used, passing the value on "struct rfkill_event.soft".
->> If
->> the caller has not acquired the airplane-mode control beforehand, th=
-e
->> operation fails.
->
-> I'd like to clarify a bit, so tell me if I'm correct or not.  Using
-> RFKILL_OP_AIRPLANE_MODE_CHANGE does not actually change any device
-> state. It's just an indicator with no relationship to any of the
-> registered rfkill switches, right?
->
-
-Yes, that's correct, and it is the intended behavior.
-
-> I wonder if setting RFKILL_OP_AIRPLANE_MODE_CHANGE(true) shouldn't al=
-so
-> softblock all switches, otherwise you can set airplane mode all day
-> long with RFKILL_OP_AIRPLANE_MODE_CHANGE and it doesn't actually enab=
-le
-> airplane mode at all?
->
-
-The idea behind it is to just provide the mechanism for userspace to
-decide what exactly being in airplane mode means, so it would
-set/unset the indicator in the right moment.
-
---
-Jo=C3=A3o Paulo Rechi Vita
-http://about.me/jprvita
+T24gTW9uLCBKYW4gMTEsIDIwMTYgYXQgMDg6MDk6MjBQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
+b3RlOgo+IEVuYWJsZSBHUFUgc3dpdGNoaW5nIG9uIHRoZSBwcmUtcmV0aW5hIE1hY0Jvb2sgUHJv
+ICgyMDA4IC0gMjAxMyksIHY1Lgo+IAo+IFRoZSBtYWluIG9ic3RhY2xlIG9uIHRoZXNlIG1hY2hp
+bmVzIGlzIHRoYXQgdGhlIHBhbmVsIG1vZGUgaW4gVkJJT1MKPiBpcyBib2d1cy4gRm9ydHVuYXRl
+bHkgZ211eCBjYW4gc3dpdGNoIEREQyBpbmRlcGVuZGVudGx5IGZyb20gdGhlCj4gZGlzcGxheSwg
+dGhlcmVieSBhbGxvd2luZyB0aGUgaW5hY3RpdmUgR1BVIHRvIHByb2JlIHRoZSBwYW5lbCdzIEVE
+SUQuCj4gCj4gSW4gc2hvcnQsIHZnYV9zd2l0Y2hlcm9vIGFuZCBhcHBsZS1nbXV4IGFyZSBhbWVu
+ZGVkIHdpdGggaG9va3MgdG8KPiBzd2l0Y2ggRERDLCBEUk0gY29yZSBpcyBhbWVuZGVkIHdpdGgg
+YSBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIGhlbHBlciwKPiBhbmQgcmVsZXZhbnQgZHJpdmVy
+cyBhcmUgYW1lbmRlZCB0byBjYWxsIHRoYXQgZm9yIExWRFMgb3V0cHV0cy4KPiAKPiBUaGUgcmV0
+aW5hIE1hY0Jvb2sgUHJvICgyMDEyIC0gcHJlc2VudCkgdXNlcyBlRFAgYW5kIGNhbm5vdCBzd2l0
+Y2gKPiBBVVggaW5kZXBlbmRlbnRseSBmcm9tIHRoZSBtYWluIGxpbmsuIFRoZSBtYWluIG9ic3Rh
+Y2xlIHRoZXJlIGlzIGxpbmsKPiB0cmFpbmluZywgSSdtIGN1cnJlbnRseSB3b3JraW5nIG9uIHRo
+aXMsIGl0IHdpbGwgYmUgYWRkcmVzc2VkIGluIGEKPiBmdXR1cmUgcGF0Y2ggc2V0Lgo+IAo+IFRo
+aXMgc2VyaWVzIGlzIGFsc28gcmV2aWV3YWJsZSBvbiBHaXRIdWI6Cj4gaHR0cHM6Ly9naXRodWIu
+Y29tL2wxay9saW51eC9jb21taXRzL21icF9zd2l0Y2hlcm9vX3Y1Cj4gCj4gQ2hhbmdlczoKPiAK
+PiAqIE5ldyBwYXRjaCBbMDEvMTJdOiB2Z2Ffc3dpdGNoZXJvbyBoYW5kbGVyIGZsYWdzCj4gICBB
+bGV4IERldWNoZXIgYXNrZWQgaWYgdGhpcyBzZXJpZXMgbWlnaHQgcmVncmVzcyBvbiBub24tQXBw
+bGUgbGFwdG9wcy4KPiAgIFRvIGFkZHJlc3MgdGhpcyBjb25jZXJuLCBJIGxldCBoYW5kbGVycyBk
+ZWNsYXJlIHRoZWlyIGNhcGFiaWxpdGllcyBpbgo+ICAgYSBiaXRtYXNrLiBEUk0gZHJpdmVycyBj
+YWxsIGRybV9nZXRfZWRpZF9zd2l0Y2hlcm9vKCkgb25seSBpZiB0aGUKPiAgIGhhbmRsZXIgaGFz
+IHNldCB0aGUgVkdBX1NXSVRDSEVST09fQ0FOX1NXSVRDSF9EREMgZmxhZy4KPiAgIEN1cnJlbnRs
+eSBqdXN0IG9uZSBvdGhlciBmbGFnIGlzIGRlZmluZWQgd2hpY2ggaXMgdXNlZCBvbiByZXRpbmFz
+Lgo+IAo+ICogQ2hhbmdlZCBwYXRjaCBbMDIvMTJdOiB2Z2Ffc3dpdGNoZXJvbyBEREMgbG9ja2lu
+Zwo+ICAgUmVuYW1lIGRkY19sb2NrIHRvIG11eF9od19sb2NrLCBzdWdnZXN0ZWQgYnkgRGFuaWVs
+IFZldHRlci4KPiAKPiAqIE5ldyBwYXRjaCBbMDMvMTJdOiB0cmFjayBzd2l0Y2ggc3RhdGUgb2Yg
+YXBwbGUtZ211eAo+ICAgRml4ZXMgYSBidWcgaW4gcHJldmlvdXMgdmVyc2lvbnMgb2YgdGhpcyBz
+ZXJpZXMgd2hpY2ggb2NjdXJyZWQgaWYKPiAgIHRoZSBzeXN0ZW0gd2FzIHN1c3BlbmRlZCB3aGls
+ZSBEREMgd2FzIHRlbXBvcmFyaWx5IHN3aXRjaGVkOgo+ICAgT24gcmVzdW1lIEREQyB3YXMgc3dp
+dGNoZWQgdG8gdGhlIHdyb25nIEdQVS4KPiAKPiAqIE5ldyBwYXRjaGVzIFswOS8xMiAtIDEyLzEy
+XTogZGVmZXJyZWQgcHJvYmluZwo+ICAgUHJldmlvdXNseSBJIHVzZWQgY29ubmVjdG9yIHJlcHJv
+YmluZyBpZiB0aGUgaW5hY3RpdmUgR1BVJ3MgZHJpdmVyCj4gICBsb2FkZWQgYmVmb3JlIGdtdXgu
+IEkndmUgZGl0Y2hlZCB0aGF0IGluIGZhdm9yIG9mIGRlZmVycmVkIGRyaXZlcgo+ICAgcHJvYmlu
+Zywgd2hpY2ggaXMgbXVjaCBzaW1wbGVyLiBUaGFua3MgdG8gRGFuaWVsIFZldHRlciBmb3IgdGhl
+Cj4gICBzdWdnZXN0aW9uLgo+IAo+IENhdXRpb246IFBhdGNoIFswOS8xMl0gZGVwZW5kcyBvbiBh
+IG5ldyBhY3BpX2Rldl9wcmVzZW50KCkgQVBJIHdoaWNoCj4gd2lsbCBsYW5kIGluIDQuNSB2aWEg
+UmFmYWVsIEouIFd5c29ja2kncyB0cmVlLgo+IAo+IEkgd291bGQgcGFydGljdWxhcmx5IGJlIGlu
+dGVyZXN0ZWQgaW4gZmVlZGJhY2sgb24gdGhlIGhhbmRsZXIgZmxhZ3MKPiBwYXRjaCBbMDEvMTJd
+LiBJJ20gbm90IDEwMCUgaGFwcHkgd2l0aCB0aGUgbnVtYmVyIG9mIGNoYXJhY3RlcnMKPiByZXF1
+aXJlZCB0byBxdWVyeSB0aGUgZmxhZ3MgKGUuZy46IGlmICh2Z2Ffc3dpdGNoZXJvb19oYW5kbGVy
+X2ZsYWdzKCkgJgo+IFZHQV9TV0lUQ0hFUk9PX0NBTl9TV0lUQ0hfRERDKSksIGJ1dCBmYWlsZWQg
+dG8gY29tZSB1cCB3aXRoIHNvbWV0aGluZwo+IHNob3J0ZXIuIFRoaWVycnkgUmVkaW5nIHVzZWQg
+YSBzdHJ1Y3Qgb2YgYm9vbHMgaW5zdGVhZCBvZiBhIGJpdG1hc2sKPiBmb3IgaGlzIHJlY2VudCBk
+cm1fZHBfbGlua19jYXBzIHBhdGNoZXMuIE1heWJlIHVzZSB0aGF0IGluc3RlYWQ/Cj4gaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxNS1EZWNlbWJlci8w
+OTcwMjUuaHRtbAoKTm8gb2JqZWN0aW9uIGZyb20gdGhlIHBsYXRmb3JtLWRyaXZlci14ODYgc2lk
+ZS4gSSBjYW4gcHVsbCB0aGVzZSBzZXBhcmF0ZWx5IG9uY2UKdGhlIGNvcmUgaXMgaW4sIG9yIHRo
+ZXNlIGNhbiBiZSBpbmNsdWRlZCB3aXRoIHRoYXQgY29yZSAocHJlZmVycmVkKSB3aXRoIG15ClJl
+dmlld2VkLWJ5IGZvciAxLCAzLCA0LCBhbmQgOS4KClJldmlld2VkLWJ5OiBEYXJyZW4gSGFydCA8
+ZHZoYXJ0QGxpbnV4LmludGVsLmNvbT4KCi0tIApEYXJyZW4gSGFydApJbnRlbCBPcGVuIFNvdXJj
+ZSBUZWNobm9sb2d5IENlbnRlcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
