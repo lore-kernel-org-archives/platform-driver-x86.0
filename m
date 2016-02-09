@@ -1,127 +1,55 @@
-From: Julian Calaby <julian.calaby@gmail.com>
-Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
-Date: Tue, 9 Feb 2016 09:53:06 +1100
-Message-ID: <CAGRGNgVuwrh5unUoQ0P+ow55ChOQ+qsRRjfD1bb7DC6PcrCO2g@mail.gmail.com>
-References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com> <1454946096-9752-9-git-send-email-jprvita@endlessm.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a
+ separate module
+Date: Tue, 9 Feb 2016 09:33:03 +0100
+Message-ID: <20160209083303.GN30075@pali>
+References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
+ <1452607380-20861-2-git-send-email-kernel@kempniu.pl>
+ <20160116151922.GA5060@pali>
+ <20160120092107.GA3247@eudyptula.hq.kempniu.pl>
+ <20160121083559.GM7192@pali>
+ <20160121130603.GA4360@eudyptula.hq.kempniu.pl>
+ <20160121131450.GE7192@pali>
+ <20160121133921.GA4626@eudyptula.hq.kempniu.pl>
+ <20160208214210.GT1779@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1454946096-9752-9-git-send-email-jprvita@endlessm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f53.google.com ([74.125.82.53]:35229 "EHLO
+	mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751734AbcBIIdI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 9 Feb 2016 03:33:08 -0500
+Content-Disposition: inline
+In-Reply-To: <20160208214210.GT1779@malice.jf.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Jo=C3=A3o,
+On Monday 08 February 2016 13:42:10 Darren Hart wrote:
+> Assuming the above is an accurate view, I don't see any reason to go =
+beyond the
+> minimal change to the existing SMBIOS code to make it a usable API. I=
+f the need
+> arises, we can always make such optimizations and performance improve=
+ments
+> later. This is an internal API and we can change it whenever we need =
+to so long
+> as we update the call sites.
 
-On Tue, Feb 9, 2016 at 2:41 AM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gma=
-il.com> wrote:
-> Provide an interface for the airplane-mode indicator be controlled fr=
-om
-> userspace. User has to first acquire the control through
-> RFKILL_OP_AIRPLANE_MODE_ACQUIRE and keep the fd open for the whole ti=
-me
-> it wants to be in control of the indicator. Closing the fd or using
-> RFKILL_OP_AIRPLANE_MODE_RELEASE restores the default policy.
->
-> To change state of the indicator, the RFKILL_OP_AIRPLANE_MODE_CHANGE
-> operation is used, passing the value on "struct rfkill_event.soft". I=
-f
-> the caller has not acquired the airplane-mode control beforehand, the
-> operation fails.
->
-> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
-> ---
->  Documentation/rfkill.txt    | 10 ++++++++++
->  include/uapi/linux/rfkill.h |  3 +++
->  net/rfkill/core.c           | 47 +++++++++++++++++++++++++++++++++++=
-+++++++---
->  3 files changed, 57 insertions(+), 3 deletions(-)
->
-> diff --git a/net/rfkill/core.c b/net/rfkill/core.c
-> index fb11547..8067701 100644
-> --- a/net/rfkill/core.c
-> +++ b/net/rfkill/core.c
-> @@ -1207,6 +1210,34 @@ static ssize_t rfkill_fop_write(struct file *f=
-ile, const char __user *buf,
->
->         mutex_lock(&rfkill_global_mutex);
->
-> +       if (ev.op =3D=3D RFKILL_OP_AIRPLANE_MODE_ACQUIRE) {
-> +               if (rfkill_apm_owned && !data->is_apm_owner) {
-> +                       count =3D -EACCES;
-> +               } else {
-> +                       rfkill_apm_owned =3D true;
-> +                       data->is_apm_owner =3D true;
-> +               }
-> +       }
-> +
-> +       if (ev.op =3D=3D RFKILL_OP_AIRPLANE_MODE_RELEASE) {
-> +               if (rfkill_apm_owned && !data->is_apm_owner) {
-
-Are you sure this is correct?
-
-In the case that airplane mode isn't owned, the
-rfkill_apm_led_trigger_event() call will be a noop, so we should
-arguably not be calling it.
-
-Also, should we just fail silently if we're not the owner? I.e. what
-does userspace learn from this op failing and is that useful?
-
-> +                       count =3D -EACCES;
-> +               } else {
-> +                       bool state =3D rfkill_global_states[RFKILL_TY=
-PE_ALL].cur;
-> +
-> +                       rfkill_apm_owned =3D false;
-> +                       data->is_apm_owner =3D false;
-> +                       rfkill_apm_led_trigger_event(state);
-> +               }
-> +       }
-> +
-> +       if (ev.op =3D=3D RFKILL_OP_AIRPLANE_MODE_CHANGE) {
-> +               if (rfkill_apm_owned && data->is_apm_owner)
-> +                       rfkill_apm_led_trigger_event(ev.soft);
-> +               else
-> +                       count =3D -EACCES;
-> +       }
-> +
->         if (ev.op =3D=3D RFKILL_OP_CHANGE_ALL)
->                 rfkill_update_global_state(ev.type, ev.soft);
->
-> @@ -1230,7 +1261,17 @@ static int rfkill_fop_release(struct inode *in=
-ode, struct file *file)
->         struct rfkill_int_event *ev, *tmp;
->
->         mutex_lock(&rfkill_global_mutex);
-> +
-> +       if (data->is_apm_owner) {
-> +               bool state =3D rfkill_global_states[RFKILL_TYPE_ALL].=
-cur;
-> +
-> +               rfkill_apm_owned =3D false;
-> +               data->is_apm_owner =3D false;
-> +               rfkill_apm_led_trigger_event(state);
-
-Also, this code is duplicated from the _RELEASE op above. Would it
-make sense to factor it out into a separate function?
-
-> +       }
-> +
->         list_del(&data->list);
-> +
-
-(extra line)
-
->         mutex_unlock(&rfkill_global_mutex);
->
->         mutex_destroy(&data->mtx);
-
-Thanks,
+Problem is that now smbios code from dell-laptop.c is moved into
+dell-smbios.c and dell-smbios.h and LED subsystem starts using
+dell-smbios.h. In this case I'm thinking that we have something like AP=
+I
+usable by other modules/subsystem. And I'm thinking if it is not better
+to create "correct" API now instead rewriting code in LED and platform
+subsystem again later... As this API needs to provide just 1 function,
+send command to Dell SMBIOS I think that API is still minimal. Currentl=
+y
+we have another two functions alloc/free buffer (needed for send).
 
 --=20
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
