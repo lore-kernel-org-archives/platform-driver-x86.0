@@ -1,55 +1,84 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a
- separate module
-Date: Tue, 9 Feb 2016 09:33:03 +0100
-Message-ID: <20160209083303.GN30075@pali>
-References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
- <1452607380-20861-2-git-send-email-kernel@kempniu.pl>
- <20160116151922.GA5060@pali>
- <20160120092107.GA3247@eudyptula.hq.kempniu.pl>
- <20160121083559.GM7192@pali>
- <20160121130603.GA4360@eudyptula.hq.kempniu.pl>
- <20160121131450.GE7192@pali>
- <20160121133921.GA4626@eudyptula.hq.kempniu.pl>
- <20160208214210.GT1779@malice.jf.intel.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH v5 00/12] Enable GPU switching on pre-retina
+	MacBook Pro
+Date: Tue, 9 Feb 2016 10:01:52 +0100
+Message-ID: <20160209090152.GZ11240@phenom.ffwll.local>
+References: <cover.1452525860.git.lukas@wunner.de>
+ <20160208181000.GL1779@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f53.google.com ([74.125.82.53]:35229 "EHLO
-	mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751734AbcBIIdI (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Feb 2016 03:33:08 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160208214210.GT1779@malice.jf.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160208181000.GL1779-Z5kFBHtJu+EzCVHREhWfF0EOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/nouveau>
+List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, intel-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 08 February 2016 13:42:10 Darren Hart wrote:
-> Assuming the above is an accurate view, I don't see any reason to go =
-beyond the
-> minimal change to the existing SMBIOS code to make it a usable API. I=
-f the need
-> arises, we can always make such optimizations and performance improve=
-ments
-> later. This is an internal API and we can change it whenever we need =
-to so long
-> as we update the call sites.
-
-Problem is that now smbios code from dell-laptop.c is moved into
-dell-smbios.c and dell-smbios.h and LED subsystem starts using
-dell-smbios.h. In this case I'm thinking that we have something like AP=
-I
-usable by other modules/subsystem. And I'm thinking if it is not better
-to create "correct" API now instead rewriting code in LED and platform
-subsystem again later... As this API needs to provide just 1 function,
-send command to Dell SMBIOS I think that API is still minimal. Currentl=
-y
-we have another two functions alloc/free buffer (needed for send).
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+T24gTW9uLCBGZWIgMDgsIDIwMTYgYXQgMTA6MTA6MDBBTSAtMDgwMCwgRGFycmVuIEhhcnQgd3Jv
+dGU6Cj4gT24gTW9uLCBKYW4gMTEsIDIwMTYgYXQgMDg6MDk6MjBQTSArMDEwMCwgTHVrYXMgV3Vu
+bmVyIHdyb3RlOgo+ID4gRW5hYmxlIEdQVSBzd2l0Y2hpbmcgb24gdGhlIHByZS1yZXRpbmEgTWFj
+Qm9vayBQcm8gKDIwMDggLSAyMDEzKSwgdjUuCj4gPiAKPiA+IFRoZSBtYWluIG9ic3RhY2xlIG9u
+IHRoZXNlIG1hY2hpbmVzIGlzIHRoYXQgdGhlIHBhbmVsIG1vZGUgaW4gVkJJT1MKPiA+IGlzIGJv
+Z3VzLiBGb3J0dW5hdGVseSBnbXV4IGNhbiBzd2l0Y2ggRERDIGluZGVwZW5kZW50bHkgZnJvbSB0
+aGUKPiA+IGRpc3BsYXksIHRoZXJlYnkgYWxsb3dpbmcgdGhlIGluYWN0aXZlIEdQVSB0byBwcm9i
+ZSB0aGUgcGFuZWwncyBFRElELgo+ID4gCj4gPiBJbiBzaG9ydCwgdmdhX3N3aXRjaGVyb28gYW5k
+IGFwcGxlLWdtdXggYXJlIGFtZW5kZWQgd2l0aCBob29rcyB0bwo+ID4gc3dpdGNoIEREQywgRFJN
+IGNvcmUgaXMgYW1lbmRlZCB3aXRoIGEgZHJtX2dldF9lZGlkX3N3aXRjaGVyb28oKSBoZWxwZXIs
+Cj4gPiBhbmQgcmVsZXZhbnQgZHJpdmVycyBhcmUgYW1lbmRlZCB0byBjYWxsIHRoYXQgZm9yIExW
+RFMgb3V0cHV0cy4KPiA+IAo+ID4gVGhlIHJldGluYSBNYWNCb29rIFBybyAoMjAxMiAtIHByZXNl
+bnQpIHVzZXMgZURQIGFuZCBjYW5ub3Qgc3dpdGNoCj4gPiBBVVggaW5kZXBlbmRlbnRseSBmcm9t
+IHRoZSBtYWluIGxpbmsuIFRoZSBtYWluIG9ic3RhY2xlIHRoZXJlIGlzIGxpbmsKPiA+IHRyYWlu
+aW5nLCBJJ20gY3VycmVudGx5IHdvcmtpbmcgb24gdGhpcywgaXQgd2lsbCBiZSBhZGRyZXNzZWQg
+aW4gYQo+ID4gZnV0dXJlIHBhdGNoIHNldC4KPiA+IAo+ID4gVGhpcyBzZXJpZXMgaXMgYWxzbyBy
+ZXZpZXdhYmxlIG9uIEdpdEh1YjoKPiA+IGh0dHBzOi8vZ2l0aHViLmNvbS9sMWsvbGludXgvY29t
+bWl0cy9tYnBfc3dpdGNoZXJvb192NQo+ID4gCj4gPiBDaGFuZ2VzOgo+ID4gCj4gPiAqIE5ldyBw
+YXRjaCBbMDEvMTJdOiB2Z2Ffc3dpdGNoZXJvbyBoYW5kbGVyIGZsYWdzCj4gPiAgIEFsZXggRGV1
+Y2hlciBhc2tlZCBpZiB0aGlzIHNlcmllcyBtaWdodCByZWdyZXNzIG9uIG5vbi1BcHBsZSBsYXB0
+b3BzLgo+ID4gICBUbyBhZGRyZXNzIHRoaXMgY29uY2VybiwgSSBsZXQgaGFuZGxlcnMgZGVjbGFy
+ZSB0aGVpciBjYXBhYmlsaXRpZXMgaW4KPiA+ICAgYSBiaXRtYXNrLiBEUk0gZHJpdmVycyBjYWxs
+IGRybV9nZXRfZWRpZF9zd2l0Y2hlcm9vKCkgb25seSBpZiB0aGUKPiA+ICAgaGFuZGxlciBoYXMg
+c2V0IHRoZSBWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQyBmbGFnLgo+ID4gICBDdXJyZW50
+bHkganVzdCBvbmUgb3RoZXIgZmxhZyBpcyBkZWZpbmVkIHdoaWNoIGlzIHVzZWQgb24gcmV0aW5h
+cy4KPiA+IAo+ID4gKiBDaGFuZ2VkIHBhdGNoIFswMi8xMl06IHZnYV9zd2l0Y2hlcm9vIEREQyBs
+b2NraW5nCj4gPiAgIFJlbmFtZSBkZGNfbG9jayB0byBtdXhfaHdfbG9jaywgc3VnZ2VzdGVkIGJ5
+IERhbmllbCBWZXR0ZXIuCj4gPiAKPiA+ICogTmV3IHBhdGNoIFswMy8xMl06IHRyYWNrIHN3aXRj
+aCBzdGF0ZSBvZiBhcHBsZS1nbXV4Cj4gPiAgIEZpeGVzIGEgYnVnIGluIHByZXZpb3VzIHZlcnNp
+b25zIG9mIHRoaXMgc2VyaWVzIHdoaWNoIG9jY3VycmVkIGlmCj4gPiAgIHRoZSBzeXN0ZW0gd2Fz
+IHN1c3BlbmRlZCB3aGlsZSBEREMgd2FzIHRlbXBvcmFyaWx5IHN3aXRjaGVkOgo+ID4gICBPbiBy
+ZXN1bWUgRERDIHdhcyBzd2l0Y2hlZCB0byB0aGUgd3JvbmcgR1BVLgo+ID4gCj4gPiAqIE5ldyBw
+YXRjaGVzIFswOS8xMiAtIDEyLzEyXTogZGVmZXJyZWQgcHJvYmluZwo+ID4gICBQcmV2aW91c2x5
+IEkgdXNlZCBjb25uZWN0b3IgcmVwcm9iaW5nIGlmIHRoZSBpbmFjdGl2ZSBHUFUncyBkcml2ZXIK
+PiA+ICAgbG9hZGVkIGJlZm9yZSBnbXV4LiBJJ3ZlIGRpdGNoZWQgdGhhdCBpbiBmYXZvciBvZiBk
+ZWZlcnJlZCBkcml2ZXIKPiA+ICAgcHJvYmluZywgd2hpY2ggaXMgbXVjaCBzaW1wbGVyLiBUaGFu
+a3MgdG8gRGFuaWVsIFZldHRlciBmb3IgdGhlCj4gPiAgIHN1Z2dlc3Rpb24uCj4gPiAKPiA+IENh
+dXRpb246IFBhdGNoIFswOS8xMl0gZGVwZW5kcyBvbiBhIG5ldyBhY3BpX2Rldl9wcmVzZW50KCkg
+QVBJIHdoaWNoCj4gPiB3aWxsIGxhbmQgaW4gNC41IHZpYSBSYWZhZWwgSi4gV3lzb2NraSdzIHRy
+ZWUuCj4gPiAKPiA+IEkgd291bGQgcGFydGljdWxhcmx5IGJlIGludGVyZXN0ZWQgaW4gZmVlZGJh
+Y2sgb24gdGhlIGhhbmRsZXIgZmxhZ3MKPiA+IHBhdGNoIFswMS8xMl0uIEknbSBub3QgMTAwJSBo
+YXBweSB3aXRoIHRoZSBudW1iZXIgb2YgY2hhcmFjdGVycwo+ID4gcmVxdWlyZWQgdG8gcXVlcnkg
+dGhlIGZsYWdzIChlLmcuOiBpZiAodmdhX3N3aXRjaGVyb29faGFuZGxlcl9mbGFncygpICYKPiA+
+IFZHQV9TV0lUQ0hFUk9PX0NBTl9TV0lUQ0hfRERDKSksIGJ1dCBmYWlsZWQgdG8gY29tZSB1cCB3
+aXRoIHNvbWV0aGluZwo+ID4gc2hvcnRlci4gVGhpZXJyeSBSZWRpbmcgdXNlZCBhIHN0cnVjdCBv
+ZiBib29scyBpbnN0ZWFkIG9mIGEgYml0bWFzawo+ID4gZm9yIGhpcyByZWNlbnQgZHJtX2RwX2xp
+bmtfY2FwcyBwYXRjaGVzLiBNYXliZSB1c2UgdGhhdCBpbnN0ZWFkPwo+ID4gaHR0cDovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxNS1EZWNlbWJlci8wOTcwMjUu
+aHRtbAo+IAo+IE5vIG9iamVjdGlvbiBmcm9tIHRoZSBwbGF0Zm9ybS1kcml2ZXIteDg2IHNpZGUu
+IEkgY2FuIHB1bGwgdGhlc2Ugc2VwYXJhdGVseSBvbmNlCj4gdGhlIGNvcmUgaXMgaW4sIG9yIHRo
+ZXNlIGNhbiBiZSBpbmNsdWRlZCB3aXRoIHRoYXQgY29yZSAocHJlZmVycmVkKSB3aXRoIG15Cj4g
+UmV2aWV3ZWQtYnkgZm9yIDEsIDMsIDQsIGFuZCA5Lgo+IAo+IFJldmlld2VkLWJ5OiBEYXJyZW4g
+SGFydCA8ZHZoYXJ0QGxpbnV4LmludGVsLmNvbT4KCkkgcHVsbGVkIHRoZW0gYWxsIGluIHRocm91
+Z2ggZHJtLW1pc2MsIHRoYW5rcy4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBF
+bmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTm91dmVhdSBtYWlsaW5nIGxp
+c3QKTm91dmVhdUBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9ub3V2ZWF1Cg==
