@@ -1,81 +1,109 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a separate module
-Date: Tue, 9 Feb 2016 20:12:07 +0100
-Message-ID: <201602092012.07392@pali>
-References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl> <20160209083303.GN30075@pali> <20160209165106.GB1309@dvhart-mobl5.amr.corp.intel.com>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
+Date: Tue, 9 Feb 2016 16:35:19 -0500
+Message-ID: <CA+A7VXU9zoQZ5wM2Ranf7o9vUphGb0THkh8-TUM_1yD7aC30pQ@mail.gmail.com>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
+ <1454946096-9752-9-git-send-email-jprvita@endlessm.com> <CAGRGNgVuwrh5unUoQ0P+ow55ChOQ+qsRRjfD1bb7DC6PcrCO2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart42802131.vFdu6qGfX9";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20160209165106.GB1309@dvhart-mobl5.amr.corp.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGRGNgVuwrh5unUoQ0P+ow55ChOQ+qsRRjfD1bb7DC6PcrCO2g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart42802131.vFdu6qGfX9
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On 8 February 2016 at 17:53, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
 
-On Tuesday 09 February 2016 17:51:06 Darren Hart wrote:
-> On Tue, Feb 09, 2016 at 09:33:03AM +0100, Pali Roh=C3=A1r wrote:
-> > On Monday 08 February 2016 13:42:10 Darren Hart wrote:
-> > > Assuming the above is an accurate view, I don't see any reason to
-> > > go beyond the minimal change to the existing SMBIOS code to make
-> > > it a usable API. If the need arises, we can always make such
-> > > optimizations and performance improvements later. This is an
-> > > internal API and we can change it whenever we need to so long as
-> > > we update the call sites.
-> >=20
-> > Problem is that now smbios code from dell-laptop.c is moved into
-> > dell-smbios.c and dell-smbios.h and LED subsystem starts using
-> > dell-smbios.h. In this case I'm thinking that we have something
-> > like API usable by other modules/subsystem. And I'm thinking if it
-> > is not better to create "correct" API now instead rewriting code
-> > in LED and platform subsystem again later... As this API needs to
-> > provide just 1 function, send command to Dell SMBIOS I think that
-> > API is still minimal. Currently we have another two functions
-> > alloc/free buffer (needed for send).
->=20
-> The internal kernel API changes all the time, we are not bound to it
-> beyond ensuring we update the internal users when we change it. I
-> prefer not to introduce complexity until we have to.
->=20
-> 	buffer =3D dell_smbios_get_buffer();
-> 	buffer->input[0] =3D token->location;
-> 	buffer->input[1] =3D token->value;
-> 	dell_smbios_send_request(1, 0);
-> 	dell_smbios_release_buffer();
->=20
-> The get_buffer and release_buffer also include the locking which is
-> necessary for a shared buffer. If you eliminate the shared buffer,
-> then you have to have a local buffer, which adds back code to create
-> the buffer, initializize it, free it if it's dynamic, etc.
->=20
-> So from that sense, Micha=C5=82's API seems at least as concise as the
-> alternative, and it introduces less change.
+>> +       if (ev.op =3D=3D RFKILL_OP_AIRPLANE_MODE_RELEASE) {
+>> +               if (rfkill_apm_owned && !data->is_apm_owner) {
+>
+> Are you sure this is correct?
+>
+> In the case that airplane mode isn't owned, the
+> rfkill_apm_led_trigger_event() call will be a noop, so we should
+> arguably not be calling it.
+>
 
-Ok. Then let's stay with it. I have not tested patches yet, but do not=20
-see anything wrong. So go ahead you can add my Reviewed-by.
+Ok, I'm changing the check to be consistent with _CHANGE, so the call
+only succeeds if (rfkill_apm_owned && data->is_apm_owner), and return
+an error otherwise.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> Also, should we just fail silently if we're not the owner? I.e. what
+> does userspace learn from this op failing and is that useful?
+>
 
---nextPart42802131.vFdu6qGfX9
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+I think it is better to return an error every time userspace is trying
+to call an operation that it was not supposed to call at a certain
+state (without acquiring control of the airplane-mode indicator). If a
+program has a logic error that makes it call _RELEASE without calling
+_ACQUIRE first, it's easier for the programmer to spot the problem if
+we return an error here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+>> +                       count =3D -EACCES;
+>> +               } else {
+>> +                       bool state =3D rfkill_global_states[RFKILL_T=
+YPE_ALL].cur;
+>> +
+>> +                       rfkill_apm_owned =3D false;
+>> +                       data->is_apm_owner =3D false;
+>> +                       rfkill_apm_led_trigger_event(state);
+>> +               }
+>> +       }
+>> +
+>> +       if (ev.op =3D=3D RFKILL_OP_AIRPLANE_MODE_CHANGE) {
+>> +               if (rfkill_apm_owned && data->is_apm_owner)
+>> +                       rfkill_apm_led_trigger_event(ev.soft);
+>> +               else
+>> +                       count =3D -EACCES;
+>> +       }
+>> +
+>>         if (ev.op =3D=3D RFKILL_OP_CHANGE_ALL)
+>>                 rfkill_update_global_state(ev.type, ev.soft);
+>>
+>> @@ -1230,7 +1261,17 @@ static int rfkill_fop_release(struct inode *i=
+node, struct file *file)
+>>         struct rfkill_int_event *ev, *tmp;
+>>
+>>         mutex_lock(&rfkill_global_mutex);
+>> +
+>> +       if (data->is_apm_owner) {
+>> +               bool state =3D rfkill_global_states[RFKILL_TYPE_ALL]=
+=2Ecur;
+>> +
+>> +               rfkill_apm_owned =3D false;
+>> +               data->is_apm_owner =3D false;
+>> +               rfkill_apm_led_trigger_event(state);
+>
+> Also, this code is duplicated from the _RELEASE op above. Would it
+> make sense to factor it out into a separate function?
+>
 
-iEYEABECAAYFAla6OgcACgkQi/DJPQPkQ1KRKACgpXI2ixn0ecb05Fb/kJTyCF7P
-O+gAoMH3OuwRz7oIiBy+C8BxKn6n3NpM
-=U9up
------END PGP SIGNATURE-----
+Yes, makes sense. This also made me notice I was assigning a negative
+value to a size_t variable (count).
 
---nextPart42802131.vFdu6qGfX9--
+>> +       }
+>> +
+>>         list_del(&data->list);
+>> +
+>
+> (extra line)
+>
+
+After factoring out the _RELEASE code it looks better without this
+additional line.
+
+>>         mutex_unlock(&rfkill_global_mutex);
+>>
+>>         mutex_destroy(&data->mtx);
+>
+> Thanks,
+>
+
+Thanks for the review, Julian. I'm sending an updated version.
+
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
