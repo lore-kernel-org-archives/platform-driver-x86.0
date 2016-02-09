@@ -1,78 +1,49 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 10/12] drm/i915: Defer probe if gmux is present but
- its driver isn't
-Date: Tue, 9 Feb 2016 10:04:01 +0100
-Message-ID: <20160209090401.GA11240@phenom.ffwll.local>
-References: <cover.1452525860.git.lukas@wunner.de>
- <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v2 07/16] dell-smbios: don't return an SMBIOS buffer from
+ dell_smbios_send_request()
+Date: Tue, 9 Feb 2016 14:27:36 +0100
+Message-ID: <20160209132736.GA7443@eudyptula.hq.kempniu.pl>
+References: <1453472848-3118-1-git-send-email-kernel@kempniu.pl>
+ <1453472848-3118-8-git-send-email-kernel@kempniu.pl>
+ <20160208184456.GM1779@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20160208184456.GM1779@malice.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gTW9uLCBKYW4gMTEsIDIwMTYgYXQgMDg6MDk6MjBQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
-b3RlOgo+IGdtdXggaXMgYSBtaWNyb2NvbnRyb2xsZXIgYnVpbHQgaW50byBkdWFsIEdQVSBNYWNC
-b29rIFByb3MuCj4gT24gcHJlLXJldGluYSBNQlBzLCBpZiB3ZSdyZSB0aGUgaW5hY3RpdmUgR1BV
-LCB3ZSBuZWVkIGFwcGxlLWdtdXgKPiB0byB0ZW1wb3JhcmlseSBzd2l0Y2ggRERDIHNvIHRoYXQg
-d2UgY2FuIHByb2JlIHRoZSBwYW5lbCdzIEVESUQuCj4gCj4gVGhlIGNoZWNrcyBmb3IgQ09ORklH
-X1ZHQV9BUkIgYW5kIENPTkZJR19WR0FfU1dJVENIRVJPTyBhcmUgbmVjZXNzYXJ5Cj4gYmVjYXVz
-ZSBpZiBlaXRoZXIgb2YgdGhlbSBpcyBkaXNhYmxlZCBidXQgZ211eCBpcyBwcmVzZW50LCB0aGUg
-ZHJpdmVyCj4gd291bGQgbmV2ZXIgbG9hZCwgZXZlbiBpZiB3ZSdyZSB0aGUgYWN0aXZlIEdQVS4g
-KHZnYV9kZWZhdWx0X2RldmljZSgpCj4gd291bGQgZXZhbHVhdGUgdG8gTlVMTCBhbmQgdmdhX3N3
-aXRjaGVyb29faGFuZGxlcl9mbGFncygpIHdvdWxkCj4gZXZhbHVhdGUgdG8gMC4pCj4gCj4gQnVn
-emlsbGE6IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9ODg4NjEK
-PiBCdWd6aWxsYTogaHR0cHM6Ly9idWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9
-NjExMTUKPiBUZXN0ZWQtYnk6IEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPgo+ICAgICBb
-TUJQICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlhIEdLMTA3ICBwcmUtcmV0aW5hICAxNSJd
-Cj4gU2lnbmVkLW9mZi1ieTogTHVrYXMgV3VubmVyIDxsdWthc0B3dW5uZXIuZGU+Cj4gLS0tCj4g
-IGRyaXZlcnMvZ3B1L2RybS9pOTE1L2k5MTVfZHJ2LmMgfCAxMiArKysrKysrKysrKysKPiAgMSBm
-aWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL2k5MTUvaTkxNV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2k5MTVfZHJ2LmMK
-PiBpbmRleCAzYWM2MTZkLi40YTVmYzVkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9p
-OTE1L2k5MTVfZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X2Rydi5jCj4g
-QEAgLTM1LDkgKzM1LDEyIEBACj4gICNpbmNsdWRlICJpOTE1X3RyYWNlLmgiCj4gICNpbmNsdWRl
-ICJpbnRlbF9kcnYuaCIKPiAgCj4gKyNpbmNsdWRlIDxsaW51eC9hcHBsZS1nbXV4Lmg+Cj4gICNp
-bmNsdWRlIDxsaW51eC9jb25zb2xlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAg
-I2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3ZnYWFyYi5o
-Pgo+ICsjaW5jbHVkZSA8bGludXgvdmdhX3N3aXRjaGVyb28uaD4KPiAgI2luY2x1ZGUgPGRybS9k
-cm1fY3J0Y19oZWxwZXIuaD4KPiAgCj4gIHN0YXRpYyBzdHJ1Y3QgZHJtX2RyaXZlciBkcml2ZXI7
-Cj4gQEAgLTk2Nyw2ICs5NzAsMTUgQEAgc3RhdGljIGludCBpOTE1X3BjaV9wcm9iZShzdHJ1Y3Qg
-cGNpX2RldiAqcGRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmVudCkKPiAgCWlmIChQ
-Q0lfRlVOQyhwZGV2LT5kZXZmbikpCj4gIAkJcmV0dXJuIC1FTk9ERVY7Cj4gIAo+ICsJLyoKPiAr
-CSAqIGFwcGxlLWdtdXggaXMgbmVlZGVkIG9uIGR1YWwgR1BVIE1hY0Jvb2sgUHJvCj4gKwkgKiB0
-byBwcm9iZSB0aGUgcGFuZWwgaWYgd2UncmUgdGhlIGluYWN0aXZlIEdQVS4KPiArCSAqLwo+ICsJ
-aWYgKElTX0VOQUJMRUQoQ09ORklHX1ZHQV9BUkIpICYmIElTX0VOQUJMRUQoQ09ORklHX1ZHQV9T
-V0lUQ0hFUk9PKSAmJgo+ICsJICAgIGFwcGxlX2dtdXhfcHJlc2VudCgpICYmIHBkZXYgIT0gdmdh
-X2RlZmF1bHRfZGV2aWNlKCkgJiYKPiArCSAgICAhdmdhX3N3aXRjaGVyb29faGFuZGxlcl9mbGFn
-cygpKQo+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOwoKSSBwdWxsZWQgaW4gYWxsIHBhdGNoZXMg
-dG8gZHJtLW1pc2MsIGJ1dCB0aGlzIGhlcmUgaXMgaW1vIHVnbHkgYW5kIG5lZWRzCnRvIGJlIHBv
-bGlzaGVkIGEgYml0LiBXaGF0IGFib3V0IGFkZGluZyBhIHZnYV9zd2l0Y2hlcm9vX3JlYWR5KCkg
-ZnVuY3Rpb24Kd2hpY2ggY29udGFpbnMgdGhpcyBjaGVjayAoYW5kIG1pZ2h0IGluIHRoZSBmdXR1
-cmUgY29udGFpbiBldmVuIG1vcmUKY2hlY2tzKT8gVGhlbiBpOTE1L3JhZGVvbi9ub3V2ZWF1IHdv
-dWxkIGp1c3QgaGF2ZSBhIHNpbXBsZQoKCWlmICghdmdhX3N3aXRjaGVyb29fcmVhZHkoKSkKCQly
-ZXR1cm4gLUVQUk9CRV9ERUZFUjsKCmFuZCBpbnN0ZWFkIG9mIGR1cGxpY2F0aW5nIHRoZSBzYW1l
-IGNvbW1lbnQgMyB0aW1lcyB3ZSBjb3VsZCBoYXZlIGl0IG9uY2UKaW4gb25lIHBsYWNlLiBQbHVz
-IHNvbWUgbmVhdCBrZXJuZWxkb2MgZm9yIHRoaXMgbmV3IGhlbHBlciB0byBkZXNjcmliZSBob3cK
-aXQncyBzdXBwb3NlZCB0byBiZSB1c2VkLiBQbHVzIGJldHRlciBlbmNhcHN1bGF0aW9uIG9mIGNv
-bmNlcHRzLgoKQ2FuIHlvdSBwbHMgZm9sbG93IHVwIHdpdGggYSBwYXRjaC9zZXJpZXMgdG8gZG8g
-dGhhdD8KClRoYW5rcywgRGFuaWVsCgo+ICsKPiAgCXJldHVybiBkcm1fZ2V0X3BjaV9kZXYocGRl
-diwgZW50LCAmZHJpdmVyKTsKPiAgfQo+ICAKPiAtLSAKPiAxLjguNS4yIChBcHBsZSBHaXQtNDgp
-Cj4gCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRp
-b24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+> > An SMBIOS buffer pointer does not need to be returned by
+> > dell_smbios_send_request(), because SMBIOS call results are stored =
+in
+> > the buffer passed as input.
+>=20
+> This should come before 6/16, update the commit message to reflect th=
+e module
+> exported buffer (not the one passed as input), or possibly just merge=
+ this patch
+> and 6/16 as correcting the use of SMBIOS buffer within the module.
+
+I have only now noticed that I phrased the commit message for this patc=
+h
+rather unfortunately as it inappropriately conveyed my reasoning.  What
+I meant by "the buffer passed as input" was not "the buffer passed as a=
+n
+argument to dell_smbios_send_request()", but rather "the buffer passed
+to the SMI handler".  In other words, there is no reason to return a
+buffer from dell_smbios_send_request(), because each caller will simply
+find their output in the same buffer they used to provide input (no
+matter whether the latter is passed as a function argument or accessed
+using a module-wide variable).
+
+Anyway, as even the above explanation is hardly a stellar demonstration
+of clarity, I believe your idea of resolving this issue may simply be
+the best one, thanks.
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
