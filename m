@@ -1,38 +1,47 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCH 5/5] asus-wmi: Add quirk_no_rfkill for the Asus Z550MA
-Date: Tue, 9 Feb 2016 16:39:03 -0500
-Message-ID: <CA+A7VXW7hehA1UzdxfYjVN5vAj5zGoHm_OcbfD36bFQGa5eWUA@mail.gmail.com>
-References: <1454951123-27470-1-git-send-email-jprvita@endlessm.com>
- <1454951123-27470-6-git-send-email-jprvita@endlessm.com> <20160208210338.GR1779@malice.jf.intel.com>
+From: Julian Calaby <julian.calaby@gmail.com>
+Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
+Date: Wed, 10 Feb 2016 09:01:05 +1100
+Message-ID: <CAGRGNgVwSPn4rc+19q7VVVL8V8zK=ubbF7in00HBYnsc1-WKWw@mail.gmail.com>
+References: <CA+A7VXU9zoQZ5wM2Ranf7o9vUphGb0THkh8-TUM_1yD7aC30pQ@mail.gmail.com>
+ <1455053802-13063-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yk0-f193.google.com ([209.85.160.193]:33491 "EHLO
-	mail-yk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932471AbcBIVjn convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Feb 2016 16:39:43 -0500
-In-Reply-To: <20160208210338.GR1779@malice.jf.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455053802-13063-1-git-send-email-jprvita@endlessm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 8 February 2016 at 16:03, Darren Hart <dvhart@infradead.org> wrote:
-> On Mon, Feb 08, 2016 at 12:05:23PM -0500, Jo=C3=A3o Paulo Rechi Vita =
-wrote:
+Hi All,
+
+On Wed, Feb 10, 2016 at 8:36 AM, Jo=C3=A3o Paulo Rechi Vita
+<jprvita@gmail.com> wrote:
+> Provide an interface for the airplane-mode indicator be controlled fr=
+om
+> userspace. User has to first acquire the control through
+> RFKILL_OP_AIRPLANE_MODE_ACQUIRE and keep the fd open for the whole ti=
+me
+> it wants to be in control of the indicator. Closing the fd or using
+> RFKILL_OP_AIRPLANE_MODE_RELEASE restores the default policy.
 >
-> I'm waiting for the RFKILL reviews to complete, but quickly, patches =
-4 and 5
-> require a commit message. There is always something you can add here,=
- for
-> example, do these not have a switch or is it handled by a different d=
-river? Etc.
+> To change state of the indicator, the RFKILL_OP_AIRPLANE_MODE_CHANGE
+> operation is used, passing the value on "struct rfkill_event.soft". I=
+f
+> the caller has not acquired the airplane-mode control beforehand, the
+> operation fails.
 >
+> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
 
-All right, I'll work on the commit messages. Thanks!
+This looks sane to me.
 
---
-Jo=C3=A3o Paulo Rechi Vita
-http://about.me/jprvita
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+
+Thanks,
+
+--=20
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
