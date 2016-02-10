@@ -1,37 +1,79 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
-Date: Wed, 10 Feb 2016 18:12:41 +0100
-Message-ID: <ec4b7edcda0a62cd4e36e501f5ad56f9@sipsolutions.net>
-References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
- <1454946096-9752-9-git-send-email-jprvita@endlessm.com>
- <1454947887.5325.8.camel@redhat.com>
- <1455120444.4991.1.camel@sipsolutions.net>
- <1455123205.19821.34.camel@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a
+ separate module
+Date: Wed, 10 Feb 2016 15:03:50 -0800
+Message-ID: <20160210230350.GA11461@dvhart-mobl5.amr.corp.intel.com>
+References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
+ <20160209083303.GN30075@pali>
+ <20160209165106.GB1309@dvhart-mobl5.amr.corp.intel.com>
+ <201602092012.07392@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455123205.19821.34.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dcbw@redhat.com>
-Cc: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201602092012.07392@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2016-02-10 17:53, Dan Williams wrote:
-> Yeah, I get that now. =C2=A0It's just that to me, something called
-> "AIRPLANE_MODE_CHANGE" seems like it should actually change airplane
-> mode on/off, which implies killing radios. =C2=A0I wouldn't have had =
-the
-> problem if it was named AIRPLANE_MODE_INDICATOR_CHANGE, which makes i=
+On Tue, Feb 09, 2016 at 08:12:07PM +0100, Pali Roh=C3=A1r wrote:
+> On Tuesday 09 February 2016 17:51:06 Darren Hart wrote:
+> > On Tue, Feb 09, 2016 at 09:33:03AM +0100, Pali Roh=C3=A1r wrote:
+> > > On Monday 08 February 2016 13:42:10 Darren Hart wrote:
+> > > > Assuming the above is an accurate view, I don't see any reason =
+to
+> > > > go beyond the minimal change to the existing SMBIOS code to mak=
+e
+> > > > it a usable API. If the need arises, we can always make such
+> > > > optimizations and performance improvements later. This is an
+> > > > internal API and we can change it whenever we need to so long a=
+s
+> > > > we update the call sites.
+> > >=20
+> > > Problem is that now smbios code from dell-laptop.c is moved into
+> > > dell-smbios.c and dell-smbios.h and LED subsystem starts using
+> > > dell-smbios.h. In this case I'm thinking that we have something
+> > > like API usable by other modules/subsystem. And I'm thinking if i=
 t
-> clear this is simply an indicator and has no actual effect on anythin=
-g
-> other than a LED.
+> > > is not better to create "correct" API now instead rewriting code
+> > > in LED and platform subsystem again later... As this API needs to
+> > > provide just 1 function, send command to Dell SMBIOS I think that
+> > > API is still minimal. Currently we have another two functions
+> > > alloc/free buffer (needed for send).
+> >=20
+> > The internal kernel API changes all the time, we are not bound to i=
+t
+> > beyond ensuring we update the internal users when we change it. I
+> > prefer not to introduce complexity until we have to.
+> >=20
+> > 	buffer =3D dell_smbios_get_buffer();
+> > 	buffer->input[0] =3D token->location;
+> > 	buffer->input[1] =3D token->value;
+> > 	dell_smbios_send_request(1, 0);
+> > 	dell_smbios_release_buffer();
+> >=20
+> > The get_buffer and release_buffer also include the locking which is
+> > necessary for a shared buffer. If you eliminate the shared buffer,
+> > then you have to have a local buffer, which adds back code to creat=
+e
+> > the buffer, initializize it, free it if it's dynamic, etc.
+> >=20
+> > So from that sense, Micha=C5=82's API seems at least as concise as =
+the
+> > alternative, and it introduces less change.
+>=20
+> Ok. Then let's stay with it. I have not tested patches yet, but do no=
+t=20
+> see anything wrong. So go ahead you can add my Reviewed-by.
 
-Yeah, I agree. I'm not even sure that it's a good idea to subsume this=20
-into the regular operations in the API, although that's obviously the=20
-easiest extension. I'll need to think about that a bit more with the=20
-code at hand though.
+Great. Thank you Pali.
 
-johannes
+This has been queued to testing.
+
+Thank you all for your diligence in getting this series to this point.
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
