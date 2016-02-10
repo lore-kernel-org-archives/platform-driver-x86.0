@@ -1,47 +1,37 @@
-From: Julian Calaby <julian.calaby@gmail.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
 Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
-Date: Wed, 10 Feb 2016 09:01:05 +1100
-Message-ID: <CAGRGNgVwSPn4rc+19q7VVVL8V8zK=ubbF7in00HBYnsc1-WKWw@mail.gmail.com>
-References: <CA+A7VXU9zoQZ5wM2Ranf7o9vUphGb0THkh8-TUM_1yD7aC30pQ@mail.gmail.com>
- <1455053802-13063-1-git-send-email-jprvita@endlessm.com>
+Date: Wed, 10 Feb 2016 17:07:24 +0100
+Message-ID: <1455120444.4991.1.camel@sipsolutions.net>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
+	 <1454946096-9752-9-git-send-email-jprvita@endlessm.com>
+	 <1454947887.5325.8.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455053802-13063-1-git-send-email-jprvita@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454947887.5325.8.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Williams <dcbw-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi All,
+On Mon, 2016-02-08 at 10:11 -0600, Dan Williams wrote:
+> I'd like to clarify a bit, so tell me if I'm correct or not.=C2=A0=C2=
+=A0Using
+> RFKILL_OP_AIRPLANE_MODE_CHANGE does not actually change any device
+> state. It's just an indicator with no relationship to any of the
+> registered rfkill switches, right?
 
-On Wed, Feb 10, 2016 at 8:36 AM, Jo=C3=A3o Paulo Rechi Vita
-<jprvita@gmail.com> wrote:
-> Provide an interface for the airplane-mode indicator be controlled fr=
-om
-> userspace. User has to first acquire the control through
-> RFKILL_OP_AIRPLANE_MODE_ACQUIRE and keep the fd open for the whole ti=
-me
-> it wants to be in control of the indicator. Closing the fd or using
-> RFKILL_OP_AIRPLANE_MODE_RELEASE restores the default policy.
->
-> To change state of the indicator, the RFKILL_OP_AIRPLANE_MODE_CHANGE
-> operation is used, passing the value on "struct rfkill_event.soft". I=
-f
-> the caller has not acquired the airplane-mode control beforehand, the
-> operation fails.
->
-> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+Yes. I'm not sure I'm totally happy with this userspace API.
 
-This looks sane to me.
+> I wonder if setting RFKILL_OP_AIRPLANE_MODE_CHANGE(true) shouldn't
+> also
+> softblock all switches, otherwise you can set airplane mode all day
+> long with RFKILL_OP_AIRPLANE_MODE_CHANGE and it doesn't actually
+> enable
+> airplane mode at all?
 
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+No, this is kinda the point that you could implement your policy in
+userspace now.
 
-Thanks,
-
---=20
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+johannes
