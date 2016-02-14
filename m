@@ -1,184 +1,58 @@
 From: Lukas Wunner <lukas@wunner.de>
 Subject: Re: Backlight control does not work on an Apple dual-GPU
  (intel/nvidia) system using nouveau
-Date: Sun, 14 Feb 2016 14:24:01 +0100
-Message-ID: <20160214132401.GA15948@wunner.de>
+Date: Sun, 14 Feb 2016 14:40:45 +0100
+Message-ID: <20160214134045.GA16892@wunner.de>
 References: <56BF996F.3030503@guruburu.com>
  <20160213233912.GA16687@wunner.de>
+ <20160214053827.GA25439@srcf.ucam.org>
+ <CAHW-aUd7j+iQSTw551g0oucHS6kFmWjyLURuJX0zK_S_UBMV2g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout3.hostsharing.net ([176.9.242.54]:42493 "EHLO
-	mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751315AbcBNNXg (ORCPT
+Received: from mailout2.hostsharing.net ([83.223.90.233]:57145 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751452AbcBNNkR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 14 Feb 2016 08:23:36 -0500
+	Sun, 14 Feb 2016 08:40:17 -0500
 Content-Disposition: inline
-In-Reply-To: <20160213233912.GA16687@wunner.de>
+In-Reply-To: <CAHW-aUd7j+iQSTw551g0oucHS6kFmWjyLURuJX0zK_S_UBMV2g@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gaele Strootman <gaele@guruburu.com>
-Cc: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, Bjorn Helgaas <bhelgaas@google.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bruno Bierbaumer <bruno@bierbaumer.net>, Michael Marineau <mike@marineau.org>
+To: Michael Marineau <mike@marineau.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, Gaele Strootman <gaele@guruburu.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Bierbaumer <bruno@bierbaumer.net>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
 
-Hi Gaele,
+Hi Michael,
 
-On Sun, Feb 14, 2016 at 12:39:12AM +0100, Lukas Wunner wrote:
-> On dual GPU MacBook Pros, brightness is controlled by gmux.
-> It is changed by writing to gmux' I/O port range, 0x700 - 0x7FF.
-> gmux is located on the LPC bus, i.e. behind the southbridge.
+On Sat, Feb 13, 2016 at 10:36:47PM -0800, Michael Marineau wrote:
+> On Feb 13, 2016 9:38 PM, "Matthew Garrett" <mjg59@srcf.ucam.org> wrote:
+> >
+> > On Sun, Feb 14, 2016 at 12:39:12AM +0100, Lukas Wunner wrote:
+> > > @Bjorn Helgaas: Do you think this masquerade patch would be eligible
+> > > for inclusion in the kernel or is this not in your department?
+> > > https://www.marc.info/?l=grub-deavel&m=141586614924917&w=2
+> >
+> > I think this is an entirely appropriate piece of code to add to the EFI
+> > boot code in the kernel.
 > 
-> For communication with gmux to work, the above-mentioned I/O port
-> range needs to be routed to bus 00, where the LPC bus bridge is
-> located. Incidentally the integrated GPU is also located on that
-> same bus, whereas the discrete GPU is on a different bus. (It is
-> directly connected to the PCI Root Complex in the CPU.)
+> One note on that code: making the Intel card visible exposes a number of
+> other bugs such as power management with nouveau not working any more and
+> despite vga switcheroo becoming available it isn't possible to switch to
+> the Intel gpu because, at least on my machine, neither the Intel nor
+> nouveau drivers can figure out how to bring up the eDP link or some such.
 
-FWIW, I've cobbled together an experimental patch (included below)
-which locks I/O to the LPC bridge instead of the integrated GPU.
-
-This requires a modification to vgaarb.c to deal with not just
-PCI_CLASS_DISPLAY_VGA, but also PCI_CLASS_BRIDGE_ISA devices.
-As to the justification, well it *could* be argued that back in
-the 1990s we had mainboards with PCI + ISA slots and for backward
-compatibility we need to support VGA devices in ISA slots located
-behind a PCI/ISA bridge. ;-)
-
-Seriously though, maybe you want to give this a try and see if
-it solves the issue for you (apply with git am --scissors).
+That is correct. GPU switching for pre-retinas was finally queued for
+4.6 this week, retinas are my next target. To overcome the link training
+issues I had experimented with AUX proxying last year until I realized in
+December that the DP spec has a link training exemption for eDP. Basically
+what we need to do is wait until the active GPU has set up its eDP output,
+then communicate voltage swing, pre-emphasis, lane count etc to the
+inactive GPU's driver (via vga_switcheroo) and use these pre-calibrated
+values to set up the output. I've hacked together an initial implementation
+of the i915 and vga_switcheroo side of things in early January, then got
+side-tracked while working on the nouveau part. However I'll get back to
+this pretty soon.
 
 Best regards,
 
 Lukas
-
--- >8 --
-Subject: [PATCH] apple-gmux: Fix IO locking
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/gpu/vga/vgaarb.c          |  3 ++-
- drivers/platform/x86/apple-gmux.c | 51 ++++++++++++++-------------------------
- 2 files changed, 20 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
-index f17cb04..b23b471 100644
---- a/drivers/gpu/vga/vgaarb.c
-+++ b/drivers/gpu/vga/vgaarb.c
-@@ -529,7 +529,8 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
- 	u16 cmd;
- 
- 	/* Only deal with VGA class devices */
--	if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
-+	if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA &&
-+	    (pdev->class >> 8) != PCI_CLASS_BRIDGE_ISA)
- 		return false;
- 
- 	/* Allocate structure */
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index f236250..999daad 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -48,10 +48,10 @@
- struct apple_gmux_data {
- 	unsigned long iostart;
- 	unsigned long iolen;
-+	struct pci_dev *lpc_bridge;
- 	bool indexed;
- 	struct mutex index_lock;
- 
--	struct pci_dev *pdev;
- 	struct backlight_device *bdev;
- 
- 	/* switcheroo data */
-@@ -530,34 +530,17 @@ static int gmux_resume(struct device *dev)
- 	return 0;
- }
- 
--static struct pci_dev *gmux_get_io_pdev(void)
--{
--	struct pci_dev *pdev = NULL;
--
--	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))) {
--		u16 cmd;
--
--		pci_read_config_word(pdev, PCI_COMMAND, &cmd);
--		if (!(cmd & PCI_COMMAND_IO))
--			continue;
--
--		return pdev;
--	}
--
--	return NULL;
--}
--
- static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- {
- 	struct apple_gmux_data *gmux_data;
- 	struct resource *res;
-+	struct pci_dev *lpc_bridge;
- 	struct backlight_properties props;
- 	struct backlight_device *bdev;
- 	u8 ver_major, ver_minor, ver_release;
- 	int ret = -ENXIO;
- 	acpi_status status;
- 	unsigned long long gpe;
--	struct pci_dev *pdev = NULL;
- 
- 	if (apple_gmux_data)
- 		return -EBUSY;
-@@ -622,16 +605,17 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	 * disables IO/MEM used for backlight control on some systems.
- 	 * Lock IO+MEM to GPU with active IO to prevent switch.
- 	 */
--	pdev = gmux_get_io_pdev();
--	if (pdev && vga_tryget(pdev,
--			       VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM)) {
--		pr_err("IO+MEM vgaarb-locking for PCI:%s failed\n",
--			pci_name(pdev));
-+	lpc_bridge = pci_get_class(PCI_CLASS_BRIDGE_ISA << 8, NULL);
-+	if (lpc_bridge &&
-+	    !vga_tryget(lpc_bridge, VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM)) {
-+		pr_debug("Locked IO to %s\n", pci_name(lpc_bridge));
-+		gmux_data->lpc_bridge = lpc_bridge;
-+	} else {
-+		pr_err("Failed to lock IO to %s\n", pci_name(lpc_bridge));
-+		pci_dev_put(lpc_bridge);
- 		ret = -EBUSY;
- 		goto err_release;
--	} else if (pdev)
--		pr_info("locked IO for PCI:%s\n", pci_name(pdev));
--	gmux_data->pdev = pdev;
-+	}
- 
- 	memset(&props, 0, sizeof(props));
- 	props.type = BACKLIGHT_PLATFORM;
-@@ -725,10 +709,11 @@ err_enable_gpe:
- err_notify:
- 	backlight_device_unregister(bdev);
- err_release:
--	if (gmux_data->pdev)
--		vga_put(gmux_data->pdev,
-+	if (gmux_data->lpc_bridge) {
-+		vga_put(gmux_data->lpc_bridge,
- 			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
--	pci_dev_put(pdev);
-+		pci_dev_put(gmux_data->lpc_bridge);
-+	}
- 	release_region(gmux_data->iostart, gmux_data->iolen);
- err_free:
- 	kfree(gmux_data);
-@@ -748,10 +733,10 @@ static void gmux_remove(struct pnp_dev *pnp)
- 					   &gmux_notify_handler);
- 	}
- 
--	if (gmux_data->pdev) {
--		vga_put(gmux_data->pdev,
-+	if (gmux_data->lpc_bridge) {
-+		vga_put(gmux_data->lpc_bridge,
- 			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
--		pci_dev_put(gmux_data->pdev);
-+		pci_dev_put(gmux_data->lpc_bridge);
- 	}
- 	backlight_device_unregister(gmux_data->bdev);
- 
--- 
-2.1.0
