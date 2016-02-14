@@ -1,58 +1,114 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: Backlight control does not work on an Apple dual-GPU
- (intel/nvidia) system using nouveau
-Date: Sun, 14 Feb 2016 14:40:45 +0100
-Message-ID: <20160214134045.GA16892@wunner.de>
-References: <56BF996F.3030503@guruburu.com>
- <20160213233912.GA16687@wunner.de>
- <20160214053827.GA25439@srcf.ucam.org>
- <CAHW-aUd7j+iQSTw551g0oucHS6kFmWjyLURuJX0zK_S_UBMV2g@mail.gmail.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH] drivers/platform: make x86/intel_scu_ipc.c explicitly non-modular
+Date: Sun, 14 Feb 2016 15:00:52 -0500
+Message-ID: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.hostsharing.net ([83.223.90.233]:57145 "EHLO
-	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751452AbcBNNkR (ORCPT
+Received: from mail1.windriver.com ([147.11.146.13]:54687 "EHLO
+	mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751283AbcBNUBi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 14 Feb 2016 08:40:17 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHW-aUd7j+iQSTw551g0oucHS6kFmWjyLURuJX0zK_S_UBMV2g@mail.gmail.com>
+	Sun, 14 Feb 2016 15:01:38 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Michael Marineau <mike@marineau.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, Gaele Strootman <gaele@guruburu.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Bierbaumer <bruno@bierbaumer.net>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-Hi Michael,
+The Kconfig currently controlling compilation of this code is:
 
-On Sat, Feb 13, 2016 at 10:36:47PM -0800, Michael Marineau wrote:
-> On Feb 13, 2016 9:38 PM, "Matthew Garrett" <mjg59@srcf.ucam.org> wrote:
-> >
-> > On Sun, Feb 14, 2016 at 12:39:12AM +0100, Lukas Wunner wrote:
-> > > @Bjorn Helgaas: Do you think this masquerade patch would be eligible
-> > > for inclusion in the kernel or is this not in your department?
-> > > https://www.marc.info/?l=grub-deavel&m=141586614924917&w=2
-> >
-> > I think this is an entirely appropriate piece of code to add to the EFI
-> > boot code in the kernel.
-> 
-> One note on that code: making the Intel card visible exposes a number of
-> other bugs such as power management with nouveau not working any more and
-> despite vga switcheroo becoming available it isn't possible to switch to
-> the Intel gpu because, at least on my machine, neither the Intel nor
-> nouveau drivers can figure out how to bring up the eDP link or some such.
+drivers/platform/x86/Kconfig:config INTEL_SCU_IPC
+drivers/platform/x86/Kconfig:   bool "Intel SCU IPC Support"
 
-That is correct. GPU switching for pre-retinas was finally queued for
-4.6 this week, retinas are my next target. To overcome the link training
-issues I had experimented with AUX proxying last year until I realized in
-December that the DP spec has a link training exemption for eDP. Basically
-what we need to do is wait until the active GPU has set up its eDP output,
-then communicate voltage swing, pre-emphasis, lane count etc to the
-inactive GPU's driver (via vga_switcheroo) and use these pre-calibrated
-values to set up the output. I've hacked together an initial implementation
-of the i915 and vga_switcheroo side of things in early January, then got
-side-tracked while working on the nouveau part. However I'll get back to
-this pretty soon.
+...meaning that it currently is not being built as a module by anyone.
 
-Best regards,
+Lets remove the modular code that is essentially orphaned, so that
+when reading the driver there is no doubt it is builtin-only.
 
-Lukas
+We explicitly disallow a driver unbind, since that doesn't have a
+sensible use case anyway, and it allows us to drop the ".remove"
+code for non-modular drivers.
+
+Since module_pci_driver() uses the same init level priority as
+builtin_pci_driver() the init ordering remains unchanged with
+this commit.
+
+Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
+
+We don't replace module.h with init.h since the file already has that.
+
+We also delete the MODULE_LICENSE tag etc. since all that information
+is already contained at the top of the file in the comments.
+
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ drivers/platform/x86/intel_scu_ipc.c | 35 ++++-------------------------------
+ 1 file changed, 4 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index f94b730540e2..e81daff65f62 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -24,7 +24,6 @@
+ #include <linux/pci.h>
+ #include <linux/interrupt.h>
+ #include <linux/sfi.h>
+-#include <linux/module.h>
+ #include <asm/intel-mid.h>
+ #include <asm/intel_scu_ipc.h>
+ 
+@@ -611,28 +610,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
+ }
+ 
+-/**
+- *	ipc_remove	-	remove a bound IPC device
+- *	@pdev: PCI device
+- *
+- *	In practice the SCU is not removable but this function is also
+- *	called for each device on a module unload or cleanup which is the
+- *	path that will get used.
+- *
+- *	Free up the mappings and release the PCI resources
+- */
+-static void ipc_remove(struct pci_dev *pdev)
+-{
+-	struct intel_scu_ipc_dev *scu = pci_get_drvdata(pdev);
+-
+-	mutex_lock(&ipclock);
+-	scu->dev = NULL;
+-	mutex_unlock(&ipclock);
+-
+-	iounmap(scu->i2c_base);
+-	intel_scu_devices_destroy();
+-}
+-
+ static const struct pci_device_id pci_ids[] = {
+ 	{
+ 		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_LINCROFT),
+@@ -650,17 +627,13 @@ static const struct pci_device_id pci_ids[] = {
+ 		0,
+ 	}
+ };
+-MODULE_DEVICE_TABLE(pci, pci_ids);
+ 
+ static struct pci_driver ipc_driver = {
++	.driver = {
++		.suppress_bind_attrs = true,
++	},
+ 	.name = "intel_scu_ipc",
+ 	.id_table = pci_ids,
+ 	.probe = ipc_probe,
+-	.remove = ipc_remove,
+ };
+-
+-module_pci_driver(ipc_driver);
+-
+-MODULE_AUTHOR("Sreedhara DS <sreedhara.ds@intel.com>");
+-MODULE_DESCRIPTION("Intel SCU IPC driver");
+-MODULE_LICENSE("GPL");
++builtin_pci_driver(ipc_driver);
+-- 
+2.6.1
