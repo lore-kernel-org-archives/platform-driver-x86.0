@@ -1,81 +1,79 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Subject: Re: [PATCH 1/2] ideapad: No hardware switch after 2016
-Date: Mon, 15 Feb 2016 18:32:25 +0100
-Message-ID: <877fi5x4k6.fsf@nemi.mork.no>
-References: <1455531813-1256-1-git-send-email-ike.pan@canonical.com>
-	<1455531863-1294-1-git-send-email-ike.pan@canonical.com>
-	<87r3gew4zw.fsf@nemi.mork.no> <56C20556.7040900@canonical.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v5 4/5] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
+Date: Mon, 15 Feb 2016 18:37:16 +0100
+Message-ID: <201602151837.16114@pali>
+References: <cover.1455553470.git.luto@kernel.org> <201602151820.56085@pali> <56C20A40.6010807@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart1554842.zQ32sQKmRI";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from canardo.mork.no ([148.122.252.1]:41901 "EHLO canardo.mork.no"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751326AbcBORcy convert rfc822-to-8bit (ORCPT
+Received: from mail-wm0-f54.google.com ([74.125.82.54]:36120 "EHLO
+	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751481AbcBORhS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Feb 2016 12:32:54 -0500
-In-Reply-To: <56C20556.7040900@canonical.com> (Ike Panhc's message of "Tue, 16
-	Feb 2016 01:05:26 +0800")
+	Mon, 15 Feb 2016 12:37:18 -0500
+Received: by mail-wm0-f54.google.com with SMTP id g62so69824055wme.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2016 09:37:18 -0800 (PST)
+In-Reply-To: <56C20A40.6010807@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mario Limonciello <mario_limonciello@dell.com>
+Cc: Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-Ike Panhc <ike.pan@canonical.com> writes:
-> On 02/15/2016 08:08 PM, Bj=C3=B8rn Mork wrote:
->> Ike Panhc <ike.pan@canonical.com> writes:
->>=20
->>> There are complains on few ideapads that wireless is always hard
->>> blocked but there is no physical radio switch. For now, we need
->>> each user to report its dmi information and ignore hard blocks
->>> on their ideapad. With more and more ideapads available in market
->>> to maintain the dmi table becomes never-ended job.
->>>
->>> I've checked lenovo website and for recent design none of the
->>> ideapads has radio switch. I do not believe there will be in the
->>> future. Therefore to disable hard block according to BIOS date is
->>> reasonable approach.
->>>
->>> This patch will disable rfkill hardblock if BIOS year > 2015.
->>=20
->> Huh?  And what happens when a user upgrades the BIOS on older hardwa=
-re?
->>=20
->
-> That's why I believe > 2015 is a better choice, not > 2014.
->
-> Ideapads in market now carries BIOS year 2015 and I found no radio sw=
-itch
-> on them. And I don't believe anyone will receive or upgrade BIOS for =
-more
-> then 1y old machine. In fact I haven't heard anyone upgrading BIOS fo=
-r a
-> long time.
+--nextPart1554842.zQ32sQKmRI
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now I don't know this platform, but that assumption seems terribly
-fragile to me.
+On Monday 15 February 2016 18:26:24 Mario Limonciello wrote:
+> On 02/15/2016 11:20 AM, Pali Roh=C3=A1r wrote:
+> > On Monday 15 February 2016 17:32:36 Andy Lutomirski wrote:
+> >> +       /* Stealth mode toggle */
+> >> +       { KE_IGNORE, 0x155, { KEY_RESERVED } },
+> >=20
+> > Hi! Just one question, what does this "Stealth mode" means and what
+> > this toggle key/button doing?
+> >=20
+> > I would propose for Laptops manufactures to revert back normal
+> > nonchiclet keyboard with full 105 normal keys (with F1-F12) instead
+> > inventing such useless and crappy/funny names for keys/buttons on
+> > laptops which replace PgUP/PgDown/SysRq and etc...
+>=20
+> Pali,
+>=20
+> Stealth mode will "disable all lights and sounds".  The event is for
+> notification only.  The actual change is performed by a combination
+> of the BIOS and EC.
+>=20
+> There is also a BIOS setting that disables the hotkey from doing
+> anything.
+>=20
+> Thanks,
 
-Do you own a crystal ball?  Are BIOS updates for older machines so
-unlikely that you don't even have to consider the possibility?  What
-about a security flaw affecting the BIOS of a large number of older
-machines?  Has that never happened?
+Thank you! Now I can image what this line in diff means :-)
 
-Sorry, but I don't think it's very nice to owners of older ideapads to
-just let their rfkill devices disappear silently if they ever upgrade
-their BIOS after 2015.  Yes, that may not be possible right now.  And i=
-t
-might never become possible.  I don't know.  But what exactly is your
-plan *if* it becomes possible?
+Anyway, I would propose some rule to and longer description for newly=20
+invented hot key events which are marked as KEY_RESERVED in kernel=20
+source code. Really sometimes it is hard to guess what it can means and=20
+constant KEY_RESERVED does not help much more.
 
-And are you sure there is no proper way to fix this issue?  I know
-firmware engineers are evil ;) But it would be surprising if they didn'=
-t
-put some clue about the physical switch into the BIOS tables.  I see
-that you check flags for wlan/bt/3g existence.  Maybe there is another
-flag indicating the switch existence? Or maybe some other acpi method?
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-At the very least, I am convinced there are other hardware you can
-correlate the switch existence with.
+--nextPart1554842.zQ32sQKmRI
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-Bj=C3=B8rn
+iEYEABECAAYFAlbCDMwACgkQi/DJPQPkQ1KP4QCfcqBj/KJ8JCGIaxKTlM1yBUVl
+FPsAniEaW64eVlEAoJWdlhAj2aK586gU
+=qtgf
+-----END PGP SIGNATURE-----
+
+--nextPart1554842.zQ32sQKmRI--
