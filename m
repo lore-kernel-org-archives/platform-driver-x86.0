@@ -1,72 +1,46 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v5 3/5] dell-wmi: Clean up hotkey table size check
-Date: Mon, 15 Feb 2016 08:32:35 -0800
-Message-ID: <9aaaffdc9eb56061386c8ae443d130f20131c234.1455553470.git.luto@kernel.org>
-References: <cover.1455553470.git.luto@kernel.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:34188 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751326AbcBOQcu (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Feb 2016 11:32:50 -0500
-In-Reply-To: <cover.1455553470.git.luto@kernel.org>
-In-Reply-To: <cover.1455553470.git.luto@kernel.org>
-References: <cover.1455553470.git.luto@kernel.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
-Cc: Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 1/2] ideapad: No hardware switch after 2016
+Date: Tue, 16 Feb 2016 01:05:26 +0800
+Message-ID: <56C20556.7040900@canonical.com>
+References: <1455531813-1256-1-git-send-email-ike.pan@canonical.com>
+ <1455531863-1294-1-git-send-email-ike.pan@canonical.com>
+ <87r3gew4zw.fsf@nemi.mork.no>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87r3gew4zw.fsf@nemi.mork.no>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Checking the table for a minimum size of 7 bytes makes no sense: any valid
-hotkey table has a size that's a multiple of 4.
+On 02/15/2016 08:08 PM, Bj=C3=B8rn Mork wrote:
+> Ike Panhc <ike.pan@canonical.com> writes:
+>=20
+>> There are complains on few ideapads that wireless is always hard
+>> blocked but there is no physical radio switch. For now, we need
+>> each user to report its dmi information and ignore hard blocks
+>> on their ideapad. With more and more ideapads available in market
+>> to maintain the dmi table becomes never-ended job.
+>>
+>> I've checked lenovo website and for recent design none of the
+>> ideapads has radio switch. I do not believe there will be in the
+>> future. Therefore to disable hard block according to BIOS date is
+>> reasonable approach.
+>>
+>> This patch will disable rfkill hardblock if BIOS year > 2015.
+>=20
+> Huh?  And what happens when a user upgrades the BIOS on older hardwar=
+e?
+>=20
 
-Clean this up: replace the hardcoded header length with a sizeof and
-change the check to ignore an empty hotkey table.  The only behavior
-change is that a 7-byte table (which is nonsensical) will now be
-treated as absent instead of as valid but empty.
+That's why I believe > 2015 is a better choice, not > 2014.
 
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
-
-Changes from v3: None
-
-Changes from v2:
- - Total rewrite.
-
-drivers/platform/x86/dell-wmi.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index d6ae69e0a787..32808a463325 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -351,13 +351,24 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
- 	if (results->err || results->keymap)
- 		return;		/* We already found the hotkey table. */
- 
--	if (dm->type != 0xb2 || dm->length <= 6)
-+	if (dm->type != 0xb2)
- 		return;
- 
- 	table = container_of(dm, struct dell_bios_hotkey_table, header);
- 
--	hotkey_num = (table->header.length - 4) /
-+	hotkey_num = (table->header.length -
-+		      sizeof(struct dell_bios_hotkey_table)) /
- 				sizeof(struct dell_bios_keymap_entry);
-+	if (hotkey_num < 1) {
-+		/*
-+		 * Historically, dell-wmi would ignore a DMI entry of
-+		 * fewer than 7 bytes.  Sizes between 4 and 8 bytes are
-+		 * nonsensical (both the header and all entries are 4
-+		 * bytes), so we approximate the old behavior by
-+		 * ignoring tables with fewer than one entry.
-+		 */
-+		return;
-+	}
- 
- 	keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
- 	if (!keymap) {
--- 
-2.5.0
+Ideapads in market now carries BIOS year 2015 and I found no radio swit=
+ch
+on them. And I don't believe anyone will receive or upgrade BIOS for mo=
+re
+then 1y old machine. In fact I haven't heard anyone upgrading BIOS for =
+a
+long time.
