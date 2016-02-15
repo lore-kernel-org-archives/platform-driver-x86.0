@@ -1,79 +1,37 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v5 4/5] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-Date: Mon, 15 Feb 2016 18:37:16 +0100
-Message-ID: <201602151837.16114@pali>
-References: <cover.1455553470.git.luto@kernel.org> <201602151820.56085@pali> <56C20A40.6010807@dell.com>
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: Re: [PATCH v3 0/6] alienware-wmi: new platform and feature support
+Date: Mon, 15 Feb 2016 16:51:29 -0600
+Message-ID: <56C25671.2090008@dell.com>
+References: <1454449137-16478-1-git-send-email-mario_limonciello@dell.com>
+ <20160207200506.GG1779@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1554842.zQ32sQKmRI";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f54.google.com ([74.125.82.54]:36120 "EHLO
-	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751481AbcBORhS (ORCPT
+Received: from ausxipps301.us.dell.com ([143.166.148.223]:58321 "EHLO
+	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753106AbcBOWzw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Feb 2016 12:37:18 -0500
-Received: by mail-wm0-f54.google.com with SMTP id g62so69824055wme.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2016 09:37:18 -0800 (PST)
-In-Reply-To: <56C20A40.6010807@dell.com>
+	Mon, 15 Feb 2016 17:55:52 -0500
+In-Reply-To: <20160207200506.GG1779@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
---nextPart1554842.zQ32sQKmRI
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Monday 15 February 2016 18:26:24 Mario Limonciello wrote:
-> On 02/15/2016 11:20 AM, Pali Roh=C3=A1r wrote:
-> > On Monday 15 February 2016 17:32:36 Andy Lutomirski wrote:
-> >> +       /* Stealth mode toggle */
-> >> +       { KE_IGNORE, 0x155, { KEY_RESERVED } },
-> >=20
-> > Hi! Just one question, what does this "Stealth mode" means and what
-> > this toggle key/button doing?
-> >=20
-> > I would propose for Laptops manufactures to revert back normal
-> > nonchiclet keyboard with full 105 normal keys (with F1-F12) instead
-> > inventing such useless and crappy/funny names for keys/buttons on
-> > laptops which replace PgUP/PgDown/SysRq and etc...
->=20
-> Pali,
->=20
-> Stealth mode will "disable all lights and sounds".  The event is for
-> notification only.  The actual change is performed by a combination
-> of the BIOS and EC.
->=20
-> There is also a BIOS setting that disables the hotkey from doing
-> anything.
->=20
-> Thanks,
 
-Thank you! Now I can image what this line in diff means :-)
-
-Anyway, I would propose some rule to and longer description for newly=20
-invented hot key events which are marked as KEY_RESERVED in kernel=20
-source code. Really sometimes it is hard to guess what it can means and=20
-constant KEY_RESERVED does not help much more.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1554842.zQ32sQKmRI
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlbCDMwACgkQi/DJPQPkQ1KP4QCfcqBj/KJ8JCGIaxKTlM1yBUVl
-FPsAniEaW64eVlEAoJWdlhAj2aK586gU
-=qtgf
------END PGP SIGNATURE-----
-
---nextPart1554842.zQ32sQKmRI--
+On 02/07/2016 02:05 PM, Darren Hart wrote:
+> On Tue, Feb 02, 2016 at 03:38:51PM -0600, Mario Limonciello wrote:
+>> I've got some extensions for the alienware-wmi driver that have
+>> been introduced for a few new platforms and can be controlled via the WMI
+>> interface.
+> Thanks Mario, and apologies for the delay. This appears functionally correct at
+> each patch. There were still a couple minor line wrapping and comment block
+> formatting issues, but given the time delay, I just took care of those myself
+> and annotated it in the commit messages. These are now queued to testing.
+>
+> If you would like to verify my changes, they are available in the testing branch
+> of my tree.
+>
+Everything looks good, thanks!
