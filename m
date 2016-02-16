@@ -1,65 +1,70 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
-Date: Tue, 16 Feb 2016 10:12:45 -0500
-Message-ID: <CA+A7VXWuMfGpLCyv+veq1GxMzZe+P1F99470KT7B_Q3+6v9fdQ@mail.gmail.com>
-References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
- <1454946096-9752-9-git-send-email-jprvita@endlessm.com> <1454947887.5325.8.camel@redhat.com>
- <1455120444.4991.1.camel@sipsolutions.net> <1455123205.19821.34.camel@redhat.com>
- <ec4b7edcda0a62cd4e36e501f5ad56f9@sipsolutions.net>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3 3/5] dell-wmi: enable receiving WMI events on Dell
+ Vostro V131
+Date: Tue, 16 Feb 2016 16:17:39 +0100
+Message-ID: <20160216151739.GK1476@pali>
+References: <20160121090401.GR7192@pali>
+ <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+ <1455634230-1487-4-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <ec4b7edcda0a62cd4e36e501f5ad56f9@sipsolutions.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Dan Williams <dcbw@redhat.com>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:35513 "EHLO
+	mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754633AbcBPPRm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 16 Feb 2016 10:17:42 -0500
+Content-Disposition: inline
+In-Reply-To: <1455634230-1487-4-git-send-email-kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 10 February 2016 at 12:12, Johannes Berg <johannes@sipsolutions.net>=
- wrote:
-> On 2016-02-10 17:53, Dan Williams wrote:
->>
->> Yeah, I get that now.  It's just that to me, something called
->> "AIRPLANE_MODE_CHANGE" seems like it should actually change airplane
->> mode on/off, which implies killing radios.  I wouldn't have had the
->> problem if it was named AIRPLANE_MODE_INDICATOR_CHANGE, which makes =
-it
->> clear this is simply an indicator and has no actual effect on anythi=
-ng
->> other than a LED.
->
+On Tuesday 16 February 2016 15:50:28 Micha=C5=82 K=C4=99pie=C5=84 wrote=
+:
+> +	if (wmi_requires_smbios_request) {
+> +		buffer =3D dell_smbios_get_buffer();
+> +		buffer->input[0] =3D 0x10000;
+> +		buffer->input[1] =3D 0x51534554;
+> +		buffer->input[3] =3D 0x1;
+> +		dell_smbios_send_request(17, 3);
+> +		err =3D buffer->output[0];
+> +		dell_smbios_release_buffer();
+> +		if (err) {
+> +			pr_err("Failed to enable WMI (error %d)\n", err);
+> +			wmi_remove_notify_handler(DELL_EVENT_GUID);
+> +			dell_wmi_input_destroy();
+> +			return dell_smbios_error(err);
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  module_init(dell_wmi_init);
+> =20
+>  static void __exit dell_wmi_exit(void)
+>  {
+> +	struct calling_interface_buffer *buffer;
+> +
+> +	if (wmi_requires_smbios_request) {
+> +		buffer =3D dell_smbios_get_buffer();
+> +		buffer->input[0] =3D 0x10000;
+> +		buffer->input[1] =3D 0x51534554;
+> +		dell_smbios_send_request(17, 3);
+> +		dell_smbios_release_buffer();
+> +	}
+> +
+>  	wmi_remove_notify_handler(DELL_EVENT_GUID);
+>  	dell_wmi_input_destroy();
+>  }
 
-I also agree the AIRPLANE_MODE_INDICATOR_* prefix makes things more
-clear here. Thanks for the feedback, Dan!
+Hi! I would propose moving this get_buffer, send, release code into own
+function with boolean argument on/off. This de-duplicate same code plus
+decrease level of indentation in _init function. And maybe adding ascii
+string comment representation for that 0x5153... number can be useful.
 
->
-> Yeah, I agree. I'm not even sure that it's a good idea to subsume thi=
-s into
-> the regular operations in the API, although that's obviously the easi=
-est
-> extension. I'll need to think about that a bit more with the code at =
-hand
-> though.
->
-
-Initially I have thought about creating and additional RFKill switch
-for that, but I think it would be a bit hackish since we would have to
-treat it specially in sysfs attributes and probably other places, and
-userspace would also need a special case when going through the list
-of RFKill switches in the system. The proposed solution has equivalent
-semantics to an RFKill switch, is backward-compatible (users would
-only ignore the unknown operations and evens -- although gsd has a
-"default:" case to abort execution on an unknown event) and does not
-extend the RFKill event struct.
-
-One alternative would be to move the control point to a separate
-device, like /dev/rfkill-airplane-mode, but I'm not sure this is a
-very elegant approach. Anyway, I'm open to work on changes to the API,
-but it would be great if you could at least pick or reject the
-non-polemical patches of the series, so I don't need to carry them
-anymore.
-
---
-Jo=C3=A3o Paulo Rechi Vita
-http://about.me/jprvita
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
