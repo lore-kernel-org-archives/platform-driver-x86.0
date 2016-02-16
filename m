@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v3 1/5] dell-laptop: move dell_smi_error() to dell-smbios
-Date: Tue, 16 Feb 2016 15:50:26 +0100
-Message-ID: <1455634230-1487-2-git-send-email-kernel@kempniu.pl>
+Subject: [PATCH v3 3/5] dell-wmi: enable receiving WMI events on Dell Vostro V131
+Date: Tue, 16 Feb 2016 15:50:28 +0100
+Message-ID: <1455634230-1487-4-git-send-email-kernel@kempniu.pl>
 References: <20160121090401.GR7192@pali>
  <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
@@ -14,92 +14,131 @@ To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.r
 Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The dell_smi_error() method could be used by modules other than
-dell-laptop for convenient translation of SMBIOS request errors into
-errno values.  Thus, move it to dell-smbios.
+On some laptop models (e.g. Dell Vostro V131), WMI events are not
+generated until a specific SMBIOS request is issued to register an even=
+t
+listener [1].  As there seems to be no ACPI method or SMBIOS request to
+determine without possible side effects whether a given machine needs t=
+o
+issue this SMBIOS request in order to receive WMI events, DMI matching
+is used to whitelist the models which need it.
+
+[1] https://lists.us.dell.com/pipermail/libsmbios-devel/2015-July/00061=
+2.html
 
 Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
 ---
- drivers/platform/x86/dell-laptop.c |   14 --------------
- drivers/platform/x86/dell-smbios.c |   16 ++++++++++++++++
- drivers/platform/x86/dell-smbios.h |    2 ++
- 3 files changed, 18 insertions(+), 14 deletions(-)
+ drivers/platform/x86/Kconfig    |    1 +
+ drivers/platform/x86/dell-wmi.c |   49 +++++++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index 76064c8..cbafb95 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -273,20 +273,6 @@ static const struct dmi_system_id dell_quirks[] __=
-initconst =3D {
- 	{ }
- };
-=20
--static inline int dell_smi_error(int value)
--{
--	switch (value) {
--	case 0: /* Completed successfully */
--		return 0;
--	case -1: /* Completed with error */
--		return -EIO;
--	case -2: /* Function not supported */
--		return -ENXIO;
--	default: /* Unknown error */
--		return -EINVAL;
--	}
--}
--
- /*
-  * Derived from information in smbios-wireless-ctl:
-  *
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-index 2a4992a..942572f 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index 3e4d9c3..5ceb53a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -122,6 +122,7 @@ config DELL_WMI
+ 	depends on ACPI_WMI
+ 	depends on INPUT
+ 	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
++	depends on DELL_SMBIOS
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+ 	  Say Y here if you want to support WMI-based hotkeys on Dell laptops=
+=2E
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-wmi.c
+index 368e193..ca8233a 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -37,6 +37,7 @@
+ #include <linux/string.h>
  #include <linux/dmi.h>
-+#include <linux/err.h>
- #include <linux/gfp.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-@@ -39,6 +40,21 @@ static int da_command_code;
- static int da_num_tokens;
- static struct calling_interface_token *da_tokens;
+ #include <acpi/video.h>
++#include "dell-smbios.h"
 =20
-+int dell_smi_error(int value)
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
+@@ -47,10 +48,29 @@ MODULE_LICENSE("GPL");
+ #define DELL_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+=20
+ static u32 dell_wmi_interface_version;
++static bool wmi_requires_smbios_request;
+=20
+ MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
+ MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
+=20
++static int __init dmi_matched(const struct dmi_system_id *dmi)
 +{
-+	switch (value) {
-+	case 0: /* Completed successfully */
-+		return 0;
-+	case -1: /* Completed with error */
-+		return -EIO;
-+	case -2: /* Function not supported */
-+		return -ENXIO;
-+	default: /* Unknown error */
-+		return -EINVAL;
-+	}
++	wmi_requires_smbios_request =3D 1;
++	return 1;
 +}
-+EXPORT_SYMBOL_GPL(dell_smi_error);
 +
- struct calling_interface_buffer *dell_smbios_get_buffer(void)
++static const struct dmi_system_id dell_wmi_smbios_list[] __initconst =3D=
  {
- 	mutex_lock(&buffer_mutex);
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/=
-dell-smbios.h
-index 4f69b16..52febe6 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -35,6 +35,8 @@ struct calling_interface_token {
- 	};
- };
-=20
-+int dell_smi_error(int value);
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "Dell Vostro V131",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
++		},
++	},
++	{ }
++};
 +
- struct calling_interface_buffer *dell_smbios_get_buffer(void);
- void dell_smbios_clear_buffer(void);
- void dell_smbios_release_buffer(void);
+ /*
+  * Certain keys are flagged as KE_IGNORE. All of these are either
+  * notifications (rather than requests for change) or are also sent
+@@ -513,6 +533,7 @@ static int __init dell_wmi_init(void)
+ {
+ 	int err;
+ 	acpi_status status;
++	struct calling_interface_buffer *buffer;
+=20
+ 	if (!wmi_has_guid(DELL_EVENT_GUID) ||
+ 	    !wmi_has_guid(DELL_DESCRIPTOR_GUID)) {
+@@ -538,12 +559,40 @@ static int __init dell_wmi_init(void)
+ 		return -ENODEV;
+ 	}
+=20
++	dmi_check_system(dell_wmi_smbios_list);
++
++	if (wmi_requires_smbios_request) {
++		buffer =3D dell_smbios_get_buffer();
++		buffer->input[0] =3D 0x10000;
++		buffer->input[1] =3D 0x51534554;
++		buffer->input[3] =3D 0x1;
++		dell_smbios_send_request(17, 3);
++		err =3D buffer->output[0];
++		dell_smbios_release_buffer();
++		if (err) {
++			pr_err("Failed to enable WMI (error %d)\n", err);
++			wmi_remove_notify_handler(DELL_EVENT_GUID);
++			dell_wmi_input_destroy();
++			return dell_smbios_error(err);
++		}
++	}
++
+ 	return 0;
+ }
+ module_init(dell_wmi_init);
+=20
+ static void __exit dell_wmi_exit(void)
+ {
++	struct calling_interface_buffer *buffer;
++
++	if (wmi_requires_smbios_request) {
++		buffer =3D dell_smbios_get_buffer();
++		buffer->input[0] =3D 0x10000;
++		buffer->input[1] =3D 0x51534554;
++		dell_smbios_send_request(17, 3);
++		dell_smbios_release_buffer();
++	}
++
+ 	wmi_remove_notify_handler(DELL_EVENT_GUID);
+ 	dell_wmi_input_destroy();
+ }
 --=20
 1.7.10.4
