@@ -1,147 +1,65 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v3 2/5] dell-smbios: rename dell_smi_error() to dell_smbios_error()
-Date: Tue, 16 Feb 2016 15:50:27 +0100
-Message-ID: <1455634230-1487-3-git-send-email-kernel@kempniu.pl>
-References: <20160121090401.GR7192@pali>
- <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 8/9] rfkill: Userspace control for airplane mode
+Date: Tue, 16 Feb 2016 10:12:45 -0500
+Message-ID: <CA+A7VXWuMfGpLCyv+veq1GxMzZe+P1F99470KT7B_Q3+6v9fdQ@mail.gmail.com>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
+ <1454946096-9752-9-git-send-email-jprvita@endlessm.com> <1454947887.5325.8.camel@redhat.com>
+ <1455120444.4991.1.camel@sipsolutions.net> <1455123205.19821.34.camel@redhat.com>
+ <ec4b7edcda0a62cd4e36e501f5ad56f9@sipsolutions.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <ec4b7edcda0a62cd4e36e501f5ad56f9@sipsolutions.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Dan Williams <dcbw@redhat.com>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As dell_smi_error() is exported by dell-smbios, its prefix should be
-consistent with other exported symbols, so change function name to
-dell_smbios_error().
+On 10 February 2016 at 12:12, Johannes Berg <johannes@sipsolutions.net>=
+ wrote:
+> On 2016-02-10 17:53, Dan Williams wrote:
+>>
+>> Yeah, I get that now.  It's just that to me, something called
+>> "AIRPLANE_MODE_CHANGE" seems like it should actually change airplane
+>> mode on/off, which implies killing radios.  I wouldn't have had the
+>> problem if it was named AIRPLANE_MODE_INDICATOR_CHANGE, which makes =
+it
+>> clear this is simply an indicator and has no actual effect on anythi=
+ng
+>> other than a LED.
+>
 
-Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
----
- drivers/platform/x86/dell-laptop.c |   16 ++++++++--------
- drivers/platform/x86/dell-smbios.c |    4 ++--
- drivers/platform/x86/dell-smbios.h |    2 +-
- 3 files changed, 11 insertions(+), 11 deletions(-)
+I also agree the AIRPLANE_MODE_INDICATOR_* prefix makes things more
+clear here. Thanks for the feedback, Dan!
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index cbafb95..2c2f02b 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -433,7 +433,7 @@ static int dell_rfkill_set(void *data, bool blocked=
-)
-=20
-  out:
- 	dell_smbios_release_buffer();
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- /* Must be called with the buffer held */
-@@ -876,7 +876,7 @@ static int dell_send_intensity(struct backlight_dev=
-ice *bd)
- 	else
- 		dell_smbios_send_request(1, 1);
-=20
--	ret =3D dell_smi_error(buffer->output[0]);
-+	ret =3D dell_smbios_error(buffer->output[0]);
-=20
- 	dell_smbios_release_buffer();
- 	return ret;
-@@ -901,7 +901,7 @@ static int dell_get_intensity(struct backlight_devi=
-ce *bd)
- 		dell_smbios_send_request(0, 1);
-=20
- 	if (buffer->output[0])
--		ret =3D dell_smi_error(buffer->output[0]);
-+		ret =3D dell_smbios_error(buffer->output[0]);
- 	else
- 		ret =3D buffer->output[1];
-=20
-@@ -1160,7 +1160,7 @@ static int kbd_get_info(struct kbd_info *info)
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
--		ret =3D dell_smi_error(ret);
-+		ret =3D dell_smbios_error(ret);
- 		goto out;
- 	}
-=20
-@@ -1249,7 +1249,7 @@ static int kbd_get_state(struct kbd_state *state)
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
--		ret =3D dell_smi_error(ret);
-+		ret =3D dell_smbios_error(ret);
- 		goto out;
- 	}
-=20
-@@ -1286,7 +1286,7 @@ static int kbd_set_state(struct kbd_state *state)
- 	ret =3D buffer->output[0];
- 	dell_smbios_release_buffer();
-=20
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- static int kbd_set_state_safe(struct kbd_state *state, struct kbd_stat=
-e *old)
-@@ -1329,7 +1329,7 @@ static int kbd_set_token_bit(u8 bit)
- 	ret =3D buffer->output[0];
- 	dell_smbios_release_buffer();
-=20
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- static int kbd_get_token_bit(u8 bit)
-@@ -1354,7 +1354,7 @@ static int kbd_get_token_bit(u8 bit)
- 	dell_smbios_release_buffer();
-=20
- 	if (ret)
--		return dell_smi_error(ret);
-+		return dell_smbios_error(ret);
-=20
- 	return (val =3D=3D token->value);
- }
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-index 942572f..d2412ab 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -40,7 +40,7 @@ static int da_command_code;
- static int da_num_tokens;
- static struct calling_interface_token *da_tokens;
-=20
--int dell_smi_error(int value)
-+int dell_smbios_error(int value)
- {
- 	switch (value) {
- 	case 0: /* Completed successfully */
-@@ -53,7 +53,7 @@ int dell_smi_error(int value)
- 		return -EINVAL;
- 	}
- }
--EXPORT_SYMBOL_GPL(dell_smi_error);
-+EXPORT_SYMBOL_GPL(dell_smbios_error);
-=20
- struct calling_interface_buffer *dell_smbios_get_buffer(void)
- {
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/=
-dell-smbios.h
-index 52febe6..ec7d40a 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -35,7 +35,7 @@ struct calling_interface_token {
- 	};
- };
-=20
--int dell_smi_error(int value);
-+int dell_smbios_error(int value);
-=20
- struct calling_interface_buffer *dell_smbios_get_buffer(void);
- void dell_smbios_clear_buffer(void);
---=20
-1.7.10.4
+>
+> Yeah, I agree. I'm not even sure that it's a good idea to subsume thi=
+s into
+> the regular operations in the API, although that's obviously the easi=
+est
+> extension. I'll need to think about that a bit more with the code at =
+hand
+> though.
+>
+
+Initially I have thought about creating and additional RFKill switch
+for that, but I think it would be a bit hackish since we would have to
+treat it specially in sysfs attributes and probably other places, and
+userspace would also need a special case when going through the list
+of RFKill switches in the system. The proposed solution has equivalent
+semantics to an RFKill switch, is backward-compatible (users would
+only ignore the unknown operations and evens -- although gsd has a
+"default:" case to abort execution on an unknown event) and does not
+extend the RFKill event struct.
+
+One alternative would be to move the control point to a separate
+device, like /dev/rfkill-airplane-mode, but I'm not sure this is a
+very elegant approach. Anyway, I'm open to work on changes to the API,
+but it would be great if you could at least pick or reject the
+non-polemical patches of the series, so I don't need to carry them
+anymore.
+
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
