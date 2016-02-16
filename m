@@ -1,46 +1,64 @@
-From: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>
-Subject: =?utf-8?Q?=D0=9A=D0=9B=D0=98=D0=95=D0=9D=D0=A2=D0=A1=D0?=
-	=?utf-8?Q?=9A=D0=98=D0=95_=D0=91=D0=90=D0=97=D0=AB!_=D0?=
-	=?utf-8?Q?=A2=D0=B5=D0=BB=5CViber=5CWhatsapp=3A_+79139393?=
-	=?utf-8?Q?506_Email=3A_usitnikov94=40gmail=2Ecom_Skype=3A?=
-	=?utf-8?Q?_prodawez389?=
-Date: Tue, 16 Feb 2016 18:24:45 +0600
-Message-ID: <53A81CC373A7884B9792DB6490A4A82F@vger.kernel.org>
-Reply-To: "platform-driver-x86@vger.kernel.org" <usitnikov94@gmail.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v3 0/5] Process Dell Instant Launch hotkey on Vostro V131 and Inspiron M5110
+Date: Tue, 16 Feb 2016 15:50:25 +0100
+Message-ID: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+References: <20160121090401.GR7192@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static-181-143-229-122.une.net.co ([181.143.229.122]:40059 "EHLO
-	ServProxy.localdomain" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751221AbcBPOuP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Feb 2016 09:50:15 -0500
-Received: from 181.143.229.122 (localhost.localdomain [127.0.0.1])
-	by ServProxy.localdomain (Postfix) with SMTP id 933C0BD6B7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Feb 2016 15:23:01 -0500 (COT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160121090401.GR7192@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-=D0=9A=D0=9B=D0=98=D0=95=D0=9D=D0=A2=D0=A1=D0=9A=D0=98=D0=95 =D0=91=D0=90=
-=D0=97=D0=AB!
+Changes from v2:
 
-=D0=A1=D0=BE=D0=B1=D0=B5=D1=80=D0=B5=D0=BC =D0=B4=D0=BB=D1=8F =D0=92=D0=
-=B0=D1=81 =D0=BF=D0=BE =D0=B8=D0=BD=D1=82=D0=B5=D1=80=D0=BD=D0=B5=D1=82=
- =D0=B1=D0=B0=D0=B7=D1=83 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D1=85 =D0=BF=D0=
-=BE=D1=82=D0=B5=D0=BD=D1=86=D0=B8=D0=B0=D0=BB=D1=8C=D0=BD=D1=8B=D1=85 =D0=
-=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=BE=D0=B2=20
-=D0=B4=D0=BB=D1=8F =D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE =D0=91=D0=B8=D0=
-=B7=D0=BD=D0=B5=D1=81=D0=B0!
-=D0=9C=D0=BD=D0=BE=D0=B3=D0=BE! =D0=91=D1=8B=D1=81=D1=82=D1=80=D0=BE! =D0=
-=9D=D0=B5=D0=B4=D0=BE=D1=80=D0=BE=D0=B3=D0=BE!=20
-=D0=A3=D0=B7=D0=BD=D0=B0=D0=B9=D1=82=D0=B5 =D0=BE=D0=B1 =D1=8D=D1=82=D0=
-=BE=D0=BC =D0=BF=D0=BE=D0=B4=D1=80=D0=BE=D0=B1=D0=BD=D0=B5=D0=B5 =D0=BF=
-=D0=BE=20
-=D0=A2=D0=B5=D0=BB: +79139393506
-Viber: +79139393506
-Whatsapp: +79139393506
-Skype: prodawez389
-Email: usitnikov94@gmail.com
+  - Use a static variable instead of a quirk structure
+
+  - Use the API exported by dell-smbios to issue the SMBIOS request
+    required for generating WMI events, returning with error from
+    dell_wmi_init() if it fails
+
+  - Move dell_smi_error() from dell-laptop to dell-smbios and use it to
+    determine the error code for returning from dell_wmi_init() when
+    enabling WMI fails
+
+  - Support Dell Inspiron M5110
+
+Changes from v1:
+
+  - Use DMI matching instead of a module parameter
+  - Change flag name to improve readability
+
+This patch series makes use of the API exported by dell-smbios, so it
+should be applied to either testing or dell-smbios.
+
+This patch series was tested on a Dell Inspiron M5110 by Darek Stojaczyk
+(CC'd), who reported that it had similar issues as Dell Vostro V131 back
+in July 2015 [1].
+
+Pali, returning to our debate whether to place the WMI-enabling SMBIOS
+request in dell-laptop or in dell-wmi, I still strongly recommend the
+latter.  Apart from the reasons I had discussed before [2], I came up
+with another one.  The SMBIOS request in question registers/unregisters
+an event listener (dell-wmi).  If we only register for WMI events in
+dell-laptop and dell-wmi gets unloaded at some point further on,
+brightness keys will not be properly processed any more as they will
+only be reported using WMI.  If we properly unregister in
+dell_wmi_exit(), brightness keys will be properly reported by ACPI as if
+dell-wmi was never loaded.
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1205791/comments/12
+[2] http://www.spinics.net/lists/platform-driver-x86/msg08289.html
+
+ drivers/platform/x86/Kconfig       |    1 +
+ drivers/platform/x86/dell-laptop.c |   30 +++++------------
+ drivers/platform/x86/dell-smbios.c |   16 +++++++++
+ drivers/platform/x86/dell-smbios.h |    2 ++
+ drivers/platform/x86/dell-wmi.c    |   63 +++++++++++++++++++++++++++++++++++-
+ 5 files changed, 89 insertions(+), 23 deletions(-)
+
+-- 
+1.7.10.4
