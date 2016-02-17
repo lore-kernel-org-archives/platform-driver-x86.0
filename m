@@ -1,43 +1,51 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v3 5/5] dell-wmi: support Dell Inspiron M5110
-Date: Tue, 16 Feb 2016 23:03:12 +0100
-Message-ID: <20160216220312.GB2741@eudyptula.hq.kempniu.pl>
-References: <20160121090401.GR7192@pali>
- <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <1455634230-1487-6-git-send-email-kernel@kempniu.pl>
- <20160216152246.GL1476@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160216152246.GL1476@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Subject: [PATCH] intel_telemetry_pltdrv: Change verbosity control bits
+Date: Wed, 17 Feb 2016 12:05:22 +0530
+Message-ID: <1455690922-22936-1-git-send-email-souvik.k.chakravarty@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:27224 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756521AbcBQG3R (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Feb 2016 01:29:17 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 
-> >  	/* Shortcut and audio panel keys */
-> >  	{ KE_KEY, 0xe025, { KEY_PROG4 } },
-> >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> > +	{ KE_KEY, 0xe029, { KEY_PROG4 } },
->=20
-> Hi! Above comment (Shortcut and audio panel keys) is not relevant for
-> this 0xe029, right?
+Due to a recent fix in the firmware, the Punit verbosity control bits
+now adhere to the correct pattern. Hence remove the workaround and
+do a read-mofiy-write of the register.
 
-I believe it is relevant.  The commit which added that comment
-(f1566f0d) was made by Seth Forshee to support Dell XPS L502X.  The ter=
-m
-"shortcut key" is used in the bug report linked from that commit [1],
-but the manual for that model [2] describes the hotkey in question as
-"Instant launch control" (page 43), so I believe both Seth's commit and
-my patch refer to the same thing.
+Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+---
+ drivers/platform/x86/intel_telemetry_pltdrv.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/815914/comment=
-s/6
-[2] http://downloads.dell.com/Manuals/all-products/esuprt_laptop/esuprt=
-_xps_laptop/xps-l502x_setup%20guide_en-us.pdf
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c b/drivers/platform/x86/intel_telemetry_pltdrv.c
+index f97019b..397119f 100644
+--- a/drivers/platform/x86/intel_telemetry_pltdrv.c
++++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
+@@ -1030,8 +1030,19 @@ static int telemetry_plt_set_trace_verbosity(enum telemetry_unit telem_unit,
+ 	switch (telem_unit) {
+ 	case TELEM_PSS:
+ 		ret = intel_punit_ipc_command(
++				IPC_PUNIT_BIOS_READ_TELE_TRACE_CTRL,
++				0, 0, NULL, &temp);
++		if (ret) {
++			pr_err("PSS TRACE_CTRL Read Failed\n");
++			goto out;
++		}
++
++		TELEM_CLEAR_VERBOSITY_BITS(temp);
++		TELEM_SET_VERBOSITY_BITS(temp, verbosity);
++
++		ret = intel_punit_ipc_command(
+ 				IPC_PUNIT_BIOS_WRITE_TELE_TRACE_CTRL,
+-				0, 0, &verbosity, NULL);
++				0, 0, &temp, NULL);
+ 		if (ret) {
+ 			pr_err("PSS TRACE_CTRL Verbosity Set Failed\n");
+ 			goto out;
+-- 
+1.7.9.5
