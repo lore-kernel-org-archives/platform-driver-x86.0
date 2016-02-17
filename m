@@ -1,61 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
-Date: Tue, 16 Feb 2016 23:33:23 -0800
-Message-ID: <20160217073323.GD22091@dvhart-mobl5.amr.corp.intel.com>
-References: <0cbfffd61495fe8bc060c53b424d9391@natalenko.name>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Qipeng Zha <qipeng.zha@intel.com>
+Subject: [PATCH 1/2] intel_pmc_ipc: Fix GCR register base address and length
+Date: Thu, 18 Feb 2016 02:03:37 +0800
+Message-ID: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43303 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756450AbcBQHdY (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:28457 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S933388AbcBQJ6j (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 02:33:24 -0500
-Content-Disposition: inline
-In-Reply-To: <0cbfffd61495fe8bc060c53b424d9391@natalenko.name>
+	Wed, 17 Feb 2016 04:58:39 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, Francois-Nicolas Muller <francois-nicolas.muller@intel.com>
 
-On Fri, Feb 12, 2016 at 03:35:21PM +0200, Oleksandr Natalenko wrote:
-> Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
-> is loaded with wapf=4 option. Add quirk for this.
+GCR register (pmc_cfg register) is at offset 0x1008, and
+remapping of 0x4 bytes is enough.
 
-Concept is fine, checkpatch complains bitterly about whitespace. Please ensure
-you are not adding spaces at the beginning of lines in your editor or in your
-patch submission process.
+Signed-off-by: Francois-Nicolas Muller <francois-nicolas.muller@intel.com>
+Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c
-> b/drivers/platform/x86/asus-nb-wmi.c
-> index 131fee2..091ca7a 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -272,6 +272,15 @@ static const struct dmi_system_id asus_quirks[] = {
->         },
->         {
->                 .callback = dmi_matched,
-> +               .ident = "ASUSTeK COMPUTER INC. X75VD",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X75VD"),
-> +               },
-> +               .driver_data = &quirk_asus_wapf4,
-> +       },
-> +       {
-> +               .callback = dmi_matched,
->                 .ident = "ASUSTeK COMPUTER INC. 1015E",
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> -- 
-> 2.7.1
-> 
-
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index ca69135..abdf67c 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -67,7 +67,8 @@
+ /* exported resources from IFWI */
+ #define PLAT_RESOURCE_IPC_INDEX		0
+ #define PLAT_RESOURCE_IPC_SIZE		0x1000
+-#define PLAT_RESOURCE_GCR_SIZE		0x1000
++#define PLAT_RESOURCE_GCR_OFFSET	0x1008
++#define PLAT_RESOURCE_GCR_SIZE		0x4
+ #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+ #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+ #define PLAT_RESOURCE_ISP_DATA_INDEX	4
+@@ -688,7 +689,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+ 	}
+ 	ipcdev.ipc_base = addr;
+ 
+-	ipcdev.gcr_base = res->start + size;
++	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
+ 	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
+ 	dev_info(&pdev->dev, "ipc res: %pR\n", res);
+ 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+1.8.3.2
