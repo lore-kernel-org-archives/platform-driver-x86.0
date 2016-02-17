@@ -1,56 +1,48 @@
-From: John Dahlstrom <jodarom@SDF.ORG>
-Subject: [PATCH] ideapad-laptop: Add Lenovo ideapad Y700 Touch-15ISK and
- Lenovo ideapad Y700-15ISK to the no_hw_rfkill DMI list
-Date: Wed, 17 Feb 2016 03:33:46 -0600 (CST)
-Message-ID: <Pine.NEB.4.64.1602170304040.5423@faeroes.freeshell.org>
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Subject: [PATCH][RESEND] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
+Date: Wed, 17 Feb 2016 09:45:05 +0200
+Message-ID: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.sdf.org ([192.94.73.23]:65193 "EHLO sdf.lonestar.org"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S932209AbcBQKCn (ORCPT
+Received: from vulcan.natalenko.name ([104.207.131.136]:36646 "EHLO
+	vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932209AbcBQKNQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 05:02:43 -0500
+	Wed, 17 Feb 2016 05:13:16 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Some Lenovo ideapad models lack a physical rfkill switch.
-On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
-ideapad-laptop would wrongly report all radios as blocked by
-hardware which caused wireless network connections to fail.
+Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
+is loaded with wapf=4 option. Add quirk for this.
+---
+  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+  1 file changed, 9 insertions(+)
 
-Add these models without an rfkill switch to the no_hw_rfkill list.
-
-Relevant kernel versions: 4.5-rc4, 4.4.1, 4.3.5, 4.1.18, 3.18.27
-
-Tested-by: John Dahlstrom <jodarom@sdf.org>
-Signed-off-by: John Dahlstrom <jodarom@sdf.org>
-
---- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 
-15:05:20.000000000 -0600
-+++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 
-03:54:48.484423725 -0600
-@@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] 
-= {
-  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
-  		},
-+ 	},
-+ 	{
-+		.ident = "Lenovo ideapad Y700-15ISK",
+diff --git a/drivers/platform/x86/asus-nb-wmi.c 
+b/drivers/platform/x86/asus-nb-wmi.c
+index 131fee2..091ca7a 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -272,6 +272,15 @@ static const struct dmi_system_id asus_quirks[] = {
+  	},
+  	{
+  		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X75VD",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 
-Y700-15ISK"),
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X75VD"),
 +		},
++		.driver_data = &quirk_asus_wapf4,
 +	},
 +	{
-+		.ident = "Lenovo ideapad Y700 Touch-15ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 
-Y700 Touch-15ISK"),
-+		},
- 	},
- 	{
++		.callback = dmi_matched,
+  		.ident = "ASUSTeK COMPUTER INC. 1015E",
+  		.matches = {
+  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+2.7.1
