@@ -1,53 +1,60 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] drivers/platform: make x86/intel_scu_ipc.c explicitly
- non-modular
-Date: Tue, 16 Feb 2016 23:30:35 -0800
-Message-ID: <20160217073035.GC22091@dvhart-mobl5.amr.corp.intel.com>
-References: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
+Subject: Re: [PATCH] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
+Date: Tue, 16 Feb 2016 23:33:23 -0800
+Message-ID: <20160217073323.GD22091@dvhart-mobl5.amr.corp.intel.com>
+References: <0cbfffd61495fe8bc060c53b424d9391@natalenko.name>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43087 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:43303 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756450AbcBQHai (ORCPT
+	with ESMTP id S1756450AbcBQHdY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 02:30:38 -0500
+	Wed, 17 Feb 2016 02:33:24 -0500
 Content-Disposition: inline
-In-Reply-To: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
+In-Reply-To: <0cbfffd61495fe8bc060c53b424d9391@natalenko.name>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Paul Gortmaker <paul.gortmaker@windriver.com>, Sreedhara DS <sreedhara.ds@intel.com>, Alan Cox <alan@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Feb 14, 2016 at 03:00:52PM -0500, Paul Gortmaker wrote:
-> The Kconfig currently controlling compilation of this code is:
-> 
-> drivers/platform/x86/Kconfig:config INTEL_SCU_IPC
-> drivers/platform/x86/Kconfig:   bool "Intel SCU IPC Support"
-> 
-> ...meaning that it currently is not being built as a module by anyone.
-> 
-> Lets remove the modular code that is essentially orphaned, so that
-> when reading the driver there is no doubt it is builtin-only.
-> 
-> We explicitly disallow a driver unbind, since that doesn't have a
-> sensible use case anyway, and it allows us to drop the ".remove"
-> code for non-modular drivers.
-> 
-> Since module_pci_driver() uses the same init level priority as
-> builtin_pci_driver() the init ordering remains unchanged with
-> this commit.
-> 
-> Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
-> 
-> We don't replace module.h with init.h since the file already has that.
-> 
-> We also delete the MODULE_LICENSE tag etc. since all that information
-> is already contained at the top of the file in the comments.
+On Fri, Feb 12, 2016 at 03:35:21PM +0200, Oleksandr Natalenko wrote:
+> Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
+> is loaded with wapf=4 option. Add quirk for this.
 
-Alan, Sreedhara, any objection to Paul's changes?
+Concept is fine, checkpatch complains bitterly about whitespace. Please ensure
+you are not adding spaces at the beginning of lines in your editor or in your
+patch submission process.
 
-This appears to have been introduced as bool in the original commit.
+> 
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c
+> b/drivers/platform/x86/asus-nb-wmi.c
+> index 131fee2..091ca7a 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -272,6 +272,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>         },
+>         {
+>                 .callback = dmi_matched,
+> +               .ident = "ASUSTeK COMPUTER INC. X75VD",
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X75VD"),
+> +               },
+> +               .driver_data = &quirk_asus_wapf4,
+> +       },
+> +       {
+> +               .callback = dmi_matched,
+>                 .ident = "ASUSTeK COMPUTER INC. 1015E",
+>                 .matches = {
+>                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -- 
+> 2.7.1
+> 
 
 -- 
 Darren Hart
