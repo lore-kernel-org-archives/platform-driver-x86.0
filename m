@@ -1,48 +1,24 @@
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: [PATCH][RESEND] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
-Date: Wed, 17 Feb 2016 09:45:05 +0200
-Message-ID: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
+From: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?=
+	<giedrius.statkevicius@gmail.com>
+Subject: Re: [PATCH][RESEND] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
+Date: Wed, 17 Feb 2016 12:37:38 +0200
+Message-ID: <20160217103738.GA1609@tyrael>
+References: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from vulcan.natalenko.name ([104.207.131.136]:36646 "EHLO
-	vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932209AbcBQKNQ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 05:13:16 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: dvhart@infradead.org, corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
-is loaded with wapf=4 option. Add quirk for this.
----
-  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
-  1 file changed, 9 insertions(+)
+On Wed, Feb 17, 2016 at 09:45:05AM +0200, Oleksandr Natalenko wrote:
+> Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
+> is loaded with wapf=4 option. Add quirk for this.
+> ---
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c 
-b/drivers/platform/x86/asus-nb-wmi.c
-index 131fee2..091ca7a 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -272,6 +272,15 @@ static const struct dmi_system_id asus_quirks[] = {
-  	},
-  	{
-  		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X75VD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X75VD"),
-+		},
-+		.driver_data = &quirk_asus_wapf4,
-+	},
-+	{
-+		.callback = dmi_matched,
-  		.ident = "ASUSTeK COMPUTER INC. 1015E",
-  		.matches = {
-  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--- 
-2.7.1
+You forgot Signed-off-by here. Always run your patch through
+scripts/checkpatch.pl. Also, I think the format is usually
+[PATCH RESEND vX AA/BB] and not [PATCH][RESEND].
