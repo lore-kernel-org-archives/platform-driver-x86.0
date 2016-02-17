@@ -1,82 +1,58 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v5 4/5] dell-wmi: Support new hotkeys on the XPS 13 9350
- (Skylake)
-Date: Wed, 17 Feb 2016 12:19:12 +0100
-Message-ID: <20160217111912.GR1476@pali>
-References: <cover.1455553470.git.luto@kernel.org>
- <201602151820.56085@pali>
- <56C20A40.6010807@dell.com>
- <201602151837.16114@pali>
- <20160217072942.GB22091@dvhart-mobl5.amr.corp.intel.com>
+Subject: Re: [PATCH v3 5/5] dell-wmi: support Dell Inspiron M5110
+Date: Wed, 17 Feb 2016 12:42:30 +0100
+Message-ID: <20160217114230.GS1476@pali>
+References: <20160121090401.GR7192@pali>
+ <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+ <1455634230-1487-6-git-send-email-kernel@kempniu.pl>
+ <20160216152246.GL1476@pali>
+ <20160216220312.GB2741@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f50.google.com ([74.125.82.50]:37524 "EHLO
-	mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1161149AbcBQLTP (ORCPT
+Received: from mail-wm0-f54.google.com ([74.125.82.54]:35477 "EHLO
+	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1161300AbcBQLmd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 06:19:15 -0500
-Received: by mail-wm0-f50.google.com with SMTP id g62so23195444wme.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Feb 2016 03:19:14 -0800 (PST)
+	Wed, 17 Feb 2016 06:42:33 -0500
 Content-Disposition: inline
-In-Reply-To: <20160217072942.GB22091@dvhart-mobl5.amr.corp.intel.com>
+In-Reply-To: <20160216220312.GB2741@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tuesday 16 February 2016 23:29:42 Darren Hart wrote:
-> On Mon, Feb 15, 2016 at 06:37:16PM +0100, Pali Roh=C3=A1r wrote:
-> > On Monday 15 February 2016 18:26:24 Mario Limonciello wrote:
-> > > On 02/15/2016 11:20 AM, Pali Roh=C3=A1r wrote:
-> > > > On Monday 15 February 2016 17:32:36 Andy Lutomirski wrote:
-> > > >> +       /* Stealth mode toggle */
-> > > >> +       { KE_IGNORE, 0x155, { KEY_RESERVED } },
-> > > >=20
-> > > > Hi! Just one question, what does this "Stealth mode" means and =
-what
-> > > > this toggle key/button doing?
-> > > >=20
-> > > > I would propose for Laptops manufactures to revert back normal
-> > > > nonchiclet keyboard with full 105 normal keys (with F1-F12) ins=
-tead
-> > > > inventing such useless and crappy/funny names for keys/buttons =
-on
-> > > > laptops which replace PgUP/PgDown/SysRq and etc...
-> > >=20
-> > > Pali,
-> > >=20
-> > > Stealth mode will "disable all lights and sounds".  The event is =
-for
-> > > notification only.  The actual change is performed by a combinati=
-on
-> > > of the BIOS and EC.
-> > >=20
-> > > There is also a BIOS setting that disables the hotkey from doing
-> > > anything.
-> > >=20
-> > > Thanks,
+On Tuesday 16 February 2016 23:03:12 Micha=C5=82 K=C4=99pie=C5=84 wrote=
+:
+> > >  	/* Shortcut and audio panel keys */
+> > >  	{ KE_KEY, 0xe025, { KEY_PROG4 } },
+> > >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+> > > +	{ KE_KEY, 0xe029, { KEY_PROG4 } },
 > >=20
-> > Thank you! Now I can image what this line in diff means :-)
-> >=20
-> > Anyway, I would propose some rule to and longer description for new=
-ly=20
-> > invented hot key events which are marked as KEY_RESERVED in kernel=20
-> > source code. Really sometimes it is hard to guess what it can means=
- and=20
-> > constant KEY_RESERVED does not help much more.
+> > Hi! Above comment (Shortcut and audio panel keys) is not relevant f=
+or
+> > this 0xe029, right?
 >=20
-> Since we got the update from Mario, could you include the "disable al=
-l lights
-> and sounds" blurb in the KEY_RESERVED comment for stealth mode as par=
-t of the
-> next spin.
+> I believe it is relevant.  The commit which added that comment
+> (f1566f0d) was made by Seth Forshee to support Dell XPS L502X.  The t=
+erm
+> "shortcut key" is used in the bug report linked from that commit [1],
+> but the manual for that model [2] describes the hotkey in question as
+> "Instant launch control" (page 43), so I believe both Seth's commit a=
+nd
+> my patch refer to the same thing.
 >=20
-> Pali, is that your only concern with this series?
+> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/815914/comme=
+nts/6
+> [2] http://downloads.dell.com/Manuals/all-products/esuprt_laptop/esup=
+rt_xps_laptop/xps-l502x_setup%20guide_en-us.pdf
 
-Just I would like to know reason for NetworkManager in 5/5. But patches
-looks good, so you can add my Acked-by.
+Then please split above group of keys and add comment which key is
+shortcut and which audio panel. Because now there will be three keys an=
+d
+comment just for two -- in future will not know which code 0x... is
+mapped to which key.
 
 --=20
 Pali Roh=C3=A1r
