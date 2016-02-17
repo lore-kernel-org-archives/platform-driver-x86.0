@@ -1,49 +1,56 @@
 From: Qipeng Zha <qipeng.zha@intel.com>
-Subject: [PATCH 1/2] intel_pmc_ipc: Fix GCR register base address and length
-Date: Thu, 18 Feb 2016 02:03:37 +0800
-Message-ID: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+Subject: [PATCH 2/2] intel_pmc_ipc: avoid pending IPC1 command during legacy suspend
+Date: Thu, 18 Feb 2016 02:03:38 +0800
+Message-ID: <1455732218-27283-2-git-send-email-qipeng.zha@intel.com>
+References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:28457 "EHLO mga01.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:56386 "EHLO mga01.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933388AbcBQJ6j (ORCPT
+	id S933325AbcBQJ6k (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 04:58:39 -0500
+	Wed, 17 Feb 2016 04:58:40 -0500
+In-Reply-To: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, Francois-Nicolas Muller <francois-nicolas.muller@intel.com>
+Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, Ananth Krishna R <ananth.krishna.r@intel.com>, Bharath K Veera <bharath.k.veera@intel.com>
 
-GCR register (pmc_cfg register) is at offset 0x1008, and
-remapping of 0x4 bytes is enough.
+During legacy suspend flow, IPC1 commands are being requested
+from opregion driver. But the PMC_IPC1 command will timeout as example:
 
-Signed-off-by: Francois-Nicolas Muller <francois-nicolas.muller@intel.com>
+[  281.444600] ipc_debug##: ipc_send_command: cmd=0x201ff,
+[  281.444648] wbuf[0]=0x4ea6
+[  281.444668] wbuf[1]=0x0
+[  281.444674] wbuf[2]=0x0
+[  281.444676] wbuf[3]=0x0
+[  284.446467] pmc-ipc-plat INT34D2:00: IPC timed out, TS=0x4, CMD=0x200ff
+
+This is because before the opregion driver could send IPC1 commands,
+the PMC_IPC irq is already suspended. Which makes the IPC command to
+timeout.
+
+Solution: register pmc_ipc irq as IRQF_NO_SUSPEND
+
+Signed-off-by: Ananth Krishna R <ananth.krishna.r@intel.com>
+Signed-off-by: Bharath K Veera <bharath.k.veera@intel.com>
 Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index ca69135..abdf67c 100644
+index abdf67c..140aa77 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -67,7 +67,8 @@
- /* exported resources from IFWI */
- #define PLAT_RESOURCE_IPC_INDEX		0
- #define PLAT_RESOURCE_IPC_SIZE		0x1000
--#define PLAT_RESOURCE_GCR_SIZE		0x1000
-+#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-+#define PLAT_RESOURCE_GCR_SIZE		0x4
- #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
- #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
- #define PLAT_RESOURCE_ISP_DATA_INDEX	4
-@@ -688,7 +689,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+@@ -731,7 +731,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 		goto err_device;
  	}
- 	ipcdev.ipc_base = addr;
  
--	ipcdev.gcr_base = res->start + size;
-+	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
- 	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
- 	dev_info(&pdev->dev, "ipc res: %pR\n", res);
- 
+-	if (request_irq(ipcdev.irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
++	if (request_irq(ipcdev.irq, ioc, IRQF_NO_SUSPEND,
++			"intel_pmc_ipc", &ipcdev)) {
+ 		dev_err(&pdev->dev, "Failed to request irq\n");
+ 		ret = -EBUSY;
+ 		goto err_irq;
 -- 
 1.8.3.2
