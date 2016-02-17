@@ -1,72 +1,35 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
-Date: Wed, 17 Feb 2016 07:07:28 -0600
-Message-ID: <56C47090.1050106@dell.com>
-References: <cover.1455553470.git.luto@kernel.org>
- <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
- <20160217111634.GQ1476@pali>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v5 2/5] dell-wmi, dell-laptop: select DMI
+Date: Wed, 17 Feb 2016 12:32:22 -0800
+Message-ID: <CALCETrVZA0ZAmSyZKWjQyzYpx3F3d+taCPye99=XxWKw-UBvOg@mail.gmail.com>
+References: <cover.1455553470.git.luto@kernel.org> <f134070fe93b5ce81ceea9071497d853b7e7db9c.1455553470.git.luto@kernel.org>
+ <20160217063937.GB20116@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxipps301.us.dell.com ([143.166.148.223]:13015 "EHLO
-	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S964898AbcBQNLy (ORCPT
+Received: from mail-ob0-f169.google.com ([209.85.214.169]:33963 "EHLO
+	mail-ob0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965253AbcBQUcm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 08:11:54 -0500
-In-Reply-To: <20160217111634.GQ1476@pali>
+	Wed, 17 Feb 2016 15:32:42 -0500
+Received: by mail-ob0-f169.google.com with SMTP id wb13so33628240obb.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Feb 2016 12:32:42 -0800 (PST)
+In-Reply-To: <20160217063937.GB20116@dvhart-mobl5.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Jon Eyolfson <jon@eyl.io>, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
 
+On Feb 16, 2016 10:39 PM, "Darren Hart" <dvhart@infradead.org> wrote:
+>
+> On Mon, Feb 15, 2016 at 08:32:34AM -0800, Andy Lutomirski wrote:
+> > dell-wmi and dell-laptop will compile but won't work right if DMI
+> > isn't selected.
+>
+> Was this necessitated by patch 1/5, or was this an existing problem? If the
+> former, I'd prefer to just include this in 1/5. If the latter, this is fine.
 
+It's an existing problem, I believe.  Jean noticed when reviewing an
+earlier version of patch 1 IIRC.
 
-On 02/17/2016 05:16 AM, Pali Roh=C3=A1r wrote:
-> On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
->> On the XPS 13 9350, the dell-rbtn mechanism has a new device id, and
->> the DSDT turns it off if a new enough _OSI is supported.  Add a
->> comment about why we don't bother supporting it.
->>
->> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> ---
->>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86=
-/dell-rbtn.c
->> index cd410e392550..b51a2008d782 100644
->> --- a/drivers/platform/x86/dell-rbtn.c
->> +++ b/drivers/platform/x86/dell-rbtn.c
->> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_device *dev=
-ice, u32 event);
->>  static const struct acpi_device_id rbtn_ids[] =3D {
->>  	{ "DELRBTN", 0 },
->>  	{ "DELLABCE", 0 },
->> +
->> +	/*
->> +	 * This driver can also handle the "DELLABC6" device that
->> +	 * appears on the XPS 13 9350, but that device is disabled
->> +	 * by the DSDT unless booted with acpi_osi=3D"!Windows 2012"
->> +	 * acpi_osi=3D"!Windows 2013".  Even if we boot that and bind
->> +	 * the driver, we seem to have inconsistent behavior in
->> +	 * which NetworkManager can get out of sync with the rfkill
->> +	 * state.
-> Do you know reason for such behaviour? It is because event is send
-> duplicated (by dell-rbtn and also by intel-hid)?
-DELLABC6 is a custom interface that was created solely to have airplane
-mode support for Windows 7.=20
-=46or Windows 10 the proper interface is to use that which is handled b=
-y
-intel-hid.  A OEM airplane mode driver is not used.
-
-Since the kernel doesn't identify as Windows 7 it would be incorrect to
-do attempt to use that interface.
->> +	 * On the XPS 13 9350 and similar laptops, we're not supposed to
->> +	 * use DELLABC6 at all.  Instead, we handle the rfkill button
->> +	 * via the intel-hid driver.
->> +	 */
->> +
->>  	{ "", 0 },
->>  };
->> =20
+--Andy
