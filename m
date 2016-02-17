@@ -1,81 +1,72 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 5/5] dell-wmi: support Dell Inspiron M5110
-Date: Wed, 17 Feb 2016 13:08:48 +0100
-Message-ID: <20160217120848.GT1476@pali>
-References: <20160121090401.GR7192@pali>
- <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <1455634230-1487-6-git-send-email-kernel@kempniu.pl>
- <20160216152246.GL1476@pali>
- <20160216220312.GB2741@eudyptula.hq.kempniu.pl>
- <20160217114230.GS1476@pali>
- <20160217120158.GA3494@eudyptula.hq.kempniu.pl>
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
+Date: Wed, 17 Feb 2016 07:07:28 -0600
+Message-ID: <56C47090.1050106@dell.com>
+References: <cover.1455553470.git.luto@kernel.org>
+ <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
+ <20160217111634.GQ1476@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160217120158.GA3494@eudyptula.hq.kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ausxipps301.us.dell.com ([143.166.148.223]:13015 "EHLO
+	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S964898AbcBQNLy (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Feb 2016 08:11:54 -0500
+In-Reply-To: <20160217111634.GQ1476@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Wednesday 17 February 2016 13:01:58 Micha=C5=82 K=C4=99pie=C5=84 wro=
-te:
-> > > > >  	/* Shortcut and audio panel keys */
-> > > > >  	{ KE_KEY, 0xe025, { KEY_PROG4 } },
-> > > > >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> > > > > +	{ KE_KEY, 0xe029, { KEY_PROG4 } },
-> > > >=20
-> > > > Hi! Above comment (Shortcut and audio panel keys) is not releva=
-nt for
-> > > > this 0xe029, right?
-> > >=20
-> > > I believe it is relevant.  The commit which added that comment
-> > > (f1566f0d) was made by Seth Forshee to support Dell XPS L502X.  T=
-he term
-> > > "shortcut key" is used in the bug report linked from that commit =
-[1],
-> > > but the manual for that model [2] describes the hotkey in questio=
-n as
-> > > "Instant launch control" (page 43), so I believe both Seth's comm=
-it and
-> > > my patch refer to the same thing.
-> > >=20
-> > > [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/815914/c=
-omments/6
-> > > [2] http://downloads.dell.com/Manuals/all-products/esuprt_laptop/=
-esuprt_xps_laptop/xps-l502x_setup%20guide_en-us.pdf
-> >=20
-> > Then please split above group of keys and add comment which key is
-> > shortcut and which audio panel. Because now there will be three key=
-s and
-> > comment just for two -- in future will not know which code 0x... is
-> > mapped to which key.
->=20
-> Please note that except for the first 5 entries, the keymap is sorted=
- by
-> event code in ascending order.
 
-I have prepared some patches which sort all event codes plus adds
-missing comments... So after all dell patches are in Darren tree, I wil=
-l
-rewrite/rebase my and can send them.
 
-> If I understand correctly, doing what you ask would break that orderi=
-ng:
->=20
->     /* Dell Instant Launch key */
->     { KE_KEY, 0xe025, { KEY_PROG4 } },
->     { KE_KEY, 0xe029, { KEY_PROG4 } },
->=20
->     /* Audio panel key */
->     { KE_IGNORE, 0xe026, { KEY_RESERVED } },
->=20
-> Is this acceptable?  Or perhaps you had something else on your mind?
+On 02/17/2016 05:16 AM, Pali Roh=C3=A1r wrote:
+> On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
+>> On the XPS 13 9350, the dell-rbtn mechanism has a new device id, and
+>> the DSDT turns it off if a new enough _OSI is supported.  Add a
+>> comment about why we don't bother supporting it.
+>>
+>> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> ---
+>>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86=
+/dell-rbtn.c
+>> index cd410e392550..b51a2008d782 100644
+>> --- a/drivers/platform/x86/dell-rbtn.c
+>> +++ b/drivers/platform/x86/dell-rbtn.c
+>> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_device *dev=
+ice, u32 event);
+>>  static const struct acpi_device_id rbtn_ids[] =3D {
+>>  	{ "DELRBTN", 0 },
+>>  	{ "DELLABCE", 0 },
+>> +
+>> +	/*
+>> +	 * This driver can also handle the "DELLABC6" device that
+>> +	 * appears on the XPS 13 9350, but that device is disabled
+>> +	 * by the DSDT unless booted with acpi_osi=3D"!Windows 2012"
+>> +	 * acpi_osi=3D"!Windows 2013".  Even if we boot that and bind
+>> +	 * the driver, we seem to have inconsistent behavior in
+>> +	 * which NetworkManager can get out of sync with the rfkill
+>> +	 * state.
+> Do you know reason for such behaviour? It is because event is send
+> duplicated (by dell-rbtn and also by intel-hid)?
+DELLABC6 is a custom interface that was created solely to have airplane
+mode support for Windows 7.=20
+=46or Windows 10 the proper interface is to use that which is handled b=
+y
+intel-hid.  A OEM airplane mode driver is not used.
 
-Thats better, now we know which event is audio and which launch key.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Since the kernel doesn't identify as Windows 7 it would be incorrect to
+do attempt to use that interface.
+>> +	 * On the XPS 13 9350 and similar laptops, we're not supposed to
+>> +	 * use DELLABC6 at all.  Instead, we handle the rfkill button
+>> +	 * via the intel-hid driver.
+>> +	 */
+>> +
+>>  	{ "", 0 },
+>>  };
+>> =20
