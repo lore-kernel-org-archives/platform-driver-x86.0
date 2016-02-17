@@ -1,56 +1,56 @@
-From: Qipeng Zha <qipeng.zha@intel.com>
-Subject: [PATCH 2/2] intel_pmc_ipc: avoid pending IPC1 command during legacy suspend
-Date: Thu, 18 Feb 2016 02:03:38 +0800
-Message-ID: <1455732218-27283-2-git-send-email-qipeng.zha@intel.com>
-References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+From: John Dahlstrom <jodarom@SDF.ORG>
+Subject: [PATCH] ideapad-laptop: Add Lenovo ideapad Y700 Touch-15ISK and
+ Lenovo ideapad Y700-15ISK to the no_hw_rfkill DMI list
+Date: Wed, 17 Feb 2016 03:33:46 -0600 (CST)
+Message-ID: <Pine.NEB.4.64.1602170304040.5423@faeroes.freeshell.org>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:56386 "EHLO mga01.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933325AbcBQJ6k (ORCPT
+Received: from mx.sdf.org ([192.94.73.23]:65193 "EHLO sdf.lonestar.org"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S932209AbcBQKCn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 04:58:40 -0500
-In-Reply-To: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+	Wed, 17 Feb 2016 05:02:43 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, Ananth Krishna R <ananth.krishna.r@intel.com>, Bharath K Veera <bharath.k.veera@intel.com>
+To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-During legacy suspend flow, IPC1 commands are being requested
-from opregion driver. But the PMC_IPC1 command will timeout as example:
+Some Lenovo ideapad models lack a physical rfkill switch.
+On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
+ideapad-laptop would wrongly report all radios as blocked by
+hardware which caused wireless network connections to fail.
 
-[  281.444600] ipc_debug##: ipc_send_command: cmd=0x201ff,
-[  281.444648] wbuf[0]=0x4ea6
-[  281.444668] wbuf[1]=0x0
-[  281.444674] wbuf[2]=0x0
-[  281.444676] wbuf[3]=0x0
-[  284.446467] pmc-ipc-plat INT34D2:00: IPC timed out, TS=0x4, CMD=0x200ff
+Add these models without an rfkill switch to the no_hw_rfkill list.
 
-This is because before the opregion driver could send IPC1 commands,
-the PMC_IPC irq is already suspended. Which makes the IPC command to
-timeout.
+Relevant kernel versions: 4.5-rc4, 4.4.1, 4.3.5, 4.1.18, 3.18.27
 
-Solution: register pmc_ipc irq as IRQF_NO_SUSPEND
+Tested-by: John Dahlstrom <jodarom@sdf.org>
+Signed-off-by: John Dahlstrom <jodarom@sdf.org>
 
-Signed-off-by: Ananth Krishna R <ananth.krishna.r@intel.com>
-Signed-off-by: Bharath K Veera <bharath.k.veera@intel.com>
-Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index abdf67c..140aa77 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -731,7 +731,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 		goto err_device;
- 	}
- 
--	if (request_irq(ipcdev.irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
-+	if (request_irq(ipcdev.irq, ioc, IRQF_NO_SUSPEND,
-+			"intel_pmc_ipc", &ipcdev)) {
- 		dev_err(&pdev->dev, "Failed to request irq\n");
- 		ret = -EBUSY;
- 		goto err_irq;
--- 
-1.8.3.2
+--- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 
+15:05:20.000000000 -0600
++++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 
+03:54:48.484423725 -0600
+@@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] 
+= {
+  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
+  		},
++ 	},
++ 	{
++		.ident = "Lenovo ideapad Y700-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 
+Y700-15ISK"),
++		},
++	},
++	{
++		.ident = "Lenovo ideapad Y700 Touch-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 
+Y700 Touch-15ISK"),
++		},
+ 	},
+ 	{
