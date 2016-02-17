@@ -1,64 +1,69 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 1/2] intel_pmc_ipc: Fix GCR register base address and
- length
-Date: Wed, 17 Feb 2016 12:58:09 +0200
-Message-ID: <1455706689.31169.164.camel@linux.intel.com>
-References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
+Date: Wed, 17 Feb 2016 12:16:34 +0100
+Message-ID: <20160217111634.GQ1476@pali>
+References: <cover.1455553470.git.luto@kernel.org>
+ <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:18811 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1161067AbcBQK53 (ORCPT
+Received: from mail-wm0-f42.google.com ([74.125.82.42]:37962 "EHLO
+	mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1161108AbcBQLQh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Feb 2016 05:57:29 -0500
-In-Reply-To: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+	Wed, 17 Feb 2016 06:16:37 -0500
+Received: by mail-wm0-f42.google.com with SMTP id a4so22902745wme.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Feb 2016 03:16:36 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Qipeng Zha <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, Francois-Nicolas Muller <francois-nicolas.muller@intel.com>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario_limonciello@dell.com>
 
-On Thu, 2016-02-18 at 02:03 +0800, Qipeng Zha wrote:
-> GCR register (pmc_cfg register) is at offset 0x1008, and
-> remapping of 0x4 bytes is enough.
+On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
+> On the XPS 13 9350, the dell-rbtn mechanism has a new device id, and
+> the DSDT turns it off if a new enough _OSI is supported.  Add a
+> comment about why we don't bother supporting it.
 >=20
-
-Darren, both patches are fine by me.
-
-> Signed-off-by: Francois-Nicolas Muller <francois-
-> nicolas.muller@intel.com>
-> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
 > ---
-> =C2=A0drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
-> =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 >=20
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c
-> b/drivers/platform/x86/intel_pmc_ipc.c
-> index ca69135..abdf67c 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -67,7 +67,8 @@
-> =C2=A0/* exported resources from IFWI */
-> =C2=A0#define PLAT_RESOURCE_IPC_INDEX		0
-> =C2=A0#define PLAT_RESOURCE_IPC_SIZE		0x1000
-> -#define PLAT_RESOURCE_GCR_SIZE		0x1000
-> +#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-> +#define PLAT_RESOURCE_GCR_SIZE		0x4
-> =C2=A0#define PLAT_RESOURCE_BIOS_DATA_INDEX	1
-> =C2=A0#define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
-> =C2=A0#define PLAT_RESOURCE_ISP_DATA_INDEX	4
-> @@ -688,7 +689,7 @@ static int ipc_plat_get_res(struct
-> platform_device *pdev)
-> =C2=A0	}
-> =C2=A0	ipcdev.ipc_base =3D addr;
-> =C2=A0
-> -	ipcdev.gcr_base =3D res->start + size;
-> +	ipcdev.gcr_base =3D res->start + PLAT_RESOURCE_GCR_OFFSET;
-> =C2=A0	ipcdev.gcr_size =3D PLAT_RESOURCE_GCR_SIZE;
-> =C2=A0	dev_info(&pdev->dev, "ipc res: %pR\n", res);
-> =C2=A0
+> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/=
+dell-rbtn.c
+> index cd410e392550..b51a2008d782 100644
+> --- a/drivers/platform/x86/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell-rbtn.c
+> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_device *devi=
+ce, u32 event);
+>  static const struct acpi_device_id rbtn_ids[] =3D {
+>  	{ "DELRBTN", 0 },
+>  	{ "DELLABCE", 0 },
+> +
+> +	/*
+> +	 * This driver can also handle the "DELLABC6" device that
+> +	 * appears on the XPS 13 9350, but that device is disabled
+> +	 * by the DSDT unless booted with acpi_osi=3D"!Windows 2012"
+> +	 * acpi_osi=3D"!Windows 2013".  Even if we boot that and bind
+> +	 * the driver, we seem to have inconsistent behavior in
+> +	 * which NetworkManager can get out of sync with the rfkill
+> +	 * state.
+
+Do you know reason for such behaviour? It is because event is send
+duplicated (by dell-rbtn and also by intel-hid)?
+
+> +	 * On the XPS 13 9350 and similar laptops, we're not supposed to
+> +	 * use DELLABC6 at all.  Instead, we handle the rfkill button
+> +	 * via the intel-hid driver.
+> +	 */
+> +
+>  	{ "", 0 },
+>  };
+> =20
 
 --=20
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
