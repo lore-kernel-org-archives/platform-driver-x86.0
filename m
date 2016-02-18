@@ -1,36 +1,31 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 1/2] ideapad-laptop: Add ideapad Y700-15ISK to the
- no_hw_rfkill DMI list
-Date: Wed, 17 Feb 2016 21:50:50 -0800
-Message-ID: <20160218055050.GH18421@dvhart-mobl5.amr.corp.intel.com>
-References: <Pine.NEB.4.64.1602171614460.23053@faeroes.freeshell.org>
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Subject: Re: [PATCH RESEND v3] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
+Date: Thu, 18 Feb 2016 08:00:58 +0200
+Message-ID: <1789149.FKtgJXZfQF@spock>
+References: <ece82c01c879e7e1fed300a001b491ed@natalenko.name> <20160218052345.GC18421@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.NEB.4.64.1602171614460.23053@faeroes.freeshell.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Dahlstrom <jodarom@SDF.ORG>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from vulcan.natalenko.name ([104.207.131.136]:32516 "EHLO
+	vulcan.natalenko.name" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1756269AbcBRGB1 convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 18 Feb 2016 01:01:27 -0500
+In-Reply-To: <20160218052345.GC18421@dvhart-mobl5.amr.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Feb 17, 2016 at 04:33:43PM -0600, John Dahlstrom wrote:
-> Some Lenovo ideapad models lack a physical rfkill switch.
-> On a Lenovo ideapad Y700-15ISK, the ideapad-laptop module
-> would wrongly report all radios as blocked by hardware which
-> caused wireless network connections to fail.
-> 
-> Add this model without an rfkill switch to the no_hw_rfkill list.
-> 
-> Tested-by: John Dahlstrom <jodarom@sdf.org>
-> Signed-off-by: John Dahlstrom <jodarom@sdf.org>
-> ---
->  Relevant kernel versions: 4.5-rc4, 4.4.2, 4.3.5, 4.1.18, 3.18.27
->  Patch changelog
->   v2 split patch between Touch and non-Touch devices
+Thanks for your patience ;).
 
-One patch was fine. Please see my feedback to the initial patch.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+On =D1=81=D0=B5=D1=80=D0=B5=D0=B4=D0=B0, 17 =D0=BB=D1=8E=D1=82=D0=BE=D0=
+=B3=D0=BE 2016 =D1=80. 21:23:45 EET Darren Hart wrote:
+> On Wed, Feb 17, 2016 at 01:35:46PM +0200, Oleksandr Natalenko wrote:
+> > Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
+> > is loaded with wapf=3D4 option. Add quirk for this.
+> >=20
+> > Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+>=20
+> Queued to testing, thanks.
