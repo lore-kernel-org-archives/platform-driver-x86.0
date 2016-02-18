@@ -1,30 +1,78 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH][RESEND] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
-Date: Wed, 17 Feb 2016 21:25:27 -0800
-Message-ID: <20160218052527.GD18421@dvhart-mobl5.amr.corp.intel.com>
-References: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
+Subject: Re: [PATCH][RESEND] ideapad-laptop: Add Lenovo ideapad Y700
+ Touch-15ISK and Lenovo ideapad Y700-15ISK to the no_hw_rfkill DMI list
+Date: Wed, 17 Feb 2016 21:31:17 -0800
+Message-ID: <20160218053117.GE18421@dvhart-mobl5.amr.corp.intel.com>
+References: <Pine.NEB.4.64.1602170529490.2123@faeroes.freeshell.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48360 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932127AbcBRFZa (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Feb 2016 00:25:30 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4f2df9dab959ad572e08eb7f7fa03220@natalenko.name>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <Pine.NEB.4.64.1602170529490.2123@faeroes.freeshell.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Dahlstrom <jodarom@SDF.ORG>
+Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 17, 2016 at 09:45:05AM +0200, Oleksandr Natalenko wrote:
-> Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
-> is loaded with wapf=4 option. Add quirk for this.
+On Wed, Feb 17, 2016 at 05:55:49AM -0600, John Dahlstrom wrote:
 
-Point of terminology. It is not a RESEND if you made changes, even whitespace,
-it's v2, v3, etc. RESEND means it's identical to the previous one, but it's been
-a long time (2 weeks) and nobody responded with a review.
+Hi John,
+
+Why the RESEND?
+
+Please update your subject to be less than 72 characters or so. It needs to
+display completely with git log on an 80 char terminal without getting
+truncated. Anything you can't fit there, please add to the changelog below.
+
+
+> Some Lenovo ideapad models lack a physical rfkill switch.
+> On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
+> ideapad-laptop would wrongly report all radios as blocked by
+> hardware which caused wireless network connections to fail.
+> 
+> Add these models without an rfkill switch to the no_hw_rfkill list.
+> 
+> Relevant kernel versions: 4.5-rc4, 4.4.1, 4.3.5, 4.1.18, 3.18.27
+
+Please read Documentation/stable-kernel-rules.txt for how to submit changes to
+the stable kernels.
+
+> 
+> Tested-by: John Dahlstrom <jodarom@sdf.org>
+> Signed-off-by: John Dahlstrom <jodarom@sdf.org>
+
+Generally speaking, if you wrote it, I expect you have tested it :-) This isn't
+bad, but not really necessary. It would be more useful to include a cover letter
+with more verbage on what specifically you tested. Both Lenovo laptops listed
+below? Any others to ensure no regressions? Etc. This is a trivial patch, so I'm
+not particularly concerned, just as an example.
+
+Please correct the commit message and resubmit as v2.
+
+> ---
+> 
+> --- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 15:05:20.000000000 -0600
+> +++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 03:54:48.484423725 -0600
+> @@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+> 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
+> 		},
+> + 	},
+> + 	{
+> +		.ident = "Lenovo ideapad Y700-15ISK",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
+> +		},
+> +	},
+> +	{
+> +		.ident = "Lenovo ideapad Y700 Touch-15ISK",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
+> +		},
+> 	},
+> 	{
+> 
 
 -- 
 Darren Hart
