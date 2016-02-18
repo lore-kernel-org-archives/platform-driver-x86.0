@@ -1,8 +1,8 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 10/12] drm/i915: Defer probe if gmux is
- present but its driver isn't
-Date: Thu, 18 Feb 2016 22:39:05 +0100
-Message-ID: <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v5 10/12] drm/i915: Defer probe if gmux is present but
+ its driver isn't
+Date: Thu, 18 Feb 2016 23:20:41 +0100
+Message-ID: <20160218222041.GB19128@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
  <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
  <20160209090401.GA11240@phenom.ffwll.local>
@@ -11,51 +11,70 @@ References: <cover.1452525860.git.lukas@wunner.de>
  <20160216155820.GA17446@wunner.de>
  <20160216160840.GT32705@phenom.ffwll.local>
  <20160218203431.GA19065@wunner.de>
+ <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <20160218203431.GA19065@wunner.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Alex Deucher <alexander.deucher@amd.com>, intel-gfx <intel-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>, dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout2.hostsharing.net ([83.223.90.233]:38664 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1947206AbcBRWUH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 18 Feb 2016 17:20:07 -0500
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, intel-gfx <intel-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>, Alex Deucher <alexander.deucher@amd.com>
 
-T24gVGh1LCBGZWIgMTgsIDIwMTYgYXQgOTozNCBQTSwgTHVrYXMgV3VubmVyIDxsdWthc0B3dW5u
-ZXIuZGU+IHdyb3RlOgo+Cj4+IE9rLCBtYWtlcyBzZW5zZS4gSSBzdGlsbCB0aGluayBhZGRpbmcg
-dGhlIGNoZWNrIHRvIHRoZSBjbGllbnRfcmVnaXN0ZXIKPj4gZnVuY3Rpb24gd291bGQgYmUgZ29v
-ZCwganVzdCBhcyBhIHNhZmV0eSBtZWFzdXJlLgo+Cj4gSG0sIHRoZSBpZGVhIG9mIGNhbGxpbmcg
-dmdhX3N3aXRjaGVyb29fY2xpZW50X3Byb2JlX2RlZmVyKCkgdHdpY2UKPiBjYXVzZXMgbWUgcGFp
-biBpbiB0aGUgc3RvbWFjaC4gSXQncyBzdXJwcmlzaW5nIGZvciBkcml2ZXJzIHdoaWNoCj4ganVz
-dCBkb24ndCBuZWVkIGl0IGF0IHRoZSBtb21lbnQgKGFtZGdwdSBhbmQgc25kX2hkYV9pbnRlbCkg
-YW5kCj4gaXQgZmVlbHMgbGlrZSBvdmVyZW5naW5lZXJpbmcgYW5kIHBhbXBlcmluZyBkcml2ZXIg
-ZGV2ZWxvcGVycwo+IGJleW9uZCByZWFzb25hYmxlIG1lYXN1cmUuIEFsc28gd2hpbGUgdGhlIHNp
-bmdsZSBleGlzdGluZyBjaGVjayBpcwo+IGNoZWFwLCB3ZSBtaWdodCBsYXRlciBvbiBhZGQgY2hl
-Y2tzIHRoYXQgdGFrZSBtb3JlIHRpbWUgYW5kIHNsb3cKPiB0aGluZ3MgZG93bi4KCkl0J3MgbW90
-aXZhdGVkIGJ5IFJ1c3R5J3MgQVBJIE1hbmlmZXN0bzoKCmh0dHA6Ly9zd2VuZy50aGUtZGF2aWVz
-Lm5ldC9Ib21lL3J1c3R5cy1hcGktZGVzaWduLW1hbmlmZXN0bwoKV2l0aCB0aGUgbWFuZGF0b3J5
-IGNoZWNrIGluIF9yZWdpc3RlciB3ZSByZWFjaCBsZXZlbCA1IC0gaXQnbGwgYmxvdyB1cAphdCBy
-dW50aW1lIHdoZW4gd2UgdHJ5IHRvIHJlZ2lzdGVyIGl0LiBXaXRob3V0IHRoYXQgdGhlIGZhaWx1
-cmUgaXMKY29tcGxldGVseSBzaWxlbnQsIGFuZCB5b3UgbmVlZCB0byByZWFkIHRoZSByaWdodCBt
-YWlsaW5nIGxpc3QgdGhyZWFkCihsZXZlbCAxKSwgYnV0IGF0IGxlYXN0IHRoZSBrZXJuZWxkb2Nz
-IGxpZnQgaXQgdXAgdG8gbGV2ZWwgMy4KCkZvciBtb3JlIGNvbnRleHQ6IFdlIGhhdmUgdG9ucyBv
-ZiBmdW4gd2l0aCBFUFJPQkVfREVGRVIgaGFuZGxpbmcKYmV0d2VlbiBpOTE1IGFuZCBzbmQtaGRh
-LCBhbmQgSSdtIGxvb2tpbmcgaW50byBhbGwgcG9zc2libGUgbWVhbnMgdG8KbWFrZSBhbnkgYXBp
-L3N1YnN5c3RlbSB1c2luZyBkZWZlcnJlZCBwcm9iaW5nIGFzIHJvYnVzdCBhcyBwb3NzaWJsZSBi
-eQpkZWZhdWx0LiBPbmUgb2YgdGhlIGlkZWFzIGlzIHRvIGluamVjdCBkZWZlcnJlZCBwcm9iZSBm
-YWlsdXJlcyBhdApydW50aW1lLCBidXQgdGhhdCdzIGtpbmRhIGhhcmQgdG8gZG8gaW4gYSBnZW5l
-cmljIHdheS4gQXQgbGVhc3QgbWFraW5nCml0IGFzIGNsb3NlIHRvIGltcG9zc2libGUgdG8gYWJ1
-c2UgYXMgZmVhc2libGUgaXMgdGhlIG5leHQgYmVzdApvcHRpb24uCi1EYW5pZWwKLS0gCkRhbmll
-bCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkg
-MzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KSW50ZWwtZ2Z4IG1haWxpbmcgbGlzdApJbnRlbC1nZnhA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vaW50ZWwtZ2Z4Cg==
+Hi,
+
+On Thu, Feb 18, 2016 at 10:39:05PM +0100, Daniel Vetter wrote:
+> On Thu, Feb 18, 2016 at 9:34 PM, Lukas Wunner <lukas@wunner.de> wrote:
+> >
+> >> Ok, makes sense. I still think adding the check to the client_register
+> >> function would be good, just as a safety measure.
+> >
+> > Hm, the idea of calling vga_switcheroo_client_probe_defer() twice
+> > causes me pain in the stomach. It's surprising for drivers which
+> > just don't need it at the moment (amdgpu and snd_hda_intel) and
+> > it feels like overengineering and pampering driver developers
+> > beyond reasonable measure. Also while the single existing check is
+> > cheap, we might later on add checks that take more time and slow
+> > things down.
+> 
+> It's motivated by Rusty's API Manifesto:
+> 
+> http://sweng.the-davies.net/Home/rustys-api-design-manifesto
+
+Interesting, thank you.
+
+
+> With the mandatory check in _register we reach level 5 - it'll blow up
+> at runtime when we try to register it.
+
+The manifesto says "5. Do it right or it will always break at runtime".
+
+However even if we add a WARN_ON(vga_switcheroo_client_probe_defer(pdev))
+to register_client(), it will not *always* spew a stacktrace but only on
+the machines this concerns (MacBook Pros). Since failure to defer breaks
+GPU switching, level 5 is already reached. Chances are this won't go
+unnoticed by the user.
+
+
+> For more context: We have tons of fun with EPROBE_DEFER handling
+> between i915 and snd-hda
+
+I don't understand, there is currently not a single occurrence of
+EPROBE_DEFER in i915, apart from the one I added.
+
+In sound/ there are 88 occurrences of EPROBE_DEFER in soc/, plus 1 in
+ppc/ and that's it. So not a single one in pci/hda/ where hda_intel.c
+resides.
+
+Is the fun with EPROBE_DEFER handling caused by the lack thereof?
+
+
+Best regards,
+
+Lukas
