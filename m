@@ -1,8 +1,8 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v5 10/12] drm/i915: Defer probe if gmux is present but
- its driver isn't
-Date: Thu, 18 Feb 2016 23:20:41 +0100
-Message-ID: <20160218222041.GB19128@wunner.de>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v5 10/12] drm/i915: Defer probe if gmux is
+ present but its driver isn't
+Date: Fri, 19 Feb 2016 00:11:23 +0100
+Message-ID: <CAKMK7uFT5fUmvAXFWFtUyj9=DMwhVB5msB84sgD1vetLEqKr6A@mail.gmail.com>
 References: <cover.1452525860.git.lukas@wunner.de>
  <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
  <20160209090401.GA11240@phenom.ffwll.local>
@@ -12,69 +12,84 @@ References: <cover.1452525860.git.lukas@wunner.de>
  <20160216160840.GT32705@phenom.ffwll.local>
  <20160218203431.GA19065@wunner.de>
  <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
+ <20160218222041.GB19128@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.hostsharing.net ([83.223.90.233]:38664 "EHLO
-	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1947206AbcBRWUH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Feb 2016 17:20:07 -0500
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, intel-gfx <intel-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>, Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <20160218222041.GB19128@wunner.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Alex Deucher <alexander.deucher@amd.com>, intel-gfx <intel-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>, dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On Thu, Feb 18, 2016 at 10:39:05PM +0100, Daniel Vetter wrote:
-> On Thu, Feb 18, 2016 at 9:34 PM, Lukas Wunner <lukas@wunner.de> wrote:
-> >
-> >> Ok, makes sense. I still think adding the check to the client_register
-> >> function would be good, just as a safety measure.
-> >
-> > Hm, the idea of calling vga_switcheroo_client_probe_defer() twice
-> > causes me pain in the stomach. It's surprising for drivers which
-> > just don't need it at the moment (amdgpu and snd_hda_intel) and
-> > it feels like overengineering and pampering driver developers
-> > beyond reasonable measure. Also while the single existing check is
-> > cheap, we might later on add checks that take more time and slow
-> > things down.
-> 
-> It's motivated by Rusty's API Manifesto:
-> 
-> http://sweng.the-davies.net/Home/rustys-api-design-manifesto
-
-Interesting, thank you.
-
-
-> With the mandatory check in _register we reach level 5 - it'll blow up
-> at runtime when we try to register it.
-
-The manifesto says "5. Do it right or it will always break at runtime".
-
-However even if we add a WARN_ON(vga_switcheroo_client_probe_defer(pdev))
-to register_client(), it will not *always* spew a stacktrace but only on
-the machines this concerns (MacBook Pros). Since failure to defer breaks
-GPU switching, level 5 is already reached. Chances are this won't go
-unnoticed by the user.
-
-
-> For more context: We have tons of fun with EPROBE_DEFER handling
-> between i915 and snd-hda
-
-I don't understand, there is currently not a single occurrence of
-EPROBE_DEFER in i915, apart from the one I added.
-
-In sound/ there are 88 occurrences of EPROBE_DEFER in soc/, plus 1 in
-ppc/ and that's it. So not a single one in pci/hda/ where hda_intel.c
-resides.
-
-Is the fun with EPROBE_DEFER handling caused by the lack thereof?
-
-
-Best regards,
-
-Lukas
+T24gVGh1LCBGZWIgMTgsIDIwMTYgYXQgMTE6MjAgUE0sIEx1a2FzIFd1bm5lciA8bHVrYXNAd3Vu
+bmVyLmRlPiB3cm90ZToKPiBIaSwKPgo+IE9uIFRodSwgRmViIDE4LCAyMDE2IGF0IDEwOjM5OjA1
+UE0gKzAxMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+IE9uIFRodSwgRmViIDE4LCAyMDE2IGF0
+IDk6MzQgUE0sIEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPiB3cm90ZToKPj4gPgo+PiA+
+PiBPaywgbWFrZXMgc2Vuc2UuIEkgc3RpbGwgdGhpbmsgYWRkaW5nIHRoZSBjaGVjayB0byB0aGUg
+Y2xpZW50X3JlZ2lzdGVyCj4+ID4+IGZ1bmN0aW9uIHdvdWxkIGJlIGdvb2QsIGp1c3QgYXMgYSBz
+YWZldHkgbWVhc3VyZS4KPj4gPgo+PiA+IEhtLCB0aGUgaWRlYSBvZiBjYWxsaW5nIHZnYV9zd2l0
+Y2hlcm9vX2NsaWVudF9wcm9iZV9kZWZlcigpIHR3aWNlCj4+ID4gY2F1c2VzIG1lIHBhaW4gaW4g
+dGhlIHN0b21hY2guIEl0J3Mgc3VycHJpc2luZyBmb3IgZHJpdmVycyB3aGljaAo+PiA+IGp1c3Qg
+ZG9uJ3QgbmVlZCBpdCBhdCB0aGUgbW9tZW50IChhbWRncHUgYW5kIHNuZF9oZGFfaW50ZWwpIGFu
+ZAo+PiA+IGl0IGZlZWxzIGxpa2Ugb3ZlcmVuZ2luZWVyaW5nIGFuZCBwYW1wZXJpbmcgZHJpdmVy
+IGRldmVsb3BlcnMKPj4gPiBiZXlvbmQgcmVhc29uYWJsZSBtZWFzdXJlLiBBbHNvIHdoaWxlIHRo
+ZSBzaW5nbGUgZXhpc3RpbmcgY2hlY2sgaXMKPj4gPiBjaGVhcCwgd2UgbWlnaHQgbGF0ZXIgb24g
+YWRkIGNoZWNrcyB0aGF0IHRha2UgbW9yZSB0aW1lIGFuZCBzbG93Cj4+ID4gdGhpbmdzIGRvd24u
+Cj4+Cj4+IEl0J3MgbW90aXZhdGVkIGJ5IFJ1c3R5J3MgQVBJIE1hbmlmZXN0bzoKPj4KPj4gaHR0
+cDovL3N3ZW5nLnRoZS1kYXZpZXMubmV0L0hvbWUvcnVzdHlzLWFwaS1kZXNpZ24tbWFuaWZlc3Rv
+Cj4KPiBJbnRlcmVzdGluZywgdGhhbmsgeW91Lgo+Cj4KPj4gV2l0aCB0aGUgbWFuZGF0b3J5IGNo
+ZWNrIGluIF9yZWdpc3RlciB3ZSByZWFjaCBsZXZlbCA1IC0gaXQnbGwgYmxvdyB1cAo+PiBhdCBy
+dW50aW1lIHdoZW4gd2UgdHJ5IHRvIHJlZ2lzdGVyIGl0Lgo+Cj4gVGhlIG1hbmlmZXN0byBzYXlz
+ICI1LiBEbyBpdCByaWdodCBvciBpdCB3aWxsIGFsd2F5cyBicmVhayBhdCBydW50aW1lIi4KPgo+
+IEhvd2V2ZXIgZXZlbiBpZiB3ZSBhZGQgYSBXQVJOX09OKHZnYV9zd2l0Y2hlcm9vX2NsaWVudF9w
+cm9iZV9kZWZlcihwZGV2KSkKPiB0byByZWdpc3Rlcl9jbGllbnQoKSwgaXQgd2lsbCBub3QgKmFs
+d2F5cyogc3BldyBhIHN0YWNrdHJhY2UgYnV0IG9ubHkgb24KPiB0aGUgbWFjaGluZXMgdGhpcyBj
+b25jZXJucyAoTWFjQm9vayBQcm9zKS4gU2luY2UgZmFpbHVyZSB0byBkZWZlciBicmVha3MKPiBH
+UFUgc3dpdGNoaW5nLCBsZXZlbCA1IGlzIGFscmVhZHkgcmVhY2hlZC4gQ2hhbmNlcyBhcmUgdGhp
+cyB3b24ndCBnbwo+IHVubm90aWNlZCBieSB0aGUgdXNlci4KCklmIHdlIGZhaWwgdGhlIHJlZ2lz
+dGVyIGhvcGVmdWxseSB0aGUgZHJpdmVyIGNoZWNrcyBmb3IgdGhhdCBhbmQgbWlnaHQKYmxvdyB1
+cCBzb21ld2hlcmUgaW4gdW50ZXN0ZWQgZXJyb3IgaGFuZGxpbmcgY29kZS4gQnV0IHRoZXJlJ3Mg
+YSBnb29kCmNoYW5jZSBpdCdsbCBmYWlsICh3ZSBjYW4gZW5jb3VyYWdlIHRoYXQgbW9yZSBieSBh
+ZGRpbmcgbXVzdF9jaGVjayB0bwp0aGUgZnVuY3Rpb24gZGVjbGFyYXRpb24pLiBJbiB0aGF0IGNh
+c2UgeW91IGdldCBhIG5pY2UgYnVnIHJlcG9ydCB3aXRoCnNwbGF0IGZyb20gdXNlcnMgaGl0dGlu
+ZyB0aGlzLgoKV2l0aG91dCB0aGlzIGl0J2xsIHNpbGVudGx5IHdvcmssIGFuZCBhbGwgdGhlIHJl
+cG9ydHMgeW91IGdldCBpcwoibGludXggaXMgc2hpdCwgZ3B1IHN3aXRjaGluZyBkb2Vzbid0IHdv
+cmsiLgoKSW4gYm90aCBjYXNlcyBpdCBjYW4gc29tZXRpbWVzIHN1Y2NlZWQsIHdoaWNoIGlzIG5v
+dCBncmVhdCBpbmRlZWQuIEJ1dApJJ20gdHJ5aW5nIHRvIGZpeCB0aGF0IGJ5IGluamVjdGlvbiBF
+REVGRVIgcG9pbnRzIGFydGlmaWNpYWxseQpzb21laG93LiBOb3QgeWV0IGZpZ3VyZWQgb3V0IHRo
+YXQgb25lLgoKQnV0IGlycmVzcGVjdGl2ZSBvZiB0aGUgcHJlY2lzZSBmYWlsdXJlIG1vZGUgbWFr
+aW5nIHRoZSBkZWZlciBjaGVjawptYW5kYXRvcnkgYnkganVzdCBpbmNsdWRpbmcgaXQgaW4gX3Jl
+Z2lzdGVyKCkgaXMgYmV0dGVyIHNpbmNlIGl0IG1ha2VzCml0IGltcG9zc2libGUgdG8gZm9yZ2V0
+IHRvIGNhbGwgaXQgd2hlbiBpdHMgbmVlZGVkLiBTbyBpbW8gY2xlYXJseSB0aGUKbW9yZSByb2J1
+c3QgQVBJLiBBbmQgdGhhdCdzIG15IG1ldHJpYyBmb3IgZXZhbHVhdGluZyBuZXcgQVBJIC0gaG93
+CmVhc3kvaGFyZCBpcyBpdCB0byBhYnVzZS9nZXQgd3JvbmcuCgo+PiBGb3IgbW9yZSBjb250ZXh0
+OiBXZSBoYXZlIHRvbnMgb2YgZnVuIHdpdGggRVBST0JFX0RFRkVSIGhhbmRsaW5nCj4+IGJldHdl
+ZW4gaTkxNSBhbmQgc25kLWhkYQo+Cj4gSSBkb24ndCB1bmRlcnN0YW5kLCB0aGVyZSBpcyBjdXJy
+ZW50bHkgbm90IGEgc2luZ2xlIG9jY3VycmVuY2Ugb2YKPiBFUFJPQkVfREVGRVIgaW4gaTkxNSwg
+YXBhcnQgZnJvbSB0aGUgb25lIEkgYWRkZWQuCj4KPiBJbiBzb3VuZC8gdGhlcmUgYXJlIDg4IG9j
+Y3VycmVuY2VzIG9mIEVQUk9CRV9ERUZFUiBpbiBzb2MvLCBwbHVzIDEgaW4KPiBwcGMvIGFuZCB0
+aGF0J3MgaXQuIFNvIG5vdCBhIHNpbmdsZSBvbmUgaW4gcGNpL2hkYS8gd2hlcmUgaGRhX2ludGVs
+LmMKPiByZXNpZGVzLgo+Cj4gSXMgdGhlIGZ1biB3aXRoIEVQUk9CRV9ERUZFUiBoYW5kbGluZyBj
+YXVzZWQgYnkgdGhlIGxhY2sgdGhlcmVvZj8KClllcywgdGhlcmUncyBvbmUgaW5zdGFuY2Ugd2hl
+cmUgaTkxNSBzaG91ZGwgZGVmZXIgbWlzc2luZy4gVGhlIHJlYWwKdHJvdWJsZSBpcyB0aGF0IHNu
+ZC1oZGEgaGFzIHNvbWUgcmVhbGx5IGNsb3NlIHRpZXMgd2l0aCBpOTE1LCBhbmQKcmVzb2x2ZXMg
+dGhvc2Ugd2l0aCBwcm9iZS1kZWZlci4gQW5kIGJsb3dzIHVwIGFsbCB0aGUgdGltZSBzaW5jZSB3
+ZQpzdGFydGVkIHVzaW5nIHRoaXMsIGFuZCB3aXRoIGhkbWkvZHAgeW91IHJlYWxseSBhbHdheXMg
+aGF2ZSB0byB0ZXN0CmJvdGggdG9nZXRoZXIgaW4gQ0ksIHNuZC1oZGEgaXMgcHJldHR5IG11Y2gg
+YSBwYXJ0IG9mIHRoZSBpbnRlbCBnZngKZHJpdmVyIG5vd2FkYXlzLiBEZWZlcnJlZCBwcm9iaW5n
+IGlzIGltZSByZWFsIHRyb3VibGUuCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUg
+RW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDov
+L2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KSW50ZWwtZ2Z4IG1haWxpbmcgbGlzdApJbnRlbC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vaW50ZWwt
+Z2Z4Cg==
