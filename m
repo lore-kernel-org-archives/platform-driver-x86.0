@@ -1,68 +1,62 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH 1/2] intel_pmc_ipc: Fix GCR register base address and
- length
-Date: Thu, 18 Feb 2016 06:19:35 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD038613C2@SHSMSX104.ccr.corp.intel.com>
-References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
- <20160218061415.GJ18421@dvhart-mobl5.amr.corp.intel.com>
+From: John Dahlstrom <jodarom@SDF.ORG>
+Subject: [PATCH v3 1/1] ideapad-laptop: Add ideapad Y700 (15) to the no_hw_rfkill
+ DMI list
+Date: Thu, 18 Feb 2016 01:42:20 -0600 (CST)
+Message-ID: <Pine.NEB.4.64.1602180029370.7701@norge.freeshell.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:18300 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1425148AbcBRGTj convert rfc822-to-8bit (ORCPT
+Received: from mx.sdf.org ([192.94.73.23]:55138 "EHLO sdf.lonestar.org"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S933402AbcBRHnF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Feb 2016 01:19:39 -0500
-In-Reply-To: <20160218061415.GJ18421@dvhart-mobl5.amr.corp.intel.com>
-Content-Language: en-US
+	Thu, 18 Feb 2016 02:43:05 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Muller, Francois-nicolas" <francois-nicolas.muller@intel.com>
+To: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-> 
-> Signed-off-by: Francois-Nicolas Muller 
-> <francois-nicolas.muller@intel.com>
-> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+Some Lenovo ideapad models lack a physical rfkill switch.
+On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
+ideapad-laptop would wrongly report all radios as blocked by
+hardware which caused wireless network connections to fail.
 
-> Who wrote the patch?
-Darren, Francois-Nicolas wrote this patch whicch merged in internal kernel.
+Add these models without an rfkill switch to the no_hw_rfkill list.
 
+Signed-off-by: John Dahlstrom <jodarom@sdf.org>
+Cc: <stable@vger.kernel.org>
+---
+  Relevant kernel versions: 4.5-rc4, 4.4.2, 4.3.5, 4.1.18, 3.18.27
 
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c 
-> b/drivers/platform/x86/intel_pmc_ipc.c
-> index ca69135..abdf67c 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -67,7 +67,8 @@
->  /* exported resources from IFWI */
->  #define PLAT_RESOURCE_IPC_INDEX		0
->  #define PLAT_RESOURCE_IPC_SIZE		0x1000
-> -#define PLAT_RESOURCE_GCR_SIZE		0x1000
-> +#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-> +#define PLAT_RESOURCE_GCR_SIZE		0x4
->  #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
->  #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
->  #define PLAT_RESOURCE_ISP_DATA_INDEX	4
-> @@ -688,7 +689,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
->  	}
->  	ipcdev.ipc_base = addr;
->  
-> -	ipcdev.gcr_base = res->start + size;
-> +	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
->  	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
->  	dev_info(&pdev->dev, "ipc res: %pR\n", res);
->  
-> --
-> 1.8.3.2
-> 
-> 
+  Test configuration
+   Hardware: Lenovo ideapad Y700 Touch-15ISK
+   Kernel version: 4.4.2
 
---
-Darren Hart
-Intel Open Source Technology Center
+  Patch changelog
+   v2 split patch between Touch and non-Touch devices
+   v3 undo patch split and limit summary to 72 characters
+
+  drivers/platform/x86/ideapad-laptop.c |   14 ++++++++++++++
+  1 file changed, 14 insertions(+)
+
+--- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 15:05:20.000000000 -0600
++++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 03:54:48.484423725 -0600
+@@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
+ 		},
++	},
++	{
++		.ident = "Lenovo ideapad Y700-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
++		},
++	},
++	{
++		.ident = "Lenovo ideapad Y700 Touch-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
++		},
+  	},
+  	{
