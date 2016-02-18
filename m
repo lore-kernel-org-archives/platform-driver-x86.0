@@ -1,31 +1,74 @@
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Re: [PATCH RESEND v3] asus-nb-wmi: add wapf=4 quirk for ASUS X75VD
-Date: Thu, 18 Feb 2016 08:00:58 +0200
-Message-ID: <1789149.FKtgJXZfQF@spock>
-References: <ece82c01c879e7e1fed300a001b491ed@natalenko.name> <20160218052345.GC18421@dvhart-mobl5.amr.corp.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 2/2] intel_pmc_ipc: avoid pending IPC1 command during
+ legacy suspend
+Date: Wed, 17 Feb 2016 22:13:27 -0800
+Message-ID: <20160218061327.GI18421@dvhart-mobl5.amr.corp.intel.com>
+References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+ <1455732218-27283-2-git-send-email-qipeng.zha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from vulcan.natalenko.name ([104.207.131.136]:32516 "EHLO
-	vulcan.natalenko.name" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1756269AbcBRGB1 convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:59242 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1424396AbcBRGN2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Feb 2016 01:01:27 -0500
-In-Reply-To: <20160218052345.GC18421@dvhart-mobl5.amr.corp.intel.com>
+	Thu, 18 Feb 2016 01:13:28 -0500
+Content-Disposition: inline
+In-Reply-To: <1455732218-27283-2-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Qipeng Zha <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, Ananth Krishna R <ananth.krishna.r@intel.com>, Bharath K Veera <bharath.k.veera@intel.com>
 
-Thanks for your patience ;).
+On Thu, Feb 18, 2016 at 02:03:38AM +0800, Qipeng Zha wrote:
+> During legacy suspend flow, IPC1 commands are being requested
+> from opregion driver. But the PMC_IPC1 command will timeout as example:
+> 
+> [  281.444600] ipc_debug##: ipc_send_command: cmd=0x201ff,
+> [  281.444648] wbuf[0]=0x4ea6
+> [  281.444668] wbuf[1]=0x0
+> [  281.444674] wbuf[2]=0x0
+> [  281.444676] wbuf[3]=0x0
+> [  284.446467] pmc-ipc-plat INT34D2:00: IPC timed out, TS=0x4, CMD=0x200ff
+> 
+> This is because before the opregion driver could send IPC1 commands,
+> the PMC_IPC irq is already suspended. Which makes the IPC command to
+> timeout.
+> 
+> Solution: register pmc_ipc irq as IRQF_NO_SUSPEND
+> 
+> Signed-off-by: Ananth Krishna R <ananth.krishna.r@intel.com>
+> Signed-off-by: Bharath K Veera <bharath.k.veera@intel.com>
+> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
 
-On =D1=81=D0=B5=D1=80=D0=B5=D0=B4=D0=B0, 17 =D0=BB=D1=8E=D1=82=D0=BE=D0=
-=B3=D0=BE 2016 =D1=80. 21:23:45 EET Darren Hart wrote:
-> On Wed, Feb 17, 2016 at 01:35:46PM +0200, Oleksandr Natalenko wrote:
-> > Wi-Fi on ASUS X75VD laptop does not work unless asus_nb_wmi module
-> > is loaded with wapf=3D4 option. Add quirk for this.
-> >=20
-> > Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
->=20
-> Queued to testing, thanks.
+Qipeng, who wrote this patch? This is the one I need a Signed-off-by from. Feel
+free to credit the others with concept, debug, testing in the commit message,
+but the Signed-off-by indicates authorship and the path the patch took to
+mainline.
+
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index abdf67c..140aa77 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -731,7 +731,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
+>  		goto err_device;
+>  	}
+>  
+> -	if (request_irq(ipcdev.irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
+> +	if (request_irq(ipcdev.irq, ioc, IRQF_NO_SUSPEND,
+> +			"intel_pmc_ipc", &ipcdev)) {
+>  		dev_err(&pdev->dev, "Failed to request irq\n");
+>  		ret = -EBUSY;
+>  		goto err_irq;
+> -- 
+> 1.8.3.2
+> 
+> 
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
