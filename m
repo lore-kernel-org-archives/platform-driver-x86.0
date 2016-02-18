@@ -1,52 +1,36 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v3 5/5] dell-wmi: support Dell Inspiron M5110
-Date: Thu, 18 Feb 2016 09:25:25 +0100
-Message-ID: <20160218082525.GA4385@eudyptula.hq.kempniu.pl>
-References: <20160121090401.GR7192@pali>
- <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <1455634230-1487-6-git-send-email-kernel@kempniu.pl>
- <20160216152246.GL1476@pali>
- <20160216220312.GB2741@eudyptula.hq.kempniu.pl>
- <20160217114230.GS1476@pali>
- <20160217120158.GA3494@eudyptula.hq.kempniu.pl>
- <20160217120848.GT1476@pali>
+From: Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH 7/9] rfkill: Create "rfkill-airplane_mode" LED trigger
+Date: Thu, 18 Feb 2016 21:08:41 +0100
+Message-ID: <1455826121.2084.17.camel@sipsolutions.net>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
+	 <1454946096-9752-8-git-send-email-jprvita@endlessm.com>
+	 (sfid-20160208_164147_435264_67EE08E5)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160217120848.GT1476@pali>
+In-Reply-To: <1454946096-9752-8-git-send-email-jprvita@endlessm.com> (sfid-20160208_164147_435264_67EE08E5)
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> > Please note that except for the first 5 entries, the keymap is sort=
-ed by
-> > event code in ascending order.
+On Mon, 2016-02-08 at 10:41 -0500, Jo=C3=A3o Paulo Rechi Vita wrote:
+> This creates a new LED trigger to be used by platform drivers as a
+> default trigger for airplane-mode indicator LEDs.
 >=20
-> I have prepared some patches which sort all event codes plus adds
-> missing comments... So after all dell patches are in Darren tree, I w=
-ill
-> rewrite/rebase my and can send them.
+> By default this trigger will fire when RFKILL_OP_CHANGE_ALL is called
+> for all types (RFKILL_TYPE_ALL), setting the LED brightness to
+> LED_FULL
+> when the changing the state to blocked, and to LED_OFF when the
+> changing
+> the state to unblocked. In the future there will be a mechanism for
+> userspace to override the default policy, so it can implement its
+> own.
 >=20
-> > If I understand correctly, doing what you ask would break that orde=
-ring:
-> >=20
-> >     /* Dell Instant Launch key */
-> >     { KE_KEY, 0xe025, { KEY_PROG4 } },
-> >     { KE_KEY, 0xe029, { KEY_PROG4 } },
-> >=20
-> >     /* Audio panel key */
-> >     { KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> >=20
-> > Is this acceptable?  Or perhaps you had something else on your mind=
-?
->=20
-> Thats better, now we know which event is audio and which launch key.
+> This trigger will be used by the asus-wireless x86 platform driver.
 
-Ok, then I will do that in v4.
+Just one comment - I think you should be consistent with the _ vs - and
+just use "rfkill-airplane-mode" as the name.
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+johannes
