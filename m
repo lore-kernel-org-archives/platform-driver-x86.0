@@ -1,107 +1,38 @@
-From: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Subject: RE: [PATCH v5 10/12] drm/i915: Defer probe if gmux is present but its
- driver isn't
-Date: Thu, 18 Feb 2016 23:53:51 +0000
-Message-ID: <BLUPR12MB06917664206020977956D260F7AF0@BLUPR12MB0691.namprd12.prod.outlook.com>
-References: <cover.1452525860.git.lukas@wunner.de>
- <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
- <20160209090401.GA11240@phenom.ffwll.local>
- <20160214121008.GA16847@wunner.de>
- <CAKMK7uGZz=HyDhgJg=y9xb+i=-3zrQ_b8FGH6_Hd7snTyok7zQ@mail.gmail.com>
- <20160216155820.GA17446@wunner.de>
- <20160216160840.GT32705@phenom.ffwll.local>
- <20160218203431.GA19065@wunner.de>
- <CAKMK7uEd3XUMy8D_BcowtqB49CX8kG6E=aKzi8A3H08_713MoA@mail.gmail.com>
- <20160218222041.GB19128@wunner.de>
- <CAKMK7uFT5fUmvAXFWFtUyj9=DMwhVB5msB84sgD1vetLEqKr6A@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/2] intel_pmc_ipc: Fix GCR register base address and
+ length
+Date: Fri, 19 Feb 2016 14:37:52 -0800
+Message-ID: <20160219223752.GA23707@dvhart-mobl5.amr.corp.intel.com>
+References: <1455732218-27283-1-git-send-email-qipeng.zha@intel.com>
+ <20160218061415.GJ18421@dvhart-mobl5.amr.corp.intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD038613C2@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uFT5fUmvAXFWFtUyj9=DMwhVB5msB84sgD1vetLEqKr6A@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: 'Daniel Vetter' <daniel@ffwll.ch>, Lukas Wunner <lukas@wunner.de>
-Cc: intel-gfx <intel-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>, dri-devel <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:60679 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757484AbcBSWhx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 19 Feb 2016 17:37:53 -0500
+Content-Disposition: inline
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD038613C2@SHSMSX104.ccr.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Muller, Francois-nicolas" <francois-nicolas.muller@intel.com>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBkYW5pZWwudmV0dGVyQGZmd2xs
-LmNoIFttYWlsdG86ZGFuaWVsLnZldHRlckBmZndsbC5jaF0gT24gQmVoYWxmIE9mDQo+IERhbmll
-bCBWZXR0ZXINCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDE4LCAyMDE2IDY6MTEgUE0NCj4g
-VG86IEx1a2FzIFd1bm5lcg0KPiBDYzogZHJpLWRldmVsOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZn
-ZXIua2VybmVsLm9yZzsgaW50ZWwtZ2Z4OyBCZW4gU2tlZ2dzOw0KPiBEZXVjaGVyLCBBbGV4YW5k
-ZXINCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NSAxMC8xMl0gZHJtL2k5MTU6IERlZmVyIHByb2Jl
-IGlmIGdtdXggaXMgcHJlc2VudCBidXQNCj4gaXRzIGRyaXZlciBpc24ndA0KPiANCj4gT24gVGh1
-LCBGZWIgMTgsIDIwMTYgYXQgMTE6MjAgUE0sIEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRl
-PiB3cm90ZToNCj4gPiBIaSwNCj4gPg0KPiA+IE9uIFRodSwgRmViIDE4LCAyMDE2IGF0IDEwOjM5
-OjA1UE0gKzAxMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6DQo+ID4+IE9uIFRodSwgRmViIDE4LCAy
-MDE2IGF0IDk6MzQgUE0sIEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPg0KPiB3cm90ZToN
-Cj4gPj4gPg0KPiA+PiA+PiBPaywgbWFrZXMgc2Vuc2UuIEkgc3RpbGwgdGhpbmsgYWRkaW5nIHRo
-ZSBjaGVjayB0byB0aGUgY2xpZW50X3JlZ2lzdGVyDQo+ID4+ID4+IGZ1bmN0aW9uIHdvdWxkIGJl
-IGdvb2QsIGp1c3QgYXMgYSBzYWZldHkgbWVhc3VyZS4NCj4gPj4gPg0KPiA+PiA+IEhtLCB0aGUg
-aWRlYSBvZiBjYWxsaW5nIHZnYV9zd2l0Y2hlcm9vX2NsaWVudF9wcm9iZV9kZWZlcigpIHR3aWNl
-DQo+ID4+ID4gY2F1c2VzIG1lIHBhaW4gaW4gdGhlIHN0b21hY2guIEl0J3Mgc3VycHJpc2luZyBm
-b3IgZHJpdmVycyB3aGljaA0KPiA+PiA+IGp1c3QgZG9uJ3QgbmVlZCBpdCBhdCB0aGUgbW9tZW50
-IChhbWRncHUgYW5kIHNuZF9oZGFfaW50ZWwpIGFuZA0KPiA+PiA+IGl0IGZlZWxzIGxpa2Ugb3Zl
-cmVuZ2luZWVyaW5nIGFuZCBwYW1wZXJpbmcgZHJpdmVyIGRldmVsb3BlcnMNCj4gPj4gPiBiZXlv
-bmQgcmVhc29uYWJsZSBtZWFzdXJlLiBBbHNvIHdoaWxlIHRoZSBzaW5nbGUgZXhpc3RpbmcgY2hl
-Y2sgaXMNCj4gPj4gPiBjaGVhcCwgd2UgbWlnaHQgbGF0ZXIgb24gYWRkIGNoZWNrcyB0aGF0IHRh
-a2UgbW9yZSB0aW1lIGFuZCBzbG93DQo+ID4+ID4gdGhpbmdzIGRvd24uDQo+ID4+DQo+ID4+IEl0
-J3MgbW90aXZhdGVkIGJ5IFJ1c3R5J3MgQVBJIE1hbmlmZXN0bzoNCj4gPj4NCj4gPj4gaHR0cDov
-L3N3ZW5nLnRoZS1kYXZpZXMubmV0L0hvbWUvcnVzdHlzLWFwaS1kZXNpZ24tbWFuaWZlc3RvDQo+
-ID4NCj4gPiBJbnRlcmVzdGluZywgdGhhbmsgeW91Lg0KPiA+DQo+ID4NCj4gPj4gV2l0aCB0aGUg
-bWFuZGF0b3J5IGNoZWNrIGluIF9yZWdpc3RlciB3ZSByZWFjaCBsZXZlbCA1IC0gaXQnbGwgYmxv
-dyB1cA0KPiA+PiBhdCBydW50aW1lIHdoZW4gd2UgdHJ5IHRvIHJlZ2lzdGVyIGl0Lg0KPiA+DQo+
-ID4gVGhlIG1hbmlmZXN0byBzYXlzICI1LiBEbyBpdCByaWdodCBvciBpdCB3aWxsIGFsd2F5cyBi
-cmVhayBhdCBydW50aW1lIi4NCj4gPg0KPiA+IEhvd2V2ZXIgZXZlbiBpZiB3ZSBhZGQgYQ0KPiBX
-QVJOX09OKHZnYV9zd2l0Y2hlcm9vX2NsaWVudF9wcm9iZV9kZWZlcihwZGV2KSkNCj4gPiB0byBy
-ZWdpc3Rlcl9jbGllbnQoKSwgaXQgd2lsbCBub3QgKmFsd2F5cyogc3BldyBhIHN0YWNrdHJhY2Ug
-YnV0IG9ubHkgb24NCj4gPiB0aGUgbWFjaGluZXMgdGhpcyBjb25jZXJucyAoTWFjQm9vayBQcm9z
-KS4gU2luY2UgZmFpbHVyZSB0byBkZWZlciBicmVha3MNCj4gPiBHUFUgc3dpdGNoaW5nLCBsZXZl
-bCA1IGlzIGFscmVhZHkgcmVhY2hlZC4gQ2hhbmNlcyBhcmUgdGhpcyB3b24ndCBnbw0KPiA+IHVu
-bm90aWNlZCBieSB0aGUgdXNlci4NCj4gDQo+IElmIHdlIGZhaWwgdGhlIHJlZ2lzdGVyIGhvcGVm
-dWxseSB0aGUgZHJpdmVyIGNoZWNrcyBmb3IgdGhhdCBhbmQgbWlnaHQNCj4gYmxvdyB1cCBzb21l
-d2hlcmUgaW4gdW50ZXN0ZWQgZXJyb3IgaGFuZGxpbmcgY29kZS4gQnV0IHRoZXJlJ3MgYSBnb29k
-DQo+IGNoYW5jZSBpdCdsbCBmYWlsICh3ZSBjYW4gZW5jb3VyYWdlIHRoYXQgbW9yZSBieSBhZGRp
-bmcgbXVzdF9jaGVjayB0bw0KPiB0aGUgZnVuY3Rpb24gZGVjbGFyYXRpb24pLiBJbiB0aGF0IGNh
-c2UgeW91IGdldCBhIG5pY2UgYnVnIHJlcG9ydCB3aXRoDQo+IHNwbGF0IGZyb20gdXNlcnMgaGl0
-dGluZyB0aGlzLg0KPiANCj4gV2l0aG91dCB0aGlzIGl0J2xsIHNpbGVudGx5IHdvcmssIGFuZCBh
-bGwgdGhlIHJlcG9ydHMgeW91IGdldCBpcw0KPiAibGludXggaXMgc2hpdCwgZ3B1IHN3aXRjaGlu
-ZyBkb2Vzbid0IHdvcmsiLg0KPiANCj4gSW4gYm90aCBjYXNlcyBpdCBjYW4gc29tZXRpbWVzIHN1
-Y2NlZWQsIHdoaWNoIGlzIG5vdCBncmVhdCBpbmRlZWQuIEJ1dA0KPiBJJ20gdHJ5aW5nIHRvIGZp
-eCB0aGF0IGJ5IGluamVjdGlvbiBFREVGRVIgcG9pbnRzIGFydGlmaWNpYWxseQ0KPiBzb21laG93
-LiBOb3QgeWV0IGZpZ3VyZWQgb3V0IHRoYXQgb25lLg0KPiANCj4gQnV0IGlycmVzcGVjdGl2ZSBv
-ZiB0aGUgcHJlY2lzZSBmYWlsdXJlIG1vZGUgbWFraW5nIHRoZSBkZWZlciBjaGVjaw0KPiBtYW5k
-YXRvcnkgYnkganVzdCBpbmNsdWRpbmcgaXQgaW4gX3JlZ2lzdGVyKCkgaXMgYmV0dGVyIHNpbmNl
-IGl0IG1ha2VzDQo+IGl0IGltcG9zc2libGUgdG8gZm9yZ2V0IHRvIGNhbGwgaXQgd2hlbiBpdHMg
-bmVlZGVkLiBTbyBpbW8gY2xlYXJseSB0aGUNCj4gbW9yZSByb2J1c3QgQVBJLiBBbmQgdGhhdCdz
-IG15IG1ldHJpYyBmb3IgZXZhbHVhdGluZyBuZXcgQVBJIC0gaG93DQo+IGVhc3kvaGFyZCBpcyBp
-dCB0byBhYnVzZS9nZXQgd3JvbmcuDQo+IA0KPiA+PiBGb3IgbW9yZSBjb250ZXh0OiBXZSBoYXZl
-IHRvbnMgb2YgZnVuIHdpdGggRVBST0JFX0RFRkVSIGhhbmRsaW5nDQo+ID4+IGJldHdlZW4gaTkx
-NSBhbmQgc25kLWhkYQ0KPiA+DQo+ID4gSSBkb24ndCB1bmRlcnN0YW5kLCB0aGVyZSBpcyBjdXJy
-ZW50bHkgbm90IGEgc2luZ2xlIG9jY3VycmVuY2Ugb2YNCj4gPiBFUFJPQkVfREVGRVIgaW4gaTkx
-NSwgYXBhcnQgZnJvbSB0aGUgb25lIEkgYWRkZWQuDQo+ID4NCj4gPiBJbiBzb3VuZC8gdGhlcmUg
-YXJlIDg4IG9jY3VycmVuY2VzIG9mIEVQUk9CRV9ERUZFUiBpbiBzb2MvLCBwbHVzIDEgaW4NCj4g
-PiBwcGMvIGFuZCB0aGF0J3MgaXQuIFNvIG5vdCBhIHNpbmdsZSBvbmUgaW4gcGNpL2hkYS8gd2hl
-cmUgaGRhX2ludGVsLmMNCj4gPiByZXNpZGVzLg0KPiA+DQo+ID4gSXMgdGhlIGZ1biB3aXRoIEVQ
-Uk9CRV9ERUZFUiBoYW5kbGluZyBjYXVzZWQgYnkgdGhlIGxhY2sgdGhlcmVvZj8NCj4gDQo+IFll
-cywgdGhlcmUncyBvbmUgaW5zdGFuY2Ugd2hlcmUgaTkxNSBzaG91ZGwgZGVmZXIgbWlzc2luZy4g
-VGhlIHJlYWwNCj4gdHJvdWJsZSBpcyB0aGF0IHNuZC1oZGEgaGFzIHNvbWUgcmVhbGx5IGNsb3Nl
-IHRpZXMgd2l0aCBpOTE1LCBhbmQNCj4gcmVzb2x2ZXMgdGhvc2Ugd2l0aCBwcm9iZS1kZWZlci4g
-QW5kIGJsb3dzIHVwIGFsbCB0aGUgdGltZSBzaW5jZSB3ZQ0KPiBzdGFydGVkIHVzaW5nIHRoaXMs
-IGFuZCB3aXRoIGhkbWkvZHAgeW91IHJlYWxseSBhbHdheXMgaGF2ZSB0byB0ZXN0DQo+IGJvdGgg
-dG9nZXRoZXIgaW4gQ0ksIHNuZC1oZGEgaXMgcHJldHR5IG11Y2ggYSBwYXJ0IG9mIHRoZSBpbnRl
-bCBnZngNCj4gZHJpdmVyIG5vd2FkYXlzLiBEZWZlcnJlZCBwcm9iaW5nIGlzIGltZSByZWFsIHRy
-b3VibGUuDQoNClRvIGZ1cnRoZXIgY29tcGxpY2F0ZSB0aGluZ3MsIEFNRCBkR1BVcyBoYXZlIEhE
-QSBhdWRpbyBvbiBib2FyZCBhcyB3ZWxsLg0KDQpBbGV4DQoNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Feb 18, 2016 at 06:19:35AM +0000, Zha, Qipeng wrote:
+> > 
+> > Signed-off-by: Francois-Nicolas Muller 
+> > <francois-nicolas.muller@intel.com>
+> > Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+> 
+> > Who wrote the patch?
+> Darren, Francois-Nicolas wrote this patch whicch merged in internal kernel.
+
+Thanks Qipeng. If the author isn't submitting, please give me a head's up in the
+cover letter (PATCH 0/X) in future submissions.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
