@@ -1,60 +1,50 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] drivers/platform: make x86/intel_scu_ipc.c explicitly
- non-modular
-Date: Fri, 19 Feb 2016 17:36:04 -0800
-Message-ID: <20160220013604.GD23707@dvhart-mobl5.amr.corp.intel.com>
-References: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
+From: John Dahlstrom <jodarom@SDF.ORG>
+Subject: Re: [PATCH v3 1/1] ideapad-laptop: Add ideapad Y700 (15) to the
+ no_hw_rfkill DMI list
+Date: Fri, 19 Feb 2016 20:01:17 -0600 (CST)
+Message-ID: <Pine.NEB.4.64.1602191935590.15324@faeroes.freeshell.org>
+References: <Pine.NEB.4.64.1602180029370.7701@norge.freeshell.org>
+ <20160219224312.GB23707@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:38525 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1428164AbcBTBgJ (ORCPT
+Received: from mx.sdf.org ([192.94.73.23]:58173 "EHLO sdf.lonestar.org"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1161296AbcBTCBw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 19 Feb 2016 20:36:09 -0500
-Content-Disposition: inline
-In-Reply-To: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
+	Fri, 19 Feb 2016 21:01:52 -0500
+In-Reply-To: <20160219224312.GB23707@dvhart-mobl5.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Feb 14, 2016 at 03:00:52PM -0500, Paul Gortmaker wrote:
-> The Kconfig currently controlling compilation of this code is:
-> 
-> drivers/platform/x86/Kconfig:config INTEL_SCU_IPC
-> drivers/platform/x86/Kconfig:   bool "Intel SCU IPC Support"
-> 
-> ...meaning that it currently is not being built as a module by anyone.
-> 
-> Lets remove the modular code that is essentially orphaned, so that
-> when reading the driver there is no doubt it is builtin-only.
-> 
-> We explicitly disallow a driver unbind, since that doesn't have a
-> sensible use case anyway, and it allows us to drop the ".remove"
-> code for non-modular drivers.
-> 
-> Since module_pci_driver() uses the same init level priority as
-> builtin_pci_driver() the init ordering remains unchanged with
-> this commit.
-> 
-> Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
-> 
-> We don't replace module.h with init.h since the file already has that.
-> 
-> We also delete the MODULE_LICENSE tag etc. since all that information
-> is already contained at the top of the file in the comments.
-> 
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+On Fri, 19 Feb 2016, Darren Hart wrote:
 
-Queued to testing with a normalized subject:
+> See stable_kernel_rules.txt for how to specify relevant versions. I'm curious
+> why there is a gap from 3.18 to 4.1.
+>
+> What you probably meant was:
+>
+> Cc: <stable@vger.kernel.org> # 3.18.x
+>
+> If you are going to take this approach, you may wish to verify that this applies
+> back to 3.18, otherwise you may need to specify dependencies (also described in
+> the stable_kernel_rules).
+>
 
-platform/x86: Make intel_scu_ipc explicitly non-modular
+Darren,
 
-Thank you Paul.
+Thank you for your assistance.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+The version gap in the earlier v3 comment reflected my earlier gap in 
+verification. Today I stepped through the additional kernel versions to 
+confirm the patch applies successfully to those versions, and have 
+submitted the patch as v4.
+
+Kernel version 3.18.27 already handles the 17" model of the ideapad Y700, 
+so it would seem odd not to also handle the 15" model.
+
+Kind regards,
+
+John
