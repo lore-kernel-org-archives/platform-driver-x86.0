@@ -1,70 +1,60 @@
-From: John Dahlstrom <jodarom@SDF.ORG>
-Subject: [PATCH v4 1/1] ideapad-laptop: Add ideapad Y700 (15) to the no_hw_rfkill
- DMI list
-Date: Fri, 19 Feb 2016 19:34:18 -0600 (CST)
-Message-ID: <Pine.NEB.4.64.1602191918380.15324@faeroes.freeshell.org>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] drivers/platform: make x86/intel_scu_ipc.c explicitly
+ non-modular
+Date: Fri, 19 Feb 2016 17:36:04 -0800
+Message-ID: <20160220013604.GD23707@dvhart-mobl5.amr.corp.intel.com>
+References: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.sdf.org ([192.94.73.23]:49635 "EHLO sdf.lonestar.org"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1428164AbcBTBfo (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:38525 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1428164AbcBTBgJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 19 Feb 2016 20:35:44 -0500
+	Fri, 19 Feb 2016 20:36:09 -0500
+Content-Disposition: inline
+In-Reply-To: <1455480052-1732-1-git-send-email-paul.gortmaker@windriver.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Some Lenovo ideapad models lack a physical rfkill switch.
-On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
-ideapad-laptop would wrongly report all radios as blocked by
-hardware which caused wireless network connections to fail.
+On Sun, Feb 14, 2016 at 03:00:52PM -0500, Paul Gortmaker wrote:
+> The Kconfig currently controlling compilation of this code is:
+> 
+> drivers/platform/x86/Kconfig:config INTEL_SCU_IPC
+> drivers/platform/x86/Kconfig:   bool "Intel SCU IPC Support"
+> 
+> ...meaning that it currently is not being built as a module by anyone.
+> 
+> Lets remove the modular code that is essentially orphaned, so that
+> when reading the driver there is no doubt it is builtin-only.
+> 
+> We explicitly disallow a driver unbind, since that doesn't have a
+> sensible use case anyway, and it allows us to drop the ".remove"
+> code for non-modular drivers.
+> 
+> Since module_pci_driver() uses the same init level priority as
+> builtin_pci_driver() the init ordering remains unchanged with
+> this commit.
+> 
+> Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
+> 
+> We don't replace module.h with init.h since the file already has that.
+> 
+> We also delete the MODULE_LICENSE tag etc. since all that information
+> is already contained at the top of the file in the comments.
+> 
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 
-Add these models without an rfkill switch to the no_hw_rfkill list.
+Queued to testing with a normalized subject:
 
-Signed-off-by: John Dahlstrom <jodarom@sdf.org>
-Cc: <stable@vger.kernel.org> # 4.5.x
-Cc: <stable@vger.kernel.org> # 4.4.x
-Cc: <stable@vger.kernel.org> # 4.3.x
-Cc: <stable@vger.kernel.org> # 4.2.x
-Cc: <stable@vger.kernel.org> # 4.1.x
-Cc: <stable@vger.kernel.org> # 4.0.x
-Cc: <stable@vger.kernel.org> # 3.19.x
-Cc: <stable@vger.kernel.org> # 3.18.x
-Cc: <stable@vger.kernel.org> # 3.17.x
-Cc: <stable@vger.kernel.org> # 3.16.x
----
-   Test configuration
-    Hardware: Lenovo ideapad Y700 Touch-15ISK
-    Kernel version: 4.4.2
+platform/x86: Make intel_scu_ipc explicitly non-modular
 
-   Patch changelog
-    v2 split patch between Touch and non-Touch devices
-    v3 undo patch split and limit summary to 72 characters
-    v4 include comprehensive list of patchable kernels in Cc
+Thank you Paul.
 
-   drivers/platform/x86/ideapad-laptop.c |   14 ++++++++++++++
-   1 file changed, 14 insertions(+)
-
---- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 15:05:20.000000000 -0600
-+++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 03:54:48.484423725 -0600
-@@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
-  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
-  		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad Y700-15ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad Y700 Touch-15ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
-+		},
-  	},
-  	{
+-- 
+Darren Hart
+Intel Open Source Technology Center
