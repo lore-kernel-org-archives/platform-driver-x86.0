@@ -1,55 +1,49 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v3 3/5] dell-wmi: enable receiving WMI events on Dell
- Vostro V131
-Date: Mon, 22 Feb 2016 10:13:50 +0100
-Message-ID: <20160222091350.GA8471@eudyptula.hq.kempniu.pl>
-References: <20160121090401.GR7192@pali>
- <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <1455634230-1487-4-git-send-email-kernel@kempniu.pl>
- <20160220012457.GC23707@dvhart-mobl5.amr.corp.intel.com>
- <20160222085650.GA8322@eudyptula.hq.kempniu.pl>
- <20160222090314.GB4606@pali>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 7/9] rfkill: Create "rfkill-airplane_mode" LED trigger
+Date: Mon, 22 Feb 2016 11:10:50 -0500
+Message-ID: <CA+A7VXUJNUftsQjEAGtOmQbCMF1WzRJVAMqF2NDPYoitmXTrrQ@mail.gmail.com>
+References: <1454946096-9752-1-git-send-email-jprvita@endlessm.com>
+ <1454946096-9752-8-git-send-email-jprvita@endlessm.com> <1455826121.2084.17.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160222090314.GB4606@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yw0-f182.google.com ([209.85.161.182]:36253 "EHLO
+	mail-yw0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751364AbcBVQLb convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 22 Feb 2016 11:11:31 -0500
+In-Reply-To: <1455826121.2084.17.camel@sipsolutions.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 
-> > > Pali's point about documenting the hardcoded values and eliminati=
-ng the code
-> > > duplication with a function (inline) is a good one.
-> >=20
-> > I plan to only put a comment next to 0x51534554 as 0x10000 is appar=
-ently
-> > just something pulled out of a hat (as the link provided in the com=
-mit
-> > message proves) and input[3] should be self-explanatory due to the =
-name
-> > of the variable whose value is put into it.
->=20
-> Maybe you can add documentation which we got from Dell on some ML abo=
-ut
-> this SMI call. Similarly what I added in dell-laptop.c...
+On 18 February 2016 at 15:08, Johannes Berg <johannes@sipsolutions.net>=
+ wrote:
+> On Mon, 2016-02-08 at 10:41 -0500, Jo=C3=A3o Paulo Rechi Vita wrote:
+>> This creates a new LED trigger to be used by platform drivers as a
+>> default trigger for airplane-mode indicator LEDs.
+>>
+>> By default this trigger will fire when RFKILL_OP_CHANGE_ALL is calle=
+d
+>> for all types (RFKILL_TYPE_ALL), setting the LED brightness to
+>> LED_FULL
+>> when the changing the state to blocked, and to LED_OFF when the
+>> changing
+>> the state to unblocked. In the future there will be a mechanism for
+>> userspace to override the default policy, so it can implement its
+>> own.
+>>
+>> This trigger will be used by the asus-wireless x86 platform driver.
+>
+> Just one comment - I think you should be consistent with the _ vs - a=
+nd
+> just use "rfkill-airplane-mode" as the name.
+>
 
-Sure, I can do that.
+Ok, no problem. I'll change for the next version.
 
-> > By the way, is there any kernel-wide or subsystem-wide policy for
-> > marking a function inline?  I mean, this is hardly time-critical co=
-de,
-> > so is your suggestion to make it inline just a preference or am I
-> > unaware of some rule?
->=20
-> IIRC recent versions of gcc ignores "inline" keyword and inline
-> functions as needed when doing optimizations.
-
-This was my hunch as well, but I couldn't find any proof immediately,
-hence the question.
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
