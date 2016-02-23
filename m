@@ -1,106 +1,34 @@
-From: Andy Lutomirski <luto@amacapital.net>
+From: Mario Limonciello <mario_limonciello@dell.com>
 Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
-Date: Tue, 23 Feb 2016 09:35:47 -0800
-Message-ID: <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
-References: <cover.1455553470.git.luto@kernel.org> <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
- <20160217111634.GQ1476@pali> <56C47090.1050106@dell.com> <20160223120100.GN4606@pali>
+Date: Tue, 23 Feb 2016 11:42:14 -0600
+Message-ID: <56CC99F6.9060009@dell.com>
+References: <cover.1455553470.git.luto@kernel.org>
+ <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
+ <20160217111634.GQ1476@pali> <56C47090.1050106@dell.com>
+ <20160223120100.GN4606@pali>
+ <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f173.google.com ([209.85.214.173]:36789 "EHLO
-	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754077AbcBWRgH convert rfc822-to-8bit (ORCPT
+Received: from ausc60ps301.us.dell.com ([143.166.148.206]:20906 "EHLO
+	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754640AbcBWRmP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Feb 2016 12:36:07 -0500
-Received: by mail-ob0-f173.google.com with SMTP id gc3so200873586obb.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Feb 2016 09:36:07 -0800 (PST)
-In-Reply-To: <20160223120100.GN4606@pali>
+	Tue, 23 Feb 2016 12:42:15 -0500
+In-Reply-To: <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Jon Eyolfson <jon@eyl.io>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
+To: Andy Lutomirski <luto@amacapital.net>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Jon Eyolfson <jon@eyl.io>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
 
-On Feb 23, 2016 4:01 AM, "Pali Roh=C3=A1r" <pali.rohar@gmail.com> wrote=
-:
+
+
+On 02/23/2016 11:35 AM, Andy Lutomirski wrote:
 >
-> On Wednesday 17 February 2016 07:07:28 Mario Limonciello wrote:
-> >
-> >
-> > On 02/17/2016 05:16 AM, Pali Roh=C3=A1r wrote:
-> > > On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
-> > >> On the XPS 13 9350, the dell-rbtn mechanism has a new device id,=
- and
-> > >> the DSDT turns it off if a new enough _OSI is supported.  Add a
-> > >> comment about why we don't bother supporting it.
-> > >>
-> > >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> > >> ---
-> > >>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
-> > >>  1 file changed, 15 insertions(+)
-> > >>
-> > >> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform=
-/x86/dell-rbtn.c
-> > >> index cd410e392550..b51a2008d782 100644
-> > >> --- a/drivers/platform/x86/dell-rbtn.c
-> > >> +++ b/drivers/platform/x86/dell-rbtn.c
-> > >> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_device =
-*device, u32 event);
-> > >>  static const struct acpi_device_id rbtn_ids[] =3D {
-> > >>    { "DELRBTN", 0 },
-> > >>    { "DELLABCE", 0 },
-> > >> +
-> > >> +  /*
-> > >> +   * This driver can also handle the "DELLABC6" device that
-> > >> +   * appears on the XPS 13 9350, but that device is disabled
-> > >> +   * by the DSDT unless booted with acpi_osi=3D"!Windows 2012"
-> > >> +   * acpi_osi=3D"!Windows 2013".  Even if we boot that and bind
-> > >> +   * the driver, we seem to have inconsistent behavior in
-> > >> +   * which NetworkManager can get out of sync with the rfkill
-> > >> +   * state.
-> > > Do you know reason for such behaviour? It is because event is sen=
-d
-> > > duplicated (by dell-rbtn and also by intel-hid)?
-> > DELLABC6 is a custom interface that was created solely to have airp=
-lane
-> > mode support for Windows 7.
-> > For Windows 10 the proper interface is to use that which is handled=
- by
-> > intel-hid.  A OEM airplane mode driver is not used.
-> >
-> > Since the kernel doesn't identify as Windows 7 it would be incorrec=
-t to
-> > do attempt to use that interface.
->
-> Ok, I understand. But what user can is to tell linux kernel to identi=
-fy
-> as Windows 7.
->
-> And I would like to know reason for that inconsistent behaviour. It i=
-s
-> because of bug in NetworkManager or because of some hidden bug in
-> dell-rbnt.c or in rfkill kernel subsystem? If it is in kernel there i=
-s
-> really big change that it can occur also on other machines which uses
-> dell-rbtn and so we should fix it.
->
-> Andy, can you look at it and try identify where is the problem?
-
-I think it's straightforward.  If we identify as Windows 7 and enable
-this driver then, when we press the wireless button, dell-rbtn
-switches its state *and* NetworkManager gets KEY_RFKILL from intel-hid
-and changes its state.  Then you can tell NetworkManager to turn wifi
-on using the menu, at which point dell-rbtn is off but NM's software
-state is on.  Then you press the button again, turning on dell-rbtn
-but turning NM off again.  The result is that the last button press
-direct work as expected.
-
-I haven't verified that this is actually what happens, but it's
-certainly the case that a button that triggers a state toggle should
-only change the state by *one* mechanism.
-
-Presumably this works on Windows 7 because either there is no
-equivalent of intel-hid or because the DSDT turns it off -- I haven't
-checked which is the case.
-
---Andy
+> Presumably this works on Windows 7 because either there is no
+> equivalent of intel-hid or because the DSDT turns it off -- I haven't
+> checked which is the case.
+That's correct, the DSDT doesn't offer the ACPI device corresponding to
+intel-hid for Linux in Win7 otherwise it would be a "yellow bang" in
+device manager that can't be resolved.
