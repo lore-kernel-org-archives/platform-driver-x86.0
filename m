@@ -1,53 +1,62 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] intel-hid: allocate correct amount of memory for private
- struct
-Date: Mon, 22 Feb 2016 14:27:20 -0800
-Message-ID: <20160222222720.GE14101@dvhart-mobl5.amr.corp.intel.com>
-References: <1456064574-11245-1-git-send-email-wsa@the-dreams.de>
+From: John Dahlstrom <jodarom@SDF.ORG>
+Subject: [PATCH v5 1/1] ideapad-laptop: Add ideapad Y700 (15) to the no_hw_rfkill
+ DMI list
+Date: Mon, 22 Feb 2016 21:49:25 -0600 (CST)
+Message-ID: <Pine.NEB.4.64.1602222121540.15286@norge.freeshell.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456064574-11245-1-git-send-email-wsa@the-dreams.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx.sdf.org ([192.94.73.23]:60771 "EHLO sdf.lonestar.org"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1756681AbcBWDvK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 22 Feb 2016 22:51:10 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Feb 21, 2016 at 03:22:27PM +0100, Wolfram Sang wrote:
-> We want the size of the struct, not of a pointer to it. To be future
-> proof, just dereference the pointer to get the desired type.
-> 
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Some Lenovo ideapad models lack a physical rfkill switch.
+On Lenovo models ideapad Y700 Touch-15ISK and ideapad Y700-15ISK,
+ideapad-laptop would wrongly report all radios as blocked by
+hardware which caused wireless network connections to fail.
 
-Queued to testing. Thank you Wolfram.
+Add these models without an rfkill switch to the no_hw_rfkill list.
 
-> ---
-> 
-> Compile tested only. Found by static code analysis.
-> 
->  drivers/platform/x86/intel-hid.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index e20f23e04c24ce..f93abc8c1424ad 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -180,8 +180,7 @@ static int intel_hid_probe(struct platform_device *device)
->  		return -ENODEV;
->  	}
->  
-> -	priv = devm_kzalloc(&device->dev,
-> -			    sizeof(struct intel_hid_priv *), GFP_KERNEL);
-> +	priv = devm_kzalloc(&device->dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
->  	dev_set_drvdata(&device->dev, priv);
-> -- 
-> 2.7.0
-> 
-> 
+Signed-off-by: John Dahlstrom <jodarom@sdf.org>
+Cc: <stable@vger.kernel.org> # 3.18.x-: 4fa9dab: ideapad_laptop: Lenovo G50-30 fix rfkill reports wireless blocked
+---
+   Test configuration
+    Hardware: Lenovo ideapad Y700 Touch-15ISK
+    Kernel version: 4.4.2
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+   Patch changelog
+    v2 split patch between Touch and non-Touch devices
+    v3 undo patch split and limit summary to 72 characters
+    v4 include comprehensive list of patchable kernels in Cc
+    v5 include commit ID of the prerequisite patch in Cc
+
+   drivers/platform/x86/ideapad-laptop.c |   14 ++++++++++++++
+   1 file changed, 14 insertions(+)
+
+--- a/drivers/platform/x86/ideapad-laptop.c	2016-02-14 15:05:20.000000000 -0600
++++ b/drivers/platform/x86/ideapad-laptop.c	2016-02-16 03:54:48.484423725 -0600
+@@ -864,4 +864,18 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
+  		},
++	},
++	{
++		.ident = "Lenovo ideapad Y700-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
++		},
++	},
++	{
++		.ident = "Lenovo ideapad Y700 Touch-15ISK",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
++		},
+  	},
+  	{
