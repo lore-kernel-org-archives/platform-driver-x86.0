@@ -1,34 +1,46 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
-Date: Tue, 23 Feb 2016 11:42:14 -0600
-Message-ID: <56CC99F6.9060009@dell.com>
-References: <cover.1455553470.git.luto@kernel.org>
- <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
- <20160217111634.GQ1476@pali> <56C47090.1050106@dell.com>
- <20160223120100.GN4606@pali>
- <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv2 04/10] rfkill: Move "state" sysfs file back to stable
+Date: Tue, 23 Feb 2016 21:45:20 +0100
+Message-ID: <20160223204520.GB16961@amd>
+References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
+ <1456159001-20307-5-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60ps301.us.dell.com ([143.166.148.206]:20906 "EHLO
-	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754640AbcBWRmP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Feb 2016 12:42:15 -0500
-In-Reply-To: <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Jon Eyolfson <jon@eyl.io>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456159001-20307-5-git-send-email-jprvita@endlessm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon 2016-02-22 11:36:35, Jo=E3o Paulo Rechi Vita wrote:
+> There is still quite a bit of code using this interface, so we can't
+> just remove it. Hopefully it will be possible in the future, but sinc=
+e
+> its scheduled removal date is past 2 years already, we are better hav=
+ing
+> the documentation reflecting the current state of things.
 
+Umm. If you think it is still obsolete (and you do), you should keep
+it in place.
 
-On 02/23/2016 11:35 AM, Andy Lutomirski wrote:
->
-> Presumably this works on Windows 7 because either there is no
-> equivalent of intel-hid or because the DSDT turns it off -- I haven't
-> checked which is the case.
-That's correct, the DSDT doesn't offer the ACPI device corresponding to
-intel-hid for Linux in Win7 otherwise it would be a "yellow bang" in
-device manager that can't be resolved.
+> -rfkill - radio frequency (RF) connector kill switch support
+> -
+> -For details to this subsystem look at Documentation/rfkill.txt.
+> -
+> -What:		/sys/class/rfkill/rfkill[0-9]+/state
+> -Date:		09-Jul-2007
+> -KernelVersion	v2.6.22
+> -Contact:	linux-wireless@vger.kernel.org
+> -Description: 	Current state of the transmitter.
+> -		This file is deprecated and scheduled to be removed in
+> -2014,
+
+Change it to "and may be removed,"
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
