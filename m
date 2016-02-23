@@ -1,74 +1,97 @@
-From: John Dahlstrom <jodarom@SDF.ORG>
-Subject: Re: [PATCH v4 1/1] ideapad-laptop: Add ideapad Y700 (15) to the
- no_hw_rfkill DMI list
-Date: Mon, 22 Feb 2016 22:29:48 -0600 (CST)
-Message-ID: <Pine.NEB.4.64.1602221810140.9397@norge.freeshell.org>
-References: <Pine.NEB.4.64.1602191918380.15324@faeroes.freeshell.org>
- <20160222221416.GD14101@dvhart-mobl5.amr.corp.intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
+Date: Tue, 23 Feb 2016 13:01:00 +0100
+Message-ID: <20160223120100.GN4606@pali>
+References: <cover.1455553470.git.luto@kernel.org>
+ <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
+ <20160217111634.GQ1476@pali>
+ <56C47090.1050106@dell.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.sdf.org ([192.94.73.23]:52625 "EHLO sdf.lonestar.org"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1757100AbcBWEaj (ORCPT
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:37143 "EHLO
+	mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750918AbcBWMBD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Feb 2016 23:30:39 -0500
-In-Reply-To: <20160222221416.GD14101@dvhart-mobl5.amr.corp.intel.com>
+	Tue, 23 Feb 2016 07:01:03 -0500
+Received: by mail-wm0-f45.google.com with SMTP id g62so206607189wme.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Feb 2016 04:01:03 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <56C47090.1050106@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mario Limonciello <mario_limonciello@dell.com>
+Cc: Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Mon, 22 Feb 2016, Darren Hart wrote:
+On Wednesday 17 February 2016 07:07:28 Mario Limonciello wrote:
+>=20
+>=20
+> On 02/17/2016 05:16 AM, Pali Roh=C3=A1r wrote:
+> > On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
+> >> On the XPS 13 9350, the dell-rbtn mechanism has a new device id, a=
+nd
+> >> the DSDT turns it off if a new enough _OSI is supported.  Add a
+> >> comment about why we don't bother supporting it.
+> >>
+> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> >> ---
+> >>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
+> >>  1 file changed, 15 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x=
+86/dell-rbtn.c
+> >> index cd410e392550..b51a2008d782 100644
+> >> --- a/drivers/platform/x86/dell-rbtn.c
+> >> +++ b/drivers/platform/x86/dell-rbtn.c
+> >> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_device *d=
+evice, u32 event);
+> >>  static const struct acpi_device_id rbtn_ids[] =3D {
+> >>  	{ "DELRBTN", 0 },
+> >>  	{ "DELLABCE", 0 },
+> >> +
+> >> +	/*
+> >> +	 * This driver can also handle the "DELLABC6" device that
+> >> +	 * appears on the XPS 13 9350, but that device is disabled
+> >> +	 * by the DSDT unless booted with acpi_osi=3D"!Windows 2012"
+> >> +	 * acpi_osi=3D"!Windows 2013".  Even if we boot that and bind
+> >> +	 * the driver, we seem to have inconsistent behavior in
+> >> +	 * which NetworkManager can get out of sync with the rfkill
+> >> +	 * state.
+> > Do you know reason for such behaviour? It is because event is send
+> > duplicated (by dell-rbtn and also by intel-hid)?
+> DELLABC6 is a custom interface that was created solely to have airpla=
+ne
+> mode support for Windows 7.=20
+> For Windows 10 the proper interface is to use that which is handled b=
+y
+> intel-hid.  A OEM airplane mode driver is not used.
+>=20
+> Since the kernel doesn't identify as Windows 7 it would be incorrect =
+to
+> do attempt to use that interface.
 
-> Unfortunately, backporting this to stable is not quite so simple.
->
-> First, 3.16 doesn't really work as between 3.16 and 3.17 the following patch
-> landed:
->
-> ce363c2 ideapad-laptop: Change Lenovo Yoga 2 series rfkill handling
->
-> Which changes the name of the dmi_system_id struct from rfkill_blacklist to
-> no_hw_rfkill_list.
->
-> Following that, there were several additions to the list which should be applied
-> before this patch to each stable kernel for which they haven't been picked up in
-> order for this one to apply cleanly. Several of those are included below:
->
+Ok, I understand. But what user can is to tell linux kernel to identify
+as Windows 7.
 
-Despite the change in the no_hw_rfkill_list, GNU patch still yields the
-correct output but with fuzz. I interpret apply cleanly to mean that
-the patch must also apply with zero fuzz, such as with "patch -F 0".
+And I would like to know reason for that inconsistent behaviour. It is
+because of bug in NetworkManager or because of some hidden bug in
+dell-rbnt.c or in rfkill kernel subsystem? If it is in kernel there is
+really big change that it can occur also on other machines which uses
+dell-rbtn and so we should fix it.
 
-In the case where the context has changed (including changes to an
-enclosing struct or function), I gather that a patch exactly modified
-for an older kernel is to be sent to stable@vger.kernel.org after the 
-unmodified patch is accepted upstream with a commit ID.
+Andy, can you look at it and try identify where is the problem?
 
-> $ git l v3.17.. drivers/platform/x86/ideapad-laptop.c
-[...]
+> >> +	 * On the XPS 13 9350 and similar laptops, we're not supposed to
+> >> +	 * use DELLABC6 at all.  Instead, we handle the rfkill button
+> >> +	 * via the intel-hid driver.
+> >> +	 */
+> >> +
+> >>  	{ "", 0 },
+> >>  };
+> >> =20
+>=20
 
-> If you are going to specify a kernel version, you should also include the
-> commits above necessary to make the patch apply cleanly. That would be a long
-> list as you would need many of these for each version.
->
-
-Thank you for that information. One commit is sufficient to apply the 
-patch to all kernel versions without fuzz:
-
-4fa9dab ideapad_laptop: Lenovo G50-30 fix rfkill reports wireless blocked
-
-> What I'm going to do is include a single Cc to stable line without a kernel
-> version. The maintainers will pull that back as far as they can using their own
-> judgement. If you want this to go back earlier than they do on their own, you
-> should submit it to linux-stable directly and include the Cc lines for the
-> dependencies for each kernel you care to see this backported to. See the
-> stable-kernel-rules for the specific formatting to accomplish this.
->
-
-I've submitted v5 of the patch with a single Cc line with the prerequisite
-kernel(s) and commit ID specified exactly.
-
-Kind regards,
-
-John
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
