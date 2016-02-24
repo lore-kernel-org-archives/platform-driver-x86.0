@@ -1,147 +1,64 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v4 2/5] dell-smbios: rename dell_smi_error() to dell_smbios_error()
-Date: Wed, 24 Feb 2016 08:20:12 +0100
-Message-ID: <1456298416-29683-3-git-send-email-kernel@kempniu.pl>
-References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCHv2 09/10] rfkill: Userspace control for airplane mode
+Date: Wed, 24 Feb 2016 10:01:49 +0100
+Message-ID: <1456304509.2050.15.camel@sipsolutions.net>
+References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
+	 <1456159001-20307-10-git-send-email-jprvita@endlessm.com>
+	 <20160223204525.GC16961@amd> <1456260914.9910.34.camel@sipsolutions.net>
+	 <20160223214501.GA22501@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223214501.GA22501@amd>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As dell_smi_error() is exported by dell-smbios, its prefix should be
-consistent with other exported symbols, so change function name to
-dell_smbios_error().
+On Tue, 2016-02-23 at 22:45 +0100, Pavel Machek wrote:
 
-Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
----
- drivers/platform/x86/dell-laptop.c |   16 ++++++++--------
- drivers/platform/x86/dell-smbios.c |    4 ++--
- drivers/platform/x86/dell-smbios.h |    2 +-
- 3 files changed, 11 insertions(+), 11 deletions(-)
+> Well "the airplane mode" is well defined. It means no intentional
+> transmitting at radio frequencies.
+> 
+> The fact that you are allowed to use WIFI on certain flights does not
+> change anything.
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index cbafb95..2c2f02b 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -433,7 +433,7 @@ static int dell_rfkill_set(void *data, bool blocked=
-)
-=20
-  out:
- 	dell_smbios_release_buffer();
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- /* Must be called with the buffer held */
-@@ -876,7 +876,7 @@ static int dell_send_intensity(struct backlight_dev=
-ice *bd)
- 	else
- 		dell_smbios_send_request(1, 1);
-=20
--	ret =3D dell_smi_error(buffer->output[0]);
-+	ret =3D dell_smbios_error(buffer->output[0]);
-=20
- 	dell_smbios_release_buffer();
- 	return ret;
-@@ -901,7 +901,7 @@ static int dell_get_intensity(struct backlight_devi=
-ce *bd)
- 		dell_smbios_send_request(0, 1);
-=20
- 	if (buffer->output[0])
--		ret =3D dell_smi_error(buffer->output[0]);
-+		ret =3D dell_smbios_error(buffer->output[0]);
- 	else
- 		ret =3D buffer->output[1];
-=20
-@@ -1160,7 +1160,7 @@ static int kbd_get_info(struct kbd_info *info)
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
--		ret =3D dell_smi_error(ret);
-+		ret =3D dell_smbios_error(ret);
- 		goto out;
- 	}
-=20
-@@ -1249,7 +1249,7 @@ static int kbd_get_state(struct kbd_state *state)
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
--		ret =3D dell_smi_error(ret);
-+		ret =3D dell_smbios_error(ret);
- 		goto out;
- 	}
-=20
-@@ -1286,7 +1286,7 @@ static int kbd_set_state(struct kbd_state *state)
- 	ret =3D buffer->output[0];
- 	dell_smbios_release_buffer();
-=20
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- static int kbd_set_state_safe(struct kbd_state *state, struct kbd_stat=
-e *old)
-@@ -1329,7 +1329,7 @@ static int kbd_set_token_bit(u8 bit)
- 	ret =3D buffer->output[0];
- 	dell_smbios_release_buffer();
-=20
--	return dell_smi_error(ret);
-+	return dell_smbios_error(ret);
- }
-=20
- static int kbd_get_token_bit(u8 bit)
-@@ -1354,7 +1354,7 @@ static int kbd_get_token_bit(u8 bit)
- 	dell_smbios_release_buffer();
-=20
- 	if (ret)
--		return dell_smi_error(ret);
-+		return dell_smbios_error(ret);
-=20
- 	return (val =3D=3D token->value);
- }
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-index 942572f..d2412ab 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -40,7 +40,7 @@ static int da_command_code;
- static int da_num_tokens;
- static struct calling_interface_token *da_tokens;
-=20
--int dell_smi_error(int value)
-+int dell_smbios_error(int value)
- {
- 	switch (value) {
- 	case 0: /* Completed successfully */
-@@ -53,7 +53,7 @@ int dell_smi_error(int value)
- 		return -EINVAL;
- 	}
- }
--EXPORT_SYMBOL_GPL(dell_smi_error);
-+EXPORT_SYMBOL_GPL(dell_smbios_error);
-=20
- struct calling_interface_buffer *dell_smbios_get_buffer(void)
- {
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/=
-dell-smbios.h
-index 52febe6..ec7d40a 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -35,7 +35,7 @@ struct calling_interface_token {
- 	};
- };
-=20
--int dell_smi_error(int value);
-+int dell_smbios_error(int value);
-=20
- struct calling_interface_buffer *dell_smbios_get_buffer(void);
- void dell_smbios_clear_buffer(void);
---=20
-1.7.10.4
+Nope, not that simple. Pick up any (contemporary) smartphone and watch
+what happens with the airplane mode indicator (the little airplane
+icon) when you enable wifi after enabling airplane mode. It stays
+there.
+
+Clearly the same logic could then apply to an actual LED (on a system
+that's less size-constrained, e.g. a laptop or tablet.)
+
+Thus, the display of "in airplane mode" *does* have policy, and clearly
+there's precedent for not disabling the icon or LED when wifi is
+enabled, but the kernel shouldn't really impose that. Now, the kernel
+has a "safe" default which does what you thought was the "well defined"
+airplane mode, but at the same time it's obviously not good enough.
+
+And evidently, the Asus system that this was originally proposed for
+has such an LED.
+
+> I see that "airplane mode" trigger might be a tiny bit
+> useful... dunno, for a LED near the airplane mode switch, when vendor
+> replaced hardware toggle with a key. But policy should have nothing
+> to do with that. If you argue additional "policy daemon" is needed
+> for that... forget it, that's overdesigned.
+
+See above.
+
+> (Besides, finding all LEDs with given trigger is trivial
+> operation. Besides... there should never be more than one).
+
+That *might* actually work. But once a tool has detached the trigger
+the information is gone; and tools would have to do that to control the
+LED, making recovery from any kind of error difficult.
+
+In any case, I've applied those patches already.
+
+As far as the LED subsystem is concerned, all of this is just another
+trigger anyway.
+
+johannes
