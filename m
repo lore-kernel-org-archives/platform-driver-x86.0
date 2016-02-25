@@ -1,94 +1,128 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: custom ioctl-based interface to control LED in networking (was
- Re: [PATCHv2 09/10] rfkill: Userspace control for airplane mode)
-Date: Thu, 25 Feb 2016 10:06:36 +0100
-Message-ID: <20160225090636.GA32652@amd>
-References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
- <1456159001-20307-10-git-send-email-jprvita@endlessm.com>
- <20160223204525.GC16961@amd>
- <1456260914.9910.34.camel@sipsolutions.net>
- <20160223214501.GA22501@amd>
- <1456304509.2050.15.camel@sipsolutions.net>
- <20160224104611.GB31302@amd>
- <1456311697.2050.23.camel@sipsolutions.net>
- <20160224121420.GA5627@amd>
- <1456320693.2050.30.camel@sipsolutions.net>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v5 5/5] dell-rbtn: Add a comment about the XPS 13 9350
+Date: Thu, 25 Feb 2016 11:45:28 +0100
+Message-ID: <20160225104528.GT4606@pali>
+References: <cover.1455553470.git.luto@kernel.org>
+ <17238db9f090e8b2c80756ccd4bcd8f4f1e3bfab.1455553470.git.luto@kernel.org>
+ <20160217111634.GQ1476@pali>
+ <56C47090.1050106@dell.com>
+ <20160223120100.GN4606@pali>
+ <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f49.google.com ([74.125.82.49]:36709 "EHLO
+	mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759460AbcBYKpc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 25 Feb 2016 05:45:32 -0500
+Received: by mail-wm0-f49.google.com with SMTP id g62so22316186wme.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Feb 2016 02:45:31 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <1456320693.2050.30.camel@sipsolutions.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: rpurdie@rpsys.net, j.anaszewski@samsung.com, linux-leds@vger.kernel.org, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <CALCETrU98nEhLQSr7M+DsvD2Fgk5K0GFPFBoLE8_k-_ZRg72mA@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>, Darren Hart <dvhart@infradead.org>
+Cc: Jon Eyolfson <jon@eyl.io>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Wed 2016-02-24 14:31:33, Johannes Berg wrote:
-> On Wed, 2016-02-24 at 13:14 +0100, Pavel Machek wrote:
-> >=A0
-> > Why would it need to? It could look at default triggers for the led
-> > if it really wanted to.
+On Tuesday 23 February 2016 09:35:47 Andy Lutomirski wrote:
+> On Feb 23, 2016 4:01 AM, "Pali Roh=C3=A1r" <pali.rohar@gmail.com> wro=
+te:
+> >
+> > On Wednesday 17 February 2016 07:07:28 Mario Limonciello wrote:
+> > >
+> > >
+> > > On 02/17/2016 05:16 AM, Pali Roh=C3=A1r wrote:
+> > > > On Monday 15 February 2016 08:32:37 Andy Lutomirski wrote:
+> > > >> On the XPS 13 9350, the dell-rbtn mechanism has a new device i=
+d, and
+> > > >> the DSDT turns it off if a new enough _OSI is supported.  Add =
+a
+> > > >> comment about why we don't bother supporting it.
+> > > >>
+> > > >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > > >> ---
+> > > >>  drivers/platform/x86/dell-rbtn.c | 15 +++++++++++++++
+> > > >>  1 file changed, 15 insertions(+)
+> > > >>
+> > > >> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platfo=
+rm/x86/dell-rbtn.c
+> > > >> index cd410e392550..b51a2008d782 100644
+> > > >> --- a/drivers/platform/x86/dell-rbtn.c
+> > > >> +++ b/drivers/platform/x86/dell-rbtn.c
+> > > >> @@ -217,6 +217,21 @@ static void rbtn_notify(struct acpi_devic=
+e *device, u32 event);
+> > > >>  static const struct acpi_device_id rbtn_ids[] =3D {
+> > > >>    { "DELRBTN", 0 },
+> > > >>    { "DELLABCE", 0 },
+> > > >> +
+> > > >> +  /*
+> > > >> +   * This driver can also handle the "DELLABC6" device that
+> > > >> +   * appears on the XPS 13 9350, but that device is disabled
+> > > >> +   * by the DSDT unless booted with acpi_osi=3D"!Windows 2012=
+"
+> > > >> +   * acpi_osi=3D"!Windows 2013".  Even if we boot that and bi=
+nd
+> > > >> +   * the driver, we seem to have inconsistent behavior in
+> > > >> +   * which NetworkManager can get out of sync with the rfkill
+> > > >> +   * state.
+> > > > Do you know reason for such behaviour? It is because event is s=
+end
+> > > > duplicated (by dell-rbtn and also by intel-hid)?
+> > > DELLABC6 is a custom interface that was created solely to have ai=
+rplane
+> > > mode support for Windows 7.
+> > > For Windows 10 the proper interface is to use that which is handl=
+ed by
+> > > intel-hid.  A OEM airplane mode driver is not used.
+> > >
+> > > Since the kernel doesn't identify as Windows 7 it would be incorr=
+ect to
+> > > do attempt to use that interface.
+> >
+> > Ok, I understand. But what user can is to tell linux kernel to iden=
+tify
+> > as Windows 7.
+> >
+> > And I would like to know reason for that inconsistent behaviour. It=
+ is
+> > because of bug in NetworkManager or because of some hidden bug in
+> > dell-rbnt.c or in rfkill kernel subsystem? If it is in kernel there=
+ is
+> > really big change that it can occur also on other machines which us=
+es
+> > dell-rbtn and so we should fix it.
+> >
+> > Andy, can you look at it and try identify where is the problem?
 >=20
-> And then it needs to change them; if anything goes wrong error recove=
-ry
-> is practically impossible since the trigger information is lost
-> forever.
-
-Well, conventional way to solve this is to simply name the led
-"acer::airplane"... that way it is persistent. We already do that for
-display/keyboard backlights.
-
-> It's not my position to decide which combinations some system
-> integrator or userspace developer might find useful.
+> I think it's straightforward.  If we identify as Windows 7 and enable
+> this driver then, when we press the wireless button, dell-rbtn
+> switches its state *and* NetworkManager gets KEY_RFKILL from intel-hi=
+d
+> and changes its state.  Then you can tell NetworkManager to turn wifi
+> on using the menu, at which point dell-rbtn is off but NM's software
+> state is on.  Then you press the button again, turning on dell-rbtn
+> but turning NM off again.  The result is that the last button press
+> direct work as expected.
 >=20
-> Even when we add parameters to a trigger (I don't see a generic way t=
-o
-> do that, but please do enlighten me), you're now ignoring the issue o=
-f
-> the userspace controlled GSM modem...
-
-Take a look at the blinking triggers.
-
-> > > Really what you have here is a concept of "airplane mode", and th=
-at
-> > > concept is specific to the rfkill subsystem. This happens to affe=
-ct
-> > > mostly an LED trigger, today, but as a concept it's something tha=
-t
-> > > *should* be managed within the rfkill subsystem.
-> >=20
-> > How is that concept used outside the LEDs? What semantics does
-> > "airplane mode" have? You tried to explain "airplane mode" is not
-> > well defined up in this thread...
+> I haven't verified that this is actually what happens, but it's
+> certainly the case that a button that triggers a state toggle should
+> only change the state by *one* mechanism.
 >=20
-> I'd say it's well-defined for any given set of system software, so if
-> e.g. NetworkManager decides to define it one way, and connman another
-> way, there's a definition but the kernel need not interfere with it.
-
-So... the LED changes meaning during boot? That's surely not a nice
-solution.
-
-So... you rather store bit in a kernel with unclear semantics,
-explaining "oh I need to leave the flexibility to userland"? Sorry,
-that's just ugly.
-
-> > I'm not saying that. I'm saying that LED maintainers should be Cced=
-,
-> > to keep the interfaces consistent.
+> Presumably this works on Windows 7 because either there is no
+> equivalent of intel-hid or because the DSDT turns it off -- I haven't
+> checked which is the case.
 >=20
-> I pretty much have to read it that way, since the LED API is in no wa=
-y
-> impacted by these changes. Here's a new trigger, with some magic inne=
-r
-> working. No impact on the LED API.
+> --Andy
 
-New LED trigger and new ioctl for LED control... not matching how LEDs
-are normally controlled.
+Understood, this is just big API mess in Dell APCI/EC/firmware and also
+our kernel implementation in (dell-(laptop|wmi|rbtn)|intel-hid) drivers
+is not ideal and clean...
 
-Best regards,
-									Pavel
+Darren, add my Acked-by also for this patch (if you already have not
+done it).
+
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
