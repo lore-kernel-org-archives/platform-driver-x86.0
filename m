@@ -1,51 +1,46 @@
-From: John Dahlstrom <jodarom@SDF.ORG>
-Subject: Re: [PATCH v4 1/1] ideapad-laptop: Add ideapad Y700 (15) to the
- no_hw_rfkill DMI list
-Date: Sat, 27 Feb 2016 00:49:03 -0600 (CST)
-Message-ID: <Pine.NEB.4.64.1602261748330.4769@norge.freeshell.org>
-References: <Pine.NEB.4.64.1602191918380.15324@faeroes.freeshell.org>
- <20160222221416.GD14101@dvhart-mobl5.amr.corp.intel.com>
- <Pine.NEB.4.64.1602221810140.9397@norge.freeshell.org>
- <20160226185622.GA21870@dvhart-mobl5.amr.corp.intel.com>
+From: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: =?utf-8?Q?=D0=9A=D0=9B=D0=98=D0=95=D0=9D=D0=A2=D0=A1=D0?=
+	=?utf-8?Q?=9A=D0=98=D0=95_=D0=91=D0=90=D0=97=D0=AB!_=D0?=
+	=?utf-8?Q?=A2=D0=B5=D0=BB=5CViber=5CWhatsapp=3A_+79133913?=
+	=?utf-8?Q?837_Email=3A_mgordeev72=40gmail=2Ecom_Skype=3A_?=
+	=?utf-8?Q?prodawez389?=
+Date: Sat, 27 Feb 2016 17:54:08 +0600
+Message-ID: <07FC489727F3DC1FC3C68F30C4B94DD0@vger.kernel.org>
+Reply-To: "platform-driver-x86@vger.kernel.org" <mgordeev72@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.sdf.org ([192.94.73.23]:61977 "EHLO sdf.lonestar.org"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1753481AbcB0GuF (ORCPT
+Received: from canadian-24h-pharm.com ([62.109.16.205]:56573 "EHLO
+	canadian-24h-pharm.com" rhost-flags-OK-FAIL-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1755225AbcB2E2K (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 27 Feb 2016 01:50:05 -0500
-In-Reply-To: <20160226185622.GA21870@dvhart-mobl5.amr.corp.intel.com>
+	Sun, 28 Feb 2016 23:28:10 -0500
+Received: from 62.109.16.205 (localhost.localdomain [127.0.0.1])
+	by canadian-24h-pharm.com (Postfix) with SMTP id 162201D277B3
+	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Feb 2016 14:54:08 +0300 (MSK)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Fri, 26 Feb 2016, Darren Hart wrote:
-> On Mon, Feb 22, 2016 at 10:29:48PM -0600, John Dahlstrom wrote:
-[...]
->> Thank you for that information. One commit is sufficient to apply the patch
->> to all kernel versions without fuzz:
->>
->> 4fa9dab ideapad_laptop: Lenovo G50-30 fix rfkill reports wireless blocked
->
-> This does not yield correct results for me on 3.17 (or 3.17.8). Do you get
-> different results from the following?
->
-[...]
-> Note that the DMI match blocks were stuffed in the middle of the
-> ideapad_acpi_add() function instead of the no_hw_rfkill.
+=D0=9A=D0=9B=D0=98=D0=95=D0=9D=D0=A2=D0=A1=D0=9A=D0=98=D0=95 =D0=91=D0=90=
+=D0=97=D0=AB!
 
-The v3, v4, and v5 patch submissions had been corrupted by spurious
-whitespace inserted by my email client. I have sent a corrected version,
-[PATCH v6 1/1] ideapad-laptop: Add ideapad Y700 (15) to the no_hw_rfkill DMI list
-
-After submission, I verified the successful application of the patch
-as received by the mailing list.
-
-I also ran git clone, "git checkout -b 3.17 v3.17", and
-"git cherry-pick 4fa9dab", followed by patch with success.
-
-Kind regards,
-
-John
+=D0=A1=D0=BE=D0=B1=D0=B5=D1=80=D0=B5=D0=BC =D0=B4=D0=BB=D1=8F =D0=92=D0=
+=B0=D1=81 =D0=BF=D0=BE =D0=B8=D0=BD=D1=82=D0=B5=D1=80=D0=BD=D0=B5=D1=82=
+ =D0=B1=D0=B0=D0=B7=D1=83 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D1=85 =D0=BF=D0=
+=BE=D1=82=D0=B5=D0=BD=D1=86=D0=B8=D0=B0=D0=BB=D1=8C=D0=BD=D1=8B=D1=85 =D0=
+=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=BE=D0=B2=20
+=D0=B4=D0=BB=D1=8F =D0=92=D0=B0=D1=88=D0=B5=D0=B3=D0=BE =D0=91=D0=B8=D0=
+=B7=D0=BD=D0=B5=D1=81=D0=B0!
+=D0=9C=D0=BD=D0=BE=D0=B3=D0=BE! =D0=91=D1=8B=D1=81=D1=82=D1=80=D0=BE! =D0=
+=9D=D0=B5=D0=B4=D0=BE=D1=80=D0=BE=D0=B3=D0=BE!=20
+=D0=A3=D0=B7=D0=BD=D0=B0=D0=B9=D1=82=D0=B5 =D0=BE=D0=B1 =D1=8D=D1=82=D0=
+=BE=D0=BC =D0=BF=D0=BE=D0=B4=D1=80=D0=BE=D0=B1=D0=BD=D0=B5=D0=B5 =D0=BF=
+=D0=BE=20
+=D0=A2=D0=B5=D0=BB: +79133913837
+Viber: +79133913837
+Whatsapp: +79133913837
+Skype: prodawez389
+Email: mgordeev72@gmail.com
