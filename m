@@ -1,58 +1,169 @@
-From: Jouni Malinen <j@w1.fi>
-Subject: Re: [PATCHv2 08/10] rfkill: Use switch to demux userspace operations
-Date: Tue, 1 Mar 2016 00:39:18 +0200
-Message-ID: <20160229223918.GA32464@w1.fi>
-References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
- <1456159001-20307-9-git-send-email-jprvita@endlessm.com>
- <20160226175925.GA9331@w1.fi>
- <CA+A7VXUY=qVDQ-OqT+QJK8haN6AFX4Br=OPXi-6RCxpvH3=QRg@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 1/5] dell-laptop: move dell_smi_error() to dell-smbios
+Date: Mon, 29 Feb 2016 14:50:31 -0800
+Message-ID: <20160229225031.GE7499@dvhart-mobl5.amr.corp.intel.com>
+References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+ <20160229125214.GF21814@pali>
+ <20160229202254.GA23395@eudyptula.hq.kempniu.pl>
+ <201602292124.07161@pali>
+ <20160229204136.GA23568@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:34423 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750729AbcB2Wue (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 29 Feb 2016 17:50:34 -0500
 Content-Disposition: inline
-In-Reply-To: <CA+A7VXUY=qVDQ-OqT+QJK8haN6AFX4Br=OPXi-6RCxpvH3=QRg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?utf-8?B?Sm/Do28=?= Paulo Rechi Vita <jprvita@gmail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?utf-8?B?Sm/Do28=?= Paulo Rechi Vita <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20160229204136.GA23568@eudyptula.hq.kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Feb 29, 2016 at 05:30:20PM -0500, Jo=C3=A3o Paulo Rechi Vita wr=
+On Mon, Feb 29, 2016 at 09:41:36PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
+wrote:
+> > On Monday 29 February 2016 21:22:54 Micha=C5=82 K=C4=99pie=C5=84 wr=
 ote:
+> > > > On Wednesday 24 February 2016 08:20:11 Micha=C5=82 K=C4=99pie=C5=
+=84 wrote:
+> > > > > The dell_smi_error() method could be used by modules other th=
+an
+> > > > > dell-laptop for convenient translation of SMBIOS request erro=
+rs
+> > > > > into errno values.  Thus, move it to dell-smbios.
+> > > > >=20
+> > > > > Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.p=
+l>
+> > > > > ---
+> > > > >=20
+> > > > >  drivers/platform/x86/dell-laptop.c |   14 --------------
+> > > > >  drivers/platform/x86/dell-smbios.c |   16 ++++++++++++++++
+> > > > >  drivers/platform/x86/dell-smbios.h |    2 ++
+> > > > >  3 files changed, 18 insertions(+), 14 deletions(-)
+> > > > >=20
+> > > > > diff --git a/drivers/platform/x86/dell-laptop.c
+> > > > > b/drivers/platform/x86/dell-laptop.c index 76064c8..cbafb95
+> > > > > 100644
+> > > > > --- a/drivers/platform/x86/dell-laptop.c
+> > > > > +++ b/drivers/platform/x86/dell-laptop.c
+> > > > > @@ -273,20 +273,6 @@ static const struct dmi_system_id
+> > > > > dell_quirks[] __initconst =3D {
+> > > > >=20
+> > > > >  	{ }
+> > > > > =20
+> > > > >  };
+> > > > >=20
+> > > > > -static inline int dell_smi_error(int value)
+> > > > > -{
+> > > > > -	switch (value) {
+> > > > > -	case 0: /* Completed successfully */
+> > > > > -		return 0;
+> > > > > -	case -1: /* Completed with error */
+> > > > > -		return -EIO;
+> > > > > -	case -2: /* Function not supported */
+> > > > > -		return -ENXIO;
+> > > > > -	default: /* Unknown error */
+> > > > > -		return -EINVAL;
+> > > > > -	}
+> > > > > -}
+> > > > > -
+> > > > >=20
+> > > > >  /*
+> > > > > =20
+> > > > >   * Derived from information in smbios-wireless-ctl:
+> > > > >   *
+> > > > >=20
+> > > > > diff --git a/drivers/platform/x86/dell-smbios.c
+> > > > > b/drivers/platform/x86/dell-smbios.c index 2a4992a..942572f
+> > > > > 100644
+> > > > > --- a/drivers/platform/x86/dell-smbios.c
+> > > > > +++ b/drivers/platform/x86/dell-smbios.c
+> > > > > @@ -16,6 +16,7 @@
+> > > > >=20
+> > > > >  #include <linux/kernel.h>
+> > > > >  #include <linux/module.h>
+> > > > >  #include <linux/dmi.h>
+> > > > >=20
+> > > > > +#include <linux/err.h>
+> > > > >=20
+> > > > >  #include <linux/gfp.h>
+> > > > >  #include <linux/mutex.h>
+> > > > >  #include <linux/slab.h>
+> > > > >=20
+> > > > > @@ -39,6 +40,21 @@ static int da_command_code;
+> > > > >=20
+> > > > >  static int da_num_tokens;
+> > > > >  static struct calling_interface_token *da_tokens;
+> > > > >=20
+> > > > > +int dell_smi_error(int value)
+> > > > > +{
+> > > > > +	switch (value) {
+> > > > > +	case 0: /* Completed successfully */
+> > > > > +		return 0;
+> > > > > +	case -1: /* Completed with error */
+> > > > > +		return -EIO;
+> > > > > +	case -2: /* Function not supported */
+> > > > > +		return -ENXIO;
+> > > > > +	default: /* Unknown error */
+> > > > > +		return -EINVAL;
+> > > > > +	}
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(dell_smi_error);
+> > > > > +
+> > > > >=20
+> > > > >  struct calling_interface_buffer *dell_smbios_get_buffer(void=
+)
+> > > > >  {
+> > > > > =20
+> > > > >  	mutex_lock(&buffer_mutex);
+> > > > >=20
+> > > > > diff --git a/drivers/platform/x86/dell-smbios.h
+> > > > > b/drivers/platform/x86/dell-smbios.h index 4f69b16..52febe6
+> > > > > 100644
+> > > > > --- a/drivers/platform/x86/dell-smbios.h
+> > > > > +++ b/drivers/platform/x86/dell-smbios.h
+> > > > > @@ -35,6 +35,8 @@ struct calling_interface_token {
+> > > > >=20
+> > > > >  	};
+> > > > > =20
+> > > > >  };
+> > > > >=20
+> > > > > +int dell_smi_error(int value);
+> > > > > +
+> > > > >=20
+> > > > >  struct calling_interface_buffer *dell_smbios_get_buffer(void=
+);
+> > > > >  void dell_smbios_clear_buffer(void);
+> > > > >  void dell_smbios_release_buffer(void);
+> > > >=20
+> > > > And... here what about inline vs EXPORT_SYMBOL function? Just
+> > > > asking...
+> > >=20
+> > > Well, what about it? :)  The commit message is pretty explicit in
+> > > describing what happens here, i.e. a previously static function i=
+s
+> > > moved to another module so that it can be reused.  Thus, keeping =
+the
+> > > inline keyword makes no sense.  What exactly is your concern?
+> >=20
+> > Just asking if this function should be or not be inline (of course =
+in=20
+> > header file, not in module .c).
+>=20
+> If you mark a function as inline in the header file, you have to prov=
+ide
+> its definition, otherwise you'll get a compilation error.  Given that
+> this is in no way performance-critical code, I see no point in
+> clobbering the header file with the body of this function.
 
-> I agree there is a difference in the logic here, thanks for taking th=
-e
-> time to point it out so clearly, and sorry for missing this. But AFAI=
-U
-> userspace should not call RFKILL_OP_CHANGE with ev.type =3D=3D
-> RFKILL_TYPE_ALL, as RFKILL_OP_CHANGE is intended to be used to
-> block/unblock one RFKill switch, and it is not possible to create a
-> RFKill switch with type =3D=3D RFKILL_TYPE_ALL (rfkill_alloc() would
-> return NULL).
+Agreed, please leave it as is.
 
-Interesting. Maybe Johannes can comment on that part since I think he
-wrote the code that interacts with kernel for the rfkill test cases.
+=46or a discussion on inline, please see:
+CodingStyle: Chapter 15: The inline disease
 
-> I tried to look into the source code of the test suite you pointed,
-> but couldn't easily figure out how it ends up with that combination.
-> Could you please explain (or point me in the code) how is that a vali=
-d
-> operation? If I'm not missing anything, we should probably return
-> EINVAL in this case.
-
-These specific failures were shown for the test cases in this file:
-http://w1.fi/cgit/hostap/tree/tests/hwsim/test_rfkill.py
-
-The interaction with kernel is done using this code:
-http://w1.fi/cgit/hostap/tree/tests/hwsim/rfkill.py
-
-It does indeed look like TYPE_ALL is used here (the block() and
-unblock() implementations). If this is incorrect, we can certainly
-change the script since I'd assume this is not used for anything else
-than the hwsim test cases (or well who knows, it is available out there=
-,
-so if someone needs python code to do rfkill operations..).
-=20
 --=20
-Jouni Malinen                                            PGP id EFC895F=
-A
+Darren Hart
+Intel Open Source Technology Center
