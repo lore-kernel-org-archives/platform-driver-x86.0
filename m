@@ -1,87 +1,118 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] platform/x86: never 'select DMI' from a driver
-Date: Mon, 29 Feb 2016 13:13:31 +0100
-Message-ID: <1456748014-358588-1-git-send-email-arnd@arndb.de>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v4 1/5] dell-laptop: move dell_smi_error() to dell-smbios
+Date: Mon, 29 Feb 2016 13:52:14 +0100
+Message-ID: <20160229125214.GF21814@pali>
+References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
+ <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
+ <1456298416-29683-2-git-send-email-kernel@kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.kundenserver.de ([212.227.17.24]:54705 "EHLO
-	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754013AbcB2MOe (ORCPT
+Received: from mail-wm0-f48.google.com ([74.125.82.48]:33667 "EHLO
+	mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751548AbcB2MwS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Feb 2016 07:14:34 -0500
+	Mon, 29 Feb 2016 07:52:18 -0500
+Content-Disposition: inline
+In-Reply-To: <1456298416-29683-2-git-send-email-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, Andy Lutomirski <luto@kernel.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-CONFIG_DMI is a user-selectable Kconfig symbol that some drivers
-depend on. As part of a recent patch, other drivers started
-adding a 'select' for the same symbol, which now causes
-a recursive dependency:
+On Wednesday 24 February 2016 08:20:11 Micha=C5=82 K=C4=99pie=C5=84 wro=
+te:
+> The dell_smi_error() method could be used by modules other than
+> dell-laptop for convenient translation of SMBIOS request errors into
+> errno values.  Thus, move it to dell-smbios.
+>=20
+> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+> ---
+>  drivers/platform/x86/dell-laptop.c |   14 --------------
+>  drivers/platform/x86/dell-smbios.c |   16 ++++++++++++++++
+>  drivers/platform/x86/dell-smbios.h |    2 ++
+>  3 files changed, 18 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x8=
+6/dell-laptop.c
+> index 76064c8..cbafb95 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -273,20 +273,6 @@ static const struct dmi_system_id dell_quirks[] =
+__initconst =3D {
+>  	{ }
+>  };
+> =20
+> -static inline int dell_smi_error(int value)
+> -{
+> -	switch (value) {
+> -	case 0: /* Completed successfully */
+> -		return 0;
+> -	case -1: /* Completed with error */
+> -		return -EIO;
+> -	case -2: /* Function not supported */
+> -		return -ENXIO;
+> -	default: /* Unknown error */
+> -		return -EINVAL;
+> -	}
+> -}
+> -
+>  /*
+>   * Derived from information in smbios-wireless-ctl:
+>   *
+> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x8=
+6/dell-smbios.c
+> index 2a4992a..942572f 100644
+> --- a/drivers/platform/x86/dell-smbios.c
+> +++ b/drivers/platform/x86/dell-smbios.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/dmi.h>
+> +#include <linux/err.h>
+>  #include <linux/gfp.h>
+>  #include <linux/mutex.h>
+>  #include <linux/slab.h>
+> @@ -39,6 +40,21 @@ static int da_command_code;
+>  static int da_num_tokens;
+>  static struct calling_interface_token *da_tokens;
+> =20
+> +int dell_smi_error(int value)
+> +{
+> +	switch (value) {
+> +	case 0: /* Completed successfully */
+> +		return 0;
+> +	case -1: /* Completed with error */
+> +		return -EIO;
+> +	case -2: /* Function not supported */
+> +		return -ENXIO;
+> +	default: /* Unknown error */
+> +		return -EINVAL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(dell_smi_error);
+> +
+>  struct calling_interface_buffer *dell_smbios_get_buffer(void)
+>  {
+>  	mutex_lock(&buffer_mutex);
+> diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x8=
+6/dell-smbios.h
+> index 4f69b16..52febe6 100644
+> --- a/drivers/platform/x86/dell-smbios.h
+> +++ b/drivers/platform/x86/dell-smbios.h
+> @@ -35,6 +35,8 @@ struct calling_interface_token {
+>  	};
+>  };
+> =20
+> +int dell_smi_error(int value);
+> +
+>  struct calling_interface_buffer *dell_smbios_get_buffer(void);
+>  void dell_smbios_clear_buffer(void);
+>  void dell_smbios_release_buffer(void);
 
-drivers/gpio/Kconfig:34:error: recursive dependency detected!
-subsection "Kconfig recursive dependency limitations"
-drivers/gpio/Kconfig:34:        symbol GPIOLIB is selected by GEOS
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-arch/x86/Kconfig:2591:  symbol GEOS depends on DMI
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-arch/x86/Kconfig:815:   symbol DMI is selected by DELL_LAPTOP
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/platform/x86/Kconfig:104:       symbol DELL_LAPTOP depends on BACKLIGHT_CLASS_DEVICE
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/backlight/Kconfig:158:    symbol BACKLIGHT_CLASS_DEVICE is selected by FB_BACKLIGHT
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:192:        symbol FB_BACKLIGHT is selected by FB_SSD1307
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:2462:       symbol FB_SSD1307 depends on GPIOLIB
+And... here what about inline vs EXPORT_SYMBOL function? Just asking...
 
-Basically we should either always use 'depends on' or always use 'select'
-to avoid this kind of loop. Using 'depends on' is more useful here,
-as it still allows users to turn off the symbol of they really
-want to, without having to track down every driver selecting it.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: cbd9d95b2b27 ("dell-wmi, dell-laptop: select DMI")
----
- drivers/platform/x86/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 659e13b1e6f0..a65d974f387a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -105,6 +105,7 @@ config DELL_LAPTOP
- 	tristate "Dell Laptop Extras"
- 	depends on X86
- 	depends on DELL_SMBIOS
-+	depends on DMI
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	depends on RFKILL || RFKILL = n
-@@ -112,7 +113,6 @@ config DELL_LAPTOP
- 	select POWER_SUPPLY
- 	select LEDS_CLASS
- 	select NEW_LEDS
--	select DMI
- 	default n
- 	---help---
- 	This driver adds support for rfkill and backlight control to Dell
-@@ -121,10 +121,10 @@ config DELL_LAPTOP
- config DELL_WMI
- 	tristate "Dell WMI extras"
- 	depends on ACPI_WMI
-+	depends on DMI
- 	depends on INPUT
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_SPARSEKMAP
--	select DMI
- 	---help---
- 	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
- 
--- 
-2.7.0
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
