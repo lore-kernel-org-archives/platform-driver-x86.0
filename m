@@ -1,96 +1,62 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v4 4/5] dell-wmi: properly process Dell Instant Launch hotkey
-Date: Mon, 29 Feb 2016 21:56:03 +0100
-Message-ID: <201602292156.03876@pali>
-References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl> <201602292139.16006@pali> <20160229204927.GB23568@eudyptula.hq.kempniu.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 1/1] ideapad-laptop: Add ideapad Y700 (15) to the
+ no_hw_rfkill DMI list
+Date: Mon, 29 Feb 2016 14:13:21 -0800
+Message-ID: <20160229221321.GC7499@dvhart-mobl5.amr.corp.intel.com>
+References: <Pine.NEB.4.64.1602191918380.15324@faeroes.freeshell.org>
+ <20160222221416.GD14101@dvhart-mobl5.amr.corp.intel.com>
+ <Pine.NEB.4.64.1602221810140.9397@norge.freeshell.org>
+ <20160226185622.GA21870@dvhart-mobl5.amr.corp.intel.com>
+ <Pine.NEB.4.64.1602261748330.4769@norge.freeshell.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2475112.CKeFCBDQnE";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f50.google.com ([74.125.82.50]:37092 "EHLO
-	mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751173AbcB2U4H (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:46781 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750775AbcB2WNZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Feb 2016 15:56:07 -0500
-In-Reply-To: <20160229204927.GB23568@eudyptula.hq.kempniu.pl>
+	Mon, 29 Feb 2016 17:13:25 -0500
+Content-Disposition: inline
+In-Reply-To: <Pine.NEB.4.64.1602261748330.4769@norge.freeshell.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: John Dahlstrom <jodarom@SDF.ORG>
+Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart2475112.CKeFCBDQnE
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Sat, Feb 27, 2016 at 12:49:03AM -0600, John Dahlstrom wrote:
+> On Fri, 26 Feb 2016, Darren Hart wrote:
+> >On Mon, Feb 22, 2016 at 10:29:48PM -0600, John Dahlstrom wrote:
+> [...]
+> >>Thank you for that information. One commit is sufficient to apply the patch
+> >>to all kernel versions without fuzz:
+> >>
+> >>4fa9dab ideapad_laptop: Lenovo G50-30 fix rfkill reports wireless blocked
+> >
+> >This does not yield correct results for me on 3.17 (or 3.17.8). Do you get
+> >different results from the following?
+> >
+> [...]
+> >Note that the DMI match blocks were stuffed in the middle of the
+> >ideapad_acpi_add() function instead of the no_hw_rfkill.
+> 
+> The v3, v4, and v5 patch submissions had been corrupted by spurious
+> whitespace inserted by my email client. I have sent a corrected version,
+> [PATCH v6 1/1] ideapad-laptop: Add ideapad Y700 (15) to the no_hw_rfkill DMI list
+> 
+> After submission, I verified the successful application of the patch
+> as received by the mailing list.
+> 
+> I also ran git clone, "git checkout -b 3.17 v3.17", and
+> "git cherry-pick 4fa9dab", followed by patch with success.
 
-On Monday 29 February 2016 21:49:27 you wrote:
-> > On Monday 29 February 2016 21:31:23 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > > > > diff --git a/drivers/platform/x86/dell-wmi.c
-> > > > > b/drivers/platform/x86/dell-wmi.c index 65edd93..ffc957b5
-> > > > > 100644 --- a/drivers/platform/x86/dell-wmi.c
-> > > > > +++ b/drivers/platform/x86/dell-wmi.c
-> > > > > @@ -111,7 +111,7 @@ static const struct key_entry
-> > > > > dell_wmi_legacy_keymap[] __initconst =3D {
-> > > > >=20
-> > > > >  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
-> > > > >  =09
-> > > > >  	/* Shortcut and audio panel keys */
-> > > > >=20
-> > > > > -	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
-> > > > > +	{ KE_KEY, 0xe025, { KEY_PROG4 } },
-> > > > >=20
-> > > > >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> > > > >  =09
-> > > > >  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
-> > > > >=20
-> > > > > @@ -235,6 +235,9 @@ static void dell_wmi_process_key(int
-> > > > > reported_key)
-> > > > >=20
-> > > > >  	    acpi_video_handles_brightness_key_presses())
-> > > > >  	=09
-> > > > >  		return;
-> > > > >=20
-> > > > > +	if (key->keycode =3D=3D KEY_PROG4 &&
-> > > > > !wmi_requires_smbios_request) +		return;
-> > > > > +
-> > > >=20
-> > > > Here I would rather test against reported_key, not keycode. If
-> > > > somebody in future adds KEY_PROG4 for something else we will
-> > > > have problem...
-> > >=20
-> > > As 0xe025 is currently the only event we know about that should
-> > > be ignored on some machines and processed on others, this makes
-> > > sense,
-> > >=20
-> > > at least for now.  If I change the first condition to:
-> > >     reported_key =3D=3D 0xe025
-> >=20
-> > There will be need also change for 5/5 patch...
->=20
-> Why?  Are you aware of any model which sends a 0xe029 WMI event _and_
-> generates an i8042 interrupt?  If not, WMI event 0xe029 should always
-> be turned into a key event, as per the keymap.
+OK, I've replaced the one in for-next with this one.
 
-No, but your current patch 4/5 and 5/5 do that (because it checks=20
-KEY_PROG4). But if it is not needed, I'm happy because of one hook less.
+I'm not keen on backporting only certain dmi match patches back to stable, but I
+don't want to discourage people from working to get the hardware they care about
+supported in stable either.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Thanks for sticking with it and seeing this through to completion.
 
---nextPart2475112.CKeFCBDQnE
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlbUsGMACgkQi/DJPQPkQ1IEZwCgm7QkCMVYiYkm5zaEwqpMi+a0
-epQAoLfSwTexJIu7Gn5/JeB7SFCr3HS3
-=RuEH
------END PGP SIGNATURE-----
-
---nextPart2475112.CKeFCBDQnE--
+-- 
+Darren Hart
+Intel Open Source Technology Center
