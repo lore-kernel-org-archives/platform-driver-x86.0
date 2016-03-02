@@ -1,167 +1,134 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v4 1/5] dell-laptop: move dell_smi_error() to dell-smbios
-Date: Wed, 2 Mar 2016 12:49:39 +0100
-Message-ID: <20160302114939.GA25223@eudyptula.hq.kempniu.pl>
+Subject: Re: [PATCH v4 4/5] dell-wmi: properly process Dell Instant Launch
+ hotkey
+Date: Wed, 2 Mar 2016 13:35:04 +0100
+Message-ID: <20160302123504.GB25223@eudyptula.hq.kempniu.pl>
 References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <20160229125214.GF21814@pali>
- <20160229202254.GA23395@eudyptula.hq.kempniu.pl>
- <201602292124.07161@pali>
- <20160229204136.GA23568@eudyptula.hq.kempniu.pl>
- <20160229225031.GE7499@dvhart-mobl5.amr.corp.intel.com>
+ <201602292139.16006@pali>
+ <20160229204927.GB23568@eudyptula.hq.kempniu.pl>
+ <201602292156.03876@pali>
+ <20160229230015.GF7499@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160229225031.GE7499@dvhart-mobl5.amr.corp.intel.com>
+In-Reply-To: <20160229230015.GF7499@dvhart-mobl5.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> On Mon, Feb 29, 2016 at 09:41:36PM +0100, Micha=C5=82 K=C4=99pie=C5=84=
+> On Mon, Feb 29, 2016 at 09:56:03PM +0100, Pali Roh=C3=A1r wrote:
+> > On Monday 29 February 2016 21:49:27 you wrote:
+> > > > On Monday 29 February 2016 21:31:23 Micha=C5=82 K=C4=99pie=C5=84=
  wrote:
-> > > On Monday 29 February 2016 21:22:54 Micha=C5=82 K=C4=99pie=C5=84 =
-wrote:
-> > > > > On Wednesday 24 February 2016 08:20:11 Micha=C5=82 K=C4=99pie=
-=C5=84 wrote:
-> > > > > > The dell_smi_error() method could be used by modules other =
-than
-> > > > > > dell-laptop for convenient translation of SMBIOS request er=
-rors
-> > > > > > into errno values.  Thus, move it to dell-smbios.
+> > > > > > > diff --git a/drivers/platform/x86/dell-wmi.c
+> > > > > > > b/drivers/platform/x86/dell-wmi.c index 65edd93..ffc957b5
+> > > > > > > 100644 --- a/drivers/platform/x86/dell-wmi.c
+> > > > > > > +++ b/drivers/platform/x86/dell-wmi.c
+> > > > > > > @@ -111,7 +111,7 @@ static const struct key_entry
+> > > > > > > dell_wmi_legacy_keymap[] __initconst =3D {
+> > > > > > >=20
+> > > > > > >  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+> > > > > > >  =09
+> > > > > > >  	/* Shortcut and audio panel keys */
+> > > > > > >=20
+> > > > > > > -	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
+> > > > > > > +	{ KE_KEY, 0xe025, { KEY_PROG4 } },
+> > > > > > >=20
+> > > > > > >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+> > > > > > >  =09
+> > > > > > >  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+> > > > > > >=20
+> > > > > > > @@ -235,6 +235,9 @@ static void dell_wmi_process_key(int
+> > > > > > > reported_key)
+> > > > > > >=20
+> > > > > > >  	    acpi_video_handles_brightness_key_presses())
+> > > > > > >  	=09
+> > > > > > >  		return;
+> > > > > > >=20
+> > > > > > > +	if (key->keycode =3D=3D KEY_PROG4 &&
+> > > > > > > !wmi_requires_smbios_request) +		return;
+> > > > > > > +
 > > > > > >=20
-> > > > > > Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu=
-=2Epl>
-> > > > > > ---
-> > > > > >=20
-> > > > > >  drivers/platform/x86/dell-laptop.c |   14 --------------
-> > > > > >  drivers/platform/x86/dell-smbios.c |   16 ++++++++++++++++
-> > > > > >  drivers/platform/x86/dell-smbios.h |    2 ++
-> > > > > >  3 files changed, 18 insertions(+), 14 deletions(-)
-> > > > > >=20
-> > > > > > diff --git a/drivers/platform/x86/dell-laptop.c
-> > > > > > b/drivers/platform/x86/dell-laptop.c index 76064c8..cbafb95
-> > > > > > 100644
-> > > > > > --- a/drivers/platform/x86/dell-laptop.c
-> > > > > > +++ b/drivers/platform/x86/dell-laptop.c
-> > > > > > @@ -273,20 +273,6 @@ static const struct dmi_system_id
-> > > > > > dell_quirks[] __initconst =3D {
-> > > > > >=20
-> > > > > >  	{ }
-> > > > > > =20
-> > > > > >  };
-> > > > > >=20
-> > > > > > -static inline int dell_smi_error(int value)
-> > > > > > -{
-> > > > > > -	switch (value) {
-> > > > > > -	case 0: /* Completed successfully */
-> > > > > > -		return 0;
-> > > > > > -	case -1: /* Completed with error */
-> > > > > > -		return -EIO;
-> > > > > > -	case -2: /* Function not supported */
-> > > > > > -		return -ENXIO;
-> > > > > > -	default: /* Unknown error */
-> > > > > > -		return -EINVAL;
-> > > > > > -	}
-> > > > > > -}
-> > > > > > -
-> > > > > >=20
-> > > > > >  /*
-> > > > > > =20
-> > > > > >   * Derived from information in smbios-wireless-ctl:
-> > > > > >   *
-> > > > > >=20
-> > > > > > diff --git a/drivers/platform/x86/dell-smbios.c
-> > > > > > b/drivers/platform/x86/dell-smbios.c index 2a4992a..942572f
-> > > > > > 100644
-> > > > > > --- a/drivers/platform/x86/dell-smbios.c
-> > > > > > +++ b/drivers/platform/x86/dell-smbios.c
-> > > > > > @@ -16,6 +16,7 @@
-> > > > > >=20
-> > > > > >  #include <linux/kernel.h>
-> > > > > >  #include <linux/module.h>
-> > > > > >  #include <linux/dmi.h>
-> > > > > >=20
-> > > > > > +#include <linux/err.h>
-> > > > > >=20
-> > > > > >  #include <linux/gfp.h>
-> > > > > >  #include <linux/mutex.h>
-> > > > > >  #include <linux/slab.h>
-> > > > > >=20
-> > > > > > @@ -39,6 +40,21 @@ static int da_command_code;
-> > > > > >=20
-> > > > > >  static int da_num_tokens;
-> > > > > >  static struct calling_interface_token *da_tokens;
-> > > > > >=20
-> > > > > > +int dell_smi_error(int value)
-> > > > > > +{
-> > > > > > +	switch (value) {
-> > > > > > +	case 0: /* Completed successfully */
-> > > > > > +		return 0;
-> > > > > > +	case -1: /* Completed with error */
-> > > > > > +		return -EIO;
-> > > > > > +	case -2: /* Function not supported */
-> > > > > > +		return -ENXIO;
-> > > > > > +	default: /* Unknown error */
-> > > > > > +		return -EINVAL;
-> > > > > > +	}
-> > > > > > +}
-> > > > > > +EXPORT_SYMBOL_GPL(dell_smi_error);
-> > > > > > +
-> > > > > >=20
-> > > > > >  struct calling_interface_buffer *dell_smbios_get_buffer(vo=
-id)
-> > > > > >  {
-> > > > > > =20
-> > > > > >  	mutex_lock(&buffer_mutex);
-> > > > > >=20
-> > > > > > diff --git a/drivers/platform/x86/dell-smbios.h
-> > > > > > b/drivers/platform/x86/dell-smbios.h index 4f69b16..52febe6
-> > > > > > 100644
-> > > > > > --- a/drivers/platform/x86/dell-smbios.h
-> > > > > > +++ b/drivers/platform/x86/dell-smbios.h
-> > > > > > @@ -35,6 +35,8 @@ struct calling_interface_token {
-> > > > > >=20
-> > > > > >  	};
-> > > > > > =20
-> > > > > >  };
-> > > > > >=20
-> > > > > > +int dell_smi_error(int value);
-> > > > > > +
-> > > > > >=20
-> > > > > >  struct calling_interface_buffer *dell_smbios_get_buffer(vo=
-id);
-> > > > > >  void dell_smbios_clear_buffer(void);
-> > > > > >  void dell_smbios_release_buffer(void);
+> > > > > > Here I would rather test against reported_key, not keycode.=
+ If
+> > > > > > somebody in future adds KEY_PROG4 for something else we wil=
+l
+> > > > > > have problem...
 > > > > >=20
-> > > > > And... here what about inline vs EXPORT_SYMBOL function? Just
-> > > > > asking...
+> > > > > As 0xe025 is currently the only event we know about that shou=
+ld
+> > > > > be ignored on some machines and processed on others, this mak=
+es
+> > > > > sense,
+> > > > >=20
+> > > > > at least for now.  If I change the first condition to:
+> > > > >     reported_key =3D=3D 0xe025
 > > > >=20
-> > > > Well, what about it? :)  The commit message is pretty explicit =
-in
-> > > > describing what happens here, i.e. a previously static function=
- is
-> > > > moved to another module so that it can be reused.  Thus, keepin=
-g the
-> > > > inline keyword makes no sense.  What exactly is your concern?
+> > > > There will be need also change for 5/5 patch...
 > > >=20
-> > > Just asking if this function should be or not be inline (of cours=
-e in=20
-> > > header file, not in module .c).
+> > > Why?  Are you aware of any model which sends a 0xe029 WMI event _=
+and_
+> > > generates an i8042 interrupt?  If not, WMI event 0xe029 should al=
+ways
+> > > be turned into a key event, as per the keymap.
 > >=20
-> > If you mark a function as inline in the header file, you have to pr=
-ovide
-> > its definition, otherwise you'll get a compilation error.  Given th=
-at
-> > this is in no way performance-critical code, I see no point in
-> > clobbering the header file with the body of this function.
+> > No, but your current patch 4/5 and 5/5 do that (because it checks=20
+> > KEY_PROG4). But if it is not needed, I'm happy because of one hook =
+less.
 >=20
-> Agreed, please leave it as is.
+> From my reading, patch 5/5 adds 0xe029 to the reported keys that need=
+ to be
+> ignored, so the test would need to include both if it isn't using the=
+ common
+> keycode KEY_PROG4. I believe that is what Pali is saying as well. Is =
+this not
+> the correct reading of 5/5?
 
-Pali,
+It's the other way round :)  Perhaps explaining the issue once again
+will help.
 
-Given Darren's remark, are you okay with acking this patch?
+Until this patch series, dell-wmi was only "aware" of laptops which
+generate _both_ an i8042 interrupt and a WMI event when Dell Instant
+Launch is pressed.  Thus, as the i8042 interrupt already caused a key
+event to be generated, there was no point in generating another one for
+the WMI event, hence the KE_IGNORE entry for 0xe025 in the keymap.
+
+Enter Vostro V131, which does _not_ generate an i8042 interrupt when
+Dell Instant Launch is pressed, yet still generates a WMI event.  In
+other words, there was no way of generating a key event for Dell Instan=
+t
+Launch on that model without changing the relevant keymap entry into a
+KE_KEY one.  However, I still needed to ensure that for most machines
+that WMI event would _not_ be turned into a key event.  That's why patc=
+h
+4/5 changes the keymap entry to a KE_KEY one, while also adding a
+conditional return to the key processing function, thus making sure tha=
+t
+the previous behavior (ignoring WMI event 0xe025) is preserved on most
+machines.
+
+I used KEY_PROG4 in the conditional expression because a mapped keycode
+is also used in a comparison just above the code inserted by patch 4/5.
+=46or event 0xe029, however, the conditional expression added by patch =
+4/5
+should always evaluate to false.  Note that if we use KEY_PROG4 in the
+comparison, the second condition will be false; if we use 0xe025 in the
+comparison, the first condition will be false.  The latter variant
+(suggested by Pali) will work fine until we hear of a model which
+generates _both_ WMI event 0xe029 and an i8042 interrupt upon pressing
+some hotkey.
+
+I was hoping the commit message for patch 4/5 would be clear enough to
+convey my intent, yet it seems I managed to confuse you.  Maybe that's =
+a
+sign that the commit message and/or code should be rephrased, but I
+can't be a judge on this one myself.  Let me know what you think.  Pali=
+,
+if you think this is good enough as it is, please add your Reviewed-by.
+If you have doubts, I'm all ears.
 
 --=20
 Best regards,
