@@ -1,88 +1,73 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 4/5] dell-wmi: properly process Dell Instant Launch
- hotkey
-Date: Thu, 3 Mar 2016 12:47:02 -0800
-Message-ID: <20160303204702.GE1092@dvhart-mobl5.amr.corp.intel.com>
-References: <1455634230-1487-1-git-send-email-kernel@kempniu.pl>
- <201602292139.16006@pali>
- <20160229204927.GB23568@eudyptula.hq.kempniu.pl>
- <201602292156.03876@pali>
- <20160229230015.GF7499@dvhart-mobl5.amr.corp.intel.com>
- <20160302123504.GB25223@eudyptula.hq.kempniu.pl>
- <20160303171655.GD1092@dvhart-mobl5.amr.corp.intel.com>
- <20160303184632.GA26514@eudyptula.hq.kempniu.pl>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v5 0/5] Process Dell Instant Launch hotkey on Vostro V131 and Inspiron M5110
+Date: Fri,  4 Mar 2016 14:09:05 +0100
+Message-ID: <1457096950-29838-1-git-send-email-kernel@kempniu.pl>
+References: <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39359 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751938AbcCCUrE (ORCPT
+Received: from mail-lb0-f195.google.com ([209.85.217.195]:32840 "EHLO
+	mail-lb0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750932AbcCDNIJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 Mar 2016 15:47:04 -0500
-Content-Disposition: inline
-In-Reply-To: <20160303184632.GA26514@eudyptula.hq.kempniu.pl>
+	Fri, 4 Mar 2016 08:08:09 -0500
+Received: by mail-lb0-f195.google.com with SMTP id bc4so4874727lbc.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2016 05:08:08 -0800 (PST)
+In-Reply-To: <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Mar 03, 2016 at 07:46:32PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
-wrote:
-> > Your description below helped explain why the KE_KEY change was nec=
-essary, the
-> > commit message didn't do that for me. Just explicitly stating "when=
- there is no
-> > i8042 interrupt, the WMI even must generate a valid KE_KEY" or some=
-thing along
-> > those lines would help.
->=20
-> I will do that in v5, then.
->=20
-> > > > > > > > > >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> > > > > > > > > >  =09
-> > > > > > > > > >  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
-> > > > > > > > > >=20
-> > > > > > > > > > @@ -235,6 +235,9 @@ static void dell_wmi_process_ke=
-y(int
-> > > > > > > > > > reported_key)
-> > > > > > > > > >=20
-> > > > > > > > > >  	    acpi_video_handles_brightness_key_presses())
-> > > > > > > > > >  	=09
-> > > > > > > > > >  		return;
-> > > > > > > > > >=20
-> > > > > > > > > > +	if (key->keycode =3D=3D KEY_PROG4 &&
-> > > > > > > > > > !wmi_requires_smbios_request) +		return;
-> > > > > > > > > > +
-> > > > > > > > >=20
-> > > > > > > > > Here I would rather test against reported_key, not ke=
-ycode. If
-> > > > > > > > > somebody in future adds KEY_PROG4 for something else =
-we will
-> > > > > > > > > have problem...
-> >=20
-> > And ultimately, that is under our control. So let's just not do tha=
-t :-)
-> >=20
-> > A comment by the definition of KEY_PROG4 that notes it's meaning in=
- this driver
-> > should prevent any future attempts at overloading it and breaking t=
-his.
->=20
-> As I'll be sending a v5 anyway, do you think Pali's idea is bad?
-> Personally, I'm leaning towards it.  IMHO comparing against reported_=
-key
-> would emphasize the fact that only event 0xe025 is "special" and chan=
-ces
-> are that there are no other WMI event codes which need to be handled
-> this way.
+This patch series makes use of the API exported by dell-smbios, so it
+should be applied to either testing or dell-smbios.
 
-I took another look at the discussion on 5/5 regarding event 0xe029, an=
-d after
-that, no, no objection from me. Go ahead with Pali's recommendation to =
-test
-against reported_key.
+Pali, I added your Reviewed-by/Acked-by tags to all patches except 4/5;
+it is the last one awaiting your approval.
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+Changes from v4:
+
+  - Filter Dell Instant Launch hotkey based on reported keycode instead
+    of mapped keycode (patch 4/5)
+
+  - Added further explanations to the commit message for patch 4/5
+
+Changes from v3:
+
+  - Extract code issuing the WMI-controlling SMBIOS request into a
+    separate function
+
+  - Document the SMBIOS request used
+
+  - Split keymap section "Shortcut and audio panel keys" into two
+    separate sections
+
+Changes from v2:
+
+  - Use a static variable instead of a quirk structure
+
+  - Use API exported by dell-smbios to issue the SMBIOS request required
+    for generating WMI events, returning with error from dell_wmi_init()
+    if it fails
+
+  - Move dell_smi_error() from dell-laptop to dell-smbios and use it to
+    determine error code for returning from dell_wmi_init() when
+    enabling WMI fails
+
+  - Support Dell Inspiron M5110
+
+Changes from v1:
+
+  - Use DMI matching instead of a module parameter
+  - Change flag name to improve readability
+
+ drivers/platform/x86/Kconfig       |    1 +
+ drivers/platform/x86/dell-laptop.c |   30 ++++---------
+ drivers/platform/x86/dell-smbios.c |   16 +++++++
+ drivers/platform/x86/dell-smbios.h |    2 +
+ drivers/platform/x86/dell-wmi.c    |   84 +++++++++++++++++++++++++++++++++++-
+ 5 files changed, 109 insertions(+), 24 deletions(-)
+
+-- 
+1.7.10.4
