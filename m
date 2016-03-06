@@ -1,75 +1,124 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v5 5/5] dell-wmi: support Dell Inspiron M5110
-Date: Fri,  4 Mar 2016 14:09:10 +0100
-Message-ID: <1457096950-29838-6-git-send-email-kernel@kempniu.pl>
-References: <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
- <1457096950-29838-1-git-send-email-kernel@kempniu.pl>
+From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
+Subject: [PATCH] Add support for Acer Predator macro keys
+Date: Sun,  6 Mar 2016 07:08:59 +0100
+Message-ID: <1457244539-23763-1-git-send-email-bero@lindev.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f195.google.com ([209.85.217.195]:34694 "EHLO
-	mail-lb0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754272AbcCDNIP (ORCPT
+Received: from bero.eu ([88.198.22.18]:46110 "EHLO mail.lindev.ch"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751132AbcCFGQz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Mar 2016 08:08:15 -0500
-Received: by mail-lb0-f195.google.com with SMTP id vk4so4885221lbb.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Mar 2016 05:08:14 -0800 (PST)
-In-Reply-To: <1457096950-29838-1-git-send-email-kernel@kempniu.pl>
+	Sun, 6 Mar 2016 01:16:55 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: jlee@suse.com, carlos@strangeworlds.co.uk, =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
 
-Similarly to Dell Vostro V131, Dell Inspiron M5110 also requires an
-SMBIOS request to be issued in order for WMI events to be generated and
-does not raise an i8042 interrupt when the Dell Instant Launch hotkey i=
-s
-pressed.  However, the event code for that hotkey on this machine is
-0xe029, so add it to the legacy keymap.
+This patch adds support for the macro keys found on
+Acer Predator laptops.
 
-Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-Tested-by: Darek Stojaczyk <darek.stojaczyk@gmail.com>
-Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@lindev.ch>
 ---
- drivers/platform/x86/dell-wmi.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/platform/x86/acer-wmi.c | 44 +++++++++++++++++++++++++++++++++=
+++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
-l-wmi.c
-index 3ea959e..15c6f11 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -62,6 +62,14 @@ static int __init dmi_matched(const struct dmi_syste=
-m_id *dmi)
- static const struct dmi_system_id dell_wmi_smbios_list[] __initconst =3D=
- {
- 	{
- 		.callback =3D dmi_matched,
-+		.ident =3D "Dell Inspiron M5110",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron M5110"),
-+		},
-+	},
-+	{
-+		.callback =3D dmi_matched,
- 		.ident =3D "Dell Vostro V131",
- 		.matches =3D {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-@@ -110,8 +118,11 @@ static const struct key_entry dell_wmi_legacy_keym=
-ap[] __initconst =3D {
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index 1062fa4..e2d333c 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -7,6 +7,9 @@
+  *    Copyright (C) 2005-2007	E.M. Smith
+  *    Copyright (C) 2007-2008	Carlos Corbacho <cathectic@gmail.com>
+  *
++ *  Added support for Acer Predator hotkeys:
++ *    Copyright (C) 2016	Bernhard Rosenkraenzer <bero@lindev.ch>
++ *
+  *  This program is free software; you can redistribute it and/or modi=
+fy
+  *  it under the terms of the GNU General Public License as published =
+by
+  *  the Free Software Foundation; either version 2 of the License, or
+@@ -94,6 +97,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D1402=
+6");
+ enum acer_wmi_event_ids {
+ 	WMID_HOTKEY_EVENT =3D 0x1,
+ 	WMID_ACCEL_EVENT =3D 0x5,
++	WMID_MACROKEY_EVENT =3D 0x7,
+ };
 =20
- 	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+ static const struct key_entry acer_wmi_keymap[] __initconst =3D {
+@@ -128,6 +132,26 @@ static const struct key_entry acer_wmi_keymap[] __=
+initconst =3D {
+ 	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
+ 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+ 	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
++	/* Acer Predator macro keys:
++	 * 0xdaXY:
++	 *   da   - magic value (preDAtor)
++	 *     X  - macro key selector state (0: red, 1: blue, 2: green)
++	 *      Y - key pressed (0: 1, 1: 2, ...) */
++	{KE_KEY, 0xda00, {KEY_PROG1} },
++	{KE_KEY, 0xda01, {KEY_PROG2} },
++	{KE_KEY, 0xda02, {KEY_PROG3} },
++	{KE_KEY, 0xda03, {KEY_PROG4} },
++	{KE_KEY, 0xda04, {KEY_F13} },
++	{KE_KEY, 0xda10, {KEY_F14} },
++	{KE_KEY, 0xda11, {KEY_F15} },
++	{KE_KEY, 0xda12, {KEY_F16} },
++	{KE_KEY, 0xda13, {KEY_F17} },
++	{KE_KEY, 0xda14, {KEY_F18} },
++	{KE_KEY, 0xda20, {KEY_F19} },
++	{KE_KEY, 0xda21, {KEY_F20} },
++	{KE_KEY, 0xda22, {KEY_F21} },
++	{KE_KEY, 0xda23, {KEY_F22} },
++	{KE_KEY, 0xda24, {KEY_F23} },
+ 	{KE_END, 0}
+ };
 =20
--	/* Shortcut and audio panel keys */
-+	/* Dell Instant Launch key */
- 	{ KE_KEY, 0xe025, { KEY_PROG4 } },
-+	{ KE_KEY, 0xe029, { KEY_PROG4 } },
-+
-+	/* Audio panel key */
- 	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+@@ -232,6 +256,7 @@ static bool ec_raw_mode;
+ static bool has_type_aa;
+ static u16 commun_func_bitmap;
+ static u8 commun_fn_key_number;
++static u8 macro_key_state =3D 0;
 =20
- 	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+ module_param(mailled, int, 0444);
+ module_param(brightness, int, 0444);
+@@ -1731,6 +1756,25 @@ static void acer_wmi_notify(u32 value, void *con=
+text)
+ 	case WMID_ACCEL_EVENT:
+ 		acer_gsensor_event();
+ 		break;
++	case WMID_MACROKEY_EVENT:
++		switch(return_value.key_num) {
++		case 1:
++			if(return_value.device_state >=3D 1 && return_value.device_state <=3D=
+ 3)
++				macro_key_state =3D return_value.device_state - 1;
++			else
++				pr_warn("acer_wmi: macro key state set to %d (only values 1 to 3 a=
+re known)", return_value.device_state);
++			break;
++		case 2:
++			if(return_value.device_state >=3D 1 && return_value.device_state <=3D=
+ 5)
++				sparse_keymap_report_event(acer_wmi_input_dev, 0xda00 + (macro_key=
+_state<<4) + return_value.device_state-1, 1, true);
++			else
++				pr_warn("acer_wmi: macro key %d pressed (only 1 to 5 are known)", =
+return_value.device_state);
++			break;
++		default:
++			pr_warn("Unknown macro key event: %d %d %d", return_value.key_num, =
+return_value.device_state, return_value.reserved);
++			break;
++		}
++		break;
+ 	default:
+ 		pr_warn("Unknown function number - %d - %d\n",
+ 			return_value.function, return_value.key_num);
 --=20
-1.7.10.4
+2.7.2
