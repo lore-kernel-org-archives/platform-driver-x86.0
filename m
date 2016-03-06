@@ -1,16 +1,18 @@
 From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@lindev.ch>
 Subject: [PATCH] Add support for Acer Predator macro keys
-Date: Sun,  6 Mar 2016 07:08:59 +0100
-Message-ID: <1457244539-23763-1-git-send-email-bero@lindev.ch>
+Date: Sun,  6 Mar 2016 07:17:29 +0100
+Message-ID: <1457245049-4326-1-git-send-email-bero@lindev.ch>
+References: <1457244539-23763-1-git-send-email-bero@lindev.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bero.eu ([88.198.22.18]:46110 "EHLO mail.lindev.ch"
+Received: from bero.eu ([88.198.22.18]:46179 "EHLO mail.lindev.ch"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751132AbcCFGQz (ORCPT
+	id S1751132AbcCFGSP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 Mar 2016 01:16:55 -0500
+	Sun, 6 Mar 2016 01:18:15 -0500
+In-Reply-To: <1457244539-23763-1-git-send-email-bero@lindev.ch>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
@@ -27,7 +29,7 @@ Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@lindev.ch>
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
 r-wmi.c
-index 1062fa4..e2d333c 100644
+index 1062fa4..4cf0e2b 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
 @@ -7,6 +7,9 @@
@@ -99,8 +101,8 @@ text)
  3)
 +				macro_key_state =3D return_value.device_state - 1;
 +			else
-+				pr_warn("acer_wmi: macro key state set to %d (only values 1 to 3 a=
-re known)", return_value.device_state);
++				pr_warn("acer_wmi: macro key state %d requested (only values 1 to =
+3 are known)\n", return_value.device_state);
 +			break;
 +		case 2:
 +			if(return_value.device_state >=3D 1 && return_value.device_state <=3D=
@@ -108,12 +110,12 @@ re known)", return_value.device_state);
 +				sparse_keymap_report_event(acer_wmi_input_dev, 0xda00 + (macro_key=
 _state<<4) + return_value.device_state-1, 1, true);
 +			else
-+				pr_warn("acer_wmi: macro key %d pressed (only 1 to 5 are known)", =
-return_value.device_state);
++				pr_warn("acer_wmi: macro key %d pressed (only 1 to 5 are known)\n"=
+, return_value.device_state);
 +			break;
 +		default:
-+			pr_warn("Unknown macro key event: %d %d %d", return_value.key_num, =
-return_value.device_state, return_value.reserved);
++			pr_warn("Unknown macro key event: %d %d %d\n", return_value.key_num=
+, return_value.device_state, return_value.reserved);
 +			break;
 +		}
 +		break;
