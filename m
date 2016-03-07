@@ -1,132 +1,139 @@
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Subject: [PATCH 2/2] hp-wmi: remove GPS rfkill support via pre-2009 interface
-Date: Sun, 06 Mar 2016 23:40:19 +0100
-Message-ID: <56DCB1D3.9070403@maciej.szmigiero.name>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] Add support for Acer Predator macro keys
+Date: Mon, 7 Mar 2016 13:03:06 +0800
+Message-ID: <20160307050306.GC6160@linux-rxt1.site>
+References: <1457244539-23763-1-git-send-email-bero@lindev.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, =?UTF-8?B?VHJlcMOhayBWaWxtb3M=?= <trepo@netcomga.sk>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp.nue.novell.com ([195.135.221.5]:58368 "EHLO
+	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750854AbcCGFDR (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Mon, 7 Mar 2016 00:03:17 -0500
+Content-Disposition: inline
+In-Reply-To: <1457244539-23763-1-git-send-email-bero@lindev.ch>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@lindev.ch>
+Cc: platform-driver-x86@vger.kernel.org, carlos@strangeworlds.co.uk
 
-GPS rfkill support via pre-2009 WMI interface uses
-hp_wmi_get_sw_state() and hp_wmi_get_hw_state()
-to query its current hard and soft block state,
-respectively.
+On Sun, Mar 06, 2016 at 07:08:59AM +0100, Bernhard Rosenkr=E4nzer wrote=
+:
+> This patch adds support for the macro keys found on
+> Acer Predator laptops.
+>=20
+> Signed-off-by: Bernhard Rosenkr=E4nzer <bero@lindev.ch>
 
-In hp_wmi_get_sw_state() a mask is calculated which
-bit should be checked in an int value returned by
-firmware to get current block state:
-0x200 << (r * 8) which with r being 3 for GPS
-results in overflow and mask of zero.
-The same goes for hp_wmi_get_hw_state().
+Acked-by: Lee, Chun-Yi <jlee@suse.com>
 
-This effectively means that GPS rfkill on this
-WMI interface is considered always both hard and
-soft blocked.
 
-Unfortunately, later when rfkill subsystem calls
-hp_wmi_set_block() to sync this block to hardware
-firmware at least on my old nc6400 gets confused
-and sets both hard and soft blocks on WiFi and BT.
+Thanks a lot!
 
-This happens for example on hp-wmi module load.
+Joey Lee
 
-Since due to overflow described above it is dubious that
-this ever worked correctly and HP laptops with modems
-having GPS support seem to all have been released well past
-year 2009 let's just remove GPS rfkill support via
-pre-2009 WMI interface.
-
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
- drivers/platform/x86/hp-wmi.c | 38 +-------------------------------------
- 1 file changed, 1 insertion(+), 37 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 78cebc0e358c..6f145f2d004d 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -157,7 +157,6 @@ static struct platform_device *hp_wmi_platform_dev;
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
- static struct rfkill *wwan_rfkill;
--static struct rfkill *gps_rfkill;
- 
- struct rfkill2_device {
- 	u8 id;
-@@ -613,10 +612,6 @@ static void hp_wmi_notify(u32 value, void *context)
- 			rfkill_set_states(wwan_rfkill,
- 					  hp_wmi_get_sw_state(HPWMI_WWAN),
- 					  hp_wmi_get_hw_state(HPWMI_WWAN));
--		if (gps_rfkill)
--			rfkill_set_states(gps_rfkill,
--					  hp_wmi_get_sw_state(HPWMI_GPS),
--					  hp_wmi_get_hw_state(HPWMI_GPS));
- 		break;
- 	case HPWMI_CPU_BATTERY_THROTTLE:
- 		pr_info("Unimplemented CPU throttle because of 3 Cell battery event detected\n");
-@@ -775,30 +770,8 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- 			goto register_wwan_error;
- 	}
- 
--	if (wireless & 0x8) {
--		gps_rfkill = rfkill_alloc("hp-gps", &device->dev,
--						RFKILL_TYPE_GPS,
--						&hp_wmi_rfkill_ops,
--						(void *) HPWMI_GPS);
--		if (!gps_rfkill) {
--			err = -ENOMEM;
--			goto register_gps_error;
--		}
--		rfkill_init_sw_state(gps_rfkill,
--				     hp_wmi_get_sw_state(HPWMI_GPS));
--		rfkill_set_hw_state(gps_rfkill,
--				    hp_wmi_get_hw_state(HPWMI_GPS));
--		err = rfkill_register(gps_rfkill);
--		if (err)
--			goto register_gps_error;
--	}
--
- 	return 0;
--register_gps_error:
--	rfkill_destroy(gps_rfkill);
--	gps_rfkill = NULL;
--	if (wwan_rfkill)
--		rfkill_unregister(wwan_rfkill);
-+
- register_wwan_error:
- 	rfkill_destroy(wwan_rfkill);
- 	wwan_rfkill = NULL;
-@@ -907,7 +880,6 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 	wifi_rfkill = NULL;
- 	bluetooth_rfkill = NULL;
- 	wwan_rfkill = NULL;
--	gps_rfkill = NULL;
- 	rfkill2_count = 0;
- 
- 	if (hp_wmi_bios_2009_later() || hp_wmi_rfkill_setup(device))
-@@ -960,10 +932,6 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
- 		rfkill_unregister(wwan_rfkill);
- 		rfkill_destroy(wwan_rfkill);
- 	}
--	if (gps_rfkill) {
--		rfkill_unregister(gps_rfkill);
--		rfkill_destroy(gps_rfkill);
--	}
- 
- 	return 0;
- }
-@@ -999,10 +967,6 @@ static int hp_wmi_resume_handler(struct device *device)
- 		rfkill_set_states(wwan_rfkill,
- 				  hp_wmi_get_sw_state(HPWMI_WWAN),
- 				  hp_wmi_get_hw_state(HPWMI_WWAN));
--	if (gps_rfkill)
--		rfkill_set_states(gps_rfkill,
--				  hp_wmi_get_sw_state(HPWMI_GPS),
--				  hp_wmi_get_hw_state(HPWMI_GPS));
- 
- 	return 0;
- }
+> ---
+>  drivers/platform/x86/acer-wmi.c | 44 +++++++++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 44 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index 1062fa4..e2d333c 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -7,6 +7,9 @@
+>   *    Copyright (C) 2005-2007	E.M. Smith
+>   *    Copyright (C) 2007-2008	Carlos Corbacho <cathectic@gmail.com>
+>   *
+> + *  Added support for Acer Predator hotkeys:
+> + *    Copyright (C) 2016	Bernhard Rosenkraenzer <bero@lindev.ch>
+> + *
+>   *  This program is free software; you can redistribute it and/or mo=
+dify
+>   *  it under the terms of the GNU General Public License as publishe=
+d by
+>   *  the Free Software Foundation; either version 2 of the License, o=
+r
+> @@ -94,6 +97,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14=
+026");
+>  enum acer_wmi_event_ids {
+>  	WMID_HOTKEY_EVENT =3D 0x1,
+>  	WMID_ACCEL_EVENT =3D 0x5,
+> +	WMID_MACROKEY_EVENT =3D 0x7,
+>  };
+> =20
+>  static const struct key_entry acer_wmi_keymap[] __initconst =3D {
+> @@ -128,6 +132,26 @@ static const struct key_entry acer_wmi_keymap[] =
+__initconst =3D {
+>  	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
+>  	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+>  	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
+> +	/* Acer Predator macro keys:
+> +	 * 0xdaXY:
+> +	 *   da   - magic value (preDAtor)
+> +	 *     X  - macro key selector state (0: red, 1: blue, 2: green)
+> +	 *      Y - key pressed (0: 1, 1: 2, ...) */
+> +	{KE_KEY, 0xda00, {KEY_PROG1} },
+> +	{KE_KEY, 0xda01, {KEY_PROG2} },
+> +	{KE_KEY, 0xda02, {KEY_PROG3} },
+> +	{KE_KEY, 0xda03, {KEY_PROG4} },
+> +	{KE_KEY, 0xda04, {KEY_F13} },
+> +	{KE_KEY, 0xda10, {KEY_F14} },
+> +	{KE_KEY, 0xda11, {KEY_F15} },
+> +	{KE_KEY, 0xda12, {KEY_F16} },
+> +	{KE_KEY, 0xda13, {KEY_F17} },
+> +	{KE_KEY, 0xda14, {KEY_F18} },
+> +	{KE_KEY, 0xda20, {KEY_F19} },
+> +	{KE_KEY, 0xda21, {KEY_F20} },
+> +	{KE_KEY, 0xda22, {KEY_F21} },
+> +	{KE_KEY, 0xda23, {KEY_F22} },
+> +	{KE_KEY, 0xda24, {KEY_F23} },
+>  	{KE_END, 0}
+>  };
+> =20
+> @@ -232,6 +256,7 @@ static bool ec_raw_mode;
+>  static bool has_type_aa;
+>  static u16 commun_func_bitmap;
+>  static u8 commun_fn_key_number;
+> +static u8 macro_key_state =3D 0;
+> =20
+>  module_param(mailled, int, 0444);
+>  module_param(brightness, int, 0444);
+> @@ -1731,6 +1756,25 @@ static void acer_wmi_notify(u32 value, void *c=
+ontext)
+>  	case WMID_ACCEL_EVENT:
+>  		acer_gsensor_event();
+>  		break;
+> +	case WMID_MACROKEY_EVENT:
+> +		switch(return_value.key_num) {
+> +		case 1:
+> +			if(return_value.device_state >=3D 1 && return_value.device_state =
+<=3D 3)
+> +				macro_key_state =3D return_value.device_state - 1;
+> +			else
+> +				pr_warn("acer_wmi: macro key state set to %d (only values 1 to 3=
+ are known)", return_value.device_state);
+> +			break;
+> +		case 2:
+> +			if(return_value.device_state >=3D 1 && return_value.device_state =
+<=3D 5)
+> +				sparse_keymap_report_event(acer_wmi_input_dev, 0xda00 + (macro_k=
+ey_state<<4) + return_value.device_state-1, 1, true);
+> +			else
+> +				pr_warn("acer_wmi: macro key %d pressed (only 1 to 5 are known)"=
+, return_value.device_state);
+> +			break;
+> +		default:
+> +			pr_warn("Unknown macro key event: %d %d %d", return_value.key_num=
+, return_value.device_state, return_value.reserved);
+> +			break;
+> +		}
+> +		break;
+>  	default:
+>  		pr_warn("Unknown function number - %d - %d\n",
+>  			return_value.function, return_value.key_num);
+> --=20
+> 2.7.2
+>=20
