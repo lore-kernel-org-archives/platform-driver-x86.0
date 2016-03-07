@@ -1,139 +1,36 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] Add support for Acer Predator macro keys
-Date: Mon, 7 Mar 2016 13:03:06 +0800
-Message-ID: <20160307050306.GC6160@linux-rxt1.site>
-References: <1457244539-23763-1-git-send-email-bero@lindev.ch>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v5 0/5] Process Dell Instant Launch hotkey on Vostro V131
+ and Inspiron M5110
+Date: Mon, 7 Mar 2016 09:27:45 +0100
+Message-ID: <20160307082745.GB20264@pali>
+References: <1456298416-29683-1-git-send-email-kernel@kempniu.pl>
+ <1457096950-29838-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:58368 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750854AbcCGFDR (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Mon, 7 Mar 2016 00:03:17 -0500
+Received: from mail-wm0-f42.google.com ([74.125.82.42]:36682 "EHLO
+	mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752205AbcCGI1s (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 7 Mar 2016 03:27:48 -0500
 Content-Disposition: inline
-In-Reply-To: <1457244539-23763-1-git-send-email-bero@lindev.ch>
+In-Reply-To: <1457096950-29838-1-git-send-email-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@lindev.ch>
-Cc: platform-driver-x86@vger.kernel.org, carlos@strangeworlds.co.uk
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darek Stojaczyk <darek.stojaczyk@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Mar 06, 2016 at 07:08:59AM +0100, Bernhard Rosenkr=E4nzer wrote=
-:
-> This patch adds support for the macro keys found on
-> Acer Predator laptops.
+On Friday 04 March 2016 14:09:05 Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> This patch series makes use of the API exported by dell-smbios, so it
+> should be applied to either testing or dell-smbios.
 >=20
-> Signed-off-by: Bernhard Rosenkr=E4nzer <bero@lindev.ch>
+> Pali, I added your Reviewed-by/Acked-by tags to all patches except 4/=
+5;
+> it is the last one awaiting your approval.
 
-Acked-by: Lee, Chun-Yi <jlee@suse.com>
+Darren, whole series looks good to me, add my Reviewed-by.
 
-
-Thanks a lot!
-
-Joey Lee
-
-> ---
->  drivers/platform/x86/acer-wmi.c | 44 +++++++++++++++++++++++++++++++=
-++++++++++
->  1 file changed, 44 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index 1062fa4..e2d333c 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -7,6 +7,9 @@
->   *    Copyright (C) 2005-2007	E.M. Smith
->   *    Copyright (C) 2007-2008	Carlos Corbacho <cathectic@gmail.com>
->   *
-> + *  Added support for Acer Predator hotkeys:
-> + *    Copyright (C) 2016	Bernhard Rosenkraenzer <bero@lindev.ch>
-> + *
->   *  This program is free software; you can redistribute it and/or mo=
-dify
->   *  it under the terms of the GNU General Public License as publishe=
-d by
->   *  the Free Software Foundation; either version 2 of the License, o=
-r
-> @@ -94,6 +97,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14=
-026");
->  enum acer_wmi_event_ids {
->  	WMID_HOTKEY_EVENT =3D 0x1,
->  	WMID_ACCEL_EVENT =3D 0x5,
-> +	WMID_MACROKEY_EVENT =3D 0x7,
->  };
-> =20
->  static const struct key_entry acer_wmi_keymap[] __initconst =3D {
-> @@ -128,6 +132,26 @@ static const struct key_entry acer_wmi_keymap[] =
-__initconst =3D {
->  	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
->  	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
->  	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
-> +	/* Acer Predator macro keys:
-> +	 * 0xdaXY:
-> +	 *   da   - magic value (preDAtor)
-> +	 *     X  - macro key selector state (0: red, 1: blue, 2: green)
-> +	 *      Y - key pressed (0: 1, 1: 2, ...) */
-> +	{KE_KEY, 0xda00, {KEY_PROG1} },
-> +	{KE_KEY, 0xda01, {KEY_PROG2} },
-> +	{KE_KEY, 0xda02, {KEY_PROG3} },
-> +	{KE_KEY, 0xda03, {KEY_PROG4} },
-> +	{KE_KEY, 0xda04, {KEY_F13} },
-> +	{KE_KEY, 0xda10, {KEY_F14} },
-> +	{KE_KEY, 0xda11, {KEY_F15} },
-> +	{KE_KEY, 0xda12, {KEY_F16} },
-> +	{KE_KEY, 0xda13, {KEY_F17} },
-> +	{KE_KEY, 0xda14, {KEY_F18} },
-> +	{KE_KEY, 0xda20, {KEY_F19} },
-> +	{KE_KEY, 0xda21, {KEY_F20} },
-> +	{KE_KEY, 0xda22, {KEY_F21} },
-> +	{KE_KEY, 0xda23, {KEY_F22} },
-> +	{KE_KEY, 0xda24, {KEY_F23} },
->  	{KE_END, 0}
->  };
-> =20
-> @@ -232,6 +256,7 @@ static bool ec_raw_mode;
->  static bool has_type_aa;
->  static u16 commun_func_bitmap;
->  static u8 commun_fn_key_number;
-> +static u8 macro_key_state =3D 0;
-> =20
->  module_param(mailled, int, 0444);
->  module_param(brightness, int, 0444);
-> @@ -1731,6 +1756,25 @@ static void acer_wmi_notify(u32 value, void *c=
-ontext)
->  	case WMID_ACCEL_EVENT:
->  		acer_gsensor_event();
->  		break;
-> +	case WMID_MACROKEY_EVENT:
-> +		switch(return_value.key_num) {
-> +		case 1:
-> +			if(return_value.device_state >=3D 1 && return_value.device_state =
-<=3D 3)
-> +				macro_key_state =3D return_value.device_state - 1;
-> +			else
-> +				pr_warn("acer_wmi: macro key state set to %d (only values 1 to 3=
- are known)", return_value.device_state);
-> +			break;
-> +		case 2:
-> +			if(return_value.device_state >=3D 1 && return_value.device_state =
-<=3D 5)
-> +				sparse_keymap_report_event(acer_wmi_input_dev, 0xda00 + (macro_k=
-ey_state<<4) + return_value.device_state-1, 1, true);
-> +			else
-> +				pr_warn("acer_wmi: macro key %d pressed (only 1 to 5 are known)"=
-, return_value.device_state);
-> +			break;
-> +		default:
-> +			pr_warn("Unknown macro key event: %d %d %d", return_value.key_num=
-, return_value.device_state, return_value.reserved);
-> +			break;
-> +		}
-> +		break;
->  	default:
->  		pr_warn("Unknown function number - %d - %d\n",
->  			return_value.function, return_value.key_num);
-> --=20
-> 2.7.2
->=20
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
