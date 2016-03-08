@@ -1,109 +1,62 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] hp-wmi: fix unregister order in
- hp_wmi_rfkill_setup() once again
-Date: Tue, 8 Mar 2016 04:39:16 -0800
-Message-ID: <20160308123649.GC31742@dvhart-mobl5.amr.corp.intel.com>
-References: <56DCB16C.80608@maciej.szmigiero.name>
+Subject: Re: [PATCH 2/2] hp-wmi: remove GPS rfkill support via pre-2009
+ interface
+Date: Tue, 8 Mar 2016 05:11:31 -0800
+Message-ID: <20160308131131.GD31742@dvhart-mobl5.amr.corp.intel.com>
+References: <56DCB1D3.9070403@maciej.szmigiero.name>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:60979 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750843AbcCHNLg (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 8 Mar 2016 08:11:36 -0500
 Content-Disposition: inline
-In-Reply-To: <56DCB16C.80608@maciej.szmigiero.name>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <56DCB1D3.9070403@maciej.szmigiero.name>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Kirill Tkhai <tkhai@yandex.ru>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, =?iso-8859-1?Q?Trep=E1k?= Vilmos <trepo@netcomga.sk>
 
-On Sun, Mar 06, 2016 at 11:38:36PM +0100, Maciej S. Szmigiero wrote:
-> rfkill registration order in hp_wmi_rfkill_setup() is:
-> 1) WiFi,
-> 2) BT,
-> 3) WWAN,
-> 5) GPS.
+On Sun, Mar 06, 2016 at 11:40:19PM +0100, Maciej S. Szmigiero wrote:
+> GPS rfkill support via pre-2009 WMI interface uses
+> hp_wmi_get_sw_state() and hp_wmi_get_hw_state()
+> to query its current hard and soft block state,
+> respectively.
 > 
-> Unregistration when cleaning up on error return should happen
-> in reverse order.
+> In hp_wmi_get_sw_state() a mask is calculated which
+> bit should be checked in an int value returned by
+> firmware to get current block state:
+> 0x200 << (r * 8) which with r being 3 for GPS
+> results in overflow and mask of zero.
+> The same goes for hp_wmi_get_hw_state().
 > 
-> This means that:
-> If BT rfkill fails to be allocated we possibly need to
-> first unregister WiFi rfkill before destroying it.
+> This effectively means that GPS rfkill on this
+> WMI interface is considered always both hard and
+> soft blocked.
 > 
-> The same goes with (WWAN, BT) and (GPS, WWAN) pairs.
+> Unfortunately, later when rfkill subsystem calls
+> hp_wmi_set_block() to sync this block to hardware
+> firmware at least on my old nc6400 gets confused
+> and sets both hard and soft blocks on WiFi and BT.
 > 
-> Also, if WWAN rfkill fails to register we need to (possibly)
-> unregister BT not the GPS one.
-> And if GPS rfkill fails to register we need to unregister WWAN
-> not the BT one.
+> This happens for example on hp-wmi module load.
 > 
-> We never need to unregister GPS rfkill here since if GPS rfkill
-> registration succeeds this function returns without error so no
-> cleanup is necessary.
-
-Thank you for clearly articulating the problem.
-
-> 
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  drivers/platform/x86/hp-wmi.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index fb4dd7b3ee71..78cebc0e358c 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -746,7 +746,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
->  						(void *) HPWMI_BLUETOOTH);
->  		if (!bluetooth_rfkill) {
->  			err = -ENOMEM;
-> -			goto register_wifi_error;
-> +			goto register_bluetooth_error;
-
-In this and all cases below, the goto label should match the situation, jumping
-to register_bluetooth_error would be incorrect as we experienced a wifi error. A
-better solution would be to reorder the labels in the exit block such that they
-enforce the necessary reverse order.
-
->  		}
->  		rfkill_init_sw_state(bluetooth_rfkill,
->  				     hp_wmi_get_sw_state(HPWMI_BLUETOOTH));
-> @@ -764,7 +764,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
->  					   (void *) HPWMI_WWAN);
->  		if (!wwan_rfkill) {
->  			err = -ENOMEM;
-> -			goto register_bluetooth_error;
-> +			goto register_wwan_error;
->  		}
->  		rfkill_init_sw_state(wwan_rfkill,
->  				     hp_wmi_get_sw_state(HPWMI_WWAN));
-> @@ -782,7 +782,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
->  						(void *) HPWMI_GPS);
->  		if (!gps_rfkill) {
->  			err = -ENOMEM;
-> -			goto register_wwan_error;
-> +			goto register_gps_error;
->  		}
->  		rfkill_init_sw_state(gps_rfkill,
->  				     hp_wmi_get_sw_state(HPWMI_GPS));
-> @@ -797,13 +797,13 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
->  register_gps_error:
->  	rfkill_destroy(gps_rfkill);
->  	gps_rfkill = NULL;
-> -	if (bluetooth_rfkill)
-> -		rfkill_unregister(bluetooth_rfkill);
-> +	if (wwan_rfkill)
-> +		rfkill_unregister(wwan_rfkill);
->  register_wwan_error:
->  	rfkill_destroy(wwan_rfkill);
->  	wwan_rfkill = NULL;
-> -	if (gps_rfkill)
-> -		rfkill_unregister(gps_rfkill);
-> +	if (bluetooth_rfkill)
-> +		rfkill_unregister(bluetooth_rfkill);
->  register_bluetooth_error:
->  	rfkill_destroy(bluetooth_rfkill);
->  	bluetooth_rfkill = NULL;
+> Since due to overflow described above it is dubious that
+> this ever worked correctly and HP laptops with modems
+> having GPS support seem to all have been released well past
+> year 2009 let's just remove GPS rfkill support via
+> pre-2009 WMI interface.
 > 
 
+This looks reasonable. As it fails to apply without patch 1/2, please resubmit
+along with my feedback for 1/2.
+
+Also, please update your line wrap to 75 characters for commit messages.
+(see Documentation/SubmittingPatches "14) The canonical patch format").
+
+Thanks,
 -- 
 Darren Hart
 Intel Open Source Technology Center
