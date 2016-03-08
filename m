@@ -1,62 +1,47 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] hp-wmi: remove GPS rfkill support via pre-2009
- interface
-Date: Tue, 8 Mar 2016 05:11:31 -0800
-Message-ID: <20160308131131.GD31742@dvhart-mobl5.amr.corp.intel.com>
-References: <56DCB1D3.9070403@maciej.szmigiero.name>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCHv2 08/10] rfkill: Use switch to demux userspace operations
+Date: Tue, 8 Mar 2016 09:01:06 -0500
+Message-ID: <CA+A7VXXd0SONVPi2BOokL13YevR0+hmFz4KE-U1MvXT0qqWN_A@mail.gmail.com>
+References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
+ <1456159001-20307-9-git-send-email-jprvita@endlessm.com> <20160226175925.GA9331@w1.fi>
+ <CA+A7VXUY=qVDQ-OqT+QJK8haN6AFX4Br=OPXi-6RCxpvH3=QRg@mail.gmail.com>
+ <20160229223918.GA32464@w1.fi> <1456839787.3926.20.camel@sipsolutions.net> <CA+A7VXWWQOti7pOre08QcXN9vgssQH3V1f6RjphaK0VwM27C7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:60979 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750843AbcCHNLg (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Mar 2016 08:11:36 -0500
-Content-Disposition: inline
-In-Reply-To: <56DCB1D3.9070403@maciej.szmigiero.name>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, =?iso-8859-1?Q?Trep=E1k?= Vilmos <trepo@netcomga.sk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CA+A7VXWWQOti7pOre08QcXN9vgssQH3V1f6RjphaK0VwM27C7g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Jouni Malinen <j@w1.fi>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 06, 2016 at 11:40:19PM +0100, Maciej S. Szmigiero wrote:
-> GPS rfkill support via pre-2009 WMI interface uses
-> hp_wmi_get_sw_state() and hp_wmi_get_hw_state()
-> to query its current hard and soft block state,
-> respectively.
-> 
-> In hp_wmi_get_sw_state() a mask is calculated which
-> bit should be checked in an int value returned by
-> firmware to get current block state:
-> 0x200 << (r * 8) which with r being 3 for GPS
-> results in overflow and mask of zero.
-> The same goes for hp_wmi_get_hw_state().
-> 
-> This effectively means that GPS rfkill on this
-> WMI interface is considered always both hard and
-> soft blocked.
-> 
-> Unfortunately, later when rfkill subsystem calls
-> hp_wmi_set_block() to sync this block to hardware
-> firmware at least on my old nc6400 gets confused
-> and sets both hard and soft blocks on WiFi and BT.
-> 
-> This happens for example on hp-wmi module load.
-> 
-> Since due to overflow described above it is dubious that
-> this ever worked correctly and HP laptops with modems
-> having GPS support seem to all have been released well past
-> year 2009 let's just remove GPS rfkill support via
-> pre-2009 WMI interface.
-> 
+Hello Johannes,
 
-This looks reasonable. As it fails to apply without patch 1/2, please resubmit
-along with my feedback for 1/2.
+On 1 March 2016 at 11:15, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.com=
+> wrote:
+> On 1 March 2016 at 08:43, Johannes Berg <johannes@sipsolutions.net> w=
+rote:
+>>
+>> I'm fine with Jouni's change, preserving the original behaviour of
+>> requiring TYPE_ALL or the correct type, but I'm tempted to simply
+>> remove the type check entirely.
+>>
+>> Thoughts?
+>>
+>
+> I think this patch should keep the original logic, as this is suppose=
+d
+> to be a refactor only. If we decide to remove the check, we should to
+> it in a separate patch, to make it clear for someone looking at the
+> history later.
+>
+> I'm fine with removing the type check (in a separate patch), but I
+> don't see much gain in doing so.
+>
 
-Also, please update your line wrap to 75 characters for commit messages.
-(see Documentation/SubmittingPatches "14) The canonical patch format").
+I just saw you picked this patch with Jouni's fix, thanks!
 
-Thanks,
--- 
-Darren Hart
-Intel Open Source Technology Center
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
