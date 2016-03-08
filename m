@@ -1,47 +1,72 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCHv2 08/10] rfkill: Use switch to demux userspace operations
-Date: Tue, 8 Mar 2016 09:01:06 -0500
-Message-ID: <CA+A7VXXd0SONVPi2BOokL13YevR0+hmFz4KE-U1MvXT0qqWN_A@mail.gmail.com>
-References: <1456159001-20307-1-git-send-email-jprvita@endlessm.com>
- <1456159001-20307-9-git-send-email-jprvita@endlessm.com> <20160226175925.GA9331@w1.fi>
- <CA+A7VXUY=qVDQ-OqT+QJK8haN6AFX4Br=OPXi-6RCxpvH3=QRg@mail.gmail.com>
- <20160229223918.GA32464@w1.fi> <1456839787.3926.20.camel@sipsolutions.net> <CA+A7VXWWQOti7pOre08QcXN9vgssQH3V1f6RjphaK0VwM27C7g@mail.gmail.com>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Subject: Re: [PATCH 1/2] hp-wmi: fix unregister order in hp_wmi_rfkill_setup()
+ once again
+Date: Tue, 08 Mar 2016 16:58:40 +0100
+Message-ID: <56DEF6B0.9050902@maciej.szmigiero.name>
+References: <56DCB16C.80608@maciej.szmigiero.name> <20160308123649.GC31742@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+A7VXWWQOti7pOre08QcXN9vgssQH3V1f6RjphaK0VwM27C7g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jouni Malinen <j@w1.fi>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from vi37-28-154-113.vibiznes.pl ([37.28.154.113]:48842 "EHLO
+	vps-vb.mhejs.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932275AbcCHP6u (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 8 Mar 2016 10:58:50 -0500
+In-Reply-To: <20160308123649.GC31742@dvhart-mobl5.amr.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Kirill Tkhai <tkhai@yandex.ru>
 
-Hello Johannes,
+Hi Darren,
 
-On 1 March 2016 at 11:15, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.com=
-> wrote:
-> On 1 March 2016 at 08:43, Johannes Berg <johannes@sipsolutions.net> w=
-rote:
->>
->> I'm fine with Jouni's change, preserving the original behaviour of
->> requiring TYPE_ALL or the correct type, but I'm tempted to simply
->> remove the type check entirely.
->>
->> Thoughts?
->>
->
-> I think this patch should keep the original logic, as this is suppose=
-d
-> to be a refactor only. If we decide to remove the check, we should to
-> it in a separate patch, to make it clear for someone looking at the
-> history later.
->
-> I'm fine with removing the type check (in a separate patch), but I
-> don't see much gain in doing so.
->
+Thanks for review, see also my comments below.
 
-I just saw you picked this patch with Jouni's fix, thanks!
+On 08.03.2016 13:39, Darren Hart wrote:
+> On Sun, Mar 06, 2016 at 11:38:36PM +0100, Maciej S. Szmigiero wrote:
+>> --- a/drivers/platform/x86/hp-wmi.c
+>> +++ b/drivers/platform/x86/hp-wmi.c
+>> @@ -746,7 +746,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
+>>  						(void *) HPWMI_BLUETOOTH);
+>>  		if (!bluetooth_rfkill) {
+>>  			err = -ENOMEM;
+>> -			goto register_wifi_error;
+>> +			goto register_bluetooth_error;
+> 
+> In this and all cases below, the goto label should match the situation, jumping
+> to register_bluetooth_error would be incorrect as we experienced a wifi error. 
 
---
-Jo=C3=A3o Paulo Rechi Vita
-http://about.me/jprvita
+Here we experienced an BT error - BT rkill allocation failed,
+so jump is to "register_bluetooth_error".
+
+The second jump to "register_bluetooth_error" is in another case of BT error:
+when its rfkill registration failed.
+
+It is the same label since if BT rfkill allocation had failed
+rfkill_destroy(bluetooth_rfkill) call in cleanup does nothing but we still
+need to possibly unregister WiFi rfkill that might have been registered in
+a previews block (and then fall through to next label to destroy WiFi rfkill).
+
+It would be possible to have separate jump labels skipping unnecessary
+rfkill_destroy() calls on allocation failure, but this would mean
+that we would have 7 labels in such small block of cleanup code.
+
+> A better solution would be to reorder the labels in the exit block
+> such that they enforce the necessary reverse order.
+
+Cleanup labels already are in reverse order with regard to registration:
+Registration:
+1) WiFi,
+2) BT,
+3) WWAN,
+5) GPS.
+
+Cleanup:
+1) GPS,
+2) WWAN,
+3) BT,
+4) WiFi.
+
+Best regards,
+Maciej Szmigiero
