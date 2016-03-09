@@ -1,69 +1,86 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] hp-wmi: fix unregister order in
- hp_wmi_rfkill_setup() once again
-Date: Tue, 8 Mar 2016 18:01:11 +0100
-Message-ID: <20160308170111.GE31742@dvhart-mobl5.amr.corp.intel.com>
-References: <56DCB16C.80608@maciej.szmigiero.name>
- <20160308123649.GC31742@dvhart-mobl5.amr.corp.intel.com>
- <56DEF6B0.9050902@maciej.szmigiero.name>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 0/2] Use acpi_dev_present()
+Date: Wed, 9 Mar 2016 23:21:18 +0100
+Message-ID: <CAJZ5v0gRYiWDSd-hgMPiBEAOEif8sdc-W=Ot5fibPUMv_EE+Jg@mail.gmail.com>
+References: <cover.1453060661.git.lukas@wunner.de>
+	<20160119211229.GB3253@malice.jf.intel.com>
+	<5367662.pAQ7mO39ru@vostro.rjw.lan>
+	<20160211183157.GA15803@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:38005 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932071AbcCHRBf (ORCPT
+Received: from mail-lb0-f196.google.com ([209.85.217.196]:33458 "EHLO
+	mail-lb0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751476AbcCIWVU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Mar 2016 12:01:35 -0500
-Content-Disposition: inline
-In-Reply-To: <56DEF6B0.9050902@maciej.szmigiero.name>
+	Wed, 9 Mar 2016 17:21:20 -0500
+In-Reply-To: <20160211183157.GA15803@wunner.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Kirill Tkhai <tkhai@yandex.ru>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Lv Zheng <lv.zheng@intel.com>, Robert Moore <robert.moore@intel.com>, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 
-On Tue, Mar 08, 2016 at 04:58:40PM +0100, Maciej S. Szmigiero wrote:
-> Hi Darren,
-> 
-> Thanks for review, see also my comments below.
-> 
-> On 08.03.2016 13:39, Darren Hart wrote:
-> > On Sun, Mar 06, 2016 at 11:38:36PM +0100, Maciej S. Szmigiero wrote:
-> >> --- a/drivers/platform/x86/hp-wmi.c
-> >> +++ b/drivers/platform/x86/hp-wmi.c
-> >> @@ -746,7 +746,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
-> >>  						(void *) HPWMI_BLUETOOTH);
-> >>  		if (!bluetooth_rfkill) {
-> >>  			err = -ENOMEM;
-> >> -			goto register_wifi_error;
-> >> +			goto register_bluetooth_error;
-> > 
-> > In this and all cases below, the goto label should match the situation, jumping
-> > to register_bluetooth_error would be incorrect as we experienced a wifi error. 
-> 
-> Here we experienced an BT error - BT rkill allocation failed,
-> so jump is to "register_bluetooth_error".
-> 
-> The second jump to "register_bluetooth_error" is in another case of BT error:
-> when its rfkill registration failed.
-> 
-> It is the same label since if BT rfkill allocation had failed
-> rfkill_destroy(bluetooth_rfkill) call in cleanup does nothing but we still
-> need to possibly unregister WiFi rfkill that might have been registered in
-> a previews block (and then fall through to next label to destroy WiFi rfkill).
-> 
-> It would be possible to have separate jump labels skipping unnecessary
-> rfkill_destroy() calls on allocation failure, but this would mean
-> that we would have 7 labels in such small block of cleanup code.
+On Thu, Feb 11, 2016 at 7:31 PM, Lukas Wunner <lukas@wunner.de> wrote:
+> Hi Rafael,
+>
+> thanks a lot for your patience.
+>
+> On Tue, Jan 19, 2016 at 10:59:04PM +0100, Rafael J. Wysocki wrote:
+>> On Tuesday, January 19, 2016 01:12:29 PM Darren Hart wrote:
+>> > On Sun, Jan 17, 2016 at 09:49:41PM +0100, Lukas Wunner wrote:
+>> > > Hi Darren,
+>> > >
+>> > > the acpi_dev_present() API has now landed in Linus' tree.
+>> > > Thus, after Linus' tree gets merged back into yours,
+>> > > it would be possible to use the API in the pdx86 drivers
+>> > > as per the following patches.
+>> > >
+>> > > I've also pushed these to GitHub in case anyone prefers
+>> > > perusing them in a browser:
+>> > > https://github.com/l1k/linux/commits/acpi_dev_present_pdx86
+>> > >
+>> > > This is a repost of patches submitted in November, the only
+>> > > change is one line added to the commit messages to reference
+>> > > the commit which introduces the API:
+>> > > http://thread.gmane.org/gmane.linux.alsa.devel/147414/focus=8004
+>> > > http://thread.gmane.org/gmane.linux.alsa.devel/147414/focus=8005
+>> >
+>> > Who's tree did the API make it in through? That would likely be the best tree to
+>> > pull these 2 patches in from.
+>> >
+>> > Robert, Lv, Rafael? Would one of you prefer to take these 2 patches using the
+>> > new API?
+>>
+>> It was my tree and I can take these patches, but in that case I'd like the
+>> function's name to be changed as discussed elsewhere.
+>>
+>> Executive summary is that we have acpi_dev_present() and acpi_device_is_present()
+>> now and they serve different purposes which is kind of confusing.  Moreover,
+>> acpi_dev_present() doesn't check if the device is actually present, so
+>> I would like it to be renamed to acpi_device_found() or similar.
+>
+> There are 4 users of acpi_dev_present in linux-next (3 in sound/soc/intel/,
+> 1 in include/linux/apple-gmux.h). I expect 1 other user to appear in i915.
+>
+> I've created a patch (based on linux-next and included below as an RFC)
+> to rename acpi_dev_present to acpi_dev_found in the function declaration
+> as well as at all call sites. I've also rebased the 2 pdx86 patches onto
+> this and pushed the branch to GitHub:
+> https://github.com/l1k/linux/commits/acpi_dev_found
+>
+> My plan is currently to wait until all users are merged into 4.6,
+> then rebase my branch onto Linus' tree and post the resulting patches.
+> This will be either late during the 4.6 merge window or immediately
+> after it has closed. You could then either pick up the patches for
+> 4.6 or 4.7, whichever you prefer.
+>
+> If you'd prefer a different way of moving forward or would like
+> something changed in the patch below, please let me know and
+> I will be happy to adjust accordingly.
 
-My apologies, I read through this too quickly. The patch is correct as is.
-I have wrapped the commit message at 75 characters and queued to the testing
-branch.
+Thanks for doing this!
 
-The one thing that's missing in the commit message is a description of how this
-was failing. It can, however, be inferred.
+Your plan seems workable to me, so please go ahead with it.
 
-Thanks for the patient reply, I deserved a slap for my initial response.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+Thanks,
+Rafael
