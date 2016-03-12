@@ -1,97 +1,105 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: [PATCH v2] dell-rbtn: Ignore ACPI notifications if device is suspended
-Date: Sat, 12 Mar 2016 00:49:35 +0100
-Message-ID: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 0/2] Use acpi_dev_present()
+Date: Sat, 12 Mar 2016 18:31:36 +0100
+Message-ID: <20160312173135.GA27059@wunner.de>
+References: <cover.1453060661.git.lukas@wunner.de>
+ <20160119211229.GB3253@malice.jf.intel.com>
+ <5367662.pAQ7mO39ru@vostro.rjw.lan>
+ <20160211183157.GA15803@wunner.de>
+ <CAJZ5v0gRYiWDSd-hgMPiBEAOEif8sdc-W=Ot5fibPUMv_EE+Jg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:36517 "EHLO
-	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751407AbcCKXuC (ORCPT
+Received: from mailout2.hostsharing.net ([83.223.90.233]:35523 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751883AbcCLRaW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Mar 2016 18:50:02 -0500
+	Sat, 12 Mar 2016 12:30:22 -0500
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gRYiWDSd-hgMPiBEAOEif8sdc-W=Ot5fibPUMv_EE+Jg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: Jared_Dominguez@dell.com, platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net, alex.hung@canonical.com, arvidjaar@gmail.com, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Lv Zheng <lv.zheng@intel.com>, Robert Moore <robert.moore@intel.com>, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 
-Some BIOSes unconditionally send an ACPI notification to RBTN when the
-system is resuming from suspend. This makes dell-rbtn send an input
-event to userspace as if a function key was pressed. Prevent this by
-ignoring all the notifications received while the device is suspended.
+Hi Rafael,
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=106031
-Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
----
- drivers/platform/x86/dell-rbtn.c | 41 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+I've noticed only now that the PCI core has 2 separate functions
+for detecting presence of a device, pci_dev_present() which only
+searches the list of enumerated devices, and pci_device_is_present(),
+which tests actual presence by reading from the device's config space.
 
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
-index cd410e3..56b0da7 100644
---- a/drivers/platform/x86/dell-rbtn.c
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -28,6 +28,7 @@ struct rbtn_data {
- 	enum rbtn_type type;
- 	struct rfkill *rfkill;
- 	struct input_dev *input_dev;
-+	bool suspended;
- };
- 
- 
-@@ -220,9 +221,44 @@ static const struct acpi_device_id rbtn_ids[] = {
- 	{ "", 0 },
- };
- 
-+#ifdef CONFIG_PM_SLEEP
-+static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context)
-+{
-+	struct rbtn_data *rbtn_data = context;
-+
-+	rbtn_data->suspended = false;
-+}
-+
-+static int rbtn_suspend(struct device *dev)
-+{
-+	struct acpi_device *device = to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data = acpi_driver_data(device);
-+
-+	rbtn_data->suspended = true;
-+
-+	return 0;
-+}
-+
-+static int rbtn_resume(struct device *dev)
-+{
-+	struct acpi_device *device = to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data = acpi_driver_data(device);
-+	acpi_status status;
-+
-+	status = acpi_os_execute(OSL_NOTIFY_HANDLER,
-+			 rbtn_acpi_clear_flag, rbtn_data);
-+	if (ACPI_FAILURE(status))
-+		rbtn_data->suspended = false;
-+
-+	return 0;
-+}
-+#endif
-+static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
-+
- static struct acpi_driver rbtn_driver = {
- 	.name = "dell-rbtn",
- 	.ids = rbtn_ids,
-+	.drv.pm = &rbtn_pm_ops,
- 	.ops = {
- 		.add = rbtn_add,
- 		.remove = rbtn_remove,
-@@ -384,6 +420,11 @@ static void rbtn_notify(struct acpi_device *device, u32 event)
- {
- 	struct rbtn_data *rbtn_data = device->driver_data;
- 
-+	if (rbtn_data->suspended) {
-+		dev_dbg(&device->dev, "ACPI notification ignored\n");
-+		return;
-+	}
-+
- 	if (event != 0x80) {
- 		dev_info(&device->dev, "Received unknown event (0x%x)\n",
- 			 event);
--- 
-2.7.0
+Thus it would actually be consistent to have acpi_dev_present()
+(only searches namespace) and acpi_device_is_present() (calls _STA).
+
+But I assume you still want it renamed, right? Just to clarify.
+
+Thanks,
+
+Lukas
+
+On Wed, Mar 09, 2016 at 11:21:18PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Feb 11, 2016 at 7:31 PM, Lukas Wunner <lukas@wunner.de> wrote:
+> > Hi Rafael,
+> >
+> > thanks a lot for your patience.
+> >
+> > On Tue, Jan 19, 2016 at 10:59:04PM +0100, Rafael J. Wysocki wrote:
+> >> On Tuesday, January 19, 2016 01:12:29 PM Darren Hart wrote:
+> >> > On Sun, Jan 17, 2016 at 09:49:41PM +0100, Lukas Wunner wrote:
+> >> > > Hi Darren,
+> >> > >
+> >> > > the acpi_dev_present() API has now landed in Linus' tree.
+> >> > > Thus, after Linus' tree gets merged back into yours,
+> >> > > it would be possible to use the API in the pdx86 drivers
+> >> > > as per the following patches.
+> >> > >
+> >> > > I've also pushed these to GitHub in case anyone prefers
+> >> > > perusing them in a browser:
+> >> > > https://github.com/l1k/linux/commits/acpi_dev_present_pdx86
+> >> > >
+> >> > > This is a repost of patches submitted in November, the only
+> >> > > change is one line added to the commit messages to reference
+> >> > > the commit which introduces the API:
+> >> > > http://thread.gmane.org/gmane.linux.alsa.devel/147414/focus=8004
+> >> > > http://thread.gmane.org/gmane.linux.alsa.devel/147414/focus=8005
+> >> >
+> >> > Who's tree did the API make it in through? That would likely be the best tree to
+> >> > pull these 2 patches in from.
+> >> >
+> >> > Robert, Lv, Rafael? Would one of you prefer to take these 2 patches using the
+> >> > new API?
+> >>
+> >> It was my tree and I can take these patches, but in that case I'd like the
+> >> function's name to be changed as discussed elsewhere.
+> >>
+> >> Executive summary is that we have acpi_dev_present() and acpi_device_is_present()
+> >> now and they serve different purposes which is kind of confusing.  Moreover,
+> >> acpi_dev_present() doesn't check if the device is actually present, so
+> >> I would like it to be renamed to acpi_device_found() or similar.
+> >
+> > There are 4 users of acpi_dev_present in linux-next (3 in sound/soc/intel/,
+> > 1 in include/linux/apple-gmux.h). I expect 1 other user to appear in i915.
+> >
+> > I've created a patch (based on linux-next and included below as an RFC)
+> > to rename acpi_dev_present to acpi_dev_found in the function declaration
+> > as well as at all call sites. I've also rebased the 2 pdx86 patches onto
+> > this and pushed the branch to GitHub:
+> > https://github.com/l1k/linux/commits/acpi_dev_found
+> >
+> > My plan is currently to wait until all users are merged into 4.6,
+> > then rebase my branch onto Linus' tree and post the resulting patches.
+> > This will be either late during the 4.6 merge window or immediately
+> > after it has closed. You could then either pick up the patches for
+> > 4.6 or 4.7, whichever you prefer.
+> >
+> > If you'd prefer a different way of moving forward or would like
+> > something changed in the patch below, please let me know and
+> > I will be happy to adjust accordingly.
+> 
+> Thanks for doing this!
+> 
+> Your plan seems workable to me, so please go ahead with it.
+> 
+> Thanks,
+> Rafael
