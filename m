@@ -1,44 +1,106 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Mon, 14 Mar 2016 12:29:50 +0100
-Message-ID: <20160314112950.GJ8413@pali>
-References: <5628C069.8040902@gmail.com>
- <4630444.0gh5fv1p6X@vostro.rjw.lan>
- <CABFtUbR56RzXRyoO_WB-Td_J92VOfBxTcg8YQgZfdt8LWb0vPw@mail.gmail.com>
- <4495389.z2Ik1rf6oK@vostro.rjw.lan>
- <20160107223529.GL11364@pali>
- <20160311094506.GC8413@pali>
- <CABFtUbRudWJZfvD2d7L6XZRrQMy97foB5BaWE+PjCiBLCMewZw@mail.gmail.com>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2] dell-rbtn: Ignore ACPI notifications if device is suspended
+Date: Mon, 14 Mar 2016 12:34:31 +0100
+Message-ID: <CABFtUbTpCU4XJBFBwTAHqE=eUbNgHHmCb2yrz_a1fkkNmzpHPQ@mail.gmail.com>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f54.google.com ([74.125.82.54]:38663 "EHLO
-	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752234AbcCNL3y (ORCPT
+Received: from mail-qg0-f66.google.com ([209.85.192.66]:35889 "EHLO
+	mail-qg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932650AbcCNLec (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Mar 2016 07:29:54 -0400
-Received: by mail-wm0-f54.google.com with SMTP id l68so98050434wml.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Mar 2016 04:29:53 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <CABFtUbRudWJZfvD2d7L6XZRrQMy97foB5BaWE+PjCiBLCMewZw@mail.gmail.com>
+	Mon, 14 Mar 2016 07:34:32 -0400
+In-Reply-To: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-On Saturday 12 March 2016 00:30:37 Gabriele Mazzotta wrote:
-> 2016-03-11 10:45 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> > Gabriele, Darren, Alex... was this problem fixed? Or what is curren=
-t state?
->=20
-> As far as I know, there was no progress. I'm now going to try what
-> Rafael suggested and see what I can do.
+2016-03-12 0:49 GMT+01:00 Gabriele Mazzotta <gabriele.mzt@gmail.com>:
+> Some BIOSes unconditionally send an ACPI notification to RBTN when the
+> system is resuming from suspend. This makes dell-rbtn send an input
+> event to userspace as if a function key was pressed. Prevent this by
+> ignoring all the notifications received while the device is suspended.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=106031
+> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> ---
+>  drivers/platform/x86/dell-rbtn.c | 41 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>
+> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+> index cd410e3..56b0da7 100644
+> --- a/drivers/platform/x86/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell-rbtn.c
+> @@ -28,6 +28,7 @@ struct rbtn_data {
+>         enum rbtn_type type;
+>         struct rfkill *rfkill;
+>         struct input_dev *input_dev;
+> +       bool suspended;
+>  };
+>
+>
+> @@ -220,9 +221,44 @@ static const struct acpi_device_id rbtn_ids[] = {
+>         { "", 0 },
+>  };
+>
+> +#ifdef CONFIG_PM_SLEEP
+> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context)
+> +{
+> +       struct rbtn_data *rbtn_data = context;
+> +
+> +       rbtn_data->suspended = false;
+> +}
+> +
+> +static int rbtn_suspend(struct device *dev)
+> +{
+> +       struct acpi_device *device = to_acpi_device(dev);
+> +       struct rbtn_data *rbtn_data = acpi_driver_data(device);
+> +
+> +       rbtn_data->suspended = true;
+> +
+> +       return 0;
+> +}
+> +
+> +static int rbtn_resume(struct device *dev)
+> +{
+> +       struct acpi_device *device = to_acpi_device(dev);
+> +       struct rbtn_data *rbtn_data = acpi_driver_data(device);
+> +       acpi_status status;
+> +
+> +       status = acpi_os_execute(OSL_NOTIFY_HANDLER,
+> +                        rbtn_acpi_clear_flag, rbtn_data);
+> +       if (ACPI_FAILURE(status))
+> +               rbtn_data->suspended = false;
+> +
+> +       return 0;
+> +}
+> +#endif
+> +static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
+> +
+>  static struct acpi_driver rbtn_driver = {
+>         .name = "dell-rbtn",
+>         .ids = rbtn_ids,
+> +       .drv.pm = &rbtn_pm_ops,
+>         .ops = {
+>                 .add = rbtn_add,
+>                 .remove = rbtn_remove,
+> @@ -384,6 +420,11 @@ static void rbtn_notify(struct acpi_device *device, u32 event)
+>  {
+>         struct rbtn_data *rbtn_data = device->driver_data;
+>
+> +       if (rbtn_data->suspended) {
+> +               dev_dbg(&device->dev, "ACPI notification ignored\n");
+> +               return;
+> +       }
+> +
+>         if (event != 0x80) {
+>                 dev_info(&device->dev, "Received unknown event (0x%x)\n",
+>                          event);
+> --
+> 2.7.0
+>
 
-Ok, thanks for info. If you have some results, let us know as we can
-finally fix this problem...
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+I'm sorry, Pali, I must have missed your email address while sending
+this updated version.
