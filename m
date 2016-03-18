@@ -1,40 +1,84 @@
-From: Javier Aguinaga <javier.4guinaga@gmail.com>
-Subject: firmware reverse code engineering
-Date: Wed, 16 Mar 2016 15:35:56 -0300
-Message-ID: <CACWXQrZiLsSen2c5n1Oe_yEp66+ZVGA8+NJEtVEsE8CQ+f==Fw@mail.gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
+Date: Fri, 18 Mar 2016 22:34:18 +1030
+Message-ID: <20160318120418.GA29889@marvin.atrad.com.au>
+References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f175.google.com ([209.85.161.175]:35730 "EHLO
-	mail-yw0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934328AbcCPSf4 (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:39773 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750772AbcCRMHP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Mar 2016 14:35:56 -0400
-Received: by mail-yw0-f175.google.com with SMTP id g127so72694858ywf.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2016 11:35:56 -0700 (PDT)
+	Fri, 18 Mar 2016 08:07:15 -0400
+Content-Disposition: inline
+In-Reply-To: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi everbody, I'm new in the list
+On Wed, Mar 16, 2016 at 12:28:07PM +0100, Micha?? K??pie?? wrote:
+> Lifebook E734/E744/E754 has a LED which the manual calls "radio
+> components indicator".  It should be lit when any radio transmitter is
+> enabled.  Its state can be read and set using ACPI (FUNC interface,
+> RFKILL method).
+> 
+> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
 
-I want to make a research about the non-free wifi modules
-(iwlwifi-3160-8.ucode), but I am really lost
+Wow, that is a comprehensive explanation.  In principle the patch looks
+good, but I wonder whether the heuristics you have developed for button
+detection needs wider testing.  I can test on my S7020 but only in a few
+days time (this week is a very busy week) which would give us one more data
+point.
 
-I was thinking  that this modules could be ELF binaries, but the magic
-number says another thing:
+> First of all, this patch raises a couple of checkpatch warnings.
 
-writer@polluelo:/lib/firmware$ hexdump -C iwlwifi-3160-8.ucode | head -20
-00000000  00 00 00 00 49 57 4c 0a  62 61 73 65 6c 69 6e 65  |....IWL.baseline|
-00000010  3a 4c 69 6e 75 78 5f 73  74 61 62 5f 43 6f 72 65  |:Linux_stab_Core|
-00000020  43 79 63 6c 65 34 5f 32  35 00 00 00 00 00 00 00  |Cycle4_25.......|
-00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-00000040  00 00 00 00 00 00 00 00  00 08 18 16 00 00 00 00  |................|
-00000050  00 00 00 00 00 00 00 00  06 00 00 00 04 00 00 00  |................|
-00000060
+The code on the whole reads well so I would be happy with it as is.  Making
+it (and the existing code) fully compliant with checkpatch results in harder
+to read code - at least that was the consensus when it was initially merged,
+which is why it was left in the current state.  Darren may have an
+alternative view on this though, in which case I'm happy to defer to his
+preference.
 
-Is there a way to analize the assembler of this module?
+> As for detecting whether the LED is present on a given machine, I had to
+> resort to educated guesswork.  I assumed this LED is present on all
+> devices which have a radio toggle button instead of a slider.  My
+> Lifebook E744 holds 0x01010001 in BTNI.  By comparing the bits and
+> buttons with those of a Lifebook E8420 (BTNI=0x000F0101, has a slider),
+> I put my money on bit 24 as the indicator of the radio toggle button
+> being present.
 
-I looked in Google but I can't find anything
+The other question is how consistent the bit layout is across all devices
+which might make use of this driver.  The set of potential devices spans
+nearly 10 years, and in many ways it would be surprising if the bit
+definitions were kept the same over that time.  Testing would be the only
+way to get a feeling for that.  If you could let me know how you went about
+acquiring the values on your machine I could try the exact same steps on the
+S7020 to see what we get.
 
-Thanks in advance
+> While it's not essential, it would be nice to initialize soft rfkill
+> state of all radio transmitters to the value of RFSW upon boot.
+
+I think this would only be necessary for those machines with the RF button
+in place of the hard slider switch, right?
+
+> One last remark is that I think this LED would best be driven by an
+> inverted airplane mode LED trigger ...
+
+In addition to the button interaction, presumedly.
+
+> Perhaps it's a candidate for a follow-up patch in the future.
+
+Could be.
+
+> And finally, perhaps some of the remarks above belong in the commit
+> message for future reference.  Please advise.
+
+I think so - there's useful information in there which would be particularly
+relevant if the button detection heuristics ever need to be revised.  Due to
+the necessarily arbitrary feel of the detection logic a brief in-source
+comment may be justified too.
+
+Regards
+  jonathan
