@@ -1,84 +1,136 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Fri, 18 Mar 2016 22:34:18 +1030
-Message-ID: <20160318120418.GA29889@marvin.atrad.com.au>
-References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Subject: Re: [PATCH v2] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Fri, 18 Mar 2016 18:57:33 +0300
+Message-ID: <56EC256D.9000004@gmail.com>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+ <CABFtUbTpCU4XJBFBwTAHqE=eUbNgHHmCb2yrz_a1fkkNmzpHPQ@mail.gmail.com>
+ <20160314114525.GK8413@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:39773 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750772AbcCRMHP (ORCPT
+Received: from mail-lb0-f194.google.com ([209.85.217.194]:36012 "EHLO
+	mail-lb0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757340AbcCRP5i (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 Mar 2016 08:07:15 -0400
-Content-Disposition: inline
-In-Reply-To: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+	Fri, 18 Mar 2016 11:57:38 -0400
+In-Reply-To: <20160314114525.GK8413@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Mar 16, 2016 at 12:28:07PM +0100, Micha?? K??pie?? wrote:
-> Lifebook E734/E744/E754 has a LED which the manual calls "radio
-> components indicator".  It should be lit when any radio transmitter is
-> enabled.  Its state can be read and set using ACPI (FUNC interface,
-> RFKILL method).
-> 
-> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+14.03.2016 14:45, Pali Roh=C3=A1r =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On Monday 14 March 2016 12:34:31 Gabriele Mazzotta wrote:
+>> 2016-03-12 0:49 GMT+01:00 Gabriele Mazzotta <gabriele.mzt@gmail.com>=
+:
+>>> Some BIOSes unconditionally send an ACPI notification to RBTN when =
+the
+>>> system is resuming from suspend. This makes dell-rbtn send an input
+>>> event to userspace as if a function key was pressed. Prevent this b=
+y
+>>> ignoring all the notifications received while the device is suspend=
+ed.
+>>>
+>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
+>>> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+>>> ---
+>>>  drivers/platform/x86/dell-rbtn.c | 41 ++++++++++++++++++++++++++++=
+++++++++++++
+>>>  1 file changed, 41 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x8=
+6/dell-rbtn.c
+>>> index cd410e3..56b0da7 100644
+>>> --- a/drivers/platform/x86/dell-rbtn.c
+>>> +++ b/drivers/platform/x86/dell-rbtn.c
+>>> @@ -28,6 +28,7 @@ struct rbtn_data {
+>>>         enum rbtn_type type;
+>>>         struct rfkill *rfkill;
+>>>         struct input_dev *input_dev;
+>>> +       bool suspended;
+>>>  };
+>>>
+>>>
+>>> @@ -220,9 +221,44 @@ static const struct acpi_device_id rbtn_ids[] =
+=3D {
+>>>         { "", 0 },
+>>>  };
+>>>
+>>> +#ifdef CONFIG_PM_SLEEP
+>>> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context)
+>>> +{
+>>> +       struct rbtn_data *rbtn_data =3D context;
+>>> +
+>>> +       rbtn_data->suspended =3D false;
+>>> +}
+>>> +
+>>> +static int rbtn_suspend(struct device *dev)
+>>> +{
+>>> +       struct acpi_device *device =3D to_acpi_device(dev);
+>>> +       struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
+>>> +
+>>> +       rbtn_data->suspended =3D true;
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int rbtn_resume(struct device *dev)
+>>> +{
+>>> +       struct acpi_device *device =3D to_acpi_device(dev);
+>>> +       struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
+>>> +       acpi_status status;
+>>> +
+>>> +       status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
+>>> +                        rbtn_acpi_clear_flag, rbtn_data);
+>>> +       if (ACPI_FAILURE(status))
+>>> +               rbtn_data->suspended =3D false;
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +#endif
+>>> +static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
+>>> +
+>>>  static struct acpi_driver rbtn_driver =3D {
+>>>         .name =3D "dell-rbtn",
+>>>         .ids =3D rbtn_ids,
+>>> +       .drv.pm =3D &rbtn_pm_ops,
+>>>         .ops =3D {
+>>>                 .add =3D rbtn_add,
+>>>                 .remove =3D rbtn_remove,
+>>> @@ -384,6 +420,11 @@ static void rbtn_notify(struct acpi_device *de=
+vice, u32 event)
+>>>  {
+>>>         struct rbtn_data *rbtn_data =3D device->driver_data;
+>>>
+>>> +       if (rbtn_data->suspended) {
+>>> +               dev_dbg(&device->dev, "ACPI notification ignored\n"=
+);
+>>> +               return;
+>>> +       }
+>>> +
+>>>         if (event !=3D 0x80) {
+>>>                 dev_info(&device->dev, "Received unknown event (0x%=
+x)\n",
+>>>                          event);
+>>> --
+>>> 2.7.0
+>>>
+>>
+>> I'm sorry, Pali, I must have missed your email address while sending
+>> this updated version.
+>=20
+> For me patch looks OK. I would suggest to add some comment about BIOS
+> into code too.
+>=20
+> Rafael, can you review that ACPI suspended/OSL_NOTIFY_HANDLER part?
+>=20
+> Andrei, can you test if it now really fix it on your machine?
+>=20
 
-Wow, that is a comprehensive explanation.  In principle the patch looks
-good, but I wonder whether the heuristics you have developed for button
-detection needs wider testing.  I can test on my S7020 but only in a few
-days time (this week is a very busy week) which would give us one more data
-point.
+TBH I'm still unsure if this fixes root cause or just decreases race
+window, but so far after multiple suspend/resume cycles on my Dell
+Latitude E5450 WiFi was restored every time. So
 
-> First of all, this patch raises a couple of checkpatch warnings.
-
-The code on the whole reads well so I would be happy with it as is.  Making
-it (and the existing code) fully compliant with checkpatch results in harder
-to read code - at least that was the consensus when it was initially merged,
-which is why it was left in the current state.  Darren may have an
-alternative view on this though, in which case I'm happy to defer to his
-preference.
-
-> As for detecting whether the LED is present on a given machine, I had to
-> resort to educated guesswork.  I assumed this LED is present on all
-> devices which have a radio toggle button instead of a slider.  My
-> Lifebook E744 holds 0x01010001 in BTNI.  By comparing the bits and
-> buttons with those of a Lifebook E8420 (BTNI=0x000F0101, has a slider),
-> I put my money on bit 24 as the indicator of the radio toggle button
-> being present.
-
-The other question is how consistent the bit layout is across all devices
-which might make use of this driver.  The set of potential devices spans
-nearly 10 years, and in many ways it would be surprising if the bit
-definitions were kept the same over that time.  Testing would be the only
-way to get a feeling for that.  If you could let me know how you went about
-acquiring the values on your machine I could try the exact same steps on the
-S7020 to see what we get.
-
-> While it's not essential, it would be nice to initialize soft rfkill
-> state of all radio transmitters to the value of RFSW upon boot.
-
-I think this would only be necessary for those machines with the RF button
-in place of the hard slider switch, right?
-
-> One last remark is that I think this LED would best be driven by an
-> inverted airplane mode LED trigger ...
-
-In addition to the button interaction, presumedly.
-
-> Perhaps it's a candidate for a follow-up patch in the future.
-
-Could be.
-
-> And finally, perhaps some of the remarks above belong in the commit
-> message for future reference.  Please advise.
-
-I think so - there's useful information in there which would be particularly
-relevant if the button detection heuristics ever need to be revised.  Due to
-the necessarily arbitrary feel of the detection logic a brief in-source
-comment may be justified too.
-
-Regards
-  jonathan
+Tested-By: Andrei Borzenkov <arvidjaar@gmail.com>
