@@ -1,86 +1,87 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Wed, 23 Mar 2016 08:51:45 +0100
-Message-ID: <20160323075145.GA4216@eudyptula.hq.kempniu.pl>
-References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
- <20160318120418.GA29889@marvin.atrad.com.au>
- <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
+From: Laison@seymour.toledo.br, Computech@seymour.toledo.br,
+	"Inc <support"@ensuretech.com
+Subject: CISCO IP PHONES AND CPU's
+Date: Thu, 24 Mar 2016 01:45:38 +0700
+Message-ID: <20160323200937.9F538A68A0@seymour.toledo.br>
+Reply-To: sales@laisoncomputertech.us
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f51.google.com ([209.85.215.51]:33903 "EHLO
-	mail-lf0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753431AbcCWHvV (ORCPT
+Received: from seymour.toledo.br ([200.148.142.55]:33980 "EHLO
+	seymour.toledo.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756777AbcCWUit convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Mar 2016 03:51:21 -0400
-Received: by mail-lf0-f51.google.com with SMTP id c62so1867497lfc.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Mar 2016 00:51:20 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
+	Wed, 23 Mar 2016 16:38:49 -0400
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Recipients <support@ensuretech.com>
 
-> > If you could let me know how you went about
-> > acquiring the values on your machine I could try the exact same ste=
-ps on the
-> > S7020 to see what we get.
->=20
-> The BTNI value is printed to the kernel log buffer by
-> acpi_fujitsu_hotkey_add(), so all it takes to retrieve it is:
->=20
->     dmesg | grep BTNI
->=20
+Hi,
 
-I forgot to write that the other value I suggested could perhaps be use=
-d
-to determine whether a radio toggle button is present on a given model
-(0x00020320 on a Lifebook E744) is the return value of:
+Our Stock list.
 
-    call_fext_func(FUNC_RFKILL, 0x0, 0x0, 0x0);
+Brand NEW
+96 x Cisco 7900 IP Phone
+87 x Unified IP Phone 6900
+12 x Unified IP Phone 8900
+76 x Unified IP Phone 9900
+55 x Unified IP Phone 8800
+67 x Cisco 1921
+67 x Cisco 1941
+56 x Cisco CP-7961G 7961G
+34 x Cisco CP-7971G-GE 7971G
+19 x Cisco Unified IP Conference Station 7937G Model: 7937 CP-7937G
+20 x Cisco CP-7975G 7975G
 
-It is stored in the rfkill_supported field of struct fujitsu_hotkey_t.
-You can also look it up in a DSDT dump.  On a Lifebook E744:
+Brand New Sealed :
 
-    Method (S000, 3, Serialized)
-    {
-        Name (_T_0, Zero)  // _T_x: Emitted by ASL Compiler
-        Local0 =3D Zero
-        While (One)
-        {
-            _T_0 =3D Arg0
-            If ((_T_0 =3D=3D Zero))
-            {
- >>             Local0 |=3D 0x00020000
-                Local0 |=3D 0x0200
-                Local0 |=3D 0x0100
-                Local0 |=3D 0x20
-            }
-            ...
-            Break
-        }
+23 x  CISCO1921-SEC/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Security Bundle w/SEC license PAK
 
-        Return (Local0)
-    }
+45 x CISCO1921/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Modular Router, 2 GE, 2 EHWIC slots, 512DRAM, IP Base
 
-On an E8420:
+(1)  WS-C4500X-16SFP+
+Serial number:  JAE183501L3
+US&#36;2600
 
-    Method (S000, 3, NotSerialized)
-    {
-        Local0 =3D 0x80000000
-        If ((Arg0 =3D=3D 0x00))
-        {
-            Local0 =3D Zero
-            Local0 |=3D 0x20
-            Local0 |=3D 0x0100
-            Local0 |=3D 0x0200
-        }
-        ...
-        Return (Local0)
-    }
+(1)  WS-C3850-48PW-S
+Serial number:  FCW1823C0EW
+US&#36;2650
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+(1)  WS-X6908-10G-2T
+Serial number:  SAL1620CKUB
+US&#36;3650
+
+(1)  ASR1000-ESP10
+Serial number:  JAE181306C3
+US&#36;3800
+
+(1)  AIR-CT5508-250-K9   (this is new but box is open!)
+Serial number:  FCW1521L038
+US&#36;4000
+
+CPUs part number below
+
+89 x  X5650
+
+975 x  X5660
+
+150 x  X5680
+
+265 x  X5690
+
+Kindly make your price offers.
+
+Sincerely
+Barbara Johnson
+Laison Computech
+210 N Scoring Ave,
+Rialto California, 92376
+Tel: +1-657-232-7047
+Fax: +1-347-214-0478
+Email: sales@laisoncomputertech.us
