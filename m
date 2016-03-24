@@ -1,82 +1,75 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is suspended
-Date: Thu, 24 Mar 2016 12:24:56 +0100
-Message-ID: <CABFtUbTy+zWgGOk4C998yNn=A91VF5o7ye5piTN5CuSBFKW9_g@mail.gmail.com>
-References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
-	<1458341063-8753-1-git-send-email-gabriele.mzt@gmail.com>
-	<20160321121736.GH8413@pali>
-	<CABFtUbRxqJfd=CruaVnQPMbRo1ZaK=NX8wO7kwRh6pDN4s0t2g@mail.gmail.com>
-	<20160324093915.GZ8413@pali>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
+Date: Thu, 24 Mar 2016 22:05:14 +1030
+Message-ID: <20160324113513.GA5129@marvin.atrad.com.au>
+References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+ <20160318120418.GA29889@marvin.atrad.com.au>
+ <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160324093915.GZ8413@pali>
+Content-Disposition: inline
+In-Reply-To: <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-2016-03-24 10:39 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> On Monday 21 March 2016 16:13:34 Gabriele Mazzotta wrote:
->> 2016-03-21 13:17 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
->> > On Friday 18 March 2016 23:44:23 Gabriele Mazzotta wrote:
->> >> +#ifdef CONFIG_PM_SLEEP
->> >> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context=
-)
->> >> +{
->> >> +     struct rbtn_data *rbtn_data =3D context;
->> >> +
->> >> +     rbtn_data->suspended =3D false;
->> >> +}
->> >> +
->> >> +static int rbtn_suspend(struct device *dev)
->> >> +{
->> >> +     struct acpi_device *device =3D to_acpi_device(dev);
->> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
->> >> +
->> >> +     rbtn_data->suspended =3D true;
->> >> +
->> >> +     return 0;
->> >> +}
->> >> +
->> >> +static int rbtn_resume(struct device *dev)
->> >> +{
->> >> +     struct acpi_device *device =3D to_acpi_device(dev);
->> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
->> >> +     acpi_status status;
->> >> +
->> >> +     /*
->> >> +      * Clear the flag only after we received the extra
->> >> +      * ACPI notification.
->> >> +      */
->> >> +     status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
->> >> +                      rbtn_acpi_clear_flag, rbtn_data);
->> >> +     if (ACPI_FAILURE(status))
->> >> +             rbtn_data->suspended =3D false;
->> >
->> > I case when acpi_os_execute success it calls rbtn_acpi_clear_flag,
->> > right? And that will set suspended to false. When acpi_os_execute =
-fails,
->> > then it set suspended too to false... Then whole acpi_os_execute d=
-oing
->> > just "barrier" after which suspended flag can be set to false. So =
-I
->> > think rbtn_acpi_clear_flag function is not needed here.
->> >
->> > Cannot you pass NULL or empty function pointer as callback? Or wha=
-t was
->> > reason to do that flag clearing at "two places"?
->>
->> acpi_os_execute doesn't wait for the callback to be executed, so
->> I can't clear the flag from rbtn_resume.
->
-> acpi_os_execute calls callback asynchronously later? Or what exactly =
-do it?
+This is a quick reply with preliminary information.  I'll follow up in the
+next few days with further details.
 
-In this case, it adds the callback to the kacpi_notify_wq workqueue
-for deferred execution.
+On Tue, Mar 22, 2016 at 02:30:51PM +0100, Micha?? K??pie?? wrote:
+> > > As for detecting whether the LED is present on a given machine, I had to
+> > > resort to educated guesswork.  I assumed this LED is present on all
+> > > devices which have a radio toggle button instead of a slider.  My
+> > > Lifebook E744 holds 0x01010001 in BTNI.  By comparing the bits and
+> > > buttons with those of a Lifebook E8420 (BTNI=0x000F0101, has a slider),
+> > > I put my money on bit 24 as the indicator of the radio toggle button
+> > > being present.
+> > 
+> > The other question is how consistent the bit layout is across all devices
+> > which might make use of this driver.  The set of potential devices spans
+> > nearly 10 years, and in many ways it would be surprising if the bit
+> > definitions were kept the same over that time.  Testing would be the only
+> > way to get a feeling for that.
+> 
+> My thoughts exactly.
+> 
+> > If you could let me know how you went about
+> > acquiring the values on your machine I could try the exact same steps on the
+> > S7020 to see what we get.
+> 
+> The BTNI value is printed to the kernel log buffer by
+> acpi_fujitsu_hotkey_add(), so all it takes to retrieve it is:
+> 
+>     dmesg | grep BTNI
 
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+Here's what's reported by the S7020:
+
+  fujitsu_laptop: BTNI: [0xf0001]
+
+The S7020 doesn't have any LEDs.  It also has a physical slider to enable RF
+and an "RF enabled" indicator in the LCD panel.  The LCD indicator is under
+hardware control; software cannot influence it.
+
+Clearly bit 24 is *not* set on the S7020.  Using this bit as a test for the
+button's presence therefore should not cause trouble for the S7020 and
+probably other similar models from that time.  Obviously we don't have
+access to every single model, but the apparent consistency back to the S7020
+is encouraging.
+
+> > > While it's not essential, it would be nice to initialize soft rfkill
+> > > state of all radio transmitters to the value of RFSW upon boot.
+> > 
+> > I think this would only be necessary for those machines with the RF button
+> > in place of the hard slider switch, right?
+> 
+> Yes.  On the E8420 I tested, moving the slider switch to "off" position
+> caused the Bluetooth device to be removed from the system altogether
+> while iwlwifi reacted by hard-blocking phy0.
+
+I haven't noticed anything that dramatic on the S7020, but anything's
+possible.
+
+Regards
+  jonathan
