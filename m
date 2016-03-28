@@ -1,50 +1,50 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] platform/x86: panasonic-laptop: set pcc after null device check to avoid null pointer dereference
-Date: Mon, 28 Mar 2016 17:26:12 +0100
-Message-ID: <1459182372-14018-1-git-send-email-colin.king@canonical.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel-hid: add a workaround to ignore an event after
+ waking up from S4.
+Date: Mon, 28 Mar 2016 10:01:48 -0700
+Message-ID: <20160328170148.GB3668@dvhart-mobl5.amr.corp.intel.com>
+References: <1458547722-32663-1-git-send-email-alex.hung@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:51090 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753761AbcC1Q0Q (ORCPT
+Received: from [198.137.202.9] ([198.137.202.9]:42572 "EHLO
+	bombadil.infradead.org" rhost-flags-FAIL-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1752852AbcC1REO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2016 12:26:16 -0400
+	Mon, 28 Mar 2016 13:04:14 -0400
+Content-Disposition: inline
+In-Reply-To: <1458547722-32663-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Harald Welte <laforge@gnumonks.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Mar 21, 2016 at 04:08:42PM +0800, Alex Hung wrote:
+> This is the same as the original workaround from S3 but for S4.  Without
+> this workaround, a rfkill event will be received and it will toggle
+> wireless devices when radio hotkey is not pressed.
+> 
+> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> ---
+>  drivers/platform/x86/intel-hid.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+> index e20f23e..4ad57b9 100644
+> --- a/drivers/platform/x86/intel-hid.c
+> +++ b/drivers/platform/x86/intel-hid.c
+> @@ -91,6 +91,8 @@ static int intel_hid_pl_resume_handler(struct device *device)
+>  }
+>  
+>  static const struct dev_pm_ops intel_hid_pl_pm_ops = {
+> +	.freeze  = intel_hid_pl_suspend_handler,
+> +	.restore  = intel_hid_pl_resume_handler,
+>  	.suspend  = intel_hid_pl_suspend_handler,
+>  	.resume  = intel_hid_pl_resume_handler,
+>  };
 
-acpi_pcc_hotkey_remove sanity checks to see if device is null, however,
-this check is performed after we have already passed device into a call
-to acpi_driver_data.  If device is null, then acpi_driver_data will produce
-a null pointer dereference on device. The correct action is to sanity check
-device, then assign pcc, then check if pcc is null.
+Thanks Alex, queued to "fixes" for the 4.6-rc cycle.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/platform/x86/panasonic-laptop.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 3f87097..39c1ebc 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -651,9 +651,13 @@ out_hotkey:
- 
- static int acpi_pcc_hotkey_remove(struct acpi_device *device)
- {
--	struct pcc_acpi *pcc = acpi_driver_data(device);
-+	struct pcc_acpi *pcc;
-+
-+	if (!device)
-+		return -EINVAL;
- 
--	if (!device || !pcc)
-+	pcc = acpi_driver_data(device);
-+	if (!pcc)
- 		return -EINVAL;
- 
- 	sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
 -- 
-2.7.4
+Darren Hart
+Intel Open Source Technology Center
