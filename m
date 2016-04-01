@@ -1,192 +1,65 @@
-From: Aubrey Li <aubrey.li@linux.intel.com>
-Subject: [PATCH] platform:x86 decouple telemetry driver from the optional IPC resources
-Date: Thu, 31 Mar 2016 14:28:09 -0500
-Message-ID: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: [PATCH] asus-wmi: provide access to ALS control
+Date: Fri,  1 Apr 2016 13:35:21 +0200
+Message-ID: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:65255 "EHLO mga14.intel.com"
+Received: from mout.gmx.net ([212.227.17.22]:59882 "EHLO mout.gmx.net"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755497AbcCaG3K (ORCPT
+	id S1751513AbcDALgH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 31 Mar 2016 02:29:10 -0400
+	Fri, 1 Apr 2016 07:36:07 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: qipeng.zha@intel.com, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Aubrey Li <aubrey.li@linux.intel.com>
+To: dvhart@infradead.org, corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Oleksij Rempel <linux@rempel-privat.de>
 
-Currently the optional IPC resources prevent telemetry driver from
-probing if these resources are not in ACPI table. This patch decouples
-telemetry driver from these optional resources, so that telemetry driver
-has dependency only on the necessary ACPI resources.
+Asus Zenbook ux31a is providing ACPI0008 interface for ALS
+(Ambient Light Sensor), which is accessible for OS => Win 7.
+This sensor can be used with iio/acpi-als driver.
+Since it is disabled by default, we should use asus-wmi
+interface to enable it.
 
-Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 ---
- drivers/platform/x86/intel_pmc_ipc.c   |   48 +++++++++++++++-----------------
- drivers/platform/x86/intel_punit_ipc.c |   48 +++++++++++++++++++++-----------
- 2 files changed, 54 insertions(+), 42 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 092519e..29d9c02 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -686,8 +686,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	ipcdev.acpi_io_size = size;
- 	dev_info(&pdev->dev, "io res: %pR\n", res);
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index a96630d..a26dca3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
+ #define ASUS_WMI_DEVID_LED6		0x00020016
  
--	/* This is index 0 to cover BIOS data register */
- 	punit_res = punit_res_array;
-+	/* This is index 0 to cover BIOS data register */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_BIOS_DATA_INDEX);
- 	if (!res) {
-@@ -697,55 +697,51 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	*punit_res = *res;
- 	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+ /* Backlight and Brightness */
++#define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor */
+ #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
+ #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
+ #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
+@@ -1730,6 +1731,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS_WMI_DEVID_TOUCHPAD);
+ ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
+ ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
+ ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESUME);
++ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENABLE);
  
-+	/* This is index 1 to cover BIOS interface register */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_BIOS_IFACE_INDEX);
- 	if (!res) {
- 		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
- 		return -ENXIO;
- 	}
--	/* This is index 1 to cover BIOS interface register */
- 	*++punit_res = *res;
- 	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+ static ssize_t store_cpufv(struct device *dev, struct device_attribute *attr,
+ 			   const char *buf, size_t count)
+@@ -1756,6 +1758,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_cardr.attr,
+ 	&dev_attr_touchpad.attr,
+ 	&dev_attr_lid_resume.attr,
++	&dev_attr_als_enable.attr,
+ 	NULL
+ };
  
-+	/* This is index 2 to cover ISP data register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_ISP_DATA_INDEX);
--	if (!res) {
--		dev_err(&pdev->dev, "Failed to get res of punit ISP data\n");
--		return -ENXIO;
-+	++punit_res;
-+	if (res) {
-+		*punit_res = *res;
-+		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
- 	}
--	/* This is index 2 to cover ISP data register */
--	*++punit_res = *res;
--	dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+@@ -1776,6 +1779,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_TOUCHPAD;
+ 	else if (attr == &dev_attr_lid_resume.attr)
+ 		devid = ASUS_WMI_DEVID_LID_RESUME;
++	else if (attr == &dev_attr_als_enable.attr)
++		devid = ASUS_WMI_DEVID_ALS_ENABLE;
  
-+	/* This is index 3 to cover ISP interface register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_ISP_IFACE_INDEX);
--	if (!res) {
--		dev_err(&pdev->dev, "Failed to get res of punit ISP iface\n");
--		return -ENXIO;
-+	++punit_res;
-+	if (res) {
-+		*punit_res = *res;
-+		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
- 	}
--	/* This is index 3 to cover ISP interface register */
--	*++punit_res = *res;
--	dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
- 
-+	/* This is index 4 to cover GTD data register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_GTD_DATA_INDEX);
--	if (!res) {
--		dev_err(&pdev->dev, "Failed to get res of punit GTD data\n");
--		return -ENXIO;
-+	++punit_res;
-+	if (res) {
-+		*punit_res = *res;
-+		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
- 	}
--	/* This is index 4 to cover GTD data register */
--	*++punit_res = *res;
--	dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
- 
-+	/* This is index 5 to cover GTD interface register, optional */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_GTD_IFACE_INDEX);
--	if (!res) {
--		dev_err(&pdev->dev, "Failed to get res of punit GTD iface\n");
--		return -ENXIO;
-+	++punit_res;
-+	if (res) {
-+		*punit_res = *res;
-+		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
- 	}
--	/* This is index 5 to cover GTD interface register */
--	*++punit_res = *res;
--	dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_IPC_INDEX);
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-index bd87540..a47a41f 100644
---- a/drivers/platform/x86/intel_punit_ipc.c
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -227,6 +227,11 @@ static int intel_punit_get_bars(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *addr;
- 
-+	/*
-+	 * The following resources are required
-+	 * - BIOS_IPC BASE_DATA
-+	 * - BIOS_IPC BASE_IFACE
-+	 */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	addr = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(addr))
-@@ -239,29 +244,40 @@ static int intel_punit_get_bars(struct platform_device *pdev)
- 		return PTR_ERR(addr);
- 	punit_ipcdev->base[BIOS_IPC][BASE_IFACE] = addr;
- 
-+	/*
-+	 * The following resources are optional
-+	 * - ISPDRIVER_IPC BASE_DATA
-+	 * - ISPDRIVER_IPC BASE_IFACE
-+	 * - GTDRIVER_IPC BASE_DATA
-+	 * - GTDRIVER_IPC BASE_IFACE
-+	 */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	addr = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(addr))
--		return PTR_ERR(addr);
--	punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
-+	if (res) {
-+		addr = devm_ioremap_resource(&pdev->dev, res);
-+		if (!IS_ERR(addr))
-+			punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
--	addr = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(addr))
--		return PTR_ERR(addr);
--	punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] = addr;
-+	if (res) {
-+		addr = devm_ioremap_resource(&pdev->dev, res);
-+		if (!IS_ERR(addr))
-+			punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] = addr;
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
--	addr = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(addr))
--		return PTR_ERR(addr);
--	punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] = addr;
-+	if (res) {
-+		addr = devm_ioremap_resource(&pdev->dev, res);
-+		if (!IS_ERR(addr))
-+			punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] = addr;
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
--	addr = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(addr))
--		return PTR_ERR(addr);
--	punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] = addr;
-+	if (res) {
-+		addr = devm_ioremap_resource(&pdev->dev, res);
-+		if (!IS_ERR(addr))
-+			punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] = addr;
-+	}
- 
- 	return 0;
- }
+ 	if (devid != -1)
+ 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
 -- 
-1.7.10.4
+2.5.0
