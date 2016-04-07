@@ -1,65 +1,44 @@
 From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
 	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH 1/2] asus-laptop: remove redundant initializers
-Date: Thu,  7 Apr 2016 23:20:00 +0300
-Message-ID: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
+Subject: [PATCH 2/2] asus-laptop: remove unused variable
+Date: Thu,  7 Apr 2016 23:20:01 +0300
+Message-ID: <1460060401-20742-2-git-send-email-giedrius.statkevicius@gmail.com>
+References: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:33811 "EHLO
-	mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755466AbcDGUUT (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Apr 2016 16:20:19 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: corentin.chary@gmail.com, dvhart@infradead.org
 Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Initializing rv to AE_OK is pointless because later function results ar=
-e
-assigned to them and only then the variable is used
+`out' was assigned value but it was never used so remove it
 
 Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
 com>
 ---
- drivers/platform/x86/asus-laptop.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-laptop.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
 asus-laptop.c
-index f2b5d0a..d86d42e 100644
+index d86d42e..39ddcee 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -771,7 +771,7 @@ static int asus_read_brightness(struct backlight_de=
-vice *bd)
+@@ -946,11 +946,8 @@ static ssize_t sysfs_acpi_set(struct asus_laptop *=
+asus,
+ 			      const char *method)
  {
- 	struct asus_laptop *asus =3D bl_get_data(bd);
- 	unsigned long long value;
--	acpi_status rv =3D AE_OK;
-+	acpi_status rv;
+ 	int rv, value;
+-	int out =3D 0;
 =20
- 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNESS_GET,
- 				   NULL, &value);
-@@ -865,7 +865,7 @@ static ssize_t infos_show(struct device *dev, struc=
-t device_attribute *attr,
- 	int len =3D 0;
- 	unsigned long long temp;
- 	char buf[16];		/* enough for all info */
--	acpi_status rv =3D AE_OK;
-+	acpi_status rv;
+ 	rv =3D parse_arg(buf, count, &value);
+-	if (rv > 0)
+-		out =3D value ? 1 : 0;
 =20
- 	/*
- 	 * We use the easy way, we don't care of off and count,
-@@ -1265,7 +1265,7 @@ static DEVICE_ATTR_RO(ls_value);
- static int asus_gps_status(struct asus_laptop *asus)
- {
- 	unsigned long long status;
--	acpi_status rv =3D AE_OK;
-+	acpi_status rv;
-=20
- 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_GPS_STATUS,
- 				   NULL, &status);
+ 	if (write_acpi_int(asus->handle, method, value))
+ 		return -ENODEV;
 --=20
 2.8.0
