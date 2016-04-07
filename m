@@ -1,30 +1,65 @@
-From: Mrs Estelle Amadieu <youarebless2016@gmail.com>
-Subject: Good day
-Date: Tue, 5 Apr 2016 14:15:30 -0700
-Message-ID: <AL98n97M6qbWzOWGVWKHynC9e0ehamP6LIj9W1z1nMli@gmail.com>
-Reply-To: mrsamadieuestelle@gmail.com
+From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
+	<giedrius.statkevicius@gmail.com>
+Subject: [PATCH 1/2] asus-laptop: remove redundant initializers
+Date: Thu,  7 Apr 2016 23:20:00 +0300
+Message-ID: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
-	format=flowed
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from sogo.smartshop.hu ([185.51.66.104]:33714 "EHLO
-	sogo.smartshop.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1760272AbcDEVjB convert rfc822-to-8bit (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:33811 "EHLO
+	mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755466AbcDGUUT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Apr 2016 17:39:01 -0400
-Received: from [199.16.31.162] (unknown [199.16.31.162])
-	by sogo.smartshop.hu (Postfix) with ESMTPSA id 01FDA58291A
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Apr 2016 23:14:57 +0200 (CEST)
+	Thu, 7 Apr 2016 16:20:19 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: corentin.chary@gmail.com, dvhart@infradead.org
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
 
- Greetings to you,
+Initializing rv to AE_OK is pointless because later function results ar=
+e
+assigned to them and only then the variable is used
 
-My names are Mrs Estelle Amadieu, I live in Cote d'Ivoire, I want to entrust a huge amount of money in your care (USD 2. 5) million dollars for charity work in your country. I have been suffering from cancer I want to know if I can trust you to use these funds for charity/orphanage.
-Please contact me, so that I will give you more details.
+Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
+com>
+---
+ drivers/platform/x86/asus-laptop.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best Regards
-
-Mrs Estelle Amadieu.
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
+asus-laptop.c
+index f2b5d0a..d86d42e 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -771,7 +771,7 @@ static int asus_read_brightness(struct backlight_de=
+vice *bd)
+ {
+ 	struct asus_laptop *asus =3D bl_get_data(bd);
+ 	unsigned long long value;
+-	acpi_status rv =3D AE_OK;
++	acpi_status rv;
+=20
+ 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNESS_GET,
+ 				   NULL, &value);
+@@ -865,7 +865,7 @@ static ssize_t infos_show(struct device *dev, struc=
+t device_attribute *attr,
+ 	int len =3D 0;
+ 	unsigned long long temp;
+ 	char buf[16];		/* enough for all info */
+-	acpi_status rv =3D AE_OK;
++	acpi_status rv;
+=20
+ 	/*
+ 	 * We use the easy way, we don't care of off and count,
+@@ -1265,7 +1265,7 @@ static DEVICE_ATTR_RO(ls_value);
+ static int asus_gps_status(struct asus_laptop *asus)
+ {
+ 	unsigned long long status;
+-	acpi_status rv =3D AE_OK;
++	acpi_status rv;
+=20
+ 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_GPS_STATUS,
+ 				   NULL, &status);
+--=20
+2.8.0
