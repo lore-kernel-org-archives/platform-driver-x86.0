@@ -1,33 +1,20 @@
-From: AKINWUMI <urr@adminnfo3.website.tk>
-Subject: FROM: MR. OLIVER SENO!!
-Date: Fri, 8 Apr 2016 11:53:32 -0700
-Message-ID: <BLUPR17MB0483A7595C32E1B9E9F72B92D0910@BLUPR17MB0483.namprd17.prod.outlook.com>
-Reply-To: <officeosenol@yahoo.com>
+From: darlehen@info.com
+Subject: LOAN
+Date: Sat, 09 Apr 2016 03:33:13 +0530
+Message-ID: <20160408220116.9D9303B6D60@bescomm.terengganu.my>
+Reply-To: legacyassetgrougp@hotmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bn1bhn0251.outbound.protection.outlook.com ([157.56.111.251]:52487
-	"EHLO na01-bn1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1758741AbcDHSxq convert rfc822-to-8bit (ORCPT
+Received: from bescomm.terengganu.my ([202.188.29.20]:37916 "EHLO
+	bescomm.terengganu.my" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751515AbcDIV3a convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 8 Apr 2016 14:53:46 -0400
+	Sat, 9 Apr 2016 17:29:30 -0400
 Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <urr@adminnfo3.website.tk>
+To: Recipients <darlehen@info.com>
 
-Dear Sir.
-
-I bring you greetings. My name is Mr.Oliver Seno Lim, I am a staff of Abbey National Plc. London and heading our regional office in West Africa. Our late customer named Engr.Ben W.westland, made a fixed deposit amount of US$7Million.He did not declare any next of kin in any of his paper work, I want you as a foreigner to stand as the beneficiary to transfer this funds out of my bank into your account, after the successful transfer, we shall share in the ratio of 30% for you, 70%for me. Should you be interested please send me your information:
-
-1,Full names.
-2,current residential address.
-3,Tele/Fax numbers./your work.
- 
-   
-All I need from you is your readiness, trustworthiness and edication. Please email me directly on my private email address: officeosenol@yahoo.com) so we can begin arrangements and I would give you more information on how we would handle this venture and once i hear from you i will give you information of the bank for the transferring funds on your name.
-
-Regards,
-Mr.Oliver Seno Lim 
+Brauchen Sie einen Kredit? Wir bieten Darlehen in 2% gelten heute Kontakt mit uns auf: legacyassetgrougp@hotmail.com
