@@ -1,44 +1,33 @@
-From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH 2/2] asus-laptop: remove unused variable
-Date: Thu,  7 Apr 2016 23:20:01 +0300
-Message-ID: <1460060401-20742-2-git-send-email-giedrius.statkevicius@gmail.com>
-References: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
+From: AKINWUMI <urr@adminnfo3.website.tk>
+Subject: FROM: MR. OLIVER SENO!!
+Date: Fri, 8 Apr 2016 11:53:32 -0700
+Message-ID: <BLUPR17MB0483A7595C32E1B9E9F72B92D0910@BLUPR17MB0483.namprd17.prod.outlook.com>
+Reply-To: <officeosenol@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: corentin.chary@gmail.com, dvhart@infradead.org
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-bn1bhn0251.outbound.protection.outlook.com ([157.56.111.251]:52487
+	"EHLO na01-bn1-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1758741AbcDHSxq convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 8 Apr 2016 14:53:46 -0400
+Content-Description: Mail message body
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <urr@adminnfo3.website.tk>
 
-`out' was assigned value but it was never used so remove it
+Dear Sir.
 
-Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
-com>
----
- drivers/platform/x86/asus-laptop.c | 3 ---
- 1 file changed, 3 deletions(-)
+I bring you greetings. My name is Mr.Oliver Seno Lim, I am a staff of Abbey National Plc. London and heading our regional office in West Africa. Our late customer named Engr.Ben W.westland, made a fixed deposit amount of US$7Million.He did not declare any next of kin in any of his paper work, I want you as a foreigner to stand as the beneficiary to transfer this funds out of my bank into your account, after the successful transfer, we shall share in the ratio of 30% for you, 70%for me. Should you be interested please send me your information:
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
-asus-laptop.c
-index d86d42e..39ddcee 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -946,11 +946,8 @@ static ssize_t sysfs_acpi_set(struct asus_laptop *=
-asus,
- 			      const char *method)
- {
- 	int rv, value;
--	int out =3D 0;
-=20
- 	rv =3D parse_arg(buf, count, &value);
--	if (rv > 0)
--		out =3D value ? 1 : 0;
-=20
- 	if (write_acpi_int(asus->handle, method, value))
- 		return -ENODEV;
---=20
-2.8.0
+1,Full names.
+2,current residential address.
+3,Tele/Fax numbers./your work.
+ 
+   
+All I need from you is your readiness, trustworthiness and edication. Please email me directly on my private email address: officeosenol@yahoo.com) so we can begin arrangements and I would give you more information on how we would handle this venture and once i hear from you i will give you information of the bank for the transferring funds on your name.
+
+Regards,
+Mr.Oliver Seno Lim 
