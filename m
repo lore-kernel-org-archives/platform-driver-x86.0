@@ -1,59 +1,108 @@
-From: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: Re: [PATCH 2/2] asus-laptop: remove unused variable
-Date: Sun, 10 Apr 2016 11:48:52 +0300
-Message-ID: <20160410084852.GA5473@tyrael>
-References: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
- <1460060401-20742-2-git-send-email-giedrius.statkevicius@gmail.com>
- <20160410032121.GD18689@dvhart-mobl5.amr.corp.intel.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
+Date: Sun, 10 Apr 2016 20:22:58 +0930
+Message-ID: <20160410105258.GA2922@marvin.atrad.com.au>
+References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+ <20160318120418.GA29889@marvin.atrad.com.au>
+ <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
+ <20160324113513.GA5129@marvin.atrad.com.au>
+ <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:36365 "EHLO
-	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750810AbcDJIs4 (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:33813 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752353AbcDJKzz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 10 Apr 2016 04:48:56 -0400
+	Sun, 10 Apr 2016 06:55:55 -0400
 Content-Disposition: inline
-In-Reply-To: <20160410032121.GD18689@dvhart-mobl5.amr.corp.intel.com>
+In-Reply-To: <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Apr 09, 2016 at 08:21:21PM -0700, Darren Hart wrote:
-> On Thu, Apr 07, 2016 at 11:20:01PM +0300, Giedrius Statkevi=C4=8Dius =
-wrote:
-> > `out' was assigned value but it was never used so remove it
-> >=20
-> > Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gm=
-ail.com>
-> > ---
-> >  drivers/platform/x86/asus-laptop.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/=
-x86/asus-laptop.c
-> > index d86d42e..39ddcee 100644
-> > --- a/drivers/platform/x86/asus-laptop.c
-> > +++ b/drivers/platform/x86/asus-laptop.c
-> > @@ -946,11 +946,8 @@ static ssize_t sysfs_acpi_set(struct asus_lapt=
-op *asus,
-> >  			      const char *method)
-> >  {
-> >  	int rv, value;
-> > -	int out =3D 0;
-> > =20
-> >  	rv =3D parse_arg(buf, count, &value);
-> > -	if (rv > 0)
-> > -		out =3D value ? 1 : 0;
-> > =20
-> >  	if (write_acpi_int(asus->handle, method, value))
->=20
-> out is indeed unused, however the rv > 0 condition is relevant as <=3D=
-0 will pass
-> value uninitialized to write_acpi_int.
-That's indeed a problem. Somehow I missed that :( Should I make a v2 to=
- include
-another patch that checks for rv < 0 or send it as an independent one?
+Hi Darren
+
+Thanks for the ping.
+
+On Sat, Apr 09, 2016 at 07:30:20PM -0700, Darren Hart wrote:
+> On Thu, Mar 24, 2016 at 10:05:14PM +1030, Jonathan Woithe wrote:
+> > This is a quick reply with preliminary information.  I'll follow up in the
+> > next few days with further details.
+> > 
+> > On Tue, Mar 22, 2016 at 02:30:51PM +0100, Micha?? K??pie?? wrote:
+> > > > > As for detecting whether the LED is present on a given machine, I had to
+> > > > > resort to educated guesswork.  I assumed this LED is present on all
+> > > > > devices which have a radio toggle button instead of a slider.  My
+> > > > > Lifebook E744 holds 0x01010001 in BTNI.  By comparing the bits and
+> > > > > buttons with those of a Lifebook E8420 (BTNI=0x000F0101, has a slider),
+> > > > > I put my money on bit 24 as the indicator of the radio toggle button
+> > > > > being present.
+> > > > 
+> > > > The other question is how consistent the bit layout is across all devices
+> > > > which might make use of this driver.  The set of potential devices spans
+> > > > nearly 10 years, and in many ways it would be surprising if the bit
+> > > > definitions were kept the same over that time.  Testing would be the only
+> > > > way to get a feeling for that.
+> > > 
+> > > My thoughts exactly.
+> > > 
+> > > > If you could let me know how you went about
+> > > > acquiring the values on your machine I could try the exact same steps on the
+> > > > S7020 to see what we get.
+> > > 
+> > > The BTNI value is printed to the kernel log buffer by
+> > > acpi_fujitsu_hotkey_add(), so all it takes to retrieve it is:
+> > > 
+> > >     dmesg | grep BTNI
+> > 
+> > Here's what's reported by the S7020:
+> > 
+> >   fujitsu_laptop: BTNI: [0xf0001]
+> > 
+> > The S7020 doesn't have any LEDs.  It also has a physical slider to enable RF
+> > and an "RF enabled" indicator in the LCD panel.  The LCD indicator is under
+> > hardware control; software cannot influence it.
+> > 
+> > Clearly bit 24 is *not* set on the S7020.  Using this bit as a test for the
+> > button's presence therefore should not cause trouble for the S7020 and
+> > probably other similar models from that time.  Obviously we don't have
+> > access to every single model, but the apparent consistency back to the S7020
+> > is encouraging.
+> > 
+> > > > > While it's not essential, it would be nice to initialize soft rfkill
+> > > > > state of all radio transmitters to the value of RFSW upon boot.
+> > > > 
+> > > > I think this would only be necessary for those machines with the RF button
+> > > > in place of the hard slider switch, right?
+> > > 
+> > > Yes.  On the E8420 I tested, moving the slider switch to "off" position
+> > > caused the Bluetooth device to be removed from the system altogether
+> > > while iwlwifi reacted by hard-blocking phy0.
+> > 
+> > I haven't noticed anything that dramatic on the S7020, but anything's
+> > possible.
+> 
+> Jonathan, Micha??,
+> 
+> Where are we with this? The above reads as "Doesn't appear to break existing
+> systems on hand". Jonathan, are you happy with this patch?
+
+Sorry, I got caught up over the last couple of weeks with other tasks and
+have not yet managed to confirm the lack of regressions on the S7020.  It
+was on my list for this coming week though.  My comments quoted above were
+theoretical rather than based on an actual test.  The patch appears fairly
+innoculous given that BTNI bit 24 is not set on the S7020 but for
+completeness I would prefer to give it a run on the S7020 before we merge
+the patch.  I will make an effort to fit this in over the next couple of
+days.
+
+> Micha??, do you have plans for a v2?
+
+I wasn't clear on this myself.  I suspect, given the lack of a v2 in the
+time since the last discussion, that there is no v2 planned at this stage
+and I will proceed with my testing accordingly.
+
+Regards
+  jonathan
