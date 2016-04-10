@@ -1,108 +1,266 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Sun, 10 Apr 2016 20:22:58 +0930
-Message-ID: <20160410105258.GA2922@marvin.atrad.com.au>
-References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
- <20160318120418.GA29889@marvin.atrad.com.au>
- <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
- <20160324113513.GA5129@marvin.atrad.com.au>
- <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform:x86 decouple telemetry driver from the optional
+ IPC resources
+Date: Sun, 10 Apr 2016 16:17:20 +0300
+Message-ID: <CAHp75VeKgVwOQ7U9=a92hcts8tPJriRtNJ3h2nHL_BXVXc7D5Q@mail.gmail.com>
+References: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:33813 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752353AbcDJKzz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 10 Apr 2016 06:55:55 -0400
-Content-Disposition: inline
-In-Reply-To: <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aubrey Li <aubrey.li@linux.intel.com>
+Cc: qipeng.zha@intel.com, "dvhart@infradead.org" <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren
+On Thu, Mar 31, 2016 at 10:28 PM, Aubrey Li <aubrey.li@linux.intel.com>=
+ wrote:
+> Currently the optional IPC resources prevent telemetry driver from
+> probing if these resources are not in ACPI table. This patch decouple=
+s
+> telemetry driver from these optional resources, so that telemetry dri=
+ver
+> has dependency only on the necessary ACPI resources.
 
-Thanks for the ping.
+Darren, I have comments as well.
 
-On Sat, Apr 09, 2016 at 07:30:20PM -0700, Darren Hart wrote:
-> On Thu, Mar 24, 2016 at 10:05:14PM +1030, Jonathan Woithe wrote:
-> > This is a quick reply with preliminary information.  I'll follow up in the
-> > next few days with further details.
-> > 
-> > On Tue, Mar 22, 2016 at 02:30:51PM +0100, Micha?? K??pie?? wrote:
-> > > > > As for detecting whether the LED is present on a given machine, I had to
-> > > > > resort to educated guesswork.  I assumed this LED is present on all
-> > > > > devices which have a radio toggle button instead of a slider.  My
-> > > > > Lifebook E744 holds 0x01010001 in BTNI.  By comparing the bits and
-> > > > > buttons with those of a Lifebook E8420 (BTNI=0x000F0101, has a slider),
-> > > > > I put my money on bit 24 as the indicator of the radio toggle button
-> > > > > being present.
-> > > > 
-> > > > The other question is how consistent the bit layout is across all devices
-> > > > which might make use of this driver.  The set of potential devices spans
-> > > > nearly 10 years, and in many ways it would be surprising if the bit
-> > > > definitions were kept the same over that time.  Testing would be the only
-> > > > way to get a feeling for that.
-> > > 
-> > > My thoughts exactly.
-> > > 
-> > > > If you could let me know how you went about
-> > > > acquiring the values on your machine I could try the exact same steps on the
-> > > > S7020 to see what we get.
-> > > 
-> > > The BTNI value is printed to the kernel log buffer by
-> > > acpi_fujitsu_hotkey_add(), so all it takes to retrieve it is:
-> > > 
-> > >     dmesg | grep BTNI
-> > 
-> > Here's what's reported by the S7020:
-> > 
-> >   fujitsu_laptop: BTNI: [0xf0001]
-> > 
-> > The S7020 doesn't have any LEDs.  It also has a physical slider to enable RF
-> > and an "RF enabled" indicator in the LCD panel.  The LCD indicator is under
-> > hardware control; software cannot influence it.
-> > 
-> > Clearly bit 24 is *not* set on the S7020.  Using this bit as a test for the
-> > button's presence therefore should not cause trouble for the S7020 and
-> > probably other similar models from that time.  Obviously we don't have
-> > access to every single model, but the apparent consistency back to the S7020
-> > is encouraging.
-> > 
-> > > > > While it's not essential, it would be nice to initialize soft rfkill
-> > > > > state of all radio transmitters to the value of RFSW upon boot.
-> > > > 
-> > > > I think this would only be necessary for those machines with the RF button
-> > > > in place of the hard slider switch, right?
-> > > 
-> > > Yes.  On the E8420 I tested, moving the slider switch to "off" position
-> > > caused the Bluetooth device to be removed from the system altogether
-> > > while iwlwifi reacted by hard-blocking phy0.
-> > 
-> > I haven't noticed anything that dramatic on the S7020, but anything's
-> > possible.
-> 
-> Jonathan, Micha??,
-> 
-> Where are we with this? The above reads as "Doesn't appear to break existing
-> systems on hand". Jonathan, are you happy with this patch?
+>
+> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c   |   48 +++++++++++++++-------=
+----------
+>  drivers/platform/x86/intel_punit_ipc.c |   48 +++++++++++++++++++++-=
+----------
+>  2 files changed, 54 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/=
+x86/intel_pmc_ipc.c
+> index 092519e..29d9c02 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -686,8 +686,8 @@ static int ipc_plat_get_res(struct platform_devic=
+e *pdev)
+>         ipcdev.acpi_io_size =3D size;
+>         dev_info(&pdev->dev, "io res: %pR\n", res);
+>
+> -       /* This is index 0 to cover BIOS data register */
+>         punit_res =3D punit_res_array;
+> +       /* This is index 0 to cover BIOS data register */
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_BIOS_DATA_INDEX);
+>         if (!res) {
+> @@ -697,55 +697,51 @@ static int ipc_plat_get_res(struct platform_dev=
+ice *pdev)
+>         *punit_res =3D *res;
+>         dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+>
+> +       /* This is index 1 to cover BIOS interface register */
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_BIOS_IFACE_INDEX);
+>         if (!res) {
+>                 dev_err(&pdev->dev, "Failed to get res of punit BIOS =
+iface\n");
+>                 return -ENXIO;
+>         }
+> -       /* This is index 1 to cover BIOS interface register */
+>         *++punit_res =3D *res;
+>         dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+>
+> +       /* This is index 2 to cover ISP data register, optional */
 
-Sorry, I got caught up over the last couple of weeks with other tasks and
-have not yet managed to confirm the lack of regressions on the S7020.  It
-was on my list for this coming week though.  My comments quoted above were
-theoretical rather than based on an actual test.  The patch appears fairly
-innoculous given that BTNI bit 24 is not set on the S7020 but for
-completeness I would prefer to give it a run on the S7020 before we merge
-the patch.  I will make an effort to fit this in over the next couple of
-days.
+All above looks like a commentary fixes (except an additional
+'optional' word in one case). Can you do this separately?
 
-> Micha??, do you have plans for a v2?
 
-I wasn't clear on this myself.  I suspect, given the lack of a v2 in the
-time since the last discussion, that there is no v2 planned at this stage
-and I will proceed with my testing accordingly.
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_ISP_DATA_INDEX);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Failed to get res of punit ISP d=
+ata\n");
+> -               return -ENXIO;
+> +       ++punit_res;
+> +       if (res) {
+> +               *punit_res =3D *res;
+> +               dev_info(&pdev->dev, "punit ISP data res: %pR\n", res=
+);
 
-Regards
-  jonathan
+Okay, what if you re-arrange this to some helper first
+
+int =E2=80=A6_assign_res(*pdev, index, *punit_res)
+{
+ struct resource res;
+ res =3D platform_get_resource(pdev, =E2=80=A6, index);
+ if (!res)
+  return -ERRNO;
+ *punit_res =3D *res;
+ dev_dbg(%pR);
+ return 0;
+}
+
+In this patch you move to optional by
+dev_err -> dev_warn
+
+and use
+
+if (ret)
+  dev_warn( "=E2=80=A6skip  optional resource=E2=80=A6" );
+
+instead of
+if (ret) {
+ dev_err();
+ return ret;
+}
+
+>         }
+> -       /* This is index 2 to cover ISP data register */
+> -       *++punit_res =3D *res;
+> -       dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+>
+> +       /* This is index 3 to cover ISP interface register, optional =
+*/
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_ISP_IFACE_INDEX);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Failed to get res of punit ISP i=
+face\n");
+> -               return -ENXIO;
+> +       ++punit_res;
+> +       if (res) {
+> +               *punit_res =3D *res;
+> +               dev_info(&pdev->dev, "punit ISP interface res: %pR\n"=
+, res);
+>         }
+> -       /* This is index 3 to cover ISP interface register */
+> -       *++punit_res =3D *res;
+> -       dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
+>
+> +       /* This is index 4 to cover GTD data register, optional */
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_GTD_DATA_INDEX);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Failed to get res of punit GTD d=
+ata\n");
+> -               return -ENXIO;
+> +       ++punit_res;
+> +       if (res) {
+> +               *punit_res =3D *res;
+> +               dev_info(&pdev->dev, "punit GTD data res: %pR\n", res=
+);
+>         }
+> -       /* This is index 4 to cover GTD data register */
+> -       *++punit_res =3D *res;
+> -       dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
+>
+> +       /* This is index 5 to cover GTD interface register, optional =
+*/
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_GTD_IFACE_INDEX);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Failed to get res of punit GTD i=
+face\n");
+> -               return -ENXIO;
+> +       ++punit_res;
+> +       if (res) {
+> +               *punit_res =3D *res;
+> +               dev_info(&pdev->dev, "punit GTD interface res: %pR\n"=
+, res);
+>         }
+> -       /* This is index 5 to cover GTD interface register */
+> -       *++punit_res =3D *res;
+> -       dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_IPC_INDEX);
+> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platfor=
+m/x86/intel_punit_ipc.c
+> index bd87540..a47a41f 100644
+> --- a/drivers/platform/x86/intel_punit_ipc.c
+> +++ b/drivers/platform/x86/intel_punit_ipc.c
+> @@ -227,6 +227,11 @@ static int intel_punit_get_bars(struct platform_=
+device *pdev)
+>         struct resource *res;
+>         void __iomem *addr;
+>
+> +       /*
+> +        * The following resources are required
+> +        * - BIOS_IPC BASE_DATA
+> +        * - BIOS_IPC BASE_IFACE
+> +        */
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         addr =3D devm_ioremap_resource(&pdev->dev, res);
+>         if (IS_ERR(addr))
+> @@ -239,29 +244,40 @@ static int intel_punit_get_bars(struct platform=
+_device *pdev)
+>                 return PTR_ERR(addr);
+>         punit_ipcdev->base[BIOS_IPC][BASE_IFACE] =3D addr;
+>
+> +       /*
+> +        * The following resources are optional
+> +        * - ISPDRIVER_IPC BASE_DATA
+> +        * - ISPDRIVER_IPC BASE_IFACE
+> +        * - GTDRIVER_IPC BASE_DATA
+> +        * - GTDRIVER_IPC BASE_IFACE
+> +        */
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> -       addr =3D devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(addr))
+> -               return PTR_ERR(addr);
+> -       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] =3D addr;
+> +       if (res) {
+> +               addr =3D devm_ioremap_resource(&pdev->dev, res);
+> +               if (!IS_ERR(addr))
+> +                       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] =
+=3D addr;
+> +       }
+
+And here, what about just replacing return to dev_warn()?
+
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> -       addr =3D devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(addr))
+> -               return PTR_ERR(addr);
+> -       punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] =3D addr;
+> +       if (res) {
+> +               addr =3D devm_ioremap_resource(&pdev->dev, res);
+> +               if (!IS_ERR(addr))
+> +                       punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE]=
+ =3D addr;
+> +       }
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 4);
+> -       addr =3D devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(addr))
+> -               return PTR_ERR(addr);
+> -       punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] =3D addr;
+> +       if (res) {
+> +               addr =3D devm_ioremap_resource(&pdev->dev, res);
+> +               if (!IS_ERR(addr))
+> +                       punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] =3D=
+ addr;
+> +       }
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 5);
+> -       addr =3D devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(addr))
+> -               return PTR_ERR(addr);
+> -       punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] =3D addr;
+> +       if (res) {
+> +               addr =3D devm_ioremap_resource(&pdev->dev, res);
+> +               if (!IS_ERR(addr))
+> +                       punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] =
+=3D addr;
+> +       }
+>
+>         return 0;
+>  }
+> --
+> 1.7.10.4
+>
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
