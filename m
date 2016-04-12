@@ -1,56 +1,143 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Tue, 12 Apr 2016 15:29:13 +0200
-Message-ID: <20160412132913.GA2631@eudyptula.hq.kempniu.pl>
-References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
- <20160318120418.GA29889@marvin.atrad.com.au>
- <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
- <20160324113513.GA5129@marvin.atrad.com.au>
- <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
- <20160410105258.GA2922@marvin.atrad.com.au>
- <20160412120323.GA2583@eudyptula.hq.kempniu.pl>
- <20160412124920.GB8195@marvin.atrad.com.au>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH] asus-wmi: provide access to ALS control
+Date: Tue, 12 Apr 2016 19:10:35 +0200
+Message-ID: <570D2C0B.1010409@rempel-privat.de>
+References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
+ <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35376 "EHLO
-	mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753372AbcDLN3R (ORCPT
+Received: from mout.gmx.net ([212.227.17.22]:50536 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S965072AbcDLRLU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Apr 2016 09:29:17 -0400
-Received: by mail-lf0-f66.google.com with SMTP id o124so2595291lfb.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Apr 2016 06:29:16 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20160412124920.GB8195@marvin.atrad.com.au>
+	Tue, 12 Apr 2016 13:11:20 -0400
+In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-> > Darren, even if Jonathan is happy with v1 code-wise, I was planning=
- to
-> > post a v2 with an improved commit message (as hinted before [1]).  =
-Yet,
-> > the contents of that message may depend on the results of Jonathan'=
-s
-> > tests.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll
+Content-Type: multipart/mixed; boundary="LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org
+Message-ID: <570D2C0B.1010409@rempel-privat.de>
+Subject: Re: [PATCH] asus-wmi: provide access to ALS control
+References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
+ <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+
+--LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Am 10.04.2016 um 05:06 schrieb Darren Hart:
+> On Fri, Apr 01, 2016 at 01:35:21PM +0200, Oleksij Rempel wrote:
+>> Asus Zenbook ux31a is providing ACPI0008 interface for ALS
+>> (Ambient Light Sensor), which is accessible for OS =3D> Win 7.
+>> This sensor can be used with iio/acpi-als driver.
+>> Since it is disabled by default, we should use asus-wmi
+>> interface to enable it.
+>>
 >=20
-> No problem.  You can use my posted suggestions as they are or edit as
-> appropriate.  Note the suggested comment in the code regarding the us=
-e of
-> BTNI bit 24 - again, feel free to use it as is or make changes as you=
- see
-> fit.  Darren: I'm happy to wait for the v2 patch.
+> Corentin, any concerns?
+>=20
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
+us-wmi.c
+>> index a96630d..a26dca3 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
+>>  #define ASUS_WMI_DEVID_LED6		0x00020016
+>> =20
+>>  /* Backlight and Brightness */
+>> +#define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor =
+*/
+>>  #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
+>>  #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
+>>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
+>=20
+> Following this is:
+>=20
+> #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
+>=20
+> Is there any relationship with this patch and that device? It would be =
+useful to
+> understand the difference between these two DEVIDs (a comment in the so=
+urce).
 
-Jonathan, thanks so much for taking the time to edit the commit message=
-=2E
-I like the end result, so if you're happy with it as it is, so am I.
+I don't have this ID on my laptop. Hard to say what is it.
 
-Darren, feel free to use the version of this patch suggested by
-Jonathan.  I am at your disposal in case you'd like me to take any
-further action regarding this patch.
+>=20
+> Otherwise, I'm happy with the patch.
+>=20
+>> @@ -1730,6 +1731,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS=
+_WMI_DEVID_TOUCHPAD);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESU=
+ME);
+>> +ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENAB=
+LE);
+>> =20
+>>  static ssize_t store_cpufv(struct device *dev, struct device_attribut=
+e *attr,
+>>  			   const char *buf, size_t count)
+>> @@ -1756,6 +1758,7 @@ static struct attribute *platform_attributes[] =3D=
+ {
+>>  	&dev_attr_cardr.attr,
+>>  	&dev_attr_touchpad.attr,
+>>  	&dev_attr_lid_resume.attr,
+>> +	&dev_attr_als_enable.attr,
+>>  	NULL
+>>  };
+>> =20
+>> @@ -1776,6 +1779,8 @@ static umode_t asus_sysfs_is_visible(struct kobj=
+ect *kobj,
+>>  		devid =3D ASUS_WMI_DEVID_TOUCHPAD;
+>>  	else if (attr =3D=3D &dev_attr_lid_resume.attr)
+>>  		devid =3D ASUS_WMI_DEVID_LID_RESUME;
+>> +	else if (attr =3D=3D &dev_attr_als_enable.attr)
+>> +		devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
+>> =20
+>>  	if (devid !=3D -1)
+>>  		ok =3D !(asus_wmi_get_devstate_simple(asus, devid) < 0);
+>> --=20
+>> 2.5.0
+>>
+>>
+>=20
+
 
 --=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+Regards,
+Oleksij
+
+
+--LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp--
+
+--h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlcNLA8ACgkQHwImuRkmbWmdlgEAh8nWWD8FPhC1uXRL2iKFGVaU
+WaDbnjCndP65gDx2TcMBAJKsAF1nbUq15drdRBlqRJvQw0mkk4EFPHW+G6caABtW
+=JlzG
+-----END PGP SIGNATURE-----
+
+--h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll--
