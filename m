@@ -1,75 +1,82 @@
-From: =?UTF-8?Q?=c3=89ric_Piel?= <eric.piel@tremplin-utc.net>
-Subject: Re: [PATCH] hp_accel: Add support for HP ProBook 440 G3
-Date: Mon, 11 Apr 2016 23:06:53 +0200
-Message-ID: <570C11ED.4080002@tremplin-utc.net>
-References: <1459620673-10633-1-git-send-email-martin.vajnar@gmail.com>
- <20160410031042.GC18689@dvhart-mobl5.amr.corp.intel.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
+Date: Tue, 12 Apr 2016 14:03:23 +0200
+Message-ID: <20160412120323.GA2583@eudyptula.hq.kempniu.pl>
+References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+ <20160318120418.GA29889@marvin.atrad.com.au>
+ <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
+ <20160324113513.GA5129@marvin.atrad.com.au>
+ <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
+ <20160410105258.GA2922@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp2-g21.free.fr ([212.27.42.2]:47305 "EHLO smtp2-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751360AbcDKVHE (ORCPT
+Received: from mail-lf0-f44.google.com ([209.85.215.44]:34531 "EHLO
+	mail-lf0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932467AbcDLMD2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Apr 2016 17:07:04 -0400
-In-Reply-To: <20160410031042.GC18689@dvhart-mobl5.amr.corp.intel.com>
+	Tue, 12 Apr 2016 08:03:28 -0400
+Received: by mail-lf0-f44.google.com with SMTP id j11so21792070lfb.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Apr 2016 05:03:27 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20160410105258.GA2922@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Martin Vajnar <martin.vajnar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 10-04-16 05:10, Darren Hart wrote:
-> On Sat, Apr 02, 2016 at 08:11:13PM +0200, Martin Vajnar wrote:
->> HP ProBook 440 G3 laptop needs a non-standard mapping (x_inverted_us=
-d).
->>
->> Signed-off-by: Martin Vajnar <martin.vajnar@gmail.com>
->
-> Eric, this looks good to me. Any concerns?
-Hi Darren, Martin,
+> > Where are we with this? The above reads as "Doesn't appear to break=
+ existing
+> > systems on hand". Jonathan, are you happy with this patch?
+>=20
+> Sorry, I got caught up over the last couple of weeks with other tasks=
+ and
+> have not yet managed to confirm the lack of regressions on the S7020.=
+  It
+> was on my list for this coming week though.  My comments quoted above=
+ were
+> theoretical rather than based on an actual test.  The patch appears f=
+airly
+> innoculous given that BTNI bit 24 is not set on the S7020 but for
+> completeness I would prefer to give it a run on the S7020 before we m=
+erge
+> the patch.  I will make an effort to fit this in over the next couple=
+ of
+> days.
+>=20
+> > Micha=C5=82, do you have plans for a v2?
+>=20
+> I wasn't clear on this myself.  I suspect, given the lack of a v2 in =
+the
+> time since the last discussion, that there is no v2 planned at this s=
+tage
+> and I will proceed with my testing accordingly.
 
-Indeed it looks fine :-)
+Jonathan, in one of my previous messages [1] I laid out my motivation
+for implementing this patch the way I did.  In your response [2], you
+wrote:
 
-Here is my:
-Acked-by: =C9ric Piel <eric.piel@tremplin-utc.net>
+> This is a quick reply with preliminary information.  I'll follow up i=
+n the
+> next few days with further details.
 
-Darren, could you pick it up in your tree?
+Thus, I have been patiently awaiting your response ever since as I see
+no reason to rush this patch.
 
-Thanks,
-=C9ric
+Darren, even if Jonathan is happy with v1 code-wise, I was planning to
+post a v2 with an improved commit message (as hinted before [1]).  Yet,
+the contents of that message may depend on the results of Jonathan's
+tests.
 
->
->> ---
->>   drivers/platform/x86/hp_accel.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/=
-hp_accel.c
->> index 10ce6cb..263002b 100644
->> --- a/drivers/platform/x86/hp_accel.c
->> +++ b/drivers/platform/x86/hp_accel.c
->> @@ -173,6 +173,7 @@ static int lis3lv02d_dmi_matched(const struct dm=
-i_system_id *dmi)
->>   DEFINE_CONV(normal, 1, 2, 3);
->>   DEFINE_CONV(y_inverted, 1, -2, 3);
->>   DEFINE_CONV(x_inverted, -1, 2, 3);
->> +DEFINE_CONV(x_inverted_usd, -1, 2, -3);
->>   DEFINE_CONV(z_inverted, 1, 2, -3);
->>   DEFINE_CONV(xy_swap, 2, 1, 3);
->>   DEFINE_CONV(xy_rotated_left, -2, 1, 3);
->> @@ -236,6 +237,7 @@ static const struct dmi_system_id lis3lv02d_dmi_=
-ids[] =3D {
->>   	AXIS_DMI_MATCH("HP8710", "HP Compaq 8710", y_inverted),
->>   	AXIS_DMI_MATCH("HDX18", "HP HDX 18", x_inverted),
->>   	AXIS_DMI_MATCH("HPB432x", "HP ProBook 432", xy_rotated_left),
->> +	AXIS_DMI_MATCH("HPB440G3", "HP ProBook 440 G3", x_inverted_usd),
->>   	AXIS_DMI_MATCH("HPB442x", "HP ProBook 442", xy_rotated_left),
->>   	AXIS_DMI_MATCH("HPB452x", "HP ProBook 452", y_inverted),
->>   	AXIS_DMI_MATCH("HPB522x", "HP ProBook 522", xy_swap),
->> --
->> 2.5.0
->>
->>
->
+The logical path forward for me would be to wait until Jonathan finds
+time to respond to the issues I raised and only then post a v2 with at
+least an updated commit message.  Let me know if you would like to
+handle this differently.
+
+[1] https://www.spinics.net/lists/platform-driver-x86/msg08657.html
+[2] https://www.spinics.net/lists/platform-driver-x86/msg08662.html
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
