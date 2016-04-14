@@ -1,143 +1,85 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH] asus-wmi: provide access to ALS control
-Date: Tue, 12 Apr 2016 19:10:35 +0200
-Message-ID: <570D2C0B.1010409@rempel-privat.de>
-References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
- <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
+Date: Thu, 14 Apr 2016 14:39:38 +0200
+Message-ID: <20160414123938.GA13049@amd>
+References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
+ <20160322112738.GA26924@xo-6d-61-c0.localdomain>
+ <20160412122615.GB2583@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.gmx.net ([212.227.17.22]:50536 "EHLO mout.gmx.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S965072AbcDLRLU (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Apr 2016 13:11:20 -0400
-In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160412122615.GB2583@eudyptula.hq.kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll
-Content-Type: multipart/mixed; boundary="LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp"
-From: Oleksij Rempel <linux@rempel-privat.de>
-To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org
-Message-ID: <570D2C0B.1010409@rempel-privat.de>
-Subject: Re: [PATCH] asus-wmi: provide access to ALS control
-References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
- <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
-In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+Hi!
+>=20
+> Either your clock is really off or it took you 3 weeks to get this
+> message out ;)  Just letting you know.
 
---LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Clock is off.
 
-Am 10.04.2016 um 05:06 schrieb Darren Hart:
-> On Fri, Apr 01, 2016 at 01:35:21PM +0200, Oleksij Rempel wrote:
->> Asus Zenbook ux31a is providing ACPI0008 interface for ALS
->> (Ambient Light Sensor), which is accessible for OS =3D> Win 7.
->> This sensor can be used with iio/acpi-als driver.
->> Since it is disabled by default, we should use asus-wmi
->> interface to enable it.
->>
+> > > +
+> > > +static enum led_brightness radio_led_get(struct led_classdev *cd=
+ev);
+> > > +static void radio_led_set(struct led_classdev *cdev,
+> > > +			       enum led_brightness brightness);
+> > > +
+> > > +static struct led_classdev radio_led =3D {
+> > > + .name =3D "fujitsu::radio_led",
+> > > + .brightness_get =3D radio_led_get,
+> > > + .brightness_set =3D radio_led_set
+> > > +};
+> >=20
+> > Is the naming consistent with other drivers?
 >=20
-> Corentin, any concerns?
->=20
->> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
->> ---
->>  drivers/platform/x86/asus-wmi.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
-us-wmi.c
->> index a96630d..a26dca3 100644
->> --- a/drivers/platform/x86/asus-wmi.c
->> +++ b/drivers/platform/x86/asus-wmi.c
->> @@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
->>  #define ASUS_WMI_DEVID_LED6		0x00020016
->> =20
->>  /* Backlight and Brightness */
->> +#define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor =
-*/
->>  #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
->>  #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
->>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
->=20
-> Following this is:
->=20
-> #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
->=20
-> Is there any relationship with this patch and that device? It would be =
-useful to
-> understand the difference between these two DEVIDs (a comment in the so=
-urce).
+> I am not entirely clear what you are referring to.  If it is the doub=
+le
+> colon, that seems to be the convention used throughout the
+> platform-driver-x86 tree.  If it is the LED's name ("radio_led"), I
+> failed to find a similarly purposed LED in the platform-driver-x86 tr=
+ee
+> with a name I could reuse.  I decided to use the _led suffix to
+> differentiate this LED from the "lamps" already implemented by
+> fujitsu-laptop.
 
-I don't have this ID on my laptop. Hard to say what is it.
+I'd expected the led to be called "fujitsu::rfkill" but it looks that y=
+ou
+are first one in tree with something similar, so I guess you get to
+pick the name.
 
->=20
-> Otherwise, I'm happy with the patch.
->=20
->> @@ -1730,6 +1731,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS=
-_WMI_DEVID_TOUCHPAD);
->>  ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
->>  ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
->>  ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESU=
-ME);
->> +ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENAB=
-LE);
->> =20
->>  static ssize_t store_cpufv(struct device *dev, struct device_attribut=
-e *attr,
->>  			   const char *buf, size_t count)
->> @@ -1756,6 +1758,7 @@ static struct attribute *platform_attributes[] =3D=
- {
->>  	&dev_attr_cardr.attr,
->>  	&dev_attr_touchpad.attr,
->>  	&dev_attr_lid_resume.attr,
->> +	&dev_attr_als_enable.attr,
->>  	NULL
->>  };
->> =20
->> @@ -1776,6 +1779,8 @@ static umode_t asus_sysfs_is_visible(struct kobj=
-ect *kobj,
->>  		devid =3D ASUS_WMI_DEVID_TOUCHPAD;
->>  	else if (attr =3D=3D &dev_attr_lid_resume.attr)
->>  		devid =3D ASUS_WMI_DEVID_LID_RESUME;
->> +	else if (attr =3D=3D &dev_attr_als_enable.attr)
->> +		devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
->> =20
->>  	if (devid !=3D -1)
->>  		ok =3D !(asus_wmi_get_devstate_simple(asus, devid) < 0);
->> --=20
->> 2.5.0
->>
->>
->=20
+It would be nice to have easily-available list of all the suffixes. We
+have keyboard backlights, keyboard frontlights, LED flashes, ...
 
+> > Should there be default trigger so that it works out of the box?
+>=20
+> I have covered this issue in the lengthy comment attached to this pat=
+ch:
+>=20
+> > One last remark is that I think this LED would best be driven by an
+> > inverted airplane mode LED trigger (as proposed by Jo=E3o Paulo Rec=
+hi
+> > Vita).  As the code for that trigger is not yet merged, I refrained=
+ from
+> > setting the default_trigger field in struct led_classdev radio_led.
+> > Perhaps it's a candidate for a follow-up patch in the future.
+>=20
+> I haven't found a way to make this work the intended way out of the b=
+ox,
+> not with the currently available set of LED triggers.  That being sai=
+d,
+> I would be happy if someone proved me wrong.
+
+Aha, ok.
+
+Thanks,
+								Pavel
 
 --=20
-Regards,
-Oleksij
-
-
---LKdWUFCHVhgCu5cRoBHbhcKe21UF3RxOp--
-
---h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iF4EAREIAAYFAlcNLA8ACgkQHwImuRkmbWmdlgEAh8nWWD8FPhC1uXRL2iKFGVaU
-WaDbnjCndP65gDx2TcMBAJKsAF1nbUq15drdRBlqRJvQw0mkk4EFPHW+G6caABtW
-=JlzG
------END PGP SIGNATURE-----
-
---h8VhXXc6VjFmQBhH3cgxMRt4veQLESfll--
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
