@@ -1,101 +1,136 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Thu, 14 Apr 2016 21:42:55 -0700
-Message-ID: <20160415044255.GE3232@f23x64.localdomain>
-References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
- <20160318120418.GA29889@marvin.atrad.com.au>
- <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
- <20160324113513.GA5129@marvin.atrad.com.au>
- <20160410023020.GA27081@dvhart-mobl5.amr.corp.intel.com>
- <20160410105258.GA2922@marvin.atrad.com.au>
- <20160412123634.GA8195@marvin.atrad.com.au>
+Subject: Re: [PATCH] platform:x86 decouple telemetry driver from the optional
+ IPC resources
+Date: Thu, 14 Apr 2016 22:05:53 -0700
+Message-ID: <20160415050553.GF3232@f23x64.localdomain>
+References: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
+ <CAHp75VeKgVwOQ7U9=a92hcts8tPJriRtNJ3h2nHL_BXVXc7D5Q@mail.gmail.com>
+ <570A5948.8000405@linux.intel.com>
+ <20160415003236.GA3232@f23x64.localdomain>
+ <57104F92.9060908@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39721 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:42087 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751005AbcDOEnC (ORCPT
+	with ESMTP id S1750966AbcDOFF4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 15 Apr 2016 00:43:02 -0400
+	Fri, 15 Apr 2016 01:05:56 -0400
 Content-Disposition: inline
-In-Reply-To: <20160412123634.GA8195@marvin.atrad.com.au>
+In-Reply-To: <57104F92.9060908@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, qipeng.zha@intel.com, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, Apr 12, 2016 at 10:06:34PM +0930, Jonathan Woithe wrote:
-> Hi Darren
->=20
-> On Sun, Apr 10, 2016 at 08:22:58PM +0930, Jonathan Woithe wrote:
-> > On Sat, Apr 09, 2016 at 07:30:20PM -0700, Darren Hart wrote:
-> > > Jonathan, Micha??,
-> > >=20
-> > > Where are we with this? The above reads as "Doesn't appear to bre=
-ak existing
-> > > systems on hand". Jonathan, are you happy with this patch?
-> >=20
-> > Sorry, I got caught up over the last couple of weeks with other tas=
-ks and
-> > have not yet managed to confirm the lack of regressions on the S702=
-0.  It
-> > was on my list for this coming week though.  My comments quoted abo=
-ve were
-> > theoretical rather than based on an actual test.  The patch appears=
- fairly
-> > innoculous given that BTNI bit 24 is not set on the S7020 but for
-> > completeness I would prefer to give it a run on the S7020 before we=
- merge
-> > the patch.  I will make an effort to fit this in over the next coup=
-le of
-> > days.
->=20
-> I have now tested the patch on the S7020 and unsurprisingly I have no=
-t
-> observed any regressions.  I'm therefore happy to take the patch more=
- or
-> less as is.  However, I would like to see a brief comment in
-> acpi_fujitsu_hotkey_add() about the use of bit 24 in BTNI to determin=
-e
-> whether the LED handler should be registered since the reasoning is n=
-ot
-> obvious and is not evident from the code.  A copy of the original pat=
-ch with
-> such a comment inserted (no code changes) is below.
->=20
-> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+On Fri, Apr 15, 2016 at 10:18:58AM +0800, Li, Aubrey wrote:
 
-Jonathan, please check your character set, a few mangled characters her=
-e which I
-have to fix up to use. UTF-8 seems to work reliably.
+Hi Aubrey,
 
-Your headers currently include:
-Content-Type: text/plain; charset=3Diso-8859-1
+> >>>>         res = platform_get_resource(pdev, IORESOURCE_MEM,
+> >>>>                                     PLAT_RESOURCE_ISP_DATA_INDEX);
+> >>>> -       if (!res) {
+> >>>> -               dev_err(&pdev->dev, "Failed to get res of punit ISP data\n");
+> >>>> -               return -ENXIO;
+> >>>> +       ++punit_res;
+> >>>> +       if (res) {
+> >>>> +               *punit_res = *res;
+> >>>> +               dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+> >>>
+> >>> Okay, what if you re-arrange this to some helper first
+> >>>
+> >>
+> >> Thanks for the idea, but I don't like a helper here, did you see
+> >> anything harmful of the current implementation?
+> > 
+> > In both arguments, we need to identify the WHY.
+> > 
+> > I imagine Andy is trying to reduce the copy and paste potential for error as
+> > well as error introduction in future patches. There are... 7 or so cases with
+> > near identical usage, that's a compelling argument for a refactor such as the
+> > helper Andy suggests.
+> > 
+> > Aubrey, you said you don't like it. Why is that? Will it not save enough lines
+> > of code to be worth it? Are you concerned about revalidating the change?
+> 
+> dev_info with different strings makes the helper useless, or more
+> complex than desired if we have to write a helper here.
+> 
+> Also, we have necessary resource above, which returns directly if there
+> is a error. For the coding style consistency in a routine, I really
+> don't like we call platform_get_resource() directly at first and then
+> put it into a helper later. The current implementation is
+> straightforward and clean.
 
-> Acked-by: Jonathan Woithe <jwoithe@just42.net>
->=20
-> Micha=C5=82 hasn't indicated that a revised patch is in the works so =
-I'm fine if
-> you proceed with the one below.  I've selected the relevant parts of =
-his
-> preamble for inclusion in the commit message, but feel free to edit f=
-urther
-> to your taste.
->=20
+Both of those could be addressed with arguments, macros, etc. However, that
+becomes subjective quickly, and I appreciate the incremental functional fix
+here. I think this bit is fine as is.
 
-Yeah, tough call, some guess work involved here, and where we are uncer=
-tain, we
-should document it. I don't think we need to include bits about uncerta=
-in future
-plans or speculation on how things might be done. Keep it to what this =
-patch
-does and any qualifiers a developer should be aware of.
+...
 
-I've made a couple cosmetic changes and queued to for-next. Please revi=
-ew and
-let me know if you have any concerns.
+> >>>> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+> >>>> index bd87540..a47a41f 100644
+> >>>> --- a/drivers/platform/x86/intel_punit_ipc.c
+> >>>> +++ b/drivers/platform/x86/intel_punit_ipc.c
+> >>>> @@ -227,6 +227,11 @@ static int intel_punit_get_bars(struct platform_device *pdev)
+> >>>>         struct resource *res;
+> >>>>         void __iomem *addr;
+> >>>>
+> >>>> +       /*
+> >>>> +        * The following resources are required
+> >>>> +        * - BIOS_IPC BASE_DATA
+> >>>> +        * - BIOS_IPC BASE_IFACE
+> >>>> +        */
+> >>>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >>>>         addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>>         if (IS_ERR(addr))
+> >>>> @@ -239,29 +244,40 @@ static int intel_punit_get_bars(struct platform_device *pdev)
+> >>>>                 return PTR_ERR(addr);
+> >>>>         punit_ipcdev->base[BIOS_IPC][BASE_IFACE] = addr;
+> >>>>
+> >>>> +       /*
+> >>>> +        * The following resources are optional
+> >>>> +        * - ISPDRIVER_IPC BASE_DATA
+> >>>> +        * - ISPDRIVER_IPC BASE_IFACE
+> >>>> +        * - GTDRIVER_IPC BASE_DATA
+> >>>> +        * - GTDRIVER_IPC BASE_IFACE
+> >>>> +        */
+> >>>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> >>>> -       addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>> -       if (IS_ERR(addr))
+> >>>> -               return PTR_ERR(addr);
+> >>>> -       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
+> >>>> +       if (res) {
+> >>>> +               addr = devm_ioremap_resource(&pdev->dev, res);
+> >>>> +               if (!IS_ERR(addr))
+> >>>> +                       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
+> >>>> +       }
+> >>>
+> >>> And here, what about just replacing return to dev_warn()?
+> >>
+> >> I don't think we need to continue the subsequent ops if an error address
+> >> returns.
+> > 
+> > Why is that? Will the driver fail to provide any functionality? Or could it be
+> > the other IFACEs could still be of some use?
+> > 
+> > This one does need a justification.
+> > 
+> We discussed this.
+> - For the necessary resources, if we obtain an error address, we should
+> return immediately.
+> - For the optional resources, we keep quiet if we don't get them, that
+> is, not throwing a warning out.
 
---=20
+Andy, he's checking for "res" now too, which is a good extra check since
+devm_ioremap_resource will issue a dev_err "invalid resource" if it's NULL, even
+though in our case, that's expected for an optional resource. This adds the
+extra nesting, and a dev_warn wouldn't be appropriate for an option resource.
+
+I'm happy to queue this to fixes at this point. Andy, are you OK with the
+resolution here?
+
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
