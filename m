@@ -1,7 +1,7 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH 2/2] asus-laptop: remove unused variable
-Date: Thu, 14 Apr 2016 17:34:29 -0700
-Message-ID: <20160415003429.GB3232@f23x64.localdomain>
+Date: Thu, 14 Apr 2016 17:36:00 -0700
+Message-ID: <20160415003600.GC3232@f23x64.localdomain>
 References: <1460060401-20742-1-git-send-email-giedrius.statkevicius@gmail.com>
  <1460060401-20742-2-git-send-email-giedrius.statkevicius@gmail.com>
  <20160410032121.GD18689@dvhart-mobl5.amr.corp.intel.com>
@@ -10,11 +10,11 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:52554 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:53277 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752406AbcDOAec (ORCPT
+	with ESMTP id S1752486AbcDOAgE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Apr 2016 20:34:32 -0400
+	Thu, 14 Apr 2016 20:36:04 -0400
 Content-Disposition: inline
 In-Reply-To: <20160410084852.GA5473@tyrael>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -62,7 +62,13 @@ to include
 ?
 >=20
 
-Please just rewrite this one to do the right thing as a v2.
+Sorry, my response was not clear. Please resend both patches as a v2, w=
+ith the
+first unchanged, and this one updated to do the right thing. This just =
+makes
+managing the patches as series simpler.
+
+Thank you,
 
 --=20
 Darren Hart
