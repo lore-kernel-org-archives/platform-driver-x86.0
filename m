@@ -1,35 +1,36 @@
 From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] intel_telemetry_pltdrv: silence an unintialized variable
- warning
-Date: Fri, 15 Apr 2016 17:45:58 +0300
-Message-ID: <20160415144558.GD8953@mwanda>
+Subject: [patch] thinkpad_acpi: silence an unintialized variable warning
+Date: Fri, 15 Apr 2016 17:46:34 +0300
+Message-ID: <20160415144634.GE8953@mwanda>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
 Sender: kernel-janitors-owner@vger.kernel.org
-To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Presumably "pss_period" and "ioss_period" can't both be zero, but this
-function is never called so we can't infer that using static analysis
-alone.
-
-Let's silence the warning by setting "ret" to zero.
+If fan_get_status() fails then "s" isn't initialized.  I've tweaked the
+error handling a bit to silence this warning.
 
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c b/drivers/platform/x86/intel_telemetry_pltdrv.c
-index 397119f..781bd10 100644
---- a/drivers/platform/x86/intel_telemetry_pltdrv.c
-+++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
-@@ -659,7 +659,7 @@ static int telemetry_plt_update_events(struct telemetry_evtconfig pss_evtconfig,
- static int telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)
- {
- 	u32 telem_ctrl = 0;
--	int ret;
-+	int ret = 0;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e305ab5..9255ff3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7972,10 +7972,12 @@ static int fan_get_status_safe(u8 *status)
+ 		fan_update_desired_level(s);
+ 	mutex_unlock(&fan_mutex);
  
- 	mutex_lock(&(telm_conf->telem_lock));
- 	if (ioss_period) {
++	if (rc)
++		return rc;
+ 	if (status)
+ 		*status = s;
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ static int fan_get_speed(unsigned int *speed)
