@@ -1,7 +1,7 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Jonathan Woithe <jwoithe@just42.net>
 Subject: Re: [PATCH] fujitsu-laptop: Support radio LED
-Date: Thu, 14 Apr 2016 22:44:52 -0700
-Message-ID: <20160415054417.GA127188@f23x64.localdomain>
+Date: Fri, 15 Apr 2016 15:30:15 +0930
+Message-ID: <20160415060015.GQ12741@marvin.atrad.com.au>
 References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
  <20160318120418.GA29889@marvin.atrad.com.au>
  <20160322133051.GA3379@eudyptula.hq.kempniu.pl>
@@ -11,76 +11,48 @@ References: <1458127687-25366-1-git-send-email-kernel@kempniu.pl>
  <20160412123634.GA8195@marvin.atrad.com.au>
  <20160415044255.GE3232@f23x64.localdomain>
  <20160415053333.GP12741@marvin.atrad.com.au>
+ <20160415054417.GA127188@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48613 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751145AbcDOFoz (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:38563 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751448AbcDOGAt (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 15 Apr 2016 01:44:55 -0400
+	Fri, 15 Apr 2016 02:00:49 -0400
 Content-Disposition: inline
-In-Reply-To: <20160415053333.GP12741@marvin.atrad.com.au>
+In-Reply-To: <20160415054417.GA127188@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
+To: Darren Hart <dvhart@infradead.org>
 Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 03:03:33PM +0930, Jonathan Woithe wrote:
-> On Thu, Apr 14, 2016 at 09:42:55PM -0700, Darren Hart wrote:
-> > > Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-> >=20
-> > Jonathan, please check your character set, a few mangled characters=
- here
-> > which I have to fix up to use.  UTF-8 seems to work reliably.
->=20
-> Sorry about that.  Normally UTF-8 stuff goes through just fine so I'm=
- not sure
-> what happened there.  I'll admit I've never touched the default mutt =
-charset
-> settings though so perhaps there's a corner case that's not being han=
-dled.=20
-> I'll look into it.
->=20
-> > > Acked-by: Jonathan Woithe <jwoithe@just42.net>
-> > >=20
-> > > Micha=C5=82 hasn't indicated that a revised patch is in the works=
- so I'm fine if
-> > > you proceed with the one below.  I've selected the relevant parts=
- of his
-> > > preamble for inclusion in the commit message, but feel free to ed=
-it further
-> > > to your taste.
-> >=20
-> > Yeah, tough call, some guess work involved here, and where we are
-> > uncertain, we should document it.  I don't think we need to include=
- bits
-> > about uncertain future plans or speculation on how things might be =
-done.=20
-> > Keep it to what this patch does and any qualifiers a developer shou=
-ld be
-> > aware of.
->=20
-> I agree.  Also note that a followup post from the original submitter
-> indicated they were happy to go with what I proposed.
->=20
-> > I've made a couple cosmetic changes and queued to for-next. Please =
-review
-> > and let me know if you have any concerns.
->=20
-> Sure.  Pardon my ignorance of such things, but what is the most
-> straight-forward way to review the queued commit (preferrably without
-> cloning an entire kernel git repo)?
+Hi Darren
 
-You can see the tree in the MAINTAINERS file, but I suppose that doesn'=
-t make it
-obvious how to browse it. You can do that via the git web interface on
-infradead. The direct link to this patch is here:
+On Thu, Apr 14, 2016 at 10:44:52PM -0700, Darren Hart wrote:
+> On Fri, Apr 15, 2016 at 03:03:33PM +0930, Jonathan Woithe wrote:
+> > > I've made a couple cosmetic changes and queued to for-next. Please review
+> > > and let me know if you have any concerns.
+> > 
+> > Sure.  Pardon my ignorance of such things, but what is the most
+> > straight-forward way to review the queued commit (preferrably without
+> > cloning an entire kernel git repo)?
+> 
+> You can see the tree in the MAINTAINERS file, but I suppose that doesn't
+> make it obvious how to browse it.  You can do that via the git web
+> interface on infradead.
 
-http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/co=
-mmit/34b5199d2b69f9be731233af2425c53cc7ff995b
+Oh, there is a git-web interface on that server.  I should have just
+followed my instinct.  Apologies for the noise.
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+> The direct link to this patch is here:
+> 
+> http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/commit/34b5199d2b69f9be731233af2425c53cc7ff995b
+
+The commit looks fine to me.  My only question is whether Michal should be
+credited explicitly as the author since the patch originated from him (I
+essentially just added some comments).  You know the process better than me
+though so I'll leave it up to you.
+
+Regards
+  jonathan
