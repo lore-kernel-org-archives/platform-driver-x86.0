@@ -1,47 +1,51 @@
 From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
 	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH v2 2/2] asus-laptop: correct error handling in sysfs_acpi_set
-Date: Sat, 16 Apr 2016 03:01:57 +0300
-Message-ID: <1460764917-1042-2-git-send-email-giedrius.statkevicius@gmail.com>
-References: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
+Subject: [PATCH] asus-laptop: correct error handling in asus_read_brightness()
+Date: Sat, 16 Apr 2016 03:27:12 +0300
+Message-ID: <1460766432-5390-1-git-send-email-giedrius.statkevicius@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:35049 "EHLO
+	mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751581AbcDPAbe (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 15 Apr 2016 20:31:34 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: corentin.chary@gmail.com, dvhart@infradead.org
 Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Properly return rv back to the caller in the case of an error in
-parse_arg. In the process remove a unused variable 'out'.
+It is possible that acpi_evaluate_integer might fail and value would no=
+t be
+set to any value so correct this defect by returning 0 in case of an
+error. This is also the correct thing to return because the backlight
+subsystem will print the old value of brightness in this case.
 
 Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
 com>
 ---
- drivers/platform/x86/asus-laptop.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-laptop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
 asus-laptop.c
-index d86d42e..9a69734 100644
+index 9a69734..15f1311 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -946,11 +946,10 @@ static ssize_t sysfs_acpi_set(struct asus_laptop =
-*asus,
- 			      const char *method)
- {
- 	int rv, value;
--	int out =3D 0;
+@@ -775,8 +775,10 @@ static int asus_read_brightness(struct backlight_d=
+evice *bd)
 =20
- 	rv =3D parse_arg(buf, count, &value);
--	if (rv > 0)
--		out =3D value ? 1 : 0;
-+	if (rv <=3D 0)
-+		return rv;
+ 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNESS_GET,
+ 				   NULL, &value);
+-	if (ACPI_FAILURE(rv))
++	if (ACPI_FAILURE(rv)) {
+ 		pr_warn("Error reading brightness\n");
++		return 0;
++	}
 =20
- 	if (write_acpi_int(asus->handle, method, value))
- 		return -ENODEV;
+ 	return value;
+ }
 --=20
 2.8.0
