@@ -1,17 +1,17 @@
 From: Central Trust Loan Limited <akbar.ramaputra12@kalstaronline.com>
 Subject: =?utf-8?Q?L=C3=A5netilbud?=
-Date: Mon, 18 Apr 2016 00:00:24 +0700 (WIT)
-Message-ID: <879249537.41646.1460912424879.JavaMail.zimbra@kalstaronline.com>
+Date: Mon, 18 Apr 2016 00:02:22 +0700 (WIT)
+Message-ID: <1004495727.41831.1460912542818.JavaMail.zimbra@kalstaronline.com>
 Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2.kalstaronline.com ([202.43.163.170]:45428 "EHLO
+Received: from mail2.kalstaronline.com ([202.43.163.170]:46888 "EHLO
 	mail2.kalstaronline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750921AbcDQRCk convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1750921AbcDQRE1 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Apr 2016 13:02:40 -0400
+	Sun, 17 Apr 2016 13:04:27 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 
