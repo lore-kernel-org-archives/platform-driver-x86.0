@@ -1,51 +1,54 @@
-From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH] asus-laptop: correct error handling in asus_read_brightness()
-Date: Sat, 16 Apr 2016 03:27:12 +0300
-Message-ID: <1460766432-5390-1-git-send-email-giedrius.statkevicius@gmail.com>
+From: Central Trust Loan Limited <akbar.ramaputra12@kalstaronline.com>
+Subject: =?utf-8?Q?L=C3=A5netilbud?=
+Date: Mon, 18 Apr 2016 00:00:24 +0700 (WIT)
+Message-ID: <879249537.41646.1460912424879.JavaMail.zimbra@kalstaronline.com>
+Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:35049 "EHLO
-	mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751581AbcDPAbe (ORCPT
+Received: from mail2.kalstaronline.com ([202.43.163.170]:45428 "EHLO
+	mail2.kalstaronline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750921AbcDQRCk convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 15 Apr 2016 20:31:34 -0400
+	Sun, 17 Apr 2016 13:02:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com, dvhart@infradead.org
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
 
-It is possible that acpi_evaluate_integer might fail and value would no=
-t be
-set to any value so correct this defect by returning 0 in case of an
-error. This is also the correct thing to return because the backlight
-subsystem will print the old value of brightness in this case.
+God dag,
 
-Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
-com>
----
- drivers/platform/x86/asus-laptop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Dette er CENTRAL TRUST l=C3=A5n selskaper tilbyr l=C3=A5n.
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
-asus-laptop.c
-index 9a69734..15f1311 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -775,8 +775,10 @@ static int asus_read_brightness(struct backlight_d=
-evice *bd)
-=20
- 	rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNESS_GET,
- 				   NULL, &value);
--	if (ACPI_FAILURE(rv))
-+	if (ACPI_FAILURE(rv)) {
- 		pr_warn("Error reading brightness\n");
-+		return 0;
-+	}
-=20
- 	return value;
- }
---=20
-2.8.0
+Central Trust L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
+til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
+nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 1,5%. Her er noen v=
+iktige trekk ved personlig l=C3=A5n fra sentral stoler p=C3=A5 utl=C3=A5=
+n selskaper tilbys. Her er de L=C3=A5ne Faktorer vi samarbeider med de =
+ledende britiske meglere som har tilgang til toppen l=C3=A5ngivere og v=
+=C3=A6re i stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8snin=
+gen til en rimelig price.Please, hvis du er interessert kan du kontakte=
+ oss via denne e-post: centraltrust_ltd@webadicta.org
+
+Etter reaksjonen vil du motta en s=C3=B8knad om kreditt fyll. Ingen sos=
+ial sikkerhet og ingen kredittsjekk, 100% garantert.
+Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
+
+informasjon Needed
+
+Dine navn:
+Adresse:
+telefon:
+M=C3=A5 Antall:
+Varighet:
+Okkupasjon:
+M=C3=A5nedlig inntekt:
+Kj=C3=B8nn:
+=46=C3=B8dselsdato:
+Status:
+Land:
+Hensikt:
+
+M=C3=B8t dine =C3=B8konomiske behov er v=C3=A5r stolthet.
+
+Vennlig hilsen
+David Donald
