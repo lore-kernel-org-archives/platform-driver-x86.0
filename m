@@ -1,54 +1,50 @@
-From: Central Trust Loan Limited <akbar.ramaputra12@kalstaronline.com>
-Subject: =?utf-8?Q?L=C3=A5netilbud?=
-Date: Mon, 18 Apr 2016 00:02:22 +0700 (WIT)
-Message-ID: <1004495727.41831.1460912542818.JavaMail.zimbra@kalstaronline.com>
-Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [patch] intel_telemetry_pltdrv: silence an unintialized
+ variable warning
+Date: Mon, 18 Apr 2016 04:28:11 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42CAC85CD@BGSMSX102.gar.corp.intel.com>
+References: <20160415144558.GD8953@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2.kalstaronline.com ([202.43.163.170]:46888 "EHLO
-	mail2.kalstaronline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750921AbcDQRE1 convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Apr 2016 13:04:27 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160415144558.GD8953@mwanda>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-God dag,
+Looks good...thanks Dan.
 
-Dette er CENTRAL TRUST l=C3=A5n selskaper tilbyr l=C3=A5n.
-
-Central Trust L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
-til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
-nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 1,5%. Her er noen v=
-iktige trekk ved personlig l=C3=A5n fra sentral stoler p=C3=A5 utl=C3=A5=
-n selskaper tilbys. Her er de L=C3=A5ne Faktorer vi samarbeider med de =
-ledende britiske meglere som har tilgang til toppen l=C3=A5ngivere og v=
-=C3=A6re i stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8snin=
-gen til en rimelig price.Please, hvis du er interessert kan du kontakte=
- oss via denne e-post: centraltrust_ltd@webadicta.org
-
-Etter reaksjonen vil du motta en s=C3=B8knad om kreditt fyll. Ingen sos=
-ial sikkerhet og ingen kredittsjekk, 100% garantert.
-Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
-
-informasjon Needed
-
-Dine navn:
-Adresse:
-telefon:
-M=C3=A5 Antall:
-Varighet:
-Okkupasjon:
-M=C3=A5nedlig inntekt:
-Kj=C3=B8nn:
-=46=C3=B8dselsdato:
-Status:
-Land:
-Hensikt:
-
-M=C3=B8t dine =C3=B8konomiske behov er v=C3=A5r stolthet.
-
-Vennlig hilsen
-David Donald
+> -----Original Message-----
+> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> Sent: Friday, April 15, 2016 8:16 PM
+> To: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>; platform-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org; kernel-
+> janitors@vger.kernel.org
+> Subject: [patch] intel_telemetry_pltdrv: silence an unintialized variable
+> warning
+> 
+> Presumably "pss_period" and "ioss_period" can't both be zero, but this
+> function is never called so we can't infer that using static analysis alone.
+> 
+> Let's silence the warning by setting "ret" to zero.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c
+> b/drivers/platform/x86/intel_telemetry_pltdrv.c
+> index 397119f..781bd10 100644
+> --- a/drivers/platform/x86/intel_telemetry_pltdrv.c
+> +++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
+> @@ -659,7 +659,7 @@ static int telemetry_plt_update_events(struct
+> telemetry_evtconfig pss_evtconfig,  static int
+> telemetry_plt_set_sampling_period(u8 pss_period, u8 ioss_period)  {
+>  	u32 telem_ctrl = 0;
+> -	int ret;
+> +	int ret = 0;
+> 
+>  	mutex_lock(&(telm_conf->telem_lock));
+>  	if (ioss_period) {
