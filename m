@@ -1,84 +1,45 @@
-From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: support HKEY interface
-	version 0x200
-Date: Tue, 19 Apr 2016 14:48:25 +0200
-Message-ID: <1461070105.7279.18.camel@hadess.net>
-References: <1461064294-2879-1-git-send-email-hadess@hadess.net>
-	<87k2jt7orx.fsf@nemi.mork.no>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform:x86 decouple telemetry driver from the optional
+ IPC resources
+Date: Tue, 19 Apr 2016 14:17:19 -0700
+Message-ID: <20160419211719.GD1899@f23x64.localdomain>
+References: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
+ <CAHp75VeKgVwOQ7U9=a92hcts8tPJriRtNJ3h2nHL_BXVXc7D5Q@mail.gmail.com>
+ <570A5948.8000405@linux.intel.com>
+ <20160415003236.GA3232@f23x64.localdomain>
+ <57104F92.9060908@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <87k2jt7orx.fsf-lbf33ChDnrE/G1V5fR+Y7Q@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?ISO-8859-1?Q?Bj=F8rn?= Mork <bjorn-yOkvZcmFvRU@public.gmane.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Bruce Ma <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:42961 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753852AbcDSVRV (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 19 Apr 2016 17:17:21 -0400
+Content-Disposition: inline
+In-Reply-To: <57104F92.9060908@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, qipeng.zha@intel.com, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-T24gVHVlLCAyMDE2LTA0LTE5IGF0IDE0OjQyICswMjAwLCBCasO4cm4gTW9yayB3cm90ZToKPiBC
-YXN0aWVuIE5vY2VyYSA8aGFkZXNzQGhhZGVzcy5uZXQ+IHdyaXRlczoKPiAKPiA+IAo+ID4gRnJv
-bTogU2h1ZHVvIFNhbmcgPHNodWR1by5zYW5nQGNhbm9uaWNhbC5jb20+Cj4gPiAKPiA+IFRoZSBU
-aGlua3BhZCBYMSBDYXJib24gMm5kIGdlbmVyYXRpb24gKDIwMTQpIHNoaXBzIHdpdGggQklPUyB0
-aGF0Cj4gPiB3aWxsCj4gPiByZXR1cm4gSEtFWSBpbnRlcmZhY2UgdmVyc2lvbiAweDIwMC4gSXQg
-bmVlZHMgdGhpbmtwYWQtYWNwaSBzdXBwb3J0Cj4gPiBvdGhlcndpc2UgaXQgd2lsbCBiZSByb3V0
-ZWQgdG8gd3JvbmcgYnJhbmNoIGFuZCB0aGUgaG90a2V5IG1hc2sKPiA+IHdpbGwKPiA+IGJlIHdy
-b25nLgo+ID4gCj4gPiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lk
-PTExNDczMQo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBCcnVjZSBNYSA8YnJ1Y2UubWFAY2Fub25p
-Y2FsLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IFNodWR1byBTYW5nIDxzaHVkdW8uc2FuZ0BjYW5v
-bmljYWwuY29tPgo+ID4gLS0tCj4gPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2Fj
-cGkuYyB8IDM1Cj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+ID4gwqAx
-IGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKPiA+IAo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+ID4gYi9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiA+IGluZGV4IGRhZDI5ODQuLmMx
-Nzc5MzYgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3Bp
-LmMKPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+ID4gQEAg
-LTMzNTcsMTEgKzMzNTcsOCBAQCBzdGF0aWMgaW50IF9faW5pdCBob3RrZXlfaW5pdChzdHJ1Y3QK
-PiA+IGlibV9pbml0X3N0cnVjdCAqaWlibSkKPiA+IMKgCcKgwqDCoEEzMCwgUjMwLCBSMzEsIFQy
-MC0yMiwgWDIwLTIxLCBYMjItMjQuwqDCoERldGVjdGVkIGJ5Cj4gPiBjaGVja2luZwo+ID4gwqAJ
-wqDCoMKgZm9yIEhLRVkgaW50ZXJmYWNlIHZlcnNpb24gMHgxMDAgKi8KPiA+IMKgCWlmIChhY3Bp
-X2V2YWxmKGhrZXlfaGFuZGxlLCAmaGtleXYsICJNSEtWIiwgInFkIikpIHsKPiA+IC0JCWlmICgo
-aGtleXYgPj4gOCkgIT0gMSkgewo+ID4gLQkJCXByX2VycigidW5rbm93biB2ZXJzaW9uIG9mIHRo
-ZSBIS0VZCj4gPiBpbnRlcmZhY2U6IDB4JXhcbiIsCj4gPiAtCQkJwqDCoMKgwqDCoMKgwqBoa2V5
-dik7Cj4gPiAtCQkJcHJfZXJyKCJwbGVhc2UgcmVwb3J0IHRoaXMgdG8gJXNcbiIsCj4gPiBUUEFD
-UElfTUFJTCk7Cj4gPiAtCQl9IGVsc2Ugewo+ID4gKwkJc3dpdGNoIChoa2V5diA+PiA4KSB7Cj4g
-PiArCQljYXNlIDE6Cj4gPiDCoAkJCS8qCj4gPiDCoAkJCcKgKiBNSEtWIDB4MTAwIGluIEEzMSwg
-UjQwLCBSNDBlLAo+ID4gwqAJCQnCoCogVDR4LCBYMzEsIGFuZCBsYXRlcgo+ID4gQEAgLTMzODEs
-NiArMzM3OCwzNCBAQCBzdGF0aWMgaW50IF9faW5pdCBob3RrZXlfaW5pdChzdHJ1Y3QKPiA+IGli
-bV9pbml0X3N0cnVjdCAqaWlibSkKPiA+IMKgCQkJfSBlbHNlIHsKPiA+IMKgCQkJCXRwX2ZlYXR1
-cmVzLmhvdGtleV9tYXNrID0gMTsKPiA+IMKgCQkJfQo+ID4gKwkJCWJyZWFrOwo+ID4gKwo+ID4g
-KwkJY2FzZSAyOgo+ID4gKwkJCS8qCj4gPiArCQkJwqAqIE1IS1YgMHgyMDAgaW4gWDEKPiA+ICsJ
-CQnCoCovCj4gPiArCQkJdmRiZ19wcmludGsoVFBBQ1BJX0RCR19JTklUIHwKPiA+IFRQQUNQSV9E
-QkdfSEtFWSwKPiA+ICsJCQkJImZpcm13YXJlIEhLRVkgaW50ZXJmYWNlIHZlcnNpb246Cj4gPiAw
-eCV4XG4iLAo+ID4gKwkJCQloa2V5dik7Cj4gPiArCj4gPiArCQkJLyogUGFyYW5vaWEgY2hlY2sg
-QU5EIGluaXQgaG90a2V5X2FsbF9tYXNrCj4gPiAqLwo+ID4gKwkJCWlmICghYWNwaV9ldmFsZiho
-a2V5X2hhbmRsZSwKPiA+ICZob3RrZXlfYWxsX21hc2ssCj4gPiArCQkJCQkiTUhLQSIsICJkZCIs
-IDEpKSB7Cj4gPiArCQkJCXByX2VycigibWlzc2luZyBNSEtBIGhhbmRsZXIsICIKPiA+ICsJCQkJ
-CSJwbGVhc2UgcmVwb3J0IHRoaXMgdG8KPiA+ICVzXG4iLAo+ID4gKwkJCQkJVFBBQ1BJX01BSUwp
-Owo+ID4gKwkJCQkvKiBGYWxsYmFjazogcHJlLWluaXQgZm9yCj4gPiBGTitGMyxGNCxGMTIgKi8K
-PiA+ICsJCQkJaG90a2V5X2FsbF9tYXNrID0gMHgwODBjVTsKPiA+ICsJCQl9IGVsc2Ugewo+ID4g
-KwkJCQl0cF9mZWF0dXJlcy5ob3RrZXlfbWFzayA9IDE7Cj4gPiArCQkJfQo+ID4gKwkJCWJyZWFr
-Owo+IAo+IFdoeSBkbyB5b3UgZHVwbGljYXRlIHRoaXMgY29kZSBibG9jayB3aXRoIHRoYXQgc2lu
-Z2xlIGJ5dGUgY2hhbmdlZD8KPiBJZgo+IHRoYXQgd2FzIGludGVuZGVkLCB0aGVuIGl0IGNlcnRh
-aW5seSBzaG91bGQgYmUgZXhwbGFpbmVkLgoKSSBkaWRuJ3QsIEkgcmUtc2VudCBvbmUgb2YgU2h1
-ZHVvJ3MgcGF0Y2hlcy4KCkluIGFueSBjYXNlLCBpdCBzZWVtcyB0aGF0IHRoZSBwYXRjaCBicmVh
-a3MgYSBmZXcgZGV2aWNlcyB0aGF0IGFwcGVhcmVkCmFmdGVyIHRoZSBMZW5vdm8gQ2FyYm9uIFgx
-IDIwMTQuIFRoaXMgaXMgZGlzY3Vzc2VkLCBpbiBhIGZldyBzZXBhcmF0ZQp0aHJlYWRzLCBvbiB0
-aGUgaWJtLWFjcGkgbGlzdDoKaHR0cDovL25ld3MuZ21hbmUub3JnL2dtYW5lLmxpbnV4LmFjcGku
-aWJtLWFjcGkuZGV2ZWwKCkNoZWVycwoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkZpbmQgYW5kIGZp
-eCBhcHBsaWNhdGlvbiBwZXJmb3JtYW5jZSBpc3N1ZXMgZmFzdGVyIHdpdGggQXBwbGljYXRpb25z
-IE1hbmFnZXIKQXBwbGljYXRpb25zIE1hbmFnZXIgcHJvdmlkZXMgZGVlcCBwZXJmb3JtYW5jZSBp
-bnNpZ2h0cyBpbnRvIG11bHRpcGxlIHRpZXJzIG9mCnlvdXIgYnVzaW5lc3MgYXBwbGljYXRpb25z
-LiBJdCByZXNvbHZlcyBhcHBsaWNhdGlvbiBwcm9ibGVtcyBxdWlja2x5IGFuZApyZWR1Y2VzIHlv
-dXIgTVRUUi4gR2V0IHlvdXIgZnJlZSB0cmlhbCEKaHR0cHM6Ly9hZC5kb3VibGVjbGljay5uZXQv
-ZGRtL2Nsay8zMDI5ODIxOTg7MTMwMTA1NTE2O3oKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3Bp
-LWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5l
-dC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
+On Fri, Apr 15, 2016 at 10:18:58AM +0800, Li, Aubrey wrote:
+> On 2016/4/15 8:32, Darren Hart wrote:
+> > On Sun, Apr 10, 2016 at 09:46:48PM +0800, Li, Aubrey wrote:
+> >> On 2016/4/10 21:17, Andy Shevchenko wrote:
+> >>> On Thu, Mar 31, 2016 at 10:28 PM, Aubrey Li <aubrey.li@linux.intel.com> wrote:
+> >>>> Currently the optional IPC resources prevent telemetry driver from
+> >>>> probing if these resources are not in ACPI table. This patch decouples
+> >>>> telemetry driver from these optional resources, so that telemetry driver
+> >>>> has dependency only on the necessary ACPI resources.
+> >>>
+> >>> Darren, I have comments as well.
+> >>>
+> >>>>
+> >>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+
+Lacking any additional follow-up, I've queued this to fixes for 4.6.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
