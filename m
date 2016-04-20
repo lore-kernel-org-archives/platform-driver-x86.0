@@ -1,45 +1,97 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform:x86 decouple telemetry driver from the optional
- IPC resources
-Date: Tue, 19 Apr 2016 14:17:19 -0700
-Message-ID: <20160419211719.GD1899@f23x64.localdomain>
-References: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
- <CAHp75VeKgVwOQ7U9=a92hcts8tPJriRtNJ3h2nHL_BXVXc7D5Q@mail.gmail.com>
- <570A5948.8000405@linux.intel.com>
- <20160415003236.GA3232@f23x64.localdomain>
- <57104F92.9060908@linux.intel.com>
+From: Yrjan Skrimstad <yrjansk-oe7qfRrRQff7lrOFANSjUYjpYkJvURAb@public.gmane.org>
+Subject: Re: [PATCH] thinkpad_acpi: support HKEY interface
+	version 0x200
+Date: Wed, 20 Apr 2016 11:10:43 +0200
+Message-ID: <20160420091043.GA3299@obi-wan>
+References: <1461064294-2879-1-git-send-email-hadess@hadess.net>
+	<87k2jt7orx.fsf@nemi.mork.no> <1461070105.7279.18.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42961 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753852AbcDSVRV (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Apr 2016 17:17:21 -0400
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <57104F92.9060908@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, qipeng.zha@intel.com, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1461070105.7279.18.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Bruce Ma <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, =?utf-8?B?QmrDuHJu?= Mork <bjorn-yOkvZcmFvRU@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 15, 2016 at 10:18:58AM +0800, Li, Aubrey wrote:
-> On 2016/4/15 8:32, Darren Hart wrote:
-> > On Sun, Apr 10, 2016 at 09:46:48PM +0800, Li, Aubrey wrote:
-> >> On 2016/4/10 21:17, Andy Shevchenko wrote:
-> >>> On Thu, Mar 31, 2016 at 10:28 PM, Aubrey Li <aubrey.li@linux.intel.com> wrote:
-> >>>> Currently the optional IPC resources prevent telemetry driver from
-> >>>> probing if these resources are not in ACPI table. This patch decouples
-> >>>> telemetry driver from these optional resources, so that telemetry driver
-> >>>> has dependency only on the necessary ACPI resources.
-> >>>
-> >>> Darren, I have comments as well.
-> >>>
-> >>>>
-> >>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-
-Lacking any additional follow-up, I've queued this to fixes for 4.6.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+T24gVHVlLCBBcHIgMTksIDIwMTYgYXQgMDI6NDg6MjVQTSArMDIwMCwgQmFzdGllbiBOb2NlcmEg
+d3JvdGU6Cj4gT24gVHVlLCAyMDE2LTA0LTE5IGF0IDE0OjQyICswMjAwLCBCasO4cm4gTW9yayB3
+cm90ZToKPiA+IEJhc3RpZW4gTm9jZXJhIDxoYWRlc3NAaGFkZXNzLm5ldD4gd3JpdGVzOgo+ID4g
+Cj4gPiA+IAo+ID4gPiBGcm9tOiBTaHVkdW8gU2FuZyA8c2h1ZHVvLnNhbmdAY2Fub25pY2FsLmNv
+bT4KPiA+ID4gCj4gPiA+IFRoZSBUaGlua3BhZCBYMSBDYXJib24gMm5kIGdlbmVyYXRpb24gKDIw
+MTQpIHNoaXBzIHdpdGggQklPUyB0aGF0Cj4gPiA+IHdpbGwKPiA+ID4gcmV0dXJuIEhLRVkgaW50
+ZXJmYWNlIHZlcnNpb24gMHgyMDAuIEl0IG5lZWRzIHRoaW5rcGFkLWFjcGkgc3VwcG9ydAo+ID4g
+PiBvdGhlcndpc2UgaXQgd2lsbCBiZSByb3V0ZWQgdG8gd3JvbmcgYnJhbmNoIGFuZCB0aGUgaG90
+a2V5IG1hc2sKPiA+ID4gd2lsbAo+ID4gPiBiZSB3cm9uZy4KPiA+ID4gCj4gPiA+IGh0dHBzOi8v
+YnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTE0NzMxCj4gPiA+IAo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBCcnVjZSBNYSA8YnJ1Y2UubWFAY2Fub25pY2FsLmNvbT4KPiA+ID4gU2ln
+bmVkLW9mZi1ieTogU2h1ZHVvIFNhbmcgPHNodWR1by5zYW5nQGNhbm9uaWNhbC5jb20+Cj4gPiA+
+IC0tLQo+ID4gPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyB8IDM1Cj4g
+PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tCj4gPiA+IMKgMSBmaWxlIGNo
+YW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCj4gPiA+IAo+ID4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4gPiA+IGIvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4gPiA+IGluZGV4IGRhZDI5ODQuLmMx
+Nzc5MzYgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2Fj
+cGkuYwo+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiA+
+ID4gQEAgLTMzNTcsMTEgKzMzNTcsOCBAQCBzdGF0aWMgaW50IF9faW5pdCBob3RrZXlfaW5pdChz
+dHJ1Y3QKPiA+ID4gaWJtX2luaXRfc3RydWN0ICppaWJtKQo+ID4gPiDCoAnCoMKgwqBBMzAsIFIz
+MCwgUjMxLCBUMjAtMjIsIFgyMC0yMSwgWDIyLTI0LsKgwqBEZXRlY3RlZCBieQo+ID4gPiBjaGVj
+a2luZwo+ID4gPiDCoAnCoMKgwqBmb3IgSEtFWSBpbnRlcmZhY2UgdmVyc2lvbiAweDEwMCAqLwo+
+ID4gPiDCoAlpZiAoYWNwaV9ldmFsZihoa2V5X2hhbmRsZSwgJmhrZXl2LCAiTUhLViIsICJxZCIp
+KSB7Cj4gPiA+IC0JCWlmICgoaGtleXYgPj4gOCkgIT0gMSkgewo+ID4gPiAtCQkJcHJfZXJyKCJ1
+bmtub3duIHZlcnNpb24gb2YgdGhlIEhLRVkKPiA+ID4gaW50ZXJmYWNlOiAweCV4XG4iLAo+ID4g
+PiAtCQkJwqDCoMKgwqDCoMKgwqBoa2V5dik7Cj4gPiA+IC0JCQlwcl9lcnIoInBsZWFzZSByZXBv
+cnQgdGhpcyB0byAlc1xuIiwKPiA+ID4gVFBBQ1BJX01BSUwpOwo+ID4gPiAtCQl9IGVsc2Ugewo+
+ID4gPiArCQlzd2l0Y2ggKGhrZXl2ID4+IDgpIHsKPiA+ID4gKwkJY2FzZSAxOgo+ID4gPiDCoAkJ
+CS8qCj4gPiA+IMKgCQkJwqAqIE1IS1YgMHgxMDAgaW4gQTMxLCBSNDAsIFI0MGUsCj4gPiA+IMKg
+CQkJwqAqIFQ0eCwgWDMxLCBhbmQgbGF0ZXIKPiA+ID4gQEAgLTMzODEsNiArMzM3OCwzNCBAQCBz
+dGF0aWMgaW50IF9faW5pdCBob3RrZXlfaW5pdChzdHJ1Y3QKPiA+ID4gaWJtX2luaXRfc3RydWN0
+ICppaWJtKQo+ID4gPiDCoAkJCX0gZWxzZSB7Cj4gPiA+IMKgCQkJCXRwX2ZlYXR1cmVzLmhvdGtl
+eV9tYXNrID0gMTsKPiA+ID4gwqAJCQl9Cj4gPiA+ICsJCQlicmVhazsKPiA+ID4gKwo+ID4gPiAr
+CQljYXNlIDI6Cj4gPiA+ICsJCQkvKgo+ID4gPiArCQkJwqAqIE1IS1YgMHgyMDAgaW4gWDEKPiA+
+ID4gKwkJCcKgKi8KPiA+ID4gKwkJCXZkYmdfcHJpbnRrKFRQQUNQSV9EQkdfSU5JVCB8Cj4gPiA+
+IFRQQUNQSV9EQkdfSEtFWSwKPiA+ID4gKwkJCQkiZmlybXdhcmUgSEtFWSBpbnRlcmZhY2UgdmVy
+c2lvbjoKPiA+ID4gMHgleFxuIiwKPiA+ID4gKwkJCQloa2V5dik7Cj4gPiA+ICsKPiA+ID4gKwkJ
+CS8qIFBhcmFub2lhIGNoZWNrIEFORCBpbml0IGhvdGtleV9hbGxfbWFzawo+ID4gPiAqLwo+ID4g
+PiArCQkJaWYgKCFhY3BpX2V2YWxmKGhrZXlfaGFuZGxlLAo+ID4gPiAmaG90a2V5X2FsbF9tYXNr
+LAo+ID4gPiArCQkJCQkiTUhLQSIsICJkZCIsIDEpKSB7Cj4gPiA+ICsJCQkJcHJfZXJyKCJtaXNz
+aW5nIE1IS0EgaGFuZGxlciwgIgo+ID4gPiArCQkJCQkicGxlYXNlIHJlcG9ydCB0aGlzIHRvCj4g
+PiA+ICVzXG4iLAo+ID4gPiArCQkJCQlUUEFDUElfTUFJTCk7Cj4gPiA+ICsJCQkJLyogRmFsbGJh
+Y2s6IHByZS1pbml0IGZvcgo+ID4gPiBGTitGMyxGNCxGMTIgKi8KPiA+ID4gKwkJCQlob3RrZXlf
+YWxsX21hc2sgPSAweDA4MGNVOwo+ID4gPiArCQkJfSBlbHNlIHsKPiA+ID4gKwkJCQl0cF9mZWF0
+dXJlcy5ob3RrZXlfbWFzayA9IDE7Cj4gPiA+ICsJCQl9Cj4gPiA+ICsJCQlicmVhazsKPiA+IAo+
+ID4gV2h5IGRvIHlvdSBkdXBsaWNhdGUgdGhpcyBjb2RlIGJsb2NrIHdpdGggdGhhdCBzaW5nbGUg
+Ynl0ZSBjaGFuZ2VkPwo+ID4gSWYKPiA+IHRoYXQgd2FzIGludGVuZGVkLCB0aGVuIGl0IGNlcnRh
+aW5seSBzaG91bGQgYmUgZXhwbGFpbmVkLgoKSXQgaXMgbm90IGVudGlyZWx5IGR1cGxpY2F0ZWQu
+IFRoZSBjYWxscyB0byBhY3BpX2V2YWxmIGFyZSBkaWZmZXJlbnQuCldvdWxkIGl0IGJlIGEgZ29v
+ZCBpZGVhIHRvIG1vdmUgdGhlIGNhbGwgdG8gdmRiZ19wcmludGsgaW4gYm90aCB0aGUKc3dpdGNo
+IGNhc2VzIHRvIGJlZm9yZSB0aGUgc3dpdGNoIGNhc2UgdG8gcmVkdWNlIHRoZSBjb2RlIGR1cGxp
+Y2F0aW9uPwoKTWF5YmUgYWxzbyB1cGRhdGUgdGhlIGNvbW1lbnQgaW4gY2FzZSAyIHRvIHN1Z2dl
+c3QgdGhhdCBpdCdzIHRoZSBNSEtWIGZvcgptdWx0aXBsZSBuZXdlciBtb2RlbHM/Cgo+IEkgZGlk
+bid0LCBJIHJlLXNlbnQgb25lIG9mIFNodWR1bydzIHBhdGNoZXMuCj4gCj4gSW4gYW55IGNhc2Us
+IGl0IHNlZW1zIHRoYXQgdGhlIHBhdGNoIGJyZWFrcyBhIGZldyBkZXZpY2VzIHRoYXQgYXBwZWFy
+ZWQKPiBhZnRlciB0aGUgTGVub3ZvIENhcmJvbiBYMSAyMDE0LiBUaGlzIGlzIGRpc2N1c3NlZCwg
+aW4gYSBmZXcgc2VwYXJhdGUKPiB0aHJlYWRzLCBvbiB0aGUgaWJtLWFjcGkgbGlzdDoKPiBodHRw
+Oi8vbmV3cy5nbWFuZS5vcmcvZ21hbmUubGludXguYWNwaS5pYm0tYWNwaS5kZXZlbAoKVGhpcyBw
+YXRjaCBicmVha3MgZGV2aWNlcz8gSSBmYWlsZWQgdG8gZmluZCBhbnkgbWVudGlvbiBvZiB0aGF0
+LgpEbyB5b3UgbWVhbiB0aGF0IGl0IGZpeGVzIHNvbWUgYnJva2VuIGRldmljZXMgLi4/CgotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0KRmluZCBhbmQgZml4IGFwcGxpY2F0aW9uIHBlcmZvcm1hbmNlIGlz
+c3VlcyBmYXN0ZXIgd2l0aCBBcHBsaWNhdGlvbnMgTWFuYWdlcgpBcHBsaWNhdGlvbnMgTWFuYWdl
+ciBwcm92aWRlcyBkZWVwIHBlcmZvcm1hbmNlIGluc2lnaHRzIGludG8gbXVsdGlwbGUgdGllcnMg
+b2YKeW91ciBidXNpbmVzcyBhcHBsaWNhdGlvbnMuIEl0IHJlc29sdmVzIGFwcGxpY2F0aW9uIHBy
+b2JsZW1zIHF1aWNrbHkgYW5kCnJlZHVjZXMgeW91ciBNVFRSLiBHZXQgeW91ciBmcmVlIHRyaWFs
+IQpodHRwczovL2FkLmRvdWJsZWNsaWNrLm5ldC9kZG0vY2xrLzMwMjk4MjE5ODsxMzAxMDU1MTY7
+egpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppYm0tYWNw
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0
+Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL2libS1hY3BpLWRl
+dmVsCg==
