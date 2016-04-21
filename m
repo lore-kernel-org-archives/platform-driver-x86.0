@@ -1,66 +1,48 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 2/2] asus-laptop: correct error handling in
- sysfs_acpi_set
-Date: Wed, 20 Apr 2016 13:19:55 -0700
-Message-ID: <20160420201955.GA35572@f23x64.localdomain>
-References: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
- <1460764917-1042-2-git-send-email-giedrius.statkevicius@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 0/3] Rename acpi_dev_present()
+Date: Thu, 21 Apr 2016 02:20:32 +0200
+Message-ID: <1963616.usctFDexe3@vostro.rjw.lan>
+References: <cover.1458813034.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57016 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750926AbcDTUT7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 Apr 2016 16:19:59 -0400
-Content-Disposition: inline
-In-Reply-To: <1460764917-1042-2-git-send-email-giedrius.statkevicius@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <cover.1458813034.git.lukas@wunner.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Apr 16, 2016 at 03:01:57AM +0300, Giedrius Statkevi=C4=8Dius wr=
-ote:
-> Properly return rv back to the caller in the case of an error in
-> parse_arg. In the process remove a unused variable 'out'.
+On Thursday, March 24, 2016 01:15:20 PM Lukas Wunner wrote:
+> Hi Rafael,
+> 
+> all users of acpi_dev_present() that I'm aware of have landed in
+> Linus' tree, so as discussed I'm sending you herewith a patch which
+> renames acpi_dev_present() to acpi_dev_found(), plus two patches for
+> drivers/platform/x86 which replace legacy code with acpi_dev_found().
+> Both were previously acked by Darren:
+> http://www.spinics.net/lists/linux-acpi/msg61872.html
+> http://www.spinics.net/lists/linux-acpi/msg61873.html
+> 
+> Best regards,
+> 
+> Lukas
+> 
+> 
+> Lukas Wunner (3):
+>   ACPI / utils: Rename acpi_dev_present()
+>   eeepc-wmi: Use acpi_dev_found()
+>   acer-wmi: Use acpi_dev_found()
+> 
+>  drivers/acpi/utils.c                         |  6 +++---
+>  drivers/platform/x86/acer-wmi.c              | 16 ++++------------
+>  drivers/platform/x86/eeepc-wmi.c             | 24 ++----------------------
+>  include/acpi/acpi_bus.h                      |  2 +-
+>  include/linux/apple-gmux.h                   |  2 +-
+>  sound/pci/hda/thinkpad_helper.c              |  2 +-
+>  sound/soc/intel/boards/cht_bsw_max98090_ti.c |  2 +-
+>  sound/soc/intel/boards/cht_bsw_rt5645.c      |  2 +-
+>  8 files changed, 14 insertions(+), 42 deletions(-)
 
-The initial problem if I recall was value being uninitialized. Is that =
-correct?
+All [1-3/3] applied, thanks!
 
->=20
-> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmai=
-l.com>
-> ---
->  drivers/platform/x86/asus-laptop.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
-6/asus-laptop.c
-> index d86d42e..9a69734 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -946,11 +946,10 @@ static ssize_t sysfs_acpi_set(struct asus_lapto=
-p *asus,
->  			      const char *method)
->  {
->  	int rv, value;
-> -	int out =3D 0;
-> =20
->  	rv =3D parse_arg(buf, count, &value);
-> -	if (rv > 0)
-> -		out =3D value ? 1 : 0;
-> +	if (rv <=3D 0)
-> +		return rv;
-> =20
->  	if (write_acpi_int(asus->handle, method, value))
->  		return -ENODEV;
-> --=20
-> 2.8.0
->=20
->=20
-
---=20
-Darren Hart
-Intel Open Source Technology Center
