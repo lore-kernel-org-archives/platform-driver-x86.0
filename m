@@ -1,74 +1,80 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform:x86 decouple telemetry driver from the optional
- IPC resources
-Date: Fri, 22 Apr 2016 00:13:56 +0300
-Message-ID: <CAHp75VdTYajOmA09icFF5x6d-Qib_XjNFgM_vTzh8+mhEahb2g@mail.gmail.com>
-References: <1459452489-46827-1-git-send-email-aubrey.li@linux.intel.com>
-	<CAHp75VeKgVwOQ7U9=a92hcts8tPJriRtNJ3h2nHL_BXVXc7D5Q@mail.gmail.com>
-	<570A5948.8000405@linux.intel.com>
-	<20160415003236.GA3232@f23x64.localdomain>
-	<57104F92.9060908@linux.intel.com>
-	<20160415050553.GF3232@f23x64.localdomain>
+Subject: Re: [PATCH v2 1/2] asus-laptop: remove redundant initializers
+Date: Fri, 22 Apr 2016 02:01:53 +0300
+Message-ID: <CAHp75VesGPg28bDhsXCuuQGNuwedhivY9Dd+FLWUSMeWpvhrjQ@mail.gmail.com>
+References: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f48.google.com ([209.85.218.48]:34861 "EHLO
-	mail-oi0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752431AbcDUVN6 (ORCPT
+Received: from mail-oi0-f47.google.com ([209.85.218.47]:34479 "EHLO
+	mail-oi0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751594AbcDUXBy convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Apr 2016 17:13:58 -0400
-In-Reply-To: <20160415050553.GF3232@f23x64.localdomain>
+	Thu, 21 Apr 2016 19:01:54 -0400
+In-Reply-To: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Li, Aubrey" <aubrey.li@linux.intel.com>, qipeng.zha@intel.com, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Giedrius_Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, Apr 15, 2016 at 8:05 AM, Darren Hart <dvhart@infradead.org> wrote:
-
->> >>>> +       /*
->> >>>> +        * The following resources are optional
->> >>>> +        * - ISPDRIVER_IPC BASE_DATA
->> >>>> +        * - ISPDRIVER_IPC BASE_IFACE
->> >>>> +        * - GTDRIVER_IPC BASE_DATA
->> >>>> +        * - GTDRIVER_IPC BASE_IFACE
->> >>>> +        */
->> >>>>         res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
->> >>>> -       addr = devm_ioremap_resource(&pdev->dev, res);
->> >>>> -       if (IS_ERR(addr))
->> >>>> -               return PTR_ERR(addr);
->> >>>> -       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
->> >>>> +       if (res) {
->> >>>> +               addr = devm_ioremap_resource(&pdev->dev, res);
->> >>>> +               if (!IS_ERR(addr))
->> >>>> +                       punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
->> >>>> +       }
->> >>>
->> >>> And here, what about just replacing return to dev_warn()?
->> >>
->> >> I don't think we need to continue the subsequent ops if an error address
->> >> returns.
->> >
->> > Why is that? Will the driver fail to provide any functionality? Or could it be
->> > the other IFACEs could still be of some use?
->> >
->> > This one does need a justification.
->> >
->> We discussed this.
->> - For the necessary resources, if we obtain an error address, we should
->> return immediately.
->> - For the optional resources, we keep quiet if we don't get them, that
->> is, not throwing a warning out.
+On Sat, Apr 16, 2016 at 3:01 AM, Giedrius Statkevi=C4=8Dius
+<giedrius.statkevicius@gmail.com> wrote:
+> Initializing rv to AE_OK is pointless because later function results =
+are
+> assigned to them and only then the variable is used
 >
-> Andy, he's checking for "res" now too, which is a good extra check since
-> devm_ioremap_resource will issue a dev_err "invalid resource" if it's NULL, even
-> though in our case, that's expected for an optional resource. This adds the
-> extra nesting, and a dev_warn wouldn't be appropriate for an option resource.
+> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmai=
+l.com>
+
+=46ine to me:
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> ---
+>  drivers/platform/x86/asus-laptop.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> I'm happy to queue this to fixes at this point. Andy, are you OK with the
-> resolution here?
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
+6/asus-laptop.c
+> index f2b5d0a..d86d42e 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -771,7 +771,7 @@ static int asus_read_brightness(struct backlight_=
+device *bd)
+>  {
+>         struct asus_laptop *asus =3D bl_get_data(bd);
+>         unsigned long long value;
+> -       acpi_status rv =3D AE_OK;
+> +       acpi_status rv;
+>
+>         rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNESS_=
+GET,
+>                                    NULL, &value);
+> @@ -865,7 +865,7 @@ static ssize_t infos_show(struct device *dev, str=
+uct device_attribute *attr,
+>         int len =3D 0;
+>         unsigned long long temp;
+>         char buf[16];           /* enough for all info */
+> -       acpi_status rv =3D AE_OK;
+> +       acpi_status rv;
+>
+>         /*
+>          * We use the easy way, we don't care of off and count,
+> @@ -1265,7 +1265,7 @@ static DEVICE_ATTR_RO(ls_value);
+>  static int asus_gps_status(struct asus_laptop *asus)
+>  {
+>         unsigned long long status;
+> -       acpi_status rv =3D AE_OK;
+> +       acpi_status rv;
+>
+>         rv =3D acpi_evaluate_integer(asus->handle, METHOD_GPS_STATUS,
+>                                    NULL, &status);
+> --
+> 2.8.0
+>
 
-Gmail hided this mail from me by some reason. I'm fine with the resolution.
 
--- 
+
+--=20
 With Best Regards,
 Andy Shevchenko
