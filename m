@@ -1,72 +1,47 @@
-From: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: Re: [PATCH] asus-laptop: correct error handling in
- asus_read_brightness()
-Date: Fri, 22 Apr 2016 10:43:30 +0300
-Message-ID: <20160422074329.GA15499@tyrael>
-References: <1460766432-5390-1-git-send-email-giedrius.statkevicius@gmail.com>
- <CAHp75VeS86iWKxTGVWmSgVcJ9cTgLWM7tDAmdonipB7pskJEHg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeS86iWKxTGVWmSgVcJ9cTgLWM7tDAmdonipB7pskJEHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Fix regression caused by hotkey enabling value
+Date: Fri, 22 Apr 2016 09:29:36 -0600
+Message-ID: <1461338976-5194-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f53.google.com ([209.85.218.53]:34744 "EHLO
+	mail-oi0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932211AbcDVP3m (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 22 Apr 2016 11:29:42 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Fri, Apr 22, 2016 at 02:09:22AM +0300, Andy Shevchenko wrote:
-> On Sat, Apr 16, 2016 at 3:27 AM, Giedrius Statkevi=C4=8Dius
-> <giedrius.statkevicius@gmail.com> wrote:
-> > It is possible that acpi_evaluate_integer might fail and value woul=
-d not be
-> > set to any value so correct this defect by returning 0 in case of a=
-n
-> > error. This is also the correct thing to return because the backlig=
-ht
-> > subsystem will print the old value of brightness in this case.
-> >
-> > Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gm=
-ail.com>
-> > ---
-> >  drivers/platform/x86/asus-laptop.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/=
-x86/asus-laptop.c
-> > index 9a69734..15f1311 100644
-> > --- a/drivers/platform/x86/asus-laptop.c
-> > +++ b/drivers/platform/x86/asus-laptop.c
-> > @@ -775,8 +775,10 @@ static int asus_read_brightness(struct backlig=
-ht_device *bd)
-> >
-> >         rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTNES=
-S_GET,
-> >                                    NULL, &value);
-> > -       if (ACPI_FAILURE(rv))
-> > +       if (ACPI_FAILURE(rv)) {
-> >                 pr_warn("Error reading brightness\n");
-> > +               return 0;
-> > +       }
->=20
-> This looks like a workaround.
-> I suppose the real fix is to return here an error code and fix all ca=
-llers, like
-> drivers/video/backlight/backlight.c.
->=20
+Commit 52cbae0127ad ("toshiba_acpi: Change default Hotkey enabling value")
+changed the hotkeys enabling value, as it was the same value Windows uses,
+however, it turns out that the value tells the EC that the driver will now
+take care of the hardware events like the physical RFKill switch or the
+pointing device toggle button.
 
-It just fixes the behaviour according to the current code in that file.=
- I
-suppose that would be nice but I don't think it would make any differen=
-ce
-because the backlight core code still prints out ->props.brightness in =
-case
-ops->get_brightness fails. Just the difference would be that now actual=
- error
-messages are printed in the drivers themselves instead of generic messa=
-ges from
-the backlight core. Anyway, I think the current behaviour is more usefu=
-l because
-the drivers know better about what has failed.
+This patch reverts such commit by changing the default hotkey enabling
+value to 0x09, which enables hotkey events only, making the hardware
+buttons working again.
+
+Fixes bugs 113331 and 114941.
+
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index df1f1a7..01e12d2 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -135,7 +135,7 @@ MODULE_LICENSE("GPL");
+ /* Field definitions */
+ #define HCI_ACCEL_MASK			0x7fff
+ #define HCI_HOTKEY_DISABLE		0x0b
+-#define HCI_HOTKEY_ENABLE		0x01
++#define HCI_HOTKEY_ENABLE		0x09
+ #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
+ #define HCI_LCD_BRIGHTNESS_BITS		3
+ #define HCI_LCD_BRIGHTNESS_SHIFT	(16-HCI_LCD_BRIGHTNESS_BITS)
+-- 
+2.8.1
