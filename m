@@ -1,95 +1,64 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-laptop: correct error handling in
- asus_read_brightness()
-Date: Mon, 25 Apr 2016 10:46:54 -0700
-Message-ID: <20160425174654.GD2115@f23x64.localdomain>
-References: <1460766432-5390-1-git-send-email-giedrius.statkevicius@gmail.com>
- <CAHp75VeS86iWKxTGVWmSgVcJ9cTgLWM7tDAmdonipB7pskJEHg@mail.gmail.com>
- <20160422074329.GA15499@tyrael>
+Subject: Re: [PATCH v2 2/2] asus-laptop: correct error handling in
+ sysfs_acpi_set
+Date: Mon, 25 Apr 2016 10:47:32 -0700
+Message-ID: <20160425174732.GE2115@f23x64.localdomain>
+References: <1460764917-1042-1-git-send-email-giedrius.statkevicius@gmail.com>
+ <1460764917-1042-2-git-send-email-giedrius.statkevicius@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:41017 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:41039 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754558AbcDYRq4 (ORCPT
+	with ESMTP id S1754558AbcDYRrd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Apr 2016 13:46:56 -0400
+	Mon, 25 Apr 2016 13:47:33 -0400
 Content-Disposition: inline
-In-Reply-To: <20160422074329.GA15499@tyrael>
+In-Reply-To: <1460764917-1042-2-git-send-email-giedrius.statkevicius@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 10:43:30AM +0300, Giedrius Statkevi=C4=8Dius wr=
+On Sat, Apr 16, 2016 at 03:01:57AM +0300, Giedrius Statkevi=C4=8Dius wr=
 ote:
-> On Fri, Apr 22, 2016 at 02:09:22AM +0300, Andy Shevchenko wrote:
-> > On Sat, Apr 16, 2016 at 3:27 AM, Giedrius Statkevi=C4=8Dius
-> > <giedrius.statkevicius@gmail.com> wrote:
-> > > It is possible that acpi_evaluate_integer might fail and value wo=
-uld not be
-> > > set to any value so correct this defect by returning 0 in case of=
- an
-> > > error. This is also the correct thing to return because the backl=
-ight
-> > > subsystem will print the old value of brightness in this case.
-> > >
-> > > Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@=
-gmail.com>
-> > > ---
-> > >  drivers/platform/x86/asus-laptop.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platfor=
-m/x86/asus-laptop.c
-> > > index 9a69734..15f1311 100644
-> > > --- a/drivers/platform/x86/asus-laptop.c
-> > > +++ b/drivers/platform/x86/asus-laptop.c
-> > > @@ -775,8 +775,10 @@ static int asus_read_brightness(struct backl=
-ight_device *bd)
-> > >
-> > >         rv =3D acpi_evaluate_integer(asus->handle, METHOD_BRIGHTN=
-ESS_GET,
-> > >                                    NULL, &value);
-> > > -       if (ACPI_FAILURE(rv))
-> > > +       if (ACPI_FAILURE(rv)) {
-> > >                 pr_warn("Error reading brightness\n");
-> > > +               return 0;
-> > > +       }
-> >=20
-> > This looks like a workaround.
-> > I suppose the real fix is to return here an error code and fix all =
-callers, like
-> > drivers/video/backlight/backlight.c.
-> >=20
+> Properly return rv back to the caller in the case of an error in
+> parse_arg. In the process remove a unused variable 'out'.
 >=20
-> It just fixes the behaviour according to the current code in that fil=
-e. I
-> suppose that would be nice but I don't think it would make any differ=
-ence
-> because the backlight core code still prints out ->props.brightness i=
-n case
-> ops->get_brightness fails. Just the difference would be that now actu=
-al error
-> messages are printed in the drivers themselves instead of generic mes=
-sages from
-> the backlight core. Anyway, I think the current behaviour is more use=
-ful because
-> the drivers know better about what has failed.
+> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmai=
+l.com>
+
+1 and 2 queued for 4.7.
+
+> ---
+>  drivers/platform/x86/asus-laptop.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >=20
-
-As a matter of practice, based on feedback from the previous pdx86 main=
-tainers,
-I prefer to accept patches which fix an immediate issue and leave the r=
-ework or
-broader work as a follow-on, or a TODO item.
-
-We should look for a good place to document these TODOs.
-
-Queued for 4.7.
-
-Thanks,
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
+6/asus-laptop.c
+> index d86d42e..9a69734 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -946,11 +946,10 @@ static ssize_t sysfs_acpi_set(struct asus_lapto=
+p *asus,
+>  			      const char *method)
+>  {
+>  	int rv, value;
+> -	int out =3D 0;
+> =20
+>  	rv =3D parse_arg(buf, count, &value);
+> -	if (rv > 0)
+> -		out =3D value ? 1 : 0;
+> +	if (rv <=3D 0)
+> +		return rv;
+> =20
+>  	if (write_acpi_int(asus->handle, method, value))
+>  		return -ENODEV;
+> --=20
+> 2.8.0
+>=20
+>=20
 
 --=20
 Darren Hart
