@@ -1,223 +1,135 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform:x86: Add PMC Driver for Intel Core SOC
-Date: Mon, 25 Apr 2016 11:10:49 -0700
-Message-ID: <20160425181049.GF2115@f23x64.localdomain>
-References: <1461236605-27245-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <20160421124728.GA8392@tyrael>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is suspended
+Date: Mon, 25 Apr 2016 22:06:11 +0200
+Message-ID: <CABFtUbTczjpda2Ld698ZbfJmDFX_qcXVpPR_nECrj4oJxJKgJw@mail.gmail.com>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+	<CABFtUbTy+zWgGOk4C998yNn=A91VF5o7ye5piTN5CuSBFKW9_g@mail.gmail.com>
+	<20160328173309.GA26086@dvhart-mobl5.amr.corp.intel.com>
+	<4072492.lANJWhSkYa@vostro.rjw.lan>
+	<20160418123547.GK29406@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:34162 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932905AbcDYSKv (ORCPT
+Received: from mail-qg0-f68.google.com ([209.85.192.68]:36815 "EHLO
+	mail-qg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933160AbcDYUGM convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Apr 2016 14:10:51 -0400
-Content-Disposition: inline
-In-Reply-To: <20160421124728.GA8392@tyrael>
+	Mon, 25 Apr 2016 16:06:12 -0400
+In-Reply-To: <20160418123547.GK29406@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, vishwanath.somayaji@intel.com
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-On Thu, Apr 21, 2016 at 03:47:29PM +0300, Giedrius Statkevi=C4=8Dius wr=
-ote:
-> On Thu, Apr 21, 2016 at 04:33:25PM +0530, Rajneesh Bhardwaj wrote:
-> [...]
->=20
-> Just some minor things I've spotted and one error is probably uncheck=
-ed.
->=20
-> [...]
-> > diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm=
-/pmc_core.h
-> > new file mode 100644
-> > index 0000000..3ea61bf
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/pmc_core.h
-> > @@ -0,0 +1,53 @@
-> > +/*
-> > + * Intel Core SOC Power Management Controller Header File
-> > + *
-> > + * Copyright (c) 2016, Intel Corporation.
-> > + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
-> > + *
-> > + * This program is free software; you can redistribute it and/or m=
-odify it
-> > + * under the terms and conditions of the GNU General Public Licens=
-e,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but =
-WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
-> > + * more details.
-> > + *
-> > + */
-> > +
-> > +#ifndef PMC_CORE_H
-> > +#define PMC_CORE_H
-> > +
-> > +/* Skylake Power Management Controller PCI Device ID */
-> > +#define PCI_DEVICE_ID_SKL_PMC   0x9d21
-> > +#define PMC_BASE_ADDR_OFFSET    0x48
-> > +#define PMC_SLP_S0_RESIDENCY_COUNTER 0x13c
-> > +#define PMC_MMIO_REG_LEN        0x100
-> > +#define PMC_REG_BIT_WIDTH       0x20
-> > +#define SLP_S0_RESIDENCY_COUNTER_GRANULARITY 0x64
->=20
-> Inconsistent spaces. Maybe just use one space.
->=20
-> [...]
->=20
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platfo=
-rm/x86/intel_pmc_core.c
-> > new file mode 100644
-> > index 0000000..42cee87
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -0,0 +1,200 @@
-> > +/*
-> > + * Intel Core SOC Power Management Controller Driver
-> > + *
-> > + * Copyright (c) 2016, Intel Corporation.
-> > + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
-> > + *
-> > + * This program is free software; you can redistribute it and/or m=
-odify it
-> > + * under the terms and conditions of the GNU General Public Licens=
-e,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but =
-WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
-> > + * more details.
-> > + *
-> > + */
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/device.h>
-> > +#include <linux/debugfs.h>
-> > +#include <linux/seq_file.h>
-> > +#include <linux/module.h>
-> > +#include <linux/io.h>
-> > +#include <asm/cpu_device_id.h>
-> > +#include <asm/pmc_core.h>
-> > +
-> > +static struct pmc_dev pmc;
-> > +
-> > +static const struct pci_device_id pmc_pci_ids[] =3D {
-> > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_SKL_PMC), (kernel_ulong_t)NULL=
- },
->=20
-> Minor thing here but maybe just use a simple 0 here instead of
-> (kernel_ulong_t)NULL? In the other places as well.
->=20
-> [...]
->=20
+2016-04-18 14:35 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> On Tuesday 29 March 2016 15:11:35 Rafael J. Wysocki wrote:
+>> On Monday, March 28, 2016 10:33:09 AM Darren Hart wrote:
+>> > On Thu, Mar 24, 2016 at 12:24:56PM +0100, Gabriele Mazzotta wrote:
+>> > > 2016-03-24 10:39 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com=
+>:
+>> > > > On Monday 21 March 2016 16:13:34 Gabriele Mazzotta wrote:
+>> > > >> 2016-03-21 13:17 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.=
+com>:
+>> > > >> > On Friday 18 March 2016 23:44:23 Gabriele Mazzotta wrote:
+>> > > >> >> +#ifdef CONFIG_PM_SLEEP
+>> > > >> >> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *=
+context)
+>> > > >> >> +{
+>> > > >> >> +     struct rbtn_data *rbtn_data =3D context;
+>> > > >> >> +
+>> > > >> >> +     rbtn_data->suspended =3D false;
+>> > > >> >> +}
+>> > > >> >> +
+>> > > >> >> +static int rbtn_suspend(struct device *dev)
+>> > > >> >> +{
+>> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev);
+>> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(dev=
+ice);
+>> > > >> >> +
+>> > > >> >> +     rbtn_data->suspended =3D true;
+>> > > >> >> +
+>> > > >> >> +     return 0;
+>> > > >> >> +}
+>> > > >> >> +
+>> > > >> >> +static int rbtn_resume(struct device *dev)
+>> > > >> >> +{
+>> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev);
+>> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(dev=
+ice);
+>> > > >> >> +     acpi_status status;
+>> > > >> >> +
+>> > > >> >> +     /*
+>> > > >> >> +      * Clear the flag only after we received the extra
+>> > > >> >> +      * ACPI notification.
+>> > > >> >> +      */
+>> > > >> >> +     status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
+>> > > >> >> +                      rbtn_acpi_clear_flag, rbtn_data);
+>> > > >> >> +     if (ACPI_FAILURE(status))
+>> > > >> >> +             rbtn_data->suspended =3D false;
+>> > > >> >
+>> > > >> > I case when acpi_os_execute success it calls rbtn_acpi_clea=
+r_flag,
+>> > > >> > right? And that will set suspended to false. When acpi_os_e=
+xecute fails,
+>> > > >> > then it set suspended too to false... Then whole acpi_os_ex=
+ecute doing
+>> > > >> > just "barrier" after which suspended flag can be set to fal=
+se. So I
+>> > > >> > think rbtn_acpi_clear_flag function is not needed here.
+>> > > >> >
+>> > > >> > Cannot you pass NULL or empty function pointer as callback?=
+ Or what was
+>> > > >> > reason to do that flag clearing at "two places"?
+>> > > >>
+>> > > >> acpi_os_execute doesn't wait for the callback to be executed,=
+ so
+>> > > >> I can't clear the flag from rbtn_resume.
+>> > > >
+>> > > > acpi_os_execute calls callback asynchronously later? Or what e=
+xactly do it?
+>> > >
+>> > > In this case, it adds the callback to the kacpi_notify_wq workqu=
+eue
+>> > > for deferred execution.
+>> >
+>> > +Rafael for context/advice on the use of acpi_os_execute here.
+>> >
+>> > This is true, but a quick scan through that call path doesn't tell=
+ me why we
+>> > would need to call it here instead of just setting rbtn_data->susp=
+ended =3D false.
+>> > The comment suggests waiting for the event, but is that what this =
+is doing? It
+>> > appears to me to be immediately scheduling the function to a work =
+queue, not
+>> > waiting for the event notifier.
+>>
+>> I think this is supposed to work as a barrier.  That is, it will onl=
+y run after
+>> all events in the queue have been processed.
+>>
+>> I'm not sure if that's necessary, though.
+>>
+>> Thanks,
+>> Rafael
+>>
+>
+> Darren, Gabriele, what is state of this patch? Bug is not still fixed=
+,
+> right?
 
-Please provide the rational for a request for change. What do you think=
- is wrong
-with the above? There is precedent in the kernel today for this usage. =
-Is it
-wrong? Unnecessary? Subjectively ugly?
+Yes, the bug is still there and this patch fixes it.
 
-> > +static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
-> > +{
-> > +	return 0; /* nothing to register */
-> > +}
-> > +
-> > +#endif /* CONFIG_DEBUG_FS */
-> > +
-> > +static const struct x86_cpu_id intel_pmc_core_ids[] =3D {
-> > +	{ X86_VENDOR_INTEL, 6, 0x4e, X86_FEATURE_MWAIT,
-> > +		(kernel_ulong_t)NULL}, /* SKL CPU*/
-> > +	{ X86_VENDOR_INTEL, 6, 0x5e, X86_FEATURE_MWAIT,
-> > +		(kernel_ulong_t)NULL}, /* SKL CPU*/
-> > +	{}
->=20
-> A space after CPU? SKL? I assume this means skylake so perhaps add th=
-e whole
-> name.
->=20
+Just to make it clear, we need the barrier. Andrei could reproduce
+the bug without it [1], but not with it, as he confirmed in this
+thread [2].
 
-The three letter CPU code is very common throughout the kernel of Intel=
- CPUs.
-NHM,WSM,SNB,IVB,BYT,HSW,BDW,SKL, etc.
+[1] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/800=
+1
+[2] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/893=
+7
 
-Those are becoming more and more difficult to grep for though, so a ful=
-l
-expansion now and then would certainly be nice :-)
-
-> > +};
-> > +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
-> > +
-> > +static int pmc_core_probe(struct pci_dev *dev, const struct pci_de=
-vice_id *id)
-> > +{
-> > +	int err;
-> > +	const struct x86_cpu_id *cpu_id;
-> > +
-> > +	cpu_id =3D x86_match_cpu(intel_pmc_core_ids);
-> > +	if (!cpu_id)
-> > +		return -EINVAL;
-> > +
-> > +	err =3D pci_enable_device(dev);
-> > +	if (err) {
-> > +		dev_err(&dev->dev, "PMC Core: failed to enable Power Management =
-Controller.\n");
-> > +		goto exit;
-> > +	}
-> > +
-> > +	pci_read_config_dword(dev, PMC_BASE_ADDR_OFFSET, &pmc.base_addr);
->=20
-> Shouldn't the return value of this function be checked if an error oc=
-cured? Also
-
-Yes please.
-
-> while we are at it maybe the label names could be improved. For examp=
-le:
-> err_disable_dev; err_return
->=20
-
-This is more typical, although "out" or "err_out" if only used in the e=
-rror
-case. However, if the label does nothing but return with an error code,=
- be sure
-to be consistent in it's usage. Don't do "return -EINVAL" and "ret =3D =
--EINVAL;
-goto err_out;" in the same function.
-
-
-Thanks,
-
-> > +	err =3D pmc_core_dbgfs_register(&pmc);
-> > +	if (err) {
-> > +		dev_err(&dev->dev, "PMC Core: debugfs register failed\n");
-> > +		iounmap(pmc.regmap);
-> > +		goto disable;
-> > +	}
-> > +
-> > +	pmc.feature_available =3D 1;
-> > +	return 0;
-> > +
-> > +disable:
-> > +	pci_disable_device(dev);
-> > +exit:
-> > +	return err;
-> > +}
-> > +
->=20
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
