@@ -1,135 +1,136 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is suspended
-Date: Mon, 25 Apr 2016 22:06:11 +0200
-Message-ID: <CABFtUbTczjpda2Ld698ZbfJmDFX_qcXVpPR_nECrj4oJxJKgJw@mail.gmail.com>
-References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
-	<CABFtUbTy+zWgGOk4C998yNn=A91VF5o7ye5piTN5CuSBFKW9_g@mail.gmail.com>
-	<20160328173309.GA26086@dvhart-mobl5.amr.corp.intel.com>
-	<4072492.lANJWhSkYa@vostro.rjw.lan>
-	<20160418123547.GK29406@pali>
+From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>
+Subject: RE: [PATCH] platform:x86: Add PMC Driver for Intel Core SOC
+Date: Tue, 26 Apr 2016 05:10:31 +0000
+Message-ID: <DA43BA71CEE1344FB5BAE72044B8141E2CA91A72@BGSMSX102.gar.corp.intel.com>
+References: <1461236605-27245-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <20160421124728.GA8392@tyrael> <20160425181049.GF2115@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qg0-f68.google.com ([209.85.192.68]:36815 "EHLO
-	mail-qg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933160AbcDYUGM convert rfc822-to-8bit (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:64724 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750869AbcDZFKx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Apr 2016 16:06:12 -0400
-In-Reply-To: <20160418123547.GK29406@pali>
+	Tue, 26 Apr 2016 01:10:53 -0400
+In-Reply-To: <20160425181049.GF2115@f23x64.localdomain>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Darren Hart <dvhart@infradead.org>, Giedrius Statkevicius <giedrius.statkevicius@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>
 
-2016-04-18 14:35 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> On Tuesday 29 March 2016 15:11:35 Rafael J. Wysocki wrote:
->> On Monday, March 28, 2016 10:33:09 AM Darren Hart wrote:
->> > On Thu, Mar 24, 2016 at 12:24:56PM +0100, Gabriele Mazzotta wrote:
->> > > 2016-03-24 10:39 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com=
->:
->> > > > On Monday 21 March 2016 16:13:34 Gabriele Mazzotta wrote:
->> > > >> 2016-03-21 13:17 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.=
-com>:
->> > > >> > On Friday 18 March 2016 23:44:23 Gabriele Mazzotta wrote:
->> > > >> >> +#ifdef CONFIG_PM_SLEEP
->> > > >> >> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *=
-context)
->> > > >> >> +{
->> > > >> >> +     struct rbtn_data *rbtn_data =3D context;
->> > > >> >> +
->> > > >> >> +     rbtn_data->suspended =3D false;
->> > > >> >> +}
->> > > >> >> +
->> > > >> >> +static int rbtn_suspend(struct device *dev)
->> > > >> >> +{
->> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev);
->> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(dev=
-ice);
->> > > >> >> +
->> > > >> >> +     rbtn_data->suspended =3D true;
->> > > >> >> +
->> > > >> >> +     return 0;
->> > > >> >> +}
->> > > >> >> +
->> > > >> >> +static int rbtn_resume(struct device *dev)
->> > > >> >> +{
->> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev);
->> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(dev=
-ice);
->> > > >> >> +     acpi_status status;
->> > > >> >> +
->> > > >> >> +     /*
->> > > >> >> +      * Clear the flag only after we received the extra
->> > > >> >> +      * ACPI notification.
->> > > >> >> +      */
->> > > >> >> +     status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
->> > > >> >> +                      rbtn_acpi_clear_flag, rbtn_data);
->> > > >> >> +     if (ACPI_FAILURE(status))
->> > > >> >> +             rbtn_data->suspended =3D false;
->> > > >> >
->> > > >> > I case when acpi_os_execute success it calls rbtn_acpi_clea=
-r_flag,
->> > > >> > right? And that will set suspended to false. When acpi_os_e=
-xecute fails,
->> > > >> > then it set suspended too to false... Then whole acpi_os_ex=
-ecute doing
->> > > >> > just "barrier" after which suspended flag can be set to fal=
-se. So I
->> > > >> > think rbtn_acpi_clear_flag function is not needed here.
->> > > >> >
->> > > >> > Cannot you pass NULL or empty function pointer as callback?=
- Or what was
->> > > >> > reason to do that flag clearing at "two places"?
->> > > >>
->> > > >> acpi_os_execute doesn't wait for the callback to be executed,=
- so
->> > > >> I can't clear the flag from rbtn_resume.
->> > > >
->> > > > acpi_os_execute calls callback asynchronously later? Or what e=
-xactly do it?
->> > >
->> > > In this case, it adds the callback to the kacpi_notify_wq workqu=
-eue
->> > > for deferred execution.
->> >
->> > +Rafael for context/advice on the use of acpi_os_execute here.
->> >
->> > This is true, but a quick scan through that call path doesn't tell=
- me why we
->> > would need to call it here instead of just setting rbtn_data->susp=
-ended =3D false.
->> > The comment suggests waiting for the event, but is that what this =
-is doing? It
->> > appears to me to be immediately scheduling the function to a work =
-queue, not
->> > waiting for the event notifier.
->>
->> I think this is supposed to work as a barrier.  That is, it will onl=
-y run after
->> all events in the queue have been processed.
->>
->> I'm not sure if that's necessary, though.
->>
->> Thanks,
->> Rafael
->>
->
-> Darren, Gabriele, what is state of this patch? Bug is not still fixed=
-,
-> right?
-
-Yes, the bug is still there and this patch fixes it.
-
-Just to make it clear, we need the barrier. Andrei could reproduce
-the bug without it [1], but not with it, as he confirmed in this
-thread [2].
-
-[1] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/800=
-1
-[2] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/893=
-7
-
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+VGhhbmtzIGZvciB0aGUgcmV2aWV3ICwgd2lsbCBzZW5kIHRoZSByZXZpc2VkIHBhdGNoIHYyDQog
+d2l0aCBhbGwgcmV2aWV3IGNvbW1lbnRzIGFkZHJlc3NlZCBzbyBmYXIuDQoNClJlZ2FyZHMNClJh
+am5lZXNoDQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRGFycmVuIEhh
+cnQgW21haWx0bzpkdmhhcnRAaW5mcmFkZWFkLm9yZ10NCj5TZW50OiBNb25kYXksIEFwcmlsIDI1
+LCAyMDE2IDExOjQxIFBNDQo+VG86IEdpZWRyaXVzIFN0YXRrZXZpxI1pdXMgPGdpZWRyaXVzLnN0
+YXRrZXZpY2l1c0BnbWFpbC5jb20+DQo+Q2M6IEJoYXJkd2FqLCBSYWpuZWVzaCA8cmFqbmVlc2gu
+YmhhcmR3YWpAaW50ZWwuY29tPjsgcGxhdGZvcm0tZHJpdmVyLQ0KPng4NkB2Z2VyLmtlcm5lbC5v
+cmc7IFNvbWF5YWppLCBWaXNod2FuYXRoDQo+PHZpc2h3YW5hdGguc29tYXlhamlAaW50ZWwuY29t
+Pg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBsYXRmb3JtOng4NjogQWRkIFBNQyBEcml2ZXIgZm9y
+IEludGVsIENvcmUgU09DDQo+DQo+T24gVGh1LCBBcHIgMjEsIDIwMTYgYXQgMDM6NDc6MjlQTSAr
+MDMwMCwgR2llZHJpdXMgU3RhdGtldmnEjWl1cyB3cm90ZToNCj4+IE9uIFRodSwgQXByIDIxLCAy
+MDE2IGF0IDA0OjMzOjI1UE0gKzA1MzAsIFJham5lZXNoIEJoYXJkd2FqIHdyb3RlOg0KPj4gWy4u
+Ll0NCj4+DQo+PiBKdXN0IHNvbWUgbWlub3IgdGhpbmdzIEkndmUgc3BvdHRlZCBhbmQgb25lIGVy
+cm9yIGlzIHByb2JhYmx5IHVuY2hlY2tlZC4NCj4+DQo+PiBbLi4uXQ0KPj4gPiBkaWZmIC0tZ2l0
+IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcG1jX2NvcmUuaA0KPj4gPiBiL2FyY2gveDg2L2luY2x1
+ZGUvYXNtL3BtY19jb3JlLmggbmV3IGZpbGUgbW9kZSAxMDA2NDQgaW5kZXgNCj4+ID4gMDAwMDAw
+MC4uM2VhNjFiZg0KPj4gPiAtLS0gL2Rldi9udWxsDQo+PiA+ICsrKyBiL2FyY2gveDg2L2luY2x1
+ZGUvYXNtL3BtY19jb3JlLmgNCj4+ID4gQEAgLTAsMCArMSw1MyBAQA0KPj4gPiArLyoNCj4+ID4g
+KyAqIEludGVsIENvcmUgU09DIFBvd2VyIE1hbmFnZW1lbnQgQ29udHJvbGxlciBIZWFkZXIgRmls
+ZQ0KPj4gPiArICoNCj4+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxNiwgSW50ZWwgQ29ycG9yYXRp
+b24uDQo+PiA+ICsgKiBBdXRob3I6IFJham5lZXNoIEJoYXJkd2FqIChyYWpuZWVzaC5iaGFyZHdh
+akBpbnRlbC5jb20pDQo+PiA+ICsgKg0KPj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
+dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPj4gPiArbW9kaWZ5IGl0DQo+
+PiA+ICsgKiB1bmRlciB0aGUgdGVybXMgYW5kIGNvbmRpdGlvbnMgb2YgdGhlIEdOVSBHZW5lcmFs
+IFB1YmxpYw0KPj4gPiArTGljZW5zZSwNCj4+ID4gKyAqIHZlcnNpb24gMiwgYXMgcHVibGlzaGVk
+IGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uDQo+PiA+ICsgKg0KPj4gPiArICogVGhp
+cyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIGl0IHdpbGwgYmUgdXNlZnVsLCBi
+dXQNCj4+ID4gK1dJVEhPVVQNCj4+ID4gKyAqIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRo
+ZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+PiA+ICtNRVJDSEFOVEFCSUxJVFkgb3INCj4+ID4gKyAq
+IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZSBHTlUgR2VuZXJhbCBQ
+dWJsaWMNCj4+ID4gK0xpY2Vuc2UgZm9yDQo+PiA+ICsgKiBtb3JlIGRldGFpbHMuDQo+PiA+ICsg
+Kg0KPj4gPiArICovDQo+PiA+ICsNCj4+ID4gKyNpZm5kZWYgUE1DX0NPUkVfSA0KPj4gPiArI2Rl
+ZmluZSBQTUNfQ09SRV9IDQo+PiA+ICsNCj4+ID4gKy8qIFNreWxha2UgUG93ZXIgTWFuYWdlbWVu
+dCBDb250cm9sbGVyIFBDSSBEZXZpY2UgSUQgKi8NCj4+ID4gKyNkZWZpbmUgUENJX0RFVklDRV9J
+RF9TS0xfUE1DICAgMHg5ZDIxDQo+PiA+ICsjZGVmaW5lIFBNQ19CQVNFX0FERFJfT0ZGU0VUICAg
+IDB4NDgNCj4+ID4gKyNkZWZpbmUgUE1DX1NMUF9TMF9SRVNJREVOQ1lfQ09VTlRFUiAweDEzYw0K
+Pj4gPiArI2RlZmluZSBQTUNfTU1JT19SRUdfTEVOICAgICAgICAweDEwMA0KPj4gPiArI2RlZmlu
+ZSBQTUNfUkVHX0JJVF9XSURUSCAgICAgICAweDIwDQo+PiA+ICsjZGVmaW5lIFNMUF9TMF9SRVNJ
+REVOQ1lfQ09VTlRFUl9HUkFOVUxBUklUWSAweDY0DQo+Pg0KPj4gSW5jb25zaXN0ZW50IHNwYWNl
+cy4gTWF5YmUganVzdCB1c2Ugb25lIHNwYWNlLg0KPj4NCj4+IFsuLi5dDQo+Pg0KPj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPj4gPiBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4+ID4gaW5kZXggMDAwMDAwMC4uNDJjZWU4Nw0KPj4gPiAtLS0gL2Rldi9udWxsDQo+
+PiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4+ID4gQEAg
+LTAsMCArMSwyMDAgQEANCj4+ID4gKy8qDQo+PiA+ICsgKiBJbnRlbCBDb3JlIFNPQyBQb3dlciBN
+YW5hZ2VtZW50IENvbnRyb2xsZXIgRHJpdmVyDQo+PiA+ICsgKg0KPj4gPiArICogQ29weXJpZ2h0
+IChjKSAyMDE2LCBJbnRlbCBDb3Jwb3JhdGlvbi4NCj4+ID4gKyAqIEF1dGhvcjogUmFqbmVlc2gg
+QmhhcmR3YWogKHJham5lZXNoLmJoYXJkd2FqQGludGVsLmNvbSkNCj4+ID4gKyAqDQo+PiA+ICsg
+KiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQg
+YW5kL29yDQo+PiA+ICttb2RpZnkgaXQNCj4+ID4gKyAqIHVuZGVyIHRoZSB0ZXJtcyBhbmQgY29u
+ZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljDQo+PiA+ICtMaWNlbnNlLA0KPj4gPiAr
+ICogdmVyc2lvbiAyLCBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlv
+bi4NCj4+ID4gKyAqDQo+PiA+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhl
+IGhvcGUgaXQgd2lsbCBiZSB1c2VmdWwsIGJ1dA0KPj4gPiArV0lUSE9VVA0KPj4gPiArICogQU5Z
+IFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4+ID4gK01F
+UkNIQU5UQUJJTElUWSBvcg0KPj4gPiArICogRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
+U0UuICBTZWUgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYw0KPj4gPiArTGljZW5zZSBmb3INCj4+ID4g
+KyAqIG1vcmUgZGV0YWlscy4NCj4+ID4gKyAqDQo+PiA+ICsgKi8NCj4+ID4gKw0KPj4gPiArI2lu
+Y2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4+ID4g
+KyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9kZWJ1Z2Zz
+Lmg+DQo+PiA+ICsjaW5jbHVkZSA8bGludXgvc2VxX2ZpbGUuaD4NCj4+ID4gKyNpbmNsdWRlIDxs
+aW51eC9tb2R1bGUuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPj4gPiArI2luY2x1
+ZGUgPGFzbS9jcHVfZGV2aWNlX2lkLmg+DQo+PiA+ICsjaW5jbHVkZSA8YXNtL3BtY19jb3JlLmg+
+DQo+PiA+ICsNCj4+ID4gK3N0YXRpYyBzdHJ1Y3QgcG1jX2RldiBwbWM7DQo+PiA+ICsNCj4+ID4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBwbWNfcGNpX2lkc1tdID0gew0KPj4g
+PiArCXsgUENJX1ZERVZJQ0UoSU5URUwsIFBDSV9ERVZJQ0VfSURfU0tMX1BNQyksDQo+KGtlcm5l
+bF91bG9uZ190KU5VTEwNCj4+ID4gK30sDQo+Pg0KPj4gTWlub3IgdGhpbmcgaGVyZSBidXQgbWF5
+YmUganVzdCB1c2UgYSBzaW1wbGUgMCBoZXJlIGluc3RlYWQgb2YNCj4+IChrZXJuZWxfdWxvbmdf
+dClOVUxMPyBJbiB0aGUgb3RoZXIgcGxhY2VzIGFzIHdlbGwuDQo+Pg0KPj4gWy4uLl0NCj4+DQo+
+DQo+UGxlYXNlIHByb3ZpZGUgdGhlIHJhdGlvbmFsIGZvciBhIHJlcXVlc3QgZm9yIGNoYW5nZS4g
+V2hhdCBkbyB5b3UgdGhpbmsgaXMNCj53cm9uZyB3aXRoIHRoZSBhYm92ZT8gVGhlcmUgaXMgcHJl
+Y2VkZW50IGluIHRoZSBrZXJuZWwgdG9kYXkgZm9yIHRoaXMgdXNhZ2UuDQo+SXMgaXQgd3Jvbmc/
+IFVubmVjZXNzYXJ5PyBTdWJqZWN0aXZlbHkgdWdseT8NCj4NCj4+ID4gK3N0YXRpYyBpbnQgcG1j
+X2NvcmVfZGJnZnNfcmVnaXN0ZXIoc3RydWN0IHBtY19kZXYgKnBtYykgew0KPj4gPiArCXJldHVy
+biAwOyAvKiBub3RoaW5nIHRvIHJlZ2lzdGVyICovIH0NCj4+ID4gKw0KPj4gPiArI2VuZGlmIC8q
+IENPTkZJR19ERUJVR19GUyAqLw0KPj4gPiArDQo+PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHg4
+Nl9jcHVfaWQgaW50ZWxfcG1jX2NvcmVfaWRzW10gPSB7DQo+PiA+ICsJeyBYODZfVkVORE9SX0lO
+VEVMLCA2LCAweDRlLCBYODZfRkVBVFVSRV9NV0FJVCwNCj4+ID4gKwkJKGtlcm5lbF91bG9uZ190
+KU5VTEx9LCAvKiBTS0wgQ1BVKi8NCj4+ID4gKwl7IFg4Nl9WRU5ET1JfSU5URUwsIDYsIDB4NWUs
+IFg4Nl9GRUFUVVJFX01XQUlULA0KPj4gPiArCQkoa2VybmVsX3Vsb25nX3QpTlVMTH0sIC8qIFNL
+TCBDUFUqLw0KPj4gPiArCXt9DQo+Pg0KPj4gQSBzcGFjZSBhZnRlciBDUFU/IFNLTD8gSSBhc3N1
+bWUgdGhpcyBtZWFucyBza3lsYWtlIHNvIHBlcmhhcHMgYWRkIHRoZQ0KPj4gd2hvbGUgbmFtZS4N
+Cj4+DQo+DQo+VGhlIHRocmVlIGxldHRlciBDUFUgY29kZSBpcyB2ZXJ5IGNvbW1vbiB0aHJvdWdo
+b3V0IHRoZSBrZXJuZWwgb2YgSW50ZWwNCj5DUFVzLg0KPk5ITSxXU00sU05CLElWQixCWVQsSFNX
+LEJEVyxTS0wsIGV0Yy4NCj4NCj5UaG9zZSBhcmUgYmVjb21pbmcgbW9yZSBhbmQgbW9yZSBkaWZm
+aWN1bHQgdG8gZ3JlcCBmb3IgdGhvdWdoLCBzbyBhIGZ1bGwNCj5leHBhbnNpb24gbm93IGFuZCB0
+aGVuIHdvdWxkIGNlcnRhaW5seSBiZSBuaWNlIDotKQ0KPg0KPj4gPiArfTsNCj4+ID4gK01PRFVM
+RV9ERVZJQ0VfVEFCTEUoeDg2Y3B1LCBpbnRlbF9wbWNfY29yZV9pZHMpOw0KPj4gPiArDQo+PiA+
+ICtzdGF0aWMgaW50IHBtY19jb3JlX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGNvbnN0IHN0
+cnVjdA0KPj4gPiArcGNpX2RldmljZV9pZCAqaWQpIHsNCj4+ID4gKwlpbnQgZXJyOw0KPj4gPiAr
+CWNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkICpjcHVfaWQ7DQo+PiA+ICsNCj4+ID4gKwljcHVfaWQg
+PSB4ODZfbWF0Y2hfY3B1KGludGVsX3BtY19jb3JlX2lkcyk7DQo+PiA+ICsJaWYgKCFjcHVfaWQp
+DQo+PiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPj4gPiArDQo+PiA+ICsJZXJyID0gcGNpX2VuYWJs
+ZV9kZXZpY2UoZGV2KTsNCj4+ID4gKwlpZiAoZXJyKSB7DQo+PiA+ICsJCWRldl9lcnIoJmRldi0+
+ZGV2LCAiUE1DIENvcmU6IGZhaWxlZCB0byBlbmFibGUgUG93ZXINCj5NYW5hZ2VtZW50IENvbnRy
+b2xsZXIuXG4iKTsNCj4+ID4gKwkJZ290byBleGl0Ow0KPj4gPiArCX0NCj4+ID4gKw0KPj4gPiAr
+CXBjaV9yZWFkX2NvbmZpZ19kd29yZChkZXYsIFBNQ19CQVNFX0FERFJfT0ZGU0VULA0KPiZwbWMu
+YmFzZV9hZGRyKTsNCj4+DQo+PiBTaG91bGRuJ3QgdGhlIHJldHVybiB2YWx1ZSBvZiB0aGlzIGZ1
+bmN0aW9uIGJlIGNoZWNrZWQgaWYgYW4gZXJyb3INCj4+IG9jY3VyZWQ/IEFsc28NCj4NCj5ZZXMg
+cGxlYXNlLg0KPg0KPj4gd2hpbGUgd2UgYXJlIGF0IGl0IG1heWJlIHRoZSBsYWJlbCBuYW1lcyBj
+b3VsZCBiZSBpbXByb3ZlZC4gRm9yIGV4YW1wbGU6DQo+PiBlcnJfZGlzYWJsZV9kZXY7IGVycl9y
+ZXR1cm4NCj4+DQo+DQo+VGhpcyBpcyBtb3JlIHR5cGljYWwsIGFsdGhvdWdoICJvdXQiIG9yICJl
+cnJfb3V0IiBpZiBvbmx5IHVzZWQgaW4gdGhlIGVycm9yIGNhc2UuDQo+SG93ZXZlciwgaWYgdGhl
+IGxhYmVsIGRvZXMgbm90aGluZyBidXQgcmV0dXJuIHdpdGggYW4gZXJyb3IgY29kZSwgYmUgc3Vy
+ZSB0bw0KPmJlIGNvbnNpc3RlbnQgaW4gaXQncyB1c2FnZS4gRG9uJ3QgZG8gInJldHVybiAtRUlO
+VkFMIiBhbmQgInJldCA9IC1FSU5WQUw7IGdvdG8NCj5lcnJfb3V0OyIgaW4gdGhlIHNhbWUgZnVu
+Y3Rpb24uDQo+DQo+DQo+VGhhbmtzLA0KPg0KPj4gPiArCWVyciA9IHBtY19jb3JlX2RiZ2ZzX3Jl
+Z2lzdGVyKCZwbWMpOw0KPj4gPiArCWlmIChlcnIpIHsNCj4+ID4gKwkJZGV2X2VycigmZGV2LT5k
+ZXYsICJQTUMgQ29yZTogZGVidWdmcyByZWdpc3RlciBmYWlsZWRcbiIpOw0KPj4gPiArCQlpb3Vu
+bWFwKHBtYy5yZWdtYXApOw0KPj4gPiArCQlnb3RvIGRpc2FibGU7DQo+PiA+ICsJfQ0KPj4gPiAr
+DQo+PiA+ICsJcG1jLmZlYXR1cmVfYXZhaWxhYmxlID0gMTsNCj4+ID4gKwlyZXR1cm4gMDsNCj4+
+ID4gKw0KPj4gPiArZGlzYWJsZToNCj4+ID4gKwlwY2lfZGlzYWJsZV9kZXZpY2UoZGV2KTsNCj4+
+ID4gK2V4aXQ6DQo+PiA+ICsJcmV0dXJuIGVycjsNCj4+ID4gK30NCj4+ID4gKw0KPj4NCj4NCj4t
+LQ0KPkRhcnJlbiBIYXJ0DQo+SW50ZWwgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCg==
