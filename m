@@ -1,136 +1,372 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>
-Subject: RE: [PATCH] platform:x86: Add PMC Driver for Intel Core SOC
-Date: Tue, 26 Apr 2016 05:10:31 +0000
-Message-ID: <DA43BA71CEE1344FB5BAE72044B8141E2CA91A72@BGSMSX102.gar.corp.intel.com>
-References: <1461236605-27245-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <20160421124728.GA8392@tyrael> <20160425181049.GF2115@f23x64.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: [PATCH v2] platform:x86: Add PMC Driver for Intel Core SOC
+Date: Tue, 26 Apr 2016 16:04:47 +0530
+Message-ID: <1461666887-29220-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:64724 "EHLO mga01.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:27913 "EHLO mga01.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750869AbcDZFKx (ORCPT
+	id S1751037AbcDZKev (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Apr 2016 01:10:53 -0400
-In-Reply-To: <20160425181049.GF2115@f23x64.localdomain>
-Content-Language: en-US
+	Tue, 26 Apr 2016 06:34:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Giedrius Statkevicius <giedrius.statkevicius@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, vishwanath.somayaji@intel.com, rajneesh.bhardwaj@intel.com
 
-VGhhbmtzIGZvciB0aGUgcmV2aWV3ICwgd2lsbCBzZW5kIHRoZSByZXZpc2VkIHBhdGNoIHYyDQog
-d2l0aCBhbGwgcmV2aWV3IGNvbW1lbnRzIGFkZHJlc3NlZCBzbyBmYXIuDQoNClJlZ2FyZHMNClJh
-am5lZXNoDQoNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRGFycmVuIEhh
-cnQgW21haWx0bzpkdmhhcnRAaW5mcmFkZWFkLm9yZ10NCj5TZW50OiBNb25kYXksIEFwcmlsIDI1
-LCAyMDE2IDExOjQxIFBNDQo+VG86IEdpZWRyaXVzIFN0YXRrZXZpxI1pdXMgPGdpZWRyaXVzLnN0
-YXRrZXZpY2l1c0BnbWFpbC5jb20+DQo+Q2M6IEJoYXJkd2FqLCBSYWpuZWVzaCA8cmFqbmVlc2gu
-YmhhcmR3YWpAaW50ZWwuY29tPjsgcGxhdGZvcm0tZHJpdmVyLQ0KPng4NkB2Z2VyLmtlcm5lbC5v
-cmc7IFNvbWF5YWppLCBWaXNod2FuYXRoDQo+PHZpc2h3YW5hdGguc29tYXlhamlAaW50ZWwuY29t
-Pg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBsYXRmb3JtOng4NjogQWRkIFBNQyBEcml2ZXIgZm9y
-IEludGVsIENvcmUgU09DDQo+DQo+T24gVGh1LCBBcHIgMjEsIDIwMTYgYXQgMDM6NDc6MjlQTSAr
-MDMwMCwgR2llZHJpdXMgU3RhdGtldmnEjWl1cyB3cm90ZToNCj4+IE9uIFRodSwgQXByIDIxLCAy
-MDE2IGF0IDA0OjMzOjI1UE0gKzA1MzAsIFJham5lZXNoIEJoYXJkd2FqIHdyb3RlOg0KPj4gWy4u
-Ll0NCj4+DQo+PiBKdXN0IHNvbWUgbWlub3IgdGhpbmdzIEkndmUgc3BvdHRlZCBhbmQgb25lIGVy
-cm9yIGlzIHByb2JhYmx5IHVuY2hlY2tlZC4NCj4+DQo+PiBbLi4uXQ0KPj4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcG1jX2NvcmUuaA0KPj4gPiBiL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL3BtY19jb3JlLmggbmV3IGZpbGUgbW9kZSAxMDA2NDQgaW5kZXgNCj4+ID4gMDAwMDAw
-MC4uM2VhNjFiZg0KPj4gPiAtLS0gL2Rldi9udWxsDQo+PiA+ICsrKyBiL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL3BtY19jb3JlLmgNCj4+ID4gQEAgLTAsMCArMSw1MyBAQA0KPj4gPiArLyoNCj4+ID4g
-KyAqIEludGVsIENvcmUgU09DIFBvd2VyIE1hbmFnZW1lbnQgQ29udHJvbGxlciBIZWFkZXIgRmls
-ZQ0KPj4gPiArICoNCj4+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxNiwgSW50ZWwgQ29ycG9yYXRp
-b24uDQo+PiA+ICsgKiBBdXRob3I6IFJham5lZXNoIEJoYXJkd2FqIChyYWpuZWVzaC5iaGFyZHdh
-akBpbnRlbC5jb20pDQo+PiA+ICsgKg0KPj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
-dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPj4gPiArbW9kaWZ5IGl0DQo+
-PiA+ICsgKiB1bmRlciB0aGUgdGVybXMgYW5kIGNvbmRpdGlvbnMgb2YgdGhlIEdOVSBHZW5lcmFs
-IFB1YmxpYw0KPj4gPiArTGljZW5zZSwNCj4+ID4gKyAqIHZlcnNpb24gMiwgYXMgcHVibGlzaGVk
-IGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uDQo+PiA+ICsgKg0KPj4gPiArICogVGhp
-cyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIGl0IHdpbGwgYmUgdXNlZnVsLCBi
-dXQNCj4+ID4gK1dJVEhPVVQNCj4+ID4gKyAqIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRo
-ZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+PiA+ICtNRVJDSEFOVEFCSUxJVFkgb3INCj4+ID4gKyAq
-IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZSBHTlUgR2VuZXJhbCBQ
-dWJsaWMNCj4+ID4gK0xpY2Vuc2UgZm9yDQo+PiA+ICsgKiBtb3JlIGRldGFpbHMuDQo+PiA+ICsg
-Kg0KPj4gPiArICovDQo+PiA+ICsNCj4+ID4gKyNpZm5kZWYgUE1DX0NPUkVfSA0KPj4gPiArI2Rl
-ZmluZSBQTUNfQ09SRV9IDQo+PiA+ICsNCj4+ID4gKy8qIFNreWxha2UgUG93ZXIgTWFuYWdlbWVu
-dCBDb250cm9sbGVyIFBDSSBEZXZpY2UgSUQgKi8NCj4+ID4gKyNkZWZpbmUgUENJX0RFVklDRV9J
-RF9TS0xfUE1DICAgMHg5ZDIxDQo+PiA+ICsjZGVmaW5lIFBNQ19CQVNFX0FERFJfT0ZGU0VUICAg
-IDB4NDgNCj4+ID4gKyNkZWZpbmUgUE1DX1NMUF9TMF9SRVNJREVOQ1lfQ09VTlRFUiAweDEzYw0K
-Pj4gPiArI2RlZmluZSBQTUNfTU1JT19SRUdfTEVOICAgICAgICAweDEwMA0KPj4gPiArI2RlZmlu
-ZSBQTUNfUkVHX0JJVF9XSURUSCAgICAgICAweDIwDQo+PiA+ICsjZGVmaW5lIFNMUF9TMF9SRVNJ
-REVOQ1lfQ09VTlRFUl9HUkFOVUxBUklUWSAweDY0DQo+Pg0KPj4gSW5jb25zaXN0ZW50IHNwYWNl
-cy4gTWF5YmUganVzdCB1c2Ugb25lIHNwYWNlLg0KPj4NCj4+IFsuLi5dDQo+Pg0KPj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPj4gPiBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4+ID4gaW5kZXggMDAwMDAwMC4uNDJjZWU4Nw0KPj4gPiAtLS0gL2Rldi9udWxsDQo+
-PiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4+ID4gQEAg
-LTAsMCArMSwyMDAgQEANCj4+ID4gKy8qDQo+PiA+ICsgKiBJbnRlbCBDb3JlIFNPQyBQb3dlciBN
-YW5hZ2VtZW50IENvbnRyb2xsZXIgRHJpdmVyDQo+PiA+ICsgKg0KPj4gPiArICogQ29weXJpZ2h0
-IChjKSAyMDE2LCBJbnRlbCBDb3Jwb3JhdGlvbi4NCj4+ID4gKyAqIEF1dGhvcjogUmFqbmVlc2gg
-QmhhcmR3YWogKHJham5lZXNoLmJoYXJkd2FqQGludGVsLmNvbSkNCj4+ID4gKyAqDQo+PiA+ICsg
-KiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQg
-YW5kL29yDQo+PiA+ICttb2RpZnkgaXQNCj4+ID4gKyAqIHVuZGVyIHRoZSB0ZXJtcyBhbmQgY29u
-ZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljDQo+PiA+ICtMaWNlbnNlLA0KPj4gPiAr
-ICogdmVyc2lvbiAyLCBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlv
-bi4NCj4+ID4gKyAqDQo+PiA+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhl
-IGhvcGUgaXQgd2lsbCBiZSB1c2VmdWwsIGJ1dA0KPj4gPiArV0lUSE9VVA0KPj4gPiArICogQU5Z
-IFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCj4+ID4gK01F
-UkNIQU5UQUJJTElUWSBvcg0KPj4gPiArICogRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
-U0UuICBTZWUgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYw0KPj4gPiArTGljZW5zZSBmb3INCj4+ID4g
-KyAqIG1vcmUgZGV0YWlscy4NCj4+ID4gKyAqDQo+PiA+ICsgKi8NCj4+ID4gKw0KPj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4+ID4g
-KyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9kZWJ1Z2Zz
-Lmg+DQo+PiA+ICsjaW5jbHVkZSA8bGludXgvc2VxX2ZpbGUuaD4NCj4+ID4gKyNpbmNsdWRlIDxs
-aW51eC9tb2R1bGUuaD4NCj4+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPj4gPiArI2luY2x1
-ZGUgPGFzbS9jcHVfZGV2aWNlX2lkLmg+DQo+PiA+ICsjaW5jbHVkZSA8YXNtL3BtY19jb3JlLmg+
-DQo+PiA+ICsNCj4+ID4gK3N0YXRpYyBzdHJ1Y3QgcG1jX2RldiBwbWM7DQo+PiA+ICsNCj4+ID4g
-K3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBwbWNfcGNpX2lkc1tdID0gew0KPj4g
-PiArCXsgUENJX1ZERVZJQ0UoSU5URUwsIFBDSV9ERVZJQ0VfSURfU0tMX1BNQyksDQo+KGtlcm5l
-bF91bG9uZ190KU5VTEwNCj4+ID4gK30sDQo+Pg0KPj4gTWlub3IgdGhpbmcgaGVyZSBidXQgbWF5
-YmUganVzdCB1c2UgYSBzaW1wbGUgMCBoZXJlIGluc3RlYWQgb2YNCj4+IChrZXJuZWxfdWxvbmdf
-dClOVUxMPyBJbiB0aGUgb3RoZXIgcGxhY2VzIGFzIHdlbGwuDQo+Pg0KPj4gWy4uLl0NCj4+DQo+
-DQo+UGxlYXNlIHByb3ZpZGUgdGhlIHJhdGlvbmFsIGZvciBhIHJlcXVlc3QgZm9yIGNoYW5nZS4g
-V2hhdCBkbyB5b3UgdGhpbmsgaXMNCj53cm9uZyB3aXRoIHRoZSBhYm92ZT8gVGhlcmUgaXMgcHJl
-Y2VkZW50IGluIHRoZSBrZXJuZWwgdG9kYXkgZm9yIHRoaXMgdXNhZ2UuDQo+SXMgaXQgd3Jvbmc/
-IFVubmVjZXNzYXJ5PyBTdWJqZWN0aXZlbHkgdWdseT8NCj4NCj4+ID4gK3N0YXRpYyBpbnQgcG1j
-X2NvcmVfZGJnZnNfcmVnaXN0ZXIoc3RydWN0IHBtY19kZXYgKnBtYykgew0KPj4gPiArCXJldHVy
-biAwOyAvKiBub3RoaW5nIHRvIHJlZ2lzdGVyICovIH0NCj4+ID4gKw0KPj4gPiArI2VuZGlmIC8q
-IENPTkZJR19ERUJVR19GUyAqLw0KPj4gPiArDQo+PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHg4
-Nl9jcHVfaWQgaW50ZWxfcG1jX2NvcmVfaWRzW10gPSB7DQo+PiA+ICsJeyBYODZfVkVORE9SX0lO
-VEVMLCA2LCAweDRlLCBYODZfRkVBVFVSRV9NV0FJVCwNCj4+ID4gKwkJKGtlcm5lbF91bG9uZ190
-KU5VTEx9LCAvKiBTS0wgQ1BVKi8NCj4+ID4gKwl7IFg4Nl9WRU5ET1JfSU5URUwsIDYsIDB4NWUs
-IFg4Nl9GRUFUVVJFX01XQUlULA0KPj4gPiArCQkoa2VybmVsX3Vsb25nX3QpTlVMTH0sIC8qIFNL
-TCBDUFUqLw0KPj4gPiArCXt9DQo+Pg0KPj4gQSBzcGFjZSBhZnRlciBDUFU/IFNLTD8gSSBhc3N1
-bWUgdGhpcyBtZWFucyBza3lsYWtlIHNvIHBlcmhhcHMgYWRkIHRoZQ0KPj4gd2hvbGUgbmFtZS4N
-Cj4+DQo+DQo+VGhlIHRocmVlIGxldHRlciBDUFUgY29kZSBpcyB2ZXJ5IGNvbW1vbiB0aHJvdWdo
-b3V0IHRoZSBrZXJuZWwgb2YgSW50ZWwNCj5DUFVzLg0KPk5ITSxXU00sU05CLElWQixCWVQsSFNX
-LEJEVyxTS0wsIGV0Yy4NCj4NCj5UaG9zZSBhcmUgYmVjb21pbmcgbW9yZSBhbmQgbW9yZSBkaWZm
-aWN1bHQgdG8gZ3JlcCBmb3IgdGhvdWdoLCBzbyBhIGZ1bGwNCj5leHBhbnNpb24gbm93IGFuZCB0
-aGVuIHdvdWxkIGNlcnRhaW5seSBiZSBuaWNlIDotKQ0KPg0KPj4gPiArfTsNCj4+ID4gK01PRFVM
-RV9ERVZJQ0VfVEFCTEUoeDg2Y3B1LCBpbnRlbF9wbWNfY29yZV9pZHMpOw0KPj4gPiArDQo+PiA+
-ICtzdGF0aWMgaW50IHBtY19jb3JlX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGNvbnN0IHN0
-cnVjdA0KPj4gPiArcGNpX2RldmljZV9pZCAqaWQpIHsNCj4+ID4gKwlpbnQgZXJyOw0KPj4gPiAr
-CWNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkICpjcHVfaWQ7DQo+PiA+ICsNCj4+ID4gKwljcHVfaWQg
-PSB4ODZfbWF0Y2hfY3B1KGludGVsX3BtY19jb3JlX2lkcyk7DQo+PiA+ICsJaWYgKCFjcHVfaWQp
-DQo+PiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPj4gPiArDQo+PiA+ICsJZXJyID0gcGNpX2VuYWJs
-ZV9kZXZpY2UoZGV2KTsNCj4+ID4gKwlpZiAoZXJyKSB7DQo+PiA+ICsJCWRldl9lcnIoJmRldi0+
-ZGV2LCAiUE1DIENvcmU6IGZhaWxlZCB0byBlbmFibGUgUG93ZXINCj5NYW5hZ2VtZW50IENvbnRy
-b2xsZXIuXG4iKTsNCj4+ID4gKwkJZ290byBleGl0Ow0KPj4gPiArCX0NCj4+ID4gKw0KPj4gPiAr
-CXBjaV9yZWFkX2NvbmZpZ19kd29yZChkZXYsIFBNQ19CQVNFX0FERFJfT0ZGU0VULA0KPiZwbWMu
-YmFzZV9hZGRyKTsNCj4+DQo+PiBTaG91bGRuJ3QgdGhlIHJldHVybiB2YWx1ZSBvZiB0aGlzIGZ1
-bmN0aW9uIGJlIGNoZWNrZWQgaWYgYW4gZXJyb3INCj4+IG9jY3VyZWQ/IEFsc28NCj4NCj5ZZXMg
-cGxlYXNlLg0KPg0KPj4gd2hpbGUgd2UgYXJlIGF0IGl0IG1heWJlIHRoZSBsYWJlbCBuYW1lcyBj
-b3VsZCBiZSBpbXByb3ZlZC4gRm9yIGV4YW1wbGU6DQo+PiBlcnJfZGlzYWJsZV9kZXY7IGVycl9y
-ZXR1cm4NCj4+DQo+DQo+VGhpcyBpcyBtb3JlIHR5cGljYWwsIGFsdGhvdWdoICJvdXQiIG9yICJl
-cnJfb3V0IiBpZiBvbmx5IHVzZWQgaW4gdGhlIGVycm9yIGNhc2UuDQo+SG93ZXZlciwgaWYgdGhl
-IGxhYmVsIGRvZXMgbm90aGluZyBidXQgcmV0dXJuIHdpdGggYW4gZXJyb3IgY29kZSwgYmUgc3Vy
-ZSB0bw0KPmJlIGNvbnNpc3RlbnQgaW4gaXQncyB1c2FnZS4gRG9uJ3QgZG8gInJldHVybiAtRUlO
-VkFMIiBhbmQgInJldCA9IC1FSU5WQUw7IGdvdG8NCj5lcnJfb3V0OyIgaW4gdGhlIHNhbWUgZnVu
-Y3Rpb24uDQo+DQo+DQo+VGhhbmtzLA0KPg0KPj4gPiArCWVyciA9IHBtY19jb3JlX2RiZ2ZzX3Jl
-Z2lzdGVyKCZwbWMpOw0KPj4gPiArCWlmIChlcnIpIHsNCj4+ID4gKwkJZGV2X2VycigmZGV2LT5k
-ZXYsICJQTUMgQ29yZTogZGVidWdmcyByZWdpc3RlciBmYWlsZWRcbiIpOw0KPj4gPiArCQlpb3Vu
-bWFwKHBtYy5yZWdtYXApOw0KPj4gPiArCQlnb3RvIGRpc2FibGU7DQo+PiA+ICsJfQ0KPj4gPiAr
-DQo+PiA+ICsJcG1jLmZlYXR1cmVfYXZhaWxhYmxlID0gMTsNCj4+ID4gKwlyZXR1cm4gMDsNCj4+
-ID4gKw0KPj4gPiArZGlzYWJsZToNCj4+ID4gKwlwY2lfZGlzYWJsZV9kZXZpY2UoZGV2KTsNCj4+
-ID4gK2V4aXQ6DQo+PiA+ICsJcmV0dXJuIGVycjsNCj4+ID4gK30NCj4+ID4gKw0KPj4NCj4NCj4t
-LQ0KPkRhcnJlbiBIYXJ0DQo+SW50ZWwgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCg==
+This patch adds the Power Management Controller driver as a pci driver
+for Intel Core SOC architecture.
+
+This driver can utilize debugging capabilities and supported features
+as exposed by the Power Management Controller.
+
+The current version of this driver can be used for detecting fragile
+SLP_S0 signal related failures and take corrective actions when PCH
+SLP_S0 signal is not asserted after kernel freeze as part of
+suspend to idle flow i.e. echo freeze > /sys/power/state.
+
+Intel Platform Controller Hub (PCH) asserts SLP_S0 signal when it
+detects favorable conditions to enter its low power mode. As a
+pre-requisite the SOC should be in deepest possible Package C-State
+and devices should be in low power mode. For example, on Skylake SOC
+the deepest Package C-State is Package C10 or PC10. Suspend to idle
+flow generally leads to PC10 state but PC10 state may not be sufficient
+for realizing the platform wide power potential which SLP_S0 signal
+assertion can provide.
+
+SLP_S0 signal is often connected to the Embedded Controller (EC) and the
+Power Management IC (PMIC) for other platform power management related
+optimizations.
+
+In general, SLP_S0 assertion == PC10 + PCH low power mode + ModPhy Lanes
+power gated + PLL Idle.
+
+As part of this driver, a mechanism to read the slp_s0 residency is exposed
+as an api and also debugfs features are added to indicate slp_s0 signal
+assertion residency in microseconds.
+
+echo freeze > /sys/power/state
+wake the system
+cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
+
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Signed-off-by: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+---
+Changes in v2:
+ * Fixed inconsistent spaces in the header file.
+ * Updated commit message.
+ * Enhanced acronym SKL CPU to Skylake CPUID Signature.
+ * Put error check on pci_read_config_dword in probe function.
+ * Changed goto label (disable) to disable_pci.
+ * Changed x86_match_cpu error handling for consistency.
+
+ arch/x86/include/asm/pmc_core.h       |  53 +++++++++
+ drivers/platform/x86/Kconfig          |  10 ++
+ drivers/platform/x86/Makefile         |   1 +
+ drivers/platform/x86/intel_pmc_core.c | 206 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 270 insertions(+)
+ create mode 100644 arch/x86/include/asm/pmc_core.h
+ create mode 100644 drivers/platform/x86/intel_pmc_core.c
+
+diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm/pmc_core.h
+new file mode 100644
+index 0000000..2930c6c
+--- /dev/null
++++ b/arch/x86/include/asm/pmc_core.h
+@@ -0,0 +1,53 @@
++/*
++ * Intel Core SOC Power Management Controller Header File
++ *
++ * Copyright (c) 2016, Intel Corporation.
++ * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ */
++
++#ifndef PMC_CORE_H
++#define PMC_CORE_H
++
++/* Skylake Power Management Controller PCI Device ID */
++#define PCI_DEVICE_ID_SKL_PMC			0x9d21
++#define PMC_BASE_ADDR_OFFSET			0x48
++#define PMC_SLP_S0_RESIDENCY_COUNTER		0x13c
++#define PMC_MMIO_REG_LEN			0x100
++#define PMC_REG_BIT_WIDTH			0x20
++#define SLP_S0_RESIDENCY_COUNTER_GRANULARITY	0x64
++
++/**
++ * struct pmc_dev - pmc device structure
++ * @base_addr:		comtains pmc base address
++ * @regmap: pointer to io-remapped memory location
++ * @dbgfs_dir:		path to debug fs interface
++ * @feature_available:	flag to indicate whether,
++ *			the feature is available,
++ *			on a particular platform or not.
++ *
++ * pmc_dev contains info about power management controller device.
++ */
++struct pmc_dev {
++	u32 base_addr;
++	void __iomem *regmap;
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++	struct dentry *dbgfs_dir;
++#endif /* CONFIG_DEBUG_FS */
++	int feature_available;
++};
++
++int intel_pmc_slp_s0_counter_read(u64 *data);
++
++#endif
++
++/* PMC_CORE_H */
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ed2004b..5db364c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -821,6 +821,16 @@ config INTEL_IPS
+ 	  functionality.  If in doubt, say Y here; it will only load on
+ 	  supported platforms.
+ 
++config INTEL_PMC_CORE
++	bool "Intel PMC Core driver"
++	depends on X86 && PCI
++	default y
++	---help---
++	  This driver exposes the features provided by Power Management
++	  Controller for Intel Core SOC. Intel Platform Controller Hub
++	  for Intel Core SOCs provides access to Power Management Controller
++	  registers via pci interface.
++
+ config INTEL_IMR
+ 	bool "Intel Isolated Memory Region support"
+ 	default n
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 448443c..9b11b40 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -69,3 +69,4 @@ obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
+ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
++obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+new file mode 100644
+index 0000000..d092655
+--- /dev/null
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -0,0 +1,206 @@
++/*
++ * Intel Core SOC Power Management Controller Driver
++ *
++ * Copyright (c) 2016, Intel Corporation.
++ * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ */
++
++#include <linux/init.h>
++#include <linux/pci.h>
++#include <linux/device.h>
++#include <linux/debugfs.h>
++#include <linux/seq_file.h>
++#include <linux/module.h>
++#include <linux/io.h>
++#include <asm/cpu_device_id.h>
++#include <asm/pmc_core.h>
++
++static struct pmc_dev pmc;
++
++static const struct pci_device_id pmc_pci_ids[] = {
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_SKL_PMC), (kernel_ulong_t)NULL },
++	{ 0, },
++};
++MODULE_DEVICE_TABLE(pci, pmc_pci_ids);
++
++/**
++ * intel_pmc_slp_s0_counter_read() - Read slp_s0 residency.
++ * @data: Out param that contains current slp_s0 count.
++ *
++ * This API currently supports Intel Skylake SOC and Sunrise
++ * point Platform Controller Hub. Future platform support
++ * should be added for platforms that support low power modes
++ * beyond Package C10 state.
++ *
++ * SLP_S0_RESIDENCY counter counts in 100 us granularity per
++ * step hence function populates the multiplied value in out
++ * parameter @data
++ *
++ * Return:	an error code or 0 on success.
++ */
++int intel_pmc_slp_s0_counter_read(u64 *data)
++{
++	int ret = 0;
++
++	if (pmc.feature_available) {
++		*data = readl(pmc.regmap + PMC_SLP_S0_RESIDENCY_COUNTER);
++		*data *= SLP_S0_RESIDENCY_COUNTER_GRANULARITY;
++	} else {
++		ret = -EACCES;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
++
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++
++static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
++{
++	u64 counter_val;
++	int err;
++
++	err = intel_pmc_slp_s0_counter_read(&counter_val);
++	if (err) {
++		counter_val = 0;
++		seq_printf(s, "%lld\n", counter_val);
++	} else {
++		seq_printf(s, "%lld\n", counter_val);
++	}
++
++	return 0;
++}
++
++static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, pmc_core_dev_state_show, inode->i_private);
++}
++
++static const struct file_operations pmc_core_dev_state_ops = {
++	.open           = pmc_core_dev_state_open,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++	.release        = single_release,
++};
++
++static void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
++{
++	debugfs_remove_recursive(pmc->dbgfs_dir);
++}
++
++static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
++{
++	struct dentry *dir, *file;
++	int ret = 0;
++
++	dir = debugfs_create_dir("pmc_core", NULL);
++	if (!dir)
++		return -ENOMEM;
++
++	pmc->dbgfs_dir = dir;
++	file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
++				   dir, pmc, &pmc_core_dev_state_ops);
++
++	if (!file) {
++		pmc_core_dbgfs_unregister(pmc);
++		ret = -ENODEV;
++	}
++	return ret;
++}
++
++#else
++
++static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
++{
++	return 0; /* nothing to register */
++}
++
++#endif /* CONFIG_DEBUG_FS */
++
++static const struct x86_cpu_id intel_pmc_core_ids[] = {
++	{ X86_VENDOR_INTEL, 6, 0x4e, X86_FEATURE_MWAIT,
++		(kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
++	{ X86_VENDOR_INTEL, 6, 0x5e, X86_FEATURE_MWAIT,
++		(kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
++	{}
++};
++MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
++
++static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
++{
++	int err;
++	const struct x86_cpu_id *cpu_id;
++
++	cpu_id = x86_match_cpu(intel_pmc_core_ids);
++	if (!cpu_id) {
++		err = -EINVAL;
++		goto exit;
++	}
++
++	err = pci_enable_device(dev);
++	if (err) {
++		dev_err(&dev->dev, "PMC Core: failed to enable Power Management Controller.\n");
++		goto exit;
++	}
++
++	err = pci_read_config_dword(dev, PMC_BASE_ADDR_OFFSET, &pmc.base_addr);
++	if (err) {
++		dev_err(&dev->dev, "PMC Core: failed to read pci config space.\n");
++		goto disable_pci;
++	}
++	dev_dbg(&dev->dev, "PMC Core: PWRMBASE is 0x%x\n", pmc.base_addr);
++
++	pmc.regmap = ioremap_nocache(pmc.base_addr, PMC_MMIO_REG_LEN);
++	if (!pmc.regmap) {
++		dev_err(&dev->dev, "PMC Core: ioremap failed\n");
++		err = -ENOMEM;
++		goto disable_pci;
++	}
++
++	err = pmc_core_dbgfs_register(&pmc);
++	if (err) {
++		dev_err(&dev->dev, "PMC Core: debugfs register failed\n");
++		iounmap(pmc.regmap);
++		goto disable_pci;
++	}
++
++	pmc.feature_available = 1;
++	return 0;
++
++disable_pci:
++	pci_disable_device(dev);
++exit:
++	return err;
++}
++
++static void intel_pmc_core_remove(struct pci_dev *pdev)
++{
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++	pmc_core_dbgfs_unregister(&pmc);
++#endif
++	pci_disable_device(pdev);
++	iounmap(pmc.regmap);
++}
++
++static struct pci_driver intel_pmc_core_driver = {
++	.name = "intel_pmc_core",
++	.id_table = pmc_pci_ids,
++	.probe = pmc_core_probe,
++	.remove = intel_pmc_core_remove,
++};
++module_pci_driver(intel_pmc_core_driver);
++
++MODULE_AUTHOR("Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>");
++MODULE_AUTHOR("Vishwanath Somayaji <vishwanath.somayaji@intel.com>");
++MODULE_DESCRIPTION("Intel CORE SOC Power Management Controller Interface");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
