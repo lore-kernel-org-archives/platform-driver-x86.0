@@ -1,84 +1,166 @@
-From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH] intel_telemetry: constify telemetry_core_ops structures
-Date: Sun,  1 May 2016 22:11:59 +0200
-Message-ID: <1462133519-17989-1-git-send-email-Julia.Lawall@lip6.fr>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED trigger
+Date: Mon,  2 May 2016 10:39:06 -0400
+Message-ID: <1462199948-6424-2-git-send-email-jprvita@endlessm.com>
+References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:51354 "EHLO
-	mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752150AbcEAU1U (ORCPT
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:35466 "EHLO
+	mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754025AbcEBOj1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 May 2016 16:27:20 -0400
+	Mon, 2 May 2016 10:39:27 -0400
+In-Reply-To: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>
 
-The telemetry_core_ops structures are never modified, so declare them as const.
+=46rom: Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.com>
 
-Done with the help of Coccinelle.
+This creates a new LED trigger to be used by platform drivers as a
+default trigger for airplane-mode indicator LEDs.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+By default this trigger will fire when RFKILL_OP_CHANGE_ALL is called
+for all types (RFKILL_TYPE_ALL), setting the LED brightness to LED_FULL
+when the changing the state to blocked, and to LED_OFF when the changin=
+g
+the state to unblocked. In the future there will be a mechanism for
+userspace to override the default policy, so it can implement its own.
 
+This trigger will be used by the asus-wireless x86 platform driver.
+
+Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
 ---
- arch/x86/include/asm/intel_telemetry.h        |    2 +-
- drivers/platform/x86/intel_telemetry_core.c   |    6 +++---
- drivers/platform/x86/intel_telemetry_pltdrv.c |    2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ Documentation/rfkill.txt |  2 ++
+ net/rfkill/core.c        | 49 ++++++++++++++++++++++++++++++++++++++++=
++++++++-
+ 2 files changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
-index a695a43..0d4c380 100644
---- a/drivers/platform/x86/intel_telemetry_core.c
-+++ b/drivers/platform/x86/intel_telemetry_core.c
-@@ -25,7 +25,7 @@
- 
- struct telemetry_core_config {
- 	struct telemetry_plt_config *plt_config;
--	struct telemetry_core_ops *telem_ops;
-+	const struct telemetry_core_ops *telem_ops;
- };
- 
- static struct telemetry_core_config telm_core_conf;
-@@ -95,7 +95,7 @@ static int telemetry_def_reset_events(void)
- 	return 0;
- }
- 
--static struct telemetry_core_ops telm_defpltops = {
-+static const struct telemetry_core_ops telm_defpltops = {
- 	.set_sampling_period = telemetry_def_set_sampling_period,
- 	.get_sampling_period = telemetry_def_get_sampling_period,
- 	.get_trace_verbosity = telemetry_def_get_trace_verbosity,
-@@ -332,7 +332,7 @@ EXPORT_SYMBOL_GPL(telemetry_set_trace_verbosity);
-  *
-  * Return: 0 success, < 0 for failure
-  */
--int telemetry_set_pltdata(struct telemetry_core_ops *ops,
-+int telemetry_set_pltdata(const struct telemetry_core_ops *ops,
- 			  struct telemetry_plt_config *pltconfig)
+diff --git a/Documentation/rfkill.txt b/Documentation/rfkill.txt
+index 1f0c270..b13025a 100644
+--- a/Documentation/rfkill.txt
++++ b/Documentation/rfkill.txt
+@@ -85,6 +85,8 @@ device). Don't do this unless you cannot get the even=
+t in any other way.
+=20
+ RFKill provides per-switch LED triggers, which can be used to drive LE=
+Ds
+ according to the switch state (LED_FULL when blocked, LED_OFF otherwis=
+e).
++An airplane-mode indicator LED trigger is also available, which trigge=
+rs
++LED_FULL when all radios known by RFKill are blocked, and LED_OFF othe=
+rwise.
+=20
+=20
+ 5. Userspace support
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index 884027f..9adf95e 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -126,6 +126,30 @@ static bool rfkill_epo_lock_active;
+=20
+=20
+ #ifdef CONFIG_RFKILL_LEDS
++static struct led_trigger rfkill_apm_led_trigger;
++
++static void rfkill_apm_led_trigger_event(bool state)
++{
++	led_trigger_event(&rfkill_apm_led_trigger, state ? LED_FULL : LED_OFF=
+);
++}
++
++static void rfkill_apm_led_trigger_activate(struct led_classdev *led)
++{
++	rfkill_apm_led_trigger_event(!rfkill_default_state);
++}
++
++static int rfkill_apm_led_trigger_register(void)
++{
++	rfkill_apm_led_trigger.name =3D "rfkill-airplane-mode";
++	rfkill_apm_led_trigger.activate =3D rfkill_apm_led_trigger_activate;
++	return led_trigger_register(&rfkill_apm_led_trigger);
++}
++
++static void rfkill_apm_led_trigger_unregister(void)
++{
++	led_trigger_unregister(&rfkill_apm_led_trigger);
++}
++
+ static void rfkill_led_trigger_event(struct rfkill *rfkill)
  {
- 	if (ops)
-diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c b/drivers/platform/x86/intel_telemetry_pltdrv.c
-index 781bd10..09c84a2 100644
---- a/drivers/platform/x86/intel_telemetry_pltdrv.c
-+++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
-@@ -1081,7 +1081,7 @@ out:
- 	return ret;
+ 	struct led_trigger *trigger;
+@@ -177,6 +201,19 @@ static void rfkill_led_trigger_unregister(struct r=
+fkill *rfkill)
+ 	led_trigger_unregister(&rfkill->led_trigger);
  }
- 
--static struct telemetry_core_ops telm_pltops = {
-+static const struct telemetry_core_ops telm_pltops = {
- 	.get_trace_verbosity = telemetry_plt_get_trace_verbosity,
- 	.set_trace_verbosity = telemetry_plt_set_trace_verbosity,
- 	.set_sampling_period = telemetry_plt_set_sampling_period,
-diff --git a/arch/x86/include/asm/intel_telemetry.h b/arch/x86/include/asm/intel_telemetry.h
-index ed65fe7..85029b5 100644
---- a/arch/x86/include/asm/intel_telemetry.h
-+++ b/arch/x86/include/asm/intel_telemetry.h
-@@ -99,7 +99,7 @@ struct telemetry_core_ops {
- 	int (*reset_events)(void);
- };
- 
--int telemetry_set_pltdata(struct telemetry_core_ops *ops,
-+int telemetry_set_pltdata(const struct telemetry_core_ops *ops,
- 			  struct telemetry_plt_config *pltconfig);
- 
- int telemetry_clear_pltdata(void);
+ #else
++static void rfkill_apm_led_trigger_event(bool state)
++{
++}
++
++static int rfkill_apm_led_trigger_register(void)
++{
++	return 0;
++}
++
++static void rfkill_apm_led_trigger_unregister(void)
++{
++}
++
+ static void rfkill_led_trigger_event(struct rfkill *rfkill)
+ {
+ }
+@@ -313,6 +350,7 @@ static void rfkill_update_global_state(enum rfkill_=
+type type, bool blocked)
+=20
+ 	for (i =3D 0; i < NUM_RFKILL_TYPES; i++)
+ 		rfkill_global_states[i].cur =3D blocked;
++	rfkill_apm_led_trigger_event(blocked);
+ }
+=20
+ #ifdef CONFIG_RFKILL_INPUT
+@@ -1262,15 +1300,22 @@ static int __init rfkill_init(void)
+ {
+ 	int error;
+=20
++	error =3D rfkill_apm_led_trigger_register();
++	if (error)
++		goto out;
++
+ 	rfkill_update_global_state(RFKILL_TYPE_ALL, !rfkill_default_state);
+=20
+ 	error =3D class_register(&rfkill_class);
+-	if (error)
++	if (error) {
++		rfkill_apm_led_trigger_unregister();
+ 		goto out;
++	}
+=20
+ 	error =3D misc_register(&rfkill_miscdev);
+ 	if (error) {
+ 		class_unregister(&rfkill_class);
++		rfkill_apm_led_trigger_unregister();
+ 		goto out;
+ 	}
+=20
+@@ -1279,6 +1324,7 @@ static int __init rfkill_init(void)
+ 	if (error) {
+ 		misc_deregister(&rfkill_miscdev);
+ 		class_unregister(&rfkill_class);
++		rfkill_apm_led_trigger_unregister();
+ 		goto out;
+ 	}
+ #endif
+@@ -1295,5 +1341,6 @@ static void __exit rfkill_exit(void)
+ #endif
+ 	misc_deregister(&rfkill_miscdev);
+ 	class_unregister(&rfkill_class);
++	rfkill_apm_led_trigger_unregister();
+ }
+ module_exit(rfkill_exit);
+--=20
+2.5.0
