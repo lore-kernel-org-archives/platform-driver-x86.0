@@ -1,35 +1,27 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] fujitsu-laptop: Use IS_ENABLED() instead of checking for
- built-in or module
-Date: Thu, 5 May 2016 13:53:23 -0700
-Message-ID: <20160505205323.GB2113@f23x64.localdomain>
-References: <1461709697-4152-1-git-send-email-javier@osg.samsung.com>
- <20160427234309.GB9930@marvin.atrad.com.au>
+Subject: Re: [PATCH] intel_telemetry: constify telemetry_core_ops structures
+Date: Thu, 5 May 2016 14:01:29 -0700
+Message-ID: <20160505210129.GC2113@f23x64.localdomain>
+References: <1462133519-17989-1-git-send-email-Julia.Lawall@lip6.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47740 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754952AbcEEUx2 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 5 May 2016 16:53:28 -0400
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160427234309.GB9930@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <1462133519-17989-1-git-send-email-Julia.Lawall@lip6.fr>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 28, 2016 at 09:13:09AM +0930, Jonathan Woithe wrote:
-> On Tue, Apr 26, 2016 at 06:28:17PM -0400, Javier Martinez Canillas wrote:
-> > The IS_ENABLED() macro checks if a Kconfig symbol has been enabled either
-> > built-in or as a module, use that macro instead of open coding the same.
-> > 
-> > Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+On Sun, May 01, 2016 at 10:11:59PM +0200, Julia Lawall wrote:
+> The telemetry_core_ops structures are never modified, so declare them as const.
 > 
-> Acked-by: Jonathan Woithe <jwoithe@just42.net>
+> Done with the help of Coccinelle.
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 
 Queued, thank you.
+
 -- 
 Darren Hart
 Intel Open Source Technology Center
