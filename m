@@ -1,68 +1,450 @@
-From: <danielle.picarda2@orange.fr>
-Subject: platform-driver-x86
-Date: Tue, 04 May 2016 22:35:07 0000
-Message-ID: <000101d1a655$35a9a020$c0a80001@comstar.ru>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform:x86: Add PMC Driver for Intel Core SOC
+Date: Thu, 5 May 2016 11:33:31 -0700
+Message-ID: <20160505183331.GA2113@f23x64.localdomain>
+References: <1461666887-29220-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from DramTeatrPushkina.access.comstar.ru ([89.175.118.110]:42199
-	"HELO comstar.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with SMTP id S1751388AbcEDQfM (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:54477 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753003AbcEESdd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 May 2016 12:35:12 -0400
-Content-Disposition: attachment
+	Thu, 5 May 2016 14:33:33 -0400
+Content-Disposition: inline
+In-Reply-To: <1461666887-29220-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, vishwanath.somayaji@intel.com
+
+On Tue, Apr 26, 2016 at 04:04:47PM +0530, Rajneesh Bhardwaj wrote:
+
+Hi Rajneesh,
+
+Thanks for a solid description below. Apologies for the delay in review, we try
+for a much faster turn-around.
+
+> This patch adds the Power Management Controller driver as a pci driver
+> for Intel Core SOC architecture.
+> 
+> This driver can utilize debugging capabilities and supported features
+> as exposed by the Power Management Controller.
+> 
+
+Which features specifically? They vary by SoC I presume? The features are
+advertised via the exposed registers?
+
+> The current version of this driver can be used for detecting fragile
+> SLP_S0 signal related failures and take corrective actions when PCH
+> SLP_S0 signal is not asserted after kernel freeze as part of
+> suspend to idle flow i.e. echo freeze > /sys/power/state.
+> 
+> Intel Platform Controller Hub (PCH) asserts SLP_S0 signal when it
+> detects favorable conditions to enter its low power mode. As a
+> pre-requisite the SOC should be in deepest possible Package C-State
+> and devices should be in low power mode. For example, on Skylake SOC
+> the deepest Package C-State is Package C10 or PC10. Suspend to idle
+> flow generally leads to PC10 state but PC10 state may not be sufficient
+> for realizing the platform wide power potential which SLP_S0 signal
+> assertion can provide.
+> 
+> SLP_S0 signal is often connected to the Embedded Controller (EC) and the
+> Power Management IC (PMIC) for other platform power management related
+> optimizations.
+> 
+> In general, SLP_S0 assertion == PC10 + PCH low power mode + ModPhy Lanes
+> power gated + PLL Idle.
+> 
+> As part of this driver, a mechanism to read the slp_s0 residency is exposed
+> as an api and also debugfs features are added to indicate slp_s0 signal
+> assertion residency in microseconds.
+> 
+> echo freeze > /sys/power/state
+> wake the system
+> cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
+> 
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Signed-off-by: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+> ---
+> Changes in v2:
+>  * Fixed inconsistent spaces in the header file.
+>  * Updated commit message.
+>  * Enhanced acronym SKL CPU to Skylake CPUID Signature.
+>  * Put error check on pci_read_config_dword in probe function.
+>  * Changed goto label (disable) to disable_pci.
+>  * Changed x86_match_cpu error handling for consistency.
+> 
+>  arch/x86/include/asm/pmc_core.h       |  53 +++++++++
+>  drivers/platform/x86/Kconfig          |  10 ++
+>  drivers/platform/x86/Makefile         |   1 +
+>  drivers/platform/x86/intel_pmc_core.c | 206 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 270 insertions(+)
+>  create mode 100644 arch/x86/include/asm/pmc_core.h
+>  create mode 100644 drivers/platform/x86/intel_pmc_core.c
+> 
+> diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm/pmc_core.h
+> new file mode 100644
+> index 0000000..2930c6c
+> --- /dev/null
+> +++ b/arch/x86/include/asm/pmc_core.h
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Intel Core SOC Power Management Controller Header File
+> + *
+> + * Copyright (c) 2016, Intel Corporation.
+
+Intel recommendation is to include the following line in addition to the above:
+
+  * All rights reserved.
+
+> + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + */
+> +
+> +#ifndef PMC_CORE_H
+> +#define PMC_CORE_H
+> +
+> +/* Skylake Power Management Controller PCI Device ID */
+> +#define PCI_DEVICE_ID_SKL_PMC			0x9d21
+> +#define PMC_BASE_ADDR_OFFSET			0x48
+> +#define PMC_SLP_S0_RESIDENCY_COUNTER		0x13c
+> +#define PMC_MMIO_REG_LEN			0x100
+> +#define PMC_REG_BIT_WIDTH			0x20
+> +#define SLP_S0_RESIDENCY_COUNTER_GRANULARITY	0x64
+> +
+> +/**
+> + * struct pmc_dev - pmc device structure
+> + * @base_addr:		comtains pmc base address
+> + * @regmap: pointer to io-remapped memory location
+
+Whitespace alignment ^
+
+> + * @dbgfs_dir:		path to debug fs interface
+> + * @feature_available:	flag to indicate whether,
+
+No trailing comma here
+
+> + *			the feature is available,
+> + *			on a particular platform or not.
+> + *
+> + * pmc_dev contains info about power management controller device.
+> + */
+> +struct pmc_dev {
+> +	u32 base_addr;
+> +	void __iomem *regmap;
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	struct dentry *dbgfs_dir;
+> +#endif /* CONFIG_DEBUG_FS */
+> +	int feature_available;
+
+The meaning of "feature_available" isn't obvious to me reading the code to here.
+In what scenario would I have a pmc_dev but not "feature_available" ? Is it one
+particular feature of the device, or is the device itself useless?
+
+> +};
+> +
+> +int intel_pmc_slp_s0_counter_read(u64 *data);
+> +
+> +#endif
+> +
+> +/* PMC_CORE_H */
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index ed2004b..5db364c 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -821,6 +821,16 @@ config INTEL_IPS
+>  	  functionality.  If in doubt, say Y here; it will only load on
+>  	  supported platforms.
+>  
+> +config INTEL_PMC_CORE
+> +	bool "Intel PMC Core driver"
+> +	depends on X86 && PCI
+> +	default y
+> +	---help---
+> +	  This driver exposes the features provided by Power Management
+> +	  Controller for Intel Core SOC. Intel Platform Controller Hub
+> +	  for Intel Core SOCs provides access to Power Management Controller
+> +	  registers via pci interface.
+
+This needs a few grammatical corrections:
+
+	  This driver exposes the Intel Core SoC Power Management Controller
+	  features. The Intel Platform Controller Hub for Intel Core SoCs
+	  provides access to the Power Management Controller registers via a PCI
+	  interface.
+
+Even this is rather vague in my opinion. The term "features" doesn't tell the
+reader anything about what is actually being enabled? Again, is it enabling the
+device itself, or is it enabling some additional feature of this device, if so,
+which ones?
+
+>  config INTEL_IMR
+>  	bool "Intel Isolated Memory Region support"
+>  	default n
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 448443c..9b11b40 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,3 +69,4 @@ obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+>  				   intel_telemetry_pltdrv.o \
+>  				   intel_telemetry_debugfs.o
+> +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> new file mode 100644
+> index 0000000..d092655
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -0,0 +1,206 @@
+> +/*
+> + * Intel Core SOC Power Management Controller Driver
+> + *
+> + * Copyright (c) 2016, Intel Corporation.
+
+All rights reserved.
+
+> + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/pci.h>
+> +#include <linux/device.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <asm/cpu_device_id.h>
+> +#include <asm/pmc_core.h>
+> +
+> +static struct pmc_dev pmc;
+> +
+> +static const struct pci_device_id pmc_pci_ids[] = {
+> +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_SKL_PMC), (kernel_ulong_t)NULL },
+> +	{ 0, },
+> +};
+> +MODULE_DEVICE_TABLE(pci, pmc_pci_ids);
+> +
+> +/**
+> + * intel_pmc_slp_s0_counter_read() - Read slp_s0 residency.
+> + * @data: Out param that contains current slp_s0 count.
+> + *
+> + * This API currently supports Intel Skylake SOC and Sunrise
+> + * point Platform Controller Hub. Future platform support
+> + * should be added for platforms that support low power modes
+> + * beyond Package C10 state.
+> + *
+> + * SLP_S0_RESIDENCY counter counts in 100 us granularity per
+> + * step hence function populates the multiplied value in out
+> + * parameter @data
+> + *
+> + * Return:	an error code or 0 on success.
+> + */
+> +int intel_pmc_slp_s0_counter_read(u64 *data)
+> +{
+> +	int ret = 0;
+> +
+> +	if (pmc.feature_available) {
+> +		*data = readl(pmc.regmap + PMC_SLP_S0_RESIDENCY_COUNTER);
+> +		*data *= SLP_S0_RESIDENCY_COUNTER_GRANULARITY;
+> +	} else {
+> +		ret = -EACCES;
+> +	}
+> +
+> +	return ret;
+> +}
+
+This can be streamlined significantly by checking for errors, rather than
+success:
 
 
+	if (!pmc.feature_available)
+		return -EACCESS;
 
-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
+	*data = readl(pmc.regmap + PMC_SLP_S0_RESIDENCY_COUNTER);
+	*data *= SLP_S0_RESIDENCY_COUNTER_GRANULARITY;
+	return 0;
+
+> +EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
+> +
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +
+> +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
+> +{
+> +	u64 counter_val;
+> +	int err;
+> +
+> +	err = intel_pmc_slp_s0_counter_read(&counter_val);
+> +	if (err) {
+> +		counter_val = 0;
+> +		seq_printf(s, "%lld\n", counter_val);
+
+I presume we should propagate the error here? If not, there is no need to store
+err, and this function should return void.
+
+> +	} else {
+> +		seq_printf(s, "%lld\n", counter_val);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, pmc_core_dev_state_show, inode->i_private);
+> +}
+> +
+> +static const struct file_operations pmc_core_dev_state_ops = {
+> +	.open           = pmc_core_dev_state_open,
+> +	.read           = seq_read,
+> +	.llseek         = seq_lseek,
+> +	.release        = single_release,
+> +};
+> +
+> +static void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
+> +{
+> +	debugfs_remove_recursive(pmc->dbgfs_dir);
+> +}
+> +
+> +static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
+> +{
+> +	struct dentry *dir, *file;
+> +	int ret = 0;
+> +
+> +	dir = debugfs_create_dir("pmc_core", NULL);
+> +	if (!dir)
+> +		return -ENOMEM;
+> +
+> +	pmc->dbgfs_dir = dir;
+> +	file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
+> +				   dir, pmc, &pmc_core_dev_state_ops);
+> +
+> +	if (!file) {
+> +		pmc_core_dbgfs_unregister(pmc);
+> +		ret = -ENODEV;
+> +	}
+> +	return ret;
+> +}
+> +
+> +#else
+> +
+> +static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
+> +{
+> +	return 0; /* nothing to register */
+> +}
+> +
+> +#endif /* CONFIG_DEBUG_FS */
+> +
+> +static const struct x86_cpu_id intel_pmc_core_ids[] = {
+> +	{ X86_VENDOR_INTEL, 6, 0x4e, X86_FEATURE_MWAIT,
+> +		(kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
+> +	{ X86_VENDOR_INTEL, 6, 0x5e, X86_FEATURE_MWAIT,
+> +		(kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+> +
+> +static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +{
+> +	int err;
+> +	const struct x86_cpu_id *cpu_id;
+> +
+> +	cpu_id = x86_match_cpu(intel_pmc_core_ids);
+> +	if (!cpu_id) {
+> +		err = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	err = pci_enable_device(dev);
+> +	if (err) {
+> +		dev_err(&dev->dev, "PMC Core: failed to enable Power Management Controller.\n");
+> +		goto exit;
+> +	}
+> +
+> +	err = pci_read_config_dword(dev, PMC_BASE_ADDR_OFFSET, &pmc.base_addr);
+> +	if (err) {
+> +		dev_err(&dev->dev, "PMC Core: failed to read pci config space.\n");
+> +		goto disable_pci;
+> +	}
+> +	dev_dbg(&dev->dev, "PMC Core: PWRMBASE is 0x%x\n", pmc.base_addr);
+> +
+> +	pmc.regmap = ioremap_nocache(pmc.base_addr, PMC_MMIO_REG_LEN);
+> +	if (!pmc.regmap) {
+> +		dev_err(&dev->dev, "PMC Core: ioremap failed\n");
+> +		err = -ENOMEM;
+> +		goto disable_pci;
+> +	}
+> +
+> +	err = pmc_core_dbgfs_register(&pmc);
+> +	if (err) {
+> +		dev_err(&dev->dev, "PMC Core: debugfs register failed\n");
+> +		iounmap(pmc.regmap);
+> +		goto disable_pci;
+> +	}
+> +
+> +	pmc.feature_available = 1;
+> +	return 0;
+> +
+> +disable_pci:
+> +	pci_disable_device(dev);
+> +exit:
+> +	return err;
+> +}
+> +
+> +static void intel_pmc_core_remove(struct pci_dev *pdev)
+> +{
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	pmc_core_dbgfs_unregister(&pmc);
+> +#endif
+
+You are using the ifdef rather inconsistently. In probe you call
+pmc_core_dbgs_register regardless and redefine that function based on
+CONFIG_DEBIG_FS, but here you only call unregister if CONFIG_DEBUG_FS is set. I
+don't know that one is particularly preferable to the other - but please be
+consistent and parallel in such usages.
+
+> +	pci_disable_device(pdev);
+> +	iounmap(pmc.regmap);
+> +}
+> +
+> +static struct pci_driver intel_pmc_core_driver = {
+> +	.name = "intel_pmc_core",
+> +	.id_table = pmc_pci_ids,
+> +	.probe = pmc_core_probe,
+> +	.remove = intel_pmc_core_remove,
+> +};
+> +module_pci_driver(intel_pmc_core_driver);
+> +
+> +MODULE_AUTHOR("Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>");
+> +MODULE_AUTHOR("Vishwanath Somayaji <vishwanath.somayaji@intel.com>");
+> +MODULE_DESCRIPTION("Intel CORE SOC Power Management Controller Interface");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 1.9.1
+> 
+> 
+
+Who will own this driver going forward? Who gets added to MAINTAINERS?
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
