@@ -1,65 +1,52 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] sony-laptop: Avoid oops on module unload for older
- laptops
-Date: Thu, 5 May 2016 16:22:04 -0700
-Message-ID: <20160505232204.GF2113@f23x64.localdomain>
-References: <56EFB466.60008@gmail.com>
+Subject: Re: [PATCH 1/1] ideapad-laptop: Handle Yoga in tablet mode
+Date: Thu, 5 May 2016 16:42:47 -0700
+Message-ID: <20160505234247.GG2113@f23x64.localdomain>
+References: <1459544569-29865-1-git-send-email-list@eworm.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:38610 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:48184 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754684AbcEEXWH (ORCPT
+	with ESMTP id S1754614AbcEEXmu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 5 May 2016 19:22:07 -0400
+	Thu, 5 May 2016 19:42:50 -0400
 Content-Disposition: inline
-In-Reply-To: <56EFB466.60008@gmail.com>
+In-Reply-To: <1459544569-29865-1-git-send-email-list@eworm.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lawrence Yiu <lawyiu.dev@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, malattia@linux.it
+To: Christian Hesse <list@eworm.de>
+Cc: platform-driver-x86@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>
 
-On Mon, Mar 21, 2016 at 01:44:22AM -0700, Lawrence Yiu wrote:
-> Older VAIO laptops without the SN00 ACPI method will have the "handles"
-> variable unset. Return early from sony_nc_function_cleanup when "handles"
-> is null.
+On Fri, Apr 01, 2016 at 11:02:49PM +0200, Christian Hesse wrote:
+> From: Christian Hesse <mail@eworm.de>
 > 
+> When Lenovo Yoga 700 is flipped to tablet mode it emmits event 10. Let's
+> send touchpad key codes so software can disable touchpad.
+> 
+> Signed-off-by: Christian Hesse <mail@eworm.de>
+> Signed-off-by: Michael Gisbers <michael@gisbers.de>
 
-Hi Lawrence,
+Queued, thanks.
 
-Please include all maintainers listed by get_maintainer.pl. My scripts collect
-those that apply to the tree where I'm not Cc'd, but the ones that land in the
-Inbox take priority.
-
-> Signed-off-by: Lawrence Yiu <lawyiu.dev@gmail.com>
 > ---
->  drivers/platform/x86/sony-laptop.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/platform/x86/ideapad-laptop.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> index e9caa34..1dba359 100644
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -1446,6 +1446,9 @@ static void sony_nc_function_cleanup(struct platform_device *pd)
->  {
->  	unsigned int i, result, bitmask, handle;
->  
-> +	if (!handles)
-> +		return;
-
-Hrm... the cleanup logic in this driver definitely has something to be desired.
-sony_nc_handles_cleanup is called at the end of this function, and it checks for
-handles != NULL.... and this is called from too many places.
-
-So, this driver needs some cleanup - but I'm taking this patch as is for an
-immediately "fix". Thank you for submitting.
-
-> +
->  	/* get enabled events and disable them */
->  	sony_nc_int_call(sony_nc_acpi_handle, "SN01", NULL, &bitmask);
->  	sony_nc_int_call(sony_nc_acpi_handle, "SN03", &bitmask, &result);
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index be3bc2f..1d49db1 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -809,6 +809,7 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  			case 6:
+>  				ideapad_input_report(priv, vpc_bit);
+>  				break;
+> +			case 10:
+>  			case 5:
+>  				ideapad_sync_touchpad_state(priv);
+>  				break;
 > -- 
-> 2.5.0
+> 2.8.0
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
