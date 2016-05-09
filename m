@@ -1,228 +1,99 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v2 2/2] dell-laptop: Expose auxiliary MAC address if
- available
-Date: Mon, 9 May 2016 14:13:18 +0200
-Message-ID: <20160509121318.GB2875@eudyptula.hq.kempniu.pl>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH v2 1/2] dell-smbios: Add a helper function for complex SMI
+ requests
+Date: Mon, 9 May 2016 14:22:45 +0000
+Message-ID: <2097d319f77749ca9ace94ec52daf0bf@ausx13mpc120.AMER.DELL.COM>
 References: <1462636364-25644-1-git-send-email-mario_limonciello@dell.com>
- <1462636364-25644-2-git-send-email-mario_limonciello@dell.com>
+ <20160509120212.GA2875@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:35154 "EHLO
-	mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751764AbcEIMNZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2016 08:13:25 -0400
-Received: by mail-lf0-f68.google.com with SMTP id u64so20888378lff.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 May 2016 05:13:24 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <1462636364-25644-2-git-send-email-mario_limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: dvhart@infradead.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160509120212.GA2875@eudyptula.hq.kempniu.pl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: kernel@kempniu.pl
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> System with Type-C ports have a feature to expose an auxiliary
-> persistent MAC address.  This address is burned in at the
-> factory.
->=20
-> The intention of this address is to update the MAC address on
-> Type-C docks containing an ethernet adapter to match the
-> auxiliary address of the system connected to them.
->=20
-> Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
-> ---
->  drivers/platform/x86/dell-laptop.c | 66 ++++++++++++++++++++++++++++=
-+++++++++-
->  1 file changed, 65 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x8=
-6/dell-laptop.c
-> index 2c2f02b..7a1fe08 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -87,6 +87,7 @@ static struct rfkill *wifi_rfkill;
->  static struct rfkill *bluetooth_rfkill;
->  static struct rfkill *wwan_rfkill;
->  static bool force_rfkill;
-> +static char *auxiliary_mac_address;
-> =20
->  module_param(force_rfkill, bool, 0444);
->  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted mod=
-els");
-> @@ -273,6 +274,59 @@ static const struct dmi_system_id dell_quirks[] =
-__initconst =3D {
->  	{ }
->  };
-> =20
-> +/* get_aux_mac
-> + * returns the auxiliary mac address
-> + * for assigning to a Type-C ethernet device
-> + * such as that found in the Dell TB15 dock
-> + */
-> +static int get_aux_mac(void)
-> +{
-> +	struct calling_interface_buffer *buffer;
-> +	int ret;
-> +	unsigned char *address =3D
-> +		(unsigned char *) __get_free_page(GFP_KERNEL | GFP_DMA32);
-> +
-> +	buffer =3D dell_smbios_get_buffer();
-> +
-> +	/* prepare a 17 byte buffer */
-> +	dell_smbios_prepare_v2_call(address, 17);
-> +	buffer->input[0] =3D virt_to_phys(address);
-> +	dell_smbios_send_request(11, 6);
-
-I guess this code could be made reusable by:
-
-  * moving the pre-allocation to dell-smbios (so it would pre-allocate
-    two pages, one for "normal" requests and one more for "complex"
-    requests),
-   =20
-  * defining a new function, e.g. dell_smbios_send_v2_request(), taking
-    an additional parameter for specifying the desired length of the
-    "complex request" buffer, which would:
-       =20
-      o prepare the "complex request" buffer,
-       =20
-      o fill the SMI buffer with proper values (physical address of the
-        "complex request" buffer as the first input argument),
-       =20
-      o perform the SMI request,
-       =20
-      o return a structure containing the length of the returned
-        "complex" data and a pointer to that data (or perhaps even
-        length immediately followed by data, so that the "complex
-        request" buffer can simply be cast to that structure after the
-        SMI is performed).
-
-Such a function could then be used like this:
-
-    struct calling_interface_extended_buffer *extbuffer;
-    struct calling_interface_buffer *buffer;
-    int ret;
-
-    buffer =3D dell_smbios_get_buffer();
-    extbuffer =3D dell_smbios_send_v2_request(11, 6, 17);
-    ret =3D buffer->output[0];
-    if (ret !=3D 0) {
-        ...
-    }
-    auxiliary_mac_address =3D kmalloc(extbuffer->length, GFP_KERNEL);
-    memcpy(auxiliary_mac_address, extbuffer->data, extbuffer->length);
-    dell_smbios_release_buffer();
-
-This "complex request" buffer could then be freed in dell_smbios_exit()=
-,
-making caller cleanup a bit simpler.
-
-I am also not sure about the "v2" part of the naming scheme, perhaps it
-should be "extended" or "complex" instead?  Is it referred to as "v2" i=
-n
-some internal Dell documentation?
-
-> +	ret =3D buffer->output[0];
-> +
-> +	if (ret !=3D 0) {
-
-Nit: I would remove the empty line here, perhaps moving it one line
-higher, i.e. below dell_smbios_send_request().
-
-> +		auxiliary_mac_address =3D NULL;
-> +		goto auxout;
-> +	}
-> +	dell_smbios_clear_buffer();
-
-Why is this needed?
-
-> +
-> +	/* address will be stored in byte 4-> */
-> +	auxiliary_mac_address =3D kmalloc(13, GFP_KERNEL);
-> +	memcpy(auxiliary_mac_address, &address[4], 13);
-
-As pointed out above, instead of hardcoding a constant value here, the
-value returned in the first four bytes of the "complex request" buffer
-should probably be used or at least checked.
-
-> +
-> + auxout:
-> +	free_page((unsigned long)address);
-> +	dell_smbios_release_buffer();
-> +	return dell_smbios_error(ret);
-> +
-> +}
-> +
-> +static ssize_t auxiliary_mac_show(struct device *dev,
-> +				  struct device_attribute *attr, char *page)
-> +{
-> +	return sprintf(page, "%s\n", auxiliary_mac_address);
-> +}
-> +
-> +static DEVICE_ATTR_RO(auxiliary_mac);
-> +static struct attribute *dell_attributes[] =3D {
-> +	&dev_attr_auxiliary_mac.attr,
-> +	NULL
-> +};
-> +static const struct attribute_group dell_attr_group =3D {
-> +.attrs =3D dell_attributes,
-
-While checkpatch doesn't complain here, an indent would ensure
-consistency with the rest of dell-laptop.
-
-> +};
-> +
-> +
-
-If you run checkpatch with the --strict option, you will find that it
-has some whitespace-related remarks here and in several other places.
-
->  /*
->   * Derived from information in smbios-wireless-ctl:
->   *
-> @@ -392,7 +446,6 @@ static const struct dmi_system_id dell_quirks[] _=
-_initconst =3D {
->   *     cbArg1, byte0 =3D 0x13
->   *     cbRes1 Standard return codes (0, -1, -2)
->   */
-> -
-
-Is there any reason why this patch touches an unrelated empty line?
-
->  static int dell_rfkill_set(void *data, bool blocked)
->  {
->  	struct calling_interface_buffer *buffer;
-> @@ -2003,6 +2056,12 @@ static int __init dell_init(void)
->  		goto fail_rfkill;
->  	}
-> =20
-> +	ret =3D get_aux_mac();
-> +	if (!ret) {
-> +		sysfs_create_group(&platform_device->dev.kobj,
-> +				   &dell_attr_group);
-> +	}
-> +
->  	if (quirks && quirks->touchpad_led)
->  		touchpad_led_init(&platform_device->dev);
-> =20
-> @@ -2064,6 +2123,11 @@ fail_platform_driver:
-> =20
->  static void __exit dell_exit(void)
->  {
-> +	if (auxiliary_mac_address)
-> +		sysfs_remove_group(&platform_device->dev.kobj,
-> +				  &dell_attr_group);
-> +
-> +	kfree(auxiliary_mac_address);
-
-Nit, but it might be cleaner to only call kfree() if
-auxiliary_mac_address is not NULL.
-
-BTW, I sincerely hope this whole "complex request" thingy is also used
-for something more useful than encoding a 6-byte MAC into a 13-byte
-null-terminated string...
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYcWCIEvEmXBpZcWEIFtt
+YWlsdG86a2VybmVsQGtlbXBuaXUucGxdDQo+IFNlbnQ6IE1vbmRheSwgTWF5IDksIDIwMTYgNzow
+MiBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNv
+bT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnPjsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSBkZWxsLXNtYmlvczogQWRkIGEgaGVscGVyIGZ1bmN0
+aW9uIGZvciBjb21wbGV4DQo+IFNNSSByZXF1ZXN0cw0KPiANCj4gPiBNb3JlIGNvbXBsZXggU01J
+IHJlcXVlc3RzIGNhbiByZXR1cm4gZGF0YSB0aGF0IGV4Y2VlZHMgdGhlIDQgMzIgYnl0ZQ0KPiAN
+Cj4gMzItYml0DQoNCkFjaywgdGhhbmtzLg0KDQo+IA0KPiA+IGFyZ3VtZW50cyB0aGF0IGFyZSB0
+cmFkaXRpb25hbGx5IHBhcnQgb2YgYSByZXF1ZXN0Lg0KPiA+DQo+ID4gVG8gc3VwcG9ydCBtb3Jl
+IGNvbXBsZXggcmVxdWVzdHMsIHRoZSBmaXJzdCBpbnB1dCBhcmd1bWVudCBjYW4gYmUgYQ0KPiA+
+IDMyIGJpdCBwaHlzaWNhbCBhZGRyZXNzIHdpdGggYSBidWZmZXIgcHJvcGVybHkgYnVpbHQgaW4g
+YWR2YW5jZS4NCj4gPg0KPiA+IFRoaXMgaGVscGVyIGZ1bmN0aW9uIHByZXBhcmVzIHRoZSBidWZm
+ZXIgYXMgdGhlIEJJT1Mgd2lsbCBsb29rIGZvciBpdA0KPiA+IGluIHRoZXNlIHJlcXVlc3RzLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvX2xpbW9uY2ll
+bGxvQGRlbGwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNt
+Ymlvcy5jIHwgMjgNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+IGRyaXZlcnMv
+cGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmggfCAgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwg
+MjkgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2RlbGwtc21iaW9zLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9z
+LmMNCj4gPiBpbmRleCBkMjQxMmFiLi4wMGIyOWRmIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9kZWxsLXNtYmlvcy5jDQo+ID4gQEAgLTkyLDYgKzkyLDM0IEBAIHZvaWQgZGVsbF9zbWJpb3Nf
+c2VuZF9yZXF1ZXN0KGludCBjbGFzcywgaW50DQo+ID4gc2VsZWN0KSAgfSAgRVhQT1JUX1NZTUJP
+TF9HUEwoZGVsbF9zbWJpb3Nfc2VuZF9yZXF1ZXN0KTsNCj4gPg0KPiA+ICsvKiBNb3JlIGNvbXBs
+ZXggcmVxdWVzdHMgYXJlIHNlcnZlZCBieSBzZW5kaW5nDQo+ID4gKyAqIGEgcG9pbnRlciB0byBh
+IHByZS1hbGxvY2F0ZWQgYnVmZmVyDQo+ID4gKyAqIEJ5dGVzIDA6MyBhcmUgdGhlIHNpemUgb2Yg
+dGhlIHJldHVybiB2YWx1ZQ0KPiA+ICsgKiBCeXRlcyA0Omxlbmd0aCBhcmUgdGhlIHJldHVybmVk
+IHZhbHVlDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgaGVscGVyIGZ1bmN0aW9uIHByZXBhcmVzIGl0
+IHByb3Blcmx5DQo+ID4gKyAqIHdpdGggdGhlIHNpemUgbGVuZ3RoIHRvIGJlIHByb3ZpZGVkDQo+
+ID4gKyAqDQo+ID4gKyAqIGNhbGxlciBzdGlsbCBuZWVkcyB0byBwcmUtYWxsb2NhdGUgYW5kIGNs
+ZWFyDQo+ID4gKyAqIHRoZSBpbnB1dCBidWZmZXINCj4gDQo+IFdoaWNoIGlucHV0IGJ1ZmZlciwg
+dGhlIG9yaWdpbmFsIG9uZSAoc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlcikgb3IgdGhl
+DQo+IG9uZSBmb3IgImNvbXBsZXggcmVxdWVzdHMiPw0KPiANCj4gSWYgdGhlIGZvcm1lciwgcHJl
+LWFsbG9jYXRpb24gaXMgZG9uZSBieSBkZWxsX3NtYmlvc19pbml0KCkgd2hpbGUNCj4gZGVsbF9z
+bWJpb3NfZ2V0X2J1ZmZlcigpIGNsZWFycyB0aGUgYnVmZmVyIGJlZm9yZSB1c2UsIHNvIHRoZSBj
+b21tZW50DQo+IGFib3ZlIG1heSBiZSBtaXNsZWFkaW5nLg0KPiANCj4gSWYgdGhlIGxhdHRlciwg
+dGhlbiB0aGUgY2FsbGVyIGluIHBhdGNoIDIvMiBkb2Vzbid0IGNsZWFyIHRoZSBpbnB1dCBidWZm
+ZXIsIGl0IGp1c3QNCj4gYWxsb2NhdGVzIGl0IHVzaW5nIF9fZ2V0X2ZyZWVfcGFnZSgpLg0KDQpZ
+ZWFoIHRoaXMgaXMgYSBjb21tZW50IG1pc3Rha2UuICBJIHdhcyBtZWFuaW5nIGZvciAgdGhlIGNh
+bGxlciB0byBqdXN0IGFsbG9jYXRlZCBpdCwgYnV0IGFzIHlvdXIgb3RoZXIgY29tbWVudCBub3Rl
+ZCBpdCdzIGJldHRlciBmb3IgY29kZSByZS11c2UgdG8gaGF2ZSB0aGlzIGhhcHBlbiBpbiBkZWxs
+LXNtYmlvcywgc28gSSdsbCB0cnkgdG8gd29yayB0b3dhcmRzIHRoYXQgZ29hbCBpbiBuZXh0IHBh
+dGNoIGF0dGVtcHQuDQoNCj4gDQo+ID4gKyAqLw0KPiA+ICt2b2lkIGRlbGxfc21iaW9zX3ByZXBh
+cmVfdjJfY2FsbCh1OCAqaW5wdXQsIHNpemVfdCBsZW5ndGgpIHsNCj4gPiArCXUzMiBpOw0KPiA+
+ICsJdTMyICpkYXRhID0gKHUzMiAqKSBpbnB1dDsNCj4gPiArDQo+ID4gKwlkYXRhWzBdID0gbGVu
+Z3RoIC0gNDsNCj4gPiArCWZvciAoaSA9IDQ7IGkgPCBsZW5ndGg7IGkgKz0gNCkgew0KPiA+ICsJ
+CWlmIChsZW5ndGggLSBpID4gNCkgew0KPiA+ICsJCQlpbnB1dFtpXSAgID0gJ0QnOw0KPiA+ICsJ
+CQlpbnB1dFtpKzFdID0gJ1MnOw0KPiA+ICsJCQlpbnB1dFtpKzJdID0gJ0MnOw0KPiA+ICsJCQlp
+bnB1dFtpKzNdID0gJ0knOw0KPiANCj4gbWVtY3B5KCZpbnB1dFtpXSwgIkRTQ0kiLCA0KSBvciBz
+b21ldGhpbmcgYWxvbmcgdGhvc2UgbGluZXM/DQo+IA0KDQpZZWFoIHRoYXQncyBjbGVhbmVyLCBJ
+J2xsIHVzZSB0aGF0LCB0aGFua3MuDQoNCj4gQW55d2F5LCBJJ20gY29uZnVzZWQgYWJvdXQgZmls
+bGluZyB0aGUgYnVmZmVyIHdpdGggcmVwZWF0aW5nICJEU0NJIg0KPiBzdHJpbmdzLiAgVGhlIGJ1
+ZmZlcidzIGxlbmd0aCBpcyBwcm92aWRlZCBleHBsaWNpdGx5IGluIGl0cyBmaXJzdCBmb3VyIGJ5
+dGVzLiAgU29tZQ0KPiBieXRlcyBhdCB0aGUgZW5kIHdpbGwgYWx3YXlzIGJlIGxlZnQgdW5pbml0
+aWFsaXplZC4gIFNvIHdoeSBib3RoZXIgaW5pdGlhbGl6aW5nDQo+IGFueXRoaW5nIGJlc2lkZXMg
+bGVuZ3RoIGF0IGFsbD8NCj4gDQoNClRoZSByZWFzb24gZm9yIGFueSBvZiB0aGlzIGluIHRoZSBm
+aXJzdCBwbGFjZSB3YXMgc29tZSBzaXR1YXRpb25zIHdoZXJlIG1lbW9yeSB3YXMgZ2V0dGluZyBj
+bG9iYmVyZWQgYmVjYXVzZSBpdCB3YXNuJ3QgcHJvcGVybHkgYWxsb2NhdGVkIGJ5IHVzZXJzIG9m
+IHRoaXMgaW50ZXJmYWNlLiAgU28gdGhlIGRldGVybWluYXRpb24gd2FzIHRvIGhhdmUgYSB0aGUg
+MzIgYml0IHVuc2lnbmVkIGxlbmd0aCB0aGUgZmlyc3QgNCBieXRlcyBhbmQgdGhlbiByZXBlYXQg
+dGhhdCBzdHJpbmcgb24gNCBieXRlIGFsaWdubWVudCBmb3IgdGhlIHJlc3Qgb2YgdGhlIGJ1ZmZl
+ci4gIEFueXRoaW5nIG5vdCBhbGlnbmVkIG9uIDQgYnl0ZXMgaXNuJ3QgY2hlY2tlZCBieSB0aGUg
+U01NLCBzbyBpdCdzIG5vdCBpbXBvcnRhbnQgdG8gaW5pdGlhbGl6ZS4NCg0KVGhlIFNNTSB3aWxs
+IGNoZWNrIHRoZSBidWZmZXIgZm9yIHRoYXQgcmVwZWF0aW5nIHN0cmluZyBhbmQgcmVqZWN0IChl
+cnJvciAtNSkgaWYgaXQncyBub3QgYnVpbHQgcHJvcGVybHkuICANCg0KPiA+ICsJCX0NCj4gPiAr
+CX0NCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChkZWxsX3NtYmlvc19wcmVwYXJlX3Yy
+X2NhbGwpOw0KPiA+ICsNCj4gPiAgc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX3Rva2VuICpkZWxs
+X3NtYmlvc19maW5kX3Rva2VuKGludCB0b2tlbmlkKQ0KPiA+IHsNCj4gPiAgCWludCBpOw0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5oDQo+ID4gYi9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5oDQo+ID4gaW5kZXggZWM3ZDQwYS4uNWQ0
+MTg0YyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5o
+DQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3MuaA0KPiA+IEBAIC00
+MSw2ICs0MSw3IEBAIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXINCj4gPiAqZGVsbF9z
+bWJpb3NfZ2V0X2J1ZmZlcih2b2lkKTsgIHZvaWQgZGVsbF9zbWJpb3NfY2xlYXJfYnVmZmVyKHZv
+aWQpOw0KPiA+IHZvaWQgZGVsbF9zbWJpb3NfcmVsZWFzZV9idWZmZXIodm9pZCk7ICB2b2lkDQo+
+ID4gZGVsbF9zbWJpb3Nfc2VuZF9yZXF1ZXN0KGludCBjbGFzcywgaW50IHNlbGVjdCk7DQo+ID4g
+K3ZvaWQgZGVsbF9zbWJpb3NfcHJlcGFyZV92Ml9jYWxsKHU4ICppbnB1dCwgc2l6ZV90IGxlbmd0
+aCk7DQo+IA0KPiBJIHdpbGwgc2VuZCBteSByZW1hcmtzIHJlZ2FyZGluZyB0aGUgcHJvcG9zZWQg
+Y2hhbmdlcyB0byBkZWxsLXNtYmlvcyBBUEkgaW4NCj4gcmVzcG9uc2UgdG8gcGF0Y2ggMi8yLg0K
+PiANCj4gLS0NCj4gQmVzdCByZWdhcmRzLA0KPiBNaWNoYcWCIEvEmXBpZcWEDQo=
