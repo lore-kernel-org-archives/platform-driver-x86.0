@@ -1,168 +1,128 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH v2 2/2] dell-laptop: Expose auxiliary MAC address if
- available
-Date: Mon, 9 May 2016 14:22:44 +0000
-Message-ID: <695d11519a0c45ea94f570823cdbe641@ausx13mpc120.AMER.DELL.COM>
-References: <1462636364-25644-1-git-send-email-mario_limonciello@dell.com>
- <1462636364-25644-2-git-send-email-mario_limonciello@dell.com>
- <20160509121318.GB2875@eudyptula.hq.kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: [PATCH v3 1/2] dell-smbios: Add a method for more complex SMI requests
+Date: Mon,  9 May 2016 11:24:58 -0500
+Message-ID: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from AUSXIPPS306.us.dell.com ([143.166.148.156]:6190 "EHLO
-	ausxipps306.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750913AbcEIOcQ (ORCPT
+Received: from ausc60ps301.us.dell.com ([143.166.148.206]:24323 "EHLO
+	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751018AbcEIQZI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2016 10:32:16 -0400
-In-Reply-To: <20160509121318.GB2875@eudyptula.hq.kempniu.pl>
-Content-Language: en-US
+	Mon, 9 May 2016 12:25:08 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: kernel@kempniu.pl
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGHFgiBLxJlwaWXF
-hCBbbWFpbHRvOmtlcm5lbEBrZW1wbml1LnBsXQ0KPiBTZW50OiBNb25kYXksIE1heSA5LCAyMDE2
-IDc6MTMgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
-bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgTEtNTCA8bGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLQ0KPiBkcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gZGVsbC1sYXB0b3A6IEV4cG9zZSBhdXhpbGlh
-cnkgTUFDIGFkZHJlc3MgaWYNCj4gYXZhaWxhYmxlDQo+IA0KPiA+IFN5c3RlbSB3aXRoIFR5cGUt
-QyBwb3J0cyBoYXZlIGEgZmVhdHVyZSB0byBleHBvc2UgYW4gYXV4aWxpYXJ5DQo+ID4gcGVyc2lz
-dGVudCBNQUMgYWRkcmVzcy4gIFRoaXMgYWRkcmVzcyBpcyBidXJuZWQgaW4gYXQgdGhlIGZhY3Rv
-cnkuDQo+ID4NCj4gPiBUaGUgaW50ZW50aW9uIG9mIHRoaXMgYWRkcmVzcyBpcyB0byB1cGRhdGUg
-dGhlIE1BQyBhZGRyZXNzIG9uIFR5cGUtQw0KPiA+IGRvY2tzIGNvbnRhaW5pbmcgYW4gZXRoZXJu
-ZXQgYWRhcHRlciB0byBtYXRjaCB0aGUgYXV4aWxpYXJ5IGFkZHJlc3Mgb2YNCj4gPiB0aGUgc3lz
-dGVtIGNvbm5lY3RlZCB0byB0aGVtLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGlt
-b25jaWVsbG8gPG1hcmlvX2xpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jIHwgNjYNCj4gPiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjUgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2RlbGwtbGFwdG9wLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtbGFw
-dG9wLmMNCj4gPiBpbmRleCAyYzJmMDJiLi43YTFmZTA4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L2RlbGwtbGFwdG9wLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9kZWxsLWxhcHRvcC5jDQo+ID4gQEAgLTg3LDYgKzg3LDcgQEAgc3RhdGljIHN0cnVjdCBy
-ZmtpbGwgKndpZmlfcmZraWxsOyAgc3RhdGljIHN0cnVjdA0KPiA+IHJma2lsbCAqYmx1ZXRvb3Ro
-X3Jma2lsbDsgIHN0YXRpYyBzdHJ1Y3QgcmZraWxsICp3d2FuX3Jma2lsbDsgIHN0YXRpYw0KPiA+
-IGJvb2wgZm9yY2VfcmZraWxsOw0KPiA+ICtzdGF0aWMgY2hhciAqYXV4aWxpYXJ5X21hY19hZGRy
-ZXNzOw0KPiA+DQo+ID4gIG1vZHVsZV9wYXJhbShmb3JjZV9yZmtpbGwsIGJvb2wsIDA0NDQpOw0K
-PiA+IE1PRFVMRV9QQVJNX0RFU0MoZm9yY2VfcmZraWxsLCAiZW5hYmxlIHJma2lsbCBvbiBub24g
-d2hpdGVsaXN0ZWQNCj4gPiBtb2RlbHMiKTsgQEAgLTI3Myw2ICsyNzQsNTkgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBkbWlfc3lzdGVtX2lkDQo+IGRlbGxfcXVpcmtzW10gX19pbml0Y29uc3QgPSB7
-DQo+ID4gIAl7IH0NCj4gPiAgfTsNCj4gPg0KPiA+ICsvKiBnZXRfYXV4X21hYw0KPiA+ICsgKiBy
-ZXR1cm5zIHRoZSBhdXhpbGlhcnkgbWFjIGFkZHJlc3MNCj4gPiArICogZm9yIGFzc2lnbmluZyB0
-byBhIFR5cGUtQyBldGhlcm5ldCBkZXZpY2UNCj4gPiArICogc3VjaCBhcyB0aGF0IGZvdW5kIGlu
-IHRoZSBEZWxsIFRCMTUgZG9jayAgKi8gc3RhdGljIGludA0KPiA+ICtnZXRfYXV4X21hYyh2b2lk
-KSB7DQo+ID4gKwlzdHJ1Y3QgY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyICpidWZmZXI7DQo+ID4g
-KwlpbnQgcmV0Ow0KPiA+ICsJdW5zaWduZWQgY2hhciAqYWRkcmVzcyA9DQo+ID4gKwkJKHVuc2ln
-bmVkIGNoYXIgKikgX19nZXRfZnJlZV9wYWdlKEdGUF9LRVJORUwgfA0KPiBHRlBfRE1BMzIpOw0K
-PiA+ICsNCj4gPiArCWJ1ZmZlciA9IGRlbGxfc21iaW9zX2dldF9idWZmZXIoKTsNCj4gPiArDQo+
-ID4gKwkvKiBwcmVwYXJlIGEgMTcgYnl0ZSBidWZmZXIgKi8NCj4gPiArCWRlbGxfc21iaW9zX3By
-ZXBhcmVfdjJfY2FsbChhZGRyZXNzLCAxNyk7DQo+ID4gKwlidWZmZXItPmlucHV0WzBdID0gdmly
-dF90b19waHlzKGFkZHJlc3MpOw0KPiA+ICsJZGVsbF9zbWJpb3Nfc2VuZF9yZXF1ZXN0KDExLCA2
-KTsNCj4gDQo+IEkgZ3Vlc3MgdGhpcyBjb2RlIGNvdWxkIGJlIG1hZGUgcmV1c2FibGUgYnk6DQo+
-IA0KPiAgICogbW92aW5nIHRoZSBwcmUtYWxsb2NhdGlvbiB0byBkZWxsLXNtYmlvcyAoc28gaXQg
-d291bGQgcHJlLWFsbG9jYXRlDQo+ICAgICB0d28gcGFnZXMsIG9uZSBmb3IgIm5vcm1hbCIgcmVx
-dWVzdHMgYW5kIG9uZSBtb3JlIGZvciAiY29tcGxleCINCj4gICAgIHJlcXVlc3RzKSwNCj4gDQo+
-ICAgKiBkZWZpbmluZyBhIG5ldyBmdW5jdGlvbiwgZS5nLiBkZWxsX3NtYmlvc19zZW5kX3YyX3Jl
-cXVlc3QoKSwgdGFraW5nDQo+ICAgICBhbiBhZGRpdGlvbmFsIHBhcmFtZXRlciBmb3Igc3BlY2lm
-eWluZyB0aGUgZGVzaXJlZCBsZW5ndGggb2YgdGhlDQo+ICAgICAiY29tcGxleCByZXF1ZXN0IiBi
-dWZmZXIsIHdoaWNoIHdvdWxkOg0KPiANCj4gICAgICAgbyBwcmVwYXJlIHRoZSAiY29tcGxleCBy
-ZXF1ZXN0IiBidWZmZXIsDQo+IA0KPiAgICAgICBvIGZpbGwgdGhlIFNNSSBidWZmZXIgd2l0aCBw
-cm9wZXIgdmFsdWVzIChwaHlzaWNhbCBhZGRyZXNzIG9mIHRoZQ0KPiAgICAgICAgICJjb21wbGV4
-IHJlcXVlc3QiIGJ1ZmZlciBhcyB0aGUgZmlyc3QgaW5wdXQgYXJndW1lbnQpLA0KPiANCj4gICAg
-ICAgbyBwZXJmb3JtIHRoZSBTTUkgcmVxdWVzdCwNCj4gDQo+ICAgICAgIG8gcmV0dXJuIGEgc3Ry
-dWN0dXJlIGNvbnRhaW5pbmcgdGhlIGxlbmd0aCBvZiB0aGUgcmV0dXJuZWQNCj4gICAgICAgICAi
-Y29tcGxleCIgZGF0YSBhbmQgYSBwb2ludGVyIHRvIHRoYXQgZGF0YSAob3IgcGVyaGFwcyBldmVu
-DQo+ICAgICAgICAgbGVuZ3RoIGltbWVkaWF0ZWx5IGZvbGxvd2VkIGJ5IGRhdGEsIHNvIHRoYXQg
-dGhlICJjb21wbGV4DQo+ICAgICAgICAgcmVxdWVzdCIgYnVmZmVyIGNhbiBzaW1wbHkgYmUgY2Fz
-dCB0byB0aGF0IHN0cnVjdHVyZSBhZnRlciB0aGUNCj4gICAgICAgICBTTUkgaXMgcGVyZm9ybWVk
-KS4NCj4gDQo+IFN1Y2ggYSBmdW5jdGlvbiBjb3VsZCB0aGVuIGJlIHVzZWQgbGlrZSB0aGlzOg0K
-PiANCj4gICAgIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9leHRlbmRlZF9idWZmZXIgKmV4dGJ1
-ZmZlcjsNCj4gICAgIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIgKmJ1ZmZlcjsNCj4g
-ICAgIGludCByZXQ7DQo+IA0KPiAgICAgYnVmZmVyID0gZGVsbF9zbWJpb3NfZ2V0X2J1ZmZlcigp
-Ow0KPiAgICAgZXh0YnVmZmVyID0gZGVsbF9zbWJpb3Nfc2VuZF92Ml9yZXF1ZXN0KDExLCA2LCAx
-Nyk7DQo+ICAgICByZXQgPSBidWZmZXItPm91dHB1dFswXTsNCj4gICAgIGlmIChyZXQgIT0gMCkg
-ew0KPiAgICAgICAgIC4uLg0KPiAgICAgfQ0KPiAgICAgYXV4aWxpYXJ5X21hY19hZGRyZXNzID0g
-a21hbGxvYyhleHRidWZmZXItPmxlbmd0aCwgR0ZQX0tFUk5FTCk7DQo+ICAgICBtZW1jcHkoYXV4
-aWxpYXJ5X21hY19hZGRyZXNzLCBleHRidWZmZXItPmRhdGEsIGV4dGJ1ZmZlci0+bGVuZ3RoKTsN
-Cj4gICAgIGRlbGxfc21iaW9zX3JlbGVhc2VfYnVmZmVyKCk7DQo+IA0KPiBUaGlzICJjb21wbGV4
-IHJlcXVlc3QiIGJ1ZmZlciBjb3VsZCB0aGVuIGJlIGZyZWVkIGluIGRlbGxfc21iaW9zX2V4aXQo
-KSwNCj4gbWFraW5nIGNhbGxlciBjbGVhbnVwIGEgYml0IHNpbXBsZXIuDQo+IA0KDQpUaGlzIHBy
-b3Bvc2FsIHNvdW5kcyBncmVhdCwgdGhhbmtzLiAgSSdsbCBhZGp1c3QgaXQgaW4gdGhlIG5leHQg
-cmV2aXNpb24uDQoNCj4gSSBhbSBhbHNvIG5vdCBzdXJlIGFib3V0IHRoZSAidjIiIHBhcnQgb2Yg
-dGhlIG5hbWluZyBzY2hlbWUsIHBlcmhhcHMgaXQNCj4gc2hvdWxkIGJlICJleHRlbmRlZCIgb3Ig
-ImNvbXBsZXgiIGluc3RlYWQ/ICBJcyBpdCByZWZlcnJlZCB0byBhcyAidjIiIGluIHNvbWUNCj4g
-aW50ZXJuYWwgRGVsbCBkb2N1bWVudGF0aW9uPw0KDQpZZXMgaXQncyByZWZlcnJpbmcgdG8gc29t
-ZXRoaW5nIGluIGludGVybmFsIGRvY3VtZW50YXRpb24uICBJJ20gZmluZSB3aXRoIGp1c3QgaGF2
-aW5nIGl0IGJlIHNvbWV0aGluZyBsaWtlICJleHRlbmRlZCByZXF1ZXN0Ii4gIEknbGwgbWFrZSB0
-aGF0IG5vdGVkIGluIHRoZSBuZXh0IGNoYW5nZSBzZXQuDQoNCj4gDQo+ID4gKwlyZXQgPSBidWZm
-ZXItPm91dHB1dFswXTsNCj4gPiArDQo+ID4gKwlpZiAocmV0ICE9IDApIHsNCj4gDQo+IE5pdDog
-SSB3b3VsZCByZW1vdmUgdGhlIGVtcHR5IGxpbmUgaGVyZSwgcGVyaGFwcyBtb3ZpbmcgaXQgb25l
-IGxpbmUgaGlnaGVyLA0KPiBpLmUuIGJlbG93IGRlbGxfc21iaW9zX3NlbmRfcmVxdWVzdCgpLg0K
-PiANCj4gPiArCQlhdXhpbGlhcnlfbWFjX2FkZHJlc3MgPSBOVUxMOw0KPiA+ICsJCWdvdG8gYXV4
-b3V0Ow0KPiA+ICsJfQ0KPiA+ICsJZGVsbF9zbWJpb3NfY2xlYXJfYnVmZmVyKCk7DQo+IA0KPiBX
-aHkgaXMgdGhpcyBuZWVkZWQ/DQo+IA0KDQpUaGUgZXh0ZW5kZWQgYnVmZmVyIGFkZHJlc3MgaXMg
-b25seSB1c2VkIGFzIGFuIGFyZ3VtZW50IHRvIHRoZSBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIs
-IHNvIGluIG9yZGVyIHRvIHByZXZlbnQgcHJvYmxlbXMgZnJvbSBvdGhlciBjYWxscyBoYXZpbmcg
-dW5leHBlY3RlZCBkYXRhIGl0IHNob3VsZCBiZSBjbGVhcmVkIG91dC4gIA0KDQpJIGd1ZXNzIHlv
-dXIgYXJndW1lbnQgaXMgZGVsbF9zbWJpb3NfZ2V0X2J1ZmZlciAoKSBhbHJlYWR5IGNhbGxzIGRl
-bGxfc21iaW9zX2NsZWFyX2J1ZmZlcigpIGV2ZXJ5d2hlcmUgc28gdGhpcyBpcyBwb2ludGxlc3Mu
-DQoNCj4gPiArDQo+ID4gKwkvKiBhZGRyZXNzIHdpbGwgYmUgc3RvcmVkIGluIGJ5dGUgNC0+ICov
-DQo+ID4gKwlhdXhpbGlhcnlfbWFjX2FkZHJlc3MgPSBrbWFsbG9jKDEzLCBHRlBfS0VSTkVMKTsN
-Cj4gPiArCW1lbWNweShhdXhpbGlhcnlfbWFjX2FkZHJlc3MsICZhZGRyZXNzWzRdLCAxMyk7DQo+
-IA0KPiBBcyBwb2ludGVkIG91dCBhYm92ZSwgaW5zdGVhZCBvZiBoYXJkY29kaW5nIGEgY29uc3Rh
-bnQgdmFsdWUgaGVyZSwgdGhlIHZhbHVlDQo+IHJldHVybmVkIGluIHRoZSBmaXJzdCBmb3VyIGJ5
-dGVzIG9mIHRoZSAiY29tcGxleCByZXF1ZXN0IiBidWZmZXIgc2hvdWxkDQo+IHByb2JhYmx5IGJl
-IHVzZWQgb3IgYXQgbGVhc3QgY2hlY2tlZC4NCg0KT0suDQoNCj4gDQo+ID4gKw0KPiA+ICsgYXV4
-b3V0Og0KPiA+ICsJZnJlZV9wYWdlKCh1bnNpZ25lZCBsb25nKWFkZHJlc3MpOw0KPiA+ICsJZGVs
-bF9zbWJpb3NfcmVsZWFzZV9idWZmZXIoKTsNCj4gPiArCXJldHVybiBkZWxsX3NtYmlvc19lcnJv
-cihyZXQpOw0KPiA+ICsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHNzaXplX3QgYXV4aWxp
-YXJ5X21hY19zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJCSAgc3RydWN0IGRldmlj
-ZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKnBhZ2UpIHsNCj4gPiArCXJldHVybiBzcHJpbnRmKHBh
-Z2UsICIlc1xuIiwgYXV4aWxpYXJ5X21hY19hZGRyZXNzKTsgfQ0KPiA+ICsNCj4gPiArc3RhdGlj
-IERFVklDRV9BVFRSX1JPKGF1eGlsaWFyeV9tYWMpOyBzdGF0aWMgc3RydWN0IGF0dHJpYnV0ZQ0K
-PiA+ICsqZGVsbF9hdHRyaWJ1dGVzW10gPSB7DQo+ID4gKwkmZGV2X2F0dHJfYXV4aWxpYXJ5X21h
-Yy5hdHRyLA0KPiA+ICsJTlVMTA0KPiA+ICt9Ow0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGF0
-dHJpYnV0ZV9ncm91cCBkZWxsX2F0dHJfZ3JvdXAgPSB7IC5hdHRycyA9DQo+ID4gK2RlbGxfYXR0
-cmlidXRlcywNCj4gDQo+IFdoaWxlIGNoZWNrcGF0Y2ggZG9lc24ndCBjb21wbGFpbiBoZXJlLCBh
-biBpbmRlbnQgd291bGQgZW5zdXJlDQo+IGNvbnNpc3RlbmN5IHdpdGggdGhlIHJlc3Qgb2YgZGVs
-bC1sYXB0b3AuDQoNCk9LLg0KDQo+IA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArDQo+IA0KPiBJZiB5
-b3UgcnVuIGNoZWNrcGF0Y2ggd2l0aCB0aGUgLS1zdHJpY3Qgb3B0aW9uLCB5b3Ugd2lsbCBmaW5k
-IHRoYXQgaXQgaGFzIHNvbWUNCj4gd2hpdGVzcGFjZS1yZWxhdGVkIHJlbWFya3MgaGVyZSBhbmQg
-aW4gc2V2ZXJhbCBvdGhlciBwbGFjZXMuDQoNCk9LLg0KDQoNCj4gDQo+ID4gIC8qDQo+ID4gICAq
-IERlcml2ZWQgZnJvbSBpbmZvcm1hdGlvbiBpbiBzbWJpb3Mtd2lyZWxlc3MtY3RsOg0KPiA+ICAg
-Kg0KPiA+IEBAIC0zOTIsNyArNDQ2LDYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkbWlfc3lzdGVt
-X2lkIGRlbGxfcXVpcmtzW10NCj4gX19pbml0Y29uc3QgPSB7DQo+ID4gICAqICAgICBjYkFyZzEs
-IGJ5dGUwID0gMHgxMw0KPiA+ICAgKiAgICAgY2JSZXMxIFN0YW5kYXJkIHJldHVybiBjb2RlcyAo
-MCwgLTEsIC0yKQ0KPiA+ICAgKi8NCj4gPiAtDQo+IA0KPiBJcyB0aGVyZSBhbnkgcmVhc29uIHdo
-eSB0aGlzIHBhdGNoIHRvdWNoZXMgYW4gdW5yZWxhdGVkIGVtcHR5IGxpbmU/DQoNCk5vLCBpdCB3
-YXMgcHJvYmFibHkgYSBtaXN0YWtlIG9uIG15IHBhcnQuICBJJ2xsIGRvdWJsZSBjaGVjayB0aGF0
-IG5vbmUgb2YgdGhhdCBpcyBpbiB2My4NCg0KPiANCj4gPiAgc3RhdGljIGludCBkZWxsX3Jma2ls
-bF9zZXQodm9pZCAqZGF0YSwgYm9vbCBibG9ja2VkKSAgew0KPiA+ICAJc3RydWN0IGNhbGxpbmdf
-aW50ZXJmYWNlX2J1ZmZlciAqYnVmZmVyOyBAQCAtMjAwMyw2ICsyMDU2LDEyIEBADQo+ID4gc3Rh
-dGljIGludCBfX2luaXQgZGVsbF9pbml0KHZvaWQpDQo+ID4gIAkJZ290byBmYWlsX3Jma2lsbDsN
-Cj4gPiAgCX0NCj4gPg0KPiA+ICsJcmV0ID0gZ2V0X2F1eF9tYWMoKTsNCj4gPiArCWlmICghcmV0
-KSB7DQo+ID4gKwkJc3lzZnNfY3JlYXRlX2dyb3VwKCZwbGF0Zm9ybV9kZXZpY2UtPmRldi5rb2Jq
-LA0KPiA+ICsJCQkJICAgJmRlbGxfYXR0cl9ncm91cCk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJ
-aWYgKHF1aXJrcyAmJiBxdWlya3MtPnRvdWNocGFkX2xlZCkNCj4gPiAgCQl0b3VjaHBhZF9sZWRf
-aW5pdCgmcGxhdGZvcm1fZGV2aWNlLT5kZXYpOw0KPiA+DQo+ID4gQEAgLTIwNjQsNiArMjEyMywx
-MSBAQCBmYWlsX3BsYXRmb3JtX2RyaXZlcjoNCj4gPg0KPiA+ICBzdGF0aWMgdm9pZCBfX2V4aXQg
-ZGVsbF9leGl0KHZvaWQpDQo+ID4gIHsNCj4gPiArCWlmIChhdXhpbGlhcnlfbWFjX2FkZHJlc3Mp
-DQo+ID4gKwkJc3lzZnNfcmVtb3ZlX2dyb3VwKCZwbGF0Zm9ybV9kZXZpY2UtPmRldi5rb2JqLA0K
-PiA+ICsJCQkJICAmZGVsbF9hdHRyX2dyb3VwKTsNCj4gPiArDQo+ID4gKwlrZnJlZShhdXhpbGlh
-cnlfbWFjX2FkZHJlc3MpOw0KPiANCj4gTml0LCBidXQgaXQgbWlnaHQgYmUgY2xlYW5lciB0byBv
-bmx5IGNhbGwga2ZyZWUoKSBpZiBhdXhpbGlhcnlfbWFjX2FkZHJlc3MgaXMgbm90DQo+IE5VTEwu
-DQoNCk9LLg0KDQo+IA0KPiBCVFcsIEkgc2luY2VyZWx5IGhvcGUgdGhpcyB3aG9sZSAiY29tcGxl
-eCByZXF1ZXN0IiB0aGluZ3kgaXMgYWxzbyB1c2VkIGZvcg0KPiBzb21ldGhpbmcgbW9yZSB1c2Vm
-dWwgdGhhbiBlbmNvZGluZyBhIDYtYnl0ZSBNQUMgaW50byBhIDEzLWJ5dGUgbnVsbC0NCj4gdGVy
-bWluYXRlZCBzdHJpbmcuLi4NCj4gDQoNClllcywgaXQncyB1c2VkIGZvciBhbnkgcmVxdWVzdCB0
-aGF0IG5lZWRzIHRvIHByb3ZpZGUgbGFyZ2VyIGFtb3VudHMgb2YgZGF0YS4gIFNvbWUgb2YgdGhl
-bSBhcmVuJ3QgdG9vIGltcG9ydGFudCBiZWNhdXNlIHRoZXkgY2FuIGJlIG9idGFpbmVkIG90aGVy
-IG1ldGhvZHMgKGZvciBleGFtcGxlIFNlcnZpY2UgdGFnIGNhbiBiZSBvYnRhaW5lZCB2aWEgRE1J
-J3Mgc2VyaWFsICMgZmllbGQgb3IgdmlhIGFuIFNNTSBjYWxsKS4NCkkgY2FuJ3QgcmVsZWFzZSB0
-aGUgZnVsbCBzcGVjLCBidXQgaWYgeW91IGhhdmUgc29tZSBwZXQgcmVxdWVzdHMgeW91J2QgbGlr
-ZSB0byBrbm93IGlmIGl0J3MgcG9zc2libGUgdG8gZ2V0IGluZm9ybWF0aW9uIEkgY2FuIGNoZWNr
-IHRocm91Z2ggYW5kIGxldCB5b3Uga25vdyB0aGUgYXBwcm9wcmlhdGUgY2FsbCB0aGF0IG1hdGNo
-ZXMgdXAgdG8gdGhlbS4NCg0KVGhhbmtzLA0KDQo=
+More complex SMI requests can return data that exceeds the 4 32 bit
+arguments that are traditionally part of a request.
+
+To support more complex requests, the first input argument can be a
+32 bit physical address with a buffer properly built in advance.
+
+This new method prepares the buffer as the BIOS will look for
+it in these requests.
+
+Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
+---
+ drivers/platform/x86/dell-smbios.c | 43 ++++++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/dell-smbios.h |  2 ++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index d2412ab..e3bbbb3 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -33,12 +33,14 @@ struct calling_interface_structure {
+ } __packed;
+ 
+ static struct calling_interface_buffer *buffer;
++static unsigned char *extended_buffer;
+ static DEFINE_MUTEX(buffer_mutex);
+ 
+ static int da_command_address;
+ static int da_command_code;
+ static int da_num_tokens;
+ static struct calling_interface_token *da_tokens;
++static const char extended_key[4] = {'D', 'S', 'C', 'I'};
+ 
+ int dell_smbios_error(int value)
+ {
+@@ -92,6 +94,38 @@ void dell_smbios_send_request(int class, int select)
+ }
+ EXPORT_SYMBOL_GPL(dell_smbios_send_request);
+ 
++/* More complex requests are served by sending
++ * a pointer to a pre-allocated buffer
++ * Bytes 0:3 are the size of the return value
++ * Bytes 4:length are the returned value
++ *
++ * The return value is the data of the extended buffer request
++ * The value of length will be updated to the length of the actual
++ * buffer content
++ *
++ */
++unsigned char *dell_smbios_send_extended_request(int class, int select,
++						 size_t *length)
++{
++	u32 i;
++	u32 *buffer_length = (u32 *)extended_buffer;
++
++	if (*length < 5 || *length - 4 > PAGE_SIZE)
++		return NULL;
++
++	*buffer_length = *length - 4;
++	for (i = 4; i < *length; i += 4)
++		if (*length - i > 4)
++			memcpy(&extended_buffer[i], &extended_key, 4);
++
++	*length = buffer_length[0];
++	buffer->input[0] = virt_to_phys(extended_buffer);
++	dell_smbios_send_request(class, select);
++
++	return &extended_buffer[4];
++}
++EXPORT_SYMBOL_GPL(dell_smbios_send_extended_request);
++
+ struct calling_interface_token *dell_smbios_find_token(int tokenid)
+ {
+ 	int i;
+@@ -170,8 +204,16 @@ static int __init dell_smbios_init(void)
+ 		goto fail_buffer;
+ 	}
+ 
++	extended_buffer = (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
++	if (!extended_buffer) {
++		ret = -ENOMEM;
++		goto fail_extended_buffer;
++	}
++
+ 	return 0;
+ 
++fail_extended_buffer:
++	kfree(buffer);
+ fail_buffer:
+ 	kfree(da_tokens);
+ 	return ret;
+@@ -181,6 +223,7 @@ static void __exit dell_smbios_exit(void)
+ {
+ 	kfree(da_tokens);
+ 	free_page((unsigned long)buffer);
++	free_page((unsigned long)extended_buffer);
+ }
+ 
+ subsys_initcall(dell_smbios_init);
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
+index ec7d40a..c0f4395 100644
+--- a/drivers/platform/x86/dell-smbios.h
++++ b/drivers/platform/x86/dell-smbios.h
+@@ -41,6 +41,8 @@ struct calling_interface_buffer *dell_smbios_get_buffer(void);
+ void dell_smbios_clear_buffer(void);
+ void dell_smbios_release_buffer(void);
+ void dell_smbios_send_request(int class, int select);
++unsigned char *dell_smbios_send_extended_request(int class, int select,
++						 size_t *length);
+ 
+ struct calling_interface_token *dell_smbios_find_token(int tokenid);
+ #endif
+-- 
+2.7.4
