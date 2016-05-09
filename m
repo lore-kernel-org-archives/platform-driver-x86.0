@@ -1,128 +1,127 @@
 From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH v3 1/2] dell-smbios: Add a method for more complex SMI requests
-Date: Mon,  9 May 2016 11:24:58 -0500
-Message-ID: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60ps301.us.dell.com ([143.166.148.206]:24323 "EHLO
-	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751018AbcEIQZI (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2016 12:25:08 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if available
+Date: Mon,  9 May 2016 11:24:59 -0500
+Message-ID: <1462811099-16897-2-git-send-email-mario_limonciello@dell.com>
+References: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-More complex SMI requests can return data that exceeds the 4 32 bit
-arguments that are traditionally part of a request.
+System with Type-C ports have a feature to expose an auxiliary
+persistent MAC address.  This address is burned in at the
+factory.
 
-To support more complex requests, the first input argument can be a
-32 bit physical address with a buffer properly built in advance.
-
-This new method prepares the buffer as the BIOS will look for
-it in these requests.
+The intention of this address is to update the MAC address on
+Type-C docks containing an ethernet adapter to match the
+auxiliary address of the system connected to them.
 
 Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
 ---
- drivers/platform/x86/dell-smbios.c | 43 ++++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smbios.h |  2 ++
- 2 files changed, 45 insertions(+)
+ drivers/platform/x86/dell-laptop.c | 61 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index d2412ab..e3bbbb3 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -33,12 +33,14 @@ struct calling_interface_structure {
- } __packed;
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 2c2f02b..7d29690 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -87,6 +87,7 @@ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
+ static bool force_rfkill;
++static char *auxiliary_mac_address;
  
- static struct calling_interface_buffer *buffer;
-+static unsigned char *extended_buffer;
- static DEFINE_MUTEX(buffer_mutex);
+ module_param(force_rfkill, bool, 0444);
+ MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+@@ -273,6 +274,54 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+ 	{ }
+ };
  
- static int da_command_address;
- static int da_command_code;
- static int da_num_tokens;
- static struct calling_interface_token *da_tokens;
-+static const char extended_key[4] = {'D', 'S', 'C', 'I'};
- 
- int dell_smbios_error(int value)
- {
-@@ -92,6 +94,38 @@ void dell_smbios_send_request(int class, int select)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_send_request);
- 
-+/* More complex requests are served by sending
-+ * a pointer to a pre-allocated buffer
-+ * Bytes 0:3 are the size of the return value
-+ * Bytes 4:length are the returned value
-+ *
-+ * The return value is the data of the extended buffer request
-+ * The value of length will be updated to the length of the actual
-+ * buffer content
-+ *
++/* get_aux_mac
++ * returns the auxiliary mac address
++ * for assigning to a Type-C ethernet device
++ * such as that found in the Dell TB15 dock
 + */
-+unsigned char *dell_smbios_send_extended_request(int class, int select,
-+						 size_t *length)
++static int get_aux_mac(void)
 +{
-+	u32 i;
-+	u32 *buffer_length = (u32 *)extended_buffer;
++	struct calling_interface_buffer *buffer;
++	unsigned char *extended_buffer;
++	size_t length;
++	int ret;
 +
-+	if (*length < 5 || *length - 4 > PAGE_SIZE)
-+		return NULL;
-+
-+	*buffer_length = *length - 4;
-+	for (i = 4; i < *length; i += 4)
-+		if (*length - i > 4)
-+			memcpy(&extended_buffer[i], &extended_key, 4);
-+
-+	*length = buffer_length[0];
-+	buffer->input[0] = virt_to_phys(extended_buffer);
-+	dell_smbios_send_request(class, select);
-+
-+	return &extended_buffer[4];
-+}
-+EXPORT_SYMBOL_GPL(dell_smbios_send_extended_request);
-+
- struct calling_interface_token *dell_smbios_find_token(int tokenid)
- {
- 	int i;
-@@ -170,8 +204,16 @@ static int __init dell_smbios_init(void)
- 		goto fail_buffer;
- 	}
- 
-+	extended_buffer = (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
-+	if (!extended_buffer) {
-+		ret = -ENOMEM;
-+		goto fail_extended_buffer;
++	buffer = dell_smbios_get_buffer();
++	length = 17;
++	extended_buffer = dell_smbios_send_extended_request(11, 6, &length);
++	ret = buffer->output[0];
++	if (ret != 0 || !extended_buffer) {
++		pr_debug("get_aux_mac: ext buffer: %p, len: %lu, ret: %d\n",
++			 extended_buffer, length, ret);
++		auxiliary_mac_address = NULL;
++		goto auxout;
 +	}
 +
- 	return 0;
- 
-+fail_extended_buffer:
-+	kfree(buffer);
- fail_buffer:
- 	kfree(da_tokens);
- 	return ret;
-@@ -181,6 +223,7 @@ static void __exit dell_smbios_exit(void)
++	/* address will be stored in byte 4-> */
++	auxiliary_mac_address = kmalloc(length, GFP_KERNEL);
++	memcpy(auxiliary_mac_address, extended_buffer, length);
++
++ auxout:
++	dell_smbios_release_buffer();
++	return dell_smbios_error(ret);
++}
++
++static ssize_t auxiliary_mac_show(struct device *dev,
++				  struct device_attribute *attr, char *page)
++{
++	return sprintf(page, "%s\n", auxiliary_mac_address);
++}
++
++static DEVICE_ATTR_RO(auxiliary_mac);
++static struct attribute *dell_attributes[] = {
++	&dev_attr_auxiliary_mac.attr,
++	NULL
++};
++
++static const struct attribute_group dell_attr_group = {
++	.attrs = dell_attributes,
++};
++
+ /*
+  * Derived from information in smbios-wireless-ctl:
+  *
+@@ -392,7 +441,6 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+  *     cbArg1, byte0 = 0x13
+  *     cbRes1 Standard return codes (0, -1, -2)
+  */
+-
+ static int dell_rfkill_set(void *data, bool blocked)
  {
- 	kfree(da_tokens);
- 	free_page((unsigned long)buffer);
-+	free_page((unsigned long)extended_buffer);
- }
+ 	struct calling_interface_buffer *buffer;
+@@ -2003,6 +2051,12 @@ static int __init dell_init(void)
+ 		goto fail_rfkill;
+ 	}
  
- subsys_initcall(dell_smbios_init);
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index ec7d40a..c0f4395 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -41,6 +41,8 @@ struct calling_interface_buffer *dell_smbios_get_buffer(void);
- void dell_smbios_clear_buffer(void);
- void dell_smbios_release_buffer(void);
- void dell_smbios_send_request(int class, int select);
-+unsigned char *dell_smbios_send_extended_request(int class, int select,
-+						 size_t *length);
++	ret = get_aux_mac();
++	if (!ret) {
++		sysfs_create_group(&platform_device->dev.kobj,
++				   &dell_attr_group);
++	}
++
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_init(&platform_device->dev);
  
- struct calling_interface_token *dell_smbios_find_token(int tokenid);
- #endif
+@@ -2064,6 +2118,11 @@ fail_platform_driver:
+ 
+ static void __exit dell_exit(void)
+ {
++	if (auxiliary_mac_address) {
++		sysfs_remove_group(&platform_device->dev.kobj,
++				   &dell_attr_group);
++		kfree(auxiliary_mac_address);
++	}
+ 	debugfs_remove_recursive(dell_laptop_dir);
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_exit();
 -- 
 2.7.4
