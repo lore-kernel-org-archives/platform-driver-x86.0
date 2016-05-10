@@ -1,80 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ideapad-laptop: add a new WMI string for ESC key
-Date: Mon,  9 May 2016 23:49:21 +0200
-Message-ID: <1462830577-1670360-1-git-send-email-arnd@arndb.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Denis Gordienko <denis.gordienko.mail@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Josh Boyer <jwboyer@fedoraproject.org>, Philippe Coval <philippe.coval@open.eurogiciel.org>, Christian Hesse <mail@eworm.de>, Dmitry Tunin <hanipouspilot@gmail.com>, John Dahlstrom <jodarom@SDF.ORG>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] surface pro 3: add a warning when switching to tablet mode
+Date: Tue, 10 May 2016 14:49:55 +0300
+Message-ID: <1462880995-66192-1-git-send-email-andriy.shevchenko@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:44068 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751767AbcEJLuA (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 10 May 2016 07:50:00 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-My patch to the ideapad-laptop driver to get the ESC key working on the
-Yoga 1170 (Yoga 3) failed to do the same for the following model, the
-Lenovo Yoga 700.
+Microsoft Surface Book has a tablet mode button. Print another message once on
+this even instead of a bit annoying repetition of "Unknown event...".
 
-Denis Gordienko managed to get it working by adding another GUID for the
-new WMI interface. I have adapted his patch to normal coding style
-and simplified it a bit for inclusion, but this patch is currently
-untested.
+Unfortunately we can't right now to implement the proper support of this since
+_DSM method is very likely owned by Microsoft and it's not too easy to just run
+it. Thus print a warning for now.
 
-Link: https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Notebooks/YOGA-3-14-How-to-reclaim-my-Esc-key-and-permanently-disable/m-p/3317499
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Denis Gordienko <denis.gordienko.mail@gmail.com>
+One may consider to evaluate GGIV method which seems responsible to return
+current mode in use.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/ideapad-laptop.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/platform/x86/surfacepro3_button.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 1d49db124753..531ecca9dbe3 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -48,7 +48,10 @@
- #define CFG_CAMERA_BIT	(19)
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+index 700e0fa..6505c97 100644
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ b/drivers/platform/x86/surfacepro3_button.c
+@@ -24,6 +24,8 @@
+ #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+ #define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
  
- #if IS_ENABLED(CONFIG_ACPI_WMI)
--static const char ideapad_wmi_fnesc_event[] = "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6";
-+static const char* ideapad_wmi_fnesc_events[] = {
-+	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
-+	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-+};
- #endif
- 
- enum {
-@@ -93,6 +96,7 @@ struct ideapad_private {
- 	struct dentry *debug;
- 	unsigned long cfg;
- 	bool has_hw_rfkill_switch;
-+	const char *fnesc_guid;
- };
- 
- static bool no_bt_rfkill;
-@@ -990,8 +994,16 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
- 	if (ret)
- 		goto notification_failed;
++#define SURFACE_BUTTON_NOTIFY_TABLET_MODE	0xc8
 +
- #if IS_ENABLED(CONFIG_ACPI_WMI)
--	ret = wmi_install_notify_handler(ideapad_wmi_fnesc_event, ideapad_wmi_notify, priv);
-+	for (i = 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
-+		ret = wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
-+						 ideapad_wmi_notify, priv);
-+		if (ret == AE_OK) {
-+			priv->fnesc_guid = ideapad_wmi_fnesc_events[i];
-+			break;
-+		}
-+        }
- 	if (ret != AE_OK && ret != AE_NOT_EXIST)
- 		goto notification_failed_wmi;
- #endif
-@@ -1021,7 +1033,8 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
- 	int i;
+ #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_POWER	0xc7
  
- #if IS_ENABLED(CONFIG_ACPI_WMI)
--	wmi_remove_notify_handler(ideapad_wmi_fnesc_event);
-+	if (priv->fnesc_guid)
-+		wmi_remove_notify_handler(priv->fnesc_guid);
- #endif
- 	acpi_remove_notify_handler(priv->adev->handle,
- 		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify);
+@@ -33,7 +35,7 @@
+ #define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP	0xc0
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP	0xc1
+ 
+-#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN	0xc2
++#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN		0xc2
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN	0xc3
+ 
+ ACPI_MODULE_NAME("surface pro 3 button");
+@@ -105,9 +107,12 @@ static void surface_button_notify(struct acpi_device *device, u32 event)
+ 	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
+ 		key_code = KEY_VOLUMEDOWN;
+ 		break;
++	case SURFACE_BUTTON_NOTIFY_TABLET_MODE:
++		dev_warn_once(&device->dev, "Tablet mode is not supported\n");
++		break;
+ 	default:
+ 		dev_info_ratelimited(&device->dev,
+-				  "Unsupported event [0x%x]\n", event);
++				     "Unsupported event [0x%x]\n", event);
+ 		break;
+ 	}
+ 	input = button->input;
 -- 
-2.7.0
+2.8.1
