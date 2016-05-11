@@ -1,103 +1,137 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: add a new WMI string for ESC key
-Date: Wed, 11 May 2016 13:09:37 -0700
-Message-ID: <20160511200937.GC4225@f23x64.localdomain>
-References: <1462830577-1670360-1-git-send-email-arnd@arndb.de>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if
+ available
+Date: Wed, 11 May 2016 22:41:16 +0000
+Message-ID: <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
+References: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
+ <1462811099-16897-2-git-send-email-mario_limonciello@dell.com>
+ <20160511133251.GA3440@eudyptula.hq.kempniu.pl> <201605111841.54411@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:45391 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932082AbcEKUJp (ORCPT
+Received: from ausc60pc101.us.dell.com ([143.166.85.206]:57615 "EHLO
+	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751647AbcEKWlS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 May 2016 16:09:45 -0400
-Content-Disposition: inline
-In-Reply-To: <1462830577-1670360-1-git-send-email-arnd@arndb.de>
+	Wed, 11 May 2016 18:41:18 -0400
+In-Reply-To: <201605111841.54411@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ike Panhc <ike.pan@canonical.com>, Denis Gordienko <denis.gordienko.mail@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Josh Boyer <jwboyer@fedoraproject.org>, Philippe Coval <philippe.coval@open.eurogiciel.org>, Christian Hesse <mail@eworm.de>, Dmitry Tunin <hanipouspilot@gmail.com>, John Dahlstrom <jodarom@SDF.ORG>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: pali.rohar@gmail.com, kernel@kempniu.pl
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, May 09, 2016 at 11:49:21PM +0200, Arnd Bergmann wrote:
-> My patch to the ideapad-laptop driver to get the ESC key working on the
-> Yoga 1170 (Yoga 3) failed to do the same for the following model, the
-> Lenovo Yoga 700.
-> 
-> Denis Gordienko managed to get it working by adding another GUID for the
-> new WMI interface. I have adapted his patch to normal coding style
-> and simplified it a bit for inclusion, but this patch is currently
-> untested.
-> 
-> Link: https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Notebooks/YOGA-3-14-How-to-reclaim-my-Esc-key-and-permanently-disable/m-p/3317499
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Denis Gordienko <denis.gordienko.mail@gmail.com>
-
-Looks good to me, but of course I would like to see some testing. Denis, I
-presume you have a Yoga 700 you could verify this version of your patch on?
-Would you be willing to do so?
-
-
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 1d49db124753..531ecca9dbe3 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -48,7 +48,10 @@
->  #define CFG_CAMERA_BIT	(19)
->  
->  #if IS_ENABLED(CONFIG_ACPI_WMI)
-> -static const char ideapad_wmi_fnesc_event[] = "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6";
-> +static const char* ideapad_wmi_fnesc_events[] = {
-> +	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
-> +	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-> +};
->  #endif
->  
->  enum {
-> @@ -93,6 +96,7 @@ struct ideapad_private {
->  	struct dentry *debug;
->  	unsigned long cfg;
->  	bool has_hw_rfkill_switch;
-> +	const char *fnesc_guid;
->  };
->  
->  static bool no_bt_rfkill;
-> @@ -990,8 +994,16 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->  		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
->  	if (ret)
->  		goto notification_failed;
-> +
->  #if IS_ENABLED(CONFIG_ACPI_WMI)
-> -	ret = wmi_install_notify_handler(ideapad_wmi_fnesc_event, ideapad_wmi_notify, priv);
-> +	for (i = 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
-> +		ret = wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
-> +						 ideapad_wmi_notify, priv);
-> +		if (ret == AE_OK) {
-> +			priv->fnesc_guid = ideapad_wmi_fnesc_events[i];
-> +			break;
-> +		}
-> +        }
->  	if (ret != AE_OK && ret != AE_NOT_EXIST)
->  		goto notification_failed_wmi;
->  #endif
-> @@ -1021,7 +1033,8 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
->  	int i;
->  
->  #if IS_ENABLED(CONFIG_ACPI_WMI)
-> -	wmi_remove_notify_handler(ideapad_wmi_fnesc_event);
-> +	if (priv->fnesc_guid)
-> +		wmi_remove_notify_handler(priv->fnesc_guid);
->  #endif
->  	acpi_remove_notify_handler(priv->adev->handle,
->  		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify);
-> -- 
-> 2.7.0
-> 
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
+aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMTEsIDIw
+MTYgMTE6NDIgQU0NCj4gVG86IE1pY2hhxYIgS8SZcGllxYQgPGtlcm5lbEBrZW1wbml1LnBsPjsg
+TGltb25jaWVsbG8sIE1hcmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6
+IE1hdHRoZXcgR2FycmV0dCA8bWpnNTlAc3JjZi51Y2FtLm9yZz47IGR2aGFydEBpbmZyYWRlYWQu
+b3JnOyBMS01MDQo+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJp
+dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIGRl
+bGwtbGFwdG9wOiBFeHBvc2UgYXV4aWxpYXJ5IE1BQyBhZGRyZXNzIGlmDQo+IGF2YWlsYWJsZQ0K
+PiANCj4gSGkgTWFyaW8gJiBNaWNoYcWCIQ0KPiANCj4gT24gV2VkbmVzZGF5IDExIE1heSAyMDE2
+IDE1OjMyOjUxIE1pY2hhxYIgS8SZcGllxYQgd3JvdGU6DQo+ID4gPiBTeXN0ZW0gd2l0aCBUeXBl
+LUMgcG9ydHMgaGF2ZSBhIGZlYXR1cmUgdG8gZXhwb3NlIGFuIGF1eGlsaWFyeQ0KPiA+ID4gcGVy
+c2lzdGVudCBNQUMgYWRkcmVzcy4gIFRoaXMgYWRkcmVzcyBpcyBidXJuZWQgaW4gYXQgdGhlIGZh
+Y3RvcnkuDQo+ID4gPg0KPiA+ID4gVGhlIGludGVudGlvbiBvZiB0aGlzIGFkZHJlc3MgaXMgdG8g
+dXBkYXRlIHRoZSBNQUMgYWRkcmVzcyBvbiBUeXBlLUMNCj4gPiA+IGRvY2tzIGNvbnRhaW5pbmcg
+YW4gZXRoZXJuZXQgYWRhcHRlciB0byBtYXRjaCB0aGUgYXV4aWxpYXJ5IGFkZHJlc3MNCj4gPiA+
+IG9mIHRoZSBzeXN0ZW0gY29ubmVjdGVkIHRvIHRoZW0uDQo+IA0KPiBTby4uLiBpZiBJIHVuZGVy
+c3RhbmQgcGF0Y2ggZGVzY3JpcHRpb24gY29ycmVjdGx5LCBpdCBtZWFucyB0aGF0IG5ldyBub3Rl
+Ym9va3MNCj4gY291bGQgaGF2ZSByZXNlcnZlZCBNQUMgYWRkcmVzcyB1c2VkIGJ5IGRvY2ssIHJp
+Z2h0Pw0KPiANCj4gQW5kIFVTQiBUeXBlLUMgZG9ja3Mgd2l0aCBldGhlcm5ldCBwb3J0IGFjdCBs
+aWtlIFVTQiBldGhlcm5ldCBjYXJkLCByaWdodD8NCj4gDQo+IFNvIG5vdGVib29rIGhhcyBidXJu
+ZWQgTUFDIGFkZHJlc3Mgd2hpY2ggc2hvdWxkIGJlIHVzZWQgZm9yIGFueQ0KPiBjb25uZWN0ZWQg
+ZG9jayAodXNiIGV0aGVybmV0KSBpbnRvIEMgcG9ydCwgaW5zdGVhZCBNQUMgYWRkcmVzcyBidXJu
+ZWQgaW50bw0KPiBldGhlcm5ldCBjYXJkPw0KPiANCj4gSWYgSSdtIG5vdCByaWdodCwgcGxlYXNl
+IGRlc2NyaWJlIG1lIGhvdyBpdCBzaG91bGQgd29yaywgYXMgSSdtIG5vdCBzdXJlIGlmIEkNCj4g
+dW5kZXJzdGFuZCBpdCBjb3JyZWN0bHkuLi4NCg0KWWVwLCB0aGF0J3Mgc3BvdCBvbi4NCg0KPiA+
+ID4gKy8qIGdldF9hdXhfbWFjDQo+ID4NCj4gPiBJJ20gbm90IHN1cmUgd2hldGhlciByZXBlYXRp
+bmcgdGhlIGZ1bmN0aW9uJ3MgbmFtZSBpbiBhIGNvbW1lbnQgcGxhY2VkDQo+ID4ganVzdCBhYm92
+ZSBpdHMgZGVmaW5pdGlvbiBpcyB1c2VmdWwgd2hlbiBub3QgdXNpbmcga2VybmVsLWRvYy4NCj4g
+DQo+IFllcywgdGhhdCBjb21tZW50IGRvZXMgbm90IGJyaW5nIGFueSB2YWx1ZSBmb3IgcmVhZGVy
+Lg0KPiANCj4gPiBDQydpbmcgTWF0dGhldyBhbmQgUGFsaSB3aG8gYXJlIHRoZSBtYWludGFpbmVy
+cyBvZiBkZWxsLWxhcHRvcCBhcyB0aGlzDQo+ID4gYm9pbHMgZG93biB0byB0aGVpciBvcGluaW9u
+IChhbmQgeW91J2xsIG5lZWQgdGhlaXIgYWNrIGZvciB0aGUgd2hvbGUNCj4gPiBwYXRjaCBhbnl3
+YXkpLiAgUGxlYXNlIENDIHRoZW0gZm9yIGFueSB1cGNvbWluZyByZXZpc2lvbnMgb2YgdGhpcw0K
+PiA+IHBhdGNoIHNlcmllcy4NCj4gDQo+IEknbSBub3Qgb24gcGxhdGZvcm0tZHJpdmVyLXg4NiBN
+TCwgc28gcGxlYXNlIENDIG1lIGV4cGxpY2l0bHkgaWYgeW91IHdhbnQNCj4gZnJvbSBtZSB0byBj
+b21tZW50IHBhdGNoZXMuDQo+IA0KPiA+ID4gKyAqIHJldHVybnMgdGhlIGF1eGlsaWFyeSBtYWMg
+YWRkcmVzcw0KPiA+DQo+ID4gZ2V0X2F1eF9tYWMoKSBkb2Vzbid0IHJldHVybiB0aGUgYXV4aWxp
+YXJ5IE1BQyBhZGRyZXNzLCBpdCBzdG9yZXMgaXQNCj4gPiBpbiBhIHZhcmlhYmxlIGFuZCByZXR1
+cm5zIGFuIGVycm9yIGNvZGUuICBQbGVhc2UgcmVwaHJhc2UgdGhlIGNvbW1lbnQNCj4gPiB0byBh
+dm9pZCBjb25mdXNpb24uDQo+ID4NCj4gPiA+ICsgKiBmb3IgYXNzaWduaW5nIHRvIGEgVHlwZS1D
+IGV0aGVybmV0IGRldmljZQ0KPiA+ID4gKyAqIHN1Y2ggYXMgdGhhdCBmb3VuZCBpbiB0aGUgRGVs
+bCBUQjE1IGRvY2sgICovIHN0YXRpYyBpbnQNCj4gPiA+ICtnZXRfYXV4X21hYyh2b2lkKSB7DQo+
+ID4gPiArCXN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIgKmJ1ZmZlcjsNCj4gPiA+ICsJ
+dW5zaWduZWQgY2hhciAqZXh0ZW5kZWRfYnVmZmVyOw0KPiA+ID4gKwlzaXplX3QgbGVuZ3RoOw0K
+PiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwlidWZmZXIgPSBkZWxsX3NtYmlvc19n
+ZXRfYnVmZmVyKCk7DQo+ID4gPiArCWxlbmd0aCA9IDE3Ow0KPiA+ID4gKwlleHRlbmRlZF9idWZm
+ZXIgPSBkZWxsX3NtYmlvc19zZW5kX2V4dGVuZGVkX3JlcXVlc3QoMTEsIDYsDQo+ID4gPiAmbGVu
+Z3RoKTsgKwlyZXQgPSBidWZmZXItPm91dHB1dFswXTsNCj4gPiA+ICsJaWYgKHJldCAhPSAwIHx8
+ICFleHRlbmRlZF9idWZmZXIpIHsNCj4gPiA+ICsJCXByX2RlYnVnKCJnZXRfYXV4X21hYzogZXh0
+IGJ1ZmZlcjogJXAsIGxlbjogJWx1LCByZXQ6DQo+ICVkXG4iLA0KPiA+ID4gKwkJCSBleHRlbmRl
+ZF9idWZmZXIsIGxlbmd0aCwgcmV0KTsNCj4gPiA+ICsJCWF1eGlsaWFyeV9tYWNfYWRkcmVzcyA9
+IE5VTEw7DQo+ID4NCj4gPiBUaGlzIGlzIHJlZHVuZGFudCBhcyBhdXhpbGlhcnlfbWFjX2FkZHJl
+c3MgaXMgc3RhdGljIGFuZCB0aHVzIHdpbGwgYmUNCj4gPiBpbml0aWFsaXplZCB0byBOVUxMLg0K
+PiA+DQo+ID4gPiArCQlnb3RvIGF1eG91dDsNCj4gPg0KPiA+IEkgZ3Vlc3MgdGhlIGxhYmVsJ3Mg
+bmFtZSBjb3VsZCBiZSBjaGFuZ2VkIHRvICJvdXQiIGZvciBjb25zaXN0ZW5jeQ0KPiA+IHdpdGgg
+b3RoZXIgZnVuY3Rpb25zIGluIGRlbGwtbGFwdG9wIHVzaW5nIG9ubHkgb25lIGdvdG8gbGFiZWwu
+DQo+ID4NCj4gPiA+ICsJfQ0KPiA+ID4gKw0KPiA+ID4gKwkvKiBhZGRyZXNzIHdpbGwgYmUgc3Rv
+cmVkIGluIGJ5dGUgNC0+ICovDQo+ID4NCj4gPiBUaGlzIGNvbW1lbnQgaXMgbm93IHJlZHVuZGFu
+dC4NCj4gPg0KPiA+ID4gKwlhdXhpbGlhcnlfbWFjX2FkZHJlc3MgPSBrbWFsbG9jKGxlbmd0aCwg
+R0ZQX0tFUk5FTCk7DQo+ID4gPiArCW1lbWNweShhdXhpbGlhcnlfbWFjX2FkZHJlc3MsIGV4dGVu
+ZGVkX2J1ZmZlciwgbGVuZ3RoKTsNCj4gPiA+ICsNCj4gPiA+ICsgYXV4b3V0Og0KPiA+ID4gKwlk
+ZWxsX3NtYmlvc19yZWxlYXNlX2J1ZmZlcigpOw0KPiA+ID4gKwlyZXR1cm4gZGVsbF9zbWJpb3Nf
+ZXJyb3IocmV0KTsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIHNzaXplX3QgYXV4
+aWxpYXJ5X21hY19zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiA+ICsJCQkJICBzdHJ1Y3Qg
+ZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwgY2hhciAqcGFnZSkNCj4gPg0KPiA+IENvdWxkIHlvdSBy
+ZW5hbWUgdGhlIHZhcmlhYmxlICJwYWdlIiB0byAiYnVmIiBmb3IgY29uc2lzdGVuY3kgd2l0aA0K
+PiA+IG90aGVyIGRldmljZSBhdHRyaWJ1dGVzIGRlZmluZWQgaW5zaWRlIGRlbGwtbGFwdG9wPw0K
+PiA+DQo+ID4gPiArew0KPiA+ID4gKwlyZXR1cm4gc3ByaW50ZihwYWdlLCAiJXNcbiIsIGF1eGls
+aWFyeV9tYWNfYWRkcmVzcyk7IH0NCj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMgREVWSUNFX0FUVFJf
+Uk8oYXV4aWxpYXJ5X21hYyk7IHN0YXRpYyBzdHJ1Y3QgYXR0cmlidXRlDQo+ID4gPiArKmRlbGxf
+YXR0cmlidXRlc1tdID0gew0KPiA+ID4gKwkmZGV2X2F0dHJfYXV4aWxpYXJ5X21hYy5hdHRyLA0K
+PiA+ID4gKwlOVUxMDQo+ID4gPiArfTsNCj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGF0dHJpYnV0ZV9ncm91cCBkZWxsX2F0dHJfZ3JvdXAgPSB7DQo+ID4gPiArCS5hdHRycyA9
+IGRlbGxfYXR0cmlidXRlcywNCj4gPiA+ICt9Ow0KPiA+ID4gKw0KPiANCj4gSW4gbXkgb3Bpbmlv
+biB0aGlzIGlzIG5vdCBjb3JyZWN0IHdheSB0byBleHBvcnQgInJhbmRvbSIgc3lzZnMgYXR0cmli
+dXRlcyB0bw0KPiB1c2Vyc3BhY2UuIElmIGl0IGlzIHBvc3NpYmxlIHdlIHNob3VsZCB1c2UgZXhp
+c3RpbmcgQVBJL0FCSSBmb3Iga2VybmVsIGFuZCBub3QNCj4gdG8gaW52ZW50IG5ldyBBQkkgZm9y
+IHVzZXJzcGFjZS4NCj4gDQo+IERlbGwtbGFwdG9wIGRyaXZlciBoYXMgYWxyZWFkeSBkb2N1bWVu
+dGVkIEFCSSBmb3Igbm9uIHN0YW5kYXJkIHRoaW5ncyAobGlrZQ0KPiBleHRlbmRlZCBzZXR0aW5n
+cyBmb3Iga2V5Ym9hcmQgYmFja2xpZ2h0KSwgc2VlOg0KPiBodHRwczovL3d3dy5rZXJuZWwub3Jn
+L2RvYy9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLXBsYXRmb3JtLQ0KPiBkZWxsLWxh
+cHRvcA0KPiANCj4gQW5kIGV4cG9ydGluZyBNQUMgYWRkcmVzcyBzb3VuZHMgZm9yIG1lIGxpa2Ug
+YmFkIGlkZWEuIEkgdGhpbmsgaXQgc2hvdWxkDQo+IGhhbmRsZSBrZXJuZWwgaXRzZWxmIChtYXli
+ZSBzZW5kIGl0IHRvIGRyaXZlciB3aGljaCB1c2UgaXQ/KS4NCj4gDQo+IEFuZCBtb3N0IGltcG9y
+dGFudCBxdWVzdGlvbjogV2hvIGlzIGdvaW5nIHRvIHVzZSB0aGF0IHN5c2ZzIGZpbGU/IElzIHRo
+ZXJlIGFueQ0KPiBhcHBsaWNhdGlvbj8gSXQgaXMgbm90IHBvc3NpYmxlIHRvIHF1ZXJ5IGZvciB0
+aGF0IGFkZHJlc3MgZnJvbSB1c2Vyc3BhY2UsIGUuZy4NCj4gZnJvbSBsaWJzbWJpb3MgdG9vbHM/
+DQo+IA0KPiBXZSBoYXZlIGxpYnNtYmlvcyBmdW5jdGlvbmFsaXR5IGluIGtlcm5lbCBqdXN0IGZv
+ciB0aGluZ3Mgd2hpY2ggaGF2ZSBleGl0aW5nDQo+IEFQSS9BQkkvaW50ZXJmYWNlIGluIGtlcm5l
+bC4gTm90IHRob3NlIHdoaWNoIGRvIG5vdCBoYXZlLi4uDQo+IA0KPiBTbyB3aHkgaXMgbmVlZGVk
+IHRvIGhhdmUgc3VjaCBzeXNmcyBhdHRyaWJ1dGUgZXhwb3J0ZWQgYnkga2VybmVsPw0KPiANCg0K
+SSBza2lwcGVkIHlvdXIgb3RoZXIgY29tbWVudHMgYmVjYXVzZSBvZiB0aGlzIG9uZS4gIE15IG9y
+aWdpbmFsIHBsYW4gZm9yIHRoaXMgd2FzIHRvIGRvIGl0IGluIHVkZXYgb3IgTmV0d29yayBNYW5h
+Z2VyIGJ1dCB5b3UgcmFpc2UgYSBnb29kIHBvaW50LiANCk1heWJlIHRoaXMgcGF0Y2ggc2hvdWxk
+IGJlIHNjcmFwcGVkIGFsbCB0b2dldGhlci4gIA0KDQpNaWNhbCAtIGlmIHlvdSB0aGluayBwYXRj
+aCAxLzIgY291bGQgc3RpbGwgYmUgdXNlZnVsIHRvIGhhdmUgYXMgYSBnZW5lcmFsIGludGVyZmFj
+ZSBJJ2xsIHVwZGF0ZSBpdCBmb3IgeW91ciBvdGhlciBjb21tZW50cyBhbmQgZ2V0IGl0IHJlc3Vi
+bWl0dGVkLg0KDQpXZSBkbyBtaXJyb3IgdGhlIGluZm9ybWF0aW9uIGluIEFDUEkgdW5kZXIgdGhl
+IHN5c3RlbSBidXM6DQoNCiAgICBTY29wZSAoX1NCKQ0KICAgIHsNCiAgICAgICAgTmFtZSAoQU1B
+QywgQnVmZmVyICgweDE3KQ0KICAgICAgICB7DQogICAgICAgICAgICAiX0FVWE1BQ18jODQ3QkVC
+NTk5MkQyIyINCiAgICAgICAgfSkNCiAgICB9DQoNCkkgZG9uJ3Qga25vdyBob3cgdG8gcHJvcGVy
+bHkgYWNjZXNzIHRoaXMgZnJvbSB0aGUga2VybmVsIHNpZGUuICBJIG5vdGljZWQgdGhhdCBtb3N0
+IGRyaXZlcnMgdGhhdCByZWZlcmVuY2UgQUNQSSBub2RlcyByZWZlciB0byBkZXZpY2VzLCBub3Qg
+c29tZXRoaW5nIGhhbmdpbmcgb2ZmIHRoZSBzeXN0ZW0gYnVzLiANCklmIHlvdSBjb3VsZCBhZHZp
+c2UgdGhlIHJpZ2h0IHdheSB0byBnbyBhYm91dCB0aGF0LCBJIHdvdWxkIGFwcHJlY2lhdGUgaXQu
+DQoNCklmIEkgY2FuIGFjY2VzcyB0aGF0LCBtYXliZSBpdCdzIGJldHRlciB0byBkbyB0aGlzIGRp
+cmVjdGx5IGFzIGEgcGF0Y2ggdG8gdGhlIEV0aGVybmV0IGRyaXZlciBpbiBxdWVzdGlvbiAocjgx
+NTIpLiAgDQpUaGF0J3MgYWN0dWFsbHkgaG93IGl0J3MgaGFuZGxlZCBvbiB0aGUgT1Mgc2lkZSBm
+b3IgV2luZG93cyB0b28gZnJvbSB3aGF0IEkgdW5kZXJzdGFuZC4NCldlIGhhdmUgc29tZSBGVyBi
+aXQgc2V0IGluIHRoZW0gdG8gaW5kaWNhdGUgdGhleSdyZSBEZWxsIFJlYWx0ZWsgcHJvZHVjdHMg
+KGRvbid0IGhhdmUgdGhpcyBkZXRhaWwgeWV0KS4NCldoZW4gdGhleSBzZWUgdGhhdCBiaXQgdGhl
+eSBsb29rIGZvciB0aGF0IEFDUEkgYnVmZmVyIGFuZCB1c2UgaXQgdG8gc2V0IHRoZSBNQUMgYWRk
+cmVzcyB0aGUgT1Mgc2Vlcy4NCg0KDQo=
