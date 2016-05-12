@@ -1,137 +1,123 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if
  available
-Date: Wed, 11 May 2016 22:41:16 +0000
-Message-ID: <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
+Date: Thu, 12 May 2016 10:40:33 +0200
+Message-ID: <20160512084033.GW29844@pali>
 References: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
  <1462811099-16897-2-git-send-email-mario_limonciello@dell.com>
- <20160511133251.GA3440@eudyptula.hq.kempniu.pl> <201605111841.54411@pali>
+ <20160511133251.GA3440@eudyptula.hq.kempniu.pl>
+ <201605111841.54411@pali>
+ <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60pc101.us.dell.com ([143.166.85.206]:57615 "EHLO
-	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751647AbcEKWlS (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:34303 "EHLO
+	mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752058AbcELIkh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 May 2016 18:41:18 -0400
-In-Reply-To: <201605111841.54411@pali>
-Content-Language: en-US
+	Thu, 12 May 2016 04:40:37 -0400
+Content-Disposition: inline
+In-Reply-To: <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, kernel@kempniu.pl
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario_Limonciello@Dell.com
+Cc: kernel@kempniu.pl, mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
-aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMTEsIDIw
-MTYgMTE6NDIgQU0NCj4gVG86IE1pY2hhxYIgS8SZcGllxYQgPGtlcm5lbEBrZW1wbml1LnBsPjsg
-TGltb25jaWVsbG8sIE1hcmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6
-IE1hdHRoZXcgR2FycmV0dCA8bWpnNTlAc3JjZi51Y2FtLm9yZz47IGR2aGFydEBpbmZyYWRlYWQu
-b3JnOyBMS01MDQo+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJp
-dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIGRl
-bGwtbGFwdG9wOiBFeHBvc2UgYXV4aWxpYXJ5IE1BQyBhZGRyZXNzIGlmDQo+IGF2YWlsYWJsZQ0K
-PiANCj4gSGkgTWFyaW8gJiBNaWNoYcWCIQ0KPiANCj4gT24gV2VkbmVzZGF5IDExIE1heSAyMDE2
-IDE1OjMyOjUxIE1pY2hhxYIgS8SZcGllxYQgd3JvdGU6DQo+ID4gPiBTeXN0ZW0gd2l0aCBUeXBl
-LUMgcG9ydHMgaGF2ZSBhIGZlYXR1cmUgdG8gZXhwb3NlIGFuIGF1eGlsaWFyeQ0KPiA+ID4gcGVy
-c2lzdGVudCBNQUMgYWRkcmVzcy4gIFRoaXMgYWRkcmVzcyBpcyBidXJuZWQgaW4gYXQgdGhlIGZh
-Y3RvcnkuDQo+ID4gPg0KPiA+ID4gVGhlIGludGVudGlvbiBvZiB0aGlzIGFkZHJlc3MgaXMgdG8g
-dXBkYXRlIHRoZSBNQUMgYWRkcmVzcyBvbiBUeXBlLUMNCj4gPiA+IGRvY2tzIGNvbnRhaW5pbmcg
-YW4gZXRoZXJuZXQgYWRhcHRlciB0byBtYXRjaCB0aGUgYXV4aWxpYXJ5IGFkZHJlc3MNCj4gPiA+
-IG9mIHRoZSBzeXN0ZW0gY29ubmVjdGVkIHRvIHRoZW0uDQo+IA0KPiBTby4uLiBpZiBJIHVuZGVy
-c3RhbmQgcGF0Y2ggZGVzY3JpcHRpb24gY29ycmVjdGx5LCBpdCBtZWFucyB0aGF0IG5ldyBub3Rl
-Ym9va3MNCj4gY291bGQgaGF2ZSByZXNlcnZlZCBNQUMgYWRkcmVzcyB1c2VkIGJ5IGRvY2ssIHJp
-Z2h0Pw0KPiANCj4gQW5kIFVTQiBUeXBlLUMgZG9ja3Mgd2l0aCBldGhlcm5ldCBwb3J0IGFjdCBs
-aWtlIFVTQiBldGhlcm5ldCBjYXJkLCByaWdodD8NCj4gDQo+IFNvIG5vdGVib29rIGhhcyBidXJu
-ZWQgTUFDIGFkZHJlc3Mgd2hpY2ggc2hvdWxkIGJlIHVzZWQgZm9yIGFueQ0KPiBjb25uZWN0ZWQg
-ZG9jayAodXNiIGV0aGVybmV0KSBpbnRvIEMgcG9ydCwgaW5zdGVhZCBNQUMgYWRkcmVzcyBidXJu
-ZWQgaW50bw0KPiBldGhlcm5ldCBjYXJkPw0KPiANCj4gSWYgSSdtIG5vdCByaWdodCwgcGxlYXNl
-IGRlc2NyaWJlIG1lIGhvdyBpdCBzaG91bGQgd29yaywgYXMgSSdtIG5vdCBzdXJlIGlmIEkNCj4g
-dW5kZXJzdGFuZCBpdCBjb3JyZWN0bHkuLi4NCg0KWWVwLCB0aGF0J3Mgc3BvdCBvbi4NCg0KPiA+
-ID4gKy8qIGdldF9hdXhfbWFjDQo+ID4NCj4gPiBJJ20gbm90IHN1cmUgd2hldGhlciByZXBlYXRp
-bmcgdGhlIGZ1bmN0aW9uJ3MgbmFtZSBpbiBhIGNvbW1lbnQgcGxhY2VkDQo+ID4ganVzdCBhYm92
-ZSBpdHMgZGVmaW5pdGlvbiBpcyB1c2VmdWwgd2hlbiBub3QgdXNpbmcga2VybmVsLWRvYy4NCj4g
-DQo+IFllcywgdGhhdCBjb21tZW50IGRvZXMgbm90IGJyaW5nIGFueSB2YWx1ZSBmb3IgcmVhZGVy
-Lg0KPiANCj4gPiBDQydpbmcgTWF0dGhldyBhbmQgUGFsaSB3aG8gYXJlIHRoZSBtYWludGFpbmVy
-cyBvZiBkZWxsLWxhcHRvcCBhcyB0aGlzDQo+ID4gYm9pbHMgZG93biB0byB0aGVpciBvcGluaW9u
-IChhbmQgeW91J2xsIG5lZWQgdGhlaXIgYWNrIGZvciB0aGUgd2hvbGUNCj4gPiBwYXRjaCBhbnl3
-YXkpLiAgUGxlYXNlIENDIHRoZW0gZm9yIGFueSB1cGNvbWluZyByZXZpc2lvbnMgb2YgdGhpcw0K
-PiA+IHBhdGNoIHNlcmllcy4NCj4gDQo+IEknbSBub3Qgb24gcGxhdGZvcm0tZHJpdmVyLXg4NiBN
-TCwgc28gcGxlYXNlIENDIG1lIGV4cGxpY2l0bHkgaWYgeW91IHdhbnQNCj4gZnJvbSBtZSB0byBj
-b21tZW50IHBhdGNoZXMuDQo+IA0KPiA+ID4gKyAqIHJldHVybnMgdGhlIGF1eGlsaWFyeSBtYWMg
-YWRkcmVzcw0KPiA+DQo+ID4gZ2V0X2F1eF9tYWMoKSBkb2Vzbid0IHJldHVybiB0aGUgYXV4aWxp
-YXJ5IE1BQyBhZGRyZXNzLCBpdCBzdG9yZXMgaXQNCj4gPiBpbiBhIHZhcmlhYmxlIGFuZCByZXR1
-cm5zIGFuIGVycm9yIGNvZGUuICBQbGVhc2UgcmVwaHJhc2UgdGhlIGNvbW1lbnQNCj4gPiB0byBh
-dm9pZCBjb25mdXNpb24uDQo+ID4NCj4gPiA+ICsgKiBmb3IgYXNzaWduaW5nIHRvIGEgVHlwZS1D
-IGV0aGVybmV0IGRldmljZQ0KPiA+ID4gKyAqIHN1Y2ggYXMgdGhhdCBmb3VuZCBpbiB0aGUgRGVs
-bCBUQjE1IGRvY2sgICovIHN0YXRpYyBpbnQNCj4gPiA+ICtnZXRfYXV4X21hYyh2b2lkKSB7DQo+
-ID4gPiArCXN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIgKmJ1ZmZlcjsNCj4gPiA+ICsJ
-dW5zaWduZWQgY2hhciAqZXh0ZW5kZWRfYnVmZmVyOw0KPiA+ID4gKwlzaXplX3QgbGVuZ3RoOw0K
-PiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwlidWZmZXIgPSBkZWxsX3NtYmlvc19n
-ZXRfYnVmZmVyKCk7DQo+ID4gPiArCWxlbmd0aCA9IDE3Ow0KPiA+ID4gKwlleHRlbmRlZF9idWZm
-ZXIgPSBkZWxsX3NtYmlvc19zZW5kX2V4dGVuZGVkX3JlcXVlc3QoMTEsIDYsDQo+ID4gPiAmbGVu
-Z3RoKTsgKwlyZXQgPSBidWZmZXItPm91dHB1dFswXTsNCj4gPiA+ICsJaWYgKHJldCAhPSAwIHx8
-ICFleHRlbmRlZF9idWZmZXIpIHsNCj4gPiA+ICsJCXByX2RlYnVnKCJnZXRfYXV4X21hYzogZXh0
-IGJ1ZmZlcjogJXAsIGxlbjogJWx1LCByZXQ6DQo+ICVkXG4iLA0KPiA+ID4gKwkJCSBleHRlbmRl
-ZF9idWZmZXIsIGxlbmd0aCwgcmV0KTsNCj4gPiA+ICsJCWF1eGlsaWFyeV9tYWNfYWRkcmVzcyA9
-IE5VTEw7DQo+ID4NCj4gPiBUaGlzIGlzIHJlZHVuZGFudCBhcyBhdXhpbGlhcnlfbWFjX2FkZHJl
-c3MgaXMgc3RhdGljIGFuZCB0aHVzIHdpbGwgYmUNCj4gPiBpbml0aWFsaXplZCB0byBOVUxMLg0K
-PiA+DQo+ID4gPiArCQlnb3RvIGF1eG91dDsNCj4gPg0KPiA+IEkgZ3Vlc3MgdGhlIGxhYmVsJ3Mg
-bmFtZSBjb3VsZCBiZSBjaGFuZ2VkIHRvICJvdXQiIGZvciBjb25zaXN0ZW5jeQ0KPiA+IHdpdGgg
-b3RoZXIgZnVuY3Rpb25zIGluIGRlbGwtbGFwdG9wIHVzaW5nIG9ubHkgb25lIGdvdG8gbGFiZWwu
-DQo+ID4NCj4gPiA+ICsJfQ0KPiA+ID4gKw0KPiA+ID4gKwkvKiBhZGRyZXNzIHdpbGwgYmUgc3Rv
-cmVkIGluIGJ5dGUgNC0+ICovDQo+ID4NCj4gPiBUaGlzIGNvbW1lbnQgaXMgbm93IHJlZHVuZGFu
-dC4NCj4gPg0KPiA+ID4gKwlhdXhpbGlhcnlfbWFjX2FkZHJlc3MgPSBrbWFsbG9jKGxlbmd0aCwg
-R0ZQX0tFUk5FTCk7DQo+ID4gPiArCW1lbWNweShhdXhpbGlhcnlfbWFjX2FkZHJlc3MsIGV4dGVu
-ZGVkX2J1ZmZlciwgbGVuZ3RoKTsNCj4gPiA+ICsNCj4gPiA+ICsgYXV4b3V0Og0KPiA+ID4gKwlk
-ZWxsX3NtYmlvc19yZWxlYXNlX2J1ZmZlcigpOw0KPiA+ID4gKwlyZXR1cm4gZGVsbF9zbWJpb3Nf
-ZXJyb3IocmV0KTsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIHNzaXplX3QgYXV4
-aWxpYXJ5X21hY19zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiA+ICsJCQkJICBzdHJ1Y3Qg
-ZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwgY2hhciAqcGFnZSkNCj4gPg0KPiA+IENvdWxkIHlvdSBy
-ZW5hbWUgdGhlIHZhcmlhYmxlICJwYWdlIiB0byAiYnVmIiBmb3IgY29uc2lzdGVuY3kgd2l0aA0K
-PiA+IG90aGVyIGRldmljZSBhdHRyaWJ1dGVzIGRlZmluZWQgaW5zaWRlIGRlbGwtbGFwdG9wPw0K
-PiA+DQo+ID4gPiArew0KPiA+ID4gKwlyZXR1cm4gc3ByaW50ZihwYWdlLCAiJXNcbiIsIGF1eGls
-aWFyeV9tYWNfYWRkcmVzcyk7IH0NCj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMgREVWSUNFX0FUVFJf
-Uk8oYXV4aWxpYXJ5X21hYyk7IHN0YXRpYyBzdHJ1Y3QgYXR0cmlidXRlDQo+ID4gPiArKmRlbGxf
-YXR0cmlidXRlc1tdID0gew0KPiA+ID4gKwkmZGV2X2F0dHJfYXV4aWxpYXJ5X21hYy5hdHRyLA0K
-PiA+ID4gKwlOVUxMDQo+ID4gPiArfTsNCj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGF0dHJpYnV0ZV9ncm91cCBkZWxsX2F0dHJfZ3JvdXAgPSB7DQo+ID4gPiArCS5hdHRycyA9
-IGRlbGxfYXR0cmlidXRlcywNCj4gPiA+ICt9Ow0KPiA+ID4gKw0KPiANCj4gSW4gbXkgb3Bpbmlv
-biB0aGlzIGlzIG5vdCBjb3JyZWN0IHdheSB0byBleHBvcnQgInJhbmRvbSIgc3lzZnMgYXR0cmli
-dXRlcyB0bw0KPiB1c2Vyc3BhY2UuIElmIGl0IGlzIHBvc3NpYmxlIHdlIHNob3VsZCB1c2UgZXhp
-c3RpbmcgQVBJL0FCSSBmb3Iga2VybmVsIGFuZCBub3QNCj4gdG8gaW52ZW50IG5ldyBBQkkgZm9y
-IHVzZXJzcGFjZS4NCj4gDQo+IERlbGwtbGFwdG9wIGRyaXZlciBoYXMgYWxyZWFkeSBkb2N1bWVu
-dGVkIEFCSSBmb3Igbm9uIHN0YW5kYXJkIHRoaW5ncyAobGlrZQ0KPiBleHRlbmRlZCBzZXR0aW5n
-cyBmb3Iga2V5Ym9hcmQgYmFja2xpZ2h0KSwgc2VlOg0KPiBodHRwczovL3d3dy5rZXJuZWwub3Jn
-L2RvYy9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLXBsYXRmb3JtLQ0KPiBkZWxsLWxh
-cHRvcA0KPiANCj4gQW5kIGV4cG9ydGluZyBNQUMgYWRkcmVzcyBzb3VuZHMgZm9yIG1lIGxpa2Ug
-YmFkIGlkZWEuIEkgdGhpbmsgaXQgc2hvdWxkDQo+IGhhbmRsZSBrZXJuZWwgaXRzZWxmIChtYXli
-ZSBzZW5kIGl0IHRvIGRyaXZlciB3aGljaCB1c2UgaXQ/KS4NCj4gDQo+IEFuZCBtb3N0IGltcG9y
-dGFudCBxdWVzdGlvbjogV2hvIGlzIGdvaW5nIHRvIHVzZSB0aGF0IHN5c2ZzIGZpbGU/IElzIHRo
-ZXJlIGFueQ0KPiBhcHBsaWNhdGlvbj8gSXQgaXMgbm90IHBvc3NpYmxlIHRvIHF1ZXJ5IGZvciB0
-aGF0IGFkZHJlc3MgZnJvbSB1c2Vyc3BhY2UsIGUuZy4NCj4gZnJvbSBsaWJzbWJpb3MgdG9vbHM/
-DQo+IA0KPiBXZSBoYXZlIGxpYnNtYmlvcyBmdW5jdGlvbmFsaXR5IGluIGtlcm5lbCBqdXN0IGZv
-ciB0aGluZ3Mgd2hpY2ggaGF2ZSBleGl0aW5nDQo+IEFQSS9BQkkvaW50ZXJmYWNlIGluIGtlcm5l
-bC4gTm90IHRob3NlIHdoaWNoIGRvIG5vdCBoYXZlLi4uDQo+IA0KPiBTbyB3aHkgaXMgbmVlZGVk
-IHRvIGhhdmUgc3VjaCBzeXNmcyBhdHRyaWJ1dGUgZXhwb3J0ZWQgYnkga2VybmVsPw0KPiANCg0K
-SSBza2lwcGVkIHlvdXIgb3RoZXIgY29tbWVudHMgYmVjYXVzZSBvZiB0aGlzIG9uZS4gIE15IG9y
-aWdpbmFsIHBsYW4gZm9yIHRoaXMgd2FzIHRvIGRvIGl0IGluIHVkZXYgb3IgTmV0d29yayBNYW5h
-Z2VyIGJ1dCB5b3UgcmFpc2UgYSBnb29kIHBvaW50LiANCk1heWJlIHRoaXMgcGF0Y2ggc2hvdWxk
-IGJlIHNjcmFwcGVkIGFsbCB0b2dldGhlci4gIA0KDQpNaWNhbCAtIGlmIHlvdSB0aGluayBwYXRj
-aCAxLzIgY291bGQgc3RpbGwgYmUgdXNlZnVsIHRvIGhhdmUgYXMgYSBnZW5lcmFsIGludGVyZmFj
-ZSBJJ2xsIHVwZGF0ZSBpdCBmb3IgeW91ciBvdGhlciBjb21tZW50cyBhbmQgZ2V0IGl0IHJlc3Vi
-bWl0dGVkLg0KDQpXZSBkbyBtaXJyb3IgdGhlIGluZm9ybWF0aW9uIGluIEFDUEkgdW5kZXIgdGhl
-IHN5c3RlbSBidXM6DQoNCiAgICBTY29wZSAoX1NCKQ0KICAgIHsNCiAgICAgICAgTmFtZSAoQU1B
-QywgQnVmZmVyICgweDE3KQ0KICAgICAgICB7DQogICAgICAgICAgICAiX0FVWE1BQ18jODQ3QkVC
-NTk5MkQyIyINCiAgICAgICAgfSkNCiAgICB9DQoNCkkgZG9uJ3Qga25vdyBob3cgdG8gcHJvcGVy
-bHkgYWNjZXNzIHRoaXMgZnJvbSB0aGUga2VybmVsIHNpZGUuICBJIG5vdGljZWQgdGhhdCBtb3N0
-IGRyaXZlcnMgdGhhdCByZWZlcmVuY2UgQUNQSSBub2RlcyByZWZlciB0byBkZXZpY2VzLCBub3Qg
-c29tZXRoaW5nIGhhbmdpbmcgb2ZmIHRoZSBzeXN0ZW0gYnVzLiANCklmIHlvdSBjb3VsZCBhZHZp
-c2UgdGhlIHJpZ2h0IHdheSB0byBnbyBhYm91dCB0aGF0LCBJIHdvdWxkIGFwcHJlY2lhdGUgaXQu
-DQoNCklmIEkgY2FuIGFjY2VzcyB0aGF0LCBtYXliZSBpdCdzIGJldHRlciB0byBkbyB0aGlzIGRp
-cmVjdGx5IGFzIGEgcGF0Y2ggdG8gdGhlIEV0aGVybmV0IGRyaXZlciBpbiBxdWVzdGlvbiAocjgx
-NTIpLiAgDQpUaGF0J3MgYWN0dWFsbHkgaG93IGl0J3MgaGFuZGxlZCBvbiB0aGUgT1Mgc2lkZSBm
-b3IgV2luZG93cyB0b28gZnJvbSB3aGF0IEkgdW5kZXJzdGFuZC4NCldlIGhhdmUgc29tZSBGVyBi
-aXQgc2V0IGluIHRoZW0gdG8gaW5kaWNhdGUgdGhleSdyZSBEZWxsIFJlYWx0ZWsgcHJvZHVjdHMg
-KGRvbid0IGhhdmUgdGhpcyBkZXRhaWwgeWV0KS4NCldoZW4gdGhleSBzZWUgdGhhdCBiaXQgdGhl
-eSBsb29rIGZvciB0aGF0IEFDUEkgYnVmZmVyIGFuZCB1c2UgaXQgdG8gc2V0IHRoZSBNQUMgYWRk
-cmVzcyB0aGUgT1Mgc2Vlcy4NCg0KDQo=
+On Wednesday 11 May 2016 22:41:16 Mario_Limonciello@Dell.com wrote:
+> > > > +static DEVICE_ATTR_RO(auxiliary_mac); static struct attribute
+> > > > +*dell_attributes[] =3D {
+> > > > +	&dev_attr_auxiliary_mac.attr,
+> > > > +	NULL
+> > > > +};
+> > > > +
+> > > > +static const struct attribute_group dell_attr_group =3D {
+> > > > +	.attrs =3D dell_attributes,
+> > > > +};
+> > > > +
+> >=20
+> > In my opinion this is not correct way to export "random" sysfs attr=
+ibutes to
+> > userspace. If it is possible we should use existing API/ABI for ker=
+nel and not
+> > to invent new ABI for userspace.
+> >=20
+> > Dell-laptop driver has already documented ABI for non standard thin=
+gs (like
+> > extended settings for keyboard backlight), see:
+> > https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-platform=
+-
+> > dell-laptop
+> >=20
+> > And exporting MAC address sounds for me like bad idea. I think it s=
+hould
+> > handle kernel itself (maybe send it to driver which use it?).
+> >=20
+> > And most important question: Who is going to use that sysfs file? I=
+s there any
+> > application? It is not possible to query for that address from user=
+space, e.g.
+> > from libsmbios tools?
+> >=20
+> > We have libsmbios functionality in kernel just for things which hav=
+e exiting
+> > API/ABI/interface in kernel. Not those which do not have...
+> >=20
+> > So why is needed to have such sysfs attribute exported by kernel?
+> >=20
+>=20
+> I skipped your other comments because of this one.  My original plan =
+for this was to do it in udev or Network Manager but you raise a good p=
+oint.=20
+> Maybe this patch should be scrapped all together. =20
+>=20
+> Mical - if you think patch 1/2 could still be useful to have as a gen=
+eral interface I'll update it for your other comments and get it resubm=
+itted.
+
+What is first patch doing? Can you send me link to it?
+
+> We do mirror the information in ACPI under the system bus:
+>=20
+>     Scope (_SB)
+>     {
+>         Name (AMAC, Buffer (0x17)
+>         {
+>             "_AUXMAC_#847BEB5992D2#"
+>         })
+>     }
+>=20
+> I don't know how to properly access this from the kernel side.  I not=
+iced that most drivers that reference ACPI nodes refer to devices, not =
+something hanging off the system bus.=20
+> If you could advise the right way to go about that, I would appreciat=
+e it.
+
+So there are two ways how to read that MAC address. One is via SMM and
+one via ACPI.
+
+You can also read ACPI buffer (name is probably \_SB.AMAC) with ACPI
+functions in kernel. Ask ACPI people, for correct API. I'm sure this is
+possible also without creating new ACPI driver...
+
+> If I can access that, maybe it's better to do this directly as a patc=
+h to the Ethernet driver in question (r8152). =20
+> That's actually how it's handled on the OS side for Windows too from =
+what I understand.
+> We have some FW bit set in them to indicate they're Dell Realtek prod=
+ucts (don't have this detail yet).
+> When they see that bit they look for that ACPI buffer and use it to s=
+et the MAC address the OS sees.
+
+Maybe it should be better to chose same way as Windows drivers? Better
+ask on netdev mailing list and ping maintainers of that ethernet driver
+what they think about it.
+
+=46or me it sounds like a better solution (patching that ethernet drive=
+r)
+as exporting some non-standard sysfs node from kernel with MAC address
+and then using another tool which send that MAC address back to kernel.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
