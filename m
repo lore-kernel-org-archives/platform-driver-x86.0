@@ -1,46 +1,41 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED
- trigger
-Date: Thu, 12 May 2016 11:32:52 +0200
-Message-ID: <1463045572.13313.21.camel@sipsolutions.net>
-References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
-	 <1462199948-6424-2-git-send-email-jprvita@endlessm.com>
-	 <20160504072936.GB17045@amd>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] surface pro 3: add a warning when switching to
+ tablet mode
+Date: Thu, 12 May 2016 14:11:06 +0300
+Message-ID: <1463051466.17131.313.camel@linux.intel.com>
+References: <1462880995-66192-1-git-send-email-andriy.shevchenko@linux.intel.com>
+	 <20160511195646.GB4225@f23x64.localdomain>
+	 <36DF59CE26D8EE47B0655C516E9CE640287599DE@shsmsx102.ccr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160504072936.GB17045@amd>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:42750 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750774AbcELLJ6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 12 May 2016 07:09:58 -0400
+In-Reply-To: <36DF59CE26D8EE47B0655C516E9CE640287599DE@shsmsx102.ccr.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-On Wed, 2016-05-04 at 09:29 +0200, Pavel Machek wrote:
+Mailing list missed by some reason, return it back.
+
+On Thu, 2016-05-12 at 01:02 +0000, Chen, Yu C wrote:
+> Hi Andy,
 >=C2=A0
-> If userspace wants to control the manually, it can do just that --
-> control it manually. There should not be a need to "override the
-> default policy".
+> > On Tue, May 10, 2016 at 02:49:55PM +0300, Andy Shevchenko wrote:
+> > >=20
+> > > Microsoft Surface Book has a tablet mode button. Print another
+> > > message
 
-I'm still not buying this.
+> I can not find this button on Surface Pro 3, is this Surface Book
+> specific?
 
-In the original situation, without these patches, userspace has to have
-a list of all LEDs that are supposed to indicate airplane mode.
+I suppose so.
 
-With this patch only (without patch 2/3), userspace can look up the
-default trigger, but then has to change it, causing the necessary
-information to be lost immediately when you actually use it - that also
-seems like a bad idea.
-
-With the patches, the userspace that cares can also concentrate on
-something it already *does* - i.e. dealing with the rfkill API - and
-let the rest of the situation be sorted out in itself.
-
-
-Now, if the LED subsystem had a really good way of specifying LED
-intent, and it was widely used, and rfkill didn't already concern
-itself with the rfkill status of all devices ... yeah maybe this
-wouldn't be needed. As it stands, I still think this is the best way
-forward.
-
-johannes
+--=20
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
