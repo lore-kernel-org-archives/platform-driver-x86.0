@@ -1,59 +1,66 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if
- available
-Date: Thu, 12 May 2016 13:31:17 +0200
-Message-ID: <20160512113117.GA4390@eudyptula.hq.kempniu.pl>
-References: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
- <1462811099-16897-2-git-send-email-mario_limonciello@dell.com>
- <20160511133251.GA3440@eudyptula.hq.kempniu.pl>
- <201605111841.54411@pali>
- <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] surface pro 3: add a warning when switching to
+ tablet mode
+Date: Thu, 12 May 2016 15:32:31 +0300
+Message-ID: <1463056351.17131.315.camel@linux.intel.com>
+References: <1462880995-66192-1-git-send-email-andriy.shevchenko@linux.intel.com>
+	 <20160511195646.GB4225@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:36436 "EHLO
-	mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751497AbcELLbW (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:60471 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751713AbcELMbX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 12 May 2016 07:31:22 -0400
-Received: by mail-lf0-f67.google.com with SMTP id y84so7524787lfc.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 May 2016 04:31:21 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
+	Thu, 12 May 2016 08:31:23 -0400
+In-Reply-To: <20160511195646.GB4225@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario_Limonciello@Dell.com
-Cc: pali.rohar@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
 
-> Mical - if you think patch 1/2 could still be useful to have as a gen=
-eral interface I'll update it for your other comments and get it resubm=
-itted.
+On Wed, 2016-05-11 at 12:56 -0700, Darren Hart wrote:
+> On Tue, May 10, 2016 at 02:49:55PM +0300, Andy Shevchenko wrote:
+> > 
+> > Microsoft Surface Book has a tablet mode button. Print another
+> > message once on
+> > this even instead of a bit annoying repetition of "Unknown
+> > event...".
+> > 
+> > Unfortunately we can't right now to implement the proper support of
+> > this since
+> > _DSM method is very likely owned by Microsoft and it's not too easy
+> > to just run
+> > it. Thus print a warning for now.
+> > 
+> > One may consider to evaluate GGIV method which seems responsible to
+> > return
+> > current mode in use.
+> > 
+> I cleaned up the language of this commit a bit to make it flow a bit
+> better.
+> Please do keep the line length under 75 (checkpatch will complain) as
+> this
+> avoids truncation with "git log".
 
-If there is no practical use for it today, then let's call it quits for
-now.  Once the need emerges, you can simply pick up where you left off.
+Noted.
 
-> We do mirror the information in ACPI under the system bus:
->=20
->     Scope (_SB)
->     {
->         Name (AMAC, Buffer (0x17)
->         {
->             "_AUXMAC_#847BEB5992D2#"
->         })
->     }
->=20
-> I don't know how to properly access this from the kernel side.  I not=
-iced that most drivers that reference ACPI nodes refer to devices, not =
-something hanging off the system bus.=20
-> If you could advise the right way to go about that, I would appreciat=
-e it.
->=20
-> If I can access that, maybe it's better to do this directly as a patc=
-h to the Ethernet driver in question (r8152). =20
+> 
+> I dropped the last bit about GGIV entirely as I try to leave
+> speculative stuff
+> out of the commit logs where possible.
+> 
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> I've pushed this to for-next, thanks Andy. Please have a look and let
+> me know if
+> you disagree with any of the commit message changes, the code changes
+> I left
+> intact.
 
-As Pali said, this sounds like the cleaner option.
+I checked and found it nice and clean. Thanks, Darren!
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
