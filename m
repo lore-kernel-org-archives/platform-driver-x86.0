@@ -1,573 +1,92 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH v4] platform:x86: Add PMC Driver for Intel Core SOC
-Date: Mon, 16 May 2016 15:45:50 +0530
-Message-ID: <20160516101550.GA3037@rajaneesh-OptiPlex-9010>
-References: <1463061001-23210-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VfHzh2mBtNBGDHcz9BZ5C8eAdSxUqXq1Cdn-ujm9mtX8g@mail.gmail.com>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 1/1] ideapad-laptop: Handle Yoga in tablet mode
+Date: Mon, 16 May 2016 12:04:28 -0400
+Message-ID: <CA+A7VXVcq3JjJC54kXZkmvrLF1hktX_w+vXcU-vk5WA4nFeNLA@mail.gmail.com>
+References: <1459544569-29865-1-git-send-email-list@eworm.de> <20160505234247.GG2113@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfHzh2mBtNBGDHcz9BZ5C8eAdSxUqXq1Cdn-ujm9mtX8g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, vishwanath.somayaji@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yw0-f195.google.com ([209.85.161.195]:36375 "EHLO
+	mail-yw0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752812AbcEPQFK convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 16 May 2016 12:05:10 -0400
+Received: by mail-yw0-f195.google.com with SMTP id u62so20054938ywe.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 May 2016 09:05:09 -0700 (PDT)
+In-Reply-To: <20160505234247.GG2113@f23x64.localdomain>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Christian Hesse <list@eworm.de>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, maxtram95@gmail.com, hdegoede@redhat.com, linux@endlessm.com
 
-On Thu, May 12, 2016 at 06:02:45PM +0300, Andy Shevchenko wrote:
-> On Thu, May 12, 2016 at 4:50 PM, Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@intel.com> wrote:
-> 
-> Sorry for a bit late review, but I think there are still issues need
-> to be addressed.
+Adding Maxim Mikityanskiy and Hans de Goede to CC.
+
+On 5 May 2016 at 19:42, Darren Hart <dvhart@infradead.org> wrote:
+> On Fri, Apr 01, 2016 at 11:02:49PM +0200, Christian Hesse wrote:
+>> From: Christian Hesse <mail@eworm.de>
+>>
+>> When Lenovo Yoga 700 is flipped to tablet mode it emmits event 10. L=
+et's
+>> send touchpad key codes so software can disable touchpad.
+>>
+>> Signed-off-by: Christian Hesse <mail@eworm.de>
+>> Signed-off-by: Michael Gisbers <michael@gisbers.de>
 >
-
-Thanks for the detailed review and the feedback. :)
- 
-> > This patch adds the Power Management Controller driver as a pci driver
-> > for Intel Core SOC architecture.
-> 
-> SOC -> SoC
-> 
-
-Sure, will fix this throughout the code.
-
-> >
-> > This driver can utilize debugging capabilities and supported features
-> > as exposed by the Power Management Controller.
-> >
-> > Please refer to the below specification for more details on PMC features.
-> > http://www.intel.in/content/www/in/en/chipsets/100-series-chipset-datasheet-vol-2.html
-> >
-> > The current version of this driver exposes slp_s0_residency counter.
-> > This counter can be used for detecting fragile SLP_S0 signal related
-> > failures and take corrective actions when PCH SLP_S0 signal is not
-> > asserted after kernel freeze as part of suspend to idle flow
-> > (echo freeze > /sys/power/state).
-> >
-> > Intel Platform Controller Hub (PCH) asserts SLP_S0 signal when it
-> > detects favorable conditions to enter its low power mode. As a
-> > pre-requisite the SOC should be in deepest possible Package C-State
-> > and devices should be in low power mode. For example, on Skylake SOC
-> 
-> Ditto.
-> Check entire code for this.
-> 
-
-Same as above.
-
-> > the deepest Package C-State is Package C10 or PC10. Suspend to idle
-> > flow generally leads to PC10 state but PC10 state may not be sufficient
-> > for realizing the platform wide power potential which SLP_S0 signal
-> > assertion can provide.
-> >
-> > SLP_S0 signal is often connected to the Embedded Controller (EC) and the
-> > Power Management IC (PMIC) for other platform power management related
-> > optimizations.
-> >
-> > In general, SLP_S0 assertion == PC10 + PCH low power mode + ModPhy Lanes
-> > power gated + PLL Idle.
-> >
-> > As part of this driver, a mechanism to read the slp_s0 residency is exposed
-> > as an api and also debugfs features are added to indicate slp_s0 signal
-> 
-> api -> API
-> 
-
-Sure, will take care of this change.
-
-> > assertion residency in microseconds.
-> >
-> > echo freeze > /sys/power/state
-> > wake the system
-> > cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
-> >
-> > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > Signed-off-by: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-> 
-> Two people (1).
-> 
-> 
-
-Ok.
-
-> > +INTEL PMC CORE DRIVER
-> > +M:      Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > +M:      Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-> > +L:      platform-driver-x86@vger.kernel.org
-> > +S:      Maintained
-> > +F:      drivers/platform/x86/intel_pmc_core.h
-> > +F:      drivers/platform/x86/intel_pmc_core.c
-> 
-> So, we have arch/x86/platform/atom/pmc_atom.c
-> 
-> This driver looks very similar (by what functional is), so, we have to
-> become clear what our layout is.
-> Either we go with drivers/platform/x86 or with arch/x86/platform.
-> 
-
-IMHO, the functianality provided by this driver is platform specific and
-not architecture specific.
-
-There are few similar drivers present in this location already i.e.
-intel_telemetry_core.c, intel_pmc_ipc.c etc.
-
-We had initially put this driver along with pmc_atom.c but later we thought
-that driver/platform/x86 would be a more apt place for it because of the
-above mentioned reasons.
-
-Please advise for the right location for this driver if its not placed in the
-expected location.
-
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -821,6 +821,18 @@ config INTEL_IPS
-> >           functionality.  If in doubt, say Y here; it will only load on
-> >           supported platforms.
-> >
-> > +config INTEL_PMC_CORE
-> 
-> Better to locate this in alphabetical order.
-> 
-
-Agreed, i tried to put it in alphabetical order but there are quite a few entries
-in Kconfig that are skewed e.g. INTEL_MFLD is placed above INTEL_IPS.
-
-Placing INTEL_PMC_CORE after INTEL_IMR would be ok?
-
-> > +       bool "Intel PMC Core driver"
-> > +       depends on X86 && PCI
-> 
-> > +       ---help---
-> > +         The Intel Platform Controller Hub for Intel Core SoCs provides access
-> > +         to Power Management Controller registers via a pci interface. This
-> > +         driver can utilize debugging capabilities and supported features as
-> > +         exposed by the Power Management Controller.
-> > +
-> > +         Supported features:
-> > +               - slp_s0_residency counter.
-> > +
-> >  config INTEL_IMR
-> >         bool "Intel Isolated Memory Region support"
-> >         default n
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> > index 448443c..9b11b40 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -69,3 +69,4 @@ obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
-> >  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
-> >                                    intel_telemetry_pltdrv.o \
-> >                                    intel_telemetry_debugfs.o
-> > +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> > new file mode 100644
-> > index 0000000..0b5388e
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -0,0 +1,201 @@
-> > +/*
-> > + * Intel Core SOC Power Management Controller Driver
-> > + *
-> > + * Copyright (c) 2016, Intel Corporation.
-> > + * All Rights Reserved.
-> 
-> > + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
-> 
-> (2)
-> 
-> In (1) you put two people, here is one. Please, explain who is the
-> author and why SoB is not in align with Author(s).
-> 
-
-Its a miss from our end, will update the Author tag. Thanks for pointing it out.
-
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + */
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/device.h>
-> > +#include <linux/debugfs.h>
-> > +#include <linux/seq_file.h>
-> > +#include <linux/module.h>
-> > +#include <linux/io.h>
-> 
-> Alphabetical order.
-> 
-> + empty line
-> 
-> > +#include <asm/cpu_device_id.h>
-> 
-> + empty line
-> 
-> > +#include "intel_pmc_core.h"
-> > +
-> 
-
-Ok for above.
-
-> > +static struct pmc_dev pmc;
-> > +
-> > +static const struct pci_device_id pmc_pci_ids[] = {
-> > +       { PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID), (kernel_ulong_t)NULL },
-> 
-> No need to have an explicit NULL
-> 
-
-There is a precedent in the kernel for such usage and in previous reviews we agreed
-to stick to this format. I hope thats fine?
-
-> > +       { 0, },
-> > +};
-> > +MODULE_DEVICE_TABLE(pci, pmc_pci_ids);
-> > +
-> > +/**
-> > + * intel_pmc_slp_s0_counter_read() - Read slp_s0 residency.
-> > + * @data: Out param that contains current slp_s0 count.
-> > + *
-> > + * This API currently supports Intel Skylake SOC and Sunrise
-> > + * point Platform Controller Hub. Future platform support
-> 
-> Either Sunrisepoint or Sunrise Point.
-> SOC -> SoC
-> 
-
-Sure.
-
-> > + * should be added for platforms that support low power modes
-> > + * beyond Package C10 state.
-> > + *
-> > + * SLP_S0_RESIDENCY counter counts in 100 us granularity per
-> > + * step hence function populates the multiplied value in out
-> > + * parameter @data
-> 
-> + dot at the end of sentence.
-> 
-
-Ok.
-
-> > + *
-> > + * Return:     an error code or 0 on success.
-> > + */
-> > +int intel_pmc_slp_s0_counter_read(u64 *data)
-> > +{
-> 
-> struct pmc_dev *pmcdev = &pmc;
-> 
-> 
-> > +       if (!pmc.has_slp_s0_res)
-> 
-> 'pmc.' -> 'pmcdev->'
-> 
-> > +               return -EACCES;
-> > +
-> > +       *data = readl(pmc.regmap + SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-> 
-> Ditto.
-> 
-> > +       *data *= SPT_PMC_SLP_S0_RES_COUNTER_STEP;
-> 
-> Use temporary variable.
-> 
-> u64 value;
-> 
-> value = readl();
-> value *= ;
-> 
-> *data = value;
-> 
-> This makes only one place where you assign returning value.
+> Queued, thanks.
 >
+>> ---
+>>  drivers/platform/x86/ideapad-laptop.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfor=
+m/x86/ideapad-laptop.c
+>> index be3bc2f..1d49db1 100644
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -809,6 +809,7 @@ static void ideapad_acpi_notify(acpi_handle hand=
+le, u32 event, void *data)
+>>                       case 6:
+>>                               ideapad_input_report(priv, vpc_bit);
+>>                               break;
+>> +                     case 10:
+>>                       case 5:
+>>                               ideapad_sync_touchpad_state(priv);
 
-Ok, will rework on the function and split it into two. One for performing
-read operation and callable from within the module and the other one to be
-called from outside.
- 
-> > +
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
-> 
-> Who is going to be a user of that?
-> 
+I'm not sure this is the right action here: ideapad_sync_touchpad()
+sends a sequence of KEY_TOUCHPAD_DISABLE and KEY_TOUCHPAD_ENABLED,
+which are interpreted by userspace as "the touchpad has been
+{dis,en}abled by the hardware". The way userspace is expected to react
+to it is by showing a notification of the fact to the user, but not
+disabling the touchpad. This behavior can be confirmed in the original
+commit message that introduced this change (I couldn't find any actual
+documentation on this): "Input: add keycodes for touchpad on/off keys"
+(0417596f66). I was actually going to propose a patch similar to Hans'
+"ideapad-laptop: Disable touchpad interface on Yoga models"
+(f79a901331) for the Yoga 900, to avoid an "touchpad ON" OSD
+notification being shown to the user when returning for suspend.
 
-This is expected to be used by a framework (upcoming) for detecting slp_s0
-signal assertion related failures.
+Also, I've been investigating touchpad-related problems in the Lenovo
+Yoga 900 recently, and trying to understand this code. IIUC
+ideadpad_sync_touchpad_state() was created as part of "ideapad: add
+Lenovo IdeaPad Z570 support (part 2)" (07a4a4fc8) to allow userspace
+to syncronize a touchpad-state-indicator LED with the actual touchpad
+state, although it seems to me it only works if the touchpad is always
+enabled by the hardware on resume (cc'ing the original patch author
+here for maybe a confirmation on how this is expected to work).
 
-> > +
-> 
-> > +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> 
-> 
-> > +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
-> > +{
-> 
-> Pointer to pmc, i.e. pmc_dev *, would be supplied in seq_file. Take it
-> from there...
-> 
-> > +       u64 counter_val;
-> 
-> u64 value;
-> 
-> > +       int err;
-> > +
-> > +       err = intel_pmc_slp_s0_counter_read(&counter_val);
-> 
-> ...thus split your function to internal, which takes pmc_dev * as a
-> first parameter and use exported variant for users which takes global
-> variable.
-> 
-> int intel_pmc_slp_s0_counter_read(u64 *data)
-> {
->  struct pmc_dev *pmcdev = &pmc;
-> 
->  return do_counter_read(pmcdev, data);
-> }
-> 
-> 
+Additionally, while I indeed see an unknown event reported by
+ideapad_laptop when closing the lid on the Yoga 900, it is not
+vpc_bit=3D10, but vpc_bit=3D1. But I also see the keyboard device sendi=
+ng
+the same scancode that is sent when the actual touchpad-toggle media
+key is pressed (F6 on the Yoga 900), so I'm not 100% sure how all of
+this play together yet. I think it would be great if we could
+understand the problem a bit better and find a more generic solution.
+Were you able to trace the DSDT code that generates this notification?
 
-As explained above, will rework on the function split logic and accomodate 
-these suggestions.
+Best regards,
 
-> > +       if (!err)
-> > +               seq_printf(s, "%lld\n", counter_val);
-> 
-> Please, use positive check
-> 
-> if (err)
->  return err;
-> 
-
-Ok, any benefit? readability?
-
-> > +
-> > +       return err;
-> > +}
-> > +
-> > +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
-> > +{
-> > +       return single_open(file, pmc_core_dev_state_show, inode->i_private);
-> > +}
-> > +
-> > +static const struct file_operations pmc_core_dev_state_ops = {
-> > +       .open           = pmc_core_dev_state_open,
-> > +       .read           = seq_read,
-> > +       .llseek         = seq_lseek,
-> > +       .release        = single_release,
-> > +};
-> > +
-> 
-> > +static void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
-> > +{
-> > +       debugfs_remove_recursive(pmc->dbgfs_dir);
-> > +}
-> 
-> No need to keep this under #ifdef.
-> 
-
-Based on some previus review comments we decided to put the dummy functions
-for !CONIG_DEBUG_FS case. Can you please elaborate more on this change request?
-
-> > +
-> > +static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
-> > +{
-> > +       struct dentry *dir, *file;
-> 
-> > +       int ret = 0;
-> 
-> Redundant, see below.
-> 
-> > +
-> > +       dir = debugfs_create_dir("pmc_core", NULL);
-> > +       if (!dir)
-> > +               return -ENOMEM;
-> > +
-> > +       pmc->dbgfs_dir = dir;
-> > +       file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
-> > +                                  dir, pmc, &pmc_core_dev_state_ops);
-> > +
-> > +       if (!file) {
-> > +               pmc_core_dbgfs_unregister(pmc);
-> > +               ret = -ENODEV;
-> 
-> return -ENODEV;
-> 
-
-Ok.
-
-> > +       }
-> 
-> > +       return ret;
-> 
-> return 0;
-> 
-> > +}
-> > +#else
-> > +static inline int pmc_core_dbgfs_register(struct pmc_dev *pmc)
-> > +{
-> > +       return 0; /* nothing to register */
-> > +}
-> > +
-> 
-> > +static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
-> > +{
-> > +       /* nothing to deregister */
-> > +}
-> 
-> Redundant.
-> 
-
-Same as above.
-
-> > +#endif /* CONFIG_DEBUG_FS */
-> > +
-> > +static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> > +       { X86_VENDOR_INTEL, 6, 0x4e, X86_FEATURE_MWAIT,
-> > +               (kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
-> 
-> No explicit NULL.
-> 
-
-Same as explained above.
-
-> > +       { X86_VENDOR_INTEL, 6, 0x5e, X86_FEATURE_MWAIT,
-> > +               (kernel_ulong_t)NULL}, /* Skylake CPUID Signature */
-> 
-> Ditto.
-> 
-
-Same as explained above.
-
-> > +       {}
-> > +};
-> > +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
-> > +
-> > +static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> > +{
-> 
-> > +       int err;
-> > +       const struct x86_cpu_id *cpu_id;
-> 
-> Swap them.
-> 
->  +       const struct x86_cpu_id *cpu_id;
->  +       int err;
-> 
-> struct pmc_dev *pmcdev = &pmc;
->
-
-Ok.
- 
-> > +
-> > +       cpu_id = x86_match_cpu(intel_pmc_core_ids);
-> > +       if (!cpu_id) {
-> > +               err = -EINVAL;
-> > +               goto exit;
-> > +       }
-> > +
-> > +       err = pci_enable_device(dev);
-> 
-> pcim_enable_device();
-> 
-
-Thanks for this suggestion.
-
-> > +       if (err) {
-> > +               dev_err(&dev->dev, "PMC Core: failed to enable Power Management Controller.\n");
-> 
-> I doubt this message is useful anyhow.
-> 
-> > +               goto exit;
-> > +       }
-> > +
-> > +       err = pci_read_config_dword(dev,
-> > +                                   SPT_PMC_BASE_ADDR_OFFSET,
-> > +                                   &pmc.base_addr);
-> 
-> 'pmc.' -> 'pmcdev->'
-> 
-> > +       if (err) {
-> > +               dev_err(&dev->dev, "PMC Core: failed to read pci config space.\n");
-> > +               goto disable_pci;
-> > +       }
-> 
-> So, and this is not available through BARs?
-> 
-> > +       dev_dbg(&dev->dev, "PMC Core: PWRMBASE is 0x%x\n", pmc.base_addr);
-> 
-> %#x will prefix the number.
-> 
-> > +
-
-Ok.
-
-> > +       pmc.regmap = ioremap_nocache(pmc.base_addr, SPT_PMC_MMIO_REG_LEN);
-> > +       if (!pmc.regmap) {
-> 
-> > +               dev_err(&dev->dev, "PMC Core: ioremap failed\n");
-> 
-> Useful?
-> 
-
-Want to keep it for debug purpose. 
-Do you recommend devm_ioremap_nocache as well?
-
-> > +               err = -ENOMEM;
-> > +               goto disable_pci;
-> > +       }
-> > +
-> > +       err = pmc_core_dbgfs_register(&pmc);
-> > +       if (err) {
-> > +               dev_err(&dev->dev, "PMC Core: debugfs register failed\n");
-> > +               iounmap(pmc.regmap);
-> > +               goto disable_pci;Do you recommend devm_ioremap_nocache as well?
-> > +       }
-> > +
-> > +       pmc.has_slp_s0_res = true;
-> 
-> 
-> > +       return 0;
-> > +
-> 
-> > +disable_pci:
-> > +       pci_disable_device(dev);
-> 
-> Remove after using pcim_*().
-> 
-
-Ok.
-
-> > +exit:
-> 
-> Redundant. Use return directly.
-> 
-
-Ok.
-
-> > +       return err;
-> > +}
-> > +
-> > +static void intel_pmc_core_remove(struct pci_dev *pdev)
-> > +{
-> > +       pmc_core_dbgfs_unregister(&pmc);
-> > +       pci_disable_device(pdev);
-> > +       iounmap(pmc.regmap);
-> > +}
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-
--- 
-Best Regards,
-Rajneesh
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
