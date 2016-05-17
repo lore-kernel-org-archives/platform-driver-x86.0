@@ -1,96 +1,142 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: add a new WMI string for ESC key
-Date: Mon, 16 May 2016 16:38:16 -0700
-Message-ID: <20160516233816.GB3402@f23x64.localdomain>
-References: <1462830577-1670360-1-git-send-email-arnd@arndb.de>
- <20160511200937.GC4225@f23x64.localdomain>
- <CAOxJCxfxmTyZhsAwp9oDkAEVd9iPPygKJcZvBkqQ=VrU_Vrzog@mail.gmail.com>
- <CAOxJCxdsMDCY33JHr+JrQtEwQ4Jh7UyvUFS4SNeoA71ojDxYpg@mail.gmail.com>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH] asus-wmi: provide access to ALS control
+Date: Tue, 17 May 2016 22:27:14 +0200
+Message-ID: <573B7EA2.6040506@rempel-privat.de>
+References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
+ <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="rHf7MTEdDFiBW9cwTW7pqUwaNknWnHh0w"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48354 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751587AbcEPXiV (ORCPT
+Received: from mout.gmx.net ([212.227.15.15]:51007 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751054AbcEQU2q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 16 May 2016 19:38:21 -0400
-Content-Disposition: inline
-In-Reply-To: <CAOxJCxdsMDCY33JHr+JrQtEwQ4Jh7UyvUFS4SNeoA71ojDxYpg@mail.gmail.com>
+	Tue, 17 May 2016 16:28:46 -0400
+In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Denis Gordienko <denis.gordienko.mail@gmail.com>
-Cc: Christian Hesse <mail@eworm.de>, Philippe Coval <philippe.coval@open.eurogiciel.org>, Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org, Dmitry Tunin <hanipouspilot@gmail.com>, platform-driver-x86@vger.kernel.org, John Dahlstrom <jodarom@sdf.org>, Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Josh Boyer <jwboyer@fedoraproject.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Thu, May 12, 2016 at 12:34:05AM +0300, Denis Gordienko wrote:
-> Hi, Darren. This patch already tested on my laptop and I can confirm =
-- it's
-> work fine.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--rHf7MTEdDFiBW9cwTW7pqUwaNknWnHh0w
+Content-Type: multipart/mixed; boundary="SghCfiwtmF1GD4H9qlJb9970EahgFK6JU"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org
+Message-ID: <573B7EA2.6040506@rempel-privat.de>
+Subject: Re: [PATCH] asus-wmi: provide access to ALS control
+References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
+ <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+In-Reply-To: <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
 
-Awesome, thanks! Added your tested-by.
+--SghCfiwtmF1GD4H9qlJb9970EahgFK6JU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> Denis
-> 11 =D0=9C=D0=B0=D0=B9 2016 =D0=B3. 23:09 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=
-=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8C "Darren Hart" <dvhart@infrad=
-ead.org>
-> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
+ping
+
+Am 10.04.2016 um 05:06 schrieb Darren Hart:
+> On Fri, Apr 01, 2016 at 01:35:21PM +0200, Oleksij Rempel wrote:
+>> Asus Zenbook ux31a is providing ACPI0008 interface for ALS
+>> (Ambient Light Sensor), which is accessible for OS =3D> Win 7.
+>> This sensor can be used with iio/acpi-als driver.
+>> Since it is disabled by default, we should use asus-wmi
+>> interface to enable it.
+>>
 >=20
-> On Mon, May 09, 2016 at 11:49:21PM +0200, Arnd Bergmann wrote:
-> > My patch to the ideapad-laptop driver to get the ESC key working on=
- the
-> > Yoga 1170 (Yoga 3) failed to do the same for the following model, t=
-he
-> > Lenovo Yoga 700.
-> >
-> > Denis Gordienko managed to get it working by adding another GUID fo=
-r the
-> > new WMI interface. I have adapted his patch to normal coding style
-> > and simplified it a bit for inclusion, but this patch is currently
-> > untested.
-> >
-> > Link:
-> https://forums.lenovo.com/t5/Lenovo-Yoga-Series-Notebooks/YOGA-3-14-H=
-ow-to-reclaim-my-Esc-key-and-permanently-disable/m-p/3317499
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Denis Gordienko <denis.gordienko.mail@gmail.com>
+> Corentin, any concerns?
 >=20
-> Looks good to me, but of course I would like to see some testing. Den=
-is, I
-> presume you have a Yoga 700 you could verify this version of your pat=
-ch on?
-> Would you be willing to do so?
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
+us-wmi.c
+>> index a96630d..a26dca3 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
+>>  #define ASUS_WMI_DEVID_LED6		0x00020016
+>> =20
+>>  /* Backlight and Brightness */
+>> +#define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor =
+*/
+>>  #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
+>>  #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
+>>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
 >=20
+> Following this is:
 >=20
-> > ---
-> >  drivers/platform/x86/ideapad-laptop.c | 19 ++++++++++++++++---
-> >  1 file changed, 16 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/ideapad-laptop.c
-> b/drivers/platform/x86/ideapad-laptop.c
-> > index 1d49db124753..531ecca9dbe3 100644
-> > --- a/drivers/platform/x86/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > @@ -48,7 +48,10 @@
-> >  #define CFG_CAMERA_BIT       (19)
-> >
-> >  #if IS_ENABLED(CONFIG_ACPI_WMI)
-> > -static const char ideapad_wmi_fnesc_event[] =3D
-> "26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6";
-> > +static const char* ideapad_wmi_fnesc_events[] =3D {
+> #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
+>=20
+> Is there any relationship with this patch and that device? It would be =
+useful to
+> understand the difference between these two DEVIDs (a comment in the so=
+urce).
+>=20
+> Otherwise, I'm happy with the patch.
+>=20
+>> @@ -1730,6 +1731,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS=
+_WMI_DEVID_TOUCHPAD);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
+>>  ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESU=
+ME);
+>> +ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENAB=
+LE);
+>> =20
+>>  static ssize_t store_cpufv(struct device *dev, struct device_attribut=
+e *attr,
+>>  			   const char *buf, size_t count)
+>> @@ -1756,6 +1758,7 @@ static struct attribute *platform_attributes[] =3D=
+ {
+>>  	&dev_attr_cardr.attr,
+>>  	&dev_attr_touchpad.attr,
+>>  	&dev_attr_lid_resume.attr,
+>> +	&dev_attr_als_enable.attr,
+>>  	NULL
+>>  };
+>> =20
+>> @@ -1776,6 +1779,8 @@ static umode_t asus_sysfs_is_visible(struct kobj=
+ect *kobj,
+>>  		devid =3D ASUS_WMI_DEVID_TOUCHPAD;
+>>  	else if (attr =3D=3D &dev_attr_lid_resume.attr)
+>>  		devid =3D ASUS_WMI_DEVID_LID_RESUME;
+>> +	else if (attr =3D=3D &dev_attr_als_enable.attr)
+>> +		devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
+>> =20
+>>  	if (devid !=3D -1)
+>>  		ok =3D !(asus_wmi_get_devstate_simple(asus, devid) < 0);
+>> --=20
+>> 2.5.0
+>>
+>>
+>=20
 
-Arnd, should this be:
-
-static const char *const ideapad_wmi_fnesc_events[] =3D {
-
-?
-
-Checkpatch complains, I see both usages throughout the kernel. I believ=
-e we do
-want a const array of const char arrays, so I think this is a better
-declaration.
-
-Any objection to this change?
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+Regards,
+Oleksij
+
+
+--SghCfiwtmF1GD4H9qlJb9970EahgFK6JU--
+
+--rHf7MTEdDFiBW9cwTW7pqUwaNknWnHh0w
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlc7frQACgkQHwImuRkmbWk0YwD9Gw3UYbjGtxUy4qO6/PaEn0u3
+MWKcnZD5IHcwQjlPqM4A+gMRCPc6rxshyRgrBAW33suS44TSRmrCeoGyv4GVZl9Y
+=VUVb
+-----END PGP SIGNATURE-----
+
+--rHf7MTEdDFiBW9cwTW7pqUwaNknWnHh0w--
