@@ -1,141 +1,143 @@
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH 1/1] ideapad-laptop: Handle Yoga in tablet mode
-Date: Thu, 19 May 2016 12:17:31 +0300
-Message-ID: <CAKErNvrs4300M+ap+O1R-44z_EE97O=hk74nOGT+MSsVmfL6Ew@mail.gmail.com>
-References: <1459544569-29865-1-git-send-email-list@eworm.de>
- <20160505234247.GG2113@f23x64.localdomain> <CA+A7VXVcq3JjJC54kXZkmvrLF1hktX_w+vXcU-vk5WA4nFeNLA@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Thu, 19 May 2016 15:30:32 +0200
+Message-ID: <20160519133032.GO29844@pali>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+ <CABFtUbTy+zWgGOk4C998yNn=A91VF5o7ye5piTN5CuSBFKW9_g@mail.gmail.com>
+ <20160328173309.GA26086@dvhart-mobl5.amr.corp.intel.com>
+ <4072492.lANJWhSkYa@vostro.rjw.lan>
+ <20160418123547.GK29406@pali>
+ <CABFtUbTczjpda2Ld698ZbfJmDFX_qcXVpPR_nECrj4oJxJKgJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:35275 "EHLO
-	mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932394AbcESJSN convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 19 May 2016 05:18:13 -0400
-Received: by mail-lf0-f68.google.com with SMTP id u64so5047756lff.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2016 02:18:07 -0700 (PDT)
-In-Reply-To: <CA+A7VXVcq3JjJC54kXZkmvrLF1hktX_w+vXcU-vk5WA4nFeNLA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Christian Hesse <list@eworm.de>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABFtUbTczjpda2Ld698ZbfJmDFX_qcXVpPR_nECrj4oJxJKgJw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-2016-05-16 19:04 GMT+03:00 Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.co=
-m>:
->
-> Adding Maxim Mikityanskiy and Hans de Goede to CC.
->
-> On 5 May 2016 at 19:42, Darren Hart <dvhart@infradead.org> wrote:
-> > On Fri, Apr 01, 2016 at 11:02:49PM +0200, Christian Hesse wrote:
-> >> From: Christian Hesse <mail@eworm.de>
+On Monday 25 April 2016 22:06:11 Gabriele Mazzotta wrote:
+> 2016-04-18 14:35 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> > On Tuesday 29 March 2016 15:11:35 Rafael J. Wysocki wrote:
+> >> On Monday, March 28, 2016 10:33:09 AM Darren Hart wrote:
+> >> > On Thu, Mar 24, 2016 at 12:24:56PM +0100, Gabriele Mazzotta wrot=
+e:
+> >> > > 2016-03-24 10:39 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.c=
+om>:
+> >> > > > On Monday 21 March 2016 16:13:34 Gabriele Mazzotta wrote:
+> >> > > >> 2016-03-21 13:17 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmai=
+l.com>:
+> >> > > >> > On Friday 18 March 2016 23:44:23 Gabriele Mazzotta wrote:
+> >> > > >> >> +#ifdef CONFIG_PM_SLEEP
+> >> > > >> >> +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void=
+ *context)
+> >> > > >> >> +{
+> >> > > >> >> +     struct rbtn_data *rbtn_data =3D context;
+> >> > > >> >> +
+> >> > > >> >> +     rbtn_data->suspended =3D false;
+> >> > > >> >> +}
+> >> > > >> >> +
+> >> > > >> >> +static int rbtn_suspend(struct device *dev)
+> >> > > >> >> +{
+> >> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev)=
+;
+> >> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(d=
+evice);
+> >> > > >> >> +
+> >> > > >> >> +     rbtn_data->suspended =3D true;
+> >> > > >> >> +
+> >> > > >> >> +     return 0;
+> >> > > >> >> +}
+> >> > > >> >> +
+> >> > > >> >> +static int rbtn_resume(struct device *dev)
+> >> > > >> >> +{
+> >> > > >> >> +     struct acpi_device *device =3D to_acpi_device(dev)=
+;
+> >> > > >> >> +     struct rbtn_data *rbtn_data =3D acpi_driver_data(d=
+evice);
+> >> > > >> >> +     acpi_status status;
+> >> > > >> >> +
+> >> > > >> >> +     /*
+> >> > > >> >> +      * Clear the flag only after we received the extra
+> >> > > >> >> +      * ACPI notification.
+> >> > > >> >> +      */
+> >> > > >> >> +     status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
+> >> > > >> >> +                      rbtn_acpi_clear_flag, rbtn_data);
+> >> > > >> >> +     if (ACPI_FAILURE(status))
+> >> > > >> >> +             rbtn_data->suspended =3D false;
+> >> > > >> >
+> >> > > >> > I case when acpi_os_execute success it calls rbtn_acpi_cl=
+ear_flag,
+> >> > > >> > right? And that will set suspended to false. When acpi_os=
+_execute fails,
+> >> > > >> > then it set suspended too to false... Then whole acpi_os_=
+execute doing
+> >> > > >> > just "barrier" after which suspended flag can be set to f=
+alse. So I
+> >> > > >> > think rbtn_acpi_clear_flag function is not needed here.
+> >> > > >> >
+> >> > > >> > Cannot you pass NULL or empty function pointer as callbac=
+k? Or what was
+> >> > > >> > reason to do that flag clearing at "two places"?
+> >> > > >>
+> >> > > >> acpi_os_execute doesn't wait for the callback to be execute=
+d, so
+> >> > > >> I can't clear the flag from rbtn_resume.
+> >> > > >
+> >> > > > acpi_os_execute calls callback asynchronously later? Or what=
+ exactly do it?
+> >> > >
+> >> > > In this case, it adds the callback to the kacpi_notify_wq work=
+queue
+> >> > > for deferred execution.
+> >> >
+> >> > +Rafael for context/advice on the use of acpi_os_execute here.
+> >> >
+> >> > This is true, but a quick scan through that call path doesn't te=
+ll me why we
+> >> > would need to call it here instead of just setting rbtn_data->su=
+spended =3D false.
+> >> > The comment suggests waiting for the event, but is that what thi=
+s is doing? It
+> >> > appears to me to be immediately scheduling the function to a wor=
+k queue, not
+> >> > waiting for the event notifier.
 > >>
-> >> When Lenovo Yoga 700 is flipped to tablet mode it emmits event 10.=
- Let's
-> >> send touchpad key codes so software can disable touchpad.
+> >> I think this is supposed to work as a barrier.  That is, it will o=
+nly run after
+> >> all events in the queue have been processed.
 > >>
-> >> Signed-off-by: Christian Hesse <mail@eworm.de>
-> >> Signed-off-by: Michael Gisbers <michael@gisbers.de>
+> >> I'm not sure if that's necessary, though.
+> >>
+> >> Thanks,
+> >> Rafael
+> >>
 > >
-> > Queued, thanks.
-> >
-> >> ---
-> >>  drivers/platform/x86/ideapad-laptop.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platf=
-orm/x86/ideapad-laptop.c
-> >> index be3bc2f..1d49db1 100644
-> >> --- a/drivers/platform/x86/ideapad-laptop.c
-> >> +++ b/drivers/platform/x86/ideapad-laptop.c
-> >> @@ -809,6 +809,7 @@ static void ideapad_acpi_notify(acpi_handle ha=
-ndle, u32 event, void *data)
-> >>                       case 6:
-> >>                               ideapad_input_report(priv, vpc_bit);
-> >>                               break;
-> >> +                     case 10:
-> >>                       case 5:
-> >>                               ideapad_sync_touchpad_state(priv);
->
-> I'm not sure this is the right action here: ideapad_sync_touchpad()
-> sends a sequence of KEY_TOUCHPAD_DISABLE and KEY_TOUCHPAD_ENABLED,
-> which are interpreted by userspace as "the touchpad has been
-> {dis,en}abled by the hardware". The way userspace is expected to reac=
-t
-> to it is by showing a notification of the fact to the user, but not
-> disabling the touchpad. This behavior can be confirmed in the origina=
-l
-> commit message that introduced this change (I couldn't find any actua=
-l
-> documentation on this): "Input: add keycodes for touchpad on/off keys=
-"
-> (0417596f66). I was actually going to propose a patch similar to Hans=
-'
-> "ideapad-laptop: Disable touchpad interface on Yoga models"
-> (f79a901331) for the Yoga 900, to avoid an "touchpad ON" OSD
-> notification being shown to the user when returning for suspend.
->
-> Also, I've been investigating touchpad-related problems in the Lenovo
-> Yoga 900 recently, and trying to understand this code. IIUC
-> ideadpad_sync_touchpad_state() was created as part of "ideapad: add
-> Lenovo IdeaPad Z570 support (part 2)" (07a4a4fc8) to allow userspace
-> to syncronize a touchpad-state-indicator LED with the actual touchpad
-> state, although it seems to me it only works if the touchpad is alway=
-s
-> enabled by the hardware on resume (cc'ing the original patch author
-> here for maybe a confirmation on how this is expected to work).
+> > Darren, Gabriele, what is state of this patch? Bug is not still fix=
+ed,
+> > right?
+>=20
+> Yes, the bug is still there and this patch fixes it.
+>=20
+> Just to make it clear, we need the barrier. Andrei could reproduce
+> the bug without it [1], but not with it, as he confirmed in this
+> thread [2].
+>=20
+> [1] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/8=
+001
+> [2] http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/8=
+937
 
-This is a short explanation of this function.
+Ok, so it means that somebody (who understand ACPI) should review code
+and accept it or show what is needed to fix. Plus maybe adds more
+comments how that "barrier" works as I was first confused...
 
-We call ideapad_sync_touchpad_state when a touchpad state changed
-event arrives (touchpad on/off button pressed) or we need to read  out
-the initial touchpad state. It is also called on resume because
-possibly the touchpad state may be changed after resume, but I don't
-know which devices behave like that (and unfortunately I'm unable to
-test it on my Z570 because now it's dead).
+Darren, Rafael, can you do review of this patch?
 
-ideadpad_sync_touchpad_state serves several purposes:
-
-- It actually reads out current touchpad state. It is necessary when
-we are reading the initial state, and also this read is necessary on
-touchpad state changed events, because on some laptops (e.g. Z570)
-touchpad LED only changes its state after this read.
-
-- Then it disables/enables i8042 AUX port to disable/enable touchpad.
-It is also necessary, because some laptops (Z570) do not disable
-touchpad in hardware although they are storing touchpad state.
-
-- Finally it sends userspace event with new touchpad state. It does
-not send a sequence of KEY_TOUCHPAD_OFF and KEY_TOUCHPAD_ON as you
-mentioned, but only one of these key codes.
-
-The second point is kinda hack. In Linux there are two ways of
-reporting touchpad state events to the userspace:
-
-- KEY_TOUCHPAD_TOGGLE for those laptops that do not disable touchpad
-in hardware and thus don't store touchpad state. The userspace should
-listen for those key presses and disable/enable touchpad
-programmatically (e.g. TouchpadOff in synaptics X11 driver).
-
-- KEY_TOUCHPAD_ON and KEY_TOUCHPAD_OFF for those laptops that fully
-manage touchpad state in hardware and just report its state to the
-userspace so that notification can be shown. Userspace should not
-disable touchpad programmatically on these events, because it is
-managed by hardware and may easily get out of sync if using multiple
-user sessions.
-
-Ideapad Z570 matches none of these options. It looks more like the
-second one, it stores the touchpad state in hardware, controls the
-LED, but it lacks the ability to disable the touchpad in hardware. So
-we need to keep track of the hardware state and disable i8042 AUX port
-from the driver when necessary.
-
-So if on event 10 the touchpad state may be changed, we need to call
-ideadpad_sync_touchpad_state, otherwise I don't see why it is
-necessary.
-
-=46ell free to ask me any questions if something is still not clear,
-I'll try to assist.
-
-Best regards,
-Maxim
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
