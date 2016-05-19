@@ -1,30 +1,59 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-wmi: provide access to ALS control
-Date: Wed, 18 May 2016 18:24:51 -0700
-Message-ID: <20160519012451.GB2093@f23x64.localdomain>
-References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
- <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
- <573B7EA2.6040506@rempel-privat.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED
+ trigger
+Date: Thu, 19 May 2016 09:16:39 +0200
+Message-ID: <20160519071639.GB17077@amd>
+References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
+ <1462199948-6424-2-git-send-email-jprvita@endlessm.com>
+ <20160504072936.GB17045@amd>
+ <1463045572.13313.21.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:41518 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752035AbcESBY5 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 18 May 2016 21:24:57 -0400
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <573B7EA2.6040506@rempel-privat.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+In-Reply-To: <1463045572.13313.21.camel@sipsolutions.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 17, 2016 at 10:27:14PM +0200, Oleksij Rempel wrote:
-> ping
+On Thu 2016-05-12 11:32:52, Johannes Berg wrote:
+> On Wed, 2016-05-04 at 09:29 +0200, Pavel Machek wrote:
+> >=A0
+> > If userspace wants to control the manually, it can do just that --
+> > control it manually. There should not be a need to "override the
+> > default policy".
+>=20
+> I'm still not buying this.
+>=20
+> In the original situation, without these patches, userspace has to ha=
+ve
+> a list of all LEDs that are supposed to indicate airplane mode.
 
-Merged, thanks for the ping.
+Well, that's situation for many LEDs.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+> With this patch only (without patch 2/3), userspace can look up the
+> default trigger, but then has to change it, causing the necessary
+> information to be lost immediately when you actually use it - that al=
+so
+> seems like a bad idea.
+
+We should not store "what kind of led this is" in a trigger. LED
+subsystem seems to use suffix of LED name to do that. So if we
+standartize, lets say "::rfkill" suffix for this, it should work and
+follow existing practice.
+
+> Now, if the LED subsystem had a really good way of specifying LED
+> intent, and it was widely used, and rfkill didn't already concern
+> itself with the rfkill status of all devices ... yeah maybe this
+> wouldn't be needed. As it stands, I still think this is the best way
+> forward.
+
+There is one -- suffix in the LED name.
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
