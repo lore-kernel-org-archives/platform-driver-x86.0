@@ -1,48 +1,99 @@
-From: =?UTF-8?Q?Marco_Trevisan_=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
-Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and restore
- it on resume
-Date: Fri, 20 May 2016 05:03:52 +0200
-Message-ID: <CAALaSc=b821TsgB1FZGy9nmP-ZG0jjycdP2ktE1hFZUFg_ACog@mail.gmail.com>
-References: <1463620982-21058-1-git-send-email-mail@3v1n0.net> <20160519075243.GI29844@pali>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3 2/2] dell-laptop: Expose auxiliary MAC address if
+ available
+Date: Fri, 20 May 2016 16:27:42 +0200
+Message-ID: <20160520142742.GA29844@pali>
+References: <1462811099-16897-1-git-send-email-mario_limonciello@dell.com>
+ <1462811099-16897-2-git-send-email-mario_limonciello@dell.com>
+ <20160511133251.GA3440@eudyptula.hq.kempniu.pl>
+ <201605111841.54411@pali>
+ <3afbad44903b4da88b1362e938850da8@ausx13mpc120.AMER.DELL.COM>
+ <20160512084033.GW29844@pali>
+ <d6ad6268f43549f58efa41b5065b015e@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35168 "EHLO
-	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752750AbcETDEZ convert rfc822-to-8bit (ORCPT
+Received: from mail-wm0-f52.google.com ([74.125.82.52]:37775 "EHLO
+	mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932099AbcETO1q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 19 May 2016 23:04:25 -0400
-Received: by mail-wm0-f65.google.com with SMTP id s63so11155753wme.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2016 20:04:24 -0700 (PDT)
-Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com. [74.125.82.46])
-        by smtp.gmail.com with ESMTPSA id m140sm2204951wma.24.2016.05.19.20.04.22
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 May 2016 20:04:22 -0700 (PDT)
-Received: by mail-wm0-f46.google.com with SMTP id n129so62149799wmn.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 May 2016 20:04:22 -0700 (PDT)
-In-Reply-To: <20160519075243.GI29844@pali>
+	Fri, 20 May 2016 10:27:46 -0400
+Content-Disposition: inline
+In-Reply-To: <d6ad6268f43549f58efa41b5065b015e@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Marco Trevisan <mail@3v1n0.net>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>
+To: Mario_Limonciello@Dell.com
+Cc: kernel@kempniu.pl, mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-2016-05-19 9:52 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> For me whole patch looks like a big hack because LED_CORE_SUSPENDRESU=
-ME
-> does not work correctly... I would rather see fixed support for flag
-> LED_CORE_SUSPENDRESUME, not adding another suspend/resume hook if
-> possible. Any idea?
+On Thursday 12 May 2016 19:08:30 Mario_Limonciello@Dell.com wrote:
+> > > We do mirror the information in ACPI under the system bus:
+> > >
+> > >     Scope (_SB)
+> > >     {
+> > >         Name (AMAC, Buffer (0x17)
+> > >         {
+> > >             "_AUXMAC_#847BEB5992D2#"
+> > >         })
+> > >     }
+> > >
+> > > I don't know how to properly access this from the kernel side.  I=
+ noticed
+> > that most drivers that reference ACPI nodes refer to devices, not s=
+omething
+> > hanging off the system bus.
+> > > If you could advise the right way to go about that, I would appre=
+ciate it.
+> >=20
+> > So there are two ways how to read that MAC address. One is via SMM =
+and
+> > one via ACPI.
+>=20
+> Yes, this isn't a general statement for read only static information,=
+ but in this case it is true.
+>=20
+> > You can also read ACPI buffer (name is probably \_SB.AMAC) with ACP=
+I
+> > functions in kernel. Ask ACPI people, for correct API. I'm sure thi=
+s is possible
+> > also without creating new ACPI driver...
+>=20
+> Thanks will do.
 
-As I wrote you in private mail I think the only way we have is to keep
-the led_cdev->brightness in sync with actual state. And to do this, we
-can listen the ACPI event, keeping this like a private event that we
-just consume to update led brightness value, without delivering it to
-userspace.
+I think that acpi_get_handle() and acpi_evaluate_object() methods are
+those which you want to use.
 
-However, the custom code needed for getting this done, is probably way
-more than the one I added here.
-Maybe it could be useful to others to read the brightness level before
-suspending, and in this case we could add a new flag to the led
-subsystem, but not sure it's really worth.
+> > > If I can access that, maybe it's better to do this directly as a =
+patch to the
+> > Ethernet driver in question (r8152).
+> > > That's actually how it's handled on the OS side for Windows too f=
+rom what I
+> > understand.
+> > > We have some FW bit set in them to indicate they're Dell Realtek =
+products
+> > (don't have this detail yet).
+> > > When they see that bit they look for that ACPI buffer and use it =
+to set the
+> > MAC address the OS sees.
+> >=20
+> > Maybe it should be better to chose same way as Windows drivers? Bet=
+ter
+> > ask on netdev mailing list and ping maintainers of that ethernet dr=
+iver what
+> > they think about it.
+> >=20
+> > For me it sounds like a better solution (patching that ethernet dri=
+ver) as
+> > exporting some non-standard sysfs node from kernel with MAC address=
+ and
+> > then using another tool which send that MAC address back to kernel.
+> >=20
+>=20
+> Great, thank you for your feedback.  I'll wander down that rabbit hol=
+e.
+
+Ok, CC me next discussion.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
