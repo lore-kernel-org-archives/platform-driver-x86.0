@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH 1/4] dell-wmi: Ignore WMI event code 0xe045
-Date: Sun, 22 May 2016 13:36:20 +0200
-Message-ID: <1463916983-12562-2-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH 4/4] dell-wmi: Rework code for generating sparse keymap and processing WMI events
+Date: Sun, 22 May 2016 13:36:23 +0200
+Message-ID: <1463916983-12562-5-git-send-email-pali.rohar@gmail.com>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,61 +10,409 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-=46rom Dell we know that WMI event code 0xe045 is for Num Lock key, but=
- it is
-unclear due to message in commit 0b3f6109f0c9 ("dell-wmi: new driver fo=
-r
-hotkey control").
+This patch unify procedure for generating sparse keymap and unify also =
+big
+switch code for processing WMI events of different types. After this pa=
+tch
+dell-wmi driver does not differ between "old" and "new" hotkey type.
+
+It construct sparse keymap table with all WMI codes. It is because on s=
+ome
+laptops (e.g. Dell Latitude E6440) ACPI/firmware send both event types =
+(old
+and new).
+
+Each WMI code in sparse keymap table is prefixed by 16bit event type, s=
+o it
+does not change functionality on laptops with "old" hotkey support (tho=
+se
+without scancodes in DMI).
+
+This allow us to distinguish between same WMI codes with different type=
+s in
+sparse keymap. Thanks to this WMI events of type 0x0011 were moved from=
+ big
+switch into sparse keymap table too.
+
+This patch also fixes possible bug in parsing WMI event buffer introduc=
+ed
+in commit 5ea2559726b7 ("dell-wmi: Add support for new Dell systems"). =
+That
+commit changed buffer type from int* to u16* without fixing code. More =
+at:
+http://lkml.iu.edu/hypermail/linux/kernel/1507.0/01950.html
 
 Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Mario Limonciello <mario_limonciello@dell.com>
-Link: https://lkml.org/lkml/2015/7/7/830
 ---
- drivers/platform/x86/dell-wmi.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell-wmi.c |  213 +++++++++++++++++++------------=
+--------
+ 1 file changed, 106 insertions(+), 107 deletions(-)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
 l-wmi.c
-index 15c6f11..4d23c91 100644
+index 7aac1dc..24b8103 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -88,7 +88,6 @@ static const struct dmi_system_id dell_wmi_smbios_lis=
-t[] __initconst =3D {
- static const struct key_entry dell_wmi_legacy_keymap[] __initconst =3D=
+@@ -80,12 +80,13 @@ static const struct dmi_system_id dell_wmi_smbios_l=
+ist[] __initconst =3D {
+ };
+=20
+ /*
++ * Keymap for WMI events of type 0x0000
++ *
+  * Certain keys are flagged as KE_IGNORE. All of these are either
+  * notifications (rather than requests for change) or are also sent
+  * via the keyboard controller so should not be sent again.
+  */
+-
+-static const struct key_entry dell_wmi_legacy_keymap[] __initconst =3D=
  {
++static const struct key_entry dell_wmi_keymap_type_0000[] __initconst =
+=3D {
+=20
  	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
 =20
--	{ KE_KEY, 0xe045, { KEY_PROG1 } },
- 	{ KE_KEY, 0xe009, { KEY_EJECTCD } },
-=20
- 	/* These also contain the brightness level at offset 6 */
-@@ -130,7 +129,19 @@ static const struct key_entry dell_wmi_legacy_keym=
+@@ -182,12 +183,8 @@ static const struct key_entry dell_wmi_legacy_keym=
 ap[] __initconst =3D {
- 	{ KE_IGNORE, 0xe033, { KEY_KBDILLUMUP } },
- 	{ KE_IGNORE, 0xe034, { KEY_KBDILLUMDOWN } },
- 	{ KE_IGNORE, 0xe03a, { KEY_CAPSLOCK } },
+ 	{ KE_IGNORE, 0xe0f8, { KEY_VOLUMEDOWN } },
+ 	{ KE_IGNORE, 0xe0f9, { KEY_VOLUMEUP } },
+=20
+-	{ KE_END, 0 }
+-
+ };
+=20
+-static bool dell_new_hk_type;
+-
+ struct dell_bios_keymap_entry {
+ 	u16 scancode;
+ 	u16 keycode;
+@@ -201,6 +198,7 @@ struct dell_bios_hotkey_table {
+=20
+ struct dell_dmi_results {
+ 	int err;
++	int keymap_size;
+ 	struct key_entry *keymap;
+ };
+=20
+@@ -249,10 +247,12 @@ static const u16 bios_to_linux_keycode[256] __ini=
+tconst =3D {
+ };
+=20
+ /*
++ * Keymap for WMI events of type 0x0010
++ *
+  * These are applied if the 0xB2 DMI hotkey table is present and doesn=
+'t
+  * override them.
+  */
+-static const struct key_entry dell_wmi_extra_keymap[] __initconst =3D =
+{
++static const struct key_entry dell_wmi_keymap_type_0010[] __initconst =
+=3D {
+ 	/* Fn-lock */
+ 	{ KE_IGNORE, 0x151, { KEY_RESERVED } },
+=20
+@@ -272,21 +272,39 @@ static const struct key_entry dell_wmi_extra_keym=
+ap[] __initconst =3D {
+ 	{ KE_IGNORE, 0x155, { KEY_RESERVED } },
+ };
+=20
++/*
++ * Keymap for WMI events of type 0x0011
++ */
++static const struct key_entry dell_wmi_keymap_type_0011[] __initconst =
+=3D {
++	/* Battery unplugged */
++	{ KE_IGNORE, 0xfff0, { KEY_RESERVED } },
++
++	/* Battery inserted */
++	{ KE_IGNORE, 0xfff1, { KEY_RESERVED } },
++
++	/* Keyboard backlight level changed */
++	{ KE_IGNORE, 0x01e1, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x02ea, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x02eb, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x02ec, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x02f6, { KEY_RESERVED } },
++};
++
+ static struct input_dev *dell_wmi_input_dev;
+=20
+-static void dell_wmi_process_key(int reported_key)
++static void dell_wmi_process_key(int type, int code)
+ {
+ 	const struct key_entry *key;
+=20
+ 	key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
+-						reported_key);
++						(type << 16) | code);
+ 	if (!key) {
+-		pr_info("Unknown key with scancode 0x%x pressed\n",
+-			reported_key);
++		pr_info("Unknown key with type 0x%x and code 0x%x pressed\n",
++			type, code);
+ 		return;
+ 	}
+=20
+-	pr_debug("Key %x pressed\n", reported_key);
++	pr_debug("Key with type 0x%x and code 0x%x pressed\n", type, code);
+=20
+ 	/* Don't report brightness notifications that will also come via ACPI=
+ */
+ 	if ((key->keycode =3D=3D KEY_BRIGHTNESSUP ||
+@@ -294,7 +312,7 @@ static void dell_wmi_process_key(int reported_key)
+ 	    acpi_video_handles_brightness_key_presses())
+ 		return;
+=20
+-	if (reported_key =3D=3D 0xe025 && !wmi_requires_smbios_request)
++	if (type =3D=3D 0x0000 && code =3D=3D 0xe025 && !wmi_requires_smbios_=
+request)
+ 		return;
+=20
+ 	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
+@@ -332,18 +350,6 @@ static void dell_wmi_notify(u32 value, void *conte=
+xt)
+=20
+ 	buffer_entry =3D (u16 *)obj->buffer.pointer;
+ 	buffer_size =3D obj->buffer.length/2;
+-
+-	if (!dell_new_hk_type) {
+-		if (buffer_size >=3D 3 && buffer_entry[1] =3D=3D 0x0)
+-			dell_wmi_process_key(buffer_entry[2]);
+-		else if (buffer_size >=3D 2)
+-			dell_wmi_process_key(buffer_entry[1]);
+-		else
+-			pr_info("Received unknown WMI event\n");
+-		kfree(obj);
+-		return;
+-	}
+-
+ 	buffer_end =3D buffer_entry + buffer_size;
+=20
+ 	/*
+@@ -378,59 +384,21 @@ static void dell_wmi_notify(u32 value, void *cont=
+ext)
+ 		pr_debug("Process buffer (%*ph)\n", len*2, buffer_entry);
+=20
+ 		switch (buffer_entry[1]) {
+-		case 0x00:
+-			for (i =3D 2; i < len; ++i) {
+-				switch (buffer_entry[i]) {
+-				case 0xe043:
+-					/* NIC Link is Up */
+-					pr_debug("NIC Link is Up\n");
+-					break;
+-				case 0xe044:
+-					/* NIC Link is Down */
+-					pr_debug("NIC Link is Down\n");
+-					break;
+-				case 0xe045:
+-					/* Unknown event but defined in DSDT */
+-				default:
+-					/* Unknown event */
+-					pr_info("Unknown WMI event type 0x00: "
+-						"0x%x\n", (int)buffer_entry[i]);
+-					break;
+-				}
+-			}
++		case 0x0000:
++			/* One key pressed or event occurred */
++			if (len > 2)
++				dell_wmi_process_key(0x0000, buffer_entry[2]);
++			/* Other entries in buffer could contain additional information */
+ 			break;
+-		case 0x10:
+-			/* Keys pressed */
++		case 0x0010:
++			/* Sequence of keys pressed */
+ 			for (i =3D 2; i < len; ++i)
+-				dell_wmi_process_key(buffer_entry[i]);
++				dell_wmi_process_key(0x0010, buffer_entry[i]);
+ 			break;
+-		case 0x11:
+-			for (i =3D 2; i < len; ++i) {
+-				switch (buffer_entry[i]) {
+-				case 0xfff0:
+-					/* Battery unplugged */
+-					pr_debug("Battery unplugged\n");
+-					break;
+-				case 0xfff1:
+-					/* Battery inserted */
+-					pr_debug("Battery inserted\n");
+-					break;
+-				case 0x01e1:
+-				case 0x02ea:
+-				case 0x02eb:
+-				case 0x02ec:
+-				case 0x02f6:
+-					/* Keyboard backlight level changed */
+-					pr_debug("Keyboard backlight level "
+-						 "changed\n");
+-					break;
+-				default:
+-					/* Unknown event */
+-					pr_info("Unknown WMI event type 0x11: "
+-						"0x%x\n", (int)buffer_entry[i]);
+-					break;
+-				}
+-			}
++		case 0x0011:
++			/* Sequence of events occurred */
++			for (i =3D 2; i < len; ++i)
++				dell_wmi_process_key(0x0011, buffer_entry[i]);
+ 			break;
+ 		default:
+ 			/* Unknown event */
+@@ -458,7 +426,6 @@ static bool have_scancode(u32 scancode, const struc=
+t key_entry *keymap, int len)
+ }
+=20
+ static void __init handle_dmi_entry(const struct dmi_header *dm,
+-
+ 				    void *opaque)
+=20
+ {
+@@ -466,7 +433,6 @@ static void __init handle_dmi_entry(const struct dm=
+i_header *dm,
+ 	struct dell_bios_hotkey_table *table;
+ 	int hotkey_num, i, pos =3D 0;
+ 	struct key_entry *keymap;
+-	int num_bios_keys;
+=20
+ 	if (results->err || results->keymap)
+ 		return;		/* We already found the hotkey table. */
+@@ -490,8 +456,7 @@ static void __init handle_dmi_entry(const struct dm=
+i_header *dm,
+ 		return;
+ 	}
+=20
+-	keymap =3D kcalloc(hotkey_num + ARRAY_SIZE(dell_wmi_extra_keymap) + 1=
+,
+-			 sizeof(struct key_entry), GFP_KERNEL);
++	keymap =3D kcalloc(hotkey_num, sizeof(struct key_entry), GFP_KERNEL);
+ 	if (!keymap) {
+ 		results->err =3D -ENOMEM;
+ 		return;
+@@ -528,31 +493,15 @@ static void __init handle_dmi_entry(const struct =
+dmi_header *dm,
+ 		pos++;
+ 	}
+=20
+-	num_bios_keys =3D pos;
+-
+-	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_extra_keymap); i++) {
+-		const struct key_entry *entry =3D &dell_wmi_extra_keymap[i];
+-
+-		/*
+-		 * Check if we've already found this scancode.  This takes
+-		 * quadratic time, but it doesn't matter unless the list
+-		 * of extra keys gets very long.
+-		 */
+-		if (!have_scancode(entry->code, keymap, num_bios_keys)) {
+-			keymap[pos] =3D *entry;
+-			pos++;
+-		}
+-	}
+-
+-	keymap[pos].type =3D KE_END;
+-
+ 	results->keymap =3D keymap;
++	results->keymap_size =3D pos;
+ }
+=20
+ static int __init dell_wmi_input_setup(void)
+ {
+ 	struct dell_dmi_results dmi_results =3D {};
+-	int err;
++	struct key_entry *keymap;
++	int err, i, pos =3D 0;
+=20
+ 	dell_wmi_input_dev =3D input_allocate_device();
+ 	if (!dell_wmi_input_dev)
+@@ -576,21 +525,71 @@ static int __init dell_wmi_input_setup(void)
+ 		goto err_free_dev;
+ 	}
+=20
++	keymap =3D kcalloc(dmi_results.keymap_size +
++			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
++			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
++			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
++			 1,
++			 sizeof(struct key_entry), GFP_KERNEL);
++	if (!keymap) {
++		err =3D -ENOMEM;
++		goto err_free_dev;
++	}
++
++	/* Append table with events of type 0x0010 which comes from DMI */
+ 	if (dmi_results.keymap) {
+-		dell_new_hk_type =3D true;
++		for (i =3D 0; i < dmi_results.keymap_size; i++) {
++			keymap[pos] =3D dmi_results.keymap[i];
++			keymap[pos].code |=3D (0x0010 << 16);
++			pos++;
++		}
++		kfree(dmi_results.keymap);
++	}
+=20
+-		err =3D sparse_keymap_setup(dell_wmi_input_dev,
+-					  dmi_results.keymap, NULL);
++	/* Append table with extra events of type 0x0010 which are not in DMI=
+ */
++	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0010); i++) {
++		const struct key_entry *entry =3D &dell_wmi_keymap_type_0010[i];
+=20
+ 		/*
+-		 * Sparse keymap library makes a copy of keymap so we
+-		 * don't need the original one that was allocated.
++		 * Check if we've already found this scancode.  This takes
++		 * quadratic time, but it doesn't matter unless the list
++		 * of extra keys gets very long.
+ 		 */
+-		kfree(dmi_results.keymap);
+-	} else {
+-		err =3D sparse_keymap_setup(dell_wmi_input_dev,
+-					  dell_wmi_legacy_keymap, NULL);
++		if (dmi_results.keymap_size &&
++		    have_scancode(entry->code | (0x0010 << 16),
++				  keymap, dmi_results.keymap_size)
++		   )
++			continue;
++
++		keymap[pos] =3D *entry;
++		keymap[pos].code |=3D (0x0010 << 16);
++		pos++;
++	}
++
++	/* Append table with events of type 0x0011 */
++	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0011); i++) {
++		keymap[pos] =3D dell_wmi_keymap_type_0011[i];
++		keymap[pos].code |=3D (0x0011 << 16);
++		pos++;
+ 	}
 +
 +	/*
-+	 * This entry is very suspicious!
-+	 * Originally Matthew Garrett created this dell-wmi driver specially =
-for
-+	 * "button with a picture of a battery" which has event code 0xe045.
-+	 * Later Mario Limonciello from Dell told us that event code 0xe045 i=
-s
-+	 * reported by Num Lock and should be ignored because key is send als=
-o
-+	 * by keyboard controller.
-+	 * So for now we will ignore this event to prevent potential double
-+	 * Num Lock key press.
++	 * Now append also table with "legacy" events of type 0x0000. Some of
++	 * them are reported also on laptops which have scancodes in DMI.
 +	 */
- 	{ KE_IGNORE, 0xe045, { KEY_NUMLOCK } },
++	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0000); i++) {
++		keymap[pos] =3D dell_wmi_keymap_type_0000[i];
++		pos++;
++	}
 +
- 	{ KE_IGNORE, 0xe046, { KEY_SCROLLLOCK } },
- 	{ KE_IGNORE, 0xe0f7, { KEY_MUTE } },
- 	{ KE_IGNORE, 0xe0f8, { KEY_VOLUMEDOWN } },
++	keymap[pos].type =3D KE_END;
++
++	err =3D sparse_keymap_setup(dell_wmi_input_dev, keymap, NULL);
++	/*
++	 * Sparse keymap library makes a copy of keymap so we don't need the
++	 * original one that was allocated.
++	 */
++	kfree(keymap);
+ 	if (err)
+ 		goto err_free_dev;
+=20
 --=20
 1.7.9.5
