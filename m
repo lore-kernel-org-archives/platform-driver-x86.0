@@ -1,128 +1,152 @@
-From: Marco Trevisan <mail@3v1n0.net>
-Subject: [PATCH v2] thinkpad_acpi: save kbdlight state on suspend and restore it on resume
-Date: Tue, 24 May 2016 00:39:51 +0200
-Message-ID: <1464043191-20791-1-git-send-email-mail@3v1n0.net>
-References: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Tue, 24 May 2016 01:03:11 +0200
+Message-ID: <1d56338e-6312-371d-ace7-96f762e18bba@gmail.com>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+ <201605240006.03580@pali> <20160523221715.GE2735@f23x64.localdomain>
+ <201605240022.28140@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:36583 "EHLO
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:36002 "EHLO
 	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750888AbcEWWkM (ORCPT
+	with ESMTP id S1751124AbcEWXDO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2016 18:40:12 -0400
-Received: by mail-wm0-f66.google.com with SMTP id q62so716857wmg.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:40:12 -0700 (PDT)
-In-Reply-To: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
+	Mon, 23 May 2016 19:03:14 -0400
+In-Reply-To: <201605240022.28140@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?Marco=20Trevisan=20=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-=46rom: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
+On 24/05/2016 00:22, Pali Roh=C3=A1r wrote:
+> On Tuesday 24 May 2016 00:17:15 Darren Hart wrote:
+>> On Tue, May 24, 2016 at 12:06:03AM +0200, Pali Roh=C3=A1r wrote:
+>>> On Monday 23 May 2016 23:26:55 Darren Hart wrote:
+>>>> I've queued this. Thanks for your patience.
+>>>
+>>> Ok, In that case I would update comments in patch to try it more
+>>> clear what code is doing.
+>>
+>> I thought I had your approval on this one Pali. Apologies if that wa=
+s
+>> not the case. Did I miss a change request from you?
+>>
+>> If so, please point me at it, and I'll dequeue this one and wait for
+>> an updated one.
+>=20
+> I just wanted to review that code from somebody else and decide if=20
+> accept it or not. Because I was not sure if it is OK...
+>=20
+> But there was no objection, so patch is OK.
+>=20
+> And I pointed that patch could have better comments to describe what =
+it=20
+> is doing as at first time I was confused.
+>=20
+> So I believe that you can update patch in your queue with new version=
+=20
+> which just change comments in source code (without functional changes=
+).
+>=20
 
-Override default LED class suspend/resume handles, by keeping track of
-the brightness level before suspending so that it can be automatically
-restored on resume by calling default resume handler.
+Something such as the following?
+=46eel free to reword the comments if you have something better in mind=
+=2E
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Signed-off-by: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 43 ++++++++++++++++++++++++++++=
-+++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ drivers/platform/x86/dell-rbtn.c | 56 ++++++++++++++++++++++++++++++++=
+++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
-6/thinkpad_acpi.c
-index 1f9783c..10111c2 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5041,6 +5041,8 @@ static int kbdlight_set_level(int level)
- 	return 0;
- }
-=20
-+static int kbdlight_set_level_and_update(int level);
-+
- static int kbdlight_get_level(void)
- {
- 	int status =3D 0;
-@@ -5108,7 +5110,7 @@ static void kbdlight_set_worker(struct work_struc=
-t *work)
- 			container_of(work, struct tpacpi_led_classdev, work);
-=20
- 	if (likely(tpacpi_lifecycle =3D=3D TPACPI_LIFE_RUNNING))
--		kbdlight_set_level(data->new_state);
-+		kbdlight_set_level_and_update(data->new_state);
- }
-=20
- static void kbdlight_sysfs_set(struct led_classdev *led_cdev,
-@@ -5139,7 +5141,6 @@ static struct tpacpi_led_classdev tpacpi_led_kbdl=
-ight =3D {
- 		.max_brightness	=3D 2,
- 		.brightness_set	=3D &kbdlight_sysfs_set,
- 		.brightness_get	=3D &kbdlight_sysfs_get,
--		.flags		=3D LED_CORE_SUSPENDRESUME,
- 	}
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
+ll-rbtn.c
+index 331d63c..e0208ba 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -28,6 +28,7 @@ struct rbtn_data {
+ 	enum rbtn_type type;
+ 	struct rfkill *rfkill;
+ 	struct input_dev *input_dev;
++	bool suspended;
  };
 =20
-@@ -5177,6 +5178,20 @@ static void kbdlight_exit(void)
- 	flush_workqueue(tpacpi_wq);
- }
 =20
-+static int kbdlight_set_level_and_update(int level)
-+{
-+	int ret;
-+	struct led_classdev *led_cdev;
-+
-+	ret =3D kbdlight_set_level(level);
-+	led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
-+
-+	if (ret =3D=3D 0 && !(led_cdev->flags & LED_SUSPENDED))
-+		led_cdev->brightness =3D level;
-+
-+	return ret;
-+}
-+
- static int kbdlight_read(struct seq_file *m)
- {
- 	int level;
-@@ -5217,13 +5232,35 @@ static int kbdlight_write(char *buf)
- 	if (level =3D=3D -1)
- 		return -EINVAL;
-=20
--	return kbdlight_set_level(level);
-+	return kbdlight_set_level_and_update(level);
-+}
-+
-+static void kbdlight_suspend(void)
-+{
-+	struct led_classdev *led_cdev;
-+
-+	if (!tp_features.kbdlight)
-+		return;
-+
-+	led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
-+	led_update_brightness(led_cdev);
-+	led_classdev_suspend(led_cdev);
-+}
-+
-+static void kbdlight_resume(void)
-+{
-+	if (!tp_features.kbdlight)
-+		return;
-+
-+	led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
- }
-=20
- static struct ibm_struct kbdlight_driver_data =3D {
- 	.name =3D "kbdlight",
- 	.read =3D kbdlight_read,
- 	.write =3D kbdlight_write,
-+	.suspend =3D kbdlight_suspend,
-+	.resume =3D kbdlight_resume,
- 	.exit =3D kbdlight_exit,
+@@ -235,9 +236,55 @@ static const struct acpi_device_id rbtn_ids[] =3D =
+{
+ 	{ "", 0 },
  };
 =20
++#ifdef CONFIG_PM_SLEEP
++static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context)
++{
++	struct rbtn_data *rbtn_data =3D context;
++
++	rbtn_data->suspended =3D false;
++}
++
++static int rbtn_suspend(struct device *dev)
++{
++	struct acpi_device *device =3D to_acpi_device(dev);
++	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
++
++	rbtn_data->suspended =3D true;
++
++	return 0;
++}
++
++static int rbtn_resume(struct device *dev)
++{
++	struct acpi_device *device =3D to_acpi_device(dev);
++	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
++	acpi_status status;
++
++	/*
++	 * Upon resume, some BIOSes autonomously send an ACPI notification
++	 * that triggers an unwanted input event. In order to ignore it,
++	 * we use a flag that we set at suspend and clear once we have
++	 * received the extra notification. Since ACPI notifications are
++	 * delivered asynchronously to drivers, we clear the flag from the
++	 * workqueue used to deliver the notifications. This should be enough
++	 * to guarantee that the flag is cleared only after we received the
++	 * extra notification, if any.
++	 */
++	status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
++			 rbtn_acpi_clear_flag, rbtn_data);
++	if (ACPI_FAILURE(status))
++		rbtn_data->suspended =3D false;
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
++
+ static struct acpi_driver rbtn_driver =3D {
+ 	.name =3D "dell-rbtn",
+ 	.ids =3D rbtn_ids,
++	.drv.pm =3D &rbtn_pm_ops,
+ 	.ops =3D {
+ 		.add =3D rbtn_add,
+ 		.remove =3D rbtn_remove,
+@@ -399,6 +446,15 @@ static void rbtn_notify(struct acpi_device *device=
+, u32 event)
+ {
+ 	struct rbtn_data *rbtn_data =3D device->driver_data;
+=20
++	/*
++	 * Some BIOSes send autonomously a notification at resume.
++	 * Ignore it to prevent unwanted input events.
++	 */
++	if (rbtn_data->suspended) {
++		dev_dbg(&device->dev, "ACPI notification ignored\n");
++		return;
++	}
++
+ 	if (event !=3D 0x80) {
+ 		dev_info(&device->dev, "Received unknown event (0x%x)\n",
+ 			 event);
 --=20
-1.9.1
+2.8.1
