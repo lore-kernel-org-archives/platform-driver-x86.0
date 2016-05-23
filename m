@@ -1,62 +1,40 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and
- restore it on resume
-Date: Mon, 23 May 2016 15:09:29 -0700
-Message-ID: <20160523220929.GD2735@f23x64.localdomain>
+From: =?UTF-8?Q?Marco_Trevisan_=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
+Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and restore
+ it on resume
+Date: Tue, 24 May 2016 00:10:44 +0200
+Message-ID: <CAALaScnavfThOtXeb1FRJAqxzMhtV-KmtZt71-pFL0rr23nzhA@mail.gmail.com>
 References: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
- <20160519075243.GI29844@pali>
- <CAALaSc=b821TsgB1FZGy9nmP-ZG0jjycdP2ktE1hFZUFg_ACog@mail.gmail.com>
+ <20160523215752.GC2735@f23x64.localdomain> <201605240004.09829@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57416 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751853AbcEWWJb (ORCPT
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:35198 "EHLO
+	mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751477AbcEWWLP convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2016 18:09:31 -0400
-Content-Disposition: inline
-In-Reply-To: <CAALaSc=b821TsgB1FZGy9nmP-ZG0jjycdP2ktE1hFZUFg_ACog@mail.gmail.com>
+	Mon, 23 May 2016 18:11:15 -0400
+Received: by mail-oi0-f66.google.com with SMTP id j202so4218411oih.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:11:15 -0700 (PDT)
+Received: from mail-oi0-f46.google.com (mail-oi0-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a71sm1348764oic.16.2016.05.23.15.11.13
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 23 May 2016 15:11:14 -0700 (PDT)
+Received: by mail-oi0-f46.google.com with SMTP id b65so156168901oia.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:11:13 -0700 (PDT)
+In-Reply-To: <201605240004.09829@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Trevisan =?iso-8859-1?B?KFRyZXZp8W8p?= <mail@3v1n0.net>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-On Fri, May 20, 2016 at 05:03:52AM +0200, Marco Trevisan (Trevi=F1o) wr=
-ote:
-> 2016-05-19 9:52 GMT+02:00 Pali Roh=E1r <pali.rohar@gmail.com>:
-> > For me whole patch looks like a big hack because LED_CORE_SUSPENDRE=
-SUME
-> > does not work correctly... I would rather see fixed support for fla=
-g
-> > LED_CORE_SUSPENDRESUME, not adding another suspend/resume hook if
-> > possible. Any idea?
->=20
-> As I wrote you in private mail I think the only way we have is to kee=
-p
-> the led_cdev->brightness in sync with actual state. And to do this, w=
-e
-> can listen the ACPI event, keeping this like a private event that we
-> just consume to update led brightness value, without delivering it to
-> userspace.
->=20
-> However, the custom code needed for getting this done, is probably wa=
-y
-> more than the one I added here.
-> Maybe it could be useful to others to read the brightness level befor=
-e
-> suspending, and in this case we could add a new flag to the led
-> subsystem, but not sure it's really worth.
->=20
+2016-05-24 0:04 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> Darren, I'm not sure if this is really correct approach in current
+> patch... Anyway as Marco wrote, there is ACPI event when keyboard
+> backlight change and maybe we should handle it...
 
-At the risk of contributing to "the platform platform", I agree with a =
-local fix
-here in the near term. If this becomes a pattern, we can look to move t=
-his into
-the LED subsystem. As it is, this is working as designed, overriding wh=
-en
-necessary.
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+I'll be happy to work on that as well, but I've not much time at the mo=
+ment.
+However I think this could be an ok way to handle things in the mean ti=
+me.
