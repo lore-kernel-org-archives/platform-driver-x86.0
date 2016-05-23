@@ -1,70 +1,128 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is suspended
-Date: Tue, 24 May 2016 00:22:28 +0200
-Message-ID: <201605240022.28140@pali>
-References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com> <201605240006.03580@pali> <20160523221715.GE2735@f23x64.localdomain>
+From: Marco Trevisan <mail@3v1n0.net>
+Subject: [PATCH v2] thinkpad_acpi: save kbdlight state on suspend and restore it on resume
+Date: Tue, 24 May 2016 00:39:51 +0200
+Message-ID: <1464043191-20791-1-git-send-email-mail@3v1n0.net>
+References: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3275945.aYp4lR5EcH";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f43.google.com ([74.125.82.43]:33230 "EHLO
-	mail-wm0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751951AbcEWWWb (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:36583 "EHLO
+	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750888AbcEWWkM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2016 18:22:31 -0400
-In-Reply-To: <20160523221715.GE2735@f23x64.localdomain>
+	Mon, 23 May 2016 18:40:12 -0400
+Received: by mail-wm0-f66.google.com with SMTP id q62so716857wmg.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:40:12 -0700 (PDT)
+In-Reply-To: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?Marco=20Trevisan=20=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
 
---nextPart3275945.aYp4lR5EcH
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+=46rom: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
 
-On Tuesday 24 May 2016 00:17:15 Darren Hart wrote:
-> On Tue, May 24, 2016 at 12:06:03AM +0200, Pali Roh=C3=A1r wrote:
-> > On Monday 23 May 2016 23:26:55 Darren Hart wrote:
-> > > I've queued this. Thanks for your patience.
-> >=20
-> > Ok, In that case I would update comments in patch to try it more
-> > clear what code is doing.
->=20
-> I thought I had your approval on this one Pali. Apologies if that was
-> not the case. Did I miss a change request from you?
->=20
-> If so, please point me at it, and I'll dequeue this one and wait for
-> an updated one.
+Override default LED class suspend/resume handles, by keeping track of
+the brightness level before suspending so that it can be automatically
+restored on resume by calling default resume handler.
 
-I just wanted to review that code from somebody else and decide if=20
-accept it or not. Because I was not sure if it is OK...
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 43 ++++++++++++++++++++++++++++=
++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
-But there was no objection, so patch is OK.
-
-And I pointed that patch could have better comments to describe what it=20
-is doing as at first time I was confused.
-
-So I believe that you can update patch in your queue with new version=20
-which just change comments in source code (without functional changes).
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart3275945.aYp4lR5EcH
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAldDgqQACgkQi/DJPQPkQ1JSAwCaAnETD3Geil6kFwUlReVCEsph
-ykkAoLh4QtUvlmvFO7OP4flHaqqP6chJ
-=Z17y
------END PGP SIGNATURE-----
-
---nextPart3275945.aYp4lR5EcH--
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
+6/thinkpad_acpi.c
+index 1f9783c..10111c2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5041,6 +5041,8 @@ static int kbdlight_set_level(int level)
+ 	return 0;
+ }
+=20
++static int kbdlight_set_level_and_update(int level);
++
+ static int kbdlight_get_level(void)
+ {
+ 	int status =3D 0;
+@@ -5108,7 +5110,7 @@ static void kbdlight_set_worker(struct work_struc=
+t *work)
+ 			container_of(work, struct tpacpi_led_classdev, work);
+=20
+ 	if (likely(tpacpi_lifecycle =3D=3D TPACPI_LIFE_RUNNING))
+-		kbdlight_set_level(data->new_state);
++		kbdlight_set_level_and_update(data->new_state);
+ }
+=20
+ static void kbdlight_sysfs_set(struct led_classdev *led_cdev,
+@@ -5139,7 +5141,6 @@ static struct tpacpi_led_classdev tpacpi_led_kbdl=
+ight =3D {
+ 		.max_brightness	=3D 2,
+ 		.brightness_set	=3D &kbdlight_sysfs_set,
+ 		.brightness_get	=3D &kbdlight_sysfs_get,
+-		.flags		=3D LED_CORE_SUSPENDRESUME,
+ 	}
+ };
+=20
+@@ -5177,6 +5178,20 @@ static void kbdlight_exit(void)
+ 	flush_workqueue(tpacpi_wq);
+ }
+=20
++static int kbdlight_set_level_and_update(int level)
++{
++	int ret;
++	struct led_classdev *led_cdev;
++
++	ret =3D kbdlight_set_level(level);
++	led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
++
++	if (ret =3D=3D 0 && !(led_cdev->flags & LED_SUSPENDED))
++		led_cdev->brightness =3D level;
++
++	return ret;
++}
++
+ static int kbdlight_read(struct seq_file *m)
+ {
+ 	int level;
+@@ -5217,13 +5232,35 @@ static int kbdlight_write(char *buf)
+ 	if (level =3D=3D -1)
+ 		return -EINVAL;
+=20
+-	return kbdlight_set_level(level);
++	return kbdlight_set_level_and_update(level);
++}
++
++static void kbdlight_suspend(void)
++{
++	struct led_classdev *led_cdev;
++
++	if (!tp_features.kbdlight)
++		return;
++
++	led_cdev =3D &tpacpi_led_kbdlight.led_classdev;
++	led_update_brightness(led_cdev);
++	led_classdev_suspend(led_cdev);
++}
++
++static void kbdlight_resume(void)
++{
++	if (!tp_features.kbdlight)
++		return;
++
++	led_classdev_resume(&tpacpi_led_kbdlight.led_classdev);
+ }
+=20
+ static struct ibm_struct kbdlight_driver_data =3D {
+ 	.name =3D "kbdlight",
+ 	.read =3D kbdlight_read,
+ 	.write =3D kbdlight_write,
++	.suspend =3D kbdlight_suspend,
++	.resume =3D kbdlight_resume,
+ 	.exit =3D kbdlight_exit,
+ };
+=20
+--=20
+1.9.1
