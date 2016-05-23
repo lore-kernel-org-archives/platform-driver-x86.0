@@ -1,69 +1,46 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and restore it on resume
-Date: Tue, 24 May 2016 00:04:09 +0200
-Message-ID: <201605240004.09829@pali>
-References: <1463620982-21058-1-git-send-email-mail@3v1n0.net> <20160523215752.GC2735@f23x64.localdomain>
+Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is suspended
+Date: Tue, 24 May 2016 00:06:03 +0200
+Message-ID: <201605240006.03580@pali>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com> <20160519133032.GO29844@pali> <20160523212655.GA2735@f23x64.localdomain>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart7184665.TsNSIxR0Nx";
+  boundary="nextPart2313570.BImM9yXlrp";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:36444 "EHLO
-	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753087AbcEWWEM (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2016 18:04:12 -0400
-Received: by mail-wm0-f68.google.com with SMTP id q62so506486wmg.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:04:12 -0700 (PDT)
-In-Reply-To: <20160523215752.GC2735@f23x64.localdomain>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160523212655.GA2735@f23x64.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Marco Trevisan <mail@3v1n0.net>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Andrei Borzenkov <arvidjaar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart7184665.TsNSIxR0Nx
+--nextPart2313570.BImM9yXlrp
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Monday 23 May 2016 23:57:52 Darren Hart wrote:
-> On Thu, May 19, 2016 at 03:23:02AM +0200, Marco Trevisan wrote:
-> > From: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
-> >=20
-> > Override default LED class suspend/resume handles, by keeping track
-> > of the brightness level before suspending so that it can be
-> > automatically restored on resume by calling default resume
-> > handler.
-> >=20
-> > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
->=20
-> The patch requires a Signed-off-by. I presume that should be from
-> Marco?
->=20
-> Henrique, is this Acked-by from you accurate? I need to see
-> maintainers respond on list as they would likely object to me just
-> taking other people's word for it in other scenarios ;-)
+On Monday 23 May 2016 23:26:55 Darren Hart wrote:
+> I've queued this. Thanks for your patience.
 
-Darren, I'm not sure if this is really correct approach in current=20
-patch... Anyway as Marco wrote, there is ACPI event when keyboard=20
-backlight change and maybe we should handle it...
+Ok, In that case I would update comments in patch to try it more clear=20
+what code is doing.
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart7184665.TsNSIxR0Nx
+--nextPart2313570.BImM9yXlrp
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAldDflkACgkQi/DJPQPkQ1K9BQCdEo+yBgq4wGkCeFxJToy0fkOW
-Hv0AnRNsDe/sEP0+xR/w0Ul67/KkHxSl
-=ZOyl
+iEYEABECAAYFAldDfssACgkQi/DJPQPkQ1Lr/gCguDSrrNXEB5vB6Q8KBJVbKe1d
+DvAAn0hbZTsVcR1mueV/l3agUn9wYVgH
+=pRTN
 -----END PGP SIGNATURE-----
 
---nextPart7184665.TsNSIxR0Nx--
+--nextPart2313570.BImM9yXlrp--
