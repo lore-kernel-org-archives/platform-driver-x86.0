@@ -1,56 +1,62 @@
-From: =?UTF-8?Q?Marco_Trevisan_=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
-Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and restore
- it on resume
-Date: Tue, 24 May 2016 00:08:46 +0200
-Message-ID: <CAALaSc=dtXhPgqxQCWx40JxrwJECjH22EGq6p2rv_9w0+kQoHA@mail.gmail.com>
-References: <1463620982-21058-1-git-send-email-mail@3v1n0.net> <20160523215752.GC2735@f23x64.localdomain>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] thinkpad_acpi: save kbdlight state on suspend and
+ restore it on resume
+Date: Mon, 23 May 2016 15:09:29 -0700
+Message-ID: <20160523220929.GD2735@f23x64.localdomain>
+References: <1463620982-21058-1-git-send-email-mail@3v1n0.net>
+ <20160519075243.GI29844@pali>
+ <CAALaSc=b821TsgB1FZGy9nmP-ZG0jjycdP2ktE1hFZUFg_ACog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:34931 "EHLO
-	mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751477AbcEWWJS convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:57416 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751853AbcEWWJb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2016 18:09:18 -0400
-Received: by mail-oi0-f67.google.com with SMTP id j202so4207983oih.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:09:18 -0700 (PDT)
-Received: from mail-oi0-f48.google.com (mail-oi0-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id 99sm2055964otf.36.2016.05.23.15.09.16
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 May 2016 15:09:16 -0700 (PDT)
-Received: by mail-oi0-f48.google.com with SMTP id b65so156103471oia.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2016 15:09:16 -0700 (PDT)
-In-Reply-To: <20160523215752.GC2735@f23x64.localdomain>
+	Mon, 23 May 2016 18:09:31 -0400
+Content-Disposition: inline
+In-Reply-To: <CAALaSc=b821TsgB1FZGy9nmP-ZG0jjycdP2ktE1hFZUFg_ACog@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Marco Trevisan =?iso-8859-1?B?KFRyZXZp8W8p?= <mail@3v1n0.net>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-2016-05-23 23:57 GMT+02:00 Darren Hart <dvhart@infradead.org>:
-> On Thu, May 19, 2016 at 03:23:02AM +0200, Marco Trevisan wrote:
->> From: Marco Trevisan (Trevi=C3=B1o) <mail@3v1n0.net>
->>
->> Override default LED class suspend/resume handles, by keeping track =
-of
->> the brightness level before suspending so that it can be automatical=
-ly
->> restored on resume by calling default resume handler.
->>
->> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
->
-> The patch requires a Signed-off-by. I presume that should be from Mar=
-co?
+On Fri, May 20, 2016 at 05:03:52AM +0200, Marco Trevisan (Trevi=F1o) wr=
+ote:
+> 2016-05-19 9:52 GMT+02:00 Pali Roh=E1r <pali.rohar@gmail.com>:
+> > For me whole patch looks like a big hack because LED_CORE_SUSPENDRE=
+SUME
+> > does not work correctly... I would rather see fixed support for fla=
+g
+> > LED_CORE_SUSPENDRESUME, not adding another suspend/resume hook if
+> > possible. Any idea?
+>=20
+> As I wrote you in private mail I think the only way we have is to kee=
+p
+> the led_cdev->brightness in sync with actual state. And to do this, w=
+e
+> can listen the ACPI event, keeping this like a private event that we
+> just consume to update led brightness value, without delivering it to
+> userspace.
+>=20
+> However, the custom code needed for getting this done, is probably wa=
+y
+> more than the one I added here.
+> Maybe it could be useful to others to read the brightness level befor=
+e
+> suspending, and in this case we could add a new flag to the led
+> subsystem, but not sure it's really worth.
+>=20
 
-I'm quite new to this, so please let me know how I should proceed.
+At the risk of contributing to "the platform platform", I agree with a =
+local fix
+here in the near term. If this becomes a pattern, we can look to move t=
+his into
+the LED subsystem. As it is, this is working as designed, overriding wh=
+en
+necessary.
 
-> Henrique, is this Acked-by from you accurate? I need to see maintaine=
-rs respond
-> on list as they would likely object to me just taking other people's =
-word for it
-> in other scenarios ;-)
-
-I've added it based on this reply (on ibm-acpi ML):
- - http://thread.gmane.org/gmane.linux.acpi.ibm-acpi.devel/4006/focus=3D=
-4007
+--=20
+Darren Hart
+Intel Open Source Technology Center
