@@ -1,60 +1,96 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v5] platform:x86: Add PMC Driver for Intel Core SoC
-Date: Tue, 24 May 2016 12:43:02 -0700
-Message-ID: <20160524194302.GK2735@f23x64.localdomain>
-References: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VfKowT6ZJ1_hy8LFWJ6dHmva3OQafOy4_LpDp4sU-jZsw@mail.gmail.com>
- <CAHp75Vd8XhcW5xr9ttyOT=5gBy3QBdeGnP8knx5fK=Nea9N0kA@mail.gmail.com>
+Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Tue, 24 May 2016 12:57:26 -0700
+Message-ID: <20160524195726.GM2735@f23x64.localdomain>
+References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
+ <201605240006.03580@pali>
+ <20160523221715.GE2735@f23x64.localdomain>
+ <201605240022.28140@pali>
+ <1d56338e-6312-371d-ace7-96f762e18bba@gmail.com>
+ <5743CF19.8050404@gmail.com>
+ <20160524070938.GG29844@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:60698 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932650AbcEXT51 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 24 May 2016 15:57:27 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd8XhcW5xr9ttyOT=5gBy3QBdeGnP8knx5fK=Nea9N0kA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, dbasehore@google.com, vishwanath.somayaji@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20160524070938.GG29844@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Andrei Borzenkov <arvidjaar@gmail.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, May 24, 2016 at 10:07:32PM +0300, Andy Shevchenko wrote:
-> On Tue, May 24, 2016 at 9:54 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Tue, May 24, 2016 at 5:25 PM, Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@intel.com> wrote:
-> 
-> >> +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
-> >> +{
-> >> +       struct pmc_dev *pmcdev = s->private;
-> >> +       u32 counter_val;
-> >> +
-> >> +       counter_val = pmc_core_reg_read(pmcdev,
-> >> +                                       SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-> >> +       seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
-> >> +{
-> >> +       return single_open(file, pmc_core_dev_state_show, inode->i_private);
-> >> +}
-> >> +
-> >> +static const struct file_operations pmc_core_dev_state_ops = {
-> >> +       .open           = pmc_core_dev_state_open,
-> >> +       .read           = seq_read,
-> >> +       .llseek         = seq_lseek,
-> >> +       .release        = single_release,
-> >> +};
-> >
-> > I suppose DEFINE_SIMPLE_ATTRIBUTE might reduce amount of LOC.
-> 
-> Correction:
-> DEFINE_DEBUGFS_ATTRIBUTE()
+On Tue, May 24, 2016 at 09:09:38AM +0200, Pali Roh=C3=A1r wrote:
+> On Tuesday 24 May 2016 06:48:41 Andrei Borzenkov wrote:
+> > 24.05.2016 02:03, Gabriele Mazzotta =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > On 24/05/2016 00:22, Pali Roh=C3=A1r wrote:
 
-Andy caught the couple things I was going to add and a couple more. Please give
-his feedback one more pass (except where I noted we had already covered things
-like the header and the module build), and we should still be able to get this
-into 4.7 if I have the next rev by tomorrow.
+=2E..
 
--- 
+> > > +#ifdef CONFIG_PM_SLEEP
+> > > +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context=
+)
+>=20
+> I would rename this function to rbtn_clear_suspended_flag.
+>=20
+
+=2E..
+
+> > > +	/*
+> > > +	 * Upon resume, some BIOSes autonomously send an ACPI notificat=
+ion
+
+You can drop "autonomously", it reads a bit awkwardly, and doesn't add =
+any
+information.
+
+> > > +	 * that triggers an unwanted input event. In order to ignore it=
+,
+> > > +	 * we use a flag that we set at suspend and clear once we have
+> > > +	 * received the extra notification. Since ACPI notifications ar=
+e
+> > > +	 * delivered asynchronously to drivers, we clear the flag from =
+the
+> > > +	 * workqueue used to deliver the notifications. This should be =
+enough
+> > > +	 * to guarantee that the flag is cleared only after we received=
+ the
+> > > +	 * extra notification, if any.
+> > > +	 */
+> >=20
+> > "guarantee" is rather strong word here. We really do not know anyth=
+ing
+> > how and when these notifications are generated by firmware, so can =
+only
+> > hope. But otherwise this explains what this patch intends to do (so=
+ that
+> > even me finally understood it :)
+>=20
+> Yes, thats better.
+>=20
+> > > +	status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
+> > > +			 rbtn_acpi_clear_flag, rbtn_data);
+> > > +	if (ACPI_FAILURE(status))
+> > > +		rbtn_data->suspended =3D false;
+>=20
+> And here rbtn_clear_suspended_flag(rbtn_data) call instead direct
+> assignment.
+>=20
+
+I'm dropping this from the queue, and awaiting an updated version with =
+the
+requested changes (these from Pali, and the issue raised about "guarant=
+ee" being
+too strong).
+
+Thanks,
+
+--=20
 Darren Hart
 Intel Open Source Technology Center
