@@ -1,64 +1,77 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5] platform:x86: Add PMC Driver for Intel Core SoC
-Date: Tue, 24 May 2016 23:12:10 +0300
-Message-ID: <CAHp75Vd9=M4b=5d85r5xL=AYoWtPmtMWqX6=Hnhgs6O62=Q2Rg@mail.gmail.com>
-References: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
-	<CAHp75VfKowT6ZJ1_hy8LFWJ6dHmva3OQafOy4_LpDp4sU-jZsw@mail.gmail.com>
-	<CAHp75Vd8XhcW5xr9ttyOT=5gBy3QBdeGnP8knx5fK=Nea9N0kA@mail.gmail.com>
-	<20160524194302.GK2735@f23x64.localdomain>
+From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] x86: Fix Apollo Lake Watchdog address in PMC driver
+Date: Tue, 24 May 2016 13:13:16 -0700
+Message-ID: <20160524201316.GA5857@f23x64.localdomain>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
+ <1463541972-19758-3-git-send-email-jonathan.yong@intel.com>
+ <573BE985.1000306@roeck-us.net>
+ <573BF421.2020503@intel.com>
+ <573C7E0C.7050304@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160524194302.GK2735@f23x64.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Derek Basehore <dbasehore@google.com>, vishwanath.somayaji@intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <573C7E0C.7050304-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "Yong, Jonathan" <jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 24, 2016 at 10:43 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, May 24, 2016 at 10:07:32PM +0300, Andy Shevchenko wrote:
->> On Tue, May 24, 2016 at 9:54 PM, Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->> > On Tue, May 24, 2016 at 5:25 PM, Rajneesh Bhardwaj
->> > <rajneesh.bhardwaj@intel.com> wrote:
->>
->> >> +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
->> >> +{
->> >> +       struct pmc_dev *pmcdev = s->private;
->> >> +       u32 counter_val;
->> >> +
->> >> +       counter_val = pmc_core_reg_read(pmcdev,
->> >> +                                       SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
->> >> +       seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
->> >> +
->> >> +       return 0;
->> >> +}
->> >> +
->> >> +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
->> >> +{
->> >> +       return single_open(file, pmc_core_dev_state_show, inode->i_private);
->> >> +}
->> >> +
->> >> +static const struct file_operations pmc_core_dev_state_ops = {
->> >> +       .open           = pmc_core_dev_state_open,
->> >> +       .read           = seq_read,
->> >> +       .llseek         = seq_lseek,
->> >> +       .release        = single_release,
->> >> +};
->> >
->> > I suppose DEFINE_SIMPLE_ATTRIBUTE might reduce amount of LOC.
->>
->> Correction:
->> DEFINE_DEBUGFS_ATTRIBUTE()
->
-> Andy caught the couple things I was going to add and a couple more. Please give
-> his feedback one more pass (except where I noted we had already covered things
-> like the header and the module build), and we should still be able to get this
-> into 4.7 if I have the next rev by tomorrow.
+On Wed, May 18, 2016 at 07:37:00AM -0700, Guenter Roeck wrote:
+> On 05/17/2016 09:48 PM, Yong, Jonathan wrote:
+> >On 05/18/2016 12:03, Guenter Roeck wrote:
+> >>On 05/17/2016 08:26 PM, Yong, Jonathan wrote:
+> >>>The TCO I/O base is 40h rather than the usual 30h, and the
+> >>>re_reboot bit is at ACPIBASE+8.
+> >>>
+> >>
+> >>Does this mean that the code never worked, or in other words that it
+> >>was never tested, or are there now other chips which used the old
+> >>definitions which no longer work after this patch has been applied ?
+> >
+> >To my knowledge, it has never worked since 30h is claimed by ACPI GPE0_BLK.
+> >
+> Hmm.. Darren will have to take that one. I am not in a position to
+> determine if the new patch is correct or not, and/or if it causes some
+> other platform/architecture to fail. I'll Ack the other patch, and
+> would suggest for Darren to take it as well to keep the two patches together.
 
-For me patch is in a good shape, just style issues and couple of
-things indeed that make code looking better.
+I actually have the same exact question :-)
+
+The history of this driver is for Apollo Lake, so the question is if there exist
+v3 and v5 APL products, or if we only need to concern ourselves with v5 in the
+upstream driver.
+
+Especially given the "I don't know if this is the right way" in the cover
+letter, I will need an Acked-by at the very least from Qipeng.
+
+Jonathan, please remember to Cc ALL the maintainers and all the lists listed by
+get_maintainers when sending patches:
+
+$ scripts/get_maintainer.pl -f drivers/platform/x86/intel_pmc_ipc.c
+Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> (maintainer:INTEL PMC/P-Unit IPC DRIVER)
+Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> (maintainer:X86 PLATFORM DRIVERS)
+platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:INTEL PMC/P-Unit IPC DRIVER)
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+
+In particular, ALL patches MUST cc  LKML.
+
+> 
+> Guenter
+> 
+> >With this patch, watchdog ioctl is working properly with WDIOC_SETTIMEOUT, WDIOC_GETTIMEOUT and WDIOC_GETTIMELEFT as expected.
+> >
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+Intel Open Source Technology Center
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
