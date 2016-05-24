@@ -1,152 +1,373 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] platform:x86: Add PMC Driver for Intel Core SOC
-Date: Tue, 24 May 2016 21:27:38 +0300
-Message-ID: <CAHp75VdycD2Ea6hJFA4hwGabAA+Aa=h50Cp0xjYDUbnnhcdHvg@mail.gmail.com>
-References: <1463061001-23210-1-git-send-email-rajneesh.bhardwaj@intel.com>
-	<CAHp75VfHzh2mBtNBGDHcz9BZ5C8eAdSxUqXq1Cdn-ujm9mtX8g@mail.gmail.com>
-	<20160516101550.GA3037@rajaneesh-OptiPlex-9010>
-	<20160516225913.GA3402@f23x64.localdomain>
+Subject: Re: [PATCH v5] platform:x86: Add PMC Driver for Intel Core SoC
+Date: Tue, 24 May 2016 21:54:36 +0300
+Message-ID: <CAHp75VfKowT6ZJ1_hy8LFWJ6dHmva3OQafOy4_LpDp4sU-jZsw@mail.gmail.com>
+References: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f47.google.com ([209.85.218.47]:34395 "EHLO
-	mail-oi0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754114AbcEXS1k (ORCPT
+Received: from mail-oi0-f67.google.com ([209.85.218.67]:34777 "EHLO
+	mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751015AbcEXSyh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 May 2016 14:27:40 -0400
-In-Reply-To: <20160516225913.GA3402@f23x64.localdomain>
+	Tue, 24 May 2016 14:54:37 -0400
+In-Reply-To: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, vishwanath.somayaji@intel.com
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, dbasehore@google.com, vishwanath.somayaji@intel.com
 
-On Tue, May 17, 2016 at 1:59 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Mon, May 16, 2016 at 03:45:50PM +0530, Rajneesh Bhardwaj wrote:
->> On Thu, May 12, 2016 at 06:02:45PM +0300, Andy Shevchenko wrote:
->> > On Thu, May 12, 2016 at 4:50 PM, Rajneesh Bhardwaj
->> > <rajneesh.bhardwaj@intel.com> wrote:
+On Tue, May 24, 2016 at 5:25 PM, Rajneesh Bhardwaj
+<rajneesh.bhardwaj@intel.com> wrote:
 
->> > > +INTEL PMC CORE DRIVER
->> > > +M:      Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
->> > > +M:      Vishwanath Somayaji <vishwanath.somayaji@intel.com>
->> > > +L:      platform-driver-x86@vger.kernel.org
->> > > +S:      Maintained
->> > > +F:      drivers/platform/x86/intel_pmc_core.h
->> > > +F:      drivers/platform/x86/intel_pmc_core.c
->> >
->> > So, we have arch/x86/platform/atom/pmc_atom.c
->> >
->> > This driver looks very similar (by what functional is), so, we have to
->> > become clear what our layout is.
->> > Either we go with drivers/platform/x86 or with arch/x86/platform.
->> >
->>
->> IMHO, the functianality provided by this driver is platform specific and
->> not architecture specific.
->>
->> There are few similar drivers present in this location already i.e.
->> intel_telemetry_core.c, intel_pmc_ipc.c etc.
->>
->> We had initially put this driver along with pmc_atom.c but later we thought
->> that driver/platform/x86 would be a more apt place for it because of the
->> above mentioned reasons.
->>
->> Please advise for the right location for this driver if its not placed in the
->> expected location.
+Thanks for an update!
+
+By the way, please keep me in the Cc list with my
+andriy.shevchenko@linux.intel.com address.
+
+Additionally to what I said in the previous mail for v4.
+
+> This patch adds the Power Management Controller driver as a pci driver
+
+pci -> PCI
+
+Check entire file.
+
+> for Intel Core SoC architecture.
+
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6096,6 +6096,15 @@ S:       Maintained
+>  F:     arch/x86/include/asm/intel_telemetry.h
+>  F:     drivers/platform/x86/intel_telemetry*
 >
-> We're experiencing some repeat discussion due to some of the reviews having
-> taken place off list. Sorry Andy, I've been trying to steer this back to list,
-> so you're missing some context to no fault of your own.
+> +INTEL PMC CORE DRIVER
+> +M:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> +M:     Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+> +L:     platform-driver-x86@vger.kernel.org
+> +S:     Maintained
+> +F:     arch/x86/include/asm/pmc_core.h
+
+> +F:     drivers/platform/x86/intel_pmc_core.h
+> +F:     drivers/platform/x86/intel_pmc_core.c
+
+F:     drivers/platform/x86/intel_pmc_core*
+
+?
+
+> +++ b/arch/x86/include/asm/pmc_core.h
+
+> +#ifndef _ASM_PMC_CORE_H
+> +#define _ASM_PMC_CORE_H
+> +
+> +/* API to read slp_s0 residency */
+
+I think in the comment you may use SLP_S0 like you did in the commit message.
+
+> +int intel_pmc_slp_s0_counter_read(u32 *data);
+> +
+
+> +#endif
+> +
+> +/* _ASM_PMC_CORE_H */
+
+Would be one line.
+
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -846,6 +846,18 @@ config INTEL_IMR
 >
-> It's possible some of the existing drivers in arch really shouldn't be there.
-> It's not particularly well defined, however, if it isn't used outside the kernel
-> or by other subsystems within the kernel, it seems that drivers/platform/x86
-> would be the appropriate location.
-
-Roughly it's what I also expected, but here we export function to the
-users. If they are all be located under pdx86 I'm pretty okay with
-current approach. Otherwise might be good to think a bit.
-
-> Thomas, Peter - do you have a criteria for what you prefer to have in
-> arch/x86/platform versus drivers/platform/x86?
-
-+1 to the question. It would be nice to have a formal criteria to
-choose a location.
-
->> > > --- a/drivers/platform/x86/Kconfig
->> > > +++ b/drivers/platform/x86/Kconfig
->> > > @@ -821,6 +821,18 @@ config INTEL_IPS
->> > >           functionality.  If in doubt, say Y here; it will only load on
->> > >           supported platforms.
->> > >
->> > > +config INTEL_PMC_CORE
->> >
->> > Better to locate this in alphabetical order.
->> >
->>
->> Agreed, i tried to put it in alphabetical order but there are quite a few entries
->> in Kconfig that are skewed e.g. INTEL_MFLD is placed above INTEL_IPS.
->>
->> Placing INTEL_PMC_CORE after INTEL_IMR would be ok?
-
-At least. At some point we might sort entire file alphabetically.
-
->> > > +static struct pmc_dev pmc;
->> > > +
->> > > +static const struct pci_device_id pmc_pci_ids[] = {
->> > > +       { PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID), (kernel_ulong_t)NULL },
->> >
->> > No need to have an explicit NULL
->> >
->>
->> There is a precedent in the kernel for such usage and in previous reviews we agreed
->> to stick to this format. I hope thats fine?
+>           If you are running on a Galileo/Quark say Y here.
 >
-> I'm fine with this, even if redundant, so long as you are consistent throughout
-> the driver. This is consistent with the other drivers in drivers/platform/x86.
+> +config INTEL_PMC_CORE
+> +       bool "Intel PMC Core driver"
+> +       depends on X86 && PCI
+> +       ---help---
+> +         The Intel Platform Controller Hub for Intel Core SoCs provides access
+> +         to Power Management Controller registers via a pci interface. This
 
-Yeah, it's minor, so just one format for all entries.
+PCI
 
->> > > +EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
->> >
->> > Who is going to be a user of that?
->> >
->>
->> This is expected to be used by a framework (upcoming) for detecting slp_s0
->> signal assertion related failures.
+> +         driver can utilize debugging capabilities and supported features as
+> +         exposed by the Power Management Controller.
+> +
+> +         Supported features:
+> +               - slp_s0_residency counter.
 
-It might be good to put few words in the commit message about expecting user(s).
+SLP_S0
 
->> > > +static void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
->> > > +{
->> > > +       debugfs_remove_recursive(pmc->dbgfs_dir);
->> > > +}
->> >
->> > No need to keep this under #ifdef.
->> >
->>
->> Based on some previus review comments we decided to put the dummy functions
->> for !CONIG_DEBUG_FS case. Can you please elaborate more on this change request?
->>
->
-> I think Andy's point is that there is no reason to specialize this function
-> since debugs_remove_recursive checks for null.
->
-> The problem of course is that dbgfs_dir only exists if CONFIG_DEBUG_FS exists. I
-> don't know if that's worth ifdeffing out of the struct, but there is precendent
-> for doing it that way, and I didn't feel strongly one way or the other, so I
-> left it up to you.
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,3 +69,4 @@ obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
+>                                    intel_telemetry_pltdrv.o \
+>                                    intel_telemetry_debugfs.o
+> +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
 
-> If you want to conditionally include the field in the struct, then this is fine
-> as is.
+Alphabetical order?
 
-Yeah, for the consistency either way is okay. I prefer to have less
-#ifdef:s, but here it's a not bit burden.
+> +++ b/drivers/platform/x86/intel_pmc_core.c
 
->> > > +       pmc.regmap = ioremap_nocache(pmc.base_addr, SPT_PMC_MMIO_REG_LEN);
->> Do you recommend devm_ioremap_nocache as well?
+> +/**
+> + * intel_pmc_slp_s0_counter_read() - Read slp_s0 residency.
 
-Good point.
+SLP_S0
+
+> + * @data: Out param that contains current slp_s0 count.
+
+Ditto.
+
+> + *
+
++ * Description:
+
+> + * This API currently supports Intel Skylake SoC and Sunrise
+> + * Point Platform Controller Hub. Future platform support
+> + * should be added for platforms that support low power modes
+> + * beyond Package C10 state.
+> + *
+> + * SLP_S0_RESIDENCY counter counts in 100 us granularity per
+> + * step hence function populates the multiplied value in out
+> + * parameter @data.
+> + *
+> + * Return: an error code or 0 on success.
+> + */
+> +int intel_pmc_slp_s0_counter_read(u32 *data)
+> +{
+> +       struct pmc_dev *pmcdev = &pmc;
+> +       u32 value;
+> +
+> +       if (!pmcdev->has_slp_s0_res)
+
+I would name this just initialized, so if you ever add something else
+there will be no need to rename.
+
+if (!pmcdev->initialized)
+
+> +               return -EACCES;
+> +
+> +       value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> +       *data = pmc_core_adjust_slp_s0_step(value);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
+> +
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
+> +{
+> +       struct pmc_dev *pmcdev = s->private;
+> +       u32 counter_val;
+> +
+> +       counter_val = pmc_core_reg_read(pmcdev,
+> +                                       SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> +       seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
+> +
+> +       return 0;
+> +}
+> +
+> +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
+> +{
+> +       return single_open(file, pmc_core_dev_state_show, inode->i_private);
+> +}
+> +
+> +static const struct file_operations pmc_core_dev_state_ops = {
+> +       .open           = pmc_core_dev_state_open,
+> +       .read           = seq_read,
+> +       .llseek         = seq_lseek,
+> +       .release        = single_release,
+> +};
+
+I suppose DEFINE_SIMPLE_ATTRIBUTE might reduce amount of LOC.
+
+> +static int pmc_core_dbgfs_register(struct pmc_dev *pmc)
+
+Use pmcdev for pointer for the sake of consistency.
+
+> +{
+> +       struct dentry *dir, *file;
+
+> +       int ret = 0;
+
+Redundant.
+
+> +
+> +       dir = debugfs_create_dir("pmc_core", NULL);
+> +       if (!dir)
+> +               return -ENOMEM;
+> +
+> +       pmc->dbgfs_dir = dir;
+
+I'm not sure you need an additional variable here.
+
+> +       file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
+> +                                  dir, pmc, &pmc_core_dev_state_ops);
+> +
+> +       if (!file) {
+> +               pmc_core_dbgfs_unregister(pmc);
+> +               ret = -ENODEV;
+> +       }
+> +       return ret;
+> +}
+> +#else
+> +static inline int pmc_core_dbgfs_register(struct pmc_dev *pmc)
+> +{
+> +       return 0; /* nothing to register */
+
+Useless comment.
+
+> +}
+> +
+> +static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmc)
+> +{
+> +       /* nothing to deregister */
+
+Ditto.
+
+> +}
+> +#endif /* CONFIG_DEBUG_FS */
+
+> +static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +{
+> +       struct device *ptr_dev = &dev->dev;
+> +       struct pmc_dev *pmcdev = &pmc;
+> +       const struct x86_cpu_id *cpu_id;
+> +       int err;
+> +
+> +       cpu_id = x86_match_cpu(intel_pmc_core_ids);
+> +       if (!cpu_id) {
+> +               dev_dbg(&dev->dev, "PMC Core: cpuid mismatch.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       err = pcim_enable_device(dev);
+> +       if (err < 0) {
+> +               dev_dbg(&dev->dev, "PMC Core: failed to enable Power Management Controller.\n");
+> +               return err;
+> +       }
+> +
+> +       err = pci_read_config_dword(dev,
+> +                                   SPT_PMC_BASE_ADDR_OFFSET,
+> +                                   &pmcdev->base_addr);
+> +       if (err < 0) {
+> +               dev_dbg(&dev->dev, "PMC Core: failed to read pci config space.\n");
+
+PCI
+
+> +               return err;
+> +       }
+> +       dev_dbg(&dev->dev, "PMC Core: PWRMBASE is %#x\n", pmcdev->base_addr);
+> +
+> +       pmcdev->regmap = devm_ioremap_nocache(ptr_dev,
+> +                                             pmcdev->base_addr,
+> +                                             SPT_PMC_MMIO_REG_LEN);
+
+I suggest to rename regmap to avoid confusion with regmap framework
+widely used in the drivers. Choose something like base, regs, regbase,
+etc.
+
+> +       if (!pmcdev->regmap) {
+> +               dev_dbg(&dev->dev, "PMC Core: ioremap failed.\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       err = pmc_core_dbgfs_register(pmcdev);
+> +       if (err < 0) {
+> +               dev_err(&dev->dev, "PMC Core: debugfs register failed.\n");
+> +               return err;
+> +       }
+> +
+> +       pmc.has_slp_s0_res = true;
+> +       return 0;
+> +}
+> +
+
+
+> +static void intel_pmc_core_remove(struct pci_dev *pdev)
+> +{
+> +       pmc_core_dbgfs_unregister(&pmc);
+> +}
+> +
+> +static struct pci_driver intel_pmc_core_driver = {
+> +       .name = "intel_pmc_core",
+> +       .id_table = pmc_pci_ids,
+> +       .probe = pmc_core_probe,
+> +       .remove = intel_pmc_core_remove,
+> +};
+> +module_pci_driver(intel_pmc_core_driver);
+> +
+> +MODULE_AUTHOR("Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>");
+> +MODULE_AUTHOR("Vishwanath Somayaji <vishwanath.somayaji@intel.com>");
+> +MODULE_DESCRIPTION("Intel CORE SoC Power Management Controller Interface");
+> +MODULE_LICENSE("GPL v2");
+
+So, since you have symbol defined as boolean, most of the above lines
+are redundant including ->remove() and module.h inclusion.
+
+Do we need it as a module? In that case you have to set to false
+pmcdev->initialized variable.
+
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Intel Core SOC Power Management Controller Header File
+> + *
+> + * Copyright (c) 2016, Intel Corporation.
+> + * All Rights Reserved.
+
+> + * Author: Rajneesh Bhardwaj (rajneesh.bhardwaj@intel.com)
+> + * Author: Vishwanath Somayaji (vishwanath.somayaji@intel.com)
+
+Authors: Author 1
+          Author 2
+
+Check the other files.
+
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + */
+> +
+> +#ifndef PMC_CORE_H
+> +#define PMC_CORE_H
+> +
+> +/* Sunrise Point Power Management Controller PCI Device ID */
+> +#define SPT_PMC_PCI_DEVICE_ID                  0x9d21
+> +#define SPT_PMC_BASE_ADDR_OFFSET               0x48
+> +#define SPT_PMC_SLP_S0_RES_COUNTER_OFFSET      0x13c
+> +#define SPT_PMC_MMIO_REG_LEN                   0x100
+> +#define SPT_PMC_REG_BIT_WIDTH                  0x20
+> +#define SPT_PMC_SLP_S0_RES_COUNTER_STEP                0x64
+> +
+> +/**
+> + * struct pmc_dev - pmc device structure
+> + * @base_addr:         comtains pmc base address
+> + * @regmap:            pointer to io-remapped memory location
+> + * @dbgfs_dir:         path to debug fs interface
+> + * @feature_available: flag to indicate whether
+> + *                     the feature is available
+> + *                     on a particular platform or not.
+> + *
+> + * pmc_dev contains info about power management controller device.
+> + */
+> +struct pmc_dev {
+> +       u32 base_addr;
+> +       void __iomem *regmap;
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +       struct dentry *dbgfs_dir;
+> +#endif /* CONFIG_DEBUG_FS */
+> +       bool has_slp_s0_res;
+> +};
+
+I doubt this header makes any sense to be exist.
 
 -- 
 With Best Regards,
