@@ -1,96 +1,92 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] dell-rbtn: Ignore ACPI notifications if device is
- suspended
-Date: Tue, 24 May 2016 12:57:26 -0700
-Message-ID: <20160524195726.GM2735@f23x64.localdomain>
-References: <1457740175-8327-1-git-send-email-gabriele.mzt@gmail.com>
- <201605240006.03580@pali>
- <20160523221715.GE2735@f23x64.localdomain>
- <201605240022.28140@pali>
- <1d56338e-6312-371d-ace7-96f762e18bba@gmail.com>
- <5743CF19.8050404@gmail.com>
- <20160524070938.GG29844@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5] platform:x86: Add PMC Driver for Intel Core SoC
+Date: Tue, 24 May 2016 23:10:56 +0300
+Message-ID: <CAHp75VfXztjrq7ESKv_Oy6AWb3SAS-zLRhdLOpoQ0hj_oFkgZg@mail.gmail.com>
+References: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
+	<CAHp75VfKowT6ZJ1_hy8LFWJ6dHmva3OQafOy4_LpDp4sU-jZsw@mail.gmail.com>
+	<20160524193844.GJ2735@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:60698 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932650AbcEXT51 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 May 2016 15:57:27 -0400
-Content-Disposition: inline
-In-Reply-To: <20160524070938.GG29844@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Andrei Borzenkov <arvidjaar@gmail.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "D. Jared Dominguez" <Jared_Dominguez@dell.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160524193844.GJ2735@f23x64.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, dbasehore@google.com, vishwanath.somayaji@intel.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 24, 2016 at 09:09:38AM +0200, Pali Roh=C3=A1r wrote:
-> On Tuesday 24 May 2016 06:48:41 Andrei Borzenkov wrote:
-> > 24.05.2016 02:03, Gabriele Mazzotta =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > On 24/05/2016 00:22, Pali Roh=C3=A1r wrote:
+On Tue, May 24, 2016 at 10:38 PM, Darren Hart <dvhart@infradead.org> wrote:
+> On Tue, May 24, 2016 at 09:54:36PM +0300, Andy Shevchenko wrote:
+>> On Tue, May 24, 2016 at 5:25 PM, Rajneesh Bhardwaj
+>> <rajneesh.bhardwaj@intel.com> wrote:
 
-=2E..
+>> > +int intel_pmc_slp_s0_counter_read(u32 *data)
+>> > +{
+>> > +       struct pmc_dev *pmcdev = &pmc;
+>> > +       u32 value;
+>> > +
+>> > +       if (!pmcdev->has_slp_s0_res)
+>>
+>> I would name this just initialized, so if you ever add something else
+>> there will be no need to rename.
+>>
+>> if (!pmcdev->initialized)
+>>
+>
+> Previously this was "has_feature" or similar and I asked for something more
+> specific. "initialized" is going back the other way, and if the device can
+> support some features and not others, then this will need to go back to a more
+> specific naming. Let's leave this one as is for now. We can revisit it in the
+> future when more features provide us information on how it will be used.
 
-> > > +#ifdef CONFIG_PM_SLEEP
-> > > +static void ACPI_SYSTEM_XFACE rbtn_acpi_clear_flag(void *context=
-)
->=20
-> I would rename this function to rbtn_clear_suspended_flag.
->=20
+Okay, stick with the current name. As you may noticed most of the
+comments are rather style ones, so, I have no objections to either
+choice.
 
-=2E..
+>> > +static void intel_pmc_core_remove(struct pci_dev *pdev)
+>> > +{
+>> > +       pmc_core_dbgfs_unregister(&pmc);
+>> > +}
+>> > +
+>> > +static struct pci_driver intel_pmc_core_driver = {
+>> > +       .name = "intel_pmc_core",
+>> > +       .id_table = pmc_pci_ids,
+>> > +       .probe = pmc_core_probe,
+>> > +       .remove = intel_pmc_core_remove,
+>> > +};
+>> > +module_pci_driver(intel_pmc_core_driver);
+>> > +
+>> > +MODULE_AUTHOR("Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>");
+>> > +MODULE_AUTHOR("Vishwanath Somayaji <vishwanath.somayaji@intel.com>");
+>> > +MODULE_DESCRIPTION("Intel CORE SoC Power Management Controller Interface");
+>> > +MODULE_LICENSE("GPL v2");
+>>
+>> So, since you have symbol defined as boolean, most of the above lines
+>> are redundant including ->remove() and module.h inclusion.
+>>
+>> Do we need it as a module? In that case you have to set to false
+>> pmcdev->initialized variable.
+>
+> It was determined best not to build as a module given the it's primary consumer
+> was a built-in. Some of that is still being built, so we'll leave it as built-in
+> until it's in, and we can re-evaluate as needed.
 
-> > > +	/*
-> > > +	 * Upon resume, some BIOSes autonomously send an ACPI notificat=
-ion
+Yeah, I saw several patches floating around that removes module
+support for boolean symbols. Thus my question is how we suppose to
+proceed. In case we might have module support I would rather remove
+extra stuff and apply it later when it would be needed. What do you
+think?
 
-You can drop "autonomously", it reads a bit awkwardly, and doesn't add =
-any
-information.
+>>
+>> I doubt this header makes any sense to be exist.
+>
+> This is a very subjective call, and several folks have weighed in on how they
+> would like to see it. This could be part of the C file, but there is nothing
+> wrong with it like this. The important part to me is that the driver specific
+> stuff is kept close to the driver in this directory, while the interface alone
+> is exposed in the arch header.
 
-> > > +	 * that triggers an unwanted input event. In order to ignore it=
-,
-> > > +	 * we use a flag that we set at suspend and clear once we have
-> > > +	 * received the extra notification. Since ACPI notifications ar=
-e
-> > > +	 * delivered asynchronously to drivers, we clear the flag from =
-the
-> > > +	 * workqueue used to deliver the notifications. This should be =
-enough
-> > > +	 * to guarantee that the flag is cleared only after we received=
- the
-> > > +	 * extra notification, if any.
-> > > +	 */
-> >=20
-> > "guarantee" is rather strong word here. We really do not know anyth=
-ing
-> > how and when these notifications are generated by firmware, so can =
-only
-> > hope. But otherwise this explains what this patch intends to do (so=
- that
-> > even me finally understood it :)
->=20
-> Yes, thats better.
->=20
-> > > +	status =3D acpi_os_execute(OSL_NOTIFY_HANDLER,
-> > > +			 rbtn_acpi_clear_flag, rbtn_data);
-> > > +	if (ACPI_FAILURE(status))
-> > > +		rbtn_data->suspended =3D false;
->=20
-> And here rbtn_clear_suspended_flag(rbtn_data) call instead direct
-> assignment.
->=20
+Agreed.
 
-I'm dropping this from the queue, and awaiting an updated version with =
-the
-requested changes (these from Pali, and the issue raised about "guarant=
-ee" being
-too strong).
-
-Thanks,
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+-- 
+With Best Regards,
+Andy Shevchenko
