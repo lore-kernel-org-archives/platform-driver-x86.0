@@ -1,83 +1,107 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH v5] platform:x86: Add PMC Driver for Intel Core SoC
-Date: Wed, 25 May 2016 23:43:17 +0530
-Message-ID: <20160525181316.GA32508@rajaneesh-OptiPlex-9010>
-References: <1464099946-15078-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VfKowT6ZJ1_hy8LFWJ6dHmva3OQafOy4_LpDp4sU-jZsw@mail.gmail.com>
- <CAHp75Vd8XhcW5xr9ttyOT=5gBy3QBdeGnP8knx5fK=Nea9N0kA@mail.gmail.com>
- <20160524194302.GK2735@f23x64.localdomain>
- <CAHp75Vd9=M4b=5d85r5xL=AYoWtPmtMWqX6=Hnhgs6O62=Q2Rg@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v6] platform:x86: Add PMC Driver for Intel Core SoC
+Date: Wed, 25 May 2016 13:13:53 -0700
+Message-ID: <20160525201353.GA109010@f23x64.localdomain>
+References: <1464198292-32356-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:54029 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751042AbcEYUNx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 25 May 2016 16:13:53 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd9=M4b=5d85r5xL=AYoWtPmtMWqX6=Hnhgs6O62=Q2Rg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Derek Basehore <dbasehore@google.com>, vishwanath.somayaji@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1464198292-32356-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, olof@lixom.net, tglx@linutronix.de, hpa@zytor.com, dbasehore@google.com, vishwanath.somayaji@intel.com
 
-On Tue, May 24, 2016 at 11:12:10PM +0300, Andy Shevchenko wrote:
-> On Tue, May 24, 2016 at 10:43 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Tue, May 24, 2016 at 10:07:32PM +0300, Andy Shevchenko wrote:
-> >> On Tue, May 24, 2016 at 9:54 PM, Andy Shevchenko
-> >> <andy.shevchenko@gmail.com> wrote:
-> >> > On Tue, May 24, 2016 at 5:25 PM, Rajneesh Bhardwaj
-> >> > <rajneesh.bhardwaj@intel.com> wrote:
-> >>
-> >> >> +static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
-> >> >> +{
-> >> >> +       struct pmc_dev *pmcdev = s->private;
-> >> >> +       u32 counter_val;
-> >> >> +
-> >> >> +       counter_val = pmc_core_reg_read(pmcdev,
-> >> >> +                                       SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-> >> >> +       seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
-> >> >> +
-> >> >> +       return 0;
-> >> >> +}
-> >> >> +
-> >> >> +static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
-> >> >> +{
-> >> >> +       return single_open(file, pmc_core_dev_state_show, inode->i_private);
-> >> >> +}
-> >> >> +
-> >> >> +static const struct file_operations pmc_core_dev_state_ops = {
-> >> >> +       .open           = pmc_core_dev_state_open,
-> >> >> +       .read           = seq_read,
-> >> >> +       .llseek         = seq_lseek,
-> >> >> +       .release        = single_release,
-> >> >> +};
-> >> >
-> >> > I suppose DEFINE_SIMPLE_ATTRIBUTE might reduce amount of LOC.
-> >>
-> >> Correction:
-> >> DEFINE_DEBUGFS_ATTRIBUTE()
-> >
-> > Andy caught the couple things I was going to add and a couple more. Please give
-> > his feedback one more pass (except where I noted we had already covered things
-> > like the header and the module build), and we should still be able to get this
-> > into 4.7 if I have the next rev by tomorrow.
-> 
-> For me patch is in a good shape, just style issues and couple of
-> things indeed that make code looking better.
->
+On Wed, May 25, 2016 at 11:14:52PM +0530, Rajneesh Bhardwaj wrote:
+> This patch adds the Power Management Controller driver as a PCI drive=
+r
+> for Intel Core SoC architecture.
+>=20
+> This driver can utilize debugging capabilities and supported features
+> as exposed by the Power Management Controller.
+>=20
+> Please refer to the below specification for more details on PMC featu=
+res.
+> http://www.intel.in/content/www/in/en/chipsets/100-series-chipset-dat=
+asheet-vol-2.html
+>=20
+> The current version of this driver exposes SLP_S0_RESIDENCY counter.
+> This counter can be used for detecting fragile SLP_S0 signal related
+> failures and take corrective actions when PCH SLP_S0 signal is not
+> asserted after kernel freeze as part of suspend to idle flow
+> (echo freeze > /sys/power/state).
+>=20
+> Intel Platform Controller Hub (PCH) asserts SLP_S0 signal when it
+> detects favorable conditions to enter its low power mode. As a
+> pre-requisite the SoC should be in deepest possible Package C-State
+> and devices should be in low power mode. For example, on Skylake SoC
+> the deepest Package C-State is Package C10 or PC10. Suspend to idle
+> flow generally leads to PC10 state but PC10 state may not be sufficie=
+nt
+> for realizing the platform wide power potential which SLP_S0 signal
+> assertion can provide.
+>=20
+> SLP_S0 signal is often connected to the Embedded Controller (EC) and =
+the
+> Power Management IC (PMIC) for other platform power management relate=
+d
+> optimizations.
+>=20
+> In general, SLP_S0 assertion =3D=3D PC10 + PCH low power mode + ModPh=
+y Lanes
+> power gated + PLL Idle.
+>=20
+> As part of this driver, a mechanism to read the SLP_S0_RESIDENCY is e=
+xposed
+> as an API and also debugfs features are added to indicate SLP_S0 sign=
+al
+> assertion residency in microseconds.
+>=20
+> echo freeze > /sys/power/state
+> wake the system
+> cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
+>=20
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Signed-off-by: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 
-Thanks again for the review.
-I have sent patch v6 addressing your consolidated feedback except a couple
-of things that you suggested.
+Hi Rajneesh,
 
-I guess DEFINE_DEBUGFS_ATTRIBUTE is linux-next so to avoid possible build
-issues can we skip this for now? We can revisit this change when this is
-readily available in the mainline kernel in near future.
+Unfortunately during my build test, this introduced a new warning to th=
+e build:
 
-Also, Makefile and Kconfig files in pdx86 need alphabetical sorting so 
-skipped the suggestion related to alphabetical placement in Makefile.
- 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+drivers/platform/x86/intel_pmc_core.c:201:19: warning: =E2=80=98intel_p=
+mc_core_init=E2=80=99
+defined but not used [-Wunused-function]
+ static int __init intel_pmc_core_init(void)
 
--- 
-Best Regards,
-Rajneesh
+After the removal of the module stuff, the driver needed a device_initc=
+all, or
+the macro equivalent, consider:
+
+$ git diff
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x=
+86/intel_pmc_core.c
+index c834281..f6a29b9 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -198,7 +198,4 @@ static struct pci_driver intel_pmc_core_driver =3D =
+{
+        .remove =3D NULL, /* not a hot-plug capable driver */
+ };
+
+-static int __init intel_pmc_core_init(void)
+-{
+-       return pci_register_driver(&intel_pmc_core_driver);
+-}
++builtin_pci_driver(intel_pmc_core_driver);
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
