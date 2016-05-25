@@ -1,60 +1,68 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v6] platform:x86: Add PMC Driver for Intel Core SoC
-Date: Wed, 25 May 2016 14:04:03 -0700
-Message-ID: <20160525210403.GD109010@f23x64.localdomain>
-References: <1464198292-32356-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <20160525201353.GA109010@f23x64.localdomain>
- <CAHp75Vcqxreujm9+D2JpAGkbyYZJ+uvKXjcSb_Dqcs96Y0n2_Q@mail.gmail.com>
+Subject: Re: [PATCH v4] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Wed, 25 May 2016 14:20:45 -0700
+Message-ID: <20160525212045.GE109010@f23x64.localdomain>
+References: <20160524195726.GM2735@f23x64.localdomain>
+ <1464123188-9589-1-git-send-email-gabriele.mzt@gmail.com>
+ <20160525202847.GC109010@f23x64.localdomain>
+ <201605252236.55715@pali>
+ <57b87380-6ea8-cdaf-b95c-4685fc2a85d1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47071 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:51370 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751107AbcEYVEE (ORCPT
+	with ESMTP id S1751110AbcEYVUr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 25 May 2016 17:04:04 -0400
+	Wed, 25 May 2016 17:20:47 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vcqxreujm9+D2JpAGkbyYZJ+uvKXjcSb_Dqcs96Y0n2_Q@mail.gmail.com>
+In-Reply-To: <57b87380-6ea8-cdaf-b95c-4685fc2a85d1@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, dbasehore@google.com, vishwanath.somayaji@intel.com
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, arvidjaar@gmail.com, rjw@rjwysocki.net, Jared_Dominguez@dell.com, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, linux-kernel@vger.kernel.org
 
-On Wed, May 25, 2016 at 11:37:21PM +0300, Andy Shevchenko wrote:
-> On Wed, May 25, 2016 at 11:13 PM, Darren Hart <dvhart@infradead.org> =
-wrote:
-> > On Wed, May 25, 2016 at 11:14:52PM +0530, Rajneesh Bhardwaj wrote:
+On Wed, May 25, 2016 at 10:47:03PM +0200, Gabriele Mazzotta wrote:
+> On 25/05/2016 22:36, Pali Roh=E1r wrote:
+> > On Wednesday 25 May 2016 22:28:47 Darren Hart wrote:
+> >> On Tue, May 24, 2016 at 10:53:08PM +0200, Gabriele Mazzotta wrote:
+> >>> Some BIOSes unconditionally send an ACPI notification to RBTN whe=
+n
+> >>> the system is resuming from suspend. This makes dell-rbtn send an
+> >>> input event to userspace as if a function key was pressed. Preven=
+t
+> >>> this by ignoring all the notifications received while the device
+> >>> is suspended.
+> >>>
+> >>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
+> >>> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> >>
+> >> Gabriele, please include all the maintainers on Cc (Pali was
+> >> missing).
+> >=20
+> > Hehe, currently I started git send-email with my changes for v4 :D
+> > So doing CTRL+C in terminal...
+> >=20
+> >> Pali, can I have your Reviewed-by?
+> >=20
+> > Yes as my patch differs only in two words (in comments) :-)
+> >=20
+> > Anyway, there is missing Andrei's tested-by (from v2 version).
 >=20
-> > Hi Rajneesh,
-> >
-> > Unfortunately during my build test, this introduced a new warning t=
-o the build:
-> >
-> > drivers/platform/x86/intel_pmc_core.c:201:19: warning: =E2=80=98int=
-el_pmc_core_init=E2=80=99
-> > defined but not used [-Wunused-function]
-> >  static int __init intel_pmc_core_init(void)
-> >
-> > After the removal of the module stuff, the driver needed a device_i=
-nitcall, or
-> > the macro equivalent, consider:
-> >
-> > $ git diff
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platfo=
-rm/x86/intel_pmc_core.c
-> > index c834281..f6a29b9 100644
-> > --- a/drivers/platform/x86/intel_pmc_core.c
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -198,7 +198,4 @@ static struct pci_driver intel_pmc_core_driver =
-=3D {
+> Sorry, I think this was not the first time I excluded Pali's address.=
+=2E.
 >=20
-> >         .remove =3D NULL, /* not a hot-plug capable driver */
+> Anyway, there's also Alex's tested-by from v2, which is basically
+> the same as v4.
 >=20
-> Since it requires an update I would suggest to remove above line comp=
-letely.
+> > Maybe also this should go to stable tree?
+> >=20
+>=20
 
-Indeed, thank you Andy.
+Added Pali, Stable, and Alex. Queued for 4.7, thanks.
+
 
 --=20
 Darren Hart
