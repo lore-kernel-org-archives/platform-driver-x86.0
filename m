@@ -1,107 +1,73 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v6] platform:x86: Add PMC Driver for Intel Core SoC
-Date: Wed, 25 May 2016 13:13:53 -0700
-Message-ID: <20160525201353.GA109010@f23x64.localdomain>
-References: <1464198292-32356-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH] asus-wmi: provide access to ALS control
+Date: Wed, 25 May 2016 13:25:38 -0700
+Message-ID: <20160525202538.GB109010@f23x64.localdomain>
+References: <1459510521-4682-1-git-send-email-linux@rempel-privat.de>
+ <20160410030633.GB18689@dvhart-mobl5.amr.corp.intel.com>
+ <570D2C0B.1010409@rempel-privat.de>
+ <CAHR064hWV8v826gGzQYUOe2Zv8w9mYxo1sg90Gz4M32E6ojuQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54029 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:35005 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751042AbcEYUNx (ORCPT
+	with ESMTP id S1750840AbcEYUZk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 25 May 2016 16:13:53 -0400
+	Wed, 25 May 2016 16:25:40 -0400
 Content-Disposition: inline
-In-Reply-To: <1464198292-32356-1-git-send-email-rajneesh.bhardwaj@intel.com>
+In-Reply-To: <CAHR064hWV8v826gGzQYUOe2Zv8w9mYxo1sg90Gz4M32E6ojuQA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, olof@lixom.net, tglx@linutronix.de, hpa@zytor.com, dbasehore@google.com, vishwanath.somayaji@intel.com
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Oleksij Rempel <linux@rempel-privat.de>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Wed, May 25, 2016 at 11:14:52PM +0530, Rajneesh Bhardwaj wrote:
-> This patch adds the Power Management Controller driver as a PCI drive=
-r
-> for Intel Core SoC architecture.
->=20
-> This driver can utilize debugging capabilities and supported features
-> as exposed by the Power Management Controller.
->=20
-> Please refer to the below specification for more details on PMC featu=
-res.
-> http://www.intel.in/content/www/in/en/chipsets/100-series-chipset-dat=
-asheet-vol-2.html
->=20
-> The current version of this driver exposes SLP_S0_RESIDENCY counter.
-> This counter can be used for detecting fragile SLP_S0 signal related
-> failures and take corrective actions when PCH SLP_S0 signal is not
-> asserted after kernel freeze as part of suspend to idle flow
-> (echo freeze > /sys/power/state).
->=20
-> Intel Platform Controller Hub (PCH) asserts SLP_S0 signal when it
-> detects favorable conditions to enter its low power mode. As a
-> pre-requisite the SoC should be in deepest possible Package C-State
-> and devices should be in low power mode. For example, on Skylake SoC
-> the deepest Package C-State is Package C10 or PC10. Suspend to idle
-> flow generally leads to PC10 state but PC10 state may not be sufficie=
-nt
-> for realizing the platform wide power potential which SLP_S0 signal
-> assertion can provide.
->=20
-> SLP_S0 signal is often connected to the Embedded Controller (EC) and =
-the
-> Power Management IC (PMIC) for other platform power management relate=
-d
-> optimizations.
->=20
-> In general, SLP_S0 assertion =3D=3D PC10 + PCH low power mode + ModPh=
-y Lanes
-> power gated + PLL Idle.
->=20
-> As part of this driver, a mechanism to read the SLP_S0_RESIDENCY is e=
-xposed
-> as an API and also debugfs features are added to indicate SLP_S0 sign=
-al
-> assertion residency in microseconds.
->=20
-> echo freeze > /sys/power/state
-> wake the system
-> cat /sys/kernel/debug/pmc_core/slp_s0_residency_usec
->=20
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> Signed-off-by: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+On Wed, May 25, 2016 at 09:08:25AM +0200, Corentin Chary wrote:
+> On Tue, Apr 12, 2016 at 7:10 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+> >
+> > Am 10.04.2016 um 05:06 schrieb Darren Hart:
+> > > On Fri, Apr 01, 2016 at 01:35:21PM +0200, Oleksij Rempel wrote:
+> > >> Asus Zenbook ux31a is providing ACPI0008 interface for ALS
+> > >> (Ambient Light Sensor), which is accessible for OS => Win 7.
+> > >> This sensor can be used with iio/acpi-als driver.
+> > >> Since it is disabled by default, we should use asus-wmi
+> > >> interface to enable it.
+> > >>
+> > >
+> > > Corentin, any concerns?
+> > >
+> > >> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+> > >> ---
+> > >>  drivers/platform/x86/asus-wmi.c | 5 +++++
+> > >>  1 file changed, 5 insertions(+)
+> > >>
+> > >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> > >> index a96630d..a26dca3 100644
+> > >> --- a/drivers/platform/x86/asus-wmi.c
+> > >> +++ b/drivers/platform/x86/asus-wmi.c
+> > >> @@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
+> > >>  #define ASUS_WMI_DEVID_LED6         0x00020016
+> > >>
+> > >>  /* Backlight and Brightness */
+> > >> +#define ASUS_WMI_DEVID_ALS_ENABLE   0x00050001 /* Ambient Light Sensor */
+> > >>  #define ASUS_WMI_DEVID_BACKLIGHT    0x00050011
+> > >>  #define ASUS_WMI_DEVID_BRIGHTNESS   0x00050012
+> > >>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT        0x00050021
+> > >
+> > > Following this is:
+> > >
+> > > #define ASUS_WMI_DEVID_LIGHT_SENSOR   0x00050022 /* ?? */
+> > >
+> > > Is there any relationship with this patch and that device? It would be useful to
+> > > understand the difference between these two DEVIDs (a comment in the source).
+> >
+> > I don't have this ID on my laptop. Hard to say what is it.
+> >
+> 
+> I believe I found out this was somehow related to light sensors
+> because the WMI device contained that kind of information, but it's
+> likely that Asus didn't use this ID in a consistent way.
 
-Hi Rajneesh,
-
-Unfortunately during my build test, this introduced a new warning to th=
-e build:
-
-drivers/platform/x86/intel_pmc_core.c:201:19: warning: =E2=80=98intel_p=
-mc_core_init=E2=80=99
-defined but not used [-Wunused-function]
- static int __init intel_pmc_core_init(void)
-
-After the removal of the module stuff, the driver needed a device_initc=
-all, or
-the macro equivalent, consider:
-
-$ git diff
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x=
-86/intel_pmc_core.c
-index c834281..f6a29b9 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -198,7 +198,4 @@ static struct pci_driver intel_pmc_core_driver =3D =
-{
-        .remove =3D NULL, /* not a hot-plug capable driver */
- };
-
--static int __init intel_pmc_core_init(void)
--{
--       return pci_register_driver(&intel_pmc_core_driver);
--}
-+builtin_pci_driver(intel_pmc_core_driver);
-
---=20
+Thanks for the follow-up. This one is already queued for 4.7.
+-- 
 Darren Hart
 Intel Open Source Technology Center
