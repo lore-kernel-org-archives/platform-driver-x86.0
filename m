@@ -1,129 +1,71 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Fri, 27 May 2016 00:04:23 +0200
-Message-ID: <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Deadlock in 4.6 caused by 4eebd5a4e726 ("apple-gmux: lock iGP IO to
+ protect from vgaarb changes")
+Date: Fri, 27 May 2016 14:23:02 +0200
+Message-ID: <20160527122302.GA7471@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:33145 "EHLO
-	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754733AbcEZWE0 (ORCPT
+Received: from mailout1.hostsharing.net ([83.223.95.204]:49784 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751978AbcE0MTg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 May 2016 18:04:26 -0400
-In-Reply-To: <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
+	Fri, 27 May 2016 08:19:36 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bruno Premont <bonbons@linux-vserver.org>, platform-driver-x86@vger.kernel.org
+Cc: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>, dri-devel@lists.freedesktop.org
 
-On 22/05/2016 13:36, Pali Roh=C3=A1r wrote:
-> ACPI DSDT tables have defined other WMI codes, but does not contain a=
-ny
-> description when those codes are emitted. Some other codes can be fou=
-nd in
-> logs on internet. In this patch are all which I saw, but lot of them =
-are
-> not tested properly (e.g. for duplicate events with AT keyboard). Now=
- we
-> have all WMI event codes at one place and in future after proper test=
-ing
-> those codes can be correctly enabled or disabled...
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> ---
->  drivers/platform/x86/dell-wmi.c |   32 +++++++++++++++++++++++++++++=
-+++
->  1 file changed, 32 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index 363d927..7aac1dc 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -110,6 +110,9 @@ static const struct key_entry dell_wmi_legacy_key=
-map[] __initconst =3D {
->  	/* BIOS error detected */
->  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
-> =20
-> +	/* Unknown, defined in ACPI DSDT */
-> +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
-> +
+Hi Bruno,
 
-I'm interested in knowing what's the meaning of this 0xe00e. This
-event is sent multiple times when I suspend/resume my laptop and
-it's definitely not a keypress.
+Wilfried Klaebe has reported a deadlock in 4.6 which he bisected to
+my commit 704ab614ec12 ("drm/i915: Defer probe if gmux is present but
+its driver isn't"), but which is ultimately caused by your commit
+4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb changes").
 
-Anyway, I've been using this patch set and didn't notice any issue, so
+What's happening is that your commit calls vga_tryget() in apple-gmux,
+which succeeds. When Xorg is launched, it opens /dev/vga_arbiter and
+calls vga_get(), which deadlocks. See the attachments to this bugzilla
+entry, in particular the stacktrace at the end of "kern.log / dmesg of
+non-working Linux 4.6.0":
+https://bugzilla.kernel.org/show_bug.cgi?id=88861#c11
+https://bugzilla.kernel.org/attachment.cgi?id=217541
 
-Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+For some reason the deadlock only occurs if apple-gmux loads before
+i915, so it seems there's a race condition in your commit. My commit
+ensures that this is the case, because i915 cannot probe the panel's
+EDID without gmux. (The panel is switched to the radeon GPU.)
+Notably, your commit message says that: "It is expected to load/probe
+gmux prior to graphics drivers." However your commit does not take any
+precautions to actually ensure that. What's more, now that apple-gmux
+*does* load before i915, your commit breaks.
 
->  	/* Wifi Catcher */
->  	{ KE_KEY,    0xe011, { KEY_PROG2 } },
-> =20
-> @@ -118,21 +121,45 @@ static const struct key_entry dell_wmi_legacy_k=
-eymap[] __initconst =3D {
-> =20
->  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
-> =20
-> +	/* Unknown, defined in ACPI DSDT */
-> +	/* { KE_IGNORE, 0xe023, { KEY_RESERVED } }, */
-> +
-> +	/* Untested, Dell Instant Launch key on Inspiron 7520 */
-> +	/* { KE_IGNORE, 0xe024, { KEY_RESERVED } }, */
-> +
->  	/* Dell Instant Launch key */
->  	{ KE_KEY,    0xe025, { KEY_PROG4 } },
-> =20
->  	/* Audio panel key */
->  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> =20
-> +	/* Untested, Multimedia key on Dell Vostro 3560 */
-> +	/* { KE_IGNORE, 0xe028, { KEY_RESERVED } }, */
-> +
->  	/* Dell Instant Launch key */
->  	{ KE_KEY,    0xe029, { KEY_PROG4 } },
-> =20
-> +	/* Untested, Windows Mobility Center button on Inspiron 7520 */
-> +	/* { KE_IGNORE, 0xe02a, { KEY_RESERVED } }, */
-> +
-> +	/* Unknown, defined in ACPI DSDT */
-> +	/* { KE_IGNORE, 0xe02b, { KEY_RESERVED } }, */
-> +
-> +	/* Untested, Dell Audio With Preset Switch button on Inspiron 7520 =
-*/
-> +	/* { KE_IGNORE, 0xe02c, { KEY_RESERVED } }, */
-> +
->  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
->  	{ KE_IGNORE, 0xe030, { KEY_VOLUMEUP } },
->  	{ KE_IGNORE, 0xe033, { KEY_KBDILLUMUP } },
->  	{ KE_IGNORE, 0xe034, { KEY_KBDILLUMDOWN } },
->  	{ KE_IGNORE, 0xe03a, { KEY_CAPSLOCK } },
-> =20
-> +	/* NIC Link is Up */
-> +	{ KE_IGNORE, 0xe043, { KEY_RESERVED } },
-> +
-> +	/* NIC Link is Down */
-> +	{ KE_IGNORE, 0xe044, { KEY_RESERVED } },
-> +
->  	/*
->  	 * This entry is very suspicious!
->  	 * Originally Matthew Garrett created this dell-wmi driver speciall=
-y for
-> @@ -145,7 +172,12 @@ static const struct key_entry dell_wmi_legacy_ke=
-ymap[] __initconst =3D {
->  	 */
->  	{ KE_IGNORE, 0xe045, { KEY_NUMLOCK } },
-> =20
-> +	/* Scroll lock and also going to tablet mode on portable devices */
->  	{ KE_IGNORE, 0xe046, { KEY_SCROLLLOCK } },
-> +
-> +	/* Untested, going from tablet mode on portable devices */
-> +	/* { KE_IGNORE, 0xe047, { KEY_RESERVED } }, */
-> +
->  	{ KE_IGNORE, 0xe0f7, { KEY_MUTE } },
->  	{ KE_IGNORE, 0xe0f8, { KEY_VOLUMEDOWN } },
->  	{ KE_IGNORE, 0xe0f9, { KEY_VOLUMEUP } },
->=20
+I'm not really familiar with vgaarb, but grepping through the kernel
+tree I can find only 2 drivers which use it, i915 and vfio. In both
+cases, the kernel only briefly acquires a lock to write to VGA
+registers, and immediately releases the lock afterwards. So it looks
+to me like the intended usage is to not hold a lock over a prolonged
+period of time. IIUC the proprietary nvidia driver is doing exactly
+that, and you sought to work around this issue by also holding a lock
+indefinitely in apple-gmux.c.
+
+The proper way, at least from my point of view as a complete vgaarb
+dimwit, seems to briefly acquire a lock whenever apple-gmux.c
+accesses its registers in the 0x700 IO range. And likewise nvidia
+ought to fix their driver to only acquire a lock whenever they
+actually need it. It was noble that you tried to help the user
+with the nvidia driver issue, but ultimately we can't workaround
+nvidia's bugs if it causes breakage elsewhere. They need to fix
+their closed source driver.
+
+There's also this unresolved issue that your commit broke backlight
+control on the MacBookPro11,3 and 11,5:
+https://bugzilla.kernel.org/show_bug.cgi?id=105051
+
+So what do we do? We need to do something because now we've got the
+deadlock regression in 4.6 on top. :(
+
+Thanks,
+
+Lukas
