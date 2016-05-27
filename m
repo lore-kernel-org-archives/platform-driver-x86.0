@@ -1,71 +1,64 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Deadlock in 4.6 caused by 4eebd5a4e726 ("apple-gmux: lock iGP IO to
- protect from vgaarb changes")
-Date: Fri, 27 May 2016 14:23:02 +0200
-Message-ID: <20160527122302.GA7471@wunner.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/1] ideapad-laptop: Handle Yoga in tablet mode
+Date: Fri, 27 May 2016 11:51:43 -0700
+Message-ID: <20160527185143.GB98596@f23x64.localdomain>
+References: <1459544569-29865-1-git-send-email-list@eworm.de>
+ <20160505234247.GG2113@f23x64.localdomain>
+ <CA+A7VXVcq3JjJC54kXZkmvrLF1hktX_w+vXcU-vk5WA4nFeNLA@mail.gmail.com>
+ <CAKErNvrs4300M+ap+O1R-44z_EE97O=hk74nOGT+MSsVmfL6Ew@mail.gmail.com>
+ <CA+A7VXW8qCu-j4QGoDBZUym+sEsXgkzPTVTv7A4UoSDe+D1mig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout1.hostsharing.net ([83.223.95.204]:49784 "EHLO
-	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751978AbcE0MTg (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:40412 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752585AbcE0Svr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 May 2016 08:19:36 -0400
+	Fri, 27 May 2016 14:51:47 -0400
 Content-Disposition: inline
+In-Reply-To: <CA+A7VXW8qCu-j4QGoDBZUym+sEsXgkzPTVTv7A4UoSDe+D1mig@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bruno Premont <bonbons@linux-vserver.org>, platform-driver-x86@vger.kernel.org
-Cc: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>, dri-devel@lists.freedesktop.org
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Maxim Mikityanskiy <maxtram95@gmail.com>, Christian Hesse <list@eworm.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com
 
-Hi Bruno,
+On Tue, May 24, 2016 at 04:32:48PM -0400, Jo=E3o Paulo Rechi Vita wrote=
+:
+> On 19 May 2016 at 05:17, Maxim Mikityanskiy <maxtram95@gmail.com> wro=
+te:
+> > 2016-05-16 19:04 GMT+03:00 Jo=E3o Paulo Rechi Vita <jprvita@gmail.c=
+om>:
+> >>
+> >> Adding Maxim Mikityanskiy and Hans de Goede to CC.
+> >>
+> >> On 5 May 2016 at 19:42, Darren Hart <dvhart@infradead.org> wrote:
+> >> > On Fri, Apr 01, 2016 at 11:02:49PM +0200, Christian Hesse wrote:
+> >> >> From: Christian Hesse <mail@eworm.de>
+> >> >>
 
-Wilfried Klaebe has reported a deadlock in 4.6 which he bisected to
-my commit 704ab614ec12 ("drm/i915: Defer probe if gmux is present but
-its driver isn't"), but which is ultimately caused by your commit
-4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb changes").
+=2E..
 
-What's happening is that your commit calls vga_tryget() in apple-gmux,
-which succeeds. When Xorg is launched, it opens /dev/vga_arbiter and
-calls vga_get(), which deadlocks. See the attachments to this bugzilla
-entry, in particular the stacktrace at the end of "kern.log / dmesg of
-non-working Linux 4.6.0":
-https://bugzilla.kernel.org/show_bug.cgi?id=88861#c11
-https://bugzilla.kernel.org/attachment.cgi?id=217541
+> It seems to me that at least we should have some quirks in place so
+> this only gets executed on hardware where it will actually work, to
+> avoid notifying userspace of touchpad events when there were actually
+> none. Darren, what do you think is the best way to move forward here?
+> If we can reach an agreement I can provide some patches for this.
+>=20
 
-For some reason the deadlock only occurs if apple-gmux loads before
-i915, so it seems there's a race condition in your commit. My commit
-ensures that this is the case, because i915 cannot probe the panel's
-EDID without gmux. (The panel is switched to the radeon GPU.)
-Notably, your commit message says that: "It is expected to load/probe
-gmux prior to graphics drivers." However your commit does not take any
-precautions to actually ensure that. What's more, now that apple-gmux
-*does* load before i915, your commit breaks.
+Based on this discussion, I have dropped the patch from the 4.7 queue.
 
-I'm not really familiar with vgaarb, but grepping through the kernel
-tree I can find only 2 drivers which use it, i915 and vfio. In both
-cases, the kernel only briefly acquires a lock to write to VGA
-registers, and immediately releases the lock afterwards. So it looks
-to me like the intended usage is to not hold a lock over a prolonged
-period of time. IIUC the proprietary nvidia driver is doing exactly
-that, and you sought to work around this issue by also holding a lock
-indefinitely in apple-gmux.c.
+I do not have a good plan-of-attach, or preferred-approach to offer
+unfortunately. You and Maxim have already started the additional inform=
+ation
+gathering process, which would be my only guidance at this point.
 
-The proper way, at least from my point of view as a complete vgaarb
-dimwit, seems to briefly acquire a lock whenever apple-gmux.c
-accesses its registers in the 0x700 IO range. And likewise nvidia
-ought to fix their driver to only acquire a lock whenever they
-actually need it. It was noble that you tried to help the user
-with the nvidia driver issue, but ultimately we can't workaround
-nvidia's bugs if it causes breakage elsewhere. They need to fix
-their closed source driver.
+We need to characterize the hardware and the interfaces as exposed thro=
+ugh ACPI.
+Quirks would be OK if we can't just match on different HIDs (it appears=
+ the same
+HID is being used for radically different hardware unfortunately).
 
-There's also this unresolved issue that your commit broke backlight
-control on the MacBookPro11,3 and 11,5:
-https://bugzilla.kernel.org/show_bug.cgi?id=105051
-
-So what do we do? We need to do something because now we've got the
-deadlock regression in 4.6 on top. :(
-
-Thanks,
-
-Lukas
+--=20
+Darren Hart
+Intel Open Source Technology Center
