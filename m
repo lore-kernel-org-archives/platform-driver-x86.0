@@ -1,180 +1,162 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: Deadlock in 4.6 caused by 4eebd5a4e726 ("apple-gmux: lock iGP IO
- to protect from vgaarb changes")
-Date: Mon, 30 May 2016 12:24:46 +0200
-Message-ID: <20160530102446.GA13170@wunner.de>
+From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
+Subject: Re: Deadlock in 4.6 caused by 4eebd5a4e726 ("apple-gmux: lock iGP
+ IO to protect from vgaarb changes")
+Date: Mon, 30 May 2016 12:48:15 +0200
+Message-ID: <20160530124815.3e0358da@pluto.restena.lu>
 References: <20160527122302.GA7471@wunner.de>
  <20160530110753.61846b70@pluto.restena.lu>
+ <20160530102446.GA13170@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout3.hostsharing.net ([176.9.242.54]:55105 "EHLO
-	mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751137AbcE3KVP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 May 2016 06:21:15 -0400
-Content-Disposition: inline
-In-Reply-To: <20160530110753.61846b70@pluto.restena.lu>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
-Cc: platform-driver-x86@vger.kernel.org, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>, dri-devel@lists.freedesktop.org, Tiago Vignatti <tiago.vignatti@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160530102446.GA13170@wunner.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 30, 2016 at 11:07:53AM +0200, Bruno Pr=E9mont wrote:
-> On Fri, 27 May 2016 14:23:02 +0200 Lukas Wunner wrote:
-> > Wilfried Klaebe has reported a deadlock in 4.6 which he bisected to
-> > my commit 704ab614ec12 ("drm/i915: Defer probe if gmux is present b=
-ut
-> > its driver isn't"), but which is ultimately caused by your commit
-> > 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb chang=
-es").
-> >=20
-> > What's happening is that your commit calls vga_tryget() in apple-gm=
-ux,
-> > which succeeds. When Xorg is launched, it opens /dev/vga_arbiter an=
-d
-> > calls vga_get(), which deadlocks. See the attachments to this bugzi=
-lla
-> > entry, in particular the stacktrace at the end of "kern.log / dmesg=
- of
-> > non-working Linux 4.6.0":
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D88861#c11
-> > https://bugzilla.kernel.org/attachment.cgi?id=3D217541
->=20
-> Looks like here the two GPUs are visible and the right one is being
-> selected.
-> So your patch to allow including ISA devices in vga arbitration would
-> not change anything here.
->=20
-> Is it known at what time the lockup happens?
-> From the kernel trace the lockup only happens during write() and not
-> already at open time. Thus the command written to /dev/vga_arbiter wo=
-uld
-> be helpful for proper understanding.
-> From kernel side code I think it's a call related to radeon and not
-> intel in Xorg that calls out to vga_arbiter, but please provide
-> more details (either strace&/backtrace on Xorg or kernel with pr_debu=
-g
-> active for vgaargb and corresponding kernel log).
-
-When Xorg starts up, it calls xf86VGAarbiterLock() a couple of times
-from InitOutput():
-https://cgit.freedesktop.org/xorg/xserver/tree/hw/xfree86/common/xf86In=
-it.c#n569
-
-This calls pci_device_vgaarb_lock():
-https://cgit.freedesktop.org/xorg/xserver/tree/hw/xfree86/common/xf86VG=
-Aarbiter.c#n88
-
-And this writes to /dev/vga_arbiter:
-https://cgit.freedesktop.org/xorg/lib/libpciaccess/tree/src/common_vgaa=
-rb.c#n287
-
-Adding Tiago Vignatti to cc: who wrote much of this code.
-
-
-> From the bug report, comment #11 I don't understand this part:
->   I boot Linux directly via rEFInd. I got the radeon xorg drivers
->   installed, but neither intel nor fbdev or kms.
->=20
-> Does this mean that neither Intel KMS nor Radeon KMS are able to
-> initialize, nor simplefb's fbdev?
-> The kernel log though reports proper startup of radeon (KMS) and i915
-> (KMS) so only userspace gets caught...
-> So details on the userspace stack (xf86-video-intel and libdrm versio=
-ns)
-> would be helpful as well.
-
-The kernel modules apple-gmux, i915 and radeon are present and loaded,
-but the user space Xorg driver for i915 is not installed, only radeon.
-
-But we (one the kernel side) cannot force people to have specific
-userland drivers installed to avoid deadlocks in the kernel.
-
-
-> > For some reason the deadlock only occurs if apple-gmux loads before
-> > i915, so it seems there's a race condition in your commit. My commi=
-t
-> > ensures that this is the case, because i915 cannot probe the panel'=
-s
-> > EDID without gmux. (The panel is switched to the radeon GPU.)
-> > Notably, your commit message says that: "It is expected to load/pro=
-be
-> > gmux prior to graphics drivers." However your commit does not take =
-any
-> > precautions to actually ensure that. What's more, now that apple-gm=
-ux
-> > *does* load before i915, your commit breaks.
->=20
-> I think here userspace and kernel-side parts are getting mixed-up.
->=20
-> From the failing kernel log, both i915 and radeon are loaded long bef=
-ore
-> the lock happens (with vgaarb being loaded yet earlier).
->=20
-> The only one having trouble is Xorg (would it be possible to get a
-> backtrace of Xorg to know what code called/triggered /dev/vga_arbiter
-> and what it intends to do?).
->=20
-> > I'm not really familiar with vgaarb, but grepping through the kerne=
-l
-> > tree I can find only 2 drivers which use it, i915 and vfio. In both
-> > cases, the kernel only briefly acquires a lock to write to VGA
-> > registers, and immediately releases the lock afterwards. So it look=
-s
-> > to me like the intended usage is to not hold a lock over a prolonge=
-d
-> > period of time. IIUC the proprietary nvidia driver is doing exactly
-> > that, and you sought to work around this issue by also holding a lo=
-ck
-> > indefinitely in apple-gmux.c.
-> >=20
-> > The proper way, at least from my point of view as a complete vgaarb
-> > dimwit, seems to briefly acquire a lock whenever apple-gmux.c
-> > accesses its registers in the 0x700 IO range. And likewise nvidia
-> > ought to fix their driver to only acquire a lock whenever they
-> > actually need it. It was noble that you tried to help the user
-> > with the nvidia driver issue, but ultimately we can't workaround
-> > nvidia's bugs if it causes breakage elsewhere. They need to fix
-> > their closed source driver.
-> >=20
-> > There's also this unresolved issue that your commit broke backlight
-> > control on the MacBookPro11,3 and 11,5:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D105051
->=20
-> You had a patch allowing registering ISA devices to vgaarb (for when
-> Intel GPU is hidden), did anything happen with that one?
-
-That patch was only half serious.
-
-As said, based on my limited understanding of vgaarb.c, the intended
-usage seems not to be that a lock is acquired and kept indefinitely,
-but only for the brief period of time when I/O is accessed.
-
-So what Nvidia is doing is plain wrong and people have tried to
-convince them to fix their driver time and again in this forum
-thread:
-https://devtalk.nvidia.com/default/topic/545560/vfio-vga-arbitration-lo=
-ck/
-
-You were correct in that you noticed that I/O needs to be locked to
-a device on the root bus for gmux to be accessible. However the lock
-shouldn't be held indefinitely, but only briefly in the gmux_read*(),
-gmux_write*() and gmux_is_indexed() functions. So my suggestion would
-be to revert 4eebd5a4e726, replace it with a new patch that locks IO
-only when needed, and get nvidia to do the same in their driver.
-
-Thanks,
-
-Lukas
-
->=20
-> > So what do we do? We need to do something because now we've got the
-> > deadlock regression in 4.6 on top. :(
-> >=20
-> > Thanks,
-> >=20
-> > Lukas
->=20
-> Bruno
+SGkgTHVjYXMsCgpPbiBNb24sIDMwIE1heSAyMDE2IDEyOjI0OjQ2ICswMjAwIEx1a2FzIFd1bm5l
+ciB3cm90ZToKPiBPbiBNb24sIE1heSAzMCwgMjAxNiBhdCAxMTowNzo1M0FNICswMjAwLCBCcnVu
+byBQcsOpbW9udCB3cm90ZToKPiA+IE9uIEZyaSwgMjcgTWF5IDIwMTYgMTQ6MjM6MDIgKzAyMDAg
+THVrYXMgV3VubmVyIHdyb3RlOiAgCj4gPiA+IFdpbGZyaWVkIEtsYWViZSBoYXMgcmVwb3J0ZWQg
+YSBkZWFkbG9jayBpbiA0LjYgd2hpY2ggaGUgYmlzZWN0ZWQgdG8KPiA+ID4gbXkgY29tbWl0IDcw
+NGFiNjE0ZWMxMiAoImRybS9pOTE1OiBEZWZlciBwcm9iZSBpZiBnbXV4IGlzIHByZXNlbnQgYnV0
+Cj4gPiA+IGl0cyBkcml2ZXIgaXNuJ3QiKSwgYnV0IHdoaWNoIGlzIHVsdGltYXRlbHkgY2F1c2Vk
+IGJ5IHlvdXIgY29tbWl0Cj4gPiA+IDRlZWJkNWE0ZTcyNiAoImFwcGxlLWdtdXg6IGxvY2sgaUdQ
+IElPIHRvIHByb3RlY3QgZnJvbSB2Z2FhcmIgY2hhbmdlcyIpLgo+ID4gPiAKPiA+ID4gV2hhdCdz
+IGhhcHBlbmluZyBpcyB0aGF0IHlvdXIgY29tbWl0IGNhbGxzIHZnYV90cnlnZXQoKSBpbiBhcHBs
+ZS1nbXV4LAo+ID4gPiB3aGljaCBzdWNjZWVkcy4gV2hlbiBYb3JnIGlzIGxhdW5jaGVkLCBpdCBv
+cGVucyAvZGV2L3ZnYV9hcmJpdGVyIGFuZAo+ID4gPiBjYWxscyB2Z2FfZ2V0KCksIHdoaWNoIGRl
+YWRsb2Nrcy4gU2VlIHRoZSBhdHRhY2htZW50cyB0byB0aGlzIGJ1Z3ppbGxhCj4gPiA+IGVudHJ5
+LCBpbiBwYXJ0aWN1bGFyIHRoZSBzdGFja3RyYWNlIGF0IHRoZSBlbmQgb2YgImtlcm4ubG9nIC8g
+ZG1lc2cgb2YKPiA+ID4gbm9uLXdvcmtpbmcgTGludXggNC42LjAiOgo+ID4gPiBodHRwczovL2J1
+Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTg4ODYxI2MxMQo+ID4gPiBodHRwczov
+L2J1Z3ppbGxhLmtlcm5lbC5vcmcvYXR0YWNobWVudC5jZ2k/aWQ9MjE3NTQxICAKPiA+IAo+ID4g
+TG9va3MgbGlrZSBoZXJlIHRoZSB0d28gR1BVcyBhcmUgdmlzaWJsZSBhbmQgdGhlIHJpZ2h0IG9u
+ZSBpcyBiZWluZwo+ID4gc2VsZWN0ZWQuCj4gPiBTbyB5b3VyIHBhdGNoIHRvIGFsbG93IGluY2x1
+ZGluZyBJU0EgZGV2aWNlcyBpbiB2Z2EgYXJiaXRyYXRpb24gd291bGQKPiA+IG5vdCBjaGFuZ2Ug
+YW55dGhpbmcgaGVyZS4KPiA+IAo+ID4gSXMgaXQga25vd24gYXQgd2hhdCB0aW1lIHRoZSBsb2Nr
+dXAgaGFwcGVucz8KPiA+IEZyb20gdGhlIGtlcm5lbCB0cmFjZSB0aGUgbG9ja3VwIG9ubHkgaGFw
+cGVucyBkdXJpbmcgd3JpdGUoKSBhbmQgbm90Cj4gPiBhbHJlYWR5IGF0IG9wZW4gdGltZS4gVGh1
+cyB0aGUgY29tbWFuZCB3cml0dGVuIHRvIC9kZXYvdmdhX2FyYml0ZXIgd291bGQKPiA+IGJlIGhl
+bHBmdWwgZm9yIHByb3BlciB1bmRlcnN0YW5kaW5nLgo+ID4gRnJvbSBrZXJuZWwgc2lkZSBjb2Rl
+IEkgdGhpbmsgaXQncyBhIGNhbGwgcmVsYXRlZCB0byByYWRlb24gYW5kIG5vdAo+ID4gaW50ZWwg
+aW4gWG9yZyB0aGF0IGNhbGxzIG91dCB0byB2Z2FfYXJiaXRlciwgYnV0IHBsZWFzZSBwcm92aWRl
+Cj4gPiBtb3JlIGRldGFpbHMgKGVpdGhlciBzdHJhY2UmL2JhY2t0cmFjZSBvbiBYb3JnIG9yIGtl
+cm5lbCB3aXRoIHByX2RlYnVnCj4gPiBhY3RpdmUgZm9yIHZnYWFyZ2IgYW5kIGNvcnJlc3BvbmRp
+bmcga2VybmVsIGxvZykuICAKPiAKPiBXaGVuIFhvcmcgc3RhcnRzIHVwLCBpdCBjYWxscyB4Zjg2
+VkdBYXJiaXRlckxvY2soKSBhIGNvdXBsZSBvZiB0aW1lcwo+IGZyb20gSW5pdE91dHB1dCgpOgo+
+IGh0dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcveG9yZy94c2VydmVyL3RyZWUvaHcveGZyZWU4
+Ni9jb21tb24veGY4NkluaXQuYyNuNTY5Cj4gCj4gVGhpcyBjYWxscyBwY2lfZGV2aWNlX3ZnYWFy
+Yl9sb2NrKCk6Cj4gaHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy94b3JnL3hzZXJ2ZXIvdHJl
+ZS9ody94ZnJlZTg2L2NvbW1vbi94Zjg2VkdBYXJiaXRlci5jI244OAo+IAo+IEFuZCB0aGlzIHdy
+aXRlcyB0byAvZGV2L3ZnYV9hcmJpdGVyOgo+IGh0dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcv
+eG9yZy9saWIvbGlicGNpYWNjZXNzL3RyZWUvc3JjL2NvbW1vbl92Z2FhcmIuYyNuMjg3Cj4gCj4g
+QWRkaW5nIFRpYWdvIFZpZ25hdHRpIHRvIGNjOiB3aG8gd3JvdGUgbXVjaCBvZiB0aGlzIGNvZGUu
+CgpPaywgYW5kIHRoZSBkZXZpY2UgY2hvc2UgZm9yIHRoZSBsb2NrIGlzIHByb2JhYmx5IHRoZSBy
+YWRlb24gb25lLCB0aHVzCnRoZSBsb2NrIHRha2VuIGJ5IHZnYWFyYiBjb25mbGljdHMgd2l0aCB0
+aGUgb25lIGxpYnBjaWFjY2VzcyB3YW50cyB0bwp0YWtlIGZvciByYWRlb24gZHJpdmVyLgpJZiBp
+dCB3YXMgdGhlIGludGVsIG9uZSB0aGUga2VybmVsIHNob3VsZCBub3QgYmxvY2sgYXMgdGhlIHRo
+ZSBvbmUgdG8KYmUgbG9ja2VkICBieSB1c2Vyc3BhY2UgbWF0Y2hlcyB0aGUgb25lIGxvY2tlZCBi
+eSBrZXJuZWwuCgo+ID4gRnJvbSB0aGUgYnVnIHJlcG9ydCwgY29tbWVudCAjMTEgSSBkb24ndCB1
+bmRlcnN0YW5kIHRoaXMgcGFydDoKPiA+ICAgSSBib290IExpbnV4IGRpcmVjdGx5IHZpYSByRUZJ
+bmQuIEkgZ290IHRoZSByYWRlb24geG9yZyBkcml2ZXJzCj4gPiAgIGluc3RhbGxlZCwgYnV0IG5l
+aXRoZXIgaW50ZWwgbm9yIGZiZGV2IG9yIGttcy4KPiA+IAo+ID4gRG9lcyB0aGlzIG1lYW4gdGhh
+dCBuZWl0aGVyIEludGVsIEtNUyBub3IgUmFkZW9uIEtNUyBhcmUgYWJsZSB0bwo+ID4gaW5pdGlh
+bGl6ZSwgbm9yIHNpbXBsZWZiJ3MgZmJkZXY/Cj4gPiBUaGUga2VybmVsIGxvZyB0aG91Z2ggcmVw
+b3J0cyBwcm9wZXIgc3RhcnR1cCBvZiByYWRlb24gKEtNUykgYW5kIGk5MTUKPiA+IChLTVMpIHNv
+IG9ubHkgdXNlcnNwYWNlIGdldHMgY2F1Z2h0Li4uCj4gPiBTbyBkZXRhaWxzIG9uIHRoZSB1c2Vy
+c3BhY2Ugc3RhY2sgKHhmODYtdmlkZW8taW50ZWwgYW5kIGxpYmRybSB2ZXJzaW9ucykKPiA+IHdv
+dWxkIGJlIGhlbHBmdWwgYXMgd2VsbC4gIAo+IAo+IFRoZSBrZXJuZWwgbW9kdWxlcyBhcHBsZS1n
+bXV4LCBpOTE1IGFuZCByYWRlb24gYXJlIHByZXNlbnQgYW5kIGxvYWRlZCwKPiBidXQgdGhlIHVz
+ZXIgc3BhY2UgWG9yZyBkcml2ZXIgZm9yIGk5MTUgaXMgbm90IGluc3RhbGxlZCwgb25seSByYWRl
+b24uCj4gCj4gQnV0IHdlIChvbmUgdGhlIGtlcm5lbCBzaWRlKSBjYW5ub3QgZm9yY2UgcGVvcGxl
+IHRvIGhhdmUgc3BlY2lmaWMKPiB1c2VybGFuZCBkcml2ZXJzIGluc3RhbGxlZCB0byBhdm9pZCBk
+ZWFkbG9ja3MgaW4gdGhlIGtlcm5lbC4KCk9rLCB0aGF0IG1hdGNoZXMgYWJvdmUuCgpTdXJlIHdl
+IHNob3VsZCBub3QgYmxvY2sgdXNlcnNwYWNlIGluZGVmaW5pdGVseS4KT24gdXNlcnNwYWNlIGEg
+dHJ5LWxvY2sgaW5zdGVhZCBvZiBsb2NrIGNvbW1hbmQgd291bGQgYmUgYW4gb3B0aW9uCnRvdWdo
+LgoKSXQgc2VlbXMgdGhhdCBjb21taXQgOWY1YmQzMDgxOGM0MmM2YzM2YTUxZjkzYjRkZjc1YTJl
+YTJiZDg1ZSBtaWdodAphbHNvIGhhdmUgbWFkZSB0aGUgaXNzdWUgd29yc2UgKGFzIHRoZSBsb2Nr
+IGlzIGJlY29taW5nCmVmZmVjdGl2ZWx5IHVuaW50ZXJydXB0aWJsZSB3aXRoIHRoYXQgY29tbWl0
+IHdoaWxlIGl0IHdhcyBub3Qgc28gYmVmb3JlCihubyBpZGVhIGlmIFhvcmcgZGlkIHJlY2VpdmUg
+c2lnbmFscyB0byBlc2NhcGUgdGhlIGltcG9zc2libGUgbG9ja2luZwphdHRlbXB0KQoKPiA+ID4g
+Rm9yIHNvbWUgcmVhc29uIHRoZSBkZWFkbG9jayBvbmx5IG9jY3VycyBpZiBhcHBsZS1nbXV4IGxv
+YWRzCj4gPiA+IGJlZm9yZSBpOTE1LCBzbyBpdCBzZWVtcyB0aGVyZSdzIGEgcmFjZSBjb25kaXRp
+b24gaW4geW91ciBjb21taXQuCj4gPiA+IE15IGNvbW1pdCBlbnN1cmVzIHRoYXQgdGhpcyBpcyB0
+aGUgY2FzZSwgYmVjYXVzZSBpOTE1IGNhbm5vdAo+ID4gPiBwcm9iZSB0aGUgcGFuZWwncyBFRElE
+IHdpdGhvdXQgZ211eC4gKFRoZSBwYW5lbCBpcyBzd2l0Y2hlZCB0bwo+ID4gPiB0aGUgcmFkZW9u
+IEdQVS4pIE5vdGFibHksIHlvdXIgY29tbWl0IG1lc3NhZ2Ugc2F5cyB0aGF0OiAiSXQgaXMKPiA+
+ID4gZXhwZWN0ZWQgdG8gbG9hZC9wcm9iZSBnbXV4IHByaW9yIHRvIGdyYXBoaWNzIGRyaXZlcnMu
+IiBIb3dldmVyCj4gPiA+IHlvdXIgY29tbWl0IGRvZXMgbm90IHRha2UgYW55IHByZWNhdXRpb25z
+IHRvIGFjdHVhbGx5IGVuc3VyZQo+ID4gPiB0aGF0LiBXaGF0J3MgbW9yZSwgbm93IHRoYXQgYXBw
+bGUtZ211eCAqZG9lcyogbG9hZCBiZWZvcmUgaTkxNSwKPiA+ID4geW91ciBjb21taXQgYnJlYWtz
+LiAgCj4gPiAKPiA+IEkgdGhpbmsgaGVyZSB1c2Vyc3BhY2UgYW5kIGtlcm5lbC1zaWRlIHBhcnRz
+IGFyZSBnZXR0aW5nIG1peGVkLXVwLgo+ID4gCj4gPiBGcm9tIHRoZSBmYWlsaW5nIGtlcm5lbCBs
+b2csIGJvdGggaTkxNSBhbmQgcmFkZW9uIGFyZSBsb2FkZWQgbG9uZwo+ID4gYmVmb3JlIHRoZSBs
+b2NrIGhhcHBlbnMgKHdpdGggdmdhYXJiIGJlaW5nIGxvYWRlZCB5ZXQgZWFybGllcikuCj4gPiAK
+PiA+IFRoZSBvbmx5IG9uZSBoYXZpbmcgdHJvdWJsZSBpcyBYb3JnICh3b3VsZCBpdCBiZSBwb3Nz
+aWJsZSB0byBnZXQgYQo+ID4gYmFja3RyYWNlIG9mIFhvcmcgdG8ga25vdyB3aGF0IGNvZGUKPiA+
+IGNhbGxlZC90cmlnZ2VyZWQgL2Rldi92Z2FfYXJiaXRlciBhbmQgd2hhdCBpdCBpbnRlbmRzIHRv
+IGRvPykuCj4gPiAgIAo+ID4gPiBJJ20gbm90IHJlYWxseSBmYW1pbGlhciB3aXRoIHZnYWFyYiwg
+YnV0IGdyZXBwaW5nIHRocm91Z2ggdGhlCj4gPiA+IGtlcm5lbCB0cmVlIEkgY2FuIGZpbmQgb25s
+eSAyIGRyaXZlcnMgd2hpY2ggdXNlIGl0LCBpOTE1IGFuZAo+ID4gPiB2ZmlvLiBJbiBib3RoIGNh
+c2VzLCB0aGUga2VybmVsIG9ubHkgYnJpZWZseSBhY3F1aXJlcyBhIGxvY2sgdG8KPiA+ID4gd3Jp
+dGUgdG8gVkdBIHJlZ2lzdGVycywgYW5kIGltbWVkaWF0ZWx5IHJlbGVhc2VzIHRoZSBsb2NrCj4g
+PiA+IGFmdGVyd2FyZHMuIFNvIGl0IGxvb2tzIHRvIG1lIGxpa2UgdGhlIGludGVuZGVkIHVzYWdl
+IGlzIHRvIG5vdAo+ID4gPiBob2xkIGEgbG9jayBvdmVyIGEgcHJvbG9uZ2VkIHBlcmlvZCBvZiB0
+aW1lLiBJSVVDIHRoZSBwcm9wcmlldGFyeQo+ID4gPiBudmlkaWEgZHJpdmVyIGlzIGRvaW5nIGV4
+YWN0bHkgdGhhdCwgYW5kIHlvdSBzb3VnaHQgdG8gd29yawo+ID4gPiBhcm91bmQgdGhpcyBpc3N1
+ZSBieSBhbHNvIGhvbGRpbmcgYSBsb2NrIGluZGVmaW5pdGVseSBpbgo+ID4gPiBhcHBsZS1nbXV4
+LmMuCj4gPiA+IAo+ID4gPiBUaGUgcHJvcGVyIHdheSwgYXQgbGVhc3QgZnJvbSBteSBwb2ludCBv
+ZiB2aWV3IGFzIGEgY29tcGxldGUKPiA+ID4gdmdhYXJiIGRpbXdpdCwgc2VlbXMgdG8gYnJpZWZs
+eSBhY3F1aXJlIGEgbG9jayB3aGVuZXZlcgo+ID4gPiBhcHBsZS1nbXV4LmMgYWNjZXNzZXMgaXRz
+IHJlZ2lzdGVycyBpbiB0aGUgMHg3MDAgSU8gcmFuZ2UuIEFuZAo+ID4gPiBsaWtld2lzZSBudmlk
+aWEgb3VnaHQgdG8gZml4IHRoZWlyIGRyaXZlciB0byBvbmx5IGFjcXVpcmUgYSBsb2NrCj4gPiA+
+IHdoZW5ldmVyIHRoZXkgYWN0dWFsbHkgbmVlZCBpdC4gSXQgd2FzIG5vYmxlIHRoYXQgeW91IHRy
+aWVkIHRvCj4gPiA+IGhlbHAgdGhlIHVzZXIgd2l0aCB0aGUgbnZpZGlhIGRyaXZlciBpc3N1ZSwg
+YnV0IHVsdGltYXRlbHkgd2UKPiA+ID4gY2FuJ3Qgd29ya2Fyb3VuZCBudmlkaWEncyBidWdzIGlm
+IGl0IGNhdXNlcyBicmVha2FnZSBlbHNld2hlcmUuCj4gPiA+IFRoZXkgbmVlZCB0byBmaXggdGhl
+aXIgY2xvc2VkIHNvdXJjZSBkcml2ZXIuCj4gPiA+IAo+ID4gPiBUaGVyZSdzIGFsc28gdGhpcyB1
+bnJlc29sdmVkIGlzc3VlIHRoYXQgeW91ciBjb21taXQgYnJva2UKPiA+ID4gYmFja2xpZ2h0IGNv
+bnRyb2wgb24gdGhlIE1hY0Jvb2tQcm8xMSwzIGFuZCAxMSw1Ogo+ID4gPiBodHRwczovL2J1Z3pp
+bGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTEwNTA1MSAgCj4gPiAKPiA+IFlvdSBoYWQg
+YSBwYXRjaCBhbGxvd2luZyByZWdpc3RlcmluZyBJU0EgZGV2aWNlcyB0byB2Z2FhcmIgKGZvciB3
+aGVuCj4gPiBJbnRlbCBHUFUgaXMgaGlkZGVuKSwgZGlkIGFueXRoaW5nIGhhcHBlbiB3aXRoIHRo
+YXQgb25lPyAgCj4gCj4gVGhhdCBwYXRjaCB3YXMgb25seSBoYWxmIHNlcmlvdXMuCj4gCj4gQXMg
+c2FpZCwgYmFzZWQgb24gbXkgbGltaXRlZCB1bmRlcnN0YW5kaW5nIG9mIHZnYWFyYi5jLCB0aGUg
+aW50ZW5kZWQKPiB1c2FnZSBzZWVtcyBub3QgdG8gYmUgdGhhdCBhIGxvY2sgaXMgYWNxdWlyZWQg
+YW5kIGtlcHQgaW5kZWZpbml0ZWx5LAo+IGJ1dCBvbmx5IGZvciB0aGUgYnJpZWYgcGVyaW9kIG9m
+IHRpbWUgd2hlbiBJL08gaXMgYWNjZXNzZWQuCj4gCj4gU28gd2hhdCBOdmlkaWEgaXMgZG9pbmcg
+aXMgcGxhaW4gd3JvbmcgYW5kIHBlb3BsZSBoYXZlIHRyaWVkIHRvCj4gY29udmluY2UgdGhlbSB0
+byBmaXggdGhlaXIgZHJpdmVyIHRpbWUgYW5kIGFnYWluIGluIHRoaXMgZm9ydW0KPiB0aHJlYWQ6
+Cj4gaHR0cHM6Ly9kZXZ0YWxrLm52aWRpYS5jb20vZGVmYXVsdC90b3BpYy81NDU1NjAvdmZpby12
+Z2EtYXJiaXRyYXRpb24tbG9jay8KPiAKPiBZb3Ugd2VyZSBjb3JyZWN0IGluIHRoYXQgeW91IG5v
+dGljZWQgdGhhdCBJL08gbmVlZHMgdG8gYmUgbG9ja2VkIHRvCj4gYSBkZXZpY2Ugb24gdGhlIHJv
+b3QgYnVzIGZvciBnbXV4IHRvIGJlIGFjY2Vzc2libGUuIEhvd2V2ZXIgdGhlIGxvY2sKPiBzaG91
+bGRuJ3QgYmUgaGVsZCBpbmRlZmluaXRlbHksIGJ1dCBvbmx5IGJyaWVmbHkgaW4gdGhlIGdtdXhf
+cmVhZCooKSwKPiBnbXV4X3dyaXRlKigpIGFuZCBnbXV4X2lzX2luZGV4ZWQoKSBmdW5jdGlvbnMu
+IFNvIG15IHN1Z2dlc3Rpb24gd291bGQKPiBiZSB0byByZXZlcnQgNGVlYmQ1YTRlNzI2LCByZXBs
+YWNlIGl0IHdpdGggYSBuZXcgcGF0Y2ggdGhhdCBsb2NrcyBJTwo+IG9ubHkgd2hlbiBuZWVkZWQs
+IGFuZCBnZXQgbnZpZGlhIHRvIGRvIHRoZSBzYW1lIGluIHRoZWlyIGRyaXZlci4KCkp1c3QgY2hh
+bmdpbmcgdGhlIGxvY2tpbmcgcGVyaW9kIGxvb2tzIGdyZWF0IHdoZW4gYWxsIEdQVXMgYXJlIHZp
+c2libGUsCnRob3VnaCBmb3IgdGhlIGNhc2Ugd2hlbiBvbmx5IGRpc2NyZXRlIEdQVSBpcyB2aXNp
+YmxlIHdpbGwgbmVlZCBzb21lCmV4dHJhIGNhcmUgKHZnYWFyYiBjYW4ndCBkbyBzbyBwcm9wZXJs
+eSByaWdodCBub3cgdW5sZXNzIHdlIGNhbiBjb29rCnNvbWV0aGluZyB3aXRoIHJlbW92aW5nIGFs
+bCBkZWNvZGVzIG9mIGRpc2NyZXRlIEdQVSBhbmQgcmVwbGljYXRlIGluCnByaXZhdGUgc2V0dGlu
+ZyB1cCBkZWNvZGVzIHByb3Blcmx5IGZvciByb290IGJ1cykuLi4KCkJydW5vCgo+IFRoYW5rcywK
+PiAKPiBMdWthcwo+IAo+ID4gICAKPiA+ID4gU28gd2hhdCBkbyB3ZSBkbz8gV2UgbmVlZCB0byBk
+byBzb21ldGhpbmcgYmVjYXVzZSBub3cgd2UndmUgZ290IHRoZQo+ID4gPiBkZWFkbG9jayByZWdy
+ZXNzaW9uIGluIDQuNiBvbiB0b3AuIDooCj4gPiA+IAo+ID4gPiBUaGFua3MsCj4gPiA+IAo+ID4g
+PiBMdWthcyAgCj4gPiAKPiA+IEJydW5vICAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
