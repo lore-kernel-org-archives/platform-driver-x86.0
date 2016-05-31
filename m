@@ -1,162 +1,380 @@
-From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
-Subject: Re: Deadlock in 4.6 caused by 4eebd5a4e726 ("apple-gmux: lock iGP
- IO to protect from vgaarb changes")
-Date: Mon, 30 May 2016 12:48:15 +0200
-Message-ID: <20160530124815.3e0358da@pluto.restena.lu>
-References: <20160527122302.GA7471@wunner.de>
- <20160530110753.61846b70@pluto.restena.lu>
- <20160530102446.GA13170@wunner.de>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 1/1] ideapad-laptop: Handle Yoga in tablet mode
+Date: Tue, 31 May 2016 18:43:30 -0400
+Message-ID: <CA+A7VXVJ6eCXmzFmO4Ek4TxMNKFA+BoKyj0Fm7s0ycn+Ev5cTg@mail.gmail.com>
+References: <1459544569-29865-1-git-send-email-list@eworm.de>
+ <20160505234247.GG2113@f23x64.localdomain> <CA+A7VXVcq3JjJC54kXZkmvrLF1hktX_w+vXcU-vk5WA4nFeNLA@mail.gmail.com>
+ <CAKErNvrs4300M+ap+O1R-44z_EE97O=hk74nOGT+MSsVmfL6Ew@mail.gmail.com>
+ <CA+A7VXW8qCu-j4QGoDBZUym+sEsXgkzPTVTv7A4UoSDe+D1mig@mail.gmail.com>
+ <CAKErNvpVwhL6AXgfeQcx_K0Zu=KpqptYjB9AO6ezpDjbqx=g7w@mail.gmail.com>
+ <CA+A7VXUaT+XJPCfGYrJqtB+vr7OYjZgg1m6=oVwpfA3JM++1yw@mail.gmail.com> <CAKErNvrr1wNB_6a-DWjbM3LcgbWd-WFvF3gz1y97ikmqE4-Wtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160530102446.GA13170@wunner.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yw0-f176.google.com ([209.85.161.176]:35150 "EHLO
+	mail-yw0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750750AbcEaWoL convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 31 May 2016 18:44:11 -0400
+Received: by mail-yw0-f176.google.com with SMTP id o16so2018989ywd.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 May 2016 15:44:10 -0700 (PDT)
+In-Reply-To: <CAKErNvrr1wNB_6a-DWjbM3LcgbWd-WFvF3gz1y97ikmqE4-Wtw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: Christian Hesse <list@eworm.de>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com
 
-SGkgTHVjYXMsCgpPbiBNb24sIDMwIE1heSAyMDE2IDEyOjI0OjQ2ICswMjAwIEx1a2FzIFd1bm5l
-ciB3cm90ZToKPiBPbiBNb24sIE1heSAzMCwgMjAxNiBhdCAxMTowNzo1M0FNICswMjAwLCBCcnVu
-byBQcsOpbW9udCB3cm90ZToKPiA+IE9uIEZyaSwgMjcgTWF5IDIwMTYgMTQ6MjM6MDIgKzAyMDAg
-THVrYXMgV3VubmVyIHdyb3RlOiAgCj4gPiA+IFdpbGZyaWVkIEtsYWViZSBoYXMgcmVwb3J0ZWQg
-YSBkZWFkbG9jayBpbiA0LjYgd2hpY2ggaGUgYmlzZWN0ZWQgdG8KPiA+ID4gbXkgY29tbWl0IDcw
-NGFiNjE0ZWMxMiAoImRybS9pOTE1OiBEZWZlciBwcm9iZSBpZiBnbXV4IGlzIHByZXNlbnQgYnV0
-Cj4gPiA+IGl0cyBkcml2ZXIgaXNuJ3QiKSwgYnV0IHdoaWNoIGlzIHVsdGltYXRlbHkgY2F1c2Vk
-IGJ5IHlvdXIgY29tbWl0Cj4gPiA+IDRlZWJkNWE0ZTcyNiAoImFwcGxlLWdtdXg6IGxvY2sgaUdQ
-IElPIHRvIHByb3RlY3QgZnJvbSB2Z2FhcmIgY2hhbmdlcyIpLgo+ID4gPiAKPiA+ID4gV2hhdCdz
-IGhhcHBlbmluZyBpcyB0aGF0IHlvdXIgY29tbWl0IGNhbGxzIHZnYV90cnlnZXQoKSBpbiBhcHBs
-ZS1nbXV4LAo+ID4gPiB3aGljaCBzdWNjZWVkcy4gV2hlbiBYb3JnIGlzIGxhdW5jaGVkLCBpdCBv
-cGVucyAvZGV2L3ZnYV9hcmJpdGVyIGFuZAo+ID4gPiBjYWxscyB2Z2FfZ2V0KCksIHdoaWNoIGRl
-YWRsb2Nrcy4gU2VlIHRoZSBhdHRhY2htZW50cyB0byB0aGlzIGJ1Z3ppbGxhCj4gPiA+IGVudHJ5
-LCBpbiBwYXJ0aWN1bGFyIHRoZSBzdGFja3RyYWNlIGF0IHRoZSBlbmQgb2YgImtlcm4ubG9nIC8g
-ZG1lc2cgb2YKPiA+ID4gbm9uLXdvcmtpbmcgTGludXggNC42LjAiOgo+ID4gPiBodHRwczovL2J1
-Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTg4ODYxI2MxMQo+ID4gPiBodHRwczov
-L2J1Z3ppbGxhLmtlcm5lbC5vcmcvYXR0YWNobWVudC5jZ2k/aWQ9MjE3NTQxICAKPiA+IAo+ID4g
-TG9va3MgbGlrZSBoZXJlIHRoZSB0d28gR1BVcyBhcmUgdmlzaWJsZSBhbmQgdGhlIHJpZ2h0IG9u
-ZSBpcyBiZWluZwo+ID4gc2VsZWN0ZWQuCj4gPiBTbyB5b3VyIHBhdGNoIHRvIGFsbG93IGluY2x1
-ZGluZyBJU0EgZGV2aWNlcyBpbiB2Z2EgYXJiaXRyYXRpb24gd291bGQKPiA+IG5vdCBjaGFuZ2Ug
-YW55dGhpbmcgaGVyZS4KPiA+IAo+ID4gSXMgaXQga25vd24gYXQgd2hhdCB0aW1lIHRoZSBsb2Nr
-dXAgaGFwcGVucz8KPiA+IEZyb20gdGhlIGtlcm5lbCB0cmFjZSB0aGUgbG9ja3VwIG9ubHkgaGFw
-cGVucyBkdXJpbmcgd3JpdGUoKSBhbmQgbm90Cj4gPiBhbHJlYWR5IGF0IG9wZW4gdGltZS4gVGh1
-cyB0aGUgY29tbWFuZCB3cml0dGVuIHRvIC9kZXYvdmdhX2FyYml0ZXIgd291bGQKPiA+IGJlIGhl
-bHBmdWwgZm9yIHByb3BlciB1bmRlcnN0YW5kaW5nLgo+ID4gRnJvbSBrZXJuZWwgc2lkZSBjb2Rl
-IEkgdGhpbmsgaXQncyBhIGNhbGwgcmVsYXRlZCB0byByYWRlb24gYW5kIG5vdAo+ID4gaW50ZWwg
-aW4gWG9yZyB0aGF0IGNhbGxzIG91dCB0byB2Z2FfYXJiaXRlciwgYnV0IHBsZWFzZSBwcm92aWRl
-Cj4gPiBtb3JlIGRldGFpbHMgKGVpdGhlciBzdHJhY2UmL2JhY2t0cmFjZSBvbiBYb3JnIG9yIGtl
-cm5lbCB3aXRoIHByX2RlYnVnCj4gPiBhY3RpdmUgZm9yIHZnYWFyZ2IgYW5kIGNvcnJlc3BvbmRp
-bmcga2VybmVsIGxvZykuICAKPiAKPiBXaGVuIFhvcmcgc3RhcnRzIHVwLCBpdCBjYWxscyB4Zjg2
-VkdBYXJiaXRlckxvY2soKSBhIGNvdXBsZSBvZiB0aW1lcwo+IGZyb20gSW5pdE91dHB1dCgpOgo+
-IGh0dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcveG9yZy94c2VydmVyL3RyZWUvaHcveGZyZWU4
-Ni9jb21tb24veGY4NkluaXQuYyNuNTY5Cj4gCj4gVGhpcyBjYWxscyBwY2lfZGV2aWNlX3ZnYWFy
-Yl9sb2NrKCk6Cj4gaHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy94b3JnL3hzZXJ2ZXIvdHJl
-ZS9ody94ZnJlZTg2L2NvbW1vbi94Zjg2VkdBYXJiaXRlci5jI244OAo+IAo+IEFuZCB0aGlzIHdy
-aXRlcyB0byAvZGV2L3ZnYV9hcmJpdGVyOgo+IGh0dHBzOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcv
-eG9yZy9saWIvbGlicGNpYWNjZXNzL3RyZWUvc3JjL2NvbW1vbl92Z2FhcmIuYyNuMjg3Cj4gCj4g
-QWRkaW5nIFRpYWdvIFZpZ25hdHRpIHRvIGNjOiB3aG8gd3JvdGUgbXVjaCBvZiB0aGlzIGNvZGUu
-CgpPaywgYW5kIHRoZSBkZXZpY2UgY2hvc2UgZm9yIHRoZSBsb2NrIGlzIHByb2JhYmx5IHRoZSBy
-YWRlb24gb25lLCB0aHVzCnRoZSBsb2NrIHRha2VuIGJ5IHZnYWFyYiBjb25mbGljdHMgd2l0aCB0
-aGUgb25lIGxpYnBjaWFjY2VzcyB3YW50cyB0bwp0YWtlIGZvciByYWRlb24gZHJpdmVyLgpJZiBp
-dCB3YXMgdGhlIGludGVsIG9uZSB0aGUga2VybmVsIHNob3VsZCBub3QgYmxvY2sgYXMgdGhlIHRo
-ZSBvbmUgdG8KYmUgbG9ja2VkICBieSB1c2Vyc3BhY2UgbWF0Y2hlcyB0aGUgb25lIGxvY2tlZCBi
-eSBrZXJuZWwuCgo+ID4gRnJvbSB0aGUgYnVnIHJlcG9ydCwgY29tbWVudCAjMTEgSSBkb24ndCB1
-bmRlcnN0YW5kIHRoaXMgcGFydDoKPiA+ICAgSSBib290IExpbnV4IGRpcmVjdGx5IHZpYSByRUZJ
-bmQuIEkgZ290IHRoZSByYWRlb24geG9yZyBkcml2ZXJzCj4gPiAgIGluc3RhbGxlZCwgYnV0IG5l
-aXRoZXIgaW50ZWwgbm9yIGZiZGV2IG9yIGttcy4KPiA+IAo+ID4gRG9lcyB0aGlzIG1lYW4gdGhh
-dCBuZWl0aGVyIEludGVsIEtNUyBub3IgUmFkZW9uIEtNUyBhcmUgYWJsZSB0bwo+ID4gaW5pdGlh
-bGl6ZSwgbm9yIHNpbXBsZWZiJ3MgZmJkZXY/Cj4gPiBUaGUga2VybmVsIGxvZyB0aG91Z2ggcmVw
-b3J0cyBwcm9wZXIgc3RhcnR1cCBvZiByYWRlb24gKEtNUykgYW5kIGk5MTUKPiA+IChLTVMpIHNv
-IG9ubHkgdXNlcnNwYWNlIGdldHMgY2F1Z2h0Li4uCj4gPiBTbyBkZXRhaWxzIG9uIHRoZSB1c2Vy
-c3BhY2Ugc3RhY2sgKHhmODYtdmlkZW8taW50ZWwgYW5kIGxpYmRybSB2ZXJzaW9ucykKPiA+IHdv
-dWxkIGJlIGhlbHBmdWwgYXMgd2VsbC4gIAo+IAo+IFRoZSBrZXJuZWwgbW9kdWxlcyBhcHBsZS1n
-bXV4LCBpOTE1IGFuZCByYWRlb24gYXJlIHByZXNlbnQgYW5kIGxvYWRlZCwKPiBidXQgdGhlIHVz
-ZXIgc3BhY2UgWG9yZyBkcml2ZXIgZm9yIGk5MTUgaXMgbm90IGluc3RhbGxlZCwgb25seSByYWRl
-b24uCj4gCj4gQnV0IHdlIChvbmUgdGhlIGtlcm5lbCBzaWRlKSBjYW5ub3QgZm9yY2UgcGVvcGxl
-IHRvIGhhdmUgc3BlY2lmaWMKPiB1c2VybGFuZCBkcml2ZXJzIGluc3RhbGxlZCB0byBhdm9pZCBk
-ZWFkbG9ja3MgaW4gdGhlIGtlcm5lbC4KCk9rLCB0aGF0IG1hdGNoZXMgYWJvdmUuCgpTdXJlIHdl
-IHNob3VsZCBub3QgYmxvY2sgdXNlcnNwYWNlIGluZGVmaW5pdGVseS4KT24gdXNlcnNwYWNlIGEg
-dHJ5LWxvY2sgaW5zdGVhZCBvZiBsb2NrIGNvbW1hbmQgd291bGQgYmUgYW4gb3B0aW9uCnRvdWdo
-LgoKSXQgc2VlbXMgdGhhdCBjb21taXQgOWY1YmQzMDgxOGM0MmM2YzM2YTUxZjkzYjRkZjc1YTJl
-YTJiZDg1ZSBtaWdodAphbHNvIGhhdmUgbWFkZSB0aGUgaXNzdWUgd29yc2UgKGFzIHRoZSBsb2Nr
-IGlzIGJlY29taW5nCmVmZmVjdGl2ZWx5IHVuaW50ZXJydXB0aWJsZSB3aXRoIHRoYXQgY29tbWl0
-IHdoaWxlIGl0IHdhcyBub3Qgc28gYmVmb3JlCihubyBpZGVhIGlmIFhvcmcgZGlkIHJlY2VpdmUg
-c2lnbmFscyB0byBlc2NhcGUgdGhlIGltcG9zc2libGUgbG9ja2luZwphdHRlbXB0KQoKPiA+ID4g
-Rm9yIHNvbWUgcmVhc29uIHRoZSBkZWFkbG9jayBvbmx5IG9jY3VycyBpZiBhcHBsZS1nbXV4IGxv
-YWRzCj4gPiA+IGJlZm9yZSBpOTE1LCBzbyBpdCBzZWVtcyB0aGVyZSdzIGEgcmFjZSBjb25kaXRp
-b24gaW4geW91ciBjb21taXQuCj4gPiA+IE15IGNvbW1pdCBlbnN1cmVzIHRoYXQgdGhpcyBpcyB0
-aGUgY2FzZSwgYmVjYXVzZSBpOTE1IGNhbm5vdAo+ID4gPiBwcm9iZSB0aGUgcGFuZWwncyBFRElE
-IHdpdGhvdXQgZ211eC4gKFRoZSBwYW5lbCBpcyBzd2l0Y2hlZCB0bwo+ID4gPiB0aGUgcmFkZW9u
-IEdQVS4pIE5vdGFibHksIHlvdXIgY29tbWl0IG1lc3NhZ2Ugc2F5cyB0aGF0OiAiSXQgaXMKPiA+
-ID4gZXhwZWN0ZWQgdG8gbG9hZC9wcm9iZSBnbXV4IHByaW9yIHRvIGdyYXBoaWNzIGRyaXZlcnMu
-IiBIb3dldmVyCj4gPiA+IHlvdXIgY29tbWl0IGRvZXMgbm90IHRha2UgYW55IHByZWNhdXRpb25z
-IHRvIGFjdHVhbGx5IGVuc3VyZQo+ID4gPiB0aGF0LiBXaGF0J3MgbW9yZSwgbm93IHRoYXQgYXBw
-bGUtZ211eCAqZG9lcyogbG9hZCBiZWZvcmUgaTkxNSwKPiA+ID4geW91ciBjb21taXQgYnJlYWtz
-LiAgCj4gPiAKPiA+IEkgdGhpbmsgaGVyZSB1c2Vyc3BhY2UgYW5kIGtlcm5lbC1zaWRlIHBhcnRz
-IGFyZSBnZXR0aW5nIG1peGVkLXVwLgo+ID4gCj4gPiBGcm9tIHRoZSBmYWlsaW5nIGtlcm5lbCBs
-b2csIGJvdGggaTkxNSBhbmQgcmFkZW9uIGFyZSBsb2FkZWQgbG9uZwo+ID4gYmVmb3JlIHRoZSBs
-b2NrIGhhcHBlbnMgKHdpdGggdmdhYXJiIGJlaW5nIGxvYWRlZCB5ZXQgZWFybGllcikuCj4gPiAK
-PiA+IFRoZSBvbmx5IG9uZSBoYXZpbmcgdHJvdWJsZSBpcyBYb3JnICh3b3VsZCBpdCBiZSBwb3Nz
-aWJsZSB0byBnZXQgYQo+ID4gYmFja3RyYWNlIG9mIFhvcmcgdG8ga25vdyB3aGF0IGNvZGUKPiA+
-IGNhbGxlZC90cmlnZ2VyZWQgL2Rldi92Z2FfYXJiaXRlciBhbmQgd2hhdCBpdCBpbnRlbmRzIHRv
-IGRvPykuCj4gPiAgIAo+ID4gPiBJJ20gbm90IHJlYWxseSBmYW1pbGlhciB3aXRoIHZnYWFyYiwg
-YnV0IGdyZXBwaW5nIHRocm91Z2ggdGhlCj4gPiA+IGtlcm5lbCB0cmVlIEkgY2FuIGZpbmQgb25s
-eSAyIGRyaXZlcnMgd2hpY2ggdXNlIGl0LCBpOTE1IGFuZAo+ID4gPiB2ZmlvLiBJbiBib3RoIGNh
-c2VzLCB0aGUga2VybmVsIG9ubHkgYnJpZWZseSBhY3F1aXJlcyBhIGxvY2sgdG8KPiA+ID4gd3Jp
-dGUgdG8gVkdBIHJlZ2lzdGVycywgYW5kIGltbWVkaWF0ZWx5IHJlbGVhc2VzIHRoZSBsb2NrCj4g
-PiA+IGFmdGVyd2FyZHMuIFNvIGl0IGxvb2tzIHRvIG1lIGxpa2UgdGhlIGludGVuZGVkIHVzYWdl
-IGlzIHRvIG5vdAo+ID4gPiBob2xkIGEgbG9jayBvdmVyIGEgcHJvbG9uZ2VkIHBlcmlvZCBvZiB0
-aW1lLiBJSVVDIHRoZSBwcm9wcmlldGFyeQo+ID4gPiBudmlkaWEgZHJpdmVyIGlzIGRvaW5nIGV4
-YWN0bHkgdGhhdCwgYW5kIHlvdSBzb3VnaHQgdG8gd29yawo+ID4gPiBhcm91bmQgdGhpcyBpc3N1
-ZSBieSBhbHNvIGhvbGRpbmcgYSBsb2NrIGluZGVmaW5pdGVseSBpbgo+ID4gPiBhcHBsZS1nbXV4
-LmMuCj4gPiA+IAo+ID4gPiBUaGUgcHJvcGVyIHdheSwgYXQgbGVhc3QgZnJvbSBteSBwb2ludCBv
-ZiB2aWV3IGFzIGEgY29tcGxldGUKPiA+ID4gdmdhYXJiIGRpbXdpdCwgc2VlbXMgdG8gYnJpZWZs
-eSBhY3F1aXJlIGEgbG9jayB3aGVuZXZlcgo+ID4gPiBhcHBsZS1nbXV4LmMgYWNjZXNzZXMgaXRz
-IHJlZ2lzdGVycyBpbiB0aGUgMHg3MDAgSU8gcmFuZ2UuIEFuZAo+ID4gPiBsaWtld2lzZSBudmlk
-aWEgb3VnaHQgdG8gZml4IHRoZWlyIGRyaXZlciB0byBvbmx5IGFjcXVpcmUgYSBsb2NrCj4gPiA+
-IHdoZW5ldmVyIHRoZXkgYWN0dWFsbHkgbmVlZCBpdC4gSXQgd2FzIG5vYmxlIHRoYXQgeW91IHRy
-aWVkIHRvCj4gPiA+IGhlbHAgdGhlIHVzZXIgd2l0aCB0aGUgbnZpZGlhIGRyaXZlciBpc3N1ZSwg
-YnV0IHVsdGltYXRlbHkgd2UKPiA+ID4gY2FuJ3Qgd29ya2Fyb3VuZCBudmlkaWEncyBidWdzIGlm
-IGl0IGNhdXNlcyBicmVha2FnZSBlbHNld2hlcmUuCj4gPiA+IFRoZXkgbmVlZCB0byBmaXggdGhl
-aXIgY2xvc2VkIHNvdXJjZSBkcml2ZXIuCj4gPiA+IAo+ID4gPiBUaGVyZSdzIGFsc28gdGhpcyB1
-bnJlc29sdmVkIGlzc3VlIHRoYXQgeW91ciBjb21taXQgYnJva2UKPiA+ID4gYmFja2xpZ2h0IGNv
-bnRyb2wgb24gdGhlIE1hY0Jvb2tQcm8xMSwzIGFuZCAxMSw1Ogo+ID4gPiBodHRwczovL2J1Z3pp
-bGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTEwNTA1MSAgCj4gPiAKPiA+IFlvdSBoYWQg
-YSBwYXRjaCBhbGxvd2luZyByZWdpc3RlcmluZyBJU0EgZGV2aWNlcyB0byB2Z2FhcmIgKGZvciB3
-aGVuCj4gPiBJbnRlbCBHUFUgaXMgaGlkZGVuKSwgZGlkIGFueXRoaW5nIGhhcHBlbiB3aXRoIHRo
-YXQgb25lPyAgCj4gCj4gVGhhdCBwYXRjaCB3YXMgb25seSBoYWxmIHNlcmlvdXMuCj4gCj4gQXMg
-c2FpZCwgYmFzZWQgb24gbXkgbGltaXRlZCB1bmRlcnN0YW5kaW5nIG9mIHZnYWFyYi5jLCB0aGUg
-aW50ZW5kZWQKPiB1c2FnZSBzZWVtcyBub3QgdG8gYmUgdGhhdCBhIGxvY2sgaXMgYWNxdWlyZWQg
-YW5kIGtlcHQgaW5kZWZpbml0ZWx5LAo+IGJ1dCBvbmx5IGZvciB0aGUgYnJpZWYgcGVyaW9kIG9m
-IHRpbWUgd2hlbiBJL08gaXMgYWNjZXNzZWQuCj4gCj4gU28gd2hhdCBOdmlkaWEgaXMgZG9pbmcg
-aXMgcGxhaW4gd3JvbmcgYW5kIHBlb3BsZSBoYXZlIHRyaWVkIHRvCj4gY29udmluY2UgdGhlbSB0
-byBmaXggdGhlaXIgZHJpdmVyIHRpbWUgYW5kIGFnYWluIGluIHRoaXMgZm9ydW0KPiB0aHJlYWQ6
-Cj4gaHR0cHM6Ly9kZXZ0YWxrLm52aWRpYS5jb20vZGVmYXVsdC90b3BpYy81NDU1NjAvdmZpby12
-Z2EtYXJiaXRyYXRpb24tbG9jay8KPiAKPiBZb3Ugd2VyZSBjb3JyZWN0IGluIHRoYXQgeW91IG5v
-dGljZWQgdGhhdCBJL08gbmVlZHMgdG8gYmUgbG9ja2VkIHRvCj4gYSBkZXZpY2Ugb24gdGhlIHJv
-b3QgYnVzIGZvciBnbXV4IHRvIGJlIGFjY2Vzc2libGUuIEhvd2V2ZXIgdGhlIGxvY2sKPiBzaG91
-bGRuJ3QgYmUgaGVsZCBpbmRlZmluaXRlbHksIGJ1dCBvbmx5IGJyaWVmbHkgaW4gdGhlIGdtdXhf
-cmVhZCooKSwKPiBnbXV4X3dyaXRlKigpIGFuZCBnbXV4X2lzX2luZGV4ZWQoKSBmdW5jdGlvbnMu
-IFNvIG15IHN1Z2dlc3Rpb24gd291bGQKPiBiZSB0byByZXZlcnQgNGVlYmQ1YTRlNzI2LCByZXBs
-YWNlIGl0IHdpdGggYSBuZXcgcGF0Y2ggdGhhdCBsb2NrcyBJTwo+IG9ubHkgd2hlbiBuZWVkZWQs
-IGFuZCBnZXQgbnZpZGlhIHRvIGRvIHRoZSBzYW1lIGluIHRoZWlyIGRyaXZlci4KCkp1c3QgY2hh
-bmdpbmcgdGhlIGxvY2tpbmcgcGVyaW9kIGxvb2tzIGdyZWF0IHdoZW4gYWxsIEdQVXMgYXJlIHZp
-c2libGUsCnRob3VnaCBmb3IgdGhlIGNhc2Ugd2hlbiBvbmx5IGRpc2NyZXRlIEdQVSBpcyB2aXNp
-YmxlIHdpbGwgbmVlZCBzb21lCmV4dHJhIGNhcmUgKHZnYWFyYiBjYW4ndCBkbyBzbyBwcm9wZXJs
-eSByaWdodCBub3cgdW5sZXNzIHdlIGNhbiBjb29rCnNvbWV0aGluZyB3aXRoIHJlbW92aW5nIGFs
-bCBkZWNvZGVzIG9mIGRpc2NyZXRlIEdQVSBhbmQgcmVwbGljYXRlIGluCnByaXZhdGUgc2V0dGlu
-ZyB1cCBkZWNvZGVzIHByb3Blcmx5IGZvciByb290IGJ1cykuLi4KCkJydW5vCgo+IFRoYW5rcywK
-PiAKPiBMdWthcwo+IAo+ID4gICAKPiA+ID4gU28gd2hhdCBkbyB3ZSBkbz8gV2UgbmVlZCB0byBk
-byBzb21ldGhpbmcgYmVjYXVzZSBub3cgd2UndmUgZ290IHRoZQo+ID4gPiBkZWFkbG9jayByZWdy
-ZXNzaW9uIGluIDQuNiBvbiB0b3AuIDooCj4gPiA+IAo+ID4gPiBUaGFua3MsCj4gPiA+IAo+ID4g
-PiBMdWthcyAgCj4gPiAKPiA+IEJydW5vICAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On 26 May 2016 at 15:44, Maxim Mikityanskiy <maxtram95@gmail.com> wrote=
+:
+> 2016-05-25 19:03 GMT+03:00 Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.=
+com>:
+>> On 25 May 2016 at 02:26, Maxim Mikityanskiy <maxtram95@gmail.com> wr=
+ote:
+>>> 2016-05-24 23:32 GMT+03:00 Jo=C3=A3o Paulo Rechi Vita <jprvita@gmai=
+l.com>:
+>>>> On 19 May 2016 at 05:17, Maxim Mikityanskiy <maxtram95@gmail.com> =
+wrote:
+>>>>> 2016-05-16 19:04 GMT+03:00 Jo=C3=A3o Paulo Rechi Vita <jprvita@gm=
+ail.com>:
+>>>>>>
+>>>>>> Adding Maxim Mikityanskiy and Hans de Goede to CC.
+>>>>>>
+>>>>>> On 5 May 2016 at 19:42, Darren Hart <dvhart@infradead.org> wrote=
+:
+>>>>>> > On Fri, Apr 01, 2016 at 11:02:49PM +0200, Christian Hesse wrot=
+e:
+>>>>>> >> From: Christian Hesse <mail@eworm.de>
+>>>>>> >>
+>>>>>> >> When Lenovo Yoga 700 is flipped to tablet mode it emmits even=
+t 10. Let's
+>>>>>> >> send touchpad key codes so software can disable touchpad.
+>>>>>> >>
+>>>>>> >> Signed-off-by: Christian Hesse <mail@eworm.de>
+>>>>>> >> Signed-off-by: Michael Gisbers <michael@gisbers.de>
+>>>>>> >
+>>>>>> > Queued, thanks.
+>>>>>> >
+>>>>>> >> ---
+>>>>>> >>  drivers/platform/x86/ideapad-laptop.c | 1 +
+>>>>>> >>  1 file changed, 1 insertion(+)
+>>>>>> >>
+>>>>>> >> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/=
+platform/x86/ideapad-laptop.c
+>>>>>> >> index be3bc2f..1d49db1 100644
+>>>>>> >> --- a/drivers/platform/x86/ideapad-laptop.c
+>>>>>> >> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>>>>> >> @@ -809,6 +809,7 @@ static void ideapad_acpi_notify(acpi_hand=
+le handle, u32 event, void *data)
+>>>>>> >>                       case 6:
+>>>>>> >>                               ideapad_input_report(priv, vpc_=
+bit);
+>>>>>> >>                               break;
+>>>>>> >> +                     case 10:
+>>>>>> >>                       case 5:
+>>>>>> >>                               ideapad_sync_touchpad_state(pri=
+v);
+>>>>>>
+>>>>>> I'm not sure this is the right action here: ideapad_sync_touchpa=
+d()
+>>>>>> sends a sequence of KEY_TOUCHPAD_DISABLE and KEY_TOUCHPAD_ENABLE=
+D,
+>>>>>> which are interpreted by userspace as "the touchpad has been
+>>>>>> {dis,en}abled by the hardware". The way userspace is expected to=
+ react
+>>>>>> to it is by showing a notification of the fact to the user, but =
+not
+>>>>>> disabling the touchpad. This behavior can be confirmed in the or=
+iginal
+>>>>>> commit message that introduced this change (I couldn't find any =
+actual
+>>>>>> documentation on this): "Input: add keycodes for touchpad on/off=
+ keys"
+>>>>>> (0417596f66). I was actually going to propose a patch similar to=
+ Hans'
+>>>>>> "ideapad-laptop: Disable touchpad interface on Yoga models"
+>>>>>> (f79a901331) for the Yoga 900, to avoid an "touchpad ON" OSD
+>>>>>> notification being shown to the user when returning for suspend.
+>>>>>>
+>>>>>> Also, I've been investigating touchpad-related problems in the L=
+enovo
+>>>>>> Yoga 900 recently, and trying to understand this code. IIUC
+>>>>>> ideadpad_sync_touchpad_state() was created as part of "ideapad: =
+add
+>>>>>> Lenovo IdeaPad Z570 support (part 2)" (07a4a4fc8) to allow users=
+pace
+>>>>>> to syncronize a touchpad-state-indicator LED with the actual tou=
+chpad
+>>>>>> state, although it seems to me it only works if the touchpad is =
+always
+>>>>>> enabled by the hardware on resume (cc'ing the original patch aut=
+hor
+>>>>>> here for maybe a confirmation on how this is expected to work).
+>>>>>
+>>>>> This is a short explanation of this function.
+>>>>>
+>>>>> We call ideapad_sync_touchpad_state when a touchpad state changed
+>>>>> event arrives (touchpad on/off button pressed) or we need to read=
+  out
+>>>>> the initial touchpad state. It is also called on resume because
+>>>>> possibly the touchpad state may be changed after resume, but I do=
+n't
+>>>>> know which devices behave like that (and unfortunately I'm unable=
+ to
+>>>>> test it on my Z570 because now it's dead).
+>>>>>
+>>>>
+>>>> So if I'm following this correctly, on some ideapads (Z570 and may=
+be
+>>>> others) there is a ACPI notification when the touchpad on/off hotk=
+ey
+>>>> is pressed, is that correct?
+>>>
+>>> Yes, exactly.
+>>>
+>>>> This is not what I see on the Yoga 900 or
+>>>> the Yoga 3, but a special scancode (0xbf on the Yoga 900, 0xbe on =
+the
+>>>> Yoga 3) come through the AT keyboard device. So here I'm using hwd=
+b to
+>>>> map these to KEY_TOUCHPAD_TOGGLE (pending upstream submission to
+>>>> udev).
+>>>
+>>> If KEY_TOUCHPAD_TOGGLE is sent to the userspace on the Yoga, no
+>>> KEY_TOUCHPAD_ON or KEY_TOUCHPAD_OFF should be ever sent. Only one o=
+f
+>>> these mechanisms should be used for userspace to handle this
+>>> correctly.
+>>>
+>>
+>> Agreed. That's why I was planning to propose a patch very similar to
+>> Hans' (f79a901331 "ideapad-laptop: Disable touchpad interface on Yog=
+a
+>> models"), but it was later reverted by 3b264d279e. I wonder if there
+>> is a more specific way to tell one model from the other.
+>>
+>>>>> ideadpad_sync_touchpad_state serves several purposes:
+>>>>>
+>>>>> - It actually reads out current touchpad state. It is necessary w=
+hen
+>>>>> we are reading the initial state, and also this read is necessary=
+ on
+>>>>> touchpad state changed events, because on some laptops (e.g. Z570=
+)
+>>>>> touchpad LED only changes its state after this read.
+>>>>>
+>>>>
+>>>> On the Yogas I've been testing this the state being read on
+>>>> ideapad_sync_touchpad_state() never changes, so even if I press th=
+e
+>>>> touchpad disable/enable hotkey before suspending, I always get
+>>>> KEY_TOUCHPAD_ON.
+>>>
+>>> So if VPCCMD_R_TOUCHPAD always returns the same value and not the
+>>> actual touchpad state, we should not send KEY_TOUCHPAD_ON on these
+>>> devices as it conflicts with KEY_TOUCHPAD_TOGGLE and doesn't reflec=
+t
+>>> the real touchpad state. Is there any way to determine in runtime i=
+f
+>>> VPCCMD_R_TOUCHPAD works correctly on the device? BTW, could you sen=
+d
+>>> me a DSDT dump from Yoga where it always shows touchpad on?
+>>>
+>>
+>> I imagine it is expected to return the same value because, from the
+>> hardware perspective, the touchpad is always enabled. I'm not sure o=
+f
+>> a good way to verify this, maybe disabling/re-enabling the i8042 AUX
+>> and checking its value when the module first loads (not sure if this
+>> is a good idea).
+>
+> Not sure how disabling/enabling AUX port will help us determine if EC
+> is capable of disabling touchpad and reporting disabled state.
+>
+
+If you disable the AUX port and read the touchpad state, on the Yoga
+you will still read the "enabled" value (1).
+
+>> The Yoga 900 DSDT can be found here:
+>> https://gist.githubusercontent.com/jprvita/5737de3cbb670e80973b7d4e5=
+1c38ab6/raw/189220cb746a719026bde2fa3e75ef5cb24e1931/yoga-900-dsdt.dsl
+>
+> Okay, I took a look at this DSDT, and the VPC interface used by
+> ideapad-laptop driver is completely opaque here. On my Z570 there was
+> XCMD method that was called from VPCW and handled all the commands. I
+> was hoping to find this method in Yoga DSDT to examine its code and
+> check if VPCCMD_R_TOUCHPAD actually returns any non-constant value or
+> just reports a constant, but on this device VPCW just writes the
+> command to the register, and maybe EC handles it in its firmware. So
+> there is no XCMD method and the code that handles VPC commands is
+> unavailable.
+>
+> My idea was that it could be possible that on the Yoga
+> VPCCMD_R_TOUCHPAD returns always the same value, but the value is
+> neither 0 nor 1, but some other non-zero constant indicating that
+> touchpad state reporting does not work. Unfortunately DSDT did not
+> help me to check this hypothesis, but we still can check it by lookin=
+g
+> at the value of the variable value in ideapad_sync_touchpad_state. I
+> think that most likely we will just get 1 there, but if we get anothe=
+r
+> value it will be the nice way to distinguish devices where we need
+> touchpad control from others. (Actually we need to check also if it i=
+s
+> actually 1 on the devices with working touchpad control, because I
+> don't remember for sure and have no device to test it.)
+>
+
+It is always 1 on the Yoga 900.
+
+>>>>> - Then it disables/enables i8042 AUX port to disable/enable touch=
+pad.
+>>>>> It is also necessary, because some laptops (Z570) do not disable
+>>>>> touchpad in hardware although they are storing touchpad state.
+>>>>>
+>>>>
+>>>> Ok, but this will only work if the touchpad is connected through t=
+hat
+>>>> bus. On the Yoga 900 and Yoga 3 the are connected via I2C, and I g=
+uess
+>>>> this might be true for other machines as well.
+>>>
+>>> If I remember correctly, some ideapads actually disable the touchpa=
+d
+>>> in hardware and some (e.g. Z570) only toggle the LED. For those one=
+s
+>>> that have PS/2 touchpad and don't disable it in hardware,
+>>> I8042_CMD_AUX_ENABLE/DISABLE works. I'm not sure if any ideapad exi=
+sts
+>>> that has e.g. I2C touchpad and doesn't disable it in hardware, but
+>>> only toggles the LED. If such laptop is a case, i8042 method will n=
+ot
+>>> work. Is there any better and universal way to disable touchpad fro=
+m
+>>> the driver?
+>>>
+>>
+>> I don't know if such laptop model exists either, but we can probably
+>> leave this case for when (if) it shows up.
+>>
+>>>>> - Finally it sends userspace event with new touchpad state. It do=
+es
+>>>>> not send a sequence of KEY_TOUCHPAD_OFF and KEY_TOUCHPAD_ON as yo=
+u
+>>>>> mentioned, but only one of these key codes.
+>>>>>
+>>>>
+>>>> Right, I got confused when I wrote this email by the comments in t=
+he
+>>>> function implementation, but when I checked with evtest I did see =
+only
+>>>> one event being sent, indeed.
+>>>
+>>> OK, when I read those comments now, they look really confusing,
+>>> espessially "We send KEY_TOUCHPAD_OFF and KEY_TOUCHPAD_ON" part. So=
+rry
+>>> for this confusion, it should mean that we send one of those codes
+>>> depending on the touchpad state, not that we send both of them.
+>>>
+>>>>> The second point is kinda hack. In Linux there are two ways of
+>>>>> reporting touchpad state events to the userspace:
+>>>>>
+>>>>> - KEY_TOUCHPAD_TOGGLE for those laptops that do not disable touch=
+pad
+>>>>> in hardware and thus don't store touchpad state. The userspace sh=
+ould
+>>>>> listen for those key presses and disable/enable touchpad
+>>>>> programmatically (e.g. TouchpadOff in synaptics X11 driver).
+>>>>>
+>>>>
+>>>> Yes, when the notification for the disable/enable touchpad hotkey =
+goes
+>>>> through ACPI.
+>>>
+>>> Sorry, why is ACPI important in this case?
+>>>
+>>
+>> I mean, if the hardware sends a notification through ACPI that needs
+>> to be handled by the kernel, instead of a keypress event on the
+>> keyboard device with a special scancode. But anyway, my comment here
+>> didn't really add anything.
+>>
+>>>>> - KEY_TOUCHPAD_ON and KEY_TOUCHPAD_OFF for those laptops that ful=
+ly
+>>>>> manage touchpad state in hardware and just report its state to th=
+e
+>>>>> userspace so that notification can be shown. Userspace should not
+>>>>> disable touchpad programmatically on these events, because it is
+>>>>> managed by hardware and may easily get out of sync if using multi=
+ple
+>>>>> user sessions.
+>>>>>
+>>>>
+>>>> Yes, and that is what I tried to explain on my previous comment. I=
+n
+>>>> this case userspace will usually want to notify the user that the
+>>>> touchpad state has been changed.
+>>>>
+>>>>> Ideapad Z570 matches none of these options. It looks more like th=
+e
+>>>>> second one, it stores the touchpad state in hardware, controls th=
+e
+>>>>> LED, but it lacks the ability to disable the touchpad in hardware=
+=2E So
+>>>>> we need to keep track of the hardware state and disable i8042 AUX=
+ port
+>>>>> from the driver when necessary.
+>>>>>
+>>>>
+>>>> Isn't the case that what it actually stores under VPCCMD_R_TOUCHPA=
+D is
+>>>> only the touchpad LED state?
+>>>
+>>> Yes, Z570 only stores the LED state.
+>>>
+>>>> If so, wouldn't it work if when ACPI
+>>>> notifies the kernel of event 5 (the touchpad disable/enable key ha=
+s
+>>>> been pressed) we simply sent KEY_TOUCHPAD_TOGGLE to userspace? I'm=
+ not
+>>>> entirely sure what would be best way to keep the LED in sync with =
+the
+>>>> touchpad state in that case, the only way I can think of if to exp=
+ose
+>>>> the LED to userspace so it can update it accordingly.
+>>>
+>>> No, sadly it wouldn't work correctly, because on Z570 we can't chan=
+ge
+>>> the LED state programmatically. There is VPCCMD_W_TOUCHPAD, but as =
+far
+>>> as I remember it doesn't work at least on Z570.
+>>>
+>>
+>> So what you are saying is that the only way to update the LED state =
+is
+>> to kill the i8042 AUX port.
+>
+> Not exactly. We can't update the LED state, so the firmware updates
+> it, and we just need to obey it and switch touchpad on/off
+> accordingly.
+>
+>> In this case I can't think of a different
+>> way for this to work on the Z570 and other models that have a touchp=
+ad
+>> LED. So it seems to me we should keep the current logic but make sur=
+e
+>> it only runs on machines that actually need it. I'm now wondering if
+>> this actually really needs to be called on resume, tho.
+>
+> Interesting question, it's really worth checking if it is necessary o=
+n
+> resume, but unfortunately I can't do this test because my Z570 is
+> dead, it does not turn on.
+>
+
+Maybe we could remove that call and see if someone complains? Not a
+very nice policy, tho.
+
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
