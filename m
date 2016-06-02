@@ -1,108 +1,121 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 2/4] dell-wmi: Sort WMI event codes and update comments
-Date: Thu, 2 Jun 2016 12:41:42 +0200
-Message-ID: <20160602104142.GA2456@eudyptula.hq.kempniu.pl>
+Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Thu, 2 Jun 2016 12:41:53 +0200
+Message-ID: <20160602104153.GB2456@eudyptula.hq.kempniu.pl>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <1463916983-12562-3-git-send-email-pali.rohar@gmail.com>
+ <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:34921 "EHLO
-	mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932086AbcFBKlt (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Jun 2016 06:41:49 -0400
-Received: by mail-lf0-f68.google.com with SMTP id q63so4693079lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Jun 2016 03:41:48 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463916983-12562-3-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+> ACPI DSDT tables have defined other WMI codes, but does not contain a=
+ny
+> description when those codes are emitted. Some other codes can be fou=
+nd in
+> logs on internet. In this patch are all which I saw, but lot of them =
+are
+> not tested properly (e.g. for duplicate events with AT keyboard). Now=
+ we
+> have all WMI event codes at one place and in future after proper test=
+ing
+> those codes can be correctly enabled or disabled...
+>=20
 > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-My guess is that Darren won't let you off without at least a short
-commit message.
-
 > ---
->  drivers/platform/x86/dell-wmi.c |   31 ++++++++++++++++++-----------=
---
->  1 file changed, 18 insertions(+), 13 deletions(-)
+>  drivers/platform/x86/dell-wmi.c |   32 +++++++++++++++++++++++++++++=
++++
+>  1 file changed, 32 insertions(+)
 >=20
 > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
 ell-wmi.c
-> index 4d23c91..363d927 100644
+> index 363d927..7aac1dc 100644
 > --- a/drivers/platform/x86/dell-wmi.c
 > +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -86,31 +86,32 @@ static const struct dmi_system_id dell_wmi_smbios=
-_list[] __initconst =3D {
->   */
+> @@ -110,6 +110,9 @@ static const struct key_entry dell_wmi_legacy_key=
+map[] __initconst =3D {
+>  	/* BIOS error detected */
+>  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
 > =20
->  static const struct key_entry dell_wmi_legacy_keymap[] __initconst =3D=
- {
-> -	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
-> =20
-> -	{ KE_KEY, 0xe009, { KEY_EJECTCD } },
-> +	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
-> =20
-> -	/* These also contain the brightness level at offset 6 */
-> -	{ KE_KEY, 0xe006, { KEY_BRIGHTNESSUP } },
-> -	{ KE_KEY, 0xe005, { KEY_BRIGHTNESSDOWN } },
-> +	/* These also contain the brightness level after key code */
-> +	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
-> +	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
-
-These two entries were left unsorted.
-
-> =20
->  	/* Battery health status button */
-> -	{ KE_KEY, 0xe007, { KEY_BATTERY } },
-> +	{ KE_KEY,    0xe007, { KEY_BATTERY } },
-> =20
-> -	/* Radio devices state change */
-> +	/* Radio devices state change, also contains additional information=
- */
->  	{ KE_IGNORE, 0xe008, { KEY_RFKILL } },
-> =20
-> -	/* The next device is at offset 6, the active devices are at
-> -	   offset 8 and the attached devices at offset 10 */
-> -	{ KE_KEY, 0xe00b, { KEY_SWITCHVIDEOMODE } },
-> +	{ KE_KEY,    0xe009, { KEY_EJECTCD } },
-> =20
-> +	/* After key code is: next device, active devices, attached devices=
- */
-> +	{ KE_KEY,    0xe00b, { KEY_SWITCHVIDEOMODE } },
+> +	/* Unknown, defined in ACPI DSDT */
+> +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
 > +
-> +	/* Also contains keyboard illumination level after key code */
+>  	/* Wifi Catcher */
+>  	{ KE_KEY,    0xe011, { KEY_PROG2 } },
+> =20
+> @@ -118,21 +121,45 @@ static const struct key_entry dell_wmi_legacy_k=
+eymap[] __initconst =3D {
+> =20
+>  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+> =20
+> +	/* Unknown, defined in ACPI DSDT */
+> +	/* { KE_IGNORE, 0xe023, { KEY_RESERVED } }, */
+> +
+> +	/* Untested, Dell Instant Launch key on Inspiron 7520 */
+> +	/* { KE_IGNORE, 0xe024, { KEY_RESERVED } }, */
+> +
+>  	/* Dell Instant Launch key */
+>  	{ KE_KEY,    0xe025, { KEY_PROG4 } },
+> =20
+>  	/* Audio panel key */
+>  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+> =20
+> +	/* Untested, Multimedia key on Dell Vostro 3560 */
+> +	/* { KE_IGNORE, 0xe028, { KEY_RESERVED } }, */
+> +
+>  	/* Dell Instant Launch key */
+>  	{ KE_KEY,    0xe029, { KEY_PROG4 } },
+> =20
+> +	/* Untested, Windows Mobility Center button on Inspiron 7520 */
+> +	/* { KE_IGNORE, 0xe02a, { KEY_RESERVED } }, */
+> +
+> +	/* Unknown, defined in ACPI DSDT */
+> +	/* { KE_IGNORE, 0xe02b, { KEY_RESERVED } }, */
+> +
+> +	/* Untested, Dell Audio With Preset Switch button on Inspiron 7520 =
+*/
+> +	/* { KE_IGNORE, 0xe02c, { KEY_RESERVED } }, */
+> +
+>  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+>  	{ KE_IGNORE, 0xe030, { KEY_VOLUMEUP } },
+>  	{ KE_IGNORE, 0xe033, { KEY_KBDILLUMUP } },
+>  	{ KE_IGNORE, 0xe034, { KEY_KBDILLUMDOWN } },
+>  	{ KE_IGNORE, 0xe03a, { KEY_CAPSLOCK } },
+> =20
+> +	/* NIC Link is Up */
+> +	{ KE_IGNORE, 0xe043, { KEY_RESERVED } },
+> +
+> +	/* NIC Link is Down */
+> +	{ KE_IGNORE, 0xe044, { KEY_RESERVED } },
+> +
+>  	/*
+>  	 * This entry is very suspicious!
+>  	 * Originally Matthew Garrett created this dell-wmi driver speciall=
+y for
+> @@ -145,7 +172,12 @@ static const struct key_entry dell_wmi_legacy_ke=
+ymap[] __initconst =3D {
+>  	 */
+>  	{ KE_IGNORE, 0xe045, { KEY_NUMLOCK } },
+> =20
+> +	/* Scroll lock and also going to tablet mode on portable devices */
+>  	{ KE_IGNORE, 0xe046, { KEY_SCROLLLOCK } },
+> +
+> +	/* Untested, going from tablet mode on portable devices */
+> +	/* { KE_IGNORE, 0xe047, { KEY_RESERVED } }, */
+> +
 
-I know I'm being really pedantic here, but as this is a cleanup patch,
-maybe it makes sense to unify the comments a bit?  After this patch is
-applied, the comments are:
+I have one more entry to add here:
 
-    /* These also contain the brightness level after key code */
-    /* Radio devices state change, also contains additional information=
- */
-    /* After key code is: next device, active devices, attached devices=
- */
-    /* Also contains keyboard illumination level after key code */
+    { KE_IGNORE, 0xe06e, { KEY_RESERVED } },
 
-How about changing them to something like:
-
-    /* Key code is followed by brightness level */
-    /* Radio devices state change, key code is followed by additional i=
-nformation */
-    /* Key code is followed by: next device, active devices, attached d=
-evices */
-    /* Key code is followed by keyboard illumination level */
-
-And looking at the bigger picture, do you think these comments
-(especially the generic one: "also contains additional information") ar=
-e
-actually needed?  Anything that follows the key code is ignored by
-kernel code anyway.
+WMI event 0xe06e is emitted on a Vostro V131 when the Dell Support
+Center hotkey is pressed, along with an i8042 interrupt.
 
 --=20
 Best regards,
