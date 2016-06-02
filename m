@@ -1,33 +1,39 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 01/20] x86, intel: Introduce macros for Intel family
- numbers
-Date: Thu, 2 Jun 2016 08:57:15 +0200
-Message-ID: <20160602065715.GA10803@pd.tnic>
-References: <20160602001157.D8BE59D7@viggo.jf.intel.com>
+From: "Yong, Jonathan" <jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] x86: Fix Apollo Lake Watchdog address in PMC driver
+Date: Thu, 02 Jun 2016 16:28:03 +0800
+Message-ID: <574FEE13.30500@intel.com>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com> <1463541972-19758-3-git-send-email-jonathan.yong@intel.com> <573BE985.1000306@roeck-us.net> <573BF421.2020503@intel.com> <573C7E0C.7050304@roeck-us.net> <20160524201316.GA5857@f23x64.localdomain> <57455A8B.1090807@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160602001157.D8BE59D7@viggo.jf.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave@sr71.net>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, dave.hansen@linux.intel.com, adrian.hunter@intel.com, ak@linux.intel.com, luto@kernel.org, dvhart@infradead.org, dougthompson@xmission.com, edubezval@gmail.com, hpa@zytor.com, mingo@redhat.com, jacob.jun.pan@linux.intel.com, kan.liang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, mchehab@osg.samsung.com, peterz@infradead.org, platform-driver-x86@vger.kernel.org, rafael.j.wysocki@intel.com, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, srinivas.pandruvada@linux.intel.com, eranian@google.com, tglx@linutronix.de, tony.luck@intel.com, ulf.hansson@linaro.org, viresh.kumar@linaro.org, vishwanath.somayaji@intel.com, zheng.z.yan@intel.com, rui.zhang@intel.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57455A8B.1090807-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 01, 2016 at 05:11:57PM -0700, Dave Hansen wrote:
-> +#define INTEL_FAM6_MODEL_CORE_YONAH		0x0E
-> +#define INTEL_FAM6_MODEL_CORE2_MEROM		0x0F
+On 05/25/2016 15:55, Yong, Jonathan wrote:
+> On 05/25/2016 04:13, Darren Hart wrote:
+>>
+>> The history of this driver is for Apollo Lake, so the question is if
+>> there exist
+>> v3 and v5 APL products, or if we only need to concern ourselves with
+>> v5 in the
+>> upstream driver.
+>>
+>> Especially given the "I don't know if this is the right way" in the cover
+>> letter, I will need an Acked-by at the very least from Qipeng.
+>>
+>
+> Hi Qipeng,
+>
+> Do you know the history behind drivers/platform/x86/intel_pmc_ipc.c?
+> Were the specs based on earlier prototypes?
+>
 
-That "MODEL_" part looks redundant too IMO - you could simply do
-
-INTEL_FAM6_NEHALEM and
-INTEL_FAM6_SKYLAKE_DESKTOP
-...
-
-and so on and it is still clear what it is.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
+Qipeng, ping?
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
