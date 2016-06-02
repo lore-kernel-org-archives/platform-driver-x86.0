@@ -1,68 +1,33 @@
-From: Dave Hansen <dave@sr71.net>
-Subject: [PATCH 15/20] x86, intel_telemetry: use Intel family name macros for telemetry driver
-Date: Wed, 01 Jun 2016 17:12:18 -0700
-Message-ID: <20160602001218.D3434548@viggo.jf.intel.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 01/20] x86, intel: Introduce macros for Intel family
+ numbers
+Date: Thu, 2 Jun 2016 08:57:15 +0200
+Message-ID: <20160602065715.GA10803@pd.tnic>
 References: <20160602001157.D8BE59D7@viggo.jf.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20160602001157.D8BE59D7@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Dave Hansen <dave@sr71.net>, dave.hansen@linux.intel.com, souvik.k.chakravarty@intel.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
+To: Dave Hansen <dave@sr71.net>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, dave.hansen@linux.intel.com, adrian.hunter@intel.com, ak@linux.intel.com, luto@kernel.org, dvhart@infradead.org, dougthompson@xmission.com, edubezval@gmail.com, hpa@zytor.com, mingo@redhat.com, jacob.jun.pan@linux.intel.com, kan.liang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, mchehab@osg.samsung.com, peterz@infradead.org, platform-driver-x86@vger.kernel.org, rafael.j.wysocki@intel.com, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, srinivas.pandruvada@linux.intel.com, eranian@google.com, tglx@linutronix.de, tony.luck@intel.com, ulf.hansson@linaro.org, viresh.kumar@linaro.org, vishwanath.somayaji@intel.com, zheng.z.yan@intel.com, rui.zhang@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Wed, Jun 01, 2016 at 05:11:57PM -0700, Dave Hansen wrote:
+> +#define INTEL_FAM6_MODEL_CORE_YONAH		0x0E
+> +#define INTEL_FAM6_MODEL_CORE2_MEROM		0x0F
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+That "MODEL_" part looks redundant too IMO - you could simply do
 
-Another straightforward replacement of magic numbers.
+INTEL_FAM6_NEHALEM and
+INTEL_FAM6_SKYLAKE_DESKTOP
+...
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
----
+and so on and it is still clear what it is.
 
- b/drivers/platform/x86/intel_telemetry_debugfs.c |    3 ++-
- b/drivers/platform/x86/intel_telemetry_pltdrv.c  |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+-- 
+Regards/Gruss,
+    Boris.
 
-diff -puN drivers/platform/x86/intel_telemetry_debugfs.c~x86-intel-families-telemetry drivers/platform/x86/intel_telemetry_debugfs.c
---- a/drivers/platform/x86/intel_telemetry_debugfs.c~x86-intel-families-telemetry	2016-06-01 15:45:08.962162099 -0700
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c	2016-06-01 15:45:08.967162327 -0700
-@@ -32,6 +32,7 @@
- #include <linux/suspend.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
- #include <asm/intel_pmc_ipc.h>
- #include <asm/intel_punit_ipc.h>
- #include <asm/intel_telemetry.h>
-@@ -331,7 +332,7 @@ static struct telemetry_debugfs_conf tel
- };
- 
- static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
--	TELEM_DEBUGFS_CPU(0x5c, telem_apl_debugfs_conf),
-+	TELEM_DEBUGFS_CPU(INTEL_FAM6_MODEL_ATOM_GOLDMONT, telem_apl_debugfs_conf),
- 	{}
- };
- 
-diff -puN drivers/platform/x86/intel_telemetry_pltdrv.c~x86-intel-families-telemetry drivers/platform/x86/intel_telemetry_pltdrv.c
---- a/drivers/platform/x86/intel_telemetry_pltdrv.c~x86-intel-families-telemetry	2016-06-01 15:45:08.964162191 -0700
-+++ b/drivers/platform/x86/intel_telemetry_pltdrv.c	2016-06-01 15:45:08.968162373 -0700
-@@ -28,6 +28,7 @@
- #include <linux/platform_device.h>
- 
- #include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
- #include <asm/intel_pmc_ipc.h>
- #include <asm/intel_punit_ipc.h>
- #include <asm/intel_telemetry.h>
-@@ -163,7 +164,7 @@ static struct telemetry_plt_config telem
- };
- 
- static const struct x86_cpu_id telemetry_cpu_ids[] = {
--	TELEM_CPU(0x5c, telem_apl_config),
-+	TELEM_CPU(INTEL_FAM6_MODEL_ATOM_GOLDMONT, telem_apl_config),
- 	{}
- };
- 
-_
+ECO tip #101: Trim your mails when you reply.
