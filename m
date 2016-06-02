@@ -1,109 +1,100 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/2] dell-wmi, dell-laptop: hide dell-smbios
-Date: Thu, 2 Jun 2016 13:10:29 +0200
-Message-ID: <20160602111029.GO29844@pali>
-References: <20160526114212.2b17ee2d@endymion>
- <20160602110333.GA2575@eudyptula.hq.kempniu.pl>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH] ideadpad: Runtime check for hw touchpad control
+Date: Thu, 2 Jun 2016 10:30:49 -0400
+Message-ID: <CA+A7VXWwhBbE0TevXSegUrsEpPw4KYBoBVRP2sS9fhTpg7RtOw@mail.gmail.com>
+References: <CA+A7VXVJ6eCXmzFmO4Ek4TxMNKFA+BoKyj0Fm7s0ycn+Ev5cTg@mail.gmail.com>
+ <1464736867-6084-1-git-send-email-jprvita@endlessm.com> <CAKErNvqfphVV5f6s9zfO-c=e279wQoGQ_Q2Z35qq11fEkdu5_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:35177 "EHLO
-	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751145AbcFBLKd (ORCPT
+Received: from mail-yw0-f195.google.com ([209.85.161.195]:36026 "EHLO
+	mail-yw0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932712AbcFBOba convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Jun 2016 07:10:33 -0400
-Received: by mail-wm0-f66.google.com with SMTP id e3so14778168wme.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Jun 2016 04:10:32 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20160602110333.GA2575@eudyptula.hq.kempniu.pl>
+	Thu, 2 Jun 2016 10:31:30 -0400
+Received: by mail-yw0-f195.google.com with SMTP id l126so7054990ywe.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Jun 2016 07:31:29 -0700 (PDT)
+In-Reply-To: <CAKErNvqfphVV5f6s9zfO-c=e279wQoGQ_Q2Z35qq11fEkdu5_A@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jean Delvare <jdelvare@suse.de>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
+To: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: Christian Hesse <list@eworm.de>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 
-On Thursday 02 June 2016 13:03:33 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > Dell-smbios is a helper module, it serves no purpose on its own, so
-> > do not present it as an option to the user. Instead, select it
-> > automatically whenever a driver which needs it is selected.
-> >=20
-> > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > Cc: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-> > Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > ---
-> >  drivers/platform/x86/Kconfig |    8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >=20
-> > --- linux-4.6.orig/drivers/platform/x86/Kconfig	2016-05-16 00:43:13=
-=2E000000000 +0200
-> > +++ linux-4.6/drivers/platform/x86/Kconfig	2016-05-26 11:18:50.0291=
-03790 +0200
-> > @@ -92,7 +92,7 @@ config ASUS_LAPTOP
-> >  	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
-> > =20
-> >  config DELL_SMBIOS
-> > -	tristate "Dell SMBIOS Support"
-> > +	tristate
-> >  	depends on DCDBAS
-> >  	default n
-> >  	---help---
-> > @@ -104,12 +104,13 @@ config DELL_SMBIOS
-> >  config DELL_LAPTOP
-> >  	tristate "Dell Laptop Extras"
-> >  	depends on X86
-> > -	depends on DELL_SMBIOS
-> >  	depends on DMI
-> >  	depends on BACKLIGHT_CLASS_DEVICE
-> >  	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
-> >  	depends on RFKILL || RFKILL =3D n
-> >  	depends on SERIO_I8042
-> > +	depends on DCDBAS
-> > +	select DELL_SMBIOS
-> >  	select POWER_SUPPLY
-> >  	select LEDS_CLASS
-> >  	select NEW_LEDS
-> > @@ -124,7 +125,8 @@ config DELL_WMI
-> >  	depends on DMI
-> >  	depends on INPUT
-> >  	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
-> > -	depends on DELL_SMBIOS
-> > +	depends on DCDBAS
-> > +	select DELL_SMBIOS
-> >  	select INPUT_SPARSEKMAP
-> >  	---help---
-> >  	  Say Y here if you want to support WMI-based hotkeys on Dell lap=
-tops.
->=20
-> While I'm not a maintainer, I feel obliged to respond as I introduced
-> the changes which this patch applies to.
+On 1 June 2016 at 00:37, Maxim Mikityanskiy <maxtram95@gmail.com> wrote=
+:
+> 2016-06-01 2:21 GMT+03:00 Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.c=
+om>:
+>> Check if disabling the i8042 AUX port has any effect on
+>> VPCCMD_R_TOUCHPAD, and use that information to decide whether or not
+>> ideapad_sync_touchpad_state() should do something.
+>>
+>> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+>> ---
+>>  drivers/platform/x86/ideapad-laptop.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfor=
+m/x86/ideapad-laptop.c
+>> index 06a837a..08dd487 100644
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -93,6 +93,7 @@ struct ideapad_private {
+>>         struct dentry *debug;
+>>         unsigned long cfg;
+>>         bool has_hw_rfkill_switch;
+>> +       bool has_hw_tp_ctrl;
+>>  };
+>>
+>>  static bool no_bt_rfkill;
+>> @@ -773,6 +774,9 @@ static void ideapad_sync_touchpad_state(struct i=
+deapad_private *priv)
+>>  {
+>>         unsigned long value;
+>>
+>> +       if (!priv->has_hw_tp_ctrl)
+>> +               return;
+>> +
+>>         /* Without reading from EC touchpad LED doesn't switch state=
+ */
+>>         if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &va=
+lue)) {
+>>                 /* Some IdeaPads don't really turn off touchpad - th=
+ey only
+>> @@ -930,6 +934,18 @@ static const struct dmi_system_id no_hw_rfkill_=
+list[] =3D {
+>>         {}
+>>  };
+>>
+>> +static bool ideapad_has_touchpad_ctrl(struct ideapad_private *priv)
+>> +{
+>> +       unsigned char param;
+>> +       unsigned long value_disabled, value_enabled;
+>> +
+>> +       i8042_command(&param, I8042_CMD_AUX_DISABLE);
+>> +       read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value_d=
+isabled);
+>> +       i8042_command(&param, I8042_CMD_AUX_ENABLE);
+>> +       read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value_e=
+nabled);
+>
+> This should be tested on a device that has touchpad control, but
+> personally I don't think it will work in that way. As
+> VPCCMD_R_TOUCHPAD returns different values independently of the actua=
+l
+> touchpad state, but synchronously with the LED state changes, I think
+> disabling the touchpad by I8042_CMD_AUX_DISABLE will not affect the
+> value read with VPCCMD_R_TOUCHPAD. So if this code will for some
+> reason work, we should test it in advance, merging it without prior
+> testing has a very big chances to break touchpad switching.
+>
 
-Well, I'm on maintainer list of dell modules, but I do care about kbuil=
-d
-configuration if it is working. So I let review of this change to other
-people who understand kbuild better.
+=46rom your previous explanation of ideapad_sync_touchpad_state() I
+understood that the LED state would reflect the touchpad state when
+you disabled the AUX port, but maybe I missed something on the way. I
+tried to reach out to colleagues and friends to see if someone has an
+Ideapad Z570, but I'm not very confident I'll find one.
 
-What I see in this change is adding "duplicate" or "redundant"
-transitive dependency from DELL_WMI to DCDBAS. But DELL_WMI does not us=
-e
-or need DCDBAS. It just needs DELL_SMIBIOS and basically DELL_WMI does
-not care what DELL_SMBIOS is using (if DCDBAS, ACPI or any other thing)=
-=2E
-So from my graph dependency point of view it is not correct, but I do
-not know how kbuild is working...
-
-So I think kbuild developers should review this change.
-
-> I like this approach and all the way I've been thinking whether it's
-> reasonable to hide configuration options that are pretty
-> self-explanatory ("Dell Laptop Extras", "Dell WMI extras") behind a
-> rather cryptic one ("Dell SMBIOS Support").  The only reason I didn't=
- go
-> the way you're suggesting in this patch is my lack of experience with
-> kbuild and the warning in Documentation/kbuild/kconfig-language.txt t=
-hat
-> "select should be used with care".
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
