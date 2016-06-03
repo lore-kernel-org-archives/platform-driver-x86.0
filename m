@@ -1,61 +1,68 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 01/20] x86, intel: Introduce macros for Intel family
- numbers
-Date: Thu, 2 Jun 2016 14:45:57 -0700
-Message-ID: <20160602214557.GB1975@f23x64.localdomain>
-References: <20160602001157.D8BE59D7@viggo.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160602001157.D8BE59D7@viggo.jf.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Dave Hansen <dave@sr71.net>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, dave.hansen@linux.intel.com, adrian.hunter@intel.com, ak@linux.intel.com, luto@kernel.org, bp@alien8.de, dougthompson@xmission.com, edubezval@gmail.com, hpa@zytor.com, mingo@redhat.com, jacob.jun.pan@linux.intel.com, kan.liang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, mchehab@osg.samsung.com, peterz@infradead.org, platform-driver-x86@vger.kernel.org, rafael.j.wysocki@intel.com, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, srinivas.pandruvada@linux.intel.com, eranian@google.com, tglx@linutronix.de, tony.luck@intel.com, ulf.hansson@linaro.org, viresh.kumar@linaro.org, vishwanath.somayaji@intel.com, zheng.z.yan@intel.com, rui.zhang@intel.com
+From: Dave Hansen <dave@sr71.net>
+Subject: [PATCH 15/20] x86, intel_telemetry: use Intel family name macros for telemetry driver
+Date: Thu, 02 Jun 2016 17:19:47 -0700
+Message-ID: <20160603001947.05102C3E@viggo.jf.intel.com>
+References: <20160603001927.F2A7D828@viggo.jf.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160603001927.F2A7D828@viggo.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, jacob.jun.pan@intel.com, Dave Hansen <dave@sr71.net>, dave.hansen@linux.intel.com, dvhart@infradead.org, souvik.k.chakravarty@intel.com, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 01, 2016 at 05:11:57PM -0700, Dave Hansen wrote:
-> 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> If you are cc'd on this code, please check _your_ code vs. the
-> model list in "intel-family.h".  Please make sure you have all
-> the models listed that you intend to.
-> 
-> Problem:
-> 
-> We have a boatload of open-coded family-6 model numbers.  Half of
-> them have these model numbers in hex and the other half in
-> decimal.  This makes grepping for them tons of fun, if you were
-> to try.
-> 
-> Solution:
-> 
-> Consolidate all the magic numbers.  Put all the definitions in
-> one header.
-> 
-> The names here are closely derived from the comments describing
-> the models from arch/x86/events/intel/core.c.  We could easily
-> make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
-> they seemed fine even with the longer versions to me.
-> 
-> Do not take any of these names too literally, like "DESKTOP"
-> or "MOBILE".  These are all colloquial names and not precise
-> descriptions of everywhere a given model will show up.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Darren Hart <dvhart@infradead.org>
 
-For platform/drivers/x86:
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
-Magic number to macro mapping verified.
+Another straightforward replacement of magic numbers.
 
-Acked-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Darren Hart <dvhart@infradead.org>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+ b/drivers/platform/x86/intel_telemetry_debugfs.c |    3 ++-
+ b/drivers/platform/x86/intel_telemetry_pltdrv.c  |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff -puN drivers/platform/x86/intel_telemetry_debugfs.c~x86-intel-families-telemetry drivers/platform/x86/intel_telemetry_debugfs.c
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c~x86-intel-families-telemetry	2016-06-02 15:19:21.988385142 -0700
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c	2016-06-02 15:19:21.993385369 -0700
+@@ -32,6 +32,7 @@
+ #include <linux/suspend.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
+ #include <asm/intel_pmc_ipc.h>
+ #include <asm/intel_punit_ipc.h>
+ #include <asm/intel_telemetry.h>
+@@ -331,7 +332,7 @@ static struct telemetry_debugfs_conf tel
+ };
+ 
+ static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
+-	TELEM_DEBUGFS_CPU(0x5c, telem_apl_debugfs_conf),
++	TELEM_DEBUGFS_CPU(INTEL_FAM6_ATOM_GOLDMONT, telem_apl_debugfs_conf),
+ 	{}
+ };
+ 
+diff -puN drivers/platform/x86/intel_telemetry_pltdrv.c~x86-intel-families-telemetry drivers/platform/x86/intel_telemetry_pltdrv.c
+--- a/drivers/platform/x86/intel_telemetry_pltdrv.c~x86-intel-families-telemetry	2016-06-02 15:19:21.990385233 -0700
++++ b/drivers/platform/x86/intel_telemetry_pltdrv.c	2016-06-02 15:19:21.995385460 -0700
+@@ -28,6 +28,7 @@
+ #include <linux/platform_device.h>
+ 
+ #include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
+ #include <asm/intel_pmc_ipc.h>
+ #include <asm/intel_punit_ipc.h>
+ #include <asm/intel_telemetry.h>
+@@ -163,7 +164,7 @@ static struct telemetry_plt_config telem
+ };
+ 
+ static const struct x86_cpu_id telemetry_cpu_ids[] = {
+-	TELEM_CPU(0x5c, telem_apl_config),
++	TELEM_CPU(INTEL_FAM6_ATOM_GOLDMONT, telem_apl_config),
+ 	{}
+ };
+ 
+_
