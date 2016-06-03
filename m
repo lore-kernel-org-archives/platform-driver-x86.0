@@ -1,34 +1,58 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 01/20] [v2] x86, intel: Introduce macros for Intel family numbers
-Date: Fri, 03 Jun 2016 02:38:59 +0200
-Message-ID: <3618590.bN2s1CDUs5@vostro.rjw.lan>
-References: <20160603001927.F2A7D828@viggo.jf.intel.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] ideapad_laptop: add an event for mic mute hotkey
+Date: Fri, 3 Jun 2016 16:33:34 +0800
+Message-ID: <575140DE.1000504@canonical.com>
+References: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160603001927.F2A7D828@viggo.jf.intel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dave Hansen <dave@sr71.net>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, jacob.jun.pan@intel.com, dave.hansen@linux.intel.com, adrian.hunter@intel.com, ak@linux.intel.com, luto@kernel.org, bp@alien8.de, dvhart@infradead.org, dougthompson@xmission.com, edubezval@gmail.com, hpa@zytor.com, mingo@redhat.com, jacob.jun.pan@linux.intel.com, kan.liang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, mchehab@osg.samsung.com, peterz@infradead.org, platform-driver-x86@vger.kernel.org, rafael.j.wysocki@intel.com, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, srinivas.pandruvada@linux.intel.com, eranian@google.com, tglx@linutronix.de, tony.luck@intel.com, ulf.hansson@linaro.org, viresh.kumar@linaro.org, vishwanath.somayaji@intel.com, rui.zhang@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:48355 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751579AbcFCIdl (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 3 Jun 2016 04:33:41 -0400
+In-Reply-To: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 
-On Thursday, June 02, 2016 05:19:27 PM Dave Hansen wrote:
+On 05/30/2016 03:26 PM, Alex Hung wrote:
+> Newer ideapad supports new mic new hotkey, and it is implemented
+> via ACPI interface.  This patch conver the mic mute event to
+> a keycode KEY_MICMUTE
 > 
-> Changes from v1:
->  * added acks from a few folks
->  * Took the redundant "MODEL_" out of the macro names (Suggested
->    by Borislav Petkov and acked by others)
+> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> If you are cc'd on this code, please check _your_ code vs. the
-> model list in "intel-family.h".  Please make sure you have all
-> the models listed that you intend to.
-> 
-> Also, rather than trickling these in via all the various
-> maintainers, should these just get pulled in to the x86 tree in
-> one go?
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 4a23fbc..aa87a42 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -567,6 +567,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
+>  static const struct key_entry ideapad_keymap[] = {
+>  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
+>  	{ KE_KEY, 7,  { KEY_CAMERA } },
+> +	{ KE_KEY, 8,  { KEY_MICMUTE } },
+>  	{ KE_KEY, 11, { KEY_F16 } },
+>  	{ KE_KEY, 13, { KEY_WLAN } },
+>  	{ KE_KEY, 16, { KEY_PROG1 } },
+> @@ -809,6 +810,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  				break;
+>  			case 13:
+>  			case 11:
+> +			case 8:
 
-Yes, please.
+fall through is easier to read
 
+> +				ideapad_input_report(priv, vpc_bit);
+> +				break;
+
+so above two lines are not necessary.
+
+>  			case 7:
+>  			case 6:
+>  				ideapad_input_report(priv, vpc_bit);
+> 
