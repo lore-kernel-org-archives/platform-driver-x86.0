@@ -1,69 +1,57 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad_laptop: add an event for mic mute hotkey
-Date: Tue, 7 Jun 2016 14:54:04 -0700
-Message-ID: <20160607215404.GB3829@f23x64.localdomain>
-References: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
- <575140DE.1000504@canonical.com>
+Subject: Re: [PATCH 2/2] x86: Fix Apollo Lake Watchdog address in PMC driver
+Date: Tue, 7 Jun 2016 15:03:23 -0700
+Message-ID: <20160607220323.GA28348@f23x64.localdomain>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
+ <1463541972-19758-3-git-send-email-jonathan.yong@intel.com>
+ <573BE985.1000306@roeck-us.net>
+ <573BF421.2020503@intel.com>
+ <573C7E0C.7050304@roeck-us.net>
+ <20160524201316.GA5857@f23x64.localdomain>
+ <57455A8B.1090807@intel.com>
+ <574FEE13.30500@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:52308 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:56893 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933273AbcFGVyG (ORCPT
+	with ESMTP id S932652AbcFGWDZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Jun 2016 17:54:06 -0400
+	Tue, 7 Jun 2016 18:03:25 -0400
 Content-Disposition: inline
-In-Reply-To: <575140DE.1000504@canonical.com>
+In-Reply-To: <574FEE13.30500@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org
+To: "Yong, Jonathan" <jonathan.yong@intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, platform-driver-x86@vger.kernel.org, qipeng.zha@intel.com
 
-On Fri, Jun 03, 2016 at 04:33:34PM +0800, Ike Panhc wrote:
-> On 05/30/2016 03:26 PM, Alex Hung wrote:
-> > Newer ideapad supports new mic new hotkey, and it is implemented
-> > via ACPI interface.  This patch conver the mic mute event to
-> > a keycode KEY_MICMUTE
+On Thu, Jun 02, 2016 at 04:28:03PM +0800, Yong, Jonathan wrote:
+> On 05/25/2016 15:55, Yong, Jonathan wrote:
+> > On 05/25/2016 04:13, Darren Hart wrote:
+> > > 
+> > > The history of this driver is for Apollo Lake, so the question is if
+> > > there exist
+> > > v3 and v5 APL products, or if we only need to concern ourselves with
+> > > v5 in the
+> > > upstream driver.
+> > > 
+> > > Especially given the "I don't know if this is the right way" in the cover
+> > > letter, I will need an Acked-by at the very least from Qipeng.
+> > > 
 > > 
-> > Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> > ---
-> >  drivers/platform/x86/ideapad-laptop.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> > Hi Qipeng,
 > > 
-> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> > index 4a23fbc..aa87a42 100644
-> > --- a/drivers/platform/x86/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > @@ -567,6 +567,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
-> >  static const struct key_entry ideapad_keymap[] = {
-> >  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
-> >  	{ KE_KEY, 7,  { KEY_CAMERA } },
-> > +	{ KE_KEY, 8,  { KEY_MICMUTE } },
-> >  	{ KE_KEY, 11, { KEY_F16 } },
-> >  	{ KE_KEY, 13, { KEY_WLAN } },
-> >  	{ KE_KEY, 16, { KEY_PROG1 } },
-> > @@ -809,6 +810,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
-> >  				break;
-> >  			case 13:
-> >  			case 11:
-> > +			case 8:
-> 
-> fall through is easier to read
-> 
-> > +				ideapad_input_report(priv, vpc_bit);
-> > +				break;
-> 
-> so above two lines are not necessary.
-
-Are you happy with the changes otherwise Ike?
-
-> 
-> >  			case 7:
-> >  			case 6:
-> >  				ideapad_input_report(priv, vpc_bit);
+> > Do you know the history behind drivers/platform/x86/intel_pmc_ipc.c?
+> > Were the specs based on earlier prototypes?
 > > 
+> 
+> Qipeng, ping?
+> 
 
-Thanks,
+Jonathan, can you follow-up with Qiping (possibly internally) and get back to
+the list with a definitive response? Getting these into 4.7-rc would be good so
+we don't have to push it back via stable, but we need to be sure it's the right
+fix.
 
 -- 
 Darren Hart
