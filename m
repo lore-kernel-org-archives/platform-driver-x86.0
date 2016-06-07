@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v2 2/4] dell-wmi: Sort WMI event codes and update comments
-Date: Wed,  8 Jun 2016 01:32:25 +0200
-Message-ID: <1465342347-20635-3-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH v2 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed,  8 Jun 2016 01:32:26 +0200
+Message-ID: <1465342347-20635-4-git-send-email-pali.rohar@gmail.com>
 References: <1465342347-20635-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,88 +13,105 @@ To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, G
 Cc: Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+ACPI DSDT tables have defined other WMI codes, but does not contain any
+description when those codes are emitted. Some other codes can be found=
+ in
+logs on internet. In this patch are all which I saw, but lot of them ar=
+e
+not tested properly (e.g. for duplicate events with AT keyboard). Now w=
+e
+have all WMI event codes at one place and in future after proper testin=
+g
+those codes can be correctly enabled or disabled...
+
 Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 Tested-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 ---
- drivers/platform/x86/dell-wmi.c |   29 ++++++++++++++++-------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ drivers/platform/x86/dell-wmi.c |   35 +++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
 l-wmi.c
-index 4d23c91..6750604 100644
+index 6750604..a406f01 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -88,29 +88,29 @@ static const struct dmi_system_id dell_wmi_smbios_l=
-ist[] __initconst =3D {
- static const struct key_entry dell_wmi_legacy_keymap[] __initconst =3D=
- {
- 	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
-=20
--	{ KE_KEY, 0xe009, { KEY_EJECTCD } },
--
--	/* These also contain the brightness level at offset 6 */
--	{ KE_KEY, 0xe006, { KEY_BRIGHTNESSUP } },
--	{ KE_KEY, 0xe005, { KEY_BRIGHTNESSDOWN } },
-+	/* Key code is followed by brightness level */
-+	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
-+	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
-=20
- 	/* Battery health status button */
--	{ KE_KEY, 0xe007, { KEY_BATTERY } },
-+	{ KE_KEY,    0xe007, { KEY_BATTERY } },
-=20
--	/* Radio devices state change */
-+	/* Radio devices state change, key code is followed by additional inf=
-ormation */
- 	{ KE_IGNORE, 0xe008, { KEY_RFKILL } },
-=20
--	/* The next device is at offset 6, the active devices are at
--	   offset 8 and the attached devices at offset 10 */
--	{ KE_KEY, 0xe00b, { KEY_SWITCHVIDEOMODE } },
-+	{ KE_KEY,    0xe009, { KEY_EJECTCD } },
-+
-+	/* Key code is followed by: next device, active devices, attached dev=
-ices */
-+	{ KE_KEY,    0xe00b, { KEY_SWITCHVIDEOMODE } },
-=20
-+	/* Key code is followed by keyboard illumination level */
- 	{ KE_IGNORE, 0xe00c, { KEY_KBDILLUMTOGGLE } },
-=20
+@@ -109,6 +109,9 @@ static const struct key_entry dell_wmi_legacy_keyma=
+p[] __initconst =3D {
  	/* BIOS error detected */
  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
 =20
++	/* Unknown, defined in ACPI DSDT */
++	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
++
  	/* Wifi Catcher */
--	{ KE_KEY, 0xe011, {KEY_PROG2 } },
-+	{ KE_KEY,    0xe011, { KEY_PROG2 } },
+ 	{ KE_KEY,    0xe011, { KEY_PROG2 } },
 =20
- 	/* Ambient light sensor toggle */
- 	{ KE_IGNORE, 0xe013, { KEY_RESERVED } },
-@@ -118,12 +118,14 @@ static const struct key_entry dell_wmi_legacy_key=
+@@ -117,21 +120,45 @@ static const struct key_entry dell_wmi_legacy_key=
 map[] __initconst =3D {
+=20
  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
 =20
++	/* Unknown, defined in ACPI DSDT */
++	/* { KE_IGNORE, 0xe023, { KEY_RESERVED } }, */
++
++	/* Untested, Dell Instant Launch key on Inspiron 7520 */
++	/* { KE_IGNORE, 0xe024, { KEY_RESERVED } }, */
++
  	/* Dell Instant Launch key */
--	{ KE_KEY, 0xe025, { KEY_PROG4 } },
--	{ KE_KEY, 0xe029, { KEY_PROG4 } },
-+	{ KE_KEY,    0xe025, { KEY_PROG4 } },
+ 	{ KE_KEY,    0xe025, { KEY_PROG4 } },
 =20
  	/* Audio panel key */
  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
 =20
-+	/* Dell Instant Launch key */
-+	{ KE_KEY,    0xe029, { KEY_PROG4 } },
++	/* Untested, Multimedia key on Dell Vostro 3560 */
++	/* { KE_IGNORE, 0xe028, { KEY_RESERVED } }, */
++
+ 	/* Dell Instant Launch key */
+ 	{ KE_KEY,    0xe029, { KEY_PROG4 } },
+=20
++	/* Untested, Windows Mobility Center button on Inspiron 7520 */
++	/* { KE_IGNORE, 0xe02a, { KEY_RESERVED } }, */
++
++	/* Unknown, defined in ACPI DSDT */
++	/* { KE_IGNORE, 0xe02b, { KEY_RESERVED } }, */
++
++	/* Untested, Dell Audio With Preset Switch button on Inspiron 7520 */
++	/* { KE_IGNORE, 0xe02c, { KEY_RESERVED } }, */
 +
  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
  	{ KE_IGNORE, 0xe030, { KEY_VOLUMEUP } },
  	{ KE_IGNORE, 0xe033, { KEY_KBDILLUMUP } },
-@@ -146,6 +148,7 @@ static const struct key_entry dell_wmi_legacy_keyma=
-p[] __initconst =3D {
+ 	{ KE_IGNORE, 0xe034, { KEY_KBDILLUMDOWN } },
+ 	{ KE_IGNORE, 0xe03a, { KEY_CAPSLOCK } },
+=20
++	/* NIC Link is Up */
++	{ KE_IGNORE, 0xe043, { KEY_RESERVED } },
++
++	/* NIC Link is Down */
++	{ KE_IGNORE, 0xe044, { KEY_RESERVED } },
++
+ 	/*
+ 	 * This entry is very suspicious!
+ 	 * Originally Matthew Garrett created this dell-wmi driver specially =
+for
+@@ -144,7 +171,15 @@ static const struct key_entry dell_wmi_legacy_keym=
+ap[] __initconst =3D {
+ 	 */
+ 	{ KE_IGNORE, 0xe045, { KEY_NUMLOCK } },
+=20
++	/* Scroll lock and also going to tablet mode on portable devices */
+ 	{ KE_IGNORE, 0xe046, { KEY_SCROLLLOCK } },
++
++	/* Untested, going from tablet mode on portable devices */
++	/* { KE_IGNORE, 0xe047, { KEY_RESERVED } }, */
++
++	/* Dell Support Center key */
++	{ KE_IGNORE, 0xe06e, { KEY_RESERVED } },
++
  	{ KE_IGNORE, 0xe0f7, { KEY_MUTE } },
  	{ KE_IGNORE, 0xe0f8, { KEY_VOLUMEDOWN } },
  	{ KE_IGNORE, 0xe0f9, { KEY_VOLUMEUP } },
-+
- 	{ KE_END, 0 }
- };
-=20
 --=20
 1.7.9.5
