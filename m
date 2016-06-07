@@ -1,58 +1,121 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] x86: Fix Apollo Lake Watchdog address in PMC driver
-Date: Tue, 7 Jun 2016 15:03:23 -0700
-Message-ID: <20160607220323.GA28348@f23x64.localdomain>
-References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
- <1463541972-19758-3-git-send-email-jonathan.yong@intel.com>
- <573BE985.1000306@roeck-us.net>
- <573BF421.2020503@intel.com>
- <573C7E0C.7050304@roeck-us.net>
- <20160524201316.GA5857@f23x64.localdomain>
- <57455A8B.1090807@intel.com>
- <574FEE13.30500@intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 2/4] dell-wmi: Sort WMI event codes and update comments
+Date: Wed, 8 Jun 2016 00:03:24 +0200
+Message-ID: <20160607220324.GN29844@pali>
+References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
+ <1463916983-12562-3-git-send-email-pali.rohar@gmail.com>
+ <20160602104142.GA2456@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:56893 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932652AbcFGWDZ (ORCPT
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:33694 "EHLO
+	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932652AbcFGWD2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Jun 2016 18:03:25 -0400
+	Tue, 7 Jun 2016 18:03:28 -0400
 Content-Disposition: inline
-In-Reply-To: <574FEE13.30500@intel.com>
+In-Reply-To: <20160602104142.GA2456@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Yong, Jonathan" <jonathan.yong@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, platform-driver-x86@vger.kernel.org, qipeng.zha@intel.com
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Jun 02, 2016 at 04:28:03PM +0800, Yong, Jonathan wrote:
-> On 05/25/2016 15:55, Yong, Jonathan wrote:
-> > On 05/25/2016 04:13, Darren Hart wrote:
-> > > 
-> > > The history of this driver is for Apollo Lake, so the question is if
-> > > there exist
-> > > v3 and v5 APL products, or if we only need to concern ourselves with
-> > > v5 in the
-> > > upstream driver.
-> > > 
-> > > Especially given the "I don't know if this is the right way" in the cover
-> > > letter, I will need an Acked-by at the very least from Qipeng.
-> > > 
-> > 
-> > Hi Qipeng,
-> > 
-> > Do you know the history behind drivers/platform/x86/intel_pmc_ipc.c?
-> > Were the specs based on earlier prototypes?
-> > 
-> 
-> Qipeng, ping?
-> 
+On Thursday 02 June 2016 12:41:42 Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>=20
+> My guess is that Darren won't let you off without at least a short
+> commit message.
 
-Jonathan, can you follow-up with Qiping (possibly internally) and get back to
-the list with a definitive response? Getting these into 4.7-rc would be good so
-we don't have to push it back via stable, but we need to be sure it's the right
-fix.
+I have no idea what else to write. I think that description is enough.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+> > ---
+> >  drivers/platform/x86/dell-wmi.c |   31 ++++++++++++++++++---------=
+----
+> >  1 file changed, 18 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86=
+/dell-wmi.c
+> > index 4d23c91..363d927 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -86,31 +86,32 @@ static const struct dmi_system_id dell_wmi_smbi=
+os_list[] __initconst =3D {
+> >   */
+> > =20
+> >  static const struct key_entry dell_wmi_legacy_keymap[] __initconst=
+ =3D {
+> > -	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
+> > =20
+> > -	{ KE_KEY, 0xe009, { KEY_EJECTCD } },
+> > +	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
+> > =20
+> > -	/* These also contain the brightness level at offset 6 */
+> > -	{ KE_KEY, 0xe006, { KEY_BRIGHTNESSUP } },
+> > -	{ KE_KEY, 0xe005, { KEY_BRIGHTNESSDOWN } },
+> > +	/* These also contain the brightness level after key code */
+> > +	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
+> > +	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
+>=20
+> These two entries were left unsorted.
+
+Thanks, I will fix it.
+
+> > =20
+> >  	/* Battery health status button */
+> > -	{ KE_KEY, 0xe007, { KEY_BATTERY } },
+> > +	{ KE_KEY,    0xe007, { KEY_BATTERY } },
+> > =20
+> > -	/* Radio devices state change */
+> > +	/* Radio devices state change, also contains additional informati=
+on */
+> >  	{ KE_IGNORE, 0xe008, { KEY_RFKILL } },
+> > =20
+> > -	/* The next device is at offset 6, the active devices are at
+> > -	   offset 8 and the attached devices at offset 10 */
+> > -	{ KE_KEY, 0xe00b, { KEY_SWITCHVIDEOMODE } },
+> > +	{ KE_KEY,    0xe009, { KEY_EJECTCD } },
+> > =20
+> > +	/* After key code is: next device, active devices, attached devic=
+es */
+> > +	{ KE_KEY,    0xe00b, { KEY_SWITCHVIDEOMODE } },
+> > +
+> > +	/* Also contains keyboard illumination level after key code */
+>=20
+> I know I'm being really pedantic here, but as this is a cleanup patch=
+,
+> maybe it makes sense to unify the comments a bit?  After this patch i=
+s
+> applied, the comments are:
+>=20
+>     /* These also contain the brightness level after key code */
+>     /* Radio devices state change, also contains additional informati=
+on */
+>     /* After key code is: next device, active devices, attached devic=
+es */
+>     /* Also contains keyboard illumination level after key code */
+>=20
+> How about changing them to something like:
+>=20
+>     /* Key code is followed by brightness level */
+>     /* Radio devices state change, key code is followed by additional=
+ information */
+>     /* Key code is followed by: next device, active devices, attached=
+ devices */
+>     /* Key code is followed by keyboard illumination level */
+
+No problem, I will change it.
+
+> And looking at the bigger picture, do you think these comments
+> (especially the generic one: "also contains additional information") =
+are
+> actually needed?  Anything that follows the key code is ignored by
+> kernel code anyway.
+
+Currently it is ignored, but it is the only documentation which we have
+for these WMI events. Somebody in future can use these documentation
+information and extend code to process also these information...
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
