@@ -1,167 +1,142 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 4/4] dell-wmi: Rework code for generating sparse keymap
- and processing WMI events
-Date: Wed, 8 Jun 2016 00:30:11 +0200
-Message-ID: <20160607223011.GP29844@pali>
+Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 8 Jun 2016 01:00:08 +0200
+Message-ID: <20160607230008.GQ29844@pali>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <1463916983-12562-5-git-send-email-pali.rohar@gmail.com>
- <20160602104211.GC2456@eudyptula.hq.kempniu.pl>
+ <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
+ <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:35281 "EHLO
+	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752248AbcFGXAS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 7 Jun 2016 19:00:18 -0400
 Content-Disposition: inline
-In-Reply-To: <20160602104211.GC2456@eudyptula.hq.kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thursday 02 June 2016 12:42:11 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > -static void dell_wmi_process_key(int reported_key)
-> > +static void dell_wmi_process_key(int type, int code)
-> >  {
-> >  	const struct key_entry *key;
+On Friday 27 May 2016 00:04:23 Gabriele Mazzotta wrote:
+> On 22/05/2016 13:36, Pali Roh=C3=A1r wrote:
+> > ACPI DSDT tables have defined other WMI codes, but does not contain=
+ any
+> > description when those codes are emitted. Some other codes can be f=
+ound in
+> > logs on internet. In this patch are all which I saw, but lot of the=
+m are
+> > not tested properly (e.g. for duplicate events with AT keyboard). N=
+ow we
+> > have all WMI event codes at one place and in future after proper te=
+sting
+> > those codes can be correctly enabled or disabled...
+> >=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c |   32 +++++++++++++++++++++++++++=
++++++
+> >  1 file changed, 32 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86=
+/dell-wmi.c
+> > index 363d927..7aac1dc 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -110,6 +110,9 @@ static const struct key_entry dell_wmi_legacy_k=
+eymap[] __initconst =3D {
+> >  	/* BIOS error detected */
+> >  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
 > > =20
-> >  	key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
-> > -						reported_key);
-> > +						(type << 16) | code);
-> >  	if (!key) {
-> > -		pr_info("Unknown key with scancode 0x%x pressed\n",
-> > -			reported_key);
-> > +		pr_info("Unknown key with type 0x%x and code 0x%x pressed\n",
-> > +			type, code);
->=20
-> Since you updated the switch cases below so that each of them now
-> consists of four digits, maybe it's a good idea to change the format
-> specifiers for type and code to %04x for coherency?
-
-Ok.
-
-> >  		return;
-> >  	}
-> > =20
-> > -	pr_debug("Key %x pressed\n", reported_key);
-> > +	pr_debug("Key with type 0x%x and code 0x%x pressed\n", type, code=
-);
->=20
-> The same applies here.
-
-Ok.
-
-> > +		case 0x0000:
-> > +			/* One key pressed or event occurred */
-> > +			if (len > 2)
-> > +				dell_wmi_process_key(0x0000, buffer_entry[2]);
->=20
-> I am sure you spent way more time analysing this than me, but is this
-> documented anywhere?
-
-Yes, this is the only documented part. Read my email linked to commit
-message for more details.
-
-> Technically speaking, this is a behavioral change
-> which causes events to be lost on any Dell model which is capable of
-> stuffing more than one key code into a single type 0x0000 WMI event (=
-not
-> that I know of any such model).
-
-I do not think. Other values in that buffer are not scan codes of other
-keys, but additional events. See that table with comments (those
-comments which you suggested to change).
-
-> > +			/* Other entries in buffer could contain additional information=
- */
->=20
-> This comment exceeds 80 characters, but do you think it is needed at
-> all?  What does the reader gain by reading it?  Any additional
-> information that follows the key code is ignored by kernel code anywa=
-y.
-
-It is just documentation purpose, to understand why we are processing
-only buffer_entry[2] and why are ignoring anything else after it.
-
-> >  			break;
-
-> > @@ -576,21 +525,71 @@ static int __init dell_wmi_input_setup(void)
-> >  		goto err_free_dev;
-> >  	}
-> > =20
-> > +	keymap =3D kcalloc(dmi_results.keymap_size +
-> > +			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
-> > +			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
-> > +			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
-> > +			 1,
-> > +			 sizeof(struct key_entry), GFP_KERNEL);
-> > +	if (!keymap) {
-> > +		err =3D -ENOMEM;
-> > +		goto err_free_dev;
->=20
-> You're potentially leaking dmi_results.keymap here.
-
-You are right, I will fix it.
-
-> > +	}
+> > +	/* Unknown, defined in ACPI DSDT */
+> > +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
 > > +
-> > +	/* Append table with events of type 0x0010 which comes from DMI *=
-/
-> >  	if (dmi_results.keymap) {
-> > -		dell_new_hk_type =3D true;
-> > +		for (i =3D 0; i < dmi_results.keymap_size; i++) {
-> > +			keymap[pos] =3D dmi_results.keymap[i];
-> > +			keymap[pos].code |=3D (0x0010 << 16);
-> > +			pos++;
-> > +		}
-> > +		kfree(dmi_results.keymap);
-> > +	}
 >=20
-> Nit, but is the enclosing conditional expression needed any more, now
-> that you got rid of dell_new_hk_type?  If the 0xB2 DMI table is not
-> found then dmi_results.keymap_size will be 0 and thus the for loop ab=
-ove
-> doesn't do anything and it is okay to pass a null pointer to kfree().
+> I'm interested in knowing what's the meaning of this 0xe00e. This
+> event is sent multiple times when I suspend/resume my laptop and
+> it's definitely not a keypress.
 
-Yes, it is not needed anymore. I will delete it.
+=46rom DSDT dumps which I have seen, I guess it could be something with
+battery charging... but that is only my guess.
 
-> > =20
-> > -		err =3D sparse_keymap_setup(dell_wmi_input_dev,
-> > -					  dmi_results.keymap, NULL);
-> > +	/* Append table with extra events of type 0x0010 which are not in=
- DMI */
-> > +	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0010); i++) {
-> > +		const struct key_entry *entry =3D &dell_wmi_keymap_type_0010[i];
-> > =20
-> >  		/*
-> > -		 * Sparse keymap library makes a copy of keymap so we
-> > -		 * don't need the original one that was allocated.
-> > +		 * Check if we've already found this scancode.  This takes
-> > +		 * quadratic time, but it doesn't matter unless the list
-> > +		 * of extra keys gets very long.
-> >  		 */
-> > -		kfree(dmi_results.keymap);
-> > -	} else {
-> > -		err =3D sparse_keymap_setup(dell_wmi_input_dev,
-> > -					  dell_wmi_legacy_keymap, NULL);
-> > +		if (dmi_results.keymap_size &&
-> > +		    have_scancode(entry->code | (0x0010 << 16),
-> > +				  keymap, dmi_results.keymap_size)
-> > +		   )
-> > +			continue;
+Mario, do you have any idea, what these unknown events are?
+
+> Anyway, I've been using this patch set and didn't notice any issue, s=
+o
 >=20
-> Is the first part of this conditional expression really needed?  If
-> dmi_results.keymap_size is 0 then have_scancode() will simply return
-> false, so the only disadvantage of removing this check is the overhea=
-d
-> of calling have_scancode() for every iteration of the loop, but I
-> believe that overhead is negligible as this is not performance-critic=
-al
-> code.
-
-It is linear scan of whole table and so above two loops has something
-like quadratic time complexity. List dell_wmi_keymap_type_0010 is not
-too long for now, so it is OK. But still it is better not to call
-have_scancode() everytime if it is not needed. Once we have big list of
-events we could switch code to use some hash tables...
+> Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+>=20
+> >  	/* Wifi Catcher */
+> >  	{ KE_KEY,    0xe011, { KEY_PROG2 } },
+> > =20
+> > @@ -118,21 +121,45 @@ static const struct key_entry dell_wmi_legacy=
+_keymap[] __initconst =3D {
+> > =20
+> >  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+> > =20
+> > +	/* Unknown, defined in ACPI DSDT */
+> > +	/* { KE_IGNORE, 0xe023, { KEY_RESERVED } }, */
+> > +
+> > +	/* Untested, Dell Instant Launch key on Inspiron 7520 */
+> > +	/* { KE_IGNORE, 0xe024, { KEY_RESERVED } }, */
+> > +
+> >  	/* Dell Instant Launch key */
+> >  	{ KE_KEY,    0xe025, { KEY_PROG4 } },
+> > =20
+> >  	/* Audio panel key */
+> >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+> > =20
+> > +	/* Untested, Multimedia key on Dell Vostro 3560 */
+> > +	/* { KE_IGNORE, 0xe028, { KEY_RESERVED } }, */
+> > +
+> >  	/* Dell Instant Launch key */
+> >  	{ KE_KEY,    0xe029, { KEY_PROG4 } },
+> > =20
+> > +	/* Untested, Windows Mobility Center button on Inspiron 7520 */
+> > +	/* { KE_IGNORE, 0xe02a, { KEY_RESERVED } }, */
+> > +
+> > +	/* Unknown, defined in ACPI DSDT */
+> > +	/* { KE_IGNORE, 0xe02b, { KEY_RESERVED } }, */
+> > +
+> > +	/* Untested, Dell Audio With Preset Switch button on Inspiron 752=
+0 */
+> > +	/* { KE_IGNORE, 0xe02c, { KEY_RESERVED } }, */
+> > +
+> >  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+> >  	{ KE_IGNORE, 0xe030, { KEY_VOLUMEUP } },
+> >  	{ KE_IGNORE, 0xe033, { KEY_KBDILLUMUP } },
+> >  	{ KE_IGNORE, 0xe034, { KEY_KBDILLUMDOWN } },
+> >  	{ KE_IGNORE, 0xe03a, { KEY_CAPSLOCK } },
+> > =20
+> > +	/* NIC Link is Up */
+> > +	{ KE_IGNORE, 0xe043, { KEY_RESERVED } },
+> > +
+> > +	/* NIC Link is Down */
+> > +	{ KE_IGNORE, 0xe044, { KEY_RESERVED } },
+> > +
+> >  	/*
+> >  	 * This entry is very suspicious!
+> >  	 * Originally Matthew Garrett created this dell-wmi driver specia=
+lly for
+> > @@ -145,7 +172,12 @@ static const struct key_entry dell_wmi_legacy_=
+keymap[] __initconst =3D {
+> >  	 */
+> >  	{ KE_IGNORE, 0xe045, { KEY_NUMLOCK } },
+> > =20
+> > +	/* Scroll lock and also going to tablet mode on portable devices =
+*/
+> >  	{ KE_IGNORE, 0xe046, { KEY_SCROLLLOCK } },
+> > +
+> > +	/* Untested, going from tablet mode on portable devices */
+> > +	/* { KE_IGNORE, 0xe047, { KEY_RESERVED } }, */
+> > +
+> >  	{ KE_IGNORE, 0xe0f7, { KEY_MUTE } },
+> >  	{ KE_IGNORE, 0xe0f8, { KEY_VOLUMEDOWN } },
+> >  	{ KE_IGNORE, 0xe0f9, { KEY_VOLUMEUP } },
+> >=20
 
 --=20
 Pali Roh=C3=A1r
