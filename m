@@ -1,70 +1,68 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] ideapad_laptop: add an event for mic mute hotkey
-Date: Wed, 8 Jun 2016 11:26:44 +0800
-Message-ID: <57579074.1080303@canonical.com>
-References: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
- <575140DE.1000504@canonical.com> <20160607215404.GB3829@f23x64.localdomain>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 8 Jun 2016 06:02:29 +0000
+Message-ID: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
+References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
+ <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
+ <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
+ <20160607230008.GQ29844@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:54775 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752845AbcFHD0y (ORCPT
+Received: from ausxippc101.us.dell.com ([143.166.85.207]:12540 "EHLO
+	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753472AbcFHGCc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Jun 2016 23:26:54 -0400
-In-Reply-To: <20160607215404.GB3829@f23x64.localdomain>
+	Wed, 8 Jun 2016 02:02:32 -0400
+In-Reply-To: <20160607230008.GQ29844@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org
+To: pali.rohar@gmail.com, gabriele.mzt@gmail.com
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 06/08/2016 05:54 AM, Darren Hart wrote:
-> On Fri, Jun 03, 2016 at 04:33:34PM +0800, Ike Panhc wrote:
->> On 05/30/2016 03:26 PM, Alex Hung wrote:
->>> Newer ideapad supports new mic new hotkey, and it is implemented
->>> via ACPI interface.  This patch conver the mic mute event to
->>> a keycode KEY_MICMUTE
->>>
->>> Signed-off-by: Alex Hung <alex.hung@canonical.com>
->>> ---
->>>  drivers/platform/x86/ideapad-laptop.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->>> index 4a23fbc..aa87a42 100644
->>> --- a/drivers/platform/x86/ideapad-laptop.c
->>> +++ b/drivers/platform/x86/ideapad-laptop.c
->>> @@ -567,6 +567,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
->>>  static const struct key_entry ideapad_keymap[] = {
->>>  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
->>>  	{ KE_KEY, 7,  { KEY_CAMERA } },
->>> +	{ KE_KEY, 8,  { KEY_MICMUTE } },
->>>  	{ KE_KEY, 11, { KEY_F16 } },
->>>  	{ KE_KEY, 13, { KEY_WLAN } },
->>>  	{ KE_KEY, 16, { KEY_PROG1 } },
->>> @@ -809,6 +810,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
->>>  				break;
->>>  			case 13:
->>>  			case 11:
->>> +			case 8:
->>
->> fall through is easier to read
->>
->>> +				ideapad_input_report(priv, vpc_bit);
->>> +				break;
->>
->> so above two lines are not necessary.
-> 
-> Are you happy with the changes otherwise Ike?
-> 
->>
->>>  			case 7:
->>>  			case 6:
->>>  				ideapad_input_report(priv, vpc_bit);
->>>
-> 
-> Thanks,
-> 
-
-Yes. Looks good to me.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBKdW5lIDcsIDIwMTYgNjow
+MCBQTQ0KPiBUbzogR2FicmllbGUgTWF6em90dGEgPGdhYnJpZWxlLm16dEBnbWFpbC5jb20+OyBM
+aW1vbmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzog
+TWF0dGhldyBHYXJyZXR0IDxtamc1OUBzcmNmLnVjYW0ub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2
+aGFydEBpbmZyYWRlYWQub3JnPjsgTWljaGHFgiBLxJlwaWXFhCA8a2VybmVsQGtlbXBuaXUucGw+
+OyBBbmR5IEx1dG9taXJza2kNCj4gPGx1dG9Aa2VybmVsLm9yZz47IEFsZXggSHVuZyA8YWxleC5o
+dW5nQGNhbm9uaWNhbC5jb20+OyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAz
+LzRdIGRlbGwtd21pOiBBZGQgaW5mb3JtYXRpb24gYWJvdXQgb3RoZXIgV01JIGV2ZW50DQo+IGNv
+ZGVzDQo+IA0KPiBPbiBGcmlkYXkgMjcgTWF5IDIwMTYgMDA6MDQ6MjMgR2FicmllbGUgTWF6em90
+dGEgd3JvdGU6DQo+ID4gT24gMjIvMDUvMjAxNiAxMzozNiwgUGFsaSBSb2jDoXIgd3JvdGU6DQo+
+ID4gPiBBQ1BJIERTRFQgdGFibGVzIGhhdmUgZGVmaW5lZCBvdGhlciBXTUkgY29kZXMsIGJ1dCBk
+b2VzIG5vdCBjb250YWluDQo+ID4gPiBhbnkgZGVzY3JpcHRpb24gd2hlbiB0aG9zZSBjb2RlcyBh
+cmUgZW1pdHRlZC4gU29tZSBvdGhlciBjb2RlcyBjYW4NCj4gPiA+IGJlIGZvdW5kIGluIGxvZ3Mg
+b24gaW50ZXJuZXQuIEluIHRoaXMgcGF0Y2ggYXJlIGFsbCB3aGljaCBJIHNhdywgYnV0DQo+ID4g
+PiBsb3Qgb2YgdGhlbSBhcmUgbm90IHRlc3RlZCBwcm9wZXJseSAoZS5nLiBmb3IgZHVwbGljYXRl
+IGV2ZW50cyB3aXRoDQo+ID4gPiBBVCBrZXlib2FyZCkuIE5vdyB3ZSBoYXZlIGFsbCBXTUkgZXZl
+bnQgY29kZXMgYXQgb25lIHBsYWNlIGFuZCBpbg0KPiA+ID4gZnV0dXJlIGFmdGVyIHByb3BlciB0
+ZXN0aW5nIHRob3NlIGNvZGVzIGNhbiBiZSBjb3JyZWN0bHkgZW5hYmxlZCBvcg0KPiBkaXNhYmxl
+ZC4uLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFy
+QGdtYWlsLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwt
+d21pLmMgfCAgIDMyDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+ID4gYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXdtaS5jIGluZGV4IDM2M2Q5MjcuLjdhYWMxZGMgMTAwNjQ0DQo+ID4gPiAt
+LS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPiArKysgYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPiBAQCAtMTEwLDYgKzExMCw5IEBAIHN0YXRp
+YyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5DQo+IGRlbGxfd21pX2xlZ2FjeV9rZXltYXBbXSBfX2lu
+aXRjb25zdCA9IHsNCj4gPiA+ICAJLyogQklPUyBlcnJvciBkZXRlY3RlZCAqLw0KPiA+ID4gIAl7
+IEtFX0lHTk9SRSwgMHhlMDBkLCB7IEtFWV9SRVNFUlZFRCB9IH0sDQo+ID4gPg0KPiA+ID4gKwkv
+KiBVbmtub3duLCBkZWZpbmVkIGluIEFDUEkgRFNEVCAqLw0KPiA+ID4gKwkvKiB7IEtFX0lHTk9S
+RSwgMHhlMDBlLCB7IEtFWV9SRVNFUlZFRCB9IH0sICovDQo+ID4gPiArDQo+ID4NCj4gPiBJJ20g
+aW50ZXJlc3RlZCBpbiBrbm93aW5nIHdoYXQncyB0aGUgbWVhbmluZyBvZiB0aGlzIDB4ZTAwZS4g
+VGhpcw0KPiA+IGV2ZW50IGlzIHNlbnQgbXVsdGlwbGUgdGltZXMgd2hlbiBJIHN1c3BlbmQvcmVz
+dW1lIG15IGxhcHRvcCBhbmQgaXQncw0KPiA+IGRlZmluaXRlbHkgbm90IGEga2V5cHJlc3MuDQo+
+IA0KPiBGcm9tIERTRFQgZHVtcHMgd2hpY2ggSSBoYXZlIHNlZW4sIEkgZ3Vlc3MgaXQgY291bGQg
+YmUgc29tZXRoaW5nIHdpdGggYmF0dGVyeQ0KPiBjaGFyZ2luZy4uLiBidXQgdGhhdCBpcyBvbmx5
+IG15IGd1ZXNzLg0KPiANCj4gTWFyaW8sIGRvIHlvdSBoYXZlIGFueSBpZGVhLCB3aGF0IHRoZXNl
+IHVua25vd24gZXZlbnRzIGFyZT8NCg0KT2ZmLWhhbmQgSSdtIG5vdCBzdXJlLCBpdCB3b3VsZCBy
+ZXF1aXJlIHNvbWUgbW9yZSBkaWdnaW5nLg0KDQpDYW4geW91IHBsZWFzZSByZW1pbmQgbWUgd2hh
+dCBtb2RlbCBudW1iZXJzIGFuZCBCSU9TIGNvbWJpbmF0aW9ucyB5b3UgaGF2ZSANCmZvdW5kIGUw
+MGUgaW4gRFNEVCBhbmQgd2hhdCBjb250ZXh0IHRoZSBldmVudHMgYXJlIGFjdHVhbGx5IGhhcHBl
+bmluZz8gICANCkFueXRoaW5nIHJlbGVhc2VkIGluIHRoZSBwYXN0IHR3byB5ZWFycz8NCg0K
