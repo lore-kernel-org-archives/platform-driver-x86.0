@@ -1,169 +1,116 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] dell-wmi, dell-laptop: hide dell-smbios
-Date: Wed, 8 Jun 2016 14:57:44 -0700
-Message-ID: <20160608215744.GI28348@f23x64.localdomain>
-References: <20160526114212.2b17ee2d@endymion>
- <20160602110333.GA2575@eudyptula.hq.kempniu.pl>
- <20160602111029.GO29844@pali>
- <20160602230336.431d854a@endymion>
- <20160607113019.GD29844@pali>
+Subject: Re: [PATCH] ideapad: DMI quirk for touchpad control
+Date: Wed, 8 Jun 2016 15:07:51 -0700
+Message-ID: <20160608220751.GJ28348@f23x64.localdomain>
+References: <1465230324-18035-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:57692 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1422835AbcFHWHx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 8 Jun 2016 18:07:53 -0400
 Content-Disposition: inline
-In-Reply-To: <20160607113019.GD29844@pali>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.de>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kbuild@vger.kernel.org, "Yann E. MORIN" <yann.morin.1998@free.fr>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1465230324-18035-1-git-send-email-jprvita@endlessm.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Maxim Mikityanskiy <maxtram95@gmail.com>, Christian Hesse <list@eworm.de>, platform-driver-x86@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
 
-On Tue, Jun 07, 2016 at 01:30:19PM +0200, Pali Roh=C3=A1r wrote:
-> On Thursday 02 June 2016 23:03:36 Jean Delvare wrote:
-> > Hi Pali,
-> >=20
-> > On Thu, 2 Jun 2016 13:10:29 +0200, Pali Roh=C3=A1r wrote:
-> > > On Thursday 02 June 2016 13:03:33 Micha=C5=82 K=C4=99pie=C5=84 wr=
-ote:
-> > > > > Dell-smbios is a helper module, it serves no purpose on its o=
-wn, so
-> > > > > do not present it as an option to the user. Instead, select i=
-t
-> > > > > automatically whenever a driver which needs it is selected.
-
-Hi Yann,
-
-We have a question regarding best practice of depends and selects insti=
-gated by
-the following patch from Jean.
-
-> > > > >=20
-> > > > > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > > > > Cc: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-> > > > > Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > > > Cc: Darren Hart <dvhart@infradead.org>
-> > > > > ---
-> > > > >  drivers/platform/x86/Kconfig |    8 +++++---
-> > > > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > >=20
-> > > > > --- linux-4.6.orig/drivers/platform/x86/Kconfig	2016-05-16 00=
-:43:13.000000000 +0200
-> > > > > +++ linux-4.6/drivers/platform/x86/Kconfig	2016-05-26 11:18:5=
-0.029103790 +0200
-> > > > > @@ -92,7 +92,7 @@ config ASUS_LAPTOP
-> > > > >  	  If you have an ACPI-compatible ASUS laptop, say Y or M he=
-re.
-> > > > > =20
-> > > > >  config DELL_SMBIOS
-> > > > > -	tristate "Dell SMBIOS Support"
-> > > > > +	tristate
-> > > > >  	depends on DCDBAS
-> > > > >  	default n
-> > > > >  	---help---
-> > > > > @@ -104,12 +104,13 @@ config DELL_SMBIOS
-> > > > >  config DELL_LAPTOP
-> > > > >  	tristate "Dell Laptop Extras"
-> > > > >  	depends on X86
-> > > > > -	depends on DELL_SMBIOS
-> > > > >  	depends on DMI
-> > > > >  	depends on BACKLIGHT_CLASS_DEVICE
-> > > > >  	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
-> > > > >  	depends on RFKILL || RFKILL =3D n
-> > > > >  	depends on SERIO_I8042
-> > > > > +	depends on DCDBAS
-> > > > > +	select DELL_SMBIOS
-> > > > >  	select POWER_SUPPLY
-> > > > >  	select LEDS_CLASS
-> > > > >  	select NEW_LEDS
-> > > > > @@ -124,7 +125,8 @@ config DELL_WMI
-> > > > >  	depends on DMI
-> > > > >  	depends on INPUT
-> > > > >  	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
-> > > > > -	depends on DELL_SMBIOS
-> > > > > +	depends on DCDBAS
-> > > > > +	select DELL_SMBIOS
-> > > > >  	select INPUT_SPARSEKMAP
-> > > > >  	---help---
-> > > > >  	  Say Y here if you want to support WMI-based hotkeys on De=
-ll laptops.
-> > > >=20
-> > > > While I'm not a maintainer, I feel obliged to respond as I intr=
-oduced
-> > > > the changes which this patch applies to.
-> > >=20
-> > > Well, I'm on maintainer list of dell modules, but I do care about=
- kbuild
-> > > configuration if it is working. So I let review of this change to=
- other
-> > > people who understand kbuild better.
-> > >=20
-> > > What I see in this change is adding "duplicate" or "redundant"
-> > > transitive dependency from DELL_WMI to DCDBAS. But DELL_WMI does =
-not use
-> > > or need DCDBAS. It just needs DELL_SMIBIOS and basically DELL_WMI=
- does
-> > > not care what DELL_SMBIOS is using (if DCDBAS, ACPI or any other =
-thing).
-> > > So from my graph dependency point of view it is not correct, but =
-I do
-> > > not know how kbuild is working...
-> >=20
-> > Sadly, options which select other options do not inherit from their
-> > dependencies, so kconfig would complain about unmet dependencies if=
- you
-> > let the user enable an option which selects something that depends =
-on
-> > something which is missing or not selected. I wish kconfig was smar=
-ter
-> > and would inherit dependencies in this case, but this doesn't happe=
-n. I
-> > don't know if it is a design decision, a limitation, or just the wa=
-y it
-> > is for no specific reason.
-> >=20
-> > The only way I know of to avoid the duplicate dependency would be t=
+On Mon, Jun 06, 2016 at 12:25:24PM -0400, Jo=E3o Paulo Rechi Vita wrote=
+:
+> Don't try to control the touchpad on laptops that do not support it, =
+as
+> it leads to sending wrong KEY_TOUCHPAD_ON / KEY_TOUCHPAD_OFF events t=
 o
-> > let DELL_SMBIOS select DCDBAS instead of depending on it. But this =
-is a
-> > more intrusive change. If it were just me I'd use select a lot more=
-, as
-> > I don't think it is user-friendly to have drivers in one subsystem
-> > silently depend on options from another subsystem. But not everybod=
-y
-> > agrees with that.
-> >=20
-> > > So I think kbuild developers should review this change.
+> userspace.
 
-Let's ask them then.
-+Yann
-+linux-kbuild
+Other than some minor comment clarity/grammar, this looks like a reason=
+able
+approach to get the new models working without risking breakage to the =
+older
+models. I'll correct.
 
-> >=20
-> > Sounds unrealistic to me. It's as if you would ask Kernighan and Ri=
-tchie
-> > to review your driver code because they invented the C language ;-)
+Maxim, Ike? OK with this approach?
+
 >=20
-> No, that is not same. It is about that restriction that kbuild does n=
-ot
-> support (correctly) transitive dependences and this is probably good
-> proposal either for extending kbuild or fixing something else. And
-> kbuild maintainers/developers either confirm this is really problem i=
-n
-> kbuild (which should be fixed) or show us how to write such thing
-> correctly. Or we are trying to use kbuild for something for which kbu=
-ild
-> is not designed...
+> Signed-off-by: Jo=E3o Paulo Rechi Vita <jprvita@endlessm.com>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 26 +++++++++++++++++++++++++=
++
+>  1 file changed, 26 insertions(+)
 >=20
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform=
+/x86/ideapad-laptop.c
+> index 06a837a..6270948 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -93,6 +93,7 @@ struct ideapad_private {
+>  	struct dentry *debug;
+>  	unsigned long cfg;
+>  	bool has_hw_rfkill_switch;
+> +	bool has_tp_ctrl;
+>  };
+> =20
+>  static bool no_bt_rfkill;
+> @@ -773,6 +774,9 @@ static void ideapad_sync_touchpad_state(struct id=
+eapad_private *priv)
+>  {
+>  	unsigned long value;
+> =20
+> +	if (!priv->has_tp_ctrl)
+> +		return;
+> +
+>  	/* Without reading from EC touchpad LED doesn't switch state */
+>  	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
+>  		/* Some IdeaPads don't really turn off touchpad - they only
+> @@ -930,6 +934,27 @@ static const struct dmi_system_id no_hw_rfkill_l=
+ist[] =3D {
+>  	{}
+>  };
+> =20
+> +/*
+> + * Avoid sending wrong KEY_TOUCHPAD_ON / KEY_TOUCHPAD_OFF events to =
+userspace.
+> + */
+> +static const struct dmi_system_id no_tp_ctrl_list[] =3D {
+> +	{
+> +		.ident =3D "Lenovo 80HE", /* Yoga 3 Pro 2 */
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "80HE"),
+> +		},
+> +	},
+> +	{
+> +		.ident =3D "Lenovo 80MK", /* Yoga 900 */
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "80MK"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  static int ideapad_acpi_add(struct platform_device *pdev)
+>  {
+>  	int ret, i;
+> @@ -953,6 +978,7 @@ static int ideapad_acpi_add(struct platform_devic=
+e *pdev)
+>  	priv->adev =3D adev;
+>  	priv->platform_device =3D pdev;
+>  	priv->has_hw_rfkill_switch =3D !dmi_check_system(no_hw_rfkill_list)=
+;
+> +	priv->has_tp_ctrl =3D !dmi_check_system(no_tp_ctrl_list);
+> =20
+>  	ret =3D ideapad_sysfs_init(priv);
+>  	if (ret)
 > --=20
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+> 2.5.0
+>=20
 >=20
 
 --=20
 Darren Hart
 Intel Open Source Technology Center
---
-To unsubscribe from this list: send the line "unsubscribe linux-kbuild"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
