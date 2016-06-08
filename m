@@ -1,102 +1,68 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 8 Jun 2016 12:44:44 +0200
-Message-ID: <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
- <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
- <20160607230008.GQ29844@pali>
- <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 01/20] [v2] x86, intel: Introduce macros for Intel family
+ numbers
+Date: Wed, 8 Jun 2016 13:01:47 +0200
+Message-ID: <20160608110147.GA32077@gmail.com>
+References: <20160603001927.F2A7D828@viggo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:36112 "EHLO
-	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932250AbcFHKos (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2016 06:44:48 -0400
-In-Reply-To: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario_Limonciello@Dell.com, pali.rohar@gmail.com
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160603001927.F2A7D828@viggo.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Hansen <dave@sr71.net>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, jacob.jun.pan@intel.com, dave.hansen@linux.intel.com, adrian.hunter@intel.com, ak@linux.intel.com, luto@kernel.org, bp@alien8.de, dvhart@infradead.org, dougthompson@xmission.com, edubezval@gmail.com, hpa@zytor.com, mingo@redhat.com, jacob.jun.pan@linux.intel.com, kan.liang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, mchehab@osg.samsung.com, peterz@infradead.org, platform-driver-x86@vger.kernel.org, rafael.j.wysocki@intel.com, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, srinivas.pandruvada@linux.intel.com, eranian@google.com, tglx@linutronix.de, tony.luck@intel.com, ulf.hansson@linaro.org, viresh.kumar@linaro.org, vishwanath.somayaji@intel.com, rui.zhang@intel.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 08/06/2016 08:02, Mario_Limonciello@Dell.com wrote:
->> -----Original Message-----
->> From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
->> Sent: Tuesday, June 7, 2016 6:00 PM
->> To: Gabriele Mazzotta <gabriele.mzt@gmail.com>; Limonciello, Mario
->> <Mario_Limonciello@Dell.com>
->> Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
->> <dvhart@infradead.org>; Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu=
-=2Epl>; Andy Lutomirski
->> <luto@kernel.org>; Alex Hung <alex.hung@canonical.com>; platform-dri=
-ver-
->> x86@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI e=
-vent
->> codes
->>
->> On Friday 27 May 2016 00:04:23 Gabriele Mazzotta wrote:
->>> On 22/05/2016 13:36, Pali Roh=C3=A1r wrote:
->>>> ACPI DSDT tables have defined other WMI codes, but does not contai=
-n
->>>> any description when those codes are emitted. Some other codes can
->>>> be found in logs on internet. In this patch are all which I saw, b=
-ut
->>>> lot of them are not tested properly (e.g. for duplicate events wit=
-h
->>>> AT keyboard). Now we have all WMI event codes at one place and in
->>>> future after proper testing those codes can be correctly enabled o=
-r
->> disabled...
->>>>
->>>> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->>>> ---
->>>>  drivers/platform/x86/dell-wmi.c |   32
->> ++++++++++++++++++++++++++++++++
->>>>  1 file changed, 32 insertions(+)
->>>>
->>>> diff --git a/drivers/platform/x86/dell-wmi.c
->>>> b/drivers/platform/x86/dell-wmi.c index 363d927..7aac1dc 100644
->>>> --- a/drivers/platform/x86/dell-wmi.c
->>>> +++ b/drivers/platform/x86/dell-wmi.c
->>>> @@ -110,6 +110,9 @@ static const struct key_entry
->> dell_wmi_legacy_keymap[] __initconst =3D {
->>>>  	/* BIOS error detected */
->>>>  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
->>>>
->>>> +	/* Unknown, defined in ACPI DSDT */
->>>> +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
->>>> +
->>>
->>> I'm interested in knowing what's the meaning of this 0xe00e. This
->>> event is sent multiple times when I suspend/resume my laptop and it=
-'s
->>> definitely not a keypress.
->>
->> From DSDT dumps which I have seen, I guess it could be something wit=
-h battery
->> charging... but that is only my guess.
->>
->> Mario, do you have any idea, what these unknown events are?
->=20
-> Off-hand I'm not sure, it would require some more digging.
->=20
-> Can you please remind me what model numbers and BIOS combinations you=
- have=20
-> found e00e in DSDT and what context the events are actually happening=
-?  =20
-> Anything released in the past two years?
->=20
 
-XPS13 9333, BIOS A07.
+* Dave Hansen <dave@sr71.net> wrote:
 
-I think I saw the event only after resuming from suspend and
-it's sent four times in a row.
+> 
+> Changes from v1:
+>  * added acks from a few folks
+>  * Took the redundant "MODEL_" out of the macro names (Suggested
+>    by Borislav Petkov and acked by others)
+> 
+> From: Dave Hansen <dave.hansen@linux.intel.com>
+> 
+> If you are cc'd on this code, please check _your_ code vs. the
+> model list in "intel-family.h".  Please make sure you have all
+> the models listed that you intend to.
+> 
+> Also, rather than trickling these in via all the various
+> maintainers, should these just get pulled in to the x86 tree in
+> one go?
+> 
+> Problem:
+> 
+> We have a boatload of open-coded family-6 model numbers.  Half of
+> them have these model numbers in hex and the other half in
+> decimal.  This makes grepping for them tons of fun, if you were
+> to try.
+> 
+> Solution:
+> 
+> Consolidate all the magic numbers.  Put all the definitions in
+> one header.
+> 
+> The names here are closely derived from the comments describing
+> the models from arch/x86/events/intel/core.c.  We could easily
+> make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
+> they seemed fine even with the longer versions to me.
+> 
+> Do not take any of these names too literally, like "DESKTOP"
+> or "MOBILE".  These are all colloquial names and not precise
+> descriptions of everywhere a given model will show up.
+> 
+> These have all been compile-tested.  I also made a stab at
+> dumping .o files and looking for unexpected deltas when I was
+> just replacing magic numbers with equivalent macros.
 
-As Pali says, it seems to be related to the battery. There are
-three _Qxx ACPI methods in my DSDT sending this event: one stops
-battery charging, one detaches the battery and the last one stores
-a value on the GNVS.
+So I've picked up this series and restructured it: I've created a single patch 
+that creates intel-family.h and have put it into x86/urgent. This eliminated 
+dependencies and allowed some of the patches to be queued in their natural trees, 
+in particular the 7 perf patches.
+
+Thanks,
+
+	Ingo
