@@ -1,49 +1,70 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Add support for HKEY
- version 0x200
-Date: Tue, 7 Jun 2016 20:53:38 -0300
-Message-ID: <20160607235338.GA3147@khazad-dum.debian.net>
-References: <1465318938.7166.23.camel@redhat.com>
- <1465333851.7166.46.camel@redhat.com>
- <CAALaSc=cby0oq1fptVu3cvr9JkQA6yQ4pBGXPMWxHGK=dq3f6Q@mail.gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] ideapad_laptop: add an event for mic mute hotkey
+Date: Wed, 8 Jun 2016 11:26:44 +0800
+Message-ID: <57579074.1080303@canonical.com>
+References: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
+ <575140DE.1000504@canonical.com> <20160607215404.GB3829@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42562 "EHLO
-	out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932540AbcFGXxn (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:54775 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752845AbcFHD0y (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Jun 2016 19:53:43 -0400
-Content-Disposition: inline
-In-Reply-To: <CAALaSc=cby0oq1fptVu3cvr9JkQA6yQ4pBGXPMWxHGK=dq3f6Q@mail.gmail.com>
+	Tue, 7 Jun 2016 23:26:54 -0400
+In-Reply-To: <20160607215404.GB3829@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Trevisan =?iso-8859-1?B?KFRyZXZp8W8p?= <mail@3v1n0.net>
-Cc: Lyude Paul <cpaul@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, Dennis Wassenberg <dennis.wassenberg@secunet.com>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org
 
-On Tue, 07 Jun 2016, Marco Trevisan (Trevi=F1o) wrote:
-> 2016-06-07 17:10 GMT-04:00 Lyude Paul <cpaul@redhat.com>:
-> > Managed to find someone in the office with one of these laptops and=
- it looks
-> > like the adaptive keyboard works perfectly with this patch, so I ca=
-n give my t-
-> > b:
-> >
-> >         Tested-by: Lyude Paul <cpaul@redhat.com>
-> >
->=20
-> I can confirm it works too.
->=20
-> Tested-by: Marco Trevisan <marco@ubuntu.com>
+On 06/08/2016 05:54 AM, Darren Hart wrote:
+> On Fri, Jun 03, 2016 at 04:33:34PM +0800, Ike Panhc wrote:
+>> On 05/30/2016 03:26 PM, Alex Hung wrote:
+>>> Newer ideapad supports new mic new hotkey, and it is implemented
+>>> via ACPI interface.  This patch conver the mic mute event to
+>>> a keycode KEY_MICMUTE
+>>>
+>>> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+>>> ---
+>>>  drivers/platform/x86/ideapad-laptop.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>> index 4a23fbc..aa87a42 100644
+>>> --- a/drivers/platform/x86/ideapad-laptop.c
+>>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> @@ -567,6 +567,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
+>>>  static const struct key_entry ideapad_keymap[] = {
+>>>  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
+>>>  	{ KE_KEY, 7,  { KEY_CAMERA } },
+>>> +	{ KE_KEY, 8,  { KEY_MICMUTE } },
+>>>  	{ KE_KEY, 11, { KEY_F16 } },
+>>>  	{ KE_KEY, 13, { KEY_WLAN } },
+>>>  	{ KE_KEY, 16, { KEY_PROG1 } },
+>>> @@ -809,6 +810,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>>>  				break;
+>>>  			case 13:
+>>>  			case 11:
+>>> +			case 8:
+>>
+>> fall through is easier to read
+>>
+>>> +				ideapad_input_report(priv, vpc_bit);
+>>> +				break;
+>>
+>> so above two lines are not necessary.
+> 
+> Are you happy with the changes otherwise Ike?
+> 
+>>
+>>>  			case 7:
+>>>  			case 6:
+>>>  				ideapad_input_report(priv, vpc_bit);
+>>>
+> 
+> Thanks,
+> 
 
-Ok, looks like the patch is safe.  Let's fix the boring details
-(formating, etc), and then merge it.
-
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Yes. Looks good to me.
