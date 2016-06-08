@@ -1,71 +1,82 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 2/4] dell-wmi: Sort WMI event codes and update comments
-Date: Wed, 8 Jun 2016 21:57:26 +0200
-Message-ID: <201606082157.26447@pali>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com> <20160607220324.GN29844@pali> <20160608194824.GC28348@f23x64.localdomain>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] ideapad_laptop: add an event for mic mute hotkey
+Date: Wed, 8 Jun 2016 13:02:40 -0700
+Message-ID: <20160608200240.GD28348@f23x64.localdomain>
+References: <1464593208-13190-1-git-send-email-alex.hung@canonical.com>
+ <575140DE.1000504@canonical.com>
+ <20160607215404.GB3829@f23x64.localdomain>
+ <57579074.1080303@canonical.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1522957.ofMWncLNHm";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f51.google.com ([74.125.82.51]:37389 "EHLO
-	mail-wm0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752271AbcFHT5a (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:33794 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1425031AbcFHUCh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2016 15:57:30 -0400
-In-Reply-To: <20160608194824.GC28348@f23x64.localdomain>
+	Wed, 8 Jun 2016 16:02:37 -0400
+Content-Disposition: inline
+In-Reply-To: <57579074.1080303@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org
 
---nextPart1522957.ofMWncLNHm
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 08, 2016 at 11:26:44AM +0800, Ike Panhc wrote:
+> On 06/08/2016 05:54 AM, Darren Hart wrote:
+> > On Fri, Jun 03, 2016 at 04:33:34PM +0800, Ike Panhc wrote:
+> >> On 05/30/2016 03:26 PM, Alex Hung wrote:
+> >>> Newer ideapad supports new mic new hotkey, and it is implemented
+> >>> via ACPI interface.  This patch conver the mic mute event to
+> >>> a keycode KEY_MICMUTE
+> >>>
+> >>> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> >>> ---
+> >>>  drivers/platform/x86/ideapad-laptop.c | 4 ++++
+> >>>  1 file changed, 4 insertions(+)
+> >>>
+> >>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> >>> index 4a23fbc..aa87a42 100644
+> >>> --- a/drivers/platform/x86/ideapad-laptop.c
+> >>> +++ b/drivers/platform/x86/ideapad-laptop.c
+> >>> @@ -567,6 +567,7 @@ static void ideapad_sysfs_exit(struct ideapad_private *priv)
+> >>>  static const struct key_entry ideapad_keymap[] = {
+> >>>  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
+> >>>  	{ KE_KEY, 7,  { KEY_CAMERA } },
+> >>> +	{ KE_KEY, 8,  { KEY_MICMUTE } },
+> >>>  	{ KE_KEY, 11, { KEY_F16 } },
+> >>>  	{ KE_KEY, 13, { KEY_WLAN } },
+> >>>  	{ KE_KEY, 16, { KEY_PROG1 } },
+> >>> @@ -809,6 +810,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+> >>>  				break;
+> >>>  			case 13:
+> >>>  			case 11:
+> >>> +			case 8:
+> >>
+> >> fall through is easier to read
+> >>
+> >>> +				ideapad_input_report(priv, vpc_bit);
+> >>> +				break;
+> >>
+> >> so above two lines are not necessary.
+> > 
+> > Are you happy with the changes otherwise Ike?
+> > 
+> >>
+> >>>  			case 7:
+> >>>  			case 6:
+> >>>  				ideapad_input_report(priv, vpc_bit);
+> >>>
+> > 
+> > Thanks,
+> > 
+> 
+> Yes. Looks good to me.
+> 
 
-On Wednesday 08 June 2016 21:48:24 Darren Hart wrote:
-> On Wed, Jun 08, 2016 at 12:03:24AM +0200, Pali Roh=C3=A1r wrote:
-> > On Thursday 02 June 2016 12:41:42 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > >=20
-> > > My guess is that Darren won't let you off without at least a
-> > > short commit message.
-> >=20
-> > I have no idea what else to write. I think that description is
-> > enough.
->=20
-> There is always something. For example, why? See
-> Documentation/SubmittingPatches section "14) The canonical patch
-> format" for an explanation.
->=20
-> "Traceability" of changes is important. If it's worth preparing the
-> patch, it's worth documenting why.
+Thanks Ike, in the future, please provide an explicit Acked, Reviewed, or
+Tested-by so I can accurately record your level of review. I've added your
+Acked-by here.
 
-In my opinion current description is enough and cover everything what=20
-this patch is doing. I think it is clear from my description what this=20
-patch is doing and so it is documented.
-
-But if it is not clear and something is missing, let me know or show=20
-what is wrong and how you change it... It is just my assumption that=20
-"Sort WMI event codes and update comments" is clear...
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1522957.ofMWncLNHm
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAldYeKYACgkQi/DJPQPkQ1L7qwCghvH9C7WOX7wZ8Mzz0X+y2Yq7
-kAgAn2kOyUAn7bFxC4ehRDDjtbRwdkzA
-=CwF7
------END PGP SIGNATURE-----
-
---nextPart1522957.ofMWncLNHm--
+-- 
+Darren Hart
+Intel Open Source Technology Center
