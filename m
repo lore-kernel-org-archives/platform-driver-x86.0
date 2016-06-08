@@ -1,17 +1,17 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH] ideapad: DMI quirk for touchpad control
-Date: Wed, 8 Jun 2016 15:07:51 -0700
-Message-ID: <20160608220751.GJ28348@f23x64.localdomain>
+Date: Wed, 8 Jun 2016 15:15:13 -0700
+Message-ID: <20160608221513.GK28348@f23x64.localdomain>
 References: <1465230324-18035-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57692 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:33617 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1422835AbcFHWHx (ORCPT
+	with ESMTP id S1161205AbcFHWPO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2016 18:07:53 -0400
+	Wed, 8 Jun 2016 18:15:14 -0400
 Content-Disposition: inline
 In-Reply-To: <1465230324-18035-1-git-send-email-jprvita@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -26,15 +26,6 @@ as
 > it leads to sending wrong KEY_TOUCHPAD_ON / KEY_TOUCHPAD_OFF events t=
 o
 > userspace.
-
-Other than some minor comment clarity/grammar, this looks like a reason=
-able
-approach to get the new models working without risking breakage to the =
-older
-models. I'll correct.
-
-Maxim, Ike? OK with this approach?
-
 >=20
 > Signed-off-by: Jo=E3o Paulo Rechi Vita <jprvita@endlessm.com>
 > ---
@@ -89,27 +80,16 @@ userspace.
 > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 > +			DMI_MATCH(DMI_PRODUCT_NAME, "80MK"),
 > +		},
-> +	},
-> +	{}
-> +};
-> +
->  static int ideapad_acpi_add(struct platform_device *pdev)
->  {
->  	int ret, i;
-> @@ -953,6 +978,7 @@ static int ideapad_acpi_add(struct platform_devic=
-e *pdev)
->  	priv->adev =3D adev;
->  	priv->platform_device =3D pdev;
->  	priv->has_hw_rfkill_switch =3D !dmi_check_system(no_hw_rfkill_list)=
-;
-> +	priv->has_tp_ctrl =3D !dmi_check_system(no_tp_ctrl_list);
-> =20
->  	ret =3D ideapad_sysfs_init(priv);
->  	if (ret)
-> --=20
-> 2.5.0
->=20
->=20
+
+Upon closer inspection, is there a reason you chose to match on PRODUCT=
+_NAME
+instead of PRODUCT_VERSION like the no_hw_rfkill_list? The PRODUCT_VERS=
+ION tends
+to have the user recognizable name which you placed in a comment instea=
+d of in
+the .ident. For both consistency and legibility, it seems like it would=
+ be better to
+match on DMI_PRODUCT_VERSION and use that in the .ident.
 
 --=20
 Darren Hart
