@@ -1,68 +1,102 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 8 Jun 2016 06:02:29 +0000
-Message-ID: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 8 Jun 2016 12:44:44 +0200
+Message-ID: <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
  <1463916983-12562-4-git-send-email-pali.rohar@gmail.com>
  <79752a4a-22b0-13ec-721c-d92b5dfd46e1@gmail.com>
  <20160607230008.GQ29844@pali>
+ <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxippc101.us.dell.com ([143.166.85.207]:12540 "EHLO
-	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753472AbcFHGCc (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:36112 "EHLO
+	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932250AbcFHKos (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2016 02:02:32 -0400
-In-Reply-To: <20160607230008.GQ29844@pali>
-Content-Language: en-US
+	Wed, 8 Jun 2016 06:44:48 -0400
+In-Reply-To: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, gabriele.mzt@gmail.com
+To: Mario_Limonciello@Dell.com, pali.rohar@gmail.com
 Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBKdW5lIDcsIDIwMTYgNjow
-MCBQTQ0KPiBUbzogR2FicmllbGUgTWF6em90dGEgPGdhYnJpZWxlLm16dEBnbWFpbC5jb20+OyBM
-aW1vbmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzog
-TWF0dGhldyBHYXJyZXR0IDxtamc1OUBzcmNmLnVjYW0ub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2
-aGFydEBpbmZyYWRlYWQub3JnPjsgTWljaGHFgiBLxJlwaWXFhCA8a2VybmVsQGtlbXBuaXUucGw+
-OyBBbmR5IEx1dG9taXJza2kNCj4gPGx1dG9Aa2VybmVsLm9yZz47IEFsZXggSHVuZyA8YWxleC5o
-dW5nQGNhbm9uaWNhbC5jb20+OyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAz
-LzRdIGRlbGwtd21pOiBBZGQgaW5mb3JtYXRpb24gYWJvdXQgb3RoZXIgV01JIGV2ZW50DQo+IGNv
-ZGVzDQo+IA0KPiBPbiBGcmlkYXkgMjcgTWF5IDIwMTYgMDA6MDQ6MjMgR2FicmllbGUgTWF6em90
-dGEgd3JvdGU6DQo+ID4gT24gMjIvMDUvMjAxNiAxMzozNiwgUGFsaSBSb2jDoXIgd3JvdGU6DQo+
-ID4gPiBBQ1BJIERTRFQgdGFibGVzIGhhdmUgZGVmaW5lZCBvdGhlciBXTUkgY29kZXMsIGJ1dCBk
-b2VzIG5vdCBjb250YWluDQo+ID4gPiBhbnkgZGVzY3JpcHRpb24gd2hlbiB0aG9zZSBjb2RlcyBh
-cmUgZW1pdHRlZC4gU29tZSBvdGhlciBjb2RlcyBjYW4NCj4gPiA+IGJlIGZvdW5kIGluIGxvZ3Mg
-b24gaW50ZXJuZXQuIEluIHRoaXMgcGF0Y2ggYXJlIGFsbCB3aGljaCBJIHNhdywgYnV0DQo+ID4g
-PiBsb3Qgb2YgdGhlbSBhcmUgbm90IHRlc3RlZCBwcm9wZXJseSAoZS5nLiBmb3IgZHVwbGljYXRl
-IGV2ZW50cyB3aXRoDQo+ID4gPiBBVCBrZXlib2FyZCkuIE5vdyB3ZSBoYXZlIGFsbCBXTUkgZXZl
-bnQgY29kZXMgYXQgb25lIHBsYWNlIGFuZCBpbg0KPiA+ID4gZnV0dXJlIGFmdGVyIHByb3BlciB0
-ZXN0aW5nIHRob3NlIGNvZGVzIGNhbiBiZSBjb3JyZWN0bHkgZW5hYmxlZCBvcg0KPiBkaXNhYmxl
-ZC4uLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFy
-QGdtYWlsLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwt
-d21pLmMgfCAgIDMyDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykNCj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+ID4gYi9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9kZWxsLXdtaS5jIGluZGV4IDM2M2Q5MjcuLjdhYWMxZGMgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPiArKysgYi9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPiBAQCAtMTEwLDYgKzExMCw5IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5DQo+IGRlbGxfd21pX2xlZ2FjeV9rZXltYXBbXSBfX2lu
-aXRjb25zdCA9IHsNCj4gPiA+ICAJLyogQklPUyBlcnJvciBkZXRlY3RlZCAqLw0KPiA+ID4gIAl7
-IEtFX0lHTk9SRSwgMHhlMDBkLCB7IEtFWV9SRVNFUlZFRCB9IH0sDQo+ID4gPg0KPiA+ID4gKwkv
-KiBVbmtub3duLCBkZWZpbmVkIGluIEFDUEkgRFNEVCAqLw0KPiA+ID4gKwkvKiB7IEtFX0lHTk9S
-RSwgMHhlMDBlLCB7IEtFWV9SRVNFUlZFRCB9IH0sICovDQo+ID4gPiArDQo+ID4NCj4gPiBJJ20g
-aW50ZXJlc3RlZCBpbiBrbm93aW5nIHdoYXQncyB0aGUgbWVhbmluZyBvZiB0aGlzIDB4ZTAwZS4g
-VGhpcw0KPiA+IGV2ZW50IGlzIHNlbnQgbXVsdGlwbGUgdGltZXMgd2hlbiBJIHN1c3BlbmQvcmVz
-dW1lIG15IGxhcHRvcCBhbmQgaXQncw0KPiA+IGRlZmluaXRlbHkgbm90IGEga2V5cHJlc3MuDQo+
-IA0KPiBGcm9tIERTRFQgZHVtcHMgd2hpY2ggSSBoYXZlIHNlZW4sIEkgZ3Vlc3MgaXQgY291bGQg
-YmUgc29tZXRoaW5nIHdpdGggYmF0dGVyeQ0KPiBjaGFyZ2luZy4uLiBidXQgdGhhdCBpcyBvbmx5
-IG15IGd1ZXNzLg0KPiANCj4gTWFyaW8sIGRvIHlvdSBoYXZlIGFueSBpZGVhLCB3aGF0IHRoZXNl
-IHVua25vd24gZXZlbnRzIGFyZT8NCg0KT2ZmLWhhbmQgSSdtIG5vdCBzdXJlLCBpdCB3b3VsZCBy
-ZXF1aXJlIHNvbWUgbW9yZSBkaWdnaW5nLg0KDQpDYW4geW91IHBsZWFzZSByZW1pbmQgbWUgd2hh
-dCBtb2RlbCBudW1iZXJzIGFuZCBCSU9TIGNvbWJpbmF0aW9ucyB5b3UgaGF2ZSANCmZvdW5kIGUw
-MGUgaW4gRFNEVCBhbmQgd2hhdCBjb250ZXh0IHRoZSBldmVudHMgYXJlIGFjdHVhbGx5IGhhcHBl
-bmluZz8gICANCkFueXRoaW5nIHJlbGVhc2VkIGluIHRoZSBwYXN0IHR3byB5ZWFycz8NCg0K
+On 08/06/2016 08:02, Mario_Limonciello@Dell.com wrote:
+>> -----Original Message-----
+>> From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+>> Sent: Tuesday, June 7, 2016 6:00 PM
+>> To: Gabriele Mazzotta <gabriele.mzt@gmail.com>; Limonciello, Mario
+>> <Mario_Limonciello@Dell.com>
+>> Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
+>> <dvhart@infradead.org>; Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu=
+=2Epl>; Andy Lutomirski
+>> <luto@kernel.org>; Alex Hung <alex.hung@canonical.com>; platform-dri=
+ver-
+>> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI e=
+vent
+>> codes
+>>
+>> On Friday 27 May 2016 00:04:23 Gabriele Mazzotta wrote:
+>>> On 22/05/2016 13:36, Pali Roh=C3=A1r wrote:
+>>>> ACPI DSDT tables have defined other WMI codes, but does not contai=
+n
+>>>> any description when those codes are emitted. Some other codes can
+>>>> be found in logs on internet. In this patch are all which I saw, b=
+ut
+>>>> lot of them are not tested properly (e.g. for duplicate events wit=
+h
+>>>> AT keyboard). Now we have all WMI event codes at one place and in
+>>>> future after proper testing those codes can be correctly enabled o=
+r
+>> disabled...
+>>>>
+>>>> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>>>> ---
+>>>>  drivers/platform/x86/dell-wmi.c |   32
+>> ++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 32 insertions(+)
+>>>>
+>>>> diff --git a/drivers/platform/x86/dell-wmi.c
+>>>> b/drivers/platform/x86/dell-wmi.c index 363d927..7aac1dc 100644
+>>>> --- a/drivers/platform/x86/dell-wmi.c
+>>>> +++ b/drivers/platform/x86/dell-wmi.c
+>>>> @@ -110,6 +110,9 @@ static const struct key_entry
+>> dell_wmi_legacy_keymap[] __initconst =3D {
+>>>>  	/* BIOS error detected */
+>>>>  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
+>>>>
+>>>> +	/* Unknown, defined in ACPI DSDT */
+>>>> +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
+>>>> +
+>>>
+>>> I'm interested in knowing what's the meaning of this 0xe00e. This
+>>> event is sent multiple times when I suspend/resume my laptop and it=
+'s
+>>> definitely not a keypress.
+>>
+>> From DSDT dumps which I have seen, I guess it could be something wit=
+h battery
+>> charging... but that is only my guess.
+>>
+>> Mario, do you have any idea, what these unknown events are?
+>=20
+> Off-hand I'm not sure, it would require some more digging.
+>=20
+> Can you please remind me what model numbers and BIOS combinations you=
+ have=20
+> found e00e in DSDT and what context the events are actually happening=
+?  =20
+> Anything released in the past two years?
+>=20
+
+XPS13 9333, BIOS A07.
+
+I think I saw the event only after resuming from suspend and
+it's sent four times in a row.
+
+As Pali says, it seems to be related to the battery. There are
+three _Qxx ACPI methods in my DSDT sending this event: one stops
+battery charging, one detaches the battery and the last one stores
+a value on the GNVS.
