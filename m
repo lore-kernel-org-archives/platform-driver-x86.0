@@ -1,51 +1,92 @@
-From: =?UTF-8?Q?Marco_Trevisan_=28Trevi=C3=B1o=29?= <mail-DXHccXIHLaFeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] thinkpad_acpi: Add support for HKEY
- version 0x200
-Date: Thu, 9 Jun 2016 01:05:12 -0400
-Message-ID: <CAALaSckmmACY6ZxBOKFumT0tJe1Yo24S7-5jsUuREw7SFrde-w@mail.gmail.com>
-References: <20160607235338.GA3147@khazad-dum.debian.net>
-	<1465397665-9343-1-git-send-email-cpaul@redhat.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v2 4/4] dell-wmi: Rework code for generating sparse
+ keymap and processing WMI events
+Date: Thu, 9 Jun 2016 13:27:21 +0200
+Message-ID: <20160609112721.GA2461@eudyptula.hq.kempniu.pl>
+References: <1465342347-20635-1-git-send-email-pali.rohar@gmail.com>
+ <1465342347-20635-5-git-send-email-pali.rohar@gmail.com>
+ <20160608225032.GL28348@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1465397665-9343-1-git-send-email-cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXTRAS DRIVER" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f52.google.com ([74.125.82.52]:35272 "EHLO
+	mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752352AbcFIL10 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 9 Jun 2016 07:27:26 -0400
+Received: by mail-wm0-f52.google.com with SMTP id v199so102895818wmv.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jun 2016 04:27:25 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20160608225032.GL28348@f23x64.localdomain>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-2016-06-08 10:54 GMT-04:00 Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
-> From: Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
->
-> Lenovo Thinkpad devices T460, T460s, T460p, T560, X260 use
-> HKEY version 0x200 without adaptive keyboard.
->
-> HKEY version 0x200 has method MHKA with one parameter value.
-> Passing parameter value 1 will get hotkey_all_mask (the same like
-> HKEY version 0x100 without parameter). Passing parameter value 2 to
-> MHKA method will retrieve hotkey_all_adaptive_mask. If 0 is returned in
-> that case there is no adaptive keyboard available.
->
-> Signed-off-by: Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Marco Trevisan <marco-GeWIH/nMZzLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+> > -		case 0x10:
+> > -			/* Keys pressed */
+> > +		case 0x0010:
+> > +			/* Sequence of keys pressed */
+> >  			for (i =3D 2; i < len; ++i)
+> > -				dell_wmi_process_key(buffer_entry[i]);
+> > +				dell_wmi_process_key(0x0010, buffer_entry[i]);
+> >  			break;
+> > -		case 0x11:
+> > -			for (i =3D 2; i < len; ++i) {
+> > -				switch (buffer_entry[i]) {
+> > -				case 0xfff0:
+> > -					/* Battery unplugged */
+> > -					pr_debug("Battery unplugged\n");
+> > -					break;
+> > -				case 0xfff1:
+> > -					/* Battery inserted */
+> > -					pr_debug("Battery inserted\n");
+> > -					break;
+> > -				case 0x01e1:
+> > -				case 0x02ea:
+> > -				case 0x02eb:
+> > -				case 0x02ec:
+> > -				case 0x02f6:
+> > -					/* Keyboard backlight level changed */
+> > -					pr_debug("Keyboard backlight level "
+> > -						 "changed\n");
+> > -					break;
+> > -				default:
+> > -					/* Unknown event */
+> > -					pr_info("Unknown WMI event type 0x11: "
+> > -						"0x%x\n", (int)buffer_entry[i]);
+> > -					break;
+> > -				}
+> > -			}
+> > +		case 0x0011:
+> > +			/* Sequence of events occurred */
+> > +			for (i =3D 2; i < len; ++i)
+> > +				dell_wmi_process_key(0x0011, buffer_entry[i]);
+>=20
+> Since this is identical to case 0x010, let's avoid the duplication of=
+ code and
+> handle this with a fall-through, like:
+>=20
+> 		case 0x0010:
+> 		case 0x0011:
+> 			/* Sequence of events occurred */
+> 			for (i =3D 2; i < len; ++i)
+> 				dell_wmi_process_key(buffer_entry[1], buffer_entry[i]);
 
-Can you also Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org so that it can be imported
-there once merged?
+I believe it was Pali's intention to make a distinction between keys
+being pressed (0x0010) and other events occuring (0x0011), so perhaps a
+comment after the first case label could be useful?
 
-------------------------------------------------------------------------------
-What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
-patterns at an interface-level. Reveals which users, apps, and protocols are 
-consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
-J-Flow, sFlow and other flows. Make informed decisions using capacity 
-planning reports. https://ad.doubleclick.net/ddm/clk/305295220;132659582;e
+    case 0x0010:
+        /* Sequence of keys pressed; fall through */
+    case 0x0011:
+        /* Sequence of events occurred */
+        for (i =3D 2; i < len; ++i)
+            dell_wmi_process_key(buffer_entry[1], buffer_entry[i]);
+
+I'll leave it to Pali to decide, I'm just throwing in my two cents.
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
