@@ -1,53 +1,44 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED
- trigger
-Date: Thu, 09 Jun 2016 14:43:14 +0200
-Message-ID: <1465476194.3442.21.camel@sipsolutions.net>
-References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
-	 <1462199948-6424-2-git-send-email-jprvita@endlessm.com>
-	 <20160504072936.GB17045@amd> <1463045572.13313.21.camel@sipsolutions.net>
-	 <20160519071639.GB17077@amd>
+From: Vincent =?iso-8859-1?Q?Stehl=E9?= <vincent.stehle@intel.com>
+Subject: Re: [PATCH] intel_menlow: prevent NULL pointer dereference
+Date: Thu, 9 Jun 2016 19:24:52 +0200
+Message-ID: <20160609172452.GA32327@jazz.nc.intel.com>
+References: <1464186011-732-1-git-send-email-vincent.stehle@intel.com>
+ <20160608203846.GG28348@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160519071639.GB17077@amd>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160608203846.GG28348@f23x64.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sujith Thomas <sujith.thomas@intel.com>, Zhang Rui <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>, Rafael Wysocki <rjw@rjwysocki.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2016-05-19 at 09:16 +0200, Pavel Machek wrote:
+On Wed, Jun 08, 2016 at 01:38:46PM -0700, Darren Hart wrote:
+> Under what circumstances can the .remove op be called with a NULL struct
+> acpi_device * as a parameter? From what I can see, most acpi_* calls accpeting
+> an acpi_device rely on it not being null, and they are regularly called from
+> driver remove functions.
+> Did you observe an explicit failure or can you describe a call path where this
+> can occur?
 
-> > In the original situation, without these patches, userspace has to
-> > have a list of all LEDs that are supposed to indicate airplane
-> > mode.
-> Well, that's situation for many LEDs.
+Hi Darren,
 
-That doesn't make it a *good* situation though.
+Thank you for reviewing.
 
-> > With this patch only (without patch 2/3), userspace can look up the
-> > default trigger, but then has to change it, causing the necessary
-> > information to be lost immediately when you actually use it - that
-> > also seems like a bad idea.
-> We should not store "what kind of led this is" in a trigger.=20
+I am not sure about when the .remove() functions are called with a NULL
+pointer, or if that can ever happen. I just noticed that dereferencing the
+pointer and checking for NULL after did not seem to be the right thing to
+do. So I wanted to replicate instead the same construct as e.g.
+xen_acpi_processor_remove().
 
-That's pretty much what I'm arguing though.
+Your remark encouraged me to do some more digging into the sources and it
+appears that 13 .remove() functions do indeed check their input device
+pointer for NULL, while 26 do not (the remaining do not use their input
+pointer at all). Now I am puzzled about the necessity to check the pointer
+for NULL or not, and there does not seem to be a definitive answer in the
+docs either...
 
-> LED
-> subsystem seems to use suffix of LED name to do that. So if we
-> standartize, lets say "::rfkill" suffix for this, it should work and
-> follow existing practice.
-[...]
-> There is one -- suffix in the LED name.
+Best regards,
 
-I don't really think that's a good way, and it doesn't seem to be used
-universally, but I suppose it's good enough.
-
-Jo=C3=A3o, that means you should send a patch to add the ::rfkill suffi=
-x.
-
-And Pavel should send a patch to document the practice and the existing
-suffixes with their meaning ;-)
-
-johannes
+Vincent.
