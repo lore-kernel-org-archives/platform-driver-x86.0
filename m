@@ -1,123 +1,51 @@
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH] ideapad: DMI quirk for touchpad control
-Date: Thu, 9 Jun 2016 07:08:16 +0300
-Message-ID: <CAKErNvpahaFjNgmufUMsrrLg8WKms6F5RpGK2sos5Zo0ncdKFw@mail.gmail.com>
-References: <1465230324-18035-1-git-send-email-jprvita@endlessm.com> <20160608220751.GJ28348@f23x64.localdomain>
+From: =?UTF-8?Q?Marco_Trevisan_=28Trevi=C3=B1o=29?= <mail-DXHccXIHLaFeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2] thinkpad_acpi: Add support for HKEY
+ version 0x200
+Date: Thu, 9 Jun 2016 01:05:12 -0400
+Message-ID: <CAALaSckmmACY6ZxBOKFumT0tJe1Yo24S7-5jsUuREw7SFrde-w@mail.gmail.com>
+References: <20160607235338.GA3147@khazad-dum.debian.net>
+	<1465397665-9343-1-git-send-email-cpaul@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:35656 "EHLO
-	mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752338AbcFIEIs convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 9 Jun 2016 00:08:48 -0400
-Received: by mail-lf0-f68.google.com with SMTP id s186so2339751lfs.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2016 21:08:47 -0700 (PDT)
-In-Reply-To: <20160608220751.GJ28348@f23x64.localdomain>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>, Christian Hesse <list@eworm.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Michael Gisbers <michael@gisbers.de>, Christian Hesse <mail@eworm.de>, hdegoede@redhat.com, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1465397665-9343-1-git-send-email-cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXTRAS DRIVER" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-2016-06-09 1:07 GMT+03:00 Darren Hart <dvhart@infradead.org>:
-> On Mon, Jun 06, 2016 at 12:25:24PM -0400, Jo=C3=A3o Paulo Rechi Vita =
-wrote:
->> Don't try to control the touchpad on laptops that do not support it,=
- as
->> it leads to sending wrong KEY_TOUCHPAD_ON / KEY_TOUCHPAD_OFF events =
-to
->> userspace.
+2016-06-08 10:54 GMT-04:00 Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+> From: Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
 >
-> Other than some minor comment clarity/grammar, this looks like a reas=
-onable
-> approach to get the new models working without risking breakage to th=
-e older
-> models. I'll correct.
+> Lenovo Thinkpad devices T460, T460s, T460p, T560, X260 use
+> HKEY version 0x200 without adaptive keyboard.
 >
-> Maxim, Ike? OK with this approach?
+> HKEY version 0x200 has method MHKA with one parameter value.
+> Passing parameter value 1 will get hotkey_all_mask (the same like
+> HKEY version 0x100 without parameter). Passing parameter value 2 to
+> MHKA method will retrieve hotkey_all_adaptive_mask. If 0 is returned in
+> that case there is no adaptive keyboard available.
+>
+> Signed-off-by: Dennis Wassenberg <dennis.wassenberg-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Lyude <cpaul-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Marco Trevisan <marco-GeWIH/nMZzLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 
-Looks good for me.
+Can you also Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org so that it can be imported
+there once merged?
 
->>
->> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
->> ---
->>  drivers/platform/x86/ideapad-laptop.c | 26 ++++++++++++++++++++++++=
-++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfor=
-m/x86/ideapad-laptop.c
->> index 06a837a..6270948 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -93,6 +93,7 @@ struct ideapad_private {
->>       struct dentry *debug;
->>       unsigned long cfg;
->>       bool has_hw_rfkill_switch;
->> +     bool has_tp_ctrl;
->>  };
->>
->>  static bool no_bt_rfkill;
->> @@ -773,6 +774,9 @@ static void ideapad_sync_touchpad_state(struct i=
-deapad_private *priv)
->>  {
->>       unsigned long value;
->>
->> +     if (!priv->has_tp_ctrl)
->> +             return;
->> +
->>       /* Without reading from EC touchpad LED doesn't switch state *=
-/
->>       if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &valu=
-e)) {
->>               /* Some IdeaPads don't really turn off touchpad - they=
- only
->> @@ -930,6 +934,27 @@ static const struct dmi_system_id no_hw_rfkill_=
-list[] =3D {
->>       {}
->>  };
->>
->> +/*
->> + * Avoid sending wrong KEY_TOUCHPAD_ON / KEY_TOUCHPAD_OFF events to=
- userspace.
->> + */
->> +static const struct dmi_system_id no_tp_ctrl_list[] =3D {
->> +     {
->> +             .ident =3D "Lenovo 80HE", /* Yoga 3 Pro 2 */
->> +             .matches =3D {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "80HE"),
->> +             },
->> +     },
->> +     {
->> +             .ident =3D "Lenovo 80MK", /* Yoga 900 */
->> +             .matches =3D {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "80MK"),
->> +             },
->> +     },
->> +     {}
->> +};
->> +
->>  static int ideapad_acpi_add(struct platform_device *pdev)
->>  {
->>       int ret, i;
->> @@ -953,6 +978,7 @@ static int ideapad_acpi_add(struct platform_devi=
-ce *pdev)
->>       priv->adev =3D adev;
->>       priv->platform_device =3D pdev;
->>       priv->has_hw_rfkill_switch =3D !dmi_check_system(no_hw_rfkill_=
-list);
->> +     priv->has_tp_ctrl =3D !dmi_check_system(no_tp_ctrl_list);
->>
->>       ret =3D ideapad_sysfs_init(priv);
->>       if (ret)
->> --
->> 2.5.0
->>
->>
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+------------------------------------------------------------------------------
+What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
+patterns at an interface-level. Reveals which users, apps, and protocols are 
+consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
+J-Flow, sFlow and other flows. Make informed decisions using capacity 
+planning reports. https://ad.doubleclick.net/ddm/clk/305295220;132659582;e
