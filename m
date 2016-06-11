@@ -1,30 +1,52 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 0/3] toshiba_acpi: Accelerometer updates
-Date: Sat, 11 Jun 2016 12:52:43 -0600
-Message-ID: <20160611185245.14155-1-coproscefalo@gmail.com>
+Subject: [PATCH 3/3] toshiba_acpi: Bump driver version and update copyrignt year
+Date: Sat, 11 Jun 2016 12:52:45 -0600
+Message-ID: <20160611185245.14155-3-coproscefalo@gmail.com>
+References: <20160611185245.14155-1-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:33020 "EHLO
-	mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751708AbcFKSww (ORCPT
+Received: from mail-oi0-f68.google.com ([209.85.218.68]:36075 "EHLO
+	mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752236AbcFKSwy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 11 Jun 2016 14:52:52 -0400
+	Sat, 11 Jun 2016 14:52:54 -0400
+In-Reply-To: <20160611185245.14155-1-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-These series of patches update the accelerometer axis data
-reporting to use the IIO subsystem, deprecating the custom
-position sysfs entry, and finally bumping the driver version
-to 0.24.
+After several fixes, and added support for more features (WWAN,
+Cooling Method and IIO accelometer axis data), bump the driver
+version to 0.24.
 
-Azael Avalos (3):
-  toshiba_acpi: Add IIO interface for accelerometer axis data
-  toshiba_acpi: Remove the position sysfs entry
-  toshiba_acpi: Bump driver version and update copyrignt year
+Also update the copyright year.
 
- drivers/platform/x86/toshiba_acpi.c | 147 +++++++++++++++++++++++++++++-------
- 1 file changed, 120 insertions(+), 27 deletions(-)
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 818b960..c2983bd 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -4,7 +4,7 @@
+  *  Copyright (C) 2002-2004 John Belmonte
+  *  Copyright (C) 2008 Philip Langdale
+  *  Copyright (C) 2010 Pierre Ducroquet
+- *  Copyright (C) 2014-2015 Azael Avalos
++ *  Copyright (C) 2014-2016 Azael Avalos
+  *
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+@@ -31,7 +31,7 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+-#define TOSHIBA_ACPI_VERSION	"0.23"
++#define TOSHIBA_ACPI_VERSION	"0.24"
+ #define PROC_INTERFACE_VERSION	1
+ 
+ #include <linux/kernel.h>
 -- 
 2.8.3
