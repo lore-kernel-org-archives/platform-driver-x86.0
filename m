@@ -1,45 +1,85 @@
 From: Dan O'Donovan <dan@emutex.com>
-Subject: [RFC PATCH 2/5] platform: x86: add UP Board I/O pinctrl driver
-Date: Sun, 12 Jun 2016 21:13:09 +0100
-Message-ID: <1465762392-9205-3-git-send-email-dan@emutex.com>
+Subject: [RFC PATCH 5/5] platform: x86: add platform driver for UP Board
+Date: Sun, 12 Jun 2016 21:13:12 +0100
+Message-ID: <1465762392-9205-6-git-send-email-dan@emutex.com>
 References: <1465762392-9205-1-git-send-email-dan@emutex.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bert.emutex.com ([91.103.1.109]:32889 "EHLO bert.emutex.com"
+Received: from bert.emutex.com ([91.103.1.109]:32892 "EHLO bert.emutex.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750937AbcFLULa (ORCPT
+	id S1753400AbcFLULe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 12 Jun 2016 16:11:30 -0400
+	Sun, 12 Jun 2016 16:11:34 -0400
 Received: from [92.51.199.138] (helo=statler.emutex.com)
 	by bert.emutex.com with esmtp (Exim 4.84)
 	(envelope-from <dan@emutex.com>)
-	id 1bCBjD-0006IY-Ea
-	for platform-driver-x86@vger.kernel.org; Sun, 12 Jun 2016 21:11:27 +0100
+	id 1bCBjH-0006Ik-Pi
+	for platform-driver-x86@vger.kernel.org; Sun, 12 Jun 2016 21:11:31 +0100
 In-Reply-To: <1465762392-9205-1-git-send-email-dan@emutex.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: Dan O'Donovan <dan@emutex.com>
 
-This pinctrl driver manages the Pin Control functions provided by
-the I/O CPLD integrated on the UP Board.  This includes dynamic pin
-direction and pin mux configuration.
+This platform driver instantiates a platform device relevant to the
+UP board, in particular a device representing the unique I/O pin CPLD
+controller on the UP board.
+
+In addition, this driver registers pin maps to configure
+appropriately the underlying SoC GPIO pins for use with the
+UP Board I/O pin header.
 
 Signed-off-by: Dan O'Donovan <dan@emutex.com>
 ---
- drivers/platform/x86/up_board_pinctrl.c | 285 ++++++++++++++++++++++++++++++++
- drivers/platform/x86/up_board_pinctrl.h | 102 ++++++++++++
- 2 files changed, 387 insertions(+)
- create mode 100644 drivers/platform/x86/up_board_pinctrl.c
- create mode 100644 drivers/platform/x86/up_board_pinctrl.h
+ drivers/platform/x86/Kconfig    |  13 ++++
+ drivers/platform/x86/Makefile   |   5 ++
+ drivers/platform/x86/up_board.c | 167 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 185 insertions(+)
+ create mode 100644 drivers/platform/x86/up_board.c
 
-diff --git a/drivers/platform/x86/up_board_pinctrl.c b/drivers/platform/x86/up_board_pinctrl.c
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c06bb85..47f8715 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1013,4 +1013,17 @@ config INTEL_TELEMETRY
+ 	  used to get various SoC events and parameters
+ 	  directly via debugfs files. Various tools may use
+ 	  this interface for SoC state monitoring.
++
++config UP_BOARD
++	bool "UP Board Platform I/O Driver"
++	depends on ACPI && PINCTRL_CHERRYVIEW
++	select GPIOLIB_IRQCHIP
++	select LEDS_CLASS
++	select NEW_LEDS
++	---help---
++	  This driver provides support for the platform functions on the UP
++	  board.  It includes platform, pinctrl and gpio drivers for the CPLD
++	  that manages the external pin header, as well as a driver for the
++	  built-in LEDs.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9b11b40..687c583 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -70,3 +70,8 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+ obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
++obj-$(CONFIG_UP_BOARD)		+= up_board.o \
++				   up_board_cpld.o \
++				   up_board_pinctrl.o \
++				   up_board_gpio.o \
++				   up_board_leds.o
+diff --git a/drivers/platform/x86/up_board.c b/drivers/platform/x86/up_board.c
 new file mode 100644
-index 0000000..be95837
+index 0000000..8635759
 --- /dev/null
-+++ b/drivers/platform/x86/up_board_pinctrl.c
-@@ -0,0 +1,285 @@
++++ b/drivers/platform/x86/up_board.c
+@@ -0,0 +1,167 @@
++
 +/*
-+ * UP Board I/O Header CPLD Pin Control driver.
++ * UP Board platform driver.
 + *
 + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
 + *
@@ -57,379 +97,152 @@ index 0000000..be95837
 + * You should have received a copy of the GNU General Public License
 + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
-+#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/dmi.h>
 +#include <linux/platform_device.h>
-+
-+#include "up_board_pinctrl.h"
++#include <linux/pinctrl/machine.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/regulator/fixed.h>
++#include <linux/regulator/machine.h>
 +
 +/* Internal context information for this driver */
-+struct up_board_pinctrl {
-+	struct up_board_pinctrl_pdata *pdata;
-+	struct pinctrl_desc pctldesc;
-+	struct pinctrl_dev *pctldev;
++struct up_board_info {
++	struct platform_device *cpld_pdev;
++	struct platform_device *vreg_pdev;
++	struct pinctrl_map *pinmux_maps;
++	unsigned int num_pinmux_maps;
 +};
 +
-+static int up_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return up_pinctrl->pdata->ngroup;
-+}
-+
-+static const char *up_get_group_name(struct pinctrl_dev *pctldev,
-+				     unsigned int group)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return up_pinctrl->pdata->groups[group].name;
-+}
-+
-+static int up_get_group_pins(struct pinctrl_dev *pctldev, unsigned int group,
-+			     const unsigned int **pins, unsigned int *npins)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = up_pinctrl->pdata->groups[group].pins;
-+	*npins = up_pinctrl->pdata->groups[group].npin;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops up_pinctrl_ops = {
-+	.get_groups_count = up_get_groups_count,
-+	.get_group_name = up_get_group_name,
-+	.get_group_pins = up_get_group_pins,
++/*
++ * On the UP board, if the ODEn bit is set on the pad configuration
++ * it seems to impair some functions on the I/O header such as UART, SPI
++ * and I2C.  So we disable it for all header pins by default.
++ */
++static unsigned long oden_disable_conf[] = {
++	PIN_CONF_PACKED(PIN_CONFIG_DRIVE_PUSH_PULL, 0),
 +};
 +
-+static int up_get_functions_count(struct pinctrl_dev *pctldev)
++#define UP_PIN_MAP_MUX_GROUP(d, p, f) \
++	PIN_MAP_MUX_GROUP_DEFAULT(d, p, f "_grp", f)
++
++#define UP_PIN_MAP_CONF_ODEN(d, p, f) \
++	PIN_MAP_CONFIGS_GROUP_DEFAULT(d, p, f "_grp", oden_disable_conf)
++
++/* Maps pin functions on UP Board I/O pin header to specific CHT SoC devices */
++static struct pinctrl_map up_pinmux_maps[] __initdata = {
++	UP_PIN_MAP_MUX_GROUP("8086228A:00", "up-board-pinctrl", "uart1"),
++	UP_PIN_MAP_MUX_GROUP("808622C1:00", "up-board-pinctrl", "i2c0"),
++	UP_PIN_MAP_MUX_GROUP("808622C1:01", "up-board-pinctrl", "i2c1"),
++	UP_PIN_MAP_MUX_GROUP("80862288:00", "up-board-pinctrl", "pwm0"),
++	UP_PIN_MAP_MUX_GROUP("80862288:01", "up-board-pinctrl", "pwm1"),
++	UP_PIN_MAP_MUX_GROUP("8086228E:01", "up-board-pinctrl", "spi2"),
++	UP_PIN_MAP_MUX_GROUP("808622A8:00", "up-board-pinctrl", "i2s2"),
++	UP_PIN_MAP_MUX_GROUP("i2c-ADC081C:00", "up-board-pinctrl", "adc0"),
++
++	UP_PIN_MAP_MUX_GROUP("8086228A:00", "INT33FF:00", "uart1"),
++	UP_PIN_MAP_MUX_GROUP("808622C1:00", "INT33FF:00", "i2c0"),
++	UP_PIN_MAP_MUX_GROUP("808622C1:01", "INT33FF:00", "i2c1"),
++	UP_PIN_MAP_MUX_GROUP("808622C1:02", "INT33FF:00", "i2c2"),
++	UP_PIN_MAP_MUX_GROUP("80862288:00", "INT33FF:03", "pwm0"),
++	UP_PIN_MAP_MUX_GROUP("80862288:01", "INT33FF:03", "pwm1"),
++	UP_PIN_MAP_MUX_GROUP("8086228E:01", "INT33FF:03", "spi2"),
++	UP_PIN_MAP_MUX_GROUP("808622A8:00", "INT33FF:00", "lpe"),
++
++	UP_PIN_MAP_CONF_ODEN("8086228A:00", "INT33FF:00", "uart1"),
++	UP_PIN_MAP_CONF_ODEN("808622C1:00", "INT33FF:00", "i2c0"),
++	UP_PIN_MAP_CONF_ODEN("808622C1:01", "INT33FF:00", "i2c1"),
++	UP_PIN_MAP_CONF_ODEN("80862288:00", "INT33FF:03", "pwm0"),
++	UP_PIN_MAP_CONF_ODEN("80862288:01", "INT33FF:03", "pwm1"),
++	UP_PIN_MAP_CONF_ODEN("8086228E:01", "INT33FF:03", "spi2"),
++	UP_PIN_MAP_CONF_ODEN("808622A8:00", "INT33FF:00", "lpe"),
++};
++
++static struct up_board_info up_board_info = {
++	.pinmux_maps = up_pinmux_maps,
++	.num_pinmux_maps = ARRAY_SIZE(up_pinmux_maps),
++};
++
++static const struct dmi_system_id up_board_id_table[] __initconst = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_MATCH(DMI_BOARD_NAME, "UP-CHT01"),
++			DMI_MATCH(DMI_BOARD_VERSION, "V0.4"),
++		},
++		.driver_data = &up_board_info,
++	},
++	{ }
++};
++
++static struct regulator_consumer_supply vref3v3_consumers[] = {
++	REGULATOR_SUPPLY("vref", "i2c-ADC081C:00"),
++};
++
++static struct up_board_info *up_board;
++
++static int __init
++up_board_init_devices(void)
 +{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return up_pinctrl->pdata->nfunction;
-+}
-+
-+static const char *up_get_function_name(struct pinctrl_dev *pctldev,
-+					unsigned int function)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return up_pinctrl->pdata->functions[function].name;
-+}
-+
-+static int up_get_function_groups(struct pinctrl_dev *pctldev,
-+				  unsigned int function,
-+				  const char * const **groups,
-+				  unsigned int * const ngroups)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = up_pinctrl->pdata->functions[function].groups;
-+	*ngroups = up_pinctrl->pdata->functions[function].ngroup;
-+
-+	return 0;
-+}
-+
-+static int up_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
-+			     unsigned int group)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
-+	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
-+	const struct up_board_pinctrl_group *grp = &pdata->groups[group];
-+	int i, ret;
-+
-+	for (i = 0; i < grp->npin; i++) {
-+		int offset = grp->pins[i];
-+		struct up_board_pin_info *pin = &pdata->pins[offset];
-+
-+		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
-+			ret = cpld_info->reg_set_bit(cpld_info->cpld,
-+						     pin->dir_ctrl_offset,
-+						     pin->func_dir);
-+			if (ret)
-+				return ret;
-+		}
-+		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
-+			ret = cpld_info->reg_set_bit(cpld_info->cpld,
-+						     pin->mux_ctrl_offset,
-+						     UP_BOARD_PMUX_FUNC);
-+			if (ret)
-+				return ret;
-+		}
-+		pin->func_enabled = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int up_gpio_set_direction(struct pinctrl_dev *pctldev,
-+				 struct pinctrl_gpio_range *range,
-+				 unsigned int offset, bool input)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
-+	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
-+	struct up_board_pin_info *pin = &pdata->pins[offset];
-+	int dir = input ? UP_BOARD_PDIR_IN : UP_BOARD_PDIR_OUT;
-+
-+	return cpld_info->reg_set_bit(cpld_info->cpld,
-+				      pin->dir_ctrl_offset,
-+				      dir);
-+}
-+
-+static int up_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				  struct pinctrl_gpio_range *range,
-+				  unsigned int offset)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
-+	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
-+	struct up_board_pin_info *pin = &pdata->pins[offset];
++	const struct dmi_system_id *system_id;
 +	int ret;
 +
-+	if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
-+		ret = cpld_info->reg_set_bit(cpld_info->cpld,
-+					     pin->mux_ctrl_offset,
-+					     UP_BOARD_PMUX_GPIO);
-+		if (ret)
++	system_id = dmi_first_match(up_board_id_table);
++	if (!system_id)
++		return -ENXIO;
++
++	up_board = system_id->driver_data;
++
++	/* Register pin control mappings specific to board version */
++	if (up_board->pinmux_maps) {
++		ret = pinctrl_register_mappings(up_board->pinmux_maps,
++						up_board->num_pinmux_maps);
++		if (ret) {
++			pr_err("Failed to register UP Board pinctrl mapping");
 +			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void up_gpio_disable_free(struct pinctrl_dev *pctldev,
-+				 struct pinctrl_gpio_range *range,
-+				 unsigned int offset)
-+{
-+	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
-+	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
-+	struct up_board_pin_info *pin = &pdata->pins[offset];
-+
-+	if (pin->func_enabled) {
-+		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
-+			cpld_info->reg_set_bit(cpld_info->cpld,
-+					       pin->dir_ctrl_offset,
-+					       pin->func_dir);
-+		}
-+		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
-+			cpld_info->reg_set_bit(cpld_info->cpld,
-+					       pin->mux_ctrl_offset,
-+					       UP_BOARD_PMUX_FUNC);
 +		}
 +	}
-+}
 +
-+static const struct pinmux_ops up_pinmux_ops = {
-+	.get_functions_count = up_get_functions_count,
-+	.get_function_name = up_get_function_name,
-+	.get_function_groups = up_get_function_groups,
-+	.set_mux = up_pinmux_set_mux,
-+	.gpio_request_enable = up_gpio_request_enable,
-+	.gpio_disable_free = up_gpio_disable_free,
-+	.gpio_set_direction = up_gpio_set_direction,
-+};
++	/* Create a platform device to manage the UP Board I/O header CPLD */
++	up_board->cpld_pdev =
++		platform_device_register_simple("up-board-cpld",
++						PLATFORM_DEVID_NONE,
++						NULL, 0);
++	if (IS_ERR(up_board->cpld_pdev)) {
++		pr_err("Failed to register UP Board I/O CPLD platform device");
++		return PTR_ERR(up_board->cpld_pdev);
++	}
 +
-+static int up_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+			 unsigned long *config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static int up_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			 unsigned long *configs, unsigned int nconfigs)
-+{
-+	return 0;
-+}
-+
-+static const struct pinconf_ops up_pinconf_ops = {
-+	.is_generic = true,
-+	.pin_config_set = up_config_set,
-+	.pin_config_get = up_config_get,
-+};
-+
-+static struct pinctrl_desc up_pinctrl_desc = {
-+	.owner = THIS_MODULE,
-+	.pctlops = &up_pinctrl_ops,
-+	.pmxops = &up_pinmux_ops,
-+	.confops = &up_pinconf_ops,
-+};
-+
-+static int up_board_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct up_board_pinctrl_pdata *pdata = dev_get_platdata(dev);
-+	struct up_board_pinctrl *up_pinctrl;
-+
-+	if (!pdata)
-+		return -EINVAL;
-+
-+	up_pinctrl = devm_kzalloc(dev, sizeof(*up_pinctrl), GFP_KERNEL);
-+	if (!up_pinctrl)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, up_pinctrl);
-+
-+	up_pinctrl->pdata = pdata;
-+	up_pinctrl->pctldesc = up_pinctrl_desc;
-+	up_pinctrl->pctldesc.pins = pdata->descs;
-+	up_pinctrl->pctldesc.npins = pdata->ndesc;
-+	up_pinctrl->pctldesc.name = dev_name(dev);
-+	up_pinctrl->pctldev = pinctrl_register(&up_pinctrl->pctldesc,
-+					       dev, up_pinctrl);
-+	if (IS_ERR(up_pinctrl->pctldev)) {
-+		dev_err(dev, "failed to register pinctrl driver\n");
-+		return PTR_ERR(up_pinctrl->pctldev);
++	up_board->vreg_pdev =
++		regulator_register_always_on(0, "fixed-3.3V",
++					     vref3v3_consumers,
++					     ARRAY_SIZE(vref3v3_consumers),
++					     3300000);
++	if (!up_board->vreg_pdev) {
++		pr_err("Failed to register UP Board ADC vref regulator");
++		platform_device_unregister(up_board->cpld_pdev);
++		return -ENODEV;
 +	}
 +
 +	return 0;
 +}
 +
-+static int up_board_pinctrl_remove(struct platform_device *pdev)
++static void __exit
++up_board_exit(void)
 +{
-+	struct up_board_pinctrl *up_pinctrl = platform_get_drvdata(pdev);
-+
-+	pinctrl_unregister(up_pinctrl->pctldev);
-+
-+	return 0;
++	platform_device_unregister(up_board->vreg_pdev);
++	platform_device_unregister(up_board->cpld_pdev);
 +}
 +
-+static struct platform_driver up_board_pinctrl_driver = {
-+	.driver.name	= "up-board-pinctrl",
-+	.driver.owner	= THIS_MODULE,
-+	.probe		= up_board_pinctrl_probe,
-+	.remove		= up_board_pinctrl_remove,
-+};
-+
-+static int __init up_board_pinctrl_init(void)
-+{
-+	return platform_driver_register(&up_board_pinctrl_driver);
-+}
-+subsys_initcall(up_board_pinctrl_init);
-+
-+static void __exit up_board_pinctrl_exit(void)
-+{
-+	platform_driver_unregister(&up_board_pinctrl_driver);
-+}
-+module_exit(up_board_pinctrl_exit);
++/*
++ * Using arch_initcall to ensure that pinmux maps are registered
++ * before the relevant devices are initialised
++ */
++arch_initcall(up_board_init_devices);
++module_exit(up_board_exit);
 +
 +MODULE_AUTHOR("Dan O'Donovan <dan@emutex.com>");
-+MODULE_DESCRIPTION("UP Board I/O Header CPLD Pin Control driver");
++MODULE_DESCRIPTION("Platform driver for UP Board");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:up-board-pinctrl");
-diff --git a/drivers/platform/x86/up_board_pinctrl.h b/drivers/platform/x86/up_board_pinctrl.h
-new file mode 100644
-index 0000000..ce46886
---- /dev/null
-+++ b/drivers/platform/x86/up_board_pinctrl.h
-@@ -0,0 +1,102 @@
-+/*
-+ * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
-+ *
-+ * Author: Dan O'Donovan <dan@emutex.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#ifndef _UP_BOARD_PINCTRL_H_
-+#define _UP_BOARD_PINCTRL_H_
-+
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "up_board_cpld.h"
-+
-+#define UP_BOARD_PDIR_NONE	-1
-+#define UP_BOARD_PDIR_OUT	 0
-+#define UP_BOARD_PDIR_IN	 1
-+
-+#define UP_BOARD_PMUX_GPIO	 0
-+#define UP_BOARD_PMUX_FUNC	 1
-+
-+#define UP_BOARD_UNASSIGNED	-1
-+
-+/**
-+ * struct up_board_pinctrl_group - information for a single pinctrl group
-+ * @name: group name
-+ * @pins: array of pins associated with this group
-+ * @npin: size of pins array
-+ */
-+struct up_board_pinctrl_group {
-+	const char *name;
-+	const unsigned int *pins;
-+	size_t npin;
-+};
-+
-+/**
-+ * struct up_board_pinctrl_function - information for a single pinctrl function
-+ * @name:	function name
-+ * @groups:	array of groups associated with this function
-+ * @ngroup:	size of groups array
-+ */
-+struct up_board_pinctrl_function {
-+	const char *name;
-+	const char * const *groups;
-+	size_t ngroup;
-+};
-+
-+/**
-+ * struct up_board_pin_info - information for each UP Board GPIO pin
-+ * @dir_ctrl_offset:	CPLD register bit offset for pin direction control
-+ * @mux_ctrl_offset:	CPLD register bit offset for pin mux control
-+ * @func_dir:		Pin dir to set when alternate pin function is selected
-+ * @func_enabled:	Flag to indicate if alternate pin function is enabled
-+ *
-+ * Information for a single GPIO pin on the UP Board I/O header, including
-+ * details of CPLD parameters for managing pin direction and function selection.
-+ */
-+struct up_board_pin_info {
-+	int dir_ctrl_offset;
-+	int mux_ctrl_offset;
-+	int func_dir;
-+	bool func_enabled;
-+};
-+
-+/**
-+ * struct up_board_pinctrl_pdata - platform driver data
-+ * @cpld_info:	CPLD configuration interface information
-+ * @pins:	Array of pin information structures
-+ * @npin:	Number of entries in pins array
-+ * @descs:	Array of pinctrl pin descriptors
-+ * @ndesc:	Number of entries in pin_descs array
-+ * @groups:	Array of pin groups
-+ * @ngroup:	Number of entries in groups array
-+ * @functions:	Array of pin functions
-+ * @nfunction:	Number of entries in functions array
-+ *
-+ * Platform data provided to UP Board CPLD pinctrl platform device driver.
-+ * Provides information for each GPIO pin on the UP Board I/O header.
-+ */
-+struct up_board_pinctrl_pdata {
-+	struct up_board_cpld_info cpld_info;
-+	struct up_board_pin_info *pins;
-+	size_t npin;
-+	const struct pinctrl_pin_desc *descs;
-+	size_t ndesc;
-+	const struct up_board_pinctrl_group *groups;
-+	size_t ngroup;
-+	const struct up_board_pinctrl_function *functions;
-+	size_t nfunction;
-+};
-+
-+#endif /* _UP_BOARD_PINCTRL_H_ */
++MODULE_ALIAS("dmi:*:svnAAEON*:rnUP-CHT01:*");
 -- 
 2.1.4
