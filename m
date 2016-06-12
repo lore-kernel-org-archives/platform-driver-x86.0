@@ -1,60 +1,45 @@
 From: Dan O'Donovan <dan@emutex.com>
-Subject: [RFC PATCH 3/5] platform: x86: add UP Board I/O gpio driver
-Date: Sun, 12 Jun 2016 21:13:10 +0100
-Message-ID: <1465762392-9205-4-git-send-email-dan@emutex.com>
+Subject: [RFC PATCH 2/5] platform: x86: add UP Board I/O pinctrl driver
+Date: Sun, 12 Jun 2016 21:13:09 +0100
+Message-ID: <1465762392-9205-3-git-send-email-dan@emutex.com>
 References: <1465762392-9205-1-git-send-email-dan@emutex.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bert.emutex.com ([91.103.1.109]:32890 "EHLO bert.emutex.com"
+Received: from bert.emutex.com ([91.103.1.109]:32889 "EHLO bert.emutex.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753090AbcFLULb (ORCPT
+	id S1750937AbcFLULa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 12 Jun 2016 16:11:31 -0400
+	Sun, 12 Jun 2016 16:11:30 -0400
 Received: from [92.51.199.138] (helo=statler.emutex.com)
 	by bert.emutex.com with esmtp (Exim 4.84)
 	(envelope-from <dan@emutex.com>)
-	id 1bCBjD-0006Ic-VP
-	for platform-driver-x86@vger.kernel.org; Sun, 12 Jun 2016 21:11:28 +0100
+	id 1bCBjD-0006IY-Ea
+	for platform-driver-x86@vger.kernel.org; Sun, 12 Jun 2016 21:11:27 +0100
 In-Reply-To: <1465762392-9205-1-git-send-email-dan@emutex.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: Dan O'Donovan <dan@emutex.com>
 
-This gpio driver encapsulates the GPIO pin mapping function provided
-by the I/O CPLD integrated on the UP Board.  This makes possible the
-following features:
-- integration of UP Board pin control functions with GPIO run-time
-  configuration hooks, to allow run-time pin direction and pin mux
-  selection
-- logical numbering scheme for the external GPIO pins which is
-  independent from the internal mapping to SoC GPIO pins.  This
-  allows for variations in CPLD pin mapping configurations.
-- numbering scheme which mimicks the Raspberry Pi GPIO numbering to
-  facilitate application portability, reflecting the hardware design
-  goal for the UP Board I/O pin header.
-
-In essence, this driver is implemented as a thin layer on top of the
-underlying Cherry Trail SoC GPIO driver, and instantiates a logical
-gpiochip device.  The intention is that the user at application level
-would utilise this logical GPIO chip to access the GPIO functions on
-the UP Board I/O pins.
+This pinctrl driver manages the Pin Control functions provided by
+the I/O CPLD integrated on the UP Board.  This includes dynamic pin
+direction and pin mux configuration.
 
 Signed-off-by: Dan O'Donovan <dan@emutex.com>
 ---
- drivers/platform/x86/up_board_gpio.c | 254 +++++++++++++++++++++++++++++++++++
- drivers/platform/x86/up_board_gpio.h |  59 ++++++++
- 2 files changed, 313 insertions(+)
- create mode 100644 drivers/platform/x86/up_board_gpio.c
- create mode 100644 drivers/platform/x86/up_board_gpio.h
+ drivers/platform/x86/up_board_pinctrl.c | 285 ++++++++++++++++++++++++++++++++
+ drivers/platform/x86/up_board_pinctrl.h | 102 ++++++++++++
+ 2 files changed, 387 insertions(+)
+ create mode 100644 drivers/platform/x86/up_board_pinctrl.c
+ create mode 100644 drivers/platform/x86/up_board_pinctrl.h
 
-diff --git a/drivers/platform/x86/up_board_gpio.c b/drivers/platform/x86/up_board_gpio.c
+diff --git a/drivers/platform/x86/up_board_pinctrl.c b/drivers/platform/x86/up_board_pinctrl.c
 new file mode 100644
-index 0000000..c30c64b
+index 0000000..be95837
 --- /dev/null
-+++ b/drivers/platform/x86/up_board_gpio.c
-@@ -0,0 +1,254 @@
++++ b/drivers/platform/x86/up_board_pinctrl.c
+@@ -0,0 +1,285 @@
 +/*
-+ * UP Board I/O Header CPLD GPIO driver.
++ * UP Board I/O Header CPLD Pin Control driver.
 + *
 + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
 + *
@@ -74,245 +59,276 @@ index 0000000..c30c64b
 + */
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/gpio.h>
 +#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
 +#include <linux/platform_device.h>
-+#include <linux/interrupt.h>
 +
-+#include "up_board_gpio.h"
++#include "up_board_pinctrl.h"
 +
 +/* Internal context information for this driver */
-+struct up_board_gpio {
-+	struct up_board_gpio_pdata *pdata;
-+	struct gpio_chip chip;
++struct up_board_pinctrl {
++	struct up_board_pinctrl_pdata *pdata;
++	struct pinctrl_desc pctldesc;
++	struct pinctrl_dev *pctldev;
 +};
 +
-+static irqreturn_t up_gpio_irq_handler(int irq, void *data)
++static int up_get_groups_count(struct pinctrl_dev *pctldev)
 +{
-+	struct up_board_gpio_info *gpio = data;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	generic_handle_irq(gpio->irq);
-+	return IRQ_HANDLED;
++	return up_pinctrl->pdata->ngroup;
 +}
 +
-+static unsigned int up_gpio_irq_startup(struct irq_data *data)
++static const char *up_get_group_name(struct pinctrl_dev *pctldev,
++				     unsigned int group)
 +{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	unsigned int offset = irqd_to_hwirq(data);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return request_irq(gpio->soc_gpio_irq, up_gpio_irq_handler,
-+			   IRQF_ONESHOT, gc->label, gpio);
++	return up_pinctrl->pdata->groups[group].name;
 +}
 +
-+static void up_gpio_irq_shutdown(struct irq_data *data)
++static int up_get_group_pins(struct pinctrl_dev *pctldev, unsigned int group,
++			     const unsigned int **pins, unsigned int *npins)
 +{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	unsigned int offset = irqd_to_hwirq(data);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	free_irq(gpio->soc_gpio_irq, gpio);
++	*pins = up_pinctrl->pdata->groups[group].pins;
++	*npins = up_pinctrl->pdata->groups[group].npin;
++
++	return 0;
 +}
 +
-+static struct irq_chip up_gpio_irqchip = {
-+	.irq_startup = up_gpio_irq_startup,
-+	.irq_shutdown = up_gpio_irq_shutdown,
-+	.irq_enable = irq_chip_enable_parent,
-+	.irq_disable = irq_chip_disable_parent,
-+	.irq_mask = irq_chip_mask_parent,
-+	.irq_unmask = irq_chip_unmask_parent,
-+	.irq_ack = irq_chip_ack_parent,
-+	.irq_set_type = irq_chip_set_type_parent,
++static const struct pinctrl_ops up_pinctrl_ops = {
++	.get_groups_count = up_get_groups_count,
++	.get_group_name = up_get_group_name,
++	.get_group_pins = up_get_group_pins,
 +};
 +
-+static int up_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
++static int up_get_functions_count(struct pinctrl_dev *pctldev)
 +{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+	int ret;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	ret = gpiod_direction_input(gpio->soc_gpiod);
-+	if (ret)
-+		return ret;
-+
-+	return pinctrl_gpio_direction_input(gc->base + offset);
++	return up_pinctrl->pdata->nfunction;
 +}
 +
-+static int up_gpio_dir_out(struct gpio_chip *gc, unsigned int offset, int value)
++static const char *up_get_function_name(struct pinctrl_dev *pctldev,
++					unsigned int function)
 +{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+	int ret;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	ret = pinctrl_gpio_direction_output(gc->base + offset);
-+	if (ret)
-+		return ret;
-+
-+	return gpiod_direction_output(gpio->soc_gpiod, value);
++	return up_pinctrl->pdata->functions[function].name;
 +}
 +
-+static int up_gpio_get_dir(struct gpio_chip *gc, unsigned int offset)
++static int up_get_function_groups(struct pinctrl_dev *pctldev,
++				  unsigned int function,
++				  const char * const **groups,
++				  unsigned int * const ngroups)
 +{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return gpiod_get_direction(gpio->soc_gpiod);
++	*groups = up_pinctrl->pdata->functions[function].groups;
++	*ngroups = up_pinctrl->pdata->functions[function].ngroup;
++
++	return 0;
 +}
 +
-+static int up_gpio_request(struct gpio_chip *gc, unsigned int offset)
++static int up_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
++			     unsigned int group)
 +{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+	int ret;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	const struct up_board_pinctrl_group *grp = &pdata->groups[group];
++	int i, ret;
 +
-+	ret = pinctrl_request_gpio(gc->base + offset);
-+	if (ret)
-+		return ret;
++	for (i = 0; i < grp->npin; i++) {
++		int offset = grp->pins[i];
++		struct up_board_pin_info *pin = &pdata->pins[offset];
 +
-+	if (gpiod_get_direction(gpio->soc_gpiod))
-+		ret = pinctrl_gpio_direction_input(gc->base + offset);
-+	else
-+		ret = pinctrl_gpio_direction_output(gc->base + offset);
-+	if (ret)
-+		return ret;
-+
-+	return gpio_request(gpio->soc_gpio, gc->label);
-+}
-+
-+static void up_gpio_free(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+
-+	pinctrl_free_gpio(gc->base + offset);
-+	gpio_free(gpio->soc_gpio);
-+}
-+
-+static int up_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+
-+	return gpiod_get_value(gpio->soc_gpiod);
-+}
-+
-+static void up_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct up_board_gpio *up_gpio = gpiochip_get_data(gc);
-+	struct up_board_gpio_info *gpio = &up_gpio->pdata->gpios[offset];
-+
-+	gpiod_set_value(gpio->soc_gpiod, value);
-+}
-+
-+static struct gpio_chip up_gpio_chip = {
-+	.owner			= THIS_MODULE,
-+	.request		= up_gpio_request,
-+	.free			= up_gpio_free,
-+	.get_direction		= up_gpio_get_dir,
-+	.direction_input	= up_gpio_dir_in,
-+	.direction_output	= up_gpio_dir_out,
-+	.get			= up_gpio_get,
-+	.set			= up_gpio_set,
-+};
-+
-+static int up_board_gpio_setup(struct up_board_gpio *up_gpio)
-+{
-+	struct up_board_gpio_pdata *pdata = up_gpio->pdata;
-+	size_t i;
-+
-+	for (i = 0; i < pdata->ngpio; i++) {
-+		struct up_board_gpio_info *gpio = &pdata->gpios[i];
-+		struct irq_data *irq_data;
-+
-+		/*
-+		 * Create parent linkage with SoC GPIO IRQs to simplify
-+		 * IRQ handling by enabling use of irq_chip_*_parent()
-+		 * functions
-+		 */
-+		gpio->soc_gpio_irq = gpiod_to_irq(gpio->soc_gpiod);
-+		gpio->irq = irq_find_mapping(up_gpio->chip.irqdomain, i);
-+		irq_set_parent(gpio->irq, gpio->soc_gpio_irq);
-+		irq_data = irq_get_irq_data(gpio->irq);
-+		irq_data->parent_data = irq_get_irq_data(gpio->soc_gpio_irq);
++		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
++			ret = cpld_info->reg_set_bit(cpld_info->cpld,
++						     pin->dir_ctrl_offset,
++						     pin->func_dir);
++			if (ret)
++				return ret;
++		}
++		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++			ret = cpld_info->reg_set_bit(cpld_info->cpld,
++						     pin->mux_ctrl_offset,
++						     UP_BOARD_PMUX_FUNC);
++			if (ret)
++				return ret;
++		}
++		pin->func_enabled = true;
 +	}
 +
 +	return 0;
 +}
 +
-+static int up_board_gpio_probe(struct platform_device *pdev)
++static int up_gpio_set_direction(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int offset, bool input)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++	int dir = input ? UP_BOARD_PDIR_IN : UP_BOARD_PDIR_OUT;
++
++	return cpld_info->reg_set_bit(cpld_info->cpld,
++				      pin->dir_ctrl_offset,
++				      dir);
++}
++
++static int up_gpio_request_enable(struct pinctrl_dev *pctldev,
++				  struct pinctrl_gpio_range *range,
++				  unsigned int offset)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++	int ret;
++
++	if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++		ret = cpld_info->reg_set_bit(cpld_info->cpld,
++					     pin->mux_ctrl_offset,
++					     UP_BOARD_PMUX_GPIO);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static void up_gpio_disable_free(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int offset)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++
++	if (pin->func_enabled) {
++		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
++			cpld_info->reg_set_bit(cpld_info->cpld,
++					       pin->dir_ctrl_offset,
++					       pin->func_dir);
++		}
++		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++			cpld_info->reg_set_bit(cpld_info->cpld,
++					       pin->mux_ctrl_offset,
++					       UP_BOARD_PMUX_FUNC);
++		}
++	}
++}
++
++static const struct pinmux_ops up_pinmux_ops = {
++	.get_functions_count = up_get_functions_count,
++	.get_function_name = up_get_function_name,
++	.get_function_groups = up_get_function_groups,
++	.set_mux = up_pinmux_set_mux,
++	.gpio_request_enable = up_gpio_request_enable,
++	.gpio_disable_free = up_gpio_disable_free,
++	.gpio_set_direction = up_gpio_set_direction,
++};
++
++static int up_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
++			 unsigned long *config)
++{
++	return -ENOTSUPP;
++}
++
++static int up_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			 unsigned long *configs, unsigned int nconfigs)
++{
++	return 0;
++}
++
++static const struct pinconf_ops up_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_set = up_config_set,
++	.pin_config_get = up_config_get,
++};
++
++static struct pinctrl_desc up_pinctrl_desc = {
++	.owner = THIS_MODULE,
++	.pctlops = &up_pinctrl_ops,
++	.pmxops = &up_pinmux_ops,
++	.confops = &up_pinconf_ops,
++};
++
++static int up_board_pinctrl_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct up_board_gpio_pdata *pdata = dev_get_platdata(dev);
-+	struct up_board_gpio *up_gpio;
-+	int ret;
++	struct up_board_pinctrl_pdata *pdata = dev_get_platdata(dev);
++	struct up_board_pinctrl *up_pinctrl;
 +
 +	if (!pdata)
 +		return -EINVAL;
 +
-+	up_gpio = devm_kzalloc(dev, sizeof(*up_gpio), GFP_KERNEL);
-+	if (!up_gpio)
++	up_pinctrl = devm_kzalloc(dev, sizeof(*up_pinctrl), GFP_KERNEL);
++	if (!up_pinctrl)
 +		return -ENOMEM;
 +
-+	up_gpio->pdata = pdata;
-+	up_gpio->chip = up_gpio_chip;
-+	up_gpio->chip.parent = dev;
-+	up_gpio->chip.ngpio = pdata->ngpio;
-+	up_gpio->chip.label = dev_name(dev);
++	platform_set_drvdata(pdev, up_pinctrl);
 +
-+	ret = devm_gpiochip_add_data(dev, &up_gpio->chip, up_gpio);
-+	if (ret) {
-+		dev_err(dev, "failed to add gpio chip: %d\n", ret);
-+		return ret;
++	up_pinctrl->pdata = pdata;
++	up_pinctrl->pctldesc = up_pinctrl_desc;
++	up_pinctrl->pctldesc.pins = pdata->descs;
++	up_pinctrl->pctldesc.npins = pdata->ndesc;
++	up_pinctrl->pctldesc.name = dev_name(dev);
++	up_pinctrl->pctldev = pinctrl_register(&up_pinctrl->pctldesc,
++					       dev, up_pinctrl);
++	if (IS_ERR(up_pinctrl->pctldev)) {
++		dev_err(dev, "failed to register pinctrl driver\n");
++		return PTR_ERR(up_pinctrl->pctldev);
 +	}
-+
-+	ret = gpiochip_add_pin_range(&up_gpio->chip, "up-board-pinctrl", 0, 0,
-+				     pdata->ngpio);
-+	if (ret) {
-+		dev_err(dev, "failed to add GPIO pin range\n");
-+		return ret;
-+	}
-+
-+	up_gpio_irqchip.name = up_gpio->chip.label;
-+	ret = gpiochip_irqchip_add(&up_gpio->chip, &up_gpio_irqchip, 0,
-+				   handle_simple_irq, IRQ_TYPE_NONE);
-+	if (ret) {
-+		dev_err(dev, "failed to add IRQ chip\n");
-+		goto fail_irqchip_add;
-+	}
-+
-+	ret = up_board_gpio_setup(up_gpio);
-+	if (ret)
-+		goto fail_gpio_setup;
 +
 +	return 0;
-+
-+fail_gpio_setup:
-+fail_irqchip_add:
-+	gpiochip_remove_pin_ranges(&up_gpio->chip);
-+
-+	return ret;
 +}
 +
-+static struct platform_driver up_board_gpio_driver = {
-+	.driver.name	= "up-board-gpio",
++static int up_board_pinctrl_remove(struct platform_device *pdev)
++{
++	struct up_board_pinctrl *up_pinctrl = platform_get_drvdata(pdev);
++
++	pinctrl_unregister(up_pinctrl->pctldev);
++
++	return 0;
++}
++
++static struct platform_driver up_board_pinctrl_driver = {
++	.driver.name	= "up-board-pinctrl",
 +	.driver.owner	= THIS_MODULE,
-+	.probe		= up_board_gpio_probe,
++	.probe		= up_board_pinctrl_probe,
++	.remove		= up_board_pinctrl_remove,
 +};
 +
-+module_platform_driver(up_board_gpio_driver);
++static int __init up_board_pinctrl_init(void)
++{
++	return platform_driver_register(&up_board_pinctrl_driver);
++}
++subsys_initcall(up_board_pinctrl_init);
++
++static void __exit up_board_pinctrl_exit(void)
++{
++	platform_driver_unregister(&up_board_pinctrl_driver);
++}
++module_exit(up_board_pinctrl_exit);
 +
 +MODULE_AUTHOR("Dan O'Donovan <dan@emutex.com>");
-+MODULE_DESCRIPTION("UP Board I/O Header CPLD GPIO driver");
++MODULE_DESCRIPTION("UP Board I/O Header CPLD Pin Control driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:up-board-gpio");
-diff --git a/drivers/platform/x86/up_board_gpio.h b/drivers/platform/x86/up_board_gpio.h
++MODULE_ALIAS("platform:up-board-pinctrl");
+diff --git a/drivers/platform/x86/up_board_pinctrl.h b/drivers/platform/x86/up_board_pinctrl.h
 new file mode 100644
-index 0000000..ada7d2e
+index 0000000..ce46886
 --- /dev/null
-+++ b/drivers/platform/x86/up_board_gpio.h
-@@ -0,0 +1,59 @@
++++ b/drivers/platform/x86/up_board_pinctrl.h
+@@ -0,0 +1,102 @@
 +/*
 + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
 + *
@@ -330,47 +346,90 @@ index 0000000..ada7d2e
 + * You should have received a copy of the GNU General Public License
 + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
-+#ifndef _UP_BOARD_GPIO_H_
-+#define _UP_BOARD_GPIO_H_
++#ifndef _UP_BOARD_PINCTRL_H_
++#define _UP_BOARD_PINCTRL_H_
++
++#include <linux/pinctrl/pinctrl.h>
++
++#include "up_board_cpld.h"
++
++#define UP_BOARD_PDIR_NONE	-1
++#define UP_BOARD_PDIR_OUT	 0
++#define UP_BOARD_PDIR_IN	 1
++
++#define UP_BOARD_PMUX_GPIO	 0
++#define UP_BOARD_PMUX_FUNC	 1
++
++#define UP_BOARD_UNASSIGNED	-1
 +
 +/**
-+ * struct up_board_gpio_info - information for an UP Board GPIO pin
-+ * @soc_gc_name:	Device name for corresponding SoC GPIO chip
-+ * @soc_gc_offset:	GPIO chip offset of corresponding SoC GPIO pin
-+ * @soc_gc:		SoC GPIO chip reference
-+ * @soc_gpiod:		SoC GPIO descriptor reference
-+ * @soc_gpio:		SoC GPIO assigned pin number
-+ * @soc_gpio_irq:	SoC GPIO assigned IRQ number
-+ * @soc_gpio_flags:	Optional GPIO flags to apply to SoC GPIO
-+ * @irq:		Assigned IRQ number for this GPIO pin
++ * struct up_board_pinctrl_group - information for a single pinctrl group
++ * @name: group name
++ * @pins: array of pins associated with this group
++ * @npin: size of pins array
++ */
++struct up_board_pinctrl_group {
++	const char *name;
++	const unsigned int *pins;
++	size_t npin;
++};
++
++/**
++ * struct up_board_pinctrl_function - information for a single pinctrl function
++ * @name:	function name
++ * @groups:	array of groups associated with this function
++ * @ngroup:	size of groups array
++ */
++struct up_board_pinctrl_function {
++	const char *name;
++	const char * const *groups;
++	size_t ngroup;
++};
++
++/**
++ * struct up_board_pin_info - information for each UP Board GPIO pin
++ * @dir_ctrl_offset:	CPLD register bit offset for pin direction control
++ * @mux_ctrl_offset:	CPLD register bit offset for pin mux control
++ * @func_dir:		Pin dir to set when alternate pin function is selected
++ * @func_enabled:	Flag to indicate if alternate pin function is enabled
 + *
 + * Information for a single GPIO pin on the UP Board I/O header, including
-+ * details of the corresponding SoC GPIO mapped to this I/O header GPIO.
++ * details of CPLD parameters for managing pin direction and function selection.
 + */
-+struct up_board_gpio_info {
-+	char *soc_gc_name;
-+	unsigned int soc_gc_offset;
-+	struct gpio_chip *soc_gc;
-+	struct gpio_desc *soc_gpiod;
-+	int soc_gpio;
-+	int soc_gpio_irq;
-+	int soc_gpio_flags;
-+	int irq;
++struct up_board_pin_info {
++	int dir_ctrl_offset;
++	int mux_ctrl_offset;
++	int func_dir;
++	bool func_enabled;
 +};
 +
 +/**
-+ * struct up_board_gpio_pdata - platform driver data
-+ * @gpios:	Array of GPIO information structures.
-+ * @ngpio:	Number of entries in gpios array.
++ * struct up_board_pinctrl_pdata - platform driver data
++ * @cpld_info:	CPLD configuration interface information
++ * @pins:	Array of pin information structures
++ * @npin:	Number of entries in pins array
++ * @descs:	Array of pinctrl pin descriptors
++ * @ndesc:	Number of entries in pin_descs array
++ * @groups:	Array of pin groups
++ * @ngroup:	Number of entries in groups array
++ * @functions:	Array of pin functions
++ * @nfunction:	Number of entries in functions array
 + *
-+ * Platform data provided to UP Board CPLD GPIO platform device driver.
++ * Platform data provided to UP Board CPLD pinctrl platform device driver.
 + * Provides information for each GPIO pin on the UP Board I/O header.
 + */
-+struct up_board_gpio_pdata {
-+	struct up_board_gpio_info *gpios;
-+	size_t ngpio;
++struct up_board_pinctrl_pdata {
++	struct up_board_cpld_info cpld_info;
++	struct up_board_pin_info *pins;
++	size_t npin;
++	const struct pinctrl_pin_desc *descs;
++	size_t ndesc;
++	const struct up_board_pinctrl_group *groups;
++	size_t ngroup;
++	const struct up_board_pinctrl_function *functions;
++	size_t nfunction;
 +};
 +
-+#endif /* _UP_BOARD_GPIO_H_ */
++#endif /* _UP_BOARD_PINCTRL_H_ */
 -- 
 2.1.4
