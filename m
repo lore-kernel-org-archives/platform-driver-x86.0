@@ -1,39 +1,52 @@
-From: "Yong, Jonathan" <jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] x86: Fix Apollo Lake Watchdog address in PMC driver
-Date: Mon, 13 Jun 2016 12:42:23 +0800
-Message-ID: <575E39AF.6050906@intel.com>
-References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com> <1463541972-19758-3-git-send-email-jonathan.yong@intel.com> <573BE985.1000306@roeck-us.net> <573BF421.2020503@intel.com> <573C7E0C.7050304@roeck-us.net> <20160524201316.GA5857@f23x64.localdomain> <57455A8B.1090807@intel.com> <574FEE13.30500@intel.com> <20160607220323.GA28348@f23x64.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160607220323.GA28348-EK61lajVJsRSq9BJjBFyUp/QNRX+jHPU@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] hp-wmi: fix wifi cannot be hard-unblock
+Date: Mon, 13 Jun 2016 19:44:00 +0800
+Message-ID: <1465818240-11994-1-git-send-email-alex.hung@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:39940 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1422740AbcFMLoJ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 13 Jun 2016 07:44:09 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, david.ward@ll.mit.edu
 
-On 06/08/2016 06:03, Darren Hart wrote:
->>>
->>> Hi Qipeng,
->>>
->>> Do you know the history behind drivers/platform/x86/intel_pmc_ipc.c?
->>> Were the specs based on earlier prototypes?
->>>
->>
->> Qipeng, ping?
->>
->
-> Jonathan, can you follow-up with Qiping (possibly internally) and get back to
-> the list with a definitive response? Getting these into 4.7-rc would be good so
-> we don't have to push it back via stable, but we need to be sure it's the right
-> fix.
->
+Several users reported wifi cannot be unblocked as discussed in [1].
+This patch removes the useof 2009 flag by BIOS but uses the actual WMI
+function calls - it will be skipped if WMI reports unsupported
 
-I checked with Qipeng, the 0x30h offset was based on an earlier internal 
-prototype, 0x40h should be OK for Apollo Lake.
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=69131
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/hp-wmi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 6f145f2..96ffda4 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -718,6 +718,11 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
+ 	if (err)
+ 		return err;
+ 
++	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 1, &wireless,
++				   sizeof(wireless), 0);
++	if (err)
++		return err;
++
+ 	if (wireless & 0x1) {
+ 		wifi_rfkill = rfkill_alloc("hp-wifi", &device->dev,
+ 					   RFKILL_TYPE_WLAN,
+@@ -882,7 +887,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	wwan_rfkill = NULL;
+ 	rfkill2_count = 0;
+ 
+-	if (hp_wmi_bios_2009_later() || hp_wmi_rfkill_setup(device))
++	if (hp_wmi_rfkill_setup(device))
+ 		hp_wmi_rfkill2_setup(device);
+ 
+ 	err = device_create_file(&device->dev, &dev_attr_display);
+-- 
+2.7.4
