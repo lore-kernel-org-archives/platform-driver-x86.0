@@ -1,77 +1,64 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Moving drivers/leds/dell-led.c to drivers/platform/x86
-Date: Mon, 13 Jun 2016 15:49:42 +0200
-Message-ID: <20160613134942.GA2824@eudyptula.hq.kempniu.pl>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED trigger
+Date: Mon, 13 Jun 2016 11:24:24 -0400
+Message-ID: <CA+A7VXXP3TYuk4Vvgc8YvxPFo06GG6WpyLJS+2vMLzr0iKQgsA@mail.gmail.com>
+References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
+ <1462199948-6424-2-git-send-email-jprvita@endlessm.com> <20160504072936.GB17045@amd>
+ <1463045572.13313.21.camel@sipsolutions.net> <20160519071639.GB17077@amd> <1465476194.3442.21.camel@sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yw0-f195.google.com ([209.85.161.195]:34103 "EHLO
+	mail-yw0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1424071AbcFMPZF convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 13 Jun 2016 11:25:05 -0400
+In-Reply-To: <1465476194.3442.21.camel@sipsolutions.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Pavel Machek <pavel@ucw.cz>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 
-Hi everyone,
+On 9 June 2016 at 08:43, Johannes Berg <johannes@sipsolutions.net> wrot=
+e:
+> On Thu, 2016-05-19 at 09:16 +0200, Pavel Machek wrote:
+>
 
-Back in January [1], while working on the dell-smbios module, I
-suggested that the code present in drivers/leds/dell-led.c could be
-moved to drivers/platform/x86 for coherency.  I decided to revisit that
-idea.
+(...)
 
-dell-led consists of two major parts:
-
-  - the part handling an "Activity LED" present in Dell Latitude 2100
-    netbooks, introduced in 72dcd8d; it registers a LED device and uses
-    a special WMI interface to control its state,
-
-  - the part exposing a "microphone mute LED interface", introduced in
-    db6d8cc; this interface is used by sound/pci/hda/dell_wmi_helper.c;
-    while the original implementation also used a WMI interface, it was
-    changed to use dell-smbios in cf0d7ea and 0c41a08.
-
-I believe both parts could (and should) be moved to drivers/platform/x8=
-6
-as drivers/platform/x86/dell-laptop.c already handles a bunch of LEDs
-and drivers/leds/dell-led.c is the only dell-smbios user outside of
-drivers/platform/x86.
-
-My question to you, the maintainers of the relevant drivers and
-subsystems, is whether you would like to see such a move happen.  I hav=
-e
-prepared a draft patch series which:
-
-  - moves the "microphone mute LED interface" to dell-laptop.c,
-    effectively causing sound/pci/hda/dell_wmi_helper.c to depend on
-    CONFIG_DELL_LAPTOP instead of CONFIG_LEDS_DELL_NETBOOKS,
-
-  - moves the "Activity LED" part to a new file, tentatively called
-    drivers/platform/x86/dell-wmi-led.c.
-
-Merging the "Activity LED" part with drivers/platform/x86/dell-wmi.c is
-not really clean because dell-wmi handles a different GUID, which AFAIK
-is not related in any way to the GUID used by dell-led.
-
-So, before I spam *three* subsystem mailing lists with a bunch of
-patches, I would love to hear from the maintainers of both drivers/leds
-and drivers/platform/x86 whether there are any arguments against such a
-move.  Meanwhile, I will keep polishing the patch series and if there i=
-s
-no strong disagreement from any party involved, I will post the series
-next week or so, so that we can discuss code and not just ideas.
-
-As a side note, if anyone reading this has access to a Dell device whic=
-h
-has an "Activity LED" and/or a "microphone mute LED" currently supporte=
+>> LED
+>> subsystem seems to use suffix of LED name to do that. So if we
+>> standartize, lets say "::rfkill" suffix for this, it should work and
+>> follow existing practice.
+> [...]
+>> There is one -- suffix in the LED name.
+>
+> I don't really think that's a good way, and it doesn't seem to be use=
 d
-by dell-led, I would love to hear from you as I do not have the hardwar=
-e
-needed to practically test the patch series I am working on.
+> universally, but I suppose it's good enough.
+>
 
-Looking forward to hearing from you,
+The main practical drawback of this approach IMO is that we can't
+guarantee that userspace processes will not step on each other's toes
+trying to control the LED concurrently. But I guess that is something
+that userspace will have to solve for now, I rather get this moving
+without the trigger than not moving at all.
 
-[1] https://www.spinics.net/lists/platform-driver-x86/msg08143.html
+> Jo=C3=A3o, that means you should send a patch to add the ::rfkill suf=
+fix.
+>
 
---=20
+IMO "airplane" (or maybe "airplane-mode") is a better suffix, as it
+reflects the label on the machine's chassis. I'll name it
+"asus-wireless::airplane" and send this through platform-drivers-x86,
+as this is now contained in the platform-drivers-x86 subsystem. Thanks
+Johannes for your patience and help designing and reviewing the rfkill
+changes, even if not all of them made it through in the end. And
+thanks everyone else involved for the feedback.
+
 Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
