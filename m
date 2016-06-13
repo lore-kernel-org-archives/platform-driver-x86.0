@@ -1,42 +1,124 @@
 From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH 0/7] asus-wireless: LED control
-Date: Mon, 13 Jun 2016 16:57:29 -0400
-Message-ID: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
+Subject: [PATCH 2/7] asus-wmi: Create quirk for airplane_mode LED
+Date: Mon, 13 Jun 2016 16:57:31 -0400
+Message-ID: <1465851456-1421-3-git-send-email-jprvita@endlessm.com>
+References: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This series adds support for controlling the airplane-mode indicator LE=
-D
-present in some Asus laptops. It also creates a quirk in asus-wmi so it=
- does not
-create RFKill devices for platforms that use asus-wireless and where th=
-ere is a
-competition for the LED control (see "asus-wmi: Create quirk for airpla=
-ne_mode
-LED" for more details).
+Some Asus laptops that have an airplane-mode indicator LED, also have
+the WMI WLAN user bit set, and the following bits in their DSDT:
 
-Jo=C3=A3o Paulo Rechi Vita (7):
-  asus-wireless: Toggle airplane mode LED
-  asus-wmi: Create quirk for airplane_mode LED
-  asus-wmi: Add quirk_no_rfkill for the Asus N552VW
-  asus-wmi: Add quirk_no_rfkill for the Asus U303LB
-  asus-wmi: Add quirk_no_rfkill for the Asus Z550MA
-  asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UF
-  asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UA
+Scope (_SB)
+{
+  (...)
+  Device (ATKD)
+  {
+    (...)
+    Method (WMNB, 3, Serialized)
+    {
+      (...)
+      If (LEqual (IIA0, 0x00010002))
+      {
+        OWGD (IIA1)
+        Return (One)
+      }
+    }
+  }
+}
 
- drivers/platform/x86/Kconfig         |  2 +
- drivers/platform/x86/asus-nb-wmi.c   | 49 ++++++++++++++++++-
- drivers/platform/x86/asus-wireless.c | 91 ++++++++++++++++++++++++++++=
-+++++++-
- drivers/platform/x86/asus-wmi.c      |  8 ++--
- drivers/platform/x86/asus-wmi.h      |  1 +
- 5 files changed, 145 insertions(+), 6 deletions(-)
+So when asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store the
+wlan state, it drives the airplane-mode indicator LED (through the call
+to OWGD) in an inverted fashion: the LED is ON when airplane mode is OF=
+=46
+(since wlan is ON), and vice-versa.
 
+This commit creates a quirk to not register a RFKill switch at all for
+these laptops, to allow the asus-wireless driver to drive the airplane
+mode LED correctly through the ASHS ACPI device. It also adds a match t=
+o
+that quirk for the Asus X555UB, which is affected by this problem.
+
+Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  8 +++++---
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/=
+asus-nb-wmi.c
+index 091ca7a..90c8f41 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -78,6 +78,10 @@ static struct quirk_entry quirk_asus_x200ca =3D {
+ 	.wapf =3D 2,
+ };
+=20
++static struct quirk_entry quirk_no_rfkill =3D {
++	.no_rfkill =3D true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks =3D dmi->driver_data;
+@@ -306,6 +310,15 @@ static const struct dmi_system_id asus_quirks[] =3D=
+ {
+ 		},
+ 		.driver_data =3D &quirk_asus_x200ca,
+ 	},
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "ASUSTeK COMPUTER INC. X555UB",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X555UB"),
++		},
++		.driver_data =3D &quirk_no_rfkill,
++	},
+ 	{},
+ };
+=20
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asu=
+s-wmi.c
+index a26dca3..7c093a0 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2069,9 +2069,11 @@ static int asus_wmi_add(struct platform_device *=
+pdev)
+ 	if (err)
+ 		goto fail_leds;
+=20
+-	err =3D asus_wmi_rfkill_init(asus);
+-	if (err)
+-		goto fail_rfkill;
++	if (!asus->driver->quirks->no_rfkill) {
++		err =3D asus_wmi_rfkill_init(asus);
++		if (err)
++			goto fail_rfkill;
++	}
+=20
+ 	/* Some Asus desktop boards export an acpi-video backlight interface,
+ 	   stop this from showing up */
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asu=
+s-wmi.h
+index 4da4c8b..5de1df5 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -38,6 +38,7 @@ struct key_entry;
+ struct asus_wmi;
+=20
+ struct quirk_entry {
++	bool no_rfkill;
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
 --=20
 2.5.0
