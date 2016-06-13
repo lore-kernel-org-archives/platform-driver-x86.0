@@ -1,51 +1,53 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [RESEND PATCH 1/3] rfkill: Create "rfkill-airplane-mode" LED trigger
-Date: Mon, 13 Jun 2016 15:59:35 -0400
-Message-ID: <CA+A7VXXOfN1Td2T6uiunWZMS4gvS5sHDzPiDp9VEdx+OPJpSmA@mail.gmail.com>
-References: <1462199948-6424-1-git-send-email-jprvita@endlessm.com>
- <1462199948-6424-2-git-send-email-jprvita@endlessm.com> <20160504072936.GB17045@amd>
- <1463045572.13313.21.camel@sipsolutions.net> <20160519071639.GB17077@amd>
- <1465476194.3442.21.camel@sipsolutions.net> <CA+A7VXXP3TYuk4Vvgc8YvxPFo06GG6WpyLJS+2vMLzr0iKQgsA@mail.gmail.com>
- <20160613190048.GA17101@amd>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [PATCH 4/7] asus-wmi: Add quirk_no_rfkill for the Asus U303LB
+Date: Mon, 13 Jun 2016 16:57:33 -0400
+Message-ID: <1465851456-1421-5-git-send-email-jprvita@endlessm.com>
+References: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160613190048.GA17101@amd>
-Sender: netdev-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 13 June 2016 at 15:00, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
->
->> > Jo=C3=A3o, that means you should send a patch to add the ::rfkill =
-suffix.
->> >
->>
->> IMO "airplane" (or maybe "airplane-mode") is a better suffix, as it
->> reflects the label on the machine's chassis. I'll name it
->> "asus-wireless::airplane" and send this through platform-drivers-x86=
-,
->> as this is now contained in the platform-drivers-x86 subsystem. Than=
-ks
->> Johannes for your patience and help designing and reviewing the rfki=
-ll
->> changes, even if not all of them made it through in the end. And
->> thanks everyone else involved for the feedback.
->
-> Actually, I'd do '::rfkill', for consistency with other places in
-> /sys.
->
-> /sys/devices/platform/thinkpad_acpi/rfkill/rfkill1/name
-> /sys/class/rfkill
-> /sys/module/rfkill
->
+The Asus U303LB has an airplane-mode indicator LED and the WMI WLAN use=
+r
+bit set, so asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store
+the wlan state, which has a side-effect of driving the airplane mode
+indicator LED in an inverted fashion. quirk_no_rfkill prevents asus-wmi
+from registering RFKill switches at all for this laptop and allows
+asus-wireless to drive the LED through the ASHS ACPI device.
 
-If we use "rfkill" as a suffix, how do you expect userspace to be able
-to differentiate between a LED that indicates airplane-mode (LED ON
-when all radios are OFF) and a LED that indicates the state of a
-specific radio like WiFi or Bluetooth (LED ON when that specific radio
-is ON)? If we're going this route we should provide meaningful
-information here.
+Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+Reported-by: Mousou Yuu <guogaishiwo@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/=
+asus-nb-wmi.c
+index 31fcde1..efae467 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -328,6 +328,15 @@ static const struct dmi_system_id asus_quirks[] =3D=
+ {
+ 		},
+ 		.driver_data =3D &quirk_no_rfkill,
+ 	},
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "ASUSTeK COMPUTER INC. U303LB",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "U303LB"),
++		},
++		.driver_data =3D &quirk_no_rfkill,
++	},
+ 	{},
+ };
+=20
+--=20
+2.5.0
