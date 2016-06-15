@@ -1,88 +1,100 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH 2/2] platform/x86: Drop duplicate dependencies on X86
-Date: Wed, 15 Jun 2016 10:35:52 +0200
-Message-ID: <20160615103552.47e9767a@endymion>
-References: <20160526114323.763237f5@endymion>
-	<20160608202129.GF28348@f23x64.localdomain>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: Moving drivers/leds/dell-led.c to drivers/platform/x86
+Date: Wed, 15 Jun 2016 12:10:20 +0200
+Message-ID: <5761298C.9030005@samsung.com>
+References: <20160613134942.GA2824@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:39002 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752183AbcFOIfz (ORCPT
+Received: from mailout4.w1.samsung.com ([210.118.77.14]:29748 "EHLO
+	mailout4.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753172AbcFOKKZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Jun 2016 04:35:55 -0400
-In-Reply-To: <20160608202129.GF28348@f23x64.localdomain>
+	Wed, 15 Jun 2016 06:10:25 -0400
+In-reply-to: <20160613134942.GA2824@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Darren,
+Hi Micha=C5=82,
 
-On Wed, 8 Jun 2016 13:21:29 -0700, Darren Hart wrote:
-> On Thu, May 26, 2016 at 11:43:23AM +0200, Jean Delvare wrote:
-> > The whole menu depends on X86 so there is no point in repeating this
-> > dependency on individual driver entries.
-> > 
-> > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > ---
-> >  drivers/platform/x86/Kconfig |    6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > 
-> > --- linux-4.6.orig/drivers/platform/x86/Kconfig	2016-05-26 11:18:50.029103790 +0200
-> > +++ linux-4.6/drivers/platform/x86/Kconfig	2016-05-26 11:35:23.704400044 +0200
-> > @@ -103,7 +103,6 @@ config DELL_SMBIOS
-> >  
-> >  config DELL_LAPTOP
-> >  	tristate "Dell Laptop Extras"
-> > -	depends on X86
-> >  	depends on DMI
-> >  	depends on BACKLIGHT_CLASS_DEVICE
-> >  	depends on ACPI_VIDEO || ACPI_VIDEO = n
-> > @@ -751,7 +750,7 @@ config TOSHIBA_WMI
-> >  
-> >  config ACPI_CMPC
-> >  	tristate "CMPC Laptop Extras"
-> > -	depends on X86 && ACPI
-> > +	depends on ACPI
-> >  	depends on RFKILL || RFKILL=n
-> >  	select INPUT
-> >  	select BACKLIGHT_CLASS_DEVICE
-> > @@ -850,7 +849,7 @@ config INTEL_IMR
-> >  
-> >  config IBM_RTL
-> >  	tristate "Device driver to enable PRTL support"
-> > -	depends on X86 && PCI
-> > +	depends on PCI
-> >  	---help---
-> >  	 Enable support for IBM Premium Real Time Mode (PRTM).
-> >  	 This module will allow you the enter and exit PRTM in the BIOS via
-> > @@ -884,7 +883,6 @@ config XO15_EBOOK
-> >  
-> >  config SAMSUNG_LAPTOP
-> >  	tristate "Samsung Laptop driver"
-> > -	depends on X86
-> >  	depends on RFKILL || RFKILL = n
-> >  	depends on ACPI_VIDEO || ACPI_VIDEO = n
-> >  	depends on BACKLIGHT_CLASS_DEVICE
-> > 
-> 
-> Was there a reason you omitted removing the X86 depends from SENSORS_HDAPS and
-> INTEL_PMC_CORE?
+I have no objections.
 
-INTEL_PMC_CORE did not exist in the tree I was working on. For
-SENSORS_HDAPS, probably I stupidly grepped for "depends on X86" and
-that did not catch SENSORS_HDAPS because X86 was listed as a second
-dependency on the same line there.
+Best regards,
+Jacek Anaszewski
 
-> I've dropped these as well and queued this for 4.8, please let me know if you
-> deliberately left these in.
-
-You did well, thank you.
-
--- 
-Jean Delvare
-SUSE L3 Support
+On 06/13/2016 03:49 PM, Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> Hi everyone,
+>
+> Back in January [1], while working on the dell-smbios module, I
+> suggested that the code present in drivers/leds/dell-led.c could be
+> moved to drivers/platform/x86 for coherency.  I decided to revisit th=
+at
+> idea.
+>
+> dell-led consists of two major parts:
+>
+>    - the part handling an "Activity LED" present in Dell Latitude 210=
+0
+>      netbooks, introduced in 72dcd8d; it registers a LED device and u=
+ses
+>      a special WMI interface to control its state,
+>
+>    - the part exposing a "microphone mute LED interface", introduced =
+in
+>      db6d8cc; this interface is used by sound/pci/hda/dell_wmi_helper=
+=2Ec;
+>      while the original implementation also used a WMI interface, it =
+was
+>      changed to use dell-smbios in cf0d7ea and 0c41a08.
+>
+> I believe both parts could (and should) be moved to drivers/platform/=
+x86
+> as drivers/platform/x86/dell-laptop.c already handles a bunch of LEDs
+> and drivers/leds/dell-led.c is the only dell-smbios user outside of
+> drivers/platform/x86.
+>
+> My question to you, the maintainers of the relevant drivers and
+> subsystems, is whether you would like to see such a move happen.  I h=
+ave
+> prepared a draft patch series which:
+>
+>    - moves the "microphone mute LED interface" to dell-laptop.c,
+>      effectively causing sound/pci/hda/dell_wmi_helper.c to depend on
+>      CONFIG_DELL_LAPTOP instead of CONFIG_LEDS_DELL_NETBOOKS,
+>
+>    - moves the "Activity LED" part to a new file, tentatively called
+>      drivers/platform/x86/dell-wmi-led.c.
+>
+> Merging the "Activity LED" part with drivers/platform/x86/dell-wmi.c =
+is
+> not really clean because dell-wmi handles a different GUID, which AFA=
+IK
+> is not related in any way to the GUID used by dell-led.
+>
+> So, before I spam *three* subsystem mailing lists with a bunch of
+> patches, I would love to hear from the maintainers of both drivers/le=
+ds
+> and drivers/platform/x86 whether there are any arguments against such=
+ a
+> move.  Meanwhile, I will keep polishing the patch series and if there=
+ is
+> no strong disagreement from any party involved, I will post the serie=
+s
+> next week or so, so that we can discuss code and not just ideas.
+>
+> As a side note, if anyone reading this has access to a Dell device wh=
+ich
+> has an "Activity LED" and/or a "microphone mute LED" currently suppor=
+ted
+> by dell-led, I would love to hear from you as I do not have the hardw=
+are
+> needed to practically test the patch series I am working on.
+>
+> Looking forward to hearing from you,
+>
+> [1] https://www.spinics.net/lists/platform-driver-x86/msg08143.html
+>
