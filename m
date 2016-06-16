@@ -1,43 +1,98 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH v3 0/4] dell-wmi: Changes in WMI event code handling
-Date: Fri, 17 Jun 2016 01:01:10 +0200
-Message-ID: <023b8dab-2c73-1b51-5cdb-19f5a54d4561@gmail.com>
-References: <1466020153-10877-1-git-send-email-pali.rohar@gmail.com>
- <20160616031958.GA54214@f23x64.localdomain> <20160616073302.GT29844@pali>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
+ Fujitsu e7x6
+Date: Fri, 17 Jun 2016 09:16:30 +0930
+Message-ID: <20160616234630.GB4764@marvin.atrad.com.au>
+References: <575FC4E0.7080501@fbihome.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f41.google.com ([74.125.82.41]:38435 "EHLO
-	mail-wm0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753864AbcFPXBN (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:49881 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753945AbcFQAQj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 16 Jun 2016 19:01:13 -0400
-In-Reply-To: <20160616073302.GT29844@pali>
+	Thu, 16 Jun 2016 20:16:39 -0400
+Content-Disposition: inline
+In-Reply-To: <575FC4E0.7080501@fbihome.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWU=?= =?UTF-8?B?xYQ=?= <kernel@kempniu.pl>, Mario Limonciello <mario_limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: platform-driver-x86@vger.kernel.org
 
-On 16/06/2016 09:33, Pali Roh=C3=A1r wrote:
-> On Wednesday 15 June 2016 20:19:58 Darren Hart wrote:
->> On Wed, Jun 15, 2016 at 09:49:09PM +0200, Pali Roh=C3=A1r wrote:
->>> First patch describe problem about 0xe045 code. Second and third ar=
-e just
->>> cosmetic and last rework code which processing WMI events. It shoul=
-d be
->>> properly tested on more Dell machines, to check that everything is =
-still
->>> working correctly.
->>
->> Is this "should be properly tested on more Dell machines" still the =
-case? Are
->> you ready for this to go into linux-next?
->=20
-> Series should be OK, but I would like to see if someone else test thi=
-s
-> series... Gabriele, Alex or Andy? Do you have time?
+Hi Jan-Marek
 
-I tested this series and everything seems to be working fine here.
+On Tue, Jun 14, 2016 at 10:48:32AM +0200, Jan-Marek Glogowski wrote:
+> I recently got new Skylake hardware (e7x6) from Fujitsu. Compared to
+> previous Haswell generation (e7x4), some of the Fn+X key combination
+> stopped working. This includes the brightness and "touchpad dis-/enable"
+> key combinations.
+> 
+> For the brightness control it's understandable, as this was handled by a
+> ACPI device FUJ02B1, which is no longer available.
 
-Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+I see.  Perhaps they've rolled this functionality into FUJ02E3 (which
+previously has handled everything except brightness control).
+
+> I don't know how the touchpad disable key was actually working, as I don't
+> get any scan codes or ACPI events in userspace - probably I'm missing
+> something here.
+
+Maybe on the previous hardware generation the touchpad keys were controlled
+solely in hardware, and for some reason they've moved them to software in
+the latest generation.
+
+> I compiled the git fujitsu-notebook driver ...
+
+I assume this was "fujitsu-laptop".
+
+> ... can see ACPI notifications when any of the non-working combination is
+> pressed like:
+> 
+> [  408.997023] FUJ02B1: call_fext_func: FUNC 0x1000 (args 0x4, 0x0, 0x0)
+> returned 0x100
+> [  408.997072] FUJ02B1: call_fext_func: FUNC 0x1002 (args 0x1, 0x0, 0x0)
+> returned 0x0
+> 
+> so these button states seems to be handled differently then all the
+> other buttons. (FUNC 0x1002 is used to check the special button states).
+
+For clarity, which buttons are the "non-working combinations"?  Is it just
+the brightness/touchpad buttons, or are there others which are behaving
+similarly?
+
+> BTW: the debug message is a little misleading, as all of them are prefixed
+> 'FUJ02B1', even if the ACPI event is handled by the FUJ02E3 device.
+
+Yes, good point.  The use of "FUJ02B1" (via ACPI_FUJITSU_HID) would have
+been for convenience and possibly dates from before FUJ02E3 support was
+included in the driver.  A case can certainly be made for a more generic
+descriptor.
+
+> I checked the DSTD from the old and new HW. The size has more then
+> duplicated (414k => 955k) with a 43k diff. The diff for the FUJ02E3
+> device is just 356 lines, but I couldn't identify anything, which might
+> relate to the keys.
+
+Perhaps they've introduced a new backlight control device with a different
+HID (except you mentioned that only FUJ02E3 was listed even on other OSes,
+so I guess this is unlikely).
+
+> Any help would be appreciated to get this fixed.
+
+I don't have access to any of the newer Fujitsu hardware so I can't do much
+in relation to debugging the problem.  Obviously the buttons concerned
+generate ACPI notifications.  Without a FUJ02B1 and any obvious extension 
+to FUJ02E3, my only thought at present is that they've taken backlight
+control out of ACPI (that is, based on the ACPI button notification they
+poke other hardware to effect the brightness control).  It does seem a bit
+odd though.
+
+In any case, we'd have to identify what is meant to be done (and what is
+done under other OSes) in reponse to these buttons.
+
+I assume that the brightness buttons don't do anything when fujitsu-laptop
+is unloaded?  I'm wondering whether the standard backlight driver might be
+operational on this hardware.
+
+Regards
+  jonathan
