@@ -1,56 +1,61 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH][v2] dell-wmi: add a WMI event code for display on/off
-Date: Fri, 17 Jun 2016 11:19:31 -0700
-Message-ID: <20160617181931.GA3685@f23x64.localdomain>
+Date: Fri, 17 Jun 2016 20:50:27 +0200
+Message-ID: <201606172050.27278@pali>
 References: <1466135067-28566-1-git-send-email-alex.hung@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart2571718.cVUAumRk2u";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:33693 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753222AbcFQSTf (ORCPT
+Received: from mail-wm0-f44.google.com ([74.125.82.44]:35653 "EHLO
+	mail-wm0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751097AbcFQSub (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 17 Jun 2016 14:19:35 -0400
-Content-Disposition: inline
+	Fri, 17 Jun 2016 14:50:31 -0400
+Received: by mail-wm0-f44.google.com with SMTP id v199so289430wmv.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jun 2016 11:50:30 -0700 (PDT)
 In-Reply-To: <1466135067-28566-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org
+To: dvhart@infradead.org
+Cc: Alex Hung <alex.hung@canonical.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 11:44:27AM +0800, Alex Hung wrote:
-> Some new Dell AIO systems have a button that generates WMI evnet
-> that is to be used to turn LCD on/off.
->=20
-> Acked-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index b8ad055..8e6c357 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -133,6 +133,9 @@ static const struct key_entry dell_wmi_keymap_typ=
-e_0000[] __initconst =3D {
->  	/* Audio panel key */
+--nextPart2571718.cVUAumRk2u
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Friday 17 June 2016 05:44:27 Alex Hung wrote:
+> @@ -133,6 +133,9 @@ static const struct key_entry
+> dell_wmi_keymap_type_0000[] __initconst =3D { /* Audio panel key */
 >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> =20
+>=20
 > +	/* Monitor On/Off Control key */
+> +	{ KE_KEY, 0xe027, { KEY_DISPLAYTOGGLE } },
 
-I've changed this to:
+Darren, I would suggest small alignment (as for 0xe026):
 
-	/* LCD Display On/Off Control Key */
+   	{ KE_KEY,    0xe027, { KEY_DISPLAYTOGGLE } },
 
-As "Monitor" read like external display to me. I can change this back i=
-f you
-strongly disagree.
+>  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
 
-Queued for 4.8.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+--nextPart2571718.cVUAumRk2u
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAldkRnMACgkQi/DJPQPkQ1Le8gCgltnpM3azu5JLr2hdFeNYURYm
+Zv4An1D5NV39QfzWkvAWFEDagxlF0sqo
+=HUE6
+-----END PGP SIGNATURE-----
+
+--nextPart2571718.cVUAumRk2u--
