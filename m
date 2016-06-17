@@ -1,98 +1,40 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
- Fujitsu e7x6
-Date: Fri, 17 Jun 2016 09:16:30 +0930
-Message-ID: <20160616234630.GB4764@marvin.atrad.com.au>
-References: <575FC4E0.7080501@fbihome.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "Yong, Jonathan" <jonathan.yong@intel.com>
+Subject: [PATCH v2 0/2] Correct iTCO Watchdog for Apollo Lake
+Date: Fri, 17 Jun 2016 00:33:30 +0000
+Message-ID: <1466123612-50633-1-git-send-email-jonathan.yong@intel.com>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:49881 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753945AbcFQAQj (ORCPT
+Received: from mga04.intel.com ([192.55.52.120]:64482 "EHLO mga04.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754260AbcFQAdc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 16 Jun 2016 20:16:39 -0400
-Content-Disposition: inline
-In-Reply-To: <575FC4E0.7080501@fbihome.de>
+	Thu, 16 Jun 2016 20:33:32 -0400
+In-Reply-To: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: platform-driver-x86@vger.kernel.org
+To: linux-watchdog@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: qipeng.zha@intel.com, linux@roeck-us.net, dvhart@infradead.org, linux-kernel.vger.kernel.org@vger.kernel.org, jonathan.yong@intel.com
 
-Hi Jan-Marek
+These patches fix the iTCO watchdog for Apollo Lake.
+I changed the watchdog memory io to only use 4 bytes rather
+the whole region, I'm not sure if that is the correct way.
 
-On Tue, Jun 14, 2016 at 10:48:32AM +0200, Jan-Marek Glogowski wrote:
-> I recently got new Skylake hardware (e7x6) from Fujitsu. Compared to
-> previous Haswell generation (e7x4), some of the Fn+X key combination
-> stopped working. This includes the brightness and "touchpad dis-/enable"
-> key combinations.
-> 
-> For the brightness control it's understandable, as this was handled by a
-> ACPI device FUJ02B1, which is no longer available.
+The previous 0x30h offset in intel_pmc_ipc.c was for based
+on the earlier BXT-M platform. Apollo Lake has it at 0x40h.
 
-I see.  Perhaps they've rolled this functionality into FUJ02E3 (which
-previously has handled everything except brightness control).
+Let me know if the patches need changes.
+Please CC me as I am not subscribed, thanks.
 
-> I don't know how the touchpad disable key was actually working, as I don't
-> get any scan codes or ACPI events in userspace - probably I'm missing
-> something here.
+Changes since v1:
+	* Watchdog NO_REBOOT bit off-by-one corrected.
 
-Maybe on the previous hardware generation the touchpad keys were controlled
-solely in hardware, and for some reason they've moved them to software in
-the latest generation.
+Yong, Jonathan (2):
+  watchdog: iTCO-wdt handle 5th variation for Apollo Lake
+  x86: Fix Apollo Lake Watchdog address in PMC driver
 
-> I compiled the git fujitsu-notebook driver ...
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ++++++----
+ drivers/watchdog/iTCO_wdt.c          |  2 ++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-I assume this was "fujitsu-laptop".
-
-> ... can see ACPI notifications when any of the non-working combination is
-> pressed like:
-> 
-> [  408.997023] FUJ02B1: call_fext_func: FUNC 0x1000 (args 0x4, 0x0, 0x0)
-> returned 0x100
-> [  408.997072] FUJ02B1: call_fext_func: FUNC 0x1002 (args 0x1, 0x0, 0x0)
-> returned 0x0
-> 
-> so these button states seems to be handled differently then all the
-> other buttons. (FUNC 0x1002 is used to check the special button states).
-
-For clarity, which buttons are the "non-working combinations"?  Is it just
-the brightness/touchpad buttons, or are there others which are behaving
-similarly?
-
-> BTW: the debug message is a little misleading, as all of them are prefixed
-> 'FUJ02B1', even if the ACPI event is handled by the FUJ02E3 device.
-
-Yes, good point.  The use of "FUJ02B1" (via ACPI_FUJITSU_HID) would have
-been for convenience and possibly dates from before FUJ02E3 support was
-included in the driver.  A case can certainly be made for a more generic
-descriptor.
-
-> I checked the DSTD from the old and new HW. The size has more then
-> duplicated (414k => 955k) with a 43k diff. The diff for the FUJ02E3
-> device is just 356 lines, but I couldn't identify anything, which might
-> relate to the keys.
-
-Perhaps they've introduced a new backlight control device with a different
-HID (except you mentioned that only FUJ02E3 was listed even on other OSes,
-so I guess this is unlikely).
-
-> Any help would be appreciated to get this fixed.
-
-I don't have access to any of the newer Fujitsu hardware so I can't do much
-in relation to debugging the problem.  Obviously the buttons concerned
-generate ACPI notifications.  Without a FUJ02B1 and any obvious extension 
-to FUJ02E3, my only thought at present is that they've taken backlight
-control out of ACPI (that is, based on the ACPI button notification they
-poke other hardware to effect the brightness control).  It does seem a bit
-odd though.
-
-In any case, we'd have to identify what is meant to be done (and what is
-done under other OSes) in reponse to these buttons.
-
-I assume that the brightness buttons don't do anything when fujitsu-laptop
-is unloaded?  I'm wondering whether the standard backlight driver might be
-operational on this hardware.
-
-Regards
-  jonathan
+-- 
+2.7.3
