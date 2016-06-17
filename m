@@ -1,42 +1,44 @@
-From: "Yong, Jonathan" <jonathan.yong@intel.com>
-Subject: [PATCH v2 1/2] watchdog: iTCO-wdt handle 5th variation for Apollo Lake
-Date: Fri, 17 Jun 2016 00:36:56 +0000
-Message-ID: <1466123817-50679-2-git-send-email-jonathan.yong@intel.com>
-References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
- <1466123817-50679-1-git-send-email-jonathan.yong@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466123817-50679-1-git-send-email-jonathan.yong@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-watchdog@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: qipeng.zha@intel.com, linux@roeck-us.net, dvhart@infradead.org, linux-kernel@vger.kernel.org, jonathan.yong@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH][v2] dell-wmi: add a WMI event code for display on/off
+Date: Fri, 17 Jun 2016 11:44:27 +0800
+Message-ID: <1466135067-28566-1-git-send-email-alex.hung@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:60908 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755124AbcFQDok (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 16 Jun 2016 23:44:40 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
 
-The Apollo Lake Watchdog has the no_reboot flag in the 4th bit.
+Some new Dell AIO systems have a button that generates WMI evnet
+that is to be used to turn LCD on/off.
 
-Signed-off-by: Yong, Jonathan <jonathan.yong@intel.com>
+Acked-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
 ---
- drivers/watchdog/iTCO_wdt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/dell-wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
-index 0acc6c5..54cab18 100644
---- a/drivers/watchdog/iTCO_wdt.c
-+++ b/drivers/watchdog/iTCO_wdt.c
-@@ -150,6 +150,7 @@ static inline u32 no_reboot_bit(void)
- 	u32 enable_bit;
- 
- 	switch (iTCO_wdt_private.iTCO_version) {
-+	case 5:
- 	case 3:
- 		enable_bit = 0x00000010;
- 		break;
-@@ -512,6 +513,7 @@ static int iTCO_wdt_probe(struct platform_device *dev)
- 
- 	/* Clear out the (probably old) status */
- 	switch (iTCO_wdt_private.iTCO_version) {
-+	case 5:
- 	case 4:
- 		outw(0x0008, TCO1_STS);	/* Clear the Time Out Status bit */
- 		outw(0x0002, TCO2_STS);	/* Clear SECOND_TO_STS bit */
--- 
-2.7.3
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-wmi.c
+index b8ad055..8e6c357 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -133,6 +133,9 @@ static const struct key_entry dell_wmi_keymap_type_=
+0000[] __initconst =3D {
+ 	/* Audio panel key */
+ 	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+=20
++	/* Monitor On/Off Control key */
++	{ KE_KEY, 0xe027, { KEY_DISPLAYTOGGLE } },
++
+ 	/* Untested, Multimedia key on Dell Vostro 3560 */
+ 	/* { KE_IGNORE, 0xe028, { KEY_RESERVED } }, */
+=20
+--=20
+2.7.4
