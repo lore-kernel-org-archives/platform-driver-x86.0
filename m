@@ -1,61 +1,45 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 0/7] asus-wireless: LED control
-Date: Sun, 19 Jun 2016 09:19:03 +0200
-Message-ID: <CAHR064g-4Hi_7YQ2=D0x9+W+ka8ofRZW8NrWfC3N4id0vAtMqg@mail.gmail.com>
-References: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
+From: Nick Leiten <nickleiten@gmail.com>
+Subject: [PATCH] asus-wmi: Ambient sensor toggle key
+Date: Sun, 19 Jun 2016 14:59:26 +0300
+Message-ID: <9711814.jjoeah4X4e@nl-ubook>
+Reply-To: nickleiten@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:33384 "EHLO
-	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751471AbcFSHTF convert rfc822-to-8bit (ORCPT
+Received: from mail-lf0-f66.google.com ([209.85.215.66]:35883 "EHLO
+	mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751711AbcFSL7b (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 19 Jun 2016 03:19:05 -0400
-In-Reply-To: <1465851456-1421-1-git-send-email-jprvita@endlessm.com>
+	Sun, 19 Jun 2016 07:59:31 -0400
+Received: by mail-lf0-f66.google.com with SMTP id a2so3137767lfe.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jun 2016 04:59:30 -0700 (PDT)
+Received: from nl-ubook.localnet ([134.249.130.86])
+        by smtp.gmail.com with ESMTPSA id 39sm4501976lja.37.2016.06.19.04.59.28
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLSv1/SSLv3 cipher=OTHER);
+        Sun, 19 Jun 2016 04:59:28 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Mon, Jun 13, 2016 at 10:57 PM, Jo=C3=A3o Paulo Rechi Vita
-<jprvita@gmail.com> wrote:
-> This series adds support for controlling the airplane-mode indicator =
-LED
-> present in some Asus laptops. It also creates a quirk in asus-wmi so =
-it does not
-> create RFKill devices for platforms that use asus-wireless and where =
-there is a
-> competition for the LED control (see "asus-wmi: Create quirk for airp=
-lane_mode
-> LED" for more details).
->
-> Jo=C3=A3o Paulo Rechi Vita (7):
->   asus-wireless: Toggle airplane mode LED
->   asus-wmi: Create quirk for airplane_mode LED
->   asus-wmi: Add quirk_no_rfkill for the Asus N552VW
->   asus-wmi: Add quirk_no_rfkill for the Asus U303LB
->   asus-wmi: Add quirk_no_rfkill for the Asus Z550MA
->   asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UF
->   asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UA
->
->  drivers/platform/x86/Kconfig         |  2 +
->  drivers/platform/x86/asus-nb-wmi.c   | 49 ++++++++++++++++++-
->  drivers/platform/x86/asus-wireless.c | 91 ++++++++++++++++++++++++++=
-+++++++++-
->  drivers/platform/x86/asus-wmi.c      |  8 ++--
->  drivers/platform/x86/asus-wmi.h      |  1 +
->  5 files changed, 145 insertions(+), 6 deletions(-)
->
-> --
-> 2.5.0
->
+Hi, 
+here is little patch for Fn+A key assignment in asus-nb-wmi.c file so userspace can control ALS (ambient light sensor) on/off state.
 
-Looks good to me. I hope that we can get rid of all these quirks in
-the near future.
+As I can see mentions in Internet Asus makes 0x7a code in all their laptops to be assigned to Toggle ALS.
+Tested on Asus U38N.
 
-Reviewed-by: Corentin Chary <corentin.chary@gmail.com>
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+Signed-off-by: Nick Leiten <nickleiten@gmail.com>
+
+diff -Npru a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+--- linux-4.6-orig/drivers/platform/x86/asus-nb-wmi.c	2016-05-16 01:43:13.000000000 +0300
++++ linux-4.6-diff/drivers/platform/x86/asus-nb-wmi.c	2016-06-06 07:00:27.000000000 +0300
+@@ -356,6 +356,7 @@ static const struct key_entry asus_nb_wm
+ 	{ KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
+ 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
++	{ KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle, Fn+A*/
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
+ 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } }, /* Bluetooth Disable */
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
