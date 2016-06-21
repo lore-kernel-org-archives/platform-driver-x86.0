@@ -1,48 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH][v2] dell-wmi: add a WMI event code for display on/off
-Date: Tue, 21 Jun 2016 09:24:29 -0700
-Message-ID: <20160621162429.GB3685@f23x64.localdomain>
-References: <1466135067-28566-1-git-send-email-alex.hung@canonical.com>
- <201606172050.27278@pali>
+Subject: Re: [PATCH v3 0/4] dell-wmi: Changes in WMI event code handling
+Date: Tue, 21 Jun 2016 09:27:23 -0700
+Message-ID: <20160621162723.GC3685@f23x64.localdomain>
+References: <1466020153-10877-1-git-send-email-pali.rohar@gmail.com>
+ <20160616031958.GA54214@f23x64.localdomain>
+ <20160616073302.GT29844@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39891 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751665AbcFUQYb (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2016 12:24:31 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201606172050.27278@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <20160616073302.GT29844@pali>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Mario Limonciello <mario_limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 17, 2016 at 08:50:27PM +0200, Pali Roh=E1r wrote:
-> On Friday 17 June 2016 05:44:27 Alex Hung wrote:
-> > @@ -133,6 +133,9 @@ static const struct key_entry
-> > dell_wmi_keymap_type_0000[] __initconst =3D { /* Audio panel key */
-> >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+On Thu, Jun 16, 2016 at 09:33:02AM +0200, Pali Roh=E1r wrote:
+> On Wednesday 15 June 2016 20:19:58 Darren Hart wrote:
+> > On Wed, Jun 15, 2016 at 09:49:09PM +0200, Pali Roh=E1r wrote:
+> > > First patch describe problem about 0xe045 code. Second and third =
+are just
+> > > cosmetic and last rework code which processing WMI events. It sho=
+uld be
+> > > properly tested on more Dell machines, to check that everything i=
+s still
+> > > working correctly.
 > >=20
-> > +	/* Monitor On/Off Control key */
-> > +	{ KE_KEY, 0xe027, { KEY_DISPLAYTOGGLE } },
+> > Is this "should be properly tested on more Dell machines" still the=
+ case? Are
+> > you ready for this to go into linux-next?
 >=20
-> Darren, I would suggest small alignment (as for 0xe026):
+> Series should be OK, but I would like to see if someone else test thi=
+s
+> series... Gabriele, Alex or Andy? Do you have time?
 
-Done.
-
->=20
->    	{ KE_KEY,    0xe027, { KEY_DISPLAYTOGGLE } },
->=20
-> >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
->=20
-> --=20
-> Pali Roh=E1r
-> pali.rohar@gmail.com
-
-
+I've queued these to for-next to ensure we get several weeks there.
 
 --=20
 Darren Hart
