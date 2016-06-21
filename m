@@ -1,289 +1,142 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 1/3] toshiba_acpi: Add IIO interface for accelerometer
- axis data
-Date: Sun, 19 Jun 2016 17:29:59 -0600
-Message-ID: <CAGdLNWH_xOtT=R-sV1dHKQE9HJPdeaAOnxWns_hXE8wR+ZX9sQ@mail.gmail.com>
-References: <20160611185710.14234-1-coproscefalo@gmail.com> <d9b7c548-44df-e3b4-2912-95f83b712b1e@kernel.org>
+From: Matej Groma <matejgroma@gmail.com>
+Subject: [PATCH] fujitsu-laptop: Add support for eco LED
+Date: Tue, 21 Jun 2016 10:09:21 +0200
+Message-ID: <20160621080918.GA3333@Matej-PC.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f196.google.com ([209.85.214.196]:34029 "EHLO
-	mail-ob0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751319AbcFSXaA (ORCPT
+Received: from mail-lb0-f195.google.com ([209.85.217.195]:36622 "EHLO
+	mail-lb0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753007AbcFUIJb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 19 Jun 2016 19:30:00 -0400
-In-Reply-To: <d9b7c548-44df-e3b4-2912-95f83b712b1e@kernel.org>
+	Tue, 21 Jun 2016 04:09:31 -0400
+Received: by mail-lb0-f195.google.com with SMTP id ur4so878913lbc.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2016 01:09:24 -0700 (PDT)
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+To: jwoithe@just42.net
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi,
+There is an indicator LED signaling activated power saving mode
+on certain Fujitsu laptop models. This has currently no use on Linux.
+Export it to userspace.
 
-Thanks for the feedback, I just did a respin of the series with the
-changes you mentioned.
+Signed-off-by: Matej Groma <matejgroma@gmail.com>
+---
 
+Notes:
+    Tested on Lifebook E756
 
-Cheers
-Azael
+ drivers/platform/x86/fujitsu-laptop.c | 56 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-2016-06-19 14:16 GMT-06:00 Jonathan Cameron <jic23@kernel.org>:
-> On 11/06/16 19:57, Azael Avalos wrote:
->> This patch adds the accelerometer axis data to the IIO subsystem.
->>
->> Currently reporting the X, Y and Z values, as no other data can be
->> queried given the fact that the accelerometer chip itself is hidden
->> behind the Toshiba proprietary interface.
->>
->> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> Looks pretty good and simple to me.  A few bits and bobs inline.
->
-> Jonathan
->> ---
->> All:
->>  This is my first attempt with the IIO subsysem, I'll be looking
->>  forward for your valuable input on this.
->>
->> Darren:
->>  There's a warning about more than 80 columns on this patch, once
->>  I get feedback from the IIO guys I'll respin this with that issue
->>  corrected.
->>
->>  drivers/platform/x86/toshiba_acpi.c | 130 ++++++++++++++++++++++++++++++++++--
->>  1 file changed, 126 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 01e12d2..85014a3 100644
->> --- a/drivers/platform/x86/toshiba_acpi.c
->> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -53,6 +53,7 @@
->>  #include <linux/uaccess.h>
->>  #include <linux/miscdevice.h>
->>  #include <linux/rfkill.h>
->> +#include <linux/iio/iio.h>
->>  #include <linux/toshiba.h>
->>  #include <acpi/video.h>
->>
->> @@ -134,6 +135,7 @@ MODULE_LICENSE("GPL");
->>
->>  /* Field definitions */
->>  #define HCI_ACCEL_MASK                       0x7fff
->> +#define HCI_ACCEL_DIRECTION_MASK     0x8000
->>  #define HCI_HOTKEY_DISABLE           0x0b
->>  #define HCI_HOTKEY_ENABLE            0x09
->>  #define HCI_HOTKEY_SPECIAL_FUNCTIONS 0x10
->> @@ -178,6 +180,7 @@ struct toshiba_acpi_dev {
->>       struct led_classdev eco_led;
->>       struct miscdevice miscdev;
->>       struct rfkill *wwan_rfk;
->> +     struct iio_dev *indio_dev;
->>
->>       int force_fan;
->>       int last_key_event;
->> @@ -1962,8 +1965,8 @@ static ssize_t position_show(struct device *dev,
->>                            struct device_attribute *attr, char *buf)
->>  {
->>       struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
->> -     u32 xyval, zval, tmp;
->> -     u16 x, y, z;
->> +     u32 xyval, zval;
->> +     int x, y, z;
->>       int ret;
->>
->>       xyval = zval = 0;
->> @@ -1971,10 +1974,14 @@ static ssize_t position_show(struct device *dev,
->>       if (ret < 0)
->>               return ret;
->>
->> +     /* Accelerometer values */
->>       x = xyval & HCI_ACCEL_MASK;
->> -     tmp = xyval >> HCI_MISC_SHIFT;
->> -     y = tmp & HCI_ACCEL_MASK;
->> +     y = (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK;
->>       z = zval & HCI_ACCEL_MASK;
->> +     /* Movement direction */
->> +     x *= xyval & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
->> +     y *= (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
->> +     z *= zval & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
-> This lot is really an unrelated change - do it as a separate precursor patch
-> to the IIO support.
->>
->>       return sprintf(buf, "%d %d %d\n", x, y, z);
->>  }
->> @@ -2420,6 +2427,94 @@ static void toshiba_acpi_kbd_bl_work(struct work_struct *work)
->>  }
->>
->>  /*
->> + * IIO device
->> + */
->> +
->> +enum toshiba_accel_chan {
->> +     AXIS_X,
->> +     AXIS_Y,
->> +     AXIS_Z
->> +};
->> +
->> +static int toshiba_accel_get_axis(enum toshiba_accel_chan chan)
->> +{
->> +     u32 xyval, zval;
->> +     int x, y, z;
->> +     int ret;
->> +
->> +     xyval = zval = 0;
->> +     ret = toshiba_accelerometer_get(toshiba_acpi, &xyval, &zval);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     /* Accelerometer values */
->> +     x = xyval & HCI_ACCEL_MASK;
->> +     y = (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK;
->> +     z = zval & HCI_ACCEL_MASK;
->> +     /* Movement direction */
->> +     x *= xyval & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
->> +     y *= (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
->> +     z *= zval & HCI_ACCEL_DIRECTION_MASK ? -1 : 1;
-> Wow, that's hideous ;)
->> +
->> +     switch (chan) {
->> +     case AXIS_X:
->> +             ret = x;
->> +             break;
->> +     case AXIS_Y:
->> +             ret = y;
->> +             break;
->> +     case AXIS_Z:
->> +             ret = z;
->> +             break;
-> Just compute the one you are returning perhaps?
-> case AXIS_X:
->      return xyval & HCI_ACCEL_DIRECTION_MASK ?
->             -(xyval & HCI_ACCEL_MASK) :
->             xyval & HCI_ACCEL_MASK;
-> etc?
-> Brings all the 'mess' into one location.
-> Or break it out into steps which is fine, but only compute the one
-> we care about.
->
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->> +static int toshiba_accel_read_raw(struct iio_dev *indio_dev,
->> +                               struct iio_chan_spec const *chan,
->> +                               int *val, int *val2, long mask)
->> +{
->> +     int ret;
->> +
->> +     switch (mask) {
->> +     case IIO_CHAN_INFO_RAW:
->> +             if (iio_buffer_enabled(indio_dev))
->> +                     return -EBUSY;
-> Couple of things here.
-> * you aren't supporting buffered reads (pushed data flows) so
-> very unlikely the buffer would be enabled.
-> * if you were you'd need to be holding indio_dev->mlock to
-> avoid races around entering buffered mode mid way through this
-> function.  Note we have the claim_direct functions to handle this
-> case cleanly if you ever do need them!
->
-> Right now just drop this check.
->
->> +
->> +             ret = toshiba_accel_get_axis(chan->scan_index);
-> For this use chan->address as it's not the 'scan_index' as such.
->
->> +             if (ret == -EIO || ret == -ENODEV)
->> +                     return ret;
->> +
->> +             *val = ret;
->> +
->> +             return IIO_VAL_INT;
->> +     }
->> +
->> +     return -EINVAL;
->> +}
->> +
->> +#define TOSHIBA_ACCEL_CHANNEL(axis, chan) { \
->> +     .type = IIO_ACCEL, \
->> +     .modified = 1, \
->> +     .channel2 = IIO_MOD_##axis, \
->> +     .output = 1, \
->> +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
->> +     .scan_index = chan, \
-> You don't need scan index unless you are supporting pushed data
-> flow (rather than polled ones that you have here).
->> +}
->> +
->> +static const struct iio_chan_spec toshiba_accel_channels[] = {
->> +     TOSHIBA_ACCEL_CHANNEL(X, AXIS_X),
->> +     TOSHIBA_ACCEL_CHANNEL(Y, AXIS_Y),
->> +     TOSHIBA_ACCEL_CHANNEL(Z, AXIS_Z),
->> +};
->> +
->> +static const struct iio_info toshiba_accel_info = {
->> +     .driver_module = THIS_MODULE,
->> +     .read_raw = &toshiba_accel_read_raw,
->> +};
->> +
->> +/*
->>   * Misc device
->>   */
->>  static int toshiba_acpi_smm_bridge(SMMRegisters *regs)
->> @@ -2903,6 +2998,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
->>       misc_deregister(&dev->miscdev);
->>
->>       remove_toshiba_proc_entries(dev);
->> +
->> +     if (dev->accelerometer_supported) {
->> +             iio_device_unregister(dev->indio_dev);
->> +             iio_device_free(dev->indio_dev);
->> +     }
->>
->>       if (dev->sysfs_created)
->>               sysfs_remove_group(&dev->acpi_dev->dev.kobj,
->> @@ -3051,6 +3151,28 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->>       dev->touchpad_supported = !ret;
->>
->>       toshiba_accelerometer_available(dev);
->> +     if (dev->accelerometer_supported) {
->> +             dev->indio_dev = iio_device_alloc(sizeof(*dev));
->> +             if (!dev->indio_dev)
->> +                     return -ENOMEM;
->> +
->> +             pr_info("Registering Toshiba accelerometer iio device\n");
->> +
->> +             dev->indio_dev->info = &toshiba_accel_info;
->> +             dev->indio_dev->name = "Toshiba accelerometer";
->> +             dev->indio_dev->dev.parent = &acpi_dev->dev;
->> +             dev->indio_dev->modes = INDIO_DIRECT_MODE;
->> +             dev->indio_dev->channels = toshiba_accel_channels;
->> +             dev->indio_dev->num_channels = ARRAY_SIZE(toshiba_accel_channels);
->> +
->> +             ret = iio_device_register(dev->indio_dev);
->> +             if (ret < 0) {
->> +                     pr_err("Unable to register iio device\n");
->> +                     iio_device_free(dev->indio_dev);
-> I'm wondering if we want to be a little 'ruder' if this occurs and drop out
-> hard as it indicates something very nasty happened... Here we are papering
-> over any failures and users may never notice.  I guess it depends on what
-> is happening in other similar locations in this driver.
->
-> You already drop out if you get a memory allocation failure, so best
-> to be consistent I think.
->> +             }
->> +
->> +             iio_device_set_drvdata(dev->indio_dev, dev);
-> There should be no real advantage in setting this as you can always get
-> to dev via iio_priv(indio_dev)
->> +     }
->>
->>       toshiba_usb_sleep_charge_available(dev);
->>
->>
->
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index ce41bc3..66e12a2 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -108,6 +108,8 @@
+ #define LOGOLAMP_POWERON 0x2000
+ #define LOGOLAMP_ALWAYS  0x4000
+ #define RADIO_LED_ON	0x20
++#define ECO_LED	0x10000
++#define ECO_LED_ON	0x80000
+ #endif
 
+ /* Hotkey details */
+@@ -176,6 +178,7 @@ struct fujitsu_hotkey_t {
+ 	int logolamp_registered;
+ 	int kblamps_registered;
+ 	int radio_led_registered;
++	int eco_led_registered;
+ };
 
+ static struct fujitsu_hotkey_t *fujitsu_hotkey;
+@@ -212,6 +215,17 @@ static struct led_classdev radio_led = {
+  .brightness_get = radio_led_get,
+  .brightness_set = radio_led_set
+ };
++
++static enum led_brightness eco_led_get(struct led_classdev *cdev);
++static void eco_led_set(struct led_classdev *cdev,
++			       enum led_brightness brightness);
++
++static struct led_classdev eco_led = {
++ .name = "fujitsu::eco_led",
++ .max_brightness = 1,
++ .brightness_get = eco_led_get,
++ .brightness_set = eco_led_set
++};
+ #endif
 
--- 
--- El mundo apesta y vosotros apestais tambien --
+ #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
+@@ -296,6 +310,18 @@ static void radio_led_set(struct led_classdev *cdev,
+ 		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
+ }
+
++static void eco_led_set(struct led_classdev *cdev,
++				enum led_brightness brightness)
++{
++	int curr;
++
++	curr = call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
++	if (brightness)
++		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON);
++	else
++		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_ON);
++}
++
+ static enum led_brightness logolamp_get(struct led_classdev *cdev)
+ {
+ 	enum led_brightness brightness = LED_OFF;
+@@ -330,6 +356,16 @@ static enum led_brightness radio_led_get(struct led_classdev *cdev)
+
+ 	return brightness;
+ }
++
++static enum led_brightness eco_led_get(struct led_classdev *cdev)
++{
++	enum led_brightness brightness = LED_OFF;
++
++	if (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
++		brightness = cdev->max_brightness;
++
++	return brightness;
++}
+ #endif
+
+ /* Hardware access for LCD brightness control */
+@@ -943,6 +979,23 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+ 			       result);
+ 		}
+ 	}
++
++	/* Support for eco led is not always signaled in bit corresponding
++	 * to the bit used to control the led. According to the DSDT table,
++	 * bit 14 seems to indicate presence of said led as well.
++	 * Confirm by testing the status.
++	*/
++	if ((call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
++	   (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
++		result = led_classdev_register(&fujitsu->pf_device->dev,
++						&eco_led);
++		if (result == 0) {
++			fujitsu_hotkey->eco_led_registered = 1;
++		} else {
++			pr_err("Could not register LED handler for eco LED, error %i\n",
++			       result);
++		}
++	}
+ #endif
+
+ 	return result;
+@@ -972,6 +1025,9 @@ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
+
+ 	if (fujitsu_hotkey->radio_led_registered)
+ 		led_classdev_unregister(&radio_led);
++
++	if (fujitsu_hotkey->eco_led_registered)
++		led_classdev_unregister(&eco_led);
+ #endif
+
+ 	input_unregister_device(input);
