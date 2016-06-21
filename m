@@ -1,106 +1,87 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 0/4] dell-wmi: Changes in WMI event code handling
-Date: Tue, 21 Jun 2016 20:29:27 +0200
-Message-ID: <201606212029.28029@pali>
-References: <1466020153-10877-1-git-send-email-pali.rohar@gmail.com> <20160621180617.GD3685@f23x64.localdomain> <e3fabd2ab50d46389400cfb8900bad4d@ausx13mpc120.AMER.DELL.COM>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH v3 0/4] dell-wmi: Changes in WMI event code handling
+Date: Tue, 21 Jun 2016 18:37:19 +0000
+Message-ID: <284b4ec68aae43e6ab6a257574d5b58a@ausx13mpc120.AMER.DELL.COM>
+References: <1466020153-10877-1-git-send-email-pali.rohar@gmail.com>
+ <20160621180617.GD3685@f23x64.localdomain>
+ <e3fabd2ab50d46389400cfb8900bad4d@ausx13mpc120.AMER.DELL.COM>
+ <201606212029.28029@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1830051.xN5hMYO3Um";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f54.google.com ([209.85.215.54]:34425 "EHLO
-	mail-lf0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751870AbcFUS3c (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2016 14:29:32 -0400
-In-Reply-To: <e3fabd2ab50d46389400cfb8900bad4d@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario_Limonciello@dell.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201606212029.28029@pali>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com
 Cc: dvhart@infradead.org, gabriele.mzt@gmail.com, luto@kernel.org, alex.hung@canonical.com, mjg59@srcf.ucam.org, kernel@kempniu.pl, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart1830051.xN5hMYO3Um
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 21 June 2016 20:16:09 Mario_Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Darren Hart [mailto:dvhart@infradead.org]
-> > Sent: Tuesday, June 21, 2016 1:06 PM
-> > To: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>; Andy Lutomirski
-> > <luto@kernel.org>; Alex Hung <alex.hung@canonical.com>; Matthew
-> > Garrett <mjg59@srcf.ucam.org>; Micha=C5=82 K=C4=99pie=C5=84 <kernel@kem=
-pniu.pl>;
-> > Limonciello, Mario <Mario_Limonciello@Dell.com>; platform-driver-
-> > x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v3 0/4] dell-wmi: Changes in WMI event code
-> > handling
-> >=20
-> > On Thu, Jun 16, 2016 at 09:33:02AM +0200, Pali Roh=C3=A1r wrote:
-> > > On Wednesday 15 June 2016 20:19:58 Darren Hart wrote:
-> > > > On Wed, Jun 15, 2016 at 09:49:09PM +0200, Pali Roh=C3=A1r wrote:
-> > > > > First patch describe problem about 0xe045 code. Second and
-> > > > > third are
-> >=20
-> > just
-> >=20
-> > > > > cosmetic and last rework code which processing WMI events. It
-> > > > > should
-> >=20
-> > be
-> >=20
-> > > > > properly tested on more Dell machines, to check that
-> > > > > everything is still working correctly.
-> > > >=20
-> > > > Is this "should be properly tested on more Dell machines" still
-> > > > the case?
-> >=20
-> > Are
-> >=20
-> > > > you ready for this to go into linux-next?
-> > >=20
-> > > Series should be OK, but I would like to see if someone else test
-> > > this series... Gabriele, Alex or Andy? Do you have time?
-> >=20
-> > Tested on a Dell XPS 13 2016 (9350). All hotkeys appear to work
-> > without warning
-> > messages. I didn't get anything out of Fn-F8 which has a picture of
-> > a laptop and
-> > white screen behind it. Not sure what that is supposed to do - if
-> > it was meant to blank the screen, it did not, perhaps it is meant
-> > to toggle screen outputs... will test that when I have access to
-> > an external display.
->=20
-> That key is meant to toggle screen outputs.  I believe it's still
-> done by the EC emitting <super> + p.  If your WM doesn't recognize
-> that, it won't do much, but you can see in xev the key combinations.
-
-I still do not understand this stupidity, pressing *one* key cause=20
-emitting two keys to OS and then OS needs to handle combinations of keys=20
-and acts on it correctly.... (like windows manager)
-
-Is there some way to disable this insane nonsense activity of BIOS,=20
-firmware or whatever it is doing in HW to send *one* key scancode when=20
-pressing *one* key?
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1830051.xN5hMYO3Um
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAldph4gACgkQi/DJPQPkQ1J8rwCfS+dxlOuMti5YTrwP40UNQCWw
-/jwAoIRUJ5MQVs0GYVkqwQ2swwHuWdDq
-=xSwg
------END PGP SIGNATURE-----
-
---nextPart1830051.xN5hMYO3Um--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBKdW5lIDIxLCAyMDE2IDE6
+MjkgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5j
+b20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgZ2FicmllbGUubXp0QGdtYWlsLmNvbTsg
+bHV0b0BrZXJuZWwub3JnOw0KPiBhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbTsgbWpnNTlAc3JjZi51
+Y2FtLm9yZzsga2VybmVsQGtlbXBuaXUucGw7DQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjMgMC80XSBkZWxsLXdtaTogQ2hhbmdlcyBpbiBXTUkgZXZlbnQgY29kZSBoYW5kbGlu
+Zw0KPiANCj4gT24gVHVlc2RheSAyMSBKdW5lIDIwMTYgMjA6MTY6MDkgTWFyaW9fTGltb25jaWVs
+bG9AZGVsbC5jb20gd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
+ID4gRnJvbTogRGFycmVuIEhhcnQgW21haWx0bzpkdmhhcnRAaW5mcmFkZWFkLm9yZ10NCj4gPiA+
+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMjEsIDIwMTYgMTowNiBQTQ0KPiA+ID4gVG86IFBhbGkgUm9o
+w6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gPiA+IENjOiBHYWJyaWVsZSBNYXp6b3R0YSA8
+Z2FicmllbGUubXp0QGdtYWlsLmNvbT47IEFuZHkgTHV0b21pcnNraQ0KPiA+ID4gPGx1dG9Aa2Vy
+bmVsLm9yZz47IEFsZXggSHVuZyA8YWxleC5odW5nQGNhbm9uaWNhbC5jb20+OyBNYXR0aGV3DQo+
+ID4gPiBHYXJyZXR0IDxtamc1OUBzcmNmLnVjYW0ub3JnPjsgTWljaGHFgiBLxJlwaWXFhCA8a2Vy
+bmVsQGtlbXBuaXUucGw+Ow0KPiA+ID4gTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNp
+ZWxsb0BEZWxsLmNvbT47IHBsYXRmb3JtLWRyaXZlci0NCj4gPiA+IHg4NkB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjMgMC80XSBkZWxsLXdtaTogQ2hhbmdlcyBpbiBXTUkgZXZlbnQgY29kZQ0KPiA+ID4gaGFu
+ZGxpbmcNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIEp1biAxNiwgMjAxNiBhdCAwOTozMzowMkFNICsw
+MjAwLCBQYWxpIFJvaMOhciB3cm90ZToNCj4gPiA+ID4gT24gV2VkbmVzZGF5IDE1IEp1bmUgMjAx
+NiAyMDoxOTo1OCBEYXJyZW4gSGFydCB3cm90ZToNCj4gPiA+ID4gPiBPbiBXZWQsIEp1biAxNSwg
+MjAxNiBhdCAwOTo0OTowOVBNICswMjAwLCBQYWxpIFJvaMOhciB3cm90ZToNCj4gPiA+ID4gPiA+
+IEZpcnN0IHBhdGNoIGRlc2NyaWJlIHByb2JsZW0gYWJvdXQgMHhlMDQ1IGNvZGUuIFNlY29uZCBh
+bmQNCj4gPiA+ID4gPiA+IHRoaXJkIGFyZQ0KPiA+ID4NCj4gPiA+IGp1c3QNCj4gPiA+DQo+ID4g
+PiA+ID4gPiBjb3NtZXRpYyBhbmQgbGFzdCByZXdvcmsgY29kZSB3aGljaCBwcm9jZXNzaW5nIFdN
+SSBldmVudHMuIEl0DQo+ID4gPiA+ID4gPiBzaG91bGQNCj4gPiA+DQo+ID4gPiBiZQ0KPiA+ID4N
+Cj4gPiA+ID4gPiA+IHByb3Blcmx5IHRlc3RlZCBvbiBtb3JlIERlbGwgbWFjaGluZXMsIHRvIGNo
+ZWNrIHRoYXQNCj4gPiA+ID4gPiA+IGV2ZXJ5dGhpbmcgaXMgc3RpbGwgd29ya2luZyBjb3JyZWN0
+bHkuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJcyB0aGlzICJzaG91bGQgYmUgcHJvcGVybHkgdGVz
+dGVkIG9uIG1vcmUgRGVsbCBtYWNoaW5lcyIgc3RpbGwNCj4gPiA+ID4gPiB0aGUgY2FzZT8NCj4g
+PiA+DQo+ID4gPiBBcmUNCj4gPiA+DQo+ID4gPiA+ID4geW91IHJlYWR5IGZvciB0aGlzIHRvIGdv
+IGludG8gbGludXgtbmV4dD8NCj4gPiA+ID4NCj4gPiA+ID4gU2VyaWVzIHNob3VsZCBiZSBPSywg
+YnV0IEkgd291bGQgbGlrZSB0byBzZWUgaWYgc29tZW9uZSBlbHNlIHRlc3QNCj4gPiA+ID4gdGhp
+cyBzZXJpZXMuLi4gR2FicmllbGUsIEFsZXggb3IgQW5keT8gRG8geW91IGhhdmUgdGltZT8NCj4g
+PiA+DQo+ID4gPiBUZXN0ZWQgb24gYSBEZWxsIFhQUyAxMyAyMDE2ICg5MzUwKS4gQWxsIGhvdGtl
+eXMgYXBwZWFyIHRvIHdvcmsNCj4gPiA+IHdpdGhvdXQgd2FybmluZw0KPiA+ID4gbWVzc2FnZXMu
+IEkgZGlkbid0IGdldCBhbnl0aGluZyBvdXQgb2YgRm4tRjggd2hpY2ggaGFzIGEgcGljdHVyZSBv
+Zg0KPiA+ID4gYSBsYXB0b3AgYW5kDQo+ID4gPiB3aGl0ZSBzY3JlZW4gYmVoaW5kIGl0LiBOb3Qg
+c3VyZSB3aGF0IHRoYXQgaXMgc3VwcG9zZWQgdG8gZG8gLSBpZg0KPiA+ID4gaXQgd2FzIG1lYW50
+IHRvIGJsYW5rIHRoZSBzY3JlZW4sIGl0IGRpZCBub3QsIHBlcmhhcHMgaXQgaXMgbWVhbnQNCj4g
+PiA+IHRvIHRvZ2dsZSBzY3JlZW4gb3V0cHV0cy4uLiB3aWxsIHRlc3QgdGhhdCB3aGVuIEkgaGF2
+ZSBhY2Nlc3MgdG8NCj4gPiA+IGFuIGV4dGVybmFsIGRpc3BsYXkuDQo+ID4NCj4gPiBUaGF0IGtl
+eSBpcyBtZWFudCB0byB0b2dnbGUgc2NyZWVuIG91dHB1dHMuICBJIGJlbGlldmUgaXQncyBzdGls
+bA0KPiA+IGRvbmUgYnkgdGhlIEVDIGVtaXR0aW5nIDxzdXBlcj4gKyBwLiAgSWYgeW91ciBXTSBk
+b2Vzbid0IHJlY29nbml6ZQ0KPiA+IHRoYXQsIGl0IHdvbid0IGRvIG11Y2gsIGJ1dCB5b3UgY2Fu
+IHNlZSBpbiB4ZXYgdGhlIGtleSBjb21iaW5hdGlvbnMuDQo+IA0KPiBJIHN0aWxsIGRvIG5vdCB1
+bmRlcnN0YW5kIHRoaXMgc3R1cGlkaXR5LCBwcmVzc2luZyAqb25lKiBrZXkgY2F1c2UNCj4gZW1p
+dHRpbmcgdHdvIGtleXMgdG8gT1MgYW5kIHRoZW4gT1MgbmVlZHMgdG8gaGFuZGxlIGNvbWJpbmF0
+aW9ucyBvZiBrZXlzDQo+IGFuZCBhY3RzIG9uIGl0IGNvcnJlY3RseS4uLi4gKGxpa2Ugd2luZG93
+cyBtYW5hZ2VyKQ0KPiANCj4gSXMgdGhlcmUgc29tZSB3YXkgdG8gZGlzYWJsZSB0aGlzIGluc2Fu
+ZSBub25zZW5zZSBhY3Rpdml0eSBvZiBCSU9TLA0KPiBmaXJtd2FyZSBvciB3aGF0ZXZlciBpdCBp
+cyBkb2luZyBpbiBIVyB0byBzZW5kICpvbmUqIGtleSBzY2FuY29kZSB3aGVuDQo+IHByZXNzaW5n
+ICpvbmUqIGtleT8NCj4gDQoNCkkgdGFsa2VkIHRvIHRoZSBFQyB0ZWFtIGFib3V0IHRoaXMgYSB3
+aGlsZSBiYWNrIHdoZW4gaXQgd2FzIGZpcnN0IGltcGxlbWVudGVkLg0KVGhhdCdzIG5vdCBwb3Nz
+aWJsZSB3aXRob3V0IF9PU0kgZGV0ZWN0aW9uIG9mIExpbnV4LiAgX09TSSBkZXRlY3Rpb24gY291
+bGQgYmUgDQp1c2VkIHRvIHJlbGF5IHRvIHRoZSBFQyB0byBiZWhhdmUgZGlmZmVyZW50bHksIGJ1
+dCBvdGhlcndpc2UgdGhlIEVDIHdpbGwgaGF2ZSANCm5vIGlkZWEgd2hhdCBPUyBpdCdzIG9uIGZv
+ciB3aGljaCB3YXkgdG8gYmVoYXZlLg0KDQpJIGRvbid0IHJlbWVtYmVyIGFsbCB0aGUgaGlzdG9y
+eSBiZWhpbmQgdGhlIHN3aXRjaCBvdmVyIGZyb20gYSBzaW5nbGUgc2NhbiBjb2RlIA0KVG8gPHN1
+cGVyPiArIFAsIGJ1dCBJIHRoaW5rIGl0J3MgYWxvbmcgdGhlIGxpbmVzIG9mIFdpbmRvd3MgOC9X
+aW5kb3dzIDEwIGFsbG93DQp5b3UgdG8gaXRlcmF0ZSB0aGUgZGlzcGxheSBzZWxlY3Rpb24gbWVu
+dSBiYXNlZCB1cG9uIGhvbGRpbmcgc3VwZXIgYW5kIHByZXNzaW5nDQpQIG11bHRpcGxlIHRpbWVz
+IGFuZCB3YWl0aW5nIGZvciB5b3UgdG8gc3RvcC4gIA0KDQpTZW5kaW5nIGEgc2luZ2xlIHNjYW4g
+Y29kZSB3aWxsIGNoYW5nZSBkaXNwbGF5cyBpbW1lZGlhdGVseSwgc28gaGF2aW5nIHRoZSANCkVD
+IHNlbmQgc3VwZXIrcCB1bmlmaWVzIHRoZSBiZWhhdmlvciBvZiBmbi1mOCBhbmQgc3VwZXIrcC4N
+Cg0K
