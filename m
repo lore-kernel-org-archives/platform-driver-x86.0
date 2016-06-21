@@ -1,142 +1,109 @@
-From: Matej Groma <matejgroma@gmail.com>
-Subject: [PATCH] fujitsu-laptop: Add support for eco LED
-Date: Tue, 21 Jun 2016 10:09:21 +0200
-Message-ID: <20160621080918.GA3333@Matej-PC.localdomain>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
+ Fujitsu e7x6
+Date: Tue, 21 Jun 2016 17:42:29 +0930
+Message-ID: <20160621081229.GE19735@marvin.atrad.com.au>
+References: <575FC4E0.7080501@fbihome.de>
+ <20160616234630.GB4764@marvin.atrad.com.au>
+ <5763C0DF.3030302@fbihome.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f195.google.com ([209.85.217.195]:36622 "EHLO
-	mail-lb0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753007AbcFUIJb (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:52009 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750978AbcFUIwE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2016 04:09:31 -0400
-Received: by mail-lb0-f195.google.com with SMTP id ur4so878913lbc.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jun 2016 01:09:24 -0700 (PDT)
+	Tue, 21 Jun 2016 04:52:04 -0400
 Content-Disposition: inline
+In-Reply-To: <5763C0DF.3030302@fbihome.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jwoithe@just42.net
+To: Jan-Marek Glogowski <glogow@fbihome.de>
 Cc: platform-driver-x86@vger.kernel.org
 
-There is an indicator LED signaling activated power saving mode
-on certain Fujitsu laptop models. This has currently no use on Linux.
-Export it to userspace.
+Hi Jan-Marek
 
-Signed-off-by: Matej Groma <matejgroma@gmail.com>
----
+On Fri, Jun 17, 2016 at 11:20:31AM +0200, Jan-Marek Glogowski wrote:
+> Just to make this clear. It's not "touchpad keys" but the "Fn + F4",
+> which should toggle the touchpad functionality (is broken on Windows too).
 
-Notes:
-    Tested on Lifebook E756
+No problem, that's what I understood from your original description.
 
- drivers/platform/x86/fujitsu-laptop.c | 56 +++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+> I'm just talking about Fn + Brightness (Fn + (F6|F7)) and "touchpad
+> dis-/enable" (Fn + F4) key events.
+> Not those real extra buttons, like ECO, RFkill, etc.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index ce41bc3..66e12a2 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -108,6 +108,8 @@
- #define LOGOLAMP_POWERON 0x2000
- #define LOGOLAMP_ALWAYS  0x4000
- #define RADIO_LED_ON	0x20
-+#define ECO_LED	0x10000
-+#define ECO_LED_ON	0x80000
- #endif
+Thanks.
 
- /* Hotkey details */
-@@ -176,6 +178,7 @@ struct fujitsu_hotkey_t {
- 	int logolamp_registered;
- 	int kblamps_registered;
- 	int radio_led_registered;
-+	int eco_led_registered;
- };
+> >> I checked the DSTD from the old and new HW. The size has more then
+> >> duplicated (414k => 955k) with a 43k diff. The diff for the FUJ02E3
+> >> device is just 356 lines, but I couldn't identify anything, which might
+> >> relate to the keys.
+> 
+> 43k = lines. (I didn't find a way to normalize the DSTD to catch moved
+> objects).
 
- static struct fujitsu_hotkey_t *fujitsu_hotkey;
-@@ -212,6 +215,17 @@ static struct led_classdev radio_led = {
-  .brightness_get = radio_led_get,
-  .brightness_set = radio_led_set
- };
-+
-+static enum led_brightness eco_led_get(struct led_classdev *cdev);
-+static void eco_led_set(struct led_classdev *cdev,
-+			       enum led_brightness brightness);
-+
-+static struct led_classdev eco_led = {
-+ .name = "fujitsu::eco_led",
-+ .max_brightness = 1,
-+ .brightness_get = eco_led_get,
-+ .brightness_set = eco_led_set
-+};
- #endif
+Hmm, it sounds like they changed quite a bit. :-(
 
- #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
-@@ -296,6 +310,18 @@ static void radio_led_set(struct led_classdev *cdev,
- 		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
- }
+> > Perhaps they've introduced a new backlight control device with a different
+> > HID (except you mentioned that only FUJ02E3 was listed even on other OSes,
+> > so I guess this is unlikely).
+> 
+> The diff of the sorted device list is also 230 lines. I checked the
+> devices, which start with F, but these don't seem interesting.
 
-+static void eco_led_set(struct led_classdev *cdev,
-+				enum led_brightness brightness)
-+{
-+	int curr;
-+
-+	curr = call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
-+	if (brightness)
-+		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON);
-+	else
-+		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_ON);
-+}
-+
- static enum led_brightness logolamp_get(struct led_classdev *cdev)
- {
- 	enum led_brightness brightness = LED_OFF;
-@@ -330,6 +356,16 @@ static enum led_brightness radio_led_get(struct led_classdev *cdev)
+I'm not surprised.  If there was another HID it's reasonable to expect it to
+be listed on the other systems.
 
- 	return brightness;
- }
-+
-+static enum led_brightness eco_led_get(struct led_classdev *cdev)
-+{
-+	enum led_brightness brightness = LED_OFF;
-+
-+	if (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
-+		brightness = cdev->max_brightness;
-+
-+	return brightness;
-+}
- #endif
+> > I don't have access to any of the newer Fujitsu hardware so I can't do much
+> > in relation to debugging the problem.  Obviously the buttons concerned
+> > generate ACPI notifications.  Without a FUJ02B1 and any obvious extension 
+> > to FUJ02E3, my only thought at present is that they've taken backlight
+> > control out of ACPI (that is, based on the ACPI button notification they
+> > poke other hardware to effect the brightness control).  It does seem a bit
+> > odd though.
+> > 
+> > In any case, we'd have to identify what is meant to be done (and what is
+> > done under other OSes) in reponse to these buttons.
+> > 
+> > I assume that the brightness buttons don't do anything when fujitsu-laptop
+> > is unloaded?  I'm wondering whether the standard backlight driver might be
+> > operational on this hardware.
+> 
+> Unloading doesn't help.
 
- /* Hardware access for LCD brightness control */
-@@ -943,6 +979,23 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
- 			       result);
- 		}
- 	}
-+
-+	/* Support for eco led is not always signaled in bit corresponding
-+	 * to the bit used to control the led. According to the DSDT table,
-+	 * bit 14 seems to indicate presence of said led as well.
-+	 * Confirm by testing the status.
-+	*/
-+	if ((call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
-+	   (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
-+		result = led_classdev_register(&fujitsu->pf_device->dev,
-+						&eco_led);
-+		if (result == 0) {
-+			fujitsu_hotkey->eco_led_registered = 1;
-+		} else {
-+			pr_err("Could not register LED handler for eco LED, error %i\n",
-+			       result);
-+		}
-+	}
- #endif
+Again, no surprises.
 
- 	return result;
-@@ -972,6 +1025,9 @@ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
+> A backlight device is available via /sys/class/backlight/intel_backlight
+> and you can change brightness manually. AFAIK this device is provided by
+> the i915 driver.
 
- 	if (fujitsu_hotkey->radio_led_registered)
- 		led_classdev_unregister(&radio_led);
-+
-+	if (fujitsu_hotkey->eco_led_registered)
-+		led_classdev_unregister(&eco_led);
- #endif
+So perhaps the intent on other systems is to respond to the ACPI button
+notifications by manipulating the intel backlight hardware.  If this is the
+case we'd need a way to do this from within the fujitsu-laptop driver in
+response to the buttons you've identified.  I'm going from memory here, but
+I don't think the S7020 that I have includes the intel backlight control
+hardware.  This was the motivation for the initial implementation of the
+fujitsu-laptop module which utilised the ACPI brightness controller.  It's
+been a while since I did those investigations though: I'll see if I can find
+my notes.
 
- 	input_unregister_device(input);
+> We'll use the KDE battery applet as a workaround, so users have a way to
+> change the backlight.
+
+This may be the easiest approach, at least in the short term.
+
+> OTOH a colleague told me our vendor has opened a service call with
+> Fujitsu and was told Fujitsu is working on a fix - at least for the
+> Touchpad button (quite probably a BIOS update).
+> 
+> If you don't have an additional ideas for me to check, I'll wait for a
+> reply from Fujitsu.
+
+Let's see what comes back, at least in response to the touchpad button.  If
+they do issue a BIOS update it will be interesting to see whether the
+brightness control is affected in any way.  I suspect it won't be, but you
+never know.
+
+Regards
+  jonathan
