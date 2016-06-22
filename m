@@ -1,87 +1,152 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 14:34:01 +0000
-Message-ID: <6fdb239b17254606861aab4723b26599@ausx13mpc124.AMER.DELL.COM>
-References: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com> <201606152151.07407@pali>
- <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
- <20160622075602.GA29844@pali>
- <41f11bb2917349919e0b4eb21fab9a46@ausx13mpc124.AMER.DELL.COM>
- <20160622141239.GG29844@pali>
- <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
- <20160622142407.GH29844@pali>
- <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
- <20160622143112.GI29844@pali>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCHv2 1/1] thermal: core: call thermal_zone_device_update()
+ after mode update
+Date: Wed, 22 Jun 2016 07:36:11 -0700
+Message-ID: <20160622143609.GA28915@localhost.localdomain>
+References: <1466563538.2471.10.camel@intel.com>
+ <1466572546-12944-1-git-send-email-edubezval@gmail.com>
+ <576A5B79.7070209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160622143112.GI29844@pali>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <576A5B79.7070209@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Keerthy <a0393675@ti.com>
+Cc: Rui Zhang <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjIsIDIwMTYg
-OTozMSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGdhYnJpZWxlLm16dEBnbWFpbC5jb207IG1qZzU5QHNyY2YudWNhbS5vcmc7
-IGR2aGFydEBpbmZyYWRlYWQub3JnOw0KPiBrZXJuZWxAa2VtcG5pdS5wbDsgbHV0b0BrZXJuZWwu
-b3JnOyBhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbTsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMy80XSBkZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFib3V0IG90aGVyIFdNSSBl
-dmVudA0KPiBjb2Rlcw0KPiANCj4gT24gV2VkbmVzZGF5IDIyIEp1bmUgMjAxNiAxNDoyODozNyBN
-YXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRvOnBhbGkucm9oYXJAZ21h
-aWwuY29tXQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBKdW5lIDIyLCAyMDE2IDk6MjQgQU0NCj4g
-PiA+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0K
-PiA+ID4gQ2M6IGdhYnJpZWxlLm16dEBnbWFpbC5jb207IG1qZzU5QHNyY2YudWNhbS5vcmc7DQo+
-IGR2aGFydEBpbmZyYWRlYWQub3JnOw0KPiA+ID4ga2VybmVsQGtlbXBuaXUucGw7IGx1dG9Aa2Vy
-bmVsLm9yZzsgYWxleC5odW5nQGNhbm9uaWNhbC5jb207DQo+IHBsYXRmb3JtLQ0KPiA+ID4gZHJp
-dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g
-PiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy80XSBkZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFi
-b3V0IG90aGVyIFdNSQ0KPiBldmVudA0KPiA+ID4gY29kZXMNCj4gPiA+DQo+ID4gPiBPbiBXZWRu
-ZXNkYXkgMjIgSnVuZSAyMDE2IDE0OjIxOjI1IE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tDQo+
-IHdyb3RlOg0KPiA+ID4gPiA+ID4gRm9yIExpbnV4IEkgZG9u4oCZdCB0aGluayB0aGlzIGlzIG5l
-Y2Vzc2FyeSBhbmQgYSBOT09QIGlzIGFwcHJvcHJpYXRlLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+IFRoZXJlIGlzIGFsc28gYSBzZWNvbmQgcGxhY2UgdGhhdCBzb21lIG9sZGVyIGxhcHRvcHMg
-aGFkIGEgYmF0dGVyeQ0KPiA+ID4gImhvdGtleSINCj4gPiA+ID4gPiA+IHRoYXQgd291bGQgYWxz
-byBlbWl0IDB4RTAwRS4gIFRoaXMgd2FzIGFsc28gcGlja2VkIHVwIGJ5IHF1aWNrc2V0DQo+IGFu
-ZA0KPiA+ID4gd291bGQNCj4gPiA+ID4gPiA+IHNob3cgYmF0dGVyeSBpbmZvcm1hdGlvbi4NCj4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBUaGlzIHNob3VsZG4ndCBiZSBibG9ja2VkIGJ5IGtlcm5l
-bCwgSSdkIGV4cGVjdCBpZiBzb21lb25lIHdhbnRzIHRvDQo+ID4gPiBiaW5kDQo+ID4gPiA+ID4g
-dGhpcw0KPiA+ID4gPiA+ID4gdG8gYW5vdGhlciBhcHBsaWNhdGlvbiBmcm9tIHVzZXJzcGFjZSB0
-aGV5IHNob3VsZCBiZSBhYmxlIHRvLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gR3JlYXQhIENhbiBJ
-IHNlbmQgcGF0Y2ggYWZ0ZXIgd2hpY2ggMHhlMDBlIHdpbGwgYmUgc2VuZCB0byBpbnB1dCBsYXll
-cg0KPiBhcw0KPiA+ID4gPiA+IGV2ZW50IEtFWV9CQVRURVJZPw0KPiA+ID4gPiA+DQo+ID4gPiA+
-DQo+ID4gPiA+IFdlbGwgdGhhdCdzIHdoeSBJIHdhcyBtZW50aW9uaW5nIHRoaXMgaW4gdHdvIHBs
-YWNlcy4gIElmIGl0J3MgcmVjZWl2ZWQgZnJvbQ0KPiA+ID4ga2V5Ym9hcmQNCj4gPiA+ID4gcmVj
-b2RpbmcgaXQgYXMgS0VZX0JBVFRFUlkgc291bmRzIGFwcHJvcHJpYXRlIHRvIG1lLiAgSWYgaXQn
-cyByZWNlaXZlZA0KPiBmcm9tDQo+ID4gPiBXTUksDQo+ID4gPiA+IGl0IHJlYWxseSBzaG91bGRu
-J3QgYmUgc2V0IGFzIGFueXRoaW5nIGZvciBMaW51eCB0byBkby4NCj4gPiA+ID4NCj4gPiA+ID4g
-SSBkb24ndCB0aGluayBhbnkgYXBwcyB3aWxsIGJlbmVmaXQgZnJvbSB0aGUgbm90aWZpY2F0aW9u
-IHRvIHJlLXJlYWQNCj4gYmF0dGVyeQ0KPiA+ID4gPiBJbmZvcm1hdGlvbiB0b2RheS4NCj4gPiA+
-DQo+ID4gPiBJIG1lYW4gZm9yIGRlbGwtd21pLmMgY29kZS4NCj4gPiA+IFdoeSBpdCBzaG91bGQg
-bm90IGJlIHNldCB0byBhbnl0aGluZyBvbiBMaW51eD8NCj4gPiA+DQo+ID4NCj4gPiBPbiBXaW5k
-b3dzIFF1aWNrc2V0IGlzIGEgc2VwYXJhdGUgYXBwbGljYXRpb24gZnJvbSBidWlsdC1pbiBXaW5k
-b3dzDQo+IGJhdHRlcnkNCj4gPiBhcHBsZXQuICBJdCBzaG93cyBzaW1pbGFyIHR5cGVzIG9mIGlu
-Zm9ybWF0aW9uIGFzIGdub21lLXBvd2VyLW1hbmFnZXINCj4gZG9lcywNCj4gPiBidXQgYmVjYXVz
-ZSBpdCdzIG5vdCBwYXJ0IG9mIHRoZSBPUywgaXQgZG9lc24ndCBnZXQgbm90aWZpY2F0aW9ucyBs
-aWtlIHRoaXMgc28NCj4gPiBzcGVjaWFsIEJJT1MgaG9va3MgYXJlIGluIHBsYWNlIGZvciBpdCB0
-byBrbm93IHdoZW4gdG8gcmUtcmVhZCBiYXR0ZXJ5DQo+ID4gaW5mb3JtYXRpb24uDQo+ID4NCj4g
-PiBPbiBMaW51eCwgdGhlcmUgYXJlIGFscmVhZHkgaW5mcmFzdHJ1Y3R1cmUgZm9yIGJhdHRlcnkg
-cmVtb3ZhbCBhbmQgYWRkaW5nDQo+ID4gbm90aWZpY2F0aW9ucyBmcm9tIEFDUEkuICBTZW5kaW5n
-IHRoaXMgdXAgdG8gdXNlciBzcGFjZSB3b24ndCBiZSB1c2VmdWwuDQo+IA0KPiBFcnJyLiBJIG1l
-YW4gV01JIGV2ZW50IDB4ZTAwZSB3aGljaCB5b3Ugd3JvdGUgaXMgZW1pdHRlZCB3aGVuIHVzZXIg
-cHJlc3MNCj4gYmF0dGVyeSBrZXkuIEFuZCBJIHRoaW5rIHRoaXMgZXZlbnQgc2hvdWxkIGJlIHNl
-bnQgYnkgZGVsbC13bWkuYyBhcw0KPiBLRVlfQkFUVEVSWS4NCj4gDQoNCk5vLCBJIG1lYW4gMHhl
-MDBlIHNjYW5jb2RlIGlzIGVtaXR0ZWQgd2hlbiB1c2VyIHByZXNzZXMgdGhlIGJhdHRlcnkga2V5
-IG9uDQpvbGRlciBsYXB0b3BzLiAgSSdtIG9ubHkgbWVudGlvbmluZyBpdCBiZWNhdXNlIGl0IGhh
-cHBlbnMgdG8gaGF2ZSB0aGUgc2FtZQ0Kc2NhbmNvZGUgYXMgaXMgcmVjZWl2ZWQgZm9yIFdNSSBm
-b3IgYW5vdGhlciBwdXJwb3NlIGFuZCBJIHdhbnRlZCB0byBtYWtlIHN1cmUNCml0IHdhcyBjbGVh
-ciB3aGF0IGJvdGggYXJlIGZvci4gIA0KVGhpcyBidXR0b24gcHJlc3MgaXNuJ3QgZW1pdHRlZCB2
-aWEgV01JLCBpdCdzIG92ZXIgc3RhbmRhcmQgc2VyaW8uDQoNClRoZSBldmVudCByZWNlaXZlZCBv
-dmVyIFdNSSBmb3IgYmF0dGVyeSByZWZyZXNoIHRoYXQgc2hhcmVzIHRoZSBzYW1lIGNvZGUgc2hv
-dWxkbid0DQpiZSBlbWl0dGVkIGFzIEtFWV9CQVRURVJZIHRvIHRoZSBPUyBpcyBhbGwgSSB3YXMg
-dHJ5aW5nIHRvIHNheS4NCg0K
+On Wed, Jun 22, 2016 at 03:03:45PM +0530, Keerthy wrote:
+> 
+> 
+> On Wednesday 22 June 2016 10:45 AM, Eduardo Valentin wrote:
+> >Because several drivers do the following pattern:
+> >.set_mode()
+> >    ...
+> >    local_data->mode = new_mode;
+> >    thermal_zone_device_update(tz);
+> >
+> >makes sense to simply do the thermal_zone_device_update()
+> >in thermal core, after setting the new mode.
+> 
+> http://pastebin.ubuntu.com/17687601/
+> 
+> linux-next + current v2 of the patch.
+> The back trace still comes.
+
+I confirm this. Please check V3 I just sent. On V2 I focused
+on thermal_zone_device_update(), but for OF thermal specifically,
+we also hold the lock for protecting other accesses. Now they
+are removed.
+
+> 
+> Regards,
+> Keerthy
+> 
+> >
+> >Also, this patch also remove deadlocks on drivers that
+> >call thermal_zone_device_update() on .set_mode(),
+> >as .set_mode()  is now called always with tz->lock held.
+> >
+> >Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> >Cc: Len Brown <lenb@kernel.org>
+> >Cc: linux-acpi@vger.kernel.org
+> >Cc: "Lee, Chun-Yi" <jlee@suse.com>
+> >Cc: Darren Hart <dvhart@infradead.org>
+> >Cc: Zhang Rui <rui.zhang@intel.com>
+> >Cc: Keerthy <j-keerthy@ti.com>
+> >Cc: linux-kernel@vger.kernel.org
+> >Cc: linux-omap@vger.kernel.org
+> >Cc: platform-driver-x86@vger.kernel.org
+> >Cc: linux-pm@vger.kernel.org
+> >Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+> >---
+> >Please ignore last version.
+> >
+> >V1-> V2:
+> >Cleaned the patch and remove unrelated changes.
+> >---
+> >
+> >  drivers/acpi/thermal.c                             | 2 --
+> >  drivers/platform/x86/acerhdf.c                     | 1 -
+> >  drivers/thermal/imx_thermal.c                      | 1 -
+> >  drivers/thermal/of-thermal.c                       | 1 -
+> >  drivers/thermal/thermal_sysfs.c                    | 1 +
+> >  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 1 -
+> >  6 files changed, 1 insertion(+), 6 deletions(-)
+> >
+> >diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+> >index 82707f9..8582b88 100644
+> >--- a/drivers/acpi/thermal.c
+> >+++ b/drivers/acpi/thermal.c
+> >@@ -519,8 +519,6 @@ static void acpi_thermal_check(void *data)
+> >
+> >  	if (!tz->tz_enabled)
+> >  		return;
+> >-
+> >-	thermal_zone_device_update(tz->thermal_zone);
+> >  }
+> >
+> >  /* sys I/F for generic thermal sysfs support */
+> >diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> >index 460fa67..aee33ba 100644
+> >--- a/drivers/platform/x86/acerhdf.c
+> >+++ b/drivers/platform/x86/acerhdf.c
+> >@@ -405,7 +405,6 @@ static inline void acerhdf_enable_kernelmode(void)
+> >  	kernelmode = 1;
+> >
+> >  	thz_dev->polling_delay = interval*1000;
+> >-	thermal_zone_device_update(thz_dev);
+> >  	pr_notice("kernel mode fan control ON\n");
+> >  }
+> >
+> >diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> >index c5547bd..a413eb6 100644
+> >--- a/drivers/thermal/imx_thermal.c
+> >+++ b/drivers/thermal/imx_thermal.c
+> >@@ -246,7 +246,6 @@ static int imx_set_mode(struct thermal_zone_device *tz,
+> >  	}
+> >
+> >  	data->mode = mode;
+> >-	thermal_zone_device_update(tz);
+> >
+> >  	return 0;
+> >  }
+> >diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> >index b8e509c..4602e2e 100644
+> >--- a/drivers/thermal/of-thermal.c
+> >+++ b/drivers/thermal/of-thermal.c
+> >@@ -292,7 +292,6 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
+> >  	mutex_unlock(&tz->lock);
+> >
+> >  	data->mode = mode;
+> >-	thermal_zone_device_update(tz);
+> >
+> >  	return 0;
+> >  }
+> >diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> >index 743df50..3d0dc30 100644
+> >--- a/drivers/thermal/thermal_sysfs.c
+> >+++ b/drivers/thermal/thermal_sysfs.c
+> >@@ -100,6 +100,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
+> >  	mutex_lock(&tz->lock);
+> >  	result = tz->ops->set_mode(tz, mode);
+> >  	mutex_unlock(&tz->lock);
+> >+	thermal_zone_device_update(tz);
+> >
+> >  	if (result)
+> >  		return result;
+> >diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> >index 15c0a9a..9a5a3a3 100644
+> >--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> >+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> >@@ -205,7 +205,6 @@ static int ti_thermal_set_mode(struct thermal_zone_device *thermal,
+> >  	data->mode = mode;
+> >  	ti_bandgap_write_update_interval(bgp, data->sensor_id,
+> >  					data->ti_thermal->polling_delay);
+> >-	thermal_zone_device_update(data->ti_thermal);
+> >  	dev_dbg(&thermal->device, "thermal polling set for duration=%d msec\n",
+> >  		data->ti_thermal->polling_delay);
+> >
+> >
