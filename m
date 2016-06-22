@@ -1,143 +1,71 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCHv2 1/1] thermal: core: call thermal_zone_device_update()
- after mode update
-Date: Wed, 22 Jun 2016 15:03:45 +0530
-Message-ID: <576A5B79.7070209@ti.com>
-References: <1466563538.2471.10.camel@intel.com>
- <1466572546-12944-1-git-send-email-edubezval@gmail.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
+ Fujitsu e7x6
+Date: Wed, 22 Jun 2016 12:07:26 +0200
+Message-ID: <576A635E.1090101@fbihome.de>
+References: <575FC4E0.7080501@fbihome.de>
+ <20160622071517.GC3056@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466572546-12944-1-git-send-email-edubezval@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Rui Zhang <rui.zhang@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ironman.h-da.de ([141.100.10.250]:8510 "EHLO ironman.h-da.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751582AbcFVKPo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 22 Jun 2016 06:15:44 -0400
+In-Reply-To: <20160622071517.GC3056@eudyptula.hq.kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org
 
+Am 22.06.2016 um 09:15 schrieb Micha=C5=82 K=C4=99pie=C5=84:
+>> I recently got new Skylake hardware (e7x6) from Fujitsu. Compared to
+>> previous Haswell generation (e7x4), some of the Fn+X key combination
+>> stopped working. This includes the brightness and "touchpad dis-/ena=
+ble"
+>> key combinations.
+>=20
+> As you used the phrase "stopped working", I'm wondering whether you w=
+ere
+> ever able to get ACPI brightness control to work on a Haswell machine=
+?
+> It seems to be broken on my Lifebook E744 (BIOS version 1.19): pressi=
+ng
+> the brightness keys causes acpi_fujitsu_notify() to call GBLL, which
+> always returns the same brightness level, even though it sets the
+> highest bit in its return value (which denotes a brightness change).
+> Also, calling set_lcd_level() with various values causes the value
+> subsequently returned by GBLL to change, but the actual screen
+> brightness is identical all the time.
 
+Brightness control works for me with the Fujitsu e7x4 hardware and so
+does the "touchpad" button. These notebooks run Ubuntu 12.04 with 14.04
+HWE AKA some 3.13 kernel and KDE4. No extra configuration needed.
 
-On Wednesday 22 June 2016 10:45 AM, Eduardo Valentin wrote:
-> Because several drivers do the following pattern:
-> .set_mode()
->     ...
->     local_data->mode = new_mode;
->     thermal_zone_device_update(tz);
->
-> makes sense to simply do the thermal_zone_device_update()
-> in thermal core, after setting the new mode.
+But: the brightness buttons just generate key events, which are
+evaluated inside KDE, not in a terminal or the login screen, so the
+actual part of the driver, which handles the LCD brightness level, isn'=
+t
+working - at least not the driver version in 3.13.
 
-http://pastebin.ubuntu.com/17687601/
+>> For the brightness control it's understandable, as this was handled =
+by a
+>> ACPI device FUJ02B1, which is no longer available. I don't know how =
+the
+>> touchpad disable key was actually working, as I don't get any scan c=
+odes
+>> or ACPI events in userspace - probably I'm missing something here.
+>=20
+> It looks like it is handled purely in hardware because I'm not gettin=
+g
+> any scan codes or ACPI events either on a Lifebook E744 and the hotke=
+y
+> works correctly.
 
-linux-next + current v2 of the patch.
-The back trace still comes.
+Yup
 
 Regards,
-Keerthy
 
->
-> Also, this patch also remove deadlocks on drivers that
-> call thermal_zone_device_update() on .set_mode(),
-> as .set_mode()  is now called always with tz->lock held.
->
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: "Lee, Chun-Yi" <jlee@suse.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-omap@vger.kernel.org
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
-> ---
-> Please ignore last version.
->
-> V1-> V2:
-> Cleaned the patch and remove unrelated changes.
-> ---
->
->   drivers/acpi/thermal.c                             | 2 --
->   drivers/platform/x86/acerhdf.c                     | 1 -
->   drivers/thermal/imx_thermal.c                      | 1 -
->   drivers/thermal/of-thermal.c                       | 1 -
->   drivers/thermal/thermal_sysfs.c                    | 1 +
->   drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 1 -
->   6 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-> index 82707f9..8582b88 100644
-> --- a/drivers/acpi/thermal.c
-> +++ b/drivers/acpi/thermal.c
-> @@ -519,8 +519,6 @@ static void acpi_thermal_check(void *data)
->
->   	if (!tz->tz_enabled)
->   		return;
-> -
-> -	thermal_zone_device_update(tz->thermal_zone);
->   }
->
->   /* sys I/F for generic thermal sysfs support */
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 460fa67..aee33ba 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -405,7 +405,6 @@ static inline void acerhdf_enable_kernelmode(void)
->   	kernelmode = 1;
->
->   	thz_dev->polling_delay = interval*1000;
-> -	thermal_zone_device_update(thz_dev);
->   	pr_notice("kernel mode fan control ON\n");
->   }
->
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index c5547bd..a413eb6 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -246,7 +246,6 @@ static int imx_set_mode(struct thermal_zone_device *tz,
->   	}
->
->   	data->mode = mode;
-> -	thermal_zone_device_update(tz);
->
->   	return 0;
->   }
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index b8e509c..4602e2e 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -292,7 +292,6 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
->   	mutex_unlock(&tz->lock);
->
->   	data->mode = mode;
-> -	thermal_zone_device_update(tz);
->
->   	return 0;
->   }
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> index 743df50..3d0dc30 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -100,6 +100,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
->   	mutex_lock(&tz->lock);
->   	result = tz->ops->set_mode(tz, mode);
->   	mutex_unlock(&tz->lock);
-> +	thermal_zone_device_update(tz);
->
->   	if (result)
->   		return result;
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> index 15c0a9a..9a5a3a3 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> @@ -205,7 +205,6 @@ static int ti_thermal_set_mode(struct thermal_zone_device *thermal,
->   	data->mode = mode;
->   	ti_bandgap_write_update_interval(bgp, data->sensor_id,
->   					data->ti_thermal->polling_delay);
-> -	thermal_zone_device_update(data->ti_thermal);
->   	dev_dbg(&thermal->device, "thermal polling set for duration=%d msec\n",
->   		data->ti_thermal->polling_delay);
->
->
+Jan-Marek
