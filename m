@@ -1,68 +1,78 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH v3 0/4] dell-wmi: Changes in WMI event code handling
-Date: Wed, 22 Jun 2016 13:20:12 +0000
-Message-ID: <1402523c32044788ab64db22d075fc83@ausx13mpc124.AMER.DELL.COM>
-References: <1466020153-10877-1-git-send-email-pali.rohar@gmail.com>
- <20160621180617.GD3685@f23x64.localdomain>
- <e3fabd2ab50d46389400cfb8900bad4d@ausx13mpc120.AMER.DELL.COM>
- <201606212029.28029@pali>
- <284b4ec68aae43e6ab6a257574d5b58a@ausx13mpc120.AMER.DELL.COM>
- <20160622103028.GB29844@pali>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
+ Fujitsu e7x6
+Date: Wed, 22 Jun 2016 15:22:03 +0200
+Message-ID: <576A90FB.9090506@fbihome.de>
+References: <575FC4E0.7080501@fbihome.de>
+ <20160616234630.GB4764@marvin.atrad.com.au> <5763C0DF.3030302@fbihome.de>
+ <20160621081229.GE19735@marvin.atrad.com.au>
+ <20160622073213.GD3056@eudyptula.hq.kempniu.pl> <576A6604.8010907@fbihome.de>
+ <20160622105333.GD25599@marvin.atrad.com.au> <576A7519.9040703@fbihome.de>
+ <20160622123941.GB2466@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160622103028.GB29844@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, gabriele.mzt@gmail.com, luto@kernel.org, alex.hung@canonical.com, mjg59@srcf.ucam.org, kernel@kempniu.pl, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ironchief.h-da.de ([141.100.10.235]:5780 "EHLO
+	ironchief.h-da.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750957AbcFVNWH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 22 Jun 2016 09:22:07 -0400
+In-Reply-To: <20160622123941.GB2466@eudyptula.hq.kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org
 
-PiA+IEkgdGFsa2VkIHRvIHRoZSBFQyB0ZWFtIGFib3V0IHRoaXMgYSB3aGlsZSBiYWNrIHdoZW4g
-aXQgd2FzIGZpcnN0IGltcGxlbWVudGVkLg0KPiA+IFRoYXQncyBub3QgcG9zc2libGUgd2l0aG91
-dCBfT1NJIGRldGVjdGlvbiBvZiBMaW51eC4gIF9PU0kgZGV0ZWN0aW9uDQo+ID4gY291bGQgYmUg
-dXNlZCB0byByZWxheSB0byB0aGUgRUMgdG8gYmVoYXZlIGRpZmZlcmVudGx5LCBidXQgb3RoZXJ3
-aXNlDQo+ID4gdGhlIEVDIHdpbGwgaGF2ZSBubyBpZGVhIHdoYXQgT1MgaXQncyBvbiBmb3Igd2hp
-Y2ggd2F5IHRvIGJlaGF2ZS4NCj4gDQo+IEFDUEkgY29kZSBzaG91bGQgbm90IGJlaGF2ZSBkaWZm
-ZXJlbnRseSBmb3IgZGlmZmVyZW50IG9wZXJhdGluZyBzeXN0ZW1zLg0KPiBJZiB0aGVyZSBpcyBi
-dWcgaW4ga2VybmVsLCByZXBvcnQgYnVnIHRvIGtlcm5lbCwgc3VidHJlZSBtYWludGFpbmVyIGZv
-ciBmaXhpbmcgaXQuDQo+IEFuZCBub3QgZG9pbmcgd29ya2Fyb3VuZCBhbmQgaGFja3MgaW4gQUNQ
-SS4NCg0KVGhpcyBpc24ndCBBQ1BJIGNvZGUsIHRoaXMgaXMgRUMgY29kZS4NCg0KPiANCj4gSW4g
-dGhpcyBjYXNlIHRoZXJlIGNvdWxkIGJlIChzdGFuZGFyZGl6ZWQpIEFDUEkgZnVuY3Rpb24gZm9y
-IHR1cm5pbmcgb2ZmIHRoaXMNCj4gbm9uc2Vuc2UgZnVuY3Rpb25hbGl0eSBhbmQgc3VwcG9ydGVk
-IGtlcm5lbCBjb3VsZCBjYWxsIGl0Lg0KPiANCg0KSSB0aGluayB5b3UgbWlnaHQgaGF2ZSBpbnRl
-cnByZXRlZCBteSByZXNwb25zZSBkaWZmZXJlbnRseSB0aGFuIEkgaW50ZW5kZWQuDQpJIGtub3cg
-dGhhdCB0aGUgTGludXgga2VybmVsIGhhcyBjaG9zZW4gdG8gcmVzcG9uZCBhcyB0aGUgbGF0ZXN0
-IFdpbmRvd3MNCnZlcnNpb24gZm9yIF9PU0ksIGFuZCB0aGF0J3Mgd2h5IGl0J3Mgbm90IHBvc3Np
-YmxlIHRvIGRvIGEgZGlmZmVyZW50IGJlaGF2aW9yDQpmb3IgTGludXggYW5kIFdpbmRvd3MuDQoN
-CklmIHRoZXJlIGlzIGEgZGVzaXJlIHRvIGdvIGRvd24gdGhlIHJvdXRlIG9mIGhhdmluZyBkaWZm
-ZXJlbnQgYmVoYXZpb3IgZm9yIA0Kd2hhdCB0aGUgRUMgZG9lcyBpbiBkaWZmZXJlbnQgT1MnZXMs
-IF9PU0kgaXMgb25seSB3YXkgdG8gYWNjb21wbGlzaCB0aGlzLg0KDQo+IElzIG5vdCB0aGVyZSBz
-dWNoIEFDUEkgZnVuY3Rpb24/IE9yIERlbGwgc3BlY2lmaWMgU01CSU9TIGNhbGw/DQo+IA0KDQpJ
-J20gbm90IGF3YXJlIG9mIGFueSBzdGFuZGFyZCBBQ1BJIGZ1bmN0aW9uIG9yIERlbGwgZnVuY3Rp
-b24gZm9yIHRoaXMgdHlwZSANCm9mIHJlcXVlc3QuICBMYXN0IHRpbWUgdGhpcyB3YXMgZGlzY3Vz
-c2VkIEkgd2FzIHRvbGQgdGhlIEVDIHdvdWxkIGVtaXQgDQpzaW5nbGUgZGlzcGxheSBzY2FuIGNv
-ZGUgZm9yIFdpbmRvd3MgPCA3IChhcyBXaW5kb3dzIFZpc3RhIGFuZCBlYXJsaWVyDQpkb2Vzbid0
-IHN1cHBvcnQgc3VwZXIgKyBwKS4gIFdpbmRvd3MgPiA3IChhcyBkZXRlY3RlZCAgYnkgX09TSSBh
-bmQgDQpwYXNzZWQgdG8gRUMpIHdpbGwgZW1pdCBzdXBlciArIHAuDQoNCj4gPiBJIGRvbid0IHJl
-bWVtYmVyIGFsbCB0aGUgaGlzdG9yeSBiZWhpbmQgdGhlIHN3aXRjaCBvdmVyIGZyb20gYSBzaW5n
-bGUNCj4gPiBzY2FuIGNvZGUgVG8gPHN1cGVyPiArIFAsIGJ1dCBJIHRoaW5rIGl0J3MgYWxvbmcg
-dGhlIGxpbmVzIG9mIFdpbmRvd3MNCj4gPiA4L1dpbmRvd3MgMTAgYWxsb3cgeW91IHRvIGl0ZXJh
-dGUgdGhlIGRpc3BsYXkgc2VsZWN0aW9uIG1lbnUgYmFzZWQNCj4gPiB1cG9uIGhvbGRpbmcgc3Vw
-ZXIgYW5kIHByZXNzaW5nIFAgbXVsdGlwbGUgdGltZXMgYW5kIHdhaXRpbmcgZm9yIHlvdSB0byBz
-dG9wLg0KPiANCj4gV2luZG93cyBzeXN0ZW1zIGRvaW5nIHN0dXBpZCB0aGluZ3MgYW5kIGZpeGlu
-ZyB0aGVpciBidWdzIGluIEFDUEkgaXMgd3JvbmcuIEl0DQo+IGJyb2tlIGZvciBleGFtcGxlIHRo
-aXMga2V5IG9uIGFsbCBvdGhlciBzeXN0ZW1zIChMaW51eCB0b28pLg0KPiANCg0KVGhlcmUncyBu
-byBidWcgaW4gdGhpcyBiZWhhdmlvciwgaXQncyBpbnRlbmRlZCBiZWhhdmlvci4NCg0KTGlrZSBJ
-IHNhaWQsIHByZXZpb3VzbHkgZGlzcGxheSBzd2l0Y2ggaG90a2V5IHdvdWxkIGltbWVkaWF0ZWx5
-IGN5Y2xlIG91dHB1dHMuDQpUaGUgYmVoYXZpb3IgZm9sbG93ZWQgd2l0aCBzdXBlciArIHAgYWxs
-b3dzIGZvciBPUyB0byB0b2dnbGUgdGhyb3VnaCBhIG1lbnUNCm9mIG91dHB1dHMgaW4gdGhpcyBP
-Uy4NCg0KIiBUb2dnbGUgdGhyb3VnaCB0aGUgcHJvamVjdGlvbiBtb2RlIChuZXcgd2l0aCBXaW5k
-b3dzIDcpLiINCmh0dHBzOi8vbXNkbi5taWNyb3NvZnQuY29tL2VuLXVzL2xpYnJhcnkvbXM5NzEz
-MjMuYXNweA0KDQo+ID4gU2VuZGluZyBhIHNpbmdsZSBzY2FuIGNvZGUgd2lsbCBjaGFuZ2UgZGlz
-cGxheXMgaW1tZWRpYXRlbHksIHNvIGhhdmluZw0KPiA+IHRoZSBFQyBzZW5kIHN1cGVyK3AgdW5p
-ZmllcyB0aGUgYmVoYXZpb3Igb2YgZm4tZjggYW5kIHN1cGVyK3AuDQo+IA0KPiBBbmQgZHVlIHRv
-IHRoaXMgT1Mva2VybmVsIGNhbm5vdCBkaXN0aW5ndWlzaCBiZXR3ZWVuIEZuLUY4IGFuZCBTdXBl
-citwIGtleXMuLi4NCg0KV2hpY2ggaXMgaW50ZW5kZWQgYmVoYXZpb3IgZnJvbSBzeXN0ZW0gZGVz
-aWduZXIncyBwZXJzcGVjdGl2ZS4NCg==
+Am 22.06.2016 um 14:39 schrieb Micha=C5=82 K=C4=99pie=C5=84:
+>> Someone / Something has to generate the keycodes, even if we skip al=
+l
+>> brightness control. And I get an ACPI event for the FUJ02E3 when I p=
+ress
+>> the keys, but I don't know what to do with it (AKA which DSTD functi=
+on
+>> to call).
+>=20
+> Can you post a DSDT dump of your machine somewhere so that we can tak=
+e a
+> look?
+>=20
+> I played with my Lifebook E744 a bit and there is a chance it is not =
+as
+> different from the Skylake machines as I originally imagined.  Earlie=
+r
+> in this thread, I already mentioned that pure ACPI brightness control
+> doesn't work, just like it doesn't work on Skylakes.  However, input
+> events are correctly generated when Fn+F6 or Fn+F7 is pressed.
+
+That's no mystery, because the brightness control ACPI device (AKA
+=46UJ02B1 is available on e7x4 notebooks and the diriver also generates
+the keycodes in addition.
+
+The diff between e7x4 and e7x6 DSDT is ~43k lines or 1.3MB
+And the DSDT of 736 and 756 is identical.
+
+> And I am
+> sure these events are generated by ACPI code as booting with acpi=3Do=
+ff
+> makes the input events disappear, while also causing brightness to be
+> correctly adjusted.  Thus, I can try to figure out which part of the
+> ACPI code causes the input events to be generated.  That information
+> combined with your DSDT dump might help us in figuring out how to mak=
+e
+> it work for your machine.  However, it might just as well turn out th=
+at
+> Fujitsu switched to using WMI or some opaque vendor-specific magic.
+
+The ACPI code doesn't generate the keycodes.
+Look at the acpi_fujitsu_notify function in
+drivers/platform/x86/fujitsu-laptop.c
+
+And sure, without ACPI no ACPI driver will be loaded.
+
+So without ACPI, the brightness buttons work correctly (not that's an
+option to run a laptop without ACPI)?
+
+Regards,
+
+Jan-Marek
