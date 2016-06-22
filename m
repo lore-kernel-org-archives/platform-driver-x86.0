@@ -1,76 +1,65 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 14:21:25 +0000
-Message-ID: <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 22 Jun 2016 16:24:07 +0200
+Message-ID: <20160622142407.GH29844@pali>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
  <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com> <201606152151.07407@pali>
+ <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
+ <201606152151.07407@pali>
  <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
  <20160622075602.GA29844@pali>
  <41f11bb2917349919e0b4eb21fab9a46@ausx13mpc124.AMER.DELL.COM>
  <20160622141239.GG29844@pali>
+ <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60ps301.us.dell.com ([143.166.148.206]:15067 "EHLO
-	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751543AbcFVOVq (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:35193 "EHLO
+	mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751000AbcFVOYd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jun 2016 10:21:46 -0400
-In-Reply-To: <20160622141239.GG29844@pali>
-Content-Language: en-US
+	Wed, 22 Jun 2016 10:24:33 -0400
+Content-Disposition: inline
+In-Reply-To: <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
+To: Mario_Limonciello@Dell.com
 Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjIsIDIwMTYg
-OToxMyBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGdhYnJpZWxlLm16dEBnbWFpbC5jb207IG1qZzU5QHNyY2YudWNhbS5vcmc7
-IGR2aGFydEBpbmZyYWRlYWQub3JnOw0KPiBrZXJuZWxAa2VtcG5pdS5wbDsgbHV0b0BrZXJuZWwu
-b3JnOyBhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbTsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMy80XSBkZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFib3V0IG90aGVyIFdNSSBl
-dmVudA0KPiBjb2Rlcw0KPiANCj4gT24gV2VkbmVzZGF5IDIyIEp1bmUgMjAxNiAxMzo0MDo1NyBN
-YXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbSB3cm90ZToNCj4gPiA+ID4gWW91IGFyZW4ndCBzZWVp
-bmcgdGhpcyBvbiB0aGUgRFNEVCBvZiB5b3VyIExhdGl0dWRlIHJpZ2h0Pw0KPiA+ID4NCj4gPiA+
-IFllcywgSSBkbyBub3Qgc2VlIGl0IG9uIExhdGl0dWRlLg0KPiA+DQo+ID4gVGhhbmtzLCB0aGUg
-dXNhZ2Ugb2YgdGhpcyBzY2FuIGNvZGUgaXMgc3BlY2lmaWMgdG8gY29uc3VtZXIgQklPU2VzLg0K
-PiA+DQo+ID4gPg0KPiA+ID4gPiBHYWJyaWVsZSwNCj4gPiA+ID4NCj4gPiA+ID4gWW91ciBtYWNo
-aW5lIGlzIGZyb20gdGhlIHllYXIgYmVmb3JlIFhQUyBzd2l0Y2hlZCBvdmVyIHRvIHJ1bm5pbmcg
-dGhlDQo+ID4gPiA+IERlbGwgYnVzaW5lc3MgY2xpZW50IChlZyBMYXRpdHVkZSwgUHJlY2lzaW9u
-LCBPcHRpcGxleCkgQklPUy4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIEVDIGluIHRoYXQgbWFjaGlu
-ZSBkb2VzIGhhdmUgc3VwcG9ydCBmb3IgIkJhdHRlcnkgSGVhbHRoIiB2aWEgdGhhdA0KPiA+ID4g
-PiBzY2FuY29kZS4gIE9uIFdpbmRvd3MgaXQncyB1c2VkIGZvciByZWxheWluZyBiYXR0ZXJ5IGlu
-Zm9ybWF0aW9uIHRvIGFuDQo+ID4gPiA+IGFwcGxpY2F0aW9uIGNhbGxlZCBRdWljayBTZXQuDQo+
-ID4gPg0KPiA+ID4gRG8geW91IGhhdmUgc29tZSBkZXRhaWxzIHdoZW4gaXQgaXMgc2VuZCB0byBP
-Uz8gQW5kIGhvdyB0byByZWFkIHRoYXQNCj4gdGhhdA0KPiA+ID4gImJhdHRlcnkgaGVhbHRoIj8N
-Cj4gPg0KPiA+IFdoZW4gYSBiYXR0ZXJ5IGlzIHJlbW92ZWQgb3IgaW5zZXJ0ZWQgdGhpcyBldmVu
-dCBpcyBzdXBwb3NlZCB0byBiZQ0KPiByZWNlaXZlZA0KPiA+IGJ5IHF1aWNrc2V0IG92ZXIgV01J
-IGFuZCB0aGVuIFF1aWNrc2V0IHdpbGwgcmUtcmVhZCBiYXR0ZXJ5IGluZm9ybWF0aW9uLg0KPiAN
-Cj4gU28gZXZlbnQgaXMgc2VudCBvbmx5IGlmIGJhdHRlcnkgaXMgcmVtb3ZlZCBvciBpbnNlcnRl
-ZD8NCj4gDQoNClllYWgsIHRoYXQncyB3aGF0IG15IHNwZWMgc2F5cywgSSBoYXZlbid0IHRlc3Rl
-ZCB0aGlzIG9uIGFjdHVhbCBzeXN0ZW0gdG8gc2VlLg0KDQpJJ20gZ3Vlc3Npbmcgd2hhdCdzIGdv
-aW5nIG9uIGlzIHRoYXQgZHVyaW5nIHN1c3BlbmQgQUNQSSBiYXR0ZXJ5IGRyb3BzDQpvZmYgc3lz
-dGVtIGFuZCBjb21lcyBiYWNrIHVwIG9uIHJlc3VtZS4NCg0KTWF5YmUgR2FicmllbGUgY2FuIGNv
-bW1lbnQgaWYgYW55IG90aGVyIHRpbWVzIHdlcmUgbm90aWNlZCwgYnV0IGluIGFueQ0KY2FzZSBJ
-IHRoaW5rIGl0J3MgYXBwcm9wcmlhdGUgZm9yIGRlbGwtd21pIGRyaXZlciB3aGVuIHJlY2Vpdmlu
-ZyB0aGlzIG9uIFdNSQ0KdG8gbm90IGRvIGFueXRoaW5nLiAgU2VuZGluZyBLRVlfQkFUVEVSWSB3
-b3VsZCBiZSB3cm9uZyBiZWhhdmlvci4NCg0KPiA+IEZvciBMaW51eCBJIGRvbuKAmXQgdGhpbmsg
-dGhpcyBpcyBuZWNlc3NhcnkgYW5kIGEgTk9PUCBpcyBhcHByb3ByaWF0ZS4NCj4gPg0KPiA+IFRo
-ZXJlIGlzIGFsc28gYSBzZWNvbmQgcGxhY2UgdGhhdCBzb21lIG9sZGVyIGxhcHRvcHMgaGFkIGEg
-YmF0dGVyeSAiaG90a2V5Ig0KPiA+IHRoYXQgd291bGQgYWxzbyBlbWl0IDB4RTAwRS4gIFRoaXMg
-d2FzIGFsc28gcGlja2VkIHVwIGJ5IHF1aWNrc2V0IGFuZCB3b3VsZA0KPiA+IHNob3cgYmF0dGVy
-eSBpbmZvcm1hdGlvbi4NCj4gPg0KPiA+IFRoaXMgc2hvdWxkbid0IGJlIGJsb2NrZWQgYnkga2Vy
-bmVsLCBJJ2QgZXhwZWN0IGlmIHNvbWVvbmUgd2FudHMgdG8gYmluZA0KPiB0aGlzDQo+ID4gdG8g
-YW5vdGhlciBhcHBsaWNhdGlvbiBmcm9tIHVzZXJzcGFjZSB0aGV5IHNob3VsZCBiZSBhYmxlIHRv
-Lg0KPiANCj4gR3JlYXQhIENhbiBJIHNlbmQgcGF0Y2ggYWZ0ZXIgd2hpY2ggMHhlMDBlIHdpbGwg
-YmUgc2VuZCB0byBpbnB1dCBsYXllciBhcw0KPiBldmVudCBLRVlfQkFUVEVSWT8NCj4gDQoNCldl
-bGwgdGhhdCdzIHdoeSBJIHdhcyBtZW50aW9uaW5nIHRoaXMgaW4gdHdvIHBsYWNlcy4gIElmIGl0
-J3MgcmVjZWl2ZWQgZnJvbSBrZXlib2FyZA0KcmVjb2RpbmcgaXQgYXMgS0VZX0JBVFRFUlkgc291
-bmRzIGFwcHJvcHJpYXRlIHRvIG1lLiAgSWYgaXQncyByZWNlaXZlZCBmcm9tIFdNSSwNCml0IHJl
-YWxseSBzaG91bGRuJ3QgYmUgc2V0IGFzIGFueXRoaW5nIGZvciBMaW51eCB0byBkby4NCg0KSSBk
-b24ndCB0aGluayBhbnkgYXBwcyB3aWxsIGJlbmVmaXQgZnJvbSB0aGUgbm90aWZpY2F0aW9uIHRv
-IHJlLXJlYWQgYmF0dGVyeQ0KSW5mb3JtYXRpb24gdG9kYXkuDQo=
+On Wednesday 22 June 2016 14:21:25 Mario_Limonciello@Dell.com wrote:
+> > > For Linux I don=E2=80=99t think this is necessary and a NOOP is a=
+ppropriate.
+> > >
+> > > There is also a second place that some older laptops had a batter=
+y "hotkey"
+> > > that would also emit 0xE00E.  This was also picked up by quickset=
+ and would
+> > > show battery information.
+> > >
+> > > This shouldn't be blocked by kernel, I'd expect if someone wants =
+to bind
+> > this
+> > > to another application from userspace they should be able to.
+> >=20
+> > Great! Can I send patch after which 0xe00e will be send to input la=
+yer as
+> > event KEY_BATTERY?
+> >=20
+>=20
+> Well that's why I was mentioning this in two places.  If it's receive=
+d from keyboard
+> recoding it as KEY_BATTERY sounds appropriate to me.  If it's receive=
+d from WMI,
+> it really shouldn't be set as anything for Linux to do.
+>=20
+> I don't think any apps will benefit from the notification to re-read =
+battery
+> Information today.
+
+I mean for dell-wmi.c code.
+Why it should not be set to anything on Linux?
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
