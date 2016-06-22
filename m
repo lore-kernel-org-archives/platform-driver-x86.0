@@ -1,102 +1,143 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 16:31:12 +0200
-Message-ID: <20160622143112.GI29844@pali>
-References: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
- <201606152151.07407@pali>
- <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
- <20160622075602.GA29844@pali>
- <41f11bb2917349919e0b4eb21fab9a46@ausx13mpc124.AMER.DELL.COM>
- <20160622141239.GG29844@pali>
- <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
- <20160622142407.GH29844@pali>
- <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario_Limonciello@Dell.com
-Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: [PATCHv3 1/1] thermal: core: call thermal_zone_device_update() after mode update
+Date: Wed, 22 Jun 2016 07:34:14 -0700
+Message-ID: <1466606054-28867-1-git-send-email-edubezval@gmail.com>
+References: <1466563538.2471.10.camel@intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1466563538.2471.10.camel@intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rui Zhang <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 22 June 2016 14:28:37 Mario_Limonciello@Dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > Sent: Wednesday, June 22, 2016 9:24 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: gabriele.mzt@gmail.com; mjg59@srcf.ucam.org; dvhart@infradead.o=
-rg;
-> > kernel@kempniu.pl; luto@kernel.org; alex.hung@canonical.com; platfo=
-rm-
-> > driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI =
-event
-> > codes
-> >=20
-> > On Wednesday 22 June 2016 14:21:25 Mario_Limonciello@Dell.com wrote=
-:
-> > > > > For Linux I don=E2=80=99t think this is necessary and a NOOP =
-is appropriate.
-> > > > >
-> > > > > There is also a second place that some older laptops had a ba=
-ttery
-> > "hotkey"
-> > > > > that would also emit 0xE00E.  This was also picked up by quic=
-kset and
-> > would
-> > > > > show battery information.
-> > > > >
-> > > > > This shouldn't be blocked by kernel, I'd expect if someone wa=
-nts to
-> > bind
-> > > > this
-> > > > > to another application from userspace they should be able to.
-> > > >
-> > > > Great! Can I send patch after which 0xe00e will be send to inpu=
-t layer as
-> > > > event KEY_BATTERY?
-> > > >
-> > >
-> > > Well that's why I was mentioning this in two places.  If it's rec=
-eived from
-> > keyboard
-> > > recoding it as KEY_BATTERY sounds appropriate to me.  If it's rec=
-eived from
-> > WMI,
-> > > it really shouldn't be set as anything for Linux to do.
-> > >
-> > > I don't think any apps will benefit from the notification to re-r=
-ead battery
-> > > Information today.
-> >=20
-> > I mean for dell-wmi.c code.
-> > Why it should not be set to anything on Linux?
-> >=20
->=20
-> On Windows Quickset is a separate application from built-in Windows b=
-attery=20
-> applet.  It shows similar types of information as gnome-power-manager=
- does,=20
-> but because it's not part of the OS, it doesn't get notifications lik=
-e this so=20
-> special BIOS hooks are in place for it to know when to re-read batter=
-y
-> information.
->=20
-> On Linux, there are already infrastructure for battery removal and ad=
-ding=20
-> notifications from ACPI.  Sending this up to user space won't be usef=
-ul.
+Because several drivers do the following pattern:
+.set_mode()
+   ...
+   local_data->mode = new_mode;
+   thermal_zone_device_update(tz);
 
-Errr. I mean WMI event 0xe00e which you wrote is emitted when user pres=
-s
-battery key. And I think this event should be sent by dell-wmi.c as
-KEY_BATTERY.
+makes sense to simply do the thermal_zone_device_update()
+in thermal core, after setting the new mode.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Also, this patch also remove deadlocks on drivers that
+call thermal_zone_device_update() on .set_mode(),
+as .set_mode()  is now called always with tz->lock held.
+
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+Cc: "Lee, Chun-Yi" <jlee@suse.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+---
+
+Hey,
+
+
+V2--> V3: Remove locking from OF thermal set mode.
+The locking is done from thermal core already.
+
+BR,
+
+Eduardo
+
+ drivers/acpi/thermal.c                             | 2 --
+ drivers/platform/x86/acerhdf.c                     | 1 -
+ drivers/thermal/imx_thermal.c                      | 1 -
+ drivers/thermal/of-thermal.c                       | 5 -----
+ drivers/thermal/thermal_sysfs.c                    | 1 +
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 1 -
+ 6 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+index 82707f9..8582b88 100644
+--- a/drivers/acpi/thermal.c
++++ b/drivers/acpi/thermal.c
+@@ -519,8 +519,6 @@ static void acpi_thermal_check(void *data)
+ 
+ 	if (!tz->tz_enabled)
+ 		return;
+-
+-	thermal_zone_device_update(tz->thermal_zone);
+ }
+ 
+ /* sys I/F for generic thermal sysfs support */
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 460fa67..aee33ba 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -405,7 +405,6 @@ static inline void acerhdf_enable_kernelmode(void)
+ 	kernelmode = 1;
+ 
+ 	thz_dev->polling_delay = interval*1000;
+-	thermal_zone_device_update(thz_dev);
+ 	pr_notice("kernel mode fan control ON\n");
+ }
+ 
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index c5547bd..a413eb6 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -246,7 +246,6 @@ static int imx_set_mode(struct thermal_zone_device *tz,
+ 	}
+ 
+ 	data->mode = mode;
+-	thermal_zone_device_update(tz);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index b8e509c..95c47da 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -282,17 +282,12 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
+ {
+ 	struct __thermal_zone *data = tz->devdata;
+ 
+-	mutex_lock(&tz->lock);
+-
+ 	if (mode == THERMAL_DEVICE_ENABLED)
+ 		tz->polling_delay = data->polling_delay;
+ 	else
+ 		tz->polling_delay = 0;
+ 
+-	mutex_unlock(&tz->lock);
+-
+ 	data->mode = mode;
+-	thermal_zone_device_update(tz);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+index 743df50..3d0dc30 100644
+--- a/drivers/thermal/thermal_sysfs.c
++++ b/drivers/thermal/thermal_sysfs.c
+@@ -100,6 +100,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
+ 	mutex_lock(&tz->lock);
+ 	result = tz->ops->set_mode(tz, mode);
+ 	mutex_unlock(&tz->lock);
++	thermal_zone_device_update(tz);
+ 
+ 	if (result)
+ 		return result;
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 15c0a9a..9a5a3a3 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -205,7 +205,6 @@ static int ti_thermal_set_mode(struct thermal_zone_device *thermal,
+ 	data->mode = mode;
+ 	ti_bandgap_write_update_interval(bgp, data->sensor_id,
+ 					data->ti_thermal->polling_delay);
+-	thermal_zone_device_update(data->ti_thermal);
+ 	dev_dbg(&thermal->device, "thermal polling set for duration=%d msec\n",
+ 		data->ti_thermal->polling_delay);
+ 
+-- 
+2.1.4
+
