@@ -1,54 +1,153 @@
 From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
- Fujitsu e7x6
-Date: Wed, 22 Jun 2016 20:23:33 +0930
-Message-ID: <20160622105333.GD25599@marvin.atrad.com.au>
-References: <575FC4E0.7080501@fbihome.de>
- <20160616234630.GB4764@marvin.atrad.com.au>
- <5763C0DF.3030302@fbihome.de>
- <20160621081229.GE19735@marvin.atrad.com.au>
- <20160622073213.GD3056@eudyptula.hq.kempniu.pl>
- <576A6604.8010907@fbihome.de>
+Subject: Re: [PATCH] fujitsu-laptop: Add support for eco LED
+Date: Wed, 22 Jun 2016 20:30:28 +0930
+Message-ID: <20160622110027.GE25599@marvin.atrad.com.au>
+References: <20160621080918.GA3333@Matej-PC.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:52466 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:52469 "EHLO
 	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752071AbcFVKxw (ORCPT
+	with ESMTP id S1751175AbcFVLGj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jun 2016 06:53:52 -0400
+	Wed, 22 Jun 2016 07:06:39 -0400
 Content-Disposition: inline
-In-Reply-To: <576A6604.8010907@fbihome.de>
+In-Reply-To: <20160621080918.GA3333@Matej-PC.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org
+To: Matej Groma <matejgroma@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 12:18:44PM +0200, Jan-Marek Glogowski wrote:
-> Am 22.06.2016 um 09:32 schrieb Micha?? K??pie??:
-> > Is implementing this in the kernel really worth the effort?  I ended up
-> > using xbacklight bound (in my window manager) to the brightness hotkeys
-> > for both my Lifebook E744 and my Vostro V131, which has a royally borked
-> > ACPI backlight control implementation.  It seems using userspace helpers
-> > for backlight control is the new normal [1].  Yes, you lose console
-> > brightness control; I can live with that, YMMV.
-> > 
-> > [1] https://www.spinics.net/lists/platform-driver-x86/msg07902.html
+On Tue, Jun 21, 2016 at 10:09:21AM +0200, Matej Groma wrote:
+> There is an indicator LED signaling activated power saving mode
+> on certain Fujitsu laptop models. This has currently no use on Linux.
+> Export it to userspace.
+
+This looks ok to me.  My only reservation is the implicit assumption that
+bit 14 is uniquely used across all models supported by this driver to
+indicate the presence of this LED.  The assumption seems reasonable enough
+based on what we know though, so in the absence of any documentation the
+best thing we can do is put the patch out there and see if there are any
+unintended side effects.
+
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+
 > 
-> The e7x6's DSTD misses the ACPI brightness control device (FUJ02B1), so
-> the brightness part of the fujitsu-laptop driver isn't used and
-> therefore - in addition to the direct brightness adjustment - generates
-> no keycodes for the keys.
+> Signed-off-by: Matej Groma <matejgroma@gmail.com>
+> ---
 > 
-> A userspace keycode handling solution would be totally sufficient. Would
-> be nice, if it worked in kernel but that's clearly optional for me.
-
-Since the newer hardware lacks an ACPI brightness controller and it is
-possible to have userspace deal with the brightness in these cases, it seems
-to me that the solution to the issue lies outside of the fujitsu-laptop
-module (which is focussed on the custom devices in the laptops).  I am more
-than willing to be convinced otherwise, but at present this seems to be the
-prevailing line of thought.
-
-Regards
-  jonathan
+> Notes:
+>     Tested on Lifebook E756
+> 
+>  drivers/platform/x86/fujitsu-laptop.c | 56 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index ce41bc3..66e12a2 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -108,6 +108,8 @@
+>  #define LOGOLAMP_POWERON 0x2000
+>  #define LOGOLAMP_ALWAYS  0x4000
+>  #define RADIO_LED_ON	0x20
+> +#define ECO_LED	0x10000
+> +#define ECO_LED_ON	0x80000
+>  #endif
+> 
+>  /* Hotkey details */
+> @@ -176,6 +178,7 @@ struct fujitsu_hotkey_t {
+>  	int logolamp_registered;
+>  	int kblamps_registered;
+>  	int radio_led_registered;
+> +	int eco_led_registered;
+>  };
+> 
+>  static struct fujitsu_hotkey_t *fujitsu_hotkey;
+> @@ -212,6 +215,17 @@ static struct led_classdev radio_led = {
+>   .brightness_get = radio_led_get,
+>   .brightness_set = radio_led_set
+>  };
+> +
+> +static enum led_brightness eco_led_get(struct led_classdev *cdev);
+> +static void eco_led_set(struct led_classdev *cdev,
+> +			       enum led_brightness brightness);
+> +
+> +static struct led_classdev eco_led = {
+> + .name = "fujitsu::eco_led",
+> + .max_brightness = 1,
+> + .brightness_get = eco_led_get,
+> + .brightness_set = eco_led_set
+> +};
+>  #endif
+> 
+>  #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
+> @@ -296,6 +310,18 @@ static void radio_led_set(struct led_classdev *cdev,
+>  		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
+>  }
+> 
+> +static void eco_led_set(struct led_classdev *cdev,
+> +				enum led_brightness brightness)
+> +{
+> +	int curr;
+> +
+> +	curr = call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
+> +	if (brightness)
+> +		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON);
+> +	else
+> +		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_ON);
+> +}
+> +
+>  static enum led_brightness logolamp_get(struct led_classdev *cdev)
+>  {
+>  	enum led_brightness brightness = LED_OFF;
+> @@ -330,6 +356,16 @@ static enum led_brightness radio_led_get(struct led_classdev *cdev)
+> 
+>  	return brightness;
+>  }
+> +
+> +static enum led_brightness eco_led_get(struct led_classdev *cdev)
+> +{
+> +	enum led_brightness brightness = LED_OFF;
+> +
+> +	if (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
+> +		brightness = cdev->max_brightness;
+> +
+> +	return brightness;
+> +}
+>  #endif
+> 
+>  /* Hardware access for LCD brightness control */
+> @@ -943,6 +979,23 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+>  			       result);
+>  		}
+>  	}
+> +
+> +	/* Support for eco led is not always signaled in bit corresponding
+> +	 * to the bit used to control the led. According to the DSDT table,
+> +	 * bit 14 seems to indicate presence of said led as well.
+> +	 * Confirm by testing the status.
+> +	*/
+> +	if ((call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
+> +	   (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
+> +		result = led_classdev_register(&fujitsu->pf_device->dev,
+> +						&eco_led);
+> +		if (result == 0) {
+> +			fujitsu_hotkey->eco_led_registered = 1;
+> +		} else {
+> +			pr_err("Could not register LED handler for eco LED, error %i\n",
+> +			       result);
+> +		}
+> +	}
+>  #endif
+> 
+>  	return result;
+> @@ -972,6 +1025,9 @@ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
+> 
+>  	if (fujitsu_hotkey->radio_led_registered)
+>  		led_classdev_unregister(&radio_led);
+> +
+> +	if (fujitsu_hotkey->eco_led_registered)
+> +		led_classdev_unregister(&eco_led);
+>  #endif
+> 
+>  	input_unregister_device(input);
