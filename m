@@ -1,132 +1,54 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: [PATCHv2 1/1] thermal: core: call thermal_zone_device_update() after mode update
-Date: Tue, 21 Jun 2016 22:15:46 -0700
-Message-ID: <1466572546-12944-1-git-send-email-edubezval@gmail.com>
-References: <1466563538.2471.10.camel@intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 0/2] Correct iTCO Watchdog for Apollo Lake
+Date: Tue, 21 Jun 2016 23:01:01 -0700
+Message-ID: <576A299D.5010300@roeck-us.net>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com>
+ <1466123817-50679-1-git-send-email-jonathan.yong@intel.com>
+ <576A19BC.4000502@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f67.google.com ([209.85.220.67]:35091 "EHLO
-	mail-pa0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751002AbcFVFQI (ORCPT
+Received: from bh-25.webhostbox.net ([208.91.199.152]:41020 "EHLO
+	bh-25.webhostbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751718AbcFVGBU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jun 2016 01:16:08 -0400
-In-Reply-To: <1466563538.2471.10.camel@intel.com>
+	Wed, 22 Jun 2016 02:01:20 -0400
+In-Reply-To: <576A19BC.4000502@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rui Zhang <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: "Yong, Jonathan" <jonathan.yong@intel.com>, linux-watchdog@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: qipeng.zha@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org
 
-Because several drivers do the following pattern:
-.set_mode()
-   ...
-   local_data->mode = new_mode;
-   thermal_zone_device_update(tz);
+On 06/21/2016 09:53 PM, Yong, Jonathan wrote:
+> On 06/17/2016 08:36, Yong, Jonathan wrote:
+>> These patches fix the iTCO watchdog for Apollo Lake.
+>> I changed the watchdog memory io to only use 4 bytes rather
+>> the whole region, I'm not sure if that is the correct way.
+>>
+>> The previous 0x30h offset in intel_pmc_ipc.c was for based
+>> on the earlier BXT-M platform. Apollo Lake has it at 0x40h.
+>>
+>> Let me know if the patches need changes.
+>> Please CC me as I am not subscribed, thanks.
+>>
+>> * Resent, typo in linux-kernel email address
+>>
+>> Changes since v1:
+>>     * Watchdog NO_REBOOT bit off-by-one corrected.
+>>
+>> Yong, Jonathan (2):
+>>    watchdog: iTCO-wdt handle 5th variation for Apollo Lake
+>>    x86: Fix Apollo Lake Watchdog address in PMC driver
+>>
+>>   drivers/platform/x86/intel_pmc_ipc.c | 10 ++++++----
+>>   drivers/watchdog/iTCO_wdt.c          |  2 ++
+>>   2 files changed, 8 insertions(+), 4 deletions(-)
+>>
+>
+> Ping.
+>
+>
+Waiting for an Ack from Darren.
 
-makes sense to simply do the thermal_zone_device_update()
-in thermal core, after setting the new mode.
-
-Also, this patch also remove deadlocks on drivers that
-call thermal_zone_device_update() on .set_mode(),
-as .set_mode()  is now called always with tz->lock held.
-
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org
-Cc: "Lee, Chun-Yi" <jlee@suse.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
----
-Please ignore last version.
-
-V1-> V2:
-Cleaned the patch and remove unrelated changes.
----
-
- drivers/acpi/thermal.c                             | 2 --
- drivers/platform/x86/acerhdf.c                     | 1 -
- drivers/thermal/imx_thermal.c                      | 1 -
- drivers/thermal/of-thermal.c                       | 1 -
- drivers/thermal/thermal_sysfs.c                    | 1 +
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 1 -
- 6 files changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-index 82707f9..8582b88 100644
---- a/drivers/acpi/thermal.c
-+++ b/drivers/acpi/thermal.c
-@@ -519,8 +519,6 @@ static void acpi_thermal_check(void *data)
- 
- 	if (!tz->tz_enabled)
- 		return;
--
--	thermal_zone_device_update(tz->thermal_zone);
- }
- 
- /* sys I/F for generic thermal sysfs support */
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 460fa67..aee33ba 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -405,7 +405,6 @@ static inline void acerhdf_enable_kernelmode(void)
- 	kernelmode = 1;
- 
- 	thz_dev->polling_delay = interval*1000;
--	thermal_zone_device_update(thz_dev);
- 	pr_notice("kernel mode fan control ON\n");
- }
- 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index c5547bd..a413eb6 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -246,7 +246,6 @@ static int imx_set_mode(struct thermal_zone_device *tz,
- 	}
- 
- 	data->mode = mode;
--	thermal_zone_device_update(tz);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index b8e509c..4602e2e 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -292,7 +292,6 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
- 	mutex_unlock(&tz->lock);
- 
- 	data->mode = mode;
--	thermal_zone_device_update(tz);
- 
- 	return 0;
- }
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index 743df50..3d0dc30 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -100,6 +100,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
- 	mutex_lock(&tz->lock);
- 	result = tz->ops->set_mode(tz, mode);
- 	mutex_unlock(&tz->lock);
-+	thermal_zone_device_update(tz);
- 
- 	if (result)
- 		return result;
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index 15c0a9a..9a5a3a3 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -205,7 +205,6 @@ static int ti_thermal_set_mode(struct thermal_zone_device *thermal,
- 	data->mode = mode;
- 	ti_bandgap_write_update_interval(bgp, data->sensor_id,
- 					data->ti_thermal->polling_delay);
--	thermal_zone_device_update(data->ti_thermal);
- 	dev_dbg(&thermal->device, "thermal polling set for duration=%d msec\n",
- 		data->ti_thermal->polling_delay);
- 
--- 
-2.1.4
+Guenter
