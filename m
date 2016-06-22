@@ -1,146 +1,143 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 09:56:02 +0200
-Message-ID: <20160622075602.GA29844@pali>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
- <201606152151.07407@pali>
- <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCHv2 1/1] thermal: core: call thermal_zone_device_update()
+ after mode update
+Date: Wed, 22 Jun 2016 15:03:45 +0530
+Message-ID: <576A5B79.7070209@ti.com>
+References: <1466563538.2471.10.camel@intel.com>
+ <1466572546-12944-1-git-send-email-edubezval@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <1466572546-12944-1-git-send-email-edubezval@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario_Limonciello@Dell.com
-Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Rui Zhang <rui.zhang@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 21 June 2016 19:51:06 Mario_Limonciello@Dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > Sent: Wednesday, June 15, 2016 2:51 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>; mjg59@srcf.ucam.org=
-;
-> > dvhart@infradead.org; kernel@kempniu.pl; luto@kernel.org;
-> > alex.hung@canonical.com; platform-driver-x86@vger.kernel.org; linux=
--
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI =
-event
-> > codes
-> >=20
-> > On Wednesday 08 June 2016 12:44:44 Gabriele Mazzotta wrote:
-> > > On 08/06/2016 08:02, Mario_Limonciello@Dell.com wrote:
-> > > >> -----Original Message-----
-> > > >> From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > > >> Sent: Tuesday, June 7, 2016 6:00 PM
-> > > >> To: Gabriele Mazzotta <gabriele.mzt@gmail.com>; Limonciello, M=
-ario
-> > > >> <Mario_Limonciello@Dell.com>
-> > > >> Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
-> > > >> <dvhart@infradead.org>; Micha=C5=82 K=C4=99pie=C5=84 <kernel@k=
-empniu.pl>; Andy
-> > > >> Lutomirski <luto@kernel.org>; Alex Hung
-> > > >> <alex.hung@canonical.com>; platform-driver- x86@vger.kernel.or=
-g;
-> > > >> linux-kernel@vger.kernel.org
-> > > >> Subject: Re: [PATCH 3/4] dell-wmi: Add information about other=
- WMI
-> > > >> event codes
-> > > >>
-> > > >> On Friday 27 May 2016 00:04:23 Gabriele Mazzotta wrote:
-> > > >>> On 22/05/2016 13:36, Pali Roh=C3=A1r wrote:
-> > > >>>> ACPI DSDT tables have defined other WMI codes, but does not
-> > > >>>> contain any description when those codes are emitted. Some
-> > > >>>> other codes can be found in logs on internet. In this patch =
-are
-> > > >>>> all which I saw, but lot of them are not tested properly (e.=
-g.
-> > > >>>> for duplicate events with AT keyboard). Now we have all WMI
-> > > >>>> event codes at one place and in future after proper testing
-> > > >>>> those codes can be correctly enabled or
-> > > >>
-> > > >> disabled...
-> > > >>
-> > > >>>> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > >>>> ---
-> > > >>>>
-> > > >>>>  drivers/platform/x86/dell-wmi.c |   32
-> > > >>
-> > > >> ++++++++++++++++++++++++++++++++
-> > > >>
-> > > >>>>  1 file changed, 32 insertions(+)
-> > > >>>>
-> > > >>>> diff --git a/drivers/platform/x86/dell-wmi.c
-> > > >>>> b/drivers/platform/x86/dell-wmi.c index 363d927..7aac1dc 100=
-644
-> > > >>>> --- a/drivers/platform/x86/dell-wmi.c
-> > > >>>> +++ b/drivers/platform/x86/dell-wmi.c
-> > > >>>> @@ -110,6 +110,9 @@ static const struct key_entry
-> > > >>
-> > > >> dell_wmi_legacy_keymap[] __initconst =3D {
-> > > >>
-> > > >>>>  	/* BIOS error detected */
-> > > >>>>  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
-> > > >>>>
-> > > >>>> +	/* Unknown, defined in ACPI DSDT */
-> > > >>>> +	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
-> > > >>>> +
-> > > >>>
-> > > >>> I'm interested in knowing what's the meaning of this 0xe00e. =
-This
-> > > >>> event is sent multiple times when I suspend/resume my laptop =
-and
-> > > >>> it's definitely not a keypress.
-> > > >>
-> > > >> From DSDT dumps which I have seen, I guess it could be somethi=
-ng
-> > > >> with battery charging... but that is only my guess.
-> > > >>
-> > > >> Mario, do you have any idea, what these unknown events are?
-> > > >
-> > > > Off-hand I'm not sure, it would require some more digging.
-> > > >
-> > > > Can you please remind me what model numbers and BIOS combinatio=
-ns
-> > > > you have found e00e in DSDT and what context the events are
-> > > > actually happening? Anything released in the past two years?
-> > >
-> > > XPS13 9333, BIOS A07.
-> > >
-> > > I think I saw the event only after resuming from suspend and
-> > > it's sent four times in a row.
-> > >
-> > > As Pali says, it seems to be related to the battery. There are
-> > > three _Qxx ACPI methods in my DSDT sending this event: one stops
-> > > battery charging, one detaches the battery and the last one store=
-s
-> > > a value on the GNVS.
-> >=20
-> > Mario, were you able to identify something?
-> >
-> Pali,
->=20
-> You aren't seeing this on the DSDT of your Latitude right?
 
-Yes, I do not see it on Latitude.
 
-> Gabriele,
->=20
-> Your machine is from the year before XPS switched over to running
-> the Dell business client (eg Latitude, Precision, Optiplex) BIOS.
->=20
-> The EC in that machine does have support for "Battery Health" via
-> that scancode.  On Windows it's used for relaying battery information
-> to an application called Quick Set.
+On Wednesday 22 June 2016 10:45 AM, Eduardo Valentin wrote:
+> Because several drivers do the following pattern:
+> .set_mode()
+>     ...
+>     local_data->mode = new_mode;
+>     thermal_zone_device_update(tz);
+>
+> makes sense to simply do the thermal_zone_device_update()
+> in thermal core, after setting the new mode.
 
-Do you have some details when it is send to OS? And how to read that
-that "battery health"?
+http://pastebin.ubuntu.com/17687601/
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+linux-next + current v2 of the patch.
+The back trace still comes.
+
+Regards,
+Keerthy
+
+>
+> Also, this patch also remove deadlocks on drivers that
+> call thermal_zone_device_update() on .set_mode(),
+> as .set_mode()  is now called always with tz->lock held.
+>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: "Lee, Chun-Yi" <jlee@suse.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+> ---
+> Please ignore last version.
+>
+> V1-> V2:
+> Cleaned the patch and remove unrelated changes.
+> ---
+>
+>   drivers/acpi/thermal.c                             | 2 --
+>   drivers/platform/x86/acerhdf.c                     | 1 -
+>   drivers/thermal/imx_thermal.c                      | 1 -
+>   drivers/thermal/of-thermal.c                       | 1 -
+>   drivers/thermal/thermal_sysfs.c                    | 1 +
+>   drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 1 -
+>   6 files changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+> index 82707f9..8582b88 100644
+> --- a/drivers/acpi/thermal.c
+> +++ b/drivers/acpi/thermal.c
+> @@ -519,8 +519,6 @@ static void acpi_thermal_check(void *data)
+>
+>   	if (!tz->tz_enabled)
+>   		return;
+> -
+> -	thermal_zone_device_update(tz->thermal_zone);
+>   }
+>
+>   /* sys I/F for generic thermal sysfs support */
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 460fa67..aee33ba 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -405,7 +405,6 @@ static inline void acerhdf_enable_kernelmode(void)
+>   	kernelmode = 1;
+>
+>   	thz_dev->polling_delay = interval*1000;
+> -	thermal_zone_device_update(thz_dev);
+>   	pr_notice("kernel mode fan control ON\n");
+>   }
+>
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index c5547bd..a413eb6 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -246,7 +246,6 @@ static int imx_set_mode(struct thermal_zone_device *tz,
+>   	}
+>
+>   	data->mode = mode;
+> -	thermal_zone_device_update(tz);
+>
+>   	return 0;
+>   }
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index b8e509c..4602e2e 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -292,7 +292,6 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
+>   	mutex_unlock(&tz->lock);
+>
+>   	data->mode = mode;
+> -	thermal_zone_device_update(tz);
+>
+>   	return 0;
+>   }
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> index 743df50..3d0dc30 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -100,6 +100,7 @@ mode_store(struct device *dev, struct device_attribute *attr,
+>   	mutex_lock(&tz->lock);
+>   	result = tz->ops->set_mode(tz, mode);
+>   	mutex_unlock(&tz->lock);
+> +	thermal_zone_device_update(tz);
+>
+>   	if (result)
+>   		return result;
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> index 15c0a9a..9a5a3a3 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> @@ -205,7 +205,6 @@ static int ti_thermal_set_mode(struct thermal_zone_device *thermal,
+>   	data->mode = mode;
+>   	ti_bandgap_write_update_interval(bgp, data->sensor_id,
+>   					data->ti_thermal->polling_delay);
+> -	thermal_zone_device_update(data->ti_thermal);
+>   	dev_dbg(&thermal->device, "thermal polling set for duration=%d msec\n",
+>   		data->ti_thermal->polling_delay);
+>
+>
