@@ -1,98 +1,46 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Tue, 21 Jun 2016 19:51:06 +0000
-Message-ID: <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com> <201606152151.07407@pali>
+From: "Yong, Jonathan" <jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Correct iTCO Watchdog for Apollo Lake
+Date: Wed, 22 Jun 2016 12:53:16 +0800
+Message-ID: <576A19BC.4000502@intel.com>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com> <1466123817-50679-1-git-send-email-jonathan.yong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxippc101.us.dell.com ([143.166.85.207]:3190 "EHLO
-	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751973AbcFUTvJ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2016 15:51:09 -0400
-In-Reply-To: <201606152151.07407@pali>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466123817-50679-1-git-send-email-jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMTUsIDIwMTYg
-Mjo1MSBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IEdhYnJpZWxlIE1henpvdHRhIDxnYWJyaWVsZS5tenRAZ21haWwuY29tPjsg
-bWpnNTlAc3JjZi51Y2FtLm9yZzsNCj4gZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGtlcm5lbEBrZW1w
-bml1LnBsOyBsdXRvQGtlcm5lbC5vcmc7DQo+IGFsZXguaHVuZ0BjYW5vbmljYWwuY29tOyBwbGF0
-Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzRdIGRlbGwtd21pOiBBZGQgaW5mb3Jt
-YXRpb24gYWJvdXQgb3RoZXIgV01JIGV2ZW50DQo+IGNvZGVzDQo+IA0KPiBPbiBXZWRuZXNkYXkg
-MDggSnVuZSAyMDE2IDEyOjQ0OjQ0IEdhYnJpZWxlIE1henpvdHRhIHdyb3RlOg0KPiA+IE9uIDA4
-LzA2LzIwMTYgMDg6MDIsIE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tIHdyb3RlOg0KPiA+ID4+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
-aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gPiA+PiBTZW50OiBUdWVzZGF5LCBKdW5lIDcs
-IDIwMTYgNjowMCBQTQ0KPiA+ID4+IFRvOiBHYWJyaWVsZSBNYXp6b3R0YSA8Z2FicmllbGUubXp0
-QGdtYWlsLmNvbT47IExpbW9uY2llbGxvLCBNYXJpbw0KPiA+ID4+IDxNYXJpb19MaW1vbmNpZWxs
-b0BEZWxsLmNvbT4NCj4gPiA+PiBDYzogTWF0dGhldyBHYXJyZXR0IDxtamc1OUBzcmNmLnVjYW0u
-b3JnPjsgRGFycmVuIEhhcnQNCj4gPiA+PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBNaWNoYcWC
-IEvEmXBpZcWEIDxrZXJuZWxAa2VtcG5pdS5wbD47IEFuZHkNCj4gPiA+PiBMdXRvbWlyc2tpIDxs
-dXRvQGtlcm5lbC5vcmc+OyBBbGV4IEh1bmcNCj4gPiA+PiA8YWxleC5odW5nQGNhbm9uaWNhbC5j
-b20+OyBwbGF0Zm9ybS1kcml2ZXItIHg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPj4gbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy80XSBk
-ZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFib3V0IG90aGVyIFdNSQ0KPiA+ID4+IGV2ZW50IGNv
-ZGVzDQo+ID4gPj4NCj4gPiA+PiBPbiBGcmlkYXkgMjcgTWF5IDIwMTYgMDA6MDQ6MjMgR2Ficmll
-bGUgTWF6em90dGEgd3JvdGU6DQo+ID4gPj4+IE9uIDIyLzA1LzIwMTYgMTM6MzYsIFBhbGkgUm9o
-w6FyIHdyb3RlOg0KPiA+ID4+Pj4gQUNQSSBEU0RUIHRhYmxlcyBoYXZlIGRlZmluZWQgb3RoZXIg
-V01JIGNvZGVzLCBidXQgZG9lcyBub3QNCj4gPiA+Pj4+IGNvbnRhaW4gYW55IGRlc2NyaXB0aW9u
-IHdoZW4gdGhvc2UgY29kZXMgYXJlIGVtaXR0ZWQuIFNvbWUNCj4gPiA+Pj4+IG90aGVyIGNvZGVz
-IGNhbiBiZSBmb3VuZCBpbiBsb2dzIG9uIGludGVybmV0LiBJbiB0aGlzIHBhdGNoIGFyZQ0KPiA+
-ID4+Pj4gYWxsIHdoaWNoIEkgc2F3LCBidXQgbG90IG9mIHRoZW0gYXJlIG5vdCB0ZXN0ZWQgcHJv
-cGVybHkgKGUuZy4NCj4gPiA+Pj4+IGZvciBkdXBsaWNhdGUgZXZlbnRzIHdpdGggQVQga2V5Ym9h
-cmQpLiBOb3cgd2UgaGF2ZSBhbGwgV01JDQo+ID4gPj4+PiBldmVudCBjb2RlcyBhdCBvbmUgcGxh
-Y2UgYW5kIGluIGZ1dHVyZSBhZnRlciBwcm9wZXIgdGVzdGluZw0KPiA+ID4+Pj4gdGhvc2UgY29k
-ZXMgY2FuIGJlIGNvcnJlY3RseSBlbmFibGVkIG9yDQo+ID4gPj4NCj4gPiA+PiBkaXNhYmxlZC4u
-Lg0KPiA+ID4+DQo+ID4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBQYWxpIFJvaMOhciA8cGFsaS5yb2hh
-ckBnbWFpbC5jb20+DQo+ID4gPj4+PiAtLS0NCj4gPiA+Pj4+DQo+ID4gPj4+PiAgZHJpdmVycy9w
-bGF0Zm9ybS94ODYvZGVsbC13bWkuYyB8ICAgMzINCj4gPiA+Pg0KPiA+ID4+ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gPj4NCj4gPiA+Pj4+ICAxIGZpbGUgY2hhbmdlZCwg
-MzIgaW5zZXJ0aW9ucygrKQ0KPiA+ID4+Pj4NCj4gPiA+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPj4+PiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
-L2RlbGwtd21pLmMgaW5kZXggMzYzZDkyNy4uN2FhYzFkYyAxMDA2NDQNCj4gPiA+Pj4+IC0tLSBh
-L2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiA+Pj4+ICsrKyBiL2RyaXZlcnMv
-cGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiA+Pj4+IEBAIC0xMTAsNiArMTEwLDkgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkNCj4gPiA+Pg0KPiA+ID4+IGRlbGxfd21pX2xlZ2Fj
-eV9rZXltYXBbXSBfX2luaXRjb25zdCA9IHsNCj4gPiA+Pg0KPiA+ID4+Pj4gIAkvKiBCSU9TIGVy
-cm9yIGRldGVjdGVkICovDQo+ID4gPj4+PiAgCXsgS0VfSUdOT1JFLCAweGUwMGQsIHsgS0VZX1JF
-U0VSVkVEIH0gfSwNCj4gPiA+Pj4+DQo+ID4gPj4+PiArCS8qIFVua25vd24sIGRlZmluZWQgaW4g
-QUNQSSBEU0RUICovDQo+ID4gPj4+PiArCS8qIHsgS0VfSUdOT1JFLCAweGUwMGUsIHsgS0VZX1JF
-U0VSVkVEIH0gfSwgKi8NCj4gPiA+Pj4+ICsNCj4gPiA+Pj4NCj4gPiA+Pj4gSSdtIGludGVyZXN0
-ZWQgaW4ga25vd2luZyB3aGF0J3MgdGhlIG1lYW5pbmcgb2YgdGhpcyAweGUwMGUuIFRoaXMNCj4g
-PiA+Pj4gZXZlbnQgaXMgc2VudCBtdWx0aXBsZSB0aW1lcyB3aGVuIEkgc3VzcGVuZC9yZXN1bWUg
-bXkgbGFwdG9wIGFuZA0KPiA+ID4+PiBpdCdzIGRlZmluaXRlbHkgbm90IGEga2V5cHJlc3MuDQo+
-ID4gPj4NCj4gPiA+PiBGcm9tIERTRFQgZHVtcHMgd2hpY2ggSSBoYXZlIHNlZW4sIEkgZ3Vlc3Mg
-aXQgY291bGQgYmUgc29tZXRoaW5nDQo+ID4gPj4gd2l0aCBiYXR0ZXJ5IGNoYXJnaW5nLi4uIGJ1
-dCB0aGF0IGlzIG9ubHkgbXkgZ3Vlc3MuDQo+ID4gPj4NCj4gPiA+PiBNYXJpbywgZG8geW91IGhh
-dmUgYW55IGlkZWEsIHdoYXQgdGhlc2UgdW5rbm93biBldmVudHMgYXJlPw0KPiA+ID4NCj4gPiA+
-IE9mZi1oYW5kIEknbSBub3Qgc3VyZSwgaXQgd291bGQgcmVxdWlyZSBzb21lIG1vcmUgZGlnZ2lu
-Zy4NCj4gPiA+DQo+ID4gPiBDYW4geW91IHBsZWFzZSByZW1pbmQgbWUgd2hhdCBtb2RlbCBudW1i
-ZXJzIGFuZCBCSU9TIGNvbWJpbmF0aW9ucw0KPiA+ID4geW91IGhhdmUgZm91bmQgZTAwZSBpbiBE
-U0RUIGFuZCB3aGF0IGNvbnRleHQgdGhlIGV2ZW50cyBhcmUNCj4gPiA+IGFjdHVhbGx5IGhhcHBl
-bmluZz8gQW55dGhpbmcgcmVsZWFzZWQgaW4gdGhlIHBhc3QgdHdvIHllYXJzPw0KPiA+DQo+ID4g
-WFBTMTMgOTMzMywgQklPUyBBMDcuDQo+ID4NCj4gPiBJIHRoaW5rIEkgc2F3IHRoZSBldmVudCBv
-bmx5IGFmdGVyIHJlc3VtaW5nIGZyb20gc3VzcGVuZCBhbmQNCj4gPiBpdCdzIHNlbnQgZm91ciB0
-aW1lcyBpbiBhIHJvdy4NCj4gPg0KPiA+IEFzIFBhbGkgc2F5cywgaXQgc2VlbXMgdG8gYmUgcmVs
-YXRlZCB0byB0aGUgYmF0dGVyeS4gVGhlcmUgYXJlDQo+ID4gdGhyZWUgX1F4eCBBQ1BJIG1ldGhv
-ZHMgaW4gbXkgRFNEVCBzZW5kaW5nIHRoaXMgZXZlbnQ6IG9uZSBzdG9wcw0KPiA+IGJhdHRlcnkg
-Y2hhcmdpbmcsIG9uZSBkZXRhY2hlcyB0aGUgYmF0dGVyeSBhbmQgdGhlIGxhc3Qgb25lIHN0b3Jl
-cw0KPiA+IGEgdmFsdWUgb24gdGhlIEdOVlMuDQo+IA0KPiBNYXJpbywgd2VyZSB5b3UgYWJsZSB0
-byBpZGVudGlmeSBzb21ldGhpbmc/DQo+DQpQYWxpLA0KDQpZb3UgYXJlbid0IHNlZWluZyB0aGlz
-IG9uIHRoZSBEU0RUIG9mIHlvdXIgTGF0aXR1ZGUgcmlnaHQ/DQoNCkdhYnJpZWxlLA0KDQpZb3Vy
-IG1hY2hpbmUgaXMgZnJvbSB0aGUgeWVhciBiZWZvcmUgWFBTIHN3aXRjaGVkIG92ZXIgdG8gcnVu
-bmluZw0KdGhlIERlbGwgYnVzaW5lc3MgY2xpZW50IChlZyBMYXRpdHVkZSwgUHJlY2lzaW9uLCBP
-cHRpcGxleCkgQklPUy4NCg0KVGhlIEVDIGluIHRoYXQgbWFjaGluZSBkb2VzIGhhdmUgc3VwcG9y
-dCBmb3IgIkJhdHRlcnkgSGVhbHRoIiB2aWENCnRoYXQgc2NhbmNvZGUuICBPbiBXaW5kb3dzIGl0
-J3MgdXNlZCBmb3IgcmVsYXlpbmcgYmF0dGVyeSBpbmZvcm1hdGlvbg0KdG8gYW4gYXBwbGljYXRp
-b24gY2FsbGVkIFF1aWNrIFNldC4NCg0KVGhhbmtzLA0KDQoNCg==
+On 06/17/2016 08:36, Yong, Jonathan wrote:
+> These patches fix the iTCO watchdog for Apollo Lake.
+> I changed the watchdog memory io to only use 4 bytes rather
+> the whole region, I'm not sure if that is the correct way.
+>
+> The previous 0x30h offset in intel_pmc_ipc.c was for based
+> on the earlier BXT-M platform. Apollo Lake has it at 0x40h.
+>
+> Let me know if the patches need changes.
+> Please CC me as I am not subscribed, thanks.
+>
+> * Resent, typo in linux-kernel email address
+>
+> Changes since v1:
+> 	* Watchdog NO_REBOOT bit off-by-one corrected.
+>
+> Yong, Jonathan (2):
+>    watchdog: iTCO-wdt handle 5th variation for Apollo Lake
+>    x86: Fix Apollo Lake Watchdog address in PMC driver
+>
+>   drivers/platform/x86/intel_pmc_ipc.c | 10 ++++++----
+>   drivers/watchdog/iTCO_wdt.c          |  2 ++
+>   2 files changed, 8 insertions(+), 4 deletions(-)
+>
+
+Ping.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
