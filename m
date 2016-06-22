@@ -1,7 +1,7 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 16:39:31 +0200
-Message-ID: <20d89b56-7633-e695-ef6e-b5a2698184d0@gmail.com>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 22 Jun 2016 14:46:40 +0000
+Message-ID: <c17949ecde5e4a6dbf6e2912f6d19eae@ausx13mpc124.AMER.DELL.COM>
 References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
  <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
  <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com> <201606152151.07407@pali>
@@ -10,89 +10,77 @@ References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
  <41f11bb2917349919e0b4eb21fab9a46@ausx13mpc124.AMER.DELL.COM>
  <20160622141239.GG29844@pali>
  <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
+ <20d89b56-7633-e695-ef6e-b5a2698184d0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f41.google.com ([74.125.82.41]:37004 "EHLO
-	mail-wm0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752759AbcFVOjf (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jun 2016 10:39:35 -0400
-In-Reply-To: <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario_Limonciello@Dell.com, pali.rohar@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20d89b56-7633-e695-ef6e-b5a2698184d0@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: gabriele.mzt@gmail.com, pali.rohar@gmail.com
 Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 22/06/2016 16:21, Mario_Limonciello@Dell.com wrote:
->> -----Original Message-----
->> From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
->> Sent: Wednesday, June 22, 2016 9:13 AM
->> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
->> Cc: gabriele.mzt@gmail.com; mjg59@srcf.ucam.org; dvhart@infradead.or=
-g;
->> kernel@kempniu.pl; luto@kernel.org; alex.hung@canonical.com; platfor=
-m-
->> driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI e=
-vent
->> codes
->>
->> On Wednesday 22 June 2016 13:40:57 Mario_Limonciello@Dell.com wrote:
->>>>> You aren't seeing this on the DSDT of your Latitude right?
->>>>
->>>> Yes, I do not see it on Latitude.
->>>
->>> Thanks, the usage of this scan code is specific to consumer BIOSes.
->>>
->>>>
->>>>> Gabriele,
->>>>>
->>>>> Your machine is from the year before XPS switched over to running=
- the
->>>>> Dell business client (eg Latitude, Precision, Optiplex) BIOS.
->>>>>
->>>>> The EC in that machine does have support for "Battery Health" via=
- that
->>>>> scancode.  On Windows it's used for relaying battery information =
-to an
->>>>> application called Quick Set.
->>>>
->>>> Do you have some details when it is send to OS? And how to read th=
-at
->> that
->>>> "battery health"?
->>>
->>> When a battery is removed or inserted this event is supposed to be
->> received
->>> by quickset over WMI and then Quickset will re-read battery informa=
-tion.
->>
->> So event is sent only if battery is removed or inserted?
->>
->=20
-> Yeah, that's what my spec says, I haven't tested this on actual syste=
-m to see.
->=20
-> I'm guessing what's going on is that during suspend ACPI battery drop=
-s
-> off system and comes back up on resume.
->=20
-> Maybe Gabriele can comment if any other times were noticed, but in an=
-y
-> case I think it's appropriate for dell-wmi driver when receiving this=
- on WMI
-> to not do anything.  Sending KEY_BATTERY would be wrong behavior.
-
-I think I saw the event only after resume, but I don't read my dmesg
-that often to notice other special cases. Surely it's not related to
-any hotkey nor actual battery removal.
-
-=46YI I have a "battery button" and the associated code is 0xe007. I
-guess most of the laptop nowadays use that code for QuickSet, given
-that the entry for it was added to dell-wmi.c back in 2009.
-
-I would also like to remind that my laptop receives four WMI events
-with code 0xe00e after resume. If we send an input event for each
-WMI event with code 0xe00e, I'd get four bogus button keypresses.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHYWJyaWVsZSBNYXp6b3R0YSBb
+bWFpbHRvOmdhYnJpZWxlLm16dEBnbWFpbC5jb21dDQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAy
+MiwgMjAxNiA5OjQwIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2ll
+bGxvQERlbGwuY29tPjsgcGFsaS5yb2hhckBnbWFpbC5jb20NCj4gQ2M6IG1qZzU5QHNyY2YudWNh
+bS5vcmc7IGR2aGFydEBpbmZyYWRlYWQub3JnOyBrZXJuZWxAa2VtcG5pdS5wbDsNCj4gbHV0b0Br
+ZXJuZWwub3JnOyBhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbTsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4
+ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggMy80XSBkZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFib3V0IG90aGVy
+IFdNSSBldmVudA0KPiBjb2Rlcw0KPiANCj4gT24gMjIvMDYvMjAxNiAxNjoyMSwgTWFyaW9fTGlt
+b25jaWVsbG9ARGVsbC5jb20gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4+IEZyb206IFBhbGkgUm9ow6FyIFttYWlsdG86cGFsaS5yb2hhckBnbWFpbC5jb21dDQo+
+ID4+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAyMiwgMjAxNiA5OjEzIEFNDQo+ID4+IFRvOiBMaW1v
+bmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiA+PiBDYzogZ2Fi
+cmllbGUubXp0QGdtYWlsLmNvbTsgbWpnNTlAc3JjZi51Y2FtLm9yZzsNCj4gZHZoYXJ0QGluZnJh
+ZGVhZC5vcmc7DQo+ID4+IGtlcm5lbEBrZW1wbml1LnBsOyBsdXRvQGtlcm5lbC5vcmc7IGFsZXgu
+aHVuZ0BjYW5vbmljYWwuY29tOw0KPiBwbGF0Zm9ybS0NCj4gPj4gZHJpdmVyLXg4NkB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPj4gU3ViamVjdDogUmU6
+IFtQQVRDSCAzLzRdIGRlbGwtd21pOiBBZGQgaW5mb3JtYXRpb24gYWJvdXQgb3RoZXIgV01JDQo+
+IGV2ZW50DQo+ID4+IGNvZGVzDQo+ID4+DQo+ID4+IE9uIFdlZG5lc2RheSAyMiBKdW5lIDIwMTYg
+MTM6NDA6NTcgTWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20NCj4gd3JvdGU6DQo+ID4+Pj4+IFlv
+dSBhcmVuJ3Qgc2VlaW5nIHRoaXMgb24gdGhlIERTRFQgb2YgeW91ciBMYXRpdHVkZSByaWdodD8N
+Cj4gPj4+Pg0KPiA+Pj4+IFllcywgSSBkbyBub3Qgc2VlIGl0IG9uIExhdGl0dWRlLg0KPiA+Pj4N
+Cj4gPj4+IFRoYW5rcywgdGhlIHVzYWdlIG9mIHRoaXMgc2NhbiBjb2RlIGlzIHNwZWNpZmljIHRv
+IGNvbnN1bWVyIEJJT1Nlcy4NCj4gPj4+DQo+ID4+Pj4NCj4gPj4+Pj4gR2FicmllbGUsDQo+ID4+
+Pj4+DQo+ID4+Pj4+IFlvdXIgbWFjaGluZSBpcyBmcm9tIHRoZSB5ZWFyIGJlZm9yZSBYUFMgc3dp
+dGNoZWQgb3ZlciB0byBydW5uaW5nDQo+IHRoZQ0KPiA+Pj4+PiBEZWxsIGJ1c2luZXNzIGNsaWVu
+dCAoZWcgTGF0aXR1ZGUsIFByZWNpc2lvbiwgT3B0aXBsZXgpIEJJT1MuDQo+ID4+Pj4+DQo+ID4+
+Pj4+IFRoZSBFQyBpbiB0aGF0IG1hY2hpbmUgZG9lcyBoYXZlIHN1cHBvcnQgZm9yICJCYXR0ZXJ5
+IEhlYWx0aCIgdmlhIHRoYXQNCj4gPj4+Pj4gc2NhbmNvZGUuICBPbiBXaW5kb3dzIGl0J3MgdXNl
+ZCBmb3IgcmVsYXlpbmcgYmF0dGVyeSBpbmZvcm1hdGlvbiB0byBhbg0KPiA+Pj4+PiBhcHBsaWNh
+dGlvbiBjYWxsZWQgUXVpY2sgU2V0Lg0KPiA+Pj4+DQo+ID4+Pj4gRG8geW91IGhhdmUgc29tZSBk
+ZXRhaWxzIHdoZW4gaXQgaXMgc2VuZCB0byBPUz8gQW5kIGhvdyB0byByZWFkIHRoYXQNCj4gPj4g
+dGhhdA0KPiA+Pj4+ICJiYXR0ZXJ5IGhlYWx0aCI/DQo+ID4+Pg0KPiA+Pj4gV2hlbiBhIGJhdHRl
+cnkgaXMgcmVtb3ZlZCBvciBpbnNlcnRlZCB0aGlzIGV2ZW50IGlzIHN1cHBvc2VkIHRvIGJlDQo+
+ID4+IHJlY2VpdmVkDQo+ID4+PiBieSBxdWlja3NldCBvdmVyIFdNSSBhbmQgdGhlbiBRdWlja3Nl
+dCB3aWxsIHJlLXJlYWQgYmF0dGVyeQ0KPiBpbmZvcm1hdGlvbi4NCj4gPj4NCj4gPj4gU28gZXZl
+bnQgaXMgc2VudCBvbmx5IGlmIGJhdHRlcnkgaXMgcmVtb3ZlZCBvciBpbnNlcnRlZD8NCj4gPj4N
+Cj4gPg0KPiA+IFllYWgsIHRoYXQncyB3aGF0IG15IHNwZWMgc2F5cywgSSBoYXZlbid0IHRlc3Rl
+ZCB0aGlzIG9uIGFjdHVhbCBzeXN0ZW0gdG8NCj4gc2VlLg0KPiA+DQo+ID4gSSdtIGd1ZXNzaW5n
+IHdoYXQncyBnb2luZyBvbiBpcyB0aGF0IGR1cmluZyBzdXNwZW5kIEFDUEkgYmF0dGVyeSBkcm9w
+cw0KPiA+IG9mZiBzeXN0ZW0gYW5kIGNvbWVzIGJhY2sgdXAgb24gcmVzdW1lLg0KPiA+DQo+ID4g
+TWF5YmUgR2FicmllbGUgY2FuIGNvbW1lbnQgaWYgYW55IG90aGVyIHRpbWVzIHdlcmUgbm90aWNl
+ZCwgYnV0IGluIGFueQ0KPiA+IGNhc2UgSSB0aGluayBpdCdzIGFwcHJvcHJpYXRlIGZvciBkZWxs
+LXdtaSBkcml2ZXIgd2hlbiByZWNlaXZpbmcgdGhpcyBvbiBXTUkNCj4gPiB0byBub3QgZG8gYW55
+dGhpbmcuICBTZW5kaW5nIEtFWV9CQVRURVJZIHdvdWxkIGJlIHdyb25nIGJlaGF2aW9yLg0KPiAN
+Cj4gSSB0aGluayBJIHNhdyB0aGUgZXZlbnQgb25seSBhZnRlciByZXN1bWUsIGJ1dCBJIGRvbid0
+IHJlYWQgbXkgZG1lc2cNCj4gdGhhdCBvZnRlbiB0byBub3RpY2Ugb3RoZXIgc3BlY2lhbCBjYXNl
+cy4gU3VyZWx5IGl0J3Mgbm90IHJlbGF0ZWQgdG8NCj4gYW55IGhvdGtleSBub3IgYWN0dWFsIGJh
+dHRlcnkgcmVtb3ZhbC4NCj4gDQo+IEZZSSBJIGhhdmUgYSAiYmF0dGVyeSBidXR0b24iIGFuZCB0
+aGUgYXNzb2NpYXRlZCBjb2RlIGlzIDB4ZTAwNy4gSQ0KPiBndWVzcyBtb3N0IG9mIHRoZSBsYXB0
+b3Agbm93YWRheXMgdXNlIHRoYXQgY29kZSBmb3IgUXVpY2tTZXQsIGdpdmVuDQo+IHRoYXQgdGhl
+IGVudHJ5IGZvciBpdCB3YXMgYWRkZWQgdG8gZGVsbC13bWkuYyBiYWNrIGluIDIwMDkuDQoNCkFo
+IHllcyB0byBtYWtlIHN1cmUgdGhhdCdzIGNsZWFyIC0gdGhhdCBiYXR0ZXJ5IGJ1dHRvbiBpcyAN
+CiJCYXR0ZXJ5IEhlYWx0aCBNZXRlciIuIEZvciBRdWlja1NldCB0aGF0IGZ1bmN0aW9uIHdhcyBm
+b3IganVzdCBzaG93aW5nDQphIGxpdHRsZSBwb3B1cCB3aXRoIHJlbWFpbmluZyBiYXR0ZXJ5IGxp
+ZmUuICBGb3IgTGludXggSSBkbyB0aGluayBLRVlfQkFUVEVSWQ0KaXMgc3RpbGwgYXBwcm9wcmlh
+dGUgdGhlcmUuDQoNCj4gDQo+IEkgd291bGQgYWxzbyBsaWtlIHRvIHJlbWluZCB0aGF0IG15IGxh
+cHRvcCByZWNlaXZlcyBmb3VyIFdNSSBldmVudHMNCj4gd2l0aCBjb2RlIDB4ZTAwZSBhZnRlciBy
+ZXN1bWUuIElmIHdlIHNlbmQgYW4gaW5wdXQgZXZlbnQgZm9yIGVhY2gNCj4gV01JIGV2ZW50IHdp
+dGggY29kZSAweGUwMGUsIEknZCBnZXQgZm91ciBib2d1cyBidXR0b24ga2V5cHJlc3Nlcy4NCg0K
+WWVwLCBleGFjdGx5IHdoeSBkZWxsLXdtaSBzaG91bGQganVzdCBpZ25vcmUgdGhpcyBjb2RlLg0K
+DQo=
