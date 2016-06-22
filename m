@@ -1,61 +1,102 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
-Date: Wed, 22 Jun 2016 14:28:37 +0000
-Message-ID: <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
-References: <1463916983-12562-1-git-send-email-pali.rohar@gmail.com>
- <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
- <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com> <201606152151.07407@pali>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI event codes
+Date: Wed, 22 Jun 2016 16:31:12 +0200
+Message-ID: <20160622143112.GI29844@pali>
+References: <01b8e172bca546728b596c8cc4ebd932@ausx13mpc124.AMER.DELL.COM>
+ <0d5a8762-b849-41c6-bfe5-e00da25d26d5@gmail.com>
+ <201606152151.07407@pali>
  <efa30ea0242d4d2fa1b1f594b2e238c5@ausx13mpc120.AMER.DELL.COM>
  <20160622075602.GA29844@pali>
  <41f11bb2917349919e0b4eb21fab9a46@ausx13mpc124.AMER.DELL.COM>
  <20160622141239.GG29844@pali>
  <d24c871ec38e4fe2a21b25c16e0ec862@ausx13mpc124.AMER.DELL.COM>
  <20160622142407.GH29844@pali>
+ <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160622142407.GH29844@pali>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <68dd5c56440d4fc9a1c09c69a548476a@ausx13mpc124.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
+To: Mario_Limonciello@Dell.com
 Cc: gabriele.mzt@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, kernel@kempniu.pl, luto@kernel.org, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjIsIDIwMTYg
-OToyNCBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGdhYnJpZWxlLm16dEBnbWFpbC5jb207IG1qZzU5QHNyY2YudWNhbS5vcmc7
-IGR2aGFydEBpbmZyYWRlYWQub3JnOw0KPiBrZXJuZWxAa2VtcG5pdS5wbDsgbHV0b0BrZXJuZWwu
-b3JnOyBhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbTsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMy80XSBkZWxsLXdtaTogQWRkIGluZm9ybWF0aW9uIGFib3V0IG90aGVyIFdNSSBl
-dmVudA0KPiBjb2Rlcw0KPiANCj4gT24gV2VkbmVzZGF5IDIyIEp1bmUgMjAxNiAxNDoyMToyNSBN
-YXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbSB3cm90ZToNCj4gPiA+ID4gRm9yIExpbnV4IEkgZG9u
-4oCZdCB0aGluayB0aGlzIGlzIG5lY2Vzc2FyeSBhbmQgYSBOT09QIGlzIGFwcHJvcHJpYXRlLg0K
-PiA+ID4gPg0KPiA+ID4gPiBUaGVyZSBpcyBhbHNvIGEgc2Vjb25kIHBsYWNlIHRoYXQgc29tZSBv
-bGRlciBsYXB0b3BzIGhhZCBhIGJhdHRlcnkNCj4gImhvdGtleSINCj4gPiA+ID4gdGhhdCB3b3Vs
-ZCBhbHNvIGVtaXQgMHhFMDBFLiAgVGhpcyB3YXMgYWxzbyBwaWNrZWQgdXAgYnkgcXVpY2tzZXQg
-YW5kDQo+IHdvdWxkDQo+ID4gPiA+IHNob3cgYmF0dGVyeSBpbmZvcm1hdGlvbi4NCj4gPiA+ID4N
-Cj4gPiA+ID4gVGhpcyBzaG91bGRuJ3QgYmUgYmxvY2tlZCBieSBrZXJuZWwsIEknZCBleHBlY3Qg
-aWYgc29tZW9uZSB3YW50cyB0bw0KPiBiaW5kDQo+ID4gPiB0aGlzDQo+ID4gPiA+IHRvIGFub3Ro
-ZXIgYXBwbGljYXRpb24gZnJvbSB1c2Vyc3BhY2UgdGhleSBzaG91bGQgYmUgYWJsZSB0by4NCj4g
-PiA+DQo+ID4gPiBHcmVhdCEgQ2FuIEkgc2VuZCBwYXRjaCBhZnRlciB3aGljaCAweGUwMGUgd2ls
-bCBiZSBzZW5kIHRvIGlucHV0IGxheWVyIGFzDQo+ID4gPiBldmVudCBLRVlfQkFUVEVSWT8NCj4g
-PiA+DQo+ID4NCj4gPiBXZWxsIHRoYXQncyB3aHkgSSB3YXMgbWVudGlvbmluZyB0aGlzIGluIHR3
-byBwbGFjZXMuICBJZiBpdCdzIHJlY2VpdmVkIGZyb20NCj4ga2V5Ym9hcmQNCj4gPiByZWNvZGlu
-ZyBpdCBhcyBLRVlfQkFUVEVSWSBzb3VuZHMgYXBwcm9wcmlhdGUgdG8gbWUuICBJZiBpdCdzIHJl
-Y2VpdmVkIGZyb20NCj4gV01JLA0KPiA+IGl0IHJlYWxseSBzaG91bGRuJ3QgYmUgc2V0IGFzIGFu
-eXRoaW5nIGZvciBMaW51eCB0byBkby4NCj4gPg0KPiA+IEkgZG9uJ3QgdGhpbmsgYW55IGFwcHMg
-d2lsbCBiZW5lZml0IGZyb20gdGhlIG5vdGlmaWNhdGlvbiB0byByZS1yZWFkIGJhdHRlcnkNCj4g
-PiBJbmZvcm1hdGlvbiB0b2RheS4NCj4gDQo+IEkgbWVhbiBmb3IgZGVsbC13bWkuYyBjb2RlLg0K
-PiBXaHkgaXQgc2hvdWxkIG5vdCBiZSBzZXQgdG8gYW55dGhpbmcgb24gTGludXg/DQo+IA0KDQpP
-biBXaW5kb3dzIFF1aWNrc2V0IGlzIGEgc2VwYXJhdGUgYXBwbGljYXRpb24gZnJvbSBidWlsdC1p
-biBXaW5kb3dzIGJhdHRlcnkgDQphcHBsZXQuICBJdCBzaG93cyBzaW1pbGFyIHR5cGVzIG9mIGlu
-Zm9ybWF0aW9uIGFzIGdub21lLXBvd2VyLW1hbmFnZXIgZG9lcywgDQpidXQgYmVjYXVzZSBpdCdz
-IG5vdCBwYXJ0IG9mIHRoZSBPUywgaXQgZG9lc24ndCBnZXQgbm90aWZpY2F0aW9ucyBsaWtlIHRo
-aXMgc28gDQpzcGVjaWFsIEJJT1MgaG9va3MgYXJlIGluIHBsYWNlIGZvciBpdCB0byBrbm93IHdo
-ZW4gdG8gcmUtcmVhZCBiYXR0ZXJ5DQppbmZvcm1hdGlvbi4NCg0KT24gTGludXgsIHRoZXJlIGFy
-ZSBhbHJlYWR5IGluZnJhc3RydWN0dXJlIGZvciBiYXR0ZXJ5IHJlbW92YWwgYW5kIGFkZGluZyAN
-Cm5vdGlmaWNhdGlvbnMgZnJvbSBBQ1BJLiAgU2VuZGluZyB0aGlzIHVwIHRvIHVzZXIgc3BhY2Ug
-d29uJ3QgYmUgdXNlZnVsLg0K
+On Wednesday 22 June 2016 14:28:37 Mario_Limonciello@Dell.com wrote:
+> > -----Original Message-----
+> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > Sent: Wednesday, June 22, 2016 9:24 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: gabriele.mzt@gmail.com; mjg59@srcf.ucam.org; dvhart@infradead.o=
+rg;
+> > kernel@kempniu.pl; luto@kernel.org; alex.hung@canonical.com; platfo=
+rm-
+> > driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 3/4] dell-wmi: Add information about other WMI =
+event
+> > codes
+> >=20
+> > On Wednesday 22 June 2016 14:21:25 Mario_Limonciello@Dell.com wrote=
+:
+> > > > > For Linux I don=E2=80=99t think this is necessary and a NOOP =
+is appropriate.
+> > > > >
+> > > > > There is also a second place that some older laptops had a ba=
+ttery
+> > "hotkey"
+> > > > > that would also emit 0xE00E.  This was also picked up by quic=
+kset and
+> > would
+> > > > > show battery information.
+> > > > >
+> > > > > This shouldn't be blocked by kernel, I'd expect if someone wa=
+nts to
+> > bind
+> > > > this
+> > > > > to another application from userspace they should be able to.
+> > > >
+> > > > Great! Can I send patch after which 0xe00e will be send to inpu=
+t layer as
+> > > > event KEY_BATTERY?
+> > > >
+> > >
+> > > Well that's why I was mentioning this in two places.  If it's rec=
+eived from
+> > keyboard
+> > > recoding it as KEY_BATTERY sounds appropriate to me.  If it's rec=
+eived from
+> > WMI,
+> > > it really shouldn't be set as anything for Linux to do.
+> > >
+> > > I don't think any apps will benefit from the notification to re-r=
+ead battery
+> > > Information today.
+> >=20
+> > I mean for dell-wmi.c code.
+> > Why it should not be set to anything on Linux?
+> >=20
+>=20
+> On Windows Quickset is a separate application from built-in Windows b=
+attery=20
+> applet.  It shows similar types of information as gnome-power-manager=
+ does,=20
+> but because it's not part of the OS, it doesn't get notifications lik=
+e this so=20
+> special BIOS hooks are in place for it to know when to re-read batter=
+y
+> information.
+>=20
+> On Linux, there are already infrastructure for battery removal and ad=
+ding=20
+> notifications from ACPI.  Sending this up to user space won't be usef=
+ul.
+
+Errr. I mean WMI event 0xe00e which you wrote is emitted when user pres=
+s
+battery key. And I think this event should be sent by dell-wmi.c as
+KEY_BATTERY.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
