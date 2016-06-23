@@ -1,102 +1,173 @@
-From: Jan-Marek Glogowski <glogow@fbihome.de>
-Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
- Fujitsu e7x6
-Date: Thu, 23 Jun 2016 15:42:30 +0200
-Message-ID: <576BE746.2010504@fbihome.de>
-References: <20160622073213.GD3056@eudyptula.hq.kempniu.pl>
- <576A6604.8010907@fbihome.de> <20160622105333.GD25599@marvin.atrad.com.au>
- <576A7519.9040703@fbihome.de> <20160622123941.GB2466@eudyptula.hq.kempniu.pl>
- <576A90FB.9090506@fbihome.de> <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
- <576BD150.6050304@fbihome.de> <20160623123506.GA4461@eudyptula.hq.kempniu.pl>
- <576BE187.7060603@fbihome.de> <20160623133146.GA4558@eudyptula.hq.kempniu.pl>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH v1 1/1] platform/x86/intel_pmc_core: Convert to
+ DEFINE_DEBUGFS_ATTRIBUTE
+Date: Thu, 23 Jun 2016 20:56:53 +0530
+Message-ID: <20160623152652.GA1217@rajaneesh-OptiPlex-9010>
+References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ironman.h-da.de ([141.100.10.250]:29563 "EHLO ironman.h-da.de"
+Received: from mga11.intel.com ([192.55.52.93]:46175 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750885AbcFWNme (ORCPT
+	id S1750799AbcFWP04 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Jun 2016 09:42:34 -0400
-In-Reply-To: <20160623133146.GA4558@eudyptula.hq.kempniu.pl>
+	Thu, 23 Jun 2016 11:26:56 -0400
+Content-Disposition: inline
+In-Reply-To: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 
-Am 23.06.2016 um 15:31 schrieb Micha=C5=82 K=C4=99pie=C5=84:
->>> First I figured out (using a command almost identical to the one I
->>> suggested to you) which GPE is used for signalling brightness-relat=
-ed
->>> key presses on my Haswell machine.  This immediately led me to ACPI
->>> method _L11.  I selectively commented out ACPI code from this metho=
-d,
->>> recompiling and overriding it using /sys/kernel/debug/acpi/custom_m=
-ethod
->>> after every change until I figured out exactly which method invocat=
-ion
->>> causes the key events to be generated.  Once I knew that, I searche=
-d for
->>> a similar invocation in a Skylake DSDT dump.  This led me to ACPI m=
-ethod
->>> _L21, which is very similar to Haswell's _L11.
->>
->> Thanks for this info. I guess I can also debug the "disable touchpad=
-"
->> button with this method.
->=20
-> If that button is supposed to be handled by ACPI, then yes, this shou=
-ld
-> help.
+On Mon, Jun 13, 2016 at 08:56:49PM +0300, Andy Shevchenko wrote:
 
-I'm not sure if it's supposed to be handled by ACPI and not completely
-in HW, like in the Haswell line, but I get Notify events for the fujits=
-u
-driver.
+Sorry for the late reply. I compiled/tested this on linux-next on a Skylake
+system and it looks ok to me except for a couple of minor comments.
 
->> I'm currently to recompiling my Ubuntu kernel, as it doesn't set
->> CONFIG_ACPI_CUSTOM_METHOD
->=20
-> Right, you are going to need that.
->=20
->> Reading _L21, there are quite a few calls to Notify (\_SB.FEXT, 0x80=
-),
->> which is exactly the notify function for the Fujitsu ACPI device.
->>
->> Actually there are a few more GPEs, which emit Notify (\_SB.FEXT, 0x=
-80)
->> calls, which are caught by the fujitsu-notebook driver.
->>
->>>>> If it does, try overriding ACPI method _L21 [3] so that you can r=
-ead
->>>>> the value of BSWF when the method is invoked.
->>
->> What's the easiest way to report the value to userspace? I don't thi=
-nk I
->> can add variables.
->>
->> My idea was to add a Notify (\_SB.FEXT, 0x80) into the BSWF branch, =
-and
->> remove the Notify calls from all other branches.
->>
->> Probably even start by removing all Notify calls to be sure the func=
-tion
->> actually is overwritten.
->=20
-> Just use the ACPI debug object.  Everything you need is in the
-> documentation I have already referred you to (method-customizing.txt)=
-=2E
+> This patch does the following:
+> - refactors code to use recently introduced DEFINE_DEBUGFS_ATTRIBUTE() macro
+> - makes absence of DEBUG_FS non-fatal error
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 45 ++++++++---------------------------
+>  drivers/platform/x86/intel_pmc_core.h |  5 ++--
+>  2 files changed, 13 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index e57f923..c29f59b 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -23,7 +23,6 @@
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <linux/pci.h>
+> -#include <linux/seq_file.h>
+>  
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+> @@ -78,30 +77,18 @@ int intel_pmc_slp_s0_counter_read(u32 *data)
+>  }
+>  EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
+>  
+> -#if IS_ENABLED(CONFIG_DEBUG_FS)
+> -static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
+> +static int pmc_core_dev_state_get(void *data, u64 *val)
+>  {
+> -	struct pmc_dev *pmcdev = s->private;
+> -	u32 counter_val;
+> +	struct pmc_dev *pmcdev = data;
 
-Ups. Sorry - too much parallel stuff going on today.
-I'll really read the document and not just skim through it (which I did
-after realizing my kernel misses the needed modules.
+I am hoping that data being passed here is similar to inode.i_private
+so that we get the address of pmc struct here.
 
-> I would simply use the original _L21 method with a "Store (BSWF, Debu=
-g)"
-> line inserted just before the "If (BSWF)" conditional expression.
+> +	u32 value;
+>  
+> -	counter_val = pmc_core_reg_read(pmcdev,
+> -					SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> -	seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
+> +	value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> +	*val = pmc_core_adjust_slp_s0_step(value);
+>  
+>  	return 0;
+>  }
+>  
+> -static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
+> -{
+> -	return single_open(file, pmc_core_dev_state_show, inode->i_private);
+> -}
+> -
+> -static const struct file_operations pmc_core_dev_state_ops = {
+> -	.open           = pmc_core_dev_state_open,
+> -	.read           = seq_read,
+> -	.llseek         = seq_lseek,
+> -	.release        = single_release,
+> -};
+> +DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL, "%llu");
+>  
+>  static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+>  {
+> @@ -113,12 +100,12 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  	struct dentry *dir, *file;
+>  
+>  	dir = debugfs_create_dir("pmc_core", NULL);
+> -	if (!dir)
+> +	if (IS_ERR_OR_NULL(dir))
+>  		return -ENOMEM;
+>  
+>  	pmcdev->dbgfs_dir = dir;
+>  	file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
 
-Yup.
+Should we consider using debugfs_create_file_unsafe ?
 
-Regards,
+> -				   dir, pmcdev, &pmc_core_dev_state_ops);
+> +				   dir, pmcdev, &pmc_core_dev_state);
+>  
+>  	if (!file) {
+>  		pmc_core_dbgfs_unregister(pmcdev);
+> @@ -127,16 +114,6 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  
+>  	return 0;
+>  }
+> -#else
+> -static inline int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+> -{
+> -}
+> -#endif /* CONFIG_DEBUG_FS */
+>  
+>  static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_MOBILE, X86_FEATURE_MWAIT,
+> @@ -183,10 +160,8 @@ static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	}
+>  
+>  	err = pmc_core_dbgfs_register(pmcdev);
+> -	if (err < 0) {
+> -		dev_err(&dev->dev, "PMC Core: debugfs register failed.\n");
+> -		return err;
+> -	}
+> +	if (err < 0)
+> +		dev_warn(&dev->dev, "PMC Core: debugfs register failed.\n");
+>  
+>  	pmc.has_slp_s0_res = true;
+>  	return 0;
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> index a9dadaf..9689b92 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -23,11 +23,14 @@
+>  
+>  /* Sunrise Point Power Management Controller PCI Device ID */
+>  #define SPT_PMC_PCI_DEVICE_ID			0x9d21
+> +
+>  #define SPT_PMC_BASE_ADDR_OFFSET		0x48
+>  #define SPT_PMC_SLP_S0_RES_COUNTER_OFFSET	0x13c
+>  #define SPT_PMC_MMIO_REG_LEN			0x100
+>  #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+>  
+> +struct dentry;
+> +
+>  /**
+>   * struct pmc_dev - pmc device structure
+>   * @base_addr:		comtains pmc base address
+> @@ -42,9 +45,7 @@
+>  struct pmc_dev {
+>  	u32 base_addr;
+>  	void __iomem *regbase;
+> -#if IS_ENABLED(CONFIG_DEBUG_FS)
+>  	struct dentry *dbgfs_dir;
+> -#endif /* CONFIG_DEBUG_FS */
+>  	bool has_slp_s0_res;
+>  };
+>  
+> -- 
+> 2.8.1
+> 
 
-Jan-Marek
+-- 
+Best Regards,
+Rajneesh
