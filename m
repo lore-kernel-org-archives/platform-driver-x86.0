@@ -1,125 +1,142 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
  Fujitsu e7x6
-Date: Thu, 23 Jun 2016 13:18:19 +0200
-Message-ID: <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
+Date: Thu, 23 Jun 2016 14:08:48 +0200
+Message-ID: <576BD150.6050304@fbihome.de>
 References: <575FC4E0.7080501@fbihome.de>
- <20160616234630.GB4764@marvin.atrad.com.au>
- <5763C0DF.3030302@fbihome.de>
+ <20160616234630.GB4764@marvin.atrad.com.au> <5763C0DF.3030302@fbihome.de>
  <20160621081229.GE19735@marvin.atrad.com.au>
- <20160622073213.GD3056@eudyptula.hq.kempniu.pl>
- <576A6604.8010907@fbihome.de>
- <20160622105333.GD25599@marvin.atrad.com.au>
- <576A7519.9040703@fbihome.de>
- <20160622123941.GB2466@eudyptula.hq.kempniu.pl>
- <576A90FB.9090506@fbihome.de>
+ <20160622073213.GD3056@eudyptula.hq.kempniu.pl> <576A6604.8010907@fbihome.de>
+ <20160622105333.GD25599@marvin.atrad.com.au> <576A7519.9040703@fbihome.de>
+ <20160622123941.GB2466@eudyptula.hq.kempniu.pl> <576A90FB.9090506@fbihome.de>
+ <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f49.google.com ([74.125.82.49]:37525 "EHLO
-	mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751865AbcFWLSZ (ORCPT
+Received: from ironman.h-da.de ([141.100.10.250]:53296 "EHLO ironman.h-da.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750978AbcFWMIw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Jun 2016 07:18:25 -0400
-Received: by mail-wm0-f49.google.com with SMTP id a66so45088022wme.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jun 2016 04:18:24 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <576A90FB.9090506@fbihome.de>
+	Thu, 23 Jun 2016 08:08:52 -0400
+In-Reply-To: <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan-Marek Glogowski <glogow@fbihome.de>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org
 
-> > I played with my Lifebook E744 a bit and there is a chance it is no=
+Am 23.06.2016 um 13:18 schrieb Micha=C5=82 K=C4=99pie=C5=84:
+>>> I played with my Lifebook E744 a bit and there is a chance it is no=
 t as
-> > different from the Skylake machines as I originally imagined.  Earl=
+>>> different from the Skylake machines as I originally imagined.  Earl=
 ier
-> > in this thread, I already mentioned that pure ACPI brightness contr=
+>>> in this thread, I already mentioned that pure ACPI brightness contr=
 ol
-> > doesn't work, just like it doesn't work on Skylakes.  However, inpu=
+>>> doesn't work, just like it doesn't work on Skylakes.  However, inpu=
 t
-> > events are correctly generated when Fn+F6 or Fn+F7 is pressed.
->=20
-> That's no mystery, because the brightness control ACPI device (AKA
-> FUJ02B1 is available on e7x4 notebooks and the diriver also generates
-> the keycodes in addition.
-
-No, at least not on Haswells.  For proof, do an `rmmod fujitsu-laptop'
-on a Haswell machine and press Fn+F6 or Fn+F7.  The input event will
-still be generated.  What happens is that pressing Fn+F6 or Fn+F7 raise=
+>>> events are correctly generated when Fn+F6 or Fn+F7 is pressed.
+>>
+>> That's no mystery, because the brightness control ACPI device (AKA
+>> FUJ02B1 is available on e7x4 notebooks and the diriver also generate=
 s
-a certain GPE (General-Purpose Event; 0x11 on Haswells).  This causes
-the corresponding ACPI method (_L11) to be called, which in turn sends
-notifications to both FUJ02B1 and the ACPI video device.  On my Haswell
-machine, the former [1] effectively does nothing, because subsequent
-calls to GBLL keep returning the same brightness level, apparently
-ignoring key presses, but the latter [2] is enough because it causes
-acpi_video to generate an input event.  For further proof, boot a 4.5+
-kernel on a Haswell machine with command line parameter
-video.report_key_events=3D1.  Brightness-related input events will not =
-be
-generated any more.
+>> the keycodes in addition.
+>=20
+> No, at least not on Haswells.  For proof, do an `rmmod fujitsu-laptop=
+'
+> on a Haswell machine and press Fn+F6 or Fn+F7.  The input event will
+> still be generated.  What happens is that pressing Fn+F6 or Fn+F7 rai=
+ses
+> a certain GPE (General-Purpose Event; 0x11 on Haswells).  This causes
+> the corresponding ACPI method (_L11) to be called, which in turn send=
+s
+> notifications to both FUJ02B1 and the ACPI video device.  On my Haswe=
+ll
+> machine, the former [1] effectively does nothing, because subsequent
+> calls to GBLL keep returning the same brightness level, apparently
+> ignoring key presses, but the latter [2] is enough because it causes
+> acpi_video to generate an input event.  For further proof, boot a 4.5=
++
+> kernel on a Haswell machine with command line parameter
+> video.report_key_events=3D1.  Brightness-related input events will no=
+t be
+> generated any more.
+>=20
+> I looked at the ACPI tables you sent me and it looks like
+> brightness-related keys should be handled by ACPI method _L21 on
+> Skylakes.  As far as I can tell without playing with the hardware
+> myself, the ACPI code doesn't strike me as outright broken, so the fi=
+rst
+> step would be to confirm whether the relevant GPE is raised at all wh=
+en
+> you press brightness-related keys.  To check it, launch the following
+> command in a terminal:
+>=20
+>     watch -n 1 cat /sys/firmware/acpi/interrupts/gpe21
+>=20
+> and press Fn+F6 or Fn+F7.  The counter should get increased by one.
 
-I looked at the ACPI tables you sent me and it looks like
-brightness-related keys should be handled by ACPI method _L21 on
-Skylakes.  As far as I can tell without playing with the hardware
-myself, the ACPI code doesn't strike me as outright broken, so the firs=
+Yup - great. This works :-)
+I would be interested to know, how you came to this conclusion. Is this
+encoded in the ssdt tables? I really want to understand this. Should I
+read the ACPI specs?
+
+> If it does, try overriding ACPI method _L21 [3] so that you can read
+> the value of BSWF when the method is invoked.
+
+I'll read [3] and report back later.
+
+> If that value is 0, it's
+> obviously a vendor bug as it would prevent the ACPI video device from
+> being notified.  If the GPE count isn't increased when
+> brightness-related keys are pressed, it means some hardware
+> initialization may be required before these keys are handled.  In tha=
 t
-step would be to confirm whether the relevant GPE is raised at all when
-you press brightness-related keys.  To check it, launch the following
-command in a terminal:
-
-    watch -n 1 cat /sys/firmware/acpi/interrupts/gpe21
-
-and press Fn+F6 or Fn+F7.  The counter should get increased by one.  If
-it does, try overriding ACPI method _L21 [3] so that you can read the
-value of BSWF when the method is invoked.  If that value is 0, it's
-obviously a vendor bug as it would prevent the ACPI video device from
-being notified.  If the GPE count isn't increased when
-brightness-related keys are pressed, it means some hardware
-initialization may be required before these keys are handled.  In that
-case we would likely be screwed without assistance from Fujitsu.
-
-To sum up, I see no immediate reason for brightness control not to work
-on Skylakes, so you will have to get your hands a bit dirty to get to
-the bottom of this (and it might still not yield a solution).
-
+> case we would likely be screwed without assistance from Fujitsu.
 >=20
-> The diff between e7x4 and e7x6 DSDT is ~43k lines or 1.3MB
-> And the DSDT of 736 and 756 is identical.
->=20
-> > And I am
-> > sure these events are generated by ACPI code as booting with acpi=3D=
+> To sum up, I see no immediate reason for brightness control not to wo=
+rk
+> on Skylakes, so you will have to get your hands a bit dirty to get to
+> the bottom of this (and it might still not yield a solution).
+
+The brightness buttons work in Windows 7 with the Fujitsu button driver=
+=2E
+Didn't check, if they even work without. I can get my hands on a Window=
+s
+7 laptop, but that'll take some time, if this additional info would hel=
+p.
+
+>> The diff between e7x4 and e7x6 DSDT is ~43k lines or 1.3MB
+>> And the DSDT of 736 and 756 is identical.
+>>
+>>> And I am
+>>> sure these events are generated by ACPI code as booting with acpi=3D=
 off
-> > makes the input events disappear, while also causing brightness to =
+>>> makes the input events disappear, while also causing brightness to =
 be
-> > correctly adjusted.  Thus, I can try to figure out which part of th=
+>>> correctly adjusted.  Thus, I can try to figure out which part of th=
 e
-> > ACPI code causes the input events to be generated.  That informatio=
+>>> ACPI code causes the input events to be generated.  That informatio=
 n
-> > combined with your DSDT dump might help us in figuring out how to m=
+>>> combined with your DSDT dump might help us in figuring out how to m=
 ake
-> > it work for your machine.  However, it might just as well turn out =
+>>> it work for your machine.  However, it might just as well turn out =
 that
-> > Fujitsu switched to using WMI or some opaque vendor-specific magic.
+>>> Fujitsu switched to using WMI or some opaque vendor-specific magic.
+>>
+>> The ACPI code doesn't generate the keycodes.
+>> Look at the acpi_fujitsu_notify function in
+>> drivers/platform/x86/fujitsu-laptop.c
+>>
+>> And sure, without ACPI no ACPI driver will be loaded.
+>>
+>> So without ACPI, the brightness buttons work correctly (not that's a=
+n
+>> option to run a laptop without ACPI)?
 >=20
-> The ACPI code doesn't generate the keycodes.
-> Look at the acpi_fujitsu_notify function in
-> drivers/platform/x86/fujitsu-laptop.c
+> Indeed.  My understanding is that on an operating system without ACPI
+> support, brightness is adjusted directly by the BIOS.
 >=20
-> And sure, without ACPI no ACPI driver will be loaded.
+> [1] Notify (\_SB.PCI0.LPCB.FJEX, 0x80)
+> [2] \_SB.PCI0.GFX0.LCD.BLNF ()
+> [3] see: Documentation/acpi/method-customizing.txt
 >=20
-> So without ACPI, the brightness buttons work correctly (not that's an
-> option to run a laptop without ACPI)?
-
-Indeed.  My understanding is that on an operating system without ACPI
-support, brightness is adjusted directly by the BIOS.
-
-[1] Notify (\_SB.PCI0.LPCB.FJEX, 0x80)
-[2] \_SB.PCI0.GFX0.LCD.BLNF ()
-[3] see: Documentation/acpi/method-customizing.txt
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
