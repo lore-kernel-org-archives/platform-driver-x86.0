@@ -1,138 +1,58 @@
-From: Stefan Seidel <lkml@stefanseidel.info>
-Subject: [PATCH v2] sony-laptop: add new thermal control handle
-Date: Thu, 23 Jun 2016 20:43:22 +0200
-Message-ID: <20160623204322.Horde.KP6NgW-vjq4KeyukqDxSgtN@horde.stefanseidel.info>
-References: <20160623202122.Horde.TxvrWAneTMWnwZqVFW5oO0g@horde.stefanseidel.info>
+From: Tema Williams <cityelectronicsplaza@gmail.com>
+Subject: PLEASE HELP MY FAMILY.
+Date: Fri, 24 Jun 2016 00:34:15 +0200
+Message-ID: <CAGys7Dp3nd5UmdazZe4L9c_5tdRXzWCnaRnUb40BkO0gsbu5bA@mail.gmail.com>
+Reply-To: temawilliams026@yahoo.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.teration.net ([213.136.64.78]:47067 "EHLO
-	mail.teration.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751857AbcFWSnc (ORCPT
+Received: from mail-lf0-f66.google.com ([209.85.215.66]:33464 "EHLO
+	mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751155AbcFWWeR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Jun 2016 14:43:32 -0400
-In-Reply-To: <20160623202122.Horde.TxvrWAneTMWnwZqVFW5oO0g@horde.stefanseidel.info>
-Content-Disposition: inline
+	Thu, 23 Jun 2016 18:34:17 -0400
+Received: by mail-lf0-f66.google.com with SMTP id l188so19856196lfe.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jun 2016 15:34:17 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
 
-Hi,
+Dear Sir/madam,
 
-sorry about the wrong first patch, I had missed an unwanted hunk.
+With due respect and to the glory of Almighty God whom we worship I
+call upon you to assist my family. Please Permit me to inform you of
+my desire of going into business relationship with you.
 
-On at least the SVD11 there is an additional thermal control setting that
-is found at a different handle address but otherwise behaves the same as
-the other one.
+My name is Tema Williams,The only Son of late Chief PATRICK WILLIAMS.
+My father was a very wealthy cocoa merchant in Abidjan but we are from
+Sierra Leone
+After my Father death I and my Family move to South Africa as refugee.
 
-Signed-off-by: Stefan Seidel <lkml@stefanseidel.info>
----
-  drivers/platform/x86/sony-laptop.c | 26 ++++++++++++++++++--------
-  1 file changed, 18 insertions(+), 8 deletions(-)
+My father was poisoned to death by his business associates on one of
+their outings on a business trip. Before his death in a private
+hospital in Abidjan he secretly called me on his bed side and told me
+that he has the sum of ($12.000,000 MILLION US DOLLAR) kept with a
+security and finance company in South Africa.
 
-diff --git a/drivers/platform/x86/sony-laptop.c  
-b/drivers/platform/x86/sony-laptop.c
-index 1dba359..6c9deb3 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -148,7 +148,8 @@ static int sony_nc_battery_care_setup(struct  
-platform_device *pd,
-  		unsigned int handle);
-  static void sony_nc_battery_care_cleanup(struct platform_device *pd);
+He also explained to me that it was because of this wealth that he was
+poisoned by his business associates,that I should seek for a
+beneficiary in any country of my choice where I will transfer this
+money and use it for investment.I am honorably seeking for your
+assistance to transfer our fund out of South Africa.Upon the
+successful transfer of this fund,we shall make arrangement for me,my
+mother and younger sister to come over to your country to further our
+Education and invest in a profitable business that you may suggest.
 
--static int sony_nc_thermal_setup(struct platform_device *pd);
-+static int sony_nc_thermal_setup(struct platform_device *pd,
-+				  unsigned int handle);
-  static void sony_nc_thermal_cleanup(struct platform_device *pd);
+More over,I am willing to offer you 20% of the total sum as
+compensation for your effort/input after the successful transfer of
+this fund into your nominated bank account overseas.
 
-  static int sony_nc_lid_resume_setup(struct platform_device *pd,
-@@ -1363,7 +1364,8 @@ static void sony_nc_function_setup(struct  
-acpi_device *device,
-  						result);
-  			break;
-  		case 0x0122:
--			result = sony_nc_thermal_setup(pf_device);
-+		case 0x015F:
-+			result = sony_nc_thermal_setup(pf_device, handle);
-  			if (result)
-  				pr_err("couldn't set up thermal profile function (%d)\n",
-  						result);
-@@ -1476,6 +1478,7 @@ static void sony_nc_function_cleanup(struct  
-platform_device *pd)
-  			sony_nc_lid_resume_cleanup(pd);
-  			break;
-  		case 0x0122:
-+		case 0x015F:
-  			sony_nc_thermal_cleanup(pd);
-  			break;
-  		case 0x0128:
-@@ -1547,6 +1550,7 @@ static void sony_nc_function_resume(void)
-  			sony_call_snc_handle(handle, 0x100, &result);
-  			break;
-  		case 0x0122:
-+		case 0x015F:
-  			sony_nc_thermal_resume();
-  			break;
-  		case 0x0124:
-@@ -2150,14 +2154,16 @@ struct snc_thermal_ctrl {
-  	unsigned int profiles;
-  	struct device_attribute mode_attr;
-  	struct device_attribute profiles_attr;
-+	unsigned int handle;
-  };
-  static struct snc_thermal_ctrl *th_handle;
+As we depend on God, and with God all things are possible.
+Anticipating to hear from you today.
 
--#define THM_PROFILE_MAX 3
-+#define THM_PROFILE_MAX 4
-  static const char * const snc_thermal_profiles[] = {
-  	"balanced",
-  	"silent",
--	"performance"
-+	"performance",
-+	"cooling"
-  };
+Thanks and God bless.
+PLEASE CALL ME +27710235008
 
-  static int sony_nc_thermal_mode_set(unsigned short mode)
-@@ -2173,7 +2179,8 @@ static int sony_nc_thermal_mode_set(unsigned short mode)
-  	if ((mode && !(th_handle->profiles & mode)) || mode >= THM_PROFILE_MAX)
-  		return -EINVAL;
+Best regards,
 
--	if (sony_call_snc_handle(0x0122, mode << 0x10 | 0x0200, &result))
-+	if (sony_call_snc_handle(th_handle->handle, mode << 0x10 | 0x0200,
-+				 &result))
-  		return -EIO;
-
-  	th_handle->mode = mode;
-@@ -2185,7 +2192,7 @@ static int sony_nc_thermal_mode_get(void)
-  {
-  	unsigned int result;
-
--	if (sony_call_snc_handle(0x0122, 0x0100, &result))
-+	if (sony_call_snc_handle(th_handle->handle, 0x0100, &result))
-  		return -EIO;
-
-  	return result & 0xff;
-@@ -2245,14 +2252,17 @@ static ssize_t  
-sony_nc_thermal_mode_show(struct device *dev,
-  	return count;
-  }
-
--static int sony_nc_thermal_setup(struct platform_device *pd)
-+static int sony_nc_thermal_setup(struct platform_device *pd,
-+				 unsigned int handle)
-  {
-  	int ret = 0;
-  	th_handle = kzalloc(sizeof(struct snc_thermal_ctrl), GFP_KERNEL);
-  	if (!th_handle)
-  		return -ENOMEM;
-
--	ret = sony_call_snc_handle(0x0122, 0x0000, &th_handle->profiles);
-+	th_handle->handle = handle;
-+
-+	ret = sony_call_snc_handle(handle, 0x0000, &th_handle->profiles);
-  	if (ret) {
-  		pr_warn("couldn't to read the thermal profiles\n");
-  		goto outkzalloc;
--- 
-2.8.3
+Tema Williams
+(for the family)
