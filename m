@@ -1,58 +1,50 @@
-From: Tema Williams <cityelectronicsplaza@gmail.com>
-Subject: PLEASE HELP MY FAMILY.
-Date: Fri, 24 Jun 2016 00:34:15 +0200
-Message-ID: <CAGys7Dp3nd5UmdazZe4L9c_5tdRXzWCnaRnUb40BkO0gsbu5bA@mail.gmail.com>
-Reply-To: temawilliams026@yahoo.com
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] fujitsu-laptop: Add support for eco LED
+Date: Fri, 24 Jun 2016 09:29:38 +0930
+Message-ID: <20160623235938.GD11197@marvin.atrad.com.au>
+References: <20160621080918.GA3333@Matej-PC.localdomain>
+ <20160622110027.GE25599@marvin.atrad.com.au>
+ <20160622124850.GA8407@Matej-PC.localdomain>
+ <20160623081304.GH17670@marvin.atrad.com.au>
+ <20160623175723.GA22637@Matej-PC.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:33464 "EHLO
-	mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751155AbcFWWeR (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:53077 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751706AbcFWX7r (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Jun 2016 18:34:17 -0400
-Received: by mail-lf0-f66.google.com with SMTP id l188so19856196lfe.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jun 2016 15:34:17 -0700 (PDT)
+	Thu, 23 Jun 2016 19:59:47 -0400
+Content-Disposition: inline
+In-Reply-To: <20160623175723.GA22637@Matej-PC.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matej Groma <matejgroma@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Dear Sir/madam,
+On Thu, Jun 23, 2016 at 07:57:24PM +0200, Matej Groma wrote:
+> > > Thank you for your review. If you want me to, I can also add a check based on
+> > > a presence of eco button and join it with AND or OR. The patch should not
+> > > introduce a regression because the firmware consistently returns
+> > > UNSUPPORTED_CMD when queried about unknown leds.
+> > 
+> > An additional AND check based on this sounds like a good idea since it
+> > provides another level of confidence that the LED concerned really is an Eco
+> > LED.  It is also straight forward to do.  If the machine does not have an
+> > Eco button then it's highly unlikely that it would have an Eco LED.
+> 
+> I failed to identify the bit indicating presence of eco button. I guess
+> there is a difference between the old 4-key security pads (some of them
+> have a key mapped to eco mode and I have no idea whether that counts as
+> presence) and the other ones.
 
-With due respect and to the glory of Almighty God whom we worship I
-call upon you to assist my family. Please Permit me to inform you of
-my desire of going into business relationship with you.
+That is unfortunate and does indeed make a check based on this awkward.
 
-My name is Tema Williams,The only Son of late Chief PATRICK WILLIAMS.
-My father was a very wealthy cocoa merchant in Abidjan but we are from
-Sierra Leone
-After my Father death I and my Family move to South Africa as refugee.
+> For the time being I suggest keeping the patch as it is, also the last
+> check should be itself sufficient.
 
-My father was poisoned to death by his business associates on one of
-their outings on a business trip. Before his death in a private
-hospital in Abidjan he secretly called me on his bed side and told me
-that he has the sum of ($12.000,000 MILLION US DOLLAR) kept with a
-security and finance company in South Africa.
+In the circumstances I agree.  Let's run with the current patch as is and
+see what happens.
 
-He also explained to me that it was because of this wealth that he was
-poisoned by his business associates,that I should seek for a
-beneficiary in any country of my choice where I will transfer this
-money and use it for investment.I am honorably seeking for your
-assistance to transfer our fund out of South Africa.Upon the
-successful transfer of this fund,we shall make arrangement for me,my
-mother and younger sister to come over to your country to further our
-Education and invest in a profitable business that you may suggest.
-
-More over,I am willing to offer you 20% of the total sum as
-compensation for your effort/input after the successful transfer of
-this fund into your nominated bank account overseas.
-
-As we depend on God, and with God all things are possible.
-Anticipating to hear from you today.
-
-Thanks and God bless.
-PLEASE CALL ME +27710235008
-
-Best regards,
-
-Tema Williams
-(for the family)
+Regards
+  jonathan
