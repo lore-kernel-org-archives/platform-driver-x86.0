@@ -1,127 +1,192 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH] fujitsu-laptop: Support touchpad toggle hotkey on Skylake-based models
-Date: Sun, 26 Jun 2016 09:41:35 +0200
-Message-ID: <1466926895-7830-1-git-send-email-kernel@kempniu.pl>
-References: <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] toshiba_acpi: Add IIO interface for accelerometer
+ axis data
+Date: Sun, 26 Jun 2016 17:36:50 +0100
+Message-ID: <e51de271-6d3f-26ea-9b04-61612336c14f@kernel.org>
+References: <20160619232804.8875-1-coproscefalo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:33147 "EHLO
-	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750940AbcFZHl7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 26 Jun 2016 03:41:59 -0400
-Received: by mail-wm0-f68.google.com with SMTP id r201so16450820wme.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jun 2016 00:41:58 -0700 (PDT)
-In-Reply-To: <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160619232804.8875-1-coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Haswell-based Fujitsu laptops (Lifebook E734/E744/E754) have a touchpad
-toggle hotkey (Fn+F4) which is handled transparently to the operating
-system: while an ACPI notification is sent to FUJ02B1 when Fn+F4 is
-pressed, touchpad state is properly toggled without any explicit suppor=
-t
-for this operation in fujitsu-laptop.
+On 20/06/16 00:28, Azael Avalos wrote:
+> This patch adds the accelerometer axis data to the IIO subsystem.
+> 
+> Currently reporting the X, Y and Z values, as no other data can be
+> queried given the fact that the accelerometer chip itself is hidden
+> behind the Toshiba proprietary interface.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Skylake-based models (Lifebook E736/E746/E756) also have that hotkey,
-but the touchpad is not toggled transparently to the operating system.
-When Fn+F4 is pressed, an ACPI notification is sent to FUJ02E3.  A
-subsequent call to S000 (FUNC_RFKILL) can be used to determine whether
-the touchpad toggle hotkey was pressed so that an input event can be
-sent to userspace.
+I'm assuming this will go through the relevant tree on the platform side
+rather than through iio.
 
-Relevant ACPI code:
+Nothing in here that is flux in the IIO tree so should be no issues in
+doing that.
 
-    Method (_L21, 0, NotSerialized)
-    {
-        ...
-        If (AHKF)
-        {
-            Notify (\_SB.FEXT, 0x80)
-        }
-        ...
-    }
+Thanks,
 
-    Method (S000, 3, Serialized)
-    {
-        Name (_T_0, Zero)
-        Local0 =3D Zero
-        While (One)
-        {
-            _T_0 =3D Arg0
-            If (_T_0 =3D=3D Zero)
-            {
-                Local0 |=3D 0x04000000
-                Local0 |=3D 0x02000000
-                Local0 |=3D 0x00020000
-                Local0 |=3D 0x0200
-                Local0 |=3D 0x0100
-                Local0 |=3D 0x20
-            }
-            ElseIf (_T_0 =3D=3D One)
-            {
-                ...
-                If (AHKF & 0x08)
-                {
-                Local0 |=3D 0x04000000
-                AHKF ^=3D 0x08
-                }
-                ...
-            } ...
-            Break
-        }
-        Return (Local0)
-    }
-
-Pressing Fn+F4 raises GPE 0x21 and sets bit 3 in AHKF.  This in turn
-results in bit 26 being set in the value returned by FUNC_RFKILL called
-with 1 as its first argument.  On Skylake-based models, bit 26 is also
-set in the value returned by FUNC_RFKILL called with 0 as its first
-argument (this value is saved in fujitsu_hotkey->rfkill_supported upon
-module initialization), which suggests that this bit is set on models
-which do not handle touchpad toggling transparently to the operating
-system.
-
-Note that bit 3 is cleared in AHKF once FUNC_RFKILL is called with 1 as
-its first argument, which requires fujitsu-laptop to handle this hotkey
-in a different manner than the other, GIRB-based hotkeys: two input
-events (press and release) are immediately sent once Fn+F4 is pressed.
-
-Reported-by: Jan-Marek Glogowski <glogow@fbihome.de>
-Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
----
-
-Darren, this patch needs both an Acked-by from Jonathan and a Tested-by
-from Jan-Marek before merging as I do not have the hardware to test it.
-
- drivers/platform/x86/fujitsu-laptop.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x=
-86/fujitsu-laptop.c
-index ce41bc3..ef28447 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -1060,6 +1060,15 @@ static void acpi_fujitsu_hotkey_notify(struct ac=
-pi_device *device, u32 event)
- 			}
- 		}
-=20
-+		if ((fujitsu_hotkey->rfkill_supported & BIT(26)) &&
-+		    (call_fext_func(FUNC_RFKILL, 0x1, 0x0, 0x0) & BIT(26))) {
-+			keycode =3D KEY_TOUCHPAD_TOGGLE;
-+			input_report_key(input, keycode, 1);
-+			input_sync(input);
-+			input_report_key(input, keycode, 0);
-+			input_sync(input);
-+		}
-+
- 		break;
- 	default:
- 		keycode =3D KEY_UNKNOWN;
---=20
-1.7.10.4
+Jonathan
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 107 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 01e12d2..7949929 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -53,6 +53,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/miscdevice.h>
+>  #include <linux/rfkill.h>
+> +#include <linux/iio/iio.h>
+>  #include <linux/toshiba.h>
+>  #include <acpi/video.h>
+>  
+> @@ -134,6 +135,7 @@ MODULE_LICENSE("GPL");
+>  
+>  /* Field definitions */
+>  #define HCI_ACCEL_MASK			0x7fff
+> +#define HCI_ACCEL_DIRECTION_MASK	0x8000
+>  #define HCI_HOTKEY_DISABLE		0x0b
+>  #define HCI_HOTKEY_ENABLE		0x09
+>  #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
+> @@ -178,6 +180,7 @@ struct toshiba_acpi_dev {
+>  	struct led_classdev eco_led;
+>  	struct miscdevice miscdev;
+>  	struct rfkill *wwan_rfk;
+> +	struct iio_dev *indio_dev;
+>  
+>  	int force_fan;
+>  	int last_key_event;
+> @@ -2420,6 +2423,83 @@ static void toshiba_acpi_kbd_bl_work(struct work_struct *work)
+>  }
+>  
+>  /*
+> + * IIO device
+> + */
+> +
+> +enum toshiba_accel_chan {
+> +	AXIS_X,
+> +	AXIS_Y,
+> +	AXIS_Z
+> +};
+> +
+> +static int toshiba_accel_get_axis(enum toshiba_accel_chan chan)
+> +{
+> +	u32 xyval;
+> +	u32 zval;
+> +	int ret;
+> +
+> +	xyval = zval = 0;
+> +	ret = toshiba_accelerometer_get(toshiba_acpi, &xyval, &zval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (chan) {
+> +	case AXIS_X:
+> +		return xyval & HCI_ACCEL_DIRECTION_MASK ?
+> +			-(xyval & HCI_ACCEL_MASK) : xyval & HCI_ACCEL_MASK;
+> +	case AXIS_Y:
+> +		return (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_DIRECTION_MASK ?
+> +			-((xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK) :
+> +			(xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK;
+> +	case AXIS_Z:
+> +		return zval & HCI_ACCEL_DIRECTION_MASK ?
+> +			-(zval & HCI_ACCEL_MASK) : zval & HCI_ACCEL_MASK;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int toshiba_accel_read_raw(struct iio_dev *indio_dev,
+> +				  struct iio_chan_spec const *chan,
+> +				  int *val, int *val2, long mask)
+> +{
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = toshiba_accel_get_axis(chan->channel);
+> +		if (ret == -EIO || ret == -ENODEV)
+> +			return ret;
+> +
+> +		*val = ret;
+> +
+> +		return IIO_VAL_INT;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +#define TOSHIBA_ACCEL_CHANNEL(axis, chan) { \
+> +	.type = IIO_ACCEL, \
+> +	.modified = 1, \
+> +	.channel = chan, \
+> +	.channel2 = IIO_MOD_##axis, \
+> +	.output = 1, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> +}
+> +
+> +static const struct iio_chan_spec toshiba_accel_channels[] = {
+> +	TOSHIBA_ACCEL_CHANNEL(X, AXIS_X),
+> +	TOSHIBA_ACCEL_CHANNEL(Y, AXIS_Y),
+> +	TOSHIBA_ACCEL_CHANNEL(Z, AXIS_Z),
+> +};
+> +
+> +static const struct iio_info toshiba_accel_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &toshiba_accel_read_raw,
+> +};
+> +
+> +/*
+>   * Misc device
+>   */
+>  static int toshiba_acpi_smm_bridge(SMMRegisters *regs)
+> @@ -2904,6 +2984,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>  
+>  	remove_toshiba_proc_entries(dev);
+>  
+> +	if (dev->accelerometer_supported) {
+> +		iio_device_unregister(dev->indio_dev);
+> +		iio_device_free(dev->indio_dev);
+> +	}
+> +
+>  	if (dev->sysfs_created)
+>  		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
+>  				   &toshiba_attr_group);
+> @@ -3051,6 +3136,28 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  	dev->touchpad_supported = !ret;
+>  
+>  	toshiba_accelerometer_available(dev);
+> +	if (dev->accelerometer_supported) {
+> +		dev->indio_dev = iio_device_alloc(sizeof(*dev));
+> +		if (!dev->indio_dev)
+> +			return -ENOMEM;
+> +
+> +		pr_info("Registering Toshiba accelerometer iio device\n");
+> +
+> +		dev->indio_dev->info = &toshiba_accel_info;
+> +		dev->indio_dev->name = "Toshiba accelerometer";
+> +		dev->indio_dev->dev.parent = &acpi_dev->dev;
+> +		dev->indio_dev->modes = INDIO_DIRECT_MODE;
+> +		dev->indio_dev->channels = toshiba_accel_channels;
+> +		dev->indio_dev->num_channels =
+> +					ARRAY_SIZE(toshiba_accel_channels);
+> +
+> +		ret = iio_device_register(dev->indio_dev);
+> +		if (ret < 0) {
+> +			pr_err("Unable to register iio device\n");
+> +			iio_device_free(dev->indio_dev);
+> +			return ret;
+> +		}
+> +	}
+>  
+>  	toshiba_usb_sleep_charge_available(dev);
+>  
+> 
