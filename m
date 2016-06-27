@@ -1,44 +1,87 @@
 From: Jan-Marek Glogowski <glogow@fbihome.de>
-Subject: [PATCH] Register KEY_TOUCHPAD_TOGGLE with input device
-Date: Mon, 27 Jun 2016 10:03:24 +0200
-Message-ID: <5770DDCC.8060507@fbihome.de>
-References: <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
- <1466926895-7830-1-git-send-email-kernel@kempniu.pl>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
+ Fujitsu e7x6
+Date: Mon, 27 Jun 2016 10:32:04 +0200
+Message-ID: <5770E484.4030009@fbihome.de>
+References: <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
+ <576BD150.6050304@fbihome.de> <20160623123506.GA4461@eudyptula.hq.kempniu.pl>
+ <576C1B0C.5050206@fbihome.de> <20160624071224.GA5289@eudyptula.hq.kempniu.pl>
+ <576CFBC6.2000309@fbihome.de> <20160624102024.GA5461@eudyptula.hq.kempniu.pl>
+ <576D5523.7030309@fbihome.de> <20160624201737.GA5843@eudyptula.hq.kempniu.pl>
+ <20160625085052.GA5137@marvin.atrad.com.au>
+ <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ironchief.h-da.de ([141.100.10.235]:43363 "EHLO
+Received: from ironchief.h-da.de ([141.100.10.235]:49617 "EHLO
 	ironchief.h-da.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751664AbcF0IDc (ORCPT
+	with ESMTP id S1751248AbcF0IcH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 27 Jun 2016 04:03:32 -0400
-In-Reply-To: <1466926895-7830-1-git-send-email-kernel@kempniu.pl>
+	Mon, 27 Jun 2016 04:32:07 -0400
+In-Reply-To: <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>
+Cc: platform-driver-x86@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
 
-Probably just squash that into
+Am 25.06.2016 um 11:15 schrieb Micha=C5=82 K=C4=99pie=C5=84:
+>>> ...though if you think about it, the whole thing is absolutely hide=
+ous:
+>>> an *ACPI* driver requires cooperation from a *video* driver to noti=
+fy
+>>> the operating system about a *key press*.
+>>
+>> Yeah.  On one hand I'm utterly amazed.  On the other, I've seen and =
+read
+>> about other really bizarre things which go on in the BIOSes of compu=
+ters
+>> over the years, so nothing really surprises me anymore. :-)
+>=20
+> Yes, I am a rookie in this field, so perhaps I simply have not seen
+> enough weirdness yet to just get over something like this.
+>=20
+>> My understanding based on this latest information is that the patch =
+to the
+>> i915 driver fixes the brightness control on these laptops and that n=
+o
+>> changes to fujitsu-laptop are required for this.  Is this correct?
+>=20
+> This is my understanding as well.
 
-[PATCH] fujitsu-laptop: Support touchpad toggle hotkey on Skylake-based models
+Yup. AFAIK the patchset registers the active output ports of the graphi=
+c
+chip within ACPI, and this is checked by the brightness keys EC, so if
+the port of the display is disabled, the keys don't work.
 
-Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
----
- fujitsu-laptop.c | 1 +
- 1 file changed, 1 insertion(+)
+So no additional change is needed, as long as it just has to work in X1=
+1.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 695bd5e..42319c8 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -884,6 +884,7 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
- 	set_bit(fujitsu->keycode3, input->keybit);
- 	set_bit(fujitsu->keycode4, input->keybit);
- 	set_bit(fujitsu->keycode5, input->keybit);
-+	set_bit(KEY_TOUCHPAD_TOGGLE, input->keybit);
- 	set_bit(KEY_UNKNOWN, input->keybit);
- 
- 	error = input_register_device(input);
--- 
-1.9.1
+And I just realized the events are generated on key release, which feel=
+s
+strange, but since we don't get press and release events, stuff like
+auto-repeat for brightness wouldn't work.
+
+>> As to
+>> the touch keys, it sounds like this might be a BIOS thing to - is it=
+?
+>=20
+> Are you referring to the "touchpad toggle" key?  If you are, I will s=
+oon
+> post a patch adding support for this key so that Jan-Marek can test i=
+t.
+> I just need to find some time to actually write it.
+
+This needs a small patch. But getting the keycode into X11 seems to be
+impossible, as X / xev can't handle keycodes > 255 (KEY_TOUCHPAD_TOGGLE=
+).
+
+I'm currently running evrouter, to call a script on the event, which
+dis-/enables the input device using xinput. I would definitely prefer
+any HW or kernel driver solution. I couldn't find a way to map the 530
+keycode to something < 255 to suit xev and skip the evrouter. Maybe
+=46ujitsu will offer a better solution.
+
+Regards,
+
+Jan-Marek
