@@ -1,69 +1,55 @@
-From: Jan-Marek Glogowski <glogow@fbihome.de>
+From: Jonathan Woithe <jwoithe@just42.net>
 Subject: Re: Brightness and "touchpad dis-/enable" keys not working for
  Fujitsu e7x6
-Date: Mon, 27 Jun 2016 13:40:09 +0200
-Message-ID: <57711099.1020802@fbihome.de>
-References: <20160623123506.GA4461@eudyptula.hq.kempniu.pl>
- <576C1B0C.5050206@fbihome.de> <20160624071224.GA5289@eudyptula.hq.kempniu.pl>
- <576CFBC6.2000309@fbihome.de> <20160624102024.GA5461@eudyptula.hq.kempniu.pl>
- <576D5523.7030309@fbihome.de> <20160624201737.GA5843@eudyptula.hq.kempniu.pl>
+Date: Mon, 27 Jun 2016 22:10:10 +0930
+Message-ID: <20160627124010.GA1544@marvin.atrad.com.au>
+References: <20160624071224.GA5289@eudyptula.hq.kempniu.pl>
+ <576CFBC6.2000309@fbihome.de>
+ <20160624102024.GA5461@eudyptula.hq.kempniu.pl>
+ <576D5523.7030309@fbihome.de>
+ <20160624201737.GA5843@eudyptula.hq.kempniu.pl>
  <20160625085052.GA5137@marvin.atrad.com.au>
- <20160625091522.GA6423@eudyptula.hq.kempniu.pl> <5770E484.4030009@fbihome.de>
+ <20160625091522.GA6423@eudyptula.hq.kempniu.pl>
+ <5770E484.4030009@fbihome.de>
  <20160627111655.GA2438@eudyptula.hq.kempniu.pl>
+ <57711099.1020802@fbihome.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ironman.h-da.de ([141.100.10.250]:6051 "EHLO ironman.h-da.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751661AbcF0LkM (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:54299 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751601AbcF0Mkc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 27 Jun 2016 07:40:12 -0400
-In-Reply-To: <20160627111655.GA2438@eudyptula.hq.kempniu.pl>
+	Mon, 27 Jun 2016 08:40:32 -0400
+Content-Disposition: inline
+In-Reply-To: <57711099.1020802@fbihome.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
+To: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
 
-Am 27.06.2016 um 13:16 schrieb Micha=C5=82 K=C4=99pie=C5=84:
->>>> As to
->>>> the touch keys, it sounds like this might be a BIOS thing to - is =
-it?
->>>
->>> Are you referring to the "touchpad toggle" key?  If you are, I will=
- soon
->>> post a patch adding support for this key so that Jan-Marek can test=
- it.
->>> I just need to find some time to actually write it.
->>
->> This needs a small patch. But getting the keycode into X11 seems to =
-be
->> impossible, as X / xev can't handle keycodes > 255 (KEY_TOUCHPAD_TOG=
-GLE).
->>
->> I'm currently running evrouter, to call a script on the event, which
->> dis-/enables the input device using xinput.
->=20
-> So does my patch work after the set_bit() you suggested is added?  Yo=
-u
-> have not explicitly stated that, so I can only guess it works.
+On Mon, Jun 27, 2016 at 01:40:09PM +0200, Jan-Marek Glogowski wrote:
+> Am 27.06.2016 um 13:16 schrieb Micha?? K??pie??:
+> >>> Are you referring to the "touchpad toggle" key?  If you are, I will soon
+> >>> post a patch adding support for this key so that Jan-Marek can test it.
+> >>> I just need to find some time to actually write it.
+> >>
+> >> This needs a small patch. But getting the keycode into X11 seems to be
+> >> impossible, as X / xev can't handle keycodes > 255 (KEY_TOUCHPAD_TOGGLE).
+> >>
+> >> I'm currently running evrouter, to call a script on the event, which
+> >> dis-/enables the input device using xinput.
+> > 
+> > So does my patch work after the set_bit() you suggested is added?  You
+> > have not explicitly stated that, so I can only guess it works.
+> 
+> Yup - it works.
+> 
+> Should I add a Tested-by to the merged version?
 
-Yup - it works.
+To keep everything clear it would be best if a fresh patch were submitted
+which included the fix and addressed a comment I'll write in a minute.  Add
+Tested-by to that and we can take it from there.
 
-Should I add a Tested-by to the merged version?
-How is this normally handled?
-
-> If you really want to avoid using helper software, patch your kernel =
-to
-> generate a different event when Fn+F4 is pressed.
-
-That would really be hackish, I guess ;-)
-
-Probably I'll go with a patch to the X11 evdev driver for remapping:
-http://www.thenautilus.net/cgit/xf86-input-evdev/commit/?h=3Dcode-remap=
--2.9.2
-as XF86XK_TouchpadToggle is already mapped to 199 in my xmodmap.
-
-Regards,
-
-Jan-Marek
+Regards
+  jonathan
