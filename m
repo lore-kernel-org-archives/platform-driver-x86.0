@@ -1,43 +1,74 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 0/3] toshiba_acpi: Accelerometer updates
-Date: Mon, 27 Jun 2016 19:46:42 -0600
-Message-ID: <20160628014644.8417-1-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f49.google.com ([209.85.218.49]:33971 "EHLO
-	mail-oi0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751942AbcF1Bqu (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 27 Jun 2016 21:46:50 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH v3 2/3] toshiba_acpi: Remove the position sysfs entry
+Date: Mon, 27 Jun 2016 19:46:43 -0600
+Message-ID: <20160628014644.8417-2-coproscefalo@gmail.com>
+References: <20160628014644.8417-1-coproscefalo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160628014644.8417-1-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-These series of patches update the accelerometer axis data
-reporting to use the IIO subsystem, deprecating the custom
-position sysfs entry, and finally bumping the driver version
-to 0.24.
+Now that we have proper support for the acceleromeer under the IIO
+subsystem, the _position_ sysfs file is now deprecated.
 
-Changes since v2:
-- Small format and style changes once again
-- Renamed toshiba_accel* functions to toshiba_iio_accel* to
-  differentiate from the iio functions and the toshiba_acpi
-  driver fuctions
-- Print error messages instead of bailing out in case the
-  iio_device* functions fail, this is to allow the driver
-  to continue loading its many functions
+This patch removes all code related to the position sysfs entry.
 
-Changes since v1:
-- Small format and style changes
-- Changed the iio code according to feedback from Jonathan Cameron
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
-Azael Avalos (3):
-  toshiba_acpi: Add IIO interface for accelerometer axis data
-  toshiba_acpi: Remove the position sysfs entry
-  toshiba_acpi: Bump driver version and update copyright year
-
- drivers/platform/x86/toshiba_acpi.c | 136 +++++++++++++++++++++++++++++-------
- 1 file changed, 109 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index bd9b346a..ea0262e 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1961,28 +1961,6 @@ static ssize_t touchpad_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(touchpad);
+ 
+-static ssize_t position_show(struct device *dev,
+-			     struct device_attribute *attr, char *buf)
+-{
+-	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
+-	u32 xyval, zval, tmp;
+-	u16 x, y, z;
+-	int ret;
+-
+-	xyval = zval = 0;
+-	ret = toshiba_accelerometer_get(toshiba, &xyval, &zval);
+-	if (ret < 0)
+-		return ret;
+-
+-	x = xyval & HCI_ACCEL_MASK;
+-	tmp = xyval >> HCI_MISC_SHIFT;
+-	y = tmp & HCI_ACCEL_MASK;
+-	z = zval & HCI_ACCEL_MASK;
+-
+-	return sprintf(buf, "%d %d %d\n", x, y, z);
+-}
+-static DEVICE_ATTR_RO(position);
+-
+ static ssize_t usb_sleep_charge_show(struct device *dev,
+ 				     struct device_attribute *attr, char *buf)
+ {
+@@ -2353,7 +2331,6 @@ static struct attribute *toshiba_attributes[] = {
+ 	&dev_attr_available_kbd_modes.attr,
+ 	&dev_attr_kbd_backlight_timeout.attr,
+ 	&dev_attr_touchpad.attr,
+-	&dev_attr_position.attr,
+ 	&dev_attr_usb_sleep_charge.attr,
+ 	&dev_attr_sleep_functions_on_battery.attr,
+ 	&dev_attr_usb_rapid_charge.attr,
+@@ -2380,8 +2357,6 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
+ 		exists = (drv->kbd_mode == SCI_KBD_MODE_AUTO) ? true : false;
+ 	else if (attr == &dev_attr_touchpad.attr)
+ 		exists = (drv->touchpad_supported) ? true : false;
+-	else if (attr == &dev_attr_position.attr)
+-		exists = (drv->accelerometer_supported) ? true : false;
+ 	else if (attr == &dev_attr_usb_sleep_charge.attr)
+ 		exists = (drv->usb_sleep_charge_supported) ? true : false;
+ 	else if (attr == &dev_attr_sleep_functions_on_battery.attr)
 -- 
 2.8.4
