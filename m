@@ -1,176 +1,44 @@
-From: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/3] toshiba_acpi: Add IIO interface for accelerometer axis data
-Date: Mon, 27 Jun 2016 19:48:08 -0600
-Message-ID: <20160628014808.8495-1-coproscefalo@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] intel-hid: remove duplicated acpi_remove_notify_handler and extra indents
+Date: Tue, 28 Jun 2016 11:09:42 +0800
+Message-ID: <1467083382-31634-1-git-send-email-alex.hung@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:60389 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752039AbcF1DJv (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 27 Jun 2016 23:09:51 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: alex.hung@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 
-This patch adds the accelerometer axis data to the IIO subsystem.
-
-Currently reporting the X, Y and Z values, as no other data can be
-queried given the fact that the accelerometer chip itself is hidden
-behind the Toshiba proprietary interface.
-
-Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 107 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
+ drivers/platform/x86/intel-hid.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 01e12d2..bd9b346a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -53,6 +53,7 @@
- #include <linux/uaccess.h>
- #include <linux/miscdevice.h>
- #include <linux/rfkill.h>
-+#include <linux/iio/iio.h>
- #include <linux/toshiba.h>
- #include <acpi/video.h>
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index a818db6..ed58742 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -122,8 +122,8 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	return 0;
  
-@@ -134,6 +135,7 @@ MODULE_LICENSE("GPL");
- 
- /* Field definitions */
- #define HCI_ACCEL_MASK			0x7fff
-+#define HCI_ACCEL_DIRECTION_MASK	0x8000
- #define HCI_HOTKEY_DISABLE		0x0b
- #define HCI_HOTKEY_ENABLE		0x09
- #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
-@@ -178,6 +180,7 @@ struct toshiba_acpi_dev {
- 	struct led_classdev eco_led;
- 	struct miscdevice miscdev;
- 	struct rfkill *wwan_rfk;
-+	struct iio_dev *indio_dev;
- 
- 	int force_fan;
- 	int last_key_event;
-@@ -2420,6 +2423,81 @@ static void toshiba_acpi_kbd_bl_work(struct work_struct *work)
+ err_free_device:
+-		input_free_device(priv->input_dev);
+-		return ret;
++	input_free_device(priv->input_dev);
++	return ret;
  }
  
- /*
-+ * IIO device
-+ */
-+
-+enum toshiba_iio_accel_chan {
-+	AXIS_X,
-+	AXIS_Y,
-+	AXIS_Z
-+};
-+
-+static int toshiba_iio_accel_get_axis(enum toshiba_iio_accel_chan chan)
-+{
-+	u32 xyval, zval;
-+	int ret;
-+
-+	ret = toshiba_accelerometer_get(toshiba_acpi, &xyval, &zval);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (chan) {
-+	case AXIS_X:
-+		return xyval & HCI_ACCEL_DIRECTION_MASK ?
-+			-(xyval & HCI_ACCEL_MASK) : xyval & HCI_ACCEL_MASK;
-+	case AXIS_Y:
-+		return (xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_DIRECTION_MASK ?
-+			-((xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK) :
-+			(xyval >> HCI_MISC_SHIFT) & HCI_ACCEL_MASK;
-+	case AXIS_Z:
-+		return zval & HCI_ACCEL_DIRECTION_MASK ?
-+			-(zval & HCI_ACCEL_MASK) : zval & HCI_ACCEL_MASK;
-+	}
-+
-+	return ret;
-+}
-+
-+static int toshiba_iio_accel_read_raw(struct iio_dev *indio_dev,
-+				      struct iio_chan_spec const *chan,
-+				      int *val, int *val2, long mask)
-+{
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = toshiba_iio_accel_get_axis(chan->channel);
-+		if (ret == -EIO || ret == -ENODEV)
-+			return ret;
-+
-+		*val = ret;
-+
-+		return IIO_VAL_INT;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+#define TOSHIBA_IIO_ACCEL_CHANNEL(axis, chan) { \
-+	.type = IIO_ACCEL, \
-+	.modified = 1, \
-+	.channel = chan, \
-+	.channel2 = IIO_MOD_##axis, \
-+	.output = 1, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-+}
-+
-+static const struct iio_chan_spec toshiba_iio_accel_channels[] = {
-+	TOSHIBA_IIO_ACCEL_CHANNEL(X, AXIS_X),
-+	TOSHIBA_IIO_ACCEL_CHANNEL(Y, AXIS_Y),
-+	TOSHIBA_IIO_ACCEL_CHANNEL(Z, AXIS_Z),
-+};
-+
-+static const struct iio_info toshiba_iio_accel_info = {
-+	.driver_module = THIS_MODULE,
-+	.read_raw = &toshiba_iio_accel_read_raw,
-+};
-+
-+/*
-  * Misc device
-  */
- static int toshiba_acpi_smm_bridge(SMMRegisters *regs)
-@@ -2904,6 +2982,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+ static void intel_hid_input_destroy(struct platform_device *device)
+@@ -224,7 +224,6 @@ static int intel_hid_remove(struct platform_device *device)
+ 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+ 	intel_hid_input_destroy(device);
+ 	intel_hid_set_enable(&device->dev, 0);
+-	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
  
- 	remove_toshiba_proc_entries(dev);
- 
-+	if (dev->accelerometer_supported && dev->indio_dev) {
-+		iio_device_unregister(dev->indio_dev);
-+		iio_device_free(dev->indio_dev);
-+	}
-+
- 	if (dev->sysfs_created)
- 		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
- 				   &toshiba_attr_group);
-@@ -3051,6 +3134,30 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	dev->touchpad_supported = !ret;
- 
- 	toshiba_accelerometer_available(dev);
-+	if (dev->accelerometer_supported) {
-+		dev->indio_dev = iio_device_alloc(sizeof(*dev));
-+		if (!dev->indio_dev) {
-+			pr_err("Unable to allocate iio device\n");
-+			goto iio_error;
-+		}
-+
-+		pr_info("Registering Toshiba accelerometer iio device\n");
-+
-+		dev->indio_dev->info = &toshiba_iio_accel_info;
-+		dev->indio_dev->name = "Toshiba accelerometer";
-+		dev->indio_dev->dev.parent = &acpi_dev->dev;
-+		dev->indio_dev->modes = INDIO_DIRECT_MODE;
-+		dev->indio_dev->channels = toshiba_iio_accel_channels;
-+		dev->indio_dev->num_channels =
-+					ARRAY_SIZE(toshiba_iio_accel_channels);
-+
-+		ret = iio_device_register(dev->indio_dev);
-+		if (ret < 0) {
-+			pr_err("Unable to register iio device\n");
-+			iio_device_free(dev->indio_dev);
-+		}
-+	}
-+iio_error:
- 
- 	toshiba_usb_sleep_charge_available(dev);
- 
+ 	/*
+ 	 * Even if we failed to shut off the event stream, we can still
 -- 
-2.8.4
+2.7.4
