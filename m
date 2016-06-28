@@ -1,160 +1,148 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH v2] sony-laptop: add new thermal control handle
-Date: Mon, 27 Jun 2016 22:15:18 -0700
-Message-ID: <20160628051515.GA17531@taihen.jp>
-References: <20160623202122.Horde.TxvrWAneTMWnwZqVFW5oO0g@horde.stefanseidel.info>
- <20160623204322.Horde.KP6NgW-vjq4KeyukqDxSgtN@horde.stefanseidel.info>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v3] fujitsu-laptop: Support touchpad toggle hotkey on Skylake-based models
+Date: Tue, 28 Jun 2016 09:25:50 +0200
+Message-ID: <1467098750-2742-1-git-send-email-kernel@kempniu.pl>
+References: <20160628010609.GC26713@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from picard.linux.it ([213.254.12.146]:53809 "EHLO picard.linux.it"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751065AbcF1FUt (ORCPT
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:36016 "EHLO
+	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752021AbcF1H0B (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2016 01:20:49 -0400
-Content-Disposition: inline
-In-Reply-To: <20160623204322.Horde.KP6NgW-vjq4KeyukqDxSgtN@horde.stefanseidel.info>
+	Tue, 28 Jun 2016 03:26:01 -0400
+Received: by mail-wm0-f65.google.com with SMTP id c82so3368722wme.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jun 2016 00:26:00 -0700 (PDT)
+In-Reply-To: <20160628010609.GC26713@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stefan Seidel <lkml@stefanseidel.info>
-Cc: platform-driver-x86@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
+Cc: Jan-Marek Glogowski <glogow@fbihome.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 08:43:22PM +0200, Stefan Seidel wrote:
-> Hi,
-> 
-> sorry about the wrong first patch, I had missed an unwanted hunk.
-> 
-> On at least the SVD11 there is an additional thermal control setting that
-> is found at a different handle address but otherwise behaves the same as
-> the other one.
+Haswell-based Fujitsu laptops (Lifebook E734/E744/E754) have a touchpad
+toggle hotkey (Fn+F4) which is handled transparently to the operating
+system: while an ACPI notification is sent to FUJ02B1 when Fn+F4 is
+pressed, touchpad state is properly toggled without any explicit suppor=
+t
+for this operation in fujitsu-laptop.
 
-Hi Stefan,
+Skylake-based models (Lifebook E736/E746/E756) also have that hotkey,
+but the touchpad is not toggled transparently to the operating system.
+When Fn+F4 is pressed, an ACPI notification is sent to FUJ02E3.  A
+subsequent call to S000 (FUNC_RFKILL) can be used to determine whether
+the touchpad toggle hotkey was pressed so that an input event can be
+sent to userspace.
 
-this patch looks ok.
-I'm tempted to say that the "cooling" option should be limited to models
-that support it, though IIRC (and the comment seems to confirm), it's
-already the case that not all models support the current 3 options.
+Relevant ACPI code:
 
-I cannot test this code myself not having a Duo.
-For reference, could you send me (even privately) the DSDT from your Duo
-model?
+    Method (_L21, 0, NotSerialized)
+    {
+        ...
+        If (AHKF)
+        {
+            Notify (\_SB.FEXT, 0x80)
+        }
+        ...
+    }
 
-Thanks.
+    Method (S000, 3, Serialized)
+    {
+        Name (_T_0, Zero)
+        Local0 =3D Zero
+        While (One)
+        {
+            _T_0 =3D Arg0
+            If (_T_0 =3D=3D Zero)
+            {
+                Local0 |=3D 0x04000000
+                Local0 |=3D 0x02000000
+                Local0 |=3D 0x00020000
+                Local0 |=3D 0x0200
+                Local0 |=3D 0x0100
+                Local0 |=3D 0x20
+            }
+            ElseIf (_T_0 =3D=3D One)
+            {
+                ...
+                If (AHKF & 0x08)
+                {
+                Local0 |=3D 0x04000000
+                AHKF ^=3D 0x08
+                }
+                ...
+            } ...
+            Break
+        }
+        Return (Local0)
+    }
 
-Reviewed-by: Mattia Dongili <malattia@linux.it>
+Pressing Fn+F4 raises GPE 0x21 and sets bit 3 in AHKF.  This in turn
+results in bit 26 being set in the value returned by FUNC_RFKILL called
+with 1 as its first argument.  On Skylake-based models, bit 26 is also
+set in the value returned by FUNC_RFKILL called with 0 as its first
+argument (this value is saved in fujitsu_hotkey->rfkill_supported upon
+module initialization), which suggests that this bit is set on models
+which do not handle touchpad toggling transparently to the operating
+system.
 
-> Signed-off-by: Stefan Seidel <lkml@stefanseidel.info>
-> ---
->  drivers/platform/x86/sony-laptop.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/sony-laptop.c
-> b/drivers/platform/x86/sony-laptop.c
-> index 1dba359..6c9deb3 100644
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -148,7 +148,8 @@ static int sony_nc_battery_care_setup(struct
-> platform_device *pd,
->  		unsigned int handle);
->  static void sony_nc_battery_care_cleanup(struct platform_device *pd);
-> 
-> -static int sony_nc_thermal_setup(struct platform_device *pd);
-> +static int sony_nc_thermal_setup(struct platform_device *pd,
-> +				  unsigned int handle);
->  static void sony_nc_thermal_cleanup(struct platform_device *pd);
-> 
->  static int sony_nc_lid_resume_setup(struct platform_device *pd,
-> @@ -1363,7 +1364,8 @@ static void sony_nc_function_setup(struct acpi_device
-> *device,
->  						result);
->  			break;
->  		case 0x0122:
-> -			result = sony_nc_thermal_setup(pf_device);
-> +		case 0x015F:
-> +			result = sony_nc_thermal_setup(pf_device, handle);
->  			if (result)
->  				pr_err("couldn't set up thermal profile function (%d)\n",
->  						result);
-> @@ -1476,6 +1478,7 @@ static void sony_nc_function_cleanup(struct
-> platform_device *pd)
->  			sony_nc_lid_resume_cleanup(pd);
->  			break;
->  		case 0x0122:
-> +		case 0x015F:
->  			sony_nc_thermal_cleanup(pd);
->  			break;
->  		case 0x0128:
-> @@ -1547,6 +1550,7 @@ static void sony_nc_function_resume(void)
->  			sony_call_snc_handle(handle, 0x100, &result);
->  			break;
->  		case 0x0122:
-> +		case 0x015F:
->  			sony_nc_thermal_resume();
->  			break;
->  		case 0x0124:
-> @@ -2150,14 +2154,16 @@ struct snc_thermal_ctrl {
->  	unsigned int profiles;
->  	struct device_attribute mode_attr;
->  	struct device_attribute profiles_attr;
-> +	unsigned int handle;
->  };
->  static struct snc_thermal_ctrl *th_handle;
-> 
-> -#define THM_PROFILE_MAX 3
-> +#define THM_PROFILE_MAX 4
->  static const char * const snc_thermal_profiles[] = {
->  	"balanced",
->  	"silent",
-> -	"performance"
-> +	"performance",
-> +	"cooling"
->  };
-> 
->  static int sony_nc_thermal_mode_set(unsigned short mode)
-> @@ -2173,7 +2179,8 @@ static int sony_nc_thermal_mode_set(unsigned short mode)
->  	if ((mode && !(th_handle->profiles & mode)) || mode >= THM_PROFILE_MAX)
->  		return -EINVAL;
-> 
-> -	if (sony_call_snc_handle(0x0122, mode << 0x10 | 0x0200, &result))
-> +	if (sony_call_snc_handle(th_handle->handle, mode << 0x10 | 0x0200,
-> +				 &result))
->  		return -EIO;
-> 
->  	th_handle->mode = mode;
-> @@ -2185,7 +2192,7 @@ static int sony_nc_thermal_mode_get(void)
->  {
->  	unsigned int result;
-> 
-> -	if (sony_call_snc_handle(0x0122, 0x0100, &result))
-> +	if (sony_call_snc_handle(th_handle->handle, 0x0100, &result))
->  		return -EIO;
-> 
->  	return result & 0xff;
-> @@ -2245,14 +2252,17 @@ static ssize_t sony_nc_thermal_mode_show(struct
-> device *dev,
->  	return count;
->  }
-> 
-> -static int sony_nc_thermal_setup(struct platform_device *pd)
-> +static int sony_nc_thermal_setup(struct platform_device *pd,
-> +				 unsigned int handle)
->  {
->  	int ret = 0;
->  	th_handle = kzalloc(sizeof(struct snc_thermal_ctrl), GFP_KERNEL);
->  	if (!th_handle)
->  		return -ENOMEM;
-> 
-> -	ret = sony_call_snc_handle(0x0122, 0x0000, &th_handle->profiles);
-> +	th_handle->handle = handle;
-> +
-> +	ret = sony_call_snc_handle(handle, 0x0000, &th_handle->profiles);
->  	if (ret) {
->  		pr_warn("couldn't to read the thermal profiles\n");
->  		goto outkzalloc;
-> -- 
-> 2.8.3
-> 
-> 
--- 
-mattia
-:wq!
+Note that bit 3 is cleared in AHKF once FUNC_RFKILL is called with 1 as
+its first argument, which requires fujitsu-laptop to handle this hotkey
+in a different manner than the other, GIRB-based hotkeys: two input
+events (press and release) are immediately sent once Fn+F4 is pressed.
+
+Reported-and-tested-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+---
+
+Changes from v2:
+
+  - edited code comment so that it defines "some models" more precisely=
+=2E
+
+Changes from v1:
+
+  - added KEY_TOUCHPAD_TOGGLE to the FUJ02E3 input device's key bitmap,
+
+  - added code comment.
+
+ drivers/platform/x86/fujitsu-laptop.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x=
+86/fujitsu-laptop.c
+index ce41bc3..36cd743 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -856,6 +856,7 @@ static int acpi_fujitsu_hotkey_add(struct acpi_devi=
+ce *device)
+ 	set_bit(fujitsu->keycode3, input->keybit);
+ 	set_bit(fujitsu->keycode4, input->keybit);
+ 	set_bit(fujitsu->keycode5, input->keybit);
++	set_bit(KEY_TOUCHPAD_TOGGLE, input->keybit);
+ 	set_bit(KEY_UNKNOWN, input->keybit);
+=20
+ 	error =3D input_register_device(input);
+@@ -1060,6 +1061,19 @@ static void acpi_fujitsu_hotkey_notify(struct ac=
+pi_device *device, u32 event)
+ 			}
+ 		}
+=20
++		/* On some models (first seen on the Skylake-based Lifebook
++		 * E736/E746/E756), the touchpad toggle hotkey (Fn+F4) is
++		 * handled in software; its state is queried using FUNC_RFKILL
++		 */
++		if ((fujitsu_hotkey->rfkill_supported & BIT(26)) &&
++		    (call_fext_func(FUNC_RFKILL, 0x1, 0x0, 0x0) & BIT(26))) {
++			keycode =3D KEY_TOUCHPAD_TOGGLE;
++			input_report_key(input, keycode, 1);
++			input_sync(input);
++			input_report_key(input, keycode, 0);
++			input_sync(input);
++		}
++
+ 		break;
+ 	default:
+ 		keycode =3D KEY_UNKNOWN;
+--=20
+1.7.10.4
