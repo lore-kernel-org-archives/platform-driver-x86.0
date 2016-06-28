@@ -1,101 +1,103 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] fujitsu-laptop: Support touchpad toggle hotkey on
- Skylake-based models
-Date: Tue, 28 Jun 2016 10:50:36 -0700
-Message-ID: <20160628175036.GF3837@f23x64.localdomain>
-References: <20160628010609.GC26713@marvin.atrad.com.au>
- <1467098750-2742-1-git-send-email-kernel@kempniu.pl>
- <20160628111922.GA4256@marvin.atrad.com.au>
+Subject: Re: [PATCH] fujitsu-laptop: Unify max brightness of exported leds
+Date: Tue, 28 Jun 2016 10:58:01 -0700
+Message-ID: <20160628175801.GG3837@f23x64.localdomain>
+References: <20160623175250.GA22215@Matej-PC.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:37261 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752133AbcF1R6B (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Jun 2016 13:58:01 -0400
 Content-Disposition: inline
-In-Reply-To: <20160628111922.GA4256@marvin.atrad.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Jan-Marek Glogowski <glogow@fbihome.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20160623175250.GA22215@Matej-PC.localdomain>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matej Groma <matejgroma@gmail.com>
+Cc: jwoithe@just42.net, platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 08:49:22PM +0930, Jonathan Woithe wrote:
-> On Tue, Jun 28, 2016 at 09:25:50AM +0200, Micha?? K??pie?? wrote:
-> > Haswell-based Fujitsu laptops (Lifebook E734/E744/E754) have a touchpad
-> > toggle hotkey (Fn+F4) which is handled transparently to the operating
-> > system: while an ACPI notification is sent to FUJ02B1 when Fn+F4 is
-> > pressed, touchpad state is properly toggled without any explicit support
-> > for this operation in fujitsu-laptop.
-> > 
-> > Skylake-based models (Lifebook E736/E746/E756) also have that hotkey,
-> > but the touchpad is not toggled transparently to the operating system.
-> > When Fn+F4 is pressed, an ACPI notification is sent to FUJ02E3.  A
-> > subsequent call to S000 (FUNC_RFKILL) can be used to determine whether
-> > the touchpad toggle hotkey was pressed so that an input event can be
-> > sent to userspace.
-> > 
-> > Relevant ACPI code:
-> > 
-> >     Method (_L21, 0, NotSerialized)
-> >     {
-> >         ...
-> >         If (AHKF)
-> >         {
-> >             Notify (\_SB.FEXT, 0x80)
-> >         }
-> >         ...
-> >     }
-> > 
-> >     Method (S000, 3, Serialized)
-> >     {
-> >         Name (_T_0, Zero)
-> >         Local0 = Zero
-> >         While (One)
-> >         {
-> >             _T_0 = Arg0
-> >             If (_T_0 == Zero)
-> >             {
-> >                 Local0 |= 0x04000000
-> >                 Local0 |= 0x02000000
-> >                 Local0 |= 0x00020000
-> >                 Local0 |= 0x0200
-> >                 Local0 |= 0x0100
-> >                 Local0 |= 0x20
-> >             }
-> >             ElseIf (_T_0 == One)
-> >             {
-> >                 ...
-> >                 If (AHKF & 0x08)
-> >                 {
-> >                 Local0 |= 0x04000000
-> >                 AHKF ^= 0x08
-> >                 }
-> >                 ...
-> >             } ...
-> >             Break
-> >         }
-> >         Return (Local0)
-> >     }
-> > 
-> > Pressing Fn+F4 raises GPE 0x21 and sets bit 3 in AHKF.  This in turn
-> > results in bit 26 being set in the value returned by FUNC_RFKILL called
-> > with 1 as its first argument.  On Skylake-based models, bit 26 is also
-> > set in the value returned by FUNC_RFKILL called with 0 as its first
-> > argument (this value is saved in fujitsu_hotkey->rfkill_supported upon
-> > module initialization), which suggests that this bit is set on models
-> > which do not handle touchpad toggling transparently to the operating
-> > system.
-> > 
-> > Note that bit 3 is cleared in AHKF once FUNC_RFKILL is called with 1 as
-> > its first argument, which requires fujitsu-laptop to handle this hotkey
-> > in a different manner than the other, GIRB-based hotkeys: two input
-> > events (press and release) are immediately sent once Fn+F4 is pressed.
-> > 
-> > Reported-and-tested-by: Jan-Marek Glogowski <glogow@fbihome.de>
-> > Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
-> 
-> Thanks for the revision and your patience.
-> 
-> Acked-by: Jonathan Woithe <jwoithe@just42.net>
+On Thu, Jun 23, 2016 at 07:52:53PM +0200, Matej Groma wrote:
+> Set maximum brightness of leds that can only be turned off or on to 1.
 
-Queued to testing for 4.8, thanks.
+Hi Matej,
+
+Thank you for your patch. Please include all the maintainers and lists reported
+by the get_maintainer.pl script.
+
+Also, please provide a complete commit message. For details, see
+Documentation/SubmittingPatches, Section 1, 14) The canonical patch format.
+
+> 
+> Signed-off-by: Matej Groma <matejgroma@gmail.com>
+> ---
+> Tested on Lifebook E756.
+> 
+>  drivers/platform/x86/fujitsu-laptop.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index ce41bc3..5542342 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -199,6 +199,7 @@ static void kblamps_set(struct led_classdev *cdev,
+> 
+>  static struct led_classdev kblamps_led = {
+>   .name = "fujitsu::kblamps",
+> + .max_brightness = 1,
+>   .brightness_get = kblamps_get,
+>   .brightness_set = kblamps_set
+>  };
+> @@ -209,6 +210,7 @@ static void radio_led_set(struct led_classdev *cdev,
+> 
+>  static struct led_classdev radio_led = {
+>   .name = "fujitsu::radio_led",
+> + .max_brightness = 1,
+>   .brightness_get = radio_led_get,
+>   .brightness_set = radio_led_set
+>  };
+> @@ -281,7 +283,7 @@ static void logolamp_set(struct led_classdev *cdev,
+>  static void kblamps_set(struct led_classdev *cdev,
+>  			       enum led_brightness brightness)
+>  {
+> -	if (brightness >= LED_FULL)
+> +	if (brightness)
+>  		call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_ON);
+>  	else
+>  		call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_OFF);
+> @@ -290,7 +292,7 @@ static void kblamps_set(struct led_classdev *cdev,
+>  static void radio_led_set(struct led_classdev *cdev,
+>  				enum led_brightness brightness)
+>  {
+> -	if (brightness >= LED_FULL)
+> +	if (brightness)
+>  		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, RADIO_LED_ON);
+>  	else
+>  		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
+> @@ -316,7 +318,7 @@ static enum led_brightness kblamps_get(struct led_classdev *cdev)
+>  	enum led_brightness brightness = LED_OFF;
+> 
+>  	if (call_fext_func(FUNC_LEDS, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
+> -		brightness = LED_FULL;
+> +		brightness = cdev->max_brightness;
+> 
+>  	return brightness;
+>  }
+> @@ -326,7 +328,7 @@ static enum led_brightness radio_led_get(struct led_classdev *cdev)
+>  	enum led_brightness brightness = LED_OFF;
+> 
+>  	if (call_fext_func(FUNC_RFKILL, 0x4, 0x0, 0x0) & RADIO_LED_ON)
+> -		brightness = LED_FULL;
+> +		brightness = cdev->max_brightness;
+> 
+>  	return brightness;
+>  }
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
 Darren Hart
