@@ -1,36 +1,50 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] hp-wmi: fix wifi cannot be hard-unblock
-Date: Tue, 28 Jun 2016 09:04:39 -0700
-Message-ID: <20160628160439.GD3837@f23x64.localdomain>
-References: <1465818240-11994-1-git-send-email-alex.hung@canonical.com>
- <57726047.6070209@yandex.ru>
+Subject: Re: [PATCH 0/2] fujitsu-laptop: Debugging cleanup
+Date: Tue, 28 Jun 2016 10:49:48 -0700
+Message-ID: <20160628174948.GE3837@f23x64.localdomain>
+References: <20160616234630.GB4764@marvin.atrad.com.au>
+ <1466676168-4199-1-git-send-email-kernel@kempniu.pl>
+ <20160623103535.GA18242@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:52713 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:56289 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752058AbcF1QFa (ORCPT
+	with ESMTP id S1752071AbcF1Ru2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2016 12:05:30 -0400
+	Tue, 28 Jun 2016 13:50:28 -0400
 Content-Disposition: inline
-In-Reply-To: <57726047.6070209@yandex.ru>
+In-Reply-To: <20160623103535.GA18242@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Evgenii Shatokhin <eugene.shatokhin@yandex.ru>
-Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, david.ward@ll.mit.edu
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Jan-Marek Glogowski <glogow@fbihome.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 02:32:23PM +0300, Evgenii Shatokhin wrote:
-> On 13.06.2016 14:44, Alex Hung wrote:
-> > Several users reported wifi cannot be unblocked as discussed in [1].
-> > This patch removes the useof 2009 flag by BIOS but uses the actual WMI
-> > function calls - it will be skipped if WMI reports unsupported
+On Thu, Jun 23, 2016 at 08:05:35PM +0930, Jonathan Woithe wrote:
+> On Thu, Jun 23, 2016 at 12:02:46PM +0200, Micha?? K??pie?? wrote:
+> > vdbg_printk() was introduced by 20b9373, which is the same commit that
+> > adds FUJ02E3 support, so it has been the way it is now from the start.
+> > This patch series attempts to tidy things up a bit.
 > > 
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=69131
-> > 
-> > Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> >  drivers/platform/x86/fujitsu-laptop.c |   12 +-----------
+> >  1 file changed, 1 insertion(+), 11 deletions(-)
+> 
+> Yes, good idea.  Both patches look good to me.  I would like to note in
+> passing that the removal of the unused defines in the second patch was in
+> fact suggested as part of a broader cleanup series by Alan Jenkins an
+> embarassingly long time ago.  For various reasons I didn't get a chance to
+> review and apply his patch series at the time.  It is my aim to rectify this
+> soon, but in the meantime this two patch series is good to go in.  Thanks
+> for the submission.
+> 
+> Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-Thank you Alex, and thanks Evgenii for the testing. Queued to testing for 4.8,
-tagged for stable.
+Queued to testing for 4.8.
+
+> 
+> Regards
+>   jonathan
+> 
 
 -- 
 Darren Hart
