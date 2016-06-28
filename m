@@ -1,57 +1,60 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 0/3] toshiba_acpi: Accelerometer updates
-Date: Mon, 27 Jun 2016 21:29:25 -0700
-Message-ID: <20160628042925.GB3837@f23x64.localdomain>
-References: <20160628014644.8417-1-coproscefalo@gmail.com>
+Subject: Re: [PATCH] intel-hid: remove duplicated acpi_remove_notify_handler
+ and extra indents
+Date: Mon, 27 Jun 2016 21:35:43 -0700
+Message-ID: <20160628043543.GC3837@f23x64.localdomain>
+References: <1467083382-31634-1-git-send-email-alex.hung@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42168 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:45250 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750704AbcF1E31 (ORCPT
+	with ESMTP id S1752138AbcF1Efo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2016 00:29:27 -0400
+	Tue, 28 Jun 2016 00:35:44 -0400
 Content-Disposition: inline
-In-Reply-To: <20160628014644.8417-1-coproscefalo@gmail.com>
+In-Reply-To: <1467083382-31634-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 07:46:42PM -0600, Azael Avalos wrote:
-> These series of patches update the accelerometer axis data
-> reporting to use the IIO subsystem, deprecating the custom
-> position sysfs entry, and finally bumping the driver version
-> to 0.24.
-> 
+On Tue, Jun 28, 2016 at 11:09:42AM +0800, Alex Hung wrote:
 
-Thanks Azael, queued to testing for 4.8.
+What triggered this patch? Was an error/panic observed? Is this a theoretical
+bug or an observed one? This will impact if it goes back to stable. Please
+provide a complete change log.
 
-Jonathan, I took the full set.
-
-> Changes since v2:
-> - Small format and style changes once again
-> - Renamed toshiba_accel* functions to toshiba_iio_accel* to
->   differentiate from the iio functions and the toshiba_acpi
->   driver fuctions
-> - Print error messages instead of bailing out in case the
->   iio_device* functions fail, this is to allow the driver
->   to continue loading its many functions
+> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> ---
+>  drivers/platform/x86/intel-hid.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> Changes since v1:
-> - Small format and style changes
-> - Changed the iio code according to feedback from Jonathan Cameron
-> 
-> Azael Avalos (3):
->   toshiba_acpi: Add IIO interface for accelerometer axis data
->   toshiba_acpi: Remove the position sysfs entry
->   toshiba_acpi: Bump driver version and update copyright year
-> 
->  drivers/platform/x86/toshiba_acpi.c | 136 +++++++++++++++++++++++++++++-------
->  1 file changed, 109 insertions(+), 27 deletions(-)
-> 
+> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+> index a818db6..ed58742 100644
+> --- a/drivers/platform/x86/intel-hid.c
+> +++ b/drivers/platform/x86/intel-hid.c
+> @@ -122,8 +122,8 @@ static int intel_hid_input_setup(struct platform_device *device)
+>  	return 0;
+>  
+>  err_free_device:
+> -		input_free_device(priv->input_dev);
+> -		return ret;
+> +	input_free_device(priv->input_dev);
+> +	return ret;
+>  }
+>  
+>  static void intel_hid_input_destroy(struct platform_device *device)
+> @@ -224,7 +224,6 @@ static int intel_hid_remove(struct platform_device *device)
+>  	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+>  	intel_hid_input_destroy(device);
+>  	intel_hid_set_enable(&device->dev, 0);
+> -	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+>  
+>  	/*
+>  	 * Even if we failed to shut off the event stream, we can still
 > -- 
-> 2.8.4
+> 2.7.4
 > 
 > 
 
