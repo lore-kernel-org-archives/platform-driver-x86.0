@@ -1,64 +1,47 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH][V2] intel-hid: remove duplicated
- acpi_remove_notify_handler and extra indents
-Date: Tue, 28 Jun 2016 22:07:32 -0700
-Message-ID: <20160629050732.GK3837@f23x64.localdomain>
-References: <1467171675-32174-1-git-send-email-alex.hung@canonical.com>
+Subject: Re: Whitespace cleanup proposal for fujitsu-laptop (was: Re: [PATCH]
+ fujitsu-laptop: Add support for eco LED)
+Date: Tue, 28 Jun 2016 22:14:11 -0700
+Message-ID: <20160629051411.GL3837@f23x64.localdomain>
+References: <20160628233211.GA30332@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:45143 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:45227 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750790AbcF2FIg (ORCPT
+	with ESMTP id S1751328AbcF2FON (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jun 2016 01:08:36 -0400
+	Wed, 29 Jun 2016 01:14:13 -0400
 Content-Disposition: inline
-In-Reply-To: <1467171675-32174-1-git-send-email-alex.hung@canonical.com>
+In-Reply-To: <20160628233211.GA30332@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
+To: Jonathan Woithe <jwoithe@just42.net>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 11:41:15AM +0800, Alex Hung wrote:
-> Two lines are indented incorrectly and is fixed. The second call to 
-> acpi_remove_notify_handler does not result in panic or generate error
-> messages, but it is unnecessary and the function returns with an error.
+On Wed, Jun 29, 2016 at 09:02:11AM +0930, Jonathan Woithe wrote:
+> Hi Darren
 > 
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> In the "Add support for eco LED" thread you noted:
+> 
+> > I was going to point out the checkpatch failures in codingstyle, but you
+> > were probably as consistent as you could be given the state of this driver
+> > and it's rather inconsistent use of whitespace.
+> 
+> It is true that there is inconsistency in this regard within this driver,
+> which has come about for various historical reasons.  Would you take a pure
+> whitespace cleanup patch if I were to go through the driver and fix these
+> issues as best they can be?
 
-Thank you Alex, queued to testing for 4.8.
+Yes, I'm happy to take those. I know some maintainers prefer not to take
+non-functional changes as they make git blame less immediately useful (for
+example), but I prefer for existing code to be compliant with CodingStyle, or it
+tends to spread through new patches such as this one for the sake of internal
+consistency.
 
-> ---
->  drivers/platform/x86/intel-hid.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index a818db6..ed58742 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -122,8 +122,8 @@ static int intel_hid_input_setup(struct platform_device *device)
->  	return 0;
->  
->  err_free_device:
-> -		input_free_device(priv->input_dev);
-> -		return ret;
-> +	input_free_device(priv->input_dev);
-> +	return ret;
->  }
->  
->  static void intel_hid_input_destroy(struct platform_device *device)
-> @@ -224,7 +224,6 @@ static int intel_hid_remove(struct platform_device *device)
->  	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
->  	intel_hid_input_destroy(device);
->  	intel_hid_set_enable(&device->dev, 0);
-> -	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
->  
->  	/*
->  	 * Even if we failed to shut off the event stream, we can still
-> -- 
-> 2.7.4
-> 
-> 
+So yes, I'd gladly take a whitespace cleanup patch. Thanks for offering.
+
+Thanks,
 
 -- 
 Darren Hart
