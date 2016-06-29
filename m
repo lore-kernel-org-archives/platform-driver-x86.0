@@ -1,50 +1,48 @@
-From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Subject: RE: [PATCH] platform:x86 Remove Monitor MWAIT feature dependency
-Date: Wed, 29 Jun 2016 03:03:02 +0000
-Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42CAE856B@BGSMSX102.gar.corp.intel.com>
-References: <1466665198-14446-1-git-send-email-ong.hock.yu@intel.com>
- <1466665198-14446-2-git-send-email-ong.hock.yu@intel.com>
- <20160628202353.GJ3837@f23x64.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH][V2] intel-hid: remove duplicated acpi_remove_notify_handler and extra indents
+Date: Wed, 29 Jun 2016 11:41:15 +0800
+Message-ID: <1467171675-32174-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:1938 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752450AbcF2DDK convert rfc822-to-8bit (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:45721 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752455AbcF2DmB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2016 23:03:10 -0400
-In-Reply-To: <20160628202353.GJ3837@f23x64.localdomain>
-Content-Language: en-US
+	Tue, 28 Jun 2016 23:42:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, "Yu, Ong Hock" <ong.hock.yu@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: alex.hung@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Wednesday, June 29, 2016 1:54 AM
-> To: Yu, Ong Hock <ong.hock.yu@intel.com>
-> Cc: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; platform-driver-
-> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] platform:x86 Remove Monitor MWAIT feature
-> dependency
-> 
-> On Thu, Jun 23, 2016 at 02:59:58PM +0800, ong.hock.yu@intel.com wrote:
-> > From: "Yu, Ong Hock" <ong.hock.yu@intel.com>
-> >
-> > Telemetry capability does not depend on Monitor MWAIT feature.
-> >
-> > Signed-off-by: Yu, Ong Hock <ong.hock.yu@intel.com>
-Acked-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Two lines are indented incorrectly and is fixed. The second call to 
+acpi_remove_notify_handler does not result in panic or generate error
+messages, but it is unnecessary and the function returns with an error.
 
-> 
-> Souvik, any objection?
-Seems reasonable, since I have not heard anything break from the Chrome guys as well.
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-> 
-> > ---
-> >  drivers/platform/x86/intel_telemetry_debugfs.c | 2 +-
-> > drivers/platform/x86/intel_telemetry_pltdrv.c  | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index a818db6..ed58742 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -122,8 +122,8 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	return 0;
+ 
+ err_free_device:
+-		input_free_device(priv->input_dev);
+-		return ret;
++	input_free_device(priv->input_dev);
++	return ret;
+ }
+ 
+ static void intel_hid_input_destroy(struct platform_device *device)
+@@ -224,7 +224,6 @@ static int intel_hid_remove(struct platform_device *device)
+ 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+ 	intel_hid_input_destroy(device);
+ 	intel_hid_set_enable(&device->dev, 0);
+-	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+ 
+ 	/*
+ 	 * Even if we failed to shut off the event stream, we can still
+-- 
+2.7.4
