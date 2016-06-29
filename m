@@ -1,34 +1,50 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Whitespace cleanup proposal for fujitsu-laptop (was: Re: [PATCH]
- fujitsu-laptop: Add support for eco LED)
-Date: Wed, 29 Jun 2016 09:02:11 +0930
-Message-ID: <20160628233211.GA30332@marvin.atrad.com.au>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH] platform:x86 Remove Monitor MWAIT feature dependency
+Date: Wed, 29 Jun 2016 03:03:02 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42CAE856B@BGSMSX102.gar.corp.intel.com>
+References: <1466665198-14446-1-git-send-email-ong.hock.yu@intel.com>
+ <1466665198-14446-2-git-send-email-ong.hock.yu@intel.com>
+ <20160628202353.GJ3837@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:55038 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752440AbcF1Xe5 (ORCPT
+Received: from mga03.intel.com ([134.134.136.65]:1938 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752450AbcF2DDK convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2016 19:34:57 -0400
-Content-Disposition: inline
+	Tue, 28 Jun 2016 23:03:10 -0400
+In-Reply-To: <20160628202353.GJ3837@f23x64.localdomain>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org
+To: Darren Hart <dvhart@infradead.org>, "Yu, Ong Hock" <ong.hock.yu@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi Darren
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Wednesday, June 29, 2016 1:54 AM
+> To: Yu, Ong Hock <ong.hock.yu@intel.com>
+> Cc: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; platform-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] platform:x86 Remove Monitor MWAIT feature
+> dependency
+> 
+> On Thu, Jun 23, 2016 at 02:59:58PM +0800, ong.hock.yu@intel.com wrote:
+> > From: "Yu, Ong Hock" <ong.hock.yu@intel.com>
+> >
+> > Telemetry capability does not depend on Monitor MWAIT feature.
+> >
+> > Signed-off-by: Yu, Ong Hock <ong.hock.yu@intel.com>
+Acked-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 
-In the "Add support for eco LED" thread you noted:
+> 
+> Souvik, any objection?
+Seems reasonable, since I have not heard anything break from the Chrome guys as well.
 
-> I was going to point out the checkpatch failures in codingstyle, but you
-> were probably as consistent as you could be given the state of this driver
-> and it's rather inconsistent use of whitespace.
-
-It is true that there is inconsistency in this regard within this driver,
-which has come about for various historical reasons.  Would you take a pure
-whitespace cleanup patch if I were to go through the driver and fix these
-issues as best they can be?
-
-Regards
-  jonathan
+> 
+> > ---
+> >  drivers/platform/x86/intel_telemetry_debugfs.c | 2 +-
+> > drivers/platform/x86/intel_telemetry_pltdrv.c  | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
