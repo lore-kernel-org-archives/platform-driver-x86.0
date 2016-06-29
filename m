@@ -1,79 +1,90 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86/intel_pmc_core: Convert to
- DEFINE_DEBUGFS_ATTRIBUTE
-Date: Wed, 29 Jun 2016 16:33:50 +0300
-Message-ID: <1467207230.30123.329.camel@linux.intel.com>
-References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
- <20160628090504.GA2169@rajaneesh-OptiPlex-9010>
- <1467108307.30123.303.camel@linux.intel.com>
- <20160629080325.GA11318@rajaneesh-OptiPlex-9010>
- <1467200985.30123.320.camel@linux.intel.com>
- <20160629121604.GA26750@rajaneesh-OptiPlex-9010>
- <1467204505.30123.326.camel@linux.intel.com>
-	 <20160629132038.GB26750@rajaneesh-OptiPlex-9010>
+From: Jani Nikula <jani.nikula@intel.com>
+Subject: Re: Brightness and "touchpad dis-/enable" keys not
+	working for Fujitsu e7x6
+Date: Wed, 29 Jun 2016 16:59:44 +0300
+Message-ID: <87por0qenj.fsf@intel.com>
+References: <20160623111819.GA4284@eudyptula.hq.kempniu.pl>
+ <576BD150.6050304@fbihome.de> <20160623123506.GA4461@eudyptula.hq.kempniu.pl>
+ <576C1B0C.5050206@fbihome.de> <20160624071224.GA5289@eudyptula.hq.kempniu.pl>
+ <576CFBC6.2000309@fbihome.de> <20160624102024.GA5461@eudyptula.hq.kempniu.pl>
+ <576D5523.7030309@fbihome.de> <20160624201737.GA5843@eudyptula.hq.kempniu.pl>
+ <20160625085052.GA5137@marvin.atrad.com.au>
+ <20160625091522.GA6423@eudyptula.hq.kempniu.pl> <5770E484.4030009@fbihome.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:39302 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752524AbcF2NeT (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jun 2016 09:34:19 -0400
-In-Reply-To: <20160629132038.GB26750@rajaneesh-OptiPlex-9010>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <5770E484.4030009@fbihome.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Jan-Marek Glogowski <glogow@fbihome.de>, =?utf-8?B?TWljaGHFgiBLxJlw?= =?utf-8?B?aWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>
+Cc: intel-gfx@lists.freedesktop.org, "Lankhorst,
+ Maarten" <maarten.lankhorst@intel.com>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2016-06-29 at 18:50 +0530, Rajneesh Bhardwaj wrote:
-> On Wed, Jun 29, 2016 at 03:48:25PM +0300, Andy Shevchenko wrote:
-> > On Wed, 2016-06-29 at 17:46 +0530, Rajneesh Bhardwaj wrote:
-> > > On Wed, Jun 29, 2016 at 02:49:45PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, 2016-06-29 at 13:33 +0530, Rajneesh Bhardwaj wrote:
-> > > > > On Tue, Jun 28, 2016 at 01:05:07PM +0300, Andy Shevchenko
-> > > > > wrote:
-> >=20
-> > > > >=20
-
-
-> > If it touches the same attribute it needs to be seen first before
-> > applying this one.
-> >=20
->=20
-> No, this attribute wont be touched.
-
-So, if there is no objections (taking into consideration minors you
-mentioned) I think the patch can be applied.
-
-> Can we have seq_printf for such cases and use
-> > > DEFINE_DEBUGFS_ATTRIBUTE
-> > > for
-> > > other simple attributes? Doing this might raise some coding style
-> > > consistency=C2=A0
-> > > concerns though so lets wait to hear=C2=A0=C2=A0Darren's opinion =
-on this
-> > > patch.
-> >=20
-> > For the rest we have to see the implementation and decide how to
-> > proceed
-> > (since it's a debugfs dedicated for _debugging_) we might change it
-> > in
-> > the way we like. Though I don't encourage people to do this. I like
-> > interfaces on which people thought before implementing.
-> >=20
->=20
-> Sure, i am fine with DEFINE_DEBUGFS_ATTRIBUTE but would like to leave
-> the scope
-> for having seq_printf for future patches i.e. linux/seq_file.h and
-> thus would
-> have a dependency on struct file_operations for seq_read.
-
-Of course! No-one is insisting to use only the macro and simple
-attributes.
-
-
---=20
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+T24gTW9uLCAyNyBKdW4gMjAxNiwgSmFuLU1hcmVrIEdsb2dvd3NraSA8Z2xvZ293QGZiaWhvbWUu
+ZGU+IHdyb3RlOgo+IEFtIDI1LjA2LjIwMTYgdW0gMTE6MTUgc2NocmllYiBNaWNoYcWCIEvEmXBp
+ZcWEOgo+Pj4+IC4uLnRob3VnaCBpZiB5b3UgdGhpbmsgYWJvdXQgaXQsIHRoZSB3aG9sZSB0aGlu
+ZyBpcyBhYnNvbHV0ZWx5IGhpZGVvdXM6Cj4+Pj4gYW4gKkFDUEkqIGRyaXZlciByZXF1aXJlcyBj
+b29wZXJhdGlvbiBmcm9tIGEgKnZpZGVvKiBkcml2ZXIgdG8gbm90aWZ5Cj4+Pj4gdGhlIG9wZXJh
+dGluZyBzeXN0ZW0gYWJvdXQgYSAqa2V5IHByZXNzKi4KPj4+Cj4+PiBZZWFoLiAgT24gb25lIGhh
+bmQgSSdtIHV0dGVybHkgYW1hemVkLiAgT24gdGhlIG90aGVyLCBJJ3ZlIHNlZW4gYW5kIHJlYWQK
+Pj4+IGFib3V0IG90aGVyIHJlYWxseSBiaXphcnJlIHRoaW5ncyB3aGljaCBnbyBvbiBpbiB0aGUg
+QklPU2VzIG9mIGNvbXB1dGVycwo+Pj4gb3ZlciB0aGUgeWVhcnMsIHNvIG5vdGhpbmcgcmVhbGx5
+IHN1cnByaXNlcyBtZSBhbnltb3JlLiA6LSkKPj4gCj4+IFllcywgSSBhbSBhIHJvb2tpZSBpbiB0
+aGlzIGZpZWxkLCBzbyBwZXJoYXBzIEkgc2ltcGx5IGhhdmUgbm90IHNlZW4KPj4gZW5vdWdoIHdl
+aXJkbmVzcyB5ZXQgdG8ganVzdCBnZXQgb3ZlciBzb21ldGhpbmcgbGlrZSB0aGlzLgo+PiAKPj4+
+IE15IHVuZGVyc3RhbmRpbmcgYmFzZWQgb24gdGhpcyBsYXRlc3QgaW5mb3JtYXRpb24gaXMgdGhh
+dCB0aGUgcGF0Y2ggdG8gdGhlCj4+PiBpOTE1IGRyaXZlciBmaXhlcyB0aGUgYnJpZ2h0bmVzcyBj
+b250cm9sIG9uIHRoZXNlIGxhcHRvcHMgYW5kIHRoYXQgbm8KPj4+IGNoYW5nZXMgdG8gZnVqaXRz
+dS1sYXB0b3AgYXJlIHJlcXVpcmVkIGZvciB0aGlzLiAgSXMgdGhpcyBjb3JyZWN0Pwo+PiAKPj4g
+VGhpcyBpcyBteSB1bmRlcnN0YW5kaW5nIGFzIHdlbGwuCj4KPiBZdXAuIEFGQUlLIHRoZSBwYXRj
+aHNldCByZWdpc3RlcnMgdGhlIGFjdGl2ZSBvdXRwdXQgcG9ydHMgb2YgdGhlIGdyYXBoaWMKPiBj
+aGlwIHdpdGhpbiBBQ1BJLCBhbmQgdGhpcyBpcyBjaGVja2VkIGJ5IHRoZSBicmlnaHRuZXNzIGtl
+eXMgRUMsIHNvIGlmCj4gdGhlIHBvcnQgb2YgdGhlIGRpc3BsYXkgaXMgZGlzYWJsZWQsIHRoZSBr
+ZXlzIGRvbid0IHdvcmsuCgpJIHRha2UgaXQgeW91IHJlZmVyIHRvIHNlcmllcyBhdCBbMV0uIFNh
+ZGx5LCBJIGhhdmVuJ3QgaGFkIHRoZSB0aW1lIHRvCmZpZ3VyZSBvdXQgYSBwcm9wZXIgc29sdXRp
+b24gdG8gcGF0Y2ggNS81IHlldC4gTWFhcnRlbiwgaWYgeW91IGhhdmUgYQptb21lbnQgb2YgaW5z
+cGlyYXRpb24sIGdvIGZvciBpdCEgOykKCkFueXdheSwgc29tZW9uZSBzb21ld2hlcmUgdGhvdWdo
+dCBpdCdzIGEgZ3JlYXQgaWRlYSB0byBmaWx0ZXIgb3V0CmJhY2tsaWdodCBrZXkgZXZlbnRzIGF0
+IHRoZSBmaXJtd2FyZSAocG9zc2libHkgQU1MKSBsZXZlbCBpZiB0aGUgZmxhdApwYW5lbCBpcyBu
+b3QgYWN0aXZlLiBJdCdzIG5vdCBhIGRlY2lzaW9uIGluIGluIGVpdGhlciBpOTE1IG9yIEFDUEkK
+ZHJpdmVyLiBJbiBMaW51eCwgdGhlIG9idmlvdXMgdGhpbmcgdG8gaGF2ZSBkb25lIGlzIHRvIGRl
+ZmVyIGFsbCBzdWNoCnBvbGljeSB0byB1c2Vyc3BhY2UuIEp1c3QgcHJvdmlkZSB0aGUgbWVjaGFu
+aXNtLCBhbmQgdGhlIHVzZXJzcGFjZSB3aWxsCmZpZ3VyZSBvdXQgd2hhdCB0byBkbyB3aXRoIHRo
+ZSBrZXlwcmVzcy4gU2VyaW91c2x5LCBzb21lb25lIGNvdWxkIGhhdmUKdXNlZCB0aGF0IGluZm9y
+bWF0aW9uIHRvIGNoYW5nZSB0aGUgYnJpZ2h0bmVzcyBvZiB0aGUgKmV4dGVybmFsKgpkaXNwbGF5
+LiBCdXQgY2FuJ3QgaGF2ZSB0aGF0LiA8L3JhbnQ+LiBTbyBpbiB0aGUgZHJpdmVyIHdlJ2xsIGp1
+c3QgaGF2ZQp0byB0ZWxsIEFDUEkgd2hhdCBvdXRwdXRzIGFyZSBhY3RpdmUuIFRoYXQncyB3aGF0
+IHRoZSBwYXRjaGVzIGFyZSBhYm91dC4KCkJSLApKYW5pLgoKClsxXSBodHRwOi8vbWlkLmdtYW5l
+Lm9yZy9jb3Zlci4xNDY1ODEwMDA3LmdpdC5qYW5pLm5pa3VsYUBpbnRlbC5jb20KCgoKPgo+IFNv
+IG5vIGFkZGl0aW9uYWwgY2hhbmdlIGlzIG5lZWRlZCwgYXMgbG9uZyBhcyBpdCBqdXN0IGhhcyB0
+byB3b3JrIGluIFgxMS4KPgo+IEFuZCBJIGp1c3QgcmVhbGl6ZWQgdGhlIGV2ZW50cyBhcmUgZ2Vu
+ZXJhdGVkIG9uIGtleSByZWxlYXNlLCB3aGljaCBmZWVscwo+IHN0cmFuZ2UsIGJ1dCBzaW5jZSB3
+ZSBkb24ndCBnZXQgcHJlc3MgYW5kIHJlbGVhc2UgZXZlbnRzLCBzdHVmZiBsaWtlCj4gYXV0by1y
+ZXBlYXQgZm9yIGJyaWdodG5lc3Mgd291bGRuJ3Qgd29yay4KPgo+Pj4gQXMgdG8KPj4+IHRoZSB0
+b3VjaCBrZXlzLCBpdCBzb3VuZHMgbGlrZSB0aGlzIG1pZ2h0IGJlIGEgQklPUyB0aGluZyB0byAt
+IGlzIGl0Pwo+PiAKPj4gQXJlIHlvdSByZWZlcnJpbmcgdG8gdGhlICJ0b3VjaHBhZCB0b2dnbGUi
+IGtleT8gIElmIHlvdSBhcmUsIEkgd2lsbCBzb29uCj4+IHBvc3QgYSBwYXRjaCBhZGRpbmcgc3Vw
+cG9ydCBmb3IgdGhpcyBrZXkgc28gdGhhdCBKYW4tTWFyZWsgY2FuIHRlc3QgaXQuCj4+IEkganVz
+dCBuZWVkIHRvIGZpbmQgc29tZSB0aW1lIHRvIGFjdHVhbGx5IHdyaXRlIGl0Lgo+Cj4gVGhpcyBu
+ZWVkcyBhIHNtYWxsIHBhdGNoLiBCdXQgZ2V0dGluZyB0aGUga2V5Y29kZSBpbnRvIFgxMSBzZWVt
+cyB0byBiZQo+IGltcG9zc2libGUsIGFzIFggLyB4ZXYgY2FuJ3QgaGFuZGxlIGtleWNvZGVzID4g
+MjU1IChLRVlfVE9VQ0hQQURfVE9HR0xFKS4KPgo+IEknbSBjdXJyZW50bHkgcnVubmluZyBldnJv
+dXRlciwgdG8gY2FsbCBhIHNjcmlwdCBvbiB0aGUgZXZlbnQsIHdoaWNoCj4gZGlzLS9lbmFibGVz
+IHRoZSBpbnB1dCBkZXZpY2UgdXNpbmcgeGlucHV0LiBJIHdvdWxkIGRlZmluaXRlbHkgcHJlZmVy
+Cj4gYW55IEhXIG9yIGtlcm5lbCBkcml2ZXIgc29sdXRpb24uIEkgY291bGRuJ3QgZmluZCBhIHdh
+eSB0byBtYXAgdGhlIDUzMAo+IGtleWNvZGUgdG8gc29tZXRoaW5nIDwgMjU1IHRvIHN1aXQgeGV2
+IGFuZCBza2lwIHRoZSBldnJvdXRlci4gTWF5YmUKPiBGdWppdHN1IHdpbGwgb2ZmZXIgYSBiZXR0
+ZXIgc29sdXRpb24uCj4KPiBSZWdhcmRzLAo+Cj4gSmFuLU1hcmVrCgotLSAKSmFuaSBOaWt1bGEs
+IEludGVsIE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwt
+Z2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeAo=
