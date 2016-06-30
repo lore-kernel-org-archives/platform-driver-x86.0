@@ -1,110 +1,48 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2] fujitsu-laptop: Unify max brightness of exported leds
-Date: Thu, 30 Jun 2016 22:30:57 +0930
-Message-ID: <20160630130057.GE32030@marvin.atrad.com.au>
-References: <20160629072758.GA2778@Matej-PC.localdomain>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: UP Board and similar
+Date: Thu, 30 Jun 2016 23:36:04 +0300
+Message-ID: <CAHp75VcOMFygekkhCEtWigW+JaKOgNQrM9M-3MtKemBF3arBOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:55679 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751432AbcF3NHF (ORCPT
+Received: from mail-oi0-f50.google.com ([209.85.218.50]:36661 "EHLO
+	mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751840AbcF3Vbm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Jun 2016 09:07:05 -0400
-Content-Disposition: inline
-In-Reply-To: <20160629072758.GA2778@Matej-PC.localdomain>
+	Thu, 30 Jun 2016 17:31:42 -0400
+Received: by mail-oi0-f50.google.com with SMTP id f189so84703174oig.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jun 2016 14:30:43 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matej Groma <matejgroma@gmail.com>
-Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: "Darren Hart (Google+)" <reply-101378268367730737515@profiles.google.com>, Dan O'Donovan <dan@emutex.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
 
-On Wed, Jun 29, 2016 at 09:28:03AM +0200, Matej Groma wrote:
-> Exported leds had maximum brightness previously unset, thus having
-> value 255. Set maximum brightness of leds that can only be turned
-> off or on to 1, making the behavior more consistent with other leds
-> having binary state.
+Hi!
 
-I understand the motivation here.  Is this change consistent with the LED
-API though?  Currently for the binary state Fujitsu LEDs, LED_OFF (0) means
-off and LED_FULL (255) means on.  It seems to me that this is the most
-obvious way to use the LED API with binary state LEDs.  This patch changes
-the "on" brightness to 1, which is clearly not LED_FULL (it does however
-match the max_brightness configured for the LED).  Thus there is an
-inconsistency: the brightness isn't LED_FULL but in reality the LED is as
-bright as it goes.  Could this create problems within the LED subsystem, or
-is there nothing special attached to the LED_FULL value?  A quick look
-through the leds driver didn't turn up anything obvious, but I might have
-missed some subtlties.
+Thank you for the series and sorry to answer as a new mail, just
+subscribed to the list and didn't manage to retrieve archives (seems
+VGER doesn't have them).
 
-Darren: any thoughts?
+So, regarding to enabling UP Board and similar open connected  boards
+(Galileo, Edison/Arduino, etc.).
 
-Regards
-  jonathan
+The mentioned boards are x86. There is currently no way to handle
+pinctrl on them since they are ACPI-based. Moreover pinctrl doesn't
+have a way to configure stuff for customer needs!
 
-> Signed-off-by: Matej Groma <matejgroma@gmail.com>
-> ---
-> Changes from v1:
-> 	made commit message more clear
-> 	rebased on testing
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 6ce8e78..abb7c62 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -192,6 +192,7 @@ static void kblamps_set(struct led_classdev *cdev,
-> 
->  static struct led_classdev kblamps_led = {
->   .name = "fujitsu::kblamps",
-> + .max_brightness = 1,
->   .brightness_get = kblamps_get,
->   .brightness_set = kblamps_set
->  };
-> @@ -202,6 +203,7 @@ static void radio_led_set(struct led_classdev *cdev,
-> 
->  static struct led_classdev radio_led = {
->   .name = "fujitsu::radio_led",
-> + .max_brightness = 1,
->   .brightness_get = radio_led_get,
->   .brightness_set = radio_led_set
->  };
-> @@ -285,7 +287,7 @@ static void logolamp_set(struct led_classdev *cdev,
->  static void kblamps_set(struct led_classdev *cdev,
->  			       enum led_brightness brightness)
->  {
-> -	if (brightness >= LED_FULL)
-> +	if (brightness)
->  		call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_ON);
->  	else
->  		call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_OFF);
-> @@ -294,7 +296,7 @@ static void kblamps_set(struct led_classdev *cdev,
->  static void radio_led_set(struct led_classdev *cdev,
->  				enum led_brightness brightness)
->  {
-> -	if (brightness >= LED_FULL)
-> +	if (brightness)
->  		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, RADIO_LED_ON);
->  	else
->  		call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
-> @@ -332,7 +334,7 @@ static enum led_brightness kblamps_get(struct led_classdev *cdev)
->  	enum led_brightness brightness = LED_OFF;
-> 
->  	if (call_fext_func(FUNC_LEDS, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
-> -		brightness = LED_FULL;
-> +		brightness = cdev->max_brightness;
-> 
->  	return brightness;
->  }
-> @@ -342,7 +344,7 @@ static enum led_brightness radio_led_get(struct led_classdev *cdev)
->  	enum led_brightness brightness = LED_OFF;
-> 
->  	if (call_fext_func(FUNC_RFKILL, 0x4, 0x0, 0x0) & RADIO_LED_ON)
-> -		brightness = LED_FULL;
-> +		brightness = cdev->max_brightness;
-> 
->  	return brightness;
->  }
+What is my vision on the issue. Currently we have pending ACPI patches
+from Octavian that help us to load ACPI DSDT overlays in a way as it
+works for DT. This will make possible to create a blob to configure
+pins. Thus, part of the patch series which hard codes the mappings is
+not needed. And therefore your drivers should go somewhere under
+drivers/pinctrl/intel folder which Mika (mostly) and I are supporting.
+
+We still need to agree on the above: which folder and how those
+drivers should look like.
+
+P.S. Dan, next time please include me and Mika into Cc list for such
+things. Thanks!
 
 -- 
+With Best Regards,
+Andy Shevchenko
