@@ -1,48 +1,280 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: UP Board and similar
-Date: Thu, 30 Jun 2016 23:36:04 +0300
-Message-ID: <CAHp75VcOMFygekkhCEtWigW+JaKOgNQrM9M-3MtKemBF3arBOQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] intel-vbtn: new driver for Intel Virtual Button
+Date: Fri,  1 Jul 2016 09:51:49 +0800
+Message-ID: <1467337909-20985-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f50.google.com ([209.85.218.50]:36661 "EHLO
-	mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751840AbcF3Vbm (ORCPT
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:32888 "EHLO
+	mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751652AbcGABvy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Jun 2016 17:31:42 -0400
-Received: by mail-oi0-f50.google.com with SMTP id f189so84703174oig.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jun 2016 14:30:43 -0700 (PDT)
+	Thu, 30 Jun 2016 21:51:54 -0400
+Received: by mail-pf0-f193.google.com with SMTP id c74so8748883pfb.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jun 2016 18:51:52 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: "Darren Hart (Google+)" <reply-101378268367730737515@profiles.google.com>, Dan O'Donovan <dan@emutex.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>
 
-Hi!
+This driver supports power button event in Intel Virtual Button currently.
+New Dell XPS 13 requires this driver for the power button.
 
-Thank you for the series and sorry to answer as a new mail, just
-subscribed to the list and didn't manage to retrieve archives (seems
-VGER doesn't have them).
+This driver is copied/modified from intel-hid.c
+Most credit goes to the author of intel-hid.c,
+Alex Hung <alex.hung@canonical.com>
 
-So, regarding to enabling UP Board and similar open connected  boards
-(Galileo, Edison/Arduino, etc.).
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ MAINTAINERS                       |   6 ++
+ drivers/platform/x86/Kconfig      |  12 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/intel-vbtn.c | 188 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 207 insertions(+)
+ create mode 100644 drivers/platform/x86/intel-vbtn.c
 
-The mentioned boards are x86. There is currently no way to handle
-pinctrl on them since they are ACPI-based. Moreover pinctrl doesn't
-have a way to configure stuff for customer needs!
-
-What is my vision on the issue. Currently we have pending ACPI patches
-from Octavian that help us to load ACPI DSDT overlays in a way as it
-works for DT. This will make possible to create a blob to configure
-pins. Thus, part of the patch series which hard codes the mappings is
-not needed. And therefore your drivers should go somewhere under
-drivers/pinctrl/intel folder which Mika (mostly) and I are supporting.
-
-We still need to agree on the above: which folder and how those
-drivers should look like.
-
-P.S. Dan, next time please include me and Mika into Cc list for such
-things. Thanks!
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1b090f..9644280 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5915,6 +5915,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel-hid.c
+ 
++INTEL VIRTUAL BUTTON DRIVER
++M:	AceLan Kao <acelan.kao@canonical.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel-vbtn.c
++
+ INTEL IDLE DRIVER
+ M:	Len Brown <lenb@kernel.org>
+ L:	linux-pm@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3ec0025..727c6af 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -770,6 +770,18 @@ config INTEL_HID_EVENT
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_hid.
+ 
++config INTEL_VBTN
++	tristate "INTEL VIRTUAL BUTTON"
++	depends on ACPI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	help
++	  This driver provides support for the Intel Virtual Button interface.
++	  Some laptops require this driver for power button support.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_vbtn.
++
+ config INTEL_SCU_IPC
+ 	bool "Intel SCU IPC Support"
+ 	depends on X86_INTEL_MID
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9b11b40..2efa86d 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
+ obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
+ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
+ obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
++obj-$(CONFIG_INTEL_VBTN)	+= intel-vbtn.o
+ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
+ obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+ obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+new file mode 100644
+index 0000000..146d02f
+--- /dev/null
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -0,0 +1,188 @@
++/*
++ *  Intel Virtual Button driver for Windows 8.1+
++ *
++ *  Copyright (C) 2016 AceLan Kao <acelan.kao@canonical.com>
++ *  Copyright (C) 2016 Alex Hung <alex.hung@canonical.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/platform_device.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/acpi.h>
++#include <acpi/acpi_bus.h>
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("AceLan Kao");
++
++static const struct acpi_device_id intel_vbtn_ids[] = {
++	{"INT33D6", 0},
++	{"", 0},
++};
++
++/* In theory, these are HID usages. */
++static const struct key_entry intel_vbtn_keymap[] = {
++	{ KE_IGNORE, 0xC0, { KEY_POWER } },	/* power key press */
++	{ KE_KEY, 0xC1, { KEY_POWER } },	/* power key release */
++	{ KE_END },
++};
++
++struct intel_vbtn_priv {
++	struct input_dev *input_dev;
++};
++
++static int intel_vbtn_input_setup(struct platform_device *device)
++{
++	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
++	int ret;
++
++	priv->input_dev = input_allocate_device();
++	if (!priv->input_dev)
++		return -ENOMEM;
++
++	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	if (ret)
++		goto err_free_device;
++
++	priv->input_dev->dev.parent = &device->dev;
++	priv->input_dev->name = "Intel Virtual Button driver";
++	priv->input_dev->id.bustype = BUS_HOST;
++
++	ret = input_register_device(priv->input_dev);
++	if (ret)
++		goto err_free_device;
++
++	return 0;
++
++err_free_device:
++	input_free_device(priv->input_dev);
++	return ret;
++}
++
++static void intel_vbtn_input_destroy(struct platform_device *device)
++{
++	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
++
++	input_unregister_device(priv->input_dev);
++}
++
++static void notify_handler(acpi_handle handle, u32 event, void *context)
++{
++	struct platform_device *device = context;
++	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
++
++	if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
++		dev_info(&device->dev, "unknown event index 0x%x\n",
++			 event);
++}
++
++static int intel_vbtn_probe(struct platform_device *device)
++{
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	struct intel_vbtn_priv *priv;
++	acpi_status status;
++	int err;
++
++	status = acpi_evaluate_object(handle, "VBDL", NULL, NULL);
++	if (!ACPI_SUCCESS(status)) {
++		dev_warn(&device->dev, "failed to read Intel Virtual Button driver\n");
++		return -ENODEV;
++	}
++
++	priv = devm_kzalloc(&device->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	dev_set_drvdata(&device->dev, priv);
++
++	err = intel_vbtn_input_setup(device);
++	if (err) {
++		pr_err("Failed to setup Intel Virtual Button\n");
++		return err;
++	}
++
++	status = acpi_install_notify_handler(handle,
++					     ACPI_DEVICE_NOTIFY,
++					     notify_handler,
++					     device);
++	if (ACPI_FAILURE(status)) {
++		err = -EBUSY;
++		goto err_remove_input;
++	}
++
++	return 0;
++
++err_remove_input:
++	intel_vbtn_input_destroy(device);
++
++	return err;
++}
++
++static int intel_vbtn_remove(struct platform_device *device)
++{
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++
++	intel_vbtn_input_destroy(device);
++	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
++
++	/*
++	 * Even if we failed to shut off the event stream, we can still
++	 * safely detach from the device.
++	 */
++	return 0;
++}
++
++static struct platform_driver intel_vbtn_pl_driver = {
++	.driver = {
++		.name = "intel-vbtn",
++		.acpi_match_table = intel_vbtn_ids,
++	},
++	.probe = intel_vbtn_probe,
++	.remove = intel_vbtn_remove,
++};
++MODULE_DEVICE_TABLE(acpi, intel_vbtn_ids);
++
++static acpi_status __init
++check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
++{
++	const struct acpi_device_id *ids = context;
++	struct acpi_device *dev;
++
++	if (acpi_bus_get_device(handle, &dev) != 0)
++		return AE_OK;
++
++	if (acpi_match_device_ids(dev, ids) == 0)
++		if (acpi_create_platform_device(dev))
++			dev_info(&dev->dev,
++				 "intel-vbtn: created platform device\n");
++
++	return AE_OK;
++}
++
++static int __init intel_vbtn_init(void)
++{
++	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
++			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
++			    (void *)intel_vbtn_ids, NULL);
++
++	return platform_driver_register(&intel_vbtn_pl_driver);
++}
++module_init(intel_vbtn_init);
++
++static void __exit intel_vbtn_exit(void)
++{
++	platform_driver_unregister(&intel_vbtn_pl_driver);
++}
++module_exit(intel_vbtn_exit);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
