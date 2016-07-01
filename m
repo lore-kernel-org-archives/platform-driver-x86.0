@@ -1,168 +1,52 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] sony-laptop: add new thermal control handle
-Date: Fri, 1 Jul 2016 12:30:50 -0700
-Message-ID: <20160701193050.GB60048@f23x64.localdomain>
-References: <20160623202122.Horde.TxvrWAneTMWnwZqVFW5oO0g@horde.stefanseidel.info>
- <20160623204322.Horde.KP6NgW-vjq4KeyukqDxSgtN@horde.stefanseidel.info>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 1/1] thermal: core: call thermal_zone_device_update()
+ after mode update
+Date: Fri, 1 Jul 2016 13:53:31 -0700
+Message-ID: <20160701205329.GB7814@localhost.localdomain>
+References: <1466563538.2471.10.camel@intel.com>
+ <1466571990-12346-1-git-send-email-edubezval@gmail.com>
+ <CAJZ5v0hRosrpW50Jx3p6-yHmNFLEaHpf9htfevtunEa10Jo7Dg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39785 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932065AbcGATay (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2016 15:30:54 -0400
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160623204322.Horde.KP6NgW-vjq4KeyukqDxSgtN@horde.stefanseidel.info>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stefan Seidel <lkml@stefanseidel.info>
-Cc: Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <CAJZ5v0hRosrpW50Jx3p6-yHmNFLEaHpf9htfevtunEa10Jo7Dg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Rui Zhang <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Keerthy <j-keerthy@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, platform-driver-x86@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 23, 2016 at 08:43:22PM +0200, Stefan Seidel wrote:
-> Hi,
+On Thu, Jun 23, 2016 at 02:27:12PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jun 22, 2016 at 7:06 AM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> > Because several drivers do the following pattern:
+> > .set_mode()
+> >    ...
+> >    local_data->mode = new_mode;
+> >    thermal_zone_device_update(tz);
+> >
+> > makes sense to simply do the thermal_zone_device_update()
+> > in thermal core, after setting the new mode.
+> >
+> > Also, this patch also remove deadlocks on drivers that
+> > call thermal_zone_device_update() on .set_mode(),
+> > as .set_mode()  is now called always with tz->lock held.
 > 
-> sorry about the wrong first patch, I had missed an unwanted hunk.
+> To me, this part of the patch is way more important than the
+> optimization mentioned before.
 > 
+> Apparently, the problem is that drivers deadlock, because the
+> thermal_zone_device_update() invoked from ->set_mode() is called under
+> tz->lock.
+> 
+> So to address that problem you make the core call
+> thermal_zone_device_update() after ->set_mode() outside of tz->lock
+> and the drivers don't have to do it any more.
+> 
+> Is that correct?
 
-Hi Stefan, please provide commentary like the above in a cover letter (PATCH
-0/N), so the patch itself can be applied directly.
+Yes this is correct. The optimization is simply a consequence of the bug
+fix, as reported by Keerthy.
 
-> On at least the SVD11 there is an additional thermal control setting that
-> is found at a different handle address but otherwise behaves the same as
-> the other one.
 > 
-> Signed-off-by: Stefan Seidel <lkml@stefanseidel.info>
-
-
-Please include all maintainers and lists reported by get_maintainers.pl on Cc.
-
-The patch comes in corrupted and does not apply. It appears to be line wrapped.
-checkpatch --fix-inplace was unable to correct it. Please check your mail client
-settings, send the patch to yourself and verify you can apply it, then resend.
-
-> ---
->  drivers/platform/x86/sony-laptop.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/sony-laptop.c
-> b/drivers/platform/x86/sony-laptop.c
-> index 1dba359..6c9deb3 100644
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -148,7 +148,8 @@ static int sony_nc_battery_care_setup(struct
-> platform_device *pd,
->  		unsigned int handle);
->  static void sony_nc_battery_care_cleanup(struct platform_device *pd);
-> 
-> -static int sony_nc_thermal_setup(struct platform_device *pd);
-> +static int sony_nc_thermal_setup(struct platform_device *pd,
-> +				  unsigned int handle);
->  static void sony_nc_thermal_cleanup(struct platform_device *pd);
-> 
->  static int sony_nc_lid_resume_setup(struct platform_device *pd,
-> @@ -1363,7 +1364,8 @@ static void sony_nc_function_setup(struct acpi_device
-> *device,
->  						result);
->  			break;
->  		case 0x0122:
-> -			result = sony_nc_thermal_setup(pf_device);
-> +		case 0x015F:
-> +			result = sony_nc_thermal_setup(pf_device, handle);
->  			if (result)
->  				pr_err("couldn't set up thermal profile function (%d)\n",
->  						result);
-> @@ -1476,6 +1478,7 @@ static void sony_nc_function_cleanup(struct
-> platform_device *pd)
->  			sony_nc_lid_resume_cleanup(pd);
->  			break;
->  		case 0x0122:
-> +		case 0x015F:
->  			sony_nc_thermal_cleanup(pd);
->  			break;
->  		case 0x0128:
-> @@ -1547,6 +1550,7 @@ static void sony_nc_function_resume(void)
->  			sony_call_snc_handle(handle, 0x100, &result);
->  			break;
->  		case 0x0122:
-> +		case 0x015F:
->  			sony_nc_thermal_resume();
->  			break;
->  		case 0x0124:
-> @@ -2150,14 +2154,16 @@ struct snc_thermal_ctrl {
->  	unsigned int profiles;
->  	struct device_attribute mode_attr;
->  	struct device_attribute profiles_attr;
-> +	unsigned int handle;
->  };
->  static struct snc_thermal_ctrl *th_handle;
-> 
-> -#define THM_PROFILE_MAX 3
-> +#define THM_PROFILE_MAX 4
-
-You mention the new control behaves the same, but here you are adding a profile,
-and blow you add "cooling"... this seems like an additional change which needs
-to be documented in the commit message at the very least.
-
->  static const char * const snc_thermal_profiles[] = {
->  	"balanced",
->  	"silent",
-> -	"performance"
-> +	"performance",
-> +	"cooling"
->  };
-> 
->  static int sony_nc_thermal_mode_set(unsigned short mode)
-> @@ -2173,7 +2179,8 @@ static int sony_nc_thermal_mode_set(unsigned short mode)
->  	if ((mode && !(th_handle->profiles & mode)) || mode >= THM_PROFILE_MAX)
->  		return -EINVAL;
-> 
-> -	if (sony_call_snc_handle(0x0122, mode << 0x10 | 0x0200, &result))
-> +	if (sony_call_snc_handle(th_handle->handle, mode << 0x10 | 0x0200,
-> +				 &result))
->  		return -EIO;
-> 
->  	th_handle->mode = mode;
-> @@ -2185,7 +2192,7 @@ static int sony_nc_thermal_mode_get(void)
->  {
->  	unsigned int result;
-> 
-> -	if (sony_call_snc_handle(0x0122, 0x0100, &result))
-> +	if (sony_call_snc_handle(th_handle->handle, 0x0100, &result))
->  		return -EIO;
-> 
->  	return result & 0xff;
-> @@ -2245,14 +2252,17 @@ static ssize_t sony_nc_thermal_mode_show(struct
-> device *dev,
->  	return count;
->  }
-> 
-> -static int sony_nc_thermal_setup(struct platform_device *pd)
-> +static int sony_nc_thermal_setup(struct platform_device *pd,
-> +				 unsigned int handle)
->  {
->  	int ret = 0;
->  	th_handle = kzalloc(sizeof(struct snc_thermal_ctrl), GFP_KERNEL);
->  	if (!th_handle)
->  		return -ENOMEM;
-> 
-> -	ret = sony_call_snc_handle(0x0122, 0x0000, &th_handle->profiles);
-> +	th_handle->handle = handle;
-> +
-> +	ret = sony_call_snc_handle(handle, 0x0000, &th_handle->profiles);
->  	if (ret) {
->  		pr_warn("couldn't to read the thermal profiles\n");
->  		goto outkzalloc;
-> -- 
-> 2.8.3
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+> Thanks,
+> Rafael
