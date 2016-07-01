@@ -1,92 +1,102 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH v1 1/1] platform/x86/intel_pmc_core: Convert to
  DEFINE_DEBUGFS_ATTRIBUTE
-Date: Fri, 1 Jul 2016 14:30:28 -0700
-Message-ID: <20160701213028.GE60048@f23x64.localdomain>
+Date: Fri, 1 Jul 2016 14:24:34 -0700
+Message-ID: <20160701212434.GC60048@f23x64.localdomain>
 References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
  <20160628090504.GA2169@rajaneesh-OptiPlex-9010>
  <1467108307.30123.303.camel@linux.intel.com>
- <20160629080325.GA11318@rajaneesh-OptiPlex-9010>
- <1467200985.30123.320.camel@linux.intel.com>
- <20160629121604.GA26750@rajaneesh-OptiPlex-9010>
- <1467204505.30123.326.camel@linux.intel.com>
- <20160629132038.GB26750@rajaneesh-OptiPlex-9010>
- <1467207230.30123.329.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:60915 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:36518 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752232AbcGAVaa (ORCPT
+	with ESMTP id S1752557AbcGAVq7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2016 17:30:30 -0400
+	Fri, 1 Jul 2016 17:46:59 -0400
 Content-Disposition: inline
-In-Reply-To: <1467207230.30123.329.camel@linux.intel.com>
+In-Reply-To: <1467108307.30123.303.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 
-On Wed, Jun 29, 2016 at 04:33:50PM +0300, Andy Shevchenko wrote:
-> On Wed, 2016-06-29 at 18:50 +0530, Rajneesh Bhardwaj wrote:
-> > On Wed, Jun 29, 2016 at 03:48:25PM +0300, Andy Shevchenko wrote:
-> > > On Wed, 2016-06-29 at 17:46 +0530, Rajneesh Bhardwaj wrote:
-> > > > On Wed, Jun 29, 2016 at 02:49:45PM +0300, Andy Shevchenko wrote=
-:
-> > > > > On Wed, 2016-06-29 at 13:33 +0530, Rajneesh Bhardwaj wrote:
-> > > > > > On Tue, Jun 28, 2016 at 01:05:07PM +0300, Andy Shevchenko
-> > > > > > wrote:
-> > >=20
-> > > > > >=20
+On Tue, Jun 28, 2016 at 01:05:07PM +0300, Andy Shevchenko wrote:
+> On Tue, 2016-06-28 at 14:35 +0530, Rajneesh Bhardwaj wrote:
+> > On Mon, Jun 13, 2016 at 08:56:49PM +0300, Andy Shevchenko wrote:
+> > > This patch does the following:
+> > > - refactors code to use recently introduced
+> > > DEFINE_DEBUGFS_ATTRIBUTE() macro
+> > > - makes absence of DEBUG_FS non-fatal error
 >=20
 >=20
-> > > If it touches the same attribute it needs to be seen first before
-> > > applying this one.
-> > >=20
+> > > -	counter_val =3D pmc_core_reg_read(pmcdev,
+> > > -					SPT_PMC_SLP_S0_RES_COUNTER_
+> > > OFFSET);
+> > > -	seq_printf(s, "%u\n",
+> > > pmc_core_adjust_slp_s0_step(counter_val));
+> > > +	value =3D pmc_core_reg_read(pmcdev,
+> > > SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> > > +	*val =3D pmc_core_adjust_slp_s0_step(value);
+> > > =A0
 > >=20
-> > No, this attribute wont be touched.
+> > We were ensuring a new line for printing the output value with
+> > seq_printf=A0
+> > whereas in this case the output is printed along with the shell
+> > prompt.
+> > Sometimes this could be harder to read.
 >=20
-> So, if there is no objections (taking into consideration minors you
-> mentioned) I think the patch can be applied.
->=20
-> > Can we have seq_printf for such cases and use
-> > > > DEFINE_DEBUGFS_ATTRIBUTE
-> > > > for
-> > > > other simple attributes? Doing this might raise some coding sty=
-le
-> > > > consistency=A0
-> > > > concerns though so lets wait to hear=A0=A0Darren's opinion on t=
-his
-> > > > patch.
-> > >=20
-> > > For the rest we have to see the implementation and decide how to
-> > > proceed
-> > > (since it's a debugfs dedicated for _debugging_) we might change =
-it
-> > > in
-> > > the way we like. Though I don't encourage people to do this. I li=
-ke
-> > > interfaces on which people thought before implementing.
-> > >=20
-> >=20
-> > Sure, i am fine with DEFINE_DEBUGFS_ATTRIBUTE but would like to lea=
-ve
-> > the scope
-> > for having seq_printf for future patches i.e. linux/seq_file.h and
-> > thus would
-> > have a dependency on struct file_operations for seq_read.
->=20
-> Of course! No-one is insisting to use only the macro and simple
-> attributes.
+> This would be a difference in the behaviour to a generic assumption
+> (since this new macro is going to be used by plenty of simple attribu=
+tes
+> under debugfs). If you still consider it's inappropriate I would
+> recommend to propose a fix globally then.
 
-Agreed. I do wonder if some of the newer debugfs types like array and r=
-egset
-would be sufficient for your needs. Whenever you can reuse an abstracti=
-on of the
-subsystem through higher level interfaces, I encourage you to do so as =
-it
-reduces code size and potential programming errors.
+Agreed.
+
+>=20
+> Regarding to change behaviour of the current implementation I think
+> Darren can tell his opinion. (For me at least pros and cons of new
+> format quite obvious).
+
+We should use the available subsystem tools for boilerplate reduction w=
+henever
+possible. Fortunately, debugfs is debug, and we do not require that it =
+provide a
+consistent user interface like with sysfs (via a version attribute).
+
+>=20
+> > =A0
+> > > +struct dentry;
+> > > +
+> >=20
+> > Why do we need this ?
+>=20
+> Since we are using pointer to undefined type.
+
+Erm... why is dentry an undefined type?
+
+>=20
+> >=20
+> > > =A0/**
+> > > =A0 * struct pmc_dev - pmc device structure
+> > > =A0 * @base_addr:		comtains pmc base address
+> > > @@ -42,9 +45,7 @@
+> > > =A0struct pmc_dev {
+> > > =A0	u32 base_addr;
+> > > =A0	void __iomem *regbase;
+> > > -#if IS_ENABLED(CONFIG_DEBUG_FS)
+> > > =A0	struct dentry *dbgfs_dir;
+> > > -#endif /* CONFIG_DEBUG_FS */
+>=20
+>=20
+>=20
+> --=20
+>=20
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Intel Finland Oy
+>=20
 
 --=20
 Darren Hart
