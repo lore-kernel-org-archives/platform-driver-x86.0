@@ -1,7 +1,7 @@
 From: Dan O'Donovan <dan@emutex.com>
-Subject: [RESEND RFC PATCH 4/5] platform: x86: add UP Board CPLD LED driver
-Date: Mon,  4 Jul 2016 17:07:13 +0100
-Message-ID: <1467648434-29080-5-git-send-email-dan@emutex.com>
+Subject: [RESEND RFC PATCH 2/5] platform: x86: add UP Board I/O pinctrl driver
+Date: Mon,  4 Jul 2016 17:07:11 +0100
+Message-ID: <1467648434-29080-3-git-send-email-dan@emutex.com>
 References: <1465762392-9205-1-git-send-email-dan@emutex.com>
  <1467648434-29080-1-git-send-email-dan@emutex.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,30 +11,30 @@ To: platform-driver-x86@vger.kernel.org, dvhart@infradead.org
 Cc: lee.jones@linaro.org, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, Dan O'Donovan <dan@emutex.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This pinctrl driver manages the LED Control function provided by
-the I/O CPLD integrated on the UP Board.  This allows basic on/off
-brightness control for each of the individual LEDs.
+This pinctrl driver manages the Pin Control functions provided by
+the I/O CPLD integrated on the UP Board.  This includes dynamic pin
+direction and pin mux configuration.
 
 Signed-off-by: Dan O'Donovan <dan@emutex.com>
 ---
- drivers/platform/x86/up_board_leds.c | 85 ++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/up_board_leds.h | 50 +++++++++++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 drivers/platform/x86/up_board_leds.c
- create mode 100644 drivers/platform/x86/up_board_leds.h
+ drivers/platform/x86/up_board_pinctrl.c | 285 ++++++++++++++++++++++++++++++++
+ drivers/platform/x86/up_board_pinctrl.h | 102 ++++++++++++
+ 2 files changed, 387 insertions(+)
+ create mode 100644 drivers/platform/x86/up_board_pinctrl.c
+ create mode 100644 drivers/platform/x86/up_board_pinctrl.h
 
-diff --git a/drivers/platform/x86/up_board_leds.c b/drivers/platform/x86/up_board_leds.c
+diff --git a/drivers/platform/x86/up_board_pinctrl.c b/drivers/platform/x86/up_board_pinctrl.c
 new file mode 100644
-index 0000000..4186475
+index 0000000..be95837
 --- /dev/null
-+++ b/drivers/platform/x86/up_board_leds.c
-@@ -0,0 +1,85 @@
++++ b/drivers/platform/x86/up_board_pinctrl.c
+@@ -0,0 +1,285 @@
 +/*
-+ * UP Board CPLD LEDs driver.
++ * UP Board I/O Header CPLD Pin Control driver.
 + *
 + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
 + *
-+ * Author: Javier Arteaga <javier@emutex.com>
++ * Author: Dan O'Donovan <dan@emutex.com>
 + *
 + * This program is free software; you can redistribute it and/or modify it
 + * under the terms and conditions of the GNU General Public License,
@@ -50,51 +50,143 @@ index 0000000..4186475
 + */
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/leds.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
 +#include <linux/platform_device.h>
 +
-+#include "up_board_leds.h"
++#include "up_board_pinctrl.h"
 +
 +/* Internal context information for this driver */
-+struct up_board_led {
-+	struct up_board_leds_pdata *pdata;
-+	unsigned int offset;
-+	const char *name;
-+	struct led_classdev cdev;
++struct up_board_pinctrl {
++	struct up_board_pinctrl_pdata *pdata;
++	struct pinctrl_desc pctldesc;
++	struct pinctrl_dev *pctldev;
 +};
 +
-+static void up_led_brightness_set(struct led_classdev *cdev,
-+				  enum led_brightness value)
++static int up_get_groups_count(struct pinctrl_dev *pctldev)
 +{
-+	struct up_board_led *led = container_of(cdev,
-+						struct up_board_led,
-+						cdev);
-+	struct up_board_cpld_info *cpld_info = &led->pdata->cpld_info;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	cpld_info->reg_set_bit(cpld_info->cpld, led->offset, value != LED_OFF);
++	return up_pinctrl->pdata->ngroup;
 +}
 +
-+static int up_board_leds_probe(struct platform_device *pdev)
++static const char *up_get_group_name(struct pinctrl_dev *pctldev,
++				     unsigned int group)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct up_board_leds_pdata *pdata = dev_get_platdata(dev);
-+	struct up_board_led *up_led;
-+	int ret = 0;
-+	size_t i;
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+	for (i = 0; i < pdata->nled; i++) {
-+		struct up_board_led_info *led_info = &pdata->leds[i];
++	return up_pinctrl->pdata->groups[group].name;
++}
 +
-+		up_led = devm_kzalloc(dev, sizeof(*up_led), GFP_KERNEL);
-+		if (!up_led)
-+			return -ENOMEM;
++static int up_get_group_pins(struct pinctrl_dev *pctldev, unsigned int group,
++			     const unsigned int **pins, unsigned int *npins)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
 +
-+		up_led->pdata = pdata;
-+		up_led->offset = led_info->cpld_offset;
-+		up_led->cdev.brightness_set = up_led_brightness_set;
-+		up_led->cdev.name = led_info->name;
++	*pins = up_pinctrl->pdata->groups[group].pins;
++	*npins = up_pinctrl->pdata->groups[group].npin;
 +
-+		ret = devm_led_classdev_register(dev, &up_led->cdev);
++	return 0;
++}
++
++static const struct pinctrl_ops up_pinctrl_ops = {
++	.get_groups_count = up_get_groups_count,
++	.get_group_name = up_get_group_name,
++	.get_group_pins = up_get_group_pins,
++};
++
++static int up_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return up_pinctrl->pdata->nfunction;
++}
++
++static const char *up_get_function_name(struct pinctrl_dev *pctldev,
++					unsigned int function)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return up_pinctrl->pdata->functions[function].name;
++}
++
++static int up_get_function_groups(struct pinctrl_dev *pctldev,
++				  unsigned int function,
++				  const char * const **groups,
++				  unsigned int * const ngroups)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	*groups = up_pinctrl->pdata->functions[function].groups;
++	*ngroups = up_pinctrl->pdata->functions[function].ngroup;
++
++	return 0;
++}
++
++static int up_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
++			     unsigned int group)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	const struct up_board_pinctrl_group *grp = &pdata->groups[group];
++	int i, ret;
++
++	for (i = 0; i < grp->npin; i++) {
++		int offset = grp->pins[i];
++		struct up_board_pin_info *pin = &pdata->pins[offset];
++
++		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
++			ret = cpld_info->reg_set_bit(cpld_info->cpld,
++						     pin->dir_ctrl_offset,
++						     pin->func_dir);
++			if (ret)
++				return ret;
++		}
++		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++			ret = cpld_info->reg_set_bit(cpld_info->cpld,
++						     pin->mux_ctrl_offset,
++						     UP_BOARD_PMUX_FUNC);
++			if (ret)
++				return ret;
++		}
++		pin->func_enabled = true;
++	}
++
++	return 0;
++}
++
++static int up_gpio_set_direction(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int offset, bool input)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++	int dir = input ? UP_BOARD_PDIR_IN : UP_BOARD_PDIR_OUT;
++
++	return cpld_info->reg_set_bit(cpld_info->cpld,
++				      pin->dir_ctrl_offset,
++				      dir);
++}
++
++static int up_gpio_request_enable(struct pinctrl_dev *pctldev,
++				  struct pinctrl_gpio_range *range,
++				  unsigned int offset)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++	int ret;
++
++	if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++		ret = cpld_info->reg_set_bit(cpld_info->cpld,
++					     pin->mux_ctrl_offset,
++					     UP_BOARD_PMUX_GPIO);
 +		if (ret)
 +			return ret;
 +	}
@@ -102,24 +194,132 @@ index 0000000..4186475
 +	return 0;
 +}
 +
-+static struct platform_driver up_board_leds_driver = {
-+	.driver.name	= "up-board-leds",
-+	.driver.owner	= THIS_MODULE,
-+	.probe		= up_board_leds_probe,
++static void up_gpio_disable_free(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int offset)
++{
++	struct up_board_pinctrl *up_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct up_board_pinctrl_pdata *pdata = up_pinctrl->pdata;
++	struct up_board_cpld_info *cpld_info = &up_pinctrl->pdata->cpld_info;
++	struct up_board_pin_info *pin = &pdata->pins[offset];
++
++	if (pin->func_enabled) {
++		if (pin->func_dir != UP_BOARD_PDIR_NONE) {
++			cpld_info->reg_set_bit(cpld_info->cpld,
++					       pin->dir_ctrl_offset,
++					       pin->func_dir);
++		}
++		if (pin->mux_ctrl_offset != UP_BOARD_UNASSIGNED) {
++			cpld_info->reg_set_bit(cpld_info->cpld,
++					       pin->mux_ctrl_offset,
++					       UP_BOARD_PMUX_FUNC);
++		}
++	}
++}
++
++static const struct pinmux_ops up_pinmux_ops = {
++	.get_functions_count = up_get_functions_count,
++	.get_function_name = up_get_function_name,
++	.get_function_groups = up_get_function_groups,
++	.set_mux = up_pinmux_set_mux,
++	.gpio_request_enable = up_gpio_request_enable,
++	.gpio_disable_free = up_gpio_disable_free,
++	.gpio_set_direction = up_gpio_set_direction,
 +};
 +
-+module_platform_driver(up_board_leds_driver);
++static int up_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
++			 unsigned long *config)
++{
++	return -ENOTSUPP;
++}
 +
-+MODULE_AUTHOR("Javier Arteaga <javier@emutex.com>");
-+MODULE_DESCRIPTION("UP Board LEDs driver");
++static int up_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			 unsigned long *configs, unsigned int nconfigs)
++{
++	return 0;
++}
++
++static const struct pinconf_ops up_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_set = up_config_set,
++	.pin_config_get = up_config_get,
++};
++
++static struct pinctrl_desc up_pinctrl_desc = {
++	.owner = THIS_MODULE,
++	.pctlops = &up_pinctrl_ops,
++	.pmxops = &up_pinmux_ops,
++	.confops = &up_pinconf_ops,
++};
++
++static int up_board_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct up_board_pinctrl_pdata *pdata = dev_get_platdata(dev);
++	struct up_board_pinctrl *up_pinctrl;
++
++	if (!pdata)
++		return -EINVAL;
++
++	up_pinctrl = devm_kzalloc(dev, sizeof(*up_pinctrl), GFP_KERNEL);
++	if (!up_pinctrl)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, up_pinctrl);
++
++	up_pinctrl->pdata = pdata;
++	up_pinctrl->pctldesc = up_pinctrl_desc;
++	up_pinctrl->pctldesc.pins = pdata->descs;
++	up_pinctrl->pctldesc.npins = pdata->ndesc;
++	up_pinctrl->pctldesc.name = dev_name(dev);
++	up_pinctrl->pctldev = pinctrl_register(&up_pinctrl->pctldesc,
++					       dev, up_pinctrl);
++	if (IS_ERR(up_pinctrl->pctldev)) {
++		dev_err(dev, "failed to register pinctrl driver\n");
++		return PTR_ERR(up_pinctrl->pctldev);
++	}
++
++	return 0;
++}
++
++static int up_board_pinctrl_remove(struct platform_device *pdev)
++{
++	struct up_board_pinctrl *up_pinctrl = platform_get_drvdata(pdev);
++
++	pinctrl_unregister(up_pinctrl->pctldev);
++
++	return 0;
++}
++
++static struct platform_driver up_board_pinctrl_driver = {
++	.driver.name	= "up-board-pinctrl",
++	.driver.owner	= THIS_MODULE,
++	.probe		= up_board_pinctrl_probe,
++	.remove		= up_board_pinctrl_remove,
++};
++
++static int __init up_board_pinctrl_init(void)
++{
++	return platform_driver_register(&up_board_pinctrl_driver);
++}
++subsys_initcall(up_board_pinctrl_init);
++
++static void __exit up_board_pinctrl_exit(void)
++{
++	platform_driver_unregister(&up_board_pinctrl_driver);
++}
++module_exit(up_board_pinctrl_exit);
++
++MODULE_AUTHOR("Dan O'Donovan <dan@emutex.com>");
++MODULE_DESCRIPTION("UP Board I/O Header CPLD Pin Control driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:up-board-leds");
-diff --git a/drivers/platform/x86/up_board_leds.h b/drivers/platform/x86/up_board_leds.h
++MODULE_ALIAS("platform:up-board-pinctrl");
+diff --git a/drivers/platform/x86/up_board_pinctrl.h b/drivers/platform/x86/up_board_pinctrl.h
 new file mode 100644
-index 0000000..473b1ad
+index 0000000..ce46886
 --- /dev/null
-+++ b/drivers/platform/x86/up_board_leds.h
-@@ -0,0 +1,50 @@
++++ b/drivers/platform/x86/up_board_pinctrl.h
+@@ -0,0 +1,102 @@
 +/*
 + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
 + *
@@ -137,38 +337,90 @@ index 0000000..473b1ad
 + * You should have received a copy of the GNU General Public License
 + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
-+#ifndef _UP_BOARD_LED_H_
-+#define _UP_BOARD_LED_H_
++#ifndef _UP_BOARD_PINCTRL_H_
++#define _UP_BOARD_PINCTRL_H_
++
++#include <linux/pinctrl/pinctrl.h>
 +
 +#include "up_board_cpld.h"
 +
++#define UP_BOARD_PDIR_NONE	-1
++#define UP_BOARD_PDIR_OUT	 0
++#define UP_BOARD_PDIR_IN	 1
++
++#define UP_BOARD_PMUX_GPIO	 0
++#define UP_BOARD_PMUX_FUNC	 1
++
++#define UP_BOARD_UNASSIGNED	-1
++
 +/**
-+ * struct up_board_led_info - information for an UP Board LED
-+ * @name:		LED name
-+ * @cpld_offset:	CPLD register bit offset for LED control
-+ *
-+ * Information for a single CPLD-controlled LED on the UP Board.
++ * struct up_board_pinctrl_group - information for a single pinctrl group
++ * @name: group name
++ * @pins: array of pins associated with this group
++ * @npin: size of pins array
 + */
-+struct up_board_led_info {
++struct up_board_pinctrl_group {
 +	const char *name;
-+	unsigned int cpld_offset;
++	const unsigned int *pins;
++	size_t npin;
 +};
 +
 +/**
-+ * struct up_board_leds_pdata - platform driver data
-+ * @cpld_info:	CPLD configuration interface information
-+ * @leds:	Array of LED information structures
-+ * @nled:	Number of entries in leds array
-+ *
-+ * Platform data provided to UP Board CPLD LEDs platform device driver.
-+ * Provides information for each CPLD-controlled LED on the UP Board.
++ * struct up_board_pinctrl_function - information for a single pinctrl function
++ * @name:	function name
++ * @groups:	array of groups associated with this function
++ * @ngroup:	size of groups array
 + */
-+struct up_board_leds_pdata {
-+	struct up_board_cpld_info cpld_info;
-+	struct up_board_led_info *leds;
-+	size_t nled;
++struct up_board_pinctrl_function {
++	const char *name;
++	const char * const *groups;
++	size_t ngroup;
 +};
 +
-+#endif /* _UP_BOARD_LED_H_ */
++/**
++ * struct up_board_pin_info - information for each UP Board GPIO pin
++ * @dir_ctrl_offset:	CPLD register bit offset for pin direction control
++ * @mux_ctrl_offset:	CPLD register bit offset for pin mux control
++ * @func_dir:		Pin dir to set when alternate pin function is selected
++ * @func_enabled:	Flag to indicate if alternate pin function is enabled
++ *
++ * Information for a single GPIO pin on the UP Board I/O header, including
++ * details of CPLD parameters for managing pin direction and function selection.
++ */
++struct up_board_pin_info {
++	int dir_ctrl_offset;
++	int mux_ctrl_offset;
++	int func_dir;
++	bool func_enabled;
++};
++
++/**
++ * struct up_board_pinctrl_pdata - platform driver data
++ * @cpld_info:	CPLD configuration interface information
++ * @pins:	Array of pin information structures
++ * @npin:	Number of entries in pins array
++ * @descs:	Array of pinctrl pin descriptors
++ * @ndesc:	Number of entries in pin_descs array
++ * @groups:	Array of pin groups
++ * @ngroup:	Number of entries in groups array
++ * @functions:	Array of pin functions
++ * @nfunction:	Number of entries in functions array
++ *
++ * Platform data provided to UP Board CPLD pinctrl platform device driver.
++ * Provides information for each GPIO pin on the UP Board I/O header.
++ */
++struct up_board_pinctrl_pdata {
++	struct up_board_cpld_info cpld_info;
++	struct up_board_pin_info *pins;
++	size_t npin;
++	const struct pinctrl_pin_desc *descs;
++	size_t ndesc;
++	const struct up_board_pinctrl_group *groups;
++	size_t ngroup;
++	const struct up_board_pinctrl_function *functions;
++	size_t nfunction;
++};
++
++#endif /* _UP_BOARD_PINCTRL_H_ */
 -- 
 2.1.4
