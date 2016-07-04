@@ -1,145 +1,28 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/1] platform/x86/intel_pmc_core: Convert to DEFINE_DEBUGFS_ATTRIBUTE
-Date: Mon,  4 Jul 2016 15:39:48 +0300
-Message-ID: <1467635988-64195-1-git-send-email-andriy.shevchenko@linux.intel.com>
+From: "flitkin13@gmail.com" <flitkin13@gmail.com>
+Subject: =?windows-1251?B?x+Tw4OLx8uLz6fLlISDC4PEg6O3y5fDl8fP+?=
+	=?windows-1251?B?8iDq6+jl7fLx6ujlIOHg5/sg5ODt7fv1PyDE?=
+	=?windows-1251?B?wCAtIM3F0iDv8Oj46+jy5SDt4CBlbWFpbDog?=
+	=?windows-1251?B?YWJ1cm92NTJAZ21haWwuY29tIFNreXBlOiBw?=
+	=?windows-1251?B?cm9kYXdlejM4OSDP8Oj46+XsIO/u5PDu4e3u?=
+	=?windows-1251?B?8fLoIQ==?=
+Date: Mon, 4 Jul 2016 19:19:01 +0600
+Message-ID: <5055E3B0BB6F41F22E2B62DECAEF8D75@kknzj>
+Reply-To: "flitkin13@gmail.com" <aburov52@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+	format=flowed;
+	charset="windows-1251";
+	reply-type=original
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:37468 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753076AbcGDMjx (ORCPT
+Received: from [186.27.126.130] ([186.27.126.130]:41093 "EHLO
+	NUE-cach-SCZ.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1754236AbcGDPPu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jul 2016 08:39:53 -0400
+	Mon, 4 Jul 2016 11:15:50 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This patch does the following:
-- refactors code to use recently introduced DEFINE_DEBUGFS_ATTRIBUTE() macro
-- makes absence of DEBUG_FS non-fatal error
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-In v2:
-- address Rajneesh's comments
- drivers/platform/x86/intel_pmc_core.c | 45 ++++++++---------------------------
- drivers/platform/x86/intel_pmc_core.h |  3 +--
- 2 files changed, 11 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 2776bec..d8379cd 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -23,7 +23,6 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/pci.h>
--#include <linux/seq_file.h>
- 
- #include <asm/cpu_device_id.h>
- #include <asm/pmc_core.h>
-@@ -77,30 +76,18 @@ int intel_pmc_slp_s0_counter_read(u32 *data)
- }
- EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
- 
--#if IS_ENABLED(CONFIG_DEBUG_FS)
--static int pmc_core_dev_state_show(struct seq_file *s, void *unused)
-+static int pmc_core_dev_state_get(void *data, u64 *val)
- {
--	struct pmc_dev *pmcdev = s->private;
--	u32 counter_val;
-+	struct pmc_dev *pmcdev = data;
-+	u32 value;
- 
--	counter_val = pmc_core_reg_read(pmcdev,
--					SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
--	seq_printf(s, "%u\n", pmc_core_adjust_slp_s0_step(counter_val));
-+	value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-+	*val = pmc_core_adjust_slp_s0_step(value);
- 
- 	return 0;
- }
- 
--static int pmc_core_dev_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, pmc_core_dev_state_show, inode->i_private);
--}
--
--static const struct file_operations pmc_core_dev_state_ops = {
--	.open           = pmc_core_dev_state_open,
--	.read           = seq_read,
--	.llseek         = seq_lseek,
--	.release        = single_release,
--};
-+DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL, "%llu\n");
- 
- static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
- {
-@@ -112,12 +99,12 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 	struct dentry *dir, *file;
- 
- 	dir = debugfs_create_dir("pmc_core", NULL);
--	if (!dir)
-+	if (IS_ERR_OR_NULL(dir))
- 		return -ENOMEM;
- 
- 	pmcdev->dbgfs_dir = dir;
- 	file = debugfs_create_file("slp_s0_residency_usec", S_IFREG | S_IRUGO,
--				   dir, pmcdev, &pmc_core_dev_state_ops);
-+				   dir, pmcdev, &pmc_core_dev_state);
- 
- 	if (!file) {
- 		pmc_core_dbgfs_unregister(pmcdev);
-@@ -126,16 +113,6 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 
- 	return 0;
- }
--#else
--static inline int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
--{
--	return 0;
--}
--
--static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
--{
--}
--#endif /* CONFIG_DEBUG_FS */
- 
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	{ X86_VENDOR_INTEL, 6, 0x4e, X86_FEATURE_MWAIT,
-@@ -182,10 +159,8 @@ static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	}
- 
- 	err = pmc_core_dbgfs_register(pmcdev);
--	if (err < 0) {
--		dev_err(&dev->dev, "PMC Core: debugfs register failed.\n");
--		return err;
--	}
-+	if (err < 0)
-+		dev_warn(&dev->dev, "PMC Core: debugfs register failed.\n");
- 
- 	pmc.has_slp_s0_res = true;
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index a9dadaf..e3f671f 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -23,6 +23,7 @@
- 
- /* Sunrise Point Power Management Controller PCI Device ID */
- #define SPT_PMC_PCI_DEVICE_ID			0x9d21
-+
- #define SPT_PMC_BASE_ADDR_OFFSET		0x48
- #define SPT_PMC_SLP_S0_RES_COUNTER_OFFSET	0x13c
- #define SPT_PMC_MMIO_REG_LEN			0x100
-@@ -42,9 +43,7 @@
- struct pmc_dev {
- 	u32 base_addr;
- 	void __iomem *regbase;
--#if IS_ENABLED(CONFIG_DEBUG_FS)
- 	struct dentry *dbgfs_dir;
--#endif /* CONFIG_DEBUG_FS */
- 	bool has_slp_s0_res;
- };
- 
--- 
-2.8.1
+x+Tw4OLx8uLz6fLlISDC4PEg6O3y5fDl8fP+8iDq6+jl7fLx6ujlIOHg5/sg5ODt7fv1PyDEwCAt
+IM3F0iDv8Oj46+jy5SDt4CBlbWFpbDogYWJ1cm92NTJAZ21haWwuY29tIFNreXBlOiBwcm9kYXdl
+ejM4OSDP8Oj46+XsIO/u5PDu4e3u8fLoIQ0K
