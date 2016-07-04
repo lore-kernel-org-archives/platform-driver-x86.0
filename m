@@ -1,69 +1,65 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2] fujitsu-laptop: Unify max brightness of exported leds
-Date: Mon, 4 Jul 2016 09:05:41 +0930
-Message-ID: <20160703233541.GB1198@marvin.atrad.com.au>
-References: <20160629072758.GA2778@Matej-PC.localdomain>
- <20160630130057.GE32030@marvin.atrad.com.au>
- <20160701191927.GA60048@f23x64.localdomain>
- <20160701212913.GA11588@Matej-PC.localdomain>
+From: Matej Groma <matejgroma@gmail.com>
+Subject: [PATCH] fujitsu-laptop: Rework brightness of eco led
+Date: Mon, 4 Jul 2016 12:04:12 +0200
+Message-ID: <20160704100409.GA5578@Matej-PC.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:57006 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932191AbcGCXib (ORCPT
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:35640 "EHLO
+	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750895AbcGDKER (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 3 Jul 2016 19:38:31 -0400
+	Mon, 4 Jul 2016 06:04:17 -0400
 Content-Disposition: inline
-In-Reply-To: <20160701212913.GA11588@Matej-PC.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matej Groma <matejgroma@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jwoithe@just42.net, dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 11:29:14PM +0200, Matej Groma wrote:
-> On Fri, Jul 01, 2016 at 12:19:27PM -0700, Darren Hart wrote:
-> > 1) Matej, why do you want to make this change? You mention consistency with
-> > other LEDs drivers - which ones? Also, why? Is there a tool or something that
-> > expects this behavior which you want to use? Why is this better than sticking
-> > with LED_OFF and LED_FULL?
-> 
-> I got the idea looking at the input leds - they all have set max
-> brightness at 1. I find it more intuitive because there are no
-> intermediate brightness levels changing nothing. Also, I think
-> brightness level 1 somewhat implies that the led should be at
-> least "a little on".
-> 
-> > 2) If we change it, we need to first introduce a version attribute (separate
-> > patch), and this patch following it should increment that version indicating the
-> > value policy change.
-> 
-> I understand your concerns about breaking the userspace. Another way of
-> handling this that comes to mind is not changing the max_brightness
-> but activating the leds on values 1-255. This does not break things
-> "as much". A version bump would be of course legitimate in either case.
-> However, a problem with the second approach is that the set value would
-> have to be stored in order to return the same when querying the status
-> of the led. Or, on second thought, it's probably best to leave this all
-> as it is.
+For the sake of internal consistency, unset maximum brightness of eco
+led and make it activatable only on values >= LED_FULL.
 
-At this point I am inclined to agree with you: leaving it as it is.  The
-need to version the user space attribute just to make what is ultimately a
-cosmetic change seems like a lot of churn which bring no practical benefit.
+Signed-off-by: Matej Groma <matejgroma@gmail.com>
+---
+Here is a small statistics covering max brightness of platform-x86 leds:
+1	other	unset
+8	6	7
+3/7 leds that have unset max_brightness are activated on nonzero value.
+The other 4 are fujitsu-laptop leds. Maybe someone from led subsystem
+would be willing to look at this and standardise guidelines on how and
+when to use different brightness levels. Hopefully, this could then be
+reverted.
 
-> By the way, the eco led patch (d6b88f64b0d46) I sent previously has set
-> max_brightness of the led to 1. If that was a slip through, I can send
-> a patch that corrects it.
+ drivers/platform/x86/fujitsu-laptop.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-I could argue both ways here because there's no userspace API to worry about
-at this stage.  Given what Darren said there's no definitive convention to
-call on.  I think on balance it would make more sense if the API for the
-Fujitsu LEDS was consistent within itself as much as possible, so if you
-could do up a patch to correct this for the eco LED that would be
-appreciated.
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 6ce8e78..61f39ab 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -212,7 +212,6 @@ static void eco_led_set(struct led_classdev *cdev,
 
-If down the track circumstances create a practical benefit to an API change
-then we can always revisit this.
+ static struct led_classdev eco_led = {
+  .name = "fujitsu::eco_led",
+- .max_brightness = 1,
+  .brightness_get = eco_led_get,
+  .brightness_set = eco_led_set
+ };
+@@ -306,7 +305,7 @@ static void eco_led_set(struct led_classdev *cdev,
+ 	int curr;
 
-Regards
-  jonathan
+ 	curr = call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
+-	if (brightness)
++	if (brightness >= LED_FULL)
+ 		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON);
+ 	else
+ 		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_ON);
+@@ -352,7 +351,7 @@ static enum led_brightness eco_led_get(struct led_classdev *cdev)
+ 	enum led_brightness brightness = LED_OFF;
+
+ 	if (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
+-		brightness = cdev->max_brightness;
++		brightness = LED_FULL;
+
+ 	return brightness;
+ }
