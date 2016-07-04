@@ -1,56 +1,130 @@
 From: Dan O'Donovan <dan@emutex.com>
-Subject: Re: UP Board and similar
-Date: Mon, 4 Jul 2016 16:33:45 +0100
-Message-ID: <577A81D9.4010800@emutex.com>
-References: <CAHp75VcOMFygekkhCEtWigW+JaKOgNQrM9M-3MtKemBF3arBOQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] platform drivers for UP Board
+Date: Mon, 4 Jul 2016 16:37:45 +0100
+Message-ID: <577A82C9.9000301@emutex.com>
+References: <1465762392-9205-1-git-send-email-dan@emutex.com>
+ <20160701224450.GG60048@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bert.emutex.com ([91.103.1.109]:33746 "EHLO bert.emutex.com"
+Received: from bert.emutex.com ([91.103.1.109]:33750 "EHLO bert.emutex.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932558AbcGDPdt (ORCPT
+	id S932500AbcGDPhw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jul 2016 11:33:49 -0400
-In-Reply-To: <CAHp75VcOMFygekkhCEtWigW+JaKOgNQrM9M-3MtKemBF3arBOQ@mail.gmail.com>
+	Mon, 4 Jul 2016 11:37:52 -0400
+In-Reply-To: <20160701224450.GG60048@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: "Darren Hart (Google+)" <reply-101378268367730737515@profiles.google.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@intel.com>
 
-Hi Andy
+Hi Darren
 
-On 06/30/2016 09:36 PM, Andy Shevchenko wrote:
-> Hi!
+On 07/01/2016 11:44 PM, Darren Hart wrote:
+> On Sun, Jun 12, 2016 at 09:13:07PM +0100, Dan O'Donovan wrote:
 >
-> Thank you for the series and sorry to answer as a new mail, just
-> subscribed to the list and didn't manage to retrieve archives (seems
-> VGER doesn't have them).
-Thanks very much for your reply.  I appreciate you kick-starting a
-discussion on these patches.  :-)
+> Hi Dan,
 >
-> So, regarding to enabling UP Board and similar open connected  boards
-> (Galileo, Edison/Arduino, etc.).
+> My apologies for the delay. Two tips on getting a response to RFCs.
 >
-> The mentioned boards are x86. There is currently no way to handle
-> pinctrl on them since they are ACPI-based. Moreover pinctrl doesn't
-> have a way to configure stuff for customer needs!
+> 1) Always include the individuals you are looking for a response from directly
+> on Cc. In this case, that should have been me as the maintainer of the
+> platform-driver-x86 tree. Also, Andy and Mika as he noted in a separate email. I
+> would also suggest the mfd maintainer as your CPLD driver is just that. The
+> get_maintainer.pl script will help you there:
 >
-> What is my vision on the issue. Currently we have pending ACPI patches
-> from Octavian that help us to load ACPI DSDT overlays in a way as it
-> works for DT. This will make possible to create a blob to configure
-> pins. Thus, part of the patch series which hard codes the mappings is
-> not needed. And therefore your drivers should go somewhere under
-> drivers/pinctrl/intel folder which Mika (mostly) and I are supporting.
-Yes, I think that makes sense.  This is essentially a pin control driver
-(except for some LED control functionality).
+> $ scripts/get_maintainer.pl -f drivers/platform/x86/
+> Darren Hart <dvhart@infradead.org> (maintainer:X86 PLATFORM DRIVERS)
+> platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
+> linux-kernel@vger.kernel.org (open list)
 >
-> We still need to agree on the above: which folder and how those
-> drivers should look like.
-Darren has suggested that I re-post the patches for review, so I'll do
-that next and see where the discussion takes us. 
+> $ scripts/get_maintainer.pl -f drivers/mfd
+> Lee Jones <lee.jones@linaro.org> (supporter:MULTIFUNCTION DEVICES (MFD))
+> linux-kernel@vger.kernel.org (open list)
 >
-> P.S. Dan, next time please include me and Mika into Cc list for such
-> things. Thanks!
+> 2) All patches should Cc LKML
 >
-Will do, thanks!
+> Before I respond, I would recommend that you resend this series, as is, and
+> include the above names and lists on Cc. For Andy and Mika, please use:
+>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> I'll wait for you to resend and we'll start the review so that everyone that
+> needs to receive the emails has, and that people that may be interested that we
+> haven't thought of can find it on LKML.
+Thanks very much for your reply, and your guidance above.  I will resend
+the patch as you suggest.
+>
+> Thanks,
+>
+>> The UP Board is a new SBC based on the Intel Atom X5-Z8350 "Cherry 
+>> Trail" SoC and features a 40-pin I/O pin header and form-factor 
+>> inspired by the Raspberry Pi 2.
+>>
+>> It utilises a CPLD between the SoC and the external 40-pin header
+>> to provide buffered voltage level-shifting of the I/O signals, mux
+>> switching and LED control, and programmable pin mapping between the
+>> SoC and the external pin header.
+>>
+>> The gpio, pinctrl and led drivers provided in this patch series 
+>> enable and manage the functions provided by that CPLD.
+>>
+>> I have some open questions about this patch series:
+>>  * Is it ok to place all of these various UP board drivers together
+>>    in drivers/platform/x86/, or would it be preferable to place them
+>>    in the respective sub-system directories (gpio, pinctrl, etc.)?
+>>    My rationale for keeping them together here is that they are all
+>>    specific to this UP Board platform and not expected to be
+>>    generally useful on any other platforms (except variants of UP).
+>>  * Is it acceptable to include hard-coded references to ACPI device
+>>    IDs (representing devices integrated on the SoC devices) for the
+>>    purpose of pin map and gpio references? Or is it required to
+>>    use only named gpio pins?
+>>
+>> Any feedback/suggestions on the questions above, and the patch series
+>> in general, would be greatly appreciated!
+>>
+>> Further information on the UP board can be obtained from [1] and [2].
+>>
+>> [1] https://www.up-board.org
+>> [2] https://up-community.org
+>>
+>> Dan O'Donovan (5):
+>>   platform: x86: add driver for UP Board I/O CPLD
+>>   platform: x86: add UP Board I/O pinctrl driver
+>>   platform: x86: add UP Board I/O gpio driver
+>>   platform: x86: add UP Board CPLD LED driver
+>>   platform: x86: add platform driver for UP Board
+>>
+>>  drivers/platform/x86/Kconfig            |  13 +
+>>  drivers/platform/x86/Makefile           |   5 +
+>>  drivers/platform/x86/up_board.c         | 167 ++++++++++
+>>  drivers/platform/x86/up_board_cpld.c    | 560 ++++++++++++++++++++++++++++++++
+>>  drivers/platform/x86/up_board_cpld.h    |  38 +++
+>>  drivers/platform/x86/up_board_gpio.c    | 254 +++++++++++++++
+>>  drivers/platform/x86/up_board_gpio.h    |  59 ++++
+>>  drivers/platform/x86/up_board_leds.c    |  85 +++++
+>>  drivers/platform/x86/up_board_leds.h    |  50 +++
+>>  drivers/platform/x86/up_board_pinctrl.c | 285 ++++++++++++++++
+>>  drivers/platform/x86/up_board_pinctrl.h | 102 ++++++
+>>  11 files changed, 1618 insertions(+)
+>>  create mode 100644 drivers/platform/x86/up_board.c
+>>  create mode 100644 drivers/platform/x86/up_board_cpld.c
+>>  create mode 100644 drivers/platform/x86/up_board_cpld.h
+>>  create mode 100644 drivers/platform/x86/up_board_gpio.c
+>>  create mode 100644 drivers/platform/x86/up_board_gpio.h
+>>  create mode 100644 drivers/platform/x86/up_board_leds.c
+>>  create mode 100644 drivers/platform/x86/up_board_leds.h
+>>  create mode 100644 drivers/platform/x86/up_board_pinctrl.c
+>>  create mode 100644 drivers/platform/x86/up_board_pinctrl.h
+>>
+>> -- 
+>> 2.1.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
