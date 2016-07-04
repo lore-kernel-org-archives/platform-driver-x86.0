@@ -1,8 +1,8 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v1 1/1] platform/x86/intel_pmc_core: Convert to
  DEFINE_DEBUGFS_ATTRIBUTE
-Date: Mon, 4 Jul 2016 17:05:18 +0530
-Message-ID: <20160704113518.GC1177@rajaneesh-OptiPlex-9010>
+Date: Mon, 04 Jul 2016 15:01:33 +0300
+Message-ID: <1467633693.30123.452.camel@linux.intel.com>
 References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
  <20160628090504.GA2169@rajaneesh-OptiPlex-9010>
  <1467108307.30123.303.camel@linux.intel.com>
@@ -12,95 +12,74 @@ References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.co
  <1467204505.30123.326.camel@linux.intel.com>
  <20160629132038.GB26750@rajaneesh-OptiPlex-9010>
  <1467207230.30123.329.camel@linux.intel.com>
+	 <20160704113518.GC1177@rajaneesh-OptiPlex-9010>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:2206 "EHLO mga01.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:18441 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753558AbcGDLfW (ORCPT
+	id S1753161AbcGDMBg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jul 2016 07:35:22 -0400
-Content-Disposition: inline
-In-Reply-To: <1467207230.30123.329.camel@linux.intel.com>
+	Mon, 4 Jul 2016 08:01:36 -0400
+In-Reply-To: <20160704113518.GC1177@rajaneesh-OptiPlex-9010>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 
-> 
-> So, if there is no objections (taking into consideration minors you
-> mentioned) I think the patch can be applied.
->
+On Mon, 2016-07-04 at 17:05 +0530, Rajneesh Bhardwaj wrote:
+> >=20
+> >=20
+> > So, if there is no objections (taking into consideration minors you
+> > mentioned) I think the patch can be applied.
+> >=20
+>=20
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -23,6 +23,7 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/io.h>
+> =C2=A0#include <linux/pci.h>
+> +#include <linux/seq_file.h>
 
-I think we still need to address a couple of minor issues and might need a
-version 2 of this patch. In case we want to apply this one here is one patch
-that can applied on top of this one. Please see the proposed changes below.
+What is this for?
 
-From 42d899968c8c07f103390fcaebdaf2ba54cb3363 Mon Sep 17 00:00:00 2001
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Date: Mon, 4 Jul 2016 16:22:31 +0530
-Subject: [PATCH] platform/x86/intel_pmc_core: Enhances debugfs attribute
-patch
+>=20
+> =C2=A0#include <asm/cpu_device_id.h>
+> =C2=A0#include <asm/intel-family.h>
+> @@ -88,7 +89,8 @@ static int pmc_core_dev_state_get(void *data, u64
+> *val)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> =C2=A0}
+>=20
+> -DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get,
+> NULL,
+> "%llu");
+> +DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get,
+> NULL,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"%=
+llu\n");
 
-Refines "convert to DEFINE_DEBUGFS_ATTRIBUTE" patch for PMC Core.
+Okay, since debugfs is actually using them in standard code, we may add
+it here as well.
 
-This change can be applied over the Convert to DEFINE_DEBUGFS_ATTRIBUTE
-patch sent by Andy Shevchenko to the platform drivers mailing list. This
-helps preserve usage of seq_file.h in the pmc_core driver. This also caters
-to some minor cosmetic changes suggested during the code review process.
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -29,7 +29,6 @@
+> =C2=A0#define SPT_PMC_MMIO_REG_LEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A00x100
+> =C2=A0#define SPT_PMC_SLP_S0_RES_COUNTER_STEP=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+0x64
+>=20
+> -struct dentry;
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 4 +++-
- drivers/platform/x86/intel_pmc_core.h | 1 -
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Agreed.
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c
-b/drivers/platform/x86/intel_pmc_core.c
-index c29f59b..18af49f 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -23,6 +23,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/pci.h>
-+#include <linux/seq_file.h>
+--=20
 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-@@ -88,7 +89,8 @@ static int pmc_core_dev_state_get(void *data, u64 *val)
-        return 0;
- }
-
--DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL,
-"%llu");
-+DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL,
-+                       "%llu\n");
-
- static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
- {
-diff --git a/drivers/platform/x86/intel_pmc_core.h
-b/drivers/platform/x86/intel_pmc_core.h
-index 9689b92..6265480 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -29,7 +29,6 @@
- #define SPT_PMC_MMIO_REG_LEN                   0x100
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP                0x64
-
--struct dentry;
-
- /**
-  * struct pmc_dev - pmc device structure
---
-1.9.1
-
-
-> -- 
-> 
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Intel Finland Oy
-
--- 
-Best Regards,
-Rajneesh
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
