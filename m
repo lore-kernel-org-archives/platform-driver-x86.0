@@ -1,71 +1,106 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] fujitsu-laptop: Rework brightness of eco led
-Date: Mon, 4 Jul 2016 20:59:14 +0930
-Message-ID: <20160704112914.GB1945@marvin.atrad.com.au>
-References: <20160704100409.GA5578@Matej-PC.localdomain>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH v1 1/1] platform/x86/intel_pmc_core: Convert to
+ DEFINE_DEBUGFS_ATTRIBUTE
+Date: Mon, 4 Jul 2016 17:05:18 +0530
+Message-ID: <20160704113518.GC1177@rajaneesh-OptiPlex-9010>
+References: <1465840609-136143-1-git-send-email-andriy.shevchenko@linux.intel.com>
+ <20160628090504.GA2169@rajaneesh-OptiPlex-9010>
+ <1467108307.30123.303.camel@linux.intel.com>
+ <20160629080325.GA11318@rajaneesh-OptiPlex-9010>
+ <1467200985.30123.320.camel@linux.intel.com>
+ <20160629121604.GA26750@rajaneesh-OptiPlex-9010>
+ <1467204505.30123.326.camel@linux.intel.com>
+ <20160629132038.GB26750@rajaneesh-OptiPlex-9010>
+ <1467207230.30123.329.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:57206 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752844AbcGDL3y (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:2206 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753558AbcGDLfW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jul 2016 07:29:54 -0400
+	Mon, 4 Jul 2016 07:35:22 -0400
 Content-Disposition: inline
-In-Reply-To: <20160704100409.GA5578@Matej-PC.localdomain>
+In-Reply-To: <1467207230.30123.329.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matej Groma <matejgroma@gmail.com>
-Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 
-On Mon, Jul 04, 2016 at 12:04:12PM +0200, Matej Groma wrote:
-> For the sake of internal consistency, unset maximum brightness of eco
-> led and make it activatable only on values >= LED_FULL.
 > 
-> Signed-off-by: Matej Groma <matejgroma@gmail.com>
+> So, if there is no objections (taking into consideration minors you
+> mentioned) I think the patch can be applied.
+>
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+I think we still need to address a couple of minor issues and might need a
+version 2 of this patch. In case we want to apply this one here is one patch
+that can applied on top of this one. Please see the proposed changes below.
 
-> ---
-> Here is a small statistics covering max brightness of platform-x86 leds:
-> 1	other	unset
-> 8	6	7
-> 3/7 leds that have unset max_brightness are activated on nonzero value.
-> The other 4 are fujitsu-laptop leds. Maybe someone from led subsystem
-> would be willing to look at this and standardise guidelines on how and
-> when to use different brightness levels. Hopefully, this could then be
-> reverted.
+From 42d899968c8c07f103390fcaebdaf2ba54cb3363 Mon Sep 17 00:00:00 2001
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Date: Mon, 4 Jul 2016 16:22:31 +0530
+Subject: [PATCH] platform/x86/intel_pmc_core: Enhances debugfs attribute
+patch
+
+Refines "convert to DEFINE_DEBUGFS_ATTRIBUTE" patch for PMC Core.
+
+This change can be applied over the Convert to DEFINE_DEBUGFS_ATTRIBUTE
+patch sent by Andy Shevchenko to the platform drivers mailing list. This
+helps preserve usage of seq_file.h in the pmc_core driver. This also caters
+to some minor cosmetic changes suggested during the code review process.
+
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 4 +++-
+ drivers/platform/x86/intel_pmc_core.h | 1 -
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c
+b/drivers/platform/x86/intel_pmc_core.c
+index c29f59b..18af49f 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -23,6 +23,7 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/pci.h>
++#include <linux/seq_file.h>
+
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+@@ -88,7 +89,8 @@ static int pmc_core_dev_state_get(void *data, u64 *val)
+        return 0;
+ }
+
+-DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL,
+"%llu");
++DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL,
++                       "%llu\n");
+
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+diff --git a/drivers/platform/x86/intel_pmc_core.h
+b/drivers/platform/x86/intel_pmc_core.h
+index 9689b92..6265480 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -29,7 +29,6 @@
+ #define SPT_PMC_MMIO_REG_LEN                   0x100
+ #define SPT_PMC_SLP_S0_RES_COUNTER_STEP                0x64
+
+-struct dentry;
+
+ /**
+  * struct pmc_dev - pmc device structure
+--
+1.9.1
+
+
+> -- 
 > 
->  drivers/platform/x86/fujitsu-laptop.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 6ce8e78..61f39ab 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -212,7 +212,6 @@ static void eco_led_set(struct led_classdev *cdev,
-> 
->  static struct led_classdev eco_led = {
->   .name = "fujitsu::eco_led",
-> - .max_brightness = 1,
->   .brightness_get = eco_led_get,
->   .brightness_set = eco_led_set
->  };
-> @@ -306,7 +305,7 @@ static void eco_led_set(struct led_classdev *cdev,
->  	int curr;
-> 
->  	curr = call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
-> -	if (brightness)
-> +	if (brightness >= LED_FULL)
->  		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON);
->  	else
->  		call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_ON);
-> @@ -352,7 +351,7 @@ static enum led_brightness eco_led_get(struct led_classdev *cdev)
->  	enum led_brightness brightness = LED_OFF;
-> 
->  	if (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
-> -		brightness = cdev->max_brightness;
-> +		brightness = LED_FULL;
-> 
->  	return brightness;
->  }
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Intel Finland Oy
+
+-- 
+Best Regards,
+Rajneesh
