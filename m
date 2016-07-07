@@ -1,155 +1,96 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [RESEND RFC PATCH 1/5] platform: x86: add driver for UP Board
- I/O CPLD
-Date: Thu, 07 Jul 2016 14:43:36 +0100
-Message-ID: <1467899016.17253.135.camel@nexus-software.ie>
-References: <1465762392-9205-1-git-send-email-dan@emutex.com>
-	 <1467648434-29080-1-git-send-email-dan@emutex.com>
-	 <1467648434-29080-2-git-send-email-dan@emutex.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel-vbtn: new driver for Intel Virtual Button
+Date: Thu, 7 Jul 2016 15:01:42 -0700
+Message-ID: <20160707220142.GA3927@f23x64.localdomain>
+References: <1467337909-20985-1-git-send-email-acelan.kao@canonical.com>
+ <20160701214952.GF60048@f23x64.localdomain>
+ <CAMz9Wg9JpS7zdNQZ=Z-mO12Mtz8N-rX-GpWbuF3+ZtDHkiT=bQ@mail.gmail.com>
+ <20160706195824.GB66341@f23x64.localdomain>
+ <CAFv23Qmtz+HcpuWtmhBB+7gMhEBaWWDqzFNmzGmbuntBzE79FA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f52.google.com ([74.125.82.52]:36955 "EHLO
-	mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751243AbcGGNnk (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:40108 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751926AbcGGWBp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Jul 2016 09:43:40 -0400
-Received: by mail-wm0-f52.google.com with SMTP id a66so32587100wme.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Jul 2016 06:43:39 -0700 (PDT)
-In-Reply-To: <1467648434-29080-2-git-send-email-dan@emutex.com>
+	Thu, 7 Jul 2016 18:01:45 -0400
+Content-Disposition: inline
+In-Reply-To: <CAFv23Qmtz+HcpuWtmhBB+7gMhEBaWWDqzFNmzGmbuntBzE79FA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan O'Donovan <dan@emutex.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org
-Cc: lee.jones@linaro.org, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
 
-On Mon, 2016-07-04 at 17:07 +0100, Dan O'Donovan wrote:
-> +static int cpld_reg_update(struct up_board_cpld *cpld)
-> +{
-> +	u64 dir_reg_verify =3D 0;
-> +	int i;
-> +
-> +	/* Reset the CPLD internal counters */
-> +	gpiod_set_value(cpld->reset_gpio.soc_gpiod, 0);
-> +	gpiod_set_value(cpld->reset_gpio.soc_gpiod, 1);
-> +
-> +	/*
-> +	=C2=A0* Update the CPLD dir register
-> +	=C2=A0* data_in will be sampled on each rising edge of the strobe
-> signal
-> +	=C2=A0*/
-> +	for (i =3D cpld->dir_reg_size - 1; i >=3D 0; i--) {
-> +		gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 0);
-> +		gpiod_set_value(cpld->data_in_gpio.soc_gpiod,
-> +				(cpld->dir_reg >> i) & 0x1);
-> +		gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 1);
-> +	}
-> +
-> +	/*
-> +	=C2=A0* Read back and verify the value
-> +	=C2=A0* data_out will be set on each rising edge of the strobe
-> signal
-> +	=C2=A0*/
-> +	for (i =3D cpld->dir_reg_size - 1; i >=3D 0; i--) {
-> +		int data_out;
-> +
-> +		gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 0);
-> +		gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 1);
-> +		data_out =3D gpiod_get_value(cpld-
-> >data_out_gpio.soc_gpiod);
-> +		dir_reg_verify |=3D (u64)data_out << i;
-> +	}
-> +
-> +	if (dir_reg_verify !=3D cpld->dir_reg) {
-> +		pr_err("CPLD verify error (expected: %llX, actual:
-> %llX)\n",
-> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpld->dir_reg, dir_reg_v=
-erify);
+On Thu, Jul 07, 2016 at 10:15:38AM +0800, AceLan Kao wrote:
+> Hi Darren,
+> 
+> I reply your questions in-line.
+> 
+> 2016-07-07 3:58 GMT+08:00 Darren Hart <dvhart@infradead.org>:
+> > On Mon, Jul 04, 2016 at 09:25:06AM +0800, AceLan Kao wrote:
+> >> Hi Darren,
+> >>
+> >>
+> >> This is the DSDT table from my machine,
+> >> and this is the first time we have the machine which enabled virtual
+> >> button feature.
+> >>
+> >> I've granted the permission to upstream the driver,
+> >> our contact window is Zhang, Xiong Y from Intel.
+> >
+> > Thanks AceLan,
+> >
+> > A few questions.
+> >
+> > Which specific Dell XPS 13 are you using? Which model is reported via dmidecode?
+> >
+> > Which firmware version is it (also dmidecode)?
+> For the above 2 questions, this is the latest model we are working on,
+> and for the sake of confidential, I can't reveal its model name and/or
+> other info to the public.
+> 
 
-dev_err();
+I see, that might explain why it isn't present in the DSDT on my Skylake XPS 13.
 
-> +		return -EIO;
-> +	}
-> +
-> +	/* Issue a dummy STB cycle to latch the dir register updates
-> */
-> +	gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 0);
-> +	gpiod_set_value(cpld->strobe_gpio.soc_gpiod, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * up_board_cpld_reg_set_bit() - update CPLD configuration
-> + * @cpld:	CPLD internal context info reference
-> + * @offset:	bit offset in CPLD register to set
-> + * @value:	boolean value to set in CPLD register bit selected
-> by offset
-> + *
-> + * Return:	Returns 0 if successful, or negative error value
-> otherwise
-> + */
-> +static int up_board_cpld_reg_set_bit(struct up_board_cpld *cpld,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int offset, int value)
-> +{
-> +	u64 old_regval;
-> +	int ret =3D 0;
-> +
-> +	spin_lock(&cpld->lock);
-> +
-> +	old_regval =3D cpld->dir_reg;
-> +
-> +	if (value)
-> +		cpld->dir_reg |=3D 1ULL << offset;
-> +	else
-> +		cpld->dir_reg &=3D ~(1ULL << offset);
-> +
-> +	/* Only update the CPLD register if it has changed */
-> +	if (cpld->dir_reg !=3D old_regval)
-> +		ret =3D cpld_reg_update(cpld);
-> +
-> +	spin_unlock(&cpld->lock);
+> >
+> > Your DSDT suggests the INT33D6 is only advertised to the OS if the OSYS variable
+> > is >= 0x7DD, the value for "Windows 2013" set in _INI. Are you passing acpi_osi=
+> > to the Linux kernel?
+> No, we don't pass acpi_osi on most of our projects.
+> 
+> >
+> > Given the similarities of this driver and the intel-hid driver, I wonder if
+> > there is a possibility to augment the intel-hid driver to support this one
+> > additional hotkey?. There are two ACPI object eval calls we would have to
+> > special case and also decide how to deal with the suspend/resume handling
+> > intel-hid employs, but otherwise, these drivers appear to do the same exact
+> > thing.
+> >
+> > Rafael, we have a number of drivers in this subsystem which match on multiple
+> > ACPI IDs. Any general guidance on the preference for one driver per HID versus
+> > killing all the boilerplate and special casing a couple of things in a single
+> > driver for two or more HIDs?
+> >
+> > Alex, AceLan, what was your motivation to do this as a new driver rather than
+> > augmenting intel-hid?
+> Yes, intel-vbtn and intel-hid do almost the same thing, but intel-vbtn
+> use event code
+> passed from notification handler to do his job
+> (no need to use ACPI function to retrieve the event value),
+> and the event code conflicts with the usage in intel-hid.
+> ex. event code = 0xc0 in intel-vbtn is power button has been pressed,
+>                      in intel-hid is used to checking the valid event
+> And I believe we'll need a sysfs interface for user to configure the
+> keyevent report by intel-vbtn,
+> on tablet/phone, we will want to suspend directly while pressing the
+> power button,
+> and on laptop, we just need it behaves as a traditional power button.
+> It's more clean/simple to have a standalone driver to handle this.
+> 
 
-Seems to me as though cpld_reg_update() could be quite lengthy. Would a
-mutex be a better choice here ?
+Thanks for the clarification. I've queued this patch to testing for 4.8.
 
-
-> +static int up_board_cpld_setup(struct up_board_cpld *cpld)
-> +{
-> +	struct up_board_gpio_info *cpld_gpios[] =3D {
-> +		&cpld->strobe_gpio,
-> +		&cpld->reset_gpio,
-> +		&cpld->data_in_gpio,
-> +		&cpld->data_out_gpio,
-> +		&cpld->oe_gpio,
-> +	};
-> +	int i, ret;
-> +
-> +	spin_lock_init(&cpld->lock);
-> +
-> +	/* Initialise the CPLD config input GPIOs as outputs,
-> initially low */
-> +	for (i =3D 0; i < ARRAY_SIZE(cpld_gpios); i++) {
-> +		struct up_board_gpio_info *gpio =3D cpld_gpios[i];
-> +
-> +		ret =3D up_board_soc_gpio_setup(cpld, gpio);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret =3D devm_gpio_request_one(cpld->dev, gpio-
-> >soc_gpio,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0gpio->soc_gpio_flags,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0dev_name(cpld->dev));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Load initial CPLD configuration (all pins set for GPIO
-> input) */
-> +	ret =3D cpld_reg_update(cpld);
-> +	if (ret) {
-
-devm_gpio_free() ?
-
----
-bod
+-- 
+Darren Hart
+Intel Open Source Technology Center
