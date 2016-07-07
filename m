@@ -1,161 +1,173 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] apple-gmux: Sphinxify docs
-Date: Wed, 6 Jul 2016 13:40:25 -0700
-Message-ID: <20160706204025.GD66341@f23x64.localdomain>
-References: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Subject: Re: [RESEND RFC PATCH 5/5] platform: x86: add platform driver for
+ UP Board
+Date: Thu, 07 Jul 2016 02:57:56 +0100
+Message-ID: <1467856676.17253.126.camel@nexus-software.ie>
+References: <1465762392-9205-1-git-send-email-dan@emutex.com>
+	 <1467648434-29080-1-git-send-email-dan@emutex.com>
+	 <1467648434-29080-6-git-send-email-dan@emutex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jani Nikula <jani.nikula@intel.com>, Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f48.google.com ([74.125.82.48]:37603 "EHLO
+	mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751504AbcGGB6A (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 6 Jul 2016 21:58:00 -0400
+Received: by mail-wm0-f48.google.com with SMTP id a66so14111827wme.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Jul 2016 18:57:59 -0700 (PDT)
+In-Reply-To: <1467648434-29080-6-git-send-email-dan@emutex.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dan O'Donovan <dan@emutex.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org
+Cc: lee.jones@linaro.org, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org
 
-T24gTW9uLCBKdWwgMDQsIDIwMTYgYXQgMTI6NDA6MzVQTSArMDIwMCwgTHVrYXMgV3VubmVyIHdy
-b3RlOgo+IENvbnZlcnQgYXNjaWlkb2MtZm9ybWF0dGVkIGRvY3MgdG8gcnN0IGluIGFjY29yZGFu
-Y2Ugd2l0aCBKb25hdGhhbidzIGFuZAo+IEphbmkncyBlZmZvcnQgdG8gdXNlIHNwaGlueCBmb3Ig
-a2VybmVsLWRvYyByZW5kZXJpbmcgaW4gNC44LgoKU29tZWJvZHkgaGVscCBtZSBvdXQgaGVyZS4g
-SG93IGRvIEkgdmVyaWZ5IHRoaXMgd29ya3MgYW5kIHVzaW5nIHNwaGlueD8gdG8gYnVpbGQKdGhl
-IGRvY3M/IFNob3VsZCBJIGJlIG1lcmdpbmcgdGhpcyBkaXJlY3RseSwgb3IgaXMgaXQgZGVwZW5k
-ZW50IG9uIHNvbWV0aGluZyBKb24KaXMgd29ya2luZyBvbiBhbmQgdGhlcmVmb3JlIHRvIGJlIG1l
-cmdlZCBieSBoaW0/Cgo+IAo+IENjOiBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24ubmV0Pgo+
-IENjOiBKYW5pIE5pa3VsYSA8amFuaS5uaWt1bGFAaW50ZWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6
-IEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPgo+IC0tLQo+ICBkcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9hcHBsZS1nbXV4LmMgfCA1NSArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0t
-LS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygt
-KQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMgYi9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMKPiBpbmRleCA0MDM0ZDJkLi5hNjZiZTEz
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdtdXguYwo+ICsrKyBi
-L2RyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdtdXguYwo+IEBAIC0zMSwxOSArMzEsMjEgQEAK
-PiAgLyoqCj4gICAqIERPQzogT3ZlcnZpZXcKPiAgICoKPiAtICogOjE6ICBodHRwOi8vd3d3Lmxh
-dHRpY2VzZW1pLmNvbS9lbi9Qcm9kdWN0cy9GUEdBYW5kQ1BMRC9MYXR0aWNlWFAyLmFzcHgKPiAt
-ICogOjI6ICBodHRwOi8vd3d3LnJlbmVzYXMuY29tL3Byb2R1Y3RzL21wdW1jdS9oOHMvaDhzMjEw
-MC9oOHMyMTEzL2luZGV4LmpzcAo+IC0gKgo+ICAgKiBnbXV4IGlzIGEgbWljcm9jb250cm9sbGVy
-IGJ1aWx0IGludG8gdGhlIE1hY0Jvb2sgUHJvIHRvIHN1cHBvcnQgZHVhbCBHUFVzOgo+IC0gKiBB
-IHsxfVtMYXR0aWNlIFhQMl0gb24gcHJlLXJldGluYXMsIGEgezJ9W1JlbmVzYXMgUjRGMjExM10g
-b24gcmV0aW5hcy4KPiArICogQSBgTGF0dGljZSBYUDJgXyBvbiBwcmUtcmV0aW5hcywgYSBgUmVu
-ZXNhcyBSNEYyMTEzYF8gb24gcmV0aW5hcy4KPiAgICoKPiAgICogKFRoZSBNYWNQcm82LDEgMjAx
-MyBhbHNvIGhhcyBhIGdtdXgsIGhvd2V2ZXIgaXQgaXMgdW5jbGVhciB3aHkgc2luY2UgaXQgaGFz
-Cj4gICAqIGR1YWwgR1BVcyBidXQgbm8gYnVpbHQtaW4gZGlzcGxheS4pCj4gICAqCj4gICAqIGdt
-dXggaXMgY29ubmVjdGVkIHRvIHRoZSBMUEMgYnVzIG9mIHRoZSBzb3V0aGJyaWRnZS4gSXRzIEkv
-TyBwb3J0cyBhcmUKPiAgICogYWNjZXNzZWQgZGlmZmVyZW50bHkgZGVwZW5kaW5nIG9uIHRoZSBt
-aWNyb2NvbnRyb2xsZXI6IERyaXZlciBmdW5jdGlvbnMKPiAtICogdG8gYWNjZXNzIGEgcHJlLXJl
-dGluYSBnbXV4IGFyZSBpbmZpeGVkIGBfcGlvX2AsIHRob3NlIGZvciBhIHJldGluYSBnbXV4Cj4g
-LSAqIGFyZSBpbmZpeGVkIGBfaW5kZXhfYC4KPiArICogdG8gYWNjZXNzIGEgcHJlLXJldGluYSBn
-bXV4IGFyZSBpbmZpeGVkIGBgX3Bpb19gYCwgdGhvc2UgZm9yIGEgcmV0aW5hIGdtdXgKPiArICog
-YXJlIGluZml4ZWQgYGBfaW5kZXhfYGAuCj4gKyAqCj4gKyAqIC4uIF9MYXR0aWNlIFhQMjoKPiAr
-ICogICAgIGh0dHA6Ly93d3cubGF0dGljZXNlbWkuY29tL2VuL1Byb2R1Y3RzL0ZQR0FhbmRDUExE
-L0xhdHRpY2VYUDIuYXNweAo+ICsgKiAuLiBfUmVuZXNhcyBSNEYyMTEzOgo+ICsgKiAgICAgaHR0
-cDovL3d3dy5yZW5lc2FzLmNvbS9wcm9kdWN0cy9tcHVtY3UvaDhzL2g4czIxMDAvaDhzMjExMy9p
-bmRleC5qc3AKPiAgICovCj4gIAo+ICBzdHJ1Y3QgYXBwbGVfZ211eF9kYXRhIHsKPiBAQCAtMjcy
-LDE1ICsyNzQsMTUgQEAgc3RhdGljIGJvb2wgZ211eF9pc19pbmRleGVkKHN0cnVjdCBhcHBsZV9n
-bXV4X2RhdGEgKmdtdXhfZGF0YSkKPiAgLyoqCj4gICAqIERPQzogQmFja2xpZ2h0IGNvbnRyb2wK
-PiAgICoKPiAtICogOjM6ICBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9scDg1NDMu
-cGRmCj4gLSAqIDo0OiAgaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvbHA4NTQ1LnBk
-Zgo+IC0gKgo+ICAgKiBPbiBzaW5nbGUgR1BVIE1hY0Jvb2tzLCB0aGUgUFdNIHNpZ25hbCBmb3Ig
-dGhlIGJhY2tsaWdodCBpcyBnZW5lcmF0ZWQgYnkKPiAgICogdGhlIEdQVS4gT24gZHVhbCBHUFUg
-TWFjQm9vayBQcm9zIGJ5IGNvbnRyYXN0LCBlaXRoZXIgR1BVIG1heSBiZSBzdXNwZW5kZWQKPiAg
-ICogdG8gY29uc2VydmUgZW5lcmd5LiBIZW5jZSB0aGUgUFdNIHNpZ25hbCBuZWVkcyB0byBiZSBn
-ZW5lcmF0ZWQgYnkgYSBzZXBhcmF0ZQo+ICAgKiBiYWNrbGlnaHQgZHJpdmVyIHdoaWNoIGlzIGNv
-bnRyb2xsZWQgYnkgZ211eC4gVGhlIGVhcmxpZXN0IGdlbmVyYXRpb24KPiAtICogTUJQNSAyMDA4
-LzA5IHVzZXMgYSB7M31bVEkgTFA4NTQzXSBiYWNrbGlnaHQgZHJpdmVyLiBBbGwgbmV3ZXIgbW9k
-ZWxzCj4gLSAqIHVzZSBhIHs0fVtUSSBMUDg1NDVdLgo+ICsgKiBNQlA1IDIwMDgvMDkgdXNlcyBh
-IGBUSSBMUDg1NDNgXyBiYWNrbGlnaHQgZHJpdmVyLiBBbGwgbmV3ZXIgbW9kZWxzCj4gKyAqIHVz
-ZSBhIGBUSSBMUDg1NDVgXy4KPiArICoKPiArICogLi4gX1RJIExQODU0MzogaHR0cDovL3d3dy50
-aS5jb20vbGl0L2RzL3N5bWxpbmsvbHA4NTQzLnBkZgo+ICsgKiAuLiBfVEkgTFA4NTQ1OiBodHRw
-Oi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9scDg1NDUucGRmCj4gICAqLwo+ICAKPiAgc3Rh
-dGljIGludCBnbXV4X2dldF9icmlnaHRuZXNzKHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiZCkK
-PiBAQCAtMzEyLDI4ICszMTQsMjAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBiYWNrbGlnaHRfb3Bz
-IGdtdXhfYmxfb3BzID0gewo+ICAvKioKPiAgICogRE9DOiBHcmFwaGljcyBtdXgKPiAgICoKPiAt
-ICogOjU6ICBodHRwOi8vcGltZy1mcGl3LnVzcHRvLmdvdi9mZGQvMDcvODcwLzA4Ni8wLnBkZgo+
-IC0gKiA6NjogIGh0dHA6Ly93d3cubnhwLmNvbS9kb2N1bWVudHMvZGF0YV9zaGVldC9DQlRMMDYx
-NDEucGRmCj4gLSAqIDo3OiAgaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvaGQzc3My
-MTIucGRmCj4gLSAqIDo4OiAgaHR0cHM6Ly93d3cucGVyaWNvbS5jb20vYXNzZXRzL0RhdGFzaGVl
-dHMvUEkzVkRQMTI0MTIucGRmCj4gLSAqIDo5OiAgaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5
-bWxpbmsvc243NGx2NDA2NmEucGRmCj4gLSAqIDoxMDogaHR0cDovL3BkZi5kYXRhc2hlZXRhcmNo
-aXZlLmNvbS9pbmRleGVyZmlsZXMvRGF0YXNoZWV0cy1TVzE2L0RTQVNXMDAzMDg1MTEucGRmCj4g
-LSAqIDoxMTogaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvdHMzZHMxMDIyNC5wZGYK
-PiAtICoKPiAgICogT24gcHJlLXJldGluYXMsIHRoZSBMVkRTIG91dHB1dHMgb2YgYm90aCBHUFVz
-IGZlZWQgaW50byBnbXV4IHdoaWNoIG11eGVzCj4gICAqIGVpdGhlciBvZiB0aGVtIHRvIHRoZSBw
-YW5lbC4gT25lIG9mIHRoZSB0cmlja3MgZ211eCBoYXMgdXAgaXRzIHNsZWV2ZSBpcwo+ICAgKiB0
-byBsZW5ndGhlbiB0aGUgYmxhbmtpbmcgaW50ZXJ2YWwgb2YgaXRzIG91dHB1dCBkdXJpbmcgYSBz
-d2l0Y2ggdG8KPiAgICogc3luY2hyb25pemUgaXQgd2l0aCB0aGUgR1BVIHN3aXRjaGVkIHRvLiBU
-aGlzIGFsbG93cyBmb3IgYSBmbGlja2VyLWZyZWUKPiAtICogc3dpdGNoIHRoYXQgaXMgaW1wZXJj
-ZXB0aWJsZSBieSB0aGUgdXNlciAoezV9W1VTIDgsNjg3LDAwNyBCMl0pLgo+ICsgKiBzd2l0Y2gg
-dGhhdCBpcyBpbXBlcmNlcHRpYmxlIGJ5IHRoZSB1c2VyIChgVVMgOCw2ODcsMDA3IEIyYF8pLgo+
-ICAgKgo+ICAgKiBPbiByZXRpbmFzLCBtdXhpbmcgaXMgbm8gbG9uZ2VyIGRvbmUgYnkgZ211eCBp
-dHNlbGYsIGJ1dCBieSBhIHNlcGFyYXRlCj4gICAqIGNoaXAgd2hpY2ggaXMgY29udHJvbGxlZCBi
-eSBnbXV4LiBUaGUgY2hpcCBpcyB0cmlwbGUgc291cmNlZCwgaXQgaXMKPiAtICogZWl0aGVyIGFu
-IHs2fVtOWFAgQ0JUTDA2MTQyXSwgezd9W1RJIEhEM1NTMjEyXSBvciB7OH1bUGVyaWNvbSBQSTNW
-RFAxMjQxMl0uCj4gKyAqIGVpdGhlciBhbiBgTlhQIENCVEwwNjE0MmBfLCBgVEkgSEQzU1MyMTJg
-XyBvciBgUGVyaWNvbSBQSTNWRFAxMjQxMmBfLgo+ICAgKiBUaGUgcGFuZWwgaXMgZHJpdmVuIHdp
-dGggZURQIGluc3RlYWQgb2YgTFZEUyBzaW5jZSB0aGUgcGl4ZWwgY2xvY2sKPiAgICogcmVxdWly
-ZWQgZm9yIHJldGluYSByZXNvbHV0aW9uIGV4Y2VlZHMgTFZEUycgbGltaXRzLgo+ICAgKgo+ICAg
-KiBQcmUtcmV0aW5hcyBhcmUgYWJsZSB0byBzd2l0Y2ggdGhlIHBhbmVsJ3MgRERDIHBpbnMgc2Vw
-YXJhdGVseS4KPiAtICogVGhpcyBpcyBoYW5kbGVkIGJ5IGEgezl9W1RJIFNONzRMVjQwNjZBXSB3
-aGljaCBpcyBjb250cm9sbGVkIGJ5IGdtdXguCj4gKyAqIFRoaXMgaXMgaGFuZGxlZCBieSBhIGBU
-SSBTTjc0TFY0MDY2QWBfIHdoaWNoIGlzIGNvbnRyb2xsZWQgYnkgZ211eC4KPiAgICogVGhlIGlu
-YWN0aXZlIEdQVSBjYW4gdGh1cyBwcm9iZSB0aGUgcGFuZWwncyBFRElEIHdpdGhvdXQgc3dpdGNo
-aW5nIG92ZXIKPiAgICogdGhlIGVudGlyZSBwYW5lbC4gUmV0aW5hcyBsYWNrIHRoaXMgZnVuY3Rp
-b25hbGl0eSBhcyB0aGUgY2hpcHMgdXNlZCBmb3IKPiAgICogZURQIG11eGluZyBhcmUgaW5jYXBh
-YmxlIG9mIHN3aXRjaGluZyB0aGUgQVVYIGNoYW5uZWwgc2VwYXJhdGVseSAoc2VlCj4gQEAgLTM0
-NCwxNSArMzM4LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYmFja2xpZ2h0X29wcyBnbXV4X2Js
-X29wcyA9IHsKPiAgICoKPiAgICogVGhlIGV4dGVybmFsIERQIHBvcnQgaXMgb25seSBmdWxseSBz
-d2l0Y2hhYmxlIG9uIHRoZSBmaXJzdCB0d28gdW5pYm9keQo+ICAgKiBNYWNCb29rIFBybyBnZW5l
-cmF0aW9ucywgTUJQNSAyMDA4LzA5IGFuZCBNQlA2IDIwMTAuIFRoaXMgaXMgZG9uZSBieSBhbgo+
-IC0gKiB7Nn1bTlhQIENCVEwwNjE0MV0gd2hpY2ggaXMgY29udHJvbGxlZCBieSBnbXV4LiBJdCdz
-IHRoZSBwcmVkZWNlc3NvciBvZiB0aGUKPiArICogYE5YUCBDQlRMMDYxNDFgXyB3aGljaCBpcyBj
-b250cm9sbGVkIGJ5IGdtdXguIEl0J3MgdGhlIHByZWRlY2Vzc29yIG9mIHRoZQo+ICAgKiBlRFAg
-bXV4IG9uIHJldGluYXMsIHRoZSBkaWZmZXJlbmNlIGJlaW5nIHN1cHBvcnQgZm9yIDIuNyB2ZXJz
-dXMgNS40IEdiaXQvcy4KPiAgICoKPiAgICogVGhlIGZvbGxvd2luZyBNYWNCb29rIFBybyBnZW5l
-cmF0aW9ucyByZXBsYWNlZCB0aGUgZXh0ZXJuYWwgRFAgcG9ydCB3aXRoIGEKPiAgICogY29tYmlu
-ZWQgRFAvVGh1bmRlcmJvbHQgcG9ydCBhbmQgbG9zdCB0aGUgYWJpbGl0eSB0byBzd2l0Y2ggaXQg
-YmV0d2VlbiBHUFVzLAo+ICAgKiBjb25uZWN0aW5nIGl0IGVpdGhlciB0byB0aGUgZGlzY3JldGUg
-R1BVIG9yIHRoZSBUaHVuZGVyYm9sdCBjb250cm9sbGVyLgo+ICAgKiBPZGRseSBlbm91Z2gsIHdo
-aWxlIHRoZSBmdWxsIHBvcnQgaXMgbm8gbG9uZ2VyIHN3aXRjaGFibGUsIEFVWCBhbmQgSFBECj4g
-LSAqIGFyZSBzdGlsbCBzd2l0Y2hhYmxlIGJ5IHdheSBvZiBhbiB7MTB9W05YUCBDQlRMMDMwNjJd
-IChvbiBwcmUtcmV0aW5hcwo+IC0gKiBNQlA4IDIwMTEgYW5kIE1CUDkgMjAxMikgb3IgdHdvIHsx
-MX1bVEkgVFMzRFMxMDIyNF0gKG9uIHJldGluYXMpIHVuZGVyIHRoZQo+ICsgKiBhcmUgc3RpbGwg
-c3dpdGNoYWJsZSBieSB3YXkgb2YgYW4gYE5YUCBDQlRMMDMwNjJgXyAob24gcHJlLXJldGluYXMK
-PiArICogTUJQOCAyMDExIGFuZCBNQlA5IDIwMTIpIG9yIHR3byBgVEkgVFMzRFMxMDIyNGBfIChv
-biByZXRpbmFzKSB1bmRlciB0aGUKPiAgICogY29udHJvbCBvZiBnbXV4LiBTaW5jZSB0aGUgaW50
-ZWdyYXRlZCBHUFUgaXMgbWlzc2luZyB0aGUgbWFpbiBsaW5rLAo+ICAgKiBleHRlcm5hbCBkaXNw
-bGF5cyBhcHBlYXIgdG8gaXQgYXMgcGhhbnRvbXMgd2hpY2ggZmFpbCB0byBsaW5rLXRyYWluLgo+
-ICAgKgo+IEBAIC0zNjUsMTAgKzM1OSwxOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGJhY2tsaWdo
-dF9vcHMgZ211eF9ibF9vcHMgPSB7Cj4gICAqIG9mIHRoaXMgZmVhdHVyZS4KPiAgICoKPiAgICog
-Z211eCcgaW5pdGlhbCBzd2l0Y2ggc3RhdGUgb24gYm9vdHVwIGlzIHVzZXIgY29uZmlndXJhYmxl
-IHZpYSB0aGUgRUZJCj4gLSAqIHZhcmlhYmxlIGBncHUtcG93ZXItcHJlZnMtZmE0Y2UyOGQtYjYy
-Zi00Yzk5LTljYzMtNjgxNTY4NmUzMGY5YCAoNXRoIGJ5dGUsCj4gKyAqIHZhcmlhYmxlIGBgZ3B1
-LXBvd2VyLXByZWZzLWZhNGNlMjhkLWI2MmYtNGM5OS05Y2MzLTY4MTU2ODZlMzBmOWBgICg1dGgg
-Ynl0ZSwKPiAgICogMSA9IElHRCwgMCA9IERJUykuIEJhc2VkIG9uIHRoaXMgc2V0dGluZywgdGhl
-IEVGSSBmaXJtd2FyZSB0ZWxscyBnbXV4IHRvCj4gICAqIHN3aXRjaCB0aGUgcGFuZWwgYW5kIHRo
-ZSBleHRlcm5hbCBEUCBjb25uZWN0b3IgYW5kIGFsbG9jYXRlcyBhIGZyYW1lYnVmZmVyCj4gICAq
-IGZvciB0aGUgc2VsZWN0ZWQgR1BVLgo+ICsgKgo+ICsgKiAuLiBfVVMgOCw2ODcsMDA3IEIyOiBo
-dHRwOi8vcGltZy1mcGl3LnVzcHRvLmdvdi9mZGQvMDcvODcwLzA4Ni8wLnBkZgo+ICsgKiAuLiBf
-TlhQIENCVEwwNjE0MTogICBodHRwOi8vd3d3Lm54cC5jb20vZG9jdW1lbnRzL2RhdGFfc2hlZXQv
-Q0JUTDA2MTQxLnBkZgo+ICsgKiAuLiBfTlhQIENCVEwwNjE0MjogICBodHRwOi8vd3d3Lm54cC5j
-b20vZG9jdW1lbnRzL2RhdGFfc2hlZXQvQ0JUTDA2MTQxLnBkZgo+ICsgKiAuLiBfVEkgSEQzU1My
-MTI6ICAgICBodHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9oZDNzczIxMi5wZGYKPiAr
-ICogLi4gX1Blcmljb20gUEkzVkRQMTI0MTI6IGh0dHBzOi8vd3d3LnBlcmljb20uY29tL2Fzc2V0
-cy9EYXRhc2hlZXRzL1BJM1ZEUDEyNDEyLnBkZgo+ICsgKiAuLiBfVEkgU043NExWNDA2NkE6ICBo
-dHRwOi8vd3d3LnRpLmNvbS9saXQvZHMvc3ltbGluay9zbjc0bHY0MDY2YS5wZGYKPiArICogLi4g
-X05YUCBDQlRMMDMwNjI6ICAgaHR0cDovL3BkZi5kYXRhc2hlZXRhcmNoaXZlLmNvbS9pbmRleGVy
-ZmlsZXMvRGF0YXNoZWV0cy1TVzE2L0RTQVNXMDAzMDg1MTEucGRmCj4gKyAqIC4uIF9USSBUUzNE
-UzEwMjI0OiAgIGh0dHA6Ly93d3cudGkuY29tL2xpdC9kcy9zeW1saW5rL3RzM2RzMTAyMjQucGRm
-Cj4gICAqLwo+ICAKPiAgc3RhdGljIHZvaWQgZ211eF9yZWFkX3N3aXRjaF9zdGF0ZShzdHJ1Y3Qg
-YXBwbGVfZ211eF9kYXRhICpnbXV4X2RhdGEpCj4gLS0gCj4gMi44LjEKPiAKPiAKCi0tIApEYXJy
-ZW4gSGFydApJbnRlbCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, 2016-07-04 at 17:07 +0100, Dan O'Donovan wrote:
+> This platform driver instantiates a platform device relevant to the
+> UP board, in particular a device representing the unique I/O pin CPLD
+> controller on the UP board.
+>=20
+> In addition, this driver registers pin maps to configure
+> appropriately the underlying SoC GPIO pins for use with the
+> UP Board I/O pin header.
+>=20
+> Signed-off-by: Dan O'Donovan <dan@emutex.com>
+> ---
+> =C2=A0drivers/platform/x86/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=
+13 ++++
+> =C2=A0drivers/platform/x86/Makefile=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=
+=A05 ++
+> =C2=A0drivers/platform/x86/up_board.c | 167
+> ++++++++++++++++++++++++++++++++++++++++
+> =C2=A03 files changed, 185 insertions(+)
+> =C2=A0create mode 100644 drivers/platform/x86/up_board.c
+>=20
+> diff --git a/drivers/platform/x86/Kconfig
+> b/drivers/platform/x86/Kconfig
+> index 3ec0025..b579adb 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1011,4 +1011,17 @@ config INTEL_TELEMETRY
+> =C2=A0	=C2=A0=C2=A0used to get various SoC events and parameters
+> =C2=A0	=C2=A0=C2=A0directly via debugfs files. Various tools may use
+> =C2=A0	=C2=A0=C2=A0this interface for SoC state monitoring.
+> +
+> +config UP_BOARD
+> +	bool "UP Board Platform I/O Driver"
+
+Addressing your question in the cover letter - I'm not sure where
+up_board.c should go but, I reckon up_board_leds.c should go into
+drivers/leds, up_board_gpio.c should go into drivers/gpio etc.
+
+My highly scientific feeling is that up_board.c and up_board_cpld.c
+shouldn't be in this directory but, that they would fit well in
+drivers/mfd.
+
+> +	depends on ACPI && PINCTRL_CHERRYVIEW
+> +	select GPIOLIB_IRQCHIP
+> +	select LEDS_CLASS
+> +	select NEW_LEDS
+> +	---help---
+> +	=C2=A0=C2=A0This driver provides support for the platform functions=
+ on
+> the UP
+> +	=C2=A0=C2=A0board.=C2=A0=C2=A0It includes platform, pinctrl and gpi=
+o drivers for
+> the CPLD
+> +	=C2=A0=C2=A0that manages the external pin header, as well as a driv=
+er
+> for the
+> +	=C2=A0=C2=A0built-in LEDs.
+> +
+> =C2=A0endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile
+> b/drivers/platform/x86/Makefile
+> index 9b11b40..687c583 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -70,3 +70,8 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+=3D
+> intel_telemetry_core.o \
+> =C2=A0				=C2=A0=C2=A0=C2=A0intel_telemetry_pltdrv.o \
+> =C2=A0				=C2=A0=C2=A0=C2=A0intel_telemetry_debugfs.o
+> =C2=A0obj-$(CONFIG_INTEL_PMC_CORE)=C2=A0=C2=A0=C2=A0=C2=A0+=3D intel_=
+pmc_core.o
+> +obj-$(CONFIG_UP_BOARD)		+=3D up_board.o \
+> +				=C2=A0=C2=A0=C2=A0up_board_cpld.o \
+> +				=C2=A0=C2=A0=C2=A0up_board_pinctrl.o \
+> +				=C2=A0=C2=A0=C2=A0up_board_gpio.o \
+> +				=C2=A0=C2=A0=C2=A0up_board_leds.o
+> diff --git a/drivers/platform/x86/up_board.c
+> b/drivers/platform/x86/up_board.c
+> new file mode 100644
+> index 0000000..8635759
+> --- /dev/null
+> +++ b/drivers/platform/x86/up_board.c
+> @@ -0,0 +1,167 @@
+> +
+
+Dangling extra line.
+
+> +
+> +/*
+> + * On the UP board, if the ODEn bit=20
+
+Do you mean Open Drain Enable bit ? I think this comment will parse
+better if its called out explicitly.
+
+> is set on the pad configuration
+> + * it seems to impair some functions on the I/O header such as UART,
+> SPI
+> + * and I2C.=C2=A0=C2=A0So we disable it for all header pins by defau=
+lt.
+> + */
+
+Seems to impair is a bit vague... what does impair mean - not working
+or just wrong ?
+
+> +static struct up_board_info *up_board;
+> +
+> +static int __init
+> +up_board_init_devices(void)
+
+Why are you breaking up the __init and the function name onto separate
+lines ?
+
+> +{
+> +	const struct dmi_system_id *system_id;
+> +	int ret;
+> +
+> +	system_id =3D dmi_first_match(up_board_id_table);
+> +	if (!system_id)
+> +		return -ENXIO;
+
+How about=C2=A0-ENODEV
+
+> +
+> +
+> +	up_board->vreg_pdev =3D
+> +		regulator_register_always_on(0, "fixed-3.3V",
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0vref3v3_consumers,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ARRAY_SIZE(vref3v3_cons
+> umers),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A03300000);
+> +	if (!up_board->vreg_pdev) {
+> +		pr_err("Failed to register UP Board ADC vref
+> regulator");
+
+dev_err(&up_board->cpld_pdev.dev) ?
+
+> +		platform_device_unregister(up_board->cpld_pdev);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit
+> +up_board_exit(void)
+
+Same comment on multiple line declarations.
+
+---
+bod
