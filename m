@@ -1,96 +1,76 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] intel-vbtn: new driver for Intel Virtual Button
-Date: Thu, 7 Jul 2016 15:01:42 -0700
-Message-ID: <20160707220142.GA3927@f23x64.localdomain>
-References: <1467337909-20985-1-git-send-email-acelan.kao@canonical.com>
- <20160701214952.GF60048@f23x64.localdomain>
- <CAMz9Wg9JpS7zdNQZ=Z-mO12Mtz8N-rX-GpWbuF3+ZtDHkiT=bQ@mail.gmail.com>
- <20160706195824.GB66341@f23x64.localdomain>
- <CAFv23Qmtz+HcpuWtmhBB+7gMhEBaWWDqzFNmzGmbuntBzE79FA@mail.gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] apple-gmux: Sphinxify docs
+Date: Fri, 8 Jul 2016 07:49:32 +0200
+Message-ID: <20160708054932.GA3842@wunner.de>
+References: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
+ <20160706204025.GD66341@f23x64.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40108 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751926AbcGGWBp (ORCPT
+Received: from mailout1.hostsharing.net ([83.223.95.204]:43214 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751110AbcGHFpG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Jul 2016 18:01:45 -0400
+	Fri, 8 Jul 2016 01:45:06 -0400
 Content-Disposition: inline
-In-Reply-To: <CAFv23Qmtz+HcpuWtmhBB+7gMhEBaWWDqzFNmzGmbuntBzE79FA@mail.gmail.com>
+In-Reply-To: <20160706204025.GD66341@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org, Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@intel.com>, Daniel Vetter <daniel@ffwll.ch>
 
-On Thu, Jul 07, 2016 at 10:15:38AM +0800, AceLan Kao wrote:
-> Hi Darren,
+On Wed, Jul 06, 2016 at 01:40:25PM -0700, Darren Hart wrote:
+> On Mon, Jul 04, 2016 at 12:40:35PM +0200, Lukas Wunner wrote:
+> > Convert asciidoc-formatted docs to rst in accordance with Jonathan's and
+> > Jani's effort to use sphinx for kernel-doc rendering in 4.8.
 > 
-> I reply your questions in-line.
-> 
-> 2016-07-07 3:58 GMT+08:00 Darren Hart <dvhart@infradead.org>:
-> > On Mon, Jul 04, 2016 at 09:25:06AM +0800, AceLan Kao wrote:
-> >> Hi Darren,
-> >>
-> >>
-> >> This is the DSDT table from my machine,
-> >> and this is the first time we have the machine which enabled virtual
-> >> button feature.
-> >>
-> >> I've granted the permission to upstream the driver,
-> >> our contact window is Zhang, Xiong Y from Intel.
-> >
-> > Thanks AceLan,
-> >
-> > A few questions.
-> >
-> > Which specific Dell XPS 13 are you using? Which model is reported via dmidecode?
-> >
-> > Which firmware version is it (also dmidecode)?
-> For the above 2 questions, this is the latest model we are working on,
-> and for the sake of confidential, I can't reveal its model name and/or
-> other info to the public.
-> 
+> Somebody help me out here. How do I verify this works and using sphinx?
+> to build the docs?
 
-I see, that might explain why it isn't present in the DSDT on my Skylake XPS 13.
+(1) git remote add l1k https://github.com/l1k/linux.git
+    git fetch l1k
+    git checkout l1k/sphinx-docs
+    (Alternatively: git cherry-pick v4.7-rc6..l1k/sphinx-docs )
 
-> >
-> > Your DSDT suggests the INT33D6 is only advertised to the OS if the OSYS variable
-> > is >= 0x7DD, the value for "Windows 2013" set in _INI. Are you passing acpi_osi=
-> > to the Linux kernel?
-> No, we don't pass acpi_osi on most of our projects.
-> 
-> >
-> > Given the similarities of this driver and the intel-hid driver, I wonder if
-> > there is a possibility to augment the intel-hid driver to support this one
-> > additional hotkey?. There are two ACPI object eval calls we would have to
-> > special case and also decide how to deal with the suspend/resume handling
-> > intel-hid employs, but otherwise, these drivers appear to do the same exact
-> > thing.
-> >
-> > Rafael, we have a number of drivers in this subsystem which match on multiple
-> > ACPI IDs. Any general guidance on the preference for one driver per HID versus
-> > killing all the boilerplate and special casing a couple of things in a single
-> > driver for two or more HIDs?
-> >
-> > Alex, AceLan, what was your motivation to do this as a new driver rather than
-> > augmenting intel-hid?
-> Yes, intel-vbtn and intel-hid do almost the same thing, but intel-vbtn
-> use event code
-> passed from notification handler to do his job
-> (no need to use ACPI function to retrieve the event value),
-> and the event code conflicts with the usage in intel-hid.
-> ex. event code = 0xc0 in intel-vbtn is power button has been pressed,
->                      in intel-hid is used to checking the valid event
-> And I believe we'll need a sysfs interface for user to configure the
-> keyevent report by intel-vbtn,
-> on tablet/phone, we will want to suspend directly while pressing the
-> power button,
-> and on laptop, we just need it behaves as a traditional power button.
-> It's more clean/simple to have a standalone driver to handle this.
-> 
+(2) sudo apt-get install python-sphinx python-sphinx-rtd-theme
 
-Thanks for the clarification. I've queued this patch to testing for 4.8.
+(3) make xmldocs
+    make htmldocs
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+(4) open Documentation/output/html/index.html
+    click on "VGA Switcheroo", then click on "Handlers" in the
+    navigation pane on the left
+
+The apple-gmux docs are currently asciidoc-formatted. Support for
+markdown/asciidoc in kerneldoc was an Intel-sponsored effort last year
+led by Daniel, but never got upstreamed.
+
+After some deliberation the decision was made to use rst instead.
+Support for it is in docs-next, i.e. will be in 4.8.
+
+Jani has converted the gpu docs to rst and deleted the gpu.tmpl,
+this is on the drm-intel/for-linux-next branch but not yet in drm-next.
+Jani and Daniel are both on vacation. Daniel has indicated that he
+considers sending another drm-intel-next pull when he returns next week,
+then the rst-formatted gpu docs would land in drm-next:
+https://lists.freedesktop.org/archives/intel-gfx/2016-June/099114.html
+
+
+> Should I be merging this directly, or is it dependent on something Jon
+> is working on and therefore to be merged by him?
+
+It is not dependent on someone else. You can either merge it directly
+through your tree or alternatively ack it and have it merged through
+drm-intel trees by Daniel (+ cc:) next week.
+
+
+Unfortunately there is currently no branch which contains all the rst
+patches in docs-next *and* the rst-formatted gpu docs in drm-intel.
+(Some patches in docs-next are missing from drm-intel/for-linux-next.)
+That's why I pushed the above-mentioned branch to my GitHub repo,
+it contains everything needed:
+https://github.com/l1k/linux/commits/sphinx-docs
+
+Thanks,
+
+Lukas
