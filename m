@@ -1,27 +1,78 @@
-From: "Administrator" <karila.palma@posgrad.ufsc.br>
-Subject: NOTIFICATION
-Date: Sun, 10 Jul 2016 23:47:59 +0530
-Message-ID: <20160710182018.3D6B01173BBE@antispam.setic.ufsc.br>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] apple-gmux: Sphinxify docs
+Date: Tue, 12 Jul 2016 15:11:45 +0200
+Message-ID: <20160712131145.GA23520@phenom.ffwll.local>
+References: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
+ <20160706204025.GD66341@f23x64.localdomain>
+ <20160708054932.GA3842@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from antispam.setic.ufsc.br ([150.162.2.76]:56945 "EHLO
-	antispam.setic.ufsc.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750718AbcGKECr convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jul 2016 00:02:47 -0400
-Content-Description: Mail message body
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <karila.palma@posgrad.ufsc.br>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20160708054932.GA3842@wunner.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Your mailbox has exceeded it storage limit as set by your administrator=
- and you will not be able to receive new mails until you re-validate it=
-=2E To re-validate-> copy or click here
-
-http://ff.form2pay.com/webaccountupgrade.html
-
-Thank You.
-IT Help Desk.      =20
-=A9Copyright 2016. System Administrator
+T24gRnJpLCBKdWwgMDgsIDIwMTYgYXQgMDc6NDk6MzJBTSArMDIwMCwgTHVrYXMgV3VubmVyIHdy
+b3RlOgo+IE9uIFdlZCwgSnVsIDA2LCAyMDE2IGF0IDAxOjQwOjI1UE0gLTA3MDAsIERhcnJlbiBI
+YXJ0IHdyb3RlOgo+ID4gT24gTW9uLCBKdWwgMDQsIDIwMTYgYXQgMTI6NDA6MzVQTSArMDIwMCwg
+THVrYXMgV3VubmVyIHdyb3RlOgo+ID4gPiBDb252ZXJ0IGFzY2lpZG9jLWZvcm1hdHRlZCBkb2Nz
+IHRvIHJzdCBpbiBhY2NvcmRhbmNlIHdpdGggSm9uYXRoYW4ncyBhbmQKPiA+ID4gSmFuaSdzIGVm
+Zm9ydCB0byB1c2Ugc3BoaW54IGZvciBrZXJuZWwtZG9jIHJlbmRlcmluZyBpbiA0LjguCj4gPiAK
+PiA+IFNvbWVib2R5IGhlbHAgbWUgb3V0IGhlcmUuIEhvdyBkbyBJIHZlcmlmeSB0aGlzIHdvcmtz
+IGFuZCB1c2luZyBzcGhpbng/Cj4gPiB0byBidWlsZCB0aGUgZG9jcz8KPiAKPiAoMSkgZ2l0IHJl
+bW90ZSBhZGQgbDFrIGh0dHBzOi8vZ2l0aHViLmNvbS9sMWsvbGludXguZ2l0Cj4gICAgIGdpdCBm
+ZXRjaCBsMWsKPiAgICAgZ2l0IGNoZWNrb3V0IGwxay9zcGhpbngtZG9jcwo+ICAgICAoQWx0ZXJu
+YXRpdmVseTogZ2l0IGNoZXJyeS1waWNrIHY0LjctcmM2Li5sMWsvc3BoaW54LWRvY3MgKQo+IAo+
+ICgyKSBzdWRvIGFwdC1nZXQgaW5zdGFsbCBweXRob24tc3BoaW54IHB5dGhvbi1zcGhpbngtcnRk
+LXRoZW1lCj4gCj4gKDMpIG1ha2UgeG1sZG9jcwo+ICAgICBtYWtlIGh0bWxkb2NzCj4gCj4gKDQp
+IG9wZW4gRG9jdW1lbnRhdGlvbi9vdXRwdXQvaHRtbC9pbmRleC5odG1sCj4gICAgIGNsaWNrIG9u
+ICJWR0EgU3dpdGNoZXJvbyIsIHRoZW4gY2xpY2sgb24gIkhhbmRsZXJzIiBpbiB0aGUKPiAgICAg
+bmF2aWdhdGlvbiBwYW5lIG9uIHRoZSBsZWZ0Cj4gCj4gVGhlIGFwcGxlLWdtdXggZG9jcyBhcmUg
+Y3VycmVudGx5IGFzY2lpZG9jLWZvcm1hdHRlZC4gU3VwcG9ydCBmb3IKPiBtYXJrZG93bi9hc2Np
+aWRvYyBpbiBrZXJuZWxkb2Mgd2FzIGFuIEludGVsLXNwb25zb3JlZCBlZmZvcnQgbGFzdCB5ZWFy
+Cj4gbGVkIGJ5IERhbmllbCwgYnV0IG5ldmVyIGdvdCB1cHN0cmVhbWVkLgo+IAo+IEFmdGVyIHNv
+bWUgZGVsaWJlcmF0aW9uIHRoZSBkZWNpc2lvbiB3YXMgbWFkZSB0byB1c2UgcnN0IGluc3RlYWQu
+Cj4gU3VwcG9ydCBmb3IgaXQgaXMgaW4gZG9jcy1uZXh0LCBpLmUuIHdpbGwgYmUgaW4gNC44Lgo+
+IAo+IEphbmkgaGFzIGNvbnZlcnRlZCB0aGUgZ3B1IGRvY3MgdG8gcnN0IGFuZCBkZWxldGVkIHRo
+ZSBncHUudG1wbCwKPiB0aGlzIGlzIG9uIHRoZSBkcm0taW50ZWwvZm9yLWxpbnV4LW5leHQgYnJh
+bmNoIGJ1dCBub3QgeWV0IGluIGRybS1uZXh0Lgo+IEphbmkgYW5kIERhbmllbCBhcmUgYm90aCBv
+biB2YWNhdGlvbi4gRGFuaWVsIGhhcyBpbmRpY2F0ZWQgdGhhdCBoZQo+IGNvbnNpZGVycyBzZW5k
+aW5nIGFub3RoZXIgZHJtLWludGVsLW5leHQgcHVsbCB3aGVuIGhlIHJldHVybnMgbmV4dCB3ZWVr
+LAo+IHRoZW4gdGhlIHJzdC1mb3JtYXR0ZWQgZ3B1IGRvY3Mgd291bGQgbGFuZCBpbiBkcm0tbmV4
+dDoKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9pbnRlbC1nZngvMjAx
+Ni1KdW5lLzA5OTExNC5odG1sCj4gCj4gCj4gPiBTaG91bGQgSSBiZSBtZXJnaW5nIHRoaXMgZGly
+ZWN0bHksIG9yIGlzIGl0IGRlcGVuZGVudCBvbiBzb21ldGhpbmcgSm9uCj4gPiBpcyB3b3JraW5n
+IG9uIGFuZCB0aGVyZWZvcmUgdG8gYmUgbWVyZ2VkIGJ5IGhpbT8KPiAKPiBJdCBpcyBub3QgZGVw
+ZW5kZW50IG9uIHNvbWVvbmUgZWxzZS4gWW91IGNhbiBlaXRoZXIgbWVyZ2UgaXQgZGlyZWN0bHkK
+PiB0aHJvdWdoIHlvdXIgdHJlZSBvciBhbHRlcm5hdGl2ZWx5IGFjayBpdCBhbmQgaGF2ZSBpdCBt
+ZXJnZWQgdGhyb3VnaAo+IGRybS1pbnRlbCB0cmVlcyBieSBEYW5pZWwgKCsgY2M6KSBuZXh0IHdl
+ZWsuCj4gCj4gCj4gVW5mb3J0dW5hdGVseSB0aGVyZSBpcyBjdXJyZW50bHkgbm8gYnJhbmNoIHdo
+aWNoIGNvbnRhaW5zIGFsbCB0aGUgcnN0Cj4gcGF0Y2hlcyBpbiBkb2NzLW5leHQgKmFuZCogdGhl
+IHJzdC1mb3JtYXR0ZWQgZ3B1IGRvY3MgaW4gZHJtLWludGVsLgo+IChTb21lIHBhdGNoZXMgaW4g
+ZG9jcy1uZXh0IGFyZSBtaXNzaW5nIGZyb20gZHJtLWludGVsL2Zvci1saW51eC1uZXh0LikKPiBU
+aGF0J3Mgd2h5IEkgcHVzaGVkIHRoZSBhYm92ZS1tZW50aW9uZWQgYnJhbmNoIHRvIG15IEdpdEh1
+YiByZXBvLAo+IGl0IGNvbnRhaW5zIGV2ZXJ5dGhpbmcgbmVlZGVkOgo+IGh0dHBzOi8vZ2l0aHVi
+LmNvbS9sMWsvbGludXgvY29tbWl0cy9zcGhpbngtZG9jcwoKUHJvYmFibHkgYmVzdCB0byBwdWxs
+IHRoaXMgaW4gdGhyb3VnaCBkcm0tbWlzYywgd2hpY2ggY29udGFpbnMgZG9jcy1uZXh0CnBsdXMg
+dGhlIHNrZWxldG9uIGNvbnZlcnNpb24gb2YgdGhlIGRybSBkb2NzIG92ZXIgdG8gc3BoaW54L3Jz
+dC4gRGFycmVuLAphY2sgb24gdGhhdD8KCk9oIGFuZCBpZiB5b3Ugd2FudCB0byB0YWtlIGEgcGVl
+ayBhdCB0aGUgcHJldHR5IGRvY3MgdGhpcyBnaXZlcyB1czoKCmh0dHBzOi8vMDEub3JnL2xpbnV4
+Z3JhcGhpY3MvZ2Z4LWRvY3MvZHJtLwoKVGhpcyBpcyBqdXN0IHRoZSBkcm0gcGFydCwgYnV0IGlm
+IHlvdSBwdWxsIGluIGRvY3MtbmV4dCB0aGVyZSBzaG91bGQgYmUKZXZlbiBtb3JlLiBNZWRpYS90
+diBtaWdodCBhbHNvIGJlIHJlYWR5IGZvciA0LjguCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIK
+U29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNo
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
