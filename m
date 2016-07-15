@@ -1,17 +1,17 @@
 From: Central Trust Loan Limited <agnaldo.tremea@mda.gov.br>
 Subject: =?utf-8?Q?L=C3=A5netilbud?=
-Date: Thu, 14 Jul 2016 23:49:01 -0300 (BRT)
-Message-ID: <594440761.4393595.1468550941181.JavaMail.zimbra@mda.gov.br>
+Date: Fri, 15 Jul 2016 03:36:57 -0300 (BRT)
+Message-ID: <1574424140.4464096.1468564617491.JavaMail.zimbra@mda.gov.br>
 Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.mda.gov.br ([200.198.212.36]:39818 "EHLO mx1.mda.gov.br"
+Received: from mx1.mda.gov.br ([200.198.212.36]:56686 "EHLO mx1.mda.gov.br"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751503AbcGOC7n convert rfc822-to-8bit (ORCPT
+	id S1751760AbcGOGhF convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Jul 2016 22:59:43 -0400
+	Fri, 15 Jul 2016 02:37:05 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 
