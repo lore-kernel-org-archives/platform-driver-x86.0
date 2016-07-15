@@ -1,58 +1,59 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Subject: acer-wmi auto-loaded on a Lenovo Thinkpad X1 Carbon 4th gen
-Date: Thu, 14 Jul 2016 23:39:31 +0200
-Message-ID: <87vb07lx0s.fsf@miraculix.mork.no>
+From: Central Trust Loan Limited <agnaldo.tremea@mda.gov.br>
+Subject: =?utf-8?Q?L=C3=A5netilbud?=
+Date: Thu, 14 Jul 2016 23:49:01 -0300 (BRT)
+Message-ID: <594440761.4393595.1468550941181.JavaMail.zimbra@mda.gov.br>
+Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from canardo.mork.no ([148.122.252.1]:35993 "EHLO canardo.mork.no"
+Received: from mx1.mda.gov.br ([200.198.212.36]:39818 "EHLO mx1.mda.gov.br"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751859AbcGNVkm convert rfc822-to-8bit (ORCPT
+	id S1751503AbcGOC7n convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Jul 2016 17:40:42 -0400
+	Thu, 14 Jul 2016 22:59:43 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org
-
-I recently got a new laptop.  And now I'm trying to figure out what all
-the stuff they put into it actually is :)
-=2E
-One thing that doesn't seem quite right is that the acer-wmi driver is
-loaded and claims that this laptop has an "Acer BMA150 accelerometer".
-
-It is true that there is a device there matching
-
-  #define AMW0_GUID1            "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
-
-as can be seen:
-
- bjorn@miraculix:~$ ls -l /sys/devices/virtual/wmi/67C3371D-95A3-4C37-B=
-B61-DD47B491DAAB
- total 0
- -r--r--r-- 1 root root 4096 Jul 14 23:10 modalias
- drwxr-xr-x 2 root root    0 Jul 14 23:10 power
- lrwxrwxrwx 1 root root    0 Jul 14 23:10 subsystem -> ../../../../clas=
-s/wmi
- -rw-r--r-- 1 root root 4096 Jul 14 23:10 uevent
 
 
-But I sort of doubt there is an Acer specific device here.  Maybe this
-is a generic accelerometer interface?  Or is there something else going
-on?
 
-The input device created by the driver just just returns -EPERM when I
-try to open it, so I don't think this actually works as-is:
+God dag,
 
- root@miraculix:/tmp# cat /dev/input/event8
- cat: /dev/input/event8: Operation not permitted
+Dette er Central Trust L=C3=A5n Aksjeselskaper tilby l=C3=A5n.
+
+Central Trust l=C3=A5n selskaper tilbyr fleksible og rimelige l=C3=A5n =
+til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
+nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 3%. Her er noen vik=
+tige trekk ved personlig l=C3=A5n fra midler sirkel utl=C3=A5n selskape=
+r tilbys. Her er de L=C3=A5ne Faktorer vi samarbeider med de ledende br=
+itiske meglere som har tilgang til toppen l=C3=A5ngivere og v=C3=A6re i=
+ stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8sningen til en=
+ rimelig price.Please, hvis du er interessert kan du kontakte oss via d=
+enne e-post: Centraltrust_ltd@webadicta .org
 
 
-And it does seem a little weird that a Thinkpad should need an Acer
-specific platform driver anyway....  thinkpad_acpi is of course handlin=
-g
-all(?) the Thinkpad specifics as expected.
+Etter reaksjonen vil du motta en s=C3=B8knad om kreditt fyll. Ingen sos=
+ial sikkerhet og ingen kredittsjekk, 100% garantert.
+
+Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
 
 
-Bj=C3=B8rn
+informasjon Needed
+
+Dine navn:
+Adresse:
+telefon:
+L=C3=A5nebel=C3=B8p Needed:
+Varighet:
+Okkupasjon:
+M=C3=A5nedlig inntekt:
+Kj=C3=B8nn:
+=46=C3=B8dselsdato:
+Status:
+Land:
+Hensikt:
+
+M=C3=B8t dine =C3=B8konomiske behov er v=C3=A5r stolthet.
+
+Vennlig hilsen
+David Donald
