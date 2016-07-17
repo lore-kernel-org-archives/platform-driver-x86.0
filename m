@@ -1,59 +1,55 @@
-From: Central Trust Loan Limited <agnaldo.tremea@mda.gov.br>
-Subject: =?utf-8?Q?L=C3=A5netilbud?=
-Date: Fri, 15 Jul 2016 03:36:57 -0300 (BRT)
-Message-ID: <1574424140.4464096.1468564617491.JavaMail.zimbra@mda.gov.br>
-Reply-To: "centraltrustlltd@gmail.com" <centraltrustlltd@gmail.com>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] Correct iTCO Watchdog for Apollo Lake
+Date: Sun, 17 Jul 2016 22:16:15 +0200
+Message-ID: <20160717201615.GA841@spo001.leaseweb.nl>
+References: <1463541972-19758-1-git-send-email-jonathan.yong@intel.com> <1466123612-50633-1-git-send-email-jonathan.yong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.mda.gov.br ([200.198.212.36]:56686 "EHLO mx1.mda.gov.br"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751760AbcGOGhF convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 15 Jul 2016 02:37:05 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466123612-50633-1-git-send-email-jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yong, Jonathan" <jonathan.yong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel.vger.kernel.org-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+Hi Jonathan,
 
+> These patches fix the iTCO watchdog for Apollo Lake.
+> I changed the watchdog memory io to only use 4 bytes rather
+> the whole region, I'm not sure if that is the correct way.
+> 
+> The previous 0x30h offset in intel_pmc_ipc.c was for based
+> on the earlier BXT-M platform. Apollo Lake has it at 0x40h.
+> 
+> Let me know if the patches need changes.
+> Please CC me as I am not subscribed, thanks.
+> 
+> Changes since v1:
+> 	* Watchdog NO_REBOOT bit off-by-one corrected.
+> 
+> Yong, Jonathan (2):
+>   watchdog: iTCO-wdt handle 5th variation for Apollo Lake
+>   x86: Fix Apollo Lake Watchdog address in PMC driver
+> 
+>  drivers/platform/x86/intel_pmc_ipc.c | 10 ++++++----
+>  drivers/watchdog/iTCO_wdt.c          |  2 ++
+>  2 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.7.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-God dag,
+Both patches have been added to linux-watchdog-next.
 
-Dette er Central Trust L=C3=A5n Aksjeselskaper tilby l=C3=A5n.
+Kind regards,
+Wim.
 
-Central Trust l=C3=A5n selskaper tilbyr fleksible og rimelige l=C3=A5n =
-til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
-nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 3%. Her er noen vik=
-tige trekk ved personlig l=C3=A5n fra midler sirkel utl=C3=A5n selskape=
-r tilbys. Her er de L=C3=A5ne Faktorer vi samarbeider med de ledende br=
-itiske meglere som har tilgang til toppen l=C3=A5ngivere og v=C3=A6re i=
- stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8sningen til en=
- rimelig price.Please, hvis du er interessert kan du kontakte oss via d=
-enne e-post: Centraltrust_ltd@webadicta .org
-
-
-Etter reaksjonen vil du motta en s=C3=B8knad om kreditt fyll. Ingen sos=
-ial sikkerhet og ingen kredittsjekk, 100% garantert.
-
-Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
-
-
-informasjon Needed
-
-Dine navn:
-Adresse:
-telefon:
-L=C3=A5nebel=C3=B8p Needed:
-Varighet:
-Okkupasjon:
-M=C3=A5nedlig inntekt:
-Kj=C3=B8nn:
-=46=C3=B8dselsdato:
-Status:
-Land:
-Hensikt:
-
-M=C3=B8t dine =C3=B8konomiske behov er v=C3=A5r stolthet.
-
-Vennlig hilsen
-David Donald
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
