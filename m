@@ -1,105 +1,86 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] apple-gmux: Sphinxify docs
-Date: Fri, 22 Jul 2016 13:19:12 -0700
-Message-ID: <20160722201912.GC3703@f23x64.localdomain>
-References: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
- <20160706204025.GD66341@f23x64.localdomain>
- <20160708054932.GA3842@wunner.de>
- <20160712131145.GA23520@phenom.ffwll.local>
+Subject: Re: [RESEND RFC PATCH 1/5] platform: x86: add driver for UP Board
+ I/O CPLD
+Date: Fri, 22 Jul 2016 13:52:51 -0700
+Message-ID: <20160722204525.GD3703@f23x64.localdomain>
+References: <1465762392-9205-1-git-send-email-dan@emutex.com>
+ <1467648434-29080-1-git-send-email-dan@emutex.com>
+ <1467648434-29080-2-git-send-email-dan@emutex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:56893 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:39575 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751751AbcGVUTN (ORCPT
+	with ESMTP id S1751195AbcGVUwy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jul 2016 16:19:13 -0400
+	Fri, 22 Jul 2016 16:52:54 -0400
 Content-Disposition: inline
-In-Reply-To: <20160712131145.GA23520@phenom.ffwll.local>
+In-Reply-To: <1467648434-29080-2-git-send-email-dan@emutex.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Lukas Wunner <lukas@wunner.de>, platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org, Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@intel.com>
+To: Dan O'Donovan <dan@emutex.com>
+Cc: platform-driver-x86@vger.kernel.org, lee.jones@linaro.org, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org
 
-On Tue, Jul 12, 2016 at 03:11:45PM +0200, Daniel Vetter wrote:
-> On Fri, Jul 08, 2016 at 07:49:32AM +0200, Lukas Wunner wrote:
-> > On Wed, Jul 06, 2016 at 01:40:25PM -0700, Darren Hart wrote:
-> > > On Mon, Jul 04, 2016 at 12:40:35PM +0200, Lukas Wunner wrote:
-> > > > Convert asciidoc-formatted docs to rst in accordance with Jonathan's and
-> > > > Jani's effort to use sphinx for kernel-doc rendering in 4.8.
-> > > 
-> > > Somebody help me out here. How do I verify this works and using sphinx?
-> > > to build the docs?
-> > 
-> > (1) git remote add l1k https://github.com/l1k/linux.git
-> >     git fetch l1k
-> >     git checkout l1k/sphinx-docs
-> >     (Alternatively: git cherry-pick v4.7-rc6..l1k/sphinx-docs )
-> > 
-> > (2) sudo apt-get install python-sphinx python-sphinx-rtd-theme
-> > 
-> > (3) make xmldocs
-> >     make htmldocs
-> > 
-> > (4) open Documentation/output/html/index.html
-> >     click on "VGA Switcheroo", then click on "Handlers" in the
-> >     navigation pane on the left
-> > 
-> > The apple-gmux docs are currently asciidoc-formatted. Support for
-> > markdown/asciidoc in kerneldoc was an Intel-sponsored effort last year
-> > led by Daniel, but never got upstreamed.
-> > 
-> > After some deliberation the decision was made to use rst instead.
-> > Support for it is in docs-next, i.e. will be in 4.8.
-> > 
-> > Jani has converted the gpu docs to rst and deleted the gpu.tmpl,
-> > this is on the drm-intel/for-linux-next branch but not yet in drm-next.
-> > Jani and Daniel are both on vacation. Daniel has indicated that he
-> > considers sending another drm-intel-next pull when he returns next week,
-> > then the rst-formatted gpu docs would land in drm-next:
-> > https://lists.freedesktop.org/archives/intel-gfx/2016-June/099114.html
-> > 
-> > 
-> > > Should I be merging this directly, or is it dependent on something Jon
-> > > is working on and therefore to be merged by him?
-> > 
-> > It is not dependent on someone else. You can either merge it directly
-> > through your tree or alternatively ack it and have it merged through
-> > drm-intel trees by Daniel (+ cc:) next week.
-> > 
-> > 
-> > Unfortunately there is currently no branch which contains all the rst
-> > patches in docs-next *and* the rst-formatted gpu docs in drm-intel.
-> > (Some patches in docs-next are missing from drm-intel/for-linux-next.)
-> > That's why I pushed the above-mentioned branch to my GitHub repo,
-> > it contains everything needed:
-> > https://github.com/l1k/linux/commits/sphinx-docs
+On Mon, Jul 04, 2016 at 05:07:10PM +0100, Dan O'Donovan wrote:
+> The UP board utilises a CPLD between its Intel X5-Z8350 SoC and an
+> external 40-pin header, to provide buffered voltage level-shifting
+> of the I/O signals, mux switching and LED control, and programmable
+> pin mapping between the SoC and the external pin header.
 > 
-> Probably best to pull this in through drm-misc, which contains docs-next
-> plus the skeleton conversion of the drm docs over to sphinx/rst. Darren,
-> ack on that?
-
-Acked-by: Darren Hart <dvhart@linux.intel.com>
-
-I've dropped this from my testing branch (I never pushed it to my next branch)
-and will leave it to you to pull in.
-
+> gpio, pinctrl and led drivers are provided in separate commits
+> to manage the functions provided by that CPLD.
 > 
-> Oh and if you want to take a peek at the pretty docs this gives us:
+> This commit registers a platform driver to manage the configuration
+> of the CPLD itself.
 > 
-> https://01.org/linuxgraphics/gfx-docs/drm/
+> Signed-off-by: Dan O'Donovan <dan@emutex.com>
+> ---
+>  drivers/platform/x86/up_board_cpld.c | 560 +++++++++++++++++++++++++++++++++++
+>  drivers/platform/x86/up_board_cpld.h |  38 +++
+>  2 files changed, 598 insertions(+)
+>  create mode 100644 drivers/platform/x86/up_board_cpld.c
+>  create mode 100644 drivers/platform/x86/up_board_cpld.h
+> 
+> diff --git a/drivers/platform/x86/up_board_cpld.c b/drivers/platform/x86/up_board_cpld.c
+> new file mode 100644
+> index 0000000..dc36d6a
+> --- /dev/null
+> +++ b/drivers/platform/x86/up_board_cpld.c
+> @@ -0,0 +1,560 @@
+> +/*
+> + * UP Board I/O Header CPLD driver.
+> + *
+> + * Copyright (c) 2016, Emutex Ltd.  All rights reserved.
+> + *
+> + * Author: Dan O'Donovan <dan@emutex.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/gpio.h>
+> +
+> +#include "up_board_cpld.h"
+> +#include "up_board_pinctrl.h"
 
-Very nice.
+Here you include up_board_pinctrl.h, but this file has not been introduced. The
+build fails with 1/5 applied, breaking bisection.
 
-> 
-> This is just the drm part, but if you pull in docs-next there should be
-> even more. Media/tv might also be ready for 4.8.
-> -Daniel
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-> 
+Something to keep in mind as you relocate and refactor these drivers as we hear
+back from the other maintainers. Each patch should build as you know, I'm sure
+this was an error following a refactoring or something similar.
 
 -- 
 Darren Hart
