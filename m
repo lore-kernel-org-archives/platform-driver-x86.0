@@ -1,103 +1,87 @@
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [RFC v3 10/13] jump_label: port __jump_table to linker tables
-Date: Fri, 22 Jul 2016 17:55:35 -0500
-Message-ID: <20160722225535.uu7h7iowwchby7uy@treble>
-References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
- <1469222687-1600-11-git-send-email-mcgrof@kernel.org>
- <20160722214945.h7v7fvsnuhnvz6ux@treble>
- <20160722222654.GO5537@wotan.suse.de>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] apple-gmux: Sphinxify docs
+Date: Mon, 25 Jul 2016 08:56:33 +0200
+Message-ID: <20160725065633.GJ25486@phenom.ffwll.local>
+References: <4c1b29986fa77772156b1af0c965d3799e43a47b.1467628307.git.lukas@wunner.de>
+ <20160706204025.GD66341@f23x64.localdomain>
+ <20160708054932.GA3842@wunner.de>
+ <20160712131145.GA23520@phenom.ffwll.local>
+ <20160722201912.GC3703@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20160722222654.GO5537@wotan.suse.de>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, linux@arm.linux.org.uk, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.intel.com, paul.gortmaker@windri
+In-Reply-To: <20160722201912.GC3703@f23x64.localdomain>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jul 23, 2016 at 12:26:54AM +0200, Luis R. Rodriguez wrote:
-> On Fri, Jul 22, 2016 at 04:49:45PM -0500, Josh Poimboeuf wrote:
-> > On Fri, Jul 22, 2016 at 02:24:44PM -0700, Luis R. Rodriguez wrote:
-> > > diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-> > > index bff8abb3a4aa..f0ad369f994b 100644
-> > > --- a/tools/objtool/special.c
-> > > +++ b/tools/objtool/special.c
-> > > @@ -26,6 +26,10 @@
-> > >  #include "special.h"
-> > >  #include "warn.h"
-> > >  
-> > > +#include "../../include/asm-generic/sections.h"
-> > > +#include "../../include/asm-generic/tables.h"
-> > > +#include "../../include/linux/stringify.h"
-> > > +
-> > >  #define EX_ENTRY_SIZE		12
-> > >  #define EX_ORIG_OFFSET		0
-> > >  #define EX_NEW_OFFSET		4
-> > > @@ -63,7 +67,9 @@ struct special_entry entries[] = {
-> > >  		.feature = ALT_FEATURE_OFFSET,
-> > >  	},
-> > >  	{
-> > > -		.sec = "__jump_table",
-> > > +		.sec = __stringify(SECTION_TBL(SECTION_DATA,
-> > > +				               __jump_table,
-> > > +					       SECTION_ORDER_ANY)),
-> > >  		.jump_or_nop = true,
-> > >  		.size = JUMP_ENTRY_SIZE,
-> > >  		.orig = JUMP_ORIG_OFFSET,
-> > 
-> > (continuing our discussion from another thread...)
-> > 
-> > I think tools code isn't allowed to include kernel files because the
-> > tools subdirectory is supposed to be completely independent.
-> 
-> That was also the case for userpsace tools in scripts/ -- for instance
-> scripts/mod/modpost.c made an exception. What I've proposed here to
-> keep things simple was to ensure -UKERNEL is passed and then only
-> include files we know will work.
-> 
-> Refer to the patch "kprobes: port .kprobes.text to section range"
-> in this series for an extension of the scripts/mod/modpost.c kernel
-> headers use.
-
-I think the rule of separating code is stricter for tools/ than it is
-for scripts/.  The scripts are generally kernel-specific whereas the
-tools are independent.  I believe the goal is to be able to copy them
-out of the kernel tree and still be able to compile them.
-
-> > As far as I can tell, the section name will always be
-> > ".data.tbl.__jump_table.any".  Is that true?  If so, any reason why we
-> > can't just hard-code the string here?
-> 
-> Its a fair strategy, however if upstream changes the order name we'd
-> have to hand code this as well, by using a macro we keep it all in one
-> place.
-
-Hm, do you expect the section name to change often?
-
-> > As you saw, if the string
-> > changes, objtool will complain and 0-day will report it.
-> 
-> Indeed, which is why I was hoping to instead stick to a standard
-> sections set of header files that lets us get these in on place.
-
-Actually, I meant that obtool reporting the change would be a good
-thing, in favor of just hard-coding the string.  It lets objtool do its
-job of letting us know when something changes, like it did today.
-
-> The only place I hand coded in this series was in the perl
-> file scripts/recordmcount.pl but I suppose if we wanted to get
-> creative we could even generate a header for it too.
-> 
-> If we want to avoid all this hacker include stuff another option
-> is to *generate* each respective sections.h for the kernel, and
-> also, one for tools, and one for perl. What do you think?
-
-If the generated files aren't checked into git, tools/ will rely on
-kernel files and will no longer be independent.  If they *are* checked
-in, then we have to keep the files in sync.  Either way it sounds like
-overkill, just to avoid hard-coding a string for which objtool will
-already warn if it changes.
-
--- 
-Josh
+T24gRnJpLCBKdWwgMjIsIDIwMTYgYXQgMDE6MTk6MTJQTSAtMDcwMCwgRGFycmVuIEhhcnQgd3Jv
+dGU6Cj4gT24gVHVlLCBKdWwgMTIsIDIwMTYgYXQgMDM6MTE6NDVQTSArMDIwMCwgRGFuaWVsIFZl
+dHRlciB3cm90ZToKPiA+IE9uIEZyaSwgSnVsIDA4LCAyMDE2IGF0IDA3OjQ5OjMyQU0gKzAyMDAs
+IEx1a2FzIFd1bm5lciB3cm90ZToKPiA+ID4gT24gV2VkLCBKdWwgMDYsIDIwMTYgYXQgMDE6NDA6
+MjVQTSAtMDcwMCwgRGFycmVuIEhhcnQgd3JvdGU6Cj4gPiA+ID4gT24gTW9uLCBKdWwgMDQsIDIw
+MTYgYXQgMTI6NDA6MzVQTSArMDIwMCwgTHVrYXMgV3VubmVyIHdyb3RlOgo+ID4gPiA+ID4gQ29u
+dmVydCBhc2NpaWRvYy1mb3JtYXR0ZWQgZG9jcyB0byByc3QgaW4gYWNjb3JkYW5jZSB3aXRoIEpv
+bmF0aGFuJ3MgYW5kCj4gPiA+ID4gPiBKYW5pJ3MgZWZmb3J0IHRvIHVzZSBzcGhpbnggZm9yIGtl
+cm5lbC1kb2MgcmVuZGVyaW5nIGluIDQuOC4KPiA+ID4gPiAKPiA+ID4gPiBTb21lYm9keSBoZWxw
+IG1lIG91dCBoZXJlLiBIb3cgZG8gSSB2ZXJpZnkgdGhpcyB3b3JrcyBhbmQgdXNpbmcgc3BoaW54
+Pwo+ID4gPiA+IHRvIGJ1aWxkIHRoZSBkb2NzPwo+ID4gPiAKPiA+ID4gKDEpIGdpdCByZW1vdGUg
+YWRkIGwxayBodHRwczovL2dpdGh1Yi5jb20vbDFrL2xpbnV4LmdpdAo+ID4gPiAgICAgZ2l0IGZl
+dGNoIGwxawo+ID4gPiAgICAgZ2l0IGNoZWNrb3V0IGwxay9zcGhpbngtZG9jcwo+ID4gPiAgICAg
+KEFsdGVybmF0aXZlbHk6IGdpdCBjaGVycnktcGljayB2NC43LXJjNi4ubDFrL3NwaGlueC1kb2Nz
+ICkKPiA+ID4gCj4gPiA+ICgyKSBzdWRvIGFwdC1nZXQgaW5zdGFsbCBweXRob24tc3BoaW54IHB5
+dGhvbi1zcGhpbngtcnRkLXRoZW1lCj4gPiA+IAo+ID4gPiAoMykgbWFrZSB4bWxkb2NzCj4gPiA+
+ICAgICBtYWtlIGh0bWxkb2NzCj4gPiA+IAo+ID4gPiAoNCkgb3BlbiBEb2N1bWVudGF0aW9uL291
+dHB1dC9odG1sL2luZGV4Lmh0bWwKPiA+ID4gICAgIGNsaWNrIG9uICJWR0EgU3dpdGNoZXJvbyIs
+IHRoZW4gY2xpY2sgb24gIkhhbmRsZXJzIiBpbiB0aGUKPiA+ID4gICAgIG5hdmlnYXRpb24gcGFu
+ZSBvbiB0aGUgbGVmdAo+ID4gPiAKPiA+ID4gVGhlIGFwcGxlLWdtdXggZG9jcyBhcmUgY3VycmVu
+dGx5IGFzY2lpZG9jLWZvcm1hdHRlZC4gU3VwcG9ydCBmb3IKPiA+ID4gbWFya2Rvd24vYXNjaWlk
+b2MgaW4ga2VybmVsZG9jIHdhcyBhbiBJbnRlbC1zcG9uc29yZWQgZWZmb3J0IGxhc3QgeWVhcgo+
+ID4gPiBsZWQgYnkgRGFuaWVsLCBidXQgbmV2ZXIgZ290IHVwc3RyZWFtZWQuCj4gPiA+IAo+ID4g
+PiBBZnRlciBzb21lIGRlbGliZXJhdGlvbiB0aGUgZGVjaXNpb24gd2FzIG1hZGUgdG8gdXNlIHJz
+dCBpbnN0ZWFkLgo+ID4gPiBTdXBwb3J0IGZvciBpdCBpcyBpbiBkb2NzLW5leHQsIGkuZS4gd2ls
+bCBiZSBpbiA0LjguCj4gPiA+IAo+ID4gPiBKYW5pIGhhcyBjb252ZXJ0ZWQgdGhlIGdwdSBkb2Nz
+IHRvIHJzdCBhbmQgZGVsZXRlZCB0aGUgZ3B1LnRtcGwsCj4gPiA+IHRoaXMgaXMgb24gdGhlIGRy
+bS1pbnRlbC9mb3ItbGludXgtbmV4dCBicmFuY2ggYnV0IG5vdCB5ZXQgaW4gZHJtLW5leHQuCj4g
+PiA+IEphbmkgYW5kIERhbmllbCBhcmUgYm90aCBvbiB2YWNhdGlvbi4gRGFuaWVsIGhhcyBpbmRp
+Y2F0ZWQgdGhhdCBoZQo+ID4gPiBjb25zaWRlcnMgc2VuZGluZyBhbm90aGVyIGRybS1pbnRlbC1u
+ZXh0IHB1bGwgd2hlbiBoZSByZXR1cm5zIG5leHQgd2VlaywKPiA+ID4gdGhlbiB0aGUgcnN0LWZv
+cm1hdHRlZCBncHUgZG9jcyB3b3VsZCBsYW5kIGluIGRybS1uZXh0Ogo+ID4gPiBodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9pbnRlbC1nZngvMjAxNi1KdW5lLzA5OTExNC5o
+dG1sCj4gPiA+IAo+ID4gPiAKPiA+ID4gPiBTaG91bGQgSSBiZSBtZXJnaW5nIHRoaXMgZGlyZWN0
+bHksIG9yIGlzIGl0IGRlcGVuZGVudCBvbiBzb21ldGhpbmcgSm9uCj4gPiA+ID4gaXMgd29ya2lu
+ZyBvbiBhbmQgdGhlcmVmb3JlIHRvIGJlIG1lcmdlZCBieSBoaW0/Cj4gPiA+IAo+ID4gPiBJdCBp
+cyBub3QgZGVwZW5kZW50IG9uIHNvbWVvbmUgZWxzZS4gWW91IGNhbiBlaXRoZXIgbWVyZ2UgaXQg
+ZGlyZWN0bHkKPiA+ID4gdGhyb3VnaCB5b3VyIHRyZWUgb3IgYWx0ZXJuYXRpdmVseSBhY2sgaXQg
+YW5kIGhhdmUgaXQgbWVyZ2VkIHRocm91Z2gKPiA+ID4gZHJtLWludGVsIHRyZWVzIGJ5IERhbmll
+bCAoKyBjYzopIG5leHQgd2Vlay4KPiA+ID4gCj4gPiA+IAo+ID4gPiBVbmZvcnR1bmF0ZWx5IHRo
+ZXJlIGlzIGN1cnJlbnRseSBubyBicmFuY2ggd2hpY2ggY29udGFpbnMgYWxsIHRoZSByc3QKPiA+
+ID4gcGF0Y2hlcyBpbiBkb2NzLW5leHQgKmFuZCogdGhlIHJzdC1mb3JtYXR0ZWQgZ3B1IGRvY3Mg
+aW4gZHJtLWludGVsLgo+ID4gPiAoU29tZSBwYXRjaGVzIGluIGRvY3MtbmV4dCBhcmUgbWlzc2lu
+ZyBmcm9tIGRybS1pbnRlbC9mb3ItbGludXgtbmV4dC4pCj4gPiA+IFRoYXQncyB3aHkgSSBwdXNo
+ZWQgdGhlIGFib3ZlLW1lbnRpb25lZCBicmFuY2ggdG8gbXkgR2l0SHViIHJlcG8sCj4gPiA+IGl0
+IGNvbnRhaW5zIGV2ZXJ5dGhpbmcgbmVlZGVkOgo+ID4gPiBodHRwczovL2dpdGh1Yi5jb20vbDFr
+L2xpbnV4L2NvbW1pdHMvc3BoaW54LWRvY3MKPiA+IAo+ID4gUHJvYmFibHkgYmVzdCB0byBwdWxs
+IHRoaXMgaW4gdGhyb3VnaCBkcm0tbWlzYywgd2hpY2ggY29udGFpbnMgZG9jcy1uZXh0Cj4gPiBw
+bHVzIHRoZSBza2VsZXRvbiBjb252ZXJzaW9uIG9mIHRoZSBkcm0gZG9jcyBvdmVyIHRvIHNwaGlu
+eC9yc3QuIERhcnJlbiwKPiA+IGFjayBvbiB0aGF0Pwo+IAo+IEFja2VkLWJ5OiBEYXJyZW4gSGFy
+dCA8ZHZoYXJ0QGxpbnV4LmludGVsLmNvbT4KPiAKPiBJJ3ZlIGRyb3BwZWQgdGhpcyBmcm9tIG15
+IHRlc3RpbmcgYnJhbmNoIChJIG5ldmVyIHB1c2hlZCBpdCB0byBteSBuZXh0IGJyYW5jaCkKPiBh
+bmQgd2lsbCBsZWF2ZSBpdCB0byB5b3UgdG8gcHVsbCBpbi4KClRoYW5rcywgYXBwbGllZCB0byBk
+cm0tbWlzYy4gSSdsbCB0cnkgdG8gc3RpbGwgc25lYWsgaXQgaW50byA0LjguCi1EYW5pZWwKLS0g
+CkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6
+Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
