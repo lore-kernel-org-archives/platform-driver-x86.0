@@ -1,83 +1,173 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
-Date: Wed, 27 Jul 2016 19:03:57 +0000
-Message-ID: <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
-References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
- <20160727072350.GF29844@pali> <1469634909478.10239@Dell.com>
- <201607271805.57123@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
+Date: Wed, 27 Jul 2016 22:15:12 +0200
+Message-ID: <201607272215.12385@pali>
+References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com> <201607271805.57123@pali> <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed;
+  boundary="nextPart2220508.SY45cCOlcm";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:18008 "EHLO
-	esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1757190AbcG0TEA (ORCPT
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:34287 "EHLO
+	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752018AbcG0UPQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Jul 2016 15:04:00 -0400
-In-Reply-To: <201607271805.57123@pali>
-Content-Language: en-US
+	Wed, 27 Jul 2016 16:15:16 -0400
+In-Reply-To: <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
+To: Mario_Limonciello@dell.com
 Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMjcsIDIwMTYg
-MTE6MDYgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
-bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0hdIGRlbGwtd21pOiBBZGQgZXZlbnRzIGNyZWF0ZWQgYnkgRGVsbCBSdWdn
-ZWQgMi1pbi0xcw0KPiANCj4gT24gV2VkbmVzZGF5IDI3IEp1bHkgMjAxNiAxNzo1NTowOSBNYXJp
-b19MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+IEhpISBJJ20gbm90IHN1cmUgaWYg
-S0VZX1BST0cxLzIvMyBhcmUgZ29vZCBuYW1lcyBoZXJlIGFzIHdlIGFscmVhZHkNCj4gPiA+IHVz
-ZQ0KPiA+ID4NCj4gPiA+dGhvc2UgZm9yIG90aGVyIGFjdGlvbnMgKHNlZSBiaW9zX3RvX2xpbnV4
-X2tleWNvZGUpLiBBbHNvIHRoZXJlIGlzOg0KPiA+IEkgaGFkIG1pc3NlZCB0aGlzLCBkbyB5b3Ug
-aGF2ZSBzb21lIHJlY29tbWVuZGF0aW9ucyBvbiB3aGF0IHdvdWxkIGJlDQo+ID4gYmV0dGVyIGNv
-ZGVzIHRvIG1hcCB0aGlzIHRvPw0KPiANCj4gUHJvYmxlbSBpcyB0aGF0IEkgZG8gbm90IGtub3cg
-d2hlbiB0aG9zZSBLRVlfUFJPRyBrZXlzIGZyb20NCj4gYmlvc190b19saW51eF9rZXljb2RlIHRh
-YmxlIGFyZSBlbWl0dGVkLiBUaGVyZSBhcmUgbWlzc2luZyBjb21tZW50cyBvcg0KPiBkZXNjcmlw
-dGlvbi4NCj4gDQo+IEFyZSB5b3UgYWJsZSB0byBmaW5kIG91dCBkZXNjcmlwdGlvbiBmb3IgYWxs
-IHRob3NlIGtleXMgaW4gdGhhdCB0YWJsZT8NCj4gTWF5YmUgbm93ICh3aGVuIGxpbnV4IGtleSBj
-b25zdGFudHMgYXJlIGV4dGVuZGVkKSwgdGhlcmUgY291bGQgYmUgYmV0dGVyDQo+IGNhbmRpZGF0
-ZXMuLi4NCg0KSSdsbCBhc2sgYXJvdW5kLiAgSXQncyBub3QgaW1tZWRpYXRlbHkgb2J2aW91cyB0
-byBtZSB0aG91Z2gsIG1heWJlIGZyb20gb2xkDQpzcGVjcz8NCg0KPiANCj4gPiBJJ2xsIGRvdWJs
-ZSBjaGVjayB3aGF0IHRoZSB0aGluZ3MgdGhhdCAid2VyZSIgbWFwcGluZyB0byBLRVlfUFJPRzEg
-ZXRjDQo+ID4gYWN0dWFsbHkgd2VyZS4gIFRoaXMgbWlnaHQgYmUgYSBjYXNlIG9mIGFuIGV4cGVj
-dGVkIGNsYXNoIGlmIHRoZQ0KPiA+IGZ1bmN0aW9ucyBhcmVuJ3QgaW4gY3VycmVudCBnZW5lcmF0
-aW9ucy4NCj4gPg0KPiA+ID4vKiBXaWZpIENhdGNoZXIgKi8NCj4gPiA+DQo+ID4gPiB7IEtFX0tF
-WSwgICAgMHhlMDExLCB7IEtFWV9QUk9HMiB9IH0sDQo+ID4NCj4gPiBJdCdzIHdvcnRoIG1lbnRp
-b25pbmcgdGhhdCBXaWZpIENhdGNoZXIgaGFzbid0IGJlZW4gdXNlZCBmb3IgYW55IERlbGwNCj4g
-PiBsYXB0b3BzIGZvciBhIGhhbmRmdWwgZ2VuZXJhdGlvbnMuICBUaGUgcnVnZ2VkIDJpbjEncyBh
-cmUgY3VycmVudA0KPiA+IGdlbmVyYXRpb24gdGhhdCBoYXZlIHRoZXNlIHByb2dyYW1tYWJsZSBi
-dXR0b25zIGFuZCBkb24ndCBoYXZlIHdpZmkNCj4gPiBjYXRjaGVyLg0KPiANCj4gQW55d2F5LCB3
-aGF0IGlzICJXaWZpIENhdGNoZXIiPyBIVyBzd2l0Y2ggYnV0dHRvbiB3aGljaCBlbmFibGUvZGlz
-YWJsZSB3aWZpPw0KPiBPciBzb21ldGhpbmcgZWxzZT8NCj4NCg0KV2lmaSBjYXRjaGVyIHdhcyBh
-IHNwZWNpYWwgaGFyZHdhcmUgc3dpdGNoIHNsaWRlciBzd2l0Y2guICBXaGVuIHRoZSBtYWNoaW5l
-DQp3YXMgdHVybmVkIGluIFMzIHRoZSBzbGlkaW5nIHRoZSBzd2l0Y2ggYmV5b25kIHRoZSBvbiBw
-b3NpdGlvbiB3b3VsZCBzY2FuIGZvciANCmF2YWlsYWJsZSB3aWZpIG5ldHdvcmtzIGFuZCBsaWdo
-dCB1cCBhbiBMRUQgaWYgc29tZSBmcm9tIHlvdXIgcHJlZGVmaW5lZCBsaXN0DQp3ZXJlIGZvdW5k
-Lg0KDQpXaGVuIHRoZSBtYWNoaW5lIHdhcyBvbiwgaXQgd291bGQgb3BlbiB1cCB0aGUgYXBwbGV0
-IHRoYXQgbGV0IHlvdSBjb25maWd1cmUNCnRoZSBiZWhhdmlvciBmb3IgdGhlIHN3aXRjaCBpbiBT
-My4NCg0KPiA+IFNvIHRoZXJlIHNob3VsZCBiZSBubyAicmVhbCIgY2xhc2ggaGVyZS4NCj4gDQo+
-IFByb2JsZW0gY2FuIGJlIGluIGZ1dHVyZS4gVGhpcyBkcml2ZXIgaXMgdW5pZmllZCBmb3IgYWxs
-IERlbGwgcHJvZHVjdHMgd2l0aCB3bWkNCj4gaW50ZXJmYWNlIGFuZCBzbyBmdXR1cmUgcHJvZHVj
-dCBjb3VsZCBkbyBzb21lIG5hc3R5IHRoaW5ncy4uLg0KDQpJIGFncmVlIHdpdGggRGFycmVuIGhl
-cmUuICANCg0KQXQgbGVhc3Qgb24gRGVsbCBzaWRlIHdlJ3JlIGNyZWF0aW5nIG5ldyBjb2RlcyBm
-b3IgIm5ldyIgYnV0dG9ucyBhbmQgdGhlDQpsaW1pdGF0aW9uIGlzIHJlYWxseSBvbiB0aGUga2Vy
-bmVsIHNpZGUgZm9yIGhvdyBtYW55IEtFWV9QUk9HIyBvciBzaW1pbGFyDQpmdW5jdGlvbnMgdGhl
-eSBjYW4gYmUgcmUtYXNzaWduZWQgdG8uDQoNCk1heWJlIGl0J3MgdGltZSB0byB0aGluayBvZiBh
-bm90aGVyIHdheSB0byBnZXQgdGhpcyBpbmZvcm1hdGlvbiB0byB1c2Vyc3BhY2UNCnJhdGhlciB0
-aGF0IGFsd2F5cyB0cmFuc2xhdGluZyB0aGVtIGludG8ga2V5IGNvZGVzPw0KDQpUaGVyZSdzIGEg
-bG90IHRoYXQgYXJlIG1hcmtlZCBhcyBLRV9JR05PUkUgYmVjYXVzZSB0aGUga2VybmVsIGNhbid0
-IGRvDQphbnl0aGluZyBpbnRlcmVzdGluZyB3aXRoIHRoZW0gYXMgbm8gMS0xIG1hcHBpbmcgZXhp
-c3RzIHRvIGEga2V5Y29kZS4NCg0KVGhvc2UgY291bGQgc3RpbGwgYmUgcGFzc2VkIG9uIHNvbWVo
-b3cgdG8gaGF2ZSB0aGluZ3MgbGlrZSBnbm9tZS1zZXR0aW5ncy1kYWVtb24NCm9yIG90aGVyIHVz
-ZXJzcGFjZSB0b29scyB0byByZWFjdCBob3dldmVyIGFuZCBzaG93IGEgbm90aWZpY2F0aW9uLg0K
-DQo+IA0KPiA+ID4gQnV0IHByb2JhYmx5IHdlIGRvIG5vdCBoYXZlIGJldHRlciBuYW1lcy4uLg0K
-PiA+DQo+ID4gSW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UsIEkgd2FzIHRoaW5raW5nIFBST0cxLzIv
-MyB3ZXJlIHJlYWxseSB0aGUgYmVzdA0KPiA+IG9wdGlvbiBhbmQgd291bGQgYmUgbW9zdCBpbnR1
-aXRpdmUgYmVjYXVzZSB0aGUga2V5cyByZWFsbHkgYXJlIGxhYmVscw0KPiA+ICJQMSIgIlAyIiBh
-bmQgIlAzIi4NCj4gDQo+IFByb2JhYmx5IHllcywgYXMgSSB3cm90ZSBJIGRvIG5vdCBoYXZlIGlu
-IG15IG1pbmQgYmV0dGVyIG5hbWVzIGZvciBub3cuDQo+IA0KDQpPSywgSSdsbCByZXNlbmQgd2l0
-aCB0aGUgY29zbWV0aWMgdGFiYmluZyBjaGFuZ2UgYW5kIGEgY2xlYXJlciBkZXNjcmlwdGlvbiwN
-CmJ1dCBrZWVwIHRoZSBzYW1lIG1hcHBpbmcuDQoNCg==
+--nextPart2220508.SY45cCOlcm
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wednesday 27 July 2016 21:03:57 Mario_Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > Sent: Wednesday, July 27, 2016 11:06 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; linux-kernel@vger.kernel.org;
+> > platform-driver- x86@vger.kernel.org
+> > Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged
+> > 2-in-1s
+> >=20
+> > On Wednesday 27 July 2016 17:55:09 Mario_Limonciello@dell.com wrote:
+> > > > Hi! I'm not sure if KEY_PROG1/2/3 are good names here as we
+> > > > already use
+> > > >
+> > > >those for other actions (see bios_to_linux_keycode). Also there
+> > > >is:
+> > > I had missed this, do you have some recommendations on what would
+> > > be better codes to map this to?
+> >=20
+> > Problem is that I do not know when those KEY_PROG keys from
+> > bios_to_linux_keycode table are emitted. There are missing comments
+> > or description.
+> >=20
+> > Are you able to find out description for all those keys in that
+> > table? Maybe now (when linux key constants are extended), there
+> > could be better candidates...
+>=20
+> I'll ask around.  It's not immediately obvious to me though, maybe
+> from old specs?
+
+Do not know if it is old. At least some codes from it are used on my=20
+E6440 machine. Table itself was added by Rezwanul Kabir in this commit:
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=
+=3D5ea2559726b786283236835dc2905c23b36ac91c
+
+Maybe commit message could help you to indentify what it is...
+
+> > > I'll double check what the things that "were" mapping to
+> > > KEY_PROG1 etc actually were.  This might be a case of an
+> > > expected clash if the functions aren't in current generations.
+> > >=20
+> > > >/* Wifi Catcher */
+> > > >
+> > > > { KE_KEY,    0xe011, { KEY_PROG2 } },
+> > >=20
+> > > It's worth mentioning that Wifi Catcher hasn't been used for any
+> > > Dell laptops for a handful generations.  The rugged 2in1's are
+> > > current generation that have these programmable buttons and
+> > > don't have wifi catcher.
+> >=20
+> > Anyway, what is "Wifi Catcher"? HW switch buttton which
+> > enable/disable wifi? Or something else?
+>=20
+> Wifi catcher was a special hardware switch slider switch.  When the
+> machine was turned in S3 the sliding the switch beyond the on
+> position would scan for available wifi networks and light up an LED
+> if some from your predefined list were found.
+>=20
+> When the machine was on, it would open up the applet that let you
+> configure the behavior for the switch in S3.
+
+Hm... maybe it better fit KEY_WLAN then? Just speculation.
+
+> > > So there should be no "real" clash here.
+> >=20
+> > Problem can be in future. This driver is unified for all Dell
+> > products with wmi interface and so future product could do some
+> > nasty things...
+>=20
+> I agree with Darren here.
+>=20
+> At least on Dell side we're creating new codes for "new" buttons and
+> the limitation is really on the kernel side for how many KEY_PROG#
+> or similar functions they can be re-assigned to.
+
+Ok.
+
+> Maybe it's time to think of another way to get this information to
+> userspace rather that always translating them into key codes?
+
+If event is generated by pressing key, button or hw switch, then input=20
+key is correct way. If there is no KEY define which fit for new vendor=20
+hw button, then I think we should start discussion with input subsystem=20
+how to handle such situation.
+
+> There's a lot that are marked as KE_IGNORE because the kernel can't
+> do anything interesting with them as no 1-1 mapping exists to a
+> keycode.
+
+Most marked as KE_IGNORE are because duplicate event is sent via=20
+keyboard controller or via other subsystem (e.g. rfkill).
+
+But events which are not keys or buttons should not be sent via input=20
+devices. At least I think it is against usage of input devices.
+
+Events like "battery was removed" or "keyboard backlight was changed" or=20
+"battery lifetime decreased under X %" can be useful for userspace=20
+applications. I agree. But I think we do not have any subsystem or=20
+interface for sending them from kernel to userspace.
+
+If we start talking about creating interface for it, I would rather see=20
+something more generic, not Dell-only specific or created specially for=20
+Dell machines which will not fit for others...
+
+Darren, what do you think about it?
+
+> Those could still be passed on somehow to have things like
+> gnome-settings-daemon or other userspace tools to react however and
+> show a notification.
+
+Yes, that can be useful and with some genetic way, other hardware can=20
+benefit from it too...
+
+> > > > But probably we do not have better names...
+> > >=20
+> > > In this particular case, I was thinking PROG1/2/3 were really the
+> > > best option and would be most intuitive because the keys really
+> > > are labels "P1" "P2" and "P3".
+> >=20
+> > Probably yes, as I wrote I do not have in my mind better names for
+> > now.
+>=20
+> OK, I'll resend with the cosmetic tabbing change and a clearer
+> description, but keep the same mapping.
+
+Ok.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2220508.SY45cCOlcm
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAleZFlAACgkQi/DJPQPkQ1La8gCdFQJwVuDhOkHECO+q/hnqHYeD
+1LwAn0qtFbwsGE4y2flHwxdpGbJST8i9
+=kw5P
+-----END PGP SIGNATURE-----
+
+--nextPart2220508.SY45cCOlcm--
