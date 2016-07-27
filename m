@@ -1,52 +1,83 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi: Ignore WMI event 0xe00e
-Date: Wed, 27 Jul 2016 10:12:44 -0700
-Message-ID: <20160727171244.GG2565@f23x64.localdomain>
-References: <1469604882-22169-1-git-send-email-pali.rohar@gmail.com>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
+Date: Wed, 27 Jul 2016 19:03:57 +0000
+Message-ID: <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
+References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
+ <20160727072350.GF29844@pali> <1469634909478.10239@Dell.com>
+ <201607271805.57123@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469604882-22169-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario_Limonciello@Dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:18008 "EHLO
+	esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1757190AbcG0TEA (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 Jul 2016 15:04:00 -0400
+In-Reply-To: <201607271805.57123@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 09:34:42AM +0200, Pali Roh=E1r wrote:
-> WMI event 0xe00e is received when battery was removed or inserted.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-
-Queued for 4.8, thanks.
-
-> ---
->  drivers/platform/x86/dell-wmi.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index d2bc092..da2fe18 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -110,8 +110,8 @@ static const struct key_entry dell_wmi_keymap_typ=
-e_0000[] __initconst =3D {
->  	/* BIOS error detected */
->  	{ KE_IGNORE, 0xe00d, { KEY_RESERVED } },
-> =20
-> -	/* Unknown, defined in ACPI DSDT */
-> -	/* { KE_IGNORE, 0xe00e, { KEY_RESERVED } }, */
-> +	/* Battery was removed or inserted */
-> +	{ KE_IGNORE, 0xe00e, { KEY_RESERVED } },
-> =20
->  	/* Wifi Catcher */
->  	{ KE_KEY,    0xe011, { KEY_PROG2 } },
-> --=20
-> 1.7.10.4
->=20
->=20
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMjcsIDIwMTYg
+MTE6MDYgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0hdIGRlbGwtd21pOiBBZGQgZXZlbnRzIGNyZWF0ZWQgYnkgRGVsbCBSdWdn
+ZWQgMi1pbi0xcw0KPiANCj4gT24gV2VkbmVzZGF5IDI3IEp1bHkgMjAxNiAxNzo1NTowOSBNYXJp
+b19MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+IEhpISBJJ20gbm90IHN1cmUgaWYg
+S0VZX1BST0cxLzIvMyBhcmUgZ29vZCBuYW1lcyBoZXJlIGFzIHdlIGFscmVhZHkNCj4gPiA+IHVz
+ZQ0KPiA+ID4NCj4gPiA+dGhvc2UgZm9yIG90aGVyIGFjdGlvbnMgKHNlZSBiaW9zX3RvX2xpbnV4
+X2tleWNvZGUpLiBBbHNvIHRoZXJlIGlzOg0KPiA+IEkgaGFkIG1pc3NlZCB0aGlzLCBkbyB5b3Ug
+aGF2ZSBzb21lIHJlY29tbWVuZGF0aW9ucyBvbiB3aGF0IHdvdWxkIGJlDQo+ID4gYmV0dGVyIGNv
+ZGVzIHRvIG1hcCB0aGlzIHRvPw0KPiANCj4gUHJvYmxlbSBpcyB0aGF0IEkgZG8gbm90IGtub3cg
+d2hlbiB0aG9zZSBLRVlfUFJPRyBrZXlzIGZyb20NCj4gYmlvc190b19saW51eF9rZXljb2RlIHRh
+YmxlIGFyZSBlbWl0dGVkLiBUaGVyZSBhcmUgbWlzc2luZyBjb21tZW50cyBvcg0KPiBkZXNjcmlw
+dGlvbi4NCj4gDQo+IEFyZSB5b3UgYWJsZSB0byBmaW5kIG91dCBkZXNjcmlwdGlvbiBmb3IgYWxs
+IHRob3NlIGtleXMgaW4gdGhhdCB0YWJsZT8NCj4gTWF5YmUgbm93ICh3aGVuIGxpbnV4IGtleSBj
+b25zdGFudHMgYXJlIGV4dGVuZGVkKSwgdGhlcmUgY291bGQgYmUgYmV0dGVyDQo+IGNhbmRpZGF0
+ZXMuLi4NCg0KSSdsbCBhc2sgYXJvdW5kLiAgSXQncyBub3QgaW1tZWRpYXRlbHkgb2J2aW91cyB0
+byBtZSB0aG91Z2gsIG1heWJlIGZyb20gb2xkDQpzcGVjcz8NCg0KPiANCj4gPiBJJ2xsIGRvdWJs
+ZSBjaGVjayB3aGF0IHRoZSB0aGluZ3MgdGhhdCAid2VyZSIgbWFwcGluZyB0byBLRVlfUFJPRzEg
+ZXRjDQo+ID4gYWN0dWFsbHkgd2VyZS4gIFRoaXMgbWlnaHQgYmUgYSBjYXNlIG9mIGFuIGV4cGVj
+dGVkIGNsYXNoIGlmIHRoZQ0KPiA+IGZ1bmN0aW9ucyBhcmVuJ3QgaW4gY3VycmVudCBnZW5lcmF0
+aW9ucy4NCj4gPg0KPiA+ID4vKiBXaWZpIENhdGNoZXIgKi8NCj4gPiA+DQo+ID4gPiB7IEtFX0tF
+WSwgICAgMHhlMDExLCB7IEtFWV9QUk9HMiB9IH0sDQo+ID4NCj4gPiBJdCdzIHdvcnRoIG1lbnRp
+b25pbmcgdGhhdCBXaWZpIENhdGNoZXIgaGFzbid0IGJlZW4gdXNlZCBmb3IgYW55IERlbGwNCj4g
+PiBsYXB0b3BzIGZvciBhIGhhbmRmdWwgZ2VuZXJhdGlvbnMuICBUaGUgcnVnZ2VkIDJpbjEncyBh
+cmUgY3VycmVudA0KPiA+IGdlbmVyYXRpb24gdGhhdCBoYXZlIHRoZXNlIHByb2dyYW1tYWJsZSBi
+dXR0b25zIGFuZCBkb24ndCBoYXZlIHdpZmkNCj4gPiBjYXRjaGVyLg0KPiANCj4gQW55d2F5LCB3
+aGF0IGlzICJXaWZpIENhdGNoZXIiPyBIVyBzd2l0Y2ggYnV0dHRvbiB3aGljaCBlbmFibGUvZGlz
+YWJsZSB3aWZpPw0KPiBPciBzb21ldGhpbmcgZWxzZT8NCj4NCg0KV2lmaSBjYXRjaGVyIHdhcyBh
+IHNwZWNpYWwgaGFyZHdhcmUgc3dpdGNoIHNsaWRlciBzd2l0Y2guICBXaGVuIHRoZSBtYWNoaW5l
+DQp3YXMgdHVybmVkIGluIFMzIHRoZSBzbGlkaW5nIHRoZSBzd2l0Y2ggYmV5b25kIHRoZSBvbiBw
+b3NpdGlvbiB3b3VsZCBzY2FuIGZvciANCmF2YWlsYWJsZSB3aWZpIG5ldHdvcmtzIGFuZCBsaWdo
+dCB1cCBhbiBMRUQgaWYgc29tZSBmcm9tIHlvdXIgcHJlZGVmaW5lZCBsaXN0DQp3ZXJlIGZvdW5k
+Lg0KDQpXaGVuIHRoZSBtYWNoaW5lIHdhcyBvbiwgaXQgd291bGQgb3BlbiB1cCB0aGUgYXBwbGV0
+IHRoYXQgbGV0IHlvdSBjb25maWd1cmUNCnRoZSBiZWhhdmlvciBmb3IgdGhlIHN3aXRjaCBpbiBT
+My4NCg0KPiA+IFNvIHRoZXJlIHNob3VsZCBiZSBubyAicmVhbCIgY2xhc2ggaGVyZS4NCj4gDQo+
+IFByb2JsZW0gY2FuIGJlIGluIGZ1dHVyZS4gVGhpcyBkcml2ZXIgaXMgdW5pZmllZCBmb3IgYWxs
+IERlbGwgcHJvZHVjdHMgd2l0aCB3bWkNCj4gaW50ZXJmYWNlIGFuZCBzbyBmdXR1cmUgcHJvZHVj
+dCBjb3VsZCBkbyBzb21lIG5hc3R5IHRoaW5ncy4uLg0KDQpJIGFncmVlIHdpdGggRGFycmVuIGhl
+cmUuICANCg0KQXQgbGVhc3Qgb24gRGVsbCBzaWRlIHdlJ3JlIGNyZWF0aW5nIG5ldyBjb2RlcyBm
+b3IgIm5ldyIgYnV0dG9ucyBhbmQgdGhlDQpsaW1pdGF0aW9uIGlzIHJlYWxseSBvbiB0aGUga2Vy
+bmVsIHNpZGUgZm9yIGhvdyBtYW55IEtFWV9QUk9HIyBvciBzaW1pbGFyDQpmdW5jdGlvbnMgdGhl
+eSBjYW4gYmUgcmUtYXNzaWduZWQgdG8uDQoNCk1heWJlIGl0J3MgdGltZSB0byB0aGluayBvZiBh
+bm90aGVyIHdheSB0byBnZXQgdGhpcyBpbmZvcm1hdGlvbiB0byB1c2Vyc3BhY2UNCnJhdGhlciB0
+aGF0IGFsd2F5cyB0cmFuc2xhdGluZyB0aGVtIGludG8ga2V5IGNvZGVzPw0KDQpUaGVyZSdzIGEg
+bG90IHRoYXQgYXJlIG1hcmtlZCBhcyBLRV9JR05PUkUgYmVjYXVzZSB0aGUga2VybmVsIGNhbid0
+IGRvDQphbnl0aGluZyBpbnRlcmVzdGluZyB3aXRoIHRoZW0gYXMgbm8gMS0xIG1hcHBpbmcgZXhp
+c3RzIHRvIGEga2V5Y29kZS4NCg0KVGhvc2UgY291bGQgc3RpbGwgYmUgcGFzc2VkIG9uIHNvbWVo
+b3cgdG8gaGF2ZSB0aGluZ3MgbGlrZSBnbm9tZS1zZXR0aW5ncy1kYWVtb24NCm9yIG90aGVyIHVz
+ZXJzcGFjZSB0b29scyB0byByZWFjdCBob3dldmVyIGFuZCBzaG93IGEgbm90aWZpY2F0aW9uLg0K
+DQo+IA0KPiA+ID4gQnV0IHByb2JhYmx5IHdlIGRvIG5vdCBoYXZlIGJldHRlciBuYW1lcy4uLg0K
+PiA+DQo+ID4gSW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UsIEkgd2FzIHRoaW5raW5nIFBST0cxLzIv
+MyB3ZXJlIHJlYWxseSB0aGUgYmVzdA0KPiA+IG9wdGlvbiBhbmQgd291bGQgYmUgbW9zdCBpbnR1
+aXRpdmUgYmVjYXVzZSB0aGUga2V5cyByZWFsbHkgYXJlIGxhYmVscw0KPiA+ICJQMSIgIlAyIiBh
+bmQgIlAzIi4NCj4gDQo+IFByb2JhYmx5IHllcywgYXMgSSB3cm90ZSBJIGRvIG5vdCBoYXZlIGlu
+IG15IG1pbmQgYmV0dGVyIG5hbWVzIGZvciBub3cuDQo+IA0KDQpPSywgSSdsbCByZXNlbmQgd2l0
+aCB0aGUgY29zbWV0aWMgdGFiYmluZyBjaGFuZ2UgYW5kIGEgY2xlYXJlciBkZXNjcmlwdGlvbiwN
+CmJ1dCBrZWVwIHRoZSBzYW1lIG1hcHBpbmcuDQoNCg==
