@@ -1,110 +1,200 @@
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [RFC v3 12/13] kprobes: port .kprobes.text to section range
-Date: Thu, 28 Jul 2016 00:40:46 +0200
-Message-ID: <20160727224046.GN5537@wotan.suse.de>
-References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
- <1469222687-1600-13-git-send-email-mcgrof@kernel.org>
- <20160726001958.09b64d73e0bdda461ad1451c@kernel.org>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
+Date: Wed, 27 Jul 2016 15:43:38 -0700
+Message-ID: <20160727224338.GA36353@f23x64.localdomain>
+References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
+ <201607271805.57123@pali>
+ <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
+ <201607272215.12385@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:52135 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1162284AbcG0Wnk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 Jul 2016 18:43:40 -0400
 Content-Disposition: inline
-In-Reply-To: <20160726001958.09b64d73e0bdda461ad1451c@kernel.org>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, linux@arm.linux.org.uk, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <201607272215.12385@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mario_Limonciello@dell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 26, 2016 at 12:19:58AM +0900, Masami Hiramatsu wrote:
-> On Fri, 22 Jul 2016 14:24:46 -0700
-> "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
-> 
-> > kprobe makes use of two custom sections, each custom section
-> > is folded into one of the standard Linux sections types as follows,
-> > it currently relies on the linker script to fold the custom section
-> > onto the respective Linux section:
-> > 
-> > type  Linux-section custom section name  begin                    end
-> > table .init.data    _kprobe_blacklist    __start_kprobe_blacklist __stop_kprobe_blacklist
-> > range .text         .kprobes.text        __kprobes_text_start     __kprobes_text_end
-> > 
-> > This ports the .kprobes.text custom section to the standard
-> > Linux ranges API allowing us remove all the custom kprobe section
-> > declarations from the linker script.
-> > 
-> > Tested with CONFIG_KPROBES_SANITY_TEST, it passes with:
-> > 
-> > Kprobe smoke test: started
-> > Kprobe smoke test: passed successfully
-> > 
-> > Then tested CONFIG_SAMPLE_KPROBES on do_fork, and the kprobe bites
-> > and kicks as expected.
-> > 
-> > Also ran ./ftracetest with no issues:
-> > 
-> > $ sudo ./ftracetest
-> > === Ftrace unit tests ===
-> > [1] Basic trace file check      [PASS]
-> > [2] Basic test for tracers      [PASS]
-> > [3] Basic trace clock test      [PASS]
-> > [4] Basic event tracing check   [PASS]
-> > [5] event tracing - enable/disable with event level files       [PASS]
-> > [6] event tracing - restricts events based on pid       [PASS]
-> > [7] event tracing - enable/disable with subsystem level files   [PASS]
-> > [8] event tracing - enable/disable with top level files [PASS]
-> > [9] ftrace - function graph filters with stack tracer   [PASS]
-> > [10] ftrace - function graph filters    [PASS]
-> > [11] ftrace - function profiler with function tracing   [PASS]
-> > [12] Test creation and deletion of trace instances while setting an event[PASS]
-> > [13] Test creation and deletion of trace instances      [PASS]
-> > [14] Kprobe dynamic event - adding and removing [PASS]
-> > [15] Kprobe dynamic event - busy event check    [PASS]
-> > [16] Kprobe dynamic event with arguments        [PASS]
-> > [17] Kprobe dynamic event with function tracer  [PASS]
-> > [18] Kretprobe dynamic event with arguments     [PASS]
-> > [19] event trigger - test event enable/disable trigger  [PASS]
-> > [20] event trigger - test trigger filter        [PASS]
-> > [21] event trigger - test histogram modifiers   [PASS]
-> > [22] event trigger - test histogram trigger     [PASS]
-> > [23] event trigger - test multiple histogram triggers   [PASS]
-> > [24] event trigger - test snapshot-trigger      [PASS]
-> > [25] event trigger - test stacktrace-trigger    [PASS]
-> > [26] event trigger - test traceon/off trigger   [PASS]
-> > 
-> >  # of passed:  26
-> >  # of failed:  0
-> >  # of unresolved:  0
-> >  # of untested:  0
-> >  # of unsupported:  0
-> >  # of xfailed:  0
-> >  # of undefined(test bug):  0
-> 
-> Looks good to me except for the modpost part.
+Dmitry, we'd appreciate your thoughts as the input maintainer on a ques=
+tion
+below (left the thread in tact so you have all the context).
 
-OK thanks!
+On Wed, Jul 27, 2016 at 10:15:12PM +0200, Pali Roh=E1r wrote:
+> On Wednesday 27 July 2016 21:03:57 Mario_Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Pali Roh=E1r [mailto:pali.rohar@gmail.com]
+> > > Sent: Wednesday, July 27, 2016 11:06 AM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: dvhart@infradead.org; linux-kernel@vger.kernel.org;
+> > > platform-driver- x86@vger.kernel.org
+> > > Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged
+> > > 2-in-1s
+> > >=20
+> > > On Wednesday 27 July 2016 17:55:09 Mario_Limonciello@dell.com wro=
+te:
+> > > > > Hi! I'm not sure if KEY_PROG1/2/3 are good names here as we
+> > > > > already use
+> > > > >
+> > > > >those for other actions (see bios_to_linux_keycode). Also ther=
+e
+> > > > >is:
+> > > > I had missed this, do you have some recommendations on what wou=
+ld
+> > > > be better codes to map this to?
+> > >=20
+> > > Problem is that I do not know when those KEY_PROG keys from
+> > > bios_to_linux_keycode table are emitted. There are missing commen=
+ts
+> > > or description.
+> > >=20
+> > > Are you able to find out description for all those keys in that
+> > > table? Maybe now (when linux key constants are extended), there
+> > > could be better candidates...
+> >=20
+> > I'll ask around.  It's not immediately obvious to me though, maybe
+> > from old specs?
+>=20
+> Do not know if it is old. At least some codes from it are used on my=20
+> E6440 machine. Table itself was added by Rezwanul Kabir in this commi=
+t:
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commi=
+t/?id=3D5ea2559726b786283236835dc2905c23b36ac91c
+>=20
+> Maybe commit message could help you to indentify what it is...
+>=20
+> > > > I'll double check what the things that "were" mapping to
+> > > > KEY_PROG1 etc actually were.  This might be a case of an
+> > > > expected clash if the functions aren't in current generations.
+> > > >=20
+> > > > >/* Wifi Catcher */
+> > > > >
+> > > > > { KE_KEY,    0xe011, { KEY_PROG2 } },
+> > > >=20
+> > > > It's worth mentioning that Wifi Catcher hasn't been used for an=
+y
+> > > > Dell laptops for a handful generations.  The rugged 2in1's are
+> > > > current generation that have these programmable buttons and
+> > > > don't have wifi catcher.
+> > >=20
+> > > Anyway, what is "Wifi Catcher"? HW switch buttton which
+> > > enable/disable wifi? Or something else?
+> >=20
+> > Wifi catcher was a special hardware switch slider switch.  When the
+> > machine was turned in S3 the sliding the switch beyond the on
+> > position would scan for available wifi networks and light up an LED
+> > if some from your predefined list were found.
+> >=20
+> > When the machine was on, it would open up the applet that let you
+> > configure the behavior for the switch in S3.
+>=20
+> Hm... maybe it better fit KEY_WLAN then? Just speculation.
+>=20
+> > > > So there should be no "real" clash here.
+> > >=20
+> > > Problem can be in future. This driver is unified for all Dell
+> > > products with wmi interface and so future product could do some
+> > > nasty things...
+> >=20
+> > I agree with Darren here.
+> >=20
+> > At least on Dell side we're creating new codes for "new" buttons an=
+d
+> > the limitation is really on the kernel side for how many KEY_PROG#
+> > or similar functions they can be re-assigned to.
+>=20
+> Ok.
+>=20
+> > Maybe it's time to think of another way to get this information to
+> > userspace rather that always translating them into key codes?
+>=20
+> If event is generated by pressing key, button or hw switch, then inpu=
+t=20
+> key is correct way. If there is no KEY define which fit for new vendo=
+r=20
+> hw button, then I think we should start discussion with input subsyst=
+em=20
+> how to handle such situation.
+>=20
+> > There's a lot that are marked as KE_IGNORE because the kernel can't
+> > do anything interesting with them as no 1-1 mapping exists to a
+> > keycode.
+>=20
+> Most marked as KE_IGNORE are because duplicate event is sent via=20
+> keyboard controller or via other subsystem (e.g. rfkill).
+>=20
+> But events which are not keys or buttons should not be sent via input=
+=20
+> devices. At least I think it is against usage of input devices.
+>=20
+> Events like "battery was removed" or "keyboard backlight was changed"=
+ or=20
+> "battery lifetime decreased under X %" can be useful for userspace=20
+> applications. I agree. But I think we do not have any subsystem or=20
+> interface for sending them from kernel to userspace.
+>=20
+> If we start talking about creating interface for it, I would rather s=
+ee=20
+> something more generic, not Dell-only specific or created specially f=
+or=20
+> Dell machines which will not fit for others...
+>=20
+> Darren, what do you think about it?
 
-> > diff --git a/scripts/Makefile b/scripts/Makefile
-> > index 1d80897a9644..77a0cc91628c 100644
-> > --- a/scripts/Makefile
-> > +++ b/scripts/Makefile
-> > @@ -10,6 +10,7 @@
-> >  # check-lc_ctype: Used in Documentation/DocBook
-> >  
-> >  HOST_EXTRACFLAGS += -I$(srctree)/tools/include
-> > +HOST_EXTRACFLAGS += -U__KERNEL__
-> 
-> This looks a add-hoc hack. If we just need SECTION_RNG(SECTION_TEXT, kprobes)
-> to convert to section name, can we export the definitions outside of _KERNEL_ ?
+It sounds like a good Kernel Summit topic... and they just happen to ha=
+ve the
+call for topics going on right now... first step would be to get the in=
+put
+maintainers thoughts...
 
-We can, it was just a matter of deciding if we were OK with open coding the
-section, copying over some defines, or sharing somehow (this was one way) the
-header files.
++Dmitry Torokhov
 
-Josh seems to prefer to open coding out the names on the tools we can certanly
-do that here as well, I think his point that the names should/will likely
-never change is sufficient motivation to avoid all this and prefer open coding
-this.
+Dmitry, what are your thoughts with respect to handing events up to use=
+rspace
+which are not strictly key presses via the input system? Pali's suggest=
+ion makes
+sense to me - do you think this is something we should discuss at KS...=
+ or is
+this already decided and can you set us straight?
 
-Will do that in the next spin unless I hear otherwise.
+>=20
+> > Those could still be passed on somehow to have things like
+> > gnome-settings-daemon or other userspace tools to react however and
+> > show a notification.
+>=20
+> Yes, that can be useful and with some genetic way, other hardware can=
+=20
+> benefit from it too...
+>=20
+> > > > > But probably we do not have better names...
+> > > >=20
+> > > > In this particular case, I was thinking PROG1/2/3 were really t=
+he
+> > > > best option and would be most intuitive because the keys really
+> > > > are labels "P1" "P2" and "P3".
+> > >=20
+> > > Probably yes, as I wrote I do not have in my mind better names fo=
+r
+> > > now.
+> >=20
+> > OK, I'll resend with the cosmetic tabbing change and a clearer
+> > description, but keep the same mapping.
+>=20
+> Ok.
+>=20
+> --=20
+> Pali Roh=E1r
+> pali.rohar@gmail.com
 
-  Luis
+
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
