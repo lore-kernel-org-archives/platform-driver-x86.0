@@ -1,198 +1,67 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
-Date: Wed, 27 Jul 2016 16:07:54 -0700
-Message-ID: <CAKdAkRRG8DwofYxcGe8dQmFAg86b8gcWM3pMAp0pv=VwBO-ZQg@mail.gmail.com>
+From: <Mario_Limonciello@Dell.com>
+Subject: RE: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
+Date: Thu, 28 Jul 2016 15:36:19 +0000
+Message-ID: <dd9ecd64269e41b99257b08c9d08dbdc@ausx13mpc120.AMER.DELL.COM>
 References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
- <201607271805.57123@pali> <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
- <201607272215.12385@pali> <20160727224338.GA36353@f23x64.localdomain>
+ <201607271805.57123@pali>
+ <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
+ <201607272215.12385@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f68.google.com ([209.85.213.68]:33587 "EHLO
-	mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1163142AbcG0XH4 convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Jul 2016 19:07:56 -0400
-In-Reply-To: <20160727224338.GA36353@f23x64.localdomain>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Mario Limonciello <Mario_Limonciello@dell.com>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201607272215.12385@pali>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
-
-On Wed, Jul 27, 2016 at 3:43 PM, Darren Hart <dvhart@infradead.org> wro=
-te:
-> Dmitry, we'd appreciate your thoughts as the input maintainer on a qu=
-estion
-> below (left the thread in tact so you have all the context).
->
-> On Wed, Jul 27, 2016 at 10:15:12PM +0200, Pali Roh=C3=A1r wrote:
->> On Wednesday 27 July 2016 21:03:57 Mario_Limonciello@dell.com wrote:
->> > > -----Original Message-----
->> > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
->> > > Sent: Wednesday, July 27, 2016 11:06 AM
->> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
->> > > Cc: dvhart@infradead.org; linux-kernel@vger.kernel.org;
->> > > platform-driver- x86@vger.kernel.org
->> > > Subject: Re: [PATCH] dell-wmi: Add events created by Dell Rugged
->> > > 2-in-1s
->> > >
->> > > On Wednesday 27 July 2016 17:55:09 Mario_Limonciello@dell.com wr=
-ote:
->> > > > > Hi! I'm not sure if KEY_PROG1/2/3 are good names here as we
->> > > > > already use
->> > > > >
->> > > > >those for other actions (see bios_to_linux_keycode). Also the=
-re
->> > > > >is:
->> > > > I had missed this, do you have some recommendations on what wo=
-uld
->> > > > be better codes to map this to?
->> > >
->> > > Problem is that I do not know when those KEY_PROG keys from
->> > > bios_to_linux_keycode table are emitted. There are missing comme=
-nts
->> > > or description.
->> > >
->> > > Are you able to find out description for all those keys in that
->> > > table? Maybe now (when linux key constants are extended), there
->> > > could be better candidates...
->> >
->> > I'll ask around.  It's not immediately obvious to me though, maybe
->> > from old specs?
->>
->> Do not know if it is old. At least some codes from it are used on my
->> E6440 machine. Table itself was added by Rezwanul Kabir in this comm=
-it:
->>
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3D5ea2559726b786283236835dc2905c23b36ac91c
->>
->> Maybe commit message could help you to indentify what it is...
->>
->> > > > I'll double check what the things that "were" mapping to
->> > > > KEY_PROG1 etc actually were.  This might be a case of an
->> > > > expected clash if the functions aren't in current generations.
->> > > >
->> > > > >/* Wifi Catcher */
->> > > > >
->> > > > > { KE_KEY,    0xe011, { KEY_PROG2 } },
->> > > >
->> > > > It's worth mentioning that Wifi Catcher hasn't been used for a=
-ny
->> > > > Dell laptops for a handful generations.  The rugged 2in1's are
->> > > > current generation that have these programmable buttons and
->> > > > don't have wifi catcher.
->> > >
->> > > Anyway, what is "Wifi Catcher"? HW switch buttton which
->> > > enable/disable wifi? Or something else?
->> >
->> > Wifi catcher was a special hardware switch slider switch.  When th=
-e
->> > machine was turned in S3 the sliding the switch beyond the on
->> > position would scan for available wifi networks and light up an LE=
-D
->> > if some from your predefined list were found.
->> >
->> > When the machine was on, it would open up the applet that let you
->> > configure the behavior for the switch in S3.
->>
->> Hm... maybe it better fit KEY_WLAN then? Just speculation.
->>
->> > > > So there should be no "real" clash here.
->> > >
->> > > Problem can be in future. This driver is unified for all Dell
->> > > products with wmi interface and so future product could do some
->> > > nasty things...
->> >
->> > I agree with Darren here.
->> >
->> > At least on Dell side we're creating new codes for "new" buttons a=
-nd
->> > the limitation is really on the kernel side for how many KEY_PROG#
->> > or similar functions they can be re-assigned to.
->>
->> Ok.
->>
->> > Maybe it's time to think of another way to get this information to
->> > userspace rather that always translating them into key codes?
->>
->> If event is generated by pressing key, button or hw switch, then inp=
-ut
->> key is correct way. If there is no KEY define which fit for new vend=
-or
->> hw button, then I think we should start discussion with input subsys=
-tem
->> how to handle such situation.
->>
->> > There's a lot that are marked as KE_IGNORE because the kernel can'=
-t
->> > do anything interesting with them as no 1-1 mapping exists to a
->> > keycode.
->>
->> Most marked as KE_IGNORE are because duplicate event is sent via
->> keyboard controller or via other subsystem (e.g. rfkill).
->>
->> But events which are not keys or buttons should not be sent via inpu=
-t
->> devices. At least I think it is against usage of input devices.
->>
->> Events like "battery was removed" or "keyboard backlight was changed=
-" or
->> "battery lifetime decreased under X %" can be useful for userspace
->> applications. I agree. But I think we do not have any subsystem or
->> interface for sending them from kernel to userspace.
->>
->> If we start talking about creating interface for it, I would rather =
-see
->> something more generic, not Dell-only specific or created specially =
-for
->> Dell machines which will not fit for others...
->>
->> Darren, what do you think about it?
->
-> It sounds like a good Kernel Summit topic... and they just happen to =
-have the
-> call for topics going on right now... first step would be to get the =
-input
-> maintainers thoughts...
->
-> +Dmitry Torokhov
->
-> Dmitry, what are your thoughts with respect to handing events up to u=
-serspace
-> which are not strictly key presses via the input system? Pali's sugge=
-stion makes
-> sense to me - do you think this is something we should discuss at KS.=
-=2E. or is
-> this already decided and can you set us straight?
-
-So here is what I believe:
-
-- Stuff that are not keys/buttons/switches/other bits of hardware
-directly manipulated by user, but rather state change notifications
-should not be delivered via input subsystem
-
-- Even if something is a key/button/switch it does not necessarily
-need to be sent through input subsystem or we may want to wait until
-we add a new input event. This is because vendors love to come up with
-"value add" features that require vendor specific driver that noone
-ends up using. I mean, for the "WiFi catcher" do you have any kind of
-numbers for the users of the feature?
-
-- In the same vein, we can come up with something generic to shuffle
-the crap over to userspace ("com.vendor.crap.morecrap..." over
-connector? I think I just threw into my mouth a little), but do we
-have consumer for this?
-
-Actually it might be fun topic to discuss at KS, even if in hallway
-only. We might end up deciding that we should work events that make
-sense generically into existing subsystems and leave "value add"
-suppressed.
-
-Thanks.
-
---=20
-Dmitry
+PiA+ID4NCj4gPiA+IEFueXdheSwgd2hhdCBpcyAiV2lmaSBDYXRjaGVyIj8gSFcgc3dpdGNoIGJ1
+dHR0b24gd2hpY2gNCj4gPiA+IGVuYWJsZS9kaXNhYmxlIHdpZmk/IE9yIHNvbWV0aGluZyBlbHNl
+Pw0KPiA+DQo+ID4gV2lmaSBjYXRjaGVyIHdhcyBhIHNwZWNpYWwgaGFyZHdhcmUgc3dpdGNoIHNs
+aWRlciBzd2l0Y2guICBXaGVuIHRoZQ0KPiA+IG1hY2hpbmUgd2FzIHR1cm5lZCBpbiBTMyB0aGUg
+c2xpZGluZyB0aGUgc3dpdGNoIGJleW9uZCB0aGUgb24NCj4gPiBwb3NpdGlvbiB3b3VsZCBzY2Fu
+IGZvciBhdmFpbGFibGUgd2lmaSBuZXR3b3JrcyBhbmQgbGlnaHQgdXAgYW4gTEVEDQo+ID4gaWYg
+c29tZSBmcm9tIHlvdXIgcHJlZGVmaW5lZCBsaXN0IHdlcmUgZm91bmQuDQo+ID4NCj4gPiBXaGVu
+IHRoZSBtYWNoaW5lIHdhcyBvbiwgaXQgd291bGQgb3BlbiB1cCB0aGUgYXBwbGV0IHRoYXQgbGV0
+IHlvdQ0KPiA+IGNvbmZpZ3VyZSB0aGUgYmVoYXZpb3IgZm9yIHRoZSBzd2l0Y2ggaW4gUzMuDQo+
+IA0KPiBIbS4uLiBtYXliZSBpdCBiZXR0ZXIgZml0IEtFWV9XTEFOIHRoZW4/IEp1c3Qgc3BlY3Vs
+YXRpb24uDQo+IA0KDQpZZWFoLCBJIHRoaW5rIHRoYXQncyBhIGdvb2QgZml0LiAgSSdsbCBhZGp1
+c3QgdGhhdCB3aGVuIEkgcmVzdWJtaXQgdGhlDQpydWdnZWQgcGF0Y2ggc2hvcnRseS4NCg0KPiA+
+ID4gPiBTbyB0aGVyZSBzaG91bGQgYmUgbm8gInJlYWwiIGNsYXNoIGhlcmUuDQo+ID4gPg0KPiA+
+ID4gUHJvYmxlbSBjYW4gYmUgaW4gZnV0dXJlLiBUaGlzIGRyaXZlciBpcyB1bmlmaWVkIGZvciBh
+bGwgRGVsbA0KPiA+ID4gcHJvZHVjdHMgd2l0aCB3bWkgaW50ZXJmYWNlIGFuZCBzbyBmdXR1cmUg
+cHJvZHVjdCBjb3VsZCBkbyBzb21lDQo+ID4gPiBuYXN0eSB0aGluZ3MuLi4NCj4gPg0KPiA+IEkg
+YWdyZWUgd2l0aCBEYXJyZW4gaGVyZS4NCj4gPg0KPiA+IEF0IGxlYXN0IG9uIERlbGwgc2lkZSB3
+ZSdyZSBjcmVhdGluZyBuZXcgY29kZXMgZm9yICJuZXciIGJ1dHRvbnMgYW5kDQo+ID4gdGhlIGxp
+bWl0YXRpb24gaXMgcmVhbGx5IG9uIHRoZSBrZXJuZWwgc2lkZSBmb3IgaG93IG1hbnkgS0VZX1BS
+T0cjDQo+ID4gb3Igc2ltaWxhciBmdW5jdGlvbnMgdGhleSBjYW4gYmUgcmUtYXNzaWduZWQgdG8u
+DQo+IA0KPiBPay4NCj4gDQo+ID4gTWF5YmUgaXQncyB0aW1lIHRvIHRoaW5rIG9mIGFub3RoZXIg
+d2F5IHRvIGdldCB0aGlzIGluZm9ybWF0aW9uIHRvDQo+ID4gdXNlcnNwYWNlIHJhdGhlciB0aGF0
+IGFsd2F5cyB0cmFuc2xhdGluZyB0aGVtIGludG8ga2V5IGNvZGVzPw0KPiANCj4gSWYgZXZlbnQg
+aXMgZ2VuZXJhdGVkIGJ5IHByZXNzaW5nIGtleSwgYnV0dG9uIG9yIGh3IHN3aXRjaCwgdGhlbiBp
+bnB1dA0KPiBrZXkgaXMgY29ycmVjdCB3YXkuIElmIHRoZXJlIGlzIG5vIEtFWSBkZWZpbmUgd2hp
+Y2ggZml0IGZvciBuZXcgdmVuZG9yDQo+IGh3IGJ1dHRvbiwgdGhlbiBJIHRoaW5rIHdlIHNob3Vs
+ZCBzdGFydCBkaXNjdXNzaW9uIHdpdGggaW5wdXQgc3Vic3lzdGVtDQo+IGhvdyB0byBoYW5kbGUg
+c3VjaCBzaXR1YXRpb24uDQo+IA0KPiA+IFRoZXJlJ3MgYSBsb3QgdGhhdCBhcmUgbWFya2VkIGFz
+IEtFX0lHTk9SRSBiZWNhdXNlIHRoZSBrZXJuZWwgY2FuJ3QNCj4gPiBkbyBhbnl0aGluZyBpbnRl
+cmVzdGluZyB3aXRoIHRoZW0gYXMgbm8gMS0xIG1hcHBpbmcgZXhpc3RzIHRvIGENCj4gPiBrZXlj
+b2RlLg0KPiANCj4gTW9zdCBtYXJrZWQgYXMgS0VfSUdOT1JFIGFyZSBiZWNhdXNlIGR1cGxpY2F0
+ZSBldmVudCBpcyBzZW50IHZpYQ0KPiBrZXlib2FyZCBjb250cm9sbGVyIG9yIHZpYSBvdGhlciBz
+dWJzeXN0ZW0gKGUuZy4gcmZraWxsKS4NCj4gDQo+IEJ1dCBldmVudHMgd2hpY2ggYXJlIG5vdCBr
+ZXlzIG9yIGJ1dHRvbnMgc2hvdWxkIG5vdCBiZSBzZW50IHZpYSBpbnB1dA0KPiBkZXZpY2VzLiBB
+dCBsZWFzdCBJIHRoaW5rIGl0IGlzIGFnYWluc3QgdXNhZ2Ugb2YgaW5wdXQgZGV2aWNlcy4NCj4g
+DQo+IEV2ZW50cyBsaWtlICJiYXR0ZXJ5IHdhcyByZW1vdmVkIiBvciAia2V5Ym9hcmQgYmFja2xp
+Z2h0IHdhcyBjaGFuZ2VkIiBvcg0KPiAiYmF0dGVyeSBsaWZldGltZSBkZWNyZWFzZWQgdW5kZXIg
+WCAlIiBjYW4gYmUgdXNlZnVsIGZvciB1c2Vyc3BhY2UNCj4gYXBwbGljYXRpb25zLiBJIGFncmVl
+LiBCdXQgSSB0aGluayB3ZSBkbyBub3QgaGF2ZSBhbnkgc3Vic3lzdGVtIG9yDQo+IGludGVyZmFj
+ZSBmb3Igc2VuZGluZyB0aGVtIGZyb20ga2VybmVsIHRvIHVzZXJzcGFjZS4NCj4gDQo+IElmIHdl
+IHN0YXJ0IHRhbGtpbmcgYWJvdXQgY3JlYXRpbmcgaW50ZXJmYWNlIGZvciBpdCwgSSB3b3VsZCBy
+YXRoZXIgc2VlDQo+IHNvbWV0aGluZyBtb3JlIGdlbmVyaWMsIG5vdCBEZWxsLW9ubHkgc3BlY2lm
+aWMgb3IgY3JlYXRlZCBzcGVjaWFsbHkgZm9yDQo+IERlbGwgbWFjaGluZXMgd2hpY2ggd2lsbCBu
+b3QgZml0IGZvciBvdGhlcnMuLi4NCj4gDQoNCkkgZG9uJ3QgdGhpbmsgaXQgbmVlZHMgdG8gYmUg
+RGVsbCBzcGVjaWZpYywgSSdtIHN1cmUgcGxlbnR5IG9mIG90aGVyIHBsYXRmb3JtDQpkcml2ZXJz
+IHdvdWxkIHVzZSBpdCB0b28uDQoNCklmIHRoaXMgaW50ZXJmYWNlIGlzIGNyZWF0ZWQgd2UgY2Fu
+IGZpZ3VyZSBvdXQgd2hpY2ggb25lcyByZWFsbHkgYXJlIHVzZWZ1bA0Kbm90aWZpY2F0aW9ucyB0
+byB1c2Vyc3BhY2UuDQoNCg==
