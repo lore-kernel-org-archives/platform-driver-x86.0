@@ -1,172 +1,85 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
-Date: Thu, 28 Jul 2016 15:52:11 +0000
-Message-ID: <be8bbf443c804fde8ebf5e9c237ce83f@ausx13mpc120.AMER.DELL.COM>
-References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
- <201607271805.57123@pali>
- <13ec06e37e284263b6bf4fe4a6a04a78@ausx13mpc120.AMER.DELL.COM>
- <201607272215.12385@pali> <20160727224338.GA36353@f23x64.localdomain>
- <CAKdAkRRG8DwofYxcGe8dQmFAg86b8gcWM3pMAp0pv=VwBO-ZQg@mail.gmail.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC v3 07/13] tables.h: add linker table support
+Date: Thu, 28 Jul 2016 10:08:20 -0700
+Message-ID: <201607281708.u6SH8Uvl002361__41573.1679102921$1469726775$gmane$org@mail.zytor.com>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org> <1469222687-1600-8-git-send-email-mcgrof@kernel.org> <20160726003014.8e0424d2991ec71ad5e0ac5f@kernel.org> <20160727230218.GR5537@wotan.suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:8400 "EHLO
-	esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752180AbcG1PwO (ORCPT
+Received: from terminus.zytor.com ([198.137.202.10]:52266 "EHLO mail.zytor.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1758917AbcG1RZx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 28 Jul 2016 11:52:14 -0400
-In-Reply-To: <CAKdAkRRG8DwofYxcGe8dQmFAg86b8gcWM3pMAp0pv=VwBO-ZQg@mail.gmail.com>
-Content-Language: en-US
+	Thu, 28 Jul 2016 13:25:53 -0400
+In-Reply-To: <20160727230218.GR5537@wotan.suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dmitry.torokhov@gmail.com, dvhart@infradead.org
-Cc: pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEbWl0cnkgVG9yb2tob3YgW21h
-aWx0bzpkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkg
-MjcsIDIwMTYgNjowOCBQTQ0KPiBUbzogRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3Jn
-Pg0KPiBDYzogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPjsgTGltb25jaWVsbG8s
-IE1hcmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IGxrbWwgPGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBkZWxsLXdtaTogQWRkIGV2ZW50cyBjcmVhdGVkIGJ5
-IERlbGwgUnVnZ2VkIDItaW4tMXMNCj4gDQo+IEhpIERhcnJlbiwNCj4gDQo+IE9uIFdlZCwgSnVs
-IDI3LCAyMDE2IGF0IDM6NDMgUE0sIERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4g
-d3JvdGU6DQo+ID4gRG1pdHJ5LCB3ZSdkIGFwcHJlY2lhdGUgeW91ciB0aG91Z2h0cyBhcyB0aGUg
-aW5wdXQgbWFpbnRhaW5lciBvbiBhDQo+IHF1ZXN0aW9uDQo+ID4gYmVsb3cgKGxlZnQgdGhlIHRo
-cmVhZCBpbiB0YWN0IHNvIHlvdSBoYXZlIGFsbCB0aGUgY29udGV4dCkuDQo+ID4NCj4gPiBPbiBX
-ZWQsIEp1bCAyNywgMjAxNiBhdCAxMDoxNToxMlBNICswMjAwLCBQYWxpIFJvaMOhciB3cm90ZToN
-Cj4gPj4gT24gV2VkbmVzZGF5IDI3IEp1bHkgMjAxNiAyMTowMzo1NyBNYXJpb19MaW1vbmNpZWxs
-b0BkZWxsLmNvbSB3cm90ZToNCj4gPj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4+ID4gPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0K
-PiA+PiA+ID4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDI3LCAyMDE2IDExOjA2IEFNDQo+ID4+ID4g
-PiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4g
-Pj4gPiA+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPj4gPiA+IHBsYXRmb3JtLWRyaXZlci0geDg2QHZnZXIua2VybmVsLm9yZw0KPiA+
-PiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gZGVsbC13bWk6IEFkZCBldmVudHMgY3JlYXRlZCBi
-eSBEZWxsIFJ1Z2dlZA0KPiA+PiA+ID4gMi1pbi0xcw0KPiA+PiA+ID4NCj4gPj4gPiA+IE9uIFdl
-ZG5lc2RheSAyNyBKdWx5IDIwMTYgMTc6NTU6MDkgTWFyaW9fTGltb25jaWVsbG9AZGVsbC5jb20N
-Cj4gd3JvdGU6DQo+ID4+ID4gPiA+ID4gSGkhIEknbSBub3Qgc3VyZSBpZiBLRVlfUFJPRzEvMi8z
-IGFyZSBnb29kIG5hbWVzIGhlcmUgYXMgd2UNCj4gPj4gPiA+ID4gPiBhbHJlYWR5IHVzZQ0KPiA+
-PiA+ID4gPiA+DQo+ID4+ID4gPiA+ID50aG9zZSBmb3Igb3RoZXIgYWN0aW9ucyAoc2VlIGJpb3Nf
-dG9fbGludXhfa2V5Y29kZSkuIEFsc28gdGhlcmUNCj4gPj4gPiA+ID4gPmlzOg0KPiA+PiA+ID4g
-PiBJIGhhZCBtaXNzZWQgdGhpcywgZG8geW91IGhhdmUgc29tZSByZWNvbW1lbmRhdGlvbnMgb24g
-d2hhdA0KPiB3b3VsZA0KPiA+PiA+ID4gPiBiZSBiZXR0ZXIgY29kZXMgdG8gbWFwIHRoaXMgdG8/
-DQo+ID4+ID4gPg0KPiA+PiA+ID4gUHJvYmxlbSBpcyB0aGF0IEkgZG8gbm90IGtub3cgd2hlbiB0
-aG9zZSBLRVlfUFJPRyBrZXlzIGZyb20NCj4gPj4gPiA+IGJpb3NfdG9fbGludXhfa2V5Y29kZSB0
-YWJsZSBhcmUgZW1pdHRlZC4gVGhlcmUgYXJlIG1pc3NpbmcNCj4gY29tbWVudHMNCj4gPj4gPiA+
-IG9yIGRlc2NyaXB0aW9uLg0KPiA+PiA+ID4NCj4gPj4gPiA+IEFyZSB5b3UgYWJsZSB0byBmaW5k
-IG91dCBkZXNjcmlwdGlvbiBmb3IgYWxsIHRob3NlIGtleXMgaW4gdGhhdA0KPiA+PiA+ID4gdGFi
-bGU/IE1heWJlIG5vdyAod2hlbiBsaW51eCBrZXkgY29uc3RhbnRzIGFyZSBleHRlbmRlZCksIHRo
-ZXJlDQo+ID4+ID4gPiBjb3VsZCBiZSBiZXR0ZXIgY2FuZGlkYXRlcy4uLg0KPiA+PiA+DQo+ID4+
-ID4gSSdsbCBhc2sgYXJvdW5kLiAgSXQncyBub3QgaW1tZWRpYXRlbHkgb2J2aW91cyB0byBtZSB0
-aG91Z2gsIG1heWJlDQo+ID4+ID4gZnJvbSBvbGQgc3BlY3M/DQo+ID4+DQo+ID4+IERvIG5vdCBr
-bm93IGlmIGl0IGlzIG9sZC4gQXQgbGVhc3Qgc29tZSBjb2RlcyBmcm9tIGl0IGFyZSB1c2VkIG9u
-IG15DQo+ID4+IEU2NDQwIG1hY2hpbmUuIFRhYmxlIGl0c2VsZiB3YXMgYWRkZWQgYnkgUmV6d2Fu
-dWwgS2FiaXIgaW4gdGhpcyBjb21taXQ6DQo+ID4+DQo+ID4+DQo+IGh0dHBzOi8vZ2l0Lmtlcm5l
-bC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lk
-PTVlDQo+IGEyNTU5NzI2Yjc4NjI4MzIzNjgzNWRjMjkwNWMyM2IzNmFjOTFjDQo+ID4+DQo+ID4+
-IE1heWJlIGNvbW1pdCBtZXNzYWdlIGNvdWxkIGhlbHAgeW91IHRvIGluZGVudGlmeSB3aGF0IGl0
-IGlzLi4uDQo+ID4+DQo+ID4+ID4gPiA+IEknbGwgZG91YmxlIGNoZWNrIHdoYXQgdGhlIHRoaW5n
-cyB0aGF0ICJ3ZXJlIiBtYXBwaW5nIHRvDQo+ID4+ID4gPiA+IEtFWV9QUk9HMSBldGMgYWN0dWFs
-bHkgd2VyZS4gIFRoaXMgbWlnaHQgYmUgYSBjYXNlIG9mIGFuDQo+ID4+ID4gPiA+IGV4cGVjdGVk
-IGNsYXNoIGlmIHRoZSBmdW5jdGlvbnMgYXJlbid0IGluIGN1cnJlbnQgZ2VuZXJhdGlvbnMuDQo+
-ID4+ID4gPiA+DQo+ID4+ID4gPiA+ID4vKiBXaWZpIENhdGNoZXIgKi8NCj4gPj4gPiA+ID4gPg0K
-PiA+PiA+ID4gPiA+IHsgS0VfS0VZLCAgICAweGUwMTEsIHsgS0VZX1BST0cyIH0gfSwNCj4gPj4g
-PiA+ID4NCj4gPj4gPiA+ID4gSXQncyB3b3J0aCBtZW50aW9uaW5nIHRoYXQgV2lmaSBDYXRjaGVy
-IGhhc24ndCBiZWVuIHVzZWQgZm9yIGFueQ0KPiA+PiA+ID4gPiBEZWxsIGxhcHRvcHMgZm9yIGEg
-aGFuZGZ1bCBnZW5lcmF0aW9ucy4gIFRoZSBydWdnZWQgMmluMSdzIGFyZQ0KPiA+PiA+ID4gPiBj
-dXJyZW50IGdlbmVyYXRpb24gdGhhdCBoYXZlIHRoZXNlIHByb2dyYW1tYWJsZSBidXR0b25zIGFu
-ZA0KPiA+PiA+ID4gPiBkb24ndCBoYXZlIHdpZmkgY2F0Y2hlci4NCj4gPj4gPiA+DQo+ID4+ID4g
-PiBBbnl3YXksIHdoYXQgaXMgIldpZmkgQ2F0Y2hlciI/IEhXIHN3aXRjaCBidXR0dG9uIHdoaWNo
-DQo+ID4+ID4gPiBlbmFibGUvZGlzYWJsZSB3aWZpPyBPciBzb21ldGhpbmcgZWxzZT8NCj4gPj4g
-Pg0KPiA+PiA+IFdpZmkgY2F0Y2hlciB3YXMgYSBzcGVjaWFsIGhhcmR3YXJlIHN3aXRjaCBzbGlk
-ZXIgc3dpdGNoLiAgV2hlbiB0aGUNCj4gPj4gPiBtYWNoaW5lIHdhcyB0dXJuZWQgaW4gUzMgdGhl
-IHNsaWRpbmcgdGhlIHN3aXRjaCBiZXlvbmQgdGhlIG9uDQo+ID4+ID4gcG9zaXRpb24gd291bGQg
-c2NhbiBmb3IgYXZhaWxhYmxlIHdpZmkgbmV0d29ya3MgYW5kIGxpZ2h0IHVwIGFuIExFRA0KPiA+
-PiA+IGlmIHNvbWUgZnJvbSB5b3VyIHByZWRlZmluZWQgbGlzdCB3ZXJlIGZvdW5kLg0KPiA+PiA+
-DQo+ID4+ID4gV2hlbiB0aGUgbWFjaGluZSB3YXMgb24sIGl0IHdvdWxkIG9wZW4gdXAgdGhlIGFw
-cGxldCB0aGF0IGxldCB5b3UNCj4gPj4gPiBjb25maWd1cmUgdGhlIGJlaGF2aW9yIGZvciB0aGUg
-c3dpdGNoIGluIFMzLg0KPiA+Pg0KPiA+PiBIbS4uLiBtYXliZSBpdCBiZXR0ZXIgZml0IEtFWV9X
-TEFOIHRoZW4/IEp1c3Qgc3BlY3VsYXRpb24uDQo+ID4+DQo+ID4+ID4gPiA+IFNvIHRoZXJlIHNo
-b3VsZCBiZSBubyAicmVhbCIgY2xhc2ggaGVyZS4NCj4gPj4gPiA+DQo+ID4+ID4gPiBQcm9ibGVt
-IGNhbiBiZSBpbiBmdXR1cmUuIFRoaXMgZHJpdmVyIGlzIHVuaWZpZWQgZm9yIGFsbCBEZWxsDQo+
-ID4+ID4gPiBwcm9kdWN0cyB3aXRoIHdtaSBpbnRlcmZhY2UgYW5kIHNvIGZ1dHVyZSBwcm9kdWN0
-IGNvdWxkIGRvIHNvbWUNCj4gPj4gPiA+IG5hc3R5IHRoaW5ncy4uLg0KPiA+PiA+DQo+ID4+ID4g
-SSBhZ3JlZSB3aXRoIERhcnJlbiBoZXJlLg0KPiA+PiA+DQo+ID4+ID4gQXQgbGVhc3Qgb24gRGVs
-bCBzaWRlIHdlJ3JlIGNyZWF0aW5nIG5ldyBjb2RlcyBmb3IgIm5ldyIgYnV0dG9ucyBhbmQNCj4g
-Pj4gPiB0aGUgbGltaXRhdGlvbiBpcyByZWFsbHkgb24gdGhlIGtlcm5lbCBzaWRlIGZvciBob3cg
-bWFueSBLRVlfUFJPRyMNCj4gPj4gPiBvciBzaW1pbGFyIGZ1bmN0aW9ucyB0aGV5IGNhbiBiZSBy
-ZS1hc3NpZ25lZCB0by4NCj4gPj4NCj4gPj4gT2suDQo+ID4+DQo+ID4+ID4gTWF5YmUgaXQncyB0
-aW1lIHRvIHRoaW5rIG9mIGFub3RoZXIgd2F5IHRvIGdldCB0aGlzIGluZm9ybWF0aW9uIHRvDQo+
-ID4+ID4gdXNlcnNwYWNlIHJhdGhlciB0aGF0IGFsd2F5cyB0cmFuc2xhdGluZyB0aGVtIGludG8g
-a2V5IGNvZGVzPw0KPiA+Pg0KPiA+PiBJZiBldmVudCBpcyBnZW5lcmF0ZWQgYnkgcHJlc3Npbmcg
-a2V5LCBidXR0b24gb3IgaHcgc3dpdGNoLCB0aGVuIGlucHV0DQo+ID4+IGtleSBpcyBjb3JyZWN0
-IHdheS4gSWYgdGhlcmUgaXMgbm8gS0VZIGRlZmluZSB3aGljaCBmaXQgZm9yIG5ldyB2ZW5kb3IN
-Cj4gPj4gaHcgYnV0dG9uLCB0aGVuIEkgdGhpbmsgd2Ugc2hvdWxkIHN0YXJ0IGRpc2N1c3Npb24g
-d2l0aCBpbnB1dCBzdWJzeXN0ZW0NCj4gPj4gaG93IHRvIGhhbmRsZSBzdWNoIHNpdHVhdGlvbi4N
-Cj4gPj4NCj4gPj4gPiBUaGVyZSdzIGEgbG90IHRoYXQgYXJlIG1hcmtlZCBhcyBLRV9JR05PUkUg
-YmVjYXVzZSB0aGUga2VybmVsIGNhbid0DQo+ID4+ID4gZG8gYW55dGhpbmcgaW50ZXJlc3Rpbmcg
-d2l0aCB0aGVtIGFzIG5vIDEtMSBtYXBwaW5nIGV4aXN0cyB0byBhDQo+ID4+ID4ga2V5Y29kZS4N
-Cj4gPj4NCj4gPj4gTW9zdCBtYXJrZWQgYXMgS0VfSUdOT1JFIGFyZSBiZWNhdXNlIGR1cGxpY2F0
-ZSBldmVudCBpcyBzZW50IHZpYQ0KPiA+PiBrZXlib2FyZCBjb250cm9sbGVyIG9yIHZpYSBvdGhl
-ciBzdWJzeXN0ZW0gKGUuZy4gcmZraWxsKS4NCj4gPj4NCj4gPj4gQnV0IGV2ZW50cyB3aGljaCBh
-cmUgbm90IGtleXMgb3IgYnV0dG9ucyBzaG91bGQgbm90IGJlIHNlbnQgdmlhIGlucHV0DQo+ID4+
-IGRldmljZXMuIEF0IGxlYXN0IEkgdGhpbmsgaXQgaXMgYWdhaW5zdCB1c2FnZSBvZiBpbnB1dCBk
-ZXZpY2VzLg0KPiA+Pg0KPiA+PiBFdmVudHMgbGlrZSAiYmF0dGVyeSB3YXMgcmVtb3ZlZCIgb3Ig
-ImtleWJvYXJkIGJhY2tsaWdodCB3YXMgY2hhbmdlZCINCj4gb3INCj4gPj4gImJhdHRlcnkgbGlm
-ZXRpbWUgZGVjcmVhc2VkIHVuZGVyIFggJSIgY2FuIGJlIHVzZWZ1bCBmb3IgdXNlcnNwYWNlDQo+
-ID4+IGFwcGxpY2F0aW9ucy4gSSBhZ3JlZS4gQnV0IEkgdGhpbmsgd2UgZG8gbm90IGhhdmUgYW55
-IHN1YnN5c3RlbSBvcg0KPiA+PiBpbnRlcmZhY2UgZm9yIHNlbmRpbmcgdGhlbSBmcm9tIGtlcm5l
-bCB0byB1c2Vyc3BhY2UuDQo+ID4+DQo+ID4+IElmIHdlIHN0YXJ0IHRhbGtpbmcgYWJvdXQgY3Jl
-YXRpbmcgaW50ZXJmYWNlIGZvciBpdCwgSSB3b3VsZCByYXRoZXIgc2VlDQo+ID4+IHNvbWV0aGlu
-ZyBtb3JlIGdlbmVyaWMsIG5vdCBEZWxsLW9ubHkgc3BlY2lmaWMgb3IgY3JlYXRlZCBzcGVjaWFs
-bHkgZm9yDQo+ID4+IERlbGwgbWFjaGluZXMgd2hpY2ggd2lsbCBub3QgZml0IGZvciBvdGhlcnMu
-Li4NCj4gPj4NCj4gPj4gRGFycmVuLCB3aGF0IGRvIHlvdSB0aGluayBhYm91dCBpdD8NCj4gPg0K
-PiA+IEl0IHNvdW5kcyBsaWtlIGEgZ29vZCBLZXJuZWwgU3VtbWl0IHRvcGljLi4uIGFuZCB0aGV5
-IGp1c3QgaGFwcGVuIHRvIGhhdmUNCj4gdGhlDQo+ID4gY2FsbCBmb3IgdG9waWNzIGdvaW5nIG9u
-IHJpZ2h0IG5vdy4uLiBmaXJzdCBzdGVwIHdvdWxkIGJlIHRvIGdldCB0aGUgaW5wdXQNCj4gPiBt
-YWludGFpbmVycyB0aG91Z2h0cy4uLg0KPiA+DQo+ID4gK0RtaXRyeSBUb3Jva2hvdg0KPiA+DQo+
-ID4gRG1pdHJ5LCB3aGF0IGFyZSB5b3VyIHRob3VnaHRzIHdpdGggcmVzcGVjdCB0byBoYW5kaW5n
-IGV2ZW50cyB1cCB0bw0KPiB1c2Vyc3BhY2UNCj4gPiB3aGljaCBhcmUgbm90IHN0cmljdGx5IGtl
-eSBwcmVzc2VzIHZpYSB0aGUgaW5wdXQgc3lzdGVtPyBQYWxpJ3Mgc3VnZ2VzdGlvbg0KPiBtYWtl
-cw0KPiA+IHNlbnNlIHRvIG1lIC0gZG8geW91IHRoaW5rIHRoaXMgaXMgc29tZXRoaW5nIHdlIHNo
-b3VsZCBkaXNjdXNzIGF0IEtTLi4uIG9yIGlzDQo+ID4gdGhpcyBhbHJlYWR5IGRlY2lkZWQgYW5k
-IGNhbiB5b3Ugc2V0IHVzIHN0cmFpZ2h0Pw0KPiANCj4gU28gaGVyZSBpcyB3aGF0IEkgYmVsaWV2
-ZToNCj4gDQo+IC0gU3R1ZmYgdGhhdCBhcmUgbm90IGtleXMvYnV0dG9ucy9zd2l0Y2hlcy9vdGhl
-ciBiaXRzIG9mIGhhcmR3YXJlDQo+IGRpcmVjdGx5IG1hbmlwdWxhdGVkIGJ5IHVzZXIsIGJ1dCBy
-YXRoZXIgc3RhdGUgY2hhbmdlIG5vdGlmaWNhdGlvbnMNCj4gc2hvdWxkIG5vdCBiZSBkZWxpdmVy
-ZWQgdmlhIGlucHV0IHN1YnN5c3RlbQ0KDQpZZWFoIHRoaXMgbWF0Y2hlcyBleGlzdGluZyBrZXJu
-ZWwgZG9jdW1lbnRhdGlvbiB0b28uDQoNCj4gDQo+IC0gRXZlbiBpZiBzb21ldGhpbmcgaXMgYSBr
-ZXkvYnV0dG9uL3N3aXRjaCBpdCBkb2VzIG5vdCBuZWNlc3NhcmlseQ0KPiBuZWVkIHRvIGJlIHNl
-bnQgdGhyb3VnaCBpbnB1dCBzdWJzeXN0ZW0gb3Igd2UgbWF5IHdhbnQgdG8gd2FpdCB1bnRpbA0K
-PiB3ZSBhZGQgYSBuZXcgaW5wdXQgZXZlbnQuIFRoaXMgaXMgYmVjYXVzZSB2ZW5kb3JzIGxvdmUg
-dG8gY29tZSB1cCB3aXRoDQo+ICJ2YWx1ZSBhZGQiIGZlYXR1cmVzIHRoYXQgcmVxdWlyZSB2ZW5k
-b3Igc3BlY2lmaWMgZHJpdmVyIHRoYXQgbm9vbmUNCj4gZW5kcyB1cCB1c2luZy4gSSBtZWFuLCBm
-b3IgdGhlICJXaUZpIGNhdGNoZXIiIGRvIHlvdSBoYXZlIGFueSBraW5kIG9mDQo+IG51bWJlcnMg
-Zm9yIHRoZSB1c2VycyBvZiB0aGUgZmVhdHVyZT8NCg0KTGlrZSBJIHNhaWQsIHRoaXMgcGFydGlj
-dWxhciBmZWF0dXJlIGhhc24ndCBiZWVuIGluIHVzZSBmb3IgcXVpdGUgYSBmZXcgZ2VuZXJhdGlv
-bnMuICANCkluIGl0cyB0aW1lIGl0IHdhcyBkZWVtZWQgImJlbmVmaWNpYWwiIGluIHRoYXQgZGF5
-IGJlY2F1c2Ugb2YgdGhlIGFtb3VudCBvZiB0aW1lIGl0IA0KdG9vayBmb3Igd2FraW5nIHVwIHRo
-ZSBtYWNoaW5lIG9ubHkgdG8gZGV0ZXJtaW5lIHRoZXJlIHdhcyBubyBhdmFpbGFibGUgd2lmaSBu
-ZWFyYnkuDQpJdCdzIGJlZW4gc3VwZXJzZWRlZCBieSBvdGhlciB0ZWNobm9sb2d5IGltcHJvdmVt
-ZW50cy4NCg0KVGhlcmUgYXJlIG90aGVyIHR5cGVzIG9mICJub3RpZmljYXRpb24iIG9ubHkgZXZl
-bnRzIHRoYXQgY291bGQgYmUgdXNlZnVsIHRvIHVzZXJzcGFjZS4NCkkgZG9uJ3QgdGhpbmsgdGhl
-eSBuZWVkIHRvIGFsbCBiZSBnZW5lcmFsbHkgZGVtb25pemVkIHdpdGggdGhlIGNvbm5vdGF0aW9u
-IGFzIGEgbmVnYXRpdmUgDQp2ZW5kb3Igc3BlY2lmaWMgdmFsdWUgYWRkLCB0aGVyZSBhcmUgcGxl
-bnR5IG9mIGdlbmVyaWMgdGhpbmdzIHRoYXQgdXNlcnNwYWNlIGNvdWxkIG5vdGlmeSBvbg0KdGhh
-dCBhcmUgZXNzZW50aWFsbHkgImtpbGxlZCIgYXQgdGhlIFdNSSBkcml2ZXIgdG9kYXkuDQoNCkhl
-cmUncyBhIGZldyBJIGZpbmQ6DQoiS2V5Ym9hcmQgaWxsdW1pbmF0aW9uIHRvZ2dsZSINCiJNaWMg
-bXV0ZSB0b2dnbGUiDQoiQUxTIHNlbnNvciB0b2dnbGUiDQoiIFJvdGF0aW9uIGxvY2sgdG9nZ2xl
-Ig0KIkFpcnBsYW5lIG1vZGUgdG9nZ2xlIg0KDQo+IA0KPiAtIEluIHRoZSBzYW1lIHZlaW4sIHdl
-IGNhbiBjb21lIHVwIHdpdGggc29tZXRoaW5nIGdlbmVyaWMgdG8gc2h1ZmZsZQ0KPiB0aGUgY3Jh
-cCBvdmVyIHRvIHVzZXJzcGFjZSAoImNvbS52ZW5kb3IuY3JhcC5tb3JlY3JhcC4uLiIgb3Zlcg0K
-PiBjb25uZWN0b3I/IEkgdGhpbmsgSSBqdXN0IHRocmV3IGludG8gbXkgbW91dGggYSBsaXR0bGUp
-LCBidXQgZG8gd2UNCj4gaGF2ZSBjb25zdW1lciBmb3IgdGhpcz8NCj4gDQoNCkkgdGhpbmsgaXQg
-d291bGQgYmUgbW9zdCBlcXVpdGFibGUgdG8gc2h1ZmZsZSBhbGwgbm90aWZpY2F0aW9uIGV2ZW50
-cyBvdmVyDQp0byB1c2Vyc3BhY2Ugd2l0aCBhIGdlbmVyaWMgY29ubmVjdG9yIGFuZCBsZXQgdXNl
-cnNwYWNlIG1haW50YWluZXJzIA0KZGVjaWRlIHdoaWNoIG9uZXMgbWFrZSBzZW5zZSB0byBzaG93
-IHRvIHRoZSB1c2VyLg0KDQpUaGUgbW9zdCBsb2dpY2FsIG9uZSB0byBtZSB3aWxsIGJlIGFkZGlu
-ZyBwYXRjaGVzIGludG8gZ25vbWUtc2V0dGluZ3MtZGFlbW9uDQphbmQgc2ltaWxhciBVSSBpbnRl
-cmZhY2VzIHRoYXQgYWxyZWFkeSBkaXNwbGF5IHRoaW5ncyBsaWtlIGJyaWdodG5lc3MgYW5kIHZv
-bHVtZQ0KY2hhbmdlcy4NCg0K
+tglx@linutronix.de,mingo@redhat.com,bp@alien8.de,linux@arm.linux.org.uk,masami.hiramatsu.pt@hitachi.com,jbaron@akamai.com,heiko.carstens@de.ibm.com,ananth@linux.vnet.ibm.com,anil.s.keshavamurthy@intel.com,davem@davemloft.net,realmz6@gmail.com,x86@kernel.org,luto@amacapital.net,keescook@chromium.org,torvalds@linux-foundation.org,gregkh@linuxfoundation.org,rusty@rustcorp.com.au,gnomes@lxorguk.ukuu.org.uk,alan@linux.intel.com,dwmw2@infradead.org,arnd@arndb.de,ming.lei@canonical.com,linux-arch@vger.kernel.org,benh@kernel.crashing.org,ananth@in.ibm.com,pebolle@tiscali.nl,fontana@sharpeleven.org,ciaran.farrell@suse.com,christopher.denicolo@suse.com,david.vrabel@citrix.com,konrad.wilk@oracle.com,mcb30@ipxe.org,jgross@suse.com,andrew.cooper3@citrix.com,andriy.shevchenko@linux.intel.com,paul.gortma
+ ker@windriver.com,xen-devel@lists.xensource.com,ak@linux.intel.com,pali.rohar@gmail.com,dvhart@infradead.org,platform-driver-x86@vger.kernel.org,mmarek@suse.com,linux@rasmusvillemoes.dk,jko!
+ sina@suse
+.cz,korea.drzix@gmail.com,linux-kbuild@vger.kernel.org,tony.luck@intel.com,akpm@linux-foundation.org,linux-ia64@vger.kernel.org,linux-arm-kernel@lists.infradead.org,linux-sh@vger.kernel.org,sparclinux@vger.kernel.org,catalin.marinas@arm.com,will.deacon@arm.com,rostedt@goodmis.org,jpoimboe@redhat.com
+Message-ID: <01FD20B1-E788-4CC6-81CF-BA26F000FFCB@zytor.com>
+
+On July 27, 2016 4:02:18 PM PDT, "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
+>On Tue, Jul 26, 2016 at 12:30:14AM +0900, Masami Hiramatsu wrote:
+>> On Fri, 22 Jul 2016 14:24:41 -0700
+>> "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
+>> 
+>> > +/**
+>> > + * LINKTABLE_RUN_ALL - iterate and run through all entries on a
+>linker table
+>> > + *
+>> > + * @tbl: linker table
+>> > + * @func: structure name for the function name we want to call.
+>> > + * @args...: arguments to pass to func
+>> > + *
+>> > + * Example usage:
+>> > + *
+>> > + *   LINKTABLE_RUN_ALL(frobnicator_fns, some_run,);
+>> > + */
+>> > +#define LINKTABLE_RUN_ALL(tbl, func, args...)				\
+>> > +do {									\
+>> > +	size_t i;							\
+>> > +	for (i = 0; i < LINUX_SECTION_SIZE(tbl); i++)			\
+>> > +		(tbl[i]).func (args);					\
+>> > +} while (0);
+>> > +
+>> > +/**
+>> > + * LINKTABLE_RUN_ERR - run each linker table entry func and return
+>error if any
+>> > + *
+>> > + * @tbl: linker table
+>> > + * @func: structure name for the function name we want to call.
+>> > + * @args...: arguments to pass to func
+>> > + *
+>> > + * Example usage:
+>> > + *
+>> > + *   unsigned int err = LINKTABLE_RUN_ERR(frobnicator_fns,
+>some_run,);
+>> > + */
+>> > +#define LINKTABLE_RUN_ERR(tbl, func, args...)				\
+>> > +({									\
+>> > +	size_t i;							\
+>> > +	int err = 0;							\
+>> > +	for (i = 0; !err && i < LINUX_SECTION_SIZE(tbl); i++)		\
+>> > +		err = (tbl[i]).func (args);				\
+>> > +		err; \
+>> > +})
+>> 
+>> These iteration APIs are a bit dangerous, at least for these APIs
+>we'd better change
+>> name like as FUNCTABLE_RUN etc. because LINKTABLE can contain not
+>only function address
+>> but also some data (or address of data).
+>
+>Sure will do, thanks for the review.
+>
+>  Luis
+
+I don't know if they are dangerous.  Keep in mind C type checking is still present.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse brevity and formatting.
