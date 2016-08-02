@@ -1,10 +1,10 @@
 From: Baole Ni <baolex.ni@intel.com>
-Subject: [PATCH 0854/1285] Replace numeric parameter like 0444 with macro
-Date: Tue,  2 Aug 2016 19:52:35 +0800
-Message-ID: <20160802115235.6920-1-baolex.ni@intel.com>
+Subject: [PATCH 0852/1285] Replace numeric parameter like 0444 with macro
+Date: Tue,  2 Aug 2016 19:52:26 +0800
+Message-ID: <20160802115226.6786-1-baolex.ni@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ike.pan@canonical.com, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
+To: frank@f-seidel.de, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
@@ -17,39 +17,35 @@ thus, I suggest replacing the numeric parameter with the macro.
 Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
 Signed-off-by: Baole Ni <baolex.ni@intel.com>
 ---
- drivers/platform/x86/ideapad-laptop.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hdaps.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index d1a091b..1611d4d 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -100,7 +100,7 @@ struct ideapad_private {
- };
- 
- static bool no_bt_rfkill;
--module_param(no_bt_rfkill, bool, 0444);
-+module_param(no_bt_rfkill, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
- 
- /*
-@@ -388,7 +388,7 @@ static ssize_t store_ideapad_cam(struct device *dev,
+diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
+index 458e6c9..b8a7dfe 100644
+--- a/drivers/platform/x86/hdaps.c
++++ b/drivers/platform/x86/hdaps.c
+@@ -454,14 +454,14 @@ static ssize_t hdaps_invert_store(struct device *dev,
  	return count;
  }
  
--static DEVICE_ATTR(camera_power, 0644, show_ideapad_cam, store_ideapad_cam);
-+static DEVICE_ATTR(camera_power, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_ideapad_cam, store_ideapad_cam);
+-static DEVICE_ATTR(position, 0444, hdaps_position_show, NULL);
+-static DEVICE_ATTR(variance, 0444, hdaps_variance_show, NULL);
+-static DEVICE_ATTR(temp1, 0444, hdaps_temp1_show, NULL);
+-static DEVICE_ATTR(temp2, 0444, hdaps_temp2_show, NULL);
+-static DEVICE_ATTR(keyboard_activity, 0444, hdaps_keyboard_activity_show, NULL);
+-static DEVICE_ATTR(mouse_activity, 0444, hdaps_mouse_activity_show, NULL);
+-static DEVICE_ATTR(calibrate, 0644, hdaps_calibrate_show,hdaps_calibrate_store);
+-static DEVICE_ATTR(invert, 0644, hdaps_invert_show, hdaps_invert_store);
++static DEVICE_ATTR(position, S_IRUSR | S_IRGRP | S_IROTH, hdaps_position_show, NULL);
++static DEVICE_ATTR(variance, S_IRUSR | S_IRGRP | S_IROTH, hdaps_variance_show, NULL);
++static DEVICE_ATTR(temp1, S_IRUSR | S_IRGRP | S_IROTH, hdaps_temp1_show, NULL);
++static DEVICE_ATTR(temp2, S_IRUSR | S_IRGRP | S_IROTH, hdaps_temp2_show, NULL);
++static DEVICE_ATTR(keyboard_activity, S_IRUSR | S_IRGRP | S_IROTH, hdaps_keyboard_activity_show, NULL);
++static DEVICE_ATTR(mouse_activity, S_IRUSR | S_IRGRP | S_IROTH, hdaps_mouse_activity_show, NULL);
++static DEVICE_ATTR(calibrate, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, hdaps_calibrate_show,hdaps_calibrate_store);
++static DEVICE_ATTR(invert, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, hdaps_invert_show, hdaps_invert_store);
  
- static ssize_t show_ideapad_fan(struct device *dev,
- 				struct device_attribute *attr,
-@@ -421,7 +421,7 @@ static ssize_t store_ideapad_fan(struct device *dev,
- 	return count;
- }
- 
--static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
-+static DEVICE_ATTR(fan_mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_ideapad_fan, store_ideapad_fan);
- 
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
+ static struct attribute *hdaps_attributes[] = {
+ 	&dev_attr_position.attr,
 -- 
 2.9.2
