@@ -1,11 +1,11 @@
 From: Baole Ni <baolex.ni@intel.com>
-Subject: [PATCH 0857/1285] Replace numeric parameter like 0444 with macro
-Date: Tue,  2 Aug 2016 19:52:49 +0800
-Message-ID: <20160802115249.7120-1-baolex.ni@intel.com>
+Subject: [PATCH 0858/1285] Replace numeric parameter like 0444 with macro
+Date: Tue,  2 Aug 2016 19:52:53 +0800
+Message-ID: <20160802115253.7186-1-baolex.ni@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ibm-acpi@hmh.eng.br, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
+To: coproscefalo@gmail.com, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
 I find that the developers often just specified the numeric value
@@ -17,112 +17,21 @@ thus, I suggest replacing the numeric parameter with the macro.
 Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
 Signed-off-by: Baole Ni <baolex.ni@intel.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index b65ce75..898d185 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9553,57 +9553,57 @@ static int __init set_ibm_param(const char *val, struct kernel_param *kp)
- 	return -EINVAL;
- }
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 01e12d2..46e7579 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -222,7 +222,7 @@ struct toshiba_acpi_dev {
+ static struct toshiba_acpi_dev *toshiba_acpi;
  
--module_param(experimental, int, 0444);
-+module_param(experimental, int, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(experimental,
- 		 "Enables experimental features when non-zero");
+ static bool disable_hotkeys;
+-module_param(disable_hotkeys, bool, 0444);
++module_param(disable_hotkeys, bool, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(disable_hotkeys, "Disables the hotkeys activation");
  
- module_param_named(debug, dbg_level, uint, 0);
- MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
- 
--module_param(force_load, bool, 0444);
-+module_param(force_load, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(force_load,
- 		 "Attempts to load the driver even on a "
- 		 "mis-identified ThinkPad when true");
- 
--module_param_named(fan_control, fan_control_allowed, bool, 0444);
-+module_param_named(fan_control, fan_control_allowed, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(fan_control,
- 		 "Enables setting fan parameters features when true");
- 
--module_param_named(brightness_mode, brightness_mode, uint, 0444);
-+module_param_named(brightness_mode, brightness_mode, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(brightness_mode,
- 		 "Selects brightness control strategy: "
- 		 "0=auto, 1=EC, 2=UCMS, 3=EC+NVRAM");
- 
--module_param(brightness_enable, uint, 0444);
-+module_param(brightness_enable, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(brightness_enable,
- 		 "Enables backlight control when 1, disables when 0");
- 
- #ifdef CONFIG_THINKPAD_ACPI_ALSA_SUPPORT
--module_param_named(volume_mode, volume_mode, uint, 0444);
-+module_param_named(volume_mode, volume_mode, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(volume_mode,
- 		 "Selects volume control strategy: "
- 		 "0=auto, 1=EC, 2=N/A, 3=EC+NVRAM");
- 
--module_param_named(volume_capabilities, volume_capabilities, uint, 0444);
-+module_param_named(volume_capabilities, volume_capabilities, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(volume_capabilities,
- 		 "Selects the mixer capabilites: "
- 		 "0=auto, 1=volume and mute, 2=mute only");
- 
--module_param_named(volume_control, volume_control_allowed, bool, 0444);
-+module_param_named(volume_control, volume_control_allowed, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(volume_control,
- 		 "Enables software override for the console audio "
- 		 "control when true");
- 
--module_param_named(software_mute, software_mute_requested, bool, 0444);
-+module_param_named(software_mute, software_mute_requested, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(software_mute,
- 		 "Request full software mute control");
- 
- /* ALSA module API parameters */
--module_param_named(index, alsa_index, int, 0444);
-+module_param_named(index, alsa_index, int, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(index, "ALSA index for the ACPI EC Mixer");
--module_param_named(id, alsa_id, charp, 0444);
-+module_param_named(id, alsa_id, charp, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(id, "ALSA id for the ACPI EC Mixer");
--module_param_named(enable, alsa_enable, bool, 0444);
-+module_param_named(enable, alsa_enable, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(enable, "Enable the ALSA interface for the ACPI EC Mixer");
- #endif /* CONFIG_THINKPAD_ACPI_ALSA_SUPPORT */
- 
-@@ -9624,25 +9624,25 @@ TPACPI_PARAM(volume);
- TPACPI_PARAM(fan);
- 
- #ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
--module_param(dbg_wlswemul, uint, 0444);
-+module_param(dbg_wlswemul, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(dbg_wlswemul, "Enables WLSW emulation");
- module_param_named(wlsw_state, tpacpi_wlsw_emulstate, bool, 0);
- MODULE_PARM_DESC(wlsw_state,
- 		 "Initial state of the emulated WLSW switch");
- 
--module_param(dbg_bluetoothemul, uint, 0444);
-+module_param(dbg_bluetoothemul, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(dbg_bluetoothemul, "Enables bluetooth switch emulation");
- module_param_named(bluetooth_state, tpacpi_bluetooth_emulstate, bool, 0);
- MODULE_PARM_DESC(bluetooth_state,
- 		 "Initial state of the emulated bluetooth switch");
- 
--module_param(dbg_wwanemul, uint, 0444);
-+module_param(dbg_wwanemul, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(dbg_wwanemul, "Enables WWAN switch emulation");
- module_param_named(wwan_state, tpacpi_wwan_emulstate, bool, 0);
- MODULE_PARM_DESC(wwan_state,
- 		 "Initial state of the emulated WWAN switch");
- 
--module_param(dbg_uwbemul, uint, 0444);
-+module_param(dbg_uwbemul, uint, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(dbg_uwbemul, "Enables UWB switch emulation");
- module_param_named(uwb_state, tpacpi_uwb_emulstate, bool, 0);
- MODULE_PARM_DESC(uwb_state,
+ static const struct acpi_device_id toshiba_device_ids[] = {
 -- 
 2.9.2
