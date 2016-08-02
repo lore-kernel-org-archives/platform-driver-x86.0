@@ -1,48 +1,61 @@
-From: "Santander Bank UK" <no-reply@santanderbank.no>
-Subject: Svare.//..
-Date: Tue, 02 Aug 2016 05:33:30 -0400
-Message-ID: <20160802093136.72B48147C891@mail.grupobaptista.com.br>
-Reply-To: derek.b.gibson@aol.co.uk
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+From: Baole Ni <baolex.ni@intel.com>
+Subject: [PATCH 0855/1285] Replace numeric parameter like 0444 with macro
+Date: Tue,  2 Aug 2016 19:52:40 +0800
+Message-ID: <20160802115240.6986-1-baolex.ni@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.grupobaptista.com.br ([200.195.184.146]:54133 "EHLO
-	mail.grupobaptista.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965619AbcHBMw5 convert rfc822-to-8bit (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:18080 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S964899AbcHBMfF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Aug 2016 08:52:57 -0400
-Content-Description: Mail message body
+	Tue, 2 Aug 2016 08:35:05 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <no-reply@santanderbank.no>
+To: jlee@suse.com, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
 
-Derek Gibson,
-Drift / regionsjef
-Santander Bank Plc,
-47-48 Piccadilly
-PICCADILLY
-W1J0DT
-London, Storbritannia
- 
-Hei,
+I find that the developers often just specified the numeric value
+when calling a macro which is defined with a parameter for access permission.
+As we know, these numeric value for access permission have had the corresponding macro,
+and that using macro can improve the robustness and readability of the code,
+thus, I suggest replacing the numeric parameter with the macro.
 
-Jeg er Derek Gibson, fra Harlesden North West London, leder for regnskap Revisjonen og formell senior programmerer sjef hos Deutsche bank, her i England (Santander Bank Plc). Jeg har også jobbet for Nyeste ministrene Bank Plc.
- 
-Jeg trenger din haster hjelp til å overføre summen av (£ 21,5) millioner britiske pund på kontoen din innen 11 eller 15 bankdager. Disse pengene har vært sovende i mange år i vår Bank uten krav. Jeg ønsker banken å frigjøre penger til deg som nærmeste person til vår avdøde kunden (eieren av kontoen) som dessverre mistet livet februar 2003 gjennom det sørlige USA romfergen Columbia, døde han en enkelt mann. Jeg ønsker ikke penger til å gå inn i bankens egne konto som en forlatt fondet. Så dette er grunnen til at jeg kontakter deg slik at banken kan frigjøre penger til deg som skal pårørende til den avdøde kunden. (Late David McDowell Brown) en amerikansk statsborger av Arlington Virginia.
-Vennligst Jeg vil at du skal holde Forslaget som en topp hemmelig og slette den hvis du ikke er interessert.
- 
-Her er deling ratio; 50% til meg og 40% til deg mens 10% er for eventuelle utgifter i løpet av transaksjonen. Hvis du er interessert, ta kontakt med meg umiddelbart via min private / direkte e-post: derek.b.gibson@aol.co.uk
+Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Baole Ni <baolex.ni@intel.com>
+---
+ drivers/platform/x86/msi-laptop.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Gi meg følgende under, som vi har 7 dager for å kjøre den gjennom. Dette er veldig HASTER.
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index 4231770..8d9dc0e 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -534,17 +534,17 @@ static ssize_t store_auto_fan(struct device *dev,
+ 	return count;
+ }
  
-1. Fullt navn:
-2. Direkte Mobilnummer:
-3. Kontakt Adresse:
-4. Yrke:
-5. Alder:
-6. Kjønn:
-7. Nasjonalitet:
+-static DEVICE_ATTR(lcd_level, 0644, show_lcd_level, store_lcd_level);
+-static DEVICE_ATTR(auto_brightness, 0644, show_auto_brightness,
++static DEVICE_ATTR(lcd_level, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_lcd_level, store_lcd_level);
++static DEVICE_ATTR(auto_brightness, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_auto_brightness,
+ 		   store_auto_brightness);
+-static DEVICE_ATTR(bluetooth, 0444, show_bluetooth, NULL);
+-static DEVICE_ATTR(wlan, 0444, show_wlan, NULL);
+-static DEVICE_ATTR(threeg, 0444, show_threeg, NULL);
+-static DEVICE_ATTR(touchpad, 0444, show_touchpad, NULL);
+-static DEVICE_ATTR(turbo_mode, 0444, show_turbo, NULL);
+-static DEVICE_ATTR(eco_mode, 0444, show_eco, NULL);
+-static DEVICE_ATTR(turbo_cooldown, 0444, show_turbo_cooldown, NULL);
+-static DEVICE_ATTR(auto_fan, 0644, show_auto_fan, store_auto_fan);
++static DEVICE_ATTR(bluetooth, S_IRUSR | S_IRGRP | S_IROTH, show_bluetooth, NULL);
++static DEVICE_ATTR(wlan, S_IRUSR | S_IRGRP | S_IROTH, show_wlan, NULL);
++static DEVICE_ATTR(threeg, S_IRUSR | S_IRGRP | S_IROTH, show_threeg, NULL);
++static DEVICE_ATTR(touchpad, S_IRUSR | S_IRGRP | S_IROTH, show_touchpad, NULL);
++static DEVICE_ATTR(turbo_mode, S_IRUSR | S_IRGRP | S_IROTH, show_turbo, NULL);
++static DEVICE_ATTR(eco_mode, S_IRUSR | S_IRGRP | S_IROTH, show_eco, NULL);
++static DEVICE_ATTR(turbo_cooldown, S_IRUSR | S_IRGRP | S_IROTH, show_turbo_cooldown, NULL);
++static DEVICE_ATTR(auto_fan, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_auto_fan, store_auto_fan);
  
-Med vennlig hilsen,
-Derek Gibson.
+ static struct attribute *msipf_attributes[] = {
+ 	&dev_attr_bluetooth.attr,
+-- 
+2.9.2
