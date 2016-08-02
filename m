@@ -1,144 +1,77 @@
-From: <Mario_Limonciello@Dell.com>
-Subject: RE: [PATCH] dell-wmi: Add events created by Dell Rugged 2-in-1s
-Date: Mon, 1 Aug 2016 22:41:27 +0000
-Message-ID: <01ef781fb68f4ea8965d1ea5e01016b3@ausx13mpc120.AMER.DELL.COM>
-References: <1469217684-6643-1-git-send-email-mario_limonciello@dell.com>
- <be8bbf443c804fde8ebf5e9c237ce83f@ausx13mpc120.AMER.DELL.COM>
- <20160728184930.GF16852@dtor-ws> <201607282122.40816@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Baole Ni <baolex.ni@intel.com>
+Subject: [PATCH 0110/1285] Replace numeric parameter like 0444 with macro
+Date: Tue,  2 Aug 2016 18:41:25 +0800
+Message-ID: <20160802104125.21089-1-baolex.ni@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:14027 "EHLO
-	esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751929AbcHAWoe (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:27602 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754850AbcHBLTR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 1 Aug 2016 18:44:34 -0400
-In-Reply-To: <201607282122.40816@pali>
-Content-Language: en-US
+	Tue, 2 Aug 2016 07:19:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, dmitry.torokhov@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, pavel@ucw.cz
+To: arnd@arndb.de, gregkh@linuxfoundation.org, malattia@linux.it, hpa@zytor.com, x86@kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com, jslaby@suse.cz, peter@korsgaard.com, lee.jones@linaro.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVseSAyOCwgMjAxNiAy
-OjIzIFBNDQo+IFRvOiBEbWl0cnkgVG9yb2tob3YgPGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb20+
-DQo+IENjOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsN
-Cj4gZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBs
-YXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZzsgcGF2ZWxAdWN3LmN6DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIGRlbGwtd21pOiBBZGQgZXZlbnRzIGNyZWF0ZWQgYnkgRGVsbCBS
-dWdnZWQgMi1pbi0xcw0KPiANCj4gT24gVGh1cnNkYXkgMjggSnVseSAyMDE2IDIwOjQ5OjMwIERt
-aXRyeSBUb3Jva2hvdiB3cm90ZToNCj4gPiBPbiBUaHUsIEp1bCAyOCwgMjAxNiBhdCAwMzo1Mjox
-MVBNICswMDAwLCBNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbQ0KPiA+IHdyb3RlOg0KPiA+ID4g
-PiAtIEV2ZW4gaWYgc29tZXRoaW5nIGlzIGEga2V5L2J1dHRvbi9zd2l0Y2ggaXQgZG9lcyBub3QN
-Cj4gPiA+ID4gbmVjZXNzYXJpbHkgbmVlZCB0byBiZSBzZW50IHRocm91Z2ggaW5wdXQgc3Vic3lz
-dGVtIG9yIHdlIG1heQ0KPiA+ID4gPiB3YW50IHRvIHdhaXQgdW50aWwgd2UgYWRkIGEgbmV3IGlu
-cHV0IGV2ZW50LiBUaGlzIGlzIGJlY2F1c2UNCj4gPiA+ID4gdmVuZG9ycyBsb3ZlIHRvIGNvbWUg
-dXAgd2l0aCAidmFsdWUgYWRkIiBmZWF0dXJlcyB0aGF0IHJlcXVpcmUNCj4gPiA+ID4gdmVuZG9y
-IHNwZWNpZmljIGRyaXZlciB0aGF0IG5vb25lIGVuZHMgdXAgdXNpbmcuIEkgbWVhbiwgZm9yIHRo
-ZQ0KPiA+ID4gPiAiV2lGaSBjYXRjaGVyIiBkbyB5b3UgaGF2ZSBhbnkga2luZCBvZiBudW1iZXJz
-IGZvciB0aGUgdXNlcnMgb2YNCj4gPiA+ID4gdGhlIGZlYXR1cmU/DQo+ID4gPg0KPiA+ID4gTGlr
-ZSBJIHNhaWQsIHRoaXMgcGFydGljdWxhciBmZWF0dXJlIGhhc24ndCBiZWVuIGluIHVzZSBmb3Ig
-cXVpdGUgYQ0KPiA+ID4gZmV3IGdlbmVyYXRpb25zLiBJbiBpdHMgdGltZSBpdCB3YXMgZGVlbWVk
-ICJiZW5lZmljaWFsIiBpbiB0aGF0DQo+ID4gPiBkYXkgYmVjYXVzZSBvZiB0aGUgYW1vdW50IG9m
-IHRpbWUgaXQgdG9vayBmb3Igd2FraW5nIHVwIHRoZQ0KPiA+ID4gbWFjaGluZSBvbmx5IHRvIGRl
-dGVybWluZSB0aGVyZSB3YXMgbm8gYXZhaWxhYmxlIHdpZmkgbmVhcmJ5LiBJdCdzDQo+ID4gPiBi
-ZWVuIHN1cGVyc2VkZWQgYnkgb3RoZXIgdGVjaG5vbG9neSBpbXByb3ZlbWVudHMuDQo+ID4gPg0K
-PiA+ID4gVGhlcmUgYXJlIG90aGVyIHR5cGVzIG9mICJub3RpZmljYXRpb24iIG9ubHkgZXZlbnRz
-IHRoYXQgY291bGQgYmUNCj4gPiA+IHVzZWZ1bCB0byB1c2Vyc3BhY2UuIEkgZG9uJ3QgdGhpbmsg
-dGhleSBuZWVkIHRvIGFsbCBiZSBnZW5lcmFsbHkNCj4gPiA+IGRlbW9uaXplZCB3aXRoIHRoZSBj
-b25ub3RhdGlvbiBhcyBhIG5lZ2F0aXZlIHZlbmRvciBzcGVjaWZpYyB2YWx1ZQ0KPiA+ID4gYWRk
-LCB0aGVyZSBhcmUgcGxlbnR5IG9mIGdlbmVyaWMgdGhpbmdzIHRoYXQgdXNlcnNwYWNlIGNvdWxk
-DQo+ID4gPiBub3RpZnkgb24NCj4gPg0KPiA+IEdlbmVyaWMgdGhpbmdzIHNob3VsZCBmaW5kIGEg
-c3BlY2lmaWMgc3lzdGVtIHRoZXkgYXJlIHBhcnQgb2YgKGkuZS4NCj4gPiB3aWZpIG5vdGlmaWNh
-dGlvbnMgLT4gcmZsaWxsLCB3aWZpIHN3aXRjaGluZyAtPiBpbnB1dCwgZXRjKSwgaXQgaXMNCj4g
-PiBvbmUtb2ZmIHRoYXQgInNvdW5kZWQgZ29vZCIgYnV0IGFyZSBoYXJkIHRvIGRpc2NvdmVyIGJ5
-IHVzZXIgYW5kDQo+ID4gbm9ib2R5IGVuZHMgdXAgdXNpbmcgdGhhdCBJIGFtIGRlbW9uaXppbmcu
-DQo+IA0KPiBVc2VyIChhcyBjb25zdW1lcikgb2YgYXBwbGljYXRpb25zIHNob3VsZCBub3QgZGlz
-Y292ZXJpbmcgc3VjaCBwYXJ0cy4NCj4gVXNlciBqdXN0IG9wZW4vY29uZmlndXJlIGhpcyBmYXZv
-dXJpdGUgZ25vbWUva2RlL3VuaXR5L3hmYWNlLy4uLg0KPiBhcHBsaWNhdGlvbi4gQnV0IGRldmVs
-b3BlcnMgb2Ygd2lmaS9wb3dlci9sZWQgYXBwbGljYXRpb25zIG11c3Qga25vdw0KPiB3aGVyZSB0
-byBmaW5kIHRob3NlIGV2ZW50cy4NCj4gDQo+IEFuZCBJIG5lZWQgdG8gc2F5LCBpZiBJIGNoYW5n
-ZSB3aWZpIHN0YXRlIHZpYSByZmtpbGwgaW50ZXJmYWNlLCBJIHdvdWxkDQo+IGV4cGVjdCB0aGF0
-IGFsc28gcmZraWxsIGludGVyZmFjZSBwcm92aWRlcyBtZSBpbmZvcm1hdGlvbiBhYm91dCBjaGFu
-Z2VzLg0KPiBJZiBJIGNoYW5nZSBrZXlib2FyZCBiYWNrbGlnaHQgbGV2ZWwgdmlhIExFRCBpbnRl
-cmZhY2UsIHRoZW4gSSBzb21laG93DQo+IGV4cGVjdCB0aGF0IExFRCBpbnRlcmZhY2Ugc2hvdWxk
-IGJlIGFibGUgdG8gdGVsbCBtZSBpbmZvcm1hdGlvbiB0aGF0IGl0DQo+IHdhcyBjaGFuZ2VkIChi
-dXQgdGhhdCdzIG5vdCB0cnV0aC4uLiB5ZXQpLg0KPiANCj4gPiA+IHRoYXQgYXJlIGVzc2VudGlh
-bGx5ICJraWxsZWQiIGF0IHRoZSBXTUkgZHJpdmVyIHRvZGF5Lg0KPiA+ID4NCj4gPiA+IEhlcmUn
-cyBhIGZldyBJIGZpbmQ6DQo+ID4gPiAiS2V5Ym9hcmQgaWxsdW1pbmF0aW9uIHRvZ2dsZSINCj4g
-PiA+ICJNaWMgbXV0ZSB0b2dnbGUiDQo+ID4gPiAiQUxTIHNlbnNvciB0b2dnbGUiDQo+ID4gPiAi
-IFJvdGF0aW9uIGxvY2sgdG9nZ2xlIg0KPiA+ID4gIkFpcnBsYW5lIG1vZGUgdG9nZ2xlIg0KPiA+
-DQo+ID4gVGhlc2UgYWxsIHNlZW0gdmFsaWQga2V5IGV2ZW50cyAodW5sZXNzIHRoZXkgYXJlIG5v
-dCByZXF1ZXN0cyB0bw0KPiA+IGV4ZWN1dGUgc2FpZCBhY3Rpb25zIGJ1dCByYXRoZXIgbm90aWZp
-ZXJzIG9mIGV2ZW50cyBhbHJlYWR5DQo+ID4gaGFwcGVuZWQpLg0KPiANCj4gUHJldmlvdXNseSAi
-S2V5Ym9hcmQgaWxsdW1pbmF0aW9uIHRvZ2dsZSIgZXZlbnQgd2FzIHRyYW5zbGF0ZWQgdG8NCj4g
-S0VZX0tCRElMTFVNVE9HR0xFLCBidXQgaXQgbGF0ZXIgYWZ0ZXIgaW1wbGVtZW50aW5nIGRlbGw6
-OmtiZF9iYWNrbGlnaHQNCj4gTEVEIGRyaXZlciAoc29mdHdhcmUgY29udHJvbCB2aWEgL3N5cy8g
-b2Yga2V5Ym9hcmQgYmFja2xpZ2h0KSBpdCB3YXMNCj4gY2hhbmdlZCB0byBLRV9JR05PUkUuDQo+
-IA0KPiBSZWFzb24gd2FzIGZvbGxvd2luZzogQWxsIHVzZXJzcGFjZSBhcHBsaWNhdGlvbnMgKEtE
-RSwgVW5pdHksIHVwb3dlcmQpDQo+IHVuZGVyc3RhbmQgS0VZX0tCRElMTFVNVE9HR0xFIGlucHV0
-IGV2ZW50IGFzICJrZXkgZm9yIHRvZ2dsaW5nDQo+IGtleWJvYXJkDQo+IGJhY2tsaWdodCBsZXZl
-bCIgd2FzIHByZXNzZWQuIFRoZWlyIGFuc3dlciB0byB0aGF0IGlucHV0IGtleSBpcyB0byBmaW5k
-DQo+ICo6OmtiZF9iYWNrbGlnaHQgbGVkIGRldmljZSBpbiAvc3lzL2NsYXNzL2xlZHMgYW5kIHN3
-aXRjaCBrZXlib2FyZA0KPiBiYWNrbGlnaHQgbGV2ZWwgdG8gbmV4dCB2YWx1ZS4NCj4gDQo+IERl
-bGwgQUNQSS9maXJtd2FyZSBzZW5kICJLZXlib2FyZCBpbGx1bWluYXRpb24gdG9nZ2xlIiBldmVu
-dCBldmVyeSB0aW1lDQo+IHdoZW4ga2V5Ym9hcmQgYmFja2xpZ2h0IGxldmVsIGlzIGNoYW5nZWQg
-KHNvZnR3YXJlIHZpYSBkcml2ZXIgb3IgYnkgSFcNCj4ga2V5IHByZXNzKSBhbmQgYWxsIGFib3Zl
-IGFwcGxpY2F0aW9ucyBzdGFydGVkIGluZmluaXRlIGxvb3AuLi4NCj4gDQo+IFNvIHRoZXJlIGFy
-ZSBkaWZmZXJlbmNlIGJldHdlZW46DQo+IA0KPiAqKSB1c2VyIHByZXNzZWQga2V5IHdpdGggaWNv
-biBvZiAia2V5Ym9hcmQgaWxsdW1pbmF0aW9uIiwgYnV0IGhhcmR3YXJlDQo+IGRpZCBub3RoaW5n
-DQo+IA0KPiAqKSBoYXJkd2FyZSBjaGFuZ2VkIGtleWJvYXJkIGlsbHVtaW5hdGlvbiBsZXZlbCAo
-ZWl0aGVyIGJ5IGl0cyBvd24gLS0tDQo+IGUuZy4gYmVjYXVzZSBvZiBsb25nIGluYWN0aXZpdHkg
-b2YgdXNlciBvciB1c2VyIGNsb3NlZCBMSUQgLS0tIG9yIGFzDQo+IHJlYWN0aW9uIG9mIHVzZXIg
-cmVxdWVzdCB2aWEgc3BlY2lhbCBkcml2ZXIpDQo+IA0KPiBNb250aHMgYWdvIHdlIGFncmVlZCB0
-aGF0IGlmIHByZXNzaW5nIGtleSB3aXRoIGljb24gImtleWJvYXJkDQo+IGlsbHVtaW5hdGlvbiIg
-Y2F1c2UgMSkgZW1pdHRpbmcga2V5IHByZXNzIGV2ZW50ICh2aWEgQUNQSS9XTUkpIGFuZCBhbHNv
-DQo+IDIpIGhhcmR3YXJlIHVuY29uZGl0aW9uYWxseSBjaGFuZ2Uga2V5Ym9hcmQgYmFja2xpZ2h0
-IGxldmVsLCB0aGVuIHdlDQo+IHNob3VsZCBub3Qgc2VuZCB0aGF0IGtleSBwcmVzcyB0byB1c2Vy
-c3BhY2UgKGFzIGl0IHdhcyBhbHJlYWR5IHByb2Nlc3NlZA0KPiBieSBoYXJkd2FyZSkuIFNhbWUg
-aXMgZm9yIGhhcmR3YXJlIGtleSB3aGljaCBibG9jayBXSUZJIChhcyB1c2Vyc3BhY2UNCj4gcmVh
-Y3Qgb24gaW5wdXQgS0VZX1JGS0lMTCB0byBibG9jayBhbGwgcmZraWxscykuDQo+IA0KPiBCdXQg
-SSBhZ3JlZSB0aGF0IGNvdWxkIHNvbWVob3cgaW5mb3JtIHVzZXJzcGFjZSBhYm91dCBjaGFuZ2Vz
-IHdoaWNoDQo+IGhhcmR3YXJlIGRpZC4gRm9yIHJma2lsbHMgd2UgYWxyZWFkeSBzdXBwb3J0IGlu
-dGVyZmFjZSB3aGVuIHJma2lsbA0KPiBkZXZpY2Ugc2VuZCB0byB1c2Vyc3BhY2UgYWxsIGNoYW5n
-ZSBldmVudHMuDQo+IA0KPiBGb3Iga2V5Ym9hcmQgYmFja2xpZ2h0IHdlIGRvIG5vdCBoYXZlIG5v
-dGlmeSBpbnRlcmZhY2UgeWV0LCBidXQgSQ0KPiBwcm9wb3NlZCB0aGF0IExFRCBzdWJzeXN0ZW0g
-Y291bGQgYmUgZXh0ZW5kZWQsIHNvIHNlbGVjdC9wb2xsIHN5c2NhbGxzDQo+IGNvdWxkIGJlIHVz
-ZWQgb24gImJyaWdodG5lc3MiIHN5c2ZzIG5vZGUgKHdoaWNoIGlzIHVzZWQgZm9yIGNoYW5naW5n
-IExFRA0KPiBsZXZlbCkuDQo+IA0KPiA+IEFyZSB0aGV5ICJraWxsZWQiIGJlY2F1c2UgdGhleSBh
-cmUgYWxzbyBkZWxpdmVyZWQgdmlhIGk4MDQyPw0KPiANCj4gTm8sIChhdCBsZWFzdCBvbiBteSBt
-YWNoaW5lIHRoZXkgYXJlIHNlbnQgdmlhIFdNSSkuDQoNCkl0IHJlYWxseSBkZXBlbmRzIHVwb24g
-dGhlIHZlbmRvcidzIGltcGxlbWVudGF0aW9uIGFuZCB0aGF0IGtleSdzIHBhcnRpY3VsYXINCmlt
-cGxlbWVudGF0aW9uLiAgU29tZSBvZiB0aGUgb25lcyB0aGF0IGFyZSBLRV9JR05PUkUnZWQgYnkg
-dGhlIHdtaSBkcml2ZXINCndpbGwgc2VuZCBzb21ldGhpbmcgb24gaTgwNDIsIG90aGVycyB3b24n
-dC4NCg0KVGhlIG9uZXMgSSdtIHBhcnRpY3VsYXJseSBpbnRlcmVzdGVkIGFib3V0IGFyZSB0aGUg
-b25lcyB0aGF0IGFyZSAiTk9USUZZIiBvbmx5DQphbmQgb25seSBjb21lIGFjcm9zcyBvbiBXTUku
-DQoNCk9uIFdpbmRvd3MgdGhlc2UgYXJlIHBpY2tlZCB1cCBieSBzb21lIGFwcGxpY2F0aW9uIG9y
-IGEgZmlsdGVyIGRyaXZlciBhbmQgYSANCm5vdGlmaWNhdGlvbiBldmVudCBpcyBzaG93bi4NCg0K
-PiANCj4gPiA+ID4gLSBJbiB0aGUgc2FtZSB2ZWluLCB3ZSBjYW4gY29tZSB1cCB3aXRoIHNvbWV0
-aGluZyBnZW5lcmljIHRvDQo+ID4gPiA+IHNodWZmbGUgdGhlIGNyYXAgb3ZlciB0byB1c2Vyc3Bh
-Y2UNCj4gPiA+ID4gKCJjb20udmVuZG9yLmNyYXAubW9yZWNyYXAuLi4iIG92ZXIgY29ubmVjdG9y
-PyBJIHRoaW5rIEkganVzdA0KPiA+ID4gPiB0aHJldyBpbnRvIG15IG1vdXRoIGEgbGl0dGxlKSwg
-YnV0IGRvIHdlIGhhdmUgY29uc3VtZXIgZm9yIHRoaXM/DQo+ID4gPg0KPiA+ID4gSSB0aGluayBp
-dCB3b3VsZCBiZSBtb3N0IGVxdWl0YWJsZSB0byBzaHVmZmxlIGFsbCBub3RpZmljYXRpb24NCj4g
-PiA+IGV2ZW50cyBvdmVyIHRvIHVzZXJzcGFjZSB3aXRoIGEgZ2VuZXJpYyBjb25uZWN0b3IgYW5k
-IGxldA0KPiA+ID4gdXNlcnNwYWNlIG1haW50YWluZXJzIGRlY2lkZSB3aGljaCBvbmVzIG1ha2Ug
-c2Vuc2UgdG8gc2hvdyB0byB0aGUNCj4gPiA+IHVzZXIuDQo+ID4gPg0KPiA+ID4gVGhlIG1vc3Qg
-bG9naWNhbCBvbmUgdG8gbWUgd2lsbCBiZSBhZGRpbmcgcGF0Y2hlcyBpbnRvDQo+ID4gPiBnbm9t
-ZS1zZXR0aW5ncy1kYWVtb24gYW5kIHNpbWlsYXIgVUkgaW50ZXJmYWNlcyB0aGF0IGFscmVhZHkN
-Cj4gPiA+IGRpc3BsYXkgdGhpbmdzIGxpa2UgYnJpZ2h0bmVzcyBhbmQgdm9sdW1lIGNoYW5nZXMu
-DQo+ID4NCj4gPiBXZWxsLCBpdCBpcyByZWFsbHkgZWFzeSB0byBzaG92ZSBzdHVmZiB1cCBpbnRv
-IHVzZXJzcGFjZSBhbmQgc2F5ICJsZXQNCj4gPiB0aGVtIGRlYWwgd2l0aCBpdCIsIGJ1dCB3ZSBp
-ZiBzdHVmZiBpcyB1c2VmdWwgYW5kIGFwcGxpY2FibGUgdG8gbWFueQ0KPiA+IGRldmljZXMsIHRo
-ZW4gSSBhbSBzdXJlIHRoZXJlIGFyZSBtb3JlIHNwZWNpZmljIGludGVyZmFjZXMgdGhhdCB3b3Vs
-ZA0KPiA+IGJlIGJldHRlciBzdWl0ZWQgZm9yIHN1Y2ggZXZlbnRzLCBhbmQgb25lIG9mZiB3aWxs
-IHJlcXVpcmUgd3JpdGluZw0KPiA+ICJ0cmF5IG5vdGlmaWNhdGlvbiBhcHBzIiB0aGF0IHdlIGFs
-bCBzbyBsb3ZlLg0KPiA+DQo+ID4gVGhhbmtzLg0KPiANCg0KSSBndWVzcyBJIGRvbid0IHNlZSB0
-aGUgdXNlIGNhc2Ugb24gcmVhY3RpbmcgdG8gZXZlbnRzIGxpa2UgSSBzYWlkIGFib3ZlDQppbiB1
-c2Vyc3BhY2Ugb3RoZXIgdGhhbiB0aGUgYmFzaWMgbGlibm90aWZ5IHRvYXN0IHBvcHVwLg0KDQpU
-aGF0IGF0IGxlYXN0IHJlbGF5cyB0aGUgbWVzc2FnZSB0byB0aGUgdXNlciB0aGF0ICJzb21ldGhp
-bmciIGhhcHBlbmVkDQp3aGVuIHRoYXQga2V5IHdhcyBwcmVzc2VkLiAgRWl0aGVyIEZXIG9yIGtl
-cm5lbCB3b3VsZCBkbyB0aGUgYWN0dWFsDQphY3Rpdml0aWVzIGJ1dCB1c2Vyc3BhY2Ugd291bGQg
-aGF2ZSB0byBkbyB0aGUgbm90aWZpY2F0aW9uLg0KDQo=
+I find that the developers often just specified the numeric value
+when calling a macro which is defined with a parameter for access permission.
+As we know, these numeric value for access permission have had the corresponding macro,
+and that using macro can improve the robustness and readability of the code,
+thus, I suggest replacing the numeric parameter with the macro.
+
+Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Baole Ni <baolex.ni@intel.com>
+---
+ drivers/char/sonypi.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
+index e496dae..0e206d1 100644
+--- a/drivers/char/sonypi.c
++++ b/drivers/char/sonypi.c
+@@ -70,36 +70,36 @@ MODULE_PARM_DESC(minor,
+ 		 "minor number of the misc device, default is -1 (automatic)");
+ 
+ static int verbose;		/* = 0 */
+-module_param(verbose, int, 0644);
++module_param(verbose, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(verbose, "be verbose, default is 0 (no)");
+ 
+ static int fnkeyinit;		/* = 0 */
+-module_param(fnkeyinit, int, 0444);
++module_param(fnkeyinit, int, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(fnkeyinit,
+ 		 "set this if your Fn keys do not generate any event");
+ 
+ static int camera;		/* = 0 */
+-module_param(camera, int, 0444);
++module_param(camera, int, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(camera,
+ 		 "set this if you have a MotionEye camera (PictureBook series)");
+ 
+ static int compat;		/* = 0 */
+-module_param(compat, int, 0444);
++module_param(compat, int, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(compat,
+ 		 "set this if you want to enable backward compatibility mode");
+ 
+ static unsigned long mask = 0xffffffff;
+-module_param(mask, ulong, 0644);
++module_param(mask, ulong, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(mask,
+ 		 "set this to the mask of event you want to enable (see doc)");
+ 
+ static int useinput = 1;
+-module_param(useinput, int, 0444);
++module_param(useinput, int, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(useinput,
+ 		 "set this if you would like sonypi to feed events to the input subsystem");
+ 
+ static int check_ioport = 1;
+-module_param(check_ioport, int, 0444);
++module_param(check_ioport, int, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(check_ioport,
+ 		 "set this to 0 if you think the automatic ioport check for sony-laptop is wrong");
+ 
+-- 
+2.9.2
