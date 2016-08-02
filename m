@@ -1,10 +1,10 @@
 From: Baole Ni <baolex.ni@intel.com>
-Subject: [PATCH 0853/1285] Replace numeric parameter like 0444 with macro
-Date: Tue,  2 Aug 2016 19:52:31 +0800
-Message-ID: <20160802115231.6854-1-baolex.ni@intel.com>
+Subject: [PATCH 0854/1285] Replace numeric parameter like 0444 with macro
+Date: Tue,  2 Aug 2016 19:52:35 +0800
+Message-ID: <20160802115235.6920-1-baolex.ni@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
+To: ike.pan@canonical.com, dvhart@infradead.org, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
@@ -17,30 +17,39 @@ thus, I suggest replacing the numeric parameter with the macro.
 Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
 Signed-off-by: Baole Ni <baolex.ni@intel.com>
 ---
- drivers/platform/x86/ibm_rtl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index c62e5e1..ea318e2 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -40,7 +40,7 @@ module_param(force, bool, 0);
- MODULE_PARM_DESC(force, "Force driver load, ignore DMI data");
- 
- static bool debug;
--module_param(debug, bool, 0644);
-+module_param(debug, bool, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(debug, "Show debug output");
- 
- MODULE_LICENSE("GPL");
-@@ -199,7 +199,7 @@ static struct bus_type rtl_subsys = {
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d1a091b..1611d4d 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -100,7 +100,7 @@ struct ideapad_private {
  };
  
- static DEVICE_ATTR(version, S_IRUGO, rtl_show_version, NULL);
--static DEVICE_ATTR(state, 0600, rtl_show_state, rtl_set_state);
-+static DEVICE_ATTR(state, S_IRUSR | S_IWUSR, rtl_show_state, rtl_set_state);
+ static bool no_bt_rfkill;
+-module_param(no_bt_rfkill, bool, 0444);
++module_param(no_bt_rfkill, bool, S_IRUSR | S_IRGRP | S_IROTH);
+ MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
  
- static struct device_attribute *rtl_attributes[] = {
- 	&dev_attr_version,
+ /*
+@@ -388,7 +388,7 @@ static ssize_t store_ideapad_cam(struct device *dev,
+ 	return count;
+ }
+ 
+-static DEVICE_ATTR(camera_power, 0644, show_ideapad_cam, store_ideapad_cam);
++static DEVICE_ATTR(camera_power, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_ideapad_cam, store_ideapad_cam);
+ 
+ static ssize_t show_ideapad_fan(struct device *dev,
+ 				struct device_attribute *attr,
+@@ -421,7 +421,7 @@ static ssize_t store_ideapad_fan(struct device *dev,
+ 	return count;
+ }
+ 
+-static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
++static DEVICE_ATTR(fan_mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH, show_ideapad_fan, store_ideapad_fan);
+ 
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
 -- 
 2.9.2
