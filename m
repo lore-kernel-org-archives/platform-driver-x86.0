@@ -1,45 +1,41 @@
-From: Baole Ni <baolex.ni@intel.com>
-Subject: [PATCH 0840/1285] Replace numeric parameter like 0444 with macro
-Date: Tue,  2 Aug 2016 19:51:31 +0800
-Message-ID: <20160802115131.5992-1-baolex.ni@intel.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 0857/1285] Replace numeric parameter like 0444 with macro
+Date: Tue, 2 Aug 2016 14:34:07 -0300
+Message-ID: <20160802173407.GA1939@khazad-dum.debian.net>
+References: <20160802115249.7120-1-baolex.ni@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160802115249.7120-1-baolex.ni@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jlee@suse.com, dvhart@infradead.org, david.vrabel@citrix.com, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com, baolex.ni@intel.com
+To: Baole Ni <baolex.ni@intel.com>
+Cc: dvhart@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-I find that the developers often just specified the numeric value
-when calling a macro which is defined with a parameter for access permission.
-As we know, these numeric value for access permission have had the corresponding macro,
-and that using macro can improve the robustness and readability of the code,
-thus, I suggest replacing the numeric parameter with the macro.
+(cc list trimmed)
 
-Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
-Signed-off-by: Baole Ni <baolex.ni@intel.com>
----
- drivers/platform/x86/acer-wmi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Tue, 02 Aug 2016, Baole Ni wrote:
+> I find that the developers often just specified the numeric value
+> when calling a macro which is defined with a parameter for access permission.
+> As we know, these numeric value for access permission have had the corresponding macro,
+> and that using macro can improve the robustness and readability of the code,
+> thus, I suggest replacing the numeric parameter with the macro.
+> 
+> Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
+> Signed-off-by: Baole Ni <baolex.ni@intel.com>
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 79d64ea..be9b00a 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -233,11 +233,11 @@ static bool has_type_aa;
- static u16 commun_func_bitmap;
- static u8 commun_fn_key_number;
- 
--module_param(mailled, int, 0444);
--module_param(brightness, int, 0444);
--module_param(threeg, int, 0444);
--module_param(force_series, int, 0444);
--module_param(ec_raw_mode, bool, 0444);
-+module_param(mailled, int, S_IRUSR | S_IRGRP | S_IROTH);
-+module_param(brightness, int, S_IRUSR | S_IRGRP | S_IROTH);
-+module_param(threeg, int, S_IRUSR | S_IRGRP | S_IROTH);
-+module_param(force_series, int, S_IRUSR | S_IRGRP | S_IROTH);
-+module_param(ec_raw_mode, bool, S_IRUSR | S_IRGRP | S_IROTH);
- MODULE_PARM_DESC(mailled, "Set initial state of Mail LED");
- MODULE_PARM_DESC(brightness, "Set initial LCD backlight brightness");
- MODULE_PARM_DESC(threeg, "Set initial state of 3G hardware");
+NACK.
+
+IMO, the proposed change reduces readiability for no good reason.  Most
+people touching kernel code have 0444, 0644, 0755, etc. already
+hardwired into their pattern recognition neural network, while the POSIX
+S_* crap is actually bug food.
+
+PS: no more ill-managed ultra-large patch bombs, *please*.
+
 -- 
-2.9.2
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
