@@ -1,188 +1,64 @@
-From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH] asus-laptop: get rid of parse_arg()
-Date: Fri,  5 Aug 2016 23:57:10 +0300
-Message-ID: <20160805205710.4735-1-giedrius.statkevicius@gmail.com>
+From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 0857/1285] Replace numeric parameter
+	like 0444 with macro
+Date: Fri, 5 Aug 2016 15:57:24 -0700
+Message-ID: <20160805225724.GC4952@f23x64.localdomain>
+References: <20160802115249.7120-1-baolex.ni@intel.com>
+	<20160802173407.GA1939@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:36329 "EHLO
-	mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S2998820AbcHEU50 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Aug 2016 16:57:26 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com, dvhart@infradead.org
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160802173407.GA1939-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: Baole Ni <baolex.ni-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, chuansheng.liu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-parse_arg() duplicates the funcionality of kstrtoint() so use the latter
-function instead. There is no funcionality change except that in the
-case of input being too big -ERANGE will be returned instead of -EINVAL
-which is not bad because -ERANGE makes more sense here. The check for
-!count is already done by the sysfs core so no need to duplicate it
-again. Also, add some minor corrections to error handling to accommodate
-the change in return values (parse_arg returned count if everything
-succeeded whereas kstrtoint returns 0 in the same situation)
+On Tue, Aug 02, 2016 at 02:34:07PM -0300, Henrique de Moraes Holschuh wrote:
+> (cc list trimmed)
+> 
+> On Tue, 02 Aug 2016, Baole Ni wrote:
+> > I find that the developers often just specified the numeric value
+> > when calling a macro which is defined with a parameter for access permission.
+> > As we know, these numeric value for access permission have had the corresponding macro,
+> > and that using macro can improve the robustness and readability of the code,
+> > thus, I suggest replacing the numeric parameter with the macro.
+> > 
+> > Signed-off-by: Chuansheng Liu <chuansheng.liu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Baole Ni <baolex.ni-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> NACK.
+> 
+> IMO, the proposed change reduces readiability for no good reason.  Most
+> people touching kernel code have 0444, 0644, 0755, etc. already
+> hardwired into their pattern recognition neural network, while the POSIX
+> S_* crap is actually bug food.
 
-As a result of this patch asus-laptop.ko size is reduced by almost 1%:
-add/remove: 0/1 grow/shrink: 1/6 up/down: 1/-149 (-148)
-function                                     old     new   delta
-__UNIQUE_ID_vermagic0                         69      70      +1
-ls_switch_store                              133     117     -16
-ledd_store                                   175     159     -16
-display_store                                157     141     -16
-ls_level_store                               193     176     -17
-gps_store                                    200     178     -22
-sysfs_acpi_set.isra                          148     125     -23
-parse_arg.part                                39       -     -39
-Total: Before=19160, After=19012, chg -0.77%
+While I'm generally in favor of using macros where they exist, I do agree with
+Henrique that this is actually less legible.
 
-Signed-off-by: Giedrius Statkevičius <giedrius.statkevicius@gmail.com>
----
- drivers/platform/x86/asus-laptop.c | 77 ++++++++++++++++++--------------------
- 1 file changed, 36 insertions(+), 41 deletions(-)
+> 
+> PS: no more ill-managed ultra-large patch bombs, *please*.
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 15f1311..28551f5 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -932,30 +932,19 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RO(infos);
- 
--static int parse_arg(const char *buf, unsigned long count, int *val)
--{
--	if (!count)
--		return 0;
--	if (count > 31)
--		return -EINVAL;
--	if (sscanf(buf, "%i", val) != 1)
--		return -EINVAL;
--	return count;
--}
--
- static ssize_t sysfs_acpi_set(struct asus_laptop *asus,
- 			      const char *buf, size_t count,
- 			      const char *method)
- {
- 	int rv, value;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv <= 0)
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
- 		return rv;
- 
- 	if (write_acpi_int(asus->handle, method, value))
- 		return -ENODEV;
--	return rv;
-+	return count;
- }
- 
- /*
-@@ -975,15 +964,17 @@ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
- 	struct asus_laptop *asus = dev_get_drvdata(dev);
- 	int rv, value;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv > 0) {
--		if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
--			pr_warn("LED display write failed\n");
--			return -ENODEV;
--		}
--		asus->ledd_status = (u32) value;
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
-+		return rv;
-+
-+	if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
-+		pr_warn("LED display write failed\n");
-+		return -ENODEV;
- 	}
--	return rv;
-+
-+	asus->ledd_status = (u32) value;
-+	return count;
- }
- static DEVICE_ATTR_RW(ledd);
- 
-@@ -1148,10 +1139,12 @@ static ssize_t display_store(struct device *dev, struct device_attribute *attr,
- 	struct asus_laptop *asus = dev_get_drvdata(dev);
- 	int rv, value;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv > 0)
--		asus_set_display(asus, value);
--	return rv;
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
-+		return rv;
-+
-+	asus_set_display(asus, value);
-+	return count;
- }
- static DEVICE_ATTR_WO(display);
- 
-@@ -1190,11 +1183,12 @@ static ssize_t ls_switch_store(struct device *dev,
- 	struct asus_laptop *asus = dev_get_drvdata(dev);
- 	int rv, value;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv > 0)
--		asus_als_switch(asus, value ? 1 : 0);
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
-+		return rv;
- 
--	return rv;
-+	asus_als_switch(asus, value ? 1 : 0);
-+	return count;
- }
- static DEVICE_ATTR_RW(ls_switch);
- 
-@@ -1219,14 +1213,15 @@ static ssize_t ls_level_store(struct device *dev, struct device_attribute *attr,
- 	struct asus_laptop *asus = dev_get_drvdata(dev);
- 	int rv, value;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv > 0) {
--		value = (0 < value) ? ((15 < value) ? 15 : value) : 0;
--		/* 0 <= value <= 15 */
--		asus_als_level(asus, value);
--	}
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
-+		return rv;
-+
-+	value = (0 < value) ? ((15 < value) ? 15 : value) : 0;
-+	/* 0 <= value <= 15 */
-+	asus_als_level(asus, value);
- 
--	return rv;
-+	return count;
- }
- static DEVICE_ATTR_RW(ls_level);
- 
-@@ -1301,14 +1296,14 @@ static ssize_t gps_store(struct device *dev, struct device_attribute *attr,
- 	int rv, value;
- 	int ret;
- 
--	rv = parse_arg(buf, count, &value);
--	if (rv <= 0)
--		return -EINVAL;
-+	rv = kstrtoint(buf, 0, &value);
-+	if (rv < 0)
-+		return rv;
- 	ret = asus_gps_switch(asus, !!value);
- 	if (ret)
- 		return ret;
- 	rfkill_set_sw_state(asus->gps.rfkill, !value);
--	return rv;
-+	return count;
- }
- static DEVICE_ATTR_RW(gps);
- 
+Indeed. 1285 patches with the same subject line is "not ideal". Prefixing with
+the subsystem at the very least would have been an improvement. An RFC on the
+concept, cc'ing the subsystem maintainers to get consensus and direction on how
+to manage the large change would have been advisable.
+
+I'm dropping these for pdx86 unless a compelling argument arises for including
+them (like - the only subsystem not taking these is pdx86...)
+
 -- 
-2.9.0
+Darren Hart
+Intel Open Source Technology Center
+
+------------------------------------------------------------------------------
