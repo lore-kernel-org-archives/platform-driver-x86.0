@@ -1,64 +1,221 @@
-From: "Ni, BaoleX" <baolex.ni@intel.com>
-Subject: RE: [PATCH 0857/1285] Replace numeric parameter like 0444 with macro
-Date: Mon, 8 Aug 2016 06:41:46 +0000
-Message-ID: <318B87A793BE164187D8851D6CE09D64012D3969@shsmsx102.ccr.corp.intel.com>
-References: <20160802115249.7120-1-baolex.ni@intel.com>
- <20160802173407.GA1939@khazad-dum.debian.net>
- <20160805225724.GC4952@f23x64.localdomain>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: acer-wmi auto-loaded on a Lenovo Thinkpad X1 Carbon 4th gen
+Date: Mon, 08 Aug 2016 12:09:55 +0200
+Message-ID: <87k2fr7erw.fsf@miraculix.mork.no>
+References: <87vb07lx0s.fsf@miraculix.mork.no>
+	<20160719045518.GA26365@linux-rxt1.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160805225724.GC4952@f23x64.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Liu, Chuansheng" <chuansheng.liu@intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from canardo.mork.no ([148.122.252.1]:53879 "EHLO canardo.mork.no"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751670AbcHHKMM convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 8 Aug 2016 06:12:12 -0400
+In-Reply-To: <20160719045518.GA26365@linux-rxt1.site> (joeyli's message of
+	"Tue, 19 Jul 2016 12:55:19 +0800")
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: joeyli <jlee@suse.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Dear Darren, 
+joeyli <jlee@suse.com> writes:
 
-Thank you very much! I'll be glad to take your advice.
+> Hi Bjørn,
+>
+> On Thu, Jul 14, 2016 at 11:39:31PM +0200, Bjørn Mork wrote:
+>> I recently got a new laptop.  And now I'm trying to figure out what all
+>> the stuff they put into it actually is :)
+>> .
+>> One thing that doesn't seem quite right is that the acer-wmi driver is
+>> loaded and claims that this laptop has an "Acer BMA150 accelerometer".
+>> 
+>> It is true that there is a device there matching
+>> 
+>>   #define AMW0_GUID1            "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
+>> 
+>> as can be seen:
+>> 
+>>  bjorn@miraculix:~$ ls -l /sys/devices/virtual/wmi/67C3371D-95A3-4C37-BB61-DD47B491DAAB
+>>  total 0
+>>  -r--r--r-- 1 root root 4096 Jul 14 23:10 modalias
+>>  drwxr-xr-x 2 root root    0 Jul 14 23:10 power
+>>  lrwxrwxrwx 1 root root    0 Jul 14 23:10 subsystem -> ../../../../class/wmi
+>>  -rw-r--r-- 1 root root 4096 Jul 14 23:10 uevent
+>> 
+>> 
+>> But I sort of doubt there is an Acer specific device here.  Maybe this
+>> is a generic accelerometer interface?  Or is there something else going
+>> on?
+>> 
+>> The input device created by the driver just just returns -EPERM when I
+>> try to open it, so I don't think this actually works as-is:
+>> 
+>>  root@miraculix:/tmp# cat /dev/input/event8
+>>  cat: /dev/input/event8: Operation not permitted
+>> 
+>> 
+>> And it does seem a little weird that a Thinkpad should need an Acer
+>> specific platform driver anyway....  thinkpad_acpi is of course handling
+>> all(?) the Thinkpad specifics as expected.
+>> 
+>> 
+>> Bjørn
+>
+> Could you please check that what does the _HID of HKEY device in your DSDT?
+>
+> or please attached your acpidump data to me:
+>  # acpidump > acpidump.raw
 
-Baole
+Sorry for the delay.  Just back from vacation.  I took a quick peek at
+the driver and I don't think you need that dump. The DSDT is completely
+irrelevant.  The driver will match and load on that generic WMI UUID,
+and this code ensures that it successfully probes regardless of DSDT:
 
------Original Message-----
-From: Darren Hart [mailto:dvhart@infradead.org] 
-Sent: Saturday, August 06, 2016 6:57 AM
-To: Henrique de Moraes Holschuh
-Cc: Ni, BaoleX; ibm-acpi-devel@lists.sourceforge.net; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Liu, Chuansheng
-Subject: Re: [PATCH 0857/1285] Replace numeric parameter like 0444 with macro
 
-On Tue, Aug 02, 2016 at 02:34:07PM -0300, Henrique de Moraes Holschuh wrote:
-> (cc list trimmed)
-> 
-> On Tue, 02 Aug 2016, Baole Ni wrote:
-> > I find that the developers often just specified the numeric value 
-> > when calling a macro which is defined with a parameter for access permission.
-> > As we know, these numeric value for access permission have had the 
-> > corresponding macro, and that using macro can improve the robustness 
-> > and readability of the code, thus, I suggest replacing the numeric parameter with the macro.
-> > 
-> > Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
-> > Signed-off-by: Baole Ni <baolex.ni@intel.com>
-> 
-> NACK.
-> 
-> IMO, the proposed change reduces readiability for no good reason.  
-> Most people touching kernel code have 0444, 0644, 0755, etc. already 
-> hardwired into their pattern recognition neural network, while the 
-> POSIX
-> S_* crap is actually bug food.
+static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+						void *ctx, void **retval)
+{
+	*(acpi_handle *)retval = ah;
+	return AE_OK;
+}
 
-While I'm generally in favor of using macros where they exist, I do agree with Henrique that this is actually less legible.
+static int __init acer_wmi_get_handle(const char *name, const char *prop,
+					acpi_handle *ah)
+{
+	acpi_status status;
+	acpi_handle handle;
 
-> 
-> PS: no more ill-managed ultra-large patch bombs, *please*.
+	BUG_ON(!name || !ah);
 
-Indeed. 1285 patches with the same subject line is "not ideal". Prefixing with the subsystem at the very least would have been an improvement. An RFC on the concept, cc'ing the subsystem maintainers to get consensus and direction on how to manage the large change would have been advisable.
+	handle = NULL;
+	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
+					(void *)name, &handle);
 
-I'm dropping these for pdx86 unless a compelling argument arises for including them (like - the only subsystem not taking these is pdx86...)
+	if (ACPI_SUCCESS(status)) {
+		*ah = handle;
+		return 0;
+	} else {
+		return -ENODEV;
+	}
+}
 
---
-Darren Hart
-Intel Open Source Technology Center
+
+Since acer_wmi_get_handle_cb() doesn't actually test anything, this will
+just return an arbitrary handle regardless of the value of *prop.
+
+
+> Then I want to add HID to the norfkill_ids list in acer-wmi to avoid that
+> it loaded on your Lenovo machine like LEN0068.
+
+I see that this has been done before when this bug has been reported.
+Sorry, but I believe that solution is plain wrong.  You are papering
+over a more fundamental problem.
+
+Solve the *real* problems in the driver instead:
+1) "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
+>> 
+>> as can be seen:
+>> 
+>>  bjorn@miraculix:~$ ls -l /sys/devices/virtual/wmi/67C3371D-95A3-4C37-BB61-DD47B491DAAB
+>>  total 0
+>>  -r--r--r-- 1 root root 4096 Jul 14 23:10 modalias
+>>  drwxr-xr-x 2 root root    0 Jul 14 23:10 power
+>>  lrwxrwxrwx 1 root root    0 Jul 14 23:10 subsystem -> ../../../../class/wmi
+>>  -rw-r--r-- 1 root root 4096 Jul 14 23:10 uevent
+>> 
+>> 
+>> But I sort of doubt there is an Acer specific device here.  Maybe this
+>> is a generic accelerometer interface?  Or is there something else going
+>> on?
+>> 
+>> The input device created by the driver just just returns -EPERM when I
+>> try to open it, so I don't think this actually works as-is:
+>> 
+>>  root@miraculix:/tmp# cat /dev/input/event8
+>>  cat: /dev/input/event8: Operation not permitted
+>> 
+>> 
+>> And it does seem a little weird that a Thinkpad should need an Acer
+>> specific platform driver anyway....  thinkpad_acpi is of course handling
+>> all(?) the Thinkpad specifics as expected.
+>> 
+>> 
+>> Bjørn
+>
+> Could you please check that what does the _HID of HKEY device in your DSDT?
+>
+> or please attached your acpidump data to me:
+>  # acpidump > acpidump.raw
+
+Sorry for the delay.  Just back from vacation.  I took a quick peek at
+the driver and I don't think you need that dump. The DSDT is completely
+irrelevant.  The driver will match and load on that generic WMI UUID,
+and this code ensures that it successfully probes regardless of DSDT:
+
+
+static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+						void *ctx, void **retval)
+{
+	*(acpi_handle *)retval = ah;
+	return AE_OK;
+}
+
+static int __init acer_wmi_get_handle(const char *name, const char *prop,
+					acpi_handle *ah)
+{
+	acpi_status status;
+	acpi_handle handle;
+
+	BUG_ON(!name || !ah);
+
+	handle = NULL;
+	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
+					(void *)name, &handle);
+
+	if (ACPI_SUCCESS(status)) {
+		*ah = handle;
+		return 0;
+	} else {
+		return -ENODEV;
+	}
+}
+
+
+Since acer_wmi_get_handle_cb() doesn't actually test anything, this will
+just return an arbitrary handle regardless of the value of *prop.
+
+
+> Then I want to add HID to the norfkill_ids list in acer-wmi to avoid that
+> it loaded on your Lenovo machine like LEN0068.
+
+I see that this has been done before when this bug has been reported.
+Sorry, but I believe that solution is plain wrong.  You are papering
+over a more fundamental problem.
+
+Solve the *real* problems in the driver instead:
+1)  "67C3371D-95A3-4C37-BB61-DD47B491DAAB" is not an Acer specific GUID
+ and should probably never have been used to match Acer specific
+ devices.  The fact that it happens to work for some aribitrary laptop is
+ not sufficient.
+
+2) the "get_handle" code shown above is broken.  If it works for some
+ specific DSDT, then that is just pure luck.
+
+These things should be fixed ASAP, and backported to stable.  The driver
+as it is will probably both load and probe successfully on a large
+number of systems it has no business messing with.
+
+
+> Then, thinkpad_acpi needs to support this _HID.
+
+No.  Looking further at this, I don't think so. There is no indication
+that there is any relation between that WMI ID and any of the hardware
+functions supported by the acer-wmi driver.  So there is no reason to
+believe that any of the matched Lenovo laptops have the same hardware
+functions.
+
+
+
+Bjørn
