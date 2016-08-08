@@ -1,221 +1,275 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Subject: Re: acer-wmi auto-loaded on a Lenovo Thinkpad X1 Carbon 4th gen
-Date: Mon, 08 Aug 2016 12:09:55 +0200
-Message-ID: <87k2fr7erw.fsf@miraculix.mork.no>
-References: <87vb07lx0s.fsf@miraculix.mork.no>
-	<20160719045518.GA26365@linux-rxt1.site>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [RFC v3 07/13] tables.h: add linker table support
+Date: Mon, 8 Aug 2016 17:05:39 +0200
+Message-ID: <20160808150539.GG3296@wotan.suse.de>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
+ <1469222687-1600-8-git-send-email-mcgrof@kernel.org>
+ <20160729100630.GA27271@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from canardo.mork.no ([148.122.252.1]:53879 "EHLO canardo.mork.no"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751670AbcHHKMM convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Aug 2016 06:12:12 -0400
-In-Reply-To: <20160719045518.GA26365@linux-rxt1.site> (joeyli's message of
-	"Tue, 19 Jul 2016 12:55:19 +0800")
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160729100630.GA27271@nazgul.tnic>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, linux@arm.linux.org.uk, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.intel
+List-Id: platform-driver-x86.vger.kernel.org
 
-joeyli <jlee@suse.com> writes:
+On Fri, Jul 29, 2016 at 12:06:30PM +0200, Borislav Petkov wrote:
+> On Fri, Jul 22, 2016 at 02:24:41PM -0700, Luis R. Rodriguez wrote:
+> > A linker table is a data structure that is stitched together from items
+> > in multiple object files. Linux has historically implicitly used linker
+> > tables for ages, however they were all built in an adhoc manner which
+> > requires linker script modifications, per architecture. This adds a
+> > general linker table solution so that a new linker table can be
+> > implemented by changing C code only. The Linux linker table was
+> > originally based on Michael Brown's iPXE's linker table solution but
+> > has been significantly modified to fit Linux's use in its integration.
+> 
+> ...
+> 
+> > diff --git a/include/asm-generic/tables.h b/include/asm-generic/tables.h
+> > new file mode 100644
+> > index 000000000000..5cf655590a19
+> > --- /dev/null
+> > +++ b/include/asm-generic/tables.h
+> > @@ -0,0 +1,70 @@
+> > +#ifndef _ASM_GENERIC_TABLES_H_
+> > +#define _ASM_GENERIC_TABLES_H_
+> > +/*
+> > + * Linux linker tables
+> > + *
+> > + * Copyright (C) 2016 Luis R. Rodriguez <mcgrof@kernel.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms of copyleft-next (version 0.3.1 or later) as published
+> > + * at http://copyleft-next.org/.
+> > + */
+> > +
+> > +#ifdef __KERNEL__
+> > +# include <asm/sections.h>
+> > +#endif /* __KERNEL__ */
+> > +
+> > +#define SECTION_TYPE_TABLES	tbl
+> 
+> What is that for? Section type? Do we have more types or is it useless
+> and can go?
 
-> Hi Bjørn,
->
-> On Thu, Jul 14, 2016 at 11:39:31PM +0200, Bjørn Mork wrote:
->> I recently got a new laptop.  And now I'm trying to figure out what all
->> the stuff they put into it actually is :)
->> .
->> One thing that doesn't seem quite right is that the acer-wmi driver is
->> loaded and claims that this laptop has an "Acer BMA150 accelerometer".
->> 
->> It is true that there is a device there matching
->> 
->>   #define AMW0_GUID1            "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
->> 
->> as can be seen:
->> 
->>  bjorn@miraculix:~$ ls -l /sys/devices/virtual/wmi/67C3371D-95A3-4C37-BB61-DD47B491DAAB
->>  total 0
->>  -r--r--r-- 1 root root 4096 Jul 14 23:10 modalias
->>  drwxr-xr-x 2 root root    0 Jul 14 23:10 power
->>  lrwxrwxrwx 1 root root    0 Jul 14 23:10 subsystem -> ../../../../class/wmi
->>  -rw-r--r-- 1 root root 4096 Jul 14 23:10 uevent
->> 
->> 
->> But I sort of doubt there is an Acer specific device here.  Maybe this
->> is a generic accelerometer interface?  Or is there something else going
->> on?
->> 
->> The input device created by the driver just just returns -EPERM when I
->> try to open it, so I don't think this actually works as-is:
->> 
->>  root@miraculix:/tmp# cat /dev/input/event8
->>  cat: /dev/input/event8: Operation not permitted
->> 
->> 
->> And it does seem a little weird that a Thinkpad should need an Acer
->> specific platform driver anyway....  thinkpad_acpi is of course handling
->> all(?) the Thinkpad specifics as expected.
->> 
->> 
->> Bjørn
->
-> Could you please check that what does the _HID of HKEY device in your DSDT?
->
-> or please attached your acpidump data to me:
->  # acpidump > acpidump.raw
+We have two types, tables and ranges. But I'll drop that.
 
-Sorry for the delay.  Just back from vacation.  I took a quick peek at
-the driver and I don't think you need that dump. The DSDT is completely
-irrelevant.  The driver will match and load on that generic WMI UUID,
-and this code ensures that it successfully probes regardless of DSDT:
+> > +
+> > +#define SECTION_TBL(section, name, level)				\
+> > +	SECTION_TYPE(section, SECTION_TYPE_TABLES, name, level)
+> > +
+> > +#define SECTION_TBL_ALL(section)					\
+> > +	SECTION_TYPE_ALL(section,SECTION_TYPE_TABLES)
+> > +
+> > +#ifndef section_tbl
+> > +# define section_tbl(section, name, level, flags)			\
+> > +	 section_type(section, SECTION_TYPE_TABLES, name,		\
+> > +		     level, flags)
+> 
+> That section_type macro is actually saying the following code should
+> be in it. Can we make its name have a verb, i.e., something like
+> "set_section" to make it more clear?
 
+Sure, thanks changed.
 
-static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
-						void *ctx, void **retval)
-{
-	*(acpi_handle *)retval = ah;
-	return AE_OK;
-}
+> Also, that type SECTION_TYPE_TABLES looks redundant to me but it
+> might start making more sense after I've gone through the rest of the
+> series...
 
-static int __init acer_wmi_get_handle(const char *name, const char *prop,
-					acpi_handle *ah)
-{
-	acpi_status status;
-	acpi_handle handle;
+I've dropped the type thing.
 
-	BUG_ON(!name || !ah);
+> > +#endif
+> > +
+> > +#ifndef section_tbl_any
+> > +# define section_tbl_any(section, name, flags)				\
+> > +	 section_type(section, SECTION_TYPE_TABLES, name,		\
+> > +		     SECTION_ORDER_ANY, flags)
+> > +#endif
+> > +
+> > +#ifndef section_tbl_asmtype
+> > +# define section_tbl_asmtype(section, name, level, flags, asmtype)	\
+> 
+> And here's the confusion: there's "asmtype" but there's also
+> SECTION_TYPE_TABLES.
+> 
+> That asmtype is the *actual* section type in gas speak, i.e., @progbits,
+> @note, etc.
+> 
+> Now *that* should be your type. The SECTION_TYPE_TABLES should be called
+> something else or completely gone.
 
-	handle = NULL;
-	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
-					(void *)name, &handle);
+Right, OK dropped and only kept type for this.
 
-	if (ACPI_SUCCESS(status)) {
-		*ah = handle;
-		return 0;
-	} else {
-		return -ENODEV;
-	}
-}
+> > +	 section_type_asmtype(section, SECTION_TYPE_TABLES, name,	\
+> > +			     level, flags, asmtype)
+> > +#endif
+> > +
+> > +#ifndef push_section_tbl
+> > +# define push_section_tbl(section, name, level, flags)			\
+> > +	 push_section_type(section, SECTION_TYPE_TABLES, name,		\
+> > +			  level, flags)
+> > +#endif
+> > +
+> > +#ifndef push_section_tbl_any
+> > +# define push_section_tbl_any(section, name, flags)			\
+> > +	 push_section_type(section, SECTION_TYPE_TABLES, name,		\
+> > +			  SECTION_ORDER_ANY, flags)
+> > +#endif
+> > +
+> > +#if defined(__ASSEMBLER__) || defined(__ASSEMBLY__)
+> > +
+> > +# ifndef DECLARE_SECTION_TBL
+> > +#  define DECLARE_SECTION_TBL(section, name)				\
+> > +  push_section_tbl(section, name,,) ;					\
+> > +  .globl name ;								\
+> > +name: ;									\
+> > +  .popsection								\
+> > +									\
+> > +  push_section_tbl(section, name, ~,) ;					\
+> > +  .popsection
+> > +# endif
+> 
+> #endif /* DECLARE_SECTION_TBL */
+> 
+> Btw, what does that macro do? I don't see it used anywhere.
 
+It can be used in asm code to do actually what DEFINE_LINKTABLE() does but now
+that I think about it this should then match the name and we'd need one per
+standard section, as we have for linker table in C code. I've demo'd this
+use in the userspace mockup git tree but with section ranges. In the meantime
+I've dropped these macros from this series for now. When we need them we can add
+them.
 
-Since acer_wmi_get_handle_cb() doesn't actually test anything, this will
-just return an arbitrary handle regardless of the value of *prop.
+> > + * userspace linker-table tree [1].  This repository can be used for ease of
+> > + * testing of extensions and sampling of changes prior to inclusion into Linux,
+> > + * it is intended to be kept up to date to match Linux's solution. Contrary to
+> 
+> Keeping different pieces of code in sync is always a PITA.
+> 
+> Can we automatically extract the kernel linker tables into a standalone
+> userspace pile of C code for experimentation? I.e., something like
+> 
+> make linker_tables_app
 
+Sure. Will shoot for that.
 
-> Then I want to add HID to the norfkill_ids list in acer-wmi to avoid that
-> it loaded on your Lenovo machine like LEN0068.
+> > + * enables you to always force compiling of select features that one wishes to
+> > + * avoid bit-rot while still enabling you to disable linking feature code into
+> > + * the final kernel image if the features have been disabled via Kconfig.
+> 
+> So this sounds to me like the main reason for linker tables is solving
+> the bitrot problem. And I don't think that is the main reason for them,
+> is it?
 
-I see that this has been done before when this bug has been reported.
-Sorry, but I believe that solution is plain wrong.  You are papering
-over a more fundamental problem.
+Not for us, it just one added benefit that's possible from it.
 
-Solve the *real* problems in the driver instead:
-1) "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
->> 
->> as can be seen:
->> 
->>  bjorn@miraculix:~$ ls -l /sys/devices/virtual/wmi/67C3371D-95A3-4C37-BB61-DD47B491DAAB
->>  total 0
->>  -r--r--r-- 1 root root 4096 Jul 14 23:10 modalias
->>  drwxr-xr-x 2 root root    0 Jul 14 23:10 power
->>  lrwxrwxrwx 1 root root    0 Jul 14 23:10 subsystem -> ../../../../class/wmi
->>  -rw-r--r-- 1 root root 4096 Jul 14 23:10 uevent
->> 
->> 
->> But I sort of doubt there is an Acer specific device here.  Maybe this
->> is a generic accelerometer interface?  Or is there something else going
->> on?
->> 
->> The input device created by the driver just just returns -EPERM when I
->> try to open it, so I don't think this actually works as-is:
->> 
->>  root@miraculix:/tmp# cat /dev/input/event8
->>  cat: /dev/input/event8: Operation not permitted
->> 
->> 
->> And it does seem a little weird that a Thinkpad should need an Acer
->> specific platform driver anyway....  thinkpad_acpi is of course handling
->> all(?) the Thinkpad specifics as expected.
->> 
->> 
->> Bjørn
->
-> Could you please check that what does the _HID of HKEY device in your DSDT?
->
-> or please attached your acpidump data to me:
->  # acpidump > acpidump.raw
+> Because we can address the bitrot issue by simply building randconfigs,
+> without even touching the kernel. So why do we need those linker tables?
 
-Sorry for the delay.  Just back from vacation.  I took a quick peek at
-the driver and I don't think you need that dump. The DSDT is completely
-irrelevant.  The driver will match and load on that generic WMI UUID,
-and this code ensures that it successfully probes regardless of DSDT:
+As you noted its described better below.
 
+> > + * Linux's linker tables allows for developers to be selective over where one
+> > + * wishes to take advantage of the optional feature of forcing compilation and
+> > + * only linking in enabled features.
+> > + *
+> > + * To use linker tables and to optionally take advantage of avoiding code
+> > + * bit-rot, feature code should be implemented in separate C files, and should
+> > + * be designed to always be compiled -- they should not be guarded with a C
+> > + * code #ifdef CONFIG_FOO statements, consideration must also be taken for
+> > + * sub-features which depend on the main CONFIG_FOO option, as they will be
+> > + * disabled if they depend on CONFIG_FOO and therefore not compiled. To force
+> > + * compilation and only link when features are needed a new optional target
+> > + * table-y can be used on Makefiles, documented below.
+> 
+> Ok, this is more like it. Linker tables actually diminish the Kconfig
+> complexity. I'd lead with that.
 
-static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
-						void *ctx, void **retval)
-{
-	*(acpi_handle *)retval = ah;
-	return AE_OK;
-}
+OK will be sure to clarify all this and thanks for the typo fixes, etc.
 
-static int __init acer_wmi_get_handle(const char *name, const char *prop,
-					acpi_handle *ah)
-{
-	acpi_status status;
-	acpi_handle handle;
+> > + * will result with the feature on your binary only if you've enabled
+> > + * CONFIG_FOO, however using table-$(CONFIG_FOO) will always force compilation,
+> > + * this is why avoiding code bit-rot is an optional fature for Linux linker
+> 
+> "fature" - please run it through spellchecker.
+> 
+> Btw, I'm afraid this "table-$(CONFIG" thing might be misused by people
+> wanting their stuff to be compile-tested and we'd end up practically
+> building an allyesconfig each time.
 
-	BUG_ON(!name || !ah);
+This should be decided per subsystem maintainer.
 
-	handle = NULL;
-	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
-					(void *)name, &handle);
+> So how can I disable those table-* things from even getting built? Avoid
+> using table-y? But then everything declared table-y will be built
+> unconditionally. I don't think I like that. :-\
 
-	if (ACPI_SUCCESS(status)) {
-		*ah = handle;
-		return 0;
-	} else {
-		return -ENODEV;
-	}
-}
+I suppose we could make this configurable... But frankly I would prefer to
+instead just document that this use should be carefully considered instead,
+and let this be up to the maintainers. We can make it easily configurable so
+we can do that later becomes a required, I don't think its needed though
+given maintainers should use it only when needed.
 
+> 
+> > + * tables.
+> > + */
+> > +
+> > +/**
+> > + * DOC: How linker tables simplify inits
+> > + *
+> > + * Traditionally, we would implement features in C code as follows:
+> 
+> Ok, so *this* is your main reason for linker tables - not fixing the
+> bit-rot problem. The text on the bit-rot problem should come second and
+> be the byproduct of linker tables.
 
-Since acer_wmi_get_handle_cb() doesn't actually test anything, this will
-just return an arbitrary handle regardless of the value of *prop.
+Will fix ordering.
 
+> Also, this section here should be the opening section in the document
+> explaining linker tables. I'd like to read about what it is first, then
+> read what else they're good for.
 
-> Then I want to add HID to the norfkill_ids list in acer-wmi to avoid that
-> it loaded on your Lenovo machine like LEN0068.
+Sure.
 
-I see that this has been done before when this bug has been reported.
-Sorry, but I believe that solution is plain wrong.  You are papering
-over a more fundamental problem.
+> > + *
+> > + *	foo_init();
+> > + *
+> > + * You'd then have a foo.h which would have:
+> > + *
+> > + *	#ifdef CONFIG_FOO
+> > + *	#else
+> > + *	static inline void foo(void) { }
+> > + *	#endif
+> > + *
+> > + * With linker tables this is no longer necessary as your init routines would
+> > + * be implicit, you'd instead call:
+> > + *
+> > + *	call_init_fns();
+> > + *
+> > + * call_init_fns() would call all functions present in your init table and if
+> > + * and only if foo.o gets linked in, then its initialisation function will be
+> > + * called, whether you use obj-$(CONFIG_FOO) or table-$(CONFIG_FOO).
+> > + *
+> > + * The linker script takes care of assembling the tables for us. All of our
+> > + * table sections have names of the format SECTION_NAME*.tbl.NAME.N. Here
+> 
+> The fact that you actually say "tbl" here shows again SECTION_TYPE_TABLES is
+> redundant.
 
-Solve the *real* problems in the driver instead:
-1)  "67C3371D-95A3-4C37-BB61-DD47B491DAAB" is not an Acer specific GUID
- and should probably never have been used to match Acer specific
- devices.  The fact that it happens to work for some aribitrary laptop is
- not sufficient.
+I've nuked SECTION_TYPE_TABLES and SECTION_TYPE_RANGES
 
-2) the "get_handle" code shown above is broken.  If it works for some
- specific DSDT, then that is just pure luck.
+> > +/**
+> > + * DOC: Linker table helpers
+> > + *
+> > + * These are helpers for linker tables.
+> > + */
+> 
+> I'm assuming those are all needed and we're not adding them just for
+> completeness...
+> 
+> Otherwise, they'll bit-rot. :-))))
 
-These things should be fixed ASAP, and backported to stable.  The driver
-as it is will probably both load and probe successfully on a large
-number of systems it has no business messing with.
+The ones we didn't have uses for yet I've nuked now.
 
-
-> Then, thinkpad_acpi needs to support this _HID.
-
-No.  Looking further at this, I don't think so. There is no indication
-that there is any relation between that WMI ID and any of the hardware
-functions supported by the acer-wmi driver.  So there is no reason to
-believe that any of the matched Lenovo laptops have the same hardware
-functions.
-
-
-
-Bjørn
+  Luis
