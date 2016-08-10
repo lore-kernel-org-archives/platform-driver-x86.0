@@ -1,14 +1,16 @@
-From: Andy Lutomirski <luto@amacapital.net>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
 Subject: Re: [RFC v3 00/13] linux: generalize sections,
-	ranges and linker tables
-Date: Tue, 9 Aug 2016 21:51:13 -0700
-Message-ID: <CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
+ ranges and linker tables
+Date: Wed, 10 Aug 2016 19:03:29 +0200
+Message-ID: <20160810170329.GK3296@wotan.suse.de>
 References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
  <20160809152429.5bb1c077@lxorguk.ukuu.org.uk>
  <1470758947.2299.47.camel@HansenPartnership.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4245753166950360238=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <xen-devel-bounces@lists.xen.org>
+Content-Disposition: inline
 In-Reply-To: <1470758947.2299.47.camel@HansenPartnership.com>
 List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
  <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
@@ -18,98 +20,55 @@ List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
  <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
 Errors-To: xen-devel-bounces@lists.xen.org
 Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-ia64@vger.kernel.org, realmz6@gmail.com, linux-sh@vger.kernel.org, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, linux@rasmusvillemoes.dk, platform-driver-x86@vger.kernel.org, paul.gortmaker@windriver.com, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, catalin.marinas@arm.com, dvhart@infradead.org, dwmw2@infradead.org, mhiramat@kernel.org, rusty@rustcorp.com.au, keescook@chromium.org, arnd@arndb.de, linux-kbuild@vger.kernel.org, will.deacon@arm.com, pali.rohar@gmail.com, rostedt@goodmis.org, christopher.denicolo@suse.com, jbaron@akamai.com, ananth@linux.vnet.ibm.com, ciaran.farrell@suse.
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-ia64@vger.kernel.org, jkosina@suse.cz, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, platform-driver-x86@vger.kernel.org, paul.gortmaker@windriver.com, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, linux-arch@vger.kernel.org, msalter@redhat.com, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, will.deacon@arm.com, korea.drzix@gmail.com, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, dvhart@infradead.org, dwmw2@infradead.org, david.vrabel@citrix.com, pali.rohar@gmail.com, keescook@chromium.org, arnd@arndb.de, realmz6@gmail.com, a-jacquiot@ti.com, linux@rasmusvillemoes.dk, rusty@rustcorp.com.au, rostedt@goodmis.org, chris
 List-Id: platform-driver-x86.vger.kernel.org
 
---===============4245753166950360238==
-Content-Type: multipart/alternative; boundary=94eb2c125290335bf30539b06628
-
---94eb2c125290335bf30539b06628
-Content-Type: text/plain; charset=UTF-8
-
-On Aug 9, 2016 7:09 PM, "James Bottomley" <
-James.Bottomley@hansenpartnership.com> wrote:
->
-> On Tue, 2016-08-09 at 15:24 +0100, One Thousand Gnomes wrote:
-> > > table development go under copyleft-next, Rusty recently asked for
-> > > code to go in prior to the license tag being added denoting this
-> > > license as GPL-compatible [3] -- I had noted in the patch
-> > > submission which annotated copyleft-next's compatibility to GPLv2
-> > > that copyleft-next is the license of choice for ongoing kernel
-> > > development on my end [4]. If this is objectionable I'm happy to
-> > > change it to GPLv2 however I'd like a reason provided as I've gone
-> > > through all possible channels to ensure this is kosher, including
-> > > vetting by 3 attorneys now, 2 at SUSE.
-> >
-> > You don't need a new tag, you can use "GPL" or "GPL and additional
-> > rights". In fact you don't want any other tag because when combined
-> >  with the kernel it is GPLv2 anyway because the only way the two are
-> > fully compatible is for the kernel community to license the derived
-> > work under the GPL.
->
-> This is the module tag ... it says what licence the module is under,
-> not the licence for the module combined with the kernel, which is
-> always GPLv2 because the stricter licence rules.
-
-Then why isn't "BSD" in the license_is_gpl_compatible list?
-
---94eb2c125290335bf30539b06628
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<p dir=3D"ltr"></p>
-<p dir=3D"ltr">On Aug 9, 2016 7:09 PM, &quot;James Bottomley&quot; &lt;<a h=
-ref=3D"mailto:James.Bottomley@hansenpartnership.com">James.Bottomley@hansen=
-partnership.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On Tue, 2016-08-09 at 15:24 +0100, One Thousand Gnomes wrote:<br>
-&gt; &gt; &gt; table development go under copyleft-next, Rusty recently ask=
-ed for<br>
-&gt; &gt; &gt; code to go in prior to the license tag being added denoting =
-this<br>
-&gt; &gt; &gt; license as GPL-compatible [3] -- I had noted in the patch<br=
->
-&gt; &gt; &gt; submission which annotated copyleft-next&#39;s compatibility=
- to GPLv2<br>
-&gt; &gt; &gt; that copyleft-next is the license of choice for ongoing kern=
-el<br>
-&gt; &gt; &gt; development on my end [4]. If this is objectionable I&#39;m =
-happy to<br>
-&gt; &gt; &gt; change it to GPLv2 however I&#39;d like a reason provided as=
- I&#39;ve gone<br>
-&gt; &gt; &gt; through all possible channels to ensure this is kosher, incl=
-uding<br>
-&gt; &gt; &gt; vetting by 3 attorneys now, 2 at SUSE.<br>
-&gt; &gt;<br>
-&gt; &gt; You don&#39;t need a new tag, you can use &quot;GPL&quot; or &quo=
-t;GPL and additional<br>
-&gt; &gt; rights&quot;. In fact you don&#39;t want any other tag because wh=
-en combined<br>
-&gt; &gt;=C2=A0 with the kernel it is GPLv2 anyway because the only way the=
- two are<br>
-&gt; &gt; fully compatible is for the kernel community to license the deriv=
-ed<br>
-&gt; &gt; work under the GPL.<br>
-&gt;<br>
-&gt; This is the module tag ... it says what licence the module is under,<b=
-r>
-&gt; not the licence for the module combined with the kernel, which is<br>
-&gt; always GPLv2 because the stricter licence rules.</p>
-<p dir=3D"ltr">Then why isn&#39;t &quot;BSD&quot; in the license_is_gpl_com=
-patible list?</p>
-
---94eb2c125290335bf30539b06628--
-
-
---===============4245753166950360238==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
-IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhlbi5v
-cmcveGVuLWRldmVsCg==
-
---===============4245753166950360238==--
+T24gVHVlLCBBdWcgMDksIDIwMTYgYXQgMDk6MDk6MDdBTSAtMDcwMCwgSmFtZXMgQm90dG9tbGV5
+IHdyb3RlOgo+IE9uIFR1ZSwgMjAxNi0wOC0wOSBhdCAxNToyNCArMDEwMCwgT25lIFRob3VzYW5k
+IEdub21lcyB3cm90ZToKPiA+ID4gdGFibGUgZGV2ZWxvcG1lbnQgZ28gdW5kZXIgY29weWxlZnQt
+bmV4dCwgUnVzdHkgcmVjZW50bHkgYXNrZWQgZm9yIAo+ID4gPiBjb2RlIHRvIGdvIGluIHByaW9y
+IHRvIHRoZSBsaWNlbnNlIHRhZyBiZWluZyBhZGRlZCBkZW5vdGluZyB0aGlzIAo+ID4gPiBsaWNl
+bnNlIGFzIEdQTC1jb21wYXRpYmxlIFszXSAtLSBJIGhhZCBub3RlZCBpbiB0aGUgcGF0Y2ggCj4g
+PiA+IHN1Ym1pc3Npb24gd2hpY2ggYW5ub3RhdGVkIGNvcHlsZWZ0LW5leHQncyBjb21wYXRpYmls
+aXR5IHRvIEdQTHYyIAo+ID4gPiB0aGF0IGNvcHlsZWZ0LW5leHQgaXMgdGhlIGxpY2Vuc2Ugb2Yg
+Y2hvaWNlIGZvciBvbmdvaW5nIGtlcm5lbCAKPiA+ID4gZGV2ZWxvcG1lbnQgb24gbXkgZW5kIFs0
+XS4gSWYgdGhpcyBpcyBvYmplY3Rpb25hYmxlIEknbSBoYXBweSB0byAKPiA+ID4gY2hhbmdlIGl0
+IHRvIEdQTHYyIGhvd2V2ZXIgSSdkIGxpa2UgYSByZWFzb24gcHJvdmlkZWQgYXMgSSd2ZSBnb25l
+IAo+ID4gPiB0aHJvdWdoIGFsbCBwb3NzaWJsZSBjaGFubmVscyB0byBlbnN1cmUgdGhpcyBpcyBr
+b3NoZXIsIGluY2x1ZGluZwo+ID4gPiB2ZXR0aW5nIGJ5IDMgYXR0b3JuZXlzIG5vdywgMiBhdCBT
+VVNFLgo+ID4gCj4gPiBZb3UgZG9uJ3QgbmVlZCBhIG5ldyB0YWcsIHlvdSBjYW4gdXNlICJHUEwi
+IG9yICJHUEwgYW5kIGFkZGl0aW9uYWwKPiA+IHJpZ2h0cyIuIEluIGZhY3QgeW91IGRvbid0IHdh
+bnQgYW55IG90aGVyIHRhZyBiZWNhdXNlIHdoZW4gY29tYmluZWQKPiA+ICB3aXRoIHRoZSBrZXJu
+ZWwgaXQgaXMgR1BMdjIgYW55d2F5IGJlY2F1c2UgdGhlIG9ubHkgd2F5IHRoZSB0d28gYXJlIAo+
+ID4gZnVsbHkgY29tcGF0aWJsZSBpcyBmb3IgdGhlIGtlcm5lbCBjb21tdW5pdHkgdG8gbGljZW5z
+ZSB0aGUgZGVyaXZlZCAKPiA+IHdvcmsgdW5kZXIgdGhlIEdQTC4KPiAKPiBUaGlzIGlzIHRoZSBt
+b2R1bGUgdGFnIC4uLiBpdCBzYXlzIHdoYXQgbGljZW5jZSB0aGUgbW9kdWxlIGlzIHVuZGVyLAo+
+IG5vdCB0aGUgbGljZW5jZSBmb3IgdGhlIG1vZHVsZSBjb21iaW5lZCB3aXRoIHRoZSBrZXJuZWws
+IHdoaWNoIGlzCj4gYWx3YXlzIEdQTHYyIGJlY2F1c2UgdGhlIHN0cmljdGVyIGxpY2VuY2UgcnVs
+ZXMuCgpBcyBwZXIgTGludXMnIHJlY29tbWVuZGF0aW9ucyBbMF0gaWYgSSBhZGQgYSBtb2R1bGUg
+SSdsbCBiZSB1c2luZwpNT0RVTEVfTElDRU5TRSgiR1BMIikgaWYgdXNpbmcgY29weWxlZnQtbmV4
+dC4gRWl0aGVyIHdheSB0aGlzIHNlcmllcwpkaWRuJ3QgYWRkIGEgbW9kdWxlIHlldCBzbyBubyBu
+ZWVkIGZvciB0aGF0IHlldCwgYnV0IGl0IGRvZXMgdXNlCmNvcHlsZWZ0LW5leHQgaW4gaGVhZGVy
+cyAvIEMgY29kZS4KClswXSBodHRwczovL2xrbWwua2VybmVsLm9yZy9yL0NBKzU1YUZ5aHhjdkQr
+cTd0cCsteXJTRkRLZlIwbU9IZ3lFQWU9Zl85NGFLTHNPdTBPZ0BtYWlsLmdtYWlsLmNvbQoKPiBI
+b3dldmVyLCBpZiBJCj4gd2FudCBteSBiaW5hcnkgb25seSBtb2R1bGVzIHRvIGJlIGNvbWJpbmVk
+IHdpdGggTGludXgsIEkgaGF2ZSB0byBmb2xsb3cKPiBHUEx2MiBjb21wbGlhbmNlIGJlY2F1c2Ug
+R1BMdjIgYmVjb21lcyB0aGUgcnVsaW5nIGxpY2VuY2Ugb2YgdGhlCj4gY29tYmluYXRpb24uICBU
+aGUgc2FtZSB3b3VsZCBhcHBseSB0byB0aGlzIGNvcHlsZWZ0LW5leHQsIGV2ZW4gYWZ0ZXIgMTUK
+PiB5ZWFycy4KCkFuZCB0aGlzIHdoYXQgcmVhbGx5IG1hdHRlcnMgaGVyZS4KCj4gVGhlIFVTIGNv
+cHlyaWdodCBvZmZpY2UgZGVmaW5lcyBhIGNvcHlyaWdodCB3b3JrIGFzIGFueXRoaW5nIHdoaWNo
+IGlzCj4gImFuIG9yaWdpbmFsIHdvcmsgb2YgYXV0aG9yc2hpcCBmaXhlZCBpbiBhbnkgdGFuZ2li
+bGUgbWVkaXVtIG9mCj4gZXhwcmVzc2lvbiIuICBUaGF0IG1lYW5zIGFueSBjaGFuZ2UgdG8gYW4g
+ZXhpc3Rpbmcgd29yayAoaS5lLiBieSBhCj4gcGF0Y2gpIHdoaWNoIGNvbnRhaW5zIGVub3VnaCBv
+cmlnaW5hbGl0eSB0byBtYWtlIHRoZSBjaGFuZ2VkIHdvcmsKPiBkaXN0aW5jdCBmcm9tIHRoZSBv
+bGQgd29yayBpcyBpcHNvIGZhY3RvIGEgbmV3IHdvcmsuICB1bmRlciBjb3B5cmlnaHQKPiAtbmV4
+dCB0aGlzIG5ldyB3b3JrIGhhcyBhIHN1bnNldCAxNSB5ZWFycyBmcm9tIGl0cyBjcmVhdGlvbiBi
+eQo+IGNvbWJpbmF0aW9uLCBub3QgMTUgeWVhcnMgZnJvbSB0aGUgb3JpZ2luYWwuICBUaGlzIG1l
+YW5zIGEgY29uc3RhbnRseQo+IHVwZGF0ZWQgd29yayBuZXZlciBzdW5zZXRzLiAgU3VyZSwgeW91
+IGNhbiBnbyBiYWNrIDE1IHllYXJzIGFuZCBjbGFpbQo+IHRoZSBjb2RlIGF0IHRoYXQgdGltZSBo
+YXMgcGFzc2VkIGludG8gdGhlIHB1YmxpYyBkb21haW4gYnV0IHlvdSBjYW4ndAo+IGRvIHRoYXQg
+aWYgeW91IGFsc28gd2FudCB0aGUgYmVuZWZpdCBvZiBsYXRlciBjaGFuZ2VzLgoKQWdyZWVkLgoK
+ICBMdWlzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpY
+ZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW4ub3JnCmh0dHBzOi8vbGlz
+dHMueGVuLm9yZy94ZW4tZGV2ZWwK
