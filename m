@@ -1,65 +1,42 @@
-From: "Peter Feuerer" <peter@piie.net>
-Subject: Re: [PATCH 0841/1285] Replace numeric parameter like 0444 with
- macro
-Date: Thu, 11 Aug 2016 21:21:48 +0000
-Message-ID: <95991cb563633df910245c1fa8d83169@mail.piie.net>
-References: <20160802115136.6059-1-baolex.ni@intel.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [RFC v3 07/13] tables.h: add linker table support
+Date: Fri, 12 Aug 2016 05:51:29 +0200
+Message-ID: <20160812035129.GA3296@wotan.suse.de>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
+ <1469222687-1600-8-git-send-email-mcgrof@kernel.org>
+ <20160729100630.GA27271@nazgul.tnic>
+ <20160808150539.GG3296@wotan.suse.de>
+ <20160809035508.GC11445@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from piie.net ([80.82.223.85]:58173 "EHLO piie.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751359AbcHKVcH convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 11 Aug 2016 17:32:07 -0400
-In-Reply-To: <20160802115136.6059-1-baolex.ni@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Baole Ni <baolex.ni@intel.com>, dvhart@infradead.org, david.vrabel@citrix.com, jgross@suse.com, bhelgaas@google.com, m.chehab@samsung.com, pawel@osciak.com, m.szyprowski@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chuansheng.liu@intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160809035508.GC11445@nazgul.tnic>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, linux@arm.linux.org.uk, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.intel
+List-Id: platform-driver-x86.vger.kernel.org
 
-2. August 2016 14:29 Uhr, "Baole Ni" <baolex.ni@intel.com> schrieb:
-> I find that the developers often just specified the numeric value
-> when calling a macro which is defined with a parameter for access permission.
-> As we know, these numeric value for access permission have had the corresponding macro,
-> and that using macro can improve the robustness and readability of the code,
-> thus, I suggest replacing the numeric parameter with the macro.
+On Tue, Aug 09, 2016 at 05:55:08AM +0200, Borislav Petkov wrote:
+> On Mon, Aug 08, 2016 at 05:05:39PM +0200, Luis R. Rodriguez wrote:
+> > > So how can I disable those table-* things from even getting built? Avoid
+> > > using table-y? But then everything declared table-y will be built
+> > > unconditionally. I don't think I like that. :-\
+> > 
+> > I suppose we could make this configurable... But frankly I would prefer to
+> > instead just document that this use should be carefully considered instead,
+> > and let this be up to the maintainers. We can make it easily configurable so
+> > we can do that later becomes a required, I don't think its needed though
+> > given maintainers should use it only when needed.
 > 
-> Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
-> Signed-off-by: Baole Ni <baolex.ni@intel.com>
-
-Acked-by: Peter Feuerer <peter@piie.net>
-
-> ---
-> drivers/platform/x86/acerhdf.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
+> You know how maintainers are just people, right? At least in most cases :-)
 > 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 460fa67..a4706dd 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -96,13 +96,13 @@ static struct platform_device *acerhdf_dev;
-> 
-> module_param(kernelmode, uint, 0);
-> MODULE_PARM_DESC(kernelmode, "Kernel mode fan control on / off");
-> -module_param(interval, uint, 0600);
-> +module_param(interval, uint, S_IRUSR | S_IWUSR);
-> MODULE_PARM_DESC(interval, "Polling interval of temperature check");
-> -module_param(fanon, uint, 0600);
-> +module_param(fanon, uint, S_IRUSR | S_IWUSR);
-> MODULE_PARM_DESC(fanon, "Turn the fan on above this temperature");
-> -module_param(fanoff, uint, 0600);
-> +module_param(fanoff, uint, S_IRUSR | S_IWUSR);
-> MODULE_PARM_DESC(fanoff, "Turn the fan off below this temperature");
-> -module_param(verbose, uint, 0600);
-> +module_param(verbose, uint, S_IRUSR | S_IWUSR);
-> MODULE_PARM_DESC(verbose, "Enable verbose dmesg output");
-> module_param_string(force_bios, force_bios, 16, 0);
-> MODULE_PARM_DESC(force_bios, "Force BIOS version and omit BIOS check");
-> -- 
-> 2.9.2
+> I think it would be better if it were machine-enforceable somehow.
+> Maybe allow it only for core code and have a single, per-arch file
+> arch/x86/linker_tables or so where all those statements are collected
+> and can be eyeballed by more people. Dunno, just trying to think of
+> something here...
 
--- 
-thanks,
---peter;
+OK I've added CONFIG_BUILD_AVOID_BITROT.
+
+  Luis
