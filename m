@@ -1,30 +1,151 @@
-From: Jiri Kosina <jikos@kernel.org>
-Subject: Re: [RFC v3 07/13] tables.h: add linker table support
-Date: Fri, 12 Aug 2016 22:46:27 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1608122244130.22028@cbobk.fhfr.pm>
-References: <20160729100630.GA27271@nazgul.tnic> <20160808150539.GG3296@wotan.suse.de> <20160809035508.GC11445@nazgul.tnic> <20160812035129.GA3296@wotan.suse.de> <20160812052303.GB12013@nazgul.tnic> <20160812065011.GB3296@wotan.suse.de> <20160812072507.GC12013@nazgul.tnic>
- <20160812152805.GD3296@wotan.suse.de> <20160812155121.GB13315@nazgul.tnic> <20160812170451.GE3296@wotan.suse.de> <20160812202334.GA10199@kroah.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] asus-laptop: get rid of parse_arg()
+Date: Fri, 12 Aug 2016 14:40:02 -0700
+Message-ID: <20160812214002.GA2855@f23x64.localdomain>
+References: <20160805205710.4735-1-giedrius.statkevicius@gmail.com>
+ <20160805231507.GD4952@f23x64.localdomain>
+ <20160806170026.GA20321@tyrael>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <20160812202334.GA10199@kroah.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, Borislav Petkov <bp@alien8.de>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, linux@arm.linux.org.uk, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:55942 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751154AbcHLVkF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 12 Aug 2016 17:40:05 -0400
+Content-Disposition: inline
+In-Reply-To: <20160806170026.GA20321@tyrael>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, 12 Aug 2016, Greg KH wrote:
+On Sat, Aug 06, 2016 at 08:00:26PM +0300, Giedrius Statkevičius wrote:
+> On Fri, Aug 05, 2016 at 04:15:07PM -0700, Darren Hart wrote:
+> > On Fri, Aug 05, 2016 at 11:57:10PM +0300, Giedrius Statkevičius wrote:
+> > > parse_arg() duplicates the funcionality of kstrtoint() so use the latter
+> > > function instead. There is no funcionality change except that in the
+> > > case of input being too big -ERANGE will be returned instead of -EINVAL
+> > > which is not bad because -ERANGE makes more sense here. The check for
+> > > !count is already done by the sysfs core so no need to duplicate it
+> > > again. Also, add some minor corrections to error handling to accommodate
+> > > the change in return values (parse_arg returned count if everything
+> > > succeeded whereas kstrtoint returns 0 in the same situation)
+> > > 
+> > > As a result of this patch asus-laptop.ko size is reduced by almost 1%:
+> > > add/remove: 0/1 grow/shrink: 1/6 up/down: 1/-149 (-148)
+> > > function                                     old     new   delta
+> > > __UNIQUE_ID_vermagic0                         69      70      +1
+> > > ls_switch_store                              133     117     -16
+> > > ledd_store                                   175     159     -16
+> > > display_store                                157     141     -16
+> > > ls_level_store                               193     176     -17
+> > > gps_store                                    200     178     -22
+> > > sysfs_acpi_set.isra                          148     125     -23
+> > > parse_arg.part                                39       -     -39
+> > > Total: Before=19160, After=19012, chg -0.77%
+> > > 
+> > > Signed-off-by: Giedrius Statkevičius <giedrius.statkevicius@gmail.com>
+> > > ---
+> > >  drivers/platform/x86/asus-laptop.c | 77 ++++++++++++++++++--------------------
+> > >  1 file changed, 36 insertions(+), 41 deletions(-)
+> > > 
+> > > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> > > index 15f1311..28551f5 100644
+> > > --- a/drivers/platform/x86/asus-laptop.c
+> > > +++ b/drivers/platform/x86/asus-laptop.c
+> > > @@ -932,30 +932,19 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+> > >  }
+> > >  static DEVICE_ATTR_RO(infos);
+> > >  
+> > > -static int parse_arg(const char *buf, unsigned long count, int *val)
+> > > -{
+> > > -	if (!count)
+> > > -		return 0;
+> > > -	if (count > 31)
+> > > -		return -EINVAL;
+> > > -	if (sscanf(buf, "%i", val) != 1)
+> > > -		return -EINVAL;
+> > > -	return count;
+> > > -}
+> > > -
+> > >  static ssize_t sysfs_acpi_set(struct asus_laptop *asus,
+> > >  			      const char *buf, size_t count,
+> > >  			      const char *method)
+> > >  {
+> > >  	int rv, value;
+> > >  
+> > > -	rv = parse_arg(buf, count, &value);
+> > > -	if (rv <= 0)
+> > > +	rv = kstrtoint(buf, 0, &value);
+> > > +	if (rv < 0)
+> > >  		return rv;
+> > >  
+> > >  	if (write_acpi_int(asus->handle, method, value))
+> > >  		return -ENODEV;
+> > > -	return rv;
+> > > +	return count;
+> > 
+> > This makes explicit what was hidden before - count is merely a range check, it
+> > isn't used in parsing the string... I'm not sure if this is a problem, but it
+> > caught my interest. If count is passed as 12, but buf only contains 3 character,
+> > it may succeed and return 12. I suppose this is a failure in the caller, and
+> > doesn't impact this function - unless the caller isn't expected to properly
+> > terminate the string... but if that were the case, it would have failed
+> > previously as we didn't check for that in parse_arg either.... this is fine as
+> > is I suppose - can be addressed separately if need be.
+> > 
 
-> > +	  Enabling this option never increases the size of your kernel.
+OK, good - thanks for the context.
+
+> According to Documentation/filesystems/sysfs.txt:
+> "On write(2), ... A terminating null is added after the data on stores. This
+> makes functions like sysfs_streq() safe to use."
+> So it should be guaranteed that the buffer is a proper C string. Also, we could
+> say kstrtoint() or sscanf() uses all of the buffer so it is safe to return count
+> (as it says in the documentation) as it was before this patch (parse_int
+> returned count if everything succeeded).
 > 
-> Then what does it do?  Just burn electricity for no reason?
+> > >  }
+> > >  
+> > >  /*
+> > > @@ -975,15 +964,17 @@ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
+> > >  	struct asus_laptop *asus = dev_get_drvdata(dev);
+> > >  	int rv, value;
+> > >  
+> > > -	rv = parse_arg(buf, count, &value);
+> > > -	if (rv > 0) {
+> > > -		if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
+> > > -			pr_warn("LED display write failed\n");
+> > > -			return -ENODEV;
+> > > -		}
+> > > -		asus->ledd_status = (u32) value;
+> > > +	rv = kstrtoint(buf, 0, &value);
+> > > +	if (rv < 0)
+> > > +		return rv;
+> > >
+> > 
+> > This inverts the check to check for failure (this is preferred), but it does
+> > change the successful path to include the value of 0, which was skipped over in
+> > the original above.
+> > 
+> > > +	if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
+> > 
+> > What is value if rv is 0? Perhaps safer/more explicit to test for (rv <= 0)
+> > above. Please consider, and apply decision to all similar instances below.
+> > 
+> Yes but in this case 0 indicates success so it doesn't make sense to test for <=
+> 0 as it would be triggered on success. To be honest I didn't get the idea of
+> what you wanted to say is wrong with this patch. Could you elaborate more?
+> 
 
-I think that this whole thing could be without loss of generality 
-reformulated in a "allows for participating in compile-testing code 
-efforts, without actually having to have all the compile-tested code 
-present in the resulting kernel".
+Your commit message states there is no functional change, but this changes the
+behavior of this function (and others) for the 0 edge case.
+
+Previously if rv == 0, it would not call write_acpi_int(), now it will and set
+the ledd_status.
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Darren Hart
+Intel Open Source Technology Center
