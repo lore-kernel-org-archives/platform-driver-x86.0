@@ -1,9 +1,8 @@
-From: Greg KH <gregkh@linuxfoundation.org>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
 Subject: Re: [RFC v3 07/13] tables.h: add linker table support
-Date: Sat, 13 Aug 2016 12:46:16 +0200
-Message-ID: <20160813104616.GA16348@kroah.com>
-References: <20160809035508.GC11445@nazgul.tnic>
- <20160812035129.GA3296@wotan.suse.de>
+Date: Sat, 13 Aug 2016 19:54:08 +0200
+Message-ID: <20160813175408.GG3296@wotan.suse.de>
+References: <20160812035129.GA3296@wotan.suse.de>
  <20160812052303.GB12013@nazgul.tnic>
  <20160812065011.GB3296@wotan.suse.de>
  <20160812072507.GC12013@nazgul.tnic>
@@ -12,138 +11,140 @@ References: <20160809035508.GC11445@nazgul.tnic>
  <20160812170451.GE3296@wotan.suse.de>
  <20160812202334.GA10199@kroah.com>
  <20160812220042.GF3296@wotan.suse.de>
+ <20160813104616.GA16348@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
 Content-Disposition: inline
-In-Reply-To: <20160812220042.GF3296@wotan.suse.de>
-Sender: linux-ia64-owner@vger.kernel.org
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, linux@arm.linux.org.uk, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, ciaran.farrell@suse.com, christopher.denicolo@suse.com, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, andriy.shevchenko@linux.intel.com, paul.gortmaker@windriver.comx
+In-Reply-To: <20160813104616.GA16348@kroah.com>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-ia64@vger.kernel.org, jkosina@suse.cz, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, platform-driver-x86@vger.kernel.org, paul.gortmaker@windriver.com, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, will.deacon@arm.com, korea.drzix@gmail.com, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, dvhart@infradead.org, david.vrabel@citrix.com, pali.rohar@gmail.com, keescook@chromium.org, arnd@arndb.de, realmz6@gmail.com, linux@rasmusvillemoes.dk, rusty@rustcorp.com.au, rostedt@goodmis.org, christopher.denicolo@suse.com, jbaron@akamai.com, ananth@linux.vnet.ibm.com, Borislav
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Aug 13, 2016 at 12:00:42AM +0200, Luis R. Rodriguez wrote:
-> On Fri, Aug 12, 2016 at 10:23:34PM +0200, Greg KH wrote:
-> > On Fri, Aug 12, 2016 at 07:04:52PM +0200, Luis R. Rodriguez wrote:
-> > > Alright, how's this new description:
-> > > 
-> > > diff --git a/init/Kconfig b/init/Kconfig
-> > > index cac3f096050d..73e4890c24c4 100644
-> > > --- a/init/Kconfig
-> > > +++ b/init/Kconfig
-> > > @@ -53,6 +53,34 @@ config CROSS_COMPILE
-> > >  	  need to set this unless you want the configured kernel build
-> > >  	  directory to select the cross-compiler automatically.
-> > >  
-> > > +config BUILD_AVOID_BITROT
-> > > +	bool "Always force building specially annotated targets"
-> > > +	default n
-> > > +	help
-> > > +	  If enabled then the the special table-* Makefile targets will always
-> > > +	  be forced to be compiled even if their respective CONFIG_ option has
-> > > +	  been disabled, but its objects will only be linked in if the same
-> > > +	  respective CONFIG_ option has been enabled. This helps avoid code
-> > > +	  bit rot issues, use for these targets should be carefully considred
-> > > +	  by maintainers. You can safely enable this option at the expense of
-> > > +	  increasing compile time. Enabling this option helps avoid code bit
-> > > +	  rot by taking advantage of the facilities provided and enabled by
-> > > +	  using linker tables documented under:
-> > 
-> > As a kernel developer I have _no_ idea what this is trying to say at
-> > all, sorry.
-> 
-> Hmm, wow OK, sorry, and I thought I was being too verbose...
-
-All of your good explainations and detail need to go into the text
-itself.  Responding to my questions is wonderful, but is not going to
-help anyone out who sees the config option for the first time, unless
-you change the text there.
-
-> OK so first, linker tables allow for the ability to help simplify initialization
-> sequences so that you no longer have to add the respective static inline in
-> header files to do nothing, instead you simply get your init routine for your
-> feature pegged into the linker table or not at link time. If enabling your
-> feature does not require structural changes, you could then safely enable
-> compiling this feature all the time, and only allow linking when the feature
-> was enabled. We don't have an easy way to express this in our build system,
-> the new targets added lets you accomplish this.
-
-I still don't understand, sorry.
-
-As a kernel developer, why do I care about this?  Who should care about
-this, a driver developer, subsystem developer, someone adding a syscall,
-an arch subsystem developer?
-
-> > What is a "specially annotated target"?
-> 
-> The ones listed below, table-obj-y and table-lib-y
-
-circular logic doesn't work :)
-
-> > Who is forcing it to be built?
-> 
-> It would be up to maintainers for each subsystem/feature to decide if they want
-> to use the new targets or not within their subsystem.
-
-Ok, as a maintainer of a subsystem, I still have no idea what any of
-this means.  But maybe I'm just don't understand kernel subsystem
-development...
-
-> > What does it mean if it isn't built?
-> 
-> If you have CONFIG_BUILD_AVOID_BITROT enabled and some code using the special
-> targets do not get built it means the dependencies it has were not met.
-
-What "dependencies"?
-
-> > > +
-> > > +	  include/linux/tables.h
-> > > +
-> > > +	  The special targets supported are:
-> > > +
-> > > +	    o table-obj-y
-> > > +	    o table-lib-y
-> > 
-> > What does this mean to me as a developer?
-> 
-> It mean you can count on a bit more build test coverage by
-> CONFIG_BUILD_AVOID_BITROT users. Using table-obj-y is functionally
-> equivalent to doing:
-> 
-> extra-y += foo.o
-> obj-y += foo.o
-
-Ok, but why change this?  What's the advantage?  Are you going to now go
-and change all locations of the above in the tree to the table-
-versions?  If not, why is this needed?
-
-> The above new targets are just short hand annotations for the same.  We could
-> actually use another shorthand prefix other than table-, however linker tables
-> help making more of these type of targets possible. For instance, on initialiation
-> sequences you no longer have to add each line for each feature onto a set routine,
-> rather you just get the initialization routine linked in or not. This lets us avoid
-> cluttering C code and header code with #idefs, and as a side consequences also
-> allows more targets to be compiled without implicating functionality.
-> 
-> As a developer you should take care to to use table-obj-y, or table-lib-y only if
-> you are certain the target does not require structural changes.
-
-How am I supposed to be "certain"?
-
-> > What does it mean to a user
-> > who wants to figure out if it should be enabled or not?
-> 
-> It depends on their build system capability and their goals. If they wish
-> to be able to report build bugs and have a decent build system they can
-> enable this. Otherwise they should disable it.
-
-Why is this differnent from CONFIG_TEST build option we have today (or
-whatever it's called...)
-
-Anyway, again, I have no idea what this is, nor how I should use it.
-And if I am the audience for this type of config option, well, perhaps
-it needs to be rethought...
-
-thanks,
-
-greg k-h
+T24gU2F0LCBBdWcgMTMsIDIwMTYgYXQgMTI6NDY6MTZQTSArMDIwMCwgR3JlZyBLSCB3cm90ZToK
+PiBPbiBTYXQsIEF1ZyAxMywgMjAxNiBhdCAxMjowMDo0MkFNICswMjAwLCBMdWlzIFIuIFJvZHJp
+Z3VleiB3cm90ZToKPiA+IE9uIEZyaSwgQXVnIDEyLCAyMDE2IGF0IDEwOjIzOjM0UE0gKzAyMDAs
+IEdyZWcgS0ggd3JvdGU6Cj4gPiA+IE9uIEZyaSwgQXVnIDEyLCAyMDE2IGF0IDA3OjA0OjUyUE0g
+KzAyMDAsIEx1aXMgUi4gUm9kcmlndWV6IHdyb3RlOgo+ID4gPiA+IEFscmlnaHQsIGhvdydzIHRo
+aXMgbmV3IGRlc2NyaXB0aW9uOgo+ID4gPiA+IAo+ID4gPiA+IGRpZmYgLS1naXQgYS9pbml0L0tj
+b25maWcgYi9pbml0L0tjb25maWcKPiA+ID4gPiBpbmRleCBjYWMzZjA5NjA1MGQuLjczZTQ4OTBj
+MjRjNCAxMDA2NDQKPiA+ID4gPiAtLS0gYS9pbml0L0tjb25maWcKPiA+ID4gPiArKysgYi9pbml0
+L0tjb25maWcKPiA+ID4gPiBAQCAtNTMsNiArNTMsMzQgQEAgY29uZmlnIENST1NTX0NPTVBJTEUK
+PiA+ID4gPiAgCSAgbmVlZCB0byBzZXQgdGhpcyB1bmxlc3MgeW91IHdhbnQgdGhlIGNvbmZpZ3Vy
+ZWQga2VybmVsIGJ1aWxkCj4gPiA+ID4gIAkgIGRpcmVjdG9yeSB0byBzZWxlY3QgdGhlIGNyb3Nz
+LWNvbXBpbGVyIGF1dG9tYXRpY2FsbHkuCj4gPiA+ID4gIAo+ID4gPiA+ICtjb25maWcgQlVJTERf
+QVZPSURfQklUUk9UCj4gPiA+ID4gKwlib29sICJBbHdheXMgZm9yY2UgYnVpbGRpbmcgc3BlY2lh
+bGx5IGFubm90YXRlZCB0YXJnZXRzIgo+ID4gPiA+ICsJZGVmYXVsdCBuCj4gPiA+ID4gKwloZWxw
+Cj4gPiA+ID4gKwkgIElmIGVuYWJsZWQgdGhlbiB0aGUgdGhlIHNwZWNpYWwgdGFibGUtKiBNYWtl
+ZmlsZSB0YXJnZXRzIHdpbGwgYWx3YXlzCj4gPiA+ID4gKwkgIGJlIGZvcmNlZCB0byBiZSBjb21w
+aWxlZCBldmVuIGlmIHRoZWlyIHJlc3BlY3RpdmUgQ09ORklHXyBvcHRpb24gaGFzCj4gPiA+ID4g
+KwkgIGJlZW4gZGlzYWJsZWQsIGJ1dCBpdHMgb2JqZWN0cyB3aWxsIG9ubHkgYmUgbGlua2VkIGlu
+IGlmIHRoZSBzYW1lCj4gPiA+ID4gKwkgIHJlc3BlY3RpdmUgQ09ORklHXyBvcHRpb24gaGFzIGJl
+ZW4gZW5hYmxlZC4gVGhpcyBoZWxwcyBhdm9pZCBjb2RlCj4gPiA+ID4gKwkgIGJpdCByb3QgaXNz
+dWVzLCB1c2UgZm9yIHRoZXNlIHRhcmdldHMgc2hvdWxkIGJlIGNhcmVmdWxseSBjb25zaWRyZWQK
+PiA+ID4gPiArCSAgYnkgbWFpbnRhaW5lcnMuIFlvdSBjYW4gc2FmZWx5IGVuYWJsZSB0aGlzIG9w
+dGlvbiBhdCB0aGUgZXhwZW5zZSBvZgo+ID4gPiA+ICsJICBpbmNyZWFzaW5nIGNvbXBpbGUgdGlt
+ZS4gRW5hYmxpbmcgdGhpcyBvcHRpb24gaGVscHMgYXZvaWQgY29kZSBiaXQKPiA+ID4gPiArCSAg
+cm90IGJ5IHRha2luZyBhZHZhbnRhZ2Ugb2YgdGhlIGZhY2lsaXRpZXMgcHJvdmlkZWQgYW5kIGVu
+YWJsZWQgYnkKPiA+ID4gPiArCSAgdXNpbmcgbGlua2VyIHRhYmxlcyBkb2N1bWVudGVkIHVuZGVy
+Ogo+ID4gPiAKPiA+ID4gQXMgYSBrZXJuZWwgZGV2ZWxvcGVyIEkgaGF2ZSBfbm9fIGlkZWEgd2hh
+dCB0aGlzIGlzIHRyeWluZyB0byBzYXkgYXQKPiA+ID4gYWxsLCBzb3JyeS4KPiA+IAo+ID4gSG1t
+LCB3b3cgT0ssIHNvcnJ5LCBhbmQgSSB0aG91Z2h0IEkgd2FzIGJlaW5nIHRvbyB2ZXJib3NlLi4u
+Cj4gCj4gQWxsIG9mIHlvdXIgZ29vZCBleHBsYWluYXRpb25zIGFuZCBkZXRhaWwgbmVlZCB0byBn
+byBpbnRvIHRoZSB0ZXh0Cj4gaXRzZWxmLiAgUmVzcG9uZGluZyB0byBteSBxdWVzdGlvbnMgaXMg
+d29uZGVyZnVsLCBidXQgaXMgbm90IGdvaW5nIHRvCj4gaGVscCBhbnlvbmUgb3V0IHdobyBzZWVz
+IHRoZSBjb25maWcgb3B0aW9uIGZvciB0aGUgZmlyc3QgdGltZSwgdW5sZXNzCj4geW91IGNoYW5n
+ZSB0aGUgdGV4dCB0aGVyZS4KClN1cmUuCgo+ID4gT0sgc28gZmlyc3QsIGxpbmtlciB0YWJsZXMg
+YWxsb3cgZm9yIHRoZSBhYmlsaXR5IHRvIGhlbHAgc2ltcGxpZnkgaW5pdGlhbGl6YXRpb24KPiA+
+IHNlcXVlbmNlcyBzbyB0aGF0IHlvdSBubyBsb25nZXIgaGF2ZSB0byBhZGQgdGhlIHJlc3BlY3Rp
+dmUgc3RhdGljIGlubGluZSBpbgo+ID4gaGVhZGVyIGZpbGVzIHRvIGRvIG5vdGhpbmcsIGluc3Rl
+YWQgeW91IHNpbXBseSBnZXQgeW91ciBpbml0IHJvdXRpbmUgZm9yIHlvdXIKPiA+IGZlYXR1cmUg
+cGVnZ2VkIGludG8gdGhlIGxpbmtlciB0YWJsZSBvciBub3QgYXQgbGluayB0aW1lLiBJZiBlbmFi
+bGluZyB5b3VyCj4gPiBmZWF0dXJlIGRvZXMgbm90IHJlcXVpcmUgc3RydWN0dXJhbCBjaGFuZ2Vz
+LCB5b3UgY291bGQgdGhlbiBzYWZlbHkgZW5hYmxlCj4gPiBjb21waWxpbmcgdGhpcyBmZWF0dXJl
+IGFsbCB0aGUgdGltZSwgYW5kIG9ubHkgYWxsb3cgbGlua2luZyB3aGVuIHRoZSBmZWF0dXJlCj4g
+PiB3YXMgZW5hYmxlZC4gV2UgZG9uJ3QgaGF2ZSBhbiBlYXN5IHdheSB0byBleHByZXNzIHRoaXMg
+aW4gb3VyIGJ1aWxkIHN5c3RlbSwKPiA+IHRoZSBuZXcgdGFyZ2V0cyBhZGRlZCBsZXRzIHlvdSBh
+Y2NvbXBsaXNoIHRoaXMuCj4gCj4gSSBzdGlsbCBkb24ndCB1bmRlcnN0YW5kLCBzb3JyeS4KPiAK
+PiBBcyBhIGtlcm5lbCBkZXZlbG9wZXIsIHdoeSBkbyBJIGNhcmUgYWJvdXQgdGhpcz8gIFdobyBz
+aG91bGQgY2FyZSBhYm91dAo+IHRoaXMsIGEgZHJpdmVyIGRldmVsb3Blciwgc3Vic3lzdGVtIGRl
+dmVsb3Blciwgc29tZW9uZSBhZGRpbmcgYSBzeXNjYWxsLAo+IGFuIGFyY2ggc3Vic3lzdGVtIGRl
+dmVsb3Blcj8KCkknbGwgdHJ5IHRvIGV4cGxhaW4gdGhpcyBtb3JlLgoKPiA+ID4gV2hhdCBpcyBh
+ICJzcGVjaWFsbHkgYW5ub3RhdGVkIHRhcmdldCI/Cj4gPiAKPiA+IFRoZSBvbmVzIGxpc3RlZCBi
+ZWxvdywgdGFibGUtb2JqLXkgYW5kIHRhYmxlLWxpYi15Cj4gCj4gY2lyY3VsYXIgbG9naWMgZG9l
+c24ndCB3b3JrIDopCj4gCj4gPiA+IFdobyBpcyBmb3JjaW5nIGl0IHRvIGJlIGJ1aWx0Pwo+ID4g
+Cj4gPiBJdCB3b3VsZCBiZSB1cCB0byBtYWludGFpbmVycyBmb3IgZWFjaCBzdWJzeXN0ZW0vZmVh
+dHVyZSB0byBkZWNpZGUgaWYgdGhleSB3YW50Cj4gPiB0byB1c2UgdGhlIG5ldyB0YXJnZXRzIG9y
+IG5vdCB3aXRoaW4gdGhlaXIgc3Vic3lzdGVtLgo+IAo+IE9rLCBhcyBhIG1haW50YWluZXIgb2Yg
+YSBzdWJzeXN0ZW0sIEkgc3RpbGwgaGF2ZSBubyBpZGVhIHdoYXQgYW55IG9mCj4gdGhpcyBtZWFu
+cy4gIEJ1dCBtYXliZSBJJ20ganVzdCBkb24ndCB1bmRlcnN0YW5kIGtlcm5lbCBzdWJzeXN0ZW0K
+PiBkZXZlbG9wbWVudC4uLgoKSmVlc2gsIE9LLCB3aWxsIGdpdmUgaXQgb25lIG1vcmUgZ28uCgo+
+ID4gPiBXaGF0IGRvZXMgaXQgbWVhbiBpZiBpdCBpc24ndCBidWlsdD8KPiA+IAo+ID4gSWYgeW91
+IGhhdmUgQ09ORklHX0JVSUxEX0FWT0lEX0JJVFJPVCBlbmFibGVkIGFuZCBzb21lIGNvZGUgdXNp
+bmcgdGhlIHNwZWNpYWwKPiA+IHRhcmdldHMgZG8gbm90IGdldCBidWlsdCBpdCBtZWFucyB0aGUg
+ZGVwZW5kZW5jaWVzIGl0IGhhcyB3ZXJlIG5vdCBtZXQuCj4gCj4gV2hhdCAiZGVwZW5kZW5jaWVz
+Ij8KCldpbGwgZWxhYm9yYXRlLgoKPiA+ID4gPiArCj4gPiA+ID4gKwkgIGluY2x1ZGUvbGludXgv
+dGFibGVzLmgKPiA+ID4gPiArCj4gPiA+ID4gKwkgIFRoZSBzcGVjaWFsIHRhcmdldHMgc3VwcG9y
+dGVkIGFyZToKPiA+ID4gPiArCj4gPiA+ID4gKwkgICAgbyB0YWJsZS1vYmoteQo+ID4gPiA+ICsJ
+ICAgIG8gdGFibGUtbGliLXkKPiA+ID4gCj4gPiA+IFdoYXQgZG9lcyB0aGlzIG1lYW4gdG8gbWUg
+YXMgYSBkZXZlbG9wZXI/Cj4gPiAKPiA+IEl0IG1lYW4geW91IGNhbiBjb3VudCBvbiBhIGJpdCBt
+b3JlIGJ1aWxkIHRlc3QgY292ZXJhZ2UgYnkKPiA+IENPTkZJR19CVUlMRF9BVk9JRF9CSVRST1Qg
+dXNlcnMuIFVzaW5nIHRhYmxlLW9iai15IGlzIGZ1bmN0aW9uYWxseQo+ID4gZXF1aXZhbGVudCB0
+byBkb2luZzoKPiA+IAo+ID4gZXh0cmEteSArPSBmb28ubwo+ID4gb2JqLXkgKz0gZm9vLm8KPiAK
+PiBPaywgYnV0IHdoeSBjaGFuZ2UgdGhpcz8gIFdoYXQncyB0aGUgYWR2YW50YWdlPyAgQXJlIHlv
+dSBnb2luZyB0byBub3cgZ28KPiBhbmQgY2hhbmdlIGFsbCBsb2NhdGlvbnMgb2YgdGhlIGFib3Zl
+IGluIHRoZSB0cmVlIHRvIHRoZSB0YWJsZS0KPiB2ZXJzaW9ucz8gIElmIG5vdCwgd2h5IGlzIHRo
+aXMgbmVlZGVkPwoKSGVsbCBubywgdGhlIGdhaW4gaGVyZSBpcyBjbGVhciBhbm5vdGF0aW9uIG9m
+IHdoZW4gdGhpcyBwcmFjdGljZSBpcyB1c2VkLgpMaW5rZXIgdGFibGUgdXNlIGNvdWxkIG1ha2Ug
+dGhpcyBwcmFjdGljZSBtb3JlIHByZXZhbGVudC4KCj4gPiBUaGUgYWJvdmUgbmV3IHRhcmdldHMg
+YXJlIGp1c3Qgc2hvcnQgaGFuZCBhbm5vdGF0aW9ucyBmb3IgdGhlIHNhbWUuICBXZSBjb3VsZAo+
+ID4gYWN0dWFsbHkgdXNlIGFub3RoZXIgc2hvcnRoYW5kIHByZWZpeCBvdGhlciB0aGFuIHRhYmxl
+LSwgaG93ZXZlciBsaW5rZXIgdGFibGVzCj4gPiBoZWxwIG1ha2luZyBtb3JlIG9mIHRoZXNlIHR5
+cGUgb2YgdGFyZ2V0cyBwb3NzaWJsZS4gRm9yIGluc3RhbmNlLCBvbiBpbml0aWFsaWF0aW9uCj4g
+PiBzZXF1ZW5jZXMgeW91IG5vIGxvbmdlciBoYXZlIHRvIGFkZCBlYWNoIGxpbmUgZm9yIGVhY2gg
+ZmVhdHVyZSBvbnRvIGEgc2V0IHJvdXRpbmUsCj4gPiByYXRoZXIgeW91IGp1c3QgZ2V0IHRoZSBp
+bml0aWFsaXphdGlvbiByb3V0aW5lIGxpbmtlZCBpbiBvciBub3QuIFRoaXMgbGV0cyB1cyBhdm9p
+ZAo+ID4gY2x1dHRlcmluZyBDIGNvZGUgYW5kIGhlYWRlciBjb2RlIHdpdGggI2lkZWZzLCBhbmQg
+YXMgYSBzaWRlIGNvbnNlcXVlbmNlcyBhbHNvCj4gPiBhbGxvd3MgbW9yZSB0YXJnZXRzIHRvIGJl
+IGNvbXBpbGVkIHdpdGhvdXQgaW1wbGljYXRpbmcgZnVuY3Rpb25hbGl0eS4KPiA+IAo+ID4gQXMg
+YSBkZXZlbG9wZXIgeW91IHNob3VsZCB0YWtlIGNhcmUgdG8gdG8gdXNlIHRhYmxlLW9iai15LCBv
+ciB0YWJsZS1saWIteSBvbmx5IGlmCj4gPiB5b3UgYXJlIGNlcnRhaW4gdGhlIHRhcmdldCBkb2Vz
+IG5vdCByZXF1aXJlIHN0cnVjdHVyYWwgY2hhbmdlcy4KPiAKPiBIb3cgYW0gSSBzdXBwb3NlZCB0
+byBiZSAiY2VydGFpbiI/CgpDb21waWxlIHRlc3RpbmcgaXMgb25lIGVhc3kgd2F5LCBidXQgYmV0
+dGVyIHlldCB1bmRlcnN0YW5kaW5nIHRoZSBjb2RlIGlzCmJlc3QuIFRoZSBzdHJ1Y3R1cmFsIGNo
+YW5nZSBjb21wbGljYXRpb24gd2FzIG9uZSBjb25zaWRlcmF0aW9uIHRoYXQgY2FtZQp0byBtaW5k
+LgoKPiA+ID4gV2hhdCBkb2VzIGl0IG1lYW4gdG8gYSB1c2VyCj4gPiA+IHdobyB3YW50cyB0byBm
+aWd1cmUgb3V0IGlmIGl0IHNob3VsZCBiZSBlbmFibGVkIG9yIG5vdD8KPiA+IAo+ID4gSXQgZGVw
+ZW5kcyBvbiB0aGVpciBidWlsZCBzeXN0ZW0gY2FwYWJpbGl0eSBhbmQgdGhlaXIgZ29hbHMuIElm
+IHRoZXkgd2lzaAo+ID4gdG8gYmUgYWJsZSB0byByZXBvcnQgYnVpbGQgYnVncyBhbmQgaGF2ZSBh
+IGRlY2VudCBidWlsZCBzeXN0ZW0gdGhleSBjYW4KPiA+IGVuYWJsZSB0aGlzLiBPdGhlcndpc2Ug
+dGhleSBzaG91bGQgZGlzYWJsZSBpdC4KPiAKPiBXaHkgaXMgdGhpcyBkaWZmZXJuZW50IGZyb20g
+Q09ORklHX1RFU1QgYnVpbGQgb3B0aW9uIHdlIGhhdmUgdG9kYXkgKG9yCj4gd2hhdGV2ZXIgaXQn
+cyBjYWxsZWQuLi4pCgpXZSBjb3VsZCBmb2xkIGl0IHVuZGVyIHRoYXQsIHN1cmUuCgo+IEFueXdh
+eSwgYWdhaW4sIEkgaGF2ZSBubyBpZGVhIHdoYXQgdGhpcyBpcywgbm9yIGhvdyBJIHNob3VsZCB1
+c2UgaXQuCj4gQW5kIGlmIEkgYW0gdGhlIGF1ZGllbmNlIGZvciB0aGlzIHR5cGUgb2YgY29uZmln
+IG9wdGlvbiwgd2VsbCwgcGVyaGFwcwo+IGl0IG5lZWRzIHRvIGJlIHJldGhvdWdodC4uLgoKQWxy
+aWdodCwgSSdsbCByaXAgYWxsIHRoaXMgY29kZSBiaXQgcm90IHRoaW5ncyBvdXQgaW50byBpdHMg
+b3duIHNlcGFyYXRlCnBhdGNoIGZvciBLYnVpbGQgY2hhbmdlcywgZG9jdW1lbnRhdGlvbiwgZXRj
+LCBhbmQgc2VlIGlmIHRoaXMgaGVscHMuIE90aGVyd2lzZQp3ZSBjYW4gZXZhbHVhdGUgaWYgd2Ug
+c2hvdWxkIGp1c3QgZHJvcCBpdC4gS2VlcCBpbiBtaW5kIHRoYXQgaVBYRSBhY3R1YWxseQp1c2Vk
+IGl0IGZvciB0aGlzIHB1cnBvc2UgYW5kIGVuYWJsZWQgaXQgdHJlZSB3aWRlLCBzaW5jZSBJIGtu
+ZXcgaXQgd291bGQKbGlrZWx5IG5vdCBiZSBhIHBvcHVsYXIgb3B0aW9uIGZvciBzb21lIEkgZmln
+dXJlZCBhbiBvcHRpb25hbCBidWlsZCB0YXJnZXQKd291bGQgYmUgYmV0dGVyLiBUaGUgcmVzdCBp
+cyB1cCB0byBtZSB0byB0cnkgdG8gZXhwbGFpbiB0aGVuIGhvdyBhbmQgd2h5IHNvbWUKZm9sa3Mg
+bWlnaHQgd2FudCB0aGlzLiBMaW5rZXIgdGFibGVzIGp1c3QgbWFrZSBpdCBhbiBlYXNpZXIgcHJh
+Y3RpY2UgdG8KdXNlIGR1ZSB0byB0aGUgc2ltcGxpY2F0aW9uIG9mIGNvZGUgZnJvbSAjaWZkZWYg
+c3RhdGVtZW50cyBvbiBLY29uZmlnCnN5bWJvbHMuCgpJJ2xsIGFkZHJlc3MgYWxsIHRoaXMgdGhl
+biBzZXBhcmF0ZWx5IGluIG15IG5leHQgcmVzcGluLiBJdCB3aWxsIGJlIGl0cyBvd24Kc2VwYXJh
+dGUgcGF0Y2guCgogIEx1aXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fClhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbi5vcmcK
+aHR0cHM6Ly9saXN0cy54ZW4ub3JnL3hlbi1kZXZlbAo=
