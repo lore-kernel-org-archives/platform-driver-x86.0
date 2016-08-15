@@ -1,35 +1,56 @@
-From: "Mrs. Maimouna Farooq" <bn2@204715289.com>
-Subject: Re: Faith For Charity
-Date: Mon, 15 Aug 2016 02:01:35 +0200
-Message-ID: <DB6PR0601MB2389E88FE0419B46D779049FBD120@DB6PR0601MB2389.eurprd06.prod.outlook.com>
-Reply-To: <mrsmaimounafarooq@gmail.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v3 00/13] linux: generalize sections, ranges and linker
+ tables
+Date: Mon, 15 Aug 2016 17:00:55 -0400
+Message-ID: <20160815170055.248eee3e@gandalf.local.home>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
+	<20160809152429.5bb1c077@lxorguk.ukuu.org.uk>
+	<1470758947.2299.47.camel@HansenPartnership.com>
+	<CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
+	<1471292106.5944.3.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ve1eur03hn0208.outbound.protection.outlook.com ([104.47.9.208]:39960
-	"EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751015AbcHOBRm (ORCPT
+Received: from smtprelay0175.hostedemail.com ([216.40.44.175]:35716 "EHLO
+	smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S932182AbcHOVBN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 14 Aug 2016 21:17:42 -0400
-Content-Description: Mail message body
+	Mon, 15 Aug 2016 17:01:13 -0400
+In-Reply-To: <1471292106.5944.3.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <bn2@204715289.com>
+To: Alan Cox <alan@linux.intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>, James Bottomley <James.Bottomley@hansenpartnership.com>, benh@kernel.crashing.org, masami.hiramatsu.pt@hitachi.com, linux@rasmusvillemoes.dk, linux-kbuild@vger.kernel.org, linux-sh@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, dwmw2@infradead.org, xen-devel@lists.xensource.com, "Luis R. Rodriguez" <mcgrof@kernel.org>, anil.s.keshavamurthy@intel.com, will.deacon@arm.com, linux-ia64@vger.kernel.org, x86@kernel.org, korea.drzix@gmail.com, mingo@redhat.com, andrew.cooper3@citrix.com, jgross@suse.com, tglx@linutronix.de, keescook@chromium.org, ananth@linux.vnet.ibm.com, jpoimboe@redhat.com, hpa@zytor.com, arnd@arndb.de, davem@davemloft.net, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, platform-driver-x86@vger.kernel.org, jkosina@suse.cz, david.vrabel@citrix.com, realmz6@gmail.com, fontana@sharpeleven
 
-Dearly Beloved,
+On Mon, 15 Aug 2016 21:15:06 +0100
+Alan Cox <alan@linux.intel.com> wrote:
 
-I am very glad to write you this mail, my name is Mrs. Maimouna Farooq, and I am from Omani ancestral origin living in Abidjan for many years with my family. I am a good merchant; I have companies and good shares in various banks. I spend all my life on investment and Real Estate business. All the way I lost my husband and two kids in a fatal train crash in 2014
+> > This is the module tag ... it says what licence the module is under,
+> > not the licence for the module combined with the kernel, which is
+> > always GPLv2 because the stricter licence rules.  
+> 
+> Because if I build a BSD licensed module against the kernel, give you
+> the binaries and refuse to give you the source I am conforming to the
+> BSD licence in letter. So to use it with the kernel it needs to be GPL
+> with additional rights (eg BSD including the source...)
+> 
 
-Since I lost my family, I have been living a self-minding life; I don't know much and care about people. But last year 2015 around July, I was sent a letter of medical checkup as my personal doctor testified that I have lungs cancer which can easily take off my life soon. I found it uneasy to survive myself because a lot of investment cannot be run and manage by me again. So I quickly call up a spiritual adviser to give me positive thinking on this solution as my adviser.
+But that only pertains to the code that was modified to be used with
+the Linux kernel, right? That is, if there's a BSD licensed module for
+device FOO, and I port it to the Linux kernel, that will need to have a
+GPL added to it to be included in Linux. But the original BSD code is
+not affected. If a fix is made to the GPL Linux version, I'm assuming
+(because I've been asked when doing something like this), that the
+author of that fix will have to give it a dual license to be used back
+in the original BSD only code. Correct?
 
-He minister to me to share my properties to the poor and needy, people that need money to survive both students that need money for their education and business people for their investment and for less privilege around the globe.
+I'm just trying to understand this. From what would make sense to me
+(but may or may not to a court of law, where it counts), is that the
+code added to Linux must be under GPL. But using that code depends on
+where you get it from. If you use BSD source, it stays under BSD. But
+any fixes to the GPL version will require permission to be put back to
+the BSD version. A change to the GPL version doesn't automatically get
+allowed back to the BSD only version?
 
-My condition would not allow me handle disbursement and carry out other functions actively, if you sincere and honest with heart for helping me distribute money to orphanages homes in your country and other country's you wish to.
-
-I will give more information to you as I wait your response immediately.
-
-Best Regards,	
-
-Mrs. Maimouna Farooq
+-- Steve
