@@ -1,66 +1,62 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH] platform: olpc: make ec explicitly non-modular
-Date: Mon, 15 Aug 2016 18:25:17 -0400
-Message-ID: <20160815222517.1348-1-paul.gortmaker@windriver.com>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: Re: [RFC v3 00/13] linux: generalize sections, ranges and linker
+ tables
+Date: Mon, 15 Aug 2016 15:40:14 -0700
+Message-ID: <1471300814.2428.45.camel@HansenPartnership.com>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
+	 <20160809152429.5bb1c077@lxorguk.ukuu.org.uk>
+	 <1470758947.2299.47.camel@HansenPartnership.com>
+	 <CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
+	 <1471292106.5944.3.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, Andres Salomon <dilinger@queued.net>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <1471292106.5944.3.camel@linux.intel.com>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Alan Cox <alan@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>
+Cc: benh@kernel.crashing.org, masami.hiramatsu.pt@hitachi.com, linux@rasmusvillemoes.dk, linux-kbuild@vger.kernel.org, linux-sh@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, dwmw2@infradead.org, xen-devel@lists.xensource.com, "Luis R. Rodriguez" <mcgrof@kernel.org>, anil.s.keshavamurthy@intel.com, will.deacon@arm.com, linux-ia64@vger.kernel.org, x86@kernel.org, korea.drzix@gmail.com, mingo@redhat.com, andrew.cooper3@citrix.com, jgross@suse.com, tglx@linutronix.de, keescook@chromium.org, ananth@linux.vnet.ibm.com, jpoimboe@redhat.com, rostedt@goodmis.org, hpa@zytor.com, arnd@arndb.de, davem@davemloft.net, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, platform-driver-x86@vger.kernel.org, jkosina@suse.cz, david.vrabel@citrix.com, realmz6@gmail.com, fontana@sharpeleven.org, konrad.wilk@oracle.com, ananth@in.ibm.com, paul.gortmaker@windriver.c
 List-Id: platform-driver-x86.vger.kernel.org
 
-The Kconfig entry controlling compilation of this code is:
+On Mon, 2016-08-15 at 21:15 +0100, Alan Cox wrote:
+> > This is the module tag ... it says what licence the module is 
+> > under, not the licence for the module combined with the kernel, 
+> > which is always GPLv2 because the stricter licence rules.
+> 
+> Because if I build a BSD licensed module against the kernel, give you
+> the binaries and refuse to give you the source I am conforming to the
+> BSD licence in letter.
 
-arch/x86/Kconfig:config OLPC
-arch/x86/Kconfig:       bool "One Laptop Per Child support"
+No, you can't.  Forget dual licensing for a minute: I can produce a
+Linux kernel module under a pure BSD licence because BSD is compatible
+with GPL.  However, if we assume for the sake of argument that a binary
+module is a derived work of Linux, producing and distributing the
+binary for the module brings the combination under GPLv2 via the
+derivative works clause and I'm required to offer you corresponding
+source code in spite of the fact that my module *only* has a BSD
+licence.  The only known get out from this is if I make *you* produce
+the binary (the open source shim defence).
 
-...meaning that it currently is not being built as a module by anyone.
+>  So to use it with the kernel it needs to be GPL with additional
+> rights (eg BSD including the source...)
 
-Lets remove the couple traces of modular infrastructure use, so that
-when reading the driver there is no doubt it is builtin-only.
+I'm not quite sure what you're disagreeing over?  Is it semantics of a
+Dual BSD/GPL licence vs a GPL with additional rights one?  Dual
+licensed code is a well settled area: the ruling licence is the one
+which permits the action.  So for a dual licencesed kernel module, if I
+compile the module as a binary and distribute it, I'm required to
+follow all the provisions of GPLv2 i.e. make you and offer of
+corresponding source.   Conversely, if I cut and paste a section of the
+driver source code into a BSD driver, I'm permitted to do this under
+the BSD licence, so the pasted code doesn't carry GPLv2 contamination
+into BSD.
 
-We delete the MODULE_LICENSE tag etc. since all that information
-was (or is now) contained at the top of the file in the comments.
+You can certainly call the Dual BSD/GPL licence a GPL licence with
+additional permission to include the source code in a BSD licensed
+system, but it's not a precise equivalence because a true Dual Licensed
+BSD/GPL driver may be cut and pasted into any code which is compatible
+either with the BSD or GPL licences, meaning it's actually less strict
+than your additional permission to include into BSD.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andres Salomon <dilinger@queued.net>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
----
- drivers/platform/olpc/olpc-ec.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+James
 
-diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
-index f99b183d5296..374a8028fec7 100644
---- a/drivers/platform/olpc/olpc-ec.c
-+++ b/drivers/platform/olpc/olpc-ec.c
-@@ -1,6 +1,8 @@
- /*
-  * Generic driver for the OLPC Embedded Controller.
-  *
-+ * Author: Andres Salomon <dilinger@queued.net>
-+ *
-  * Copyright (C) 2011-2012 One Laptop per Child Foundation.
-  *
-  * Licensed under the GPL v2 or later.
-@@ -12,7 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
--#include <linux/module.h>
-+#include <linux/init.h>
- #include <linux/list.h>
- #include <linux/olpc-ec.h>
- #include <asm/olpc.h>
-@@ -326,8 +328,4 @@ static int __init olpc_ec_init_module(void)
- {
- 	return platform_driver_register(&olpc_ec_plat_driver);
- }
--
- arch_initcall(olpc_ec_init_module);
--
--MODULE_AUTHOR("Andres Salomon <dilinger@queued.net>");
--MODULE_LICENSE("GPL");
--- 
-2.8.4
