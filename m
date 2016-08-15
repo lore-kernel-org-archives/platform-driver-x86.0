@@ -1,56 +1,73 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v3 00/13] linux: generalize sections, ranges and linker
- tables
-Date: Mon, 15 Aug 2016 17:00:55 -0400
-Message-ID: <20160815170055.248eee3e@gandalf.local.home>
-References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
-	<20160809152429.5bb1c077@lxorguk.ukuu.org.uk>
-	<1470758947.2299.47.camel@HansenPartnership.com>
-	<CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
-	<1471292106.5944.3.camel@linux.intel.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH] platform: intel_pmic: make gpio explicitly non-modular
+Date: Mon, 15 Aug 2016 18:24:59 -0400
+Message-ID: <20160815222459.1279-1-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay0175.hostedemail.com ([216.40.44.175]:35716 "EHLO
-	smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S932182AbcHOVBN (ORCPT
+Received: from mail5.windriver.com ([192.103.53.11]:60486 "EHLO mail5.wrs.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753021AbcHOWZl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Aug 2016 17:01:13 -0400
-In-Reply-To: <1471292106.5944.3.camel@linux.intel.com>
+	Mon, 15 Aug 2016 18:25:41 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Cox <alan@linux.intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, James Bottomley <James.Bottomley@hansenpartnership.com>, benh@kernel.crashing.org, masami.hiramatsu.pt@hitachi.com, linux@rasmusvillemoes.dk, linux-kbuild@vger.kernel.org, linux-sh@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, dwmw2@infradead.org, xen-devel@lists.xensource.com, "Luis R. Rodriguez" <mcgrof@kernel.org>, anil.s.keshavamurthy@intel.com, will.deacon@arm.com, linux-ia64@vger.kernel.org, x86@kernel.org, korea.drzix@gmail.com, mingo@redhat.com, andrew.cooper3@citrix.com, jgross@suse.com, tglx@linutronix.de, keescook@chromium.org, ananth@linux.vnet.ibm.com, jpoimboe@redhat.com, hpa@zytor.com, arnd@arndb.de, davem@davemloft.net, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, platform-driver-x86@vger.kernel.org, jkosina@suse.cz, david.vrabel@citrix.com, realmz6@gmail.com, fontana@sharpeleven
+To: linux-kernel@vger.kernel.org
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, Alek Du <alek.du@intel.com>, platform-driver-x86@vger.kernel.org
 
-On Mon, 15 Aug 2016 21:15:06 +0100
-Alan Cox <alan@linux.intel.com> wrote:
+The Kconfig entry controlling compilation of this code is:
 
-> > This is the module tag ... it says what licence the module is under,
-> > not the licence for the module combined with the kernel, which is
-> > always GPLv2 because the stricter licence rules.  
-> 
-> Because if I build a BSD licensed module against the kernel, give you
-> the binaries and refuse to give you the source I am conforming to the
-> BSD licence in letter. So to use it with the kernel it needs to be GPL
-> with additional rights (eg BSD including the source...)
-> 
+drivers/platform/x86/Kconfig:config GPIO_INTEL_PMIC
+drivers/platform/x86/Kconfig:   bool "Intel PMIC GPIO support"
 
-But that only pertains to the code that was modified to be used with
-the Linux kernel, right? That is, if there's a BSD licensed module for
-device FOO, and I port it to the Linux kernel, that will need to have a
-GPL added to it to be included in Linux. But the original BSD code is
-not affected. If a fix is made to the GPL Linux version, I'm assuming
-(because I've been asked when doing something like this), that the
-author of that fix will have to give it a dual license to be used back
-in the original BSD only code. Correct?
+...meaning that it currently is not being built as a module by anyone.
 
-I'm just trying to understand this. From what would make sense to me
-(but may or may not to a court of law, where it counts), is that the
-code added to Linux must be under GPL. But using that code depends on
-where you get it from. If you use BSD source, it stays under BSD. But
-any fixes to the GPL version will require permission to be put back to
-the BSD version. A change to the GPL version doesn't automatically get
-allowed back to the BSD only version?
+Lets remove the couple traces of modular infrastructure use, so that
+when reading the driver there is no doubt it is builtin-only.
 
--- Steve
+We delete the MODULE_LICENSE tag etc. since all that information
+was (or is now) contained at the top of the file in the comments.
+
+We don't replace module.h with init.h since the file already has that.
+
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Alek Du <alek.du@intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ drivers/platform/x86/intel_pmic_gpio.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+index 63b371d6ee55..91ae58510d92 100644
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ b/drivers/platform/x86/intel_pmic_gpio.c
+@@ -1,6 +1,8 @@
+ /* Moorestown PMIC GPIO (access through IPC) driver
+  * Copyright (c) 2008 - 2009, Intel Corporation.
+  *
++ * Author: Alek Du <alek.du@intel.com>
++ *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+@@ -21,7 +23,6 @@
+ 
+ #define pr_fmt(fmt) "%s: " fmt, __func__
+ 
+-#include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+@@ -322,9 +323,4 @@ static int __init platform_pmic_gpio_init(void)
+ {
+ 	return platform_driver_register(&platform_pmic_gpio_driver);
+ }
+-
+ subsys_initcall(platform_pmic_gpio_init);
+-
+-MODULE_AUTHOR("Alek Du <alek.du@intel.com>");
+-MODULE_DESCRIPTION("Intel Moorestown PMIC GPIO driver");
+-MODULE_LICENSE("GPL v2");
+-- 
+2.8.4
