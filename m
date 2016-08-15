@@ -1,24 +1,19 @@
 From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH] platform: intel_pmic: make gpio explicitly non-modular
-Date: Mon, 15 Aug 2016 18:24:59 -0400
-Message-ID: <20160815222459.1279-1-paul.gortmaker@windriver.com>
+Subject: [PATCH] platform: olpc: make ec explicitly non-modular
+Date: Mon, 15 Aug 2016 18:25:17 -0400
+Message-ID: <20160815222517.1348-1-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail5.windriver.com ([192.103.53.11]:60486 "EHLO mail5.wrs.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753021AbcHOWZl (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Aug 2016 18:25:41 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, Alek Du <alek.du@intel.com>, platform-driver-x86@vger.kernel.org
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, Andres Salomon <dilinger@queued.net>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 The Kconfig entry controlling compilation of this code is:
 
-drivers/platform/x86/Kconfig:config GPIO_INTEL_PMIC
-drivers/platform/x86/Kconfig:   bool "Intel PMIC GPIO support"
+arch/x86/Kconfig:config OLPC
+arch/x86/Kconfig:       bool "One Laptop Per Child support"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -28,46 +23,44 @@ when reading the driver there is no doubt it is builtin-only.
 We delete the MODULE_LICENSE tag etc. since all that information
 was (or is now) contained at the top of the file in the comments.
 
-We don't replace module.h with init.h since the file already has that.
-
 Cc: Darren Hart <dvhart@infradead.org>
-Cc: Alek Du <alek.du@intel.com>
+Cc: Andres Salomon <dilinger@queued.net>
 Cc: platform-driver-x86@vger.kernel.org
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/platform/x86/intel_pmic_gpio.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/platform/olpc/olpc-ec.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
-index 63b371d6ee55..91ae58510d92 100644
---- a/drivers/platform/x86/intel_pmic_gpio.c
-+++ b/drivers/platform/x86/intel_pmic_gpio.c
+diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
+index f99b183d5296..374a8028fec7 100644
+--- a/drivers/platform/olpc/olpc-ec.c
++++ b/drivers/platform/olpc/olpc-ec.c
 @@ -1,6 +1,8 @@
- /* Moorestown PMIC GPIO (access through IPC) driver
-  * Copyright (c) 2008 - 2009, Intel Corporation.
+ /*
+  * Generic driver for the OLPC Embedded Controller.
   *
-+ * Author: Alek Du <alek.du@intel.com>
++ * Author: Andres Salomon <dilinger@queued.net>
 + *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-@@ -21,7 +23,6 @@
- 
- #define pr_fmt(fmt) "%s: " fmt, __func__
- 
+  * Copyright (C) 2011-2012 One Laptop per Child Foundation.
+  *
+  * Licensed under the GPL v2 or later.
+@@ -12,7 +14,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
 -#include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
-@@ -322,9 +323,4 @@ static int __init platform_pmic_gpio_init(void)
++#include <linux/init.h>
+ #include <linux/list.h>
+ #include <linux/olpc-ec.h>
+ #include <asm/olpc.h>
+@@ -326,8 +328,4 @@ static int __init olpc_ec_init_module(void)
  {
- 	return platform_driver_register(&platform_pmic_gpio_driver);
+ 	return platform_driver_register(&olpc_ec_plat_driver);
  }
 -
- subsys_initcall(platform_pmic_gpio_init);
+ arch_initcall(olpc_ec_init_module);
 -
--MODULE_AUTHOR("Alek Du <alek.du@intel.com>");
--MODULE_DESCRIPTION("Intel Moorestown PMIC GPIO driver");
--MODULE_LICENSE("GPL v2");
+-MODULE_AUTHOR("Andres Salomon <dilinger@queued.net>");
+-MODULE_LICENSE("GPL");
 -- 
 2.8.4
