@@ -1,80 +1,69 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: Re: [PATCH] platform: olpc: make ec explicitly non-modular
-Date: Mon, 15 Aug 2016 18:01:20 -0700
-Message-ID: <20160815180120.24e46394@e7450.queued.net>
-References: <20160815222517.1348-1-paul.gortmaker@windriver.com>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: [RFC v3 00/13] linux: generalize sections,
+ ranges and linker tables
+Date: Mon, 15 Aug 2016 21:15:06 +0100
+Message-ID: <1471292106.5944.3.camel@linux.intel.com>
+References: <1469222687-1600-1-git-send-email-mcgrof@kernel.org>
+ <20160809152429.5bb1c077@lxorguk.ukuu.org.uk>
+ <1470758947.2299.47.camel@HansenPartnership.com>
+ <CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="===============0387795053816116240=="
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <CALCETrVmDhPC6BMu4_xTanSFZBKeW9V6A4SeQ4qxnpVod-eLbQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: Andy Lutomirski <luto@amacapital.net>, James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-ia64@vger.kernel.org, realmz6@gmail.com, linux-sh@vger.kernel.org, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, linux@rasmusvillemoes.dk, platform-driver-x86@vger.kernel.org, paul.gortmaker@windriver.com, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, linux-arch@vger.kernel.org, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, catalin.marinas@arm.com, dvhart@infradead.org, dwmw2@infradead.org, mhiramat@kernel.org, rusty@rustcorp.com.au, keescook@chromium.org, arnd@arndb.de, linux-kbuild@vger.kernel.org, will.deacon@arm.com, pali.rohar@gmail.com, rostedt@goodmis.org, christopher.denicolo@suse.com, jbaron@akamai.com, ananth@linux.vnet.ibm.com, ciaran.farrell@suse.
+List-Id: platform-driver-x86.vger.kernel.org
+
+
+--===============0387795053816116240==
+Content-Type: multipart/alternative; boundary="=-9BDK4GqpUPTCxb1VKKOi"
+
+
+--=-9BDK4GqpUPTCxb1VKKOi
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from spindle.queued.net ([45.33.49.30]:53173 "EHLO
-	spindle.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751244AbcHPBHn (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Aug 2016 21:07:43 -0400
-In-Reply-To: <20160815222517.1348-1-paul.gortmaker@windriver.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-Fine by me.
 
-Acked-by: Andres Salomon <dilinger@queued.net>
+> This is the module tag ... it says what licence the module is under,
+> not the licence for the module combined with the kernel, which is
+> always GPLv2 because the stricter licence rules.
 
-On Mon, 15
-Aug 2016 18:25:17 -0400 Paul Gortmaker <paul.gortmaker@windriver.com>
-wrote:
+Because if I build a BSD licensed module against the kernel, give you
+the binaries and refuse to give you the source I am conforming to the
+BSD licence in letter. So to use it with the kernel it needs to be GPL
+with additional rights (eg BSD including the source...)
 
-> The Kconfig entry controlling compilation of this code is:
-> 
-> arch/x86/Kconfig:config OLPC
-> arch/x86/Kconfig:       bool "One Laptop Per Child support"
-> 
-> ...meaning that it currently is not being built as a module by anyone.
-> 
-> Lets remove the couple traces of modular infrastructure use, so that
-> when reading the driver there is no doubt it is builtin-only.
-> 
-> We delete the MODULE_LICENSE tag etc. since all that information
-> was (or is now) contained at the top of the file in the comments.
-> 
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andres Salomon <dilinger@queued.net>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-> ---
->  drivers/platform/olpc/olpc-ec.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/olpc/olpc-ec.c
-> b/drivers/platform/olpc/olpc-ec.c index f99b183d5296..374a8028fec7
-> 100644 --- a/drivers/platform/olpc/olpc-ec.c
-> +++ b/drivers/platform/olpc/olpc-ec.c
-> @@ -1,6 +1,8 @@
->  /*
->   * Generic driver for the OLPC Embedded Controller.
->   *
-> + * Author: Andres Salomon <dilinger@queued.net>
-> + *
->   * Copyright (C) 2011-2012 One Laptop per Child Foundation.
->   *
->   * Licensed under the GPL v2 or later.
-> @@ -12,7 +14,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
-> -#include <linux/module.h>
-> +#include <linux/init.h>
->  #include <linux/list.h>
->  #include <linux/olpc-ec.h>
->  #include <asm/olpc.h>
-> @@ -326,8 +328,4 @@ static int __init olpc_ec_init_module(void)
->  {
->  	return platform_driver_register(&olpc_ec_plat_driver);
->  }
-> -
->  arch_initcall(olpc_ec_init_module);
-> -
-> -MODULE_AUTHOR("Andres Salomon <dilinger@queued.net>");
-> -MODULE_LICENSE("GPL");
+Alan
+##SELECTION_END##
+--=-9BDK4GqpUPTCxb1VKKOi
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<html><head></head><body><div><br>
+&gt; This is the module tag ... it says what licence the module is under,<br>
+&gt; not the licence for the module combined with the kernel, which is<br>
+&gt; always GPLv2 because the stricter licence rules.</div><div><br></div><div>Because if I build a BSD licensed module against the kernel, give you the binaries and refuse to give you the source I am conforming to the BSD licence in letter. So to use it with the kernel it needs to be GPL with additional rights (eg BSD including the source...)</div><div><br></div><div>Alan</div><div><br></div></body></html>
+--=-9BDK4GqpUPTCxb1VKKOi--
+
+
+
+--===============0387795053816116240==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
+IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhlbi5v
+cmcveGVuLWRldmVsCg==
+
+--===============0387795053816116240==--
