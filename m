@@ -1,64 +1,78 @@
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [PATCH v1 7/7] tools: add userspace linker table
-	sandbox
-Date: Tue, 23 Aug 2016 02:07:39 +0200
-Message-ID: <20160823000739.GX3296@wotan.suse.de>
-References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
- <1471642875-5957-1-git-send-email-mcgrof@kernel.org>
- <1471642875-5957-8-git-send-email-mcgrof@kernel.org>
- <CAGXu5jKX-VZR_r9wMsnLAU+Z10vB4yDiRPpvwXbRZj0=wU208A@mail.gmail.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v1 7/7] tools: add userspace linker table sandbox
+Date: Mon, 22 Aug 2016 17:28:42 -0700
+Message-ID: <201608230028.u7N0SneR020502__18693.3797937401$1471912501$gmane$org@mail.zytor.com>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org> <1471642875-5957-1-git-send-email-mcgrof@kernel.org> <1471642875-5957-8-git-send-email-mcgrof@kernel.org> <CAGXu5jKX-VZR_r9wMsnLAU+Z10vB4yDiRPpvwXbRZj0=wU208A@mail.gmail.com> <20160823000739.GX3296@wotan.suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xen.org>
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKX-VZR_r9wMsnLAU+Z10vB4yDiRPpvwXbRZj0=wU208A@mail.gmail.com>
-List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xen.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
-To: Kees Cook <keescook@chromium.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, linux-ia64@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Ming Lei <ming.lei@canonical.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, platform-driver-x86@vger.kernel.org, James Bottomley <James.Bottomley@hansenpartnership.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arch <linux-arch@vger.kernel.org>, markus.heiser@darmarit.de, sparclinux <sparclinux@vger.kernel.org>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-sh <linux-sh@vger.kernel.org>, Will Deacon <will>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from terminus.zytor.com ([198.137.202.10]:38616 "EHLO mail.zytor.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752089AbcHWAer (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 22 Aug 2016 20:34:47 -0400
+In-Reply-To: <20160823000739.GX3296@wotan.suse.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, mhiramat@kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, jbaron@akamai.com, Heiko Carstens <heiko.carstens@de.ibm.com>, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, "David S. Miller" <davem@davemloft.net>, Miao Steven <realmz6@gmail.com>, "x86@kernel.org" <x86@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, Rusty Russell <rusty@rustcorp.com.au>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, Alan Cox <alan@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, Arnd
 
-T24gRnJpLCBBdWcgMTksIDIwMTYgYXQgMDM6MzE6NDdQTSAtMDcwMCwgS2VlcyBDb29rIHdyb3Rl
-Ogo+IE9uIEZyaSwgQXVnIDE5LCAyMDE2IGF0IDI6NDEgUE0sICA8bWNncm9mQGtlcm5lbC5vcmc+
-IHdyb3RlOgo+ID4gRnJvbTogIkx1aXMgUi4gUm9kcmlndWV6IiA8bWNncm9mQGtlcm5lbC5vcmc+
-Cj4gPgo+ID4gQWRkIGEgdXNlcnNwYWNlIHNhbmRib3ggdG8gYWxsb3cgZWFzeSBleHBlcmltZW50
-YXRpb24gYW5kCj4gPiB0ZXN0IGV4dGVuc2lvbnMgd2l0aCBsaW5rZXIgdGFibGVzLCBzZWN0aW9u
-IHJhbmdlcyBhbmQgdGhlCj4gPiBuZXcgc2VjdGlvbiBjb3JlIGRlZmluaXRpb25zLgo+ID4KPiA+
-IFRoZSB1c2Vyc3BhY2Ugc2FuZGJveCB0cmllcyB0byBtaW1pYyB0aGUgTGludXgga2VybmVsIGRl
-dmVsb3BtZW50Cj4gPiBmbG93IGFzIG11Y2ggYXMgcG9zc2libGUsIGl0IGhvd2V2ZXIgcmVsaWVz
-IG9uIGFuZCB1c2VzIGxpYmMuIFN1cHBvcnQKPiA+IGlzIGN1cnJlbnRseSBvbmx5IHByb3ZpZGVk
-IHRvIHg4Nl82NC4KPiA+Cj4gPiB2NDogdGhpcyBwYXRjaCBpcyBuZXcgaW4gdGhpcyBzZXJpZXMg
-LS0gYWRkZWQgdG8gdGhlIGtlbnJlbCBhcwo+ID4gICAgIHN1Z2dlc3RlZCBieSBCb3JpcywgYXMg
-b3RoZXJ3aXNlIGl0J2QgYmUgcmVhbGx5IGhhcmQgdG8ga2VlcAo+ID4gICAgIGFuIGV4dGVybmFs
-IHVzZXJzcGFjZSByZXBvc2l0b3J5IGluIHN5bmMuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogTHVp
-cyBSLiBSb2RyaWd1ZXogPG1jZ3JvZkBrZXJuZWwub3JnPgo+ID4gLS0tCj4gPiAgRG9jdW1lbnRh
-dGlvbi9zZWN0aW9ucy9saW5rZXItdGFibGVzLnJzdCAgICAgICAgICAgfCAgIDQgKy0KPiA+ICBN
-QUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSAr
-Cj4gPiAgaW5jbHVkZS9saW51eC90YWJsZXMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDUgKy0KPiA+ICB0b29scy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgMyArLQo+ID4gIC4uLi9hcmNoL3g4Ni9pbmNsdWRlL2dlbmVyYXRlZC9hc20v
-c2VjdGlvbi1jb3JlLmggIHwgICAxICsKPiA+ICB0b29scy9hcmNoL3g4Ni9pbmNsdWRlL2dlbmVy
-YXRlZC9yYW5nZXMuaCAgICAgICAgICB8ICAgMSArCj4gPiAgdG9vbHMvYXJjaC94ODYvaW5jbHVk
-ZS9nZW5lcmF0ZWQvdGFibGVzLmggICAgICAgICAgfCAgIDEgKwo+ID4gIHRvb2xzL2luY2x1ZGUv
-YXNtLWdlbmVyaWMvcmFuZ2VzLmggICAgICAgICAgICAgICAgIHwgMTAzICsrKysKPiA+ICB0b29s
-cy9pbmNsdWRlL2FzbS1nZW5lcmljL3NlY3Rpb24tY29yZS5oICAgICAgICAgICB8IDM0MSArKysr
-KysrKysrKwo+ID4gIHRvb2xzL2luY2x1ZGUvYXNtLWdlbmVyaWMvdGFibGVzLmggICAgICAgICAg
-ICAgICAgIHwgIDUwICsrCj4gCj4gQXJlbid0IGEgYnVuY2ggb2YgdGhlc2UgZmlsZXMgZXhhY3Qg
-ZHVwbGljYXRlcyBvZiB0aGUgaGVhZGVycyBpbiBpbmNsdWRlL2xpbnV4PwoKSW5kZWVkLi4uIFRo
-aXMgYSB1c2Vyc3BhY2UgdG9vbHMvIGFyY2hpdGVjdHVyZSBkZWNpc2lvbiB0aGF0IHdhcyBtYWRl
-IGxvbmcgYWdvLApzbyBpdHMgbm90IHVwIHRvIG1lLCBJIGFtIGp1c3QgZm9sbG93aW5nIHRoZSBz
-dHJhdGVneSBkZXZpc2VkIGFuZCBwaWNrZWQgdXAuClJlZmVyIHRvIDdkN2QxYmYxZDFkYWJlNDM1
-ZWY1MGVmYjA1MTcyNGI4NjY0NzQ5Y2IgKCJwZXJmIGJlbmNoOiBDb3B5IGtlcm5lbApmaWxlcyBu
-ZWVkZWQgdG8gYnVpbGQgbWVte2NweSxzZXR9IHg4Nl82NCBiZW5jaG1hcmtzIikgZm9yIGFuIGV4
-YW1wbGUgb2YKcHJldmlvdXMgc2ltaWxhciB3b3JrLiBCeSBzaGFyaW5nIGhlYWRlciBmaWxlcyB0
-aGlzIGVuYWJsZSBtb3JlIHRvb2xzLwp0byBiZSBoYWNrZWQgb24uCgogIEx1aXMKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhlbi1kZXZlbCBtYWlsaW5n
-IGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbi5vcmcKaHR0cHM6Ly9saXN0cy54ZW4ub3JnL3hlbi1k
-ZXZlbAo=
+Vrabel <david.vrabel@citrix.com>,Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,Michael Brown <mcb30@ipxe.org>,Juergen Gross <jgross@suse.com>,Andrew Cooper <andrew.cooper3@citrix.com>,Andy Shevchenko <andriy.shevchenko@linux.intel.com>,Paul Gortmaker <paul.gortmaker@windriver.com>,"xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>,Andi Kleen <ak@linux.intel.com>,pali.rohar@gmail.com,dvhart@infradead.org,platform-driver-x86@vger.kernel.org,Michal Marek <mmarek@suse.com>,Rasmus Villemoes <linux@rasmusvillemoes.dk>,Jiri Kosina <jkosina@suse.cz>,=?UTF-8?B?7KGw6rK966+8?= <korea.drzix@gmail.com>,linux-kbuild <linux-kbuild@vger.kernel.org>,Tony Luck <tony.luck@intel.com>,Andrew Morton <akpm@linux-foundation.org>,linux-ia64@vger.kernel.org,"linux-arm-kernel@lists.infradead.org" <linu
+ x-arm-kernel@lists.infradead.org>,linux-sh <linux-sh@vger.kernel.org>,sparclinux <sparclinux@vger.kernel.org>,Catalin Marinas <catalin.marinas@arm.com>,Will Deacon <will.deacon@arm.com>,Ste!
+ ven
+Rostedt <rostedt@goodmis.org>,Jani Nikula <jani.nikula@intel.com>,Mauro Carvalho Chehab <mchehab@osg.samsung.com>,markus.heiser@darmarit.de,jolsa@kernel.org,Mark Salter <msalter@redhat.com>,Chris Zankel <chris@zankel.net>,Max Filippov <jcmvbkbc@gmail.com>,linux-xtensa@linux-xtensa.org,Paul Mackerras <paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,James Bottomley <James.Bottomley@hansenpartnership.com>
+Message-ID: <58F06CEA-AEB3-4ED7-8211-95F402C9D3D3@zytor.com>
+
+On August 22, 2016 5:07:39 PM PDT, "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
+>On Fri, Aug 19, 2016 at 03:31:47PM -0700, Kees Cook wrote:
+>> On Fri, Aug 19, 2016 at 2:41 PM,  <mcgrof@kernel.org> wrote:
+>> > From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+>> >
+>> > Add a userspace sandbox to allow easy experimentation and
+>> > test extensions with linker tables, section ranges and the
+>> > new section core definitions.
+>> >
+>> > The userspace sandbox tries to mimic the Linux kernel development
+>> > flow as much as possible, it however relies on and uses libc.
+>Support
+>> > is currently only provided to x86_64.
+>> >
+>> > v4: this patch is new in this series -- added to the kenrel as
+>> >     suggested by Boris, as otherwise it'd be really hard to keep
+>> >     an external userspace repository in sync.
+>> >
+>> > Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
+>> > ---
+>> >  Documentation/sections/linker-tables.rst           |   4 +-
+>> >  MAINTAINERS                                        |   1 +
+>> >  include/linux/tables.h                             |   5 +-
+>> >  tools/Makefile                                     |   3 +-
+>> >  .../arch/x86/include/generated/asm/section-core.h  |   1 +
+>> >  tools/arch/x86/include/generated/ranges.h          |   1 +
+>> >  tools/arch/x86/include/generated/tables.h          |   1 +
+>> >  tools/include/asm-generic/ranges.h                 | 103 ++++
+>> >  tools/include/asm-generic/section-core.h           | 341
+>+++++++++++
+>> >  tools/include/asm-generic/tables.h                 |  50 ++
+>> 
+>> Aren't a bunch of these files exact duplicates of the headers in
+>include/linux?
+>
+>Indeed... This a userspace tools/ architecture decision that was made
+>long ago,
+>so its not up to me, I am just following the strategy devised and
+>picked up.
+>Refer to 7d7d1bf1d1dabe435ef50efb051724b8664749cb ("perf bench: Copy
+>kernel
+>files needed to build mem{cpy,set} x86_64 benchmarks") for an example
+>of
+>previous similar work. By sharing header files this enable more tools/
+>to be hacked on.
+>
+>  Luis
+
+I think this is a legacy from before the uapi change that should really be fixed.  If we need to export additional kernel structures for the tools, we could define a third level of we really need it.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse brevity and formatting.
