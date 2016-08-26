@@ -1,125 +1,74 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH] toshiba-wmi: Fix loading the driver on non Toshiba laptops
-Date: Thu, 25 Aug 2016 12:50:55 -0600
-Message-ID: <20160825185055.12143-1-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f68.google.com ([209.85.218.68]:34994 "EHLO
-        mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752629AbcHYSvA (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Aug 2016 14:51:00 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+From: Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v4 04/16] generic-sections: add section core
+	helpers
+Date: Fri, 26 Aug 2016 13:00:24 +1000
+Message-ID: <20160826130024.0ad51d33@roar.ozlabs.ibm.com>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
+ <1471642454-5679-5-git-send-email-mcgrof@kernel.org>
+ <20160823112633.7d482e62@roar.ozlabs.ibm.com>
+ <20160823173306.GA3296@wotan.suse.de>
+ <20160824135141.2c8f06ec@roar.ozlabs.ibm.com>
+ <20160824201253.GS3296@wotan.suse.de>
+ <20160825120633.057b2f6f@roar.ozlabs.ibm.com>
+ <20160825060540.GX3296@wotan.suse.de>
+ <20160825165121.45d26fb0@roar.ozlabs.ibm.com>
+ <20160825175239.GB3296@wotan.suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <20160825175239.GB3296@wotan.suse.de>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-ia64@vger.kernel.org, jkosina@suse.cz, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, platform-driver-x86@vger.kernel.org, James.Bottomley@HansenPartnership.com, paul.gortmaker@windriver.com, paulus@samba.org, mpe@ellerman.id.au, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, mchehab@osg.samsung.com, linux-arch@vger.kernel.org, markus.heiser@darmarit.de, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, will.deacon@arm.com, korea.drzix@gmail.com, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, dvhart@infradead.org, dwmw2@infradead.org, david.vrabel@citrix.com, linux-xtensa@linux-xtensa.org, pali.rohar@gmail.com, keescook@chromium.org, arnd@arndb
+List-Id: platform-driver-x86.vger.kernel.org
 
-Bug 150611 uncovered that the WMI ID used by the toshiba-wmi driver
-is not Toshiba specific, and as such, the driver was being loaded
-on non Toshiba laptops too.
-
-This patch adds a DMI matching list checking for TOSHIBA as the
-vendor, refusing to load if it is not.
-
-Also the WMI GUID was renamed, dropping the TOSHIBA_ prefix, to
-better reflect that such GUID is not a Toshiba specific one.
-
-Cc: <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
-Hi Darren,
-
-I was waiting on input from the bug above, but haven't received an
-answer (as of yet), so I decided to send this to the mailing list
-for feedback as to whether this is the correct approach for this
-issue.
-
- drivers/platform/x86/toshiba-wmi.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
-index feac457..0c92887 100644
---- a/drivers/platform/x86/toshiba-wmi.c
-+++ b/drivers/platform/x86/toshiba-wmi.c
-@@ -24,14 +24,15 @@
- #include <linux/acpi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/dmi.h>
- 
- MODULE_AUTHOR("Azael Avalos");
- MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
- MODULE_LICENSE("GPL");
- 
--#define TOSHIBA_WMI_EVENT_GUID	"59142400-C6A3-40FA-BADB-8A2652834100"
-+#define WMI_EVENT_GUID	"59142400-C6A3-40FA-BADB-8A2652834100"
- 
--MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
-+MODULE_ALIAS("wmi:"WMI_EVENT_GUID);
- 
- static struct input_dev *toshiba_wmi_input_dev;
- 
-@@ -63,6 +64,16 @@ static void toshiba_wmi_notify(u32 value, void *context)
- 	kfree(response.pointer);
- }
- 
-+static struct dmi_system_id toshiba_wmi_dmi_table[] __initdata = {
-+	{
-+		.ident = "Toshiba laptop",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+		},
-+	},
-+	{}
-+};
-+
- static int __init toshiba_wmi_input_setup(void)
- {
- 	acpi_status status;
-@@ -81,7 +92,7 @@ static int __init toshiba_wmi_input_setup(void)
- 	if (err)
- 		goto err_free_dev;
- 
--	status = wmi_install_notify_handler(TOSHIBA_WMI_EVENT_GUID,
-+	status = wmi_install_notify_handler(WMI_EVENT_GUID,
- 					    toshiba_wmi_notify, NULL);
- 	if (ACPI_FAILURE(status)) {
- 		err = -EIO;
-@@ -95,7 +106,7 @@ static int __init toshiba_wmi_input_setup(void)
- 	return 0;
- 
-  err_remove_notifier:
--	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
-+	wmi_remove_notify_handler(WMI_EVENT_GUID);
-  err_free_keymap:
- 	sparse_keymap_free(toshiba_wmi_input_dev);
-  err_free_dev:
-@@ -105,7 +116,7 @@ static int __init toshiba_wmi_input_setup(void)
- 
- static void toshiba_wmi_input_destroy(void)
- {
--	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
-+	wmi_remove_notify_handler(WMI_EVENT_GUID);
- 	sparse_keymap_free(toshiba_wmi_input_dev);
- 	input_unregister_device(toshiba_wmi_input_dev);
- }
-@@ -114,7 +125,8 @@ static int __init toshiba_wmi_init(void)
- {
- 	int ret;
- 
--	if (!wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+	if (!wmi_has_guid(WMI_EVENT_GUID) ||
-+	    !dmi_check_system(toshiba_wmi_dmi_table))
- 		return -ENODEV;
- 
- 	ret = toshiba_wmi_input_setup();
-@@ -130,7 +142,7 @@ static int __init toshiba_wmi_init(void)
- 
- static void __exit toshiba_wmi_exit(void)
- {
--	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+	if (wmi_has_guid(WMI_EVENT_GUID))
- 		toshiba_wmi_input_destroy();
- }
- 
--- 
-2.9.3
+T24gVGh1LCAyNSBBdWcgMjAxNiAxOTo1MjozOSArMDIwMAoiTHVpcyBSLiBSb2RyaWd1ZXoiIDxt
+Y2dyb2ZAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFRodSwgQXVnIDI1LCAyMDE2IGF0IDA0OjUx
+OjIxUE0gKzEwMDAsIE5pY2hvbGFzIFBpZ2dpbiB3cm90ZToKPiA+IE9uIFRodSwgMjUgQXVnIDIw
+MTYgMDg6MDU6NDAgKzAyMDAKPiA+ICJMdWlzIFIuIFJvZHJpZ3VleiIgPG1jZ3JvZkBrZXJuZWwu
+b3JnPiB3cm90ZTogIAo+ID4gPiA+IE9oLCB0aGF0IG1ha2VzIG1vcmUgc2Vuc2UuIFRoZSBTRUNU
+SU9OIHN0dWZmIGFuZCBjdXN0b20gc2VjdGlvbnMgd2FzCj4gPiA+ID4gY29uZnVzaW5nIG1lLiBJ
+IHdvdWxkIHByZWZlciBqdXN0IHRvIGRyb3AgYWxsIHRoZSBMSU5VWF9TRUNUSU9OIG5hbWluZwo+
+ID4gPiA+IGFuZCBtYWtlIGl0IG1hdGNoIHRoZSBmdW5jdGlvbmFsaXR5IHlvdSdyZSB1c2luZy4g
+Rm9yIGV4YW1wbGU6Cj4gPiA+ID4gCj4gPiA+ID4gK0RFRklORV9MSU5LVEFCTEUoc3RydWN0IGp1
+bXBfZW50cnksIF9fanVtcF90YWJsZSk7Cj4gPiA+ID4gKwo+ID4gPiA+ICAvKiBtdXRleCB0byBw
+cm90ZWN0IGNvbWluZy9nb2luZyBvZiB0aGUgdGhlIGp1bXBfbGFiZWwgdGFibGUgKi8KPiA+ID4g
+PiAgc3RhdGljIERFRklORV9NVVRFWChqdW1wX2xhYmVsX211dGV4KTsKPiA+ID4gPiAgCj4gPiA+
+ID4gQEAgLTI3NCw4ICsyNzcsNiBAQCBzdGF0aWMgdm9pZCBfX2p1bXBfbGFiZWxfdXBkYXRlKHN0
+cnVjdCBzdGF0aWNfa2V5ICprZXksCj4gPiA+ID4gIAo+ID4gPiA+ICB2b2lkIF9faW5pdCBqdW1w
+X2xhYmVsX2luaXQodm9pZCkKPiA+ID4gPiAgewo+ID4gPiA+IC0Jc3RydWN0IGp1bXBfZW50cnkg
+Kml0ZXJfc3RhcnQgPSBfX3N0YXJ0X19fanVtcF90YWJsZTsKPiA+ID4gPiAtCXN0cnVjdCBqdW1w
+X2VudHJ5ICppdGVyX3N0b3AgPSBfX3N0b3BfX19qdW1wX3RhYmxlOwo+ID4gPiA+ICAJc3RydWN0
+IHN0YXRpY19rZXkgKmtleSA9IE5VTEw7Cj4gPiA+ID4gIAlzdHJ1Y3QganVtcF9lbnRyeSAqaXRl
+cjsKPiA+ID4gPiAgCj4gPiA+ID4gQEAgLTI5Miw5ICsyOTMsMTAgQEAgdm9pZCBfX2luaXQganVt
+cF9sYWJlbF9pbml0KHZvaWQpCj4gPiA+ID4gIAkJcmV0dXJuOwo+ID4gPiA+ICAKPiA+ID4gPiAg
+CWp1bXBfbGFiZWxfbG9jaygpOwo+ID4gPiA+IC0JanVtcF9sYWJlbF9zb3J0X2VudHJpZXMoaXRl
+cl9zdGFydCwgaXRlcl9zdG9wKTsKPiA+ID4gPiArCWp1bXBfbGFiZWxfc29ydF9lbnRyaWVzKExJ
+TlVYX1NFQ1RJT05fU1RBUlQoX19qdW1wX3RhYmxlKSwKPiA+ID4gPiArCQkJCUxJTlVYX1NFQ1RJ
+T05fRU5EKF9fanVtcF90YWJsZSkpOwo+ID4gPiA+IAo+ID4gPiA+IE5vdyBJIHRoaW5rIHRoaXMg
+aXMgYSBmaW5lIGFic3RyYWN0aW9uIHRvIGhhdmUuICAgIAo+ID4gPiAKPiA+ID4gT0sgd2lsbCBr
+ZWVwIHRoaXMgb25lLgo+ID4gPiAgIAo+ID4gPiA+IEkgdGhpbmsgaXQgd291bGQgbG9vawo+ID4g
+PiA+IGV2ZW4gY2xlYW5lciBpZiB5b3UgaGFkOgo+ID4gPiA+IAo+ID4gPiA+IExJTktUQUJMRV9T
+VEFSVChfX2p1bXBfdGFibGUpCj4gPiA+ID4gTElOS1RBQkxFX0VORChfX2p1bXBfdGFibGUpCj4g
+PiA+ID4KPiA+ID4gPiBUaGVuIGRvIHdlIG5lZWQgdG8gZXZlbiBoYXZlIHRoZSBMSU5VWF9TRUNU
+SU9OIG1pZGRsZSBtYW4gYXQgYWxsPyAgICAKPiA+ID4gCj4gPiA+IEFoLCB0aGluZyBpcyB3ZSB1
+c2UgdGhpcyBmb3IgYm90aCBsaW5rdGFibGVzIGFuZCBzZWN0aW9uIHJhbmdlcy4KPiA+ID4gT3Ig
+ZG8gd2Ugd2FudCBtYWNyb3MgZm9yIGJvdGggdGhhdCBkbyB0aGUgc2FtZSB0aGluZyA/ICAKPiA+
+IAo+ID4gSSB0aGluayBpdCB3b3VsZCBtYWtlIHRoZSBjb2RlIHVzaW5nIGl0IG1vcmUgcmVhZGFi
+bGUuICAKPiAKPiBBbHJpZ2h0eS4uLiBzbzoKPiAKPiBMSU5LVEFCTEVfU1RBUlQoKQo+IExJTktU
+QUJMRV9FTkQoKQo+IAo+IFNFQ1RJT05fUkFOR0VfU1RBUlQoKQo+IFNFQ1RJT05fUkFOR0VfRU5E
+KCkKPiAKPiBBbmQgdGhlc2UgbWFjcm9zIGRvIHRoZSBleGFjdCBzYW1lIHRoaW5nLiBJZSwgbm90
+aGluZyBzaGFyZWQuIFJpZ2h0PwoKWWVhaCBJIHRoaW5rIHNvLiBJbnRlcm5hbGx5IHRoZXkgd291
+bGQgcHJvYmFibHkgYmUgYWxpYXNlZCB0byB0aGUKc2FtZSBjb21tb24gZGVmaW5pdGlvbiAodW5s
+ZXNzIHlvdSBoYWQgc29tZSB0eXBlIGNoZWNrIG9yIHNvbWV0aGluZyksCmJ1dCB1c2VyIHdvdWxk
+IGtub3cgYWJvdXQgc3VjaCBkZXRhaWxzLgoKVGhhbmtzLApOaWNrCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhl
+bi1kZXZlbEBsaXN0cy54ZW4ub3JnCmh0dHBzOi8vbGlzdHMueGVuLm9yZy94ZW4tZGV2ZWwK
