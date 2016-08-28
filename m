@@ -1,78 +1,88 @@
-From: Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v4 04/16] generic-sections: add section core helpers
-Date: Fri, 26 Aug 2016 23:28:55 +1000
-Message-ID: <20160826232855.31464a63@roar.ozlabs.ibm.com>
-References: <20160823173306.GA3296@wotan.suse.de>
-        <20160824135141.2c8f06ec@roar.ozlabs.ibm.com>
-        <20160824201253.GS3296@wotan.suse.de>
-        <20160825120633.057b2f6f@roar.ozlabs.ibm.com>
-        <20160825060540.GX3296@wotan.suse.de>
-        <20160825165121.45d26fb0@roar.ozlabs.ibm.com>
-        <20160825175239.GB3296@wotan.suse.de>
-        <20160826130024.0ad51d33@roar.ozlabs.ibm.com>
-        <CAB=NE6UQ8qE6AqRg9=YddNYrMyU7opCEij-5Usty7wMgEJJbpw@mail.gmail.com>
-        <20160826173338.41a56103@roar.ozlabs.ibm.com>
-        <20160826132219.GG3296@wotan.suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Zino Lin <linzino7@gmail.com>
+Subject: [PATCH] asus-wmi: fix asus ux303ub brightness issue
+Date: Sun, 28 Aug 2016 16:12:06 +0800
+Message-ID: <1472371926-7936-1-git-send-email-linzino7@gmai.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f49.google.com ([209.85.220.49]:35205 "EHLO
-        mail-pa0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752300AbcHZN3Z (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:32988 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755316AbcH1IMJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Aug 2016 09:29:25 -0400
-In-Reply-To: <20160826132219.GG3296@wotan.suse.de>
+        Sun, 28 Aug 2016 04:12:09 -0400
+Received: by mail-pf0-f196.google.com with SMTP id i6so7394381pfe.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 28 Aug 2016 01:12:09 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: benh@kernel.crashing.org, jani.nikula@intel.com, masami.hiramatsu.pt@hitachi.com, linux@rasmusvillemoes.dk, linux-kbuild@vger.kernel.org, linux-sh@vger.kernel.org, luto@amacapital.net, gnomes@lxorguk.ukuu.org.uk, jcmvbkbc@gmail.com, torvalds@linux-foundation.org, akpm@linux-foundation.org, dwmw2@infradead.org, xen-devel@lists.xensource.com, anil.s.keshavamurthy@intel.com, will.deacon@arm.com, linux-ia64@vger.kernel.org, x86@kernel.org, korea.drzix@gmail.com, mingo@redhat.com, andrew.cooper3@citrix.com, jgross@suse.com, tglx@linutronix.de, keescook@chromium.org, ananth@linux.vnet.ibm.com, jpoimboe@redhat.com, rostedt@goodmis.org, hpa@zytor.com, acme@redhat.com, arnd@arndb.de, davem@davemloft.net, platform-driver-x86@vger.kernel.org, jkosina@suse.cz, david.vrabel@citrix.com
+To: corentin.chary@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 
-On Fri, 26 Aug 2016 15:22:19 +0200
-"Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
+From: zino lin <linzino7@gmail.com>
 
-> On Fri, Aug 26, 2016 at 05:33:38PM +1000, Nicholas Piggin wrote:
-> > On Thu, 25 Aug 2016 23:38:44 -0700
-> > "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:  
-> > > > > > > Ah, thing is we use this for both linktables and section ranges.
-> > > > > > > Or do we want macros for both that do the same thing ?    
-> > > > > >
-> > > > > > I think it would make the code using it more readable.    
-> > > > >
-> > > > > Alrighty... so:
-> > > > >
-> > > > > LINKTABLE_START()
-> > > > > LINKTABLE_END()
-> > > > >
-> > > > > SECTION_RANGE_START()
-> > > > > SECTION_RANGE_END()
-> > > > >
-> > > > > And these macros do the exact same thing. Ie, nothing shared. Right?    
-> > > >
-> > > > Yeah I think so. Internally they would probably be aliased to the
-> > > > same common definition (unless you had some type check or something),
-> > > > but user would know about such details.    
-> > > 
-> > > What name should we use for such common macro definition ?  
-> > 
-> > 
-> > Ah, not really sure. I guess the "link table" is some kind of
-> > section range? I haven't actually looked closely at both of them
-> > in the subsequent patches. It matters less if it's not expected
-> > to be used as an API though.
-> >   
-> 
-> OK well, going with LINUX_SECTION_START() so we'll have:
-> 
-> #define LINKTABLE_START		LINUX_SECTION_START
-> #define LINKTABLE_END		LINUX_SECTION_END
-> 
-> #define SECTION_RANGE_START	LINUX_SECTION_START
-> #define SECTION_RANGE_END	LINUX_SECTION_END
-> 
-> Is that OK?
+acpi_video0 doesn't work, asus-wmi brightness interface doesn't work, too.
+So, we use native brightness interface to handle the brightness adjustion,
+and add quirk_asus_ux303ub.
 
-I guess so, without having seen the updated, although I don't see why
-you'd not just
+Signed-off-by: zino lin <linzino7@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  3 +++
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 17 insertions(+)
 
-#define LINKTABLE_START SECTION_RANGE_START
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index adecc1c..456ad8e 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -87,6 +87,10 @@ static struct quirk_entry quirk_no_rfkill_wapf4 = {
+ 	.no_rfkill = true,
+ };
+ 
++static struct quirk_entry quirk_asus_ux303ub = {
++	.wmi_backlight_native = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+@@ -351,6 +355,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_no_rfkill,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. UX303UB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
++		},
++		.driver_data = &quirk_asus_ux303ub,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 7c093a0..ce6ca31 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2084,6 +2084,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (asus->driver->quirks->wmi_backlight_power)
+ 		acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
+ 
++	if (asus->driver->quirks->wmi_backlight_native)
++		acpi_video_set_dmi_backlight_type(acpi_backlight_native);
++
+ 	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 		err = asus_wmi_backlight_init(asus);
+ 		if (err && err != -ENODEV)
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 5de1df5..5e22041 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -43,6 +43,7 @@ struct quirk_entry {
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_power;
++	bool wmi_backlight_native;
+ 	int wapf;
+ 	/*
+ 	 * For machines with AMD graphic chips, it will send out WMI event
+-- 
+2.7.4
