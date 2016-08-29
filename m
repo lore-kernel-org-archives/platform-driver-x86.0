@@ -1,89 +1,53 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: setup accelerometer when machine has appropriate notify event
-Date: Mon, 29 Aug 2016 18:00:21 +0800
-Message-ID: <1472464821-10360-1-git-send-email-jlee@suse.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
+Date: Mon, 29 Aug 2016 12:11:59 +0200
+Message-ID: <87fupnx4sw.fsf@miraculix.mork.no>
+References: <1472464553-9922-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:34333 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756125AbcH2KC3 (ORCPT
+Received: from canardo.mork.no ([148.122.252.1]:46599 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1756136AbcH2KPv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Aug 2016 06:02:29 -0400
+        Mon, 29 Aug 2016 06:15:51 -0400
+In-Reply-To: <1472464553-9922-1-git-send-email-jlee@suse.com> (Chun-Yi Lee's
+        message of "Mon, 29 Aug 2016 17:55:53 +0800")
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
 
-The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
-So, this patch changes the codes to setup accelerometer input device
-when detected ACERWMID_EVENT_GUID. It avoids that the accel input
-device created on every acer machines.
+"Lee, Chun-Yi" <joeyli.kernel@gmail.com> writes:
 
-In addition, patch adds a clearly parsing logic of accelerometer hid
-to acer_wmi_get_handle_cb callback function. It is positive matching
-the "SENR" name with "BST0001" device to avoid non-supported hardware.
+> The AMW0_GUID1 wmi is not only found on Acer family but also other
+> machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
+> driver handled those non-Acer machines by quirks list.
+>
+> But actually acer-wmi driver was loaded on any machines that have
+> AMW0_GUID1. This behavior is strange because those machines should
+> be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
+> ideapad-laptop.
+>
+> So, This patch adds the logic to check the machine that has AMW0_GUID1
+> should be in Acer/Packard Bell/Gateway white list. But, it still keeps
+> the quirk list of those supported non-acer machines for backward
+> compatible.
 
-Reported-by: Bjørn Mork <bjorn@mork.no>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+Works fine for me on a Lenovo Thinkpad X1 Carbon 4th gen.  Thanks.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 79d64ea..3bb3162 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(void)
- 	return status;
- }
- 
-+#define ACER_WMID_ACCEL_HID	"BST0001"
-+
- static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
- 						void *ctx, void **retval)
- {
-+	struct acpi_device *dev;
-+
-+	if (strcmp(ctx, "SENR")) {
-+		if (acpi_bus_get_device(ah, &dev))
-+			return AE_OK;
-+		if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-+			return AE_OK;
-+	} else
-+		return AE_OK;
-+
- 	*(acpi_handle *)retval = ah;
--	return AE_OK;
-+
-+	return AE_CTRL_TERMINATE;
- }
- 
- static int __init acer_wmi_get_handle(const char *name, const char *prop,
-@@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(void)
- {
- 	int err;
- 
--	err = acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
-+	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
- 	if (err)
- 		return err;
- 
-@@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
- 		err = acer_wmi_input_setup();
- 		if (err)
- 			return err;
-+		err = acer_wmi_accel_setup();
-+		if (err)
-+			return err;
- 	}
- 
--	acer_wmi_accel_setup();
--
- 	err = platform_driver_register(&acer_platform_driver);
- 	if (err) {
- 		pr_err("Unable to register platform driver\n");
--- 
-2.1.4
+Bogus accelerometer device without patch:
+
+  acer_wmi: Acer Laptop ACPI-WMI Extras
+  input: Acer BMA150 accelerometer as /devices/virtual/input/input16
+
+With patch:
+
+  acer_wmi: Acer Laptop ACPI-WMI Extras
+  acer_wmi: Unsupported machine has AMW0_GUID1, unable to load
+
+
+So if you want it:
+
+Tested-by: Bj=C3=B8rn Mork <bjorn@mork.no>
