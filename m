@@ -1,106 +1,129 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-wmi: fix asus ux303ub brightness issue
-Date: Sun, 28 Aug 2016 10:34:53 -0700
-Message-ID: <20160828173453.GF96930@f23x64.localdomain>
-References: <1472371926-7936-1-git-send-email-linzino7@gmai.com>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
+Date: Mon, 29 Aug 2016 17:55:53 +0800
+Message-ID: <1472464553-9922-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755781AbcH1Re4 (ORCPT
+Received: from mail-pa0-f68.google.com ([209.85.220.68]:35262 "EHLO
+        mail-pa0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756756AbcH2J6E (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 28 Aug 2016 13:34:56 -0400
-Content-Disposition: inline
-In-Reply-To: <1472371926-7936-1-git-send-email-linzino7@gmai.com>
+        Mon, 29 Aug 2016 05:58:04 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zino Lin <linzino7@gmail.com>
-Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
 
-On Sun, Aug 28, 2016 at 04:12:06PM +0800, Zino Lin wrote:
-> From: zino lin <linzino7@gmail.com>
-> 
-> acpi_video0 doesn't work, asus-wmi brightness interface doesn't work, too.
-> So, we use native brightness interface to handle the brightness adjustion,
-> and add quirk_asus_ux303ub.
+The AMW0_GUID1 wmi is not only found on Acer family but also other
+machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
+driver handled those non-Acer machines by quirks list.
 
-Thanks Zino,
+But actually acer-wmi driver was loaded on any machines that have
+AMW0_GUID1. This behavior is strange because those machines should
+be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
+ideapad-laptop.
 
-+Rafael in case he has an opinion wrt to the acpi_video bit.
+So, This patch adds the logic to check the machine that has AMW0_GUID1
+should be in Acer/Packard Bell/Gateway white list. But, it still keeps
+the quirk list of those supported non-acer machines for backward
+compatible.
 
-Looking for an Ack from Corentin, but otherwise this looks fine to me.
+Cc: Bjørn Mork <bjorn@mork.no>
+Cc: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c | 56 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-> 
-> Signed-off-by: zino lin <linzino7@gmail.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
->  drivers/platform/x86/asus-wmi.c    |  3 +++
->  drivers/platform/x86/asus-wmi.h    |  1 +
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index adecc1c..456ad8e 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -87,6 +87,10 @@ static struct quirk_entry quirk_no_rfkill_wapf4 = {
->  	.no_rfkill = true,
->  };
->  
-> +static struct quirk_entry quirk_asus_ux303ub = {
-> +	.wmi_backlight_native = true,
-> +};
-> +
->  static int dmi_matched(const struct dmi_system_id *dmi)
->  {
->  	quirks = dmi->driver_data;
-> @@ -351,6 +355,15 @@ static const struct dmi_system_id asus_quirks[] = {
->  		},
->  		.driver_data = &quirk_no_rfkill,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "ASUSTeK COMPUTER INC. UX303UB",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
-> +		},
-> +		.driver_data = &quirk_asus_ux303ub,
-> +	},
->  	{},
->  };
->  
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 7c093a0..ce6ca31 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2084,6 +2084,9 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	if (asus->driver->quirks->wmi_backlight_power)
->  		acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
->  
-> +	if (asus->driver->quirks->wmi_backlight_native)
-> +		acpi_video_set_dmi_backlight_type(acpi_backlight_native);
-> +
->  	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->  		err = asus_wmi_backlight_init(asus);
->  		if (err && err != -ENODEV)
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index 5de1df5..5e22041 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -43,6 +43,7 @@ struct quirk_entry {
->  	bool scalar_panel_brightness;
->  	bool store_backlight_power;
->  	bool wmi_backlight_power;
-> +	bool wmi_backlight_native;
->  	int wapf;
->  	/*
->  	 * For machines with AMD graphic chips, it will send out WMI event
-> -- 
-> 2.7.4
-> 
-> 
-
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 3bb3162..734f0da 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -355,6 +355,32 @@ static const struct dmi_system_id acer_blacklist[] __initconst = {
+ 	{}
+ };
+ 
++static const struct dmi_system_id amw0_whitelist[] __initconst = {
++	{
++		.ident = "Acer",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		},
++	},
++	{
++		.ident = "Gateway",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++		},
++	},
++	{
++		.ident = "Packard Bell",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
++		},
++	},
++	{}
++};
++
++/*
++ * This quirk table is only for Acer/Gateway/Packard Bell family
++ * that those machines are supported by acer-wmi driver.
++ */
+ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+@@ -464,6 +490,17 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_travelmate_2490,
+ 	},
++	{}
++};
++
++/*
++ * This quirk list is for those non-acer machines that have AMW0_GUID1
++ * but supported by acer-wmi in past days. Keeping this quirk list here
++ * is only for backward compatible. Please do not add new machine to
++ * here anymore. Those non-acer machines should be supported by
++ * appropriate wmi drivers.
++ */
++static const struct dmi_system_id non_acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Fujitsu Siemens Amilo Li 1718",
+@@ -598,6 +635,7 @@ static void __init find_quirks(void)
+ {
+ 	if (!force_series) {
+ 		dmi_check_system(acer_quirks);
++		dmi_check_system(non_acer_quirks);
+ 	} else if (force_series == 2490) {
+ 		quirks = &quirk_acer_travelmate_2490;
+ 	}
+@@ -2121,6 +2159,24 @@ static int __init acer_wmi_init(void)
+ 	find_quirks();
+ 
+ 	/*
++	 * The AMW0_GUID1 wmi is not only found on Acer family but also other
++	 * machines like Lenovo, Fujitsu and Medion. In the past days,
++	 * acer-wmi driver handled those non-Acer machines by quirks list.
++	 * But actually acer-wmi driver was loaded on any machines that have
++	 * AMW0_GUID1. This behavior is strange because those machines should
++	 * be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
++	 * ideapad-laptop. So, here checks the machine that has AMW0_GUID1
++	 * should be in Acer/Gateway/Packard Bell white list, or it's already
++	 * in the past quirk list.
++	 */
++	if (wmi_has_guid(AMW0_GUID1) &&
++	    !dmi_check_system(amw0_whitelist) &&
++	    quirks == &quirk_unknown) {
++		pr_err("Unsupported machine has AMW0_GUID1, unable to load\n");
++		return -ENODEV;
++	}
++
++	/*
+ 	 * Detect which ACPI-WMI interface we're using.
+ 	 */
+ 	if (wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.1.4
