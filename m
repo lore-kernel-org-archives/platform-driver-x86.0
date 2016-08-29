@@ -1,129 +1,89 @@
 From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
-Date: Mon, 29 Aug 2016 17:55:53 +0800
-Message-ID: <1472464553-9922-1-git-send-email-jlee@suse.com>
+Subject: [PATCH] acer-wmi: setup accelerometer when machine has appropriate notify event
+Date: Mon, 29 Aug 2016 18:00:21 +0800
+Message-ID: <1472464821-10360-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f68.google.com ([209.85.220.68]:35262 "EHLO
-        mail-pa0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756756AbcH2J6E (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:34333 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756125AbcH2KC3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Aug 2016 05:58:04 -0400
+        Mon, 29 Aug 2016 06:02:29 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
 
-The AMW0_GUID1 wmi is not only found on Acer family but also other
-machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
-driver handled those non-Acer machines by quirks list.
+The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
+So, this patch changes the codes to setup accelerometer input device
+when detected ACERWMID_EVENT_GUID. It avoids that the accel input
+device created on every acer machines.
 
-But actually acer-wmi driver was loaded on any machines that have
-AMW0_GUID1. This behavior is strange because those machines should
-be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
-ideapad-laptop.
+In addition, patch adds a clearly parsing logic of accelerometer hid
+to acer_wmi_get_handle_cb callback function. It is positive matching
+the "SENR" name with "BST0001" device to avoid non-supported hardware.
 
-So, This patch adds the logic to check the machine that has AMW0_GUID1
-should be in Acer/Packard Bell/Gateway white list. But, it still keeps
-the quirk list of those supported non-acer machines for backward
-compatible.
-
-Cc: Bjørn Mork <bjorn@mork.no>
+Reported-by: Bjørn Mork <bjorn@mork.no>
 Cc: Darren Hart <dvhart@infradead.org>
 Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 ---
- drivers/platform/x86/acer-wmi.c | 56 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 3bb3162..734f0da 100644
+index 79d64ea..3bb3162 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -355,6 +355,32 @@ static const struct dmi_system_id acer_blacklist[] __initconst = {
- 	{}
- };
+@@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(void)
+ 	return status;
+ }
  
-+static const struct dmi_system_id amw0_whitelist[] __initconst = {
-+	{
-+		.ident = "Acer",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+		},
-+	},
-+	{
-+		.ident = "Gateway",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
-+		},
-+	},
-+	{
-+		.ident = "Packard Bell",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
-+		},
-+	},
-+	{}
-+};
++#define ACER_WMID_ACCEL_HID	"BST0001"
 +
-+/*
-+ * This quirk table is only for Acer/Gateway/Packard Bell family
-+ * that those machines are supported by acer-wmi driver.
-+ */
- static const struct dmi_system_id acer_quirks[] __initconst = {
- 	{
- 		.callback = dmi_matched,
-@@ -464,6 +490,17 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_travelmate_2490,
- 	},
-+	{}
-+};
-+
-+/*
-+ * This quirk list is for those non-acer machines that have AMW0_GUID1
-+ * but supported by acer-wmi in past days. Keeping this quirk list here
-+ * is only for backward compatible. Please do not add new machine to
-+ * here anymore. Those non-acer machines should be supported by
-+ * appropriate wmi drivers.
-+ */
-+static const struct dmi_system_id non_acer_quirks[] __initconst = {
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Fujitsu Siemens Amilo Li 1718",
-@@ -598,6 +635,7 @@ static void __init find_quirks(void)
+ static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+ 						void *ctx, void **retval)
  {
- 	if (!force_series) {
- 		dmi_check_system(acer_quirks);
-+		dmi_check_system(non_acer_quirks);
- 	} else if (force_series == 2490) {
- 		quirks = &quirk_acer_travelmate_2490;
- 	}
-@@ -2121,6 +2159,24 @@ static int __init acer_wmi_init(void)
- 	find_quirks();
- 
- 	/*
-+	 * The AMW0_GUID1 wmi is not only found on Acer family but also other
-+	 * machines like Lenovo, Fujitsu and Medion. In the past days,
-+	 * acer-wmi driver handled those non-Acer machines by quirks list.
-+	 * But actually acer-wmi driver was loaded on any machines that have
-+	 * AMW0_GUID1. This behavior is strange because those machines should
-+	 * be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
-+	 * ideapad-laptop. So, here checks the machine that has AMW0_GUID1
-+	 * should be in Acer/Gateway/Packard Bell white list, or it's already
-+	 * in the past quirk list.
-+	 */
-+	if (wmi_has_guid(AMW0_GUID1) &&
-+	    !dmi_check_system(amw0_whitelist) &&
-+	    quirks == &quirk_unknown) {
-+		pr_err("Unsupported machine has AMW0_GUID1, unable to load\n");
-+		return -ENODEV;
-+	}
++	struct acpi_device *dev;
 +
-+	/*
- 	 * Detect which ACPI-WMI interface we're using.
- 	 */
- 	if (wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
++	if (strcmp(ctx, "SENR")) {
++		if (acpi_bus_get_device(ah, &dev))
++			return AE_OK;
++		if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
++			return AE_OK;
++	} else
++		return AE_OK;
++
+ 	*(acpi_handle *)retval = ah;
+-	return AE_OK;
++
++	return AE_CTRL_TERMINATE;
+ }
+ 
+ static int __init acer_wmi_get_handle(const char *name, const char *prop,
+@@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(void)
+ {
+ 	int err;
+ 
+-	err = acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
++	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
+ 	if (err)
+ 		return err;
+ 
+@@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
+ 		err = acer_wmi_input_setup();
+ 		if (err)
+ 			return err;
++		err = acer_wmi_accel_setup();
++		if (err)
++			return err;
+ 	}
+ 
+-	acer_wmi_accel_setup();
+-
+ 	err = platform_driver_register(&acer_platform_driver);
+ 	if (err) {
+ 		pr_err("Unable to register platform driver\n");
 -- 
 2.1.4
