@@ -1,183 +1,184 @@
-From: Kai-Chuan Hsieh <kai.chiuan@gmail.com>
-Subject: [PATCH] asus-wmi: Set specified XUSB2PR value for X550LB
-Date: Thu,  1 Sep 2016 23:55:55 +0800
-Message-ID: <1472745355-13428-1-git-send-email-kai.chiuan@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:36426 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933486AbcIAP4F (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Sep 2016 11:56:05 -0400
-Received: by mail-pf0-f193.google.com with SMTP id a143so1276875pfa.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Sep 2016 08:56:05 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
+From: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?=
+        <giedrius.statkevicius@gmail.com>
+Subject: Re: [PATCH] asus-laptop: get rid of parse_arg()
+Date: Sat, 3 Sep 2016 08:51:26 +0300
+Message-ID: <20160903055126.GA12426@tyrael>
+References: <20160805205710.4735-1-giedrius.statkevicius@gmail.com>
+ <20160805231507.GD4952@f23x64.localdomain>
+ <20160806170026.GA20321@tyrael>
+ <20160812214002.GA2855@f23x64.localdomain>
+ <20160816094950.GA2374@tyrael>
+ <20160817182315.GD81374@f23x64.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160817182315.GD81374@f23x64.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-The bluetooth adapter Atheros AR3012 can't be enumerated
-and make the bluetooth function broken.
+On Wed, Aug 17, 2016 at 11:23:15AM -0700, Darren Hart wrote:
+> On Tue, Aug 16, 2016 at 12:49:50PM +0300, Giedrius Statkevičius wrote:
+> > On Fri, Aug 12, 2016 at 02:40:02PM -0700, Darren Hart wrote:
+> > > On Sat, Aug 06, 2016 at 08:00:26PM +0300, Giedrius Statkevičius wrote:
+> > > > On Fri, Aug 05, 2016 at 04:15:07PM -0700, Darren Hart wrote:
+> > > > > On Fri, Aug 05, 2016 at 11:57:10PM +0300, Giedrius Statkevičius wrote:
+> > > > > > parse_arg() duplicates the funcionality of kstrtoint() so use the latter
+> > > > > > function instead. There is no funcionality change except that in the
+> > > > > > case of input being too big -ERANGE will be returned instead of -EINVAL
+> > > > > > which is not bad because -ERANGE makes more sense here. The check for
+> > > > > > !count is already done by the sysfs core so no need to duplicate it
+> > > > > > again. Also, add some minor corrections to error handling to accommodate
+> > > > > > the change in return values (parse_arg returned count if everything
+> > > > > > succeeded whereas kstrtoint returns 0 in the same situation)
+> > > > > > 
+> > > > > > As a result of this patch asus-laptop.ko size is reduced by almost 1%:
+> > > > > > add/remove: 0/1 grow/shrink: 1/6 up/down: 1/-149 (-148)
+> > > > > > function                                     old     new   delta
+> > > > > > __UNIQUE_ID_vermagic0                         69      70      +1
+> > > > > > ls_switch_store                              133     117     -16
+> > > > > > ledd_store                                   175     159     -16
+> > > > > > display_store                                157     141     -16
+> > > > > > ls_level_store                               193     176     -17
+> > > > > > gps_store                                    200     178     -22
+> > > > > > sysfs_acpi_set.isra                          148     125     -23
+> > > > > > parse_arg.part                                39       -     -39
+> > > > > > Total: Before=19160, After=19012, chg -0.77%
+> > > > > > 
+> > > > > > Signed-off-by: Giedrius Statkevičius <giedrius.statkevicius@gmail.com>
+> > > > > > ---
+> > > > > >  drivers/platform/x86/asus-laptop.c | 77 ++++++++++++++++++--------------------
+> > > > > >  1 file changed, 36 insertions(+), 41 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> > > > > > index 15f1311..28551f5 100644
+> > > > > > --- a/drivers/platform/x86/asus-laptop.c
+> > > > > > +++ b/drivers/platform/x86/asus-laptop.c
+> > > > > > @@ -932,30 +932,19 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+> > > > > >  }
+> > > > > >  static DEVICE_ATTR_RO(infos);
+> > > > > >  
+> > > > > > -static int parse_arg(const char *buf, unsigned long count, int *val)
+> > > > > > -{
+> > > > > > -	if (!count)
+> > > > > > -		return 0;
+> > > > > > -	if (count > 31)
+> > > > > > -		return -EINVAL;
+> > > > > > -	if (sscanf(buf, "%i", val) != 1)
+> > > > > > -		return -EINVAL;
+> > > > > > -	return count;
+> > > > > > -}
+> > > > > > -
+> > > > > >  static ssize_t sysfs_acpi_set(struct asus_laptop *asus,
+> > > > > >  			      const char *buf, size_t count,
+> > > > > >  			      const char *method)
+> > > > > >  {
+> > > > > >  	int rv, value;
+> > > > > >  
+> > > > > > -	rv = parse_arg(buf, count, &value);
+> > > > > > -	if (rv <= 0)
+> > > > > > +	rv = kstrtoint(buf, 0, &value);
+> > > > > > +	if (rv < 0)
+> > > > > >  		return rv;
+> > > > > >  
+> > > > > >  	if (write_acpi_int(asus->handle, method, value))
+> > > > > >  		return -ENODEV;
+> > > > > > -	return rv;
+> > > > > > +	return count;
+> > > > > 
+> > > > > This makes explicit what was hidden before - count is merely a range check, it
+> > > > > isn't used in parsing the string... I'm not sure if this is a problem, but it
+> > > > > caught my interest. If count is passed as 12, but buf only contains 3 character,
+> > > > > it may succeed and return 12. I suppose this is a failure in the caller, and
+> > > > > doesn't impact this function - unless the caller isn't expected to properly
+> > > > > terminate the string... but if that were the case, it would have failed
+> > > > > previously as we didn't check for that in parse_arg either.... this is fine as
+> > > > > is I suppose - can be addressed separately if need be.
+> > > > > 
+> > > 
+> > > OK, good - thanks for the context.
+> > > 
+> > > > According to Documentation/filesystems/sysfs.txt:
+> > > > "On write(2), ... A terminating null is added after the data on stores. This
+> > > > makes functions like sysfs_streq() safe to use."
+> > > > So it should be guaranteed that the buffer is a proper C string. Also, we could
+> > > > say kstrtoint() or sscanf() uses all of the buffer so it is safe to return count
+> > > > (as it says in the documentation) as it was before this patch (parse_int
+> > > > returned count if everything succeeded).
+> > > > 
+> > > > > >  }
+> > > > > >  
+> > > > > >  /*
+> > > > > > @@ -975,15 +964,17 @@ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
+> > > > > >  	struct asus_laptop *asus = dev_get_drvdata(dev);
+> > > > > >  	int rv, value;
+> > > > > >  
+> > > > > > -	rv = parse_arg(buf, count, &value);
+> > > > > > -	if (rv > 0) {
+> > > > > > -		if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
+> > > > > > -			pr_warn("LED display write failed\n");
+> > > > > > -			return -ENODEV;
+> > > > > > -		}
+> > > > > > -		asus->ledd_status = (u32) value;
+> > > > > > +	rv = kstrtoint(buf, 0, &value);
+> > > > > > +	if (rv < 0)
+> > > > > > +		return rv;
+> > > > > >
+> > > > > 
+> > > > > This inverts the check to check for failure (this is preferred), but it does
+> > > > > change the successful path to include the value of 0, which was skipped over in
+> > > > > the original above.
+> > > > > 
+> > > > > > +	if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
+> > > > > 
+> > > > > What is value if rv is 0? Perhaps safer/more explicit to test for (rv <= 0)
+> > > > > above. Please consider, and apply decision to all similar instances below.
+> > > > > 
+> > > > Yes but in this case 0 indicates success so it doesn't make sense to test for <=
+> > > > 0 as it would be triggered on success. To be honest I didn't get the idea of
+> > > > what you wanted to say is wrong with this patch. Could you elaborate more?
+> > > > 
+> > >
+> > > Your commit message states there is no functional change, but this changes the
+> > > behavior of this function (and others) for the 0 edge case.
+> > >
+> > > Previously if rv == 0, it would not call write_acpi_int(), now it will and set
+> > > the ledd_status.
+> > >
+> >
+> > sysfs already takes care of this edge case. parse_arg() returned 0 iff count ==
+> > 0 but in fs/sysfs/file.c sysfs_kf_write() there already is:
+> >
+> > if (!count)
+> >     return 0;
+>
+> From a defensive programming context, we should be explicit in what we pass on
+> to other functions and not rely on the caller to filter for us, especially when
+> it's a simple matter of <= versus < in our comparison.
 
-T:  Bus=02 Lev=01 Prnt=01 Port=05 Cnt=02 Dev#=  5 Spd=12  MxCh= 0
-D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3362 Rev=00.02
-S:  Manufacturer=Atheros Communications
-S:  Product=Bluetooth USB Host Controller
-S:  SerialNumber=Alaska Day 2006
-C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-I:  If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+Which comparison? kstrtoint returns 0 on success so we can't use <=.
 
-The error is:
+>
+> Please update the changed comparison sites in the patch to have the same end
+> result as before with respect to what it would do if a 0 were received.
+>
 
- usb 2-6: device not accepting address 7, error -62
- usb usb2-port6: unable to enumerate USB device
+So you want me to add:
 
-It is caused by adapter's connected port is mapped to xHC
-controller, but the xHCI is not supported by the usb device.
+if (!count)
+    return 0;
 
-The output of 'sudo lspci -nnxxx -s 00:14.0':
+Before each kstrtoint()? Sorry but I don't see a point in adding duplicated code
+that is not functional because these functions aren't and will never be used
+outside of sysfs. Just take a look at how many drivers in your own tree use
+kstrtoint() in sysfs methods and there isn't such check in place because it's
+pointless. Only samsung-laptop.c is an exception but it could be cleaned up
+because !count is a pointless check. Not only sysfs can't call us when count is
+0 but kstrtoint() also returns -EINVAL if the string is empty (in case of the
+code in samsung-laptop).
 
- 00:14.0 USB controller [0c03]: Intel Corporation 8 Series USB xHCI HC [8086:9c31] (rev 04)
- 00: 86 80 31 9c 06 04 90 02 04 30 03 0c 00 00 00 00
- 10: 04 00 a0 f7 00 00 00 00 00 00 00 00 00 00 00 00
- 20: 00 00 00 00 00 00 00 00 00 00 00 00 43 10 1f 20
- 30: 00 00 00 00 70 00 00 00 00 00 00 00 0b 01 00 00
- 40: fd 01 36 80 89 c6 0f 80 00 00 00 00 00 00 00 00
- 50: 5f 2e ce 0f 00 00 00 00 00 00 00 00 00 00 00 00
- 60: 30 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 70: 01 80 c2 c1 08 00 00 00 00 00 00 00 00 00 00 00
- 80: 05 00 87 00 0c a0 e0 fe 00 00 00 00 a1 41 00 00
- 90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- a0: 00 01 04 00 00 00 00 00 00 00 00 00 00 00 00 00
- b0: 0f 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00
- c0: 03 c0 30 00 00 00 00 00 03 0c 00 00 00 00 00 00
- d0: f9 01 00 00 f9 01 00 00 0f 00 00 00 0f 00 00 00
- e0: 00 08 00 00 00 00 00 00 00 00 00 00 d8 d8 00 00
- f0: 00 00 00 00 00 00 00 00 b1 0f 04 08 00 00 00 00
-
-By referencing Intel Platform Controller Hub(PCH) datasheet,
-the xHC USB 2.0 Port Routing(XUSB2PR) at offset 0xD0-0xD3h
-decides the setting of mapping the port to EHCI controller or
-xHC controller. And the port mapped to xHC will enable xHCI
-during bus resume.
-
-The setting of disabling bluetooth adapter's connected port is
-0x000001D9. The value can be obtained by few times 1 bit flip
-operation. The suited configuration should have the 'lsusb -t'
-result with bluetooth using ehci:
-
-/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/9p, 480M
-    |__ Port 5: Dev 2, If 0, Class=Video, Driver=uvcvideo, 480M
-    |__ Port 5: Dev 2, If 1, Class=Video, Driver=uvcvideo, 480M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/2p, 480M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
-        |__ Port 6: Dev 3, If 0, Class=Wireless, Driver=btusb, 12M
-        |__ Port 6: Dev 3, If 1, Class=Wireless, Driver=btusb, 12M
-
-Signed-off-by: Kai-Chuan Hsieh <kai.chiuan@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c    | 29 +++++++++++++++++++++++++++++
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 43 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index adecc1c..b64dc16 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -87,6 +87,10 @@ static struct quirk_entry quirk_no_rfkill_wapf4 = {
- 	.no_rfkill = true,
- };
- 
-+static struct quirk_entry quirk_asus_x550lb = {
-+	.xusb2pr = 0x01D9,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	quirks = dmi->driver_data;
-@@ -351,6 +355,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_no_rfkill,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X550LB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X550LB"),
-+		},
-+		.driver_data = &quirk_asus_x550lb,
-+	},
- 	{},
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 7c093a0..8cd689a 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -156,6 +156,9 @@ MODULE_LICENSE("GPL");
- #define ASUS_FAN_CTRL_MANUAL		1
- #define ASUS_FAN_CTRL_AUTO		2
- 
-+#define USB_INTEL_XUSB2PR		0xD0
-+#define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
-+
- struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
-@@ -1080,6 +1083,29 @@ exit:
- 	return result;
- }
- 
-+static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
-+{
-+	struct pci_dev *xhci_pdev;
-+	u32 orig_ports_available;
-+	u32 ports_available = asus->driver->quirks->xusb2pr;
-+
-+	xhci_pdev = pci_get_device(PCI_VENDOR_ID_INTEL,
-+			PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI,
-+			NULL);
-+
-+	if (!xhci_pdev)
-+		return;
-+
-+	pci_read_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
-+				&orig_ports_available);
-+
-+	pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
-+				cpu_to_le32(ports_available));
-+
-+	pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
-+			orig_ports_available, ports_available);
-+}
-+
- /*
-  * Hwmon device
-  */
-@@ -2084,6 +2110,9 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (asus->driver->quirks->wmi_backlight_power)
- 		acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
- 
-+	if (asus->driver->quirks->xusb2pr)
-+		asus_wmi_set_xusb2pr(asus);
-+
- 	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
- 		err = asus_wmi_backlight_init(asus);
- 		if (err && err != -ENODEV)
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 5de1df5..cd6b108 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -51,6 +51,7 @@ struct quirk_entry {
- 	 * and let the ACPI interrupt to send out the key event.
- 	 */
- 	int no_display_toggle;
-+	u32 xusb2pr;
- };
- 
- struct asus_wmi_driver {
--- 
-2.7.4
+thanks,
+Giedrius
