@@ -1,28 +1,30 @@
-From: "Easy Loan" <mail@altrenotizie.org>
-Subject: RE
-Date: Wed, 07 Sep 2016 02:28:27 -0700
-Message-ID: <20160907093333.000BE3B0FF6__11923.589037224$1473240855$gmane$org@mail.altrenotizie.org>
-Reply-To: easyloanscpy@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 0/2] toshiba_haps: Small updates to driver code
+Date: Wed,  7 Sep 2016 09:28:12 -0600
+Message-ID: <20160907152815.5950-1-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [93.63.249.116] ([93.63.249.116]:44779 "EHLO
-        mail.altrenotizie.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S965069AbcIGJdk (ORCPT
+Received: from mail-oi0-f44.google.com ([209.85.218.44]:36012 "EHLO
+        mail-oi0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932610AbcIGP2V (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Sep 2016 05:33:40 -0400
-Content-Description: Mail message body
+        Wed, 7 Sep 2016 11:28:21 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <mail@altrenotizie.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Are you need of Loan offer?  We here to meet your need
+These two patches make some small changes to the driver code, the first
+splits the error check fro the ACPI status and the HDD protection, and
+the second simply changes the printing level of two strings from info
+to debug.
 
-Contact us
+Azael Avalos (2):
+  toshiba_haps: Split ACPI status error check from HDD protection
+    support
+  toshiba_haps: Change the error logging level from info to debug
 
-Jim Elssin
+ drivers/platform/x86/toshiba_haps.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+-- 
+2.9.3
