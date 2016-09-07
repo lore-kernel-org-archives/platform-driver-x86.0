@@ -1,16 +1,16 @@
-From: "@Admin Support .Inc" <sgc@alba.ba.gov.br>
+From: "@ADMIN ZIMBRA" <emefprofalbalilia@serra.es.gov.br>
 Subject: RE
-Date: Wed, 7 Sep 2016 15:38:53 -0300 (BRT)
-Message-ID: <1880531036.6410.1473273533767.JavaMail.zimbra@alba.ba.gov.br>
+Date: Wed, 7 Sep 2016 15:53:23 -0300 (BRT)
+Message-ID: <312132808.3767716.1473274403072.JavaMail.zimbra@serra.es.gov.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.alba.ba.gov.br ([200.223.129.165]:31331 "EHLO
-        mail.alba.ba.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752721AbcIGSvw (ORCPT
+Received: from mail.serra.es.gov.br ([177.137.234.238]:41888 "EHLO
+        correio.serra.es.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751147AbcIGTJV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Sep 2016 14:51:52 -0400
+        Wed, 7 Sep 2016 15:09:21 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 
