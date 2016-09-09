@@ -1,25 +1,118 @@
-From: Service Membre Zimbra <dcf.contabilidade@reitoria.ufrn.br>
-Subject: RE
-Date: Thu, 8 Sep 2016 04:15:31 -0300 (BRT)
-Message-ID: <514451419.4151104.1473318931279.JavaMail.zimbra__18041.3150731058$1473321026$gmane$org@reitoria.ufrn.br>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] asus-wmi: fix asus ux303ub brightness issue
+Date: Fri, 9 Sep 2016 08:46:45 -0700
+Message-ID: <20160909154645.GA17607@f23x64.localdomain>
+References: <1472371926-7936-1-git-send-email-linzino7@gmai.com>
+ <20160828173453.GF96930@f23x64.localdomain>
+ <CAHR064hQ-XBDoTOc79mvGNmC2kdq-O-eJdKcFM1gwE62+VJuHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from as3.ufrn.br ([177.20.144.243]:55850 "EHLO
-        antispam3.info.ufrn.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752115AbcIHHuP (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:49795 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751638AbcIIPqt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Sep 2016 03:50:15 -0400
+        Fri, 9 Sep 2016 11:46:49 -0400
+Content-Disposition: inline
+In-Reply-To: <CAHR064hQ-XBDoTOc79mvGNmC2kdq-O-eJdKcFM1gwE62+VJuHQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Zino Lin <linzino7@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>
 
-Sua cota de webmail excedeu a cota, que é de 2 GB. Eles atualmente totalizaram 2,3 GB.
-Para reviver e aumentar a sua quota de correio web, clique no link a seguir ou copie o link para atualizar sua conta de e-mail da web
-Para ativá-lo.
+On Thu, Sep 01, 2016 at 07:16:10AM +0200, Corentin Chary wrote:
+> On Sun, Aug 28, 2016 at 7:34 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Sun, Aug 28, 2016 at 04:12:06PM +0800, Zino Lin wrote:
+> >> From: zino lin <linzino7@gmail.com>
+> >>
+> >> acpi_video0 doesn't work, asus-wmi brightness interface doesn't work, too.
+> >> So, we use native brightness interface to handle the brightness adjustion,
+> >> and add quirk_asus_ux303ub.
+> >
+> > Thanks Zino,
+> >
+> > +Rafael in case he has an opinion wrt to the acpi_video bit.
+> >
+> > Looking for an Ack from Corentin, but otherwise this looks fine to me.
+> >
+> >>
+> >> Signed-off-by: zino lin <linzino7@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+> >>  drivers/platform/x86/asus-wmi.c    |  3 +++
+> >>  drivers/platform/x86/asus-wmi.h    |  1 +
+> >>  3 files changed, 17 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> >> index adecc1c..456ad8e 100644
+> >> --- a/drivers/platform/x86/asus-nb-wmi.c
+> >> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> >> @@ -87,6 +87,10 @@ static struct quirk_entry quirk_no_rfkill_wapf4 = {
+> >>       .no_rfkill = true,
+> >>  };
+> >>
+> >> +static struct quirk_entry quirk_asus_ux303ub = {
+> >> +     .wmi_backlight_native = true,
+> >> +};
+> >> +
+> >>  static int dmi_matched(const struct dmi_system_id *dmi)
+> >>  {
+> >>       quirks = dmi->driver_data;
+> >> @@ -351,6 +355,15 @@ static const struct dmi_system_id asus_quirks[] = {
+> >>               },
+> >>               .driver_data = &quirk_no_rfkill,
+> >>       },
+> >> +     {
+> >> +             .callback = dmi_matched,
+> >> +             .ident = "ASUSTeK COMPUTER INC. UX303UB",
+> >> +             .matches = {
+> >> +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> >> +                     DMI_MATCH(DMI_PRODUCT_NAME, "UX303UB"),
+> >> +             },
+> >> +             .driver_data = &quirk_asus_ux303ub,
+> >> +     },
+> >>       {},
+> >>  };
+> >>
+> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> >> index 7c093a0..ce6ca31 100644
+> >> --- a/drivers/platform/x86/asus-wmi.c
+> >> +++ b/drivers/platform/x86/asus-wmi.c
+> >> @@ -2084,6 +2084,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+> >>       if (asus->driver->quirks->wmi_backlight_power)
+> >>               acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
+> >>
+> >> +     if (asus->driver->quirks->wmi_backlight_native)
+> >> +             acpi_video_set_dmi_backlight_type(acpi_backlight_native);
+> >> +
+> >>       if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+> >>               err = asus_wmi_backlight_init(asus);
+> >>               if (err && err != -ENODEV)
+> >> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> >> index 5de1df5..5e22041 100644
+> >> --- a/drivers/platform/x86/asus-wmi.h
+> >> +++ b/drivers/platform/x86/asus-wmi.h
+> >> @@ -43,6 +43,7 @@ struct quirk_entry {
+> >>       bool scalar_panel_brightness;
+> >>       bool store_backlight_power;
+> >>       bool wmi_backlight_power;
+> >> +     bool wmi_backlight_native;
+> >>       int wapf;
+> >>       /*
+> >>        * For machines with AMD graphic chips, it will send out WMI event
+> >> --
+> >> 2.7.4
+> >>
+> >>
+> >
+> > --
+> > Darren Hart
+> > Intel Open Source Technology Center
+> 
+> Acked-by: Corentin Chary <corentin.chary@gmail.com>
 
-https://formcrafts.com/a/22734
+Queued to testing, thanks Zino and Corentin.
 
-
-Caso contrário, arrisca-se o cancelamento da sua conta de e-mail.
-Obrigado e desculpe o inconveniente
+-- 
+Darren Hart
+Intel Open Source Technology Center
