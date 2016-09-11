@@ -1,13 +1,13 @@
 From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 18/26] intel_scu_ipc: constify local structures
-Date: Sun, 11 Sep 2016 15:06:00 +0200
-Message-ID: <1473599168-30561-19-git-send-email-Julia.Lawall@lip6.fr>
+Subject: [PATCH 17/26] intel_telemetry_debugfs: constify local structures
+Date: Sun, 11 Sep 2016 15:05:59 +0200
+Message-ID: <1473599168-30561-18-git-send-email-Julia.Lawall@lip6.fr>
 References: <1473599168-30561-1-git-send-email-Julia.Lawall@lip6.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473599168-30561-1-git-send-email-Julia.Lawall@lip6.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: joe@perches.com, kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: joe@perches.com, kernel-janitors@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 For structure types defined in the same file or local header files, find
@@ -29,34 +29,19 @@ Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 The semantic patch seems too long for a commit log, but is in the cover
 letter.
 
- drivers/platform/x86/intel_scu_ipc.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_telemetry_debugfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index e81daff..257837f 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -72,20 +72,20 @@ struct intel_scu_ipc_pdata_t {
- 	u8 irq_mode;
- };
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index ef29f18..d0761f3 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -297,7 +297,7 @@ struct telemetry_debugfs_conf {
  
--static struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
-+static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
- 	.irq_mode = 0,
- };
+ static struct telemetry_debugfs_conf *debugfs_conf;
  
- /* Penwell and Cloverview */
--static struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
-+static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
- 	.irq_mode = 1,
- };
- 
--static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
-+static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
- 	.i2c_base  = 0xff00d000,
- 	.i2c_len = 0x10,
- 	.irq_mode = 0,
+-static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
++static const struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
+ 	.pss_idle_data = telem_apl_pss_idle_data,
+ 	.pcs_idle_blkd_data = telem_apl_pcs_idle_blkd_data,
+ 	.pcs_s0ix_blkd_data = telem_apl_pcs_s0ix_blkd_data,
