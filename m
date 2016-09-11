@@ -1,220 +1,192 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] asus-wmi: Set specified XUSB2PR value for X550LB
-Date: Sun, 11 Sep 2016 16:50:46 +0200
-Message-ID: <CAHR064hBWJo7N417mZWVT4EN_EBCULLcn_HUbFnguA_4O3+inQ@mail.gmail.com>
-References: <1472745355-13428-1-git-send-email-kai.chiuan@gmail.com> <20160909165820.GB17607@f23x64.localdomain>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 00/26] constify local structures
+Date: Sun, 11 Sep 2016 20:21:05 +0300
+Message-ID: <20160911172105.GB5493@intel.com>
+References: <1473599168-30561-1-git-send-email-Julia.Lawall@lip6.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f65.google.com ([209.85.215.65]:36423 "EHLO
-        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753947AbcIKOuu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Sep 2016 10:50:50 -0400
-Received: by mail-lf0-f65.google.com with SMTP id s29so4766102lfg.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Sep 2016 07:50:49 -0700 (PDT)
-In-Reply-To: <20160909165820.GB17607@f23x64.localdomain>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Kai-Chuan Hsieh <kai.chiuan@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473599168-30561-1-git-send-email-Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mustafa Ismail <mustafa.ismail-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tatyana Nikolova <tatyana.e.nikolova-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shiraz Saleem <shiraz.saleem-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chien Tin Tung <chien.tin.tung-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-I'm not sure what this has to do with the acpi/wmi driver, but I'm
-fine to merge it there if there isn't a better place.
+On Sun, Sep 11, 2016 at 03:05:42PM +0200, Julia Lawall wrote:
+> Constify local structures.
+> 
+> The semantic patch that makes this change is as follows:
+> (http://coccinelle.lip6.fr/)
 
-Kai-Chuan:
-- Can you double-check that there is no BIOS update fixing this ?
-- Can you double-check that there isn't similar code somewhere else in
-the kernel ?
+Just my two cents but:
 
-Thanks !
+1. You *can* use a static analysis too to find bugs or other issues.
+2. However, you should manually do the commits and proper commit
+   messages to subsystems based on your findings. And I generally think
+   that if one contributes code one should also at least smoke test changes
+   somehow.
 
-On Fri, Sep 9, 2016 at 6:58 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Thu, Sep 01, 2016 at 11:55:55PM +0800, Kai-Chuan Hsieh wrote:
->> The bluetooth adapter Atheros AR3012 can't be enumerated
->> and make the bluetooth function broken.
->>
->> T:  Bus=02 Lev=01 Prnt=01 Port=05 Cnt=02 Dev#=  5 Spd=12  MxCh= 0
->> D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
->> P:  Vendor=13d3 ProdID=3362 Rev=00.02
->> S:  Manufacturer=Atheros Communications
->> S:  Product=Bluetooth USB Host Controller
->> S:  SerialNumber=Alaska Day 2006
->> C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
->> I:  If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
->> I:  If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
->>
->> The error is:
->>
->>  usb 2-6: device not accepting address 7, error -62
->>  usb usb2-port6: unable to enumerate USB device
->>
->> It is caused by adapter's connected port is mapped to xHC
->> controller, but the xHCI is not supported by the usb device.
->>
->> The output of 'sudo lspci -nnxxx -s 00:14.0':
->>
->>  00:14.0 USB controller [0c03]: Intel Corporation 8 Series USB xHCI HC [8086:9c31] (rev 04)
->>  00: 86 80 31 9c 06 04 90 02 04 30 03 0c 00 00 00 00
->>  10: 04 00 a0 f7 00 00 00 00 00 00 00 00 00 00 00 00
->>  20: 00 00 00 00 00 00 00 00 00 00 00 00 43 10 1f 20
->>  30: 00 00 00 00 70 00 00 00 00 00 00 00 0b 01 00 00
->>  40: fd 01 36 80 89 c6 0f 80 00 00 00 00 00 00 00 00
->>  50: 5f 2e ce 0f 00 00 00 00 00 00 00 00 00 00 00 00
->>  60: 30 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>  70: 01 80 c2 c1 08 00 00 00 00 00 00 00 00 00 00 00
->>  80: 05 00 87 00 0c a0 e0 fe 00 00 00 00 a1 41 00 00
->>  90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>  a0: 00 01 04 00 00 00 00 00 00 00 00 00 00 00 00 00
->>  b0: 0f 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00
->>  c0: 03 c0 30 00 00 00 00 00 03 0c 00 00 00 00 00 00
->>  d0: f9 01 00 00 f9 01 00 00 0f 00 00 00 0f 00 00 00
->>  e0: 00 08 00 00 00 00 00 00 00 00 00 00 d8 d8 00 00
->>  f0: 00 00 00 00 00 00 00 00 b1 0f 04 08 00 00 00 00
->>
->> By referencing Intel Platform Controller Hub(PCH) datasheet,
->> the xHC USB 2.0 Port Routing(XUSB2PR) at offset 0xD0-0xD3h
->> decides the setting of mapping the port to EHCI controller or
->> xHC controller. And the port mapped to xHC will enable xHCI
->> during bus resume.
->>
->> The setting of disabling bluetooth adapter's connected port is
->> 0x000001D9. The value can be obtained by few times 1 bit flip
->> operation. The suited configuration should have the 'lsusb -t'
->> result with bluetooth using ehci:
->>
->> /:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
->> /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/9p, 480M
->>     |__ Port 5: Dev 2, If 0, Class=Video, Driver=uvcvideo, 480M
->>     |__ Port 5: Dev 2, If 1, Class=Video, Driver=uvcvideo, 480M
->> /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/2p, 480M
->>     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
->>         |__ Port 6: Dev 3, If 0, Class=Wireless, Driver=btusb, 12M
->>         |__ Port 6: Dev 3, If 1, Class=Wireless, Driver=btusb, 12M
->>
->> Signed-off-by: Kai-Chuan Hsieh <kai.chiuan@gmail.com>
->> ---
->>  drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
->>  drivers/platform/x86/asus-wmi.c    | 29 +++++++++++++++++++++++++++++
->>  drivers/platform/x86/asus-wmi.h    |  1 +
->>  3 files changed, 43 insertions(+)
->>
->> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->> index adecc1c..b64dc16 100644
->> --- a/drivers/platform/x86/asus-nb-wmi.c
->> +++ b/drivers/platform/x86/asus-nb-wmi.c
->> @@ -87,6 +87,10 @@ static struct quirk_entry quirk_no_rfkill_wapf4 = {
->>       .no_rfkill = true,
->>  };
->>
->> +static struct quirk_entry quirk_asus_x550lb = {
->> +     .xusb2pr = 0x01D9,
->> +};
->> +
->>  static int dmi_matched(const struct dmi_system_id *dmi)
->>  {
->>       quirks = dmi->driver_data;
->> @@ -351,6 +355,15 @@ static const struct dmi_system_id asus_quirks[] = {
->>               },
->>               .driver_data = &quirk_no_rfkill,
->>       },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "ASUSTeK COMPUTER INC. X550LB",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "X550LB"),
->> +             },
->> +             .driver_data = &quirk_asus_x550lb,
->> +     },
->>       {},
->>  };
->>
->> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->> index 7c093a0..8cd689a 100644
->> --- a/drivers/platform/x86/asus-wmi.c
->> +++ b/drivers/platform/x86/asus-wmi.c
->> @@ -156,6 +156,9 @@ MODULE_LICENSE("GPL");
->>  #define ASUS_FAN_CTRL_MANUAL         1
->>  #define ASUS_FAN_CTRL_AUTO           2
->>
->> +#define USB_INTEL_XUSB2PR            0xD0
->> +#define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI        0x9c31
->> +
->>  struct bios_args {
->>       u32 arg0;
->>       u32 arg1;
->> @@ -1080,6 +1083,29 @@ exit:
->>       return result;
->>  }
->>
->> +static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
->> +{
->> +     struct pci_dev *xhci_pdev;
->> +     u32 orig_ports_available;
->> +     u32 ports_available = asus->driver->quirks->xusb2pr;
->> +
->> +     xhci_pdev = pci_get_device(PCI_VENDOR_ID_INTEL,
->> +                     PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI,
->> +                     NULL);
->> +
->> +     if (!xhci_pdev)
->> +             return;
->> +
->> +     pci_read_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
->> +                             &orig_ports_available);
->> +
->> +     pci_write_config_dword(xhci_pdev, USB_INTEL_XUSB2PR,
->> +                             cpu_to_le32(ports_available));
->> +
->> +     pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
->> +                     orig_ports_available, ports_available);
->> +}
->
-> These seems more appropriate as a debug statement than an info statement to me.
-> This certainly isn't at the level a user would need to see.
->
-> Otherwise, this looks good to me.
->
-> Corentin, any other concerns?
->
->> +
->>  /*
->>   * Hwmon device
->>   */
->> @@ -2084,6 +2110,9 @@ static int asus_wmi_add(struct platform_device *pdev)
->>       if (asus->driver->quirks->wmi_backlight_power)
->>               acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
->>
->> +     if (asus->driver->quirks->xusb2pr)
->> +             asus_wmi_set_xusb2pr(asus);
->> +
->>       if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->>               err = asus_wmi_backlight_init(asus);
->>               if (err && err != -ENODEV)
->> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
->> index 5de1df5..cd6b108 100644
->> --- a/drivers/platform/x86/asus-wmi.h
->> +++ b/drivers/platform/x86/asus-wmi.h
->> @@ -51,6 +51,7 @@ struct quirk_entry {
->>        * and let the ACPI interrupt to send out the key event.
->>        */
->>       int no_display_toggle;
->> +     u32 xusb2pr;
->>  };
->>
->>  struct asus_wmi_driver {
->> --
->> 2.7.4
->>
->>
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+I don't know if I'm alone with my opinion. I just think that one should
+also do the analysis part and not blindly create and submit patches.
 
+Anyway, I'll apply the TPM change at some point. As I said they were
+for better. Thanks.
 
+/Jarkko
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+> // <smpl>
+> // The first rule ignores some cases that posed problems
+> @r disable optional_qualifier@
+> identifier s != {peri_clk_data,threshold_attr,tracer_flags,tracer};
+> identifier i != {s5k5baf_cis_rect,smtcfb_fix};
+> position p;
+> @@
+> static struct s i@p = { ... };
+> 
+> @lstruct@
+> identifier r.s;
+> @@
+> struct s { ... };
+> 
+> @used depends on lstruct@
+> identifier r.i;
+> @@
+> i
+> 
+> @bad1@
+> expression e;
+> identifier r.i;
+> assignment operator a;
+> @@
+>  (<+...i...+>) a e
+> 
+> @bad2@
+> identifier r.i;
+> @@
+>  &(<+...i...+>)
+> 
+> @bad3@
+> identifier r.i;
+> declarer d;
+> @@
+>  d(...,<+...i...+>,...);
+> 
+> @bad4@
+> identifier r.i;
+> type T;
+> T[] e;
+> identifier f;
+> position p;
+> @@
+> 
+> f@p(...,
+> (
+>   (<+...i...+>)
+> &
+>   e
+> )
+> ,...)
+> 
+> @bad4a@
+> identifier r.i;
+> type T;
+> T *e;
+> identifier f;
+> position p;
+> @@
+> 
+> f@p(...,
+> (
+>   (<+...i...+>)
+> &
+>   e
+> )
+> ,...)
+> 
+> @ok5@
+> expression *e;
+> identifier r.i;
+> position p;
+> @@
+> e =@p i
+> 
+> @bad5@
+> expression *e;
+> identifier r.i;
+> position p != ok5.p;
+> @@
+> e =@p (<+...i...+>)
+> 
+> @rr depends on used && !bad1 && !bad2 && !bad3 && !bad4 && !bad4a && !bad5@
+> identifier s,r.i;
+> position r.p;
+> @@
+> 
+> static
+> +const
+>  struct s i@p = { ... };
+> 
+> @depends on used && !bad1 && !bad2 && !bad3 && !bad4 && !bad4a && !bad5
+>  disable optional_qualifier@
+> identifier rr.s,r.i;
+> @@
+> 
+> static
+> +const
+>  struct s i;
+> // </smpl>
+> 
+> ---
+> 
+>  drivers/acpi/acpi_apd.c                              |    8 +++---
+>  drivers/char/tpm/tpm-interface.c                     |   10 ++++----
+>  drivers/char/tpm/tpm-sysfs.c                         |    2 -
+>  drivers/cpufreq/intel_pstate.c                       |    8 +++---
+>  drivers/infiniband/hw/i40iw/i40iw_uk.c               |    6 ++---
+>  drivers/media/i2c/tvp514x.c                          |    2 -
+>  drivers/media/pci/ddbridge/ddbridge-core.c           |   18 +++++++--------
+>  drivers/media/pci/ngene/ngene-cards.c                |   14 ++++++------
+>  drivers/media/pci/smipcie/smipcie-main.c             |    8 +++---
+>  drivers/misc/sgi-xp/xpc_uv.c                         |    2 -
+>  drivers/net/arcnet/com20020-pci.c                    |   10 ++++----
+>  drivers/net/can/c_can/c_can_pci.c                    |    4 +--
+>  drivers/net/can/sja1000/plx_pci.c                    |   20 ++++++++---------
+>  drivers/net/ethernet/mellanox/mlx4/main.c            |    4 +--
+>  drivers/net/ethernet/oki-semi/pch_gbe/pch_gbe_main.c |    2 -
+>  drivers/net/ethernet/renesas/sh_eth.c                |   14 ++++++------
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c     |    2 -
+>  drivers/net/wireless/ath/dfs_pattern_detector.c      |    2 -
+>  drivers/net/wireless/intel/iwlegacy/3945.c           |    4 +--
+>  drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192ce/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192ee/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192se/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c  |    2 -
+>  drivers/net/wireless/realtek/rtlwifi/rtl8821ae/sw.c  |    2 -
+>  drivers/platform/chrome/chromeos_laptop.c            |   22 +++++++++----------
+>  drivers/platform/x86/intel_scu_ipc.c                 |    6 ++---
+>  drivers/platform/x86/intel_telemetry_debugfs.c       |    2 -
+>  drivers/scsi/esas2r/esas2r_flash.c                   |    2 -
+>  drivers/scsi/hptiop.c                                |    6 ++---
+>  drivers/spi/spi-dw-pci.c                             |    4 +--
+>  drivers/staging/rtl8192e/rtl8192e/rtl_core.c         |    2 -
+>  drivers/usb/misc/ezusb.c                             |    2 -
+>  drivers/video/fbdev/matrox/matroxfb_g450.c           |    2 -
+>  lib/crc64_ecma.c                                     |    2 -
+>  sound/pci/ctxfi/ctatc.c                              |    2 -
+>  sound/pci/hda/patch_ca0132.c                         |   10 ++++----
+>  sound/pci/riptide/riptide.c                          |    2 -
+>  40 files changed, 110 insertions(+), 110 deletions(-)
+
+------------------------------------------------------------------------------
