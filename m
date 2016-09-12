@@ -1,54 +1,148 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [patch v1] x86/platform/mellanox: introduce support for Mellanox
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v1] x86/platform/mellanox: introduce support for Mellanox
  systems platform
-Date: Mon, 12 Sep 2016 13:00:53 +0200
-Message-ID: <20160912110053.GA5463@gmail.com>
-References: <AM5PR0501MB2097F4FF64CD69BD634B8CCEA2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+Date: Mon, 12 Sep 2016 07:48:24 +0000
+Message-ID: <AM5PR0501MB2097A0B071880E64FB157816A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+References: <1473661798-112691-1-git-send-email-vadimp@mellanox.com>
+ <20160912061237.GB11230@kroah.com>
+ <AM5PR0501MB2097F4FF64CD69BD634B8CCEA2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
  <20160912070457.GA4590@kroah.com>
  <AM5PR0501MB2097F6324F291676415B3513A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
  <20160912074059.GA19325@kroah.com>
- <AM5PR0501MB2097A0B071880E64FB157816A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160912081712.GA27368@kroah.com>
- <AM5PR0501MB20970321C4308E2DB45D59D2A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160912083436.GA9490@kroah.com>
- <CAMuHMdWkgyyxTOanMZDEGSPLhkA2AgXbgikCi2jbwJvqQ5m--A@mail.gmail.com>
- <20160912102124.GA3809@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:35273 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753421AbcILLBA (ORCPT
+Received: from mail-db5eur01on0069.outbound.protection.outlook.com ([104.47.2.69]:31040
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754615AbcILLVi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Sep 2016 07:01:00 -0400
-Content-Disposition: inline
-In-Reply-To: <20160912102124.GA3809@kroah.com>
+        Mon, 12 Sep 2016 07:21:38 -0400
+In-Reply-To: <20160912074059.GA19325@kroah.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Vadim Pasternak <vadimp@mellanox.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "davem@davemloft.net" <davem@davemloft.net>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
 
 
-* Greg KH <gregkh@linuxfoundation.org> wrote:
 
-> On Mon, Sep 12, 2016 at 11:14:26AM +0200, Geert Uytterhoeven wrote:
-> > On Mon, Sep 12, 2016 at 10:34 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >> This is LPC to I2C bridge.
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Monday, September 12, 2016 10:41 AM
+> To: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: tglx@linutronix.de; mingo@redhat.com; hpa@zytor.com;
+> davem@davemloft.net; geert@linux-m68k.org; akpm@linux-foundation.org;
+> kvalo@codeaurora.org; mchehab@kernel.org; linux@roeck-us.net;
+> x86@kernel.org; linux-kernel@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; jiri@resnulli.us
+> Subject: Re: [patch v1] x86/platform/mellanox: introduce support for Mell=
+anox
+> systems platform
+>=20
+> On Mon, Sep 12, 2016 at 07:23:59AM +0000, Vadim Pasternak wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > Sent: Monday, September 12, 2016 10:05 AM
+> > > To: Vadim Pasternak <vadimp@mellanox.com>
+> > > Cc: tglx@linutronix.de; mingo@redhat.com; hpa@zytor.com;
+> > > davem@davemloft.net; geert@linux-m68k.org;
+> > > akpm@linux-foundation.org; kvalo@codeaurora.org; mchehab@kernel.org;
+> > > linux@roeck-us.net; x86@kernel.org; linux-kernel@vger.kernel.org;
+> > > platform-driver- x86@vger.kernel.org; jiri@resnulli.us
+> > > Subject: Re: [patch v1] x86/platform/mellanox: introduce support for
+> > > Mellanox systems platform
 > > >
-> > > "LPC"?
-> > 
-> > https://en.wikipedia.org/wiki/Low_Pin_Count
-> > 
-> > "Modern ISA"
-> 
-> So my original point stands, 1990's technology being used for brand new
-> devices today, ugh :(
-> 
-> Someone needs to go kick some hardware designers...
+> > > On Mon, Sep 12, 2016 at 06:44:03AM +0000, Vadim Pasternak wrote:
+> > > >
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > > > > Sent: Monday, September 12, 2016 9:13 AM
+> > > > > To: Vadim Pasternak <vadimp@mellanox.com>
+> > > > > Cc: tglx@linutronix.de; mingo@redhat.com; hpa@zytor.com;
+> > > > > davem@davemloft.net; geert@linux-m68k.org;
+> > > > > akpm@linux-foundation.org; kvalo@codeaurora.org;
+> > > > > mchehab@kernel.org; linux@roeck-us.net; x86@kernel.org;
+> > > > > linux-kernel@vger.kernel.org;
+> > > > > platform-driver- x86@vger.kernel.org; jiri@resnulli.us
+> > > > > Subject: Re: [patch v1] x86/platform/mellanox: introduce support
+> > > > > for Mellanox systems platform
+> > > > >
+> > > > > On Mon, Sep 12, 2016 at 06:29:58AM +0000, vadimp@mellanox.com
+> wrote:
+> > > > > > From: Vadim Pasternak <vadimp@mellanox.com>
+> > > > > >
+> > > > > > Enable system support for the Mellanox Technologies platform,
+> > > > > > which provides support for the next Mellanox basic systems:
+> > > > > > "msx6710", "msx6720", "msb7700", "msn2700", "msx1410",
+> > > > > > "msn2410", "msb7800", "msn2740", "msn2100" and also various
+> > > > > > number of derivative systems from the above basic types.
+> > > > >
+> > > > > What does "system support" mean?
+> > > > >
+> > > > > Why can't this just be a "normal" PCI driver, as you are just
+> > > > > accessing a PCI device and doing something with it, seems odd to
+> > > > > claim it is a
+> > > "platform" driver.
+> > > > >
+> > > >
+> > > > This driver also activates probes to create i2c platform driver and=
+ muxes.
+> > >
+> > > And how does it do that?  Through the PCI device?
+> > >
+> > > > For ARM and PPC based systems I can activate such stuff through dts=
+.
+> > > > To be honest I don't know what is the right way to do such things
+> > > > for
+> > > > x86 systems.
+> > >
+> > > How is it found in a x86 system, in ACPI?
+> > >
+> >
+> > We have no support in ACPI.
+> > Currently it could be found through DMI.
+> >
+> > > > If I will move PCI related stuff to separate driver, could you
+> > > > suggest some right location for that?
+> > >
+> > > Depends on what it does.
+> >
+> > It creates platform i2c driver (Mellanox controller), like:
+> > platform_device_register_simple("i2c_mlxcpld", -1,
+> >                                                          NULL, 0); And
+> > two mux platform device instances, like:
+> > platform_device_register_resndata(dev,
+> >                                                 " i2c-mux-reg", i, NULL=
+,
+> >                                                 0, &mlxplat_mux_data[i]=
+,
+> >
+> > sizeof(mlxplat_mux_data[i]));
+>=20
+> Ugh.  Really?  These aren't on a real bus?  What is this, the 1990's?
 
-In their defense, "this is a carbon copy of published 1990s technology" is a 
-pretty good starting point for a defendant, in patent litigation.
+Actually this is 2015-2016.
+Many switches use i2c virtual buses infrastructure for placing slow devices=
+ for system monitoring and control.
+
+>=20
+> Ok, a DMI driver for these makes sense in the platform directory to me, b=
+ut you
+> have to convince the maintainer of this subsystem :)
+>=20
+> And rip all of that PCI stuff out, that belongs in a PCI driver.
+>=20
+Thank you very much for all your inputs.
+
+> thanks,
+>=20
+> greg k-h
 
 Thanks,
 
-	Ingo
+Vadim.
