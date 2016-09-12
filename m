@@ -1,154 +1,86 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: [PATCH] asus-wmi: filter buggy scan codes on ASUS Q500A
-Date: Mon, 12 Sep 2016 17:48:17 +0200
-Message-ID: <1473695297-10236-1-git-send-email-linux@rempel-privat.de>
-References: <20160804005052.GC36266@dtor-ws>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160804005052.GC36266@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: fixed-term.Oleksij.Rempel@de.bosch.com
-Cc: Oleksij Rempel <linux@rempel-privat.de>, Alex Henrie <alexhenrie24@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH 00/26] constify local structures
+Date: Mon, 12 Sep 2016 21:50:23 +0300
+Message-ID: <20160912185023.GB14727@intel.com>
+References: <1473599168-30561-1-git-send-email-Julia.Lawall@lip6.fr>
+ <20160911172105.GB5493@intel.com>
+ <alpine.DEB.2.10.1609121051050.3049@hadrien>
+ <20160912131625.GD957@intel.com>
+ <877fah5j35.fsf@linux.intel.com>
+ <alpine.DEB.2.10.1609121548200.29099@hadrien>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.10.1609121548200.29099@hadrien>
+Sender: linux-can-owner@vger.kernel.org
+To: Julia Lawall <julia.lawall@lip6.fr>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, linux-renesas-soc@vger.kernel.org, joe@perches.com, kernel-janitors@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, linux-can@vger.kernel.org, Tatyana Nikolova <tatyana.e.nikolova@intel.com>, Shiraz Saleem <shiraz.saleem@intel.com>, Mustafa Ismail <mustafa.ismail@intel.com>, Chien Tin Tung <chien.tin.tung@intel.com>, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, devel@driverdev.osuosl.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-wireless@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, tpmdd-devel@lists.sourceforge.net, linux-scsi@
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some revision of ASUS Q500A series have keyboard related
-issue which is reproducible only if Windows with installed ASUS
-tools was ever started.
-In this case the Linux side will have blocked keyboard or
-report wrong or incomplete hotkey events.
-To make Linux work properly again complete power down
-(unplug power supply and remove battery) should be made.
+On Mon, Sep 12, 2016 at 03:52:08PM +0200, Julia Lawall wrote:
+> 
+> 
+> On Mon, 12 Sep 2016, Felipe Balbi wrote:
+> 
+> >
+> > Hi,
+> >
+> > Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
+> > > On Mon, Sep 12, 2016 at 10:54:07AM +0200, Julia Lawall wrote:
+> > >>
+> > >>
+> > >> On Sun, 11 Sep 2016, Jarkko Sakkinen wrote:
+> > >>
+> > >> > On Sun, Sep 11, 2016 at 03:05:42PM +0200, Julia Lawall wrote:
+> > >> > > Constify local structures.
+> > >> > >
+> > >> > > The semantic patch that makes this change is as follows:
+> > >> > > (http://coccinelle.lip6.fr/)
+> > >> >
+> > >> > Just my two cents but:
+> > >> >
+> > >> > 1. You *can* use a static analysis too to find bugs or other issues.
+> > >> > 2. However, you should manually do the commits and proper commit
+> > >> >    messages to subsystems based on your findings. And I generally think
+> > >> >    that if one contributes code one should also at least smoke test changes
+> > >> >    somehow.
+> > >> >
+> > >> > I don't know if I'm alone with my opinion. I just think that one should
+> > >> > also do the analysis part and not blindly create and submit patches.
+> > >>
+> > >> All of the patches are compile tested.  And the individual patches are
+> > >
+> > > Compile-testing is not testing. If you are not able to test a commit,
+> > > you should explain why.
+> >
+> > Dude, Julia has been doing semantic patching for years already and
+> > nobody has raised any concerns so far. There's already an expectation
+> > that Coccinelle *works* and Julia's sematic patches are sound.
+> >
+> > Besides, adding 'const' is something that causes virtually no functional
+> > changes to the point that build-testing is really all you need. Any
+> > problems caused by adding 'const' to a definition will be seen by build
+> > errors or warnings.
+> >
+> > Really, just stop with the pointless discussion and go read a bit about
+> > Coccinelle and what semantic patches are giving you. The work done by
+> > Julia and her peers are INRIA have measurable benefits.
+> >
+> > You're really making a thunderstorm in a glass of water.
+> 
+> Thanks for the defense, but since a lot of these patches torned out to be
+> wrong, due to an incorrect parse by Coccinelle, combined with an
+> unpleasantly lax compiler, Jarkko does have a point that I should have
+> looked at the patches more carefully.  In any case, I have written to the
+> maintainers relevant to the patches that turned out to be incorrect.
 
-Linux/atkbd after clean start will get fallowing code on VOLUME_UP
-key: {0xe0, 0x30, 0xe0, 0xb0}. After Windows, same key will generate this
-codes: {0xe1, 0x23, 0xe0, 0x30, 0xe0, 0xb0}. As result atkdb will
-be confused by buggy codes.
+Exactly. I'm not excepting that every commit would require extensive
+analysis but it would be good to quickly at least skim through commits
+and see if they make sense (or ask if unsure) :) 
 
-This patch is filtering this buggy code out.
+And I'm fine with compile testing if it is mentioned in the commit msg.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=119391
+> julia
 
-Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-Cc: Alex Henrie <alexhenrie24@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: acpi4asus-user@lists.sourceforge.net
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/platform/x86/asus-nb-wmi.c | 45 ++++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/asus-wmi.h    |  4 ++++
- 2 files changed, 49 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index adecc1c..787da83 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -27,6 +27,7 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/fb.h>
- #include <linux/dmi.h>
-+#include <linux/i8042.h>
- 
- #include "asus-wmi.h"
- 
-@@ -55,10 +56,35 @@ MODULE_PARM_DESC(wapf, "WAPF value");
- 
- static struct quirk_entry *quirks;
- 
-+static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
-+			      struct serio *port)
-+{
-+	static bool extended;
-+	bool ret = false;
-+
-+
-+	if (str & I8042_STR_AUXDATA)
-+		return false;
-+
-+	if (unlikely(data == 0xe1)) {
-+		extended = true;
-+		ret = true;
-+	} else if (unlikely(extended)) {
-+		extended = false;
-+		ret = true;
-+	}
-+
-+	return ret;
-+}
-+
- static struct quirk_entry quirk_asus_unknown = {
- 	.wapf = 0,
- };
- 
-+static struct quirk_entry quirk_asus_q500a = {
-+	.i8042_filter = asus_q500a_i8042_filter,
-+};
-+
- /*
-  * For those machines that need software to control bt/wifi status
-  * and can't adjust brightness through ACPI interface
-@@ -96,6 +122,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
- static const struct dmi_system_id asus_quirks[] = {
- 	{
- 		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. Q500A",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Q500A"),
-+		},
-+		.driver_data = &quirk_asus_q500a,
-+	},
-+	{
-+		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. U32U",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
-@@ -356,6 +391,8 @@ static const struct dmi_system_id asus_quirks[] = {
- 
- static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- {
-+	int ret;
-+
- 	quirks = &quirk_asus_unknown;
- 	dmi_check_system(asus_quirks);
- 
-@@ -367,6 +404,14 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- 		quirks->wapf = wapf;
- 	else
- 		wapf = quirks->wapf;
-+
-+	if (quirks->i8042_filter) {
-+		ret = i8042_install_filter(quirks->i8042_filter);
-+		if (ret) {
-+			pr_warn("Unable to install key filter\n");
-+		}
-+		pr_info("Using i8042 filter function for receiving events\n");
-+	}
- }
- 
- static const struct key_entry asus_nb_wmi_keymap[] = {
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 5de1df5..dd2e6cc 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -28,6 +28,7 @@
- #define _ASUS_WMI_H_
- 
- #include <linux/platform_device.h>
-+#include <linux/i8042.h>
- 
- #define ASUS_WMI_KEY_IGNORE (-1)
- #define ASUS_WMI_BRN_DOWN	0x20
-@@ -51,6 +52,9 @@ struct quirk_entry {
- 	 * and let the ACPI interrupt to send out the key event.
- 	 */
- 	int no_display_toggle;
-+
-+	bool (*i8042_filter)(unsigned char data, unsigned char str,
-+			     struct serio *serio);
- };
- 
- struct asus_wmi_driver {
--- 
-2.7.4
+/Jarkko
