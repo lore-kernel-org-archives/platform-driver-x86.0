@@ -1,122 +1,95 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v1] x86/platform/mellanox: introduce support for Mellanox
- systems platform
-Date: Tue, 13 Sep 2016 08:18:11 +0000
-Message-ID: <AM5PR0501MB20979B6C5AC0F9E0AB55C01AA2FE0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <AM5PR0501MB2097F6324F291676415B3513A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160912074059.GA19325@kroah.com>
- <AM5PR0501MB2097A0B071880E64FB157816A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160912081712.GA27368@kroah.com>
- <AM5PR0501MB20970321C4308E2DB45D59D2A2FF0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160912083436.GA9490@kroah.com>
- <CAMuHMdWkgyyxTOanMZDEGSPLhkA2AgXbgikCi2jbwJvqQ5m--A@mail.gmail.com>
- <20160912102124.GA3809@kroah.com> <20160912110053.GA5463@gmail.com>
- <AM5PR0501MB20978EA0F1FF7A2E5162EC8FA2FE0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <20160913081212.GA15715@kroah.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [RESEND RFC PATCH 0/5] platform drivers for UP Board
+Date: Tue, 13 Sep 2016 12:42:52 +0300
+Message-ID: <1473759772.11323.265.camel@linux.intel.com>
+References: <1465762392-9205-1-git-send-email-dan@emutex.com>
+         <1467648434-29080-1-git-send-email-dan@emutex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db5eur01on0075.outbound.protection.outlook.com ([104.47.2.75]:35684
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752217AbcIMIeT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Sep 2016 04:34:19 -0400
-In-Reply-To: <20160913081212.GA15715@kroah.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467648434-29080-1-git-send-email-dan@emutex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan O'Donovan <dan@emutex.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org
+Cc: lee.jones@linaro.org, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, 2016-07-04 at 17:07 +0100, Dan O'Donovan wrote:
+> [Re-sending to a wider audience suggested by Darren Hart]
+> 
+> The UP Board is a new SBC based on the Intel Atom X5-Z8350 "Cherry 
+> Trail" SoC and features a 40-pin I/O pin header and form-factor 
+> inspired by the Raspberry Pi 2.
+> 
+> It utilises a CPLD between the SoC and the external 40-pin header
+> to provide buffered voltage level-shifting of the I/O signals, mux
+> switching and LED control, and programmable pin mapping between the
+> SoC and the external pin header.
+> 
+> The gpio, pinctrl and led drivers provided in this patch series 
+> enable and manage the functions provided by that CPLD.
+> 
+> I have some open questions about this patch series:
+>  * Is it ok to place all of these various UP board drivers together
+>    in drivers/platform/x86/, or would it be preferable to place them
+>    in the respective sub-system directories (gpio, pinctrl, etc.)?
+>    My rationale for keeping them together here is that they are all
+>    specific to this UP Board platform and not expected to be
+>    generally useful on any other platforms (except variants of UP).
+>  * Is it acceptable to include hard-coded references to ACPI device
+>    IDs (representing devices integrated on the SoC devices) for the
+>    purpose of pin map and gpio references? Or is it required to
+>    use only named gpio pins?
+> 
+> Any feedback/suggestions on the questions above, and the patch series
+> in general, would be greatly appreciated!
 
+Looking closer to this and taking into account what is going on with
+ACPI support for open connected boards I think this patch set is not
+needed at all.
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Tuesday, September 13, 2016 11:12 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: Ingo Molnar <mingo@kernel.org>; Geert Uytterhoeven <geert@linux-
-> m68k.org>; tglx@linutronix.de; mingo@redhat.com; hpa@zytor.com;
-> davem@davemloft.net; akpm@linux-foundation.org; kvalo@codeaurora.org;
-> mchehab@kernel.org; linux@roeck-us.net; x86@kernel.org; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
-i.us
-> Subject: Re: [patch v1] x86/platform/mellanox: introduce support for Mell=
-anox
-> systems platform
->=20
-> On Tue, Sep 13, 2016 at 07:27:20AM +0000, Vadim Pasternak wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Ingo Molnar [mailto:mingo.kernel.org@gmail.com] On Behalf Of
-> > > Ingo Molnar
-> > > Sent: Monday, September 12, 2016 2:01 PM
-> > > To: Greg KH <gregkh@linuxfoundation.org>
-> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>; Vadim Pasternak
-> > > <vadimp@mellanox.com>; tglx@linutronix.de; mingo@redhat.com;
-> > > hpa@zytor.com; davem@davemloft.net; akpm@linux-foundation.org;
-> > > kvalo@codeaurora.org; mchehab@kernel.org; linux@roeck-us.net;
-> > > x86@kernel.org; linux-kernel@vger.kernel.org; platform-driver-
-> > > x86@vger.kernel.org; jiri@resnulli.us
-> > > Subject: Re: [patch v1] x86/platform/mellanox: introduce support for
-> > > Mellanox systems platform
-> > >
-> > >
-> > > * Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > > On Mon, Sep 12, 2016 at 11:14:26AM +0200, Geert Uytterhoeven wrote:
-> > > > > On Mon, Sep 12, 2016 at 10:34 AM, Greg KH
-> > > > > <gregkh@linuxfoundation.org>
-> > > wrote:
-> > > > > >> This is LPC to I2C bridge.
-> > > > > >
-> > > > > > "LPC"?
-> > > > >
-> > > > > https://en.wikipedia.org/wiki/Low_Pin_Count
-> > > > >
-> > > > > "Modern ISA"
-> > > >
-> > > > So my original point stands, 1990's technology being used for
-> > > > brand new devices today, ugh :(
-> > > >
-> > > > Someone needs to go kick some hardware designers...
-> > >
-> > > In their defense, "this is a carbon copy of published 1990s
-> > > technology" is a pretty good starting point for a defendant, in paten=
-t
-> litigation.
-> > >
-> >
-> > I understood your comments regarding undiscoverable busses.
-> > But we use LPC on all our x86 based systems.
-> > I have to activate all platform related stuff from some place and we
-> > don't support ACPI.
->=20
-> x86 that doesn't support ACPI?  That's sad :(
+Basically most (everything?) you are trying to do in C code may and
+should be done in ASL.
 
-Yes.
-But we should make a decision for the coming platform - to provide ACPI sup=
-port for board specific stuff, or equip the new systems with BMC (so we'll =
-introduce all board related stuff through DTS).
-But currently this is our reality. Me also sad.
+Mika, can you correct me if I'm wrong?
 
->=20
-> > Do you think it would be OK, if I'll remove all PCI related code, make
-> > use of DMI and leave only platform activation code?
-> > If yes, I'll re-work this driver and re-send it for your review.
->=20
-> Yes, that sounds like a good start, let's see how the code looks after do=
-ing that.
+> 
+> Further information on the UP board can be obtained from [1] and [2].
+> 
+> [1] https://www.up-board.org
+> [2] https://up-community.org
+> 
+> Dan O'Donovan (5):
+>   platform: x86: add driver for UP Board I/O CPLD
+>   platform: x86: add UP Board I/O pinctrl driver
+>   platform: x86: add UP Board I/O gpio driver
+>   platform: x86: add UP Board CPLD LED driver
+>   platform: x86: add platform driver for UP Board
+> 
+>  drivers/platform/x86/Kconfig            |  13 +
+>  drivers/platform/x86/Makefile           |   5 +
+>  drivers/platform/x86/up_board.c         | 167 ++++++++++
+>  drivers/platform/x86/up_board_cpld.c    | 560
+> ++++++++++++++++++++++++++++++++
+>  drivers/platform/x86/up_board_cpld.h    |  38 +++
+>  drivers/platform/x86/up_board_gpio.c    | 254 +++++++++++++++
+>  drivers/platform/x86/up_board_gpio.h    |  59 ++++
+>  drivers/platform/x86/up_board_leds.c    |  85 +++++
+>  drivers/platform/x86/up_board_leds.h    |  50 +++
+>  drivers/platform/x86/up_board_pinctrl.c | 285 ++++++++++++++++
+>  drivers/platform/x86/up_board_pinctrl.h | 102 ++++++
+>  11 files changed, 1618 insertions(+)
+>  create mode 100644 drivers/platform/x86/up_board.c
+>  create mode 100644 drivers/platform/x86/up_board_cpld.c
+>  create mode 100644 drivers/platform/x86/up_board_cpld.h
+>  create mode 100644 drivers/platform/x86/up_board_gpio.c
+>  create mode 100644 drivers/platform/x86/up_board_gpio.h
+>  create mode 100644 drivers/platform/x86/up_board_leds.c
+>  create mode 100644 drivers/platform/x86/up_board_leds.h
+>  create mode 100644 drivers/platform/x86/up_board_pinctrl.c
+>  create mode 100644 drivers/platform/x86/up_board_pinctrl.h
+> 
 
-Sure. I'll do it.
-Thank you very much for your comments.
-
-Thanks,
-
-Vadim
->=20
-> thanks,
->=20
-> greg k-h
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
