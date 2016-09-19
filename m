@@ -1,148 +1,113 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-laptop: get rid of parse_arg()
-Date: Sun, 18 Sep 2016 17:52:17 -0700
-Message-ID: <20160919005217.GA77003@f23x64.localdomain>
-References: <20160805205710.4735-1-giedrius.statkevicius@gmail.com>
- <20160805231507.GD4952@f23x64.localdomain>
- <20160806170026.GA20321@tyrael>
- <20160812214002.GA2855@f23x64.localdomain>
- <20160816094950.GA2374@tyrael>
- <20160817182315.GD81374@f23x64.localdomain>
- <20160903055126.GA12426@tyrael>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] platform/x86: Use ACPI_FAILURE at appropriate places
+Date: Mon, 19 Sep 2016 09:33:51 +0800
+Message-ID: <1474248831-29832-1-git-send-email-axel.lin@ingics.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37830 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932596AbcISAwU (ORCPT
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:33657 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932720AbcISBeT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Sep 2016 20:52:20 -0400
-Content-Disposition: inline
-In-Reply-To: <20160903055126.GA12426@tyrael>
+        Sun, 18 Sep 2016 21:34:19 -0400
+Received: by mail-pf0-f194.google.com with SMTP id q2so3779174pfj.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Sep 2016 18:34:19 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Giedrius =?utf-8?Q?Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Alex Hung <alex.hung@canonical.com>, AceLan Kao <acelan.kao@canonical.com>, Harald Welte <laforge@gnumonks.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Axel Lin <axel.lin@ingics.com>
 
-On Sat, Sep 03, 2016 at 08:51:26AM +0300, Giedrius Statkevičius wrote:
-> On Wed, Aug 17, 2016 at 11:23:15AM -0700, Darren Hart wrote:
-> > On Tue, Aug 16, 2016 at 12:49:50PM +0300, Giedrius Statkevičius wrote:
-> > > On Fri, Aug 12, 2016 at 02:40:02PM -0700, Darren Hart wrote:
-> > > > On Sat, Aug 06, 2016 at 08:00:26PM +0300, Giedrius Statkevičius wrote:
-> > > > > On Fri, Aug 05, 2016 at 04:15:07PM -0700, Darren Hart wrote:
-> > > > > > On Fri, Aug 05, 2016 at 11:57:10PM +0300, Giedrius Statkevičius wrote:
-> > > > > > > parse_arg() duplicates the funcionality of kstrtoint() so use the latter
-> > > > > > > function instead. There is no funcionality change except that in the
-> > > > > > > case of input being too big -ERANGE will be returned instead of -EINVAL
-> > > > > > > which is not bad because -ERANGE makes more sense here. The check for
-> > > > > > > !count is already done by the sysfs core so no need to duplicate it
-> > > > > > > again. Also, add some minor corrections to error handling to accommodate
-> > > > > > > the change in return values (parse_arg returned count if everything
-> > > > > > > succeeded whereas kstrtoint returns 0 in the same situation)
-> > > > > > > 
-> > > > > > > As a result of this patch asus-laptop.ko size is reduced by almost 1%:
-> > > > > > > add/remove: 0/1 grow/shrink: 1/6 up/down: 1/-149 (-148)
-> > > > > > > function                                     old     new   delta
-> > > > > > > __UNIQUE_ID_vermagic0                         69      70      +1
-> > > > > > > ls_switch_store                              133     117     -16
-> > > > > > > ledd_store                                   175     159     -16
-> > > > > > > display_store                                157     141     -16
-> > > > > > > ls_level_store                               193     176     -17
-> > > > > > > gps_store                                    200     178     -22
-> > > > > > > sysfs_acpi_set.isra                          148     125     -23
-> > > > > > > parse_arg.part                                39       -     -39
-> > > > > > > Total: Before=19160, After=19012, chg -0.77%
-> > > > > > > 
-> > > > > > > Signed-off-by: Giedrius Statkevičius <giedrius.statkevicius@gmail.com>
-> > > > > > >  }
+Use ACPI_FAILURE() to replace !ACPI_SUCCESS(), this avoid !! operations.
 
-...
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/platform/x86/intel-hid.c          | 6 +++---
+ drivers/platform/x86/intel-smartconnect.c | 2 +-
+ drivers/platform/x86/intel-vbtn.c         | 2 +-
+ drivers/platform/x86/panasonic-laptop.c   | 2 +-
+ drivers/platform/x86/thinkpad_acpi.c      | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
-> > > > > > >  
-> > > > > > >  /*
-> > > > > > > @@ -975,15 +964,17 @@ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
-> > > > > > >  	struct asus_laptop *asus = dev_get_drvdata(dev);
-> > > > > > >  	int rv, value;
-> > > > > > >  
-> > > > > > > -	rv = parse_arg(buf, count, &value);
-> > > > > > > -	if (rv > 0) {
-> > > > > > > -		if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
-> > > > > > > -			pr_warn("LED display write failed\n");
-> > > > > > > -			return -ENODEV;
-> > > > > > > -		}
-> > > > > > > -		asus->ledd_status = (u32) value;
-> > > > > > > +	rv = kstrtoint(buf, 0, &value);
-> > > > > > > +	if (rv < 0)
-
-I was pointing out that for functional equivalence, this should be:
-
-		if (rv <= 0)
-
-But as you point out below, this can't be achieved directly as kstrtoint returns
-0 on success. I missed that in my first review (I guess), apologies.
-
-> > > > > > > +		return rv;
-> > > > > > >
-> > > > > > 
-> > > > > > This inverts the check to check for failure (this is preferred), but it does
-> > > > > > change the successful path to include the value of 0, which was skipped over in
-> > > > > > the original above.
-> > > > > > 
-> > > > > > > +	if (write_acpi_int(asus->handle, METHOD_LEDD, value)) {
-> > > > > > 
-> > > > > > What is value if rv is 0? Perhaps safer/more explicit to test for (rv <= 0)
-> > > > > > above. Please consider, and apply decision to all similar instances below.
-> > > > > > 
-> > > > > Yes but in this case 0 indicates success so it doesn't make sense to test for <=
-> > > > > 0 as it would be triggered on success. To be honest I didn't get the idea of
-> > > > > what you wanted to say is wrong with this patch. Could you elaborate more?
-> > > > > 
-> > > >
-> > > > Your commit message states there is no functional change, but this changes the
-> > > > behavior of this function (and others) for the 0 edge case.
-> > > >
-> > > > Previously if rv == 0, it would not call write_acpi_int(), now it will and set
-> > > > the ledd_status.
-> > > >
-> > >
-> > > sysfs already takes care of this edge case. parse_arg() returned 0 iff count ==
-> > > 0 but in fs/sysfs/file.c sysfs_kf_write() there already is:
-> > >
-> > > if (!count)
-> > >     return 0;
-> >
-> > From a defensive programming context, we should be explicit in what we pass on
-> > to other functions and not rely on the caller to filter for us, especially when
-> > it's a simple matter of <= versus < in our comparison.
-> 
-> Which comparison? kstrtoint returns 0 on success so we can't use <=.
-> 
-> >
-> > Please update the changed comparison sites in the patch to have the same end
-> > result as before with respect to what it would do if a 0 were received.
-> >
-> 
-> So you want me to add:
-> 
-> if (!count)
->     return 0;
-> 
-> Before each kstrtoint()? Sorry but I don't see a point in adding duplicated code
-> that is not functional because these functions aren't and will never be used
-> outside of sysfs. Just take a look at how many drivers in your own tree use
-> kstrtoint() in sysfs methods and there isn't such check in place because it's
-> pointless. Only samsung-laptop.c is an exception but it could be cleaned up
-> because !count is a pointless check. Not only sysfs can't call us when count is
-> 0 but kstrtoint() also returns -EINVAL if the string is empty (in case of the
-> code in samsung-laptop).
-
-You're correct.
-
-Queued to testing. Thanks for taking the time to follow up. Sorry for the
-hassle.
-
-
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index ed58742..00cbeca 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -69,7 +69,7 @@ static int intel_hid_set_enable(struct device *device, int enable)
+ 
+ 	arg0.integer.value = enable;
+ 	status = acpi_evaluate_object(ACPI_HANDLE(device), "HDSM", &args, NULL);
+-	if (!ACPI_SUCCESS(status)) {
++	if (ACPI_FAILURE(status)) {
+ 		dev_warn(device, "failed to %sable hotkeys\n",
+ 			 enable ? "en" : "dis");
+ 		return -EIO;
+@@ -148,7 +148,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	}
+ 
+ 	status = acpi_evaluate_integer(handle, "HDEM", NULL, &ev_index);
+-	if (!ACPI_SUCCESS(status)) {
++	if (ACPI_FAILURE(status)) {
+ 		dev_warn(&device->dev, "failed to get event index\n");
+ 		return;
+ 	}
+@@ -167,7 +167,7 @@ static int intel_hid_probe(struct platform_device *device)
+ 	int err;
+ 
+ 	status = acpi_evaluate_integer(handle, "HDMM", NULL, &mode);
+-	if (!ACPI_SUCCESS(status)) {
++	if (ACPI_FAILURE(status)) {
+ 		dev_warn(&device->dev, "failed to read mode\n");
+ 		return -ENODEV;
+ 	}
+diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel-smartconnect.c
+index 04cf5df..bbe4c06 100644
+--- a/drivers/platform/x86/intel-smartconnect.c
++++ b/drivers/platform/x86/intel-smartconnect.c
+@@ -29,7 +29,7 @@ static int smartconnect_acpi_init(struct acpi_device *acpi)
+ 	acpi_status status;
+ 
+ 	status = acpi_evaluate_integer(acpi->handle, "GAOS", NULL, &value);
+-	if (!ACPI_SUCCESS(status))
++	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+ 
+ 	if (value & 0x1) {
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 146d02f..f04a394 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -97,7 +97,7 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 	int err;
+ 
+ 	status = acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+-	if (!ACPI_SUCCESS(status)) {
++	if (ACPI_FAILURE(status)) {
+ 		dev_warn(&device->dev, "failed to read Intel Virtual Button driver\n");
+ 		return -ENODEV;
+ 	}
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 3f87097..59b8eb6 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -458,7 +458,7 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
+ 
+ 	rc = acpi_evaluate_integer(pcc->handle, METHOD_HKEY_QUERY,
+ 				   NULL, &result);
+-	if (!ACPI_SUCCESS(rc)) {
++	if (ACPI_FAILURE(rc)) {
+ 		ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
+ 				 "error getting hotkey status\n"));
+ 		return;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b65ce75..31fb979 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9018,7 +9018,7 @@ static int mute_led_on_off(struct tp_led_table *t, bool state)
+ 	acpi_handle temp;
+ 	int output;
+ 
+-	if (!ACPI_SUCCESS(acpi_get_handle(hkey_handle, t->name, &temp))) {
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, t->name, &temp))) {
+ 		pr_warn("Thinkpad ACPI has no %s interface.\n", t->name);
+ 		return -EIO;
+ 	}
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.7.4
