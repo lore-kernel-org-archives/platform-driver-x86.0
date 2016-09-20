@@ -1,143 +1,110 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Johannes Stezenbach <js@sig21.net>
 Subject: Re: Cherryview wake up events
-Date: Tue, 20 Sep 2016 12:18:40 +0300
-Message-ID: <20160920091840.GN1811@lahna.fi.intel.com>
+Date: Tue, 20 Sep 2016 12:14:50 +0200
+Message-ID: <20160920101450.ylohouriienzrgtj@sig21.net>
 References: <20160919112117.55dim46nmqdmqjan@sig21.net>
  <20160919115619.GF1811@lahna.fi.intel.com>
  <20160919203622.ujh4l5eudrncv3rl@sig21.net>
+ <20160920091840.GN1811@lahna.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:46417 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751387AbcITJSo (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Sep 2016 05:18:44 -0400
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160919203622.ujh4l5eudrncv3rl@sig21.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Johannes Stezenbach <js@sig21.net>
+In-Reply-To: <20160920091840.GN1811@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 19, 2016 at 10:36:22PM +0200, Johannes Stezenbach wrote:
-> On Mon, Sep 19, 2016 at 02:56:19PM +0300, Mika Westerberg wrote:
-> > On Mon, Sep 19, 2016 at 01:21:17PM +0200, Johannes Stezenbach wrote:
-> > > 
-> > > The LID causes a gpio irq:
-> > >  158:          2          0          0          0  chv-gpio   43 ACPI:Event
-> > > 
-> > > However, neither LID nor power button can wake up the
-> > > device from "echo freeze >/sys/power/state".  :-(
+On Tue, Sep 20, 2016 at 12:18:40PM +0300, Mika Westerberg wrote:
+> On Mon, Sep 19, 2016 at 10:36:22PM +0200, Johannes Stezenbach wrote:
+> > Now my question is, is this pin 0x004E the same as this
+> > in /proc/interrupts which fires on LID event?
 > > 
-> > The cherryview pinctrl driver does not (yet) support wake up events. It
-> > currently just sets IRQCHIP_SKIP_SET_WAKE for the irqchip.
+> >  158:          2          0          0          0  chv-gpio   43 ACPI:Event
 > 
-> OK, but shouldn't the wakeup usually be handled by ACPI?
-> Clearly I don't understand this.  I mean on the non-ACPI
-> embedded ARM systems I'm used to I need to enable specific
-> irqs as wakeup sources, but on ACPI, isn't SCI the implicit
-> wakeup irq?  Probably I'm just totally confused, so let
-> me ask another way, below.
+> Yes, it is that one and it triggers \_SB.GPO0._E4E() method to be called
+> whenever low edge is detected on the GPIO line. This method then handles
+> many things depending on what the AML code reads from ^^PCI0.I2C1.ENID
+> notifying the power button device (PWRB) among other things.
 
-It is typically handled by ACPI but it requires some hardware as well.
-Looks like your machine does not use SCIs at all but instead events are
-triggered using GPIO signals instead of GPEs.
+Thanks for confirmation, but it circles back to the question
+how to map the numbers.  Since the document that describes it
+is not public, it would be useful if you could add comments
+to pinctrl-cherryview.c that describes it.
+Or did I just miss something?
 
-> > I can make you a test patch which adds support for wakes for the pinctrl
-> > driver if you like to test it out. However, that will happen most likely
-> > near end of the week as I have other things right now.
+> I suppose you already have CONFIG_ACPI_I2C_OPREGION=y in your .config?
+> That allows the AML code to access the I2C bus using the I2C driver.
 > 
-> That would be great!
+> > The FADT has
+> >             Control Method Power Button (V1) : 0
+> >             Control Method Sleep Button (V1) : 1
+> > 
+> > PWRBTN_EN in PM1 is set.  But PWRBTN press causes thermal irq.
 > 
-> 
-> I found in the DSDT:
-> 
->     Scope (_SB.GPO0)
->     {
->         Name (EVBF, Buffer (0x03) {})
->         CreateByteField (EVBF, Zero, EVST)
->         CreateByteField (EVBF, One, ELEN)
->         CreateByteField (EVBF, 0x02, ENVT)
->         Name (LIDZ, One)
->         Method (_E4E, 0, Serialized)  // _Exx: Edge-Triggered GPE
->         {
->             Name (_T_0, Zero)  // _T_x: Emitted by ASL Compiler
->             If (^^PCI0.I2C1.AVBL != One)
->             {
->                 Return (Zero)
->             }
-> 
->             EVBF = ^^PCI0.I2C1.ENID /* \_SB_.PCI0.I2C1.ENID */
-> ...
->             _T_0 = ENVT /* \_SB_.GPO0.ENVT */
-> ...
->                 ElseIf (_T_0 == 0xA9)
->                 {
->                     Notify (PWRB, 0x80) // Status Change
->                     Break
->                 }
-> 
-> and
->         Device (GPO0)
->         {
-> ...
->             Method (_AEI, 0, NotSerialized)  // _AEI: ACPI Event Interrupts
->             {
->                 Name (WBUF, ResourceTemplate ()
->                 {
->                     GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullUp, 0x0000,
->                         "\\_SB.GPO0", 0x00, ResourceConsumer, ,
->                         )
->                         {   // Pin list
->                             0x004E
->                         }
->                 })
->                 If (OSID == One)
->                 {
->                     Return (WBUF) /* \_SB_.GPO0._AEI.WBUF */
->                 }
->             }
-> 
-> and OSID is a field in 
->     OperationRegion (GNVS, SystemMemory, 0x7A158000, 0x0362)
-> which is inside what /proc/iomem lists as "ACPI no-volatile storage".
-> OSID is read a lot in the DSDT but never written to.
-> But calling \_SB.GPO0._AEI in acpidbg returns a buffer of size 25.
-> 
-> Now my question is, is this pin 0x004E the same as this
-> in /proc/interrupts which fires on LID event?
-> 
->  158:          2          0          0          0  chv-gpio   43 ACPI:Event
+> Yeah, it uses control method power button (PNP0C0C) and ACPI GPIO event
+> to trigger changes in that.
 
-Yes, it is that one and it triggers \_SB.GPO0._E4E() method to be called
-whenever low edge is detected on the GPIO line. This method then handles
-many things depending on what the AML code reads from ^^PCI0.I2C1.ENID
-notifying the power button device (PWRB) among other things.
+I'm confused again because I thought "Control Method Power Button (V1) : 0"
+means it is a fixed power button, however the DSDT also has
 
-I suppose you already have CONFIG_ACPI_I2C_OPREGION=y in your .config?
-That allows the AML code to access the I2C bus using the I2C driver.
+        Device (PWRB)
+        {
+            Name (_HID, EisaId ("PNP0C0C") /* Power Button Device */)  // _HID: Hardware ID
+        }
 
-> The FADT has
->             Control Method Power Button (V1) : 0
->             Control Method Sleep Button (V1) : 1
+        Device (SLPB)
+        {
+            Name (_HID, EisaId ("PNP0C0E") /* Sleep Button Device */)  // _HID: Hardware ID
+        }
+
+
+> > No SCI (irq 9) is ever generated, except by writing to the
+> > BIOS_RLS bit in SMI_EN register (IO port 0x430).
+> > 
+> > GPE block addresses in FADT are 0.  GPE0a_EN register (IO 0x428)
+> > is set to 0x6000 (TCO_EN + PME_B0_EN, but none of the GPIO enables).
+> > 
+> > Any advice how to continue?
 > 
-> PWRBTN_EN in PM1 is set.  But PWRBTN press causes thermal irq.
-
-Yeah, it uses control method power button (PNP0C0C) and ACPI GPIO event
-to trigger changes in that.
-
-> No SCI (irq 9) is ever generated, except by writing to the
-> BIOS_RLS bit in SMI_EN register (IO port 0x430).
+> Please check that you have that CONFIG_ACPI_I2C_OPREGION=y and
+> CONFIG_MFD_AXP20X=y.
 > 
-> GPE block addresses in FADT are 0.  GPE0a_EN register (IO 0x428)
-> is set to 0x6000 (TCO_EN + PME_B0_EN, but none of the GPIO enables).
-> 
-> Any advice how to continue?
+> You should see the ACPI:Event interrupt count increasing in
+> /proc/interrups when you press power button. When that works then we can
+> start thinking about adding wake support :)
 
-Please check that you have that CONFIG_ACPI_I2C_OPREGION=y and
-CONFIG_MFD_AXP20X=y.
+I had CONFIG_ACPI_I2C_OPREGION=y but excluded CONFIG_MFD_AXP20X
+based on \_SB.PIC0.I2C7.PMI1._STA returning 0 in acpidbg,
 
-You should see the ACPI:Event interrupt count increasing in
-/proc/interrups when you press power button. When that works then we can
-start thinking about adding wake support :)
+            Device (PMI1)
+            {
+                Name (_ADR, Zero)  // _ADR: Address
+                Name (_HID, "INT33F4" /* XPOWER PMIC Controller */)  // _HID: Hardware ID
+                Name (_CID, "INT33F4" /* XPOWER PMIC Controller */)  // _CID: Compatible ID
+                Name (_DDN, "XPOWER PMIC Controller")  // _DDN: DOS Device Name
+
+but \_SB.PIC0.I2C7.PMI1._STA returns 0xf
+
+            Device (PMI2)
+            {
+                Name (_ADR, Zero)  // _ADR: Address
+                Name (_HID, "INT33F5" /* TI PMIC Controller */)  // _HID: Hardware ID
+                Name (_CID, "INT33F5" /* TI PMIC Controller */)  // _CID: Compatible ID
+                Name (_DDN, "TI PMIC Controller")  // _DDN: DOS Device Name
+
+So I tried CONFIG_MFD_AXP20X=y anyway, but as expected: no change.
+
+Since TI doesn't even have a product page for the SND9039
+(only a few references in TI support forum can be found),
+I'm not sure what can be done.  So maybe a better short term
+goal would be to get wakeup by LID working.
+
+However, I still wonder why the power button can trigger
+a thermal irq, is it related to the PMIC?  I couldn't
+find out where the thermal irq is routed.
+
+
+Thanks,
+Johannes
