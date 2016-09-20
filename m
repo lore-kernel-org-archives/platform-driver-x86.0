@@ -1,75 +1,55 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Johannes Stezenbach <js@sig21.net>
 Subject: Re: Cherryview wake up events
-Date: Tue, 20 Sep 2016 13:40:14 +0300
-Message-ID: <20160920104014.GO1811@lahna.fi.intel.com>
+Date: Tue, 20 Sep 2016 17:59:43 +0200
+Message-ID: <20160920155943.zrj7wwgg7ugqyv6i@sig21.net>
 References: <20160919112117.55dim46nmqdmqjan@sig21.net>
  <20160919115619.GF1811@lahna.fi.intel.com>
  <20160919203622.ujh4l5eudrncv3rl@sig21.net>
  <20160920091840.GN1811@lahna.fi.intel.com>
  <20160920101450.ylohouriienzrgtj@sig21.net>
+ <20160920104014.GO1811@lahna.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160920101450.ylohouriienzrgtj@sig21.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Stezenbach <js@sig21.net>
+In-Reply-To: <20160920104014.GO1811@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 20, 2016 at 12:14:50PM +0200, Johannes Stezenbach wrote:
-> On Tue, Sep 20, 2016 at 12:18:40PM +0300, Mika Westerberg wrote:
-> > On Mon, Sep 19, 2016 at 10:36:22PM +0200, Johannes Stezenbach wrote:
-> > > Now my question is, is this pin 0x004E the same as this
-> > > in /proc/interrupts which fires on LID event?
-> > > 
-> > >  158:          2          0          0          0  chv-gpio   43 ACPI:Event
-> > 
-> > Yes, it is that one and it triggers \_SB.GPO0._E4E() method to be called
-> > whenever low edge is detected on the GPIO line. This method then handles
-> > many things depending on what the AML code reads from ^^PCI0.I2C1.ENID
-> > notifying the power button device (PWRB) among other things.
+On Tue, Sep 20, 2016 at 01:40:14PM +0300, Mika Westerberg wrote:
+> Can you check if you have:
 > 
-> Thanks for confirmation, but it circles back to the question
-> how to map the numbers.  Since the document that describes it
-> is not public, it would be useful if you could add comments
-> to pinctrl-cherryview.c that describes it.
-> Or did I just miss something?
-
-I don't think it is relevant here. The driver uses only wired OR
-interrupt which is provided in _CRS of the device.
-
-> > I suppose you already have CONFIG_ACPI_I2C_OPREGION=y in your .config?
-> > That allows the AML code to access the I2C bus using the I2C driver.
-> > 
-> > > The FADT has
-> > >             Control Method Power Button (V1) : 0
-> > >             Control Method Sleep Button (V1) : 1
-> > > 
-> > > PWRBTN_EN in PM1 is set.  But PWRBTN press causes thermal irq.
-> > 
-> > Yeah, it uses control method power button (PNP0C0C) and ACPI GPIO event
-> > to trigger changes in that.
+>   Hardware Reduced (V5) : 1
 > 
-> I'm confused again because I thought "Control Method Power Button (V1) : 0"
-> means it is a fixed power button, however the DSDT also has
+> in that FADT table?
 
-I misread it, sorry about that.
+Nope, it is "Hardware Reduced (V5) : 0".  Now the FADT is also at
+https://linuxtv.org/~js/e200ha/
 
-Can you check if you have:
+> If yes, it probably does not have the normal Fixed power button but
+> instead it has something called "Windows button array device" with
+> _HID/_CID of PNP0C40. Looking at your dsdt.dsl, this looks to be the
+> case.
+> 
+> That device is driven by soc_button_array.c driver which can be enabled
+> with CONFIG_KEYBOARD_GPIO=y and CONFIG_INPUT_SOC_BUTTON_ARRAY=y. Can you
+> check if you have that enabled already?
+> 
+> You should actually see it in /proc/interrupts with names like "power"
+> and so on.
 
-  Hardware Reduced (V5) : 1
+I added CONFIG_INPUT_SOC_BUTTON_ARRAY=y, but no joy.
+Maybe because the _HID is INTCFD9, only _CID is PNP0C40?
+It also has a _DSM with UUID dfbcf3c5-e7a5-44e6-9c1f-29c76f6e059c.
 
-in that FADT table?
+BTW, lsinput already lists two "Power Button" devices,
+   phys    : "PNP0C0C/button/input0"
+   phys    : "LNXPWRBN/button/input0"
 
-If yes, it probably does not have the normal Fixed power button but
-instead it has something called "Windows button array device" with
-_HID/_CID of PNP0C40. Looking at your dsdt.dsl, this looks to be the
-case.
+None of them generates events in input-events.
 
-That device is driven by soc_button_array.c driver which can be enabled
-with CONFIG_KEYBOARD_GPIO=y and CONFIG_INPUT_SOC_BUTTON_ARRAY=y. Can you
-check if you have that enabled already?
 
-You should actually see it in /proc/interrupts with names like "power"
-and so on.
+Thanks,
+Johannes
