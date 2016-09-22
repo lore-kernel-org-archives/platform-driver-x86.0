@@ -1,94 +1,76 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v1] drivers/platform/x86: introduce support for Mellanox
- hotplug driver
-Date: Thu, 22 Sep 2016 13:01:46 +0000
-Message-ID: <AM5PR0501MB20971F191335B0BB88243DF3A2C90@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <1474550067-142107-1-git-send-email-vadimp@mellanox.com>
- <20160922123038.GA2630@kroah.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [patch v5] x86/platform/mellanox: introduce support for Mellanox
+ systems platform
+Date: Thu, 22 Sep 2016 19:08:30 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609221902570.5599@nanos>
+References: <1474365532-168129-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db5eur01on0069.outbound.protection.outlook.com ([104.47.2.69]:43136
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S933448AbcIVPg5 (ORCPT
+Received: from Galois.linutronix.de ([146.0.238.70]:38813 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S934069AbcIVRLw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Sep 2016 11:36:57 -0400
-In-Reply-To: <20160922123038.GA2630@kroah.com>
-Content-Language: en-US
+        Thu, 22 Sep 2016 13:11:52 -0400
+In-Reply-To: <1474365532-168129-1-git-send-email-vadimp@mellanox.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "davem@davemloft.net" <davem@davemloft.net>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: mingo@redhat.com, hpa@zytor.com, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, kvalo@codeaurora.org, mchehab@kernel.org, linux@roeck-us.net, x86@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 
+On Tue, 20 Sep 2016, vadimp@mellanox.com wrote:
 
+Just a few nitpicks.
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday, September 22, 2016 3:31 PM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: dvhart@infradead.org; davem@davemloft.net; geert@linux-m68k.org;
-> akpm@linux-foundation.org; kvalo@codeaurora.org; mchehab@kernel.org;
-> linux@roeck-us.net; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; jiri@resnulli.us
-> Subject: Re: [patch v1] drivers/platform/x86: introduce support for Mella=
-nox
-> hotplug driver
->=20
-> On Thu, Sep 22, 2016 at 01:14:27PM +0000, vadimp@mellanox.com wrote:
-> > From: Vadim Pasternak <vadimp@mellanox.com>
-> >
-> > Enable system support for the Mellanox Technologies hotplug platform
-> > driver, which provides support for the next Mellanox basic systems:
-> > "msx6710", "msx6720", "msb7700", "msn2700", "msx1410", "msn2410",
-> > "msb7800", "msn2740", "msn2100" and also various number of derivative
-> > systems from the above basic types.
-> > This driver handles hot-plug events for the power suppliers, power
-> > cables and fans for the above systems.
-> >
-> > The Kconfig currently controlling compilation of this code is:
-> > driver/platform/x86:config MLX_CPLD_PLATFORM
-> >                        tristate "Mellanox platform hotplug driver suppo=
-rt"
-> >
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > ---
-> >  MAINTAINERS                                   |   7 +
-> >  drivers/platform/x86/Kconfig                  |  10 +
-> >  drivers/platform/x86/Makefile                 |   1 +
-> >  drivers/platform/x86/mlxcpld-hotplug.c        | 543
-> ++++++++++++++++++++++++++
-> >  include/linux/platform_data/mlxcpld-hotplug.h |  90 +++++
->=20
-> Why do you need a platform_data .h file for a stand-alone driver?
->=20
+> +/* Regions for LPC I2C controller and LPC base register space */
+> +static struct resource mlxplat_lpc_resources[] = {
 
-I have another module mlx-platform, which is reviewed now (I also got a num=
-ber feedbacks from you on this matter).
-I want to activate mlxcpld-hotplug from this module.=20
-Like
+Shouldnt this be const?
 
-/* Platform hotplug default data */
-static struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_default=
-_data =3D {
-=20
-/* Platform hotplug MSN21xx system family data*/
-static struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_msn21xx=
-_data =3D {
-...
-	priv->pdev_hotplug =3D platform_device_register_resndata(
-				&mlxplat_dev->dev, "mlxcpld-hotplug", -1,
-				mlxplat_mlxcpld_hotplug_resources,
-				ARRAY_SIZE(mlxplat_mlxcpld_hotplug_resources),
-				mlxplat_hotplug, sizeof(*mlxplat_hotplug));
+> +static int mlxplat_default_channels[][8] = {
+> +	{
 
-But I can't add this code to mlx-platfrom, until this one is not accepted.
+Ditto. And some more of these?
+
+> +static struct dmi_system_id mlxplat_dmi_table[] __initdata = {
+
+This one as well.
+
+> +static int __init mlxplat_init(void)
+> +{
+> +	struct mlxplat_priv *priv;
+> +	int i;
+> +	int err;
+
+Same types can go into one line.
+
+> +
+> +	return err;
+
+err is unitialized if we get here. Just return 0 and be done with it.
+> +
+> +fail_platform_mux_register:
+
+> +static void __exit mlxplat_exit(void)
+> +{
+> +	struct mlxplat_priv *priv = platform_get_drvdata(mlxplat_dev);
+> +	int i;
+> +
+> +	for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
+> +		platform_device_unregister(priv->pdev_mux[i]);
+> +
+> +	platform_device_unregister(priv->pdev_i2c);
+> +	platform_device_unregister(mlxplat_dev);
+> +}
+> +
+> +module_init(mlxplat_init);
+> +module_exit(mlxplat_exit);
+
+Please move the module_xxx() right under the closing brace of the function
+to which it belongs.
+
+Otherwise this looks good.
 
 Thanks,
 
-Vadim.
-
-> thanks,
->=20
-> greg k-h
+	tglx
