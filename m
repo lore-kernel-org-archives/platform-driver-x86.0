@@ -1,52 +1,52 @@
-From: Johannes Stezenbach <js@sig21.net>
-Subject: Re: Cherryview wake up events
-Date: Fri, 23 Sep 2016 11:59:53 +0200
-Message-ID: <20160923095953.gkzzblbipye3ogft@sig21.net>
-References: <20160919115619.GF1811@lahna.fi.intel.com>
- <20160919203622.ujh4l5eudrncv3rl@sig21.net>
- <20160920091840.GN1811@lahna.fi.intel.com>
- <20160920101450.ylohouriienzrgtj@sig21.net>
- <20160920104014.GO1811@lahna.fi.intel.com>
- <20160920155943.zrj7wwgg7ugqyv6i@sig21.net>
- <20160920211153.y7ntwwik2l6ppoqz@sig21.net>
- <20160921090614.GY1811@lahna.fi.intel.com>
- <20160921091635.tjnc2gvj75jixycv@sig21.net>
- <20160923081904.GM1218@lahna.fi.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/2] toshiba_haps: Small updates to driver code
+Date: Fri, 23 Sep 2016 16:19:28 -0700
+Message-ID: <20160923231928.GB27846@f23x64.localdomain>
+References: <20160907152815.5950-1-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:39628 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752839AbcIWXTa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 23 Sep 2016 19:19:30 -0400
 Content-Disposition: inline
-In-Reply-To: <20160923081904.GM1218@lahna.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20160907152815.5950-1-coproscefalo@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Sep 23, 2016 at 11:19:04AM +0300, Mika Westerberg wrote:
-> On Wed, Sep 21, 2016 at 11:16:35AM +0200, Johannes Stezenbach wrote:
-> > There is an ADBG ("TI_DCOVE") in PMI2._STA, so Dollar Cove
-> > sounds like a good guess.
+On Wed, Sep 07, 2016 at 09:28:12AM -0600, Azael Avalos wrote:
+> These two patches make some small changes to the driver code, the first
+> splits the error check fro the ACPI status and the HDD protection, and
+> the second simply changes the printing level of two strings from info
+> to debug.
+
+Queued, thanks Azael.
+
+After reviewing the history of this tree and following the approach of the ACPI
+tree, I've started prefixing commit subjects with "platform/x86: DRIVERNAME:
+MESSAGE". Please use this format in the future (not a big deal, but it's nice
+when your subject is the same as the one I submit).
+
+Thanks (and sorry for the delay).
+
 > 
-> David (CC'd) is working on getting the Dollar Cove PMIC driver
-> upstreamed to the mainline kernel.
+> Azael Avalos (2):
+>   toshiba_haps: Split ACPI status error check from HDD protection
+>     support
+>   toshiba_haps: Change the error logging level from info to debug
+> 
+>  drivers/platform/x86/toshiba_haps.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.9.3
+> 
+> 
 
-Excellent news!  Repeating essential info to avoid any
-confusion, the PMIC is
-
-            Device (PMI2)
-            {
-                Name (_ADR, Zero)  // _ADR: Address
-                Name (_HID, "INT33F5" /* TI PMIC Controller */)  // _HID: Hardware ID
-                Name (_CID, "INT33F5" /* TI PMIC Controller */)  // _CID: Compatible ID
-                Name (_DDN, "TI PMIC Controller")  // _DDN: DOS Device Name
-
-(Because the INT33F4 XPOWER PMIC also has ADBG ("XPWR_DCOVE")
-so I'm not sure "Dollar Cove" is a unique name.)
-
-
-I put the Asus E200HA DSDT at
-https://linuxtv.org/~js/e200ha/
-
-
-Thanks,
-Johannes
+-- 
+Darren Hart
+Intel Open Source Technology Center
