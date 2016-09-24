@@ -1,196 +1,185 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-wmi: filter buggy scan codes on ASUS Q500A
-Date: Fri, 23 Sep 2016 17:09:37 -0700
-Message-ID: <20160924000937.GD27846@f23x64.localdomain>
-References: <20160804005052.GC36266@dtor-ws>
- <1473695297-10236-1-git-send-email-linux@rempel-privat.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH RFT] platform/x86: intel_pmc_ipc: Convert to use platform_device_register_full
+Date: Sat, 24 Sep 2016 11:54:08 +0800
+Message-ID: <1474689248-5925-1-git-send-email-axel.lin@ingics.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47087 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758021AbcIXAJp (ORCPT
+Received: from mail-pf0-f193.google.com ([209.85.192.193]:33113 "EHLO
+        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753757AbcIXDyT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 23 Sep 2016 20:09:45 -0400
-Content-Disposition: inline
-In-Reply-To: <1473695297-10236-1-git-send-email-linux@rempel-privat.de>
+        Fri, 23 Sep 2016 23:54:19 -0400
+Received: by mail-pf0-f193.google.com with SMTP id q2so6047811pfj.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Sep 2016 20:54:18 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: fixed-term.Oleksij.Rempel@de.bosch.com, Alex Henrie <alexhenrie24@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Zha Qipeng <qipeng.zha@intel.com>, Aubrey Li <aubrey.li@linux.intel.com>, platform-driver-x86@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
 
-On Mon, Sep 12, 2016 at 05:48:17PM +0200, Oleksij Rempel wrote:
-> Some revision of ASUS Q500A series have keyboard related
-> issue which is reproducible only if Windows with installed ASUS
-> tools was ever started.
-> In this case the Linux side will have blocked keyboard or
-> report wrong or incomplete hotkey events.
-> To make Linux work properly again complete power down
-> (unplug power supply and remove battery) should be made.
-> 
-> Linux/atkbd after clean start will get fallowing code on VOLUME_UP
-> key: {0xe0, 0x30, 0xe0, 0xb0}. After Windows, same key will generate this
-> codes: {0xe1, 0x23, 0xe0, 0x30, 0xe0, 0xb0}. As result atkdb will
-> be confused by buggy codes.
-> 
-> This patch is filtering this buggy code out.
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=119391
+Use platform_device_register_full() instead of open-coded.
 
-First of all - wow - what a bunch of work. Nice job tracking this all down.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 110 +++++++++++------------------------
+ 1 file changed, 33 insertions(+), 77 deletions(-)
 
-A couple of minor nits below, which I've taken care of.
-
-Queued to testing.
-
-> 
-> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-> Cc: Alex Henrie <alexhenrie24@gmail.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Corentin Chary <corentin.chary@gmail.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: acpi4asus-user@lists.sourceforge.net
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 45 ++++++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/asus-wmi.h    |  4 ++++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index adecc1c..787da83 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -27,6 +27,7 @@
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/fb.h>
->  #include <linux/dmi.h>
-> +#include <linux/i8042.h>
->  
->  #include "asus-wmi.h"
->  
-> @@ -55,10 +56,35 @@ MODULE_PARM_DESC(wapf, "WAPF value");
->  
->  static struct quirk_entry *quirks;
->  
-> +static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
-> +			      struct serio *port)
-> +{
-> +	static bool extended;
-> +	bool ret = false;
-> +
-> +
-
-Just one empty line is plenty
-
-> +	if (str & I8042_STR_AUXDATA)
-> +		return false;
-> +
-> +	if (unlikely(data == 0xe1)) {
-> +		extended = true;
-> +		ret = true;
-> +	} else if (unlikely(extended)) {
-> +		extended = false;
-> +		ret = true;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static struct quirk_entry quirk_asus_unknown = {
->  	.wapf = 0,
->  };
->  
-> +static struct quirk_entry quirk_asus_q500a = {
-> +	.i8042_filter = asus_q500a_i8042_filter,
-> +};
-> +
->  /*
->   * For those machines that need software to control bt/wifi status
->   * and can't adjust brightness through ACPI interface
-> @@ -96,6 +122,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
->  static const struct dmi_system_id asus_quirks[] = {
->  	{
->  		.callback = dmi_matched,
-> +		.ident = "ASUSTeK COMPUTER INC. Q500A",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Q500A"),
-> +		},
-> +		.driver_data = &quirk_asus_q500a,
-> +	},
-> +	{
-> +		.callback = dmi_matched,
->  		.ident = "ASUSTeK COMPUTER INC. U32U",
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
-> @@ -356,6 +391,8 @@ static const struct dmi_system_id asus_quirks[] = {
->  
->  static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
->  {
-> +	int ret;
-> +
->  	quirks = &quirk_asus_unknown;
->  	dmi_check_system(asus_quirks);
->  
-> @@ -367,6 +404,14 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
->  		quirks->wapf = wapf;
->  	else
->  		wapf = quirks->wapf;
-> +
-> +	if (quirks->i8042_filter) {
-> +		ret = i8042_install_filter(quirks->i8042_filter);
-> +		if (ret) {
-> +			pr_warn("Unable to install key filter\n");
-> +		}
-
-No braces for a single line block
-
-> +		pr_info("Using i8042 filter function for receiving events\n");
-
-Well, then again, a return in the above block would make more sense.
-
-		pr_warn
-		return
-	}
-	pr_info
-
-I've taken the liberty of making this change.... mostly to speed things a long
-since I've neglected this patch for so long! Apologies. This is queued to
-testing, let me know if you have any concerns. It'll hit linux-next this
-weekend.
-
-> +	}
->  }
->  
->  static const struct key_entry asus_nb_wmi_keymap[] = {
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index 5de1df5..dd2e6cc 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -28,6 +28,7 @@
->  #define _ASUS_WMI_H_
->  
->  #include <linux/platform_device.h>
-> +#include <linux/i8042.h>
->  
->  #define ASUS_WMI_KEY_IGNORE (-1)
->  #define ASUS_WMI_BRN_DOWN	0x20
-> @@ -51,6 +52,9 @@ struct quirk_entry {
->  	 * and let the ACPI interrupt to send out the key event.
->  	 */
->  	int no_display_toggle;
-> +
-> +	bool (*i8042_filter)(unsigned char data, unsigned char str,
-> +			     struct serio *serio);
->  };
->  
->  struct asus_wmi_driver {
-> -- 
-> 2.7.4
-> 
-> 
-
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index b86e1bc..665a9a1 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -522,48 +522,36 @@ static struct resource telemetry_res[] = {
+ static int ipc_create_punit_device(void)
+ {
+ 	struct platform_device *pdev;
+-	int ret;
+-
+-	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+-	if (!pdev) {
+-		dev_err(ipcdev.dev, "Failed to alloc punit platform device\n");
+-		return -ENOMEM;
+-	}
+-
+-	pdev->dev.parent = ipcdev.dev;
+-	ret = platform_device_add_resources(pdev, punit_res_array,
+-					    ARRAY_SIZE(punit_res_array));
+-	if (ret) {
+-		dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
+-		goto err;
+-	}
++	const struct platform_device_info pdevinfo = {
++		.parent = ipcdev.dev,
++		.name = PUNIT_DEVICE_NAME,
++		.id = -1,
++		.res = punit_res_array,
++		.num_res = ARRAY_SIZE(punit_res_array),
++		};
++
++	pdev = platform_device_register_full(&pdevinfo);
++	if (IS_ERR(pdev))
++		return PTR_ERR(pdev);
+ 
+-	ret = platform_device_add(pdev);
+-	if (ret) {
+-		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
+-		goto err;
+-	}
+ 	ipcdev.punit_dev = pdev;
+ 
+ 	return 0;
+-err:
+-	platform_device_put(pdev);
+-	return ret;
+ }
+ 
+ static int ipc_create_tco_device(void)
+ {
+ 	struct platform_device *pdev;
+ 	struct resource *res;
+-	int ret;
+-
+-	pdev = platform_device_alloc(TCO_DEVICE_NAME, -1);
+-	if (!pdev) {
+-		dev_err(ipcdev.dev, "Failed to alloc tco platform device\n");
+-		return -ENOMEM;
+-	}
+-
+-	pdev->dev.parent = ipcdev.dev;
++	const struct platform_device_info pdevinfo = {
++		.parent = ipcdev.dev,
++		.name = TCO_DEVICE_NAME,
++		.id = -1,
++		.res = tco_res,
++		.num_res = ARRAY_SIZE(tco_res),
++		.data = &tco_info,
++		.size_data = sizeof(tco_info),
++		};
+ 
+ 	res = tco_res + TCO_RESOURCE_ACPI_IO;
+ 	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
+@@ -577,45 +565,26 @@ static int ipc_create_tco_device(void)
+ 	res->start = ipcdev.gcr_base + TCO_PMC_OFFSET;
+ 	res->end = res->start + TCO_PMC_SIZE - 1;
+ 
+-	ret = platform_device_add_resources(pdev, tco_res, ARRAY_SIZE(tco_res));
+-	if (ret) {
+-		dev_err(ipcdev.dev, "Failed to add tco platform resources\n");
+-		goto err;
+-	}
+-
+-	ret = platform_device_add_data(pdev, &tco_info, sizeof(tco_info));
+-	if (ret) {
+-		dev_err(ipcdev.dev, "Failed to add tco platform data\n");
+-		goto err;
+-	}
++	pdev = platform_device_register_full(&pdevinfo);
++	if (IS_ERR(pdev))
++		return PTR_ERR(pdev);
+ 
+-	ret = platform_device_add(pdev);
+-	if (ret) {
+-		dev_err(ipcdev.dev, "Failed to add tco platform device\n");
+-		goto err;
+-	}
+ 	ipcdev.tco_dev = pdev;
+ 
+ 	return 0;
+-err:
+-	platform_device_put(pdev);
+-	return ret;
+ }
+ 
+ static int ipc_create_telemetry_device(void)
+ {
+ 	struct platform_device *pdev;
+ 	struct resource *res;
+-	int ret;
+-
+-	pdev = platform_device_alloc(TELEMETRY_DEVICE_NAME, -1);
+-	if (!pdev) {
+-		dev_err(ipcdev.dev,
+-			"Failed to allocate telemetry platform device\n");
+-		return -ENOMEM;
+-	}
+-
+-	pdev->dev.parent = ipcdev.dev;
++	const struct platform_device_info pdevinfo = {
++		.parent = ipcdev.dev,
++		.name = TELEMETRY_DEVICE_NAME,
++		.id = -1,
++		.res = telemetry_res,
++		.num_res = ARRAY_SIZE(telemetry_res),
++		};
+ 
+ 	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
+ 	res->start = ipcdev.telem_punit_ssram_base;
+@@ -625,26 +594,13 @@ static int ipc_create_telemetry_device(void)
+ 	res->start = ipcdev.telem_pmc_ssram_base;
+ 	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
+ 
+-	ret = platform_device_add_resources(pdev, telemetry_res,
+-					    ARRAY_SIZE(telemetry_res));
+-	if (ret) {
+-		dev_err(ipcdev.dev,
+-			"Failed to add telemetry platform resources\n");
+-		goto err;
+-	}
++	pdev = platform_device_register_full(&pdevinfo);
++	if (IS_ERR(pdev))
++		return PTR_ERR(pdev);
+ 
+-	ret = platform_device_add(pdev);
+-	if (ret) {
+-		dev_err(ipcdev.dev,
+-			"Failed to add telemetry platform device\n");
+-		goto err;
+-	}
+ 	ipcdev.telemetry_dev = pdev;
+ 
+ 	return 0;
+-err:
+-	platform_device_put(pdev);
+-	return ret;
+ }
+ 
+ static int ipc_create_pmc_devices(void)
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.7.4
