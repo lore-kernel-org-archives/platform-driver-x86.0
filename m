@@ -1,18 +1,18 @@
 From: Wei Yongjun <weiyj.lk@gmail.com>
 Subject: [PATCH -next] x86/platform/mellanox: Fix return value check in mlxplat_init()
-Date: Sat, 24 Sep 2016 11:48:13 +0000
-Message-ID: <1474717693-6191-1-git-send-email-weiyj.lk@gmail.com>
+Date: Sat, 24 Sep 2016 11:56:14 +0000
+Message-ID: <1474718174-10818-1-git-send-email-weiyj.lk@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f67.google.com ([209.85.220.67]:35671 "EHLO
-        mail-pa0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753571AbcIXLsd (ORCPT
+Received: from mail-pf0-f195.google.com ([209.85.192.195]:36524 "EHLO
+        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751900AbcIXL43 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 24 Sep 2016 07:48:33 -0400
-Received: by mail-pa0-f67.google.com with SMTP id gg10so823172pac.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Sep 2016 04:48:33 -0700 (PDT)
+        Sat, 24 Sep 2016 07:56:29 -0400
+Received: by mail-pf0-f195.google.com with SMTP id n24so6495603pfb.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Sep 2016 04:56:29 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Vadim Pasternak <vadimp@mellanox.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
