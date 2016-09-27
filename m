@@ -1,197 +1,70 @@
-From: "Li, Aubrey" <aubrey.li@linux.intel.com>
-Subject: Re: [PATCH RFT] platform/x86: intel_pmc_ipc: Convert to use
- platform_device_register_full
-Date: Tue, 27 Sep 2016 07:21:58 +0800
-Message-ID: <becb6cab-7060-7227-f9d9-0209437c807f@linux.intel.com>
-References: <1474689248-5925-1-git-send-email-axel.lin@ingics.com>
+From: Axel Lin <axel.lin@ingics.com>
+Subject: Re: [PATCH RFT] platform/x86: intel_pmc_ipc: Convert to use platform_device_register_full
+Date: Tue, 27 Sep 2016 08:24:35 +0800
+Message-ID: <CAFRkauBo05oeuGTaCAz0GejZR5aOvMxFQjPBU-3aUFZ8DzWNVw@mail.gmail.com>
+References: <1474689248-5925-1-git-send-email-axel.lin@ingics.com> <becb6cab-7060-7227-f9d9-0209437c807f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:39087 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751152AbcIZXWE (ORCPT
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:36797 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753844AbcI0AYh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Sep 2016 19:22:04 -0400
-In-Reply-To: <1474689248-5925-1-git-send-email-axel.lin@ingics.com>
+        Mon, 26 Sep 2016 20:24:37 -0400
+Received: by mail-qk0-f194.google.com with SMTP id m184so4770016qkb.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Sep 2016 17:24:36 -0700 (PDT)
+In-Reply-To: <becb6cab-7060-7227-f9d9-0209437c807f@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@ingics.com>, Darren Hart <dvhart@infradead.org>
-Cc: Zha Qipeng <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org
+To: "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org
 
-On 2016/9/24 11:54, Axel Lin wrote:
-> Use platform_device_register_full() instead of open-coded.
-> 
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 110 +++++++++++------------------------
->  1 file changed, 33 insertions(+), 77 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index b86e1bc..665a9a1 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -522,48 +522,36 @@ static struct resource telemetry_res[] = {
->  static int ipc_create_punit_device(void)
->  {
->  	struct platform_device *pdev;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev, "Failed to alloc punit platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> -	ret = platform_device_add_resources(pdev, punit_res_array,
-> -					    ARRAY_SIZE(punit_res_array));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
-> -		goto err;
-> -	}
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = PUNIT_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = punit_res_array,
-> +		.num_res = ARRAY_SIZE(punit_res_array),
-> +		};
-> +
+2016-09-27 7:21 GMT+08:00 Li, Aubrey <aubrey.li@linux.intel.com>:
+> On 2016/9/24 11:54, Axel Lin wrote:
+>> Use platform_device_register_full() instead of open-coded.
+>>
+>> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+>> ---
+>>  drivers/platform/x86/intel_pmc_ipc.c | 110 +++++++++++------------------------
+>>  1 file changed, 33 insertions(+), 77 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+>> index b86e1bc..665a9a1 100644
+>> --- a/drivers/platform/x86/intel_pmc_ipc.c
+>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+>> @@ -522,48 +522,36 @@ static struct resource telemetry_res[] = {
+>>  static int ipc_create_punit_device(void)
+>>  {
+>>       struct platform_device *pdev;
+>> -     int ret;
+>> -
+>> -     pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+>> -     if (!pdev) {
+>> -             dev_err(ipcdev.dev, "Failed to alloc punit platform device\n");
+>> -             return -ENOMEM;
+>> -     }
+>> -
+>> -     pdev->dev.parent = ipcdev.dev;
+>> -     ret = platform_device_add_resources(pdev, punit_res_array,
+>> -                                         ARRAY_SIZE(punit_res_array));
+>> -     if (ret) {
+>> -             dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
+>> -             goto err;
+>> -     }
+>> +     const struct platform_device_info pdevinfo = {
+>> +             .parent = ipcdev.dev,
+>> +             .name = PUNIT_DEVICE_NAME,
+>> +             .id = -1,
+>> +             .res = punit_res_array,
+>> +             .num_res = ARRAY_SIZE(punit_res_array),
+>> +             };
+>> +
+>
+> Is it better to move the structure out of the routine?
 
-Is it better to move the structure out of the routine?
+Either is fine.
 
-Thanks,
--Aubrey
-
-
-
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.punit_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_tco_device(void)
->  {
->  	struct platform_device *pdev;
->  	struct resource *res;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(TCO_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev, "Failed to alloc tco platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = TCO_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = tco_res,
-> +		.num_res = ARRAY_SIZE(tco_res),
-> +		.data = &tco_info,
-> +		.size_data = sizeof(tco_info),
-> +		};
->  
->  	res = tco_res + TCO_RESOURCE_ACPI_IO;
->  	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
-> @@ -577,45 +565,26 @@ static int ipc_create_tco_device(void)
->  	res->start = ipcdev.gcr_base + TCO_PMC_OFFSET;
->  	res->end = res->start + TCO_PMC_SIZE - 1;
->  
-> -	ret = platform_device_add_resources(pdev, tco_res, ARRAY_SIZE(tco_res));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform resources\n");
-> -		goto err;
-> -	}
-> -
-> -	ret = platform_device_add_data(pdev, &tco_info, sizeof(tco_info));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform data\n");
-> -		goto err;
-> -	}
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.tco_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_telemetry_device(void)
->  {
->  	struct platform_device *pdev;
->  	struct resource *res;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(TELEMETRY_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to allocate telemetry platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = TELEMETRY_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = telemetry_res,
-> +		.num_res = ARRAY_SIZE(telemetry_res),
-> +		};
->  
->  	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
->  	res->start = ipcdev.telem_punit_ssram_base;
-> @@ -625,26 +594,13 @@ static int ipc_create_telemetry_device(void)
->  	res->start = ipcdev.telem_pmc_ssram_base;
->  	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
->  
-> -	ret = platform_device_add_resources(pdev, telemetry_res,
-> -					    ARRAY_SIZE(telemetry_res));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to add telemetry platform resources\n");
-> -		goto err;
-> -	}
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to add telemetry platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.telemetry_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_pmc_devices(void)
-> 
+The struct platform_device_info is not very big as most of it's fields are
+pointers. And this variable is for setup only so it's fine to use
+local variable,
+we don't need it once the function is done.
