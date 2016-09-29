@@ -1,205 +1,92 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH RFT] platform/x86: intel_pmc_ipc: Convert to use
- platform_device_register_full
-Date: Thu, 29 Sep 2016 01:51:37 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD398E9E8D@SHSMSX104.ccr.corp.intel.com>
-References: <1474689248-5925-1-git-send-email-axel.lin@ingics.com>
- <20160928233644.GC7630@f23x64.localdomain>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH 17/26] intel_telemetry_debugfs: constify local
+ structures
+Date: Thu, 29 Sep 2016 07:19:21 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1609290716550.3288@hadrien>
+References: <1473599168-30561-1-git-send-email-Julia.Lawall@lip6.fr> <1473599168-30561-18-git-send-email-Julia.Lawall@lip6.fr> <20160928235235.GD7630@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:63508 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750738AbcI2Bvm (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Sep 2016 21:51:42 -0400
-In-Reply-To: <20160928233644.GC7630@f23x64.localdomain>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Axel Lin <axel.lin@ingics.com>
-Cc: Aubrey Li <aubrey.li@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20160928235235.GD7630@f23x64.localdomain>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, joe@perches.com, kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-It's good to me, thanks.
 
->+LKML
+
+On Wed, 28 Sep 2016, Darren Hart wrote:
+
+> On Sun, Sep 11, 2016 at 03:05:59PM +0200, Julia Lawall wrote:
 >
->Axel, please always include LKML on any patch.
+> Hi Julia,
 >
->Qipeng, any concerns?
+> > For structure types defined in the same file or local header files, find
+> > top-level static structure declarations that have the following
+> > properties:
+> > 1. Never reassigned.
+> > 2. Address never taken
+>
+> Hrm. telem_apl_debugfs_conf is passed to the TELEM_DEBUGFS_CPU macro as the
+> second argument "data":
+>
+> #define TELEM_DEBUGFS_CPU(model, data) \
+> 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&data}
+>
+> And the address is taken, and later assigned to the debugfs_conf pointer.
+>
+> The usage still seems OK, but did I misunderstand the conditions?
 
-On Sat, Sep 24, 2016 at 11:54:08AM +0800, Axel Lin wrote:
-> Use platform_device_register_full() instead of open-coded.
-> 
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 110 
-> +++++++++++------------------------
->  1 file changed, 33 insertions(+), 77 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c 
-> b/drivers/platform/x86/intel_pmc_ipc.c
-> index b86e1bc..665a9a1 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -522,48 +522,36 @@ static struct resource telemetry_res[] = {  
-> static int ipc_create_punit_device(void)  {
->  	struct platform_device *pdev;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev, "Failed to alloc punit platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> -	ret = platform_device_add_resources(pdev, punit_res_array,
-> -					    ARRAY_SIZE(punit_res_array));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
-> -		goto err;
-> -	}
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = PUNIT_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = punit_res_array,
-> +		.num_res = ARRAY_SIZE(punit_res_array),
-> +		};
-> +
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.punit_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_tco_device(void)  {
->  	struct platform_device *pdev;
->  	struct resource *res;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(TCO_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev, "Failed to alloc tco platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = TCO_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = tco_res,
-> +		.num_res = ARRAY_SIZE(tco_res),
-> +		.data = &tco_info,
-> +		.size_data = sizeof(tco_info),
-> +		};
->  
->  	res = tco_res + TCO_RESOURCE_ACPI_IO;
->  	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET; @@ -577,45 
-> +565,26 @@ static int ipc_create_tco_device(void)
->  	res->start = ipcdev.gcr_base + TCO_PMC_OFFSET;
->  	res->end = res->start + TCO_PMC_SIZE - 1;
->  
-> -	ret = platform_device_add_resources(pdev, tco_res, ARRAY_SIZE(tco_res));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform resources\n");
-> -		goto err;
-> -	}
-> -
-> -	ret = platform_device_add_data(pdev, &tco_info, sizeof(tco_info));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform data\n");
-> -		goto err;
-> -	}
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add tco platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.tco_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_telemetry_device(void)  {
->  	struct platform_device *pdev;
->  	struct resource *res;
-> -	int ret;
-> -
-> -	pdev = platform_device_alloc(TELEMETRY_DEVICE_NAME, -1);
-> -	if (!pdev) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to allocate telemetry platform device\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	pdev->dev.parent = ipcdev.dev;
-> +	const struct platform_device_info pdevinfo = {
-> +		.parent = ipcdev.dev,
-> +		.name = TELEMETRY_DEVICE_NAME,
-> +		.id = -1,
-> +		.res = telemetry_res,
-> +		.num_res = ARRAY_SIZE(telemetry_res),
-> +		};
->  
->  	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
->  	res->start = ipcdev.telem_punit_ssram_base; @@ -625,26 +594,13 @@ 
-> static int ipc_create_telemetry_device(void)
->  	res->start = ipcdev.telem_pmc_ssram_base;
->  	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
->  
-> -	ret = platform_device_add_resources(pdev, telemetry_res,
-> -					    ARRAY_SIZE(telemetry_res));
-> -	if (ret) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to add telemetry platform resources\n");
-> -		goto err;
-> -	}
-> +	pdev = platform_device_register_full(&pdevinfo);
-> +	if (IS_ERR(pdev))
-> +		return PTR_ERR(pdev);
->  
-> -	ret = platform_device_add(pdev);
-> -	if (ret) {
-> -		dev_err(ipcdev.dev,
-> -			"Failed to add telemetry platform device\n");
-> -		goto err;
-> -	}
->  	ipcdev.telemetry_dev = pdev;
->  
->  	return 0;
-> -err:
-> -	platform_device_put(pdev);
-> -	return ret;
->  }
->  
->  static int ipc_create_pmc_devices(void)
+OK, this is definitely a weakness of the script and my methodology for
+checking the results.  There was already a case of a cast that I have
+fixed up my script for, but this one is worse because it's under a macro.
+I can look into whether the cast can be changed to add a const, but for
+the time being, I think you should just drop this patch.
+
+Thanks for the careful review.
+
+julia
+
+>
+>
+> > 3. Not passed to a top-level macro call
+> > 4. No pointer or array-typed field passed to a function or stored in a
+> > variable.
+> > Declare structures having all of these properties as const.
+> >
+> > Done using Coccinelle.
+> > Based on a suggestion by Joe Perches <joe@perches.com>.
+>
+> > Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+> >
+> > ---
+> > The semantic patch seems too long for a commit log, but is in the cover
+> > letter.
+> >
+> >  drivers/platform/x86/intel_telemetry_debugfs.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+> > index ef29f18..d0761f3 100644
+> > --- a/drivers/platform/x86/intel_telemetry_debugfs.c
+> > +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+> > @@ -297,7 +297,7 @@ struct telemetry_debugfs_conf {
+> >
+> >  static struct telemetry_debugfs_conf *debugfs_conf;
+> >
+> > -static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
+> > +static const struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
+> >  	.pss_idle_data = telem_apl_pss_idle_data,
+> >  	.pcs_idle_blkd_data = telem_apl_pcs_idle_blkd_data,
+> >  	.pcs_s0ix_blkd_data = telem_apl_pcs_s0ix_blkd_data,
+> >
+> >
+>
 > --
-> 2.7.4
-> 
-> 
-
---
-Darren Hart
-Intel Open Source Technology Center
+> Darren Hart
+> Intel Open Source Technology Center
+> --
+> To unsubscribe from this list: send the line "unsubscribe kernel-janitors" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
