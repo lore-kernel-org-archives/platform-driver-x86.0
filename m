@@ -1,71 +1,41 @@
-From: Lloyds TSB Bank PLC <livia.aguiar@mda.gov.br>
-Subject: Darlehen Angebot von 3%
-Date: Tue, 11 Oct 2016 02:10:45 -0300 (BRT)
-Message-ID: <1416831980.2988142.1476162645823.JavaMail.zimbra__41633.165049325$1476165417$gmane$org@mda.gov.br>
-Reply-To: "lloyds26tsb@gmail.com" <lloyds26tsb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.mda.gov.br ([200.198.212.36]:58018 "EHLO mx1.mda.gov.br"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751148AbcJKF4H (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Oct 2016 01:56:07 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH] ideapad-laptop: Add Lenovo Yoga 910-13IKB to no_hw_rfkill dmi list
+Date: Tue, 11 Oct 2016 19:28:02 -0400
+Message-ID: <1476228482-2823-1-git-send-email-masneyb@onstation.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ike.pan@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, masneyb@onstation.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+The Lenovo Yoga 910-13IKB does not have a hw rfkill switch, and trying
+to read the hw rfkill switch through the ideapad module causes it to
+always report as blocked.
 
+This commit adds the Lenovo Yoga 910-13IKB to the no_hw_rfkill dmi list,
+fixing the WiFI breakage.
 
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Sch=C3=B6nen Tag,
-
- Dies ist Lloyds TSB Bank plc Kredite anbieten.
-
-   Lloyds TSB bietet flexible und g=C3=BCnstige Kredite f=C3=BCr jeden Zwec=
-k Sie Ihre Ziele erreichen zu helfen. wir bei niedrigen Zinssatz von 3% Dar=
-lehen. Hier sind einige wichtige Merkmale der pers=C3=B6nlichen Kredit ange=
-boten durch Lloyds TSB. Hier sind die Darlehen Faktoren, die wir mit den f=
-=C3=BChrenden britischen Makler arbeiten, die Zugang zu Top-Kreditgeber hab=
-en und sind in der Lage, die beste finanzielle L=C3=B6sung zu einem erschwi=
-nglichen price.Please zu finden, wenn Sie daran interessiert sind, uns freu=
-ndlich =C3=BCber diese E-Mail an: lloyds26tsb@gmail.com
-
-
-Nach der Reaktion wird eine Anwendung f=C3=BCr Darlehen f=C3=BCllen erhalte=
-n. Keine soziale Sicherheit und keine Bonit=C3=A4tspr=C3=BCfung, 100% garan=
-tiert.
-
-Es wird uns eine Ehre, wenn Sie uns erlauben, zu Ihren Diensten zu sein.
-
-
-erforderlichen Informationen, um
-
-Deine Namen:
-
-Adresse: ...........
-
-Telefon: ...........
-
-Ben=C3=B6tigte Menge: ........
-
-Dauer: ...............
-
-Beruf: ...........
-
-Monatliches Einkommen Level: ........
-
-Geschlecht: ...............
-
-Geburtsdatum: ........
-
-Bundesland: ..................
-
-Land: ..........
-
-Zweck: .........
-
-Treffen Sie Ihre finanziellen Bed=C3=BCrfnisse ist unser Stolz.
-
-
-Dr.John Mahama.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d1a091b..a232394 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -933,6 +933,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
+ 		},
+ 	},
++	{
++		.ident = "Lenovo YOGA 910-13IKB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 910-13IKB"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+2.7.4
