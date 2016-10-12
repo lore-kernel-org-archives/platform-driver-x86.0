@@ -1,72 +1,37 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] intel_pmc_core: avoid boot time warning for
- !CONFIG_DEBUGFS_FS
-Date: Wed, 12 Oct 2016 01:13:18 -0700
-Message-ID: <20161012081318.GA4411@f23x64.localdomain>
-References: <20161010111313.119658-1-arnd@arndb.de>
- <20161010111313.119658-2-arnd@arndb.de>
- <20161010122917.GA2377@kroah.com>
+Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 910-13IKB to
+ no_hw_rfkill dmi list
+Date: Wed, 12 Oct 2016 01:17:39 -0700
+Message-ID: <20161012081739.GB4411@f23x64.localdomain>
+References: <1476228482-2823-1-git-send-email-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:53301 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752865AbcJLIRm (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 12 Oct 2016 04:17:42 -0400
 Content-Disposition: inline
-In-Reply-To: <20161010122917.GA2377@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Darren Hart <dvhart@linux.intel.com>, Nicolai Stange <nicstange@gmail.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1476228482-2823-1-git-send-email-masneyb@onstation.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Oct 10, 2016 at 02:29:17PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Oct 10, 2016 at 01:12:58PM +0200, Arnd Bergmann wrote:
-> > While looking at a patch that introduced a compile-time warning
-> > "‘pmc_core_dev_state_get’ defined but not used" (I sent a patch
-> > for debugfs to fix it), I noticed that the same patch caused
-> > it in intel_pmc_core also introduced a bogus run-time warning:
-> > "PMC Core: debugfs register failed".
-> > 
-> > The problem is the IS_ERR_OR_NULL() check that as usual gets
-> > things wrong: when CONFIG_DEBUGFS_FS is disabled,
-> > debugfs_create_dir() fails with an error code, and we don't
-> > need to warn about it, unlike the case in which it returns
-> > NULL.
-> > 
-> > This reverts the driver to the previous state of not warning
-> > about CONFIG_DEBUGFS_FS being disabled. I chose not to
-> > restore the driver to making a runtime error in debugfs
-> > fatal in pmc_core_probe().
-> > 
-> > Fixes: df2294fb6428 ("intel_pmc_core: Convert to DEFINE_DEBUGFS_ATTRIBUTE")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/platform/x86/intel_pmc_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> > index 520b58a04daa..e8b1b836ca2d 100644
-> > --- a/drivers/platform/x86/intel_pmc_core.c
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -100,7 +100,7 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
-> >  	struct dentry *dir, *file;
-> >  
-> >  	dir = debugfs_create_dir("pmc_core", NULL);
-> > -	if (IS_ERR_OR_NULL(dir))
-> > +	if (!dir)
-> >  		return -ENOMEM;
+On Tue, Oct 11, 2016 at 07:28:02PM -0400, Brian Masney wrote:
+> The Lenovo Yoga 910-13IKB does not have a hw rfkill switch, and trying
+> to read the hw rfkill switch through the ideapad module causes it to
+> always report as blocked.
 > 
-> Hah, no, you shouldn't ever care about any return value being "wrong"
-> from debugfs, the code should just continue on as normal.
+> This commit adds the Lenovo Yoga 910-13IKB to the no_hw_rfkill dmi list,
+> fixing the WiFI breakage.
 > 
-> And yes, you are correct, the IS_ERR_OR_NULL() is totally wrong.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Thanks Arnd and Greg, appreciate the catch and the fix.
+Thanks Brian,
 
-Applied.
+Queued to testing.
 
 -- 
 Darren Hart
