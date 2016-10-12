@@ -1,62 +1,129 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: add SERIO_I8042 dependency
-Date: Wed, 12 Oct 2016 23:04:10 +0200
-Message-ID: <20161012210233.GA127258@f23x64.localdomain>
-References: <20161012193224.127356-1-arnd@arndb.de>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
+Date: Thu, 13 Oct 2016 07:32:18 +0800
+Message-ID: <1476315138-20478-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57920 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752237AbcJLWUY (ORCPT
+Received: from mail-pa0-f65.google.com ([209.85.220.65]:36690 "EHLO
+        mail-pa0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933778AbcJMDq6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Oct 2016 18:20:24 -0400
-Content-Disposition: inline
-In-Reply-To: <20161012193224.127356-1-arnd@arndb.de>
+        Wed, 12 Oct 2016 23:46:58 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Oleksij Rempel <linux@rempel-privat.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
 
-On Wed, Oct 12, 2016 at 09:31:40PM +0200, Arnd Bergmann wrote:
-> A recent bugfix added a call to i8042_install_filter but did
-> not add the dependency, leading to possible link errors:
-> 
-> drivers/platform/built-in.o: In function `asus_nb_wmi_quirks':
-> asus-nb-wmi.c:(.text+0x23af): undefined reference to `i8042_install_filter'
-> 
-> This adds a dependency on SERIO_I8042||SERIO_I8042=n to indicate
-> that we can build the driver when the i8042 driver is disabled,
-> but it cannot be built-in when that is a loadable module.
-> 
-> Fixes: b5643539b825 ("platform/x86: asus-wmi: Filter buggy scan codes on ASUS Q500A")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The AMW0_GUID1 wmi is not only found on Acer family but also other
+machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
+driver handled those non-Acer machines by quirks list.
 
-Thanks again Arnd, queued to testing. Will try to include in a pull request
-within the merge window, but travel may push it out to early next week if
-connectivity or travel goes south.
+But actually acer-wmi driver was loaded on any machines that have
+AMW0_GUID1. This behavior is strange because those machines should
+be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
+ideapad-laptop.
 
-> ---
->  drivers/platform/x86/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9756c8354b37..6bca28472605 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -576,6 +576,7 @@ config ASUS_WMI
->  config ASUS_NB_WMI
->  	tristate "Asus Notebook WMI Driver"
->  	depends on ASUS_WMI
-> +	depends on SERIO_I8042 || SERIO_I8042 = n
->  	---help---
->  	  This is a driver for newer Asus notebooks. It adds extra features
->  	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
-> -- 
-> 2.9.0
-> 
-> 
+So, This patch adds the logic to check the machine that has AMW0_GUID1
+should be in Acer/Packard Bell/Gateway white list. But, it still keeps
+the quirk list of those supported non-acer machines for backward
+compatible.
 
+Tested-by: Bjørn Mork <bjorn@mork.no>
+Cc: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c | 56 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 3bb3162..734f0da 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -355,6 +355,32 @@ static const struct dmi_system_id acer_blacklist[] __initconst = {
+ 	{}
+ };
+ 
++static const struct dmi_system_id amw0_whitelist[] __initconst = {
++	{
++		.ident = "Acer",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		},
++	},
++	{
++		.ident = "Gateway",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++		},
++	},
++	{
++		.ident = "Packard Bell",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
++		},
++	},
++	{}
++};
++
++/*
++ * This quirk table is only for Acer/Gateway/Packard Bell family
++ * that those machines are supported by acer-wmi driver.
++ */
+ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+@@ -464,6 +490,17 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_travelmate_2490,
+ 	},
++	{}
++};
++
++/*
++ * This quirk list is for those non-acer machines that have AMW0_GUID1
++ * but supported by acer-wmi in past days. Keeping this quirk list here
++ * is only for backward compatible. Please do not add new machine to
++ * here anymore. Those non-acer machines should be supported by
++ * appropriate wmi drivers.
++ */
++static const struct dmi_system_id non_acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Fujitsu Siemens Amilo Li 1718",
+@@ -598,6 +635,7 @@ static void __init find_quirks(void)
+ {
+ 	if (!force_series) {
+ 		dmi_check_system(acer_quirks);
++		dmi_check_system(non_acer_quirks);
+ 	} else if (force_series == 2490) {
+ 		quirks = &quirk_acer_travelmate_2490;
+ 	}
+@@ -2121,6 +2159,24 @@ static int __init acer_wmi_init(void)
+ 	find_quirks();
+ 
+ 	/*
++	 * The AMW0_GUID1 wmi is not only found on Acer family but also other
++	 * machines like Lenovo, Fujitsu and Medion. In the past days,
++	 * acer-wmi driver handled those non-Acer machines by quirks list.
++	 * But actually acer-wmi driver was loaded on any machines that have
++	 * AMW0_GUID1. This behavior is strange because those machines should
++	 * be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
++	 * ideapad-laptop. So, here checks the machine that has AMW0_GUID1
++	 * should be in Acer/Gateway/Packard Bell white list, or it's already
++	 * in the past quirk list.
++	 */
++	if (wmi_has_guid(AMW0_GUID1) &&
++	    !dmi_check_system(amw0_whitelist) &&
++	    quirks == &quirk_unknown) {
++		pr_err("Unsupported machine has AMW0_GUID1, unable to load\n");
++		return -ENODEV;
++	}
++
++	/*
+ 	 * Detect which ACPI-WMI interface we're using.
+ 	 */
+ 	if (wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.1.4
