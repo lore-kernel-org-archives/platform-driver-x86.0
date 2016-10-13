@@ -1,90 +1,44 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: setup accelerometer when machine has appropriate notify event
-Date: Thu, 13 Oct 2016 07:32:20 +0800
-Message-ID: <1476315140-20443-1-git-send-email-jlee@suse.com>
+From: "Mrs. Maim Farooq" <yy@hdt-yu-polo-lqd.me>
+Subject: Re: My incurable illness
+Date: Thu, 13 Oct 2016 09:18:41 +0200
+Message-ID: <DB5PR02MB111076EC0B5B4878FBDBFB11E0DC0@DB5PR02MB1110.eurprd02.prod.outlook.com>
+Reply-To: <mrsmaimounafarooq@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:35496 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933767AbcJMDv3 (ORCPT
+Received: from mail-am5eur03hn0202.outbound.protection.outlook.com ([104.47.8.202]:64177
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752554AbcJMJHw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Oct 2016 23:51:29 -0400
+        Thu, 13 Oct 2016 05:07:52 -0400
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+To: yy@hdt-yu-polo-lqd.me
 
-The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
-So, this patch changes the codes to setup accelerometer input device
-when detected ACERWMID_EVENT_GUID. It avoids that the accel input
-device created on every acer machines.
+Good Day,
 
-In addition, patch adds a clearly parsing logic of accelerometer hid
-to acer_wmi_get_handle_cb callback function. It is positive matching
-the "SENR" name with "BST0001" device to avoid non-supported hardware.
+I am Mrs. Maim Farooq from Canada, Aging widow suffering from long time inc=
+urable illness. =
 
-Reported-by: Bjørn Mork <bjorn@mork.no>
-Tested-by: Bjørn Mork <bjorn@mork.no>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+Presently I am admitted in a private hospital and don't know how tomorrow w=
+ill be like.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 79d64ea..3bb3162 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(void)
- 	return status;
- }
- 
-+#define ACER_WMID_ACCEL_HID	"BST0001"
-+
- static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
- 						void *ctx, void **retval)
- {
-+	struct acpi_device *dev;
-+
-+	if (strcmp(ctx, "SENR")) {
-+		if (acpi_bus_get_device(ah, &dev))
-+			return AE_OK;
-+		if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-+			return AE_OK;
-+	} else
-+		return AE_OK;
-+
- 	*(acpi_handle *)retval = ah;
--	return AE_OK;
-+
-+	return AE_CTRL_TERMINATE;
- }
- 
- static int __init acer_wmi_get_handle(const char *name, const char *prop,
-@@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(void)
- {
- 	int err;
- 
--	err = acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
-+	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
- 	if (err)
- 		return err;
- 
-@@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
- 		err = acer_wmi_input_setup();
- 		if (err)
- 			return err;
-+		err = acer_wmi_accel_setup();
-+		if (err)
-+			return err;
- 	}
- 
--	acer_wmi_accel_setup();
--
- 	err = platform_driver_register(&acer_platform_driver);
- 	if (err) {
- 		pr_err("Unable to register platform driver\n");
--- 
-2.1.4
+I am not afraid of death even if I have no child to succeed my estate left =
+behind by my late husband.
+
+My late husband's family members wanted me to even die before my time, and =
+for that reason; I now decide to seek one who has a heart to help the Mothe=
+rless and less privileged in our society to receive and utilize the funds f=
+or that purpose.
+
+Can you volunteer or make yourself available to be used in putting smiles o=
+r an end to the sufferings of our children out there?
+
+Please if after reading this mail and your heart is troubled to carry on wi=
+th this project; do not hesitate to avail yourself for this purpose kindly =
+reply.
+
+Mrs. Maim Farooq
