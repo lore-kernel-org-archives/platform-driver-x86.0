@@ -1,61 +1,42 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 2/2] platform: x86: dell-*: Call
- led_notify_brightness_change on kbd brightness change
-Date: Wed, 19 Oct 2016 16:06:14 +0200
-Message-ID: <20161019140614.GF1689@pali>
-References: <20161019133355.6192-1-hdegoede@redhat.com>
- <20161019133355.6192-3-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:36067 "EHLO
-        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S941334AbcJSOSn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Oct 2016 10:18:43 -0400
-Content-Disposition: inline
-In-Reply-To: <20161019133355.6192-3-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 0/2] Add led_notify_brightness_change led-core function and use in dell-wmi driver
+Date: Wed, 19 Oct 2016 15:33:53 +0200
+Message-ID: <20161019133355.6192-1-hdegoede@redhat.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 19 October 2016 15:33:55 Hans de Goede wrote:
-> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-> index d2412ab..7934953 100644
-> --- a/drivers/platform/x86/dell-smbios.c
-> +++ b/drivers/platform/x86/dell-smbios.c
-> @@ -21,6 +21,7 @@
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/io.h>
-> +#include <linux/leds.h>
->  #include "../../firmware/dcdbas.h"
->  #include "dell-smbios.h"
->  
-> @@ -40,6 +41,9 @@ static int da_command_code;
->  static int da_num_tokens;
->  static struct calling_interface_token *da_tokens;
->  
-> +struct led_classdev *dell_kbd_backlight_led;
-> +EXPORT_SYMBOL_GPL(dell_kbd_backlight_led);
-> +
->  int dell_smbios_error(int value)
->  {
->  	switch (value) {
+Hi All,
 
-This is ugly! dell-smbios.c file have nothing to do with led and
-keyboard backlight. It is generic interface for sending and receiving
-smbios requests.
+I was annoyed by the kbd-backlight on my Dell XPS 9550 not working well
+together with the GNOME3 ui for kbd-backlight control.
 
-I know, there are "layering problems" and something better should be
-invented. Drivers dell-wmi.ko and dell-rbtn.ko provides events and
-dell-laptop.ko want to listen for them. There is already hack in
-dell-rbnt.ko which I really would like to fix and then delete...
+Part of the problem here is that the hotkey on the laptop's keyboard to
+control the kbd backlight is fully handled in firmware. So dell-wmi does
+not send any key-presses for it. This is the right thing todo since
+sending such key-presses will result in userspace adjusting the backlight,
+while this has already been done by the firmware.
 
-So I rather do not want to see another hacks in that code.
+OTOH userspace should really still get some sort of event when this happens,
+just like e.g. on some systems with hardwired volume-up/down buttons the
+alsa mixer interface will send events to notify userspace about the changed
+volume.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Checking other sysfs drivers, there is a standard way to notify userspace
+about changes to a sysfs attributes underlying value. This patch-set adds
+a led_notify_brightness_change led-core function using this standard
+mechanism and makes the dell-wmi driver call led_notify_brightness_change
+on the kbd_backlight led_classdev when the firmware has changed the
+brightness. Together with some userspace changes / fixes this leads to
+a much nicer / more integrated experience wrt kbd backlight control.
+
+Currently this patch-set introduces only 1 user (dell-wmi) of the new
+led_notify_brightness_change function, but I plan to also fix the same
+issue on thinkpads (soon), and also one some HP models (when I can borrow
+one, hopefully also soon).
+
+Regards,
+
+Hans
