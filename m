@@ -1,41 +1,54 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 0/2] Add led_notify_brightness_change led-core function
- and use in dell-wmi driver
-Date: Wed, 19 Oct 2016 16:10:22 +0200
-Message-ID: <20161019141022.GG1689@pali>
-References: <20161019133355.6192-1-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] ideapad-laptop: Add another DMI entry for Yoga 900
+Date: Wed, 19 Oct 2016 19:36:42 +0300
+Message-ID: <CAHp75Ve2a_p7A7TfZQL+9-8ws09_N4XG1fsQswrJO58x3o-j-w@mail.gmail.com>
+References: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161019133355.6192-1-hdegoede@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f42.google.com ([209.85.218.42]:36175 "EHLO
+        mail-oi0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751012AbcJSQgn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 19 Oct 2016 12:36:43 -0400
+Received: by mail-oi0-f42.google.com with SMTP id m72so37031293oik.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Oct 2016 09:36:43 -0700 (PDT)
+In-Reply-To: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
 
-On Wednesday 19 October 2016 15:33:53 Hans de Goede wrote:
-> Checking other sysfs drivers, there is a standard way to notify userspace
-> about changes to a sysfs attributes underlying value. This patch-set adds
-> a led_notify_brightness_change led-core function using this standard
-> mechanism and makes the dell-wmi driver call led_notify_brightness_change
-> on the kbd_backlight led_classdev when the firmware has changed the
-> brightness. Together with some userspace changes / fixes this leads to
-> a much nicer / more integrated experience wrt kbd backlight control.
+On Wed, Oct 19, 2016 at 1:27 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> This particular laptop has its motherboard replaced and after that, even
+> with the latest BIOS, some DMI identification strings have become
+> "INVALID". This includes DMI_PRODUCT_VERSION which results Wifi being
+> blocked.
+>
+> It seems that DMI_BOARD_NAME is still valid so use that as an
+> alternative for Lenovo Yoga 900.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Thank you for bringing this back! I had similar solution in my mind, but
-I have not had time to implement it yet. It is great to see support for
-this.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@linux.intel.com>
 
-> Currently this patch-set introduces only 1 user (dell-wmi) of the new
-> led_notify_brightness_change function, but I plan to also fix the same
-> issue on thinkpads (soon),
-
-Look at thinkpad acpi mailing list discussion. There is acpi information
-how to listen for firmware event when keyboard backlight on thinkpad was
-changed. Maybe it could help you...
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -933,6 +933,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>                         DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
+>                 },
+>         },
+> +       {
+> +               .ident = "Lenovo Yoga 900",
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "VIUU4"),
+> +               },
+> +       },
+>         {}
+>  };
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+With Best Regards,
+Andy Shevchenko
