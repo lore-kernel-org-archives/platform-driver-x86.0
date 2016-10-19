@@ -1,36 +1,55 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: Add another DMI entry for Yoga 900
-Date: Wed, 19 Oct 2016 13:10:43 -0700
-Message-ID: <20161019201043.GA78689@f23x64.localdomain>
-References: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] toshiba-wmi: Fix loading the driver on non Toshiba
+ laptops
+Date: Wed, 19 Oct 2016 13:26:43 -0700
+Message-ID: <20161019202643.GB78689@f23x64.localdomain>
+References: <20160825185055.12143-1-coproscefalo@gmail.com>
+ <20160828170037.GC96930@f23x64.localdomain>
+ <CAGdLNWGderHFpsqcRc5FjHYOCokoKzfsTeMUkjyZYhAU3guQ0w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57642 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752006AbcJSUK1 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Oct 2016 16:10:27 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>
+In-Reply-To: <CAGdLNWGderHFpsqcRc5FjHYOCokoKzfsTeMUkjyZYhAU3guQ0w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, carlos@strangeworlds.co.uk
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 19, 2016 at 01:27:40PM +0300, Mika Westerberg wrote:
-> This particular laptop has its motherboard replaced and after that, even
-> with the latest BIOS, some DMI identification strings have become
-> "INVALID". This includes DMI_PRODUCT_VERSION which results Wifi being
-> blocked.
+On Wed, Oct 12, 2016 at 10:26:43AM -0600, Azael Avalos wrote:
+> *ping*
 > 
-> It seems that DMI_BOARD_NAME is still valid so use that as an
-> alternative for Lenovo Yoga 900.
+> 2016-08-28 11:00 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> > On Thu, Aug 25, 2016 at 12:50:55PM -0600, Azael Avalos wrote:
+> >> Bug 150611 uncovered that the WMI ID used by the toshiba-wmi driver
+> >> is not Toshiba specific, and as such, the driver was being loaded
+> >> on non Toshiba laptops too.
+> >>
+> >> This patch adds a DMI matching list checking for TOSHIBA as the
+> >> vendor, refusing to load if it is not.
+> >>
+> >> Also the WMI GUID was renamed, dropping the TOSHIBA_ prefix, to
+> >> better reflect that such GUID is not a Toshiba specific one.
+> >>
+> >> Cc: <stable@vger.kernel.org> # 4.4+
+> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> >> ---
+> >> Hi Darren,
+> >>
+> >> I was waiting on input from the bug above, but haven't received an
+> >> answer (as of yet), so I decided to send this to the mailing list
+> >> for feedback as to whether this is the correct approach for this
+> >> issue.
+> >
+> > Thanks. Let's see if Carlos (wmi.c author) has an opinion...
+> >
+> > Carlos?
+> 
+> Any input on this?
 
-Well, that stinks. We have a similar split for the Yoga 2 11/13/Pro.
+Looks like a sane workaround to me. Queued to fixes.
 
-Applied.
-
+Want to going to stable?
 -- 
 Darren Hart
 Intel Open Source Technology Center
