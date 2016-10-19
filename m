@@ -1,42 +1,48 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 0/2] Add led_notify_brightness_change led-core function and use in dell-wmi driver
-Date: Wed, 19 Oct 2016 15:33:53 +0200
-Message-ID: <20161019133355.6192-1-hdegoede@redhat.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH] ideapad-laptop: Add another DMI entry for Yoga 900
+Date: Wed, 19 Oct 2016 13:27:40 +0300
+Message-ID: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:38210 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S943177AbcJSOzC (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 19 Oct 2016 10:55:02 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Hi All,
+This particular laptop has its motherboard replaced and after that, even
+with the latest BIOS, some DMI identification strings have become
+"INVALID". This includes DMI_PRODUCT_VERSION which results Wifi being
+blocked.
 
-I was annoyed by the kbd-backlight on my Dell XPS 9550 not working well
-together with the GNOME3 ui for kbd-backlight control.
+It seems that DMI_BOARD_NAME is still valid so use that as an
+alternative for Lenovo Yoga 900.
 
-Part of the problem here is that the hotkey on the laptop's keyboard to
-control the kbd backlight is fully handled in firmware. So dell-wmi does
-not send any key-presses for it. This is the right thing todo since
-sending such key-presses will result in userspace adjusting the backlight,
-while this has already been done by the firmware.
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-OTOH userspace should really still get some sort of event when this happens,
-just like e.g. on some systems with hardwired volume-up/down buttons the
-alsa mixer interface will send events to notify userspace about the changed
-volume.
-
-Checking other sysfs drivers, there is a standard way to notify userspace
-about changes to a sysfs attributes underlying value. This patch-set adds
-a led_notify_brightness_change led-core function using this standard
-mechanism and makes the dell-wmi driver call led_notify_brightness_change
-on the kbd_backlight led_classdev when the firmware has changed the
-brightness. Together with some userspace changes / fixes this leads to
-a much nicer / more integrated experience wrt kbd backlight control.
-
-Currently this patch-set introduces only 1 user (dell-wmi) of the new
-led_notify_brightness_change function, but I plan to also fix the same
-issue on thinkpads (soon), and also one some HP models (when I can borrow
-one, hopefully also soon).
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d1a091b..d99b45e 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -933,6 +933,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
+ 		},
+ 	},
++	{
++		.ident = "Lenovo Yoga 900",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "VIUU4"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+2.7.4
