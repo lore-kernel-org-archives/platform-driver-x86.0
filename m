@@ -1,197 +1,732 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/2] leds: core: Add led_notify_brightness_change helper
- function
-Date: Thu, 20 Oct 2016 12:02:22 +0200
-Message-ID: <8b10b78c-c40a-bbf2-ea25-62a9b3c2413e@redhat.com>
-References: <20161019133355.6192-1-hdegoede@redhat.com>
- <20161019133355.6192-2-hdegoede@redhat.com> <20161019135958.GE1689@pali>
- <CGME20161019160756eucas1p16549bdf4b7db9a91126752e81682ce67@eucas1p1.samsung.com>
- <e6f111e6-f921-4f96-3d21-89a16774880a@redhat.com>
- <6edc21a8-fd9d-f3c4-77f2-aaa17ed5683a@samsung.com>
- <412a78c0-204f-fd3f-8c6e-6dc2d3a94cc9@redhat.com>
- <1d7200f7-1a27-3c9b-51ab-5530f04b1d96@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42434 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750920AbcJTKC2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Oct 2016 06:02:28 -0400
-In-Reply-To: <1d7200f7-1a27-3c9b-51ab-5530f04b1d96@samsung.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+From: vadimp@mellanox.com
+Subject: [patch v3] drivers/platform/x86: introduce support for Mellanox hotplug driver
+Date: Thu, 20 Oct 2016 16:28:01 +0000
+Message-ID: <1476980881-62938-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, gregkh@linuxfoundation.org, mchehab@kernel.org, linux@roeck-us.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-On 20-10-16 11:15, Jacek Anaszewski wrote:
-> On 10/20/2016 10:41 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 20-10-16 08:42, Jacek Anaszewski wrote:
->>> Hi Hans,
->>>
->>> How about exploiting recently added userspace driver for the LED
->>> subsystem ((drivers/leds/uleds.c, available in linux-next) instead?
->>>
->>> If the LED class device to be observed implemented its internal trigger
->>> for generating kernel events upon device brightness change, then the
->>> userspace could create virtual LED class device, register on the
->>> trigger and poll the obtained file descriptor.
->>>
->>> See tools/leds/uledmon.c.
->>
->> Erm, this feels like a very wrong way to go about this, so now you
->> want the led_classdev to send a new trigger to be picked up by a fake-led
->> driven from userspace ? Having a led_classdev send triggers feels quite
->> wrong, and having a u-led which will not really be a led at all, just a
->> way to listen to the trigger seems wrong to me too.
->
-> Generally the intention behind introducing userspace LED class driver
-> was to have a means for intercepting kernel LED events. I agree that
-> having LED class device generating trigger events is awkward. It was
-> just the first thing that came to my mind seeing the idea of polling,
-> and having the fresh memory of userspace LED driver.
->
-> I am inclined to accept your patch
+Enable system support for the Mellanox Technologies hotplug platform
+driver, which provides support for the next Mellanox basic systems:
+"msx6710", "msx6720", "msb7700", "msn2700", "msx1410", "msn2410",
+"msb7800", "msn2740", "msn2100" and also various number of derivative
+systems from the above basic types.
+This driver handles hot-plug events for the power suppliers, power
+cables and fans for the above systems.
 
-Ok.
+The Kconfig currently controlling compilation of this code is:
+driver/platform/x86:config MLX_CPLD_PLATFORM
+                       tristate "Mellanox platform hotplug driver support"
 
-> but it will need thorough testing
-> to check if there will be no unpleasant side effects when one or more
-> processes will be polling the brightness sysfs file and in the
-> meantime other process(es) will write to it.
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+v1->v2:
+ Comments pointed out by Darren:
+ - remove whitespaces in config;
+ - remove redundant includes for header files;
+ - fix comments styling;
+ - fix register value assignment in mlxcpld_hotplug_attr_show;
+ - mlxcpld_hotplug_attr_init - use local aliases to reduce line length;
+ - Add fields description in the struct mlxcpld_hotplug_device;
+v2->v3:
+ Comments pointed out by Darren:
+  - Fix structures and enum comments in mlxcpld-hotplug.c according to
+    Documentation/kernel-documentation.rst guideline;
+  - Assign and mask aggregation status in mlxcpld_hotplug_work_handler on
+    the same line.
+  - Refactor mlxcpld_hotplug_work_handler. Make common helper routine for
+    each attribute type.
+  - Produce error message in case signal is not expected.
+  - Fix header file according to Documentation/kernel-documentation.rst
+    guideline;
+ Fix added by Vadim:
+	Fix re-scheduling flow for possibly missed signals. By mistake it
+	was coupled with FAN.
+---
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/Kconfig                  |  10 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/mlxcpld-hotplug.c        | 515 ++++++++++++++++++++++++++
+ include/linux/platform_data/mlxcpld-hotplug.h |  99 +++++
+ 5 files changed, 632 insertions(+)
+ create mode 100644 drivers/platform/x86/mlxcpld-hotplug.c
+ create mode 100644 include/linux/platform_data/mlxcpld-hotplug.h
 
-Those paths are really separate, sysfs_notify_dirent just schedules
-a wakeup (it is safe to be called from interrupt context) and does
-nothing else. Later on the task will wake up, and likely will
-call brightness_show().
-
-Currently we can already have brightness_store() and brightness_show()
-race with each other according to a comment in brightness_show()
-this is safe, but I've my doubts about this, this means that a
-led_classdev's brightness_set and brightness_get method can be
-called simultaneously which seems wrong to me / seems to violate
-the principle of least surprise where I as a led-driver author
-would expect the led-core to protect me against this.
-
-So you're right we need to think about this, but this seems to
-be an orthogonal pre-existing problem/race which userspace can
-already trigger.
-
-Hmm, looking at the code closer I believe that the led code
-needs an audit for races in general. E.g. when sw blinking
-led_set_brightness() does a read-modify-write of led_cdev->flags
-but led_timer_function() also does read-modify-write of led_cdev->flags
-and nothing is protecting led_cdev->flags from these 2 happening at
-the same time.
-
-> Also notifying only about brightness change events not caused by
-> writing brightness file is counter intuitive if we are polling
-> brightness file. What about brightness changes caused by using
-> led_set_brightness() API, without mediation of brightness file?
-
-A valid question, after carefully reading the code I see that
-triggers and blinking will make brightness_show() / reading
-the brightness sysfs attribute return a different value,
-so yes you're right we should notify each time one of
-__led_set_brightness or __led_set_brightness_blocking
-succeeds.
-
-> If we want to notify only brightness changes originating from
-> hardware, maybe it would be a good idea to add a dedicated
-> sysfs file? It could appear only if relevant option in the
-> kernel config was turned on.
-
-I believe that simply allowing poll on the brightness sysfs
-attribute is better.
-
-Regards,
-
-Hans
-
-
->
->>
->> No this really is the wrong way to do this IMHO.
->>
->> We already have a well defined interface to wait for sysfs attribute
->> changes for devices which export a sysfs interfaces, which is doing
->> POLL_PRI on the sysfs attribute.
->>
->> Looking at the discussion between me and Pali I can see a clear
->> consensus on the semantics of the poll here, we will notify any
->> POLL_PRI listeners on long-lived changes to the brightness, either
->> done by the hw autonomously or those done by a sysfs brightness write.
->> Temporary brightness changes caused by triggers and/or blinking will
->> not lead to a notify.
->>
->> If we can all agree on these semantics, then I believe that this will
->> be a good interface to deal with this.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>
->>> Best regards,
->>> Jacek Anaszewski
->>>
->>> On 10/19/2016 06:07 PM, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 19-10-16 15:59, Pali Rohár wrote:
->>>>> On Wednesday 19 October 2016 15:33:54 Hans de Goede wrote:
->>>>>> +        itself and the driver can detect this. Changes done by
->>>>>> +        kernel triggers / software blinking and writing the
->>>>>> brightness
->>>>>> +        file are not signalled.
->>>>>
->>>>> Why? In case you have desktop application which show current brightness
->>>>> level and you change manually it via echo something > /sys/ then that
->>>>> application does not have any information about your change. And so it
->>>>> show old value...
->>>>
->>>> Well it seems like a bad idea to me to notify on changes caused by
->>>> triggers and blinking, even though those are visible under sysfs
->>>> if polling the brightness attribute. At which point it seemed to make
->>>> sense to only notify on changes done autonomously by the hardware,
->>>> rather then from any software (running on the main CPU).
->>>>
->>>> As for specifically not notifying on write, the sysfs interface is root
->>>> only,
->>>> so usually there will be a single daemon controlling the brightness,
->>>> and any users can go through that daemon and it can distribute change
->>>> messages itself (and will do so for the POLL_PRI events).
->>>>
->>>> Since the usual use case is a single writing process, which is also
->>>> the same single process listening for POLL_PRI, it seems unnecessary
->>>> to me to notify the process about the write it has just done.
->>>>
->>>> But if people think that we should consider multiple simultaneous
->>>> users (which seems like a bad idea to me, because of coordination
->>>> issues, but the API does allow it) and therefor should notify
->>>> of the brightness change on a write, I'm fine with doing a new
->>>> version implementing those semantics instead.
->>>>
->>>> Either way notifying on brightness changes caused by triggers /
->>>> blinking seems like a bad idea to me.
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
->>>>
->>>>
->>>
->>>
->>
->>
->>
->
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a306795..cbfe2a8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7649,6 +7649,13 @@ W:	http://www.mellanox.com
+ Q:	http://patchwork.ozlabs.org/project/netdev/list/
+ F:	drivers/net/ethernet/mellanox/mlxsw/
+ 
++MELLANOX MLX CPLD HOTPLUG DRIVER
++M:	Vadim Pasternak <vadimp@mellanox.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/mlxcpld-hotplug.c
++F:	include/linux/platform_data/mlxcpld-hotplug.h
++
+ SOFT-ROCE DRIVER (rxe)
+ M:	Moni Shoua <monis@mellanox.com>
+ L:	linux-rdma@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 81b8dcc..c92e2f8 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1026,4 +1026,14 @@ config INTEL_TELEMETRY
+ 	  used to get various SoC events and parameters
+ 	  directly via debugfs files. Various tools may use
+ 	  this interface for SoC state monitoring.
++
++config MLX_CPLD_PLATFORM
++	tristate "Mellanox platform hotplug driver support"
++	default n
++	depends on MLX_PLATFORM
++	select I2C
++	---help---
++	  This driver handles hot-plug events for the power suppliers, power
++	  cables and fans on the wide range Mellanox IB and Ethernet systems.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2efa86d..1f06b63 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -71,3 +71,4 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+ obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
++obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
+diff --git a/drivers/platform/x86/mlxcpld-hotplug.c b/drivers/platform/x86/mlxcpld-hotplug.c
+new file mode 100644
+index 0000000..aff3686
+--- /dev/null
++++ b/drivers/platform/x86/mlxcpld-hotplug.c
+@@ -0,0 +1,515 @@
++/*
++ * drivers/platform/x86/mlxcpld-hotplug.c
++ * Copyright (c) 2016 Mellanox Technologies. All rights reserved.
++ * Copyright (c) 2016 Vadim Pasternak <vadimp@mellanox.com>
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. Neither the names of the copyright holders nor the names of its
++ *    contributors may be used to endorse or promote products derived from
++ *    this software without specific prior written permission.
++ *
++ * Alternatively, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") version 2 as published by the Free
++ * Software Foundation.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_data/mlxcpld-hotplug.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include <linux/wait.h>
++#include <linux/workqueue.h>
++
++/* Offset of event and mask registers from status register */
++#define MLXCPLD_HOTPLUG_EVENT_OFF	1
++#define MLXCPLD_HOTPLUG_MASK_OFF	2
++#define MLXCPLD_HOTPLUG_AGGR_MASK_OFF	1
++
++#define MLXCPLD_HOTPLUG_ATTRS_NUM	8
++
++/**
++ * enum mlxcpld_hotplug_attr_type - sysfs attributes for hotplug events:
++ * @MLXCPLD_HOTPLUG_ATTR_TYPE_PSU: power supply unit attribute;
++ * @MLXCPLD_HOTPLUG_ATTR_TYPE_PWR: power cable attribute;
++ * @MLXCPLD_HOTPLUG_ATTR_TYPE_FAN: FAN drawer attribute;
++ */
++enum mlxcpld_hotplug_attr_type {
++	MLXCPLD_HOTPLUG_ATTR_TYPE_PSU,
++	MLXCPLD_HOTPLUG_ATTR_TYPE_PWR,
++	MLXCPLD_HOTPLUG_ATTR_TYPE_FAN,
++};
++
++/**
++ * struct mlxcpld_hotplug_priv_data - platform private data:
++ * @irq: platform interrupt number;
++ * @pdev: platform device;
++ * @plat: platform data;
++ * @hwmon: hwmon device;
++ * @mlxcpld_hotplug_attr: sysfs attributes array;
++ * @mlxcpld_hotplug_dev_attr: sysfs sensor device attribute array;
++ * @group: sysfs attribute group;
++ * @groups: list of sysfs attribute group for hwmon registration;
++ * @dwork: delayed work template;
++ * @lock: spin lock;
++ * @aggr_cache: last value of aggregation register status;
++ * @psu_cache: last value of PSU register status;
++ * @pwr_cache: last value of power register status;
++ * @fan_cache: last value of FAN register status;
++ */
++struct mlxcpld_hotplug_priv_data {
++	int irq;
++	struct platform_device *pdev;
++	struct mlxcpld_hotplug_platform_data *plat;
++	struct device *hwmon;
++	struct attribute *mlxcpld_hotplug_attr[MLXCPLD_HOTPLUG_ATTRS_NUM + 1];
++	struct sensor_device_attribute_2
++			mlxcpld_hotplug_dev_attr[MLXCPLD_HOTPLUG_ATTRS_NUM];
++	struct attribute_group group;
++	const struct attribute_group *groups[2];
++	struct delayed_work dwork;
++	spinlock_t lock;
++	u8 aggr_cache;
++	u8 psu_cache;
++	u8 pwr_cache;
++	u8 fan_cache;
++};
++
++static ssize_t mlxcpld_hotplug_attr_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct mlxcpld_hotplug_priv_data *priv = platform_get_drvdata(pdev);
++	int index = to_sensor_dev_attr_2(attr)->index;
++	int nr = to_sensor_dev_attr_2(attr)->nr;
++	u8 reg_val = 0;
++
++	switch (nr) {
++	case MLXCPLD_HOTPLUG_ATTR_TYPE_PSU:
++		/* Bit = 0 : PSU is present. */
++		reg_val = !!!(inb(priv->plat->psu_reg_offset) & BIT(index));
++		break;
++
++	case MLXCPLD_HOTPLUG_ATTR_TYPE_PWR:
++		/* Bit = 1 : power cable is attached. */
++		reg_val = !!(inb(priv->plat->pwr_reg_offset) & BIT(index %
++						priv->plat->pwr_count));
++		break;
++
++	case MLXCPLD_HOTPLUG_ATTR_TYPE_FAN:
++		/* Bit = 0 : FAN is present. */
++		reg_val = !!!(inb(priv->plat->fan_reg_offset) & BIT(index %
++						priv->plat->fan_count));
++		break;
++	}
++
++	return sprintf(buf, "%u\n", reg_val);
++}
++
++#define PRIV_ATTR(i) priv->mlxcpld_hotplug_attr[i]
++#define PRIV_DEV_ATTR(i) priv->mlxcpld_hotplug_dev_attr[i]
++static int mlxcpld_hotplug_attr_init(struct mlxcpld_hotplug_priv_data *priv)
++{
++	int num_attrs = priv->plat->psu_count + priv->plat->pwr_count +
++			priv->plat->fan_count;
++	int i;
++
++	priv->group.attrs = devm_kzalloc(&priv->pdev->dev, num_attrs *
++					 sizeof(struct attribute *),
++					 GFP_KERNEL);
++	if (!priv->group.attrs)
++		return -ENOMEM;
++
++	for (i = 0; i < num_attrs; i++) {
++		PRIV_ATTR(i) = &PRIV_DEV_ATTR(i).dev_attr.attr;
++
++		if (i < priv->plat->psu_count) {
++			PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
++						GFP_KERNEL, "psu%u", i + 1);
++			PRIV_DEV_ATTR(i).nr = MLXCPLD_HOTPLUG_ATTR_TYPE_PSU;
++		} else if (i < priv->plat->psu_count + priv->plat->pwr_count) {
++			PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
++						GFP_KERNEL, "pwr%u", i %
++						priv->plat->pwr_count + 1);
++			PRIV_DEV_ATTR(i).nr = MLXCPLD_HOTPLUG_ATTR_TYPE_PWR;
++		} else {
++			PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
++						GFP_KERNEL, "fan%u", i %
++						priv->plat->fan_count + 1);
++			PRIV_DEV_ATTR(i).nr = MLXCPLD_HOTPLUG_ATTR_TYPE_FAN;
++		}
++
++		if (!PRIV_ATTR(i)->name) {
++			dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
++				i + 1);
++			return -ENOMEM;
++		}
++
++		PRIV_DEV_ATTR(i).dev_attr.attr.name = PRIV_ATTR(i)->name;
++		PRIV_DEV_ATTR(i).dev_attr.attr.mode = S_IRUGO;
++		PRIV_DEV_ATTR(i).dev_attr.show = mlxcpld_hotplug_attr_show;
++		PRIV_DEV_ATTR(i).index = i;
++		sysfs_attr_init(&PRIV_DEV_ATTR(i).dev_attr.attr);
++	}
++
++	priv->group.attrs = priv->mlxcpld_hotplug_attr;
++	priv->groups[0] = &priv->group;
++	priv->groups[1] = NULL;
++
++	return 0;
++}
++
++static int mlxcpld_hotplug_device_create(struct device *dev,
++					 struct mlxcpld_hotplug_device *item)
++{
++	item->adapter = i2c_get_adapter(item->bus);
++	if (!item->adapter) {
++		dev_err(dev, "Failed to get adapter for bus %d\n",
++			item->bus);
++		return -EFAULT;
++	}
++
++	item->client = i2c_new_device(item->adapter, &item->brdinfo);
++	if (!item->client) {
++		dev_err(dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
++			item->brdinfo.type, item->bus, item->brdinfo.addr);
++		i2c_put_adapter(item->adapter);
++		item->adapter = NULL;
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++static void mlxcpld_hotplug_device_destroy(struct mlxcpld_hotplug_device *item)
++{
++	if (item->client) {
++		i2c_unregister_device(item->client);
++		item->client = NULL;
++	}
++
++	if (item->adapter) {
++		i2c_put_adapter(item->adapter);
++		item->adapter = NULL;
++	}
++}
++
++static inline void
++mlxcpld_hotplug_work_helper(struct device *dev,
++			    struct mlxcpld_hotplug_device *item, u8 is_inverse,
++			    u16 offset, u8 mask, u8 *cache)
++{
++	u8 val, asserted;
++	int bit;
++
++	/* Mask event. */
++	outb(0, offset + MLXCPLD_HOTPLUG_MASK_OFF);
++	/* Read status. */
++	val = inb(offset) & mask;
++	asserted = *cache ^ val;
++	*cache = val;
++
++	/*
++	 * Validate if item related to received signal type is valid.
++	 * It should never happen, excepted the situation when some
++	 * piece of hardware is broken. In such situation just produce
++	 * error message and return. Caller must continue to handle the
++	 * signals from other devices if any.
++	 */
++	if (unlikely(!item)) {
++		dev_err(dev, "False signal is received: register at offset 0x%02x, mask 0x%02x.\n",
++			offset, mask);
++		return;
++	}
++
++	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
++		if (val & BIT(bit)) {
++			if (is_inverse)
++				mlxcpld_hotplug_device_destroy(item + bit);
++			else
++				mlxcpld_hotplug_device_create(dev, item + bit);
++		} else {
++			if (is_inverse)
++				mlxcpld_hotplug_device_create(dev, item + bit);
++			else
++				mlxcpld_hotplug_device_destroy(item + bit);
++		}
++	}
++
++	/* Acknowledge event. */
++	outb(0, offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++	/* Unmask event. */
++	outb(mask, offset + MLXCPLD_HOTPLUG_MASK_OFF);
++}
++
++/*
++ * mlxcpld_hotplug_work_handler - performs traversing of CPLD interrupt
++ * registers according to the below hierarchy schema:
++ *
++ *                   Aggregation registers (status/mask)
++ * PSU registers:           *---*
++ * *-----------------*      |   |
++ * |status/event/mask|----->| * |
++ * *-----------------*      |   |
++ * Power registers:         |   |
++ * *-----------------*      |   |
++ * |status/event/mask|----->| * |---> CPU
++ * *-----------------*      |   |
++ * FAN registers:
++ * *-----------------*      |   |
++ * |status/event/mask|----->| * |
++ * *-----------------*      |   |
++ *                          *---*
++ * In case some system changed are detected: FAN in/out, PSU in/out, power
++ * cable attached/detached, relevant device is created or destroyed.
++ */
++static void mlxcpld_hotplug_work_handler(struct work_struct *work)
++{
++	struct mlxcpld_hotplug_priv_data *priv = container_of(work,
++				struct mlxcpld_hotplug_priv_data, dwork.work);
++	u8 val, aggr_asserted;
++	unsigned long flags;
++
++	/* Mask aggregation event. */
++	outb(0, priv->plat->top_aggr_offset + MLXCPLD_HOTPLUG_AGGR_MASK_OFF);
++	/* Read aggregation status. */
++	val = inb(priv->plat->top_aggr_offset) & priv->plat->top_aggr_mask;
++	aggr_asserted = priv->aggr_cache ^ val;
++	priv->aggr_cache = val;
++
++	/* Handle PSU configuration changes. */
++	if (aggr_asserted & priv->plat->top_aggr_psu_mask)
++		mlxcpld_hotplug_work_helper(&priv->pdev->dev, priv->plat->psu,
++					    1, priv->plat->psu_reg_offset,
++					    priv->plat->psu_mask,
++					    &priv->psu_cache);
++
++	/* Handle power cable configuration changes. */
++	if (aggr_asserted & priv->plat->top_aggr_pwr_mask)
++		mlxcpld_hotplug_work_helper(&priv->pdev->dev, priv->plat->pwr,
++					    0, priv->plat->pwr_reg_offset,
++					    priv->plat->pwr_mask,
++					    &priv->pwr_cache);
++
++	/* Handle FAN configuration changes. */
++	if (aggr_asserted & priv->plat->top_aggr_fan_mask)
++		mlxcpld_hotplug_work_helper(&priv->pdev->dev, priv->plat->fan,
++					    1, priv->plat->fan_reg_offset,
++					    priv->plat->fan_mask,
++					    &priv->fan_cache);
++
++	if (aggr_asserted) {
++		spin_lock_irqsave(&priv->lock, flags);
++
++		/*
++		 * It is possible, that some signals have been inserted, while
++		 * interrupt has been masked by mlxcpld_hotplug_work_handler.
++		 * In this case such signals will be missed. In order to handle
++		 * these signals delayed work is canceled and work task
++		 * re-scheduled for immediate execution. It allows to handle
++		 * missed signals, if any. In other case work handler just
++		 * validates that no new signals have been received during
++		 * masking.
++		 */
++		cancel_delayed_work(&priv->dwork);
++		schedule_delayed_work(&priv->dwork, 0);
++
++		spin_unlock_irqrestore(&priv->lock, flags);
++
++		return;
++	}
++
++	/* Unmask aggregation event (no need acknowledge). */
++	outb(priv->plat->top_aggr_mask, priv->plat->top_aggr_offset +
++						MLXCPLD_HOTPLUG_AGGR_MASK_OFF);
++}
++
++static void mlxcpld_hotplug_set_irq(struct mlxcpld_hotplug_priv_data *priv)
++{
++	/* Clear psu presense event. */
++	outb(0, priv->plat->psu_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++	/* Set psu initial status as mask and unmask psu event. */
++	priv->psu_cache = priv->plat->psu_mask;
++	outb(priv->plat->psu_mask, priv->plat->psu_reg_offset +
++						MLXCPLD_HOTPLUG_MASK_OFF);
++
++	/* Clear power cable event. */
++	outb(0, priv->plat->pwr_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++	/* Keep power initial status as zero and unmask power event. */
++	outb(priv->plat->pwr_mask, priv->plat->pwr_reg_offset +
++						MLXCPLD_HOTPLUG_MASK_OFF);
++
++	/* Clear fan presense event. */
++	outb(0, priv->plat->fan_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++	/* Set fan initial status as mask and unmask fan event. */
++	priv->fan_cache = priv->plat->fan_mask;
++	outb(priv->plat->fan_mask, priv->plat->fan_reg_offset +
++						MLXCPLD_HOTPLUG_MASK_OFF);
++
++	/* Keep aggregation initial status as zero and unmask events. */
++	outb(priv->plat->top_aggr_mask, priv->plat->top_aggr_offset +
++						MLXCPLD_HOTPLUG_AGGR_MASK_OFF);
++
++	/* Invoke work handler for initializing hot plug devices setting. */
++	mlxcpld_hotplug_work_handler(&priv->dwork.work);
++
++	enable_irq(priv->irq);
++}
++
++static void mlxcpld_hotplug_unset_irq(struct mlxcpld_hotplug_priv_data *priv)
++{
++	int i;
++
++	disable_irq(priv->irq);
++	cancel_delayed_work_sync(&priv->dwork);
++
++	/* Mask aggregation event. */
++	outb(0, priv->plat->top_aggr_offset + MLXCPLD_HOTPLUG_AGGR_MASK_OFF);
++
++	/* Mask psu presense event. */
++	outb(0, priv->plat->psu_reg_offset + MLXCPLD_HOTPLUG_MASK_OFF);
++	/* Clear psu presense event. */
++	outb(0, priv->plat->psu_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++
++	/* Mask power cable event. */
++	outb(0, priv->plat->pwr_reg_offset + MLXCPLD_HOTPLUG_MASK_OFF);
++	/* Clear power cable event. */
++	outb(0, priv->plat->pwr_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++
++	/* Mask fan presense event. */
++	outb(0, priv->plat->fan_reg_offset + MLXCPLD_HOTPLUG_MASK_OFF);
++	/* Clear fan presense event. */
++	outb(0, priv->plat->fan_reg_offset + MLXCPLD_HOTPLUG_EVENT_OFF);
++
++	/* Remove all the attached devices. */
++	for (i = 0; i < priv->plat->psu_count; i++)
++		mlxcpld_hotplug_device_destroy(priv->plat->psu + i);
++
++	for (i = 0; i < priv->plat->pwr_count; i++)
++		mlxcpld_hotplug_device_destroy(priv->plat->pwr + i);
++
++	for (i = 0; i < priv->plat->fan_count; i++)
++		mlxcpld_hotplug_device_destroy(priv->plat->fan + i);
++}
++
++static irqreturn_t mlxcpld_hotplug_irq_handler(int irq, void *dev)
++{
++	struct mlxcpld_hotplug_priv_data *priv =
++				(struct mlxcpld_hotplug_priv_data *)dev;
++
++	/* Schedule work task for immediate execution.*/
++	schedule_delayed_work(&priv->dwork, 0);
++
++	return IRQ_HANDLED;
++}
++
++static int mlxcpld_hotplug_probe(struct platform_device *pdev)
++{
++	struct mlxcpld_hotplug_platform_data *pdata;
++	struct mlxcpld_hotplug_priv_data *priv;
++	int err;
++
++	pdata = dev_get_platdata(&pdev->dev);
++	if (!pdata) {
++		dev_err(&pdev->dev, "Failed to get platform data.\n");
++		return -EINVAL;
++	}
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->pdev = pdev;
++	priv->plat = pdata;
++
++	priv->irq = platform_get_irq(pdev, 0);
++	if (priv->irq < 0) {
++		dev_err(&pdev->dev, "Failed to get platform irq: %d\n",
++			priv->irq);
++		return priv->irq;
++	}
++
++	err = devm_request_irq(&pdev->dev, priv->irq,
++				mlxcpld_hotplug_irq_handler, 0, pdev->name,
++				priv);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to request irq: %d\n", err);
++		return err;
++	}
++	disable_irq(priv->irq);
++
++	INIT_DELAYED_WORK(&priv->dwork, mlxcpld_hotplug_work_handler);
++	spin_lock_init(&priv->lock);
++
++	err = mlxcpld_hotplug_attr_init(priv);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to allocate attributes: %d\n", err);
++		return err;
++	}
++
++	priv->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
++					"mlxcpld_hotplug", priv, priv->groups);
++	if (IS_ERR(priv->hwmon)) {
++		dev_err(&pdev->dev, "Failed to register hwmon device %ld\n",
++			PTR_ERR(priv->hwmon));
++		return PTR_ERR(priv->hwmon);
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	/* Perform initial interrupts setup. */
++	mlxcpld_hotplug_set_irq(priv);
++
++	return 0;
++}
++
++static int mlxcpld_hotplug_remove(struct platform_device *pdev)
++{
++	struct mlxcpld_hotplug_priv_data *priv = platform_get_drvdata(pdev);
++
++	/* Clean interrupts setup. */
++	mlxcpld_hotplug_unset_irq(priv);
++
++	return 0;
++}
++
++static struct platform_driver mlxcpld_hotplug_driver = {
++	.driver = {
++		.name = "mlxcpld-hotplug",
++	},
++	.probe = mlxcpld_hotplug_probe,
++	.remove = mlxcpld_hotplug_remove,
++};
++
++module_platform_driver(mlxcpld_hotplug_driver);
++
++MODULE_AUTHOR("Vadim Pasternak <vadimp@mellanox.com>");
++MODULE_DESCRIPTION("Mellanox CPLD hotplug platform driver");
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_ALIAS("platform:mlxcpld-hotplug");
+diff --git a/include/linux/platform_data/mlxcpld-hotplug.h b/include/linux/platform_data/mlxcpld-hotplug.h
+new file mode 100644
+index 0000000..e4cfcff
+--- /dev/null
++++ b/include/linux/platform_data/mlxcpld-hotplug.h
+@@ -0,0 +1,99 @@
++/*
++ * include/linux/platform_data/mlxcpld-hotplug.h
++ * Copyright (c) 2016 Mellanox Technologies. All rights reserved.
++ * Copyright (c) 2016 Vadim Pasternak <vadimp@mellanox.com>
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. Neither the names of the copyright holders nor the names of its
++ *    contributors may be used to endorse or promote products derived from
++ *    this software without specific prior written permission.
++ *
++ * Alternatively, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") version 2 as published by the Free
++ * Software Foundation.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
++ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef __LINUX_PLATFORM_DATA_MLXCPLD_HOTPLUG_H
++#define __LINUX_PLATFORM_DATA_MLXCPLD_HOTPLUG_H
++
++/**
++ * struct mlxcpld_hotplug_device - I2C device data:
++ * @adapter: I2C device adapter;
++ * @client: I2C device client;
++ * @brdinfo: device board information;
++ * @bus: I2C bus, where device is attached;
++ *
++ * Structure represents I2C hotplug device static data (board topology) and
++ * dynamic data (related kernel objects handles).
++ */
++struct mlxcpld_hotplug_device {
++	struct i2c_adapter *adapter;
++	struct i2c_client *client;
++	struct i2c_board_info brdinfo;
++	u16 bus;
++};
++
++/**
++ * struct mlxcpld_hotplug_platform_data - device platform data:
++ * @top_aggr_offset: offset of top aggregation interrupt register;
++ * @top_aggr_mask: top aggregation interrupt common mask;
++ * @top_aggr_psu_mask: top aggregation interrupt PSU mask;
++ * @psu_reg_offset: offset of PSU interrupt register;
++ * @psu_mask: PSU interrupt mask;
++ * @psu_count: number of equipped replaceable PSUs;
++ * @psu: pointer to PSU devices data array;
++ * @top_aggr_pwr_mask: top aggregation interrupt power mask;
++ * @pwr_reg_offset: offset of power interrupt register
++ * @pwr_mask: power interrupt mask;
++ * @pwr_count: number of power sources;
++ * @pwr: pointer to power devices data array;
++ * @top_aggr_fan_mask: top aggregation interrupt FAN mask;
++ * @fan_reg_offset: offset of FAN interrupt register;
++ * @fan_mask: FAN interrupt mask;
++ * @fan_count: number of equipped replaceable FANs;
++ * @fan: pointer to FAN devices data array;
++ *
++ * Structure represents board platform data, related to system hotplug events,
++ * like FAN, PSU, power cable insertion and removing. This data provides the
++ * number of hot-pluggable devices and hardware description for event handling.
++ */
++struct mlxcpld_hotplug_platform_data {
++	u16 top_aggr_offset;
++	u8 top_aggr_mask;
++	u8 top_aggr_psu_mask;
++	u16 psu_reg_offset;
++	u8 psu_mask;
++	u8 psu_count;
++	struct mlxcpld_hotplug_device *psu;
++	u8 top_aggr_pwr_mask;
++	u16 pwr_reg_offset;
++	u8 pwr_mask;
++	u8 pwr_count;
++	struct mlxcpld_hotplug_device *pwr;
++	u8 top_aggr_fan_mask;
++	u16 fan_reg_offset;
++	u8 fan_mask;
++	u8 fan_count;
++	struct mlxcpld_hotplug_device *fan;
++};
++
++#endif /* __LINUX_PLATFORM_DATA_MLXCPLD_HOTPLUG_H */
+-- 
+2.1.4
