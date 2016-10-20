@@ -1,83 +1,61 @@
-From: Lloyds TSB Bank PLC <edna.hiendlmayer@terceirizado.mda.gov.br>
-Subject: =?utf-8?Q?l=C3=A5netilbud_p=C3=A5_3%?=
-Date: Thu, 20 Oct 2016 12:34:32 -0200 (BRST)
-Message-ID: <1430867335.8443976.1476974072477.JavaMail.zimbra@terceirizado.mda.gov.br>
-Reply-To: "lloyds26tsb@gmail.com" <lloyds26tsb@gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 910-13IKB to
+ no_hw_rfkill dmi list
+Date: Thu, 20 Oct 2016 18:46:14 +0300
+Message-ID: <20161020154614.GQ24289@lahna.fi.intel.com>
+References: <1476228482-2823-1-git-send-email-masneyb@onstation.org>
+ <20161012081739.GB4411@f23x64.localdomain>
+ <a848d067-25af-26a8-7f4c-d785b73232c3@canonical.com>
+ <20161020011814.GA11359@basecamp.onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.mda.gov.br ([200.198.212.37]:22310 "EHLO mx2.mda.gov.br"
+Received: from mga09.intel.com ([134.134.136.24]:14187 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1030302AbcJTOfI (ORCPT
+        id S1754241AbcJTPqT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Oct 2016 10:35:08 -0400
+        Thu, 20 Oct 2016 11:46:19 -0400
+Content-Disposition: inline
+In-Reply-To: <20161020011814.GA11359@basecamp.onstation.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On Wed, Oct 19, 2016 at 09:18:14PM -0400, Brian Masney wrote:
+> On Thu, Oct 20, 2016 at 08:58:53AM +0800, Ike Panhc wrote:
+> > On 10/12/2016 04:17 PM, Darren Hart wrote:
+> > > On Tue, Oct 11, 2016 at 07:28:02PM -0400, Brian Masney wrote:
+> > >> The Lenovo Yoga 910-13IKB does not have a hw rfkill switch, and trying
+> > >> to read the hw rfkill switch through the ideapad module causes it to
+> > >> always report as blocked.
+> > >>
+> > >> This commit adds the Lenovo Yoga 910-13IKB to the no_hw_rfkill dmi list,
+> > >> fixing the WiFI breakage.
+> > >>
+> > >> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > 
+> > > Thanks Brian,
+> > > 
+> > > Queued to testing.
+> > > 
+> > 
+> > Hi Brian,
+> > 
+> > Could you post output of acpidump and `cat /sys/class/dmi/id/modalias` for record please?
+> > 
+> > I would like to see if there is anyway to short the growing blacklist.
+> 
+> Hi Ike,
+>    I attached the compressed output from acpidump. Here is the contents
+> of my /sys/class/dmi/id/modalias:
+> 
+> dmi:bvnLENOVO:bvr2JCN28WW:bd09/09/2016:svnLENOVO:pn80VF:pvrLenovoYOGA910-13IKB:rvnLENOVO:rnVIUU4:rvrSDK0J40709WIN:cvnLENOVO:ct10:cvrLenovoYOGA910-13IKB:
 
+Hmm, comparing that to my Yoga 900:
 
-Schönen Tag,
+dmi:bvnLENOVO:bvr2JCN28WW:bd09/09/2016:svnLENOVO:pn80VF:pvrLenovoYOGA910-13IKB:rvnLENOVO:rnVIUU4:rvrSDK0J40709WIN:cvnLENOVO:ct10:cvrLenovoYOGA910-13IKB:
+dmi:bvnLENOVO:bvrC6CN37WW:bd03/01/2016:svnLENOVO:pnINVALID:pvrINVALID:rvnLENOVO:rnVIUU4:rvrSDK0K17763WIN:cvnLENOVO:ct10:cvrINVALID:
 
-Dies ist Lloyd's TSB Bank plc Darlehen bieten.
-
-Lloyd's TSB bietet flexible und erschwingliche Darlehen für jeden Zweck, um Ihnen zu helfen, Ihre Ziele zu erreichen. Wir leihen zu einem niedrigen Zinssatz von 3%. Hier sind einige wichtige Merkmale der persönlichen Darlehen von Lloyd's TSB angeboten. Hier sind die Kredit-Faktoren arbeiten wir mit den führenden britischen Makler, die Zugang zu Top-Kreditgeber haben und sind in der Lage, die beste finanzielle Lösung zu einem erschwinglichen Preis zu finden.Bitte, wenn Sie interessiert sind kontaktieren Sie uns bitte über diese E-Mail: lloyds26tsb@gmail.com
-
-
-Nach der Reaktion erhalten Sie einen Antrag auf Ausleihe. Keine Sozialversicherung und keine Bonitätsprüfung, 100% garantiert.
-
-Es ist unsere Ehre, wenn Sie uns erlauben, zu Ihren Diensten zu sein.
-
-
-ERFORDERLICHE INFORMATIONENDeine Namen.......
-Adresse: ...........
-Telefon: ...........
-Benötigter Betrag: ........
-Dauer: ...............
-Beruf: ...........
-Monatliche Einkommensstufe: ........
-Geschlecht: ...............
-Geburtsdatum: ........
-Bundesland: ..................
-Land: ..........
-Zweck: .........
-
-Die Erfüllung Ihrer finanziellen Bedürfnisse ist unser Stolz.
-
-
-Dr. John Mahama.
-
-
-..........................................................................................................................................................................................................................................................................................................................................................................................................................................................
-
-Good day,
-
-This is Lloyd's TSB bank plc Loans offer.
-
-Lloyd's TSB offers flexible and affordable loans for any purpose to help you reach your goals. we loan at low interest rate of 3%. Here are some important features of the Personal Loan offered by Lloyd's TSB. Here are the Loan Factors we work with the leading UK brokers who have access to top lenders and are able to find the best financial solution at an affordable price.Please if you are interested kindly contact us via this Email: lloyds26tsb@gmail.com
-
-
-After the reaction, you will receive an application for loan fill. No social security and no credit check, 100% Guaranteed.
-
-It will be our honor if you permit us to be at your service.
-
-
-INFORMATION NEEDED
-
-Your names.......
-Address: ...........
-Phone: ...........
-Amount needed: ........
-Duration: ...............
-Occupation: ...........
-Monthly Income Level: ........
-Gender: ...............
-Date of Birth: ........
-State: ..................
-Country: ..........
-Purpose: .........
-
-Meeting your financial needs is our pride.
-
-
-Dr.John Mahama.
+The DMI_BOARD_NAME==VIIU4 seems to be in both (I hope it is limited to
+only such Lenovo Yoga laptops without physical rfkill switch ;-))
