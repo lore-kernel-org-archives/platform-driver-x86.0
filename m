@@ -1,46 +1,43 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] ideapad-laptop: Add another DMI entry for Yoga 900
-Date: Thu, 20 Oct 2016 10:37:01 +0300
-Message-ID: <20161020073701.GS1722@lahna.fi.intel.com>
-References: <20161019102740.74567-1-mika.westerberg@linux.intel.com>
- <20161019201043.GA78689@f23x64.localdomain>
- <e7efc31b-7410-8386-e98e-f65762f07e40@canonical.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 2/2] platform: x86: dell-*: Call
+ led_notify_brightness_change on kbd brightness change
+Date: Thu, 20 Oct 2016 09:48:43 +0200
+Message-ID: <20161020074843.GI1689@pali>
+References: <20161019133355.6192-1-hdegoede@redhat.com>
+ <20161019133355.6192-3-hdegoede@redhat.com>
+ <20161019140614.GF1689@pali>
+ <10c3baa9-db2f-3cf2-d924-70a77243e7f8@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:14629 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932277AbcJTHno (ORCPT
+Received: from mail-qk0-f173.google.com ([209.85.220.173]:35712 "EHLO
+        mail-qk0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756903AbcJTHsw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Oct 2016 03:43:44 -0400
+        Thu, 20 Oct 2016 03:48:52 -0400
 Content-Disposition: inline
-In-Reply-To: <e7efc31b-7410-8386-e98e-f65762f07e40@canonical.com>
+In-Reply-To: <10c3baa9-db2f-3cf2-d924-70a77243e7f8@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-On Thu, Oct 20, 2016 at 08:56:30AM +0800, Ike Panhc wrote:
-> On 10/20/2016 04:10 AM, Darren Hart wrote:
-> > On Wed, Oct 19, 2016 at 01:27:40PM +0300, Mika Westerberg wrote:
-> >> This particular laptop has its motherboard replaced and after that, even
-> >> with the latest BIOS, some DMI identification strings have become
-> >> "INVALID". This includes DMI_PRODUCT_VERSION which results Wifi being
-> >> blocked.
-> >>
-> >> It seems that DMI_BOARD_NAME is still valid so use that as an
-> >> alternative for Lenovo Yoga 900.
-> > 
-> > Well, that stinks. We have a similar split for the Yoga 2 11/13/Pro.
-> > 
-> > Applied.
-> > 
-> 
-> Hi Mika,
-> 
-> Could you post output of acpidump and `cat /sys/class/dmi/id/modalias` for record please?
-> 
+On Wednesday 19 October 2016 18:09:27 Hans de Goede wrote:
+> I agree that this is not pretty, but I could not come up with a
+> simple other solution. If you've any suggestions on how you want
+> to see this implemented instead I can give that a try.
 
-Here it is:
+I was thinking about exporting some dell_wmi_notifier_register and
+unregister functions (based on atomic_notifier_chain_register) from
+dell-wmi. And dell-laptop could use it. Something similar is already
+implemented in dell-rbtn+dell-latop, but still I'm consider it as hack.
 
-dmi:bvnLENOVO:bvrC6CN37WW:bd03/01/2016:svnLENOVO:pnINVALID:pvrINVALID:rvnLENOVO:rnVIUU4:rvrSDK0K17763WIN:cvnLENOVO:ct10:cvrINVALID:
+This one in dell-wmi could be easier as dell-rbtn because dell-wmi is
+monolitic. dell-wmi could be loaded only on systems which support it, so
+at that register call (from dell-laptop) you already know if you receive
+events or not.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
