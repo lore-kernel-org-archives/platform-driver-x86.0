@@ -1,76 +1,75 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [platform-drivers-x86:for-next 1/1] ERROR:
- "devm_hwmon_device_register_with_groups"
- [drivers/platform/x86/mlxcpld-hotplug.ko] undefined!
-Date: Mon, 24 Oct 2016 05:32:21 +0000
-Message-ID: <AM5PR0501MB2097DE5CB795F200E5841D4BA2A90@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <201610230328.IieEHVjC%fengguang.wu@intel.com>
- <20161023145025.GB120221@f23x64.localdomain>
+Subject: RE: [patch v1] drivers/platform/x86: select hwmon for Mellanox
+ hotplug driver in Kconfig
+Date: Mon, 24 Oct 2016 05:33:30 +0000
+Message-ID: <AM5PR0501MB209742F84A0724DA79D8DE33A2A90@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+References: <1477226727-160036-1-git-send-email-vadimp@mellanox.com>
+ <20161023145153.GC120221@f23x64.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db5eur01on0057.outbound.protection.outlook.com ([104.47.2.57]:17792
+Received: from mail-db5eur01on0061.outbound.protection.outlook.com ([104.47.2.61]:23534
         "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1755203AbcJXFcZ (ORCPT
+        id S1750818AbcJXFdd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Oct 2016 01:32:25 -0400
-In-Reply-To: <20161023145025.GB120221@f23x64.localdomain>
+        Mon, 24 Oct 2016 01:33:33 -0400
+In-Reply-To: <20161023145153.GC120221@f23x64.localdomain>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, kbuild test robot <fengguang.wu@intel.com>
-Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "fengguang.wu@intel.com" <fengguang.wu@intel.com>, "davem@davemloft.net" <davem@davemloft.net>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
 
 
 
 > -----Original Message-----
 > From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Sunday, October 23, 2016 5:50 PM
-> To: kbuild test robot <fengguang.wu@intel.com>
-> Cc: Vadim Pasternak <vadimp@mellanox.com>; kbuild-all@01.org; platform-
-> driver-x86@vger.kernel.org; Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com>
-> Subject: Re: [platform-drivers-x86:for-next 1/1] ERROR:
-> "devm_hwmon_device_register_with_groups" [drivers/platform/x86/mlxcpld-
-> hotplug.ko] undefined!
+> Sent: Sunday, October 23, 2016 5:52 PM
+> To: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: fengguang.wu@intel.com; davem@davemloft.net; geert@linux-m68k.org;
+> akpm@linux-foundation.org; kvalo@codeaurora.org;
+> gregkh@linuxfoundation.org; mchehab@kernel.org; linux@roeck-us.net; linux=
+-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
+i.us;
+> andriy.shevchenko@linux.intel.com
+> Subject: Re: [patch v1] drivers/platform/x86: select hwmon for Mellanox
+> hotplug driver in Kconfig
 >=20
-> On Sun, Oct 23, 2016 at 03:07:36AM +0800, kbuild test robot wrote:
-> > tree:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86=
-.git for-
-> next
-> > head:   3c294d95beca17846eee58084ec92553ec2af009
-> > commit: 3c294d95beca17846eee58084ec92553ec2af009 [1/1] platform/x86:
-> > Introduce support for Mellanox hotplug driver
-> > config: x86_64-randconfig-x005-201643 (attached as .config)
-> > compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> > reproduce:
-> >         git checkout 3c294d95beca17846eee58084ec92553ec2af009
-> >         # save the attached .config to linux build tree
-> >         make ARCH=3Dx86_64
+> On Sun, Oct 23, 2016 at 12:45:27PM +0000, vadimp@mellanox.com wrote:
+> > From: Vadim Pasternak <vadimp@mellanox.com>
 > >
-> > All errors (new ones prefixed by >>):
+> > Add select HWMON for mlxcpld-hotplug driver config, since it requires
+> > hwmon APIs.
+>=20
+> Is this in response to the 0-day Error report?
+
+Yes.
+>=20
 > >
-> > >> ERROR: "devm_hwmon_device_register_with_groups"
-> [drivers/platform/x86/mlxcpld-hotplug.ko] undefined!
->=20
-> Vadim, please prioritize a fix for this issue and submit it as a stand-al=
-one fix. I
-> will likely roll it in to the existing patch to avoid breaking builds, bu=
-t I'd like to
-> review the patch independently.
->=20
-
-
-Hi Darren,
-
-I already sent a stand-alone fix for this issue.
-Is this fix OK or you like me to do it in other way?
-
-Thanks,
-Vadim.
-
+> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> > ---
+> >  drivers/platform/x86/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/platform/x86/Kconfig
+> > b/drivers/platform/x86/Kconfig index 65d9b04..1853769 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1032,6 +1032,7 @@ config MLX_CPLD_PLATFORM
+> >  	tristate "Mellanox platform hotplug driver support"
+> >  	default n
+> >  	depends on MLX_PLATFORM
+> > +	select HWMON
+> >  	select I2C
+> >  	---help---
+> >  	  This driver handles hot-plug events for the power suppliers, power
+> > --
+> > 2.1.4
+> >
+> >
 >=20
 > --
 > Darren Hart
