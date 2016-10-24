@@ -1,105 +1,77 @@
-From: <horizon@qubeglobal.com>
-Subject: (unknown)
-Date: Mon, 24 Oct 2016 02:58:59 -0000
-Message-ID: <147727793995.13761.3226495278150280922@bhn.net>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [platform-drivers-x86:for-next 1/1] ERROR:
+ "devm_hwmon_device_register_with_groups"
+ [drivers/platform/x86/mlxcpld-hotplug.ko] undefined!
+Date: Mon, 24 Oct 2016 05:32:21 +0000
+Message-ID: <AM5PR0501MB2097DE5CB795F200E5841D4BA2A90@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+References: <201610230328.IieEHVjC%fengguang.wu@intel.com>
+ <20161023145025.GB120221@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_18115775731340_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 75-112-74-74.biz.bhn.net ([75.112.74.74]:1162 "HELO bhn.net"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1756796AbcJXC7F (ORCPT
+Received: from mail-db5eur01on0057.outbound.protection.outlook.com ([104.47.2.57]:17792
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1755203AbcJXFcZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 23 Oct 2016 22:59:05 -0400
-Subject: 
-Content-Disposition: attachment
+        Mon, 24 Oct 2016 01:32:25 -0400
+In-Reply-To: <20161023145025.GB120221@f23x64.localdomain>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, kbuild test robot <fengguang.wu@intel.com>
+Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-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
+
+
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Sunday, October 23, 2016 5:50 PM
+> To: kbuild test robot <fengguang.wu@intel.com>
+> Cc: Vadim Pasternak <vadimp@mellanox.com>; kbuild-all@01.org; platform-
+> driver-x86@vger.kernel.org; Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com>
+> Subject: Re: [platform-drivers-x86:for-next 1/1] ERROR:
+> "devm_hwmon_device_register_with_groups" [drivers/platform/x86/mlxcpld-
+> hotplug.ko] undefined!
+>=20
+> On Sun, Oct 23, 2016 at 03:07:36AM +0800, kbuild test robot wrote:
+> > tree:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86=
+.git for-
+> next
+> > head:   3c294d95beca17846eee58084ec92553ec2af009
+> > commit: 3c294d95beca17846eee58084ec92553ec2af009 [1/1] platform/x86:
+> > Introduce support for Mellanox hotplug driver
+> > config: x86_64-randconfig-x005-201643 (attached as .config)
+> > compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+> > reproduce:
+> >         git checkout 3c294d95beca17846eee58084ec92553ec2af009
+> >         # save the attached .config to linux build tree
+> >         make ARCH=3Dx86_64
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> > >> ERROR: "devm_hwmon_device_register_with_groups"
+> [drivers/platform/x86/mlxcpld-hotplug.ko] undefined!
+>=20
+> Vadim, please prioritize a fix for this issue and submit it as a stand-al=
+one fix. I
+> will likely roll it in to the existing patch to avoid breaking builds, bu=
+t I'd like to
+> review the patch independently.
+>=20
+
+
+Hi Darren,
+
+I already sent a stand-alone fix for this issue.
+Is this fix OK or you like me to do it in other way?
+
+Thanks,
+Vadim.
+
+>=20
+> --
+> Darren Hart
+> Intel Open Source Technology Center
