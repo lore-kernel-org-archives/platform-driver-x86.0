@@ -1,188 +1,153 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/4] leds: core: Add support for poll()ing the sysfs
- brightness attr for changes.
-Date: Mon, 24 Oct 2016 22:43:37 +0200
-Message-ID: <c103b787-bd78-3a16-0d20-a2c14a91ad02@gmail.com>
-References: <20161023194652.24335-1-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20161023194652.24335-1-hdegoede@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Lyude <lyude@redhat.com>
+Subject: [PATCH] thinkpad_acpi: Add support for X1 Yoga (2016) Tablet Mode
+Date: Tue, 25 Oct 2016 18:12:23 -0400
+Message-ID: <1477433543-14915-1-git-send-email-lyude@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:58954 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750967AbcJYWMg (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 25 Oct 2016 18:12:36 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: ibm-acpi-devel@lists.sourceforge.net
+Cc: Lyude <lyude@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Hans,
+For whatever reason, the X1 Yoga doesn't support the normal method of
+querying for tablet mode. Instead of providing the MHKG method under the
+hotkey handle, we're instead given the CMMD method under the EC handle.
+Values on this handle are either 0x1, laptop mode, or 0x6, tablet mode.
 
-Thanks for the update.
-Could you please rebase your patches onto recent linux-leds.git,
-for-next branch?
+Signed-off-by: Lyude <lyude@redhat.com>
+---
+So HOPEFULLY I actually did this right. There was some discussion here
+previously about supporting this, and it was previously mentioned that the IOST
+method was responsible for holding the current tablet status. However, it
+really doesn't seem like this is the case:
 
-Also it would be convenient to have sample application for polling
-brightness changes in tools/leds.
+    Method (_Q2E, 0, NotSerialized)  // _Qxx: EC Query
+    {
+	Local0 = \_SB.PCI0.LPC.EC.CMMD
+	If ((Local0 != 0x00) && (Local0 <= 0x06))
+	{
+	    If (Local0 != \PMMD)
+	    {
+		\PMMD = Local0
+		\_SB.PCI0.LPC.EC.HKEY.MHKQ (0x60C0)
+	    }
+	}
 
-Thanks,
-Jacek Anaszewski
+	If ((Local0 == 0x00) || (Local0 >= 0x07))
+	{
+	    Local1 = 0x01
+	}
+	ElseIf ((Local0 == 0x02) || (Local0 == 0x03))
+	{
+	    Local1 = 0x02
+	}
+	Else
+	{
+	    Local1 = 0x03
+	}
 
-On 10/23/2016 09:46 PM, Hans de Goede wrote:
-> Add support for userspace using poll() for POLL_PRI on the sysfs brightness
-> attr to watch for brightness changes.
->
-> This commit adds a led_notify_brightness_change helper function for
-> waking up any poll() waiters; and calls this after any brightness changes
-> (after any led_classdev->brightness_set[_blocking] calls have completed).
->
-> In some use-cases led hardware may autonomously change its brightness,
-> e.g. the keyboard backlight used on some laptops is controlled by a
-> hardwired (firmware handled) hotkey. led_notify_brightness_change is
-> exported for use by drivers which can detect such autonomous changes.
->
-> This commit also updates the Documentation/ABI/testing/sysfs-class-led
-> documentation to document that userspace may now poll on the brightness
-> attribute.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> -Wakeup / notify userspace on any brightness changes, not just on
->  autonomous changes done by the hw
-> ---
->  Documentation/ABI/testing/sysfs-class-led |  8 ++++++--
->  drivers/leds/led-class.c                  |  9 +++++++++
->  drivers/leds/led-core.c                   | 16 +++++++++++++++-
->  include/linux/leds.h                      | 12 ++++++++++++
->  4 files changed, 42 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
-> index 86ace28..0685551 100644
-> --- a/Documentation/ABI/testing/sysfs-class-led
-> +++ b/Documentation/ABI/testing/sysfs-class-led
-> @@ -1,12 +1,16 @@
->  What:		/sys/class/leds/<led>/brightness
-> -Date:		March 2006
-> -KernelVersion:	2.6.17
-> +Date:		March 2006 (poll October 2016)
-> +KernelVersion:	2.6.17 (poll since 4.10)
->  Contact:	Richard Purdie <rpurdie@rpsys.net>
->  Description:
->  		Set the brightness of the LED. Most LEDs don't
->  		have hardware brightness support so will just be turned on for
->  		non-zero brightness settings. The value is between 0 and
->  		/sys/class/leds/<led>/max_brightness.
-> +		The file supports poll() to detect brightness changes, in
-> +		some cases the hardware / firmware may change the brightness
-> +		autonomously, poll() should be woken up in this case too,
-> +		but not all drivers may support this.
->
->  What:		/sys/class/leds/<led>/max_brightness
->  Date:		March 2006
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index aa84e5b..3427a65 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -203,6 +203,14 @@ int led_classdev_register(struct device *parent, struct led_classdev *led_cdev)
->  		dev_warn(parent, "Led %s renamed to %s due to name collision",
->  				led_cdev->name, dev_name(led_cdev->dev));
->
-> +	led_cdev->brightness_kn = sysfs_get_dirent(led_cdev->dev->kobj.sd,
-> +						   "brightness");
-> +	if (!led_cdev->brightness_kn) {
-> +		dev_err(led_cdev->dev, "Error getting brightness kernfs_node\n");
-> +		device_unregister(led_cdev->dev);
-> +		return -ENODEV;
-> +	}
-> +
->  #ifdef CONFIG_LEDS_TRIGGERS
->  	init_rwsem(&led_cdev->trigger_lock);
->  #endif
-> @@ -254,6 +262,7 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
->
->  	flush_work(&led_cdev->set_brightness_work);
->
-> +	sysfs_put(led_cdev->brightness_kn);
->  	device_unregister(led_cdev->dev);
->
->  	down_write(&leds_list_lock);
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index 3bce448..e2e5cc7 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -33,16 +33,24 @@ static int __led_set_brightness(struct led_classdev *led_cdev,
->
->  	led_cdev->brightness_set(led_cdev, value);
->
-> +	led_notify_brightness_change(led_cdev);
-> +
->  	return 0;
->  }
->
->  static int __led_set_brightness_blocking(struct led_classdev *led_cdev,
->  					 enum led_brightness value)
->  {
-> +	int ret;
-> +
->  	if (!led_cdev->brightness_set_blocking)
->  		return -ENOTSUPP;
->
-> -	return led_cdev->brightness_set_blocking(led_cdev, value);
-> +	ret = led_cdev->brightness_set_blocking(led_cdev, value);
-> +	if (ret >= 0)
-> +		led_notify_brightness_change(led_cdev);
-> +
-> +	return ret;
->  }
->
->  static void led_timer_function(unsigned long data)
-> @@ -308,6 +316,12 @@ int led_update_brightness(struct led_classdev *led_cdev)
->  }
->  EXPORT_SYMBOL_GPL(led_update_brightness);
->
-> +void led_notify_brightness_change(struct led_classdev *led_cdev)
-> +{
-> +	sysfs_notify_dirent(led_cdev->brightness_kn);
-> +}
-> +EXPORT_SYMBOL_GPL(led_notify_brightness_change);
-> +
->  /* Caller must ensure led_cdev->led_access held */
->  void led_sysfs_disable(struct led_classdev *led_cdev)
->  {
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index ddfcb2d..eebcd8c 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -13,6 +13,7 @@
->  #define __LINUX_LEDS_H_INCLUDED
->
->  #include <linux/device.h>
-> +#include <linux/kernfs.h>
->  #include <linux/list.h>
->  #include <linux/mutex.h>
->  #include <linux/rwsem.h>
-> @@ -94,6 +95,8 @@ struct led_classdev {
->  	struct work_struct	set_brightness_work;
->  	int			delayed_set_value;
->
-> +	struct kernfs_node	*brightness_kn;
-> +
->  #ifdef CONFIG_LEDS_TRIGGERS
->  	/* Protects the trigger data below */
->  	struct rw_semaphore	 trigger_lock;
-> @@ -193,6 +196,15 @@ extern int led_set_brightness_sync(struct led_classdev *led_cdev,
->  extern int led_update_brightness(struct led_classdev *led_cdev);
->
->  /**
-> + * led_notify_brightness_change - Notify userspace of brightness changes
-> + * @led_cdev: the LED to do the notify on
-> + *
-> + * Let any users waiting for POLL_PRI on the led's brightness sysfs
-> + * atrribute know that the brightness has been changed.
-> + */
-> +extern void led_notify_brightness_change(struct led_classdev *led_cdev);
-> +
-> +/**
->   * led_sysfs_disable - disable LED sysfs interface
->   * @led_cdev: the LED to set
->   *
->
+	If (Local1 != \LVMD)
+	{
+	    \LVMD = Local1
+	    Sleep (0x0A)
+	    \_SB.PCI0.LPC.EC.HKEY.MHKQ (0x60F0)
+	}
+    }
+
+IOST seems to be present in the decompiled DSDT from my Yoga, however it's
+quite far from the spot that actually sends the 0x60C0 hotkey event. Let me
+know if you guys want to verify this against the full decompiled DSDT for this
+machine.
+
+ drivers/platform/x86/thinkpad_acpi.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b65ce75..8082dc9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -190,6 +190,9 @@ enum tpacpi_hkey_event_t {
+ 	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
+ 	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
+ 	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
++	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
++						   * enter/leave tablet mode
++						   */
+ 	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
+ 	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
+ 	TP_HKEY_EV_BRGHT_CHANGED	= 0x5010, /* backlight control event */
+@@ -303,6 +306,7 @@ static struct {
+ 	u32 hotkey_mask:1;
+ 	u32 hotkey_wlsw:1;
+ 	u32 hotkey_tablet:1;
++	u32 hotkey_tablet_cmmd:1;
+ 	u32 kbdlight:1;
+ 	u32 light:1;
+ 	u32 light_status:1;
+@@ -2059,6 +2063,8 @@ static void hotkey_poll_setup(const bool may_warn);
+ 
+ /* HKEY.MHKG() return bits */
+ #define TP_HOTKEY_TABLET_MASK (1 << 3)
++/* ThinkPad X1 Yoga (2016) */
++#define TP_EC_CMMD_TABLET_MODE 0x6
+ 
+ static int hotkey_get_wlsw(void)
+ {
+@@ -2083,10 +2089,18 @@ static int hotkey_get_tablet_mode(int *status)
+ {
+ 	int s;
+ 
+-	if (!acpi_evalf(hkey_handle, &s, "MHKG", "d"))
+-		return -EIO;
++	if (tp_features.hotkey_tablet_cmmd) {
++		if (!acpi_evalf(ec_handle, &s, "CMMD", "d"))
++			return -EIO;
++
++		*status = (s == TP_EC_CMMD_TABLET_MODE);
++	} else {
++		if (!acpi_evalf(hkey_handle, &s, "MHKG", "d"))
++			return -EIO;
++
++		*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
++	}
+ 
+-	*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
+ 	return 0;
+ }
+ 
+@@ -3475,6 +3489,18 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 				&dev_attr_hotkey_tablet_mode.attr);
+ 	}
+ 
++	/* For X1 Yoga (2016) */
++	if (!res && acpi_evalf(ec_handle, &status, "CMMD", "qd")) {
++		tp_features.hotkey_tablet = 1;
++		tp_features.hotkey_tablet_cmmd = 1;
++		tabletsw_state = (status == TP_EC_CMMD_TABLET_MODE);
++
++		pr_info("Possible tablet mode switch found; ThinkPad in %s mode\n",
++			(tabletsw_state) ? "tablet" : "laptop");
++		res = add_to_attr_set(hotkey_dev_attributes,
++				      &dev_attr_hotkey_tablet_mode.attr);
++	}
++
+ 	if (!res)
+ 		res = register_attr_set_with_sysfs(
+ 				hotkey_dev_attributes,
+@@ -3899,6 +3925,10 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		*ignore_acpi_ev = true;
+ 		return true;
+ 
++	case TP_HKEY_EV_TABLET_CHANGED:
++		tpacpi_input_send_tabletsw();
++		break;
++
+ 	default:
+ 		pr_warn("unknown possible thermal alarm or keyboard event received\n");
+ 		known = false;
+-- 
+2.7.4
