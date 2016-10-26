@@ -1,82 +1,207 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform: x86: dell-laptop: use brightness_set_blocking for kbd_led_level_set
-Date: Wed, 26 Oct 2016 17:17:44 +0200
-Message-ID: <20161026151744.16638-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v2 1/4] leds: core: Add support for poll()ing the sysfs
+ brightness attr for changes.
+Date: Wed, 26 Oct 2016 17:18:33 +0200
+Message-ID: <596538b5-32d7-4a5e-d561-62b6321dea56@redhat.com>
+References: <20161023194652.24335-1-hdegoede@redhat.com>
+ <c103b787-bd78-3a16-0d20-a2c14a91ad02@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41426 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:42588 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750857AbcJZPRt (ORCPT
+        id S1754326AbcJZPSj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Oct 2016 11:17:49 -0400
+        Wed, 26 Oct 2016 11:18:39 -0400
+In-Reply-To: <c103b787-bd78-3a16-0d20-a2c14a91ad02@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-kbd_led_level_set uses dell_smbios call which block, so the kbd_led
-classdev should use the brightness_set_blocking callback.
+Hi,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+On 24-10-16 22:43, Jacek Anaszewski wrote:
+> Hi Hans,
+>
+> Thanks for the update.
+> Could you please rebase your patches onto recent linux-leds.git,
+> for-next branch?
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 3803da1..d43d2d7 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -1869,38 +1869,40 @@ static enum led_brightness kbd_led_level_get(struct led_classdev *led_cdev)
- 	return 0;
- }
- 
--static void kbd_led_level_set(struct led_classdev *led_cdev,
--			      enum led_brightness value)
-+static int kbd_led_level_set(struct led_classdev *led_cdev,
-+			     enum led_brightness value)
- {
- 	struct kbd_state state;
- 	struct kbd_state new_state;
- 	u16 num;
-+	int ret;
- 
- 	if (kbd_get_max_level()) {
--		if (kbd_get_state(&state))
--			return;
-+		ret = kbd_get_state(&state);
-+		if (ret)
-+			return ret;
- 		new_state = state;
--		if (kbd_set_level(&new_state, value))
--			return;
--		kbd_set_state_safe(&new_state, &state);
--		return;
-+		ret = kbd_set_level(&new_state, value);
-+		if (ret)
-+			return ret;
-+		return kbd_set_state_safe(&new_state, &state);
- 	}
- 
- 	if (kbd_get_valid_token_counts()) {
- 		for (num = kbd_token_bits; num != 0 && value > 0; --value)
- 			num &= num - 1; /* clear the first bit set */
- 		if (num == 0)
--			return;
--		kbd_set_token_bit(ffs(num) - 1);
--		return;
-+			return 0;
-+		return kbd_set_token_bit(ffs(num) - 1);
- 	}
- 
- 	pr_warn("Keyboard brightness level control not supported\n");
-+	return -ENXIO;
- }
- 
- static struct led_classdev kbd_led = {
- 	.name           = "dell::kbd_backlight",
--	.brightness_set = kbd_led_level_set,
-+	.brightness_set_blocking = kbd_led_level_set,
- 	.brightness_get = kbd_led_level_get,
- 	.groups         = kbd_led_groups,
- };
--- 
-2.9.3
+Done, I will send a v3 soon (today or tomorrow).
+
+> Also it would be convenient to have sample application for polling
+> brightness changes in tools/leds.
+
+I'm sorry but I do not have time to create such a sample application.
+
+Regards,
+
+Hans
+
+
+>
+> Thanks,
+> Jacek Anaszewski
+>
+> On 10/23/2016 09:46 PM, Hans de Goede wrote:
+>> Add support for userspace using poll() for POLL_PRI on the sysfs brightness
+>> attr to watch for brightness changes.
+>>
+>> This commit adds a led_notify_brightness_change helper function for
+>> waking up any poll() waiters; and calls this after any brightness changes
+>> (after any led_classdev->brightness_set[_blocking] calls have completed).
+>>
+>> In some use-cases led hardware may autonomously change its brightness,
+>> e.g. the keyboard backlight used on some laptops is controlled by a
+>> hardwired (firmware handled) hotkey. led_notify_brightness_change is
+>> exported for use by drivers which can detect such autonomous changes.
+>>
+>> This commit also updates the Documentation/ABI/testing/sysfs-class-led
+>> documentation to document that userspace may now poll on the brightness
+>> attribute.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Wakeup / notify userspace on any brightness changes, not just on
+>>  autonomous changes done by the hw
+>> ---
+>>  Documentation/ABI/testing/sysfs-class-led |  8 ++++++--
+>>  drivers/leds/led-class.c                  |  9 +++++++++
+>>  drivers/leds/led-core.c                   | 16 +++++++++++++++-
+>>  include/linux/leds.h                      | 12 ++++++++++++
+>>  4 files changed, 42 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
+>> index 86ace28..0685551 100644
+>> --- a/Documentation/ABI/testing/sysfs-class-led
+>> +++ b/Documentation/ABI/testing/sysfs-class-led
+>> @@ -1,12 +1,16 @@
+>>  What:        /sys/class/leds/<led>/brightness
+>> -Date:        March 2006
+>> -KernelVersion:    2.6.17
+>> +Date:        March 2006 (poll October 2016)
+>> +KernelVersion:    2.6.17 (poll since 4.10)
+>>  Contact:    Richard Purdie <rpurdie@rpsys.net>
+>>  Description:
+>>          Set the brightness of the LED. Most LEDs don't
+>>          have hardware brightness support so will just be turned on for
+>>          non-zero brightness settings. The value is between 0 and
+>>          /sys/class/leds/<led>/max_brightness.
+>> +        The file supports poll() to detect brightness changes, in
+>> +        some cases the hardware / firmware may change the brightness
+>> +        autonomously, poll() should be woken up in this case too,
+>> +        but not all drivers may support this.
+>>
+>>  What:        /sys/class/leds/<led>/max_brightness
+>>  Date:        March 2006
+>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>> index aa84e5b..3427a65 100644
+>> --- a/drivers/leds/led-class.c
+>> +++ b/drivers/leds/led-class.c
+>> @@ -203,6 +203,14 @@ int led_classdev_register(struct device *parent, struct led_classdev *led_cdev)
+>>          dev_warn(parent, "Led %s renamed to %s due to name collision",
+>>                  led_cdev->name, dev_name(led_cdev->dev));
+>>
+>> +    led_cdev->brightness_kn = sysfs_get_dirent(led_cdev->dev->kobj.sd,
+>> +                           "brightness");
+>> +    if (!led_cdev->brightness_kn) {
+>> +        dev_err(led_cdev->dev, "Error getting brightness kernfs_node\n");
+>> +        device_unregister(led_cdev->dev);
+>> +        return -ENODEV;
+>> +    }
+>> +
+>>  #ifdef CONFIG_LEDS_TRIGGERS
+>>      init_rwsem(&led_cdev->trigger_lock);
+>>  #endif
+>> @@ -254,6 +262,7 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
+>>
+>>      flush_work(&led_cdev->set_brightness_work);
+>>
+>> +    sysfs_put(led_cdev->brightness_kn);
+>>      device_unregister(led_cdev->dev);
+>>
+>>      down_write(&leds_list_lock);
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index 3bce448..e2e5cc7 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -33,16 +33,24 @@ static int __led_set_brightness(struct led_classdev *led_cdev,
+>>
+>>      led_cdev->brightness_set(led_cdev, value);
+>>
+>> +    led_notify_brightness_change(led_cdev);
+>> +
+>>      return 0;
+>>  }
+>>
+>>  static int __led_set_brightness_blocking(struct led_classdev *led_cdev,
+>>                       enum led_brightness value)
+>>  {
+>> +    int ret;
+>> +
+>>      if (!led_cdev->brightness_set_blocking)
+>>          return -ENOTSUPP;
+>>
+>> -    return led_cdev->brightness_set_blocking(led_cdev, value);
+>> +    ret = led_cdev->brightness_set_blocking(led_cdev, value);
+>> +    if (ret >= 0)
+>> +        led_notify_brightness_change(led_cdev);
+>> +
+>> +    return ret;
+>>  }
+>>
+>>  static void led_timer_function(unsigned long data)
+>> @@ -308,6 +316,12 @@ int led_update_brightness(struct led_classdev *led_cdev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(led_update_brightness);
+>>
+>> +void led_notify_brightness_change(struct led_classdev *led_cdev)
+>> +{
+>> +    sysfs_notify_dirent(led_cdev->brightness_kn);
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_notify_brightness_change);
+>> +
+>>  /* Caller must ensure led_cdev->led_access held */
+>>  void led_sysfs_disable(struct led_classdev *led_cdev)
+>>  {
+>> diff --git a/include/linux/leds.h b/include/linux/leds.h
+>> index ddfcb2d..eebcd8c 100644
+>> --- a/include/linux/leds.h
+>> +++ b/include/linux/leds.h
+>> @@ -13,6 +13,7 @@
+>>  #define __LINUX_LEDS_H_INCLUDED
+>>
+>>  #include <linux/device.h>
+>> +#include <linux/kernfs.h>
+>>  #include <linux/list.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/rwsem.h>
+>> @@ -94,6 +95,8 @@ struct led_classdev {
+>>      struct work_struct    set_brightness_work;
+>>      int            delayed_set_value;
+>>
+>> +    struct kernfs_node    *brightness_kn;
+>> +
+>>  #ifdef CONFIG_LEDS_TRIGGERS
+>>      /* Protects the trigger data below */
+>>      struct rw_semaphore     trigger_lock;
+>> @@ -193,6 +196,15 @@ extern int led_set_brightness_sync(struct led_classdev *led_cdev,
+>>  extern int led_update_brightness(struct led_classdev *led_cdev);
+>>
+>>  /**
+>> + * led_notify_brightness_change - Notify userspace of brightness changes
+>> + * @led_cdev: the LED to do the notify on
+>> + *
+>> + * Let any users waiting for POLL_PRI on the led's brightness sysfs
+>> + * atrribute know that the brightness has been changed.
+>> + */
+>> +extern void led_notify_brightness_change(struct led_classdev *led_cdev);
+>> +
+>> +/**
+>>   * led_sysfs_disable - disable LED sysfs interface
+>>   * @led_cdev: the LED to set
+>>   *
+>>
