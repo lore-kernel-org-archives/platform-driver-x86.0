@@ -1,53 +1,95 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [patch v1 1/2] drivers/platform/x86: move module mlx-platform
- from arch/x86 to drivers/platform/x86
-Date: Thu, 27 Oct 2016 16:59:10 +0300
-Message-ID: <1477576750.5295.28.camel@linux.intel.com>
-References: <1477576758-102003-1-git-send-email-vadimp@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 2/4] platform: x86: dell-smbios: Add a generic
+ dell-smbios notifier chain
+Date: Thu, 27 Oct 2016 14:45:20 +0200
+Message-ID: <a34c5fa0-509e-f65f-7c5a-10beb724a6fc@redhat.com>
+References: <20161023194652.24335-1-hdegoede@redhat.com>
+ <20161023194652.24335-2-hdegoede@redhat.com> <20161024133105.GC12154@pali>
+ <4cdb7bb1-2b16-e009-3309-433b1a306d54@redhat.com>
+ <20161024134339.GE12154@pali>
+ <762cceac-d807-0c3d-7469-267cc850f874@redhat.com>
+ <20161027103209.GR12154@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:52832 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933628AbcJ0N7Q (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2016 09:59:16 -0400
-In-Reply-To: <1477576758-102003-1-git-send-email-vadimp@mellanox.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: vadimp@mellanox.com, dvhart@infradead.org, fengguang.wu@intel.com
-Cc: davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, gregkh@linuxfoundation.org, mchehab@kernel.org, linux@roeck-us.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20161027103209.GR12154@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2016-10-27 at 13:59 +0000, vadimp@mellanox.com wrote:
-> From: Vadim Pasternak <vadimp@mellanox.com>
-> 
-> Move module mlx-platform.c from arch/x86/platform/mellanox/ to
-> drivers/platform/x86/.
-> Remove folder arch/x86/platform/mellanox/ and update relevant Makefile
-> and Kconfig.
+HI,
 
-No way, please use -M -C.
+On 27-10-16 12:32, Pali Rohár wrote:
+> On Monday 24 October 2016 15:45:02 Hans de Goede wrote:
+>> Hi,
+>>
+>> On 24-10-16 15:43, Pali Rohár wrote:
+>>> On Monday 24 October 2016 15:37:31 Hans de Goede wrote:
+>>>> Well WMI events get enabled via a SMBIOS call,
+>>>
+>>> This is truth only for few laptops and only for one WMI event.
+>>> Everything else is automatically enabled, no call is needed to issue.
+>>>
+>>>> and dell-laptop uses SMBIOS exclusively
+>>>
+>>> IIRC dell-led.ko uses also dell-smbio.ko, so it is not exclusive for
+>>> dell-laptop.
+>>>
+>>>> so it seems to fit. Basically this is a case of
+>>>> we have to put this somewhere and dell-smbios is the best fit IMHO.
+>>>
+>>> Agree, we need to put it somewhere...
+>>>
+>>> Basically we need to solve problem how (currently) 3 kernel modules can
+>>> communicate. Does not kernel support such "bus/event" mechanism for
+>>> this?
+>>
+>> Yes it does, that is exactly what notifiers are for, but we need to
+>> declare the bus somewhere. I still believe dell-smbios is the best
+>> place.
+>
+> But dell_smbios_register_notifier() name is totally confusing. It does
+> not register any notifier for SMBIOS. Nor it have nothing common with
+> SMBIOS API.
+>
+> Also there is absolutely no need that dell-rbtn.ko needs to depends on
+> dell-smbios.ko. dell-rbtn.ko is ACPI driver which does not use any of
+> SMBIOS API.
+>
+> Right now I'm not saying what is the best place for that notifier (as I
+> still do not have ideal candidate). I'm just saying that notifier is not
+> part of SMBIOS API and therefore dell-smbios.ko is not right place for
+> it.
+>
+> So currently we have these different APIs for dell notebook drivers:
+> * ACPI (used in dell-rbtn.ko and dell-smo8800.ko)
+> * WMI (used in dell-wmi.ko, dell-wmi-aio.ko, dell-led.ko)
+> * SMBIOS (used in dell-laptop.ko, dell-wmi.ko and dell-led.ko)
+> * some other platform code (used in dell-laptop.ko)
+>
+> And now notifier is needed for drivers:
+> * dell-laptop.ko
+> * dell-wmi.ko
+> * dell-rbtn.ko
+>
+> And if I look at above two sets, none of above drivers is good candidate
+> for central notifier functions... Maybe we should really introduce new
+> separate file where will central dell notifier live?
 
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> ---
->  MAINTAINERS                               |   2 +-
->  arch/x86/Kconfig                          |  12 --
->  arch/x86/platform/Makefile                |   1 -
->  arch/x86/platform/mellanox/Makefile       |   1 -
->  arch/x86/platform/mellanox/mlx-platform.c | 266 -------------------
-> -----------
->  drivers/platform/x86/Kconfig              |  14 +-
->  drivers/platform/x86/Makefile             |   1 +
->  drivers/platform/x86/mlx-platform.c       | 266
-> ++++++++++++++++++++++++++++++
->  8 files changed, 281 insertions(+), 282 deletions(-)
->  delete mode 100644 arch/x86/platform/mellanox/Makefile
->  delete mode 100644 arch/x86/platform/mellanox/mlx-platform.c
->  create mode 100644 drivers/platform/x86/mlx-platform.c
+We could put this in a dell-common or some such. My main reason for
+going with dell-smbios is that dell-smbios is a "library" module,
+loading it does not do anything other then make symbols available
+for use by other modules. So using it to store the notifier is safe
+(no side effects even if e.g. only dell-rbtn gets loaded).
 
+Given that we already have dell-smbios as dell library functions
+module, I think that adding a dell-common is a bit overkill.
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+I can rename the notifier, maybe use dell_laptop*notifier as names,
+since dell-laptop is the main consumer of the notifications ?
+
+Regards,
+
+Hans
