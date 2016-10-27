@@ -1,132 +1,181 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v2 1/2] drivers/platform/x86: move module mlx-platform from arch/x86 to drivers/platform/x86
-Date: Thu, 27 Oct 2016 19:53:19 +0000
-Message-ID: <1477597999-4261-1-git-send-email-vadimp@mellanox.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:59849 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S936095AbcJ0Rza (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Oct 2016 13:55:30 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [patch v2 2/2] drivers/platform/x86: add mlxcpld-hotplug driver registration to mlx-platform driver
+Date: Thu, 27 Oct 2016 19:55:54 +0000
+Message-ID: <1477598154-4459-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, fengguang.wu@intel.com
 Cc: davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, gregkh@linuxfoundation.org, mchehab@kernel.org, linux@roeck-us.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, andriy.shevchenko@linux.intel.com, Vadim Pasternak <vadimp@mellanox.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Move module mlx-platform.c from arch/x86/platform/mellanox/ to
-drivers/platform/x86/.
-Remove folder arch/x86/platform/mellanox/ and update relevant Makefile
-and Kconfig.
+Add calls for mlxcpld-hotplug platform driver registration/unregistration
+and add platform hotplug data configurations. This driver, when registered
+within system will handle system hot-plug events for the power suppliers,
+power cables and fans (insertion and removing). These events are
+controlled through CPLD Lattice device.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 v1->v2:
  Comments pointed out by Andy:
-  - Use -M -C -n option in git format-patch;
+  - Remove "from sender" from the message body;
+  - Add more information to commit message. (When CPLD spec will be
+    available at Mellanox portal - MAINTAINERS Web-page info is to
+    be updated);
+  - Do not change include order.
 ---
- MAINTAINERS                                                |  2 +-
- arch/x86/Kconfig                                           | 12 ------------
- arch/x86/platform/mellanox/Makefile                        |  1 -
- drivers/platform/x86/Kconfig                               | 14 +++++++++++++-
- drivers/platform/x86/Makefile                              |  1 +
- .../mellanox => drivers/platform/x86}/mlx-platform.c       |  2 +-
- 6 files changed, 16 insertions(+), 16 deletions(-)
- delete mode 100644 arch/x86/platform/mellanox/Makefile
- rename {arch/x86/platform/mellanox => drivers/platform/x86}/mlx-platform.c (99%)
+ drivers/platform/x86/mlx-platform.c | 98 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 97 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e30399..960f364f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7879,7 +7879,7 @@ MELLANOX PLATFORM DRIVER
- M:      Vadim Pasternak <vadimp@mellanox.com>
- L:      platform-driver-x86@vger.kernel.org
- S:      Supported
--F:      arch/x86/platform/mellanox/mlx-platform.c
-+F:      drivers/platform/x86/mlx-platform.c
- 
- MELLANOX MLX CPLD HOTPLUG DRIVER
- M:	Vadim Pasternak <vadimp@mellanox.com>
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index bada636..ccd5ff7 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -550,18 +550,6 @@ config X86_INTEL_QUARK
- 	  Say Y here if you have a Quark based system such as the Arduino
- 	  compatible Intel Galileo.
- 
--config MLX_PLATFORM
--	tristate "Mellanox Technologies platform support"
--	depends on X86_64
--	depends on X86_EXTENDED_PLATFORM
--	---help---
--	  This option enables system support for the Mellanox Technologies
--	  platform.
--
--	  Say Y here if you are building a kernel for Mellanox system.
--
--	  Otherwise, say N.
--
- config X86_INTEL_LPSS
- 	bool "Intel Low Power Subsystem Support"
- 	depends on X86 && ACPI
-diff --git a/arch/x86/platform/mellanox/Makefile b/arch/x86/platform/mellanox/Makefile
-deleted file mode 100644
-index f43c931..0000000
---- a/arch/x86/platform/mellanox/Makefile
-+++ /dev/null
-@@ -1 +0,0 @@
--obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1853769..78ed245 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1028,10 +1028,22 @@ config INTEL_TELEMETRY
- 	  directly via debugfs files. Various tools may use
- 	  this interface for SoC state monitoring.
- 
-+config MLX_PLATFORM
-+	tristate "Mellanox Technologies platform support"
-+	depends on X86_64
-+	---help---
-+	  This option enables system support for the Mellanox Technologies
-+	  platform. The Mellanox systems provide data center networking
-+	  solutions based on Virtual Protocol Interconnect (VPI) technology
-+	  enable seamless connectivity to 56/100Gb/s InfiniBand or 10/40/56GbE
-+	  connection.
-+
-+	  If you have a Mellanox system, say Y or M here.
-+
- config MLX_CPLD_PLATFORM
- 	tristate "Mellanox platform hotplug driver support"
- 	default n
--	depends on MLX_PLATFORM
-+	select MLX_PLATFORM
- 	select HWMON
- 	select I2C
- 	---help---
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1f06b63..2d6a587 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -71,4 +71,5 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
- 				   intel_telemetry_pltdrv.o \
- 				   intel_telemetry_debugfs.o
- obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
-+obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
-diff --git a/arch/x86/platform/mellanox/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-similarity index 99%
-rename from arch/x86/platform/mellanox/mlx-platform.c
-rename to drivers/platform/x86/mlx-platform.c
-index 7dcfcca..86a1356 100644
---- a/arch/x86/platform/mellanox/mlx-platform.c
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 86a1356..569d79a 100644
+--- a/drivers/platform/x86/mlx-platform.c
 +++ b/drivers/platform/x86/mlx-platform.c
-@@ -1,5 +1,5 @@
- /*
-- * arch/x86/platform/mellanox/mlx-platform.c
-+ * drivers/platform/x86/mlx-platform.c
-  * Copyright (c) 2016 Mellanox Technologies. All rights reserved.
-  * Copyright (c) 2016 Vadim Pasternak <vadimp@mellanox.com>
-  *
+@@ -39,6 +39,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/i2c-mux-reg.h>
++#include <linux/platform_data/mlxcpld-hotplug.h>
+ 
+ #define MLX_PLAT_DEVICE_NAME		"mlxplat"
+ 
+@@ -70,6 +71,7 @@
+ struct mlxplat_priv {
+ 	struct platform_device *pdev_i2c;
+ 	struct platform_device *pdev_mux[MLXPLAT_CPLD_LPC_MUX_DEVS];
++	struct platform_device *pdev_hotplug;
+ };
+ 
+ /* Regions for LPC I2C controller and LPC base register space */
+@@ -121,7 +123,87 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
+ 
+ };
+ 
+-static struct platform_device *mlxplat_dev;
++/* Platform hotplug devices */
++static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_psu[] = {
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c02", 0x51) },
++		.bus = 10,
++	},
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c02", 0x50) },
++		.bus = 10,
++	},
++};
++
++static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_pwr[] = {
++	{
++		.brdinfo = { I2C_BOARD_INFO("dps460", 0x59) },
++		.bus = 10,
++	},
++	{
++		.brdinfo = { I2C_BOARD_INFO("dps460", 0x58) },
++		.bus = 10,
++	},
++};
++
++static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_fan[] = {
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
++		.bus = 11,
++	},
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
++		.bus = 12,
++	},
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
++		.bus = 13,
++	},
++	{
++		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
++		.bus = 14,
++	},
++};
++
++/* Platform hotplug default data */
++static
++struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_default_data = {
++	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
++	.top_aggr_mask = 0x48,
++	.top_aggr_psu_mask = 0x08,
++	.psu_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x58),
++	.psu_mask = 0x03,
++	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_psu),
++	.psu = mlxplat_mlxcpld_hotplug_psu,
++	.top_aggr_pwr_mask = 0x08,
++	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
++	.pwr_mask = 0x03,
++	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
++	.pwr = mlxplat_mlxcpld_hotplug_pwr,
++	.top_aggr_fan_mask = 0x40,
++	.fan_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x88),
++	.fan_mask = 0x0f,
++	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_fan),
++	.fan = mlxplat_mlxcpld_hotplug_fan,
++};
++
++/* Platform hotplug MSN21xx system family data */
++static
++struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_msn21xx_data = {
++	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
++	.top_aggr_mask = 0x04,
++	.top_aggr_pwr_mask = 0x04,
++	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
++	.pwr_mask = 0x03,
++	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
++};
++
++static struct resource mlxplat_mlxcpld_hotplug_resources[] = {
++	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
++};
++
++struct platform_device *mlxplat_dev;
++struct mlxcpld_hotplug_platform_data *mlxplat_hotplug;
+ 
+ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ {
+@@ -132,6 +214,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_default_channels[i]);
+ 	}
++	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_default_data;
+ 
+ 	return 1;
+ };
+@@ -145,6 +228,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+ 	}
++	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_msn21xx_data;
+ 
+ 	return 1;
+ };
+@@ -230,6 +314,16 @@ static int __init mlxplat_init(void)
+ 		}
+ 	}
+ 
++	priv->pdev_hotplug = platform_device_register_resndata(
++				&mlxplat_dev->dev, "mlxcpld-hotplug", -1,
++				mlxplat_mlxcpld_hotplug_resources,
++				ARRAY_SIZE(mlxplat_mlxcpld_hotplug_resources),
++				mlxplat_hotplug, sizeof(*mlxplat_hotplug));
++	if (IS_ERR(priv->pdev_hotplug)) {
++		err = PTR_ERR(priv->pdev_hotplug);
++		goto fail_platform_mux_register;
++	}
++
+ 	return 0;
+ 
+ fail_platform_mux_register:
+@@ -248,6 +342,8 @@ static void __exit mlxplat_exit(void)
+ 	struct mlxplat_priv *priv = platform_get_drvdata(mlxplat_dev);
+ 	int i;
+ 
++	platform_device_unregister(priv->pdev_hotplug);
++
+ 	for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
+ 		platform_device_unregister(priv->pdev_mux[i]);
+ 
 -- 
 2.1.4
