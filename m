@@ -1,47 +1,53 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 2/5] platform: x86: thinkpad: Call led_notify_brightness_change on kbd brightness change
-Date: Wed, 26 Oct 2016 19:51:03 +0200
-Message-ID: <201610261951.03527@pali>
-References: <20161026174118.3431-1-hdegoede@redhat.com> <20161026174118.3431-2-hdegoede@redhat.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/4] leds: core: Add support for poll()ing the sysfs
+ brightness attr for changes.
+Date: Thu, 27 Oct 2016 08:58:12 +0200
+Message-ID: <e4f7b016-1ad4-09bc-0e0f-2737e3e20edc@samsung.com>
+References: <20161023194652.24335-1-hdegoede@redhat.com>
+ <c103b787-bd78-3a16-0d20-a2c14a91ad02@gmail.com>
+ <CGME20161026151915eucas1p27f8f1ba12e843b8d10f3b20966066565@eucas1p2.samsung.com>
+ <596538b5-32d7-4a5e-d561-62b6321dea56@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart21113274.KeL6cJecXN";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20161026174118.3431-2-hdegoede@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54671 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751152AbcJ0G6U (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 27 Oct 2016 02:58:20 -0400
+In-reply-to: <596538b5-32d7-4a5e-d561-62b6321dea56@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
---nextPart21113274.KeL6cJecXN
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Wednesday 26 October 2016 19:41:15 Hans de Goede wrote:
-> +	TP_HKEY_EV_THINKLIGHT		=3D 0x1012, /* Thinklight/kbd backlight */
+On 10/26/2016 05:18 PM, Hans de Goede wrote:
+> Hi,
+>
+> On 24-10-16 22:43, Jacek Anaszewski wrote:
+>> Hi Hans,
+>>
+>> Thanks for the update.
+>> Could you please rebase your patches onto recent linux-leds.git,
+>> for-next branch?
+>
+> Done, I will send a v3 soon (today or tomorrow).
+>
+>> Also it would be convenient to have sample application for polling
+>> brightness changes in tools/leds.
+>
+> I'm sorry but I do not have time to create such a sample application.
 
-Hi! Do you have some documentation for this number? When it is send?=20
-When keyboard baklight level is changed or when thinklight is turned=20
-on/off? Or in both cases?
+You must have tested your solution somehow. Just polish the code a bit,
+add a Makefile and that's it. Compare tools/leds/uledmon.c - it doesn't
+need to be anything big.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+If you're adding a feature that interacts with userspace, then I'd like
+to have a sample code that shows how to use it. Just for a reference.
 
---nextPart21113274.KeL6cJecXN
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlgQ7QcACgkQi/DJPQPkQ1IifgCfebG3LMXtBNYxNAbZt/0lxcAq
-Ag4AoJJrd3odcyAjF7PWgXS5tbRuXbQR
-=LhS5
------END PGP SIGNATURE-----
-
---nextPart21113274.KeL6cJecXN--
+-- 
+Best regards,
+Jacek Anaszewski
