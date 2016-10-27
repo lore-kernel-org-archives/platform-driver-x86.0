@@ -1,86 +1,53 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] platform: x86: dell-*: Simplify
- dell-rbtn integration with dell-laptop [untested]
-Date: Thu, 27 Oct 2016 14:42:55 +0200
-Message-ID: <e62241dc-02ea-eedd-df6b-2642f018b4df@redhat.com>
-References: <20161026174118.3431-1-hdegoede@redhat.com>
-	<20161026174118.3431-5-hdegoede@redhat.com>
-	<20161027103845.GT12154@pali>
-	<3b38c193-7b19-3170-b14e-3627844cbec0@redhat.com>
-	<20161027115949.GU12154@pali>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [patch v1 1/2] drivers/platform/x86: move module mlx-platform
+ from arch/x86 to drivers/platform/x86
+Date: Thu, 27 Oct 2016 16:59:10 +0300
+Message-ID: <1477576750.5295.28.camel@linux.intel.com>
+References: <1477576758-102003-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20161027115949.GU12154@pali>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:52832 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S933628AbcJ0N7Q (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 27 Oct 2016 09:59:16 -0400
+In-Reply-To: <1477576758-102003-1-git-send-email-vadimp@mellanox.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: vadimp@mellanox.com, dvhart@infradead.org, fengguang.wu@intel.com
+Cc: davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, kvalo@codeaurora.org, gregkh@linuxfoundation.org, mchehab@kernel.org, linux@roeck-us.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 
-SGksCgpPbiAyNy0xMC0xNiAxMzo1OSwgUGFsaSBSb2jDoXIgd3JvdGU6Cj4gT24gVGh1cnNkYXkg
-MjcgT2N0b2JlciAyMDE2IDEzOjQ2OjMzIEhhbnMgZGUgR29lZGUgd3JvdGU6Cj4+IEhpLAo+Pgo+
-PiBPbiAyNy0xMC0xNiAxMjozOCwgUGFsaSBSb2jDoXIgd3JvdGU6Cj4+PiBPbiBXZWRuZXNkYXkg
-MjYgT2N0b2JlciAyMDE2IDE5OjQxOjE4IEhhbnMgZGUgR29lZGUgd3JvdGU6Cj4+Pj4gVXNlIGRl
-bGxfc21iaW9zKm5vdGlmaWVyIGZvciBkZWxsLWxhcHRvcCB0byBsaXN0ZW4gdG8gZGVsbC1yYnRu
-IHNsaWRlcgo+Pj4+IGV2ZW50cywgcmVwbGFjZSBkZWxsX3JidG5fbm90aWZpZXJfcmVnaXN0ZXIo
-KSAvCj4+Pj4gZGVsbF9yYnRuX25vdGlmaWVyX3VucmVnaXN0ZXIoKSB3aXRoIGEgc2luZ2xlIGRl
-bGxfcmJ0bl9oYXNfcmZraWxsKCkgdXNlZAo+Pj4+IGJ5IGRlbGwtbGFwdG9wIHRvIGRlY2lkZSB3
-aGV0aGVyIG9yIG5vdCB0byB1c2UgdGhlIGk4MDQyIGZpbHRlciBhbmQgdXNlZAo+Pj4+IGJ5IGRl
-bGwtcmJ0biB0byBhdXRvLXJlbW92ZSBpdHMgcmZraWxsIGludGVyZmFjZSB3aGVuIGNhbGxlZC4K
-Pj4+Pgo+Pj4+IFRoaXMgcmVzdWx0cyBpbiBhIG5pY2UgY2xlYW51cCwgZG93bnNpZGUgaXMgdGhh
-dCB0aGUgcmZraWxsIGludGVyZmFjZQo+Pj4+IG9mIGRlbGwtcmJ0biBpcyBub3QgYXV0b21hdGlj
-YWxseSByZS1lbmFibGVkIG9uIHJtbW9kIGRlbGwtbGFwdG9wLCB0aGlzCj4+Pj4gbm93IHJlcXVp
-cmVzIHJtbW9kICsgaW5zbW9kIG9mIGRlbGwtcmJ0bi4gQnV0IHBlb3BsZSB3aG8gZG8gbm90IHdh
-bnQKPj4+PiBkZWxsLWxhcHRvcCBmb3Igc29tZSByZWFzb24gd2lsbCBoYXZlIGl0IGJsYWNrbGlz
-dGVkIGFueXdheXMsIHNvIHRoaXMKPj4+PiBpcyBub3QgYW4gaXNzdWUgYW5kIHRoZXJlIGlzIGEg
-d29yay1hcm91bmQuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxoZGVn
-b2VkZUByZWRoYXQuY29tPgo+Pj4+IC0tLQo+Pj4+IENoYW5nZXMgaW4gdjI6Cj4+Pj4gLVRoaXMg
-aXMgYSBuZXcgcGF0Y2ggaW4gdjIgb2YgbXkgcGxhdGZvcm0veDg2L2RlbGwtKiBub3RpZmllciBz
-ZXQgaW50ZW5kZWQKPj4+PiB0byBzaG93IGhvdyBkZWxsX3NtYmlvcypub3RpZmllciBjYW4gYmUg
-dXNlZCB0byBpbXByb3ZlIHRoZSBkZWxsLXJidG4KPj4+PiBpbnRlZ3JhdGlvbiB0b28KPj4+PiBD
-aGFuZ2VzIGluIHYzOgo+Pj4+IC1DYWxsIGRlbGxfcmJ0bl9oYXNfcmZraWxsX2Z1bmMgaW5zdGVh
-ZCBvZiBkZWxsX3JidG5faGFzX3Jma2lsbCwgc28gdGhhdCB0aGUKPj4+PiBkeW5hbWljIHN5bWJv
-bCBkYW5jZSB3ZSBkbyB0byBhbGxvdyBsb2FkaW5nIHdpdGhvdXQgZGVsbC1yYnRuIGFjdHVhbGx5
-IHdvcmtzLgo+Pj4+IC0tLQo+Pj4+IGRyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcgICAgICAg
-fCAgMSArCj4+Pj4gZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYyB8IDUzICsrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+Pj4gZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVs
-bC1yYnRuLmMgICB8IDYzICsrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+
-Pj4gZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1yYnRuLmggICB8ICA1ICstLQo+Pj4+IGRyaXZl
-cnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmggfCAgMSArCj4+Pj4gNSBmaWxlcyBjaGFuZ2Vk
-LCAyOSBpbnNlcnRpb25zKCspLCA5NCBkZWxldGlvbnMoLSkKPj4+Cj4+PiBMb29rcyBsaWtlIHRo
-YXQgZm9yIHByZXZlbnRpbmcgc2VuZGluZyBldmVudCB0aGF0IHJma2lsbCBzd2l0Y2ggd2FzCj4+
-PiBjaGFuZ2VkIGJ5IGhhcmR3YXJlIHNsaWRlciB3ZSBtdXN0IGFsd2F5cyBkcm9wIGF0ayBpODA0
-MiBrZXljb2RlLi4uCj4+Pgo+Pj4gTmVlZHMgdG8gY2hlY2sgaWYga2V5IGlzIHJlYWxseSBzZW5k
-IGJ5IGJvdGggZGVsbC1yYnRuIGFuZCBhbHNvIGJ5IGF0awo+Pj4gaTgwNDIga2V5Ym9hcmQgZHJp
-dmVyIGFuZCBpZiB5ZXMgdGhlbiBpODA0Ml9pbnN0YWxsX2ZpbHRlcigpIGlzIGFsd2F5cwo+Pj4g
-bmVlZGVkIChpZiByYnRuIGlzIHRoZXJlIG9yIG5vdCkuLi4KPj4KPj4gQnV0IHRoaXMgaXMgbm90
-IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaCwgcmlnaHQ/IFRoaXMgcGF0Y2ggZG9lcyBub3QgY2hhbmdl
-Cj4+IGFueSBiZWhhdmlvci4gT3RoZXIgdGhlbiB5b3VyIGNvbmNlcm5zIGFib3V0IHdoZXJlIHRv
-IHB1dCB0aGUgbm90aWZpZXIsCj4+IGRvIHlvdSBsaWtlIHRoZSBhcHByb2FjaCBvZiB0aGlzIHBh
-dGNoPwo+Cj4gSXQgaXMgbm90IHJlbGF0ZWQsIGJ1dCBpZiBhYm92ZSBpcyB0cnV0aCwgdGhlbiBh
-bm90aGVyIHJld3JpdGUgKGFsc28gb2YKPiB0aG9zZSB5b3VyIGNoYW5nZXMhKSBpcyBuZWVkZWQu
-IFNvIG1heWJlIGl0IHdvdWxkIGJlIGJldHRlciB0byBwb3N0cG9uZQo+IChvciBkcm9wIHRoaXMg
-cGF0Y2ggZnJvbSB5b3VyIHBhdGNoIHNlcmllcykgc28gd2UgZG8gbm90IGludmVzdCB0aW1lIGZv
-cgo+IHNvbWV0aGluZyB3aGljaCB3aWxsIGJlIGFnYWluIHJld3JpdHRlbi4uLgoKT2ssIEknbSBm
-aW5lIHdpdGggZGVsYXlpbmcgdGhpcyBjbGVhbnVwIHRpbGwgeW91ciBxdWVzdGlvbnMgYXJlIGFu
-c3dlcmVkLgoKTWF5YmUgd2Ugc2hvdWxkIHRoZW4gYWxzbyBtb3ZlIGFoZWFkIHdpdGggdGhlIG5v
-dGlmaWVyIGluIGRlbGwtc21iaW9zLApiZWNhdXNlIHdpdGhvdXQgdGhpcyBwYXRjaCBpdCBpcyBv
-bmx5IHVzZWQgYnkgZGVsbC13bWkgYW5kIGRlbGwtbGFwdG9wCmJvdGggb2Ygd2hpY2ggYWxyZWFk
-eSBkZXBlbmQgb24gZGVsbC1zbWJpb3MuCgpSZWdhcmRzLAoKSGFucwoKLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tClRoZSBDb21tYW5kIExpbmU6IFJlaW52ZW50ZWQgZm9yIE1vZGVybiBEZXZlbG9wZXJz
-CkRpZCB0aGUgcmVzdXJnZW5jZSBvZiBDTEkgdG9vbGluZyBjYXRjaCB5b3UgYnkgc3VycHJpc2U/
-ClJlY29ubmVjdCB3aXRoIHRoZSBjb21tYW5kIGxpbmUgYW5kIGJlY29tZSBtb3JlIHByb2R1Y3Rp
-dmUuIApMZWFybiB0aGUgbmV3IC5ORVQgYW5kIEFTUC5ORVQgQ0xJLiBHZXQgeW91ciBmcmVlIGNv
-cHkhCmh0dHA6Ly9zZG0ubGluay90ZWxlcmlrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0tYWNwaS1k
-ZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQv
-bGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
+On Thu, 2016-10-27 at 13:59 +0000, vadimp@mellanox.com wrote:
+> From: Vadim Pasternak <vadimp@mellanox.com>
+> 
+> Move module mlx-platform.c from arch/x86/platform/mellanox/ to
+> drivers/platform/x86/.
+> Remove folder arch/x86/platform/mellanox/ and update relevant Makefile
+> and Kconfig.
+
+No way, please use -M -C.
+
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  MAINTAINERS                               |   2 +-
+>  arch/x86/Kconfig                          |  12 --
+>  arch/x86/platform/Makefile                |   1 -
+>  arch/x86/platform/mellanox/Makefile       |   1 -
+>  arch/x86/platform/mellanox/mlx-platform.c | 266 -------------------
+> -----------
+>  drivers/platform/x86/Kconfig              |  14 +-
+>  drivers/platform/x86/Makefile             |   1 +
+>  drivers/platform/x86/mlx-platform.c       | 266
+> ++++++++++++++++++++++++++++++
+>  8 files changed, 281 insertions(+), 282 deletions(-)
+>  delete mode 100644 arch/x86/platform/mellanox/Makefile
+>  delete mode 100644 arch/x86/platform/mellanox/mlx-platform.c
+>  create mode 100644 drivers/platform/x86/mlx-platform.c
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
