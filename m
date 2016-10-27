@@ -1,116 +1,86 @@
-From: Lyude Paul <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for X1 Yoga
- (2016) Tablet Mode
-Date: Thu, 27 Oct 2016 10:52:12 -0400
-Message-ID: <1477579932.3666.4.camel@redhat.com>
-References: <1477433543-14915-1-git-send-email-lyude@redhat.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2 2/4] platform: x86: dell-smbios: Add a generic
+ dell-smbios notifier chain
+Date: Thu, 27 Oct 2016 12:32:09 +0200
+Message-ID: <20161027103209.GR12154@pali>
+References: <20161023194652.24335-1-hdegoede@redhat.com>
+ <20161023194652.24335-2-hdegoede@redhat.com>
+ <20161024133105.GC12154@pali>
+ <4cdb7bb1-2b16-e009-3309-433b1a306d54@redhat.com>
+ <20161024134339.GE12154@pali>
+ <762cceac-d807-0c3d-7469-267cc850f874@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1477433543-14915-1-git-send-email-lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:34389 "EHLO
+        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752786AbcJ0O6s (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 27 Oct 2016 10:58:48 -0400
+Content-Disposition: inline
+In-Reply-To: <762cceac-d807-0c3d-7469-267cc850f874@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-YXMgd2VsbCwgY2FuIHNvbWVvbmUgY29uZmlybSB0aGlzIHBhdGNoIG1hZGUgaXQgdG8gdGhlIGli
-bS1hY3BpLWRldmVsCmxpc3Q/IFdoZW4gSSBvcmlnaW5hbGx5IHNlbnQgdGhpcyBJIHJlYWxpemVk
-IEkgd2Fzbid0IHN1YnNjcmliZWQgdG8gdGhlCmxpc3QsIHNvIEknbSBndWVzc2luZyBJIG1pZ2h0
-IG5lZWQgdG8gcmVzZW5kLgoKT24gVHVlLCAyMDE2LTEwLTI1IGF0IDE4OjEyIC0wNDAwLCBMeXVk
-ZSB3cm90ZToKPiBGb3Igd2hhdGV2ZXIgcmVhc29uLCB0aGUgWDEgWW9nYSBkb2Vzbid0IHN1cHBv
-cnQgdGhlIG5vcm1hbCBtZXRob2Qgb2YKPiBxdWVyeWluZyBmb3IgdGFibGV0IG1vZGUuIEluc3Rl
-YWQgb2YgcHJvdmlkaW5nIHRoZSBNSEtHIG1ldGhvZCB1bmRlcgo+IHRoZQo+IGhvdGtleSBoYW5k
-bGUsIHdlJ3JlIGluc3RlYWQgZ2l2ZW4gdGhlIENNTUQgbWV0aG9kIHVuZGVyIHRoZSBFQwo+IGhh
-bmRsZS4KPiBWYWx1ZXMgb24gdGhpcyBoYW5kbGUgYXJlIGVpdGhlciAweDEsIGxhcHRvcCBtb2Rl
-LCBvciAweDYsIHRhYmxldAo+IG1vZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogTHl1ZGUgPGx5dWRl
-QHJlZGhhdC5jb20+Cj4gLS0tCj4gU28gSE9QRUZVTExZIEkgYWN0dWFsbHkgZGlkIHRoaXMgcmln
-aHQuIFRoZXJlIHdhcyBzb21lIGRpc2N1c3Npb24KPiBoZXJlCj4gcHJldmlvdXNseSBhYm91dCBz
-dXBwb3J0aW5nIHRoaXMsIGFuZCBpdCB3YXMgcHJldmlvdXNseSBtZW50aW9uZWQKPiB0aGF0IHRo
-ZSBJT1NUCj4gbWV0aG9kIHdhcyByZXNwb25zaWJsZSBmb3IgaG9sZGluZyB0aGUgY3VycmVudCB0
-YWJsZXQgc3RhdHVzLgo+IEhvd2V2ZXIsIGl0Cj4gcmVhbGx5IGRvZXNuJ3Qgc2VlbSBsaWtlIHRo
-aXMgaXMgdGhlIGNhc2U6Cj4gCj4gwqDCoMKgwqBNZXRob2QgKF9RMkUsIDAsIE5vdFNlcmlhbGl6
-ZWQpwqDCoC8vIF9ReHg6IEVDIFF1ZXJ5Cj4gwqDCoMKgwqB7Cj4gCUxvY2FsMCA9IFxfU0IuUENJ
-MC5MUEMuRUMuQ01NRAo+IAlJZiAoKExvY2FsMCAhPSAweDAwKSAmJiAoTG9jYWwwIDw9IDB4MDYp
-KQo+IAl7Cj4gCcKgwqDCoMKgSWYgKExvY2FsMCAhPSBcUE1NRCkKPiAJwqDCoMKgwqB7Cj4gCQlc
-UE1NRCA9IExvY2FsMAo+IAkJXF9TQi5QQ0kwLkxQQy5FQy5IS0VZLk1IS1EgKDB4NjBDMCkKPiAJ
-wqDCoMKgwqB9Cj4gCX0KPiAKPiAJSWYgKChMb2NhbDAgPT0gMHgwMCkgfHwgKExvY2FsMCA+PSAw
-eDA3KSkKPiAJewo+IAnCoMKgwqDCoExvY2FsMSA9IDB4MDEKPiAJfQo+IAlFbHNlSWYgKChMb2Nh
-bDAgPT0gMHgwMikgfHwgKExvY2FsMCA9PSAweDAzKSkKPiAJewo+IAnCoMKgwqDCoExvY2FsMSA9
-IDB4MDIKPiAJfQo+IAlFbHNlCj4gCXsKPiAJwqDCoMKgwqBMb2NhbDEgPSAweDAzCj4gCX0KPiAK
-PiAJSWYgKExvY2FsMSAhPSBcTFZNRCkKPiAJewo+IAnCoMKgwqDCoFxMVk1EID0gTG9jYWwxCj4g
-CcKgwqDCoMKgU2xlZXAgKDB4MEEpCj4gCcKgwqDCoMKgXF9TQi5QQ0kwLkxQQy5FQy5IS0VZLk1I
-S1EgKDB4NjBGMCkKPiAJfQo+IMKgwqDCoMKgfQo+IAo+IElPU1Qgc2VlbXMgdG8gYmUgcHJlc2Vu
-dCBpbiB0aGUgZGVjb21waWxlZCBEU0RUIGZyb20gbXkgWW9nYSwgaG93ZXZlcgo+IGl0J3MKPiBx
-dWl0ZSBmYXIgZnJvbSB0aGUgc3BvdCB0aGF0IGFjdHVhbGx5IHNlbmRzIHRoZSAweDYwQzAgaG90
-a2V5IGV2ZW50Lgo+IExldCBtZQo+IGtub3cgaWYgeW91IGd1eXMgd2FudCB0byB2ZXJpZnkgdGhp
-cyBhZ2FpbnN0IHRoZSBmdWxsIGRlY29tcGlsZWQgRFNEVAo+IGZvciB0aGlzCj4gbWFjaGluZS4K
-PiAKPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyB8IDM2Cj4gKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMzMgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0
-Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3Bh
-ZF9hY3BpLmMKPiBpbmRleCBiNjVjZTc1Li44MDgyZGM5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
-cGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
-L3RoaW5rcGFkX2FjcGkuYwo+IEBAIC0xOTAsNiArMTkwLDkgQEAgZW51bSB0cGFjcGlfaGtleV9l
-dmVudF90IHsKPiDCoAlUUF9IS0VZX0VWX0xJRF9PUEVOCQk9IDB4NTAwMiwgLyogbGFwdG9wIGxp
-ZAo+IG9wZW5lZCAqLwo+IMKgCVRQX0hLRVlfRVZfVEFCTEVUX1RBQkxFVAk9IDB4NTAwOSwgLyog
-dGFibGV0IHN3aXZlbAo+IHVwICovCj4gwqAJVFBfSEtFWV9FVl9UQUJMRVRfTk9URUJPT0sJPSAw
-eDUwMGEsIC8qIHRhYmxldCBzd2l2ZWwKPiBkb3duICovCj4gKwlUUF9IS0VZX0VWX1RBQkxFVF9D
-SEFOR0VECT0gMHg2MGMwLCAvKiBYMSBZb2dhCj4gKDIwMTYpOgo+ICsJCQkJCQnCoMKgwqAqIGVu
-dGVyL2xlYXZlCj4gdGFibGV0IG1vZGUKPiArCQkJCQkJwqDCoMKgKi8KPiDCoAlUUF9IS0VZX0VW
-X1BFTl9JTlNFUlRFRAkJPSAweDUwMGIsIC8qIHRhYmxldAo+IHBlbiBpbnNlcnRlZCAqLwo+IMKg
-CVRQX0hLRVlfRVZfUEVOX1JFTU9WRUQJCT0gMHg1MDBjLCAvKiB0YWJsZXQKPiBwZW4gcmVtb3Zl
-ZCAqLwo+IMKgCVRQX0hLRVlfRVZfQlJHSFRfQ0hBTkdFRAk9IDB4NTAxMCwgLyogYmFja2xpZ2h0
-Cj4gY29udHJvbCBldmVudCAqLwo+IEBAIC0zMDMsNiArMzA2LDcgQEAgc3RhdGljIHN0cnVjdCB7
-Cj4gwqAJdTMyIGhvdGtleV9tYXNrOjE7Cj4gwqAJdTMyIGhvdGtleV93bHN3OjE7Cj4gwqAJdTMy
-IGhvdGtleV90YWJsZXQ6MTsKPiArCXUzMiBob3RrZXlfdGFibGV0X2NtbWQ6MTsKPiDCoAl1MzIg
-a2JkbGlnaHQ6MTsKPiDCoAl1MzIgbGlnaHQ6MTsKPiDCoAl1MzIgbGlnaHRfc3RhdHVzOjE7Cj4g
-QEAgLTIwNTksNiArMjA2Myw4IEBAIHN0YXRpYyB2b2lkIGhvdGtleV9wb2xsX3NldHVwKGNvbnN0
-IGJvb2wKPiBtYXlfd2Fybik7Cj4gwqAKPiDCoC8qIEhLRVkuTUhLRygpIHJldHVybiBiaXRzICov
-Cj4gwqAjZGVmaW5lIFRQX0hPVEtFWV9UQUJMRVRfTUFTSyAoMSA8PCAzKQo+ICsvKiBUaGlua1Bh
-ZCBYMSBZb2dhICgyMDE2KSAqLwo+ICsjZGVmaW5lIFRQX0VDX0NNTURfVEFCTEVUX01PREUgMHg2
-Cj4gwqAKPiDCoHN0YXRpYyBpbnQgaG90a2V5X2dldF93bHN3KHZvaWQpCj4gwqB7Cj4gQEAgLTIw
-ODMsMTAgKzIwODksMTggQEAgc3RhdGljIGludCBob3RrZXlfZ2V0X3RhYmxldF9tb2RlKGludAo+
-ICpzdGF0dXMpCj4gwqB7Cj4gwqAJaW50IHM7Cj4gwqAKPiAtCWlmICghYWNwaV9ldmFsZihoa2V5
-X2hhbmRsZSwgJnMsICJNSEtHIiwgImQiKSkKPiAtCQlyZXR1cm4gLUVJTzsKPiArCWlmICh0cF9m
-ZWF0dXJlcy5ob3RrZXlfdGFibGV0X2NtbWQpIHsKPiArCQlpZiAoIWFjcGlfZXZhbGYoZWNfaGFu
-ZGxlLCAmcywgIkNNTUQiLCAiZCIpKQo+ICsJCQlyZXR1cm4gLUVJTzsKPiArCj4gKwkJKnN0YXR1
-cyA9IChzID09IFRQX0VDX0NNTURfVEFCTEVUX01PREUpOwo+ICsJfSBlbHNlIHsKPiArCQlpZiAo
-IWFjcGlfZXZhbGYoaGtleV9oYW5kbGUsICZzLCAiTUhLRyIsICJkIikpCj4gKwkJCXJldHVybiAt
-RUlPOwo+ICsKPiArCQkqc3RhdHVzID0gKChzICYgVFBfSE9US0VZX1RBQkxFVF9NQVNLKSAhPSAw
-KTsKPiArCX0KPiDCoAo+IC0JKnN0YXR1cyA9ICgocyAmIFRQX0hPVEtFWV9UQUJMRVRfTUFTSykg
-IT0gMCk7Cj4gwqAJcmV0dXJuIDA7Cj4gwqB9Cj4gwqAKPiBAQCAtMzQ3NSw2ICszNDg5LDE4IEBA
-IHN0YXRpYyBpbnQgX19pbml0IGhvdGtleV9pbml0KHN0cnVjdAo+IGlibV9pbml0X3N0cnVjdCAq
-aWlibSkKPiDCoAkJCQkmZGV2X2F0dHJfaG90a2V5X3RhYmxldF9tb2RlLmF0dHIpOwo+IMKgCX0K
-PiDCoAo+ICsJLyogRm9yIFgxIFlvZ2EgKDIwMTYpICovCj4gKwlpZiAoIXJlcyAmJiBhY3BpX2V2
-YWxmKGVjX2hhbmRsZSwgJnN0YXR1cywgIkNNTUQiLCAicWQiKSkgewo+ICsJCXRwX2ZlYXR1cmVz
-LmhvdGtleV90YWJsZXQgPSAxOwo+ICsJCXRwX2ZlYXR1cmVzLmhvdGtleV90YWJsZXRfY21tZCA9
-IDE7Cj4gKwkJdGFibGV0c3dfc3RhdGUgPSAoc3RhdHVzID09IFRQX0VDX0NNTURfVEFCTEVUX01P
-REUpOwo+ICsKPiArCQlwcl9pbmZvKCJQb3NzaWJsZSB0YWJsZXQgbW9kZSBzd2l0Y2ggZm91bmQ7
-IFRoaW5rUGFkCj4gaW4gJXMgbW9kZVxuIiwKPiArCQkJKHRhYmxldHN3X3N0YXRlKSA/ICJ0YWJs
-ZXQiIDogImxhcHRvcCIpOwo+ICsJCXJlcyA9IGFkZF90b19hdHRyX3NldChob3RrZXlfZGV2X2F0
-dHJpYnV0ZXMsCj4gKwkJCQnCoMKgwqDCoMKgwqAmZGV2X2F0dHJfaG90a2V5X3RhYmxldF9tb2Rl
-LmEKPiB0dHIpOwo+ICsJfQo+ICsKPiDCoAlpZiAoIXJlcykKPiDCoAkJcmVzID0gcmVnaXN0ZXJf
-YXR0cl9zZXRfd2l0aF9zeXNmcygKPiDCoAkJCQlob3RrZXlfZGV2X2F0dHJpYnV0ZXMsCj4gQEAg
-LTM4OTksNiArMzkyNSwxMCBAQCBzdGF0aWMgYm9vbCBob3RrZXlfbm90aWZ5XzZ4eHgoY29uc3Qg
-dTMyIGhrZXksCj4gwqAJCSppZ25vcmVfYWNwaV9ldiA9IHRydWU7Cj4gwqAJCXJldHVybiB0cnVl
-Owo+IMKgCj4gKwljYXNlIFRQX0hLRVlfRVZfVEFCTEVUX0NIQU5HRUQ6Cj4gKwkJdHBhY3BpX2lu
-cHV0X3NlbmRfdGFibGV0c3coKTsKPiArCQlicmVhazsKPiArCj4gwqAJZGVmYXVsdDoKPiDCoAkJ
-cHJfd2FybigidW5rbm93biBwb3NzaWJsZSB0aGVybWFsIGFsYXJtIG9yIGtleWJvYXJkCj4gZXZl
-bnQgcmVjZWl2ZWRcbiIpOwo+IMKgCQlrbm93biA9IGZhbHNlOwoKLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tClRoZSBDb21tYW5kIExpbmU6IFJlaW52ZW50ZWQgZm9yIE1vZGVybiBEZXZlbG9wZXJzCkRp
-ZCB0aGUgcmVzdXJnZW5jZSBvZiBDTEkgdG9vbGluZyBjYXRjaCB5b3UgYnkgc3VycHJpc2U/ClJl
-Y29ubmVjdCB3aXRoIHRoZSBjb21tYW5kIGxpbmUgYW5kIGJlY29tZSBtb3JlIHByb2R1Y3RpdmUu
-IApMZWFybiB0aGUgbmV3IC5ORVQgYW5kIEFTUC5ORVQgQ0xJLiBHZXQgeW91ciBmcmVlIGNvcHkh
-Cmh0dHA6Ly9zZG0ubGluay90ZWxlcmlrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0tYWNwaS1kZXZl
-bEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlz
-dHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
+On Monday 24 October 2016 15:45:02 Hans de Goede wrote:
+> Hi,
+> 
+> On 24-10-16 15:43, Pali Rohár wrote:
+> >On Monday 24 October 2016 15:37:31 Hans de Goede wrote:
+> >>Well WMI events get enabled via a SMBIOS call,
+> >
+> >This is truth only for few laptops and only for one WMI event.
+> >Everything else is automatically enabled, no call is needed to issue.
+> >
+> >>and dell-laptop uses SMBIOS exclusively
+> >
+> >IIRC dell-led.ko uses also dell-smbio.ko, so it is not exclusive for
+> >dell-laptop.
+> >
+> >>so it seems to fit. Basically this is a case of
+> >>we have to put this somewhere and dell-smbios is the best fit IMHO.
+> >
+> >Agree, we need to put it somewhere...
+> >
+> >Basically we need to solve problem how (currently) 3 kernel modules can
+> >communicate. Does not kernel support such "bus/event" mechanism for
+> >this?
+> 
+> Yes it does, that is exactly what notifiers are for, but we need to
+> declare the bus somewhere. I still believe dell-smbios is the best
+> place.
+
+But dell_smbios_register_notifier() name is totally confusing. It does
+not register any notifier for SMBIOS. Nor it have nothing common with
+SMBIOS API.
+
+Also there is absolutely no need that dell-rbtn.ko needs to depends on
+dell-smbios.ko. dell-rbtn.ko is ACPI driver which does not use any of
+SMBIOS API.
+
+Right now I'm not saying what is the best place for that notifier (as I
+still do not have ideal candidate). I'm just saying that notifier is not
+part of SMBIOS API and therefore dell-smbios.ko is not right place for
+it.
+
+So currently we have these different APIs for dell notebook drivers:
+* ACPI (used in dell-rbtn.ko and dell-smo8800.ko)
+* WMI (used in dell-wmi.ko, dell-wmi-aio.ko, dell-led.ko)
+* SMBIOS (used in dell-laptop.ko, dell-wmi.ko and dell-led.ko)
+* some other platform code (used in dell-laptop.ko)
+
+And now notifier is needed for drivers:
+* dell-laptop.ko
+* dell-wmi.ko
+* dell-rbtn.ko
+
+And if I look at above two sets, none of above drivers is good candidate
+for central notifier functions... Maybe we should really introduce new
+separate file where will central dell notifier live?
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
