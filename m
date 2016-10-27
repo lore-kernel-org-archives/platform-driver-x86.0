@@ -1,58 +1,116 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 5/5] platform: x86: dell-*: Simplify dell-rbtn
- integration with dell-laptop [untested]
-Date: Thu, 27 Oct 2016 12:38:45 +0200
-Message-ID: <20161027103845.GT12154@pali>
-References: <20161026174118.3431-1-hdegoede@redhat.com>
- <20161026174118.3431-5-hdegoede@redhat.com>
+From: Lyude Paul <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] thinkpad_acpi: Add support for X1 Yoga
+ (2016) Tablet Mode
+Date: Thu, 27 Oct 2016 10:52:12 -0400
+Message-ID: <1477579932.3666.4.camel@redhat.com>
+References: <1477433543-14915-1-git-send-email-lyude@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161026174118.3431-5-hdegoede@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1477433543-14915-1-git-send-email-lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 26 October 2016 19:41:18 Hans de Goede wrote:
-> Use dell_smbios*notifier for dell-laptop to listen to dell-rbtn slider
-> events, replace dell_rbtn_notifier_register() /
-> dell_rbtn_notifier_unregister() with a single dell_rbtn_has_rfkill() used
-> by dell-laptop to decide whether or not to use the i8042 filter and used
-> by dell-rbtn to auto-remove its rfkill interface when called.
-> 
-> This results in a nice cleanup, downside is that the rfkill interface
-> of dell-rbtn is not automatically re-enabled on rmmod dell-laptop, this
-> now requires rmmod + insmod of dell-rbtn. But people who do not want
-> dell-laptop for some reason will have it blacklisted anyways, so this
-> is not an issue and there is a work-around.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> -This is a new patch in v2 of my platform/x86/dell-* notifier set intended
->  to show how dell_smbios*notifier can be used to improve the dell-rbtn
->  integration too
-> Changes in v3:
-> -Call dell_rbtn_has_rfkill_func instead of dell_rbtn_has_rfkill, so that the
->  dynamic symbol dance we do to allow loading without dell-rbtn actually works.
-> ---
->  drivers/platform/x86/Kconfig       |  1 +
->  drivers/platform/x86/dell-laptop.c | 53 +++++++-------------------------
->  drivers/platform/x86/dell-rbtn.c   | 63 +++++++++-----------------------------
->  drivers/platform/x86/dell-rbtn.h   |  5 +--
->  drivers/platform/x86/dell-smbios.h |  1 +
->  5 files changed, 29 insertions(+), 94 deletions(-)
-
-Looks like that for preventing sending event that rfkill switch was
-changed by hardware slider we must always drop atk i8042 keycode...
-
-Needs to check if key is really send by both dell-rbtn and also by atk
-i8042 keyboard driver and if yes then i8042_install_filter() is always
-needed (if rbtn is there or not)...
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+YXMgd2VsbCwgY2FuIHNvbWVvbmUgY29uZmlybSB0aGlzIHBhdGNoIG1hZGUgaXQgdG8gdGhlIGli
+bS1hY3BpLWRldmVsCmxpc3Q/IFdoZW4gSSBvcmlnaW5hbGx5IHNlbnQgdGhpcyBJIHJlYWxpemVk
+IEkgd2Fzbid0IHN1YnNjcmliZWQgdG8gdGhlCmxpc3QsIHNvIEknbSBndWVzc2luZyBJIG1pZ2h0
+IG5lZWQgdG8gcmVzZW5kLgoKT24gVHVlLCAyMDE2LTEwLTI1IGF0IDE4OjEyIC0wNDAwLCBMeXVk
+ZSB3cm90ZToKPiBGb3Igd2hhdGV2ZXIgcmVhc29uLCB0aGUgWDEgWW9nYSBkb2Vzbid0IHN1cHBv
+cnQgdGhlIG5vcm1hbCBtZXRob2Qgb2YKPiBxdWVyeWluZyBmb3IgdGFibGV0IG1vZGUuIEluc3Rl
+YWQgb2YgcHJvdmlkaW5nIHRoZSBNSEtHIG1ldGhvZCB1bmRlcgo+IHRoZQo+IGhvdGtleSBoYW5k
+bGUsIHdlJ3JlIGluc3RlYWQgZ2l2ZW4gdGhlIENNTUQgbWV0aG9kIHVuZGVyIHRoZSBFQwo+IGhh
+bmRsZS4KPiBWYWx1ZXMgb24gdGhpcyBoYW5kbGUgYXJlIGVpdGhlciAweDEsIGxhcHRvcCBtb2Rl
+LCBvciAweDYsIHRhYmxldAo+IG1vZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogTHl1ZGUgPGx5dWRl
+QHJlZGhhdC5jb20+Cj4gLS0tCj4gU28gSE9QRUZVTExZIEkgYWN0dWFsbHkgZGlkIHRoaXMgcmln
+aHQuIFRoZXJlIHdhcyBzb21lIGRpc2N1c3Npb24KPiBoZXJlCj4gcHJldmlvdXNseSBhYm91dCBz
+dXBwb3J0aW5nIHRoaXMsIGFuZCBpdCB3YXMgcHJldmlvdXNseSBtZW50aW9uZWQKPiB0aGF0IHRo
+ZSBJT1NUCj4gbWV0aG9kIHdhcyByZXNwb25zaWJsZSBmb3IgaG9sZGluZyB0aGUgY3VycmVudCB0
+YWJsZXQgc3RhdHVzLgo+IEhvd2V2ZXIsIGl0Cj4gcmVhbGx5IGRvZXNuJ3Qgc2VlbSBsaWtlIHRo
+aXMgaXMgdGhlIGNhc2U6Cj4gCj4gwqDCoMKgwqBNZXRob2QgKF9RMkUsIDAsIE5vdFNlcmlhbGl6
+ZWQpwqDCoC8vIF9ReHg6IEVDIFF1ZXJ5Cj4gwqDCoMKgwqB7Cj4gCUxvY2FsMCA9IFxfU0IuUENJ
+MC5MUEMuRUMuQ01NRAo+IAlJZiAoKExvY2FsMCAhPSAweDAwKSAmJiAoTG9jYWwwIDw9IDB4MDYp
+KQo+IAl7Cj4gCcKgwqDCoMKgSWYgKExvY2FsMCAhPSBcUE1NRCkKPiAJwqDCoMKgwqB7Cj4gCQlc
+UE1NRCA9IExvY2FsMAo+IAkJXF9TQi5QQ0kwLkxQQy5FQy5IS0VZLk1IS1EgKDB4NjBDMCkKPiAJ
+wqDCoMKgwqB9Cj4gCX0KPiAKPiAJSWYgKChMb2NhbDAgPT0gMHgwMCkgfHwgKExvY2FsMCA+PSAw
+eDA3KSkKPiAJewo+IAnCoMKgwqDCoExvY2FsMSA9IDB4MDEKPiAJfQo+IAlFbHNlSWYgKChMb2Nh
+bDAgPT0gMHgwMikgfHwgKExvY2FsMCA9PSAweDAzKSkKPiAJewo+IAnCoMKgwqDCoExvY2FsMSA9
+IDB4MDIKPiAJfQo+IAlFbHNlCj4gCXsKPiAJwqDCoMKgwqBMb2NhbDEgPSAweDAzCj4gCX0KPiAK
+PiAJSWYgKExvY2FsMSAhPSBcTFZNRCkKPiAJewo+IAnCoMKgwqDCoFxMVk1EID0gTG9jYWwxCj4g
+CcKgwqDCoMKgU2xlZXAgKDB4MEEpCj4gCcKgwqDCoMKgXF9TQi5QQ0kwLkxQQy5FQy5IS0VZLk1I
+S1EgKDB4NjBGMCkKPiAJfQo+IMKgwqDCoMKgfQo+IAo+IElPU1Qgc2VlbXMgdG8gYmUgcHJlc2Vu
+dCBpbiB0aGUgZGVjb21waWxlZCBEU0RUIGZyb20gbXkgWW9nYSwgaG93ZXZlcgo+IGl0J3MKPiBx
+dWl0ZSBmYXIgZnJvbSB0aGUgc3BvdCB0aGF0IGFjdHVhbGx5IHNlbmRzIHRoZSAweDYwQzAgaG90
+a2V5IGV2ZW50Lgo+IExldCBtZQo+IGtub3cgaWYgeW91IGd1eXMgd2FudCB0byB2ZXJpZnkgdGhp
+cyBhZ2FpbnN0IHRoZSBmdWxsIGRlY29tcGlsZWQgRFNEVAo+IGZvciB0aGlzCj4gbWFjaGluZS4K
+PiAKPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyB8IDM2Cj4gKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMzMgaW5z
+ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0
+Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3Bh
+ZF9hY3BpLmMKPiBpbmRleCBiNjVjZTc1Li44MDgyZGM5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L3RoaW5rcGFkX2FjcGkuYwo+IEBAIC0xOTAsNiArMTkwLDkgQEAgZW51bSB0cGFjcGlfaGtleV9l
+dmVudF90IHsKPiDCoAlUUF9IS0VZX0VWX0xJRF9PUEVOCQk9IDB4NTAwMiwgLyogbGFwdG9wIGxp
+ZAo+IG9wZW5lZCAqLwo+IMKgCVRQX0hLRVlfRVZfVEFCTEVUX1RBQkxFVAk9IDB4NTAwOSwgLyog
+dGFibGV0IHN3aXZlbAo+IHVwICovCj4gwqAJVFBfSEtFWV9FVl9UQUJMRVRfTk9URUJPT0sJPSAw
+eDUwMGEsIC8qIHRhYmxldCBzd2l2ZWwKPiBkb3duICovCj4gKwlUUF9IS0VZX0VWX1RBQkxFVF9D
+SEFOR0VECT0gMHg2MGMwLCAvKiBYMSBZb2dhCj4gKDIwMTYpOgo+ICsJCQkJCQnCoMKgwqAqIGVu
+dGVyL2xlYXZlCj4gdGFibGV0IG1vZGUKPiArCQkJCQkJwqDCoMKgKi8KPiDCoAlUUF9IS0VZX0VW
+X1BFTl9JTlNFUlRFRAkJPSAweDUwMGIsIC8qIHRhYmxldAo+IHBlbiBpbnNlcnRlZCAqLwo+IMKg
+CVRQX0hLRVlfRVZfUEVOX1JFTU9WRUQJCT0gMHg1MDBjLCAvKiB0YWJsZXQKPiBwZW4gcmVtb3Zl
+ZCAqLwo+IMKgCVRQX0hLRVlfRVZfQlJHSFRfQ0hBTkdFRAk9IDB4NTAxMCwgLyogYmFja2xpZ2h0
+Cj4gY29udHJvbCBldmVudCAqLwo+IEBAIC0zMDMsNiArMzA2LDcgQEAgc3RhdGljIHN0cnVjdCB7
+Cj4gwqAJdTMyIGhvdGtleV9tYXNrOjE7Cj4gwqAJdTMyIGhvdGtleV93bHN3OjE7Cj4gwqAJdTMy
+IGhvdGtleV90YWJsZXQ6MTsKPiArCXUzMiBob3RrZXlfdGFibGV0X2NtbWQ6MTsKPiDCoAl1MzIg
+a2JkbGlnaHQ6MTsKPiDCoAl1MzIgbGlnaHQ6MTsKPiDCoAl1MzIgbGlnaHRfc3RhdHVzOjE7Cj4g
+QEAgLTIwNTksNiArMjA2Myw4IEBAIHN0YXRpYyB2b2lkIGhvdGtleV9wb2xsX3NldHVwKGNvbnN0
+IGJvb2wKPiBtYXlfd2Fybik7Cj4gwqAKPiDCoC8qIEhLRVkuTUhLRygpIHJldHVybiBiaXRzICov
+Cj4gwqAjZGVmaW5lIFRQX0hPVEtFWV9UQUJMRVRfTUFTSyAoMSA8PCAzKQo+ICsvKiBUaGlua1Bh
+ZCBYMSBZb2dhICgyMDE2KSAqLwo+ICsjZGVmaW5lIFRQX0VDX0NNTURfVEFCTEVUX01PREUgMHg2
+Cj4gwqAKPiDCoHN0YXRpYyBpbnQgaG90a2V5X2dldF93bHN3KHZvaWQpCj4gwqB7Cj4gQEAgLTIw
+ODMsMTAgKzIwODksMTggQEAgc3RhdGljIGludCBob3RrZXlfZ2V0X3RhYmxldF9tb2RlKGludAo+
+ICpzdGF0dXMpCj4gwqB7Cj4gwqAJaW50IHM7Cj4gwqAKPiAtCWlmICghYWNwaV9ldmFsZihoa2V5
+X2hhbmRsZSwgJnMsICJNSEtHIiwgImQiKSkKPiAtCQlyZXR1cm4gLUVJTzsKPiArCWlmICh0cF9m
+ZWF0dXJlcy5ob3RrZXlfdGFibGV0X2NtbWQpIHsKPiArCQlpZiAoIWFjcGlfZXZhbGYoZWNfaGFu
+ZGxlLCAmcywgIkNNTUQiLCAiZCIpKQo+ICsJCQlyZXR1cm4gLUVJTzsKPiArCj4gKwkJKnN0YXR1
+cyA9IChzID09IFRQX0VDX0NNTURfVEFCTEVUX01PREUpOwo+ICsJfSBlbHNlIHsKPiArCQlpZiAo
+IWFjcGlfZXZhbGYoaGtleV9oYW5kbGUsICZzLCAiTUhLRyIsICJkIikpCj4gKwkJCXJldHVybiAt
+RUlPOwo+ICsKPiArCQkqc3RhdHVzID0gKChzICYgVFBfSE9US0VZX1RBQkxFVF9NQVNLKSAhPSAw
+KTsKPiArCX0KPiDCoAo+IC0JKnN0YXR1cyA9ICgocyAmIFRQX0hPVEtFWV9UQUJMRVRfTUFTSykg
+IT0gMCk7Cj4gwqAJcmV0dXJuIDA7Cj4gwqB9Cj4gwqAKPiBAQCAtMzQ3NSw2ICszNDg5LDE4IEBA
+IHN0YXRpYyBpbnQgX19pbml0IGhvdGtleV9pbml0KHN0cnVjdAo+IGlibV9pbml0X3N0cnVjdCAq
+aWlibSkKPiDCoAkJCQkmZGV2X2F0dHJfaG90a2V5X3RhYmxldF9tb2RlLmF0dHIpOwo+IMKgCX0K
+PiDCoAo+ICsJLyogRm9yIFgxIFlvZ2EgKDIwMTYpICovCj4gKwlpZiAoIXJlcyAmJiBhY3BpX2V2
+YWxmKGVjX2hhbmRsZSwgJnN0YXR1cywgIkNNTUQiLCAicWQiKSkgewo+ICsJCXRwX2ZlYXR1cmVz
+LmhvdGtleV90YWJsZXQgPSAxOwo+ICsJCXRwX2ZlYXR1cmVzLmhvdGtleV90YWJsZXRfY21tZCA9
+IDE7Cj4gKwkJdGFibGV0c3dfc3RhdGUgPSAoc3RhdHVzID09IFRQX0VDX0NNTURfVEFCTEVUX01P
+REUpOwo+ICsKPiArCQlwcl9pbmZvKCJQb3NzaWJsZSB0YWJsZXQgbW9kZSBzd2l0Y2ggZm91bmQ7
+IFRoaW5rUGFkCj4gaW4gJXMgbW9kZVxuIiwKPiArCQkJKHRhYmxldHN3X3N0YXRlKSA/ICJ0YWJs
+ZXQiIDogImxhcHRvcCIpOwo+ICsJCXJlcyA9IGFkZF90b19hdHRyX3NldChob3RrZXlfZGV2X2F0
+dHJpYnV0ZXMsCj4gKwkJCQnCoMKgwqDCoMKgwqAmZGV2X2F0dHJfaG90a2V5X3RhYmxldF9tb2Rl
+LmEKPiB0dHIpOwo+ICsJfQo+ICsKPiDCoAlpZiAoIXJlcykKPiDCoAkJcmVzID0gcmVnaXN0ZXJf
+YXR0cl9zZXRfd2l0aF9zeXNmcygKPiDCoAkJCQlob3RrZXlfZGV2X2F0dHJpYnV0ZXMsCj4gQEAg
+LTM4OTksNiArMzkyNSwxMCBAQCBzdGF0aWMgYm9vbCBob3RrZXlfbm90aWZ5XzZ4eHgoY29uc3Qg
+dTMyIGhrZXksCj4gwqAJCSppZ25vcmVfYWNwaV9ldiA9IHRydWU7Cj4gwqAJCXJldHVybiB0cnVl
+Owo+IMKgCj4gKwljYXNlIFRQX0hLRVlfRVZfVEFCTEVUX0NIQU5HRUQ6Cj4gKwkJdHBhY3BpX2lu
+cHV0X3NlbmRfdGFibGV0c3coKTsKPiArCQlicmVhazsKPiArCj4gwqAJZGVmYXVsdDoKPiDCoAkJ
+cHJfd2FybigidW5rbm93biBwb3NzaWJsZSB0aGVybWFsIGFsYXJtIG9yIGtleWJvYXJkCj4gZXZl
+bnQgcmVjZWl2ZWRcbiIpOwo+IMKgCQlrbm93biA9IGZhbHNlOwoKLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tClRoZSBDb21tYW5kIExpbmU6IFJlaW52ZW50ZWQgZm9yIE1vZGVybiBEZXZlbG9wZXJzCkRp
+ZCB0aGUgcmVzdXJnZW5jZSBvZiBDTEkgdG9vbGluZyBjYXRjaCB5b3UgYnkgc3VycHJpc2U/ClJl
+Y29ubmVjdCB3aXRoIHRoZSBjb21tYW5kIGxpbmUgYW5kIGJlY29tZSBtb3JlIHByb2R1Y3RpdmUu
+IApMZWFybiB0aGUgbmV3IC5ORVQgYW5kIEFTUC5ORVQgQ0xJLiBHZXQgeW91ciBmcmVlIGNvcHkh
+Cmh0dHA6Ly9zZG0ubGluay90ZWxlcmlrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0tYWNwaS1kZXZl
+bEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlz
+dHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
