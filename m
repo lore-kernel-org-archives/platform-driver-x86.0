@@ -1,46 +1,124 @@
-From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Subject: Re: [PATCH] platform/x86/asus-nb-wmi.c: Add X45U quirk
-Date: Mon, 31 Oct 2016 23:59:24 -0200
-Message-ID: <20161101015922.GA24983@xfiles>
-References: <1477945272-4703-1-git-send-email-marcos.souza.org@gmail.com>
- <20161031221405.GA41691@f23x64.localdomain>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
+Date: Tue,  1 Nov 2016 12:30:58 +0800
+Message-ID: <1477974658-12589-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161031221405.GA41691@f23x64.localdomain>
-Sender: stable-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren and Greg,
+The AMW0_GUID1 wmi is not only found on Acer family but also other
+machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
+driver handled those non-Acer machines by quirks list.
 
-On Mon, Oct 31, 2016 at 03:14:05PM -0700, Darren Hart wrote:
-> On Mon, Oct 31, 2016 at 06:21:12PM -0200, Marcos Paulo de Souza wrote:
-> > Without this patch, the Asus X45U wireless card can't be turned
-> > on (hard-blocked), but after a suspend/resume it just starts working.
-> > 
-> > Following this bug report[1], there are other cases like this one, but
-> > this Asus is the only model that I can test.
-> > 
-> > [1] https://ubuntuforums.org/showthread.php?t=2181558
-> > 
-> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> 
-> Thanks Marcos,
-> 
-> As Greg pointed out, if you want this to go back to stable, you need to
-> add the Cc: stable tag below your Signed-off-by. I also ask that you
-> attempt to apply this yourself before sending it back to stable. Does it
-> apply to 4.8? 4.1? 3.18? How far back do you want to see this backported
-> to stable?
-> 
+But actually acer-wmi driver was loaded on any machines that have
+AMW0_GUID1. This behavior is strange because those machines should
+be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
+ideapad-laptop.
 
-I sent a new version right now, specifying 4.8.6 and 4.4.29. Hope it's correct now!
+So, This patch adds the logic to check the machine that has AMW0_GUID1
+should be in Acer/Packard Bell/Gateway white list. But, it still keeps
+the quirk list of those supported non-acer machines for backward
+compatible.
 
-Thanks,
+Tested-by: Bjørn Mork <bjorn@mork.no>
+Cc: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c | 56 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-> -- 
-> Darren Hart
-> Intel Open Source Technology Center
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 3bb3162..734f0da 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -355,6 +355,32 @@ static const struct dmi_system_id acer_blacklist[] __initconst = {
+ 	{}
+ };
+ 
++static const struct dmi_system_id amw0_whitelist[] __initconst = {
++	{
++		.ident = "Acer",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		},
++	},
++	{
++		.ident = "Gateway",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++		},
++	},
++	{
++		.ident = "Packard Bell",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
++		},
++	},
++	{}
++};
++
++/*
++ * This quirk table is only for Acer/Gateway/Packard Bell family
++ * that those machines are supported by acer-wmi driver.
++ */
+ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+@@ -464,6 +490,17 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_travelmate_2490,
+ 	},
++	{}
++};
++
++/*
++ * This quirk list is for those non-acer machines that have AMW0_GUID1
++ * but supported by acer-wmi in past days. Keeping this quirk list here
++ * is only for backward compatible. Please do not add new machine to
++ * here anymore. Those non-acer machines should be supported by
++ * appropriate wmi drivers.
++ */
++static const struct dmi_system_id non_acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Fujitsu Siemens Amilo Li 1718",
+@@ -598,6 +635,7 @@ static void __init find_quirks(void)
+ {
+ 	if (!force_series) {
+ 		dmi_check_system(acer_quirks);
++		dmi_check_system(non_acer_quirks);
+ 	} else if (force_series == 2490) {
+ 		quirks = &quirk_acer_travelmate_2490;
+ 	}
+@@ -2121,6 +2159,24 @@ static int __init acer_wmi_init(void)
+ 	find_quirks();
+ 
+ 	/*
++	 * The AMW0_GUID1 wmi is not only found on Acer family but also other
++	 * machines like Lenovo, Fujitsu and Medion. In the past days,
++	 * acer-wmi driver handled those non-Acer machines by quirks list.
++	 * But actually acer-wmi driver was loaded on any machines that have
++	 * AMW0_GUID1. This behavior is strange because those machines should
++	 * be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
++	 * ideapad-laptop. So, here checks the machine that has AMW0_GUID1
++	 * should be in Acer/Gateway/Packard Bell white list, or it's already
++	 * in the past quirk list.
++	 */
++	if (wmi_has_guid(AMW0_GUID1) &&
++	    !dmi_check_system(amw0_whitelist) &&
++	    quirks == &quirk_unknown) {
++		pr_err("Unsupported machine has AMW0_GUID1, unable to load\n");
++		return -ENODEV;
++	}
++
++	/*
+ 	 * Detect which ACPI-WMI interface we're using.
+ 	 */
+ 	if (wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
+-- 
+2.1.4
