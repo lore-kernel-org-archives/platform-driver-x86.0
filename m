@@ -1,90 +1,179 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: setup accelerometer when machine has appropriate notify event
-Date: Tue,  1 Nov 2016 12:33:32 +0800
-Message-ID: <1477974812-12657-1-git-send-email-jlee@suse.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v4 1/4] leds: core: Add support for poll()ing the sysfs brightness attr for changes.
+Date: Tue,  1 Nov 2016 14:37:45 +0100
+Message-ID: <20161101133748.7168-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:36788 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932631AbcKAEfi (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:49416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1169111AbcKANh4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Nov 2016 00:35:38 -0400
+        Tue, 1 Nov 2016 09:37:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
-So, this patch changes the codes to setup accelerometer input device
-when detected ACERWMID_EVENT_GUID. It avoids that the accel input
-device created on every acer machines.
+Add support for userspace using poll() for POLL_PRI on the sysfs brightness
+attr to watch for brightness changes.
 
-In addition, patch adds a clearly parsing logic of accelerometer hid
-to acer_wmi_get_handle_cb callback function. It is positive matching
-the "SENR" name with "BST0001" device to avoid non-supported hardware.
+This commit adds a led_notify_brightness_change helper function for
+waking up any poll() waiters; and calls this after any brightness changes
+(after any led_classdev->brightness_set[_blocking] calls have completed).
 
-Reported-by: Bjørn Mork <bjorn@mork.no>
-Tested-by: Bjørn Mork <bjorn@mork.no>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+In some use-cases led hardware may autonomously change its brightness,
+e.g. the keyboard backlight used on some laptops is controlled by a
+hardwired (firmware handled) hotkey. led_notify_brightness_change is
+exported for use by drivers which can detect such autonomous changes.
+
+This commit also updates the Documentation/ABI/testing/sysfs-class-led
+documentation to document that userspace may now poll on the brightness
+attribute.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+Changes in v2:
+-Wakeup / notify userspace on any brightness changes, not just on
+ autonomous changes done by the hw
+Changes in v3:
+-Rebase on linux-leds/for-next
+Changes in v4:
+-No Changes
+---
+ Documentation/ABI/testing/sysfs-class-led |  8 ++++++--
+ drivers/leds/led-class.c                  |  9 +++++++++
+ drivers/leds/led-core.c                   | 16 +++++++++++++++-
+ include/linux/leds.h                      | 12 ++++++++++++
+ 4 files changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 79d64ea..3bb3162 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(void)
- 	return status;
+diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
+index 491cdee..0af5191 100644
+--- a/Documentation/ABI/testing/sysfs-class-led
++++ b/Documentation/ABI/testing/sysfs-class-led
+@@ -1,12 +1,16 @@
+ What:		/sys/class/leds/<led>/brightness
+-Date:		March 2006
+-KernelVersion:	2.6.17
++Date:		March 2006 (poll October 2016)
++KernelVersion:	2.6.17 (poll since 4.10)
+ Contact:	Richard Purdie <rpurdie@rpsys.net>
+ Description:
+ 		Set the brightness of the LED. Most LEDs don't
+ 		have hardware brightness support, so will just be turned on for
+ 		non-zero brightness settings. The value is between 0 and
+ 		/sys/class/leds/<led>/max_brightness.
++		The file supports poll() to detect brightness changes, in
++		some cases the hardware / firmware may change the brightness
++		autonomously, poll() should be woken up in this case too,
++		but not all drivers may support this.
+ 
+ 		Writing 0 to this file clears active trigger.
+ 
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 731e4eb..c8d2d67 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -204,6 +204,14 @@ int led_classdev_register(struct device *parent, struct led_classdev *led_cdev)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+ 				led_cdev->name, dev_name(led_cdev->dev));
+ 
++	led_cdev->brightness_kn = sysfs_get_dirent(led_cdev->dev->kobj.sd,
++						   "brightness");
++	if (!led_cdev->brightness_kn) {
++		dev_err(led_cdev->dev, "Error getting brightness kernfs_node\n");
++		device_unregister(led_cdev->dev);
++		return -ENODEV;
++	}
++
+ #ifdef CONFIG_LEDS_TRIGGERS
+ 	init_rwsem(&led_cdev->trigger_lock);
+ #endif
+@@ -255,6 +263,7 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
+ 
+ 	flush_work(&led_cdev->set_brightness_work);
+ 
++	sysfs_put(led_cdev->brightness_kn);
+ 	device_unregister(led_cdev->dev);
+ 
+ 	down_write(&leds_list_lock);
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index 2d0c75a..af78279 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -33,16 +33,24 @@ static int __led_set_brightness(struct led_classdev *led_cdev,
+ 
+ 	led_cdev->brightness_set(led_cdev, value);
+ 
++	led_notify_brightness_change(led_cdev);
++
+ 	return 0;
  }
  
-+#define ACER_WMID_ACCEL_HID	"BST0001"
-+
- static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
- 						void *ctx, void **retval)
+ static int __led_set_brightness_blocking(struct led_classdev *led_cdev,
+ 					 enum led_brightness value)
  {
-+	struct acpi_device *dev;
++	int ret;
 +
-+	if (strcmp(ctx, "SENR")) {
-+		if (acpi_bus_get_device(ah, &dev))
-+			return AE_OK;
-+		if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-+			return AE_OK;
-+	} else
-+		return AE_OK;
+ 	if (!led_cdev->brightness_set_blocking)
+ 		return -ENOTSUPP;
+ 
+-	return led_cdev->brightness_set_blocking(led_cdev, value);
++	ret = led_cdev->brightness_set_blocking(led_cdev, value);
++	if (ret >= 0)
++		led_notify_brightness_change(led_cdev);
 +
- 	*(acpi_handle *)retval = ah;
--	return AE_OK;
-+
-+	return AE_CTRL_TERMINATE;
++	return ret;
  }
  
- static int __init acer_wmi_get_handle(const char *name, const char *prop,
-@@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(void)
+ static void led_timer_function(unsigned long data)
+@@ -308,6 +316,12 @@ int led_update_brightness(struct led_classdev *led_cdev)
+ }
+ EXPORT_SYMBOL_GPL(led_update_brightness);
+ 
++void led_notify_brightness_change(struct led_classdev *led_cdev)
++{
++	sysfs_notify_dirent(led_cdev->brightness_kn);
++}
++EXPORT_SYMBOL_GPL(led_notify_brightness_change);
++
+ /* Caller must ensure led_cdev->led_access held */
+ void led_sysfs_disable(struct led_classdev *led_cdev)
  {
- 	int err;
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 52993de..f034c2d 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -13,6 +13,7 @@
+ #define __LINUX_LEDS_H_INCLUDED
  
--	err = acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
-+	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
- 	if (err)
- 		return err;
+ #include <linux/device.h>
++#include <linux/kernfs.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/rwsem.h>
+@@ -93,6 +94,8 @@ struct led_classdev {
  
-@@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
- 		err = acer_wmi_input_setup();
- 		if (err)
- 			return err;
-+		err = acer_wmi_accel_setup();
-+		if (err)
-+			return err;
- 	}
+ 	struct work_struct	set_brightness_work;
  
--	acer_wmi_accel_setup();
--
- 	err = platform_driver_register(&acer_platform_driver);
- 	if (err) {
- 		pr_err("Unable to register platform driver\n");
++	struct kernfs_node	*brightness_kn;
++
+ #ifdef CONFIG_LEDS_TRIGGERS
+ 	/* Protects the trigger data below */
+ 	struct rw_semaphore	 trigger_lock;
+@@ -192,6 +195,15 @@ extern int led_set_brightness_sync(struct led_classdev *led_cdev,
+ extern int led_update_brightness(struct led_classdev *led_cdev);
+ 
+ /**
++ * led_notify_brightness_change - Notify userspace of brightness changes
++ * @led_cdev: the LED to do the notify on
++ *
++ * Let any users waiting for POLL_PRI on the led's brightness sysfs
++ * atrribute know that the brightness has been changed.
++ */
++extern void led_notify_brightness_change(struct led_classdev *led_cdev);
++
++/**
+  * led_sysfs_disable - disable LED sysfs interface
+  * @led_cdev: the LED to set
+  *
 -- 
-2.1.4
+2.9.3
