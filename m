@@ -1,49 +1,68 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
-Date: Thu, 3 Nov 2016 12:14:50 +0800
-Message-ID: <20161103041450.GI18823@linux-rxt1.site>
-References: <1477974658-12589-1-git-send-email-jlee@suse.com>
- <CAE7LaDAmQjjToC8n6mLNM8dJf1Vm4QN7wu7-Hk8=dwRp2XyfsA@mail.gmail.com>
+From: <mbalhoff@fulbright.com>
+Subject: 58036 platform-driver-x86
+Date: Thu, 03 Nov 2016 20:54:35 -0000
+Message-ID: <147820647500.8501.10877182616976846433@vnpt.vn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAE7LaDAmQjjToC8n6mLNM8dJf1Vm4QN7wu7-Hk8=dwRp2XyfsA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anthony Wong <ypwong@gmail.com>
-Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="EMAIL_10974213111004_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from static.vnpt.vn ([14.177.248.189]:25369 "HELO vnpt.vn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1758446AbcKCUyl (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 3 Nov 2016 16:54:41 -0400
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 11:40:15AM +0800, Anthony Wong wrote:
-> On 1 November 2016 at 12:30, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
-> >
-> > The AMW0_GUID1 wmi is not only found on Acer family but also other
-> > machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
-> > driver handled those non-Acer machines by quirks list.
-> >
-> > But actually acer-wmi driver was loaded on any machines that have
-> > AMW0_GUID1. This behavior is strange because those machines should
-> > be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
-> > ideapad-laptop.
-> >
-> > So, This patch adds the logic to check the machine that has AMW0_GUID1
-> > should be in Acer/Packard Bell/Gateway white list. But, it still keeps
-> > the quirk list of those supported non-acer machines for backward
-> > compatible.
-> >
-> > Tested-by: Bjørn Mork <bjorn@mork.no>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> 
-> Xiaomi Air 13.3 notebook suffers from the same issue, acer-wmi
-> basically has no use on this machine. With your patch, acer-wmi no
-> longer loads.
-> 
-> Tested-by: Anthony Wong <anthony@ypwong.org>
-> 
-> Thanks,
-> Anthony
-
-Thanks for your testing!
-Joey Lee
+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
