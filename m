@@ -1,96 +1,64 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: v4.8-rc1: thinkpad x60: running at low frequency even during
- kernel build
-Date: Fri, 4 Nov 2016 21:44:39 +0100
-Message-ID: <20161104204439.GA2581@amd>
-References: <20161104083849.GA32688@amd>
- <20161104085830.GA4089@amd>
- <1478268311.26953.17.camel@intel.com>
+From: <sorbisches.internat@t-online.de>
+Subject: 44487 platform-driver-x86
+Date: Fri, 04 Nov 2016 20:53:35 -0000
+Message-ID: <147829281588.2813.14265115326138498722@ono.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478268311.26953.17.camel@intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="EMAIL_79944745445_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 5.40.87.104.static.user.ono.com ([5.40.87.104]:46789 "HELO
+        ono.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+        id S1752056AbcKDUxm (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 4 Nov 2016 16:53:42 -0400
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > Let me try v4.9-rc2... that works ok (cpus at the high frequency
-> > during the kernel build). Unfortunately that sends my cpus to 99C
-> > temperature range (and eventually forces emergency shutdown).
->=20
-> This we have to debug. Do you see same line like=A0
-> "
-> /sys/devices/system/cpu/cpu0/cpufreq/bios_limit:1000000
-> "
-> If not we need
-> to find out why.
-
-I'd prefer mails over bugzilla for now...
-
-4.9-rc2 has bios_limit:
-
-pavel@duo:~$ cat /sys/devices/system/cpu/cpu0/cpufreq/bios_limit
-1833000
-
-and it has thermal zones:
-
-/sys/devices/virtual/thermal/thermal_zone0/trip_point_0_temp 127000
-/sys/devices/virtual/thermal/thermal_zone0/trip_point_0_type critical
-/sys/devices/virtual/thermal/thermal_zone1/trip_point_0_temp 97000
-/sys/devices/virtual/thermal/thermal_zone1/trip_point_0_type critical
-/sys/devices/virtual/thermal/thermal_zone1/trip_point_1_temp 92500
-/sys/devices/virtual/thermal/thermal_zone1/trip_point_1_type passive
-
-=2E.so it should slow down CPU at 92C.
-
-So lets push the temperature up a bit...
-
-sudo watch cat /proc/acpi/ibm/thermal
-/sys/devices/system/cpu/cpu0/cpufreq/bios_limit
-/sys/devices/virtual/thermal/thermal_zone1/temp  /sys/devices/system/cpu/cp=
-u0/cpufreq/cpuinfo_cur_freq
-
-temperatures:   98 49 -128 85 28 -128 28 -128 49 58 -128 -128 -128
--128 -128 -128
-1833000
-95000
-1833000
-
-Hmm. bios_limit does not seem to change, even when the temperature is
-clearly above the trip point. (It is also interestng that acpi/ibm
-reports bigger temperatures than
-/sys/devices/virtual/thermal/thermal_zone1/temp . I have seen 103C there.)
-
-
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlgc8zcACgkQMOfwapXb+vIiBACfR2NCMD3lw8jwCCIxZGIhKdRf
-22cAmwbcf1BggSaejszcLv1pFJTYaxLm
-=F4Fy
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
+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
