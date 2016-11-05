@@ -1,49 +1,48 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86/asus-nb-wmi.c: Add X45U quirk
-Date: Sat, 5 Nov 2016 11:24:04 -0700
-Message-ID: <20161105182404.GB100528@f23x64.localdomain>
-References: <1477965370-24892-1-git-send-email-marcos.souza.org@gmail.com>
+Subject: Re: [PATCH] acer-wmi: only supports AMW0_GUID1 on acer family
+Date: Sat, 5 Nov 2016 11:27:20 -0700
+Message-ID: <20161105182720.GC100528@f23x64.localdomain>
+References: <1477974658-12589-1-git-send-email-jlee@suse.com>
+ <CAE7LaDAmQjjToC8n6mLNM8dJf1Vm4QN7wu7-Hk8=dwRp2XyfsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477965370-24892-1-git-send-email-marcos.souza.org@gmail.com>
+In-Reply-To: <CAE7LaDAmQjjToC8n6mLNM8dJf1Vm4QN7wu7-Hk8=dwRp2XyfsA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Anthony Wong <ypwong@gmail.com>
+Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 31, 2016 at 11:56:10PM -0200, Marcos Paulo de Souza wrote:
-> Without this patch, the Asus X45U wireless card can't be turned
-> on (hard-blocked), but after a suspend/resume it just starts working.
+On Thu, Nov 03, 2016 at 11:40:15AM +0800, Anthony Wong wrote:
+> On 1 November 2016 at 12:30, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> >
+> > The AMW0_GUID1 wmi is not only found on Acer family but also other
+> > machines like Lenovo, Fujitsu and Medion. In the past days, acer-wmi
+> > driver handled those non-Acer machines by quirks list.
+> >
+> > But actually acer-wmi driver was loaded on any machines that have
+> > AMW0_GUID1. This behavior is strange because those machines should
+> > be supported by appropriate wmi drivers. e.g. fujitsu-laptop,
+> > ideapad-laptop.
+> >
+> > So, This patch adds the logic to check the machine that has AMW0_GUID1
+> > should be in Acer/Packard Bell/Gateway white list. But, it still keeps
+> > the quirk list of those supported non-acer machines for backward
+> > compatible.
+> >
+> > Tested-by: Bjørn Mork <bjorn@mork.no>
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 > 
-> Following this bug report[1], there are other cases like this one, but
-> this Asus is the only model that I can test.
+> Xiaomi Air 13.3 notebook suffers from the same issue, acer-wmi
+> basically has no use on this machine. With your patch, acer-wmi no
+> longer loads.
 > 
-> [1] https://ubuntuforums.org/showthread.php?t=2181558
-> 
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> Cc: <stable@vger.kernel.org>
-> 
-> ---
-> This patch applies smoothly in 4.8.6 and 4.4.29. I hope now I followed
-> the instructions correctly.
+> Tested-by: Anthony Wong <anthony@ypwong.org>
 
-Hi Marcos,
-
-You'll find exact steps in the stable_kernel_rules.txt document regarding how to
-annotate the commit message with Cc lines indicating to which versions this
-patch should be applied.
-
-If, for example, you have verified that this patch is relevant only to 4.4 and
-forward, you would include:
-
-Cc: <stable@vger.kernel.org> # 4.4.x-
-
-But this should mean that the patch is explicitly broken or otherwise
-inappropriate for 4.3 and earlier.
-
-Thanks,
+I've already pushed this to -next, but thank you for the confirmation.
 
 -- 
 Darren Hart
