@@ -1,68 +1,69 @@
-From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] thinkpad_acpi: Move tablet
- detection into separate function
-Date: Sat, 5 Nov 2016 12:30:22 -0700
-Message-ID: <20161105193022.GH100528@f23x64.localdomain>
-References: <201611010752.uqciUgvR%fengguang.wu@intel.com>
-	<1477958200-23883-1-git-send-email-lyude@redhat.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: v4.8-rc1: thinkpad x60: running at low frequency even during
+ kernel build
+Date: Sat, 5 Nov 2016 20:36:17 +0100
+Message-ID: <20161105193617.GA8705@amd>
+References: <20161104083849.GA32688@amd>
+ <20161104085830.GA4089@amd>
+ <1478268311.26953.17.camel@intel.com>
+ <20161104204439.GA2581@amd>
+ <1478293976.1268.15.camel@intel.com>
+ <20161105084248.GA664@amd>
+ <20161105174612.GA17290@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477958200-23883-1-git-send-email-lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ibm-acpi-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+In-Reply-To: <20161105174612.GA17290@khazad-dum.debian.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 31, 2016 at 07:56:40PM -0400, Lyude wrote:
-> Suggested by Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Lenovo's having a bit of fun randomly changing what hotkey events and
-> acpi handles they use for reporting tablet mode, so unfortunately this
-> means we're definitely going to need to probe for multiple types of
-> tablet mode support. Since the hotkey_init() is already a lot larger
-> then it should be, let's split up this detection into it's own function
-> to make things a little easier to read.
-> 
-> As well, since we're going to have multiple types of tablet modes, make
-> hotkey_tablet into an enum so we can also use it to indicate the type of
-> tablet mode reporting the machine supports.
-> 
-> Changes since v1:
-> - Don't use bool for in_tablet_mode (fixes complaints from kbuild test
->   robot)
-> 
 
-This series doesn't apply cleanly now (simple fuzz).
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Once we hear back from Henrique on his enum preference and thoughts on the
-refactoring (which looks reasonable to me), please resubmit this series and
-review Documentation/SubmittingPatches for the changelog (below ---) and please
-be consistent in your placement of "v2" in the subject [PATCH vX N/M] prefix.
+On Sat 2016-11-05 15:46:12, Henrique de Moraes Holschuh wrote:
+> On Sat, 05 Nov 2016, Pavel Machek wrote:
+> > Hmm, thanks for the pointer. But it seems like I'll have to build my
+> > own, as /proc/acpi/ibm does not follow the usual infrastructure...
+>=20
+> /proc/acpi/ibm has been deprecated for years.  99% of the functionality
+> is available through more modern, standard interfaces.
 
-Most all of my feedback here is minor, but there were enough little things that
-added up and I'd like to see this resubmitted as a series with those addressed
-that applies cleanly - largely to make sure I haven't missed context and somehow
-merged the wrong bits.
+Right, I see sensors can do it these days. Would it be good to expose
+them as /sys/class/thermal/thermal_zone*, too?
 
-Thanks Lyude,
+Is it known what various fields in /proc/acpi/ibm/thermal measure?
+Basically... 100C is okay for semiconductors, but I'd prefer not to
+kill the hard drive....
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+> thinkpad-acpi is supposed to export standard hwmon temperature sensors
+> as well.  Try them instead, please.
 
-------------------------------------------------------------------------------
-Developer Access Program for Intel Xeon Phi Processors
-Access to Intel Xeon Phi processor-based developer platforms.
-With one year of Intel Parallel Studio XE.
-Training and support from Colfax.
-Order your platform today. http://sdm.link/xeonphi
+Heh, I just finished python to work with /proc/acpi/ibm. Oh well.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgeNLEACgkQMOfwapXb+vJnGQCghSkRrVsBIZVF9WbVm33dDNOu
+BIYAoKGczciL22BmvI9XJARLJXaEnA0l
+=DkYd
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
