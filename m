@@ -1,63 +1,48 @@
-From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Subject: Re: [PATCH v2] platform/x86/asus-nb-wmi.c: Add X45U quirk
-Date: Sun, 6 Nov 2016 00:05:12 -0200
-Message-ID: <20161106020510.GA6228@xfiles>
-References: <1477965370-24892-1-git-send-email-marcos.souza.org@gmail.com>
- <20161105182404.GB100528@f23x64.localdomain>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH v2 1/3] thinkpad_acpi: Move tablet detection into
+ separate function
+Date: Sun, 6 Nov 2016 01:19:02 -0200
+Message-ID: <20161106031901.GH17290@khazad-dum.debian.net>
+References: <201611010752.uqciUgvR%fengguang.wu@intel.com>
+ <1477958200-23883-1-git-send-email-lyude@redhat.com>
+ <20161105193022.GH100528@f23x64.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161105182404.GB100528@f23x64.localdomain>
+In-Reply-To: <20161105193022.GH100528@f23x64.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Lyude <lyude@redhat.com>, ibm-acpi-devel@lists.freedesktop.org, Daniel Martin <consume.noise@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
-
-On Sat, Nov 05, 2016 at 11:24:04AM -0700, Darren Hart wrote:
-> On Mon, Oct 31, 2016 at 11:56:10PM -0200, Marcos Paulo de Souza wrote:
-> > Without this patch, the Asus X45U wireless card can't be turned
-> > on (hard-blocked), but after a suspend/resume it just starts working.
+On Sat, 05 Nov 2016, Darren Hart wrote:
+> On Mon, Oct 31, 2016 at 07:56:40PM -0400, Lyude wrote:
+> > Suggested by Daniel Martin <consume.noise@gmail.com>
 > > 
-> > Following this bug report[1], there are other cases like this one, but
-> > this Asus is the only model that I can test.
+> > Lenovo's having a bit of fun randomly changing what hotkey events and
+> > acpi handles they use for reporting tablet mode, so unfortunately this
+> > means we're definitely going to need to probe for multiple types of
+> > tablet mode support. Since the hotkey_init() is already a lot larger
+> > then it should be, let's split up this detection into it's own function
+> > to make things a little easier to read.
 > > 
-> > [1] https://ubuntuforums.org/showthread.php?t=2181558
+> > As well, since we're going to have multiple types of tablet modes, make
+> > hotkey_tablet into an enum so we can also use it to indicate the type of
+> > tablet mode reporting the machine supports.
 > > 
-> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > Cc: <stable@vger.kernel.org>
+> > Changes since v1:
+> > - Don't use bool for in_tablet_mode (fixes complaints from kbuild test
+> >   robot)
 > > 
-> > ---
-> > This patch applies smoothly in 4.8.6 and 4.4.29. I hope now I followed
-> > the instructions correctly.
 > 
-> Hi Marcos,
+> This series doesn't apply cleanly now (simple fuzz).
 > 
-> You'll find exact steps in the stable_kernel_rules.txt document regarding how to
-> annotate the commit message with Cc lines indicating to which versions this
-> patch should be applied.
-> 
-> If, for example, you have verified that this patch is relevant only to 4.4 and
-> forward, you would include:
-> 
-> Cc: <stable@vger.kernel.org> # 4.4.x-
-> 
-> But this should mean that the patch is explicitly broken or otherwise
-> inappropriate for 4.3 and earlier.
+> Once we hear back from Henrique on his enum preference and thoughts on the
+> refactoring (which looks reasonable to me), please resubmit this series and
 
-Yes, I have misread the documentation. I could apply the patch as is just in
-the versions 4.8.6 and 4.4.29, but maybe I could rework te patch earlier versions.
+I don't mind the enum usage, as long as it is correct.  As you said, the
+driver is not consistent there.  I also don't mind the refactoring.
 
-But, aside from stable tree, do you agree with this change, since it fixes the
-wireless problem in this laptop?
-
-Thanks,
-
-> 
-> Thanks,
-> 
-> -- 
-> Darren Hart
-> Intel Open Source Technology Center
+-- 
+  Henrique Holschuh
