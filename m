@@ -1,56 +1,63 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: v4.8-rc1: thinkpad x60: running at low frequency even during
- kernel build
-Date: Sat, 5 Nov 2016 21:31:26 +0100
-Message-ID: <20161105203126.GB3889@amd>
-References: <20161104083849.GA32688@amd>
- <20161104085830.GA4089@amd>
- <1478268311.26953.17.camel@intel.com>
- <20161104204439.GA2581@amd>
- <20161104221600.GA7007@amd>
- <1478301649.7947.3.camel@intel.com>
- <20161105133719.GA3933@amd>
- <1478354115.19557.17.camel@intel.com>
+From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Subject: Re: [PATCH v2] platform/x86/asus-nb-wmi.c: Add X45U quirk
+Date: Sun, 6 Nov 2016 00:05:12 -0200
+Message-ID: <20161106020510.GA6228@xfiles>
+References: <1477965370-24892-1-git-send-email-marcos.souza.org@gmail.com>
+ <20161105182404.GB100528@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478354115.19557.17.camel@intel.com>
+In-Reply-To: <20161105182404.GB100528@f23x64.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi Darren,
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Nov 05, 2016 at 11:24:04AM -0700, Darren Hart wrote:
+> On Mon, Oct 31, 2016 at 11:56:10PM -0200, Marcos Paulo de Souza wrote:
+> > Without this patch, the Asus X45U wireless card can't be turned
+> > on (hard-blocked), but after a suspend/resume it just starts working.
+> > 
+> > Following this bug report[1], there are other cases like this one, but
+> > this Asus is the only model that I can test.
+> > 
+> > [1] https://ubuntuforums.org/showthread.php?t=2181558
+> > 
+> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> > Cc: <stable@vger.kernel.org>
+> > 
+> > ---
+> > This patch applies smoothly in 4.8.6 and 4.4.29. I hope now I followed
+> > the instructions correctly.
+> 
+> Hi Marcos,
+> 
+> You'll find exact steps in the stable_kernel_rules.txt document regarding how to
+> annotate the commit message with Cc lines indicating to which versions this
+> patch should be applied.
+> 
+> If, for example, you have verified that this patch is relevant only to 4.4 and
+> forward, you would include:
+> 
+> Cc: <stable@vger.kernel.org> # 4.4.x-
+> 
+> But this should mean that the patch is explicitly broken or otherwise
+> inappropriate for 4.3 and earlier.
 
-Hi!
+Yes, I have misread the documentation. I could apply the patch as is just in
+the versions 4.8.6 and 4.4.29, but maybe I could rework te patch earlier versions.
 
-BTW.. This machine has nasty habit of hanging during kernel boot when
-it is "hot".. which makes reboots unplesant here. Ideas would be
-welcome how to debug that.
+But, aside from stable tree, do you agree with this change, since it fixes the
+wireless problem in this laptop?
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Thanks,
 
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlgeQZ4ACgkQMOfwapXb+vJz+ACfc9+7QqrLdVByM/QN+dSFoHjI
-G6UAnj8CtVHvR4HbWJShBJNARPLcN0D7
-=O1SE
------END PGP SIGNATURE-----
-
---xo44VMWPx7vlQ2+2--
+> 
+> Thanks,
+> 
+> -- 
+> Darren Hart
+> Intel Open Source Technology Center
