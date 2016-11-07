@@ -1,77 +1,143 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: v4.8-rc1: thinkpad x60: running at low frequency even during
- kernel build
-Date: Sun, 6 Nov 2016 01:45:01 -0200
-Message-ID: <20161106034501.GI17290@khazad-dum.debian.net>
-References: <20161104083849.GA32688@amd>
- <20161104085830.GA4089@amd>
- <1478268311.26953.17.camel@intel.com>
- <20161104204439.GA2581@amd>
- <1478293976.1268.15.camel@intel.com>
- <20161105084248.GA664@amd>
- <20161105174612.GA17290@khazad-dum.debian.net>
- <20161105193617.GA8705@amd>
+From: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/3] thinkpad_acpi: Move tablet
+	detection into separate function
+Date: Mon,  7 Nov 2016 12:10:30 -0500
+Message-ID: <1478538633-11450-1-git-send-email-lyude@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:60796 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751008AbcKFDpH (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Nov 2016 23:45:07 -0400
-Content-Disposition: inline
-In-Reply-To: <20161105193617.GA8705@amd>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 05 Nov 2016, Pavel Machek wrote:
-> On Sat 2016-11-05 15:46:12, Henrique de Moraes Holschuh wrote:
-> > On Sat, 05 Nov 2016, Pavel Machek wrote:
-> > > Hmm, thanks for the pointer. But it seems like I'll have to build my
-> > > own, as /proc/acpi/ibm does not follow the usual infrastructure...
-> > 
-> > /proc/acpi/ibm has been deprecated for years.  99% of the functionality
-> > is available through more modern, standard interfaces.
-> 
-> Right, I see sensors can do it these days. Would it be good to expose
-> them as /sys/class/thermal/thermal_zone*, too?
+The hotkey events and ACPI handles used for detecting tablet mode on a
+few of the newer thinkpad models (Yoga X1 and the Yoga 260 specifically)
+have been changed around, so unfortunately this means we're definitely
+going to need to probe for multiple types of tablet mode support. Since
+the hotkey_init() is already a lot larger than it should be, let's split
+up this detection into its own function to make things a little easier
+to read.
 
-I don't like the idea of touching vendor-screwup-land like thermal
-zones, especially when thinkpads *already* have thermal zones and they
-must come from the very same sensors...
+As well, since we're going to have multiple types of tablet modes, make
+hotkey_tablet into an enum so we can also use it to indicate the type of
+tablet mode reporting the machine supports.
 
-This would need a lot of careful studying and planning.
+Suggested by Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> Is it known what various fields in /proc/acpi/ibm/thermal measure?
+Signed-off-by: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes since v1:
+- Don't use bool for in_tablet_mode (fixes complaints from kbuild test
+  robot)
+Changes since v2:
+- Move changes out of git message
+- Fix commit message
+- Fix variable ordering
+- Remove explicit value assignment in hotkey_tablet enum
 
-It varies with each model.  You can map it out with better precision by
-using a cold spray while doing an "open-heart" surgery on the thinkpad.
-I kid you not, that's how they were mapped for some models.
+ drivers/platform/x86/thinkpad_acpi.c | 50 +++++++++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 12 deletions(-)
 
-Look for information about this in thinkwiki:
-http://www.thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_X60
-
-The battery-pack-related sensor that is stuck at 50°C is something the
-Lenovo Yamato labs guys wouldn't be clear about.  They told me to look
-at what the Windows drivers do, but that would require (1) Windows in
-the first place, and (2) clean room reverse engineering protocols.
-
-> Basically... 100C is okay for semiconductors, but I'd prefer not to
-> kill the hard drive....
-
-Well, that first sensor getting to 100°C is your CPU for sure.
-
-> > thinkpad-acpi is supposed to export standard hwmon temperature sensors
-> > as well.  Try them instead, please.
-> 
-> Heh, I just finished python to work with /proc/acpi/ibm. Oh well.
-
-Hey, I *did* properly document that driver, and the documentation is
-even mostly up-to-date...  Please refer to
-Documentation/laptops/thinkpad-acpi.txt in the kernel tree.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b65ce75..dfa1af8 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -302,7 +302,10 @@ static struct {
+ 	u32 hotkey:1;
+ 	u32 hotkey_mask:1;
+ 	u32 hotkey_wlsw:1;
+-	u32 hotkey_tablet:1;
++	enum {
++		TP_HOTKEY_TABLET_NONE = 0,
++		TP_HOTKEY_TABLET_USES_MHKG,
++	} hotkey_tablet;
+ 	u32 kbdlight:1;
+ 	u32 light:1;
+ 	u32 light_status:1;
+@@ -3117,6 +3120,34 @@ static const struct tpacpi_quirk tpacpi_hotkey_qtable[] __initconst = {
+ typedef u16 tpacpi_keymap_entry_t;
+ typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
+ 
++static int
++hotkey_init_tablet_mode(void)
++{
++	bool in_tablet_mode;
++	char *type;
++	int res;
++
++	/* For X41t, X60t, X61t Tablets... */
++	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
++		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_MHKG;
++		in_tablet_mode = !!(res & TP_HOTKEY_TABLET_MASK);
++		type = "MHKG";
++	}
++
++	if (!tp_features.hotkey_tablet)
++		return 0;
++
++	pr_info("Tablet mode switch found (type: %s), currently in %s mode\n",
++		type, in_tablet_mode ? "tablet" : "laptop");
++
++	res = add_to_attr_set(hotkey_dev_attributes,
++			      &dev_attr_hotkey_tablet_mode.attr);
++	if (res)
++		return -1;
++
++	return in_tablet_mode;
++}
++
+ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ {
+ 	/* Requirements for changing the default keymaps:
+@@ -3464,17 +3495,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		res = add_to_attr_set(hotkey_dev_attributes,
+ 				&dev_attr_hotkey_radio_sw.attr);
+ 
+-	/* For X41t, X60t, X61t Tablets... */
+-	if (!res && acpi_evalf(hkey_handle, &status, "MHKG", "qd")) {
+-		tp_features.hotkey_tablet = 1;
+-		tabletsw_state = !!(status & TP_HOTKEY_TABLET_MASK);
+-		pr_info("possible tablet mode switch found; "
+-			"ThinkPad in %s mode\n",
+-			(tabletsw_state) ? "tablet" : "laptop");
+-		res = add_to_attr_set(hotkey_dev_attributes,
+-				&dev_attr_hotkey_tablet_mode.attr);
+-	}
+-
+ 	if (!res)
+ 		res = register_attr_set_with_sysfs(
+ 				hotkey_dev_attributes,
+@@ -3482,6 +3502,12 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 	if (res)
+ 		goto err_exit;
+ 
++	res = hotkey_init_tablet_mode();
++	if (res < 0)
++		goto err_exit;
++
++	tabletsw_state = res;
++
+ 	/* Set up key map */
+ 	hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
+ 					GFP_KERNEL);
 -- 
-  Henrique Holschuh
+2.7.4
+
+
+------------------------------------------------------------------------------
+Developer Access Program for Intel Xeon Phi Processors
+Access to Intel Xeon Phi processor-based developer platforms.
+With one year of Intel Parallel Studio XE.
+Training and support from Colfax.
+Order your platform today. http://sdm.link/xeonphi
