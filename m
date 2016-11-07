@@ -1,66 +1,352 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86/asus-nb-wmi.c: Add X45U quirk
-Date: Mon, 7 Nov 2016 10:35:05 -0800
-Message-ID: <20161107183505.GA14565@f23x64.localdomain>
-References: <1477965370-24892-1-git-send-email-marcos.souza.org@gmail.com>
- <20161105182404.GB100528@f23x64.localdomain>
- <20161106020510.GA6228@xfiles>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161106020510.GA6228@xfiles>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
+Subject: [PATCH] platform: x86: Add Whiskey Cove PMIC TMU support
+Date: Mon,  7 Nov 2016 12:11:47 -0800
+Message-ID: <1478549507-157827-1-git-send-email-nilesh.bacchewar@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:52849 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752197AbcKGUKB (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 7 Nov 2016 15:10:01 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: lee.jones@linaro.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Sun, Nov 06, 2016 at 12:05:12AM -0200, Marcos Paulo de Souza wrote:
-> Hi Darren,
-> 
-> On Sat, Nov 05, 2016 at 11:24:04AM -0700, Darren Hart wrote:
-> > On Mon, Oct 31, 2016 at 11:56:10PM -0200, Marcos Paulo de Souza wrote:
-> > > Without this patch, the Asus X45U wireless card can't be turned
-> > > on (hard-blocked), but after a suspend/resume it just starts working.
-> > > 
-> > > Following this bug report[1], there are other cases like this one, but
-> > > this Asus is the only model that I can test.
-> > > 
-> > > [1] https://ubuntuforums.org/showthread.php?t=2181558
-> > > 
-> > > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > > Cc: <stable@vger.kernel.org>
-> > > 
-> > > ---
-> > > This patch applies smoothly in 4.8.6 and 4.4.29. I hope now I followed
-> > > the instructions correctly.
-> > 
-> > Hi Marcos,
-> > 
-> > You'll find exact steps in the stable_kernel_rules.txt document regarding how to
-> > annotate the commit message with Cc lines indicating to which versions this
-> > patch should be applied.
-> > 
-> > If, for example, you have verified that this patch is relevant only to 4.4 and
-> > forward, you would include:
-> > 
-> > Cc: <stable@vger.kernel.org> # 4.4.x-
-> > 
-> > But this should mean that the patch is explicitly broken or otherwise
-> > inappropriate for 4.3 and earlier.
-> 
-> Yes, I have misread the documentation. I could apply the patch as is just in
-> the versions 4.8.6 and 4.4.29, but maybe I could rework te patch earlier versions.
-> 
-> But, aside from stable tree, do you agree with this change, since it fixes the
-> wireless problem in this laptop?
+This adds TMU (Time Management Unit) support for Intel BXT platform.
+It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
+PMIC.
 
-Yes, no objection to the patch. It happened to land right about the time we were
-having the "be better about how you manage your stable commits" discussion at
-kernel summit, so it got some extra focus :-)
+Signed-off-by: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/mfd/intel_soc_pmic_bxtwc.c     |  38 ++++++++
+ drivers/platform/x86/Kconfig           |   8 ++
+ drivers/platform/x86/Makefile          |   1 +
+ drivers/platform/x86/intel_bxtwc_tmu.c | 162 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/intel_soc_pmic.h     |   1 +
+ 5 files changed, 210 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_bxtwc_tmu.c
 
-Care to resend with the Cc stable tag corrected?
-
+diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+index 43e54b7..92aba02 100644
+--- a/drivers/mfd/intel_soc_pmic_bxtwc.c
++++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+@@ -42,6 +42,7 @@
+ #define BXTWC_GPIOIRQ0		0x4E0B
+ #define BXTWC_GPIOIRQ1		0x4E0C
+ #define BXTWC_CRITIRQ		0x4E0D
++#define BXTWC_TMUIRQ		0x4FB6
+ 
+ /* Interrupt MASK Registers */
+ #define BXTWC_MIRQLVL1		0x4E0E
+@@ -59,6 +60,7 @@
+ #define BXTWC_MGPIO0IRQ		0x4E19
+ #define BXTWC_MGPIO1IRQ		0x4E1A
+ #define BXTWC_MCRITIRQ		0x4E1B
++#define BXTWC_MTMUIRQ		0x4FB7
+ 
+ /* Whiskey Cove PMIC share same ACPI ID between different platforms */
+ #define BROXTON_PMIC_WC_HRV	4
+@@ -91,6 +93,7 @@ enum bxtwc_irqs_level2 {
+ 	BXTWC_GPIO0_IRQ,
+ 	BXTWC_GPIO1_IRQ,
+ 	BXTWC_CRIT_IRQ,
++	BXTWC_TMU_IRQ,
+ };
+ 
+ static const struct regmap_irq bxtwc_regmap_irqs[] = {
+@@ -118,6 +121,10 @@ enum bxtwc_irqs_level2 {
+ 	REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 9, 0x03),
+ };
+ 
++static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
++	REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
++};
++
+ static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
+ 	.name = "bxtwc_irq_chip",
+ 	.status_base = BXTWC_IRQLVL1,
+@@ -136,6 +143,15 @@ enum bxtwc_irqs_level2 {
+ 	.num_regs = 10,
+ };
+ 
++static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
++	.name = "bxtwc_irq_chip_tmu",
++	.status_base = BXTWC_TMUIRQ,
++	.mask_base = BXTWC_MTMUIRQ,
++	.irqs = bxtwc_regmap_irqs_tmu,
++	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
++	.num_regs = 1,
++};
++
+ static struct resource gpio_resources[] = {
+ 	DEFINE_RES_IRQ_NAMED(BXTWC_GPIO0_IRQ, "GPIO0"),
+ 	DEFINE_RES_IRQ_NAMED(BXTWC_GPIO1_IRQ, "GPIO1"),
+@@ -164,6 +180,10 @@ enum bxtwc_irqs_level2 {
+ 	DEFINE_RES_IRQ_NAMED(BXTWC_BCU_IRQ, "BCU"),
+ };
+ 
++static struct resource tmu_resources[] = {
++	DEFINE_RES_IRQ_NAMED(BXTWC_TMU_IRQ, "TMU"),
++};
++
+ static struct mfd_cell bxt_wc_dev[] = {
+ 	{
+ 		.name = "bxt_wcove_gpadc",
+@@ -191,6 +211,12 @@ enum bxtwc_irqs_level2 {
+ 		.resources = bcu_resources,
+ 	},
+ 	{
++		.name = "bxt_wcove_tmu",
++		.num_resources = ARRAY_SIZE(tmu_resources),
++		.resources = tmu_resources,
++	},
++
++	{
+ 		.name = "bxt_wcove_gpio",
+ 		.num_resources = ARRAY_SIZE(gpio_resources),
+ 		.resources = gpio_resources,
+@@ -400,6 +426,15 @@ static int bxtwc_probe(struct platform_device *pdev)
+ 		goto err_irq_chip_level2;
+ 	}
+ 
++	ret = regmap_add_irq_chip(pmic->regmap, pmic->irq,
++				  IRQF_ONESHOT | IRQF_SHARED,
++				  0, &bxtwc_regmap_irq_chip_tmu,
++				  &pmic->irq_chip_data_tmu);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to add TMU IRQ chip\n");
++		goto err_irq_chip_tmu;
++	}
++
+ 	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, bxt_wc_dev,
+ 			      ARRAY_SIZE(bxt_wc_dev), NULL, 0,
+ 			      NULL);
+@@ -429,6 +464,8 @@ static int bxtwc_probe(struct platform_device *pdev)
+ err_sysfs:
+ 	mfd_remove_devices(&pdev->dev);
+ err_mfd:
++	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
++err_irq_chip_tmu:
+ 	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
+ err_irq_chip_level2:
+ 	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+@@ -444,6 +481,7 @@ static int bxtwc_remove(struct platform_device *pdev)
+ 	mfd_remove_devices(&pdev->dev);
+ 	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+ 	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
++	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b8a21d7..2dbe464 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1027,4 +1027,12 @@ config INTEL_TELEMETRY
+ 	  used to get various SoC events and parameters
+ 	  directly via debugfs files. Various tools may use
+ 	  this interface for SoC state monitoring.
++
++config INTEL_BXTWC_PMIC_TMU
++	tristate "Intel BXT Whiskey Cove TMU Driver"
++	depends on INTEL_SOC_PMIC && INTEL_PMC_IPC && REGMAP
++	---help---
++	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
++	  This driver enables the alarm wakeup functionality in the TMU unit
++	  of Whiskey Cove PMIC.
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2efa86d..0bd6609 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -67,6 +67,7 @@ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+ obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
+ obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
++obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)  += intel_bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel_bxtwc_tmu.c
+new file mode 100644
+index 0000000..e202abd
+--- /dev/null
++++ b/drivers/platform/x86/intel_bxtwc_tmu.c
+@@ -0,0 +1,162 @@
++/*
++ * intel_bxtwc_tmu.c - Intel BXT Whiskey Cove PMIC TMU driver
++ *
++ * Copyright (C) 2016 Intel Corporation. All rights reserved.
++ *
++ * This driver adds TMU (Time Management Unit) support for Intel BXT platform.
++ * It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
++ * PMIC.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version
++ * 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/intel_soc_pmic.h>
++
++#define BXTWC_TMUIRQ		0x4fb6
++#define BXTWC_MIRQLVL1		0x4e0e
++#define BXTWC_MTMUIRQ_REG	0x4fb7
++#define BXTWC_MIRQLVL1_MTMU	BIT(1)
++#define BXTWC_TMU_WK_ALRM	BIT(1)
++#define BXTWC_TMU_SYS_ALRM	BIT(2)
++#define BXTWC_TMU_ALRM_MASK	(BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
++#define BXTWC_TMU_ALRM_IRQ	(BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
++
++struct wcove_tmu {
++	int irq;
++	struct device *dev;
++	struct regmap *regmap;
++};
++
++static irqreturn_t bxt_wcove_tmu_irq_handler(int irq, void *data)
++{
++	struct wcove_tmu *wctmu = data;
++	unsigned int tmu_irq;
++
++	/* Read TMU interrupt reg */
++	regmap_read(wctmu->regmap, BXTWC_TMUIRQ, &tmu_irq);
++	if (tmu_irq & BXTWC_TMU_ALRM_IRQ) {
++		/* clear TMU irq */
++		regmap_write(wctmu->regmap, BXTWC_TMUIRQ, tmu_irq);
++		return IRQ_HANDLED;
++	}
++	return IRQ_NONE;
++}
++
++static int bxt_wcove_tmu_probe(struct platform_device *pdev)
++{
++	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
++	struct regmap_irq_chip_data *regmap_irq_chip;
++	struct wcove_tmu *wctmu;
++	int ret, virq, irq;
++
++	wctmu = devm_kzalloc(&pdev->dev, sizeof(*wctmu), GFP_KERNEL);
++	if (!wctmu)
++		return -ENOMEM;
++
++	wctmu->dev = &pdev->dev;
++	wctmu->regmap = pmic->regmap;
++
++	irq = platform_get_irq(pdev, 0);
++
++	if (irq < 0) {
++		dev_err(&pdev->dev, "invalid irq %d\n", irq);
++		return irq;
++	}
++
++	regmap_irq_chip = pmic->irq_chip_data_tmu;
++	virq = regmap_irq_get_virq(regmap_irq_chip, irq);
++	if (virq < 0) {
++		dev_err(&pdev->dev,
++			"failed to get virtual interrupt=%d\n", irq);
++		return virq;
++	}
++
++	ret = devm_request_threaded_irq(&pdev->dev, virq,
++					NULL, bxt_wcove_tmu_irq_handler,
++					IRQF_ONESHOT, "bxt_wcove_tmu", wctmu);
++	if (ret) {
++		dev_err(&pdev->dev, "request irq failed: %d,virq: %d\n",
++							ret, virq);
++		return ret;
++	}
++	wctmu->irq = virq;
++
++	/* Enable TMU interrupts */
++	regmap_update_bits(wctmu->regmap, BXTWC_MIRQLVL1,
++				  BXTWC_MIRQLVL1_MTMU, 0);
++
++	/* Unmask TMU second level Wake & System alarm */
++	regmap_update_bits(wctmu->regmap, BXTWC_MTMUIRQ_REG,
++				  BXTWC_TMU_ALRM_MASK, 0);
++
++	platform_set_drvdata(pdev, wctmu);
++	return 0;
++}
++
++static int bxt_wcove_tmu_remove(struct platform_device *pdev)
++{
++	struct wcove_tmu *wctmu = platform_get_drvdata(pdev);
++	unsigned int val;
++
++	/* Mask TMU interrupts */
++	regmap_read(wctmu->regmap, BXTWC_MIRQLVL1, &val);
++	regmap_write(wctmu->regmap, BXTWC_MIRQLVL1,
++			val | BXTWC_MIRQLVL1_MTMU);
++	regmap_read(wctmu->regmap, BXTWC_MTMUIRQ_REG, &val);
++	regmap_write(wctmu->regmap, BXTWC_MTMUIRQ_REG,
++			val | BXTWC_TMU_ALRM_MASK);
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int bxtwc_tmu_suspend(struct device *dev)
++{
++	struct wcove_tmu *wctmu = dev_get_drvdata(dev);
++
++	enable_irq_wake(wctmu->irq);
++	return 0;
++}
++
++static int bxtwc_tmu_resume(struct device *dev)
++{
++	struct wcove_tmu *wctmu = dev_get_drvdata(dev);
++
++	disable_irq_wake(wctmu->irq);
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(bxtwc_tmu_pm_ops, bxtwc_tmu_suspend, bxtwc_tmu_resume);
++
++static const struct platform_device_id bxt_wcove_tmu_id_table[] = {
++	{ .name = "bxt_wcove_tmu" },
++	{},
++};
++MODULE_DEVICE_TABLE(platform, bxt_wcove_tmu_id_table);
++
++static struct platform_driver bxt_wcove_tmu_driver = {
++	.probe = bxt_wcove_tmu_probe,
++	.remove = bxt_wcove_tmu_remove,
++	.driver = {
++		.name = "bxt_wcove_tmu",
++		.pm     = &bxtwc_tmu_pm_ops,
++	},
++	.id_table = bxt_wcove_tmu_id_table,
++};
++
++module_platform_driver(bxt_wcove_tmu_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Nilesh Bacchewar <nilesh.bacchewar@intel.com>");
++MODULE_DESCRIPTION("BXT Whiskey Cove TMU Driver");
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index cf619db..956caa0 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -26,6 +26,7 @@ struct intel_soc_pmic {
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *irq_chip_data;
+ 	struct regmap_irq_chip_data *irq_chip_data_level2;
++	struct regmap_irq_chip_data *irq_chip_data_tmu;
+ 	struct device *dev;
+ };
+ 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+1.9.1
