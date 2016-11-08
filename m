@@ -1,45 +1,50 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v3 1/1] platform/x86: move module mlx-platform from
- arch/x86 to drivers/platform/x86
-Date: Tue, 8 Nov 2016 06:19:24 +0000
-Message-ID: <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
- <alpine.DEB.2.20.1610310930430.5481@nanos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.20.1610310930430.5481@nanos>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
+Date: Tue,  8 Nov 2016 16:13:23 +0800
+Message-ID: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:47899 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752958AbcKHINd (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 8 Nov 2016 03:13:33 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+Cc: hui.wang@canonical.com
 
-Hi,
+Recently we met an issue on lots of Lenovo thinkpad laptops (those
+laptops are not released to market yet), the issue is that the
+thinkpad_acpi.ko can't be automatically loaded as before.
 
-Could this patch be merged to for-next for 4.10?
-When it's merged I'd like to submit another small patch on top of it.
+Through debugging, we found the HKEY_HID is LEN0268 instead of
+LEN0068 on those machines, and the MHKV is 0x200 instead of
+0x100. So adding the new ID into the driver.
 
-Thanks,
-Vadim.
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> -----Original Message-----
-> From: Thomas Gleixner [mailto:tglx@linutronix.de]
-> Sent: Monday, October 31, 2016 5:31 PM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: dvhart@infradead.org; platform-driver-x86@vger.kernel.org;
-> x86@kernel.org; linux-kernel@vger.kernel.org; jiri@resnulli.us;
-> andriy.shevchenko@linux.intel.com
-> Subject: Re: [patch v3 1/1] platform/x86: move module mlx-platform from
-> arch/x86 to drivers/platform/x86
->=20
-> On Mon, 31 Oct 2016, Vadim Pasternak wrote:
->=20
-> > Since mlx-platform is not an architectural driver, it is moved out of
-> > arch/x86/platform to drivers/platform/x86.
-> > Relevant Makefile and Kconfig are updated.
-> >
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
->=20
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b65ce75..dbd2e27 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -128,6 +128,7 @@ enum {
+ /* ACPI HIDs */
+ #define TPACPI_ACPI_IBM_HKEY_HID	"IBM0068"
+ #define TPACPI_ACPI_LENOVO_HKEY_HID	"LEN0068"
++#define TPACPI_ACPI_LENOVO_HKEY_V2_HID	"LEN0268"
+ #define TPACPI_ACPI_EC_HID		"PNP0C09"
+ 
+ /* Input IDs */
+@@ -4143,6 +4144,7 @@ static int hotkey_write(char *buf)
+ static const struct acpi_device_id ibm_htk_device_ids[] = {
+ 	{TPACPI_ACPI_IBM_HKEY_HID, 0},
+ 	{TPACPI_ACPI_LENOVO_HKEY_HID, 0},
++	{TPACPI_ACPI_LENOVO_HKEY_V2_HID, 0},
+ 	{"", 0},
+ };
+ 
+-- 
+1.9.1
