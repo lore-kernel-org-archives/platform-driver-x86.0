@@ -1,50 +1,62 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 1/4] leds: core: Add support for poll()ing the sysfs
- brightness attr for changes.
-Date: Tue, 8 Nov 2016 14:16:27 +0100
-Message-ID: <b703c452-4b9d-639d-24e7-490812a1e9f6@redhat.com>
-References: <CGME20161101133800eucas1p19df1b7f85ad751fcf98e60277b207296@eucas1p1.samsung.com>
- <20161101133748.7168-1-hdegoede@redhat.com>
- <5021470c-705b-6920-708e-dd5fca13951f@samsung.com>
- <d6b88f5d-8458-9361-4800-d99c03bf72c0@redhat.com>
- <0c67637a-af0d-4974-eed6-efb186e91635@samsung.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
+Date: Tue, 8 Nov 2016 11:43:52 -0200
+Message-ID: <20161108134352.GG8609@khazad-dum.debian.net>
+References: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <0c67637a-af0d-4974-eed6-efb186e91635@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40291 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751944AbcKHNn5 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 8 Nov 2016 08:43:57 -0500
+Content-Disposition: inline
+In-Reply-To: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hui Wang <hui.wang@canonical.com>
+Cc: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-Hi,
+On Tue, 08 Nov 2016, Hui Wang wrote:
 
-On 08-11-16 14:08, Jacek Anaszewski wrote:
-> On 11/08/2016 01:31 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 08-11-16 12:52, Jacek Anaszewski wrote:
->>> Hi Hans,
->>>
->>> I've tested it with userspace test application and it seems to work
->>> well both with hardware leds-aat1290 driver and drivers/leds/uleds.c.
->>>
->>> Applied to the for-next branch of linux-leds.git.
->>
->> Great, thank you. Can you also add a stable branch / tag with this
->> commit which the platform/x86 maintainer can merge into his tree,
->> so that he can merge the platform/x86 driver changes which depend
->> up on the new led_notify_brightness_change() function ?
->
-> Sure. I've created stable led_brightness_pollpri branch on
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+> laptops are not released to market yet), the issue is that the
+> thinkpad_acpi.ko can't be automatically loaded as before.
+> 
+> Through debugging, we found the HKEY_HID is LEN0268 instead of
+> LEN0068 on those machines, and the MHKV is 0x200 instead of
+> 0x100. So adding the new ID into the driver.
 
-Thank you.
+This usually means Lenovo expects to have different windows drivers.
+Does thinkpad-acpi work properly on these new thinkpads?
 
-Darren, can you merge this tag and patches 2-4 of this series please ?
+If it does, you have my
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-Regards,
+> Signed-off-by: Hui Wang <hui.wang@canonical.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index b65ce75..dbd2e27 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -128,6 +128,7 @@ enum {
+>  /* ACPI HIDs */
+>  #define TPACPI_ACPI_IBM_HKEY_HID	"IBM0068"
+>  #define TPACPI_ACPI_LENOVO_HKEY_HID	"LEN0068"
+> +#define TPACPI_ACPI_LENOVO_HKEY_V2_HID	"LEN0268"
+>  #define TPACPI_ACPI_EC_HID		"PNP0C09"
+>  
+>  /* Input IDs */
+> @@ -4143,6 +4144,7 @@ static int hotkey_write(char *buf)
+>  static const struct acpi_device_id ibm_htk_device_ids[] = {
+>  	{TPACPI_ACPI_IBM_HKEY_HID, 0},
+>  	{TPACPI_ACPI_LENOVO_HKEY_HID, 0},
+> +	{TPACPI_ACPI_LENOVO_HKEY_V2_HID, 0},
+>  	{"", 0},
+>  };
 
-Hans
+-- 
+  Henrique Holschuh
