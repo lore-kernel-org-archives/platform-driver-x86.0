@@ -1,50 +1,38 @@
-From: Hui Wang <hui.wang@canonical.com>
-Subject: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
-Date: Tue,  8 Nov 2016 16:13:23 +0800
-Message-ID: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH v3 1/3] thinkpad_acpi: Move tablet detection into
+ separate function
+Date: Tue, 8 Nov 2016 08:50:05 -0200
+Message-ID: <20161108105004.GA8609@khazad-dum.debian.net>
+References: <1478538633-11450-1-git-send-email-lyude@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:47899 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752958AbcKHINd (ORCPT
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:49568 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S932306AbcKHKuK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Nov 2016 03:13:33 -0500
+        Tue, 8 Nov 2016 05:50:10 -0500
+Content-Disposition: inline
+In-Reply-To: <1478538633-11450-1-git-send-email-lyude@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
-Cc: hui.wang@canonical.com
+To: Lyude <lyude@redhat.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, Daniel Martin <consume.noise@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Recently we met an issue on lots of Lenovo thinkpad laptops (those
-laptops are not released to market yet), the issue is that the
-thinkpad_acpi.ko can't be automatically loaded as before.
+On Mon, 07 Nov 2016, Lyude wrote:
+> @@ -3117,6 +3120,34 @@ static const struct tpacpi_quirk tpacpi_hotkey_qtable[] __initconst = {
+>  typedef u16 tpacpi_keymap_entry_t;
+>  typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
+>  
+> +static int
+> +hotkey_init_tablet_mode(void)
+> +{
 
-Through debugging, we found the HKEY_HID is LEN0268 instead of
-LEN0068 on those machines, and the MHKV is 0x200 instead of
-0x100. So adding the new ID into the driver.
+Function definiton all in one line, please.
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+Provided that you fix that minor nit,
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index b65ce75..dbd2e27 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -128,6 +128,7 @@ enum {
- /* ACPI HIDs */
- #define TPACPI_ACPI_IBM_HKEY_HID	"IBM0068"
- #define TPACPI_ACPI_LENOVO_HKEY_HID	"LEN0068"
-+#define TPACPI_ACPI_LENOVO_HKEY_V2_HID	"LEN0268"
- #define TPACPI_ACPI_EC_HID		"PNP0C09"
- 
- /* Input IDs */
-@@ -4143,6 +4144,7 @@ static int hotkey_write(char *buf)
- static const struct acpi_device_id ibm_htk_device_ids[] = {
- 	{TPACPI_ACPI_IBM_HKEY_HID, 0},
- 	{TPACPI_ACPI_LENOVO_HKEY_HID, 0},
-+	{TPACPI_ACPI_LENOVO_HKEY_V2_HID, 0},
- 	{"", 0},
- };
- 
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
 -- 
-1.9.1
+  Henrique Holschuh
