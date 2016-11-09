@@ -1,76 +1,65 @@
-From: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] thinkpad_acpi: Move tablet
-	detection into separate function
-Date: Wed, 9 Nov 2016 12:10:20 +0100
-Message-ID: <CADscph3VdmG4UQF+6=2jDR3DtStR+f=zsaOURSXH_U4RMp0ntQ@mail.gmail.com>
-References: <1478538633-11450-1-git-send-email-lyude@redhat.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: thinkpad x60, T40p: overheat with v4.9-rc4 (was Re: v4.8-rc1:
+ thinkpad x60: running at low frequency even during kernel build)
+Date: Wed, 9 Nov 2016 12:34:06 +0100
+Message-ID: <20161109113406.GA1793@amd>
+References: <20161104083849.GA32688@amd>
+ <20161104085830.GA4089@amd>
+ <1478268311.26953.17.camel@intel.com>
+ <20161104204439.GA2581@amd>
+ <20161104221600.GA7007@amd>
+ <1478301649.7947.3.camel@intel.com>
+ <20161105133719.GA3933@amd>
+ <1478354115.19557.17.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1478538633-11450-1-git-send-email-lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:46830 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932345AbcKILeL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 9 Nov 2016 06:34:11 -0500
+Content-Disposition: inline
+In-Reply-To: <1478354115.19557.17.camel@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, regressions@leemhuis.info
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 
-Sorry, I didn't had the time to look at the patches earlier.
 
-Now, I did and was wondering why hotkey_tablet_mode doesn't show up in
-sysfs anymore ...
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7 November 2016 at 18:10, Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> @@ -3464,17 +3495,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->                 res = add_to_attr_set(hotkey_dev_attributes,
->                                 &dev_attr_hotkey_radio_sw.attr);
->
-> -       /* For X41t, X60t, X61t Tablets... */
-> -       if (!res && acpi_evalf(hkey_handle, &status, "MHKG", "qd")) {
-> -               tp_features.hotkey_tablet = 1;
-> -               tabletsw_state = !!(status & TP_HOTKEY_TABLET_MASK);
-> -               pr_info("possible tablet mode switch found; "
-> -                       "ThinkPad in %s mode\n",
-> -                       (tabletsw_state) ? "tablet" : "laptop");
-> -               res = add_to_attr_set(hotkey_dev_attributes,
-> -                               &dev_attr_hotkey_tablet_mode.attr);
-> -       }
-> -
->         if (!res)
->                 res = register_attr_set_with_sysfs(
->                                 hotkey_dev_attributes,
-> @@ -3482,6 +3502,12 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->         if (res)
->                 goto err_exit;
->
-> +       res = hotkey_init_tablet_mode();
-> +       if (res < 0)
-> +               goto err_exit;
-> +
-> +       tabletsw_state = res;
-> +
->         /* Set up key map */
->         hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
->                                         GFP_KERNEL);
-> --
-> 2.7.4
->
+Hi!
 
-This block has to be before register_attr_set_with_sysfs().
+Thanks to Srinivas, bug tracking moved to bugzilla at
+https://bugzilla.kernel.org/show_bug.cgi?id=3D187311 , it is regression
+=66rom v4.8-final.
 
-With that fixed and a small patch (will be sent soon) on top it works
-on my Yoga 260, so:
-Tested-by: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Easiest way to observe it is that cpufreq/bios_limit does not change
+in v4.9, where it goes lower with high temperature on v4.8.
 
-------------------------------------------------------------------------------
-Developer Access Program for Intel Xeon Phi Processors
-Access to Intel Xeon Phi processor-based developer platforms.
-With one year of Intel Parallel Studio XE.
-Training and support from Colfax.
-Order your platform today. http://sdm.link/xeonphi
+Best regards,
+
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgjCa4ACgkQMOfwapXb+vIdIACgmnJ0ZP8yhI4oAi7H8GW1RejX
+U7MAn2FyMjVJH2KQiwRqTKvmu4UmuAOx
+=EZsJ
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
