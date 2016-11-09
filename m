@@ -1,65 +1,76 @@
-From: Hui Wang <hui.wang@canonical.com>
-Subject: Re: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
-Date: Wed, 9 Nov 2016 08:34:59 +0800
-Message-ID: <85ae5e74-ecb0-f851-8f5c-8a7859426347@canonical.com>
-References: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
- <20161108134352.GG8609@khazad-dum.debian.net>
+From: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] thinkpad_acpi: Move tablet
+	detection into separate function
+Date: Wed, 9 Nov 2016 12:10:20 +0100
+Message-ID: <CADscph3VdmG4UQF+6=2jDR3DtStR+f=zsaOURSXH_U4RMp0ntQ@mail.gmail.com>
+References: <1478538633-11450-1-git-send-email-lyude@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:57152 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751099AbcKIAfL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Nov 2016 19:35:11 -0500
-In-Reply-To: <20161108134352.GG8609@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1478538633-11450-1-git-send-email-lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 11/08/2016 09:43 PM, Henrique de Moraes Holschuh wrote:
-> On Tue, 08 Nov 2016, Hui Wang wrote:
->
->> laptops are not released to market yet), the issue is that the
->> thinkpad_acpi.ko can't be automatically loaded as before.
->>
->> Through debugging, we found the HKEY_HID is LEN0268 instead of
->> LEN0068 on those machines, and the MHKV is 0x200 instead of
->> 0x100. So adding the new ID into the driver.
-> This usually means Lenovo expects to have different windows drivers.
-> Does thinkpad-acpi work properly on these new thinkpads?
+Sorry, I didn't had the time to look at the patches earlier.
 
-Yes, It works well as before.  And thanks for your review.
+Now, I did and was wondering why hotkey_tablet_mode doesn't show up in
+sysfs anymore ...
 
-Cheers,
-Hui.
+On 7 November 2016 at 18:10, Lyude <lyude-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> @@ -3464,17 +3495,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>                 res = add_to_attr_set(hotkey_dev_attributes,
+>                                 &dev_attr_hotkey_radio_sw.attr);
 >
-> If it does, you have my
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> -       /* For X41t, X60t, X61t Tablets... */
+> -       if (!res && acpi_evalf(hkey_handle, &status, "MHKG", "qd")) {
+> -               tp_features.hotkey_tablet = 1;
+> -               tabletsw_state = !!(status & TP_HOTKEY_TABLET_MASK);
+> -               pr_info("possible tablet mode switch found; "
+> -                       "ThinkPad in %s mode\n",
+> -                       (tabletsw_state) ? "tablet" : "laptop");
+> -               res = add_to_attr_set(hotkey_dev_attributes,
+> -                               &dev_attr_hotkey_tablet_mode.attr);
+> -       }
+> -
+>         if (!res)
+>                 res = register_attr_set_with_sysfs(
+>                                 hotkey_dev_attributes,
+> @@ -3482,6 +3502,12 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>         if (res)
+>                 goto err_exit;
 >
->> Signed-off-by: Hui Wang <hui.wang@canonical.com>
->> ---
->>   drivers/platform/x86/thinkpad_acpi.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index b65ce75..dbd2e27 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -128,6 +128,7 @@ enum {
->>   /* ACPI HIDs */
->>   #define TPACPI_ACPI_IBM_HKEY_HID	"IBM0068"
->>   #define TPACPI_ACPI_LENOVO_HKEY_HID	"LEN0068"
->> +#define TPACPI_ACPI_LENOVO_HKEY_V2_HID	"LEN0268"
->>   #define TPACPI_ACPI_EC_HID		"PNP0C09"
->>   
->>   /* Input IDs */
->> @@ -4143,6 +4144,7 @@ static int hotkey_write(char *buf)
->>   static const struct acpi_device_id ibm_htk_device_ids[] = {
->>   	{TPACPI_ACPI_IBM_HKEY_HID, 0},
->>   	{TPACPI_ACPI_LENOVO_HKEY_HID, 0},
->> +	{TPACPI_ACPI_LENOVO_HKEY_V2_HID, 0},
->>   	{"", 0},
->>   };
+> +       res = hotkey_init_tablet_mode();
+> +       if (res < 0)
+> +               goto err_exit;
+> +
+> +       tabletsw_state = res;
+> +
+>         /* Set up key map */
+>         hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
+>                                         GFP_KERNEL);
+> --
+> 2.7.4
+>
+
+This block has to be before register_attr_set_with_sysfs().
+
+With that fixed and a small patch (will be sent soon) on top it works
+on my Yoga 260, so:
+Tested-by: Daniel Martin <consume.noise-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+------------------------------------------------------------------------------
+Developer Access Program for Intel Xeon Phi Processors
+Access to Intel Xeon Phi processor-based developer platforms.
+With one year of Intel Parallel Studio XE.
+Training and support from Colfax.
+Order your platform today. http://sdm.link/xeonphi
