@@ -1,125 +1,70 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v10 6/6] mfd: lpc_ich: Add support for Intel Apollo Lake
- GPIO pinctrl in non-ACPI system
-Date: Thu, 10 Nov 2016 18:19:22 +0200
-Message-ID: <1478794762.5295.134.camel@linux.intel.com>
-References: <1478768430-13422-1-git-send-email-jui.nee.tan@intel.com>
-         <1478768430-13422-7-git-send-email-jui.nee.tan@intel.com>
+From: <mbalhoff@fulbright.com>
+Subject: 28859 platform-driver-x86
+Date: Fri, 11 Nov 2016 10:25:00 -0000
+Message-ID: <147885990001.10923.10306062152785470700@hinet.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478768430-13422-7-git-send-email-jui.nee.tan@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tan Jui Nee <jui.nee.tan@intel.com>, mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com, tglx@linutronix.de, dvhart@infradead.org, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, ptyser@xes-inc.com, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan.yong@intel.com, ong.hock.yu@intel.com, tony.luck@intel.com, wan.ahmad.zainie.wan.mohamad@intel.com, yunying.sun@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="MESSAGE_16919169441987_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 36-235-136-171.dynamic-ip.hinet.net ([36.235.136.171]:36753
+        "HELO hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1755461AbcKKKZH (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 11 Nov 2016 05:25:07 -0500
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, 2016-11-10 at 17:00 +0800, Tan Jui Nee wrote:
-> This driver uses the P2SB hide/unhide mechanism cooperatively
-> to pass the PCI BAR address to the gpio platform driver.
-
-@@ -161,6 +161,10 @@ obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+=
-> intel_quark_i2c_gpio.o
->  obj-$(CONFIG_LPC_SCH)
-> 		+= lpc_sch.o
-
-
->  lpc_ich-objs		:= lpc_ich_core.o
->  obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
-> +lpc_ich-objs		:= lpc_ich_core.o
-
-Once I pointed out on this.
-
-> @@ -0,0 +1,120 @@
-> +/*
-> + * Intel Apollo Lake In-Vehicle Infotainment (IVI) systems used in
-> cars support
-> + *
-> + * Copyright (C) 2016 Intel Corporation
-> + *
-> + * Author: Tan, Jui Nee <jui.nee.tan@intel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <asm/p2sb.h>
-> +#include <linux/pci.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/lpc_ich.h>
-> +#include <linux/pinctrl/pinctrl.h>
-
-Perhaps some order like
-
-#include <linux/mfd/core.h>
-#include <linux/mfd/lpc_ich.h>
-#include <linux/pci.h>
-#include <linux/pinctrl/pinctrl.h>
-
-#include <asm/p2sb.h>
-
-> +
-> +#include "lpc_ich_apl.h"
-
-
-> +int lpc_ich_add_gpio(struct pci_dev *dev, enum lpc_chipsets chipset)
-> +{
-
-> +	unsigned int i;
-> +	int ret;
-> +	struct resource base;
-
-Reversed tree, please:
-
-	struct resource base;
-	unsigned int i;
-	int ret;
-
-> +
-> +	if (chipset != LPC_APL)
-> +		return -ENODEV;
-> +	/*
-> +	 * Apollo lake, has not 1, but 4 gpio controllers,
-> +	 * handle it a bit differently.
-> +	 */
-> +
-> +	ret = p2sb_bar(dev, PCI_DEVFN(PCI_IDSEL_P2SB, 0), &base);
-> +	if (ret)
-> +		goto warn_continue;
-> +
-> +	for (i = 0; i < APL_GPIO_COMMUNITY_MAX; i++) {
-> +		struct resource *res = &apl_gpio_io_res[i];
-> +
-> +		/* Fill MEM resource */
-> +		res->start += base.start;
-> +		res->end += base.start;
-> +		res->flags = base.flags;
-> +
-> +		res++;
-> +	}
-> +
-> +	ret = mfd_add_devices(&dev->dev, 0,
-> +		apl_gpio_devices, ARRAY_SIZE(apl_gpio_devices),
-> +			NULL, 0, NULL);
-> +
-> 
-
-> +	if (ret)
-> +warn_continue:
-
-Better if you put label before if for sake of readability. I pointed
-once to this.
-
-> +		dev_warn(&dev->dev,
-> +			"Failed to add Apollo Lake GPIO: %d\n",
-> +				ret);
-> +
-> +	return ret;
-> +}
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+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
+BAAAAABQSwUGAAAAAAEAAQBYAAAACAsAAAAA
