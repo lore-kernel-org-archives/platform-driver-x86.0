@@ -1,70 +1,96 @@
-From: <mbalhoff@fulbright.com>
-Subject: 28859 platform-driver-x86
-Date: Fri, 11 Nov 2016 10:25:00 -0000
-Message-ID: <147885990001.10923.10306062152785470700@hinet.net>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v4 2/4] platform: x86: thinkpad: Call led_notify_brightness_change on kbd brightness change
+Date: Fri, 11 Nov 2016 15:12:34 +0100
+Message-ID: <201611111512.36115@pali>
+References: <20161101133748.7168-1-hdegoede@redhat.com> <20161101133748.7168-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="MESSAGE_16919169441987_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 36-235-136-171.dynamic-ip.hinet.net ([36.235.136.171]:36753
-        "HELO hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S1755461AbcKKKZH (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Nov 2016 05:25:07 -0500
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart2149669.FC9QfI743l";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20161101133748.7168-2-hdegoede@redhat.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
-BAAAAABQSwUGAAAAAAEAAQBYAAAACAsAAAAA
+--nextPart2149669.FC9QfI743l
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tuesday 01 November 2016 14:37:46 Hans de Goede wrote:
+> Make thinkpad_acpi call led_notify_brightness_change on the kbd_led
+> led_classdev registered by thinkpad_acpi when the kbd backlight
+> brightness changes.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v3:
+> -This is a new patch in v3 of this patch-set
+> Changes in v4:
+> -No Changes
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c index b65ce75..5dcd7d8b
+> 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -162,6 +162,7 @@ enum tpacpi_hkey_event_t {
+>  	TP_HKEY_EV_HOTKEY_BASE		=3D 0x1001, /* first hotkey (FN+F1) */
+>  	TP_HKEY_EV_BRGHT_UP		=3D 0x1010, /* Brightness up */
+>  	TP_HKEY_EV_BRGHT_DOWN		=3D 0x1011, /* Brightness down */
+> +	TP_HKEY_EV_THINKLIGHT		=3D 0x1012, /* Thinklight/kbd backlight */
+
+My question remains. Is this for Thinklight or keyboard backlight?=20
+Because Thinklinght has led device "tpacpi_led_thinklight" and keyboard=20
+backlight has led device "tpacpi_led_kbdlight".
+
+>  	TP_HKEY_EV_VOL_UP		=3D 0x1015, /* Volume up or unmute */
+>  	TP_HKEY_EV_VOL_DOWN		=3D 0x1016, /* Volume down or unmute */
+>  	TP_HKEY_EV_VOL_MUTE		=3D 0x1017, /* Mixer output mute */
+> @@ -5167,6 +5168,8 @@ static int __init kbdlight_init(struct
+> ibm_init_struct *iibm) return rc;
+>  	}
+>=20
+> +	tpacpi_hotkey_driver_mask_set(hotkey_driver_mask |
+> +				      TP_ACPI_HKEY_THNKLGHT_MASK);
+>  	return 0;
+>  }
+>=20
+> @@ -9114,6 +9117,8 @@ static void tpacpi_driver_event(const unsigned
+> int hkey_event) volume_alsa_notify_change();
+>  		}
+>  	}
+> +	if (tp_features.kbdlight && hkey_event =3D=3D TP_HKEY_EV_THINKLIGHT)
+> +		led_notify_brightness_change(&tpacpi_led_kbdlight.led_classdev);
+
+This looks incorrect. You are trying to inform tpacpi_led_kbdlight when=20
+tpacpi_led_thinklight change led status?
+
+>  }
+>=20
+>  static void hotkey_driver_event(const unsigned int scancode)
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2149669.FC9QfI743l
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlgl0dQACgkQi/DJPQPkQ1IgKwCgyHasa0OZw0OgCDzwXFGyE2t4
+gYQAniYL0Av17HJQDuOSUUxIi4Y2iukm
+=gDNf
+-----END PGP SIGNATURE-----
+
+--nextPart2149669.FC9QfI743l--
