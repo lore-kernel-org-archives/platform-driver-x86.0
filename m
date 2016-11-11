@@ -1,133 +1,118 @@
 From: Lyude <lyude@redhat.com>
-Subject: [PATCH v5 2/2] thinkpad_acpi: Add support for X1 Yoga (2016) Tablet Mode
-Date: Fri, 11 Nov 2016 15:15:03 -0500
-Message-ID: <1478895304-31627-2-git-send-email-lyude@redhat.com>
-References: <1478895304-31627-1-git-send-email-lyude@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478895304-31627-1-git-send-email-lyude@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 1/2] thinkpad_acpi: Move tablet detection into separate function
+Date: Fri, 11 Nov 2016 15:15:02 -0500
+Message-ID: <1478895304-31627-1-git-send-email-lyude@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:52526 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1756014AbcKKUPM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 11 Nov 2016 15:15:12 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Daniel Martin <consume.noise@gmail.com>
-Cc: Lyude <lyude@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Darren Hart <dvhart@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Lyude <lyude@redhat.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-For whatever reason, the X1 Yoga doesn't support the normal method of
-querying for tablet mode. Instead of providing the MHKG method under the
-hotkey handle, we're instead given the CMMD method under the EC handle.
-Values on this handle are either 0x1, laptop mode, or 0x6, tablet mode.
+The hotkey events and ACPI handles used for detecting tablet mode on a
+few of the newer thinkpad models (Yoga X1 and the Yoga 260 specifically)
+have been changed around, so unfortunately this means we're definitely
+going to need to probe for multiple types of tablet mode support. Since
+the hotkey_init() is already a lot larger than it should be, let's split
+up this detection into its own function to make things a little easier
+to read.
 
-Tested-by: Daniel Martin <consume.noise@gmail.com>
+As well, since we're going to have multiple types of tablet modes, make
+hotkey_tablet into an enum so we can also use it to indicate the type of
+tablet mode reporting the machine supports.
+
+Suggested by Daniel Martin <consume.noise@gmail.com>
 Signed-off-by: Lyude <lyude@redhat.com>
+Cc: Daniel Martin <consume.noise@gmail.com>
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 ---
-Changes since v4:
- - Get rid of patch #2
- - Add BIOS model
- - Update documentation
+Changes since v3:
+ - Fix style nitpick
 
- Documentation/laptops/thinkpad-acpi.txt |  1 +
- drivers/platform/x86/thinkpad_acpi.c    | 39 +++++++++++++++++++++++++++++----
- 2 files changed, 36 insertions(+), 4 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 52 +++++++++++++++++++++++++-----------
+ 1 file changed, 37 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 72a150d..ba2e7d2 100644
---- a/Documentation/laptops/thinkpad-acpi.txt
-+++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -540,6 +540,7 @@ Events that are propagated by the driver to userspace:
- 0x6022		ALARM: a sensor is extremely hot
- 0x6030		System thermal table changed
- 0x6040		Nvidia Optimus/AC adapter related (TO BE VERIFIED)
-+0x60C0		X1 Yoga 2016, Tablet mode status changed
- 
- Battery nearly empty alarms are a last resort attempt to get the
- operating system to hibernate or shutdown cleanly (0x2313), or shutdown
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index de4e734..700b8c8 100644
+index b65ce75..de4e734 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -190,6 +190,9 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
- 	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
- 	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
-+	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
-+						   * enter/leave tablet mode
-+						   */
- 	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
- 	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
- 	TP_HKEY_EV_BRGHT_CHANGED	= 0x5010, /* backlight control event */
-@@ -305,6 +308,8 @@ static struct {
- 	enum {
- 		TP_HOTKEY_TABLET_NONE = 0,
- 		TP_HOTKEY_TABLET_USES_MHKG,
-+		/* X1 Yoga 2016, seen on BIOS N1FET44W */
-+		TP_HOTKEY_TABLET_USES_CMMD,
- 	} hotkey_tablet;
+@@ -302,7 +302,10 @@ static struct {
+ 	u32 hotkey:1;
+ 	u32 hotkey_mask:1;
+ 	u32 hotkey_wlsw:1;
+-	u32 hotkey_tablet:1;
++	enum {
++		TP_HOTKEY_TABLET_NONE = 0,
++		TP_HOTKEY_TABLET_USES_MHKG,
++	} hotkey_tablet;
  	u32 kbdlight:1;
  	u32 light:1;
-@@ -2062,6 +2067,8 @@ static void hotkey_poll_setup(const bool may_warn);
+ 	u32 light_status:1;
+@@ -3117,6 +3120,32 @@ static const struct tpacpi_quirk tpacpi_hotkey_qtable[] __initconst = {
+ typedef u16 tpacpi_keymap_entry_t;
+ typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
  
- /* HKEY.MHKG() return bits */
- #define TP_HOTKEY_TABLET_MASK (1 << 3)
-+/* ThinkPad X1 Yoga (2016) */
-+#define TP_EC_CMMD_TABLET_MODE 0x6
- 
- static int hotkey_get_wlsw(void)
- {
-@@ -2086,10 +2093,23 @@ static int hotkey_get_tablet_mode(int *status)
- {
- 	int s;
- 
--	if (!acpi_evalf(hkey_handle, &s, "MHKG", "d"))
--		return -EIO;
-+	switch (tp_features.hotkey_tablet) {
-+	case TP_HOTKEY_TABLET_USES_MHKG:
-+		if (!acpi_evalf(hkey_handle, &s, "MHKG", "d"))
-+			return -EIO;
++static int hotkey_init_tablet_mode(void)
++{
++	int in_tablet_mode, res;
++	char *type;
 +
-+		*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
-+		break;
-+	case TP_HOTKEY_TABLET_USES_CMMD:
-+		if (!acpi_evalf(ec_handle, &s, "CMMD", "d"))
-+			return -EIO;
-+
-+		*status = (s == TP_EC_CMMD_TABLET_MODE);
-+		break;
-+	default:
-+		break;
++	/* For X41t, X60t, X61t Tablets... */
++	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
++		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_MHKG;
++		in_tablet_mode = !!(res & TP_HOTKEY_TABLET_MASK);
++		type = "MHKG";
 +	}
- 
--	*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
- 	return 0;
- }
- 
-@@ -3125,11 +3145,16 @@ static int hotkey_init_tablet_mode(void)
- 	int in_tablet_mode, res;
- 	char *type;
++
++	if (!tp_features.hotkey_tablet)
++		return 0;
++
++	pr_info("Tablet mode switch found (type: %s), currently in %s mode\n",
++		type, in_tablet_mode ? "tablet" : "laptop");
++
++	res = add_to_attr_set(hotkey_dev_attributes,
++			      &dev_attr_hotkey_tablet_mode.attr);
++	if (res)
++		return -1;
++
++	return in_tablet_mode;
++}
++
+ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ {
+ 	/* Requirements for changing the default keymaps:
+@@ -3464,21 +3493,14 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		res = add_to_attr_set(hotkey_dev_attributes,
+ 				&dev_attr_hotkey_radio_sw.attr);
  
 -	/* For X41t, X60t, X61t Tablets... */
- 	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
-+		/* For X41t, X60t, X61t Tablets... */
- 		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_MHKG;
- 		in_tablet_mode = !!(res & TP_HOTKEY_TABLET_MASK);
- 		type = "MHKG";
-+	} else if (acpi_evalf(ec_handle, &res, "CMMD", "qd")) {
-+		/* For X1 Yoga (2016) */
-+		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_CMMD;
-+		in_tablet_mode = res == TP_EC_CMMD_TABLET_MODE;
-+		type = "CMMD";
- 	}
+-	if (!res && acpi_evalf(hkey_handle, &status, "MHKG", "qd")) {
+-		tp_features.hotkey_tablet = 1;
+-		tabletsw_state = !!(status & TP_HOTKEY_TABLET_MASK);
+-		pr_info("possible tablet mode switch found; "
+-			"ThinkPad in %s mode\n",
+-			(tabletsw_state) ? "tablet" : "laptop");
+-		res = add_to_attr_set(hotkey_dev_attributes,
+-				&dev_attr_hotkey_tablet_mode.attr);
+-	}
++	res = hotkey_init_tablet_mode();
++	if (res < 0)
++		goto err_exit;
  
- 	if (!tp_features.hotkey_tablet)
-@@ -3921,6 +3946,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 		*ignore_acpi_ev = true;
- 		return true;
- 
-+	case TP_HKEY_EV_TABLET_CHANGED:
-+		tpacpi_input_send_tabletsw();
-+		hotkey_tablet_mode_notify_change();
-+		*send_acpi_ev = false;
-+		break;
+-	if (!res)
+-		res = register_attr_set_with_sysfs(
+-				hotkey_dev_attributes,
+-				&tpacpi_pdev->dev.kobj);
++	tabletsw_state = res;
 +
- 	default:
- 		pr_warn("unknown possible thermal alarm or keyboard event received\n");
- 		known = false;
++	res = register_attr_set_with_sysfs(hotkey_dev_attributes,
++					   &tpacpi_pdev->dev.kobj);
+ 	if (res)
+ 		goto err_exit;
+ 
 -- 
 2.7.4
