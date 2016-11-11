@@ -1,157 +1,78 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v4 2/4] platform: x86: thinkpad: Call led_notify_brightness_change on kbd brightness change
-Date: Fri, 11 Nov 2016 15:46:22 +0100
-Message-ID: <201611111546.23658@pali>
-References: <20161101133748.7168-1-hdegoede@redhat.com> <201611111512.36115@pali> <f90bd318-9f3f-62e4-be49-e03cae4eac14@redhat.com>
+From: Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] platform: x86: thinkpad: Call
+ led_notify_brightness_change on kbd brightness change
+Date: Fri, 11 Nov 2016 11:40:51 -0700
+Message-ID: <20161111184051.xemayi634xqhkp4c@kevinolos>
+References: <20161101133748.7168-1-hdegoede@redhat.com>
+	<20161101133748.7168-2-hdegoede@redhat.com>
+	<201611111512.36115@pali>
+	<f90bd318-9f3f-62e4-be49-e03cae4eac14@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2074731.8L6CvcCThU";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <f90bd318-9f3f-62e4-be49-e03cae4eac14@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f90bd318-9f3f-62e4-be49-e03cae4eac14-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart2074731.8L6CvcCThU
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2016-11-11 at 15:33 +0100, Hans de Goede wrote:
+> On 11-11-16 15:12, Pali Roh=E1r wrote:
+>> My question remains. Is this for Thinklight or keyboard backlight?
+>> Because Thinklinght has led device "tpacpi_led_thinklight" and keyboard
+>> backlight has led device "tpacpi_led_kbdlight".
+> =
 
-On Friday 11 November 2016 15:33:48 Hans de Goede wrote:
-> Hi,
->=20
-> On 11-11-16 15:12, Pali Roh=C3=A1r wrote:
-> > On Tuesday 01 November 2016 14:37:46 Hans de Goede wrote:
-> >> Make thinkpad_acpi call led_notify_brightness_change on the
-> >> kbd_led led_classdev registered by thinkpad_acpi when the kbd
-> >> backlight brightness changes.
-> >>=20
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >> Changes in v3:
-> >> -This is a new patch in v3 of this patch-set
-> >> Changes in v4:
-> >> -No Changes
-> >> ---
-> >>=20
-> >>  drivers/platform/x86/thinkpad_acpi.c | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>=20
-> >> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> >> b/drivers/platform/x86/thinkpad_acpi.c index b65ce75..5dcd7d8b
-> >> 100644
-> >> --- a/drivers/platform/x86/thinkpad_acpi.c
-> >> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> >> @@ -162,6 +162,7 @@ enum tpacpi_hkey_event_t {
-> >>=20
-> >>  	TP_HKEY_EV_HOTKEY_BASE		=3D 0x1001, /* first hotkey (FN+F1) */
-> >>  	TP_HKEY_EV_BRGHT_UP		=3D 0x1010, /* Brightness up */
-> >>  	TP_HKEY_EV_BRGHT_DOWN		=3D 0x1011, /* Brightness down */
-> >>=20
-> >> +	TP_HKEY_EV_THINKLIGHT		=3D 0x1012, /* Thinklight/kbd backlight=20
-*/
-> >=20
-> > My question remains. Is this for Thinklight or keyboard backlight?
-> > Because Thinklinght has led device "tpacpi_led_thinklight" and
-> > keyboard backlight has led device "tpacpi_led_kbdlight".
->=20
 > I would say both, this matches with the pre-existing
 > TP_ACPI_HKEY_THNKLGHT_MASK (they have a 1:1 mapping),
 > keep in mind that there are no thinkpads with both
-> a thinklight and a backlit keyboard
-
-That is not truth. X230 is in variant with both Thinklight (light above=20
-display) and keyboard backlight. Plus in BIOS it is possible to=20
-configure if you want to enable only Thinkligh, only keyboard backlight=20
-or both. Probably T430 and other 30s models can be found with both. But=20
-I do not own those modules...
-
-> as those both
+> a thinklight and a backlit keyboard, as those both
 > serve the same purpose so it looks like the re-used
 > the scancode.
 
-So I could guess that it reports event when one of those leds are=20
-changed...
+That's not entirely correct.  The ThinkPad T430 has both a ThinkLight
+and a keyboard backlight.  Pressing Fn-Space toggles between 4 states:
 
-> I've tried this code on both a W541 and a P50 and both
-> emit TP_ACPI_HOTKEYSCAN_FNPAGEUP for the backlight
-> keyboard hotkey (fn + space), I'm naming the event for
-> this TP_HKEY_EV_THINKLIGHT for consistency with the
-> existing TP_ACPI_HKEY_THNKLGHT_MASK which corresponds
-> to TP_ACPI_HOTKEYSCAN_FNPAGEUP.
->=20
-> >>  	TP_HKEY_EV_VOL_UP		=3D 0x1015, /* Volume up or unmute */
-> >>  	TP_HKEY_EV_VOL_DOWN		=3D 0x1016, /* Volume down or unmute */
-> >>  	TP_HKEY_EV_VOL_MUTE		=3D 0x1017, /* Mixer output mute */
-> >>=20
-> >> @@ -5167,6 +5168,8 @@ static int __init kbdlight_init(struct
-> >> ibm_init_struct *iibm) return rc;
-> >>=20
-> >>  	}
-> >>=20
-> >> +	tpacpi_hotkey_driver_mask_set(hotkey_driver_mask |
-> >> +				      TP_ACPI_HKEY_THNKLGHT_MASK);
-> >>=20
-> >>  	return 0;
-> >> =20
-> >>  }
-> >>=20
-> >> @@ -9114,6 +9117,8 @@ static void tpacpi_driver_event(const
-> >> unsigned int hkey_event) volume_alsa_notify_change();
-> >>=20
-> >>  		}
-> >>  =09
-> >>  	}
-> >>=20
-> >> +	if (tp_features.kbdlight && hkey_event =3D=3D TP_HKEY_EV_THINKLIGHT)
-> >> +=09
-> >> led_notify_brightness_change(&tpacpi_led_kbdlight.led_classdev)
-> >> ;
-> >=20
-> > This looks incorrect. You are trying to inform tpacpi_led_kbdlight
-> > when tpacpi_led_thinklight change led status?
->=20
-> No as said the scancode / event is shared, notice the check for
-> tp_features.kbdlight, so the notify will only happen on laptops which
-> actually have a backlit keyboard.
+Both Off -> Backlight Low -> Backlight High -> ThinkLight On (BL Off)
 
-If that event is send when either Thinklight or keyb-backlight is=20
-changed, should not we inform both led devices about level change? Do=20
-you have a chance to test it on notebook with Thinklight?
+I tested out your patch and observed the following behavior (printing
+brightness initially and on POLLPRI):
 
-And funny question is what would happen on those machines which have=20
-both Thinklight and keyboard backlight?
+# Initial state with both lights off.
+tpacpi::kbd_backlight/brightness: 0
+tpacpi::thinklight/brightness: 0
+# Press Fn-Space.  KBD Backlight comes on low.
+tpacpi::kbd_backlight/brightness: 1
+# Press Fn-Space.  KBD Backlight brightens to high.
+tpacpi::kbd_backlight/brightness: 2
+# Press Fn-Space.  KBD Backlight turns off.  ThinkLight turns on.
+tpacpi::kbd_backlight/brightness: 0
+# Press Fn-Space.  ThinkLight turns off.
+tpacpi::kbd_backlight/brightness: 0
 
-Anyway, I would suggest different name, not TP_HKEY_EV_THINKLIGHT as it=20
-is not thinklight-only and could be misleading in keyboard backlight=20
-context...
+It works, but the behavior is not quite what I would hope for.  There
+are no poll events for tpacpi::thinklight/brightness and when the
+ThinkLight turns off it triggers an unnecessary
+tpacpi::kbd_backlight/brightness poll event.
 
-> Regards,
->=20
-> Hans
->=20
-> >>  }
-> >> =20
-> >>  static void hotkey_driver_event(const unsigned int scancode)
+If there is anything else I can do to assist, let me know.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Thanks for working on this,
+Kevin
 
---nextPart2074731.8L6CvcCThU
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlgl2b8ACgkQi/DJPQPkQ1K77ACfaq+M+mR6BxoCVdpVlPdq1HQQ
-ZTsAn3Db7/nfNKGf/CYJscj0udszVvSE
-=5SJe
------END PGP SIGNATURE-----
-
---nextPart2074731.8L6CvcCThU--
+---------------------------------------------------------------------------=
+---
+Developer Access Program for Intel Xeon Phi Processors
+Access to Intel Xeon Phi processor-based developer platforms.
+With one year of Intel Parallel Studio XE.
+Training and support from Colfax.
+Order your platform today. http://sdm.link/xeonphi
