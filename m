@@ -1,42 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [patch v3 1/1] platform/x86: move module mlx-platform from
- arch/x86 to drivers/platform/x86
-Date: Mon, 14 Nov 2016 09:16:38 +0200
-Message-ID: <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
-References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
- <alpine.DEB.2.20.1610310930430.5481@nanos> <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Subject: Re: [PATCH v3] platform/x86/asus-nb-wmi.c: Add X45U quirk
+Date: Mon, 14 Nov 2016 07:32:34 -0200
+Message-ID: <20161114093232.GA24343@xfiles>
+References: <1478563352-2524-1-git-send-email-marcos.souza.org@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1478563352-2524-1-git-send-email-marcos.souza.org@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: dvhart@infradead.org
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 8, 2016 at 8:19 AM, Vadim Pasternak <vadimp@mellanox.com> wrote:
-> Hi,
->
-> Could this patch be merged to for-next for 4.10?
-> When it's merged I'd like to submit another small patch on top of it.
+ping?
 
-First of all, please avoid top posting.
-I will process the pdx86 mailing list and queue this week.
-
-P.S. Are you sure that is the right fix "Remove "select MLX_PLATFORM"
-from Kconfig, since it has unmet direct dependencies (X86 &&
-X86_PLATFORM_DEVICES && X86_64)"?
-
->> On Mon, 31 Oct 2016, Vadim Pasternak wrote:
->>
->> > Since mlx-platform is not an architectural driver, it is moved out of
->> > arch/x86/platform to drivers/platform/x86.
->> > Relevant Makefile and Kconfig are updated.
->> >
->> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
->>
->> Acked-by: Thomas Gleixner <tglx@linutronix.de>
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Nov 07, 2016 at 10:02:32PM -0200, Marcos Paulo de Souza wrote:
+> Without this patch, the Asus X45U wireless card can't be turned
+> on (hard-blocked), but after a suspend/resume it just starts working.
+> 
+> Following this bug report[1], there are other cases like this one, but
+> this Asus is the only model that I can test.
+> 
+> [1] https://ubuntuforums.org/showthread.php?t=2181558
+> 
+> Cc: stable@vger.kernel.org # 4.4.x-
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> 
+> ---
+> v2 -> v3:
+>  Add stable version in the CC line of stable email address
+> v1 -> v2:
+>  Add stable copy and specify the stable version to apply this patch
+> 
+>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 26e4cbc..6032b70 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -175,6 +175,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  	},
+>  	{
+>  		.callback = dmi_matched,
+> +		.ident = "ASUSTeK COMPUTER INC. X45U",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "X45U"),
+> +		},
+> +		.driver_data = &quirk_asus_wapf4,
+> +	},
+> +	{
+> +		.callback = dmi_matched,
+>  		.ident = "ASUSTeK COMPUTER INC. X456UA",
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -- 
+> 2.7.4
