@@ -1,60 +1,55 @@
-From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Subject: Re: [PATCH v3] platform/x86/asus-nb-wmi.c: Add X45U quirk
-Date: Mon, 14 Nov 2016 07:32:34 -0200
-Message-ID: <20161114093232.GA24343@xfiles>
-References: <1478563352-2524-1-git-send-email-marcos.souza.org@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v3 1/1] platform/x86: move module mlx-platform from
+ arch/x86 to drivers/platform/x86
+Date: Mon, 14 Nov 2016 08:10:09 +0000
+Message-ID: <AM5PR0501MB2097E5612D9DED255FAEBFBCA2BC0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
+ <alpine.DEB.2.20.1610310930430.5481@nanos>
+ <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+ <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478563352-2524-1-git-send-email-marcos.souza.org@gmail.com>
+In-Reply-To: <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-ping?
-
-On Mon, Nov 07, 2016 at 10:02:32PM -0200, Marcos Paulo de Souza wrote:
-> Without this patch, the Asus X45U wireless card can't be turned
-> on (hard-blocked), but after a suspend/resume it just starts working.
-> 
-> Following this bug report[1], there are other cases like this one, but
-> this Asus is the only model that I can test.
-> 
-> [1] https://ubuntuforums.org/showthread.php?t=2181558
-> 
-> Cc: stable@vger.kernel.org # 4.4.x-
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> 
-> ---
-> v2 -> v3:
->  Add stable version in the CC line of stable email address
-> v1 -> v2:
->  Add stable copy and specify the stable version to apply this patch
-> 
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 26e4cbc..6032b70 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -175,6 +175,15 @@ static const struct dmi_system_id asus_quirks[] = {
->  	},
->  	{
->  		.callback = dmi_matched,
-> +		.ident = "ASUSTeK COMPUTER INC. X45U",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "X45U"),
-> +		},
-> +		.driver_data = &quirk_asus_wapf4,
-> +	},
-> +	{
-> +		.callback = dmi_matched,
->  		.ident = "ASUSTeK COMPUTER INC. X456UA",
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> -- 
-> 2.7.4
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
+IFttYWlsdG86YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBOb3Zl
+bWJlciAxNCwgMjAxNiA5OjE3IEFNDQo+IFRvOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxs
+YW5veC5jb20+DQo+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT47IGR2
+aGFydEBpbmZyYWRlYWQub3JnOyBwbGF0Zm9ybS0NCj4gZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5v
+cmc7IHg4NkBrZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBqaXJp
+QHJlc251bGxpLnVzOyBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20NCj4gU3ViamVj
+dDogUmU6IFtwYXRjaCB2MyAxLzFdIHBsYXRmb3JtL3g4NjogbW92ZSBtb2R1bGUgbWx4LXBsYXRm
+b3JtIGZyb20NCj4gYXJjaC94ODYgdG8gZHJpdmVycy9wbGF0Zm9ybS94ODYNCj4gDQo+IE9uIFR1
+ZSwgTm92IDgsIDIwMTYgYXQgODoxOSBBTSwgVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFu
+b3guY29tPg0KPiB3cm90ZToNCj4gPiBIaSwNCj4gPg0KPiA+IENvdWxkIHRoaXMgcGF0Y2ggYmUg
+bWVyZ2VkIHRvIGZvci1uZXh0IGZvciA0LjEwPw0KPiA+IFdoZW4gaXQncyBtZXJnZWQgSSdkIGxp
+a2UgdG8gc3VibWl0IGFub3RoZXIgc21hbGwgcGF0Y2ggb24gdG9wIG9mIGl0Lg0KPiANCg0KSGkg
+QW5keSwNClRoYW5rcyBmb3IgcmVwbHkuDQoNCj4gRmlyc3Qgb2YgYWxsLCBwbGVhc2UgYXZvaWQg
+dG9wIHBvc3RpbmcuDQoNClNvcnJ5IGZvciB0aGF0Lg0KSSBwb3N0ZWQgb24gdG9wLCBiZWNhdXNl
+IGl0IGRvZXNuJ3QgY29tZSBhcyByZXBseSB0byBzb21ldGhpbmcgKGJ1dCBpdCBzZWVtcyBJIHNo
+b3VsZCBwb3N0IGF0IGJvdHRvbSBpbiBzdWMgY2FzZSkuDQoNCj4gSSB3aWxsIHByb2Nlc3MgdGhl
+IHBkeDg2IG1haWxpbmcgbGlzdCBhbmQgcXVldWUgdGhpcyB3ZWVrLg0KPiANCj4gUC5TLiBBcmUg
+eW91IHN1cmUgdGhhdCBpcyB0aGUgcmlnaHQgZml4ICJSZW1vdmUgInNlbGVjdCBNTFhfUExBVEZP
+Uk0iDQo+IGZyb20gS2NvbmZpZywgc2luY2UgaXQgaGFzIHVubWV0IGRpcmVjdCBkZXBlbmRlbmNp
+ZXMgKFg4NiAmJg0KPiBYODZfUExBVEZPUk1fREVWSUNFUyAmJiBYODZfNjQpIj8NCg0KVGhlcmUg
+d2VyZSB0d28gcG9zc2liaWxpdHk6IHRvIGxlYXZlICJzZWxlY3QgTUxYX1BMQVRGT1JNIiBhbmQg
+YWRkICIgZGVwZW5kcyBvbiBYODZfNjQiLiBPciBqdXN0IHJlbW92ZSBzZWxlY3QuDQpJIGRlY2lk
+ZSB0byByZW1vdmUsIGhhdmluZyBpbiBtaW5kIHRoZSBuZXh0IGNvbnNpZGVyYXRpb25zOg0KSWYg
+TUxYX1BMQVRGT1JNIGlzIG5vdCBzZWxlY3RlZCBoZXJlIC0ganVzdCBub2JvZHkgd2lsbCBhY3Rp
+dmF0ZSBob3RwbHVnIGRyaXZlcjsNCklmIGluIHRoZSBmZWF0dXJlIG9uIHNvbWUgc3lzdGVtcyB3
+ZSdsbCBoYXZlIEFDUEkgc3VwcG9ydCAtIGhvdHBsdWcgc3RpbGwgaXMgcmVsZXZhbnQuIA0KDQo+
+IA0KPiA+PiBPbiBNb24sIDMxIE9jdCAyMDE2LCBWYWRpbSBQYXN0ZXJuYWsgd3JvdGU6DQo+ID4+
+DQo+ID4+ID4gU2luY2UgbWx4LXBsYXRmb3JtIGlzIG5vdCBhbiBhcmNoaXRlY3R1cmFsIGRyaXZl
+ciwgaXQgaXMgbW92ZWQgb3V0DQo+ID4+ID4gb2YgYXJjaC94ODYvcGxhdGZvcm0gdG8gZHJpdmVy
+cy9wbGF0Zm9ybS94ODYuDQo+ID4+ID4gUmVsZXZhbnQgTWFrZWZpbGUgYW5kIEtjb25maWcgYXJl
+IHVwZGF0ZWQuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsg
+PHZhZGltcEBtZWxsYW5veC5jb20+DQo+ID4+DQo+ID4+IEFja2VkLWJ5OiBUaG9tYXMgR2xlaXhu
+ZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0K
+PiBBbmR5IFNoZXZjaGVua28NCg==
