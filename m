@@ -1,53 +1,67 @@
-From: "UNCLAIMED ASSET" <noreply@mail.co.uk>
-Subject: Haster Response.//..
-Date: Mon, 14 Nov 2016 11:13:22 -0500
-Message-ID: <E1c6Jst-00029R-J5@srv01.wsp.net.br>
-Reply-To: steve.s.bhatti@gmail.com
+From: Pavel Machek <pavel@ucw.cz>
+Subject: 6ea8c546f3655 breaks thermal management on thinkpad x60 and t40p
+Date: Mon, 14 Nov 2016 20:03:43 +0100
+Message-ID: <20161114190343.GB20770@amd>
+References: <20161104083849.GA32688@amd>
+ <20161104085830.GA4089@amd>
+ <1478268311.26953.17.camel@intel.com>
+ <20161104204439.GA2581@amd>
+ <20161104221600.GA7007@amd>
+ <1478301649.7947.3.camel@intel.com>
+ <20161105133719.GA3933@amd>
+ <1478354115.19557.17.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 177-069-092-234.static.ctbctelecom.com.br ([177.69.92.234]:39861
-        "EHLO srv01.wsp.net.br" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1753379AbcKNQNb (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Nov 2016 11:13:31 -0500
-Received: from 75-151-23-182-michigan.hfc.comcastbusiness.net ([75.151.23.182] helo=PRIMSSERVER.PR.Headquarters.epainrehab.com)
-        by srv01.wsp.net.br with esmtpa (Exim 4.84_2)
-        (envelope-from <noreply@mail.co.uk>)
-        id 1c6Jst-00029R-J5
-        for platform-driver-x86@vger.kernel.org; Mon, 14 Nov 2016 14:13:28 -0200
-Content-Description: Mail message body
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478354115.19557.17.camel@intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Robert.Moore@intel.com, acpi_power-processor@kernel-bugs.osdl.org, rankincj@yahoo.com, srinivas.pandruvada@linux.intel.com, lenb@kernel.org, lv.zheng@intel.com, regressions@leemhuis.info
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Mr. Steve Bhatti,
-Drift / regionsjef
-Santander Bank Plc,
-47-48 Piccadilly
-PICCADILLY
-W1J0DT
-London, Storbritannia
- 
-Hei,
 
-Jeg er Steve Bhatti, fra Harlesden North West London, leder for regnskap Revisjonen og formell senior programmerer sjef hos Deutsche bank, her i England (Santander Bank Plc). Jeg har også jobbet for Nyeste ministrene Bank Plc.
- 
-Jeg trenger din haster hjelp til å overføre summen av (£ 21,5) millioner britiske pund på kontoen din innen 11 eller 15 bankdager. Disse pengene har vært sovende i mange år i vår Bank uten krav. Jeg ønsker banken å frigjøre penger til deg som nærmeste person til vår avdøde kunden (eieren av kontoen) som dessverre mistet livet februar 2003 gjennom det sørlige USA romfergen Columbia, døde han en enkelt mann. Jeg ønsker ikke penger til å gå inn i bankens egne konto som en forlatt fondet. Så dette er grunnen til at jeg kontakter deg slik at banken kan frigjøre penger til deg som skal pårørende til den avdøde kunden. (Late David McDowell Brown) en amerikansk statsborger av Arlington Virginia.
-Vennligst Jeg vil at du skal holde Forslaget som en topp hemmelig og slette den hvis du ikke er interessert.
- 
-Her deler ratio; 50% til meg og 40% til deg mens 10% er for eventuelle utgifter i løpet av transaksjonen. Hvis du er interessert, ta kontakt med meg umiddelbart via min private / direkte post: steve.s.bhatti@gmail.com
+--yEPQxsgoJgBvi8ip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gi meg følgende under, som vi har 7 dager for å kjøre den gjennom. Dette er veldig HASTER.
- 
-1. Fullt navn:
-2. Direkte Mobilnummer:
-3. Kontakt Adresse:
-4. Yrke:
-5. Alder:
-6. Kjønn:
-7. Nasjonalitet:
- 
-Vennlig hilsen,
-Dr. Steve Bhatti.
+Hi!
+
+Bisection was not fun, but I've got the result:
+
+# first bad commit: [6ea8c546f3655a81f82672f24b66dad6095bdd07] ACPICA:
+FADT support cleanup
+
+I've reverted the patch on top of 4.9-rc4, and thermal management now works.
+
+More details are in https://bugzilla.kernel.org/show_bug.cgi?id=3D187311
+
+As this breaks thermal management on both thinkpad X60 and T40p, can
+I ask for a revert?
+
+If you have other ideas, I can test them, but as this is just a
+cleanup, it can wait for 4.10...
+
+Thanks,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--yEPQxsgoJgBvi8ip
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgqCo8ACgkQMOfwapXb+vI0zgCfVeV89QHre8vCQrrkbxwj0s96
+18AAnAwYa9wduDaDgYiYzTuTLWKkS/cs
+=nYzO
+-----END PGP SIGNATURE-----
+
+--yEPQxsgoJgBvi8ip--
