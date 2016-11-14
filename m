@@ -1,43 +1,71 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: 6ea8c546f3655 breaks thermal management on thinkpad x60 and t40p
-Date: Mon, 14 Nov 2016 20:54:55 +0100
-Message-ID: <CAJZ5v0i7KDDuQX0itjnuEpHCpb+JdOQVHNzzpv_v4BwwwbW2-Q@mail.gmail.com>
-References: <20161104083849.GA32688@amd> <20161104085830.GA4089@amd>
- <1478268311.26953.17.camel@intel.com> <20161104204439.GA2581@amd>
- <20161104221600.GA7007@amd> <1478301649.7947.3.camel@intel.com>
- <20161105133719.GA3933@amd> <1478354115.19557.17.camel@intel.com> <20161114190343.GB20770@amd>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] platform/x86/asus-nb-wmi.c: Add X45U quirk
+Date: Tue, 15 Nov 2016 00:05:30 +0200
+Message-ID: <CAHp75Veu5EGVEP=xPoeqDAbzzQ5bhP+jpCBTRbRhAxda=whWLA@mail.gmail.com>
+References: <1478563352-2524-1-git-send-email-marcos.souza.org@gmail.com> <20161114093232.GA24343@xfiles>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161114190343.GB20770@amd>
+In-Reply-To: <20161114093232.GA24343@xfiles>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Robert Moore <Robert.Moore@intel.com>
-Cc: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, acpi_power-processor@kernel-bugs.osdl.org, rankincj@yahoo.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Lv <lv.zheng@intel.com>, regressions@leemhuis.info, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 14, 2016 at 8:03 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
->
-> Bisection was not fun, but I've got the result:
->
-> # first bad commit: [6ea8c546f3655a81f82672f24b66dad6095bdd07] ACPICA:
-> FADT support cleanup
+On Mon, Nov 14, 2016 at 11:32 AM, Marcos Paulo de Souza
+<marcos.souza.org@gmail.com> wrote:
+> ping?
 
-Bob?
+Please, don't do empty pings especially in top posting.
+I will look at this as soon as I can.
 
-> I've reverted the patch on top of 4.9-rc4, and thermal management now works.
 >
-> More details are in https://bugzilla.kernel.org/show_bug.cgi?id=187311
->
-> As this breaks thermal management on both thinkpad X60 and T40p, can
-> I ask for a revert?
->
-> If you have other ideas, I can test them, but as this is just a
-> cleanup, it can wait for 4.10...
+> On Mon, Nov 07, 2016 at 10:02:32PM -0200, Marcos Paulo de Souza wrote:
+>> Without this patch, the Asus X45U wireless card can't be turned
+>> on (hard-blocked), but after a suspend/resume it just starts working.
+>>
+>> Following this bug report[1], there are other cases like this one, but
+>> this Asus is the only model that I can test.
+>>
+>> [1] https://ubuntuforums.org/showthread.php?t=2181558
+>>
+>> Cc: stable@vger.kernel.org # 4.4.x-
+>> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+>>
+>> ---
+>> v2 -> v3:
+>>  Add stable version in the CC line of stable email address
+>> v1 -> v2:
+>>  Add stable copy and specify the stable version to apply this patch
+>>
+>>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+>> index 26e4cbc..6032b70 100644
+>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>> @@ -175,6 +175,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>>       },
+>>       {
+>>               .callback = dmi_matched,
+>> +             .ident = "ASUSTeK COMPUTER INC. X45U",
+>> +             .matches = {
+>> +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "X45U"),
+>> +             },
+>> +             .driver_data = &quirk_asus_wapf4,
+>> +     },
+>> +     {
+>> +             .callback = dmi_matched,
+>>               .ident = "ASUSTeK COMPUTER INC. X456UA",
+>>               .matches = {
+>>                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>> --
+>> 2.7.4
 
-Right.
 
-Besides, we're in the -rc6 time frame now, so I'll queue up a revert.
 
-Thanks,
-Rafael
+-- 
+With Best Regards,
+Andy Shevchenko
