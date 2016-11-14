@@ -1,55 +1,53 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v3 1/1] platform/x86: move module mlx-platform from
- arch/x86 to drivers/platform/x86
-Date: Mon, 14 Nov 2016 08:10:09 +0000
-Message-ID: <AM5PR0501MB2097E5612D9DED255FAEBFBCA2BC0@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
- <alpine.DEB.2.20.1610310930430.5481@nanos>
- <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
- <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
+From: "UNCLAIMED ASSET" <noreply@mail.co.uk>
+Subject: Haster Response.//..
+Date: Mon, 14 Nov 2016 11:13:22 -0500
+Message-ID: <E1c6Jst-00029R-J5@srv01.wsp.net.br>
+Reply-To: steve.s.bhatti@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 177-069-092-234.static.ctbctelecom.com.br ([177.69.92.234]:39861
+        "EHLO srv01.wsp.net.br" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1753379AbcKNQNb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 14 Nov 2016 11:13:31 -0500
+Received: from 75-151-23-182-michigan.hfc.comcastbusiness.net ([75.151.23.182] helo=PRIMSSERVER.PR.Headquarters.epainrehab.com)
+        by srv01.wsp.net.br with esmtpa (Exim 4.84_2)
+        (envelope-from <noreply@mail.co.uk>)
+        id 1c6Jst-00029R-J5
+        for platform-driver-x86@vger.kernel.org; Mon, 14 Nov 2016 14:13:28 -0200
+Content-Description: Mail message body
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
-IFttYWlsdG86YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBOb3Zl
-bWJlciAxNCwgMjAxNiA5OjE3IEFNDQo+IFRvOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxs
-YW5veC5jb20+DQo+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT47IGR2
-aGFydEBpbmZyYWRlYWQub3JnOyBwbGF0Zm9ybS0NCj4gZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5v
-cmc7IHg4NkBrZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBqaXJp
-QHJlc251bGxpLnVzOyBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20NCj4gU3ViamVj
-dDogUmU6IFtwYXRjaCB2MyAxLzFdIHBsYXRmb3JtL3g4NjogbW92ZSBtb2R1bGUgbWx4LXBsYXRm
-b3JtIGZyb20NCj4gYXJjaC94ODYgdG8gZHJpdmVycy9wbGF0Zm9ybS94ODYNCj4gDQo+IE9uIFR1
-ZSwgTm92IDgsIDIwMTYgYXQgODoxOSBBTSwgVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFu
-b3guY29tPg0KPiB3cm90ZToNCj4gPiBIaSwNCj4gPg0KPiA+IENvdWxkIHRoaXMgcGF0Y2ggYmUg
-bWVyZ2VkIHRvIGZvci1uZXh0IGZvciA0LjEwPw0KPiA+IFdoZW4gaXQncyBtZXJnZWQgSSdkIGxp
-a2UgdG8gc3VibWl0IGFub3RoZXIgc21hbGwgcGF0Y2ggb24gdG9wIG9mIGl0Lg0KPiANCg0KSGkg
-QW5keSwNClRoYW5rcyBmb3IgcmVwbHkuDQoNCj4gRmlyc3Qgb2YgYWxsLCBwbGVhc2UgYXZvaWQg
-dG9wIHBvc3RpbmcuDQoNClNvcnJ5IGZvciB0aGF0Lg0KSSBwb3N0ZWQgb24gdG9wLCBiZWNhdXNl
-IGl0IGRvZXNuJ3QgY29tZSBhcyByZXBseSB0byBzb21ldGhpbmcgKGJ1dCBpdCBzZWVtcyBJIHNo
-b3VsZCBwb3N0IGF0IGJvdHRvbSBpbiBzdWMgY2FzZSkuDQoNCj4gSSB3aWxsIHByb2Nlc3MgdGhl
-IHBkeDg2IG1haWxpbmcgbGlzdCBhbmQgcXVldWUgdGhpcyB3ZWVrLg0KPiANCj4gUC5TLiBBcmUg
-eW91IHN1cmUgdGhhdCBpcyB0aGUgcmlnaHQgZml4ICJSZW1vdmUgInNlbGVjdCBNTFhfUExBVEZP
-Uk0iDQo+IGZyb20gS2NvbmZpZywgc2luY2UgaXQgaGFzIHVubWV0IGRpcmVjdCBkZXBlbmRlbmNp
-ZXMgKFg4NiAmJg0KPiBYODZfUExBVEZPUk1fREVWSUNFUyAmJiBYODZfNjQpIj8NCg0KVGhlcmUg
-d2VyZSB0d28gcG9zc2liaWxpdHk6IHRvIGxlYXZlICJzZWxlY3QgTUxYX1BMQVRGT1JNIiBhbmQg
-YWRkICIgZGVwZW5kcyBvbiBYODZfNjQiLiBPciBqdXN0IHJlbW92ZSBzZWxlY3QuDQpJIGRlY2lk
-ZSB0byByZW1vdmUsIGhhdmluZyBpbiBtaW5kIHRoZSBuZXh0IGNvbnNpZGVyYXRpb25zOg0KSWYg
-TUxYX1BMQVRGT1JNIGlzIG5vdCBzZWxlY3RlZCBoZXJlIC0ganVzdCBub2JvZHkgd2lsbCBhY3Rp
-dmF0ZSBob3RwbHVnIGRyaXZlcjsNCklmIGluIHRoZSBmZWF0dXJlIG9uIHNvbWUgc3lzdGVtcyB3
-ZSdsbCBoYXZlIEFDUEkgc3VwcG9ydCAtIGhvdHBsdWcgc3RpbGwgaXMgcmVsZXZhbnQuIA0KDQo+
-IA0KPiA+PiBPbiBNb24sIDMxIE9jdCAyMDE2LCBWYWRpbSBQYXN0ZXJuYWsgd3JvdGU6DQo+ID4+
-DQo+ID4+ID4gU2luY2UgbWx4LXBsYXRmb3JtIGlzIG5vdCBhbiBhcmNoaXRlY3R1cmFsIGRyaXZl
-ciwgaXQgaXMgbW92ZWQgb3V0DQo+ID4+ID4gb2YgYXJjaC94ODYvcGxhdGZvcm0gdG8gZHJpdmVy
-cy9wbGF0Zm9ybS94ODYuDQo+ID4+ID4gUmVsZXZhbnQgTWFrZWZpbGUgYW5kIEtjb25maWcgYXJl
-IHVwZGF0ZWQuDQo+ID4+ID4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsg
-PHZhZGltcEBtZWxsYW5veC5jb20+DQo+ID4+DQo+ID4+IEFja2VkLWJ5OiBUaG9tYXMgR2xlaXhu
-ZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0K
-PiBBbmR5IFNoZXZjaGVua28NCg==
+Mr. Steve Bhatti,
+Drift / regionsjef
+Santander Bank Plc,
+47-48 Piccadilly
+PICCADILLY
+W1J0DT
+London, Storbritannia
+ 
+Hei,
+
+Jeg er Steve Bhatti, fra Harlesden North West London, leder for regnskap Revisjonen og formell senior programmerer sjef hos Deutsche bank, her i England (Santander Bank Plc). Jeg har også jobbet for Nyeste ministrene Bank Plc.
+ 
+Jeg trenger din haster hjelp til å overføre summen av (£ 21,5) millioner britiske pund på kontoen din innen 11 eller 15 bankdager. Disse pengene har vært sovende i mange år i vår Bank uten krav. Jeg ønsker banken å frigjøre penger til deg som nærmeste person til vår avdøde kunden (eieren av kontoen) som dessverre mistet livet februar 2003 gjennom det sørlige USA romfergen Columbia, døde han en enkelt mann. Jeg ønsker ikke penger til å gå inn i bankens egne konto som en forlatt fondet. Så dette er grunnen til at jeg kontakter deg slik at banken kan frigjøre penger til deg som skal pårørende til den avdøde kunden. (Late David McDowell Brown) en amerikansk statsborger av Arlington Virginia.
+Vennligst Jeg vil at du skal holde Forslaget som en topp hemmelig og slette den hvis du ikke er interessert.
+ 
+Her deler ratio; 50% til meg og 40% til deg mens 10% er for eventuelle utgifter i løpet av transaksjonen. Hvis du er interessert, ta kontakt med meg umiddelbart via min private / direkte post: steve.s.bhatti@gmail.com
+
+Gi meg følgende under, som vi har 7 dager for å kjøre den gjennom. Dette er veldig HASTER.
+ 
+1. Fullt navn:
+2. Direkte Mobilnummer:
+3. Kontakt Adresse:
+4. Yrke:
+5. Alder:
+6. Kjønn:
+7. Nasjonalitet:
+ 
+Vennlig hilsen,
+Dr. Steve Bhatti.
