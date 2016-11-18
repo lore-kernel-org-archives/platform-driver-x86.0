@@ -1,199 +1,36 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 3/6] leds: triggers: Add support for read-only triggers
-Date: Fri, 18 Nov 2016 12:01:04 +0100
-Message-ID: <35aaa6d6-cf13-316b-4895-17d44ee1dd84@redhat.com>
-References: <20161117222441.31464-1-hdegoede@redhat.com>
- <CGME20161117222452epcas4p43b390da988281f298b01c5dae1425469@epcas4p4.samsung.com>
- <20161117222441.31464-3-hdegoede@redhat.com>
- <b44e1e67-d609-5876-b79b-c28d2093c50e@samsung.com>
- <d70ddd38-2994-c403-114f-ef05f0ddb8c4@redhat.com>
- <b7b4a51a-1d7f-3de8-8611-b1e54f8bccdc@samsung.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v11 1/6] drivers/platform/x86/p2sb: New Primary to
+ Sideband bridge support driver for Intel SOC's
+Date: Fri, 18 Nov 2016 13:21:42 +0200
+Message-ID: <1479468102.22212.16.camel@linux.intel.com>
+References: <1479446550-28677-1-git-send-email-jui.nee.tan@intel.com>
+         <1479446550-28677-2-git-send-email-jui.nee.tan@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <b7b4a51a-1d7f-3de8-8611-b1e54f8bccdc@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479446550-28677-2-git-send-email-jui.nee.tan@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tan Jui Nee <jui.nee.tan@intel.com>, mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com, tglx@linutronix.de, dvhart@infradead.org, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, ptyser@xes-inc.com, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan.yong@intel.com, ong.hock.yu@intel.com, tony.luck@intel.com, wan.ahmad.zainie.wan.mohamad@intel.com, yunying.sun@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Fri, 2016-11-18 at 13:22 +0800, Tan Jui Nee wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> There is already one and at least one more user coming which
+> require an access to Primary to Sideband bridge (P2SB) in order
+> to get IO or MMIO bar hidden by BIOS.
+> Create a driver to access P2SB for x86 devices.
+> 
+> Signed-off-by: Yong, Jonathan <jonathan.yong@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> Changes in V11:
+> 	- No change
 
-On 18-11-16 11:49, Jacek Anaszewski wrote:
-> Hi,
->
-> On 11/18/2016 10:04 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 18-11-16 09:52, Jacek Anaszewski wrote:
->>> Hi Hans,
->>>
->>> Thanks for the new patch set.
->>>
->>> On 11/17/2016 11:24 PM, Hans de Goede wrote:
->>>> In some cases an LED is controlled through a hardwired (taken care of
->>>> in firmware outside of the kernels control) trigger.
->>>>
->>>> Add an LED_TRIGGER_READ_ONLY flag for this and disallow user-space
->>>> changing the trigger when this flag is set.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>> Changes in v5:
->>>> -This is a new patch in v5 of this patch-set
->>>> ---
->>>>  drivers/leds/led-class.c    | 2 +-
->>>>  drivers/leds/led-triggers.c | 5 +++++
->>>>  include/linux/leds.h        | 1 +
->>>>  3 files changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->>>> index 326ee6e..56f32cc 100644
->>>> --- a/drivers/leds/led-class.c
->>>> +++ b/drivers/leds/led-class.c
->>>> @@ -54,7 +54,7 @@ static ssize_t brightness_store(struct device *dev,
->>>>      if (ret)
->>>>          goto unlock;
->>>>
->>>> -    if (state == LED_OFF)
->>>> +    if (state == LED_OFF && !(led_cdev->flags & LED_TRIGGER_READ_ONLY))
->>>>          led_trigger_remove(led_cdev);
->>>>      led_set_brightness(led_cdev, state);
->>>>
->>>> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
->>>> index d2ed9c2..9669104 100644
->>>> --- a/drivers/leds/led-triggers.c
->>>> +++ b/drivers/leds/led-triggers.c
->>>> @@ -37,6 +37,11 @@ ssize_t led_trigger_store(struct device *dev,
->>>> struct device_attribute *attr,
->>>>      struct led_trigger *trig;
->>>>      int ret = count;
->>>>
->>>> +    if (led_cdev->flags & LED_TRIGGER_READ_ONLY) {
->>>> +        dev_err(led_cdev->dev, "Error this led triggers is hardwired
->>>> and cannot be changed\n");
->>>> +        return -EINVAL;
->>>
->>> It means that after a trigger is once assigned to a LED class device
->>> it will be impossible to deactivate it.
->>
->> No this flag is not set by the trigger code, it is set by the LED
->> driver itself, to indicate there is a hardwired trigger.
->>
->>> Why not leaving it to the
->>> user's decision whether they want to have hw brightness changes
->>> notifications?
->>
->> The user cannot disable the hotkey -> keyboard-backlight-led link
->> and the trigger represents this link.
->>
->> More over, if we allow changing the trigger, then writing 0
->> to the brightness attribute will remove the trigger and make
->> the device no longer poll-able, and writing 0 is exactly what
->> the systemd-backlight service does when restoring backlight
->> settings on boot and the kbd-backlight was off at the last
->> shutdown.
->>
->> This again shows how poorly thought out the old "brightness"
->> file API is, all systemd-backlight want to do is set the
->> brightness to 0, but as a side effect it will also unlink the
->> trigger, because writing 0 has 2 effects for one system call.
->> Anyways this is not something we can fix.
->
-> So we will need to fix that. Maybe we should make it configurable.
-> E.g. a sysfs file could define whether writing 0 to brightness file
-> clears a trigger.
+Any particular reason you ignored my comments to v10 of this patch?
 
-Hmm, I don't like adding a sysfs file which changes behavior of
-the "brightness" file, I think that we can work around this,
-see below.
-
-> Trigger can already be disabled by writing "none" to triggers file.
->
->>> This way we disable the possibility to set different
->>> trigger like e.g. timer, after this one is set, which is not
->>> a non-realistic scenario.
->>
->> Then we would have 2 triggers active, as the hotkey trigger
->> is part of the firmware of the laptop and is never going away.
->
-> Having this type of hardware trigger reflected in the LED class
-> device configuration all the time is not something critical I think.
-> More important is leaving a possibility of applying other existing
-> sources of kernel events to the LED controller.
-
-Ok, I've created a systemd-backlight patch to prefer
-current_brightness when present, avoiding the problem of
-systemd-backlight removing the kbd-backlight trigger on boot
-when it is restoring a brightness setting of 0.
-
-That fixes the immediate problem, without needing to break /
-hack the old "brightness" ABI.
-
-So if you want feel free to drop this patch from the series
-and just apply patch 1 and 2, Once merged I'll send a v6 of
-the platform driver patches to match the dropping of this
-patch.
-
-Regards,
-
-Hans
-
-
-
-
->
->>> Generally it is quite odd to add a functionality that once
->>> set is latched. If one will set such a trigger by mistake, then
->>> system restart will be required to reset this (unless the driver
->>> is built as a module).
->>
->> This is not under user-control, the is controlled by the
->> LED driver by setting the flag before registering the LED and
->> this is on purpose, because the trigger is hardwired.
->>
->> TL;DR:
->>
->> 1) We've decided to model the hotkey -> kbd-backlight control link as a
->> trigger
->> 2) This is hardwired in the laptop's firmware therefor the trigger cannot
->>    be changed
->> 3) Thus we need support for read-only triggers
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>
->>>> +    }
->>>> +
->>>>      mutex_lock(&led_cdev->led_access);
->>>>
->>>>      if (led_sysfs_is_disabled(led_cdev)) {
->>>> diff --git a/include/linux/leds.h b/include/linux/leds.h
->>>> index 870b8c2..e076b74 100644
->>>> --- a/include/linux/leds.h
->>>> +++ b/include/linux/leds.h
->>>> @@ -47,6 +47,7 @@ struct led_classdev {
->>>>  #define LED_DEV_CAP_FLASH    (1 << 18)
->>>>  #define LED_HW_PLUGGABLE    (1 << 19)
->>>>  #define LED_PANIC_INDICATOR    (1 << 20)
->>>> +#define LED_TRIGGER_READ_ONLY   (1 << 21)
->>>>
->>>>      /* set_brightness_work / blink_timer flags, atomic, private. */
->>>>      unsigned long        work_flags;
->>>>
->>>
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-leds" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->>
->
->
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
