@@ -1,91 +1,67 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
-Date: Sat, 19 Nov 2016 16:44:09 +0100
-Message-ID: <7b8252c4-bb2a-01dd-2404-9b81c192fb6a@gmail.com>
-References: <20161117222441.31464-1-hdegoede@redhat.com>
- <CGME20161117222450epcas2p28613abfdc50444385e6849315754f51c@epcas2p2.samsung.com>
- <20161117222441.31464-2-hdegoede@redhat.com>
- <af5a6b68-310d-85ec-16db-5c9036f38ba5@samsung.com>
- <39fdea9c-b2de-7fb6-3acf-0ea1de73ea75@redhat.com>
- <92a919a7-6849-60b6-d018-f9e983e7a2f5@samsung.com>
- <55cdf83d-2233-151f-08e1-11d4619e8fd5@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] dell-wmi: Add events created by Dell Rugged 2-in-1s
+Date: Sat, 19 Nov 2016 18:33:30 +0200
+Message-ID: <CAHp75Vd3bJOv7Cpp9xYXDV3s1pFpdS0-yvKPasY85g0TNK8X7A@mail.gmail.com>
+References: <1469728428-24881-1-git-send-email-mario_limonciello@dell.com> <1469728428-24881-2-git-send-email-mario_limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <55cdf83d-2233-151f-08e1-11d4619e8fd5@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f67.google.com ([209.85.218.67]:35089 "EHLO
+        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750958AbcKSQdb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 19 Nov 2016 11:33:31 -0500
+In-Reply-To: <1469728428-24881-2-git-send-email-mario_limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario_limonciello@dell.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, Jul 28, 2016 at 8:53 PM, Mario Limonciello
+<mario_limonciello@dell.com> wrote:
+> The Dell Rugged 7202 has 3 programmable buttons (labeled P1, P2, P3)
+> and a detachable keyboard/mouse dock.
+>
+> Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
 
-On 11/18/2016 07:47 PM, Hans de Goede wrote:
-> HI,
->
-> On 18-11-16 17:03, Jacek Anaszewski wrote:
->> Hi,
->>
->> On 11/18/2016 10:07 AM, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 18-11-16 09:55, Jacek Anaszewski wrote:
->>>> Hi Hans,
->>>>
->>>> Thanks for the patch.
->>>>
->>>> I think we need less generic trigger name.
->>>> With present name we pretend that all kbd-backlight controllers
->>>> can change LED brightness autonomously.
->>>>
->>>> How about kbd-backlight-pollable ?
->>>
->>> This is a trigger to control kbd-backlights, in the
->>> current use-case the brightness change is already done
->>> by the firmware, hence the set_brightness argument to
->>> ledtrig_kbd_backlight(), so that we can avoid setting
->>> it again.
->>>
->>> But I can see future cases where we do want to have some
->>> event (e.g. a wmi hotkey event on a laptop where the firmware
->>> does not do the adjustment automatically) which does
->>> lead to actually updating the brightness.
->>>
->>> So I decided to go with a generic kbd-backlight trigger,
->>> which in the future can also be used to directly control
->>> kbd-backlight brightness; and not just to make ot
->>> poll-able.
->>
->> I thought that kbd-backlight stands for "keyboard backlight",
->
-> It does.
->
->> that's why I assessed it is too generic.
->
-> The whole purpose of the trigger as implemented is to be
-> generic, as it seems senseless to implement a one off
-> trigger for just the dell / thinkpad case.
->
->> It seems however to be
->> the other way round - if kbd-backlight means that this is
->> a trigger only for use with dell-laptop keyboard driver
->> (I see kbd namespacing prefix in the driver functions) than it is
->> not generic at all.
->
-> The trigger as implemented is generic, if you think
-> otherwise, please let me know which part is not generic
-> according to you.
+There was a long discussion in the past. Just to get it clear. Are we
+all okay with version 2 of this series?
 
-I think I was too meticulous here. In the end of the previous
-message I mentioned that we cannot guarantee that all keyboard
-backlight controllers can adjust brightness autonomously. Nonetheless,
-for the ones that cannot do that it would make no sense to have
-a trigger. In view of that this trigger is generic enough.
+> ---
+>  drivers/platform/x86/dell-wmi.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 866bf73..28ec17a 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -274,6 +274,16 @@ static const struct key_entry dell_wmi_keymap_type_0010[] __initconst = {
+>
+>         /* Stealth mode toggle */
+>         { KE_IGNORE, 0x155, { KEY_RESERVED } },
+> +
+> +       /* Rugged magnetic dock attach/detach events */
+> +       { KE_IGNORE, 0x156, { KEY_RESERVED } },
+> +       { KE_IGNORE, 0x157, { KEY_RESERVED } },
+> +
+> +       /* Rugged programmable (P1/P2/P3 keys) */
+> +       { KE_KEY,    0x850, { KEY_PROG1 } },
+> +       { KE_KEY,    0x851, { KEY_PROG2 } },
+> +       { KE_KEY,    0x852, { KEY_PROG3 } },
+> +
+>  };
+>
+>  /*
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-I'll wait for Pavel's opinion before merging the patch set
-as he was also involved in this whole thread.
+
 
 -- 
-Best regards,
-Jacek Anaszewski
+With Best Regards,
+Andy Shevchenko
