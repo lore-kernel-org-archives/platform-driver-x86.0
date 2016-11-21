@@ -1,101 +1,54 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v11 5/6] mfd: lpc_ich: Add Device IDs for Intel Apollo
- Lake PCH
-Date: Mon, 21 Nov 2016 10:15:44 +0000
-Message-ID: <20161121101544.GE32509@dell>
-References: <1479446550-28677-1-git-send-email-jui.nee.tan@intel.com>
- <1479446550-28677-6-git-send-email-jui.nee.tan@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
+Date: Mon, 21 Nov 2016 11:16:00 +0100
+Message-ID: <42d20332-8f81-47cd-dd10-6e9ed5123169@redhat.com>
+References: <20161117222441.31464-1-hdegoede@redhat.com>
+ <55cdf83d-2233-151f-08e1-11d4619e8fd5@redhat.com>
+ <7b8252c4-bb2a-01dd-2404-9b81c192fb6a@gmail.com>
+ <CGME20161120150524epcas2p1f634a13bf220f21e7dd95b272b28594c@epcas2p1.samsung.com>
+ <201611201605.17631@pali> <d6b177fc-313f-6597-4c8c-fc3c6f48778a@samsung.com>
+ <2e1ddcc3-489d-bab1-ebb9-dad02db7b37c@redhat.com>
+ <20161121101209.GC13735@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479446550-28677-6-git-send-email-jui.nee.tan@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tan Jui Nee <jui.nee.tan@intel.com>
-Cc: mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, dvhart@infradead.org, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, ptyser@xes-inc.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan.yong@intel.com, ong.hock.yu@intel.com, tony.luck@intel.com, wan.ahmad.zainie.wan.mohamad@intel.com, yunying.sun@intel.com
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20161121101209.GC13735@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 18 Nov 2016, Tan Jui Nee wrote:
+Hi,
 
-> Adding Intel codename Apollo Lake platform device IDs for PCH.
-> 
-> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> Changes in V11:
-> 	- No change
-> 
-> Changes in V10:
-> 	- No change
-> 
-> Changes in V9:
-> 	- No change
-> 
-> Changes in V8:
-> 	- No change
-> 
->  drivers/mfd/lpc_ich_core.c  | 6 ++++++
->  include/linux/mfd/lpc_ich.h | 1 +
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/mfd/lpc_ich_core.c b/drivers/mfd/lpc_ich_core.c
-> index 920198a..3bb6334 100644
-> --- a/drivers/mfd/lpc_ich_core.c
-> +++ b/drivers/mfd/lpc_ich_core.c
-> @@ -54,6 +54,7 @@
->   *	document number TBD : Wildcat Point-LP
->   *	document number TBD : 9 Series
->   *	document number TBD : Lewisburg
-> + *	document number TBD : Apollo Lake
+On 21-11-16 11:12, Pali Rohár wrote:
+> On Monday 21 November 2016 10:31:33 Hans de Goede wrote:
+>> Pali, I'm sorry that you don't like the LED side design, but there
+>> has been a long discussion about this (which you apparently missed)
+>> and this really is the best way forward.
+>
+> Yea, I thought that I should have missed something as I was not able to
+> find all needed information about it in my mailbox.
+>
+> Is that discussion somewhere logged/available? That could help to
+> describe and understand all problems hidden behind.
+>
+>> Have you looked at what the new design means for the platform/x86
+>> patches ? Gone is the ugly dell_laptop_notifier as the event
+>> forwarding between dell-wmi and dell-laptop is now handles by
+>> the led-trigger subsys.
+>
+> Yes, I saw that ugly dell_lpatop notifier is not there. If there is some
+> more information about decision and pro/coins about this approach I
+> would like to read it before.
 
-When exactly are you guys going to start filling in these TBD document
-numbers?  Most of these entries are >4 years old!
+It is discussed in this thread:
 
-I suggest you either start populating them, or remove the reference.
+https://www.spinics.net/lists/linux-leds/msg07049.html
 
-Besides that:
+Unfortunately the starter of the thread dropped the Cc: platform-driver-x86@vger.kernel.org
+the original patch that thread is about had.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Regards,
 
->   */
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> @@ -458,6 +459,10 @@ struct lpc_ich_priv {
->  		.name = "9 Series",
->  		.iTCO_version = 2,
->  	},
-> +	[LPC_APL]  = {
-> +		.name = "Apollo Lake SoC",
-> +		.iTCO_version = 5,
-> +	},
->  };
->  
->  /*
-> @@ -606,6 +611,7 @@ struct lpc_ich_priv {
->  	{ PCI_VDEVICE(INTEL, 0x3b14), LPC_3420},
->  	{ PCI_VDEVICE(INTEL, 0x3b16), LPC_3450},
->  	{ PCI_VDEVICE(INTEL, 0x5031), LPC_EP80579},
-> +	{ PCI_VDEVICE(INTEL, 0x5ae8), LPC_APL},
->  	{ PCI_VDEVICE(INTEL, 0x8c40), LPC_LPT},
->  	{ PCI_VDEVICE(INTEL, 0x8c41), LPC_LPT},
->  	{ PCI_VDEVICE(INTEL, 0x8c42), LPC_LPT},
-> diff --git a/include/linux/mfd/lpc_ich.h b/include/linux/mfd/lpc_ich.h
-> index 42307ee..397008c 100644
-> --- a/include/linux/mfd/lpc_ich.h
-> +++ b/include/linux/mfd/lpc_ich.h
-> @@ -112,6 +112,7 @@ enum lpc_chipsets {
->  	LPC_BRASWELL,	/* Braswell SoC */
->  	LPC_LEWISBURG,	/* Lewisburg */
->  	LPC_9S,		/* 9 Series */
-> +	LPC_APL,	/* Apollo Lake SoC */
->  };
->  
->  #endif
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Hans
