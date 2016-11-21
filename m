@@ -1,46 +1,42 @@
-From: UK CREDIT LTD LOAN <nur.hupi@kalstaronline.com>
-Subject: =?utf-8?Q?l=C3=A5netilbud?=
-Date: Mon, 21 Nov 2016 05:51:54 +0700 (WIT)
-Message-ID: <1382095386.51115.1479682314742.JavaMail.zimbra@kalstaronline.com>
-Reply-To: "ukcreditltd2@gmail.com" <ukcreditltd2@gmail.com>
+From: "UNCLAIMED ASSET" <noreply@eLIVE.co.uk>
+Subject: Haster Response.//..
+Date: Sun, 20 Nov 2016 22:23:16 -0500
+Message-ID: <E1c8fCZ-0003cW-Sc@srv01.wsp.net.br>
+Reply-To: steve.s.bhatti@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2.kalstaronline.com ([202.43.163.170]:50683 "EHLO
-        mail2.kalstaronline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752029AbcKUACc (ORCPT
+Received: from 177-069-092-234.static.ctbctelecom.com.br ([177.69.92.234]:34917
+        "EHLO srv01.wsp.net.br" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1752084AbcKUDXr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Nov 2016 19:02:32 -0500
+        Sun, 20 Nov 2016 22:23:47 -0500
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <noreply@eLIVE.co.uk>
 
-Hilsener Sir / Madam:
+God dag,
 
-=C2=A0=C2=A0=C2=A0 Jeg er Dr. Peter Ibrahim fra private l=C3=A5n selskapet =
-UK CREDIT LTD l=C3=A5n, som ligger i Storbritannia.
-Vi tilbyr alle typer l=C3=A5n til enkeltpersoner og bedrifter, Gj=C3=B8r de=
-g selv =C3=B8konomisk
-stabil ved =C3=A5 skaffe et l=C3=A5n fra UK CREDIT LTD L=C3=85N 3% rente s=
-=C3=A5 kort og
-Langsiktige l=C3=A5n, corporate l=C3=A5n, hus l=C3=A5n. bill=C3=A5n etc.
+Vær så snill, kan jeg få din oppmerksomhet i utførelsen av en undermentioned forslag i tråd med min nåværende ekspansjon, vil jeg gjerne oppfordre partnerskap med deg eller ditt firma i forbindelse med en gjenstand. Det er en forlatt fondet her i vår bank (Santander Bank Plc.) Som ble eid av en av mine klienter. Ved Navn: Late David McDowell Brown, (en amerikansk statsborger av Arlington Virgina).
 
-=C2=A0=C2=A0=C2=A0=C2=A0 Fyll l=C3=A5nes=C3=B8knad skjemaet nedenfor hvis d=
-u er interessert i l=C3=A5net,
+Han er dessverre mistet livet i februar 2003 gjennom det sørlige USA romfergen Columbia. Han døde og etterlot en stor sum penger som har vært sovende i mange år i vår Bank uten krav og jeg har vært mislykket i finne noen av hans slektninger i mange år nå siden han døde en enkelt mann. Vær så snill, jeg trenger din haster hjelp til å overføre dette fondet (er) (penger) til kontoen din innen 11 eller 15 bankdager.
 
-* Navn:
-* Kj=C3=B8nn:
-* Land / Adresse:
-* St=C3=B8rrelse som:
-* M=C3=A5nedlig inntekt niv=C3=A5
-* Varighet av l=C3=A5n:
-* Form=C3=A5let med l=C3=A5n:
-* Telefon:
-* F=C3=B8dselsdato
+Jeg har nylig fått en informasjon som banken ønsker å arve undermentioned summen inn i deres Treasury konto siden ingen har kommet for kravet ennå. Vær så snill, jeg trenger din HASTER hjelp til å presentere deg som den avdødes pårørende (Late David McDowell Brown) og jeg ærlig forsikre dere om at det skulle være noen bro over LOV involverer denne transaksjonen som alle dokument (er) for å gjøre denne påstanden (s ) vil bli sikret og godkjent av meg i advokatfirmaet her i Storbritannia. Jeg har stor tro på at dette ville være en stor / gjensidig nytte og flott avenue for investeringer i nærmeste fremtid.
 
-Kontakt oss via e-post ukcreditltdloan1@gmail.com
+Når pengene er overført med hell til særskilt konto i ditt land og utbetalt henholdsvis mellom oss begge,
+Jeg ønsker å søke din ærlige råd på noen god og pålitelig forretningsidé jeg kan investere min andel i ditt land.
+Fullstendige opplysninger / modaliteter vil bli offentliggjort på din uttrykk for interesse for å samarbeide med meg. Jeg kan nås direkte på: (steve.s.bhatti@gmail.com).
 
+Takk, vil din ærlige samarbeid bli høyt verdsatt.
 
-Takk og vennlig hilsen.
-
-Dr Peter Ibrahim.
+Vennlig hilsen,
+Dr. Steve Bhatti.
+Drift / regionsjef
+Santander Bank Plc,
+47-48 Piccadilly
+PICCADILLY
+W1J0DT
+London, Storbritannia
+Tel: +447042043211
