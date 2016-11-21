@@ -1,39 +1,84 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v5 1/6] leds: triggers: Add current_brightness trigger
- parameter
-Date: Mon, 21 Nov 2016 11:02:58 +0100
-Message-ID: <20161121100258.GB13735@pali>
-References: <20161117222441.31464-1-hdegoede@redhat.com>
- <201611210007.35417@pali>
- <20161120234842.GA30717@amd>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v11 2/6] mfd: lpc_ich: Rename lpc-ich driver
+Date: Mon, 21 Nov 2016 10:13:02 +0000
+Message-ID: <20161121101302.GC32509@dell>
+References: <1479446550-28677-1-git-send-email-jui.nee.tan@intel.com>
+ <1479446550-28677-3-git-send-email-jui.nee.tan@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161120234842.GA30717@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <1479446550-28677-3-git-send-email-jui.nee.tan@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tan Jui Nee <jui.nee.tan@intel.com>
+Cc: mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, dvhart@infradead.org, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, ptyser@xes-inc.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan.yong@intel.com, ong.hock.yu@intel.com, tony.luck@intel.com, wan.ahmad.zainie.wan.mohamad@intel.com, yunying.sun@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 21 November 2016 00:48:42 Pavel Machek wrote:
-> On Mon 2016-11-21 00:07:35, Pali Rohár wrote:
-> > On Thursday 17 November 2016 23:24:36 Hans de Goede wrote:
-> > > In some cases it may be desirable for userspace to be notified when
-> > > a trigger event happens. This commit adds support for a poll-able
-> > > current_brightness trigger specific sysfs attribute which triggers
-> > > may register:
-> > > 
-> > > What:		/sys/class/leds/<led>/current_brightness
-> > 
-> > What about name actual_brightness? That name is already used by 
-> > /sys/class/backlight/...
-> 
-> Is that a problem?
+On Fri, 18 Nov 2016, Tan Jui Nee wrote:
 
-Is not better to have same name?
+> This patch follows the example of mfd/wm831x to rename the driver
+> from "lpc_ich" to "lpc_ich_core".
+> 
+> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> Changes in V11:
+> 	- No change
+> 
+> Changes in V10:
+> 	- No change
+> 
+> Changes in V9:
+> 	- Remove the filename from the header of lpc_ich_core.c (suggested by Lee).
+> 
+> Changes in V8:
+> 	- Update new file name with lpc_ich_core.c at description of source file.
+> 	- Rework Makefile with new source file name lpc_ich_apl.c.
+> 
+> Changes in V7:
+> 	- No change
+> 
+> Changes in V6:
+> 	- none, just a subject line and commit message change.
+> 
+>  drivers/mfd/Makefile                      | 1 +
+>  drivers/mfd/{lpc_ich.c => lpc_ich_core.c} | 2 --
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+>  rename drivers/mfd/{lpc_ich.c => lpc_ich_core.c} (99%)
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9834e66..06a91ea 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -159,6 +159,7 @@ obj-$(CONFIG_PMIC_ADP5520)	+= adp5520.o
+>  obj-$(CONFIG_MFD_KEMPLD)	+= kempld-core.o
+>  obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
+>  obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
+> +lpc_ich-objs		:= lpc_ich_core.o
+>  obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
+>  obj-$(CONFIG_MFD_RDC321X)	+= rdc321x-southbridge.o
+>  obj-$(CONFIG_MFD_JANZ_CMODIO)	+= janz-cmodio.o
+> diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich_core.c
+> similarity index 99%
+> rename from drivers/mfd/lpc_ich.c
+> rename to drivers/mfd/lpc_ich_core.c
+> index c8dee47..7cbe037 100644
+> --- a/drivers/mfd/lpc_ich.c
+> +++ b/drivers/mfd/lpc_ich_core.c
+> @@ -1,6 +1,4 @@
+>  /*
+> - *  lpc_ich.c - LPC interface for Intel ICH
+> - *
+>   *  LPC bridge function of the Intel ICH contains many other
+>   *  functional units, such as Interrupt controllers, Timers,
+>   *  Power Management, System Management, GPIO, RTC, and LPC
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
