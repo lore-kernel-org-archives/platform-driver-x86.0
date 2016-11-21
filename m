@@ -1,55 +1,110 @@
-From: "Tan, Jui Nee" <jui.nee.tan@intel.com>
-Subject: RE: [PATCH v11 1/6] drivers/platform/x86/p2sb: New Primary to
- Sideband bridge support driver for Intel SOC's
-Date: Mon, 21 Nov 2016 03:52:41 +0000
-Message-ID: <0158A29DB680F54A88142ED28D55B1D008323439@PGSMSX107.gar.corp.intel.com>
-References: <1479446550-28677-1-git-send-email-jui.nee.tan@intel.com>
-         <1479446550-28677-2-git-send-email-jui.nee.tan@intel.com>
- <1479468102.22212.16.camel@linux.intel.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
+Date: Mon, 21 Nov 2016 09:35:33 +0100
+Message-ID: <d6b177fc-313f-6597-4c8c-fc3c6f48778a@samsung.com>
+References: <20161117222441.31464-1-hdegoede@redhat.com>
+ <55cdf83d-2233-151f-08e1-11d4619e8fd5@redhat.com>
+ <7b8252c4-bb2a-01dd-2404-9b81c192fb6a@gmail.com>
+ <CGME20161120150524epcas2p1f634a13bf220f21e7dd95b272b28594c@epcas2p1.samsung.com>
+ <201611201605.17631@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:59523 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752782AbcKUDwr (ORCPT
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48231 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751437AbcKUIfk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Nov 2016 22:52:47 -0500
-In-Reply-To: <1479468102.22212.16.camel@linux.intel.com>
-Content-Language: en-US
+        Mon, 21 Nov 2016 03:35:40 -0500
+In-reply-to: <201611201605.17631@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "ptyser@xes-inc.com" <ptyser@xes-inc.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yong, Jonathan" <jonathan.yong@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Luck, Tony" <tony.luck@intel.com>, "Wan Mohamad, Wan Ahmad Zainie" <wan.ahmad.zainie.wan.mohamad@intel.com>, "Sun, Yunying" <yunying.sun@intel.com>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
-IFttYWlsdG86YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tXQ0KPiBTZW50OiBGcmlk
-YXksIE5vdmVtYmVyIDE4LCAyMDE2IDc6MjIgUE0NCj4gVG86IFRhbiwgSnVpIE5lZSA8anVpLm5l
-ZS50YW5AaW50ZWwuY29tPjsgbWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNvbTsNCj4gaGVp
-a2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgdGdseEBsaW51dHJvbml4LmRlOyBkdmhhcnRA
-aW5mcmFkZWFkLm9yZzsNCj4gbWluZ29AcmVkaGF0LmNvbTsgaHBhQHp5dG9yLmNvbTsgeDg2QGtl
-cm5lbC5vcmc7IHB0eXNlckB4ZXMtaW5jLmNvbTsNCj4gbGVlLmpvbmVzQGxpbmFyby5vcmc7IGxp
-bnVzLndhbGxlaWpAbGluYXJvLm9yZw0KPiBDYzogbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7
-IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBZb25nLCBKb25hdGhhbiA8am9uYXRoYW4ueW9uZ0BpbnRlbC5jb20+Ow0K
-PiBZdSwgT25nIEhvY2sgPG9uZy5ob2NrLnl1QGludGVsLmNvbT47IEx1Y2ssIFRvbnkgPHRvbnku
-bHVja0BpbnRlbC5jb20+Ow0KPiBXYW4gTW9oYW1hZCwgV2FuIEFobWFkIFphaW5pZSA8d2FuLmFo
-bWFkLnphaW5pZS53YW4ubW9oYW1hZEBpbnRlbC5jb20+Ow0KPiBTdW4sIFl1bnlpbmcgPHl1bnlp
-bmcuc3VuQGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMS82XSBkcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9wMnNiOiBOZXcgUHJpbWFyeSB0bw0KPiBTaWRlYmFuZCBicmlkZ2Ugc3Vw
-cG9ydCBkcml2ZXIgZm9yIEludGVsIFNPQydzDQo+IA0KPiBPbiBGcmksIDIwMTYtMTEtMTggYXQg
-MTM6MjIgKzA4MDAsIFRhbiBKdWkgTmVlIHdyb3RlOg0KPiA+IEZyb206IEFuZHkgU2hldmNoZW5r
-byA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiA+DQo+ID4gVGhlcmUgaXMg
-YWxyZWFkeSBvbmUgYW5kIGF0IGxlYXN0IG9uZSBtb3JlIHVzZXIgY29taW5nIHdoaWNoIHJlcXVp
-cmUNCj4gPiBhbiBhY2Nlc3MgdG8gUHJpbWFyeSB0byBTaWRlYmFuZCBicmlkZ2UgKFAyU0IpIGlu
-IG9yZGVyIHRvIGdldCBJTyBvcg0KPiA+IE1NSU8gYmFyIGhpZGRlbiBieSBCSU9TLg0KPiA+IENy
-ZWF0ZSBhIGRyaXZlciB0byBhY2Nlc3MgUDJTQiBmb3IgeDg2IGRldmljZXMuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBZb25nLCBKb25hdGhhbiA8am9uYXRoYW4ueW9uZ0BpbnRlbC5jb20+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51
-eC5pbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiBWMTE6DQo+ID4gCS0gTm8gY2hh
-bmdlDQo+IA0KPiBBbnkgcGFydGljdWxhciByZWFzb24geW91IGlnbm9yZWQgbXkgY29tbWVudHMg
-dG8gdjEwIG9mIHRoaXMgcGF0Y2g/DQo+DQpIaSBBbmR5LA0KSSBhbSBzb3JyeSBmb3IgbWlzc2lu
-ZyB5b3VyIGNvbW1lbnRzIGFzIHRoZSBlbWFpbCBmaWx0ZXJlZCBpbnRvIG90aGVyIGZvbGRlciBh
-bmQgSSB3YXMgbm90IGF3YXJlIG9mIHRoYXQuIEkgd2lsbCBhcHBsaWVkIHlvdXIgY29tbWVudHMg
-aW50byBuZXh0IHBhdGNoIHZlcnNpb24uDQogDQo+IC0tDQo+IEFuZHkgU2hldmNoZW5rbyA8YW5k
-cml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiBJbnRlbCBGaW5sYW5kIE95DQo=
+On 11/20/2016 04:05 PM, Pali Rohár wrote:
+> On Saturday 19 November 2016 16:44:09 Jacek Anaszewski wrote:
+>> Hi,
+>>
+>> On 11/18/2016 07:47 PM, Hans de Goede wrote:
+>>> HI,
+>>>
+>>> On 18-11-16 17:03, Jacek Anaszewski wrote:
+>>>> Hi,
+>>>>
+>>>> On 11/18/2016 10:07 AM, Hans de Goede wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 18-11-16 09:55, Jacek Anaszewski wrote:
+>>>>>> Hi Hans,
+>>>>>>
+>>>>>> Thanks for the patch.
+>>>>>>
+>>>>>> I think we need less generic trigger name.
+>>>>>> With present name we pretend that all kbd-backlight controllers
+>>>>>> can change LED brightness autonomously.
+>>>>>>
+>>>>>> How about kbd-backlight-pollable ?
+>>>>>
+>>>>> This is a trigger to control kbd-backlights, in the
+>>>>> current use-case the brightness change is already done
+>>>>> by the firmware, hence the set_brightness argument to
+>>>>> ledtrig_kbd_backlight(), so that we can avoid setting
+>>>>> it again.
+>>>>>
+>>>>> But I can see future cases where we do want to have some
+>>>>> event (e.g. a wmi hotkey event on a laptop where the firmware
+>>>>> does not do the adjustment automatically) which does
+>>>>> lead to actually updating the brightness.
+>>>>>
+>>>>> So I decided to go with a generic kbd-backlight trigger,
+>>>>> which in the future can also be used to directly control
+>>>>> kbd-backlight brightness; and not just to make ot
+>>>>> poll-able.
+>>>>
+>>>> I thought that kbd-backlight stands for "keyboard backlight",
+>>>
+>>> It does.
+>>>
+>>>> that's why I assessed it is too generic.
+>>>
+>>> The whole purpose of the trigger as implemented is to be
+>>> generic, as it seems senseless to implement a one off
+>>> trigger for just the dell / thinkpad case.
+>>>
+>>>> It seems however to be
+>>>> the other way round - if kbd-backlight means that this is
+>>>> a trigger only for use with dell-laptop keyboard driver
+>>>> (I see kbd namespacing prefix in the driver functions) than it is
+>>>> not generic at all.
+>>>
+>>> The trigger as implemented is generic, if you think
+>>> otherwise, please let me know which part is not generic
+>>> according to you.
+>>
+>> I think I was too meticulous here. In the end of the previous
+>> message I mentioned that we cannot guarantee that all keyboard
+>> backlight controllers can adjust brightness autonomously.
+>> Nonetheless, for the ones that cannot do that it would make no sense
+>> to have a trigger. In view of that this trigger is generic enough.
+>>
+>> I'll wait for Pavel's opinion before merging the patch set
+>> as he was also involved in this whole thread.
+>
+> Do you mean me? Or Pavel Machek (CCed) who was involved in LEDs for input devices?
+
+I meant Pavel Machek, I haven't known that Pali is an equivalent of
+Pavel :-)
+Your opinion is very much appreciated though, thanks.
+
+> As pointed in other email, we do not know if HW really controls keyboard backlight,
+> so adding "fake" trigger on machines without HW control is not a good idea.
+>
+
+Yes, I had also similar doubts, but got almost convinced due to
+no objections. Now it becomes clear that we need to improve this
+feature.
+
+-- 
+Best regards,
+Jacek Anaszewski
