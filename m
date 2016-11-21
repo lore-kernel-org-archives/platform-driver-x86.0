@@ -1,42 +1,55 @@
-From: "UNCLAIMED ASSET" <noreply@eLIVE.co.uk>
-Subject: Haster Response.//..
-Date: Sun, 20 Nov 2016 22:23:16 -0500
-Message-ID: <E1c8fCZ-0003cW-Sc@srv01.wsp.net.br>
-Reply-To: steve.s.bhatti@gmail.com
+From: "Tan, Jui Nee" <jui.nee.tan@intel.com>
+Subject: RE: [PATCH v11 1/6] drivers/platform/x86/p2sb: New Primary to
+ Sideband bridge support driver for Intel SOC's
+Date: Mon, 21 Nov 2016 03:52:41 +0000
+Message-ID: <0158A29DB680F54A88142ED28D55B1D008323439@PGSMSX107.gar.corp.intel.com>
+References: <1479446550-28677-1-git-send-email-jui.nee.tan@intel.com>
+         <1479446550-28677-2-git-send-email-jui.nee.tan@intel.com>
+ <1479468102.22212.16.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 177-069-092-234.static.ctbctelecom.com.br ([177.69.92.234]:34917
-        "EHLO srv01.wsp.net.br" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1752084AbcKUDXr (ORCPT
+Received: from mga03.intel.com ([134.134.136.65]:59523 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752782AbcKUDwr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Nov 2016 22:23:47 -0500
-Content-Description: Mail message body
+        Sun, 20 Nov 2016 22:52:47 -0500
+In-Reply-To: <1479468102.22212.16.camel@linux.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <noreply@eLIVE.co.uk>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "ptyser@xes-inc.com" <ptyser@xes-inc.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yong, Jonathan" <jonathan.yong@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Luck, Tony" <tony.luck@intel.com>, "Wan Mohamad, Wan Ahmad Zainie" <wan.ahmad.zainie.wan.mohamad@intel.com>, "Sun, Yunying" <yunying.sun@intel.com>
 
-God dag,
-
-Vær så snill, kan jeg få din oppmerksomhet i utførelsen av en undermentioned forslag i tråd med min nåværende ekspansjon, vil jeg gjerne oppfordre partnerskap med deg eller ditt firma i forbindelse med en gjenstand. Det er en forlatt fondet her i vår bank (Santander Bank Plc.) Som ble eid av en av mine klienter. Ved Navn: Late David McDowell Brown, (en amerikansk statsborger av Arlington Virgina).
-
-Han er dessverre mistet livet i februar 2003 gjennom det sørlige USA romfergen Columbia. Han døde og etterlot en stor sum penger som har vært sovende i mange år i vår Bank uten krav og jeg har vært mislykket i finne noen av hans slektninger i mange år nå siden han døde en enkelt mann. Vær så snill, jeg trenger din haster hjelp til å overføre dette fondet (er) (penger) til kontoen din innen 11 eller 15 bankdager.
-
-Jeg har nylig fått en informasjon som banken ønsker å arve undermentioned summen inn i deres Treasury konto siden ingen har kommet for kravet ennå. Vær så snill, jeg trenger din HASTER hjelp til å presentere deg som den avdødes pårørende (Late David McDowell Brown) og jeg ærlig forsikre dere om at det skulle være noen bro over LOV involverer denne transaksjonen som alle dokument (er) for å gjøre denne påstanden (s ) vil bli sikret og godkjent av meg i advokatfirmaet her i Storbritannia. Jeg har stor tro på at dette ville være en stor / gjensidig nytte og flott avenue for investeringer i nærmeste fremtid.
-
-Når pengene er overført med hell til særskilt konto i ditt land og utbetalt henholdsvis mellom oss begge,
-Jeg ønsker å søke din ærlige råd på noen god og pålitelig forretningsidé jeg kan investere min andel i ditt land.
-Fullstendige opplysninger / modaliteter vil bli offentliggjort på din uttrykk for interesse for å samarbeide med meg. Jeg kan nås direkte på: (steve.s.bhatti@gmail.com).
-
-Takk, vil din ærlige samarbeid bli høyt verdsatt.
-
-Vennlig hilsen,
-Dr. Steve Bhatti.
-Drift / regionsjef
-Santander Bank Plc,
-47-48 Piccadilly
-PICCADILLY
-W1J0DT
-London, Storbritannia
-Tel: +447042043211
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
+IFttYWlsdG86YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tXQ0KPiBTZW50OiBGcmlk
+YXksIE5vdmVtYmVyIDE4LCAyMDE2IDc6MjIgUE0NCj4gVG86IFRhbiwgSnVpIE5lZSA8anVpLm5l
+ZS50YW5AaW50ZWwuY29tPjsgbWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNvbTsNCj4gaGVp
+a2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgdGdseEBsaW51dHJvbml4LmRlOyBkdmhhcnRA
+aW5mcmFkZWFkLm9yZzsNCj4gbWluZ29AcmVkaGF0LmNvbTsgaHBhQHp5dG9yLmNvbTsgeDg2QGtl
+cm5lbC5vcmc7IHB0eXNlckB4ZXMtaW5jLmNvbTsNCj4gbGVlLmpvbmVzQGxpbmFyby5vcmc7IGxp
+bnVzLndhbGxlaWpAbGluYXJvLm9yZw0KPiBDYzogbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7
+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBZb25nLCBKb25hdGhhbiA8am9uYXRoYW4ueW9uZ0BpbnRlbC5jb20+Ow0K
+PiBZdSwgT25nIEhvY2sgPG9uZy5ob2NrLnl1QGludGVsLmNvbT47IEx1Y2ssIFRvbnkgPHRvbnku
+bHVja0BpbnRlbC5jb20+Ow0KPiBXYW4gTW9oYW1hZCwgV2FuIEFobWFkIFphaW5pZSA8d2FuLmFo
+bWFkLnphaW5pZS53YW4ubW9oYW1hZEBpbnRlbC5jb20+Ow0KPiBTdW4sIFl1bnlpbmcgPHl1bnlp
+bmcuc3VuQGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMS82XSBkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9wMnNiOiBOZXcgUHJpbWFyeSB0bw0KPiBTaWRlYmFuZCBicmlkZ2Ugc3Vw
+cG9ydCBkcml2ZXIgZm9yIEludGVsIFNPQydzDQo+IA0KPiBPbiBGcmksIDIwMTYtMTEtMTggYXQg
+MTM6MjIgKzA4MDAsIFRhbiBKdWkgTmVlIHdyb3RlOg0KPiA+IEZyb206IEFuZHkgU2hldmNoZW5r
+byA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiA+DQo+ID4gVGhlcmUgaXMg
+YWxyZWFkeSBvbmUgYW5kIGF0IGxlYXN0IG9uZSBtb3JlIHVzZXIgY29taW5nIHdoaWNoIHJlcXVp
+cmUNCj4gPiBhbiBhY2Nlc3MgdG8gUHJpbWFyeSB0byBTaWRlYmFuZCBicmlkZ2UgKFAyU0IpIGlu
+IG9yZGVyIHRvIGdldCBJTyBvcg0KPiA+IE1NSU8gYmFyIGhpZGRlbiBieSBCSU9TLg0KPiA+IENy
+ZWF0ZSBhIGRyaXZlciB0byBhY2Nlc3MgUDJTQiBmb3IgeDg2IGRldmljZXMuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBZb25nLCBKb25hdGhhbiA8am9uYXRoYW4ueW9uZ0BpbnRlbC5jb20+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51
+eC5pbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiBWMTE6DQo+ID4gCS0gTm8gY2hh
+bmdlDQo+IA0KPiBBbnkgcGFydGljdWxhciByZWFzb24geW91IGlnbm9yZWQgbXkgY29tbWVudHMg
+dG8gdjEwIG9mIHRoaXMgcGF0Y2g/DQo+DQpIaSBBbmR5LA0KSSBhbSBzb3JyeSBmb3IgbWlzc2lu
+ZyB5b3VyIGNvbW1lbnRzIGFzIHRoZSBlbWFpbCBmaWx0ZXJlZCBpbnRvIG90aGVyIGZvbGRlciBh
+bmQgSSB3YXMgbm90IGF3YXJlIG9mIHRoYXQuIEkgd2lsbCBhcHBsaWVkIHlvdXIgY29tbWVudHMg
+aW50byBuZXh0IHBhdGNoIHZlcnNpb24uDQogDQo+IC0tDQo+IEFuZHkgU2hldmNoZW5rbyA8YW5k
+cml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiBJbnRlbCBGaW5sYW5kIE95DQo=
