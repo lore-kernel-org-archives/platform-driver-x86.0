@@ -1,7 +1,7 @@
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
 Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
-Date: Thu, 24 Nov 2016 10:21:43 +0100
-Message-ID: <ed1931a0-7194-d2cb-397b-14adf30cd322@redhat.com>
+Date: Thu, 24 Nov 2016 15:21:36 +0100
+Message-ID: <ba7108be-82c7-2d87-c884-7284aaee80a3@samsung.com>
 References: <201611201605.17631@pali>
  <CGME20161120162126epcas3p353e606ebc3d4f0868ff2937ec0e95c14@epcas3p3.samsung.com>
  <20161120162116.GA15737@amd>
@@ -17,15 +17,13 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20161124091525.GG13735@pali>
+In-reply-to: <20161124091525.GG13735@pali>
 Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: gdg@zplane.com, Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: gdg@zplane.com, Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Pali,
-
-On 24-11-16 10:15, Pali Rohár wrote:
+On 11/24/2016 10:15 AM, Pali Rohár wrote:
 > On Wednesday 23 November 2016 12:01:02 Jacek Anaszewski wrote:
 >> I would also appreciate your opinion on the other solution to the
 >> problem of notifying brightness changes originating from hardware,
@@ -45,12 +43,17 @@ On 24-11-16 10:15, Pali Rohár wrote:
 >
 > Do not know if this is really enough for your situation, it is just and
 > another idea.
->
+
+This way we would be losing POLLPRI events when trigger is active,
+whereas it would be useful to have ones in some use cases.
+
 > But first please update documentation in ABI/testing to match current
 > situation. That is really needed.
+>
 
-Patches are welcome ...     :)
+I suppose that you're thinking about behaviour on brightness file
+reading? Is there anything else you'd like to have clarified in the doc?
 
-Regards,
-
-Hans
+-- 
+Best regards,
+Jacek Anaszewski
