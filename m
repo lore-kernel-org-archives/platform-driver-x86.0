@@ -1,88 +1,66 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard
-	backlight trigger
-Date: Thu, 24 Nov 2016 22:45:00 +0100
-Message-ID: <201611242245.00217@pali>
-References: <05766b18-026a-2af3-def8-9289ddb55234@samsung.com>
-	<201611241751.27696@pali>
-	<5238be1f-d669-07e6-c796-5bc0126cb456@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v3 1/1] platform/x86: move module mlx-platform from
+ arch/x86 to drivers/platform/x86
+Date: Fri, 25 Nov 2016 04:14:05 +0000
+Message-ID: <AM5PR0501MB209739CCF2AC3524B267B92EA2890@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
+ <alpine.DEB.2.20.1610310930430.5481@nanos>
+ <AM5PR0501MB20971C6FB6089705CC130C8FA2A60@AM5PR0501MB2097.eurprd05.prod.outlook.com>
+ <CAHp75Vfstb1k_kgzLO0NQKJT_Eibo-Az_Bh+M1YFR5ONoVufuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1931691018824131776=="
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <5238be1f-d669-07e6-c796-5bc0126cb456-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, gdg-EWGI23mR1M3QT0dZR+AlfA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
---===============1931691018824131776==
-Content-Type: multipart/signed; boundary="nextPart1715910.zuKnYXRVBk";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-
---nextPart1715910.zuKnYXRVBk
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thursday 24 November 2016 22:35:52 Jacek Anaszewski wrote:
-> > I understood that we cannot notify about changes done by CPU
-> > trigger due to high power usage... Or not?
->=20
-> Exactly.
-
-So in this case exporting any new sysfs file (or using existing) which=20
-report POLLPRI events for LED devices with active trigger is not=20
-accepted.
-
-This means that trigger itself is problematic and trigger code should=20
-tell to led subsystem if it should send POLLPRI events to userspace or=20
-not. E.g. cpu trigger should tell led subsystem that events must not be=20
-sent and e.g. rfkill trigger could tell that events can be sent...
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
---nextPart1715910.zuKnYXRVBk
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlg3X1wACgkQi/DJPQPkQ1LKogCeKXfwqeo8RIEg4wAxax1e/iID
-4AYAoJuM1yCIA7H13SL+hGg9aw7sc09B
-=ElIW
------END PGP SIGNATURE-----
-
---nextPart1715910.zuKnYXRVBk--
-
-
---===============1931691018824131776==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-------------------------------------------------------------------------------
-
---===============1931691018824131776==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ibm-acpi-devel mailing list
-ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
-
---===============1931691018824131776==--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmFkaW0gUGFzdGVybmFr
+DQo+IFNlbnQ6IE1vbmRheSwgTm92ZW1iZXIgMTQsIDIwMTYgMTA6MTAgQU0NCj4gVG86ICdBbmR5
+IFNoZXZjaGVua28nIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBDYzogVGhvbWFzIEds
+ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgcGxhdGZv
+cm0tDQo+IGRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyB4ODZAa2VybmVsLm9yZzsgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gamlyaUByZXNudWxsaS51czsgYW5kcml5LnNoZXZj
+aGVua29AbGludXguaW50ZWwuY29tDQo+IFN1YmplY3Q6IFJFOiBbcGF0Y2ggdjMgMS8xXSBwbGF0
+Zm9ybS94ODY6IG1vdmUgbW9kdWxlIG1seC1wbGF0Zm9ybSBmcm9tDQo+IGFyY2gveDg2IHRvIGRy
+aXZlcnMvcGxhdGZvcm0veDg2DQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21haWx0bzphbmR5LnNoZXZjaGVua29A
+Z21haWwuY29tXQ0KPiA+IFNlbnQ6IE1vbmRheSwgTm92ZW1iZXIgMTQsIDIwMTYgOToxNyBBTQ0K
+PiA+IFRvOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+DQo+ID4gQ2M6IFRo
+b21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7
+DQo+ID4gcGxhdGZvcm0tIGRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyB4ODZAa2VybmVsLm9y
+ZzsNCj4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBqaXJpQHJlc251bGxpLnVzOw0K
+PiA+IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbQ0KPiA+IFN1YmplY3Q6IFJlOiBb
+cGF0Y2ggdjMgMS8xXSBwbGF0Zm9ybS94ODY6IG1vdmUgbW9kdWxlIG1seC1wbGF0Zm9ybQ0KPiA+
+IGZyb20NCj4gPiBhcmNoL3g4NiB0byBkcml2ZXJzL3BsYXRmb3JtL3g4Ng0KPiA+DQo+ID4gT24g
+VHVlLCBOb3YgOCwgMjAxNiBhdCA4OjE5IEFNLCBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxs
+YW5veC5jb20+DQo+ID4gd3JvdGU6DQo+ID4gPiBIaSwNCj4gPiA+DQo+ID4gPiBDb3VsZCB0aGlz
+IHBhdGNoIGJlIG1lcmdlZCB0byBmb3ItbmV4dCBmb3IgNC4xMD8NCj4gPiA+IFdoZW4gaXQncyBt
+ZXJnZWQgSSdkIGxpa2UgdG8gc3VibWl0IGFub3RoZXIgc21hbGwgcGF0Y2ggb24gdG9wIG9mIGl0
+Lg0KPiA+DQo+IA0KPiBIaSBBbmR5LA0KPiBUaGFua3MgZm9yIHJlcGx5Lg0KPiANCj4gPiBGaXJz
+dCBvZiBhbGwsIHBsZWFzZSBhdm9pZCB0b3AgcG9zdGluZy4NCj4gDQo+IFNvcnJ5IGZvciB0aGF0
+Lg0KPiBJIHBvc3RlZCBvbiB0b3AsIGJlY2F1c2UgaXQgZG9lc24ndCBjb21lIGFzIHJlcGx5IHRv
+IHNvbWV0aGluZyAoYnV0IGl0IHNlZW1zIEkNCj4gc2hvdWxkIHBvc3QgYXQgYm90dG9tIGluIHN1
+YyBjYXNlKS4NCj4gDQo+ID4gSSB3aWxsIHByb2Nlc3MgdGhlIHBkeDg2IG1haWxpbmcgbGlzdCBh
+bmQgcXVldWUgdGhpcyB3ZWVrLg0KDQpJIGFtIHZlcnkgc29ycnkgZm9yIHJlbWluZGluZywgYnV0
+IEkgc2VlIHRoYXQgaXQncyBzdGlsbCBub3QgbWVyZ2VkLg0KDQpUaGFua3MsDQpWYWRpbS4NCg0K
+PiA+DQo+ID4gUC5TLiBBcmUgeW91IHN1cmUgdGhhdCBpcyB0aGUgcmlnaHQgZml4ICJSZW1vdmUg
+InNlbGVjdCBNTFhfUExBVEZPUk0iDQo+ID4gZnJvbSBLY29uZmlnLCBzaW5jZSBpdCBoYXMgdW5t
+ZXQgZGlyZWN0IGRlcGVuZGVuY2llcyAoWDg2ICYmDQo+ID4gWDg2X1BMQVRGT1JNX0RFVklDRVMg
+JiYgWDg2XzY0KSI/DQo+IA0KPiBUaGVyZSB3ZXJlIHR3byBwb3NzaWJpbGl0eTogdG8gbGVhdmUg
+InNlbGVjdCBNTFhfUExBVEZPUk0iIGFuZCBhZGQgIiBkZXBlbmRzDQo+IG9uIFg4Nl82NCIuIE9y
+IGp1c3QgcmVtb3ZlIHNlbGVjdC4NCj4gSSBkZWNpZGUgdG8gcmVtb3ZlLCBoYXZpbmcgaW4gbWlu
+ZCB0aGUgbmV4dCBjb25zaWRlcmF0aW9uczoNCj4gSWYgTUxYX1BMQVRGT1JNIGlzIG5vdCBzZWxl
+Y3RlZCBoZXJlIC0ganVzdCBub2JvZHkgd2lsbCBhY3RpdmF0ZSBob3RwbHVnIGRyaXZlcjsNCj4g
+SWYgaW4gdGhlIGZlYXR1cmUgb24gc29tZSBzeXN0ZW1zIHdlJ2xsIGhhdmUgQUNQSSBzdXBwb3J0
+IC0gaG90cGx1ZyBzdGlsbCBpcw0KPiByZWxldmFudC4NCj4gDQo+ID4NCj4gPiA+PiBPbiBNb24s
+IDMxIE9jdCAyMDE2LCBWYWRpbSBQYXN0ZXJuYWsgd3JvdGU6DQo+ID4gPj4NCj4gPiA+PiA+IFNp
+bmNlIG1seC1wbGF0Zm9ybSBpcyBub3QgYW4gYXJjaGl0ZWN0dXJhbCBkcml2ZXIsIGl0IGlzIG1v
+dmVkDQo+ID4gPj4gPiBvdXQgb2YgYXJjaC94ODYvcGxhdGZvcm0gdG8gZHJpdmVycy9wbGF0Zm9y
+bS94ODYuDQo+ID4gPj4gPiBSZWxldmFudCBNYWtlZmlsZSBhbmQgS2NvbmZpZyBhcmUgdXBkYXRl
+ZC4NCj4gPiA+PiA+DQo+ID4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsgPHZh
+ZGltcEBtZWxsYW5veC5jb20+DQo+ID4gPj4NCj4gPiA+PiBBY2tlZC1ieTogVGhvbWFzIEdsZWl4
+bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQo+ID4NCj4gPiAtLQ0KPiA+IFdpdGggQmVzdCBSZWdh
+cmRzLA0KPiA+IEFuZHkgU2hldmNoZW5rbw0K
