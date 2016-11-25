@@ -1,54 +1,88 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: Fix old style
- declaration GCC warning
-Date: Fri, 25 Nov 2016 13:31:30 -0200
-Message-ID: <20161125153130.GA4302@khazad-dum.debian.net>
-References: <20161125131807.3885-1-tklauser@distanz.ch>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
+Date: Fri, 25 Nov 2016 16:46:17 +0100
+Message-ID: <05f63782-10a4-c1c4-1838-4c86c4542bf5@samsung.com>
+References: <05766b18-026a-2af3-def8-9289ddb55234@samsung.com>
+ <20161125100140.GC4062@amd> <b159c2e1-dbf7-1ee3-707c-82891c7194db@redhat.com>
+ <CGME20161125112622epcas2p1c7e7402109b9e54155a25fdeff6aba35@epcas2p1.samsung.com>
+ <201611251226.13615@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161125131807.3885-1-tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout3.w1.samsung.com ([210.118.77.13]:23031 "EHLO
+        mailout3.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755321AbcKYPqY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 25 Nov 2016 10:46:24 -0500
+In-reply-to: <201611251226.13615@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, gdg@zplane.com, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-On Fri, 25 Nov 2016, Tobias Klauser wrote:
-> Fix an [-Wold-style-declaration] GCC warning by moving the inline
-> keyword before the return type.
-> 
-> Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Hi,
 
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+On 11/25/2016 12:26 PM, Pali Rohár wrote:
+> On Friday 25 November 2016 12:14:56 Hans de Goede wrote:
+>> Hi,
+>>
+>> On 25-11-16 11:01, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> In view of the above we could report hw brightness changes with
+>>>> POLLPRI on brightness file, but unfortunately we can't because it
+>>>> is impossible to guarantee that readout of brightness file will
+>>>> return the brightness the POLLPRI was meant to notify about.
+>>>
+>>> Agreed here.
+>>>
+>>>> That's why a separate read only file seems to be the only proper
+>>>> solution.
+>>>
+>>> Yes please. And lets make self-changing leds into a trigger, as
+>>> proposed, and as Hans' patch should be already doing.
+>>>
+>>>> Moreover, the file should return the brightness from the time
+>>>> of last POLLPRI.
+>>>
+>>> Not sure I agree here. Normally, kernel returns current state for
+>>> variables, does not track "old" state.
+>>
+>> Agreed, storing the last state just unnecessarily complicates things.
+>>
+>> So do we have a consensus on implementing a new hw_brightness_change
+>> sysfs attribute now, which only some LEDs will have, can be polled
+>> to detect changed done autonomously by the hardware and returns
+>> the current / actual LED brightness when read ?
+>>
+>> As for the modeling how the hotkey controls the LED as a trigger,
+>> although I do like this from one pov, I can see Jacek's point that
+>> this is confusing as there really is nothing to configure here,
+>> where as normally a user could do "echo none > trigger" to break
+>> the link. So I think that is best (cleanest /minimal non confusing
+>> API) with just the hw_brightness_change sysfs-attribute and not
+>> model this as a trigger.
+>
+> I can accept with this solution (no trigger, event on new sysfs file
+> which returns current/actual brightness state, new sysfs file only for
+> devices which can report brightness state).
+>
+> But I'm not sure if it is really fixing that original problem with high
+> power usage...
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index b65ce7519411..c24ce1adc577 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -7716,7 +7716,7 @@ static struct ibm_struct volume_driver_data = {
->  
->  #define alsa_card NULL
->  
-> -static void inline volume_alsa_notify_change(void)
-> +static inline void volume_alsa_notify_change(void)
->  {
->  }
->  
+High power consumption occurred because in that solution every call
+to __led_set_brightness{_blocking} triggered the POLLPRI.
+In the discussed approach it will not be the case.
+
+> As wrote in some previous emails, consider "actual_brightness" sysfs
+> name which is already used for this purpose by backlight subsystem --
+> because for consistency. backlight devices have: actual_brightness,
+> brightness, max_brightness.
+
+I don't like it very much but I could accept it eventually if
+other people deem it accurate.
 
 -- 
-  Henrique Holschuh
-
-------------------------------------------------------------------------------
+Best regards,
+Jacek Anaszewski
