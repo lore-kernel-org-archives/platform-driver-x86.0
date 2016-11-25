@@ -1,68 +1,38 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
-Date: Fri, 25 Nov 2016 13:05:17 +0100
-Message-ID: <20161125120517.GA4792@amd>
-References: <05766b18-026a-2af3-def8-9289ddb55234@samsung.com>
- <20161125100140.GC4062@amd>
- <b159c2e1-dbf7-1ee3-707c-82891c7194db@redhat.com>
- <201611251226.13615@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+From: Tobias Klauser <tklauser@distanz.ch>
+Subject: [PATCH] thinkpad_acpi: Fix old style declaration GCC warning
+Date: Fri, 25 Nov 2016 14:18:07 +0100
+Message-ID: <20161125131807.3885-1-tklauser@distanz.ch>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:58689 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752851AbcKYMFU (ORCPT
+Received: from mail.zhinst.com ([212.126.164.98]:44462 "EHLO mail.zhinst.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754329AbcKYNSS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Nov 2016 07:05:20 -0500
-Content-Disposition: inline
-In-Reply-To: <201611251226.13615@pali>
+        Fri, 25 Nov 2016 08:18:18 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, gdg@zplane.com, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
+Fix an [-Wold-style-declaration] GCC warning by moving the inline
+keyword before the return type.
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi!
-
-> > As for the modeling how the hotkey controls the LED as a trigger,
-> > although I do like this from one pov, I can see Jacek's point that
-> > this is confusing as there really is nothing to configure here,
-> > where as normally a user could do "echo none > trigger" to break
-> > the link. So I think that is best (cleanest /minimal non confusing
-> > API) with just the hw_brightness_change sysfs-attribute and not
-> > model this as a trigger.
->=20
-> I can accept with this solution (no trigger, event on new sysfs file=20
-> which returns current/actual brightness state, new sysfs file only for=20
-> devices which can report brightness state).
->=20
-> But I'm not sure if it is really fixing that original problem with high=
-=20
-> power usage...
-
-Yes, it is fixing that problem.
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlg4KPwACgkQMOfwapXb+vI3uQCgnlAiZfEKol1euoxHj6NLg5Sz
-SakAoMJWBPVSTIAm9Zui1+5ADb1a/MJv
-=s/Lu
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b65ce7519411..c24ce1adc577 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7716,7 +7716,7 @@ static struct ibm_struct volume_driver_data = {
+ 
+ #define alsa_card NULL
+ 
+-static void inline volume_alsa_notify_change(void)
++static inline void volume_alsa_notify_change(void)
+ {
+ }
+ 
+-- 
+2.11.0.rc0.7.gbe5a750
