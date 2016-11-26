@@ -1,57 +1,54 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] x86/intel_mid_thermal: Fix suspend handlers unused warning
-Date: Sat, 26 Nov 2016 17:01:51 +0100
-Message-ID: <20161126160151.25745-1-bp@alien8.de>
+From: <gillian.murray@simpsonmillar.co.uk>
+Subject: (unknown)
+Date: Sat, 26 Nov 2016 17:47:49 -0000
+Message-ID: <148018246911.32572.18353160959612536373@younet.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="INFO_087512886_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 201-71-141-233-arpa.younet.com.br ([201.71.141.233]:45634 "HELO
+        younet.com.br" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+        id S1752427AbcKZRry (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 26 Nov 2016 12:47:54 -0500
+Content-Disposition: attachment
+Subject: 
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
-
-Fix:
-
-  drivers/platform/x86/intel_mid_thermal.c:424:12: warning: ‘mid_thermal_resume’
-  defined but not used [-Wunused-function]
-   static int mid_thermal_resume(struct device *dev)
-              ^
-  drivers/platform/x86/intel_mid_thermal.c:436:12: warning: ‘mid_thermal_suspend’
-  defined but not used [-Wunused-function]
-   static int mid_thermal_suspend(struct device *dev)
-              ^
-
-which I see during randbuilds here.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/intel_mid_thermal.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index 9f713b832ba3..0df3c9d37509 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -415,6 +415,7 @@ static struct thermal_device_info *initialize_sensor(int index)
- 	return td_info;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
- /**
-  * mid_thermal_resume - resume routine
-  * @dev: device structure
-@@ -442,6 +443,7 @@ static int mid_thermal_suspend(struct device *dev)
- 	 */
- 	return configure_adc(0);
- }
-+#endif
- 
- static SIMPLE_DEV_PM_OPS(mid_thermal_pm,
- 			 mid_thermal_suspend, mid_thermal_resume);
--- 
-2.10.0
+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
