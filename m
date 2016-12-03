@@ -1,126 +1,108 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: Use ACPI_FAILURE at appropriate places
-Date: Sat, 3 Dec 2016 14:45:15 +0200
-Message-ID: <CAHp75VfZLD_GEB_Dmto1c+U3osbUWaDtb5wpEMzW9YrpuDJsaw@mail.gmail.com>
-References: <1474248831-29832-1-git-send-email-axel.lin@ingics.com>
+Subject: Re: [PATCH RFT] platform/x86: intel-vbtn: Switch to use devm_input_allocate_device
+Date: Sat, 3 Dec 2016 16:05:45 +0200
+Message-ID: <CAHp75VePA77J4zh33Mg4zKZqUMgehWs1seAyE-n1w=-dSE7SNg@mail.gmail.com>
+References: <1474362084-2670-1-git-send-email-axel.lin@ingics.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:35753 "EHLO
-        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751957AbcLCMpm (ORCPT
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:36234 "EHLO
+        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751987AbcLCOUq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Dec 2016 07:45:42 -0500
-Received: by mail-oi0-f67.google.com with SMTP id v84so30775822oie.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2016 04:45:16 -0800 (PST)
-In-Reply-To: <1474248831-29832-1-git-send-email-axel.lin@ingics.com>
+        Sat, 3 Dec 2016 09:20:46 -0500
+Received: by mail-oi0-f66.google.com with SMTP id u15so31082319oie.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2016 06:20:45 -0800 (PST)
+In-Reply-To: <1474362084-2670-1-git-send-email-axel.lin@ingics.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Axel Lin <axel.lin@ingics.com>
-Cc: Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, AceLan Kao <acelan.kao@canonical.com>, Harald Welte <laforge@gnumonks.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+Cc: Darren Hart <dvhart@infradead.org>, AceLan Kao <acelan.kao@canonical.com>, platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 19, 2016 at 4:33 AM, Axel Lin <axel.lin@ingics.com> wrote:
-> Use ACPI_FAILURE() to replace !ACPI_SUCCESS(), this avoid !! operations.
-
-I would agree that the main point is readability, not some unrealistic
-compiler stupidity/
-
-For sake of readability:
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+On Tue, Sep 20, 2016 at 12:01 PM, Axel Lin <axel.lin@ingics.com> wrote:
+> Use devm_input_allocate_device to simplify the error handling code.
+> This conversion also makes input_register_device() to be called after
+> acpi_remove_notify_handler. This avoid a small window that it's possible
+> to call notify_handler after unregister input device.
 >
 > Signed-off-by: Axel Lin <axel.lin@ingics.com>
+
+Looks good to me.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
 > ---
->  drivers/platform/x86/intel-hid.c          | 6 +++---
->  drivers/platform/x86/intel-smartconnect.c | 2 +-
->  drivers/platform/x86/intel-vbtn.c         | 2 +-
->  drivers/platform/x86/panasonic-laptop.c   | 2 +-
->  drivers/platform/x86/thinkpad_acpi.c      | 2 +-
->  5 files changed, 7 insertions(+), 7 deletions(-)
+>  drivers/platform/x86/intel-vbtn.c | 33 +++++----------------------------
+>  1 file changed, 5 insertions(+), 28 deletions(-)
 >
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index ed58742..00cbeca 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -69,7 +69,7 @@ static int intel_hid_set_enable(struct device *device, int enable)
->
->         arg0.integer.value = enable;
->         status = acpi_evaluate_object(ACPI_HANDLE(device), "HDSM", &args, NULL);
-> -       if (!ACPI_SUCCESS(status)) {
-> +       if (ACPI_FAILURE(status)) {
->                 dev_warn(device, "failed to %sable hotkeys\n",
->                          enable ? "en" : "dis");
->                 return -EIO;
-> @@ -148,7 +148,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->         }
->
->         status = acpi_evaluate_integer(handle, "HDEM", NULL, &ev_index);
-> -       if (!ACPI_SUCCESS(status)) {
-> +       if (ACPI_FAILURE(status)) {
->                 dev_warn(&device->dev, "failed to get event index\n");
->                 return;
->         }
-> @@ -167,7 +167,7 @@ static int intel_hid_probe(struct platform_device *device)
->         int err;
->
->         status = acpi_evaluate_integer(handle, "HDMM", NULL, &mode);
-> -       if (!ACPI_SUCCESS(status)) {
-> +       if (ACPI_FAILURE(status)) {
->                 dev_warn(&device->dev, "failed to read mode\n");
->                 return -ENODEV;
->         }
-> diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel-smartconnect.c
-> index 04cf5df..bbe4c06 100644
-> --- a/drivers/platform/x86/intel-smartconnect.c
-> +++ b/drivers/platform/x86/intel-smartconnect.c
-> @@ -29,7 +29,7 @@ static int smartconnect_acpi_init(struct acpi_device *acpi)
->         acpi_status status;
->
->         status = acpi_evaluate_integer(acpi->handle, "GAOS", NULL, &value);
-> -       if (!ACPI_SUCCESS(status))
-> +       if (ACPI_FAILURE(status))
->                 return -EINVAL;
->
->         if (value & 0x1) {
 > diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index 146d02f..f04a394 100644
+> index f04a394..bd7230a 100644
 > --- a/drivers/platform/x86/intel-vbtn.c
 > +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -97,7 +97,7 @@ static int intel_vbtn_probe(struct platform_device *device)
->         int err;
+> @@ -49,34 +49,19 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+>         struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+>         int ret;
 >
->         status = acpi_evaluate_object(handle, "VBDL", NULL, NULL);
-> -       if (!ACPI_SUCCESS(status)) {
-> +       if (ACPI_FAILURE(status)) {
->                 dev_warn(&device->dev, "failed to read Intel Virtual Button driver\n");
->                 return -ENODEV;
->         }
-> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-> index 3f87097..59b8eb6 100644
-> --- a/drivers/platform/x86/panasonic-laptop.c
-> +++ b/drivers/platform/x86/panasonic-laptop.c
-> @@ -458,7 +458,7 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
+> -       priv->input_dev = input_allocate_device();
+> +       priv->input_dev = devm_input_allocate_device(&device->dev);
+>         if (!priv->input_dev)
+>                 return -ENOMEM;
 >
->         rc = acpi_evaluate_integer(pcc->handle, METHOD_HKEY_QUERY,
->                                    NULL, &result);
-> -       if (!ACPI_SUCCESS(rc)) {
-> +       if (ACPI_FAILURE(rc)) {
->                 ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
->                                  "error getting hotkey status\n"));
->                 return;
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index b65ce75..31fb979 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9018,7 +9018,7 @@ static int mute_led_on_off(struct tp_led_table *t, bool state)
->         acpi_handle temp;
->         int output;
+>         ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
+>         if (ret)
+> -               goto err_free_device;
+> +               return ret;
 >
-> -       if (!ACPI_SUCCESS(acpi_get_handle(hkey_handle, t->name, &temp))) {
-> +       if (ACPI_FAILURE(acpi_get_handle(hkey_handle, t->name, &temp))) {
->                 pr_warn("Thinkpad ACPI has no %s interface.\n", t->name);
->                 return -EIO;
->         }
+>         priv->input_dev->dev.parent = &device->dev;
+>         priv->input_dev->name = "Intel Virtual Button driver";
+>         priv->input_dev->id.bustype = BUS_HOST;
+>
+> -       ret = input_register_device(priv->input_dev);
+> -       if (ret)
+> -               goto err_free_device;
+> -
+> -       return 0;
+> -
+> -err_free_device:
+> -       input_free_device(priv->input_dev);
+> -       return ret;
+> -}
+> -
+> -static void intel_vbtn_input_destroy(struct platform_device *device)
+> -{
+> -       struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+> -
+> -       input_unregister_device(priv->input_dev);
+> +       return input_register_device(priv->input_dev);
+>  }
+>
+>  static void notify_handler(acpi_handle handle, u32 event, void *context)
+> @@ -117,24 +102,16 @@ static int intel_vbtn_probe(struct platform_device *device)
+>                                              ACPI_DEVICE_NOTIFY,
+>                                              notify_handler,
+>                                              device);
+> -       if (ACPI_FAILURE(status)) {
+> -               err = -EBUSY;
+> -               goto err_remove_input;
+> -       }
+> +       if (ACPI_FAILURE(status))
+> +               return -EBUSY;
+>
+>         return 0;
+> -
+> -err_remove_input:
+> -       intel_vbtn_input_destroy(device);
+> -
+> -       return err;
+>  }
+>
+>  static int intel_vbtn_remove(struct platform_device *device)
+>  {
+>         acpi_handle handle = ACPI_HANDLE(&device->dev);
+>
+> -       intel_vbtn_input_destroy(device);
+>         acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+>
+>         /*
 > --
 > 2.7.4
 >
