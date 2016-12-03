@@ -1,85 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] x86/intel_mid_thermal: Fix suspend handlers unused warning
-Date: Sat, 3 Dec 2016 16:31:36 +0200
-Message-ID: <CAHp75Ve2asqJox+x7dVm0r=j4EWZQ80hL7-RD8vw5ae4QL9dwg@mail.gmail.com>
-References: <20161126160151.25745-1-bp@alien8.de>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] asus-wmi: Set specified XUSB2PR value for X550LB
+Date: Sat, 3 Dec 2016 19:46:36 +0100
+Message-ID: <CAHR064i=i-zizZ49ZfjZogzomCkwX9ADAu-1BNo7gASk0LDL1Q@mail.gmail.com>
+References: <1472745355-13428-1-git-send-email-kai.chiuan@gmail.com>
+ <20160909165820.GB17607@f23x64.localdomain> <CAHR064hBWJo7N417mZWVT4EN_EBCULLcn_HUbFnguA_4O3+inQ@mail.gmail.com>
+ <CAHp75VddH=yVOy-GAvvypucQg3yvOb2K=s2iY_suC8NSyES+3w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:36343 "EHLO
-        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751107AbcLCObi (ORCPT
+Received: from mail-lf0-f46.google.com ([209.85.215.46]:34251 "EHLO
+        mail-lf0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750789AbcLCSqj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Dec 2016 09:31:38 -0500
-In-Reply-To: <20161126160151.25745-1-bp@alien8.de>
+        Sat, 3 Dec 2016 13:46:39 -0500
+Received: by mail-lf0-f46.google.com with SMTP id o141so216314746lff.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2016 10:46:38 -0800 (PST)
+In-Reply-To: <CAHp75VddH=yVOy-GAvvypucQg3yvOb2K=s2iY_suC8NSyES+3w@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Kai-Chuan Hsieh <kai.chiuan@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Sat, Nov 26, 2016 at 6:01 PM, Borislav Petkov <bp@alien8.de> wrote:
-> From: Borislav Petkov <bp@suse.de>
->
-> Fix:
->
->   drivers/platform/x86/intel_mid_thermal.c:424:12: warning: =E2=80=98mid_=
-thermal_resume=E2=80=99
->   defined but not used [-Wunused-function]
->    static int mid_thermal_resume(struct device *dev)
->               ^
->   drivers/platform/x86/intel_mid_thermal.c:436:12: warning: =E2=80=98mid_=
-thermal_suspend=E2=80=99
->   defined but not used [-Wunused-function]
->    static int mid_thermal_suspend(struct device *dev)
->               ^
->
-> which I see during randbuilds here.
+Acked-by: Corentin Chary <corentin.chary@gmail.com>
 
-Thanks!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+On Sun, Nov 20, 2016 at 1:59 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sun, Sep 11, 2016 at 5:50 PM, Corentin Chary
+> <corentin.chary@gmail.com> wrote:
+>> I'm not sure what this has to do with the acpi/wmi driver, but I'm
+>> fine to merge it there if there isn't a better place.
 >
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
->  drivers/platform/x86/intel_mid_thermal.c | 2 ++
->  1 file changed, 2 insertions(+)
+> Corentin, I read this as your Ack. Tell me if it's not the case.
 >
-> diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/=
-x86/intel_mid_thermal.c
-> index 9f713b832ba3..0df3c9d37509 100644
-> --- a/drivers/platform/x86/intel_mid_thermal.c
-> +++ b/drivers/platform/x86/intel_mid_thermal.c
-> @@ -415,6 +415,7 @@ static struct thermal_device_info *initialize_sensor(=
-int index)
->         return td_info;
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
->  /**
->   * mid_thermal_resume - resume routine
->   * @dev: device structure
-> @@ -442,6 +443,7 @@ static int mid_thermal_suspend(struct device *dev)
->          */
->         return configure_adc(0);
->  }
-> +#endif
->
->  static SIMPLE_DEV_PM_OPS(mid_thermal_pm,
->                          mid_thermal_suspend, mid_thermal_resume);
-> --
-> 2.10.0
+>> Kai-Chuan:
+>> - Can you double-check that there is no BIOS update fixing this ?
+>> - Can you double-check that there isn't similar code somewhere else in
+>> the kernel ?
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver=
--x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> With Best Regards,
+> Andy Shevchenko
 
 
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Corentin Chary
+http://xf.iksaif.net
