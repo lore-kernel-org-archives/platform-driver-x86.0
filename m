@@ -1,47 +1,63 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] asus-wmi: Set specified XUSB2PR value for X550LB
-Date: Sun, 4 Dec 2016 03:33:30 +0200
-Message-ID: <CAHp75VfQkcivJUvcGZxafO2nMufyr3ZCKJLuo+OaC=0nveNBhA@mail.gmail.com>
-References: <1472745355-13428-1-git-send-email-kai.chiuan@gmail.com>
- <20160909165820.GB17607@f23x64.localdomain> <CAHR064hBWJo7N417mZWVT4EN_EBCULLcn_HUbFnguA_4O3+inQ@mail.gmail.com>
- <CAHp75VddH=yVOy-GAvvypucQg3yvOb2K=s2iY_suC8NSyES+3w@mail.gmail.com> <CAHR064i=i-zizZ49ZfjZogzomCkwX9ADAu-1BNo7gASk0LDL1Q@mail.gmail.com>
+From: Johannes Stezenbach <js@sig21.net>
+Subject: Re: Cherryview wake up events
+Date: Sun, 4 Dec 2016 19:52:19 +0100
+Message-ID: <20161204185219.j45aabkpvptadmcx@sig21.net>
+References: <20160920091840.GN1811@lahna.fi.intel.com>
+ <20160920101450.ylohouriienzrgtj@sig21.net>
+ <20160920104014.GO1811@lahna.fi.intel.com>
+ <20160920155943.zrj7wwgg7ugqyv6i@sig21.net>
+ <20160920211153.y7ntwwik2l6ppoqz@sig21.net>
+ <20160921090614.GY1811@lahna.fi.intel.com>
+ <20160921091635.tjnc2gvj75jixycv@sig21.net>
+ <20160923081904.GM1218@lahna.fi.intel.com>
+ <20161005124648.4fkl55q2i4qnug2x@sig21.net>
+ <20161005130511.GM1765@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f50.google.com ([209.85.218.50]:32936 "EHLO
-        mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751902AbcLDBdb (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Dec 2016 20:33:31 -0500
-Received: by mail-oi0-f50.google.com with SMTP id w63so306187682oiw.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Dec 2016 17:33:31 -0800 (PST)
-In-Reply-To: <CAHR064i=i-zizZ49ZfjZogzomCkwX9ADAu-1BNo7gASk0LDL1Q@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Kai-Chuan Hsieh <kai.chiuan@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161005130511.GM1765@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Dec 3, 2016 at 8:46 PM, Corentin Chary <corentin.chary@gmail.com> wrote:
-> Acked-by: Corentin Chary <corentin.chary@gmail.com>
+Hi,
 
-Thanks!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Wed, Oct 05, 2016 at 04:05:11PM +0300, Mika Westerberg wrote:
+> On Wed, Oct 05, 2016 at 02:46:48PM +0200, Johannes Stezenbach wrote:
+> > On Fri, Sep 23, 2016 at 11:19:04AM +0300, Mika Westerberg wrote:
+> > > David (CC'd) is working on getting the Dollar Cove PMIC driver
+> > > upstreamed to the mainline kernel.
+> > 
+> > May I ask when to expect a patch?  I'm ready if you
+> > have something to test, even if it's not in
+> > shape for mainline yet.
+> 
+> It typically takes quite some time to get all the legal stuff done
+> before the code can be published. And if people are busy with other
+> things it takes even more time.
+> 
+> So please be patient, it will happen sooner or later ;-)
+
+I don't want to nag, but just so it doesn't drop off
+the TODO list due to "lack of interest":  What's the
+status?  Will Santa bring the the TI Dollar Cove PMIC driver?
+
+While I'm at it, I also have questions about S0ix support
+in Linux which I didn't find answers to by web search.
+Does S0ix depend on the PMIC driver?  And will it be
+used during run time or only in "sleep" state
+(which would mean "echo freeze >/sys/power/state"
+since ACPI S3 isn't supported)?
+Now all I know is it doesn't seem to be used so far (running 4.9.0-rc7+):
+
+/sys/kernel/debug/pmc_atom/sleep_state:S0IR Residency:  0us
+/sys/kernel/debug/pmc_atom/sleep_state:S0I1 Residency:  0us
+/sys/kernel/debug/pmc_atom/sleep_state:S0I2 Residency:  0us
+/sys/kernel/debug/pmc_atom/sleep_state:S0I3 Residency:  0us
+/sys/kernel/debug/pmc_atom/sleep_state:S0   Residency: 160934496us
 
 
-> On Sun, Nov 20, 2016 at 1:59 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Sun, Sep 11, 2016 at 5:50 PM, Corentin Chary
->> <corentin.chary@gmail.com> wrote:
->>> I'm not sure what this has to do with the acpi/wmi driver, but I'm
->>> fine to merge it there if there isn't a better place.
->>
->> Corentin, I read this as your Ack. Tell me if it's not the case.
->>
->>> Kai-Chuan:
->>> - Can you double-check that there is no BIOS update fixing this ?
->>> - Can you double-check that there isn't similar code somewhere else in
->>> the kernel ?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Johannes
