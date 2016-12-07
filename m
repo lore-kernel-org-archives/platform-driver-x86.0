@@ -1,45 +1,64 @@
-From: velemas <velemas@gmail.com>
-Subject: [PATCH 1/1] ideapad-laptop: Add ideapad Y700 15-ACZ to the
- no_hw_rfkill DMI list
-Date: Tue, 6 Dec 2016 22:17:43 +0300
-Message-ID: <20161206221743.357426a0@fazafaka>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v5 0/2] Add platform clock for BayTrail platforms
+Date: Wed,  7 Dec 2016 17:43:24 +0200
+Message-ID: <1481125406-29097-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wj0-f194.google.com ([209.85.210.194]:33372 "EHLO
-        mail-wj0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751895AbcLFTSA (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:4275 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932209AbcLGPoN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Dec 2016 14:18:00 -0500
-Received: by mail-wj0-f194.google.com with SMTP id kp2so45693642wjc.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Dec 2016 11:18:00 -0800 (PST)
+        Wed, 7 Dec 2016 10:44:13 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com
-Cc: platform-driver-x86@vger.kernel.org
+To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Irina Tirdea <irina.tirdea@intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Like other Y700 models Lenovo Y700 15-ACZ does not have a physical rfkill switch.
-ideapad-laptop wrongly reports all radios as blocked by hardware which causes 
-wireless network connections to fail.
+These patches specifically enable the audio MCLK required by Baytrail CR
+devices. It is the remaining part of a bigger set of patches
+(already merged in Mark's tree) that enable sound for Baytrail CR devices
+(especially Asus T100TAF) [1]. They include the clock driver and a move
+of the non-architectural pmc_atom driver code into drivers/platform/x86.
 
-Add this model without an rfkill switch to the no_hw_rfkill list.
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-August/111704.html
 
-Signed-off-by: Artiom Vaskov <velemas@gmail.com>
----
---- a/drivers/platform/x86/ideapad-laptop.c     2016-10-03 02:24:33.000000000 +0300
-+++ b/drivers/platform/x86/ideapad-laptop.c     2016-11-24 23:02:08.108870266 +0300
-@@ -870,6 +870,13 @@ static const struct dmi_system_id no_hw_
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
- 		},
- 	},
-+	{
-+		.ident = "Lenovo ideapad Y700-15ACZ",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ACZ"),
-+		},
-+	},
- 	{
- 		.ident = "Lenovo ideapad Y700-15ISK",
- 		.matches = {
+Changes from v4:
+ - move the pmc_atom driver from arch/x86/platform/atom to
+drivers/platform/x86
+
+Changes from v3:
+ - replace devm_kzalloc with devm_kcalloc
+ - add x86 architecture maintainers
+
+Changes from v2:
+ - move clk platform data structures to a separate include file
+ - store clk_hw pointer for the fixed rate clocks
+
+Changes from v1:
+ - register the clk device as child of pmc device
+ - pass iomem pointer from pmc driver to clk driver to avoid using
+pmc_atom_read()/write() and use readl/writel API instead
+ - use devm_clk_hw_register/clkdev_hw_create instead of
+clk_register/clkdev_create
+
+Irina Tirdea (2):
+  arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
+  clk: x86: Add Atom PMC platform clocks
+
+ arch/x86/Kconfig                                   |   4 -
+ arch/x86/platform/atom/Makefile                    |   1 -
+ drivers/acpi/acpi_lpss.c                           |   2 +-
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-byt-plt.c                      | 380 +++++++++++++++++++++
+ drivers/platform/x86/Kconfig                       |   6 +
+ drivers/platform/x86/Makefile                      |   1 +
+ .../atom => drivers/platform/x86}/pmc_atom.c       |  81 ++++-
+ include/linux/platform_data/x86/clk-byt-plt.h      |  31 ++
+ .../linux/platform_data/x86}/pmc_atom.h            |   3 +
+ 10 files changed, 499 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/clk/x86/clk-byt-plt.c
+ rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c (88%)
+ create mode 100644 include/linux/platform_data/x86/clk-byt-plt.h
+ rename {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h (98%)
+
+-- 
+1.9.1
