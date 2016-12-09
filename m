@@ -1,51 +1,65 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/7] dell-led: remove GUID check from
- dell_micmute_led_set()
-Date: Fri, 9 Dec 2016 10:20:25 +0100
-Message-ID: <20161209092025.GC9959@pali>
-References: <20161208123618.28603-1-kernel@kempniu.pl>
- <20161208123618.28603-2-kernel@kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v6 0/3] Add platform clock for BayTrail platforms
+Date: Fri,  9 Dec 2016 20:01:47 +0200
+Message-ID: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161208123618.28603-2-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, Hui Wang <hui.wang@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Irina Tirdea <irina.tirdea@intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 08 December 2016 13:36:12 Michał Kępień wrote:
-> As dell_micmute_led_set() no longer uses the dell_wmi_perform_query()
-> method, which was removed in 0c41a08 ("dell-led: use
-> dell_smbios_send_request() for performing SMBIOS calls"), the
-> DELL_APP_GUID check is redundant and thus can be safely removed.
-> 
-> Signed-off-by: Michał Kępień <kernel@kempniu.pl>
-> ---
->  drivers/leds/dell-led.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/leds/dell-led.c b/drivers/leds/dell-led.c
-> index b3d6e9c..e8e8f67 100644
-> --- a/drivers/leds/dell-led.c
-> +++ b/drivers/leds/dell-led.c
-> @@ -51,9 +51,6 @@ static int dell_micmute_led_set(int state)
->  	struct calling_interface_buffer *buffer;
->  	struct calling_interface_token *token;
->  
-> -	if (!wmi_has_guid(DELL_APP_GUID))
-> -		return -ENODEV;
-> -
->  	if (state == 0)
->  		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE);
->  	else if (state == 1)
+These patches specifically enable the audio MCLK required by Baytrail CR
+devices. It is the remaining part of a bigger set of patches
+(already merged in Mark's tree) that enable sound for Baytrail CR devices
+(especially Asus T100TAF) [1]. They include the clock driver and enabling
+the clock in the pmc_atom code (along with moving of the non-architectural
+pmc_atom driver code into drivers/platform/x86).
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-August/111704.html
 
-Anyway, you can remove DELL_APP_GUID from other places too...
+Changes from v5:
+ - fix build error reported by kbuild test robot
+ - split the clk driver code from x86 platform changes
+
+Changes from v4:
+ - move the pmc_atom driver from arch/x86/platform/atom to
+drivers/platform/x86
+
+Changes from v3:
+ - replace devm_kzalloc with devm_kcalloc
+ - add x86 architecture maintainers
+
+Changes from v2:
+ - move clk platform data structures to a separate include file
+ - store clk_hw pointer for the fixed rate clocks
+
+Changes from v1:
+ - register the clk device as child of pmc device
+ - pass iomem pointer from pmc driver to clk driver to avoid using
+pmc_atom_read()/write() and use readl/writel API instead
+ - use devm_clk_hw_register/clkdev_hw_create instead of
+clk_register/clkdev_create
+
+Irina Tirdea (3):
+  clk: x86: Add Atom PMC platform clocks
+  arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
+  platform/x86: Enable Atom PMC platform clocks
+
+ arch/x86/Kconfig                                   |   4 -
+ arch/x86/platform/atom/Makefile                    |   1 -
+ drivers/acpi/acpi_lpss.c                           |   2 +-
+ drivers/clk/x86/Makefile                           |   3 +
+ drivers/clk/x86/clk-byt-plt.c                      | 380 +++++++++++++++++++++
+ drivers/platform/x86/Kconfig                       |   5 +
+ drivers/platform/x86/Makefile                      |   1 +
+ .../atom => drivers/platform/x86}/pmc_atom.c       |  81 ++++-
+ include/linux/platform_data/x86/clk-byt-plt.h      |  31 ++
+ .../linux/platform_data/x86}/pmc_atom.h            |   3 +
+ 10 files changed, 500 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/clk/x86/clk-byt-plt.c
+ rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c (88%)
+ create mode 100644 include/linux/platform_data/x86/clk-byt-plt.h
+ rename {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h (98%)
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+1.9.1
