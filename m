@@ -1,45 +1,80 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 2/2] clk: x86: Add Atom PMC platform clocks
-Date: Thu, 8 Dec 2016 16:25:23 -0800
-Message-ID: <20161209002523.GC5423@codeaurora.org>
-References: <1481125406-29097-1-git-send-email-irina.tirdea@intel.com>
- <1481125406-29097-3-git-send-email-irina.tirdea@intel.com>
+From: "Tan, Jui Nee" <jui.nee.tan@intel.com>
+Subject: RE: [PATCH v10 1/6] drivers/platform/x86/p2sb: New Primary to
+ Sideband bridge support driver for Intel SOC's
+Date: Fri, 9 Dec 2016 07:50:48 +0000
+Message-ID: <0158A29DB680F54A88142ED28D55B1D008329343@PGSMSX107.gar.corp.intel.com>
+References: <1478768430-13422-1-git-send-email-jui.nee.tan@intel.com>
+         <1478768430-13422-2-git-send-email-jui.nee.tan@intel.com>
+ <1478794036.5295.130.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1481125406-29097-3-git-send-email-irina.tirdea@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1478794036.5295.130.camel@linux.intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "ptyser@xes-inc.com" <ptyser@xes-inc.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yong, Jonathan" <jonathan.yong@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, Luck, Tony
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/07, Irina Tirdea wrote:
-> The BayTrail and CherryTrail platforms provide platform clocks
-> through their Power Management Controller (PMC).
-> 
-> The SoC supports up to 6 clocks (PMC_PLT_CLK[5:0]) with a
-> frequency of either 19.2 MHz (PLL) or 25 MHz (XTAL) for BayTrail
-> an a frequency of 19.2 MHz (XTAL) for CherryTrail. These clocks
-> are available for general system use, where appropriate, and each
-> have Control & Frequency register fields associated with them.
-> 
-> For example, the usage for platform clocks suggested in the datasheet
-> is the following:
->   PLT_CLK[2:0] - Camera
->   PLT_CLK[3] - Audio Codec
->   PLT_CLK[4] -
->   PLT_CLK[5] - COMMs
-> 
-> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/clk/x86/Makefile                      |   1 +
->  drivers/clk/x86/clk-byt-plt.c                 | 380 ++++++++++++++++++++++++++
-
-Is it possible to split the clk part from the platform part? I'd
-like to merge just the clk part if possible into the clk tree.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtZ3Bpby1vd25l
+ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpsaW51eC1ncGlvLQ0KPiBvd25lckB2Z2VyLmtlcm5l
+bC5vcmddIE9uIEJlaGFsZiBPZiBBbmR5IFNoZXZjaGVua28NCj4gU2VudDogRnJpZGF5LCBOb3Zl
+bWJlciAxMSwgMjAxNiAxMjowNyBBTQ0KPiBUbzogVGFuLCBKdWkgTmVlIDxqdWkubmVlLnRhbkBp
+bnRlbC5jb20+OyBtaWthLndlc3RlcmJlcmdAbGludXguaW50ZWwuY29tOw0KPiBoZWlra2kua3Jv
+Z2VydXNAbGludXguaW50ZWwuY29tOyB0Z2x4QGxpbnV0cm9uaXguZGU7IGR2aGFydEBpbmZyYWRl
+YWQub3JnOw0KPiBtaW5nb0ByZWRoYXQuY29tOyBocGFAenl0b3IuY29tOyB4ODZAa2VybmVsLm9y
+ZzsgcHR5c2VyQHhlcy1pbmMuY29tOw0KPiBsZWUuam9uZXNAbGluYXJvLm9yZzsgbGludXMud2Fs
+bGVpakBsaW5hcm8ub3JnDQo+IENjOiBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgcGxhdGZv
+cm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IFlvbmcsIEpvbmF0aGFuIDxqb25hdGhhbi55b25nQGludGVsLmNvbT47DQo+IFl1LCBP
+bmcgSG9jayA8b25nLmhvY2sueXVAaW50ZWwuY29tPjsgTHVjaywgVG9ueSA8dG9ueS5sdWNrQGlu
+dGVsLmNvbT47DQo+IFdhbiBNb2hhbWFkLCBXYW4gQWhtYWQgWmFpbmllIDx3YW4uYWhtYWQuemFp
+bmllLndhbi5tb2hhbWFkQGludGVsLmNvbT47DQo+IFN1biwgWXVueWluZyA8eXVueWluZy5zdW5A
+aW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMCAxLzZdIGRyaXZlcnMvcGxhdGZv
+cm0veDg2L3Ayc2I6IE5ldyBQcmltYXJ5IHRvDQo+IFNpZGViYW5kIGJyaWRnZSBzdXBwb3J0IGRy
+aXZlciBmb3IgSW50ZWwgU09DJ3MNCj4gDQo+IE9uIFRodSwgMjAxNi0xMS0xMCBhdCAxNzowMCAr
+MDgwMCwgVGFuIEp1aSBOZWUgd3JvdGU6DQo+ID4gRnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmRy
+aXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQo+ID4NCj4gPiBUaGVyZSBpcyBhbHJlYWR5
+IG9uZSBhbmQgYXQgbGVhc3Qgb25lIG1vcmUgdXNlciBjb21pbmcgd2hpY2ggcmVxdWlyZQ0KPiA+
+IGFuIGFjY2VzcyB0byBQcmltYXJ5IHRvIFNpZGViYW5kIGJyaWRnZSAoUDJTQikgaW4gb3JkZXIg
+dG8gZ2V0IElPIG9yDQo+ID4gTU1JTyBiYXIgaGlkZGVuIGJ5IEJJT1MuDQo+ID4gQ3JlYXRlIGEg
+ZHJpdmVyIHRvIGFjY2VzcyBQMlNCIGZvciB4ODYgZGV2aWNlcy4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IFlvbmcsIEpvbmF0aGFuIDxqb25hdGhhbi55b25nQGludGVsLmNvbT4NCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVs
+LmNvbT4NCj4gDQo+IA0KPiA+ICtpbnQgcDJzYl9iYXIoc3RydWN0IHBjaV9kZXYgKnBkZXYsIHVu
+c2lnbmVkIGludCBkZXZmbiwNCj4gPiArCXN0cnVjdCByZXNvdXJjZSAqcmVzKQ0KPiA+ICt7DQo+
+ID4gKwl1MzIgYmFzZV9hZGRyOw0KPiA+ICsJdTY0IGJhc2U2NF9hZGRyOw0KPiA+ICsJdW5zaWdu
+ZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4NCj4gDQo+ID4gKwlpZiAoIXJlcykNCj4gPiArCQly
+ZXR1cm4gLUVJTlZBTDsNCj4gDQo+IEkgZG9uJ3QgcmVtZW1iZXIgdGhlIGRldGFpbHMsIG9uZSB2
+ZXJzaW9uIHdhcyBxdWl0ZSBjaGFuZ2VkLCBzbywgSSB0aGluaw0KPiB0aGVzZSBsaW5lcyBhcmUg
+bm90IG5lZWRlZCBhbnltb3JlLg0KPiANCk5vdGVkLCB0aGVzZSBsaW5lcyB3aWxsIGJlIHJlbW92
+ZWQgaW4gbmV4dCBwYXRjaCB2ZXJzaW9uICh2MTIpLg0KPiA+ICsJLyogR2V0IElPIG9yIE1NSU8g
+QkFSICovDQo+ID4gKwlwY2lfYnVzX3JlYWRfY29uZmlnX2R3b3JkKHBkZXYtPmJ1cywgZGV2Zm4s
+IFNCUkVHX0JBUiwNCj4gPiAmYmFzZV9hZGRyKTsNCj4gPiArCWlmICgoYmFzZV9hZGRyICYgUENJ
+X0JBU0VfQUREUkVTU19TUEFDRSkgPT0NCj4gPiBQQ0lfQkFTRV9BRERSRVNTX1NQQUNFX0lPKSB7
+DQo+ID4gKwkJZmxhZ3MgPSBJT1JFU09VUkNFX0lPOw0KPiA+ICsJCWJhc2U2NF9hZGRyID0gYmFz
+ZV9hZGRyICYgUENJX0JBU0VfQUREUkVTU19JT19NQVNLOw0KPiA+ICsJfSBlbHNlIHsNCj4gPiAr
+CQlmbGFncyA9IElPUkVTT1VSQ0VfTUVNOw0KPiA+ICsJCWJhc2U2NF9hZGRyID0gYmFzZV9hZGRy
+ICYgUENJX0JBU0VfQUREUkVTU19NRU1fTUFTSzsNCj4gPiArCQlpZiAoYmFzZV9hZGRyICYgUENJ
+X0JBU0VfQUREUkVTU19NRU1fVFlQRV82NCkgew0KPiA+ICsJCQlmbGFncyB8PSBJT1JFU09VUkNF
+X01FTV82NDsNCj4gPg0KPiANCj4gPiArCQkJcGNpX2J1c19yZWFkX2NvbmZpZ19kd29yZChwZGV2
+LT5idXMsIGRldmZuLA0KPiA+ICsJCQkJU0JSRUdfQkFSICsgNCwgJmJhc2VfYWRkcik7DQo+IA0K
+PiBGaXggaW5kZW50YXRpb24uDQo+IA0KVGhhbmtzIGZvciBwb2ludGluZyB0aGF0IG91dC4gSSB3
+aWxsIGZpeCB0aGF0IGluIG5leHQgcGF0Y2ggdmVyc2lvbiAodjEyKS4gDQo+ID4gKwkJCWJhc2U2
+NF9hZGRyIHw9ICh1NjQpYmFzZV9hZGRyIDw8IDMyOw0KPiA+ICsJCX0NCj4gPiArCX0NCj4gPiAr
+DQo+ID4gKwkvKiBIaWRlIHRoZSBQMlNCIGRldmljZSAqLw0KPiA+ICsJcGNpX2J1c193cml0ZV9j
+b25maWdfYnl0ZShwZGV2LT5idXMsIGRldmZuLCBTQlJFR19ISURFLA0KPiA+IDB4MDEpOw0KPiA+
+ICsNCj4gPiArCXNwaW5fdW5sb2NrKCZwMnNiX3NwaW5sb2NrKTsNCj4gPiArDQo+IA0KPiA+ICsJ
+LyogVXNlciBwcm92aWRlcyBwcmVmaWxsZWQgcmVzb3VyY2VzICovDQo+IA0KPiBOb3QgYW55bW9y
+ZSBhcyBmYXIgSSBhcyBJIGNhbiBzZWUuIFlvdSBqdXN0IHJldHVybiBoZXJlIHRoZSByZXN1bHQu
+DQo+IA0KQ3VycmVudCB2ZXJzaW9uIGlzIHJldHVybmluZyBzdGF0dXMgb2YgcDJzYl9iYXIgZnVu
+Y3Rpb24sIGkuZS4sIDAgb24gc3VjY2VzcyBvciBhcHByb3ByaWF0ZSBlcnJubyB2YWx1ZSBvbiBl
+cnJvci4gUGVyaGFwcyB5b3UgY291bGQgc2hhcmUgdGhlIHJlYXNvbiBvZiByZXR1cm4gdGhlIHJl
+c3VsdCBpbnN0ZWFkIG9mIHN0YXR1cy4gDQo+ID4gKwlyZXMtPnN0YXJ0ID0gKHJlc291cmNlX3Np
+emVfdCliYXNlNjRfYWRkcjsNCj4gPiArCXJlcy0+ZmxhZ3MgPSBmbGFnczsNCj4gDQo+IC0tDQo+
+IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiBJ
+bnRlbCBGaW5sYW5kIE95DQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBz
+ZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1ncGlvIiBpbg0KPiB0aGUgYm9keSBvZiBh
+IG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbyBpbmZv
+IGF0DQo+IGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbA0K
