@@ -1,20 +1,29 @@
-From: bancoleite@sms.goiania.go.gov.br
-Subject: DO YOU NEED A LOAN??
-Date: Tue, 13 Dec 2016 10:57:18 +0530
-Message-ID: <20161213054052.907F55F6C03@zmail.goiania.go.gov.br>
-Reply-To: finansbank.muhaberrat@accountant.com
+From: <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH 0/7] Move dell-led to drivers/platform/x86
+Date: Sun, 11 Dec 2016 17:13:41 +0000
+Message-ID: <00c7k8btg2g3lgupdy340rwj.1481476421177@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from correio.goiania.go.gov.br ([200.199.226.131]:42256 "EHLO
-        zmail.goiania.go.gov.br" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1752977AbcLMFfL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2016 00:35:11 -0500
-Content-Description: Mail message body
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <bancoleite@sms.goiania.go.gov.br>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: pali.rohar@gmail.com, j.anaszewski@samsung.com, anthony.wong@canonical.com
+Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, Jim.Dailey@dell.com, kernel@kempniu.pl, alex.hung@canonical.com, rpurdie@rpsys.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, Louis.Davis@dell.com, linux-leds@vger.kernel.org, hui.wang@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-Are you in need of a loan? Apply for more details.
+add Anthony Wong @ Canonical.
+
+I'm about to go on break and won't have access to hardware for a while.
+
+Anthony,
+
+Your team has this hardware more readily available than I do. Would you be able to have someone on the team verify this series?
