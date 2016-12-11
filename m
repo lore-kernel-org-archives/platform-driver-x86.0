@@ -1,51 +1,53 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v5 2/2] clk: x86: Add Atom PMC platform clocks
-Date: Fri, 9 Dec 2016 18:09:03 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F3B77FA@irsmsx105.ger.corp.intel.com>
-References: <1481125406-29097-1-git-send-email-irina.tirdea@intel.com>
- <1481125406-29097-3-git-send-email-irina.tirdea@intel.com>
- <20161209002523.GC5423@codeaurora.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 3/7] ALSA: hda - use dell_micmute_led_set() instead of dell_app_wmi_led_set()
+Date: Sun, 11 Dec 2016 11:40:37 +0100
+Message-ID: <201612111140.38170@pali>
+References: <20161208123618.28603-1-kernel@kempniu.pl> <20161208123618.28603-4-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20161209002523.GC5423@codeaurora.org>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, "Bossart, Pierre-louis" <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>Pierre-Louis Bossart <pierre-louis.b>
+Content-Type: multipart/signed;
+  boundary="nextPart2957448.cosGxbBbF3";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20161208123618.28603-4-kernel@kempniu.pl>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, Hui Wang <hui.wang@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2016-12-09 02:25, Stephen Boyd wrote:
-> On 12/07, Irina Tirdea wrote:
->> The BayTrail and CherryTrail platforms provide platform clocks
->> through their Power Management Controller (PMC).
->> 
->> The SoC supports up to 6 clocks (PMC_PLT_CLK[5:0]) with a
->> frequency of either 19.2 MHz (PLL) or 25 MHz (XTAL) for BayTrail
->> an a frequency of 19.2 MHz (XTAL) for CherryTrail. These clocks
->> are available for general system use, where appropriate, and each
->> have Control & Frequency register fields associated with them.
->> 
->> For example, the usage for platform clocks suggested in the datasheet
->> is the following:
->>   PLT_CLK[2:0] - Camera
->>   PLT_CLK[3] - Audio Codec
->>   PLT_CLK[4] -
->>   PLT_CLK[5] - COMMs
->> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com> Signed-off-by:
->> Pierre-Louis Bossart <pierre- louis.bossart@linux.intel.com> ---
->>  drivers/clk/x86/Makefile                      |   1 +
->>  drivers/clk/x86/clk-byt-plt.c                 | 380
-> ++++++++++++++++++++++++++
-> 
-> Is it possible to split the clk part from the platform part? I'd
-> like to merge just the clk part if possible into the clk tree.
->
+--nextPart2957448.cosGxbBbF3
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-It would be great to have the clk part merged. I'll put the code in a
-separate patch.
+On Thursday 08 December 2016 13:36:14 Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> --- a/sound/pci/hda/dell_wmi_helper.c
+> +++ b/sound/pci/hda/dell_wmi_helper.c
+> @@ -6,7 +6,7 @@
+>  #include <linux/dell-led.h>
+>=20
+>  static int dell_led_value;
+> -static int (*dell_led_set_func)(int, int);
+> +static int (*dell_led_set_func)(int);
 
-Thanks,
-Irina
+Suggestion: what about changing name to dell_micmute_led_set_func to=20
+match real function name which is used after this patch?
 
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2957448.cosGxbBbF3
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlhNLSYACgkQi/DJPQPkQ1KbUQCdFi4NvEP87H0DJOMxcqVlvaGS
+XiAAoK+La+iYpov4gBUU+JZxtmDQ1ejm
+=FY7Q
+-----END PGP SIGNATURE-----
+
+--nextPart2957448.cosGxbBbF3--
