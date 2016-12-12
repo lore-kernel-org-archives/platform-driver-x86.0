@@ -1,36 +1,36 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Fix old style
- declaration GCC warning
-Date: Mon, 12 Dec 2016 10:46:28 -0800
-Message-ID: <20161212184628.GC77230@f23x64.localdomain>
-References: <20161125131807.3885-1-tklauser@distanz.ch>
- <20161125153130.GA4302@khazad-dum.debian.net>
+Subject: Re: [PATCH] platform: x86: dell-laptop: use brightness_set_blocking
+ for kbd_led_level_set
+Date: Mon, 12 Dec 2016 11:03:09 -0800
+Message-ID: <20161212190309.GD77230@f23x64.localdomain>
+References: <20161026151744.16638-1-hdegoede@redhat.com>
+ <20161027103348.GS12154@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54369 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:34050 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752810AbcLLSqZ (ORCPT
+        with ESMTP id S1751816AbcLLTDH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Dec 2016 13:46:25 -0500
+        Mon, 12 Dec 2016 14:03:07 -0500
 Content-Disposition: inline
-In-Reply-To: <20161125153130.GA4302@khazad-dum.debian.net>
+In-Reply-To: <20161027103348.GS12154@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Tobias Klauser <tklauser@distanz.ch>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 01:31:30PM -0200, Henrique de Moraes Holschuh wrote:
-> On Fri, 25 Nov 2016, Tobias Klauser wrote:
-> > Fix an [-Wold-style-declaration] GCC warning by moving the inline
-> > keyword before the return type.
+On Thu, Oct 27, 2016 at 12:33:48PM +0200, Pali Rohár wrote:
+> On Wednesday 26 October 2016 17:17:44 Hans de Goede wrote:
+> > kbd_led_level_set uses dell_smbios call which block, so the kbd_led
+> > classdev should use the brightness_set_blocking callback.
 > > 
-> > Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> 
+> Seems correct, Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 
-Queued to testing, thank you.
+Queued to testing, thanks.
 
 -- 
 Darren Hart
