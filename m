@@ -1,37 +1,47 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v5 2/2] thinkpad_acpi: Add support for X1 Yoga (2016)
- Tablet Mode
-Date: Mon, 12 Dec 2016 10:17:01 -0800
-Message-ID: <20161212181701.GA77230@f23x64.localdomain>
-References: <1478895304-31627-1-git-send-email-lyude@redhat.com>
- <1478895304-31627-2-git-send-email-lyude@redhat.com>
+Subject: Re: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
+Date: Mon, 12 Dec 2016 10:23:05 -0800
+Message-ID: <20161212182305.GB77230@f23x64.localdomain>
+References: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:56487 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:59724 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752578AbcLLSQ5 (ORCPT
+        with ESMTP id S1750696AbcLLSW5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Dec 2016 13:16:57 -0500
+        Mon, 12 Dec 2016 13:22:57 -0500
 Content-Disposition: inline
-In-Reply-To: <1478895304-31627-2-git-send-email-lyude@redhat.com>
+In-Reply-To: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lyude <lyude@redhat.com>
-Cc: ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Daniel Martin <consume.noise@gmail.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Hui Wang <hui.wang@canonical.com>
+Cc: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-On Fri, Nov 11, 2016 at 03:15:03PM -0500, Lyude wrote:
-> For whatever reason, the X1 Yoga doesn't support the normal method of
-> querying for tablet mode. Instead of providing the MHKG method under the
-> hotkey handle, we're instead given the CMMD method under the EC handle.
-> Values on this handle are either 0x1, laptop mode, or 0x6, tablet mode.
+On Tue, Nov 08, 2016 at 04:13:23PM +0800, Hui Wang wrote:
+> Recently we met an issue on lots of Lenovo thinkpad laptops (those
+> laptops are not released to market yet), the issue is that the
+> thinkpad_acpi.ko can't be automatically loaded as before.
 > 
-> Tested-by: Daniel Martin <consume.noise@gmail.com>
-> Signed-off-by: Lyude <lyude@redhat.com>
+> Through debugging, we found the HKEY_HID is LEN0268 instead of
+> LEN0068 on those machines, and the MHKV is 0x200 instead of
+> 0x100. So adding the new ID into the driver.
+> 
+> Signed-off-by: Hui Wang <hui.wang@canonical.com>
 
-Our apologies for the delay. Thank you for the updates.
+With Henrique's ack, I've queued this to testing.
 
-Queued to testing.
+However, in the commit message you mention two deltas:
+
+1) HKEY_HID is LEN0268
+2) MHKV is 0x200
+
+This patch appears to address only #1. Is another patch needed for #2?
+
+(I'm digging myself out of a deep backlog, so if it's here already, I'll find
+it, but it might expedite things to point it out to me).
+
+Thanks for the patch.
 
 -- 
 Darren Hart
