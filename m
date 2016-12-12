@@ -1,124 +1,71 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 0/7] Move dell-led to drivers/platform/x86
-Date: Sun, 11 Dec 2016 11:45:37 +0100
-Message-ID: <201612111145.37777@pali>
-References: <CGME20161208123909epcas3p23229f5e0d337e19a27b272211798d364@epcas3p2.samsung.com> <20161208123618.28603-1-kernel@kempniu.pl> <327c8edc-5a1e-8a94-85b2-4a2febc03352@samsung.com>
+From: <angers@pythagorejiujitsu.com>
+Subject: (unknown)
+Date: Mon, 12 Dec 2016 03:36:55 -0000
+Message-ID: <148151381557.16775.2212459193305259032@suntex.com.tw>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart9382632.rKynATlCas";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <327c8edc-5a1e-8a94-85b2-4a2febc03352@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, mario.limonciello@dell.com
-Cc: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, Hui Wang <hui.wang@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="EMAIL_82854453_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from suntex.com.tw ([118.163.18.41]:34965 "HELO suntex.com.tw"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751721AbcLLDhD (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 11 Dec 2016 22:37:03 -0500
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
---nextPart9382632.rKynATlCas
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thursday 08 December 2016 15:26:37 Jacek Anaszewski wrote:
-> Hi Micha=C5=82,
->=20
-> Thanks for the patch set.
->=20
-> On 12/08/2016 01:36 PM, Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > This patch series moves the dell-led driver from the LED subsystem
-> > to the x86 platform driver subsystem.  I decided to also CC the
-> > sound subsystem contacts for the whole series as
-> > sound/pci/hda/dell_wmi_helper.c is also affected.
-> >=20
-> > The original motivation behind this effort was to move all code
-> > using the dell-smbios module to the x86 platform driver subsystem.
-> >  While I was investigating the possibilites to do that, it quickly
-> > emerged that dell-led can and in fact should be moved to the x86
-> > platform driver subsystem in its entirety.
-> >=20
-> > dell-led consists of two major parts:
-> >   - the part exposing a microphone mute LED interface, introduced
-> >   in
-> >  =20
-> >     db6d8cc ("dell-led: add mic mute led interface"); this
-> >     interface is used by sound/pci/hda/dell_wmi_helper.c; while
-> >     the original implementation used a WMI interface, it was
-> >     changed to use dell-smbios in cf0d7ea ("dell-led: use
-> >     dell_smbios_find_token() for finding mic DMI tokens") and
-> >     0c41a08 ("dell-led: use
-> >     dell_smbios_send_request() for performing SMBIOS calls"),
-> >  =20
-> >   - the part handling an activity LED present in Dell Latitude 2100
-> >  =20
-> >     netbooks, introduced in 72dcd8d ("leds: Add Dell Business Class
-> >     Netbook LED driver"); it binds to a specific WMI GUID and then
-> >     registers a LED device which is controlled using WMI (i.e. it
-> >     is basically a WMI driver).
-> >=20
-> > Patches 1-4 clean up the microphone mute LED interface to minimize
-> > the amount of code moved around.
-> >=20
-> > Patch 5 moves the microphone mute LED interface to
-> > drivers/platform/x86/dell-laptop.c, effectively causing
-> > sound/pci/hda/dell_wmi_helper.c to depend on CONFIG_DELL_LAPTOP
-> > instead of CONFIG_LEDS_DELL_NETBOOKS.
-> >=20
-> > Patch 6 reverts dell-led to the state it was in after its initial
-> > commit 72dcd8d ("leds: Add Dell Business Class Netbook LED
-> > driver") by removing all remnants of the microphone mute LED
-> > handling code.
-> >=20
-> > Patch 7 moves all that is left of dell-led (i.e. the activity LED
-> > part, as originally implemented), to a new module which is placed
-> > in drivers/platform/x86/dell-wmi-led.c.
-> >=20
-> > This patch series is based on linux-leds/for-4.11 as the LED
-> > subsystem is affected by all patches except patch 3.
-> >=20
-> > If anyone reading this has access to a Dell device which has an
-> > activity LED and/or a microphone mute LED currently supported by
-> > dell-led, I would love to hear from you as I do not have the
-> > hardware needed to practically test this patch series.
->=20
-> I think that it is necessary to find someone who will give their
-> Tested-by.
->=20
-> What I can accept immediately is moving the driver in the current
-> shape to x86 platform drivers. I could expose a stable branch with
-> that patch for the x86 platform maintainers then.
-
-Adding Mario Limonciello from @dell to discussion.
-
-Mario, any chance you could be able to test this patch series?
-
-> >  drivers/leds/Kconfig                               |  9 ---
-> >  drivers/leds/Makefile                              |  1 -
-> >  drivers/platform/x86/Kconfig                       |  8 +++
-> >  drivers/platform/x86/Makefile                      |  1 +
-> >  drivers/platform/x86/dell-laptop.c                 | 28 ++++++++
-> >  .../dell-led.c =3D> platform/x86/dell-wmi-led.c}     | 75
-> >  +++------------------- include/linux/dell-led.h                 =20
-> >          |  6 +- sound/pci/hda/dell_wmi_helper.c                 =20
-> >   | 18 +++--- 8 files changed, 55 insertions(+), 91 deletions(-)
-> >  rename drivers/{leds/dell-led.c =3D> platform/x86/dell-wmi-led.c}
-> >  (73%)
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart9382632.rKynATlCas
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlhNLlEACgkQi/DJPQPkQ1IcQACgpW6xP38Wv7FV6PzQVSp+Cudj
-4MkAn0wsnppyy5pYIM3sZkyMPWWzrNQJ
-=iluJ
------END PGP SIGNATURE-----
-
---nextPart9382632.rKynATlCas--
+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
