@@ -1,95 +1,76 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 1/3] clk: x86: Add Atom PMC platform clocks
-Date: Tue, 13 Dec 2016 02:26:21 +0200
-Message-ID: <CAHp75VccDyiLhWxZYg+d0usrwhfa_hiZAJCKPXXVRod=tB803g@mail.gmail.com>
-References: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
- <1481306510-7471-2-git-send-email-irina.tirdea@intel.com> <CAHp75Vdaw4yvTPP2JZc+ti-AVNsisRQ+WG=JxPQ1jv-r7DADQA@mail.gmail.com>
- <1a98dcda-a662-958e-307f-5fe3f281ed9f@linux.intel.com>
+From: Hui Wang <hui.wang@canonical.com>
+Subject: Re: [PATCH] thinkpad_acpi: adding new hotkey ID for Lenovo thinkpad
+Date: Tue, 13 Dec 2016 08:49:20 +0800
+Message-ID: <29c05895-2f95-0529-00e1-b589d2e1e806@canonical.com>
+References: <1478592803-17522-1-git-send-email-hui.wang@canonical.com>
+ <20161212182305.GB77230@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1a98dcda-a662-958e-307f-5fe3f281ed9f@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Irina Tirdea <irina.tirdea@intel.com>, linux-clk@vger.kernel.org, "x86@kernel.org" <x86@kernel.org>, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:37785 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751615AbcLMAt1 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 12 Dec 2016 19:49:27 -0500
+In-Reply-To: <20161212182305.GB77230@f23x64.localdomain>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-On Tue, Dec 13, 2016 at 2:15 AM, Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->> Thanks for an update I will comment all the patches.
->> Here we start.
->
->
-> Thanks Andy for the review. Two quick comments before going further in the
-> details later.
->
+On 12/13/2016 02:23 AM, Darren Hart wrote:
+> On Tue, Nov 08, 2016 at 04:13:23PM +0800, Hui Wang wrote:
+>> Recently we met an issue on lots of Lenovo thinkpad laptops (those
+>> laptops are not released to market yet), the issue is that the
+>> thinkpad_acpi.ko can't be automatically loaded as before.
 >>
->>> The BayTrail and CherryTrail platforms provide platform clocks
->>> through their Power Management Controller (PMC).
->>>
->>> The SoC supports up to 6 clocks (PMC_PLT_CLK[5:0]) with a
->>> frequency of either 19.2 MHz (PLL) or 25 MHz (XTAL) for BayTrail
->>> and a frequency of 19.2 MHz (XTAL) for CherryTrail. These clocks
->>> are available for general system use, where appropriate, and each
->>> have Control & Frequency register fields associated with them.
->>>
->>> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
->>> Signed-off-by: Pierre-Louis Bossart
->>> <pierre-louis.bossart@linux.intel.com>
+>> Through debugging, we found the HKEY_HID is LEN0268 instead of
+>> LEN0068 on those machines, and the MHKV is 0x200 instead of
+>> 0x100. So adding the new ID into the driver.
 >>
->>
->> Who is the actual author? SoB I guess should be either the author, or
->> 1st, 2nd, ..., last one who is submitter.
+>> Signed-off-by: Hui Wang <hui.wang@canonical.com>
+> With Henrique's ack, I've queued this to testing.
 >
+> However, in the commit message you mention two deltas:
 >
-> I ported the initial code from Android legacy stuff and Irina ported the
-> functionality to the clk framework. It seems appropriate to have both
-> signed-offs?
-
-Yes, but as I mentioned:
-1) submitter goes last;
-2) SoB lines and Author(s) should reflect actual state of the sources.
-If patch has 2 SoBs I'm expecting see different names of Authors in
-the source code. *Or* in some cases it's possible to explain in the
-commit message why you have former SoB and for what the credit that
-person(s) get.
-
->>> +#include <linux/platform_data/x86/clk-byt-plt.h>
+> 1) HKEY_HID is LEN0268
+> 2) MHKV is 0x200
 >
+> This patch appears to address only #1. Is another patch needed for #2?
+
+The #2 was already addressed by the commit:
+
+commit 0118c2d3eac0545d4095877e5a015b5dc763b3c2
+Author: Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Date:   Wed Jun 8 10:54:25 2016 -0400
+
+     thinkpad_acpi: Add support for HKEY version 0x200
+
+     Lenovo Thinkpad devices T460, T460s, T460p, T560, X260 use
+     HKEY version 0x200 without adaptive keyboard.
+
+     HKEY version 0x200 has method MHKA with one parameter value.
+     Passing parameter value 1 will get hotkey_all_mask (the same like
+     HKEY version 0x100 without parameter). Passing parameter value 2 to
+     MHKA method will retrieve hotkey_all_adaptive_mask. If 0 is returned in
+     that case there is no adaptive keyboard available.
+
+
+It looks like the Lenovo machines have the change for HKEY_HID and MHKV 
+as below:
+
+in the past: HKEY_HID=LEN0068  MHKV=0x100
+about one year ago: HKEY_HID=LEN0068 MHKV=0x200
+recently: HKEY_HID=LEN0268 MHKV=0x200
+
+
+Cheers,
+Hui.
+
 >
-> This was a suggestion of Darren Hart in agreement with Thomas Gleixner.
-> see
-> http://mailman.alsa-project.org/pipermail/alsa-devel/2016-October/113936.html
-
-Hmm... Thanks for pointing to this I didn't aware about such details.
-
-But... I still insist that is not a platform data at all in both cases.
-
-For clock I would suggest include/linux/clk/ with x86_ prefix.
-For the rest I have no strong opinion except trying to avoid
-platform_data wording in the path as much as possible.
-
-As an example I could recall DMA engine subsystem where we have
-
-include/linux/platform_data/dma-*.h
-
-and
-
-include/linux/dma/*.h
-
-So, this sounds more to me as
-
-include/linux/x86/pmc_atom.h
-
-> Darren, did we get your proposal right?
-
->>
->> Is it indeed platform data? I would not create platform_data/x86
->> without strong argument.
->> Perhaps include/linux/clk/x86_pmc.h? (Yes, I know about clk-lpss.h
->> which is old enough and was basically first try of clk stuff on x86)
-
--- 
-With Best Regards,
-Andy Shevchenko
+> (I'm digging myself out of a deep backlog, so if it's here already, I'll find
+> it, but it might expedite things to point it out to me).
+>
+> Thanks for the patch.
+>
