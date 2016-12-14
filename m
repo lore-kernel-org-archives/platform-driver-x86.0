@@ -1,291 +1,375 @@
-From: <wesley.sydnor@louisvillemsd.org>
-Subject: (unknown)
-Date: Tue, 13 Dec 2016 23:26:44 -0000
-Message-ID: <148167160406.11829.3467219720875892836@vnpt.vn>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform: x86: Add Whiskey Cove PMIC TMU support
+Date: Wed, 14 Dec 2016 03:36:48 +0200
+Message-ID: <CAHp75VfycpUJadwyALp+aL3cbfByS-JabkhDAeJyvrLhybt-2w@mail.gmail.com>
+References: <1478549507-157827-1-git-send-email-nilesh.bacchewar@intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="MICROSOFT_50272042175_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static.vnpt.vn ([14.162.130.110]:55901 "HELO vnpt.vn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1752658AbcLMX1G (ORCPT
+Received: from mail-oi0-f67.google.com ([209.85.218.67]:35675 "EHLO
+        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754608AbcLNBgu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2016 18:27:06 -0500
-Subject: 
-Content-Disposition: attachment
+        Tue, 13 Dec 2016 20:36:50 -0500
+In-Reply-To: <1478549507-157827-1-git-send-email-nilesh.bacchewar@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-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
+On Mon, Nov 7, 2016 at 10:11 PM, Nilesh Bacchewar
+<nilesh.bacchewar@intel.com> wrote:
+> This adds TMU (Time Management Unit) support for Intel BXT platform.
+> It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
+> PMIC.
+>
+
+Pushed to testing with fixed Subject (the pattern is "platform/x86:
+Description") and resolved merge conflict in Kconfig.
+Thanks.
+
+> Signed-off-by: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/mfd/intel_soc_pmic_bxtwc.c     |  38 ++++++++
+>  drivers/platform/x86/Kconfig           |   8 ++
+>  drivers/platform/x86/Makefile          |   1 +
+>  drivers/platform/x86/intel_bxtwc_tmu.c | 162 +++++++++++++++++++++++++++++++++
+>  include/linux/mfd/intel_soc_pmic.h     |   1 +
+>  5 files changed, 210 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_bxtwc_tmu.c
+>
+> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+> index 43e54b7..92aba02 100644
+> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
+> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+> @@ -42,6 +42,7 @@
+>  #define BXTWC_GPIOIRQ0         0x4E0B
+>  #define BXTWC_GPIOIRQ1         0x4E0C
+>  #define BXTWC_CRITIRQ          0x4E0D
+> +#define BXTWC_TMUIRQ           0x4FB6
+>
+>  /* Interrupt MASK Registers */
+>  #define BXTWC_MIRQLVL1         0x4E0E
+> @@ -59,6 +60,7 @@
+>  #define BXTWC_MGPIO0IRQ                0x4E19
+>  #define BXTWC_MGPIO1IRQ                0x4E1A
+>  #define BXTWC_MCRITIRQ         0x4E1B
+> +#define BXTWC_MTMUIRQ          0x4FB7
+>
+>  /* Whiskey Cove PMIC share same ACPI ID between different platforms */
+>  #define BROXTON_PMIC_WC_HRV    4
+> @@ -91,6 +93,7 @@ enum bxtwc_irqs_level2 {
+>         BXTWC_GPIO0_IRQ,
+>         BXTWC_GPIO1_IRQ,
+>         BXTWC_CRIT_IRQ,
+> +       BXTWC_TMU_IRQ,
+>  };
+>
+>  static const struct regmap_irq bxtwc_regmap_irqs[] = {
+> @@ -118,6 +121,10 @@ enum bxtwc_irqs_level2 {
+>         REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 9, 0x03),
+>  };
+>
+> +static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
+> +       REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
+> +};
+> +
+>  static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
+>         .name = "bxtwc_irq_chip",
+>         .status_base = BXTWC_IRQLVL1,
+> @@ -136,6 +143,15 @@ enum bxtwc_irqs_level2 {
+>         .num_regs = 10,
+>  };
+>
+> +static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
+> +       .name = "bxtwc_irq_chip_tmu",
+> +       .status_base = BXTWC_TMUIRQ,
+> +       .mask_base = BXTWC_MTMUIRQ,
+> +       .irqs = bxtwc_regmap_irqs_tmu,
+> +       .num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
+> +       .num_regs = 1,
+> +};
+> +
+>  static struct resource gpio_resources[] = {
+>         DEFINE_RES_IRQ_NAMED(BXTWC_GPIO0_IRQ, "GPIO0"),
+>         DEFINE_RES_IRQ_NAMED(BXTWC_GPIO1_IRQ, "GPIO1"),
+> @@ -164,6 +180,10 @@ enum bxtwc_irqs_level2 {
+>         DEFINE_RES_IRQ_NAMED(BXTWC_BCU_IRQ, "BCU"),
+>  };
+>
+> +static struct resource tmu_resources[] = {
+> +       DEFINE_RES_IRQ_NAMED(BXTWC_TMU_IRQ, "TMU"),
+> +};
+> +
+>  static struct mfd_cell bxt_wc_dev[] = {
+>         {
+>                 .name = "bxt_wcove_gpadc",
+> @@ -191,6 +211,12 @@ enum bxtwc_irqs_level2 {
+>                 .resources = bcu_resources,
+>         },
+>         {
+> +               .name = "bxt_wcove_tmu",
+> +               .num_resources = ARRAY_SIZE(tmu_resources),
+> +               .resources = tmu_resources,
+> +       },
+> +
+> +       {
+>                 .name = "bxt_wcove_gpio",
+>                 .num_resources = ARRAY_SIZE(gpio_resources),
+>                 .resources = gpio_resources,
+> @@ -400,6 +426,15 @@ static int bxtwc_probe(struct platform_device *pdev)
+>                 goto err_irq_chip_level2;
+>         }
+>
+> +       ret = regmap_add_irq_chip(pmic->regmap, pmic->irq,
+> +                                 IRQF_ONESHOT | IRQF_SHARED,
+> +                                 0, &bxtwc_regmap_irq_chip_tmu,
+> +                                 &pmic->irq_chip_data_tmu);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to add TMU IRQ chip\n");
+> +               goto err_irq_chip_tmu;
+> +       }
+> +
+>         ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, bxt_wc_dev,
+>                               ARRAY_SIZE(bxt_wc_dev), NULL, 0,
+>                               NULL);
+> @@ -429,6 +464,8 @@ static int bxtwc_probe(struct platform_device *pdev)
+>  err_sysfs:
+>         mfd_remove_devices(&pdev->dev);
+>  err_mfd:
+> +       regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
+> +err_irq_chip_tmu:
+>         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
+>  err_irq_chip_level2:
+>         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+> @@ -444,6 +481,7 @@ static int bxtwc_remove(struct platform_device *pdev)
+>         mfd_remove_devices(&pdev->dev);
+>         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+>         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
+> +       regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
+>
+>         return 0;
+>  }
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b8a21d7..2dbe464 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1027,4 +1027,12 @@ config INTEL_TELEMETRY
+>           used to get various SoC events and parameters
+>           directly via debugfs files. Various tools may use
+>           this interface for SoC state monitoring.
+> +
+> +config INTEL_BXTWC_PMIC_TMU
+> +       tristate "Intel BXT Whiskey Cove TMU Driver"
+> +       depends on INTEL_SOC_PMIC && INTEL_PMC_IPC && REGMAP
+> +       ---help---
+> +         Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
+> +         This driver enables the alarm wakeup functionality in the TMU unit
+> +         of Whiskey Cove PMIC.
+>  endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 2efa86d..0bd6609 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -67,6 +67,7 @@ obj-$(CONFIG_ALIENWARE_WMI)   += alienware-wmi.o
+>  obj-$(CONFIG_INTEL_PMC_IPC)    += intel_pmc_ipc.o
+>  obj-$(CONFIG_SURFACE_PRO3_BUTTON)      += surfacepro3_button.o
+>  obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
+> +obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)  += intel_bxtwc_tmu.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
+>                                    intel_telemetry_pltdrv.o \
+>                                    intel_telemetry_debugfs.o
+> diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel_bxtwc_tmu.c
+> new file mode 100644
+> index 0000000..e202abd
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_bxtwc_tmu.c
+> @@ -0,0 +1,162 @@
+> +/*
+> + * intel_bxtwc_tmu.c - Intel BXT Whiskey Cove PMIC TMU driver
+> + *
+> + * Copyright (C) 2016 Intel Corporation. All rights reserved.
+> + *
+> + * This driver adds TMU (Time Management Unit) support for Intel BXT platform.
+> + * It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
+> + * PMIC.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License version
+> + * 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/intel_soc_pmic.h>
+> +
+> +#define BXTWC_TMUIRQ           0x4fb6
+> +#define BXTWC_MIRQLVL1         0x4e0e
+> +#define BXTWC_MTMUIRQ_REG      0x4fb7
+> +#define BXTWC_MIRQLVL1_MTMU    BIT(1)
+> +#define BXTWC_TMU_WK_ALRM      BIT(1)
+> +#define BXTWC_TMU_SYS_ALRM     BIT(2)
+> +#define BXTWC_TMU_ALRM_MASK    (BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
+> +#define BXTWC_TMU_ALRM_IRQ     (BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
+> +
+> +struct wcove_tmu {
+> +       int irq;
+> +       struct device *dev;
+> +       struct regmap *regmap;
+> +};
+> +
+> +static irqreturn_t bxt_wcove_tmu_irq_handler(int irq, void *data)
+> +{
+> +       struct wcove_tmu *wctmu = data;
+> +       unsigned int tmu_irq;
+> +
+> +       /* Read TMU interrupt reg */
+> +       regmap_read(wctmu->regmap, BXTWC_TMUIRQ, &tmu_irq);
+> +       if (tmu_irq & BXTWC_TMU_ALRM_IRQ) {
+> +               /* clear TMU irq */
+> +               regmap_write(wctmu->regmap, BXTWC_TMUIRQ, tmu_irq);
+> +               return IRQ_HANDLED;
+> +       }
+> +       return IRQ_NONE;
+> +}
+> +
+> +static int bxt_wcove_tmu_probe(struct platform_device *pdev)
+> +{
+> +       struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
+> +       struct regmap_irq_chip_data *regmap_irq_chip;
+> +       struct wcove_tmu *wctmu;
+> +       int ret, virq, irq;
+> +
+> +       wctmu = devm_kzalloc(&pdev->dev, sizeof(*wctmu), GFP_KERNEL);
+> +       if (!wctmu)
+> +               return -ENOMEM;
+> +
+> +       wctmu->dev = &pdev->dev;
+> +       wctmu->regmap = pmic->regmap;
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +
+> +       if (irq < 0) {
+> +               dev_err(&pdev->dev, "invalid irq %d\n", irq);
+> +               return irq;
+> +       }
+> +
+> +       regmap_irq_chip = pmic->irq_chip_data_tmu;
+> +       virq = regmap_irq_get_virq(regmap_irq_chip, irq);
+> +       if (virq < 0) {
+> +               dev_err(&pdev->dev,
+> +                       "failed to get virtual interrupt=%d\n", irq);
+> +               return virq;
+> +       }
+> +
+> +       ret = devm_request_threaded_irq(&pdev->dev, virq,
+> +                                       NULL, bxt_wcove_tmu_irq_handler,
+> +                                       IRQF_ONESHOT, "bxt_wcove_tmu", wctmu);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "request irq failed: %d,virq: %d\n",
+> +                                                       ret, virq);
+> +               return ret;
+> +       }
+> +       wctmu->irq = virq;
+> +
+> +       /* Enable TMU interrupts */
+> +       regmap_update_bits(wctmu->regmap, BXTWC_MIRQLVL1,
+> +                                 BXTWC_MIRQLVL1_MTMU, 0);
+> +
+> +       /* Unmask TMU second level Wake & System alarm */
+> +       regmap_update_bits(wctmu->regmap, BXTWC_MTMUIRQ_REG,
+> +                                 BXTWC_TMU_ALRM_MASK, 0);
+> +
+> +       platform_set_drvdata(pdev, wctmu);
+> +       return 0;
+> +}
+> +
+> +static int bxt_wcove_tmu_remove(struct platform_device *pdev)
+> +{
+> +       struct wcove_tmu *wctmu = platform_get_drvdata(pdev);
+> +       unsigned int val;
+> +
+> +       /* Mask TMU interrupts */
+> +       regmap_read(wctmu->regmap, BXTWC_MIRQLVL1, &val);
+> +       regmap_write(wctmu->regmap, BXTWC_MIRQLVL1,
+> +                       val | BXTWC_MIRQLVL1_MTMU);
+> +       regmap_read(wctmu->regmap, BXTWC_MTMUIRQ_REG, &val);
+> +       regmap_write(wctmu->regmap, BXTWC_MTMUIRQ_REG,
+> +                       val | BXTWC_TMU_ALRM_MASK);
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int bxtwc_tmu_suspend(struct device *dev)
+> +{
+> +       struct wcove_tmu *wctmu = dev_get_drvdata(dev);
+> +
+> +       enable_irq_wake(wctmu->irq);
+> +       return 0;
+> +}
+> +
+> +static int bxtwc_tmu_resume(struct device *dev)
+> +{
+> +       struct wcove_tmu *wctmu = dev_get_drvdata(dev);
+> +
+> +       disable_irq_wake(wctmu->irq);
+> +       return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(bxtwc_tmu_pm_ops, bxtwc_tmu_suspend, bxtwc_tmu_resume);
+> +
+> +static const struct platform_device_id bxt_wcove_tmu_id_table[] = {
+> +       { .name = "bxt_wcove_tmu" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(platform, bxt_wcove_tmu_id_table);
+> +
+> +static struct platform_driver bxt_wcove_tmu_driver = {
+> +       .probe = bxt_wcove_tmu_probe,
+> +       .remove = bxt_wcove_tmu_remove,
+> +       .driver = {
+> +               .name = "bxt_wcove_tmu",
+> +               .pm     = &bxtwc_tmu_pm_ops,
+> +       },
+> +       .id_table = bxt_wcove_tmu_id_table,
+> +};
+> +
+> +module_platform_driver(bxt_wcove_tmu_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Nilesh Bacchewar <nilesh.bacchewar@intel.com>");
+> +MODULE_DESCRIPTION("BXT Whiskey Cove TMU Driver");
+> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+> index cf619db..956caa0 100644
+> --- a/include/linux/mfd/intel_soc_pmic.h
+> +++ b/include/linux/mfd/intel_soc_pmic.h
+> @@ -26,6 +26,7 @@ struct intel_soc_pmic {
+>         struct regmap *regmap;
+>         struct regmap_irq_chip_data *irq_chip_data;
+>         struct regmap_irq_chip_data *irq_chip_data_level2;
+> +       struct regmap_irq_chip_data *irq_chip_data_tmu;
+>         struct device *dev;
+>  };
+>
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
