@@ -1,367 +1,170 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform: x86: Add Whiskey Cove PMIC TMU support
-Date: Wed, 14 Dec 2016 03:36:48 +0200
-Message-ID: <CAHp75VfycpUJadwyALp+aL3cbfByS-JabkhDAeJyvrLhybt-2w@mail.gmail.com>
-References: <1478549507-157827-1-git-send-email-nilesh.bacchewar@intel.com>
+Subject: Re: [patch v3 1/1] platform/x86: move module mlx-platform from
+ arch/x86 to drivers/platform/x86
+Date: Wed, 14 Dec 2016 03:38:38 +0200
+Message-ID: <CAHp75Vf3r55fg_T2yGmut5ubr_8QZ1NYmYAbons1+ic0sfjA3g@mail.gmail.com>
+References: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:35675 "EHLO
+Received: from mail-oi0-f67.google.com ([209.85.218.67]:33067 "EHLO
         mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754608AbcLNBgu (ORCPT
+        with ESMTP id S1753149AbcLNBik (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Dec 2016 20:36:50 -0500
-In-Reply-To: <1478549507-157827-1-git-send-email-nilesh.bacchewar@intel.com>
+        Tue, 13 Dec 2016 20:38:40 -0500
+In-Reply-To: <1477898553-61392-1-git-send-email-vadimp@mellanox.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, platform-driver-x86@vger.kernel.org, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Mon, Nov 7, 2016 at 10:11 PM, Nilesh Bacchewar
-<nilesh.bacchewar@intel.com> wrote:
-> This adds TMU (Time Management Unit) support for Intel BXT platform.
-> It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
-> PMIC.
->
+On Mon, Oct 31, 2016 at 9:22 AM, Vadim Pasternak <vadimp@mellanox.com> wrote:
+> Since mlx-platform is not an architectural driver, it is moved out
+> of arch/x86/platform to drivers/platform/x86.
+> Relevant Makefile and Kconfig are updated.
 
-Pushed to testing with fixed Subject (the pattern is "platform/x86:
-Description") and resolved merge conflict in Kconfig.
+Pushed to testing with fixed Subject (Pattern is "platform/x86:
+driver: Description").
 Thanks.
 
-> Signed-off-by: Nilesh Bacchewar <nilesh.bacchewar@intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 > ---
->  drivers/mfd/intel_soc_pmic_bxtwc.c     |  38 ++++++++
->  drivers/platform/x86/Kconfig           |   8 ++
->  drivers/platform/x86/Makefile          |   1 +
->  drivers/platform/x86/intel_bxtwc_tmu.c | 162 +++++++++++++++++++++++++++++++++
->  include/linux/mfd/intel_soc_pmic.h     |   1 +
->  5 files changed, 210 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_bxtwc_tmu.c
+> v2->v3:
+>  Comments pointed out by Andy:
+>   - Remove "driver" prefix from the subject;
+>   - Change subject content;
+>   - Reduce CC list;
+>   - Put patch history exactly after '---' marker;
+>   - Remove reference to module name from module header;
+>   - Explain changes in Kconfig:
+>     remove "depends on MLX_PLATFORM", since it has default n and this line
+>         is not needed;
+>   Fixes added by Vadim:
+>   - Remove "select MLX_PLATFORM" from Kconfig, since it has unmet direct
+>     dependencies (X86 && X86_PLATFORM_DEVICES && X86_64);
+> v1->v2:
+>  Comments pointed out by Andy:
+>   - Use -M -C -n option in git format-patch;
+> ---
+>  MAINTAINERS                                                 |  2 +-
+>  arch/x86/Kconfig                                            | 12 ------------
+>  arch/x86/platform/Makefile                                  |  1 -
+>  arch/x86/platform/mellanox/Makefile                         |  1 -
+>  drivers/platform/x86/Kconfig                                | 13 ++++++++++++-
+>  drivers/platform/x86/Makefile                               |  1 +
+>  .../mellanox => drivers/platform/x86}/mlx-platform.c        |  1 -
+>  7 files changed, 14 insertions(+), 17 deletions(-)
+>  delete mode 100644 arch/x86/platform/mellanox/Makefile
+>  rename {arch/x86/platform/mellanox => drivers/platform/x86}/mlx-platform.c (99%)
 >
-> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> index 43e54b7..92aba02 100644
-> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> @@ -42,6 +42,7 @@
->  #define BXTWC_GPIOIRQ0         0x4E0B
->  #define BXTWC_GPIOIRQ1         0x4E0C
->  #define BXTWC_CRITIRQ          0x4E0D
-> +#define BXTWC_TMUIRQ           0x4FB6
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e30399..960f364f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7879,7 +7879,7 @@ MELLANOX PLATFORM DRIVER
+>  M:      Vadim Pasternak <vadimp@mellanox.com>
+>  L:      platform-driver-x86@vger.kernel.org
+>  S:      Supported
+> -F:      arch/x86/platform/mellanox/mlx-platform.c
+> +F:      drivers/platform/x86/mlx-platform.c
 >
->  /* Interrupt MASK Registers */
->  #define BXTWC_MIRQLVL1         0x4E0E
-> @@ -59,6 +60,7 @@
->  #define BXTWC_MGPIO0IRQ                0x4E19
->  #define BXTWC_MGPIO1IRQ                0x4E1A
->  #define BXTWC_MCRITIRQ         0x4E1B
-> +#define BXTWC_MTMUIRQ          0x4FB7
+>  MELLANOX MLX CPLD HOTPLUG DRIVER
+>  M:     Vadim Pasternak <vadimp@mellanox.com>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index bada636..ccd5ff7 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -550,18 +550,6 @@ config X86_INTEL_QUARK
+>           Say Y here if you have a Quark based system such as the Arduino
+>           compatible Intel Galileo.
 >
->  /* Whiskey Cove PMIC share same ACPI ID between different platforms */
->  #define BROXTON_PMIC_WC_HRV    4
-> @@ -91,6 +93,7 @@ enum bxtwc_irqs_level2 {
->         BXTWC_GPIO0_IRQ,
->         BXTWC_GPIO1_IRQ,
->         BXTWC_CRIT_IRQ,
-> +       BXTWC_TMU_IRQ,
->  };
->
->  static const struct regmap_irq bxtwc_regmap_irqs[] = {
-> @@ -118,6 +121,10 @@ enum bxtwc_irqs_level2 {
->         REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 9, 0x03),
->  };
->
-> +static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
-> +       REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
-> +};
-> +
->  static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
->         .name = "bxtwc_irq_chip",
->         .status_base = BXTWC_IRQLVL1,
-> @@ -136,6 +143,15 @@ enum bxtwc_irqs_level2 {
->         .num_regs = 10,
->  };
->
-> +static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
-> +       .name = "bxtwc_irq_chip_tmu",
-> +       .status_base = BXTWC_TMUIRQ,
-> +       .mask_base = BXTWC_MTMUIRQ,
-> +       .irqs = bxtwc_regmap_irqs_tmu,
-> +       .num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
-> +       .num_regs = 1,
-> +};
-> +
->  static struct resource gpio_resources[] = {
->         DEFINE_RES_IRQ_NAMED(BXTWC_GPIO0_IRQ, "GPIO0"),
->         DEFINE_RES_IRQ_NAMED(BXTWC_GPIO1_IRQ, "GPIO1"),
-> @@ -164,6 +180,10 @@ enum bxtwc_irqs_level2 {
->         DEFINE_RES_IRQ_NAMED(BXTWC_BCU_IRQ, "BCU"),
->  };
->
-> +static struct resource tmu_resources[] = {
-> +       DEFINE_RES_IRQ_NAMED(BXTWC_TMU_IRQ, "TMU"),
-> +};
-> +
->  static struct mfd_cell bxt_wc_dev[] = {
->         {
->                 .name = "bxt_wcove_gpadc",
-> @@ -191,6 +211,12 @@ enum bxtwc_irqs_level2 {
->                 .resources = bcu_resources,
->         },
->         {
-> +               .name = "bxt_wcove_tmu",
-> +               .num_resources = ARRAY_SIZE(tmu_resources),
-> +               .resources = tmu_resources,
-> +       },
-> +
-> +       {
->                 .name = "bxt_wcove_gpio",
->                 .num_resources = ARRAY_SIZE(gpio_resources),
->                 .resources = gpio_resources,
-> @@ -400,6 +426,15 @@ static int bxtwc_probe(struct platform_device *pdev)
->                 goto err_irq_chip_level2;
->         }
->
-> +       ret = regmap_add_irq_chip(pmic->regmap, pmic->irq,
-> +                                 IRQF_ONESHOT | IRQF_SHARED,
-> +                                 0, &bxtwc_regmap_irq_chip_tmu,
-> +                                 &pmic->irq_chip_data_tmu);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to add TMU IRQ chip\n");
-> +               goto err_irq_chip_tmu;
-> +       }
-> +
->         ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, bxt_wc_dev,
->                               ARRAY_SIZE(bxt_wc_dev), NULL, 0,
->                               NULL);
-> @@ -429,6 +464,8 @@ static int bxtwc_probe(struct platform_device *pdev)
->  err_sysfs:
->         mfd_remove_devices(&pdev->dev);
->  err_mfd:
-> +       regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
-> +err_irq_chip_tmu:
->         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
->  err_irq_chip_level2:
->         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
-> @@ -444,6 +481,7 @@ static int bxtwc_remove(struct platform_device *pdev)
->         mfd_remove_devices(&pdev->dev);
->         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
->         regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_level2);
-> +       regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data_tmu);
->
->         return 0;
->  }
+> -config MLX_PLATFORM
+> -       tristate "Mellanox Technologies platform support"
+> -       depends on X86_64
+> -       depends on X86_EXTENDED_PLATFORM
+> -       ---help---
+> -         This option enables system support for the Mellanox Technologies
+> -         platform.
+> -
+> -         Say Y here if you are building a kernel for Mellanox system.
+> -
+> -         Otherwise, say N.
+> -
+>  config X86_INTEL_LPSS
+>         bool "Intel Low Power Subsystem Support"
+>         depends on X86 && ACPI
+> diff --git a/arch/x86/platform/Makefile b/arch/x86/platform/Makefile
+> index 3c3c19e..184842e 100644
+> --- a/arch/x86/platform/Makefile
+> +++ b/arch/x86/platform/Makefile
+> @@ -8,7 +8,6 @@ obj-y   += iris/
+>  obj-y  += intel/
+>  obj-y  += intel-mid/
+>  obj-y  += intel-quark/
+> -obj-y  += mellanox/
+>  obj-y  += olpc/
+>  obj-y  += scx200/
+>  obj-y  += sfi/
+> diff --git a/arch/x86/platform/mellanox/Makefile b/arch/x86/platform/mellanox/Makefile
+> deleted file mode 100644
+> index f43c931..0000000
+> --- a/arch/x86/platform/mellanox/Makefile
+> +++ /dev/null
+> @@ -1 +0,0 @@
+> -obj-$(CONFIG_MLX_PLATFORM)     += mlx-platform.o
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index b8a21d7..2dbe464 100644
+> index 1853769..4639d97 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -1027,4 +1027,12 @@ config INTEL_TELEMETRY
->           used to get various SoC events and parameters
+> @@ -1028,10 +1028,21 @@ config INTEL_TELEMETRY
 >           directly via debugfs files. Various tools may use
 >           this interface for SoC state monitoring.
-> +
-> +config INTEL_BXTWC_PMIC_TMU
-> +       tristate "Intel BXT Whiskey Cove TMU Driver"
-> +       depends on INTEL_SOC_PMIC && INTEL_PMC_IPC && REGMAP
+>
+> +config MLX_PLATFORM
+> +       tristate "Mellanox Technologies platform support"
+> +       depends on X86_64
 > +       ---help---
-> +         Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
-> +         This driver enables the alarm wakeup functionality in the TMU unit
-> +         of Whiskey Cove PMIC.
->  endif # X86_PLATFORM_DEVICES
+> +         This option enables system support for the Mellanox Technologies
+> +         platform. The Mellanox systems provide data center networking
+> +         solutions based on Virtual Protocol Interconnect (VPI) technology
+> +         enable seamless connectivity to 56/100Gb/s InfiniBand or 10/40/56GbE
+> +         connection.
+> +
+> +         If you have a Mellanox system, say Y or M here.
+> +
+>  config MLX_CPLD_PLATFORM
+>         tristate "Mellanox platform hotplug driver support"
+>         default n
+> -       depends on MLX_PLATFORM
+>         select HWMON
+>         select I2C
+>         ---help---
 > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 2efa86d..0bd6609 100644
+> index 1f06b63..2d6a587 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
-> @@ -67,6 +67,7 @@ obj-$(CONFIG_ALIENWARE_WMI)   += alienware-wmi.o
->  obj-$(CONFIG_INTEL_PMC_IPC)    += intel_pmc_ipc.o
->  obj-$(CONFIG_SURFACE_PRO3_BUTTON)      += surfacepro3_button.o
->  obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
-> +obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)  += intel_bxtwc_tmu.o
->  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
+> @@ -71,4 +71,5 @@ obj-$(CONFIG_INTEL_TELEMETRY) += intel_telemetry_core.o \
 >                                    intel_telemetry_pltdrv.o \
 >                                    intel_telemetry_debugfs.o
-> diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel_bxtwc_tmu.c
-> new file mode 100644
-> index 0000000..e202abd
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_bxtwc_tmu.c
-> @@ -0,0 +1,162 @@
-> +/*
-> + * intel_bxtwc_tmu.c - Intel BXT Whiskey Cove PMIC TMU driver
-> + *
-> + * Copyright (C) 2016 Intel Corporation. All rights reserved.
-> + *
-> + * This driver adds TMU (Time Management Unit) support for Intel BXT platform.
-> + * It enables the alarm wake-up functionality in the TMU unit of Whiskey Cove
-> + * PMIC.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License version
-> + * 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/intel_soc_pmic.h>
-> +
-> +#define BXTWC_TMUIRQ           0x4fb6
-> +#define BXTWC_MIRQLVL1         0x4e0e
-> +#define BXTWC_MTMUIRQ_REG      0x4fb7
-> +#define BXTWC_MIRQLVL1_MTMU    BIT(1)
-> +#define BXTWC_TMU_WK_ALRM      BIT(1)
-> +#define BXTWC_TMU_SYS_ALRM     BIT(2)
-> +#define BXTWC_TMU_ALRM_MASK    (BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
-> +#define BXTWC_TMU_ALRM_IRQ     (BXTWC_TMU_WK_ALRM | BXTWC_TMU_SYS_ALRM)
-> +
-> +struct wcove_tmu {
-> +       int irq;
-> +       struct device *dev;
-> +       struct regmap *regmap;
-> +};
-> +
-> +static irqreturn_t bxt_wcove_tmu_irq_handler(int irq, void *data)
-> +{
-> +       struct wcove_tmu *wctmu = data;
-> +       unsigned int tmu_irq;
-> +
-> +       /* Read TMU interrupt reg */
-> +       regmap_read(wctmu->regmap, BXTWC_TMUIRQ, &tmu_irq);
-> +       if (tmu_irq & BXTWC_TMU_ALRM_IRQ) {
-> +               /* clear TMU irq */
-> +               regmap_write(wctmu->regmap, BXTWC_TMUIRQ, tmu_irq);
-> +               return IRQ_HANDLED;
-> +       }
-> +       return IRQ_NONE;
-> +}
-> +
-> +static int bxt_wcove_tmu_probe(struct platform_device *pdev)
-> +{
-> +       struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
-> +       struct regmap_irq_chip_data *regmap_irq_chip;
-> +       struct wcove_tmu *wctmu;
-> +       int ret, virq, irq;
-> +
-> +       wctmu = devm_kzalloc(&pdev->dev, sizeof(*wctmu), GFP_KERNEL);
-> +       if (!wctmu)
-> +               return -ENOMEM;
-> +
-> +       wctmu->dev = &pdev->dev;
-> +       wctmu->regmap = pmic->regmap;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "invalid irq %d\n", irq);
-> +               return irq;
-> +       }
-> +
-> +       regmap_irq_chip = pmic->irq_chip_data_tmu;
-> +       virq = regmap_irq_get_virq(regmap_irq_chip, irq);
-> +       if (virq < 0) {
-> +               dev_err(&pdev->dev,
-> +                       "failed to get virtual interrupt=%d\n", irq);
-> +               return virq;
-> +       }
-> +
-> +       ret = devm_request_threaded_irq(&pdev->dev, virq,
-> +                                       NULL, bxt_wcove_tmu_irq_handler,
-> +                                       IRQF_ONESHOT, "bxt_wcove_tmu", wctmu);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "request irq failed: %d,virq: %d\n",
-> +                                                       ret, virq);
-> +               return ret;
-> +       }
-> +       wctmu->irq = virq;
-> +
-> +       /* Enable TMU interrupts */
-> +       regmap_update_bits(wctmu->regmap, BXTWC_MIRQLVL1,
-> +                                 BXTWC_MIRQLVL1_MTMU, 0);
-> +
-> +       /* Unmask TMU second level Wake & System alarm */
-> +       regmap_update_bits(wctmu->regmap, BXTWC_MTMUIRQ_REG,
-> +                                 BXTWC_TMU_ALRM_MASK, 0);
-> +
-> +       platform_set_drvdata(pdev, wctmu);
-> +       return 0;
-> +}
-> +
-> +static int bxt_wcove_tmu_remove(struct platform_device *pdev)
-> +{
-> +       struct wcove_tmu *wctmu = platform_get_drvdata(pdev);
-> +       unsigned int val;
-> +
-> +       /* Mask TMU interrupts */
-> +       regmap_read(wctmu->regmap, BXTWC_MIRQLVL1, &val);
-> +       regmap_write(wctmu->regmap, BXTWC_MIRQLVL1,
-> +                       val | BXTWC_MIRQLVL1_MTMU);
-> +       regmap_read(wctmu->regmap, BXTWC_MTMUIRQ_REG, &val);
-> +       regmap_write(wctmu->regmap, BXTWC_MTMUIRQ_REG,
-> +                       val | BXTWC_TMU_ALRM_MASK);
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int bxtwc_tmu_suspend(struct device *dev)
-> +{
-> +       struct wcove_tmu *wctmu = dev_get_drvdata(dev);
-> +
-> +       enable_irq_wake(wctmu->irq);
-> +       return 0;
-> +}
-> +
-> +static int bxtwc_tmu_resume(struct device *dev)
-> +{
-> +       struct wcove_tmu *wctmu = dev_get_drvdata(dev);
-> +
-> +       disable_irq_wake(wctmu->irq);
-> +       return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(bxtwc_tmu_pm_ops, bxtwc_tmu_suspend, bxtwc_tmu_resume);
-> +
-> +static const struct platform_device_id bxt_wcove_tmu_id_table[] = {
-> +       { .name = "bxt_wcove_tmu" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(platform, bxt_wcove_tmu_id_table);
-> +
-> +static struct platform_driver bxt_wcove_tmu_driver = {
-> +       .probe = bxt_wcove_tmu_probe,
-> +       .remove = bxt_wcove_tmu_remove,
-> +       .driver = {
-> +               .name = "bxt_wcove_tmu",
-> +               .pm     = &bxtwc_tmu_pm_ops,
-> +       },
-> +       .id_table = bxt_wcove_tmu_id_table,
-> +};
-> +
-> +module_platform_driver(bxt_wcove_tmu_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Nilesh Bacchewar <nilesh.bacchewar@intel.com>");
-> +MODULE_DESCRIPTION("BXT Whiskey Cove TMU Driver");
-> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
-> index cf619db..956caa0 100644
-> --- a/include/linux/mfd/intel_soc_pmic.h
-> +++ b/include/linux/mfd/intel_soc_pmic.h
-> @@ -26,6 +26,7 @@ struct intel_soc_pmic {
->         struct regmap *regmap;
->         struct regmap_irq_chip_data *irq_chip_data;
->         struct regmap_irq_chip_data *irq_chip_data_level2;
-> +       struct regmap_irq_chip_data *irq_chip_data_tmu;
->         struct device *dev;
->  };
->
+>  obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
+> +obj-$(CONFIG_MLX_PLATFORM)     += mlx-platform.o
+>  obj-$(CONFIG_MLX_CPLD_PLATFORM)        += mlxcpld-hotplug.o
+> diff --git a/arch/x86/platform/mellanox/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> similarity index 99%
+> rename from arch/x86/platform/mellanox/mlx-platform.c
+> rename to drivers/platform/x86/mlx-platform.c
+> index 7dcfcca..bbf60d1 100644
+> --- a/arch/x86/platform/mellanox/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -1,5 +1,4 @@
+>  /*
+> - * arch/x86/platform/mellanox/mlx-platform.c
+>   * Copyright (c) 2016 Mellanox Technologies. All rights reserved.
+>   * Copyright (c) 2016 Vadim Pasternak <vadimp@mellanox.com>
+>   *
 > --
-> 1.9.1
+> 2.1.4
 >
 > --
 > To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
