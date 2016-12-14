@@ -1,55 +1,395 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/1] ideapad-laptop: Add ideapad Y700 15-ACZ to the
- no_hw_rfkill DMI list
-Date: Wed, 14 Dec 2016 03:42:34 +0200
-Message-ID: <CAHp75VdTLb2PHde3T5griZ7B8XJAE_bm4fir=v-Ng9jZOdxOSw@mail.gmail.com>
-References: <20161206221743.357426a0@fazafaka>
+Subject: Re: [PATCH] platform: add custom surface3 platform device for
+ controlling LID
+Date: Wed, 14 Dec 2016 03:41:57 +0200
+Message-ID: <CAHp75VckUWk0WsMFnHA9cYOz_095c-t_=kAMbbjrc+QjQ0E1qw@mail.gmail.com>
+References: <1480090301-13500-1-git-send-email-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:32954 "EHLO
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:32825 "EHLO
         mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753149AbcLNBnV (ORCPT
+        with ESMTP id S1754635AbcLNBnV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Tue, 13 Dec 2016 20:43:21 -0500
-Received: by mail-oi0-f66.google.com with SMTP id f201so685393oib.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Dec 2016 17:42:35 -0800 (PST)
-In-Reply-To: <20161206221743.357426a0@fazafaka>
+In-Reply-To: <1480090301-13500-1-git-send-email-benjamin.tissoires@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: velemas <velemas@gmail.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Bastien Nocera <hadess@hadess.net>, Stephen J <stephenjust@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 6, 2016 at 9:17 PM, velemas <velemas@gmail.com> wrote:
-> Like other Y700 models Lenovo Y700 15-ACZ does not have a physical rfkill switch.
-> ideapad-laptop wrongly reports all radios as blocked by hardware which causes
-> wireless network connections to fail.
+On Fri, Nov 25, 2016 at 6:11 PM, Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+> The LID state provided by ACPI on the Surface 3 is not accurate.
+> The ACPI node doesn't get notified on LID open, which means the
+> LID input switch stays close most of the time.
 >
-> Add this model without an rfkill switch to the no_hw_rfkill list.
+> Fortunatelly, there is a WMI method which directly queries the
+> GPIO underneath the LID state, so it's far more reliable than ACPI.
+> To get the notifications that the LID was opened/closed, we can
+> rely on the ACPI notification of the touchscreen: the DSDT shows
+> that the touchscreen will get notified on close/open as it also
+> controls its _STA method.
+>
+> Note that we need to set the tag "power-switch" to the LID
+> input node through a udev rule for logind to accept it:
+>
+> SUBSYSTEM=="input", KERNEL=="event*", KERNELS=="surface3-wmi", \
+>         TAG+="power-switch"
 
 Pushed to testing with fixed Subject line (Pattern is "platform/x86:
-driver: Description").
+Description").
 Thanks.
 
 >
-> Signed-off-by: Artiom Vaskov <velemas@gmail.com>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 > ---
-> --- a/drivers/platform/x86/ideapad-laptop.c     2016-10-03 02:24:33.000000000 +0300
-> +++ b/drivers/platform/x86/ideapad-laptop.c     2016-11-24 23:02:08.108870266 +0300
-> @@ -870,6 +870,13 @@ static const struct dmi_system_id no_hw_
->                         DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
->                 },
->         },
+>  drivers/platform/x86/Kconfig        |  12 ++
+>  drivers/platform/x86/Makefile       |   1 +
+>  drivers/platform/x86/surface3-wmi.c | 296 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 309 insertions(+)
+>  create mode 100644 drivers/platform/x86/surface3-wmi.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b8a21d7..152aac6 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -363,6 +363,18 @@ config IDEAPAD_LAPTOP
+>           This is a driver for Lenovo IdeaPad netbooks contains drivers for
+>           rfkill switch, hotkey, fan control and backlight control.
+>
+> +config SURFACE3_WMI
+> +       tristate "Surface 3 WMI Driver"
+> +       depends on ACPI_WMI
+> +       depends on DMI
+> +       depends on INPUT
+> +       depends on SPI
+> +       ---help---
+> +         Say Y here if you have a Surface 3.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called surface3-wmi.
+> +
+>  config THINKPAD_ACPI
+>         tristate "ThinkPad ACPI Laptop Extras"
+>         depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 2efa86d..38f5419 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)        += panasonic-laptop.o
+>  obj-$(CONFIG_INTEL_MENLOW)     += intel_menlow.o
+>  obj-$(CONFIG_ACPI_WMI)         += wmi.o
+>  obj-$(CONFIG_MSI_WMI)          += msi-wmi.o
+> +obj-$(CONFIG_SURFACE3_WMI)     += surface3-wmi.o
+>  obj-$(CONFIG_TOPSTAR_LAPTOP)   += topstar-laptop.o
+>
+>  # toshiba_acpi must link after wmi to ensure that wmi devices are found
+> diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
+> new file mode 100644
+> index 0000000..5553b2b
+> --- /dev/null
+> +++ b/drivers/platform/x86/surface3-wmi.c
+> @@ -0,0 +1,296 @@
+> +/*
+> + *  Driver for the LID cover switch of the Surface 3
+> + *
+> + *  Copyright (c) 2016 Red Hat Inc.
+> + */
+> +
+> +/*
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the Free
+> + * Software Foundation; version 2 of the License.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+> +#include <linux/input.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spi/spi.h>
+> +
+> +MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@redhat.com>");
+> +MODULE_DESCRIPTION("Surface 3 platform driver");
+> +MODULE_LICENSE("GPL");
+> +
+> +#define ACPI_BUTTON_HID_LID            "PNP0C0D"
+> +#define SPI_CTL_OBJ_NAME               "SPI"
+> +#define SPI_TS_OBJ_NAME                        "NTRG"
+> +
+> +#define SURFACE3_LID_GUID "F7CC25EC-D20B-404C-8903-0ED4359C18AE"
+> +
+> +MODULE_ALIAS("wmi:" SURFACE3_LID_GUID);
+> +
+> +static const struct dmi_system_id surface3_dmi_table[] = {
+> +#if defined(CONFIG_X86)
 > +       {
-> +               .ident = "Lenovo ideapad Y700-15ACZ",
 > +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ACZ"),
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
 > +               },
 > +       },
->         {
->                 .ident = "Lenovo ideapad Y700-15ISK",
->                 .matches = {
+> +#endif
+> +       { }
+> +};
+> +
+> +struct surface3_wmi {
+> +       struct acpi_device *touchscreen_adev;
+> +       struct acpi_device *pnp0c0d_adev;
+> +       struct acpi_hotplug_context hp;
+> +       struct input_dev *input;
+> +};
+> +
+> +static struct platform_device *s3_wmi_pdev;
+> +
+> +static struct surface3_wmi s3_wmi;
+> +
+> +static DEFINE_MUTEX(s3_wmi_lock);
+> +
+> +static int s3_wmi_query_block(const char *guid, int instance, int *ret)
+> +{
+> +       acpi_status status;
+> +       union acpi_object *obj;
+> +
+> +       struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +
+> +       mutex_lock(&s3_wmi_lock);
+> +       status = wmi_query_block(guid, instance, &output);
+> +
+> +       obj = output.pointer;
+> +
+> +       if (!obj || obj->type != ACPI_TYPE_INTEGER) {
+> +               if (obj) {
+> +                       pr_err("query block returned object type: %d - buffer length:%d\n",
+> +                              obj->type,
+> +                              obj->type == ACPI_TYPE_BUFFER ?
+> +                                               obj->buffer.length : 0);
+> +               }
+> +               kfree(obj);
+> +               return -EINVAL;
+> +       }
+> +       *ret = obj->integer.value;
+> +       kfree(obj);
+> +       mutex_unlock(&s3_wmi_lock);
+> +       return 0;
+> +}
+> +
+> +static inline int s3_wmi_query_lid(int *ret)
+> +{
+> +       return s3_wmi_query_block(SURFACE3_LID_GUID, 0, ret);
+> +}
+> +
+> +static int s3_wmi_send_lid_state(void)
+> +{
+> +       int ret, lid_sw;
+> +
+> +       ret = s3_wmi_query_lid(&lid_sw);
+> +       if (ret)
+> +               return ret;
+> +
+> +       input_report_switch(s3_wmi.input, SW_LID, lid_sw);
+> +       input_sync(s3_wmi.input);
+> +
+> +       return 0;
+> +}
+> +
+> +static int s3_wmi_hp_notify(struct acpi_device *adev, u32 value)
+> +{
+> +       return s3_wmi_send_lid_state();
+> +}
+> +
+> +static acpi_status s3_wmi_attach_spi_device(acpi_handle handle,
+> +                                           u32 level,
+> +                                           void *data,
+> +                                           void **return_value)
+> +{
+> +       struct acpi_device *adev, **ts_adev;
+> +
+> +       if (acpi_bus_get_device(handle, &adev))
+> +               return AE_OK;
+> +
+> +       ts_adev = data;
+> +
+> +       if (strncmp(acpi_device_bid(adev), SPI_TS_OBJ_NAME,
+> +           strlen(SPI_TS_OBJ_NAME)))
+> +               return AE_OK;
+> +
+> +       if (*ts_adev) {
+> +               pr_err("duplicate entry %s\n", SPI_TS_OBJ_NAME);
+> +               return AE_OK;
+> +       }
+> +
+> +       *ts_adev = adev;
+> +
+> +       return AE_OK;
+> +}
+> +
+> +static int s3_wmi_check_platform_device(struct device *dev, void *data)
+> +{
+> +       struct acpi_device *adev, *ts_adev;
+> +       acpi_handle handle;
+> +       acpi_status status;
+> +
+> +       /* ignore non ACPI devices */
+> +       handle = ACPI_HANDLE(dev);
+> +       if (!handle || acpi_bus_get_device(handle, &adev))
+> +               return 0;
+> +
+> +       /* check for LID ACPI switch */
+> +       if (!strcmp(ACPI_BUTTON_HID_LID, acpi_device_hid(adev))) {
+> +               s3_wmi.pnp0c0d_adev = adev;
+> +               return 0;
+> +       }
+> +
+> +       /* ignore non SPI controllers */
+> +       if (strncmp(acpi_device_bid(adev), SPI_CTL_OBJ_NAME,
+> +           strlen(SPI_CTL_OBJ_NAME)))
+> +               return 0;
+> +
+> +       status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
+> +                                    s3_wmi_attach_spi_device, NULL,
+> +                                    &ts_adev, NULL);
+> +       if (ACPI_FAILURE(status))
+> +               dev_warn(dev, "failed to enumerate SPI slaves\n");
+> +
+> +       if (!ts_adev)
+> +               return 0;
+> +
+> +       s3_wmi.touchscreen_adev = ts_adev;
+> +
+> +       return 0;
+> +}
+> +
+> +static int s3_wmi_create_and_register_input(struct platform_device *pdev)
+> +{
+> +       struct input_dev *input;
+> +       int error;
+> +
+> +       input = devm_input_allocate_device(&pdev->dev);
+> +       if (!input)
+> +               return -ENOMEM;
+> +
+> +       input->name = "Lid Switch";
+> +       input->phys = "button/input0";
+> +       input->id.bustype = BUS_HOST;
+> +       input->id.product = 0x0005;
+> +
+> +       input_set_capability(input, EV_SW, SW_LID);
+> +
+> +       error = input_register_device(input);
+> +       if (error)
+> +               goto out_err;
+> +
+> +       s3_wmi.input = input;
+> +
+> +       return 0;
+> + out_err:
+> +       input_free_device(s3_wmi.input);
+> +       return error;
+> +}
+> +
+> +static int __init s3_wmi_probe(struct platform_device *pdev)
+> +{
+> +       int error;
+> +
+> +       if (!dmi_check_system(surface3_dmi_table))
+> +               return -ENODEV;
+> +
+> +       memset(&s3_wmi, 0, sizeof(s3_wmi));
+> +
+> +       bus_for_each_dev(&platform_bus_type, NULL, NULL,
+> +                        s3_wmi_check_platform_device);
+> +
+> +       if (!s3_wmi.touchscreen_adev)
+> +               return -ENODEV;
+> +
+> +       acpi_bus_trim(s3_wmi.pnp0c0d_adev);
+> +
+> +       error = s3_wmi_create_and_register_input(pdev);
+> +       if (error)
+> +               goto restore_acpi_lid;
+> +
+> +       acpi_initialize_hp_context(s3_wmi.touchscreen_adev, &s3_wmi.hp,
+> +                                  s3_wmi_hp_notify, NULL);
+> +
+> +       s3_wmi_send_lid_state();
+> +
+> +       return 0;
+> +
+> + restore_acpi_lid:
+> +       acpi_bus_scan(s3_wmi.pnp0c0d_adev->handle);
+> +       return error;
+> +}
+> +
+> +static int s3_wmi_remove(struct platform_device *device)
+> +{
+> +       /* remove the hotplug context from the acpi device */
+> +       s3_wmi.touchscreen_adev->hp = NULL;
+> +
+> +       /* reinstall the actual PNPC0C0D LID default handle */
+> +       acpi_bus_scan(s3_wmi.pnp0c0d_adev->handle);
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int s3_wmi_resume(struct device *dev)
+> +{
+> +       s3_wmi_send_lid_state();
+> +       return 0;
+> +}
+> +#endif
+> +static SIMPLE_DEV_PM_OPS(s3_wmi_pm, NULL, s3_wmi_resume);
+> +
+> +static struct platform_driver s3_wmi_driver = {
+> +       .driver = {
+> +               .name = "surface3-wmi",
+> +               .pm = &s3_wmi_pm,
+> +       },
+> +       .remove = s3_wmi_remove,
+> +};
+> +
+> +static int __init s3_wmi_init(void)
+> +{
+> +       int error;
+> +
+> +       s3_wmi_pdev = platform_device_alloc("surface3-wmi", -1);
+> +       if (!s3_wmi_pdev)
+> +               return -ENOMEM;
+> +
+> +       error = platform_device_add(s3_wmi_pdev);
+> +       if (error)
+> +               goto err_device_put;
+> +
+> +       error = platform_driver_probe(&s3_wmi_driver, s3_wmi_probe);
+> +       if (error)
+> +               goto err_device_del;
+> +
+> +       pr_info("Surface 3 WMI Extras loaded\n");
+> +       return 0;
+> +
+> + err_device_del:
+> +       platform_device_del(s3_wmi_pdev);
+> + err_device_put:
+> +       platform_device_put(s3_wmi_pdev);
+> +       return error;
+> +}
+> +
+> +static void __exit s3_wmi_exit(void)
+> +{
+> +       platform_device_unregister(s3_wmi_pdev);
+> +       platform_driver_unregister(&s3_wmi_driver);
+> +}
+> +
+> +module_init(s3_wmi_init);
+> +module_exit(s3_wmi_exit);
+> --
+> 2.7.4
+>
 > --
 > To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
 > the body of a message to majordomo@vger.kernel.org
