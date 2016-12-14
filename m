@@ -1,182 +1,58 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v1 1/1] platform/x86: mlx-platform: mlxcpld-hotplug driver style fixes
-Date: Wed, 14 Dec 2016 12:05:15 +0000
-Message-ID: <1481717115-60362-2-git-send-email-vadimp@mellanox.com>
-References: <1481717115-60362-1-git-send-email-vadimp@mellanox.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1481717115-60362-1-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, andriy.shevchenko@linux.intel.com, Vadim Pasternak <vadimp@mellanox.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Initialize local in_tablet_mode
+Date: Wed, 14 Dec 2016 15:10:59 -0800
+Message-ID: <20161214231059.GA8243@f23x64.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:50263 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754088AbcLNXLb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 14 Dec 2016 18:11:31 -0500
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Lyude <lyude@redhat.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The patch contains several styling fixes:
-  - Make names of hotplug devices shorter;
-  - Change register offset assignment to defines;
-  - Add defines for the all event masks;
-  - Use PLATFORM_DEVID_NONE instead of -1;
+linux-next reported in_tablet_mode may be used uninitialized after:
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+b31800283868 ("platform/x86: thinkpad_acpi: Move tablet detection into separate function")
+
+This turns out to be a false positive as the pr_info call cannot be
+reached if tp_features.hotkey_tablet (global scope) is 0, and
+in_tablet_mode is assigned in both places tp_features.hotkey_tablet is
+assigned.
+
+Regardless, to make it explicit and avoid further reports, initialize
+in_tablet_mode to 0.
+
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Cc: Lyude <lyude@redhat.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/mlx-platform.c | 84 ++++++++++++++++++++++---------------
- 1 file changed, 50 insertions(+), 34 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 97b4c3a..04e1f2b 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -45,6 +45,10 @@
- /* LPC bus IO offsets */
- #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR		0x2000
- #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR		0x2500
-+#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR		0x253a
-+#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR		0x2558
-+#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR		0x2564
-+#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR		0x2588
- #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
- #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
- #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
-@@ -56,6 +60,17 @@
- 				  MLXPLAT_CPLD_LPC_I2C_CH2_OFF) | \
- 				  MLXPLAT_CPLD_LPC_PIO_OFFSET)
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 69cb0da..1c5a6e2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3143,7 +3143,7 @@ typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
  
-+/* Masks for aggregation, psu, pwr and fan event in CPLD related registers. */
-+#define MLXPLAT_CPLD_AGGR_PSU_MASK_DEF	0x08
-+#define MLXPLAT_CPLD_AGGR_PWR_MASK_DEF	0x08
-+#define MLXPLAT_CPLD_AGGR_FAN_MASK_DEF	0x40
-+#define MLXPLAT_CPLD_AGGR_MASK_DEF	(MLXPLAT_CPLD_AGGR_PSU_MASK_DEF | \
-+					 MLXPLAT_CPLD_AGGR_FAN_MASK_DEF)
-+#define MLXPLAT_CPLD_AGGR_MASK_MSN21XX	0x04
-+#define MLXPLAT_CPLD_PSU_MASK		GENMASK(1, 0)
-+#define MLXPLAT_CPLD_PWR_MASK		GENMASK(1, 0)
-+#define MLXPLAT_CPLD_FAN_MASK		GENMASK(3, 0)
-+
- /* Start channel numbers */
- #define MLXPLAT_CPLD_CH1			2
- #define MLXPLAT_CPLD_CH2			10
-@@ -123,7 +138,7 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
- };
+ static int hotkey_init_tablet_mode(void)
+ {
+-	int in_tablet_mode, res;
++	int in_tablet_mode = 0, res;
+ 	char *type;
  
- /* Platform hotplug devices */
--static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_psu[] = {
-+static struct mlxcpld_hotplug_device mlxplat_mlxcpld_psu[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c02", 0x51) },
- 		.bus = 10,
-@@ -134,7 +149,7 @@ static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_psu[] = {
- 	},
- };
- 
--static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_pwr[] = {
-+static struct mlxcpld_hotplug_device mlxplat_mlxcpld_pwr[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("dps460", 0x59) },
- 		.bus = 10,
-@@ -145,7 +160,7 @@ static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_pwr[] = {
- 	},
- };
- 
--static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_fan[] = {
-+static struct mlxcpld_hotplug_device mlxplat_mlxcpld_fan[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
- 		.bus = 11,
-@@ -166,38 +181,38 @@ static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_fan[] = {
- 
- /* Platform hotplug default data */
- static
--struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_default_data = {
--	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
--	.top_aggr_mask = 0x48,
--	.top_aggr_psu_mask = 0x08,
--	.psu_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x58),
--	.psu_mask = 0x03,
--	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_psu),
--	.psu = mlxplat_mlxcpld_hotplug_psu,
--	.top_aggr_pwr_mask = 0x08,
--	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
--	.pwr_mask = 0x03,
--	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
--	.pwr = mlxplat_mlxcpld_hotplug_pwr,
--	.top_aggr_fan_mask = 0x40,
--	.fan_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x88),
--	.fan_mask = 0x0f,
--	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_fan),
--	.fan = mlxplat_mlxcpld_hotplug_fan,
-+struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_default_data = {
-+	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
-+	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
-+	.top_aggr_psu_mask = MLXPLAT_CPLD_AGGR_PSU_MASK_DEF,
-+	.psu_reg_offset = MLXPLAT_CPLD_LPC_REG_PSU_ADRR,
-+	.psu_mask = MLXPLAT_CPLD_PSU_MASK,
-+	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_psu),
-+	.psu = mlxplat_mlxcpld_psu,
-+	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_PWR_MASK_DEF,
-+	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
-+	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
-+	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
-+	.pwr = mlxplat_mlxcpld_pwr,
-+	.top_aggr_fan_mask = MLXPLAT_CPLD_AGGR_FAN_MASK_DEF,
-+	.fan_reg_offset = MLXPLAT_CPLD_LPC_REG_FAN_ADRR,
-+	.fan_mask = MLXPLAT_CPLD_FAN_MASK,
-+	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_fan),
-+	.fan = mlxplat_mlxcpld_fan,
- };
- 
- /* Platform hotplug MSN21xx system family data */
- static
--struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_hotplug_msn21xx_data = {
--	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
--	.top_aggr_mask = 0x04,
--	.top_aggr_pwr_mask = 0x04,
--	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
--	.pwr_mask = 0x03,
--	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
-+struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_msn21xx_data = {
-+	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
-+	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
-+	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
-+	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
-+	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
-+	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
- };
- 
--static struct resource mlxplat_mlxcpld_hotplug_resources[] = {
-+static struct resource mlxplat_mlxcpld_resources[] = {
- 	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
- };
- 
-@@ -213,7 +228,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
- 		mlxplat_mux_data[i].n_values =
- 				ARRAY_SIZE(mlxplat_default_channels[i]);
- 	}
--	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_default_data;
-+	mlxplat_hotplug = &mlxplat_mlxcpld_default_data;
- 
- 	return 1;
- };
-@@ -227,7 +242,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- 		mlxplat_mux_data[i].n_values =
- 				ARRAY_SIZE(mlxplat_msn21xx_channels);
- 	}
--	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_msn21xx_data;
-+	mlxplat_hotplug = &mlxplat_mlxcpld_msn21xx_data;
- 
- 	return 1;
- };
-@@ -314,9 +329,10 @@ static int __init mlxplat_init(void)
- 	}
- 
- 	priv->pdev_hotplug = platform_device_register_resndata(
--				&mlxplat_dev->dev, "mlxcpld-hotplug", -1,
--				mlxplat_mlxcpld_hotplug_resources,
--				ARRAY_SIZE(mlxplat_mlxcpld_hotplug_resources),
-+				&mlxplat_dev->dev, "mlxcpld-hotplug",
-+				PLATFORM_DEVID_NONE,
-+				mlxplat_mlxcpld_resources,
-+				ARRAY_SIZE(mlxplat_mlxcpld_resources),
- 				mlxplat_hotplug, sizeof(*mlxplat_hotplug));
- 	if (IS_ERR(priv->pdev_hotplug)) {
- 		err = PTR_ERR(priv->pdev_hotplug);
+ 	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
 -- 
-2.1.4
+2.9.3
+
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
