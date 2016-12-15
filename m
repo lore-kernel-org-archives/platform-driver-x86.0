@@ -1,17 +1,17 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: [PATCH 1/1] platform/x86: surface3-wmi: Balance locking on error path
-Date: Thu, 15 Dec 2016 03:24:58 +0200
-Message-ID: <20161215012458.501-1-andriy.shevchenko@linux.intel.com>
+Date: Thu, 15 Dec 2016 03:26:27 +0200
+Message-ID: <20161215012627.594-1-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:56927 "EHLO mga14.intel.com"
+Received: from mga04.intel.com ([192.55.52.120]:40238 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933974AbcLOBah (ORCPT
+        id S932261AbcLOBbF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Dec 2016 20:30:37 -0500
+        Wed, 14 Dec 2016 20:31:05 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
 There is a possibility that lock will be left acquired.
 Consolidate error path under out_free_unlock label.
