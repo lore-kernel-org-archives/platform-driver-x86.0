@@ -1,79 +1,67 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH 1/1] platform/x86: surface3-wmi: Balance locking on error
- path
-Date: Thu, 15 Dec 2016 09:14:10 +0100
-Message-ID: <20161215081410.GB31881@mail.corp.redhat.com>
-References: <20161215012458.501-1-andriy.shevchenko@linux.intel.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Initialize local
+ in_tablet_mode and type
+Date: Thu, 15 Dec 2016 11:34:00 -0200
+Message-ID: <20161215133400.GA24782@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41908 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1757445AbcLOIOk (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37708 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1755291AbcLONl5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Dec 2016 03:14:40 -0500
+        Thu, 15 Dec 2016 08:41:57 -0500
 Content-Disposition: inline
-In-Reply-To: <20161215012458.501-1-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Dec 15 2016 or thereabouts, Andy Shevchenko wrote:
-> There is a possibility that lock will be left acquired.
-> Consolidate error path under out_free_unlock label.
+(fixed platform-driver-x86 ML address, trimmed CC list on repost since
+it is just the Acked-by).
+
+On Wed, 14 Dec 2016, Darren Hart wrote:
+> linux-next reported in_tablet_mode and type may be used uninitialized
+> after:
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> b31800283868 ("platform/x86: thinkpad_acpi: Move tablet detection into separate function")
+> 
+> This turns out to be a false positive as the pr_info call cannot be
+> reached if tp_features.hotkey_tablet (global scope) is 0, and
+> in_tablet_mode and type are assigned in both places
+> tp_features.hotkey_tablet is assigned.
+> 
+> Regardless, to make it explicit and avoid further reports, initialize
+> in_tablet_mode to 0 and type to "".
+> 
+> Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+> Cc: Lyude <lyude@redhat.com>
+> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-With Darren's remarks, the patch is:
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Sorry for missing this out in the first place.
-
-Cheers,
-Benjamin
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
 > ---
->  drivers/platform/x86/surface3-wmi.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> Since v1: Initialize type also.
 > 
-> diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
-> index 5553b2b85e0a..ed7a3b77a0cc 100644
-> --- a/drivers/platform/x86/surface3-wmi.c
-> +++ b/drivers/platform/x86/surface3-wmi.c
-> @@ -60,10 +60,10 @@ static DEFINE_MUTEX(s3_wmi_lock);
+>  drivers/platform/x86/thinkpad_acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 69cb0da..c408390 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -3143,8 +3143,8 @@ typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
 >  
->  static int s3_wmi_query_block(const char *guid, int instance, int *ret)
+>  static int hotkey_init_tablet_mode(void)
 >  {
-> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	acpi_status status;
->  	union acpi_object *obj;
-> -
-> -	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	int error = 0;
+> -	int in_tablet_mode, res;
+> -	char *type;
+> +	int in_tablet_mode = 0, res;
+> +	char *type = "";
 >  
->  	mutex_lock(&s3_wmi_lock);
->  	status = wmi_query_block(guid, instance, &output);
-> @@ -77,13 +77,14 @@ static int s3_wmi_query_block(const char *guid, int instance, int *ret)
->  			       obj->type == ACPI_TYPE_BUFFER ?
->  						obj->buffer.length : 0);
->  		}
-> -		kfree(obj);
-> -		return -EINVAL;
-> +		error = -EINVAL;
-> +		goto out_free_unlock;
->  	}
->  	*ret = obj->integer.value;
-> +out_free_unlock:
->  	kfree(obj);
->  	mutex_unlock(&s3_wmi_lock);
-> -	return 0;
-> +	return error;
->  }
->  
->  static inline int s3_wmi_query_lid(int *ret)
-> -- 
-> 2.11.0
-> 
+>  	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
+>  		/* For X41t, X60t, X61t Tablets... */
+
+-- 
+  Henrique Holschuh
