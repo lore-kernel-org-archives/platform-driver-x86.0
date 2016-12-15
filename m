@@ -1,56 +1,68 @@
-From: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 3/7] ALSA: hda - use dell_micmute_led_set() instead of
-        dell_app_wmi_led_set()
-Date: Thu, 15 Dec 2016 16:43:00 +0100
-Message-ID: <1481816580.2090.5.camel@Pali-Nokia-N900>
-References: <20161208123618.28603-1-kernel@kempniu.pl>
-         <20161208123618.28603-4-kernel@kempniu.pl> <201612111140.38170@pali>
-          <20161215144628.GB22695@kmp-mobile.hq.kempniu.pl>
-Reply-To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] platform/x86: surface3-wmi: Balance locking on error path
+Date: Thu, 15 Dec 2016 19:41:06 +0200
+Message-ID: <20161215174106.13916-1-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wj0-f193.google.com ([209.85.210.193]:35664 "EHLO
-        mail-wj0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755567AbcLOPoR (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:33883 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752075AbcLORlN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Dec 2016 10:44:17 -0500
-In-Reply-To: <20161215144628.GB22695@kmp-mobile.hq.kempniu.pl>
-Content-ID: <1481816580.2090.4.camel@Pali-Nokia-N900>
+        Thu, 15 Dec 2016 12:41:13 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, Hui Wang <hui.wang@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Thu Dec 15 15:46:28 2016 Michał Kępień <kernel@kempniu.pl> wrote:
-> > On Thursday 08 December 2016 13:36:14 Michał Kępień wrote:
-> > > --- a/sound/pci/hda/dell_wmi_helper.c
-> > > +++ b/sound/pci/hda/dell_wmi_helper.c
-> > > @@ -6,7 +6,7 @@
-> > > #include <linux/dell-led.h>
-> > > 
-> > > static int dell_led_value;
-> > > -static int (*dell_led_set_func)(int, int);
-> > > +static int (*dell_led_set_func)(int);
-> > 
-> > Suggestion: what about changing name to dell_micmute_led_set_func to 
-> > match real function name which is used after this patch?
-> 
-> While I like the idea itself, implementing it will double the number of
-> lines that this patch changes (6 vs. 12), arguably making its intention
+There is a possibility that lock will be left acquired.
+Consolidate error path under out_free_unlock label.
 
-If some patch makes final result of code better then metric number of lines is not priority.
+Reported-by: kbuild test robot <fengguang.wu@intel.com>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+In v2:
+- address Darren's comments
+- update tags (in particular put proper email of reporter)
 
-> less clear.   Please let me know if you would really like this to happen
-> (perhaps as a separate patch?), otherwise I will skip this idea in v2.
-> 
-> -- 
-> Best regards,
-> Michał Kępień
+I dare to push this to testing ahead. If anyone has objections, tell me asap.
 
-If it will be in this or another following patch... I dot care. But this is sound subsystem, so sound maintainers need to decide what they prefer.
+ drivers/platform/x86/surface3-wmi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
+index 5553b2b85e0a..cbf4d83a7271 100644
+--- a/drivers/platform/x86/surface3-wmi.c
++++ b/drivers/platform/x86/surface3-wmi.c
+@@ -60,10 +60,10 @@ static DEFINE_MUTEX(s3_wmi_lock);
+ 
+ static int s3_wmi_query_block(const char *guid, int instance, int *ret)
+ {
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_status status;
+ 	union acpi_object *obj;
+-
+-	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	int error = 0;
+ 
+ 	mutex_lock(&s3_wmi_lock);
+ 	status = wmi_query_block(guid, instance, &output);
+@@ -77,13 +77,14 @@ static int s3_wmi_query_block(const char *guid, int instance, int *ret)
+ 			       obj->type == ACPI_TYPE_BUFFER ?
+ 						obj->buffer.length : 0);
+ 		}
+-		kfree(obj);
+-		return -EINVAL;
++		error = -EINVAL;
++		goto out_free_unlock;
+ 	}
+ 	*ret = obj->integer.value;
++ out_free_unlock:
+ 	kfree(obj);
+ 	mutex_unlock(&s3_wmi_lock);
+-	return 0;
++	return error;
+ }
+ 
+ static inline int s3_wmi_query_lid(int *ret)
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.11.0
