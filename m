@@ -1,58 +1,62 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Initialize local in_tablet_mode
-Date: Wed, 14 Dec 2016 15:10:59 -0800
-Message-ID: <20161214231059.GA8243@f23x64.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 1/1] platform/x86: surface3-wmi: Balance locking on error path
+Date: Thu, 15 Dec 2016 03:24:58 +0200
+Message-ID: <20161215012458.501-1-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:50263 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754088AbcLNXLb (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:56927 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S933974AbcLOBah (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Dec 2016 18:11:31 -0500
-Content-Disposition: inline
+        Wed, 14 Dec 2016 20:30:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lyude <lyude@redhat.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
 
-linux-next reported in_tablet_mode may be used uninitialized after:
+There is a possibility that lock will be left acquired.
+Consolidate error path under out_free_unlock label.
 
-b31800283868 ("platform/x86: thinkpad_acpi: Move tablet detection into separate function")
-
-This turns out to be a false positive as the pr_info call cannot be
-reached if tp_features.hotkey_tablet (global scope) is 0, and
-in_tablet_mode is assigned in both places tp_features.hotkey_tablet is
-assigned.
-
-Regardless, to make it explicit and avoid further reports, initialize
-in_tablet_mode to 0.
-
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-Cc: Lyude <lyude@redhat.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/surface3-wmi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 69cb0da..1c5a6e2 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3143,7 +3143,7 @@ typedef tpacpi_keymap_entry_t tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
+diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
+index 5553b2b85e0a..ed7a3b77a0cc 100644
+--- a/drivers/platform/x86/surface3-wmi.c
++++ b/drivers/platform/x86/surface3-wmi.c
+@@ -60,10 +60,10 @@ static DEFINE_MUTEX(s3_wmi_lock);
  
- static int hotkey_init_tablet_mode(void)
+ static int s3_wmi_query_block(const char *guid, int instance, int *ret)
  {
--	int in_tablet_mode, res;
-+	int in_tablet_mode = 0, res;
- 	char *type;
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_status status;
+ 	union acpi_object *obj;
+-
+-	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	int error = 0;
  
- 	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
+ 	mutex_lock(&s3_wmi_lock);
+ 	status = wmi_query_block(guid, instance, &output);
+@@ -77,13 +77,14 @@ static int s3_wmi_query_block(const char *guid, int instance, int *ret)
+ 			       obj->type == ACPI_TYPE_BUFFER ?
+ 						obj->buffer.length : 0);
+ 		}
+-		kfree(obj);
+-		return -EINVAL;
++		error = -EINVAL;
++		goto out_free_unlock;
+ 	}
+ 	*ret = obj->integer.value;
++out_free_unlock:
+ 	kfree(obj);
+ 	mutex_unlock(&s3_wmi_lock);
+-	return 0;
++	return error;
+ }
+ 
+ static inline int s3_wmi_query_lid(int *ret)
 -- 
-2.9.3
-
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+2.11.0
