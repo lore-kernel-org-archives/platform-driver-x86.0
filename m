@@ -1,61 +1,39 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v6 1/3] clk: x86: Add Atom PMC platform clocks
-Date: Fri, 16 Dec 2016 10:46:11 +0200
-Message-ID: <CAHp75Vf7Sfq3_mSb6xf0NHutq8tO1y7Rhi7opDkomu+-vQZCYw@mail.gmail.com>
-References: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
- <1481306510-7471-2-git-send-email-irina.tirdea@intel.com> <CAHp75Vdaw4yvTPP2JZc+ti-AVNsisRQ+WG=JxPQ1jv-r7DADQA@mail.gmail.com>
- <20161213232524.GQ5423@codeaurora.org> <32235fb3-0d54-211d-28f4-4655e4bc7812@linux.intel.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH] platform/x86: fujitsu-laptop: set default trigger for radio LED to rfkill-any
+Date: Fri, 16 Dec 2016 15:46:03 +0100
+Message-ID: <20161216144603.19100-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f65.google.com ([209.85.218.65]:33990 "EHLO
-        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753951AbcLPIqN (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Dec 2016 03:46:13 -0500
-In-Reply-To: <32235fb3-0d54-211d-28f4-4655e4bc7812@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Irina Tirdea <irina.tirdea@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, "x86@kernel.org" <x86@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, platform-driver-x86@vger.kernel.org, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>, linux-clk@vger.kernel.org, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Dec 16, 2016 at 7:15 AM, Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
-> Hi Stephen,
->
-> can you elaborate on the last comment?
+The "radio components indicator" LED present in Lifebook E734/E744/E754
+should be lit when any radio transmitter is enabled, so set its default
+trigger to rfkill-any.
 
-Please don't do top posting.
+Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+---
+Note: the rfkill-any trigger is currently only present in
+mac80211-next/master.
 
->>> devm_kasprintf()
->>
->> Please no.
+ drivers/platform/x86/fujitsu-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-That's why I used modal verb "might" instead of "would".
-
->> It's all local to this function, devm isn't helping anything.
->> Having one kfree() would be good though. And using init.name for
->> the clkdev lookup is probably wrong and should be replaced with
->> something more generic along with an associated device name.
->
-> I am not sure I understand this last comment.
-> init.name is not a constant, it's made of the "pmc_plt_clk_" string
-> concatenated with an id which directly maps to which hardware clock is
-> registered. Clients use devm_clk_get() with a "pmc_plt_clk_<n>" argument.
-
-Giving more thoughts about design and use of this I would propose to
-do the following.
-
-1. Create under clock framework something like clk-pmc-atom clock
-driver (see, for example, clk-fractional-divider, though this one
-should indeed go under x86 folder).
-2. In real provider, i.e. pmc_atom, create the necessary clock tree
-with *names*.
-
-Scheme with ID is fragile, imagine another version of PMC where
-ordering would be mixed up? It's not hypothetical since we used to
-have this already in pmc_atom for some registers and bits.
-
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 61f39ab..bfc0eb3 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -202,6 +202,7 @@ static void radio_led_set(struct led_classdev *cdev,
+ 
+ static struct led_classdev radio_led = {
+  .name = "fujitsu::radio_led",
++ .default_trigger = "rfkill-any",
+  .brightness_get = radio_led_get,
+  .brightness_set = radio_led_set
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.10.2
