@@ -1,69 +1,58 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v6 1/3] clk: x86: Add Atom PMC platform
- clocks
-Date: Fri, 16 Dec 2016 08:57:16 -0600
-Message-ID: <07206bf1-2fab-0bbe-6e1b-762e55f62363@linux.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v6 2/3] arch/x86/platform/atom: Move pmc_atom to
+ drivers/platform/x86
+Date: Fri, 16 Dec 2016 10:20:45 -0800
+Message-ID: <20161216182045.GA44199@f23x64.localdomain>
 References: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
- <1481306510-7471-2-git-send-email-irina.tirdea@intel.com>
- <CAHp75Vdaw4yvTPP2JZc+ti-AVNsisRQ+WG=JxPQ1jv-r7DADQA@mail.gmail.com>
- <20161213232524.GQ5423@codeaurora.org>
- <32235fb3-0d54-211d-28f4-4655e4bc7812@linux.intel.com>
- <CAHp75Vf7Sfq3_mSb6xf0NHutq8tO1y7Rhi7opDkomu+-vQZCYw@mail.gmail.com>
+ <1481306510-7471-3-git-send-email-irina.tirdea@intel.com>
+ <CAHp75VfCgTgWnNmgcY9mp9n-1e_mSci=3dGyrtDquMtTT3OoYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf7Sfq3_mSb6xf0NHutq8tO1y7Rhi7opDkomu+-vQZCYw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfCgTgWnNmgcY9mp9n-1e_mSci=3dGyrtDquMtTT3OoYw@mail.gmail.com>
 Sender: linux-acpi-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Irina Tirdea <irina.tirdea@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, "x86@kernel.org" <x86@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, platform-driver-x86@vger.kernel.org, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>, linux-clk@vger.kernel.org, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
+Cc: Irina Tirdea <irina.tirdea@intel.com>, linux-clk@vger.kernel.org, "x86@kernel.org" <x86@kernel.org>, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/16/16 2:46 AM, Andy Shevchenko wrote:
-> On Fri, Dec 16, 2016 at 7:15 AM, Pierre-Louis Bossart
-> <pierre-louis.bossart@linux.intel.com> wrote:
->> Hi Stephen,
->>
->> can you elaborate on the last comment?
->
-> Please don't do top posting.
->
->>>> devm_kasprintf()
->>>
->>> Please no.
->
-> That's why I used modal verb "might" instead of "would".
->
->>> It's all local to this function, devm isn't helping anything.
->>> Having one kfree() would be good though. And using init.name for
->>> the clkdev lookup is probably wrong and should be replaced with
->>> something more generic along with an associated device name.
->>
->> I am not sure I understand this last comment.
->> init.name is not a constant, it's made of the "pmc_plt_clk_" string
->> concatenated with an id which directly maps to which hardware clock is
->> registered. Clients use devm_clk_get() with a "pmc_plt_clk_<n>" argument.
->
-> Giving more thoughts about design and use of this I would propose to
-> do the following.
->
-> 1. Create under clock framework something like clk-pmc-atom clock
-> driver (see, for example, clk-fractional-divider, though this one
-> should indeed go under x86 folder).
+On Tue, Dec 13, 2016 at 01:43:31AM +0200, Andy Shevchenko wrote:
+> I have been told I have to send my comments here instead of our
+> internal ML. I didn't fast enough to comment that during v5. So do it
+> right now.
+> 
+> On Fri, Dec 9, 2016 at 8:01 PM, Irina Tirdea <irina.tirdea@intel.com> wrote:
+> > The pmc_atom driver does not contain any architecture specific
+> > code. It only enables the SOC Power Management Controller Driver
+> 
+> SOC -> SoC
+> Driver -> driver
+> 
+> > for BayTrail and CherryTrail platforms.
+> >
+> > Move the pmc_atom driver from arch/x86/platform/atom to
+> > drivers/platform/x86.
+> >
+> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> > ---
+> >  arch/x86/Kconfig                                                     | 4 ----
+> >  arch/x86/platform/atom/Makefile                                      | 1 -
+> >  drivers/acpi/acpi_lpss.c                                             | 2 +-
+> >  drivers/platform/x86/Kconfig                                         | 4 ++++
+> >  drivers/platform/x86/Makefile                                        | 1 +
+> >  {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c          | 3 +--
+> 
+> >  {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h | 0
+> 
+> No, it's not a *platform data*.
+> 
+> Other that that looks good to me.
 
-apart from the name the current code already does this with code in 
-drivers/clk/x86
+Where would you recommend instead? It needs a place to serve both acpi_lpss.c
+and pmc_atom.c. The include/linux/platform_data/x86 location doesn't seem too
+strange as it supports a "platform" driver in the sense that pmc_atom is a
+platform driver.
 
-> 2. In real provider, i.e. pmc_atom, create the necessary clock tree
-> with *names*.
->
-> Scheme with ID is fragile, imagine another version of PMC where
-> ordering would be mixed up? It's not hypothetical since we used to
-> have this already in pmc_atom for some registers and bits.
-
-I don't want to deal with hypothetical stuff happening to legacy 
-hardware. If there is a problem at some point, it's no big deal to add a 
-platform-dependent lookup table and change the registers being accessed.
-
-
-
+-- 
+Darren Hart
+Intel Open Source Technology Center
