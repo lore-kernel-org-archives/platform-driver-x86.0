@@ -1,47 +1,63 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v6 1/3] clk: x86: Add Atom PMC platform clocks
-Date: Sat, 17 Dec 2016 15:57:27 +0200
-Message-ID: <CAHp75Vdn_8_fCQzkG7CPrnDZzhC7WUpGM1cyvfNRz0u_sc7RKA@mail.gmail.com>
-References: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
- <1481306510-7471-2-git-send-email-irina.tirdea@intel.com> <CAHp75Vdaw4yvTPP2JZc+ti-AVNsisRQ+WG=JxPQ1jv-r7DADQA@mail.gmail.com>
- <20161213232524.GQ5423@codeaurora.org> <32235fb3-0d54-211d-28f4-4655e4bc7812@linux.intel.com>
- <20161217013337.GW5423@codeaurora.org>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: [platform-drivers-x86:testing 4/7] drivers/platform/x86/surface3-wmi.c:81:2-8:
+ preceding lock on line 68
+Date: Mon, 19 Dec 2016 11:35:03 +0100 (CET)
+Message-ID: <alpine.DEB.2.10.1612191134010.2994@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20161217013337.GW5423@codeaurora.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Irina Tirdea <irina.tirdea@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, "x86@kernel.org" <x86@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, platform-driver-x86@vger.kernel.org, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <lenb@kernel.org>, linux-clk@vger.kernel.org, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:8517 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S932238AbcLSKfH (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 19 Dec 2016 05:35:07 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, kbuild-all@01.org
 
-On Sat, Dec 17, 2016 at 3:33 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 12/15, Pierre-Louis Bossart wrote:
+It looks like an unlock may be missing before the returnon line 81.
 
->>Clients use devm_clk_get() with a "pmc_plt_clk_<n>"
->> argument.
->
-> This is the problem. Clients should be calling clk_get() like:
->
->         clk_get(dev, "signal name in datasheet")
->
-> where the first argument is the device and the second argument is
-> some string that is meaningful to the device, not the system as a
-> whole. The way clkdev is intended is so that the dev argument's
-> dev_name() is combined with the con_id that matches some signale
-> name in the datasheet. This way when the same IP is put into some
-> other chip, the globally unique name doesn't need to change, just
-> the device name that's registered with the lookup. Obviously this
-> breaks down quite badly when dev_name() isn't stable. Is that
-> happening here?
+julia
 
-PMC Atom is a PCI device and thus each platform would have different
-dev_name(). Do you want to list all in each consumer if consumer wants
-to work on all of them or I missed something?
 
-So, the question is how clock getting will look like to work on
-currently both CherryTrail and BayTrail.
+tree:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git testing
+head:   9b0d7c8018708b798c0bd6d4fe9512754c1e8c18
+commit: d183a21a0df57d187dbccd710ebb5a5e457251f4 [4/7] platform/x86: Add custom surface3 platform device for controlling LID
+:::::: branch date: 84 minutes ago
+:::::: commit date: 2 hours ago
 
--- 
-With Best Regards,
-Andy Shevchenko
+>> drivers/platform/x86/surface3-wmi.c:81:2-8: preceding lock on line 68
+
+git remote add platform-drivers-x86 git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git
+git remote update platform-drivers-x86
+git checkout d183a21a0df57d187dbccd710ebb5a5e457251f4
+vim +81 drivers/platform/x86/surface3-wmi.c
+
+d183a21a Benjamin Tissoires 2016-11-25  62  {
+d183a21a Benjamin Tissoires 2016-11-25  63  	acpi_status status;
+d183a21a Benjamin Tissoires 2016-11-25  64  	union acpi_object *obj;
+d183a21a Benjamin Tissoires 2016-11-25  65
+d183a21a Benjamin Tissoires 2016-11-25  66  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+d183a21a Benjamin Tissoires 2016-11-25  67
+d183a21a Benjamin Tissoires 2016-11-25 @68  	mutex_lock(&s3_wmi_lock);
+d183a21a Benjamin Tissoires 2016-11-25  69  	status = wmi_query_block(guid, instance, &output);
+d183a21a Benjamin Tissoires 2016-11-25  70
+d183a21a Benjamin Tissoires 2016-11-25  71  	obj = output.pointer;
+d183a21a Benjamin Tissoires 2016-11-25  72
+d183a21a Benjamin Tissoires 2016-11-25  73  	if (!obj || obj->type != ACPI_TYPE_INTEGER) {
+d183a21a Benjamin Tissoires 2016-11-25  74  		if (obj) {
+d183a21a Benjamin Tissoires 2016-11-25  75  			pr_err("query block returned object type: %d - buffer length:%d\n",
+d183a21a Benjamin Tissoires 2016-11-25  76  			       obj->type,
+d183a21a Benjamin Tissoires 2016-11-25  77  			       obj->type == ACPI_TYPE_BUFFER ?
+d183a21a Benjamin Tissoires 2016-11-25  78  						obj->buffer.length : 0);
+d183a21a Benjamin Tissoires 2016-11-25  79  		}
+d183a21a Benjamin Tissoires 2016-11-25  80  		kfree(obj);
+d183a21a Benjamin Tissoires 2016-11-25 @81  		return -EINVAL;
+d183a21a Benjamin Tissoires 2016-11-25  82  	}
+d183a21a Benjamin Tissoires 2016-11-25  83  	*ret = obj->integer.value;
+d183a21a Benjamin Tissoires 2016-11-25  84  	kfree(obj);
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
