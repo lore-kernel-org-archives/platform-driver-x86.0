@@ -1,115 +1,153 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] acer-wmi: setup accelerometer when machine has
- appropriate notify event
-Date: Tue, 27 Dec 2016 14:00:01 +0200
-Message-ID: <CAHp75VfJi_1LaPmE=Gxz_H-AcWqHnSRSGJgdA=GpZtUQwOs91Q@mail.gmail.com>
-References: <1478132332-25284-1-git-send-email-jlee@suse.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
+Date: Tue, 27 Dec 2016 13:52:16 +0100
+Message-ID: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f65.google.com ([209.85.218.65]:36018 "EHLO
-        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752694AbcL0MAD (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Dec 2016 07:00:03 -0500
-In-Reply-To: <1478132332-25284-1-git-send-email-jlee@suse.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Lee, Chun-Yi" <jlee@suse.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Takashi Iwai <tiwai@suse.de>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 3, 2016 at 2:18 AM, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrot=
-e:
-> The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
-> So, this patch changes the codes to setup accelerometer input device
-> when detected ACERWMID_EVENT_GUID. It avoids that the accel input
-> device created on every acer machines.
->
-> In addition, patch adds a clearly parsing logic of accelerometer hid
-> to acer_wmi_get_handle_cb callback function. It is positive matching
-> the "SENR" name with "BST0001" device to avoid non-supported hardware.
->
+Dell platform team told us that some (DMI whitelisted) Dell Latitude
+machines have ST microelectronics accelerometer at i2c address 0x29. That
+i2c address is not specified in DMI or ACPI, so runtime detection without
+whitelist which is below is not possible.
 
-Pushed to testing with slightly massaged commit message.
-Thanks.
+Presence of that ST microelectronics accelerometer is verified by existence
+of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+without i2c address.
 
-> v2:
-> Fix the string comparison logic of SENR.
->
-> Reported-by: Bj=C3=B8rn Mork <bjorn@mork.no>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> ---
->  drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
->
-> Index: linux/drivers/platform/x86/acer-wmi.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux.orig/drivers/platform/x86/acer-wmi.c
-> +++ linux/drivers/platform/x86/acer-wmi.c
-> @@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(voi
->         return status;
->  }
->
-> +#define ACER_WMID_ACCEL_HID    "BST0001"
-> +
->  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 lev=
-el,
->                                                 void *ctx, void **retval)
->  {
-> +       struct acpi_device *dev;
-> +
-> +       if (!strcmp(ctx, "SENR")) {
-> +               if (acpi_bus_get_device(ah, &dev))
-> +                       return AE_OK;
-> +               if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-> +                       return AE_OK;
-> +       } else
-> +               return AE_OK;
-> +
->         *(acpi_handle *)retval =3D ah;
-> -       return AE_OK;
-> +
-> +       return AE_CTRL_TERMINATE;
->  }
->
->  static int __init acer_wmi_get_handle(const char *name, const char *prop=
-,
-> @@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(v
->  {
->         int err;
->
-> -       err =3D acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
-> +       err =3D acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor=
-_handle);
->         if (err)
->                 return err;
->
-> @@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
->                 err =3D acer_wmi_input_setup();
->                 if (err)
->                         return err;
-> +               err =3D acer_wmi_accel_setup();
-> +               if (err)
-> +                       return err;
->         }
->
-> -       acer_wmi_accel_setup();
-> -
->         err =3D platform_driver_register(&acer_platform_driver);
->         if (err) {
->                 pr_err("Unable to register platform driver\n");
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver=
--x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch registers lis3lv02d device at i2c address 0x29 if is detected.
 
+Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
+lis3lv02d correctly initialize accelerometer.
 
+Tested on Dell Latitude E6440.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ drivers/i2c/busses/i2c-i801.c |   98 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index eb3627f..188cfd4 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1118,6 +1118,101 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
+ 	}
+ }
+ 
++static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
++					     u32 nesting_level,
++					     void *context,
++					     void **return_value)
++{
++	struct acpi_device_info *info;
++	acpi_status status;
++	char *hid;
++
++	status = acpi_get_object_info(obj_handle, &info);
++	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
++		return AE_OK;
++
++	hid = info->hardware_id.string;
++	if (!hid)
++		return AE_OK;
++
++	if (strlen(hid) < 7)
++		return AE_OK;
++
++	if (memcmp(hid, "SMO88", 5) != 0)
++		return AE_OK;
++
++	*((bool *)return_value) = true;
++	return AE_CTRL_TERMINATE;
++}
++
++static bool is_dell_system_with_lis3lv02d(void)
++{
++	bool found;
++	acpi_status status;
++	const char *vendor;
++
++	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
++	if (strcmp(vendor, "Dell Inc.") != 0)
++		return false;
++
++	/*
++	 * Check if ACPI device SMO88xx exists and if is enabled. That ACPI
++	 * device represent our ST microelectronics lis3lv02d accelerometer but
++	 * unfortunately without any other additional information.
++	 */
++	found = false;
++	status = acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
++				  (void **)&found);
++	if (!ACPI_SUCCESS(status) || !found)
++		return false;
++
++	return true;
++}
++
++/*
++ * Dell platform team told us that these Latitude devices have
++ * ST microelectronics accelerometer at i2c address 0x29.
++ * That i2c address is not specified in DMI or ACPI, so runtime
++ * detection without whitelist which is below is not possible.
++ */
++static const char * const dmi_dell_product_names[] = {
++	"Latitude E5250",
++	"Latitude E5450",
++	"Latitude E5550",
++	"Latitude E6440",
++	"Latitude E6440 ATG",
++	"Latitude E6540",
++};
++
++static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
++{
++	struct i2c_board_info info;
++	const char *product_name;
++	bool known_i2c_address;
++	int i;
++
++	known_i2c_address = false;
++	product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
++	for (i = 0; i < ARRAY_SIZE(dmi_dell_product_names); ++i) {
++		if (strcmp(product_name, dmi_dell_product_names[i]) == 0) {
++			known_i2c_address = true;
++			break;
++		}
++	}
++
++	if (!known_i2c_address) {
++		dev_warn(&priv->pci_dev->dev,
++			 "Accelerometer lis3lv02d i2c device is present "
++			 "but its i2c address is unknown, skipping ...\n");
++		return;
++	}
++
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	info.addr = 0x29;
++	strlcpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
++	i2c_new_device(&priv->adapter, &info);
++}
++
+ /* Register optional slaves */
+ static void i801_probe_optional_slaves(struct i801_priv *priv)
+ {
+@@ -1136,6 +1231,9 @@ static void i801_probe_optional_slaves(struct i801_priv *priv)
+ 
+ 	if (dmi_name_in_vendors("FUJITSU"))
+ 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
++
++	if (is_dell_system_with_lis3lv02d())
++		register_dell_lis3lv02d_i2c_device(priv);
+ }
+ #else
+ static void __init input_apanel_init(void) {}
+-- 
+1.7.9.5
