@@ -1,53 +1,50 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
-Date: Wed, 28 Dec 2016 00:15:30 +0200
-Message-ID: <CAHp75VeWBaPNmT0mb+Gs_ZhFEHFx_H-Ro0UQ9u1VvLhNVjCqYQ@mail.gmail.com>
-References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
- <21e8453f9ebd2955b2c5e499dc51efb0@the-dreams.de> <201612271451.01505@pali>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86: fix surface3_button build errors
+Date: Tue, 27 Dec 2016 14:28:51 -0800
+Message-ID: <4b805dc9-4eeb-10bb-7db5-85defa32a304@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:36103 "EHLO
-        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932451AbcL0WPb (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:47192 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753801AbcL0W3Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Dec 2016 17:15:31 -0500
-In-Reply-To: <201612271451.01505@pali>
+        Tue, 27 Dec 2016 17:29:16 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.com>, Steven Honeyman <stevenhoneyman@gmail.com>, valdis.kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, =?UTF-8?B?TWljaGHDheKAmiBLw4TihKJwaWXDheKAng==?= <kernel@kempniu.pl>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
+Cc: kbuild test robot <fengguang.wu@intel.com>, Benjamin Tissoires <benjamin.tissoires@gmail.com>
 
-On Tue, Dec 27, 2016 at 3:51 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Tuesday 27 December 2016 14:43:49 Wolfram Sang wrote:
->> > Dell platform team told us that some (DMI whitelisted) Dell
->> > Latitude machines have ST microelectronics accelerometer at i2c
->> > address 0x29. That
->> > i2c address is not specified in DMI or ACPI, so runtime detection
->> > without
->> > whitelist which is below is not possible.
->>
->> I'd think this should rather live somewhere in
->> drivers/platform/x86/dell*.c?
->
-> i2c_new_device() with lis3lv02d for i801 i2c bus needs to be called
-> after initializing i2c-i801 bus driver.
->
-> I have no idea how to do it (properly) outside of i2c-i801.c file.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-I doubt we need a single line of code for this. See [1] and perhaps
-create an EFI variable with necessary upgrade device node.
+Fix build errors when I2C=m and SURFACE_3_BUTTON=y.
+The driver uses i2c interfaces so it should depend on I2C.
 
-> Same thing is done for Fujitsu machines, see function
-> i801_probe_optional_slaves() in i2c-i801.c file. So I did similar
-> approach for Dell machines.
+drivers/built-in.o: In function `surface3_driver_init':
+surface3_button.c:(.init.text+0x75cb0): undefined reference to `i2c_register_driver'
+drivers/built-in.o: In function `surface3_driver_exit':
+surface3_button.c:(.exit.text+0x31a8): undefined reference to `i2c_del_driver'
 
-Perhaps, this also needs to be converted to use EFI variable.
+Fixes: 1a64b719d3ae (platform/x86: Introduce button support for the Surface 3)
 
-[1] https://lwn.net/Articles/693212/
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kbuild test robot <fengguang.wu@intel.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+---
+ drivers/platform/x86/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+--- lnx-410-rc1.orig/drivers/platform/x86/Kconfig
++++ lnx-410-rc1/drivers/platform/x86/Kconfig
+@@ -1034,7 +1034,7 @@ config SURFACE_PRO3_BUTTON
+ 
+ config SURFACE_3_BUTTON
+ 	tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
+-	depends on ACPI && KEYBOARD_GPIO
++	depends on ACPI && KEYBOARD_GPIO && I2C
+ 	---help---
+ 	  This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
+ 
