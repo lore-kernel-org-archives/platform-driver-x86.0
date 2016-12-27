@@ -1,59 +1,115 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] hp_accel: Add support for HP ZBook 17
-Date: Tue, 27 Dec 2016 13:57:18 +0200
-Message-ID: <CAHp75Vd8ahFTzxV=2iVJvG-MH04MyRyyVqyYQJNZUG7wukJ26A@mail.gmail.com>
-References: <20161221095553.rbrw7qyulrdsyunl@lenoch>
+Subject: Re: [PATCH v2] acer-wmi: setup accelerometer when machine has
+ appropriate notify event
+Date: Tue, 27 Dec 2016 14:00:01 +0200
+Message-ID: <CAHp75VfJi_1LaPmE=Gxz_H-AcWqHnSRSGJgdA=GpZtUQwOs91Q@mail.gmail.com>
+References: <1478132332-25284-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:35742 "EHLO
-        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754025AbcL0L5T (ORCPT
+Received: from mail-oi0-f65.google.com ([209.85.218.65]:36018 "EHLO
+        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752694AbcL0MAD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Dec 2016 06:57:19 -0500
-In-Reply-To: <20161221095553.rbrw7qyulrdsyunl@lenoch>
+        Tue, 27 Dec 2016 07:00:03 -0500
+In-Reply-To: <1478132332-25284-1-git-send-email-jlee@suse.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ladislav Michl <ladis@linux-mips.org>
-Cc: Eric Piel <eric.piel@tremplin-utc.net>, Darren Hart <dvhart@infradead.org>, Takashi Iwai <tiwai@suse.de>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Lee, Chun-Yi" <jlee@suse.com>
 
-On Wed, Dec 21, 2016 at 11:55 AM, Ladislav Michl <ladis@linux-mips.org> wrote:
-> HP ZBook 17 laptop needs a non-standard mapping (xy_swap_yz_inverted).
+On Thu, Nov 3, 2016 at 2:18 AM, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrot=
+e:
+> The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
+> So, this patch changes the codes to setup accelerometer input device
+> when detected ACERWMID_EVENT_GUID. It avoids that the accel input
+> device created on every acer machines.
+>
+> In addition, patch adds a clearly parsing logic of accelerometer hid
+> to acer_wmi_get_handle_cb callback function. It is positive matching
+> the "SENR" name with "BST0001" device to avoid non-supported hardware.
 >
 
-Pushed to testing with fixed Subject (should be "platform/x86: ...").
+Pushed to testing with slightly massaged commit message.
 Thanks.
 
-> Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
+> v2:
+> Fix the string comparison logic of SENR.
+>
+> Reported-by: Bj=C3=B8rn Mork <bjorn@mork.no>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 > ---
->  Test done on patched driver; reading /sys/devices/platform/lis3lv02d/position
->  - laptop is horizontal: (-36,0,1188)
->  - the left side is elevated: (522,18,1062)
->  - the front side (where the touchpad is) is elevated: (0,-612,990)
->  - the laptop is put upside-down: (-36,18,-1188)
+>  drivers/platform/x86/acer-wmi.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
 >
->  drivers/platform/x86/hp_accel.c |    1 +
->  1 file changed, 1 insertion(+)
+> Index: linux/drivers/platform/x86/acer-wmi.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux.orig/drivers/platform/x86/acer-wmi.c
+> +++ linux/drivers/platform/x86/acer-wmi.c
+> @@ -1808,11 +1808,24 @@ static int __init acer_wmi_enable_lm(voi
+>         return status;
+>  }
 >
-> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-> index 09356684c32f..493d8910a74e 100644
-> --- a/drivers/platform/x86/hp_accel.c
-> +++ b/drivers/platform/x86/hp_accel.c
-> @@ -251,6 +251,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
->         AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
->         AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
->         AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
-> +       AXIS_DMI_MATCH("HPZBook17", "HP ZBook 17", xy_swap_yz_inverted),
->         { NULL, }
->  /* Laptop models without axis info (yet):
->   * "NC6910" "HP Compaq 6910"
+> +#define ACER_WMID_ACCEL_HID    "BST0001"
+> +
+>  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 lev=
+el,
+>                                                 void *ctx, void **retval)
+>  {
+> +       struct acpi_device *dev;
+> +
+> +       if (!strcmp(ctx, "SENR")) {
+> +               if (acpi_bus_get_device(ah, &dev))
+> +                       return AE_OK;
+> +               if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
+> +                       return AE_OK;
+> +       } else
+> +               return AE_OK;
+> +
+>         *(acpi_handle *)retval =3D ah;
+> -       return AE_OK;
+> +
+> +       return AE_CTRL_TERMINATE;
+>  }
+>
+>  static int __init acer_wmi_get_handle(const char *name, const char *prop=
+,
+> @@ -1839,7 +1852,7 @@ static int __init acer_wmi_accel_setup(v
+>  {
+>         int err;
+>
+> -       err =3D acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle);
+> +       err =3D acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor=
+_handle);
+>         if (err)
+>                 return err;
+>
+> @@ -2177,10 +2190,11 @@ static int __init acer_wmi_init(void)
+>                 err =3D acer_wmi_input_setup();
+>                 if (err)
+>                         return err;
+> +               err =3D acer_wmi_accel_setup();
+> +               if (err)
+> +                       return err;
+>         }
+>
+> -       acer_wmi_accel_setup();
+> -
+>         err =3D platform_driver_register(&acer_platform_driver);
+>         if (err) {
+>                 pr_err("Unable to register platform driver\n");
 > --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> To unsubscribe from this list: send the line "unsubscribe platform-driver=
+-x86" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
