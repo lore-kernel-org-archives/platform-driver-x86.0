@@ -1,222 +1,60 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [patch v1 1/1] platform/x86: mlx-platform: mlxcpld-hotplug
- driver style fixes
-Date: Tue, 27 Dec 2016 13:46:43 +0200
-Message-ID: <1482839203.9552.157.camel@linux.intel.com>
-References: <1481717115-60362-1-git-send-email-vadimp@mellanox.com>
-         <1481717115-60362-2-git-send-email-vadimp@mellanox.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: set default trigger for
+ radio LED to rfkill-any
+Date: Tue, 27 Dec 2016 13:51:22 +0200
+Message-ID: <CAHp75Ve1p8VfwxKcg7AZmdiU=ZXj0iQfdzriuMCR9cRHe2JjVg@mail.gmail.com>
+References: <20161216144603.19100-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:34473 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753014AbcL0Lqq (ORCPT
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:35881 "EHLO
+        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754688AbcL0LvY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Dec 2016 06:46:46 -0500
-In-Reply-To: <1481717115-60362-2-git-send-email-vadimp@mellanox.com>
+        Tue, 27 Dec 2016 06:51:24 -0500
+In-Reply-To: <20161216144603.19100-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vadim Pasternak <vadimp@mellanox.com>, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, 2016-12-14 at 12:05 +0000, Vadim Pasternak wrote:
-> The patch contains several styling fixes:
->   - Make names of hotplug devices shorter;
->   - Change register offset assignment to defines;
->   - Add defines for the all event masks;
->   - Use PLATFORM_DEVID_NONE instead of -1;
+On Fri, Dec 16, 2016 at 4:46 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+> The "radio components indicator" LED present in Lifebook E734/E744/E754
+> should be lit when any radio transmitter is enabled, so set its default
+> trigger to rfkill-any.
+>
 
-Pushed to testing.
+Pushed to testing, thanks!
 
-For standalone patch there is no need to have a separate cover letter.
-Use space after --- delimiter (the one followed by change statistics).
-
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
 > ---
->  drivers/platform/x86/mlx-platform.c | 84 ++++++++++++++++++++++----
-> -----------
->  1 file changed, 50 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/mlx-platform.c
-> b/drivers/platform/x86/mlx-platform.c
-> index 97b4c3a..04e1f2b 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -45,6 +45,10 @@
->  /* LPC bus IO offsets */
->  #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR		0x2000
->  #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR		0x2500
-> +#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR		0x253a
-> +#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR		0x2558
-> +#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR		0x2564
-> +#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR		0x2588
->  #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
->  #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
->  #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
-> @@ -56,6 +60,17 @@
->  				  MLXPLAT_CPLD_LPC_I2C_CH2_OFF) | \
->  				  MLXPLAT_CPLD_LPC_PIO_OFFSET)
->  
-> +/* Masks for aggregation, psu, pwr and fan event in CPLD related
-> registers. */
-> +#define MLXPLAT_CPLD_AGGR_PSU_MASK_DEF	0x08
-> +#define MLXPLAT_CPLD_AGGR_PWR_MASK_DEF	0x08
-> +#define MLXPLAT_CPLD_AGGR_FAN_MASK_DEF	0x40
-> +#define MLXPLAT_CPLD_AGGR_MASK_DEF	(MLXPLAT_CPLD_AGGR_PSU_MASK
-> _DEF | \
-> +					 MLXPLAT_CPLD_AGGR_FAN_MASK_D
-> EF)
-> +#define MLXPLAT_CPLD_AGGR_MASK_MSN21XX	0x04
-> +#define MLXPLAT_CPLD_PSU_MASK		GENMASK(1, 0)
-> +#define MLXPLAT_CPLD_PWR_MASK		GENMASK(1, 0)
-> +#define MLXPLAT_CPLD_FAN_MASK		GENMASK(3, 0)
-> +
->  /* Start channel numbers */
->  #define MLXPLAT_CPLD_CH1			2
->  #define MLXPLAT_CPLD_CH2			10
-> @@ -123,7 +138,7 @@ static struct i2c_mux_reg_platform_data
-> mlxplat_mux_data[] = {
->  };
->  
->  /* Platform hotplug devices */
-> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_psu[] =
-> {
-> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_psu[] = {
->  	{
->  		.brdinfo = { I2C_BOARD_INFO("24c02", 0x51) },
->  		.bus = 10,
-> @@ -134,7 +149,7 @@ static struct mlxcpld_hotplug_device
-> mlxplat_mlxcpld_hotplug_psu[] = {
->  	},
->  };
->  
-> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_pwr[] =
-> {
-> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_pwr[] = {
->  	{
->  		.brdinfo = { I2C_BOARD_INFO("dps460", 0x59) },
->  		.bus = 10,
-> @@ -145,7 +160,7 @@ static struct mlxcpld_hotplug_device
-> mlxplat_mlxcpld_hotplug_pwr[] = {
->  	},
->  };
->  
-> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_fan[] =
-> {
-> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_fan[] = {
->  	{
->  		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
->  		.bus = 11,
-> @@ -166,38 +181,38 @@ static struct mlxcpld_hotplug_device
-> mlxplat_mlxcpld_hotplug_fan[] = {
->  
->  /* Platform hotplug default data */
->  static
-> -struct mlxcpld_hotplug_platform_data
-> mlxplat_mlxcpld_hotplug_default_data = {
-> -	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
-> -	.top_aggr_mask = 0x48,
-> -	.top_aggr_psu_mask = 0x08,
-> -	.psu_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x58),
-> -	.psu_mask = 0x03,
-> -	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_psu),
-> -	.psu = mlxplat_mlxcpld_hotplug_psu,
-> -	.top_aggr_pwr_mask = 0x08,
-> -	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
-> -	.pwr_mask = 0x03,
-> -	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
-> -	.pwr = mlxplat_mlxcpld_hotplug_pwr,
-> -	.top_aggr_fan_mask = 0x40,
-> -	.fan_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x88),
-> -	.fan_mask = 0x0f,
-> -	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_fan),
-> -	.fan = mlxplat_mlxcpld_hotplug_fan,
-> +struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_default_data = {
-> +	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
-> +	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
-> +	.top_aggr_psu_mask = MLXPLAT_CPLD_AGGR_PSU_MASK_DEF,
-> +	.psu_reg_offset = MLXPLAT_CPLD_LPC_REG_PSU_ADRR,
-> +	.psu_mask = MLXPLAT_CPLD_PSU_MASK,
-> +	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_psu),
-> +	.psu = mlxplat_mlxcpld_psu,
-> +	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_PWR_MASK_DEF,
-> +	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
-> +	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
-> +	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
-> +	.pwr = mlxplat_mlxcpld_pwr,
-> +	.top_aggr_fan_mask = MLXPLAT_CPLD_AGGR_FAN_MASK_DEF,
-> +	.fan_reg_offset = MLXPLAT_CPLD_LPC_REG_FAN_ADRR,
-> +	.fan_mask = MLXPLAT_CPLD_FAN_MASK,
-> +	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_fan),
-> +	.fan = mlxplat_mlxcpld_fan,
->  };
->  
->  /* Platform hotplug MSN21xx system family data */
->  static
-> -struct mlxcpld_hotplug_platform_data
-> mlxplat_mlxcpld_hotplug_msn21xx_data = {
-> -	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
-> -	.top_aggr_mask = 0x04,
-> -	.top_aggr_pwr_mask = 0x04,
-> -	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
-> -	.pwr_mask = 0x03,
-> -	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
-> +struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_msn21xx_data = {
-> +	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
-> +	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
-> +	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
-> +	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
-> +	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
-> +	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
->  };
->  
-> -static struct resource mlxplat_mlxcpld_hotplug_resources[] = {
-> +static struct resource mlxplat_mlxcpld_resources[] = {
->  	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
->  };
->  
-> @@ -213,7 +228,7 @@ static int __init
-> mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
->  		mlxplat_mux_data[i].n_values =
->  				ARRAY_SIZE(mlxplat_default_channels[i
-> ]);
->  	}
-> -	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_default_data;
-> +	mlxplat_hotplug = &mlxplat_mlxcpld_default_data;
->  
->  	return 1;
->  };
-> @@ -227,7 +242,7 @@ static int __init
-> mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
->  		mlxplat_mux_data[i].n_values =
->  				ARRAY_SIZE(mlxplat_msn21xx_channels);
->  	}
-> -	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_msn21xx_data;
-> +	mlxplat_hotplug = &mlxplat_mlxcpld_msn21xx_data;
->  
->  	return 1;
->  };
-> @@ -314,9 +329,10 @@ static int __init mlxplat_init(void)
->  	}
->  
->  	priv->pdev_hotplug = platform_device_register_resndata(
-> -				&mlxplat_dev->dev, "mlxcpld-hotplug", 
-> -1,
-> -				mlxplat_mlxcpld_hotplug_resources,
-> -				ARRAY_SIZE(mlxplat_mlxcpld_hotplug_re
-> sources),
-> +				&mlxplat_dev->dev, "mlxcpld-hotplug",
-> +				PLATFORM_DEVID_NONE,
-> +				mlxplat_mlxcpld_resources,
-> +				ARRAY_SIZE(mlxplat_mlxcpld_resources)
-> ,
->  				mlxplat_hotplug,
-> sizeof(*mlxplat_hotplug));
->  	if (IS_ERR(priv->pdev_hotplug)) {
->  		err = PTR_ERR(priv->pdev_hotplug);
+> Note: the rfkill-any trigger is currently only present in
+> mac80211-next/master.
+>
+>  drivers/platform/x86/fujitsu-laptop.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86=
+/fujitsu-laptop.c
+> index 61f39ab..bfc0eb3 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -202,6 +202,7 @@ static void radio_led_set(struct led_classdev *cdev,
+>
+>  static struct led_classdev radio_led =3D {
+>   .name =3D "fujitsu::radio_led",
+> + .default_trigger =3D "rfkill-any",
+>   .brightness_get =3D radio_led_get,
+>   .brightness_set =3D radio_led_set
+>  };
+> --
+> 2.10.2
+>
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
