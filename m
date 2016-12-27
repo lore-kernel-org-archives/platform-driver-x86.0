@@ -1,107 +1,222 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
-Date: Fri, 23 Dec 2016 22:55:34 +0100
-Message-ID: <eb246ac1-bed1-a1c7-8d69-e5529c774322@gmail.com>
-References: <201611242245.00217@pali>
- <afdfe71f-6f39-6f4b-4c92-47142d6267d3@samsung.com>
- <20161125100140.GC4062@amd>
- <e32e3d6c-5d6d-c882-21d9-8028c8311b0b@samsung.com>
- <20161125110557.GA13204@amd>
- <2367b9a7-68f7-2038-0d3a-a9561055b4f6@samsung.com>
- <20161125144859.GA20139@amd>
- <9844f7b3-c3e8-99d8-61b6-1550b1b8ab7e@samsung.com>
- <20161125204045.GA28036@amd> <b35b19a0-5abd-154a-cf3b-d4a7f7e76f00@gmail.com>
- <20161221184948.GB21636@amd>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [patch v1 1/1] platform/x86: mlx-platform: mlxcpld-hotplug
+ driver style fixes
+Date: Tue, 27 Dec 2016 13:46:43 +0200
+Message-ID: <1482839203.9552.157.camel@linux.intel.com>
+References: <1481717115-60362-1-git-send-email-vadimp@mellanox.com>
+         <1481717115-60362-2-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20161221184948.GB21636@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, gdg@zplane.com, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:34473 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753014AbcL0Lqq (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 27 Dec 2016 06:46:46 -0500
+In-Reply-To: <1481717115-60362-2-git-send-email-vadimp@mellanox.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Vadim Pasternak <vadimp@mellanox.com>, dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us
 
-Hi,
+On Wed, 2016-12-14 at 12:05 +0000, Vadim Pasternak wrote:
+> The patch contains several styling fixes:
+>   - Make names of hotplug devices shorter;
+>   - Change register offset assignment to defines;
+>   - Add defines for the all event masks;
+>   - Use PLATFORM_DEVID_NONE instead of -1;
 
-On 12/21/2016 07:49 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>>> In my eyes trigger approach is neccessary at least for some hardware,
->>>>> and things it pretty clear: trigger on == LED changes without
->>>>> userspace involvement. trigger off == userspace controls the LED.
->>>>
->>>> It is likely that it would break many existing users.
->>>
->>> Can you elaborate on that?
->>
->> There might exist users that adjust LED brightness while having
->> active trigger. The best example is default-on trigger - it sets
->> brightness only on init, but remains active all the time. Whereas
->> this could be fixed, there is another case: think of changing blinking
->> brightness - it would be impossible.
-> 
-> I don't see the breakage. For existing blinking and default-on
-> triggers, existing behaviour would be kept. Difference would be that
-> for hardware that changes triggers itself (like the keyboard light) we
-> would present it as a trigger. And you are right -- there would be
-> user visible changes there. You could not assign blinking, because
-> .. it already has a trigger. But I believe it is reasonable.
+Pushed to testing.
 
-We've already received negative feedback regarding blocking
-application of different trigger when hw brightness change notifications
-are enabled. One solution to that is making the notifications
-orthogonal to the trigger mechanism. The other possibility is to allow
-for having more than one active trigger for a LED.
+For standalone patch there is no need to have a separate cover letter.
+Use space after --- delimiter (the one followed by change statistics).
 
-We could think of defining a special type of persistent trigger that
-would be always enabled.
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  drivers/platform/x86/mlx-platform.c | 84 ++++++++++++++++++++++----
+> -----------
+>  1 file changed, 50 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/mlx-platform.c
+> b/drivers/platform/x86/mlx-platform.c
+> index 97b4c3a..04e1f2b 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -45,6 +45,10 @@
+>  /* LPC bus IO offsets */
+>  #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR		0x2000
+>  #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR		0x2500
+> +#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR		0x253a
+> +#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR		0x2558
+> +#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR		0x2564
+> +#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR		0x2588
+>  #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
+>  #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
+>  #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
+> @@ -56,6 +60,17 @@
+>  				  MLXPLAT_CPLD_LPC_I2C_CH2_OFF) | \
+>  				  MLXPLAT_CPLD_LPC_PIO_OFFSET)
+>  
+> +/* Masks for aggregation, psu, pwr and fan event in CPLD related
+> registers. */
+> +#define MLXPLAT_CPLD_AGGR_PSU_MASK_DEF	0x08
+> +#define MLXPLAT_CPLD_AGGR_PWR_MASK_DEF	0x08
+> +#define MLXPLAT_CPLD_AGGR_FAN_MASK_DEF	0x40
+> +#define MLXPLAT_CPLD_AGGR_MASK_DEF	(MLXPLAT_CPLD_AGGR_PSU_MASK
+> _DEF | \
+> +					 MLXPLAT_CPLD_AGGR_FAN_MASK_D
+> EF)
+> +#define MLXPLAT_CPLD_AGGR_MASK_MSN21XX	0x04
+> +#define MLXPLAT_CPLD_PSU_MASK		GENMASK(1, 0)
+> +#define MLXPLAT_CPLD_PWR_MASK		GENMASK(1, 0)
+> +#define MLXPLAT_CPLD_FAN_MASK		GENMASK(3, 0)
+> +
+>  /* Start channel numbers */
+>  #define MLXPLAT_CPLD_CH1			2
+>  #define MLXPLAT_CPLD_CH2			10
+> @@ -123,7 +138,7 @@ static struct i2c_mux_reg_platform_data
+> mlxplat_mux_data[] = {
+>  };
+>  
+>  /* Platform hotplug devices */
+> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_psu[] =
+> {
+> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_psu[] = {
+>  	{
+>  		.brdinfo = { I2C_BOARD_INFO("24c02", 0x51) },
+>  		.bus = 10,
+> @@ -134,7 +149,7 @@ static struct mlxcpld_hotplug_device
+> mlxplat_mlxcpld_hotplug_psu[] = {
+>  	},
+>  };
+>  
+> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_pwr[] =
+> {
+> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_pwr[] = {
+>  	{
+>  		.brdinfo = { I2C_BOARD_INFO("dps460", 0x59) },
+>  		.bus = 10,
+> @@ -145,7 +160,7 @@ static struct mlxcpld_hotplug_device
+> mlxplat_mlxcpld_hotplug_pwr[] = {
+>  	},
+>  };
+>  
+> -static struct mlxcpld_hotplug_device mlxplat_mlxcpld_hotplug_fan[] =
+> {
+> +static struct mlxcpld_hotplug_device mlxplat_mlxcpld_fan[] = {
+>  	{
+>  		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
+>  		.bus = 11,
+> @@ -166,38 +181,38 @@ static struct mlxcpld_hotplug_device
+> mlxplat_mlxcpld_hotplug_fan[] = {
+>  
+>  /* Platform hotplug default data */
+>  static
+> -struct mlxcpld_hotplug_platform_data
+> mlxplat_mlxcpld_hotplug_default_data = {
+> -	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
+> -	.top_aggr_mask = 0x48,
+> -	.top_aggr_psu_mask = 0x08,
+> -	.psu_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x58),
+> -	.psu_mask = 0x03,
+> -	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_psu),
+> -	.psu = mlxplat_mlxcpld_hotplug_psu,
+> -	.top_aggr_pwr_mask = 0x08,
+> -	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
+> -	.pwr_mask = 0x03,
+> -	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
+> -	.pwr = mlxplat_mlxcpld_hotplug_pwr,
+> -	.top_aggr_fan_mask = 0x40,
+> -	.fan_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x88),
+> -	.fan_mask = 0x0f,
+> -	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_fan),
+> -	.fan = mlxplat_mlxcpld_hotplug_fan,
+> +struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_default_data = {
+> +	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
+> +	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
+> +	.top_aggr_psu_mask = MLXPLAT_CPLD_AGGR_PSU_MASK_DEF,
+> +	.psu_reg_offset = MLXPLAT_CPLD_LPC_REG_PSU_ADRR,
+> +	.psu_mask = MLXPLAT_CPLD_PSU_MASK,
+> +	.psu_count = ARRAY_SIZE(mlxplat_mlxcpld_psu),
+> +	.psu = mlxplat_mlxcpld_psu,
+> +	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_PWR_MASK_DEF,
+> +	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
+> +	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
+> +	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
+> +	.pwr = mlxplat_mlxcpld_pwr,
+> +	.top_aggr_fan_mask = MLXPLAT_CPLD_AGGR_FAN_MASK_DEF,
+> +	.fan_reg_offset = MLXPLAT_CPLD_LPC_REG_FAN_ADRR,
+> +	.fan_mask = MLXPLAT_CPLD_FAN_MASK,
+> +	.fan_count = ARRAY_SIZE(mlxplat_mlxcpld_fan),
+> +	.fan = mlxplat_mlxcpld_fan,
+>  };
+>  
+>  /* Platform hotplug MSN21xx system family data */
+>  static
+> -struct mlxcpld_hotplug_platform_data
+> mlxplat_mlxcpld_hotplug_msn21xx_data = {
+> -	.top_aggr_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x3a),
+> -	.top_aggr_mask = 0x04,
+> -	.top_aggr_pwr_mask = 0x04,
+> -	.pwr_reg_offset = (MLXPLAT_CPLD_LPC_REG_BASE_ADRR | 0x64),
+> -	.pwr_mask = 0x03,
+> -	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_hotplug_pwr),
+> +struct mlxcpld_hotplug_platform_data mlxplat_mlxcpld_msn21xx_data = {
+> +	.top_aggr_offset = MLXPLAT_CPLD_LPC_REG_AGGR_ADRR,
+> +	.top_aggr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
+> +	.top_aggr_pwr_mask = MLXPLAT_CPLD_AGGR_MASK_MSN21XX,
+> +	.pwr_reg_offset = MLXPLAT_CPLD_LPC_REG_PWR_ADRR,
+> +	.pwr_mask = MLXPLAT_CPLD_PWR_MASK,
+> +	.pwr_count = ARRAY_SIZE(mlxplat_mlxcpld_pwr),
+>  };
+>  
+> -static struct resource mlxplat_mlxcpld_hotplug_resources[] = {
+> +static struct resource mlxplat_mlxcpld_resources[] = {
+>  	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
+>  };
+>  
+> @@ -213,7 +228,7 @@ static int __init
+> mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+>  		mlxplat_mux_data[i].n_values =
+>  				ARRAY_SIZE(mlxplat_default_channels[i
+> ]);
+>  	}
+> -	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_default_data;
+> +	mlxplat_hotplug = &mlxplat_mlxcpld_default_data;
+>  
+>  	return 1;
+>  };
+> @@ -227,7 +242,7 @@ static int __init
+> mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+>  		mlxplat_mux_data[i].n_values =
+>  				ARRAY_SIZE(mlxplat_msn21xx_channels);
+>  	}
+> -	mlxplat_hotplug = &mlxplat_mlxcpld_hotplug_msn21xx_data;
+> +	mlxplat_hotplug = &mlxplat_mlxcpld_msn21xx_data;
+>  
+>  	return 1;
+>  };
+> @@ -314,9 +329,10 @@ static int __init mlxplat_init(void)
+>  	}
+>  
+>  	priv->pdev_hotplug = platform_device_register_resndata(
+> -				&mlxplat_dev->dev, "mlxcpld-hotplug", 
+> -1,
+> -				mlxplat_mlxcpld_hotplug_resources,
+> -				ARRAY_SIZE(mlxplat_mlxcpld_hotplug_re
+> sources),
+> +				&mlxplat_dev->dev, "mlxcpld-hotplug",
+> +				PLATFORM_DEVID_NONE,
+> +				mlxplat_mlxcpld_resources,
+> +				ARRAY_SIZE(mlxplat_mlxcpld_resources)
+> ,
+>  				mlxplat_hotplug,
+> sizeof(*mlxplat_hotplug));
+>  	if (IS_ERR(priv->pdev_hotplug)) {
+>  		err = PTR_ERR(priv->pdev_hotplug);
 
-Best regards,
-Jacek Anaszewski
-
-
->>> I just tried with leds on thinkpad
->>>
->>> root@duo:/sys/class/leds/tpacpi::power# echo 1 > brightness
->>> root@duo:/sys/class/leds/tpacpi::power# echo 0 > brightness
->>> root@duo:/sys/class/leds/tpacpi::power# cat trigger
->>> [none] bluetooth-power kbd-scrollock kbd-numlock kbd-capslock
->>> kbd-kanalock kbd-shiftlock kbd-altgrlock kbd-ctrllock kbd-altlock
->>> kbd-shiftllock kbd-shiftrlock kbd-ctrlllock kbd-ctrlrlock AC-online
->>> BAT0-charging-or-full BAT0-charging BAT0-full
->>> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
->>> phy0radio phy0tpt mmc0 timer pattern rfkill1 hci0-power rfkill74
->>> heartbeat
->>> root@duo:/sys/class/leds/tpacpi::power#
->>>
->>> I can control the LED from userspace, but then there's no way to put
->>> the LED back to firmware control. That's just broken.
->>>
->>> Do you have a proposal how to handle that?
->>
->> Isn't it under firmware control all the time?
-> 
-> I'm not 100% sure in the thinkpad case. In the N900 case, we have LED
-> that displays (user_brightness || (user_enabled_indicator && cpu_activity)).
-> 
-> I believe clean way to do that would be a trigger.
-> 
->>>>> So I'd do the trigger here. It is same way we can handle LEDs on
->>>>> thinkpad. Yes, it means you won't be able to do oneshot trigger on
->>>>> backlight. I don't think that's a huge problem.
->>>>
->>>> There have been voices in this discussion claiming the opposite. :-)
->>>
->>> Well, lets ignore those voices until the voices understand the current
->>> design :-).
->>
->> Sheer user is not interested in design, but in usability.
-> 
-> Well, end user is not expected to touch /sys files directly -- we
-> should create a script for that. /sys should be logical and map well
-> to what we do in kernel. Being "nice to use from shell" is
-> secondary...
-> 
-> 								Pavel
-> 
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
