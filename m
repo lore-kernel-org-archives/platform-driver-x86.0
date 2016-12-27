@@ -1,227 +1,59 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: use brightness_set_blocking
- for LED-setting callbacks
-Date: Tue, 27 Dec 2016 13:49:09 +0200
-Message-ID: <CAHp75VcW8WvwTcvU8TAAw0NKoPE9dMQLn7opEbCzCQdXLdxfEw@mail.gmail.com>
-References: <20161223090008.10445-1-kernel@kempniu.pl>
+Subject: Re: [PATCH] hp_accel: Add support for HP ZBook 17
+Date: Tue, 27 Dec 2016 13:57:18 +0200
+Message-ID: <CAHp75Vd8ahFTzxV=2iVJvG-MH04MyRyyVqyYQJNZUG7wukJ26A@mail.gmail.com>
+References: <20161221095553.rbrw7qyulrdsyunl@lenoch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:35637 "EHLO
-        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754025AbcL0L46 (ORCPT
+Received: from mail-oi0-f66.google.com ([209.85.218.66]:35742 "EHLO
+        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754025AbcL0L5T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Dec 2016 06:56:58 -0500
-In-Reply-To: <20161223090008.10445-1-kernel@kempniu.pl>
+        Tue, 27 Dec 2016 06:57:19 -0500
+In-Reply-To: <20161221095553.rbrw7qyulrdsyunl@lenoch>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Ladislav Michl <ladis@linux-mips.org>
+Cc: Eric Piel <eric.piel@tremplin-utc.net>, Darren Hart <dvhart@infradead.org>, Takashi Iwai <tiwai@suse.de>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, Dec 23, 2016 at 11:00 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
-niu.pl> wrote:
-> All LED-setting functions in fujitsu-laptop are currently assigned to
-> the brightness_set callback, which is incorrect because they can sleep
-> (due to their use of call_fext_func(), which in turn issues ACPI calls)
-> and the documentation (in include/linux/leds.h) clearly states they must
-> not.  Assign them to brightness_set_blocking instead and change them to
-> match the expected function prototype.
+On Wed, Dec 21, 2016 at 11:55 AM, Ladislav Michl <ladis@linux-mips.org> wrote:
+> HP ZBook 17 laptop needs a non-standard mapping (xy_swap_yz_inverted).
 >
-> This change makes it possible to use Fujitsu-specific LEDs with "heavy"
-> triggers, like disk-activity or phy0rx.
->
-> Fixes: 3a407086090b ("fujitsu-laptop: Add BL power, LED control and radio=
- state information")
-> Fixes: 4f62568c1fcf ("fujitsu-laptop: Support radio LED")
-> Fixes: d6b88f64b0d4 ("fujitsu-laptop: Add support for eco LED")
 
-Pushed to testing, thanks!
+Pushed to testing with fixed Subject (should be "platform/x86: ...").
+Thanks.
 
-> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+> Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
 > ---
-> Even back in 2.6.29, when the first Fujitsu-specific LED was introduced,
-> the brightness_set callback was annotated with the following text: "Must
-> not sleep, use a workqueue if needed".  To make things easier for LED
-> drivers, the LED core introduced (in 3.19) brightness_set_sync, which
-> was later renamed to brightness_set_blocking (in 4.5).  It allows easy
-> use of brightness-setting callbacks that may sleep, which is exactly
-> what we need here.
+>  Test done on patched driver; reading /sys/devices/platform/lis3lv02d/position
+>  - laptop is horizontal: (-36,0,1188)
+>  - the left side is elevated: (522,18,1062)
+>  - the front side (where the touchpad is) is elevated: (0,-612,990)
+>  - the laptop is put upside-down: (-36,18,-1188)
 >
-> Without this patch, here is a quick way to lock your system up within
-> seconds:
+>  drivers/platform/x86/hp_accel.c |    1 +
+>  1 file changed, 1 insertion(+)
 >
->     # echo disk-activity > "/sys/class/leds/fujitsu::radio_led/trigger"
->     # dd if=3D/dev/sda of=3D/dev/null bs=3D1M count=3D10000
->
-> Applying this patch allowed me to successfully perform the above stress
-> test without a visible influence on system stability on a Lifebook E744
-> with an SSD.
->
-> Two notes about the patch itself:
->
->   - As fujitsu-laptop is already at odds with checkpatch rules, I
->     decided to stick with its current coding style so that the
->     functional changes introduced by this patch do not blend with
->     changes related to coding style.
->
->   - In logolamp_set(), returning the result of the second
->     call_fext_func() call as the function return value is obviously
->     pretty arbitrary, but nobody has cared about these return values at
->     all since day one, so I decided to keep this patch simple.  I can
->     submit another one which properly handles call_fext_func() failures
->     in that function, if you think that would be helpful.
->
->  drivers/platform/x86/fujitsu-laptop.c | 42 +++++++++++++++++------------=
-------
->  1 file changed, 21 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86=
-/fujitsu-laptop.c
-> index 61f39abf5dc8..82d67715ce76 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -177,43 +177,43 @@ static void acpi_fujitsu_hotkey_notify(struct acpi_=
-device *device, u32 event);
->
->  #if IS_ENABLED(CONFIG_LEDS_CLASS)
->  static enum led_brightness logolamp_get(struct led_classdev *cdev);
-> -static void logolamp_set(struct led_classdev *cdev,
-> +static int logolamp_set(struct led_classdev *cdev,
->                                enum led_brightness brightness);
->
->  static struct led_classdev logolamp_led =3D {
->   .name =3D "fujitsu::logolamp",
->   .brightness_get =3D logolamp_get,
-> - .brightness_set =3D logolamp_set
-> + .brightness_set_blocking =3D logolamp_set
->  };
->
->  static enum led_brightness kblamps_get(struct led_classdev *cdev);
-> -static void kblamps_set(struct led_classdev *cdev,
-> +static int kblamps_set(struct led_classdev *cdev,
->                                enum led_brightness brightness);
->
->  static struct led_classdev kblamps_led =3D {
->   .name =3D "fujitsu::kblamps",
->   .brightness_get =3D kblamps_get,
-> - .brightness_set =3D kblamps_set
-> + .brightness_set_blocking =3D kblamps_set
->  };
->
->  static enum led_brightness radio_led_get(struct led_classdev *cdev);
-> -static void radio_led_set(struct led_classdev *cdev,
-> +static int radio_led_set(struct led_classdev *cdev,
->                                enum led_brightness brightness);
->
->  static struct led_classdev radio_led =3D {
->   .name =3D "fujitsu::radio_led",
->   .brightness_get =3D radio_led_get,
-> - .brightness_set =3D radio_led_set
-> + .brightness_set_blocking =3D radio_led_set
->  };
->
->  static enum led_brightness eco_led_get(struct led_classdev *cdev);
-> -static void eco_led_set(struct led_classdev *cdev,
-> +static int eco_led_set(struct led_classdev *cdev,
->                                enum led_brightness brightness);
->
->  static struct led_classdev eco_led =3D {
->   .name =3D "fujitsu::eco_led",
->   .brightness_get =3D eco_led_get,
-> - .brightness_set =3D eco_led_set
-> + .brightness_set_blocking =3D eco_led_set
->  };
->  #endif
->
-> @@ -267,48 +267,48 @@ static int call_fext_func(int cmd, int arg0, int ar=
-g1, int arg2)
->  #if IS_ENABLED(CONFIG_LEDS_CLASS)
->  /* LED class callbacks */
->
-> -static void logolamp_set(struct led_classdev *cdev,
-> +static int logolamp_set(struct led_classdev *cdev,
->                                enum led_brightness brightness)
->  {
->         if (brightness >=3D LED_FULL) {
->                 call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED=
-_ON);
-> -               call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_=
-ON);
-> +               return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FU=
-NC_LED_ON);
->         } else if (brightness >=3D LED_HALF) {
->                 call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED=
-_ON);
-> -               call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_=
-OFF);
-> +               return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FU=
-NC_LED_OFF);
->         } else {
-> -               call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED=
-_OFF);
-> +               return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, F=
-UNC_LED_OFF);
->         }
->  }
->
-> -static void kblamps_set(struct led_classdev *cdev,
-> +static int kblamps_set(struct led_classdev *cdev,
->                                enum led_brightness brightness)
->  {
->         if (brightness >=3D LED_FULL)
-> -               call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_O=
-N);
-> +               return call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUN=
-C_LED_ON);
->         else
-> -               call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUNC_LED_O=
-FF);
-> +               return call_fext_func(FUNC_LEDS, 0x1, KEYBOARD_LAMPS, FUN=
-C_LED_OFF);
->  }
->
-> -static void radio_led_set(struct led_classdev *cdev,
-> +static int radio_led_set(struct led_classdev *cdev,
->                                 enum led_brightness brightness)
->  {
->         if (brightness >=3D LED_FULL)
-> -               call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, RADIO_LED_=
-ON);
-> +               return call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, RAD=
-IO_LED_ON);
->         else
-> -               call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0);
-> +               return call_fext_func(FUNC_RFKILL, 0x5, RADIO_LED_ON, 0x0=
-);
->  }
->
-> -static void eco_led_set(struct led_classdev *cdev,
-> +static int eco_led_set(struct led_classdev *cdev,
->                                 enum led_brightness brightness)
->  {
->         int curr;
->
->         curr =3D call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0);
->         if (brightness >=3D LED_FULL)
-> -               call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO_LED_ON=
-);
-> +               return call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr | ECO=
-_LED_ON);
->         else
-> -               call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~ECO_LED_O=
-N);
-> +               return call_fext_func(FUNC_LEDS, 0x1, ECO_LED, curr & ~EC=
-O_LED_ON);
->  }
->
->  static enum led_brightness logolamp_get(struct led_classdev *cdev)
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+> index 09356684c32f..493d8910a74e 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -251,6 +251,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
+>         AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
+>         AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
+>         AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
+> +       AXIS_DMI_MATCH("HPZBook17", "HP ZBook 17", xy_swap_yz_inverted),
+>         { NULL, }
+>  /* Laptop models without axis info (yet):
+>   * "NC6910" "HP Compaq 6910"
 > --
-> 2.11.0
->
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
