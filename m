@@ -1,62 +1,39 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: fix surface3_button build errors
-Date: Wed, 28 Dec 2016 22:45:28 +0200
-Message-ID: <CAHp75VeeGqieiLZLX90tynZvOs-jrPMWbnj-KN529KVUkiHL-A@mail.gmail.com>
-References: <4b805dc9-4eeb-10bb-7db5-85defa32a304@infradead.org>
+From: "Mariah Dweck" <marikirah@gmail.com>
+Subject: Hi good day
+Date: Wed, 28 Dec 2016 21:19:22 -0300 (ART)
+Message-ID: <bbe19dfda0403d0b29f5317b74fe7aa4.squirrel@webmail.lrq.com.ar>
+Reply-To: marikirah@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f195.google.com ([209.85.216.195]:35742 "EHLO
-        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751534AbcL1Upa (ORCPT
+Received: from 243.228.103.190.cable.sta.ridsa.com.ar ([190.103.228.243]:43350
+        "EHLO sanguillermo2.ridsa.com.ar" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1751956AbcL2AoN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Dec 2016 15:45:30 -0500
-In-Reply-To: <4b805dc9-4eeb-10bb-7db5-85defa32a304@infradead.org>
+        Wed, 28 Dec 2016 19:44:13 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, kbuild test robot <fengguang.wu@intel.com>, Benjamin Tissoires <benjamin.tissoires@gmail.com>
 
-On Wed, Dec 28, 2016 at 12:28 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix build errors when I2C=m and SURFACE_3_BUTTON=y.
-> The driver uses i2c interfaces so it should depend on I2C.
->
-> drivers/built-in.o: In function `surface3_driver_init':
-> surface3_button.c:(.init.text+0x75cb0): undefined reference to `i2c_register_driver'
-> drivers/built-in.o: In function `surface3_driver_exit':
-> surface3_button.c:(.exit.text+0x31a8): undefined reference to `i2c_del_driver'
->
-> Fixes: 1a64b719d3ae (platform/x86: Introduce button support for the Surface 3)
->
+Hi Good day
 
-Pushed to fixes.
-Thanks!
+i saw your address today then i tried your number but it was not available,
+so i decided to contact you through email, i would like to be your good
+friend
+my name is Mariah Dweck, i have important matter to discuss with you,
 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: kbuild test robot <fengguang.wu@intel.com>
-> Cc: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: Darren Hart <dvhart@infradead.org>
-> ---
->  drivers/platform/x86/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- lnx-410-rc1.orig/drivers/platform/x86/Kconfig
-> +++ lnx-410-rc1/drivers/platform/x86/Kconfig
-> @@ -1034,7 +1034,7 @@ config SURFACE_PRO3_BUTTON
->
->  config SURFACE_3_BUTTON
->         tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
-> -       depends on ACPI && KEYBOARD_GPIO
-> +       depends on ACPI && KEYBOARD_GPIO && I2C
->         ---help---
->           This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
->
+Regard
+Mariah
+..................................................................................................................................
 
+Hallo, Guten Tag
 
+Ich sah Ihre Adresse heute dann habe ich versucht, Ihre Nummer, aber es
+war nicht verfügbar,
+So beschloss ich, mit Ihnen durch eMail in Verbindung zu treten, ich
+möchte Ihr guter Freund sein
+Mein Name ist Mariah Dweck, ich habe wichtige Sache, mit Ihnen zu
+diskutieren,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Grüße
+Mariah
