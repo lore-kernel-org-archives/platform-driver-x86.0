@@ -1,49 +1,22 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 2/2] platform/x86: intel_mid_thermal: Fix module autoload
-Date: Mon,  2 Jan 2017 12:20:56 -0300
-Message-ID: <1483370456-30786-2-git-send-email-javier@osg.samsung.com>
-References: <1483370456-30786-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483370456-30786-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: "Dr. David White" <"wd."@eagle.ocn.ne.jp>
+Subject: Urgent Please;;
+Date: Tue, 3 Jan 2017 02:46:46 +0900 (JST)
+Message-ID: <491918776.116393025.1483379206577.JavaMail.root@eagle.ocn.ne.jp>
+Reply-To: "Dr. David White" <david_white34@mynet.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mbkd0129.ocn.ad.jp ([153.149.230.30]:52413 "EHLO
+        mbkd0129.ocn.ad.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933559AbdABSO2 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 2 Jan 2017 13:14:28 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-If the driver is built as a module, autoload won't work because the module
-alias information is not filled. So user-space can't match the registered
-device with the corresponding module.
+Dear,
+With due respect to your person and much sincerity of purpose. I have a business proposal which I will like to handle with you and $14.5 Million USD is involve. But be rest assured that everything is legal and risk free as I have concluded all the arrangements and the legal papers that will back the transaction up. Kindly indicate your interest as to enable me tell you more detail of the proposal. Waiting for your urgent response.
 
-Export the module alias information using the MODULE_DEVICE_TABLE() macro.
-
-Before this patch:
-
-$ modinfo drivers/platform/x86/intel_mid_thermal.ko | grep alias
-$
-
-After this patch:
-
-$ modinfo drivers/platform/x86/intel_mid_thermal.ko | grep alias
-alias:          platform:msic_thermal
-
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
----
-
- drivers/platform/x86/intel_mid_thermal.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index 05ac7203806d..008a76903cbf 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -551,6 +551,7 @@ static const struct platform_device_id therm_id_table[] = {
- 	{ DRIVER_NAME, 1 },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(platform, therm_id_table);
- 
- static struct platform_driver mid_thermal_driver = {
- 	.driver = {
--- 
-2.7.4
+Yours Faithfully,
+Dr. David White
