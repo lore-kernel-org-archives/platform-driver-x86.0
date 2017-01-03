@@ -1,63 +1,51 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_mid_thermal: Remove duplicated
- platform device ID
-Date: Tue, 3 Jan 2017 22:46:15 +0200
-Message-ID: <CAHp75Vd1ESu5Ej_vcWx5=tB4cGuXR4Um5tMoyV=SNK=9c2orNw@mail.gmail.com>
-References: <1483370456-30786-1-git-send-email-javier@osg.samsung.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: Remove unused iTCO_version variable
+Date: Tue, 3 Jan 2017 22:46:37 +0200
+Message-ID: <CAHp75VfTcHxY9dZvwD_jZ-i1gJ8_7naeWRvcFAfcGUKF-KS_iw@mail.gmail.com>
+References: <1483454774-906-1-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:34746 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S965918AbdACUqQ (ORCPT
+Received: from mail-qt0-f193.google.com ([209.85.216.193]:33540 "EHLO
+        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933948AbdACUqn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Jan 2017 15:46:16 -0500
-In-Reply-To: <1483370456-30786-1-git-send-email-javier@osg.samsung.com>
+        Tue, 3 Jan 2017 15:46:43 -0500
+In-Reply-To: <1483454774-906-1-git-send-email-linux@roeck-us.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Jan 2, 2017 at 5:20 PM, Javier Martinez Canillas
-<javier@osg.samsung.com> wrote:
-> Commit 3fca3d3d5075 ("platform-x86: intel_mid_thermal: add msic_thermal
-> alias") added a "msic_thermal" entry to the driver's platform device ID
-> table since that was the platform dev name registered in some platforms
-> and the only dev in the platform table was "msic_sensor" (DRIVER_NAME).
->
-> But then commit 634830704d80 ("x86/mid/thermal: Add msic_thermal alias")
-> changed DRIVER_NAME from "msic_sensor" to "msic_thermal", and so there's
-> now duplicated entries in the platform device ID table.
->
+On Tue, Jan 3, 2017 at 4:46 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> iTCO_version was there since the driver was introduced but never used.
+> Drop it.
 
-Both patches pushed to testing.
+Pushed to testing.
 Thanks!
 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 2 --
+>  1 file changed, 2 deletions(-)
 >
->  drivers/platform/x86/intel_mid_thermal.c | 1 -
->  1 file changed, 1 deletion(-)
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 0bf51d574fa9..59a86121105b 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -97,8 +97,6 @@
+>  #define TCO_PMC_OFFSET                 0x8
+>  #define TCO_PMC_SIZE                   0x4
 >
-> diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-> index 0df3c9d37509..05ac7203806d 100644
-> --- a/drivers/platform/x86/intel_mid_thermal.c
-> +++ b/drivers/platform/x86/intel_mid_thermal.c
-> @@ -549,7 +549,6 @@ static int mid_thermal_remove(struct platform_device *pdev)
->
->  static const struct platform_device_id therm_id_table[] = {
->         { DRIVER_NAME, 1 },
-> -       { "msic_thermal", 1 },
->         { }
->  };
->
+> -static const int iTCO_version = 3;
+> -
+>  static struct intel_pmc_ipc_dev {
+>         struct device *dev;
+>         void __iomem *ipc_base;
 > --
 > 2.7.4
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
 
