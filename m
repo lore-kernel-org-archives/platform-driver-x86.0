@@ -1,22 +1,35 @@
-From: "Dr. David White" <"wd."@eagle.ocn.ne.jp>
-Subject: Urgent Please;;
-Date: Tue, 3 Jan 2017 02:46:46 +0900 (JST)
-Message-ID: <491918776.116393025.1483379206577.JavaMail.root@eagle.ocn.ne.jp>
-Reply-To: "Dr. David White" <david_white34@mynet.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH v2] acer-wmi: setup accelerometer when machine has
+ appropriate notify event
+Date: Tue, 3 Jan 2017 08:16:51 +0800
+Message-ID: <20170103001651.GA8823@linux-l9pv.suse>
+References: <1478132332-25284-1-git-send-email-jlee@suse.com>
+ <CAHp75VfJi_1LaPmE=Gxz_H-AcWqHnSRSGJgdA=GpZtUQwOs91Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mbkd0129.ocn.ad.jp ([153.149.230.30]:52413 "EHLO
-        mbkd0129.ocn.ad.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933559AbdABSO2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Jan 2017 13:14:28 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfJi_1LaPmE=Gxz_H-AcWqHnSRSGJgdA=GpZtUQwOs91Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dear,
-With due respect to your person and much sincerity of purpose. I have a business proposal which I will like to handle with you and $14.5 Million USD is involve. But be rest assured that everything is legal and risk free as I have concluded all the arrangements and the legal papers that will back the transaction up. Kindly indicate your interest as to enable me tell you more detail of the proposal. Waiting for your urgent response.
+On Tue, Dec 27, 2016 at 02:00:01PM +0200, Andy Shevchenko wrote:
+> On Thu, Nov 3, 2016 at 2:18 AM, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> > The accelerometer event relies on on the ACERWMID_EVENT_GUID notify.
+> > So, this patch changes the codes to setup accelerometer input device
+> > when detected ACERWMID_EVENT_GUID. It avoids that the accel input
+> > device created on every acer machines.
+> >
+> > In addition, patch adds a clearly parsing logic of accelerometer hid
+> > to acer_wmi_get_handle_cb callback function. It is positive matching
+> > the "SENR" name with "BST0001" device to avoid non-supported hardware.
+> >
+> 
+> Pushed to testing with slightly massaged commit message.
+> Thanks.
+> 
 
-Yours Faithfully,
-Dr. David White
+Thanks a lot!
+Joey Lee
