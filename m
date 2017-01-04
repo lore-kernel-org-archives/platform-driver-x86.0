@@ -1,41 +1,40 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Wed, 4 Jan 2017 10:45:08 +0100
-Message-ID: <20170104104508.4afbc9f7@endymion>
-References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
-        <21e8453f9ebd2955b2c5e499dc51efb0@the-dreams.de>
-        <201612271451.01505@pali>
-        <6acf42bfb16eaa0e69ca322eb0c0853d@the-dreams.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 04/14] tables.h: add linker table support
+Date: Wed, 4 Jan 2017 11:47:14 +0200
+Message-ID: <CAHp75Vd-WoYd40m0piYHUNdhJnYV9aHyQaMAJpN1YLx0nSAe5g@mail.gmail.com>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
+ <20161222023811.21246-1-mcgrof@kernel.org>
+ <20161222023811.21246-5-mcgrof@kernel.org>
+ <1482415098.9552.123.camel@linux.intel.com>
+ <20170103212528.GE13946@wotan.suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <6acf42bfb16eaa0e69ca322eb0c0853d@the-dreams.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Steven Honeyman <stevenhoneyman@gmail.com>, valdis.kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, mario_limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, kernel@kempniu.pl, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <20170103212528.GE13946@wotan.suse.de>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, dalias@libc.org, linux-ia64@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, ming.lei@canonical.com, Heiko Carstens <heiko.carstens@de.ibm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "H. Peter Anvin" <hpa@zytor.com>, masami.hiramatsu.pt@hitachi.com, wangnan0@huawei.com, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, markus.heiser@darmarit.de, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, Russell King <linux@arm.linux.org.uk>, Linux-SH <linux-sh@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, korea.drzix@gmail.com, x86@k
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 28 Dec 2016 15:02:52 +0100, Wolfram Sang wrote:
-> On Tue, Dec 27, 2016 at 02:51:01PM +0100, Pali Rohár wrote:
-> > i2c_new_device() with lis3lv02d for i801 i2c bus needs to be called
-> > after initializing i2c-i801 bus driver.
-> >
-> > I have no idea how to do it (properly) outside of i2c-i801.c file.
-> 
-> I once used bus_notifiers to achieve something similar. You could check
-> arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c to see an action
-> triggered once a client device got added, but you could act on another
-> action like BUS_NOTIFY_BOUND_DRIVER. I used exactly that, too, somewhen
-> somewhere.  Haven't checked if that helps here, too. And since we have 
-> a
-> precedence (Fujitsu case), I'll leave it to Jean who is the maintainer
-> of this driver.
-
-I don't have a strong opinion on the matter, whatever works is fine
-with me.
-
--- 
-Jean Delvare
-SUSE L3 Support
+T24gVHVlLCBKYW4gMywgMjAxNyBhdCAxMToyNSBQTSwgTHVpcyBSLiBSb2RyaWd1ZXogPG1jZ3Jv
+ZkBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUaHUsIERlYyAyMiwgMjAxNiBhdCAwMzo1ODoxOFBN
+ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6Cj4+IE9uIFdlZCwgMjAxNi0xMi0yMSBhdCAx
+ODozOCAtMDgwMCwgTHVpcyBSLiBSb2RyaWd1ZXogd3JvdGU6Cj4+ID4gKyNkZWZpbmUgTElOS1RB
+QkxFX0ZPUl9FQUNIKHBvaW50ZXIsIHRibCkKPj4KPj4gSG1tLi4uIFNPTUVPTkUgTElLRVMgQ0FQ
+SVRBTCBMRVRURVJTIEZPUiBldmVyeXRoaW5nLCByaWdodD8gOi0pCj4+Cj4+IEkgd291bGQgZXhw
+ZWN0IG1vcmUgc3RhbmRhcmQgbGlua3RhYmxlX2Zvcl9lYWNoKCkgbWFjcm8KPgo+IGhwYSBoYWQg
+cmVjb21tZW5kZWQgdGhpcywgaWYgaGUgcHJlZmVycyBhIGxvd2VyIGNhc2UgSSBjYW4gY2hhbmdl
+IHRoYXQKCgo+IGJ1dCBJIHJlYWxseSBkbyBjb25zaWRlciB0aGlzIGJpa2VzaGVkZGluZy4KCkkg
+ZG9uJ3QgdGhpbmsgc286CiQgZ2l0IGdyZXAgLW4gRk9SX0VBQ0ggfCB3YyAtbAogICAgODMKJCBn
+aXQgZ3JlcCAtbiBmb3JfZWFjaCB8IHdjIC1sCiAyMzMxNwoKLS0gCldpdGggQmVzdCBSZWdhcmRz
+LApBbmR5IFNoZXZjaGVua28KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fClhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbi5vcmcK
+aHR0cHM6Ly9saXN0cy54ZW4ub3JnL3hlbi1kZXZlbAo=
