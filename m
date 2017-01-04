@@ -1,40 +1,42 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 04/14] tables.h: add linker table support
-Date: Wed, 4 Jan 2017 11:47:14 +0200
-Message-ID: <CAHp75Vd-WoYd40m0piYHUNdhJnYV9aHyQaMAJpN1YLx0nSAe5g@mail.gmail.com>
-References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
- <20161222023811.21246-1-mcgrof@kernel.org>
- <20161222023811.21246-5-mcgrof@kernel.org>
- <1482415098.9552.123.camel@linux.intel.com>
- <20170103212528.GE13946@wotan.suse.de>
+Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
+Date: Wed, 4 Jan 2017 11:53:54 +0200
+Message-ID: <CAHp75Vd2WQRHiVpqCeeNEdcup4peD_28SF1--cRr+uqAk-yY0g@mail.gmail.com>
+References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
+ <201701032105.51144@pali> <20170103202418.GE16032@dtor-ws> <201701032139.13061@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xen.org>
-In-Reply-To: <20170103212528.GE13946@wotan.suse.de>
-List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xen.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, dalias@libc.org, linux-ia64@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, ming.lei@canonical.com, Heiko Carstens <heiko.carstens@de.ibm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "H. Peter Anvin" <hpa@zytor.com>, masami.hiramatsu.pt@hitachi.com, wangnan0@huawei.com, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, markus.heiser@darmarit.de, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, Russell King <linux@arm.linux.org.uk>, Linux-SH <linux-sh@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, korea.drzix@gmail.com, x86@k
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <201701032139.13061@pali>
+Sender: linux-i2c-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gVHVlLCBKYW4gMywgMjAxNyBhdCAxMToyNSBQTSwgTHVpcyBSLiBSb2RyaWd1ZXogPG1jZ3Jv
-ZkBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUaHUsIERlYyAyMiwgMjAxNiBhdCAwMzo1ODoxOFBN
-ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6Cj4+IE9uIFdlZCwgMjAxNi0xMi0yMSBhdCAx
-ODozOCAtMDgwMCwgTHVpcyBSLiBSb2RyaWd1ZXogd3JvdGU6Cj4+ID4gKyNkZWZpbmUgTElOS1RB
-QkxFX0ZPUl9FQUNIKHBvaW50ZXIsIHRibCkKPj4KPj4gSG1tLi4uIFNPTUVPTkUgTElLRVMgQ0FQ
-SVRBTCBMRVRURVJTIEZPUiBldmVyeXRoaW5nLCByaWdodD8gOi0pCj4+Cj4+IEkgd291bGQgZXhw
-ZWN0IG1vcmUgc3RhbmRhcmQgbGlua3RhYmxlX2Zvcl9lYWNoKCkgbWFjcm8KPgo+IGhwYSBoYWQg
-cmVjb21tZW5kZWQgdGhpcywgaWYgaGUgcHJlZmVycyBhIGxvd2VyIGNhc2UgSSBjYW4gY2hhbmdl
-IHRoYXQKCgo+IGJ1dCBJIHJlYWxseSBkbyBjb25zaWRlciB0aGlzIGJpa2VzaGVkZGluZy4KCkkg
-ZG9uJ3QgdGhpbmsgc286CiQgZ2l0IGdyZXAgLW4gRk9SX0VBQ0ggfCB3YyAtbAogICAgODMKJCBn
-aXQgZ3JlcCAtbiBmb3JfZWFjaCB8IHdjIC1sCiAyMzMxNwoKLS0gCldpdGggQmVzdCBSZWdhcmRz
-LApBbmR5IFNoZXZjaGVua28KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fClhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbi5vcmcK
-aHR0cHM6Ly9saXN0cy54ZW4ub3JnL3hlbi1kZXZlbAo=
+On Tue, Jan 3, 2017 at 10:39 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+>
+> With Micha=C5=82 we already discussed about it, see emails. Basically you=
+ can
+> enable/disable kernel modules at compile time or blacklist at runtime
+> (or even chose what will be compiled into vmlinux and what as external
+> .ko module). Some distributions blacklist i2c-i801.ko module...
+
+But you understand that any of compile/not compile is not an option, right?
+The case which we face will be both of them, if possible, will be
+compiled as modules.
+
+Blacklisting means making your problem the actual user's one. Not good.
+
+> And
+> there can be also problem with initialization of i2c-i801 driver (fix is
+> in commit a7ae81952cda, but does not have to work at every time!). So
+> that move on whitelisted machines can potentially cause disappearance of
+> /dev/freefall and users will not have hdd protection which is currently
+> working.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
