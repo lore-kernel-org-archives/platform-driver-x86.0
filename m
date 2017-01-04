@@ -1,108 +1,70 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Wed, 4 Jan 2017 13:33:32 +0100
-Message-ID: <20170104123332.GU5767@mail.corp.redhat.com>
-References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
- <201701032105.51144@pali>
- <20170103202418.GE16032@dtor-ws>
- <201701032139.13061@pali>
- <CAHp75Vd2WQRHiVpqCeeNEdcup4peD_28SF1--cRr+uqAk-yY0g@mail.gmail.com>
- <20170104102544.GS5767@mail.corp.redhat.com>
- <20170104113500.GF3499@pali>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: [PATCH v2] dell-wmi, dell-laptop: hide dell-smbios
+Date: Wed, 4 Jan 2017 13:59:17 +0100
+Message-ID: <20170104135917.43eedcc0@endymion>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170104113500.GF3499@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWU=?= =?UTF-8?B?xYQ=?= <kernel@kempniu.pl>, Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Jan 04 2017 or thereabouts, Pali Rohár wrote:
-> On Wednesday 04 January 2017 11:25:44 Benjamin Tissoires wrote:
-> > On Jan 04 2017 or thereabouts, Andy Shevchenko wrote:
-> > > On Tue, Jan 3, 2017 at 10:39 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > >
-> > > > With Michał we already discussed about it, see emails. Basically you can
-> > > > enable/disable kernel modules at compile time or blacklist at runtime
-> > > > (or even chose what will be compiled into vmlinux and what as external
-> > > > .ko module). Some distributions blacklist i2c-i801.ko module...
-> > > 
-> > > But you understand that any of compile/not compile is not an option, right?
-> > > The case which we face will be both of them, if possible, will be
-> > > compiled as modules.
-> > > 
-> > > Blacklisting means making your problem the actual user's one. Not good.
-> > > 
-> > > > And
-> > > > there can be also problem with initialization of i2c-i801 driver (fix is
-> > > > in commit a7ae81952cda, but does not have to work at every time!). So
-> > > > that move on whitelisted machines can potentially cause disappearance of
-> > > > /dev/freefall and users will not have hdd protection which is currently
-> > > > working.
-> > > 
-> > 
-> > I am seeing the same issues with psmouse and SMBus touchpads. The PS/2
-> > device knows about the availability of a better but unlisted device at
-> > the ACPI level.
-> > 
-> > The way I solved this to not have to deal with compile/not compile and
-> > runtime errors is the same way Wolfram told you about: bus notifiers.
-> > I also use an intermediate platform driver to not add i2c dependency on
-> > psmouse.
-> > 
-> > For you the solution would be:
-> > - In dell-smo8800, after checking the whitelist, add a platform driver
-> >   "dell-lis3lv02d-platform", and add in the platform_data the I2C address
-> >   of the chip.
-> > - create a new driver dell-lis3lv02d-platform.ko which listens for the
-> >   i2c bus creation and registers the lis3lv02d I2C node when it sees a
-> >   matching adapter. (see [1] for my solution)
-> > - in dell-lis3lv02d-platform.ko make sure to set the irq to -ENOENT so
-> >   that lis3lv02d.ko doesn't create /dev/freefall which will still be
-> >   handled by ACPI.
-> > 
-> > How does that sound?
-> 
-> Yes, something like this was already suggested. But it is more
-> complicated as my approach and less error prone... See my notes in
-> previous emails.
+Dell-smbios is a helper module, it serves no purpose on its own, so
+do not present it as an option to the user. Instead, select it
+automatically whenever a driver which needs it is selected.
 
-Sorry but I can't find your notes about errors in your previous emails.
-This solution indeed is a little bit more complex than just adding the
-bits in i2c-i801, but I don't really see the reason for an *adapter*
-driver to instantiate specific *clients* depending on some DMI
-matching.
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Michał Kępień <kernel@kempniu.pl>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>
+---
+Changes since v1:
+ * Select DCDBAS instead of depending on it. This is more
+   user-friendly and avoids the confusing transitive dependencies
+   which Pali didn't like.
 
-It's a platform issue, so it should be solved at a platform level, not
-at the i2c adapter level.
+ drivers/platform/x86/Kconfig |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Plus the bus notifier solutions guarantees plain separation between the
-elements and prevents any conflicts, with or without compile guards.
+--- linux-4.10-rc2.orig/drivers/platform/x86/Kconfig	2017-01-01 23:31:53.000000000 +0100
++++ linux-4.10-rc2/drivers/platform/x86/Kconfig	2017-01-04 13:53:41.691262664 +0100
+@@ -92,8 +92,8 @@ config ASUS_LAPTOP
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
+ config DELL_SMBIOS
+-	tristate "Dell SMBIOS Support"
+-	depends on DCDBAS
++	tristate
++	select DCDBAS
+ 	default n
+ 	---help---
+ 	This module provides common functions for kernel modules using
+@@ -103,12 +103,12 @@ config DELL_SMBIOS
+ 
+ config DELL_LAPTOP
+ 	tristate "Dell Laptop Extras"
+-	depends on DELL_SMBIOS
+ 	depends on DMI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	depends on RFKILL || RFKILL = n
+ 	depends on SERIO_I8042
++	select DELL_SMBIOS
+ 	select POWER_SUPPLY
+ 	select LEDS_CLASS
+ 	select NEW_LEDS
+@@ -123,7 +123,7 @@ config DELL_WMI
+ 	depends on DMI
+ 	depends on INPUT
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on DELL_SMBIOS
++	select DELL_SMBIOS
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+ 	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
 
-> 
-> My current path (after fixing IRQ to -1) is smaller more intuitive and
-
-This will only fix the fact that you have 2 concurrent drivers on the
-same resource (freefall), not the fact that the global design of having
-2 drivers which do not cooperate is wrong.
-
-> do not introduce new complicated parts like bus notifier and new "fake"
-> i2c driver...
-
-It's not a "fake i2c driver". It's a platform driver. If you don't like
-the idea of the platform driver, just add the bus notifier code in
-dell-smo8800, but this will pull a new dependency on I2C in this ACPI
-driver.
-
-Cheers,
-Benjamin
-
-> > [1] https://github.com/bentiss/linux/blob/synaptics-rmi4-v4.9-rc7+/drivers/input/rmi4/rmi_platform.c 
-> 
-> -- 
-> Pali Rohár
-> pali.rohar@gmail.com
+-- 
+Jean Delvare
+SUSE L3 Support
