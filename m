@@ -1,76 +1,45 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Wed, 4 Jan 2017 14:03:52 -0800
-Message-ID: <20170104220352.GE40341@dtor-ws>
-References: <20170104103233.GT5767@mail.corp.redhat.com>
- <20170104112223.GE3499@pali>
- <20170104120031.GG3499@pali>
- <20170104130252.GV5767@mail.corp.redhat.com>
- <20170104160643.GH3499@pali>
- <20170104173928.GW5767@mail.corp.redhat.com>
- <20170104174619.feke27q3ehwkylfs@ninjato>
- <20170104175456.GA40341@dtor-ws>
- <20170104215546.GA1433@katana>
- <20170104220030.GD40341@dtor-ws>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v6 1/3] clk: x86: Add Atom PMC platform
+ clocks
+Date: Wed, 4 Jan 2017 18:54:42 -0600
+Message-ID: <564d1f26-dd11-d237-7e63-87287a062c03@linux.intel.com>
+References: <1481306510-7471-1-git-send-email-irina.tirdea@intel.com>
+ <1481306510-7471-2-git-send-email-irina.tirdea@intel.com>
+ <CAHp75Vdaw4yvTPP2JZc+ti-AVNsisRQ+WG=JxPQ1jv-r7DADQA@mail.gmail.com>
+ <20161213232524.GQ5423@codeaurora.org>
+ <32235fb3-0d54-211d-28f4-4655e4bc7812@linux.intel.com>
+ <20161217013337.GW5423@codeaurora.org>
+ <CAHp75Vdn_8_fCQzkG7CPrnDZzhC7WUpGM1cyvfNRz0u_sc7RKA@mail.gmail.com>
+ <7f3d03dc-24fe-ec3f-4a3b-926c28f0ac86@linux.intel.com>
+ <20161221230557.GK5423@codeaurora.org>
+ <cd6044f5-6c79-b2d6-902d-52e27c217e78@linux.intel.com>
+ <CAHp75VfJU3613euahjW-s92_XEz8hK70ZgRi53Lpo+2TWqPscA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f195.google.com ([209.85.192.195]:32812 "EHLO
-        mail-pf0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751814AbdADWHA (ORCPT
+Received: from mga06.intel.com ([134.134.136.31]:7673 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S937522AbdAEAyq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Jan 2017 17:07:00 -0500
-Content-Disposition: inline
-In-Reply-To: <20170104220030.GD40341@dtor-ws>
+        Wed, 4 Jan 2017 19:54:46 -0500
+In-Reply-To: <CAHp75VfJU3613euahjW-s92_XEz8hK70ZgRi53Lpo+2TWqPscA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: ALSA Development Mailing List <alsa-devel@alsa-project.org>, Len Brown <lenb@kernel.org>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, "x86@kernel.org" <x86@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, platform-driver-x86@vger.kernel.org, linux-clk@vger.kernel.org, Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
 
-On Wed, Jan 04, 2017 at 02:00:30PM -0800, Dmitry Torokhov wrote:
-> On Wed, Jan 04, 2017 at 10:55:47PM +0100, Wolfram Sang wrote:
-> > 
-> > > From e362a0277fd1bd6112f258664d8831d9bc6b78da Mon Sep 17 00:00:00 2001
-> > > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > Date: Wed, 4 Jan 2017 09:33:43 -0800
-> > > Subject: [PATCH] i2c: do not enable fall back to Host Notify by default
-> > > 
-> > > Falling back unconditionally to HostNotify as primary client's interrupt
-> > > breaks some drivers which alter their functionality depending on whether
-> > > interrupt is present or not, so let's introduce a board flag telling I2C
-> > > core explicitly if we want wired interrupt or HostNotify-based one:
-> > > I2C_CLIENT_HOST_NOTIFY.
-> > > 
-> > > For DT-based systems we introduce "host-notofy" property that we convert
-> > > to I2C_CLIENT_HOST_NOTIFY board flag.
-> > > 
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > Yay, this looks better to me. One nit:
-> > 
-> > > +Alternatively, devices supporting SMbus Host Notify, and connected to
-> > > +adapters that support this feature, may use "host-notify" property. I2C
-> > > +core will create a virtual interrupt for Host Notify and assign it as
-> > > +primary interrupt for the slave.
-> > 
-> > This paragraph sounds Linux-ish while binding docs should be OS
-> > agnostic. Maybe we can shorten the second sentence to "It will be
-> > assigned then as the primary interrupt for the slave."?
-> 
-> Heh, I just sent out patch to DT folks. Provided that they are fine with
-> the new property I can either send V2 or you could edit when applying,
-> whatever is easier for you.
 
-That said, both variants are Linux-ish to me: I do not believe that
-"primary slave interrupt" for I2C devices is a generic concept. Is it?
-Do BSD and Windows use it?
-
-Also, it matches the paragraph above that also talks about I2C core.
-
-In any case, it is your decision, I'm just making random noise here.
-
-Thanks.
-
--- 
-Dmitry
+>>>> this convention is suggested:
+>>>>    PLT_CLK[2:0] - Camera
+>>>>    PLT_CLK[3] - Audio Codec
+>>>>    PLT_CLK[4] -
+>>>>    PLT_CLK[5] - COMMs
+> By the way, would I suggest to use same prefix as provider, i.e.
+> pmc_atom_plt_clk_%d ?
+I tried this suggestion and it doesn't work unfortunately. It looks like 
+the struct clk_lookup_alloc is limited to 16 chars for the connector_id.
+"pmc_a_plt_clk_" works but that's not really helping.
+The suggestion would also require a patch on the audio side since the 
+use of pmc_plt_clk_3 was already merged.
+-> no change.
