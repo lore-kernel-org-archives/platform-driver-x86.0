@@ -1,80 +1,36 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: rework logolamp_set() to
- properly handle errors
-Date: Fri, 6 Jan 2017 00:38:01 +1030
-Message-ID: <20170105140801.GA16524@marvin.atrad.com.au>
-References: <20170105131129.5750-1-kernel@kempniu.pl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] dell-wmi, dell-laptop: hide dell-smbios
+Date: Thu, 5 Jan 2017 23:12:23 +0200
+Message-ID: <CAHp75Vdcihd52ArohnLKSXEnq34qrw_1dWoAVymfXpxxFhU8Ug@mail.gmail.com>
+References: <20170104135917.43eedcc0@endymion> <20170105085939.GC31083@pali>
+ <20170105100903.497c6de2@endymion> <20170105091048.GD31083@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:58376 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S936335AbdAEOI6 (ORCPT
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:34434 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750736AbdAEVOn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Jan 2017 09:08:58 -0500
-Content-Disposition: inline
-In-Reply-To: <20170105131129.5750-1-kernel@kempniu.pl>
+        Thu, 5 Jan 2017 16:14:43 -0500
+In-Reply-To: <20170105091048.GD31083@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.de>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 
-On Thu, Jan 05, 2017 at 02:11:29PM +0100, Micha?? K??pie?? wrote:
-> Potential errors returned by some call_fext_func() calls inside
-> logolamp_set() are currently ignored.  Rework logolamp_set() to properly
-> handle them.  This causes one more call_fext_func() call to be made in
-> the LED_OFF case, though one could argue that this is logically the
-> right thing to do (even though the extra call is not needed to shut the
-> LED off).
-> 
-> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+On Thu, Jan 5, 2017 at 11:10 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> On Thursday 05 January 2017 10:09:03 Jean Delvare wrote:
+>> > Hi! I see that in previous email you CCed Yann and linux-kbuild, (...)
+>>
+>> No, I did not. What are you talking about? I'm confused.
+>
+> Ah, Darren (not you) CCed linux-kbuild under thread for v1 of your patche=
+s.
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+I have pushed v3 to testing and it passes kbuild bot tests.
 
-> ---
-> This is a follow-up to a recent patch, "platform/x86: fujitsu-laptop:
-> use brightness_set_blocking for LED-setting callbacks" and thus needs
-> the latter to be applied first (currently it is already applied in
-> testing).
->     
-> Instead of sticking "if (ret < 0) return ret;" in two branches I decided
-> to restructure logolamp_set() for improved clarity and also to make it
-> resemble logolamp_get() a bit more.
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index b725a907a91f..12f7a8346dd0 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -271,15 +271,19 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
->  static int logolamp_set(struct led_classdev *cdev,
->  			       enum led_brightness brightness)
->  {
-> -	if (brightness >= LED_FULL) {
-> -		call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
-> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_ON);
-> -	} else if (brightness >= LED_HALF) {
-> -		call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
-> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_OFF);
-> -	} else {
-> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_OFF);
-> +	int ret, poweron = FUNC_LED_OFF, always = FUNC_LED_OFF;
-> +
-> +	if (brightness >= LED_HALF) {
-> +		poweron = FUNC_LED_ON;
-> +		if (brightness >= LED_FULL)
-> +			always = FUNC_LED_ON;
->  	}
-> +
-> +	ret = call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, always);
->  }
->  
->  static int kblamps_set(struct led_classdev *cdev,
-> -- 
-> 2.11.0
+--=20
+With Best Regards,
+Andy Shevchenko
