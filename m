@@ -1,264 +1,421 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Thu, 5 Jan 2017 10:26:54 +0100
-Message-ID: <20170105092654.GC15702@mail.corp.redhat.com>
-References: <20170104102118.GD3499@pali>
- <20170104103233.GT5767@mail.corp.redhat.com>
- <20170104112223.GE3499@pali>
- <20170104120031.GG3499@pali>
- <20170104130252.GV5767@mail.corp.redhat.com>
- <20170104160643.GH3499@pali>
- <20170104173928.GW5767@mail.corp.redhat.com>
- <20170104174619.feke27q3ehwkylfs@ninjato>
- <20170104175456.GA40341@dtor-ws>
- <20170105085419.GB31083@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170105085419.GB31083@pali>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/x86: Remove PMIC GPIO block support
+Date: Thu,  5 Jan 2017 13:32:28 +0200
+Message-ID: <20170105113228.132165-1-andriy.shevchenko@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:5019 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752933AbdAELdJ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 5 Jan 2017 06:33:09 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Jan 05 2017 or thereabouts, Pali Rohár wrote:
-> On Wednesday 04 January 2017 09:54:56 Dmitry Torokhov wrote:
-> > On Wed, Jan 04, 2017 at 06:46:19PM +0100, Wolfram Sang wrote:
-> > > 
-> > > > How about:
-> > > > ---
-> > > > From daa7571bbf337704332c0cfeec9b8fd5aeae596f Mon Sep 17 00:00:00 2001
-> > > > From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > Date: Wed, 4 Jan 2017 18:26:54 +0100
-> > > > Subject: [PATCH] I2C: add the source of the IRQ in struct i2c_client
-> > > > 
-> > > > With commit 4d5538f5882a ("i2c: use an IRQ to report Host Notify events,
-> > > > not alert"), the IRQ provided in struct i2c_client might be assigned while
-> > > > it has not been explicitly declared by either the platform information
-> > > > or OF or ACPI.
-> > > > Some drivers (lis3lv02d) rely on the fact that the IRQ gets assigned or
-> > > > not to trigger a different behavior (exposing /dev/freefall in this case).
-> > > > 
-> > > > Provide a way for others to know who set the IRQ and so they can behave
-> > > > accordingly.
-> > > > 
-> > > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > ---
-> > > >  drivers/i2c/i2c-core.c |  7 +++++++
-> > > >  include/linux/i2c.h    | 11 +++++++++++
-> > > >  2 files changed, 18 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> > > > index cf9e396..226c75d 100644
-> > > > --- a/drivers/i2c/i2c-core.c
-> > > > +++ b/drivers/i2c/i2c-core.c
-> > > > @@ -935,8 +935,12 @@ static int i2c_device_probe(struct device *dev)
-> > > >  			irq = of_irq_get_byname(dev->of_node, "irq");
-> > > >  			if (irq == -EINVAL || irq == -ENODATA)
-> > > >  				irq = of_irq_get(dev->of_node, 0);
-> > > > +			if (irq > 0)
-> > > > +				client->irq_source = I2C_IRQ_SOURCE_OF;
-> > > >  		} else if (ACPI_COMPANION(dev)) {
-> > > >  			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
-> > > > +			if (irq > 0)
-> > > > +				client->irq_source = I2C_IRQ_SOURCE_ACPI;
-> > > >  		}
-> > > >  		if (irq == -EPROBE_DEFER)
-> > > >  			return irq;
-> > > > @@ -947,6 +951,8 @@ static int i2c_device_probe(struct device *dev)
-> > > >  		if (irq < 0) {
-> > > >  			dev_dbg(dev, "Using Host Notify IRQ\n");
-> > > >  			irq = i2c_smbus_host_notify_to_irq(client);
-> > > > +			if (irq > 0)
-> > > > +				client->irq_source = I2C_IRQ_SOURCE_HOST_NOTIFY;
-> > > >  		}
-> > > >  		if (irq < 0)
-> > > >  			irq = 0;
-> > > > @@ -1317,6 +1323,7 @@ i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
-> > > >  	client->flags = info->flags;
-> > > >  	client->addr = info->addr;
-> > > >  	client->irq = info->irq;
-> > > > +	client->irq_source = I2C_IRQ_SOURCE_PLATFORM;
-> > > >  
-> > > >  	strlcpy(client->name, info->type, sizeof(client->name));
-> > > >  
-> > > > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> > > > index b2109c5..7d0368d 100644
-> > > > --- a/include/linux/i2c.h
-> > > > +++ b/include/linux/i2c.h
-> > > > @@ -213,6 +213,13 @@ struct i2c_driver {
-> > > >  };
-> > > >  #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
-> > > >  
-> > > > +enum i2c_irq_source {
-> > > > +	I2C_IRQ_SOURCE_PLATFORM,
-> > > > +	I2C_IRQ_SOURCE_OF,
-> > > > +	I2C_IRQ_SOURCE_ACPI,
-> > > > +	I2C_IRQ_SOURCE_HOST_NOTIFY,
-> > > > +};
-> > > > +
-> > > >  /**
-> > > >   * struct i2c_client - represent an I2C slave device
-> > > >   * @flags: I2C_CLIENT_TEN indicates the device uses a ten bit chip address;
-> > > > @@ -227,6 +234,9 @@ struct i2c_driver {
-> > > >   *	userspace_devices list
-> > > >   * @slave_cb: Callback when I2C slave mode of an adapter is used. The adapter
-> > > >   *	calls it to pass on slave events to the slave driver.
-> > > > + * @irq_source: Enum which provides the source of the IRQ. Useful to know
-> > > > + * 	if the IRQ was issued from Host Notify or if it was provided by an other
-> > > > + * 	component.
-> > > 
-> > > I'd think some documentation somewhere makes sense why we need to
-> > > distinguish this in some cases?
-> > 
-> > I'd rather drivers be oblivious of the source of interrupt. If they need
-> > to distinguish between them that means that our IRQ abstration failed.
-> > 
-> > > 
-> > > >   *
-> > > >   * An i2c_client identifies a single device (i.e. chip) connected to an
-> > > >   * i2c bus. The behaviour exposed to Linux is defined by the driver
-> > > > @@ -245,6 +255,7 @@ struct i2c_client {
-> > > >  #if IS_ENABLED(CONFIG_I2C_SLAVE)
-> > > >  	i2c_slave_cb_t slave_cb;	/* callback for slave mode	*/
-> > > >  #endif
-> > > > +	enum i2c_irq_source irq_source;	/* which component assigned the irq */
-> > > >  };
-> > > >  #define to_i2c_client(d) container_of(d, struct i2c_client, dev)
-> > > > 
-> > > > Dmitry, Wolfram, Jean, would this be acceptable for you?
-> > > 
-> > > Adding something to i2c_driver is not exactly cheap, but from what I
-> > > glimpsed from this thread, this is one of the cleanest solution to this
-> > > problem?
-> > > 
-> > 
-> > As Benjamin said, it is really property of device [instance], not
-> > driver. I.e. driver could handle both wired IRQ and HostNotify-based
-> > scheme similarly, it is device (and board) that knows how stuff is
-> > connected.
-> > 
-> > Maybe we could do something like this (untested):
-> > 
-> > 
-> > From e362a0277fd1bd6112f258664d8831d9bc6b78da Mon Sep 17 00:00:00 2001
-> > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Date: Wed, 4 Jan 2017 09:33:43 -0800
-> > Subject: [PATCH] i2c: do not enable fall back to Host Notify by default
-> > 
-> > Falling back unconditionally to HostNotify as primary client's interrupt
-> > breaks some drivers which alter their functionality depending on whether
-> > interrupt is present or not, so let's introduce a board flag telling I2C
-> > core explicitly if we want wired interrupt or HostNotify-based one:
-> > I2C_CLIENT_HOST_NOTIFY.
-> > 
-> > For DT-based systems we introduce "host-notofy" property that we convert
-> > to I2C_CLIENT_HOST_NOTIFY board flag.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c.txt |  8 ++++++++
-> >  drivers/i2c/i2c-core.c                        | 17 ++++++++---------
-> >  include/linux/i2c.h                           |  1 +
-> >  3 files changed, 17 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-> > index 5fa691e6f638..cee9d5055fa2 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> > @@ -62,6 +62,9 @@ wants to support one of the below features, it should adapt the bindings below.
-> >  	"irq" and "wakeup" names are recognized by I2C core, other names are
-> >  	left to individual drivers.
-> >  
-> > +- host-notify
-> > +	device uses SMBus host notify protocol instead of interrupt line.
-> > +
-> >  - multi-master
-> >  	states that there is another master active on this bus. The OS can use
-> >  	this information to adapt power management to keep the arbitration awake
-> > @@ -81,6 +84,11 @@ Binding may contain optional "interrupts" property, describing interrupts
-> >  used by the device. I2C core will assign "irq" interrupt (or the very first
-> >  interrupt if not using interrupt names) as primary interrupt for the slave.
-> >  
-> > +Alternatively, devices supporting SMbus Host Notify, and connected to
-> > +adapters that support this feature, may use "host-notify" property. I2C
-> > +core will create a virtual interrupt for Host Notify and assign it as
-> > +primary interrupt for the slave.
-> > +
-> >  Also, if device is marked as a wakeup source, I2C core will set up "wakeup"
-> >  interrupt for the device. If "wakeup" interrupt name is not present in the
-> >  binding, then primary interrupt will be used as wakeup interrupt.
-> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> > index cf9e396d7702..250969fa7670 100644
-> > --- a/drivers/i2c/i2c-core.c
-> > +++ b/drivers/i2c/i2c-core.c
-> > @@ -931,7 +931,10 @@ static int i2c_device_probe(struct device *dev)
-> >  	if (!client->irq) {
-> >  		int irq = -ENOENT;
-> >  
-> > -		if (dev->of_node) {
-> > +		if (client->flags & I2C_CLIENT_HOST_HOTIFY) {
-> > +			dev_dbg(dev, "Using Host Notify IRQ\n");
-> > +			irq = i2c_smbus_host_notify_to_irq(client);
-> > +		} else if (dev->of_node) {
-> >  			irq = of_irq_get_byname(dev->of_node, "irq");
-> >  			if (irq == -EINVAL || irq == -ENODATA)
-> >  				irq = of_irq_get(dev->of_node, 0);
-> > @@ -940,14 +943,7 @@ static int i2c_device_probe(struct device *dev)
-> >  		}
-> >  		if (irq == -EPROBE_DEFER)
-> >  			return irq;
-> > -		/*
-> > -		 * ACPI and OF did not find any useful IRQ, try to see
-> > -		 * if Host Notify can be used.
-> > -		 */
-> > -		if (irq < 0) {
-> > -			dev_dbg(dev, "Using Host Notify IRQ\n");
-> > -			irq = i2c_smbus_host_notify_to_irq(client);
-> > -		}
-> > +
-> >  		if (irq < 0)
-> >  			irq = 0;
-> >  
-> > @@ -1716,6 +1712,9 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
-> >  	info.of_node = of_node_get(node);
-> >  	info.archdata = &dev_ad;
-> >  
-> > +	if (of_read_property_bool(node, "host-notify"))
-> > +		info.flags |= I2C_CLIENT_HOST_NOTIFY;
-> > +
-> >  	if (of_get_property(node, "wakeup-source", NULL))
-> >  		info.flags |= I2C_CLIENT_WAKE;
-> >  
-> > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> > index b2109c522dec..4b45ec46161f 100644
-> > --- a/include/linux/i2c.h
-> > +++ b/include/linux/i2c.h
-> > @@ -665,6 +665,7 @@ i2c_unlock_adapter(struct i2c_adapter *adapter)
-> >  #define I2C_CLIENT_TEN		0x10	/* we have a ten bit chip address */
-> >  					/* Must equal I2C_M_TEN below */
-> >  #define I2C_CLIENT_SLAVE	0x20	/* we are the slave */
-> > +#define I2C_CLIENT_HOST_NOTIFY	0x40	/* We want to use I2C host notify */
-> >  #define I2C_CLIENT_WAKE		0x80	/* for board_info; true iff can wake */
-> >  #define I2C_CLIENT_SCCB		0x9000	/* Use Omnivision SCCB protocol */
-> >  					/* Must match I2C_M_STOP|IGNORE_NAK */
-> > -- 
-> > 2.11.0.390.gc69c2f50cf-goog
-> > 
-> > 
-> 
-> Looks good, this seems to be elegant solution to our problem.
-> 
-> But then it is needed to patch those touchpad drivers to add that
-> I2C_CLIENT_HOST_NOTIFY flag, right?
->
+The Moorestown support was removed by commit 1a8359e411eb ("x86/mid: Remove
+Intel Moorestown").
 
-Yes, but currently the 2 drivers that are using Host Notify upstream are
-rmi_smbus and elan_i2c. Both don't have an automatic binding (yet), so
-there is nothing to worry about for now.
+Remove this leftover.
 
-Cheers,
-Benjamin
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig           |   8 -
+ drivers/platform/x86/Makefile          |   1 -
+ drivers/platform/x86/intel_pmic_gpio.c | 326 ---------------------------------
+ include/linux/intel_pmic_gpio.h        |  15 --
+ 4 files changed, 350 deletions(-)
+ delete mode 100644 drivers/platform/x86/intel_pmic_gpio.c
+ delete mode 100644 include/linux/intel_pmic_gpio.h
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3cf325de9bf3..9d9b12556809 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -836,19 +836,11 @@ config INTEL_SCU_IPC_UTIL
+ 	  low level access for debug work and updating the firmware. Say
+ 	  N unless you will be doing this on an Intel MID platform.
+ 
+-config GPIO_INTEL_PMIC
+-	bool "Intel PMIC GPIO support"
+-	depends on INTEL_SCU_IPC && GPIOLIB
+-	---help---
+-	  Say Y here to support GPIO via the SCU IPC interface
+-	  on Intel MID platforms.
+-
+ config INTEL_MID_POWER_BUTTON
+ 	tristate "power button driver for Intel MID platforms"
+ 	depends on INTEL_SCU_IPC && INPUT
+ 	help
+ 	  This driver handles the power button on the Intel MID platforms.
+-
+ 	  If unsure, say N.
+ 
+ config INTEL_MFLD_THERMAL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 6bad273856e0..d84f53101520 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -56,7 +56,6 @@ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
+ obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+ obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+-obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
+ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
+ obj-$(CONFIG_XO15_EBOOK)	+= xo15-ebook.o
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+deleted file mode 100644
+index 91ae58510d92..000000000000
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ /dev/null
+@@ -1,326 +0,0 @@
+-/* Moorestown PMIC GPIO (access through IPC) driver
+- * Copyright (c) 2008 - 2009, Intel Corporation.
+- *
+- * Author: Alek Du <alek.du@intel.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- */
+-
+-/* Supports:
+- * Moorestown platform PMIC chip
+- */
+-
+-#define pr_fmt(fmt) "%s: " fmt, __func__
+-
+-#include <linux/kernel.h>
+-#include <linux/interrupt.h>
+-#include <linux/delay.h>
+-#include <linux/stddef.h>
+-#include <linux/slab.h>
+-#include <linux/ioport.h>
+-#include <linux/init.h>
+-#include <linux/io.h>
+-#include <linux/gpio/driver.h>
+-#include <asm/intel_scu_ipc.h>
+-#include <linux/device.h>
+-#include <linux/intel_pmic_gpio.h>
+-#include <linux/platform_device.h>
+-
+-#define DRIVER_NAME "pmic_gpio"
+-
+-/* register offset that IPC driver should use
+- * 8 GPIO + 8 GPOSW (6 controllable) + 8GPO
+- */
+-enum pmic_gpio_register {
+-	GPIO0		= 0xE0,
+-	GPIO7		= 0xE7,
+-	GPIOINT		= 0xE8,
+-	GPOSWCTL0	= 0xEC,
+-	GPOSWCTL5	= 0xF1,
+-	GPO		= 0xF4,
+-};
+-
+-/* bits definition for GPIO & GPOSW */
+-#define GPIO_DRV 0x01
+-#define GPIO_DIR 0x02
+-#define GPIO_DIN 0x04
+-#define GPIO_DOU 0x08
+-#define GPIO_INTCTL 0x30
+-#define GPIO_DBC 0xc0
+-
+-#define GPOSW_DRV 0x01
+-#define GPOSW_DOU 0x08
+-#define GPOSW_RDRV 0x30
+-
+-#define GPIO_UPDATE_TYPE	0x80000000
+-
+-#define NUM_GPIO 24
+-
+-struct pmic_gpio {
+-	struct mutex		buslock;
+-	struct gpio_chip	chip;
+-	void			*gpiointr;
+-	int			irq;
+-	unsigned		irq_base;
+-	unsigned int		update_type;
+-	u32			trigger_type;
+-};
+-
+-static void pmic_program_irqtype(int gpio, int type)
+-{
+-	if (type & IRQ_TYPE_EDGE_RISING)
+-		intel_scu_ipc_update_register(GPIO0 + gpio, 0x20, 0x20);
+-	else
+-		intel_scu_ipc_update_register(GPIO0 + gpio, 0x00, 0x20);
+-
+-	if (type & IRQ_TYPE_EDGE_FALLING)
+-		intel_scu_ipc_update_register(GPIO0 + gpio, 0x10, 0x10);
+-	else
+-		intel_scu_ipc_update_register(GPIO0 + gpio, 0x00, 0x10);
+-};
+-
+-static int pmic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+-{
+-	if (offset >= 8) {
+-		pr_err("only pin 0-7 support input\n");
+-		return -1;/* we only have 8 GPIO can use as input */
+-	}
+-	return intel_scu_ipc_update_register(GPIO0 + offset,
+-							GPIO_DIR, GPIO_DIR);
+-}
+-
+-static int pmic_gpio_direction_output(struct gpio_chip *chip,
+-			unsigned offset, int value)
+-{
+-	int rc = 0;
+-
+-	if (offset < 8)/* it is GPIO */
+-		rc = intel_scu_ipc_update_register(GPIO0 + offset,
+-				GPIO_DRV | (value ? GPIO_DOU : 0),
+-				GPIO_DRV | GPIO_DOU | GPIO_DIR);
+-	else if (offset < 16)/* it is GPOSW */
+-		rc = intel_scu_ipc_update_register(GPOSWCTL0 + offset - 8,
+-				GPOSW_DRV | (value ? GPOSW_DOU : 0),
+-				GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV);
+-	else if (offset > 15 && offset < 24)/* it is GPO */
+-		rc = intel_scu_ipc_update_register(GPO,
+-				value ? 1 << (offset - 16) : 0,
+-				1 << (offset - 16));
+-	else {
+-		pr_err("invalid PMIC GPIO pin %d!\n", offset);
+-		WARN_ON(1);
+-	}
+-
+-	return rc;
+-}
+-
+-static int pmic_gpio_get(struct gpio_chip *chip, unsigned offset)
+-{
+-	u8 r;
+-	int ret;
+-
+-	/* we only have 8 GPIO pins we can use as input */
+-	if (offset >= 8)
+-		return -EOPNOTSUPP;
+-	ret = intel_scu_ipc_ioread8(GPIO0 + offset, &r);
+-	if (ret < 0)
+-		return ret;
+-	return r & GPIO_DIN;
+-}
+-
+-static void pmic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+-{
+-	if (offset < 8)/* it is GPIO */
+-		intel_scu_ipc_update_register(GPIO0 + offset,
+-			GPIO_DRV | (value ? GPIO_DOU : 0),
+-			GPIO_DRV | GPIO_DOU);
+-	else if (offset < 16)/* it is GPOSW */
+-		intel_scu_ipc_update_register(GPOSWCTL0 + offset - 8,
+-			GPOSW_DRV | (value ? GPOSW_DOU : 0),
+-			GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV);
+-	else if (offset > 15 && offset < 24) /* it is GPO */
+-		intel_scu_ipc_update_register(GPO,
+-			value ? 1 << (offset - 16) : 0,
+-			1 << (offset - 16));
+-}
+-
+-/*
+- * This is called from genirq with pg->buslock locked and
+- * irq_desc->lock held. We can not access the scu bus here, so we
+- * store the change and update in the bus_sync_unlock() function below
+- */
+-static int pmic_irq_type(struct irq_data *data, unsigned type)
+-{
+-	struct pmic_gpio *pg = irq_data_get_irq_chip_data(data);
+-	u32 gpio = data->irq - pg->irq_base;
+-
+-	if (gpio >= pg->chip.ngpio)
+-		return -EINVAL;
+-
+-	pg->trigger_type = type;
+-	pg->update_type = gpio | GPIO_UPDATE_TYPE;
+-	return 0;
+-}
+-
+-static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct pmic_gpio *pg = gpiochip_get_data(chip);
+-
+-	return pg->irq_base + offset;
+-}
+-
+-static void pmic_bus_lock(struct irq_data *data)
+-{
+-	struct pmic_gpio *pg = irq_data_get_irq_chip_data(data);
+-
+-	mutex_lock(&pg->buslock);
+-}
+-
+-static void pmic_bus_sync_unlock(struct irq_data *data)
+-{
+-	struct pmic_gpio *pg = irq_data_get_irq_chip_data(data);
+-
+-	if (pg->update_type) {
+-		unsigned int gpio = pg->update_type & ~GPIO_UPDATE_TYPE;
+-
+-		pmic_program_irqtype(gpio, pg->trigger_type);
+-		pg->update_type = 0;
+-	}
+-	mutex_unlock(&pg->buslock);
+-}
+-
+-/* the gpiointr register is read-clear, so just do nothing. */
+-static void pmic_irq_unmask(struct irq_data *data) { }
+-
+-static void pmic_irq_mask(struct irq_data *data) { }
+-
+-static struct irq_chip pmic_irqchip = {
+-	.name			= "PMIC-GPIO",
+-	.irq_mask		= pmic_irq_mask,
+-	.irq_unmask		= pmic_irq_unmask,
+-	.irq_set_type		= pmic_irq_type,
+-	.irq_bus_lock		= pmic_bus_lock,
+-	.irq_bus_sync_unlock	= pmic_bus_sync_unlock,
+-};
+-
+-static irqreturn_t pmic_irq_handler(int irq, void *data)
+-{
+-	struct pmic_gpio *pg = data;
+-	u8 intsts = *((u8 *)pg->gpiointr + 4);
+-	int gpio;
+-	irqreturn_t ret = IRQ_NONE;
+-
+-	for (gpio = 0; gpio < 8; gpio++) {
+-		if (intsts & (1 << gpio)) {
+-			pr_debug("pmic pin %d triggered\n", gpio);
+-			generic_handle_irq(pg->irq_base + gpio);
+-			ret = IRQ_HANDLED;
+-		}
+-	}
+-	return ret;
+-}
+-
+-static int platform_pmic_gpio_probe(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	int irq = platform_get_irq(pdev, 0);
+-	struct intel_pmic_gpio_platform_data *pdata = dev->platform_data;
+-
+-	struct pmic_gpio *pg;
+-	int retval;
+-	int i;
+-
+-	if (irq < 0) {
+-		dev_dbg(dev, "no IRQ line\n");
+-		return -EINVAL;
+-	}
+-
+-	if (!pdata || !pdata->gpio_base || !pdata->irq_base) {
+-		dev_dbg(dev, "incorrect or missing platform data\n");
+-		return -EINVAL;
+-	}
+-
+-	pg = kzalloc(sizeof(*pg), GFP_KERNEL);
+-	if (!pg)
+-		return -ENOMEM;
+-
+-	dev_set_drvdata(dev, pg);
+-
+-	pg->irq = irq;
+-	/* setting up SRAM mapping for GPIOINT register */
+-	pg->gpiointr = ioremap_nocache(pdata->gpiointr, 8);
+-	if (!pg->gpiointr) {
+-		pr_err("Can not map GPIOINT\n");
+-		retval = -EINVAL;
+-		goto err2;
+-	}
+-	pg->irq_base = pdata->irq_base;
+-	pg->chip.label = "intel_pmic";
+-	pg->chip.direction_input = pmic_gpio_direction_input;
+-	pg->chip.direction_output = pmic_gpio_direction_output;
+-	pg->chip.get = pmic_gpio_get;
+-	pg->chip.set = pmic_gpio_set;
+-	pg->chip.to_irq = pmic_gpio_to_irq;
+-	pg->chip.base = pdata->gpio_base;
+-	pg->chip.ngpio = NUM_GPIO;
+-	pg->chip.can_sleep = 1;
+-	pg->chip.parent = dev;
+-
+-	mutex_init(&pg->buslock);
+-
+-	pg->chip.parent = dev;
+-	retval = gpiochip_add_data(&pg->chip, pg);
+-	if (retval) {
+-		pr_err("Can not add pmic gpio chip\n");
+-		goto err;
+-	}
+-
+-	retval = request_irq(pg->irq, pmic_irq_handler, 0, "pmic", pg);
+-	if (retval) {
+-		pr_warn("Interrupt request failed\n");
+-		goto fail_request_irq;
+-	}
+-
+-	for (i = 0; i < 8; i++) {
+-		irq_set_chip_and_handler_name(i + pg->irq_base,
+-					      &pmic_irqchip,
+-					      handle_simple_irq,
+-					      "demux");
+-		irq_set_chip_data(i + pg->irq_base, pg);
+-	}
+-	return 0;
+-
+-fail_request_irq:
+-	gpiochip_remove(&pg->chip);
+-err:
+-	iounmap(pg->gpiointr);
+-err2:
+-	kfree(pg);
+-	return retval;
+-}
+-
+-/* at the same time, register a platform driver
+- * this supports the sfi 0.81 fw */
+-static struct platform_driver platform_pmic_gpio_driver = {
+-	.driver = {
+-		.name		= DRIVER_NAME,
+-	},
+-	.probe		= platform_pmic_gpio_probe,
+-};
+-
+-static int __init platform_pmic_gpio_init(void)
+-{
+-	return platform_driver_register(&platform_pmic_gpio_driver);
+-}
+-subsys_initcall(platform_pmic_gpio_init);
+diff --git a/include/linux/intel_pmic_gpio.h b/include/linux/intel_pmic_gpio.h
+deleted file mode 100644
+index 920109a29191..000000000000
+--- a/include/linux/intel_pmic_gpio.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-#ifndef LINUX_INTEL_PMIC_H
+-#define LINUX_INTEL_PMIC_H
+-
+-struct intel_pmic_gpio_platform_data {
+-	/* the first IRQ of the chip */
+-	unsigned	irq_base;
+-	/* number assigned to the first GPIO */
+-	unsigned	gpio_base;
+-	/* sram address for gpiointr register, the langwell chip will map
+-	 * the PMIC spi GPIO expander's GPIOINTR register in sram.
+-	 */
+-	unsigned	gpiointr;
+-};
+-
+-#endif
+-- 
+2.11.0
