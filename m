@@ -1,88 +1,51 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: Remove PMIC GPIO block support
-Date: Fri, 6 Jan 2017 22:40:37 +0200
-Message-ID: <CAHp75VfB2_oetm_k2staYWBUvxyxnL2GAO6=c78NGR2fFfw6JQ@mail.gmail.com>
-References: <20170105113228.132165-1-andriy.shevchenko@linux.intel.com> <201701061940.KHCVPyOr%fengguang.wu@intel.com>
+Subject: Re: [PATCH v5 04/14] tables.h: add linker table support
+Date: Fri, 6 Jan 2017 22:43:59 +0200
+Message-ID: <CAHp75Vc1V74hhcy0nzUuDoHDtzyTAHpBN2fddiCqzGJTRL_rOg@mail.gmail.com>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
+ <20161222023811.21246-1-mcgrof@kernel.org>
+ <20161222023811.21246-5-mcgrof@kernel.org>
+ <1482415098.9552.123.camel@linux.intel.com>
+ <20170103212528.GE13946@wotan.suse.de>
+ <CAHp75Vd-WoYd40m0piYHUNdhJnYV9aHyQaMAJpN1YLx0nSAe5g@mail.gmail.com>
+ <20170106200021.GU13946@wotan.suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:36840 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760553AbdAFUkj (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Jan 2017 15:40:39 -0500
-In-Reply-To: <201701061940.KHCVPyOr%fengguang.wu@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: kbuild test robot <lkp@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kbuild-all@01.org, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <20170106200021.GU13946@wotan.suse.de>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, dalias@libc.org, linux-ia64@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, ming.lei@canonical.com, Heiko Carstens <heiko.carstens@de.ibm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org, wangnan0@huawei.com, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, markus.heiser@darmarit.de, xen-devel@lists.xensource.com, Russell King <linux@arm.linux.org.uk>, Linux-SH <linux-sh@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, korea.drzix@gmail.com, "x86@kernel.org" <x86@kernel.org>, anil
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 6, 2017 at 1:54 PM, kbuild test robot <lkp@intel.com> wrote:
-> Hi Andy,
->
-> [auto build test ERROR on platform-drivers-x86/for-next]
-> [also build test ERROR on v4.10-rc2 next-20170105]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/platform-x86-Remove-PMIC-GPIO-block-support/20170106-185609
-> base:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
-> config: i386-allmodconfig (attached as .config)
-> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386
->
-> All errors (new ones prefixed by >>):
-
-Yes, yes. It's not an error, just dependency. Removal of the users of
-this header is pending for tip tree.
-
->
->>> arch/x86/platform/intel-mid/sfi.c:18:35: fatal error: linux/intel_pmic_gpio.h: No such file or directory
->     #include <linux/intel_pmic_gpio.h>
->                                       ^
->    compilation terminated.
->
-> vim +18 arch/x86/platform/intel-mid/sfi.c
->
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   2   * intel_mid_sfi.c: Intel MID SFI initialization code
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   3   *
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   4   * (C) Copyright 2013 Intel Corporation
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   5   * Author: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   6   *
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   7   * This program is free software; you can redistribute it and/or
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   8   * modify it under the terms of the GNU General Public License
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17   9   * as published by the Free Software Foundation; version 2
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  10   * of the License.
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  11   */
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  12
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  13  #include <linux/init.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  14  #include <linux/kernel.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  15  #include <linux/interrupt.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  16  #include <linux/scatterlist.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  17  #include <linux/sfi.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17 @18  #include <linux/intel_pmic_gpio.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  19  #include <linux/spi/spi.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  20  #include <linux/i2c.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  21  #include <linux/skbuff.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  22  #include <linux/gpio.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  23  #include <linux/gpio_keys.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  24  #include <linux/input.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  25  #include <linux/platform_device.h>
-> aeedb370 Kuppuswamy Sathyanarayanan 2013-10-17  26  #include <linux/irq.h>
->
-> :::::: The code at line 18 was first introduced by commit
-> :::::: aeedb370e7398fb5b39185b295d36f2da0653215 intel_mid: Moved SFI related code to sfi.c
->
-> :::::: TO: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> :::::: CC: H. Peter Anvin <hpa@linux.intel.com>
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gRnJpLCBKYW4gNiwgMjAxNyBhdCAxMDowMCBQTSwgTHVpcyBSLiBSb2RyaWd1ZXogPG1jZ3Jv
+ZkBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBXZWQsIEphbiAwNCwgMjAxNyBhdCAxMTo0NzoxNEFN
+ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDMsIDIwMTcgYXQg
+MTE6MjUgUE0sIEx1aXMgUi4gUm9kcmlndWV6IDxtY2dyb2ZAa2VybmVsLm9yZz4gd3JvdGU6Cj4+
+ID4gT24gVGh1LCBEZWMgMjIsIDIwMTYgYXQgMDM6NTg6MThQTSArMDIwMCwgQW5keSBTaGV2Y2hl
+bmtvIHdyb3RlOgo+PiA+PiBPbiBXZWQsIDIwMTYtMTItMjEgYXQgMTg6MzggLTA4MDAsIEx1aXMg
+Ui4gUm9kcmlndWV6IHdyb3RlOgo+PiA+PiA+ICsjZGVmaW5lIExJTktUQUJMRV9GT1JfRUFDSChw
+b2ludGVyLCB0YmwpCj4+ID4+Cj4+ID4+IEhtbS4uLiBTT01FT05FIExJS0VTIENBUElUQUwgTEVU
+VEVSUyBGT1IgZXZlcnl0aGluZywgcmlnaHQ/IDotKQo+PiA+Pgo+PiA+PiBJIHdvdWxkIGV4cGVj
+dCBtb3JlIHN0YW5kYXJkIGxpbmt0YWJsZV9mb3JfZWFjaCgpIG1hY3JvCj4+ID4KPj4gPiBocGEg
+aGFkIHJlY29tbWVuZGVkIHRoaXMsIGlmIGhlIHByZWZlcnMgYSBsb3dlciBjYXNlIEkgY2FuIGNo
+YW5nZSB0aGF0Cj4+Cj4+Cj4+ID4gYnV0IEkgcmVhbGx5IGRvIGNvbnNpZGVyIHRoaXMgYmlrZXNo
+ZWRkaW5nLgo+Pgo+PiBJIGRvbid0IHRoaW5rIHNvOgo+PiAkIGdpdCBncmVwIC1uIEZPUl9FQUNI
+IHwgd2MgLWwKPj4gICAgIDgzCj4+ICQgZ2l0IGdyZXAgLW4gZm9yX2VhY2ggfCB3YyAtbAo+PiAg
+MjMzMTcKPgo+IE9LLCB3b3VsZCB5b3UgYWxzbyBwcmVmZXIgaWYgTElOS1RBQkxFX1JVTl9FUlIo
+KSBhbmQgTElOS1RBQkxFX1JVTl9BTEwoKQo+IHdlcmUgbG93ZXJjYXNlID8gT3IgaXMgdGhhdCBm
+aW5lID8gVG8gYmUgY2xlYXIgSSdsbCBsZWF2ZSB1cHBlciBjYXNlIHRoZQo+IGRlY2xhcmVycyBh
+bmQgZGVmaW5lcy4KCk15IHVuZGVyc3RhbmRpbmcgdGhhdCBtYWNyb3MgdG8gcnVuIGNvZGUgLS0g
+bG93ZXIgY2FzZSwgZGVmaW5pdGlvbnMgLS0KdXBwZXIgY2FzZS4KClRodXMsICpfcnVuXyooKSBt
+YWNyb3MgdG8gbG93ZXIuCgotLSAKV2l0aCBCZXN0IFJlZ2FyZHMsCkFuZHkgU2hldmNoZW5rbwoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
+IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhlbi5v
+cmcveGVuLWRldmVsCg==
