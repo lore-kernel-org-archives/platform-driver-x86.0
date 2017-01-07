@@ -1,69 +1,70 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Sat, 7 Jan 2017 13:49:31 +0100
-Message-ID: <20170107124930.GA1902@katana>
-References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
- <201612291000.58489@pali>
- <20161229134719.GA941@ozzy.nask.waw.pl>
- <201612291517.37474@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] module 'dell-laptop': quirk for laptop Dell Inspiron 3179: problem with keyboard controller for keys: Home, End, PgUp, PgDn
+Date: Sat, 7 Jan 2017 22:21:42 +0100
+Message-ID: <201701072221.42852@pali>
+References: <20170107205240.11836-1-polymorphm@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201612291517.37474@pali>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart8209204.X7NyWNrCQy";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:34707 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932341AbdAGVVp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 7 Jan 2017 16:21:45 -0500
+Received: by mail-wm0-f65.google.com with SMTP id c85so12776575wmi.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Jan 2017 13:21:45 -0800 (PST)
+In-Reply-To: <20170107205240.11836-1-polymorphm@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andrei Antonov <polymorphm@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, "
+        =?utf-8?b?0LzQsNGB0YLQtdGAINC40L3RgdGC0YDRg9C60YbQuNC4INC+INGC0L7QvA==?=
+        =?utf-8?b?INC60LDQuiDQvtGC0YHRi9C70LDRgtGMINC/0LDRgtGH0Lgg0LI=?=
+        =?utf-8?b?INGP0LTRgNC+?= (
+        =?utf-8?b?0LXRgdC70Lgg0YfRgtC+INGC0L4g0LLQuNC90LjQvCDQstC+INCy0YHRkdC8?=
+        =?utf-8?b?INGN0YLQvtCz0L4=?= =?utf-8?b?INC/0LDRgNC90Y8=?=)" <i.gnatenko.brain@gmail.com>
 
-
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--nextPart8209204.X7NyWNrCQy
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Saturday 07 January 2017 21:52:40 Andrei Antonov wrote:
+> +	/*
+> +	 * kbd_missing_release_interrupts=3D1 means bug in keyboard
+> controller for additional keys: +	 * Home, End, PgUp, PgDn. These
+> four keys only -- from all keyboard. +	 * These keys does not send
+> key-release interrupts (send key-press interrupts only). +	 *
+> kbd_missing_release_interrupts=3D<...> (!=3D0) -- for other variations
+> of similar issues +	 */
 
-> > > > > +	if (!known_i2c_address) {
-> > > > > +		dev_warn(&priv->pci_dev->dev,
-> > > > > +			 "Accelerometer lis3lv02d i2c device is present "
-> > > > > +			 "but its i2c address is unknown, skipping ...\n");
-> > > >=20
-> > > > You are probably well aware of this, but checkpatch prefers
-> > > > keeping long log messages in one line.  I am pointing it out
-> > > > just in case.
-> > >=20
-> > > Yes, but I do not know how to fix it. Splitting message into two
-> > > lines generates warning. Having long line generates warning too.
-> >=20
-> > Weird, checkpatch does not protest on my machine when the log message
-> > is written on a single line...
->=20
-> I hope that i2c maintainers decide how to format that line.
+NACK. There is "no new force-release quirks" policy in linux kernel.
 
-Make it one line saying "accelerometer address unknown"?
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=
+=3D8b8a518ef16be2de27207991e32fc32b0475c767
 
+"force release" quirks are handled by userspace e.g. by udev rule. There=20
+is hwdb database where can be put DMI of problematic/broken machines=20
+together with keys which should be force-released.
 
---BXVAT5kNtrzKuDFl
-Content-Type: application/pgp-signature; name="signature.asc"
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart8209204.X7NyWNrCQy
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIcBAEBAgAGBQJYcOPaAAoJEBQN5MwUoCm2ZiAQAKAndoV8zE+O3+CefegLmdxO
-+72BQ9FUm2DuEf4XCdgpZf6qUcH6rCV6Nquz1rGvk0XvdvYrxapCnVQJk5gBPH2n
-BRS3ZKQN7KR9FJXZBF+3odiyVKXHD1ssrox/b5FTvhD4DjduuMlE1FSY8dwsp4D8
-SkE1ajBoNTA/VMO8A7Xa3k/N1Bv4Dl+hG+zmHtcDriXmZN/CrRq0GuLT0UFdDlTi
-QzU7/hT9y0ALrnPCuJ14xHhTaB4LLu1ST6EI7J0aw0U9z65aRHvwUeMDxvA57tTn
-XfxbAkCHO5gEZ2u7IdS3a51CcXAxeeSeqOZU8virgIkj/sLDzj/dz8gyU3rUxBVK
-EbBxR1GsmuC8jizFeIzGB/xsQcZXXeNPU4nfNso3v1ce92QOlZDvUZ6r2a2uvojS
-Eb0VNTkhp2IsEL9drxpbmxSMyaRbTIq5BzxwxlRFrffedJ5H4BxcoI1DYt31T8Pa
-OoEhsMaUEVVB2xWYgMhaMGcR352JYObl5Fomcp8v9nGh9ODEB18rGG2AKAIhkMcn
-DaB4YZfzPYsUCMg7B8zXpFJlUkv0YhpGcoL2z2H9tR9hZsOkSmyBdNqiw4mSFogR
-/76W/kzXE+mnruULHX8mOTg6LePJ/KeRpYAFIr64TiuOHO1dfPDX5LErqadznHmK
-BKPohh/EPSueEV20BGqg
-=1F1a
+iEYEABECAAYFAlhxW+YACgkQi/DJPQPkQ1JuzwCdFAhQpkndm5HRE1L49P0CjfNG
+bD4Anjauxrxtmbyb3xMGms70Hmud1xdw
+=nABO
 -----END PGP SIGNATURE-----
 
---BXVAT5kNtrzKuDFl--
+--nextPart8209204.X7NyWNrCQy--
