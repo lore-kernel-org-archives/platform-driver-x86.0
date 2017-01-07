@@ -1,57 +1,69 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch] platform/x86: mlx-platform: free first dev on error
-Date: Sat, 7 Jan 2017 08:02:14 +0000
-Message-ID: <AM5PR0501MB20972BB870D9EEE2139C5B99A2620@AM5PR0501MB2097.eurprd05.prod.outlook.com>
-References: <20170107063334.GF26959@elgon.mountain>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Sat, 7 Jan 2017 13:49:31 +0100
+Message-ID: <20170107124930.GA1902@katana>
+References: <1482843136-12838-1-git-send-email-pali.rohar@gmail.com>
+ <201612291000.58489@pali>
+ <20161229134719.GA941@ozzy.nask.waw.pl>
+ <201612291517.37474@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201612291517.37474@pali>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jean Delvare <jdelvare@suse.com>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
+
+
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-he1eur01on0077.outbound.protection.outlook.com ([104.47.0.77]:30336
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932108AbdAGICS (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Jan 2017 03:02:18 -0500
-In-Reply-To: <20170107063334.GF26959@elgon.mountain>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
 
 
-
-> -----Original Message-----
-> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> Sent: Saturday, January 07, 2017 8:34 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: Darren Hart <dvhart@infradead.org>; platform-driver-
-> x86@vger.kernel.org; kernel-janitors@vger.kernel.org
-> Subject: [patch] platform/x86: mlx-platform: free first dev on error
+> > > > > +	if (!known_i2c_address) {
+> > > > > +		dev_warn(&priv->pci_dev->dev,
+> > > > > +			 "Accelerometer lis3lv02d i2c device is present "
+> > > > > +			 "but its i2c address is unknown, skipping ...\n");
+> > > >=20
+> > > > You are probably well aware of this, but checkpatch prefers
+> > > > keeping long log messages in one line.  I am pointing it out
+> > > > just in case.
+> > >=20
+> > > Yes, but I do not know how to fix it. Splitting message into two
+> > > lines generates warning. Having long line generates warning too.
+> >=20
+> > Weird, checkpatch does not protest on my machine when the log message
+> > is written on a single line...
 >=20
-> There is an off-by-one error so we don't unregister priv->pdev_mux[0].
-> Also it's slightly simpler as a while loop instead of a for loop.
->=20
-> Fixes: 58cbbee2391c ("x86/platform/mellanox: Introduce support for
-> Mellanox systems platform")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->=20
+> I hope that i2c maintainers decide how to format that line.
 
-Acked-by: Vadim Pasternak <vadimp@mellanox.com>
+Make it one line saying "accelerometer address unknown"?
 
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/m=
-lx-
-> platform.c
-> index 04e1f2b30fa6..8f98c211b440 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -342,7 +342,7 @@ static int __init mlxplat_init(void)
->  	return 0;
->=20
->  fail_platform_mux_register:
-> -	for (i--; i > 0 ; i--)
-> +	while (--i >=3D 0)
->  		platform_device_unregister(priv->pdev_mux[i]);
->  	platform_device_unregister(priv->pdev_i2c);
->  fail_alloc:
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYcOPaAAoJEBQN5MwUoCm2ZiAQAKAndoV8zE+O3+CefegLmdxO
++72BQ9FUm2DuEf4XCdgpZf6qUcH6rCV6Nquz1rGvk0XvdvYrxapCnVQJk5gBPH2n
+BRS3ZKQN7KR9FJXZBF+3odiyVKXHD1ssrox/b5FTvhD4DjduuMlE1FSY8dwsp4D8
+SkE1ajBoNTA/VMO8A7Xa3k/N1Bv4Dl+hG+zmHtcDriXmZN/CrRq0GuLT0UFdDlTi
+QzU7/hT9y0ALrnPCuJ14xHhTaB4LLu1ST6EI7J0aw0U9z65aRHvwUeMDxvA57tTn
+XfxbAkCHO5gEZ2u7IdS3a51CcXAxeeSeqOZU8virgIkj/sLDzj/dz8gyU3rUxBVK
+EbBxR1GsmuC8jizFeIzGB/xsQcZXXeNPU4nfNso3v1ce92QOlZDvUZ6r2a2uvojS
+Eb0VNTkhp2IsEL9drxpbmxSMyaRbTIq5BzxwxlRFrffedJ5H4BxcoI1DYt31T8Pa
+OoEhsMaUEVVB2xWYgMhaMGcR352JYObl5Fomcp8v9nGh9ODEB18rGG2AKAIhkMcn
+DaB4YZfzPYsUCMg7B8zXpFJlUkv0YhpGcoL2z2H9tR9hZsOkSmyBdNqiw4mSFogR
+/76W/kzXE+mnruULHX8mOTg6LePJ/KeRpYAFIr64TiuOHO1dfPDX5LErqadznHmK
+BKPohh/EPSueEV20BGqg
+=1F1a
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
