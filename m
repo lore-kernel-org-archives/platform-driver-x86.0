@@ -1,83 +1,57 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 2/2] platform/x86: fujitsu-laptop: simplify
- logolamp_get()
-Date: Tue, 10 Jan 2017 00:05:57 +1030
-Message-ID: <20170109133557.GB31198@marvin.atrad.com.au>
-References: <20170109131417.9677-1-kernel@kempniu.pl>
- <20170109131417.9677-2-kernel@kempniu.pl>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v5 04/14] tables.h: add linker table support
+Date: Mon, 9 Jan 2017 15:22:08 +0100
+Message-ID: <20170109142208.GY13946@wotan.suse.de>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
+ <20161222023811.21246-1-mcgrof@kernel.org>
+ <20161222023811.21246-5-mcgrof@kernel.org>
+ <1482415098.9552.123.camel@linux.intel.com>
+ <20170103212528.GE13946@wotan.suse.de>
+ <CAHp75Vd-WoYd40m0piYHUNdhJnYV9aHyQaMAJpN1YLx0nSAe5g@mail.gmail.com>
+ <20170106200021.GU13946@wotan.suse.de>
+ <CAHp75Vc1V74hhcy0nzUuDoHDtzyTAHpBN2fddiCqzGJTRL_rOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
 Content-Disposition: inline
-In-Reply-To: <20170109131417.9677-2-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAHp75Vc1V74hhcy0nzUuDoHDtzyTAHpBN2fddiCqzGJTRL_rOg@mail.gmail.com>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, dalias@libc.org, linux-ia64@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, ming.lei@canonical.com, Heiko Carstens <heiko.carstens@de.ibm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org, wangnan0@huawei.com, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Linux-Arch <linux-arch@vger.kernel.org>, markus.heiser@darmarit.de, xen-devel@lists.xensource.com, Russell King <linux@arm.linux.org.uk>, Linux-SH <linux-sh@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, korea.drzix@gmail.com, "x86@kernel.org" <x86@kernel.org>, anil
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 09, 2017 at 02:14:17PM +0100, Micha?? K??pie?? wrote:
-> Now that call_fext_func() is invoked by logolamp_set() for both
-> LOGOLAMP_POWERON and LOGOLAMP_ALWAYS for every brightness value,
-> logolamp_get() can be simplified to decrease indentation and number of
-> local variables.
-> 
-> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
-
-Seems sensible to me.
-
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
-
-> ---
-> Changes from v1:
-> 
->   - This patch was not present in v1.
->     
-> One thing worth noting is that in case call_fext_func() returns an
-> error, logolamp_get() will still return LED_OFF, just like the original
-> version.
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 34b8481fb0ed..7fa082558a42 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -319,17 +319,17 @@ static int eco_led_set(struct led_classdev *cdev,
->  
->  static enum led_brightness logolamp_get(struct led_classdev *cdev)
->  {
-> -	enum led_brightness brightness = LED_OFF;
-> -	int poweron, always;
-> -
-> -	poweron = call_fext_func(FUNC_LEDS, 0x2, LOGOLAMP_POWERON, 0x0);
-> -	if (poweron == FUNC_LED_ON) {
-> -		brightness = LED_HALF;
-> -		always = call_fext_func(FUNC_LEDS, 0x2, LOGOLAMP_ALWAYS, 0x0);
-> -		if (always == FUNC_LED_ON)
-> -			brightness = LED_FULL;
-> -	}
-> -	return brightness;
-> +	int ret;
-> +
-> +	ret = call_fext_func(FUNC_LEDS, 0x2, LOGOLAMP_ALWAYS, 0x0);
-> +	if (ret == FUNC_LED_ON)
-> +		return LED_FULL;
-> +
-> +	ret = call_fext_func(FUNC_LEDS, 0x2, LOGOLAMP_POWERON, 0x0);
-> +	if (ret == FUNC_LED_ON)
-> +		return LED_HALF;
-> +
-> +	return LED_OFF;
->  }
->  
->  static enum led_brightness kblamps_get(struct led_classdev *cdev)
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
+T24gRnJpLCBKYW4gMDYsIDIwMTcgYXQgMTA6NDM6NTlQTSArMDIwMCwgQW5keSBTaGV2Y2hlbmtv
+IHdyb3RlOgo+IE9uIEZyaSwgSmFuIDYsIDIwMTcgYXQgMTA6MDAgUE0sIEx1aXMgUi4gUm9kcmln
+dWV6IDxtY2dyb2ZAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiBPbiBXZWQsIEphbiAwNCwgMjAxNyBh
+dCAxMTo0NzoxNEFNICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6Cj4gPj4gT24gVHVlLCBK
+YW4gMywgMjAxNyBhdCAxMToyNSBQTSwgTHVpcyBSLiBSb2RyaWd1ZXogPG1jZ3JvZkBrZXJuZWwu
+b3JnPiB3cm90ZToKPiA+PiA+IE9uIFRodSwgRGVjIDIyLCAyMDE2IGF0IDAzOjU4OjE4UE0gKzAy
+MDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToKPiA+PiA+PiBPbiBXZWQsIDIwMTYtMTItMjEgYXQg
+MTg6MzggLTA4MDAsIEx1aXMgUi4gUm9kcmlndWV6IHdyb3RlOgo+ID4+ID4+ID4gKyNkZWZpbmUg
+TElOS1RBQkxFX0ZPUl9FQUNIKHBvaW50ZXIsIHRibCkKPiA+PiA+Pgo+ID4+ID4+IEhtbS4uLiBT
+T01FT05FIExJS0VTIENBUElUQUwgTEVUVEVSUyBGT1IgZXZlcnl0aGluZywgcmlnaHQ/IDotKQo+
+ID4+ID4+Cj4gPj4gPj4gSSB3b3VsZCBleHBlY3QgbW9yZSBzdGFuZGFyZCBsaW5rdGFibGVfZm9y
+X2VhY2goKSBtYWNybwo+ID4+ID4KPiA+PiA+IGhwYSBoYWQgcmVjb21tZW5kZWQgdGhpcywgaWYg
+aGUgcHJlZmVycyBhIGxvd2VyIGNhc2UgSSBjYW4gY2hhbmdlIHRoYXQKPiA+Pgo+ID4+Cj4gPj4g
+PiBidXQgSSByZWFsbHkgZG8gY29uc2lkZXIgdGhpcyBiaWtlc2hlZGRpbmcuCj4gPj4KPiA+PiBJ
+IGRvbid0IHRoaW5rIHNvOgo+ID4+ICQgZ2l0IGdyZXAgLW4gRk9SX0VBQ0ggfCB3YyAtbAo+ID4+
+ICAgICA4Mwo+ID4+ICQgZ2l0IGdyZXAgLW4gZm9yX2VhY2ggfCB3YyAtbAo+ID4+ICAyMzMxNwo+
+ID4KPiA+IE9LLCB3b3VsZCB5b3UgYWxzbyBwcmVmZXIgaWYgTElOS1RBQkxFX1JVTl9FUlIoKSBh
+bmQgTElOS1RBQkxFX1JVTl9BTEwoKQo+ID4gd2VyZSBsb3dlcmNhc2UgPyBPciBpcyB0aGF0IGZp
+bmUgPyBUbyBiZSBjbGVhciBJJ2xsIGxlYXZlIHVwcGVyIGNhc2UgdGhlCj4gPiBkZWNsYXJlcnMg
+YW5kIGRlZmluZXMuCj4gCj4gTXkgdW5kZXJzdGFuZGluZyB0aGF0IG1hY3JvcyB0byBydW4gY29k
+ZSAtLSBsb3dlciBjYXNlLCBkZWZpbml0aW9ucyAtLQo+IHVwcGVyIGNhc2UuCj4gCj4gVGh1cywg
+Kl9ydW5fKigpIG1hY3JvcyB0byBsb3dlci4KClZlcnkgd2VsbCwgSSd2ZSBjaGFuZ2VkIHRoZXNl
+LCBhbmQgc2luY2UgdGhlcmUgd2VyZSB1c2VycyBJIGhhZCB0byBjaGFuZ2UKYSBiaXQgb2YgdGhl
+IG90aGVyIHBhdGNoZXMgc28gd2lsbCBzZW5kIGEgdjYgc2VyaWVzIGZvbGxvdyB1cC4KCiAgTHVp
+cwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRl
+dmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhl
+bi5vcmcveGVuLWRldmVsCg==
