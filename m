@@ -1,64 +1,80 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 3/7] ALSA: hda - use dell_micmute_led_set() instead of
- dell_app_wmi_led_set()
-Date: Mon, 9 Jan 2017 14:26:31 +0100
-Message-ID: <20170109132631.GA14411@ozzy.nask.waw.pl>
-References: <20161208123618.28603-1-kernel@kempniu.pl>
- <20161208123618.28603-4-kernel@kempniu.pl>
- <201612111140.38170@pali>
- <20161215144628.GB22695@kmp-mobile.hq.kempniu.pl>
- <1481816580.2090.5.camel@Pali-Nokia-N900>
- <20161215192253.GA4776@kmp-mobile.hq.kempniu.pl>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v2 1/2] platform/x86: fujitsu-laptop: rework
+ logolamp_set() to properly handle errors
+Date: Tue, 10 Jan 2017 00:05:20 +1030
+Message-ID: <20170109133520.GA31198@marvin.atrad.com.au>
+References: <20170109131417.9677-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161215192253.GA4776@kmp-mobile.hq.kempniu.pl>
+In-Reply-To: <20170109131417.9677-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Bob Rodgers <Robert_Rodgers@dell.com>, Louis Davis <Louis_Davis@dell.com>, Jim Dailey <Jim_Dailey@dell.com>, Alex Hung <alex.hung@canonical.com>, Hui Wang <hui.wang@canonical.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> > On Thu Dec 15 15:46:28 2016 Michał Kępień <kernel@kempniu.pl> wrote:
-> > > > On Thursday 08 December 2016 13:36:14 Michał Kępień wrote:
-> > > > > --- a/sound/pci/hda/dell_wmi_helper.c
-> > > > > +++ b/sound/pci/hda/dell_wmi_helper.c
-> > > > > @@ -6,7 +6,7 @@
-> > > > > #include <linux/dell-led.h>
-> > > > > 
-> > > > > static int dell_led_value;
-> > > > > -static int (*dell_led_set_func)(int, int);
-> > > > > +static int (*dell_led_set_func)(int);
-> > > > 
-> > > > Suggestion: what about changing name to dell_micmute_led_set_func to 
-> > > > match real function name which is used after this patch?
-> > > 
-> > > While I like the idea itself, implementing it will double the number of
-> > > lines that this patch changes (6 vs. 12), arguably making its intention
-> > 
-> > If some patch makes final result of code better then metric number of lines is not priority.
-> > 
-> > > less clear.   Please let me know if you would really like this to happen
-> > > (perhaps as a separate patch?), otherwise I will skip this idea in v2.
-> > > 
-> > > -- 
-> > > Best regards,
-> > > Michał Kępień
-> > 
-> > If it will be in this or another following patch... I dot care. But this is sound subsystem, so sound maintainers need to decide what they prefer.
+On Mon, Jan 09, 2017 at 02:14:16PM +0100, Micha?? K??pie?? wrote:
+> Potential errors returned by some call_fext_func() calls inside
+> logolamp_set() are currently ignored.  Rework logolamp_set() to properly
+> handle them.  This causes one more call_fext_func() call to be made in
+> the LED_OFF case, though one could argue that this is logically the
+> right thing to do (even though the extra call is not needed to shut the
+> LED off).
 > 
-> Good point.  Jaroslav, Takashi, I will patiently wait for your opinion
-> on this patch and Pali's suggestion quoted above before I post v2 of
-> this series.
+> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
 
-As it has already been a month since I posted this patch series, this is
-just a reminder that I am waiting for comments from the sound subsystem
-maintainers before I post v2.
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-Jaroslav, Takashi, I could really use your input.  Please let me know if
-something is unclear.  Thanks,
+> ---
+> Changes from v1:
+> 
+>   - Decrease indentation by rearranging logical conditions.
+>   - Split variable declarations into two lines.
+> 
+>  drivers/platform/x86/fujitsu-laptop.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index b725a907a91f..34b8481fb0ed 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -271,15 +271,20 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
+>  static int logolamp_set(struct led_classdev *cdev,
+>  			       enum led_brightness brightness)
+>  {
+> -	if (brightness >= LED_FULL) {
+> -		call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
+> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_ON);
+> -	} else if (brightness >= LED_HALF) {
+> -		call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
+> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_OFF);
+> -	} else {
+> -		return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_OFF);
+> -	}
+> +	int poweron = FUNC_LED_ON, always = FUNC_LED_ON;
+> +	int ret;
+> +
+> +	if (brightness < LED_HALF)
+> +		poweron = FUNC_LED_OFF;
+> +
+> +	if (brightness < LED_FULL)
+> +		always = FUNC_LED_OFF;
+> +
+> +	ret = call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, always);
+>  }
+>  
+>  static int kblamps_set(struct led_classdev *cdev,
+> -- 
+> 2.11.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 -- 
-Best regards,
-Michał Kępień
