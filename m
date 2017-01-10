@@ -1,96 +1,50 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 08/14] wmi: Probe data objects for read and write capabilities
-Date: Tue, 10 Jan 2017 02:05:03 -0800
-Message-ID: <CALCETrU0PVUK7dUzNfv3BbPPrrGWhm+akBAunfks-JkOxqzJSg@mail.gmail.com>
-References: <cover.1448931782.git.luto@kernel.org> <6027f0563e82e3ca5265c6b29777636a9b8dc244.1448931782.git.luto@kernel.org>
- <20160116131111.GB7816@eudyptula.hq.kempniu.pl> <CALCETrUAyseBY-PvU2szRr9BcBXu-whEbNrKNN6x=yAjJuXVYQ@mail.gmail.com>
- <20170110055606.GA1535@kmp-mobile.hq.kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: shut up unused-function warning
+Date: Tue, 10 Jan 2017 16:28:47 +0100
+Message-ID: <20170110152857.3140948-1-arnd@arndb.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ua0-f169.google.com ([209.85.217.169]:34681 "EHLO
-        mail-ua0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S934233AbdAJKFY (ORCPT
+Received: from mout.kundenserver.de ([217.72.192.73]:49459 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752075AbdAJP3d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Jan 2017 05:05:24 -0500
-Received: by mail-ua0-f169.google.com with SMTP id 35so49343205uak.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Jan 2017 02:05:24 -0800 (PST)
-In-Reply-To: <20170110055606.GA1535@kmp-mobile.hq.kempniu.pl>
+        Tue, 10 Jan 2017 10:29:33 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jan 9, 2017 at 9:56 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempni=
-u.pl> wrote:
->> On Sat, Jan 16, 2016 at 5:11 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@ke=
-mpniu.pl> wrote:
->> >> My laptop has one RW data object, one RO data object, and one
->> >> totally inaccessible data object.  Check for the existence of the
->> >> accessor methods and report in sysfs.
->> >>
->> >> The docs also permit WQxx getters for single-instance objects to
->> >> take no parameters.  Probe for that as well to avoid ACPICA warnings
->> >> about mismatched signatures.
->> >>
->> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> >> ---
->> >>  drivers/platform/x86/wmi.c | 94 ++++++++++++++++++++++++++++++++++++=
-++++++++--
->> >>  include/linux/wmi.h        |  6 +++
->> >>  2 files changed, 96 insertions(+), 4 deletions(-)
->> >>
->> >> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
->> >> index 5571ae7354a1..49be61207c4a 100644
->> >> --- a/drivers/platform/x86/wmi.c
->> >> +++ b/drivers/platform/x86/wmi.c
->> >> @@ -66,6 +66,8 @@ struct wmi_block {
->> >>       struct acpi_device *acpi_device;
->> >>       wmi_notify_handler handler;
->> >>       void *handler_data;
->> >> +
->> >> +     bool read_takes_no_args;        /* only defined if readable */
->> >>  };
->> >>
->> >>
->> >> @@ -216,6 +218,25 @@ static bool find_guid(const char *guid_string, s=
-truct wmi_block **out)
->> >>       return false;
->> >>  }
->> >>
->> >> +static int get_subobj_info(acpi_handle handle, const char *pathname,
->> >> +                        struct acpi_device_info *info)
->> >> +{
->> >> +     acpi_handle subobj_handle;
->> >> +     acpi_status status;
->> >> +
->> >> +     status =3D acpi_get_handle(handle, (char *)pathname, &subobj_ha=
-ndle);
->> >> +     if (status =3D=3D AE_NOT_FOUND)
->> >> +             return -ENOENT;
->> >> +     else if (ACPI_FAILURE(status))
->> >> +             return -EIO;
->> >> +
->> >> +     status =3D acpi_get_object_info(subobj_handle, &info);
->> >
->> > acpi_get_object_info() allocates the returned buffer itself.  The latt=
-er
->> > should then subsequently be freed by the caller.  One solution is to
->> > change get_subobj_info() so that it takes a struct acpi_device_info **
->> > as an argument, which should then be passed to acpi_get_object_info().
->> > See also below.
->>
->> I have an updated version of this patch in my queue.  I'll try to send
->> it early next week.
->
-> Hi Andy,
->
-> Are you planning any further work on this patch series (originally
-> posted in December 2015)?  It seems to be a valuable cleanup.
+The newly added driver guards its "resume" callback with an #ifdef CONFIG_PM
+that should be CONFIG_PM_SLEEP instead, leading to a warning in some configurations:
 
-I have a tree in which the patches are sitting and I've kept them
-rebased, but I haven't had a chance to go through all the review
-comments and send them out.  Want to do it?
+drivers/platform/x86/surface3-wmi.c:248:12: error: 's3_wmi_resume' defined but not used [-Werror=unused-function]
 
---Andy
+Using a __maybe_unused annotation without an #ifdef avoids the mistake more
+reliably.
+
+Fixes: 3dda3b3798f9 ("platform/x86: Add custom surface3 platform device for controlling LID")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/surface3-wmi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
+index cbf4d83a7271..6ac1d1349d7e 100644
+--- a/drivers/platform/x86/surface3-wmi.c
++++ b/drivers/platform/x86/surface3-wmi.c
+@@ -244,13 +244,11 @@ static int s3_wmi_remove(struct platform_device *device)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int s3_wmi_resume(struct device *dev)
++static int __maybe_unused s3_wmi_resume(struct device *dev)
+ {
+ 	s3_wmi_send_lid_state();
+ 	return 0;
+ }
+-#endif
+ static SIMPLE_DEV_PM_OPS(s3_wmi_pm, NULL, s3_wmi_resume);
+ 
+ static struct platform_driver s3_wmi_driver = {
+-- 
+2.9.0
