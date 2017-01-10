@@ -1,79 +1,82 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 3/7] ALSA: hda - use dell_micmute_led_set() instead of
- dell_app_wmi_led_set()
-Date: Tue, 10 Jan 2017 06:28:53 +0100
-Message-ID: <20170110052853.GA1291@kmp-mobile.hq.kempniu.pl>
-References: <20161208123618.28603-1-kernel@kempniu.pl>
- <20161208123618.28603-4-kernel@kempniu.pl>
- <201612111140.38170@pali>
- <20161215144628.GB22695@kmp-mobile.hq.kempniu.pl>
- <1481816580.2090.5.camel@Pali-Nokia-N900>
- <20161215192253.GA4776@kmp-mobile.hq.kempniu.pl>
- <20170109132631.GA14411@ozzy.nask.waw.pl>
- <s5h8tqk1e98.wl-tiwai@suse.de>
+Subject: Re: [PATCH 08/14] wmi: Probe data objects for read and write
+ capabilities
+Date: Tue, 10 Jan 2017 06:56:06 +0100
+Message-ID: <20170110055606.GA1535@kmp-mobile.hq.kempniu.pl>
+References: <cover.1448931782.git.luto@kernel.org>
+ <6027f0563e82e3ca5265c6b29777636a9b8dc244.1448931782.git.luto@kernel.org>
+ <20160116131111.GB7816@eudyptula.hq.kempniu.pl>
+ <CALCETrUAyseBY-PvU2szRr9BcBXu-whEbNrKNN6x=yAjJuXVYQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <s5h8tqk1e98.wl-tiwai@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Alex Hung <alex.hung@canonical.com>, Anthony Wong <anthony.wong@canonical.com>, Hui Wang <hui.wang@canonical.com>, Jim Dailey <Jim_Dailey@dell.com>, Louis Davis <Louis_Davis@dell.com>, Bob Rodgers <Robert_Rodgers@dell.com>, pali.rohar@gmail.com, Darren Hart <dvhart@infradead.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <CALCETrUAyseBY-PvU2szRr9BcBXu-whEbNrKNN6x=yAjJuXVYQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> On Mon, 09 Jan 2017 14:26:31 +0100,
-> Michał Kępień wrote:
-> > 
-> > > > On Thu Dec 15 15:46:28 2016 Michał Kępień <kernel@kempniu.pl> wrote:
-> > > > > > On Thursday 08 December 2016 13:36:14 Michał Kępień wrote:
-> > > > > > > --- a/sound/pci/hda/dell_wmi_helper.c
-> > > > > > > +++ b/sound/pci/hda/dell_wmi_helper.c
-> > > > > > > @@ -6,7 +6,7 @@
-> > > > > > > #include <linux/dell-led.h>
-> > > > > > > 
-> > > > > > > static int dell_led_value;
-> > > > > > > -static int (*dell_led_set_func)(int, int);
-> > > > > > > +static int (*dell_led_set_func)(int);
-> > > > > > 
-> > > > > > Suggestion: what about changing name to dell_micmute_led_set_func to 
-> > > > > > match real function name which is used after this patch?
-> > > > > 
-> > > > > While I like the idea itself, implementing it will double the number of
-> > > > > lines that this patch changes (6 vs. 12), arguably making its intention
-> > > > 
-> > > > If some patch makes final result of code better then metric number of lines is not priority.
-> > > > 
-> > > > > less clear.   Please let me know if you would really like this to happen
-> > > > > (perhaps as a separate patch?), otherwise I will skip this idea in v2.
-> > > > > 
-> > > > > -- 
-> > > > > Best regards,
-> > > > > Michał Kępień
-> > > > 
-> > > > If it will be in this or another following patch... I dot care. But this is sound subsystem, so sound maintainers need to decide what they prefer.
-> > > 
-> > > Good point.  Jaroslav, Takashi, I will patiently wait for your opinion
-> > > on this patch and Pali's suggestion quoted above before I post v2 of
-> > > this series.
-> > 
-> > As it has already been a month since I posted this patch series, this is
-> > just a reminder that I am waiting for comments from the sound subsystem
-> > maintainers before I post v2.
-> > 
-> > Jaroslav, Takashi, I could really use your input.  Please let me know if
-> > something is unclear.  Thanks,
+> On Sat, Jan 16, 2016 at 5:11 AM, Michał Kępień <kernel@kempniu.pl> wrote:
+> >> My laptop has one RW data object, one RO data object, and one
+> >> totally inaccessible data object.  Check for the existence of the
+> >> accessor methods and report in sysfs.
+> >>
+> >> The docs also permit WQxx getters for single-instance objects to
+> >> take no parameters.  Probe for that as well to avoid ACPICA warnings
+> >> about mismatched signatures.
+> >>
+> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> >> ---
+> >>  drivers/platform/x86/wmi.c | 94 ++++++++++++++++++++++++++++++++++++++++++++--
+> >>  include/linux/wmi.h        |  6 +++
+> >>  2 files changed, 96 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> >> index 5571ae7354a1..49be61207c4a 100644
+> >> --- a/drivers/platform/x86/wmi.c
+> >> +++ b/drivers/platform/x86/wmi.c
+> >> @@ -66,6 +66,8 @@ struct wmi_block {
+> >>       struct acpi_device *acpi_device;
+> >>       wmi_notify_handler handler;
+> >>       void *handler_data;
+> >> +
+> >> +     bool read_takes_no_args;        /* only defined if readable */
+> >>  };
+> >>
+> >>
+> >> @@ -216,6 +218,25 @@ static bool find_guid(const char *guid_string, struct wmi_block **out)
+> >>       return false;
+> >>  }
+> >>
+> >> +static int get_subobj_info(acpi_handle handle, const char *pathname,
+> >> +                        struct acpi_device_info *info)
+> >> +{
+> >> +     acpi_handle subobj_handle;
+> >> +     acpi_status status;
+> >> +
+> >> +     status = acpi_get_handle(handle, (char *)pathname, &subobj_handle);
+> >> +     if (status == AE_NOT_FOUND)
+> >> +             return -ENOENT;
+> >> +     else if (ACPI_FAILURE(status))
+> >> +             return -EIO;
+> >> +
+> >> +     status = acpi_get_object_info(subobj_handle, &info);
+> >
+> > acpi_get_object_info() allocates the returned buffer itself.  The latter
+> > should then subsequently be freed by the caller.  One solution is to
+> > change get_subobj_info() so that it takes a struct acpi_device_info **
+> > as an argument, which should then be passed to acpi_get_object_info().
+> > See also below.
 > 
-> Sorry, the last post was overseen as I already went off to vacation.
+> I have an updated version of this patch in my queue.  I'll try to send
+> it early next week.
 
-No worries, thank you for getting back to me.
+Hi Andy,
 
-> The rename can be done in another patch.  Doing multiple things in a
-> single patch often leads to more confusion and error-prone.
-> 
-> Other than that, I'm fine with rename.
-
-Thank you for your comments, I will keep them in mind for v2.
+Are you planning any further work on this patch series (originally
+posted in December 2015)?  It seems to be a valuable cleanup.
 
 -- 
 Best regards,
