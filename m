@@ -1,82 +1,80 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 00/14] linux: generalize sections, ranges and linker
- tables
-Date: Mon, 09 Jan 2017 20:29:15 +0200
-Message-ID: <1483986555.26691.46.camel@linux.intel.com>
-References: <20161222023811.21246-1-mcgrof@kernel.org>
-         <20170109145833.11502-1-mcgrof@kernel.org>
-         <1483979228.26691.40.camel@linux.intel.com>
-         <1483981946.26691.44.camel@intel.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 3/7] ALSA: hda - use dell_micmute_led_set() instead of
+ dell_app_wmi_led_set()
+Date: Tue, 10 Jan 2017 06:28:53 +0100
+Message-ID: <20170110052853.GA1291@kmp-mobile.hq.kempniu.pl>
+References: <20161208123618.28603-1-kernel@kempniu.pl>
+ <20161208123618.28603-4-kernel@kempniu.pl>
+ <201612111140.38170@pali>
+ <20161215144628.GB22695@kmp-mobile.hq.kempniu.pl>
+ <1481816580.2090.5.camel@Pali-Nokia-N900>
+ <20161215192253.GA4776@kmp-mobile.hq.kempniu.pl>
+ <20170109132631.GA14411@ozzy.nask.waw.pl>
+ <s5h8tqk1e98.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <1483981946.26691.44.camel@intel.com>
-Sender: linux-ia64-owner@vger.kernel.org
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>, hpa@zytor.com, acme@redhat.com, tglx@linutronix.de, mingo@redhat.com, jpoimboe@redhat.com, bp@alien8.de, npiggin@gmail.com, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, dalias@libc.org, linux@arm.linux.org.uk
-Cc: x86@kernel.org, luto@amacapital.net, keescook@chromium.org, linux@roeck-us.net, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, pebolle@tiscali.nl, fontana@sharpeleven.org, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.com, andrew.cooper3@citrix.com, paul.gortmaker@windriver.com, xen-devel@lists.xensource.com, ak@linux.intel.com, pali.rohar@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, mmarek@suse.com, linux@rasmusvillemoes.dk, jkosina@suse.cz, korea.drzix@gmail.com, linux-kbuild@vger.kernel.org, tony.luck@intel.com, akpm@lin
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <s5h8tqk1e98.wl-tiwai@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, Alex Hung <alex.hung@canonical.com>, Anthony Wong <anthony.wong@canonical.com>, Hui Wang <hui.wang@canonical.com>, Jim Dailey <Jim_Dailey@dell.com>, Louis Davis <Louis_Davis@dell.com>, Bob Rodgers <Robert_Rodgers@dell.com>, pali.rohar@gmail.com, Darren Hart <dvhart@infradead.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 2017-01-09 at 19:12 +0200, Andy Shevchenko wrote:
-> On Mon, 2017-01-09 at 18:27 +0200, Andy Shevchenko wrote:
-> > On Mon, 2017-01-09 at 06:58 -0800, Luis R. Rodriguez wrote:
-> > > The only architecture that was not tested was avr32 and that is
-> > > because
-> > > linux-next fails to compile on it. I'd like to greatly thank
-> > > Guenter
-> > > Roeck for
-> > > his help with testing.
+> On Mon, 09 Jan 2017 14:26:31 +0100,
+> Michał Kępień wrote:
 > > 
-> > We have a real board here. I would try to check if you provide a git
-> > url
-> > to your stuff.
+> > > > On Thu Dec 15 15:46:28 2016 Michał Kępień <kernel@kempniu.pl> wrote:
+> > > > > > On Thursday 08 December 2016 13:36:14 Michał Kępień wrote:
+> > > > > > > --- a/sound/pci/hda/dell_wmi_helper.c
+> > > > > > > +++ b/sound/pci/hda/dell_wmi_helper.c
+> > > > > > > @@ -6,7 +6,7 @@
+> > > > > > > #include <linux/dell-led.h>
+> > > > > > > 
+> > > > > > > static int dell_led_value;
+> > > > > > > -static int (*dell_led_set_func)(int, int);
+> > > > > > > +static int (*dell_led_set_func)(int);
+> > > > > > 
+> > > > > > Suggestion: what about changing name to dell_micmute_led_set_func to 
+> > > > > > match real function name which is used after this patch?
+> > > > > 
+> > > > > While I like the idea itself, implementing it will double the number of
+> > > > > lines that this patch changes (6 vs. 12), arguably making its intention
+> > > > 
+> > > > If some patch makes final result of code better then metric number of lines is not priority.
+> > > > 
+> > > > > less clear.   Please let me know if you would really like this to happen
+> > > > > (perhaps as a separate patch?), otherwise I will skip this idea in v2.
+> > > > > 
+> > > > > -- 
+> > > > > Best regards,
+> > > > > Michał Kępień
+> > > > 
+> > > > If it will be in this or another following patch... I dot care. But this is sound subsystem, so sound maintainers need to decide what they prefer.
+> > > 
+> > > Good point.  Jaroslav, Takashi, I will patiently wait for your opinion
+> > > on this patch and Pali's suggestion quoted above before I post v2 of
+> > > this series.
 > > 
-> > I can confirm that breakage happened like in last couple of month.
-> > v4.10-rc3 can't be compiled either.
+> > As it has already been a month since I posted this patch series, this is
+> > just a reminder that I am waiting for comments from the sound subsystem
+> > maintainers before I post v2.
+> > 
+> > Jaroslav, Takashi, I could really use your input.  Please let me know if
+> > something is unclear.  Thanks,
 > 
-> The culprit commit is
+> Sorry, the last post was overseen as I already went off to vacation.
+
+No worries, thank you for getting back to me.
+
+> The rename can be done in another patch.  Doing multiple things in a
+> single patch often leads to more confusion and error-prone.
 > 
-> commit 3a0af8fd61f90920f6fa04e4f1e9a6a73c1b4fd2
-> Author: Thomas Graf <tgraf@suug.ch>
-> Date:   Wed Nov 30 17:10:10 2016 +0100
-> 
->     bpf: BPF for lightweight tunnel infrastructure
-> 
+> Other than that, I'm fine with rename.
 
-This makes modules closer to each other, so,
-net/socket.c:348: relocation truncated to fit: R_AVR32_11H_PCREL against
-`.text'+2930
+Thank you for your comments, I will keep them in mind for v2.
 
-But still the module is too big for AVR to do some jumps.
-
-Here I stop investigating it. I had been proposed to get rid of avr32
-completely, burden to support is just increasing (no Buildroot support,
-no Gcc support, what else do we need?) for no value.
-
-diff --git a/net/core/Makefile b/net/core/Makefile
-index f6761b6e3b29..91b7d27bf2c6 100644
---- a/net/core/Makefile
-+++ b/net/core/Makefile
-@@ -2,13 +2,13 @@
- # Makefile for the Linux networking core.
- #
- 
--obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
-+obj-y := filter.o sock.o request_sock.o skbuff.o datagram.o stream.o
-scm.o \
-         gen_stats.o gen_estimator.o net_namespace.o secure_seq.o
-flow_dissector.o
- 
- obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
- 
- obj-y               += dev.o ethtool.o dev_addr_lists.o dst.o
-netevent.o \
--                       neighbour.o rtnetlink.o utils.o link_watch.o
-filter.o \
-+                       neighbour.o rtnetlink.o utils.o link_watch.o \
-                        sock_diag.o dev_ioctl.o tso.o sock_reuseport.o
- 
- obj-$(CONFIG_XFRM) += flow.o
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Best regards,
+Michał Kępień
