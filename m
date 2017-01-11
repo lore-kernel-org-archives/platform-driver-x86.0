@@ -1,127 +1,34 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 2/4] platform/x86: fujitsu-laptop: move keycode processing to separate functions
-Date: Wed, 11 Jan 2017 09:59:31 +0100
-Message-ID: <20170111085933.2486-3-kernel@kempniu.pl>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 0/4] fujitsu-laptop: acpi_fujitsu_hotkey_notify() cleanup
+Date: Wed, 11 Jan 2017 22:28:20 +1030
+Message-ID: <20170111115820.GF17476@marvin.atrad.com.au>
 References: <20170111085933.2486-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20170111085933.2486-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-acpi_fujitsu_hotkey_notify() is pretty deeply nested, which hurts
-readability.  Move the keycode processing part to two separate functions
-to make the code easier to understand and save a few line breaks.
-Rename variable keycode_r to keycode as there is no longer any need to
-differentiate between the two.  Tweak indentations to make checkpatch
-happy.
+On Wed, Jan 11, 2017 at 09:59:29AM +0100, Micha?? K??pie?? wrote:
+> I am currently preparing a patch series which makes fujitsu-laptop use a
+> sparse keymap for hotkey handling.  Before that will happen, though,
+> acpi_fujitsu_hotkey_notify() could use a revamp because it is pretty
+> hard to read as it is.  To avoid posting everything at once, here are a
+> few patches which IMHO make that function easier to read.  Some of these
+> changes might be a matter of taste, so feel free to NACK them or suggest
+> a preferred alternative.
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 76 ++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 33 deletions(-)
+This patch series provides a significant clean up to the functions it
+focuses on.  As such I have no real objections to them.  However, because my
+Fujitsu laptop doesn't have any of the hotkeys of later models I am unable
+to test these patches with real hardware.  Have you been able to do so?  If
+they have been verified I have no problem acking these.  Otherwise I will
+have to do as much as I can (given no access to relevant hardware) to ensure
+the overall behaviour isn't changed.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index c2022f8af51b..e57d3724d2ce 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -1030,12 +1030,48 @@ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
- 	return 0;
- }
- 
-+static void acpi_fujitsu_hotkey_press(int keycode)
-+{
-+	struct input_dev *input = fujitsu_hotkey->input;
-+	int status;
-+
-+	vdbg_printk(FUJLAPTOP_DBG_TRACE,
-+		    "Push keycode into ringbuffer [%d]\n", keycode);
-+	status = kfifo_in_locked(&fujitsu_hotkey->fifo,
-+				 (unsigned char *)&keycode, sizeof(keycode),
-+				 &fujitsu_hotkey->fifo_lock);
-+	if (status != sizeof(keycode)) {
-+		vdbg_printk(FUJLAPTOP_DBG_WARN,
-+			    "Could not push keycode [0x%x]\n", keycode);
-+	} else {
-+		input_report_key(input, keycode, 1);
-+		input_sync(input);
-+	}
-+}
-+
-+static void acpi_fujitsu_hotkey_release(void)
-+{
-+	struct input_dev *input = fujitsu_hotkey->input;
-+	int keycode, status;
-+
-+	while ((status = kfifo_out_locked(&fujitsu_hotkey->fifo,
-+					  (unsigned char *)&keycode,
-+					  sizeof(keycode),
-+					  &fujitsu_hotkey->fifo_lock))
-+					  == sizeof(keycode)) {
-+		input_report_key(input, keycode, 0);
-+		input_sync(input);
-+		vdbg_printk(FUJLAPTOP_DBG_TRACE,
-+			    "Pop keycode from ringbuffer [%d]\n", keycode);
-+	}
-+}
-+
- static void acpi_fujitsu_hotkey_notify(struct acpi_device *device, u32 event)
- {
- 	struct input_dev *input;
--	int keycode, keycode_r;
-+	int keycode;
- 	unsigned int irb = 1;
--	int i, status;
-+	int i;
- 
- 	input = fujitsu_hotkey->input;
- 
-@@ -1083,37 +1119,11 @@ static void acpi_fujitsu_hotkey_notify(struct acpi_device *device, u32 event)
- 			keycode = -1;
- 			break;
- 		}
--		if (keycode > 0) {
--			vdbg_printk(FUJLAPTOP_DBG_TRACE,
--				"Push keycode into ringbuffer [%d]\n",
--				keycode);
--			status = kfifo_in_locked(&fujitsu_hotkey->fifo,
--					   (unsigned char *)&keycode,
--					   sizeof(keycode),
--					   &fujitsu_hotkey->fifo_lock);
--			if (status != sizeof(keycode)) {
--				vdbg_printk(FUJLAPTOP_DBG_WARN,
--				    "Could not push keycode [0x%x]\n",
--				    keycode);
--			} else {
--				input_report_key(input, keycode, 1);
--				input_sync(input);
--			}
--		} else if (keycode == 0) {
--			while ((status =
--				kfifo_out_locked(
--				 &fujitsu_hotkey->fifo,
--				 (unsigned char *) &keycode_r,
--				 sizeof(keycode_r),
--				 &fujitsu_hotkey->fifo_lock))
--				 == sizeof(keycode_r)) {
--				input_report_key(input, keycode_r, 0);
--				input_sync(input);
--				vdbg_printk(FUJLAPTOP_DBG_TRACE,
--				  "Pop keycode from ringbuffer [%d]\n",
--				  keycode_r);
--			}
--		}
-+
-+		if (keycode > 0)
-+			acpi_fujitsu_hotkey_press(keycode);
-+		else if (keycode == 0)
-+			acpi_fujitsu_hotkey_release();
- 	}
- 
- 	/* On some models (first seen on the Skylake-based Lifebook
--- 
-2.11.0
+Regards
+  jonathan
