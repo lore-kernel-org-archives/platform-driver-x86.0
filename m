@@ -1,25 +1,20 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH 0/4] fujitsu-laptop: acpi_fujitsu_hotkey_notify() cleanup
-Date: Fri, 13 Jan 2017 13:51:46 -0800
-Message-ID: <20170113215146.GA4165@wisp>
+Date: Fri, 13 Jan 2017 14:09:45 -0800
+Message-ID: <20170113220945.GB4165@wisp>
 References: <20170111085933.2486-1-kernel@kempniu.pl>
  <20170111115820.GF17476@marvin.atrad.com.au>
  <20170111122649.GA929@ozzy.nask.waw.pl>
  <20170111124813.GH17476@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37782 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750701AbdAMVvt (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Jan 2017 16:51:49 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20170111124813.GH17476@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>
 Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 On Wed, Jan 11, 2017 at 11:18:13PM +1030, Jonathan Woithe wrote:
 > On Wed, Jan 11, 2017 at 01:26:49PM +0100, Micha?? K??pie?? wrote:
@@ -54,11 +49,8 @@ On Wed, Jan 11, 2017 at 11:18:13PM +1030, Jonathan Woithe wrote:
 > these clean ups.
 > 
 > Acked-by: Jonathan Woithe <jwoithe@just42.net>
-> 
-> Darren: do you want me to explicitly ack all 4 parts, or the above
-> sufficient for your processes?
 
-The above is sufficient as far as I'm concerned.
+Queued to testing, thanks!
 
 -- 
 Darren Hart
