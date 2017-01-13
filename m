@@ -1,70 +1,112 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [bug report] platform/x86: Add custom surface3 platform device for
- controlling LID
-Date: Thu, 12 Jan 2017 17:09:58 +0300
-Message-ID: <20170112140958.GA1457@mwanda>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 08/14] wmi: Probe data objects for read and write capabilities
+Date: Thu, 12 Jan 2017 17:42:20 -0800
+Message-ID: <CALCETrUg6BqKCARybq2cVCRachXBPHSTYuSogDC8GW60ijOpXg@mail.gmail.com>
+References: <cover.1448931782.git.luto@kernel.org> <6027f0563e82e3ca5265c6b29777636a9b8dc244.1448931782.git.luto@kernel.org>
+ <20160116131111.GB7816@eudyptula.hq.kempniu.pl> <CALCETrUAyseBY-PvU2szRr9BcBXu-whEbNrKNN6x=yAjJuXVYQ@mail.gmail.com>
+ <20170110055606.GA1535@kmp-mobile.hq.kempniu.pl> <CALCETrU0PVUK7dUzNfv3BbPPrrGWhm+akBAunfks-JkOxqzJSg@mail.gmail.com>
+ <20170112050159.GA4072@kmp-mobile.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aserp1040.oracle.com ([141.146.126.69]:38601 "EHLO
-        aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750876AbdALOKX (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Jan 2017 09:10:23 -0500
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: benjamin.tissoires@redhat.com
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170112050159.GA4072@kmp-mobile.hq.kempniu.pl>
+Sender: linux-acpi-owner@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hello Benjamin Tissoires,
+On Wed, Jan 11, 2017 at 9:01 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+>> On Mon, Jan 9, 2017 at 9:56 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kem=
+pniu.pl> wrote:
+>> >> On Sat, Jan 16, 2016 at 5:11 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel=
+@kempniu.pl> wrote:
+>> >> >> My laptop has one RW data object, one RO data object, and one
+>> >> >> totally inaccessible data object.  Check for the existence of the
+>> >> >> accessor methods and report in sysfs.
+>> >> >>
+>> >> >> The docs also permit WQxx getters for single-instance objects to
+>> >> >> take no parameters.  Probe for that as well to avoid ACPICA warnin=
+gs
+>> >> >> about mismatched signatures.
+>> >> >>
+>> >> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> >> >> ---
+>> >> >>  drivers/platform/x86/wmi.c | 94 +++++++++++++++++++++++++++++++++=
++++++++++++--
+>> >> >>  include/linux/wmi.h        |  6 +++
+>> >> >>  2 files changed, 96 insertions(+), 4 deletions(-)
+>> >> >>
+>> >> >> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi=
+.c
+>> >> >> index 5571ae7354a1..49be61207c4a 100644
+>> >> >> --- a/drivers/platform/x86/wmi.c
+>> >> >> +++ b/drivers/platform/x86/wmi.c
+>> >> >> @@ -66,6 +66,8 @@ struct wmi_block {
+>> >> >>       struct acpi_device *acpi_device;
+>> >> >>       wmi_notify_handler handler;
+>> >> >>       void *handler_data;
+>> >> >> +
+>> >> >> +     bool read_takes_no_args;        /* only defined if readable =
+*/
+>> >> >>  };
+>> >> >>
+>> >> >>
+>> >> >> @@ -216,6 +218,25 @@ static bool find_guid(const char *guid_string=
+, struct wmi_block **out)
+>> >> >>       return false;
+>> >> >>  }
+>> >> >>
+>> >> >> +static int get_subobj_info(acpi_handle handle, const char *pathna=
+me,
+>> >> >> +                        struct acpi_device_info *info)
+>> >> >> +{
+>> >> >> +     acpi_handle subobj_handle;
+>> >> >> +     acpi_status status;
+>> >> >> +
+>> >> >> +     status =3D acpi_get_handle(handle, (char *)pathname, &subobj=
+_handle);
+>> >> >> +     if (status =3D=3D AE_NOT_FOUND)
+>> >> >> +             return -ENOENT;
+>> >> >> +     else if (ACPI_FAILURE(status))
+>> >> >> +             return -EIO;
+>> >> >> +
+>> >> >> +     status =3D acpi_get_object_info(subobj_handle, &info);
+>> >> >
+>> >> > acpi_get_object_info() allocates the returned buffer itself.  The l=
+atter
+>> >> > should then subsequently be freed by the caller.  One solution is t=
+o
+>> >> > change get_subobj_info() so that it takes a struct acpi_device_info=
+ **
+>> >> > as an argument, which should then be passed to acpi_get_object_info=
+().
+>> >> > See also below.
+>> >>
+>> >> I have an updated version of this patch in my queue.  I'll try to sen=
+d
+>> >> it early next week.
+>> >
+>> > Hi Andy,
+>> >
+>> > Are you planning any further work on this patch series (originally
+>> > posted in December 2015)?  It seems to be a valuable cleanup.
+>>
+>> I have a tree in which the patches are sitting and I've kept them
+>> rebased, but I haven't had a chance to go through all the review
+>> comments and send them out.  Want to do it?
+>
+> If you want me to take the rebased patches, fix the issues I can find
+> and resubmit as v2 with your name in From: then sure, I can give it a
+> shot once I find the time (might not be soon, though, but I guess there
+> is no rush).  If you had something else on your mind, please elaborate.
+>
 
-The patch 3dda3b3798f9: "platform/x86: Add custom surface3 platform
-device for controlling LID" from Nov 25, 2016, leads to the following
-static checker warning:
+That would be fantastic.  Let me know if/when you get started.  In the
+mean time, the rebased and slightly updated series is here:
 
-	drivers/platform/x86/surface3-wmi.c:168 s3_wmi_check_platform_device()
-	error: uninitialized symbol 'ts_adev'.
+https://git.kernel.org/cgit/linux/kernel/git/luto/linux.git/log/?h=3Dplatfo=
+rm/wmi
 
-drivers/platform/x86/surface3-wmi.c
-   140  static int s3_wmi_check_platform_device(struct device *dev, void *data)
-   141  {
-   142          struct acpi_device *adev, *ts_adev;
-   143          acpi_handle handle;
-   144          acpi_status status;
-   145  
-   146          /* ignore non ACPI devices */
-   147          handle = ACPI_HANDLE(dev);
-   148          if (!handle || acpi_bus_get_device(handle, &adev))
-   149                  return 0;
-   150  
-   151          /* check for LID ACPI switch */
-   152          if (!strcmp(ACPI_BUTTON_HID_LID, acpi_device_hid(adev))) {
-   153                  s3_wmi.pnp0c0d_adev = adev;
-   154                  return 0;
-   155          }
-   156  
-   157          /* ignore non SPI controllers */
-   158          if (strncmp(acpi_device_bid(adev), SPI_CTL_OBJ_NAME,
-   159              strlen(SPI_CTL_OBJ_NAME)))
-   160                  return 0;
-   161  
-   162          status = acpi_walk_namespace(ACPI_TYPE_DEVICE, handle, 1,
-   163                                       s3_wmi_attach_spi_device, NULL,
-   164                                       &ts_adev, NULL);
-                                              ^^^^^^^
-It's complaining about if this function fails.
-
-   165          if (ACPI_FAILURE(status))
-   166                  dev_warn(dev, "failed to enumerate SPI slaves\n");
-   167  
-   168          if (!ts_adev)
-   169                  return 0;
-   170  
-   171          s3_wmi.touchscreen_adev = ts_adev;
-   172  
-   173          return 0;
-   174  }
-
-regards,
-dan carpenter
+--Andy
