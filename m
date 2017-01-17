@@ -1,114 +1,45 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 1/2] platform/x86: fujitsu-laptop: decrease indentation in acpi_fujitsu_notify()
-Date: Tue, 17 Jan 2017 12:07:34 +0100
-Message-ID: <20170117110735.2543-2-kernel@kempniu.pl>
-References: <20170117110735.2543-1-kernel@kempniu.pl>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 6/6] dell-led: move driver to
+ drivers/platform/x86/dell-wmi-led.c
+Date: Tue, 17 Jan 2017 12:08:09 +0100
+Message-ID: <20170117110809.GC26116@xo-6d-61-c0.localdomain>
+References: <20170116132204.6421-1-kernel@kempniu.pl>
+ <20170116132204.6421-7-kernel@kempniu.pl>
+ <b702265e-893e-e3b1-1262-f959d230d552@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:36425 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750919AbdAQLQJ (ORCPT
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38382 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750957AbdAQLSC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2017 06:16:09 -0500
-Received: by mail-lf0-f66.google.com with SMTP id h65so15737279lfi.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2017 03:16:08 -0800 (PST)
-In-Reply-To: <20170117110735.2543-1-kernel@kempniu.pl>
+        Tue, 17 Jan 2017 06:18:02 -0500
+Content-Disposition: inline
+In-Reply-To: <b702265e-893e-e3b1-1262-f959d230d552@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 
-acpi_fujitsu_notify() is pretty deeply nested, which hurts readability.
-Strip off one level of indentation by returning early when the event
-code supplied as argument is not ACPI_FUJITSU_NOTIFY_CODE1.
+Hi!
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
-Changes introduced by this patch are best viewed when whitespace changes
-are ignored.
+> Thanks for the patch set.
+> 
+> Would you mind fixing also the following issues raised by
+> checkpatch.pl?:
+> 
+> WARNING: Missing a blank line after declarations
+> #376: FILE: drivers/platform/x86/dell-wmi-led.c:64:
+> +	struct bios_args args;
+...
+> The fixes could be placed in an incremental patch after this one.
 
- drivers/platform/x86/fujitsu-laptop.c | 64 ++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 31 deletions(-)
+Anyway, move itself is ok (and the checkpatch issues are not that serious anyway.)
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 96f8163d5002..35c1319b7c8e 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -789,40 +789,42 @@ static void acpi_fujitsu_notify(struct acpi_device *device, u32 event)
- 
- 	input = fujitsu->input;
- 
--	switch (event) {
--	case ACPI_FUJITSU_NOTIFY_CODE1:
--		keycode = 0;
--		oldb = fujitsu->brightness_level;
--		get_lcd_level();
--		newb = fujitsu->brightness_level;
--
--		vdbg_printk(FUJLAPTOP_DBG_TRACE,
--			    "brightness button event [%i -> %i (%i)]\n",
--			    oldb, newb, fujitsu->brightness_changed);
--
--		if (oldb < newb) {
--			if (disable_brightness_adjust != 1) {
--				if (use_alt_lcd_levels)
--					set_lcd_level_alt(newb);
--				else
--					set_lcd_level(newb);
--			}
--			keycode = KEY_BRIGHTNESSUP;
--		} else if (oldb > newb) {
--			if (disable_brightness_adjust != 1) {
--				if (use_alt_lcd_levels)
--					set_lcd_level_alt(newb);
--				else
--					set_lcd_level(newb);
--			}
--			keycode = KEY_BRIGHTNESSDOWN;
--		}
--		break;
--	default:
-+	if (event != ACPI_FUJITSU_NOTIFY_CODE1) {
- 		keycode = KEY_UNKNOWN;
- 		vdbg_printk(FUJLAPTOP_DBG_WARN,
- 			    "unsupported event [0x%x]\n", event);
--		break;
-+		input_report_key(input, keycode, 1);
-+		input_sync(input);
-+		input_report_key(input, keycode, 0);
-+		input_sync(input);
-+		return;
-+	}
-+
-+	keycode = 0;
-+	oldb = fujitsu->brightness_level;
-+	get_lcd_level();
-+	newb = fujitsu->brightness_level;
-+
-+	vdbg_printk(FUJLAPTOP_DBG_TRACE,
-+		    "brightness button event [%i -> %i (%i)]\n",
-+		    oldb, newb, fujitsu->brightness_changed);
-+
-+	if (oldb < newb) {
-+		if (disable_brightness_adjust != 1) {
-+			if (use_alt_lcd_levels)
-+				set_lcd_level_alt(newb);
-+			else
-+				set_lcd_level(newb);
-+		}
-+		keycode = KEY_BRIGHTNESSUP;
-+	} else if (oldb > newb) {
-+		if (disable_brightness_adjust != 1) {
-+			if (use_alt_lcd_levels)
-+				set_lcd_level_alt(newb);
-+			else
-+				set_lcd_level(newb);
-+		}
-+		keycode = KEY_BRIGHTNESSDOWN;
- 	}
- 
- 	if (keycode != 0) {
+Thanks,
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
 -- 
-2.11.0
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
