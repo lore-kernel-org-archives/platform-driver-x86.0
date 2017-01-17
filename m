@@ -1,51 +1,105 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 6/6] dell-led: move driver to
- drivers/platform/x86/dell-wmi-led.c
-Date: Tue, 17 Jan 2017 12:28:17 +0100
-Message-ID: <20170117112817.GD32502@pali>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 3/6] ALSA: hda - rename dell_led_set_func to
+ dell_micmute_led_set_func
+Date: Tue, 17 Jan 2017 22:20:14 +0100
+Message-ID: <ceb198ea-5864-349d-f0c8-6ecf337139cc@gmail.com>
 References: <20170116132204.6421-1-kernel@kempniu.pl>
- <20170116132204.6421-7-kernel@kempniu.pl>
- <b702265e-893e-e3b1-1262-f959d230d552@gmail.com>
- <20170117110809.GC26116@xo-6d-61-c0.localdomain>
+ <20170116132204.6421-4-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:33195 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750920AbdAQL2u (ORCPT
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:36099 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750863AbdAQVVC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2017 06:28:50 -0500
-Content-Disposition: inline
-In-Reply-To: <20170117110809.GC26116@xo-6d-61-c0.localdomain>
+        Tue, 17 Jan 2017 16:21:02 -0500
+In-Reply-To: <20170116132204.6421-4-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 
-On Tuesday 17 January 2017 12:08:09 Pavel Machek wrote:
-> Hi!
-> 
-> > Thanks for the patch set.
-> > 
-> > Would you mind fixing also the following issues raised by
-> > checkpatch.pl?:
-> > 
-> > WARNING: Missing a blank line after declarations
-> > #376: FILE: drivers/platform/x86/dell-wmi-led.c:64:
-> > +	struct bios_args args;
-> ...
-> > The fixes could be placed in an incremental patch after this one.
-> 
-> Anyway, move itself is ok (and the checkpatch issues are not that serious anyway.)
-> 
-> Thanks,
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+Hi Jaroslav, Takashi,
 
-Yes, this patch does not change code, just move one file to other
-location. You can add my Reviewed-by.
+I need an ack from sound sybsystem maintainer.
+Are you OK with this patch going through LED tree?
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Best regards,
+Jacek Anaszewski
+
+On 01/16/2017 02:22 PM, Michał Kępień wrote:
+> With dell_app_wmi_led_set() replaced by dell_micmute_led_set(), rename
+> the function pointer to the latter for consistency.
+> 
+> Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+> ---
+>  sound/pci/hda/dell_wmi_helper.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/sound/pci/hda/dell_wmi_helper.c b/sound/pci/hda/dell_wmi_helper.c
+> index e128c8096772..516237ad6ef5 100644
+> --- a/sound/pci/hda/dell_wmi_helper.c
+> +++ b/sound/pci/hda/dell_wmi_helper.c
+> @@ -6,7 +6,7 @@
+>  #include <linux/dell-led.h>
+>  
+>  static int dell_led_value;
+> -static int (*dell_led_set_func)(int);
+> +static int (*dell_micmute_led_set_func)(int);
+>  static void (*dell_old_cap_hook)(struct hda_codec *,
+>  			         struct snd_kcontrol *,
+>  				 struct snd_ctl_elem_value *);
+> @@ -18,7 +18,7 @@ static void update_dell_wmi_micmute_led(struct hda_codec *codec,
+>  	if (dell_old_cap_hook)
+>  		dell_old_cap_hook(codec, kcontrol, ucontrol);
+>  
+> -	if (!ucontrol || !dell_led_set_func)
+> +	if (!ucontrol || !dell_micmute_led_set_func)
+>  		return;
+>  	if (strcmp("Capture Switch", ucontrol->id.name) == 0 && ucontrol->id.index == 0) {
+>  		/* TODO: How do I verify if it's a mono or stereo here? */
+> @@ -26,8 +26,8 @@ static void update_dell_wmi_micmute_led(struct hda_codec *codec,
+>  		if (val == dell_led_value)
+>  			return;
+>  		dell_led_value = val;
+> -		if (dell_led_set_func)
+> -			dell_led_set_func(dell_led_value);
+> +		if (dell_micmute_led_set_func)
+> +			dell_micmute_led_set_func(dell_led_value);
+>  	}
+>  }
+>  
+> @@ -39,15 +39,15 @@ static void alc_fixup_dell_wmi(struct hda_codec *codec,
+>  	bool removefunc = false;
+>  
+>  	if (action == HDA_FIXUP_ACT_PROBE) {
+> -		if (!dell_led_set_func)
+> -			dell_led_set_func = symbol_request(dell_micmute_led_set);
+> -		if (!dell_led_set_func) {
+> +		if (!dell_micmute_led_set_func)
+> +			dell_micmute_led_set_func = symbol_request(dell_micmute_led_set);
+> +		if (!dell_micmute_led_set_func) {
+>  			codec_warn(codec, "Failed to find dell wmi symbol dell_micmute_led_set\n");
+>  			return;
+>  		}
+>  
+>  		removefunc = true;
+> -		if (dell_led_set_func(false) >= 0) {
+> +		if (dell_micmute_led_set_func(false) >= 0) {
+>  			dell_led_value = 0;
+>  			if (spec->gen.num_adc_nids > 1 && !spec->gen.dyn_adc_switch)
+>  				codec_dbg(codec, "Skipping micmute LED control due to several ADCs");
+> @@ -60,9 +60,9 @@ static void alc_fixup_dell_wmi(struct hda_codec *codec,
+>  
+>  	}
+>  
+> -	if (dell_led_set_func && (action == HDA_FIXUP_ACT_FREE || removefunc)) {
+> +	if (dell_micmute_led_set_func && (action == HDA_FIXUP_ACT_FREE || removefunc)) {
+>  		symbol_put(dell_micmute_led_set);
+> -		dell_led_set_func = NULL;
+> +		dell_micmute_led_set_func = NULL;
+>  		dell_old_cap_hook = NULL;
+>  	}
+>  }
+> 
