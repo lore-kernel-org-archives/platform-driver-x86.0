@@ -1,103 +1,138 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 0/6] Move dell-led to drivers/platform/x86
-Date: Tue, 17 Jan 2017 22:20:29 +0100
-Message-ID: <0989ec2f-c776-13f5-3933-0cb60b36f8ed@gmail.com>
-References: <20170116132204.6421-1-kernel@kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170116132204.6421-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Takashi Iwai <tiwai@suse.com>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v7 3/5] arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
+Date: Tue, 17 Jan 2017 15:57:48 -0600
+Message-ID: <1484690270-28425-4-git-send-email-pierre-louis.bossart@linux.intel.com>
+References: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:3307 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750893AbdAQWD7 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 17 Jan 2017 17:03:59 -0500
+In-Reply-To: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Hi Darren,
+From: Irina Tirdea <irina.tirdea@intel.com>
 
-Are you OK with the patches 4/6 and 6/6? If so, could you give
-your ack so that I could apply the whole patch set to the LED tree?
+The pmc_atom driver does not contain any architecture specific
+code. It only enables the SoC Power Management Controller driver
+for BayTrail and CherryTrail platforms.
 
-Best regards,
-Jacek Anaszewski
+Move the pmc_atom driver from arch/x86/platform/atom to
+drivers/platform/x86. Also clean-up and reorder include files by
+alphabetical order in pmc_atom.h
 
-On 01/16/2017 02:21 PM, Michał Kępień wrote:
-> This patch series moves the dell-led driver from the LED subsystem to
-> the x86 platform driver subsystem.
-> 
-> The original motivation behind this effort was to move all code using
-> the dell-smbios module to the x86 platform driver subsystem.  While I
-> was investigating the possibilities to do that, it quickly emerged that
-> dell-led can and in fact should be moved to the x86 platform driver
-> subsystem in its entirety.
-> 
-> dell-led consists of two major parts:
-> 
->   - the part exposing a microphone mute LED interface, introduced in
->     db6d8cc00773 ("dell-led: add mic mute led interface"); this
->     interface is used by sound/pci/hda/dell_wmi_helper.c; while the
->     original implementation used a WMI interface, it was changed to use
->     dell-smbios in cf0d7ea33596 ("dell-led: use dell_smbios_find_token()
->     for finding mic DMI tokens") and 0c41a08e131d ("dell-led: use
->     dell_smbios_send_request() for performing SMBIOS calls"),
-> 
->   - the part handling an activity LED present in Dell Latitude 2100
->     netbooks, introduced in 72dcd8d08aca ("leds: Add Dell Business Class
->     Netbook LED driver"); it binds to a specific WMI GUID and then
->     registers a LED device which is controlled using WMI (i.e. it is
->     essentially a WMI driver).
-> 
-> Patches 1 and 2 clean up the microphone mute LED interface to minimize
-> the amount of code moved around.
-> 
-> Patch 3 updates a variable name in sound/pci/hda/dell_wmi_helper.c so
-> that it better matches that variable's role.
-> 
-> Patch 4 moves the microphone mute LED interface to
-> drivers/platform/x86/dell-laptop.c, effectively causing
-> sound/pci/hda/dell_wmi_helper.c to depend on CONFIG_DELL_LAPTOP instead
-> of CONFIG_LEDS_DELL_NETBOOKS.
-> 
-> Patch 5 reverts dell-led to the state it was in after its initial commit
-> 72dcd8d08aca ("leds: Add Dell Business Class Netbook LED driver") by
-> removing all remnants of the microphone mute LED handling code.
-> 
-> Patch 6 moves all that is left of dell-led (i.e. the activity LED part,
-> as originally implemented), to a new module which is placed in
-> drivers/platform/x86/dell-wmi-led.c.
-> 
-> As all patches except patch 3 in this series affect the LED subsystem,
-> the series is based on linux-leds/for-4.11.
-> 
-> Anthony, I would be grateful if you could test this patch series on the
-> Dell machines you have access to that were previously supported by
-> dell-led as Jacek needs a Tested-by from someone to sign off on these
-> changes.  Please note the Kconfig option rename done by the last patch.
-> Thanks!
-> 
-> Changes from v1:
-> 
->   - Squash patches 2-4 from v1 into a single patch (#2 in v2).
-> 
->   - Add patch 3.
-> 
->   - Fix subject pattern in patch 4.
-> 
->   - Slight commit message adjustments, including fixing a typo
->     ("COFIG_LEDS_DELL_NETBOOKS") in patch 6.
-> 
->   - Remove the name of the module's source file from the header comment
->     in drivers/platform/x86/dell-wmi-led.c to avoid the need to update
->     it in the future.
-> 
->  drivers/leds/Kconfig                               |  9 ---
->  drivers/leds/Makefile                              |  1 -
->  drivers/platform/x86/Kconfig                       |  8 +++
->  drivers/platform/x86/Makefile                      |  1 +
->  drivers/platform/x86/dell-laptop.c                 | 28 ++++++++
->  .../dell-led.c => platform/x86/dell-wmi-led.c}     | 75 ++--------------------
->  include/linux/dell-led.h                           |  6 +-
->  sound/pci/hda/dell_wmi_helper.c                    | 30 ++++-----
->  8 files changed, 60 insertions(+), 98 deletions(-)
->  rename drivers/{leds/dell-led.c => platform/x86/dell-wmi-led.c} (73%)
-> 
+Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ arch/x86/Kconfig                                                 | 4 ----
+ arch/x86/platform/atom/Makefile                                  | 1 -
+ drivers/acpi/acpi_lpss.c                                         | 2 +-
+ drivers/platform/x86/Kconfig                                     | 4 ++++
+ drivers/platform/x86/Makefile                                    | 1 +
+ {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c      | 9 ++++-----
+ .../include/asm => include/linux/platform_data/x86}/pmc_atom.h   | 0
+ 7 files changed, 10 insertions(+), 11 deletions(-)
+ rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c (99%)
+ rename {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h (100%)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e487493..7b4f178 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2789,10 +2789,6 @@ config X86_DMA_REMAP
+ 	bool
+ 	depends on STA2X11
+ 
+-config PMC_ATOM
+-	def_bool y
+-        depends on PCI
+-
+ source "net/Kconfig"
+ 
+ source "drivers/Kconfig"
+diff --git a/arch/x86/platform/atom/Makefile b/arch/x86/platform/atom/Makefile
+index 40983f5..57be88f 100644
+--- a/arch/x86/platform/atom/Makefile
++++ b/arch/x86/platform/atom/Makefile
+@@ -1,2 +1 @@
+-obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_PUNIT_ATOM_DEBUG)	+= punit_atom_debug.o
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 8ea836c..90d112a 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -18,6 +18,7 @@
+ #include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/clk-lpss.h>
++#include <linux/platform_data/x86/pmc_atom.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/delay.h>
+@@ -31,7 +32,6 @@ ACPI_MODULE_NAME("acpi_lpss");
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+ #include <asm/iosf_mbi.h>
+-#include <asm/pmc_atom.h>
+ 
+ #define LPSS_ADDR(desc) ((unsigned long)&desc)
+ 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 59aa8e3..8b1988a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1077,3 +1077,7 @@ config MLX_CPLD_PLATFORM
+ 	  cables and fans on the wide range Mellanox IB and Ethernet systems.
+ 
+ endif # X86_PLATFORM_DEVICES
++
++config PMC_ATOM
++       def_bool y
++       depends on PCI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index d4111f0..49ee7ef 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -74,5 +74,6 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+ obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
++obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
+diff --git a/arch/x86/platform/atom/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+similarity index 99%
+rename from arch/x86/platform/atom/pmc_atom.c
+rename to drivers/platform/x86/pmc_atom.c
+index 964ff4f..e1dfb1b 100644
+--- a/arch/x86/platform/atom/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -15,14 +15,13 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/debugfs.h>
++#include <linux/device.h>
+ #include <linux/init.h>
++#include <linux/io.h>
++#include <linux/platform_data/x86/pmc_atom.h>
+ #include <linux/pci.h>
+-#include <linux/device.h>
+-#include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+-#include <linux/io.h>
+-
+-#include <asm/pmc_atom.h>
+ 
+ struct pmc_bit_map {
+ 	const char *name;
+diff --git a/arch/x86/include/asm/pmc_atom.h b/include/linux/platform_data/x86/pmc_atom.h
+similarity index 100%
+rename from arch/x86/include/asm/pmc_atom.h
+rename to include/linux/platform_data/x86/pmc_atom.h
+-- 
+2.7.4
