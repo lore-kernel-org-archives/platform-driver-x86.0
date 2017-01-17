@@ -1,45 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 6/6] dell-led: move driver to
- drivers/platform/x86/dell-wmi-led.c
-Date: Tue, 17 Jan 2017 12:08:09 +0100
-Message-ID: <20170117110809.GC26116@xo-6d-61-c0.localdomain>
-References: <20170116132204.6421-1-kernel@kempniu.pl>
- <20170116132204.6421-7-kernel@kempniu.pl>
- <b702265e-893e-e3b1-1262-f959d230d552@gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 0/2] fujitsu-laptop: acpi_fujitsu_notify() cleanup
+Date: Tue, 17 Jan 2017 21:49:35 +1030
+Message-ID: <20170117111935.GC22965@marvin.atrad.com.au>
+References: <20170117110735.2543-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38382 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750957AbdAQLSC (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:38942 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750747AbdAQLUa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2017 06:18:02 -0500
+        Tue, 17 Jan 2017 06:20:30 -0500
 Content-Disposition: inline
-In-Reply-To: <b702265e-893e-e3b1-1262-f959d230d552@gmail.com>
+In-Reply-To: <20170117110735.2543-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Richard Purdie <rpurdie@rpsys.net>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi!
+Hi Michael
 
-> Thanks for the patch set.
-> 
-> Would you mind fixing also the following issues raised by
-> checkpatch.pl?:
-> 
-> WARNING: Missing a blank line after declarations
-> #376: FILE: drivers/platform/x86/dell-wmi-led.c:64:
-> +	struct bios_args args;
-...
-> The fixes could be placed in an incremental patch after this one.
+On Tue, Jan 17, 2017 at 12:07:33PM +0100, Micha?? K??pie?? wrote:
+> Here are two minor cleanups for acpi_fujitsu_notify() that I came up
+> with while preparing the sparse keymap migration.  They can be reviewed
+> and applied independently of the other series for fujitsu-laptop I
+> posted recently.
 
-Anyway, move itself is ok (and the checkpatch issues are not that serious anyway.)
+Ok.
 
-Thanks,
+> Jonathan, I decided to post this after re-reading the subjects of Alan
+> Jenkins' cleanup patches - I believe his work should not overlap with
+> this series.  In case it does, feel free to ignore or postpone this
+> series.  Also, there is no rush to apply these, they are just a base for
+> the upcoming sparse keymap patches.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+I understand.  Thanks for posting these.  Like the earlier patch series they
+look fairly innoculous but I would like to run them up on my hardware just
+to be sure.  I do not have the hardware with me at linux.conf.au so this can
+only be done early next week.  Apologies for the delay.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Regards
+  jonathan
