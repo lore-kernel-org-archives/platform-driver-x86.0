@@ -1,51 +1,31 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH] platform/x86: surface3-wmi: fix uninitialized symbol
-Date: Wed, 18 Jan 2017 09:13:46 +0100
-Message-ID: <20170118081346.8451-1-benjamin.tissoires@redhat.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42906 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751441AbdARIjT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2017 03:39:19 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 3/5] arch/x86/platform/atom: Move pmc_atom to
+ drivers/platform/x86
+Date: Wed, 18 Jan 2017 10:28:09 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1701181027490.3464@nanos>
+References: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com> <1484690270-28425-4-git-send-email-pierre-louis.bossart@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484690270-28425-4-git-send-email-pierre-louis.bossart@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The patch 3dda3b3798f9: "platform/x86: Add custom surface3 platform
-device for controlling LID" from Nov 25, 2016, leads to the following
-static checker warning:
+On Tue, 17 Jan 2017, Pierre-Louis Bossart wrote:
 
-        drivers/platform/x86/surface3-wmi.c:168 s3_wmi_check_platform_device()
-        error: uninitialized symbol 'ts_adev'.
+> From: Irina Tirdea <irina.tirdea@intel.com>
+> 
+> The pmc_atom driver does not contain any architecture specific
+> code. It only enables the SoC Power Management Controller driver
+> for BayTrail and CherryTrail platforms.
+> 
+> Move the pmc_atom driver from arch/x86/platform/atom to
+> drivers/platform/x86. Also clean-up and reorder include files by
+> alphabetical order in pmc_atom.h
+> 
+> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
-
-Hi Dan,
-
-Sorry for the lag in treating this simple defect.
-
-Cheers,
-Benjamin
-
- drivers/platform/x86/surface3-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
-index cbf4d83..676cfca 100644
---- a/drivers/platform/x86/surface3-wmi.c
-+++ b/drivers/platform/x86/surface3-wmi.c
-@@ -139,7 +139,7 @@ static acpi_status s3_wmi_attach_spi_device(acpi_handle handle,
- 
- static int s3_wmi_check_platform_device(struct device *dev, void *data)
- {
--	struct acpi_device *adev, *ts_adev;
-+	struct acpi_device *adev, *ts_adev = NULL;
- 	acpi_handle handle;
- 	acpi_status status;
- 
--- 
-2.9.3
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
