@@ -1,89 +1,46 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: fujitsu-laptop: rework
- logolamp_set() to properly handle errors
-Date: Wed, 18 Jan 2017 21:02:12 +0200
-Message-ID: <CAHp75VeuKy8351Bp2z__C01eqaGwmGGJ9s=fy8KWaL7RGt+Arg@mail.gmail.com>
-References: <20170109131417.9677-1-kernel@kempniu.pl> <20170109133520.GA31198@marvin.atrad.com.au>
+Subject: Re: [PATCH v2 4/6] platform/x86: dell-laptop: import
+ dell_micmute_led_set() from drivers/leds/dell-led.c
+Date: Wed, 18 Jan 2017 21:12:10 +0200
+Message-ID: <CAHp75Vcp8vriBqR0ZUbPCZ2Q+Dio3=hkjSLBG2PH2ys71rfBug@mail.gmail.com>
+References: <20170116132204.6421-1-kernel@kempniu.pl> <20170116132204.6421-5-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170109133520.GA31198@marvin.atrad.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170116132204.6421-5-kernel@kempniu.pl>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 9, 2017 at 3:35 PM, Jonathan Woithe <jwoithe@just42.net> wrote:
-> On Mon, Jan 09, 2017 at 02:14:16PM +0100, Micha?? K??pie?? wrote:
->> Potential errors returned by some call_fext_func() calls inside
->> logolamp_set() are currently ignored.  Rework logolamp_set() to properly
->> handle them.  This causes one more call_fext_func() call to be made in
->> the LED_OFF case, though one could argue that this is logically the
->> right thing to do (even though the extra call is not needed to shut the
->> LED off).
->>
->> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+On Mon, Jan 16, 2017 at 3:22 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+> To ensure all users of dell-smbios are in drivers/platform/x86, move the
+> dell_micmute_led_set() method from drivers/leds/dell-led.c to
+> drivers/platform/x86/dell-laptop.c.
 >
-> Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-Both patches pushed to testing, thanks!
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
->
->> ---
->> Changes from v1:
->>
->>   - Decrease indentation by rearranging logical conditions.
->>   - Split variable declarations into two lines.
->>
->>  drivers/platform/x86/fujitsu-laptop.c | 23 ++++++++++++++---------
->>  1 file changed, 14 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
->> index b725a907a91f..34b8481fb0ed 100644
->> --- a/drivers/platform/x86/fujitsu-laptop.c
->> +++ b/drivers/platform/x86/fujitsu-laptop.c
->> @@ -271,15 +271,20 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
->>  static int logolamp_set(struct led_classdev *cdev,
->>                              enum led_brightness brightness)
->>  {
->> -     if (brightness >= LED_FULL) {
->> -             call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
->> -             return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_ON);
->> -     } else if (brightness >= LED_HALF) {
->> -             call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_ON);
->> -             return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, FUNC_LED_OFF);
->> -     } else {
->> -             return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, FUNC_LED_OFF);
->> -     }
->> +     int poweron = FUNC_LED_ON, always = FUNC_LED_ON;
->> +     int ret;
->> +
->> +     if (brightness < LED_HALF)
->> +             poweron = FUNC_LED_OFF;
->> +
->> +     if (brightness < LED_FULL)
->> +             always = FUNC_LED_OFF;
->> +
->> +     ret = call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     return call_fext_func(FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, always);
->>  }
->>
->>  static int kblamps_set(struct led_classdev *cdev,
->> --
->> 2.11.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> --
+Couple of nitpicks below.
 
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/i8042.h>
+>  #include <linux/debugfs.h>
 
+>  #include <linux/seq_file.h>
+> +#include <linux/dell-led.h>
 
--- 
+Perhaps move this one line above
+
+> +#define GLOBAL_MIC_MUTE_ENABLE 0x364
+> +#define GLOBAL_MIC_MUTE_DISABLE 0x365
+
+Same as Pali told.
+
+--=20
 With Best Regards,
 Andy Shevchenko
