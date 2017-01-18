@@ -1,102 +1,68 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH]: dell-wmi: Found location of 'auto brightness' key in dmi table
-Date: Wed, 18 Jan 2017 20:15:55 +0100
-Message-ID: <201701182015.55214@pali>
-References: <CAMFK4TN85t6ynbf3=hfTfjyxeyY5W-j0g42DxTrL0=STCJ31rw@mail.gmail.com> <201701181933.37320@pali> <CAMFK4TO=Nt56Ygs0gKWbj+JoEfx7gG=Ug_3Cid-g3Y5uSNtuzw@mail.gmail.com>
+From: Samuel Sieb <samuel@sieb.net>
+Subject: Acer ES1-522 wifi blocked and Fn keys don't work (WMI)
+Date: Wed, 18 Jan 2017 12:05:52 -0800
+Message-ID: <3743f661-2ef2-1f54-819c-8dc15569f905@sieb.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3903306.trjb5J2qFU";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:36025 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753403AbdARTRe (ORCPT
+Received: from smtp-out-no.shaw.ca ([64.59.134.12]:33175 "EHLO
+        smtp-out-no.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750836AbdARUQU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Jan 2017 14:17:34 -0500
-Received: by mail-wm0-f68.google.com with SMTP id r126so6320069wmr.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Jan 2017 11:16:03 -0800 (PST)
-In-Reply-To: <CAMFK4TO=Nt56Ygs0gKWbj+JoEfx7gG=Ug_3Cid-g3Y5uSNtuzw@mail.gmail.com>
+        Wed, 18 Jan 2017 15:16:20 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henk <henk.vergonet@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: jlee@suse.com
 
---nextPart3903306.trjb5J2qFU
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+I have a user with an Acer ES1-522 laptop and the wifi isn't working. 
+The driver detects it correctly, but rfkill says it's hard blocked.  The 
+wifi toggle key doesn't have any effect.  The touchpad toggle button 
+disables the touchpad, but doesn't enable it when pressed again. 
+However, suspend/resume resets the touchpad to working again.  The 
+acer-wmi module is loaded and an input device is created.  However, none 
+of the listed keys actually provide any output.
 
-On Wednesday 18 January 2017 20:06:11 Henk wrote:
-> No need for user space application, this is handled by dell-wmi.c
-> itself and the key is translated into a regular linux key-code like
-> the keys for brightness up/down.
->=20
-> For the latter these are already translated to:
-> #define KEY_BRIGHTNESSDOWN      224
-> #define KEY_BRIGHTNESSUP        225
->=20
-> Now with this patch adds support for:
-> #define KEY_BRIGHTNESS_AUTO 244
->=20
-> See the enclosed picture for actual key
+I blacklisted the acer_wmi module and now the wifi works.  Is there any 
+further information I could provide that would help?
 
-So... this key enable/disable automatic display brightness based on=20
-integrated ALS sensors. From your description "Found location of 'auto=20
-brightness'" I did not understand what exactly you mean... As I know=20
-these Dell keyboards, picture helped me :-) I would suggest to describe=20
-your change more preciously but patch is OK for me.
+02:00.0 Network controller: Qualcomm Atheros QCA9565 / AR9565 Wireless 
+Network Adapter (rev 01)
+	Subsystem: Lite-On Communications Inc Device 0642
+	Flags: bus master, fast devsel, latency 0, IRQ 40
+	Memory at f0a00000 (64-bit, non-prefetchable) [size=512K]
+	Expansion ROM at f0a80000 [disabled] [size=64K]
+	Capabilities: [40] Power Management version 2
+	Capabilities: [50] MSI: Enable- Count=1/4 Maskable+ 64bit+
+	Capabilities: [70] Express Endpoint, MSI 00
+	Capabilities: [100] Advanced Error Reporting
+	Capabilities: [140] Virtual Channel
+	Capabilities: [160] Device Serial Number 00-00-00-00-00-00-00-00
+	Kernel driver in use: ath9k
+	Kernel modules: ath9k		
 
-> 2017-01-18 19:33 GMT+01:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> > On Wednesday 18 January 2017 19:27:00 you wrote:
-> > > Tested on Dell Lattitude E6500.
-> > >=20
-> > > Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
-> > >=20
-> > > diff --git a/drivers/platform/x86/dell-wmi.c
-> > > b/drivers/platform/x86/dell-wmi.c
-> > > index 75e6370..2949aee 100644
-> > > --- a/drivers/platform/x86/dell-wmi.c
-> > > +++ b/drivers/platform/x86/dell-wmi.c
-> > > @@ -229,7 +229,7 @@ static const u16 bios_to_linux_keycode[256]
-> > > __initconst =3D {
-> > >=20
-> > >      [18]    =3D KEY_PROG1,
-> > >      [19]    =3D KEY_BRIGHTNESSDOWN,
-> > >      [20]    =3D KEY_BRIGHTNESSUP,
-> > >=20
-> > > -    [21]    =3D KEY_UNKNOWN,
-> > > +    [21]    =3D KEY_BRIGHTNESS_AUTO,
-> > >=20
-> > >      [22]    =3D KEY_KBDILLUMTOGGLE,
-> > >      [23]    =3D KEY_UNKNOWN,
-> > >      [24]    =3D KEY_SWITCHVIDEOMODE,
-> >=20
-> > Hi! Can you describe more details? Is that key handled by
-> > notebook's firmware itself or do you need some userspace
-> > application for handling?
-> >=20
-> > And what should that key suppose to do on your notebook?
-> >=20
-> > --
-> > Pali Roh=C3=A1r
-> > pali.rohar@gmail.com
+I: Bus=0019 Vendor=0000 Product=0000 Version=0000
+N: Name="Acer WMI hotkeys"
+P: Phys=wmi/input0
+S: Sysfs=/devices/virtual/input/input8
+U: Uniq=
+H: Handlers=kbd event7 rfkill
+B: PROP=0
+B: EV=13
+B: KEY=1c0000 0 0 0 0 1600800000c00 300000 0 0
+B: MSC=10
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Possibly related, the accelerometer gives an error when trying to read it.
+# evtest /dev/input/event8
+evtest: Operation not permitted
 
---nextPart3903306.trjb5J2qFU
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlh/vusACgkQi/DJPQPkQ1J/gwCferU4AXynBFyogRGIqhgRoURW
-p8QAn0bqX5QAWyQyCaKNPD9J1Z8/cK+7
-=8WN5
------END PGP SIGNATURE-----
-
---nextPart3903306.trjb5J2qFU--
+I: Bus=0019 Vendor=0000 Product=0000 Version=0000
+N: Name="Acer BMA150 accelerometer"
+P: Phys=wmi/input1
+S: Sysfs=/devices/virtual/input/input9
+U: Uniq=
+H: Handlers=event8 js0
+B: PROP=0
+B: EV=9
+B: ABS=7
