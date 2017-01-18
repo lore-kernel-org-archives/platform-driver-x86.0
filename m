@@ -1,116 +1,41 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v7 0/5] Add platform clock for BayTrail platforms
-Date: Wed, 18 Jan 2017 12:50:30 +0200
-Message-ID: <1484736630.2133.184.camel@linux.intel.com>
-References: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v7 02/14] xtensa: skip adding literal when
+	SORT() is used
+Date: Wed, 18 Jan 2017 12:29:51 +0100
+Message-ID: <20170118112951.62drjsk264rhe5lj@pd.tnic>
+References: <20170109145833.11502-1-mcgrof@kernel.org>
+ <20170115211057.17167-1-mcgrof@kernel.org>
+ <20170115211057.17167-3-mcgrof@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
+Content-Disposition: inline
+In-Reply-To: <20170115211057.17167-3-mcgrof@kernel.org>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: gnomes@lxorguk.ukuu.org.uk, dalias@libc.org, linux-ia64@vger.kernel.org, jkosina@suse.cz, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, platform-driver-x86@vger.kernel.org, James.Bottomley@HansenPartnership.com, paul.gortmaker@windriver.com, paulus@samba.org, mpe@ellerman.id.au, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, wangnan0@huawei.com, mchehab@osg.samsung.com, linux-arch@vger.kernel.org, markus.heiser@darmarit.de, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, will.deacon@arm.com, korea.drzix@gmail.com, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, dsahern@gmail.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, dvhart@infradead.org, dwmw2@infradead.org, linux@roeck-us.net, david.vrabel@citrix.com, linux-xte
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2017-01-17 at 15:57 -0600, Pierre-Louis Bossart wrote:
-> These patches specifically enable the audio MCLK required by Baytrail
-> CR devices. It is the remaining part of a bigger set of patches
-> (already merged in Mark Brown's tree) that enable sound for Baytrail
-> CR
-> devices (especially Asus T100TAF) [1]. They include the clock driver
-> and clock enabling in the pmc_atom code (along with moving of the
-> non-architectural pmc_atom driver code into drivers/platform/x86 as
-> suggested by Thomas Gleixner [2]). This move includes a new header in
-> include/linux/platform_data/x86/. While there is an agreement that the
-> definitions for PMC clocks are not really platform data this location
-> is seen as a good-enough compromise with an agreement between Darren
-> Hart and Andy Shevchenko [3]
-> 
-> [1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-August/1
-> 11704.html
-> [2] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-October/
-> 113936.html
-> [3] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-December
-> /115892.html
-> 
-
-Stephen, I see no issues with the patches. If you want to push them
-through your tree, take a tag from PDx86 subsystem point of view:
-
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-
-> Changes from v6:
->  - Addressed comments from Stephen Boyd, Andy Shevchenko and Vinod
-> Koul
->  - Renamed clk-byt-plt to clk-pmc-atom
->  - Rebase to 4.10-rc3 (broonie/for-next)
->  - Added helper functions to make error handling more compact
->  - Removed module-related code since it's not possible/supported
->  - Removed useless tests on remove
->  - PMC_CLK_OFFSET move to clk-pcm-atom (more logical)
->  - Split typo correction and makefile fix in separate patches
->  - small fixes (spaces, defaults in switches, alphabetical order, use
-> of
-> clk_writel/readl and no test on write, simpler error handling, use of
-> while(i--), unsigned loop variables, kernel doc fields, format-patch
-> -M
->  -C -D, use of PLATFORM_DEVID_NONE)
-> 
-> Changes from v5:
->  - fix build error reported by kbuild test robot
->  - split the clk driver code from x86 platform changes
-> 
-> Changes from v4:
->  - move the pmc_atom driver from arch/x86/platform/atom to
-> drivers/platform/x86
-> 
-> Changes from v3:
->  - replace devm_kzalloc with devm_kcalloc
->  - add x86 architecture maintainers
-> 
-> Changes from v2:
->  - move clk platform data structures to a separate include file
->  - store clk_hw pointer for the fixed rate clocks
-> 
-> Changes from v1:
->  - register the clk device as child of pmc device
->  - pass iomem pointer from pmc driver to clk driver to avoid using
-> pmc_atom_read()/write() and use readl/writel API instead
->  - use devm_clk_hw_register/clkdev_hw_create instead of
-> clk_register/clkdev_create
-> 
-> Irina Tirdea (3):
->   clk: x86: Add Atom PMC platform clocks
->   arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
->   platform/x86: Enable Atom PMC platform clocks
-> 
-> Pierre-Louis Bossart (2):
->   clk: Make x86/ conditional on CONFIG_COMMON_CLK
->   platform/x86: fix typo in comment
-> 
->  arch/x86/Kconfig                                   |   4 -
->  arch/x86/platform/atom/Makefile                    |   1 -
->  drivers/acpi/acpi_lpss.c                           |   2 +-
->  drivers/clk/Makefile                               |   2 +
->  drivers/clk/x86/Makefile                           |   1 +
->  drivers/clk/x86/clk-pmc-atom.c                     | 373
-> +++++++++++++++++++++
->  drivers/platform/x86/Kconfig                       |   5 +
->  drivers/platform/x86/Makefile                      |   1 +
->  .../atom => drivers/platform/x86}/pmc_atom.c       |  88 ++++-
->  include/linux/platform_data/x86/clk-pmc-atom.h     |  44 +++
->  .../linux/platform_data/x86}/pmc_atom.h            |   2 +-
->  11 files changed, 508 insertions(+), 15 deletions(-)
->  create mode 100644 drivers/clk/x86/clk-pmc-atom.c
->  rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c
-> (87%)
->  create mode 100644 include/linux/platform_data/x86/clk-pmc-atom.h
->  rename {arch/x86/include/asm =>
-> include/linux/platform_data/x86}/pmc_atom.h (98%)
-> 
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+T24gU3VuLCBKYW4gMTUsIDIwMTcgYXQgMDE6MTA6NDVQTSAtMDgwMCwgTHVpcyBSLiBSb2RyaWd1
+ZXogd3JvdGU6Cj4gV2hlbiBTT1JUKGZvby4qKSBpcyB1c2VkIHRoZSBjdXJyZW50IHNlZCByZXBs
+YWNlbWVudHMgYWRkCj4gU09SVChmb28ubGl0ZXJhbCBmb28uKiksIHRoaXMgYnJlYWtzIGxpbmtp
+bmcuIEF2b2lkIGFkZGluZwo+IGxpdGVyYWxzIGZvciBTT1JUIGdsb2JzLCBpZiBuZWVkZWQsIHRo
+ZXNlIG5lZWQgdG8gYmUgYWRkZWQKPiBtYW51YWxseS4KClBsZWFzZSByZXdyaXRlIHRoaXMgY29t
+bWl0IG1lc3NhZ2UgYnkgYnJlYWtpbmcgaW50byBzZXBhcmF0ZSBzZW50ZW5jZXMsCmFkZGluZyBw
+dW5jdHVhdGlvbiwgZXRjLgoKQWxzbywgInRoZSBjdXJyZW50IHNlZCByZXBsYWNlbWVudHMgYWRk
+IiBzb3VuZHMgcmVhbGx5IHN0cmFuZ2UgYW5kIG1ha2VzCm1lIHdvbmRlciB3aGF0IGRvIHlvdSBt
+ZWFuLiBXaGF0IGFyZSAic2VkIHJlcGxhY2VtZW50cyI/IEkgdGhpbmsgeW91Cm1lYW4gdGhlICJz
+ZWQgcmVnZXggYWRkcyIgZnJvbSBsb29raW5nIGF0IHRoZSBkaWZmLgoKLS0gClJlZ2FyZHMvR3J1
+c3MsCiAgICBCb3Jpcy4KClNVU0UgTGludXggR21iSCwgR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwg
+SmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbiwgSFJCIDIxMjg0IChBRyBOw7xybmJlcmcpCi0t
+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRl
+dmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhl
+bi5vcmcveGVuLWRldmVsCg==
