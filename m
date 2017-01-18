@@ -1,62 +1,47 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: surface3-wmi: fix uninitialized symbol
-Date: Wed, 18 Jan 2017 21:01:44 +0200
-Message-ID: <CAHp75Vd_xMLHWr6i_w6XWLM3=imgmJNSe_e4QzZbbZ8ixrmBQg@mail.gmail.com>
-References: <20170118081346.8451-1-benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 6+/6] platform/x86: dell-wmi-led: fix coding style issues
+Date: Wed, 18 Jan 2017 21:06:00 +0200
+Message-ID: <CAHp75Vc3LnFGPjMt8uYQeqHWPqMM-rFzsdLA94C5bJQgq++K6w@mail.gmail.com>
+References: <20170116132204.6421-1-kernel@kempniu.pl> <20170117071714.21594-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170118081346.8451-1-benjamin.tissoires@redhat.com>
+In-Reply-To: <20170117071714.21594-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Anthony Wong <anthony.wong@canonical.com>, linux-leds@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 18, 2017 at 10:13 AM, Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
-> The patch 3dda3b3798f9: "platform/x86: Add custom surface3 platform
-> device for controlling LID" from Nov 25, 2016, leads to the following
-> static checker warning:
->
->         drivers/platform/x86/surface3-wmi.c:168 s3_wmi_check_platform_device()
->         error: uninitialized symbol 'ts_adev'.
+On Tue, Jan 17, 2017 at 9:17 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+> Fix coding style issues in dell-wmi-led which checkpatch complains about
+> to make sure the module gets a clean start in the x86 platform driver
+> subsystem.
+
+> +       status =3D wmi_evaluate_method(DELL_LED_BIOS_GUID, 1, 1, &input, =
+&output);
 >
 
-Pushed to fixes, thanks!
+You may remove extra line.
 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> ---
->
-> Hi Dan,
->
-> Sorry for the lag in treating this simple defect.
->
-> Cheers,
-> Benjamin
->
->  drivers/platform/x86/surface3-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
-> index cbf4d83..676cfca 100644
-> --- a/drivers/platform/x86/surface3-wmi.c
-> +++ b/drivers/platform/x86/surface3-wmi.c
-> @@ -139,7 +139,7 @@ static acpi_status s3_wmi_attach_spi_device(acpi_handle handle,
->
->  static int s3_wmi_check_platform_device(struct device *dev, void *data)
->  {
-> -       struct acpi_device *adev, *ts_adev;
-> +       struct acpi_device *adev, *ts_adev = NULL;
->         acpi_handle handle;
->         acpi_status status;
->
-> --
-> 2.9.3
->
+>         if (ACPI_FAILURE(status))
+>                 return status;
 
+> -       if (0 =3D=3D on_eighths)
+> +       if (on_eighths =3D=3D 0)
+>                 on_eighths =3D 1;
+>         if (on_eighths > 255)
+>                 on_eighths =3D 255;
 
+> -       if (0 =3D=3D off_eighths)
+> +       if (off_eighths =3D=3D 0)
+>                 off_eighths =3D 1;
+>         if (off_eighths > 255)
+>                 off_eighths =3D 255;
 
--- 
+Obviously they both are custom clamp{_t}().
+
+--=20
 With Best Regards,
 Andy Shevchenko
