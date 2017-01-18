@@ -1,96 +1,51 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v7 0/5] Add platform clock for BayTrail platforms
-Date: Tue, 17 Jan 2017 15:57:45 -0600
-Message-ID: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH] platform/x86: surface3-wmi: fix uninitialized symbol
+Date: Wed, 18 Jan 2017 09:13:46 +0100
+Message-ID: <20170118081346.8451-1-benjamin.tissoires@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:57793 "EHLO mga14.intel.com"
+Received: from mx1.redhat.com ([209.132.183.28]:42906 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751316AbdAQWEA (ORCPT
+        id S1751441AbdARIjT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Jan 2017 17:04:00 -0500
+        Wed, 18 Jan 2017 03:39:19 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-These patches specifically enable the audio MCLK required by Baytrail
-CR devices. It is the remaining part of a bigger set of patches
-(already merged in Mark Brown's tree) that enable sound for Baytrail CR
-devices (especially Asus T100TAF) [1]. They include the clock driver
-and clock enabling in the pmc_atom code (along with moving of the
-non-architectural pmc_atom driver code into drivers/platform/x86 as
-suggested by Thomas Gleixner [2]). This move includes a new header in
-include/linux/platform_data/x86/. While there is an agreement that the
-definitions for PMC clocks are not really platform data this location
-is seen as a good-enough compromise with an agreement between Darren
-Hart and Andy Shevchenko [3]
+The patch 3dda3b3798f9: "platform/x86: Add custom surface3 platform
+device for controlling LID" from Nov 25, 2016, leads to the following
+static checker warning:
 
-[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-August/111704.html
-[2] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-October/113936.html
-[3] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-December/115892.html
+        drivers/platform/x86/surface3-wmi.c:168 s3_wmi_check_platform_device()
+        error: uninitialized symbol 'ts_adev'.
 
-Changes from v6:
- - Addressed comments from Stephen Boyd, Andy Shevchenko and Vinod Koul
- - Renamed clk-byt-plt to clk-pmc-atom
- - Rebase to 4.10-rc3 (broonie/for-next)
- - Added helper functions to make error handling more compact
- - Removed module-related code since it's not possible/supported
- - Removed useless tests on remove
- - PMC_CLK_OFFSET move to clk-pcm-atom (more logical)
- - Split typo correction and makefile fix in separate patches
- - small fixes (spaces, defaults in switches, alphabetical order, use of
-clk_writel/readl and no test on write, simpler error handling, use of
-while(i--), unsigned loop variables, kernel doc fields, format-patch -M
- -C -D, use of PLATFORM_DEVID_NONE)
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+---
 
-Changes from v5:
- - fix build error reported by kbuild test robot
- - split the clk driver code from x86 platform changes
+Hi Dan,
 
-Changes from v4:
- - move the pmc_atom driver from arch/x86/platform/atom to
-drivers/platform/x86
+Sorry for the lag in treating this simple defect.
 
-Changes from v3:
- - replace devm_kzalloc with devm_kcalloc
- - add x86 architecture maintainers
+Cheers,
+Benjamin
 
-Changes from v2:
- - move clk platform data structures to a separate include file
- - store clk_hw pointer for the fixed rate clocks
+ drivers/platform/x86/surface3-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes from v1:
- - register the clk device as child of pmc device
- - pass iomem pointer from pmc driver to clk driver to avoid using
-pmc_atom_read()/write() and use readl/writel API instead
- - use devm_clk_hw_register/clkdev_hw_create instead of
-clk_register/clkdev_create
-
-Irina Tirdea (3):
-  clk: x86: Add Atom PMC platform clocks
-  arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
-  platform/x86: Enable Atom PMC platform clocks
-
-Pierre-Louis Bossart (2):
-  clk: Make x86/ conditional on CONFIG_COMMON_CLK
-  platform/x86: fix typo in comment
-
- arch/x86/Kconfig                                   |   4 -
- arch/x86/platform/atom/Makefile                    |   1 -
- drivers/acpi/acpi_lpss.c                           |   2 +-
- drivers/clk/Makefile                               |   2 +
- drivers/clk/x86/Makefile                           |   1 +
- drivers/clk/x86/clk-pmc-atom.c                     | 373 +++++++++++++++++++++
- drivers/platform/x86/Kconfig                       |   5 +
- drivers/platform/x86/Makefile                      |   1 +
- .../atom => drivers/platform/x86}/pmc_atom.c       |  88 ++++-
- include/linux/platform_data/x86/clk-pmc-atom.h     |  44 +++
- .../linux/platform_data/x86}/pmc_atom.h            |   2 +-
- 11 files changed, 508 insertions(+), 15 deletions(-)
- create mode 100644 drivers/clk/x86/clk-pmc-atom.c
- rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c (87%)
- create mode 100644 include/linux/platform_data/x86/clk-pmc-atom.h
- rename {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h (98%)
-
+diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/x86/surface3-wmi.c
+index cbf4d83..676cfca 100644
+--- a/drivers/platform/x86/surface3-wmi.c
++++ b/drivers/platform/x86/surface3-wmi.c
+@@ -139,7 +139,7 @@ static acpi_status s3_wmi_attach_spi_device(acpi_handle handle,
+ 
+ static int s3_wmi_check_platform_device(struct device *dev, void *data)
+ {
+-	struct acpi_device *adev, *ts_adev;
++	struct acpi_device *adev, *ts_adev = NULL;
+ 	acpi_handle handle;
+ 	acpi_status status;
+ 
 -- 
-2.7.4
+2.9.3
