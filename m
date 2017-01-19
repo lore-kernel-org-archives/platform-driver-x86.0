@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 03/10] platform/x86: intel_mid_powerbtn: Substitute mfld by mid
-Date: Thu, 19 Jan 2017 18:39:42 +0200
-Message-ID: <20170119163949.147183-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 07/10] platform/x86: intel_mid_powerbtn: Enable driver for Merrifield
+Date: Thu, 19 Jan 2017 18:39:46 +0200
+Message-ID: <20170119163949.147183-8-andriy.shevchenko@linux.intel.com>
 References: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
@@ -10,87 +10,119 @@ To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, lin
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Replace all occurrences of mfld by mid to emphasize that driver is used
-for Intel MID platforms.
+Enable this driver to handle events from Basin Cove PMIC, which is
+installed on Intel Merrifield platform.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_mid_powerbtn.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 56 +++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 05c52cc87852..3ab134ba832e 100644
+index ac02a0b8bef3..12fbf400f228 100644
 --- a/drivers/platform/x86/intel_mid_powerbtn.c
 +++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -1,5 +1,5 @@
- /*
-- * Power button driver for Medfield.
-+ * Power button driver for Intel MID platforms.
-  *
-  * Copyright (C) 2010 Intel Corp
-  *
-@@ -36,7 +36,7 @@
+@@ -28,6 +28,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/intel_scu_ipc.h>
+ 
+ #define DRIVER_NAME "msic_power_btn"
+ 
+@@ -39,12 +40,23 @@
   */
  #define MSIC_PWRBTNM    (1 << 0)
  
--static irqreturn_t mfld_pb_isr(int irq, void *dev_id)
-+static irqreturn_t mid_pb_isr(int irq, void *dev_id)
- {
- 	struct input_dev *input = dev_id;
- 	int ret;
-@@ -57,7 +57,7 @@ static irqreturn_t mfld_pb_isr(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static int mfld_pb_probe(struct platform_device *pdev)
-+static int mid_pb_probe(struct platform_device *pdev)
- {
++/* Intel Tangier */
++#define MRFLD_PBSTAT_ADDR	0xfffff61a
++#define MRFLD_PB_LEVEL		(1 << 4)	/* 1 - release, 0 - press */
++
++/* Basin Cove PMIC */
++#define BCOVE_PBIRQ		0x02
++#define BCOVE_IRQLVL1MSK	0x0c
++#define BCOVE_PBIRQMASK		0x0d
++
+ struct mid_pb_ddata {
+ 	struct device *dev;
++	void __iomem *reg;
+ 	int irq;
  	struct input_dev *input;
- 	int irq = platform_get_irq(pdev, 0);
-@@ -77,10 +77,10 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 
- 	input_set_capability(input, EV_KEY, KEY_POWER);
- 
--	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mfld_pb_isr,
-+	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
- 					  IRQF_ONESHOT, DRIVER_NAME, input);
- 	if (error) {
--		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
-+		dev_err(&pdev->dev, "Unable to request irq %d for MID power"
- 				"button\n", irq);
- 		return error;
- 	}
-@@ -117,7 +117,7 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int mfld_pb_remove(struct platform_device *pdev)
-+static int mid_pb_remove(struct platform_device *pdev)
- {
- 	dev_pm_clear_wake_irq(&pdev->dev);
- 	device_init_wakeup(&pdev->dev, false);
-@@ -125,17 +125,17 @@ static int mfld_pb_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static struct platform_driver mfld_pb_driver = {
-+static struct platform_driver mid_pb_driver = {
- 	.driver = {
- 		.name = DRIVER_NAME,
- 	},
--	.probe	= mfld_pb_probe,
--	.remove	= mfld_pb_remove,
-+	.probe	= mid_pb_probe,
-+	.remove	= mid_pb_remove,
+ 	int (*pbstat)(struct mid_pb_ddata *ddata, int *value);
+ 	int (*ack)(struct mid_pb_ddata *ddata);
++	int (*setup)(struct mid_pb_ddata *ddata);
  };
  
--module_platform_driver(mfld_pb_driver);
-+module_platform_driver(mid_pb_driver);
+ static int mfld_pbstat(struct mid_pb_ddata *ddata, int *value)
+@@ -78,6 +90,37 @@ static int mfld_ack(struct mid_pb_ddata *ddata)
+ 	return intel_msic_reg_update(INTEL_MSIC_IRQLVL1MSK, 0, MSIC_PWRBTNM);
+ }
  
- MODULE_AUTHOR("Hong Liu <hong.liu@intel.com>");
--MODULE_DESCRIPTION("Intel Medfield Power Button Driver");
-+MODULE_DESCRIPTION("Intel MID Power Button Driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:" DRIVER_NAME);
++static int mrfld_pbstat(struct mid_pb_ddata *ddata, int *value)
++{
++	struct input_dev *input = ddata->input;
++	u8 pbstat;
++
++	pbstat = readb(ddata->reg);
++
++	dev_dbg(input->dev.parent, "PB_INT status= %d\n", pbstat);
++
++	*value = !(pbstat & MRFLD_PB_LEVEL);
++	return 0;
++}
++
++static int mrfld_ack(struct mid_pb_ddata *ddata)
++{
++	return intel_scu_ipc_update_register(BCOVE_IRQLVL1MSK, 0, MSIC_PWRBTNM);
++}
++
++static int mrfld_setup(struct mid_pb_ddata *ddata)
++{
++	ddata->reg = devm_ioremap_nocache(ddata->dev, MRFLD_PBSTAT_ADDR, 1);
++	if (!ddata->reg)
++		return -ENOMEM;
++
++	/* Unmask the PBIRQ and MPBIRQ on Tangier */
++	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++
++	return 0;
++}
++
+ static irqreturn_t mid_pb_isr(int irq, void *dev_id)
+ {
+ 	struct mid_pb_ddata *ddata = dev_id;
+@@ -103,11 +146,18 @@ static struct mid_pb_ddata mfld_ddata = {
+ 	.ack	= mfld_ack,
+ };
+ 
++static struct mid_pb_ddata mrfld_ddata = {
++	.pbstat	= mrfld_pbstat,
++	.ack	= mrfld_ack,
++	.setup	= mrfld_setup,
++};
++
+ #define ICPU(model, ddata)	\
+ 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (kernel_ulong_t)&ddata }
+ 
+ static const struct x86_cpu_id mid_pb_cpu_ids[] = {
+ 	ICPU(INTEL_FAM6_ATOM_PENWELL,		mfld_ddata),
++	ICPU(INTEL_FAM6_ATOM_MERRIFIELD,	mrfld_ddata),
+ 	{}
+ };
+ 
+@@ -145,6 +195,12 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 	ddata->irq = irq;
+ 	ddata->input = input;
+ 
++	if (ddata->setup) {
++		error = ddata->setup(ddata);
++		if (error)
++			return error;
++	}
++
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.11.0
