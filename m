@@ -1,46 +1,38 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2] platform: x86: Support Turbo Boost Max 3.0 for non
- HWP systems
-Date: Thu, 19 Jan 2017 12:38:34 +0200
-Message-ID: <1484822314.2133.222.camel@linux.intel.com>
-References: <1484764155-183890-1-git-send-email-srinivas.pandruvada@linux.intel.com>
-         <1484779250.2833.34.camel@linux.intel.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 1/6] tools: add a userspace tools bug.h
+Date: Thu, 19 Jan 2017 12:01:35 +0100
+Message-ID: <20170119110135.GA28024@kroah.com>
+References: <20170109150249.11667-1-mcgrof@kernel.org>
+ <20170115211215.17216-1-mcgrof@kernel.org>
+ <20170115211215.17216-2-mcgrof@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:53127 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751444AbdASKkT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Jan 2017 05:40:19 -0500
-In-Reply-To: <1484779250.2833.34.camel@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Tim Chen <tim.c.chen@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170115211215.17216-2-mcgrof@kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: bp@alien8.de, bp@suse.de, hpa@zytor.com, acme@redhat.com, tglx@linutronix.de, mingo@redhat.com, jpoimboe@redhat.com, npiggin@gmail.com, mhiramat@kernel.org, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, dalias@libc.org, linux@arm.linux.org.uk, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, linux@roeck-us.net, torvalds@linux-foundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, pebolle@tiscali.nl, fontana@sharpeleven.org, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2017-01-18 at 14:40 -0800, Tim Chen wrote:
-> On Wed, 2017-01-18 at 10:29 -0800, Srinivas Pandruvada wrote:
-> >  
-> > +
-> > +static int itmt_legacy_cpu_online(unsigned int cpu)
-> > +{
-> > +	static u32 max_highest_perf = 0, min_highest_perf =
-> > U32_MAX;
-> 
-> Should the max_highest_perf and min_highest_perf be defined and
-> initialized
-> outside this function?  Otherwise the max and min value will be lost
-> and reset
-> each time a new cpu comes online.
-> 
-> We will always find max_highest_perf == min_highest_perf.
+On Sun, Jan 15, 2017 at 01:12:10PM -0800, Luis R. Rodriguez wrote:
+> This will be used later by the userspace linker-tables sandbox.
 
-Perhaps you missed static keyword there. Their behaviour is the same as
-for global variables, i.e. the initial value assigned only at the
-beginning.
+What is that?
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+> As a convenience, include bug.h on kernel.h -- this is not done
+> on upstream kernel.h, however most header files do include bug.h
+> eventually, if we were to only add the ones that need it we'd
+> need to copy a lot of headers to tools for the only purpose of
+> includeing bug.h.
+
+I can't parse this sentance at all, please simplify or clarify or
+something so that I understand what is going on here.
+
+> This simplifies that.
+
+What is "that"?  You can't do that for such a complex previous sentence.
+
+thanks,
+
+greg k-h
