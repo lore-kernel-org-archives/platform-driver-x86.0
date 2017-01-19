@@ -1,94 +1,57 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 02/10] platform/x86: intel_mid_powerbtn: Convert to use devm_*()
-Date: Thu, 19 Jan 2017 18:39:41 +0200
-Message-ID: <20170119163949.147183-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 10/10] platform/x86: intel_mid_powerbtn: Remove snail address
+Date: Thu, 19 Jan 2017 18:39:49 +0200
+Message-ID: <20170119163949.147183-11-andriy.shevchenko@linux.intel.com>
 References: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:52485 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753875AbdASQlF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 19 Jan 2017 11:41:05 -0500
 In-Reply-To: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Convert driver to use managed resources.
-This eliminates error path boilerplate and makes code neat.
+The snail address is subject to change. This already happened once.
+Remove the address completely from the file to avoid potential noise
+when update.
+
+While here, adjust copyright years and list authors.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_mid_powerbtn.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 361770568ad0..05c52cc87852 100644
+index 63ffd1ce3d1c..1d30b3549748 100644
 --- a/drivers/platform/x86/intel_mid_powerbtn.c
 +++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -66,7 +66,7 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return -EINVAL;
+@@ -1,7 +1,10 @@
+ /*
+  * Power button driver for Intel MID platforms.
+  *
+- * Copyright (C) 2010 Intel Corp
++ * Copyright (C) 2010,2017 Intel Corp
++ *
++ * Author: Hong Liu <hong.liu@intel.com>
++ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -11,10 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License along
+- * with this program; if not, write to the Free Software Foundation, Inc.,
+- * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+  */
  
--	input = input_allocate_device();
-+	input = devm_input_allocate_device(&pdev->dev);
- 	if (!input)
- 		return -ENOMEM;
- 
-@@ -77,22 +77,19 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 
- 	input_set_capability(input, EV_KEY, KEY_POWER);
- 
--	error = request_threaded_irq(irq, NULL, mfld_pb_isr, IRQF_ONESHOT,
--				     DRIVER_NAME, input);
-+	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mfld_pb_isr,
-+					  IRQF_ONESHOT, DRIVER_NAME, input);
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
- 				"button\n", irq);
--		goto err_free_input;
-+		return error;
- 	}
- 
--	device_init_wakeup(&pdev->dev, true);
--	dev_pm_set_wake_irq(&pdev->dev, irq);
--
- 	error = input_register_device(input);
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to register input dev, error "
- 				"%d\n", error);
--		goto err_free_irq;
-+		return error;
- 	}
- 
- 	platform_set_drvdata(pdev, input);
-@@ -111,27 +108,19 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to clear power button interrupt, "
- 				"error: %d\n", error);
--		goto err_free_irq;
-+		return error;
- 	}
- 
--	return 0;
-+	device_init_wakeup(&pdev->dev, true);
-+	dev_pm_set_wake_irq(&pdev->dev, irq);
- 
--err_free_irq:
--	free_irq(irq, input);
--err_free_input:
--	input_free_device(input);
--	return error;
-+	return 0;
- }
- 
- static int mfld_pb_remove(struct platform_device *pdev)
- {
--	struct input_dev *input = platform_get_drvdata(pdev);
--	int irq = platform_get_irq(pdev, 0);
--
- 	dev_pm_clear_wake_irq(&pdev->dev);
- 	device_init_wakeup(&pdev->dev, false);
--	free_irq(irq, input);
--	input_unregister_device(input);
- 
- 	return 0;
- }
+ #include <linux/init.h>
 -- 
 2.11.0
