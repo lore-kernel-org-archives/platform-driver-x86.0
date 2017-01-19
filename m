@@ -1,112 +1,94 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 09/14] jump_label: port __jump_table to
-	linker tables
-Date: Thu, 19 Jan 2017 12:24:11 +0100
-Message-ID: <20170119112411.GN28024@kroah.com>
-References: <20170109145833.11502-1-mcgrof@kernel.org>
- <20170115211057.17167-1-mcgrof@kernel.org>
- <20170115211057.17167-10-mcgrof@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xen.org>
-Content-Disposition: inline
-In-Reply-To: <20170115211057.17167-10-mcgrof@kernel.org>
-List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xen.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: gnomes@lxorguk.ukuu.org.uk, dalias@libc.org, linux-ia64@vger.kernel.org, jkosina@suse.cz, benh@kernel.crashing.org, ming.lei@canonical.com, heiko.carstens@de.ibm.com, platform-driver-x86@vger.kernel.org, James.Bottomley@HansenPartnership.com, paul.gortmaker@windriver.com, paulus@samba.org, mpe@ellerman.id.au, hpa@zytor.com, masami.hiramatsu.pt@hitachi.com, wangnan0@huawei.com, mchehab@osg.samsung.com, linux-arch@vger.kernel.org, markus.heiser@darmarit.de, sparclinux@vger.kernel.org, xen-devel@lists.xensource.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, will.deacon@arm.com, korea.drzix@gmail.com, x86@kernel.org, anil.s.keshavamurthy@intel.com, fontana@sharpeleven.org, mingo@redhat.com, dsahern@gmail.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, dvhart@infradead.org, bp@suse.de, linux@roeck-us.net, david.vrabel@citrix.com, linux-xtensa@linux
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 02/10] platform/x86: intel_mid_powerbtn: Convert to use devm_*()
+Date: Thu, 19 Jan 2017 18:39:41 +0200
+Message-ID: <20170119163949.147183-3-andriy.shevchenko@linux.intel.com>
+References: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gU3VuLCBKYW4gMTUsIDIwMTcgYXQgMDE6MTA6NTJQTSAtMDgwMCwgTHVpcyBSLiBSb2RyaWd1
-ZXogd3JvdGU6Cj4gTW92ZSB0aGUgX19qdW1wX3RhYmxlIGZyb20gdGhlIGEgY3VzdG9tIHNlY3Rp
-b24gc29sdXRpb24KPiB0byBhIGdlbmVyaWMgc29sdXRpb24sIHRoaXMgYXZvaWRpbmcgZXh0cmEg
-dm1saW51eC5sZHMuaAo+IGN1c3RvbWl6YXRpb25zLgo+IAo+IFRoaXMgYWxzbyBkZW1vcyB0aGUg
-dXNlIG9mIHRoZSAuZGF0YSBsaW5rZXIgdGFibGUgYW5kIG9mCj4gdGhlIHNoYXJlZCBhc20gY2Fs
-bCBwdXNoX3NlY3Rpb25fdGJsKCkuCj4gCj4gQnVpbHQtaW4ga2VybmVsIGZ1bmN0aW9uYWxpdHkg
-d2FzIHRlc3RlZCB3aXRoIENPTkZJR19TVEFUSUNfS0VZU19TRUxGVEVTVC4KPiBNb2R1bGVyICBr
-ZXJuZWwgZnVuY3Rpb25hbGl0eSB3YXMgdGVzdGVkIHdpdGggQ09ORklHX1RFU1RfU1RBVElDX0tF
-WVMuCj4gQm90aCB3b3JrIGFzIGV4cGVjdGVkLgo+IAo+IFNpbmNlIF9fanVtcF90YWJsZSBzZWN0
-aW9ucyBhcmUgYWxzbyBzdXBwb3J0ZWQgcGVyCj4gbW9kdWxlIHRoaXMgYWxzbyByZXF1aXJlZCBl
-eHBhbmRpbmcgbW9kdWxlLWNvbW1vbi5sZHMuUwo+IHRvIGNhcHR1cmUgYW5kIGZvbGQgYWxsIC5k
-YXRhLnRsYi5fX2p1bXBfdGFibGUuKiBvbnRvCj4gdGhlIHRoZSBzZWN0aW9uIF9fanVtcF90YWJs
-ZSAtLSBpbiB0aGlzIGNhc2UgZm9yIG1vZHVsZXMKPiBuZWVkIHRvIGtlZXAgYSByZWZlcmVuY2Ug
-aW4gcGxhY2UsIGdpdmVuIHRoZSBhbHRlcm5hdGl2ZQo+IGlzIHRvIHVzZSBERUZJTkVfTElOS1RB
-QkxFKHN0cnVjdCBqdW1wX2VudHJ5LCBfX2p1bXBfdGFibGUpCj4gcGVyIG1vZHVsZSAtLSBhbmQg
-bGF0ZXIgdGhyb3VnaCBtYWNybyBoYWNrcyBpbnN0YW50aWF0ZQo+IHRoZSBqdW1wIGVudHJpZXMg
-cGVyIG1vZHVsZSB1cG9uIGluaXQuIFRoaXMgaXMgZG9hYmxlIGJ1dAo+IHdlJ2QgbG9vc2Ugb3V0
-IG9uIHRoZSBzb3J0aW5nIG9mIHRoZSB0YWJsZSB1c2luZyB0aGUKPiBsaW5rZXIsIHRvIHNvcnQg
-d2UnZCBhbHdheXMgc3RpbGwgbmVlZCB0byBleHBhbmQgdGhlCj4gbW9kdWxlIGNvbW1vbiBsaW5r
-ZXIgc2NyaXB0LiBBbiBhbHRlcm5hdGl2ZSBtZWNoYW5pc20KPiBpcyBwb3NzaWJsZSB3aGljaCB3
-b3VsZCBtYWtlIHRoZXNlIGN1c3RvbSBtb2R1bGUgc2VjdGlvbnMKPiBleHRlbnNpb25zIGR5bmFt
-aWMgd2l0aG91dCByZXF1aXJpbmcgbWFudWFsIGNoYW5nZXMsIHRoaXMKPiBob3dldmVyIGlzIGJl
-c3QgZG9uZSBsYXRlciB0aHJvdWdoIGEgc2VwYXJhdGUgZXZvbHV0aW9uCj4gb25jZSBsaW5rZXIg
-dGFibGVzIGFyZSBpbiBwbGFjZS4KPiAKPiBBIGNhcmVmdWwgcmV2aWV3ZXIgbWF5IG5vdGUgdGhh
-dCBzb21lIGFyY2hpdGVjdHVyZXMgdXNlCj4gIlxuXHQiIHRvIHNlcGFyYXRlIGFzbSBjb2RlLCB3
-aGlsZSBvdGhlcnMganVzdCB1c2UgYSBuZXcgbGluZS4KPiBVcG9uIHJldmlldyBsYXN0IHRpbWUg
-aXQgd2FzIGRlZW1lZCByZWFzb25hYmxlIHRvIGZvciBhbGwKPiBhcmNoaXRlY3R1cmVzIHRvIGp1
-c3QgdXNlICJcbiIsIHRoaXMgaXMgZGVmaW5lZCBhcyBBU01fQ01EX1NFUCwKPiBhbmQgaWYgYW4g
-YXJjaGl0ZWN0dXJlIG5lZWRzIHRvIG92ZXJyaWRlIHRoZXkgY2FuIGRvIHNvIG9uIHRoZWlyCj4g
-YXJjaGl0ZWN0dXJlIHNlY3Rpb25zLmggcHJpb3IgdG8gaW5jbHVkaW5nIGFzbS1nZW5lcmljL3Nl
-Y3Rpb25zLmgKPiAKPiB2NjogcmVuYW1lIHRhYmxlIG1hY3JvIGFzIHN1Z2dlc3RlZCBieSBBbmR5
-IFNoZXZjaGVua28KPiAKPiB2NToKPiAKPiBvIFVzZSAuLnRibCBpbnN0ZWFkIG9mIC50YmwgYXMg
-c3VnZ2VzdGVkIGJ5IE5pY2hvbGFzIFBpZ2dpbi4KPiAgIFRoaXMgaXMgdGhlIHR5cGljYWwgd2F5
-IHRvIGF2b2lkIGNsYXNoIHdpdGggY29tcGlsZXIgZ2VuZXJhdGVkCj4gICBzZWN0aW9uLgo+IAo+
-IG8gUmVwbGFjZSBzZWN0aW9uIG1hY3JvcyB3aXRoIHNlY3Rpb24gbmFtZXMKPiAKPiBvIFVzZSBM
-SU5LVEFCTEVfU1RBUlQoKSBhbmQgTElOS1RBQkxFX0VORCgpCj4gCj4gbyBmaXhlZCB0aWxlIGp1
-bXAgbGFiZWwgcG9ydCAtLSB0aWxlIGdvdCBqdW1wIGxhYmVsIHN1cHBvcnQgYXMgb2YKPiAgIGNv
-bW1pdCA2NWE3OTJlODRmMjVkMSAoInRpbGUvanVtcF9sYWJlbDogYWRkIGp1bXAgbGFiZWwgc3Vw
-cG9ydAo+ICAgZm9yIFRJTEUtR3giKSwgYXMgc3VjaCB3ZSBqdXN0IG5lZWRlZCB0byBhZGp1c3Qg
-dGhlIGFzbSB0byBhY2NvdW50Cj4gICBmb3IgdGhlIG5ldyBsaW5rZXIgdGFibGUgQVBJIHVzZS4g
-VGhpcyBjb21taXQgd2FzIG1lcmdlZCBhcyBvZiB2NC41LXJjMS4KPiAKPiB2NDoKPiAKPiBvIFNv
-bWUgYXJjaGl0ZWN0dXJlcyBhbGxvdyBsaW5rZXIgc2NyaXB0cyB0byBmb2xsb3cgaW5jbHVkaW5n
-IGhlYWRlcgo+ICAgZmlsZXMsIHNvbWUgb3RoZXJzIGRvIG5vdCwgc28gaWYgeW91IG5lZWQgYSBo
-ZWxwZXIgb24gYSBsaW5rZXIgc2NyaXB0Cj4gICB5b3UgbmVlZCB0byBleHBsaWNpdGx5IGluY2x1
-ZGUgaXQuIFNvIGZvciBpbnN0YW5jZSBhbHRob3VnaAo+ICAgc2NyaXB0cy9tb2R1bGUtY29tbW9u
-Lmxkcy5TIGluY2x1ZGVzIDxhc20vdGFibGVzLmg+IGFuZCB0aGlzIGZpbGUKPiAgIGluY2x1ZGVz
-IDxhc20vc2VjdGlvbi1jb3JlLmg+LCB5b3Ugc3RpbGwgbmVlZCB0byBleHBsaWNpdGx5Cj4gICBp
-bmNsdWRlIGl0IG9uIHRoZSBsaW5rZXIgc2NyaXB0LiBUaGlzIGlzc3VlIGlzIHByZXNlbnQgb24g
-QVJNLgo+IAo+IG8gYXMgcGVyIEpvc2ggUG9pbWJvZXVmIG9wZW4gY29kZSB0aGUgc2VjdGlvbiB0
-YWJsZSBuYW1lIGluc3RlYWQKPiAgIG9mIGluY2x1ZGluZyB0aGUga2VybmVsIHNlY3Rpb24gaGVh
-ZGVycywgdGhlIHNpbXBsaWNpdHkgYW5kCj4gICBpbmRlcGVuZGVuY2UgZnJvbSB0aGUga2VybmVs
-IGlzIHByZWZlcnJlZC4KPiAKPiB2MzoKPiAKPiBvIE1vcmUgZWxhYm9yYXRlIHRlc3RzIHBlcmZv
-cm1lZAo+IG8gZmlyc3QgbW9kdWxhciBzdXBwb3J0IHVzZSBjYXNlLCBtb2R1bGUgdGVzdGVkIHdh
-cwo+ICAgQ09ORklHX1RFU1RfU1RBVElDX0tFWVMgKGxpYi90ZXN0X3N0YXRpY19rZXlzLmtvKSwg
-dGhpcwo+ICAgcmVxdWlyZWQgdXMgdG8gZXh0ZW5kIG1vZHVsZS1jb21tb24ubGRzLlMKPiBvIHVz
-ZSBnZW5lcmljIHB1c2hfc2VjdGlvbl90YmxfYW55KCkgZm9yIGFsbCBhcmNoaXRlY3R1cmVzCj4g
-byBNYWtlcyB1c2Ugb2YgQVNNX0NNRF9TRVAgdG8gZW5hYmxlIGFyY2hpdGVjdHVyZXMgdG8gb3Zl
-cnJpZGUgbGF0ZXIKPiAgIGlmIG5lZWRlZAo+IG8gZ3VhcmQgdGFibGVzLmggaW5jbHVzaW9uIGFu
-ZCB0YWJsZSBkZWZpbml0aW9uIHdpdGggX19LRVJORUxfXwo+IAo+IHYyOiBpbnRyb2R1Y2VkIGlu
-IHRoaXMgc2VyaWVzCj4gCj4gU2lnbmVkLW9mZi1ieTogTHVpcyBSLiBSb2RyaWd1ZXogPG1jZ3Jv
-ZkBrZXJuZWwub3JnPgo+IC0tLQo+ICBhcmNoL2FybS9pbmNsdWRlL2FzbS9qdW1wX2xhYmVsLmgg
-ICAgIHwgIDYgKysrKy0tCj4gIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vanVtcF9sYWJlbC5oICAg
-fCAgNiArKysrLS0KPiAgYXJjaC9taXBzL2luY2x1ZGUvYXNtL2p1bXBfbGFiZWwuaCAgICB8ICA2
-ICsrKystLQo+ICBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vanVtcF9sYWJlbC5oIHwgIDggKysr
-KystLS0KPiAgYXJjaC9zMzkwL2luY2x1ZGUvYXNtL2p1bXBfbGFiZWwuaCAgICB8ICA2ICsrKyst
-LQo+ICBhcmNoL3NwYXJjL2luY2x1ZGUvYXNtL2p1bXBfbGFiZWwuaCAgIHwgIDYgKysrKy0tCj4g
-IGFyY2gvdGlsZS9pbmNsdWRlL2FzbS9qdW1wX2xhYmVsLmggICAgfCAgNSArKystLQo+ICBhcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9qdW1wX2xhYmVsLmggICAgIHwgMTAgKysrKysrLS0tLQo+ICBpbmNs
-dWRlL2FzbS1nZW5lcmljL3ZtbGludXgubGRzLmggICAgIHwgIDUgLS0tLS0KPiAgaW5jbHVkZS9s
-aW51eC9qdW1wX2xhYmVsLmggICAgICAgICAgICB8ICA0ICsrLS0KPiAga2VybmVsL2p1bXBfbGFi
-ZWwuYyAgICAgICAgICAgICAgICAgICB8IDE3ICsrKysrKysrKystLS0tLS0tCj4gIHNjcmlwdHMv
-bW9kdWxlLWNvbW1vbi5sZHMgICAgICAgICAgICAgfCAgMSArCj4gIHRvb2xzL29ianRvb2wvc3Bl
-Y2lhbC5jICAgICAgICAgICAgICAgfCAgMiArLQo+ICAxMyBmaWxlcyBjaGFuZ2VkLCA0OCBpbnNl
-cnRpb25zKCspLCAzNCBkZWxldGlvbnMoLSkKCm1ldGEtY29tbWVudC4gIFRoaXMgbmV3IGluZnJh
-c3RydWN0dXJlIGRvZXNuJ3Qgc2VlbSB0byBzYXZlIGFueSBjb2RlCndoZW4geW91IG5lZWQgdG8g
-aGF2ZSBhIG5ldyAibGluayB0YWJsZSIuICBZZXMsIHRoZSBtYWNyb3Mgc2VlbSBhIGJpdApuaWNl
-ciwgYnV0IGl0IGZlZWxzIGxpa2UgdW5uZWVkZWQgY2h1cm4uICBJIGhhdmVuJ3Qgc2VlbiBhbnkg
-cGF0Y2hlcyBpbgp0aGlzIHNlcmllcyB0aGF0IG1ha2VzIG1lIGdvICJvaCB5ZWFoLCBub3cgSSBz
-ZWUgd2h5IGhlIGRpZCB0aGlzIHdvcmssCml0J3Mgc28gbXVjaCBzaW1wbGVyIGFuZCBlYXN5IHRv
-IHVuZGVyc3RhbmQgbm93ISIKCldoYXQgYW0gSSBtaXNzaW5nPyAgV2hhdCB3b25kZXJmdWwgbmV3
-IHRoaW5ncyBhcmUgZ29pbmcgdG8gaGFwcGVuLCBvcgp3aGVyZSBpcyB0aGUgY29kZSBzYXZpbmdz
-IGdvaW5nIHRvIGNvbWUgZnJvbSB3aXRoIHRoaXMgc2VyaWVzIHRvIGp1c3RpZnkKYWxsIG9mIHRo
-ZSB3b3JrIHRvIGNyZWF0ZSBhbmQgcmV2aWV3IHRoaXM/Cgp0aGFua3MsCgpncmVnIGstaAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1h
-aWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwczovL2xpc3RzLnhlbi5vcmcv
-eGVuLWRldmVsCg==
+Convert driver to use managed resources.
+This eliminates error path boilerplate and makes code neat.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 361770568ad0..05c52cc87852 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -66,7 +66,7 @@ static int mfld_pb_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return -EINVAL;
+ 
+-	input = input_allocate_device();
++	input = devm_input_allocate_device(&pdev->dev);
+ 	if (!input)
+ 		return -ENOMEM;
+ 
+@@ -77,22 +77,19 @@ static int mfld_pb_probe(struct platform_device *pdev)
+ 
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	error = request_threaded_irq(irq, NULL, mfld_pb_isr, IRQF_ONESHOT,
+-				     DRIVER_NAME, input);
++	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mfld_pb_isr,
++					  IRQF_ONESHOT, DRIVER_NAME, input);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
+ 				"button\n", irq);
+-		goto err_free_input;
++		return error;
+ 	}
+ 
+-	device_init_wakeup(&pdev->dev, true);
+-	dev_pm_set_wake_irq(&pdev->dev, irq);
+-
+ 	error = input_register_device(input);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "Unable to register input dev, error "
+ 				"%d\n", error);
+-		goto err_free_irq;
++		return error;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, input);
+@@ -111,27 +108,19 @@ static int mfld_pb_probe(struct platform_device *pdev)
+ 	if (error) {
+ 		dev_err(&pdev->dev, "Unable to clear power button interrupt, "
+ 				"error: %d\n", error);
+-		goto err_free_irq;
++		return error;
+ 	}
+ 
+-	return 0;
++	device_init_wakeup(&pdev->dev, true);
++	dev_pm_set_wake_irq(&pdev->dev, irq);
+ 
+-err_free_irq:
+-	free_irq(irq, input);
+-err_free_input:
+-	input_free_device(input);
+-	return error;
++	return 0;
+ }
+ 
+ static int mfld_pb_remove(struct platform_device *pdev)
+ {
+-	struct input_dev *input = platform_get_drvdata(pdev);
+-	int irq = platform_get_irq(pdev, 0);
+-
+ 	dev_pm_clear_wake_irq(&pdev->dev);
+ 	device_init_wakeup(&pdev->dev, false);
+-	free_irq(irq, input);
+-	input_unregister_device(input);
+ 
+ 	return 0;
+ }
+-- 
+2.11.0
