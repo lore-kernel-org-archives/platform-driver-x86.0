@@ -1,76 +1,46 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v7 2/5] clk: x86: Add Atom PMC platform
- clocks
-Date: Sat, 21 Jan 2017 10:28:17 -0600
-Message-ID: <e201d2f3-6a14-f00f-3de0-1a68a2816f42@linux.intel.com>
-References: <1484690270-28425-1-git-send-email-pierre-louis.bossart@linux.intel.com>
- <1484690270-28425-3-git-send-email-pierre-louis.bossart@linux.intel.com>
- <20170120235856.GF20800@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Zach Ploskey <zach@ploskey.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: handle ACPI event 1
+Date: Sun, 22 Jan 2017 00:47:19 -0800
+Message-ID: <20170122084719.2135-1-zach@ploskey.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:45153 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750800AbdAUQ2Y (ORCPT
+Received: from mail-s85.mailgun.info ([184.173.153.213]:51112 "EHLO
+        mail-s85.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751160AbdAVI4Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 21 Jan 2017 11:28:24 -0500
-In-Reply-To: <20170120235856.GF20800@codeaurora.org>
+        Sun, 22 Jan 2017 03:56:16 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, x86@kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-clk@vger.kernel.org, Len Brown <lenb@kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Zach Ploskey <zach@ploskey.com>
 
-Thanks for the review Stephen.
+On Ideapad laptops, ACPI event 1 is currently not handled. Many models
+log "ideapad_laptop: Unknown event: 1" every 20 seconds or so while
+running on battery power. Some convertible laptops receive this event
+when switching in and out of tablet mode.
 
-On 1/20/17 5:58 PM, Stephen Boyd wrote:
-> On 01/17, Pierre-Louis Bossart wrote:
->> diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
->> new file mode 100644
->> index 0000000..312d4e9
->> --- /dev/null
->> +++ b/drivers/clk/x86/clk-pmc-atom.c
-> [...]
->> +
->> +static void plt_clk_reg_update(struct clk_plt *clk, u32 mask, u32 val)
->> +{
->> +	u32 tmp;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&clk->lock, flags);
->> +
->> +	tmp = clk_readl(clk->reg);
->
-> Do you need to use clk_readl? I'd prefer we deleted that
-> function/macro because it's just confusing. Please don't use it
-> unless you need it for some reason.
+This adds and additional case for event 1 in ideapad_acpi_notify to call
+ideapad_input_report(priv, vpc_bit), so that the event is reported to
+userspace and we avoid unnecessary logging.
 
-I just followed Andy's recommendation and will revert to readl/writel, 
-as well as fix the nitpicks below
->
->> +	tmp = (tmp & ~mask) | (val & mask);
->> +	clk_writel(tmp, clk->reg);
->> +
->> +	spin_unlock_irqrestore(&clk->lock, flags);
->> +}
->> +
-> [..]
->> +
->> +static void plt_clk_unregister_parents(struct clk_plt_data *data)
->> +{
->> +	plt_clk_unregister_fixed_rate_loop(data, data->nparents);
->> +}
->> +
->> +
->
-> Nitpick: Single newline please
+Fixes bug #107481 (https://bugzilla.kernel.org/show_bug.cgi?id=107481)
+Fixes bug #65751 (https://bugzilla.kernel.org/show_bug.cgi?id=65751)
 
-ok
+Signed-off-by: Zach Ploskey <zach@ploskey.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->> +static struct platform_driver plt_clk_driver = {
->> +	.driver = {
->> +		.name = PLT_CLK_DRIVER_NAME,
->
-> Nitpick: Just put the string here
-
-ok
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 410741acb3c9..f46ece2ce3c4 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -813,6 +813,7 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ 			case 8:
+ 			case 7:
+ 			case 6:
++			case 1:
+ 				ideapad_input_report(priv, vpc_bit);
+ 				break;
+ 			case 5:
+-- 
+2.11.0
