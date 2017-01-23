@@ -1,238 +1,97 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v5] platform/x86: add support for devices with Silead touchscreens
-Date: Mon, 23 Jan 2017 18:35:30 +0100
-Message-ID: <20170123173530.17618-1-hdegoede@redhat.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, "russianneuromancer @ ya . ru" <russianneuromancer@ya.ru>, Gregor Riepl <onitake@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v8 0/5] Add platform clock for BayTrail platforms
+Date: Mon, 23 Jan 2017 12:07:40 -0600
+Message-ID: <1485194865-10400-1-git-send-email-pierre-louis.bossart@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: alsa-devel@alsa-project.org, Irina Tirdea <irina.tirdea@intel.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Brown <broonie@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On ACPI based tablets, the ACPI touchscreen node only contains info on
-the gpio and the irq, and is missing any info on the axis. This info is
-expected to be built into the tablet model specific version of the driver
-shipped with the os-image for the device.
+These patches specifically enable the audio MCLK required by Baytrail
+CR devices. It is the remaining part of a bigger set of patches
+(already merged in Mark Brown's tree) that enable sound for Baytrail CR
+devices (especially Asus T100TAF) [1]. They include the clock driver
+and clock enabling in the pmc_atom code (along with moving of the
+non-architectural pmc_atom driver code into drivers/platform/x86 as
+suggested by Thomas Gleixner [2]). This move includes a new header in
+include/linux/platform_data/x86/. While there is an agreement that the
+definitions for PMC clocks are not really platform data this location
+is seen as a good-enough compromise with an agreement between Darren
+Hart and Andy Shevchenko [3]
 
-Add support for getting the missing info from a table built into the
-driver, using dmi data to identify which entry of the table to use and
-add info for the CUBE iwork8 Air and Jumper EZpad mini3 tablets on which
-this code was tested / developed.
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-August/111704.html
+[2] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-October/113936.html
+[3] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-December/115892.html
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=187531
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-[dmitry.torokhov@gmail.com: Move to platform/x86]
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-Changes in v2:
--Put the dmi code in a separate silead_dmi.c file
--Use device_add_properties to add the info
-Changes in v3 (Dmitry Torokhov):
--Move the silead_dmi code to drivers/platform/x86
-Changes in v4:
--Minor spelling and code-style fixes based on review from
- Andy Shevchenko
-Changes in v5:
--Use has_acpi_companion()
--Drop .ident from dmi_id structs, it is not used
----
- MAINTAINERS                       |   8 +++
- drivers/platform/x86/Kconfig      |  11 +++
- drivers/platform/x86/Makefile     |   1 +
- drivers/platform/x86/silead_dmi.c | 136 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 156 insertions(+)
- create mode 100644 drivers/platform/x86/silead_dmi.c
+Changes from v7:
+ - Replaced clk-readl/writel by regular readl/writel
+ - Fixed two nitpick comments (newline and driver name string)
+ - Fixed [5:0] to [0..5] in comment (missed in v6)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f1ab2c6..0953284 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11261,6 +11261,14 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SILEAD TOUCHSCREEN DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	linux-input@vger.kernel.org
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/input/touchscreen/silead.c
-+F:	drivers/platform/x86/silead_dmi.c
-+
- SIMPLEFB FB DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	linux-fbdev@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 59aa8e3..03e5347 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1076,4 +1076,15 @@ config MLX_CPLD_PLATFORM
- 	  This driver handles hot-plug events for the power suppliers, power
- 	  cables and fans on the wide range Mellanox IB and Ethernet systems.
- 
-+config SILEAD_DMI
-+	bool "Tablets with Silead touchscreens"
-+	depends on ACPI && DMI && I2C && INPUT
-+	---help---
-+	  Certain ACPI based tablets with Silead touchscreens do not have
-+	  enough data in ACPI tables for the touchscreen driver to handle
-+	  the touchscreen properly, as OEMs expected the data to be baked
-+	  into the tablet model specific version of the driver shipped
-+	  with the OS-image for the device. This option supplies the missing
-+	  information. Enable this for x86 tablets with Silead touchscreens.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d4111f0..840b07b 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -76,3 +76,4 @@ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
- obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
-+obj-$(CONFIG_SILEAD_DMI)	+= silead_dmi.o
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-new file mode 100644
-index 0000000..02e11fd
---- /dev/null
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -0,0 +1,136 @@
-+/*
-+ * Silead touchscreen driver DMI based configuration code
-+ *
-+ * Copyright (c) 2017 Red Hat Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * Red Hat authors:
-+ * Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/dmi.h>
-+#include <linux/i2c.h>
-+#include <linux/notifier.h>
-+#include <linux/property.h>
-+#include <linux/string.h>
-+
-+struct silead_ts_dmi_data {
-+	const char *acpi_name;
-+	struct property_entry *properties;
-+};
-+
-+static struct property_entry cube_iwork8_air_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-cube-iwork8-air.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data cube_iwork8_air_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= cube_iwork8_air_props,
-+};
-+
-+static struct property_entry jumper_ezpad_mini3_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1700),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-jumper-ezpad-mini3.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data jumper_ezpad_mini3_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= jumper_ezpad_mini3_props,
-+};
-+
-+static const struct dmi_system_id silead_ts_dmi_table[] = {
-+	{
-+		/* CUBE iwork8 Air */
-+		.driver_data = (void *)&cube_iwork8_air_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "cube"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "i1-TF"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+		},
-+	},
-+	{
-+		/* Jumper EZpad mini3 */
-+		.driver_data = (void *)&jumper_ezpad_mini3_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			/* jumperx.T87.KFBNEEA02 with the version-nr dropped */
-+			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
-+		},
-+	},
-+	{ },
-+};
-+
-+static void silead_ts_dmi_add_props(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	const struct dmi_system_id *dmi_id;
-+	const struct silead_ts_dmi_data *ts_data;
-+	int error;
-+
-+	dmi_id = dmi_first_match(silead_ts_dmi_table);
-+	if (!dmi_id)
-+		return;
-+
-+	ts_data = dmi_id->driver_data;
-+	if (has_acpi_companion(dev) &&
-+	    !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
-+		error = device_add_properties(dev, ts_data->properties);
-+		if (error)
-+			dev_err(dev, "failed to add properties: %d\n", error);
-+	}
-+}
-+
-+static int silead_ts_dmi_notifier_call(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct device *dev = data;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		silead_ts_dmi_add_props(dev);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct notifier_block silead_ts_dmi_notifier = {
-+	.notifier_call = silead_ts_dmi_notifier_call,
-+};
-+
-+static int __init silead_ts_dmi_init(void)
-+{
-+	int error;
-+
-+	error = bus_register_notifier(&i2c_bus_type, &silead_ts_dmi_notifier);
-+	if (error)
-+		pr_err("%s: failed to register i2c bus notifier: %d\n",
-+			__func__, error);
-+
-+	return error;
-+}
-+
-+/*
-+ * We are registering out notifier after i2c core is initialized and i2c bus
-+ * itself is ready (which happens at postcore initcall level), but before
-+ * ACPI starts enumerating devices (at subsys initcall level).
-+ */
-+arch_initcall(silead_ts_dmi_init);
+Changes from v6:
+ - Addressed comments from Stephen Boyd, Andy Shevchenko and Vinod Koul
+ - Renamed clk-byt-plt to clk-pmc-atom
+ - Rebase to 4.10-rc3 (broonie/for-next)
+ - Added helper functions to make error handling more compact
+ - Removed module-related code since it's not possible/supported
+ - Removed useless tests on remove
+ - PMC_CLK_OFFSET move to clk-pcm-atom (more logical)
+ - Split typo correction and makefile fix in separate patches
+ - small fixes (spaces, defaults in switches, alphabetical order, use of
+clk_writel/readl and no test on write, simpler error handling, use of
+while(i--), unsigned loop variables, kernel doc fields, format-patch -M
+ -C -D, use of PLATFORM_DEVID_NONE)
+
+Changes from v5:
+ - fix build error reported by kbuild test robot
+ - split the clk driver code from x86 platform changes
+
+Changes from v4:
+ - move the pmc_atom driver from arch/x86/platform/atom to
+drivers/platform/x86
+
+Changes from v3:
+ - replace devm_kzalloc with devm_kcalloc
+ - add x86 architecture maintainers
+
+Changes from v2:
+ - move clk platform data structures to a separate include file
+ - store clk_hw pointer for the fixed rate clocks
+
+Changes from v1:
+ - register the clk device as child of pmc device
+ - pass iomem pointer from pmc driver to clk driver to avoid using
+pmc_atom_read()/write() and use readl/writel API instead
+ - use devm_clk_hw_register/clkdev_hw_create instead of
+clk_register/clkdev_create
+
+Irina Tirdea (3):
+  clk: x86: Add Atom PMC platform clocks
+  arch/x86/platform/atom: Move pmc_atom to drivers/platform/x86
+  platform/x86: Enable Atom PMC platform clocks
+
+Pierre-Louis Bossart (2):
+  clk: Make x86/ conditional on CONFIG_COMMON_CLK
+  platform/x86: fix typo in comment
+
+ arch/x86/Kconfig                                   |   4 -
+ arch/x86/platform/atom/Makefile                    |   1 -
+ drivers/acpi/acpi_lpss.c                           |   2 +-
+ drivers/clk/Makefile                               |   2 +
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-pmc-atom.c                     | 371 +++++++++++++++++++++
+ drivers/platform/x86/Kconfig                       |   5 +
+ drivers/platform/x86/Makefile                      |   1 +
+ .../atom => drivers/platform/x86}/pmc_atom.c       |  88 ++++-
+ include/linux/platform_data/x86/clk-pmc-atom.h     |  44 +++
+ .../linux/platform_data/x86}/pmc_atom.h            |   2 +-
+ 11 files changed, 506 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/clk/x86/clk-pmc-atom.c
+ rename {arch/x86/platform/atom => drivers/platform/x86}/pmc_atom.c (87%)
+ create mode 100644 include/linux/platform_data/x86/clk-pmc-atom.h
+ rename {arch/x86/include/asm => include/linux/platform_data/x86}/pmc_atom.h (98%)
+
 -- 
-2.9.3
+2.7.4
 
