@@ -1,42 +1,40 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add IMS/ZII SCU driver
-Date: Tue, 24 Jan 2017 10:45:10 -0800
-Message-ID: <430e7545-68ab-d5bb-f58b-4c18980eabee@gmail.com>
-References: <20170111212644.9217-1-f.fainelli@gmail.com>
- <CAHp75VcH9ez0AjybBA8mtJ=nSyTTjXeV6d_P_NBA-mZmxjZ+Ng@mail.gmail.com>
+From: Johannes Stezenbach <js@sig21.net>
+Subject: Re: Cherryview wake up events
+Date: Tue, 24 Jan 2017 20:23:14 +0100
+Message-ID: <20170124192314.gw6njffcgwyfm2gp@sig21.net>
+References: <20160921091635.tjnc2gvj75jixycv@sig21.net>
+ <20160923081904.GM1218@lahna.fi.intel.com>
+ <20161005124648.4fkl55q2i4qnug2x@sig21.net>
+ <20161005130511.GM1765@lahna.fi.intel.com>
+ <20161204185219.j45aabkpvptadmcx@sig21.net>
+ <20161205110608.GF1459@lahna.fi.intel.com>
+ <20170124094112.ssmpe6vl4iijsjh6@sig21.net>
+ <CAHp75Vfc0g5znBm72Jx-C+p-9+3j69ecJBaVvm+Onf+sqf=7HA@mail.gmail.com>
+ <20170124135250.d72silj6jlxh7zqk@sig21.net>
+ <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f68.google.com ([74.125.83.68]:32916 "EHLO
-        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750739AbdAXSpN (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Jan 2017 13:45:13 -0500
-In-Reply-To: <CAHp75VcH9ez0AjybBA8mtJ=nSyTTjXeV6d_P_NBA-mZmxjZ+Ng@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, cphealy@gmail.com, Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 01/13/2017 08:38 AM, Andy Shevchenko wrote:
-> On Wed, Jan 11, 2017 at 11:26 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> From: Guenter Roeck <linux@roeck-us.net>
->>
->> This patch adds support for the IMS (now Zodiac Inflight Innovations)
->> SCU Generation 1/2/3 platform driver. This driver registers all the
->> on-module peripherals: Ethernet switches (Broadcom or Marvell), I2C to
->> GPIO expanders, Kontrom CPLD/I2C master, and more.
->>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
->> ---
->> Darren,
->>
->> This is against your "for-next" branch thanks!
-> 
-> I'm going to review this later, though few of comments.
+On Tue, Jan 24, 2017 at 04:28:29PM +0200, Andy Shevchenko wrote:
+> They probably release just almost all One Big Ugly patch from official
+> BSP, which by some reason, includes all Intel MID SoCs, Baytrail.
+> I think I know how Dollar Cove related code ended up there. But that
+> all stuff is a total mess.
 
-Waiting for this to happen so I can do a respin with an updated file
-location/Kconfig symbol
+I agree.  Probably it was a mistake to bring up this code here.
+Let me try to go back two steps:  Could you please let me
+know if there is any progress in mainlining the TI Dollar Cove PMIC
+and related drivers?  Is there a schedule?
+After waiting for four months I'm actually getting impatient
+because by now the Cherryview based hardware seems to go out
+of production and I fear the mainlining might never happen.
+
+Thanks,
+Johannes
