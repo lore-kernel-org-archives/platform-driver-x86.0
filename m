@@ -1,47 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: Cherryview wake up events
-Date: Tue, 24 Jan 2017 16:28:29 +0200
-Message-ID: <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
-References: <20160920211153.y7ntwwik2l6ppoqz@sig21.net> <20160921090614.GY1811@lahna.fi.intel.com>
- <20160921091635.tjnc2gvj75jixycv@sig21.net> <20160923081904.GM1218@lahna.fi.intel.com>
- <20161005124648.4fkl55q2i4qnug2x@sig21.net> <20161005130511.GM1765@lahna.fi.intel.com>
- <20161204185219.j45aabkpvptadmcx@sig21.net> <20161205110608.GF1459@lahna.fi.intel.com>
- <20170124094112.ssmpe6vl4iijsjh6@sig21.net> <CAHp75Vfc0g5znBm72Jx-C+p-9+3j69ecJBaVvm+Onf+sqf=7HA@mail.gmail.com>
- <20170124135250.d72silj6jlxh7zqk@sig21.net>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] platform/x86: Add IMS/ZII SCU driver
+Date: Tue, 24 Jan 2017 10:45:10 -0800
+Message-ID: <430e7545-68ab-d5bb-f58b-4c18980eabee@gmail.com>
+References: <20170111212644.9217-1-f.fainelli@gmail.com>
+ <CAHp75VcH9ez0AjybBA8mtJ=nSyTTjXeV6d_P_NBA-mZmxjZ+Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170124135250.d72silj6jlxh7zqk@sig21.net>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Johannes Stezenbach <js@sig21.net>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:32916 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750739AbdAXSpN (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 24 Jan 2017 13:45:13 -0500
+In-Reply-To: <CAHp75VcH9ez0AjybBA8mtJ=nSyTTjXeV6d_P_NBA-mZmxjZ+Ng@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, cphealy@gmail.com, Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, open list <linux-kernel@vger.kernel.org>
 
-On Tue, Jan 24, 2017 at 3:52 PM, Johannes Stezenbach <js@sig21.net> wrote:
-> On Tue, Jan 24, 2017 at 01:14:16PM +0200, Andy Shevchenko wrote:
->> On Tue, Jan 24, 2017 at 11:41 AM, Johannes Stezenbach <js@sig21.net> wrote:
->> > Meanwhile I found out the TI PMIC and power button drivers
->> > has been published as part of the Asus ZenFone Zoom (ZX551ML)
->> > Android kernel code drop (based on linux-3.10.x):
->> >
->> > https://www.asus.com/support/Download/39/1/0/26/BXbNqJplzZiLmk6G/32/
->> >
->> > Please let me know if there is anything I could do
->> > to help get it mainlined soon.
+On 01/13/2017 08:38 AM, Andy Shevchenko wrote:
+> On Wed, Jan 11, 2017 at 11:26 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> From: Guenter Roeck <linux@roeck-us.net>
 >>
->> AFAIK ASuS Zenfone 2 (Intel based) series uses Intel Moorefield. It
->> has ShadyCove PMIC.
->
-> So Asus released more than they needed.  I confirmed their
-> source drop contains the TI Dollar Cove driver (dollar_cove_ti.c).
+>> This patch adds support for the IMS (now Zodiac Inflight Innovations)
+>> SCU Generation 1/2/3 platform driver. This driver registers all the
+>> on-module peripherals: Ethernet switches (Broadcom or Marvell), I2C to
+>> GPIO expanders, Kontrom CPLD/I2C master, and more.
+>>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+>> ---
+>> Darren,
+>>
+>> This is against your "for-next" branch thanks!
+> 
+> I'm going to review this later, though few of comments.
 
-They probably release just almost all One Big Ugly patch from official
-BSP, which by some reason, includes all Intel MID SoCs, Baytrail.
-I think I know how Dollar Cove related code ended up there. But that
-all stuff is a total mess.
-
-> Anyway, let me know if I can help to get it into mainline soon.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Waiting for this to happen so I can do a respin with an updated file
+location/Kconfig symbol
