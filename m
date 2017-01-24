@@ -1,74 +1,38 @@
-From: joeyli <jlee@suse.com>
+From: Samuel Sieb <samuel@sieb.net>
 Subject: Re: Acer ES1-522 wifi blocked and Fn keys don't work (WMI)
-Date: Tue, 24 Jan 2017 11:51:11 +0800
-Message-ID: <20170124035111.GG16274@linux-l9pv.suse>
+Date: Mon, 23 Jan 2017 20:41:18 -0800
+Message-ID: <bdc877de-acda-1741-701d-1cf3145b9421@sieb.net>
 References: <3743f661-2ef2-1f54-819c-8dc15569f905@sieb.net>
  <20170122143657.GX10410@linux-l9pv.suse>
  <1c3c9754-70fa-039c-04f8-6a438b9c504b@sieb.net>
  <20170124034823.GF16274@linux-l9pv.suse>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:35993 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750703AbdAXDva (ORCPT
-        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Mon, 23 Jan 2017 22:51:30 -0500
-Content-Disposition: inline
+Received: from smtp-out-no.shaw.ca ([64.59.134.9]:34530 "EHLO
+        smtp-out-no.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750709AbdAXElc (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 23 Jan 2017 23:41:32 -0500
 In-Reply-To: <20170124034823.GF16274@linux-l9pv.suse>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Samuel Sieb <samuel@sieb.net>
+To: joeyli <jlee@suse.com>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 11:48:23AM +0800, joeyli wrote:
-> Hi Samuel, 
-> 
-> On Mon, Jan 23, 2017 at 03:23:19PM -0800, Samuel Sieb wrote:
-> > On 01/22/2017 06:36 AM, joeyli wrote:
-> > >On Wed, Jan 18, 2017 at 12:05:52PM -0800, Samuel Sieb wrote:
-> > >>I have a user with an Acer ES1-522 laptop and the wifi isn't working. The
-> > >>driver detects it correctly, but rfkill says it's hard blocked.  The wifi
-> > >>toggle key doesn't have any effect.  The touchpad toggle button disables the
-> > >>touchpad, but doesn't enable it when pressed again. However, suspend/resume
-> > >>resets the touchpad to working again.  The acer-wmi module is loaded and an
-> > >>input device is created.  However, none of the listed keys actually provide
-> > >>any output.
-> > >>
-> > >>I blacklisted the acer_wmi module and now the wifi works.  Is there any
-> > >>further information I could provide that would help?
-> > >>
-> > >What is your kernel verion?
-> > >
-> > It's running Fedora 24, so the latest kernel at the time was probably
-> > 4.8.17.  I see that a 4.9.5 kernel is available for F24 now, so I can try
-> > that one if it would be helpful.
-> > 
-> 
-> I see.
-> 
-> > >And, did you see any messages in dmesg when you pressed those fn-keys?
-> > >
-> > I didn't see any messages at all.
-> > 
-> > Also, on all the Acer laptops I checked, the accelerometer device gives the
-> > "Operation not permitted" error.  Should I split that into a new thread?  It
-> > appears to be part of the acer-wmi module as well.
-> > 
-> 
-> Could you please create two bugs on https://bugzilla.kernel.org/ ? One for 
-> function key, another one for accelerometer. I prefer to collect debug 
-> messages/files on bugzilla for reference in the future. Please send bug
-> number to me after you created it.
-> 
-> On the other hand, please attach your acpidump result on bugzilla:
->  # acpidump > acpidump.raw
-> 
-> I want to check the DSDT table for more detail.
->
-
-And, please attach your dmesg on bugzilla that it includes messages after
-modprobe acer-wmi driver and press the issue function keys.
-
-Thanks
-Joey Lee 
+On 01/23/2017 07:48 PM, joeyli wrote:
+ > Could you please create two bugs on https://bugzilla.kernel.org/ ? 
+One for
+ > function key, another one for accelerometer. I prefer to collect debug
+ > messages/files on bugzilla for reference in the future. Please send bug
+ > number to me after you created it.
+ >
+ > On the other hand, please attach your acpidump result on bugzilla:
+ >  # acpidump > acpidump.raw
+ >
+ > I want to check the DSDT table for more detail.
+ >
+Ok, but the biggest problem is that the wifi is hard locked with the 
+module installed with no way to turn that off.  I'll file a bug for that 
+as well.
