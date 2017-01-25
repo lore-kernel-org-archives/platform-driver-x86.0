@@ -1,93 +1,49 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v5 2/6] leds: triggers: Add a keyboard backlight trigger
-Date: Tue, 24 Jan 2017 23:56:34 +0100
-Message-ID: <c2ef272a-8bfb-2911-5b8a-73635252fbc1@gmail.com>
-References: <20161125100140.GC4062@amd>
- <e32e3d6c-5d6d-c882-21d9-8028c8311b0b@samsung.com>
- <20161125110557.GA13204@amd>
- <2367b9a7-68f7-2038-0d3a-a9561055b4f6@samsung.com>
- <20161125144859.GA20139@amd>
- <9844f7b3-c3e8-99d8-61b6-1550b1b8ab7e@samsung.com>
- <20161125204045.GA28036@amd> <b35b19a0-5abd-154a-cf3b-d4a7f7e76f00@gmail.com>
- <20161221184948.GB21636@amd> <eb246ac1-bed1-a1c7-8d69-e5529c774322@gmail.com>
- <20170124123243.GA8688@amd>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: Cherryview wake up events
+Date: Wed, 25 Jan 2017 11:29:26 +0200
+Message-ID: <20170125092926.GO17297@lahna.fi.intel.com>
+References: <20160923081904.GM1218@lahna.fi.intel.com>
+ <20161005124648.4fkl55q2i4qnug2x@sig21.net>
+ <20161005130511.GM1765@lahna.fi.intel.com>
+ <20161204185219.j45aabkpvptadmcx@sig21.net>
+ <20161205110608.GF1459@lahna.fi.intel.com>
+ <20170124094112.ssmpe6vl4iijsjh6@sig21.net>
+ <CAHp75Vfc0g5znBm72Jx-C+p-9+3j69ecJBaVvm+Onf+sqf=7HA@mail.gmail.com>
+ <20170124135250.d72silj6jlxh7zqk@sig21.net>
+ <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
+ <20170124192314.gw6njffcgwyfm2gp@sig21.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35331 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751167AbdAXW5U (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:43561 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751507AbdAYJgG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Jan 2017 17:57:20 -0500
-In-Reply-To: <20170124123243.GA8688@amd>
+        Wed, 25 Jan 2017 04:36:06 -0500
+Content-Disposition: inline
+In-Reply-To: <20170124192314.gw6njffcgwyfm2gp@sig21.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, gdg@zplane.com, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Richard Purdie <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+To: Johannes Stezenbach <js@sig21.net>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>
 
-Hi,
+On Tue, Jan 24, 2017 at 08:23:14PM +0100, Johannes Stezenbach wrote:
+> On Tue, Jan 24, 2017 at 04:28:29PM +0200, Andy Shevchenko wrote:
+> > They probably release just almost all One Big Ugly patch from official
+> > BSP, which by some reason, includes all Intel MID SoCs, Baytrail.
+> > I think I know how Dollar Cove related code ended up there. But that
+> > all stuff is a total mess.
+> 
+> I agree.  Probably it was a mistake to bring up this code here.
+> Let me try to go back two steps:  Could you please let me
+> know if there is any progress in mainlining the TI Dollar Cove PMIC
+> and related drivers?  Is there a schedule?
 
-On 01/24/2017 01:32 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> There might exist users that adjust LED brightness while having
->>>> active trigger. The best example is default-on trigger - it sets
->>>> brightness only on init, but remains active all the time. Whereas
->>>> this could be fixed, there is another case: think of changing blinking
->>>> brightness - it would be impossible.
->>>
->>> I don't see the breakage. For existing blinking and default-on
->>> triggers, existing behaviour would be kept. Difference would be that
->>> for hardware that changes triggers itself (like the keyboard light) we
->>> would present it as a trigger. And you are right -- there would be
->>> user visible changes there. You could not assign blinking, because
->>> .. it already has a trigger. But I believe it is reasonable.
->>
->> We've already received negative feedback regarding blocking
->> application of different trigger when hw brightness change
->> notifications
-> 
-> Actually sometimes we'll get negative feedback for anything we do. I
-> still believe exposing the backlight case as a trigger is a right thing.
-> 
->> are enabled. One solution to that is making the notifications
->> orthogonal to the trigger mechanism. The other possibility is to allow
->> for having more than one active trigger for a LED.
->>
->> We could think of defining a special type of persistent trigger that
->> would be always enabled.
-> 
-> Yes, that could be done. I'd not call it persistent trigger, but
-> with right name...
-> 
-> #1:
-> 
-> Apparently some LEDs change themselves, and we can't find how or
-> when. That's thinkpad battery LED, for example.
-> 
-> #2:
-> 
-> Then there are some LEDs that change themselves, and we can get
-> notifications. We should make it very clear that we'll not send
-> notifications kernel did itself.
-> 
-> So... for #1 and #2 something like
-> 
-> led/hardware_changes_brightness 
-> 
-> and for #2
-> 
-> led/poll_for_hardware_brightness_change
-> 
-> where poll() wakes the userspace up when the brightness changes, and
-> read() can get new brightness...?
+David, can you please answer this!
 
-Well, it is almost the same as hw_brightness_change I proposed
-earlier. Persistent triggers OTOH would be more generic and it would
-fit for the trigger approach Hans already implemented.
+> After waiting for four months I'm actually getting impatient
+> because by now the Cherryview based hardware seems to go out
+> of production and I fear the mainlining might never happen.
 
-
--- 
-Best regards,
-Jacek Anaszewski
+If we hear nothing from David soon, I think I'll just take it to my
+growing todo list. Unless someone else wants to take it.
