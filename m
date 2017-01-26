@@ -1,44 +1,42 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 8/8] asus-wmi: Don't register rfkill if ASHS and user
- bit are present
-Date: Thu, 26 Jan 2017 14:45:41 -0800
-Message-ID: <1485470741.12563.104.camel@perches.com>
-References: <20170126153013.12753-1-jprvita@endlessm.com>
-         <20170126153013.12753-9-jprvita@endlessm.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: Cherryview wake up events
+Date: Fri, 27 Jan 2017 00:56:53 +0200
+Message-ID: <CAHp75VdHHvy2djYSTStPPcKUJFHLSAH_z7VzWW_12Qia3n2XyQ@mail.gmail.com>
+References: <20160921091635.tjnc2gvj75jixycv@sig21.net> <20160923081904.GM1218@lahna.fi.intel.com>
+ <20161005124648.4fkl55q2i4qnug2x@sig21.net> <20161005130511.GM1765@lahna.fi.intel.com>
+ <20161204185219.j45aabkpvptadmcx@sig21.net> <20161205110608.GF1459@lahna.fi.intel.com>
+ <20170124094112.ssmpe6vl4iijsjh6@sig21.net> <CAHp75Vfc0g5znBm72Jx-C+p-9+3j69ecJBaVvm+Onf+sqf=7HA@mail.gmail.com>
+ <20170124135250.d72silj6jlxh7zqk@sig21.net> <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
+ <20170124192314.gw6njffcgwyfm2gp@sig21.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay0095.hostedemail.com ([216.40.44.95]:32887 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1752169AbdAZWsN (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Jan 2017 17:48:13 -0500
-In-Reply-To: <20170126153013.12753-9-jprvita@endlessm.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170124192314.gw6njffcgwyfm2gp@sig21.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johannes Stezenbach <js@sig21.net>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2017-01-26 at 10:30 -0500, João Paulo Rechi Vita wrote:
-> Some Asus laptops that have an airplane-mode indicator LED, also have
-> the WMI WLAN user bit set, and the following bits in their DSDT:
+On Tue, Jan 24, 2017 at 9:23 PM, Johannes Stezenbach <js@sig21.net> wrote:
+> On Tue, Jan 24, 2017 at 04:28:29PM +0200, Andy Shevchenko wrote:
+>> They probably release just almost all One Big Ugly patch from official
+>> BSP, which by some reason, includes all Intel MID SoCs, Baytrail.
+>> I think I know how Dollar Cove related code ended up there. But that
+>> all stuff is a total mess.
 
-style trivia:
+I'm reading your long thread about the issue.
 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-[]
-> @@ -2051,6 +2052,16 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
->  	return 0;
->  }
->  
-> +static bool ashs_present(void)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; strcmp(asus_wireless_ids[i].id, ""); i++)
-> +		if (acpi_dev_found(asus_wireless_ids[i].id))
-> +			return true;
+> but excluded CONFIG_MFD_AXP20X based on \_SB.PIC0.I2C7.PMI1._STA returning 0 in acpidbg,
+> but \_SB.PIC0.I2C7.PMI1._STA returns 0xf
 
-The for loop would commonly have braces because of the
-internal if.
+Did you mean PMI2 in the second sentence?
+Had you tried to add ID to axp20x-i2c.c ?
+
+> Repeating essential info to avoid any confusion, the PMIC is
+
+In code you found there are two DCove drivers :-) One with "ti" suffix.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
