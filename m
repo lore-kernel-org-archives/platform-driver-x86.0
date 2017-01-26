@@ -1,232 +1,218 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v6 1/4] leds: class: Add new optional
- brightness_hw_changed attribute
-Date: Wed, 25 Jan 2017 22:35:47 +0100
-Message-ID: <2e3375d0-42fb-8123-06f9-df6877fb4264@gmail.com>
-References: <20170125161130.5424-1-hdegoede@redhat.com>
- <20170125161130.5424-2-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH][V2] intel-hid: support 5 array button
+Date: Thu, 26 Jan 2017 15:33:01 +0800
+Message-ID: <1485415981-20487-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wj0-f194.google.com ([209.85.210.194]:34014 "EHLO
-        mail-wj0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751847AbdAYVgd (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:44383 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752505AbdAZHdJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Jan 2017 16:36:33 -0500
-In-Reply-To: <20170125161130.5424-2-hdegoede@redhat.com>
+        Thu, 26 Jan 2017 02:33:09 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: alex.hung@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 
-H Hans,
+New firmwares include a feature called 5 button array that supports
+super key, volume up/down, rotation lock and power button. Especially,
+support for this feature is required to fix power button on some recent
+systems.
 
-Thanks for the patch. I have a few comments below.
+This patch was tested on a Dell Latitude 7280.
 
-On 01/25/2017 05:11 PM, Hans de Goede wrote:
-> Some LEDs may have their brightness level changed autonomously
-> (outside of kernel control) by hardware / firmware. This commit
-> adds support for an optional brightness_hw_changed attribute to
-> signal such changes to userspace (if a driver can detect them):
-> 
-> What:		/sys/class/leds/<led>/brightness_hw_changed
-> Date:		January 2017
-> KernelVersion:	4.11
-> Description:
-> 		Last hardware set brightness level for this LED. Some LEDs
-> 		may be changed autonomously by hardware/firmware. Only LEDs
-> 		where this happens and the driver can detect this, will
-> 		have this file.
-> 
-> 		This file supports poll() to detect when the hardware
-> 		changes the brightness.
-> 
-> 		Reading this file will return the last brightness level set
-> 		by the hardware, this may be different from the current
-> 		brightness.
-> 
-> Drivers which want to support this, simply add LED_BRIGHT_HW_CHANGED to
-> their flags field and call led_classdev_notify_brightness_hw_changed()
-> with the hardware set brightness when they detect a hardware / firmware
-> triggered brightness change.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v6:
-> -New patch in v6 of this set, replacing previous trigger based API
-> ---
->  Documentation/ABI/testing/sysfs-class-led | 16 +++++++++
->  drivers/leds/led-class.c                  | 57 +++++++++++++++++++++++++++++++
->  include/linux/leds.h                      |  8 +++++
->  3 files changed, 81 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
-> index 491cdee..9f6e75d 100644
-> --- a/Documentation/ABI/testing/sysfs-class-led
-> +++ b/Documentation/ABI/testing/sysfs-class-led
-> @@ -23,6 +23,22 @@ Description:
->  		If the LED does not support different brightness levels, this
->  		should be 1.
->  
-> +What:		/sys/class/leds/<led>/brightness_hw_changed
-> +Date:		January 2017
-> +KernelVersion:	4.11
-> +Description:
-> +		Last hardware set brightness level for this LED. Some LEDs
-> +		may be changed autonomously by hardware/firmware. Only LEDs
-> +		where this happens and the driver can detect this, will have
-> +		this file.
-> +
-> +		This file supports poll() to detect when the hardware changes
-> +		the brightness.
-> +
-> +		Reading this file will return the last brightness level set
-> +		by the hardware, this may be different from the current
-> +		brightness.
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 107 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 102 insertions(+), 5 deletions(-)
 
-Let's return -ENODATA when no such an event occurred till the moment
-of file reading.
-
-> +
->  What:		/sys/class/leds/<led>/trigger
->  Date:		March 2006
->  KernelVersion:	2.6.17
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 326ee6e..27aa7b6 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -103,6 +103,52 @@ static const struct attribute_group *led_groups[] = {
->  	NULL,
->  };
->  
-> +static ssize_t brightness_hw_changed_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", led_cdev->brightness_hw_changed);
-> +}
-> +
-> +static DEVICE_ATTR_RO(brightness_hw_changed);
-> +
-> +static int led_add_brightness_hw_changed(struct led_classdev *led_cdev)
-> +{
-> +	struct device *dev = led_cdev->dev;
-> +	int ret;
-> +
-> +	ret = device_create_file(dev, &dev_attr_brightness_hw_changed);
-> +	if (ret) {
-> +		dev_err(dev, "Error creating brightness_hw_changed\n");
-> +		return ret;
-> +	}
-> +
-> +	led_cdev->brightness_hw_changed_kn =
-> +		sysfs_get_dirent(dev->kobj.sd, "brightness_hw_changed");
-> +	if (!led_cdev->brightness_hw_changed_kn) {
-> +		dev_err(dev, "Error getting brightness_hw_changed kn\n");
-> +		device_remove_file(dev, &dev_attr_brightness_hw_changed);
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void led_remove_brightness_hw_changed(struct led_classdev *led_cdev)
-> +{
-> +	sysfs_put(led_cdev->brightness_hw_changed_kn);
-> +	device_remove_file(led_cdev->dev, &dev_attr_brightness_hw_changed);
-> +}
-> +
-> +void led_classdev_notify_brightness_hw_changed(struct led_classdev *led_cdev,
-> +					       enum led_brightness brightness)
-> +{
-> +	led_cdev->brightness_hw_changed = brightness;
-> +	sysfs_notify_dirent(led_cdev->brightness_hw_changed_kn);
-> +}
-> +EXPORT_SYMBOL_GPL(led_classdev_notify_brightness_hw_changed);
->
->  /**
->   * led_classdev_suspend - suspend an led_classdev.
->   * @led_cdev: the led_classdev to suspend.
-> @@ -204,6 +250,14 @@ int led_classdev_register(struct device *parent, struct led_classdev *led_cdev)
->  		dev_warn(parent, "Led %s renamed to %s due to name collision",
->  				led_cdev->name, dev_name(led_cdev->dev));
->  
-> +	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
-> +		ret = led_add_brightness_hw_changed(led_cdev);
-> +		if (ret) {
-> +			device_unregister(led_cdev->dev);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	led_cdev->work_flags = 0;
->  #ifdef CONFIG_LEDS_TRIGGERS
->  	init_rwsem(&led_cdev->trigger_lock);
-> @@ -256,6 +310,9 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
->  
->  	flush_work(&led_cdev->set_brightness_work);
->  
-> +	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED)
-> +		led_remove_brightness_hw_changed(led_cdev);
-> +
->  	device_unregister(led_cdev->dev);
->  
->  	down_write(&leds_list_lock);
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 569cb53..aa452c8 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -13,6 +13,7 @@
->  #define __LINUX_LEDS_H_INCLUDED
->  
->  #include <linux/device.h>
-> +#include <linux/kernfs.h>
->  #include <linux/list.h>
->  #include <linux/mutex.h>
->  #include <linux/rwsem.h>
-> @@ -35,6 +36,7 @@ struct led_classdev {
->  	const char		*name;
->  	enum led_brightness	 brightness;
->  	enum led_brightness	 max_brightness;
-> +	enum led_brightness	 brightness_hw_changed;
-
-Could we add Kconfig option for this feature and build the whole
-infrastructure only if enabled?
-
->  	int			 flags;
->  
->  	/* Lower 16 bits reflect status */
-> @@ -46,6 +48,7 @@ struct led_classdev {
->  #define LED_DEV_CAP_FLASH	(1 << 18)
->  #define LED_HW_PLUGGABLE	(1 << 19)
->  #define LED_PANIC_INDICATOR	(1 << 20)
-> +#define LED_BRIGHT_HW_CHANGED	(1 << 21)
->  
->  	/* set_brightness_work / blink_timer flags, atomic, private. */
->  	unsigned long		work_flags;
-> @@ -99,6 +102,9 @@ struct led_classdev {
->  	struct work_struct	set_brightness_work;
->  	int			delayed_set_value;
->  
-> +	/* For LEDs with brightness_hw_changed sysfs attribute */
-> +	struct kernfs_node	*brightness_hw_changed_kn;
-> +
->  #ifdef CONFIG_LEDS_TRIGGERS
->  	/* Protects the trigger data below */
->  	struct rw_semaphore	 trigger_lock;
-> @@ -123,6 +129,8 @@ extern void devm_led_classdev_unregister(struct device *parent,
->  					 struct led_classdev *led_cdev);
->  extern void led_classdev_suspend(struct led_classdev *led_cdev);
->  extern void led_classdev_resume(struct led_classdev *led_cdev);
-> +extern void led_classdev_notify_brightness_hw_changed(
-> +	struct led_classdev *led_cdev, enum led_brightness brightness);
->  
->  /**
->   * led_blink_set - set blinking with software fallback
-> 
-
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index cb3ab2b..6e796a5 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -1,5 +1,5 @@
+ /*
+- *  Intel HID event driver for Windows 8
++ *  Intel HID event & 5 button array driver
+  *
+  *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
+  *  Copyright (C) 2015 Andrew Lutomirski <luto@kernel.org>
+@@ -57,8 +57,24 @@ static const struct key_entry intel_hid_keymap[] = {
+ 	{ KE_END },
+ };
+ 
++/* 5 button array notification value. */
++static const struct key_entry intel_array_keymap[] = {
++	{ KE_KEY,    0xC2, { KEY_LEFTMETA} },                /* Press */
++	{ KE_IGNORE, 0xC3, { KEY_LEFTMETA} },                /* Release */
++	{ KE_KEY,    0xC4, { KEY_VOLUMEUP} },                /* Press */
++	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP} },                /* Release */
++	{ KE_KEY,    0xC6, { KEY_VOLUMEDOWN} },              /* Press */
++	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN} },	             /* Release */
++	{ KE_SW,     0xC8, { .sw = {SW_ROTATE_LOCK, 1} } },   /* Press */
++	{ KE_SW,     0xC9, { .sw = {SW_ROTATE_LOCK, 0} } },   /* Release */
++	{ KE_KEY,    0xCE, { KEY_POWER} },                   /* Press */
++	{ KE_IGNORE, 0xCF, { KEY_POWER} },                   /* Release */
++	{ KE_END },
++};
++
+ struct intel_hid_priv {
+ 	struct input_dev *input_dev;
++	struct input_dev *array;
+ };
+ 
+ static int intel_hid_set_enable(struct device *device, int enable)
+@@ -78,15 +94,43 @@ static int intel_hid_set_enable(struct device *device, int enable)
+ 	return 0;
+ }
+ 
++static void intel_button_array_enable(struct device *device, int enable)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(device);
++	acpi_handle handle = ACPI_HANDLE(device);
++	unsigned long long button_cap;
++	acpi_status status;
++
++	if (!priv->array)
++		return;
++
++	/* Query supported platform features */
++	status = acpi_evaluate_integer(handle, "BTNC", NULL, &button_cap);
++	if (ACPI_FAILURE(status)) {
++		dev_warn(device, "failed to get button capability\n");
++		return;
++	}
++
++	/* Enable|disable features - power button is always enabled */
++	status = acpi_execute_simple_method(handle, "BTNE",
++					    enable ? button_cap : 1);
++	if (ACPI_FAILURE(status))
++		dev_warn(device, "failed to set button capability\n");
++}
++
+ static int intel_hid_pl_suspend_handler(struct device *device)
+ {
+ 	intel_hid_set_enable(device, 0);
++	intel_button_array_enable(device, 0);
++
+ 	return 0;
+ }
+ 
+ static int intel_hid_pl_resume_handler(struct device *device)
+ {
+ 	intel_hid_set_enable(device, 1);
++	intel_button_array_enable(device, 1);
++
+ 	return 0;
+ }
+ 
+@@ -126,11 +170,43 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	return ret;
+ }
+ 
++static int intel_button_array_input_setup(struct platform_device *device)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
++	int ret;
++
++	/* Setup input device for 5 button array */
++	priv->array = input_allocate_device();
++	if (!priv->array)
++		return -ENOMEM;
++
++	ret = sparse_keymap_setup(priv->array, intel_array_keymap, NULL);
++	if (ret)
++		goto err_free_array_device;
++
++	priv->array->dev.parent = &device->dev;
++	priv->array->name = "Intel HID 5 button array";
++	priv->array->id.bustype = BUS_HOST;
++
++	ret = input_register_device(priv->array);
++	if (ret)
++		goto err_free_array_device;
++
++	return 0;
++
++err_free_array_device:
++	input_free_device(priv->array);
++	return ret;
++}
++
+ static void intel_hid_input_destroy(struct platform_device *device)
+ {
+ 	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
+ 
+ 	input_unregister_device(priv->input_dev);
++
++	if (priv->array)
++		input_unregister_device(priv->array);
+ }
+ 
+ static void notify_handler(acpi_handle handle, u32 event, void *context)
+@@ -140,10 +216,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	unsigned long long ev_index;
+ 	acpi_status status;
+ 
+-	/* The platform spec only defines one event code: 0xC0. */
++	/* 0xC0 is for HID events, other values are for 5 button array */
+ 	if (event != 0xc0) {
+-		dev_warn(&device->dev, "received unknown event (0x%x)\n",
+-			 event);
++		if (!priv->array ||
++		    !sparse_keymap_report_event(priv->array, event, 1, true))
++			dev_info(&device->dev, "unknown event 0x%x\n", event);
+ 		return;
+ 	}
+ 
+@@ -161,8 +238,8 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ static int intel_hid_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	unsigned long long event_cap, mode;
+ 	struct intel_hid_priv *priv;
+-	unsigned long long mode;
+ 	acpi_status status;
+ 	int err;
+ 
+@@ -193,6 +270,15 @@ static int intel_hid_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	/* Setup 5 button array */
++	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
++	if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
++		dev_info(&device->dev, "platform supports 5 button array\n");
++		err = intel_button_array_input_setup(device);
++		if (err)
++			pr_err("Failed to setup Intel 5 button array hotkeys\n");
++	}
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+@@ -206,6 +292,16 @@ static int intel_hid_probe(struct platform_device *device)
+ 	if (err)
+ 		goto err_remove_notify;
+ 
++	if (priv->array) {
++		intel_button_array_enable(&device->dev, 1);
++
++		/* Call button load method to enable HID power button */
++		status = acpi_evaluate_object(handle, "BTNL", NULL, NULL);
++		if (ACPI_FAILURE(status))
++			dev_warn(&device->dev,
++				 "failed to enable HID power button\n");
++	}
++
+ 	return 0;
+ 
+ err_remove_notify:
+@@ -224,6 +320,7 @@ static int intel_hid_remove(struct platform_device *device)
+ 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
+ 	intel_hid_input_destroy(device);
+ 	intel_hid_set_enable(&device->dev, 0);
++	intel_button_array_enable(&device->dev, 0);
+ 
+ 	/*
+ 	 * Even if we failed to shut off the event stream, we can still
 -- 
-Best regards,
-Jacek Anaszewski
+2.7.4
