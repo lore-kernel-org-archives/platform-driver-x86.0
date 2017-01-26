@@ -1,49 +1,51 @@
 From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH 3/8] Revert "asus-wmi: Add quirk_no_rfkill for the Asus Z550MA"
-Date: Thu, 26 Jan 2017 10:30:08 -0500
-Message-ID: <20170126153013.12753-4-jprvita@endlessm.com>
-References: <20170126153013.12753-1-jprvita@endlessm.com>
+Subject: [PATCH 0/8] asus-wmi: Get rid of quirk_no_rfkill{,_wapf4}
+Date: Thu, 26 Jan 2017 10:30:05 -0500
+Message-ID: <20170126153013.12753-1-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:36552 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752628AbdAZPbQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Jan 2017 10:31:16 -0500
-In-Reply-To: <20170126153013.12753-1-jprvita@endlessm.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This reverts commit 6b7ff2af5286a8c6bec7ff5f4df62e3506c1674e.
+This quirk avoids the conflicting usage of ASUS_WMI_DEVID_WLAN_LED (0x00010002)
+by both asus-wireless and asus-wmi on machines where the BIOS can't set and
+record the wlan status (wlan_ctrl_by_user in asus-wmi.c). At the moment we have
+six models using that quirk upstream, but there are another fifteen for which
+we have downstream patches, and will send upstream unless we find a more
+dynamic solution. We also expect this list to continue growing.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 9 ---------
- 1 file changed, 9 deletions(-)
+This series makes use of ASUS_WMI_DSTS_USER_BIT plus the status of the ASHS
+device to skip asus_wmi_rfkill_init(). Since asus-wmi now needs to know the ASHS
+_HIDs, I have moved device_ids[] to a new header file, asus-wireless.h. I'm not
+sure if there are any best practices in the kernel community against having one
+module including headers from a different module, but I wanted to avoid
+duplicating this list or creating an ordering dependency between the modules.
+Any advice on alternatives here are welcome.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 5bf1dd225788..9d686d642934 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -391,15 +391,6 @@ static const struct dmi_system_id asus_quirks[] = {
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. Z550MA",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Z550MA"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. UX303UB",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+PS: I don't think asus-wireless.h needs to also be listed in MAINTAINERS,
+please correct me if I'm wrong.
+
+João Paulo Rechi Vita (8):
+  Revert "asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UA"
+  Revert "asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UF"
+  Revert "asus-wmi: Add quirk_no_rfkill for the Asus Z550MA"
+  Revert "asus-wmi: Add quirk_no_rfkill for the Asus U303LB"
+  Revert "asus-wmi: Add quirk_no_rfkill for the Asus N552VW"
+  Revert "asus-wmi: Create quirk for airplane_mode LED"
+  asus-wireless: Export ids list
+  asus-wmi: Don't register rfkill if ASHS and user bit are present
+
+ drivers/platform/x86/asus-nb-wmi.c   | 49 ++----------------------------------
+ drivers/platform/x86/asus-wireless.c | 15 +++++------
+ drivers/platform/x86/asus-wireless.h | 10 ++++++++
+ drivers/platform/x86/asus-wmi.c      | 21 ++++++++++++----
+ drivers/platform/x86/asus-wmi.h      |  1 -
+ 5 files changed, 34 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/platform/x86/asus-wireless.h
+
 -- 
 2.11.0
