@@ -1,44 +1,88 @@
-From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH 5/8] Revert "asus-wmi: Add quirk_no_rfkill for the Asus N552VW"
-Date: Thu, 26 Jan 2017 10:30:10 -0500
-Message-ID: <20170126153013.12753-6-jprvita@endlessm.com>
-References: <20170126153013.12753-1-jprvita@endlessm.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 1/4] leds: class: Add new optional
+ brightness_hw_changed attribute
+Date: Thu, 26 Jan 2017 20:51:24 +0100
+Message-ID: <70a01088-f772-6dec-a505-bf058cc2b0dd@gmail.com>
+References: <20170125161130.5424-1-hdegoede@redhat.com>
+ <20170125161130.5424-2-hdegoede@redhat.com> <20170125164936.GE7936@pali>
+ <b43ec266-d5ba-d974-b964-25fe82115db5@gmail.com> <20170126083338.GA6085@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170126153013.12753-1-jprvita@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:33141 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753022AbdAZTwK (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 26 Jan 2017 14:52:10 -0500
+In-Reply-To: <20170126083338.GA6085@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-This reverts commit 2d735244b798f0c8bf93ace1facfafdc1f7a4e6e.
+On 01/26/2017 09:33 AM, Pali Rohár wrote:
+> On Wednesday 25 January 2017 22:35:53 Jacek Anaszewski wrote:
+>> On 01/25/2017 05:49 PM, Pali Rohár wrote:
+>>> On Wednesday 25 January 2017 17:11:27 Hans de Goede wrote:
+>>>> Some LEDs may have their brightness level changed autonomously
+>>>> (outside of kernel control) by hardware / firmware. This commit
+>>>> adds support for an optional brightness_hw_changed attribute to
+>>>> signal such changes to userspace (if a driver can detect them):
+>>>>
+>>>> What:		/sys/class/leds/<led>/brightness_hw_changed
+>>>> Date:		January 2017
+>>>> KernelVersion:	4.11
+>>>> Description:
+>>>> 		Last hardware set brightness level for this LED. Some LEDs
+>>>> 		may be changed autonomously by hardware/firmware. Only LEDs
+>>>> 		where this happens and the driver can detect this, will
+>>>> 		have this file.
+>>>>
+>>>> 		This file supports poll() to detect when the hardware
+>>>> 		changes the brightness.
+>>>>
+>>>> 		Reading this file will return the last brightness level set
+>>>> 		by the hardware, this may be different from the current
+>>>> 		brightness.
+> 
+> In which situation this attribute may be different?
+> 
+> I think some information should be present in this description...
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 9 ---------
- 1 file changed, 9 deletions(-)
+The first sentence in description says:
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 5e088fbef5ad..3a2fb29b1bc4 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -373,15 +373,6 @@ static const struct dmi_system_id asus_quirks[] = {
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. N552VW",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N552VW"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. UX303UB",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+"Last hardware set brightness level for this LED" - i.e. it may be
+different from the _actual_ brightness, which could have been set by
+LED class driver.
+
+>>>> Drivers which want to support this, simply add LED_BRIGHT_HW_CHANGED to
+>>>> their flags field and call led_classdev_notify_brightness_hw_changed()
+>>>> with the hardware set brightness when they detect a hardware / firmware
+>>>> triggered brightness change.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> Just speculation: What about using name 'actual_brightness'? It provides
+>>> same output on read as actual_brightness from /sys/class/backlight/.
+>>
+>> This name is ambiguous. Propagating it to the LED subsystem only because
+>> it exists in backlight is not sufficient argument IMHO.
+> 
+> I thought that having same name could help userspace and also to have
+> consistency between similar subsystems. But ok, that was just my
+> speculation.
+
+Please also note the "actual" would be ambiguous especially in view
+of my above explanation.
+
+> I have just one small suggestion in current name "brightness_hw_changed".
+> As it provides regular read() capability I would suggest to not indicate
+> "activity" (changed) in name...
+
+Without "changed" one could think that brightness file (the one we have
+currently) doesn't reflect hardware state.
+
 -- 
-2.11.0
+Best regards,
+Jacek Anaszewski
