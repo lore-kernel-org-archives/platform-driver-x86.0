@@ -1,77 +1,38 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v6 1/4] leds: class: Add new optional
- brightness_hw_changed attribute
-Date: Thu, 26 Jan 2017 09:33:44 +0100
-Message-ID: <20170126083338.GA6085@pali>
-References: <20170125161130.5424-1-hdegoede@redhat.com>
- <20170125161130.5424-2-hdegoede@redhat.com>
- <20170125164936.GE7936@pali>
- <b43ec266-d5ba-d974-b964-25fe82115db5@gmail.com>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [PATCH 1/1] asus-wireless: Fix identation
+Date: Thu, 26 Jan 2017 09:25:54 -0500
+Message-ID: <20170126142554.8812-1-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:36297 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752835AbdAZIdw (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:36353 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752571AbdAZO0R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Jan 2017 03:33:52 -0500
-Content-Disposition: inline
-In-Reply-To: <b43ec266-d5ba-d974-b964-25fe82115db5@gmail.com>
+        Thu, 26 Jan 2017 09:26:17 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
 
-On Wednesday 25 January 2017 22:35:53 Jacek Anaszewski wrote:
-> On 01/25/2017 05:49 PM, Pali Rohár wrote:
-> > On Wednesday 25 January 2017 17:11:27 Hans de Goede wrote:
-> >> Some LEDs may have their brightness level changed autonomously
-> >> (outside of kernel control) by hardware / firmware. This commit
-> >> adds support for an optional brightness_hw_changed attribute to
-> >> signal such changes to userspace (if a driver can detect them):
-> >>
-> >> What:		/sys/class/leds/<led>/brightness_hw_changed
-> >> Date:		January 2017
-> >> KernelVersion:	4.11
-> >> Description:
-> >> 		Last hardware set brightness level for this LED. Some LEDs
-> >> 		may be changed autonomously by hardware/firmware. Only LEDs
-> >> 		where this happens and the driver can detect this, will
-> >> 		have this file.
-> >>
-> >> 		This file supports poll() to detect when the hardware
-> >> 		changes the brightness.
-> >>
-> >> 		Reading this file will return the last brightness level set
-> >> 		by the hardware, this may be different from the current
-> >> 		brightness.
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+---
+ drivers/platform/x86/asus-wireless.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In which situation this attribute may be different?
-
-I think some information should be present in this description...
-
-> >> Drivers which want to support this, simply add LED_BRIGHT_HW_CHANGED to
-> >> their flags field and call led_classdev_notify_brightness_hw_changed()
-> >> with the hardware set brightness when they detect a hardware / firmware
-> >> triggered brightness change.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > 
-> > Just speculation: What about using name 'actual_brightness'? It provides
-> > same output on read as actual_brightness from /sys/class/backlight/.
-> 
-> This name is ambiguous. Propagating it to the LED subsystem only because
-> it exists in backlight is not sufficient argument IMHO.
-
-I thought that having same name could help userspace and also to have
-consistency between similar subsystems. But ok, that was just my
-speculation.
-
-I have just one small suggestion in current name "brightness_hw_changed".
-As it provides regular read() capability I would suggest to not indicate
-"activity" (changed) in name...
-
+diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
+index 9f31bc1a47d0..c9b5ac152cf1 100644
+--- a/drivers/platform/x86/asus-wireless.c
++++ b/drivers/platform/x86/asus-wireless.c
+@@ -77,7 +77,7 @@ static void led_state_update(struct work_struct *work)
+ }
+ 
+ static void led_state_set(struct led_classdev *led,
+-				  enum led_brightness value)
++			  enum led_brightness value)
+ {
+ 	struct asus_wireless_data *data;
+ 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.11.0
