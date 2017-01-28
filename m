@@ -1,67 +1,130 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: fix out-of-bounds accesses
- on stack
-Date: Sat, 28 Jan 2017 16:12:46 +0200
-Message-ID: <CAHp75VcZ1zVag78zujsuA1mZNMMSsxsTb9Efs3WO0D0c+K9Hcw@mail.gmail.com>
-References: <20170126142723.23886-1-aryabinin@virtuozzo.com>
- <CAHp75VfV3T546uZbctMBtdd55R06KHsynRP=fP06fBLLEs3Sgw@mail.gmail.com> <0f7da819-9353-9b11-cd78-99489c5d39f5@virtuozzo.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v6 2/4] platform/x86/thinkpad: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Sat, 28 Jan 2017 16:34:05 +0100
+Message-ID: <d0a2e85a-10b8-57af-6f8e-8799b077f3eb@redhat.com>
+References: <20170125161130.5424-1-hdegoede@redhat.com>
+ <20170125161130.5424-3-hdegoede@redhat.com>
+ <CAHp75VcotSMy3wmmYcaWVSzpVSvHY8zxTydLiFCt1wdcxdb1Ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:35033 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751232AbdA1OMs (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 28 Jan 2017 09:12:48 -0500
-In-Reply-To: <0f7da819-9353-9b11-cd78-99489c5d39f5@virtuozzo.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcotSMy3wmmYcaWVSzpVSvHY8zxTydLiFCt1wdcxdb1Ww@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, linux-leds@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 27, 2017 at 6:31 PM, Andrey Ryabinin
-<aryabinin@virtuozzo.com> wrote:
-> On 01/27/2017 06:42 PM, Andy Shevchenko wrote:
->> On Thu, Jan 26, 2017 at 4:27 PM, Andrey Ryabinin
->> <aryabinin@virtuozzo.com> wrote:
->>>  #if IS_ENABLED(CONFIG_DEBUG_FS)
->>> @@ -234,12 +230,8 @@ static const struct file_operations pmc_core_ppfear_ops = {
->>>  /* This function should return link status, 0 means ready */
->>>  static int pmc_core_mtpmc_link_status(void)
->>>  {
->>> -       struct pmc_dev *pmcdev = &pmc;
->>> -       u32 value;
->>> -
->>> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_PM_STS_OFFSET);
->>> -       return test_bit(SPT_PMC_MSG_FULL_STS_BIT,
->>> -                       (unsigned long *)&value);
->>> +       u32 value = pmc_core_reg_read(&pmc, SPT_PMC_PM_STS_OFFSET);
->>> +       return value & (1U << SPT_PMC_MSG_FULL_STS_BIT);
->>>  }
+Hi,
+
+On 01/28/2017 02:36 PM, Andy Shevchenko wrote:
+> On Wed, Jan 25, 2017 at 6:11 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Make thinkpad_acpi call led_classdev_notify_brightness_hw_changed on the
+>> kbd_led led_classdev registered by thinkpad_acpi when the kbd backlight
+>> brightness is changed through the hotkey.
 >>
->> Thanks for the patch. IIRC I told (or may be forgot to tell) them
->> during internal review about the nasty casting.
+>> This will allow userspace to monitor (poll) for brightness changes on
+>> these LEDs caused by the hotkey.
 >>
->> Btw, have you checked this will work in the same way, since test_bit()
->> is atomic?
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >
-> 'value' is a local variable, atomicity is pointless here.
+> I didn't see v7 of this and consequent patches. What's going on?
 
-Ah, indeed.
+As I said in the cover-letter of v6 the platform patches were mainly
+there to document the usage of the new LED api. Since there were no
+changes to the api I did not post a v7 of the platform/x86 patches,
+also I've not yet tested the thinkpad changes as adjusted for the
+new LED api.
 
->> And if it's okay, why not to use BIT() macro?
+Once the LED side is merged, I'll re-post the platform patches.
 
-> It just a matter of taste. I find open-coded variant easier to read.
+Regards,
 
-Okay, what I'm about to do:
+Hans
 
-- switch to BIT() macro (it's already used by the driver)
-- revert unrelated changes (piece of code where we get value)
 
-and push it to testing.
 
-Tell me if you have any objections.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+>> ---
+>> Changes in v3:
+>> -This is a new patch in v3 of this patch-set
+>> Changes in v4:
+>> -No changes
+>> Changes in v5:
+>> -Switch to new led-trigger based API for notifying userspace about
+>>  keyboard backlight brightness changes.
+>> -Also call ledtrig_kbd_backlight() for laptops with a thinklight
+>> -Rename the hotkey defines from THINKLIGHT to KBD_LIGHT since they
+>>  are shared between the thinklight and the keyboard backlight
+>> Changes in v6:
+>> -Switch to new brightness_hw_changed LED class API
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index cacb43f..6249292 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -163,6 +163,7 @@ enum tpacpi_hkey_event_t {
+>>         TP_HKEY_EV_HOTKEY_BASE          = 0x1001, /* first hotkey (FN+F1) */
+>>         TP_HKEY_EV_BRGHT_UP             = 0x1010, /* Brightness up */
+>>         TP_HKEY_EV_BRGHT_DOWN           = 0x1011, /* Brightness down */
+>> +       TP_HKEY_EV_KBD_LIGHT            = 0x1012, /* Thinklight/kbd backlight */
+>>         TP_HKEY_EV_VOL_UP               = 0x1015, /* Volume up or unmute */
+>>         TP_HKEY_EV_VOL_DOWN             = 0x1016, /* Volume down or unmute */
+>>         TP_HKEY_EV_VOL_MUTE             = 0x1017, /* Mixer output mute */
+>> @@ -1959,7 +1960,7 @@ enum {    /* Positions of some of the keys in hotkey masks */
+>>         TP_ACPI_HKEY_HIBERNATE_MASK     = 1 << TP_ACPI_HOTKEYSCAN_FNF12,
+>>         TP_ACPI_HKEY_BRGHTUP_MASK       = 1 << TP_ACPI_HOTKEYSCAN_FNHOME,
+>>         TP_ACPI_HKEY_BRGHTDWN_MASK      = 1 << TP_ACPI_HOTKEYSCAN_FNEND,
+>> -       TP_ACPI_HKEY_THNKLGHT_MASK      = 1 << TP_ACPI_HOTKEYSCAN_FNPAGEUP,
+>> +       TP_ACPI_HKEY_KBD_LIGHT_MASK     = 1 << TP_ACPI_HOTKEYSCAN_FNPAGEUP,
+>>         TP_ACPI_HKEY_ZOOM_MASK          = 1 << TP_ACPI_HOTKEYSCAN_FNSPACE,
+>>         TP_ACPI_HKEY_VOLUP_MASK         = 1 << TP_ACPI_HOTKEYSCAN_VOLUMEUP,
+>>         TP_ACPI_HKEY_VOLDWN_MASK        = 1 << TP_ACPI_HOTKEYSCAN_VOLUMEDOWN,
+>> @@ -2344,7 +2345,7 @@ static void hotkey_read_nvram(struct tp_nvram_state *n, const u32 m)
+>>                 n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
+>>                 n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
+>>         }
+>> -       if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
+>> +       if (m & TP_ACPI_HKEY_KBD_LIGHT_MASK) {
+>>                 d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
+>>                 n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
+>>         }
+>> @@ -5193,6 +5194,7 @@ static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
+>>         .led_classdev = {
+>>                 .name           = "tpacpi::kbd_backlight",
+>>                 .max_brightness = 2,
+>> +               .flags          = LED_BRIGHT_HW_CHANGED,
+>>                 .brightness_set = &kbdlight_sysfs_set,
+>>                 .brightness_get = &kbdlight_sysfs_get,
+>>         }
+>> @@ -5222,6 +5224,8 @@ static int __init kbdlight_init(struct ibm_init_struct *iibm)
+>>                 return rc;
+>>         }
+>>
+>> +       tpacpi_hotkey_driver_mask_set(hotkey_driver_mask |
+>> +                                     TP_ACPI_HKEY_KBD_LIGHT_MASK);
+>>         return 0;
+>>  }
+>>
+>> @@ -9169,6 +9173,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+>>                         volume_alsa_notify_change();
+>>                 }
+>>         }
+>> +       if (tp_features.kbdlight && hkey_event == TP_HKEY_EV_KBD_LIGHT)
+>> +               led_classdev_notify_brightness_hw_changed(
+>> +                       &tpacpi_led_kbdlight.led_classdev,
+>> +                       kbdlight_sysfs_get(NULL));
+>>  }
+>>
+>>  static void hotkey_driver_event(const unsigned int scancode)
+>> --
+>> 2.9.3
+>>
+>
+>
+>
