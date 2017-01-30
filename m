@@ -1,107 +1,133 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: [PATCH] Add sysfs interface for touchpad state
-Date: Mon, 30 Jan 2017 16:27:49 +0530
-Message-ID: <20170130105749.17338-1-rrs@debian.org>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: [PATCH 3/4][RFC] fujitsu-laptop: autodetect lcd interface on unknown
+ models
+Date: Mon, 30 Jan 2017 23:15:15 +1030
+Message-ID: <20170130124515.GF10561@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:35179 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751141AbdA3LEE (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:51862 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751009AbdA3MqS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Jan 2017 06:04:04 -0500
-Received: by mail-pg0-f65.google.com with SMTP id 204so31265209pge.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Jan 2017 03:04:04 -0800 (PST)
+        Mon, 30 Jan 2017 07:46:18 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Ritesh Raj Sarraf <rrs@debian.org>
+To: kernel@kempniu.pl
+Cc: platform-driver-x86@vger.kernel.org
 
-Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
-14 etc) has multiple modles that are a hybrid laptop, working in laptop
-mode as well as tablet mode.
+Do lcd autodetection for all models - not just the ones we have DMI
+matches for.
 
-There is no interface available to query the physical state of these
-devices. Also, from the driver, it doesn't look to be having an EC
-command to get that information from the acpi driver.
+Also, if we're running on an unknown model, inform the user that generic
+keycodes (PROG_1 up to PROG_4) will be used as opposed to specific codes
+like KEY_HELP.
 
-When in tablet mode, the hardware keyboard and touchpad get disabled.
-This could be one sub-optimal way to assume that under such condition
-(touchpad disabled) the machine is in Tablet-Mode. Other than this, I've
-not come across another way to determine the physical state of the
-hardware.
+Signed-off-by: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
+Signed-off-by: Jonathan Woithe <jwoithe@just42.net>
 
-Currently, some of the hardware status is provided through debugfs,
-which is useless for unprivileged processes. (This already has many
-broken reports: radio and wifi, which are active/on as I write this)
-
-root@learner:/sys/kernel/debug# cat ideapad/status
-Backlight max:	16
-Backlight now:	3
-BL power value:	On
-=====================
-Radio status:	Off(0)
-Wifi status:	Off(0)
-BT status:	Off(0)
-3G status:	Off(0)
-=====================
-Touchpad status:On(1)
-SW_TABLET_MODE:	Off(0)
-Camera status:	On(1)
-
-This patch adds a sysfs interface for unprivileged process access under:
-/sys/bus/platform/devices/VPC2004\:00/touchpad_state
-
-rrs@learner:/sys/bus/platform/devices/VPC2004:00$ cat touchpad_state
-1
-2017-01-30 / 16:12:00 ♒♒♒  ☺
-rrs@learner:/sys/bus/platform/devices/VPC2004:00$ cat touchpad_state
-0
-2017-01-30 / 16:12:06 ♒♒♒  ☺
-
-Signed-off-by: Ritesh Raj Sarraf <rrs@debian.org>
----
- drivers/platform/x86/ideapad-laptop.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index a7614fc542b5..3a1622ef2f45 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -423,9 +423,33 @@ static ssize_t store_ideapad_fan(struct device *dev,
- 
- static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
- 
-+
-+static ssize_t show_touchpad_state(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	unsigned long result;
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+
-+	if (read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result))
-+		return sprintf(buf, "-1\n");
-+	return sprintf(buf, "%lu\n", result);
-+}
-+
-+static ssize_t store_touchpad_state(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+        /* Don't enable writing here */
-+        return -1;
-+}
-+
-+static DEVICE_ATTR(touchpad_state, 0644, show_touchpad_state, store_touchpad_state);
-+
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
- 	&dev_attr_fan_mode.attr,
-+	&dev_attr_touchpad_state.attr,
- 	NULL
+--- a/drivers/platform/x86/fujitsu-laptop.c	2017-01-30 22:41:22.976106164 +1030
++++ b/drivers/platform/x86/fujitsu-laptop.c	2017-01-30 22:41:04.736105860 +1030
+@@ -161,6 +161,7 @@
+ 	struct acpi_device *dev;
+ 	struct input_dev *input;
+ 	char phys[32];
++	const char *dmi_ident;
+ 	struct platform_device *pf_device;
+ 	struct kfifo fifo;
+ 	spinlock_t fifo_lock;
+@@ -615,23 +616,9 @@
+ 		   }
  };
  
--- 
-2.11.0
+-static void __init dmi_check_cb_common(const struct dmi_system_id *id)
+-{
+-	pr_info("Identified laptop model '%s'\n", id->ident);
+-	if (use_alt_lcd_levels == -1) {
+-		if (acpi_has_method(NULL,
+-				"\\_SB.PCI0.LPCB.FJEX.SBL2"))
+-			use_alt_lcd_levels = 1;
+-		else
+-			use_alt_lcd_levels = 0;
+-		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as "
+-			"%i\n", use_alt_lcd_levels);
+-	}
+-}
+-
+ static int __init dmi_check_cb_s6410(const struct dmi_system_id *id)
+ {
+-	dmi_check_cb_common(id);
++	fujitsu_laptop->dmi_ident = id->ident;
+ 	fujitsu_laptop->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+ 	fujitsu_laptop->keycode2 = KEY_HELP;		/* "Mobility Center" */
+ 	return 1;
+@@ -639,7 +626,7 @@
+ 
+ static int __init dmi_check_cb_s6420(const struct dmi_system_id *id)
+ {
+-	dmi_check_cb_common(id);
++	fujitsu_laptop->dmi_ident = id->ident;
+ 	fujitsu_laptop->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+ 	fujitsu_laptop->keycode2 = KEY_HELP;		/* "Mobility Center" */
+ 	return 1;
+@@ -647,7 +634,7 @@
+ 
+ static int __init dmi_check_cb_p8010(const struct dmi_system_id *id)
+ {
+-	dmi_check_cb_common(id);
++	fujitsu_laptop->dmi_ident = id->ident;
+ 	fujitsu_laptop->keycode1 = KEY_HELP;		/* "Support" */
+ 	fujitsu_laptop->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
+ 	fujitsu_laptop->keycode4 = KEY_WWW;		/* "Internet" */
+@@ -683,8 +670,8 @@
+ 
+ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ {
+-	int result = 0;
+ 	int state = 0;
++	int result = 0;
+ 	struct input_dev *input;
+ 	int error;
+ 
+@@ -742,6 +729,16 @@
+ 			pr_err("_INI Method failed\n");
+ 	}
+ 
++	if (use_alt_lcd_levels == -1) {
++		if (acpi_has_method(NULL,
++				"\\_SB.PCI0.LPCB.FJEX.SBL2"))
++			use_alt_lcd_levels = 1;
++		else
++			use_alt_lcd_levels = 0;
++		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as "
++			"%i\n", use_alt_lcd_levels);
++	}
++
+ 	/* do config (detect defaults) */
+ 	use_alt_lcd_levels = use_alt_lcd_levels == 1 ? 1 : 0;
+ 	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
+@@ -877,11 +874,18 @@
+ 	sprintf(acpi_device_class(device), "%s", ACPI_FUJITSU_CLASS);
+ 	device->driver_data = fujitsu_laptop;
+ 
+-	fujitsu_laptop->keycode1 = KEY_PROG1;
+-	fujitsu_laptop->keycode2 = KEY_PROG2;
+-	fujitsu_laptop->keycode3 = KEY_PROG3;
+-	fujitsu_laptop->keycode4 = KEY_PROG4;
+-	dmi_check_system(fujitsu_laptop_dmi_table);
++	if (dmi_check_system(fujitsu_laptop_dmi_table)) {
++		pr_info("Identified laptop model '%s'\n", 
++			fujitsu_laptop->dmi_ident);
++	} else {
++		pr_info("fujitsu-laptop: Unknown laptop model"
++			" - using generic keycodes.\n");
++		fujitsu_laptop->keycode1 = KEY1_CODE;
++		fujitsu_laptop->keycode2 = KEY2_CODE;
++		fujitsu_laptop->keycode3 = KEY3_CODE;
++		fujitsu_laptop->keycode4 = KEY4_CODE;
++		fujitsu_laptop->keycode5 = KEY5_CODE;
++	}
+ 
+ 	/* kfifo */
+ 	spin_lock_init(&fujitsu_laptop->fifo_lock);
