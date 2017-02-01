@@ -1,94 +1,81 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: Re: [PATCH] Add sysfs interface for touchpad state
-Date: Wed, 01 Feb 2017 21:47:26 +0530
-Message-ID: <1485965846.14297.1.camel@debian.org>
-References: <20170130105749.17338-1-rrs@debian.org>
-         <CAHp75VcekiLxkGbHFXbPvTX7SwBHobQFmnx5Y-uFWXZSEN9ujA@mail.gmail.com>
-         <1485863265.11199.3.camel@debian.org>
-         <CAHp75Vfbr0dfxjv1QhF+z6D1Ptd5z9s0K825VnE786W2-y+kPQ@mail.gmail.com>
-         <1485959219.8977.1.camel@debian.org>
-         <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
-Reply-To: rrs@debian.org
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v4 14/16] kprobes: move kprobe declarations to
+ asm-generic/kprobes.h
+Date: Wed, 1 Feb 2017 21:02:21 +0100
+Message-ID: <20170201200221.GH24047@wotan.suse.de>
+References: <1471642454-5679-1-git-send-email-mcgrof@kernel.org>
+ <1471642454-5679-15-git-send-email-mcgrof@kernel.org>
+ <20160823001140.8f7293408d2094a14c7725a1@kernel.org>
+ <20160823163104.GZ3296@wotan.suse.de>
+ <20160829230418.0d1d69ea76810db5148316e5@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:36711 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752566AbdBAQRb (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:49026 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753266AbdBAUC0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Feb 2017 11:17:31 -0500
-Received: by mail-pf0-f196.google.com with SMTP id 19so32072570pfo.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Feb 2017 08:17:30 -0800 (PST)
-In-Reply-To: <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
+        Wed, 1 Feb 2017 15:02:26 -0500
+Content-Disposition: inline
+In-Reply-To: <20160829230418.0d1d69ea76810db5148316e5@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, jpoimboe@redhat.com, bp@alien8.de, linux@arm.linux.org.uk, masami.hiramatsu.pt@hitachi.com, jbaron@akamai.com, heiko.carstens@de.ibm.com, ananth@linux.vnet.ibm.com, anil.s.keshavamurthy@intel.com, davem@davemloft.net, realmz6@gmail.com, x86@kernel.org, luto@amacapital.net, keescook@chromium.org, torvalds@linux-foundation.org, gregkh@linuxfoundation.org, rusty@rustcorp.com.au, gnomes@lxorguk.ukuu.org.uk, alan@linux.intel.com, dwmw2@infradead.org, arnd@arndb.de, ming.lei@canonical.com, linux-arch@vger.kernel.org, benh@kernel.crashing.org, ananth@in.ibm.com, pebolle@tiscali.nl, fontana@sharpeleven.org, david.vrabel@citrix.com, konrad.wilk@oracle.com, mcb30@ipxe.org, jgross@suse.coma
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
-On Wed, 2017-02-01 at 17:07 +0200, Andy Shevchenko wrote:
-> > root@learner:/sys/class/input# od -x /dev/input/event6
-> > ?0000000 ee33 5891 0000 0000 2bd9 0005 0000 0000
-> > ^@0000020 0004 0004 0042 0000 ee33 5891 0000 0000
-> > 0000040 2bd9 0005 0000 0000 0001 00c1 0001 0000
-> > 0000060 ee33 5891 0000 0000 2bd9 0005 0000 0000
-> > 0000100 0000 0000 0000 0000 ee33 5891 0000 0000
-> > 0000120 2c09 0005 0000 0000 0001 00c1 0000 0000
-> > 0000140 ee33 5891 0000 0000 2c09 0005 0000 0000
-> > 0000160 0000 0000 0000 0000 ee37 5891 0000 0000
-> > 0000200 3d7e 000f 0000 0000 0004 0004 0043 0000
-> > 0000220 ee37 5891 0000 0000 3d7e 000f 0000 0000
-> > 0000240 0001 00c0 0001 0000 ee37 5891 0000 0000
-> > 0000260 3d7e 000f 0000 0000 0000 0000 0000 0000
-> > 0000300 ee37 5891 0000 0000 3dae 000f 0000 0000
-> > 0000320 0001 00c0 0000 0000 ee37 5891 0000 0000
-> > 0000340 3dae 000f 0000 0000 0000 0000 0000 0000
+On Mon, Aug 29, 2016 at 11:04:18PM +0900, Masami Hiramatsu wrote:
+> On Tue, 23 Aug 2016 18:31:05 +0200
+> "Luis R. Rodriguez" <mcgrof@kernel.org> wrote:
 > 
-> So, the whole idea of this exercise is to show that driver sends an
-> event whenever you bend / unbend the cover.
-> User space already will know what is the state of the cover.
+> > On Tue, Aug 23, 2016 at 12:11:40AM +0900, Masami Hiramatsu wrote:
+> > > On Fri, 19 Aug 2016 14:34:12 -0700
+> > > mcgrof@kernel.org wrote:
+> > > 
+> > > > From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+> > > > 
+> > > > Often all is needed is these small helpers, instead of compiler.h
+> > > > or a full kprobes.h. This is important for asm helpers, in fact even
+> > > > some asm/kprobes.h make use of these helpers... instead just keep a
+> > > > generic asm file with helpers useful for asm code with the least amount
+> > > > of clutter as possible.
+> > > > 
+> > > > Likewise we need now to also address what to do about this file for both
+> > > > when architectures have CONFIG_HAVE_KPROBES, and when they do not. Then
+> > > > for when architectures have CONFIG_HAVE_KPROBES but have disabled
+> > > > CONFIG_KPROBES.
+> > > > 
+> > > > Right now most asm/kprobes.h do not have guards against CONFIG_KPROBES,
+> > > > this means most architecture code cannot include asm/kprobes.h safely.
+> > > > Correct this and add guards for architectures missing them. Additionally
+> > > > provide architectures that not have kprobes support with the default
+> > > > asm-generic solution. This lets us force asm/kprobes.h on the header
+> > > > include/linux/kprobes.h always, but most importantly we can now safely
+> > > > include just asm/kprobes.h on architecture code without bringing
+> > > > the full kitchen sink of header files.
+> > > > 
+> > > > Two architectures already provided a guard against CONFIG_KPROBES on
+> > > > its kprobes.h: sh, arch. The rest of the architectures needed gaurds
+> > > > added. We avoid including any not-needed headers on asm/kprobes.h
+> > > > unless kprobes have been enabled.
+> > > > 
+> > > > In a subsequent atomic change we can try now to remove compiler.h from
+> > > > include/linux/kprobes.h.
+> > > 
+> > > Hmm, this looks a bit overkill... I rather like move it into linux/table.h.
+> > 
+> > That's the thing, we can't reasonably expect every table to add an entry into
+> > table.h, this should be up to each user. Moving it to tables.h just prolongs
+> > what needs to be done. In this case the change is justifiable given kprobe
+> > annotations are required for some architectures early in architecture code, and
+> > including compiler.h on early architecture code blows up. There is no easy fix
+> > to this, and this this was *actually* the cleanest solution I could devise
+> > without much changes.
 > 
-
-Yes. But we've not found the interface in sysfs where we could read that from.
-Nor did udev report anything meaningful for it.
-
-> > By the way, does the patch make sense for
-> > inclusion ? To have an interface for touchpad mode ?
+> Aah, I misread your patch, it is asm-generic/kprobes.h, not asm/kprobes.h.
+> I think it is OK now.
 > 
-> The question now is why do you need that on top of existing event?
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-If you have time, please see:
-https://bugs.launchpad.net/bugs/1366421
+I'm going to send this patch out separately shortly as its independent.
 
-It has pretty much all the details on what and why we need something in sysfs.
-
-For HP and ThinkPad, there already are interfaces available.
-
-/sys/devices/platform/hp-wmi/tablet
-/sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode
-
-It'd be nice to see the same for Yoga IdeaPad; a proper interface for tablet-
-mode.
-
-- -- 
-Ritesh Raj Sarraf | http://people.debian.org/~rrs
-Debian - The Universal Operating System
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAliSChYACgkQpjpYo/Lh
-dWm/LhAAitvcaPzR2fUR6gtlxMLOQDTEPA8rjQdVmIBFLYPV9OTyJPkjz9V0aZlR
-S4BcGa43foXLNsj5tGFNoy8gucwQ2bpEEpPJazlsmRVk9SB7Ui0GVzU673EUqCHD
-wR3NI4MzlEmo6RV8DxTyx6rGOjGH2XGjwi6cbfZFLiehw7RjYZV5ggO5uxK+O43n
-EbudMaiHOZeg+rYtU+c162TdAjPwwWTiTx5LJvZpam7QS3M31U76PdVt75bacbfH
-m7TarxK15ksP9Mmj3DJnXKavOS5u92mPRkSIZmE/hmWsJ/X6tmTzgX0tHddF4N+7
-yaftBwglqV6Da8Xylc9GKkC2Q/b0mXSQqTwr86fK2TyKY6HHj5QJ6CNG9gwP33tG
-Kg2zIpMzKul7FHpJeQIrHL312Z/4bek1Islki2ydt8CwdheMPTnxUqcFNKpaTItM
-FudQTJuaffXinmavGtwco/iFBqJbnqX3RkgWpXxyIvG4NTLrcMcMDKY6DRo+f2FB
-0ojU2APhPZ+63+fvCwO1Bv06/vbzfphkOvgQv6w2laekmuCJaF2RfQDj8N+DiteH
-LRmqYpF4UEr4WnJeHuumV3oRQsjHU6exdzg/5oBNyJ1vD8CzRFYvTgyNmdunmFnp
-ybuVmjVIjFKxGnF1x46ZFF+o7CM0+3XeC6vFYbT3WNDQq1iQKTY=
-=/CI9
------END PGP SIGNATURE-----
+  Luis
