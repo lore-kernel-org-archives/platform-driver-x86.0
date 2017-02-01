@@ -1,44 +1,28 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 01/10] platform/x86: intel_mid_powerbtn: Set IRQ_ONESHOT
-Date: Thu, 19 Jan 2017 18:39:40 +0200
-Message-ID: <20170119163949.147183-2-andriy.shevchenko@linux.intel.com>
-References: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
+From: Miss Marbell <spdr3re9@friend.ocn.ne.jp>
+Subject: =?utf-8?Q?Bitte_kontaktieren_Sie_mich_f=C3=BCr_weitere_Details!?=
+Date: Wed, 1 Feb 2017 19:40:19 +0900 (JST)
+Message-ID: <1712551087.132267998.1485945619369.JavaMail.root__32886.5531752401$1485946819$gmane$org@friend.ocn.ne.jp>
+Reply-To: Miss Marbell <brownson.m221@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:31130 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753328AbdASRUs (ORCPT
+Received: from mbkd0222.ocn.ad.jp ([153.149.233.23]:59542 "EHLO
+        mbkd0222.ocn.ad.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751259AbdBALAR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Jan 2017 12:20:48 -0500
-In-Reply-To: <20170119163949.147183-1-andriy.shevchenko@linux.intel.com>
+        Wed, 1 Feb 2017 06:00:17 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The commit 1c6c69525b40 ("genirq: Reject bogus threaded irq requests")
-starts refusing misconfigured interrupt handlers. This makes
-intel_mid_powerbtn not working anymore.
+Sehr geehrte Damen und Herren,
 
-Add a mandatory flag to a threaded IRQ request in the driver.
+Ich brauche Ihre Unterstützung in Ihrem Land zu verlagern und zu investieren.Ich bitte Sie um Hilfe, weil ich nicht das Wissen über
+Geschäft und die Regeln, die Ihr Land für eine sichere Investition führen.
 
-Fixes: 1c6c69525b40 ("genirq: Reject bogus threaded irq requests")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Werden Sie versprechen, mit mir aufrichtig zu sein?
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 1fc0de870ff8..361770568ad0 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -77,7 +77,7 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 
- 	input_set_capability(input, EV_KEY, KEY_POWER);
- 
--	error = request_threaded_irq(irq, NULL, mfld_pb_isr, 0,
-+	error = request_threaded_irq(irq, NULL, mfld_pb_isr, IRQF_ONESHOT,
- 				     DRIVER_NAME, input);
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
--- 
-2.11.0
+Bitte kontaktieren Sie mich für weitere Details!
+
+Mit freundlichen Grüßen,
+Fräulein Marbell.
