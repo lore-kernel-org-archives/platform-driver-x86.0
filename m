@@ -1,56 +1,94 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: Cherryview wake up events
-Date: Thu, 2 Feb 2017 17:02:12 +0200
-Message-ID: <20170202150212.GA2053@lahna.fi.intel.com>
-References: <CAHp75Vfdk2u2wQa9ZR1vGCAPYL4rnSF78pJR98t+J0+Sn9LuqA@mail.gmail.com>
- <20170131143740.lgn2svjskjulsucf@sig21.net>
- <20170202095200.d5clhprl7rpgrf72@sig21.net>
- <20170202103122.GH2053@lahna.fi.intel.com>
- <20170202111222.aoiwinw37jrquhbh@sig21.net>
- <20170202113508.GM2053@lahna.fi.intel.com>
- <20170202121639.GO2053@lahna.fi.intel.com>
- <20170202135257.q2djuvnhlsu2qv2v@sig21.net>
- <20170202142618.GX2053@lahna.fi.intel.com>
- <20170202143145.xnjnicrxf5uapuwl@sig21.net>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: silead depends on I2C being built-in
+Date: Thu, 2 Feb 2017 16:10:00 +0100
+Message-ID: <3f7dc6b8-7447-f067-b771-8a306800ede3@redhat.com>
+References: <20170202142744.3418986-1-arnd@arndb.de>
+ <859e4199-8c8d-c1a8-6898-5ed4fe4572e4@redhat.com>
+ <CAHp75VfgGOGhO-U_dMWGvnChUqXnuxwC-xKSMNs-FJeyBzOoDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170202143145.xnjnicrxf5uapuwl@sig21.net>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Johannes Stezenbach <js@sig21.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>, ramakrishna.pallala@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:54978 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751445AbdBBPKD (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 2 Feb 2017 10:10:03 -0500
+In-Reply-To: <CAHp75VfgGOGhO-U_dMWGvnChUqXnuxwC-xKSMNs-FJeyBzOoDw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, Feb 02, 2017 at 03:31:45PM +0100, Johannes Stezenbach wrote:
-> On Thu, Feb 02, 2017 at 04:26:18PM +0200, Mika Westerberg wrote:
-> > On Thu, Feb 02, 2017 at 02:52:57PM +0100, Johannes Stezenbach wrote:
-> > > Looking at 0002-GPIO-Adding-AXP288-PMIC-GPIO-driver.patch from ProductionKernelQuilts,
-> > > it doesn't seem hard to do the same for the TI PMIC, but it needs information
-> > > from the PMIC datasheet for irq and gpio control registers.
-> > > Hopefully you have a patch or at least could provide the information.
-> > 
-> > That patch looks like a GPIO driver for DCOVE. Did you try it already?
-> 
-> Hell, no.  Without datasheets I can't compare if registers
-> are compatible between AXP288 and TI DDOVE (SND9039).
-> Couldn't it damager the hardware if I mess up charger
-> and voltage regulator related registers?
+Hi,
 
-It might yes :)
+On 02-02-17 16:01, Andy Shevchenko wrote:
+> On Thu, Feb 2, 2017 at 4:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
+>>
+>> On 02-02-17 15:25, Arnd Bergmann wrote:
+>>>
+>>> The new driver cannot be a loadable module, so if I2C is loadable, we get
+>>> this
+>>> link error:
+>>>
+>>> drivers/platform/built-in.o: In function `silead_ts_dmi_init':
+>>> silead_dmi.c:(.init.text+0x2ef): undefined reference to `i2c_bus_type'
+>>>
+>>> This makes the Kconfig dependency stricter to require I2C=y.
+>>>
+>>> Fixes: 9eeda3897a85 ("platform/x86: add support for devices with Silead
+>>> touchscreens")
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>
+>>
+>> Thank you.
+>>
+>> Acked-by: Hans de Goede <hdegoede@redhat.com>
+>
+> I'm a bit confused now:
+>
+> http://www.spinics.net/lists/platform-driver-x86/msg10408.html
+>
+> Please, clarify.
 
-> And current Linus' tree doesn't have the AXP288 GPIO,
-> and ProductionKernelQuilts doesn't use AXP288 GPIO
-> for TI DCOVE.
+The depends on INPUT is not entirely wrong, the module does not
+need it, but without the SILEAD driver being build the silead_dmi
+code is of no use. Since multiple people already reported this
+I thought it would be best to just go ahead with Arnd's version.
 
-OK, I guess it is easier if I just order one of those machines here and
-figure out how to get the PMIC driver working.
+Regards,
 
-Is the model Asus E200HA? Something like this (sorry the information is
-in Finnish but the machine should look the same):
+Hans
 
-https://www.karkkainen.com/verkkokauppa/asus-e200ha-fd0005ts-11-6--hd-kannettava-tietokone
 
-Also can you remind me what exactly is not working so we can prioritize?
-
-Thanks.
+>
+>>
+>> Regards.
+>>
+>> Hans
+>>
+>>
+>>
+>>> ---
+>>>  drivers/platform/x86/Kconfig | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index dd4952ac8797..a7fe9b9f975d 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -1079,7 +1079,7 @@ config INTEL_TURBO_MAX_3
+>>>
+>>>  config SILEAD_DMI
+>>>         bool "Tablets with Silead touchscreens"
+>>> -       depends on ACPI && DMI && I2C && INPUT
+>>> +       depends on ACPI && DMI && I2C=y && INPUT
+>>>         ---help---
+>>>           Certain ACPI based tablets with Silead touchscreens do not have
+>>>           enough data in ACPI tables for the touchscreen driver to handle
+>>>
+>>
+>
+>
+>
