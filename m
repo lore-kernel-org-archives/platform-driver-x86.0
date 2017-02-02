@@ -1,45 +1,69 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: silead depends on I2C being built-in
-Date: Thu, 2 Feb 2017 17:24:51 +0200
-Message-ID: <CAHp75Ve5mgsoRjr-LiCWG6inYp8bcSKk__XN7xynt_T_tkDYWQ@mail.gmail.com>
-References: <20170202142744.3418986-1-arnd@arndb.de> <859e4199-8c8d-c1a8-6898-5ed4fe4572e4@redhat.com>
- <CAHp75VfgGOGhO-U_dMWGvnChUqXnuxwC-xKSMNs-FJeyBzOoDw@mail.gmail.com> <3f7dc6b8-7447-f067-b771-8a306800ede3@redhat.com>
+From: Johannes Stezenbach <js@sig21.net>
+Subject: Re: Cherryview wake up events
+Date: Thu, 2 Feb 2017 16:42:43 +0100
+Message-ID: <20170202154243.wxrdcy6yqohcwvw3@sig21.net>
+References: <20170131143740.lgn2svjskjulsucf@sig21.net>
+ <20170202095200.d5clhprl7rpgrf72@sig21.net>
+ <20170202103122.GH2053@lahna.fi.intel.com>
+ <20170202111222.aoiwinw37jrquhbh@sig21.net>
+ <20170202113508.GM2053@lahna.fi.intel.com>
+ <20170202121639.GO2053@lahna.fi.intel.com>
+ <20170202135257.q2djuvnhlsu2qv2v@sig21.net>
+ <20170202142618.GX2053@lahna.fi.intel.com>
+ <20170202143145.xnjnicrxf5uapuwl@sig21.net>
+ <20170202150212.GA2053@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f175.google.com ([209.85.216.175]:34784 "EHLO
-        mail-qt0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751201AbdBBPYy (ORCPT
+Received: from mail.sig21.net ([80.244.240.74]:38188 "EHLO mail.sig21.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751107AbdBBPm7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Feb 2017 10:24:54 -0500
-In-Reply-To: <3f7dc6b8-7447-f067-b771-8a306800ede3@redhat.com>
+        Thu, 2 Feb 2017 10:42:59 -0500
+Content-Disposition: inline
+In-Reply-To: <20170202150212.GA2053@lahna.fi.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>, ramakrishna.pallala@intel.com
 
-On Thu, Feb 2, 2017 at 5:10 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On 02-02-17 16:01, Andy Shevchenko wrote:
->> On Thu, Feb 2, 2017 at 4:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+On Thu, Feb 02, 2017 at 05:02:12PM +0200, Mika Westerberg wrote:
+> OK, I guess it is easier if I just order one of those machines here and
+> figure out how to get the PMIC driver working.
 
->>> Thank you.
->>>
->>> Acked-by: Hans de Goede <hdegoede@redhat.com>
->>
->>
->> I'm a bit confused now:
->>
->> http://www.spinics.net/lists/platform-driver-x86/msg10408.html
->>
->> Please, clarify.
->
-> The depends on INPUT is not entirely wrong, the module does not
-> need it, but without the SILEAD driver being build the silead_dmi
-> code is of no use. Since multiple people already reported this
-> I thought it would be best to just go ahead with Arnd's version.
+Oh, I assumed the bottleneck is developer time, not lack of hardware...
 
-Thanks, pushed to testing.
+> Is the model Asus E200HA? Something like this (sorry the information is
+> in Finnish but the machine should look the same):
+> 
+> https://www.karkkainen.com/verkkokauppa/asus-e200ha-fd0005ts-11-6--hd-kannettava-tietokone
 
--- 
-With Best Regards,
-Andy Shevchenko
+Looks right, mine is E200HA-FD0004TS but I think that just means dark blue color.
+
+> Also can you remind me what exactly is not working so we can prioritize?
+
+There are reports hibernate isn't working, presumably because
+the storage is 32MB eMMC.  I've never tried.  It doesn't
+support ACPI S3 (suspend-to-RAM).  So currently one has
+to boot+shutdown everytime (or keep it running).
+
+1. There seems to be no way to wake it up after "echo freeze >/sys/power/state".
+   That is the reason for wanting the power button to wake it up.
+   Whether the PB creates an input event is secondary.
+   (the LID also doesn't wake it up, but it creates an input event)
+2. I've no idea what would be the power consumption in freeze state,
+   so I guess support for the S0ix states is needed
+3. It randomly hangs at boot, often with a message related to i2c timeout.
+   I tried Hans de Goede's patches but it didn't work for me
+   (question is if the semphore address is the same for
+   AXP288 and TI DCove; the DSDT has the _SEM method so the
+   semphore is needed).
+
+Everything else is secondary.  E.g. there is an ADC driver used for thermal
+used by the opregion driver, I didn't port it and just implemented
+like for AXP288 by simple register reads (which might not work for TI).
+We could fix this later.
+
+
+Thanks,
+Johannes
