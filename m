@@ -1,89 +1,157 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: Re: [PATCH] Add sysfs interface for touchpad state
-Date: Thu, 02 Feb 2017 13:46:39 +0530
-Message-ID: <1486023399.14342.1.camel@debian.org>
-References: <20170130105749.17338-1-rrs@debian.org>
-         <CAHp75VcekiLxkGbHFXbPvTX7SwBHobQFmnx5Y-uFWXZSEN9ujA@mail.gmail.com>
-         <1485863265.11199.3.camel@debian.org>
-         <CAHp75Vfbr0dfxjv1QhF+z6D1Ptd5z9s0K825VnE786W2-y+kPQ@mail.gmail.com>
-         <1485959219.8977.1.camel@debian.org>
-         <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
-         <1485965846.14297.1.camel@debian.org>
-         <CAHp75VckDTD+yx4tTwpzgvgsygiWFEs1t5Uc85UsbaJD8inx_w@mail.gmail.com>
-Reply-To: rrs@debian.org
+From: Johannes Stezenbach <js@sig21.net>
+Subject: Re: Cherryview wake up events
+Date: Thu, 2 Feb 2017 10:52:00 +0100
+Message-ID: <20170202095200.d5clhprl7rpgrf72@sig21.net>
+References: <20170124135250.d72silj6jlxh7zqk@sig21.net>
+ <CAHp75VfUgwZkA7FVhdCY2CRFbtE55Q01MBbpmXVeMvLNEQLV2w@mail.gmail.com>
+ <20170124192314.gw6njffcgwyfm2gp@sig21.net>
+ <CAHp75VdHHvy2djYSTStPPcKUJFHLSAH_z7VzWW_12Qia3n2XyQ@mail.gmail.com>
+ <20170127113845.zt5jwjzumafclvzc@sig21.net>
+ <CAHp75Ve6pwaDM3ookO9e_4c1R_U9_X3aF43XGtD5Z2+6G6f6zA@mail.gmail.com>
+ <20170127133058.pxuovuuqpnffx3py@sig21.net>
+ <20170130205745.wwavipta5hbz5zfz@sig21.net>
+ <CAHp75Vfdk2u2wQa9ZR1vGCAPYL4rnSF78pJR98t+J0+Sn9LuqA@mail.gmail.com>
+ <20170131143740.lgn2svjskjulsucf@sig21.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f66.google.com ([74.125.83.66]:33831 "EHLO
-        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750937AbdBBIQo (ORCPT
+Received: from mail.sig21.net ([80.244.240.74]:47565 "EHLO mail.sig21.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750941AbdBBJwH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Feb 2017 03:16:44 -0500
-Received: by mail-pg0-f66.google.com with SMTP id 3so1185187pgj.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Feb 2017 00:16:44 -0800 (PST)
-In-Reply-To: <CAHp75VckDTD+yx4tTwpzgvgsygiWFEs1t5Uc85UsbaJD8inx_w@mail.gmail.com>
+        Thu, 2 Feb 2017 04:52:07 -0500
+Content-Disposition: inline
+In-Reply-To: <20170131143740.lgn2svjskjulsucf@sig21.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Hi Mika,
 
-Hello Andy,
+On Tue, Jan 31, 2017 at 03:37:40PM +0100, Johannes Stezenbach wrote:
+> - Powerbutton driver seems simple enough, the only specialty
+>   of the TI dcove PB driver is the workarond for lost button
+>   press event after resume.  However, I still don't see how
+>   the PB would cause thermal event irqs on E200HA and how the
+>   PMIC driver would change it?
 
-On Wed, 2017-02-01 at 22:53 +0200, Andy Shevchenko wrote:
-> > If you have time, please see:
-> > https://bugs.launchpad.net/bugs/1366421
-> > 
-> > It has pretty much all the details on what and why we need something in
-> > sysfs.
-> 
-> It's a lo-o-ong discussion from which I, might be wrongly, assumed
-> that there couple of problems: a) you don't know initial state, b)
-> something preventing use of event.
-> 
+In ProductionKernelQuilts I found
+DC-TI-PMIC-disable-power-button-support.patch so I guess it
+might not be needed because it's probably handled by ACPI.
 
-Yes.
+> I think the mfd driver would be similar to intel_soc_pmic_crc.c,
+> the dollar_cove_ti_powerbtn.c I would keep instead of merging
+> it into intel_mid_powerbtn.c.  I guess what we need is in
+> drivers/acpi/pmic/ something similar to intel_pmic_crc.c,
+> the ProductionKernelQuilts has 0001-ACPI-Adding-support-for-TI-pmic-opregion.patch.
 
-> Keyboard and touchpad are disabled by hw, so, only what OS needs is a
-> notification.
-> 
+I have preliminary versions of the mfd and opregion driver,
+while testing I found the GPIO opregion is not registered:
 
-Yes.
+Excerpt from DSDT:
+https://linuxtv.org/~js/e200ha/dsdt.dsl
 
-> Can you point me exactly to the message that explains _why_ it's
-> impossible to use standard eventX mechanism for that?
-> 
+            Device (PMI2)
+            {
+                Name (_ADR, Zero)  // _ADR: Address
+                Name (_HID, "INT33F5" /* TI PMIC Controller */)  // _HID: Hardware ID
+                Name (_CID, "INT33F5" /* TI PMIC Controller */)  // _CID: Compatible ID
+                Name (_DDN, "TI PMIC Controller")  // _DDN: DOS Device Name
+                Name (_HRV, 0x03)  // _HRV: Hardware Revision
+                Name (_UID, One)  // _UID: Unique ID
+                Name (_DEP, Package (0x02)  // _DEP: Dependencies
+                {
+                    I2C7, 
+                    GPO1
+                })
+                Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+                {
+                    Name (SBUF, ResourceTemplate ()
+                    {
+                        I2cSerialBusV2 (0x005E, ControllerInitiated, 0x000F4240,
+                            AddressingMode7Bit, "\\_SB.PCI0.I2C7",
+                            0x00, ResourceConsumer, , Exclusive,
+                            )
+                        GpioInt (Level, ActiveHigh, Shared, PullDefault, 0x0000,
+                            "\\_SB.GPO1", 0x00, ResourceConsumer, ,
+                            )
+                            {   // Pin list
+                                0x000F
+                            }
+                    })
+                    Return (SBUF) /* \_SB_.PCI0.I2C7.PMI2._CRS.SBUF */
+                }
+...
+                Name (AVBL, Zero)
+                Name (AVBD, Zero)
+                Name (AVBG, Zero)
+                Method (_REG, 2, NotSerialized)  // _REG: Region Availability
+                {
+                    If (Arg0 == 0x08)
+                    {
+                        AVBG = Arg1
+                    }
 
-Comment #43 has the summary of what we've tried.
-https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
+                    If (Arg0 == 0x8D)
+                    {
+                        AVBL = Arg1
+                    }
 
-Some of the drivers do SW_TABLET_MODE, but ideapad does not.
-Some of the drivers do sysfs, but ideapad does not.
+                    If (Arg0 == 0x8C)
+                    {
+                        AVBD = Arg1
+                    }
+                }
 
-For ideapad, under Xorg, it generates hotkey events.
-And the hotkey event are going to work under Xorg only. What about Wayland/Mir ?
-We also aren't sure, if the keycodes that it sends, are uniform across all Yoga
-variants.
 
-- -- 
-Ritesh Raj Sarraf | http://people.debian.org/~rrs
-Debian - The Universal Operating System
------BEGIN PGP SIGNATURE-----
+acpidbg:
+        \_SB.PCI0.I2C7.PMI2.AVBL Integer      ffff8be7b74d97a8 01 = 0000000000000001
+        \_SB.PCI0.I2C7.PMI2.AVBD Integer      ffff8be7b74d94d8 01 = 0000000000000001
+        \_SB.PCI0.I2C7.PMI2.AVBG Integer      ffff8be7b74d9be0 01 = 0000000000000000
 
-iQIzBAEBCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAliS6ucACgkQpjpYo/Lh
-dWlydw/9Ejt8FSHXB3yCwBJdJc0OKfTx3zoJnJ3USbarE3XbNGW+M++FEnz9l6CR
-CI97nJDmXRQIXdfKv8xgnoUIFvZhFP20DhvytUx6ukadcLSH/Dwzf60BTThJok08
-q76j7hBpV9bRiWANaBw2dPKLt/4++UVPT5Pd8yb70gC0J8PLJ4iyFeEFgOaoniIp
-wv01whOHDkSiSW6Due/jC9Cwwv0m4AKeiUYZtJ3oJgFn1yBirlCWjkWvTktjxgwD
-QyL3QWePqTl11JATIp34zS+cXOKZFdS26F741aE0eLWP0i9N9KlXceNXe9OXWwYg
-EkxGQLbgqgQJ7J4XgRpl6x2ajgwA61Q0KtRep7+TLNT+9SC+OYUqsttLk6EwKSsc
-5CAyOcQC1d2i9vPDMHBbqB+Gluu/GcNON7fv3oTbPXYIWkw9kT4yDDlz4Phi3noK
-fncCkYw/yp3/lAkTYW5ChEj2/HADcgY3uqG1tpI1XC0YNVxd9LQY++GlboJOVTp5
-EoHBcWTmBGKJVXOW1ZmzER5pPDpf6CE/pb0KCBNq3ZLvyyPV/VRJeOPgre1+7Kz5
-Ub9mygN3rU/GhalFCj5BQIQpeiTCZa1ax1Ze1iNvJLxfsE5oasWW8yDNdzcl70Wr
-grPDk83bTKf+LdNa/jpTijZTMzhpMBWLdZf8N6c1pofDdABMoXU=
-=wiLZ
------END PGP SIGNATURE-----
+Any idea about it?
+devm_gpiochip_add_data() in chv_gpio_probe() indirectly calls acpi_gpiochip_add()
+which should use _DEP to figure out to call _REG, right?
+
+Also PMI2 has
+
+                OperationRegion (GPOP, GeneralPurposeIo, Zero, 0x0100)
+                Field (GPOP, ByteAcc, NoLock, Preserve)
+                {
+                    Connection (
+                        GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                            "\\_SB.PCI0.I2C7.PMI2", 0x00, ResourceConsumer, ,
+                            )
+                            {   // Pin list
+                                0x0020
+                            }
+                    ), 
+                    GMP0,   1, 
+                    ...
+                    (repeat for many more pins)
+
+I guess it means it uses chv_gpio pins and can't work
+if the GPIO opregion is not registered?
+
+
+FWIW, with the mfd driver, /proc/interrupts has
+
+ 180:          0          0          0          0  chv-gpio    9  TI Dollar Cove
+
+I guess the 9 refers to the 10th pin in north_pins[] which is pin 0x000F, right?
+I boot with "dyndbg=file gpiolib* +p" and get
+
+[  +0.012798] acpi INT33F5:00: GPIO: looking up 0 in _CRS
+[  +0.000214] intel_soc_pmic_i2c i2c-INT33F5:00: GPIO lookup for consumer intel_soc_pmic
+[  +0.000003] intel_soc_pmic_i2c i2c-INT33F5:00: using ACPI for GPIO lookup
+[  +0.000005] acpi INT33F5:00: GPIO: looking up intel_soc_pmic-gpios
+[  +0.000005] acpi INT33F5:00: GPIO: looking up intel_soc_pmic-gpio
+[  +0.000005] acpi INT33F5:00: GPIO: looking up 0 in _CRS
+[  +0.000091] cherryview-pinctrl INT33FF:01: request pin 15 (GPIO_SUS0) for INT33FF:01:406
+
+but so far the irq never triggers.
+
+
+Thanks
+Johannes
