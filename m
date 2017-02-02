@@ -1,80 +1,60 @@
-From: Johannes Stezenbach <js@sig21.net>
-Subject: Re: Cherryview wake up events
-Date: Thu, 2 Feb 2017 18:32:33 +0100
-Message-ID: <20170202173233.3gk6ko2tnjbhj73y@sig21.net>
-References: <20170202103122.GH2053@lahna.fi.intel.com>
- <20170202111222.aoiwinw37jrquhbh@sig21.net>
- <20170202113508.GM2053@lahna.fi.intel.com>
- <20170202121639.GO2053@lahna.fi.intel.com>
- <20170202135257.q2djuvnhlsu2qv2v@sig21.net>
- <20170202142618.GX2053@lahna.fi.intel.com>
- <20170202143145.xnjnicrxf5uapuwl@sig21.net>
- <20170202150212.GA2053@lahna.fi.intel.com>
- <20170202154243.wxrdcy6yqohcwvw3@sig21.net>
- <20170202155826.GF2053@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170202155826.GF2053@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>, ramakrishna.pallala@intel.com
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/3] platform/x86: intel_mid_powerbtn: Move comment to where it belongs
+Date: Thu,  2 Feb 2017 19:54:27 +0200
+Message-ID: <20170202175428.183482-3-andriy.shevchenko@linux.intel.com>
+References: <20170202175428.183482-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170202175428.183482-1-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 02, 2017 at 05:58:26PM +0200, Mika Westerberg wrote:
-> On Thu, Feb 02, 2017 at 04:42:43PM +0100, Johannes Stezenbach wrote:
-> > On Thu, Feb 02, 2017 at 05:02:12PM +0200, Mika Westerberg wrote:
-> > > Is the model Asus E200HA? Something like this (sorry the information is
-> > > in Finnish but the machine should look the same):
-> > > 
-> > > https://www.karkkainen.com/verkkokauppa/asus-e200ha-fd0005ts-11-6--hd-kannettava-tietokone
-> > 
-> > Looks right, mine is E200HA-FD0004TS but I think that just means dark blue color.
-> 
-> OK, we have one other Cherrytrail machine here which may have the same
-> PMIC. We'll check that first and if it does not have the same, I'll
-> order the above machine.
+The comments is about initial interrupt acknowledgment only. So, move it
+back to where it belongs.
 
-In case it is useful to know, I installed Debian stretch following this:
-https://wiki.debian.org/InstallingDebianOn/Asus/E200HA
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-I built my kernel using a relatively minimal kernel config,
-let me know if you want it.  I could also post the
-two patches which port the mfd and opregion drivers, but
-they are straight forward copies of intel_soc_pmic_crc.c
-and intel_pmic_crc.c from 4.10.0-rc6+ with code copy&pasted
-from the ProductionKernelQuilts patches and s/crc/dc_ti/ etc.,
-except I scamped the thermal handler to skip the ADC driver port for now.
-
-
-Maybe I should've used intel_pmic_xpower.c instead of
-intel_pmic_crc.c, since as I write this I see there
-is a no-op intel_xpower_pmic_gpio_handler() registered.
-This is the trick that fixes this:
-        \_SB.PCI0.I2C7.PMI2.AVBG Integer      ffff8be7b74d9be0 01 = 0000000000000001
-
-But now it generates ACPI errors about thermal zone
-and "acpi -V" usually hangs it up.
-
-[    5.500927] ACPI Exception: AE_ERROR, Returned by Handler for [UserDefinedRegion] (20160930/evregion-300)
-[    5.503842] No Local Variables are initialized for method [TMPR]
-[    5.506703] No Arguments are initialized for method [TMPR]
-[    5.509557] ACPI Error: Method parse/execution failed [\_SB.ATKD.TMPR] (Node ffff8a7d374e87f8), AE_ERROR (20160930/ps
-parse-543)
-[    5.512481] ACPI Error: Method parse/execution failed [\_SB.ATKD.WMNB] (Node ffff8a7d374e7ed8), AE_ERROR (20160930/ps
-parse-543)
-[    6.545403] i2c_designware 808622C1:06: controller timed out
-[    6.550763] ACPI Exception: AE_ERROR, Returned by Handler for [UserDefinedRegion] (20160930/evregion-300)
-[    6.555783] No Local Variables are initialized for method [TMPR]
-[    6.558769] No Arguments are initialized for method [TMPR]
-[    6.561571] ACPI Error: Method parse/execution failed [\_SB.ATKD.TMPR] (Node ffff8a7d374e87f8), AE_ERROR (20160930/ps
-parse-543)
-[    6.564487] ACPI Error: Method parse/execution failed [\_SB.ATKD.WMNB] (Node ffff8a7d374e7ed8), AE_ERROR (20160930/ps
-parse-543)
-
-(I knew my thermal opregion code was preliminary but I didn't expect it to error.)
-
-
-Thanks,
-Johannes
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 594d503ca6fe..de40c71883f8 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -76,16 +76,6 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mfld_ack(struct mid_pb_ddata *ddata)
+ {
+-	/*
+-	 * SCU firmware might send power button interrupts to IA core before
+-	 * kernel boots and doesn't get EOI from IA core. The first bit of
+-	 * MSIC reg 0x21 is kept masked, and SCU firmware doesn't send new
+-	 * power interrupt to Android kernel. Unmask the bit when probing
+-	 * power button in kernel.
+-	 * There is a very narrow race between irq handler and power button
+-	 * initialization. The race happens rarely. So we needn't worry
+-	 * about it.
+-	 */
+ 	return intel_msic_reg_update(INTEL_MSIC_IRQLVL1MSK, 0, MSIC_PWRBTNM);
+ }
+ 
+@@ -202,6 +192,16 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, ddata);
+ 
++	/*
++	 * SCU firmware might send power button interrupts to IA core before
++	 * kernel boots and doesn't get EOI from IA core. The first bit of
++	 * MSIC reg 0x21 is kept masked, and SCU firmware doesn't send new
++	 * power interrupt to Android kernel. Unmask the bit when probing
++	 * power button in kernel.
++	 * There is a very narrow race between irq handler and power button
++	 * initialization. The race happens rarely. So we needn't worry
++	 * about it.
++	 */
+ 	error = ddata->ack(ddata);
+ 	if (error) {
+ 		dev_err(&pdev->dev,
+-- 
+2.11.0
