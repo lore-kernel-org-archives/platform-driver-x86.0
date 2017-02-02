@@ -1,64 +1,44 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: Cherryview wake up events
-Date: Thu, 2 Feb 2017 16:26:18 +0200
-Message-ID: <20170202142618.GX2053@lahna.fi.intel.com>
-References: <20170127133058.pxuovuuqpnffx3py@sig21.net>
- <20170130205745.wwavipta5hbz5zfz@sig21.net>
- <CAHp75Vfdk2u2wQa9ZR1vGCAPYL4rnSF78pJR98t+J0+Sn9LuqA@mail.gmail.com>
- <20170131143740.lgn2svjskjulsucf@sig21.net>
- <20170202095200.d5clhprl7rpgrf72@sig21.net>
- <20170202103122.GH2053@lahna.fi.intel.com>
- <20170202111222.aoiwinw37jrquhbh@sig21.net>
- <20170202113508.GM2053@lahna.fi.intel.com>
- <20170202121639.GO2053@lahna.fi.intel.com>
- <20170202135257.q2djuvnhlsu2qv2v@sig21.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: silead depends on I2C being built-in
+Date: Thu,  2 Feb 2017 15:25:57 +0100
+Message-ID: <20170202142744.3418986-1-arnd@arndb.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:59946 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750808AbdBBO0o (ORCPT
+Received: from mout.kundenserver.de ([212.227.126.131]:59671 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751189AbdBBO2l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Feb 2017 09:26:44 -0500
-Content-Disposition: inline
-In-Reply-To: <20170202135257.q2djuvnhlsu2qv2v@sig21.net>
+        Thu, 2 Feb 2017 09:28:41 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Johannes Stezenbach <js@sig21.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Cohen <david.a.cohen@linux.intel.com>, ramakrishna.pallala@intel.com
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 02:52:57PM +0100, Johannes Stezenbach wrote:
-> Nope, as I've written earlier:
-> > In ProductionKernelQuilts I found
-> > DC-TI-PMIC-disable-power-button-support.patch so I guess it
-> > might not be needed because it's probably handled by ACPI.
-> 
-> [  +0.000338] input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
-> [  +0.000127] ACPI: Power Button [PWRB]
-> ...
-> [  +0.000248] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
-> [  +0.000116] ACPI: Power Button [PWRF]
+The new driver cannot be a loadable module, so if I2C is loadable, we get this
+link error:
 
-Yeah, but shouldn't hurt to try it out :)
+drivers/platform/built-in.o: In function `silead_ts_dmi_init':
+silead_dmi.c:(.init.text+0x2ef): undefined reference to `i2c_bus_type'
 
-> And I also have:
-> 
-> [  +0.000004] soc_button_array INTCFD9:00: GPIO lookup for consumer soc_button_array
-> [  +0.000002] soc_button_array INTCFD9:00: using ACPI for GPIO lookup
-> [  +0.000003] acpi INTCFD9:00: GPIO: looking up soc_button_array-gpios
-> [  +0.000004] acpi INTCFD9:00: GPIO: looking up soc_button_array-gpio
-> [  +0.000003] acpi INTCFD9:00: GPIO: looking up 0 in _CRS
-> [  +0.000610] soc_button_array INTCFD9:00: lookup for GPIO soc_button_array failed
-> (repeats for 5 buttons, one of them should succeed)
+This makes the Kconfig dependency stricter to require I2C=y.
 
-It fails because of the missing GPIO driver.
+Fixes: 9eeda3897a85 ("platform/x86: add support for devices with Silead touchscreens")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Let's include the original author (Ramakrishna) as well if we could get
-> > some information from him.
-> 
-> Looking at 0002-GPIO-Adding-AXP288-PMIC-GPIO-driver.patch from ProductionKernelQuilts,
-> it doesn't seem hard to do the same for the TI PMIC, but it needs information
-> from the PMIC datasheet for irq and gpio control registers.
-> Hopefully you have a patch or at least could provide the information.
-
-That patch looks like a GPIO driver for DCOVE. Did you try it already?
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index dd4952ac8797..a7fe9b9f975d 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1079,7 +1079,7 @@ config INTEL_TURBO_MAX_3
+ 
+ config SILEAD_DMI
+ 	bool "Tablets with Silead touchscreens"
+-	depends on ACPI && DMI && I2C && INPUT
++	depends on ACPI && DMI && I2C=y && INPUT
+ 	---help---
+ 	  Certain ACPI based tablets with Silead touchscreens do not have
+ 	  enough data in ACPI tables for the touchscreen driver to handle
+-- 
+2.9.0
