@@ -1,50 +1,36 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/4] fujitsu_init() cleanup
-Date: Fri, 3 Feb 2017 16:13:40 +0200
-Message-ID: <CAHp75VehOapj3kBCEVH+ad2XzghU6v6nLGkQDntdj-E2Ue-dTA@mail.gmail.com>
-References: <20170113110240.622-1-kernel@kempniu.pl> <20170113121758.GA9036@marvin.atrad.com.au>
- <20170113131915.GA745@ozzy.nask.waw.pl> <20170203140507.GB11947@ozzy.nask.waw.pl>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 2/4][RFC v2] fujitsu-laptop: fujitsu-laptop: restructure
+ initialisation
+Date: Fri, 3 Feb 2017 15:46:19 +0100
+Message-ID: <20170203144619.GD11947@ozzy.nask.waw.pl>
+References: <20170131130904.GC6218@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f175.google.com ([209.85.216.175]:32989 "EHLO
-        mail-qt0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752286AbdBCONm (ORCPT
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:35405 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751958AbdBCOqX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Feb 2017 09:13:42 -0500
-In-Reply-To: <20170203140507.GB11947@ozzy.nask.waw.pl>
+        Fri, 3 Feb 2017 09:46:23 -0500
+Received: by mail-lf0-f67.google.com with SMTP id v186so1699004lfa.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Feb 2017 06:46:23 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <20170131130904.GC6218@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 3, 2017 at 4:06 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempni=
-u.pl> wrote:
-> Darren, Andy,
->
-> Please drop this patch series for now.  I will send a rebased v2 after a
-> long overdue patch series from Alan Jenkins gets applied in a reworked
-> form.
+> Don't register backlight and platform devices on non-fujitsu hardware
+>  - bail out instead.
+> 
+> Register the backlight driver _after_ the main acpi driver.
 
-Noted.
+Something went wrong (during the rebase?) as after this patch is
+applied, acpi_bus_register_driver() is never called for
+acpi_fujitsu_bl_driver, rendering the latter useless.
 
-Just for you information. Our repo now consists three branches: fixes,
-for-next, and testing. testing is kinda for internal use, it might be
-broken or be in a wrong state.
-Better to use for-next as a base. For this cycle (which is my first as
-a co-maintainer) I missed a proper workflow.
-That's why I just rebased for-next. It will be not the case in the future.
-
-Darren, consider above as a summary of sync mail for this week.
-
-> However, your input is still essential for determining the future shape
-> of fujitsu-laptop.  I quoted the essential parts of my discussion with
-> Jonathan below.
-
-I'm about to leave, I'm going to follow this later.
-Thanks!
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Best regards,
+Michał Kępień
