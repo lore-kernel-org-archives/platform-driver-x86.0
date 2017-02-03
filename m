@@ -1,21 +1,21 @@
 From: Daniel Drake <drake@endlessm.com>
-Subject: [PATCH] acer-wmi: Inform firmware that RF Button Driver is active
-Date: Fri,  3 Feb 2017 14:23:07 -0600
-Message-ID: <20170203202307.23586-1-drake@endlessm.com>
+Subject: [PATCH v2] acer-wmi: Inform firmware that RF Button Driver is active
+Date: Fri,  3 Feb 2017 14:25:56 -0600
+Message-ID: <20170203202556.23758-1-drake@endlessm.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ua0-f169.google.com ([209.85.217.169]:34303 "EHLO
+Received: from mail-ua0-f169.google.com ([209.85.217.169]:34395 "EHLO
         mail-ua0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751226AbdBCUXS (ORCPT
+        with ESMTP id S1752073AbdBCU0X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Feb 2017 15:23:18 -0500
-Received: by mail-ua0-f169.google.com with SMTP id 35so22164838uak.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Feb 2017 12:23:18 -0800 (PST)
+        Fri, 3 Feb 2017 15:26:23 -0500
+Received: by mail-ua0-f169.google.com with SMTP id 35so22221659uak.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Feb 2017 12:26:23 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: jlee@suse.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endless.com, Chris Chiu <chiu@endlessm.com>
+Cc: platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endlessm.com
 
-From: Chris Chiu <chiu@endless.com>
+From: Chris Chiu <chiu@endlessm.com>
 
 The same method to activate LM(Launch Manager) can also be used to
 activate the RF Button driver with different bit toggled in the same
@@ -36,6 +36,8 @@ Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
  drivers/platform/x86/acer-wmi.c | 78 ++++++++++++++++++++++++++++++++---------
  1 file changed, 62 insertions(+), 16 deletions(-)
+
+v2: fix typo in Chris's email address (endless=>endlessm)
 
 diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
 index c29b9b6..ecdf6f1 100644
