@@ -1,107 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 7/8] asus-wireless: Export ids list
-Date: Sat, 4 Feb 2017 17:35:03 +0200
-Message-ID: <CAHp75VfMKy47--izxLfXO6ZJXSwgDg3pgVFv_F93N2ELZmsqVA@mail.gmail.com>
-References: <20170126153013.12753-1-jprvita@endlessm.com> <20170126153013.12753-8-jprvita@endlessm.com>
- <CAHp75Vf229bhmXD4zMydXCSSm4HEhOa9Y5S1trpQUfWnwq85MQ@mail.gmail.com> <CA+A7VXU3zNm2qHaM2hnaJ0GamrL5c0zCKC-MLgPZ+9M_DyKKkQ@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH][V2] intel-hid: support 5 array button
+Date: Sat, 4 Feb 2017 17:06:53 +0100
+Message-ID: <20170204160653.GA27398@pali>
+References: <1485415981-20487-1-git-send-email-alex.hung@canonical.com>
+ <20170204011439.GD38511@f23x64.localdomain>
+ <20170204012605.GA43075@f23x64.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:35669 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750876AbdBDPfE (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:36447 "EHLO
+        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750989AbdBDQHA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Feb 2017 10:35:04 -0500
-In-Reply-To: <CA+A7VXU3zNm2qHaM2hnaJ0GamrL5c0zCKC-MLgPZ+9M_DyKKkQ@mail.gmail.com>
+        Sat, 4 Feb 2017 11:07:00 -0500
+Received: by mail-wm0-f66.google.com with SMTP id r18so11796698wmd.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Feb 2017 08:06:59 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <20170204012605.GA43075@f23x64.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 1, 2017 at 2:23 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.c=
-om> wrote:
-> On 27 January 2017 at 10:36, Andy Shevchenko <andy.shevchenko@gmail.com> =
-wrote:
->> On Thu, Jan 26, 2017 at 5:30 PM, Jo=C3=A3o Paulo Rechi Vita
->> <jprvita@gmail.com> wrote:
+Hi!
 
-Fill commit message, btw.
+On Saturday 04 February 2017 02:26:05 Darren Hart wrote:
+> Apologies, this time with Pali's correct email address (aliases fail).
+> 
+...
+> > 
+> > Pali, would you care to offer a review or some testing to verify no unexpected
+> > conflicts with the other dell drivers?
 
->>> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+I do not have Dell machine which uses intel-hid.ko so I cannot test this
+patch. And obviously as it is not loaded it cannot break machines which
+do not use intel-hid.ko.
 
->>> -static const struct acpi_device_id device_ids[] =3D {
->>> -       {"ATK4001", 0},
->>> -       {"ATK4002", 0},
->>> -       {"", 0},
->>> -};
->>> -MODULE_DEVICE_TABLE(acpi, device_ids);
->>> +MODULE_DEVICE_TABLE(acpi, asus_wireless_ids);
->>>
->>
->> No, Don't do this.
->>
->
-> Why?
+> > > +/* 5 button array notification value. */
+> > > +static const struct key_entry intel_array_keymap[] = {
+> > > +	{ KE_KEY,    0xC2, { KEY_LEFTMETA} },                /* Press */
+> > > +	{ KE_IGNORE, 0xC3, { KEY_LEFTMETA} },                /* Release */
+> > > +	{ KE_KEY,    0xC4, { KEY_VOLUMEUP} },                /* Press */
+> > > +	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP} },                /* Release */
+> > > +	{ KE_KEY,    0xC6, { KEY_VOLUMEDOWN} },              /* Press */
+> > > +	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN} },	             /* Release */
+> > > +	{ KE_SW,     0xC8, { .sw = {SW_ROTATE_LOCK, 1} } },   /* Press */
+> > > +	{ KE_SW,     0xC9, { .sw = {SW_ROTATE_LOCK, 0} } },   /* Release */
+> > > +	{ KE_KEY,    0xCE, { KEY_POWER} },                   /* Press */
+> > > +	{ KE_IGNORE, 0xCF, { KEY_POWER} },                   /* Release */
+> > > +	{ KE_END },
+> > > +};
 
-Table is a property of certain driver. You make it visible to parts
-that non need it.
-Moreover, you may here the list itself non-explicit, which reduces
-readability and understandability worse.
+This looks suspicious. Why are all release events ignored?
 
-If you would like to maintain a list of devices in two
-(semi-)independent modules, it would be not good looking in any case,
-either you make a hard dependency (if they already are it's okay to
-just export a function which helps you to find an ID in the list), or
-copy it in both modules.
-
-I need to check this as well.
-
->>>  static u64 asus_wireless_method(acpi_handle handle, const char *method=
-,
->>>                                 int param)
->>> @@ -130,8 +127,8 @@ static int asus_wireless_add(struct acpi_device *ad=
-ev)
->>>         adev->driver_data =3D data;
->>>
->>>         hid =3D acpi_device_hid(adev);
->>> -       for (i =3D 0; strcmp(device_ids[i].id, ""); i++) {
->>
->> This is wrong.
->>
->>> -               if (!strcmp(device_ids[i].id, hid)) {
->>> +       for (i =3D 0; strcmp(asus_wireless_ids[i].id, ""); i++) {
->>
->> This is too.
->>
->> Potential infinite loop.
->>
->> On top of that seems you just introduced this by previous patches and
->> changing here.
->> Often it means you need to reconsider how you actually split the
->> series on logical pieces.
->>
->
-> Can you please elaborate a bit more?
-
-The original code relies on "" in the first parameter which basically
-can be NULL. This fragile.
-But this is part subject to change in a sequential patch.
-
-> All this change does is to change
-> the name of the variable being iterated in the loop. As you said, the
-> loop was introduced in a previous series, and you didn't spot any
-> problems there.
-
-If I didn't spot it doesn't mean there is no issues, right? ;)
-
-> I don't think it makes sense to also rename the
-> variable in that other series, since I'm only renaming it because I'm
-> moving it to a header so it can be used by asus-wmi.c as well.
-
-The main problem with the above is introduction something that you are
-changing soon later.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Pali Rohár
+pali.rohar@gmail.com
