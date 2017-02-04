@@ -1,25 +1,23 @@
 From: joeyli <jlee@suse.com>
 Subject: Re: [PATCH v2] acer-wmi: Inform firmware that RF Button Driver is
  active
-Date: Sun, 5 Feb 2017 00:21:34 +0800
-Message-ID: <20170204162134.GE3016@linux-l9pv.suse>
+Date: Sun, 5 Feb 2017 00:29:36 +0800
+Message-ID: <20170204162936.GF3016@linux-l9pv.suse>
 References: <20170203202556.23758-1-drake@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:40797 "EHLO
+Received: from smtp.nue.novell.com ([195.135.221.5]:43430 "EHLO
         smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750980AbdBFJq6 (ORCPT
+        with ESMTP id S1750950AbdBFJw6 (ORCPT
         <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Mon, 6 Feb 2017 04:46:58 -0500
+        Mon, 6 Feb 2017 04:52:58 -0500
 Content-Disposition: inline
 In-Reply-To: <20170203202556.23758-1-drake@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Samuel Sieb <samuel@sieb.net>
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endlessm.com, Daniel Drake <drake@endlessm.com>
-
-Hi Samuel, 
+To: Daniel Drake <drake@endlessm.com>
+Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endlessm.com
 
 On Fri, Feb 03, 2017 at 02:25:56PM -0600, Daniel Drake wrote:
 > From: Chris Chiu <chiu@endlessm.com>
@@ -41,11 +39,9 @@ On Fri, Feb 03, 2017 at 02:25:56PM -0600, Daniel Drake wrote:
 > Signed-off-by: Chris Chiu <chiu@endlessm.com>
 > Signed-off-by: Daniel Drake <drake@endlessm.com>
 
-Could you please help to try this patch on your Acer ES1-522?
-Maybe Chris's patch fixed the wifi blocked issue that you reported.
+Reviewed-by: Lee, Chun-Yi <jlee@suse.com>
 
-
-Thanks
+Thanks for your patch!
 Joey Lee
 
 > ---
