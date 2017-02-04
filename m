@@ -1,72 +1,223 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] asus-wireless: Fix identation
-Date: Sat, 4 Feb 2017 17:10:55 +0200
-Message-ID: <CAHp75VeCJee46FHoyGdZ39CvTu0pb=k_R0CnWb9_vaX-per+rQ@mail.gmail.com>
-References: <CA+A7VXU2yjb6dYExqZjsP3--6ePJzK+nbNKADv=rxUcGfzX8pQ@mail.gmail.com>
- <20170201122707.14738-1-jprvita@endlessm.com> <CAHp75Vfn4K+90pqrR=iy-CZFFM67icB4Od9NmsGtuG3puQKTUw@mail.gmail.com>
+Subject: Re: [PATCH v2] acer-wmi: Inform firmware that RF Button Driver is active
+Date: Sat, 4 Feb 2017 17:18:39 +0200
+Message-ID: <CAHp75VcvcC6Cn=gRvLuUrr8nvmDSrkiXQ-cQJaM5B3woFkjxJw@mail.gmail.com>
+References: <20170203202556.23758-1-drake@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:34938 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750851AbdBDPK4 (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:34105 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751201AbdBDPSl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Feb 2017 10:10:56 -0500
-In-Reply-To: <CAHp75Vfn4K+90pqrR=iy-CZFFM67icB4Od9NmsGtuG3puQKTUw@mail.gmail.com>
+        Sat, 4 Feb 2017 10:18:41 -0500
+Received: by mail-qk0-f193.google.com with SMTP id e1so2707442qkh.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Feb 2017 07:18:41 -0800 (PST)
+In-Reply-To: <20170203202556.23758-1-drake@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+To: Daniel Drake <drake@endlessm.com>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, chiu@endlessm.com
 
-On Sat, Feb 4, 2017 at 5:08 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Feb 1, 2017 at 2:27 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail=
-.com> wrote:
+On Fri, Feb 3, 2017 at 10:25 PM, Daniel Drake <drake@endlessm.com> wrote:
+> From: Chris Chiu <chiu@endlessm.com>
 >
-> Do not leave empty commit message. Describe your changes here in a few wo=
-rds.
->
-> For the drivers/platform/x86 use a pattern in subject
->
-> platform/x86: asus-wireless: ...
 
-And one more, use versioning of your patches: PATCHv1, PATCHv2, ...
+Thanks for the patch.
 
+We are using platform/x86: prefix for subject lines (prepend yours by this one).
+
+> The same method to activate LM(Launch Manager) can also be used to
+> activate the RF Button driver with different bit toggled in the same
+> lm_status. To express that many functions this byte field can achieve,
+> rename the lm_status to app_status. And also the app_mask is the bit
+> mask which specifically indicate which bits are going to be changed.
 >
->> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
->> ---
->>  drivers/platform/x86/asus-wireless.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86=
-/asus-wireless.c
->> index 9f31bc1a47d0..a7ee18383146 100644
->> --- a/drivers/platform/x86/asus-wireless.c
->> +++ b/drivers/platform/x86/asus-wireless.c
->> @@ -76,8 +76,7 @@ static void led_state_update(struct work_struct *work)
->>                              data->led_state);
->>  }
->>
->> -static void led_state_set(struct led_classdev *led,
->> -                                 enum led_brightness value)
->> +static void led_state_set(struct led_classdev *led, enum led_brightness=
- value)
->>  {
->>         struct asus_wireless_data *data;
->>
->> --
->> 2.11.0
->>
+> This solves a problem where the AR9565 wifi included in the
+> Acer Aspire ES1-421 is permanently hard blocked according to the rfkill
+> GPIO read by ath9k.
 >
+
+> We also enable use of the Fn+F3 airplane mode hotkey on this laptop and
+
+*also* -> red flag! Split patch to smaller logical changes.
+
+> others such as the Acer TravelMate P238-M. This can happen either as a
+> scancode or via an EC/WMI event.
 >
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 78 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 62 insertions(+), 16 deletions(-)
 >
+> v2: fix typo in Chris's email address (endless=>endlessm)
+>
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index c29b9b6..ecdf6f1 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -128,6 +128,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
+>         {KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
+>         {KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+>         {KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
+> +       {KE_KEY, 0x86, {KEY_WLAN} },
+>         {KE_END, 0}
+>  };
+>
+> @@ -150,15 +151,30 @@ struct event_return_value {
+>  #define ACER_WMID3_GDS_BLUETOOTH       (1<<11) /* BT */
+>  #define ACER_WMID3_GDS_TOUCHPAD                (1<<1)  /* Touchpad */
+>
+> -struct lm_input_params {
+> +/* Hotkey Customized Setting and Acer Application Status.
+> + * Set Device Default Value and Report Acer Application Status.
+> + * When Acer Application starts, it will run this method to inform
+> + * BIOS/EC that Acer Application is on.
+> + * App Status
+> + *     Bit[0]: Launch Manager Status
+> + *     Bit[1]: ePM Status
+> + *     Bit[2]: Device Control Status
+> + *     Bit[3]: Acer Power Button Utility Status
+> + *     Bit[4]: RF Button Status
+> + *     Bit[5]: ODD PM Status
+> + *     Bit[6]: Device Default Value Control
+> + *     Bit[7]: Hall Sensor Application Status
+> + */
+> +struct set_function_input_params {
+>         u8 function_num;        /* Function Number */
+>         u16 commun_devices;     /* Communication type devices default status */
+>         u16 devices;            /* Other type devices default status */
+> -       u8 lm_status;           /* Launch Manager Status */
+> -       u16 reserved;
+> +       u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
+> +       u8 app_mask;            /* Bit mask to app_status */
+> +       u8 reserved;
+>  } __attribute__((packed));
+>
+> -struct lm_return_value {
+> +struct set_function_return_value {
+>         u8 error_code;          /* Error Code */
+>         u8 ec_return_value;     /* EC Return Value */
+>         u16 reserved;
+> @@ -1769,13 +1785,14 @@ static void acer_wmi_notify(u32 value, void *context)
+>  }
+>
+>  static acpi_status __init
+> -wmid3_set_lm_mode(struct lm_input_params *params,
+> -                 struct lm_return_value *return_value)
+> +wmid3_set_function_mode(struct set_function_input_params *params,
+> +                       struct set_function_return_value *return_value)
+>  {
+>         acpi_status status;
+>         union acpi_object *obj;
+>
+> -       struct acpi_buffer input = { sizeof(struct lm_input_params), params };
+> +       struct acpi_buffer input = { sizeof(struct set_function_input_params),
+> +                                    params };
+>         struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+>
+>         status = wmi_evaluate_method(WMID_GUID3, 0, 0x1, &input, &output);
+> @@ -1796,7 +1813,8 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+>                 return AE_ERROR;
+>         }
+>
+> -       *return_value = *((struct lm_return_value *)obj->buffer.pointer);
+> +       *return_value = *((struct set_function_return_value *)
+> +                         obj->buffer.pointer);
+>         kfree(obj);
+>
+>         return status;
+> @@ -1804,16 +1822,17 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+>
+>  static int __init acer_wmi_enable_ec_raw(void)
+>  {
+> -       struct lm_return_value return_value;
+> +       struct set_function_return_value return_value;
+>         acpi_status status;
+> -       struct lm_input_params params = {
+> +       struct set_function_input_params params = {
+>                 .function_num = 0x1,
+>                 .commun_devices = 0xFFFF,
+>                 .devices = 0xFFFF,
+> -               .lm_status = 0x00,            /* Launch Manager Deactive */
+> +               .app_status = 0x00,             /* Launch Manager Deactive */
+> +               .app_mask = 0x01,
+>         };
+>
+> -       status = wmid3_set_lm_mode(&params, &return_value);
+> +       status = wmid3_set_function_mode(&params, &return_value);
+>
+>         if (return_value.error_code || return_value.ec_return_value)
+>                 pr_warn("Enabling EC raw mode failed: 0x%x - 0x%x\n",
+> @@ -1827,16 +1846,17 @@ static int __init acer_wmi_enable_ec_raw(void)
+>
+>  static int __init acer_wmi_enable_lm(void)
+>  {
+> -       struct lm_return_value return_value;
+> +       struct set_function_return_value return_value;
+>         acpi_status status;
+> -       struct lm_input_params params = {
+> +       struct set_function_input_params params = {
+>                 .function_num = 0x1,
+>                 .commun_devices = 0xFFFF,
+>                 .devices = 0xFFFF,
+> -               .lm_status = 0x01,            /* Launch Manager Active */
+> +               .app_status = 0x01,            /* Launch Manager Active */
+> +               .app_mask = 0x01,
+>         };
+>
+> -       status = wmid3_set_lm_mode(&params, &return_value);
+> +       status = wmid3_set_function_mode(&params, &return_value);
+>
+>         if (return_value.error_code || return_value.ec_return_value)
+>                 pr_warn("Enabling Launch Manager failed: 0x%x - 0x%x\n",
+> @@ -1846,6 +1866,28 @@ static int __init acer_wmi_enable_lm(void)
+>         return status;
+>  }
+>
+> +static int __init acer_wmi_enable_rf_button(void)
+> +{
+> +       struct set_function_return_value return_value;
+> +       acpi_status status;
+> +       struct set_function_input_params params = {
+> +               .function_num = 0x1,
+> +               .commun_devices = 0xFFFF,
+> +               .devices = 0xFFFF,
+> +               .app_status = 0x10,            /* RF Button Active */
+> +               .app_mask = 0x10,
+> +       };
+> +
+> +       status = wmid3_set_function_mode(&params, &return_value);
+> +
+> +       if (return_value.error_code || return_value.ec_return_value)
+> +               pr_warn("Enabling RF Button failed: 0x%x - 0x%x\n",
+> +                       return_value.error_code,
+> +                       return_value.ec_return_value);
+> +
+> +       return status;
+> +}
+> +
+>  #define ACER_WMID_ACCEL_HID    "BST0001"
+>
+>  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+> @@ -2229,6 +2271,10 @@ static int __init acer_wmi_init(void)
+>                 interface->capability &= ~ACER_CAP_BRIGHTNESS;
+>
+>         if (wmi_has_guid(WMID_GUID3)) {
+> +               if (ACPI_FAILURE(acer_wmi_enable_rf_button())) {
+> +                       pr_err("Cannot enable RF Button Driver\n");
+> +                       return -ENODEV;
+> +               }
+>                 if (ec_raw_mode) {
+>                         if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
+>                                 pr_err("Cannot enable EC raw mode\n");
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.9.3
+>
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
