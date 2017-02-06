@@ -1,68 +1,122 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: read s0ix residency API
-Date: Tue, 7 Feb 2017 00:01:23 +0530
-Message-ID: <20170206183122.GA14651@rajaneesh-OptiPlex-9010>
-References: <1486386591-5739-1-git-send-email-shanth.murthy@intel.com>
- <201702062146.dHHXqmBG%fengguang.wu@intel.com>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 7/8] asus-wireless: Export ids list
+Date: Mon, 6 Feb 2017 14:18:54 -0500
+Message-ID: <CA+A7VXXUyp0ypdo+SHEv6Y2EH__R1aOyb1VJ0zdmR3ytjY-rZg@mail.gmail.com>
+References: <20170126153013.12753-1-jprvita@endlessm.com> <20170126153013.12753-8-jprvita@endlessm.com>
+ <CAHp75Vf229bhmXD4zMydXCSSm4HEhOa9Y5S1trpQUfWnwq85MQ@mail.gmail.com>
+ <CA+A7VXU3zNm2qHaM2hnaJ0GamrL5c0zCKC-MLgPZ+9M_DyKKkQ@mail.gmail.com> <CAHp75VfMKy47--izxLfXO6ZJXSwgDg3pgVFv_F93N2ELZmsqVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:28307 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751321AbdBFSb1 (ORCPT
+Received: from mail-yw0-f194.google.com ([209.85.161.194]:36082 "EHLO
+        mail-yw0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751809AbdBFTTf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2017 13:31:27 -0500
-Content-Disposition: inline
-In-Reply-To: <201702062146.dHHXqmBG%fengguang.wu@intel.com>
+        Mon, 6 Feb 2017 14:19:35 -0500
+In-Reply-To: <CAHp75VfMKy47--izxLfXO6ZJXSwgDg3pgVFv_F93N2ELZmsqVA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: kbuild test robot <lkp@intel.com>
-Cc: Shanth Murthy <shanth.murthy@intel.com>, kbuild-all@01.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 
-On Mon, Feb 06, 2017 at 10:01:43PM +0800, kbuild test robot wrote:
-> Hi Shanth,
-> 
-> [auto build test ERROR on tip/x86/core]
-> [also build test ERROR on v4.10-rc7]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Shanth-Murthy/platform-x86-intel_pmc_ipc-read-s0ix-residency-API/20170206-213213
-> config: i386-randconfig-x007-201706 (attached as .config)
-> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/platform/x86/intel_pmc_ipc.c: In function 'gcr_data_readq':
-> >> drivers/platform/x86/intel_pmc_ipc.c:193:9: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
->      return readq(ipcdev.ipc_base + offset);
->             ^~~~~
->    cc1: some warnings being treated as errors
-> 
-> vim +/readq +193 drivers/platform/x86/intel_pmc_ipc.c
-> 
->    187	{
->    188		return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
->    189	}
->    190	
->    191	static inline u64 gcr_data_readq(u32 offset)
->    192	{
->  > 193		return readq(ipcdev.ipc_base + offset);
+On 4 February 2017 at 10:35, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
+ote:
+> On Wed, Feb 1, 2017 at 2:23 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail=
+.com> wrote:
+>> On 27 January 2017 at 10:36, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+>>> On Thu, Jan 26, 2017 at 5:30 PM, Jo=C3=A3o Paulo Rechi Vita
+>>> <jprvita@gmail.com> wrote:
+>
+> Fill commit message, btw.
+>
+>>>> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+>
+>>>> -static const struct acpi_device_id device_ids[] =3D {
+>>>> -       {"ATK4001", 0},
+>>>> -       {"ATK4002", 0},
+>>>> -       {"", 0},
+>>>> -};
+>>>> -MODULE_DEVICE_TABLE(acpi, device_ids);
+>>>> +MODULE_DEVICE_TABLE(acpi, asus_wireless_ids);
+>>>>
+>>>
+>>> No, Don't do this.
+>>>
+>>
+>> Why?
+>
+> Table is a property of certain driver. You make it visible to parts
+> that non need it.
+> Moreover, you may here the list itself non-explicit, which reduces
+> readability and understandability worse.
+>
+> If you would like to maintain a list of devices in two
+> (semi-)independent modules, it would be not good looking in any case,
+> either you make a hard dependency (if they already are it's okay to
+> just export a function which helps you to find an ID in the list), or
+> copy it in both modules.
+>
+> I need to check this as well.
+>
 
-Seems readq is not available for 32 bit configuration. Will send a fix soon.
+Currently these modules do not depend on each other. There are
+machines which only need asus-wmi, and not asus-wireless, and there
+may be machines in the future which will only need asus-wireless and
+not asus-wmi (not really seen any in that situation, but it is a
+possibility), so I don't think adding a dependency here is the right
+thing.
 
->    194	}
->    195	
->    196	static int intel_pmc_ipc_check_status(void)
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Duplicating code is not good, so I was trying to avoid it, but maybe
+there isn't really any better way in this case.
 
+>>>>  static u64 asus_wireless_method(acpi_handle handle, const char *metho=
+d,
+>>>>                                 int param)
+>>>> @@ -130,8 +127,8 @@ static int asus_wireless_add(struct acpi_device *a=
+dev)
+>>>>         adev->driver_data =3D data;
+>>>>
+>>>>         hid =3D acpi_device_hid(adev);
+>>>> -       for (i =3D 0; strcmp(device_ids[i].id, ""); i++) {
+>>>
+>>> This is wrong.
+>>>
+>>>> -               if (!strcmp(device_ids[i].id, hid)) {
+>>>> +       for (i =3D 0; strcmp(asus_wireless_ids[i].id, ""); i++) {
+>>>
+>>> This is too.
+>>>
+>>> Potential infinite loop.
+>>>
+>>> On top of that seems you just introduced this by previous patches and
+>>> changing here.
+>>> Often it means you need to reconsider how you actually split the
+>>> series on logical pieces.
+>>>
+>>
+>> Can you please elaborate a bit more?
+>
+> The original code relies on "" in the first parameter which basically
+> can be NULL. This fragile.
+> But this is part subject to change in a sequential patch.
+>
+>> All this change does is to change
+>> the name of the variable being iterated in the loop. As you said, the
+>> loop was introduced in a previous series, and you didn't spot any
+>> problems there.
+>
+> If I didn't spot it doesn't mean there is no issues, right? ;)
+>
+>> I don't think it makes sense to also rename the
+>> variable in that other series, since I'm only renaming it because I'm
+>> moving it to a header so it can be used by asus-wmi.c as well.
+>
+> The main problem with the above is introduction something that you are
+> changing soon later.
+>
 
-
--- 
-Best Regards,
-Rajneesh
+Ok, I should probably have sent this as RFC, as it was actually the
+case. But since I'm not going to export the ids list anymore, this
+patch will be dropped from the next revision.
