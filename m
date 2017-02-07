@@ -1,64 +1,54 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: read s0ix residency API
-Date: Tue, 7 Feb 2017 12:19:10 +0200
-Message-ID: <CAHp75VdHArjvkkx2CiLQZ2fvhwNhChNwvoCKrU7g7RMj=-nG=w@mail.gmail.com>
-References: <1486386591-5739-1-git-send-email-shanth.murthy@intel.com>
- <201702062146.dHHXqmBG%fengguang.wu@intel.com> <20170206183122.GA14651@rajaneesh-OptiPlex-9010>
+Subject: Re: [PATCHv3] platform/x86: asus-wireless: Fix identation
+Date: Tue, 7 Feb 2017 12:22:45 +0200
+Message-ID: <CAHp75VdA4ZT0CLBGuZ8Wnp2iOZBnG0f9w-mbsXkLdiZxy6UAdg@mail.gmail.com>
+References: <CAHp75VeCJee46FHoyGdZ39CvTu0pb=k_R0CnWb9_vaX-per+rQ@mail.gmail.com>
+ <20170206152021.17671-1-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170206183122.GA14651@rajaneesh-OptiPlex-9010>
+In-Reply-To: <20170206152021.17671-1-jprvita@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: kbuild test robot <lkp@intel.com>, Shanth Murthy <shanth.murthy@intel.com>, kbuild-all@01.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Zha Qipeng <qipeng.zha@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 6, 2017 at 8:31 PM, Rajneesh Bhardwaj
-<rajneesh.bhardwaj@intel.com> wrote:
-> On Mon, Feb 06, 2017 at 10:01:43PM +0800, kbuild test robot wrote:
->> Hi Shanth,
->>
->> [auto build test ERROR on tip/x86/core]
->> [also build test ERROR on v4.10-rc7]
->> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->>
->> url:    https://github.com/0day-ci/linux/commits/Shanth-Murthy/platform-x86-intel_pmc_ipc-read-s0ix-residency-API/20170206-213213
->> config: i386-randconfig-x007-201706 (attached as .config)
->> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
->> reproduce:
->>         # save the attached .config to linux build tree
->>         make ARCH=i386
->>
->> All errors (new ones prefixed by >>):
->>
->>    drivers/platform/x86/intel_pmc_ipc.c: In function 'gcr_data_readq':
->> >> drivers/platform/x86/intel_pmc_ipc.c:193:9: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
->>      return readq(ipcdev.ipc_base + offset);
->>             ^~~~~
->>    cc1: some warnings being treated as errors
->>
->> vim +/readq +193 drivers/platform/x86/intel_pmc_ipc.c
->>
->>    187        {
->>    188                return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
->>    189        }
->>    190
->>    191        static inline u64 gcr_data_readq(u32 offset)
->>    192        {
->>  > 193                return readq(ipcdev.ipc_base + offset);
->
-> Seems readq is not available for 32 bit configuration. Will send a fix soon.
+On Mon, Feb 6, 2017 at 5:20 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.c=
+om> wrote:
+> Fix identation problem introduced when this driver was first merged into
+> the kernel.
 
-I fixed and pushed to testing. No need to resend.
-Thanks!
-
+Thanks, pushed to testing.
 
 >
->>    194        }
->>    195
->>    196        static int intel_pmc_ipc_check_status(void)
+> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wireless.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/=
+asus-wireless.c
+> index 9f31bc1a47d0..a7ee18383146 100644
+> --- a/drivers/platform/x86/asus-wireless.c
+> +++ b/drivers/platform/x86/asus-wireless.c
+> @@ -76,8 +76,7 @@ static void led_state_update(struct work_struct *work)
+>                              data->led_state);
+>  }
+>
+> -static void led_state_set(struct led_classdev *led,
+> -                                 enum led_brightness value)
+> +static void led_state_set(struct led_classdev *led, enum led_brightness =
+value)
+>  {
+>         struct asus_wireless_data *data;
+>
+> --
+> 2.11.0
+>
 
 
--- 
+
+--=20
 With Best Regards,
 Andy Shevchenko
