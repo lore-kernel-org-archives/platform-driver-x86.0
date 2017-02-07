@@ -1,122 +1,81 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCH 7/8] asus-wireless: Export ids list
-Date: Mon, 6 Feb 2017 14:18:54 -0500
-Message-ID: <CA+A7VXXUyp0ypdo+SHEv6Y2EH__R1aOyb1VJ0zdmR3ytjY-rZg@mail.gmail.com>
-References: <20170126153013.12753-1-jprvita@endlessm.com> <20170126153013.12753-8-jprvita@endlessm.com>
- <CAHp75Vf229bhmXD4zMydXCSSm4HEhOa9Y5S1trpQUfWnwq85MQ@mail.gmail.com>
- <CA+A7VXU3zNm2qHaM2hnaJ0GamrL5c0zCKC-MLgPZ+9M_DyKKkQ@mail.gmail.com> <CAHp75VfMKy47--izxLfXO6ZJXSwgDg3pgVFv_F93N2ELZmsqVA@mail.gmail.com>
+From: =?UTF-8?B?0JLQvtGF0LzQuNC9INCY0LLQsNC9?= <i_vohmin@mail.ru>
+Subject: =?UTF-8?B?QXN1cyBHTDU1M1ZFIGxhcHRvcCBrZXlib2FyZCBiYWNrbGlnaHQgdW5jb250?=
+ =?UTF-8?B?cm9sbGFibGUgYW5kIEZuIGtleXMgbm90IHdvcmtpbmc=?=
+Date: Tue, 07 Feb 2017 10:01:50 +0300
+Message-ID: <1486450910.589594055@f40.i.mail.ru>
+Reply-To: =?UTF-8?B?0JLQvtGF0LzQuNC9INCY0LLQsNC9?= <i_vohmin@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f194.google.com ([209.85.161.194]:36082 "EHLO
-        mail-yw0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751809AbdBFTTf (ORCPT
+Received: from fallback1.mail.ru ([94.100.181.184]:33348 "EHLO
+        fallback1.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751606AbdBGH2H (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Feb 2017 14:19:35 -0500
-In-Reply-To: <CAHp75VfMKy47--izxLfXO6ZJXSwgDg3pgVFv_F93N2ELZmsqVA@mail.gmail.com>
+        Tue, 7 Feb 2017 02:28:07 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+To: corentin.chary@gmail.com
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On 4 February 2017 at 10:35, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
-ote:
-> On Wed, Feb 1, 2017 at 2:23 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail=
-.com> wrote:
->> On 27 January 2017 at 10:36, Andy Shevchenko <andy.shevchenko@gmail.com>=
- wrote:
->>> On Thu, Jan 26, 2017 at 5:30 PM, Jo=C3=A3o Paulo Rechi Vita
->>> <jprvita@gmail.com> wrote:
->
-> Fill commit message, btw.
->
->>>> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
->
->>>> -static const struct acpi_device_id device_ids[] =3D {
->>>> -       {"ATK4001", 0},
->>>> -       {"ATK4002", 0},
->>>> -       {"", 0},
->>>> -};
->>>> -MODULE_DEVICE_TABLE(acpi, device_ids);
->>>> +MODULE_DEVICE_TABLE(acpi, asus_wireless_ids);
->>>>
->>>
->>> No, Don't do this.
->>>
->>
->> Why?
->
-> Table is a property of certain driver. You make it visible to parts
-> that non need it.
-> Moreover, you may here the list itself non-explicit, which reduces
-> readability and understandability worse.
->
-> If you would like to maintain a list of devices in two
-> (semi-)independent modules, it would be not good looking in any case,
-> either you make a hard dependency (if they already are it's okay to
-> just export a function which helps you to find an ID in the list), or
-> copy it in both modules.
->
-> I need to check this as well.
->
-
-Currently these modules do not depend on each other. There are
-machines which only need asus-wmi, and not asus-wireless, and there
-may be machines in the future which will only need asus-wireless and
-not asus-wmi (not really seen any in that situation, but it is a
-possibility), so I don't think adding a dependency here is the right
-thing.
-
-Duplicating code is not good, so I was trying to avoid it, but maybe
-there isn't really any better way in this case.
-
->>>>  static u64 asus_wireless_method(acpi_handle handle, const char *metho=
-d,
->>>>                                 int param)
->>>> @@ -130,8 +127,8 @@ static int asus_wireless_add(struct acpi_device *a=
-dev)
->>>>         adev->driver_data =3D data;
->>>>
->>>>         hid =3D acpi_device_hid(adev);
->>>> -       for (i =3D 0; strcmp(device_ids[i].id, ""); i++) {
->>>
->>> This is wrong.
->>>
->>>> -               if (!strcmp(device_ids[i].id, hid)) {
->>>> +       for (i =3D 0; strcmp(asus_wireless_ids[i].id, ""); i++) {
->>>
->>> This is too.
->>>
->>> Potential infinite loop.
->>>
->>> On top of that seems you just introduced this by previous patches and
->>> changing here.
->>> Often it means you need to reconsider how you actually split the
->>> series on logical pieces.
->>>
->>
->> Can you please elaborate a bit more?
->
-> The original code relies on "" in the first parameter which basically
-> can be NULL. This fragile.
-> But this is part subject to change in a sequential patch.
->
->> All this change does is to change
->> the name of the variable being iterated in the loop. As you said, the
->> loop was introduced in a previous series, and you didn't spot any
->> problems there.
->
-> If I didn't spot it doesn't mean there is no issues, right? ;)
->
->> I don't think it makes sense to also rename the
->> variable in that other series, since I'm only renaming it because I'm
->> moving it to a header so it can be used by asus-wmi.c as well.
->
-> The main problem with the above is introduction something that you are
-> changing soon later.
->
-
-Ok, I should probably have sent this as RFC, as it was actually the
-case. But since I'm not going to export the ids list anymore, this
-patch will be dropped from the next revision.
+ClsxLl0gT25lIGxpbmUgc3VtbWFyeSBvZiB0aGUgcHJvYmxlbToKQXN1cyBHTDU1M1ZFIGxhcHRv
+cCBrZXlib2FyZCBiYWNrbGlnaHQgdW5jb250cm9sbGFibGUgYW5kIEZuIGtleXMgbm90IHdvcmtp
+bmcKClsyLl0gRnVsbCBkZXNjcmlwdGlvbiBvZiB0aGUgcHJvYmxlbS9yZXBvcnQ6CgpUaGVyZSBh
+cmUgcHJvYmxlbXMgd2l0aCBBc3VzIEdMNTUzVkUgbGFwdG9wIEZuIGJ1dHRvbnMgYW5kIGtleWJv
+YXJkIGJhY2tsaWdodAoxKSBLZXlib2FyZCBiYWNrbGlnaHQgdW5jb250cm9sbGFibGUKMikgTW9z
+dCBGTiBrZXlzIGRvbid0IHdvcmsKClRoZXJlIGlzIG5vIHdheSB0byBjb250cm9sIGtleWJvYXJk
+IGJhY2tsaWdodCBhdCBhbGwgKGFscmVhZHkgdHJpZWQgYWxsIHBvc3NpYmxlIHdheXMgZm91bmQg
+aW4gaW50ZXJuZXQpCgpNaXNzaW5nIC9zeXMvY2xhc3MvbGVkcy9hc3VzOjprYmRfYmFja2xpZ2h0
+IChhc3VzLW5iLXdtaSBtb2Rwcm9iZWQpCgp0cnkgYWxsIHBvc3NpYmxlIHZhcmlhbnRzIHdpdGgg
+YWNwaV9vc2kgYW5kIGFjcGlfYmFja2xpZ2h0IGZyb20gZm9ydW0gLSBubyBlZmZlY3QuCgpJbnN0
+YWxsIGtlcm5lbCA0LjkgYW5kIGV2ZW4gNC4xMCBsYXRlc3QgUkMgLSBubyBlZmZlY3QgKG9ubHkg
+Z290IGNvbnRyb2wgb3ZlciBhaXJwbGFuZSBsZWQpLgoKS2V5Ym9hcmQgYmFja2xpZ2h0IGlzIGFs
+d2F5cyBvbiBvciBhbHdheXMgb2ZmIChsYXN0IHN0YXRlIGZyb20gd2luZG93cykKRm4ga2V5cyBu
+b3Qgd29ya2luZzoKRjEoWnogU3VzcGVuZCkgRjIoQWlycGxhbmUpIEYzKEtiIGJyaWdodG5lc3Mg
+ZG93bikgRjQoS2IgYnJpZ2h0bmVzcyB1cCkgRjUoQnJpZ2h0bmVzcyBkb3duKSBGNihCcmlnaHRu
+ZXNzIHVwKSBGNyhTY3JlZW4gZGltKSBGOShUb3VjaHBhZCBkaXNhYmxlKQpXb3JraW5nOiBTb3Vu
+ZCBNdXRlICsgLSAoRjEwIEYxMSBGMTIpCgpNb25pdG9yIGJhY2tsaWdodCB3b3JraW5nIGZpbmUg
+YnkgdXNpbmcgbWVudSBzbGlkZXIuCgpTdWdnZXN0aW9uOiBhc3VzLW5iLXdtaSBrZXJuZWwgbW9k
+dWxlIHVuYWJsZSB0byBkZXRlY3QgaGFyZHdhcmUgCgpMYXVuY2hwYWQgYnVnIGh0dHBzOi8vYnVn
+cy5sYXVuY2hwYWQubmV0L3VidW50dS8rc291cmNlL2xpbnV4LytidWcvMTY2MjMxNgoKdW5hbWUg
+LWEKTGludXggY2FiYWxibDQtU1RSSVggNC4xMC4wLTA0MTAwMHJjNy1nZW5lcmljICMyMDE3MDIw
+NTE5MzEgU01QIE1vbiBGZWIgNiAKCmxzYl9yZWxlYXNlIC1yZApEZXNjcmlwdGlvbjogICAgVWJ1
+bnR1IDE2LjA0LjEgTFRTClJlbGVhc2U6ICAgICAgICAxNi4wNCAKCm1vZGluZm8gYXN1cy1uYi13
+bWkKZmlsZW5hbWU6ICAgICAgIC9saWIvbW9kdWxlcy80LjEwLjAtMDQxMDAwcmM3LWdlbmVyaWMv
+a2VybmVsL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbmItd21pLmtvCmFsaWFzOiAgICAgICAg
+ICB3bWk6MEIzQ0JCMzUtRTNDMi00NUVELTkxQzItNEM1QTZEMTk1RDFDCmxpY2Vuc2U6ICAgICAg
+ICBHUEwKZGVzY3JpcHRpb246ICAgIEFzdXMgTm90ZWJvb2tzIFdNSSBIb3RrZXkgRHJpdmVyCmF1
+dGhvcjogICAgICAgICBDb3JlbnRpbiBDaGFyeSA8Y29yZW50aW4uY2hhcnlAZ21haWwuY29tPgpz
+cmN2ZXJzaW9uOiAgICAgRDczNkUzRjFFRTk5QTkwRUFBNDY0MTYKZGVwZW5kczogICAgICAgIGFz
+dXMtd21pCmludHJlZTogICAgICAgICBZCnZlcm1hZ2ljOiAgICAgICA0LjEwLjAtMDQxMDAwcmM3
+LWdlbmVyaWMgU01QIG1vZF91bmxvYWQgCnBhcm06ICAgICAgICAgICB3YXBmOldBUEYgdmFsdWUg
+KHVpbnQpICAKClByb2JsZW1UeXBlOiBCdWcKQ3VycmVudERlc2t0b3A6IEtERQpEYXRlOiBNb24g
+RmViIDYgMjM6MTg6MTEgMjAxNwpIaWJlcm5hdGlvbkRldmljZTogUkVTVU1FPVVVSUQ9NmFiNjM2
+NWEtYzg4YS00ZTY0LWE1MjktODNiNmE5YTcwZTRlCkluc3RhbGxhdGlvbkRhdGU6IEluc3RhbGxl
+ZCBvbiAyMDE3LTAyLTA1ICgxIGRheXMgYWdvKQpMc3VzYjoKIEJ1cyAwMDIgRGV2aWNlIDAwMTog
+SUQgMWQ2YjowMDAzIExpbnV4IEZvdW5kYXRpb24gMy4wIHJvb3QgaHViCiBCdXMgMDAxIERldmlj
+ZSAwMDM6IElEIDgwODc6MGEyYSBJbnRlbCBDb3JwLgogQnVzIDAwMSBEZXZpY2UgMDAyOiBJRCAw
+YmRhOjU3ZjUgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAuCiBCdXMgMDAxIERldmljZSAwMDQ6
+IElEIDBiMDU6MTg1NCBBU1VTVGVrIENvbXB1dGVyLCBJbmMuCiBCdXMgMDAxIERldmljZSAwMDE6
+IElEIDFkNmI6MDAwMiBMaW51eCBGb3VuZGF0aW9uIDIuMCByb290IGh1YgpNYWNoaW5lVHlwZTog
+QVNVU1RlSyBDT01QVVRFUiBJTkMuIEdMNTUzVkUKUHJvY0ZCOiAwIGludGVsZHJtZmIKUmVsYXRl
+ZFBhY2thZ2VWZXJzaW9uczoKIGxpbnV4LXJlc3RyaWN0ZWQtbW9kdWxlcy00LjQuMC02Mi1nZW5l
+cmljIE4vQQogbGludXgtYmFja3BvcnRzLW1vZHVsZXMtNC40LjAtNjItZ2VuZXJpYyBOL0EKIGxp
+bnV4LWZpcm13YXJlIDEuMTU3LjYKU291cmNlUGFja2FnZTogbGludXgKVXBncmFkZVN0YXR1czog
+Tm8gdXBncmFkZSBsb2cgcHJlc2VudCAocHJvYmFibHkgZnJlc2ggaW5zdGFsbCkKZG1pLmJpb3Mu
+ZGF0ZTogMTEvMDgvMjAxNgpkbWkuYmlvcy52ZW5kb3I6IEFtZXJpY2FuIE1lZ2F0cmVuZHMgSW5j
+LgpkbWkuYmlvcy52ZXJzaW9uOiBHTDU1M1ZFLjIwOApkbWkuYm9hcmQuYXNzZXQudGFnOiBBVE4x
+MjM0NTY3ODkwMTIzNDU2NwpkbWkuYm9hcmQubmFtZTogR0w1NTNWRQpkbWkuYm9hcmQudmVuZG9y
+OiBBU1VTVGVLIENPTVBVVEVSIElOQy4KZG1pLmJvYXJkLnZlcnNpb246IDEuMApkbWkuY2hhc3Np
+cy5hc3NldC50YWc6IE5vIEFzc2V0IFRhZwpkbWkuY2hhc3Npcy50eXBlOiAxMApkbWkuY2hhc3Np
+cy52ZW5kb3I6IEFTVVNUZUsgQ09NUFVURVIgSU5DLgpkbWkuY2hhc3Npcy52ZXJzaW9uOiAxLjAK
+ZG1pLm1vZGFsaWFzOiBkbWk6YnZuQW1lcmljYW5NZWdhdHJlbmRzSW5jLjpidnJHTDU1M1ZFLjIw
+ODpiZDExLzA4LzIwMTY6c3ZuQVNVU1RlS0NPTVBVVEVSSU5DLjpwbkdMNTUzVkU6cHZyMS4wOnJ2
+bkFTVVNUZUtDT01QVVRFUklOQy46cm5HTDU1M1ZFOnJ2cjEuMDpjdm5BU1VTVGVLQ09NUFVURVJJ
+TkMuOmN0MTA6Y3ZyMS4wOgpkbWkucHJvZHVjdC5uYW1lOiBHTDU1M1ZFCmRtaS5wcm9kdWN0LnZl
+cnNpb246IDEuMApkbWkuc3lzLnZlbmRvcjogQVNVU1RlSyBDT01QVVRFUiBJTkMuCgpbMy5dIEtl
+eXdvcmRzIChpLmUuLCBtb2R1bGVzLCBuZXR3b3JraW5nLCBrZXJuZWwpOgoKCls0Ll0gS2VybmVs
+IHZlcnNpb24gKGZyb20gL3Byb2MvdmVyc2lvbik6IApjYXQgL3Byb2MvdmVyc2lvbgpMaW51eCB2
+ZXJzaW9uIDQuMTAuMC0wNDEwMDByYzctZ2VuZXJpYyAoa2VybmVsQGdsb2luKSAoZ2NjIHZlcnNp
+b24gNi4yLjAgMjAxNjEwMDUgKFVidW50dSA2LjIuMC01dWJ1bnR1MTIpICkgIzIwMTcwMjA1MTkz
+MSBTTVAgTW9uIEZlYiA2IDAwOjMzOjM5IFVUQyAyMDE3
