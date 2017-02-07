@@ -1,51 +1,69 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: [PATCH v3 2/2] platform/x86: acer-wmi: add another KEY_WLAN keycode
-Date: Tue,  7 Feb 2017 13:05:11 -0600
-Message-ID: <20170207190511.10039-2-drake@endlessm.com>
-References: <20170207190511.10039-1-drake@endlessm.com>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 1/1] asus-wireless: Use the correct HSWC parameter for
+ each HID
+Date: Tue, 7 Feb 2017 16:44:32 -0500
+Message-ID: <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com>
+References: <20170126150031.11840-1-jprvita@endlessm.com> <20170126150031.11840-2-jprvita@endlessm.com>
+ <CAHp75VfFGziE4iENsJqy8-HESK=HA8EYdGqQQ26EBqC3yv0KFg@mail.gmail.com>
+ <CA+A7VXWjL4GZORhfELJroxR3-CRTrOP8uBUgqZYyjzU0KwMYiw@mail.gmail.com> <CAHp75VdH+t1uWDMwQrRPnPO=pTQ9kag6mJ0QqPAxi8fQ593w=w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f46.google.com ([209.85.213.46]:35245 "EHLO
-        mail-vk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754498AbdBGTPY (ORCPT
+Received: from mail-yw0-f194.google.com ([209.85.161.194]:33095 "EHLO
+        mail-yw0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932176AbdBGVpS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Feb 2017 14:15:24 -0500
-Received: by mail-vk0-f46.google.com with SMTP id x75so84847096vke.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Feb 2017 11:15:24 -0800 (PST)
-In-Reply-To: <20170207190511.10039-1-drake@endlessm.com>
+        Tue, 7 Feb 2017 16:45:18 -0500
+In-Reply-To: <CAHp75VdH+t1uWDMwQrRPnPO=pTQ9kag6mJ0QqPAxi8fQ593w=w@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@suse.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endlessm.com
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 
-From: Chris Chiu <chiu@endlessm.com>
+On 4 February 2017 at 10:02, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
+ote:
+> On Wed, Feb 1, 2017 at 2:20 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail=
+.com> wrote:
+>> On 27 January 2017 at 10:26, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+>>> On Thu, Jan 26, 2017 at 5:00 PM, Jo=C3=A3o Paulo Rechi Vita
+>>> <jprvita@gmail.com> wrote:
+>
+>>>> +static const struct acpi_device_id device_ids[] =3D {
+>>>> +       {"ATK4001", 0},
+>>>> +       {"ATK4002", 0},
+>>>
+>>> ...and use it as a parameter here.
+>>>
+>>
+>> I'm not exactly sure how to do that, as driver_data is a
+>> kernel_ulong_t. Can you please elaborate a bit more?
+>
+> {"ATK4001", (kernel_ulong_t)atk4001_id_params},
+>
 
-Now that we have informed the firmware that the RF Button driver is
-active, laptops such as the Acer TravelMate P238-M will generate
-a WMI key event with code 0x86 when the Fn+F3 airplane mode key is
-pressed.
+The code you suggested:
 
-Add this keycode to the table so that it is converted to an appropriate
-input event.
+static const struct hswc_params atk4001_id_params =3D {0x0, 0x1, 0x2};
+static const struct acpi_device_id device_ids[] =3D {
+       {"ATK4001", (kernel_ulong_t)atk4001_id_params},
+       {"", 0},
+};
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
----
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+does not compile: "drivers/platform/x86/asus-wireless.c:44:2: error:
+aggregate value used where an integer was expected", so I guess you
+meant the address of that struct (&atk4001_id_params), right? I don't
+see any way how we could have the actual data in .driver_data.
 
-v3: split off this change from the original patch
+Even after moving the parameters in the driver_data field of
+device_ids[], I'm not able retrieve them with acpi_match_device(),
+because the "struct device" from the "struct acpi_device" that comes
+as an input parameter in asus_wireless_add() does not have a acpi
+companion device associated with it, so acpi_match_device() returns
+NULL. I still need to manually loop through device_ids[] in order to
+retrieve the .driver_data associated with the HID, and I see the same
+pattern in the i2c-scmi driver.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index fd15e7c..ecdf6f1 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -128,6 +128,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
-+	{KE_KEY, 0x86, {KEY_WLAN} },
- 	{KE_END, 0}
- };
- 
--- 
-2.9.3
+I'm sending the next revision for feedback, please advise if I'm
+missing any detail, or if you want this implemented differently.
