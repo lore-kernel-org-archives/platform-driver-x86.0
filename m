@@ -1,81 +1,64 @@
-From: =?UTF-8?B?0JLQvtGF0LzQuNC9INCY0LLQsNC9?= <i_vohmin@mail.ru>
-Subject: =?UTF-8?B?QXN1cyBHTDU1M1ZFIGxhcHRvcCBrZXlib2FyZCBiYWNrbGlnaHQgdW5jb250?=
- =?UTF-8?B?cm9sbGFibGUgYW5kIEZuIGtleXMgbm90IHdvcmtpbmc=?=
-Date: Tue, 07 Feb 2017 10:01:50 +0300
-Message-ID: <1486450910.589594055@f40.i.mail.ru>
-Reply-To: =?UTF-8?B?0JLQvtGF0LzQuNC9INCY0LLQsNC9?= <i_vohmin@mail.ru>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: read s0ix residency API
+Date: Tue, 7 Feb 2017 12:19:10 +0200
+Message-ID: <CAHp75VdHArjvkkx2CiLQZ2fvhwNhChNwvoCKrU7g7RMj=-nG=w@mail.gmail.com>
+References: <1486386591-5739-1-git-send-email-shanth.murthy@intel.com>
+ <201702062146.dHHXqmBG%fengguang.wu@intel.com> <20170206183122.GA14651@rajaneesh-OptiPlex-9010>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fallback1.mail.ru ([94.100.181.184]:33348 "EHLO
-        fallback1.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751606AbdBGH2H (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Feb 2017 02:28:07 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170206183122.GA14651@rajaneesh-OptiPlex-9010>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: kbuild test robot <lkp@intel.com>, Shanth Murthy <shanth.murthy@intel.com>, kbuild-all@01.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Zha Qipeng <qipeng.zha@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-ClsxLl0gT25lIGxpbmUgc3VtbWFyeSBvZiB0aGUgcHJvYmxlbToKQXN1cyBHTDU1M1ZFIGxhcHRv
-cCBrZXlib2FyZCBiYWNrbGlnaHQgdW5jb250cm9sbGFibGUgYW5kIEZuIGtleXMgbm90IHdvcmtp
-bmcKClsyLl0gRnVsbCBkZXNjcmlwdGlvbiBvZiB0aGUgcHJvYmxlbS9yZXBvcnQ6CgpUaGVyZSBh
-cmUgcHJvYmxlbXMgd2l0aCBBc3VzIEdMNTUzVkUgbGFwdG9wIEZuIGJ1dHRvbnMgYW5kIGtleWJv
-YXJkIGJhY2tsaWdodAoxKSBLZXlib2FyZCBiYWNrbGlnaHQgdW5jb250cm9sbGFibGUKMikgTW9z
-dCBGTiBrZXlzIGRvbid0IHdvcmsKClRoZXJlIGlzIG5vIHdheSB0byBjb250cm9sIGtleWJvYXJk
-IGJhY2tsaWdodCBhdCBhbGwgKGFscmVhZHkgdHJpZWQgYWxsIHBvc3NpYmxlIHdheXMgZm91bmQg
-aW4gaW50ZXJuZXQpCgpNaXNzaW5nIC9zeXMvY2xhc3MvbGVkcy9hc3VzOjprYmRfYmFja2xpZ2h0
-IChhc3VzLW5iLXdtaSBtb2Rwcm9iZWQpCgp0cnkgYWxsIHBvc3NpYmxlIHZhcmlhbnRzIHdpdGgg
-YWNwaV9vc2kgYW5kIGFjcGlfYmFja2xpZ2h0IGZyb20gZm9ydW0gLSBubyBlZmZlY3QuCgpJbnN0
-YWxsIGtlcm5lbCA0LjkgYW5kIGV2ZW4gNC4xMCBsYXRlc3QgUkMgLSBubyBlZmZlY3QgKG9ubHkg
-Z290IGNvbnRyb2wgb3ZlciBhaXJwbGFuZSBsZWQpLgoKS2V5Ym9hcmQgYmFja2xpZ2h0IGlzIGFs
-d2F5cyBvbiBvciBhbHdheXMgb2ZmIChsYXN0IHN0YXRlIGZyb20gd2luZG93cykKRm4ga2V5cyBu
-b3Qgd29ya2luZzoKRjEoWnogU3VzcGVuZCkgRjIoQWlycGxhbmUpIEYzKEtiIGJyaWdodG5lc3Mg
-ZG93bikgRjQoS2IgYnJpZ2h0bmVzcyB1cCkgRjUoQnJpZ2h0bmVzcyBkb3duKSBGNihCcmlnaHRu
-ZXNzIHVwKSBGNyhTY3JlZW4gZGltKSBGOShUb3VjaHBhZCBkaXNhYmxlKQpXb3JraW5nOiBTb3Vu
-ZCBNdXRlICsgLSAoRjEwIEYxMSBGMTIpCgpNb25pdG9yIGJhY2tsaWdodCB3b3JraW5nIGZpbmUg
-YnkgdXNpbmcgbWVudSBzbGlkZXIuCgpTdWdnZXN0aW9uOiBhc3VzLW5iLXdtaSBrZXJuZWwgbW9k
-dWxlIHVuYWJsZSB0byBkZXRlY3QgaGFyZHdhcmUgCgpMYXVuY2hwYWQgYnVnIGh0dHBzOi8vYnVn
-cy5sYXVuY2hwYWQubmV0L3VidW50dS8rc291cmNlL2xpbnV4LytidWcvMTY2MjMxNgoKdW5hbWUg
-LWEKTGludXggY2FiYWxibDQtU1RSSVggNC4xMC4wLTA0MTAwMHJjNy1nZW5lcmljICMyMDE3MDIw
-NTE5MzEgU01QIE1vbiBGZWIgNiAKCmxzYl9yZWxlYXNlIC1yZApEZXNjcmlwdGlvbjogICAgVWJ1
-bnR1IDE2LjA0LjEgTFRTClJlbGVhc2U6ICAgICAgICAxNi4wNCAKCm1vZGluZm8gYXN1cy1uYi13
-bWkKZmlsZW5hbWU6ICAgICAgIC9saWIvbW9kdWxlcy80LjEwLjAtMDQxMDAwcmM3LWdlbmVyaWMv
-a2VybmVsL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbmItd21pLmtvCmFsaWFzOiAgICAgICAg
-ICB3bWk6MEIzQ0JCMzUtRTNDMi00NUVELTkxQzItNEM1QTZEMTk1RDFDCmxpY2Vuc2U6ICAgICAg
-ICBHUEwKZGVzY3JpcHRpb246ICAgIEFzdXMgTm90ZWJvb2tzIFdNSSBIb3RrZXkgRHJpdmVyCmF1
-dGhvcjogICAgICAgICBDb3JlbnRpbiBDaGFyeSA8Y29yZW50aW4uY2hhcnlAZ21haWwuY29tPgpz
-cmN2ZXJzaW9uOiAgICAgRDczNkUzRjFFRTk5QTkwRUFBNDY0MTYKZGVwZW5kczogICAgICAgIGFz
-dXMtd21pCmludHJlZTogICAgICAgICBZCnZlcm1hZ2ljOiAgICAgICA0LjEwLjAtMDQxMDAwcmM3
-LWdlbmVyaWMgU01QIG1vZF91bmxvYWQgCnBhcm06ICAgICAgICAgICB3YXBmOldBUEYgdmFsdWUg
-KHVpbnQpICAKClByb2JsZW1UeXBlOiBCdWcKQ3VycmVudERlc2t0b3A6IEtERQpEYXRlOiBNb24g
-RmViIDYgMjM6MTg6MTEgMjAxNwpIaWJlcm5hdGlvbkRldmljZTogUkVTVU1FPVVVSUQ9NmFiNjM2
-NWEtYzg4YS00ZTY0LWE1MjktODNiNmE5YTcwZTRlCkluc3RhbGxhdGlvbkRhdGU6IEluc3RhbGxl
-ZCBvbiAyMDE3LTAyLTA1ICgxIGRheXMgYWdvKQpMc3VzYjoKIEJ1cyAwMDIgRGV2aWNlIDAwMTog
-SUQgMWQ2YjowMDAzIExpbnV4IEZvdW5kYXRpb24gMy4wIHJvb3QgaHViCiBCdXMgMDAxIERldmlj
-ZSAwMDM6IElEIDgwODc6MGEyYSBJbnRlbCBDb3JwLgogQnVzIDAwMSBEZXZpY2UgMDAyOiBJRCAw
-YmRhOjU3ZjUgUmVhbHRlayBTZW1pY29uZHVjdG9yIENvcnAuCiBCdXMgMDAxIERldmljZSAwMDQ6
-IElEIDBiMDU6MTg1NCBBU1VTVGVrIENvbXB1dGVyLCBJbmMuCiBCdXMgMDAxIERldmljZSAwMDE6
-IElEIDFkNmI6MDAwMiBMaW51eCBGb3VuZGF0aW9uIDIuMCByb290IGh1YgpNYWNoaW5lVHlwZTog
-QVNVU1RlSyBDT01QVVRFUiBJTkMuIEdMNTUzVkUKUHJvY0ZCOiAwIGludGVsZHJtZmIKUmVsYXRl
-ZFBhY2thZ2VWZXJzaW9uczoKIGxpbnV4LXJlc3RyaWN0ZWQtbW9kdWxlcy00LjQuMC02Mi1nZW5l
-cmljIE4vQQogbGludXgtYmFja3BvcnRzLW1vZHVsZXMtNC40LjAtNjItZ2VuZXJpYyBOL0EKIGxp
-bnV4LWZpcm13YXJlIDEuMTU3LjYKU291cmNlUGFja2FnZTogbGludXgKVXBncmFkZVN0YXR1czog
-Tm8gdXBncmFkZSBsb2cgcHJlc2VudCAocHJvYmFibHkgZnJlc2ggaW5zdGFsbCkKZG1pLmJpb3Mu
-ZGF0ZTogMTEvMDgvMjAxNgpkbWkuYmlvcy52ZW5kb3I6IEFtZXJpY2FuIE1lZ2F0cmVuZHMgSW5j
-LgpkbWkuYmlvcy52ZXJzaW9uOiBHTDU1M1ZFLjIwOApkbWkuYm9hcmQuYXNzZXQudGFnOiBBVE4x
-MjM0NTY3ODkwMTIzNDU2NwpkbWkuYm9hcmQubmFtZTogR0w1NTNWRQpkbWkuYm9hcmQudmVuZG9y
-OiBBU1VTVGVLIENPTVBVVEVSIElOQy4KZG1pLmJvYXJkLnZlcnNpb246IDEuMApkbWkuY2hhc3Np
-cy5hc3NldC50YWc6IE5vIEFzc2V0IFRhZwpkbWkuY2hhc3Npcy50eXBlOiAxMApkbWkuY2hhc3Np
-cy52ZW5kb3I6IEFTVVNUZUsgQ09NUFVURVIgSU5DLgpkbWkuY2hhc3Npcy52ZXJzaW9uOiAxLjAK
-ZG1pLm1vZGFsaWFzOiBkbWk6YnZuQW1lcmljYW5NZWdhdHJlbmRzSW5jLjpidnJHTDU1M1ZFLjIw
-ODpiZDExLzA4LzIwMTY6c3ZuQVNVU1RlS0NPTVBVVEVSSU5DLjpwbkdMNTUzVkU6cHZyMS4wOnJ2
-bkFTVVNUZUtDT01QVVRFUklOQy46cm5HTDU1M1ZFOnJ2cjEuMDpjdm5BU1VTVGVLQ09NUFVURVJJ
-TkMuOmN0MTA6Y3ZyMS4wOgpkbWkucHJvZHVjdC5uYW1lOiBHTDU1M1ZFCmRtaS5wcm9kdWN0LnZl
-cnNpb246IDEuMApkbWkuc3lzLnZlbmRvcjogQVNVU1RlSyBDT01QVVRFUiBJTkMuCgpbMy5dIEtl
-eXdvcmRzIChpLmUuLCBtb2R1bGVzLCBuZXR3b3JraW5nLCBrZXJuZWwpOgoKCls0Ll0gS2VybmVs
-IHZlcnNpb24gKGZyb20gL3Byb2MvdmVyc2lvbik6IApjYXQgL3Byb2MvdmVyc2lvbgpMaW51eCB2
-ZXJzaW9uIDQuMTAuMC0wNDEwMDByYzctZ2VuZXJpYyAoa2VybmVsQGdsb2luKSAoZ2NjIHZlcnNp
-b24gNi4yLjAgMjAxNjEwMDUgKFVidW50dSA2LjIuMC01dWJ1bnR1MTIpICkgIzIwMTcwMjA1MTkz
-MSBTTVAgTW9uIEZlYiA2IDAwOjMzOjM5IFVUQyAyMDE3
+On Mon, Feb 6, 2017 at 8:31 PM, Rajneesh Bhardwaj
+<rajneesh.bhardwaj@intel.com> wrote:
+> On Mon, Feb 06, 2017 at 10:01:43PM +0800, kbuild test robot wrote:
+>> Hi Shanth,
+>>
+>> [auto build test ERROR on tip/x86/core]
+>> [also build test ERROR on v4.10-rc7]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Shanth-Murthy/platform-x86-intel_pmc_ipc-read-s0ix-residency-API/20170206-213213
+>> config: i386-randconfig-x007-201706 (attached as .config)
+>> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+>> reproduce:
+>>         # save the attached .config to linux build tree
+>>         make ARCH=i386
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>    drivers/platform/x86/intel_pmc_ipc.c: In function 'gcr_data_readq':
+>> >> drivers/platform/x86/intel_pmc_ipc.c:193:9: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
+>>      return readq(ipcdev.ipc_base + offset);
+>>             ^~~~~
+>>    cc1: some warnings being treated as errors
+>>
+>> vim +/readq +193 drivers/platform/x86/intel_pmc_ipc.c
+>>
+>>    187        {
+>>    188                return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+>>    189        }
+>>    190
+>>    191        static inline u64 gcr_data_readq(u32 offset)
+>>    192        {
+>>  > 193                return readq(ipcdev.ipc_base + offset);
+>
+> Seems readq is not available for 32 bit configuration. Will send a fix soon.
+
+I fixed and pushed to testing. No need to resend.
+Thanks!
+
+
+>
+>>    194        }
+>>    195
+>>    196        static int intel_pmc_ipc_check_status(void)
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
