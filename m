@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 09/10] platform/x86: fujitsu-laptop: autodetect LCD interface on all models
-Date: Wed,  8 Feb 2017 14:46:32 +0100
-Message-ID: <20170208134633.5152-10-kernel@kempniu.pl>
+Subject: [PATCH 05/10] platform/x86: fujitsu-laptop: replace numeric values with constants
+Date: Wed,  8 Feb 2017 14:46:28 +0100
+Message-ID: <20170208134633.5152-6-kernel@kempniu.pl>
 References: <20170208134633.5152-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,53 +15,67 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
 
-Presence of ACPI method SBL2 should be checked on all models rather than
-just the ones with predefined hotkey keycode overrides.  Move most of
-dmi_check_cb_common() to acpi_fujitsu_bl_add().  Adjust indentation to
-make checkpatch happy.
+Replace three repeating numeric values with constants to improve code
+clarity.
 
 Signed-off-by: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
 [kempniu: rebase patch, rewrite commit message]
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 8247abd4658f..4eabb169e2c9 100644
+index 55d696262301..deef40a03b6d 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -631,15 +631,6 @@ static struct platform_driver fujitsu_pf_driver = {
- static void __init dmi_check_cb_common(const struct dmi_system_id *id)
- {
- 	pr_info("Identified laptop model '%s'\n", id->ident);
--	if (use_alt_lcd_levels == -1) {
--		if (acpi_has_method(NULL,
--				"\\_SB.PCI0.LPCB.FJEX.SBL2"))
--			use_alt_lcd_levels = 1;
--		else
--			use_alt_lcd_levels = 0;
--		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as "
--			"%i\n", use_alt_lcd_levels);
--	}
- }
+@@ -97,6 +97,11 @@
+ /* FUNC interface - responses */
+ #define UNSUPPORTED_CMD 0x80000000
  
- static int __init dmi_check_cb_s6410(const struct dmi_system_id *id)
-@@ -751,6 +742,15 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 			pr_err("_INI Method failed\n");
- 	}
- 
-+	if (use_alt_lcd_levels == -1) {
-+		if (acpi_has_method(NULL, "\\_SB.PCI0.LPCB.FJEX.SBL2"))
-+			use_alt_lcd_levels = 1;
-+		else
-+			use_alt_lcd_levels = 0;
-+		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as %i\n",
-+			    use_alt_lcd_levels);
-+	}
++/* FUNC interface - status flags */
++#define FLAG_RFKILL	0x020
++#define FLAG_LID	0x100
++#define FLAG_DOCK	0x200
 +
- 	/* do config (detect defaults) */
- 	use_alt_lcd_levels = use_alt_lcd_levels == 1 ? 1 : 0;
- 	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
+ #if IS_ENABLED(CONFIG_LEDS_CLASS)
+ /* FUNC interface - LED control */
+ #define FUNC_LED_OFF	0x1
+@@ -567,9 +572,9 @@ static ssize_t
+ show_lid_state(struct device *dev,
+ 			struct device_attribute *attr, char *buf)
+ {
+-	if (!(fujitsu_laptop->flags_supported & 0x100))
++	if (!(fujitsu_laptop->flags_supported & FLAG_LID))
+ 		return sprintf(buf, "unknown\n");
+-	if (fujitsu_laptop->flags_state & 0x100)
++	if (fujitsu_laptop->flags_state & FLAG_LID)
+ 		return sprintf(buf, "open\n");
+ 	else
+ 		return sprintf(buf, "closed\n");
+@@ -579,9 +584,9 @@ static ssize_t
+ show_dock_state(struct device *dev,
+ 			struct device_attribute *attr, char *buf)
+ {
+-	if (!(fujitsu_laptop->flags_supported & 0x200))
++	if (!(fujitsu_laptop->flags_supported & FLAG_DOCK))
+ 		return sprintf(buf, "unknown\n");
+-	if (fujitsu_laptop->flags_state & 0x200)
++	if (fujitsu_laptop->flags_state & FLAG_DOCK)
+ 		return sprintf(buf, "docked\n");
+ 	else
+ 		return sprintf(buf, "undocked\n");
+@@ -591,9 +596,9 @@ static ssize_t
+ show_radios_state(struct device *dev,
+ 			struct device_attribute *attr, char *buf)
+ {
+-	if (!(fujitsu_laptop->flags_supported & 0x20))
++	if (!(fujitsu_laptop->flags_supported & FLAG_RFKILL))
+ 		return sprintf(buf, "unknown\n");
+-	if (fujitsu_laptop->flags_state & 0x20)
++	if (fujitsu_laptop->flags_state & FLAG_RFKILL)
+ 		return sprintf(buf, "on\n");
+ 	else
+ 		return sprintf(buf, "killed\n");
 -- 
 2.11.1
