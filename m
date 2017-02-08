@@ -1,50 +1,82 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: intel_mid_powerbtn: Use SCU IPC directly
-Date: Wed,  8 Feb 2017 19:03:19 +0200
-Message-ID: <20170208170319.24052-1-andriy.shevchenko@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:37677 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751906AbdBHRDf (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Feb 2017 12:03:35 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH 1/1] asus-wireless: Use the correct HSWC parameter for
+ each HID
+Date: Wed, 8 Feb 2017 12:04:25 -0500
+Message-ID: <CA+A7VXWyth2ooHw2R4bjaoSR5Q49wgUBOXm6MNni=yigdYD_Xw@mail.gmail.com>
+References: <20170126150031.11840-1-jprvita@endlessm.com> <20170126150031.11840-2-jprvita@endlessm.com>
+ <CAHp75VfFGziE4iENsJqy8-HESK=HA8EYdGqQQ26EBqC3yv0KFg@mail.gmail.com>
+ <CA+A7VXWjL4GZORhfELJroxR3-CRTrOP8uBUgqZYyjzU0KwMYiw@mail.gmail.com>
+ <CAHp75VdH+t1uWDMwQrRPnPO=pTQ9kag6mJ0QqPAxi8fQ593w=w@mail.gmail.com>
+ <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com> <CAHp75VdbxEWj_2Qhfe5KPr95dcPLqipN5J68iedAWfa5Eind=A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VdbxEWj_2Qhfe5KPr95dcPLqipN5J68iedAWfa5Eind=A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On older Intel MID platforms is using SCU IPC library beneath MSIC
-calls.
+On 7 February 2017 at 18:37, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
+ote:
+> On Tue, Feb 7, 2017 at 11:44 PM, Jo=C3=A3o Paulo Rechi Vita
+> <jprvita@gmail.com> wrote:
+>> On 4 February 2017 at 10:02, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+>>> On Wed, Feb 1, 2017 at 2:20 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gma=
+il.com> wrote:
+>>>> On 27 January 2017 at 10:26, Andy Shevchenko <andy.shevchenko@gmail.co=
+m> wrote:
+>>>>> On Thu, Jan 26, 2017 at 5:00 PM, Jo=C3=A3o Paulo Rechi Vita
+>>>>> <jprvita@gmail.com> wrote:
+>>>
+>>>>>> +static const struct acpi_device_id device_ids[] =3D {
+>>>>>> +       {"ATK4001", 0},
+>>>>>> +       {"ATK4002", 0},
+>>>>>
+>>>>> ...and use it as a parameter here.
+>>>>>
+>>>>
+>>>> I'm not exactly sure how to do that, as driver_data is a
+>>>> kernel_ulong_t. Can you please elaborate a bit more?
+>>>
+>>> {"ATK4001", (kernel_ulong_t)atk4001_id_params},
+>>>
+>>
+>> The code you suggested:
+>>
+>> static const struct hswc_params atk4001_id_params =3D {0x0, 0x1, 0x2};
+>> static const struct acpi_device_id device_ids[] =3D {
+>>        {"ATK4001", (kernel_ulong_t)atk4001_id_params},
+>>        {"", 0},
+>> };
+>>
+>> does not compile: "drivers/platform/x86/asus-wireless.c:44:2: error:
+>> aggregate value used where an integer was expected", so I guess you
+>> meant the address of that struct (&atk4001_id_params), right? I don't
+>> see any way how we could have the actual data in .driver_data.
+>
+> Yes, you are right. I kept in mind array when was suggesting this.
+>
+>> Even after moving the parameters in the driver_data field of
+>> device_ids[], I'm not able retrieve them with acpi_match_device(),
+>> because the "struct device" from the "struct acpi_device" that comes
+>> as an input parameter in asus_wireless_add() does not have a acpi
+>> companion device associated with it, so acpi_match_device() returns
+>> NULL. I still need to manually loop through device_ids[] in order to
+>> retrieve the .driver_data associated with the HID, and I see the same
+>> pattern in the i2c-scmi driver.
+>
+> And what prevents us to set companion device?
+>
 
-To make access unified between old and new platforms use SCU IPC library
-directly. It's safe since serialization is done in the library.
+Assuming this in the scope of a platform driver (genuine question, as
+I don't see anything under drivers/platform/ doing so), nothing
+prevents us to set it. But when doing so, acpi_match_device() still
+fails, because acpi_get_first_physical_node() returns a different
+"struct dev *" in acpi_primary_dev_companion().
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 38844f765345..871cfa682519 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -64,7 +64,7 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 	int ret;
- 	u8 pbstat;
- 
--	ret = intel_msic_reg_read(ddata->pbstat_addr, &pbstat);
-+	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
- 	if (ret)
- 		return ret;
- 
-@@ -76,7 +76,7 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 
- static int mid_irq_ack(struct mid_pb_ddata *ddata)
- {
--	return intel_msic_reg_update(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
-+	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
- }
- 
- static int mrfld_setup(struct mid_pb_ddata *ddata)
--- 
-2.11.0
+--
+Jo=C3=A3o Paulo Rechi Vita
+http://about.me/jprvita
