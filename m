@@ -1,77 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/1] asus-wireless: Use the correct HSWC parameter for
- each HID
-Date: Wed, 8 Feb 2017 01:37:27 +0200
-Message-ID: <CAHp75VdbxEWj_2Qhfe5KPr95dcPLqipN5J68iedAWfa5Eind=A@mail.gmail.com>
-References: <20170126150031.11840-1-jprvita@endlessm.com> <20170126150031.11840-2-jprvita@endlessm.com>
- <CAHp75VfFGziE4iENsJqy8-HESK=HA8EYdGqQQ26EBqC3yv0KFg@mail.gmail.com>
- <CA+A7VXWjL4GZORhfELJroxR3-CRTrOP8uBUgqZYyjzU0KwMYiw@mail.gmail.com>
- <CAHp75VdH+t1uWDMwQrRPnPO=pTQ9kag6mJ0QqPAxi8fQ593w=w@mail.gmail.com> <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH 1/1] thinkpad_acpi: Add support for
+ status (external cover) LED
+Date: Tue, 7 Feb 2017 23:01:32 -0200
+Message-ID: <20170208010132.GB7028@khazad-dum.debian.net>
+References: <20170119172132.36029-1-agoode@google.com>
+	<CAOf41Nka4UNk_XUegEXAOHE-Xf0eOs71fuZgBKr0PHEL9sGyag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOf41Nka4UNk_XUegEXAOHE-Xf0eOs71fuZgBKr0PHEL9sGyag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Adam Goode <agoode-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 7, 2017 at 11:44 PM, Jo=C3=A3o Paulo Rechi Vita
-<jprvita@gmail.com> wrote:
-> On 4 February 2017 at 10:02, Andy Shevchenko <andy.shevchenko@gmail.com> =
-wrote:
->> On Wed, Feb 1, 2017 at 2:20 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gmai=
-l.com> wrote:
->>> On 27 January 2017 at 10:26, Andy Shevchenko <andy.shevchenko@gmail.com=
-> wrote:
->>>> On Thu, Jan 26, 2017 at 5:00 PM, Jo=C3=A3o Paulo Rechi Vita
->>>> <jprvita@gmail.com> wrote:
->>
->>>>> +static const struct acpi_device_id device_ids[] =3D {
->>>>> +       {"ATK4001", 0},
->>>>> +       {"ATK4002", 0},
->>>>
->>>> ...and use it as a parameter here.
->>>>
->>>
->>> I'm not exactly sure how to do that, as driver_data is a
->>> kernel_ulong_t. Can you please elaborate a bit more?
->>
->> {"ATK4001", (kernel_ulong_t)atk4001_id_params},
->>
->
-> The code you suggested:
->
-> static const struct hswc_params atk4001_id_params =3D {0x0, 0x1, 0x2};
-> static const struct acpi_device_id device_ids[] =3D {
->        {"ATK4001", (kernel_ulong_t)atk4001_id_params},
->        {"", 0},
-> };
->
-> does not compile: "drivers/platform/x86/asus-wireless.c:44:2: error:
-> aggregate value used where an integer was expected", so I guess you
-> meant the address of that struct (&atk4001_id_params), right? I don't
-> see any way how we could have the actual data in .driver_data.
+Hello Adam,
 
-Yes, you are right. I kept in mind array when was suggesting this.
+I apologise for the delay on answering you.
 
-> Even after moving the parameters in the driver_data field of
-> device_ids[], I'm not able retrieve them with acpi_match_device(),
-> because the "struct device" from the "struct acpi_device" that comes
-> as an input parameter in asus_wireless_add() does not have a acpi
-> companion device associated with it, so acpi_match_device() returns
-> NULL. I still need to manually loop through device_ids[] in order to
-> retrieve the .driver_data associated with the HID, and I see the same
-> pattern in the i2c-scmi driver.
+On Tue, 31 Jan 2017, Adam Goode wrote:
+> On Thu, Jan 19, 2017 at 12:21 PM, Adam Goode <agoode-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> > This allows the control of the red status LED, which is the dot of the "i"
+> > in the word "ThinkPad" on the outside cover of newer models.
+> >
+> > In the manual, both this LED and the power LED are referred to as
+> > the "system-status indicators" without distinction between the two, so
+> > I chose "status" as the LED name.
 
-And what prevents us to set companion device?
+I seem to recall this LED had an ACPI interface that was specific for
+it, and allowed it to on/off/sine-wave?
 
->
-> I'm sending the next revision for feedback, please advise if I'm
-> missing any detail, or if you want this implemented differently.
+> > Signed-off-by: Adam Goode <agoode-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> >
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/
+> > thinkpad_acpi.c
+> > index cacb43fb1df7..6577bf8e5635 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> > @@ -5611,11 +5611,11 @@ static const char * const
+> > tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
+> >         "tpacpi::standby",
+> >         "tpacpi::dock_status1",
+> >         "tpacpi::dock_status2",
+> > -       "tpacpi::unknown_led2",
+> > +       "tpacpi::status",
+> >         "tpacpi::unknown_led3",
+> >         "tpacpi::thinkvantage",
+> >  };
+> > -#define TPACPI_SAFE_LEDS       0x1081U
+> > +#define TPACPI_SAFE_LEDS       0x1481U
 
+What happens on older Lenovo models (x00, x10, x20 series?)?  I think
+the T410 already had it...
 
---=20
-With Best Regards,
-Andy Shevchenko
+Also, please add code to not export it to userspace (as a led class) on
+IBM.
+
+-- 
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
