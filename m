@@ -1,51 +1,129 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: [PATCH v4 2/2] platform/x86: acer-wmi: add another KEY_WLAN keycode
-Date: Wed,  8 Feb 2017 07:51:41 -0600
-Message-ID: <20170208135141.2105-2-drake@endlessm.com>
-References: <20170208135141.2105-1-drake@endlessm.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ua0-f182.google.com ([209.85.217.182]:35756 "EHLO
-        mail-ua0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932358AbdBHNvz (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Feb 2017 08:51:55 -0500
-Received: by mail-ua0-f182.google.com with SMTP id y9so109818792uae.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Feb 2017 05:51:55 -0800 (PST)
-In-Reply-To: <20170208135141.2105-1-drake@endlessm.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@suse.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux@endlessm.com, chiu@endlessm.com
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 08/10] platform/x86: fujitsu-laptop: only register backlight device if FUJ02B1 is present
+Date: Wed,  8 Feb 2017 14:46:31 +0100
+Message-ID: <20170208134633.5152-9-kernel@kempniu.pl>
+References: <20170208134633.5152-1-kernel@kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170208134633.5152-1-kernel@kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
 
-Now that we have informed the firmware that the RF Button driver is
-active, laptops such as the Acer TravelMate P238-M will generate
-a WMI key event with code 0x86 when the Fn+F3 airplane mode key is
-pressed.
+As the backlight device registered by fujitsu-laptop relies on the
+FUJ02B1 ACPI device being present, only register the backlight device
+once that ACPI device is detected.  Drop redundant max_brightness local
+variable.  Assign current brightness before registering the backlight
+device.  Adjust indentation to make checkpatch happy.
 
-Add this keycode to the table so that it is converted to an appropriate
-input event.
-
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
+[kempniu: rebase patch, rewrite commit message]
+Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/fujitsu-laptop.c | 49 ++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
-v3: split off this change from the original patch
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 3795d3f..0568c1a 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -128,6 +128,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
-+	{KE_KEY, 0x86, {KEY_WLAN} },
- 	{KE_END, 0}
- };
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index a5478a011b90..8247abd4658f 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -762,6 +762,23 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
+ 	get_lcd_level();
+ 
++	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
++		struct backlight_properties props;
++
++		memset(&props, 0, sizeof(struct backlight_properties));
++		props.type = BACKLIGHT_PLATFORM;
++		props.max_brightness = fujitsu_bl->max_brightness - 1;
++		props.brightness = fujitsu_bl->brightness_level;
++		fujitsu_bl->bl_device =
++			backlight_device_register("fujitsu-laptop", NULL, NULL,
++						  &fujitsu_bl_ops, &props);
++		if (IS_ERR(fujitsu_bl->bl_device)) {
++			error = PTR_ERR(fujitsu_bl->bl_device);
++			fujitsu_bl->bl_device = NULL;
++			goto err_unregister_input_dev;
++		}
++	}
++
+ 	return 0;
+ 
+ err_unregister_input_dev:
+@@ -778,6 +795,9 @@ static int acpi_fujitsu_bl_remove(struct acpi_device *device)
+ 	struct fujitsu_bl *fujitsu_bl = acpi_driver_data(device);
+ 	struct input_dev *input = fujitsu_bl->input;
+ 
++	if (fujitsu_bl->bl_device)
++		backlight_device_unregister(fujitsu_bl->bl_device);
++
+ 	input_unregister_device(input);
+ 
+ 	fujitsu_bl->acpi_handle = NULL;
+@@ -1192,7 +1212,7 @@ MODULE_DEVICE_TABLE(acpi, fujitsu_ids);
+ 
+ static int __init fujitsu_init(void)
+ {
+-	int ret, max_brightness;
++	int ret;
+ 
+ 	if (acpi_disabled)
+ 		return -ENODEV;
+@@ -1229,30 +1249,9 @@ static int __init fujitsu_init(void)
+ 	if (ret)
+ 		goto fail_platform_device2;
+ 
+-	/* Register backlight stuff */
+-
+-	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+-		struct backlight_properties props;
+-
+-		memset(&props, 0, sizeof(struct backlight_properties));
+-		max_brightness = fujitsu_bl->max_brightness;
+-		props.type = BACKLIGHT_PLATFORM;
+-		props.max_brightness = max_brightness - 1;
+-		fujitsu_bl->bl_device = backlight_device_register("fujitsu-laptop",
+-								  NULL, NULL,
+-								  &fujitsu_bl_ops,
+-								  &props);
+-		if (IS_ERR(fujitsu_bl->bl_device)) {
+-			ret = PTR_ERR(fujitsu_bl->bl_device);
+-			fujitsu_bl->bl_device = NULL;
+-			goto fail_sysfs_group;
+-		}
+-		fujitsu_bl->bl_device->props.brightness = fujitsu_bl->brightness_level;
+-	}
+-
+ 	ret = platform_driver_register(&fujitsu_pf_driver);
+ 	if (ret)
+-		goto fail_backlight;
++		goto fail_sysfs_group;
+ 
+ 	/* Register laptop driver */
+ 
+@@ -1282,8 +1281,6 @@ static int __init fujitsu_init(void)
+ 	kfree(fujitsu_laptop);
+ fail_laptop:
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+-fail_backlight:
+-	backlight_device_unregister(fujitsu_bl->bl_device);
+ fail_sysfs_group:
+ 	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
+ 			   &fujitsu_pf_attribute_group);
+@@ -1307,8 +1304,6 @@ static void __exit fujitsu_cleanup(void)
+ 
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+ 
+-	backlight_device_unregister(fujitsu_bl->bl_device);
+-
+ 	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
+ 			   &fujitsu_pf_attribute_group);
  
 -- 
-2.9.3
+2.11.1
