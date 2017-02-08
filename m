@@ -1,82 +1,156 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Subject: Re: [PATCH 1/1] asus-wireless: Use the correct HSWC parameter for
- each HID
-Date: Wed, 8 Feb 2017 12:04:25 -0500
-Message-ID: <CA+A7VXWyth2ooHw2R4bjaoSR5Q49wgUBOXm6MNni=yigdYD_Xw@mail.gmail.com>
-References: <20170126150031.11840-1-jprvita@endlessm.com> <20170126150031.11840-2-jprvita@endlessm.com>
- <CAHp75VfFGziE4iENsJqy8-HESK=HA8EYdGqQQ26EBqC3yv0KFg@mail.gmail.com>
- <CA+A7VXWjL4GZORhfELJroxR3-CRTrOP8uBUgqZYyjzU0KwMYiw@mail.gmail.com>
- <CAHp75VdH+t1uWDMwQrRPnPO=pTQ9kag6mJ0QqPAxi8fQ593w=w@mail.gmail.com>
- <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com> <CAHp75VdbxEWj_2Qhfe5KPr95dcPLqipN5J68iedAWfa5Eind=A@mail.gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: renames and cleanups
+Date: Thu, 9 Feb 2017 09:22:20 +1030
+Message-ID: <20170208225220.GD8250@marvin.atrad.com.au>
+References: <20170208134633.5152-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdbxEWj_2Qhfe5KPr95dcPLqipN5J68iedAWfa5Eind=A@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170208134633.5152-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 7 February 2017 at 18:37, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
-ote:
-> On Tue, Feb 7, 2017 at 11:44 PM, Jo=C3=A3o Paulo Rechi Vita
-> <jprvita@gmail.com> wrote:
->> On 4 February 2017 at 10:02, Andy Shevchenko <andy.shevchenko@gmail.com>=
- wrote:
->>> On Wed, Feb 1, 2017 at 2:20 PM, Jo=C3=A3o Paulo Rechi Vita <jprvita@gma=
-il.com> wrote:
->>>> On 27 January 2017 at 10:26, Andy Shevchenko <andy.shevchenko@gmail.co=
-m> wrote:
->>>>> On Thu, Jan 26, 2017 at 5:00 PM, Jo=C3=A3o Paulo Rechi Vita
->>>>> <jprvita@gmail.com> wrote:
->>>
->>>>>> +static const struct acpi_device_id device_ids[] =3D {
->>>>>> +       {"ATK4001", 0},
->>>>>> +       {"ATK4002", 0},
->>>>>
->>>>> ...and use it as a parameter here.
->>>>>
->>>>
->>>> I'm not exactly sure how to do that, as driver_data is a
->>>> kernel_ulong_t. Can you please elaborate a bit more?
->>>
->>> {"ATK4001", (kernel_ulong_t)atk4001_id_params},
->>>
->>
->> The code you suggested:
->>
->> static const struct hswc_params atk4001_id_params =3D {0x0, 0x1, 0x2};
->> static const struct acpi_device_id device_ids[] =3D {
->>        {"ATK4001", (kernel_ulong_t)atk4001_id_params},
->>        {"", 0},
->> };
->>
->> does not compile: "drivers/platform/x86/asus-wireless.c:44:2: error:
->> aggregate value used where an integer was expected", so I guess you
->> meant the address of that struct (&atk4001_id_params), right? I don't
->> see any way how we could have the actual data in .driver_data.
->
-> Yes, you are right. I kept in mind array when was suggesting this.
->
->> Even after moving the parameters in the driver_data field of
->> device_ids[], I'm not able retrieve them with acpi_match_device(),
->> because the "struct device" from the "struct acpi_device" that comes
->> as an input parameter in asus_wireless_add() does not have a acpi
->> companion device associated with it, so acpi_match_device() returns
->> NULL. I still need to manually loop through device_ids[] in order to
->> retrieve the .driver_data associated with the HID, and I see the same
->> pattern in the i2c-scmi driver.
->
-> And what prevents us to set companion device?
->
+Hi Michael
 
-Assuming this in the scope of a platform driver (genuine question, as
-I don't see anything under drivers/platform/ doing so), nothing
-prevents us to set it. But when doing so, acpi_match_device() still
-fails, because acpi_get_first_physical_node() returns a different
-"struct dev *" in acpi_primary_dev_companion().
+Thanks very much for the work you've put in to clean up these patches.  I
+very much appreciate it.  I will go through them myself in the next day or
+so, and most importantly test them on my hardware to confirm there are no
+regressions.  Some initial comments follow.
 
---
-Jo=C3=A3o Paulo Rechi Vita
-http://about.me/jprvita
+On Wed, Feb 08, 2017 at 02:46:23PM +0100, Micha?? K??pie?? wrote:
+> Some of these patches raise checkpatch warnings.  This is intentional,
+> in order to make renames clean and easy to review.
+
+For what it's worth, I was also planning to go through and fix the
+checkpatch warnings in this driver, but held off until the issues raised by
+Alan's patches were addressed (essentially to make it easier to apply those
+old patches.  If you are planning on doing this then I won't start it. :-)
+
+On to the ommitted changes from Alan's orginal patch series.
+
+>   - Restructure fujitsu_init().  Quite frankly, I am pretty sure Alan
+>     did not test his series on Fujitsu hardware with a logo lamp and/or
+>     keyboard lamps.
+
+Back in 2009 I don't think there were many models with these features.  This
+observation is therefore quite possible.  I'm more than happy to leave
+fujitsu_init()'s structure as is, especially given that related issues will
+be addressed in your furture patch series.
+
+>   - Bail out when FUJ02B1 is not present.  It could have been deemed
+>     correct back in the day, but we now know that Fujitsu started
+>     shipping devices without that ACPI device present, though with
+>     FUJ02E3 still in place.  These two ACPI devices are independent and
+>     thus should not rely on each other's presence.
+
+Agreed.  You are right, in 2009 I think it seemed like a good idea but it's
+clearly no longer valid.
+
+>   - Move keycode[1-5] fields to struct fujitsu_laptop.  Doing this
+>     causes ordering issues inside fujitsu_init(), while a patch series I
+>     have queued that makes fujitsu-laptop use a sparse keymap removes
+>     these fields altogether.
+
+This makes sense.
+
+>   - Allocate and free fujitsu_bl and fujitsu_laptop inside ACPI
+>     callbacks.  While elegant and correct, this also causes ordering
+>     issues inside fujitsu_init() and can only be done once platform
+>     device registration is properly fixed.
+
+Agreed.
+
+>   - Sync backlight power status in acpi_fujitsu_bl_add().  The long-term
+>     objective for fujitsu-laptop should be to achieve a clean split
+>     between the backlight-related part and the laptop-related part.
+>     This change keeps both parts intertwined.  My fujitsu_init() cleanup
+>     series contains a similar fix, but I have since found a different
+>     solution to this problem which I will post once Alan's rebased
+>     series gets applied.
+
+I'm happy to wait to see this alternative solution.  In the meantime,
+keeping the two parts independent is a good idea.
+
+>   - Remove dmi_check_cb_common().  The sparse keymap series I have
+>     queued gets rid of this function without introducing an additional
+>     field inside struct fujitsu_laptop.
+
+Ok.
+
+> Moreover, some other minor changes present in original patch 1/4 were
+> left out.  A brief discussion of each such case follows.
+> 
+> -#define ACPI_FUJITSU_BL_NOTIFY_CODE1    0x80
+> +#define ACPI_FUJITSU_NOTIFY_CODE1     0x80
+> 
+> Notify code 0x80 is used by both parts of the driver (the
+> brightness-related one and the laptop-related one) and thus it should
+> not be annotated using the "_BL" infix specific to brightness-related
+> code.
+
+Agreed.  Perhaps back in the day it was thought that it did only apply to
+the backlight but with the benefit of hindsight this is clearly not the
+case.
+
+> -#if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
+> ...
+> -#endif
+> 
+> This does not really bring any benefit while breaking consistency with
+> other parts of the driver.
+
+Fair enough.
+
+> 
+> -       dmi_check_system(fujitsu_laptop_dmi_table);
+> +       dmi_check_system(fujitsu_dmi_table);
+> 
+> The original patches moved this dmi_check_system() call to
+> acpi_fujitsu_laptop_add(), which justifies renaming fujitsu_dmi_table to
+> fujitsu_laptop_dmi_table.  However, for reasons discussed above, the
+> rebased patches leave the dmi_check_system() call inside fujitsu_init(),
+> thus making the rename dubious.
+
+Agreed.  In light of the reasons given this makes no sense.
+
+> -                    DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
+> +                    DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU_LAPTOP SIEMENS"),
+> 
+> There are multiple changes like this in original patch 1/4.  They are
+> obviously wrong and were probably introduced by an unreviewed automatic
+> replacement.
+
+I noticed this myself; they are clearly incorrect and have the hallmarks of
+a global search/replace operation.  They were omitted in the initial RFC
+series I sent through for this reason.
+
+[Blank line removal]
+> There are four instances of such a removal in original patch 1/4.  They
+> are obviously correct, though they all happen inside functions related
+> to platform device attributes which I hope will soon get removed
+> altogether.  Thus I refrained from applying these to reduce churn (at
+> least a bit).
+
+I'm happy with that.  The future checkpatch cleanup series could address
+these if they are deemed important enough.
+
+> Finally, some of the changes suggested by Alan were already applied
+> along the way:
+> 
+>   - kmalloc() + memset() occurences were changed to kzalloc() by commit
+>     6c75dd0f965b ("drivers/platform/x86: Use kzalloc").
+> 
+>   - Unused debug macros were removed by commit 00816e1b3839
+>     ("fujitsu-laptop: Remove unused macros").
+
+The entire debug structure has been revised since Alan's original patch was
+made, making most if not all of the debug changes unnecessary.
+
+My ack will follow once I've tested this series on my hardware.  I will try
+to get to this in the next 24 hours.
+
+Regards
+  jonathan
