@@ -1,54 +1,57 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: read s0ix residency API
-Date: Thu, 9 Feb 2017 17:32:59 +0530
-Message-ID: <20170209120259.GA25065@rajaneesh-OptiPlex-9010>
-References: <1486386591-5739-1-git-send-email-shanth.murthy@intel.com>
- <20170209064717.GA24247@rajaneesh-OptiPlex-9010>
- <1486639986.2133.425.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v8 1/7] platform/x86/thinkpad_acpi: Stop setting led_classdev brightness directly
+Date: Thu,  9 Feb 2017 16:44:11 +0100
+Message-ID: <20170209154417.19040-2-hdegoede@redhat.com>
+References: <20170209154417.19040-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:60489 "EHLO mga06.intel.com"
+Received: from mx1.redhat.com ([209.132.183.28]:51862 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752643AbdBIOoq (ORCPT
+        id S1752804AbdBIPyD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2017 09:44:46 -0500
-Content-Disposition: inline
-In-Reply-To: <1486639986.2133.425.camel@linux.intel.com>
+        Thu, 9 Feb 2017 10:54:03 -0500
+In-Reply-To: <20170209154417.19040-1-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Shanth Murthy <shanth.murthy@intel.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, qipeng.zha@intel.com, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 01:33:06PM +0200, Andy Shevchenko wrote:
-> On Thu, 2017-02-09 at 12:17 +0530, Rajneesh Bhardwaj wrote:
-> > On Mon, Feb 06, 2017 at 05:09:51AM -0800, Shanth Murthy wrote:
-> 
-> > > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
->  
-> > > +static int intel_pmc_s0ix_counter_read(u64 *data)
-> > > +{
-> > > +	return -EINVAL;
-> > > +}
-> > > +
-> > 
-> > How about making it static inline and return -ENOSYS instead of
-> > -EINVAL?
-> 
-> I'm not sure what's going on.
-> Your SoB is in this patch and now it feels like you are reviewing this
-> patch.
-> 
-> What should I do?
+There is no need to set the led_classdev's brightness value from
+its set_brightness callback, this is taken care of by the led-core and
+thinkpad_acpi really should not be mucking with it.
 
-Sorry about the confusion. We will respin the patch and send V2.
+Note that kbdlight_set_level_and_update() is still used by the old
+thinpad_acpi specific sysfs interface for the led, so we cannot
+remove it.
 
-> 
-> -- 
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Intel Finland Oy
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v8:
+-New patch in v8 of this patch-set
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index cacb43f..0680bb3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5095,8 +5095,6 @@ static int kbdlight_set_level(int level)
+ 	return 0;
+ }
+ 
+-static int kbdlight_set_level_and_update(int level);
+-
+ static int kbdlight_get_level(void)
+ {
+ 	int status = 0;
+@@ -5164,7 +5162,7 @@ static void kbdlight_set_worker(struct work_struct *work)
+ 			container_of(work, struct tpacpi_led_classdev, work);
+ 
+ 	if (likely(tpacpi_lifecycle == TPACPI_LIFE_RUNNING))
+-		kbdlight_set_level_and_update(data->new_state);
++		kbdlight_set_level(data->new_state);
+ }
+ 
+ static void kbdlight_sysfs_set(struct led_classdev *led_cdev,
 -- 
-Best Regards,
-Rajneesh
+2.9.3
