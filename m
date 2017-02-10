@@ -1,46 +1,61 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v8 0/7] platform/x86: Notify userspace about hotkeys
- changing kbd-backlight brightness
-Date: Thu, 9 Feb 2017 21:21:27 +0100
-Message-ID: <ae6a4532-ae87-33e2-48e2-22e7df75aac2@gmail.com>
-References: <20170209154417.19040-1-hdegoede@redhat.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: renames and cleanups
+Date: Fri, 10 Feb 2017 10:46:17 +1030
+Message-ID: <20170210001616.GH1950@marvin.atrad.com.au>
+References: <20170208134633.5152-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f195.google.com ([209.85.128.195]:35593 "EHLO
-        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932282AbdBIU3A (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:34348 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751410AbdBJARl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2017 15:29:00 -0500
-In-Reply-To: <20170209154417.19040-1-hdegoede@redhat.com>
+        Thu, 9 Feb 2017 19:17:41 -0500
+Content-Disposition: inline
+In-Reply-To: <20170208134633.5152-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Pavel Machek <pavel@ucw.cz>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 02/09/2017 04:44 PM, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is v8 of the platform drivers changes matching / using the new
-> v8 LED subsys led_classdev_notify_brightness_hw_changed() functionality
-> queued in -next.
-> 
-> There have been some changes (and preparation patches added) compared
-> to the previous versions since the new LED api requires the driver to
-> only call led_classdev_notify_brightness_hw_changed() on hotkey triggered
-> changes and the ACPI events indicating brightness changes also get
-> triggered when setting the brightness to led_set_brightness (or sysfs).
-> 
-> This series depends on the patch adding
-> led_classdev_notify_brightness_hw_changed() to the LED subsystem,
-> Jacek can you create a stable branch with just that patch which the
-> platform/x86 platform maintainers can merge, so that they can apply
-> this series ?
+On Wed, Feb 08, 2017 at 02:46:23PM +0100, Micha?? K??pie?? wrote:
+> This series of patches was originally submitted by Alan Jenkins in
+> September 2009. ...
 
-Created branch led_brightness_hw_changed on
-git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git.
+I have applied and tested this patch series on an S7020.  Being an older
+model (and the one the driver was originally targetting) means that many
+driver functions cannot be tested because the respective hardware isn't
+present.  However, the driver was correctly loaded and the backlight
+controls continue to work as they should.  That is, I see no regressions on
+the S7020 hardware.
 
--- 
-Best regards,
-Jacek Anaszewski
+Patches 1-6 are essentially renames to tidy up the naming convention used
+throughout the driver.  The original names date to the first implementation
+which targeted more limited hardware than what we have now, hence the need
+to generalise some of the fields, structure names and so on with the benefit
+of hindsight.
+
+Patch 7: I agree with this approach.  There's no need to clobber the actual
+error code from acpi_bus_register_driver().
+
+Patch 8: Good.  I can confirm that the backlight device is correctly
+registered when FUJ02B1 is present.  I couldn't test the case where FUJ02B1
+is not present because my hardware has the FUJ02B1 device, but can see no
+reason why it won't work as described.
+
+Patch 9: I think the original reasoning was that SBL2 was only ever seen on
+laptops which required the hotkey keycode overrides.  However, testing for
+SBL2 across all models should not change practical behaviour.  It also
+breaks the somewhat arbitrary dependency between SBL2 and the need for
+overrides which may not hold true for future hardware.
+
+Patch 10: Agreed, there is no longer a need for these MODULE_ALIAS entries.
+
+In summary, I see no issues with this patch series which provides a much
+needed clean up of the code and naming conventions within the fujitsu-laptop
+driver.  I'm happy for this series (patches 1-10/10) to be applied.
+
+Signed-off-by: Jonathan Woithe <jwoithe@just42.net>
+
+Regards
+  jonathan
