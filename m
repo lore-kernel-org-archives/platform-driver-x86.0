@@ -1,37 +1,65 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: renames and cleanups
-Date: Fri, 10 Feb 2017 02:42:00 +0200
-Message-ID: <CAHp75VeedmO7yyFjfp3VwrqZa6BmE06Xq1oxdugaYn=YEP2Aww@mail.gmail.com>
-References: <20170208134633.5152-1-kernel@kempniu.pl> <20170210001616.GH1950@marvin.atrad.com.au>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH v1] platform/x86: intel_pmc_ipc: fix division in 32-bit
+ case
+Date: Fri, 10 Feb 2017 09:54:00 +0530
+Message-ID: <20170210042400.GA27435@rajaneesh-OptiPlex-9010>
+References: <20170208160028.13308-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:33550 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751252AbdBJAmB (ORCPT
+Received: from mga05.intel.com ([192.55.52.43]:31057 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750966AbdBJEYR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Feb 2017 19:42:01 -0500
-In-Reply-To: <20170210001616.GH1950@marvin.atrad.com.au>
+        Thu, 9 Feb 2017 23:24:17 -0500
+Content-Disposition: inline
+In-Reply-To: <20170208160028.13308-1-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Shanth Murthy <shanth.murthy@intel.com>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On Fri, Feb 10, 2017 at 2:16 AM, Jonathan Woithe <jwoithe@just42.net> wrote:
-> On Wed, Feb 08, 2017 at 02:46:23PM +0100, Micha?? K??pie?? wrote:
+On Wed, Feb 08, 2017 at 06:00:28PM +0200, Andy Shevchenko wrote:
+> On 32-bit x86 platforms we can't do 64-bit divisions:
+> 
+> 	ERROR: "__udivdi3" [drivers/platform/x86/intel_pmc_ipc.ko] undefined!
+> 
+> Replace plain division by do_div() macro call.
+> 
+> Reported-by: Darren Hart <dvhart@infradead.org>
+> Cc: Shanth Murthy <shanth.murthy@intel.com>
+> Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 46202b6e7c87..8ad4d7b43423 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -62,7 +62,12 @@
+>  #define GCR_TELEM_SHLW_S0IX_OFFSET	0x1080
+>  
+>  /* Residency with clock rate at 19.2MHz to usecs */
+> -#define S0IX_RESIDENCY_IN_USECS(d, s)		(((d) + (s)) * 10 / 192)
+> +#define S0IX_RESIDENCY_IN_USECS(d, s)		\
+> +({						\
+> +	u64 result = 10ull * ((d) + (s));	\
+> +	do_div(result, 192);			\
+> +	result;					\
+> +})
+> 
 
-> In summary, I see no issues with this patch series which provides a much
-> needed clean up of the code and naming conventions within the fujitsu-laptop
-> driver.  I'm happy for this series (patches 1-10/10) to be applied.
->
-> Signed-off-by: Jonathan Woithe <jwoithe@just42.net>
-
-I have noticed people start using SoB for the code they are
-maintaining w/o sending any pull requests.
-It is okay, but there is, as Wolfram pointed, a downside for patchwork
-users. Patchwork is tracking tags (A/R/T) which by a glance allows to
-see what patches are acked/reviewed/tested.
+Looks good, we verified it. We are planning to squash this one and send V2.
+Hope thats fine?
+ 
+>  /*
+>   * 16-byte buffer for sending data associated with IPC command.
+> -- 
+> 2.11.0
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Best Regards,
+Rajneesh
