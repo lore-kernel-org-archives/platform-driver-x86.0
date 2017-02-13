@@ -1,211 +1,118 @@
-From: Shanth Murthy <shanth.murthy@intel.com>
-Subject: [PATCH v2] platform/x86: intel_pmc_ipc: read s0ix residency API
-Date: Mon, 13 Feb 2017 04:02:52 -0800
-Message-ID: <1486987372-2342-1-git-send-email-shanth.murthy@intel.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [lkp-robot] [platform/x86]  b925ff7dcd:
+ BUG:unable_to_handle_kernel
+Date: Mon, 13 Feb 2017 22:56:07 +1030
+Message-ID: <20170213122607.GB20745@marvin.atrad.com.au>
+References: <20170208134633.5152-9-kernel@kempniu.pl>
+ <20170213024015.GC28502@yexl-desktop>
+ <20170213043427.GQ18615@marvin.atrad.com.au>
+ <20170213081440.GA1093@ozzy.nask.waw.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:34211 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752088AbdBMMC4 (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:39148 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751699AbdBMM04 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2017 07:02:56 -0500
+        Mon, 13 Feb 2017 07:26:56 -0500
+Content-Disposition: inline
+In-Reply-To: <20170213081440.GA1093@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, qipeng.zha@intel.com, rajneesh.bhardwaj@intel.com, linux-kernel@vger.kernel.org, Shanth Murthy <shanth.murthy@intel.com>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: kernel test robot <xiaolong.ye@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lkp@01.org
 
-This patch adds a new API to indicate S0ix residency in usec. It utilizes
-the PMC Global Control Registers (GCR) to read deep and shallow
-S0ix residency.
+On Mon, Feb 13, 2017 at 09:14:40AM +0100, Micha?? K??pie?? wrote:
+> > On Mon, Feb 13, 2017 at 10:40:15AM +0800, kernel test robot wrote:
+> > > FYI, we noticed the following commit:
+> > > 
+> > > commit: b925ff7dcd1fc45b86baaebd3442f8b484123716 ("platform/x86: fujitsu-laptop: only register backlight device if FUJ02B1 is present")
+> > > url: https://github.com/0day-ci/linux/commits/Micha-K-pie/fujitsu-laptop-renames-and-cleanups/20170209-030748
+> > > base: git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
+> > > 
+> > > in testcase: boot
+> > > 
+> > > on test machine: qemu-system-i386 -enable-kvm -cpu Haswell,+smep,+smap -m 360M
+> > > 
+> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > > :
+> > > [    4.656202] fujitsu_laptop: call_fext_func: FUNC interface is not present
+> > > [    4.657478] BUG: unable to handle kernel NULL pointer dereference at 00000008
+> > > [    4.658433] IP: fujitsu_init+0x137/0x1b7
+> > > [    4.659208] *pdpt = 0000000000000000 *pde = f000ff53f000ff53 
+> > > :
+> :
+> > If ACPI_FUJITSU_LAPTOP_HID
+> 
+> I think you meant ACPI_FUJITSU_BL_HID.
 
-PMC MMIO resources:
-        o Lower 4kB: IPC1 (PMC inter-processor communication) interface
-        o Upper 4kB: GCR (Global Control Registers)
+I did.  Darn cut and paste.
 
-This enables the power management framework to take corrective actions when
-the platform fails to enter S0ix after kernel freeze as part of the suspend
-to idle flow. (echo freeze > /sys/power/state).
+> > is not present then presumedly the
+> > 
+> >   acpi_bus_register_driver(&acpi_fujitsu_bl_driver)
+> > 
+> > call in fujitsu_init() will fail and nothing further would happen. 
+> > Therefore this HID must be in the system.
+> 
+> Not really.  acpi_bus_register_driver() is just a wrapper around
+> driver_register().
+> In other words, whether or not a given HID is present in the firmware does
+> not have any influence on the return code of that function.
 
-This is expected to be used with a S0ix failsafe framework such as:
-<https://lwn.net/Articles/689505/>
+Yes, I saw that much but erroneously assumed there was an indication of
+device presence in the return value.  Thanks for putting me right on this.
 
-[rajneesh: folded in "fix division in 32-bit case" from Andy Shevchenko]
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-[andy: fixed kbuild error, removed "total" from variables, fixed macro]
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
----
-Changes in v2:
- * Added protection for exported function intel_pmc_s0ix_counter_read().
- * Made intel_pmc_s0ix_counter_read() function "inline" in "intel_pmc_ipc.h".
- * Includes fixes from Andy Shevchenko for kbuild error, variables renaming,
-   macro fix, and 32bit build error
+> > However, the acpi_fujitsu_bl_add() callback wouldn't necessarily get run by
+> > acpi_bus_register_driver(), would it?  I'm not too familiar with the lower
+> > level ACPI functions but a quick trip through the source suggested that the
+> > add callback isn't called via acpi_bus_register_driver().  This would mean
+> > that that fujitsu_bl->bl_device would not yet be initialised when referenced
+> > within fujitsu_init() at line 1271 or 1273.  If this were the case then I
+> > see two options:
+> > 
+> >  1) Don't move the backlight registration out of fujitsu_init().
+> > 
+> >  2) Move the remaining backlight code (lines 1268-1274) into
+> >     acpi_fujitsu_bl_add().
+> > 
+> > Item 1 effectively amounts to dropping this commit.  I'm not sure option 2
+> > is workable because of the code's reliance on FUJ02E3; is that guaranteed to
+> > be useable by the time acpi_fujitsu_bl_add() is called?
+> 
+> To keep things simple, I think we should drop this particular patch for
+> now.  Darren, Andy, could you skip it when applying this series?
+> Patches 9 and 10 do not rely on this one being applied.  Thanks and
+> sorry for the trouble.  v2 of my fujitsu_init() cleanup series will fix
+> this properly.
 
- arch/x86/include/asm/intel_pmc_ipc.h |  6 ++++
- drivers/platform/x86/intel_pmc_ipc.c | 64 ++++++++++++++++++++++++++++++++----
- 2 files changed, 64 insertions(+), 6 deletions(-)
+We could just add a test for NULL on fujitsu_bl->bl_device in
+fujitsu_init(), couldn't we?  However, if you are planning to make further
+structural changes to fujitsu_init() in the upcoming patch series then I
+agree that messing around with this now is kind of pointless.  In this case,
+skipping this single patch is fine.
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index cd0310e..4291b6a 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -30,6 +30,7 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr);
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen);
-+int intel_pmc_s0ix_counter_read(u64 *data);
- 
- #else
- 
-@@ -50,6 +51,11 @@ static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 	return -EINVAL;
- }
- 
-+static inline int intel_pmc_s0ix_counter_read(u64 *data)
-+{
-+	return -EINVAL;
-+}
-+
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 0bf51d5..de64678 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -32,7 +32,10 @@
- #include <linux/notifier.h>
- #include <linux/suspend.h>
- #include <linux/acpi.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+
- #include <asm/intel_pmc_ipc.h>
-+
- #include <linux/platform_data/itco_wdt.h>
- 
- /*
-@@ -54,6 +57,18 @@
- #define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
- 
-+/* PMC Global Control Registers */
-+#define GCR_TELEM_DEEP_S0IX_OFFSET	0x1078
-+#define GCR_TELEM_SHLW_S0IX_OFFSET	0x1080
-+
-+/* Residency with clock rate at 19.2MHz to usecs */
-+#define S0IX_RESIDENCY_IN_USECS(d, s)		\
-+({						\
-+	u64 result = 10ull * ((d) + (s));	\
-+	do_div(result, 192);			\
-+	result;					\
-+})
-+
- /*
-  * 16-byte buffer for sending data associated with IPC command.
-  */
-@@ -68,7 +83,7 @@
- #define PLAT_RESOURCE_IPC_INDEX		0
- #define PLAT_RESOURCE_IPC_SIZE		0x1000
- #define PLAT_RESOURCE_GCR_OFFSET	0x1008
--#define PLAT_RESOURCE_GCR_SIZE		0x4
-+#define PLAT_RESOURCE_GCR_SIZE		0x1000
- #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
- #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
- #define PLAT_RESOURCE_TELEM_SSRAM_INDEX	3
-@@ -115,6 +130,7 @@
- 	/* gcr */
- 	resource_size_t gcr_base;
- 	int gcr_size;
-+	bool has_gcr_regs;
- 
- 	/* punit */
- 	struct platform_device *punit_dev;
-@@ -180,6 +196,11 @@ static inline u32 ipc_data_readl(u32 offset)
- 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
- }
- 
-+static inline u64 gcr_data_readq(u32 offset)
-+{
-+	return readq(ipcdev.ipc_base + offset);
-+}
-+
- static int intel_pmc_ipc_check_status(void)
- {
- 	int status;
-@@ -712,7 +733,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "Failed to get ipc resource\n");
- 		return -ENXIO;
- 	}
--	size = PLAT_RESOURCE_IPC_SIZE;
-+	size = PLAT_RESOURCE_IPC_SIZE + PLAT_RESOURCE_GCR_SIZE;
-+
- 	if (!request_mem_region(res->start, size, pdev->name)) {
- 		dev_err(&pdev->dev, "Failed to request ipc resource\n");
- 		return -EBUSY;
-@@ -748,6 +770,28 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	return 0;
- }
- 
-+/**
-+ * intel_pmc_s0ix_counter_read() - Read S0ix residency.
-+ * @data: Out param that contains current S0ix residency count.
-+ *
-+ * Return: an error code or 0 on success.
-+ */
-+int intel_pmc_s0ix_counter_read(u64 *data)
-+{
-+	u64 deep, shlw;
-+
-+	if (!ipcdev.has_gcr_regs)
-+		return -EACCES;
-+
-+	deep = gcr_data_readq(GCR_TELEM_DEEP_S0IX_OFFSET);
-+	shlw = gcr_data_readq(GCR_TELEM_SHLW_S0IX_OFFSET);
-+
-+	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
-+
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id ipc_acpi_ids[] = {
- 	{ "INT34D2", 0},
-@@ -797,6 +841,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 		goto err_sys;
- 	}
- 
-+	ipcdev.has_gcr_regs = true;
-+
- 	return 0;
- err_sys:
- 	free_irq(ipcdev.irq, &ipcdev);
-@@ -808,8 +854,11 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 	iounmap(ipcdev.ipc_base);
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_IPC_INDEX);
--	if (res)
--		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
-+	if (res) {
-+		release_mem_region(res->start,
-+				   PLAT_RESOURCE_IPC_SIZE +
-+				   PLAT_RESOURCE_GCR_SIZE);
-+	}
- 	return ret;
- }
- 
-@@ -825,8 +874,11 @@ static int ipc_plat_remove(struct platform_device *pdev)
- 	iounmap(ipcdev.ipc_base);
- 	res = platform_get_resource(pdev, IORESOURCE_MEM,
- 				    PLAT_RESOURCE_IPC_INDEX);
--	if (res)
--		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
-+	if (res) {
-+		release_mem_region(res->start,
-+				   PLAT_RESOURCE_IPC_SIZE +
-+				   PLAT_RESOURCE_GCR_SIZE);
-+	}
- 	ipcdev.dev = NULL;
- 	return 0;
- }
--- 
-1.9.1
+> > If the ACPI bus probed/added asynchronously I guess
+> > there could be a race whereby acpi_fujitsu_bl_add() may or may not have
+> > completed by the time fujitsu_init() referenced fujitsu_bl->bl_device.  That
+> > doesn't seem right to me though.
+> 
+> When acpi_bus_register_driver() is called, the .add callback is
+> "synchronously" called for all ACPI devices handled by the registered
+> driver that are yet unbound to any driver.
+
+That's what I first thought would be the case, but I couldn't find how the
+add method was called by register_driver().  I therefore thought it must be
+triggered at some later stage (although an async mechanism seemed a bit out
+there).  Clearly there's an indirect mechanism that I missed.
+
+> So if FUJ02B1 is present,
+> acpi_fujitsu_bl_add() is called and bl_device is allocated.  However, if
+> that ACPI device is not present (like on Skylakes) and
+> acpi_backlight=vendor, we get a NULL dereference.
+
+Yes, that makes sense in light of the fact that acpi_bus_register_driver()
+can cause acpi_fujitsu_bl_add() to be called.
+
+Regards
+  jonathan
