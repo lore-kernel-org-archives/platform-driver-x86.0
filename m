@@ -1,53 +1,42 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 3/7] platform/x86/thinkpad: Call led_classdev_notify_brightness_hw_changed
- on kbd brightness change
-Date: Tue, 14 Feb 2017 00:52:53 +0200
-Message-ID: <CAHp75Vdt4SNOuYTkxg_F+pSs3FY8zA9jdOWG+Cp8hzxS7vtsVQ@mail.gmail.com>
-References: <20170209154417.19040-1-hdegoede@redhat.com> <20170209154417.19040-4-hdegoede@redhat.com>
- <1486663705.1046615.875913456.7B8ADABA@webmail.messagingengine.com>
+Subject: Re: [PATCH][V2] intel-hid: support 5 array button
+Date: Tue, 14 Feb 2017 01:23:43 +0200
+Message-ID: <CAHp75Vdjq16tM2Usy+iBTy=VqQu=7XWJK5noYhm5D_WvdpKLpA@mail.gmail.com>
+References: <1485415981-20487-1-git-send-email-alex.hung@canonical.com>
+ <20170204011439.GD38511@f23x64.localdomain> <CAJ=jquadR0-H0hjhqPCzj2QS=uv_zGKj=H2XenRJNp_x+Hc44A@mail.gmail.com>
+ <20170213114312.GB1188@ozzy.nask.waw.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:35582 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751079AbdBMWw4 (ORCPT
+Received: from mail-qt0-f172.google.com ([209.85.216.172]:34386 "EHLO
+        mail-qt0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751079AbdBMXXp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2017 17:52:56 -0500
-In-Reply-To: <1486663705.1046615.875913456.7B8ADABA@webmail.messagingengine.com>
+        Mon, 13 Feb 2017 18:23:45 -0500
+Received: by mail-qt0-f172.google.com with SMTP id w20so97072517qtb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2017 15:23:45 -0800 (PST)
+In-Reply-To: <20170213114312.GB1188@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-leds@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Thu, Feb 9, 2017 at 8:08 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> On Thu, Feb 9, 2017, at 13:44, Hans de Goede wrote:
->> Make thinkpad_acpi call led_classdev_notify_brightness_hw_changed on the
->> kbd_led led_classdev registered by thinkpad_acpi when the kbd backlight
->> brightness is changed through the hotkey.
->>
->> This will allow userspace to monitor (poll) for brightness changes on
->> these LEDs caused by the hotkey.
->
-> It will *often* do so, you assume the thinkpad firmware is far more well
-> behaved than it really is :-(
->
-> It is model/bios-revision specific.  Fortunately, it should works on
-> most models, and there really isn't a better way of doing this (other
-> than adding the event to the NVRAM poll set of some very old models,
-> which is also not worth doing unless you can actually test it).
->
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+On Mon, Feb 13, 2017 at 1:43 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+>> Thanks for the review. I will send another patch to address all comments=
+ later.
 
-Thanks, thinkpad_acpi bits are applied to testing
+> To avoid churn, perhaps the maintainers could do this for you while
+> moving this patch to for-next?  Or we can simply ignore this, as I said
+> this is just a minor annoyance.
 
->
-> --
->   Henrique Holschuh
+I would like to see simplification due to use of devm_input_allocate_device=
+().
 
+Alex, can you send v3 addressing latest comments?
+If you feel follow up patch would be better, please tell us.
 
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
