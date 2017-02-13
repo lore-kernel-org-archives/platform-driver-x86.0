@@ -1,239 +1,213 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCHv2] platform/x86: asus-wireless: Use per-HID HSWC parameters
-Date: Tue, 14 Feb 2017 00:09:36 +0200
-Message-ID: <CAHp75VcATi-m5C5mMLCR=2dNL9md5GF4JGvsrktVRm_oaQNH1A@mail.gmail.com>
-References: <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com>
- <20170207214510.23367-1-jprvita@endlessm.com>
+Subject: Re: [PATCH v4 1/2] platform/x86: acer-wmi: Inform firmware that RF
+ Button Driver is active
+Date: Tue, 14 Feb 2017 00:12:20 +0200
+Message-ID: <CAHp75VfYOh-Ud5MSTkxrYs=qR_6WmJSsZOnMb+sRibRHo9m1Jg@mail.gmail.com>
+References: <20170208135141.2105-1-drake@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170207214510.23367-1-jprvita@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:33784 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750983AbdBMWMW (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Feb 2017 17:12:22 -0500
+Received: by mail-qt0-f194.google.com with SMTP id n13so15213988qtc.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2017 14:12:21 -0800 (PST)
+In-Reply-To: <20170208135141.2105-1-drake@endlessm.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Daniel Drake <drake@endlessm.com>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, chiu@endlessm.com
 
-On Tue, Feb 7, 2017 at 11:45 PM, Jo=C3=A3o Paulo Rechi Vita
-<jprvita@gmail.com> wrote:
-> Some Asus machines use 0x4/0x5 as their LED on/off values, while others
-> use 0x0/0x1, as shown in the DSDT excerpts below. Luckily it seems this
-> behavior is tied to different HIDs, after looking at 44 DSDTs from
-> different Asus models.
+On Wed, Feb 8, 2017 at 3:51 PM, Daniel Drake <drake@endlessm.com> wrote:
+> From: Chris Chiu <chiu@endlessm.com>
 >
-> Another small difference is that a few of them call GWBL instead of
-> OWGS, and SWBL instead of OWGD. That does not seem to make a difference
-> for asus-wireless, and is additional reasoning to not try to call these
-> methods directly.
+> The same method to activate LM(Launch Manager) can also be used to
+> activate the RF Button driver with different bit toggled in the same
+> lm_status. To express that many functions this byte field can achieve,
+> rename the lm_status to app_status. And also the app_mask is the bit
+> mask which specifically indicate which bits are going to be changed.
 >
-> Device (ASHS)                       | Device (ASHS)
-> {                                   | {
->     Name (_HID, "ATK4002")          |     Name (_HID, "ATK4001")
->     Method (HSWC, 1, Serialized)    |     Method (HSWC, 1, Serialized)
->     {                               |     {
->         If ((Arg0 < 0x02))          |         If ((Arg0 < 0x02))
->         {                           |         {
->             OWGD (Arg0)             |             OWGD (Arg0)
->             Return (One)            |             Return (One)
->         }                           |         }
->         If ((Arg0 =3D=3D 0x02))         |
->         {                           |         If ((Arg0 =3D=3D 0x02))
->             Local0 =3D OWGS ()        |         {
->             If (Local0)             |             Return (OWGS ())
->             {                       |         }
->                     Return (0x05)   |
->             }                       |         If ((Arg0 =3D=3D 0x03))
->             Else                    |         {
->             {                       |             Return (0xFF)
->                     Return (0x04)   |         }
->             }                       |
->         }                           |         If ((Arg0 =3D=3D 0x80))
->         If ((Arg0 =3D=3D 0x03))         |         {
->         {                           |            Return (One)
->             Return (0xFF)           |         }
->         }                           |     }
->         If ((Arg0 =3D=3D 0x04))         |     Method (_STA, 0, NotSeriali=
-zed)
->         {                           |     {
->             OWGD (Zero)             |         If ((MSOS () >=3D OSW8))
->             Return (One)            |         {
->         }                           |             Return (0x0F)
->         If ((Arg0 =3D=3D 0x05))         |         }
->         {                           |         Else
->             OWGD (One)              |         {
->             Return (One)            |             Return (Zero)
->         }                           |         }
->         If ((Arg0 =3D=3D 0x80))         |     }
->         {                           | }
->             Return (One)            |
->         }                           |
->     }                               |
->     Method (_STA, 0, NotSerialized) |
->     {                               |
->         If ((MSOS () >=3D OSW8))      |
->         {                           |
->             Return (0x0F)           |
->         }                           |
->         Else                        |
->         {                           |
->             Return (Zero)           |
->         }                           |
->     }                               |
-> }                                   |
+> This solves a problem where the AR9565 wifi included in the
+> Acer Aspire ES1-421 is permanently hard blocked according to the rfkill
+> GPIO read by ath9k.
 >
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
 
-Thanks, applied to testing.
+Thanks.
+Applied both to testing.
 
-> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+First one with Chun-Yi's Reviewed-by (from v2). Chun-Yi, please, tell
+me if I did this by mistake.
+
 > ---
->  drivers/platform/x86/asus-wireless.c | 57 ++++++++++++++++++++++++++----=
-------
->  1 file changed, 42 insertions(+), 15 deletions(-)
+>  drivers/platform/x86/acer-wmi.c | 74 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 58 insertions(+), 16 deletions(-)
 >
-> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/=
-asus-wireless.c
-> index a7ee18383146..f3796164329e 100644
-> --- a/drivers/platform/x86/asus-wireless.c
-> +++ b/drivers/platform/x86/asus-wireless.c
-> @@ -17,19 +17,41 @@
->  #include <linux/pci_ids.h>
->  #include <linux/leds.h>
+> v2: fix typo in Chris's email address (endless=>endlessm)
 >
-> -#define ASUS_WIRELESS_LED_STATUS 0x2
-> -#define ASUS_WIRELESS_LED_OFF 0x4
-> -#define ASUS_WIRELESS_LED_ON 0x5
-> +struct hswc_params {
-> +       u8 on;
-> +       u8 off;
-> +       u8 status;
-> +};
+> v3: move keycode addition to separate patch
 >
->  struct asus_wireless_data {
->         struct input_dev *idev;
->         struct acpi_device *adev;
-> +       const struct hswc_params *hswc_params;
->         struct workqueue_struct *wq;
->         struct work_struct led_work;
->         struct led_classdev led;
->         int led_state;
->  };
+> v4: Rename set_function_ structs to func_. Don't fail if firmware rejects
+>     the new call since we don't have certainty that this will succeed on
+>     all product models.
 >
-> +static const struct hswc_params atk4001_id_params =3D {
-> +       .on =3D 0x0,
-> +       .off =3D 0x1,
-> +       .status =3D 0x2,
-> +};
-> +
-> +static const struct hswc_params atk4002_id_params =3D {
-> +       .on =3D 0x5,
-> +       .off =3D 0x4,
-> +       .status =3D 0x2,
-> +};
-> +
-> +static const struct acpi_device_id device_ids[] =3D {
-> +       {"ATK4001", (kernel_ulong_t)&atk4001_id_params},
-> +       {"ATK4002", (kernel_ulong_t)&atk4002_id_params},
-> +       {"", 0},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, device_ids);
-> +
->  static u64 asus_wireless_method(acpi_handle handle, const char *method,
->                                 int param)
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index c29b9b6..3795d3f 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -150,15 +150,30 @@ struct event_return_value {
+>  #define ACER_WMID3_GDS_BLUETOOTH       (1<<11) /* BT */
+>  #define ACER_WMID3_GDS_TOUCHPAD                (1<<1)  /* Touchpad */
+>
+> -struct lm_input_params {
+> +/* Hotkey Customized Setting and Acer Application Status.
+> + * Set Device Default Value and Report Acer Application Status.
+> + * When Acer Application starts, it will run this method to inform
+> + * BIOS/EC that Acer Application is on.
+> + * App Status
+> + *     Bit[0]: Launch Manager Status
+> + *     Bit[1]: ePM Status
+> + *     Bit[2]: Device Control Status
+> + *     Bit[3]: Acer Power Button Utility Status
+> + *     Bit[4]: RF Button Status
+> + *     Bit[5]: ODD PM Status
+> + *     Bit[6]: Device Default Value Control
+> + *     Bit[7]: Hall Sensor Application Status
+> + */
+> +struct func_input_params {
+>         u8 function_num;        /* Function Number */
+>         u16 commun_devices;     /* Communication type devices default status */
+>         u16 devices;            /* Other type devices default status */
+> -       u8 lm_status;           /* Launch Manager Status */
+> -       u16 reserved;
+> +       u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
+> +       u8 app_mask;            /* Bit mask to app_status */
+> +       u8 reserved;
+>  } __attribute__((packed));
+>
+> -struct lm_return_value {
+> +struct func_return_value {
+>         u8 error_code;          /* Error Code */
+>         u8 ec_return_value;     /* EC Return Value */
+>         u16 reserved;
+> @@ -1769,13 +1784,13 @@ static void acer_wmi_notify(u32 value, void *context)
+>  }
+>
+>  static acpi_status __init
+> -wmid3_set_lm_mode(struct lm_input_params *params,
+> -                 struct lm_return_value *return_value)
+> +wmid3_set_function_mode(struct func_input_params *params,
+> +                       struct func_return_value *return_value)
 >  {
-> @@ -61,8 +83,8 @@ static enum led_brightness led_state_get(struct led_cla=
-ssdev *led)
+>         acpi_status status;
+>         union acpi_object *obj;
 >
->         data =3D container_of(led, struct asus_wireless_data, led);
->         s =3D asus_wireless_method(acpi_device_handle(data->adev), "HSWC"=
-,
-> -                                ASUS_WIRELESS_LED_STATUS);
-> -       if (s =3D=3D ASUS_WIRELESS_LED_ON)
-> +                                data->hswc_params->status);
-> +       if (s =3D=3D data->hswc_params->on)
->                 return LED_FULL;
->         return LED_OFF;
->  }
-> @@ -81,8 +103,8 @@ static void led_state_set(struct led_classdev *led, en=
-um led_brightness value)
->         struct asus_wireless_data *data;
+> -       struct acpi_buffer input = { sizeof(struct lm_input_params), params };
+> +       struct acpi_buffer input = { sizeof(struct func_input_params), params };
+>         struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
 >
->         data =3D container_of(led, struct asus_wireless_data, led);
-> -       data->led_state =3D value =3D=3D LED_OFF ? ASUS_WIRELESS_LED_OFF =
-:
-> -                                            ASUS_WIRELESS_LED_ON;
-> +       data->led_state =3D value =3D=3D LED_OFF ? data->hswc_params->off=
- :
-> +                                            data->hswc_params->on;
->         queue_work(data->wq, &data->led_work);
->  }
+>         status = wmi_evaluate_method(WMID_GUID3, 0, 0x1, &input, &output);
+> @@ -1796,7 +1811,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+>                 return AE_ERROR;
+>         }
 >
-> @@ -103,12 +125,14 @@ static void asus_wireless_notify(struct acpi_device=
- *adev, u32 event)
->  static int asus_wireless_add(struct acpi_device *adev)
+> -       *return_value = *((struct lm_return_value *)obj->buffer.pointer);
+> +       *return_value = *((struct func_return_value *)obj->buffer.pointer);
+>         kfree(obj);
+>
+>         return status;
+> @@ -1804,16 +1819,17 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+>
+>  static int __init acer_wmi_enable_ec_raw(void)
 >  {
->         struct asus_wireless_data *data;
-> +       const struct acpi_device_id *id;
->         int err;
+> -       struct lm_return_value return_value;
+> +       struct func_return_value return_value;
+>         acpi_status status;
+> -       struct lm_input_params params = {
+> +       struct func_input_params params = {
+>                 .function_num = 0x1,
+>                 .commun_devices = 0xFFFF,
+>                 .devices = 0xFFFF,
+> -               .lm_status = 0x00,            /* Launch Manager Deactive */
+> +               .app_status = 0x00,             /* Launch Manager Deactive */
+> +               .app_mask = 0x01,
+>         };
 >
->         data =3D devm_kzalloc(&adev->dev, sizeof(*data), GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
->         adev->driver_data =3D data;
-> +       data->adev =3D adev;
+> -       status = wmid3_set_lm_mode(&params, &return_value);
+> +       status = wmid3_set_function_mode(&params, &return_value);
 >
->         data->idev =3D devm_input_allocate_device(&adev->dev);
->         if (!data->idev)
-> @@ -123,7 +147,16 @@ static int asus_wireless_add(struct acpi_device *ade=
-v)
->         if (err)
->                 return err;
+>         if (return_value.error_code || return_value.ec_return_value)
+>                 pr_warn("Enabling EC raw mode failed: 0x%x - 0x%x\n",
+> @@ -1827,16 +1843,17 @@ static int __init acer_wmi_enable_ec_raw(void)
 >
-> -       data->adev =3D adev;
-> +       for (id =3D device_ids; id->id[0]; id++) {
-> +               if (!strcmp((char *) id->id, acpi_device_hid(adev))) {
-> +                       data->hswc_params =3D
-> +                               (const struct hswc_params *)id->driver_da=
-ta;
-> +                       break;
-> +               }
-> +       }
-> +       if (!data->hswc_params)
-> +               return 0;
-> +
->         data->wq =3D create_singlethread_workqueue("asus_wireless_workque=
-ue");
->         if (!data->wq)
->                 return -ENOMEM;
-> @@ -136,6 +169,7 @@ static int asus_wireless_add(struct acpi_device *adev=
-)
->         err =3D devm_led_classdev_register(&adev->dev, &data->led);
->         if (err)
->                 destroy_workqueue(data->wq);
-> +
->         return err;
+>  static int __init acer_wmi_enable_lm(void)
+>  {
+> -       struct lm_return_value return_value;
+> +       struct func_return_value return_value;
+>         acpi_status status;
+> -       struct lm_input_params params = {
+> +       struct func_input_params params = {
+>                 .function_num = 0x1,
+>                 .commun_devices = 0xFFFF,
+>                 .devices = 0xFFFF,
+> -               .lm_status = 0x01,            /* Launch Manager Active */
+> +               .app_status = 0x01,            /* Launch Manager Active */
+> +               .app_mask = 0x01,
+>         };
+>
+> -       status = wmid3_set_lm_mode(&params, &return_value);
+> +       status = wmid3_set_function_mode(&params, &return_value);
+>
+>         if (return_value.error_code || return_value.ec_return_value)
+>                 pr_warn("Enabling Launch Manager failed: 0x%x - 0x%x\n",
+> @@ -1846,6 +1863,28 @@ static int __init acer_wmi_enable_lm(void)
+>         return status;
 >  }
 >
-> @@ -148,13 +182,6 @@ static int asus_wireless_remove(struct acpi_device *=
-adev)
->         return 0;
->  }
+> +static int __init acer_wmi_enable_rf_button(void)
+> +{
+> +       struct func_return_value return_value;
+> +       acpi_status status;
+> +       struct func_input_params params = {
+> +               .function_num = 0x1,
+> +               .commun_devices = 0xFFFF,
+> +               .devices = 0xFFFF,
+> +               .app_status = 0x10,            /* RF Button Active */
+> +               .app_mask = 0x10,
+> +       };
+> +
+> +       status = wmid3_set_function_mode(&params, &return_value);
+> +
+> +       if (return_value.error_code || return_value.ec_return_value)
+> +               pr_warn("Enabling RF Button failed: 0x%x - 0x%x\n",
+> +                       return_value.error_code,
+> +                       return_value.ec_return_value);
+> +
+> +       return status;
+> +}
+> +
+>  #define ACER_WMID_ACCEL_HID    "BST0001"
 >
-> -static const struct acpi_device_id device_ids[] =3D {
-> -       {"ATK4001", 0},
-> -       {"ATK4002", 0},
-> -       {"", 0},
-> -};
-> -MODULE_DEVICE_TABLE(acpi, device_ids);
-> -
->  static struct acpi_driver asus_wireless_driver =3D {
->         .name =3D "Asus Wireless Radio Control Driver",
->         .class =3D "hotkey",
+>  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+> @@ -2229,6 +2268,9 @@ static int __init acer_wmi_init(void)
+>                 interface->capability &= ~ACER_CAP_BRIGHTNESS;
+>
+>         if (wmi_has_guid(WMID_GUID3)) {
+> +               if (ACPI_FAILURE(acer_wmi_enable_rf_button()))
+> +                       pr_warn("Cannot enable RF Button Driver\n");
+> +
+>                 if (ec_raw_mode) {
+>                         if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
+>                                 pr_err("Cannot enable EC raw mode\n");
 > --
-> 2.11.0
+> 2.9.3
 >
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
