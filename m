@@ -1,210 +1,73 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/2] platform/x86: acer-wmi: Inform firmware that RF
- Button Driver is active
-Date: Tue, 14 Feb 2017 00:12:20 +0200
-Message-ID: <CAHp75VfYOh-Ud5MSTkxrYs=qR_6WmJSsZOnMb+sRibRHo9m1Jg@mail.gmail.com>
-References: <20170208135141.2105-1-drake@endlessm.com>
+Subject: Re: [PATCH] Add sysfs interface for touchpad state
+Date: Tue, 14 Feb 2017 00:26:12 +0200
+Message-ID: <CAHp75VcH2cCWA2mophVC1+BP69D0FJ2-tQjcs9B-Yi8JaytN_A@mail.gmail.com>
+References: <20170130105749.17338-1-rrs@debian.org> <CAHp75VcekiLxkGbHFXbPvTX7SwBHobQFmnx5Y-uFWXZSEN9ujA@mail.gmail.com>
+ <1485863265.11199.3.camel@debian.org> <CAHp75Vfbr0dfxjv1QhF+z6D1Ptd5z9s0K825VnE786W2-y+kPQ@mail.gmail.com>
+ <1485959219.8977.1.camel@debian.org> <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
+ <1485965846.14297.1.camel@debian.org> <CAHp75VckDTD+yx4tTwpzgvgsygiWFEs1t5Uc85UsbaJD8inx_w@mail.gmail.com>
+ <1486023399.14342.1.camel@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:33784 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750983AbdBMWMW (ORCPT
+Received: from mail-qt0-f182.google.com ([209.85.216.182]:35695 "EHLO
+        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751143AbdBMW01 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2017 17:12:22 -0500
-Received: by mail-qt0-f194.google.com with SMTP id n13so15213988qtc.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2017 14:12:21 -0800 (PST)
-In-Reply-To: <20170208135141.2105-1-drake@endlessm.com>
+        Mon, 13 Feb 2017 17:26:27 -0500
+Received: by mail-qt0-f182.google.com with SMTP id x49so96345839qtc.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2017 14:26:27 -0800 (PST)
+In-Reply-To: <1486023399.14342.1.camel@debian.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Drake <drake@endlessm.com>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, chiu@endlessm.com
+To: Ritesh Raj Sarraf <rrs@debian.org>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Wed, Feb 8, 2017 at 3:51 PM, Daniel Drake <drake@endlessm.com> wrote:
-> From: Chris Chiu <chiu@endlessm.com>
->
-> The same method to activate LM(Launch Manager) can also be used to
-> activate the RF Button driver with different bit toggled in the same
-> lm_status. To express that many functions this byte field can achieve,
-> rename the lm_status to app_status. And also the app_mask is the bit
-> mask which specifically indicate which bits are going to be changed.
->
-> This solves a problem where the AR9565 wifi included in the
-> Acer Aspire ES1-421 is permanently hard blocked according to the rfkill
-> GPIO read by ath9k.
->
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
+I'm sorry for top-posting, but something wrong with email quoting. I'm
+using here gmail, it might not recognize message properly.
 
-Thanks.
-Applied both to testing.
+So, please fix the subject line to have a prefix, in your case
+"platform/x86: ideapad-laptop: ...".
+Add to the commit message what you explained me and put a link to that comment.
+And resend new version with all maintainers included (there is a
+script scripts/get_maintainer.pl to help with the list of
+maintainers).
 
-First one with Chun-Yi's Reviewed-by (from v2). Chun-Yi, please, tell
-me if I did this by mistake.
+On Wed, 2017-02-01 at 22:53 +0200, Andy Shevchenko wrote:
+> > If you have time, please see:
+> > https://bugs.launchpad.net/bugs/1366421
+> >
+> > It has pretty much all the details on what and why we need something in
+> > sysfs.
+>
+> It's a lo-o-ong discussion from which I, might be wrongly, assumed
+> that there couple of problems: a) you don't know initial state, b)
+> something preventing use of event.
+>
 
-> ---
->  drivers/platform/x86/acer-wmi.c | 74 ++++++++++++++++++++++++++++++++---------
->  1 file changed, 58 insertions(+), 16 deletions(-)
+Yes.
+
+> Keyboard and touchpad are disabled by hw, so, only what OS needs is a
+> notification.
 >
-> v2: fix typo in Chris's email address (endless=>endlessm)
+
+Yes.
+
+> Can you point me exactly to the message that explains _why_ it's
+> impossible to use standard eventX mechanism for that?
 >
-> v3: move keycode addition to separate patch
->
-> v4: Rename set_function_ structs to func_. Don't fail if firmware rejects
->     the new call since we don't have certainty that this will succeed on
->     all product models.
->
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index c29b9b6..3795d3f 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -150,15 +150,30 @@ struct event_return_value {
->  #define ACER_WMID3_GDS_BLUETOOTH       (1<<11) /* BT */
->  #define ACER_WMID3_GDS_TOUCHPAD                (1<<1)  /* Touchpad */
->
-> -struct lm_input_params {
-> +/* Hotkey Customized Setting and Acer Application Status.
-> + * Set Device Default Value and Report Acer Application Status.
-> + * When Acer Application starts, it will run this method to inform
-> + * BIOS/EC that Acer Application is on.
-> + * App Status
-> + *     Bit[0]: Launch Manager Status
-> + *     Bit[1]: ePM Status
-> + *     Bit[2]: Device Control Status
-> + *     Bit[3]: Acer Power Button Utility Status
-> + *     Bit[4]: RF Button Status
-> + *     Bit[5]: ODD PM Status
-> + *     Bit[6]: Device Default Value Control
-> + *     Bit[7]: Hall Sensor Application Status
-> + */
-> +struct func_input_params {
->         u8 function_num;        /* Function Number */
->         u16 commun_devices;     /* Communication type devices default status */
->         u16 devices;            /* Other type devices default status */
-> -       u8 lm_status;           /* Launch Manager Status */
-> -       u16 reserved;
-> +       u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
-> +       u8 app_mask;            /* Bit mask to app_status */
-> +       u8 reserved;
->  } __attribute__((packed));
->
-> -struct lm_return_value {
-> +struct func_return_value {
->         u8 error_code;          /* Error Code */
->         u8 ec_return_value;     /* EC Return Value */
->         u16 reserved;
-> @@ -1769,13 +1784,13 @@ static void acer_wmi_notify(u32 value, void *context)
->  }
->
->  static acpi_status __init
-> -wmid3_set_lm_mode(struct lm_input_params *params,
-> -                 struct lm_return_value *return_value)
-> +wmid3_set_function_mode(struct func_input_params *params,
-> +                       struct func_return_value *return_value)
->  {
->         acpi_status status;
->         union acpi_object *obj;
->
-> -       struct acpi_buffer input = { sizeof(struct lm_input_params), params };
-> +       struct acpi_buffer input = { sizeof(struct func_input_params), params };
->         struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->
->         status = wmi_evaluate_method(WMID_GUID3, 0, 0x1, &input, &output);
-> @@ -1796,7 +1811,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
->                 return AE_ERROR;
->         }
->
-> -       *return_value = *((struct lm_return_value *)obj->buffer.pointer);
-> +       *return_value = *((struct func_return_value *)obj->buffer.pointer);
->         kfree(obj);
->
->         return status;
-> @@ -1804,16 +1819,17 @@ wmid3_set_lm_mode(struct lm_input_params *params,
->
->  static int __init acer_wmi_enable_ec_raw(void)
->  {
-> -       struct lm_return_value return_value;
-> +       struct func_return_value return_value;
->         acpi_status status;
-> -       struct lm_input_params params = {
-> +       struct func_input_params params = {
->                 .function_num = 0x1,
->                 .commun_devices = 0xFFFF,
->                 .devices = 0xFFFF,
-> -               .lm_status = 0x00,            /* Launch Manager Deactive */
-> +               .app_status = 0x00,             /* Launch Manager Deactive */
-> +               .app_mask = 0x01,
->         };
->
-> -       status = wmid3_set_lm_mode(&params, &return_value);
-> +       status = wmid3_set_function_mode(&params, &return_value);
->
->         if (return_value.error_code || return_value.ec_return_value)
->                 pr_warn("Enabling EC raw mode failed: 0x%x - 0x%x\n",
-> @@ -1827,16 +1843,17 @@ static int __init acer_wmi_enable_ec_raw(void)
->
->  static int __init acer_wmi_enable_lm(void)
->  {
-> -       struct lm_return_value return_value;
-> +       struct func_return_value return_value;
->         acpi_status status;
-> -       struct lm_input_params params = {
-> +       struct func_input_params params = {
->                 .function_num = 0x1,
->                 .commun_devices = 0xFFFF,
->                 .devices = 0xFFFF,
-> -               .lm_status = 0x01,            /* Launch Manager Active */
-> +               .app_status = 0x01,            /* Launch Manager Active */
-> +               .app_mask = 0x01,
->         };
->
-> -       status = wmid3_set_lm_mode(&params, &return_value);
-> +       status = wmid3_set_function_mode(&params, &return_value);
->
->         if (return_value.error_code || return_value.ec_return_value)
->                 pr_warn("Enabling Launch Manager failed: 0x%x - 0x%x\n",
-> @@ -1846,6 +1863,28 @@ static int __init acer_wmi_enable_lm(void)
->         return status;
->  }
->
-> +static int __init acer_wmi_enable_rf_button(void)
-> +{
-> +       struct func_return_value return_value;
-> +       acpi_status status;
-> +       struct func_input_params params = {
-> +               .function_num = 0x1,
-> +               .commun_devices = 0xFFFF,
-> +               .devices = 0xFFFF,
-> +               .app_status = 0x10,            /* RF Button Active */
-> +               .app_mask = 0x10,
-> +       };
-> +
-> +       status = wmid3_set_function_mode(&params, &return_value);
-> +
-> +       if (return_value.error_code || return_value.ec_return_value)
-> +               pr_warn("Enabling RF Button failed: 0x%x - 0x%x\n",
-> +                       return_value.error_code,
-> +                       return_value.ec_return_value);
-> +
-> +       return status;
-> +}
-> +
->  #define ACER_WMID_ACCEL_HID    "BST0001"
->
->  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
-> @@ -2229,6 +2268,9 @@ static int __init acer_wmi_init(void)
->                 interface->capability &= ~ACER_CAP_BRIGHTNESS;
->
->         if (wmi_has_guid(WMID_GUID3)) {
-> +               if (ACPI_FAILURE(acer_wmi_enable_rf_button()))
-> +                       pr_warn("Cannot enable RF Button Driver\n");
-> +
->                 if (ec_raw_mode) {
->                         if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
->                                 pr_err("Cannot enable EC raw mode\n");
-> --
-> 2.9.3
->
+
+Comment #43 has the summary of what we've tried.
+https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
+
+Some of the drivers do SW_TABLET_MODE, but ideapad does not.
+Some of the drivers do sysfs, but ideapad does not.
+
+For ideapad, under Xorg, it generates hotkey events.
+And the hotkey event are going to work under Xorg only. What about Wayland/Mir ?
+We also aren't sure, if the keycodes that it sends, are uniform across all Yoga
+variants.
+
 
 
 
