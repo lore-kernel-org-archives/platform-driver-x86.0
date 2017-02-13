@@ -1,118 +1,239 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [lkp-robot] [platform/x86]  b925ff7dcd:
- BUG:unable_to_handle_kernel
-Date: Mon, 13 Feb 2017 22:56:07 +1030
-Message-ID: <20170213122607.GB20745@marvin.atrad.com.au>
-References: <20170208134633.5152-9-kernel@kempniu.pl>
- <20170213024015.GC28502@yexl-desktop>
- <20170213043427.GQ18615@marvin.atrad.com.au>
- <20170213081440.GA1093@ozzy.nask.waw.pl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCHv2] platform/x86: asus-wireless: Use per-HID HSWC parameters
+Date: Tue, 14 Feb 2017 00:09:36 +0200
+Message-ID: <CAHp75VcATi-m5C5mMLCR=2dNL9md5GF4JGvsrktVRm_oaQNH1A@mail.gmail.com>
+References: <CA+A7VXXM+n-=FCYXiL-nn_CgeRRr5XOC66f8+e4MFYpcO345AA@mail.gmail.com>
+ <20170207214510.23367-1-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:39148 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751699AbdBMM04 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2017 07:26:56 -0500
-Content-Disposition: inline
-In-Reply-To: <20170213081440.GA1093@ozzy.nask.waw.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: kernel test robot <xiaolong.ye@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lkp@01.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170207214510.23367-1-jprvita@endlessm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 13, 2017 at 09:14:40AM +0100, Micha?? K??pie?? wrote:
-> > On Mon, Feb 13, 2017 at 10:40:15AM +0800, kernel test robot wrote:
-> > > FYI, we noticed the following commit:
-> > > 
-> > > commit: b925ff7dcd1fc45b86baaebd3442f8b484123716 ("platform/x86: fujitsu-laptop: only register backlight device if FUJ02B1 is present")
-> > > url: https://github.com/0day-ci/linux/commits/Micha-K-pie/fujitsu-laptop-renames-and-cleanups/20170209-030748
-> > > base: git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
-> > > 
-> > > in testcase: boot
-> > > 
-> > > on test machine: qemu-system-i386 -enable-kvm -cpu Haswell,+smep,+smap -m 360M
-> > > 
-> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > :
-> > > [    4.656202] fujitsu_laptop: call_fext_func: FUNC interface is not present
-> > > [    4.657478] BUG: unable to handle kernel NULL pointer dereference at 00000008
-> > > [    4.658433] IP: fujitsu_init+0x137/0x1b7
-> > > [    4.659208] *pdpt = 0000000000000000 *pde = f000ff53f000ff53 
-> > > :
-> :
-> > If ACPI_FUJITSU_LAPTOP_HID
-> 
-> I think you meant ACPI_FUJITSU_BL_HID.
+On Tue, Feb 7, 2017 at 11:45 PM, Jo=C3=A3o Paulo Rechi Vita
+<jprvita@gmail.com> wrote:
+> Some Asus machines use 0x4/0x5 as their LED on/off values, while others
+> use 0x0/0x1, as shown in the DSDT excerpts below. Luckily it seems this
+> behavior is tied to different HIDs, after looking at 44 DSDTs from
+> different Asus models.
+>
+> Another small difference is that a few of them call GWBL instead of
+> OWGS, and SWBL instead of OWGD. That does not seem to make a difference
+> for asus-wireless, and is additional reasoning to not try to call these
+> methods directly.
+>
+> Device (ASHS)                       | Device (ASHS)
+> {                                   | {
+>     Name (_HID, "ATK4002")          |     Name (_HID, "ATK4001")
+>     Method (HSWC, 1, Serialized)    |     Method (HSWC, 1, Serialized)
+>     {                               |     {
+>         If ((Arg0 < 0x02))          |         If ((Arg0 < 0x02))
+>         {                           |         {
+>             OWGD (Arg0)             |             OWGD (Arg0)
+>             Return (One)            |             Return (One)
+>         }                           |         }
+>         If ((Arg0 =3D=3D 0x02))         |
+>         {                           |         If ((Arg0 =3D=3D 0x02))
+>             Local0 =3D OWGS ()        |         {
+>             If (Local0)             |             Return (OWGS ())
+>             {                       |         }
+>                     Return (0x05)   |
+>             }                       |         If ((Arg0 =3D=3D 0x03))
+>             Else                    |         {
+>             {                       |             Return (0xFF)
+>                     Return (0x04)   |         }
+>             }                       |
+>         }                           |         If ((Arg0 =3D=3D 0x80))
+>         If ((Arg0 =3D=3D 0x03))         |         {
+>         {                           |            Return (One)
+>             Return (0xFF)           |         }
+>         }                           |     }
+>         If ((Arg0 =3D=3D 0x04))         |     Method (_STA, 0, NotSeriali=
+zed)
+>         {                           |     {
+>             OWGD (Zero)             |         If ((MSOS () >=3D OSW8))
+>             Return (One)            |         {
+>         }                           |             Return (0x0F)
+>         If ((Arg0 =3D=3D 0x05))         |         }
+>         {                           |         Else
+>             OWGD (One)              |         {
+>             Return (One)            |             Return (Zero)
+>         }                           |         }
+>         If ((Arg0 =3D=3D 0x80))         |     }
+>         {                           | }
+>             Return (One)            |
+>         }                           |
+>     }                               |
+>     Method (_STA, 0, NotSerialized) |
+>     {                               |
+>         If ((MSOS () >=3D OSW8))      |
+>         {                           |
+>             Return (0x0F)           |
+>         }                           |
+>         Else                        |
+>         {                           |
+>             Return (Zero)           |
+>         }                           |
+>     }                               |
+> }                                   |
+>
 
-I did.  Darn cut and paste.
+Thanks, applied to testing.
 
-> > is not present then presumedly the
-> > 
-> >   acpi_bus_register_driver(&acpi_fujitsu_bl_driver)
-> > 
-> > call in fujitsu_init() will fail and nothing further would happen. 
-> > Therefore this HID must be in the system.
-> 
-> Not really.  acpi_bus_register_driver() is just a wrapper around
-> driver_register().
-> In other words, whether or not a given HID is present in the firmware does
-> not have any influence on the return code of that function.
+> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wireless.c | 57 ++++++++++++++++++++++++++----=
+------
+>  1 file changed, 42 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/=
+asus-wireless.c
+> index a7ee18383146..f3796164329e 100644
+> --- a/drivers/platform/x86/asus-wireless.c
+> +++ b/drivers/platform/x86/asus-wireless.c
+> @@ -17,19 +17,41 @@
+>  #include <linux/pci_ids.h>
+>  #include <linux/leds.h>
+>
+> -#define ASUS_WIRELESS_LED_STATUS 0x2
+> -#define ASUS_WIRELESS_LED_OFF 0x4
+> -#define ASUS_WIRELESS_LED_ON 0x5
+> +struct hswc_params {
+> +       u8 on;
+> +       u8 off;
+> +       u8 status;
+> +};
+>
+>  struct asus_wireless_data {
+>         struct input_dev *idev;
+>         struct acpi_device *adev;
+> +       const struct hswc_params *hswc_params;
+>         struct workqueue_struct *wq;
+>         struct work_struct led_work;
+>         struct led_classdev led;
+>         int led_state;
+>  };
+>
+> +static const struct hswc_params atk4001_id_params =3D {
+> +       .on =3D 0x0,
+> +       .off =3D 0x1,
+> +       .status =3D 0x2,
+> +};
+> +
+> +static const struct hswc_params atk4002_id_params =3D {
+> +       .on =3D 0x5,
+> +       .off =3D 0x4,
+> +       .status =3D 0x2,
+> +};
+> +
+> +static const struct acpi_device_id device_ids[] =3D {
+> +       {"ATK4001", (kernel_ulong_t)&atk4001_id_params},
+> +       {"ATK4002", (kernel_ulong_t)&atk4002_id_params},
+> +       {"", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, device_ids);
+> +
+>  static u64 asus_wireless_method(acpi_handle handle, const char *method,
+>                                 int param)
+>  {
+> @@ -61,8 +83,8 @@ static enum led_brightness led_state_get(struct led_cla=
+ssdev *led)
+>
+>         data =3D container_of(led, struct asus_wireless_data, led);
+>         s =3D asus_wireless_method(acpi_device_handle(data->adev), "HSWC"=
+,
+> -                                ASUS_WIRELESS_LED_STATUS);
+> -       if (s =3D=3D ASUS_WIRELESS_LED_ON)
+> +                                data->hswc_params->status);
+> +       if (s =3D=3D data->hswc_params->on)
+>                 return LED_FULL;
+>         return LED_OFF;
+>  }
+> @@ -81,8 +103,8 @@ static void led_state_set(struct led_classdev *led, en=
+um led_brightness value)
+>         struct asus_wireless_data *data;
+>
+>         data =3D container_of(led, struct asus_wireless_data, led);
+> -       data->led_state =3D value =3D=3D LED_OFF ? ASUS_WIRELESS_LED_OFF =
+:
+> -                                            ASUS_WIRELESS_LED_ON;
+> +       data->led_state =3D value =3D=3D LED_OFF ? data->hswc_params->off=
+ :
+> +                                            data->hswc_params->on;
+>         queue_work(data->wq, &data->led_work);
+>  }
+>
+> @@ -103,12 +125,14 @@ static void asus_wireless_notify(struct acpi_device=
+ *adev, u32 event)
+>  static int asus_wireless_add(struct acpi_device *adev)
+>  {
+>         struct asus_wireless_data *data;
+> +       const struct acpi_device_id *id;
+>         int err;
+>
+>         data =3D devm_kzalloc(&adev->dev, sizeof(*data), GFP_KERNEL);
+>         if (!data)
+>                 return -ENOMEM;
+>         adev->driver_data =3D data;
+> +       data->adev =3D adev;
+>
+>         data->idev =3D devm_input_allocate_device(&adev->dev);
+>         if (!data->idev)
+> @@ -123,7 +147,16 @@ static int asus_wireless_add(struct acpi_device *ade=
+v)
+>         if (err)
+>                 return err;
+>
+> -       data->adev =3D adev;
+> +       for (id =3D device_ids; id->id[0]; id++) {
+> +               if (!strcmp((char *) id->id, acpi_device_hid(adev))) {
+> +                       data->hswc_params =3D
+> +                               (const struct hswc_params *)id->driver_da=
+ta;
+> +                       break;
+> +               }
+> +       }
+> +       if (!data->hswc_params)
+> +               return 0;
+> +
+>         data->wq =3D create_singlethread_workqueue("asus_wireless_workque=
+ue");
+>         if (!data->wq)
+>                 return -ENOMEM;
+> @@ -136,6 +169,7 @@ static int asus_wireless_add(struct acpi_device *adev=
+)
+>         err =3D devm_led_classdev_register(&adev->dev, &data->led);
+>         if (err)
+>                 destroy_workqueue(data->wq);
+> +
+>         return err;
+>  }
+>
+> @@ -148,13 +182,6 @@ static int asus_wireless_remove(struct acpi_device *=
+adev)
+>         return 0;
+>  }
+>
+> -static const struct acpi_device_id device_ids[] =3D {
+> -       {"ATK4001", 0},
+> -       {"ATK4002", 0},
+> -       {"", 0},
+> -};
+> -MODULE_DEVICE_TABLE(acpi, device_ids);
+> -
+>  static struct acpi_driver asus_wireless_driver =3D {
+>         .name =3D "Asus Wireless Radio Control Driver",
+>         .class =3D "hotkey",
+> --
+> 2.11.0
+>
 
-Yes, I saw that much but erroneously assumed there was an indication of
-device presence in the return value.  Thanks for putting me right on this.
 
-> > However, the acpi_fujitsu_bl_add() callback wouldn't necessarily get run by
-> > acpi_bus_register_driver(), would it?  I'm not too familiar with the lower
-> > level ACPI functions but a quick trip through the source suggested that the
-> > add callback isn't called via acpi_bus_register_driver().  This would mean
-> > that that fujitsu_bl->bl_device would not yet be initialised when referenced
-> > within fujitsu_init() at line 1271 or 1273.  If this were the case then I
-> > see two options:
-> > 
-> >  1) Don't move the backlight registration out of fujitsu_init().
-> > 
-> >  2) Move the remaining backlight code (lines 1268-1274) into
-> >     acpi_fujitsu_bl_add().
-> > 
-> > Item 1 effectively amounts to dropping this commit.  I'm not sure option 2
-> > is workable because of the code's reliance on FUJ02E3; is that guaranteed to
-> > be useable by the time acpi_fujitsu_bl_add() is called?
-> 
-> To keep things simple, I think we should drop this particular patch for
-> now.  Darren, Andy, could you skip it when applying this series?
-> Patches 9 and 10 do not rely on this one being applied.  Thanks and
-> sorry for the trouble.  v2 of my fujitsu_init() cleanup series will fix
-> this properly.
 
-We could just add a test for NULL on fujitsu_bl->bl_device in
-fujitsu_init(), couldn't we?  However, if you are planning to make further
-structural changes to fujitsu_init() in the upcoming patch series then I
-agree that messing around with this now is kind of pointless.  In this case,
-skipping this single patch is fine.
-
-> > If the ACPI bus probed/added asynchronously I guess
-> > there could be a race whereby acpi_fujitsu_bl_add() may or may not have
-> > completed by the time fujitsu_init() referenced fujitsu_bl->bl_device.  That
-> > doesn't seem right to me though.
-> 
-> When acpi_bus_register_driver() is called, the .add callback is
-> "synchronously" called for all ACPI devices handled by the registered
-> driver that are yet unbound to any driver.
-
-That's what I first thought would be the case, but I couldn't find how the
-add method was called by register_driver().  I therefore thought it must be
-triggered at some later stage (although an async mechanism seemed a bit out
-there).  Clearly there's an indirect mechanism that I missed.
-
-> So if FUJ02B1 is present,
-> acpi_fujitsu_bl_add() is called and bl_device is allocated.  However, if
-> that ACPI device is not present (like on Skylakes) and
-> acpi_backlight=vendor, we get a NULL dereference.
-
-Yes, that makes sense in light of the fact that acpi_bus_register_driver()
-can cause acpi_fujitsu_bl_add() to be called.
-
-Regards
-  jonathan
+--=20
+With Best Regards,
+Andy Shevchenko
