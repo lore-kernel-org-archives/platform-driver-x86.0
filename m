@@ -1,73 +1,224 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Add sysfs interface for touchpad state
-Date: Tue, 14 Feb 2017 00:26:12 +0200
-Message-ID: <CAHp75VcH2cCWA2mophVC1+BP69D0FJ2-tQjcs9B-Yi8JaytN_A@mail.gmail.com>
-References: <20170130105749.17338-1-rrs@debian.org> <CAHp75VcekiLxkGbHFXbPvTX7SwBHobQFmnx5Y-uFWXZSEN9ujA@mail.gmail.com>
- <1485863265.11199.3.camel@debian.org> <CAHp75Vfbr0dfxjv1QhF+z6D1Ptd5z9s0K825VnE786W2-y+kPQ@mail.gmail.com>
- <1485959219.8977.1.camel@debian.org> <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
- <1485965846.14297.1.camel@debian.org> <CAHp75VckDTD+yx4tTwpzgvgsygiWFEs1t5Uc85UsbaJD8inx_w@mail.gmail.com>
- <1486023399.14342.1.camel@debian.org>
+Subject: Re: [PATCH v2] platform/x86: intel_pmc_ipc: read s0ix residency API
+Date: Tue, 14 Feb 2017 00:27:53 +0200
+Message-ID: <CAHp75Veb+hm-bw8_zAA_g_=PgYZayPXG4BjJ61HycJU-9eOiTA@mail.gmail.com>
+References: <1486987372-2342-1-git-send-email-shanth.murthy@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f182.google.com ([209.85.216.182]:35695 "EHLO
-        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751143AbdBMW01 (ORCPT
+Received: from mail-qk0-f196.google.com ([209.85.220.196]:36130 "EHLO
+        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751131AbdBMW1z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Feb 2017 17:26:27 -0500
-Received: by mail-qt0-f182.google.com with SMTP id x49so96345839qtc.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Feb 2017 14:26:27 -0800 (PST)
-In-Reply-To: <1486023399.14342.1.camel@debian.org>
+        Mon, 13 Feb 2017 17:27:55 -0500
+In-Reply-To: <1486987372-2342-1-git-send-email-shanth.murthy@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ritesh Raj Sarraf <rrs@debian.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Shanth Murthy <shanth.murthy@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-I'm sorry for top-posting, but something wrong with email quoting. I'm
-using here gmail, it might not recognize message properly.
-
-So, please fix the subject line to have a prefix, in your case
-"platform/x86: ideapad-laptop: ...".
-Add to the commit message what you explained me and put a link to that comment.
-And resend new version with all maintainers included (there is a
-script scripts/get_maintainer.pl to help with the list of
-maintainers).
-
-On Wed, 2017-02-01 at 22:53 +0200, Andy Shevchenko wrote:
-> > If you have time, please see:
-> > https://bugs.launchpad.net/bugs/1366421
-> >
-> > It has pretty much all the details on what and why we need something in
-> > sysfs.
+On Mon, Feb 13, 2017 at 2:02 PM, Shanth Murthy <shanth.murthy@intel.com> wrote:
+> This patch adds a new API to indicate S0ix residency in usec. It utilizes
+> the PMC Global Control Registers (GCR) to read deep and shallow
+> S0ix residency.
 >
-> It's a lo-o-ong discussion from which I, might be wrongly, assumed
-> that there couple of problems: a) you don't know initial state, b)
-> something preventing use of event.
+> PMC MMIO resources:
+>         o Lower 4kB: IPC1 (PMC inter-processor communication) interface
+>         o Upper 4kB: GCR (Global Control Registers)
+>
+> This enables the power management framework to take corrective actions when
+> the platform fails to enter S0ix after kernel freeze as part of the suspend
+> to idle flow. (echo freeze > /sys/power/state).
+>
+> This is expected to be used with a S0ix failsafe framework such as:
+> <https://lwn.net/Articles/689505/>
 >
 
-Yes.
+Thanks, applied to testing.
 
-> Keyboard and touchpad are disabled by hw, so, only what OS needs is a
-> notification.
+> [rajneesh: folded in "fix division in 32-bit case" from Andy Shevchenko]
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> [andy: fixed kbuild error, removed "total" from variables, fixed macro]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
+
+> ---
+> Changes in v2:
+>  * Added protection for exported function intel_pmc_s0ix_counter_read().
+>  * Made intel_pmc_s0ix_counter_read() function "inline" in "intel_pmc_ipc.h".
+>  * Includes fixes from Andy Shevchenko for kbuild error, variables renaming,
+>    macro fix, and 32bit build error
 >
-
-Yes.
-
-> Can you point me exactly to the message that explains _why_ it's
-> impossible to use standard eventX mechanism for that?
+>  arch/x86/include/asm/intel_pmc_ipc.h |  6 ++++
+>  drivers/platform/x86/intel_pmc_ipc.c | 64 ++++++++++++++++++++++++++++++++----
+>  2 files changed, 64 insertions(+), 6 deletions(-)
 >
-
-Comment #43 has the summary of what we've tried.
-https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
-
-Some of the drivers do SW_TABLET_MODE, but ideapad does not.
-Some of the drivers do sysfs, but ideapad does not.
-
-For ideapad, under Xorg, it generates hotkey events.
-And the hotkey event are going to work under Xorg only. What about Wayland/Mir ?
-We also aren't sure, if the keycodes that it sends, are uniform across all Yoga
-variants.
-
+> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+> index cd0310e..4291b6a 100644
+> --- a/arch/x86/include/asm/intel_pmc_ipc.h
+> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
+> @@ -30,6 +30,7 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+>                 u32 *out, u32 outlen, u32 dptr, u32 sptr);
+>  int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+>                 u32 *out, u32 outlen);
+> +int intel_pmc_s0ix_counter_read(u64 *data);
+>
+>  #else
+>
+> @@ -50,6 +51,11 @@ static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+>         return -EINVAL;
+>  }
+>
+> +static inline int intel_pmc_s0ix_counter_read(u64 *data)
+> +{
+> +       return -EINVAL;
+> +}
+> +
+>  #endif /*CONFIG_INTEL_PMC_IPC*/
+>
+>  #endif
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 0bf51d5..de64678 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -32,7 +32,10 @@
+>  #include <linux/notifier.h>
+>  #include <linux/suspend.h>
+>  #include <linux/acpi.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +
+>  #include <asm/intel_pmc_ipc.h>
+> +
+>  #include <linux/platform_data/itco_wdt.h>
+>
+>  /*
+> @@ -54,6 +57,18 @@
+>  #define IPC_WRITE_BUFFER       0x80
+>  #define IPC_READ_BUFFER                0x90
+>
+> +/* PMC Global Control Registers */
+> +#define GCR_TELEM_DEEP_S0IX_OFFSET     0x1078
+> +#define GCR_TELEM_SHLW_S0IX_OFFSET     0x1080
+> +
+> +/* Residency with clock rate at 19.2MHz to usecs */
+> +#define S0IX_RESIDENCY_IN_USECS(d, s)          \
+> +({                                             \
+> +       u64 result = 10ull * ((d) + (s));       \
+> +       do_div(result, 192);                    \
+> +       result;                                 \
+> +})
+> +
+>  /*
+>   * 16-byte buffer for sending data associated with IPC command.
+>   */
+> @@ -68,7 +83,7 @@
+>  #define PLAT_RESOURCE_IPC_INDEX                0
+>  #define PLAT_RESOURCE_IPC_SIZE         0x1000
+>  #define PLAT_RESOURCE_GCR_OFFSET       0x1008
+> -#define PLAT_RESOURCE_GCR_SIZE         0x4
+> +#define PLAT_RESOURCE_GCR_SIZE         0x1000
+>  #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
+>  #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
+>  #define PLAT_RESOURCE_TELEM_SSRAM_INDEX        3
+> @@ -115,6 +130,7 @@
+>         /* gcr */
+>         resource_size_t gcr_base;
+>         int gcr_size;
+> +       bool has_gcr_regs;
+>
+>         /* punit */
+>         struct platform_device *punit_dev;
+> @@ -180,6 +196,11 @@ static inline u32 ipc_data_readl(u32 offset)
+>         return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+>  }
+>
+> +static inline u64 gcr_data_readq(u32 offset)
+> +{
+> +       return readq(ipcdev.ipc_base + offset);
+> +}
+> +
+>  static int intel_pmc_ipc_check_status(void)
+>  {
+>         int status;
+> @@ -712,7 +733,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>                 dev_err(&pdev->dev, "Failed to get ipc resource\n");
+>                 return -ENXIO;
+>         }
+> -       size = PLAT_RESOURCE_IPC_SIZE;
+> +       size = PLAT_RESOURCE_IPC_SIZE + PLAT_RESOURCE_GCR_SIZE;
+> +
+>         if (!request_mem_region(res->start, size, pdev->name)) {
+>                 dev_err(&pdev->dev, "Failed to request ipc resource\n");
+>                 return -EBUSY;
+> @@ -748,6 +770,28 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +/**
+> + * intel_pmc_s0ix_counter_read() - Read S0ix residency.
+> + * @data: Out param that contains current S0ix residency count.
+> + *
+> + * Return: an error code or 0 on success.
+> + */
+> +int intel_pmc_s0ix_counter_read(u64 *data)
+> +{
+> +       u64 deep, shlw;
+> +
+> +       if (!ipcdev.has_gcr_regs)
+> +               return -EACCES;
+> +
+> +       deep = gcr_data_readq(GCR_TELEM_DEEP_S0IX_OFFSET);
+> +       shlw = gcr_data_readq(GCR_TELEM_SHLW_S0IX_OFFSET);
+> +
+> +       *data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
+> +
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id ipc_acpi_ids[] = {
+>         { "INT34D2", 0},
+> @@ -797,6 +841,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
+>                 goto err_sys;
+>         }
+>
+> +       ipcdev.has_gcr_regs = true;
+> +
+>         return 0;
+>  err_sys:
+>         free_irq(ipcdev.irq, &ipcdev);
+> @@ -808,8 +854,11 @@ static int ipc_plat_probe(struct platform_device *pdev)
+>         iounmap(ipcdev.ipc_base);
+>         res = platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_IPC_INDEX);
+> -       if (res)
+> -               release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
+> +       if (res) {
+> +               release_mem_region(res->start,
+> +                                  PLAT_RESOURCE_IPC_SIZE +
+> +                                  PLAT_RESOURCE_GCR_SIZE);
+> +       }
+>         return ret;
+>  }
+>
+> @@ -825,8 +874,11 @@ static int ipc_plat_remove(struct platform_device *pdev)
+>         iounmap(ipcdev.ipc_base);
+>         res = platform_get_resource(pdev, IORESOURCE_MEM,
+>                                     PLAT_RESOURCE_IPC_INDEX);
+> -       if (res)
+> -               release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
+> +       if (res) {
+> +               release_mem_region(res->start,
+> +                                  PLAT_RESOURCE_IPC_SIZE +
+> +                                  PLAT_RESOURCE_GCR_SIZE);
+> +       }
+>         ipcdev.dev = NULL;
+>         return 0;
+>  }
+> --
+> 1.9.1
+>
 
 
 
