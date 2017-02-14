@@ -1,69 +1,98 @@
 From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: Re: [PATCH] Add sysfs interface for touchpad state
-Date: Tue, 14 Feb 2017 19:48:43 +0530
-Message-ID: <1487081923.10822.1.camel@debian.org>
-References: <20170130105749.17338-1-rrs@debian.org>
-         <CAHp75VcekiLxkGbHFXbPvTX7SwBHobQFmnx5Y-uFWXZSEN9ujA@mail.gmail.com>
-         <1485863265.11199.3.camel@debian.org>
-         <CAHp75Vfbr0dfxjv1QhF+z6D1Ptd5z9s0K825VnE786W2-y+kPQ@mail.gmail.com>
-         <1485959219.8977.1.camel@debian.org>
-         <CAHp75VcHE8ZHpuS=WEQOD7kMLSDSiFhZSAx_55ARidi0FUhapw@mail.gmail.com>
-         <1485965846.14297.1.camel@debian.org>
-         <CAHp75VckDTD+yx4tTwpzgvgsygiWFEs1t5Uc85UsbaJD8inx_w@mail.gmail.com>
-         <1486023399.14342.1.camel@debian.org>
-         <CAHp75VcH2cCWA2mophVC1+BP69D0FJ2-tQjcs9B-Yi8JaytN_A@mail.gmail.com>
-Reply-To: rrs@debian.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yb0-f193.google.com ([209.85.213.193]:34116 "EHLO
-        mail-yb0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752597AbdBNOSv (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Feb 2017 09:18:51 -0500
-Received: by mail-yb0-f193.google.com with SMTP id w194so5511891ybe.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Feb 2017 06:18:51 -0800 (PST)
-In-Reply-To: <CAHp75VcH2cCWA2mophVC1+BP69D0FJ2-tQjcs9B-Yi8JaytN_A@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add sysfs interface for touchpad state
+Date: Tue, 14 Feb 2017 19:46:12 +0530
+Message-ID: <20170214141612.16913-1-rrs@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, Ritesh Raj Sarraf <rrs@debian.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
+14 etc) has multiple modles that are a hybrid laptop, working in laptop
+mode as well as tablet mode.
 
-On Tue, 2017-02-14 at 00:26 +0200, Andy Shevchenko wrote:
-> I'm sorry for top-posting, but something wrong with email quoting. I'm
-> using here gmail, it might not recognize message properly.
-> 
-> So, please fix the subject line to have a prefix, in your case
-> "platform/x86: ideapad-laptop: ...".
-> Add to the commit message what you explained me and put a link to that
-> comment.
-> And resend new version with all maintainers included (there is a
-> script scripts/get_maintainer.pl to help with the list of
-> maintainers).
+Currently, there is no easy interface to determine the touchpad status,
+which in case of the Yoga family of machines, can also be useful to
+assume tablet mode status.
+Note: The ideapad-laptop driver does not provide a SW_TABLET_MODE either
 
-Thank you Andy. I've just re-sent (through git send-email) a revised patch, with
-your comments.
+For a detailed discussion  on why we want either of the interfaces,
+please see:
+https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
 
-- -- 
-Ritesh Raj Sarraf | http://people.debian.org/~rrs
-Debian - The Universal Operating System
------BEGIN PGP SIGNATURE-----
+This patch adds a sysfs interface for read/write access under:
+/sys/bus/platform/devices/VPC2004\:00/touchpad_mode
 
-iQIzBAEBCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAlijEcMACgkQpjpYo/Lh
-dWkieRAAtfWMgH+rwbCLjXRMTfGLTG8Nf76Iyq1w+8ny09/IyN9g15YMCuE2O5QI
-RgQQNa5e/DZ7qqGbxlZP7T5om2PWMDlREsnjiEYBwIDBPfOd/+ob/SPRGvXPf/QP
-Lx47EAmVoT4dv9urcz/54G9QjYxvgE96RlE42qx1z2mompdqAyrmg28AgqccILrU
-rcMC9xU+2x172/z8kpdx+hZf87Zi3EevIUjrjJq39b1MDyePkv7l9Mz724RRxWfs
-UheZSKJtJonySz/psg9xqDzYsc23UY0XWLbTjGBCFfc+8ZYLNvobDXJkPJMK5cyx
-Qy0ZHkkRZC0bHiuu24WMcgmelSTcwS2WTjdYOZxOoS9nshXU/xJ33C5tjq/yrfC4
-nwQsru+SdZml8xmFUHDCXfCnyMOjB5zG2n241kMjMhu7fC3UDZ+1ptxeUAk066It
-ov3LlPxs5sV/qOvFNbWAm8CJEPDX9kNpZ9IFneic2AZhfgR0BCiAItjvlkZVmpNi
-iGDIHyASM6csX8hcGKW8NAJwbZYkjrUPJRQYiqhwtbmkP7eHxEIWX1ac1uxQZP9A
-zUlxZCOSyWLKqp3+rVX/H3KsuRAJUkkLIzN7jwepPBdy8EAfXUuwuayfmAxXGges
-JtErebhnb4/WdYSkOPZcmGLGxQHlsh7mdzeEN8Gbh844Li/C0z0=
-=QTp1
------END PGP SIGNATURE-----
+Signed-off-by: Ritesh Raj Sarraf <rrs@debian.org>
+---
+ .../ABI/testing/sysfs-platform-ideapad-laptop      |  9 ++++++
+ drivers/platform/x86/ideapad-laptop.c              | 33 ++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+index b31e782bd985..401e37e5acbd 100644
+--- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
++++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+@@ -17,3 +17,12 @@ Description:
+ 			* 2 -> Dust Cleaning
+ 			* 4 -> Efficient Thermal Dissipation Mode
+ 
++What:		/sys/devices/platform/ideapad/touchpad_mode
++Date:		Jan 2017
++KernelVersion:	4.11
++Contact:	"Ritesh Raj Sarraf <rrs@debian.org>"
++Description:
++		Control touchpad mode.
++                        * 1 -> Switched On
++                        * 0 -> Switched Off
++
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index f46ece2ce3c4..639af45b45b6 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -423,9 +423,42 @@ static ssize_t store_ideapad_fan(struct device *dev,
+ 
+ static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
+ 
++
++static ssize_t show_touchpad_mode(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	unsigned long result;
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++
++	if (read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result))
++		return sprintf(buf, "-1\n");
++	return sprintf(buf, "%lu\n", result);
++}
++
++static ssize_t store_touchpad_mode(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	int ret, state;
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++
++	if (!count)
++		return 0;
++	if (sscanf(buf, "%i", &state) != 1)
++		return -EINVAL;
++	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
++	if (ret < 0)
++		return -EIO;
++	return count;
++}
++
++static DEVICE_ATTR(touchpad_mode, 0644, show_touchpad_mode, store_touchpad_mode);
++
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
+ 	&dev_attr_fan_mode.attr,
++	&dev_attr_touchpad_mode.attr,
+ 	NULL
+ };
+ 
+-- 
+2.11.0
