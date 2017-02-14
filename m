@@ -1,202 +1,52 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH][V3] intel-hid: support 5 array button
-Date: Tue, 14 Feb 2017 15:20:34 +0800
-Message-ID: <1487056834-7050-1-git-send-email-alex.hung@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:47234 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751937AbdBNHUl (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Feb 2017 02:20:41 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: alex.hung@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andy@infradead.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v8 3/7] platform/x86/thinkpad: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Tue, 14 Feb 2017 10:25:24 +0100
+Message-ID: <40d0f346-5090-ef01-4ee7-69b72458cfa2@redhat.com>
+References: <20170209154417.19040-1-hdegoede@redhat.com>
+ <20170209154417.19040-4-hdegoede@redhat.com>
+ <1486663705.1046615.875913456.7B8ADABA@webmail.messagingengine.com>
+ <CAHp75Vdt4SNOuYTkxg_F+pSs3FY8zA9jdOWG+Cp8hzxS7vtsVQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vdt4SNOuYTkxg_F+pSs3FY8zA9jdOWG+Cp8hzxS7vtsVQ@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-New firmwares include a feature called 5 button array that supports
-super key, volume up/down, rotation lock and power button. Support
-for this feature is required to fix power button on some recent
-systems.
+Hi,
 
-This patch was tested on a Dell Latitude 7480.
+On 13-02-17 23:52, Andy Shevchenko wrote:
+> On Thu, Feb 9, 2017 at 8:08 PM, Henrique de Moraes Holschuh
+> <hmh@hmh.eng.br> wrote:
+>> On Thu, Feb 9, 2017, at 13:44, Hans de Goede wrote:
+>>> Make thinkpad_acpi call led_classdev_notify_brightness_hw_changed on the
+>>> kbd_led led_classdev registered by thinkpad_acpi when the kbd backlight
+>>> brightness is changed through the hotkey.
+>>>
+>>> This will allow userspace to monitor (poll) for brightness changes on
+>>> these LEDs caused by the hotkey.
+>>
+>> It will *often* do so, you assume the thinkpad firmware is far more well
+>> behaved than it really is :-(
+>>
+>> It is model/bios-revision specific.  Fortunately, it should works on
+>> most models, and there really isn't a better way of doing this (other
+>> than adding the event to the NVRAM poll set of some very old models,
+>> which is also not worth doing unless you can actually test it).
+>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+>
+> Thanks, thinkpad_acpi bits are applied to testing
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/intel-hid.c | 96 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 91 insertions(+), 5 deletions(-)
+Thank you, so the Dell bits are waiting for Pali's ack ?
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index cb3ab2b..bcf438f 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -1,5 +1,5 @@
- /*
-- *  Intel HID event driver for Windows 8
-+ *  Intel HID event & 5 button array driver
-  *
-  *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
-  *  Copyright (C) 2015 Andrew Lutomirski <luto@kernel.org>
-@@ -57,8 +57,24 @@ static const struct key_entry intel_hid_keymap[] = {
- 	{ KE_END },
- };
- 
-+/* 5 button array notification value. */
-+static const struct key_entry intel_array_keymap[] = {
-+	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
-+	{ KE_IGNORE, 0xC3, { KEY_LEFTMETA } },                /* Release */
-+	{ KE_KEY,    0xC4, { KEY_VOLUMEUP } },                /* Press */
-+	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },                /* Release */
-+	{ KE_KEY,    0xC6, { KEY_VOLUMEDOWN } },              /* Press */
-+	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },              /* Release */
-+	{ KE_SW,     0xC8, { .sw = { SW_ROTATE_LOCK, 1 } } }, /* Press */
-+	{ KE_SW,     0xC9, { .sw = { SW_ROTATE_LOCK, 0 } } }, /* Release */
-+	{ KE_KEY,    0xCE, { KEY_POWER } },                   /* Press */
-+	{ KE_IGNORE, 0xCF, { KEY_POWER } },                   /* Release */
-+	{ KE_END },
-+};
-+
- struct intel_hid_priv {
- 	struct input_dev *input_dev;
-+	struct input_dev *array;
- };
- 
- static int intel_hid_set_enable(struct device *device, int enable)
-@@ -78,15 +94,43 @@ static int intel_hid_set_enable(struct device *device, int enable)
- 	return 0;
- }
- 
-+static void intel_button_array_enable(struct device *device, bool enable)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(device);
-+	acpi_handle handle = ACPI_HANDLE(device);
-+	unsigned long long button_cap;
-+	acpi_status status;
-+
-+	if (!priv->array)
-+		return;
-+
-+	/* Query supported platform features */
-+	status = acpi_evaluate_integer(handle, "BTNC", NULL, &button_cap);
-+	if (ACPI_FAILURE(status)) {
-+		dev_warn(device, "failed to get button capability\n");
-+		return;
-+	}
-+
-+	/* Enable|disable features - power button is always enabled */
-+	status = acpi_execute_simple_method(handle, "BTNE",
-+					    enable ? button_cap : 1);
-+	if (ACPI_FAILURE(status))
-+		dev_warn(device, "failed to set button capability\n");
-+}
-+
- static int intel_hid_pl_suspend_handler(struct device *device)
- {
- 	intel_hid_set_enable(device, 0);
-+	intel_button_array_enable(device, false);
-+
- 	return 0;
- }
- 
- static int intel_hid_pl_resume_handler(struct device *device)
- {
- 	intel_hid_set_enable(device, 1);
-+	intel_button_array_enable(device, true);
-+
- 	return 0;
- }
- 
-@@ -126,6 +170,27 @@ static int intel_hid_input_setup(struct platform_device *device)
- 	return ret;
- }
- 
-+static int intel_button_array_input_setup(struct platform_device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-+	int ret;
-+
-+	/* Setup input device for 5 button array */
-+	priv->array = devm_input_allocate_device(&device->dev);
-+	if (!priv->array)
-+		return -ENOMEM;
-+
-+	ret = sparse_keymap_setup(priv->array, intel_array_keymap, NULL);
-+	if (ret)
-+		return ret;
-+
-+	priv->array->dev.parent = &device->dev;
-+	priv->array->name = "Intel HID 5 button array";
-+	priv->array->id.bustype = BUS_HOST;
-+
-+	return input_register_device(priv->array);
-+}
-+
- static void intel_hid_input_destroy(struct platform_device *device)
- {
- 	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-@@ -140,10 +205,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	unsigned long long ev_index;
- 	acpi_status status;
- 
--	/* The platform spec only defines one event code: 0xC0. */
-+	/* 0xC0 is for HID events, other values are for 5 button array */
- 	if (event != 0xc0) {
--		dev_warn(&device->dev, "received unknown event (0x%x)\n",
--			 event);
-+		if (!priv->array ||
-+		    !sparse_keymap_report_event(priv->array, event, 1, true))
-+			dev_info(&device->dev, "unknown event 0x%x\n", event);
- 		return;
- 	}
- 
-@@ -161,8 +227,8 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- static int intel_hid_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+	unsigned long long event_cap, mode;
- 	struct intel_hid_priv *priv;
--	unsigned long long mode;
- 	acpi_status status;
- 	int err;
- 
-@@ -193,6 +259,15 @@ static int intel_hid_probe(struct platform_device *device)
- 		return err;
- 	}
- 
-+	/* Setup 5 button array */
-+	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
-+	if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
-+		dev_info(&device->dev, "platform supports 5 button array\n");
-+		err = intel_button_array_input_setup(device);
-+		if (err)
-+			pr_err("Failed to setup Intel 5 button array hotkeys\n");
-+	}
-+
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
- 					     notify_handler,
-@@ -206,6 +281,16 @@ static int intel_hid_probe(struct platform_device *device)
- 	if (err)
- 		goto err_remove_notify;
- 
-+	if (priv->array) {
-+		intel_button_array_enable(&device->dev, true);
-+
-+		/* Call button load method to enable HID power button */
-+		status = acpi_evaluate_object(handle, "BTNL", NULL, NULL);
-+		if (ACPI_FAILURE(status))
-+			dev_warn(&device->dev,
-+				 "failed to enable HID power button\n");
-+	}
-+
- 	return 0;
- 
- err_remove_notify:
-@@ -224,6 +309,7 @@ static int intel_hid_remove(struct platform_device *device)
- 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
- 	intel_hid_input_destroy(device);
- 	intel_hid_set_enable(&device->dev, 0);
-+	intel_button_array_enable(&device->dev, false);
- 
- 	/*
- 	 * Even if we failed to shut off the event stream, we can still
--- 
-2.7.4
+Note the Dell bits have been tested on actual hardware too.
+
+Regards,
+
+Hans
