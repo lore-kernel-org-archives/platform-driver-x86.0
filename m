@@ -1,223 +1,86 @@
-From: jlee@suse.com
-Subject: Re: [PATCH v4 1/2] platform/x86: acer-wmi: Inform firmware that RF
- Button Driver is active
-Date: Tue, 14 Feb 2017 08:37:41 +0800
-Message-ID: <20170214003740.2jwnv2lfflhjnp2q@linux-rasp2>
-References: <20170208135141.2105-1-drake@endlessm.com>
- <CAHp75VfYOh-Ud5MSTkxrYs=qR_6WmJSsZOnMb+sRibRHo9m1Jg@mail.gmail.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH] platform: intel_turbo_max_3: make it explicitly non-modular
+Date: Mon, 13 Feb 2017 19:37:00 -0500
+Message-ID: <20170214003700.8978-1-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:45167 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751408AbdBNAiC (ORCPT
-        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Mon, 13 Feb 2017 19:38:02 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfYOh-Ud5MSTkxrYs=qR_6WmJSsZOnMb+sRibRHo9m1Jg@mail.gmail.com>
+Received: from mail5.windriver.com ([192.103.53.11]:47050 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751408AbdBNAio (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Feb 2017 19:38:44 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Daniel Drake <drake@endlessm.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, chiu@endlessm.com
+To: linux-kernel@vger.kernel.org
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 14, 2017 at 12:12:20AM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 8, 2017 at 3:51 PM, Daniel Drake <drake@endlessm.com> wrote:
-> > From: Chris Chiu <chiu@endlessm.com>
-> >
-> > The same method to activate LM(Launch Manager) can also be used to
-> > activate the RF Button driver with different bit toggled in the same
-> > lm_status. To express that many functions this byte field can achieve,
-> > rename the lm_status to app_status. And also the app_mask is the bit
-> > mask which specifically indicate which bits are going to be changed.
-> >
-> > This solves a problem where the AR9565 wifi included in the
-> > Acer Aspire ES1-421 is permanently hard blocked according to the rfkill
-> > GPIO read by ath9k.
-> >
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> > Signed-off-by: Daniel Drake <drake@endlessm.com>
-> 
-> Thanks.
-> Applied both to testing.
-> 
-> First one with Chun-Yi's Reviewed-by (from v2). Chun-Yi, please, tell
-> me if I did this by mistake.
-> 
+The Kconfig currently controlling compilation of this code is:
 
-I just reviewed the two v4 patches. Please feel free to add:
+drivers/platform/x86/Kconfig:config INTEL_TURBO_MAX_3
+drivers/platform/x86/Kconfig:   bool "Intel Turbo Boost Max Technology 3.0 enumeration driver"
 
-Reviewed-by: Lee, Chun-Yi <jlee@suse.com>
+...meaning that it currently is not being built as a module by anyone.
 
-Thanks for your help!
+Lets remove the couple traces of modular infrastructure use, so that
+when reading the driver there is no doubt it is builtin-only.
 
-Joey Lee
+Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
 
-> > ---
-> >  drivers/platform/x86/acer-wmi.c | 74 ++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 58 insertions(+), 16 deletions(-)
-> >
-> > v2: fix typo in Chris's email address (endless=>endlessm)
-> >
-> > v3: move keycode addition to separate patch
-> >
-> > v4: Rename set_function_ structs to func_. Don't fail if firmware rejects
-> >     the new call since we don't have certainty that this will succeed on
-> >     all product models.
-> >
-> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> > index c29b9b6..3795d3f 100644
-> > --- a/drivers/platform/x86/acer-wmi.c
-> > +++ b/drivers/platform/x86/acer-wmi.c
-> > @@ -150,15 +150,30 @@ struct event_return_value {
-> >  #define ACER_WMID3_GDS_BLUETOOTH       (1<<11) /* BT */
-> >  #define ACER_WMID3_GDS_TOUCHPAD                (1<<1)  /* Touchpad */
-> >
-> > -struct lm_input_params {
-> > +/* Hotkey Customized Setting and Acer Application Status.
-> > + * Set Device Default Value and Report Acer Application Status.
-> > + * When Acer Application starts, it will run this method to inform
-> > + * BIOS/EC that Acer Application is on.
-> > + * App Status
-> > + *     Bit[0]: Launch Manager Status
-> > + *     Bit[1]: ePM Status
-> > + *     Bit[2]: Device Control Status
-> > + *     Bit[3]: Acer Power Button Utility Status
-> > + *     Bit[4]: RF Button Status
-> > + *     Bit[5]: ODD PM Status
-> > + *     Bit[6]: Device Default Value Control
-> > + *     Bit[7]: Hall Sensor Application Status
-> > + */
-> > +struct func_input_params {
-> >         u8 function_num;        /* Function Number */
-> >         u16 commun_devices;     /* Communication type devices default status */
-> >         u16 devices;            /* Other type devices default status */
-> > -       u8 lm_status;           /* Launch Manager Status */
-> > -       u16 reserved;
-> > +       u8 app_status;          /* Acer Device Status. LM, ePM, RF Button... */
-> > +       u8 app_mask;            /* Bit mask to app_status */
-> > +       u8 reserved;
-> >  } __attribute__((packed));
-> >
-> > -struct lm_return_value {
-> > +struct func_return_value {
-> >         u8 error_code;          /* Error Code */
-> >         u8 ec_return_value;     /* EC Return Value */
-> >         u16 reserved;
-> > @@ -1769,13 +1784,13 @@ static void acer_wmi_notify(u32 value, void *context)
-> >  }
-> >
-> >  static acpi_status __init
-> > -wmid3_set_lm_mode(struct lm_input_params *params,
-> > -                 struct lm_return_value *return_value)
-> > +wmid3_set_function_mode(struct func_input_params *params,
-> > +                       struct func_return_value *return_value)
-> >  {
-> >         acpi_status status;
-> >         union acpi_object *obj;
-> >
-> > -       struct acpi_buffer input = { sizeof(struct lm_input_params), params };
-> > +       struct acpi_buffer input = { sizeof(struct func_input_params), params };
-> >         struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> >
-> >         status = wmi_evaluate_method(WMID_GUID3, 0, 0x1, &input, &output);
-> > @@ -1796,7 +1811,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
-> >                 return AE_ERROR;
-> >         }
-> >
-> > -       *return_value = *((struct lm_return_value *)obj->buffer.pointer);
-> > +       *return_value = *((struct func_return_value *)obj->buffer.pointer);
-> >         kfree(obj);
-> >
-> >         return status;
-> > @@ -1804,16 +1819,17 @@ wmid3_set_lm_mode(struct lm_input_params *params,
-> >
-> >  static int __init acer_wmi_enable_ec_raw(void)
-> >  {
-> > -       struct lm_return_value return_value;
-> > +       struct func_return_value return_value;
-> >         acpi_status status;
-> > -       struct lm_input_params params = {
-> > +       struct func_input_params params = {
-> >                 .function_num = 0x1,
-> >                 .commun_devices = 0xFFFF,
-> >                 .devices = 0xFFFF,
-> > -               .lm_status = 0x00,            /* Launch Manager Deactive */
-> > +               .app_status = 0x00,             /* Launch Manager Deactive */
-> > +               .app_mask = 0x01,
-> >         };
-> >
-> > -       status = wmid3_set_lm_mode(&params, &return_value);
-> > +       status = wmid3_set_function_mode(&params, &return_value);
-> >
-> >         if (return_value.error_code || return_value.ec_return_value)
-> >                 pr_warn("Enabling EC raw mode failed: 0x%x - 0x%x\n",
-> > @@ -1827,16 +1843,17 @@ static int __init acer_wmi_enable_ec_raw(void)
-> >
-> >  static int __init acer_wmi_enable_lm(void)
-> >  {
-> > -       struct lm_return_value return_value;
-> > +       struct func_return_value return_value;
-> >         acpi_status status;
-> > -       struct lm_input_params params = {
-> > +       struct func_input_params params = {
-> >                 .function_num = 0x1,
-> >                 .commun_devices = 0xFFFF,
-> >                 .devices = 0xFFFF,
-> > -               .lm_status = 0x01,            /* Launch Manager Active */
-> > +               .app_status = 0x01,            /* Launch Manager Active */
-> > +               .app_mask = 0x01,
-> >         };
-> >
-> > -       status = wmid3_set_lm_mode(&params, &return_value);
-> > +       status = wmid3_set_function_mode(&params, &return_value);
-> >
-> >         if (return_value.error_code || return_value.ec_return_value)
-> >                 pr_warn("Enabling Launch Manager failed: 0x%x - 0x%x\n",
-> > @@ -1846,6 +1863,28 @@ static int __init acer_wmi_enable_lm(void)
-> >         return status;
-> >  }
-> >
-> > +static int __init acer_wmi_enable_rf_button(void)
-> > +{
-> > +       struct func_return_value return_value;
-> > +       acpi_status status;
-> > +       struct func_input_params params = {
-> > +               .function_num = 0x1,
-> > +               .commun_devices = 0xFFFF,
-> > +               .devices = 0xFFFF,
-> > +               .app_status = 0x10,            /* RF Button Active */
-> > +               .app_mask = 0x10,
-> > +       };
-> > +
-> > +       status = wmid3_set_function_mode(&params, &return_value);
-> > +
-> > +       if (return_value.error_code || return_value.ec_return_value)
-> > +               pr_warn("Enabling RF Button failed: 0x%x - 0x%x\n",
-> > +                       return_value.error_code,
-> > +                       return_value.ec_return_value);
-> > +
-> > +       return status;
-> > +}
-> > +
-> >  #define ACER_WMID_ACCEL_HID    "BST0001"
-> >
-> >  static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
-> > @@ -2229,6 +2268,9 @@ static int __init acer_wmi_init(void)
-> >                 interface->capability &= ~ACER_CAP_BRIGHTNESS;
-> >
-> >         if (wmi_has_guid(WMID_GUID3)) {
-> > +               if (ACPI_FAILURE(acer_wmi_enable_rf_button()))
-> > +                       pr_warn("Cannot enable RF Button Driver\n");
-> > +
-> >                 if (ec_raw_mode) {
-> >                         if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
-> >                                 pr_err("Cannot enable EC raw mode\n");
-> > --
-> > 2.9.3
-> >
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+We also delete the MODULE_LICENSE tag etc. since all that information
+was (or is now) contained at the top of the file in the comments.
+
+We do uncover some implicit includes during build coverage that
+were hidden behind the module.h which pulls in a lot of dependants.
+
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ drivers/platform/x86/intel_turbo_max_3.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel_turbo_max_3.c
+index 0103f5b32e34..4f60d8e32a0a 100644
+--- a/drivers/platform/x86/intel_turbo_max_3.c
++++ b/drivers/platform/x86/intel_turbo_max_3.c
+@@ -3,6 +3,8 @@
+  * Copyright (c) 2017, Intel Corporation.
+  * All rights reserved.
+  *
++ * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++ *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms and conditions of the GNU General Public License,
+  * version 2, as published by the Free Software Foundation.
+@@ -16,7 +18,9 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/kernel.h>
+-#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/topology.h>
++#include <linux/workqueue.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/cpufeature.h>
+ #include <asm/cpu_device_id.h>
+@@ -123,7 +127,6 @@ static const struct x86_cpu_id itmt_legacy_cpu_ids[] = {
+ 	ICPU(INTEL_FAM6_BROADWELL_X),
+ 	{}
+ };
+-MODULE_DEVICE_TABLE(x86cpu, itmt_legacy_cpu_ids);
+ 
+ static int __init itmt_legacy_init(void)
+ {
+@@ -146,7 +149,3 @@ static int __init itmt_legacy_init(void)
+ 	return 0;
+ }
+ late_initcall(itmt_legacy_init)
+-
+-MODULE_DESCRIPTION("Intel Turbo Boost Max 3.0 enumeration driver");
+-MODULE_AUTHOR("Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>");
+-MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
