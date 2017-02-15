@@ -1,64 +1,63 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH] clk: x86: add "mclk" alias for Baytrail/Cherrytrail
-Date: Tue, 14 Feb 2017 13:23:12 -0600
-Message-ID: <bc29984e-cc58-69ed-d6ca-b4808d6514dc@linux.intel.com>
-References: <1486937212-10093-1-git-send-email-pierre-louis.bossart@linux.intel.com>
- <20170214190456.GV25384@codeaurora.org>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH v2 0/6] Move dell-led to
+	drivers/platform/x86
+Date: Wed, 15 Feb 2017 19:56:52 +0800
+Message-ID: <CAJ=jqua0W3fmoJFqqVgG2Eq=9E-4toXC0UyQH3TyxZiTtNsODw@mail.gmail.com>
+References: <20170116132204.6421-1-kernel@kempniu.pl>
+ <20170213112640.GA1188@ozzy.nask.waw.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170214190456.GV25384@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, Michael Turquette <mturquette@baylibre.com>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170213112640.GA1188@ozzy.nask.waw.pl>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Anthony Wong <anthony.wong@canonical.com>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2/14/17 1:04 PM, Stephen Boyd wrote:
-> On 02/12, Pierre-Louis Bossart wrote:
->> Due to timing requirements, TI and Conexant manage the audio
->> reference clock from their ASoC codec drivers using the "mclk"
->> string. This patch adds a default alias to "pmc_plt_clk_3" to
->> avoid Intel-specific tests in those codec drivers and use code
->> as-is.
->> "pmc_plt_clk_3" is used exclusively for audio on all known
->> Baytrail/CherryTrail designs and is e.g. routed on the MCLK
->> (pin 26) of the MinnowBoardMAX Turbot LSE connector.
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>
->> Notes:
->>     This patch only applies on top of linux-next or clk-next, the
->>     previous clk-related patches are not yet merged in the audio
->>     trees
->>
->>  drivers/clk/x86/clk-pmc-atom.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
->> index 2b60577..ba00d27 100644
->> --- a/drivers/clk/x86/clk-pmc-atom.c
->> +++ b/drivers/clk/x86/clk-pmc-atom.c
->> @@ -340,6 +340,8 @@ static int plt_clk_probe(struct platform_device *pdev)
->>
->>  	plt_clk_free_parent_names_loop(parent_names, data->nparents);
->>
->> +	clk_add_alias("mclk", dev_name(&pdev->dev), "pmc_plt_clk_3", NULL);
->> +
->
-> This leaks an alias when the driver is removed. Honestly,
-> clk_add_alias() doesn't work well because of that problem. Can
-> you just add another lookup with the pointer you already have
-> instead of passing a NULL device to do a global lookup?
-
-This is a builtin driver that cannot be configured as a module, is the 
-leaked alias problematic?
-I don't mind trying something different but I am not familiar enough 
-with the framework to understand what you are hinting at. Are you 
-suggesting a change on the last parameter such as:
-
-clk_add_alias("mclk", dev_name(&pdev->dev), "pmc_plt_clk_3", &pdev->dev)
-
-Thanks!
--Pierre
+SGksCgpJIHRlc3RlZCB0aGUgcGF0Y2hlcyB3aXRoIHRoZSBmb2xsb3dpbmcgc2V0dXAuIFBsZWFz
+ZSBub3RlIEkgdGVzdGVkCnRoZSBtaWNyb3Bob25lIG11dGUgbGVkIGJ5IEdVSSwgYXMgdGhlIGhv
+dGtleSBkb2VzIG5vdCB3b3JrIG9uIHRoaXMKc3lzdGVtLgoKMS4gRG93bmxvYWRlZCB0aGUgYmVs
+b3cgcGF0Y2hlcyBmcm9tIHBhdGNod29yawoKOTUxODczNyBBd2FpdGluZyBVcHN0cmVhbSBbdjIs
+MS82XSBkZWxsLWxlZDogcmVtb3ZlIEdVSUQgY2hlY2sgZnJvbQpkZWxsX21pY211dGVfbGVkX3Nl
+dCgpCjk1MTg3NjEgQXdhaXRpbmcgVXBzdHJlYW0gW3YyLDIvNl0gQUxTQTogaGRhIC0gdXNlCmRl
+bGxfbWljbXV0ZV9sZWRfc2V0KCkgaW5zdGVhZCBvZiBkZWxsX2FwcF93bWlfbGVkX3NldCgpCjk1
+MTg3NDEgQXdhaXRpbmcgVXBzdHJlYW0gW3YyLDMvNl0gQUxTQTogaGRhIC0gcmVuYW1lCmRlbGxf
+bGVkX3NldF9mdW5jIHRvIGRlbGxfbWljbXV0ZV9sZWRfc2V0X2Z1bmMKOTUxODcyNSBBd2FpdGlu
+ZyBVcHN0cmVhbSBbdjIsNC82XSBwbGF0Zm9ybS94ODY6IGRlbGwtbGFwdG9wOiBpbXBvcnQKZGVs
+bF9taWNtdXRlX2xlZF9zZXQoKSBmcm9tIGRyaXZlcnMvbGVkcy9kZWxsLWxlZC5jCjk1MTg3Mjcg
+QXdhaXRpbmcgVXBzdHJlYW0gW3YyLDUvNl0gZGVsbC1sZWQ6IHJlbW92ZSBjb2RlIHJlbGF0ZWQg
+dG8gbWljIG11dGUgTEVECjk1MTg3MzUgQXdhaXRpbmcgVXBzdHJlYW0gW3YyLDYvNl0gZGVsbC1s
+ZWQ6IG1vdmUgZHJpdmVyIHRvCmRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWxlZC5jCjk1
+MjAwNTMgQXdhaXRpbmcgVXBzdHJlYW0gW3YyLDYrLzZdIHBsYXRmb3JtL3g4NjogZGVsbC13bWkt
+bGVkOiBmaXgKY29kaW5nIHN0eWxlIGlzc3VlcwoKMi4gSW5zdGFsbGVkIFVidW50dSAxNi4xMCAo
+TGludXgga2VybmVsIDQuOCkgb24gRGVsbCBMYXRpdHVkZSA3MTgwCgogIC0+IE1pY3JvcGhvbmUg
+bXV0ZSBsZWQgd29ya3MgYXMgZXhwZWN0ZWQKCjMuIEFwcGxpZWQgZG93bmxvYWRlZCBwYXRjaGVz
+IHRvIGtlcm5lbCA0Ljggd2l0aG91dCBhbnkgY29uZmxpY3RzLCBidXQKa2VybmVsIHdpbGwgbm90
+IGNvbXBpbGUgc3VjY2Vzc2Z1bGx5LgoKNC4gSW5zdGFsbGVkIFVidW50dSBaZXN0eSBrZXJuZWwg
+KExpbnV4IGtlcm5lbCA0LjkpCgogIC0+IE1pY3JvcGhvbmUgbXV0ZSBsZWQgd29ya3MgYXMgZXhw
+ZWN0ZWQKCjUuIEFwcGxpZWQgYW5kIGNvbXBpbGVkIGRvd25sb2FkZWQgcGF0Y2hlcyB0byBrZXJu
+ZWwgNC45CgogIC0+IE1pY3JvcGhvbmUgbXV0ZSBsZWQgZG9lcyBub3Qgd29yawoKNi4gQ29tcGls
+ZWQgYW5kIGluc3RhbGxlZCBMaW51eCBrZXJuZWwgNC4xMCByYzgKCiAgLT4gTWljcm9waG9uZSBt
+dXRlIGxlZCBkb2VzIG5vdCB3b3JrCgo3LiBBcHBsaWVkIGFuZCBjb21waWxlZCBkb3dubG9hZGVk
+IHBhdGNoZXMgdG8ga2VybmVsIDQuMTAgcmM4CgogIC0+IE1pY3JvcGhvbmUgbXV0ZSBsZWQgZG9l
+cyBub3Qgd29yawoKCgpPbiBNb24sIEZlYiAxMywgMjAxNyBhdCA3OjI2IFBNLCBNaWNoYcWCIEvE
+mXBpZcWEIDxrZXJuZWxAa2VtcG5pdS5wbD4gd3JvdGU6Cj4gSGkgZXZlcnlvbmUsCj4KPiBJdCBo
+YXMgYmVlbiBhbG1vc3QgYSBtb250aCBzaW5jZSBJIHBvc3RlZCB2Miwgc28gSSBob3BlIHNlbmRp
+bmcgYQo+IHJlbWluZGVyIGlzIG9rYXkuCj4KPiBKYXJvc2xhdiwgVGFrYXNoaSwgY291bGQgeW91
+IHBsZWFzZSBhY2sgdGhpcyBwYXRjaCBzZXJpZXMgZnJvbSB0aGUgc291bmQKPiBzdWJzeXN0ZW0g
+cGVyc3BlY3RpdmU/ICBQYXRjaGVzIDItNCB0b3VjaCBpdC4KPgo+IEFudGhvbnksIGhhdmUgeW91
+IGFuZCB5b3VyIHRlYW0gcGVyaGFwcyBoYWQgYSBjaGFuY2UgdG8gdGVzdCB0aGlzIHBhdGNoCj4g
+c2VyaWVzIG9uIGFjdHVhbCBoYXJkd2FyZT8KPgo+IFRoYW5rcywKPgo+IC0tCj4gQmVzdCByZWdh
+cmRzLAo+IE1pY2hhxYIgS8SZcGllxYQKCgoKLS0gCkNoZWVycywKQWxleCBIdW5nCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGlu
+ZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXBy
+b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
