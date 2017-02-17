@@ -1,126 +1,37 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: Use XTAL freq based on
- cpuid
-Date: Fri, 17 Feb 2017 12:05:58 +0200
-Message-ID: <1487325958.2133.500.camel@linux.intel.com>
-References: <1487323434-8553-1-git-send-email-rajneesh.bhardwaj@intel.com>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to pr_warn
+Date: Fri, 17 Feb 2017 13:27:00 +0100
+Message-ID: <CAJZ5v0gNcGtnXpE1n6LSq7ey+UDKx+oQfmTg0_PgFwzB0Dd_5A@mail.gmail.com>
+References: <cover.1487314666.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:34496 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933267AbdBQKKc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Feb 2017 05:10:32 -0500
-In-Reply-To: <1487323434-8553-1-git-send-email-rajneesh.bhardwaj@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1487314666.git.joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Karol Herbst <karolherbst-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pekka Paalanen <ppaalanen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, oprofile-list-TtF/mJH4Jtrk1uMJSBkQmQ@public.gmane.org, sfi-devel-yLnuTTp1/kvcsJTPyzm5gB2eb7JE58TQ@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, drbd-dev-cunTk1MwBs8qoQakbn7OcQ@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gigaset307x-common-5NWGOfrQmneRv+LV9MX5uv+2+P5yyue3@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2017-02-17 at 14:53 +0530, Rajneesh Bhardwaj wrote:
-> This patch uses crystal frequency based on the cpu model.
-> 
-> On Apollo Lake SoC we have 19.2 MHz clock frequency for counting S0ix
-> residency but this clock frequency might change on future platforms
-> depending on the crystal oscillator.
+On Fri, Feb 17, 2017 at 8:11 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> There are ~4300 uses of pr_warn and ~250 uses of the older
+> pr_warning in the kernel source tree.
+>
+> Make the use of pr_warn consistent across all kernel files.
+>
+> This excludes all files in tools/ as there is a separate
+> define pr_warning for that directory tree and pr_warn is
+> not used in tools/.
+>
+> Done with 'sed s/\bpr_warning\b/pr_warn/' and some emacsing.
 
-I don't see any "future platforms" in the kernel right now, so, it's not
-for this cycle apparently.
+Sorry about asking if that has been asked already.
 
-Now, let me do a review.
+Wouldn't it be slightly less intrusive to simply redefined
+pr_warning() as a synonym for pr_warn()?
 
-> @@ -61,11 +62,11 @@
->  #define GCR_TELEM_DEEP_S0IX_OFFSET	0x1078
->  #define GCR_TELEM_SHLW_S0IX_OFFSET	0x1080
->  
-> -/* Residency with clock rate at 19.2MHz to usecs */
-> -#define S0IX_RESIDENCY_IN_USECS(d, s)		\
-> +/* Convert S0ix residency to usecs based on XTAL frequency */
-> +#define S0IX_RESIDENCY_IN_USECS(d, s, x)		\
->  ({						\
-> -	u64 result = 10ull * ((d) + (s));	\
-> -	do_div(result, 192);			\
-> +	u64 result = 1000ull * ((d) + (s));	\
-> +	do_div(result, x);			\
-
-You forgot parens.
-
->  	result;					\
->  })
->  
-> @@ -131,6 +132,7 @@
->  	resource_size_t gcr_base;
->  	int gcr_size;
->  	bool has_gcr_regs;
-> +	u32 xtal_khz;
-
-Reverse Xmas tree order.
-
->  
->  	/* punit */
->  	struct platform_device *punit_dev;
-> @@ -201,6 +203,18 @@ static inline u64 gcr_data_readq(u32 offset)
->  	return readq(ipcdev.ipc_base + offset);
->  }
->  
-> +static int get_xtal_clock_freq(void)
-> +{
-> +	switch (boot_cpu_data.x86_model) {
-> +	case INTEL_FAM6_ATOM_GOLDMONT:
-> +		ipcdev.xtal_khz = 19200;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-
-No. Use x86_match_id().
-
->  static int intel_pmc_ipc_check_status(void)
->  {
->  	int status;
-> @@ -787,7 +801,7 @@ int intel_pmc_s0ix_counter_read(u64 *data)
->  	deep = gcr_data_readq(GCR_TELEM_DEEP_S0IX_OFFSET);
->  	shlw = gcr_data_readq(GCR_TELEM_SHLW_S0IX_OFFSET);
->  
-> -	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
-> +	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw, ipcdev.xtal_khz);
-
-No.
-
-Please, as I said earlier, start investing time into cleaning up the
-stuff.
-
-1. No more "ipcdev." use.
-2. Split library part from scu_ipc and this driver to something like
-
-intel_ipc_lib.c
- 
->  	return 0;
->  }
-> @@ -835,6 +849,12 @@ static int ipc_plat_probe(struct platform_device
-> *pdev)
->  		goto err_irq;
->  	}
->  
-> +	ret = get_xtal_clock_freq();
-
-x86_match_id()
-
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to get XTAL freq\n");
-> +		goto err_sys;
-> +	}
-> +
->  	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create sysfs group
-> %d\n",
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Thanks,
+Rafael
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
