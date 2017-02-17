@@ -1,158 +1,71 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v3 4/7] platform/x86: dell-laptop: import dell_micmute_led_set() from drivers/leds/dell-led.c
-Date: Fri, 17 Feb 2017 08:57:50 +0100
-Message-ID: <20170217075753.12702-5-kernel@kempniu.pl>
-References: <20170217075753.12702-1-kernel@kempniu.pl>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add sysfs interface for
+ touchpad state
+Date: Fri, 17 Feb 2017 00:48:06 -0800
+Message-ID: <20170217084806.GA4397@dtor-ws>
+References: <20170214141612.16913-1-rrs@debian.org>
+ <20170217033301.GI6814@wisp>
+ <CAHp75VeUGMYpmth34OisQT54VhmkuDSFp=OAOu+c69L3GUZUmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170217075753.12702-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Alex Hung <alex.hung@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pg0-f68.google.com ([74.125.83.68]:33631 "EHLO
+        mail-pg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754199AbdBQIsJ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 17 Feb 2017 03:48:09 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeUGMYpmth34OisQT54VhmkuDSFp=OAOu+c69L3GUZUmg@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Ritesh Raj Sarraf <rrs@debian.org>, Rafael Wysocki <rjw@rjwysocki.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-To ensure all users of dell-smbios are in drivers/platform/x86, move the
-dell_micmute_led_set() method from drivers/leds/dell-led.c to
-drivers/platform/x86/dell-laptop.c.
+On Fri, Feb 17, 2017 at 09:39:20AM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 17, 2017 at 5:33 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Tue, Feb 14, 2017 at 07:46:12PM +0530, Ritesh Raj Sarraf wrote:
+> >> Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
+> >> 14 etc) has multiple modles that are a hybrid laptop, working in laptop
+> >> mode as well as tablet mode.
+> 
+> > That said, we need to make these systems usable, and as there appears not to be
+> > an accepted standard way of doing this, I don't object to the approach. However,
+> > you mentioned in the bug comments (#64) on 2/12:
+> >
+> >     "I have attached the final patch that I had proposed, but for whatever
+> >     reasons, the maintainer isn't convinced that that interface is needed."
+> >
+> > This is the only version of this patch I have seen.
+> 
+> This patch is actually a v2 that includes maintainers as I had asked
+> and additional paragraph to explain why we need such interface.
+> 
+> > Who objected to the patch?
+> 
+> I was trying to understand why /dev/input/eventX can not be used for a such.
+> 
+> > I would like to hear from Rafael and Dmitry, for their opinion on an ACPI or INPUT
+> > interface for indicating TABLET_MODE to userspace. Even if we accept this patch
+> > as is, we should be thinking about how to do this in a standard way.
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
-Tested-by: Alex Hung <alex.hung@canonical.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/leds/dell-led.c            | 29 -----------------------------
- drivers/platform/x86/dell-laptop.c | 28 ++++++++++++++++++++++++++++
- sound/pci/hda/dell_wmi_helper.c    |  6 +++---
- 3 files changed, 31 insertions(+), 32 deletions(-)
+Kernel should send EV_SW/SW_TABLET_MODE to communicate tablet mode to
+userspace; clients should be listening to these events.
 
-diff --git a/drivers/leds/dell-led.c b/drivers/leds/dell-led.c
-index f9002d9bb757..c9cc36a7c890 100644
---- a/drivers/leds/dell-led.c
-+++ b/drivers/leds/dell-led.c
-@@ -16,7 +16,6 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/dmi.h>
--#include <linux/dell-led.h>
- #include "../platform/x86/dell-smbios.h"
- 
- MODULE_AUTHOR("Louis Davis/Jim Dailey");
-@@ -43,34 +42,6 @@ MODULE_ALIAS("wmi:" DELL_LED_BIOS_GUID);
- #define CMD_LED_OFF	17
- #define CMD_LED_BLINK	18
- 
--#define GLOBAL_MIC_MUTE_ENABLE	0x364
--#define GLOBAL_MIC_MUTE_DISABLE	0x365
--
--int dell_micmute_led_set(int state)
--{
--	struct calling_interface_buffer *buffer;
--	struct calling_interface_token *token;
--
--	if (state == 0)
--		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE);
--	else if (state == 1)
--		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE);
--	else
--		return -EINVAL;
--
--	if (!token)
--		return -ENODEV;
--
--	buffer = dell_smbios_get_buffer();
--	buffer->input[0] = token->location;
--	buffer->input[1] = token->value;
--	dell_smbios_send_request(1, 0);
--	dell_smbios_release_buffer();
--
--	return state;
--}
--EXPORT_SYMBOL_GPL(dell_micmute_led_set);
--
- struct bios_args {
- 	unsigned char length;
- 	unsigned char result_code;
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 14392a01ab36..9e35205779c0 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -29,6 +29,7 @@
- #include <linux/mm.h>
- #include <linux/i8042.h>
- #include <linux/debugfs.h>
-+#include <linux/dell-led.h>
- #include <linux/seq_file.h>
- #include <acpi/video.h>
- #include "dell-rbtn.h"
-@@ -42,6 +43,8 @@
- #define KBD_LED_AUTO_50_TOKEN 0x02EB
- #define KBD_LED_AUTO_75_TOKEN 0x02EC
- #define KBD_LED_AUTO_100_TOKEN 0x02F6
-+#define GLOBAL_MIC_MUTE_ENABLE 0x0364
-+#define GLOBAL_MIC_MUTE_DISABLE 0x0365
- 
- struct quirk_entry {
- 	u8 touchpad_led;
-@@ -1972,6 +1975,31 @@ static void kbd_led_exit(void)
- 	led_classdev_unregister(&kbd_led);
- }
- 
-+int dell_micmute_led_set(int state)
-+{
-+	struct calling_interface_buffer *buffer;
-+	struct calling_interface_token *token;
-+
-+	if (state == 0)
-+		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE);
-+	else if (state == 1)
-+		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE);
-+	else
-+		return -EINVAL;
-+
-+	if (!token)
-+		return -ENODEV;
-+
-+	buffer = dell_smbios_get_buffer();
-+	buffer->input[0] = token->location;
-+	buffer->input[1] = token->value;
-+	dell_smbios_send_request(1, 0);
-+	dell_smbios_release_buffer();
-+
-+	return state;
-+}
-+EXPORT_SYMBOL_GPL(dell_micmute_led_set);
-+
- static int __init dell_init(void)
- {
- 	struct calling_interface_buffer *buffer;
-diff --git a/sound/pci/hda/dell_wmi_helper.c b/sound/pci/hda/dell_wmi_helper.c
-index 516237ad6ef5..7efa7bd7acb2 100644
---- a/sound/pci/hda/dell_wmi_helper.c
-+++ b/sound/pci/hda/dell_wmi_helper.c
-@@ -2,7 +2,7 @@
-  * to be included from codec driver
-  */
- 
--#if IS_ENABLED(CONFIG_LEDS_DELL_NETBOOKS)
-+#if IS_ENABLED(CONFIG_DELL_LAPTOP)
- #include <linux/dell-led.h>
- 
- static int dell_led_value;
-@@ -67,10 +67,10 @@ static void alc_fixup_dell_wmi(struct hda_codec *codec,
- 	}
- }
- 
--#else /* CONFIG_LEDS_DELL_NETBOOKS */
-+#else /* CONFIG_DELL_LAPTOP */
- static void alc_fixup_dell_wmi(struct hda_codec *codec,
- 			       const struct hda_fixup *fix, int action)
- {
- }
- 
--#endif /* CONFIG_LEDS_DELL_NETBOOKS */
-+#endif /* CONFIG_DELL_LAPTOP */
+It looks like the patch is trying to provide a way to disable the
+touchpad when transitioning in tablet mode. In ChromeOS we have a notion
+of "inhibiting" input devices, where userspace policy daemon tells the
+kernel that it is not interested in events from a given device and input
+core will suppress events from such device (and driver may optionally
+put device into low power mode, if it chooses to do so). But in this
+case the control seems to be totally outside of the input driver (which
+I suspect is PS/2 device), so the policy daemon would have to have
+specific knowledge of this new knob.
+
+BTW, I am not sure if this is actually reliable: if system goes to S3
+with lid open and user changes it into tablet form, nobody will tell the
+EC that touchpad should be ignored and it will wake up the tablet.
+
+Thanks.
+
 -- 
-2.11.1
+Dmitry
