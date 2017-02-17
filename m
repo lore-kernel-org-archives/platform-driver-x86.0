@@ -1,58 +1,68 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v8 3/7] platform/x86/thinkpad: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Thu, 16 Feb 2017 19:45:31 -0800
-Message-ID: <20170217034531.GB25241@wisp>
-References: <20170209154417.19040-1-hdegoede@redhat.com>
- <20170209154417.19040-4-hdegoede@redhat.com>
- <1486663705.1046615.875913456.7B8ADABA@webmail.messagingengine.com>
- <CAHp75Vdt4SNOuYTkxg_F+pSs3FY8zA9jdOWG+Cp8hzxS7vtsVQ@mail.gmail.com>
- <40d0f346-5090-ef01-4ee7-69b72458cfa2@redhat.com>
- <CAHp75VcFE6Jxnk8qBjPst4w9DP3KLNmxzg1ZSwzz5Qw9xhdmRg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: renames and cleanups
+Date: Thu, 16 Feb 2017 19:53:19 -0800
+Message-ID: <20170217035319.GC25241@wisp>
+References: <20170208134633.5152-1-kernel@kempniu.pl>
+ <20170210001616.GH1950@marvin.atrad.com.au>
+ <CAHp75VeedmO7yyFjfp3VwrqZa6BmE06Xq1oxdugaYn=YEP2Aww@mail.gmail.com>
+ <20170217025708.GH6814@wisp>
+ <20170217030804.GT30026@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcFE6Jxnk8qBjPst4w9DP3KLNmxzg1ZSwzz5Qw9xhdmRg@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-leds@vger.kernel.org
+In-Reply-To: <20170217030804.GT30026@marvin.atrad.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 14, 2017 at 11:33:49AM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 14, 2017 at 11:25 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> > On 13-02-17 23:52, Andy Shevchenko wrote:
-> >> On Thu, Feb 9, 2017 at 8:08 PM, Henrique de Moraes Holschuh
-> >> <hmh@hmh.eng.br> wrote:
-> >>> On Thu, Feb 9, 2017, at 13:44, Hans de Goede wrote:
+On Fri, Feb 17, 2017 at 01:38:04PM +1030, Jonathan Woithe wrote:
+> On Thu, Feb 16, 2017 at 06:57:08PM -0800, Darren Hart wrote:
+> > On Fri, Feb 10, 2017 at 02:42:00AM +0200, Andy Shevchenko wrote:
+> > > On Fri, Feb 10, 2017 at 2:16 AM, Jonathan Woithe <jwoithe@just42.net> wrote:
+> > > > On Wed, Feb 08, 2017 at 02:46:23PM +0100, Micha?? K??pie?? wrote:
+> > > 
+> > > > In summary, I see no issues with this patch series which provides a much
+> > > > needed clean up of the code and naming conventions within the fujitsu-laptop
+> > > > driver.  I'm happy for this series (patches 1-10/10) to be applied.
+> > > >
+> > > > Signed-off-by: Jonathan Woithe <jwoithe@just42.net>
+> > > 
+> > > I have noticed people start using SoB for the code they are
+> > > maintaining w/o sending any pull requests.
+> > > It is okay, but there is, as Wolfram pointed, a downside for patchwork
+> > > users. Patchwork is tracking tags (A/R/T) which by a glance allows to
+> > > see what patches are acked/reviewed/tested.
+> > 
+> > Signed-off-by tracks the path the code takes from author to mainline. If you are
+> > not the author or committing it to a tree followed by a pull-request, the
+> > correct tag is "Reviewed-by".
 > 
-> >>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> 
-> >> Thanks, thinkpad_acpi bits are applied to testing
-> 
-> > Thank you, so the Dell bits are waiting for Pali's ack ?
-> > Note the Dell bits have been tested on actual hardware too.
-> 
-> This cycle shows a flaw in my understanding of process. I've
-> mistakenly pushed couple of patches without maintainers' review. So, I
-> guess from now on we highly recommend to have a tag from actual
-> maintainer before we are going to proceed.
-> 
-> Darren, if you think this is too strong, what would be better approach?
+> Yes, of course - I clearly had a brain fade back there.  Having said that, 
+> in the past I've used "Acked-by" intead of "Reviewed-by".
 
-What I've discussed with the various driver maintainers is they should reply
-within a week, and after that, I (now Andy and/or I) will make the decision.
+:-)
 
-I try to stick to this especially for functional changes. For DMI matches and
-new HIDs and other trivial things, I usually just queue to testing and ask the
-maintainer if they have any objections, and take silence for accent :)
+> Do you want me to continue to use Acked-by, or should I switch to
+> Reviewed-by?
 
-I do think there is value in getting the patch into testing as soon as possible,
-even while waiting for the driver maintainer to get to it. The risk would be
-accidentally committing a patch a maintainer objects to. I don't think this has
-happened yet as an email from the maintainer can trigger dropping the patch. We
-can discuss how to manage the corner cases offline.
+These tags do have different meanings, and have come up at Kernel Summit the
+last couple of years. My interpretation of those discussions is:
+
+Acked-by: I have no objection to this patch, but I didn't really give it a
+thorough review. I trust your judgement. e.g. minor change to your driver to
+support a subsystem API change. These are of very little value.
+
+Reviewed-by: I have carefully reviewed this patch and would like it to be
+applied. This should usually come with some sort of commentary describing the
+level of review or an area you focused on. This is what we would like to see
+from all of our driver maintainers. These are high value.
+
+Linus *really* dislikes one line acked by's, and only *slightly* more so than
+one line reviewed by's. :-)
+
+Thanks!
 
 -- 
 Darren Hart
