@@ -1,60 +1,114 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to
-	pr_warn
-Date: Fri, 17 Feb 2017 13:37:33 +0100
-Message-ID: <CAMuHMdWsG0DboaLqXag53Vejwvc5PPY2k2gy9PSdHWbNEx6nRQ@mail.gmail.com>
-References: <cover.1487314666.git.joe@perches.com>
-	<CAJZ5v0gNcGtnXpE1n6LSq7ey+UDKx+oQfmTg0_PgFwzB0Dd_5A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <CAJZ5v0gNcGtnXpE1n6LSq7ey+UDKx+oQfmTg0_PgFwzB0Dd_5A@mail.gmail.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, nouveau@lists.freedesktop.org, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, virtualization@lists.linux-foundation.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, sparclinux <sparclinux@vger.kernel.org>, Lars Ellenberg <drbd-dev@lists.linbit.com>, "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>, Richard Weinberger <richard@nod.at>, sfi-devel@simplefirmware.org, amd-gfx@lists.freedesktop.org, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, tboot-devel@lists.sourceforge.net, oprofil
-List-Id: platform-driver-x86.vger.kernel.org
+From: Ritesh Raj Sarraf <rrs@debian.org>
+Subject: [PATCH v3] Add sysfs interface for touchpad state
+Date: Fri, 17 Feb 2017 20:18:15 +0530
+Message-ID: <20170217144815.11791-1-rrs@debian.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:35595 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933963AbdBQOsZ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 17 Feb 2017 09:48:25 -0500
+Received: by mail-pf0-f196.google.com with SMTP id 68so4253949pfx.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Feb 2017 06:48:24 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, Ritesh Raj Sarraf <rrs@debian.org>
 
-Hi Rafael,
+Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
+14 etc) has multiple modles that are a hybrid laptop, working in laptop
+mode as well as tablet mode.
 
-On Fri, Feb 17, 2017 at 1:27 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Fri, Feb 17, 2017 at 8:11 AM, Joe Perches <joe@perches.com> wrote:
->> There are ~4300 uses of pr_warn and ~250 uses of the older
->> pr_warning in the kernel source tree.
->>
->> Make the use of pr_warn consistent across all kernel files.
->>
->> This excludes all files in tools/ as there is a separate
->> define pr_warning for that directory tree and pr_warn is
->> not used in tools/.
->>
->> Done with 'sed s/\bpr_warning\b/pr_warn/' and some emacsing.
->
-> Sorry about asking if that has been asked already.
->
-> Wouldn't it be slightly less intrusive to simply redefined
-> pr_warning() as a synonym for pr_warn()?
+Currently, there is no easy interface to determine the touchpad status,
+which in case of the Yoga family of machines, can also be useful to
+assume tablet mode status.
+Note: The ideapad-laptop driver does not provide a SW_TABLET_MODE either
 
-That's already the case.
+For a detailed discussion  on why we want either of the interfaces,
+please see:
+https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
 
-This series cleans up the cruft, so we can catch all users with
-"git grep -w pr_warn".
+This patch adds a sysfs interface for read/write access under:
+/sys/bus/platform/devices/VPC2004\:00/touchpad_mode
 
-Gr{oetje,eeting}s,
+v3:
+Include Darren Hart's comments
+Changed sysfs inteface from "touchpad_mode" to "touchpad"
 
-                        Geert
+v2:
+Include Andy Shevchenko's comments
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Signed-off-by: Ritesh Raj Sarraf <rrs@debian.org>
+---
+ .../ABI/testing/sysfs-platform-ideapad-laptop      |  8 +++++
+ drivers/platform/x86/ideapad-laptop.c              | 36 ++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+index b31e782bd985..5d24f1e8e6ef 100644
+--- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
++++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+@@ -17,3 +17,11 @@ Description:
+ 			* 2 -> Dust Cleaning
+ 			* 4 -> Efficient Thermal Dissipation Mode
+ 
++What:		/sys/devices/platform/ideapad/touchpad
++Date:		Feb 2017
++KernelVersion:	4.11
++Contact:	"Ritesh Raj Sarraf <rrs@debian.org>"
++Description:
++		Control touchpad mode.
++			* 1 -> Switched On
++			* 0 -> Switched Off
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index f46ece2ce3c4..aff1a561c9ec 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -423,9 +423,45 @@ static ssize_t store_ideapad_fan(struct device *dev,
+ 
+ static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
+ 
++
++static ssize_t touchpad_show(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++	unsigned long result;
++
++	if (read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result))
++		return sprintf(buf, "-1\n");
++	return sprintf(buf, "%lu\n", result);
++}
++
++static ssize_t touchpad_store(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++	int ret, state;
++
++	ret = kstrtoint(buf, 0, &state);
++	if (ret)
++		return ret;
++
++	if (state != 0 && state != 1)
++		return -EINVAL;
++
++	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
++	if (ret < 0)
++		return -EIO;
++	return count;
++}
++
++static DEVICE_ATTR_RW(touchpad);
++
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
+ 	&dev_attr_fan_mode.attr,
++	&dev_attr_touchpad.attr,
+ 	NULL
+ };
+ 
+-- 
+2.11.0
