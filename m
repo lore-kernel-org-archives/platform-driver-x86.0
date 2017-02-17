@@ -1,77 +1,106 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Fri, 17 Feb 2017 14:49:00 +0530
-Message-ID: <1487323140.6980.20.camel@debian.org>
-References: <20170214141612.16913-1-rrs@debian.org>
-         <20170217033301.GI6814@wisp>
-         <CAHp75VeUGMYpmth34OisQT54VhmkuDSFp=OAOu+c69L3GUZUmg@mail.gmail.com>
-         <20170217084806.GA4397@dtor-ws>
-Reply-To: rrs@debian.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: [PATCH] platform/x86: intel_pmc_ipc: Use XTAL freq based on cpuid
+Date: Fri, 17 Feb 2017 14:53:54 +0530
+Message-ID: <1487323434-8553-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170217084806.GA4397@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+This patch uses crystal frequency based on the cpu model.
 
-Hello Dmitry,
+On Apollo Lake SoC we have 19.2 MHz clock frequency for counting S0ix
+residency but this clock frequency might change on future platforms
+depending on the crystal oscillator.
 
-On Fri, 2017-02-17 at 00:48 -0800, Dmitry Torokhov wrote:
-> It looks like the patch is trying to provide a way to disable the
-> touchpad when transitioning in tablet mode. 
+Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+---
+Note:
+This patch depends on the following:
+ * platform/x86: intel_pmc_ipc: read s0ix residency API
+ * platform/x86: intel_pmc_ipc: Add APL PMC PCI Id
 
-The keyboard/touchpad get disabled, by hardware, when flipped to tablet mode.
-Since currently, the driver has no way to expose a tablet-mode interface, we
-relied on this behavior, for the Lenovo Yoga device types.
+ drivers/platform/x86/intel_pmc_ipc.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-> In ChromeOS we have a notion
-> of "inhibiting" input devices, where userspace policy daemon tells the
-> kernel that it is not interested in events from a given device and input
-> core will suppress events from such device (and driver may optionally
-> put device into low power mode, if it chooses to do so). But in this
-> case the control seems to be totally outside of the input driver (which
-> I suspect is PS/2 device), so the policy daemon would have to have
-> specific knowledge of this new knob.
-> 
-> BTW, I am not sure if this is actually reliable: if system goes to S3
-> with lid open and user changes it into tablet form, nobody will tell the
-> EC that touchpad should be ignored and it will wake up the tablet.
-
-I am not sure what you mean here. But:
-
-root@learner:/sys/bus/platform/devices/VPC2004:00# When in normal mode^C
-root@learner:/sys/bus/platform/devices/VPC2004:00# cat touchpad_mode 
-1
-
-S3 Suspend here. THen flip hw to tablet mode. Now, hit power btn to Resume.
-
-root@learner:/sys/bus/platform/devices/VPC2004:00# Now in tablet mode^C
-root@learner:/sys/bus/platform/devices/VPC2004:00# cat touchpad_mode 
-0
-
-- -- 
-Ritesh Raj Sarraf | http://people.debian.org/~rrs
-Debian - The Universal Operating System
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAlimwAQACgkQpjpYo/Lh
-dWkzIw/+NMiQ4A/OplUP/g6mTfba5zyuN0g9Or6RwzXyPrFsWbPAN4E6pcNIM1OT
-oy8RAnrqdSQymVH5atbR/ysPwlzG19+LWB4FVlVdkDMKkVonAHmUX+mL9+KFa7E5
-+RmpS9Hzc6cLv1kpKMUeLD7j9U3I4NkUEsxDZwLk916KE6fCthGsmbn1gGADv3oT
-/lErDW7MLaImR67cmHmRhfhIotQPokcn3OVT/Eb7K8UjvXQLlWnDxMdxlQ7xDTua
-aJ3c/lB+FQytwp/JBSbNpzspNcCX5mmkh6PERXhxLJzL1CpCz3qnwKwKyeoGFcjv
-goj+CTZNsnGqaBuZThNI2vVWJRHqGCX2qp3IyWrSzNa6j5SfMTlgr0a/WsI7rpiY
-4+81OXoeCVcr+ZGO4wtsvR1WDWvXqb+0bWYByNu85L/Rj9KWzxfh1mbtahG6odi8
-bp7/+1cy55+d4XnX2/QHgkXdSCelBPtwH+aJUBp5av1N6t88+Dat8p3EyK30Cyp/
-XfdglsfKWvmJX+hLBgR75ejy3cvr5iBIuExuULZNd8qrj+4dYDt4cYQB/MnttLt4
-HZ1c/qSjMTDPdMBb4s3C844Pgk6QsKHJwLEl2zTN8HqNTMdwHBktyFPEzsRqV6Wn
-Kea6z4lFUwS17LCaq/bhCwvYcFJm2XSimtXWj1a50YdwEgAiT5o=
-=nuhe
------END PGP SIGNATURE-----
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 6b6bdf1..557f017 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -34,6 +34,7 @@
+ #include <linux/acpi.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ 
++#include <asm/intel-family.h>
+ #include <asm/intel_pmc_ipc.h>
+ 
+ #include <linux/platform_data/itco_wdt.h>
+@@ -61,11 +62,11 @@
+ #define GCR_TELEM_DEEP_S0IX_OFFSET	0x1078
+ #define GCR_TELEM_SHLW_S0IX_OFFSET	0x1080
+ 
+-/* Residency with clock rate at 19.2MHz to usecs */
+-#define S0IX_RESIDENCY_IN_USECS(d, s)		\
++/* Convert S0ix residency to usecs based on XTAL frequency */
++#define S0IX_RESIDENCY_IN_USECS(d, s, x)		\
+ ({						\
+-	u64 result = 10ull * ((d) + (s));	\
+-	do_div(result, 192);			\
++	u64 result = 1000ull * ((d) + (s));	\
++	do_div(result, x);			\
+ 	result;					\
+ })
+ 
+@@ -131,6 +132,7 @@
+ 	resource_size_t gcr_base;
+ 	int gcr_size;
+ 	bool has_gcr_regs;
++	u32 xtal_khz;
+ 
+ 	/* punit */
+ 	struct platform_device *punit_dev;
+@@ -201,6 +203,18 @@ static inline u64 gcr_data_readq(u32 offset)
+ 	return readq(ipcdev.ipc_base + offset);
+ }
+ 
++static int get_xtal_clock_freq(void)
++{
++	switch (boot_cpu_data.x86_model) {
++	case INTEL_FAM6_ATOM_GOLDMONT:
++		ipcdev.xtal_khz = 19200;
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
+ static int intel_pmc_ipc_check_status(void)
+ {
+ 	int status;
+@@ -787,7 +801,7 @@ int intel_pmc_s0ix_counter_read(u64 *data)
+ 	deep = gcr_data_readq(GCR_TELEM_DEEP_S0IX_OFFSET);
+ 	shlw = gcr_data_readq(GCR_TELEM_SHLW_S0IX_OFFSET);
+ 
+-	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
++	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw, ipcdev.xtal_khz);
+ 
+ 	return 0;
+ }
+@@ -835,6 +849,12 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 		goto err_irq;
+ 	}
+ 
++	ret = get_xtal_clock_freq();
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to get XTAL freq\n");
++		goto err_sys;
++	}
++
+ 	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
+-- 
+1.9.1
