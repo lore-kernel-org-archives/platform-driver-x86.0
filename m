@@ -1,119 +1,107 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 27/35] drivers/platform: Convert remaining uses of
- pr_warning to pr_warn
-Date: Fri, 17 Feb 2017 09:45:08 +0200
-Message-ID: <CAHp75VeytUj9AQz0ROPvQ+VqzmbnEw2PeAY6Zqkxav+c9AZO6w@mail.gmail.com>
-References: <cover.1487314666.git.joe@perches.com> <1368dcea67d973983430fd8e328d1da7658dbb0f.1487314667.git.joe@perches.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v3 0/7] Move dell-led to drivers/platform/x86
+Date: Fri, 17 Feb 2017 08:57:46 +0100
+Message-ID: <20170217075753.12702-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:33203 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755628AbdBQHpK (ORCPT
+Received: from mail-lf0-f65.google.com ([209.85.215.65]:34081 "EHLO
+        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753622AbdBQH6D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Feb 2017 02:45:10 -0500
-In-Reply-To: <1368dcea67d973983430fd8e328d1da7658dbb0f.1487314667.git.joe@perches.com>
+        Fri, 17 Feb 2017 02:58:03 -0500
+Received: by mail-lf0-f65.google.com with SMTP id q89so3183963lfi.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Feb 2017 23:58:02 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Alex Hung <alex.hung@canonical.com>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 9:11 AM, Joe Perches <joe@perches.com> wrote:
-> To enable eventual removal of pr_warning
->
-> This makes pr_warn use consistent for drivers/platform
->
-> Prior to this patch, there were 7 uses of pr_warning and
-> 108 uses of pr_warn in drivers/platform
+This patch series moves the dell-led driver from the LED subsystem to
+the x86 platform driver subsystem.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+The original motivation behind this effort was to move all code using
+the dell-smbios module to the x86 platform driver subsystem.  While I
+was investigating the possibilities to do that, it quickly emerged that
+dell-led can and in fact should be moved to the x86 platform driver
+subsystem in its entirety.
 
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/platform/x86/asus-laptop.c    |  2 +-
->  drivers/platform/x86/eeepc-laptop.c   |  2 +-
->  drivers/platform/x86/intel_oaktrail.c | 10 +++++-----
->  3 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-> index 28551f5a2e07..7f248f84f49a 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -1163,7 +1163,7 @@ static void asus_als_switch(struct asus_laptop *asus, int value)
->                 ret = write_acpi_int(asus->handle, METHOD_ALS_CONTROL, value);
->         }
->         if (ret)
-> -               pr_warning("Error setting light sensor switch\n");
-> +               pr_warn("Error setting light sensor switch\n");
->
->         asus->light_switch = value;
->  }
-> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index 8cdf315f9730..09f93eb49230 100644
-> --- a/drivers/platform/x86/eeepc-laptop.c
-> +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -585,7 +585,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
->
->         port = acpi_get_pci_dev(handle);
->         if (!port) {
-> -               pr_warning("Unable to find port\n");
-> +               pr_warn("Unable to find port\n");
->                 goto out_unlock;
->         }
->
-> diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
-> index 6aa33c4a809f..133b2f04643d 100644
-> --- a/drivers/platform/x86/intel_oaktrail.c
-> +++ b/drivers/platform/x86/intel_oaktrail.c
-> @@ -257,7 +257,7 @@ static int oaktrail_backlight_init(void)
->
->         if (IS_ERR(bd)) {
->                 oaktrail_bl_device = NULL;
-> -               pr_warning("Unable to register backlight device\n");
-> +               pr_warn("Unable to register backlight device\n");
->                 return PTR_ERR(bd);
->         }
->
-> @@ -327,20 +327,20 @@ static int __init oaktrail_init(void)
->
->         ret = platform_driver_register(&oaktrail_driver);
->         if (ret) {
-> -               pr_warning("Unable to register platform driver\n");
-> +               pr_warn("Unable to register platform driver\n");
->                 goto err_driver_reg;
->         }
->
->         oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
->         if (!oaktrail_device) {
-> -               pr_warning("Unable to allocate platform device\n");
-> +               pr_warn("Unable to allocate platform device\n");
->                 ret = -ENOMEM;
->                 goto err_device_alloc;
->         }
->
->         ret = platform_device_add(oaktrail_device);
->         if (ret) {
-> -               pr_warning("Unable to add platform device\n");
-> +               pr_warn("Unable to add platform device\n");
->                 goto err_device_add;
->         }
->
-> @@ -352,7 +352,7 @@ static int __init oaktrail_init(void)
->
->         ret = oaktrail_rfkill_init();
->         if (ret) {
-> -               pr_warning("Setup rfkill failed\n");
-> +               pr_warn("Setup rfkill failed\n");
->                 goto err_rfkill;
->         }
->
-> --
-> 2.10.0.rc2.1.g053435c
->
+dell-led consists of two major parts:
 
+  - the part exposing a microphone mute LED interface, introduced in
+    db6d8cc00773 ("dell-led: add mic mute led interface"); this
+    interface is used by sound/pci/hda/dell_wmi_helper.c; while the
+    original implementation used a WMI interface, it was changed to use
+    dell-smbios in cf0d7ea33596 ("dell-led: use dell_smbios_find_token()
+    for finding mic DMI tokens") and 0c41a08e131d ("dell-led: use
+    dell_smbios_send_request() for performing SMBIOS calls"),
 
+  - the part handling an activity LED present in Dell Latitude 2100
+    netbooks, introduced in 72dcd8d08aca ("leds: Add Dell Business Class
+    Netbook LED driver"); it binds to a specific WMI GUID and then
+    registers a LED device which is controlled using WMI (i.e. it is
+    essentially a WMI driver).
+
+Patches 1 and 2 clean up the microphone mute LED interface to minimize
+the amount of code moved around.
+
+Patch 3 updates a variable name in sound/pci/hda/dell_wmi_helper.c so
+that it better matches that variable's role.
+
+Patch 4 moves the microphone mute LED interface to
+drivers/platform/x86/dell-laptop.c, effectively causing
+sound/pci/hda/dell_wmi_helper.c to depend on CONFIG_DELL_LAPTOP instead
+of CONFIG_LEDS_DELL_NETBOOKS.
+
+Patch 5 reverts dell-led to the state it was in after its initial commit
+72dcd8d08aca ("leds: Add Dell Business Class Netbook LED driver") by
+removing all remnants of the microphone mute LED handling code.
+
+Patch 6 moves all that is left of dell-led (i.e. the activity LED part,
+as originally implemented), to a new module which is placed in
+drivers/platform/x86/dell-wmi-led.c.
+
+Patch 7 fixes coding style issues in drivers/platform/x86/dell-wmi-led.c
+to make sure it gets a clean start in the x86 platform driver subsystem.
+
+As all patches except patch 3 in this series affect the LED subsystem,
+the series is based on linux-leds/for-next.
+
+Changes from v2:
+
+  - Add patch 7 fixing coding style issues (feedback from Joe and Andy
+    taken into account).
+
+  - Add leading zero to constants in patch 4.
+
+  - Move dell-led.h include one line higher in patch 4.
+
+Changes from v1:
+
+  - Squash patches 2-4 from v1 into a single patch (#2 in v2).
+
+  - Add patch 3.
+
+  - Fix subject pattern in patch 4.
+
+  - Slight commit message adjustments, including fixing a typo
+    ("COFIG_LEDS_DELL_NETBOOKS") in patch 6.
+
+  - Remove the name of the module's source file from the header comment
+    in drivers/platform/x86/dell-wmi-led.c to avoid the need to update
+    it in the future.
+
+ drivers/leds/Kconfig                               |   9 --
+ drivers/leds/Makefile                              |   1 -
+ drivers/platform/x86/Kconfig                       |   8 ++
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/dell-laptop.c                 |  28 ++++
+ .../dell-led.c => platform/x86/dell-wmi-led.c}     | 141 +++++----------------
+ include/linux/dell-led.h                           |   6 +-
+ sound/pci/hda/dell_wmi_helper.c                    |  30 ++---
+ 8 files changed, 86 insertions(+), 138 deletions(-)
+ rename drivers/{leds/dell-led.c => platform/x86/dell-wmi-led.c} (56%)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.1
