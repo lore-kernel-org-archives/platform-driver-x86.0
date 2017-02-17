@@ -1,115 +1,76 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for touchpad state
-Date: Sat, 18 Feb 2017 00:17:56 +0530
-Message-ID: <20170217184756.15181-1-rrs@debian.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add sysfs interface for
+ touchpad state
+Date: Fri, 17 Feb 2017 11:52:37 -0800
+Message-ID: <20170217195237.GD13050@dtor-ws>
+References: <20170214141612.16913-1-rrs@debian.org>
+ <20170217033301.GI6814@wisp>
+ <CAHp75VeUGMYpmth34OisQT54VhmkuDSFp=OAOu+c69L3GUZUmg@mail.gmail.com>
+ <20170217084806.GA4397@dtor-ws>
+ <1487323140.6980.20.camel@debian.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194]:36248 "EHLO
-        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755809AbdBQSzO (ORCPT
+Received: from mail-pg0-f65.google.com ([74.125.83.65]:34381 "EHLO
+        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932606AbdBQTwl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Feb 2017 13:55:14 -0500
-Received: by mail-pf0-f194.google.com with SMTP id 19so4614490pfo.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Feb 2017 10:55:13 -0800 (PST)
+        Fri, 17 Feb 2017 14:52:41 -0500
+Content-Disposition: inline
+In-Reply-To: <1487323140.6980.20.camel@debian.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, Ritesh Raj Sarraf <rrs@debian.org>
+To: Ritesh Raj Sarraf <rrs@debian.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
-14 etc) has multiple modles that are a hybrid laptop, working in laptop
-mode as well as tablet mode.
+On Fri, Feb 17, 2017 at 02:49:00PM +0530, Ritesh Raj Sarraf wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA512
+> 
+> Hello Dmitry,
+> 
+> On Fri, 2017-02-17 at 00:48 -0800, Dmitry Torokhov wrote:
+> > It looks like the patch is trying to provide a way to disable the
+> > touchpad when transitioning in tablet mode. 
+> 
+> The keyboard/touchpad get disabled, by hardware, when flipped to tablet mode.
+> Since currently, the driver has no way to expose a tablet-mode interface, we
+> relied on this behavior, for the Lenovo Yoga device types.
+> 
+> > In ChromeOS we have a notion
+> > of "inhibiting" input devices, where userspace policy daemon tells the
+> > kernel that it is not interested in events from a given device and input
+> > core will suppress events from such device (and driver may optionally
+> > put device into low power mode, if it chooses to do so). But in this
+> > case the control seems to be totally outside of the input driver (which
+> > I suspect is PS/2 device), so the policy daemon would have to have
+> > specific knowledge of this new knob.
+> > 
+> > BTW, I am not sure if this is actually reliable: if system goes to S3
+> > with lid open and user changes it into tablet form, nobody will tell the
+> > EC that touchpad should be ignored and it will wake up the tablet.
+> 
+> I am not sure what you mean here. But:
+> 
+> root@learner:/sys/bus/platform/devices/VPC2004:00# When in normal mode^C
+> root@learner:/sys/bus/platform/devices/VPC2004:00# cat touchpad_mode 
+> 1
+> 
+> S3 Suspend here. THen flip hw to tablet mode. Now, hit power btn to Resume.
+> 
+> root@learner:/sys/bus/platform/devices/VPC2004:00# Now in tablet mode^C
+> root@learner:/sys/bus/platform/devices/VPC2004:00# cat touchpad_mode 
+> 0
 
-Currently, there is no easy interface to determine the touchpad status,
-which in case of the Yoga family of machines, can also be useful to
-assume tablet mode status.
-Note: The ideapad-laptop driver does not provide a SW_TABLET_MODE either
+OK, if firmware disables the touchpad automatically, then it is fine.
 
-For a detailed discussion  on why we want either of the interfaces,
-please see:
-https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
+I am wondering about the utility of the new interface though. Are there
+already major users of it? If there are no users, then there is no point
+in adding it, it will stay there unused and forgotten by anyone.
+Teaching ideapad to emit SW_TABLET_MODE is more useful IMO.
 
-This patch adds a sysfs interface for read/write access under:
-/sys/bus/platform/devices/VPC2004\:00/touchpad_mode
+Thanks.
 
-v4:
-Use kstrtobool because supported values are boolean
-
-v3:
-Include Darren Hart's comments
-Changed sysfs inteface from "touchpad_mode" to "touchpad"
-
-v2:
-Include Andy Shevchenko's comments
-
-Signed-off-by: Ritesh Raj Sarraf <rrs@debian.org>
----
- .../ABI/testing/sysfs-platform-ideapad-laptop      |  8 +++++
- drivers/platform/x86/ideapad-laptop.c              | 34 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-index b31e782bd985..5d24f1e8e6ef 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -17,3 +17,11 @@ Description:
- 			* 2 -> Dust Cleaning
- 			* 4 -> Efficient Thermal Dissipation Mode
- 
-+What:		/sys/devices/platform/ideapad/touchpad
-+Date:		Feb 2017
-+KernelVersion:	4.11
-+Contact:	"Ritesh Raj Sarraf <rrs@debian.org>"
-+Description:
-+		Control touchpad mode.
-+			* 1 -> Switched On
-+			* 0 -> Switched Off
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index f46ece2ce3c4..b35954707e11 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -423,9 +423,43 @@ static ssize_t store_ideapad_fan(struct device *dev,
- 
- static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
- 
-+
-+static ssize_t touchpad_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	unsigned long result;
-+
-+	if (read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result))
-+		return sprintf(buf, "-1\n");
-+	return sprintf(buf, "%lu\n", result);
-+}
-+
-+static ssize_t touchpad_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	int ret;
-+	bool state;
-+
-+	ret = kstrtobool(buf, &state);
-+	if (ret)
-+		return ret;
-+
-+	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
-+	if (ret < 0)
-+		return -EIO;
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(touchpad);
-+
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
- 	&dev_attr_fan_mode.attr,
-+	&dev_attr_touchpad.attr,
- 	NULL
- };
- 
 -- 
-2.11.0
+Dmitry
