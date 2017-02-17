@@ -1,61 +1,118 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Fri, 17 Feb 2017 09:39:20 +0200
-Message-ID: <CAHp75VeUGMYpmth34OisQT54VhmkuDSFp=OAOu+c69L3GUZUmg@mail.gmail.com>
-References: <20170214141612.16913-1-rrs@debian.org> <20170217033301.GI6814@wisp>
+Subject: Re: [PATCH 27/35] drivers/platform: Convert remaining uses of
+ pr_warning to pr_warn
+Date: Fri, 17 Feb 2017 09:45:08 +0200
+Message-ID: <CAHp75VeytUj9AQz0ROPvQ+VqzmbnEw2PeAY6Zqkxav+c9AZO6w@mail.gmail.com>
+References: <cover.1487314666.git.joe@perches.com> <1368dcea67d973983430fd8e328d1da7658dbb0f.1487314667.git.joe@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f196.google.com ([209.85.220.196]:35397 "EHLO
-        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751579AbdBQHjV (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:33203 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755628AbdBQHpK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Feb 2017 02:39:21 -0500
-In-Reply-To: <20170217033301.GI6814@wisp>
+        Fri, 17 Feb 2017 02:45:10 -0500
+In-Reply-To: <1368dcea67d973983430fd8e328d1da7658dbb0f.1487314667.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Ritesh Raj Sarraf <rrs@debian.org>, Rafael Wysocki <rjw@rjwysocki.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, Feb 17, 2017 at 5:33 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, Feb 14, 2017 at 07:46:12PM +0530, Ritesh Raj Sarraf wrote:
->> Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
->> 14 etc) has multiple modles that are a hybrid laptop, working in laptop
->> mode as well as tablet mode.
-
-> That said, we need to make these systems usable, and as there appears not to be
-> an accepted standard way of doing this, I don't object to the approach. However,
-> you mentioned in the bug comments (#64) on 2/12:
+On Fri, Feb 17, 2017 at 9:11 AM, Joe Perches <joe@perches.com> wrote:
+> To enable eventual removal of pr_warning
 >
->     "I have attached the final patch that I had proposed, but for whatever
->     reasons, the maintainer isn't convinced that that interface is needed."
+> This makes pr_warn use consistent for drivers/platform
 >
-> This is the only version of this patch I have seen.
+> Prior to this patch, there were 7 uses of pr_warning and
+> 108 uses of pr_warn in drivers/platform
 
-This patch is actually a v2 that includes maintainers as I had asked
-and additional paragraph to explain why we need such interface.
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> Who objected to the patch?
-
-I was trying to understand why /dev/input/eventX can not be used for a such.
-
-> I would like to hear from Rafael and Dmitry, for their opinion on an ACPI or INPUT
-> interface for indicating TABLET_MODE to userspace. Even if we accept this patch
-> as is, we should be thinking about how to do this in a standard way.
-
-Good point!
-
->> +
->> +     if (!count)
->> +             return 0;
->> +     if (sscanf(buf, "%i", &state) != 1)
->> +             return -EINVAL;
 >
-> Please use kstrtoint, and no need to check for count as this function won't get
-> called if it is 0.
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/platform/x86/asus-laptop.c    |  2 +-
+>  drivers/platform/x86/eeepc-laptop.c   |  2 +-
+>  drivers/platform/x86/intel_oaktrail.c | 10 +++++-----
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> index 28551f5a2e07..7f248f84f49a 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -1163,7 +1163,7 @@ static void asus_als_switch(struct asus_laptop *asus, int value)
+>                 ret = write_acpi_int(asus->handle, METHOD_ALS_CONTROL, value);
+>         }
+>         if (ret)
+> -               pr_warning("Error setting light sensor switch\n");
+> +               pr_warn("Error setting light sensor switch\n");
+>
+>         asus->light_switch = value;
+>  }
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index 8cdf315f9730..09f93eb49230 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -585,7 +585,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+>
+>         port = acpi_get_pci_dev(handle);
+>         if (!port) {
+> -               pr_warning("Unable to find port\n");
+> +               pr_warn("Unable to find port\n");
+>                 goto out_unlock;
+>         }
+>
+> diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
+> index 6aa33c4a809f..133b2f04643d 100644
+> --- a/drivers/platform/x86/intel_oaktrail.c
+> +++ b/drivers/platform/x86/intel_oaktrail.c
+> @@ -257,7 +257,7 @@ static int oaktrail_backlight_init(void)
+>
+>         if (IS_ERR(bd)) {
+>                 oaktrail_bl_device = NULL;
+> -               pr_warning("Unable to register backlight device\n");
+> +               pr_warn("Unable to register backlight device\n");
+>                 return PTR_ERR(bd);
+>         }
+>
+> @@ -327,20 +327,20 @@ static int __init oaktrail_init(void)
+>
+>         ret = platform_driver_register(&oaktrail_driver);
+>         if (ret) {
+> -               pr_warning("Unable to register platform driver\n");
+> +               pr_warn("Unable to register platform driver\n");
+>                 goto err_driver_reg;
+>         }
+>
+>         oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
+>         if (!oaktrail_device) {
+> -               pr_warning("Unable to allocate platform device\n");
+> +               pr_warn("Unable to allocate platform device\n");
+>                 ret = -ENOMEM;
+>                 goto err_device_alloc;
+>         }
+>
+>         ret = platform_device_add(oaktrail_device);
+>         if (ret) {
+> -               pr_warning("Unable to add platform device\n");
+> +               pr_warn("Unable to add platform device\n");
+>                 goto err_device_add;
+>         }
+>
+> @@ -352,7 +352,7 @@ static int __init oaktrail_init(void)
+>
+>         ret = oaktrail_rfkill_init();
+>         if (ret) {
+> -               pr_warning("Setup rfkill failed\n");
+> +               pr_warn("Setup rfkill failed\n");
+>                 goto err_rfkill;
+>         }
+>
+> --
+> 2.10.0.rc2.1.g053435c
+>
 
-I guess Ritesh followed existing style in the code.
+
 
 -- 
 With Best Regards,
