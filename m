@@ -1,126 +1,42 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH] platform: intel_turbo_max_3: make it explicitly
- non-modular
-Date: Mon, 20 Feb 2017 07:55:45 -0800
-Message-ID: <1487606145.2714.3.camel@linux.intel.com>
-References: <20170214003700.8978-1-paul.gortmaker@windriver.com>
-         <20170217033712.GA25241@wisp>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/4] gpio: make gpiod_count() API consistent
+Date: Mon, 20 Feb 2017 18:15:45 +0200
+Message-ID: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:12514 "EHLO mga02.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:32485 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752666AbdBTP4K (ORCPT
+        id S1751140AbdBTQPy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Feb 2017 10:56:10 -0500
-In-Reply-To: <20170217033712.GA25241@wisp>
+        Mon, 20 Feb 2017 11:15:54 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Thu, 2017-02-16 at 19:37 -0800, Darren Hart wrote:
-> On Mon, Feb 13, 2017 at 07:37:00PM -0500, Paul Gortmaker wrote:
-> > The Kconfig currently controlling compilation of this code is:
-> > 
-> > drivers/platform/x86/Kconfig:config INTEL_TURBO_MAX_3
-> > drivers/platform/x86/Kconfig:   bool "Intel Turbo Boost Max
-> > Technology 3.0 enumeration driver"
-> > 
-> > ...meaning that it currently is not being built as a module by
-> > anyone.
-> > 
-> > Lets remove the couple traces of modular infrastructure use, so
-> > that
-> > when reading the driver there is no doubt it is builtin-only.
-> > 
-> > Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
-> > 
-> > We also delete the MODULE_LICENSE tag etc. since all that
-> > information
-> > was (or is now) contained at the top of the file in the comments.
-> > 
-> > We do uncover some implicit includes during build coverage that
-> > were hidden behind the module.h which pulls in a lot of dependants.
-> > 
-> 
-> Paul, this all looks so very familiar... have we been through this
-> before? Maybe
-> for another driver...
-> 
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> 
-> Srinivas, any objections?
-This module can be loadable just by adding EXPORT_GPL to two scheduler
-function. I was hoping that someone will require those functions to be
-exported.
-But any way I have no objections in this case as this driver doesn't
-have to be loadable at all.
+There are three possibilities in gpiod_count(): ACPI, OF, and
+platform data.
 
-Thanks,
-Srinivas
+Some of them return 0, which requires to be handled separately, though
+developers rather lazy and just shadow an actual error code.
 
+Let's make this API consistent by not allowing 0 in returned value.
 
-> 
-> > Cc: platform-driver-x86@vger.kernel.org
-> > Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-> > ---
-> >  drivers/platform/x86/intel_turbo_max_3.c | 11 +++++------
-> >  1 file changed, 5 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel_turbo_max_3.c
-> > b/drivers/platform/x86/intel_turbo_max_3.c
-> > index 0103f5b32e34..4f60d8e32a0a 100644
-> > --- a/drivers/platform/x86/intel_turbo_max_3.c
-> > +++ b/drivers/platform/x86/intel_turbo_max_3.c
-> > @@ -3,6 +3,8 @@
-> >   * Copyright (c) 2017, Intel Corporation.
-> >   * All rights reserved.
-> >   *
-> > + * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.co
-> > m>
-> > + *
-> >   * This program is free software; you can redistribute it and/or
-> > modify it
-> >   * under the terms and conditions of the GNU General Public
-> > License,
-> >   * version 2, as published by the Free Software Foundation.
-> > @@ -16,7 +18,9 @@
-> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >  
-> >  #include <linux/kernel.h>
-> > -#include <linux/module.h>
-> > +#include <linux/init.h>
-> > +#include <linux/topology.h>
-> > +#include <linux/workqueue.h>
-> >  #include <linux/cpuhotplug.h>
-> >  #include <linux/cpufeature.h>
-> >  #include <asm/cpu_device_id.h>
-> > @@ -123,7 +127,6 @@ static const struct x86_cpu_id
-> > itmt_legacy_cpu_ids[] = {
-> >  	ICPU(INTEL_FAM6_BROADWELL_X),
-> >  	{}
-> >  };
-> > -MODULE_DEVICE_TABLE(x86cpu, itmt_legacy_cpu_ids);
-> >  
-> >  static int __init itmt_legacy_init(void)
-> >  {
-> > @@ -146,7 +149,3 @@ static int __init itmt_legacy_init(void)
-> >  	return 0;
-> >  }
-> >  late_initcall(itmt_legacy_init)
-> > -
-> > -MODULE_DESCRIPTION("Intel Turbo Boost Max 3.0 enumeration
-> > driver");
-> > -MODULE_AUTHOR("Srinivas Pandruvada <srinivas.pandruvada@linux.inte
-> > l.com>");
-> > -MODULE_LICENSE("GPL v2");
-> > -- 
-> > 2.11.0
-> > 
-> > 
-> 
-> 
+There are luckily only 3 users right now, one of them handles this
+properly, the rest is converted in this series.
+
+Series is supposed to go through GPIO tree.
+
+Andy Shevchenko (4):
+  gpio: acpi: Don't return 0 on acpi_gpio_count()
+  gpio: of: Don't return 0 on dt_gpio_count()
+  platform/x86: surface3_button: Propagate error from gpiod_count()
+  Input: soc_button_array - Propagate error from gpiod_count()
+
+ drivers/gpio/gpiolib-acpi.c            | 4 ++--
+ drivers/gpio/gpiolib.c                 | 4 ++--
+ drivers/input/misc/soc_button_array.c  | 5 +++--
+ drivers/platform/x86/surface3_button.c | 5 +++--
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+
+-- 
+2.11.0
