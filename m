@@ -1,149 +1,68 @@
-From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCHv2 2/2] platform/x86: asus-wmi: Remove quirk_no_rfkill
-Date: Mon, 20 Feb 2017 14:50:23 -0500
-Message-ID: <20170220195023.17775-3-jprvita@endlessm.com>
-References: <20170220195023.17775-1-jprvita@endlessm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2] clk: x86: add "mclk" alias for Baytrail/Cherrytrail
+Date: Mon, 20 Feb 2017 14:23:56 -0600
+Message-ID: <1487622236-16901-1-git-send-email-pierre-louis.bossart@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:36586 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751454AbdBTTuz (ORCPT
+Received: from mga02.intel.com ([134.134.136.20]:60555 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751249AbdBTUYh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Feb 2017 14:50:55 -0500
-In-Reply-To: <20170220195023.17775-1-jprvita@endlessm.com>
+        Mon, 20 Feb 2017 15:24:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+To: linux-clk@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+Cc: alsa-devel@alsa-project.org, Michael Turquette <mturquette@baylibre.com>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-With the detection introduced in the previou patche, we don't need these
-static DMI-based quirks anymore.
+Due to timing requirements, TI and Conexant manage the audio
+reference clock from their ASoC codec drivers using the "mclk"
+string. This patch adds another lookup for the "pmc_plt_clk_3"
+clock to avoid Intel-specific tests in those codec drivers and
+use code as-is.
 
-This reverts the following commits:
-56a37a72002b "asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UA"
-a961a285b479 "asus-wmi: Add quirk_no_rfkill_wapf4 for the Asus X456UF"
-6b7ff2af5286 "asus-wmi: Add quirk_no_rfkill for the Asus Z550MA"
-02db9ff7af18 "asus-wmi: Add quirk_no_rfkill for the Asus U303LB"
-2d735244b798 "asus-wmi: Add quirk_no_rfkill for the Asus N552VW"
-a977e59c0c67 "asus-wmi: Create quirk for airplane_mode LED"
+To avoid a leak, clk_add_alias() is not used in this patch.
+Instead the lookup is created manually as part of the .probe()
+step and dropped in the .remove() step.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+"pmc_plt_clk_3" is used exclusively for audio on all known
+Baytrail/CherryTrail designs and is e.g. routed on the MCLK
+(pin 26) of the MinnowBoardMAX Turbot LSE connector.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 49 ++------------------------------------
- drivers/platform/x86/asus-wmi.c    |  5 +---
- drivers/platform/x86/asus-wmi.h    |  1 -
- 3 files changed, 3 insertions(+), 52 deletions(-)
+ drivers/clk/x86/clk-pmc-atom.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 5be4783e40d4..dea98ffb6f60 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -103,15 +103,6 @@ static struct quirk_entry quirk_asus_x200ca = {
- 	.wapf = 2,
+diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
+index 2b60577..fafc991 100644
+--- a/drivers/clk/x86/clk-pmc-atom.c
++++ b/drivers/clk/x86/clk-pmc-atom.c
+@@ -54,6 +54,7 @@ struct clk_plt_data {
+ 	struct clk_plt_fixed **parents;
+ 	u8 nparents;
+ 	struct clk_plt *clks[PMC_CLK_NUM];
++	struct clk_lookup *mclk_lookup;
  };
  
--static struct quirk_entry quirk_no_rfkill = {
--	.no_rfkill = true,
--};
--
--static struct quirk_entry quirk_no_rfkill_wapf4 = {
--	.wapf = 4,
--	.no_rfkill = true,
--};
--
- static struct quirk_entry quirk_asus_ux303ub = {
- 	.wmi_backlight_native = true,
- };
-@@ -194,7 +185,7 @@ static const struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X456UA"),
- 		},
--		.driver_data = &quirk_no_rfkill_wapf4,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -203,7 +194,7 @@ static const struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X456UF"),
- 		},
--		.driver_data = &quirk_no_rfkill_wapf4,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -369,42 +360,6 @@ static const struct dmi_system_id asus_quirks[] = {
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. X555UB",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "X555UB"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. N552VW",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N552VW"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. U303LB",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "U303LB"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. Z550MA",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Z550MA"),
--		},
--		.driver_data = &quirk_no_rfkill,
--	},
--	{
--		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. UX303UB",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 8499d3ae4257..8fe5890bf539 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2111,10 +2111,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (result & (ASUS_WMI_DSTS_PRESENCE_BIT | ASUS_WMI_DSTS_USER_BIT))
- 		asus->driver->wlan_ctrl_by_user = 1;
+ /* Return an index in parent table */
+@@ -337,6 +338,11 @@ static int plt_clk_probe(struct platform_device *pdev)
+ 			goto err_unreg_clk_plt;
+ 		}
+ 	}
++	data->mclk_lookup = clkdev_hw_create(&data->clks[3]->hw, "mclk", NULL);
++	if (IS_ERR(data->mclk_lookup)) {
++		err = PTR_ERR(data->mclk_lookup);
++		goto err_unreg_clk_plt;
++	}
  
--	if (asus->driver->wlan_ctrl_by_user && ashs_present())
--		asus->driver->quirks->no_rfkill = 1;
--
--	if (!asus->driver->quirks->no_rfkill) {
-+	if (!(asus->driver->wlan_ctrl_by_user && ashs_present())) {
- 		err = asus_wmi_rfkill_init(asus);
- 		if (err)
- 			goto fail_rfkill;
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index fdff626c3b51..c9589d9342bb 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -39,7 +39,6 @@ struct key_entry;
- struct asus_wmi;
+ 	plt_clk_free_parent_names_loop(parent_names, data->nparents);
  
- struct quirk_entry {
--	bool no_rfkill;
- 	bool hotplug_wireless;
- 	bool scalar_panel_brightness;
- 	bool store_backlight_power;
+@@ -356,6 +362,7 @@ static int plt_clk_remove(struct platform_device *pdev)
+ 
+ 	data = platform_get_drvdata(pdev);
+ 
++	clkdev_drop(data->mclk_lookup);
+ 	plt_clk_unregister_loop(data, PMC_CLK_NUM);
+ 	plt_clk_unregister_parents(data);
+ 	return 0;
 -- 
-2.11.0
+2.7.4
