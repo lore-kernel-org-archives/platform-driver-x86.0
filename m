@@ -1,44 +1,47 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/4] gpio: of: Don't return 0 on dt_gpio_count()
-Date: Mon, 20 Feb 2017 18:15:47 +0200
-Message-ID: <20170220161549.39490-3-andriy.shevchenko@linux.intel.com>
-References: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [bug report] asus-wireless: Toggle airplane mode LED
+Date: Mon, 20 Feb 2017 14:22:38 -0500
+Message-ID: <CA+A7VXX-ST1GgeSU6JJ_Wu8BWFqVz66gg6Wshm71agFHbjuVgA@mail.gmail.com>
+References: <20170218203059.GA23566@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yw0-f194.google.com ([209.85.161.194]:33553 "EHLO
+        mail-yw0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750935AbdBTTXT (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 20 Feb 2017 14:23:19 -0500
+Received: by mail-yw0-f194.google.com with SMTP id q127so2598542ywg.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Feb 2017 11:23:19 -0800 (PST)
+In-Reply-To: <20170218203059.GA23566@mwanda>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
 
-It's unusual to have error checking like (ret <= 0) in cases when
-counting GPIO resources. In case when it's mandatory we propagate the
-error (-ENOENT), otherwise we don't use the result.
+Hello Dan,
 
-This makes consistent behaviour across all possible variants called in
-gpiod_count().
+On 18 February 2017 at 15:30, Dan Carpenter <dan.carpenter@oracle.com> wrot=
+e:
+> Hello Jo=C3=A3o Paulo Rechi Vita,
+>
+> The patch 2c1a49c96123: "asus-wireless: Toggle airplane mode LED"
+> from Jun 13, 2016, leads to the following static checker warning:
+>
+>         drivers/platform/x86/asus-wireless.c:54 asus_wireless_method()
+>         error: uninitialized symbol 'ret'.
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I believe I have a fix for this, but I'm not able to reproduce this
+message with neither of the following:
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8b4d721d6d63..f8ee417de0b7 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3122,10 +3122,10 @@ static int dt_gpio_count(struct device *dev, const char *con_id)
- 				 gpio_suffixes[i]);
- 
- 		ret = of_gpio_named_count(dev->of_node, propname);
--		if (ret >= 0)
-+		if (ret > 0)
- 			break;
- 	}
--	return ret;
-+	return ret ? ret : -ENOENT;
- }
- 
- static int platform_gpio_count(struct device *dev, const char *con_id)
--- 
-2.11.0
+make C=3D2 CHECK=3D"/usr/bin/sparse" drivers/platform/x86/asus-wireless.o
+make C=3D2 CHECK=3D"../smatch/smatch -p=3Dkernel" drivers/platform/x86/asus=
+-wireless.o
+make C=3D2 CHECK=3D"scripts/coccicheck" drivers/platform/x86/asus-wireless.=
+o
 
+So I am not able to check the fix. How can I reproduce this?
+
+Thanks,
