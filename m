@@ -1,51 +1,62 @@
-From: Sven Rebhan <sven.rebhan@gmail.com>
-Subject: [PATCH] ideapad-laptop: Add Lenovo ideapad 310-15IKB to no_hw_rfkill
- dmi list
-Date: Tue, 21 Feb 2017 20:53:48 +0100
-Message-ID: <20170221195348.GA4998@Hugin.localdomain>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v8 7/7] platform/x86/dell-*: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Tue, 21 Feb 2017 21:47:15 +0100
+Message-ID: <bebe1a7c-1d00-759f-4bbb-b19f93c156d1@gmail.com>
+References: <20170209154417.19040-1-hdegoede@redhat.com>
+ <20170209154417.19040-8-hdegoede@redhat.com> <20170221141108.GG9795@pali>
+ <d1639790-24a3-8c81-651b-c8c8940ceeb5@redhat.com>
+ <20170221145043.GK9795@pali>
+ <0aed5655-11db-e632-0213-95779b780cb2@redhat.com>
+ <20170221151317.GN9795@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:33807 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754757AbdBUTx5 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Feb 2017 14:53:57 -0500
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170221151317.GN9795@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Like other Lenovo models the Lenovo ideapad 310-15IKB does not have a
-hw rfkill switch. This results in hard-blocked radios after boot,
-resulting in always blocked radios rendering them unusable.
+On 02/21/2017 04:13 PM, Pali Rohár wrote:
+> On Tuesday 21 February 2017 15:56:43 Hans de Goede wrote:
+>>> So do we really need this code which prevents update?
+>>
+>> Yes, because the ABI specification for the new brightness_hw_changed says
+>> that poll() listeners will only be woken up if the brightness is changed
+>> outside of the kernel and not when the kernel changes it itself.
+> 
+> So in case there are two applications in userspace which want to monitor
+> brightness change and both of those application could change brightness
+> (via sysfs) then these two applications would not know about every
+> brightness change and would be out-of-sync of reality what is really
+> configured by kernel.
+> 
+> This is one part which I did not liked in proposed ABI as it force
+> userspace to choose and use only one brightness monitoring application
+> at same time.
+> 
+> Plus if ABI was specified that poll() could be used only for hardware
+> change (and not by software e.g. kernel/userspace) then such
+> functionality is not possible to implement for Dell machines. As it
+> looks like Dell firmware send event about every change of brightness and
+> we cannot distinguish if change was done by software (kernel) or by
+> hardware itself.
+> 
+> I do not know now if you already accepted that ABI, I'm just saying that
+> I do not like it due to requirement for one userspace application as
+> listener and also because it is not what can be used for Dell machines.
+> 
+> Jacek, was this requirement in ABI already accepted into stable?
 
-The attached patch adds the ideapad 310-15IKB to the no_hw_rfkill
-dmi list and allows using the built-in radios.
+Yes, Linus today pulled that and it is in mainline now. From LED
+subsystem point of view I don't see any problem - the file is called
+brightness_hw_changed and its purpose is to report brightness changes
+occurred in the hardware, outside of kernel control. It also returns
+last brightness as was set by the hardware, which can be different from
+what old brightness file reports in the same time.
 
-Signed-off-by: Sven Rebhan <Sven.Rebhan@googlemail.com>
----
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index f46ece2ce3c4..cc6d91e18683 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -872,6 +872,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo ideapad 310-15IKB",
-+		.matches = {
-+		        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		        DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo ideapad Y700-15ACZ",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 -- 
-2.11.1
+Best regards,
+Jacek Anaszewski
