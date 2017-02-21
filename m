@@ -1,57 +1,65 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 1/3] Input: silead - Add OF device ID table
-Date: Tue, 21 Feb 2017 15:12:52 -0300
-Message-ID: <20170221181254.14748-1-javier@osg.samsung.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform: intel_turbo_max_3: make it explicitly
+ non-modular
+Date: Tue, 21 Feb 2017 10:35:57 -0800
+Message-ID: <20170221183557.GA114286@f23x64.localdomain>
+References: <20170214003700.8978-1-paul.gortmaker@windriver.com>
+ <20170217033712.GA25241@wisp>
+ <1487606145.2714.3.camel@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487606145.2714.3.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
+On Mon, Feb 20, 2017 at 07:55:45AM -0800, Srinivas Pandruvada wrote:
+> On Thu, 2017-02-16 at 19:37 -0800, Darren Hart wrote:
+> > On Mon, Feb 13, 2017 at 07:37:00PM -0500, Paul Gortmaker wrote:
+> > > The Kconfig currently controlling compilation of this code is:
+> > > 
+> > > drivers/platform/x86/Kconfig:config INTEL_TURBO_MAX_3
+> > > drivers/platform/x86/Kconfig:   bool "Intel Turbo Boost Max
+> > > Technology 3.0 enumeration driver"
+> > > 
+> > > ...meaning that it currently is not being built as a module by
+> > > anyone.
+> > > 
+> > > Lets remove the couple traces of modular infrastructure use, so
+> > > that
+> > > when reading the driver there is no doubt it is builtin-only.
+> > > 
+> > > Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
+> > > 
+> > > We also delete the MODULE_LICENSE tag etc. since all that
+> > > information
+> > > was (or is now) contained at the top of the file in the comments.
+> > > 
+> > > We do uncover some implicit includes during build coverage that
+> > > were hidden behind the module.h which pulls in a lot of dependants.
+> > > 
+> > 
+> > Paul, this all looks so very familiar... have we been through this
+> > before? Maybe
+> > for another driver...
+> > 
+> > > Cc: Darren Hart <dvhart@infradead.org>
+> > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > 
+> > Srinivas, any objections?
+> This module can be loadable just by adding EXPORT_GPL to two scheduler
+> function. I was hoping that someone will require those functions to be
+> exported.
+> But any way I have no objections in this case as this driver doesn't
+> have to be loadable at all.
 
-But this could change in the future so the correct approach is to have an
-OF device ID table if the devices are registered via OF.
+OK, merged. We can always make it a module if that becomes an option.
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
----
-
- drivers/input/touchscreen/silead.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 404830a4a366..aae3ba1c3e02 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -580,12 +580,26 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
- MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id silead_ts_of_match[] = {
-+	{ .compatible = "silead,gsl1680" },
-+	{ .compatible = "silead,gsl1688" },
-+	{ .compatible = "silead,gsl3670" },
-+	{ .compatible = "silead,gsl3675" },
-+	{ .compatible = "silead,gsl3692" },
-+	{ .compatible = "silead,mssl1680" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, silead_ts_of_match);
-+#endif
-+
- static struct i2c_driver silead_ts_driver = {
- 	.probe = silead_ts_probe,
- 	.id_table = silead_ts_id,
- 	.driver = {
- 		.name = SILEAD_TS_NAME,
- 		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
-+		.of_match_table = of_match_ptr(silead_ts_of_match),
- 		.pm = &silead_ts_pm,
- 	},
- };
 -- 
-2.9.3
+Darren Hart
+Intel Open Source Technology Center
