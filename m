@@ -1,65 +1,51 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform: intel_turbo_max_3: make it explicitly
- non-modular
-Date: Tue, 21 Feb 2017 10:35:57 -0800
-Message-ID: <20170221183557.GA114286@f23x64.localdomain>
-References: <20170214003700.8978-1-paul.gortmaker@windriver.com>
- <20170217033712.GA25241@wisp>
- <1487606145.2714.3.camel@linux.intel.com>
+From: Sven Rebhan <sven.rebhan@gmail.com>
+Subject: [PATCH] ideapad-laptop: Add Lenovo ideapad 310-15IKB to no_hw_rfkill
+ dmi list
+Date: Tue, 21 Feb 2017 20:53:48 +0100
+Message-ID: <20170221195348.GA4998@Hugin.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:33807 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754757AbdBUTx5 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 21 Feb 2017 14:53:57 -0500
 Content-Disposition: inline
-In-Reply-To: <1487606145.2714.3.camel@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 07:55:45AM -0800, Srinivas Pandruvada wrote:
-> On Thu, 2017-02-16 at 19:37 -0800, Darren Hart wrote:
-> > On Mon, Feb 13, 2017 at 07:37:00PM -0500, Paul Gortmaker wrote:
-> > > The Kconfig currently controlling compilation of this code is:
-> > > 
-> > > drivers/platform/x86/Kconfig:config INTEL_TURBO_MAX_3
-> > > drivers/platform/x86/Kconfig:   bool "Intel Turbo Boost Max
-> > > Technology 3.0 enumeration driver"
-> > > 
-> > > ...meaning that it currently is not being built as a module by
-> > > anyone.
-> > > 
-> > > Lets remove the couple traces of modular infrastructure use, so
-> > > that
-> > > when reading the driver there is no doubt it is builtin-only.
-> > > 
-> > > Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
-> > > 
-> > > We also delete the MODULE_LICENSE tag etc. since all that
-> > > information
-> > > was (or is now) contained at the top of the file in the comments.
-> > > 
-> > > We do uncover some implicit includes during build coverage that
-> > > were hidden behind the module.h which pulls in a lot of dependants.
-> > > 
-> > 
-> > Paul, this all looks so very familiar... have we been through this
-> > before? Maybe
-> > for another driver...
-> > 
-> > > Cc: Darren Hart <dvhart@infradead.org>
-> > > Cc: Andy Shevchenko <andy@infradead.org>
-> > > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > 
-> > Srinivas, any objections?
-> This module can be loadable just by adding EXPORT_GPL to two scheduler
-> function. I was hoping that someone will require those functions to be
-> exported.
-> But any way I have no objections in this case as this driver doesn't
-> have to be loadable at all.
+Like other Lenovo models the Lenovo ideapad 310-15IKB does not have a
+hw rfkill switch. This results in hard-blocked radios after boot,
+resulting in always blocked radios rendering them unusable.
 
-OK, merged. We can always make it a module if that becomes an option.
+The attached patch adds the ideapad 310-15IKB to the no_hw_rfkill
+dmi list and allows using the built-in radios.
 
+Signed-off-by: Sven Rebhan <Sven.Rebhan@googlemail.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index f46ece2ce3c4..cc6d91e18683 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -872,6 +872,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		},
+ 	},
+ 	{
++		.ident = "Lenovo ideapad 310-15IKB",
++		.matches = {
++		        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		        DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
++		},
++	},
++	{
+ 		.ident = "Lenovo ideapad Y700-15ACZ",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.11.1
