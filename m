@@ -1,47 +1,118 @@
-From: Pau Espin Pedrol <pespin.shar@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Tue, 21 Feb 2017 14:39:37 +0100
-Message-ID: <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
-References: <20170210174837.1078-1-pespin.shar@gmail.com> <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v8 5/7] platform/x86/dell-laptop: Refactor
+ kbd_led_triggers_store()
+Date: Tue, 21 Feb 2017 15:02:19 +0100
+Message-ID: <20170221140219.GE9795@pali>
+References: <20170209154417.19040-1-hdegoede@redhat.com>
+ <20170209154417.19040-6-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f65.google.com ([209.85.215.65]:34714 "EHLO
-        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752455AbdBUNjk (ORCPT
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:36422 "EHLO
+        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753163AbdBUOCX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Feb 2017 08:39:40 -0500
-In-Reply-To: <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+        Tue, 21 Feb 2017 09:02:23 -0500
+Content-Disposition: inline
+In-Reply-To: <20170209154417.19040-6-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
 
-Hi, resending as I initially replied from my mobile phone and it seem
-plain text support is not enabled:
+On Thursday 09 February 2017 16:44:15 Hans de Goede wrote:
+> Return -EINVAL immediately on invalid input, rather then doing
+> the straight path in an if block and returning -EINVAL at the end
+> of the function.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Hi,
+Ok, you can add my Reviewed-by.
 
-If we have user space tools supporting and using this type of event,
-then what about adding them properly with a define + entry in the
-structure array so that it can be standardized and on top get rid of
-those kernel message every time I (un)plug the charger? Would that be
-welcomed? I could send a new patch as specified above, adding the
-KEY_CHARING_ON/OFF defines + add entries to eeepc_keymap.
+> ---
+> Changes in v8:
+> -New patch in v8 of this patch-set
+> ---
+>  drivers/platform/x86/dell-laptop.c | 63 +++++++++++++++++++-------------------
+>  1 file changed, 32 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index 14392a0..a2913a5 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -1660,38 +1660,39 @@ static ssize_t kbd_led_triggers_store(struct device *dev,
+>  		}
+>  	}
+>  
+> -	if (trigger_bit != -1) {
+> -		new_state = state;
+> -		if (trigger[0] == '+')
+> -			new_state.triggers |= BIT(trigger_bit);
+> -		else {
+> -			new_state.triggers &= ~BIT(trigger_bit);
+> -			/* NOTE: trackstick bit (2) must be disabled when
+> -			 *       disabling touchpad bit (1), otherwise touchpad
+> -			 *       bit (1) will not be disabled */
+> -			if (trigger_bit == 1)
+> -				new_state.triggers &= ~BIT(2);
+> -		}
+> -		if ((kbd_info.triggers & new_state.triggers) !=
+> -		    new_state.triggers)
+> -			return -EINVAL;
+> -		if (new_state.triggers && !triggers_enabled) {
+> -			new_state.mode_bit = KBD_MODE_BIT_TRIGGER;
+> -			kbd_set_level(&new_state, kbd_previous_level);
+> -		} else if (new_state.triggers == 0) {
+> -			kbd_set_level(&new_state, 0);
+> -		}
+> -		if (!(kbd_info.modes & BIT(new_state.mode_bit)))
+> -			return -EINVAL;
+> -		ret = kbd_set_state_safe(&new_state, &state);
+> -		if (ret)
+> -			return ret;
+> -		if (new_state.mode_bit != KBD_MODE_BIT_OFF)
+> -			kbd_previous_mode_bit = new_state.mode_bit;
+> -		return count;
+> -	}
+> +	if (trigger_bit == -1)
+> +		return -EINVAL;
+>  
+> -	return -EINVAL;
+> +	new_state = state;
+> +	if (trigger[0] == '+')
+> +		new_state.triggers |= BIT(trigger_bit);
+> +	else {
+> +		new_state.triggers &= ~BIT(trigger_bit);
+> +		/*
+> +		 * NOTE: trackstick bit (2) must be disabled when
+> +		 *       disabling touchpad bit (1), otherwise touchpad
+> +		 *       bit (1) will not be disabled
+> +		 */
+> +		if (trigger_bit == 1)
+> +			new_state.triggers &= ~BIT(2);
+> +	}
+> +	if ((kbd_info.triggers & new_state.triggers) !=
+> +	    new_state.triggers)
+> +		return -EINVAL;
+> +	if (new_state.triggers && !triggers_enabled) {
+> +		new_state.mode_bit = KBD_MODE_BIT_TRIGGER;
+> +		kbd_set_level(&new_state, kbd_previous_level);
+> +	} else if (new_state.triggers == 0) {
+> +		kbd_set_level(&new_state, 0);
+> +	}
+> +	if (!(kbd_info.modes & BIT(new_state.mode_bit)))
+> +		return -EINVAL;
+> +	ret = kbd_set_state_safe(&new_state, &state);
+> +	if (ret)
+> +		return ret;
+> +	if (new_state.mode_bit != KBD_MODE_BIT_OFF)
+> +		kbd_previous_mode_bit = new_state.mode_bit;
+> +	return count;
+>  }
+>  
+>  static ssize_t kbd_led_triggers_show(struct device *dev,
 
-
-> On Feb 18, 2017 17:16, "Andy Shevchenko" <andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Feb 10, 2017 at 7:48 PM, Pau Espin Pedrol <pespin.shar@gmail.com>
-> wrote:
->> Otherwise those are printed several times when (un)plugging the AC
->> connector.
->
-> If we have a user space tool that supports them better not to ignore.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+-- 
+Pali Rohár
+pali.rohar@gmail.com
