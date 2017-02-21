@@ -1,105 +1,57 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v8 7/7] platform/x86/dell-*: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Tue, 21 Feb 2017 18:08:38 +0100
-Message-ID: <20170221170838.GO9795@pali>
-References: <20170209154417.19040-1-hdegoede@redhat.com>
- <20170209154417.19040-8-hdegoede@redhat.com>
- <20170221141108.GG9795@pali>
- <d1639790-24a3-8c81-651b-c8c8940ceeb5@redhat.com>
- <20170221145043.GK9795@pali>
- <0aed5655-11db-e632-0213-95779b780cb2@redhat.com>
- <20170221151317.GN9795@pali>
- <af30d146-8eb3-fbf7-7041-e719d8f9a5ac@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <af30d146-8eb3-fbf7-7041-e719d8f9a5ac@redhat.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 1/3] Input: silead - Add OF device ID table
+Date: Tue, 21 Feb 2017 15:12:52 -0300
+Message-ID: <20170221181254.14748-1-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 21 February 2017 17:14:06 Hans de Goede wrote:
-> Hi,
-> 
-> On 21-02-17 16:13, Pali Rohár wrote:
-> >On Tuesday 21 February 2017 15:56:43 Hans de Goede wrote:
-> >>>So do we really need this code which prevents update?
-> >>
-> >>Yes, because the ABI specification for the new brightness_hw_changed says
-> >>that poll() listeners will only be woken up if the brightness is changed
-> >>outside of the kernel and not when the kernel changes it itself.
-> >
-> >So in case there are two applications in userspace which want to monitor
-> >brightness change and both of those application could change brightness
-> >(via sysfs) then these two applications would not know about every
-> >brightness change and would be out-of-sync of reality what is really
-> >configured by kernel.
-> 
-> Yes, because with triggers and blinking etc. it is impossible for
-> userspace to continuously monitor brigthness in a way which does not
-> cause a high system load.
+The driver doesn't have a struct of_device_id table but supported devices
+are registered via Device Trees. This is working on the assumption that a
+I2C device registered via OF will always match a legacy I2C device ID and
+that the MODALIAS reported will always be of the form i2c:<device>.
 
-Triggers and blinking features are out due to high cpu load. Fine.
+But this could change in the future so the correct approach is to have an
+OF device ID table if the devices are registered via OF.
 
-But why also manual writes to /sys/class/leds/... by userspace
-applications is filtered and not reported via poll()?
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
-> >This is one part which I did not liked in proposed ABI as it force
-> >userspace to choose and use only one brightness monitoring application
-> >at same time.
-> 
-> Oh please, we are not going to have this whole ABI discussion again.
-> I already spend months on this, this ship has long sailed.
+ drivers/input/touchscreen/silead.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Ok, I just want to know reason for above one question.
-
-> >Plus if ABI was specified that poll() could be used only for hardware
-> >change (and not by software e.g. kernel/userspace) then such
-> >functionality is not possible to implement for Dell machines. As it
-> >looks like Dell firmware send event about every change of brightness and
-> >we cannot distinguish if change was done by software (kernel) or by
-> >hardware itself.
-> 
-> It is possible just fine on Dell machines, except that libsmbios changes
-> will get seen as hardware triggered changes, which in a way they are
-> as libsmbios is making hardware changes behind the kernels back.
-
-Tool smbios-keyboard-ctl is valid and will be there. If you like it or
-not we need to deal with fact that libsmbios exists and is used...
-
-Due to fundamental reasons we ignore all race condition between
-libsmbios and kernel (they are basically not possible to solve). I'm
-fine with this.
-
-But why should setting keyboard backlight via smbios-keyboard-ctl and
-via echo > /sys/class/leds/ behave differently?
-
-Only just because we say that some userspace application should not be
-used and because we invented new kernel ABI which is not fully designed
-for this case for existing Dell machines?
-
-For me it looks like a bad design somewhere...
-
-And also I do not like implementation in this dell driver that for every
-one received event we need to query smbios with another SMM call to get
-current brightness level. And after few seconds userspace ask again for
-current level (because it received event that brightness was changed)
-and we need to do another SMM call.
-
-> >I do not know now if you already accepted that ABI
-> 
-> Yes the ABI is in current next, and given that the 4.11 merge-window has
-> opened this ship has really sailed, also you're making a problem where
-> there really is none. Now can we please move forward with this ?
-> 
-> Regards,
-> 
-> Hans
-
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 404830a4a366..aae3ba1c3e02 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -580,12 +580,26 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
+ MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
+ #endif
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id silead_ts_of_match[] = {
++	{ .compatible = "silead,gsl1680" },
++	{ .compatible = "silead,gsl1688" },
++	{ .compatible = "silead,gsl3670" },
++	{ .compatible = "silead,gsl3675" },
++	{ .compatible = "silead,gsl3692" },
++	{ .compatible = "silead,mssl1680" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, silead_ts_of_match);
++#endif
++
+ static struct i2c_driver silead_ts_driver = {
+ 	.probe = silead_ts_probe,
+ 	.id_table = silead_ts_id,
+ 	.driver = {
+ 		.name = SILEAD_TS_NAME,
+ 		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
++		.of_match_table = of_match_ptr(silead_ts_of_match),
+ 		.pm = &silead_ts_pm,
+ 	},
+ };
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.9.3
