@@ -1,62 +1,80 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v8 7/7] platform/x86/dell-*: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Tue, 21 Feb 2017 21:47:15 +0100
-Message-ID: <bebe1a7c-1d00-759f-4bbb-b19f93c156d1@gmail.com>
-References: <20170209154417.19040-1-hdegoede@redhat.com>
- <20170209154417.19040-8-hdegoede@redhat.com> <20170221141108.GG9795@pali>
- <d1639790-24a3-8c81-651b-c8c8940ceeb5@redhat.com>
- <20170221145043.GK9795@pali>
- <0aed5655-11db-e632-0213-95779b780cb2@redhat.com>
- <20170221151317.GN9795@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/3] Input: silead - Add OF device ID table
+Date: Wed, 22 Feb 2017 09:29:11 +0100
+Message-ID: <bfea9fbe-663a-69e4-29f1-5e90a8d9e475@redhat.com>
+References: <20170221181254.14748-1-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170221151317.GN9795@pali>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:51778 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754279AbdBVI3P (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 22 Feb 2017 03:29:15 -0500
+In-Reply-To: <20170221181254.14748-1-javier@osg.samsung.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
 
-On 02/21/2017 04:13 PM, Pali Rohár wrote:
-> On Tuesday 21 February 2017 15:56:43 Hans de Goede wrote:
->>> So do we really need this code which prevents update?
->>
->> Yes, because the ABI specification for the new brightness_hw_changed says
->> that poll() listeners will only be woken up if the brightness is changed
->> outside of the kernel and not when the kernel changes it itself.
-> 
-> So in case there are two applications in userspace which want to monitor
-> brightness change and both of those application could change brightness
-> (via sysfs) then these two applications would not know about every
-> brightness change and would be out-of-sync of reality what is really
-> configured by kernel.
-> 
-> This is one part which I did not liked in proposed ABI as it force
-> userspace to choose and use only one brightness monitoring application
-> at same time.
-> 
-> Plus if ABI was specified that poll() could be used only for hardware
-> change (and not by software e.g. kernel/userspace) then such
-> functionality is not possible to implement for Dell machines. As it
-> looks like Dell firmware send event about every change of brightness and
-> we cannot distinguish if change was done by software (kernel) or by
-> hardware itself.
-> 
-> I do not know now if you already accepted that ABI, I'm just saying that
-> I do not like it due to requirement for one userspace application as
-> listener and also because it is not what can be used for Dell machines.
-> 
-> Jacek, was this requirement in ABI already accepted into stable?
+Hi,
 
-Yes, Linus today pulled that and it is in mainline now. From LED
-subsystem point of view I don't see any problem - the file is called
-brightness_hw_changed and its purpose is to report brightness changes
-occurred in the hardware, outside of kernel control. It also returns
-last brightness as was set by the hardware, which can be different from
-what old brightness file reports in the same time.
+On 21-02-17 19:12, Javier Martinez Canillas wrote:
+> The driver doesn't have a struct of_device_id table but supported devices
+> are registered via Device Trees. This is working on the assumption that a
+> I2C device registered via OF will always match a legacy I2C device ID and
+> that the MODALIAS reported will always be of the form i2c:<device>.
+>
+> But this could change in the future so the correct approach is to have an
+> OF device ID table if the devices are registered via OF.
+>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+>
+>  drivers/input/touchscreen/silead.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index 404830a4a366..aae3ba1c3e02 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -580,12 +580,26 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
+>  MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
+>  #endif
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id silead_ts_of_match[] = {
+> +	{ .compatible = "silead,gsl1680" },
+> +	{ .compatible = "silead,gsl1688" },
+> +	{ .compatible = "silead,gsl3670" },
+> +	{ .compatible = "silead,gsl3675" },
+> +	{ .compatible = "silead,gsl3692" },
+> +	{ .compatible = "silead,mssl1680" },
+> +	{ },
+> +};
 
--- 
-Best regards,
-Jacek Anaszewski
+Please drop the mssl1680 compatible, that id an ACPI ugliness
+which we don't need for devicetree.
+
+Otherwise looks good to me.
+
+Regards,
+
+Hans
+
+
+> +MODULE_DEVICE_TABLE(of, silead_ts_of_match);
+> +#endif
+> +
+>  static struct i2c_driver silead_ts_driver = {
+>  	.probe = silead_ts_probe,
+>  	.id_table = silead_ts_id,
+>  	.driver = {
+>  		.name = SILEAD_TS_NAME,
+>  		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
+> +		.of_match_table = of_match_ptr(silead_ts_of_match),
+>  		.pm = &silead_ts_pm,
+>  	},
+>  };
+>
