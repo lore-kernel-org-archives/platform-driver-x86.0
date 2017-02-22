@@ -1,154 +1,152 @@
-From: Ritesh Raj Sarraf <rrs@debian.org>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface
- for touchpad state
-Date: Wed, 22 Feb 2017 15:54:18 +0530
-Message-ID: <1487759058.9334.7.camel@debian.org>
-References: <20170217184756.15181-1-rrs@debian.org>
-Reply-To: rrs@debian.org
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v8 7/7] platform/x86/dell-*: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Wed, 22 Feb 2017 13:01:09 +0100
+Message-ID: <20170222120109.GC21558@pali>
+References: <20170221141108.GG9795@pali>
+ <d1639790-24a3-8c81-651b-c8c8940ceeb5@redhat.com>
+ <20170221145043.GK9795@pali>
+ <0aed5655-11db-e632-0213-95779b780cb2@redhat.com>
+ <20170221151317.GN9795@pali>
+ <af30d146-8eb3-fbf7-7041-e719d8f9a5ac@redhat.com>
+ <20170221170838.GO9795@pali>
+ <7bb7c48f-789e-8b4c-b76b-1389d7fbbfb7@redhat.com>
+ <20170222084935.GA21558@pali>
+ <cf1aceaf-9177-2223-6f36-afdb5c47ee31@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f66.google.com ([74.125.83.66]:35397 "EHLO
-        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932254AbdBVKYn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Feb 2017 05:24:43 -0500
-Received: by mail-pg0-f66.google.com with SMTP id 1so1724684pgz.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Feb 2017 02:24:37 -0800 (PST)
-In-Reply-To: <20170217184756.15181-1-rrs@debian.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cf1aceaf-9177-2223-6f36-afdb5c47ee31@redhat.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+On Wednesday 22 February 2017 11:24:13 Hans de Goede wrote:
+> HI,
+> 
+> On 22-02-17 09:49, Pali Rohár wrote:
+> >On Wednesday 22 February 2017 09:36:08 Hans de Goede wrote:
+> >>Hi,
+> >>
+> >>On 21-02-17 18:08, Pali Rohár wrote:
+> >>>On Tuesday 21 February 2017 17:14:06 Hans de Goede wrote:
+> >>>>Hi,
+> >>>>
+> >>>>On 21-02-17 16:13, Pali Rohár wrote:
+> >>>>>On Tuesday 21 February 2017 15:56:43 Hans de Goede wrote:
+> >>>>>>>So do we really need this code which prevents update?
+> >>>>>>
+> >>>>>>Yes, because the ABI specification for the new brightness_hw_changed says
+> >>>>>>that poll() listeners will only be woken up if the brightness is changed
+> >>>>>>outside of the kernel and not when the kernel changes it itself.
+> >>>>>
+> >>>>>So in case there are two applications in userspace which want to monitor
+> >>>>>brightness change and both of those application could change brightness
+> >>>>>(via sysfs) then these two applications would not know about every
+> >>>>>brightness change and would be out-of-sync of reality what is really
+> >>>>>configured by kernel.
+> >>>>
+> >>>>Yes, because with triggers and blinking etc. it is impossible for
+> >>>>userspace to continuously monitor brigthness in a way which does not
+> >>>>cause a high system load.
+> >>>
+> >>>Triggers and blinking features are out due to high cpu load. Fine.
+> >>>
+> >>>But why also manual writes to /sys/class/leds/... by userspace
+> >>>applications is filtered and not reported via poll()?
+> >>
+> >>I agree that having a way for interested userspace to detect those
+> >>would be good, but that would need to be another API, may poll()
+> >>on the brightness attribute itself while excluding triggers / blinking
+> >>changes from wakeup ?
+> >>
+> >>Anyways that is something to discuss in a thread specific to the
+> >>LED subsystem and somewhat orthogonal to this patch.
+> >
+> >Ok, lets start discussion about it in new separate thread. I was in
+> >impression that this was already part of discussion and in proposed ABI.
+> >Now I see that it was just in original cpu consuming ABI which was
+> >rejected.
+> >
+> >>One disadvantage of poll() is that it does not give the source of
+> >>the change, so in retrospect I actually like the new brightness_hw_changed
+> >>attribute as that does give the source, which is something which we need
+> >>to know in userspace.
+> >
+> >Do you really in userspace need to know source of change? And to
+> >distinguish between change from hardware and change from userspace done
+> >by echo > /sys/class/leds?
+> 
+> Yes, a change done through hardware (through the firmware handled
+> hotkeys) will make the desktop environment show an osd overlay
+> with the new kbd backlight brightness, where as a change done
+> through e.g. the brightness slider in gnome-control-panel should
+> not show that same osd.
+> 
+> >I though that this is for informing userspace application that led
+> >status was changed and application should update some bar or number
+> >which show current state of backlight level.
+> 
+> That is only part of it, we also want the OSD but ONLY when changed
+> through the hotkeys (on other models the hotkeys are handled in
+> userspace software, which will then also show the OSD, we want this
+> to be consistent whether the keys are handled in firmware or in
+> userspace).
 
-Hello Darren / Andy,
+Ok, so userspace application wants to distinguish between these types of
+events:
 
-Any further comment on this patch ? Will this be accepted ?
-Please give a N/ACK.
+1) autonomous hardware decided to change brightness
+2) application itself changed brightness
+3) other application changed brightness
+4) pressed keyboard hotkey changed brightness
+  4.1) managed by firmware
+  4.2) managed by some application
 
-Thanks,
-Ritesh
+And for 4) and 1) you want to show notification to user, right?
 
-On Sat, 2017-02-18 at 00:17 +0530, Ritesh Raj Sarraf wrote:
-> Lenovo Yoga (many variants: Yoga, Yoga2 Pro, Yoga2 13, Yoga3 Pro, Yoga 3
-> 14 etc) has multiple modles that are a hybrid laptop, working in laptop
-> mode as well as tablet mode.
+> >>In previous versions of the ABI I had to do
+> >>the same brightness comparison I'm doing in the dell-laptop driver
+> >>now in userspace, where it can never be done safely as userspace does
+> >>not know about other userspace.
+> >>
+> >>Since the Dell smbios events don't provide us with a source of the
+> >>change, we need to compare the brightness to the last set brightness
+> >>somewhere and IMHO the kernel is the best (least bad) place to do
+> >>that.
+> >
+> >Maybe kernel place is the least bad place, but still it is unreliable
+> >for Dell machines.
+> >
+> >You do not know latency and delay how long it will take Dell firmware to
+> >deliver event to kernel. It also implies that there is race condition
+> >between delivering event and reading new backlight level.
 > 
-> Currently, there is no easy interface to determine the touchpad status,
-> which in case of the Yoga family of machines, can also be useful to
-> assume tablet mode status.
-> Note: The ideapad-laptop driver does not provide a SW_TABLET_MODE either
-> 
-> For a detailed discussion  on why we want either of the interfaces,
-> please see:
-> https://bugs.launchpad.net/onboard/+bug/1366421/comments/43
-> 
-> This patch adds a sysfs interface for read/write access under:
-> /sys/bus/platform/devices/VPC2004\:00/touchpad_mode
-> 
-> v4:
-> Use kstrtobool because supported values are boolean
-> 
-> v3:
-> Include Darren Hart's comments
-> Changed sysfs inteface from "touchpad_mode" to "touchpad"
-> 
-> v2:
-> Include Andy Shevchenko's comments
-> 
-> Signed-off-by: Ritesh Raj Sarraf <rrs@debian.org>
-> ---
->  .../ABI/testing/sysfs-platform-ideapad-laptop      |  8 +++++
->  drivers/platform/x86/ideapad-laptop.c              | 34
-> ++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> index b31e782bd985..5d24f1e8e6ef 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> +++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-> @@ -17,3 +17,11 @@ Description:
->  			* 2 -> Dust Cleaning
->  			* 4 -> Efficient Thermal Dissipation Mode
->  
-> +What:		/sys/devices/platform/ideapad/touchpad
-> +Date:		Feb 2017
-> +KernelVersion:	4.11
-> +Contact:	"Ritesh Raj Sarraf <rrs@debian.org>"
-> +Description:
-> +		Control touchpad mode.
-> +			* 1 -> Switched On
-> +			* 0 -> Switched Off
-> diff --git a/drivers/platform/x86/ideapad-laptop.c
-> b/drivers/platform/x86/ideapad-laptop.c
-> index f46ece2ce3c4..b35954707e11 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -423,9 +423,43 @@ static ssize_t store_ideapad_fan(struct device *dev,
->  
->  static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
->  
-> +
-> +static ssize_t touchpad_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct ideapad_private *priv = dev_get_drvdata(dev);
-> +	unsigned long result;
-> +
-> +	if (read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result))
-> +		return sprintf(buf, "-1\n");
-> +	return sprintf(buf, "%lu\n", result);
-> +}
-> +
-> +static ssize_t touchpad_store(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 const char *buf, size_t count)
-> +{
-> +	struct ideapad_private *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +	bool state;
-> +
-> +	ret = kstrtobool(buf, &state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
-> +	if (ret < 0)
-> +		return -EIO;
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(touchpad);
-> +
->  static struct attribute *ideapad_attributes[] = {
->  	&dev_attr_camera_power.attr,
->  	&dev_attr_fan_mode.attr,
-> +	&dev_attr_touchpad.attr,
->  	NULL
->  };
->  
-- -- 
-Ritesh Raj Sarraf | http://people.debian.org/~rrs
-Debian - The Universal Operating System
------BEGIN PGP SIGNATURE-----
+> A race condition which will always exists if userspace polls the backlight
+> periodically say once a minute then it can always end up polling just
+> before the hotkey press is done. Which is exactly why we need the event,
+> so we don't need to poll  and when the event is delivered we know the new
+> backlight level.
 
-iQIzBAEBCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAlitZtIACgkQpjpYo/Lh
-dWnCsw/9Eo0+id6jjJZaVRBhtQTcI510T2IY/wDFfrMOH8Ei2+Iw1d/rCCA5iCWa
-HDP9R+AZpFxM71nJsm/JZVuYOZDbKh17TkeM9eIG1dpQH48I576hz0IdwvRNeT+t
-kba0NGyQTw0PdMdP8mcOhrFbDkFiLJ0rg0fu1ESxilTnshTUPch+1aUexqeBTCYG
-ICvidlD0gr+Q8x9pbqCEdFNwRzqekl7a9ezR4bvyqXpJSx2DWVq2WFHbnrX9BADF
-gextZaRWQ7sUR27seXO3JL0DgfYspDkP2UQno7lr4Vx3UxyeUUDVYmF2OmpupHJu
-F8BifivXBPy0ZDLn8UbKgEMBqLIx5E3BWWdVyJyobkB9PHoDbe0vvpNXyAQW2xzY
-X+CtozZ04su9rk5L+ivsozbAyNFXirHrXOOGZzTa/svKHSsR7xiFA9JHK5mwtnsl
-KhJNR0FkXH+QIBm8dbUDteJ9/fTodnUjXN+C7dya9+Sb0Bi1AgSpVe1poZ+74XWR
-jz5NtJ+yKxo7SOQ6SxRSPN7zLfhwpORoi5pid2Qn0dKpW8GoB8b6bi0xHGWuraIJ
-LIVTJE6TgMgFkjPTJR4vlR+eoxyDM2HTsyx59fWwECEJUANXit7pnbixnZ4McYLh
-he6dsgStv8kuHNNCJoeDPLiNYvruUKqHdnf/Vvbk0A+sCgY8JAI=
-=BuNe
------END PGP SIGNATURE-----
+So instead userspace polling you will ask for backlight level after
+receiving firmware event. This is same race as in userspace. Returned
+backlight level does not have to be one which caused firmware event. If
+firmware delays that event (and due to ACPI slowness it can be really
+delayed) then another backlight change could happen... And you will just
+use incorrect level for comparison.
+
+Basically on Dell machine you cannot distinguish between events done by
+1), 2), 3) and 4). You are trying to hide this fact by bringing some
+logic which on first look can fix it...
+
+Also calling another SMBIOS call via SMM for every received event (even
+if userspace is not interested in it) does not look like good
+implementation. And another one is issued after userspace receive that
+event (via poll()) and try to know current value.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
