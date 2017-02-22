@@ -1,65 +1,92 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 1/3] Input: silead - Add OF device ID table
-Date: Wed, 22 Feb 2017 11:40:03 -0300
-Message-ID: <20170222144005.23447-1-javier@osg.samsung.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: LED devices & poll() for brightness attribute
+Date: Wed, 22 Feb 2017 21:54:08 +0100
+Message-ID: <20170222205408.GB8467@amd>
+References: <20170222090630.GB21558@pali>
+ <20170222122557.GA3807@amd>
+ <20170222123929.GD21558@pali>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1UWUbFP1cBYEclgG"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170222123929.GD21558@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver doesn't have a struct of_device_id table but supported devices
-are registered via Device Trees. This is working on the assumption that a
-I2C device registered via OF will always match a legacy I2C device ID and
-that the MODALIAS reported will always be of the form i2c:<device>.
 
-But this could change in the future so the correct approach is to have an
-OF device ID table if the devices are registered via OF.
+--1UWUbFP1cBYEclgG
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As pointed by Hans de Goede, there's no mssl1680 and this is just used in
-some ACPI systems to identify the gsl1680 chip. So isn't included in the
-OF device ID table since a DT should use the proper device name instead.
+On Wed 2017-02-22 13:39:29, Pali Roh=E1r wrote:
+> On Wednesday 22 February 2017 13:25:57 Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > But this support is useful just for one single central userspace
+> > > application which will control all leds in system other application
+> > > which will change state by /sys/class/leds/ will de-synchronize that =
+one
+> > > central application.
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Actually this is wrong.
 
----
+> > Yes. Does it matter for some real use case?
+>=20
+> Yes. E.g. systemd has already some support for changing leds. And I do
+> not want to be forced to use systemd (or any other specific application)
+> just because it already controls leds.
 
-Changes in v2:
-- Remove the mssl1680 entry from the OF device ID table (Hans de Goede).
+So... you don't want to use systemd, so don't use systemd. What is the
+problem? :-)
 
- drivers/input/touchscreen/silead.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> And my own application for controlling leds should know current state of
+> them if it is possible.
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 404830a4a366..813dd68a5c82 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -580,12 +580,25 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
- MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id silead_ts_of_match[] = {
-+	{ .compatible = "silead,gsl1680" },
-+	{ .compatible = "silead,gsl1688" },
-+	{ .compatible = "silead,gsl3670" },
-+	{ .compatible = "silead,gsl3675" },
-+	{ .compatible = "silead,gsl3692" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, silead_ts_of_match);
-+#endif
-+
- static struct i2c_driver silead_ts_driver = {
- 	.probe = silead_ts_probe,
- 	.id_table = silead_ts_id,
- 	.driver = {
- 		.name = SILEAD_TS_NAME,
- 		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
-+		.of_match_table = of_match_ptr(silead_ts_of_match),
- 		.pm = &silead_ts_pm,
- 	},
- };
--- 
-2.9.3
+If you have at most one application controlling each LED, you are
+fine. That's quite common situation, serial port can also be opened at
+most once. Do you actually have two applications accessing one led? If
+so, what applications?
 
+> > > So I think new ABI is not sufficient and I would propose to add poll()
+> > > support also for changes done by userspace, write() to attribute
+> > > /sys/class/leds/.../brightness.
+> >=20
+> > Not easily possible, as we have triggers, and this was discussed in
+> > great great lengths before. Please go through that discussion.
+>=20
+> Without triggers and blinking it should be possible.
+>=20
+> Just notify only when some application do echo > brightness.
+
+Yes, we _could_ do that. Would be slightly confusing
+w.r.t. triggers. But is it good idea?
+
+Userspace could easily keep /var/run/led/XXX/brightness, and inotify
+works over regular files..
+
+And yes, with three color LEDs, userspace daemon managing LED state
+will be pretty much mandatory...
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--1UWUbFP1cBYEclgG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlit+nAACgkQMOfwapXb+vKbggCcCSvZo/i5Ha91i81CsO24uuUO
+kIkAn219Em5JahYj87mlJkuIksdhJG2V
+=n/9f
+-----END PGP SIGNATURE-----
+
+--1UWUbFP1cBYEclgG--
