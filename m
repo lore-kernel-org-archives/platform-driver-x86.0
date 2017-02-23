@@ -1,159 +1,99 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: LED devices & poll() for brightness attribute
-Date: Thu, 23 Feb 2017 21:44:54 +0100
-Message-ID: <201702232144.54558@pali>
-References: <20170222090630.GB21558@pali> <20170223144852.GD24201@pali> <20170223202333.GA19376@amd>
+Date: Thu, 23 Feb 2017 22:03:21 +0100
+Message-ID: <20170223210321.GB19376@amd>
+References: <20170222090630.GB21558@pali>
+ <20170223144852.GD24201@pali>
+ <20170223202333.GA19376@amd>
+ <201702232144.54558@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2839672.BiBJvZ136h";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
 Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170223202333.GA19376@amd>
+Content-Disposition: inline
+In-Reply-To: <201702232144.54558@pali>
 Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart2839672.BiBJvZ136h
-Content-Type: Text/Plain;
-  charset="utf-8"
+
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thursday 23 February 2017 21:23:33 Pavel Machek wrote:
-> Hi!
->=20
-> > > Ok, and this is where the problems start. You are not supposed to
-> > > control keyboard backlight like that. (In the same way you can't
-> > > control display backlight like that.)
+Hi!
+
+> > > > 2) there may be more then one
 > > >=20
-> > > There are numerous problems with the shell script:
-> > >=20
-> > > 1) how to identify the keyboard backlight LED
+> > > Yes and script can be adjusted to use specific one (config option
+> > > for script).
 > >=20
-> > Exactly same as it is doing desktop. It is possible to 100%
-> > reimplement desktop logic for identification of keyboard backlight
-> > LED
+> > No, you should autoconfigure it,
 >=20
-> Exactly! If you are reimplementing logic from another project, it is
-> strong hint that you are doing something wrong.
-
-Manual configuration is another option.
-
-> > > 2) there may be more then one
-> >=20
-> > Yes and script can be adjusted to use specific one (config option
-> > for script).
->=20
-> No, you should autoconfigure it,
-
-Why? Because you prefer autoconfiguration and all other people must use=20
-it only? Does not seems a good argument.
-
-=46or machine which does not change, static policy file is enough too. And=
+> Why? Because you prefer autoconfiguration and all other people must use=
 =20
-for this simple case it will work correctly.
-
-Why everybody must be forced to use some autoconfiguration and does not=20
-allow user to use his own manual configuration?
-
-> actually. See N900, there are 6 leds controlling one backlight.
-
-I'm not saying that one script must be universal for everything. My=20
-script is enough for machine with single keyboard led. And for other=20
-people who have only one backlight keyboard it will work fine too.
-
-=46or other cases something other could be written...
-
-> > > 3) synchronization problems
-> >=20
-> > This is reason why poll() is needed. So desktop GUI will receive
-> > information that somebody else changed LED.
+> it only? Does not seems a good argument.
 >=20
-> Actually, poll will not help you. If both your script and desktop
-> access the LED at the same time, there will be races.
-
-But does not have to be. If your own scripts are under your control then=20
-you can use it race-free.
-
-> ("Hmm. I just
-> wrote to the brightness file, and received poll notification. What is
-> the current brightness?")
-
-Value read *after* receiving poll notification. By poll notification we=20
-know that brightness was changed. And to get new up-to-date value, new=20
-read() must be done.
-
-If value is changed again, you will receive another poll notification.
-
-I do not see any race here. You will get poll notification about every=20
-change, so what is the problem? You do not miss any change for sure.
-
-> > > Your shell script should talk to the desktop, because it already
-> > > knows where the backlight is, and the problems disappear.
-> >=20
-> > Sometime there does not have to be any desktop loaded. It could but
-> > it does not have to be.
-> >=20
-> > Look at TLP scripts. They are very popular, and they have no
+> For machine which does not change, static policy file is enough too. And=
+=20
+> for this simple case it will work correctly.
 >=20
-> Do you have a link?
+> Why everybody must be forced to use some autoconfiguration and does not=
+=20
+> allow user to use his own manual configuration?
 
-https://github.com/linrunner/TLP
+Why everybody must be forced to poll() on brightness file?
 
-http://linrunner.de/en/tlp/docs/tlp-configuration.html
-
-> > > I believe the confusion is not worth it. Talk to the desktop
-> > > people, there should be good way to control the backlight
-> > > without reaching lowlevel interfaces directly.
-> >=20
-> > And probably every desktop will use own different method like
-> > before. No thanks. I do not want to depend on particular desktop
-> > or implement zillions of different desktop APIs. And even depend
-> > on desktop.
+> > actually. See N900, there are 6 leds controlling one backlight.
 >=20
-> And I don't want led/brightness file to be used for interprocess
-> communication.
+> I'm not saying that one script must be universal for everything. My=20
+> script is enough for machine with single keyboard led. And for other=20
+> people who have only one backlight keyboard it will work fine too.
 
-You are not forced to use something. I'm proposing extending current ABI=20
-which can be used for processes who want those notification.
+> For other cases something other could be written...
 
-If you do not want it, just do not use it.
+For other cases, you need to communicate with the desktop.
 
-> I especially don't want to deal with _6_ keyboard led
-> files to be used for interprocess communication -- what is desktop
-> expected to do when you set different brightnesses to each of them?
+> > And I don't want led/brightness file to be used for interprocess
+> > communication.
 >=20
-> You don't want to deal with desktop API, yet expect all the desktops
-> to follow your prefferred API (poll on led/brightness?).
->=20
-> There should be one component controlling the keyboard backlight.
-> Your scripts should talk to that component.
+> You are not forced to use something. I'm proposing extending current ABI=
+=20
+> which can be used for processes who want those notification.
 
-Yes, somebody creates some right central daemon and everybody who want=20
-to use LED kernel API will be forced to use that one "right" daemon?
+Your proposal does not help you with your problem, unless you get
+desktop people to poll() on the brightness files, and do something
+inteligent with the results.
 
-And what happens if somebody write new daemon with new userspace ABI=20
-just because that previous was incorrect/broken/does not fit all needs?
+Hmm. And doing something inteligent will be quite hard given that we
+have 6 of those files on N900.
 
-No kernel must not force which userspace application will be used for=20
-some operation. This sounds like Microsoft product...
+So, if you seriously want to do this, can you
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+1) write specification explaining how desktops should poll() the
+brightness files
 
---nextPart2839672.BiBJvZ136h
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+2) get someone to volunteer to implement that specification for at
+least GNOME and KDE?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Version: GnuPG v1
 
-iEYEABECAAYFAlivScYACgkQi/DJPQPkQ1L4fACcCZPX6bPjAuLqzgtYCsatqaUS
-XtQAmgPQ5IZLHRu9Cqymp7vtOnzj6tiH
-=t49P
+iEYEARECAAYFAlivThkACgkQMOfwapXb+vL75gCaA4LlSC2sU0sBazrWHcrQcuR6
+mtcAnivB4Bz56Cpq1snHeT/qkR01RO9L
+=op+z
 -----END PGP SIGNATURE-----
 
---nextPart2839672.BiBJvZ136h--
+--hQiwHBbRI9kgIhsi--
