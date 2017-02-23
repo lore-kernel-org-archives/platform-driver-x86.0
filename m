@@ -1,47 +1,56 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Thu, 23 Feb 2017 00:36:31 -0800
-Message-ID: <20170223083631.GE18639@dtor-ws>
-References: <20170210174837.1078-1-pespin.shar@gmail.com>
- <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
- <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
- <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] Input: soc_button_array - Propagate error from
+ gpiod_count()
+Date: Thu, 23 Feb 2017 00:40:32 -0800
+Message-ID: <20170223084032.GG18639@dtor-ws>
+References: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
+ <20170220161549.39490-5-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:34154 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751033AbdBWIgq (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Feb 2017 03:36:46 -0500
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pau Espin Pedrol <pespin.shar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+In-Reply-To: <20170220161549.39490-5-andriy.shevchenko@linux.intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 21, 2017 at 05:38:59PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 21, 2017 at 3:39 PM, Pau Espin Pedrol <pespin.shar@gmail.com> wrote:
+On Mon, Feb 20, 2017 at 06:15:49PM +0200, Andy Shevchenko wrote:
+> Since gpiod_count() does not return 0 anymore, we don't need to shadow
+> its error code and would safely propagate to the user.
 > 
-> > If we have user space tools supporting and using this type of event,
-> > then what about adding them properly with a define + entry in the
-> > structure array so that it can be standardized and on top get rid of
-> > those kernel message every time I (un)plug the charger? Would that be
-> > welcomed? I could send a new patch as specified above, adding the
-> > KEY_CHARING_ON/OFF defines + add entries to eeepc_keymap.
+> While here, replace second parameter by NULL in order to prevent side
+> effects on _DSD enabled firmware.
 > 
-> Please, do not top posting.
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+> ---
+>  drivers/input/misc/soc_button_array.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Dmitry, do we have special events for AC (un)plug? What is the best
-> approach in your opinion?
-
-Not route them through input as they not input events would be the best.
-
-I'd look into hooking up power_supply class.
-
-Thanks.
+> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+> index ddb2f22fca7a..c3b8e1fb4699 100644
+> --- a/drivers/input/misc/soc_button_array.c
+> +++ b/drivers/input/misc/soc_button_array.c
+> @@ -169,9 +169,10 @@ static int soc_button_probe(struct platform_device *pdev)
+>  
+>  	button_info = (struct soc_button_info *)id->driver_data;
+>  
+> -	if (gpiod_count(dev, KBUILD_MODNAME) <= 0) {
+> +	error = gpiod_count(dev, NULL);
+> +	if (error < 0) {
+>  		dev_dbg(dev, "no GPIO attached, ignoring...\n");
+> -		return -ENODEV;
+> +		return error;
+>  	}
+>  
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> -- 
+> 2.11.0
+> 
 
 -- 
 Dmitry
