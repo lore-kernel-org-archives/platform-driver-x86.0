@@ -1,109 +1,108 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 1/5] PCI: Recognize Thunderbolt devices
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH 2/5] apple-gmux: Don't switch external DP port on 2011+
+ MacBook Pros
 Date: Fri, 24 Feb 2017 20:19:45 +0100
-Message-ID: <c42a235e126f273e9b8712a7154f813f757db507.1487938188.git.lukas@wunner.de>
+Message-ID: <8c06c7eaf3d4a6ec3e2d75191ef26ebd554c24db.1487938188.git.lukas@wunner.de>
 References: <cover.1487938188.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <cover.1487938188.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/nouveau>
-List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Michael Jamet <michael.jamet-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Koenig <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout2.hostsharing.net ([83.223.90.233]:39227 "EHLO
+        mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750995AbdBXTUN (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 24 Feb 2017 14:20:13 -0500
+In-Reply-To: <cover.1487938188.git.lukas@wunner.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-RGV0ZWN0IG9uIHByb2JlIHdoZXRoZXIgYSBQQ0kgZGV2aWNlIGlzIHBhcnQgb2YgYSBUaHVuZGVy
-Ym9sdCBjb250cm9sbGVyLgoKSW50ZWwgdXNlcyBhIFZlbmRvci1TcGVjaWZpYyBFeHRlbmRlZCBD
-YXBhYmlsaXR5IChWU0VDKSB3aXRoIElEIDB4MTIzNApvbiBzdWNoIGRldmljZXMuICBEZXRlY3Qg
-cHJlc2VuY2Ugb2YgdGhpcyBWU0VDIGFuZCBjYWNoZSBpdCBpbiBhIG5ld2x5CmFkZGVkIGlzX3Ro
-dW5kZXJib2x0IGJpdCBpbiBzdHJ1Y3QgcGNpX2Rldi4gIEFkZCBhIGhlbHBlciB0byBjaGVjawp3
-aGV0aGVyIGEgZ2l2ZW4gUENJIGRldmljZSBpcyBzaXR1YXRlZCBvbiBhIFRodW5kZXJib2x0IGRh
-aXN5IGNoYWluLgoKVGhlIG5lY2Vzc2l0eSBhcmlzZXMgZnJvbSB0aGUgZm9sbG93aW5nOgoKKiBU
-byBwb3dlciBvZmYgVGh1bmRlcmJvbHQgY29udHJvbGxlcnMgb24gTWFjcyBldmVuIGlmIHRoZWly
-IEJJT1MgaXMKICBvbGRlciB0aGFuIDIwMTUsIHRoZWlyIFBDSWUgcG9ydHMgbmVlZCB0byBiZSB3
-aGl0ZWxpc3RlZCBmb3IgcnVudGltZQogIFBNLiAgRm9yIHRoaXMgd2UgbmVlZCBhIHdheSB0byBy
-ZWNvZ25pemUgdGhlbS4KCiogRHVhbCBHUFUgTWFjQm9vayBQcm9zIGludHJvZHVjZWQgMjAxMSsg
-Y2FuIG5vIGxvbmdlciBzd2l0Y2ggZXh0ZXJuYWwKICBEaXNwbGF5UG9ydCBwb3J0cyBiZXR3ZWVu
-IEdQVXMuICAoVGhleSdyZSBubyBsb25nZXIganVzdCB1c2VkIGZvciBEUAogIGJ1dCBoYXZlIGJl
-Y29tZSBjb21iaW5lZCBEUC9UaHVuZGVyYm9sdCBwb3J0cy4pICBUaGUgZHJpdmVyIHRvIHN3aXRj
-aAogIHRoZSBwb3J0cywgZHJpdmVycy9wbGF0Zm9ybS94ODYvYXBwbGUtZ211eC5jLCBuZWVkcyB0
-byBkZXRlY3QgcHJlc2VuY2UKICBvZiBhIFRodW5kZXJib2x0IGNvbnRyb2xsZXIgYW5kLCBpZiBm
-b3VuZCwga2VlcCBleHRlcm5hbCBwb3J0cwogIHBlcm1hbmVudGx5IHN3aXRjaGVkIHRvIHRoZSBk
-aXNjcmV0ZSBHUFUuCgoqIElmIGFuIGV4dGVybmFsIFRodW5kZXJib2x0IEdQVSBpcyBjb25uZWN0
-ZWQgdG8gYSBkdWFsIEdQVSBsYXB0b3AgKE1hYwogIG9yIG5vdCksIHRoYXQgR1BVIGlzIGN1cnJl
-bnRseSByZWdpc3RlcmVkIHdpdGggdmdhX3N3aXRjaGVyb28gZXZlbgogIHRob3VnaCBpdCBjYW4g
-bmVpdGhlciBkcml2ZSB0aGUgbGFwdG9wJ3MgcGFuZWwgbm9yIGJlIHBvd2VyZWQgb2ZmIGJ5CiAg
-dGhlIHBsYXRmb3JtLiAgVG8gdmdhX3N3aXRjaGVyb28gaXQgd2lsbCBhcHBlYXIgYXMgaWYgdHdv
-IGRpc2NyZXRlCiAgR1BVcyBhcmUgcHJlc2VudC4gIEFzIGEgcmVzdWx0LCB3aGVuIHRoZSBleHRl
-cm5hbCBHUFUgaXMgcnVudGltZQogIHN1c3BlbmRlZCwgdmdhX3N3aXRjaGVyb28gd2lsbCBjdXQg
-cG93ZXIgdG8gdGhlIGludGVybmFsIGRpc2NyZXRlIEdQVQogIHdoaWNoIG1heSBub3QgYmUgcnVu
-dGltZSBzdXNwZW5kZWQgYXQgYWxsIGF0IHRoaXMgbW9tZW50LiAgVGhlCiAgc29sdXRpb24gaXMg
-dG8gbm90IHJlZ2lzdGVyIGV4dGVybmFsIEdQVXMgd2l0aCB2Z2Ffc3dpdGNoZXJvbywgd2hpY2gK
-ICBuZWNlc3NpdGF0ZXMgYSB3YXkgdG8gcmVjb2duaXplIGlmIHRoZXkncmUgb24gYSBUaHVuZGVy
-Ym9sdCBkYWlzeQogIGNoYWluLgoKQ2M6IEFuZHJlYXMgTm9ldmVyIDxhbmRyZWFzLm5vZXZlckBn
-bWFpbC5jb20+CkNjOiBNaWNoYWVsIEphbWV0IDxtaWNoYWVsLmphbWV0QGludGVsLmNvbT4KQ2M6
-IFRvbWFzIFdpbmtsZXIgPHRvbWFzLndpbmtsZXJAaW50ZWwuY29tPgpDYzogQW1pciBMZXZ5IDxh
-bWlyLmplci5sZXZ5QGludGVsLmNvbT4KU2lnbmVkLW9mZi1ieTogTHVrYXMgV3VubmVyIDxsdWth
-c0B3dW5uZXIuZGU+Ci0tLQogZHJpdmVycy9wY2kvcGNpLmggICB8ICAyICsrCiBkcml2ZXJzL3Bj
-aS9wcm9iZS5jIHwgMjEgKysrKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2xpbnV4L3BjaS5o
-IHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysKIDMgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0
-aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS5oIGIvZHJpdmVycy9wY2kvcGNp
-LmgKaW5kZXggY2IxN2RiMjQyZjMwLi40NWMyYjgxNDQ5MTEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-cGNpL3BjaS5oCisrKyBiL2RyaXZlcnMvcGNpL3BjaS5oCkBAIC0zLDYgKzMsOCBAQAogCiAjZGVm
-aW5lIFBDSV9GSU5EX0NBUF9UVEwJNDgKIAorI2RlZmluZSBQQ0lfVlNFQ19JRF9JTlRFTF9UQlQJ
-MHgxMjM0CS8qIFRodW5kZXJib2x0ICovCisKIGV4dGVybiBjb25zdCB1bnNpZ25lZCBjaGFyIHBj
-aWVfbGlua19zcGVlZFtdOwogCiBib29sIHBjaWVfY2FwX2hhc19sbmtjdGwoY29uc3Qgc3RydWN0
-IHBjaV9kZXYgKmRldik7CmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wcm9iZS5jIGIvZHJpdmVy
-cy9wY2kvcHJvYmUuYwppbmRleCAyMDQ5NjBlNzAzMzMuLjc5NjNlY2M2ZDg1ZiAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9wY2kvcHJvYmUuYworKysgYi9kcml2ZXJzL3BjaS9wcm9iZS5jCkBAIC0xMjA4
-LDYgKzEyMDgsMjQgQEAgdm9pZCBzZXRfcGNpZV9ob3RwbHVnX2JyaWRnZShzdHJ1Y3QgcGNpX2Rl
-diAqcGRldikKIAkJcGRldi0+aXNfaG90cGx1Z19icmlkZ2UgPSAxOwogfQogCitzdGF0aWMgdm9p
-ZCBzZXRfcGNpZV90aHVuZGVyYm9sdChzdHJ1Y3QgcGNpX2RldiAqZGV2KQoreworCWludCB2c2Vj
-ID0gMDsKKwl1MzIgaGVhZGVyOworCisJd2hpbGUgKCh2c2VjID0gcGNpX2ZpbmRfbmV4dF9leHRf
-Y2FwYWJpbGl0eShkZXYsIHZzZWMsCisJCQkJCQkgICAgUENJX0VYVF9DQVBfSURfVk5EUikpKSB7
-CisJCXBjaV9yZWFkX2NvbmZpZ19kd29yZChkZXYsIHZzZWMgKyBQQ0lfVk5EUl9IRUFERVIsICZo
-ZWFkZXIpOworCisJCS8qIElzIHRoZSBkZXZpY2UgcGFydCBvZiBhIFRodW5kZXJib2x0IGNvbnRy
-b2xsZXI/ICovCisJCWlmIChkZXYtPnZlbmRvciA9PSBQQ0lfVkVORE9SX0lEX0lOVEVMICYmCisJ
-CSAgICBQQ0lfVk5EUl9IRUFERVJfSUQoaGVhZGVyKSA9PSBQQ0lfVlNFQ19JRF9JTlRFTF9UQlQp
-IHsKKwkJCWRldi0+aXNfdGh1bmRlcmJvbHQgPSAxOworCQkJcmV0dXJuOworCQl9CisJfQorfQor
-CiAvKioKICAqIHBjaV9leHRfY2ZnX2lzX2FsaWFzZWQgLSBpcyBleHQgY29uZmlnIHNwYWNlIGp1
-c3QgYW4gYWxpYXMgb2Ygc3RkIGNvbmZpZz8KICAqIEBkZXY6IFBDSSBkZXZpY2UKQEAgLTEzNjAs
-NiArMTM3OCw5IEBAIGludCBwY2lfc2V0dXBfZGV2aWNlKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiAJ
-LyogbmVlZCB0byBoYXZlIGRldi0+Y2xhc3MgcmVhZHkgKi8KIAlkZXYtPmNmZ19zaXplID0gcGNp
-X2NmZ19zcGFjZV9zaXplKGRldik7CiAKKwkvKiBuZWVkIHRvIGhhdmUgZGV2LT5jZmdfc2l6ZSBy
-ZWFkeSAqLworCXNldF9wY2llX3RodW5kZXJib2x0KGRldik7CisKIAkvKiAiVW5rbm93biBwb3dl
-ciBzdGF0ZSIgKi8KIAlkZXYtPmN1cnJlbnRfc3RhdGUgPSBQQ0lfVU5LTk9XTjsKIApkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9saW51eC9wY2kuaCBiL2luY2x1ZGUvbGludXgvcGNpLmgKaW5kZXggZTJk
-MWExMjQyMTZhLi4zNmRmY2ZkOTQ2ZjQgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvcGNpLmgK
-KysrIGIvaW5jbHVkZS9saW51eC9wY2kuaApAQCAtMzU4LDYgKzM1OCw3IEBAIHN0cnVjdCBwY2lf
-ZGV2IHsKIAl1bnNpZ25lZCBpbnQJaXNfdmlydGZuOjE7CiAJdW5zaWduZWQgaW50CXJlc2V0X2Zu
-OjE7CiAJdW5zaWduZWQgaW50ICAgIGlzX2hvdHBsdWdfYnJpZGdlOjE7CisJdW5zaWduZWQgaW50
-CWlzX3RodW5kZXJib2x0OjE7IC8qIFRodW5kZXJib2x0IGNvbnRyb2xsZXIgKi8KIAl1bnNpZ25l
-ZCBpbnQgICAgX19hZXJfZmlybXdhcmVfZmlyc3RfdmFsaWQ6MTsKIAl1bnNpZ25lZCBpbnQJX19h
-ZXJfZmlybXdhcmVfZmlyc3Q6MTsKIAl1bnNpZ25lZCBpbnQJYnJva2VuX2ludHhfbWFza2luZzox
-OwpAQCAtMjE3MSw2ICsyMTcyLDI4IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBwY2lfYXJpX2VuYWJs
-ZWQoc3RydWN0IHBjaV9idXMgKmJ1cykKIAlyZXR1cm4gYnVzLT5zZWxmICYmIGJ1cy0+c2VsZi0+
-YXJpX2VuYWJsZWQ7CiB9CiAKKy8qKgorICogcGNpX2lzX3RodW5kZXJib2x0X2F0dGFjaGVkIC0g
-d2hldGhlciBkZXZpY2UgaXMgb24gYSBUaHVuZGVyYm9sdCBkYWlzeSBjaGFpbgorICogQHBkZXY6
-IFBDSSBkZXZpY2UgdG8gY2hlY2sKKyAqCisgKiBXYWxrIHVwd2FyZHMgZnJvbSBAcGRldiBhbmQg
-Y2hlY2sgZm9yIGVhY2ggZW5jb3VudGVyZWQgYnJpZGdlIGlmIGl0J3MKKyAqIHBhcnQgb2YgYSBU
-aHVuZGVyYm9sdCBjb250cm9sbGVyLiAgUmVhY2hpbmcgdGhlIGhvc3QgYnJpZGdlIG1lYW5zIEBw
-ZGV2CisgKiBpcyBzb2xkZXJlZCB0byB0aGUgbWFpbmJvYXJkLgorICovCitzdGF0aWMgaW5saW5l
-IGJvb2wgcGNpX2lzX3RodW5kZXJib2x0X2F0dGFjaGVkKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQor
-eworCXN0cnVjdCBwY2lfZGV2ICpwYXJlbnQgPSBwZGV2OworCisJaWYgKHBkZXYtPmlzX3RodW5k
-ZXJib2x0KQorCQlyZXR1cm4gdHJ1ZTsKKworCXdoaWxlICgocGFyZW50ID0gcGNpX3Vwc3RyZWFt
-X2JyaWRnZShwYXJlbnQpKSkKKwkJaWYgKHBhcmVudC0+aXNfdGh1bmRlcmJvbHQpCisJCQlyZXR1
-cm4gdHJ1ZTsKKworCXJldHVybiBmYWxzZTsKK30KKwogLyogcHJvdmlkZSB0aGUgbGVnYWN5IHBj
-aV9kbWFfKiBBUEkgKi8KICNpbmNsdWRlIDxsaW51eC9wY2ktZG1hLWNvbXBhdC5oPgogCi0tIAoy
-LjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCk5v
-dXZlYXUgbWFpbGluZyBsaXN0Ck5vdXZlYXVAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vbm91dmVhdQo=
+On MacBook Pros introduced 2011 and onward, external DP ports are
+combined DP/Thunderbolt ports that are no longer fully switchable
+between GPUs, they can only be driven by the discrete GPU.
+
+More specifically, the Main Link pins (which transport the actual video
+and audio streams) are soldered to the discrete GPU, whereas the AUX
+Channel pins are switchable. Because the integrated GPU is missing the
+Main Link, external displays appear to it as phantoms which fail to
+link-train.
+
+Force the AUX channel to the discrete GPU on these models to avoid any
+confusion. Document the switching policy implemented by this commit.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/platform/x86/apple-gmux.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index a66be137324c..623d322447a2 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -60,6 +60,7 @@ struct apple_gmux_data {
+ 	/* switcheroo data */
+ 	acpi_handle dhandle;
+ 	int gpe;
++	bool external_switchable;
+ 	enum vga_switcheroo_client_id switch_state_display;
+ 	enum vga_switcheroo_client_id switch_state_ddc;
+ 	enum vga_switcheroo_client_id switch_state_external;
+@@ -358,6 +359,19 @@ static const struct backlight_ops gmux_bl_ops = {
+  * ports while the discrete GPU is asleep, but currently we do not make use
+  * of this feature.
+  *
++ * Our switching policy for the external port is that on those generations
++ * which are able to switch it fully, the port is switched together with the
++ * panel when IGD / DIS commands are issued to vga_switcheroo. It is thus
++ * possible to drive e.g. a beamer on battery power with the integrated GPU.
++ * The user may manually switch to the discrete GPU if more performance is
++ * needed.
++ *
++ * On all newer generations, the external port can only be driven by the
++ * discrete GPU. If a display is plugged in while the panel is switched to
++ * the integrated GPU, *both* GPUs will be in use for maximum performance.
++ * To decrease power consumption, the user may manually switch to the
++ * discrete GPU, thereby suspending the integrated GPU.
++ *
+  * gmux' initial switch state on bootup is user configurable via the EFI
+  * variable ``gpu-power-prefs-fa4ce28d-b62f-4c99-9cc3-6815686e30f9`` (5th byte,
+  * 1 = IGD, 0 = DIS). Based on this setting, the EFI firmware tells gmux to
+@@ -414,7 +428,8 @@ static int gmux_switchto(enum vga_switcheroo_client_id id)
+ {
+ 	apple_gmux_data->switch_state_ddc = id;
+ 	apple_gmux_data->switch_state_display = id;
+-	apple_gmux_data->switch_state_external = id;
++	if (apple_gmux_data->external_switchable)
++		apple_gmux_data->switch_state_external = id;
+ 
+ 	gmux_write_switch_state(apple_gmux_data);
+ 
+@@ -601,6 +616,11 @@ static struct pci_dev *gmux_get_io_pdev(void)
+ 	return NULL;
+ }
+ 
++static int is_thunderbolt(struct device *dev, void *data)
++{
++	return to_pci_dev(dev)->is_thunderbolt;
++}
++
+ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ {
+ 	struct apple_gmux_data *gmux_data;
+@@ -755,6 +775,15 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 		gmux_data->gpe = -1;
+ 	}
+ 
++	/*
++	 * If Thunderbolt is present, the external DP port is not fully
++	 * switchable. Force its AUX channel to the discrete GPU.
++	 */
++	gmux_data->external_switchable =
++		!bus_for_each_dev(&pci_bus_type, NULL, NULL, is_thunderbolt);
++	if (!gmux_data->external_switchable)
++		gmux_write8(gmux_data, GMUX_PORT_SWITCH_EXTERNAL, 3);
++
+ 	apple_gmux_data = gmux_data;
+ 	init_completion(&gmux_data->powerchange_done);
+ 	gmux_enable_interrupts(gmux_data);
+-- 
+2.11.0
