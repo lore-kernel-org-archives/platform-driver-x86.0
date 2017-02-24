@@ -1,99 +1,49 @@
-From: Pavel Machek <pavel@ucw.cz>
+From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: LED devices & poll() for brightness attribute
-Date: Thu, 23 Feb 2017 22:03:21 +0100
-Message-ID: <20170223210321.GB19376@amd>
-References: <20170222090630.GB21558@pali>
- <20170223144852.GD24201@pali>
- <20170223202333.GA19376@amd>
- <201702232144.54558@pali>
+Date: Fri, 24 Feb 2017 09:52:11 +0100
+Message-ID: <e87ee6f8-8c7e-7370-33ae-6f420f91a582@redhat.com>
+References: <20170222090630.GB21558@pali> <20170223144852.GD24201@pali>
+ <20170223202333.GA19376@amd> <201702232144.54558@pali>
+ <20170223210321.GB19376@amd> <20170224085055.GA2157@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201702232144.54558@pali>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:57268 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751296AbdBXIwx (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 24 Feb 2017 03:52:53 -0500
+In-Reply-To: <20170224085055.GA2157@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>
 Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
+Hi,
 
---hQiwHBbRI9kgIhsi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 24-02-17 09:50, Pali Rohár wrote:
+> On Thursday 23 February 2017 22:03:21 Pavel Machek wrote:
+>> So, if you seriously want to do this, can you
+>>
+>> 1) write specification explaining how desktops should poll() the
+>> brightness files
+>>
+>> 2) get someone to volunteer to implement that specification for at
+>> least GNOME and KDE?
+>
+> Hm... Probably I should try to implement it myself :-) and look deeply
+> what I'm proposing...
+>
+> Hans, you probably already did some changes for hw brightness changed
+> attribute... Do you have some links or application parts which handle
+> this for GNOME, KDE or other DE? So I could look at correct application?
+>
+> IIRC KDE4 uses upowerd for controlling keyboard backlight.
 
-Hi!
+Gnome uses upower too, and current upower master has patches to
+support brightness_hw_changed which you could use as a start.
 
-> > > > 2) there may be more then one
-> > >=20
-> > > Yes and script can be adjusted to use specific one (config option
-> > > for script).
-> >=20
-> > No, you should autoconfigure it,
->=20
-> Why? Because you prefer autoconfiguration and all other people must use=
-=20
-> it only? Does not seems a good argument.
->=20
-> For machine which does not change, static policy file is enough too. And=
-=20
-> for this simple case it will work correctly.
->=20
-> Why everybody must be forced to use some autoconfiguration and does not=
-=20
-> allow user to use his own manual configuration?
+Regards,
 
-Why everybody must be forced to poll() on brightness file?
-
-> > actually. See N900, there are 6 leds controlling one backlight.
->=20
-> I'm not saying that one script must be universal for everything. My=20
-> script is enough for machine with single keyboard led. And for other=20
-> people who have only one backlight keyboard it will work fine too.
-
-> For other cases something other could be written...
-
-For other cases, you need to communicate with the desktop.
-
-> > And I don't want led/brightness file to be used for interprocess
-> > communication.
->=20
-> You are not forced to use something. I'm proposing extending current ABI=
-=20
-> which can be used for processes who want those notification.
-
-Your proposal does not help you with your problem, unless you get
-desktop people to poll() on the brightness files, and do something
-inteligent with the results.
-
-Hmm. And doing something inteligent will be quite hard given that we
-have 6 of those files on N900.
-
-So, if you seriously want to do this, can you
-
-1) write specification explaining how desktops should poll() the
-brightness files
-
-2) get someone to volunteer to implement that specification for at
-least GNOME and KDE?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---hQiwHBbRI9kgIhsi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlivThkACgkQMOfwapXb+vL75gCaA4LlSC2sU0sBazrWHcrQcuR6
-mtcAnivB4Bz56Cpq1snHeT/qkR01RO9L
-=op+z
------END PGP SIGNATURE-----
-
---hQiwHBbRI9kgIhsi--
+Hans
