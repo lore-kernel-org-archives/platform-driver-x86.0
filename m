@@ -1,52 +1,45 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: LED devices & poll() for brightness attribute
-Date: Fri, 24 Feb 2017 09:58:14 +0100
-Message-ID: <20170224085814.GB2157@pali>
-References: <20170222090630.GB21558@pali>
- <20170223144852.GD24201@pali>
- <20170223202333.GA19376@amd>
- <201702232144.54558@pali>
- <20170223210321.GB19376@amd>
- <20170224085055.GA2157@pali>
- <e87ee6f8-8c7e-7370-33ae-6f420f91a582@redhat.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 4/4] platform/x86: intel-hid: remove redundant set_bit() call
+Date: Fri, 24 Feb 2017 11:33:09 +0100
+Message-ID: <20170224103309.19463-5-kernel@kempniu.pl>
+References: <20170224103309.19463-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e87ee6f8-8c7e-7370-33ae-6f420f91a582@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f66.google.com ([209.85.215.66]:35767 "EHLO
+        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751275AbdBXKdp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 24 Feb 2017 05:33:45 -0500
+Received: by mail-lf0-f66.google.com with SMTP id z127so1165740lfa.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Feb 2017 02:33:18 -0800 (PST)
+In-Reply-To: <20170224103309.19463-1-kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Friday 24 February 2017 09:52:11 Hans de Goede wrote:
-> Hi,
-> 
-> On 24-02-17 09:50, Pali Rohár wrote:
-> >On Thursday 23 February 2017 22:03:21 Pavel Machek wrote:
-> >>So, if you seriously want to do this, can you
-> >>
-> >>1) write specification explaining how desktops should poll() the
-> >>brightness files
-> >>
-> >>2) get someone to volunteer to implement that specification for at
-> >>least GNOME and KDE?
-> >
-> >Hm... Probably I should try to implement it myself :-) and look deeply
-> >what I'm proposing...
-> >
-> >Hans, you probably already did some changes for hw brightness changed
-> >attribute... Do you have some links or application parts which handle
-> >this for GNOME, KDE or other DE? So I could look at correct application?
-> >
-> >IIRC KDE4 uses upowerd for controlling keyboard backlight.
-> 
-> Gnome uses upower too, and current upower master has patches to
-> support brightness_hw_changed which you could use as a start.
+Remove redundant set_bit() call for KEY_RFKILL as it is already made by
+sparse_keymap_setup() due to KEY_RFKILL being assigned to event code 8
+in intel_hid_keymap.
 
-Ok, thanks!
+Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+---
+ drivers/platform/x86/intel-hid.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index b17f33b832c2..5eab31659cba 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -155,7 +155,6 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	priv->input_dev->dev.parent = &device->dev;
+ 	priv->input_dev->name = "Intel HID events";
+ 	priv->input_dev->id.bustype = BUS_HOST;
+-	set_bit(KEY_RFKILL, priv->input_dev->keybit);
+ 
+ 	return input_register_device(priv->input_dev);
+ }
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.11.1
