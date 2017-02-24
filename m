@@ -1,40 +1,81 @@
-From: Pau Espin Pedrol <pespin.shar@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Fri, 24 Feb 2017 14:01:30 +0100
-Message-ID: <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
-References: <20170210174837.1078-1-pespin.shar@gmail.com> <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
- <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
- <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com> <20170223083631.GE18639@dtor-ws>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/5] Thunderbolt GPU fixes
+Date: Fri, 24 Feb 2017 20:19:45 +0100
+Message-ID: <cover.1487938188.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:34051 "EHLO
-        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751187AbdBXNCp (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Feb 2017 08:02:45 -0500
-In-Reply-To: <20170223083631.GE18639@dtor-ws>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/nouveau>
+List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Michael Jamet <michael.jamet-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Koenig <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
->> Dmitry, do we have special events for AC (un)plug? What is the best
->> approach in your opinion?
->
-> Not route them through input as they not input events would be the best.
->
-Is my patch good enough for this or would you recommend doing it another way?
-
-> I'd look into hooking up power_supply class.
->
-Whys is this necessay? All the related information required is already
-present in my system.
-I already have two power_supply instances:
-* /sys/class/power_supply/AC0/ (provided by module "ac"), contains
-property "online" which is correctly updated to 1 when AC is plugged
-and 0 when AC is unplugged.
-* /sys/class/power_supply/BAT0/ (provided by module "battery"),
-contains property "status" which is correctly updated to "Charging"
-when AC is plugged and "Discharging" when AC is unplugged.
+Rml4IFRodW5kZXJib2x0LXJlbGF0ZWQgaXNzdWVzIGluIGFwcGxlLWdtdXggYW5kIHZnYV9zd2l0
+Y2hlcm9vOgoKUGF0Y2ggWzEvNV0gKCJSZWNvZ25pemUgVGh1bmRlcmJvbHQgZGV2aWNlcyIpIGhh
+cyBhbHJlYWR5IGJlZW4gc3ViamVjdGVkCnRvIGEgZmFpciBhbW91bnQgb2Ygc2NydXRpbnkgb3Zl
+ciBhdCBsaW51eC1wY2lALCBJJ3ZlIHN1Ym1pdHRlZCBpdCA1IHRpbWVzCnRvdGFsIHNpbmNlIE1h
+eSAyMDE2LiAgV2l0aCBsdWNrIGl0IG1heSBiZSBpbiBhY2stYWJsZSBzaGFwZSBub3cuCgpQYXRj
+aCBbMi81XSBhbWVuZHMgYXBwbGUtZ211eCB0byBoYW5kbGUgY29tYmluZWQgRFAvVGh1bmRlcmJv
+bHQgcG9ydHMKcHJvcGVybHkgb24gbmV3ZXIgTWFjQm9vayBQcm9zLgoKUGF0Y2hlcyBbMy81XSB0
+byBbNS81XSBhdm9pZCByZWdpc3RlcmluZyBleHRlcm5hbCBUaHVuZGVyYm9sdCBHUFVzIHdpdGgK
+dmdhX3N3aXRjaGVyb286ICBEYXZlIEFpcmxpZSBkZXNpZ25lZCB2Z2Ffc3dpdGNoZXJvbyB0byBy
+ZWdpc3RlciBHUFVzCnVuY29uZGl0aW9uYWxseS4gIFNvIGlmIGEgZGVza3RvcCBib3ggaGFzIG11
+bHRpcGxlIEdQVXMsIHZnYV9zd2l0Y2hlcm9vCndpbGwgc2VlIG1vcmUgdGhhbiBvbmUgZGlzY3Jl
+dGUgR1BVIGJ1dCB0aGF0J3Mgbm90IGEgcHJvYmxlbSBiZWNhdXNlIG9uCmRlc2t0b3AgYm94ZXMg
+bm8gaGFuZGxlciBpcyByZWdpc3RlcmVkIGFuZCB0aHVzIHZnYV9zd2l0Y2hlcm9vX2VuYWJsZSgp
+CmlzIG5ldmVyIGNhbGxlZC4gIEh5YnJpZCBncmFwaGljcyBsYXB0b3BzIG9uIHRoZSBvdGhlciBo
+YW5kIGRvIHJlZ2lzdGVyCmEgaGFuZGxlciwgYnV0IGFyZSBhc3N1bWVkIHRvIG5ldmVyIHJlZ2lz
+dGVyIG1vcmUgdGhhbiBvbmUgZGlzY3JldGUgR1BVLgpIb3dldmVyIG9uY2UgYSBUaHVuZGVyYm9s
+dCBlR1BVIGlzIGF0dGFjaGVkIHRvIGEgaHlicmlkIGdyYXBoaWNzIGxhcHRvcCwKdGhhdCBhc3N1
+bXB0aW9uIGlzIG5vIGxvbmdlciB0cnVlIGFuZCB0aGluZ3MgZ28gc291dGggd2hlbiB2Z2Ffc3dp
+dGNoZXJvbwpydW50aW1lIHN1c3BlbmRzIHRoZSBleHRlcm5hbCBkaXNjcmV0ZSBHUFUgYW5kIHRo
+ZW4gY2FsbHMgdGhlIGhhbmRsZXIgdG8KY3V0IHBvd2VyIHRvIHRoZSBpbnRlcm5hbCBkaXNjcmV0
+ZSBHUFUuICBUaGUgZHJpdmVyIGZvciB0aGUgaW50ZXJuYWwgR1BVCndpbGwgc2l0IHRoZXJlIHB1
+enpsZWQgYW5kIHR5cGljYWxseSBjYXVzZSBhIGxvY2t1cC4KClRoaXMgc2VyaWVzIGlzIGp1c3Qg
+YSBmaXJzdCBzdGVwIHRvd2FyZHMgcHJvcGVyIGhhbmRsaW5nIG9mIGVHUFVzLCBhbm90aGVyCndp
+bGwgYmUgc3VwcG9ydCBmb3Igc3VycHJpc2UgcmVtb3ZhbDogIERSTSBkcml2ZXJzIG5lZWQgdG8g
+Y2Vhc2UgTU1JTyBhbmQKUENJIGNvbmZpZyBzcGFjZSBhY2Nlc3Mgb25jZSBhIGRldmljZSBpcyBn
+b25lIHRvIGF2b2lkIGRlbGF5aW5nIGRldmljZQp0ZWFyZG93biBvciBhY2Nlc3NpbmcgYSBuZXds
+eSBhdHRhY2hlZCByZXBsYWNlbWVudCBkZXZpY2UuICBBbHNvLCBNTUlPCnJlYWRzIHRvIHJlbW92
+ZWQgZGV2aWNlcyByZXR1cm4gImFsbCBvbmVzIiwgd2hpY2ggcmVzdWx0cyBpbiBhbiBpbmZpbml0
+ZQpsb29wIGUuZy4gaW4gbm91dmVhdSdzIG52a21fbnNlYygpLgoKVGhlIHF1ZXN0aW9uIGlzIGhv
+dyB0byByZWNvZ25pemUgZGV2aWNlIHJlbW92YWwuICBPbmUgY29tbW9uIG1ldGhvZCBpcyB0bwpy
+ZWFkIHRoZSB2ZW5kb3IgcmVnaXN0ZXIgd2l0aCBwY2lfZGV2aWNlX2lzX3ByZXNlbnQoKSwgYnV0
+IHRoaXMgcmVwb3J0cwphIGZhbHNlIHBvc2l0aXZlIGlmIHRoZSBkZXZpY2UgaXMgcHJlc2VudCBi
+dXQgaW4gRDNjb2xkLiAgQSBiZXR0ZXIgbWV0aG9kCmlzIHRvIGxldCB0aGUgUENJZSBob3RwbHVn
+IGRyaXZlciByZWNvZ25pemUgYW5kIGNhY2hlIGRldmljZSByZW1vdmFsLgpLZWl0aCBCdXNjaCBo
+YXMgZGV2ZWxvcGVkIHBhdGNoZXMgd2hpY2ggZG8gZXhhY3RseSB0aGF0LCB0aGV5J3JlIG5vdyBh
+dAp2NiBhbmQgZnVsbHkgcmV2aWV3ZWQgYnkgQ2hyaXN0b3BoIEhlbGx3aWcgYnV0IGFsYXMgd2Vy
+ZSBub3QgaW5jbHVkZWQgaW4KdGhlIDQuMTEgUENJIHB1bGwgZm9yIHNvbWUgcmVhc29uOgpodHRw
+Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXBjaS9tc2c1ODEyMy5odG1sCgpJJ3ZlIHB1
+c2hlZCB0aGUgcHJlc2VudCBzZXJpZXMgdG8gR2l0SHViIGluIGNhc2UgYW55b25lIHByZWZlcnMg
+cmV2aWV3aW5nCml0IGluIGEgR1VJOgpodHRwczovL2dpdGh1Yi5jb20vbDFrL2xpbnV4L2NvbW1p
+dHMvdGh1bmRlcmJvbHRfZ3B1X3YxCgpUaGFua3MsCgpMdWthcwoKCkx1a2FzIFd1bm5lciAoNSk6
+CiAgUENJOiBSZWNvZ25pemUgVGh1bmRlcmJvbHQgZGV2aWNlcwogIGFwcGxlLWdtdXg6IERvbid0
+IHN3aXRjaCBleHRlcm5hbCBEUCBwb3J0IG9uIDIwMTErIE1hY0Jvb2sgUHJvcwogIGRybS9ub3V2
+ZWF1OiBEb24ndCByZWdpc3RlciBUaHVuZGVyYm9sdCBlR1BVIHdpdGggdmdhX3N3aXRjaGVyb28K
+ICBkcm0vcmFkZW9uOiBEb24ndCByZWdpc3RlciBUaHVuZGVyYm9sdCBlR1BVIHdpdGggdmdhX3N3
+aXRjaGVyb28KICBkcm0vYW1kZ3B1OiBEb24ndCByZWdpc3RlciBUaHVuZGVyYm9sdCBlR1BVIHdp
+dGggdmdhX3N3aXRjaGVyb28KCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZGV2
+aWNlLmMgfCAgNyArKysrKy0tCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfa21z
+LmMgICAgfCAgMyArKy0KIGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfdmdhLmMgICAg
+ICB8IDEwICsrKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2RldmljZS5j
+ICAgICB8ICA3ICsrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2ttcy5jICAg
+ICAgICB8ICAzICsrLQogZHJpdmVycy9wY2kvcGNpLmggICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgIDIgKysKIGRyaXZlcnMvcGNpL3Byb2JlLmMgICAgICAgICAgICAgICAgICAgICAgICB8IDIx
+ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hcHBsZS1nbXV4LmMg
+ICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KIGluY2x1ZGUvbGlu
+dXgvcGNpLmggICAgICAgICAgICAgICAgICAgICAgICB8IDIzICsrKysrKysrKysrKysrKysrKysr
+KysKIDkgZmlsZXMgY2hhbmdlZCwgOTkgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKCi0t
+IAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Ck5vdXZlYXUgbWFpbGluZyBsaXN0Ck5vdXZlYXVAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vbm91dmVhdQo=
