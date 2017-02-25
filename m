@@ -1,42 +1,79 @@
 From: Christian Kellner <ckellner@redhat.com>
-Subject: [PATCH 0/2] Support for T470s hotkeys
-Date: Sat, 25 Feb 2017 19:20:28 +0100
-Message-ID: <20170225182030.19232-1-ckellner@redhat.com>
+Subject: [PATCH 1/2] platform/x86: thinkpad_acpi: guard generic hotkey case
+Date: Sat, 25 Feb 2017 19:20:29 +0100
+Message-ID: <20170225182030.19232-2-ckellner@redhat.com>
+References: <20170225182030.19232-1-ckellner@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:54844 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:39090 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751568AbdBYSUy (ORCPT
+        id S1751629AbdBYSVG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Feb 2017 13:20:54 -0500
+        Sat, 25 Feb 2017 13:21:06 -0500
+In-Reply-To: <20170225182030.19232-1-ckellner@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 Cc: Christian Kellner <ckellner@redhat.com>
 
-Hi!
+Currently when dispatching hotkeys we check if the scancode is in
+the range of 0 and TPACPI_HOTKEY_MAP_LEN, although the bottom 20
+entries in the hotkey keymap are already adaptive keycodes.
+Therefore we introduce a TP_ACPI_HOTKEYSCAN_ADAPTIVE_START and
+ensure that we are in the range 0 and ADAPTIVE_START for the generic
+keycode case.
 
-On the new Levnovo T470s there are 4 hotkeys that emit currently
-unsupported hkey event (0x1311 .. 0x1315). According to the manual
-they are 'lanuch user selected fav. application' (0x1311), the
-'snipping tool' (0x1312), 'enable/disable bluetooth' (0x1314) and
-launch the keyboard settings dialog (0x1315). I tried to map them
-to the corresponding input event codes, although I have to say
-I am not 100% sure about the user selected fav app (KEY_FAVORITES).
+Signed-off-by: Christian Kellner <ckellner@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Hans already did a round of review of it (thanks very much!),
-comments are of course welcome!
-
-Cheers,
-Ck
-
-Christian Kellner (2):
-  platform/x86: thinkpad_acpi: guard generic hotkey case
-  platform/x86: thinkpad_acpi: add mapping for new hotkeys on T470
-
- drivers/platform/x86/thinkpad_acpi.c | 97 ++++++++++++++++++++++++++++++------
- 1 file changed, 82 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index cacb43fb1df7..83294b28933e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1923,7 +1923,8 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+ 	TP_ACPI_HOTKEYSCAN_UNK7,
+ 	TP_ACPI_HOTKEYSCAN_UNK8,
+ 
+-	TP_ACPI_HOTKEYSCAN_MUTE2,
++	TP_ACPI_HOTKEYSCAN_ADAPTIVE_START = 32,
++	TP_ACPI_HOTKEYSCAN_MUTE2 = 32,
+ 	TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
+ 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL,
+ 	TP_ACPI_HOTKEYSCAN_CLOUD,
+@@ -3657,7 +3658,6 @@ static const int adaptive_keyboard_modes[] = {
+ #define DFR_CHANGE_ROW			0x101
+ #define DFR_SHOW_QUICKVIEW_ROW		0x102
+ #define FIRST_ADAPTIVE_KEY		0x103
+-#define ADAPTIVE_KEY_OFFSET		0x020
+ 
+ /* press Fn key a while second, it will switch to Function Mode. Then
+  * release Fn key, previous mode be restored.
+@@ -3748,12 +3748,13 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
+ 	default:
+ 		if (scancode < FIRST_ADAPTIVE_KEY ||
+ 		    scancode >= FIRST_ADAPTIVE_KEY + TPACPI_HOTKEY_MAP_LEN -
+-				ADAPTIVE_KEY_OFFSET) {
++				TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+ 			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
+ 					scancode);
+ 			return false;
+ 		}
+-		keycode = hotkey_keycode_map[scancode - FIRST_ADAPTIVE_KEY + ADAPTIVE_KEY_OFFSET];
++		keycode = hotkey_keycode_map[scancode - FIRST_ADAPTIVE_KEY +
++					     TP_ACPI_HOTKEYSCAN_ADAPTIVE_START];
+ 		if (keycode != KEY_RESERVED) {
+ 			mutex_lock(&tpacpi_inputdev_send_mutex);
+ 
+@@ -3779,7 +3780,7 @@ static bool hotkey_notify_hotkey(const u32 hkey,
+ 	*ignore_acpi_ev = false;
+ 
+ 	/* HKEY event 0x1001 is scancode 0x00 */
+-	if (scancode > 0 && scancode <= TPACPI_HOTKEY_MAP_LEN) {
++	if (scancode > 0 && scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+ 		scancode--;
+ 		if (!(hotkey_source_mask & (1 << scancode))) {
+ 			tpacpi_input_send_key_masked(scancode);
 -- 
-Dr. Christian J. Kellner
-Desktop Hardware Enablement
-Red Hat
+2.11.1
