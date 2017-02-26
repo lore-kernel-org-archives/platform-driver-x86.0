@@ -1,79 +1,96 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: renames and cleanups
-Date: Sun, 26 Feb 2017 17:03:13 +0200
-Message-ID: <CAHp75Vcevq9AiMN44yVijEVqYXaD8oBEE1HusQk2pStRdMG-cg@mail.gmail.com>
-References: <20170208134633.5152-1-kernel@kempniu.pl> <20170210001616.GH1950@marvin.atrad.com.au>
- <CAHp75VeedmO7yyFjfp3VwrqZa6BmE06Xq1oxdugaYn=YEP2Aww@mail.gmail.com>
- <20170217025708.GH6814@wisp> <20170217030804.GT30026@marvin.atrad.com.au>
- <20170217035319.GC25241@wisp> <20170217041756.GW30026@marvin.atrad.com.au>
- <CAHp75Vd1ghHKuh6KJPpuzZjKCuGFfrLsXn8XkRCA+H88J4k+yg@mail.gmail.com> <20170226113006.GA1249@kmp-mobile.hq.kempniu.pl>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: guard
+ generic hotkey case
+Date: Sun, 26 Feb 2017 15:44:11 -0300
+Message-ID: <20170226184411.GA5747@khazad-dum.debian.net>
+References: <20170225182030.19232-1-ckellner@redhat.com>
+	<20170225182030.19232-2-ckellner@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170226113006.GA1249@kmp-mobile.hq.kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170225182030.19232-2-ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Feb 26, 2017 at 1:30 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
-iu.pl> wrote:
->> On Fri, Feb 17, 2017 at 6:17 AM, Jonathan Woithe <jwoithe@just42.net> wr=
-ote:
->> > On Thu, Feb 16, 2017 at 07:53:19PM -0800, Darren Hart wrote:
->> >> On Fri, Feb 17, 2017 at 01:38:04PM +1030, Jonathan Woithe wrote:
->> >> > Do you want me to continue to use Acked-by, or should I switch to
->> >> > Reviewed-by?
->> >>
->> >> These tags do have different meanings, and have come up at Kernel Sum=
-mit the
->> >> last couple of years. My interpretation of those discussions is:
->> >>
->> >> Acked-by: I have no objection to this patch, but I didn't really give=
- it a
->> >> thorough review. I trust your judgement. e.g. minor change to your dr=
-iver to
->> >> support a subsystem API change. These are of very little value.
->> >>
->> >> Reviewed-by: I have carefully reviewed this patch and would like it t=
-o be
->> >> applied. This should usually come with some sort of commentary descri=
-bing the
->> >> level of review or an area you focused on. This is what we would like=
- to see
->> >> from all of our driver maintainers. These are high value.
->> >>
->> >> Linus *really* dislikes one line acked by's, and only *slightly* more=
- so than
->> >> one line reviewed by's. :-)
->> >
->> > Got it, thanks, this is very helpful.
->> >
->> > In light of this I give you the following.
->> >
->> > Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
->>
->> Thanks, applied for testing with above tag.
->
-> Andy,
->
-> It looks like you missed this part of Jonathan's message:
+On Sat, 25 Feb 2017, Christian Kellner wrote:
+> @@ -1923,7 +1923,8 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+>  	TP_ACPI_HOTKEYSCAN_UNK7,
+>  	TP_ACPI_HOTKEYSCAN_UNK8,
+>  
+> -	TP_ACPI_HOTKEYSCAN_MUTE2,
+> +	TP_ACPI_HOTKEYSCAN_ADAPTIVE_START = 32,
+> +	TP_ACPI_HOTKEYSCAN_MUTE2 = 32,
+>  	TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
+>  	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL,
+>  	TP_ACPI_HOTKEYSCAN_CLOUD,
 
-Indeed.
+This works, but...
 
->
->> As per subsequent discussion we have agreed to drop patch 8/10 from the
->> series: it creates problems on newer hardware and the issue it is addres=
-sing
->> will be more completely dealt with in a subsequent patch series.
->
-> I see that patch 8/10 was applied to testing as well.  Could you please
-> drop that single patch?
+enum {
+	TP_ACPI_HOTKEYSCAN_ADAPTIVE_START,
+	TP_ACPI_HOTKEYSCAN_MUTE2 = TP_ACPI_HOTKEYSCAN_ADAPTIVE_START,
+	TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
+...
+} 
 
-Good we have testing branch and thank you for pointing out. Should be fixed=
- now.
+or something to that effect might be better.  Either that or an
+compile-time assert that the block boundaries are where we expect them
+to be.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Feel free to use formatting tricks with whitespace to make it create
+visual blocks in the enum {}  definition, or use comments as spacers...
+;-)
+
+> @@ -3657,7 +3658,6 @@ static const int adaptive_keyboard_modes[] = {
+>  #define DFR_CHANGE_ROW			0x101
+>  #define DFR_SHOW_QUICKVIEW_ROW		0x102
+>  #define FIRST_ADAPTIVE_KEY		0x103
+> -#define ADAPTIVE_KEY_OFFSET		0x020
+>  
+>  /* press Fn key a while second, it will switch to Function Mode. Then
+>   * release Fn key, previous mode be restored.
+> @@ -3748,12 +3748,13 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
+>  	default:
+>  		if (scancode < FIRST_ADAPTIVE_KEY ||
+>  		    scancode >= FIRST_ADAPTIVE_KEY + TPACPI_HOTKEY_MAP_LEN -
+> -				ADAPTIVE_KEY_OFFSET) {
+> +				TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+>  			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
+>  					scancode);
+>  			return false;
+>  		}
+> -		keycode = hotkey_keycode_map[scancode - FIRST_ADAPTIVE_KEY + ADAPTIVE_KEY_OFFSET];
+> +		keycode = hotkey_keycode_map[scancode - FIRST_ADAPTIVE_KEY +
+> +					     TP_ACPI_HOTKEYSCAN_ADAPTIVE_START];
+>  		if (keycode != KEY_RESERVED) {
+>  			mutex_lock(&tpacpi_inputdev_send_mutex);
+>  
+> @@ -3779,7 +3780,7 @@ static bool hotkey_notify_hotkey(const u32 hkey,
+>  	*ignore_acpi_ev = false;
+>  
+>  	/* HKEY event 0x1001 is scancode 0x00 */
+> -	if (scancode > 0 && scancode <= TPACPI_HOTKEY_MAP_LEN) {
+> +	if (scancode > 0 && scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+>  		scancode--;
+>  		if (!(hotkey_source_mask & (1 << scancode))) {
+>  			tpacpi_input_send_key_masked(scancode);
+
+Other than that, I like the idea.
+
+-- 
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
