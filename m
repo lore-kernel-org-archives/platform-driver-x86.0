@@ -1,156 +1,51 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 0/4] fujitsu_init() cleanup
-Date: Mon, 27 Feb 2017 08:19:09 +0100
-Message-ID: <20170227071909.GA9386@ozzy.nask.waw.pl>
-References: <20170113110240.622-1-kernel@kempniu.pl>
- <20170113121758.GA9036@marvin.atrad.com.au>
- <20170113131915.GA745@ozzy.nask.waw.pl>
- <20170203140507.GB11947@ozzy.nask.waw.pl>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v1 0/4] gpio: make gpiod_count() API consistent
+Date: Mon, 27 Feb 2017 09:27:35 +0100
+Message-ID: <20170227082735.GA2373@mail.corp.redhat.com>
+References: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f45.google.com ([209.85.215.45]:35606 "EHLO
-        mail-lf0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751552AbdB0H0B (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Feb 2017 02:26:01 -0500
-Received: by mail-lf0-f45.google.com with SMTP id z127so29363832lfa.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Feb 2017 23:25:59 -0800 (PST)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170203140507.GB11947@ozzy.nask.waw.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> Darren, Andy,
+On Feb 20 2017 or thereabouts, Andy Shevchenko wrote:
+> There are three possibilities in gpiod_count(): ACPI, OF, and
+> platform data.
 > 
-> Please drop this patch series for now.  I will send a rebased v2 after a
-> long overdue patch series from Alan Jenkins gets applied in a reworked
-> form.
+> Some of them return 0, which requires to be handled separately, though
+> developers rather lazy and just shadow an actual error code.
 > 
-> However, your input is still essential for determining the future shape
-> of fujitsu-laptop.  I quoted the essential parts of my discussion with
-> Jonathan below.
+> Let's make this API consistent by not allowing 0 in returned value.
 > 
-> > > > The problem I have with this driver is that it is generally oblivious to
-> > > > the user's chosen backlight provider.  It was written before acpi_video
-> > > > support for backlight control was automatically detected by the kernel 
-> > > > and as such it required a fix which was allegedly provided by          
-> > > > 7d5c89a615c5 ("fujitsu-laptop: fingers off backlight if video.ko is    
-> > > > serving this functionality").  However, that fix was superficial as the
-> > > > module still registered its vendor-specific ACPI driver for backlight  
-> > > > control.  That in turn caused SBLL/SBL2 to be called when brightness   
-> > > > hotkeys were pressed even when acpi_video was supposed to handle       
-> > > > brightness changes, which is exactly what that patch was hoping to     
-> > > > prevent.  Moreover, the module unconditionally exports backlight-related
-> > > > sysfs attributes which enable userspace to change the brightness level,
-> > > > which should also only be possible when vendor backlight control is    
-> > > > used.  Fast forward several years and on modern Fujitsu machines (e.g. 
-> > > > Lifebook E744), the kernel automatically detects that native backlight 
-> > > > control [1] should be used and SBLL becomes a noop [2].  This creates  
-> > > > confusion, because the driver claims that it can get/set LCD brightness
-> > > > level via the platform device's sysfs attributes, but it actually      
-> > > > cannot.  It gets even more confusing on Skylake machines on which the  
-> > > > FUJ02B1 ACPI device is not present at all.                             
+> There are luckily only 3 users right now, one of them handles this
+> properly, the rest is converted in this series.
 > 
-> []
+> Series is supposed to go through GPIO tree.
 > 
-> > > > The proposal I put forward in regard to the above is to remove the three
-> > > > backlight-related attributes (brightness_changed, lcd_level,
-> > > > max_brightness) from the platform driver's sysfs tree.  I believe the
-> > > > functions they implement should only be exposed through the backlight
-> > > > device, because the latter is only created when the user explicitly
-> > > > selects vendor backlight control or it is automatically selected by the
-> > > > kernel (this should be the case for older machines).
-> > > 
-> > > I will need to do some more digging into the historical developments.  At
-> > > face value I'm not sure how machines like the S7020 would end up controlling
-> > > the backlight if these sysfs attributes were removed because on this machine
-> > > (at least last time I checked) the standard backlight/video drivers could
-> > > not effect brightness control on this hardware.  Or is there a side effect
-> > > that I have forgotten?
-> > 
-> > Let us not confuse three separate things that fujitsu-laptop enables:
-> > 
-> >   * changing LCD brightness using the keyboard,
-> >   * changing LCD brightness from userspace, using the backlight device,
-> >   * changing LCD brightness from userspace, using sysfs attributes.
-> > 
-> > I have nothing against the first two, apart from the notion that they
-> > should be more tightly coupled (i.e. one should not be enabled without
-> > the other one and vice versa).
-> > 
-> > I am all against the last one.  IMHO it is a duplicate, misplaced
-> > feature which only makes clean separation of components inside the
-> > driver hard.
-> > 
-> > > > That would leave us with the remaining three sysfs attributes of the
-> > > > platform device, namely dock, lid and radios.  These all depend on the
-> > > > FUJ02E3 ACPI device.  Which begs the question: shall we reassign them to
-> > > > that ACPI device and drop the platform device altogether?  This would
-> > > > logically be the correct thing to do (panasonic-laptop and toshiba_acpi
-> > > > already assign extra sysfs attributes to ACPI nodes).  But I understand
-> > > > that this would break an 8-year-old userspace interface as functions
-> > > > previously exposed through /sys/devices/platform/fujitsu-laptop would be
-> > > > moved to /sys/bus/acpi/devices/FUJ02E3:00.  If that is unacceptable, the
-> > > > least we can (and should) do is to move platform device registration to
-> > > > acpi_fujitsu_hotkey_add().  What the driver currently does may create
-> > > > confusion in the future, because the platform device is registered
-> > > > unconditionally while it clearly depends on FUJ02E3 being present.  I do
-> > > > not know whether FUJ02E3 is present on all Fujitsu devices today without
-> > > > exception, but I do know that if Fujitsu ever decides to drop that
-> > > > device from its firmware, we would again (see above) expose a userspace
-> > > > interface (dock, lid, radios) which simply will not be able to function
-> > > > properly.
-> 
-> []
-> 
-> > > Regarding the movement of sysfs attributes, it is my understanding that
-> > > breaking the userspace API in this way is frowned upon.
-> > 
-> > This is my understanding as well, which is why this is only a proposal
-> > and not a patch.
-> > 
-> > > Personally I could
-> > > argue that given the relatively specialised nature of these attributes and
-> > > their consequential low rate of use in the wild, such a move might be
-> > > justifiable.  However, the kernel tends to hold userspace interfaces to be
-> > > perpetual so I can't see how such a change would get up in this case. 
-> > > Darren may like to comment on this.
-> > 
-> > Yes, this definitely needs input from subsystem maintainers.
-> > 
-> > Let me just emphasize once again that I believe backlight-related sysfs
-> > attributes belonging to the platform driver are a misplaced feature.
-> > Backlight-related features belong in backlight devices.  The only
-> > situation I can think of that someone will get hurt by these getting
-> > removed is that they have some custom script which uses the platform
-> > device instead of the backlight device to control LCD brightness.
-> > Removing these attributes has no effect on whether brightness-related
-> > keys on the keyboard work or not.
-> > 
-> > Nevertheless, if the consensus is that these should stay where they are,
-> > they need to be added conditionally, only when acpi_backlight=vendor.
-> > Otherwise they simply do not work on modern hardware and cause
-> > confusion.
-> 
-> In regard to the above, please let me know what you think about:
-> 
->   - removing backlight-related attributes from the platform device,
-> 
->   - removing the platform device altogether and attaching
->     laptop-specific attributes to the ACPI device instead.
+> Andy Shevchenko (4):
+>   gpio: acpi: Don't return 0 on acpi_gpio_count()
+>   gpio: of: Don't return 0 on dt_gpio_count()
+>   platform/x86: surface3_button: Propagate error from gpiod_count()
+>   Input: soc_button_array - Propagate error from gpiod_count()
 
-Darren, Andy,
+Not sure if this still matters, but still:
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-As six weeks have passed since I originally asked for your comments, I
-hope another gentle reminder is okay.  Your advice is needed before I
-can post further cleanups for fujitsu-laptop.
+Cheers,
+Benjamin
 
-Thanks,
-
--- 
-Best regards,
-Michał Kępień
+> 
+>  drivers/gpio/gpiolib-acpi.c            | 4 ++--
+>  drivers/gpio/gpiolib.c                 | 4 ++--
+>  drivers/input/misc/soc_button_array.c  | 5 +++--
+>  drivers/platform/x86/surface3_button.c | 5 +++--
+>  4 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> -- 
+> 2.11.0
+> 
