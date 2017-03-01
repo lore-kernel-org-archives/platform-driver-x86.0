@@ -1,49 +1,31 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 0/4] fujitsu_init() cleanup [resend due to vger error]
-Date: Thu, 2 Mar 2017 09:56:59 +1030
-Message-ID: <20170301232659.GN28335@marvin.atrad.com.au>
-References: <20170301081044.12141-1-kernel@kempniu.pl>
- <20170301223912.GF28335@marvin.atrad.com.au>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
+Date: Thu, 2 Mar 2017 01:18:29 +0200
+Message-ID: <CAHp75VeKXwqi+F7iq=5mDVGkUKJ637+kN_0xM+LFT0H9Wdxvkw@mail.gmail.com>
+References: <20170210174837.1078-1-pespin.shar@gmail.com> <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
+ <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+ <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
+ <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
+ <20170223083631.GE18639@dtor-ws> <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:59124 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753335AbdCBAwr (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Mar 2017 19:52:47 -0500
-Content-Disposition: inline
-In-Reply-To: <20170301223912.GF28335@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pau Espin Pedrol <pespin.shar@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Mar 01, 2017 at 09:10:40AM +0100, Micha?? K??pie?? wrote:
-> These patches should make fujitsu_init() a bit more palatable.  No
-> changes are made to platform device code yet, for clarity these will be
-> posted in a separate series after this one gets applied.
+On Fri, Feb 24, 2017 at 3:01 PM, Pau Espin Pedrol <pespin.shar@gmail.com> wrote:
+>>> Dmitry, do we have special events for AC (un)plug? What is the best
+>>> approach in your opinion?
+>>
+>> Not route them through input as they not input events would be the best.
+>>
+> Is my patch good enough for this or would you recommend doing it another way?
 
-Thanks for these.  As for the other series you posted I will endeavour to
-review and test within the next 48 hours.  I note the particular testing
-requirements of patch 2/4.
+Corentin, do you have any opinion regarding the change?
 
-Could you confirm which git tree you've based these off?
-
-I'm resending this for the benefit of the lists, hoping they will work this
-time.  On the first attempt (at 2 Mar 2017 09:09:12 +1030) I got this:
-
->    ----- The following addresses had permanent fatal errors -----
-> <platform-driver-x86@vger.kernel.org>
-> <linux-kernel@vger.kernel.org>
-> 
->    ----- Transcript of session follows -----
-> ... while talking to vger.kernel.org.:
-> >>> MAIL From:<jwoithe@just42.net> SIZE=1474
-> <<< 450 4.5.0 Interactive router timed out!
-> 550 5.1.2
-> <linux-kernel@vger.kernel.org>,<platform-driver-x86@vger.kernel.org>... Host
-> unknown (Name server: bl-ckh-le.kernel.org.: host not found)
-
-Regards
-  jonathan
+-- 
+With Best Regards,
+Andy Shevchenko
