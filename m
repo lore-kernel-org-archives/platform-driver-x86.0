@@ -1,46 +1,74 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH 0/4] Improve intel-hid's self-consistency
-Date: Thu, 2 Mar 2017 18:17:44 +0800
-Message-ID: <CAJ=jquZo3ie0C-ZEzfC93_xXsXVaJYMD2o8G8VwYBMpctohujg@mail.gmail.com>
-References: <20170224103309.19463-1-kernel@kempniu.pl> <CAHp75VdXeXmxNP=sy5Tsx3X=9PSpHK65ftPK9sExi_Pt-4ydhg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v8 0/7] platform/x86: Notify userspace about hotkeys
+ changing kbd-backlight brightness
+Date: Thu, 2 Mar 2017 15:30:23 +0100
+Message-ID: <472cba2e-94d3-d08d-5d3a-657483ad190c@redhat.com>
+References: <20170209154417.19040-1-hdegoede@redhat.com>
+ <CAHp75VfMyp9XzG6w0H60JhxpdRYfv5NuO-T9ZevPc4KT19fbGw@mail.gmail.com>
+ <98a12674-9763-670b-5978-c4150162cd79@redhat.com>
+ <20170302142253.GC29684@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f182.google.com ([209.85.220.182]:35012 "EHLO
-        mail-qk0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750779AbdCBKYK (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:56448 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752539AbdCBOdA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Mar 2017 05:24:10 -0500
-Received: by mail-qk0-f182.google.com with SMTP id m67so935710qkf.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Mar 2017 02:24:05 -0800 (PST)
-In-Reply-To: <CAHp75VdXeXmxNP=sy5Tsx3X=9PSpHK65ftPK9sExi_Pt-4ydhg@mail.gmail.com>
+        Thu, 2 Mar 2017 09:33:00 -0500
+In-Reply-To: <20170302142253.GC29684@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 
-On Thu, Mar 2, 2017 at 7:03 AM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Feb 24, 2017 at 12:33 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@ke=
-mpniu.pl> wrote:
->> Commit 2cfa4b311acc ("platform/x86: intel-hid: Support 5 button array")
->> contains some coding style cleanups compared to the code it was based
->> on.  This patch series "backports" these cleanups to the rest of the
->> driver in order to make it more self-consistent and removes a redundant
->> set_bit() call as a bonus.
+HI,
+
+On 02-03-17 15:22, Pali Rohár wrote:
+> On Thursday 02 March 2017 15:12:52 Hans de Goede wrote:
+>> Hi,
 >>
->> This series was not tested on hardware supported by intel-hid.
+>> On 02-03-17 00:10, Andy Shevchenko wrote:
+>>> On Thu, Feb 9, 2017 at 5:44 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>>> Here is v8 of the platform drivers changes matching / using the new
+>>>> v8 LED subsys led_classdev_notify_brightness_hw_changed() functionality
+>>>> queued in -next.
+>>>>
+>>>> There have been some changes (and preparation patches added) compared
+>>>> to the previous versions since the new LED api requires the driver to
+>>>> only call led_classdev_notify_brightness_hw_changed() on hotkey triggered
+>>>> changes and the ACPI events indicating brightness changes also get
+>>>> triggered when setting the brightness to led_set_brightness (or sysfs).
+>>>>
+>>>> This series depends on the patch adding
+>>>> led_classdev_notify_brightness_hw_changed() to the LED subsystem,
+>>>> Jacek can you create a stable branch with just that patch which the
+>>>> platform/x86 platform maintainers can merge, so that they can apply
+>>>> this series ?
+>>>
+>>> I briefly read the discussion and looks like I'll wait for v9 after
+>>> merge window is closed.
+>>
+>> Ok.
+>>
+>> Note the 3 acpi-thinkpad patches have been in
+>> linux-platform-drivers-x86.git/testing for a while now and there has been
+>> no discussion surrounding those. Do you want me to send a v9 of those too,
+>> or just the Dell driver patches ?
 >
-> Alex, do you have an access to hardware to test? I wouldn't going to
-> apply this until I get your tag(s) (in the best case
-> Reviewed-and-tested-by).
+> If we all agree on change for Dell driver to just drop one event, maybe
+> we can discuss if similar approach should be used also for Thinkpad
+> driver...
 
-The patches look good and tested on Latitude 7480
+As mentioned during the review of the thinkpad patches already, there is no
+guarantee that all generation thinkpads actually generate events when setting
+the brightness through calling into the BIOS, so doing this may cause actual
+hotkey events to get swallowed. So lets just keep this as is.
 
-Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
+Note I still need to test that a similar problem does not exist for the Dell
+case.
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Regards,
+
+Hans
