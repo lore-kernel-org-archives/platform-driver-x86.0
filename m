@@ -1,43 +1,47 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/4] Improve intel-hid's self-consistency
-Date: Fri, 3 Mar 2017 20:27:30 +0200
-Message-ID: <CAHp75Vdk2f0Xu5szTnP+x4UQ-Qaz-3To743Z-mJajJLn4DDadA@mail.gmail.com>
-References: <20170224103309.19463-1-kernel@kempniu.pl> <CAHp75VdXeXmxNP=sy5Tsx3X=9PSpHK65ftPK9sExi_Pt-4ydhg@mail.gmail.com>
- <CAJ=jquZo3ie0C-ZEzfC93_xXsXVaJYMD2o8G8VwYBMpctohujg@mail.gmail.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH] hwmon: (dell-smm) Add Dell XPS 15 9560 into DMI list
+Date: Fri,  3 Mar 2017 23:41:52 +0100
+Message-ID: <1488580912-13578-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ=jquZo3ie0C-ZEzfC93_xXsXVaJYMD2o8G8VwYBMpctohujg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Hung <alex.hung@canonical.com>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:34268 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752151AbdCCXL2 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Mar 2017 18:11:28 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-On Thu, Mar 2, 2017 at 12:17 PM, Alex Hung <alex.hung@canonical.com> wrote:
-> On Thu, Mar 2, 2017 at 7:03 AM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Fri, Feb 24, 2017 at 12:33 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@k=
-empniu.pl> wrote:
->>> Commit 2cfa4b311acc ("platform/x86: intel-hid: Support 5 button array")
->>> contains some coding style cleanups compared to the code it was based
->>> on.  This patch series "backports" these cleanups to the rest of the
->>> driver in order to make it more self-consistent and removes a redundant
->>> set_bit() call as a bonus.
->>>
->>> This series was not tested on hardware supported by intel-hid.
->>
->> Alex, do you have an access to hardware to test? I wouldn't going to
->> apply this until I get your tag(s) (in the best case
->> Reviewed-and-tested-by).
->
-> The patches look good and tested on Latitude 7480
->
-> Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
+It was reported that dell-smm-hwmon is working fine on Dell XPS 15 9560.
 
-Pushed to testing.
-Thanks.
+Link: http://www.spinics.net/lists/platform-driver-x86/msg10751.html
+Reported-by: Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>
+Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ drivers/hwmon/dell-smm-hwmon.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+index 34704b0..3189246 100644
+--- a/drivers/hwmon/dell-smm-hwmon.c
++++ b/drivers/hwmon/dell-smm-hwmon.c
+@@ -995,6 +995,13 @@ enum i8k_configs {
+ 		},
+ 		.driver_data = (void *)&i8k_config_data[DELL_XPS],
+ 	},
++	{
++		.ident = "Dell XPS 15 9560",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
++		},
++	},
+ 	{ }
+ };
+ 
+-- 
+1.7.9.5
