@@ -1,44 +1,43 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: thinkpad_acpi: guard generic hotkey case
-Date: Fri, 3 Mar 2017 20:28:49 +0200
-Message-ID: <CAHp75VdtBrbjJ0YTD9ZezdzgYHPiuYVVD_gJ2940FvJTAN+DdQ@mail.gmail.com>
-References: <20170228161057.28394-1-ckellner@redhat.com> <20170228200208.GA10069@khazad-dum.debian.net>
+Subject: Re: [PATCH 0/4] Improve intel-hid's self-consistency
+Date: Fri, 3 Mar 2017 20:27:30 +0200
+Message-ID: <CAHp75Vdk2f0Xu5szTnP+x4UQ-Qaz-3To743Z-mJajJLn4DDadA@mail.gmail.com>
+References: <20170224103309.19463-1-kernel@kempniu.pl> <CAHp75VdXeXmxNP=sy5Tsx3X=9PSpHK65ftPK9sExi_Pt-4ydhg@mail.gmail.com>
+ <CAJ=jquZo3ie0C-ZEzfC93_xXsXVaJYMD2o8G8VwYBMpctohujg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:34592 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751742AbdCCSaa (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Mar 2017 13:30:30 -0500
-Received: by mail-qk0-f194.google.com with SMTP id g129so903726qkd.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Mar 2017 10:28:50 -0800 (PST)
-In-Reply-To: <20170228200208.GA10069@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Christian Kellner <ckellner@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Christian Kellner <christian@kellner.me>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJ=jquZo3ie0C-ZEzfC93_xXsXVaJYMD2o8G8VwYBMpctohujg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 28, 2017 at 10:02 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> On Tue, 28 Feb 2017, Christian Kellner wrote:
->> From: Christian Kellner <christian@kellner.me>
+On Thu, Mar 2, 2017 at 12:17 PM, Alex Hung <alex.hung@canonical.com> wrote:
+> On Thu, Mar 2, 2017 at 7:03 AM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Fri, Feb 24, 2017 at 12:33 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@k=
+empniu.pl> wrote:
+>>> Commit 2cfa4b311acc ("platform/x86: intel-hid: Support 5 button array")
+>>> contains some coding style cleanups compared to the code it was based
+>>> on.  This patch series "backports" these cleanups to the rest of the
+>>> driver in order to make it more self-consistent and removes a redundant
+>>> set_bit() call as a bonus.
+>>>
+>>> This series was not tested on hardware supported by intel-hid.
 >>
->> Currently when dispatching hotkeys we check if the scancode is in
->> the range of 0 and TPACPI_HOTKEY_MAP_LEN, although the bottom 20
->> entries in the hotkey keymap are already adaptive keycodes.
->> Therefore we introduce a TP_ACPI_HOTKEYSCAN_ADAPTIVE_START and
->> ensure that we are in the range 0 and ADAPTIVE_START for the generic
->> keycode case.
->>
->> Signed-off-by: Christian Kellner <ckellner@redhat.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Alex, do you have an access to hardware to test? I wouldn't going to
+>> apply this until I get your tag(s) (in the best case
+>> Reviewed-and-tested-by).
 >
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> The patches look good and tested on Latitude 7480
+>
+> Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
 
-Both pushed to testing.
+Pushed to testing.
 Thanks.
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
