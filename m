@@ -1,40 +1,44 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 0/4] fujitsu_init() cleanup
-Date: Fri, 3 Mar 2017 23:09:23 +1030
-Message-ID: <20170303123923.GI15460@marvin.atrad.com.au>
-References: <20170301081044.12141-1-kernel@kempniu.pl>
- <20170301223912.GF28335@marvin.atrad.com.au>
- <20170302071938.GA1081@ozzy.nask.waw.pl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: thinkpad_acpi: guard generic hotkey case
+Date: Fri, 3 Mar 2017 20:28:49 +0200
+Message-ID: <CAHp75VdtBrbjJ0YTD9ZezdzgYHPiuYVVD_gJ2940FvJTAN+DdQ@mail.gmail.com>
+References: <20170228161057.28394-1-ckellner@redhat.com> <20170228200208.GA10069@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170302071938.GA1081@ozzy.nask.waw.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:34592 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751742AbdCCSaa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Mar 2017 13:30:30 -0500
+Received: by mail-qk0-f194.google.com with SMTP id g129so903726qkd.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Mar 2017 10:28:50 -0800 (PST)
+In-Reply-To: <20170228200208.GA10069@khazad-dum.debian.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Christian Kellner <ckellner@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Christian Kellner <christian@kellner.me>
 
-On Thu, Mar 02, 2017 at 08:19:38AM +0100, Micha?? K??pie?? wrote:
-> > On Wed, Mar 01, 2017 at 09:10:40AM +0100, Micha?? K??pie?? wrote:
-> > > These patches should make fujitsu_init() a bit more palatable.  No
-> > > changes are made to platform device code yet, for clarity these will be
-> > > posted in a separate series after this one gets applied.
-> > 
-> > Thanks for these.  As for the other series you posted I will endeavour to
-> > review and test within the next 48 hours.  I note the particular testing
-> > requirements of patch 2/4.
-> > 
-> > Could you confirm which git tree you've based these off?
-> 
-> Sure, both series posted yesterday are based on dvhart/testing as that
-> is where Alan's reworked series is currently applied.
+On Tue, Feb 28, 2017 at 10:02 PM, Henrique de Moraes Holschuh
+<hmh@hmh.eng.br> wrote:
+> On Tue, 28 Feb 2017, Christian Kellner wrote:
+>> From: Christian Kellner <christian@kellner.me>
+>>
+>> Currently when dispatching hotkeys we check if the scancode is in
+>> the range of 0 and TPACPI_HOTKEY_MAP_LEN, although the bottom 20
+>> entries in the hotkey keymap are already adaptive keycodes.
+>> Therefore we introduce a TP_ACPI_HOTKEYSCAN_ADAPTIVE_START and
+>> ensure that we are in the range 0 and ADAPTIVE_START for the generic
+>> keycode case.
+>>
+>> Signed-off-by: Christian Kellner <ckellner@redhat.com>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-Great, thanks.
+Both pushed to testing.
+Thanks.
 
-Unfortunately I got held up with some other urgent tasks towards the end of
-this week so I will not make my estimate of 48 hours.  I should be able to
-get to the review and testing over the weekend.  Apologies for the delay.
-
-Regards
-  jonathan
+-- 
+With Best Regards,
+Andy Shevchenko
