@@ -1,61 +1,83 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 0/4] fujitsu_init() cleanup
-Date: Sat, 4 Mar 2017 12:17:23 +1030
-Message-ID: <20170304014723.GA7944@marvin.atrad.com.au>
-References: <20170301081044.12141-1-kernel@kempniu.pl>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] PCI: Recognize Thunderbolt devices
+Date: Sat, 4 Mar 2017 12:14:46 +0100
+Message-ID: <20170304111446.GB3143@wunner.de>
+References: <cover.1487938188.git.lukas@wunner.de>
+ <c42a235e126f273e9b8712a7154f813f757db507.1487938188.git.lukas@wunner.de>
+ <20170224221724.GA26430@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:33438 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751571AbdCDCAb (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Mar 2017 21:00:31 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170301081044.12141-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170224221724.GA26430-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/nouveau>
+List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
+ <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Jamet <michael.jamet-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amir Levy <amir.jer.levy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Koenig <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Michael
-
-On Wed, Mar 01, 2017 at 09:10:40AM +0100, Micha?? K??pie?? wrote:
-> These patches should make fujitsu_init() a bit more palatable.  No
-> changes are made to platform device code yet, for clarity these will be
-> posted in a separate series after this one gets applied.
-
-I have a preliminary report.  The backlight functionality remains functional
-on an S7020 across all four of the patches in this series and with the
-additional 2-patch cleanup series applied.
-
-With regard to patch 2/4 you wrote:
-> Jonathan, this *really* needs testing on relevant hardware.  After
-> applying this patch, you should be able to turn LCD backlight on and off
-> using /sys/class/backlight/fujitsu-laptop/bl_power.  Also, the value
-> returned by that attribute upon read should be in sync with actual
-> backlight state even right after loading the module (i.e. before writing
-> anything to bl_power).  Please let me know if any of the above is not
-> true and the module works correctly without this patch applied.
-
-With patch 2/4 applied:
-
- * It is possible to read bl_power
-
- * It is possible to write a value to bl_power and read that value back
-
- * Writing values to bl_power does not appear to affect the LCD panel in 
-   any way.  That is, the backlight remains unchanged regardless of the 
-   value written.
-
- * Behaviour is the same both under X and from the terminal.
-
-Backing out patch 2/4 but with all others still in place, resulted in no
-change in behaviour.  So while bl_power had no effect with patch 2/4 in
-place, it seems that patch 2/4 is *not* the cause of this.
-
-I shall run some more bl_power tests and complete a review of the code later
-this weekend.
-
-Regards
-  jonathan
+T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMDQ6MTc6MjRQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3
+cm90ZToKPiBPbiBGcmksIEZlYiAyNCwgMjAxNyBhdCAwODoxOTo0NVBNICswMTAwLCBMdWthcyBX
+dW5uZXIgd3JvdGU6Cj4gPiBEZXRlY3Qgb24gcHJvYmUgd2hldGhlciBhIFBDSSBkZXZpY2UgaXMg
+cGFydCBvZiBhIFRodW5kZXJib2x0IGNvbnRyb2xsZXIuClsuLi5dCj4gPiAqIElmIGFuIGV4dGVy
+bmFsIFRodW5kZXJib2x0IEdQVSBpcyBjb25uZWN0ZWQgdG8gYSBkdWFsIEdQVSBsYXB0b3AgKE1h
+Ywo+ID4gICBvciBub3QpLCB0aGF0IEdQVSBpcyBjdXJyZW50bHkgcmVnaXN0ZXJlZCB3aXRoIHZn
+YV9zd2l0Y2hlcm9vIGV2ZW4KPiA+ICAgdGhvdWdoIGl0IGNhbiBuZWl0aGVyIGRyaXZlIHRoZSBs
+YXB0b3AncyBwYW5lbCBub3IgYmUgcG93ZXJlZCBvZmYgYnkKPiA+ICAgdGhlIHBsYXRmb3JtLiAg
+VG8gdmdhX3N3aXRjaGVyb28gaXQgd2lsbCBhcHBlYXIgYXMgaWYgdHdvIGRpc2NyZXRlCj4gPiAg
+IEdQVXMgYXJlIHByZXNlbnQuICBBcyBhIHJlc3VsdCwgd2hlbiB0aGUgZXh0ZXJuYWwgR1BVIGlz
+IHJ1bnRpbWUKPiA+ICAgc3VzcGVuZGVkLCB2Z2Ffc3dpdGNoZXJvbyB3aWxsIGN1dCBwb3dlciB0
+byB0aGUgaW50ZXJuYWwgZGlzY3JldGUgR1BVCj4gPiAgIHdoaWNoIG1heSBub3QgYmUgcnVudGlt
+ZSBzdXNwZW5kZWQgYXQgYWxsIGF0IHRoaXMgbW9tZW50LiAgVGhlCj4gPiAgIHNvbHV0aW9uIGlz
+IHRvIG5vdCByZWdpc3RlciBleHRlcm5hbCBHUFVzIHdpdGggdmdhX3N3aXRjaGVyb28sIHdoaWNo
+Cj4gPiAgIG5lY2Vzc2l0YXRlcyBhIHdheSB0byByZWNvZ25pemUgaWYgdGhleSdyZSBvbiBhIFRo
+dW5kZXJib2x0IGRhaXN5Cj4gPiAgIGNoYWluLgo+IAo+IElmIEkgdW5kZXJzdGFuZCBjb3JyZWN0
+bHksIHZnYV9zd2l0Y2hlcm9vIG1hbmFnZXMgdHdvIEdQVXMgdGhhdCBoYXZlIGEKPiBzaW5nbGUg
+b3V0cHV0OiBlaXRoZXIgdGhlcmUncyBhIG11eCB0aGF0IGNvbm5lY3RzIG9uZSBHUFUgb3IgdGhl
+IG90aGVyCj4gdG8gdGhlIG91dHB1dCwgb3Igb25lIEdQVSBpcyBwZXJtYW5lbnRseSBjb25uZWN0
+ZWQgdG8gdGhlIG91dHB1dCBhbmQKPiB0aGUgb3RoZXIgZG9lcyBvZmZsaW5lIHJlbmRlcmluZy4K
+ClRoZXJlIGFyZSB0d28gYXNwZWN0cyB0byBoeWJyaWQgZ3JhcGhpY3MsIHN3aXRjaGluZyB0aGUg
+cGFuZWwgYmV0d2VlbgpHUFVzIGFuZCBwb3dlcmluZyBvZmYgdGhlIGRpc2NyZXRlIEdQVS4gIChT
+b21lIGxhcHRvcHMgY2FuIGFsc28gc3dpdGNoCmV4dGVybmFsIERQIHBvcnRzIGJldHdlZW4gR1BV
+cyBhbmQgc29tZSwgYXMgeW91IHNheSwgY2Fubm90IHN3aXRjaCB0aGUKcGFuZWwgYW5kIG9ubHkg
+dXNlIHRoZSBkaXNjcmV0ZSBHUFUgZm9yIHJlbmRlciBvZmZsb2FkaW5nLikKCgo+IFRvIHRoaXMg
+bm9uLUdQVSBwZXJzb24sIGl0IHNvdW5kcyBsaWtlIHRoZSBpbXBvcnRhbnQgcXVlc3Rpb24gaXMK
+PiB3aGV0aGVyIHR3byBHUFVzIGFyZSByZWxhdGVkIGluIHRoaXMgd2F5IChlaXRoZXIgdGhleSBm
+ZWVkIHRoZSBzYW1lCj4gbXV4LCBvciB0aGVyZSdzIHNvbWUgc3BlY2lhbCBvZmZsaW5lIHJlbmRl
+cmluZyBjb25uZWN0aW9uIGJldHdlZW4KPiB0aGVtKS4gIFRoYXQgc291bmRzIHVucmVsYXRlZCB0
+byB0aGUgcXVlc3Rpb24gb2YgaG93IHRoZSBHUFVzCj4gdGhlbXNlbHZlcyBhcmUgY29ubmVjdGVk
+IHRvIHRoZSBQQ0kgaGllcmFyY2h5LgoKVG8gdGhlIGJlc3Qgb2YgbXkga25vd2xlZGdlIHRoZXJl
+J3Mgbm8gZGVmaW5pdGUgd2F5IHRvIGRldGVybWluZSB3aGV0aGVyCnR3byBHUFVzIGFyZSBjb25u
+ZWN0ZWQgdG8gdGhlIHNhbWUgcGFuZWwgdmlhIGEgbXV4LgoKVGhlcmUgaXMgYWxzbyBubyBzdWNo
+IHRoaW5nIGFzIGEgc3BlY2lhbCByZW5kZXIgb2ZmbG9hZGluZyBjb25uZWN0aW9uOgpGcmFtZXMg
+YXJlIGNvbXB1dGVkIG9uIGEgZGlzY3JldGUgR1BVLCB0aGVuIGNvcGllZCBvdmVyIFBDSWUgaW50
+byB0aGUKZnJhbWVidWZmZXIgb2YgdGhlIGludGVncmF0ZWQgR1BVLiAgV2hldGhlciB0aGF0IGRp
+c2NyZXRlIEdQVSBpcwpvbi1ib2FyZCBvciBleHRlcm5hbGx5IGNvbm5lY3RlZCBpcyBjb21wbGV0
+ZWx5IHRyYW5zcGFyZW50IGFuZCBub3QKZGlzY2VybmlibGUgb3RoZXIgdGhhbiBieSBsb29raW5n
+IGF0IHRoZSBQQ0kgaGllcmFyY2h5LgoKVGhlIHNhbWUgaXNzdWUgZXhpc3RzIGZvciBIRCBBdWRp
+byBjb250cm9sbGVycyBpbnRlZ3JhdGVkIGludG8gbWFueQpkaXNjcmV0ZSBHUFVzOiAgVG8gdGhl
+IE9TIHRoZXNlIGxvb2sgbGlrZSBzZXBhcmF0ZSBQQ0kgZnVuY3Rpb25zCmFuZCBpbiBzb3VuZC9w
+Y2kvaGRhL2hkYV9pbnRlbC5jOmdldF9ib3VuZF92Z2EoKSB3ZSBsZXZlcmFnZSB0aGUgZmFjdAp0
+aGF0IHRoZSBHUFUgaXMgYWx3YXlzIGZ1bmN0aW9uIDAgYW5kIHRoZSBIRCBBdWRpbyBpcyBmdW5j
+dGlvbiAxIHRvCmRpc2NvdmVyIHRoZSBHUFUgY29ycmVzcG9uZGluZyB0byBhIHBhcnRpY3VsYXIg
+SEQgQXVkaW8gY29udHJvbGxlci4KU28gYWdhaW4gdGhhdCByZWxhdGlvbnNoaXAgaXMgZGVkdWNl
+ZCBmcm9tIHRoZSBQQ0kgaGllcmFyY2h5LgoKCj4gRnJvbSBhIHB1cmUgUENJIHBlcnNwZWN0aXZl
+LCBJIGFzc3VtZSBpdCB3b3VsZCBiZSBjb25jZWl2YWJsZSB0byBoYXZlCj4gdHdvIFRodW5kZXJi
+b2x0LWNvbm5lY3RlZCBHUFVzIGZlZWRpbmcgaW50byBhIG11eC4gIE9yIHRvIGhhdmUgYSBHUFUK
+PiAodW5yZWxhdGVkIHRvIHRoZSBtdXgpIGluIGEgbm9uLVRodW5kZXJib2x0IHBsdWdpbiBzbG90
+IG9yIGNvbm5lY3RlZAo+IGV4dGVybmFsbHkgdmlhIGEgbm9uLVRodW5kZXJib2x0IHN3aXRjaCBh
+bmQgYW4gaVBhc3MgY2FibGUuCgpUZWNobmljYWxseSBzdWNoIHByb2R1Y3RzIHdvdWxkIGJlIHBv
+c3NpYmxlLCBidXQgSSBiZWxpZXZlIHRoZXkgZG9uJ3QKZXhpc3QuICAoVW5saWtlIFRodW5kZXJi
+b2x0IGVHUFVzLCB3aGljaCBoYXZlIGJlZW4gb24gdGhlIG1hcmtldCBmb3IKYSBmZXcgeWVhcnMu
+KQoKVGhhbmtzLAoKTHVrYXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KTm91dmVhdSBtYWlsaW5nIGxpc3QKTm91dmVhdUBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9ub3V2ZWF1
+Cg==
