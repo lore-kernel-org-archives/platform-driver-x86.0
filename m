@@ -1,83 +1,62 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] PCI: Recognize Thunderbolt devices
-Date: Sat, 4 Mar 2017 12:14:46 +0100
-Message-ID: <20170304111446.GB3143@wunner.de>
-References: <cover.1487938188.git.lukas@wunner.de>
- <c42a235e126f273e9b8712a7154f813f757db507.1487938188.git.lukas@wunner.de>
- <20170224221724.GA26430@bhelgaas-glaptop.roam.corp.google.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] hwmon: (dell-smm) Add Dell XPS 15 9560 into DMI list
+Date: Sat, 4 Mar 2017 19:44:03 +0200
+Message-ID: <CAHp75Ve4NxQ8=GQGOdwnURRzvgDOGYs1LAwd_NQE=qzWnUVMEg@mail.gmail.com>
+References: <1488580912-13578-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170224221724.GA26430-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/nouveau>
-List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Jamet <michael.jamet-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amir Levy <amir.jer.levy-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Koenig <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:35213 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752159AbdCDRoF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 4 Mar 2017 12:44:05 -0500
+In-Reply-To: <1488580912-13578-1-git-send-email-pali.rohar@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>
 
-T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMDQ6MTc6MjRQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3
-cm90ZToKPiBPbiBGcmksIEZlYiAyNCwgMjAxNyBhdCAwODoxOTo0NVBNICswMTAwLCBMdWthcyBX
-dW5uZXIgd3JvdGU6Cj4gPiBEZXRlY3Qgb24gcHJvYmUgd2hldGhlciBhIFBDSSBkZXZpY2UgaXMg
-cGFydCBvZiBhIFRodW5kZXJib2x0IGNvbnRyb2xsZXIuClsuLi5dCj4gPiAqIElmIGFuIGV4dGVy
-bmFsIFRodW5kZXJib2x0IEdQVSBpcyBjb25uZWN0ZWQgdG8gYSBkdWFsIEdQVSBsYXB0b3AgKE1h
-Ywo+ID4gICBvciBub3QpLCB0aGF0IEdQVSBpcyBjdXJyZW50bHkgcmVnaXN0ZXJlZCB3aXRoIHZn
-YV9zd2l0Y2hlcm9vIGV2ZW4KPiA+ICAgdGhvdWdoIGl0IGNhbiBuZWl0aGVyIGRyaXZlIHRoZSBs
-YXB0b3AncyBwYW5lbCBub3IgYmUgcG93ZXJlZCBvZmYgYnkKPiA+ICAgdGhlIHBsYXRmb3JtLiAg
-VG8gdmdhX3N3aXRjaGVyb28gaXQgd2lsbCBhcHBlYXIgYXMgaWYgdHdvIGRpc2NyZXRlCj4gPiAg
-IEdQVXMgYXJlIHByZXNlbnQuICBBcyBhIHJlc3VsdCwgd2hlbiB0aGUgZXh0ZXJuYWwgR1BVIGlz
-IHJ1bnRpbWUKPiA+ICAgc3VzcGVuZGVkLCB2Z2Ffc3dpdGNoZXJvbyB3aWxsIGN1dCBwb3dlciB0
-byB0aGUgaW50ZXJuYWwgZGlzY3JldGUgR1BVCj4gPiAgIHdoaWNoIG1heSBub3QgYmUgcnVudGlt
-ZSBzdXNwZW5kZWQgYXQgYWxsIGF0IHRoaXMgbW9tZW50LiAgVGhlCj4gPiAgIHNvbHV0aW9uIGlz
-IHRvIG5vdCByZWdpc3RlciBleHRlcm5hbCBHUFVzIHdpdGggdmdhX3N3aXRjaGVyb28sIHdoaWNo
-Cj4gPiAgIG5lY2Vzc2l0YXRlcyBhIHdheSB0byByZWNvZ25pemUgaWYgdGhleSdyZSBvbiBhIFRo
-dW5kZXJib2x0IGRhaXN5Cj4gPiAgIGNoYWluLgo+IAo+IElmIEkgdW5kZXJzdGFuZCBjb3JyZWN0
-bHksIHZnYV9zd2l0Y2hlcm9vIG1hbmFnZXMgdHdvIEdQVXMgdGhhdCBoYXZlIGEKPiBzaW5nbGUg
-b3V0cHV0OiBlaXRoZXIgdGhlcmUncyBhIG11eCB0aGF0IGNvbm5lY3RzIG9uZSBHUFUgb3IgdGhl
-IG90aGVyCj4gdG8gdGhlIG91dHB1dCwgb3Igb25lIEdQVSBpcyBwZXJtYW5lbnRseSBjb25uZWN0
-ZWQgdG8gdGhlIG91dHB1dCBhbmQKPiB0aGUgb3RoZXIgZG9lcyBvZmZsaW5lIHJlbmRlcmluZy4K
-ClRoZXJlIGFyZSB0d28gYXNwZWN0cyB0byBoeWJyaWQgZ3JhcGhpY3MsIHN3aXRjaGluZyB0aGUg
-cGFuZWwgYmV0d2VlbgpHUFVzIGFuZCBwb3dlcmluZyBvZmYgdGhlIGRpc2NyZXRlIEdQVS4gIChT
-b21lIGxhcHRvcHMgY2FuIGFsc28gc3dpdGNoCmV4dGVybmFsIERQIHBvcnRzIGJldHdlZW4gR1BV
-cyBhbmQgc29tZSwgYXMgeW91IHNheSwgY2Fubm90IHN3aXRjaCB0aGUKcGFuZWwgYW5kIG9ubHkg
-dXNlIHRoZSBkaXNjcmV0ZSBHUFUgZm9yIHJlbmRlciBvZmZsb2FkaW5nLikKCgo+IFRvIHRoaXMg
-bm9uLUdQVSBwZXJzb24sIGl0IHNvdW5kcyBsaWtlIHRoZSBpbXBvcnRhbnQgcXVlc3Rpb24gaXMK
-PiB3aGV0aGVyIHR3byBHUFVzIGFyZSByZWxhdGVkIGluIHRoaXMgd2F5IChlaXRoZXIgdGhleSBm
-ZWVkIHRoZSBzYW1lCj4gbXV4LCBvciB0aGVyZSdzIHNvbWUgc3BlY2lhbCBvZmZsaW5lIHJlbmRl
-cmluZyBjb25uZWN0aW9uIGJldHdlZW4KPiB0aGVtKS4gIFRoYXQgc291bmRzIHVucmVsYXRlZCB0
-byB0aGUgcXVlc3Rpb24gb2YgaG93IHRoZSBHUFVzCj4gdGhlbXNlbHZlcyBhcmUgY29ubmVjdGVk
-IHRvIHRoZSBQQ0kgaGllcmFyY2h5LgoKVG8gdGhlIGJlc3Qgb2YgbXkga25vd2xlZGdlIHRoZXJl
-J3Mgbm8gZGVmaW5pdGUgd2F5IHRvIGRldGVybWluZSB3aGV0aGVyCnR3byBHUFVzIGFyZSBjb25u
-ZWN0ZWQgdG8gdGhlIHNhbWUgcGFuZWwgdmlhIGEgbXV4LgoKVGhlcmUgaXMgYWxzbyBubyBzdWNo
-IHRoaW5nIGFzIGEgc3BlY2lhbCByZW5kZXIgb2ZmbG9hZGluZyBjb25uZWN0aW9uOgpGcmFtZXMg
-YXJlIGNvbXB1dGVkIG9uIGEgZGlzY3JldGUgR1BVLCB0aGVuIGNvcGllZCBvdmVyIFBDSWUgaW50
-byB0aGUKZnJhbWVidWZmZXIgb2YgdGhlIGludGVncmF0ZWQgR1BVLiAgV2hldGhlciB0aGF0IGRp
-c2NyZXRlIEdQVSBpcwpvbi1ib2FyZCBvciBleHRlcm5hbGx5IGNvbm5lY3RlZCBpcyBjb21wbGV0
-ZWx5IHRyYW5zcGFyZW50IGFuZCBub3QKZGlzY2VybmlibGUgb3RoZXIgdGhhbiBieSBsb29raW5n
-IGF0IHRoZSBQQ0kgaGllcmFyY2h5LgoKVGhlIHNhbWUgaXNzdWUgZXhpc3RzIGZvciBIRCBBdWRp
-byBjb250cm9sbGVycyBpbnRlZ3JhdGVkIGludG8gbWFueQpkaXNjcmV0ZSBHUFVzOiAgVG8gdGhl
-IE9TIHRoZXNlIGxvb2sgbGlrZSBzZXBhcmF0ZSBQQ0kgZnVuY3Rpb25zCmFuZCBpbiBzb3VuZC9w
-Y2kvaGRhL2hkYV9pbnRlbC5jOmdldF9ib3VuZF92Z2EoKSB3ZSBsZXZlcmFnZSB0aGUgZmFjdAp0
-aGF0IHRoZSBHUFUgaXMgYWx3YXlzIGZ1bmN0aW9uIDAgYW5kIHRoZSBIRCBBdWRpbyBpcyBmdW5j
-dGlvbiAxIHRvCmRpc2NvdmVyIHRoZSBHUFUgY29ycmVzcG9uZGluZyB0byBhIHBhcnRpY3VsYXIg
-SEQgQXVkaW8gY29udHJvbGxlci4KU28gYWdhaW4gdGhhdCByZWxhdGlvbnNoaXAgaXMgZGVkdWNl
-ZCBmcm9tIHRoZSBQQ0kgaGllcmFyY2h5LgoKCj4gRnJvbSBhIHB1cmUgUENJIHBlcnNwZWN0aXZl
-LCBJIGFzc3VtZSBpdCB3b3VsZCBiZSBjb25jZWl2YWJsZSB0byBoYXZlCj4gdHdvIFRodW5kZXJi
-b2x0LWNvbm5lY3RlZCBHUFVzIGZlZWRpbmcgaW50byBhIG11eC4gIE9yIHRvIGhhdmUgYSBHUFUK
-PiAodW5yZWxhdGVkIHRvIHRoZSBtdXgpIGluIGEgbm9uLVRodW5kZXJib2x0IHBsdWdpbiBzbG90
-IG9yIGNvbm5lY3RlZAo+IGV4dGVybmFsbHkgdmlhIGEgbm9uLVRodW5kZXJib2x0IHN3aXRjaCBh
-bmQgYW4gaVBhc3MgY2FibGUuCgpUZWNobmljYWxseSBzdWNoIHByb2R1Y3RzIHdvdWxkIGJlIHBv
-c3NpYmxlLCBidXQgSSBiZWxpZXZlIHRoZXkgZG9uJ3QKZXhpc3QuICAoVW5saWtlIFRodW5kZXJi
-b2x0IGVHUFVzLCB3aGljaCBoYXZlIGJlZW4gb24gdGhlIG1hcmtldCBmb3IKYSBmZXcgeWVhcnMu
-KQoKVGhhbmtzLAoKTHVrYXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KTm91dmVhdSBtYWlsaW5nIGxpc3QKTm91dmVhdUBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9ub3V2ZWF1
-Cg==
+On Sat, Mar 4, 2017 at 12:41 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> It was reported that dell-smm-hwmon is working fine on Dell XPS 15 9560.
+>
+> Link: http://www.spinics.net/lists/platform-driver-x86/msg10751.html
+> Reported-by: Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>
+> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> ---
+
+Vasile, can you test this fix?
+
+>  drivers/hwmon/dell-smm-hwmon.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmo=
+n.c
+> index 34704b0..3189246 100644
+> --- a/drivers/hwmon/dell-smm-hwmon.c
+> +++ b/drivers/hwmon/dell-smm-hwmon.c
+> @@ -995,6 +995,13 @@ enum i8k_configs {
+>                 },
+>                 .driver_data =3D (void *)&i8k_config_data[DELL_XPS],
+>         },
+> +       {
+> +               .ident =3D "Dell XPS 15 9560",
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
+> +               },
+> +       },
+>         { }
+>  };
+>
+> --
+> 1.7.9.5
+>
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
