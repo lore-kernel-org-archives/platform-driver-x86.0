@@ -1,80 +1,90 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v8 7/7] platform/x86/dell-*: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Mon, 6 Mar 2017 14:39:47 +0100
-Message-ID: <595f88da-a0ee-005e-b22d-ee04cfe20628@redhat.com>
-References: <20170221170838.GO9795@pali>
- <7bb7c48f-789e-8b4c-b76b-1389d7fbbfb7@redhat.com>
- <20170222084935.GA21558@pali>
- <cf1aceaf-9177-2223-6f36-afdb5c47ee31@redhat.com>
- <20170222120109.GC21558@pali>
- <035b56e6-b606-c632-35cf-00f880abcbf5@redhat.com>
- <20170301111558.GC3185@pali>
- <8c181bbc-e786-16c7-39f7-80d4be502066@redhat.com>
- <20170301125532.GF3185@pali>
- <e66822f3-b47c-e986-c819-87dfb56568ba@redhat.com>
- <20170303120020.GD25757@pali>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v2 0/4] fujitsu_init() cleanup
+Date: Mon, 6 Mar 2017 19:47:23 +0100
+Message-ID: <20170306184723.GA795@kmp-mobile.hq.kempniu.pl>
+References: <20170301081044.12141-1-kernel@kempniu.pl>
+ <20170304014723.GA7944@marvin.atrad.com.au>
+ <20170305234854.GG28473@marvin.atrad.com.au>
+ <20170306044905.GA3845@kmp-mobile.hq.kempniu.pl>
+ <20170306050104.GT28473@marvin.atrad.com.au>
+ <20170306081030.GA30975@marvin.atrad.com.au>
+ <20170306093350.GB1372@ozzy.nask.waw.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:39240 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753072AbdCFNs0 (ORCPT
+Received: from mail-lf0-f68.google.com ([209.85.215.68]:35511 "EHLO
+        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932365AbdCFSr3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Mar 2017 08:48:26 -0500
-In-Reply-To: <20170303120020.GD25757@pali>
+        Mon, 6 Mar 2017 13:47:29 -0500
+Received: by mail-lf0-f68.google.com with SMTP id v2so7343265lfi.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Mar 2017 10:47:27 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <20170306093350.GB1372@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+> > Hi Michael
+> > 
+> > Some quick feedback.
+> > 
+> > On Mon, Mar 06, 2017 at 03:31:04PM +1030, Jonathan Woithe wrote:
+> > > > > I can add that immediately after loading the driver the value returned by a
+> > > > > read of bl_power is 0.  As noted above, setting to 1 makes no difference to
+> > > > > the backlight, neither does returning it to 0.
+> > > > 
+> > > > Have you tried setting bl_power to 4?  Because that is the value of
+> > > > FB_BLANK_POWERDOWN, which is the value the patch is supposed to handle.
+> > > 
+> > > Oh no, I didn't try 4.  I should have.  I will try to squeeze in a test of
+> > > this tonight (time is short but the test won't take a lot of time).
+> > 
+> > With an unpatched 4.5 kernel, writing 4 (as opposed to 1, which I stupidly
+> > tried earlier) to bl_power caused the backlight to turn off.  Writing 0
+> > turned it back on again.
+> > 
+> > With patches 1-4/4 applied, writing 4 to bl_power did *NOT* turn the
+> > backlight off.
+> > 
+> > With patch 2 reverted, writing 4 to bl_power turned the backlight off. 
+> > Writing 0 to bl_power turned it back on again.
+> > 
+> > This means that patch 2/4 seems to prevent bl_power from operating as
+> > expected on the S7020 hardware.  Without this patch (but with all the others
+> > in place) bl_power works.
+> > 
+> > I am unlikely to have any more time to investigate this further tonight. 
+> > 
+> > In light of the above findings, what would you like to do?
+> 
+> Thanks for testing, good that we caught this before the patch series was
+> applied.  I think it is reasonable to skip applying this version of the
+> series as at least patch 2/4 is faulty and breaks a working feature.
+> 
+> Moving on, though, as I do not have access to Fujitsu hardware on which
+> this feature works, I was hoping you could help me verify whether my
+> assumptions were reasonable in the first place.  
+> 
+> I attached a crude patch to this message.  I would like to understand
+> how the underlying ACPI variables behave when the FEXT interface is
+> used, so please apply this patch on top of dvhart/testing (i.e. without
+> this series applied).  After compiling, please load the module with
+> debugging enabled, then test backlight control once again by writing 4
+> and then 0 to bl_power (this should work).  Then please send me all the
+> messages spit out by the driver into dmesg.  This should shed some light
+> on the matter.
 
-On 03-03-17 13:00, Pali Rohár wrote:
-> On Wednesday 01 March 2017 14:58:45 Hans de Goede wrote:
->>> In my idea I do not add any additional information to event. Which means
->>> all received events are same in current driver state and I can swap
->>> them. So I can decide to drop one event when driver is changing
->>> backlight level. And because I can swap received events it does not
->>> matter if I drop "correct" one (that which was really generated by my
->>> backlight level change) or any other before or after (as they are same).
->>> The only important is that kernel use correct number of firmware events.
->>>
->>> Idea for time interval of 2-3 seconds is that if event is delivered
->>> later as after 3 seconds it is probably useless as driver application
->>> code can be already out-of-sync. But this time interval is just another
->>> idea and we do not need to use it.
->>
->> I really don't like the 2-3 seconds stuff, but I'm fine with going
->> with your idea of just swallowing one event after a sysfs-write
->> without the timeout stuff.
->
-> Ok. I'm fine with just dropping exactly one event after setting new
-> value via sysfs. It is OK for you?
+Actually, scratch that.  I just ordered a banged up S7020 for €15 to
+avoid pestering you with experimental patches and hopefully make the
+whole driver cleanup process a bit smoother.
 
-Yes that will work for me. I will prepare a new version. Note I probably
-will not have time for this till the end of this week.
+Darren, Andy, please ignore this whole series for now.  I will post v3
+once I figure out how to clean things up without breaking working
+features.
 
-One thing I was wondering, is what will happen if we write the
-same value to the sysfs brightness file twice, do we get events
-for both writes?  One way to avoid this problem would be to compare
-the written value to the last known value and discard the write
-(avoiding an expensive SMM call) if they are equal.
-
-Discarding double writes does introduce a race between hotkey changes
-vs sysfs writes, if a hotkey change has been made but the event has
-not yet been handled then a sysfs write may be seen as being double
-and get discarded even though it is not double. OTOH if the hotkey
-press wins the race then the result would have been the write being
-discarded anyways, so I don't think this is a real problem.
-
-You're input on this would be appreciated. If writing the same value
-twice does not generate events then we must filter out the double
-writes. If it does drop events we can choose, the simplest would be
-to not filter in that case, avoiding any races (and userspace normally
-should not write the same value twice, but we cannot assume that).
-
-Regards,
-
-Hans
+-- 
+Best regards,
+Michał Kępień
