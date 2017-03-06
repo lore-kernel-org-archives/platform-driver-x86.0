@@ -1,16 +1,16 @@
 From: Arvind Yadav <arvind.yadav.cs@gmail.com>
 Subject: [PATCH] x86: thinkpad_acpi: Handle return error.
-Date: Mon,  6 Mar 2017 13:13:26 +0530
-Message-ID: <1488786206-20190-1-git-send-email-arvind.yadav.cs@gmail.com>
+Date: Mon,  6 Mar 2017 13:16:22 +0530
+Message-ID: <1488786382-20251-1-git-send-email-arvind.yadav.cs@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-io0-f193.google.com ([209.85.223.193]:33802 "EHLO
-        mail-io0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752610AbdCFHoY (ORCPT
+Received: from mail-it0-f66.google.com ([209.85.214.66]:33621 "EHLO
+        mail-it0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752545AbdCFHqh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Mar 2017 02:44:24 -0500
+        Mon, 6 Mar 2017 02:46:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ibm-acpi@hmh.eng.b, dvhart@infradead.org, andy@infradead.org
+To: ibm-acpi@hmh.eng.br
 Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
 This patch is for handling a return error.
