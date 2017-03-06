@@ -1,70 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] x86: thinkpad_acpi: Handle return error.
-Date: Mon, 6 Mar 2017 10:45:50 +0200
-Message-ID: <CAHp75VcY2D3E3ogT_ySTVo8C5j17EYDXqn0mi0DEmkVqntwZPA@mail.gmail.com>
-References: <1488786206-20190-1-git-send-email-arvind.yadav.cs@gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v2 0/4] fujitsu_init() cleanup
+Date: Mon, 6 Mar 2017 18:40:30 +1030
+Message-ID: <20170306081030.GA30975@marvin.atrad.com.au>
+References: <20170301081044.12141-1-kernel@kempniu.pl>
+ <20170304014723.GA7944@marvin.atrad.com.au>
+ <20170305234854.GG28473@marvin.atrad.com.au>
+ <20170306044905.GA3845@kmp-mobile.hq.kempniu.pl>
+ <20170306050104.GT28473@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:33815 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752725AbdCFIy0 (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:35382 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752685AbdCFIzX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 6 Mar 2017 03:54:26 -0500
-In-Reply-To: <1488786206-20190-1-git-send-email-arvind.yadav.cs@gmail.com>
+        Mon, 6 Mar 2017 03:55:23 -0500
+Content-Disposition: inline
+In-Reply-To: <20170306050104.GT28473@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 6, 2017 at 9:43 AM, Arvind Yadav <arvind.yadav.cs@gmail.com> wrote:
-> This patch is for handling a return error.
->
-> Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 1d18b32..19ad3ec 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -1237,9 +1237,11 @@ static int tpacpi_rfk_hook_set_block(void *data, bool blocked)
->         /* try to set radio state */
+Hi Michael
 
->         res = (tp_rfk->ops->set_status)(blocked ?
->                                 TPACPI_RFK_RADIO_OFF : TPACPI_RFK_RADIO_ON);
+Some quick feedback.
 
-Just in case: first parens are redundant here.
+On Mon, Mar 06, 2017 at 03:31:04PM +1030, Jonathan Woithe wrote:
+> > > I can add that immediately after loading the driver the value returned by a
+> > > read of bl_power is 0.  As noted above, setting to 1 makes no difference to
+> > > the backlight, neither does returning it to 0.
+> > 
+> > Have you tried setting bl_power to 4?  Because that is the value of
+> > FB_BLANK_POWERDOWN, which is the value the patch is supposed to handle.
+> 
+> Oh no, I didn't try 4.  I should have.  I will try to squeeze in a test of
+> this tonight (time is short but the test won't take a lot of time).
 
-> +       if (res < 0)
-> +               return res;
+With an unpatched 4.5 kernel, writing 4 (as opposed to 1, which I stupidly
+tried earlier) to bl_power caused the backlight to turn off.  Writing 0
+turned it back on again.
 
-So, this changes behaviour. Before we call _rfk_update_swstate()
-independently on error code.
+With patches 1-4/4 applied, writing 4 to bl_power did *NOT* turn the
+backlight off.
 
-Care to explain in commit message how this change does / does not
-affect overall user experience?
+With patch 2 reverted, writing 4 to bl_power turned the backlight off. 
+Writing 0 to bl_power turned it back on again.
 
->         /* and update the rfkill core with whatever the FW really did */
-> -       tpacpi_rfk_update_swstate(tp_rfk);
-> +       res = tpacpi_rfk_update_swstate(tp_rfk);
->
->         return (res < 0) ? res : 0;
->  }
+This means that patch 2/4 seems to prevent bl_power from operating as
+expected on the S7020 hardware.  Without this patch (but with all the others
+in place) bl_power works.
 
-> @@ -3517,6 +3524,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->         if (tp_features.hotkey_wlsw)
->                 res = add_to_attr_set(hotkey_dev_attributes,
->                                 &dev_attr_hotkey_radio_sw.attr);
-> +       if (res)
-> +               goto err_exit;
->
->         res = hotkey_init_tablet_mode();
->         if (res < 0)
+I am unlikely to have any more time to investigate this further tonight. 
 
-Ditto for hotkey_init_tablet_mode().
+In light of the above findings, what would you like to do?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards
+  jonathan
