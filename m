@@ -1,106 +1,58 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v3 3/4] platform/x86: fujitsu-laptop: only register backlight device if FUJ02B1 is present
-Date: Tue,  7 Mar 2017 11:15:15 +0100
-Message-ID: <20170307101516.9852-4-kernel@kempniu.pl>
-References: <20170307101516.9852-1-kernel@kempniu.pl>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
+Date: Tue, 7 Mar 2017 11:27:01 -0800
+Message-ID: <20170307192701.GG13740@dtor-ws>
+References: <20170210174837.1078-1-pespin.shar@gmail.com>
+ <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
+ <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+ <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
+ <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
+ <20170223083631.GE18639@dtor-ws>
+ <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35382 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755154AbdCGKPZ (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:33568 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755737AbdCGT1P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2017 05:15:25 -0500
-Received: by mail-lf0-f66.google.com with SMTP id v2so8635443lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2017 02:15:23 -0800 (PST)
-In-Reply-To: <20170307101516.9852-1-kernel@kempniu.pl>
+        Tue, 7 Mar 2017 14:27:15 -0500
+Content-Disposition: inline
+In-Reply-To: <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pau Espin Pedrol <pespin.shar@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
 
-As the backlight device registered by fujitsu-laptop relies on the
-FUJ02B1 ACPI device being present, only register the backlight device
-once that ACPI device is detected.
+On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
+> >> Dmitry, do we have special events for AC (un)plug? What is the best
+> >> approach in your opinion?
+> >
+> > Not route them through input as they not input events would be the best.
+> >
+> Is my patch good enough for this or would you recommend doing it another way?
 
-Suggested-by: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+From input POV your patch makes sense.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 348af17cdc94..8b2701da4a4e 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -781,6 +781,12 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
- 	get_lcd_level();
- 
-+	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
-+		error = fujitsu_backlight_register();
-+		if (error)
-+			goto err_unregister_input_dev;
-+	}
-+
- 	return 0;
- 
- err_unregister_input_dev:
-@@ -797,6 +803,7 @@ static int acpi_fujitsu_bl_remove(struct acpi_device *device)
- 	struct fujitsu_bl *fujitsu_bl = acpi_driver_data(device);
- 	struct input_dev *input = fujitsu_bl->input;
- 
-+	backlight_device_unregister(fujitsu_bl->bl_device);
- 	input_unregister_device(input);
- 
- 	fujitsu_bl->acpi_handle = NULL;
-@@ -956,7 +963,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	pr_info("BTNI: [0x%x]\n", call_fext_func(FUNC_BUTTONS, 0x0, 0x0, 0x0));
- 
- 	/* Sync backlight power status */
--	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
-+	if (fujitsu_bl->bl_device &&
-+	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
- 		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
- 			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
- 		else
-@@ -1256,17 +1264,9 @@ static int __init fujitsu_init(void)
- 	if (ret)
- 		goto fail_platform_device2;
- 
--	/* Register backlight stuff */
--
--	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		ret = fujitsu_backlight_register();
--		if (ret)
--			goto fail_sysfs_group;
--	}
--
- 	ret = platform_driver_register(&fujitsu_pf_driver);
- 	if (ret)
--		goto fail_backlight;
-+		goto fail_sysfs_group;
- 
- 	/* Register laptop driver */
- 
-@@ -1288,8 +1288,6 @@ static int __init fujitsu_init(void)
- 	kfree(fujitsu_laptop);
- fail_laptop:
- 	platform_driver_unregister(&fujitsu_pf_driver);
--fail_backlight:
--	backlight_device_unregister(fujitsu_bl->bl_device);
- fail_sysfs_group:
- 	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
- 			   &fujitsu_pf_attribute_group);
-@@ -1313,8 +1311,6 @@ static void __exit fujitsu_cleanup(void)
- 
- 	platform_driver_unregister(&fujitsu_pf_driver);
- 
--	backlight_device_unregister(fujitsu_bl->bl_device);
--
- 	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
- 			   &fujitsu_pf_attribute_group);
- 
+> 
+> > I'd look into hooking up power_supply class.
+> >
+> Whys is this necessay? All the related information required is already
+> present in my system.
+> I already have two power_supply instances:
+> * /sys/class/power_supply/AC0/ (provided by module "ac"), contains
+> property "online" which is correctly updated to 1 when AC is plugged
+> and 0 when AC is unplugged.
+> * /sys/class/power_supply/BAT0/ (provided by module "battery"),
+> contains property "status" which is correctly updated to "Charging"
+> when AC is plugged and "Discharging" when AC is unplugged.
+
+If everything is already working then it is not necessary. I was
+trying to say that if it does not quite work, then you shoudl look into
+integrating it better with power supply subsystem, instead of trying to
+shoehorn it into input.
+
+Thanks.
+
 -- 
-2.12.0
+Dmitry
