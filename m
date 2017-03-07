@@ -1,18 +1,18 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v3 1/4] platform/x86: fujitsu-laptop: register backlight device in a separate function
-Date: Tue,  7 Mar 2017 11:15:13 +0100
-Message-ID: <20170307101516.9852-2-kernel@kempniu.pl>
+Subject: [PATCH v3 2/4] platform/x86: fujitsu-laptop: sync backlight power status in acpi_fujitsu_laptop_add()
+Date: Tue,  7 Mar 2017 11:15:14 +0100
+Message-ID: <20170307101516.9852-3-kernel@kempniu.pl>
 References: <20170307101516.9852-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f65.google.com ([209.85.215.65]:34600 "EHLO
-        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755262AbdCGKPX (ORCPT
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:35379 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755266AbdCGKPY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2017 05:15:23 -0500
-Received: by mail-lf0-f65.google.com with SMTP id y193so13586563lfd.1
+        Tue, 7 Mar 2017 05:15:24 -0500
+Received: by mail-lf0-f67.google.com with SMTP id v2so8635417lfi.2
         for <platform-driver-x86@vger.kernel.org>; Tue, 07 Mar 2017 02:15:22 -0800 (PST)
 In-Reply-To: <20170307101516.9852-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -20,80 +20,49 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Move code responsible for backlight device registration to a separate
-function in order to simplify error handling and decrease indentation.
-Simplify initialization of struct backlight_properties.  Use
-KBUILD_MODNAME as device name to avoid repeating the same string literal
-throughout the module.
+Registering an ACPI driver does not mean the device it handles has to
+exist.  As the code which syncs backlight power status uses
+call_fext_func(), it needs the FUJ02E3 ACPI device to be present, so
+ensure that code is only run once the FUJ02E3 device is detected.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 38 ++++++++++++++++++++---------------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index e12cc3504d48..185c929898d9 100644
+index 185c929898d9..348af17cdc94 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -685,6 +685,25 @@ static const struct dmi_system_id fujitsu_dmi_table[] __initconst = {
+@@ -955,6 +955,14 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 	/* Suspect this is a keymap of the application panel, print it */
+ 	pr_info("BTNI: [0x%x]\n", call_fext_func(FUNC_BUTTONS, 0x0, 0x0, 0x0));
  
- /* ACPI device for LCD brightness control */
- 
-+static int fujitsu_backlight_register(void)
-+{
-+	struct backlight_properties props = {
-+		.brightness = fujitsu_bl->brightness_level,
-+		.max_brightness = fujitsu_bl->max_brightness - 1,
-+		.type = BACKLIGHT_PLATFORM
-+	};
-+	struct backlight_device *bd;
++	/* Sync backlight power status */
++	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
++		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
++			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
++		else
++			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
++	}
 +
-+	bd = backlight_device_register(KBUILD_MODNAME, NULL, NULL,
-+				       &fujitsu_bl_ops, &props);
-+	if (IS_ERR(bd))
-+		return PTR_ERR(bd);
-+
-+	fujitsu_bl->bl_device = bd;
-+
-+	return 0;
-+}
-+
- static int acpi_fujitsu_bl_add(struct acpi_device *device)
- {
- 	int state = 0;
-@@ -1192,7 +1211,7 @@ MODULE_DEVICE_TABLE(acpi, fujitsu_ids);
+ #if IS_ENABLED(CONFIG_LEDS_CLASS)
+ 	if (call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
+ 		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
+@@ -1272,14 +1280,6 @@ static int __init fujitsu_init(void)
+ 	if (ret)
+ 		goto fail_laptop1;
  
- static int __init fujitsu_init(void)
- {
--	int ret, max_brightness;
-+	int ret;
- 
- 	if (acpi_disabled)
- 		return -ENODEV;
-@@ -1232,22 +1251,9 @@ static int __init fujitsu_init(void)
- 	/* Register backlight stuff */
- 
- 	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		struct backlight_properties props;
+-	/* Sync backlight power status (needs FUJ02E3 device, hence deferred) */
+-	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+-		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
+-			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
+-		else
+-			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
+-	}
 -
--		memset(&props, 0, sizeof(struct backlight_properties));
--		max_brightness = fujitsu_bl->max_brightness;
--		props.type = BACKLIGHT_PLATFORM;
--		props.max_brightness = max_brightness - 1;
--		fujitsu_bl->bl_device = backlight_device_register("fujitsu-laptop",
--								  NULL, NULL,
--								  &fujitsu_bl_ops,
--								  &props);
--		if (IS_ERR(fujitsu_bl->bl_device)) {
--			ret = PTR_ERR(fujitsu_bl->bl_device);
--			fujitsu_bl->bl_device = NULL;
-+		ret = fujitsu_backlight_register();
-+		if (ret)
- 			goto fail_sysfs_group;
--		}
--		fujitsu_bl->bl_device->props.brightness = fujitsu_bl->brightness_level;
- 	}
+ 	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
  
- 	ret = platform_driver_register(&fujitsu_pf_driver);
+ 	return 0;
 -- 
 2.12.0
