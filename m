@@ -1,58 +1,26 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Tue, 7 Mar 2017 11:27:01 -0800
-Message-ID: <20170307192701.GG13740@dtor-ws>
-References: <20170210174837.1078-1-pespin.shar@gmail.com>
- <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
- <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
- <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
- <20170223083631.GE18639@dtor-ws>
- <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v3 0/4] fujitsu_init() cleanup
+Date: Wed, 8 Mar 2017 17:19:21 +1030
+Message-ID: <20170308064921.GN17689@marvin.atrad.com.au>
+References: <20170307101516.9852-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:33568 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755737AbdCGT1P (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Mar 2017 14:27:15 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pau Espin Pedrol <pespin.shar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+In-Reply-To: <20170307101516.9852-1-kernel@kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
-> >> Dmitry, do we have special events for AC (un)plug? What is the best
-> >> approach in your opinion?
-> >
-> > Not route them through input as they not input events would be the best.
-> >
-> Is my patch good enough for this or would you recommend doing it another way?
+On Tue, Mar 07, 2017 at 11:15:12AM +0100, Micha?? K??pie?? wrote:
+> These patches should make fujitsu_init() a bit more palatable.  No
+> changes are made to platform device code yet, for clarity these will be
+> posted in a separate series after this one gets applied.
 
-From input POV your patch makes sense.
+I will test and review these as soon as possible.  It is likely to be later
+this week or over the weekend.  I suspect this version will be good to go
+but we should confirm this. :-)
 
-> 
-> > I'd look into hooking up power_supply class.
-> >
-> Whys is this necessay? All the related information required is already
-> present in my system.
-> I already have two power_supply instances:
-> * /sys/class/power_supply/AC0/ (provided by module "ac"), contains
-> property "online" which is correctly updated to 1 when AC is plugged
-> and 0 when AC is unplugged.
-> * /sys/class/power_supply/BAT0/ (provided by module "battery"),
-> contains property "status" which is correctly updated to "Charging"
-> when AC is plugged and "Discharging" when AC is unplugged.
-
-If everything is already working then it is not necessary. I was
-trying to say that if it does not quite work, then you shoudl look into
-integrating it better with power supply subsystem, instead of trying to
-shoehorn it into input.
-
-Thanks.
-
--- 
-Dmitry
+Regards
+  jonathan
