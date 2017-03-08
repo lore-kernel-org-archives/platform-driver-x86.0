@@ -1,52 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] Input: sparse-keymap - use a managed allocation for
- keymap copy
-Date: Wed, 8 Mar 2017 23:47:26 +0200
-Message-ID: <CAHp75VdKNnnyu5cJr=uzvimfbwJJyZ+nwBkJzUxu+RitHf1_1Q@mail.gmail.com>
-References: <20170308082217.5466-1-kernel@kempniu.pl> <20170308181250.GC20567@dtor-ws>
- <CAHp75VdjQS_D5=gZ5Ei1quqjqyhPADxeT=a832Mb+Sk1kDz0mQ@mail.gmail.com> <20170308210506.GD20567@dtor-ws>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: [PATCH] hwmon: (dell-smm) Add Dell XPS 15 9560 into DMI list
+Date: Wed, 8 Mar 2017 23:01:42 +0100
+Message-ID: <20170308230142.52905281@endymion>
+References: <1488580912-13578-1-git-send-email-pali.rohar@gmail.com>
+        <CAHp75Ve4NxQ8=GQGOdwnURRzvgDOGYs1LAwd_NQE=qzWnUVMEg@mail.gmail.com>
+        <CAHZJmOzdDhnts6-HUKBMoYC6FSj-Hkz=jpcfwV4gFTTEWdB7kg@mail.gmail.com>
+        <20170306123318.00d46184@endymion>
+        <CAHZJmOxFc_c1B7Qtkqj3d-1NqW+OZ7a=ZFQaC526L3oqNhkOdA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f180.google.com ([209.85.220.180]:36532 "EHLO
-        mail-qk0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751262AbdCHWxr (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:53984 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750707AbdCHXQO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Mar 2017 17:53:47 -0500
-In-Reply-To: <20170308210506.GD20567@dtor-ws>
+        Wed, 8 Mar 2017 18:16:14 -0500
+In-Reply-To: <CAHZJmOxFc_c1B7Qtkqj3d-1NqW+OZ7a=ZFQaC526L3oqNhkOdA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-input <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+To: Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Wed, Mar 8, 2017 at 11:05 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Wed, Mar 08, 2017 at 10:50:16PM +0200, Andy Shevchenko wrote:
->> On Wed, Mar 8, 2017 at 8:12 PM, Dmitry Torokhov
->> <dmitry.torokhov@gmail.com> wrote:
->> > On Wed, Mar 08, 2017 at 09:22:17AM +0100, Micha=C5=82 K=C4=99pie=C5=84=
- wrote:
+On Wed, 8 Mar 2017 20:25:33 +0100, Vasile Dumitrescu wrote:
+> sudo sensors
+> =>
 
->> If there PDx86 related patches are anticipated this cycle, definitely
->> we need an immutable branch (perhaps based on v4.11-rc1).
->
-> OK, I'll make one (based on 4.10 final - the patch should apply cleanly
-> there and there is no point of forcing anyone's workflow to use kernel
-> in the beginning of stabilization cycle).
+Note that you don't need to be root to run "sensors".
 
-Fine by me.
+> (...)
+> dell_smm-virtual-0
+> Adapter: Virtual device
+> Processor Fan: 2490 RPM
+> Video Fan:     2493 RPM
+> CPU:            +48.0°C
+> Ambient:        +48.0°C
+> Ambient:        +44.0°C
+> Other:          +40.0°C
+> 
+> sudo pwmconfig
+> => fans definitely stop and restart as the script indicates they should
+> 
+> Conclusion: works for me (TM) - without force or any special options
+> 
+> Thanks Jean, that was easy.
 
-> As to whether there are PDx86 patches - I hope Micha=C5=82 will supply th=
-em
-> ;)
+You're welcome, glad I could help :-)
 
-Micha=C5=82, whenever you send the first one based on this change, please
-mention that it has dependency, I will pull the immutable branch at
-that time.
+> Looking forward to see it in some future kernel.
 
-Thanks.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Jean Delvare
+SUSE L3 Support
