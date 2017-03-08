@@ -1,76 +1,48 @@
-From: Vasile Dumitrescu <vasile.dumitrescu@undeva.eu>
-Subject: Re: [PATCH] hwmon: (dell-smm) Add Dell XPS 15 9560 into DMI list
-Date: Wed, 8 Mar 2017 20:25:33 +0100
-Message-ID: <CAHZJmOxFc_c1B7Qtkqj3d-1NqW+OZ7a=ZFQaC526L3oqNhkOdA@mail.gmail.com>
-References: <1488580912-13578-1-git-send-email-pali.rohar@gmail.com>
- <CAHp75Ve4NxQ8=GQGOdwnURRzvgDOGYs1LAwd_NQE=qzWnUVMEg@mail.gmail.com>
- <CAHZJmOzdDhnts6-HUKBMoYC6FSj-Hkz=jpcfwV4gFTTEWdB7kg@mail.gmail.com> <20170306123318.00d46184@endymion>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] Input: sparse-keymap - use a managed allocation for
+ keymap copy
+Date: Wed, 8 Mar 2017 22:50:16 +0200
+Message-ID: <CAHp75VdjQS_D5=gZ5Ei1quqjqyhPADxeT=a832Mb+Sk1kDz0mQ@mail.gmail.com>
+References: <20170308082217.5466-1-kernel@kempniu.pl> <20170308181250.GC20567@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f67.google.com ([209.85.218.67]:34803 "EHLO
-        mail-oi0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754125AbdCHT0b (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Mar 2017 14:26:31 -0500
-Received: by mail-oi0-f67.google.com with SMTP id m124so3023379oig.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Mar 2017 11:26:14 -0800 (PST)
-In-Reply-To: <20170306123318.00d46184@endymion>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170308181250.GC20567@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-input <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Wow, that was easy :-).
+On Wed, Mar 8, 2017 at 8:12 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Mar 08, 2017 at 09:22:17AM +0100, Micha=C5=82 K=C4=99pie=C5=84 wr=
+ote:
+>> Some platform drivers use devm_input_allocate_device() together with
+>> sparse_keymap_setup() in their .probe callbacks.  While using the former
+>> simplifies error handling, using the latter necessitates calling
+>> sparse_keymap_free() in the error path and upon module unloading to
+>> avoid leaking the copy of the keymap allocated by sparse_keymap_setup().
+>>
+>> To help prevent such leaks and enable simpler error handling, make
+>> sparse_keymap_setup() use devm_kmemdup() to create the keymap copy so
+>> that it gets automatically freed.
+>>
+>> This works for both managed and non-managed input devices as the keymap
+>> is freed after the last reference to the input device is dropped.
+>>
+>> Note that actions previously taken by sparse_keymap_free(), i.e. taking
+>> the input device's mutex and zeroing its keycode and keycodemax fields,
+>> are now redundant because the managed keymap will always be freed after
+>> the input device is unregistered.
 
-so I did:
-download the driver source and makefile
-make
-=3D> several new files show up including a .ko - WOHOOO
-sudo rmmod dell-smm-hwmon
-lsmod | grep hwmo
-=3D> nothing
-sudo insmod ./dell-smm-hwmon.ko
-=3D> nothing
-lsmod | grep hwmo
-=3D> dell_smm_hwmon         16384  0
+> OK, I think this looks good. Do platform folks want an immutable branch
+> off 4.10 with this change so we can start cleaning sparse_keymap_free()
+> users in this cycle?
 
-sudo sensors
-=3D>
-coretemp-isa-0000
-Adapter: ISA adapter
-Physical id 0:  +50.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
-Core 0:         +47.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
-Core 1:         +50.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
-Core 2:         +46.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
-Core 3:         +48.0=C2=B0C  (high =3D +100.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
+If there PDx86 related patches are anticipated this cycle, definitely
+we need an immutable branch (perhaps based on v4.11-rc1).
 
-acpitz-virtual-0
-Adapter: Virtual device
-temp1:        +25.0=C2=B0C  (crit =3D +107.0=C2=B0C)
-
-dell_smm-virtual-0
-Adapter: Virtual device
-Processor Fan: 2490 RPM
-Video Fan:     2493 RPM
-CPU:            +48.0=C2=B0C
-Ambient:        +48.0=C2=B0C
-Ambient:        +44.0=C2=B0C
-Other:          +40.0=C2=B0C
-
-sudo pwmconfig
-=3D> fans definitely stop and restart as the script indicates they should
-
-Conclusion: works for me (TM) - without force or any special options
-
-Thanks Jean, that was easy.
-
-Looking forward to see it in some future kernel.
-
-Kind regards
+--=20
+With Best Regards,
+Andy Shevchenko
