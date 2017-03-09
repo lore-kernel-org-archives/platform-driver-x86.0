@@ -1,54 +1,57 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH] platform/x86: intel-hid: do not set parents of input devices explicitly
-Date: Thu,  9 Mar 2017 10:36:51 +0100
-Message-ID: <20170309093651.7824-1-kernel@kempniu.pl>
+Subject: [PATCH 00/14] platform/x86: remove sparse_keymap_free() calls
+Date: Thu,  9 Mar 2017 13:11:36 +0100
+Message-ID: <20170309121150.10553-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35557 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753291AbdCIJn7 (ORCPT
+Received: from mail-lf0-f68.google.com ([209.85.215.68]:34077 "EHLO
+        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752737AbdCIMMH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2017 04:43:59 -0500
-Received: by mail-lf0-f66.google.com with SMTP id v2so4196525lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2017 01:43:57 -0800 (PST)
+        Thu, 9 Mar 2017 07:12:07 -0500
+Received: by mail-lf0-f68.google.com with SMTP id y193so4468797lfd.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Mar 2017 04:12:06 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Harald Welte <laforge@gnumonks.org>, Herton Ronaldo Krzesinski <herton@canonical.com>, Ike Panhc <ike.pan@canonical.com>, "Lee, Chun-Yi" <jlee@suse.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-devm_input_allocate_device() already causes the supplied struct device
-to be set as the parent of the input device, so doing it again is
-redundant.
+Hi everyone,
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
-This patch needs my recent intel-hid cleanup series to apply cleanly.
-In other words, it should apply on top of testing, but not for-next.
+This patch series removes all uses of sparse_keymap_free() in the x86
+platform driver subsystem due to an upcoming change in
+sparse_keymap_setup() behavior wrt memory management.  Specifically,
+sparse_keymap_setup() will use managed memory for the keymap copy it
+creates, which enables it to be automatically freed upon input device
+removal, without the need to explicitly call sparse_keymap_free().
 
- drivers/platform/x86/intel-hid.c | 2 --
- 1 file changed, 2 deletions(-)
+I thought it makes sense to post all these patches as a single series.
+To minimize spamming, only this cover letter is addressed to all the
+maintainers whose drivers are affected by this series, while each of the
+subsequent patches will only be sent to the relevant recipients, plus
+the platform-driver-x86 mailing list and subsystem maintainers.
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 5eab31659cba..b40059aba856 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -152,7 +152,6 @@ static int intel_hid_input_setup(struct platform_device *device)
- 	if (ret)
- 		return ret;
- 
--	priv->input_dev->dev.parent = &device->dev;
- 	priv->input_dev->name = "Intel HID events";
- 	priv->input_dev->id.bustype = BUS_HOST;
- 
-@@ -173,7 +172,6 @@ static int intel_button_array_input_setup(struct platform_device *device)
- 	if (ret)
- 		return ret;
- 
--	priv->array->dev.parent = &device->dev;
- 	priv->array->name = "Intel HID 5 button array";
- 	priv->array->id.bustype = BUS_HOST;
- 
+Darren, Andy, all these patches should only be applied after merging an
+immutable branch called ib/4.10-sparse-keymap-managed from Dmitry
+Torokhov's git tree.
+
+ drivers/platform/x86/acer-wmi.c         |  5 +----
+ drivers/platform/x86/asus-laptop.c      |  8 ++------
+ drivers/platform/x86/asus-wmi.c         |  8 ++------
+ drivers/platform/x86/dell-wmi-aio.c     |  6 +-----
+ drivers/platform/x86/dell-wmi.c         | 16 ++++------------
+ drivers/platform/x86/eeepc-laptop.c     |  8 ++------
+ drivers/platform/x86/hp-wmi.c           |  5 +----
+ drivers/platform/x86/ideapad-laptop.c   |  5 +----
+ drivers/platform/x86/msi-laptop.c       | 14 +++-----------
+ drivers/platform/x86/msi-wmi.c          |  9 ++-------
+ drivers/platform/x86/panasonic-laptop.c | 18 +++---------------
+ drivers/platform/x86/topstar-laptop.c   |  5 +----
+ drivers/platform/x86/toshiba-wmi.c      |  5 +----
+ drivers/platform/x86/toshiba_acpi.c     |  8 ++------
+ 14 files changed, 26 insertions(+), 94 deletions(-)
+
 -- 
 2.12.0
