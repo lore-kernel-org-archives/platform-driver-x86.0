@@ -1,47 +1,50 @@
-From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH v2] platform/x86: dell-laptop: Handle return error form dell_get_intensity.
-Date: Thu,  9 Mar 2017 11:19:56 +0530
-Message-ID: <1489038596-3765-1-git-send-email-arvind.yadav.cs@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:36815 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750763AbdCIF6j (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Mar 2017 00:58:39 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v3] Input: sparse-keymap - use a managed allocation for
+ keymap copy
+Date: Thu, 9 Mar 2017 08:58:54 +0100
+Message-ID: <20170309075854.GA1620@ozzy.nask.waw.pl>
+References: <20170308082217.5466-1-kernel@kempniu.pl>
+ <20170308181250.GC20567@dtor-ws>
+ <CAHp75VdjQS_D5=gZ5Ei1quqjqyhPADxeT=a832Mb+Sk1kDz0mQ@mail.gmail.com>
+ <20170308210506.GD20567@dtor-ws>
+ <CAHp75VdKNnnyu5cJr=uzvimfbwJJyZ+nwBkJzUxu+RitHf1_1Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdKNnnyu5cJr=uzvimfbwJJyZ+nwBkJzUxu+RitHf1_1Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Here, This patch is to handle a return error from dell_get_intensity.
-This change is done using Coccinelle.
+> On Wed, Mar 8, 2017 at 11:05 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Wed, Mar 08, 2017 at 10:50:16PM +0200, Andy Shevchenko wrote:
+> >> On Wed, Mar 8, 2017 at 8:12 PM, Dmitry Torokhov
+> >> <dmitry.torokhov@gmail.com> wrote:
+> >> > On Wed, Mar 08, 2017 at 09:22:17AM +0100, Michał Kępień wrote:
+> 
+> >> If there PDx86 related patches are anticipated this cycle, definitely
+> >> we need an immutable branch (perhaps based on v4.11-rc1).
+> >
+> > OK, I'll make one (based on 4.10 final - the patch should apply cleanly
+> > there and there is no point of forcing anyone's workflow to use kernel
+> > in the beginning of stabilization cycle).
+> 
+> Fine by me.
+> 
+> > As to whether there are PDx86 patches - I hope Michał will supply them
+> > ;)
+> 
+> Michał, whenever you send the first one based on this change, please
+> mention that it has dependency, I will pull the immutable branch at
+> that time.
 
-Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
----
- drivers/platform/x86/dell-laptop.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Noted.  I will prepare the patches and submit them within the next few
+days.
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index f57dd28..7fcf680 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2053,11 +2053,17 @@ static int __init dell_init(void)
- 
- 		dell_backlight_device->props.brightness =
- 			dell_get_intensity(dell_backlight_device);
-+		if (dell_backlight_device->props.brightness < 0) {
-+			ret = dell_backlight_device->props.brightness;
-+			goto fail_get_brightness;
-+		}
- 		backlight_update_status(dell_backlight_device);
- 	}
- 
- 	return 0;
- 
-+fail_get_brightness:
-+	backlight_device_unregister(dell_backlight_device);
- fail_backlight:
- 	dell_cleanup_rfkill();
- fail_rfkill:
 -- 
-1.9.1
+Best regards,
+Michał Kępień
