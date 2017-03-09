@@ -1,60 +1,94 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 14/14] platform/x86: toshiba_acpi: remove sparse_keymap_free() calls
-Date: Thu,  9 Mar 2017 13:11:50 +0100
-Message-ID: <20170309121150.10553-15-kernel@kempniu.pl>
-References: <20170309121150.10553-1-kernel@kempniu.pl>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 0/5] Thunderbolt GPU fixes
+Date: Thu, 9 Mar 2017 16:03:47 +0100
+Message-ID: <20170309150347.a4k4w2sclox2365t@phenom.ffwll.local>
+References: <cover.1487938188.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170309121150.10553-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1487938188.git.lukas@wunner.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Michael Jamet <michael.jamet@intel.com>, linux-pci@vger.kernel.org, Peter Wu <peter@lekensteyn.nl>, amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>, Darren Hart <dvhart@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Christian Koenig <christian.koenig@amd.com>, Andy Shevchenko <andy@infradead.org>, Ben Skeggs <bskeggs@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As sparse_keymap_setup() now uses a managed memory allocation for the
-keymap copy it creates, the latter is freed automatically.  Remove all
-calls to sparse_keymap_free().
-
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/toshiba_acpi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 074bf2fa1c55..d0daf75cbed1 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2849,7 +2849,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 		error = i8042_install_filter(toshiba_acpi_i8042_filter);
- 		if (error) {
- 			pr_err("Error installing key filter\n");
--			goto err_free_keymap;
-+			goto err_free_dev;
- 		}
- 
- 		dev->ntfy_supported = 1;
-@@ -2880,8 +2880,6 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
-  err_remove_filter:
- 	if (dev->ntfy_supported)
- 		i8042_remove_filter(toshiba_acpi_i8042_filter);
-- err_free_keymap:
--	sparse_keymap_free(dev->hotkey_dev);
-  err_free_dev:
- 	input_free_device(dev->hotkey_dev);
- 	dev->hotkey_dev = NULL;
-@@ -3018,10 +3016,8 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
- 		cancel_work_sync(&dev->hotkey_work);
- 	}
- 
--	if (dev->hotkey_dev) {
-+	if (dev->hotkey_dev)
- 		input_unregister_device(dev->hotkey_dev);
--		sparse_keymap_free(dev->hotkey_dev);
--	}
- 
- 	backlight_device_unregister(dev->backlight_dev);
- 
--- 
-2.12.0
+T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMDg6MTk6NDVQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
+b3RlOgo+IEZpeCBUaHVuZGVyYm9sdC1yZWxhdGVkIGlzc3VlcyBpbiBhcHBsZS1nbXV4IGFuZCB2
+Z2Ffc3dpdGNoZXJvbzoKPiAKPiBQYXRjaCBbMS81XSAoIlJlY29nbml6ZSBUaHVuZGVyYm9sdCBk
+ZXZpY2VzIikgaGFzIGFscmVhZHkgYmVlbiBzdWJqZWN0ZWQKPiB0byBhIGZhaXIgYW1vdW50IG9m
+IHNjcnV0aW55IG92ZXIgYXQgbGludXgtcGNpQCwgSSd2ZSBzdWJtaXR0ZWQgaXQgNSB0aW1lcwo+
+IHRvdGFsIHNpbmNlIE1heSAyMDE2LiAgV2l0aCBsdWNrIGl0IG1heSBiZSBpbiBhY2stYWJsZSBz
+aGFwZSBub3cuCj4gCj4gUGF0Y2ggWzIvNV0gYW1lbmRzIGFwcGxlLWdtdXggdG8gaGFuZGxlIGNv
+bWJpbmVkIERQL1RodW5kZXJib2x0IHBvcnRzCj4gcHJvcGVybHkgb24gbmV3ZXIgTWFjQm9vayBQ
+cm9zLgo+IAo+IFBhdGNoZXMgWzMvNV0gdG8gWzUvNV0gYXZvaWQgcmVnaXN0ZXJpbmcgZXh0ZXJu
+YWwgVGh1bmRlcmJvbHQgR1BVcyB3aXRoCj4gdmdhX3N3aXRjaGVyb286ICBEYXZlIEFpcmxpZSBk
+ZXNpZ25lZCB2Z2Ffc3dpdGNoZXJvbyB0byByZWdpc3RlciBHUFVzCj4gdW5jb25kaXRpb25hbGx5
+LiAgU28gaWYgYSBkZXNrdG9wIGJveCBoYXMgbXVsdGlwbGUgR1BVcywgdmdhX3N3aXRjaGVyb28K
+PiB3aWxsIHNlZSBtb3JlIHRoYW4gb25lIGRpc2NyZXRlIEdQVSBidXQgdGhhdCdzIG5vdCBhIHBy
+b2JsZW0gYmVjYXVzZSBvbgo+IGRlc2t0b3AgYm94ZXMgbm8gaGFuZGxlciBpcyByZWdpc3RlcmVk
+IGFuZCB0aHVzIHZnYV9zd2l0Y2hlcm9vX2VuYWJsZSgpCj4gaXMgbmV2ZXIgY2FsbGVkLiAgSHli
+cmlkIGdyYXBoaWNzIGxhcHRvcHMgb24gdGhlIG90aGVyIGhhbmQgZG8gcmVnaXN0ZXIKPiBhIGhh
+bmRsZXIsIGJ1dCBhcmUgYXNzdW1lZCB0byBuZXZlciByZWdpc3RlciBtb3JlIHRoYW4gb25lIGRp
+c2NyZXRlIEdQVS4KPiBIb3dldmVyIG9uY2UgYSBUaHVuZGVyYm9sdCBlR1BVIGlzIGF0dGFjaGVk
+IHRvIGEgaHlicmlkIGdyYXBoaWNzIGxhcHRvcCwKPiB0aGF0IGFzc3VtcHRpb24gaXMgbm8gbG9u
+Z2VyIHRydWUgYW5kIHRoaW5ncyBnbyBzb3V0aCB3aGVuIHZnYV9zd2l0Y2hlcm9vCj4gcnVudGlt
+ZSBzdXNwZW5kcyB0aGUgZXh0ZXJuYWwgZGlzY3JldGUgR1BVIGFuZCB0aGVuIGNhbGxzIHRoZSBo
+YW5kbGVyIHRvCj4gY3V0IHBvd2VyIHRvIHRoZSBpbnRlcm5hbCBkaXNjcmV0ZSBHUFUuICBUaGUg
+ZHJpdmVyIGZvciB0aGUgaW50ZXJuYWwgR1BVCj4gd2lsbCBzaXQgdGhlcmUgcHV6emxlZCBhbmQg
+dHlwaWNhbGx5IGNhdXNlIGEgbG9ja3VwLgo+IAo+IFRoaXMgc2VyaWVzIGlzIGp1c3QgYSBmaXJz
+dCBzdGVwIHRvd2FyZHMgcHJvcGVyIGhhbmRsaW5nIG9mIGVHUFVzLCBhbm90aGVyCj4gd2lsbCBi
+ZSBzdXBwb3J0IGZvciBzdXJwcmlzZSByZW1vdmFsOiAgRFJNIGRyaXZlcnMgbmVlZCB0byBjZWFz
+ZSBNTUlPIGFuZAo+IFBDSSBjb25maWcgc3BhY2UgYWNjZXNzIG9uY2UgYSBkZXZpY2UgaXMgZ29u
+ZSB0byBhdm9pZCBkZWxheWluZyBkZXZpY2UKPiB0ZWFyZG93biBvciBhY2Nlc3NpbmcgYSBuZXds
+eSBhdHRhY2hlZCByZXBsYWNlbWVudCBkZXZpY2UuICBBbHNvLCBNTUlPCj4gcmVhZHMgdG8gcmVt
+b3ZlZCBkZXZpY2VzIHJldHVybiAiYWxsIG9uZXMiLCB3aGljaCByZXN1bHRzIGluIGFuIGluZmlu
+aXRlCj4gbG9vcCBlLmcuIGluIG5vdXZlYXUncyBudmttX25zZWMoKS4KPiAKPiBUaGUgcXVlc3Rp
+b24gaXMgaG93IHRvIHJlY29nbml6ZSBkZXZpY2UgcmVtb3ZhbC4gIE9uZSBjb21tb24gbWV0aG9k
+IGlzIHRvCj4gcmVhZCB0aGUgdmVuZG9yIHJlZ2lzdGVyIHdpdGggcGNpX2RldmljZV9pc19wcmVz
+ZW50KCksIGJ1dCB0aGlzIHJlcG9ydHMKPiBhIGZhbHNlIHBvc2l0aXZlIGlmIHRoZSBkZXZpY2Ug
+aXMgcHJlc2VudCBidXQgaW4gRDNjb2xkLiAgQSBiZXR0ZXIgbWV0aG9kCj4gaXMgdG8gbGV0IHRo
+ZSBQQ0llIGhvdHBsdWcgZHJpdmVyIHJlY29nbml6ZSBhbmQgY2FjaGUgZGV2aWNlIHJlbW92YWwu
+Cj4gS2VpdGggQnVzY2ggaGFzIGRldmVsb3BlZCBwYXRjaGVzIHdoaWNoIGRvIGV4YWN0bHkgdGhh
+dCwgdGhleSdyZSBub3cgYXQKPiB2NiBhbmQgZnVsbHkgcmV2aWV3ZWQgYnkgQ2hyaXN0b3BoIEhl
+bGx3aWcgYnV0IGFsYXMgd2VyZSBub3QgaW5jbHVkZWQgaW4KPiB0aGUgNC4xMSBQQ0kgcHVsbCBm
+b3Igc29tZSByZWFzb246Cj4gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1wY2kv
+bXNnNTgxMjMuaHRtbAo+IAo+IEkndmUgcHVzaGVkIHRoZSBwcmVzZW50IHNlcmllcyB0byBHaXRI
+dWIgaW4gY2FzZSBhbnlvbmUgcHJlZmVycyByZXZpZXdpbmcKPiBpdCBpbiBhIEdVSToKPiBodHRw
+czovL2dpdGh1Yi5jb20vbDFrL2xpbnV4L2NvbW1pdHMvdGh1bmRlcmJvbHRfZ3B1X3YxCgpGb3Ig
+bWVyZ2luZywgc2hvdWxkIEkgc21hc2ggdGhpcyBhbGwgaW50byBkcm0tbWlzYz8gVGhlIG9ubHkg
+dGhpbmcgb3V0c2lkZQppcyB0aGUgYXBwbGUtZ211eCBkcml2ZXIgLi4uCi1EYW5pZWwKCgo+IAo+
+IFRoYW5rcywKPiAKPiBMdWthcwo+IAo+IAo+IEx1a2FzIFd1bm5lciAoNSk6Cj4gICBQQ0k6IFJl
+Y29nbml6ZSBUaHVuZGVyYm9sdCBkZXZpY2VzCj4gICBhcHBsZS1nbXV4OiBEb24ndCBzd2l0Y2gg
+ZXh0ZXJuYWwgRFAgcG9ydCBvbiAyMDExKyBNYWNCb29rIFByb3MKPiAgIGRybS9ub3V2ZWF1OiBE
+b24ndCByZWdpc3RlciBUaHVuZGVyYm9sdCBlR1BVIHdpdGggdmdhX3N3aXRjaGVyb28KPiAgIGRy
+bS9yYWRlb246IERvbid0IHJlZ2lzdGVyIFRodW5kZXJib2x0IGVHUFUgd2l0aCB2Z2Ffc3dpdGNo
+ZXJvbwo+ICAgZHJtL2FtZGdwdTogRG9uJ3QgcmVnaXN0ZXIgVGh1bmRlcmJvbHQgZUdQVSB3aXRo
+IHZnYV9zd2l0Y2hlcm9vCj4gCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9k
+ZXZpY2UuYyB8ICA3ICsrKysrLS0KPiAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1
+X2ttcy5jICAgIHwgIDMgKystCj4gIGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfdmdh
+LmMgICAgICB8IDEwICsrKysrKysrKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25f
+ZGV2aWNlLmMgICAgIHwgIDcgKysrKystLQo+ICBkcml2ZXJzL2dwdS9kcm0vcmFkZW9uL3JhZGVv
+bl9rbXMuYyAgICAgICAgfCAgMyArKy0KPiAgZHJpdmVycy9wY2kvcGNpLmggICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgIDIgKysKPiAgZHJpdmVycy9wY2kvcHJvYmUuYyAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgMjEgKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9wbGF0Zm9ybS94
+ODYvYXBwbGUtZ211eC5jICAgICAgICAgIHwgMzEgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KystCj4gIGluY2x1ZGUvbGludXgvcGNpLmggICAgICAgICAgICAgICAgICAgICAgICB8IDIzICsr
+KysrKysrKysrKysrKysrKysrKysKPiAgOSBmaWxlcyBjaGFuZ2VkLCA5OSBpbnNlcnRpb25zKCsp
+LCA4IGRlbGV0aW9ucygtKQo+IAo+IC0tIAo+IDIuMTEuMAo+IAo+IF9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+
+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gCkRhbmllbCBWZXR0ZXIKU29m
+dHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
