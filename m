@@ -1,61 +1,66 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v4 2/4] platform/x86: fujitsu-laptop: sync backlight power status in acpi_fujitsu_laptop_add()
-Date: Fri, 10 Mar 2017 11:50:34 +0100
-Message-ID: <20170310105036.26899-3-kernel@kempniu.pl>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v4 0/4] fujitsu_init() cleanup
+Date: Fri, 10 Mar 2017 21:32:00 +1030
+Message-ID: <20170310110200.GC21396@marvin.atrad.com.au>
 References: <20170310105036.26899-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20170310105036.26899-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Registering an ACPI driver does not mean the device it handles has to
-exist.  As the code which syncs backlight power status uses
-call_fext_func(), it needs the FUJ02E3 ACPI device to be present, so
-ensure that code is only run once the FUJ02E3 device is detected.
+On Fri, Mar 10, 2017 at 11:50:32AM +0100, Micha?? K??pie?? wrote:
+> These patches should make fujitsu_init() a bit more palatable.  No
+> changes are made to platform device code yet, for clarity these will be
+> posted in a separate series after this one gets applied.
+> 
+> Changes from v3:
+> 
+>   - Do not use KBUILD_MODNAME as backlight device name as it breaks
+>     userspace interface ("fujitsu-laptop" vs. "fujitsu_laptop").
+> 
+> Changes from v2:
+> 
+>   - Patch 2/4 from v2 did not work as expected and was thus replaced
+>     with a rebased version of patch 3/4 from v1.
+> 
+>   - Added a check in patch 3/4 to prevent a NULL dereference when
+>     ACPI device FUJ02B1 is not present and ACPI device FUJ02E3 is.
+> 
+> Changes from v1:
+> 
+>   - Rebase on top of reworked Alan Jenkins' cleanup patch series.
+> 
+>   - Drop patch 1/4 from v1 as it has already been applied in reworked
+>     Alan Jenkins' cleanup patch series.
+> 
+>   - Patch 3/4 from v1 has been replaced with a completely different one
+>     (patch 2/4).  It needs to be tested on a relevant machine as it is
+>     based purely on a dump of a DSDT table (further details can be found
+>     in the patch itself).
+> 
+>   - Patch 3/4 in v2 is a rebased version of patch 8/10 from the reworked
+>     Alan Jenkins' cleanup patch series.  Patch 2/4 from v2 (the one
+>     mentioned in the previous bullet point) ensures this one can be
+>     safely applied without causing a NULL dereference under any
+>     circumstances.
+> 
+>  drivers/platform/x86/fujitsu-laptop.c | 98 ++++++++++++++++++-----------------
+>  1 file changed, 50 insertions(+), 48 deletions(-)
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+As noted, this V4 patch series is identical to V3 except for the backlight
+device name fix.  No regressions are evident on the hardware I have (S7020). 
+I am therefore happy to see this series applied.  It represents a further
+worthwhile improvement to the fujitsu-laptop driver which will facilitate
+future maintenance and provide a more consistent basis for upcoming
+improvements.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 5ec596c5053d..165971b102e7 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -955,6 +955,14 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	/* Suspect this is a keymap of the application panel, print it */
- 	pr_info("BTNI: [0x%x]\n", call_fext_func(FUNC_BUTTONS, 0x0, 0x0, 0x0));
- 
-+	/* Sync backlight power status */
-+	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
-+		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
-+			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
-+		else
-+			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
-+	}
-+
- #if IS_ENABLED(CONFIG_LEDS_CLASS)
- 	if (call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
- 		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
-@@ -1272,14 +1280,6 @@ static int __init fujitsu_init(void)
- 	if (ret)
- 		goto fail_laptop1;
- 
--	/* Sync backlight power status (needs FUJ02E3 device, hence deferred) */
--	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
--			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
--		else
--			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
--	}
--
- 	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
- 
- 	return 0;
--- 
-2.12.0
+Tested-by: Jonathan Woithe <jwoithe@just42.net>
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+
+Regards
+  jonathan
