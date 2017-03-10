@@ -1,66 +1,67 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v4 0/4] fujitsu_init() cleanup
-Date: Fri, 10 Mar 2017 21:32:00 +1030
-Message-ID: <20170310110200.GC21396@marvin.atrad.com.au>
-References: <20170310105036.26899-1-kernel@kempniu.pl>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] Thunderbolt GPU fixes
+Date: Fri, 10 Mar 2017 13:07:25 +0100
+Message-ID: <20170310120725.GA24595@h08.hostsharing.net>
+References: <cover.1487938188.git.lukas@wunner.de>
+ <20170309150347.a4k4w2sclox2365t@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170310105036.26899-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170309150347.a4k4w2sclox2365t-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
+List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Michael Jamet <michael.jamet-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Wu <peter-VTkQYDcBqhK7DlmcbJSQ7g@public.gmane.org>, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Koenig <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 10, 2017 at 11:50:32AM +0100, Micha?? K??pie?? wrote:
-> These patches should make fujitsu_init() a bit more palatable.  No
-> changes are made to platform device code yet, for clarity these will be
-> posted in a separate series after this one gets applied.
-> 
-> Changes from v3:
-> 
->   - Do not use KBUILD_MODNAME as backlight device name as it breaks
->     userspace interface ("fujitsu-laptop" vs. "fujitsu_laptop").
-> 
-> Changes from v2:
-> 
->   - Patch 2/4 from v2 did not work as expected and was thus replaced
->     with a rebased version of patch 3/4 from v1.
-> 
->   - Added a check in patch 3/4 to prevent a NULL dereference when
->     ACPI device FUJ02B1 is not present and ACPI device FUJ02E3 is.
-> 
-> Changes from v1:
-> 
->   - Rebase on top of reworked Alan Jenkins' cleanup patch series.
-> 
->   - Drop patch 1/4 from v1 as it has already been applied in reworked
->     Alan Jenkins' cleanup patch series.
-> 
->   - Patch 3/4 from v1 has been replaced with a completely different one
->     (patch 2/4).  It needs to be tested on a relevant machine as it is
->     based purely on a dump of a DSDT table (further details can be found
->     in the patch itself).
-> 
->   - Patch 3/4 in v2 is a rebased version of patch 8/10 from the reworked
->     Alan Jenkins' cleanup patch series.  Patch 2/4 from v2 (the one
->     mentioned in the previous bullet point) ensures this one can be
->     safely applied without causing a NULL dereference under any
->     circumstances.
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 98 ++++++++++++++++++-----------------
->  1 file changed, 50 insertions(+), 48 deletions(-)
-
-As noted, this V4 patch series is identical to V3 except for the backlight
-device name fix.  No regressions are evident on the hardware I have (S7020). 
-I am therefore happy to see this series applied.  It represents a further
-worthwhile improvement to the fujitsu-laptop driver which will facilitate
-future maintenance and provide a more consistent basis for upcoming
-improvements.
-
-Tested-by: Jonathan Woithe <jwoithe@just42.net>
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-
-Regards
-  jonathan
+T24gVGh1LCBNYXIgMDksIDIwMTcgYXQgMDQ6MDM6NDdQTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
+cm90ZToKPiBPbiBGcmksIEZlYiAyNCwgMjAxNyBhdCAwODoxOTo0NVBNICswMTAwLCBMdWthcyBX
+dW5uZXIgd3JvdGU6Cj4gPiBGaXggVGh1bmRlcmJvbHQtcmVsYXRlZCBpc3N1ZXMgaW4gYXBwbGUt
+Z211eCBhbmQgdmdhX3N3aXRjaGVyb286Cj4gPiAKPiA+IFBhdGNoIFsxLzVdICgiUmVjb2duaXpl
+IFRodW5kZXJib2x0IGRldmljZXMiKSBoYXMgYWxyZWFkeSBiZWVuIHN1YmplY3RlZAo+ID4gdG8g
+YSBmYWlyIGFtb3VudCBvZiBzY3J1dGlueSBvdmVyIGF0IGxpbnV4LXBjaUAsIEkndmUgc3VibWl0
+dGVkIGl0IDUgdGltZXMKPiA+IHRvdGFsIHNpbmNlIE1heSAyMDE2LiAgV2l0aCBsdWNrIGl0IG1h
+eSBiZSBpbiBhY2stYWJsZSBzaGFwZSBub3cuCj4gPiAKPiA+IFBhdGNoIFsyLzVdIGFtZW5kcyBh
+cHBsZS1nbXV4IHRvIGhhbmRsZSBjb21iaW5lZCBEUC9UaHVuZGVyYm9sdCBwb3J0cwo+ID4gcHJv
+cGVybHkgb24gbmV3ZXIgTWFjQm9vayBQcm9zLgo+ID4gCj4gPiBQYXRjaGVzIFszLzVdIHRvIFs1
+LzVdIGF2b2lkIHJlZ2lzdGVyaW5nIGV4dGVybmFsIFRodW5kZXJib2x0IEdQVXMgd2l0aAo+ID4g
+dmdhX3N3aXRjaGVyb286ICBEYXZlIEFpcmxpZSBkZXNpZ25lZCB2Z2Ffc3dpdGNoZXJvbyB0byBy
+ZWdpc3RlciBHUFVzCj4gPiB1bmNvbmRpdGlvbmFsbHkuICBTbyBpZiBhIGRlc2t0b3AgYm94IGhh
+cyBtdWx0aXBsZSBHUFVzLCB2Z2Ffc3dpdGNoZXJvbwo+ID4gd2lsbCBzZWUgbW9yZSB0aGFuIG9u
+ZSBkaXNjcmV0ZSBHUFUgYnV0IHRoYXQncyBub3QgYSBwcm9ibGVtIGJlY2F1c2Ugb24KPiA+IGRl
+c2t0b3AgYm94ZXMgbm8gaGFuZGxlciBpcyByZWdpc3RlcmVkIGFuZCB0aHVzIHZnYV9zd2l0Y2hl
+cm9vX2VuYWJsZSgpCj4gPiBpcyBuZXZlciBjYWxsZWQuICBIeWJyaWQgZ3JhcGhpY3MgbGFwdG9w
+cyBvbiB0aGUgb3RoZXIgaGFuZCBkbyByZWdpc3Rlcgo+ID4gYSBoYW5kbGVyLCBidXQgYXJlIGFz
+c3VtZWQgdG8gbmV2ZXIgcmVnaXN0ZXIgbW9yZSB0aGFuIG9uZSBkaXNjcmV0ZSBHUFUuCj4gPiBI
+b3dldmVyIG9uY2UgYSBUaHVuZGVyYm9sdCBlR1BVIGlzIGF0dGFjaGVkIHRvIGEgaHlicmlkIGdy
+YXBoaWNzIGxhcHRvcCwKPiA+IHRoYXQgYXNzdW1wdGlvbiBpcyBubyBsb25nZXIgdHJ1ZSBhbmQg
+dGhpbmdzIGdvIHNvdXRoIHdoZW4gdmdhX3N3aXRjaGVyb28KPiA+IHJ1bnRpbWUgc3VzcGVuZHMg
+dGhlIGV4dGVybmFsIGRpc2NyZXRlIEdQVSBhbmQgdGhlbiBjYWxscyB0aGUgaGFuZGxlciB0bwo+
+ID4gY3V0IHBvd2VyIHRvIHRoZSBpbnRlcm5hbCBkaXNjcmV0ZSBHUFUuICBUaGUgZHJpdmVyIGZv
+ciB0aGUgaW50ZXJuYWwgR1BVCj4gPiB3aWxsIHNpdCB0aGVyZSBwdXp6bGVkIGFuZCB0eXBpY2Fs
+bHkgY2F1c2UgYSBsb2NrdXAuCltzbmlwXQo+ID4gSSd2ZSBwdXNoZWQgdGhlIHByZXNlbnQgc2Vy
+aWVzIHRvIEdpdEh1YiBpbiBjYXNlIGFueW9uZSBwcmVmZXJzIHJldmlld2luZwo+ID4gaXQgaW4g
+YSBHVUk6Cj4gPiBodHRwczovL2dpdGh1Yi5jb20vbDFrL2xpbnV4L2NvbW1pdHMvdGh1bmRlcmJv
+bHRfZ3B1X3YxCj4gCj4gRm9yIG1lcmdpbmcsIHNob3VsZCBJIHNtYXNoIHRoaXMgYWxsIGludG8g
+ZHJtLW1pc2M/IFRoZSBvbmx5IHRoaW5nIG91dHNpZGUKPiBpcyB0aGUgYXBwbGUtZ211eCBkcml2
+ZXIgLi4uCgpNZXJnaW5nIHRocm91Z2ggZHJtLW1pc2Mgd291bGQgYmUgbG92ZWx5LiAgSG93ZXZl
+ciBJJ3ZlIHByZXBhcmVkIGEgdjIgb2YKcGF0Y2ggWzEvNV0gdG8gYWRkcmVzcyBCam9ybidzIGNv
+bW1lbnRzIChhbWVuZGVkIHRoZSBjb21taXQgbWVzc2FnZSBhbmQgYQpjb2RlIGNvbW1lbnQpLiAg
+SSdsbCByZXNwaW4gdGhlIHNlcmllcyB0aGlzIGV2ZW5pbmcgYW5kIGluY2x1ZGUgdGhlIGFja3MK
+SSd2ZSBjb2xsZWN0ZWQgc28gZmFyLgoKQERhcnJlbiAmIEFuZHk6ClBsZWFzZSBhY2sgcGF0Y2gg
+WzUvNV0gb2YgdGhpcyBzZXJpZXMsIGJhcnJpbmcgYW55IG9iamVjdGlvbnMuCgpJJ2xsIG1vdmUg
+dGhlIGFwcGxlLWdtdXggcGF0Y2ggdG8gdGhlIGVuZCBvZiB0aGUgc2VyaWVzLCBzbyBtZXJnaW5n
+IHRoYXQKb25lIGNhbiBiZSBwb3N0cG9uZWQgdW50aWwgRGFycmVuIGFuZCBBbmR5IGZpbmQgdGhl
+IHRpbWUgdG8gbG9vayBhdCBpdC4KClRoYW5rcyEKCkx1a2FzCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmFtZC1nZnggbWFpbGluZyBsaXN0CmFtZC1nZnhA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vYW1kLWdmeAo=
