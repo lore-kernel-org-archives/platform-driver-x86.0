@@ -1,53 +1,115 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v4 0/4] fujitsu_init() cleanup
-Date: Fri, 10 Mar 2017 11:50:32 +0100
-Message-ID: <20170310105036.26899-1-kernel@kempniu.pl>
+Subject: [PATCH v4 4/4] platform/x86: fujitsu-laptop: cleanup error labels in fujitsu_init()
+Date: Fri, 10 Mar 2017 11:50:36 +0100
+Message-ID: <20170310105036.26899-5-kernel@kempniu.pl>
+References: <20170310105036.26899-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:36343 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935142AbdCJKur (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 10 Mar 2017 05:50:47 -0500
+Received: by mail-lf0-f67.google.com with SMTP id g70so6544540lfh.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Mar 2017 02:50:46 -0800 (PST)
+In-Reply-To: <20170310105036.26899-1-kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-These patches should make fujitsu_init() a bit more palatable.  No
-changes are made to platform device code yet, for clarity these will be
-posted in a separate series after this one gets applied.
+Error labels currently used in fujitsu_init() are really hard to follow:
+some (fail_laptop) indicate which operation has failed, others
+(fail_sysfs_group) indicate where unrolling should start and the rest
+(fail_platform_driver) is simply confusing.  Change them to follow the
+pattern used throughout the rest of the module, i.e. make every label
+indicate the first unrolling operation it leads to.
 
-Changes from v3:
+Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+---
+ drivers/platform/x86/fujitsu-laptop.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-  - Do not use KBUILD_MODNAME as backlight device name as it breaks
-    userspace interface ("fujitsu-laptop" vs. "fujitsu_laptop").
-
-Changes from v2:
-
-  - Patch 2/4 from v2 did not work as expected and was thus replaced
-    with a rebased version of patch 3/4 from v1.
-
-  - Added a check in patch 3/4 to prevent a NULL dereference when
-    ACPI device FUJ02B1 is not present and ACPI device FUJ02E3 is.
-
-Changes from v1:
-
-  - Rebase on top of reworked Alan Jenkins' cleanup patch series.
-
-  - Drop patch 1/4 from v1 as it has already been applied in reworked
-    Alan Jenkins' cleanup patch series.
-
-  - Patch 3/4 from v1 has been replaced with a completely different one
-    (patch 2/4).  It needs to be tested on a relevant machine as it is
-    based purely on a dump of a DSDT table (further details can be found
-    in the patch itself).
-
-  - Patch 3/4 in v2 is a rebased version of patch 8/10 from the reworked
-    Alan Jenkins' cleanup patch series.  Patch 2/4 from v2 (the one
-    mentioned in the previous bullet point) ensures this one can be
-    safely applied without causing a NULL dereference under any
-    circumstances.
-
- drivers/platform/x86/fujitsu-laptop.c | 98 ++++++++++++++++++-----------------
- 1 file changed, 50 insertions(+), 48 deletions(-)
-
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index dad7b448f2cd..75d5f758af59 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -1244,60 +1244,60 @@ static int __init fujitsu_init(void)
+ 
+ 	ret = acpi_bus_register_driver(&acpi_fujitsu_bl_driver);
+ 	if (ret)
+-		goto fail_acpi;
++		goto err_free_fujitsu_bl;
+ 
+ 	/* Register platform stuff */
+ 
+ 	fujitsu_bl->pf_device = platform_device_alloc("fujitsu-laptop", -1);
+ 	if (!fujitsu_bl->pf_device) {
+ 		ret = -ENOMEM;
+-		goto fail_platform_driver;
++		goto err_unregister_acpi;
+ 	}
+ 
+ 	ret = platform_device_add(fujitsu_bl->pf_device);
+ 	if (ret)
+-		goto fail_platform_device1;
++		goto err_put_platform_device;
+ 
+ 	ret =
+ 	    sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
+ 			       &fujitsu_pf_attribute_group);
+ 	if (ret)
+-		goto fail_platform_device2;
++		goto err_del_platform_device;
+ 
+ 	ret = platform_driver_register(&fujitsu_pf_driver);
+ 	if (ret)
+-		goto fail_sysfs_group;
++		goto err_remove_sysfs_group;
+ 
+ 	/* Register laptop driver */
+ 
+ 	fujitsu_laptop = kzalloc(sizeof(struct fujitsu_laptop), GFP_KERNEL);
+ 	if (!fujitsu_laptop) {
+ 		ret = -ENOMEM;
+-		goto fail_laptop;
++		goto err_unregister_platform_driver;
+ 	}
+ 
+ 	ret = acpi_bus_register_driver(&acpi_fujitsu_laptop_driver);
+ 	if (ret)
+-		goto fail_laptop1;
++		goto err_free_fujitsu_laptop;
+ 
+ 	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
+ 
+ 	return 0;
+ 
+-fail_laptop1:
++err_free_fujitsu_laptop:
+ 	kfree(fujitsu_laptop);
+-fail_laptop:
++err_unregister_platform_driver:
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+-fail_sysfs_group:
++err_remove_sysfs_group:
+ 	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
+ 			   &fujitsu_pf_attribute_group);
+-fail_platform_device2:
++err_del_platform_device:
+ 	platform_device_del(fujitsu_bl->pf_device);
+-fail_platform_device1:
++err_put_platform_device:
+ 	platform_device_put(fujitsu_bl->pf_device);
+-fail_platform_driver:
++err_unregister_acpi:
+ 	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
+-fail_acpi:
++err_free_fujitsu_bl:
+ 	kfree(fujitsu_bl);
+ 
+ 	return ret;
 -- 
 2.12.0
