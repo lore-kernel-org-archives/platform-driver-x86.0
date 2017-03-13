@@ -1,101 +1,45 @@
-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH 4/4] drm/amdgpu: resize VRAM BAR for CPU access
-Date: Mon, 13 Mar 2017 13:41:36 +0100
-Message-ID: <1489408896-25039-5-git-send-email-deathsimple@vodafone.de>
-References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 0/2] fujitsu-laptop: acpi_fujitsu_bl_notify() cleanup
+Date: Mon, 13 Mar 2017 18:01:17 +0200
+Message-ID: <CAHp75Vdfk7un7iS1OvQw-qDmv=LGWahTY9nr7hdHD1OV=RTH_g@mail.gmail.com>
+References: <20170301064254.1311-1-kernel@kempniu.pl> <20170305225721.GF28473@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: helgaas@kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:35173 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751089AbdCMQBT (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Mar 2017 12:01:19 -0400
+In-Reply-To: <20170305225721.GF28473@marvin.atrad.com.au>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-RnJvbTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgoKVHJ5IHRv
-IHJlc2l6ZSBCQVIwIHRvIGxldCBDUFUgYWNjZXNzIGFsbCBvZiBWUkFNLgoKU2lnbmVkLW9mZi1i
-eTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgotLS0KIGRyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1
-L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2UuYyB8IDI5ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjdfMC5jICAgICAgfCAg
-OCArKysrKy0tLQogZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y4XzAuYyAgICAgIHwg
-IDggKysrKystLS0KIDQgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHUuaCBi
-L2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oCmluZGV4IDNiODFkZWQuLjkwNWRl
-ZDkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oCisrKyBi
-L2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oCkBAIC0xNzE5LDYgKzE3MTksNyBA
-QCB1aW50NjRfdCBhbWRncHVfdHRtX3R0X3B0ZV9mbGFncyhzdHJ1Y3QgYW1kZ3B1X2RldmljZSAq
-YWRldiwgc3RydWN0IHR0bV90dCAqdHRtLAogCQkJCSBzdHJ1Y3QgdHRtX21lbV9yZWcgKm1lbSk7
-CiB2b2lkIGFtZGdwdV92cmFtX2xvY2F0aW9uKHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2LCBz
-dHJ1Y3QgYW1kZ3B1X21jICptYywgdTY0IGJhc2UpOwogdm9pZCBhbWRncHVfZ3R0X2xvY2F0aW9u
-KHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2LCBzdHJ1Y3QgYW1kZ3B1X21jICptYyk7Cit2b2lk
-IGFtZGdwdV9yZXNpemVfYmFyMChzdHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRldik7CiB2b2lkIGFt
-ZGdwdV90dG1fc2V0X2FjdGl2ZV92cmFtX3NpemUoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFkZXYs
-IHU2NCBzaXplKTsKIGludCBhbWRncHVfdHRtX2luaXQoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFk
-ZXYpOwogdm9pZCBhbWRncHVfdHRtX2Zpbmkoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFkZXYpOwpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jCmluZGV4IDExOGY0ZTYu
-LjkyOTU1ZmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9k
-ZXZpY2UuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZGV2aWNlLmMK
-QEAgLTY5Miw2ICs2OTIsMzUgQEAgdm9pZCBhbWRncHVfZ3R0X2xvY2F0aW9uKHN0cnVjdCBhbWRn
-cHVfZGV2aWNlICphZGV2LCBzdHJ1Y3QgYW1kZ3B1X21jICptYykKIAkJCW1jLT5ndHRfc2l6ZSA+
-PiAyMCwgbWMtPmd0dF9zdGFydCwgbWMtPmd0dF9lbmQpOwogfQogCisvKioKKyAqIGFtZGdwdV9y
-ZXNpemVfYmFyMCAtIHRyeSB0byByZXNpemUgQkFSMAorICoKKyAqIEBhZGV2OiBhbWRncHVfZGV2
-aWNlIHBvaW50ZXIKKyAqCisgKiBUcnkgdG8gcmVzaXplIEJBUjAgdG8gbWFrZSBhbGwgVlJBTSBD
-UFUgYWNjZXNzaWJsZS4KKyAqLwordm9pZCBhbWRncHVfcmVzaXplX2JhcjAoc3RydWN0IGFtZGdw
-dV9kZXZpY2UgKmFkZXYpCit7CisJdTMyIHNpemUgPSBtYXgoaWxvZzIoYWRldi0+bWMucmVhbF92
-cmFtX3NpemUgLSAxKSArIDEsIDIwKSAtIDIwOworCWludCByOworCisJciA9IHBjaV9yZXNpemVf
-cmVzb3VyY2UoYWRldi0+cGRldiwgMCwgc2l6ZSk7CisKKwlpZiAociA9PSAtRU5PVFNVUFApIHsK
-KwkJLyogVGhlIGhhcmR3YXJlIGRvbid0IHN1cHBvcnQgdGhlIGV4dGVuc2lvbi4gKi8KKwkJcmV0
-dXJuOworCisJfSBlbHNlIGlmIChyID09IC1FTk9TUEMpIHsKKwkJRFJNX0lORk8oIk5vdCBlbm9p
-Z2ggUENJIGFkZHJlc3Mgc3BhY2UgZm9yIGEgbGFyZ2UgQkFSLiIpOworCX0gZWxzZSBpZiAocikg
-eworCQlEUk1fRVJST1IoIlByb2JsZW0gcmVzaXppbmcgQkFSMCAoJWQpLiIsIHIpOworCX0KKwor
-CS8qIFJlaW5pdCB0aGUgZG9vcmJlbGwgbWFwcGluZywgaXQgaXMgbW9zdCBsaWtlbHkgbW92ZWQg
-YXMgd2VsbCAqLworCWFtZGdwdV9kb29yYmVsbF9maW5pKGFkZXYpOworCUJVR19PTihhbWRncHVf
-ZG9vcmJlbGxfaW5pdChhZGV2KSk7Cit9CisKIC8qCiAgKiBHUFUgaGVscGVycyBmdW5jdGlvbi4K
-ICAqLwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y3XzAuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192N18wLmMKaW5kZXggZGM5YjZkNi4uMzZh
-N2FhNSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y3XzAuYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjdfMC5jCkBAIC0zNjcsMTMgKzM2
-NywxNSBAQCBzdGF0aWMgaW50IGdtY192N18wX21jX2luaXQoc3RydWN0IGFtZGdwdV9kZXZpY2Ug
-KmFkZXYpCiAJCWJyZWFrOwogCX0KIAlhZGV2LT5tYy52cmFtX3dpZHRoID0gbnVtY2hhbiAqIGNo
-YW5zaXplOwotCS8qIENvdWxkIGFwZXIgc2l6ZSByZXBvcnQgMCA/ICovCi0JYWRldi0+bWMuYXBl
-cl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYsIDApOwotCWFkZXYtPm1jLmFw
-ZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7CiAJLyogc2l6ZSBpbiBN
-QiBvbiBzaSAqLwogCWFkZXYtPm1jLm1jX3ZyYW1fc2l6ZSA9IFJSRUczMihtbUNPTkZJR19NRU1T
-SVpFKSAqIDEwMjRVTEwgKiAxMDI0VUxMOwogCWFkZXYtPm1jLnJlYWxfdnJhbV9zaXplID0gUlJF
-RzMyKG1tQ09ORklHX01FTVNJWkUpICogMTAyNFVMTCAqIDEwMjRVTEw7CiAKKwlpZiAoIShhZGV2
-LT5mbGFncyAmIEFNRF9JU19BUFUpKQorCQlhbWRncHVfcmVzaXplX2JhcjAoYWRldik7CisJYWRl
-di0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYsIDApOworCWFk
-ZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7CisKICNp
-ZmRlZiBDT05GSUdfWDg2XzY0CiAJaWYgKGFkZXYtPmZsYWdzICYgQU1EX0lTX0FQVSkgewogCQlh
-ZGV2LT5tYy5hcGVyX2Jhc2UgPSAoKHU2NClSUkVHMzIobW1NQ19WTV9GQl9PRkZTRVQpKSA8PCAy
-MjsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OF8wLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjhfMC5jCmluZGV4IGMwODdiMDAuLjc3NjFh
-ZDMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OF8wLmMKKysr
-IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y4XzAuYwpAQCAtNDU5LDEzICs0NTks
-MTUgQEAgc3RhdGljIGludCBnbWNfdjhfMF9tY19pbml0KHN0cnVjdCBhbWRncHVfZGV2aWNlICph
-ZGV2KQogCQlicmVhazsKIAl9CiAJYWRldi0+bWMudnJhbV93aWR0aCA9IG51bWNoYW4gKiBjaGFu
-c2l6ZTsKLQkvKiBDb3VsZCBhcGVyIHNpemUgcmVwb3J0IDAgPyAqLwotCWFkZXYtPm1jLmFwZXJf
-YmFzZSA9IHBjaV9yZXNvdXJjZV9zdGFydChhZGV2LT5wZGV2LCAwKTsKLQlhZGV2LT5tYy5hcGVy
-X3NpemUgPSBwY2lfcmVzb3VyY2VfbGVuKGFkZXYtPnBkZXYsIDApOwogCS8qIHNpemUgaW4gTUIg
-b24gc2kgKi8KIAlhZGV2LT5tYy5tY192cmFtX3NpemUgPSBSUkVHMzIobW1DT05GSUdfTUVNU0la
-RSkgKiAxMDI0VUxMICogMTAyNFVMTDsKIAlhZGV2LT5tYy5yZWFsX3ZyYW1fc2l6ZSA9IFJSRUcz
-MihtbUNPTkZJR19NRU1TSVpFKSAqIDEwMjRVTEwgKiAxMDI0VUxMOwogCisJaWYgKCEoYWRldi0+
-ZmxhZ3MgJiBBTURfSVNfQVBVKSkKKwkJYW1kZ3B1X3Jlc2l6ZV9iYXIwKGFkZXYpOworCWFkZXYt
-Pm1jLmFwZXJfYmFzZSA9IHBjaV9yZXNvdXJjZV9zdGFydChhZGV2LT5wZGV2LCAwKTsKKwlhZGV2
-LT5tYy5hcGVyX3NpemUgPSBwY2lfcmVzb3VyY2VfbGVuKGFkZXYtPnBkZXYsIDApOworCiAjaWZk
-ZWYgQ09ORklHX1g4Nl82NAogCWlmIChhZGV2LT5mbGFncyAmIEFNRF9JU19BUFUpIHsKIAkJYWRl
-di0+bWMuYXBlcl9iYXNlID0gKCh1NjQpUlJFRzMyKG1tTUNfVk1fRkJfT0ZGU0VUKSkgPDwgMjI7
-Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Mon, Mar 6, 2017 at 12:57 AM, Jonathan Woithe <jwoithe@just42.net> wrote:
+> On Wed, Mar 01, 2017 at 07:42:52AM +0100, Micha?? K??pie?? wrote:
+>> Here are two minor cleanups for acpi_fujitsu_bl_notify() that I came up
+>> with while preparing the sparse keymap migration.
+>>
+>> Changes from v1:
+>>
+>>   - Rebase on top of reworked Alan Jenkins' cleanup patch series.
+>>
+>>   - Join integer variable declarations into a single line in patch 2/2.
+>>
+>>  drivers/platform/x86/fujitsu-laptop.c | 64 +++++++++++++++--------------------
+>>  1 file changed, 28 insertions(+), 36 deletions(-)
+>
+> These two clean ups, as their descriptions indicate, improve the clarity of
+> the driver code and permit some minor optimisations.  No regressions are
+> evident when tested on S7020 hardware.  Please apply.
+>
+> Tested-by: Jonathan Woithe <jwoithe@just42.net>
+> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+
+Pushed to testing, thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
