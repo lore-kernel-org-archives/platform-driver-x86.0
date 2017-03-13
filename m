@@ -1,46 +1,83 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: do not set parents of input
- devices explicitly
-Date: Mon, 13 Mar 2017 18:17:06 +0200
-Message-ID: <CAHp75Ven0CeXNBajX63DrQgupGeUkEZLJYb04g_JkwwUcDVO1w@mail.gmail.com>
-References: <20170309093651.7824-1-kernel@kempniu.pl> <2e954caa-d531-3c82-023c-afb8aaf9f3d9@canonical.com>
+Subject: Re: [PATCH 2/4] PCI: add functionality for resizing resources v2
+Date: Mon, 13 Mar 2017 18:43:42 +0200
+Message-ID: <CAHp75VcY_P63T3-XcYafxhSFshQyL1dj0B2+Q4iW9hMiig3tRQ@mail.gmail.com>
+References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
+ <1489408896-25039-3-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f173.google.com ([209.85.220.173]:36027 "EHLO
-        mail-qk0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752358AbdCMQRI (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Mar 2017 12:17:08 -0400
-In-Reply-To: <2e954caa-d531-3c82-023c-afb8aaf9f3d9@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1489408896-25039-3-git-send-email-deathsimple@vodafone.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, helgaas@kernel.org, dri-devel@lists.freedesktop.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 13, 2017 at 12:37 PM, Alex Hung <alex.hung@canonical.com> wrote=
-:
-> On 2017-03-09 05:36 PM, Micha=C5=82 K=C4=99pie=C5=84 wrote:
->>
->> devm_input_allocate_device() already causes the supplied struct device
->> to be set as the parent of the input device, so doing it again is
->> redundant.
->>
->> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-
-Pushed to testing, thanks.
-
->
-> The patch, on top of previous patches, is tested on Latitude 7480
->
-> Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
-
-Alex, this tag is not recognized by patchwork :-(, It would be nice to
-use separate tags.
-
-I would join them if needed (usually when they sent against cover letter).
-
---=20
-With Best Regards,
-Andy Shevchenko
+T24gTW9uLCBNYXIgMTMsIDIwMTcgYXQgMjo0MSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8ZGVhdGhz
+aW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgo+IEZyb206IENocmlzdGlhbiBLw7ZuaWcgPGNocmlz
+dGlhbi5rb2VuaWdAYW1kLmNvbT4KPgo+IFRoaXMgYWxsb3dzIGRldmljZSBkcml2ZXJzIHRvIHJl
+cXVlc3QgcmVzaXppbmcgdGhlaXIgQkFScy4KPgo+IFRoZSBmdW5jdGlvbiBvbmx5IHRyaWVzIHRv
+IHJlcHJvZ3JhbSB0aGUgd2luZG93cyBvZiB0aGUgYnJpZGdlIGRpcmVjdGx5IGFib3ZlCj4gdGhl
+IHJlcXVlc3RpbmcgZGV2aWNlIGFuZCBvbmx5IHRoZSBCQVIgb2YgdGhlIHNhbWUgdHlwZSAodXN1
+YWxseSBtZW0sIDY0Yml0LAo+IHByZWZldGNoYWJsZSkuIFRoaXMgaXMgZG9uZSB0byBtYWtlIHN1
+cmUgbm90IHRvIGRpc3R1cmIgb3RoZXIgZHJpdmVycyBieQo+IGNoYW5naW5nIHRoZSBCQVJzIG9m
+IHRoZWlyIGRldmljZXMuCj4KPiBJZiByZXByb2dyYW1taW5nIHRoZSBicmlkZ2UgQkFSIGZhaWxz
+IHRoZSBvbGQgc3RhdHVzIGlzIHJlc3RvcmVkIGFuZCAtRU5PU1BDCj4gcmV0dXJuZWQgdG8gdGhl
+IGNhbGxpbmcgZGV2aWNlIGRyaXZlci4KClNvbWUgc3R5bGUgY29tbWVudHMuCgo+IHYyOiByZWJh
+c2Ugb24gY2hhbmdlcyBpbiByYmFyIHN1cHBvcnQKClRoaXMga2luZCBvZiBjb21tZW50cyB1c3Vh
+bGx5IGdvZXMgYWZ0ZXIgLS0tIGRlbGltaXRlciBiZWxvdy4KCj4gU2lnbmVkLW9mZi1ieTogQ2hy
+aXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgo+IC0tLQoKLi4uaGVyZS4K
+Cj4gK2ludCBwY2lfcmVhc3NpZ25fYnJpZGdlX3Jlc291cmNlcyhzdHJ1Y3QgcGNpX2RldiAqYnJp
+ZGdlLCB1bnNpZ25lZCBsb25nIHR5cGUpCj4gK3sKPiArICAgICAgIGNvbnN0IHVuc2lnbmVkIGxv
+bmcgdHlwZV9tYXNrID0gSU9SRVNPVVJDRV9JTyB8IElPUkVTT1VSQ0VfTUVNIHwKPiArICAgICAg
+ICAgICAgICAgSU9SRVNPVVJDRV9QUkVGRVRDSCB8IElPUkVTT1VSQ0VfTUVNXzY0Owo+ICsKPiAr
+ICAgICAgIHN0cnVjdCByZXNvdXJjZSBzYXZlZDsKPiArICAgICAgIExJU1RfSEVBRChhZGRfbGlz
+dCk7Cj4gKyAgICAgICBMSVNUX0hFQUQoZmFpbF9oZWFkKTsKCj4gKyAgICAgICBzdHJ1Y3QgcGNp
+X2Rldl9yZXNvdXJjZSAqZmFpbF9yZXM7CgpQZXJoYXBzIG1vdmUgYmVmb3JlIGRlZmluaXRpb24g
+b2YgJ3NhdmVkJz8KCj4gKyAgICAgICB1bnNpZ25lZCBpOwo+ICsgICAgICAgaW50IHJldCA9IDA7
+Cj4gKwo+ICsgICAgICAgLyogUmVsZWFzZSBhbGwgY2hpbGRyZW4gZnJvbSB0aGUgbWF0Y2hpbmcg
+YnJpZGdlIHJlc291cmNlICovCj4gKyAgICAgICBmb3IgKGkgPSBQQ0lfQlJJREdFX1JFU09VUkNF
+UzsgaSA8IFBDSV9CUklER0VfUkVTT1VSQ0VfRU5EOyArK2kpIHsKPiArICAgICAgICAgICAgICAg
+c3RydWN0IHJlc291cmNlICpyZXMgPSAmYnJpZGdlLT5yZXNvdXJjZVtpXTsKPiArCgoKPiArICAg
+ICAgICAgICAgICAgaWYgKChyZXMtPmZsYWdzICYgdHlwZV9tYXNrKSAhPSAodHlwZSAmIHR5cGVf
+bWFzaykpCgpJSVVDIGl0IHdvdWxkIGJlCmlmICgocmVzLT5mbGFncyBeIHR5cGUpICYgdHlwZV9t
+YXNrKQoKKEkgY29uc2lkZXIgJ2RpZmYnIGFzIFhPUiBvcGVyYXRpb24gaXMgbW9yZSB1bmRlcnN0
+YW5kYWJsZSwgYnV0IGl0J3MgdXAgdG8geW91KQoKPiArICAgICAgICAgICAgICAgICAgICAgICBj
+b250aW51ZTsKCj4gKyAgICAgICAvKiByZXN0b3JlIHNpemUgYW5kIGZsYWdzICovCj4gKyAgICAg
+ICBsaXN0X2Zvcl9lYWNoX2VudHJ5KGZhaWxfcmVzLCAmZmFpbF9oZWFkLCBsaXN0KSB7Cj4gKyAg
+ICAgICAgICAgICAgIHN0cnVjdCByZXNvdXJjZSAqcmVzID0gZmFpbF9yZXMtPnJlczsKPiArCj4g
+KyAgICAgICAgICAgICAgIHJlcy0+c3RhcnQgPSBmYWlsX3Jlcy0+c3RhcnQ7Cj4gKyAgICAgICAg
+ICAgICAgIHJlcy0+ZW5kID0gZmFpbF9yZXMtPmVuZDsKPiArICAgICAgICAgICAgICAgcmVzLT5m
+bGFncyA9IGZhaWxfcmVzLT5mbGFnczsKPiArICAgICAgIH0KPiArCj4gKyAgICAgICAvKiBSZXZl
+cnQgdG8gdGhlIG9sZCBjb25maWd1cmF0aW9uICovCj4gKyAgICAgICBpZiAoIWxpc3RfZW1wdHko
+JmZhaWxfaGVhZCkpIHsKPiArICAgICAgICAgICAgICAgc3RydWN0IHJlc291cmNlICpyZXMgPSAm
+YnJpZGdlLT5yZXNvdXJjZVtpXTsKPiArCgo+ICsgICAgICAgICAgICAgICByZXMtPnN0YXJ0ID0g
+c2F2ZWQuc3RhcnQ7Cj4gKyAgICAgICAgICAgICAgIHJlcy0+ZW5kID0gc2F2ZWQuZW5kOwo+ICsg
+ICAgICAgICAgICAgICByZXMtPmZsYWdzID0gc2F2ZWQuZmxhZ3M7CgpXb3VsZAogKnJlcyA9IHNh
+dmVkOwp3b3JrPwoKPiAraW50IHBjaV9yZXNpemVfcmVzb3VyY2Uoc3RydWN0IHBjaV9kZXYgKmRl
+diwgaW50IHJlc25vLCBpbnQgc2l6ZSkKPiArewo+ICsgICAgICAgc3RydWN0IHJlc291cmNlICpy
+ZXMgPSBkZXYtPnJlc291cmNlICsgcmVzbm87Cj4gKyAgICAgICB1MzIgc2l6ZXMgPSBwY2lfcmJh
+cl9nZXRfcG9zc2libGVfc2l6ZXMoZGV2LCByZXNubyk7Cj4gKyAgICAgICBpbnQgb2xkID0gcGNp
+X3JiYXJfZ2V0X2N1cnJlbnRfc2l6ZShkZXYsIHJlc25vKTsKPiArICAgICAgIHU2NCBieXRlcyA9
+IDFVTEwgPDwgKHNpemUgKyAyMCk7Cj4gKyAgICAgICBpbnQgcmV0ID0gMDsKPiArCgpJIHdvdWxk
+IHB1dAogc2l6ZXMgPSBwY2lfcmJhcl9nZXRfcG9zc2libGVfc2l6ZXMoZGV2LCByZXNubyk7Cmhl
+cmUKCj4gKyAgICAgICBpZiAoIXNpemVzKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT1RT
+VVBQOwo+ICsKPiArICAgICAgIGlmICghKHNpemVzICYgKDEgPDwgc2l6ZSkpKQoKQklUKHNpemUp
+ID8KCj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+ICsKCmFuZAogb2xkID0gcGNp
+X3JiYXJfZ2V0X2N1cnJlbnRfc2l6ZShkZXYsIHJlc25vKTsKaGVyZQoKPiArICAgICAgIGlmIChv
+bGQgPCAwKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gb2xkOwoKPiArZXJyb3JfcmVzaXplOgo+
+ICsgICAgICAgcGNpX3JiYXJfc2V0X3NpemUoZGV2LCByZXNubywgb2xkKTsKPiArICAgICAgIHJl
+cy0+ZW5kID0gcmVzLT5zdGFydCArICgxVUxMIDw8IChvbGQgKyAyMCkpIC0gMTsKCkJJVF9VTEwo
+b2xkICsgMjApID8KCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2Y2hlbmtvCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
