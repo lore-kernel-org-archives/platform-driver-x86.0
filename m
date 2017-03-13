@@ -1,62 +1,44 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: do not set parents of input
- devices explicitly
-Date: Mon, 13 Mar 2017 18:37:34 +0800
-Message-ID: <2e954caa-d531-3c82-023c-afb8aaf9f3d9@canonical.com>
-References: <20170309093651.7824-1-kernel@kempniu.pl>
+From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
+Subject: Resizeable PCI BAR support V3
+Date: Mon, 13 Mar 2017 13:41:32 +0100
+Message-ID: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f45.google.com ([74.125.83.45]:36659 "EHLO
-        mail-pg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751729AbdCMKhj (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Mar 2017 06:37:39 -0400
-Received: by mail-pg0-f45.google.com with SMTP id g2so44932745pge.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Mar 2017 03:37:38 -0700 (PDT)
-In-Reply-To: <20170309093651.7824-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: helgaas@kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 2017-03-09 05:36 PM, Michał Kępień wrote:
-> devm_input_allocate_device() already causes the supplied struct device
-> to be set as the parent of the input device, so doing it again is
-> redundant.
->
-> Signed-off-by: Michał Kępień <kernel@kempniu.pl>
-> ---
-> This patch needs my recent intel-hid cleanup series to apply cleanly.
-> In other words, it should apply on top of testing, but not for-next.
->
->  drivers/platform/x86/intel-hid.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index 5eab31659cba..b40059aba856 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -152,7 +152,6 @@ static int intel_hid_input_setup(struct platform_device *device)
->  	if (ret)
->  		return ret;
->
-> -	priv->input_dev->dev.parent = &device->dev;
->  	priv->input_dev->name = "Intel HID events";
->  	priv->input_dev->id.bustype = BUS_HOST;
->
-> @@ -173,7 +172,6 @@ static int intel_button_array_input_setup(struct platform_device *device)
->  	if (ret)
->  		return ret;
->
-> -	priv->array->dev.parent = &device->dev;
->  	priv->array->name = "Intel HID 5 button array";
->  	priv->array->id.bustype = BUS_HOST;
->
->
-
-
-The patch, on top of previous patches, is tested on Latitude 7480
-
-Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
+SGkgQmpvcm4gYW5kIG90aGVycyBvbiB0aGUgbGlzdHMsCgppdCdzIG92ZXIgYSB5ZWFyIHRoYXQg
+SSBpbml0aWFsbHkgY2FtZSB1cCB3aXRoIHRoYXQsIGJ1dCBub3cgSQpmaW5hbGx5IGhhdmUgdGhl
+IHRpbWUgdG8gZmluaXNoIGl0IHVwLgoKVGhpcyBzZXQgb2YgcGF0Y2hlcyBhbGxvd3MgZGV2aWNl
+IGRyaXZlcnMgdG8gcmVzaXplIGFuZCBtb3N0IGxpa2VseSBhbHNvCnJlbG9jYXRlIHRoZSBQQ0kg
+QkFSIG9mIGRldmljZXMgdGhleSBtYW5hZ2UgdG8gYWxsb3cgdGhlIENQVSB0byBhY2Nlc3MKYWxs
+IG9mIHRoZSBkZXZpY2UgbG9jYWwgbWVtb3J5IGF0IG9uY2UuCgpUaGlzIGlzIHZlcnkgdXNlZnVs
+IGZvciBHRlggZGV2aWNlIGRyaXZlcnMgd2hlcmUgdGhlIGRlZmF1bHQgUENJIEJBUiBpcyBvbmx5
+CmFib3V0IDI1Nk1CIGluIHNpemUgZm9yIGNvbXBhdGliaWxpdHkgcmVhc29ucywgYnV0IHRoZSBk
+ZXZpY2UgZWFzaWx5IGhhdmUKbXVsdGlwbGUgZ2lnYWJ5dGUgb2YgbG9jYWwgbWVtb3J5LgoKQWRk
+aXRpb25hbCB0byB0aGUgcHVyZSByZXNpemUgZnVuY3Rpb25hbGl0eSB0aGlzIHNldCBhbHNvIGFk
+ZHMgYSBxdWlyayB0bwplbmFibGUgYSA2NGJpdCBiYXIgYWJvdmUgNEdCIG9uIEFNRCBGYW1pbHkg
+MTVoIENQVXMvQVBVcy4gRG9pbmcgc28gaXMKYWN0dWFsbHkgdHJpdmlhbCBhbmQgSSBwbGFuIHRv
+IGV4dGVuZCB0aGlzIHRvIGFsbCByZWNlbnQgQU1EIENQVXMvQVBVcy4KCk9wZW4gcXVlc3Rpb25z
+OgoKMS4gSXMgdGhpcyB0aGUgcmlnaHQgbG9jYXRpb24gdG8gaW1wbGVtZW50IHRoZSA2NGJpdCBC
+QVIgYWJvdmUgNEdCIGZvciBBTUQgQ1BVcz8KSSBndWVzcyB0aGF0IHRoaXMgbmVlZHMgYSBiaXQg
+bW9yZSBjbGVhbnVwLgoKMi4gQW55IGlkZWEgaG93IHRvIGJldHRlciBoYW5kbGUgaW50ZXJtZWRp
+YXRlIGJyaWRnZXM/IFJlcHJvZ3JhbW1pbmcgdGhlbSBpc24ndApwb3NzaWJsZSBhZnRlciBkcml2
+ZXJzIGFyZSBsb2FkZWQsIGJ1dCBhdCBsZWFzdCBmb3IgR0ZYIGRyaXZlcnMgd2UgbmVlZCB0byBs
+b2FkCnRoZW0gZmlyc3QgdG8ga25vdyBob3cgbGFyZ2Ugd2UgYWN0dWFsbHkgd2FudCBvdXIgQkFS
+IHRvIGJlIChhbmQgdG8ga2ljayBvdXIKdmVzYWZiL2VmaWZiKS4KClRoYW5rcyBpbiBhZHZhbmNl
+LApDaHJpc3RpYW4uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
