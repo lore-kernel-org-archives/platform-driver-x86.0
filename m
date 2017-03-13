@@ -1,65 +1,66 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 30h-3fh) Processors
-Date: Mon, 13 Mar 2017 18:49:00 +0200
-Message-ID: <CAHp75Ve4RXtuh7=8FUDv8RXGFMuYLte9GCOd02Y427BrFtPzYA@mail.gmail.com>
-References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
- <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
+Subject: Re: [PATCH 4/4] drm/amdgpu: resize VRAM BAR for CPU access
+Date: Mon, 13 Mar 2017 18:51:08 +0200
+Message-ID: <CAHp75VcSD+edusfZF8KWvCqoywPwJXdO_=9-RZdDpMF5dKtocQ@mail.gmail.com>
+References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de> <1489408896-25039-5-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f179.google.com ([209.85.220.179]:35318 "EHLO
+        mail-qk0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750865AbdCMQvU (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Mar 2017 12:51:20 -0400
+In-Reply-To: <1489408896-25039-5-git-send-email-deathsimple@vodafone.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, helgaas@kernel.org, dri-devel@lists.freedesktop.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: helgaas@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, amd-gfx@lists.freedesktop.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-T24gTW9uLCBNYXIgMTMsIDIwMTcgYXQgMjo0MSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8ZGVhdGhz
-aW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgoKPiBNb3N0IEJJT1MgZG9uJ3QgZW5hYmxlIHRoaXMg
-YmVjYXVzZSBvZiBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCj4KPiBNYW51YWxseSBlbmFibGUgYSA2
-NGJpdCBCQVIgb2YgNjRHQiBzaXplIHNvIHRoYXQgd2UgaGF2ZQo+IGVub3VnaCByb29tIGZvciBQ
-Q0kgZGV2aWNlcy4KCj4gK3N0YXRpYyB2b2lkIHBjaV9hbWRfZW5hYmxlXzY0Yml0X2JhcihzdHJ1
-Y3QgcGNpX2RldiAqZGV2KQo+ICt7Cj4gKyAgICAgICBjb25zdCB1aW50NjRfdCBzaXplID0gNjRV
-TEwgKiAxMDI0ICogMTAyNCAqIDEwMjQ7CgpQZXJoYXBzIGV4dGVuZCA8bGludXgvc2l6ZXMuaD4g
-YW5kIHVzZSBTWl82NEcgaGVyZT8KCkl0IHdvdWxkIGJlIG5pY2UgdG8gZG8sIHNpbmNlIHNvbWUg
-b2YgdGhlIGRyaXZlcnMgYWxyZWFkeSBhcmUgdXNpbmcKc2l6ZXMgbGlrZSA0R0IgYW5kIGFsaWtl
-LgoKPiArICAgICAgIHVpbnQzMl90IGJhc2UsIGxpbWl0LCBoaWdoOwo+ICsgICAgICAgc3RydWN0
-IHJlc291cmNlICpyZXM7Cj4gKyAgICAgICB1bnNpZ25lZCBpOwo+ICsgICAgICAgaW50IHI7Cj4g
-KwoKPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCA4OyArK2kpIHsKCj4gKwoKUmVkdW5kYW50IGVt
-cHR5IGxpbmUuCgo+ICsgICAgICAgICAgICAgICBwY2lfcmVhZF9jb25maWdfZHdvcmQoZGV2LCAw
-eDgwICsgaSAqIDB4OCwgJmJhc2UpOwo+ICsgICAgICAgICAgICAgICBwY2lfcmVhZF9jb25maWdf
-ZHdvcmQoZGV2LCAweDE4MCArIGkgKiAweDQsICZoaWdoKTsKPiArCj4gKyAgICAgICAgICAgICAg
-IC8qIElzIHRoaXMgc2xvdCBmcmVlPyAqLwo+ICsgICAgICAgICAgICAgICBpZiAoKGJhc2UgJiAw
-eDMpID09IDB4MCkKPiArICAgICAgICAgICAgICAgICAgICAgICBicmVhazsKPiArCj4gKyAgICAg
-ICAgICAgICAgIGJhc2UgPj49IDg7Cj4gKyAgICAgICAgICAgICAgIGJhc2UgfD0gaGlnaCA8PCAy
-NDsKPiArCj4gKyAgICAgICAgICAgICAgIC8qIEFib3J0IGlmIGEgc2xvdCBhbHJlYWR5IGNvbmZp
-Z3VyZXMgYSA2NGJpdCBCQVIuICovCj4gKyAgICAgICAgICAgICAgIGlmIChiYXNlID4gMHgxMDAw
-MCkKPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47Cgo+ICsKCkRpdHRvLgoKPiArICAg
-ICAgIH0KCj4gKwoKRGl0dG8uCgo+ICsgICAgICAgaWYgKGkgPT0gOCkKPiArICAgICAgICAgICAg
-ICAgcmV0dXJuOwo+ICsKPiArICAgICAgIHJlcyA9IGt6YWxsb2Moc2l6ZW9mKCpyZXMpLCBHRlBf
-S0VSTkVMKTsKPiArICAgICAgIHJlcy0+ZmxhZ3MgPSBJT1JFU09VUkNFX01FTSB8IElPUkVTT1VS
-Q0VfUFJFRkVUQ0ggfCBJT1JFU09VUkNFX01FTV82NCB8Cj4gKyAgICAgICAgICAgICAgIElPUkVT
-T1VSQ0VfV0lORE9XOwo+ICsgICAgICAgcmVzLT5uYW1lID0gZGV2LT5idXMtPm5hbWU7Cj4gKyAg
-ICAgICByID0gYWxsb2NhdGVfcmVzb3VyY2UoJmlvbWVtX3Jlc291cmNlLCByZXMsIHNpemUsIDB4
-MTAwMDAwMDAwLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4ZmQwMDAwMDAwMCwg
-c2l6ZSwgTlVMTCwgTlVMTCk7Cj4gKyAgICAgICBpZiAocikgewo+ICsgICAgICAgICAgICAgICBr
-ZnJlZShyZXMpOwo+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gKyAgICAgICB9Cj4gKwo+ICsg
-ICAgICAgYmFzZSA9ICgocmVzLT5zdGFydCA+PiA4KSAmIDB4ZmZmZmZmMDApIHwgMHgzOwo+ICsg
-ICAgICAgbGltaXQgPSAoKHJlcy0+ZW5kICsgMSkgPj4gOCkgJiAweGZmZmZmZjAwOwo+ICsgICAg
-ICAgaGlnaCA9ICgocmVzLT5zdGFydCA+PiA0MCkgJiAweGZmKSB8Cj4gKyAgICAgICAgICAgICAg
-ICgoKChyZXMtPmVuZCArIDEpID4+IDQwKSAmIDB4ZmYpIDw8IDE2KTsKClBlcmhhcHMgc29tZSBv
-ZiBjb25zdGFudHMgY2FuIGJlIHJlcGxhY2VkIGJ5IGRlZmluZXMgKEkgdGhpbmsgc29tZSBvZgp0
-aGVtIGFyZSBhbHJlYWR5IGRlZmluZWQgaW4gaW9wb3J0Lmggb3Igc29tZXdoZXJlIGVsc2UpLgoK
-LS0gCldpdGggQmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Mar 13, 2017 at 2:41 PM, Christian K=C3=B6nig
+<deathsimple@vodafone.de> wrote:
+> From: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> Try to resize BAR0 to let CPU access all of VRAM.
+
+> +void amdgpu_resize_bar0(struct amdgpu_device *adev)
+> +{
+> +       u32 size =3D max(ilog2(adev->mc.real_vram_size - 1) + 1, 20) - 20=
+;
+> +       int r;
+> +
+> +       r =3D pci_resize_resource(adev->pdev, 0, size);
+
+> +
+
+Redundant.
+
+> +       if (r =3D=3D -ENOTSUPP) {
+> +               /* The hardware don't support the extension. */
+> +               return;
+
+> +
+
+Ditto.
+
+> +       } else if (r =3D=3D -ENOSPC) {
+
+Useless use of else. And thus of curly braces.
+
+> +               DRM_INFO("Not enoigh PCI address space for a large BAR.")=
+;
+> +       } else if (r) {
+> +               DRM_ERROR("Problem resizing BAR0 (%d).", r);
+> +       }
+> +
+> +       /* Reinit the doorbell mapping, it is most likely moved as well *=
+/
+> +       amdgpu_doorbell_fini(adev);
+
+> +       BUG_ON(amdgpu_doorbell_init(adev));
+
+Comment why it's used here.
+--=20
+With Best Regards,
+Andy Shevchenko
