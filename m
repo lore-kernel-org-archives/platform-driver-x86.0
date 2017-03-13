@@ -1,71 +1,45 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/14] platform/x86: remove sparse_keymap_free() calls
-Date: Mon, 13 Mar 2017 18:11:45 +0200
-Message-ID: <CAHp75VckmaCmEyimWq23MeUjpg2jMhfZVoTRYVxFCoSRJoSSZg@mail.gmail.com>
-References: <20170309121150.10553-1-kernel@kempniu.pl>
+Subject: Re: [PATCH] platform/x86: intel-hid: do not set parents of input
+ devices explicitly
+Date: Mon, 13 Mar 2017 18:17:06 +0200
+Message-ID: <CAHp75Ven0CeXNBajX63DrQgupGeUkEZLJYb04g_JkwwUcDVO1w@mail.gmail.com>
+References: <20170309093651.7824-1-kernel@kempniu.pl> <2e954caa-d531-3c82-023c-afb8aaf9f3d9@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f196.google.com ([209.85.220.196]:34382 "EHLO
-        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751568AbdCMQLr (ORCPT
+Received: from mail-qk0-f173.google.com ([209.85.220.173]:36027 "EHLO
+        mail-qk0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752358AbdCMQRI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Mar 2017 12:11:47 -0400
-In-Reply-To: <20170309121150.10553-1-kernel@kempniu.pl>
+        Mon, 13 Mar 2017 12:17:08 -0400
+In-Reply-To: <2e954caa-d531-3c82-023c-afb8aaf9f3d9@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Andy Shevchenko <andy@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Harald Welte <laforge@gnumonks.org>, Herton Ronaldo Krzesinski <herton@canonical.com>, Ike Panhc <ike.pan@canonical.com>, "Lee, Chun-Yi" <jlee@suse.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, Mar 9, 2017 at 2:11 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempni=
-u.pl> wrote:
-> Hi everyone,
+On Mon, Mar 13, 2017 at 12:37 PM, Alex Hung <alex.hung@canonical.com> wrote=
+:
+> On 2017-03-09 05:36 PM, Micha=C5=82 K=C4=99pie=C5=84 wrote:
+>>
+>> devm_input_allocate_device() already causes the supplied struct device
+>> to be set as the parent of the input device, so doing it again is
+>> redundant.
+>>
+>> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+
+Pushed to testing, thanks.
+
 >
-> This patch series removes all uses of sparse_keymap_free() in the x86
-> platform driver subsystem due to an upcoming change in
-> sparse_keymap_setup() behavior wrt memory management.  Specifically,
-> sparse_keymap_setup() will use managed memory for the keymap copy it
-> creates, which enables it to be automatically freed upon input device
-> removal, without the need to explicitly call sparse_keymap_free().
+> The patch, on top of previous patches, is tested on Latitude 7480
 >
-> I thought it makes sense to post all these patches as a single series.
-> To minimize spamming, only this cover letter is addressed to all the
-> maintainers whose drivers are affected by this series, while each of the
-> subsequent patches will only be sent to the relevant recipients, plus
-> the platform-driver-x86 mailing list and subsystem maintainers.
->
-> Darren, Andy, all these patches should only be applied after merging an
-> immutable branch called ib/4.10-sparse-keymap-managed from Dmitry
-> Torokhov's git tree.
+> Reviewed-and-tested-by: Alex Hung <alex.hung@canonical.com>
 
-Pushed to testing.
+Alex, this tag is not recognized by patchwork :-(, It would be nice to
+use separate tags.
 
-If anyone has objections, please tell me as soon as possible (though
-we have still time to remove / revert changes which I hope not the
-case here).
-
->  drivers/platform/x86/acer-wmi.c         |  5 +----
->  drivers/platform/x86/asus-laptop.c      |  8 ++------
->  drivers/platform/x86/asus-wmi.c         |  8 ++------
->  drivers/platform/x86/dell-wmi-aio.c     |  6 +-----
->  drivers/platform/x86/dell-wmi.c         | 16 ++++------------
->  drivers/platform/x86/eeepc-laptop.c     |  8 ++------
->  drivers/platform/x86/hp-wmi.c           |  5 +----
->  drivers/platform/x86/ideapad-laptop.c   |  5 +----
->  drivers/platform/x86/msi-laptop.c       | 14 +++-----------
->  drivers/platform/x86/msi-wmi.c          |  9 ++-------
->  drivers/platform/x86/panasonic-laptop.c | 18 +++---------------
->  drivers/platform/x86/topstar-laptop.c   |  5 +----
->  drivers/platform/x86/toshiba-wmi.c      |  5 +----
->  drivers/platform/x86/toshiba_acpi.c     |  8 ++------
->  14 files changed, 26 insertions(+), 94 deletions(-)
->
-> --
-> 2.12.0
->
-
-
+I would join them if needed (usually when they sent against cover letter).
 
 --=20
 With Best Regards,
