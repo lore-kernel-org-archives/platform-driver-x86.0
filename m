@@ -1,54 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 0/4] gpio: make gpiod_count() API consistent
-Date: Tue, 14 Mar 2017 10:49:37 +0100
-Message-ID: <CACRpkdbrPf0Tomq7PWWoTbAUss+D8qVWctE_mPg9SkZu=JtLkQ@mail.gmail.com>
-References: <20170220161549.39490-1-andriy.shevchenko@linux.intel.com>
- <20170227082735.GA2373@mail.corp.redhat.com> <1488275286.20145.49.camel@linux.intel.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 0/5] fujitsu-laptop: platform device code cleanup
+Date: Tue, 14 Mar 2017 11:26:26 +0100
+Message-ID: <20170314102631.8203-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1488275286.20145.49.camel@linux.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux Input <linux-input@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f45.google.com ([209.85.215.45]:33176 "EHLO
+        mail-lf0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750842AbdCNK0k (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 14 Mar 2017 06:26:40 -0400
+Received: by mail-lf0-f45.google.com with SMTP id a6so74510353lfa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Mar 2017 03:26:39 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 10:48 AM, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, 2017-02-27 at 09:27 +0100, Benjamin Tissoires wrote:
->> On Feb 20 2017 or thereabouts, Andy Shevchenko wrote:
->> > There are three possibilities in gpiod_count(): ACPI, OF, and
->> > platform data.
->> >
->> > Some of them return 0, which requires to be handled separately,
->> > though
->> > developers rather lazy and just shadow an actual error code.
->> >
->> > Let's make this API consistent by not allowing 0 in returned value.
->> >
->> > There are luckily only 3 users right now, one of them handles this
->> > properly, the rest is converted in this series.
->> >
->> > Series is supposed to go through GPIO tree.
->> >
->> > Andy Shevchenko (4):
->> >   gpio: acpi: Don't return 0 on acpi_gpio_count()
->> >   gpio: of: Don't return 0 on dt_gpio_count()
->> >   platform/x86: surface3_button: Propagate error from gpiod_count()
->> >   Input: soc_button_array - Propagate error from gpiod_count()
->>
->> Not sure if this still matters, but still:
->> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> I'm sure it is.
->
-> Linus, is your plan to go through queue after merge window is closed?
+This series removes backlight-related sysfs attributes from the platform
+device registered by fujitsu-laptop and does some other cleanups to
+platform device code which hopefully make it easier to understand.
 
-Yes sorry for the delay, it was a busy merge window etc.
+ drivers/platform/x86/fujitsu-laptop.c | 197 ++++++++++------------------------
+ 1 file changed, 57 insertions(+), 140 deletions(-)
 
-I'd like to have some nod from Mika/Rafael that this is what
-we want to do. If I don't hear anything I guess I will just
-merge them, it looks right to me.
-
-Yours,
-Linus Walleij
+-- 
+2.12.0
