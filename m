@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 5/5] platform/x86: fujitsu-laptop: remove pf_device field from struct fujitsu_bl
-Date: Tue, 14 Mar 2017 11:26:31 +0100
-Message-ID: <20170314102631.8203-6-kernel@kempniu.pl>
+Subject: [PATCH 3/5] platform/x86: fujitsu-laptop: add and remove platform device in separate functions
+Date: Tue, 14 Mar 2017 11:26:29 +0100
+Message-ID: <20170314102631.8203-4-kernel@kempniu.pl>
 References: <20170314102631.8203-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,111 +13,117 @@ To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, An
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Both struct fujitsu_bl and struct fujitsu_laptop have a pf_device field.
-Up until now the latter has been redundant, which is logically incorrect
-because the primary function of the platform device created by
-fujitsu-laptop is to provide laptop-related (not brightness-related)
-attributes to userspace.
+Platform device handling adds a lot of complexity to fujitsu_init(),
+which hinders its readability.  Extract code responsible for adding and
+removing the platform device to separate functions.  Adjust whitespace
+to make checkpatch happy.
 
-Remove the pf_device field from struct fujitsu_bl and make all module
-code use the pf_device field of struct fujitsu_laptop instead.
-
-Suggested-by: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 66 +++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index a2641cb79df9..f3ccef3d5a1e 100644
+index 9719c821d64f..421402a19bb9 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -138,7 +138,6 @@ struct fujitsu_bl {
- 	struct input_dev *input;
- 	char phys[32];
- 	struct backlight_device *bl_device;
--	struct platform_device *pf_device;
- 	int keycode1, keycode2, keycode3, keycode4, keycode5;
+@@ -765,6 +765,40 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
  
- 	unsigned int max_brightness;
-@@ -769,15 +768,15 @@ static int fujitsu_laptop_platform_add(void)
+ /* ACPI device for hotkey handling */
+ 
++static int fujitsu_laptop_platform_add(void)
++{
++	int ret;
++
++	fujitsu_bl->pf_device = platform_device_alloc("fujitsu-laptop", -1);
++	if (!fujitsu_bl->pf_device)
++		return -ENOMEM;
++
++	ret = platform_device_add(fujitsu_bl->pf_device);
++	if (ret)
++		goto err_put_platform_device;
++
++	ret = sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
++				 &fujitsu_pf_attribute_group);
++	if (ret)
++		goto err_del_platform_device;
++
++	return 0;
++
++err_del_platform_device:
++	platform_device_del(fujitsu_bl->pf_device);
++err_put_platform_device:
++	platform_device_put(fujitsu_bl->pf_device);
++
++	return ret;
++}
++
++static void fujitsu_laptop_platform_remove(void)
++{
++	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
++			   &fujitsu_pf_attribute_group);
++	platform_device_unregister(fujitsu_bl->pf_device);
++}
++
+ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
  {
- 	int ret;
+ 	int result = 0;
+@@ -1146,25 +1180,13 @@ static int __init fujitsu_init(void)
+ 
+ 	/* Register platform stuff */
  
 -	fujitsu_bl->pf_device = platform_device_alloc("fujitsu-laptop", -1);
--	if (!fujitsu_bl->pf_device)
-+	fujitsu_laptop->pf_device = platform_device_alloc("fujitsu-laptop", -1);
-+	if (!fujitsu_laptop->pf_device)
- 		return -ENOMEM;
- 
+-	if (!fujitsu_bl->pf_device) {
+-		ret = -ENOMEM;
+-		goto err_unregister_acpi;
+-	}
+-
 -	ret = platform_device_add(fujitsu_bl->pf_device);
-+	ret = platform_device_add(fujitsu_laptop->pf_device);
+-	if (ret)
+-		goto err_put_platform_device;
+-
+-	ret =
+-	    sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
+-			       &fujitsu_pf_attribute_group);
++	ret = fujitsu_laptop_platform_add();
  	if (ret)
- 		goto err_put_platform_device;
+-		goto err_del_platform_device;
++		goto err_unregister_acpi;
  
--	ret = sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
-+	ret = sysfs_create_group(&fujitsu_laptop->pf_device->dev.kobj,
- 				 &fujitsu_pf_attribute_group);
+ 	ret = platform_driver_register(&fujitsu_pf_driver);
  	if (ret)
- 		goto err_del_platform_device;
-@@ -785,18 +784,18 @@ static int fujitsu_laptop_platform_add(void)
- 	return 0;
+-		goto err_remove_sysfs_group;
++		goto err_remove_platform_device;
  
- err_del_platform_device:
--	platform_device_del(fujitsu_bl->pf_device);
-+	platform_device_del(fujitsu_laptop->pf_device);
- err_put_platform_device:
--	platform_device_put(fujitsu_bl->pf_device);
-+	platform_device_put(fujitsu_laptop->pf_device);
+ 	/* Register laptop driver */
  
- 	return ret;
- }
- 
- static void fujitsu_laptop_platform_remove(void)
- {
+@@ -1186,13 +1208,8 @@ static int __init fujitsu_init(void)
+ 	kfree(fujitsu_laptop);
+ err_unregister_platform_driver:
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+-err_remove_sysfs_group:
 -	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
-+	sysfs_remove_group(&fujitsu_laptop->pf_device->dev.kobj,
- 			   &fujitsu_pf_attribute_group);
+-			   &fujitsu_pf_attribute_group);
+-err_del_platform_device:
+-	platform_device_del(fujitsu_bl->pf_device);
+-err_put_platform_device:
+-	platform_device_put(fujitsu_bl->pf_device);
++err_remove_platform_device:
++	fujitsu_laptop_platform_remove();
+ err_unregister_acpi:
+ 	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
+ err_free_fujitsu_bl:
+@@ -1209,10 +1226,7 @@ static void __exit fujitsu_cleanup(void)
+ 
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+ 
+-	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
+-			   &fujitsu_pf_attribute_group);
+-
 -	platform_device_unregister(fujitsu_bl->pf_device);
-+	platform_device_unregister(fujitsu_laptop->pf_device);
- }
++	fujitsu_laptop_platform_remove();
  
- static int acpi_fujitsu_laptop_add(struct acpi_device *device)
-@@ -909,7 +908,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
  
- #if IS_ENABLED(CONFIG_LEDS_CLASS)
- 	if (call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
--		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
-+		result = led_classdev_register(&fujitsu_laptop->pf_device->dev,
- 						&logolamp_led);
- 		if (result == 0) {
- 			fujitsu_laptop->logolamp_registered = 1;
-@@ -921,7 +920,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 
- 	if ((call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
- 	   (call_fext_func(FUNC_BUTTONS, 0x0, 0x0, 0x0) == 0x0)) {
--		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
-+		result = led_classdev_register(&fujitsu_laptop->pf_device->dev,
- 						&kblamps_led);
- 		if (result == 0) {
- 			fujitsu_laptop->kblamps_registered = 1;
-@@ -938,7 +937,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	 * that an RF LED is present.
- 	 */
- 	if (call_fext_func(FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {
--		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
-+		result = led_classdev_register(&fujitsu_laptop->pf_device->dev,
- 						&radio_led);
- 		if (result == 0) {
- 			fujitsu_laptop->radio_led_registered = 1;
-@@ -955,7 +954,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	*/
- 	if ((call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
- 	   (call_fext_func(FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
--		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
-+		result = led_classdev_register(&fujitsu_laptop->pf_device->dev,
- 						&eco_led);
- 		if (result == 0) {
- 			fujitsu_laptop->eco_led_registered = 1;
 -- 
 2.12.0
