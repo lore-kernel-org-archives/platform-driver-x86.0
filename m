@@ -1,129 +1,92 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 3/5] platform/x86: fujitsu-laptop: add and remove platform device in separate functions
-Date: Tue, 14 Mar 2017 11:26:29 +0100
-Message-ID: <20170314102631.8203-4-kernel@kempniu.pl>
+Subject: [PATCH 4/5] platform/x86: fujitsu-laptop: only register platform device if FUJ02E3 is present
+Date: Tue, 14 Mar 2017 11:26:30 +0100
+Message-ID: <20170314102631.8203-5-kernel@kempniu.pl>
 References: <20170314102631.8203-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f68.google.com ([209.85.215.68]:33626 "EHLO
+        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751184AbdCNK0o (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 14 Mar 2017 06:26:44 -0400
+Received: by mail-lf0-f68.google.com with SMTP id r36so13781976lfi.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Mar 2017 03:26:42 -0700 (PDT)
 In-Reply-To: <20170314102631.8203-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-Platform device handling adds a lot of complexity to fujitsu_init(),
-which hinders its readability.  Extract code responsible for adding and
-removing the platform device to separate functions.  Adjust whitespace
-to make checkpatch happy.
+The platform device registered by fujitsu-laptop is registered
+unconditionally while sysfs attributes attached to it depend on the
+FUJ02E3 ACPI device being present.  Fix this by moving platform device
+creation and removal to acpi_fujitsu_laptop_add() and
+acpi_fujitsu_laptop_remove(), respectively.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 66 +++++++++++++++++++++--------------
- 1 file changed, 40 insertions(+), 26 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 9719c821d64f..421402a19bb9 100644
+index 421402a19bb9..a2641cb79df9 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -765,6 +765,40 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+@@ -903,6 +903,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
+ 	}
  
- /* ACPI device for hotkey handling */
++	error = fujitsu_laptop_platform_add();
++	if (error)
++		goto err_unregister_input_dev;
++
+ #if IS_ENABLED(CONFIG_LEDS_CLASS)
+ 	if (call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
+ 		result = led_classdev_register(&fujitsu_bl->pf_device->dev,
+@@ -994,6 +998,8 @@ static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
+ 		led_classdev_unregister(&eco_led);
+ #endif
  
-+static int fujitsu_laptop_platform_add(void)
-+{
-+	int ret;
++	fujitsu_laptop_platform_remove();
 +
-+	fujitsu_bl->pf_device = platform_device_alloc("fujitsu-laptop", -1);
-+	if (!fujitsu_bl->pf_device)
-+		return -ENOMEM;
-+
-+	ret = platform_device_add(fujitsu_bl->pf_device);
-+	if (ret)
-+		goto err_put_platform_device;
-+
-+	ret = sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
-+				 &fujitsu_pf_attribute_group);
-+	if (ret)
-+		goto err_del_platform_device;
-+
-+	return 0;
-+
-+err_del_platform_device:
-+	platform_device_del(fujitsu_bl->pf_device);
-+err_put_platform_device:
-+	platform_device_put(fujitsu_bl->pf_device);
-+
-+	return ret;
-+}
-+
-+static void fujitsu_laptop_platform_remove(void)
-+{
-+	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
-+			   &fujitsu_pf_attribute_group);
-+	platform_device_unregister(fujitsu_bl->pf_device);
-+}
-+
- static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- {
- 	int result = 0;
-@@ -1146,25 +1180,13 @@ static int __init fujitsu_init(void)
+ 	input_unregister_device(input);
+ 
+ 	kfifo_free(&fujitsu_laptop->fifo);
+@@ -1180,13 +1186,9 @@ static int __init fujitsu_init(void)
  
  	/* Register platform stuff */
  
--	fujitsu_bl->pf_device = platform_device_alloc("fujitsu-laptop", -1);
--	if (!fujitsu_bl->pf_device) {
--		ret = -ENOMEM;
--		goto err_unregister_acpi;
--	}
--
--	ret = platform_device_add(fujitsu_bl->pf_device);
+-	ret = fujitsu_laptop_platform_add();
 -	if (ret)
--		goto err_put_platform_device;
+-		goto err_unregister_acpi;
 -
--	ret =
--	    sysfs_create_group(&fujitsu_bl->pf_device->dev.kobj,
--			       &fujitsu_pf_attribute_group);
-+	ret = fujitsu_laptop_platform_add();
- 	if (ret)
--		goto err_del_platform_device;
-+		goto err_unregister_acpi;
- 
  	ret = platform_driver_register(&fujitsu_pf_driver);
  	if (ret)
--		goto err_remove_sysfs_group;
-+		goto err_remove_platform_device;
+-		goto err_remove_platform_device;
++		goto err_unregister_acpi;
  
  	/* Register laptop driver */
  
-@@ -1186,13 +1208,8 @@ static int __init fujitsu_init(void)
+@@ -1208,8 +1210,6 @@ static int __init fujitsu_init(void)
  	kfree(fujitsu_laptop);
  err_unregister_platform_driver:
  	platform_driver_unregister(&fujitsu_pf_driver);
--err_remove_sysfs_group:
--	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
--			   &fujitsu_pf_attribute_group);
--err_del_platform_device:
--	platform_device_del(fujitsu_bl->pf_device);
--err_put_platform_device:
--	platform_device_put(fujitsu_bl->pf_device);
-+err_remove_platform_device:
-+	fujitsu_laptop_platform_remove();
+-err_remove_platform_device:
+-	fujitsu_laptop_platform_remove();
  err_unregister_acpi:
  	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
  err_free_fujitsu_bl:
-@@ -1209,10 +1226,7 @@ static void __exit fujitsu_cleanup(void)
+@@ -1226,8 +1226,6 @@ static void __exit fujitsu_cleanup(void)
  
  	platform_driver_unregister(&fujitsu_pf_driver);
  
--	sysfs_remove_group(&fujitsu_bl->pf_device->dev.kobj,
--			   &fujitsu_pf_attribute_group);
+-	fujitsu_laptop_platform_remove();
 -
--	platform_device_unregister(fujitsu_bl->pf_device);
-+	fujitsu_laptop_platform_remove();
- 
  	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
  
+ 	kfree(fujitsu_bl);
 -- 
 2.12.0
