@@ -1,139 +1,50 @@
-From: <horizon@qubeglobal.com>
-Subject: 39589 platform-driver-x86
-Date: Wed, 15 Mar 2017 20:14:19 -0000
-Message-ID: <148960885946.19795.7208226896281264721@hinet.net>
-Reply-To: <horizon@qubeglobal.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
+Date: Wed, 15 Mar 2017 15:15:27 -0700
+Message-ID: <20170315221527.GA2828@fury>
+References: <20170210174837.1078-1-pespin.shar@gmail.com>
+ <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
+ <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+ <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
+ <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
+ <20170223083631.GE18639@dtor-ws>
+ <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
+ <20170307192701.GG13740@dtor-ws>
+ <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="064558615235293.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 36-235-45-155.dynamic-ip.hinet.net ([36.235.45.155]:59348 "HELO
-        hinet.net" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1753063AbdCOUOb (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:60347 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750819AbdCOWP3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Mar 2017 16:14:31 -0400
-Content-Disposition: attachment
+        Wed, 15 Mar 2017 18:15:29 -0400
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pau Espin Pedrol <pespin.shar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
 
-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
+On Mon, Mar 13, 2017 at 06:04:42PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 7, 2017 at 9:27 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
+> >> >> Dmitry, do we have special events for AC (un)plug? What is the best
+> >> >> approach in your opinion?
+> >> >
+> >> > Not route them through input as they not input events would be the best.
+> >> >
+> >> Is my patch good enough for this or would you recommend doing it another way?
+> >
+> 
+> > From input POV your patch makes sense.
+> 
+> Could you give your tag?
+
+Based on this discussion and no additional input from Dmitry or Corentin, and my
+own review, I have queued this patch to testing. Thanks.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
