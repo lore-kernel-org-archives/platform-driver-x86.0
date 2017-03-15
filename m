@@ -1,49 +1,36 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Wed, 15 Mar 2017 15:15:27 -0700
-Message-ID: <20170315221527.GA2828@fury>
-References: <20170210174837.1078-1-pespin.shar@gmail.com>
- <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
- <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
- <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
- <20170223083631.GE18639@dtor-ws>
- <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
- <20170307192701.GG13740@dtor-ws>
- <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] fujitsu-laptop: platform device code cleanup
+Date: Wed, 15 Mar 2017 16:39:22 -0700
+Message-ID: <20170315233922.GB2828@fury>
+References: <20170314102631.8203-1-kernel@kempniu.pl>
+ <20170315001908.GE18460@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:60347 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750819AbdCOWP3 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Mar 2017 18:15:29 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pau Espin Pedrol <pespin.shar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
+In-Reply-To: <20170315001908.GE18460@marvin.atrad.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 13, 2017 at 06:04:42PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 7, 2017 at 9:27 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
-> >> >> Dmitry, do we have special events for AC (un)plug? What is the best
-> >> >> approach in your opinion?
-> >> >
-> >> > Not route them through input as they not input events would be the best.
-> >> >
-> >> Is my patch good enough for this or would you recommend doing it another way?
-> >
+On Wed, Mar 15, 2017 at 10:49:08AM +1030, Jonathan Woithe wrote:
+> Hi Michael
 > 
-> > From input POV your patch makes sense.
+> On Tue, Mar 14, 2017 at 11:26:26AM +0100, Micha?? K??pie?? wrote:
+> > This series removes backlight-related sysfs attributes from the platform
+> > device registered by fujitsu-laptop and does some other cleanups to
+> > platform device code which hopefully make it easier to understand.
 > 
-> Could you give your tag?
+> Thanks for your continued clean up efforts.  I will review and test this in
+> the next few days.  I will be particularly busy between now and the weekend,
+> so in the worst case it could be Sunday before I get a chance to do this
+> thoroughly.  However, given the relative simplicity of the patches I will
+> try to get it done before then.
 
-Based on this discussion and no additional input from Dmitry or Corentin, and my
-own review, I have queued this patch to testing. Thanks.
+I'll await Jonathan's Reviewed-by, but I've reviewed these as well and they are
+consistent with the discussion on the platform device sysfs attributes we had
+previously and all look good to me.
 
 -- 
 Darren Hart
