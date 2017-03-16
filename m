@@ -1,105 +1,46 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: intel_pmc_ipc: fix io mem mapping
- size
-Date: Thu, 16 Mar 2017 14:05:10 -0700
-Message-ID: <8c0966ba-0b83-839a-9198-51aae2ecd005@linux.intel.com>
-References: <1ab8d18dd7f5428869e6e77026ac4206863eea08.1489634924.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170316145203.GA23198@rajaneesh-OptiPlex-9010>
- <d72e4ad6-cd64-dccf-afb8-ae8644a8dd73@linux.intel.com>
- <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
+Date: Thu, 16 Mar 2017 16:54:30 -0700
+Message-ID: <20170316235430.GD2935@dtor-ws>
+References: <20170210174837.1078-1-pespin.shar@gmail.com>
+ <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
+ <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
+ <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
+ <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
+ <20170223083631.GE18639@dtor-ws>
+ <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
+ <20170307192701.GG13740@dtor-ws>
+ <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:38978 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752562AbdCPVVr (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Mar 2017 17:21:47 -0400
-In-Reply-To: <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Pau Espin Pedrol <pespin.shar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, Mar 13, 2017 at 06:04:42PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 7, 2017 at 9:27 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
+> >> >> Dmitry, do we have special events for AC (un)plug? What is the best
+> >> >> approach in your opinion?
+> >> >
+> >> > Not route them through input as they not input events would be the best.
+> >> >
+> >> Is my patch good enough for this or would you recommend doing it another way?
+> >
+> 
+> > From input POV your patch makes sense.
+> 
+> Could you give your tag?
 
+Sorry for the delay, I was out of service for a couple of days. I see
+that Darren already picked up the patch, anyway, for the record:
 
-On 03/16/2017 12:20 PM, Rajneesh Bhardwaj wrote:
-> On Thu, Mar 16, 2017 at 11:50:16AM -0700, sathyanarayanan kuppuswamy wrote:
->> Hi,
->>
->>
->> On 03/16/2017 07:52 AM, Rajneesh Bhardwaj wrote:
->>> On Wed, Mar 15, 2017 at 08:32:53PM -0700, Kuppuswamy Sathyanarayanan wrote:
->>>> Mapping entire GCR mem region in this driver creates
->>>> mem region request conflict in sub devices that depend
->>>> on PMC. This creates driver probe failure in devices like
->>>> iTC0_wdt and telemetry device.
->>> While this patch might fix the issue for now but IMHO its not taking the
->>> right approch. I guess we need some guidance here from the maintainers but
->> Agreed. I thought about this problem and I know this solution does not
->> scale well. Other way is to expose an API for GCR access and use it on
->> PMC dependent drivers. In this case, we should also add GCR register
->> address macros to PMC header file and this might need change to PMC header
->> file each time when some one wants to add access new register address.
->>
->> Since S0ix counter access is only GCR access use case in PMC driver, I
->> thought  both solutions has some pros and cons.
->>> please do consider the below explaination for why we shoud not take this
->>> approch to fix WDT issue. Telemetry driver has no issues while loading since
->>> its not using any register in the GCR region.
->>> PMC on BXT/APL platforms has contiguous IPC and GCR regions. PMC_IPC driver
->>> maps the entire IPC and GCR region. It would be inefficient to map and unmap
->>> each time we want to use another register present in IPC or GCR spaces.
->> But I am wondering whether there will be any future GCR access
->> changes in PMC driver?
-> You never know!
->
->> If its going to be just S0ix counter access then I don't think we
->> need to worry about performance here.
-> Ditto, its not about performance.
->
->>> iTCO_WDT driver needs to check the BIT4 (NO_REBOOT) of PMC_CFG register
->>> (Offset: 0x1008) and this falls in GCR space. The iTCO_WDT driver fails to
->>> load because it can't request mem region for the resources already claimed
->>> by PMC_IPC driver. However, ioremap would still work here and WDT driver
->>> would load just fine.
->>>
->>> So, IMHO the problem lies elsewhere and we should find a way to handle this
->>> better in iTCO_WDT driver.
->>>
->>> The IPC and GCR resources belong to PMC and should be claimed by the PMC
->>> driver rightfully and should not be reclaimed by iTCO_WDT or any other
->>> driver.
->> iTCO_WDT , Telemtry and Punit are PMC dependent devices right ? And they
->> share the resources among them right ?
-> Resources belong to PMC and hence it should own them, others share. Other
-> drivers request and map those resources only when PMC driver does not
-> already do so.
-I see your point.
-Correct way is to use MFD driver architecture for this device driver and 
-use regmap for GCR registers.
-We can get the regmap pointer in dependent device driver by getting the 
-private data of parent device.
->
->>>
->>>> Currently this driver only need memory mapping for
->>>> s0ix counter registers. So this patch fixes this issue
->>>> by requesting memory mapping for only the s0ix counter mem
->>>> region.
->>> How about exposing a new API in PMC_IPC driver which can be used for reading
->>> the desired GCR register and it can be used by iTCO_WDT instead of
->>> requesting mem regions and remapping?
->> If you think in future if we might need access to more GCR space in
->> PMC driver, then we need to change this solution.
->>
->> Please let me know. If yes, I will add an API as you mentioned.
-> Yes, I think so. Hope Andy and Darren are fine with that?
->
->
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 -- 
-Sathyanarayanan Kuppuswamy
-Android kernel developer
+Dmitry
