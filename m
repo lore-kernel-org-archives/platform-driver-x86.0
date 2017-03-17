@@ -1,90 +1,62 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2 3/4] watchdog: iTCO_wdt: Fix PMC GCR memory mapping
- failure
-Date: Fri, 17 Mar 2017 11:50:51 -0700
-Message-ID: <f0852768-6718-f999-0087-665971fc8ffb@linux.intel.com>
-References: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <2c41b3b6344f9cb455ac57e1e41aa229adb2867d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170317114313.GE24582@rajaneesh-OptiPlex-9010>
- <0a68f91f-e396-90aa-8337-cad3aa28a0f7@roeck-us.net>
- <CAHp75VdyW-kH2nzk63_A=XD62ftrMbSfbec9nBiKbexpP+9zkg@mail.gmail.com>
- <4e054912-1e6c-b92a-05c5-75610e621c64@linux.intel.com>
- <CAHp75VcQLCO2k_YC_-wAweH+JAhsZT5eJpwDNsRRHLM8BtXQEw@mail.gmail.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v9 4/4] platform/x86/dell-*: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Fri, 17 Mar 2017 15:33:05 -0700
+Message-ID: <20170317223305.GA18063@fury>
+References: <20170316105535.8885-1-hdegoede@redhat.com>
+ <20170316105535.8885-4-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcQLCO2k_YC_-wAweH+JAhsZT5eJpwDNsRRHLM8BtXQEw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, David Box <david.e.box@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:56689 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751061AbdCQWeP (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 17 Mar 2017 18:34:15 -0400
+Content-Disposition: inline
+In-Reply-To: <20170316105535.8885-4-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org
 
-Hi Andy,
+On Thu, Mar 16, 2017 at 11:55:35AM +0100, Hans de Goede wrote:
+> Make dell-wmi notify on hotkey kbd brightness changes, listen for this
+> in dell-laptop and call led_classdev_notify_brightness_hw_changed.
+> 
+> This will allow userspace to monitor (poll) for brightness changes on
+> these LEDs caused by the hotkey.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
+Thanks Hans, this appears to be consistent with the conclusion on v8 between you
+and Pali. While I don't care for the cross-driver-dependency, that's
+pre-existing and not something I have a solution for. So this looks good to me,
+pending Pali's final review.
 
-On 03/17/2017 11:38 AM, Andy Shevchenko wrote:
-> On Fri, Mar 17, 2017 at 7:37 PM, sathyanarayanan kuppuswamy
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> On 03/17/2017 07:25 AM, Andy Shevchenko wrote:
->>> On Fri, Mar 17, 2017 at 3:40 PM, Guenter Roeck <linux@roeck-us.net> wrote:
->>>> On 03/17/2017 04:43 AM, Rajneesh Bhardwaj wrote:
->>>>> On Thu, Mar 16, 2017 at 05:41:35PM -0700, Kuppuswamy Sathyanarayanan
->>>>> wrote:
->>> I already asked once [1] to fix up the mess we have in PDx86 regarding SCU
->>> IPC.
->>> (PMC IPC how it's called is actually just a [main] part of SCU in newer
->>> SoCs).
->>>
->>> Rajneesh, Kuppuswamy,
->>> please pay attention on the below.
->>>
->>> We have two libraries doing almost the same (basics) one for old
->>> platforms, one for new.
->>>
->>> My vision what should be done before we go further is:
->>> 1. Split out common part from intel_scu_ipc and intel_pmc_ipc to some
->>> library.
->> I think we should create MFD driver for PMC and remove the redundant
->> resource and platform device creation codes.
->> Yes, there is common code in IPC implementation between scu_ipc and pmc_ipc
->> code. This needs be modularized.
->>
->> I can work on it and send a RFC patch for this cleanup. But it could take
->> more time for merging this cleanup patch.
->> So I think, in the mean time, we should merge this watchdog fix first to
->> remove iTCO watchdog device probe issue.
-> I have heard already such excuses. Let's consider this as a "Last
-> Chinese Warning".
->
-> So, we consider reviewing applying *already floating around* patches
-> in exchange to looking forward for clean up next.
-> Do we have a deal?
-Deal.
->
-> Before you are going to implement anything in the code, please, share
-> a document (architectural point of view) how you would see things
-> should be done.
-> Also consider to address PMC (Atom drivers) and P-Unit drivers which
-> are related to SCU / IPC to have some structure.
-Will send out the design document summarizing the issues we want to 
-solve and a proposed design model.
->
->>> 2. Move headers to linux/platform_data/x86 for sharing with drivers
->>> that are supporting non-Intel / not-newest-Intel hardware.
->>> 3. Fix the mess inside the intel_pmc_ipc code (like use devm_()
->>> helpers where it makes sense, no use of global variables, etc)
->> Agreed.
->>>
->>> On top of that
->>> 4. Fix up Whiskey Cove PMIC code (See Hans' message [2] for the details)
->>>
->>> [1] Oops, it happened on internal mailing list Jan 27. And mentioned
->>> publicly after in a review on some patch here.
->>> [2] http://lkml.iu.edu/hypermail/linux/kernel/1702.3/01408.html
+Pali, I know you have had some reservations reading through the v8 discussion. I
+believe Hans has addressed each of those sufficiently for the purposes of this
+patch set. As a follow-on effort, I'd like to discuss the future of libsmbios
+with the Dell folks and see if we can't phase it out.
+
+Hans, a couple of nits on this patch. To keep the subject under 80, I used:
+
+platform/x86: dell-*: Call new led hw_changed API on kbd brightness change
+
+since you used the full led function name in the commit message anyway.
+
+I presume the changelog was intended to go after the --- and you didn't want it
+going into the commit itself, so I've removed it.
+
+I'll await Pali's final Reviewed-by before pushing to testing, but you can see
+my minor tweaks listed above in the dell branch:
+
+git://git.infradead.org/linux-platform-drivers-x86.git dell
+
+http://git.infradead.org/linux-platform-drivers-x86.git/log/refs/heads/dell
+
+Thanks,
 
 -- 
-Sathyanarayanan Kuppuswamy
-Android kernel developer
+Darren Hart
+VMware Open Source Technology Center
