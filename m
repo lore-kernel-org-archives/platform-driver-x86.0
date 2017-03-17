@@ -1,136 +1,78 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: intel_pmc_ipc: Add pmc gcr
- read/write api's
-Date: Fri, 17 Mar 2017 16:56:33 +0530
-Message-ID: <20170317112633.GD24582@rajaneesh-OptiPlex-9010>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] watchdog: iTCO_wdt: Fix PMC GCR memory mapping
+ failure
+Date: Fri, 17 Mar 2017 17:13:13 +0530
+Message-ID: <20170317114313.GE24582@rajaneesh-OptiPlex-9010>
 References: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f9bceaee4cb1c84f2cd34987ab6a443f5d367d4d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <2c41b3b6344f9cb455ac57e1e41aa229adb2867d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f9bceaee4cb1c84f2cd34987ab6a443f5d367d4d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, shanth.murthy@intel.com
+In-Reply-To: <2c41b3b6344f9cb455ac57e1e41aa229adb2867d.1489710235.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Mar 16, 2017 at 05:41:34PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> This patch adds API's to read/write PMC GC registers.
-> PMC dependent devices like iTCO_WDT, Telemetry has requirement
-> to acces GCR registers. These API's can be used for this
-> purpose.
+On Thu, Mar 16, 2017 at 05:41:35PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Currently, iTCO watchdog driver uses memory map to access
+> PMC_CFG GCR register. But the entire GCR address space is
+> already mapped in intel_scu_ipc driver. So remapping the
+
+intel_pmc_ipc driver.
+
+> GCR register in this driver causes the mem request failure in
+> iTCO_wdt probe function. This patch fixes this issue by
+> using PMC GCR read/write API's to access PMC_CFG register.
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
->  arch/x86/include/asm/intel_pmc_ipc.h | 16 ++++++++++++++++
->  drivers/platform/x86/intel_pmc_ipc.c | 14 ++++++++++++++
->  2 files changed, 30 insertions(+)
+>  drivers/watchdog/iTCO_wdt.c | 31 +++++++------------------------
+>  1 file changed, 7 insertions(+), 24 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-> index 4291b6a..017429d 100644
-> --- a/arch/x86/include/asm/intel_pmc_ipc.h
-> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
-> @@ -23,6 +23,10 @@
->  #define IPC_ERR_EMSECURITY		6
->  #define IPC_ERR_UNSIGNEDKERNEL		7
+> diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+> index 3d0abc0..31abfc5 100644
+> --- a/drivers/watchdog/iTCO_wdt.c
+> +++ b/drivers/watchdog/iTCO_wdt.c
+> @@ -68,6 +68,8 @@
+>  #include <linux/io.h>			/* For inb/outb/... */
+>  #include <linux/platform_data/itco_wdt.h>
 >  
-> +/* GCR reg offsets from gcr base*/
-> +#define PMC_GCR_PRSTS_REG		0x00
-
-remove.
-
-> +#define PMC_GCR_PMC_CFG_REG		0x08
+> +#include <asm/intel_pmc_ipc.h>
 > +
->  #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+>  #include "iTCO_vendor.h"
 >  
->  int intel_pmc_ipc_simple_command(int cmd, int sub);
-> @@ -31,6 +35,8 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
->  int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
->  		u32 *out, u32 outlen);
->  int intel_pmc_s0ix_counter_read(u64 *data);
-> +u32 intel_pmc_gcr_read(u32 offset);
+>  /* Address definitions for the TCO */
+> @@ -94,12 +96,6 @@ struct iTCO_wdt_private {
+>  	unsigned int iTCO_version;
+>  	struct resource *tco_res;
+>  	struct resource *smi_res;
+> -	/*
+> -	 * NO_REBOOT flag is Memory-Mapped GCS register bit 5 (TCO version 2),
+> -	 * or memory-mapped PMC register bit 4 (TCO version 3).
+> -	 */
 
-consider changing the signature to read data as out param and use return
-value for better error handling since exported API can be called from
-anywhere in the kernel.
+Better to retain this comment elsewhere.
 
-> +void intel_pmc_gcr_write(u32 offset, u32 data);
-
-ditto.
-
+> -	struct resource *gcs_pmc_res;
+> -	unsigned long __iomem *gcs_pmc;
+>  	/* the lock for io operations */
+>  	spinlock_t io_lock;
+>  	/* the PCI-device */
+> @@ -176,9 +172,9 @@ static void iTCO_wdt_set_NO_REBOOT_bit(struct iTCO_wdt_private *p)
 >  
->  #else
->  
-> @@ -56,6 +62,16 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
->  	return -EINVAL;
->  }
->  
-> +static inline u32 intel_pmc_gcr_read(u32 offset)
-> +{
-> +	return -EINVAL;
-> +}
-> +
+>  	/* Set the NO_REBOOT bit: this disables reboots */
+>  	if (p->iTCO_version >= 2) {
+> -		val32 = readl(p->gcs_pmc);
+> +		val32 = intel_pmc_gcr_read(PMC_GCR_PMC_CFG_REG);
 
-samew as above.
+better to have protection and error handling, discussed in v2, 2/4.
 
-> +static inline void intel_pmc_gcr_write(u32 offset, u32 data)
-> +{
-> +	return;
-> +}
-> +
+compiled and tested this on APL and i see iTCO_WDT driver loads fine. Since
+it impacts core WDT functionality, need to be thoroughly tested on various
+platforms.
 
-ditto.
-
->  #endif /*CONFIG_INTEL_PMC_IPC*/
->  
->  #endif
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index 0a33592..12018f3 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -127,6 +127,7 @@ static struct intel_pmc_ipc_dev {
->  
->  	/* gcr */
->  	resource_size_t gcr_base;
-> +	void __iomem *gcr_mem_base;
->  	int gcr_size;
->  	bool has_gcr_regs;
->  
-> @@ -199,6 +200,18 @@ static inline u64 gcr_data_readq(u32 offset)
->  	return readq(ipcdev.ipc_base + offset);
->  }
->  
-> +u32 intel_pmc_gcr_read(u32 offset)
-> +{
-> +	return readl(ipcdev.gcr_mem_base + offset);
-> +}
-
-what happens when this is called with a wrong offset on IPC enabled
-platforms?
-
-> +EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
-> +
-> +void intel_pmc_gcr_write(u32 offset, u32 data)
-> +{
-> +	writel(data, ipcdev.gcr_mem_base + offset);
-> +}
-
-same as above.
-
-> +EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-> +
->  static int intel_pmc_ipc_check_status(void)
->  {
->  	int status;
-> @@ -747,6 +760,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
->  	ipcdev.ipc_base = addr;
->  
->  	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
-> +	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
->  	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
->  	dev_info(&pdev->dev, "ipc res: %pR\n", res);
->  
 > -- 
 > 2.7.4
 > 
@@ -138,3 +80,7 @@ same as above.
 -- 
 Best Regards,
 Rajneesh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
