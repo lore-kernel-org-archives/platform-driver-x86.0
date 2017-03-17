@@ -1,85 +1,139 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] watchdog: iTCO_wdt: Fix PMC GCR memory mapping failure
-Date: Fri, 17 Mar 2017 20:38:21 +0200
-Message-ID: <CAHp75VcQLCO2k_YC_-wAweH+JAhsZT5eJpwDNsRRHLM8BtXQEw@mail.gmail.com>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] watchdog: iTCO_wdt: Fix PMC GCR memory mapping
+ failure
+Date: Fri, 17 Mar 2017 11:39:59 -0700
+Message-ID: <852c28e1-4aae-5289-cf51-dd7c8ba6d733@linux.intel.com>
 References: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
  <2c41b3b6344f9cb455ac57e1e41aa229adb2867d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170317114313.GE24582@rajaneesh-OptiPlex-9010> <0a68f91f-e396-90aa-8337-cad3aa28a0f7@roeck-us.net>
- <CAHp75VdyW-kH2nzk63_A=XD62ftrMbSfbec9nBiKbexpP+9zkg@mail.gmail.com> <4e054912-1e6c-b92a-05c5-75610e621c64@linux.intel.com>
+ <20170317114313.GE24582@rajaneesh-OptiPlex-9010>
+ <0a68f91f-e396-90aa-8337-cad3aa28a0f7@roeck-us.net>
+ <b0d660b8-219a-ebd7-e7c4-cdd261e5a081@linux.intel.com>
+ <20170317175052.GA23030@roeck-us.net>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4e054912-1e6c-b92a-05c5-75610e621c64-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170317175052.GA23030@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, wim@iguana.be
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 17, 2017 at 7:37 PM, sathyanarayanan kuppuswamy
-<sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> On 03/17/2017 07:25 AM, Andy Shevchenko wrote:
->> On Fri, Mar 17, 2017 at 3:40 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+
+
+On 03/17/2017 10:50 AM, Guenter Roeck wrote:
+> On Fri, Mar 17, 2017 at 10:24:35AM -0700, sathyanarayanan kuppuswamy wrote:
+>>
+>> On 03/17/2017 06:40 AM, Guenter Roeck wrote:
 >>> On 03/17/2017 04:43 AM, Rajneesh Bhardwaj wrote:
 >>>> On Thu, Mar 16, 2017 at 05:41:35PM -0700, Kuppuswamy Sathyanarayanan
 >>>> wrote:
+>>>>> Currently, iTCO watchdog driver uses memory map to access
+>>>>> PMC_CFG GCR register. But the entire GCR address space is
+>>>>> already mapped in intel_scu_ipc driver. So remapping the
+>>>> intel_pmc_ipc driver.
+>>>>
+>>>>> GCR register in this driver causes the mem request failure in
+>>>>> iTCO_wdt probe function. This patch fixes this issue by
+>>>>> using PMC GCR read/write API's to access PMC_CFG register.
+>>>>>
+>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan
+>>>>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>> ---
+>>>>> drivers/watchdog/iTCO_wdt.c | 31 +++++++------------------------
+>>>>> 1 file changed, 7 insertions(+), 24 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+>>>>> index 3d0abc0..31abfc5 100644
+>>>>> --- a/drivers/watchdog/iTCO_wdt.c
+>>>>> +++ b/drivers/watchdog/iTCO_wdt.c
+>>>>> @@ -68,6 +68,8 @@
+>>>>> #include <linux/io.h>            /* For inb/outb/... */
+>>>>> #include <linux/platform_data/itco_wdt.h>
+>>>>>
+>>>>> +#include <asm/intel_pmc_ipc.h>
+>>>>> +
+>>>>> #include "iTCO_vendor.h"
+>>>>>
+>>>>> /* Address definitions for the TCO */
+>>>>> @@ -94,12 +96,6 @@ struct iTCO_wdt_private {
+>>>>>      unsigned int iTCO_version;
+>>>>>      struct resource *tco_res;
+>>>>>      struct resource *smi_res;
+>>>>> -    /*
+>>>>> -     * NO_REBOOT flag is Memory-Mapped GCS register bit 5 (TCO
+>>>>> version 2),
+>>>>> -     * or memory-mapped PMC register bit 4 (TCO version 3).
+>>>>> -     */
+>>>> Better to retain this comment elsewhere.
+>>>>
+>>>>> -    struct resource *gcs_pmc_res;
+>>>>> -    unsigned long __iomem *gcs_pmc;
+>>>>>      /* the lock for io operations */
+>>>>>      spinlock_t io_lock;
+>>>>>      /* the PCI-device */
+>>>>> @@ -176,9 +172,9 @@ static void iTCO_wdt_set_NO_REBOOT_bit(struct
+>>>>> iTCO_wdt_private *p)
+>>>>>
+>>>>>      /* Set the NO_REBOOT bit: this disables reboots */
+>>>>>      if (p->iTCO_version >= 2) {
+>>>>> -        val32 = readl(p->gcs_pmc);
+>>>>> +        val32 = intel_pmc_gcr_read(PMC_GCR_PMC_CFG_REG);
+>>>> better to have protection and error handling, discussed in v2, 2/4.
+>>>>
+>>>> compiled and tested this on APL and i see iTCO_WDT driver loads fine.
+>>>> Since
+>>>> it impacts core WDT functionality, need to be thoroughly tested on
+>>>> various
+>>>> platforms.
+>>>>
+>>> I don't think I (or the watchdog mailing list) was copied on the original
+>>> patch.
+>> Sorry. Its my mistake. I will fix it in next series update.
+>>> Major immediate concern is that this introduces a dependency on external
+>>> code.
+>>> The pmc_ipc driver's Kconfig entry states "This is not needed for PC-type
+>>> machines". I don't know where the function is introduced, but I hope this
+>>> change
+>>> does not require the pmc_ipc code to be present on such machines for the
+>>> watchdog
+>>> to work. It would be bad if it does. If it doesn't, it appears that the
+>>> function
+>>> should not be declared in asm/intel_pmc_ipc.h.
+>> It should not create any compile time dependency with INTEL_PMC_IPC config
+>> option. If INTEL_PMC_IPC_CONFIG is disabled, we use
+>> empty definitions for these calls defined in asm/intel_pmc_ipc.h
+>>
+> So the watchdog driver would get an error if CONFIG_INTEL_PMC_IPC
+> is not defined ? And that is supposed to be acceptable ?
+Sorry, It looks like I missed your point in your previous email.  I 
+thought that gcs_pmc mem resource will be used only if watchdog device 
+is enumerated by intel_pmc_ipc.c
 
->> I already asked once [1] to fix up the mess we have in PDx86 regarding SCU
->> IPC.
->> (PMC IPC how it's called is actually just a [main] part of SCU in newer
->> SoCs).
->>
->> Rajneesh, Kuppuswamy,
->> please pay attention on the below.
->>
->> We have two libraries doing almost the same (basics) one for old
->> platforms, one for new.
->>
->> My vision what should be done before we go further is:
->> 1. Split out common part from intel_scu_ipc and intel_pmc_ipc to some
->> library.
+After reviewing the code again, I found out this iTCO_wdt driver can 
+also be enumerated by drivers/mfd/lpc_ich.c and 
+drivers/i2c/busses/i2c-i801.c. Both these drivers pass the GCS as memory 
+resource. So using intel_pmc_ipc specific calls will break watchdog 
+functionality if its enumerated by any device other than intel_pmic_ipc.c
+
+May be I should add a flag for ipc case in itco_wdt_platform_data and 
+handle this as a special case.
 >
-> I think we should create MFD driver for PMC and remove the redundant
-> resource and platform device creation codes.
-> Yes, there is common code in IPC implementation between scu_ipc and pmc_ipc
-> code. This needs be modularized.
+>> But iTCO_wdt driver already has runtime dependency with INTEL_PMIC_IPC if
+>> its version iTCO_version >= 2.
+>>
+> Unless I am missing something, there is no explicit dependency. AFAICS
+> the watchdog driver works just fine if INTEL_PMIC_IPC is not enabled,
+> and/or if it is built as module and the module is not loaded.
 >
-> I can work on it and send a RFC patch for this cleanup. But it could take
-> more time for merging this cleanup patch.
-> So I think, in the mean time, we should merge this watchdog fix first to
-> remove iTCO watchdog device probe issue.
-
-I have heard already such excuses. Let's consider this as a "Last
-Chinese Warning".
-
-So, we consider reviewing applying *already floating around* patches
-in exchange to looking forward for clean up next.
-Do we have a deal?
-
-Before you are going to implement anything in the code, please, share
-a document (architectural point of view) how you would see things
-should be done.
-Also consider to address PMC (Atom drivers) and P-Unit drivers which
-are related to SCU / IPC to have some structure.
-
->> 2. Move headers to linux/platform_data/x86 for sharing with drivers
->> that are supporting non-Intel / not-newest-Intel hardware.
->> 3. Fix the mess inside the intel_pmc_ipc code (like use devm_()
->> helpers where it makes sense, no use of global variables, etc)
+> Maybe you mean that the watchdog driver doesn't load if the INTEL_PMIC_IPC
+> driver is loaded. That would be a bug, not a dependency.
 >
-> Agreed.
->>
->>
->> On top of that
->> 4. Fix up Whiskey Cove PMIC code (See Hans' message [2] for the details)
->>
->> [1] Oops, it happened on internal mailing list Jan 27. And mentioned
->> publicly after in a review on some patch here.
->> [2] http://lkml.iu.edu/hypermail/linux/kernel/1702.3/01408.html
+> Guenter
+>
 
 -- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sathyanarayanan Kuppuswamy
+Android kernel developer
