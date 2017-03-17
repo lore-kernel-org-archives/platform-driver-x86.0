@@ -1,48 +1,136 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH v2 1/4] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Fri, 17 Mar 2017 16:43:11 +0530
-Message-ID: <20170317111310.GC24582@rajaneesh-OptiPlex-9010>
-References: <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
- <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 2/4] platform/x86: intel_pmc_ipc: Add pmc gcr
+ read/write api's
+Date: Fri, 17 Mar 2017 16:56:33 +0530
+Message-ID: <20170317112633.GD24582@rajaneesh-OptiPlex-9010>
+References: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f9bceaee4cb1c84f2cd34987ab6a443f5d367d4d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <f9bceaee4cb1c84f2cd34987ab6a443f5d367d4d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, shanth.murthy@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Mar 16, 2017 at 05:41:33PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> According to the PMC spec, gcr offset from ipc mem
-> region is 0x1000(4K). But currently this driver uses
-> 0x1008 as gcr offset. This patch fixes this issue.
->
-
-This one is fine and was one of the WIP patches. This now enables further
-cleanup and we should re-align GCR_TELEM_DEEP_S0IX_OFFSET from gcr_base.
-
-CC: Shanth Murthy <shanth.murthy@intel.com>
- 
+On Thu, Mar 16, 2017 at 05:41:34PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> This patch adds API's to read/write PMC GC registers.
+> PMC dependent devices like iTCO_WDT, Telemetry has requirement
+> to acces GCR registers. These API's can be used for this
+> purpose.
+> 
 > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/x86/include/asm/intel_pmc_ipc.h | 16 ++++++++++++++++
+>  drivers/platform/x86/intel_pmc_ipc.c | 14 ++++++++++++++
+>  2 files changed, 30 insertions(+)
 > 
+> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+> index 4291b6a..017429d 100644
+> --- a/arch/x86/include/asm/intel_pmc_ipc.h
+> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
+> @@ -23,6 +23,10 @@
+>  #define IPC_ERR_EMSECURITY		6
+>  #define IPC_ERR_UNSIGNEDKERNEL		7
+>  
+> +/* GCR reg offsets from gcr base*/
+> +#define PMC_GCR_PRSTS_REG		0x00
+
+remove.
+
+> +#define PMC_GCR_PMC_CFG_REG		0x08
+> +
+>  #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+>  
+>  int intel_pmc_ipc_simple_command(int cmd, int sub);
+> @@ -31,6 +35,8 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+>  int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+>  		u32 *out, u32 outlen);
+>  int intel_pmc_s0ix_counter_read(u64 *data);
+> +u32 intel_pmc_gcr_read(u32 offset);
+
+consider changing the signature to read data as out param and use return
+value for better error handling since exported API can be called from
+anywhere in the kernel.
+
+> +void intel_pmc_gcr_write(u32 offset, u32 data);
+
+ditto.
+
+>  
+>  #else
+>  
+> @@ -56,6 +62,16 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
+>  	return -EINVAL;
+>  }
+>  
+> +static inline u32 intel_pmc_gcr_read(u32 offset)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+
+samew as above.
+
+> +static inline void intel_pmc_gcr_write(u32 offset, u32 data)
+> +{
+> +	return;
+> +}
+> +
+
+ditto.
+
+>  #endif /*CONFIG_INTEL_PMC_IPC*/
+>  
+>  #endif
 > diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index 0651d47..0a33592 100644
+> index 0a33592..12018f3 100644
 > --- a/drivers/platform/x86/intel_pmc_ipc.c
 > +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -82,7 +82,7 @@
->  /* exported resources from IFWI */
->  #define PLAT_RESOURCE_IPC_INDEX		0
->  #define PLAT_RESOURCE_IPC_SIZE		0x1000
-> -#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-> +#define PLAT_RESOURCE_GCR_OFFSET	0x1000
->  #define PLAT_RESOURCE_GCR_SIZE		0x1000
->  #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
->  #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+> @@ -127,6 +127,7 @@ static struct intel_pmc_ipc_dev {
+>  
+>  	/* gcr */
+>  	resource_size_t gcr_base;
+> +	void __iomem *gcr_mem_base;
+>  	int gcr_size;
+>  	bool has_gcr_regs;
+>  
+> @@ -199,6 +200,18 @@ static inline u64 gcr_data_readq(u32 offset)
+>  	return readq(ipcdev.ipc_base + offset);
+>  }
+>  
+> +u32 intel_pmc_gcr_read(u32 offset)
+> +{
+> +	return readl(ipcdev.gcr_mem_base + offset);
+> +}
+
+what happens when this is called with a wrong offset on IPC enabled
+platforms?
+
+> +EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
+> +
+> +void intel_pmc_gcr_write(u32 offset, u32 data)
+> +{
+> +	writel(data, ipcdev.gcr_mem_base + offset);
+> +}
+
+same as above.
+
+> +EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+> +
+>  static int intel_pmc_ipc_check_status(void)
+>  {
+>  	int status;
+> @@ -747,6 +760,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>  	ipcdev.ipc_base = addr;
+>  
+>  	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
+> +	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+>  	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
+>  	dev_info(&pdev->dev, "ipc res: %pR\n", res);
+>  
 > -- 
 > 2.7.4
 > 
