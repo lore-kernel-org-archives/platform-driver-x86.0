@@ -1,141 +1,65 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 1/3] mfd: intel_soc_pmic: Fix a mess with compilation units
-Date: Fri, 17 Mar 2017 17:37:13 +0200
-Message-ID: <20170317153715.48555-1-andriy.shevchenko@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 1/4] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Fri, 17 Mar 2017 10:06:27 -0700
+Message-ID: <d5a5ba7d-4c29-8879-69cb-e1b68f7d15b2@linux.intel.com>
+References: <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
+ <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170317111310.GC24582@rajaneesh-OptiPlex-9010>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:64623 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751151AbdCQRKK (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 17 Mar 2017 13:10:10 -0400
+In-Reply-To: <20170317111310.GC24582@rajaneesh-OptiPlex-9010>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, shanth.murthy@intel.com
 
-Crystal Cove and Whiskey Cove are two different PMICs which are
-installed on Intel Atom SoC based platforms.
 
-Moreover there are two independent drivers that by some reason were
-supposed (*) to get into one kernel module.
 
-Fix the mess by clarifying Kconfig option for Crystal Cove and split
-Whiskey Cove out of it.
+On 03/17/2017 04:13 AM, Rajneesh Bhardwaj wrote:
+> On Thu, Mar 16, 2017 at 05:41:33PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> According to the PMC spec, gcr offset from ipc mem
+>> region is 0x1000(4K). But currently this driver uses
+>> 0x1008 as gcr offset. This patch fixes this issue.
+>>
+> This one is fine and was one of the WIP patches. This now enables further
+> cleanup and we should re-align GCR_TELEM_DEEP_S0IX_OFFSET from gcr_base.
+Since S0IX_OFFSET currently does not use GCR_OFFSET as base, I think 
+that change is irrelevant to this fix.
+I can submit another patch for S0IX_OFFSET cleanup.
+>
+> CC: Shanth Murthy <shanth.murthy@intel.com>
+>   
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+>> index 0651d47..0a33592 100644
+>> --- a/drivers/platform/x86/intel_pmc_ipc.c
+>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+>> @@ -82,7 +82,7 @@
+>>   /* exported resources from IFWI */
+>>   #define PLAT_RESOURCE_IPC_INDEX		0
+>>   #define PLAT_RESOURCE_IPC_SIZE		0x1000
+>> -#define PLAT_RESOURCE_GCR_OFFSET	0x1008
+>> +#define PLAT_RESOURCE_GCR_OFFSET	0x1000
+>>   #define PLAT_RESOURCE_GCR_SIZE		0x1000
+>>   #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+>>   #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+>> -- 
+>> 2.7.4
+>>
 
-(*) It looks like the configuration was never tested with
-    INTEL_SOC_PMIC=n. The line in Makefile is actually wrong.
-
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
-Cc: Linus Walleij <linus.walleij@linaro.org> (maintainer:GPIO SUBSYSTEM)
-Cc: Zhang Rui <rui.zhang@intel.com> (supporter:THERMAL)
-Cc: Eduardo Valentin <edubezval@gmail.com> (supporter:THERMAL)
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- make option visible
-- fix dependencies
- drivers/acpi/Kconfig         |  2 +-
- drivers/gpio/Kconfig         |  2 +-
- drivers/mfd/Kconfig          | 14 ++++++++++++--
- drivers/mfd/Makefile         |  2 +-
- drivers/platform/x86/Kconfig |  2 +-
- drivers/thermal/Kconfig      |  2 +-
- 6 files changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 83e5f7e1a20d..03708e08fcb4 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -512,7 +512,7 @@ config XPOWER_PMIC_OPREGION
- 
- config BXT_WC_PMIC_OPREGION
- 	bool "ACPI operation region support for BXT WhiskeyCove PMIC"
--	depends on INTEL_SOC_PMIC
-+	depends on INTEL_SOC_PMIC_BXTWC
- 	help
- 	  This config adds ACPI operation region support for BXT WhiskeyCove PMIC.
- 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 05043071fc98..9b1bcb4d0df7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1054,7 +1054,7 @@ config GPIO_UCB1400
- 
- config GPIO_WHISKEY_COVE
- 	tristate "GPIO support for Whiskey Cove PMIC"
--	depends on (X86 || COMPILE_TEST) && INTEL_SOC_PMIC
-+	depends on (X86 || COMPILE_TEST) && INTEL_SOC_PMIC_BXTWC
- 	select GPIOLIB_IRQCHIP
- 	help
- 	  Support for GPIO pins on Whiskey Cove PMIC.
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 55ecdfb74d31..e43afb8956ea 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -425,18 +425,28 @@ config LPC_SCH
- 	  System Management Bus and General Purpose I/O.
- 
- config INTEL_SOC_PMIC
--	bool "Support for Intel Atom SoC PMIC"
-+	bool "Support for Crystal Cove PMIC"
- 	depends on GPIOLIB
- 	depends on I2C=y
- 	select MFD_CORE
- 	select REGMAP_I2C
- 	select REGMAP_IRQ
- 	help
--	  Select this option to enable support for the PMIC device
-+	  Select this option to enable support for Crystal Cove PMIC
- 	  on some Intel SoC systems. The PMIC provides ADC, GPIO,
- 	  thermal, charger and related power management functions
- 	  on these systems.
- 
-+config INTEL_SOC_PMIC_BXTWC
-+	tristate "Support for Intel Broxton Whiskey Cove PMIC"
-+	select MFD_CORE
-+	select REGMAP_IRQ
-+	help
-+	  Select this option to enable support for Whiskey Cove PMIC
-+	  on Intel Broxton systems. The PMIC provides ADC, GPIO,
-+	  thermal, charger and related power management functions
-+	  on these systems.
-+
- config MFD_INTEL_LPSS
- 	tristate
- 	select COMMON_CLK
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 31ce07611a6f..201aeaf5112a 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -207,8 +207,8 @@ obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
- obj-$(CONFIG_MFD_SKY81452)	+= sky81452.o
- 
- intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
--intel-soc-pmic-$(CONFIG_INTEL_PMC_IPC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
-+obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
- 
- obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e1bffc9bb194..883fbe7a2466 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1019,7 +1019,7 @@ config INTEL_PMC_IPC
- config INTEL_BXTWC_PMIC_TMU
- 	tristate "Intel BXT Whiskey Cove TMU Driver"
- 	depends on REGMAP
--	depends on INTEL_SOC_PMIC && INTEL_PMC_IPC
-+	depends on INTEL_SOC_PMIC_BXTWC && INTEL_PMC_IPC
- 	---help---
- 	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
- 	  This driver enables the alarm wakeup functionality in the TMU unit
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 776b34396144..751e50a3d946 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -365,7 +365,7 @@ endmenu
- 
- config INTEL_BXT_PMIC_THERMAL
- 	tristate "Intel Broxton PMIC thermal driver"
--	depends on X86 && INTEL_SOC_PMIC && REGMAP
-+	depends on X86 && INTEL_SOC_PMIC_BXTWC && REGMAP
- 	help
- 	  Select this driver for Intel Broxton PMIC with ADC channels monitoring
- 	  system temperature measurements and alerts.
 -- 
-2.11.0
+Sathyanarayanan Kuppuswamy
+Android kernel developer
