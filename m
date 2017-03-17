@@ -1,46 +1,113 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: Skip unknown key messages 0x50 0x51
-Date: Thu, 16 Mar 2017 16:54:30 -0700
-Message-ID: <20170316235430.GD2935@dtor-ws>
-References: <20170210174837.1078-1-pespin.shar@gmail.com>
- <CAHp75VfnbO_9gCfYJYCvnE-w=hkYORi+7pL5NpQCVf3UxTYZNw@mail.gmail.com>
- <CAEGpDuaw3uJoxbyOuTWyBodM-JgMd2hSqZUgg_wbyJa+9sJOjw@mail.gmail.com>
- <CAEGpDuZyFrN0CHy-E+FTwgSLfUKbA65ghenmq_fVK2qw1KDiPg@mail.gmail.com>
- <CAHp75Vem5Rxa+Ms5zop2zCHqExQfv9WPufQ6jPdCBpQQh0AN=w@mail.gmail.com>
- <20170223083631.GE18639@dtor-ws>
- <CAEGpDub7-ou3YJAOxxK-vj9RYNMp5ER752XMFVLdB8zWWisV8Q@mail.gmail.com>
- <20170307192701.GG13740@dtor-ws>
- <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeuhiRvmxhy886N746KvXQq9ye8CG70DQ7UyU8=0PW1tg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pau Espin Pedrol <pespin.shar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "dvhart@infradead.org" <dvhart@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Kuppuswamy Sathyanarayanan
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2 2/4] platform/x86: intel_pmc_ipc: Add pmc gcr read/write api's
+Date: Thu, 16 Mar 2017 17:41:34 -0700
+Message-ID: <f9bceaee4cb1c84f2cd34987ab6a443f5d367d4d.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:48207 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752856AbdCQAqr (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 16 Mar 2017 20:46:47 -0400
+In-Reply-To: <20170316192003.GA19344@rajaneesh-OptiPlex-9010>
+In-Reply-To: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <b89221c652d06c3c07fdf2ec32fd4fc8930c64df.1489710235.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, david.e.box@linux.intel.com
+Cc: rajneesh.bhardwaj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 06:04:42PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 7, 2017 at 9:27 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On Fri, Feb 24, 2017 at 02:01:30PM +0100, Pau Espin Pedrol wrote:
-> >> >> Dmitry, do we have special events for AC (un)plug? What is the best
-> >> >> approach in your opinion?
-> >> >
-> >> > Not route them through input as they not input events would be the best.
-> >> >
-> >> Is my patch good enough for this or would you recommend doing it another way?
-> >
-> 
-> > From input POV your patch makes sense.
-> 
-> Could you give your tag?
+This patch adds API's to read/write PMC GC registers.
+PMC dependent devices like iTCO_WDT, Telemetry has requirement
+to acces GCR registers. These API's can be used for this
+purpose.
 
-Sorry for the delay, I was out of service for a couple of days. I see
-that Darren already picked up the patch, anyway, for the record:
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ arch/x86/include/asm/intel_pmc_ipc.h | 16 ++++++++++++++++
+ drivers/platform/x86/intel_pmc_ipc.c | 14 ++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index 4291b6a..017429d 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -23,6 +23,10 @@
+ #define IPC_ERR_EMSECURITY		6
+ #define IPC_ERR_UNSIGNEDKERNEL		7
+ 
++/* GCR reg offsets from gcr base*/
++#define PMC_GCR_PRSTS_REG		0x00
++#define PMC_GCR_PMC_CFG_REG		0x08
++
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+ 
+ int intel_pmc_ipc_simple_command(int cmd, int sub);
+@@ -31,6 +35,8 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
++u32 intel_pmc_gcr_read(u32 offset);
++void intel_pmc_gcr_write(u32 offset, u32 data);
+ 
+ #else
+ 
+@@ -56,6 +62,16 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
+ 	return -EINVAL;
+ }
+ 
++static inline u32 intel_pmc_gcr_read(u32 offset)
++{
++	return -EINVAL;
++}
++
++static inline void intel_pmc_gcr_write(u32 offset, u32 data)
++{
++	return;
++}
++
+ #endif /*CONFIG_INTEL_PMC_IPC*/
+ 
+ #endif
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 0a33592..12018f3 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -127,6 +127,7 @@ static struct intel_pmc_ipc_dev {
+ 
+ 	/* gcr */
+ 	resource_size_t gcr_base;
++	void __iomem *gcr_mem_base;
+ 	int gcr_size;
+ 	bool has_gcr_regs;
+ 
+@@ -199,6 +200,18 @@ static inline u64 gcr_data_readq(u32 offset)
+ 	return readq(ipcdev.ipc_base + offset);
+ }
+ 
++u32 intel_pmc_gcr_read(u32 offset)
++{
++	return readl(ipcdev.gcr_mem_base + offset);
++}
++EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
++
++void intel_pmc_gcr_write(u32 offset, u32 data)
++{
++	writel(data, ipcdev.gcr_mem_base + offset);
++}
++EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
++
+ static int intel_pmc_ipc_check_status(void)
+ {
+ 	int status;
+@@ -747,6 +760,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+ 	ipcdev.ipc_base = addr;
+ 
+ 	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
++	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+ 	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
+ 	dev_info(&pdev->dev, "ipc res: %pR\n", res);
+ 
 -- 
-Dmitry
+2.7.4
