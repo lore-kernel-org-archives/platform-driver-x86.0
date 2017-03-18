@@ -1,62 +1,40 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v9 4/4] platform/x86/dell-*: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Fri, 17 Mar 2017 15:33:05 -0700
-Message-ID: <20170317223305.GA18063@fury>
-References: <20170316105535.8885-1-hdegoede@redhat.com>
- <20170316105535.8885-4-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kuppuswamy Sathyanarayanan
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v3 1/5] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Fri, 17 Mar 2017 19:06:18 -0700
+Message-ID: <1ee0cc63c5ad4d4581fa46ae5e72001f0ac341c0.1489801590.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:56689 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751061AbdCQWeP (ORCPT
+Received: from mga07.intel.com ([134.134.136.100]:22327 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751117AbdCRCOB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Mar 2017 18:34:15 -0400
-Content-Disposition: inline
-In-Reply-To: <20170316105535.8885-4-hdegoede@redhat.com>
+        Fri, 17 Mar 2017 22:14:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org
+To: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net
+Cc: wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, rajneesh.bhardwaj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 
-On Thu, Mar 16, 2017 at 11:55:35AM +0100, Hans de Goede wrote:
-> Make dell-wmi notify on hotkey kbd brightness changes, listen for this
-> in dell-laptop and call led_classdev_notify_brightness_hw_changed.
-> 
-> This will allow userspace to monitor (poll) for brightness changes on
-> these LEDs caused by the hotkey.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+According to the PMC spec, gcr offset from ipc mem
+region is 0x1000(4K). But currently this driver uses
+0x1008 as gcr offset. This patch fixes this issue.
 
-Thanks Hans, this appears to be consistent with the conclusion on v8 between you
-and Pali. While I don't care for the cross-driver-dependency, that's
-pre-existing and not something I have a solution for. So this looks good to me,
-pending Pali's final review.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Pali, I know you have had some reservations reading through the v8 discussion. I
-believe Hans has addressed each of those sufficiently for the purposes of this
-patch set. As a follow-on effort, I'd like to discuss the future of libsmbios
-with the Dell folks and see if we can't phase it out.
-
-Hans, a couple of nits on this patch. To keep the subject under 80, I used:
-
-platform/x86: dell-*: Call new led hw_changed API on kbd brightness change
-
-since you used the full led function name in the commit message anyway.
-
-I presume the changelog was intended to go after the --- and you didn't want it
-going into the commit itself, so I've removed it.
-
-I'll await Pali's final Reviewed-by before pushing to testing, but you can see
-my minor tweaks listed above in the dell branch:
-
-git://git.infradead.org/linux-platform-drivers-x86.git dell
-
-http://git.infradead.org/linux-platform-drivers-x86.git/log/refs/heads/dell
-
-Thanks,
-
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 0651d47..0a33592 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -82,7 +82,7 @@
+ /* exported resources from IFWI */
+ #define PLAT_RESOURCE_IPC_INDEX		0
+ #define PLAT_RESOURCE_IPC_SIZE		0x1000
+-#define PLAT_RESOURCE_GCR_OFFSET	0x1008
++#define PLAT_RESOURCE_GCR_OFFSET	0x1000
+ #define PLAT_RESOURCE_GCR_SIZE		0x1000
+ #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+ #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.7.4
