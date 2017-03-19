@@ -1,39 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/3] mfd: intel_soc_pmic: Fix a mess with compilation units
-Date: Sat, 18 Mar 2017 17:59:30 +0100
-Message-ID: <CACRpkdYVP0snBv_K18qkKgDBVEZ19RYkDLb5Kp9dVTBo7rOAcA@mail.gmail.com>
-References: <20170317153715.48555-1-andriy.shevchenko@linux.intel.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v9 4/4] platform/x86/dell-*: Call led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Sun, 19 Mar 2017 16:10:38 +0100
+Message-ID: <201703191610.38557@pali>
+References: <20170316105535.8885-1-hdegoede@redhat.com> <20170316105535.8885-4-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170317153715.48555-1-andriy.shevchenko@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart1747596.NDh4XfBSZ3";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f44.google.com ([74.125.82.44]:36867 "EHLO
+        mail-wm0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751513AbdCSPLY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 19 Mar 2017 11:11:24 -0400
+Received: by mail-wm0-f44.google.com with SMTP id n11so47349561wma.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Mar 2017 08:10:41 -0700 (PDT)
+In-Reply-To: <20170316105535.8885-4-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 17, 2017 at 4:37 PM, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+--nextPart1747596.NDh4XfBSZ3
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Crystal Cove and Whiskey Cove are two different PMICs which are
-> installed on Intel Atom SoC based platforms.
->
-> Moreover there are two independent drivers that by some reason were
-> supposed (*) to get into one kernel module.
->
-> Fix the mess by clarifying Kconfig option for Crystal Cove and split
-> Whiskey Cove out of it.
->
-> (*) It looks like the configuration was never tested with
->     INTEL_SOC_PMIC=n. The line in Makefile is actually wrong.
->
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
-> Cc: Linus Walleij <linus.walleij@linaro.org> (maintainer:GPIO SUBSYSTEM)
-> Cc: Zhang Rui <rui.zhang@intel.com> (supporter:THERMAL)
-> Cc: Eduardo Valentin <edubezval@gmail.com> (supporter:THERMAL)
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thursday 16 March 2017 11:55:35 Hans de Goede wrote:
+> Changes in v9:
+> -Only listen to type 0x0010 kbd-led events in dell-wmi.c, these only
+> trigger on hotkey presses
+> -Drop the new / previous brightness comparison from dell-laptop.c now
+> that we only get events on hotkey presses it is no longer necessary
+> ---
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Hi! I'm really not sure if this change is correct there.
 
-Yours,
-Linus Walleij
+Now you are only listening for keypress "change kbd backlight", but some=20
+dell machines could change keyboard backlight also in other different=20
+situations, like attaching AC adapter. I guess (but I'm not sure) this=20
+probably does not send keypress event.=20
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1747596.NDh4XfBSZ3
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAljOn24ACgkQi/DJPQPkQ1I0bwCgki6/g/pElDIdWs2TBYG21kF8
+yqsAnA3wLxinPrS8KvcM8A7DqIY1G5Lc
+=Rpbf
+-----END PGP SIGNATURE-----
+
+--nextPart1747596.NDh4XfBSZ3--
