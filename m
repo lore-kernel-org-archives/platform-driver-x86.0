@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 7/8] platform/x86: fujitsu-laptop: model-dependent sparse keymap overrides
-Date: Mon, 20 Mar 2017 10:32:23 +0100
-Message-ID: <20170320093224.18541-8-kernel@kempniu.pl>
+Subject: [PATCH 5/8] platform/x86: fujitsu-laptop: switch to a managed hotkey input device
+Date: Mon, 20 Mar 2017 10:32:21 +0100
+Message-ID: <20170320093224.18541-6-kernel@kempniu.pl>
 References: <20170320093224.18541-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,168 +13,122 @@ To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, An
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some laptop models need to have different keycodes assigned to hotkey
-scancodes.  Change the sparse keymap upon a DMI match, before the hotkey
-input device is setup.
-
-Instead of using three different callbacks in the DMI match table,
-simplify code by using the driver_data field of struct dmi_system_id to
-supply the requested keymap to a common callback.  Also merge keymaps
-for S6410 and S6420 as they are identical.
-
-Rename fujitsu_dmi_table to fujitsu_laptop_dmi_table to emphasize it is
-no longer used by the backlight part of fujitsu-laptop.  Adjust
-whitespace to make checkpatch happy.
+Use a managed input device for hotkey events in order to simplify two
+error paths and one cleanup function while also reducing the number of
+local variables required.  Remove double assignment to make checkpatch
+happy.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 111 +++++++++++++++++-----------------
- 1 file changed, 55 insertions(+), 56 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 55 ++++++++++++-----------------------
+ 1 file changed, 19 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 8f1c9c204110..1487eb2396c6 100644
+index b1a08d83330b..74da588ed871 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -534,61 +534,6 @@ static struct platform_driver fujitsu_pf_driver = {
- 		   }
- };
- 
--static void __init dmi_check_cb_common(const struct dmi_system_id *id)
--{
--	pr_info("Identified laptop model '%s'\n", id->ident);
--}
--
--static int __init dmi_check_cb_s6410(const struct dmi_system_id *id)
--{
--	dmi_check_cb_common(id);
--	fujitsu_bl->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
--	fujitsu_bl->keycode2 = KEY_HELP;	/* "Mobility Center" */
--	return 1;
--}
--
--static int __init dmi_check_cb_s6420(const struct dmi_system_id *id)
--{
--	dmi_check_cb_common(id);
--	fujitsu_bl->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
--	fujitsu_bl->keycode2 = KEY_HELP;	/* "Mobility Center" */
--	return 1;
--}
--
--static int __init dmi_check_cb_p8010(const struct dmi_system_id *id)
--{
--	dmi_check_cb_common(id);
--	fujitsu_bl->keycode1 = KEY_HELP;		/* "Support" */
--	fujitsu_bl->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
--	fujitsu_bl->keycode4 = KEY_WWW;			/* "Internet" */
--	return 1;
--}
--
--static const struct dmi_system_id fujitsu_dmi_table[] __initconst = {
--	{
--	 .ident = "Fujitsu Siemens S6410",
--	 .matches = {
--		     DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
--		     DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S6410"),
--		     },
--	 .callback = dmi_check_cb_s6410},
--	{
--	 .ident = "Fujitsu Siemens S6420",
--	 .matches = {
--		     DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
--		     DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S6420"),
--		     },
--	 .callback = dmi_check_cb_s6420},
--	{
--	 .ident = "Fujitsu LifeBook P8010",
--	 .matches = {
--		     DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
--		     DMI_MATCH(DMI_PRODUCT_NAME, "LifeBook P8010"),
--		     },
--	 .callback = dmi_check_cb_p8010},
--	{}
--};
--
- /* ACPI device for LCD brightness control */
- 
- static const struct key_entry keymap_backlight[] = {
-@@ -766,8 +711,62 @@ static const struct key_entry keymap_default[] = {
- 	{ KE_END, 0 }
- };
- 
-+static const struct key_entry keymap_s6400[] = {
-+	{ KE_KEY, KEY1_CODE, { KEY_SCREENLOCK } },	/* "Lock" */
-+	{ KE_KEY, KEY2_CODE, { KEY_HELP } },		/* "Mobility Center */
-+	{ KE_KEY, KEY3_CODE, { KEY_PROG3 } },
-+	{ KE_KEY, KEY4_CODE, { KEY_PROG4 } },
-+	{ KE_END, 0 }
-+};
-+
-+static const struct key_entry keymap_p8010[] = {
-+	{ KE_KEY, KEY1_CODE, { KEY_HELP } },		/* "Support" */
-+	{ KE_KEY, KEY2_CODE, { KEY_PROG2 } },
-+	{ KE_KEY, KEY3_CODE, { KEY_SWITCHVIDEOMODE } },	/* "Presentation" */
-+	{ KE_KEY, KEY4_CODE, { KEY_WWW } },		/* "WWW" */
-+	{ KE_END, 0 }
-+};
-+
- static const struct key_entry *keymap = keymap_default;
- 
-+static int fujitsu_laptop_dmi_keymap_override(const struct dmi_system_id *id)
-+{
-+	pr_info("Identified laptop model '%s'\n", id->ident);
-+	keymap = id->driver_data;
-+	return 1;
-+}
-+
-+static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
-+	{
-+		.callback = fujitsu_laptop_dmi_keymap_override,
-+		.ident = "Fujitsu Siemens S6410",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S6410"),
-+		},
-+		.driver_data = (void *)keymap_s6400
-+	},
-+	{
-+		.callback = fujitsu_laptop_dmi_keymap_override,
-+		.ident = "Fujitsu Siemens S6420",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK S6420"),
-+		},
-+		.driver_data = (void *)keymap_s6400
-+	},
-+	{
-+		.callback = fujitsu_laptop_dmi_keymap_override,
-+		.ident = "Fujitsu LifeBook P8010",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "LifeBook P8010"),
-+		},
-+		.driver_data = (void *)keymap_p8010
-+	},
-+	{}
-+};
-+
+@@ -759,41 +759,29 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
  static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
  {
  	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-@@ -785,6 +784,7 @@ static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
- 	fujitsu_laptop->input->id.bustype = BUS_HOST;
- 	fujitsu_laptop->input->id.product = 0x06;
+-	struct input_dev *input;
+-	int error;
  
-+	dmi_check_system(fujitsu_laptop_dmi_table);
- 	ret = sparse_keymap_setup(fujitsu_laptop->input, keymap, NULL);
- 	if (ret)
- 		return ret;
-@@ -1135,7 +1135,6 @@ static int __init fujitsu_init(void)
- 	fujitsu_bl->keycode3 = KEY_PROG3;
- 	fujitsu_bl->keycode4 = KEY_PROG4;
- 	fujitsu_bl->keycode5 = KEY_RFKILL;
--	dmi_check_system(fujitsu_dmi_table);
+-	fujitsu_laptop->input = input = input_allocate_device();
+-	if (!input)
++	fujitsu_laptop->input = devm_input_allocate_device(&device->dev);
++	if (!fujitsu_laptop->input)
+ 		return -ENOMEM;
  
- 	ret = acpi_bus_register_driver(&acpi_fujitsu_bl_driver);
- 	if (ret)
+ 	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
+ 		 "%s/video/input0", acpi_device_hid(device));
+ 
+-	input->name = acpi_device_name(device);
+-	input->phys = fujitsu_laptop->phys;
+-	input->id.bustype = BUS_HOST;
+-	input->id.product = 0x06;
+-	input->dev.parent = &device->dev;
+-
+-	set_bit(EV_KEY, input->evbit);
+-	set_bit(fujitsu_bl->keycode1, input->keybit);
+-	set_bit(fujitsu_bl->keycode2, input->keybit);
+-	set_bit(fujitsu_bl->keycode3, input->keybit);
+-	set_bit(fujitsu_bl->keycode4, input->keybit);
+-	set_bit(fujitsu_bl->keycode5, input->keybit);
+-	set_bit(KEY_TOUCHPAD_TOGGLE, input->keybit);
+-	set_bit(KEY_UNKNOWN, input->keybit);
+-
+-	error = input_register_device(input);
+-	if (error)
+-		goto err_free_input_dev;
+-
+-	return 0;
+-
+-err_free_input_dev:
+-	input_free_device(input);
+-
+-	return error;
++	fujitsu_laptop->input->name = acpi_device_name(device);
++	fujitsu_laptop->input->phys = fujitsu_laptop->phys;
++	fujitsu_laptop->input->id.bustype = BUS_HOST;
++	fujitsu_laptop->input->id.product = 0x06;
++
++	set_bit(EV_KEY, fujitsu_laptop->input->evbit);
++	set_bit(fujitsu_bl->keycode1, fujitsu_laptop->input->keybit);
++	set_bit(fujitsu_bl->keycode2, fujitsu_laptop->input->keybit);
++	set_bit(fujitsu_bl->keycode3, fujitsu_laptop->input->keybit);
++	set_bit(fujitsu_bl->keycode4, fujitsu_laptop->input->keybit);
++	set_bit(fujitsu_bl->keycode5, fujitsu_laptop->input->keybit);
++	set_bit(KEY_TOUCHPAD_TOGGLE, fujitsu_laptop->input->keybit);
++	set_bit(KEY_UNKNOWN, fujitsu_laptop->input->keybit);
++
++	return input_register_device(fujitsu_laptop->input);
+ }
+ 
+ static int fujitsu_laptop_platform_add(void)
+@@ -862,7 +850,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 	error = acpi_bus_update_power(fujitsu_laptop->acpi_handle, &state);
+ 	if (error) {
+ 		pr_err("Error reading power state\n");
+-		goto err_unregister_input_dev;
++		goto err_free_fifo;
+ 	}
+ 
+ 	pr_info("ACPI: %s [%s] (%s)\n",
+@@ -911,7 +899,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 
+ 	error = fujitsu_laptop_platform_add();
+ 	if (error)
+-		goto err_unregister_input_dev;
++		goto err_free_fifo;
+ 
+ #if IS_ENABLED(CONFIG_LEDS_CLASS)
+ 	if (call_fext_func(FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
+@@ -974,8 +962,6 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 
+ 	return result;
+ 
+-err_unregister_input_dev:
+-	input_unregister_device(fujitsu_laptop->input);
+ err_free_fifo:
+ 	kfifo_free(&fujitsu_laptop->fifo);
+ err_stop:
+@@ -985,7 +971,6 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
+ {
+ 	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
+-	struct input_dev *input = fujitsu_laptop->input;
+ 
+ #if IS_ENABLED(CONFIG_LEDS_CLASS)
+ 	if (fujitsu_laptop->logolamp_registered)
+@@ -1003,8 +988,6 @@ static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
+ 
+ 	fujitsu_laptop_platform_remove();
+ 
+-	input_unregister_device(input);
+-
+ 	kfifo_free(&fujitsu_laptop->fifo);
+ 
+ 	fujitsu_laptop->acpi_handle = NULL;
 -- 
 2.12.0
