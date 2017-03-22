@@ -1,54 +1,44 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 1/2] platform: x86: silead_dmi: Constify properties arrays
-Date: Wed, 22 Mar 2017 16:55:53 +0100
-Message-ID: <20170322155554.8561-1-hdegoede@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/5] fujitsu-laptop: platform device code cleanup
+Date: Wed, 22 Mar 2017 09:01:45 -0700
+Message-ID: <20170322160145.GA15410@localhost.localdomain>
+References: <20170314102631.8203-1-kernel@kempniu.pl>
+ <20170318114035.GA2422@marvin.atrad.com.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41300 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1759587AbdCVP4D (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:56501 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1760150AbdCVQB4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2017 11:56:03 -0400
+        Wed, 22 Mar 2017 12:01:56 -0400
+Content-Disposition: inline
+In-Reply-To: <20170318114035.GA2422@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, russianneuromancer@ya.ru, platform-driver-x86@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Now that device_add_properties takes a const property_entry * rather
-then a non-const one we can constify the properties arrays.
+On Sat, Mar 18, 2017 at 10:10:35PM +1030, Jonathan Woithe wrote:
+> Apologies for the delay in reviewing this series: I've had a busy few days.
+> 
+> On Tue, Mar 14, 2017 at 11:26:26AM +0100, Micha?? K??pie?? wrote:
+> > This series removes backlight-related sysfs attributes from the platform
+> > device registered by fujitsu-laptop and does some other cleanups to
+> > platform device code which hopefully make it easier to understand.
+> 
+> This patch series codifies the outcome of discussions held over the last few
+> weeks and improves the consistency of the fujitsu-laptop driver with respect
+> to its treatment of sysfs attributes.  The additional minor cleanups
+> facilitated by these changes are also worthwhile.  The patch series has been
+> tested on the S7020 hardware and no regressions have been observed with the
+> hardware devices of that platform.  Please apply.
+> 
+> Tested-by: Jonathan Woithe <jwoithe@just42.net>
+> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--This is a new patch in v3 of this patch-set
----
- drivers/platform/x86/silead_dmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Applied, thanks Jonathan.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 02e11fd..c3909d2 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -22,10 +22,10 @@
- 
- struct silead_ts_dmi_data {
- 	const char *acpi_name;
--	struct property_entry *properties;
-+	const struct property_entry *properties;
- };
- 
--static struct property_entry cube_iwork8_air_props[] = {
-+static const struct property_entry cube_iwork8_air_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-@@ -39,7 +39,7 @@ static const struct silead_ts_dmi_data cube_iwork8_air_data = {
- 	.properties	= cube_iwork8_air_props,
- };
- 
--static struct property_entry jumper_ezpad_mini3_props[] = {
-+static const struct property_entry jumper_ezpad_mini3_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1700),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
 -- 
-2.9.3
+Darren Hart
+VMware Open Source Technology Center
