@@ -1,43 +1,57 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/5] fujitsu-laptop: platform device code cleanup
-Date: Wed, 22 Mar 2017 09:01:45 -0700
-Message-ID: <20170322160145.GA15410@localhost.localdomain>
-References: <20170314102631.8203-1-kernel@kempniu.pl>
- <20170318114035.GA2422@marvin.atrad.com.au>
+Subject: Re: [PATCH v9 4/4] platform/x86/dell-*: Call
+ led_classdev_notify_brightness_hw_changed on kbd brightness change
+Date: Wed, 22 Mar 2017 09:59:04 -0700
+Message-ID: <20170322165904.GB17578@localhost.localdomain>
+References: <20170316105535.8885-1-hdegoede@redhat.com>
+ <201703191610.38557@pali>
+ <16957a6a-be85-8771-2000-978c4bc88270@redhat.com>
+ <201703191911.43694@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:56501 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:51593 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760150AbdCVQB4 (ORCPT
+        with ESMTP id S935041AbdCVQ7N (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2017 12:01:56 -0400
+        Wed, 22 Mar 2017 12:59:13 -0400
 Content-Disposition: inline
-In-Reply-To: <20170318114035.GA2422@marvin.atrad.com.au>
+In-Reply-To: <201703191911.43694@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Sat, Mar 18, 2017 at 10:10:35PM +1030, Jonathan Woithe wrote:
-> Apologies for the delay in reviewing this series: I've had a busy few days.
+On Sun, Mar 19, 2017 at 07:11:43PM +0100, Pali Rohár wrote:
+> On Sunday 19 March 2017 19:06:19 Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 19-03-17 16:10, Pali Rohár wrote:
+> > > On Thursday 16 March 2017 11:55:35 Hans de Goede wrote:
+> > >> Changes in v9:
+> > >> -Only listen to type 0x0010 kbd-led events in dell-wmi.c, these
+> > >> only trigger on hotkey presses
+> > >> -Drop the new / previous brightness comparison from dell-laptop.c
+> > >> now that we only get events on hotkey presses it is no longer
+> > >> necessary ---
+> > > 
+> > > Hi! I'm really not sure if this change is correct there.
+> > > 
+> > > Now you are only listening for keypress "change kbd backlight", but
+> > > some dell machines could change keyboard backlight also in other
+> > > different situations, like attaching AC adapter. I guess (but I'm
+> > > not sure) this probably does not send keypress event.
+> > 
+> > I'm not aware of any Dells doing such a thing, if we encounter any
+> > then we can deal with that if and when that happens.
 > 
-> On Tue, Mar 14, 2017 at 11:26:26AM +0100, Micha?? K??pie?? wrote:
-> > This series removes backlight-related sysfs attributes from the platform
-> > device registered by fujitsu-laptop and does some other cleanups to
-> > platform device code which hopefully make it easier to understand.
-> 
-> This patch series codifies the outcome of discussions held over the last few
-> weeks and improves the consistency of the fujitsu-laptop driver with respect
-> to its treatment of sysfs attributes.  The additional minor cleanups
-> facilitated by these changes are also worthwhile.  The patch series has been
-> tested on the S7020 hardware and no regressions have been observed with the
-> hardware devices of that platform.  Please apply.
-> 
-> Tested-by: Jonathan Woithe <jwoithe@just42.net>
-> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+> Ok, go ahead. We can fix issues when appear later.
 
-Applied, thanks Jonathan.
+These are queued to testing.
+
+Pali, I can only add a tag from you if you provide it in email. If you want your
+reviewed by on these, please include that in your replies.
 
 -- 
 Darren Hart
