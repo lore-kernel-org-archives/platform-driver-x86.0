@@ -1,53 +1,34 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v9 4/4] platform/x86/dell-*: Call
- led_classdev_notify_brightness_hw_changed on kbd brightness change
-Date: Wed, 22 Mar 2017 09:53:40 -0700
-Message-ID: <20170322165340.GA17578@localhost.localdomain>
-References: <20170316105535.8885-1-hdegoede@redhat.com>
- <20170316105535.8885-4-hdegoede@redhat.com>
- <201703191610.38557@pali>
- <16957a6a-be85-8771-2000-978c4bc88270@redhat.com>
+Subject: Re: [PATCH v2 2/2] platform: x86: silead_dmi: Add entry for Insyde
+ 7W tablets
+Date: Wed, 22 Mar 2017 10:33:40 -0700
+Message-ID: <20170322173340.GC17578@localhost.localdomain>
+References: <20170322155554.8561-1-hdegoede@redhat.com>
+ <20170322155554.8561-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:52679 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:43451 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1759571AbdCVRU3 (ORCPT
+        with ESMTP id S965130AbdCVRd4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2017 13:20:29 -0400
+        Wed, 22 Mar 2017 13:33:56 -0400
 Content-Disposition: inline
-In-Reply-To: <16957a6a-be85-8771-2000-978c4bc88270@redhat.com>
+In-Reply-To: <20170322155554.8561-2-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, russianneuromancer@ya.ru, platform-driver-x86@vger.kernel.org
 
-On Sun, Mar 19, 2017 at 07:06:19PM +0100, Hans de Goede wrote:
-> Hi,
+On Wed, Mar 22, 2017 at 04:55:54PM +0100, Hans de Goede wrote:
+> Add an entry providing the necessary info to make the touchscreen work
+> on various tablets based on the Insyde 7W whitebox tablet.
 > 
-> On 19-03-17 16:10, Pali Rohár wrote:
-> > On Thursday 16 March 2017 11:55:35 Hans de Goede wrote:
-> > > Changes in v9:
-> > > -Only listen to type 0x0010 kbd-led events in dell-wmi.c, these only
-> > > trigger on hotkey presses
-> > > -Drop the new / previous brightness comparison from dell-laptop.c now
-> > > that we only get events on hotkey presses it is no longer necessary
-> > > ---
-> > 
-> > Hi! I'm really not sure if this change is correct there.
-> > 
-> > Now you are only listening for keypress "change kbd backlight", but some
-> > dell machines could change keyboard backlight also in other different
-> > situations, like attaching AC adapter. I guess (but I'm not sure) this
-> > probably does not send keypress event.
+> This has been tested on a DEXP Ursus 7W tablet.
 > 
-> I'm not aware of any Dells doing such a thing, if we encounter any then
-> we can deal with that if and when that happens.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-In general, let's always focus on what we know and can test. Hypotheticals with
-these drivers will trap us in endless loops of discussions that ultimately just
-prevent us from moving forward.
+Queued to testing, thanks Hans.
 
 -- 
 Darren Hart
