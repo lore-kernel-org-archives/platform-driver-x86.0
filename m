@@ -1,76 +1,71 @@
-From: <horizon@qubeglobal.com>
-Subject: 1770 platform-driver-x86
-Date: Wed, 22 Mar 2017 02:30:54 -0000
-Message-ID: <149014985487.16100.7473050109885938781@hinet.net>
-Reply-To: <horizon@qubeglobal.com>
-Mime-Version: 1.0
-Content-Type: application/zip; name="4226851786794.zip"
-Content-Transfer-Encoding: base64
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2 2/2] platform: x86: silead_dmi: Add entry for Insyde 7W tablets
+Date: Wed, 22 Mar 2017 16:55:54 +0100
+Message-ID: <20170322155554.8561-2-hdegoede@redhat.com>
+References: <20170322155554.8561-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 114-47-118-201.dynamic.hinet.net ([114.47.118.201]:53067 "HELO
-        hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
-        id S1758105AbdCVCb0 (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:57556 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1760598AbdCVP4A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Mar 2017 22:31:26 -0400
-Content-Disposition: attachment
+        Wed, 22 Mar 2017 11:56:00 -0400
+In-Reply-To: <20170322155554.8561-1-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, russianneuromancer@ya.ru, platform-driver-x86@vger.kernel.org
 
-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
-AAAAAQABAFMAAAAgDAAAAAA=
+Add an entry providing the necessary info to make the touchscreen work
+on various tablets based on the Insyde 7W whitebox tablet.
+
+This has been tested on a DEXP Ursus 7W tablet.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-constify the added properties array
+---
+ drivers/platform/x86/silead_dmi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index c3909d2..26b388d 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -53,6 +53,19 @@ static const struct silead_ts_dmi_data jumper_ezpad_mini3_data = {
+ 	.properties	= jumper_ezpad_mini3_props,
+ };
+ 
++static const struct property_entry dexp_ursus_7w_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 890),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1686-dexp-ursus-7w.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct silead_ts_dmi_data dexp_ursus_7w_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= dexp_ursus_7w_props,
++};
++
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -72,6 +85,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
+ 		},
+ 	},
++	{
++		/* DEXP Ursus 7W */
++		.driver_data = (void *)&dexp_ursus_7w_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "7W"),
++		},
++	},
+ 	{ },
+ };
+ 
+-- 
+2.9.3
