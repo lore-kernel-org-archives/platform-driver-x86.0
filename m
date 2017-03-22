@@ -1,71 +1,54 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 2/2] platform: x86: silead_dmi: Add entry for Insyde 7W tablets
-Date: Wed, 22 Mar 2017 16:55:54 +0100
-Message-ID: <20170322155554.8561-2-hdegoede@redhat.com>
-References: <20170322155554.8561-1-hdegoede@redhat.com>
+Subject: [PATCH v2 1/2] platform: x86: silead_dmi: Constify properties arrays
+Date: Wed, 22 Mar 2017 16:55:53 +0100
+Message-ID: <20170322155554.8561-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:57556 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:41300 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1760598AbdCVP4A (ORCPT
+        id S1759587AbdCVP4D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Mar 2017 11:56:00 -0400
-In-Reply-To: <20170322155554.8561-1-hdegoede@redhat.com>
+        Wed, 22 Mar 2017 11:56:03 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: Hans de Goede <hdegoede@redhat.com>, russianneuromancer@ya.ru, platform-driver-x86@vger.kernel.org
 
-Add an entry providing the necessary info to make the touchscreen work
-on various tablets based on the Insyde 7W whitebox tablet.
-
-This has been tested on a DEXP Ursus 7W tablet.
+Now that device_add_properties takes a const property_entry * rather
+then a non-const one we can constify the properties arrays.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--constify the added properties array
+-This is a new patch in v3 of this patch-set
 ---
- drivers/platform/x86/silead_dmi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/platform/x86/silead_dmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index c3909d2..26b388d 100644
+index 02e11fd..c3909d2 100644
 --- a/drivers/platform/x86/silead_dmi.c
 +++ b/drivers/platform/x86/silead_dmi.c
-@@ -53,6 +53,19 @@ static const struct silead_ts_dmi_data jumper_ezpad_mini3_data = {
- 	.properties	= jumper_ezpad_mini3_props,
+@@ -22,10 +22,10 @@
+ 
+ struct silead_ts_dmi_data {
+ 	const char *acpi_name;
+-	struct property_entry *properties;
++	const struct property_entry *properties;
  };
  
-+static const struct property_entry dexp_ursus_7w_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 890),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1686-dexp-ursus-7w.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data dexp_ursus_7w_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= dexp_ursus_7w_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -72,6 +85,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
- 		},
- 	},
-+	{
-+		/* DEXP Ursus 7W */
-+		.driver_data = (void *)&dexp_ursus_7w_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "7W"),
-+		},
-+	},
- 	{ },
+-static struct property_entry cube_iwork8_air_props[] = {
++static const struct property_entry cube_iwork8_air_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+@@ -39,7 +39,7 @@ static const struct silead_ts_dmi_data cube_iwork8_air_data = {
+ 	.properties	= cube_iwork8_air_props,
  };
  
+-static struct property_entry jumper_ezpad_mini3_props[] = {
++static const struct property_entry jumper_ezpad_mini3_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1700),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
 -- 
 2.9.3
