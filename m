@@ -1,78 +1,113 @@
 From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v3
-Date: Fri, 24 Mar 2017 10:28:53 -0500
-Message-ID: <20170324152853.GD25380@bhelgaas-glaptop.roam.corp.google.com>
+Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h
+ (Models 30h-3fh) Processors
+Date: Fri, 24 Mar 2017 10:47:44 -0500
+Message-ID: <20170324154744.GE25380@bhelgaas-glaptop.roam.corp.google.com>
 References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
- <1489408896-25039-2-git-send-email-deathsimple@vodafone.de>
+ <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:46202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1757319AbdCXP3b (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Mar 2017 11:29:31 -0400
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1489408896-25039-2-git-send-email-deathsimple@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
+Sender: linux-pci-owner@vger.kernel.org
 To: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>
 Cc: linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 13, 2017 at 01:41:33PM +0100, Christian König wrote:
+On Mon, Mar 13, 2017 at 01:41:35PM +0100, Christian König wrote:
 > From: Christian König <christian.koenig@amd.com>
 > 
-> Just the defines and helper functions to read the possible sizes of a BAR and
-> update it's size.
+> Most BIOS don't enable this because of compatibility reasons.
 
-s/it's/its/
+Can you give any more details here?  Without more hints, it's hard to
+know whether any of the compatibility reasons might apply to Linux as
+well.
 
-> See https://pcisig.com/sites/default/files/specification_documents/ECN_Resizable-BAR_24Apr2008.pdf.
+> Manually enable a 64bit BAR of 64GB size so that we have
+> enough room for PCI devices.
 
-It's good to have the public ECN that anybody can read, but we should
-also have a reference to the full spec that incorporates it, e.g.,
-PCIe r3.1, sec 7.22.
+From the context, I'm guessing this is enabling a new 64GB window
+through the PCI host bridge?  That might be documented as a "BAR", but
+it's not anything the Linux PCI core would recognize as a BAR.
 
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1946,6 +1946,9 @@ void pci_request_acs(void);
->  bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
->  bool pci_acs_path_enabled(struct pci_dev *start,
->  			  struct pci_dev *end, u16 acs_flags);
-> +u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar);
-> +int pci_rbar_get_current_size(struct pci_dev *pdev, int bar);
-> +int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size);
+I think the specs would envision this being done via an ACPI _SRS
+method on the PNP0A03 host bridge device.  That would be a more
+generic path that would work on any host bridge.  Did you explore that
+possibility?  I would prefer to avoid adding device-specific code if
+that's possible.
 
-These should be declared in drivers/pci/pci.h unless they're needed
-outside drivers/pci.  I hope they aren't needed outside, because
-they're not safe to use after the PCI core has claimed resources.
+> Signed-off-by: Christian König <christian.koenig@amd.com>
+> ---
+>  arch/x86/pci/fixup.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> index 6d52b94..bff5242 100644
+> --- a/arch/x86/pci/fixup.c
+> +++ b/arch/x86/pci/fixup.c
+> @@ -571,3 +571,56 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
+> +
+> +static void pci_amd_enable_64bit_bar(struct pci_dev *dev)
+> +{
+> +	const uint64_t size = 64ULL * 1024 * 1024 * 1024;
+> +	uint32_t base, limit, high;
+> +	struct resource *res;
+> +	unsigned i;
+> +	int r;
+> +
+> +	for (i = 0; i < 8; ++i) {
+> +
+> +		pci_read_config_dword(dev, 0x80 + i * 0x8, &base);
+> +		pci_read_config_dword(dev, 0x180 + i * 0x4, &high);
+> +
+> +		/* Is this slot free? */
+> +		if ((base & 0x3) == 0x0)
+> +			break;
+> +
+> +		base >>= 8;
+> +		base |= high << 24;
+> +
+> +		/* Abort if a slot already configures a 64bit BAR. */
+> +		if (base > 0x10000)
+> +			return;
+> +
+> +	}
+> +
+> +	if (i == 8)
+> +		return;
+> +
+> +	res = kzalloc(sizeof(*res), GFP_KERNEL);
+> +	res->flags = IORESOURCE_MEM | IORESOURCE_PREFETCH | IORESOURCE_MEM_64 |
+> +		IORESOURCE_WINDOW;
+> +	res->name = dev->bus->name;
+> +	r = allocate_resource(&iomem_resource, res, size, 0x100000000,
+> +			      0xfd00000000, size, NULL, NULL);
+> +	if (r) {
+> +		kfree(res);
+> +		return;
+> +	}
+> +
+> +	base = ((res->start >> 8) & 0xffffff00) | 0x3;
+> +	limit = ((res->end + 1) >> 8) & 0xffffff00;
+> +	high = ((res->start >> 40) & 0xff) |
+> +		((((res->end + 1) >> 40) & 0xff) << 16);
+> +
+> +	pci_write_config_dword(dev, 0x180 + i * 0x4, high);
+> +	pci_write_config_dword(dev, 0x84 + i * 0x8, limit);
+> +	pci_write_config_dword(dev, 0x80 + i * 0x8, base);
+> +
+> +	pci_bus_add_resource(dev->bus, res, 0);
 
->  #define PCI_VPD_LRDT			0x80	/* Large Resource Data Type */
->  #define PCI_VPD_LRDT_ID(x)		((x) | PCI_VPD_LRDT)
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e5a2e68..6de29d6 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -932,9 +932,16 @@
->  #define PCI_SATA_SIZEOF_LONG	16
->  
->  /* Resizable BARs */
-> +#define PCI_REBAR_CAP		4	/* capability register */
-> +#define  PCI_REBAR_CTRL_SIZES_MASK	(0xFFFFF << 4)	/* mask for sizes */
-> +#define  PCI_REBAR_CTRL_SIZES_SHIFT	4	/* shift for sizes */
->  #define PCI_REBAR_CTRL		8	/* control register */
-> +#define  PCI_REBAR_CTRL_BAR_IDX_MASK	(7 << 0)	/* mask for bar index */
-> +#define  PCI_REBAR_CTRL_BAR_IDX_SHIFT	0	/* shift for bar index */
->  #define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # bars */
->  #define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # bars */
-> +#define  PCI_REBAR_CTRL_BAR_SIZE_MASK	(0x1F << 8)	/* mask for bar size */
-> +#define  PCI_REBAR_CTRL_BAR_SIZE_SHIFT	8	/* shift for bar size */
+We would need some sort of printk here to explain how this new window
+magically appeared.
 
-s/bar/BAR/ several places above
-
->  /* Dynamic Power Allocation */
->  #define PCI_DPA_CAP		4	/* capability register */
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x141b, pci_amd_enable_64bit_bar);
 > -- 
 > 2.7.4
 > 
