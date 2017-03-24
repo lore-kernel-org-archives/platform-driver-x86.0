@@ -1,44 +1,78 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 0/8] fujitsu-laptop: use sparse keymaps for input event
- handling
-Date: Fri, 24 Mar 2017 21:19:59 +1030
-Message-ID: <20170324104959.GA31520@marvin.atrad.com.au>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v3
+Date: Fri, 24 Mar 2017 10:28:53 -0500
+Message-ID: <20170324152853.GD25380@bhelgaas-glaptop.roam.corp.google.com>
+References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
+ <1489408896-25039-2-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:53130 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751589AbdCXKuu (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:46202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1757319AbdCXP3b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Mar 2017 06:50:50 -0400
+        Fri, 24 Mar 2017 11:29:31 -0400
 Content-Disposition: inline
-In-Reply-To: <20170320093224.18541-1-kernel@kempniu.pl>
+In-Reply-To: <1489408896-25039-2-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>
+Cc: linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 20, 2017 at 10:32:16AM +0100, Micha?? K??pie?? wrote:
-> This series simplifies handling of both brightness key and hotkey input
-> events on Fujitsu laptops by making use of sparse keymaps.  This not
-> only makes the driver shorter and, hopefully, cleaner, but also enables
-> us to get rid of the keycodeX fields inside struct fujitsu_bl, which
-> facilitates further cleanups.  Also, to simplify error handling, input
-> devices registered by fujitsu-laptop are migrated to the devres API
-> along the way.
+On Mon, Mar 13, 2017 at 01:41:33PM +0100, Christian König wrote:
+> From: Christian König <christian.koenig@amd.com>
 > 
-> This series was tested on a Lifebook S7020 and a Lifebook E744.
+> Just the defines and helper functions to read the possible sizes of a BAR and
+> update it's size.
+
+s/it's/its/
+
+> See https://pcisig.com/sites/default/files/specification_documents/ECN_Resizable-BAR_24Apr2008.pdf.
+
+It's good to have the public ECN that anybody can read, but we should
+also have a reference to the full spec that incorporates it, e.g.,
+PCIe r3.1, sec 7.22.
+
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1946,6 +1946,9 @@ void pci_request_acs(void);
+>  bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
+>  bool pci_acs_path_enabled(struct pci_dev *start,
+>  			  struct pci_dev *end, u16 acs_flags);
+> +u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar);
+> +int pci_rbar_get_current_size(struct pci_dev *pdev, int bar);
+> +int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size);
+
+These should be declared in drivers/pci/pci.h unless they're needed
+outside drivers/pci.  I hope they aren't needed outside, because
+they're not safe to use after the PCI core has claimed resources.
+
+>  #define PCI_VPD_LRDT			0x80	/* Large Resource Data Type */
+>  #define PCI_VPD_LRDT_ID(x)		((x) | PCI_VPD_LRDT)
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e5a2e68..6de29d6 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -932,9 +932,16 @@
+>  #define PCI_SATA_SIZEOF_LONG	16
+>  
+>  /* Resizable BARs */
+> +#define PCI_REBAR_CAP		4	/* capability register */
+> +#define  PCI_REBAR_CTRL_SIZES_MASK	(0xFFFFF << 4)	/* mask for sizes */
+> +#define  PCI_REBAR_CTRL_SIZES_SHIFT	4	/* shift for sizes */
+>  #define PCI_REBAR_CTRL		8	/* control register */
+> +#define  PCI_REBAR_CTRL_BAR_IDX_MASK	(7 << 0)	/* mask for bar index */
+> +#define  PCI_REBAR_CTRL_BAR_IDX_SHIFT	0	/* shift for bar index */
+>  #define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # bars */
+>  #define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # bars */
+> +#define  PCI_REBAR_CTRL_BAR_SIZE_MASK	(0x1F << 8)	/* mask for bar size */
+> +#define  PCI_REBAR_CTRL_BAR_SIZE_SHIFT	8	/* shift for bar size */
+
+s/bar/BAR/ several places above
+
+>  /* Dynamic Power Allocation */
+>  #define PCI_DPA_CAP		4	/* capability register */
+> -- 
+> 2.7.4
 > 
-> This series depends on the platform cleanup series I posted last week.
-> While that series has not yet been merged into testing, Jonathan has
-> reviewed it and Darren also seemed to be okay with it, so I just assumed
-> it will get merged soon.  I wanted to post this one as soon as possible
-> as it requires a bit more thorough review and testing compared to the
-> previous series I posted for fujitsu-laptop.
-
-Thanks for posting this.  I have started going through this and hope to
-complete my review by the end of this weekend.
-
-Regards
-  jonathan
