@@ -1,71 +1,121 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 0/8] fujitsu-laptop: use sparse keymaps for input event
- handling
-Date: Tue, 28 Mar 2017 08:16:18 +0200
-Message-ID: <20170328061618.GA3694@ozzy.nask.waw.pl>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
- <20170324104959.GA31520@marvin.atrad.com.au>
- <20170327235719.GE23486@marvin.atrad.com.au>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v3,3/5] watchdog: iTCO_wdt: Add PMC specific noreboot update api
+Date: Tue, 28 Mar 2017 02:12:18 -0700
+Message-ID: <20170328091218.GA15828@roeck-us.net>
+References: <08193e33a1114de5401eb135691dea93dc9ec2a7.1489801590.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170327235719.GE23486@marvin.atrad.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <08193e33a1114de5401eb135691dea93dc9ec2a7.1489801590.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> On Fri, Mar 24, 2017 at 09:19:59PM +1030, Jonathan Woithe wrote:
-> > On Mon, Mar 20, 2017 at 10:32:16AM +0100, Micha?? K??pie?? wrote:
-> > > This series simplifies handling of both brightness key and hotkey input
-> > > events on Fujitsu laptops by making use of sparse keymaps.  This not
-> > > only makes the driver shorter and, hopefully, cleaner, but also enables
-> > > us to get rid of the keycodeX fields inside struct fujitsu_bl, which
-> > > facilitates further cleanups.  Also, to simplify error handling, input
-> > > devices registered by fujitsu-laptop are migrated to the devres API
-> > > along the way.
-> > > 
-> > > This series was tested on a Lifebook S7020 and a Lifebook E744.
-> > > 
-> > > This series depends on the platform cleanup series I posted last week.
-> > > While that series has not yet been merged into testing, Jonathan has
-> > > reviewed it and Darren also seemed to be okay with it, so I just assumed
-> > > it will get merged soon.  I wanted to post this one as soon as possible
-> > > as it requires a bit more thorough review and testing compared to the
-> > > previous series I posted for fujitsu-laptop.
-> > 
-> > Thanks for posting this.  I have started going through this and hope to
-> > complete my review by the end of this weekend.
+On Fri, Mar 17, 2017 at 07:06:20PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> In some SOCs, setting noreboot bit needs modification to
+> PMC GC registers. But not all PMC drivers allow other drivers
+> to memory map their GC region. This could create mem request
+> conflict in watchdog driver. So this patch adds facility to allow
+> PMC drivers to pass noreboot update function to watchdog
+> drivers via platform data.
 > 
-> I have completed my initial review of this patch series.  Aside from the
-> single recommendation about patch 7/8 (posted separately) it looks good.
-> I await your thoughts regarding patch 7/8 so we can finalise and sign off on
-> this series.
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Thanks for the review, Jonathan.  I agree with your remark regarding the
-potentially confusing name of the variable holding the S64x0 keymap.
+Not entirely happy, but I don't have a better idea either.
 
-As in the past, we have at least two options: I can either post v2 of
-all eight patches with three characters changed or you can provide your
-Reviewed-by for v1, in which case I will kindly ask the maintainers to
-run:
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-    sed -i 's|s6400|s64x0|;' drivers/platform/x86/fujitsu-laptop.c
-
-after applying patch 7/8.  Given that this series does a bit more than
-the cleanup series I posted previously, I sense it might be a good idea
-to defer submitting v2 until after subsystem maintainers review v1, just
-in case they find more issues.  If that happens, I will post v2 to avoid
-confusion.  If not, then v1 can be applied with the one-liner above
-taken into account (or I can post v2 anyway if that would be preferred
-by Darren and Andy).
-
-In other words, I am happy to follow whatever route you and the
-subsystem maintainers suggest and I just want to avoid spamming the
-mailing list.
-
--- 
-Best regards,
-Michał Kępień
+> ---
+>  drivers/watchdog/iTCO_wdt.c            | 28 +++++++++++++++++++---------
+>  include/linux/platform_data/itco_wdt.h |  1 +
+>  2 files changed, 20 insertions(+), 9 deletions(-)
+> 
+> Changes since v2: 
+>  * Removed use of PMC API's directly in watchdog driver.
+>  * Added update_noreboot_flag to handle no IPC PMC compatibility
+>    issue mentioned by Guenter.
+> 
+> diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+> index 3d0abc0..7c34259 100644
+> --- a/drivers/watchdog/iTCO_wdt.c
+> +++ b/drivers/watchdog/iTCO_wdt.c
+> @@ -100,6 +100,8 @@ struct iTCO_wdt_private {
+>  	 */
+>  	struct resource *gcs_pmc_res;
+>  	unsigned long __iomem *gcs_pmc;
+> +	/* pmc specific api to update noreboot flag */
+> +	int (*update_noreboot_flag)(bool status);
+>  	/* the lock for io operations */
+>  	spinlock_t io_lock;
+>  	/* the PCI-device */
+> @@ -176,9 +178,13 @@ static void iTCO_wdt_set_NO_REBOOT_bit(struct iTCO_wdt_private *p)
+>  
+>  	/* Set the NO_REBOOT bit: this disables reboots */
+>  	if (p->iTCO_version >= 2) {
+> -		val32 = readl(p->gcs_pmc);
+> -		val32 |= no_reboot_bit(p);
+> -		writel(val32, p->gcs_pmc);
+> +		if (p->update_noreboot_flag)
+> +			p->update_noreboot_flag(1);
+> +		else {
+> +			val32 = readl(p->gcs_pmc);
+> +			val32 |= no_reboot_bit(p);
+> +			writel(val32, p->gcs_pmc);
+> +		}
+>  	} else if (p->iTCO_version == 1) {
+>  		pci_read_config_dword(p->pci_dev, 0xd4, &val32);
+>  		val32 |= no_reboot_bit(p);
+> @@ -193,11 +199,14 @@ static int iTCO_wdt_unset_NO_REBOOT_bit(struct iTCO_wdt_private *p)
+>  
+>  	/* Unset the NO_REBOOT bit: this enables reboots */
+>  	if (p->iTCO_version >= 2) {
+> -		val32 = readl(p->gcs_pmc);
+> -		val32 &= ~enable_bit;
+> -		writel(val32, p->gcs_pmc);
+> -
+> -		val32 = readl(p->gcs_pmc);
+> +		if (p->update_noreboot_flag)
+> +			return p->update_noreboot_flag(0);
+> +		else {
+> +			val32 = readl(p->gcs_pmc);
+> +			val32 &= ~enable_bit;
+> +			writel(val32, p->gcs_pmc);
+> +			val32 = readl(p->gcs_pmc);
+> +		}
+>  	} else if (p->iTCO_version == 1) {
+>  		pci_read_config_dword(p->pci_dev, 0xd4, &val32);
+>  		val32 &= ~enable_bit;
+> @@ -426,13 +435,14 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  
+>  	p->iTCO_version = pdata->version;
+> +	p->update_noreboot_flag = pdata->update_noreboot_flag;
+>  	p->pci_dev = to_pci_dev(dev->parent);
+>  
+>  	/*
+>  	 * Get the Memory-Mapped GCS or PMC register, we need it for the
+>  	 * NO_REBOOT flag (TCO v2 and v3).
+>  	 */
+> -	if (p->iTCO_version >= 2) {
+> +	if (p->iTCO_version >= 2 && !p->update_noreboot_flag) {
+>  		p->gcs_pmc_res = platform_get_resource(pdev,
+>  						       IORESOURCE_MEM,
+>  						       ICH_RES_MEM_GCS_PMC);
+> diff --git a/include/linux/platform_data/itco_wdt.h b/include/linux/platform_data/itco_wdt.h
+> index f16542c..ea1efb7 100644
+> --- a/include/linux/platform_data/itco_wdt.h
+> +++ b/include/linux/platform_data/itco_wdt.h
+> @@ -14,6 +14,7 @@
+>  struct itco_wdt_platform_data {
+>  	char name[32];
+>  	unsigned int version;
+> +	int (*update_noreboot_flag)(bool status);
+>  };
+>  
+>  #endif /* _ITCO_WDT_H_ */
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
