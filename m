@@ -1,92 +1,65 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/8] fujitsu-laptop: use sparse keymaps for input event
- handling
-Date: Wed, 29 Mar 2017 12:28:31 -0700
-Message-ID: <20170329192831.GB15472@localhost.localdomain>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
- <20170324104959.GA31520@marvin.atrad.com.au>
- <20170327235719.GE23486@marvin.atrad.com.au>
- <20170328061618.GA3694@ozzy.nask.waw.pl>
- <20170328230029.GA29146@marvin.atrad.com.au>
+From: <mbalhoff@fulbright.com>
+Subject: 51349 platform-driver-x86
+Date: Wed, 29 Mar 2017 19:51:58 -0000
+Message-ID: <149081711885.6467.11992787804252849205@hinet.net>
+Reply-To: <mbalhoff@fulbright.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="1.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:55896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753049AbdC2T2f (ORCPT
+Received: from 218-164-187-18.dynamic.hinet.net ([218.164.187.18]:56364 "HELO
+        hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+        id S932841AbdC2TwT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Mar 2017 15:28:35 -0400
-Content-Disposition: inline
-In-Reply-To: <20170328230029.GA29146@marvin.atrad.com.au>
+        Wed, 29 Mar 2017 15:52:19 -0400
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-On Wed, Mar 29, 2017 at 09:30:29AM +1030, Jonathan Woithe wrote:
-> On Tue, Mar 28, 2017 at 08:16:18AM +0200, Micha?? K??pie?? wrote:
-> > > On Fri, Mar 24, 2017 at 09:19:59PM +1030, Jonathan Woithe wrote:
-> > > > On Mon, Mar 20, 2017 at 10:32:16AM +0100, Micha?? K??pie?? wrote:
-> > > > > This series simplifies handling of both brightness key and hotkey input
-> > > > > events on Fujitsu laptops by making use of sparse keymaps.  This not
-> > > > > only makes the driver shorter and, hopefully, cleaner, but also enables
-> > > > > us to get rid of the keycodeX fields inside struct fujitsu_bl, which
-> > > > > facilitates further cleanups.  Also, to simplify error handling, input
-> > > > > devices registered by fujitsu-laptop are migrated to the devres API
-> > > > > along the way.
-> > > > > :
-> > > I have completed my initial review of this patch series.  Aside from the
-> > > single recommendation about patch 7/8 (posted separately) it looks good.
-> > > I await your thoughts regarding patch 7/8 so we can finalise and sign off on
-> > > this series.
-> > 
-> > Thanks for the review, Jonathan.  I agree with your remark regarding the
-> > potentially confusing name of the variable holding the S64x0 keymap.
-> > 
-> > As in the past, we have at least two options: I can either post v2 of
-> > all eight patches with three characters changed or you can provide your
-> > Reviewed-by for v1, in which case I will kindly ask the maintainers to
-> > run:
-> > 
-> >     sed -i 's|s6400|s64x0|;' drivers/platform/x86/fujitsu-laptop.c
-> > 
-> > after applying patch 7/8.  Given that this series does a bit more than
-> > the cleanup series I posted previously, I sense it might be a good idea
-> > to defer submitting v2 until after subsystem maintainers review v1, just
-> > in case they find more issues.  If that happens, I will post v2 to avoid
-> > confusion.  If not, then v1 can be applied with the one-liner above
-> > taken into account (or I can post v2 anyway if that would be preferred
-> > by Darren and Andy).
-> > 
-> > In other words, I am happy to follow whatever route you and the
-> > subsystem maintainers suggest and I just want to avoid spamming the
-> > mailing list.
-> 
-> I would be interested to hear what Darren and Andy's preference would be,
-> and have no issue with following that.  My personal thought is that it's
-> best to have a patch series v2 submitted with the keymap fix since I think
-> that reduces the potential confusion now and in the future.  It makes it
-> clear what exactly is being signed off on in any Reviewed-By tags.  This
-
-No concerns applying the minor fix. It's very common to say "With XXX,
-Reviewed-by: ...", so I that's fine.
-
-> approach also removes the need for Darren or Andy to special case the
-> eventual merge of the series (having to remember to do the replacement),
-> which in turn reduces the chances of little errors creeping in.  However, if
-> Darren and Andy are happy with an alternative then we can go with that.
-> 
-> As to whether v2 is held until Darren or Andy do their own review, I guess
-> it makes sense in case they have other suggestions which are similarly
-> trivial to implement.
-
-Completing my review now...
-
-> 
-> Regards
->   jonathan
-> 
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+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
