@@ -1,92 +1,63 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 06/11] platform/x86: fujitsu-laptop: clean up use_alt_lcd_levels handling
-Date: Thu, 30 Mar 2017 12:35:04 +0200
-Message-ID: <20170330103509.32509-7-kernel@kempniu.pl>
+Subject: [PATCH 09/11] platform/x86: fujitsu-laptop: do not log set_lcd_level() failures in bl_update_status()
+Date: Thu, 30 Mar 2017 12:35:07 +0200
+Message-ID: <20170330103509.32509-10-kernel@kempniu.pl>
 References: <20170330103509.32509-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:35496 "EHLO
-        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933694AbdC3Kfa (ORCPT
+Received: from mail-lf0-f66.google.com ([209.85.215.66]:35505 "EHLO
+        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933689AbdC3Kf2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2017 06:35:30 -0400
-Received: by mail-lf0-f68.google.com with SMTP id v2so4167030lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2017 03:35:24 -0700 (PDT)
+        Thu, 30 Mar 2017 06:35:28 -0400
+Received: by mail-lf0-f66.google.com with SMTP id v2so4167091lfi.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2017 03:35:22 -0700 (PDT)
 In-Reply-To: <20170330103509.32509-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The value of each module parameter can be changed on the fly via sysfs.
-However, the current way of handling use_alt_lcd_levels prevents the
-user from dynamically switching from a value of 0 or 1 back to
-autodetection as the latter is only performed upon ACPI device
-instantiation.  Fix this by moving autodetection (in a simplified form)
-to set_lcd_level() and changing module parameter type to int.  Do not
-announce autodetection results in a debug message as current value of
-use_alt_lcd_levels can simply be read from sysfs.  Clarify module
-parameter description.
+Any set_lcd_level() call can fail for one of two reasons: either
+requested brightness is outside the allowed range or the ACPI method
+used for setting brightness level is not available.  For
+bl_update_status(), the first case is handled by backlight core, which
+means bl_update_status() will not even be called if requested brightness
+is outside the allowed range.  The second case will be logged anyway by
+set_lcd_level() itself, so there is no point in generating another
+message in bl_update_status().  Remove the superfluous debug message
+along with a local variable that is now redundant.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 9981988f82d2..d10fbb0ed95b 100644
+index ed9c37e0591d..78a39b143200 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -362,6 +362,12 @@ static int set_lcd_level(int level)
- 	char *method;
+@@ -442,18 +442,12 @@ static int bl_get_brightness(struct backlight_device *b)
  
- 	switch (use_alt_lcd_levels) {
-+	case -1:
-+		if (acpi_has_method(fujitsu_bl->acpi_handle, "SBL2"))
-+			method = "SBL2";
-+		else
-+			method = "SBLL";
-+		break;
- 	case 1:
- 		method = "SBL2";
- 		break;
-@@ -605,21 +611,10 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 			pr_err("_INI Method failed\n");
- 	}
+ static int bl_update_status(struct backlight_device *b)
+ {
+-	int ret;
+ 	if (b->props.power == FB_BLANK_POWERDOWN)
+ 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
+ 	else
+ 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
  
--	if (use_alt_lcd_levels == -1) {
--		if (acpi_has_method(NULL, "\\_SB.PCI0.LPCB.FJEX.SBL2"))
--			use_alt_lcd_levels = 1;
--		else
--			use_alt_lcd_levels = 0;
--		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as %i\n",
--			    use_alt_lcd_levels);
--	}
--
- 	/* do config (detect defaults) */
--	use_alt_lcd_levels = use_alt_lcd_levels == 1 ? 1 : 0;
- 	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
--	vdbg_printk(FUJLAPTOP_DBG_INFO,
--		    "config: [alt interface: %d], [adjust disable: %d]\n",
--		    use_alt_lcd_levels, disable_brightness_adjust);
-+	vdbg_printk(FUJLAPTOP_DBG_INFO, "config: [adjust disable: %d]\n",
-+		    disable_brightness_adjust);
+-	ret = set_lcd_level(b->props.brightness);
+-	if (ret != 0)
+-		vdbg_printk(FUJLAPTOP_DBG_ERROR,
+-			"Unable to adjust LCD brightness, error code %i\n",
+-			ret);
+-	return ret;
++	return set_lcd_level(b->props.brightness);
+ }
  
- 	if (get_max_brightness() <= 0)
- 		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
-@@ -1152,9 +1147,8 @@ static void __exit fujitsu_cleanup(void)
- module_init(fujitsu_init);
- module_exit(fujitsu_cleanup);
- 
--module_param(use_alt_lcd_levels, uint, 0644);
--MODULE_PARM_DESC(use_alt_lcd_levels,
--		 "Use alternative interface for lcd_levels (needed for Lifebook s6410).");
-+module_param(use_alt_lcd_levels, int, 0644);
-+MODULE_PARM_DESC(use_alt_lcd_levels, "Interface used for setting LCD brightness level (-1 = auto, 0 = force SBLL, 1 = force SBL2)");
- module_param(disable_brightness_adjust, uint, 0644);
- MODULE_PARM_DESC(disable_brightness_adjust, "Disable brightness adjustment .");
- #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
+ static const struct backlight_ops fujitsu_bl_ops = {
 -- 
 2.12.1
