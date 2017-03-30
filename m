@@ -1,75 +1,92 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 07/11] platform/x86: fujitsu-laptop: make disable_brightness_adjust a boolean
-Date: Thu, 30 Mar 2017 12:35:05 +0200
-Message-ID: <20170330103509.32509-8-kernel@kempniu.pl>
+Subject: [PATCH 06/11] platform/x86: fujitsu-laptop: clean up use_alt_lcd_levels handling
+Date: Thu, 30 Mar 2017 12:35:04 +0200
+Message-ID: <20170330103509.32509-7-kernel@kempniu.pl>
 References: <20170330103509.32509-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f68.google.com ([209.85.215.68]:35496 "EHLO
+        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933694AbdC3Kfa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 30 Mar 2017 06:35:30 -0400
+Received: by mail-lf0-f68.google.com with SMTP id v2so4167030lfi.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2017 03:35:24 -0700 (PDT)
 In-Reply-To: <20170330103509.32509-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-Due to the way the disable_brightness_adjust module parameter is
-currently handled in acpi_fujitsu_bl_add(), it can only be set to either
-0 or 1, which effectively makes it a boolean.  Emphasize that by
-changing module parameter type to bool.  Do not announce parameter value
-in a debug message as it can be dynamically changed via sysfs and its
-current value can also be read from there.  Clean up module parameter
-description.
+The value of each module parameter can be changed on the fly via sysfs.
+However, the current way of handling use_alt_lcd_levels prevents the
+user from dynamically switching from a value of 0 or 1 back to
+autodetection as the latter is only performed upon ACPI device
+instantiation.  Fix this by moving autodetection (in a simplified form)
+to set_lcd_level() and changing module parameter type to int.  Do not
+announce autodetection results in a debug message as current value of
+use_alt_lcd_levels can simply be read from sysfs.  Clarify module
+parameter description.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index d10fbb0ed95b..84c2bd55526f 100644
+index 9981988f82d2..d10fbb0ed95b 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -147,7 +147,7 @@ struct fujitsu_bl {
+@@ -362,6 +362,12 @@ static int set_lcd_level(int level)
+ 	char *method;
  
- static struct fujitsu_bl *fujitsu_bl;
- static int use_alt_lcd_levels = -1;
--static int disable_brightness_adjust = -1;
-+static bool disable_brightness_adjust;
- 
- /* Device used to access hotkeys and other features on the laptop */
- struct fujitsu_laptop {
-@@ -611,11 +611,6 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	switch (use_alt_lcd_levels) {
++	case -1:
++		if (acpi_has_method(fujitsu_bl->acpi_handle, "SBL2"))
++			method = "SBL2";
++		else
++			method = "SBLL";
++		break;
+ 	case 1:
+ 		method = "SBL2";
+ 		break;
+@@ -605,21 +611,10 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
  			pr_err("_INI Method failed\n");
  	}
  
--	/* do config (detect defaults) */
--	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
--	vdbg_printk(FUJLAPTOP_DBG_INFO, "config: [adjust disable: %d]\n",
--		    disable_brightness_adjust);
+-	if (use_alt_lcd_levels == -1) {
+-		if (acpi_has_method(NULL, "\\_SB.PCI0.LPCB.FJEX.SBL2"))
+-			use_alt_lcd_levels = 1;
+-		else
+-			use_alt_lcd_levels = 0;
+-		vdbg_printk(FUJLAPTOP_DBG_TRACE, "auto-detected usealt as %i\n",
+-			    use_alt_lcd_levels);
+-	}
 -
+ 	/* do config (detect defaults) */
+-	use_alt_lcd_levels = use_alt_lcd_levels == 1 ? 1 : 0;
+ 	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
+-	vdbg_printk(FUJLAPTOP_DBG_INFO,
+-		    "config: [alt interface: %d], [adjust disable: %d]\n",
+-		    use_alt_lcd_levels, disable_brightness_adjust);
++	vdbg_printk(FUJLAPTOP_DBG_INFO, "config: [adjust disable: %d]\n",
++		    disable_brightness_adjust);
+ 
  	if (get_max_brightness() <= 0)
  		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
- 	get_lcd_level();
-@@ -654,7 +649,7 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
- 	if (oldb == newb)
- 		return;
+@@ -1152,9 +1147,8 @@ static void __exit fujitsu_cleanup(void)
+ module_init(fujitsu_init);
+ module_exit(fujitsu_cleanup);
  
--	if (disable_brightness_adjust != 1)
-+	if (!disable_brightness_adjust)
- 		set_lcd_level(newb);
- 
- 	sparse_keymap_report_event(input, oldb < newb, 1, true);
-@@ -1149,8 +1144,8 @@ module_exit(fujitsu_cleanup);
- 
- module_param(use_alt_lcd_levels, int, 0644);
- MODULE_PARM_DESC(use_alt_lcd_levels, "Interface used for setting LCD brightness level (-1 = auto, 0 = force SBLL, 1 = force SBL2)");
--module_param(disable_brightness_adjust, uint, 0644);
--MODULE_PARM_DESC(disable_brightness_adjust, "Disable brightness adjustment .");
-+module_param(disable_brightness_adjust, bool, 0644);
-+MODULE_PARM_DESC(disable_brightness_adjust, "Disable LCD brightness adjustment");
+-module_param(use_alt_lcd_levels, uint, 0644);
+-MODULE_PARM_DESC(use_alt_lcd_levels,
+-		 "Use alternative interface for lcd_levels (needed for Lifebook s6410).");
++module_param(use_alt_lcd_levels, int, 0644);
++MODULE_PARM_DESC(use_alt_lcd_levels, "Interface used for setting LCD brightness level (-1 = auto, 0 = force SBLL, 1 = force SBL2)");
+ module_param(disable_brightness_adjust, uint, 0644);
+ MODULE_PARM_DESC(disable_brightness_adjust, "Disable brightness adjustment .");
  #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
- module_param_named(debug, dbg_level, uint, 0644);
- MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
 -- 
 2.12.1
