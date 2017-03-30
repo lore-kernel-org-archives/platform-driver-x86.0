@@ -1,63 +1,80 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 09/11] platform/x86: fujitsu-laptop: do not log set_lcd_level() failures in bl_update_status()
-Date: Thu, 30 Mar 2017 12:35:07 +0200
-Message-ID: <20170330103509.32509-10-kernel@kempniu.pl>
+Subject: [PATCH 11/11] platform/x86: fujitsu-laptop: remove redundant fields from struct fujitsu_bl
+Date: Thu, 30 Mar 2017 12:35:09 +0200
+Message-ID: <20170330103509.32509-12-kernel@kempniu.pl>
 References: <20170330103509.32509-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35505 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933689AbdC3Kf2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2017 06:35:28 -0400
-Received: by mail-lf0-f66.google.com with SMTP id v2so4167091lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Mar 2017 03:35:22 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170330103509.32509-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Any set_lcd_level() call can fail for one of two reasons: either
-requested brightness is outside the allowed range or the ACPI method
-used for setting brightness level is not available.  For
-bl_update_status(), the first case is handled by backlight core, which
-means bl_update_status() will not even be called if requested brightness
-is outside the allowed range.  The second case will be logged anyway by
-set_lcd_level() itself, so there is no point in generating another
-message in bl_update_status().  Remove the superfluous debug message
-along with a local variable that is now redundant.
+The dev field of struct fujitsu_bl is assigned in acpi_fujitsu_bl_add(),
+but never used afterwards.  brightness_changed is set in get_lcd_level()
+and then its value is only printed in a debug message, so it does not
+influence execution flow.  Remove both fields as they are redundant.
+Update the aforementioned debug message.  Adjust whitespace to make
+checkpatch happy.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index ed9c37e0591d..78a39b143200 100644
+index 99befc1bc4f6..976baceea018 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -442,18 +442,12 @@ static int bl_get_brightness(struct backlight_device *b)
+@@ -135,13 +135,10 @@
+ /* Device controlling the backlight and associated keys */
+ struct fujitsu_bl {
+ 	acpi_handle acpi_handle;
+-	struct acpi_device *dev;
+ 	struct input_dev *input;
+ 	char phys[32];
+ 	struct backlight_device *bl_device;
+-
+ 	unsigned int max_brightness;
+-	unsigned int brightness_changed;
+ 	unsigned int brightness_level;
+ };
  
- static int bl_update_status(struct backlight_device *b)
- {
--	int ret;
- 	if (b->props.power == FB_BLANK_POWERDOWN)
- 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
- 	else
- 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+@@ -408,11 +405,6 @@ static int get_lcd_level(void)
  
--	ret = set_lcd_level(b->props.brightness);
--	if (ret != 0)
--		vdbg_printk(FUJLAPTOP_DBG_ERROR,
--			"Unable to adjust LCD brightness, error code %i\n",
--			ret);
--	return ret;
-+	return set_lcd_level(b->props.brightness);
+ 	fujitsu_bl->brightness_level = state & 0x0fffffff;
+ 
+-	if (state & 0x80000000)
+-		fujitsu_bl->brightness_changed = 1;
+-	else
+-		fujitsu_bl->brightness_changed = 0;
+-
+ 	return fujitsu_bl->brightness_level;
  }
  
- static const struct backlight_ops fujitsu_bl_ops = {
+@@ -591,8 +583,6 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	       acpi_device_name(device), acpi_device_bid(device),
+ 	       !device->power.state ? "on" : "off");
+ 
+-	fujitsu_bl->dev = device;
+-
+ 	if (acpi_has_method(device->handle, METHOD_NAME__INI)) {
+ 		vdbg_printk(FUJLAPTOP_DBG_INFO, "Invoking _INI\n");
+ 		if (ACPI_FAILURE
+@@ -632,9 +622,8 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+ 	get_lcd_level();
+ 	newb = fujitsu_bl->brightness_level;
+ 
+-	vdbg_printk(FUJLAPTOP_DBG_TRACE,
+-		    "brightness button event [%i -> %i (%i)]\n",
+-		    oldb, newb, fujitsu_bl->brightness_changed);
++	vdbg_printk(FUJLAPTOP_DBG_TRACE, "brightness button event [%i -> %i]\n",
++		    oldb, newb);
+ 
+ 	if (oldb == newb)
+ 		return;
 -- 
 2.12.1
