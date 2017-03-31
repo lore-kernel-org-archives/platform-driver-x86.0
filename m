@@ -1,47 +1,56 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 6/8] platform/x86: fujitsu-laptop: use a sparse keymap
- for hotkey event generation
-Date: Fri, 31 Mar 2017 13:22:02 +0200
-Message-ID: <20170331112202.GA995@ozzy.nask.waw.pl>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
- <20170320093224.18541-7-kernel@kempniu.pl>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH v3 1/5] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Fri, 31 Mar 2017 19:07:32 +0530
+Message-ID: <20170331133728.GA23725@rajaneesh-OptiPlex-9010>
+References: <1ee0cc63c5ad4d4581fa46ae5e72001f0ac341c0.1489801590.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170320093224.18541-7-kernel@kempniu.pl>
+In-Reply-To: <1ee0cc63c5ad4d4581fa46ae5e72001f0ac341c0.1489801590.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net, wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> @@ -1098,14 +1075,8 @@ static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
->  	 * handled in software; its state is queried using FUNC_FLAGS
->  	 */
->  	if ((fujitsu_laptop->flags_supported & BIT(26)) &&
-> -	    (call_fext_func(FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26))) {
-> -		keycode = KEY_TOUCHPAD_TOGGLE;
-> -		input_report_key(input, keycode, 1);
-> -		input_sync(input);
-> -		input_report_key(input, keycode, 0);
-> -		input_sync(input);
-> -	}
-> -
-> +	    (call_fext_func(FLAG_RFKILL, 0x1, 0x0, 0x0) & BIT(26)))
-> +		sparse_keymap_report_event(input, BIT(26), 1, true);
+On Fri, Mar 17, 2017 at 07:06:18PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> According to the PMC spec, gcr offset from ipc mem
 
-I have only just now noticed that a typo crept in here, causing a bug.
-The original call to call_fext_func() passed FUNC_FLAGS as the first
-argument while the added one uses FLAG_RFKILL instead.  This is wrong as
-call_fext_func() arguments should be left intact by this patch.
+Which spec? We can just use generic terms for BXT/APL PMC.
 
-Darren, could you please amend this in testing?  The call_fext_func()
-call added by the above patch chunk should pass FUNC_FLAGS as the first
-argument, not FLAG_RFKILL.
+> region is 0x1000(4K). But currently this driver uses
+> 0x1008 as gcr offset. This patch fixes this issue.
+>
 
-Thanks and sorry for the trouble.
+Patch is good but i feel it's better to have little more explanation in the
+commit message since the subject looks very similar to one old patch that
+seems to have created the issue being fixed by this one.
+
+Have a look at:
+intel_pmc_ipc: Fix GCR register base address and length
+ 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 0651d47..0a33592 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -82,7 +82,7 @@
+>  /* exported resources from IFWI */
+>  #define PLAT_RESOURCE_IPC_INDEX		0
+>  #define PLAT_RESOURCE_IPC_SIZE		0x1000
+> -#define PLAT_RESOURCE_GCR_OFFSET	0x1008
+> +#define PLAT_RESOURCE_GCR_OFFSET	0x1000
+>  #define PLAT_RESOURCE_GCR_SIZE		0x1000
+>  #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+>  #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+> -- 
+> 2.7.4
+> 
 
 -- 
-Best regards,
-Michał Kępień
+Best Regards,
+Rajneesh
