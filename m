@@ -1,46 +1,47 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 0/8] fujitsu-laptop: use sparse keymaps for input event
- handling
-Date: Fri, 31 Mar 2017 08:55:22 +1030
-Message-ID: <20170330222521.GC10297@marvin.atrad.com.au>
-References: <20170324104959.GA31520@marvin.atrad.com.au>
- <20170327235719.GE23486@marvin.atrad.com.au>
- <20170328061618.GA3694@ozzy.nask.waw.pl>
- <20170328230029.GA29146@marvin.atrad.com.au>
- <20170329071926.GA1070@ozzy.nask.waw.pl>
- <CAHp75Ve2ToZW+Mp=HexjzhV82ZS38QkfK2bMxeRwuX3vu1bCsw@mail.gmail.com>
- <20170330033650.GF15472@localhost.localdomain>
- <20170330035626.GK19787@marvin.atrad.com.au>
- <20170330050430.GA3179@localhost.localdomain>
- <20170330064115.GA1068@ozzy.nask.waw.pl>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 6/8] platform/x86: fujitsu-laptop: use a sparse keymap
+ for hotkey event generation
+Date: Fri, 31 Mar 2017 13:22:02 +0200
+Message-ID: <20170331112202.GA995@ozzy.nask.waw.pl>
+References: <20170320093224.18541-1-kernel@kempniu.pl>
+ <20170320093224.18541-7-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:58350 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932560AbdC3W0O (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 30 Mar 2017 18:26:14 -0400
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170330064115.GA1068@ozzy.nask.waw.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20170320093224.18541-7-kernel@kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Michael
+> @@ -1098,14 +1075,8 @@ static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
+>  	 * handled in software; its state is queried using FUNC_FLAGS
+>  	 */
+>  	if ((fujitsu_laptop->flags_supported & BIT(26)) &&
+> -	    (call_fext_func(FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26))) {
+> -		keycode = KEY_TOUCHPAD_TOGGLE;
+> -		input_report_key(input, keycode, 1);
+> -		input_sync(input);
+> -		input_report_key(input, keycode, 0);
+> -		input_sync(input);
+> -	}
+> -
+> +	    (call_fext_func(FLAG_RFKILL, 0x1, 0x0, 0x0) & BIT(26)))
+> +		sparse_keymap_report_event(input, BIT(26), 1, true);
 
-On Thu, Mar 30, 2017 at 08:41:15AM +0200, Micha?? K??pie?? wrote:
-> I noted your concerns about error handling in the driver ...  For the time
-> being I would rather concentrate on the issues I personally consider more
-> pressing as I will most likely lose access to modern Fujitsu hardware in
-> about six weeks and I would really like to be able to test my patches on
-> hardware on which the code touched by these patches actually runs (LEDs
-> come to mind, specifically).
+I have only just now noticed that a typo crept in here, causing a bug.
+The original call to call_fext_func() passed FUNC_FLAGS as the first
+argument while the added one uses FLAG_RFKILL instead.  This is wrong as
+call_fext_func() arguments should be left intact by this patch.
 
-I have no problem with this.  Fixing consistency in connection with error
-handling is certainly something which can be done by me (or anyone else)
-at a later date.  I agree that the other work is more important.
+Darren, could you please amend this in testing?  The call_fext_func()
+call added by the above patch chunk should pass FUNC_FLAGS as the first
+argument, not FLAG_RFKILL.
 
-Regards
-  jonathan
+Thanks and sorry for the trouble.
+
+-- 
+Best regards,
+Michał Kępień
