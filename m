@@ -1,67 +1,77 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 6/8] platform/x86: fujitsu-laptop: use a sparse keymap
- for hotkey event generation
-Date: Sun, 2 Apr 2017 18:31:30 +0930
-Message-ID: <20170402090129.GB31771@marvin.atrad.com.au>
-References: <20170320093224.18541-1-kernel@kempniu.pl>
- <20170320093224.18541-7-kernel@kempniu.pl>
- <20170331112202.GA995@ozzy.nask.waw.pl>
- <20170401200023.GB5000@fury>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] platform/x86: intel_pmc_ipc: Add pmc gcr
+ read/write/update api's (fwd)
+Date: Sun, 2 Apr 2017 13:09:42 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1704021307570.2353@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:60230 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750876AbdDBJC0 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 Apr 2017 05:02:26 -0400
-Content-Disposition: inline
-In-Reply-To: <20170401200023.GB5000@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Apr 01, 2017 at 01:00:23PM -0700, Darren Hart wrote:
-> On Fri, Mar 31, 2017 at 01:22:02PM +0200, Micha?? K??pie?? wrote:
-> > > @@ -1098,14 +1075,8 @@ static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
-> > >  	 * handled in software; its state is queried using FUNC_FLAGS
-> > >  	 */
-> > >  	if ((fujitsu_laptop->flags_supported & BIT(26)) &&
-> > > -	    (call_fext_func(FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26))) {
-> > > -		keycode = KEY_TOUCHPAD_TOGGLE;
-> > > -		input_report_key(input, keycode, 1);
-> > > -		input_sync(input);
-> > > -		input_report_key(input, keycode, 0);
-> > > -		input_sync(input);
-> > > -	}
-> > > -
-> > > +	    (call_fext_func(FLAG_RFKILL, 0x1, 0x0, 0x0) & BIT(26)))
-> > > +		sparse_keymap_report_event(input, BIT(26), 1, true);
-> > 
-> > I have only just now noticed that a typo crept in here, causing a bug.
-> > The original call to call_fext_func() passed FUNC_FLAGS as the first
-> > argument while the added one uses FLAG_RFKILL instead.  This is wrong as
-> > call_fext_func() arguments should be left intact by this patch.
-> > 
-> > Darren, could you please amend this in testing?  The call_fext_func()
-> > call added by the above patch chunk should pass FUNC_FLAGS as the first
-> > argument, not FLAG_RFKILL.
-> > 
-> > Thanks and sorry for the trouble.
-> 
-> Gah, I didn't catch that either :(
+tmp has type u32 and thus will not be < 0
 
-And I missed it too. :-(  Thanks for catching this Michael.  The reason it
-never showed up in my testing is that my Fujitsu hardware doesn't have the
-feature which exercises this code branch.
+julia
 
-> I've updated this patch with:
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 52d6d21..f66da4b 100644
+---------- Forwarded message ----------
+Date: Sun, 2 Apr 2017 14:26:03 +0800
+From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: kbuild-JC7UmRfGjtg@public.gmane.org
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] platform/x86: intel_pmc_ipc: Add pmc gcr
+    read/write/update api's
 
-Thanks Darren.
+In-Reply-To: <1ca7187132bd2b98ca87d0829a3c76022f041924.1491002056.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Regards
-  jonathan
+Hi Kuppuswamy,
+
+[auto build test WARNING on platform-drivers-x86/for-next]
+[also build test WARNING on v4.11-rc4 next-20170331]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Kuppuswamy-Sathyanarayanan/platform-x86-intel_pmc_ipc-fix-gcr-offset/20170402-113300
+base:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
+:::::: branch date: 3 hours ago
+:::::: commit date: 3 hours ago
+
+>> drivers/platform/x86/intel_pmc_ipc.c:277:5-8: WARNING: Unsigned expression compared with zero: tmp < 0
+
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout f98055b2d8ad767578e0fafd280274a6cd499459
+vim +277 drivers/platform/x86/intel_pmc_ipc.c
+
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  261  /**
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  262   * intel_pmc_gcr_update() - Update PMC GCR register bits
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  263   * @offset:	offset of GCR register from GCR address base
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  264   * @mask:	bit mask for update operation
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  265   * @val:	update value
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  266   *
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  267   * Updates the bits of given GCR register as specified by
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  268   * mask and val
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  269   *
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  270   * Return:	negative value on error or 0 on success.
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  271   */
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  272  int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  273  {
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  274  	u32 orig, tmp;
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  275
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  276  	tmp = is_gcr_valid(offset);
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31 @277  	if (tmp < 0)
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  278  		return tmp;
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  279
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  280  	orig = readl(ipcdev.gcr_mem_base + offset);
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  281
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  282  	tmp = orig & ~mask;
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  283  	tmp |= val & mask;
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  284
+f98055b2 Kuppuswamy Sathyanarayanan 2017-03-31  285  	writel(tmp, ipcdev.gcr_mem_base + offset);
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
