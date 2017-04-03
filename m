@@ -1,77 +1,59 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Add wapf=4 quirk for Asus
- X302UA
-Date: Mon, 3 Apr 2017 16:05:40 -0700
-Message-ID: <20170403230540.GC17322@fury>
-References: <CAN88QNC4bv0JKRxzyCOjDh2pex9t1+7J9WXt2C1d6vOF6tT+eQ@mail.gmail.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 0/3] fujitsu-laptop: call_fext_func() cleanup
+Date: Tue, 4 Apr 2017 09:13:50 +0930
+Message-ID: <20170403234350.GA14026@marvin.atrad.com.au>
+References: <20170403093859.6685-1-kernel@kempniu.pl>
+ <20170403221311.GA17322@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:47174 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751535AbdDCXFm (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:33564 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751734AbdDCXor (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2017 19:05:42 -0400
+        Mon, 3 Apr 2017 19:44:47 -0400
 Content-Disposition: inline
-In-Reply-To: <CAN88QNC4bv0JKRxzyCOjDh2pex9t1+7J9WXt2C1d6vOF6tT+eQ@mail.gmail.com>
+In-Reply-To: <20170403221311.GA17322@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Santeri Toivonen <santeri.toivonen@vatsul.com>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Mar 30, 2017 at 09:02:41PM +0300, Santeri Toivonen wrote:
-> Asus laptop X302UA starts up with wifi hard-blocked without any meaningful
-> way to enable it.
-> Setting wapf=4 fixes the problem.
-
-Please always Cc LKML and all listed maintainers and lists when submitting
-patches to the Linux kernel (according to get_maintainer.pl).
-
-(Didn't add LKML since the original has HTML)
-+Andy
-
+On Mon, Apr 03, 2017 at 03:13:11PM -0700, Darren Hart wrote:
+> On Mon, Apr 03, 2017 at 11:38:56AM +0200, Micha?? K??pie?? wrote:
+> > This series contains a few cleanups for the call_fext_func() function.
+> > It does not depend on the previous series I submitted for
+> > fujitsu-laptop, which is why I am sending it in parallel with the
+> > backlight cleanup series.
+> > 
+> > While patches 1 and 2 are tangible improvements, I will understand if
+> > you deem patch 3 to be unnecessary churn.  I decided to submit it anyway
+> > as I think it might bring some benefit to a casual reader of the
+> > module's code, but it is basically just a suggestion and as it is the
+> > last patch, it can simply be omitted when the series is applied.
+> > 
+> >  drivers/platform/x86/fujitsu-laptop.c | 39 +++++++++++------------------------
+> >  1 file changed, 12 insertions(+), 27 deletions(-)
 > 
-> Signed-off-by: Santeri Toivonen <santeri.toivonen@vatsul.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c
-> b/drivers/platform/x86/asus-nb-wmi.c
-> index dea98ffb6f60..1ae58d906536 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -144,6 +144,15 @@ static const struct dmi_system_id asus_quirks[] = {
->   },
->   {
->   .callback = dmi_matched,
-> + .ident = "ASUSTeK COMPUTER INC. X302UA",
-> + .matches = {
-> + DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> + DMI_MATCH(DMI_PRODUCT_NAME, "X302UA"),
-> + },
-> + .driver_data = &quirk_asus_wapf4,
-> + },
-> + {
-> + .callback = dmi_matched,
+> These all look like worthwhile changes to me. Jonathan, are you aware of
+> any usage of the arguments in 3/3 that would argue against changing their
+> names to the more specific ones?
 
-The change looks good in general, with the exception of the whitespace
-corruption. Indentation should match the surrounding similar dmi match blocks,
-using tabs.
+Certainly not at this stage and realistically I don't expect this to change.
+The suggested renaming of fields does add a degree of clarity to the code so
+I have no problem with it.
 
-This message contains multiple content types, including one in HTML, which LKML
-will drop.
+> Pushed to the temporary fujitsu branch for testing, awaiting ack from
+> Jonathan.
 
-Please see: Documentation/process/submitting-patches.rst
-       and: Documentation/process/email-clients.rst
+Even though these are small changes I agree that all three patches contain
+worthwhile improvements.  I'm happy for all three of them to be merged.
 
-If you need assistance getting the patch submitted correctly, I'll be happy to
-help. This appears to be a mail client induced whitespace corruption issue and
-embedded HTML problem. See the email-clients.rst document for ways to resolve
-this.
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
-Thanks,
+FYI I am still working through the more extensive backlight cleanup series.
+This is a particularly busy week for me so my review comments might only
+come through towards the end of the week or during the weekend.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+Regards
+  jonathan
