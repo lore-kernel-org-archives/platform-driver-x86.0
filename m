@@ -1,115 +1,101 @@
-From: Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
-Subject: Re: [PATCH v4 3/5] watchdog: iTCO_wdt: Add PMC specific noreboot
- update api
-Date: Sun, 2 Apr 2017 18:55:22 -0700
-Message-ID: <CAENHMvNE_-uh9vWyiWmA5euc+nP5yCbZrYbmYfTqKUwqsSay6A@mail.gmail.com>
-References: <e537ff68732d86418982349624fd6de741bccc9b.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170331133728.GA23725@rajaneesh-OptiPlex-9010> <e36dcfd637dd0fff2c3133cea0a541bdd3712418.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VcDQoVrGkBvwb7wXwUwG_ew+XDGnBmvvraDBJ4Oy0SkOQ@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/3] mfd: intel_soc_pmic: Fix a mess with compilation
+ units
+Date: Mon, 3 Apr 2017 10:20:28 +0100
+Message-ID: <20170403092028.z4xtrwz5wj3go3jd@dell>
+References: <20170317153715.48555-1-andriy.shevchenko@linux.intel.com>
+ <201704030357.HdHD43mM%fengguang.wu@intel.com>
+ <CAHp75Vdt3ys=tFax5iK5tnANNCLj-b4-VxO78b4ZT0jqdAnsdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcDQoVrGkBvwb7wXwUwG_ew+XDGnBmvvraDBJ4Oy0SkOQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdt3ys=tFax5iK5tnANNCLj-b4-VxO78b4ZT0jqdAnsdg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
+Cc: kbuild test robot <lkp@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kbuild-all@01.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Sun, 02 Apr 2017, Andy Shevchenko wrote:
 
-On Sun, Apr 2, 2017 at 7:04 AM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Apr 1, 2017 at 2:27 AM, Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> In some SOCs, setting noreboot bit needs modification to
->
-> SoCs.
->
-> Perhaps you can create a wikipage to share with your team what style
-> issues usually needs to be addressed.
-> One of them is a proper capitalization in abbreviations / code names.
->
->> PMC GC registers. But not all PMC drivers allow other drivers
->> to memory map their GC region. This could create mem request
->> conflict in watchdog driver. So this patch adds facility to allow
->> PMC drivers to pass noreboot update function to watchdog
->> drivers via platform data.
->
->> --- a/drivers/watchdog/iTCO_wdt.c
->> +++ b/drivers/watchdog/iTCO_wdt.c
->> @@ -100,6 +100,8 @@ struct iTCO_wdt_private {
->>          */
->>         struct resource *gcs_pmc_res;
->>         unsigned long __iomem *gcs_pmc;
->
->> +       /* pmc specific api to update noreboot flag */
->
-> PMC
-> API
-will fix in next version.
->
->> +       int (*update_noreboot_flag)(bool status);
->>         /* the lock for io operations */
->>         spinlock_t io_lock;
->>         /* the PCI-device */
->> @@ -176,9 +178,13 @@ static void iTCO_wdt_set_NO_REBOOT_bit(struct iTCO_wdt_private *p)
->>
->>         /* Set the NO_REBOOT bit: this disables reboots */
->>         if (p->iTCO_version >= 2) {
->> -               val32 = readl(p->gcs_pmc);
->> -               val32 |= no_reboot_bit(p);
->> -               writel(val32, p->gcs_pmc);
->> +               if (p->update_noreboot_flag)
->
->> +                       p->update_noreboot_flag(1);
->
-> 1 -> true for sake of consistency.
-ditto
->
->> +               else {
->> +                       val32 = readl(p->gcs_pmc);
->> +                       val32 |= no_reboot_bit(p);
->> +                       writel(val32, p->gcs_pmc);
->> +               }
->>         } else if (p->iTCO_version == 1) {
->>                 pci_read_config_dword(p->pci_dev, 0xd4, &val32);
->>                 val32 |= no_reboot_bit(p);
->> @@ -193,11 +199,14 @@ static int iTCO_wdt_unset_NO_REBOOT_bit(struct iTCO_wdt_private *p)
->>
->>         /* Unset the NO_REBOOT bit: this enables reboots */
->>         if (p->iTCO_version >= 2) {
->> -               val32 = readl(p->gcs_pmc);
->> -               val32 &= ~enable_bit;
->> -               writel(val32, p->gcs_pmc);
->> -
->> -               val32 = readl(p->gcs_pmc);
->> +               if (p->update_noreboot_flag)
->
->> +                       return p->update_noreboot_flag(0);
->
-> 0 -> false.
-ditto
->
->> +               else {
->
->> +                       val32 = readl(p->gcs_pmc);
->> +                       val32 &= ~enable_bit;
->> +                       writel(val32, p->gcs_pmc);
->> +                       val32 = readl(p->gcs_pmc);
->
-> This and similar above code might be split to a helper and you may
-> assign it once. In such case you will not need a special flag anymore.
->
-> Helpers split might be done as a preparatory separate patch.
-Yes, will create a patch for fixing it.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> On Sun, Apr 2, 2017 at 11:03 PM, kbuild test robot <lkp@intel.com> wrote:
+> > Hi Andy,
+> >
+> > [auto build test ERROR on ljones-mfd/for-mfd-next]
+> > [also build test ERROR on v4.11-rc4 next-20170331]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> Thank you for report, though...
+> 
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/mfd-intel_soc_pmic-Fix-a-mess-with-compilation-units/20170320-153539
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+> > config: tile-allyesconfig (attached as .config)
+> > compiler: tilegx-linux-gcc (GCC) 4.6.2
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> 
+> >         make.cross ARCH=tile
+> 
+> ...I doubt how below is related to my patch. This is obvious x86 code
+> which was initially submitted without
+> depend on X86
+> line in corresponding Kconfig.
 
+I think you should probably specify the architecture in the Kconfig
+entry, or else some `randconfig`s will fail.
 
+> > All errors (new ones prefixed by >>):
+> >
+> >>> drivers/mfd/intel_soc_pmic_bxtwc.c:24:31: fatal error: asm/intel_pmc_ipc.h: No such file or directory
+> >    compilation terminated.
+> >
+> > vim +24 drivers/mfd/intel_soc_pmic_bxtwc.c
+> >
+> > 39d047c0 Qipeng Zha 2015-09-15   8   * version 2, as published by the Free Software Foundation.
+> > 39d047c0 Qipeng Zha 2015-09-15   9   *
+> > 39d047c0 Qipeng Zha 2015-09-15  10   * This program is distributed in the hope it will be useful, but WITHOUT
+> > 39d047c0 Qipeng Zha 2015-09-15  11   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > 39d047c0 Qipeng Zha 2015-09-15  12   * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> > 39d047c0 Qipeng Zha 2015-09-15  13   * more details.
+> > 39d047c0 Qipeng Zha 2015-09-15  14   */
+> > 39d047c0 Qipeng Zha 2015-09-15  15
+> > 39d047c0 Qipeng Zha 2015-09-15  16  #include <linux/module.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  17  #include <linux/acpi.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  18  #include <linux/err.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  19  #include <linux/delay.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  20  #include <linux/interrupt.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  21  #include <linux/kernel.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  22  #include <linux/mfd/core.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  23  #include <linux/mfd/intel_bxtwc.h>
+> > 39d047c0 Qipeng Zha 2015-09-15 @24  #include <asm/intel_pmc_ipc.h>
+> > 39d047c0 Qipeng Zha 2015-09-15  25
+> > 39d047c0 Qipeng Zha 2015-09-15  26  /* PMIC device registers */
+> > 39d047c0 Qipeng Zha 2015-09-15  27  #define REG_ADDR_MASK               0xFF00
+> > 39d047c0 Qipeng Zha 2015-09-15  28  #define REG_ADDR_SHIFT              8
+> > 39d047c0 Qipeng Zha 2015-09-15  29  #define REG_OFFSET_MASK             0xFF
+> > 39d047c0 Qipeng Zha 2015-09-15  30
+> > 39d047c0 Qipeng Zha 2015-09-15  31  /* Interrupt Status Registers */
+> > 39d047c0 Qipeng Zha 2015-09-15  32  #define BXTWC_IRQLVL1               0x4E02
+> >
+> > :::::: The code at line 24 was first introduced by commit
+> > :::::: 39d047c0b1c812e9f0014e7100e372e61f2de3de mfd: add Intel Broxton Whiskey Cove PMIC driver
+> >
+> > :::::: TO: Qipeng Zha <qipeng.zha@intel.com>
+> > :::::: CC: Lee Jones <lee.jones@linaro.org>
+> >
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+> 
+> 
 
 -- 
---
-
-Sathya
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
