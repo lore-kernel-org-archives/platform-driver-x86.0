@@ -1,57 +1,29 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 1/3] mfd: intel_soc_pmic: Fix a mess with compilation units
-Date: Mon, 3 Apr 2017 12:26:54 +0300
-Message-ID: <CAHp75VcGgSF-spv6OZWuAE9ardAW=Q6GjC7T8Eto=7subAuW2g@mail.gmail.com>
-References: <20170317153715.48555-1-andriy.shevchenko@linux.intel.com>
- <201704030357.HdHD43mM%fengguang.wu@intel.com> <CAHp75Vdt3ys=tFax5iK5tnANNCLj-b4-VxO78b4ZT0jqdAnsdg@mail.gmail.com>
- <20170403092028.z4xtrwz5wj3go3jd@dell>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 0/3] fujitsu-laptop: call_fext_func() cleanup
+Date: Mon,  3 Apr 2017 11:38:56 +0200
+Message-ID: <20170403093859.6685-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170403092028.z4xtrwz5wj3go3jd@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: kbuild test robot <lkp@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kbuild-all@01.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 3, 2017 at 12:20 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Sun, 02 Apr 2017, Andy Shevchenko wrote:
->
->> On Sun, Apr 2, 2017 at 11:03 PM, kbuild test robot <lkp@intel.com> wrote:
->> > Hi Andy,
->> >
->> > [auto build test ERROR on ljones-mfd/for-mfd-next]
->> > [also build test ERROR on v4.11-rc4 next-20170331]
->> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->>
->> Thank you for report, though...
->>
->> >
->> > url:    https://github.com/0day-ci/linux/commits/Andy-Shevchenko/mfd-intel_soc_pmic-Fix-a-mess-with-compilation-units/20170320-153539
->> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
->> > config: tile-allyesconfig (attached as .config)
->> > compiler: tilegx-linux-gcc (GCC) 4.6.2
->> > reproduce:
->> >         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->> >         chmod +x ~/bin/make.cross
->> >         # save the attached .config to linux build tree
->>
->> >         make.cross ARCH=tile
->>
->> ...I doubt how below is related to my patch. This is obvious x86 code
->> which was initially submitted without
->> depend on X86
->> line in corresponding Kconfig.
->
-> I think you should probably specify the architecture in the Kconfig
-> entry, or else some `randconfig`s will fail.
+This series contains a few cleanups for the call_fext_func() function.
+It does not depend on the previous series I submitted for
+fujitsu-laptop, which is why I am sending it in parallel with the
+backlight cleanup series.
 
-Yes, I understand how to fix this, though it's not a problem of this
-patch per se.
+While patches 1 and 2 are tangible improvements, I will understand if
+you deem patch 3 to be unnecessary churn.  I decided to submit it anyway
+as I think it might bring some benefit to a casual reader of the
+module's code, but it is basically just a suggestion and as it is the
+last patch, it can simply be omitted when the series is applied.
 
-Fengguang, is there any possible way to determine the relation between
-an error and a root cause change?
+ drivers/platform/x86/fujitsu-laptop.c | 39 +++++++++++------------------------
+ 1 file changed, 12 insertions(+), 27 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.12.1
