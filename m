@@ -1,61 +1,71 @@
-From: Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Sun, 2 Apr 2017 18:51:40 -0700
-Message-ID: <CAENHMvOyzbhDQzvpYFcxC9mvsfDGrco9RMy+rU=faT6RN_uW3A@mail.gmail.com>
-References: <20170331133728.GA23725@rajaneesh-OptiPlex-9010>
- <e537ff68732d86418982349624fd6de741bccc9b.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75Vf3bq7cGUmi2Oi_TkvkCTzJ1QDmKUoTXmJgkgbxUE+UfA@mail.gmail.com>
+From: Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+Subject: Re: [PATCH v4 4/5] platform/x86: intel_pmc_ipc: Fix iTCO GCS memory
+ mapping failure
+Date: Sun, 2 Apr 2017 18:53:59 -0700
+Message-ID: <CAENHMvObROparM_DoLOhcf=QQtq4_4Tqw5FkuuVUN3mJCiiweQ@mail.gmail.com>
+References: <e537ff68732d86418982349624fd6de741bccc9b.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170331133728.GA23725@rajaneesh-OptiPlex-9010> <4e66c12e4576c56c675d049af8b063d3ccd65d17.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAHp75VePsgzLq46GvndfQimzA=yRs0u_1Kz1mGXKS91jcqNzRw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75Vf3bq7cGUmi2Oi_TkvkCTzJ1QDmKUoTXmJgkgbxUE+UfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, David Box <david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yb0-f170.google.com ([209.85.213.170]:35033 "EHLO
+        mail-yb0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750992AbdDCByB (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 2 Apr 2017 21:54:01 -0400
+In-Reply-To: <CAHp75VePsgzLq46GvndfQimzA=yRs0u_1Kz1mGXKS91jcqNzRw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
 
-Yes, just applying this patch will fix the existing offset issue.
+Hi Andy,
 
-On Sun, Apr 2, 2017 at 7:11 AM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+
+On Sun, Apr 2, 2017 at 7:10 AM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 > On Sat, Apr 1, 2017 at 2:27 AM, Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> According to Broxton APL PMC spec, gcr mem region starts
->> at offset 0x1000 from ipc mem base address. In this driver,
->> PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
->> memory region from IPC mem region. So we should use 0x1000(4K)
->> as GCR offset. But currently this driver uses 0x1008 as GCT
->> offset.This patch fixes this issue.
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>> iTCO watchdog driver need access to PMC_CFG GCR register to modify
+>
+> iTCO_wdt or use above in the rest of the series.
+>
+> So, choose one and use it everywhere in your patch series.
+
+will go with iTCO_wdt.
+
+>
+>> the no reboot setting. Currently, this is done by passing PMC_CFG reg
+>> address as memory resource to watchdog driver and allowing it directly
+>> modify the PMC_CFG register. But currently PMC driver also has
+>> requirement to memory map the entire GCR register space in this driver.
+>> This causes mem request failure in watchdog driver. So this patch fixes
+>> this issue by adding api to update noreboot flag and passes them
+>> to watchdog driver via platform data.
 >
 >
-> So, if I apply this one independently, would it fix an existin issue?
+>> +static int update_noreboot_bit(bool status)
+>> +{
+>> +       if (status)
 >
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->>  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Changes since v3:
->>  * Updated the commit history
->>
->> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
->> index 0651d47..0a33592 100644
->> --- a/drivers/platform/x86/intel_pmc_ipc.c
->> +++ b/drivers/platform/x86/intel_pmc_ipc.c
->> @@ -82,7 +82,7 @@
->>  /* exported resources from IFWI */
->>  #define PLAT_RESOURCE_IPC_INDEX                0
->>  #define PLAT_RESOURCE_IPC_SIZE         0x1000
->> -#define PLAT_RESOURCE_GCR_OFFSET       0x1008
->> +#define PLAT_RESOURCE_GCR_OFFSET       0x1000
->>  #define PLAT_RESOURCE_GCR_SIZE         0x1000
->>  #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
->>  #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
->> --
->> 2.7.4
->>
+>> +               return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG, BIT(4),
+>> +                                           BIT(4));
 >
+> BIT(4) is a magic. Moreover, it's used as mask and value here, you
+> might introduce temporary variables for better understanding what is
+> what.
+> As an example you may look at drivers/acpi/acpi_lpss.c (code related
+> to IOSF MBI interaction).
+
+I will create macros with some meaningful name to explain what BIT(4)
+represents.
+
+>
+>> +       else
+>
+> Redundant.
 >
 >
 > --
@@ -65,10 +75,3 @@ On Sun, Apr 2, 2017 at 7:11 AM, Andy Shevchenko
 
 
 -- 
---
-
-Sathya
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
