@@ -1,61 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: silead_dmi - do not treat all devices
- as i2c_clients
-Date: Tue, 4 Apr 2017 19:33:30 +0300
-Message-ID: <CAHp75Vds88+YNRgbhKXPocUOSFQyx8MWHCVFNGQpDqVvCHQCiQ@mail.gmail.com>
-References: <20170404032514.31832-1-dmitry.torokhov@gmail.com>
- <CAHp75Vc62q7a+0CS3S9TNm+CVPodqG6HT9yoq0d8RBQ0B72REw@mail.gmail.com>
- <20170404160540.GD5936@fury> <CAHp75VezdB1PmNUfUzCCKVP7pswkVKJRvLHaAtMJ-W17-Rf3fw@mail.gmail.com>
- <20170404163154.GE5936@fury>
+From: Santeri Toivonen <santeri.toivonen@vatsul.com>
+Subject: [PATCH 1/1] asus-nb-wmi: Add wapf4 quirk for the X302UA
+Date: Tue, 4 Apr 2017 19:35:00 +0300
+Message-ID: <4a7fe8c6-e790-e855-1571-24603c5ca80f@vatsul.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f196.google.com ([209.85.216.196]:34986 "EHLO
-        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754740AbdDDQdb (ORCPT
+Received: from rs224.mailgun.us ([209.61.151.224]:44398 "EHLO rs224.mailgun.us"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932196AbdDDQfS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2017 12:33:31 -0400
-In-Reply-To: <20170404163154.GE5936@fury>
+        Tue, 4 Apr 2017 12:35:18 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: dvhart@linux.intel.com, Corentin Chary <corentin.chary@gmail.com>, jprvita@gmail.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, marcos.souza.org@gmail.com
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 4, 2017 at 7:31 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, Apr 04, 2017 at 07:08:28PM +0300, Andy Shevchenko wrote:
->> On Tue, Apr 4, 2017 at 7:05 PM, Darren Hart <dvhart@infradead.org> wrote:
->> > On Tue, Apr 04, 2017 at 04:45:05PM +0300, Andy Shevchenko wrote:
->> >> On Tue, Apr 4, 2017 at 6:25 AM, Dmitry Torokhov
->> >> <dmitry.torokhov@gmail.com> wrote:
->> >> > I2C bus has both i2c clients and adapter devices, so we must be careful in
->> >> > notifier code and verify that we are actually dealing with an i2c client
->> >> > before using it as such.
->> >>
->> >> > -static void silead_ts_dmi_add_props(struct device *dev)
->> >> > +static void silead_ts_dmi_add_props(struct i2c_client *client)
->> >> >  {
->> >>
->> >> > -       struct i2c_client *client = to_i2c_client(dev);
->> >>
->> >> I would replace this by
->> >> struct device *dev = &client->dev;
->> >>
->> >> Otherwise looks good for me.
->> >
->> > Andy, this series looks like a candidate for 4.11-fixes. We're already at rc5
->> > though, so if we are going to do that, I'd like to see a stronger statement in
->> > the commit log about how this issue manifests currently - if it does.
->>
->> It makes less changes for any (potentially) backported code.
->> I'm not insisting and even can do myself.
->
-> Sorry, I was referring to the series itself, not your feedback above. You
-> assigned this to yourself in patchwork, so I was just noting that this patch
-> series may be a candidate for fixes to 4.11, rather than testing/for-next for
-> 4.12. Your call.
+Asus laptop X302UA starts up with Wi-Fi disabled,
+without a way to enable it. Set wapf=4 to fix the problem.
 
-Ah, thanks Darren for clarification.
+Signed-off-by: Santeri Toivonen <santeri.toivonen@vatsul.com>
+---
+  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+  1 file changed, 9 insertions(+)
 
+diff --git a/drivers/platform/x86/asus-nb-wmi.c 
+b/drivers/platform/x86/asus-nb-wmi.c
+index dea98ffb6f60..1ae58d906536 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -144,6 +144,15 @@ static const struct dmi_system_id asus_quirks[] = {
+  	},
+  	{
+  		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X302UA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X302UA"),
++		},
++		.driver_data = &quirk_asus_wapf4,
++	},
++	{
++		.callback = dmi_matched,
+  		.ident = "ASUSTeK COMPUTER INC. X401U",
+  		.matches = {
+  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0.windows.3
