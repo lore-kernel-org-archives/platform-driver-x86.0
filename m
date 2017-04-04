@@ -1,85 +1,51 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/2] platform/x86: silead_dmi - abort early if DMI does
- not match
-Date: Tue, 4 Apr 2017 11:54:41 +0200
-Message-ID: <2290de15-f841-6815-969c-b80ffc77b01c@redhat.com>
-References: <20170404032514.31832-1-dmitry.torokhov@gmail.com>
- <20170404032514.31832-2-dmitry.torokhov@gmail.com>
+From: Jala - <herra.melkor@gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Add wapf=4 quirk for Asus X302UA
+Date: Tue, 4 Apr 2017 13:14:36 +0300
+Message-ID: <CAN88QNC1B6TyqJbNVmCD6J72zdWAJyFyjrCXrXOT=2p5FMGrEQ@mail.gmail.com>
+References: <CAN88QNC4bv0JKRxzyCOjDh2pex9t1+7J9WXt2C1d6vOF6tT+eQ@mail.gmail.com>
+ <20170403230540.GC17322@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170404032514.31832-2-dmitry.torokhov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pg0-f66.google.com ([74.125.83.66]:36501 "EHLO
+        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753084AbdDDKOh (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 4 Apr 2017 06:14:37 -0400
+Received: by mail-pg0-f66.google.com with SMTP id 81so36271881pgh.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 03:14:37 -0700 (PDT)
+In-Reply-To: <20170403230540.GC17322@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Santeri Toivonen <santeri.toivonen@vatsul.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hi,
+The issue should be corrected in the following.
 
-On 04-04-17 05:25, Dmitry Torokhov wrote:
-> There is no point in registering I2C bus notifier if DMI data does not
-> match.
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Good idea, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/platform/x86/silead_dmi.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index 7f1049951d1c..0eeb49e51c43 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -75,21 +75,16 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
->  	{ },
->  };
->
-> +static const struct silead_ts_dmi_data *silead_ts_data;
-> +
->  static void silead_ts_dmi_add_props(struct i2c_client *client)
->  {
-> -	const struct dmi_system_id *dmi_id;
-> -	const struct silead_ts_dmi_data *ts_data;
->  	int error;
->
-> -	dmi_id = dmi_first_match(silead_ts_dmi_table);
-> -	if (!dmi_id)
-> -		return;
-> -
-> -	ts_data = dmi_id->driver_data;
->  	if (has_acpi_companion(&client->dev) &&
-> -	    !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
-> +	    !strncmp(silead_ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
->  		error = device_add_properties(&client->dev,
-> -					      ts_data->properties);
-> +					      silead_ts_data->properties);
->  		if (error)
->  			dev_err(&client->dev,
->  				"failed to add properties: %d\n", error);
-> @@ -122,8 +117,15 @@ static struct notifier_block silead_ts_dmi_notifier = {
->
->  static int __init silead_ts_dmi_init(void)
->  {
-> +	const struct dmi_system_id *dmi_id;
->  	int error;
->
-> +	dmi_id = dmi_first_match(silead_ts_dmi_table);
-> +	if (!dmi_id)
-> +		return 0; /* Not an error */
-> +
-> +	silead_ts_data = dmi_id->driver_data;
-> +
->  	error = bus_register_notifier(&i2c_bus_type, &silead_ts_dmi_notifier);
->  	if (error)
->  		pr_err("%s: failed to register i2c bus notifier: %d\n",
->
+diff --git a/drivers/platform/x86/asus-nb-wmi.c
+b/drivers/platform/x86/asus-nb-wmi.c
+index dea98ffb6f60..1ae58d906536 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -144,6 +144,15 @@ static const struct dmi_system_id asus_quirks[] = {
+  },
+  {
+  .callback = dmi_matched,
++ .ident = "ASUSTeK COMPUTER INC. X302UA",
++ .matches = {
++ DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++ DMI_MATCH(DMI_PRODUCT_NAME, "X302UA"),
++ },
++ .driver_data = &quirk_asus_wapf4,
++ },
++ {
++ .callback = dmi_matched,
+  .ident = "ASUSTeK COMPUTER INC. X401U",
+  .matches = {
+  DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+2.11.0.windows.3
