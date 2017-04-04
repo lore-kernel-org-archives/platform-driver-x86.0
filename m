@@ -1,226 +1,39 @@
-From: Kuppuswamy Sathyanarayanan
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v5 2/6] platform/x86: intel_pmc_ipc: Add pmc gcr read/write/update api's
-Date: Mon,  3 Apr 2017 17:24:30 -0700
-Message-ID: <83d48f6907b3392e38ee251cf9fa6d518f139288.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <CAENHMvOyzbhDQzvpYFcxC9mvsfDGrco9RMy+rU=faT6RN_uW3A@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAENHMvOyzbhDQzvpYFcxC9mvsfDGrco9RMy+rU=faT6RN_uW3A@mail.gmail.com>
-In-Reply-To: <bf5a86829e9403d93e85270b2898b3c548417a05.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <bf5a86829e9403d93e85270b2898b3c548417a05.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net
-Cc: wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, rajneesh.bhardwaj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 11/11] platform/x86: fujitsu-laptop: remove redundant
+ fields from struct fujitsu_bl
+Date: Mon, 3 Apr 2017 18:16:28 -0700
+Message-ID: <20170404011628.GA16584@fury>
+References: <20170330103509.32509-1-kernel@kempniu.pl>
+ <20170330103509.32509-12-kernel@kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:41796 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751668AbdDDBQb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 3 Apr 2017 21:16:31 -0400
+Content-Disposition: inline
+In-Reply-To: <20170330103509.32509-12-kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This patch adds API's to read/write/update PMC GC registers.
-PMC dependent devices like iTCO_wdt, Telemetry has requirement
-to acces GCR registers. These API's can be used for this
-purpose.
+On Thu, Mar 30, 2017 at 12:35:09PM +0200, Michał Kępień wrote:
+> The dev field of struct fujitsu_bl is assigned in acpi_fujitsu_bl_add(),
+> but never used afterwards.  brightness_changed is set in get_lcd_level()
+> and then its value is only printed in a debug message, so it does not
+> influence execution flow.  Remove both fields as they are redundant.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- arch/x86/include/asm/intel_pmc_ipc.h |  21 +++++++
- drivers/platform/x86/intel_pmc_ipc.c | 114 +++++++++++++++++++++++++++++++++++
- 2 files changed, 135 insertions(+)
+Indeed, once that was removed from the platform device and the corresponding
+sysfs entries were eliminated, we can drop it:
 
-Changes since v4:
- * Fixed style issue in commit history
- * Added mutex locks in read/write/update API's.
+78b2602 platform/x86: fujitsu-laptop: remove backlight-related attributes from the platform device
 
-Changes since v3:
- * Added usage comments for read/write/update api
- * Created a helper function to handle GCR related range checks.
+:-)
 
-Changes since v2:
- * Removed unused reg offset from header file.
- * Modified read/write api's signatures for better error handling
- * Added function for bit level update of gcr register.
-
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 4291b6a..8402efe 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -23,6 +23,9 @@
- #define IPC_ERR_EMSECURITY		6
- #define IPC_ERR_UNSIGNEDKERNEL		7
- 
-+/* GCR reg offsets from gcr base*/
-+#define PMC_GCR_PMC_CFG_REG		0x08
-+
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
- 
- int intel_pmc_ipc_simple_command(int cmd, int sub);
-@@ -31,6 +34,9 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen);
- int intel_pmc_s0ix_counter_read(u64 *data);
-+int intel_pmc_gcr_read(u32 offset, u32 *data);
-+int intel_pmc_gcr_write(u32 offset, u32 data);
-+int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
- 
- #else
- 
-@@ -56,6 +62,21 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
- 	return -EINVAL;
- }
- 
-+static inline int intel_pmc_gcr_read(u32 offset, u32 *data)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int intel_pmc_gcr_write(u32 offset, u32 data)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+{
-+	return -EINVAL;
-+}
-+
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 0a33592..8b7fef0 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -127,6 +127,7 @@ static struct intel_pmc_ipc_dev {
- 
- 	/* gcr */
- 	resource_size_t gcr_base;
-+	void __iomem *gcr_mem_base;
- 	int gcr_size;
- 	bool has_gcr_regs;
- 
-@@ -199,6 +200,118 @@ static inline u64 gcr_data_readq(u32 offset)
- 	return readq(ipcdev.ipc_base + offset);
- }
- 
-+static inline int is_gcr_valid(u32 offset)
-+{
-+	if (!ipcdev.has_gcr_regs)
-+		return -EACCES;
-+
-+	if (offset > PLAT_RESOURCE_GCR_SIZE)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * intel_pmc_gcr_read() - Read PMC GCR register
-+ * @offset:	offset of GCR register from GCR address base
-+ * @data:	data pointer for storing the register output
-+ *
-+ * Reads the PMC GCR register of given offset.
-+ *
-+ * Return:	negative value on error or 0 on success.
-+ */
-+int intel_pmc_gcr_read(u32 offset, u32 *data)
-+{
-+	int ret;
-+
-+	mutex_lock(&ipclock);
-+
-+	ret = is_gcr_valid(offset);
-+	if (ret < 0) {
-+		mutex_unlock(&ipclock);
-+		return ret;
-+	}
-+
-+	*data = readl(ipcdev.gcr_mem_base + offset);
-+
-+	mutex_unlock(&ipclock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
-+
-+/**
-+ * intel_pmc_gcr_write() - Write PMC GCR register
-+ * @offset:	offset of GCR register from GCR address base
-+ * @data:	register update value
-+ *
-+ * Writes the PMC GCR register of given offset with given
-+ * value
-+ *
-+ * Return:	negative value on error or 0 on success.
-+ */
-+int intel_pmc_gcr_write(u32 offset, u32 data)
-+{
-+	int ret;
-+
-+	mutex_lock(&ipclock);
-+
-+	ret = is_gcr_valid(offset);
-+	if (ret < 0) {
-+		mutex_unlock(&ipclock);
-+		return ret;
-+	}
-+
-+	writel(data, ipcdev.gcr_mem_base + offset);
-+
-+	mutex_unlock(&ipclock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-+
-+/**
-+ * intel_pmc_gcr_update() - Update PMC GCR register bits
-+ * @offset:	offset of GCR register from GCR address base
-+ * @mask:	bit mask for update operation
-+ * @val:	update value
-+ *
-+ * Updates the bits of given GCR register as specified by
-+ * @mask and @val
-+ *
-+ * Return:	negative value on error or 0 on success.
-+ */
-+int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+{
-+	u32 orig, tmp;
-+	int ret = 0;
-+
-+	mutex_lock(&ipclock);
-+
-+	ret = is_gcr_valid(offset);
-+	if (ret < 0)
-+		goto gcr_update_err;
-+
-+	orig = readl(ipcdev.gcr_mem_base + offset);
-+
-+	tmp = orig & ~mask;
-+	tmp |= val & mask;
-+
-+	writel(tmp, ipcdev.gcr_mem_base + offset);
-+
-+	tmp = readl(ipcdev.gcr_mem_base + offset);
-+
-+	if ((tmp & mask) != (val & mask)) {
-+		ret = -EIO;
-+		goto gcr_update_err;
-+	}
-+
-+gcr_update_err:
-+	mutex_unlock(&ipclock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
-+
- static int intel_pmc_ipc_check_status(void)
- {
- 	int status;
-@@ -747,6 +860,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	ipcdev.ipc_base = addr;
- 
- 	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
-+	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
- 	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
- 	dev_info(&pdev->dev, "ipc res: %pR\n", res);
- 
 -- 
-2.7.4
+Darren Hart
+VMware Open Source Technology Center
