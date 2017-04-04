@@ -1,55 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: silead_dmi - do not treat all devices
- as i2c_clients
-Date: Tue, 4 Apr 2017 16:45:05 +0300
-Message-ID: <CAHp75Vc62q7a+0CS3S9TNm+CVPodqG6HT9yoq0d8RBQ0B72REw@mail.gmail.com>
-References: <20170404032514.31832-1-dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 3/6] watchdog: iTCO_wdt: Add PMC specific noreboot
+ update api
+Date: Tue, 4 Apr 2017 16:48:59 +0300
+Message-ID: <CAHp75VdvQ4k+NDmtdw_67Hds2JMPDzPBf-ioZ-VDBzFNB5wOqg@mail.gmail.com>
+References: <bf5a86829e9403d93e85270b2898b3c548417a05.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAENHMvOyzbhDQzvpYFcxC9mvsfDGrco9RMy+rU=faT6RN_uW3A@mail.gmail.com> <4d324041eea35fc04aca56b60c36035724cff2ba.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170404032514.31832-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <4d324041eea35fc04aca56b60c36035724cff2ba.1491264643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 4, 2017 at 6:25 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> I2C bus has both i2c clients and adapter devices, so we must be careful in
-> notifier code and verify that we are actually dealing with an i2c client
-> before using it as such.
+On Tue, Apr 4, 2017 at 3:24 AM, Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> In some SoCs, setting noreboot bit needs modification to
+> PMC GC registers. But not all PMC drivers allow other drivers
+> to memory map their GC region. This could create mem request
+> conflict in watchdog driver. So this patch adds facility to allow
+> PMC drivers to pass noreboot update function to watchdog
+> drivers via platform data.
 
-> -static void silead_ts_dmi_add_props(struct device *dev)
-> +static void silead_ts_dmi_add_props(struct i2c_client *client)
->  {
+>         /* Set the NO_REBOOT bit: this disables reboots */
+>         if (p->iTCO_version >= 2) {
+> -               val32 = readl(p->gcs_pmc);
+> -               val32 |= no_reboot_bit(p);
+> -               writel(val32, p->gcs_pmc);
+> +               if (p->update_noreboot_flag)
+> +                       p->update_noreboot_flag(true);
+> +               else {
+> +                       val32 = readl(p->gcs_pmc);
+> +                       val32 |= no_reboot_bit(p);
+> +                       writel(val32, p->gcs_pmc);
+> +               }
 
-> -       struct i2c_client *client = to_i2c_client(dev);
-
-I would replace this by
-struct device *dev = &client->dev;
-
-Otherwise looks good for me.
-
->         const struct dmi_system_id *dmi_id;
->         const struct silead_ts_dmi_data *ts_data;
->         int error;
-> @@ -87,11 +86,13 @@ static void silead_ts_dmi_add_props(struct device *dev)
->                 return;
->
->         ts_data = dmi_id->driver_data;
-> -       if (has_acpi_companion(dev) &&
-> +       if (has_acpi_companion(&client->dev) &&
->             !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
-> -               error = device_add_properties(dev, ts_data->properties);
-> +               error = device_add_properties(&client->dev,
-> +                                             ts_data->properties);
->                 if (error)
-> -                       dev_err(dev, "failed to add properties: %d\n", error);
-> +                       dev_err(&client->dev,
-> +                               "failed to add properties: %d\n", error);
->         }
-
-
+What I meant is to introduce helper(s) first and then fix this. Yes, I
+understand it might increase work for backporting (if even needed),
+but I still think it worth doing.
 
 -- 
 With Best Regards,
