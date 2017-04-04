@@ -1,103 +1,30 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v4 1/5] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Tue, 4 Apr 2017 14:32:50 -0700
-Message-ID: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
-References: <20170331133728.GA23725@rajaneesh-OptiPlex-9010>
- <e537ff68732d86418982349624fd6de741bccc9b.1491002056.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75Vf3bq7cGUmi2Oi_TkvkCTzJ1QDmKUoTXmJgkgbxUE+UfA@mail.gmail.com>
- <CAENHMvOyzbhDQzvpYFcxC9mvsfDGrco9RMy+rU=faT6RN_uW3A@mail.gmail.com>
- <CAHp75VdeZW6zAfoXsv6ZwQ9woyumj4s5n1ZSaPWoJQBdP5BNfw@mail.gmail.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v5 0/4] i2c-core improvements for acpi devices + ACPI INT33FE driver
+Date: Wed,  5 Apr 2017 00:03:31 +0200
+Message-ID: <20170404220335.9815-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:1629 "EHLO mga14.intel.com"
+Received: from mx1.redhat.com ([209.132.183.28]:59644 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754281AbdDDVgx (ORCPT
+        id S1752327AbdDDWDl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2017 17:36:53 -0400
-In-Reply-To: <CAHp75VdeZW6zAfoXsv6ZwQ9woyumj4s5n1ZSaPWoJQBdP5BNfw@mail.gmail.com>
+        Tue, 4 Apr 2017 18:03:41 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
+Hi All,
 
+Here is v5 of my patch-set for my i2c-core improvements for acpi
+devices + the ACPI INT33FE platform driver.
 
-On 04/04/2017 06:25 AM, Andy Shevchenko wrote:
-> Please, STOP top-posting.
->
-> On Mon, Apr 3, 2017 at 4:51 AM, Sathyanarayanan Kuppuswamy Natarajan
-> <sathyaosid@gmail.com> wrote:
->> Yes, just applying this patch will fix the existing offset issue.
-> Then the question how it was tested in both cases (before this change and now) ?
-iTCO_wdt is the only driver which uses this offset when calculating the 
-address of PMC_CFG for setting/unsetting the no-reboot bit.
+New in this version are some minor fixed to the INT33FE driver.
 
-Without this change, instead of modifying the PMC_CFG(offset:0x1008) 
-register, iTCO_wdt was modifying the address with offset 0x1010.
-According to spec, offset 0x1010 is unused memory address. So modifying 
-that area did not create any errors, but  its not functionally correct.
+The INT33FE driver depends on the i2c-core changes, so if
+it is ok with Darren / Andy I believe it would be best for
+this driver to be merged through the i2c subsys tree (with
+their ack).
 
-So with or without this change you will not see any error message. But 
-its creating the functional issue of not modifying the no-reboot bit.
+Regards,
 
-Currently, I tested this fix by duping the GCR registers and verified 
-whether the no-reboot bit is modified or not.
->
->> On Sun, Apr 2, 2017 at 7:11 AM, Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->>> On Sat, Apr 1, 2017 at 2:27 AM, Kuppuswamy Sathyanarayanan
->>> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->>>> According to Broxton APL PMC spec, gcr mem region starts
->>>> at offset 0x1000 from ipc mem base address. In this driver,
->>>> PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
->>>> memory region from IPC mem region. So we should use 0x1000(4K)
->>>> as GCR offset. But currently this driver uses 0x1008 as GCT
->>>> offset.This patch fixes this issue.
->>>
->>> So, if I apply this one independently, would it fix an existin issue?
->>>
->>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> ---
->>>>   drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> Changes since v3:
->>>>   * Updated the commit history
->>>>
->>>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
->>>> index 0651d47..0a33592 100644
->>>> --- a/drivers/platform/x86/intel_pmc_ipc.c
->>>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
->>>> @@ -82,7 +82,7 @@
->>>>   /* exported resources from IFWI */
->>>>   #define PLAT_RESOURCE_IPC_INDEX                0
->>>>   #define PLAT_RESOURCE_IPC_SIZE         0x1000
->>>> -#define PLAT_RESOURCE_GCR_OFFSET       0x1008
->>>> +#define PLAT_RESOURCE_GCR_OFFSET       0x1000
->>>>   #define PLAT_RESOURCE_GCR_SIZE         0x1000
->>>>   #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
->>>>   #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
->>>> --
->>>> 2.7.4
->>>>
->>>
->>>
->>> --
->>> With Best Regards,
->>> Andy Shevchenko
->>
->>
->> --
->> --
->>
->> Sathya
->
->
-
--- 
-Sathyanarayanan Kuppuswamy
-Android kernel developer
+Hans
