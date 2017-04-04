@@ -1,59 +1,85 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 0/3] fujitsu-laptop: call_fext_func() cleanup
-Date: Tue, 4 Apr 2017 09:13:50 +0930
-Message-ID: <20170403234350.GA14026@marvin.atrad.com.au>
-References: <20170403093859.6685-1-kernel@kempniu.pl>
- <20170403221311.GA17322@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 04/11] platform/x86: fujitsu-laptop: simplify
+ set_lcd_level()
+Date: Mon, 3 Apr 2017 17:01:02 -0700
+Message-ID: <20170404000102.GD17322@fury>
+References: <20170330103509.32509-1-kernel@kempniu.pl>
+ <20170330103509.32509-5-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:33564 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751734AbdDCXor (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:56481 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751668AbdDDABE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Apr 2017 19:44:47 -0400
+        Mon, 3 Apr 2017 20:01:04 -0400
 Content-Disposition: inline
-In-Reply-To: <20170403221311.GA17322@fury>
+In-Reply-To: <20170330103509.32509-5-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Apr 03, 2017 at 03:13:11PM -0700, Darren Hart wrote:
-> On Mon, Apr 03, 2017 at 11:38:56AM +0200, Micha?? K??pie?? wrote:
-> > This series contains a few cleanups for the call_fext_func() function.
-> > It does not depend on the previous series I submitted for
-> > fujitsu-laptop, which is why I am sending it in parallel with the
-> > backlight cleanup series.
-> > 
-> > While patches 1 and 2 are tangible improvements, I will understand if
-> > you deem patch 3 to be unnecessary churn.  I decided to submit it anyway
-> > as I think it might bring some benefit to a casual reader of the
-> > module's code, but it is basically just a suggestion and as it is the
-> > last patch, it can simply be omitted when the series is applied.
-> > 
-> >  drivers/platform/x86/fujitsu-laptop.c | 39 +++++++++++------------------------
-> >  1 file changed, 12 insertions(+), 27 deletions(-)
+On Thu, Mar 30, 2017 at 12:35:02PM +0200, Michał Kępień wrote:
+> acpi_execute_simple_method() takes a method parameter which tells it to
+> look for the given method underneath the given handle, so calling
+> acpi_get_handle() beforehand is redundant.  Replace the call to
+> acpi_get_handle() with a call to acpi_execute_simple_method(), thus
+> eliminating the need for a local variable storing the handle.  Also do
+> not assign a default value to status as it has no influence on execution
+> flow.
 > 
-> These all look like worthwhile changes to me. Jonathan, are you aware of
-> any usage of the arguments in 3/3 that would argue against changing their
-> names to the more specific ones?
+> Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 5005400b57bb..b888ba190fb2 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -358,8 +358,7 @@ static enum led_brightness eco_led_get(struct led_classdev *cdev)
+>  
+>  static int set_lcd_level(int level)
+>  {
+> -	acpi_status status = AE_OK;
+> -	acpi_handle handle = NULL;
+> +	acpi_status status;
+>  	char *method;
+>  
+>  	switch (use_alt_lcd_levels) {
+> @@ -377,16 +376,13 @@ static int set_lcd_level(int level)
+>  	if (level < 0 || level >= fujitsu_bl->max_brightness)
+>  		return -EINVAL;
+>  
+> -	status = acpi_get_handle(fujitsu_bl->acpi_handle, method, &handle);
+> +	status = acpi_execute_simple_method(fujitsu_bl->acpi_handle, method,
+> +					    level);
+>  	if (ACPI_FAILURE(status)) {
+>  		vdbg_printk(FUJLAPTOP_DBG_ERROR, "%s not present\n", method);
 
-Certainly not at this stage and realistically I don't expect this to change.
-The suggested renaming of fields does add a degree of clarity to the code so
-I have no problem with it.
+So this changes behavior a little bit for debug messages. Previously, this
+message only triggered if acpi_get_handle failed, now it will trigger if the
+method exists but fails, whereas that was silent previously (see below). I think
+printing in either case is fine, but we should adjust the message to reflect the
+new code flow.
 
-> Pushed to the temporary fujitsu branch for testing, awaiting ack from
-> Jonathan.
+>  		return -ENODEV;
+>  	}
+>  
+> -	status = acpi_execute_simple_method(handle, NULL, level);
+> -	if (ACPI_FAILURE(status))
+> -		return -ENODEV;
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.12.1
+> 
+> 
 
-Even though these are small changes I agree that all three patches contain
-worthwhile improvements.  I'm happy for all three of them to be merged.
-
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-
-FYI I am still working through the more extensive backlight cleanup series.
-This is a particularly busy week for me so my review comments might only
-come through towards the end of the week or during the weekend.
-
-Regards
-  jonathan
+-- 
+Darren Hart
+VMware Open Source Technology Center
