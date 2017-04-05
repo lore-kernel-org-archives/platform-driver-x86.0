@@ -1,63 +1,115 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 09/11] platform/x86: fujitsu-laptop: do not log set_lcd_level() failures in bl_update_status()
-Date: Wed,  5 Apr 2017 08:49:08 +0200
-Message-ID: <20170405064910.3162-10-kernel@kempniu.pl>
+Subject: [PATCH v2 03/11] platform/x86: fujitsu-laptop: merge set_lcd_level_alt() into set_lcd_level()
+Date: Wed,  5 Apr 2017 08:49:02 +0200
+Message-ID: <20170405064910.3162-4-kernel@kempniu.pl>
 References: <20170405064910.3162-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:35840 "EHLO
-        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754439AbdDEGt1 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2017 02:49:27 -0400
-Received: by mail-lf0-f67.google.com with SMTP id n78so353726lfi.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:27 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Any set_lcd_level() call can fail for one of two reasons: either
-requested brightness is outside the allowed range or the ACPI method
-used for setting brightness level is not available.  For
-bl_update_status(), the first case is handled by backlight core, which
-means bl_update_status() will not even be called if requested brightness
-is outside the allowed range.  The second case will be logged anyway by
-set_lcd_level() itself, so there is no point in generating another
-message in bl_update_status().  Remove the superfluous debug message
-along with a local variable that is now redundant.
+Depending on the value of the use_alt_lcd_levels module parameter, one
+of two functions is used for setting LCD brightness level.  These
+functions are almost identical and only differ in the name of the ACPI
+method they call.  Instead of checking the value of use_alt_lcd_levels
+at each call site, move that check to set_lcd_level() and get rid of
+set_lcd_level_alt().
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 54 +++++++++++------------------------
+ 1 file changed, 16 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 0cd58c96938c..a797e7890773 100644
+index 59107a599d22..2f563aa00592 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -443,18 +443,12 @@ static int bl_get_brightness(struct backlight_device *b)
- 
- static int bl_update_status(struct backlight_device *b)
+@@ -360,41 +360,26 @@ static int set_lcd_level(int level)
  {
--	int ret;
- 	if (b->props.power == FB_BLANK_POWERDOWN)
- 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
- 	else
- 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+ 	acpi_status status = AE_OK;
+ 	acpi_handle handle = NULL;
+-
+-	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via SBLL [%d]\n",
+-		    level);
+-
+-	if (level < 0 || level >= fujitsu_bl->max_brightness)
+-		return -EINVAL;
+-
+-	status = acpi_get_handle(fujitsu_bl->acpi_handle, "SBLL", &handle);
+-	if (ACPI_FAILURE(status)) {
+-		vdbg_printk(FUJLAPTOP_DBG_ERROR, "SBLL not present\n");
+-		return -ENODEV;
++	char *method;
++
++	switch (use_alt_lcd_levels) {
++	case 1:
++		method = "SBL2";
++		break;
++	default:
++		method = "SBLL";
++		break;
+ 	}
  
--	ret = set_lcd_level(b->props.brightness);
--	if (ret != 0)
--		vdbg_printk(FUJLAPTOP_DBG_ERROR,
--			"Unable to adjust LCD brightness, error code %i\n",
--			ret);
--	return ret;
-+	return set_lcd_level(b->props.brightness);
+-
+-	status = acpi_execute_simple_method(handle, NULL, level);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
+-
+-	return 0;
+-}
+-
+-static int set_lcd_level_alt(int level)
+-{
+-	acpi_status status = AE_OK;
+-	acpi_handle handle = NULL;
+-
+-	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via SBL2 [%d]\n",
+-		    level);
++	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via %s [%d]\n",
++		    method, level);
+ 
+ 	if (level < 0 || level >= fujitsu_bl->max_brightness)
+ 		return -EINVAL;
+ 
+-	status = acpi_get_handle(fujitsu_bl->acpi_handle, "SBL2", &handle);
++	status = acpi_get_handle(fujitsu_bl->acpi_handle, method, &handle);
+ 	if (ACPI_FAILURE(status)) {
+-		vdbg_printk(FUJLAPTOP_DBG_ERROR, "SBL2 not present\n");
++		vdbg_printk(FUJLAPTOP_DBG_ERROR, "%s not present\n", method);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -463,10 +448,7 @@ static int bl_update_status(struct backlight_device *b)
+ 			"Unable to adjust backlight power, error code %i\n",
+ 			ret);
+ 
+-	if (use_alt_lcd_levels)
+-		ret = set_lcd_level_alt(b->props.brightness);
+-	else
+-		ret = set_lcd_level(b->props.brightness);
++	ret = set_lcd_level(b->props.brightness);
+ 	if (ret != 0)
+ 		vdbg_printk(FUJLAPTOP_DBG_ERROR,
+ 			"Unable to adjust LCD brightness, error code %i\n",
+@@ -679,12 +661,8 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+ 	if (oldb == newb)
+ 		return;
+ 
+-	if (disable_brightness_adjust != 1) {
+-		if (use_alt_lcd_levels)
+-			set_lcd_level_alt(newb);
+-		else
+-			set_lcd_level(newb);
+-	}
++	if (disable_brightness_adjust != 1)
++		set_lcd_level(newb);
+ 
+ 	sparse_keymap_report_event(input, oldb < newb, 1, true);
  }
- 
- static const struct backlight_ops fujitsu_bl_ops = {
 -- 
 2.12.2
