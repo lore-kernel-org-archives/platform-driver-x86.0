@@ -1,54 +1,145 @@
 From: Kuppuswamy Sathyanarayanan
-        <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v6 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Wed,  5 Apr 2017 15:54:19 -0700
-Message-ID: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v6 4/6] watchdog: iTCO_wdt: Add PMC specific noreboot update api
+Date: Wed,  5 Apr 2017 15:54:22 -0700
+Message-ID: <686dfb634cc072d66080f6983900eefde8d85b5e.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:48130 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1755911AbdDEW6a (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 5 Apr 2017 18:58:30 -0400
+In-Reply-To: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
+In-Reply-To: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net
+Cc: wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, rajneesh.bhardwaj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 
-According to Broxton APL PMC spec, gcr mem region starts
-at offset 0x1000 from ipc mem base address. In this driver,
-PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
-memory region from IPC mem region. So we should use 0x1000(4K)
-as GCR offset. But currently this driver uses 0x1008 as GCT
-offset.This patch fixes this issue.
+In some SoCs, setting noreboot bit needs modification to
+PMC GC registers. But not all PMC drivers allow other drivers
+to memory map their GC region. This could create mem request
+conflict in watchdog driver. So this patch adds facility to allow
+PMC drivers to pass noreboot update function to watchdog
+drivers via platform data.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/iTCO_wdt.c            | 20 ++++++++++++++------
+ include/linux/platform_data/itco_wdt.h |  4 ++++
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
 Changes since v5:
- *  None
+ * Added priv_data to pass private data to no_reboot_bit update function.
+ * Changed update_noreboot_flag() to update_no_reboot_bit
 
 Changes since v4:
- *  None
+ * Fixed some style issues.
+ * used false for 0 and true for 1 in update_noreboot_flag function.
 
 Changes since v3:
- * Updated the commit history
+ * Rebased on top of latest.
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 0651d47..0a33592 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -82,7 +82,7 @@
- /* exported resources from IFWI */
- #define PLAT_RESOURCE_IPC_INDEX		0
- #define PLAT_RESOURCE_IPC_SIZE		0x1000
--#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-+#define PLAT_RESOURCE_GCR_OFFSET	0x1000
- #define PLAT_RESOURCE_GCR_SIZE		0x1000
- #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
- #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+Changes since v2: 
+ * Removed use of PMC API's directly in watchdog driver.
+ * Added update_noreboot_flag to handle no IPC PMC compatibility
+   issue mentioned by Guenter.
+
+diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+index d8768a2..3f00029 100644
+--- a/drivers/watchdog/iTCO_wdt.c
++++ b/drivers/watchdog/iTCO_wdt.c
+@@ -106,6 +106,8 @@ struct iTCO_wdt_private {
+ 	struct pci_dev *pci_dev;
+ 	/* whether or not the watchdog has been suspended */
+ 	bool suspended;
++	/* no reboot API private data */
++	void *no_reboot_priv;
+ 	/* no reboot update function pointer */
+ 	int (*update_no_reboot_bit)(void *p, bool set);
+ };
+@@ -225,6 +227,8 @@ void iTCO_wdt_no_reboot_bit_setup(struct iTCO_wdt_private *p)
+ 		p->update_no_reboot_bit = update_no_reboot_bit_pci;
+ 	else
+ 		p->update_no_reboot_bit = update_no_reboot_bit_def;
++
++	p->no_reboot_priv = p;
+ }
+ 
+ static int iTCO_wdt_start(struct watchdog_device *wd_dev)
+@@ -237,7 +241,7 @@ static int iTCO_wdt_start(struct watchdog_device *wd_dev)
+ 	iTCO_vendor_pre_start(p->smi_res, wd_dev->timeout);
+ 
+ 	/* disable chipset's NO_REBOOT bit */
+-	if (p->update_no_reboot_bit(p, false)) {
++	if (p->update_no_reboot_bit(p->no_reboot_priv, false)) {
+ 		spin_unlock(&p->io_lock);
+ 		pr_err("failed to reset NO_REBOOT flag, reboot disabled by hardware/BIOS\n");
+ 		return -EIO;
+@@ -278,7 +282,7 @@ static int iTCO_wdt_stop(struct watchdog_device *wd_dev)
+ 	val = inw(TCO1_CNT(p));
+ 
+ 	/* Set the NO_REBOOT bit to prevent later reboots, just for sure */
+-	p->update_no_reboot_bit(p, true);
++	p->update_no_reboot_bit(p->no_reboot_priv, true);
+ 
+ 	spin_unlock(&p->io_lock);
+ 
+@@ -442,14 +446,18 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+ 
+ 	p->iTCO_version = pdata->version;
+ 	p->pci_dev = to_pci_dev(dev->parent);
++	p->no_reboot_priv = pdata->no_reboot_priv;
+ 
+-	iTCO_wdt_no_reboot_bit_setup(p);
++	if (pdata->update_no_reboot_bit)
++		p->update_no_reboot_bit = pdata->update_no_reboot_bit;
++	else
++		iTCO_wdt_no_reboot_bit_setup(p);
+ 
+ 	/*
+ 	 * Get the Memory-Mapped GCS or PMC register, we need it for the
+ 	 * NO_REBOOT flag (TCO v2 and v3).
+ 	 */
+-	if (p->iTCO_version >= 2) {
++	if (p->iTCO_version >= 2 && !pdata->update_no_reboot_bit) {
+ 		p->gcs_pmc_res = platform_get_resource(pdev,
+ 						       IORESOURCE_MEM,
+ 						       ICH_RES_MEM_GCS_PMC);
+@@ -459,14 +467,14 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Check chipset's NO_REBOOT bit */
+-	if (p->update_no_reboot_bit(p, false) &&
++	if (p->update_no_reboot_bit(p->no_reboot_priv, false) &&
+ 	    iTCO_vendor_check_noreboot_on()) {
+ 		pr_info("unable to reset NO_REBOOT flag, device disabled by hardware/BIOS\n");
+ 		return -ENODEV;	/* Cannot reset NO_REBOOT bit */
+ 	}
+ 
+ 	/* Set the NO_REBOOT bit to prevent later reboots, just for sure */
+-	p->update_no_reboot_bit(p, true);
++	p->update_no_reboot_bit(p->no_reboot_priv, true);
+ 
+ 	/* The TCO logic uses the TCO_EN bit in the SMI_EN register */
+ 	if (!devm_request_region(dev, p->smi_res->start,
+diff --git a/include/linux/platform_data/itco_wdt.h b/include/linux/platform_data/itco_wdt.h
+index f16542c..0e95527 100644
+--- a/include/linux/platform_data/itco_wdt.h
++++ b/include/linux/platform_data/itco_wdt.h
+@@ -14,6 +14,10 @@
+ struct itco_wdt_platform_data {
+ 	char name[32];
+ 	unsigned int version;
++	/* private data to be passed to update_no_reboot_bit API */
++	void *no_reboot_priv;
++	/* pointer for platform specific no reboot update function */
++	int (*update_no_reboot_bit)(void *priv, bool set);
+ };
+ 
+ #endif /* _ITCO_WDT_H_ */
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
