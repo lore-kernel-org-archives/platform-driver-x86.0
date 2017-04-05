@@ -1,58 +1,63 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 05/11] platform/x86: fujitsu-laptop: sync brightness in set_lcd_level()
-Date: Wed,  5 Apr 2017 08:49:04 +0200
-Message-ID: <20170405064910.3162-6-kernel@kempniu.pl>
+Subject: [PATCH v2 04/11] platform/x86: fujitsu-laptop: simplify set_lcd_level()
+Date: Wed,  5 Apr 2017 08:49:03 +0200
+Message-ID: <20170405064910.3162-5-kernel@kempniu.pl>
 References: <20170405064910.3162-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:34905 "EHLO
-        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754251AbdDEGtT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2017 02:49:19 -0400
-Received: by mail-lf0-f67.google.com with SMTP id v2so355245lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:18 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-When using brightness keys and backlight device's sysfs interface
-alternately, an incorrect input event might be generated for a
-brightness key press.  Consider the following sequence of events:
-
- 1. Set backlight brightness to 6 using brightness keys.
- 2. Write 4 to /sys/class/backlight/fujitsu-laptop/brightness.
- 3. Press the "brightness up" key.
-
-The input event generated in this scenario would be KEY_BRIGHTNESSDOWN,
-because before step 3 brightness_level would still be at 6.  As the new
-brightness level is established using GBLL, it would evaluate to 5
-(SBLL/SBL2 sets it to 4 in step 2 and pressing the "brightness up" key
-increases it by 1).  This in turn would cause acpi_fujitsu_bl_notify()
-to observe a 6 -> 5 change, i.e. a decrease in brightness, while screen
-brightness would in fact be increased.
-
-Fix this by updating brightness_level in set_lcd_level.
+acpi_execute_simple_method() takes a method parameter which tells it to
+look for the given method underneath the given handle, so calling
+acpi_get_handle() beforehand is redundant.  Replace the call to
+acpi_get_handle() with a call to acpi_execute_simple_method(), thus
+eliminating the need for a local variable storing the handle.  Update
+debug message to reflect this change.  Also do not assign a default
+value to status as it has no influence on execution flow.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/fujitsu-laptop.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 6d4a2a36716b..b019060d6dc4 100644
+index 2f563aa00592..6d4a2a36716b 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -384,6 +384,8 @@ static int set_lcd_level(int level)
+@@ -358,8 +358,7 @@ static enum led_brightness eco_led_get(struct led_classdev *cdev)
+ 
+ static int set_lcd_level(int level)
+ {
+-	acpi_status status = AE_OK;
+-	acpi_handle handle = NULL;
++	acpi_status status;
+ 	char *method;
+ 
+ 	switch (use_alt_lcd_levels) {
+@@ -377,16 +376,14 @@ static int set_lcd_level(int level)
+ 	if (level < 0 || level >= fujitsu_bl->max_brightness)
+ 		return -EINVAL;
+ 
+-	status = acpi_get_handle(fujitsu_bl->acpi_handle, method, &handle);
++	status = acpi_execute_simple_method(fujitsu_bl->acpi_handle, method,
++					    level);
+ 	if (ACPI_FAILURE(status)) {
+-		vdbg_printk(FUJLAPTOP_DBG_ERROR, "%s not present\n", method);
++		vdbg_printk(FUJLAPTOP_DBG_ERROR, "Failed to evaluate %s\n",
++			    method);
  		return -ENODEV;
  	}
  
-+	fujitsu_bl->brightness_level = level;
-+
+-	status = acpi_execute_simple_method(handle, NULL, level);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
+-
  	return 0;
  }
  
