@@ -1,46 +1,51 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 00/11] fujitsu-laptop: backlight cleanup
-Date: Wed, 5 Apr 2017 08:36:00 -0700
-Message-ID: <20170405153600.GC27833@fury>
-References: <20170405064910.3162-1-kernel@kempniu.pl>
+Subject: Re: [PATCH v5 4/4] platform/x86: Add Intel Cherry Trail ACPI INT33FE
+ device driver
+Date: Wed, 5 Apr 2017 08:41:46 -0700
+Message-ID: <20170405154146.GD27833@fury>
+References: <20170404220335.9815-1-hdegoede@redhat.com>
+ <20170404220335.9815-5-hdegoede@redhat.com>
+ <1491400346.24567.5.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1491400346.24567.5.camel@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 05, 2017 at 08:48:59AM +0200, Michał Kępień wrote:
-> This series introduces further changes to the way LCD backlight is
-> handled by fujitsu-laptop.  These changes include fixing a bug in code
-> responsible for generating brightness-related input events, cleaning up
-> handling of module parameters, reducing code duplication, removing
-> superfluous debug messages and other fixes.
+On Wed, Apr 05, 2017 at 04:52:26PM +0300, Andy Shevchenko wrote:
+> On Wed, 2017-04-05 at 00:03 +0200, Hans de Goede wrote:
+> > The INT33FE ACPI device has a CRS table with I2cSerialBusV2 resources
+> > for
+> > 3 devices: Maxim MAX17047 Fuel Gauge Controller, FUSB300C USB Type-C
+> > Controller and PI3USB30532 USB switch.
+> > 
+> > This commit adds a driver for this ACPI device which instantiates
+> > i2c-clients for these, so that the standard i2c drivers for these
+> > chips
+> > can bind to the them.
+> > 
 > 
-> This series was tested on a Lifebook S7020 and a Lifebook E744.
+> Looks like we need something such as MFD for I2C bus clients...
 > 
-> This series is based on the testing branch as it requires earlier patch
-> series I submitted in order to apply cleanly.
-> 
-> Changes from v1:
-> 
->   - Update debug message logged by set_lcd_level() to reflect code flow
->     changes introduced by patch 04/11.
+> FWIW:
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Queued to testing, thanks! 
+Wolfram, will you be making an immutable i2c branch available for us to merge
+into our platform driver x86 for-next branch in order to apply this patch?
 
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 157 ++++++++++------------------------
->  1 file changed, 46 insertions(+), 111 deletions(-)
-> 
-> -- 
-> 2.12.2
-> 
-> 
+Alternatively you could send this in on our behalf, but that complicates any
+fixes between now and rc1 for this new driver. We'd prefer the immutable branch
+and pull this in ourselves.
+
+Either way,
+
+Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
+
+Thanks,
 
 -- 
 Darren Hart
