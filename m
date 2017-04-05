@@ -1,47 +1,41 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: ASUS g752VS Bugs
-Date: Tue, 4 Apr 2017 16:34:19 -0700
-Message-ID: <20170404233419.GA32193@fury>
-References: <bug-195027-5380@https.bugzilla.kernel.org/>
- <bug-195027-5380-w9RpRinDBI@https.bugzilla.kernel.org/>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v2 00/11] fujitsu-laptop: backlight cleanup
+Date: Wed,  5 Apr 2017 08:48:59 +0200
+Message-ID: <20170405064910.3162-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:59610 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751986AbdDDXeV (ORCPT
+Received: from mail-lf0-f54.google.com ([209.85.215.54]:34866 "EHLO
+        mail-lf0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753477AbdDEGtP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Apr 2017 19:34:21 -0400
-Content-Disposition: inline
-In-Reply-To: <bug-195027-5380-w9RpRinDBI@https.bugzilla.kernel.org/>
+        Wed, 5 Apr 2017 02:49:15 -0400
+Received: by mail-lf0-f54.google.com with SMTP id j90so2109706lfk.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:14 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Corentin,
+This series introduces further changes to the way LCD backlight is
+handled by fujitsu-laptop.  These changes include fixing a bug in code
+responsible for generating brightness-related input events, cleaning up
+handling of module parameters, reducing code duplication, removing
+superfluous debug messages and other fixes.
 
-We have a few bugs open for the Asus G752VS about hotkeys, keyboard backlight,
-and touchpad issues. The one that caught my attention listed first below. I
-thought this might have been an easy DMI entry to the asus-nb-wmi driver, but
-it's starting to look like it might be issues with hid-asus.c, with ongoing work
-here:
+This series was tested on a Lifebook S7020 and a Lifebook E744.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jikos/hid.git/commit/?h=for-4.12/asus&id=0485b1ec280cb9b2b6ed6e44e999294b4c698182
+This series is based on the testing branch as it requires earlier patch
+series I submitted in order to apply cleanly.
 
-Relevant bugs:
-https://bugzilla.kernel.org/show_bug.cgi?id=195027
-https://bugzilla.kernel.org/show_bug.cgi?id=191651
-https://bugzilla.kernel.org/show_bug.cgi?id=112531
+Changes from v1:
 
-I'd like your take on this, first of all.
+  - Update debug message logged by set_lcd_level() to reflect code flow
+    changes introduced by patch 04/11.
 
-Second of all, it would be helpful to have some instrumentation and, though I
-hate to say it, user configurable parameters to force quirks for those scenarios
-when all we need to do is add a DMI entry - like we have with wapf=4, but for
-other common quirks (if there are any anymore - maybe it's moving to drivers
-like hid-asus and we don't need to worry about it anymore).
+ drivers/platform/x86/fujitsu-laptop.c | 157 ++++++++++------------------------
+ 1 file changed, 46 insertions(+), 111 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.12.2
