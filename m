@@ -1,72 +1,54 @@
-From: David Howells <dhowells@redhat.com>
-Subject: [PATCH 15/24] asus-wmi: Restrict debugfs interface when the kernel
- is locked down
-Date: Wed, 05 Apr 2017 21:16:42 +0100
-Message-ID: <149142340198.5101.8171352010918423590.stgit@warthog.procyon.org.uk>
-References: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:58186 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S933681AbdDEUQu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2017 16:16:50 -0400
-In-Reply-To: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: matthew.garrett@nebula.com, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, gregkh@linuxfoundation.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+From: Kuppuswamy Sathyanarayanan
+        <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v6 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Wed,  5 Apr 2017 15:54:19 -0700
+Message-ID: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david.e.box-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rajneesh.bhardwaj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Matthew Garrett <matthew.garrett@nebula.com>
+According to Broxton APL PMC spec, gcr mem region starts
+at offset 0x1000 from ipc mem base address. In this driver,
+PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
+memory region from IPC mem region. So we should use 0x1000(4K)
+as GCR offset. But currently this driver uses 0x1008 as GCT
+offset.This patch fixes this issue.
 
-We have no way of validating what all of the Asus WMI methods do on a given
-machine - and there's a risk that some will allow hardware state to be
-manipulated in such a way that arbitrary code can be executed in the
-kernel, circumventing module loading restrictions.  Prevent that if the
-kernel is locked down.
-
-Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: acpi4asus-user@lists.sourceforge.net
-cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
+ drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/platform/x86/asus-wmi.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes since v5:
+ *  None
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 8fe5890bf539..feef25076813 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1900,6 +1900,9 @@ static int show_dsts(struct seq_file *m, void *data)
- 	int err;
- 	u32 retval = -1;
- 
-+	if (kernel_is_locked_down())
-+		return -EPERM;
-+
- 	err = asus_wmi_get_devstate(asus, asus->debug.dev_id, &retval);
- 
- 	if (err < 0)
-@@ -1916,6 +1919,9 @@ static int show_devs(struct seq_file *m, void *data)
- 	int err;
- 	u32 retval = -1;
- 
-+	if (kernel_is_locked_down())
-+		return -EPERM;
-+
- 	err = asus_wmi_set_devstate(asus->debug.dev_id, asus->debug.ctrl_param,
- 				    &retval);
- 
-@@ -1940,6 +1946,9 @@ static int show_call(struct seq_file *m, void *data)
- 	union acpi_object *obj;
- 	acpi_status status;
- 
-+	if (kernel_is_locked_down())
-+		return -EPERM;
-+
- 	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
- 				     1, asus->debug.method_id,
- 				     &input, &output);
+Changes since v4:
+ *  None
+
+Changes since v3:
+ * Updated the commit history
+
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 0651d47..0a33592 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -82,7 +82,7 @@
+ /* exported resources from IFWI */
+ #define PLAT_RESOURCE_IPC_INDEX		0
+ #define PLAT_RESOURCE_IPC_SIZE		0x1000
+-#define PLAT_RESOURCE_GCR_OFFSET	0x1008
++#define PLAT_RESOURCE_GCR_OFFSET	0x1000
+ #define PLAT_RESOURCE_GCR_SIZE		0x1000
+ #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+ #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
