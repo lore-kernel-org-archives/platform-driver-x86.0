@@ -1,54 +1,63 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 08/11] platform/x86: fujitsu-laptop: ignore errors when setting backlight power
-Date: Wed,  5 Apr 2017 08:49:07 +0200
-Message-ID: <20170405064910.3162-9-kernel@kempniu.pl>
+Subject: [PATCH v2 09/11] platform/x86: fujitsu-laptop: do not log set_lcd_level() failures in bl_update_status()
+Date: Wed,  5 Apr 2017 08:49:08 +0200
+Message-ID: <20170405064910.3162-10-kernel@kempniu.pl>
 References: <20170405064910.3162-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:34955 "EHLO
-        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754396AbdDEGt1 (ORCPT
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:35840 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754439AbdDEGt1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 5 Apr 2017 02:49:27 -0400
-Received: by mail-lf0-f68.google.com with SMTP id v2so355502lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:26 -0700 (PDT)
+Received: by mail-lf0-f67.google.com with SMTP id n78so353726lfi.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:27 -0700 (PDT)
 In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Not all Fujitsu laptops support controlling backlight power through the
-FUJ02E3 ACPI device.  Remove the debug message informing about a failed
-attempt to set backlight power as it may be confusing and the return
-value of call_fext_func() is logged anyway.
+Any set_lcd_level() call can fail for one of two reasons: either
+requested brightness is outside the allowed range or the ACPI method
+used for setting brightness level is not available.  For
+bl_update_status(), the first case is handled by backlight core, which
+means bl_update_status() will not even be called if requested brightness
+is outside the allowed range.  The second case will be logged anyway by
+set_lcd_level() itself, so there is no point in generating another
+message in bl_update_status().  Remove the superfluous debug message
+along with a local variable that is now redundant.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index a3e9efd1ac88..0cd58c96938c 100644
+index 0cd58c96938c..a797e7890773 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -445,13 +445,9 @@ static int bl_update_status(struct backlight_device *b)
+@@ -443,18 +443,12 @@ static int bl_get_brightness(struct backlight_device *b)
+ 
+ static int bl_update_status(struct backlight_device *b)
  {
- 	int ret;
+-	int ret;
  	if (b->props.power == FB_BLANK_POWERDOWN)
--		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
-+		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
+ 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
  	else
--		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+ 		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+ 
+-	ret = set_lcd_level(b->props.brightness);
 -	if (ret != 0)
 -		vdbg_printk(FUJLAPTOP_DBG_ERROR,
--			"Unable to adjust backlight power, error code %i\n",
+-			"Unable to adjust LCD brightness, error code %i\n",
 -			ret);
-+		call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+-	return ret;
++	return set_lcd_level(b->props.brightness);
+ }
  
- 	ret = set_lcd_level(b->props.brightness);
- 	if (ret != 0)
+ static const struct backlight_ops fujitsu_bl_ops = {
 -- 
 2.12.2
