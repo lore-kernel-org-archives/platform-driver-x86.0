@@ -1,75 +1,87 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 07/11] platform/x86: fujitsu-laptop: make disable_brightness_adjust a boolean
-Date: Wed,  5 Apr 2017 08:49:06 +0200
-Message-ID: <20170405064910.3162-8-kernel@kempniu.pl>
+Subject: [PATCH v2 11/11] platform/x86: fujitsu-laptop: remove redundant fields from struct fujitsu_bl
+Date: Wed,  5 Apr 2017 08:49:10 +0200
+Message-ID: <20170405064910.3162-12-kernel@kempniu.pl>
 References: <20170405064910.3162-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f65.google.com ([209.85.215.65]:34964 "EHLO
+        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754406AbdDEGtY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 5 Apr 2017 02:49:24 -0400
+Received: by mail-lf0-f65.google.com with SMTP id v2so355554lfi.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:23 -0700 (PDT)
 In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-Due to the way the disable_brightness_adjust module parameter is
-currently handled in acpi_fujitsu_bl_add(), it can only be set to either
-0 or 1, which effectively makes it a boolean.  Emphasize that by
-changing module parameter type to bool.  Do not announce parameter value
-in a debug message as it can be dynamically changed via sysfs and its
-current value can also be read from there.  Clean up module parameter
-description.
+The dev field of struct fujitsu_bl is assigned in acpi_fujitsu_bl_add(),
+but never used afterwards.  brightness_changed is set in get_lcd_level()
+and then its value is only printed in a debug message, so it does not
+influence execution flow.  Remove both fields as they are redundant.
+Update the aforementioned debug message.  Adjust whitespace to make
+checkpatch happy.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index cd2da9a02592..a3e9efd1ac88 100644
+index f58a33d70be3..9fd5b98aeef8 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -147,7 +147,7 @@ struct fujitsu_bl {
- 
- static struct fujitsu_bl *fujitsu_bl;
- static int use_alt_lcd_levels = -1;
--static int disable_brightness_adjust = -1;
-+static bool disable_brightness_adjust;
- 
- /* Device used to access hotkeys and other features on the laptop */
- struct fujitsu_laptop {
-@@ -612,11 +612,6 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 			pr_err("_INI Method failed\n");
- 	}
- 
--	/* do config (detect defaults) */
--	disable_brightness_adjust = disable_brightness_adjust == 1 ? 1 : 0;
--	vdbg_printk(FUJLAPTOP_DBG_INFO, "config: [adjust disable: %d]\n",
--		    disable_brightness_adjust);
+@@ -135,13 +135,10 @@
+ /* Device controlling the backlight and associated keys */
+ struct fujitsu_bl {
+ 	acpi_handle acpi_handle;
+-	struct acpi_device *dev;
+ 	struct input_dev *input;
+ 	char phys[32];
+ 	struct backlight_device *bl_device;
 -
- 	if (get_max_brightness() <= 0)
- 		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
+ 	unsigned int max_brightness;
+-	unsigned int brightness_changed;
+ 	unsigned int brightness_level;
+ };
+ 
+@@ -409,11 +406,6 @@ static int get_lcd_level(void)
+ 
+ 	fujitsu_bl->brightness_level = state & 0x0fffffff;
+ 
+-	if (state & 0x80000000)
+-		fujitsu_bl->brightness_changed = 1;
+-	else
+-		fujitsu_bl->brightness_changed = 0;
+-
+ 	return fujitsu_bl->brightness_level;
+ }
+ 
+@@ -592,8 +584,6 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	       acpi_device_name(device), acpi_device_bid(device),
+ 	       !device->power.state ? "on" : "off");
+ 
+-	fujitsu_bl->dev = device;
+-
+ 	if (acpi_has_method(device->handle, METHOD_NAME__INI)) {
+ 		vdbg_printk(FUJLAPTOP_DBG_INFO, "Invoking _INI\n");
+ 		if (ACPI_FAILURE
+@@ -633,9 +623,8 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
  	get_lcd_level();
-@@ -655,7 +650,7 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+ 	newb = fujitsu_bl->brightness_level;
+ 
+-	vdbg_printk(FUJLAPTOP_DBG_TRACE,
+-		    "brightness button event [%i -> %i (%i)]\n",
+-		    oldb, newb, fujitsu_bl->brightness_changed);
++	vdbg_printk(FUJLAPTOP_DBG_TRACE, "brightness button event [%i -> %i]\n",
++		    oldb, newb);
+ 
  	if (oldb == newb)
  		return;
- 
--	if (disable_brightness_adjust != 1)
-+	if (!disable_brightness_adjust)
- 		set_lcd_level(newb);
- 
- 	sparse_keymap_report_event(input, oldb < newb, 1, true);
-@@ -1150,8 +1145,8 @@ module_exit(fujitsu_cleanup);
- 
- module_param(use_alt_lcd_levels, int, 0644);
- MODULE_PARM_DESC(use_alt_lcd_levels, "Interface used for setting LCD brightness level (-1 = auto, 0 = force SBLL, 1 = force SBL2)");
--module_param(disable_brightness_adjust, uint, 0644);
--MODULE_PARM_DESC(disable_brightness_adjust, "Disable brightness adjustment .");
-+module_param(disable_brightness_adjust, bool, 0644);
-+MODULE_PARM_DESC(disable_brightness_adjust, "Disable LCD brightness adjustment");
- #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
- module_param_named(debug, dbg_level, uint, 0644);
- MODULE_PARM_DESC(debug, "Sets debug level bit-mask");
 -- 
 2.12.2
