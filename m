@@ -1,67 +1,109 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 01/11] platform/x86: fujitsu-laptop: only handle backlight when appropriate
-Date: Wed,  5 Apr 2017 08:49:00 +0200
-Message-ID: <20170405064910.3162-2-kernel@kempniu.pl>
-References: <20170405064910.3162-1-kernel@kempniu.pl>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 3/4] i2c: core: Allow drivers to disable i2c-core irq
+ mapping
+Date: Wed, 05 Apr 2017 16:31:07 +0300
+Message-ID: <1491399067.24567.3.camel@linux.intel.com>
+References: <20170404220335.9815-1-hdegoede@redhat.com>
+         <20170404220335.9815-4-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f65.google.com ([209.85.215.65]:34897 "EHLO
-        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753746AbdDEGtQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2017 02:49:16 -0400
-Received: by mail-lf0-f65.google.com with SMTP id v2so355187lfi.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Apr 2017 23:49:15 -0700 (PDT)
-In-Reply-To: <20170405064910.3162-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170404220335.9815-4-hdegoede@redhat.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Wolfram Sang <wsa@the-dreams.de>, Darren Hart <dvhart@infradead.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-The backlight part of fujitsu-laptop is only used by laptops which are
-incapable of using the standard ACPI video interface for handling
-brightness changes.  Conversely, on laptops which are capable of using
-the latter, no vendor-specific ACPI calls should be made unless
-explicitly requested by the user.  Bail out immediately from
-acpi_fujitsu_bl_add() unless using the vendor-specific interface was
-either explicitly requested by the user or automatically selected by the
-kernel.
+On Wed, 2017-04-05 at 00:03 +0200, Hans de Goede wrote:
+> By default the i2c-core will try to get an irq with index 0 on ACPI /
+> of
+> instantiated devices. This is troublesome on some ACPI systems where
+> the
+> irq info at index 0 in the CRS table may contain nonsense and/or point
+> to an irqchip for which there is no Linux driver.
+> 
+> If this happens then before this commit the driver's probe method
+> would
+> never get called because i2c_device_probe will try to get an irq by
+> calling acpi_dev_gpio_irq_get which will always return -EPROBE in this
+> case, as it waits for a matching irqchip driver to load. Thus causing
+> the driver to not get a chance to bind.
+> 
+> This commit adds a new disable_i2c_core_irq_mapping flag to struct
+> i2c_driver which a driver can set to tell the core to skip irq
+> mapping.
 
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+FWIW:
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index f66da4b0c31a..722250d1aa20 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -589,6 +589,9 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 	int state = 0;
- 	int error;
- 
-+	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
-+		return -ENODEV;
-+
- 	if (!device)
- 		return -EINVAL;
- 
-@@ -641,11 +644,9 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
- 		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
- 	get_lcd_level();
- 
--	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		error = fujitsu_backlight_register();
--		if (error)
--			return error;
--	}
-+	error = fujitsu_backlight_register();
-+	if (error)
-+		return error;
- 
- 	return 0;
- }
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Actually also use the irq_index for of interrupts
+> Changes in v3:
+> -Add kernel doc for new i2c_driver irq_index member
+> -Remove duplicate assignment of driver in i2c_device_probe
+> Changes in v4:
+> -Add a disable_i2c_core_irq_mapping flag to i2c_driver instead of
+>  an irq_index member (effectively a rewrite of the patch, dropped
+>  the Reviewed-by-s)
+> ---
+>  drivers/i2c/i2c-core.c | 6 +++---
+>  include/linux/i2c.h    | 3 +++
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index 00c4cef..7a065c4 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -985,7 +985,9 @@ static int i2c_device_probe(struct device *dev)
+>  	if (!client)
+>  		return 0;
+>  
+> -	if (!client->irq) {
+> +	driver = to_i2c_driver(dev->driver);
+> +
+> +	if (!client->irq && !driver->disable_i2c_core_irq_mapping) {
+>  		int irq = -ENOENT;
+>  
+>  		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+> @@ -1007,8 +1009,6 @@ static int i2c_device_probe(struct device *dev)
+>  		client->irq = irq;
+>  	}
+>  
+> -	driver = to_i2c_driver(dev->driver);
+> -
+>  	/*
+>  	 * An I2C ID table is not mandatory, if and only if, a
+> suitable Device
+>  	 * Tree match table entry is supplied for the probing device.
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 53fa50f..3a57e3d 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -149,6 +149,7 @@ enum i2c_alert_protocol {
+>   * @detect: Callback for device detection
+>   * @address_list: The I2C addresses to probe (for detect)
+>   * @clients: List of detected clients we created (for i2c-core use
+> only)
+> + * @disable_i2c_core_irq_mapping: Tell the i2c-core to not do irq-
+> mapping
+>   *
+>   * The driver.owner field should be set to the module owner of this
+> driver.
+>   * The driver.name field should be set to the name of this driver.
+> @@ -212,6 +213,8 @@ struct i2c_driver {
+>  	int (*detect)(struct i2c_client *, struct i2c_board_info *);
+>  	const unsigned short *address_list;
+>  	struct list_head clients;
+> +
+> +	bool disable_i2c_core_irq_mapping;
+>  };
+>  #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
+>  
+
 -- 
-2.12.2
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
