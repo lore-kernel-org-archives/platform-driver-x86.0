@@ -1,135 +1,54 @@
-From: Kuppuswamy Sathyanarayanan
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v6 5/6] platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS memory mapping failure
-Date: Wed,  5 Apr 2017 15:54:23 -0700
-Message-ID: <f5fbaf426ad657e1f8cb8a15619602afd4e12efe.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v2 00/11] fujitsu-laptop: backlight cleanup
+Date: Thu, 6 Apr 2017 10:15:14 +0930
+Message-ID: <20170406004514.GC25480@marvin.atrad.com.au>
+References: <20170405064910.3162-1-kernel@kempniu.pl>
+ <20170405153600.GC27833@fury>
+ <20170405195534.GB892@kmp-mobile.hq.kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:48130 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1756058AbdDEW6d (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:35346 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751655AbdDFAqa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Apr 2017 18:58:33 -0400
-In-Reply-To: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
-In-Reply-To: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Wed, 5 Apr 2017 20:46:30 -0400
+Content-Disposition: inline
+In-Reply-To: <20170405195534.GB892@kmp-mobile.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net
-Cc: wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, rajneesh.bhardwaj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-iTCO_wdt driver need access to PMC_CFG GCR register to modify the
-noreboot setting. Currently, this is done by passing PMC_CFG reg
-address as memory resource to watchdog driver and allowing it directly
-modify the PMC_CFG register. But currently PMC driver also has
-requirement to memory map the entire GCR register space in this driver.
-This causes mem request failure in watchdog driver. So this patch fixes
-this issue by adding API to update noreboot flag and passes them
-to watchdog driver via platform data.
+Hi Michael
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+On Wed, Apr 05, 2017 at 09:55:34PM +0200, Micha?? K??pie?? wrote:
+> > On Wed, Apr 05, 2017 at 08:48:59AM +0200, Micha?? K??pie?? wrote:
+> > > This series introduces further changes to the way LCD backlight is
+> > > handled by fujitsu-laptop.  These changes include fixing a bug in code
+> > > responsible for generating brightness-related input events, cleaning up
+> > > handling of module parameters, reducing code duplication, removing
+> > > superfluous debug messages and other fixes.
+> > > 
+> > > This series was tested on a Lifebook S7020 and a Lifebook E744.
+> > > 
+> > > This series is based on the testing branch as it requires earlier patch
+> > > series I submitted in order to apply cleanly.
+> > > 
+> > > Changes from v1:
+> > > 
+> > >   - Update debug message logged by set_lcd_level() to reflect code flow
+> > >     changes introduced by patch 04/11.
+> > 
+> > Queued to testing, thanks! 
+> 
+> Jonathan, I would still love to hear your opinion on this series.  Take
+> your time, though, I do not see any reason to rush things.  I will only
+> send the next series once you ack this one.
 
-Changes since v5:
- * Fixed some style issues in commit history.
- * removed unused variable gcr_size from intel_pmc_ipc_dev
+Sure, no problem.  As mentioned earlier, this week has been busy.  I am
+hoping I might find the time to complete my review this evening.  If not, it
+will be some time over the weekend.
 
-Changes since v4:
- * Fixed some style issues in commit history.
- * Used macros instead of BIT() calls.
-
-Changes since v3:
- * Rebased on top of latest changes.
-
-Changes since v2: 
- * Added support for update_noreboot_bit api.
-
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index a0c773b..173940f 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -112,6 +112,13 @@
- #define TCO_PMC_OFFSET			0x8
- #define TCO_PMC_SIZE			0x4
- 
-+/* PMC register bit definitions */
-+
-+/* PMC_CFG_REG bit masks */
-+#define PMC_CFG_NO_REBOOT_MASK		BIT(4)
-+#define PMC_CFG_NO_REBOOT_ENABLE	BIT(4)
-+#define PMC_CFG_NO_REBOOT_DISABLE	0
-+
- static struct intel_pmc_ipc_dev {
- 	struct device *dev;
- 	void __iomem *ipc_base;
-@@ -126,8 +133,6 @@ static struct intel_pmc_ipc_dev {
- 	struct platform_device *tco_dev;
- 
- 	/* gcr */
--	resource_size_t gcr_base;
--	int gcr_size;
- 	void __iomem *gcr_mem_base;
- 	bool has_gcr_regs;
- 
-@@ -313,6 +318,18 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- }
- EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
- 
-+static int update_no_reboot_bit(void *priv, bool set)
-+{
-+	if (set)
-+		return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
-+					    PMC_CFG_NO_REBOOT_MASK,
-+					    PMC_CFG_NO_REBOOT_ENABLE);
-+
-+	return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
-+				    PMC_CFG_NO_REBOOT_MASK,
-+				    PMC_CFG_NO_REBOOT_DISABLE);
-+}
-+
- static int intel_pmc_ipc_check_status(void)
- {
- 	int status;
-@@ -630,15 +647,13 @@ static struct resource tco_res[] = {
- 	{
- 		.flags = IORESOURCE_IO,
- 	},
--	/* GCS */
--	{
--		.flags = IORESOURCE_MEM,
--	},
- };
- 
- static struct itco_wdt_platform_data tco_info = {
- 	.name = "Apollo Lake SoC",
- 	.version = 5,
-+	.no_reboot_priv = &ipcdev,
-+	.update_no_reboot_bit = update_no_reboot_bit,
- };
- 
- #define TELEMETRY_RESOURCE_PUNIT_SSRAM	0
-@@ -695,10 +710,6 @@ static int ipc_create_tco_device(void)
- 	res->start = ipcdev.acpi_io_base + SMI_EN_OFFSET;
- 	res->end = res->start + SMI_EN_SIZE - 1;
- 
--	res = tco_res + TCO_RESOURCE_GCR_MEM;
--	res->start = ipcdev.gcr_base + TCO_PMC_OFFSET;
--	res->end = res->start + TCO_PMC_SIZE - 1;
--
- 	pdev = platform_device_register_full(&pdevinfo);
- 	if (IS_ERR(pdev))
- 		return PTR_ERR(pdev);
-@@ -860,9 +871,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
- 	}
- 	ipcdev.ipc_base = addr;
- 
--	ipcdev.gcr_base = res->start + PLAT_RESOURCE_GCR_OFFSET;
- 	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
--	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
- 	dev_info(&pdev->dev, "ipc res: %pR\n", res);
- 
- 	ipcdev.telem_res_inval = 0;
--- 
-2.7.4
+Regards
+  jonathan
