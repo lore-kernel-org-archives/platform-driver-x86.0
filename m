@@ -1,91 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: silead_dmi - abort early if DMI does
- not match
-Date: Fri, 7 Apr 2017 00:47:15 +0300
-Message-ID: <CAHp75VeZo-+x3azoZa005fkYSnDQ5dViitdqKAiobEv4cW7JFQ@mail.gmail.com>
-References: <20170404032514.31832-1-dmitry.torokhov@gmail.com> <20170404032514.31832-2-dmitry.torokhov@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v6] platform/x86: Add Intel Cherry Trail ACPI INT33FE
+ device driver
+Date: Thu, 6 Apr 2017 15:48:15 -0700
+Message-ID: <20170406224815.GA13110@fury>
+References: <20170406072436.12898-1-hdegoede@redhat.com>
+ <1491476636.24567.25.camel@linux.intel.com>
+ <8b6df86e-06eb-5be8-ee8c-9af980691fa5@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f196.google.com ([209.85.220.196]:32803 "EHLO
-        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754065AbdDFVrR (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:42129 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752467AbdDFWsV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2017 17:47:17 -0400
-In-Reply-To: <20170404032514.31832-2-dmitry.torokhov@gmail.com>
+        Thu, 6 Apr 2017 18:48:21 -0400
+Content-Disposition: inline
+In-Reply-To: <8b6df86e-06eb-5be8-ee8c-9af980691fa5@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org
 
-On Tue, Apr 4, 2017 at 6:25 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> There is no point in registering I2C bus notifier if DMI data does not
-> match.
->
+On Thu, Apr 06, 2017 at 02:17:11PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 06-04-17 13:03, Andy Shevchenko wrote:
+> > On Thu, 2017-04-06 at 09:24 +0200, Hans de Goede wrote:
+> > > The INT33FE ACPI device has a CRS table with I2cSerialBusV2 resources
+> > > for
+> > > 3 devices: Maxim MAX17047 Fuel Gauge Controller, FUSB302 USB Type-C
+> > > Controller and PI3USB30532 USB switch.
+> > > 
+> > > This commit adds a driver for this ACPI device which instantiates
+> > > i2c-clients for these, so that the standard i2c drivers for these
+> > > chips
+> > > can bind to the them.
+> > 
+> > Given one more thought, if the devices should be present all to make it
+> > work, than you perhaps may use component framework.
+> 
+> Actually the fuel-guage is completely independent, the PI3USB30532 USB
+> switch will get set based on extcon cable events from the FUSB302 USB
+> Type-C controller, but otherwise both drivers are independent and the
+> FUSB302 USB Type-C controller pretty much operates stand-alone.
+> 
+> > In this case this so called "pseudo" device is not so pseudo, but
+> > "master".
+> 
+> I think this is really some Windows weirdness, if I configure the BIOS
+> to boot "Android" the ACPI INT33FE device goes away and instead I
+> get 3 separate ACPI devices for the 3 chips.
 
-Both applied to testing.
-Please check I didn't mess things up.
-
-Thanks!
-
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/platform/x86/silead_dmi.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index 7f1049951d1c..0eeb49e51c43 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -75,21 +75,16 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
->         { },
->  };
->
-> +static const struct silead_ts_dmi_data *silead_ts_data;
-> +
->  static void silead_ts_dmi_add_props(struct i2c_client *client)
->  {
-> -       const struct dmi_system_id *dmi_id;
-> -       const struct silead_ts_dmi_data *ts_data;
->         int error;
->
-> -       dmi_id = dmi_first_match(silead_ts_dmi_table);
-> -       if (!dmi_id)
-> -               return;
-> -
-> -       ts_data = dmi_id->driver_data;
->         if (has_acpi_companion(&client->dev) &&
-> -           !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
-> +           !strncmp(silead_ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
->                 error = device_add_properties(&client->dev,
-> -                                             ts_data->properties);
-> +                                             silead_ts_data->properties);
->                 if (error)
->                         dev_err(&client->dev,
->                                 "failed to add properties: %d\n", error);
-> @@ -122,8 +117,15 @@ static struct notifier_block silead_ts_dmi_notifier = {
->
->  static int __init silead_ts_dmi_init(void)
->  {
-> +       const struct dmi_system_id *dmi_id;
->         int error;
->
-> +       dmi_id = dmi_first_match(silead_ts_dmi_table);
-> +       if (!dmi_id)
-> +               return 0; /* Not an error */
-> +
-> +       silead_ts_data = dmi_id->driver_data;
-> +
->         error = bus_register_notifier(&i2c_bus_type, &silead_ts_dmi_notifier);
->         if (error)
->                 pr_err("%s: failed to register i2c bus notifier: %d\n",
-> --
-> 2.12.2.715.g7642488e1d-goog
->
-
-
+So if this is this case, what is the value in supporting "windows weirdness" if
+the end user can select "Android" and be presented with 3 separate devices?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
