@@ -1,72 +1,67 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH] hp-wireless: add Xiaomi's hardware id to the supported list
-Date: Thu,  6 Apr 2017 17:32:16 +0100
-Message-ID: <1491496336-19639-1-git-send-email-alex.hung@canonical.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 5/6] platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS
+ memory mapping failure
+Date: Fri, 7 Apr 2017 00:37:54 +0300
+Message-ID: <CAHp75VcMS3V63eFVhWiM+ynoV7wOjbHb56brSSJ71CDcxS1fLg@mail.gmail.com>
+References: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com> <f5fbaf426ad657e1f8cb8a15619602afd4e12efe.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:59658 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751662AbdDFQcb (ORCPT
+Received: from mail-qk0-f182.google.com ([209.85.220.182]:36110 "EHLO
+        mail-qk0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752194AbdDFVhz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2017 12:32:31 -0400
+        Thu, 6 Apr 2017 17:37:55 -0400
+In-Reply-To: <f5fbaf426ad657e1f8cb8a15619602afd4e12efe.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
 
-The airplane mode button on Xiaomi's new laptops are the same as HP
-laptops.
+On Thu, Apr 6, 2017 at 1:54 AM, Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> iTCO_wdt driver need access to PMC_CFG GCR register to modify the
+> noreboot setting. Currently, this is done by passing PMC_CFG reg
+> address as memory resource to watchdog driver and allowing it directly
+> modify the PMC_CFG register. But currently PMC driver also has
+> requirement to memory map the entire GCR register space in this driver.
+> This causes mem request failure in watchdog driver. So this patch fixes
+> this issue by adding API to update noreboot flag and passes them
+> to watchdog driver via platform data.
 
-This is tested on Xiaomi Notebook Air 13.
+> +/* PMC_CFG_REG bit masks */
+> +#define PMC_CFG_NO_REBOOT_MASK         BIT(4)
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/hp-wireless.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> +#define PMC_CFG_NO_REBOOT_ENABLE       BIT(4)
+> +#define PMC_CFG_NO_REBOOT_DISABLE      0
 
-diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
-index 988eedb..1d4df3d 100644
---- a/drivers/platform/x86/hp-wireless.c
-+++ b/drivers/platform/x86/hp-wireless.c
-@@ -1,7 +1,7 @@
- /*
-- *  hp-wireless button for Windows 8
-+ *  Airplane mode button for HP & Xiaomi laptops
-  *
-- *  Copyright (C) 2014 Alex Hung <alex.hung@canonical.com>
-+ *  Copyright (C) 2014-2017 Alex Hung <alex.hung@canonical.com>
-  *
-  *  This program is free software; you can redistribute it and/or modify
-  *  it under the terms of the GNU General Public License as published by
-@@ -29,11 +29,13 @@
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- MODULE_ALIAS("acpi*:HPQ6001:*");
-+MODULE_ALIAS("acpi*:WSTADEF:*");
- 
- static struct input_dev *hpwl_input_dev;
- 
- static const struct acpi_device_id hpwl_ids[] = {
- 	{"HPQ6001", 0},
-+	{"WSTADEF", 0},
- 	{"", 0},
- };
- 
-@@ -112,7 +114,7 @@ static int __init hpwl_init(void)
- {
- 	int err;
- 
--	pr_info("Initializing HPQ6001 module\n");
-+	pr_info("Initializing HPQ6001/WSTADEF module\n");
- 	err = acpi_bus_register_driver(&hpwl_driver);
- 	if (err)
- 		pr_err("Unable to register HP wireless control driver.\n");
-@@ -122,7 +124,7 @@ static int __init hpwl_init(void)
- 
- static void __exit hpwl_exit(void)
- {
--	pr_info("Exiting HPQ6001 module\n");
-+	pr_info("Exiting HPQ6001/WSTADEF module\n");
- 	acpi_bus_unregister_driver(&hpwl_driver);
- }
- 
+I would go for those like
+(1 << 4)
+and
+(0 << 4)
+which for my opinion is better to get a picture.
+
+> +static int update_no_reboot_bit(void *priv, bool set)
+> +{
+> +       if (set)
+> +               return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
+> +                                           PMC_CFG_NO_REBOOT_MASK,
+> +                                           PMC_CFG_NO_REBOOT_ENABLE);
+> +
+> +       return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
+> +                                   PMC_CFG_NO_REBOOT_MASK,
+> +                                   PMC_CFG_NO_REBOOT_DISABLE);
+
+u32 value = set ? PMC_CFG_NO_REBOOT_ENABLE : PMC_CFG_NO_REBOOT_DISABLE;
+
+(also you may consider to use just *_EN and *_DIS)
+
+return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
+                                   PMC_CFG_NO_REBOOT_MASK,
+                                   value);
+> +}
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
