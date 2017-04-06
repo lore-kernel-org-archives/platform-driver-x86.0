@@ -1,76 +1,72 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH v6 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Thu, 6 Apr 2017 20:46:44 +0530
-Message-ID: <20170406151644.GA21709@rajaneesh-OptiPlex-9010>
-References: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
- <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] hp-wireless: add Xiaomi's hardware id to the supported list
+Date: Thu,  6 Apr 2017 17:32:16 +0100
+Message-ID: <1491496336-19639-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:4209 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753045AbdDFPSu (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:59658 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751662AbdDFQcb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2017 11:18:50 -0400
-Content-Disposition: inline
-In-Reply-To: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Thu, 6 Apr 2017 12:32:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net, wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
 
-On Wed, Apr 05, 2017 at 03:54:19PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> According to Broxton APL PMC spec, gcr mem region starts
-> at offset 0x1000 from ipc mem base address. In this driver,
-> PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
-> memory region from IPC mem region. So we should use 0x1000(4K)
-> as GCR offset. But currently this driver uses 0x1008 as GCT
+The airplane mode button on Xiaomi's new laptops are the same as HP
+laptops.
 
-Typo, GCT -> GCR. I think we still need to maintain consistency in the
-commit message. Consider the below message and update if you'd like to.
+This is tested on Xiaomi Notebook Air 13.
 
-On BXT SoC the PMC MMIO resources for the Global Control Registers (GCR) are
-located at 4k offset from the IPC1 base. The PLAT_RESOURCE_GCR_OFFSET macro
-used in this driver is misleading as 0x1008 is the location for PMC_CFG
-register and not the GCR Base itself. 
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/hp-wireless.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-GCR Base = IPC1 Base + 0x1000.
-
-This patch updates the GCR Base address correctly.
-
-> offset.This patch fixes this issue.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Changes since v5:
->  *  None
-> 
-> Changes since v4:
->  *  None
-> 
-> Changes since v3:
->  * Updated the commit history
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index 0651d47..0a33592 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -82,7 +82,7 @@
->  /* exported resources from IFWI */
->  #define PLAT_RESOURCE_IPC_INDEX		0
->  #define PLAT_RESOURCE_IPC_SIZE		0x1000
-> -#define PLAT_RESOURCE_GCR_OFFSET	0x1008
-> +#define PLAT_RESOURCE_GCR_OFFSET	0x1000
->  #define PLAT_RESOURCE_GCR_SIZE		0x1000
->  #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
->  #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
-> -- 
-> 2.7.4
-> 
-
+diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
+index 988eedb..1d4df3d 100644
+--- a/drivers/platform/x86/hp-wireless.c
++++ b/drivers/platform/x86/hp-wireless.c
+@@ -1,7 +1,7 @@
+ /*
+- *  hp-wireless button for Windows 8
++ *  Airplane mode button for HP & Xiaomi laptops
+  *
+- *  Copyright (C) 2014 Alex Hung <alex.hung@canonical.com>
++ *  Copyright (C) 2014-2017 Alex Hung <alex.hung@canonical.com>
+  *
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+@@ -29,11 +29,13 @@
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Alex Hung");
+ MODULE_ALIAS("acpi*:HPQ6001:*");
++MODULE_ALIAS("acpi*:WSTADEF:*");
+ 
+ static struct input_dev *hpwl_input_dev;
+ 
+ static const struct acpi_device_id hpwl_ids[] = {
+ 	{"HPQ6001", 0},
++	{"WSTADEF", 0},
+ 	{"", 0},
+ };
+ 
+@@ -112,7 +114,7 @@ static int __init hpwl_init(void)
+ {
+ 	int err;
+ 
+-	pr_info("Initializing HPQ6001 module\n");
++	pr_info("Initializing HPQ6001/WSTADEF module\n");
+ 	err = acpi_bus_register_driver(&hpwl_driver);
+ 	if (err)
+ 		pr_err("Unable to register HP wireless control driver.\n");
+@@ -122,7 +124,7 @@ static int __init hpwl_init(void)
+ 
+ static void __exit hpwl_exit(void)
+ {
+-	pr_info("Exiting HPQ6001 module\n");
++	pr_info("Exiting HPQ6001/WSTADEF module\n");
+ 	acpi_bus_unregister_driver(&hpwl_driver);
+ }
+ 
 -- 
-Best Regards,
-Rajneesh
+2.7.4
