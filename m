@@ -1,54 +1,76 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v6] platform/x86: Add Intel Cherry Trail ACPI INT33FE
- device driver
-Date: Thu, 6 Apr 2017 14:17:11 +0200
-Message-ID: <8b6df86e-06eb-5be8-ee8c-9af980691fa5@redhat.com>
-References: <20170406072436.12898-1-hdegoede@redhat.com>
- <1491476636.24567.25.camel@linux.intel.com>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH v6 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Thu, 6 Apr 2017 20:46:44 +0530
+Message-ID: <20170406151644.GA21709@rajaneesh-OptiPlex-9010>
+References: <3e7ca77c-2be5-5f89-f51f-faaca9f2d9ac@linux.intel.com>
+ <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:48046 "EHLO mx1.redhat.com"
+Received: from mga14.intel.com ([192.55.52.115]:4209 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752385AbdDFMRO (ORCPT
+        id S1753045AbdDFPSu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Apr 2017 08:17:14 -0400
-In-Reply-To: <1491476636.24567.25.camel@linux.intel.com>
+        Thu, 6 Apr 2017 11:18:50 -0400
+Content-Disposition: inline
+In-Reply-To: <463a23bb1f44098dd0fe506346bae71282009e05.1491428146.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, linux@roeck-us.net, wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 
-Hi,
+On Wed, Apr 05, 2017 at 03:54:19PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> According to Broxton APL PMC spec, gcr mem region starts
+> at offset 0x1000 from ipc mem base address. In this driver,
+> PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
+> memory region from IPC mem region. So we should use 0x1000(4K)
+> as GCR offset. But currently this driver uses 0x1008 as GCT
 
-On 06-04-17 13:03, Andy Shevchenko wrote:
-> On Thu, 2017-04-06 at 09:24 +0200, Hans de Goede wrote:
->> The INT33FE ACPI device has a CRS table with I2cSerialBusV2 resources
->> for
->> 3 devices: Maxim MAX17047 Fuel Gauge Controller, FUSB302 USB Type-C
->> Controller and PI3USB30532 USB switch.
->>
->> This commit adds a driver for this ACPI device which instantiates
->> i2c-clients for these, so that the standard i2c drivers for these
->> chips
->> can bind to the them.
->
-> Given one more thought, if the devices should be present all to make it
-> work, than you perhaps may use component framework.
+Typo, GCT -> GCR. I think we still need to maintain consistency in the
+commit message. Consider the below message and update if you'd like to.
 
-Actually the fuel-guage is completely independent, the PI3USB30532 USB
-switch will get set based on extcon cable events from the FUSB302 USB
-Type-C controller, but otherwise both drivers are independent and the
-FUSB302 USB Type-C controller pretty much operates stand-alone.
+On BXT SoC the PMC MMIO resources for the Global Control Registers (GCR) are
+located at 4k offset from the IPC1 base. The PLAT_RESOURCE_GCR_OFFSET macro
+used in this driver is misleading as 0x1008 is the location for PMC_CFG
+register and not the GCR Base itself. 
 
-> In this case this so called "pseudo" device is not so pseudo, but
-> "master".
+GCR Base = IPC1 Base + 0x1000.
 
-I think this is really some Windows weirdness, if I configure the BIOS
-to boot "Android" the ACPI INT33FE device goes away and instead I
-get 3 separate ACPI devices for the 3 chips.
+This patch updates the GCR Base address correctly.
 
-Regards,
+> offset.This patch fixes this issue.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Changes since v5:
+>  *  None
+> 
+> Changes since v4:
+>  *  None
+> 
+> Changes since v3:
+>  * Updated the commit history
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 0651d47..0a33592 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -82,7 +82,7 @@
+>  /* exported resources from IFWI */
+>  #define PLAT_RESOURCE_IPC_INDEX		0
+>  #define PLAT_RESOURCE_IPC_SIZE		0x1000
+> -#define PLAT_RESOURCE_GCR_OFFSET	0x1008
+> +#define PLAT_RESOURCE_GCR_OFFSET	0x1000
+>  #define PLAT_RESOURCE_GCR_SIZE		0x1000
+>  #define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+>  #define PLAT_RESOURCE_BIOS_IFACE_INDEX	2
+> -- 
+> 2.7.4
+> 
 
-Hans
+-- 
+Best Regards,
+Rajneesh
