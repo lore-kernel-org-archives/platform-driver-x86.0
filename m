@@ -1,77 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 00/11] fujitsu-laptop: backlight cleanup
-Date: Fri, 7 Apr 2017 10:57:36 -0700
-Message-ID: <20170407175736.GB2229@fury>
-References: <20170405064910.3162-1-kernel@kempniu.pl>
- <20170405153600.GC27833@fury>
- <20170405195534.GB892@kmp-mobile.hq.kempniu.pl>
- <20170406004514.GC25480@marvin.atrad.com.au>
- <20170406030754.GA23819@fury>
- <20170407121135.GD15240@marvin.atrad.com.au>
+From: <Mario.Limonciello@dell.com>
+Subject: dell-laptop and separate AC timeouts on some Dell systems
+Date: Fri, 7 Apr 2017 19:33:53 +0000
+Message-ID: <ac73b849a1de43b28ea87f92f4f95c1c@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:46455 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752848AbdDGR5j (ORCPT
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:59202 "EHLO
+        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S934248AbdDGTeP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2017 13:57:39 -0400
-Content-Disposition: inline
-In-Reply-To: <20170407121135.GD15240@marvin.atrad.com.au>
+        Fri, 7 Apr 2017 15:34:15 -0400
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 09:41:35PM +0930, Jonathan Woithe wrote:
-> On Wed, Apr 05, 2017 at 08:07:54PM -0700, Darren Hart wrote:
-> > On Thu, Apr 06, 2017 at 10:15:14AM +0930, Jonathan Woithe wrote:
-> > > On Wed, Apr 05, 2017 at 09:55:34PM +0200, Micha?? K??pie?? wrote:
-> > > > > On Wed, Apr 05, 2017 at 08:48:59AM +0200, Micha?? K??pie?? wrote:
-> > > > > > This series introduces further changes to the way LCD backlight is
-> > > > > > handled by fujitsu-laptop.  These changes include fixing a bug in code
-> > > > > > responsible for generating brightness-related input events, cleaning up
-> > > > > > handling of module parameters, reducing code duplication, removing
-> > > > > > superfluous debug messages and other fixes.
-> > > > > > 
-> > > > > > This series was tested on a Lifebook S7020 and a Lifebook E744.
-> > > > > > 
-> > > > > > This series is based on the testing branch as it requires earlier patch
-> > > > > > series I submitted in order to apply cleanly.
-> > > > > > 
-> > > > > > Changes from v1:
-> > > > > > 
-> > > > > >   - Update debug message logged by set_lcd_level() to reflect code flow
-> > > > > >     changes introduced by patch 04/11.
-> > > > > 
-> > > > > Queued to testing, thanks! 
-> > > > 
-> > > > Jonathan, I would still love to hear your opinion on this series.  Take
-> > > > your time, though, I do not see any reason to rush things.  I will only
-> > > > send the next series once you ack this one.
-> > > 
-> > > Sure, no problem.  As mentioned earlier, this week has been busy.  I am
-> > > hoping I might find the time to complete my review this evening.  If not, it
-> > > will be some time over the weekend.
-> > 
-> > Eeek, I jumped the gun on that. I've moved this from testing to fujitsu, and
-> > it'll wait there until Jonathan gets a chance to review. Apologies Jonathan.
-> 
-> That's fine, these things happen.
-> 
-> I've completed a review of this series.  It represents another worthwhile
-> evolutionary clean up of the fujitsu-laptop driver, this time concentrating
-> on the backlight functions.  Importantly, it makes adjustments for changes
-> in related kernel infrastructure as it has evolved over the last few
-> years (the handling of module parameters, method return values and so on).
-> 
-> I am happy for this series to be merged.  Thanks Michael for your continued
-> clean up efforts.
-> 
-> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+Pali,
 
-Queued to testing, thanks!
+For some time there have been folks reporting some issues where keyboard ba=
+cklight setting is failing on various Dell systems (https://github.com/dell=
+/libsmbios/issues/3).  I've been circling around internally to find out wha=
+t's going on.
+This affects a number of systems from the last year or so.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+What is happening is that some platforms support an alternate keyboard time=
+out while on AC.  The old "timeout" value is treated as just a battery time=
+out and the separate value is the AC timeout.
+Unfortunately if the AC timeout is /not/ set in the timeout setting/update =
+request, this will fail.
+
+As a result I prototyped a few changes for this at the libsmbios branch her=
+e: https://github.com/dell/libsmbios/commits/fix-g8-keyboard-backlight
+It's not yet requested for merging because I still don't know why the reque=
+st to supported features returns "Always On" still (that shouldn't be suppo=
+rted).
+
+As far as I can tell this doesn't really map well to how the keyboard backl=
+ight driver in the kernel works today, so I wanted to raise this to you to =
+discuss what the best way to handle it is.
+One of these systems can be detected by the presence of the token 0x451.  W=
+hen that is found, the additional timeout unit and value should be sent wit=
+h the requests.
+
+Can you let me know your thoughts?
+
+Thanks,
