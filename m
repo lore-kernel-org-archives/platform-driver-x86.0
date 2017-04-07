@@ -1,55 +1,66 @@
 From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: update debug message
- logged by call_fext_func()
-Date: Fri, 7 Apr 2017 21:10:19 +0930
-Message-ID: <20170407114019.GA15240@marvin.atrad.com.au>
-References: <20170406064610.13984-1-kernel@kempniu.pl>
+Subject: Re: [PATCH v2 03/11] platform/x86: fujitsu-laptop: merge
+ set_lcd_level_alt() into set_lcd_level()
+Date: Fri, 7 Apr 2017 21:23:47 +0930
+Message-ID: <20170407115347.GB15240@marvin.atrad.com.au>
+References: <20170405064910.3162-1-kernel@kempniu.pl>
+ <20170405064910.3162-4-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:36970 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:36990 "EHLO
         server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932247AbdDGLlP (ORCPT
+        with ESMTP id S933013AbdDGLyV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2017 07:41:15 -0400
+        Fri, 7 Apr 2017 07:54:21 -0400
 Content-Disposition: inline
-In-Reply-To: <20170406064610.13984-1-kernel@kempniu.pl>
+In-Reply-To: <20170405064910.3162-4-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Micha?? K??pie?? <kernel@kempniu.pl>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Apr 06, 2017 at 08:46:10AM +0200, Micha?? K??pie?? wrote:
-> Update debug message logged when the acpi_evaluate_integer() call inside
-> call_fext_func() fails so that it covers a broader set of possible
-> errors.
-> 
-> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
-> ---
-> This patch is a follow-up to v1 of the call_fext_func() cleanup series
-> and as such, it should be applied to for-next.
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+On Wed, Apr 05, 2017 at 08:49:02AM +0200, Micha?? K??pie?? wrote:
 > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 26149f58dba7..928778ccc4c1 100644
+> index 59107a599d22..2f563aa00592 100644
 > --- a/drivers/platform/x86/fujitsu-laptop.c
 > +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -232,7 +232,7 @@ static int call_fext_func(int func, int op, int feature, int state)
->  	status = acpi_evaluate_integer(fujitsu_laptop->acpi_handle, "FUNC",
->  				       &arg_list, &value);
->  	if (ACPI_FAILURE(status)) {
-> -		vdbg_printk(FUJLAPTOP_DBG_ERROR, "FUNC interface is not present\n");
-> +		vdbg_printk(FUJLAPTOP_DBG_ERROR, "Failed to evaluate FUNC\n");
->  		return -ENODEV;
+> @@ -360,41 +360,26 @@ static int set_lcd_level(int level)
+>  {
+>  	acpi_status status = AE_OK;
+>  	acpi_handle handle = NULL;
+> -
+> -	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via SBLL [%d]\n",
+> -		    level);
+> -
+> -	if (level < 0 || level >= fujitsu_bl->max_brightness)
+> -		return -EINVAL;
+> -
+> -	status = acpi_get_handle(fujitsu_bl->acpi_handle, "SBLL", &handle);
+> -	if (ACPI_FAILURE(status)) {
+> -		vdbg_printk(FUJLAPTOP_DBG_ERROR, "SBLL not present\n");
+> -		return -ENODEV;
+> +	char *method;
+> +
+> +	switch (use_alt_lcd_levels) {
+> +	case 1:
+> +		method = "SBL2";
+> +		break;
+> +	default:
+> +		method = "SBLL";
+> +		break;
 >  	}
 
-As per discussions on the list, this change is fine, is consistent with the
-generic nature of possible failure modes and makes sense in the context of
-the other recent changes.
+This is not necessary something actionable, but I am wondering about the
+rationale of using a switch statement here given that there really are only
+two options.  In my mind at least a simple "if" clause would be clearer and
+easier to read (with or without the braces):
 
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+  if (use_alt_lcd_levels) {
+          method = "SBL2";
+  } else {
+          method = "SBLL";
+  }
 
 Regards
   jonathan
