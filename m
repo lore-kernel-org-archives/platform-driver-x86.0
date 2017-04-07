@@ -1,99 +1,79 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: dell-laptop and separate AC timeouts on some Dell systems
-Date: Fri, 7 Apr 2017 23:55:20 +0200
-Message-ID: <201704072355.20831@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: dell-laptop and separate AC timeouts on some Dell systems
+Date: Fri, 7 Apr 2017 22:56:24 +0000
+Message-ID: <d7936c1974734b149b47ef7540af8ed8@ausx13mpc120.AMER.DELL.COM>
 References: <ac73b849a1de43b28ea87f92f4f95c1c@ausx13mpc120.AMER.DELL.COM>
+ <201704072355.20831@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1575376.bSu48zKBhQ";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f49.google.com ([74.125.82.49]:35588 "EHLO
-        mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756367AbdDGVzZ (ORCPT
+Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:15726 "EHLO
+        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751981AbdDGXGU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2017 17:55:25 -0400
-Received: by mail-wm0-f49.google.com with SMTP id w64so1700775wma.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Apr 2017 14:55:24 -0700 (PDT)
-In-Reply-To: <ac73b849a1de43b28ea87f92f4f95c1c@ausx13mpc120.AMER.DELL.COM>
+        Fri, 7 Apr 2017 19:06:20 -0400
+In-Reply-To: <201704072355.20831@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
+To: pali.rohar@gmail.com
 Cc: platform-driver-x86@vger.kernel.org
 
---nextPart1575376.bSu48zKBhQ
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-On Friday 07 April 2017 21:33:53 Mario.Limonciello@dell.com wrote:
-> Pali,
->=20
-> For some time there have been folks reporting some issues where
-> keyboard backlight setting is failing on various Dell systems
-> (https://github.com/dell/libsmbios/issues/3).  I've been circling
-> around internally to find out what's going on. This affects a number
-> of systems from the last year or so.
-
-Great!
-
-> What is happening is that some platforms support an alternate
-> keyboard timeout while on AC.  The old "timeout" value is treated as
-> just a battery timeout and the separate value is the AC timeout.
-> Unfortunately if the AC timeout is /not/ set in the timeout
-> setting/update request, this will fail.
-
-So in case notebook is running on AC and we want to change timeout for=20
-keyboard backlight, we need to tell smbios two timeouts, one for battery=20
-and one for AC?
-
-> As a result I prototyped a few changes for this at the libsmbios
-> branch here:
-> https://github.com/dell/libsmbios/commits/fix-g8-keyboard-backlight
-
-Can you update also documentation which is at the end of file? It would=20
-help for kernel implementation.
-
-> It's not yet requested for merging because I still don't know why
-> the request to supported features returns "Always On" still (that
-> shouldn't be supported).
-
-It looks like that "Always On" mode is reported by smbios by supported,=20
-but setting it will cause failure. Any idea where is a problem? Probably=20
-Dell firmware bug? Or needs to be that mode handled specially?
-
-> As far as I can tell this doesn't really map well to how the keyboard
-> backlight driver in the kernel works today, so I wanted to raise
-> this to you to discuss what the best way to handle it is. One of
-> these systems can be detected by the presence of the token 0x451.=20
-> When that is found, the additional timeout unit and value should be
-> sent with the requests.
->=20
-> Can you let me know your thoughts?
-
-I think that extending struct kbd_state should work.
-
-There are already functions dell_send_intensity() and=20
-dell_get_intensity() which handle state based on battery/AC mode.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1575376.bSu48zKBhQ
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAljoCsgACgkQi/DJPQPkQ1Ks0ACcDWcczCpiwEmngrekk42mRlLa
-fW8AoKr4xhN+2e2fsF4B8DRQEb790/Py
-=zAD/
------END PGP SIGNATURE-----
-
---nextPart1575376.bSu48zKBhQ--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
+aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogRnJpZGF5LCBBcHJpbCA3LCAyMDE3
+IDQ6NTUgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogZGVsbC1sYXB0b3AgYW5kIHNlcGFyYXRlIEFDIHRpbWVvdXRzIG9uIHNvbWUgRGVs
+bCBzeXN0ZW1zDQo+IA0KPiBIaSENCj4gDQo+IE9uIEZyaWRheSAwNyBBcHJpbCAyMDE3IDIxOjMz
+OjUzIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+IFBhbGksDQo+ID4NCj4g
+PiBGb3Igc29tZSB0aW1lIHRoZXJlIGhhdmUgYmVlbiBmb2xrcyByZXBvcnRpbmcgc29tZSBpc3N1
+ZXMgd2hlcmUNCj4gPiBrZXlib2FyZCBiYWNrbGlnaHQgc2V0dGluZyBpcyBmYWlsaW5nIG9uIHZh
+cmlvdXMgRGVsbCBzeXN0ZW1zDQo+ID4gKGh0dHBzOi8vZ2l0aHViLmNvbS9kZWxsL2xpYnNtYmlv
+cy9pc3N1ZXMvMykuICBJJ3ZlIGJlZW4gY2lyY2xpbmcNCj4gPiBhcm91bmQgaW50ZXJuYWxseSB0
+byBmaW5kIG91dCB3aGF0J3MgZ29pbmcgb24uIFRoaXMgYWZmZWN0cyBhIG51bWJlcg0KPiA+IG9m
+IHN5c3RlbXMgZnJvbSB0aGUgbGFzdCB5ZWFyIG9yIHNvLg0KPiANCj4gR3JlYXQhDQo+IA0KPiA+
+IFdoYXQgaXMgaGFwcGVuaW5nIGlzIHRoYXQgc29tZSBwbGF0Zm9ybXMgc3VwcG9ydCBhbiBhbHRl
+cm5hdGUga2V5Ym9hcmQNCj4gPiB0aW1lb3V0IHdoaWxlIG9uIEFDLiAgVGhlIG9sZCAidGltZW91
+dCIgdmFsdWUgaXMgdHJlYXRlZCBhcyBqdXN0IGENCj4gPiBiYXR0ZXJ5IHRpbWVvdXQgYW5kIHRo
+ZSBzZXBhcmF0ZSB2YWx1ZSBpcyB0aGUgQUMgdGltZW91dC4NCj4gPiBVbmZvcnR1bmF0ZWx5IGlm
+IHRoZSBBQyB0aW1lb3V0IGlzIC9ub3QvIHNldCBpbiB0aGUgdGltZW91dA0KPiA+IHNldHRpbmcv
+dXBkYXRlIHJlcXVlc3QsIHRoaXMgd2lsbCBmYWlsLg0KPiANCj4gU28gaW4gY2FzZSBub3RlYm9v
+ayBpcyBydW5uaW5nIG9uIEFDIGFuZCB3ZSB3YW50IHRvIGNoYW5nZSB0aW1lb3V0IGZvcg0KPiBr
+ZXlib2FyZCBiYWNrbGlnaHQsIHdlIG5lZWQgdG8gdGVsbCBzbWJpb3MgdHdvIHRpbWVvdXRzLCBv
+bmUgZm9yIGJhdHRlcnkgYW5kDQo+IG9uZSBmb3IgQUM/DQoNClllcywgdGhhdCdzIGNvcnJlY3Qu
+ICBUaGUgcmVhc29uIGZvciB0aGUgZmFpbHVyZXMgc28gZmFyIGhhcyBiZWVuIHRoYXQgdGhlIGZp
+ZWxkIGZvciANCkFDIGhhcyBub3QgYmVlbiBnZXR0aW5nIHNlbnQuICBTaW5jZSB0aGUgYnVmZmVy
+IGlzIHplcm8nZWQgb3V0IGJlZm9yZSBzdGFydGluZw0KdGhlIHVuZGVmaW5lZCB2YWx1ZSAiMCIg
+Zm9yIEFDIHRpbWVvdXQgaXMgc2VudCB0byBFQyBhbmQgcmVqZWN0ZWQuDQoNCj4gDQo+ID4gQXMg
+YSByZXN1bHQgSSBwcm90b3R5cGVkIGEgZmV3IGNoYW5nZXMgZm9yIHRoaXMgYXQgdGhlIGxpYnNt
+Ymlvcw0KPiA+IGJyYW5jaCBoZXJlOg0KPiA+IGh0dHBzOi8vZ2l0aHViLmNvbS9kZWxsL2xpYnNt
+Ymlvcy9jb21taXRzL2ZpeC1nOC1rZXlib2FyZC1iYWNrbGlnaHQNCj4gDQo+IENhbiB5b3UgdXBk
+YXRlIGFsc28gZG9jdW1lbnRhdGlvbiB3aGljaCBpcyBhdCB0aGUgZW5kIG9mIGZpbGU/IEl0IHdv
+dWxkIGhlbHANCj4gZm9yIGtlcm5lbCBpbXBsZW1lbnRhdGlvbi4NCj4NCk9LLCBqdXN0IGFkZGVk
+IG1vcmUgb24gdGhpcy4NCiANCj4gPiBJdCdzIG5vdCB5ZXQgcmVxdWVzdGVkIGZvciBtZXJnaW5n
+IGJlY2F1c2UgSSBzdGlsbCBkb24ndCBrbm93IHdoeSB0aGUNCj4gPiByZXF1ZXN0IHRvIHN1cHBv
+cnRlZCBmZWF0dXJlcyByZXR1cm5zICJBbHdheXMgT24iIHN0aWxsICh0aGF0DQo+ID4gc2hvdWxk
+bid0IGJlIHN1cHBvcnRlZCkuDQo+IA0KPiBJdCBsb29rcyBsaWtlIHRoYXQgIkFsd2F5cyBPbiIg
+bW9kZSBpcyByZXBvcnRlZCBieSBzbWJpb3MgYnkgc3VwcG9ydGVkLCBidXQNCj4gc2V0dGluZyBp
+dCB3aWxsIGNhdXNlIGZhaWx1cmUuIEFueSBpZGVhIHdoZXJlIGlzIGEgcHJvYmxlbT8gUHJvYmFi
+bHkgRGVsbA0KPiBmaXJtd2FyZSBidWc/IE9yIG5lZWRzIHRvIGJlIHRoYXQgbW9kZSBoYW5kbGVk
+IHNwZWNpYWxseT8NCg0KSXQncyBhIGJlaGF2aW9yIG91dHNpZGUgb2Ygc3BlYywgYnV0IEknbSBz
+dGlsbCBjbGFyaWZ5aW5nIGlmIGl0J3MgaW50ZW5kZWQgYW5kIHNwZWMNCndhc24ndCB1cGRhdGVk
+Lg0KDQpDb250aW51ZSB0byBpZ25vcmUgdGhpcyBiaXQgaWYgaXQncyBzZXQgdW5sZXNzIEkgaGVh
+ciBvdGhlcndpc2UuDQoNCj4gDQo+ID4gQXMgZmFyIGFzIEkgY2FuIHRlbGwgdGhpcyBkb2Vzbid0
+IHJlYWxseSBtYXAgd2VsbCB0byBob3cgdGhlIGtleWJvYXJkDQo+ID4gYmFja2xpZ2h0IGRyaXZl
+ciBpbiB0aGUga2VybmVsIHdvcmtzIHRvZGF5LCBzbyBJIHdhbnRlZCB0byByYWlzZSB0aGlzDQo+
+ID4gdG8geW91IHRvIGRpc2N1c3Mgd2hhdCB0aGUgYmVzdCB3YXkgdG8gaGFuZGxlIGl0IGlzLiBP
+bmUgb2YgdGhlc2UNCj4gPiBzeXN0ZW1zIGNhbiBiZSBkZXRlY3RlZCBieSB0aGUgcHJlc2VuY2Ug
+b2YgdGhlIHRva2VuIDB4NDUxLg0KPiA+IFdoZW4gdGhhdCBpcyBmb3VuZCwgdGhlIGFkZGl0aW9u
+YWwgdGltZW91dCB1bml0IGFuZCB2YWx1ZSBzaG91bGQgYmUNCj4gPiBzZW50IHdpdGggdGhlIHJl
+cXVlc3RzLg0KPiA+DQo+ID4gQ2FuIHlvdSBsZXQgbWUga25vdyB5b3VyIHRob3VnaHRzPw0KPiAN
+Cj4gSSB0aGluayB0aGF0IGV4dGVuZGluZyBzdHJ1Y3Qga2JkX3N0YXRlIHNob3VsZCB3b3JrLg0K
+PiANCj4gVGhlcmUgYXJlIGFscmVhZHkgZnVuY3Rpb25zIGRlbGxfc2VuZF9pbnRlbnNpdHkoKSBh
+bmQNCj4gZGVsbF9nZXRfaW50ZW5zaXR5KCkgd2hpY2ggaGFuZGxlIHN0YXRlIGJhc2VkIG9uIGJh
+dHRlcnkvQUMgbW9kZS4NClRoZSBkaWZmZXJlbmNlIGlzIHRoYXQgaW50ZW5zaXR5IGl0J3Mgb2J2
+aW91cyB0aGF0IGl0IGNoYW5nZXMgZnJvbSA1MCB0bw0KMTAwIHBlcmNlbnQuICBXaXRoIGRpZmZl
+cmVudCB0aW1lb3V0cywgc2hvdWxkbid0IHRoaXMgYmUgbW9yZSBjb21wbGV4Pw0KDQpXb3VsZCB5
+b3UganVzdCBrZWVwIHR3byBkaWZmZXJlbnQgbm9kZXMgYXMgYWNjZXNzaWJsZSB0byB1c2Vyc3Bh
+Y2U/DQo=
