@@ -1,72 +1,72 @@
 From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 03/11] platform/x86: fujitsu-laptop: merge
- set_lcd_level_alt() into set_lcd_level()
-Date: Fri, 7 Apr 2017 21:33:35 +0930
-Message-ID: <20170407120335.GC15240@marvin.atrad.com.au>
+Subject: Re: [PATCH v2 00/11] fujitsu-laptop: backlight cleanup
+Date: Fri, 7 Apr 2017 21:41:35 +0930
+Message-ID: <20170407121135.GD15240@marvin.atrad.com.au>
 References: <20170405064910.3162-1-kernel@kempniu.pl>
- <20170405064910.3162-4-kernel@kempniu.pl>
- <20170407115347.GB15240@marvin.atrad.com.au>
+ <20170405153600.GC27833@fury>
+ <20170405195534.GB892@kmp-mobile.hq.kempniu.pl>
+ <20170406004514.GC25480@marvin.atrad.com.au>
+ <20170406030754.GA23819@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:37002 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:37018 "EHLO
         server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932938AbdDGMEJ (ORCPT
+        with ESMTP id S932938AbdDGMML (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Apr 2017 08:04:09 -0400
+        Fri, 7 Apr 2017 08:12:11 -0400
 Content-Disposition: inline
-In-Reply-To: <20170407115347.GB15240@marvin.atrad.com.au>
+In-Reply-To: <20170406030754.GA23819@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 09:23:47PM +0930, I wrote:
-> On Wed, Apr 05, 2017 at 08:49:02AM +0200, Micha?? K??pie?? wrote:
-> > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> > index 59107a599d22..2f563aa00592 100644
-> > --- a/drivers/platform/x86/fujitsu-laptop.c
-> > +++ b/drivers/platform/x86/fujitsu-laptop.c
-> > @@ -360,41 +360,26 @@ static int set_lcd_level(int level)
-> >  {
-> >  	acpi_status status = AE_OK;
-> >  	acpi_handle handle = NULL;
-> > -
-> > -	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via SBLL [%d]\n",
-> > -		    level);
-> > -
-> > -	if (level < 0 || level >= fujitsu_bl->max_brightness)
-> > -		return -EINVAL;
-> > -
-> > -	status = acpi_get_handle(fujitsu_bl->acpi_handle, "SBLL", &handle);
-> > -	if (ACPI_FAILURE(status)) {
-> > -		vdbg_printk(FUJLAPTOP_DBG_ERROR, "SBLL not present\n");
-> > -		return -ENODEV;
-> > +	char *method;
-> > +
-> > +	switch (use_alt_lcd_levels) {
-> > +	case 1:
-> > +		method = "SBL2";
-> > +		break;
-> > +	default:
-> > +		method = "SBLL";
-> > +		break;
-> >  	}
+On Wed, Apr 05, 2017 at 08:07:54PM -0700, Darren Hart wrote:
+> On Thu, Apr 06, 2017 at 10:15:14AM +0930, Jonathan Woithe wrote:
+> > On Wed, Apr 05, 2017 at 09:55:34PM +0200, Micha?? K??pie?? wrote:
+> > > > On Wed, Apr 05, 2017 at 08:48:59AM +0200, Micha?? K??pie?? wrote:
+> > > > > This series introduces further changes to the way LCD backlight is
+> > > > > handled by fujitsu-laptop.  These changes include fixing a bug in code
+> > > > > responsible for generating brightness-related input events, cleaning up
+> > > > > handling of module parameters, reducing code duplication, removing
+> > > > > superfluous debug messages and other fixes.
+> > > > > 
+> > > > > This series was tested on a Lifebook S7020 and a Lifebook E744.
+> > > > > 
+> > > > > This series is based on the testing branch as it requires earlier patch
+> > > > > series I submitted in order to apply cleanly.
+> > > > > 
+> > > > > Changes from v1:
+> > > > > 
+> > > > >   - Update debug message logged by set_lcd_level() to reflect code flow
+> > > > >     changes introduced by patch 04/11.
+> > > > 
+> > > > Queued to testing, thanks! 
+> > > 
+> > > Jonathan, I would still love to hear your opinion on this series.  Take
+> > > your time, though, I do not see any reason to rush things.  I will only
+> > > send the next series once you ack this one.
+> > 
+> > Sure, no problem.  As mentioned earlier, this week has been busy.  I am
+> > hoping I might find the time to complete my review this evening.  If not, it
+> > will be some time over the weekend.
 > 
-> This is not necessary something actionable, but I am wondering about the
-> rationale of using a switch statement here given that there really are only
-> two options.  In my mind at least a simple "if" clause would be clearer and
-> easier to read (with or without the braces):
-> 
->   if (use_alt_lcd_levels) {
->           method = "SBL2";
->   } else {
->           method = "SBLL";
->   }
+> Eeek, I jumped the gun on that. I've moved this from testing to fujitsu, and
+> it'll wait there until Jonathan gets a chance to review. Apologies Jonathan.
 
-Ah, the reason for the use of the switch was to prepare the way for patch 
-06/11 which adds an autodetection value to the definition of
-use_alt_lcd_levels.  All good.
+That's fine, these things happen.
+
+I've completed a review of this series.  It represents another worthwhile
+evolutionary clean up of the fujitsu-laptop driver, this time concentrating
+on the backlight functions.  Importantly, it makes adjustments for changes
+in related kernel infrastructure as it has evolved over the last few
+years (the handling of module parameters, method return values and so on).
+
+I am happy for this series to be merged.  Thanks Michael for your continued
+clean up efforts.
+
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
 Regards
   jonathan
