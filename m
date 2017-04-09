@@ -1,67 +1,50 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] drivers/platform/x86: silead_dmi: Add touchscreen info for Surftab Wintron 7.0
-Date: Sun,  9 Apr 2017 11:07:44 +0200
-Message-ID: <20170409090744.9575-1-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 15/24] asus-wmi: Restrict debugfs interface when the
+ kernel is locked down
+Date: Sun, 9 Apr 2017 14:10:10 +0300
+Message-ID: <CAHp75VfvWmv7SxgwCgR-ZBYPbeQW=+qesDoBNC5JFPtvzsN5gg@mail.gmail.com>
+References: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
+ <149142340198.5101.8171352010918423590.stgit@warthog.procyon.org.uk>
+ <CAHp75VfpsnCHVqnFnwwh3JHB0ccY66Gj88sMGhrA9W7rDxiY_Q@mail.gmail.com> <31421.1491569449@warthog.procyon.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:42010 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751814AbdDIJHs (ORCPT
+Received: from mail-qk0-f178.google.com ([209.85.220.178]:35316 "EHLO
+        mail-qk0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751922AbdDILKL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 9 Apr 2017 05:07:48 -0400
+        Sun, 9 Apr 2017 07:10:11 -0400
+In-Reply-To: <31421.1491569449@warthog.procyon.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+To: David Howells <dhowells@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, matthew.garrett@nebula.com, linux-efi@vger.kernel.org, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, keyrings@vger.kernel.org
 
-Add touchscreen info for the Trekstor Surftab Wintron 7.0 ST70416-6
-tablet.
+On Fri, Apr 7, 2017 at 3:50 PM, David Howells <dhowells@redhat.com> wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+>> > From: Matthew Garrett <matthew.garrett@nebula.com>
+>> >
+>> > We have no way of validating what all of the Asus WMI methods do on a given
+>> > machine - and there's a risk that some will allow hardware state to be
+>> > manipulated in such a way that arbitrary code can be executed in the
+>> > kernel, circumventing module loading restrictions.  Prevent that if the
+>> > kernel is locked down.
+>>
+>> > +       if (kernel_is_locked_down())
+>> > +               return -EPERM;
+>>
+>> It looks a bit fragile when responsility of whatever reasons kernel
+>> can't serve become a driver burden.
+>> Can we fix this in debugfs framework instead?
+>
+> Fix it with debugfs how?  We can't offload the decision to userspace.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+I mean to do at least similar like you have done for module
+parameters. So, instead of putting above code to each attribute in
+question make a special (marked) attribute instead and debugfs
+framework will know how to deal with that.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 26b388d..d63ebb7 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -66,6 +66,20 @@ static const struct silead_ts_dmi_data dexp_ursus_7w_data = {
- 	.properties	= dexp_ursus_7w_props,
- };
- 
-+static const struct property_entry surftab_wintron70_st70416_6_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 884),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 632),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl1686-surftab-wintron70-st70416-6.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data surftab_wintron70_st70416_6_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= surftab_wintron70_st70416_6_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -93,6 +107,16 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "7W"),
- 		},
- 	},
-+	{
-+		/* Trekstor Surftab Wintron 7.0 ST70416-6 */
-+		.driver_data = (void *)&surftab_wintron70_st70416_6_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ST70416-6"),
-+			/* Exact match, different versions need different fw */
-+			DMI_MATCH(DMI_BIOS_VERSION, "TREK.G.WI71C.JGBMRBA04"),
-+		},
-+	},
- 	{ },
- };
- 
 -- 
-2.9.3
+With Best Regards,
+Andy Shevchenko
