@@ -1,202 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v7 3/6] watchdog: iTCO_wdt: cleanup set/unset
- no_reboot_bit functions
-Date: Mon, 10 Apr 2017 05:51:26 -0700
-Message-ID: <aa8ebb72-20b5-f8d7-18cc-e27f3bf85d6f@roeck-us.net>
-References: <aefdf4f6a7b0cf4af92d51ce2b9b73284cc03ffe.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <ce8f66b252cbf7a3eef43c7ff3be1c21fb1f2393.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 15/24] asus-wmi: Restrict debugfs interface when the kernel is locked down
+Date: Mon, 10 Apr 2017 14:16:48 +0100
+Message-ID: <13615.1491830208@warthog.procyon.org.uk>
+References: <CAHp75VfvWmv7SxgwCgR-ZBYPbeQW=+qesDoBNC5JFPtvzsN5gg@mail.gmail.com> <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk> <149142340198.5101.8171352010918423590.stgit@warthog.procyon.org.uk> <CAHp75VfpsnCHVqnFnwwh3JHB0ccY66Gj88sMGhrA9W7rDxiY_Q@mail.gmail.com> <31421.1491569449@warthog.procyon.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bh-25.webhostbox.net ([208.91.199.152]:39207 "EHLO
-        bh-25.webhostbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752750AbdDJMv3 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 10 Apr 2017 08:51:29 -0400
-In-Reply-To: <ce8f66b252cbf7a3eef43c7ff3be1c21fb1f2393.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, andy@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org
-Cc: wim@iguana.be, sathyaosid@gmail.com, david.e.box@linux.intel.com, rajneesh.bhardwaj@intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfvWmv7SxgwCgR-ZBYPbeQW=+qesDoBNC5JFPtvzsN5gg@mail.gmail.com>
+Content-ID: <13614.1491830208.1@warthog.procyon.org.uk>
+Sender: owner-linux-security-module@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dhowells@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, matthew.garrett@nebula.com, linux-efi@vger.kernel.org, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, keyrings@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 04/09/2017 03:00 PM, Kuppuswamy Sathyanarayanan wrote:
-> iTCO_wdt no_reboot_bit set/unset functions has lot of common code between
-> them. So merging these two functions into a single update function would
-> remove these unnecessary code duplications. This patch fixes this issue
-> by creating a no_reboot_bit update function to handle both set/unset
-> functions.
->
-> Also checking for iTCO version every time you make no_reboot_bit set/unset
-> call is inefficient and makes the code look complex. This can be improved
-> by performing this check once during device probe and selecting the
-> appropriate no_reboot_bit update function. This patch fixes this issue
-> by splitting the update function into multiple helper functions.
->
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> >> It looks a bit fragile when responsility of whatever reasons kernel
+> >> can't serve become a driver burden.
+> >> Can we fix this in debugfs framework instead?
+> >
+> > Fix it with debugfs how?  We can't offload the decision to userspace.
+> 
+> I mean to do at least similar like you have done for module
+> parameters. So, instead of putting above code to each attribute in
+> question make a special (marked) attribute instead and debugfs
+> framework will know how to deal with that.
 
-> ---
->  drivers/watchdog/iTCO_wdt.c | 83 +++++++++++++++++++++++++++------------------
->  1 file changed, 50 insertions(+), 33 deletions(-)
->
-> Changes since v6:
->  * make iTCO_wdt_no_reboot_bit_setup() static
->  * remove inline specifier for update_no_reboot_bit helper functions.
->
-> Changes since v5:
->  * Changed update function argument name from "status" to "set".
->  * Fixed commit history.
->  * Changed update function name to use "bit" instead of "flag"
->  * Addressed Andy's comment on creating multiple helper functions.
->
-> diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
-> index 3d0abc0..a629933 100644
-> --- a/drivers/watchdog/iTCO_wdt.c
-> +++ b/drivers/watchdog/iTCO_wdt.c
-> @@ -106,6 +106,8 @@ struct iTCO_wdt_private {
->  	struct pci_dev *pci_dev;
->  	/* whether or not the watchdog has been suspended */
->  	bool suspended;
-> +	/* no reboot update function pointer */
-> +	int (*update_no_reboot_bit)(void *p, bool set);
->  };
->
->  /* module parameters */
-> @@ -170,48 +172,61 @@ static inline u32 no_reboot_bit(struct iTCO_wdt_private *p)
->  	return enable_bit;
->  }
->
-> -static void iTCO_wdt_set_NO_REBOOT_bit(struct iTCO_wdt_private *p)
-> +static int update_no_reboot_bit_def(void *priv, bool set)
->  {
-> -	u32 val32;
-> -
-> -	/* Set the NO_REBOOT bit: this disables reboots */
-> -	if (p->iTCO_version >= 2) {
-> -		val32 = readl(p->gcs_pmc);
-> -		val32 |= no_reboot_bit(p);
-> -		writel(val32, p->gcs_pmc);
-> -	} else if (p->iTCO_version == 1) {
-> -		pci_read_config_dword(p->pci_dev, 0xd4, &val32);
-> -		val32 |= no_reboot_bit(p);
-> -		pci_write_config_dword(p->pci_dev, 0xd4, val32);
-> -	}
-> +	return 0;
->  }
->
-> -static int iTCO_wdt_unset_NO_REBOOT_bit(struct iTCO_wdt_private *p)
-> +static int update_no_reboot_bit_pci(void *priv, bool set)
->  {
-> -	u32 enable_bit = no_reboot_bit(p);
-> -	u32 val32 = 0;
-> +	struct iTCO_wdt_private *p = priv;
-> +	u32 val32 = 0, newval32 = 0;
->
-> -	/* Unset the NO_REBOOT bit: this enables reboots */
-> -	if (p->iTCO_version >= 2) {
-> -		val32 = readl(p->gcs_pmc);
-> -		val32 &= ~enable_bit;
-> -		writel(val32, p->gcs_pmc);
-> +	pci_read_config_dword(p->pci_dev, 0xd4, &val32);
-> +	if (set)
-> +		val32 |= no_reboot_bit(p);
-> +	else
-> +		val32 &= ~no_reboot_bit(p);
-> +	pci_write_config_dword(p->pci_dev, 0xd4, val32);
-> +	pci_read_config_dword(p->pci_dev, 0xd4, &newval32);
->
-> -		val32 = readl(p->gcs_pmc);
-> -	} else if (p->iTCO_version == 1) {
-> -		pci_read_config_dword(p->pci_dev, 0xd4, &val32);
-> -		val32 &= ~enable_bit;
-> -		pci_write_config_dword(p->pci_dev, 0xd4, val32);
-> +	/* make sure the update is successful */
-> +	if (val32 != newval32)
-> +		return -EIO;
->
-> -		pci_read_config_dword(p->pci_dev, 0xd4, &val32);
-> -	}
-> +	return 0;
-> +}
-> +
-> +static int update_no_reboot_bit_mem(void *priv, bool set)
-> +{
-> +	struct iTCO_wdt_private *p = priv;
-> +	u32 val32 = 0, newval32 = 0;
-> +
-> +	val32 = readl(p->gcs_pmc);
-> +	if (set)
-> +		val32 |= no_reboot_bit(p);
-> +	else
-> +		val32 &= ~no_reboot_bit(p);
-> +	writel(val32, p->gcs_pmc);
-> +	newval32 = readl(p->gcs_pmc);
->
-> -	if (val32 & enable_bit)
-> +	/* make sure the update is successful */
-> +	if (val32 != newval32)
->  		return -EIO;
->
->  	return 0;
->  }
->
-> +static void iTCO_wdt_no_reboot_bit_setup(struct iTCO_wdt_private *p)
-> +{
-> +	if (p->iTCO_version >= 2)
-> +		p->update_no_reboot_bit = update_no_reboot_bit_mem;
-> +	else if (p->iTCO_version == 1)
-> +		p->update_no_reboot_bit = update_no_reboot_bit_pci;
-> +	else
-> +		p->update_no_reboot_bit = update_no_reboot_bit_def;
-> +}
-> +
->  static int iTCO_wdt_start(struct watchdog_device *wd_dev)
->  {
->  	struct iTCO_wdt_private *p = watchdog_get_drvdata(wd_dev);
-> @@ -222,7 +237,7 @@ static int iTCO_wdt_start(struct watchdog_device *wd_dev)
->  	iTCO_vendor_pre_start(p->smi_res, wd_dev->timeout);
->
->  	/* disable chipset's NO_REBOOT bit */
-> -	if (iTCO_wdt_unset_NO_REBOOT_bit(p)) {
-> +	if (p->update_no_reboot_bit(p, false)) {
->  		spin_unlock(&p->io_lock);
->  		pr_err("failed to reset NO_REBOOT flag, reboot disabled by hardware/BIOS\n");
->  		return -EIO;
-> @@ -263,7 +278,7 @@ static int iTCO_wdt_stop(struct watchdog_device *wd_dev)
->  	val = inw(TCO1_CNT(p));
->
->  	/* Set the NO_REBOOT bit to prevent later reboots, just for sure */
-> -	iTCO_wdt_set_NO_REBOOT_bit(p);
-> +	p->update_no_reboot_bit(p, true);
->
->  	spin_unlock(&p->io_lock);
->
-> @@ -428,6 +443,8 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
->  	p->iTCO_version = pdata->version;
->  	p->pci_dev = to_pci_dev(dev->parent);
->
-> +	iTCO_wdt_no_reboot_bit_setup(p);
-> +
->  	/*
->  	 * Get the Memory-Mapped GCS or PMC register, we need it for the
->  	 * NO_REBOOT flag (TCO v2 and v3).
-> @@ -442,14 +459,14 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
->  	}
->
->  	/* Check chipset's NO_REBOOT bit */
-> -	if (iTCO_wdt_unset_NO_REBOOT_bit(p) &&
-> +	if (p->update_no_reboot_bit(p, false) &&
->  	    iTCO_vendor_check_noreboot_on()) {
->  		pr_info("unable to reset NO_REBOOT flag, device disabled by hardware/BIOS\n");
->  		return -ENODEV;	/* Cannot reset NO_REBOOT bit */
->  	}
->
->  	/* Set the NO_REBOOT bit to prevent later reboots, just for sure */
-> -	iTCO_wdt_set_NO_REBOOT_bit(p);
-> +	p->update_no_reboot_bit(p, true);
->
->  	/* The TCO logic uses the TCO_EN bit in the SMI_EN register */
->  	if (!devm_request_region(dev, p->smi_res->start,
->
+Hmmm...  It's tricky in that debugfs doesn't have any of its own structures,
+but is entirely built on standard VFS ones, so finding somewhere to store the
+information is going to be awkward.  One obvious solution is to entirely lock
+down debugfs in secure boot more, but that might be a bit drastic.
+
+Note that it's still going to be a driver burden to some extent anyway.  The
+driver has to tell the core what needs to be restricted.
+
+Further, I guess configfs needs attention also.
+
+David
