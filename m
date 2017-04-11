@@ -1,162 +1,123 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4] mfd: intel_soc_pmic: Fix a mess with compilation units
-Date: Tue, 11 Apr 2017 14:54:12 +0100
-Message-ID: <20170411135412.qnepq52p3m44zqkq@dell>
-References: <20170404123856.3052-1-andriy.shevchenko@linux.intel.com>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple@vodafone.de>
+Subject: Re: [PATCH 2/4] PCI: add functionality for resizing resources v2
+Date: Tue, 11 Apr 2017 17:37:04 +0200
+Message-ID: <70ea3ef3-10a6-01f1-125c-dbf89e87b1d0@vodafone.de>
+References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
+ <1489408896-25039-3-git-send-email-deathsimple@vodafone.de>
+ <20170324213445.GF25380@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f173.google.com ([209.85.128.173]:34395 "EHLO
-        mail-wr0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751527AbdDKNyQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Apr 2017 09:54:16 -0400
-Received: by mail-wr0-f173.google.com with SMTP id z109so29445354wrb.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Apr 2017 06:54:16 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20170404123856.3052-1-andriy.shevchenko@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170324213445.GF25380@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 04 Apr 2017, Andy Shevchenko wrote:
+Hi Bjorn,
 
-> Crystal Cove and Whiskey Cove are two different PMICs which are
-> installed on Intel Atom SoC based platforms.
-> 
-> Moreover there are two independent drivers that by some reason were
-> supposed (*) to get into one kernel module.
-> 
-> Fix the mess by clarifying Kconfig option for Crystal Cove and split
-> Whiskey Cove out of it.
-> 
-> (*) It looks like the configuration was never tested with
->     INTEL_SOC_PMIC=n. The line in Makefile is actually wrong.
-> 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Zhang Rui <rui.zhang@intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  - fix dependency for now, proper fix is to provide headers in platform_data/x86
->  - add tags
->  drivers/acpi/Kconfig         |  2 +-
->  drivers/gpio/Kconfig         |  2 +-
->  drivers/mfd/Kconfig          | 15 +++++++++++++--
->  drivers/mfd/Makefile         |  2 +-
->  drivers/platform/x86/Kconfig |  2 +-
->  drivers/thermal/Kconfig      |  2 +-
->  6 files changed, 18 insertions(+), 7 deletions(-)
+first of all sorry for the delay, had been busy with other stuff in the 
+last few weeks.
 
-Applied, thanks.
+Am 24.03.2017 um 22:34 schrieb Bjorn Helgaas:
+>> +			release_child_resources(res);
+> Doesn't this recursively release *all* child resources?  There could
+> be BARs from several devices, or even windows of downstream bridges,
+> inside this window.  The drivers of those other devices aren't
+> expecting things to change here.
 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index 3e15bf8f99f7..47d4e7be7a46 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -512,7 +512,7 @@ config XPOWER_PMIC_OPREGION
->  
->  config BXT_WC_PMIC_OPREGION
->  	bool "ACPI operation region support for BXT WhiskeyCove PMIC"
-> -	depends on INTEL_SOC_PMIC
-> +	depends on INTEL_SOC_PMIC_BXTWC
->  	help
->  	  This config adds ACPI operation region support for BXT WhiskeyCove PMIC.
->  
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 63ceed246b6f..05e8fbfb3d85 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1053,7 +1053,7 @@ config GPIO_UCB1400
->  
->  config GPIO_WHISKEY_COVE
->  	tristate "GPIO support for Whiskey Cove PMIC"
-> -	depends on (X86 || COMPILE_TEST) && INTEL_SOC_PMIC
-> +	depends on (X86 || COMPILE_TEST) && INTEL_SOC_PMIC_BXTWC
->  	select GPIOLIB_IRQCHIP
->  	help
->  	  Support for GPIO pins on Whiskey Cove PMIC.
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index ce3a9180a765..a48176eb9b48 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -446,18 +446,29 @@ config LPC_SCH
->  	  System Management Bus and General Purpose I/O.
->  
->  config INTEL_SOC_PMIC
-> -	bool "Support for Intel Atom SoC PMIC"
-> +	bool "Support for Crystal Cove PMIC"
->  	depends on GPIOLIB
->  	depends on I2C=y
->  	select MFD_CORE
->  	select REGMAP_I2C
->  	select REGMAP_IRQ
->  	help
-> -	  Select this option to enable support for the PMIC device
-> +	  Select this option to enable support for Crystal Cove PMIC
->  	  on some Intel SoC systems. The PMIC provides ADC, GPIO,
->  	  thermal, charger and related power management functions
->  	  on these systems.
->  
-> +config INTEL_SOC_PMIC_BXTWC
-> +	tristate "Support for Intel Broxton Whiskey Cove PMIC"
-> +	depends on INTEL_PMC_IPC
-> +	select MFD_CORE
-> +	select REGMAP_IRQ
-> +	help
-> +	  Select this option to enable support for Whiskey Cove PMIC
-> +	  on Intel Broxton systems. The PMIC provides ADC, GPIO,
-> +	  thermal, charger and related power management functions
-> +	  on these systems.
-> +
->  config MFD_INTEL_LPSS
->  	tristate
->  	select COMMON_CLK
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index fa86dbe65e52..c16bf1ea0ea9 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -212,8 +212,8 @@ obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
->  obj-$(CONFIG_MFD_SKY81452)	+= sky81452.o
->  
->  intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
-> -intel-soc-pmic-$(CONFIG_INTEL_PMC_IPC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
-> +obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 5602bdfcad65..4c0933174cd9 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1020,7 +1020,7 @@ config INTEL_PMC_IPC
->  config INTEL_BXTWC_PMIC_TMU
->  	tristate "Intel BXT Whiskey Cove TMU Driver"
->  	depends on REGMAP
-> -	depends on INTEL_SOC_PMIC && INTEL_PMC_IPC
-> +	depends on INTEL_SOC_PMIC_BXTWC && INTEL_PMC_IPC
->  	---help---
->  	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
->  	  This driver enables the alarm wakeup functionality in the TMU unit
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 93474015bb1d..8e47cfaa9aab 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -353,7 +353,7 @@ endmenu
->  
->  config INTEL_BXT_PMIC_THERMAL
->  	tristate "Intel Broxton PMIC thermal driver"
-> -	depends on X86 && INTEL_SOC_PMIC && REGMAP
-> +	depends on X86 && INTEL_SOC_PMIC_BXTWC && REGMAP
->  	help
->  	  Select this driver for Intel Broxton PMIC with ADC channels monitoring
->  	  system temperature measurements and alerts.
+Yes, the original idea was that the driver calling this knows that the 
+BARs will be changed for the bridge it belongs to.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+But you're right. I've changed it in the way that our device driver will 
+release all resource first and then call the function to resize its BAR.
+
+The function will return an error in the next version of the patch if 
+the bridge BAR which needs to be moved for this is still used by child 
+resources.
+
+>> +int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+>> +{
+>> +	struct resource *res = dev->resource + resno;
+>> +	u32 sizes = pci_rbar_get_possible_sizes(dev, resno);
+>> +	int old = pci_rbar_get_current_size(dev, resno);
+>> +	u64 bytes = 1ULL << (size + 20);
+>> +	int ret = 0;
+> I think we should fail the request if the device is enabled, i.e., if
+> the PCI_COMMAND_MEMORY bit is set.  We can't safely change the BAR
+> while memory decoding is enabled.
+>
+> I know there's code in pci_std_update_resource() that turns off
+> PCI_COMMAND_MEMORY, but I think that's a mistake: I think it should
+> fail when asked to update an enabled BAR the same way
+> pci_iov_update_resource() does.
+>
+> I'm not sure why you call pci_reenable_device() below, but I think I
+> would rather have the driver do something like this:
+>
+>    pci_disable_device(dev);
+>    pci_resize_resource(dev, 0, size);
+>    pci_enable_device(dev);
+>
+> That way it's very clear to the driver that it must re-read all BARs
+> after resizing this one.
+
+I've tried it, but this actually doesn't seem to work.
+
+At least on the board I've tried pci_disable_device() doesn't clear the 
+PCI_COMMAND_MEMORY bit, it just clears the master bit.
+
+Additional to that the power management reference counting 
+pci_disable_device() and pci_enable_device() doesn't look like what I 
+want for this functionality.
+
+How about the driver needs to disabled memory decoding itself before 
+trying to resize anything?
+
+>> +	if (!sizes)
+>> +		return -ENOTSUPP;
+>> +
+>> +	if (!(sizes & (1 << size)))
+>> +		return -EINVAL;
+>> +
+>> +	if (old < 0)
+>> +		return old;
+>> +
+>> +	/* Make sure the resource isn't assigned before making it larger. */
+>> +	if (resource_size(res) < bytes && res->parent) {
+>> +		release_resource(res);
+>> +		res->end = resource_size(res) - 1;
+>> +		res->start = 0;
+>> +		if (resno < PCI_BRIDGE_RESOURCES)
+>> +			pci_update_resource(dev, resno);
+> Why do we need to write this zero to the BAR?  If PCI_COMMAND_MEMORY
+> is set, I think this is dangerous, and if it's not set, I think it's
+> unnecessary.
+>
+> I think we should set the IORESOURCE_UNSET bit to indicate that the
+> resource does not have an address assigned to it.  It should get
+> cleared later anyway, but having IORESOURCE_UNSET will make any debug
+> messages emitted while reassigning resources make more sense.
+
+Makes sense, changed.
+
+>> +	return 0;
+>> +
+>> +error_resize:
+>> +	pci_rbar_set_size(dev, resno, old);
+>> +	res->end = res->start + (1ULL << (old + 20)) - 1;
+>> +
+>> +error_reassign:
+>> +	pci_assign_unassigned_bus_resources(dev->bus);
+>> +	pci_setup_bridge(dev->bus);
+> Could this bridge-related recovery code go inside
+> pci_reassign_bridge_resources()?
+
+No, we need to restore the original size of the resource before trying 
+the recovery code when something goes wrong.
+
+I will address all other comments in the next version of the patch as well.
+
+Regards,
+Christian.
