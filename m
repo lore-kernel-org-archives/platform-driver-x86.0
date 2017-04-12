@@ -1,68 +1,86 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
-Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 30h-3fh) Processors
-Date: Tue, 11 Apr 2017 17:48:25 +0200
-Message-ID: <a1ac66f3-3c3f-e9c6-82c9-6e9ca5715b67@vodafone.de>
-References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
- <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
- <20170324154744.GE25380@bhelgaas-glaptop.roam.corp.google.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 1/7] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
+Date: Wed, 12 Apr 2017 11:45:51 +0100
+Message-ID: <20170412104551.g2xkpihz2n2hju4m@dell>
+References: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20170324154744.GE25380-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f174.google.com ([209.85.128.174]:35142 "EHLO
+        mail-wr0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753306AbdDLKpz (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 12 Apr 2017 06:45:55 -0400
+Received: by mail-wr0-f174.google.com with SMTP id o21so14712558wrb.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2017 03:45:55 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, hdegoede@redhat.com, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sathyaosid@gmail.com
 
-QW0gMjQuMDMuMjAxNyB1bSAxNjo0NyBzY2hyaWViIEJqb3JuIEhlbGdhYXM6Cj4gT24gTW9uLCBN
-YXIgMTMsIDIwMTcgYXQgMDE6NDE6MzVQTSArMDEwMCwgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToK
-Pj4gRnJvbTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgo+Pgo+
-PiBNb3N0IEJJT1MgZG9uJ3QgZW5hYmxlIHRoaXMgYmVjYXVzZSBvZiBjb21wYXRpYmlsaXR5IHJl
-YXNvbnMuCj4gQ2FuIHlvdSBnaXZlIGFueSBtb3JlIGRldGFpbHMgaGVyZT8gIFdpdGhvdXQgbW9y
-ZSBoaW50cywgaXQncyBoYXJkIHRvCj4ga25vdyB3aGV0aGVyIGFueSBvZiB0aGUgY29tcGF0aWJp
-bGl0eSByZWFzb25zIG1pZ2h0IGFwcGx5IHRvIExpbnV4IGFzCj4gd2VsbC4KClVuZm9ydHVuYXRl
-bHkgbm90LCBJIGNvdWxkIHRyeSB0byBhc2sgYSBmZXcgbW9yZSBwZW9wbGUgYXQgQU1EIGlmIHRo
-ZXkgCmtub3cgdGhlIGJhY2tncm91bmQuCgpJIHdhcyB0b2xkIHRoYXQgdGhlcmUgYXJlIGEgZmV3
-IGJvYXJkcyB3aGljaCBvZmZlcnMgdGhhdCBhcyBhIEJJT1MgCm9wdGlvbiwgYnV0IHNvIGZhciBJ
-IGhhdmVuJ3QgZm91bmQgYW55IChhbmQgSSBoYXZlIHF1aXRlIGEgZmV3IGhlcmUpLgoKTXkgYmVz
-dCBndWVzcyBpcyB0aGF0IG9sZGVyIHdpbmRvd3MgdmVyc2lvbnMgaGF2ZSBhIHByb2JsZW0gd2l0
-aCB0aGF0LgoKPj4gTWFudWFsbHkgZW5hYmxlIGEgNjRiaXQgQkFSIG9mIDY0R0Igc2l6ZSBzbyB0
-aGF0IHdlIGhhdmUKPj4gZW5vdWdoIHJvb20gZm9yIFBDSSBkZXZpY2VzLgo+ICBGcm9tIHRoZSBj
-b250ZXh0LCBJJ20gZ3Vlc3NpbmcgdGhpcyBpcyBlbmFibGluZyBhIG5ldyA2NEdCIHdpbmRvdwo+
-IHRocm91Z2ggdGhlIFBDSSBob3N0IGJyaWRnZT8KClllcywgZXhhY3RseS4gU29ycnkgZm9yIHRo
-ZSBjb25mdXNpb24uCgo+IFRoYXQgbWlnaHQgYmUgZG9jdW1lbnRlZCBhcyBhICJCQVIiLCBidXQK
-PiBpdCdzIG5vdCBhbnl0aGluZyB0aGUgTGludXggUENJIGNvcmUgd291bGQgcmVjb2duaXplIGFz
-IGEgQkFSLgoKQXQgbGVhc3QgdGhlIEFNRCBOQiBkb2N1bWVudGF0aW9uIGNhbGxzIHRoaXMgdGhl
-IGhvc3QgQkFScy4gQnV0IEknbSAKcGVyZmVjdGx5IGZpbmUgd2l0aCBhbnkgdGVybWlub2xvZ3ku
-CgpIb3cgYWJvdXQgY2FsbGluZyBpdCBob3N0IGJyaWRnZSB3aW5kb3cgaW5zdGVhZD8KCj4gSSB0
-aGluayB0aGUgc3BlY3Mgd291bGQgZW52aXNpb24gdGhpcyBiZWluZyBkb25lIHZpYSBhbiBBQ1BJ
-IF9TUlMKPiBtZXRob2Qgb24gdGhlIFBOUDBBMDMgaG9zdCBicmlkZ2UgZGV2aWNlLiAgVGhhdCB3
-b3VsZCBiZSBhIG1vcmUKPiBnZW5lcmljIHBhdGggdGhhdCB3b3VsZCB3b3JrIG9uIGFueSBob3N0
-IGJyaWRnZS4gIERpZCB5b3UgZXhwbG9yZSB0aGF0Cj4gcG9zc2liaWxpdHk/ICBJIHdvdWxkIHBy
-ZWZlciB0byBhdm9pZCBhZGRpbmcgZGV2aWNlLXNwZWNpZmljIGNvZGUgaWYKPiB0aGF0J3MgcG9z
-c2libGUuCgpJJ3ZlIGNoZWNrZWQgcXVpdGUgYSBmZXcgYm9hcmRzLCBidXQgbm9uZSBvZiB0aGVt
-IGFjdHVhbGx5IGltcGxlbWVudHMgaXQgCnRoaXMgd2F5LgoKTSQgaXMgd29ya2luZyBvbiBhIG5l
-dyBBQ1BJIHRhYmxlIHRvIGVuYWJsZSB0aGlzIHZlbmRvciBuZXV0cmFsLCBidXQgSSAKZ3Vlc3Mg
-dGhhdCB3aWxsIHN0aWxsIHRha2UgYSB3aGlsZS4KCkkgd2FudCB0byBzdXBwb3J0IHRoaXMgZm9y
-IGFsbCBBTUQgQ1BVIHJlbGVhc2VkIGluIHRoZSBwYXN0IDUgeWVhcnMgb3IgCnNvLCBzbyB3ZSBh
-cmUgZ29pbmcgdG8gZGVhbCB3aXRoIGEgYnVuY2ggb2Ygb2xkZXIgYm9hcmRzIGFzIHdlbGwuCgoK
-Pj4gKwlwY2lfYnVzX2FkZF9yZXNvdXJjZShkZXYtPmJ1cywgcmVzLCAwKTsKPiBXZSB3b3VsZCBu
-ZWVkIHNvbWUgc29ydCBvZiBwcmludGsgaGVyZSB0byBleHBsYWluIGhvdyB0aGlzIG5ldyB3aW5k
-b3cKPiBtYWdpY2FsbHkgYXBwZWFyZWQuCgpHb29kIHBvaW50LCBjb25zaWRlciB0aGlzIGRvbmUu
-CgpCdXQgaXMgdGhpcyBhY3R1YWxseSB0aGUgcmlnaHQgcGxhY2Ugb2YgZG9pbmcgaXQ/IE9yIHdv
-dWxkIHlvdSBwcmVmZXIgCnNvbWV0aGluZyB0byBiZSBhZGRlZCB0byB0aGUgcHJvYmluZyBjb2Rl
-PwoKSSB0aGluayB0aG9zZSBmaXh1cHMgYXJlIGFwcGxpZWQgYSBiaXQgbGF0ZXIsIGFyZW4ndCB0
-aGV5PwoKQmVzdCByZWdhcmRzLApDaHJpc3RpYW4uCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmFtZC1nZnggbWFpbGluZyBsaXN0CmFtZC1nZnhAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vYW1kLWdmeAo=
+On Mon, 10 Apr 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> TMU interrupts are registered as a separate interrupt chip, and
+> hence it should start its interrupt index(BXTWC_TMU_IRQ) number
+> from 0. But currently, BXTWC_TMU_IRQ is defined as part of enum
+> bxtwc_irqs_level2 and its index value is 11. Since this index
+> value is used when calculating .num_irqs of regmap_irq_chip_tmu,
+> it incorrectly reports number of irqs as 12 instead of actual
+> value of 1.
+> 
+> static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
+> 	REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
+> };
+> 
+> static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
+> 	.name = "bxtwc_irq_chip_tmu",
+> 	.status_base = BXTWC_TMUIRQ,
+> 	.mask_base = BXTWC_MTMUIRQ,
+> 	.irqs = bxtwc_regmap_irqs_tmu,
+> 	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
+> 	.num_regs = 1,
+> };
+> 
+> This patch fixes this issue by creating new enum of tmu irqs and
+> resetting its starting index to 0.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/mfd/intel_soc_pmic_bxtwc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+
+Patch looks fine, but please remove the code segment from the commit
+log.
+
+For the code:
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+  
+> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
+> index 699c8c7..bb18e20 100644
+> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
+> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+> @@ -94,7 +94,10 @@ enum bxtwc_irqs_level2 {
+>  	BXTWC_GPIO0_IRQ,
+>  	BXTWC_GPIO1_IRQ,
+>  	BXTWC_CRIT_IRQ,
+> -	BXTWC_TMU_IRQ,
+> +};
+> +
+> +enum bxtwc_irqs_tmu {
+> +	BXTWC_TMU_IRQ = 0,
+>  };
+>  
+>  static const struct regmap_irq bxtwc_regmap_irqs[] = {
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
