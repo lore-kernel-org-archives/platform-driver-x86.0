@@ -1,101 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 1/7] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
-Date: Wed, 12 Apr 2017 21:59:54 +0100
-Message-ID: <20170412205954.yl2dsgpbev7ovyfs@dell>
-References: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170412104551.g2xkpihz2n2hju4m@dell>
- <CAENHMvO7KYFcEvGeCnA9bBYC3qTn7o8f1B6-maS5Z6n_d1Z=DQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: RFC: WMI Enhancements
+Date: Wed, 12 Apr 2017 16:08:54 -0700
+Message-ID: <20170412230854.GA11963@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f42.google.com ([74.125.82.42]:35038 "EHLO
-        mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754675AbdDLU76 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2017 16:59:58 -0400
-Received: by mail-wm0-f42.google.com with SMTP id w64so97551256wma.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2017 13:59:57 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAENHMvO7KYFcEvGeCnA9bBYC3qTn7o8f1B6-maS5Z6n_d1Z=DQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 12 Apr 2017, Sathyanarayanan Kuppuswamy Natarajan wrote:
+Hi All,
 
-> Hi Lee,
-> 
-> Thanks. Will remove the code segment in next version.
+There are a few parallel efforts involving the Windows Management
+Instrumentation (WMI)[1] and dependent/related drivers. I'd like to have a round of
+discussion among those of you that have been involved in this space before we
+decide on a direction.
 
-Please always reply inline.  Top posting is frowned upon.
+The WMI support in the kernel today fairly narrowly supports a handful of
+systems. Andy L. has a work-in-progress series [2] which converts wmi into a
+platform device and a proper bus, providing devices for dependent drivers to
+bind to, and a mechanism for sibling devices to communicate with each other.
+I've reviewed the series and feel like the approach is sound, I plan to carry
+this series forward and merge it (with Andy L's permission).
 
-> On Wed, Apr 12, 2017 at 3:45 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Mon, 10 Apr 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> >
-> >> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> >>
-> >> TMU interrupts are registered as a separate interrupt chip, and
-> >> hence it should start its interrupt index(BXTWC_TMU_IRQ) number
-> >> from 0. But currently, BXTWC_TMU_IRQ is defined as part of enum
-> >> bxtwc_irqs_level2 and its index value is 11. Since this index
-> >> value is used when calculating .num_irqs of regmap_irq_chip_tmu,
-> >> it incorrectly reports number of irqs as 12 instead of actual
-> >> value of 1.
-> >>
-> >> static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
-> >>       REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
-> >> };
-> >>
-> >> static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu = {
-> >>       .name = "bxtwc_irq_chip_tmu",
-> >>       .status_base = BXTWC_TMUIRQ,
-> >>       .mask_base = BXTWC_MTMUIRQ,
-> >>       .irqs = bxtwc_regmap_irqs_tmu,
-> >>       .num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
-> >>       .num_regs = 1,
-> >> };
-> >>
-> >> This patch fixes this issue by creating new enum of tmu irqs and
-> >> resetting its starting index to 0.
-> >>
-> >> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> >> ---
-> >>  drivers/mfd/intel_soc_pmic_bxtwc.c | 5 ++++-
-> >>  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > Patch looks fine, but please remove the code segment from the commit
-> > log.
-> >
-> > For the code:
-> >
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> >
-> >> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> >> index 699c8c7..bb18e20 100644
-> >> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-> >> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> >> @@ -94,7 +94,10 @@ enum bxtwc_irqs_level2 {
-> >>       BXTWC_GPIO0_IRQ,
-> >>       BXTWC_GPIO1_IRQ,
-> >>       BXTWC_CRIT_IRQ,
-> >> -     BXTWC_TMU_IRQ,
-> >> +};
-> >> +
-> >> +enum bxtwc_irqs_tmu {
-> >> +     BXTWC_TMU_IRQ = 0,
-> >>  };
-> >>
-> >>  static const struct regmap_irq bxtwc_regmap_irqs[] = {
-> >
-> 
-> 
-> 
+Are there any objections to this?
+
+In Windows, applications interact with WMI more or less directly. We don't do
+this in Linux currently, although it has been discussed in the past [3]. Some
+vendors will work around this by performing SMI/SMM, which is inefficient at
+best. Exposing WMI methods to userspace would bring parity to WMI for Linux and
+Windows.
+
+There are two principal concerns I'd appreciate your thoughts on:
+
+a) As an undiscoverable interface (you need to know the method signatures ahead
+of time), universally exposing every WMI "device" to userspace seems like "a bad
+idea" from a security and stability perspective. While access would certainly be
+privileged, it seems more prudent to make this exposure opt-in. We also handle
+some of this with kernel drivers and exposing those "devices" to userspace would
+enable userspace and the kernel to fight over control. So - if we expose WMI
+devices to userspace, I believe this should be done on a case by case basis,
+opting in, and not by default as part of the WMI driver (although it can provide
+the mechanism for a sub-driver to use), and possibly a devmode to do so by
+default.
+
+b) The mechanism to expose WMI devices to userspace must allow for atomic
+operation, which would exclude a sysfs interface involving multiple files.
+Something like an ioctl or a char dev would be more appropriate.
+
+Does anyone think differently regarding a) or b) ?
+
+Secondarily, Andy L created a simple driver to expose the MOF buffer [2] to
+userspace which could be consumed by a userspace tool to create sources for an
+interface to the exposed WMI methods. With or without MOF support however, I
+think it makes sense to provide a common WMI mechanism to expose specific
+devices/methods to userspace.
+
+Appreciate your thoughts,
+
+References:
+1. https://msdn.microsoft.com/en-us/library/windows/hardware/Dn614028(v=vs.85).aspx
+2. https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=platform/wmi
+3. https://www.mail-archive.com/linux-acpi@vger.kernel.org/msg11686.html
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Darren Hart
+VMware Open Source Technology Center
