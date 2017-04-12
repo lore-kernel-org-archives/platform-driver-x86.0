@@ -1,105 +1,92 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h
- (Models 30h-3fh) Processors
-Date: Wed, 12 Apr 2017 11:55:30 -0500
-Message-ID: <20170412165530.GE25197@bhelgaas-glaptop.roam.corp.google.com>
-References: <1489408896-25039-1-git-send-email-deathsimple@vodafone.de>
- <1489408896-25039-4-git-send-email-deathsimple@vodafone.de>
- <20170324154744.GE25380@bhelgaas-glaptop.roam.corp.google.com>
- <a1ac66f3-3c3f-e9c6-82c9-6e9ca5715b67@vodafone.de>
+From: Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+Subject: Re: [PATCH v1 1/7] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
+Date: Wed, 12 Apr 2017 10:59:19 -0700
+Message-ID: <CAENHMvO7KYFcEvGeCnA9bBYC3qTn7o8f1B6-maS5Z6n_d1Z=DQ@mail.gmail.com>
+References: <b8e952de94ed1902b922224de11f0814371b08b0.1491848776.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170412104551.g2xkpihz2n2hju4m@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:35586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751608AbdDLQzf (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Apr 2017 12:55:35 -0400
-Content-Disposition: inline
-In-Reply-To: <a1ac66f3-3c3f-e9c6-82c9-6e9ca5715b67@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>
-Cc: linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170412104551.g2xkpihz2n2hju4m@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 11, 2017 at 05:48:25PM +0200, Christian König wrote:
-> Am 24.03.2017 um 16:47 schrieb Bjorn Helgaas:
-> >On Mon, Mar 13, 2017 at 01:41:35PM +0100, Christian König wrote:
-> >>From: Christian König <christian.koenig@amd.com>
-> >>
-> >>Most BIOS don't enable this because of compatibility reasons.
-> >Can you give any more details here?  Without more hints, it's hard to
-> >know whether any of the compatibility reasons might apply to Linux as
-> >well.
-> 
-> Unfortunately not, I could try to ask a few more people at AMD if
-> they know the background.
-> 
-> I was told that there are a few boards which offers that as a BIOS
-> option, but so far I haven't found any (and I have quite a few
-> here).
-> 
-> My best guess is that older windows versions have a problem with that.
-> 
-> >>Manually enable a 64bit BAR of 64GB size so that we have
-> >>enough room for PCI devices.
-> > From the context, I'm guessing this is enabling a new 64GB window
-> >through the PCI host bridge?
-> 
-> Yes, exactly. Sorry for the confusion.
-> 
-> >That might be documented as a "BAR", but
-> >it's not anything the Linux PCI core would recognize as a BAR.
-> 
-> At least the AMD NB documentation calls this the host BARs. But I'm
-> perfectly fine with any terminology.
-> 
-> How about calling it host bridge window instead?
+Hi Lee,
 
-That works for me.
+Thanks. Will remove the code segment in next version.
 
-> >I think the specs would envision this being done via an ACPI _SRS
-> >method on the PNP0A03 host bridge device.  That would be a more
-> >generic path that would work on any host bridge.  Did you explore that
-> >possibility?  I would prefer to avoid adding device-specific code if
-> >that's possible.
-> 
-> I've checked quite a few boards, but none of them actually
-> implements it this way.
-> 
-> M$ is working on a new ACPI table to enable this vendor neutral, but
-> I guess that will still take a while.
-> 
-> I want to support this for all AMD CPU released in the past 5 years
-> or so, so we are going to deal with a bunch of older boards as well.
+On Wed, Apr 12, 2017 at 3:45 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 10 Apr 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel=
+.com>
+>>
+>> TMU interrupts are registered as a separate interrupt chip, and
+>> hence it should start its interrupt index(BXTWC_TMU_IRQ) number
+>> from 0. But currently, BXTWC_TMU_IRQ is defined as part of enum
+>> bxtwc_irqs_level2 and its index value is 11. Since this index
+>> value is used when calculating .num_irqs of regmap_irq_chip_tmu,
+>> it incorrectly reports number of irqs as 12 instead of actual
+>> value of 1.
+>>
+>> static const struct regmap_irq bxtwc_regmap_irqs_tmu[] =3D {
+>>       REGMAP_IRQ_REG(BXTWC_TMU_IRQ, 0, 0x06),
+>> };
+>>
+>> static struct regmap_irq_chip bxtwc_regmap_irq_chip_tmu =3D {
+>>       .name =3D "bxtwc_irq_chip_tmu",
+>>       .status_base =3D BXTWC_TMUIRQ,
+>>       .mask_base =3D BXTWC_MTMUIRQ,
+>>       .irqs =3D bxtwc_regmap_irqs_tmu,
+>>       .num_irqs =3D ARRAY_SIZE(bxtwc_regmap_irqs_tmu),
+>>       .num_regs =3D 1,
+>> };
+>>
+>> This patch fixes this issue by creating new enum of tmu irqs and
+>> resetting its starting index to 0.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@li=
+nux.intel.com>
+>> ---
+>>  drivers/mfd/intel_soc_pmic_bxtwc.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> Patch looks fine, but please remove the code segment from the commit
+> log.
+>
+> For the code:
+>
+> For my own reference:
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>
+>> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_=
+pmic_bxtwc.c
+>> index 699c8c7..bb18e20 100644
+>> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
+>> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
+>> @@ -94,7 +94,10 @@ enum bxtwc_irqs_level2 {
+>>       BXTWC_GPIO0_IRQ,
+>>       BXTWC_GPIO1_IRQ,
+>>       BXTWC_CRIT_IRQ,
+>> -     BXTWC_TMU_IRQ,
+>> +};
+>> +
+>> +enum bxtwc_irqs_tmu {
+>> +     BXTWC_TMU_IRQ =3D 0,
+>>  };
+>>
+>>  static const struct regmap_irq bxtwc_regmap_irqs[] =3D {
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
-I've never seen _SRS for host bridges either.  I'm curious about what
-sort of new table will be proposed.  It seems like the existing ACPI
-resource framework could manage it, but I certainly don't know all the
-issues.
 
-> >>+	pci_bus_add_resource(dev->bus, res, 0);
-> >We would need some sort of printk here to explain how this new window
-> >magically appeared.
-> 
-> Good point, consider this done.
-> 
-> But is this actually the right place of doing it? Or would you
-> prefer something to be added to the probing code?
-> 
-> I think those fixups are applied a bit later, aren't they?
 
-Logically, this should be done before we enumerate the PCI devices
-below the host bridge, so a PCI device fixup is not the ideal place
-for it, but it might be the most practical.
-
-I could imagine some sort of quirk like the ones in
-drivers/pnp/quirks.c that could add the window to the host bridge _CRS
-and program the bridge to open it.  But the PCI host bridges aren't
-handled through the path that applies those fixups, and it would be
-messy to identify your bridges (you currently use PCI vendor/device
-IDs, which are only available after enumerating the device).  So this
-doesn't seem like a viable strategy.
-
-Bjorn
+--=20
+Sathya
