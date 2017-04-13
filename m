@@ -1,37 +1,29 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: RFC: WMI Enhancements
-Date: Thu, 13 Apr 2017 09:33:39 +0200
-Message-ID: <20170413073339.GH3090@pali>
-References: <20170412230854.GA11963@fury>
+From: Sarah JOHNSON <sarahjohnson197070@gmail.com>
+Subject: Greetings.
+Date: Thu, 13 Apr 2017 13:07:44 +0000 (UTC)
+Message-ID: <333052830.1507063.1492088864392@mail.yahoo.com>
+References: <333052830.1507063.1492088864392.ref@mail.yahoo.com>
+Reply-To: Sarah JOHNSON <sarah.johnson197070@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35991 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756391AbdDMHdn (ORCPT
+Received: from nm10-vm2.bullet.mail.gq1.yahoo.com ([98.136.218.93]:39723 "EHLO
+        nm10-vm2.bullet.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751088AbdDMNHq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 03:33:43 -0400
-Content-Disposition: inline
-In-Reply-To: <20170412230854.GA11963@fury>
+        Thu, 13 Apr 2017 09:07:46 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Corentin Chary <corentin.chary@gmail.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-On Wednesday 12 April 2017 16:08:54 Darren Hart wrote:
-> In Windows, applications interact with WMI more or less directly. We don't do
-> this in Linux currently, although it has been discussed in the past [3]. Some
-> vendors will work around this by performing SMI/SMM, which is inefficient at
-> best. Exposing WMI methods to userspace would bring parity to WMI for Linux and
-> Windows.
+Good Day Dearest.
 
-Maybe we should first ask, why linux userspace applications need direct
-access to WMI? If we look at current WMI linux drivers, basically every
-one translate WMI interface to some standard linux class driver (with
-some extensions). This is something which should stay in kernel. E.g.
-rfkill, backlight, led, input keyboard, ...
+My name is Sarah JOHNSON I am 18 years old, the only daughter of late Mr. Raymond JOHNSON from Burkina Faso, I am contacting you to help me relocate to your country to continue my university education in  your country, before my father died he gave me a deposit slip document of ($7,000,000 USD) and made me understand that it was because of his position in the government that his government associates planed and poisoned him on a business trip with them to France and he advised me to look for a faithful and reliable foreigner who will help me to transfer this money to his country and help me to relocate over there to continue my studies.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+I hope you will help me with the good faith and trust I have in you, after you have secured the money and settle my education, I will give you 30% of the money for your good and kind assistance to me. Please Contact me e-Mail:sarah.johnson197070@yahoo.com 
+
+I am waiting on your reply
+
+Regards,
+
+Sarah.
