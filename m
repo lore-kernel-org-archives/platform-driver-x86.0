@@ -1,124 +1,55 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Thu, 13 Apr 2017 13:29:41 +0000
-Message-ID: <3370431810bd4bc09fd9eb16eb9abea5@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: RFC: WMI Enhancements
+Date: Thu, 13 Apr 2017 15:51:02 +0200
+Message-ID: <20170413135102.GL3090@pali>
 References: <20170412230854.GA11963@fury>
  <20170413073228.GB1462@ozzy.nask.waw.pl>
+ <3370431810bd4bc09fd9eb16eb9abea5@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:8118 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751054AbdDMN3t (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 09:29:49 -0400
-In-Reply-To: <20170413073228.GB1462@ozzy.nask.waw.pl>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: kernel@kempniu.pl, dvhart@infradead.org
-Cc: rjw@rjwysocki.net, len.brown@intel.com, pali.rohar@gmail.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3370431810bd4bc09fd9eb16eb9abea5@ausx13mpc120.AMER.DELL.COM>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mario.Limonciello@dell.com, Hans de Goede <hdegoede@redhat.com>
+Cc: kernel@kempniu.pl, dvhart@infradead.org, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYcWCIEvEmXBpZcWEIFtt
-YWlsdG86a2VybmVsQGtlbXBuaXUucGxdDQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAxMywgMjAx
-NyAyOjMyIEFNDQo+IFRvOiBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+DQo+IENj
-OiBSYWZhZWwgV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+OyBMZW4gQnJvd24gPGxlbi5icm93
-bkBpbnRlbC5jb20+Ow0KPiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+OyBDb3Jl
-bnRpbiBDaGFyeQ0KPiA8Y29yZW50aW4uY2hhcnlAZ21haWwuY29tPjsgTGltb25jaWVsbG8sIE1h
-cmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IEFuZHkgTHV0b21pcnNraSA8bHV0
-b0BrZXJuZWwub3JnPjsgQW5keQ0KPiBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51
-eC5pbnRlbC5jb20+OyBMS01MIDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBs
-YXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcG1Admdlci5rZXJu
-ZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBSRkM6IFdNSSBFbmhhbmNlbWVudHMNCj4gDQo+ID4gSGkg
-QWxsLA0KPiA+DQo+ID4gVGhlcmUgYXJlIGEgZmV3IHBhcmFsbGVsIGVmZm9ydHMgaW52b2x2aW5n
-IHRoZSBXaW5kb3dzIE1hbmFnZW1lbnQNCj4gPiBJbnN0cnVtZW50YXRpb24gKFdNSSlbMV0gYW5k
-IGRlcGVuZGVudC9yZWxhdGVkIGRyaXZlcnMuIEknZCBsaWtlIHRvDQo+ID4gaGF2ZSBhIHJvdW5k
-IG9mIGRpc2N1c3Npb24gYW1vbmcgdGhvc2Ugb2YgeW91IHRoYXQgaGF2ZSBiZWVuIGludm9sdmVk
-DQo+ID4gaW4gdGhpcyBzcGFjZSBiZWZvcmUgd2UgZGVjaWRlIG9uIGEgZGlyZWN0aW9uLg0KPiA+
-DQo+ID4gVGhlIFdNSSBzdXBwb3J0IGluIHRoZSBrZXJuZWwgdG9kYXkgZmFpcmx5IG5hcnJvd2x5
-IHN1cHBvcnRzIGEgaGFuZGZ1bA0KPiA+IG9mIHN5c3RlbXMuIEFuZHkgTC4gaGFzIGEgd29yay1p
-bi1wcm9ncmVzcyBzZXJpZXMgWzJdIHdoaWNoIGNvbnZlcnRzDQo+ID4gd21pIGludG8gYSBwbGF0
-Zm9ybSBkZXZpY2UgYW5kIGEgcHJvcGVyIGJ1cywgcHJvdmlkaW5nIGRldmljZXMgZm9yDQo+ID4g
-ZGVwZW5kZW50IGRyaXZlcnMgdG8gYmluZCB0bywgYW5kIGEgbWVjaGFuaXNtIGZvciBzaWJsaW5n
-IGRldmljZXMgdG8NCj4gY29tbXVuaWNhdGUgd2l0aCBlYWNoIG90aGVyLg0KPiA+IEkndmUgcmV2
-aWV3ZWQgdGhlIHNlcmllcyBhbmQgZmVlbCBsaWtlIHRoZSBhcHByb2FjaCBpcyBzb3VuZCwgSSBw
-bGFuDQo+ID4gdG8gY2FycnkgdGhpcyBzZXJpZXMgZm9yd2FyZCBhbmQgbWVyZ2UgaXQgKHdpdGgg
-QW5keSBMJ3MgcGVybWlzc2lvbikuDQo+ID4NCj4gPiBBcmUgdGhlcmUgYW55IG9iamVjdGlvbnMg
-dG8gdGhpcz8NCj4gDQo+IEJhY2sgaW4gSmFudWFyeSAyMDE2LCBJIHNlbnQgQW5keSBhIGZldyBt
-aW5vciBjb21tZW50cyBhYm91dCB0aGlzIHNlcmllcy4gIEENCj4geWVhciBsYXRlciwgSSBvZmZl
-cmVkIHRvIGlyb24gb3V0IHRoZSByZW1haW5pbmcgaXNzdWVzIGFuZCByZXN1Ym1pdCB0aGUgc2Vy
-aWVzIGluDQo+IEFuZHkncyBuYW1lIHdoZW4gSSBmaW5kIHRoZSB0aW1lLiAgU2FkbHksIHRoaW5n
-cyBoYXZlIGNoYW5nZWQgYSBiaXQgZm9yIG1lDQo+IHNpbmNlIHRoYXQgdGltZSBhbmQgaXQgaXMg
-dW5saWtlbHkgdGhhdCBJIHdpbGwgYmUgYWJsZSB0byBkZWxpdmVyLCBmb3Igd2hpY2ggSSBhbQ0K
-PiBzb3JyeS4NCj4gDQo+IEhvd2V2ZXIsIGJyb3dzaW5nIEFuZHkncyBicmFuY2ggSSBzZWUgdGhh
-dCBtb3N0IGlzc3VlcyBoYXZlIGJlZW4gcmVzb2x2ZWQsDQo+IHRob3VnaCBJIHRoaW5rIHNvbWUg
-b2YgbXkgcmVtYXJrcyBbMV0gaGF2ZSBlaXRoZXIgYmVlbiBtaXNzZWQgb3Igc2lsZW50bHkNCj4g
-cmVmdXRlZCA6KQ0KPiANCj4gQW55d2F5LCBJIGFsc28gbGlrZSB0aGlzIGFwcHJvYWNoIGFuZCBJ
-IHRoaW5rIHRoaXMgc2VyaWVzIGlzIGEgdmFsdWFibGUgY2xlYW51cC4NCj4gDQo+ID4gSW4gV2lu
-ZG93cywgYXBwbGljYXRpb25zIGludGVyYWN0IHdpdGggV01JIG1vcmUgb3IgbGVzcyBkaXJlY3Rs
-eS4gV2UNCj4gPiBkb24ndCBkbyB0aGlzIGluIExpbnV4IGN1cnJlbnRseSwgYWx0aG91Z2ggaXQg
-aGFzIGJlZW4gZGlzY3Vzc2VkIGluDQo+ID4gdGhlIHBhc3QgWzNdLiBTb21lIHZlbmRvcnMgd2ls
-bCB3b3JrIGFyb3VuZCB0aGlzIGJ5IHBlcmZvcm1pbmcNCj4gPiBTTUkvU01NLCB3aGljaCBpcyBp
-bmVmZmljaWVudCBhdCBiZXN0LiBFeHBvc2luZyBXTUkgbWV0aG9kcyB0bw0KPiA+IHVzZXJzcGFj
-ZSB3b3VsZCBicmluZyBwYXJpdHkgdG8gV01JIGZvciBMaW51eCBhbmQgV2luZG93cy4NCj4gPg0K
-PiA+IFRoZXJlIGFyZSB0d28gcHJpbmNpcGFsIGNvbmNlcm5zIEknZCBhcHByZWNpYXRlIHlvdXIg
-dGhvdWdodHMgb246DQo+ID4NCj4gPiBhKSBBcyBhbiB1bmRpc2NvdmVyYWJsZSBpbnRlcmZhY2Ug
-KHlvdSBuZWVkIHRvIGtub3cgdGhlIG1ldGhvZA0KPiA+IHNpZ25hdHVyZXMgYWhlYWQgb2YgdGlt
-ZSksIHVuaXZlcnNhbGx5IGV4cG9zaW5nIGV2ZXJ5IFdNSSAiZGV2aWNlIiB0bw0KPiA+IHVzZXJz
-cGFjZSBzZWVtcyBsaWtlICJhIGJhZCBpZGVhIiBmcm9tIGEgc2VjdXJpdHkgYW5kIHN0YWJpbGl0
-eQ0KPiA+IHBlcnNwZWN0aXZlLiBXaGlsZSBhY2Nlc3Mgd291bGQgY2VydGFpbmx5IGJlIHByaXZp
-bGVnZWQsIGl0IHNlZW1zIG1vcmUNCj4gPiBwcnVkZW50IHRvIG1ha2UgdGhpcyBleHBvc3VyZSBv
-cHQtaW4uIFdlIGFsc28gaGFuZGxlIHNvbWUgb2YgdGhpcyB3aXRoDQo+ID4ga2VybmVsIGRyaXZl
-cnMgYW5kIGV4cG9zaW5nIHRob3NlICJkZXZpY2VzIiB0byB1c2Vyc3BhY2Ugd291bGQgZW5hYmxl
-DQo+ID4gdXNlcnNwYWNlIGFuZCB0aGUga2VybmVsIHRvIGZpZ2h0IG92ZXIgY29udHJvbC4gU28g
-LSBpZiB3ZSBleHBvc2UgV01JDQo+ID4gZGV2aWNlcyB0byB1c2Vyc3BhY2UsIEkgYmVsaWV2ZSB0
-aGlzIHNob3VsZCBiZSBkb25lIG9uIGEgY2FzZSBieSBjYXNlDQo+ID4gYmFzaXMsIG9wdGluZyBp
-biwgYW5kIG5vdCBieSBkZWZhdWx0IGFzIHBhcnQgb2YgdGhlIFdNSSBkcml2ZXINCj4gPiAoYWx0
-aG91Z2ggaXQgY2FuIHByb3ZpZGUgdGhlIG1lY2hhbmlzbSBmb3IgYSBzdWItZHJpdmVyIHRvIHVz
-ZSksIGFuZCBwb3NzaWJseQ0KPiBhIGRldm1vZGUgdG8gZG8gc28gYnkgZGVmYXVsdC4NCj4gPg0K
-PiA+IGIpIFRoZSBtZWNoYW5pc20gdG8gZXhwb3NlIFdNSSBkZXZpY2VzIHRvIHVzZXJzcGFjZSBt
-dXN0IGFsbG93IGZvcg0KPiA+IGF0b21pYyBvcGVyYXRpb24sIHdoaWNoIHdvdWxkIGV4Y2x1ZGUg
-YSBzeXNmcyBpbnRlcmZhY2UgaW52b2x2aW5nIG11bHRpcGxlDQo+IGZpbGVzLg0KPiA+IFNvbWV0
-aGluZyBsaWtlIGFuIGlvY3RsIG9yIGEgY2hhciBkZXYgd291bGQgYmUgbW9yZSBhcHByb3ByaWF0
-ZS4NCj4gPg0KPiA+IERvZXMgYW55b25lIHRoaW5rIGRpZmZlcmVudGx5IHJlZ2FyZGluZyBhKSBv
-ciBiKSA/DQo+IA0KPiBQbGVhc2UgcGFyZG9uIG15IGlnbm9yYW5jZSwgYnV0IHdoYXQgZG8gd2Ug
-YWN0dWFsbHkgZ2FpbiBieSBleHBvc2luZyBXTUkgdG8NCj4gdXNlcnNwYWNlPyAgRW5hYmxpbmcg
-YXBwbGljYXRpb25zIHRvIGZldGNoIFNNQklPUyBkYXRhPyAgV2UgYWxyZWFkeSBoYXZlIGFuDQo+
-IGludGVyZmFjZSBmb3IgdGhhdC4gIEVuYWJsaW5nIGFwcGxpY2F0aW9ucyB0byByZWNlaXZlIGlu
-cHV0IGV2ZW50cz8gIExpa2V3aXNlLg0KDQpJbnB1dCBub3RpZmljYXRpb25zIGFyZSBqdXN0IG9u
-ZSBhc3BlY3QgdGhhdCByZWNlaXZlZCBvdmVyIFdNSS4gIEkgZG9uJ3Qgc2VlIGFueQ0KcmVhc29u
-IHRvIG1vdmUgdGhlIG5vdGlmaWNhdGlvbnMgb3V0IG9mIHRoZSBrZXJuZWwuDQoNCkluIHRlcm1z
-IG9mIHVzZXJzcGFjZSBhcHBsaWNhdGlvbnMsIG9uY2UgYSBXTUkgaW50ZXJmYWNlIHRvIHVzZXJz
-cGFjZSBpcyBhdmFpbGFibGUNCmxpYnNtYmlvcyB3b3VsZCBjaGFuZ2Ugb3ZlciB0byB0aGF0LiAg
-QXBwbGljYXRpb25zIHVzaW5nIGxpYnNtYmlvcyB3b3VsZCBiZW5lZml0Lg0KDQo+IFlvdSBtZW50
-aW9uZWQgV01JJ3MgZWZmaWNpZW5jeSBjb21wYXJlZCB0byBTTUkvU01NLCBidXQgaXMgaXQgYSBk
-aWZmZXJlbmNlDQo+IHNpZ25pZmljYW50IGVub3VnaCBmb3IgYW55b25lIHRvIG5vdGljZT8NCg0K
-QXQgbGVhc3QgZm9yIERlbGwgdGhlcmUgYXJlIG9wdGltaXphdGlvbnMgYmVpbmcgbWFkZSB3aGVu
-IGRhdGEgaXMgcmVxdWVzdGVkIG92ZXIgDQp0aGUgV01JLUFDUEkgd3JhcHBlciBpbnN0ZWFkIG9m
-IGRpcmVjdGx5IHZpYSBTTUkvU01NLg0KDQpGb3IgZXhhbXBsZSBpZiB0aGUgZGF0YSBpcyBhICJz
-dGF0aWMiIHRhYmxlIG9yIHRoZSByZXF1ZXN0IGlzIHRvIHNvbWV0aGluZyB0aGF0IGlzDQpwYXNz
-ZWQgdGhydSB0byB0aGUgRUMgaXQncyBhIGJpZyB3YXN0ZSBvZiBlZmZvcnQgdG8gcHV0IHRoZSBD
-UFUgaW4gU01NLg0KDQpUaGUgc2F2aW5ncyB0aGVyZSBpcyBzaWduaWZpY2FudC4NCg0KPiANCj4g
-SSBhbSBiaWFzZWQgaGVyZSBhcyBJIGhhdmUgaGFkIG15IG93biBzdHJ1Z2dsZXMgd2l0aCBXTUkg
-aW4gdGhlIHBhc3QsIGJ1dCBpdA0KPiBsb29rcyBsaWtlIGEgbGF5ZXIgb2YgaW5kaXJlY3Rpb24g
-d2hpY2ggYnJpbmdzIGxpdHRsZSB2YWx1ZSwgeWV0IGlzIHRyaWNreSB0byBleHBvc2UNCj4gcHJv
-cGVybHkuICBJZiB0aGVyZSBpcyBhIHJlYWwtbGlmZSB1c2UgY2FzZSB0aGF0IG1ha2VzIHRoaXMg
-aWRlYSB3b3J0aHdoaWxlLCBJDQo+IHdvdWxkIGxvdmUgdG8gYmUgZW5saWdodGVuZWQuDQo+IA0K
-PiA+IFNlY29uZGFyaWx5LCBBbmR5IEwgY3JlYXRlZCBhIHNpbXBsZSBkcml2ZXIgdG8gZXhwb3Nl
-IHRoZSBNT0YgYnVmZmVyDQo+ID4gWzJdIHRvIHVzZXJzcGFjZSB3aGljaCBjb3VsZCBiZSBjb25z
-dW1lZCBieSBhIHVzZXJzcGFjZSB0b29sIHRvIGNyZWF0ZQ0KPiA+IHNvdXJjZXMgZm9yIGFuIGlu
-dGVyZmFjZSB0byB0aGUgZXhwb3NlZCBXTUkgbWV0aG9kcy4NCj4gDQo+ICsxIGZvciB0aGUgaWRl
-YSwgaXQgbWFrZXMgZmlndXJpbmcgb3V0IHdoYXQgdGhlIGZpcm13YXJlIGFjdHVhbGx5DQo+IGV4
-cG9zZXMgdGhyb3VnaCBXTUkgYSBiaXQgZWFzaWVyLiAgQWZ0ZXIgc2tpbW1pbmcgdGhyb3VnaCB0
-aGUgZHJpdmVyJ3MgY29kZSwgSQ0KPiB3b3VsZCBvbmx5IHJlY29tbWVuZCB0byByZXZpZXcgdGhl
-IGluY2x1ZGVkIGhlYWRlcnMgKGxpbnV4L2lucHV0L3NwYXJzZS0NCj4ga2V5bWFwLmgsIGxpbnV4
-L2RtaS5oIGFuZCBhY3BpL3ZpZGVvLmggYWxsIHNlZW0gcmVkdW5kYW50IHRvIG1lKS4NCj4gDQo+
-IFdoYXQgd2Ugc3RpbGwgbmVlZCwgdGhvdWdoLCBpcyBhbiBvcGVuIHNvdXJjZSB2ZXJzaW9uIG9m
-IHdtaW9mY2suZXhlLiAgSSBhbQ0KPiB1bmF3YXJlIG9mIGFueXRoaW5nIGxpa2UgdGhhdCBleGlz
-dGluZyBhbmQgaW5zdGFsbGluZyB0aGUgV2luZG93cyBEcml2ZXIgS2l0DQo+IGp1c3QgdG8gcnVu
-IG9uZSBjb21tYW5kIHdoaWNoIHNwaXRzIG91dCBhIHNpbmdsZSAqLmggZmlsZSBpcyBub3Qgc29t
-ZXRoaW5nIEkNCj4gd291bGQgZGVzY3JpYmUgYXMgY29udmVuaWVudCAoYmVlbiB0aGVyZSkuDQo+
-IA0KPiBbMV0gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvcGxhdGZvcm0tZHJpdmVyLXg4
-Ni9tc2cwODIwMS5odG1sDQo+IA0KPiAtLQ0KPiBCZXN0IHJlZ2FyZHMsDQo+IE1pY2hhxYIgS8SZ
-cGllxYQNCg==
+On Thursday 13 April 2017 13:29:41 Mario.Limonciello@dell.com wrote:
+> > Please pardon my ignorance, but what do we actually gain by exposing WMI to
+> > userspace?  Enabling applications to fetch SMBIOS data?  We already have an
+> > interface for that.  Enabling applications to receive input events?  Likewise.
+> 
+> Input notifications are just one aspect that received over WMI.  I don't see any
+> reason to move the notifications out of the kernel.
+> 
+> In terms of userspace applications, once a WMI interface to userspace is available
+> libsmbios would change over to that.  Applications using libsmbios would benefit.
+
+Really libsmbios matters here? Hans (added to thread) wrote that
+libsmbios is a relic, something of ages long gone by and a normal user
+should never use it.
+
+If this is truth and libsmbios should not be used, then we probably do
+not need to care about it in changes for WMI.
+
+Hans, Mario, any comment/clarification about it?
+
+> > You mentioned WMI's efficiency compared to SMI/SMM, but is it a difference
+> > significant enough for anyone to notice?
+> 
+> At least for Dell there are optimizations being made when data is requested over 
+> the WMI-ACPI wrapper instead of directly via SMI/SMM.
+> 
+> For example if the data is a "static" table or the request is to something that is
+> passed thru to the EC it's a big waste of effort to put the CPU in SMM.
+> 
+> The savings there is significant.
+
+Maybe we can use this Dell WMI-ACPI wrapper for kernel drivers instead
+of current SMI/SMM direct access?
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
