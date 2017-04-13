@@ -1,145 +1,80 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] hp-wmi: Fix detection for dock and tablet mode
-Date: Thu, 13 Apr 2017 16:07:49 -0700
-Message-ID: <20170413230749.GA11189@fury>
-References: <20170409135608.15621-1-carlo@caione.org>
- <20170409135608.15621-3-carlo@caione.org>
- <20170413182150.GI2064@fury>
- <CAL9uMOG_3Ov6+bgDoHWYUgSKG9YbXs-vk0XsnOYAt+rDV48e7w@mail.gmail.com>
+Subject: Re: RFC: WMI Enhancements
+Date: Thu, 13 Apr 2017 16:51:03 -0700
+Message-ID: <20170413235103.GB11189@fury>
+References: <20170412230854.GA11963@fury>
+ <20170413073339.GH3090@pali>
+ <20170413165646.GD2064@fury>
+ <e50750499ea246d78b336caae95d36b8@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:52019 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:58208 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751657AbdDMXHw (ORCPT
+        with ESMTP id S1752914AbdDMXvI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 19:07:52 -0400
+        Thu, 13 Apr 2017 19:51:08 -0400
 Content-Disposition: inline
-In-Reply-To: <CAL9uMOG_3Ov6+bgDoHWYUgSKG9YbXs-vk0XsnOYAt+rDV48e7w@mail.gmail.com>
+In-Reply-To: <e50750499ea246d78b336caae95d36b8@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlo Caione <carlo@endlessm.com>
-Cc: Carlo Caione <carlo@caione.org>, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Upstreaming Team <linux@endlessm.com>
+To: Mario.Limonciello@dell.com
+Cc: pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-On Thu, Apr 13, 2017 at 10:09:43PM +0200, Carlo Caione wrote:
-> On Thu, Apr 13, 2017 at 8:21 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Sun, Apr 09, 2017 at 03:56:08PM +0200, Carlo Caione wrote:
-> >> From: Carlo Caione <carlo@endlessm.com>
+On Thu, Apr 13, 2017 at 08:38:28PM +0000, Mario.Limonciello@dell.com wrote:
+> Earlier question from Andy.  I had some discussion with the right people about this.
 > 
-> /cut
-> >> @@ -644,6 +646,7 @@ static int __init hp_wmi_input_setup(void)
-> >>  {
-> >>       acpi_status status;
-> >>       int err;
-> >> +     int val;
-> >>
-> >>       hp_wmi_input_dev = input_allocate_device();
-> >>       if (!hp_wmi_input_dev)
-> >> @@ -654,17 +657,26 @@ static int __init hp_wmi_input_setup(void)
-> >>       hp_wmi_input_dev->id.bustype = BUS_HOST;
-> >>
-> >>       __set_bit(EV_SW, hp_wmi_input_dev->evbit);
-> >> -     __set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
-> >> -     __set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-> >> +
-> >> +     /* Dock */
-> >> +     val = hp_wmi_dock_state();
-> >> +     if (!(val < 0)) {
-> >> +             __set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
-> >> +             input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
-> >> +     }
-> >
-> > In general, these are fine and can go in. I did want to get your opinion on one
-> > thought though.
-> >
-> > This adds some complexity to deal with what appears to be an unknown failure
-> > mode (the query fails, we don't know why, so we don't set the bit on the input
-> > dev for that feature). Since we don't know why it fails, can we be confident it
-> > will always fail?
+> > Is it just the "call SMBIOS" GUID or are there other things?
 > 
-> That's not exactly true, at least for the firmware I have on the
-> laptop I'm working on.
+> Today - it's just the SMBIOS calling GUID.  There are plans (not yet concrete) for
+> splitting up data access and organization of that data access classes across multiple 
+>  other GUID/method pairs in the future.
 > 
-> For this hardware (can we assume for all the HP models?) when the WMI
-> calls returns the value of 0x04, that means that the query
-> (HPWMI_HARDWARE_QUERY in this case) is not implemented at all in the
-> SSDT.
-> In general reading the disassembled AML code when the WMI query fails
-> and returns a positive value this can be:
-> - 0x04: Query ID is unknown / not implemented but valid
-> - 0x02: Wrong signature
-> - 0x05: Wrong / invalid query number (?)
+> Ideally this could be done without needing kernel patches every time a new GUID
+> would (essentially) need to be whitelisted.
 > 
-> The problem here is that: (1) this is my personal interpretation of
-> the AML code obtained by disassembling the SSDT and (2) we cannot be
-> sure that this is the same on all the HP firmwares around.
-> For sure in general in all the cases I extracted from the SSDT table
-> on this hardware if the call failed the first time all the chances are
-> that it is going to fail also in the future.
+> > I am a strong supporter of the following philosophy with respect to supporting
+> > innovation:
+> > "Enable them to enable themselves and get out of their way"
+> > 
+> > I've followed this approach over the years to encourage upstream first software
+> > development, open-first policy toward specifications and documentation, proper
+> > license selection, and development of new mechanisms in existing standards, like
+> > ACPI _DSD. All of these serve to support innovation by removing bottlenecks and
+> > enabling developers to be independent.
+> > 
+> > What I don't want to see is the Linux kernel becoming a bottleneck to feature
+> > parity with Windows (or to becoming the lead vehicle for new features). When a
+> > vendor has a feature they want to expose which they determine to be a value
+> > proposition for their product, I don't want the lack of a class driver to get in
+> > the way. Exposing specific GUIDs is a minimal and easy to upstream change which
+> > would enable rapid feature enabling.
+> > 
+> > Perhaps I should have led with this :-)
+> > 
 > 
-> In [1] is the SSDT table, the WMI method is WMAA if you want to check
-> my interpretation.
-> 
-> > Could it succeed at init here, but then fail later and leave
-> > us in the same situation we are in now?
-> 
-> I think that this is really unlikely
-> 
-> > If so, have you considered just returning 0 on error and using a WARN_ONCE print
-> > statement to report the error? This would simplify a lot of this logic that
-> > you're adding in here to handle something we could just report and ignore.
-> 
-> Yes, I thought to report just 0 but in that case we are advertising to
-> userspace fake capabilities for the hardware, like dockability or
-> laptop mode that in most cases are not even implemented on the
-> hardware (like on this laptop).
+> So considering future plans, I'd really like if it's possible to expose all the GUID's the
+> GUID's the same as Windows does today.
 
-OK, I'm convinced that this approach is correct.
+A bit of trouble parsing... to be clear, your preference would be that for the
+PNP0C14 on whitelisted platforms (either DMI matches, or possibly via the ACPI
+Device UID?) we expose every GUID (Method, Event, and Data) for that device to
+userspace?
+
+The concern raised here is that for systems using dell-wmi, the two GUIDs used
+by the kernel would also be exposed to userspace. Is this correct?
 
 > 
-> > That being said, your version avoids the input_report_switch() in the event of a
-> > failure at init. In practice, I don't know if this is worth the added
-> > complexity.
-> >
-> > Your thoughts?
+> As example is we have some diagnostic testing tools.  Having to whitelist interfaces
+> for them to operate would be sub-optimal.
 > 
-> AFAICT we can fail in hp_wmi_perform_query (as written in the comment
-> to the function):
-> 1) with -EINVAL if the query was not successful or the output buffer
-> size exceeds buffersize. In this case I don't see how the next calls
-> could be successful.
 
+Is this a problem because there are a lot of them, or because they routinely
+change?
 
-EINVAL is being used to broadly here. If the input values are incorrect, then
-yes -EINVAL is the right response. However, if the query was unsuccessful, that
-is more appropriately -EIO.
-
-If the handle/method doesn't exist, that would be -ENXIO.
-
-However, your changes make the driver self-consistent and I'll apply them as is
-to testing.
-
-You, me, or someone could prepare a follow up series to clean this driver up a
-bit.
-
-> 2) with a positive error code returned from the WMI method. Given my
-> interpretation of this positive code reported before I don't see why
-> we should fail only on init and not on all the subsequent calls
-> 
-> So I'm still convinced that my implementation is correct and that
-> probably adding complexity on top is not really worth it. But of
-> course this is your call as maintainer :)
-
-Thanks for the additional context.
-
-> 
-> Thanks,
-> 
-> [1] https://paste.fedoraproject.org/paste/bBnqUlazz1tAjKsJKq7NHl5M1UNdIGYhyRLivL9gydE=
-> 
-> -- 
-> Carlo Caione  |  +39.340.80.30.096  |  Endless
-> 
+Also, are these something that could be part of a debug feature, or do they need
+to be in production so you can work with customers to diagnose running systems
+for example?
 
 -- 
 Darren Hart
