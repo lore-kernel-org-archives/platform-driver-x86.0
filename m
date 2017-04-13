@@ -1,63 +1,119 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v6] platform/x86: Add Intel Cherry Trail ACPI INT33FE
- device driver
-Date: Thu, 13 Apr 2017 12:12:12 -0700
-Message-ID: <20170413191212.GB9783@fury>
-References: <20170406072436.12898-1-hdegoede@redhat.com>
- <1491476636.24567.25.camel@linux.intel.com>
- <8b6df86e-06eb-5be8-ee8c-9af980691fa5@redhat.com>
- <20170406224815.GA13110@fury>
- <66d4f7cc-4f4b-f912-ca8a-50fd248cc405@redhat.com>
+From: Carlo Caione <carlo@endlessm.com>
+Subject: Re: [PATCH 2/2] hp-wmi: Fix detection for dock and tablet mode
+Date: Thu, 13 Apr 2017 22:09:43 +0200
+Message-ID: <CAL9uMOG_3Ov6+bgDoHWYUgSKG9YbXs-vk0XsnOYAt+rDV48e7w@mail.gmail.com>
+References: <20170409135608.15621-1-carlo@caione.org> <20170409135608.15621-3-carlo@caione.org>
+ <20170413182150.GI2064@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:35860 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752196AbdDMTMP (ORCPT
+Received: from mail-ua0-f182.google.com ([209.85.217.182]:35931 "EHLO
+        mail-ua0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756137AbdDMUJu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 15:12:15 -0400
-Content-Disposition: inline
-In-Reply-To: <66d4f7cc-4f4b-f912-ca8a-50fd248cc405@redhat.com>
+        Thu, 13 Apr 2017 16:09:50 -0400
+Received: by mail-ua0-f182.google.com with SMTP id a1so39234959uaf.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Apr 2017 13:09:49 -0700 (PDT)
+In-Reply-To: <20170413182150.GI2064@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Carlo Caione <carlo@caione.org>, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Upstreaming Team <linux@endlessm.com>
 
-On Fri, Apr 07, 2017 at 08:49:55AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 07-04-17 00:48, Darren Hart wrote:
-> > On Thu, Apr 06, 2017 at 02:17:11PM +0200, Hans de Goede wrote:
-> > > Hi,
-> > > 
-> > > On 06-04-17 13:03, Andy Shevchenko wrote:
-...
-> > > > In this case this so called "pseudo" device is not so pseudo, but
-> > > > "master".
-> > > 
-> > > I think this is really some Windows weirdness, if I configure the BIOS
-> > > to boot "Android" the ACPI INT33FE device goes away and instead I
-> > > get 3 separate ACPI devices for the 3 chips.
-> > 
-> > So if this is this case, what is the value in supporting "windows weirdness" if
-> > the end user can select "Android" and be presented with 3 separate devices?
-> 
-> Multiple reasons:
-> 
-> 1) Multi-boot with windows without needing to toggle a BIOS option all the time
-> 2) Many of these devices only ship with windows, the Android option is there
-> from the BIOS template code they used, but is untested, so this may give us
-> the 3 separate devices but at the same time break other stuff
-> 3) On some devices the BIOS tries to autodetect the OS, overriding the BIOS option
-> 4) On some devices, including the one I'm developing on, but I can "fix" this with
-> a BIOS downgrade, this option has been locked to avoid 2.
-> 5) Users really should not need to touch BIOS settings ever
+On Thu, Apr 13, 2017 at 8:21 PM, Darren Hart <dvhart@infradead.org> wrote:
+> On Sun, Apr 09, 2017 at 03:56:08PM +0200, Carlo Caione wrote:
+>> From: Carlo Caione <carlo@endlessm.com>
 
-Agreed on all points.
+/cut
+>> @@ -644,6 +646,7 @@ static int __init hp_wmi_input_setup(void)
+>>  {
+>>       acpi_status status;
+>>       int err;
+>> +     int val;
+>>
+>>       hp_wmi_input_dev = input_allocate_device();
+>>       if (!hp_wmi_input_dev)
+>> @@ -654,17 +657,26 @@ static int __init hp_wmi_input_setup(void)
+>>       hp_wmi_input_dev->id.bustype = BUS_HOST;
+>>
+>>       __set_bit(EV_SW, hp_wmi_input_dev->evbit);
+>> -     __set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+>> -     __set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+>> +
+>> +     /* Dock */
+>> +     val = hp_wmi_dock_state();
+>> +     if (!(val < 0)) {
+>> +             __set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+>> +             input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
+>> +     }
+>
+> In general, these are fine and can go in. I did want to get your opinion on one
+> thought though.
+>
+> This adds some complexity to deal with what appears to be an unknown failure
+> mode (the query fails, we don't know why, so we don't set the bit on the input
+> dev for that feature). Since we don't know why it fails, can we be confident it
+> will always fail?
 
-I'm happy to pull this in. I need an immutable i2c branch with the dependencies
-to do so.
+That's not exactly true, at least for the firmware I have on the
+laptop I'm working on.
+
+For this hardware (can we assume for all the HP models?) when the WMI
+calls returns the value of 0x04, that means that the query
+(HPWMI_HARDWARE_QUERY in this case) is not implemented at all in the
+SSDT.
+In general reading the disassembled AML code when the WMI query fails
+and returns a positive value this can be:
+- 0x04: Query ID is unknown / not implemented but valid
+- 0x02: Wrong signature
+- 0x05: Wrong / invalid query number (?)
+
+The problem here is that: (1) this is my personal interpretation of
+the AML code obtained by disassembling the SSDT and (2) we cannot be
+sure that this is the same on all the HP firmwares around.
+For sure in general in all the cases I extracted from the SSDT table
+on this hardware if the call failed the first time all the chances are
+that it is going to fail also in the future.
+
+In [1] is the SSDT table, the WMI method is WMAA if you want to check
+my interpretation.
+
+> Could it succeed at init here, but then fail later and leave
+> us in the same situation we are in now?
+
+I think that this is really unlikely
+
+> If so, have you considered just returning 0 on error and using a WARN_ONCE print
+> statement to report the error? This would simplify a lot of this logic that
+> you're adding in here to handle something we could just report and ignore.
+
+Yes, I thought to report just 0 but in that case we are advertising to
+userspace fake capabilities for the hardware, like dockability or
+laptop mode that in most cases are not even implemented on the
+hardware (like on this laptop).
+
+> That being said, your version avoids the input_report_switch() in the event of a
+> failure at init. In practice, I don't know if this is worth the added
+> complexity.
+>
+> Your thoughts?
+
+AFAICT we can fail in hp_wmi_perform_query (as written in the comment
+to the function):
+1) with -EINVAL if the query was not successful or the output buffer
+size exceeds buffersize. In this case I don't see how the next calls
+could be successful.
+2) with a positive error code returned from the WMI method. Given my
+interpretation of this positive code reported before I don't see why
+we should fail only on init and not on all the subsequent calls
+
+So I'm still convinced that my implementation is correct and that
+probably adding complexity on top is not really worth it. But of
+course this is your call as maintainer :)
+
+Thanks,
+
+[1] https://paste.fedoraproject.org/paste/bBnqUlazz1tAjKsJKq7NHl5M1UNdIGYhyRLivL9gydE=
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Carlo Caione  |  +39.340.80.30.096  |  Endless
