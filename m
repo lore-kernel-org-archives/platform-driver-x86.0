@@ -1,74 +1,148 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Thu, 13 Apr 2017 17:49:49 +0000
-Message-ID: <aa3f1a45fa424c96a387082a8c79042b@ausx13mpc120.AMER.DELL.COM>
-References: <20170412230854.GA11963@fury>
- <20170413073228.GB1462@ozzy.nask.waw.pl>
- <CALCETrXkx2QqDtKmajywpvtxqCXzrQ3nuW0aOeY6+Uxa-LOXiQ@mail.gmail.com>
- <dffeb42986e84887b2556987925dbf31@ausx13mpc120.AMER.DELL.COM>
- <CALCETrX8W7Zi2NTAm4kJFbW14HVSYanYQ5sGo78FTgitcWfwAw@mail.gmail.com>
- <0d4e6c4562fb4b85ad4c368ae73dbe06@ausx13mpc120.AMER.DELL.COM>
- <20170413170619.GF2064@fury>
- <b729acdb12d046d3a27c754ff02482d6@ausx13mpc120.AMER.DELL.COM>
- <CALCETrXDzGvRe2t4jfz8ZjYsduHmK94Ks3N5qwwRcY_qXE30jQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 2/2] hp-wmi: Fix detection for dock and tablet mode
+Date: Thu, 13 Apr 2017 11:21:50 -0700
+Message-ID: <20170413182150.GI2064@fury>
+References: <20170409135608.15621-1-carlo@caione.org>
+ <20170409135608.15621-3-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:63243 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1753820AbdDMRuF (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:46501 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752907AbdDMSVx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 13:50:05 -0400
-In-Reply-To: <CALCETrXDzGvRe2t4jfz8ZjYsduHmK94Ks3N5qwwRcY_qXE30jQ@mail.gmail.com>
-Content-Language: en-US
+        Thu, 13 Apr 2017 14:21:53 -0400
+Content-Disposition: inline
+In-Reply-To: <20170409135608.15621-3-carlo@caione.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: luto@kernel.org
-Cc: dvhart@infradead.org, kernel@kempniu.pl, rjw@rjwysocki.net, len.brown@intel.com, pali.rohar@gmail.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Carlo Caione <carlo@endlessm.com>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IEx1dG9taXJza2kgW21h
-aWx0bzpsdXRvQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAxMywgMjAxNyAx
-Mjo0NCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IEFuZHJldyBM
-dXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+Ow0KPiBNaWNoYcWCIEvEmXBpZcWEIDxrZXJuZWxA
-a2VtcG5pdS5wbD47IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IExlbg0K
-PiBCcm93biA8bGVuLmJyb3duQGludGVsLmNvbT47IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdt
-YWlsLmNvbT47IENvcmVudGluDQo+IENoYXJ5IDxjb3JlbnRpbi5jaGFyeUBnbWFpbC5jb20+OyBB
-bmR5IFNoZXZjaGVua28NCj4gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBsYXRmb3JtLQ0KPiBkcml2ZXIteDg2QHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBSRkM6
-IFdNSSBFbmhhbmNlbWVudHMNCj4gDQo+IE9uIFRodSwgQXByIDEzLCAyMDE3IGF0IDEwOjM5IEFN
-LCAgPE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gPj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogRGFycmVuIEhhcnQgW21haWx0bzpkdmhhcnRAaW5m
-cmFkZWFkLm9yZ10NCj4gPj4gU2VudDogVGh1cnNkYXksIEFwcmlsIDEzLCAyMDE3IDEyOjA2IFBN
-DQo+ID4+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29t
-Pg0KPiA+PiBDYzogbHV0b0BrZXJuZWwub3JnOyBrZXJuZWxAa2VtcG5pdS5wbDsgcmp3QHJqd3lz
-b2NraS5uZXQ7DQo+ID4+IGxlbi5icm93bkBpbnRlbC5jb207IHBhbGkucm9oYXJAZ21haWwuY29t
-OyBjb3JlbnRpbi5jaGFyeUBnbWFpbC5jb207DQo+ID4+IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4
-LmludGVsLmNvbTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tDQo+ID4+
-IGRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj4g
-Pj4gU3ViamVjdDogUmU6IFJGQzogV01JIEVuaGFuY2VtZW50cw0KPiA+Pg0KPiANCj4gPiBXZWxs
-IHRoZSAibW9zdCIgaW50ZXJlc3RpbmcgdG8gbWUgaXMgdGhlIFNNQklPUyBjYWxsaW5nIGludGVy
-ZmFjZSBvbiB0aGUNCj4gPiByZWd1bGFyIERlbGwgR1VJRCAoV01CQSBJSVJDKS4gIFRoYXQncyB3
-aGF0IGlzIHVzZWQgdG8gbWFuaXB1bGF0ZSBrZXlib2FyZA0KPiA+IExFRCB0aW1lb3V0cyBpbiBk
-ZWxsLWxhcHRvcCAoYWx0aG91Z2ggdGhyb3VnaCBkaXJlY3QgU01JIHRvZGF5KS4NCj4gPg0KPiA+
-IEl0J3MgYWxzbyB3aGF0IGlzIHVzZWQgZm9yIG90aGVyIFNNQklPUyBjYWxscyBsaWtlIGNoYW5n
-aW5nIHJhbmRvbSBCSU9TIHNldHRpbmdzDQo+ID4gdGhhdCBzaG91bGRuJ3QgYmUgZ2VuZXJpY2Fs
-bHkgZXhwb3NlZCBpbiBzeXNmcyBidXQgc2hvdWxkIGJlIGNvbnRyb2xsZWQgYnkNCj4gPiBtYW5h
-Z2VhYmlsaXR5IHRvb2xzLg0KPiA+DQo+ID4gRXhhbXBsZTogdHVybmluZyBvbi9vZmYgbGVnYWN5
-IG9wdGlvbiBST00gb3IgY2hhbmdpbmcgbGVnYWN5IGJvb3Qgb3JkZXIuDQo+ID4NCj4gDQo+IElJ
-VUMgd2UgYmFzaWNhbGx5IGNhbid0IGV4cG9zZSB0aGUgU01JLS1iYXNlZCBpbnRlcmZhY2UgdG8g
-dGhpcyBlbnRyeQ0KPiBwb2ludCB0byB1c2Vyc3BhY2UgYmVjYXVzZSBvZiBpdHMgdXNlIG9mIHBo
-eXNpY2FsIGFkZHJlc3NpbmcuICBJdCBpcw0KPiByZWFzb25hYmx5IHNhZmUgdG8gZXhwb3NlIHRo
-ZSBXTUkgdmVyc2lvbj8gIChJT1cgc2hvdWxkIGJlIGV4cGVjdCB0aGF0DQo+IGl0IGRvZXNuJ3Qg
-ZW5hYmxlIGtlcm5lbC1tb2RlIG9yIFNNTSBjb2RlIGV4ZWN1dGlvbj8pDQoNClRoZSBTTUkgYmFz
-ZWQgZW50cnkgaXMgYWxyZWFkeSBleHBvc2VkIHVzaW5nIGRjZGJhcy4NCg0KVGhlIFdNSSB2ZXJz
-aW9uIHdoZW4gZXhlY3V0aW5nIGEgY2FsbCB0aGF0IHdvdWxkIGJlIHJ1biBhcyBhIFNNSSANCndp
-bGwgY29weSB0aGUgYnVmZmVyIHRvIGFuIGFyZWEgb2YgbWVtb3J5IHRoYXQgdGhlIEJJT1MgaGFz
-IGFscmVhZHkgDQpiZWVuIG1hcmtlZCByZXNlcnZlZCB0byBleGVjdXRlIHRoZSBTTUkgYW5kIGNv
-cHkgdGhlIHJlc3VsdCBvdXQuDQoNCj4gDQo+IFRCSCwgSSd2ZSBvY2Nhc2lvbmFsbHkgY29uc2lk
-ZXJlZCB3cml0aW5nIGEgZHJpdmVyIHRvIGV4cG9zZSBTTU0gY29kZQ0KPiBleGVjdXRpb24gb24g
-c3lzdGVtcyB3aXRoIGEga25vd24gcmVsaWFibGUgZXhwbG9pdCA6KQ0KDQpPbiBEZWxsIEhXPyAg
-SSdtIHN1cmUgb3VyIHNlY3VyaXR5IGZvbGtzIHdvdWxkIGJlIHZlcnkgaW50ZXJlc3RlZCBpbiB0
-aGlzLg0K
+On Sun, Apr 09, 2017 at 03:56:08PM +0200, Carlo Caione wrote:
+> From: Carlo Caione <carlo@endlessm.com>
+> 
+> The current driver code is not checking for the error values returned by
+> 'hp_wmi_dock_state()' and 'hp_wmi_tablet_state()' before passing the
+> returned values down to 'input_report_switch()'. This error code is
+> being translated to '1' in the input subsystem, reporting the wrong
+> status.
+> 
+> The biggest problem caused by this issue is that several laptops are
+> wrongly reported by the driver as docked, preventing them to be put to
+> sleep using the LID (and in most cases they are not even dockable).
+> 
+> With this patch we create the report switches only if we are able to
+> read the dock and tablet mode status correctly from ACPI.
+> 
+> Signed-off-by: Carlo Caione <carlo@endlessm.com>
+> ---
+>  drivers/platform/x86/hp-wmi.c | 40 +++++++++++++++++++++++++++-------------
+>  1 file changed, 27 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 13ba65c..2b721fd 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -572,10 +572,12 @@ static void hp_wmi_notify(u32 value, void *context)
+>  
+>  	switch (event_id) {
+>  	case HPWMI_DOCK_EVENT:
+> -		input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> -				    hp_wmi_dock_state());
+> -		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> -				    hp_wmi_tablet_state());
+> +		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+> +			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> +					    hp_wmi_dock_state());
+> +		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+> +			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> +					    hp_wmi_tablet_state());
+>  		input_sync(hp_wmi_input_dev);
+>  		break;
+>  	case HPWMI_PARK_HDD:
+> @@ -644,6 +646,7 @@ static int __init hp_wmi_input_setup(void)
+>  {
+>  	acpi_status status;
+>  	int err;
+> +	int val;
+>  
+>  	hp_wmi_input_dev = input_allocate_device();
+>  	if (!hp_wmi_input_dev)
+> @@ -654,17 +657,26 @@ static int __init hp_wmi_input_setup(void)
+>  	hp_wmi_input_dev->id.bustype = BUS_HOST;
+>  
+>  	__set_bit(EV_SW, hp_wmi_input_dev->evbit);
+> -	__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+> -	__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> +
+> +	/* Dock */
+> +	val = hp_wmi_dock_state();
+> +	if (!(val < 0)) {
+> +		__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+> +		input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
+> +	}
+
+In general, these are fine and can go in. I did want to get your opinion on one
+thought though.
+
+This adds some complexity to deal with what appears to be an unknown failure
+mode (the query fails, we don't know why, so we don't set the bit on the input
+dev for that feature). Since we don't know why it fails, can we be confident it
+will always fail? Could it succeed at init here, but then fail later and leave
+us in the same situation we are in now?
+
+If so, have you considered just returning 0 on error and using a WARN_ONCE print
+statement to report the error? This would simplify a lot of this logic that
+you're adding in here to handle something we could just report and ignore.
+
+That being said, your version avoids the input_report_switch() in the event of a
+failure at init. In practice, I don't know if this is worth the added
+complexity.
+
+Your thoughts?
+
+> +
+> +	/* Tablet mode */
+> +	val = hp_wmi_tablet_state();
+> +	if (!(val < 0)) {
+> +		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> +		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+> +	}
+>  
+>  	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+>  	if (err)
+>  		goto err_free_dev;
+>  
+>  	/* Set initial hardware state */
+> -	input_report_switch(hp_wmi_input_dev, SW_DOCK, hp_wmi_dock_state());
+> -	input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> -			    hp_wmi_tablet_state());
+>  	input_sync(hp_wmi_input_dev);
+>  
+>  	if (!hp_wmi_bios_2009_later() && hp_wmi_bios_2008_later())
+> @@ -950,10 +962,12 @@ static int hp_wmi_resume_handler(struct device *device)
+>  	 * changed.
+>  	 */
+>  	if (hp_wmi_input_dev) {
+> -		input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> -				    hp_wmi_dock_state());
+> -		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> -				    hp_wmi_tablet_state());
+> +		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+> +			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+> +					    hp_wmi_dock_state());
+> +		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+> +			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+> +					    hp_wmi_tablet_state());
+>  		input_sync(hp_wmi_input_dev);
+>  	}
+>  
+> -- 
+> 2.9.3
+> 
+> 
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
