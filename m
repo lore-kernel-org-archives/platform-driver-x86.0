@@ -1,41 +1,36 @@
-From: Carlo Caione <carlo@endlessm.com>
-Subject: Re: [PATCH 0/2] hp-wmi: Fix dock status and tablet mode reporting
-Date: Thu, 13 Apr 2017 08:28:38 +0200
-Message-ID: <CAL9uMOEd0ocoV5-Chkk7KE-9AkV_6Q27N_OvJtHKqjJyvi9mWQ@mail.gmail.com>
-References: <20170409135608.15621-1-carlo@caione.org>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 0/6] fujitsu-laptop: LED cleanup
+Date: Thu, 13 Apr 2017 16:19:26 +0930
+Message-ID: <20170413064926.GG7972@marvin.atrad.com.au>
+References: <20170407130713.8417-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f44.google.com ([209.85.213.44]:34348 "EHLO
-        mail-vk0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756136AbdDMG2k (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:42040 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750811AbdDMGuW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 02:28:40 -0400
-Received: by mail-vk0-f44.google.com with SMTP id z204so23925067vkd.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Apr 2017 23:28:39 -0700 (PDT)
-In-Reply-To: <20170409135608.15621-1-carlo@caione.org>
+        Thu, 13 Apr 2017 02:50:22 -0400
+Content-Disposition: inline
+In-Reply-To: <20170407130713.8417-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlo Caione <carlo@caione.org>
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Linux Upstreaming Team <linux@endlessm.com>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Apr 9, 2017 at 3:56 PM, Carlo Caione <carlo@caione.org> wrote:
-> From: Carlo Caione <carlo@endlessm.com>
->
-> Several HP laptops cannot be put to sleep using the LID since systemd complains
-> that the system is docked even though the laptop is not even dockable (see
-> [1]).
->
-> This is due to a bug in hp-wmi where the driver is failing to check for errors
-> before creating the input switches.
->
-> [1]: https://bugs.launchpad.net/ubuntu/+source/systemd/+bug/1574120
->
-> Carlo Caione (2):
->   hp-wmi: Fix error value for hp_wmi_tablet_state
->   hp-wmi: Fix detection for dock and tablet mode
+On Fri, Apr 07, 2017 at 03:07:07PM +0200, Micha?? K??pie?? wrote:
+> This patch series cleans up parts of fujitsu-laptop responsible for
+> handling LED class devices.  It was tested on a Lifebook E744.  It
+> depends on the previous patch series I submitted for fujitsu-laptop and
+> should be applied on top of the backlight cleanup series.
+> 
+>  drivers/platform/x86/Kconfig          |   2 +-
+>  drivers/platform/x86/fujitsu-laptop.c | 402 +++++++++++++++-------------------
+>  2 files changed, 176 insertions(+), 228 deletions(-)
 
-Gentle ping.
+FYI I should be able to complete my review of this series over the Easter
+weekend.  This week has been hectic to say the least.  Apologies for the
+delay.
 
--- 
-Carlo Caione  |  +39.340.80.30.096  |  Endless
+Regards
+  jonathan
