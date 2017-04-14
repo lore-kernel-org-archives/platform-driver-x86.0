@@ -1,81 +1,106 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: RFC: WMI Enhancements
-Date: Thu, 13 Apr 2017 16:51:03 -0700
-Message-ID: <20170413235103.GB11189@fury>
-References: <20170412230854.GA11963@fury>
- <20170413073339.GH3090@pali>
- <20170413165646.GD2064@fury>
- <e50750499ea246d78b336caae95d36b8@ausx13mpc120.AMER.DELL.COM>
+From: joeyli <jlee@suse.com>
+Subject: Re: Supporting status LEDs in acer-wmi
+Date: Fri, 14 Apr 2017 13:19:50 +0800
+Message-ID: <20170414051950.GA2581@linux-l9pv.suse>
+References: <CA+A7VXXd5mvMVJCzrz-oecS6jFdD7G4C=TxkEcH_SkxWvNWXiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:58208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752914AbdDMXvI (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Apr 2017 19:51:08 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:50986 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753943AbdDNFUK (ORCPT
+        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+        Fri, 14 Apr 2017 01:20:10 -0400
 Content-Disposition: inline
-In-Reply-To: <e50750499ea246d78b336caae95d36b8@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <CA+A7VXXd5mvMVJCzrz-oecS6jFdD7G4C=TxkEcH_SkxWvNWXiw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
 
-On Thu, Apr 13, 2017 at 08:38:28PM +0000, Mario.Limonciello@dell.com wrote:
-> Earlier question from Andy.  I had some discussion with the right people about this.
-> 
-> > Is it just the "call SMBIOS" GUID or are there other things?
-> 
-> Today - it's just the SMBIOS calling GUID.  There are plans (not yet concrete) for
-> splitting up data access and organization of that data access classes across multiple 
->  other GUID/method pairs in the future.
-> 
-> Ideally this could be done without needing kernel patches every time a new GUID
-> would (essentially) need to be whitelisted.
-> 
-> > I am a strong supporter of the following philosophy with respect to supporting
-> > innovation:
-> > "Enable them to enable themselves and get out of their way"
-> > 
-> > I've followed this approach over the years to encourage upstream first software
-> > development, open-first policy toward specifications and documentation, proper
-> > license selection, and development of new mechanisms in existing standards, like
-> > ACPI _DSD. All of these serve to support innovation by removing bottlenecks and
-> > enabling developers to be independent.
-> > 
-> > What I don't want to see is the Linux kernel becoming a bottleneck to feature
-> > parity with Windows (or to becoming the lead vehicle for new features). When a
-> > vendor has a feature they want to expose which they determine to be a value
-> > proposition for their product, I don't want the lack of a class driver to get in
-> > the way. Exposing specific GUIDs is a minimal and easy to upstream change which
-> > would enable rapid feature enabling.
-> > 
-> > Perhaps I should have led with this :-)
-> > 
-> 
-> So considering future plans, I'd really like if it's possible to expose all the GUID's the
-> GUID's the same as Windows does today.
+Hi,
 
-A bit of trouble parsing... to be clear, your preference would be that for the
-PNP0C14 on whitelisted platforms (either DMI matches, or possibly via the ACPI
-Device UID?) we expose every GUID (Method, Event, and Data) for that device to
-userspace?
-
-The concern raised here is that for systems using dell-wmi, the two GUIDs used
-by the kernel would also be exposed to userspace. Is this correct?
-
+On Tue, Apr 11, 2017 at 03:31:34PM -0400, João Paulo Rechi Vita wrote:
+> Hello,
 > 
-> As example is we have some diagnostic testing tools.  Having to whitelist interfaces
-> for them to operate would be sub-optimal.
+> I'm working to support the status LEDs embedded in the "mic mute" and
+> "radio toggle" buttons on a Acer TravelMate P648-G2-MG laptop, but
+> can't quite get how these are controlled. I have traced the ACPI
+> execution from Windows for both buttons, and tried to compare with a
+> method tracing on Linux, but couldn't get much out of it.
 > 
+> For the mic mute button, I see _Q45, WMID._WED, WMID.EVBC and
+> WMID.CLBC being called on both platforms. For the radios button, I see
 
-Is this a problem because there are a lot of them, or because they routinely
-change?
+I simply checked the code path of _Q45 and EVBC. The logic in EVBC is
+controlled by EC:
 
-Also, are these something that could be part of a debug feature, or do they need
-to be in production so you can work with customers to diagnose running systems
-for example?
+ssdt11.dsl
+    Method (EVBC, 0, Serialized)          /* called by _WED */
+    {
+	Local0 = DerefOf (FEBC [Zero])
+	Switch (Local0)
+	{
+	    Case (One)                   /* case One is set in _Q45 */
+	    {
+		CLBC (0x04, 0x04)
+		Local1 = DerefOf (FEBC [One])   /* FEBC [One] set to HTBN by _Q45, HTBN = 0x4a on Windows */
+		Local2 = Zero
+	... 
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+The HTBN is in the EC memory space: 
+
+dsdt.dsl
+	Device (EC0)
+	{
+	    Name (_HID, EisaId ("PNP0C09") /* Embedded Controller Device */)  // _HID: Hardware ID
+	    Name (_GPE, 0x50)  // _GPE: General Purpose Events
+	    Name (OKEC, One)
+	...
+	    OperationRegion (ECMM, SystemMemory, 0xFF000800, 0x1000)
+	    Field (ECMM, AnyAcc, Lock, Preserve)
+	    {
+		CDPR,   1,
+		LCDS,   1,
+		    ,   5,
+		ISEN,   1,
+		HTBN,   8,
+	...
+
+From your debugger log, the HTBN is 0x4a on windows:
+
+ffff9f0d3f8dde53: | Store(HTBN=0x4a,Index(^^^WMID.FEBC=Buffer(0x8){
+
+So, EVBC runs into the path to set 0x02 and 0x03 of FEBC and return
+FEBC to _WED:
+
+    Method (EVBC, 0, Serialized)               
+    {
+	Local0 = DerefOf (FEBC [Zero])          
+	Switch (Local0)
+	{
+	    Case (One)                        
+	    {
+		CLBC (0x04, 0x04)
+		Local1 = DerefOf (FEBC [One]) 
+		Local2 = Zero
+		If (((Local1 > Zero) && (Local1 < 0x20)))
+		{
+		...
+		ElseIf (((Local1 > 0x80) && (Local1 < 0xA0)))
+		...
+		Else            /* 0x4a */
+		{
+		    FEBC [0x02] = Zero
+		    FEBC [0x03] = Zero
+		}
+	...
+	Return (FEBC) /* \_SB_.PCI0.WMID.FEBC */
+    }
+
+The point is what the HTBN value on Linux. I am not familiar with EC
+logic. Sorry for can not give you too many help.
+
+Thanks a lot!
+Joey Lee
