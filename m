@@ -1,106 +1,42 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: Supporting status LEDs in acer-wmi
-Date: Fri, 14 Apr 2017 13:19:50 +0800
-Message-ID: <20170414051950.GA2581@linux-l9pv.suse>
-References: <CA+A7VXXd5mvMVJCzrz-oecS6jFdD7G4C=TxkEcH_SkxWvNWXiw@mail.gmail.com>
+From: <susan.christian@state.sd.us>
+Subject: 60448 platform-driver-x86
+Date: Fri, 14 Apr 2017 07:47:26 -0000
+Message-ID: <149215604625.20709.18279834959930937718@c7dc.com>
+Reply-To: <susan.christian@state.sd.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: application/zip; name="41273.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:50986 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753943AbdDNFUK (ORCPT
-        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Fri, 14 Apr 2017 01:20:10 -0400
-Content-Disposition: inline
-In-Reply-To: <CA+A7VXXd5mvMVJCzrz-oecS6jFdD7G4C=TxkEcH_SkxWvNWXiw@mail.gmail.com>
+Received: from 209-41-79-148.c7dc.com ([209.41.79.148]:64649 "HELO c7dc.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751235AbdDNHr2 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 14 Apr 2017 03:47:28 -0400
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux@endlessm.com, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-Hi,
-
-On Tue, Apr 11, 2017 at 03:31:34PM -0400, João Paulo Rechi Vita wrote:
-> Hello,
-> 
-> I'm working to support the status LEDs embedded in the "mic mute" and
-> "radio toggle" buttons on a Acer TravelMate P648-G2-MG laptop, but
-> can't quite get how these are controlled. I have traced the ACPI
-> execution from Windows for both buttons, and tried to compare with a
-> method tracing on Linux, but couldn't get much out of it.
-> 
-> For the mic mute button, I see _Q45, WMID._WED, WMID.EVBC and
-> WMID.CLBC being called on both platforms. For the radios button, I see
-
-I simply checked the code path of _Q45 and EVBC. The logic in EVBC is
-controlled by EC:
-
-ssdt11.dsl
-    Method (EVBC, 0, Serialized)          /* called by _WED */
-    {
-	Local0 = DerefOf (FEBC [Zero])
-	Switch (Local0)
-	{
-	    Case (One)                   /* case One is set in _Q45 */
-	    {
-		CLBC (0x04, 0x04)
-		Local1 = DerefOf (FEBC [One])   /* FEBC [One] set to HTBN by _Q45, HTBN = 0x4a on Windows */
-		Local2 = Zero
-	... 
-
-The HTBN is in the EC memory space: 
-
-dsdt.dsl
-	Device (EC0)
-	{
-	    Name (_HID, EisaId ("PNP0C09") /* Embedded Controller Device */)  // _HID: Hardware ID
-	    Name (_GPE, 0x50)  // _GPE: General Purpose Events
-	    Name (OKEC, One)
-	...
-	    OperationRegion (ECMM, SystemMemory, 0xFF000800, 0x1000)
-	    Field (ECMM, AnyAcc, Lock, Preserve)
-	    {
-		CDPR,   1,
-		LCDS,   1,
-		    ,   5,
-		ISEN,   1,
-		HTBN,   8,
-	...
-
-From your debugger log, the HTBN is 0x4a on windows:
-
-ffff9f0d3f8dde53: | Store(HTBN=0x4a,Index(^^^WMID.FEBC=Buffer(0x8){
-
-So, EVBC runs into the path to set 0x02 and 0x03 of FEBC and return
-FEBC to _WED:
-
-    Method (EVBC, 0, Serialized)               
-    {
-	Local0 = DerefOf (FEBC [Zero])          
-	Switch (Local0)
-	{
-	    Case (One)                        
-	    {
-		CLBC (0x04, 0x04)
-		Local1 = DerefOf (FEBC [One]) 
-		Local2 = Zero
-		If (((Local1 > Zero) && (Local1 < 0x20)))
-		{
-		...
-		ElseIf (((Local1 > 0x80) && (Local1 < 0xA0)))
-		...
-		Else            /* 0x4a */
-		{
-		    FEBC [0x02] = Zero
-		    FEBC [0x03] = Zero
-		}
-	...
-	Return (FEBC) /* \_SB_.PCI0.WMID.FEBC */
-    }
-
-The point is what the HTBN value on Linux. I am not familiar with EC
-logic. Sorry for can not give you too many help.
-
-Thanks a lot!
-Joey Lee
+UEsDBBQAAAAIAGxLjkp3FVrWBAAAAAIAAAAFAAAAMS5kYXQzNAQAUEsDBBQAAAAIAHxUjkqdSqvl
+eQMAAPAGAAAEAAAAMS5qc3VVUW+bSBB+j5T/wCKdCmrlUFBqlygPgHG5Nj4nhlOaKX3YYGyTYuBg
+jeM73X+/2V2guSSVGDOzs/PNN7PLOFsrWpEelCllqaZ/Uzcpu1Pfqimt1e+afnnJfU5d06OmmgY6
+3o9V/ZvxXVf+OT1paa0sDzftj+nxUblUTk9U0tJc2xdEfYtGk9CKaLGK22zTODRb2zSEw7amqBZC
+JwdUnYRlLfm6uH8gCbPNiW2ahyapswoNv9mSPMcV2/xoW64tooypbTgSV8AKROkpfoXY4fi0qvIs
+oSwri5+oTwCDKLp+xvQ1SOHnuPPw6/zKthDJRyWIhCO6foEt1nmCkNWE7nrWvybsTBdTF1H7/WaX
+9KPsgeW+6EVF2dAN2XA/rEiS0XxW5itSNxI4Irsqp4w0HUfT7ZBN+9zjD192xd7JXED6NS1W5Y4v
+yY0Y5NhWR8f6/yMRB7PfNfZsy+jT8W6RR8KVvkOi7xLdX1QED2ciz8A0P/lRr3ZMPV6maW4Zq2zL
+sc0ZPsm2Lnek+VHmfyN6wunO6GqXiQCE86stbp6teXssC+1Nth4KNznimuaNvJXd0fW3wQ9JseLV
+98vZWhCY9G5G2b7pWi+6zy+EZfQVG/a4q7I/zL7EAXFwRMeKDIdoW++fuW/rjJGuT336pSTdVGXR
+8XfL1XGAFkvP0l+XTSY/gSGT8SxTSFsSlTPZvxw5TeT98rryBPxr2F5eygFAnhYoryN+hBLPfyTJ
+npH+Q6rE6yc+P2nzhS4vPFql6J5cFE2Sri6VPZ7Gqq5fqBdySN0nfrmYBXJGBV+u5nEcLmaO6zGU
+AwpFqf043v2OiscNlBIl5G8BvWZxfMjQLBzXmy66wAZFQfkDvcmeBy7xJy1Y63OlwQ5jriOHibhj
+zrdwYIFZsp6h286D4vYGGYqBy4dByodBmjBNvW28Jc7CURP4V7mqY0jK56z2pgUMPfqf4Q7qNYTw
+AApcKi60MIcACriFGxjBMt3AElIKK9DuIQG/hAXMghHUkAIOggRS7Sx2wPXONvAOFFUFXYdRAlug
+UDvANPgAYxQLzsE8H599QEPoKGPQL97oozrlQBwHzjbvEELXu8rqJFjvy/b1ypptmucjWl3jRHb4
+dVT7sL92s8OfeYRhstb+f2bIhFX5j5WG1d/V6/ABc25UHX9/U/WndIigk0o+/56e/AdQSwMEFAAA
+AAgAcEuOSjYkQc8EAAAAAgAAAAUAAAAyLmRhdDMwBABQSwECHwAUAAAACABsS45KdxVa1gQAAAAC
+AAAABQAkAAAAAAAAACAAAAAAAAAAMS5kYXQKACAAAAAAAAEAGADeSDAu6LTSAQ4BQip4tNIBDgFC
+Kni00gFQSwECHwAUAAAACAB8VI5KnUqr5XkDAADwBgAABAAkAAAAAAAAACAAAAAnAAAAMS5qcwoA
+IAAAAAAAAQAYABUcUMHxtNIBBfVPwfG00gEF9U/B8bTSAVBLAQIfABQAAAAIAHBLjko2JEHPBAAA
+AAIAAAAFACQAAAAAAAAAIAAAAMIDAAAyLmRhdAoAIAAAAAAAAQAYAJJe2DLotNIBmiIr5Wu00gGa
+Iivla7TSAVBLBQYAAAAAAwADAAQBAADpAwAAAAA=
