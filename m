@@ -1,42 +1,49 @@
-From: <susan.christian@state.sd.us>
-Subject: 60448 platform-driver-x86
-Date: Fri, 14 Apr 2017 07:47:26 -0000
-Message-ID: <149215604625.20709.18279834959930937718@c7dc.com>
-Reply-To: <susan.christian@state.sd.us>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v5 0/4] i2c-core improvements for acpi devices + ACPI
+ INT33FE driver
+Date: Fri, 14 Apr 2017 14:34:16 +0200
+Message-ID: <1a01f3d0-3d14-9f93-e789-cf1f0232becc@redhat.com>
+References: <20170404220335.9815-1-hdegoede@redhat.com>
+ <20170413190933.GA9783@fury>
 Mime-Version: 1.0
-Content-Type: application/zip; name="41273.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 209-41-79-148.c7dc.com ([209.41.79.148]:64649 "HELO c7dc.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751235AbdDNHr2 (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:50488 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751763AbdDNMeT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Apr 2017 03:47:28 -0400
-Content-Disposition: attachment
+        Fri, 14 Apr 2017 08:34:19 -0400
+In-Reply-To: <20170413190933.GA9783@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-UEsDBBQAAAAIAGxLjkp3FVrWBAAAAAIAAAAFAAAAMS5kYXQzNAQAUEsDBBQAAAAIAHxUjkqdSqvl
-eQMAAPAGAAAEAAAAMS5qc3VVUW+bSBB+j5T/wCKdCmrlUFBqlygPgHG5Nj4nhlOaKX3YYGyTYuBg
-jeM73X+/2V2guSSVGDOzs/PNN7PLOFsrWpEelCllqaZ/Uzcpu1Pfqimt1e+afnnJfU5d06OmmgY6
-3o9V/ZvxXVf+OT1paa0sDzftj+nxUblUTk9U0tJc2xdEfYtGk9CKaLGK22zTODRb2zSEw7amqBZC
-JwdUnYRlLfm6uH8gCbPNiW2ahyapswoNv9mSPMcV2/xoW64tooypbTgSV8AKROkpfoXY4fi0qvIs
-oSwri5+oTwCDKLp+xvQ1SOHnuPPw6/zKthDJRyWIhCO6foEt1nmCkNWE7nrWvybsTBdTF1H7/WaX
-9KPsgeW+6EVF2dAN2XA/rEiS0XxW5itSNxI4Irsqp4w0HUfT7ZBN+9zjD192xd7JXED6NS1W5Y4v
-yY0Y5NhWR8f6/yMRB7PfNfZsy+jT8W6RR8KVvkOi7xLdX1QED2ciz8A0P/lRr3ZMPV6maW4Zq2zL
-sc0ZPsm2Lnek+VHmfyN6wunO6GqXiQCE86stbp6teXssC+1Nth4KNznimuaNvJXd0fW3wQ9JseLV
-98vZWhCY9G5G2b7pWi+6zy+EZfQVG/a4q7I/zL7EAXFwRMeKDIdoW++fuW/rjJGuT336pSTdVGXR
-8XfL1XGAFkvP0l+XTSY/gSGT8SxTSFsSlTPZvxw5TeT98rryBPxr2F5eygFAnhYoryN+hBLPfyTJ
-npH+Q6rE6yc+P2nzhS4vPFql6J5cFE2Sri6VPZ7Gqq5fqBdySN0nfrmYBXJGBV+u5nEcLmaO6zGU
-AwpFqf043v2OiscNlBIl5G8BvWZxfMjQLBzXmy66wAZFQfkDvcmeBy7xJy1Y63OlwQ5jriOHibhj
-zrdwYIFZsp6h286D4vYGGYqBy4dByodBmjBNvW28Jc7CURP4V7mqY0jK56z2pgUMPfqf4Q7qNYTw
-AApcKi60MIcACriFGxjBMt3AElIKK9DuIQG/hAXMghHUkAIOggRS7Sx2wPXONvAOFFUFXYdRAlug
-UDvANPgAYxQLzsE8H599QEPoKGPQL97oozrlQBwHzjbvEELXu8rqJFjvy/b1ypptmucjWl3jRHb4
-dVT7sL92s8OfeYRhstb+f2bIhFX5j5WG1d/V6/ABc25UHX9/U/WndIigk0o+/56e/AdQSwMEFAAA
-AAgAcEuOSjYkQc8EAAAAAgAAAAUAAAAyLmRhdDMwBABQSwECHwAUAAAACABsS45KdxVa1gQAAAAC
-AAAABQAkAAAAAAAAACAAAAAAAAAAMS5kYXQKACAAAAAAAAEAGADeSDAu6LTSAQ4BQip4tNIBDgFC
-Kni00gFQSwECHwAUAAAACAB8VI5KnUqr5XkDAADwBgAABAAkAAAAAAAAACAAAAAnAAAAMS5qcwoA
-IAAAAAAAAQAYABUcUMHxtNIBBfVPwfG00gEF9U/B8bTSAVBLAQIfABQAAAAIAHBLjko2JEHPBAAA
-AAIAAAAFACQAAAAAAAAAIAAAAMIDAAAyLmRhdAoAIAAAAAAAAQAYAJJe2DLotNIBmiIr5Wu00gGa
-Iivla7TSAVBLBQYAAAAAAwADAAQBAADpAwAAAAA=
+Hi,
+
+On 13-04-17 21:09, Darren Hart wrote:
+> On Wed, Apr 05, 2017 at 12:03:31AM +0200, Hans de Goede wrote:
+>> Hi All,
+>>
+>> Here is v5 of my patch-set for my i2c-core improvements for acpi
+>> devices + the ACPI INT33FE platform driver.
+>>
+>> New in this version are some minor fixed to the INT33FE driver.
+>>
+>> The INT33FE driver depends on the i2c-core changes, so if
+>> it is ok with Darren / Andy I believe it would be best for
+>> this driver to be merged through the i2c subsys tree (with
+>> their ack).
+>
+> Is there an immutable i2c branch I can merge with these changes in order to add
+> the Cherry Trail driver on top of those?
+
+The i2c-core patches have been reviewed, but to the best of my
+knowledge they have not been merged yet.
+
+Wolfram, what is the status of this ?
+
+Regards,
+
+Hans
