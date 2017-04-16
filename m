@@ -1,100 +1,86 @@
-From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v2 2/8] mfd: intel_soc_pmic_bxtwc: remove thermal second level irqs
-Date: Fri, 14 Apr 2017 16:25:54 -0700
-Message-ID: <87427056a02054ebd6d2100db5c3d5f3827316e2.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org
-Cc: linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v5 4/4] platform/x86: Add Intel Cherry Trail ACPI INT33FE
+ device driver
+Date: Sun, 16 Apr 2017 22:08:10 +0200
+Message-ID: <20170416200810.sck2btf7xcznb5xt@ninjato>
+References: <20170404220335.9815-1-hdegoede@redhat.com>
+ <20170404220335.9815-5-hdegoede@redhat.com>
+ <1491400346.24567.5.camel@linux.intel.com>
+ <20170405154146.GD27833@fury>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7fzmkpnhwtqewrqn"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from sauhun.de ([88.99.104.3]:57719 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1756634AbdDPUIM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 16 Apr 2017 16:08:12 -0400
+Content-Disposition: inline
+In-Reply-To: <20170405154146.GD27833@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since all second level thermal irqs are consumed by the same
-device(bxt_wcove_thermal), there is no need to expose them as separate
-interrupts. We can just export only the first level irqs for thermal and
-let the device(bxt_wcove_thermal) driver handle the second level irqs
-based on thermal interrupt status register. Also, just using only the
-first level irq will eliminate the bug involved in requesting only the
-second level irq and not explicitly enable the first level irq. For
-more info on this issue please read the details at,
+--7fzmkpnhwtqewrqn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://lkml.org/lkml/2017/2/27/148
+On Wed, Apr 05, 2017 at 08:41:46AM -0700, Darren Hart wrote:
+> On Wed, Apr 05, 2017 at 04:52:26PM +0300, Andy Shevchenko wrote:
+> > On Wed, 2017-04-05 at 00:03 +0200, Hans de Goede wrote:
+> > > The INT33FE ACPI device has a CRS table with I2cSerialBusV2 resources
+> > > for
+> > > 3 devices: Maxim MAX17047 Fuel Gauge Controller, FUSB300C USB Type-C
+> > > Controller and PI3USB30532 USB switch.
+> > >=20
+> > > This commit adds a driver for this ACPI device which instantiates
+> > > i2c-clients for these, so that the standard i2c drivers for these
+> > > chips
+> > > can bind to the them.
+> > >=20
+> >=20
+> > Looks like we need something such as MFD for I2C bus clients...
+> >=20
+> > FWIW:
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>=20
+> Wolfram, will you be making an immutable i2c branch available for us to m=
+erge
+> into our platform driver x86 for-next branch in order to apply this patch?
+>=20
+> Alternatively you could send this in on our behalf, but that complicates =
+any
+> fixes between now and rc1 for this new driver. We'd prefer the immutable =
+branch
+> and pull this in ourselves.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/intel_soc_pmic_bxtwc.c | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+Fine with me, here it is:
 
-Changes since v1:
- * None
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-INT33FE
 
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index bb18e20..c08d514 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -83,10 +83,7 @@ enum bxtwc_irqs {
- 
- enum bxtwc_irqs_level2 {
- 	/* Level 2 */
--	BXTWC_THRM0_IRQ = 0,
--	BXTWC_THRM1_IRQ,
--	BXTWC_THRM2_IRQ,
--	BXTWC_BCU_IRQ,
-+	BXTWC_BCU_IRQ = 0,
- 	BXTWC_ADC_IRQ,
- 	BXTWC_USBC_IRQ,
- 	BXTWC_CHGR0_IRQ,
-@@ -113,17 +110,14 @@ static const struct regmap_irq bxtwc_regmap_irqs[] = {
- };
- 
- static const struct regmap_irq bxtwc_regmap_irqs_level2[] = {
--	REGMAP_IRQ_REG(BXTWC_THRM0_IRQ, 0, 0xff),
--	REGMAP_IRQ_REG(BXTWC_THRM1_IRQ, 1, 0xbf),
--	REGMAP_IRQ_REG(BXTWC_THRM2_IRQ, 2, 0xff),
--	REGMAP_IRQ_REG(BXTWC_BCU_IRQ, 3, 0x1f),
--	REGMAP_IRQ_REG(BXTWC_ADC_IRQ, 4, 0xff),
--	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 5, BIT(5)),
--	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 5, 0x1f),
--	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 6, 0x1f),
--	REGMAP_IRQ_REG(BXTWC_GPIO0_IRQ, 7, 0xff),
--	REGMAP_IRQ_REG(BXTWC_GPIO1_IRQ, 8, 0x3f),
--	REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 9, 0x03),
-+	REGMAP_IRQ_REG(BXTWC_BCU_IRQ, 0, 0x1f),
-+	REGMAP_IRQ_REG(BXTWC_ADC_IRQ, 1, 0xff),
-+	REGMAP_IRQ_REG(BXTWC_USBC_IRQ, 2, BIT(5)),
-+	REGMAP_IRQ_REG(BXTWC_CHGR0_IRQ, 2, 0x1f),
-+	REGMAP_IRQ_REG(BXTWC_CHGR1_IRQ, 3, 0x1f),
-+	REGMAP_IRQ_REG(BXTWC_GPIO0_IRQ, 4, 0xff),
-+	REGMAP_IRQ_REG(BXTWC_GPIO1_IRQ, 5, 0x3f),
-+	REGMAP_IRQ_REG(BXTWC_CRIT_IRQ, 6, 0x03),
- };
- 
- static const struct regmap_irq bxtwc_regmap_irqs_tmu[] = {
-@@ -141,8 +135,8 @@ static struct regmap_irq_chip bxtwc_regmap_irq_chip = {
- 
- static struct regmap_irq_chip bxtwc_regmap_irq_chip_level2 = {
- 	.name = "bxtwc_irq_chip_level2",
--	.status_base = BXTWC_THRM0IRQ,
--	.mask_base = BXTWC_MTHRM0IRQ,
-+	.status_base = BXTWC_BCUIRQ,
-+	.mask_base = BXTWC_MBCUIRQ,
- 	.irqs = bxtwc_regmap_irqs_level2,
- 	.num_irqs = ARRAY_SIZE(bxtwc_regmap_irqs_level2),
- 	.num_regs = 10,
-@@ -176,9 +170,7 @@ static struct resource charger_resources[] = {
- };
- 
- static struct resource thermal_resources[] = {
--	DEFINE_RES_IRQ(BXTWC_THRM0_IRQ),
--	DEFINE_RES_IRQ(BXTWC_THRM1_IRQ),
--	DEFINE_RES_IRQ(BXTWC_THRM2_IRQ),
-+	DEFINE_RES_IRQ(BXTWC_THRM_LVL1_IRQ),
- };
- 
- static struct resource bcu_resources[] = {
--- 
-2.7.4
+
+--7fzmkpnhwtqewrqn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAljzzykACgkQFA3kzBSg
+Kbb+pQ/+JbNw4Uu5h9jW6q2bVZyCYB1hc1/PkAQ6lghnmg8qMsmulrltf8gJLvhz
+bqUwxONPVD/OJJ8kAwAC+wv+ugnyE6VrACwsJR7lGlfcAL2sTAM6a1Hw8pllyXEV
+Y8gMDClbW/uQCxzKGzdTKA023XczGnwdbRtQ7IX3YghHWgSxX+gXSWBhTDz58wVh
+wbngHe+Tdku+lwDSYFwt8LZS7/apaZmAlFcUpClE1v0AeR4816CQUEzHszFF/fAG
+ht2X0tLHSK+si9kLBpNnGr9h4s7jrSaHNDLk346vignnFNtj+0EdvAvJLvW452Sw
+8GpjBk7X01uSdRCYGUFmxUxXM9v/oKtwe0UqU3LVV24xMFpLawX2Up0hdnEG3Wjz
+aTERsY/lppDccguvYC4UXsvt7y3McQBqPvBDijbDE5/HKFSfk39hiKrz+nStB7Qz
+VC5TlgE5MeUwnUThvkOI+HUaAEQvtBbBRIEmhtrztrg+cg3t9wHuqTOhfbh4l6Gv
+5Dak4PlW1mX5cosY+jQykZUb4pOVUZy+Cj4Oknc6zrOcioniG8UNrUpjIyofPcvX
+ASKEZbgl8gvlsvV0s9D+iqokJIqeYnegrsSFiVExNTDb7vqYidgjd06hBStQa9Eu
+7aqD9Nc/iAGvPLoMOTrUvzTV5gV7k0TRhqZPLCE+6a6g/Zv9+jA=
+=9FVR
+-----END PGP SIGNATURE-----
+
+--7fzmkpnhwtqewrqn--
