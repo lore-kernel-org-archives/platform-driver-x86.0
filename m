@@ -1,100 +1,65 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: RFC: WMI Enhancements
-Date: Mon, 17 Apr 2017 15:03:29 -0700
-Message-ID: <CALCETrXAb1=ae8XuNRcajNLJw3b45Z=Qz7GDYXRzFk7CQrd5kQ@mail.gmail.com>
-References: <20170412230854.GA11963@fury> <2216131.lxtCY30Ovb@aspire.rjw.lan> <20170414230551.GA5438@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 4/4] platform/x86: Add Intel Cherry Trail ACPI INT33FE
+ device driver
+Date: Mon, 17 Apr 2017 15:40:16 -0700
+Message-ID: <20170417224016.GA7183@fury>
+References: <20170404220335.9815-1-hdegoede@redhat.com>
+ <20170404220335.9815-5-hdegoede@redhat.com>
+ <1491400346.24567.5.camel@linux.intel.com>
+ <20170405154146.GD27833@fury>
+ <20170416200810.sck2btf7xcznb5xt@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f54.google.com ([209.85.213.54]:35030 "EHLO
-        mail-vk0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751620AbdDQWDv (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:53308 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751895AbdDQWkU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Apr 2017 18:03:51 -0400
-Received: by mail-vk0-f54.google.com with SMTP id r69so66552235vke.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Apr 2017 15:03:50 -0700 (PDT)
-In-Reply-To: <20170414230551.GA5438@fury>
+        Mon, 17 Apr 2017 18:40:20 -0400
+Content-Disposition: inline
+In-Reply-To: <20170416200810.sck2btf7xcznb5xt@ninjato>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Mario Limonciello <Mario_Limonciello@dell.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 14, 2017 at 4:05 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Sat, Apr 15, 2017 at 12:45:30AM +0200, Rafael Wysocki wrote:
->> On Wednesday, April 12, 2017 04:08:54 PM Darren Hart wrote:
->> > Hi All,
->> >
->> > There are a few parallel efforts involving the Windows Management
->> > Instrumentation (WMI)[1] and dependent/related drivers. I'd like to have a round of
->> > discussion among those of you that have been involved in this space before we
->> > decide on a direction.
->> >
->> > The WMI support in the kernel today fairly narrowly supports a handful of
->> > systems. Andy L. has a work-in-progress series [2] which converts wmi into a
->> > platform device and a proper bus, providing devices for dependent drivers to
->> > bind to, and a mechanism for sibling devices to communicate with each other.
->> > I've reviewed the series and feel like the approach is sound, I plan to carry
->> > this series forward and merge it (with Andy L's permission).
->> >
->> > Are there any objections to this?
->> >
->> > In Windows, applications interact with WMI more or less directly. We don't do
->> > this in Linux currently, although it has been discussed in the past [3]. Some
->> > vendors will work around this by performing SMI/SMM, which is inefficient at
->> > best. Exposing WMI methods to userspace would bring parity to WMI for Linux and
->> > Windows.
->> >
->> > There are two principal concerns I'd appreciate your thoughts on:
->> >
->> > a) As an undiscoverable interface (you need to know the method signatures ahead
->> > of time), universally exposing every WMI "device" to userspace seems like "a bad
->> > idea" from a security and stability perspective. While access would certainly be
->> > privileged, it seems more prudent to make this exposure opt-in. We also handle
->> > some of this with kernel drivers and exposing those "devices" to userspace would
->> > enable userspace and the kernel to fight over control. So - if we expose WMI
->> > devices to userspace, I believe this should be done on a case by case basis,
->> > opting in, and not by default as part of the WMI driver (although it can provide
->> > the mechanism for a sub-driver to use), and possibly a devmode to do so by
->> > default.
->>
->> A couple of loose thoughts here.
->>
->> In principle there could be a "generic default WMI driver" or similar that would
->> "claim" all WMI "devices" that have not been "claimed" by anyone else and would
->> simply expose them to user space somehow (e.g. using a chardev interface).
->>
->> Then, depending on how that thing is implemented, opt-in etc should be possible
->> too.
->>
->
-> I think we agree this would be an ideal approach.
->
-> As we look into this more, it is becoming clear that the necessary functionality
-> is not nicely divided into GUIDs for what is necessary in userspace and what is
-> handled in the kernel. A single WMI METHOD GUID may be needed by userspace for
-> certain functionality, while the kernel drivers may use it for something else.
->
-> :-(
->
-> The input to a WMI method is just a buffer, so it is very free form. One
-> approach Mario has mentioned was to audit the user space WMI METHOD calls in the
-> kernel platform drivers and reject those calls with arguments matching those
-> issued by the kernel driver. This is likely to be complex and error prone in my
-> opinion. However, I have not yet thought of another means to meet the
-> requirement of having disjoint feature sets for userspace and kernel space via a
-> mechanism that was effectively designed to be used solely from user space with
-> vendor defined method signatures.
->
-> Next step is to look at just how complex it would be to audit the method calls
-> the kernel currently uses.
+On Sun, Apr 16, 2017 at 10:08:10PM +0200, Wolfram Sang wrote:
+> On Wed, Apr 05, 2017 at 08:41:46AM -0700, Darren Hart wrote:
+> > On Wed, Apr 05, 2017 at 04:52:26PM +0300, Andy Shevchenko wrote:
+> > > On Wed, 2017-04-05 at 00:03 +0200, Hans de Goede wrote:
+> > > > The INT33FE ACPI device has a CRS table with I2cSerialBusV2 resources
+> > > > for
+> > > > 3 devices: Maxim MAX17047 Fuel Gauge Controller, FUSB300C USB Type-C
+> > > > Controller and PI3USB30532 USB switch.
+> > > > 
+> > > > This commit adds a driver for this ACPI device which instantiates
+> > > > i2c-clients for these, so that the standard i2c drivers for these
+> > > > chips
+> > > > can bind to the them.
+> > > > 
+> > > 
+> > > Looks like we need something such as MFD for I2C bus clients...
+> > > 
+> > > FWIW:
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > Wolfram, will you be making an immutable i2c branch available for us to merge
+> > into our platform driver x86 for-next branch in order to apply this patch?
+> > 
+> > Alternatively you could send this in on our behalf, but that complicates any
+> > fixes between now and rc1 for this new driver. We'd prefer the immutable branch
+> > and pull this in ourselves.
+> 
+> Fine with me, here it is:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-INT33FE
+> 
 
-I'm wondering whether it's really worth it.  We already allow doing
-darned near anything using dcdbas.  Maybe the world won't end if we
-expose a complete-ish ioctl interface to WMI.
+Excellent, thank you.
 
-Also, dcdbas is, to put it mildly, a bit ridiculous.  It seems to be a
-seriously awkward sysfs interface that allows you to, drumroll please,
-issue outb and inb instructions.  It doesn't even check that it's
-running on a Dell system.  It might be nice to deprecate it some day
-in favor of a real interface.  I'd consider a low-level WMI ioctl
-interface to be a vast improvement.
+Hans, v6 queued to testing.
+
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
