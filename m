@@ -1,83 +1,190 @@
-From: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 15/24] asus-wmi: Restrict debugfs interface when the
- kernel is locked down
-Date: Tue, 18 Apr 2017 18:39:18 +0100
-Message-ID: <1492537158.2409.147.camel@decadent.org.uk>
-References: <1492526075.2409.140.camel@decadent.org.uk>
-         <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
-         <149142340198.5101.8171352010918423590.stgit@warthog.procyon.org.uk>
-         <CAHp75VfpsnCHVqnFnwwh3JHB0ccY66Gj88sMGhrA9W7rDxiY_Q@mail.gmail.com>
-         <31421.1491569449@warthog.procyon.org.uk>
-         <CAHp75VfvWmv7SxgwCgR-ZBYPbeQW=+qesDoBNC5JFPtvzsN5gg@mail.gmail.com>
-         <13615.1491830208@warthog.procyon.org.uk>
-         <CAHp75Vd+-_CmW2MPpK3b6bER8bFmECusnx0BZMwYAizWZys4YA@mail.gmail.com>
-         <16503.1492529434@warthog.procyon.org.uk>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: RFC: WMI Enhancements
+Date: Tue, 18 Apr 2017 21:28:31 +0200
+Message-ID: <201704182128.31940@pali>
+References: <20170412230854.GA11963@fury> <20170418075401.GC18887@pali> <20170418165631.GD25405@fury>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-PjgoJAt2XrmYnGr0bCTk"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <16503.1492529434-S6HVgzuS8uM4Awkfq6JHfwNdhmdF6hFW@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, acpi4asus-user <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-security-module <linux-security-module-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, keyrings-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed;
+  boundary="nextPart41467196.zQCEdTFOrn";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170418165631.GD25405@fury>
+Sender: linux-pm-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mario.Limonciello@dell.com, luto@kernel.org, kernel@kempniu.pl, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-
---=-PjgoJAt2XrmYnGr0bCTk
-Content-Type: text/plain; charset="UTF-8"
+--nextPart41467196.zQCEdTFOrn
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2017-04-18 at 16:30 +0100, David Howells wrote:
-> Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org> wrote:
+On Tuesday 18 April 2017 18:56:31 Darren Hart wrote:
+> On Tue, Apr 18, 2017 at 09:54:01AM +0200, Pali Roh=C3=A1r wrote:
+> > On Thursday 13 April 2017 17:39:56 Mario.Limonciello@dell.com wrote:
+> > > > > No more than exists today with the dcdbas SMI interface
+> > > > > (which only if you manually run userspace tools that
+> > > > > manipulate the same data you can do that technically).
+> > > > >=20
+> > > > > We're all reasonable folks, if there is an instance of this
+> > > > > that comes up we can make changes to userspace to fix it.
+> > > >=20
+> > > > Right. As Pali pointed out previously, if there is an existing
+> > > > class driver / subsystem which supports this functionality we
+> > > > should use that.
+> > > >=20
+> > > > I suppose one risk will be one GUID exposing both types of
+> > > > methods. Those which are used by kernel drivers, and those
+> > > > which have no kernel support. Or worse, methods which have
+> > > > multiple behaviors depending on their input arguments.
+> > > >=20
+> > > > --
+> > >=20
+> > > Well the "most" interesting to me is the SMBIOS calling interface
+> > > on the regular Dell GUID (WMBA IIRC).  That's what is used to
+> > > manipulate keyboard LED timeouts in dell-laptop (although
+> > > through direct SMI today).
+> > >=20
+> > > It's also what is used for other SMBIOS calls like changing
+> > > random BIOS settings that shouldn't be generically exposed in
+> > > sysfs but should be controlled by manageability tools.
+> > >=20
+> > > Example: turning on/off legacy option ROM or changing legacy boot
+> > > order.
+> >=20
+> > Which basically means that new WMI /dev/ files does not help for
+> > Dell.
+> >=20
+> > Kernel needs to manipulate with SMBIOS for implementing rfkill,
+> > keyboard backlight, display brightness and also needs to receive
+> > WMI events for hotkeys. So kernel modules would lock WMI interface
+> > for receiving events & sending SMBIOS calls, and userspace would
+> > be blocked from usage of this WMI GUID.
 >=20
-> > So it's generally not going to be OK to turn off debugfs.=C2=A0=C2=A0Th=
-ere will
-> > probably need to be a distinction between believed-safe and unsafe
-> > directories/files.
+> This is why we can't rely on a method ID granular filter for which
+> methods are exported to userspace. In my previous reply to Rafael, I
+> suggested platform drivers decide which method IDs are exported, and
+> for platforms with insufficient WMI method ID granularity, we will
+> end up exposing methods we also use in the kernel. The WMI
+> evaluation will need to be centralized and placed under mutual
+> exclusion. The optional wmi evaluation filter would allow for
+> drivers to audit incoming calls from userspace to ensure no
+> conflict.
 >=20
-> Any suggestion on how to mark this distinction?
+> It's not ideal - but I believe it addresses our reality.
 
-I don't know.
+Ok.
 
-> I'd prefer not to modify every read/write op associated with a
-> debugfs file.
+> > I do not think that we can solve this problem easily in
+> > vendor-neutral interface. There was argument that WMI API was
+> > designed to allow userspace applications call firmware functions
+> > directly... But we are using WMI in kernel and we should not allow
+> > both kernel and userspace to fight on some WMI API.
+>=20
+> We could drop all the in kernel wmi drivers and rely on userspace
+> daemons per platform.... but I think we all agree that is not where
+> we want this to go. So we'll need to find a compromise. Even then,
+> we'd need to avoid competition for common method IDs across multiple
+> userspace applications.
 
-I think debugfs should be assumed unsafe by default.  So only the
-believed-safe parts would need to be changed.
+I think this is step backward. Current wmi drivers in kernel which=20
+implements class devices should stay in kernel -- independently of fact=20
+if they are provided by WMI API, ACPI API or direct HW access.
 
-> Modify
-> DEFINE_DEBUGFS_ATTRIBUTE() maybe?=C2=A0=C2=A0And provide lockable variant=
-s of
-> debugfs_create_u8() and co.?
+> > So for Dell we need for sure some Dell specific interface which
+> > covers all needed functionality. I'm not sure what everything Dell
+> > software needs, so what about specifying current usage of Dell
+> > SMBIOS/WMI functions from existing userspace applications and also
+> > planned usage in future? Then from this information we can design
+> > kernel and userspace API which can fit for Dell usage.
+>=20
+> This was my initial response as well. The biggest problem with it is
+> it places Linux imposed restrictions on the WMI mechanism, which
+> will ultimately stifle innovation and/or leave Linux as a second
+> class citizen for systems which rely on WMI for userspace firmware
+> management.
 
-That could help.
+Maybe... I agree that having WMI API for userspace application could be=20
+useful, but it should not be at cost of loosing current kernel drivers=20
+or kernel functionality provided by current kernel wmi drivers.
 
-Ben.
+The question is, who is interested in full WMI access from userspace?=20
+And who already requested it in past? I'm just asking if we are not=20
+going to work on something in which nobody is interested...
 
---=20
-Ben Hutchings
-The world is coming to an end.	Please log off.
+Yes, we know from Mario that Dell is interested in WMI access from=20
+userspace. But is there other vendor? At least I do not know, so this is=20
+reason why I suggested to rather create API specially for Dell which=20
+will fully fit for both userspace Dell applications and also kernel dell=20
+wmi drivers to minimize conflicts.
 
+I'm sure that specific API/ABI designed for concrete usage (here in=20
+Dell) would be easier and also better in resolving conflicts and=20
+fighting between kernel & userspace as some fully generic API/ABI which=20
+needs to be designed for everything and everybody.
 
---=-PjgoJAt2XrmYnGr0bCTk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+What worry me is that there will be kernel wmi drivers which due to=20
+conflicts in locking/usage would not be able to allow userspace to=20
+access WMI. Or if their implemented filter would not fullfit for vendor=20
+userspace application (for some reasons), and vendor userspace=20
+application starts blocking kernel wmi modules. This would mean that=20
+user would be in position where must decide if he wants: stable kernel=20
+driver for controlling rfkill/led and receive hotkey presses OR=20
+userspace application which can control charging, setting special BIOS=20
+settings/etc/... And if laptop vendors do not want to coordinate work=20
+with kernel upstream, this situation can really happen.
+
+> > About other vendor WMI's functions... I'm not sure, but there is
+> > again possibility that rfkill, leds or hotkeys would exists on
+> > same WMI GUID as other maintenance functions (which userspace
+> > wants), so export would be again blocked by kernel module for
+> > rfkill/leds/hotkeys.
+> >=20
+> > Therefore I'm not really sure if some /dev/wmi* API would be
+> > usefull, and not always blocked by kernel module which implements
+> > rfkill support.
+>=20
+> I'd like to also point out that the Linux kernel has a minimal and
+> targeted set of WMI drivers generally aimed at making laptops work
+> as expected through the only mechanism we had access to.
+
+Yes, that is truth for obvious reason.
+
+> To my
+> knowledge, we never sat down to discuss how WMI should be
+> implemented in the Linux ecosystem. That leaves us in the situation
+> we are in today, in which Linux essentially took the most expedient
+> route to making laptops work - which happened to be WMI, but we
+> didn't consider the broader implications of that mechanism or how
+> what we implemented would interact with full set of functionality
+> provided by WMI.
+
+I did not know about any discussion too.
+
+> So our challenge now is to look at WMI as a whole. How should it be
+> implemented to achieve feature parity. And then consider how the
+> existing drivers fit into that. Please see my proposal in response
+> to Rafael's latest reply. I believe it outlines a reasonable
+> compromise.
+
+Ok, I will write there other notes.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart41467196.zQCEdTFOrn
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlj2T0YACgkQ57/I7JWG
-EQlfzA//VHvVydwqOJlDEXlQSYXVftsuPkvgvNHB2VO5N27m8i/8hawuSi+RAeZV
-rOPwwircNhAuVxj9GuieaxF2iv7F3N5qLRWqahcJhghnBlNN5vzRRFk1n8+xj0FY
-VOkP+SpuHDnxFoFzowinEBu1JgoxOOAScWNOEmhK5cfjZYBLYZb0qaURcv+DuWzw
-cTu/NeVm9rcyn9AGNo0U0YNxnBN+lW65ta6y+hch6d3qTdpQh17UBX0/mtybu2Qu
-jnDHWwWX9asZDSOWzj6JdDeZFC7MQrjFjl/AUfvoxPEbrQGWakGf40OMx09TMi+N
-yKxiyeT/++xSbfxcMl0Xlezm6xiX3wRPn5/kQ5n6YMM8F6dtlddkBQztMatYau78
-5lAQi7XyVtT/j7AnhtTebVpgDA1K0cHOuRZdUi56K2Nf8b3jfNWsun+eZL/AXRcm
-nPYlaaMhTdoibpG3Cqctl/0veayIa7S1mjQp0yg6LIK8hNYOnL7ZqFRqGi2i/A1p
-JyNI9YFY9HHTMpfw3aXHYmFH60IZlwRP8m3f+Z7bPlztk8n9gPKl1lc9DD/tSb5H
-b9vVDE+jn8QjQCCXzAhF6jCtwNEZJgPoM+HSjYb04yvxlmsewHoZFfJRMi+sVGv+
-GJrEQheIoth2wCe+JQWelkXg3IokOaHtAywNDIwj1tVMPWO7n1Y=
-=ZIc7
+iEYEABECAAYFAlj2aN8ACgkQi/DJPQPkQ1JxPQCdE6e7kKERc3zGtRB28y5lzTMJ
+/eYAn3zOb3owJsbtaui9M7Dj4k0hK9tb
+=NUWj
 -----END PGP SIGNATURE-----
 
---=-PjgoJAt2XrmYnGr0bCTk--
+--nextPart41467196.zQCEdTFOrn--
