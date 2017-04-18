@@ -1,50 +1,108 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Tue, 18 Apr 2017 14:08:51 +0000
-Message-ID: <21d6718a327e4ebcb0174c573f27df68@ausx13mpc120.AMER.DELL.COM>
-References: <20170412230854.GA11963@fury>
-         <20170413073228.GB1462@ozzy.nask.waw.pl>
-         <3370431810bd4bc09fd9eb16eb9abea5@ausx13mpc120.AMER.DELL.COM>
-         <20170413135102.GL3090@pali>
-         <faffff39232f4734859a360cb666856f@ausx13mpc120.AMER.DELL.COM>
- <1492501019.24567.45.camel@linux.intel.com>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH 15/24] asus-wmi: Restrict debugfs interface when the
+ kernel is locked down
+Date: Tue, 18 Apr 2017 15:34:35 +0100
+Message-ID: <1492526075.2409.140.camel@decadent.org.uk>
+References: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
+         <149142340198.5101.8171352010918423590.stgit@warthog.procyon.org.uk>
+         <CAHp75VfpsnCHVqnFnwwh3JHB0ccY66Gj88sMGhrA9W7rDxiY_Q@mail.gmail.com>
+         <31421.1491569449@warthog.procyon.org.uk>
+         <CAHp75VfvWmv7SxgwCgR-ZBYPbeQW=+qesDoBNC5JFPtvzsN5gg@mail.gmail.com>
+         <13615.1491830208@warthog.procyon.org.uk>
+         <CAHp75Vd+-_CmW2MPpK3b6bER8bFmECusnx0BZMwYAizWZys4YA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-oh3Vr70YVFjl3JS4w0c9"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:7615 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750758AbdDROJG (ORCPT
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49456 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750758AbdDROer (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Apr 2017 10:09:06 -0400
-In-Reply-To: <1492501019.24567.45.camel@linux.intel.com>
-Content-Language: en-US
+        Tue, 18 Apr 2017 10:34:47 -0400
+In-Reply-To: <CAHp75Vd+-_CmW2MPpK3b6bER8bFmECusnx0BZMwYAizWZys4YA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andriy.shevchenko@linux.intel.com, pali.rohar@gmail.com, hdegoede@redhat.com
-Cc: kernel@kempniu.pl, dvhart@infradead.org, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, David Howells <dhowells@redhat.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, matthew.garrett@nebula.com, linux-efi@vger.kernel.org, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, keyrings@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXks
-IEFwcmlsIDE4LCAyMDE3IDI6MzcgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9f
-TGltb25jaWVsbG9ARGVsbC5jb20+OyBwYWxpLnJvaGFyQGdtYWlsLmNvbTsNCj4gaGRlZ29lZGVA
-cmVkaGF0LmNvbQ0KPiBDYzoga2VybmVsQGtlbXBuaXUucGw7IGR2aGFydEBpbmZyYWRlYWQub3Jn
-OyByandAcmp3eXNvY2tpLm5ldDsNCj4gbGVuLmJyb3duQGludGVsLmNvbTsgY29yZW50aW4uY2hh
-cnlAZ21haWwuY29tOyBsdXRvQGtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHBt
-QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogUkZDOiBXTUkgRW5oYW5jZW1lbnRzDQo+
-IA0KPiBPbiBUaHUsIDIwMTctMDQtMTMgYXQgMTU6NDAgKzAwMDAsIE1hcmlvLkxpbW9uY2llbGxv
-QGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gbGlic21iaW9zIHdvdWxkIGJlbmVmaXQuDQo+ID4gPg0K
-PiA+ID4gUmVhbGx5IGxpYnNtYmlvcyBtYXR0ZXJzIGhlcmU/IEhhbnMgKGFkZGVkIHRvIHRocmVh
-ZCkgd3JvdGUgdGhhdA0KPiA+ID4gbGlic21iaW9zIGlzDQo+ID4gPiBhIHJlbGljLCBzb21ldGhp
-bmcgb2YgYWdlcyBsb25nIGdvbmUgYnkgYW5kIGEgbm9ybWFsIHVzZXIgc2hvdWxkDQo+ID4gPiBu
-ZXZlciB1c2UgaXQuDQo+ID4gPg0KPiA+DQo+ID4gQSBub3JtYWwgdXNlciBzaG91bGRuJ3QgYmUg
-dXNpbmcgaXQgZGlyZWN0bHksIGJ1dCBsaWJzbWJpb3MgaXMgdXNlZCBieQ0KPiA+IGEgZmV3IG9w
-ZW4NCj4gPiBzb3VyY2UgdG9vbHMgYXMgYSBkZXBlbmRlbmN5LsKgwqBJdCdzIGFsc28gdXNlZCBp
-biBtYW55IERlbGwNCj4gPiBtYW5hZ2VhYmlsaXR5IHRvb2xzLg0KPiA+DQo+IA0KPiBTaG91bGRu
-J3QgdG9vbHMgZXZvbHZlIHRvIHVzZSBuZXdlciBpbnRlcmZhY2VzICh3aGlsZSBrZWVwaW5nDQo+
-IGNvbXBhdGliaWxpdHkgd2l0aCBvbGQga2VybmVscyk/DQoNClllcy4gIElmIGEgV01JIHVzZXJz
-cGFjZSBpbnRlcmZhY2UgZG9lcyBlbmQgdXAgYmVpbmcgdGhlIG91dGNvbWUgb2YNCnRoaXMgdGhy
-ZWFkLCBJJ2xsIHB1c2ggdGhlIHJlbGV2YW50IGZvbGtzIG1haW50YWluaW5nIHRob3NlIHRvb2xz
-IHRvIHN3aXRjaA0Kb3ZlciBzbyB0aGF0IGRjZGJhcyBjYW4gYmUgbWFya2VkIGRlcHJlY2F0ZWQg
-YW5kIG9ubHkgaW4gdXNlIGZvciBvbGRlcg0Ka2VybmVscy4NCg==
+
+--=-oh3Vr70YVFjl3JS4w0c9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2017-04-18 at 09:06 +0300, Andy Shevchenko wrote:
+> > On Mon, Apr 10, 2017 at 4:16 PM, David Howells <dhowells@redhat.com> wr=
+ote:
+> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >=20
+> > > > > It looks a bit fragile when responsility of whatever reasons kern=
+el
+> > > > > can't serve become a driver burden.
+> > > > > Can we fix this in debugfs framework instead?
+> > > >=20
+> > > > Fix it with debugfs how?=C2=A0=C2=A0We can't offload the decision t=
+o userspace.
+> > >=20
+> > > I mean to do at least similar like you have done for module
+> > > parameters. So, instead of putting above code to each attribute in
+> > > question make a special (marked) attribute instead and debugfs
+> > > framework will know how to deal with that.
+> >=20
+> > Hmmm...=C2=A0=C2=A0It's tricky in that debugfs doesn't have any of its =
+own structures,
+> > but is entirely built on standard VFS ones, so finding somewhere to sto=
+re the
+> > information is going to be awkward.
+>=20
+> I see.
+>=20
+> > =C2=A0One obvious solution is to entirely lock
+> > down debugfs in secure boot more, but that might be a bit drastic.
+>=20
+> But this sounds sane! debugFS for debugging, not for production. If
+> someone is using secure kernel it means pure production use (otherwise
+> one may do temporary hacks in kernel).
+[...]
+
+Production systems need instrumentation to understand performance
+issues and any bugs that=C2=A0for whatever reason didn't show up in earlier
+testing.  A number of interfaces for that have been added under
+debugfs:
+
+- tracing (now tracefs, but it's expected to appear under debugfs)
+- dynamic_debug
+- various ad-hoc statistics
+
+So it's generally not going to be OK to turn off debugfs.  There will
+probably need to be a distinction between believed-safe and unsafe
+directories/files.
+
+Ben.
+
+--=20
+Ben Hutchings
+The world is coming to an end.	Please log off.
+
+
+--=-oh3Vr70YVFjl3JS4w0c9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlj2I/sACgkQ57/I7JWG
+EQnt0Q/9H1V+Meq+gOJY9Pk9UUFAjXx4L9OPBttLCWvNE0t3mZUqyKW3myZku3o/
+iP9VWNlYGEycsDBGMQZTCU/uJoSFpiionPT+Sb+kC7Qr0j9ORb3idyJILOsB1M4/
+PUxsDUhmASwSLjn0bQwYQxthQYW0jKKc7trXqTNGlxLYwWf/tGy99xHUgX9dRb9q
+y+CTfZCSNfrgXBesjGJPOUngs03BCPDWJWlANkcwNmCll+fdhB1mLPqU3J2A5pYP
+4zOTng4APv2ELqdQJ7rRUxPJmVZ8CVWB8FSYGSzXh8t+iMkkO4GLR1f1yOimXeWF
+iDXUZVuf5+qm56WWS/tPxuuu59le981NIOIf1IgVdyEGuTayZyeYYTjk/HMyT4a7
+GQml72pkJrfLrlMm9NtCtBhMYRs9bunaSAZnwjd5aqGYo6abTyFJBYP3F5/yVrRS
+OOkVMWSDm5slp+IXIH7dx6VcUaG5DXHET2COCAo/SsTIGavHPClKy7d96ydfzu7x
+1se27l0lODBxw7qWesRSOUB5bFGdpehuBnAJvTjLwdd16kkQzFyZ56a+VZKNxmL+
+GKQuwYAeUA4G9hbNww5zD1x4cmIDj9lkSWJYvwlKPFi2tM+rcXJHNEzJ1FYfQBgj
+lkwngsnszeE+jhnN5b3aKXCain/IfmGwdgTm9oy1F7BnPkOXNak=
+=3L3D
+-----END PGP SIGNATURE-----
+
+--=-oh3Vr70YVFjl3JS4w0c9--
