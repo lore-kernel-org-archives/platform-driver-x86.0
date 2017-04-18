@@ -1,47 +1,50 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH] platform: x86: intel-hid: Add missing ->thaw callback
-Date: Tue, 18 Apr 2017 15:49:06 +0200
-Message-ID: <3369188.n8HfSBcO3V@aspire.rjw.lan>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: RFC: WMI Enhancements
+Date: Tue, 18 Apr 2017 14:08:51 +0000
+Message-ID: <21d6718a327e4ebcb0174c573f27df68@ausx13mpc120.AMER.DELL.COM>
+References: <20170412230854.GA11963@fury>
+         <20170413073228.GB1462@ozzy.nask.waw.pl>
+         <3370431810bd4bc09fd9eb16eb9abea5@ausx13mpc120.AMER.DELL.COM>
+         <20170413135102.GL3090@pali>
+         <faffff39232f4734859a360cb666856f@ausx13mpc120.AMER.DELL.COM>
+ <1492501019.24567.45.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.net.pl ([79.96.170.134]:65379 "EHLO
-        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752674AbdDRNzL (ORCPT
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:7615 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750758AbdDROJG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Apr 2017 09:55:11 -0400
+        Tue, 18 Apr 2017 10:09:06 -0400
+In-Reply-To: <1492501019.24567.45.camel@linux.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: andriy.shevchenko@linux.intel.com, pali.rohar@gmail.com, hdegoede@redhat.com
+Cc: kernel@kempniu.pl, dvhart@infradead.org, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-The intel-hid driver is missing a PM ->thaw callback allowing the
-device to go back to the operational state after creating a
-hibernation image or when there is an image restoration error during
-resume.
-
-The lack of the ->thaw callback basically means that all events
-signaled by the device are discarded after a hibernation image has
-been created which may be problematic, for example, if the image
-cannot be saved (eg. due to an I/O issue with storage).
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/platform/x86/intel-hid.c |    1 +
- 1 file changed, 1 insertion(+)
-
-Index: linux-pm/drivers/platform/x86/intel-hid.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-hid.c
-+++ linux-pm/drivers/platform/x86/intel-hid.c
-@@ -136,6 +136,7 @@ static int intel_hid_pl_resume_handler(s
- 
- static const struct dev_pm_ops intel_hid_pl_pm_ops = {
- 	.freeze  = intel_hid_pl_suspend_handler,
-+	.thaw  = intel_hid_pl_resume_handler,
- 	.restore  = intel_hid_pl_resume_handler,
- 	.suspend  = intel_hid_pl_suspend_handler,
- 	.resume  = intel_hid_pl_resume_handler,
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXks
+IEFwcmlsIDE4LCAyMDE3IDI6MzcgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9f
+TGltb25jaWVsbG9ARGVsbC5jb20+OyBwYWxpLnJvaGFyQGdtYWlsLmNvbTsNCj4gaGRlZ29lZGVA
+cmVkaGF0LmNvbQ0KPiBDYzoga2VybmVsQGtlbXBuaXUucGw7IGR2aGFydEBpbmZyYWRlYWQub3Jn
+OyByandAcmp3eXNvY2tpLm5ldDsNCj4gbGVuLmJyb3duQGludGVsLmNvbTsgY29yZW50aW4uY2hh
+cnlAZ21haWwuY29tOyBsdXRvQGtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHBt
+QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogUkZDOiBXTUkgRW5oYW5jZW1lbnRzDQo+
+IA0KPiBPbiBUaHUsIDIwMTctMDQtMTMgYXQgMTU6NDAgKzAwMDAsIE1hcmlvLkxpbW9uY2llbGxv
+QGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gbGlic21iaW9zIHdvdWxkIGJlbmVmaXQuDQo+ID4gPg0K
+PiA+ID4gUmVhbGx5IGxpYnNtYmlvcyBtYXR0ZXJzIGhlcmU/IEhhbnMgKGFkZGVkIHRvIHRocmVh
+ZCkgd3JvdGUgdGhhdA0KPiA+ID4gbGlic21iaW9zIGlzDQo+ID4gPiBhIHJlbGljLCBzb21ldGhp
+bmcgb2YgYWdlcyBsb25nIGdvbmUgYnkgYW5kIGEgbm9ybWFsIHVzZXIgc2hvdWxkDQo+ID4gPiBu
+ZXZlciB1c2UgaXQuDQo+ID4gPg0KPiA+DQo+ID4gQSBub3JtYWwgdXNlciBzaG91bGRuJ3QgYmUg
+dXNpbmcgaXQgZGlyZWN0bHksIGJ1dCBsaWJzbWJpb3MgaXMgdXNlZCBieQ0KPiA+IGEgZmV3IG9w
+ZW4NCj4gPiBzb3VyY2UgdG9vbHMgYXMgYSBkZXBlbmRlbmN5LsKgwqBJdCdzIGFsc28gdXNlZCBp
+biBtYW55IERlbGwNCj4gPiBtYW5hZ2VhYmlsaXR5IHRvb2xzLg0KPiA+DQo+IA0KPiBTaG91bGRu
+J3QgdG9vbHMgZXZvbHZlIHRvIHVzZSBuZXdlciBpbnRlcmZhY2VzICh3aGlsZSBrZWVwaW5nDQo+
+IGNvbXBhdGliaWxpdHkgd2l0aCBvbGQga2VybmVscyk/DQoNClllcy4gIElmIGEgV01JIHVzZXJz
+cGFjZSBpbnRlcmZhY2UgZG9lcyBlbmQgdXAgYmVpbmcgdGhlIG91dGNvbWUgb2YNCnRoaXMgdGhy
+ZWFkLCBJJ2xsIHB1c2ggdGhlIHJlbGV2YW50IGZvbGtzIG1haW50YWluaW5nIHRob3NlIHRvb2xz
+IHRvIHN3aXRjaA0Kb3ZlciBzbyB0aGF0IGRjZGJhcyBjYW4gYmUgbWFya2VkIGRlcHJlY2F0ZWQg
+YW5kIG9ubHkgaW4gdXNlIGZvciBvbGRlcg0Ka2VybmVscy4NCg==
