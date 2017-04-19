@@ -1,65 +1,87 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Wed, 19 Apr 2017 17:24:00 +0000
-Message-ID: <4e3e507b116443298427002c5aafed7f@ausx13mpc120.AMER.DELL.COM>
-References: <20170412230854.GA11963@fury> <20170419075248.GD18887@pali>
- <f3684c95b91349d3b4e512370ac1faf4@ausx13mpc120.AMER.DELL.COM>
- <201704191854.51783@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <201704191854.51783@pali>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v2 1/2] hp-wmi: Do not shadow error values
+Date: Wed, 19 Apr 2017 19:41:53 +0200
+Message-ID: <20170419174154.16518-2-carlo@caione.org>
+References: <20170419174154.16518-1-carlo@caione.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170419174154.16518-1-carlo@caione.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org, andy@infradead.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com
+Cc: Carlo Caione <carlo@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE5LCAyMDE3
-IDExOjU1IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
-bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBs
-dXRvQGFtYWNhcGl0YWwubmV0Ow0KPiBsZW4uYnJvd25AaW50ZWwuY29tOyBjb3JlbnRpbi5jaGFy
-eUBnbWFpbC5jb207IGx1dG9Aa2VybmVsLm9yZzsNCj4gYW5kcml5LnNoZXZjaGVua29AbGludXgu
-aW50ZWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS0NCj4gZHJp
-dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogUkZDOiBXTUkgRW5oYW5jZW1lbnRzDQo+IA0KPiBPbiBXZWRuZXNkYXkgMTkgQXBy
-aWwgMjAxNyAxODoyOTo1MyBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+
-IEFzIHdyb3RlIGFib3ZlLCBJJ20gZmluZSB3aXRoIGV4cGxpY2l0IHdoaXRlbGlzdCBvZiBXTUkg
-R1VJRHMgd2hpY2gNCj4gPiA+IHdpbGwgYmUgZXhwb3J0ZWQgdG8gdXNlcnNwYWNlIGFmdGVyIGNv
-bW11bmljYXRpb24gd2l0aCB2ZW5kb3IuDQo+ID4NCj4gPiBXaGF0IGFib3V0IEdVSUQncyBub3Qg
-eWV0IHVzZWQgYnkga2VybmVsIGRyaXZlcnM/ICBXb3VsZCB0aG9zZQ0KPiA+IGRlZmF1bHQgdG8g
-d2hpdGVsaXN0IGRlZmF1bHQgdG8gYmxhY2tsaXN0PyAgTXkgcHJlZmVyZW5jZSB3b3VsZCBiZQ0K
-PiA+IHRvIGRlZmF1bHQgdG8gd2hpdGVsaXN0LiBUaGlzIGFsbG93cyBuZXcgR1VJRCdzIHRvIGJl
-IGFkZGVkIGxhdGVyDQo+ID4gd2l0aG91dCBuZWVkaW5nIHRvIG1vZGlmeSBrZXJuZWwgZm9yIHNv
-bWV0aGluZyB0aGF0IGtlcm5lbCB3b24ndA0KPiA+IG5lZWQgdG8gZG8gYW55dGhpbmcgaW1tZWRp
-YXRlbHkuDQo+IA0KPiBJIHVuZGVyc3Rvb2QgaXQgYXMgdGhlcmUgd291bGQgYmUgZXhwbGljaXQg
-d2hpdGVsaXN0IGluIGtlcm5lbCBhbmQgbmV3DQo+IEdVSURzIHdvdWxkIGJlIG5lZWRlZCB0byBh
-ZGQgaW50byB3aGl0ZWxpc3QsIGV2ZW4gdGhvc2Ugd2hpY2ggZG8gbm90DQo+IGhhdmUga2VybmVs
-IHdtaSBkcml2ZXIuDQo+IA0KPiBFeHBvcnRpbmcgYWxsIEdVSURzICh0byB1c2Vyc3BhY2UpIHdo
-aWNoIGFyZSBub3QgYmluZCB0byBrZXJuZWwgZHJpdmVyDQo+IGhhcyBvbmUgYmlnIHByb2JsZW0u
-IElmIGtlcm5lbCBpbnRyb2R1Y2UgbmV3IHdtaSBkcml2ZXIgZm9yIHN1Y2ggR1VJRA0KPiB0aGVu
-IGl0IGJsb2NrIHVzZXJzcGFjZSB0byBhY2Nlc3MgaXQgb3IgYXQgbGVhc3Qgd291bGQgbmVlZCB0
-byBwcm92aWRlDQo+IGF1ZGl0IGZpbHRlciBhbmQgc29tZXRoaW5nIHdvdWxkIGJlIHByb2JhYmx5
-IGZpbHRlcmVkLiBJdCBtZWFucyB0aGF0DQo+IHNvbWUgdXNlcnNwYWNlIGFwcGxpY2F0aW9ucyB3
-aGljaCB3b3VsZCB1c2UgdGhhdCBHVUlEcyBzdG9wcyB3b3JraW5nDQo+IGFmdGVyIHVwZ3JhZGlu
-ZyB0byBuZXcga2VybmVsLiBBbmQgd2UgY2FuIGJlIGluIHNpdHVhdGlvbiB3aGVyZSAqdXNlcioN
-Cj4gbmVlZCB0byBkZWNpZGU6IGVpdGhlciB1c2UgM3JkIHBhcnR5IHVzZXJzcGFjZSBhcHBsaWNh
-dGlvbiBmcm9tIHZlbmRvcg0KPiB3aGljaCBwcm92aWRlIHNvbWUgc3BlY2lhbCBzZXR0aW5ncyBm
-b3IgeW91ciBsYXB0b3AsIG9yIHVzZSBrZXJuZWwNCj4gbW9kdWxlIHdoaWNoIHByb3ZpZGVzIHN0
-YW5kYXJkIHJma2lsbC9sZWQvaW5wdXQgY2xhc3MgZHJpdmVyLg0KPiANCg0KSWYgdGhpcyBwcm9w
-b3NhbCBnb2VzIGZvcndhcmQgaXQgd291bGQgc291bmQgbGlrZSB0byBtZSBhbiBhdWRpdCBmaWx0
-ZXINCndvdWxkIGJlY29tZSBhIHByZXJlcXVpc2l0ZSBmb3IgYW55IG5ldyBXTUkga2VybmVsIGRy
-aXZlci4gIFRoaXMgaXMgbm90DQphIHByb2JsZW0gdG8gbWUuDQoNClRoaXMgYXVkaWVuY2UgcmVj
-b21tZW5kcyB0aGUgd2F5IGZvciB1c2VycyB0byBjb25maWd1cmUgdGhlIHN5c3RlbSBidXQgDQpv
-ZiBjb3Vyc2UgY2Fubm90IHN0b3AgdXNlcnMgZnJvbSBkb2luZyB3aGF0IHRoZXkgZGVjaWRlIHRv
-IGRvLiAgDQpXZSdyZSBhbGwgaW4gYWdyZWVtZW50IHRoYXQgdGhlIGtlcm5lbCBzaG91bGQga2Vl
-cCByZXNwb25zaWJpbGl0eSBmb3Igc29tZQ0Kb2YgdGhlc2UgZnVuY3Rpb25hbGl0aWVzLg0KSWYg
-YSBuZXcga2VybmVsIFdNSSBkcml2ZXIgZHVwbGljYXRlcyBmdW5jdGlvbmFsaXR5IHRoYXQgaGFw
-cGVucyB0byBmaW5kIGl0cyANCndheSBpbiB1c2Vyc3BhY2UgYW5kIHRoZSBrZXJuZWwgYXVkaXRz
-IHRoYXQgb3V0IHllcyB0aGUgdXNlcnNwYWNlIA0KYXBwbGljYXRpb24gbWF5IHN0YXJ0IHRvICBo
-YXZlIGxlc3MgZnVuY3Rpb25hbGl0eSwgYnV0IGJldHRlciBzdXBwb3J0IA0Kd291bGQgbGl2ZSBp
-biB0aGUga2VybmVsIGFuZCB0aGUgdXNlciB3b3VsZCBiZSBiZXR0ZXIgc3VwcG9ydGVkIGJ5IA0K
-dGhlIHN0YWNrIChmb3IgZXhhbXBsZSBjb3VsZCB1c2Ugc3RhbmRhcmQgcmZraWxsIHVzZXJzcGFj
-ZSB1dGlsaXRpZXMpLg0KDQoNCg==
+From: Carlo Caione <carlo@endlessm.com>
+
+All the helper functions (i.e. hp_wmi_dock_state, hp_wmi_tablet_state,
+...) using hp_wmi_perform_query to perform an HP WMI query shadow the
+returned value in case of error.
+
+We return -EINVAL only when the HP WMI query returns a positive value
+(the specific error code) to not mix this up with the actual value
+returned by the helper function.
+
+Signed-off-by: Carlo Caione <carlo@endlessm.com>
+---
+ drivers/platform/x86/hp-wmi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 96ffda4..8c7773a 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -248,7 +248,7 @@ static int hp_wmi_display_state(void)
+ 	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (ret)
+-		return -EINVAL;
++		return ret < 0 ? ret : -EINVAL;
+ 	return state;
+ }
+ 
+@@ -258,7 +258,7 @@ static int hp_wmi_hddtemp_state(void)
+ 	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (ret)
+-		return -EINVAL;
++		return ret < 0 ? ret : -EINVAL;
+ 	return state;
+ }
+ 
+@@ -268,7 +268,7 @@ static int hp_wmi_als_state(void)
+ 	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (ret)
+-		return -EINVAL;
++		return ret < 0 ? ret : -EINVAL;
+ 	return state;
+ }
+ 
+@@ -279,7 +279,7 @@ static int hp_wmi_dock_state(void)
+ 				       sizeof(state), sizeof(state));
+ 
+ 	if (ret)
+-		return -EINVAL;
++		return ret < 0 ? ret : -EINVAL;
+ 
+ 	return state & 0x1;
+ }
+@@ -290,7 +290,7 @@ static int hp_wmi_tablet_state(void)
+ 	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (ret)
+-		return ret;
++		return ret < 0 ? ret : -EINVAL;
+ 
+ 	return (state & 0x4) ? 1 : 0;
+ }
+@@ -323,7 +323,7 @@ static int __init hp_wmi_enable_hotkeys(void)
+ 	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
+ 				       sizeof(value), 0);
+ 	if (ret)
+-		return -EINVAL;
++		return ret < 0 ? ret : -EINVAL;
+ 	return 0;
+ }
+ 
+-- 
+2.9.3
