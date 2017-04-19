@@ -1,82 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: add thermal dependency
-Date: Wed, 19 Apr 2017 21:58:54 +0300
-Message-ID: <CAHp75VeL0CV2=YNgMfbt4upWnq0=yg2aYwEjK8dg+Tuq0YAx4g@mail.gmail.com>
-References: <20170419181209.537907-1-arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170419181209.537907-1-arnd@arndb.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sujith Thomas <sujith.thomas@intel.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org, Eduardo Valentin <edubezval@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Russell King <linux+etnaviv@armlinux.org.uk>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andy@infradead.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] platform/x86: hp-wireless: reuse module_acpi_driver
+Date: Wed, 19 Apr 2017 22:27:31 +0300
+Message-ID: <20170419192731.17850-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alex Hung <alex.hung@canonical.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCBBcHIgMTksIDIwMTcgYXQgOToxMSBQTSwgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
-Yi5kZT4gd3JvdGU6Cj4gV2hlbiBDT05GSUdfVEhFUk1BTCBpcyBlbmFibGVkIGFzIGEgbG9hZGFi
-bGUgbW9kdWxlLCBhbmQgZXRuYXZpdiBpcwo+IGJ1aWx0LWluLCB3ZSBnZXQgYSBsaW5rIGVycm9y
-Ogo+Cj4gZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZpdl9ncHUubzogSW4gZnVuY3Rpb24g
-YGV0bmF2aXZfZ3B1X2JpbmQnOgo+IGV0bmF2aXZfZ3B1LmM6KC50ZXh0LmV0bmF2aXZfZ3B1X2Jp
-bmQrMHgzNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYHRoZXJtYWxfb2ZfY29vbGluZ19kZXZp
-Y2VfcmVnaXN0ZXInCj4gZXRuYXZpdl9ncHUuYzooLnRleHQuZXRuYXZpdl9ncHVfYmluZCsweGUw
-KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgdGhlcm1hbF9jb29saW5nX2RldmljZV91bnJlZ2lz
-dGVyJwo+IGRyaXZlcnMvZ3B1L2RybS9ldG5hdml2L2V0bmF2aXZfZ3B1Lm86IEluIGZ1bmN0aW9u
-IGBldG5hdml2X2dwdV91bmJpbmQnOgo+IGV0bmF2aXZfZ3B1LmM6KC50ZXh0LmV0bmF2aXZfZ3B1
-X3VuYmluZCsweGYwKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgdGhlcm1hbF9jb29saW5nX2Rl
-dmljZV91bnJlZ2lzdGVyJwo+Cj4gVGhpcyBhZGRzIGEgS2NvbmZpZyBkZXBlbmRlbmN5IHRvIHBy
-ZXZlbnQgZXRuYXZpdiBmcm9tIGJlaW5nIGJ1aWx0LWluCj4gd2l0aCBDT05GSUdfVEhFUk1BTD1t
-LCB3aGlsZSBzdGlsbCBhbGxvd2luZyB0aGUgdmFsaWQgY29uZmlndXJhdGlvbnMuCj4gVW5mb3J0
-dW5hdGVseSwgc2ltcGx5IGFkZGluZyB0aGUgZGVwZW5kZW5jeSBoZXJlIGJyZWFrcyBLY29uZmln
-IHRocm91Z2gKPiBhIGRlcGVuZGVuY3kgbG9vcCBpbnZvbHZpbmcgbG90cyBvZiBzeW1ib2xzIGFs
-bCB0aGUgd2F5IHVudGlsIEFDUElfVklERU8sCj4gd2hpY2ggaXMgdGhlIG9ubHkgdmlkZW8gZHJp
-dmVyIHRoYXQgZXhwbGljaXRseSBzZWxlY3RzICdUSEVSTUFMJy4gVHVybmluZwo+IHRoaXMgaW50
-byBhICdkZXBlbmRzIG9uJyBhZGRyZXNzZXMgdGhlIHByb2JsZW0uCj4gRm9yIGNvbXBsZXRlbmVz
-cywgSSdtIGFsc28gcmVtb3ZpbmcgdGhlIHJlZHVuZGFudCAnc2VsZWN0IFRIRVJNQUwnCj4gZnJv
-bSBJTlRFTF9NRU5MT1csIHNvIG5vIG90aGVyIGRyaXZlciB1c2VzIHRoYXQgc3RhdGVtZW50Lgo+
-CgpGb3IgUER4ODYgcGFydDoKCkFja2VkLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNo
-ZW5rb0BnbWFpbC5jb20+Cgo+IEZpeGVzOiBiY2RmYjVlNTZkYzUgKCJkcm0vZXRuYXZpdjogYWRk
-IGV0bmF2aXYgY29vbGluZyBkZXZpY2UiKQo+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4g
-PGFybmRAYXJuZGIuZGU+Cj4gLS0tCj4gIGRyaXZlcnMvYWNwaS9LY29uZmlnICAgICAgICAgICAg
-fCAyICstCj4gIGRyaXZlcnMvZ3B1L2RybS9ldG5hdml2L0tjb25maWcgfCAxICsKPiAgZHJpdmVy
-cy9wbGF0Zm9ybS94ODYvS2NvbmZpZyAgICB8IDEgLQo+ICAzIGZpbGVzIGNoYW5nZWQsIDIgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkv
-S2NvbmZpZyBiL2RyaXZlcnMvYWNwaS9LY29uZmlnCj4gaW5kZXggMDNjYzRlNzQwOTZiLi4yNTIz
-OTllZmE4YjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9hY3BpL0tjb25maWcKPiArKysgYi9kcml2
-ZXJzL2FjcGkvS2NvbmZpZwo+IEBAIC0xODQsNyArMTg0LDcgQEAgY29uZmlnIEFDUElfVklERU8K
-PiAgICAgICAgIHRyaXN0YXRlICJWaWRlbyIKPiAgICAgICAgIGRlcGVuZHMgb24gWDg2ICYmIEJB
-Q0tMSUdIVF9DTEFTU19ERVZJQ0UKPiAgICAgICAgIGRlcGVuZHMgb24gSU5QVVQKPiAtICAgICAg
-IHNlbGVjdCBUSEVSTUFMCj4gKyAgICAgICBkZXBlbmRzIG9uIFRIRVJNQUwKPiAgICAgICAgIGhl
-bHAKPiAgICAgICAgICAgVGhpcyBkcml2ZXIgaW1wbGVtZW50cyB0aGUgQUNQSSBFeHRlbnNpb25z
-IEZvciBEaXNwbGF5IEFkYXB0ZXJzCj4gICAgICAgICAgIGZvciBpbnRlZ3JhdGVkIGdyYXBoaWNz
-IGRldmljZXMgb24gbW90aGVyYm9hcmQsIGFzIHNwZWNpZmllZCBpbgo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYv
-S2NvbmZpZwo+IGluZGV4IDcxY2VlNGU5ZmVmYi4uMWQ2Yzc0NGU3OTI0IDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-ZXRuYXZpdi9LY29uZmlnCj4gQEAgLTMsNiArMyw3IEBAIGNvbmZpZyBEUk1fRVROQVZJVgo+ICAg
-ICAgICAgdHJpc3RhdGUgIkVUTkFWSVYgKERSTSBzdXBwb3J0IGZvciBWaXZhbnRlIEdQVSBJUCBj
-b3JlcykiCj4gICAgICAgICBkZXBlbmRzIG9uIERSTQo+ICAgICAgICAgZGVwZW5kcyBvbiBBUkNI
-X01YQyB8fCBBUkNIX0RPVkUgfHwgKEFSTSAmJiBDT01QSUxFX1RFU1QpCj4gKyAgICAgICBkZXBl
-bmRzIG9uIFRIRVJNQUwgfHwgVEhFUk1BTD1uCj4gICAgICAgICBkZXBlbmRzIG9uIE1NVQo+ICAg
-ICAgICAgc2VsZWN0IFNITUVNCj4gICAgICAgICBzZWxlY3QgU1lOQ19GSUxFCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9L
-Y29uZmlnCj4gaW5kZXggZTIyOWVhMzE3YjljLi43NmNlZDg3ZWZkZTUgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
-L0tjb25maWcKPiBAQCAtNTQ0LDcgKzU0NCw2IEBAIGNvbmZpZyBTRU5TT1JTX0hEQVBTCj4gIGNv
-bmZpZyBJTlRFTF9NRU5MT1cKPiAgICAgICAgIHRyaXN0YXRlICJUaGVybWFsIE1hbmFnZW1lbnQg
-ZHJpdmVyIGZvciBJbnRlbCBtZW5sb3cgcGxhdGZvcm0iCj4gICAgICAgICBkZXBlbmRzIG9uIEFD
-UElfVEhFUk1BTAo+IC0gICAgICAgc2VsZWN0IFRIRVJNQUwKPiAgICAgICAgIC0tLWhlbHAtLS0K
-PiAgICAgICAgICAgQUNQSSB0aGVybWFsIG1hbmFnZW1lbnQgZW5oYW5jZW1lbnQgZHJpdmVyIG9u
-Cj4gICAgICAgICAgIEludGVsIE1lbmxvdyBwbGF0Zm9ybS4KPiAtLQo+IDIuOS4wCj4KCgoKLS0g
-CldpdGggQmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+There is a macro to register and unregister modules in simple cases,
+Let's use it and clean up the driver.
+
+Cc: Alex Hung <alex.hung@canonical.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/hp-wireless.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
+index d860ea0d0e60..d6ea5e998fb8 100644
+--- a/drivers/platform/x86/hp-wireless.c
++++ b/drivers/platform/x86/hp-wireless.c
+@@ -110,21 +110,4 @@ static struct acpi_driver hpwl_driver = {
+ 	},
+ };
+ 
+-static int __init hpwl_init(void)
+-{
+-	int err;
+-
+-	err = acpi_bus_register_driver(&hpwl_driver);
+-	if (err)
+-		pr_err("Unable to register HP wireless control driver.\n");
+-
+-	return err;
+-}
+-
+-static void __exit hpwl_exit(void)
+-{
+-	acpi_bus_unregister_driver(&hpwl_driver);
+-}
+-
+-module_init(hpwl_init);
+-module_exit(hpwl_exit);
++module_acpi_driver(hpwl_driver);
+-- 
+2.11.0
