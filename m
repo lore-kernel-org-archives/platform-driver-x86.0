@@ -1,40 +1,72 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: [PATCH v2 0/2] hp-wmi: Fix dock status and tablet mode reporting
-Date: Wed, 19 Apr 2017 19:41:52 +0200
-Message-ID: <20170419174154.16518-1-carlo@caione.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f193.google.com ([209.85.128.193]:32928 "EHLO
-        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S968600AbdDSRmV (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Apr 2017 13:42:21 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, andy@infradead.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com
-Cc: Carlo Caione <carlo@endlessm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] drm/etnaviv: add thermal dependency
+Date: Wed, 19 Apr 2017 20:11:16 +0200
+Message-ID: <20170419181209.537907-1-arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>, David Airlie <airlied@linux.ie>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Sujith Thomas <sujith.thomas@intel.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org, Eduardo Valentin <edubezval@gmail.com>, linux-acpi@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Len Brown <lenb@kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Carlo Caione <carlo@endlessm.com>
-
-Several HP laptops cannot be put to sleep using the LID since systemd complains
-that the system is docked even though the laptop is not even dockable (see
-[1]).
-
-This is due to a bug in hp-wmi where the driver is failing to check for errors
-before creating the input switches.
-
-[1]: https://bugs.launchpad.net/ubuntu/+source/systemd/+bug/1574120
-
-changelog:
-
-v2:
- * Changed PATCH 1/2 to not shadow negative errors if any
-
-Carlo Caione (2):
-  hp-wmi: Do not shadow error values
-  hp-wmi: Fix detection for dock and tablet mode
-
- drivers/platform/x86/hp-wmi.c | 52 +++++++++++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 19 deletions(-)
-
--- 
-2.9.3
+V2hlbiBDT05GSUdfVEhFUk1BTCBpcyBlbmFibGVkIGFzIGEgbG9hZGFibGUgbW9kdWxlLCBhbmQg
+ZXRuYXZpdiBpcwpidWlsdC1pbiwgd2UgZ2V0IGEgbGluayBlcnJvcjoKCmRyaXZlcnMvZ3B1L2Ry
+bS9ldG5hdml2L2V0bmF2aXZfZ3B1Lm86IEluIGZ1bmN0aW9uIGBldG5hdml2X2dwdV9iaW5kJzoK
+ZXRuYXZpdl9ncHUuYzooLnRleHQuZXRuYXZpdl9ncHVfYmluZCsweDM0KTogdW5kZWZpbmVkIHJl
+ZmVyZW5jZSB0byBgdGhlcm1hbF9vZl9jb29saW5nX2RldmljZV9yZWdpc3RlcicKZXRuYXZpdl9n
+cHUuYzooLnRleHQuZXRuYXZpdl9ncHVfYmluZCsweGUwKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0
+byBgdGhlcm1hbF9jb29saW5nX2RldmljZV91bnJlZ2lzdGVyJwpkcml2ZXJzL2dwdS9kcm0vZXRu
+YXZpdi9ldG5hdml2X2dwdS5vOiBJbiBmdW5jdGlvbiBgZXRuYXZpdl9ncHVfdW5iaW5kJzoKZXRu
+YXZpdl9ncHUuYzooLnRleHQuZXRuYXZpdl9ncHVfdW5iaW5kKzB4ZjApOiB1bmRlZmluZWQgcmVm
+ZXJlbmNlIHRvIGB0aGVybWFsX2Nvb2xpbmdfZGV2aWNlX3VucmVnaXN0ZXInCgpUaGlzIGFkZHMg
+YSBLY29uZmlnIGRlcGVuZGVuY3kgdG8gcHJldmVudCBldG5hdml2IGZyb20gYmVpbmcgYnVpbHQt
+aW4Kd2l0aCBDT05GSUdfVEhFUk1BTD1tLCB3aGlsZSBzdGlsbCBhbGxvd2luZyB0aGUgdmFsaWQg
+Y29uZmlndXJhdGlvbnMuClVuZm9ydHVuYXRlbHksIHNpbXBseSBhZGRpbmcgdGhlIGRlcGVuZGVu
+Y3kgaGVyZSBicmVha3MgS2NvbmZpZyB0aHJvdWdoCmEgZGVwZW5kZW5jeSBsb29wIGludm9sdmlu
+ZyBsb3RzIG9mIHN5bWJvbHMgYWxsIHRoZSB3YXkgdW50aWwgQUNQSV9WSURFTywKd2hpY2ggaXMg
+dGhlIG9ubHkgdmlkZW8gZHJpdmVyIHRoYXQgZXhwbGljaXRseSBzZWxlY3RzICdUSEVSTUFMJy4g
+VHVybmluZwp0aGlzIGludG8gYSAnZGVwZW5kcyBvbicgYWRkcmVzc2VzIHRoZSBwcm9ibGVtLgpG
+b3IgY29tcGxldGVuZXNzLCBJJ20gYWxzbyByZW1vdmluZyB0aGUgcmVkdW5kYW50ICdzZWxlY3Qg
+VEhFUk1BTCcKZnJvbSBJTlRFTF9NRU5MT1csIHNvIG5vIG90aGVyIGRyaXZlciB1c2VzIHRoYXQg
+c3RhdGVtZW50LgoKRml4ZXM6IGJjZGZiNWU1NmRjNSAoImRybS9ldG5hdml2OiBhZGQgZXRuYXZp
+diBjb29saW5nIGRldmljZSIpClNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJu
+ZGIuZGU+Ci0tLQogZHJpdmVycy9hY3BpL0tjb25maWcgICAgICAgICAgICB8IDIgKy0KIGRyaXZl
+cnMvZ3B1L2RybS9ldG5hdml2L0tjb25maWcgfCAxICsKIGRyaXZlcnMvcGxhdGZvcm0veDg2L0tj
+b25maWcgICAgfCAxIC0KIDMgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9LY29uZmlnIGIvZHJpdmVycy9hY3Bp
+L0tjb25maWcKaW5kZXggMDNjYzRlNzQwOTZiLi4yNTIzOTllZmE4YjMgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvYWNwaS9LY29uZmlnCisrKyBiL2RyaXZlcnMvYWNwaS9LY29uZmlnCkBAIC0xODQsNyAr
+MTg0LDcgQEAgY29uZmlnIEFDUElfVklERU8KIAl0cmlzdGF0ZSAiVmlkZW8iCiAJZGVwZW5kcyBv
+biBYODYgJiYgQkFDS0xJR0hUX0NMQVNTX0RFVklDRQogCWRlcGVuZHMgb24gSU5QVVQKLQlzZWxl
+Y3QgVEhFUk1BTAorCWRlcGVuZHMgb24gVEhFUk1BTAogCWhlbHAKIAkgIFRoaXMgZHJpdmVyIGlt
+cGxlbWVudHMgdGhlIEFDUEkgRXh0ZW5zaW9ucyBGb3IgRGlzcGxheSBBZGFwdGVycwogCSAgZm9y
+IGludGVncmF0ZWQgZ3JhcGhpY3MgZGV2aWNlcyBvbiBtb3RoZXJib2FyZCwgYXMgc3BlY2lmaWVk
+IGluCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9LY29uZmlnIGIvZHJpdmVy
+cy9ncHUvZHJtL2V0bmF2aXYvS2NvbmZpZwppbmRleCA3MWNlZTRlOWZlZmIuLjFkNmM3NDRlNzky
+NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvS2NvbmZpZworKysgYi9kcml2
+ZXJzL2dwdS9kcm0vZXRuYXZpdi9LY29uZmlnCkBAIC0zLDYgKzMsNyBAQCBjb25maWcgRFJNX0VU
+TkFWSVYKIAl0cmlzdGF0ZSAiRVROQVZJViAoRFJNIHN1cHBvcnQgZm9yIFZpdmFudGUgR1BVIElQ
+IGNvcmVzKSIKIAlkZXBlbmRzIG9uIERSTQogCWRlcGVuZHMgb24gQVJDSF9NWEMgfHwgQVJDSF9E
+T1ZFIHx8IChBUk0gJiYgQ09NUElMRV9URVNUKQorCWRlcGVuZHMgb24gVEhFUk1BTCB8fCBUSEVS
+TUFMPW4KIAlkZXBlbmRzIG9uIE1NVQogCXNlbGVjdCBTSE1FTQogCXNlbGVjdCBTWU5DX0ZJTEUK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9LY29uZmlnCmluZGV4IGUyMjllYTMxN2I5Yy4uNzZjZWQ4N2VmZGU1IDEwMDY0NAot
+LS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L0tjb25maWcKQEAgLTU0NCw3ICs1NDQsNiBAQCBjb25maWcgU0VOU09SU19IREFQUwogY29u
+ZmlnIElOVEVMX01FTkxPVwogCXRyaXN0YXRlICJUaGVybWFsIE1hbmFnZW1lbnQgZHJpdmVyIGZv
+ciBJbnRlbCBtZW5sb3cgcGxhdGZvcm0iCiAJZGVwZW5kcyBvbiBBQ1BJX1RIRVJNQUwKLQlzZWxl
+Y3QgVEhFUk1BTAogCS0tLWhlbHAtLS0KIAkgIEFDUEkgdGhlcm1hbCBtYW5hZ2VtZW50IGVuaGFu
+Y2VtZW50IGRyaXZlciBvbgogCSAgSW50ZWwgTWVubG93IHBsYXRmb3JtLgotLSAKMi45LjAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
