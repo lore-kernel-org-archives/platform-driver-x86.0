@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo@caione.org>
-Subject: [PATCH v2 1/2] hp-wmi: Do not shadow error values
-Date: Wed, 19 Apr 2017 19:41:53 +0200
-Message-ID: <20170419174154.16518-2-carlo@caione.org>
+Subject: [PATCH v2 2/2] hp-wmi: Fix detection for dock and tablet mode
+Date: Wed, 19 Apr 2017 19:41:54 +0200
+Message-ID: <20170419174154.16518-3-carlo@caione.org>
 References: <20170419174154.16518-1-carlo@caione.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170419174154.16518-1-carlo@caione.org>
@@ -12,76 +12,101 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Carlo Caione <carlo@endlessm.com>
 
-All the helper functions (i.e. hp_wmi_dock_state, hp_wmi_tablet_state,
-...) using hp_wmi_perform_query to perform an HP WMI query shadow the
-returned value in case of error.
+The current driver code is not checking for the error values returned by
+'hp_wmi_dock_state()' and 'hp_wmi_tablet_state()' before passing the
+returned values down to 'input_report_switch()'. This error code is
+being translated to '1' in the input subsystem, reporting the wrong
+status.
 
-We return -EINVAL only when the HP WMI query returns a positive value
-(the specific error code) to not mix this up with the actual value
-returned by the helper function.
+The biggest problem caused by this issue is that several laptops are
+wrongly reported by the driver as docked, preventing them to be put to
+sleep using the LID (and in most cases they are not even dockable).
+
+With this patch we create the report switches only if we are able to
+read the dock and tablet mode status correctly from ACPI.
 
 Signed-off-by: Carlo Caione <carlo@endlessm.com>
 ---
- drivers/platform/x86/hp-wmi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 40 +++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 96ffda4..8c7773a 100644
+index 8c7773a..95fab81 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -248,7 +248,7 @@ static int hp_wmi_display_state(void)
- 	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, 0, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
--		return -EINVAL;
-+		return ret < 0 ? ret : -EINVAL;
- 	return state;
- }
+@@ -572,10 +572,12 @@ static void hp_wmi_notify(u32 value, void *context)
  
-@@ -258,7 +258,7 @@ static int hp_wmi_hddtemp_state(void)
- 	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, 0, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
--		return -EINVAL;
-+		return ret < 0 ? ret : -EINVAL;
- 	return state;
- }
+ 	switch (event_id) {
+ 	case HPWMI_DOCK_EVENT:
+-		input_report_switch(hp_wmi_input_dev, SW_DOCK,
+-				    hp_wmi_dock_state());
+-		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+-				    hp_wmi_tablet_state());
++		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
++			input_report_switch(hp_wmi_input_dev, SW_DOCK,
++					    hp_wmi_dock_state());
++		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
++			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
++					    hp_wmi_tablet_state());
+ 		input_sync(hp_wmi_input_dev);
+ 		break;
+ 	case HPWMI_PARK_HDD:
+@@ -644,6 +646,7 @@ static int __init hp_wmi_input_setup(void)
+ {
+ 	acpi_status status;
+ 	int err;
++	int val;
  
-@@ -268,7 +268,7 @@ static int hp_wmi_als_state(void)
- 	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 0, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
--		return -EINVAL;
-+		return ret < 0 ? ret : -EINVAL;
- 	return state;
- }
+ 	hp_wmi_input_dev = input_allocate_device();
+ 	if (!hp_wmi_input_dev)
+@@ -654,17 +657,26 @@ static int __init hp_wmi_input_setup(void)
+ 	hp_wmi_input_dev->id.bustype = BUS_HOST;
  
-@@ -279,7 +279,7 @@ static int hp_wmi_dock_state(void)
- 				       sizeof(state), sizeof(state));
+ 	__set_bit(EV_SW, hp_wmi_input_dev->evbit);
+-	__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
+-	__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
++
++	/* Dock */
++	val = hp_wmi_dock_state();
++	if (!(val < 0)) {
++		__set_bit(SW_DOCK, hp_wmi_input_dev->swbit);
++		input_report_switch(hp_wmi_input_dev, SW_DOCK, val);
++	}
++
++	/* Tablet mode */
++	val = hp_wmi_tablet_state();
++	if (!(val < 0)) {
++		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
++		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
++	}
  
- 	if (ret)
--		return -EINVAL;
-+		return ret < 0 ? ret : -EINVAL;
+ 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+ 	if (err)
+ 		goto err_free_dev;
  
- 	return state & 0x1;
- }
-@@ -290,7 +290,7 @@ static int hp_wmi_tablet_state(void)
- 	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
--		return ret;
-+		return ret < 0 ? ret : -EINVAL;
+ 	/* Set initial hardware state */
+-	input_report_switch(hp_wmi_input_dev, SW_DOCK, hp_wmi_dock_state());
+-	input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+-			    hp_wmi_tablet_state());
+ 	input_sync(hp_wmi_input_dev);
  
- 	return (state & 0x4) ? 1 : 0;
- }
-@@ -323,7 +323,7 @@ static int __init hp_wmi_enable_hotkeys(void)
- 	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
- 				       sizeof(value), 0);
- 	if (ret)
--		return -EINVAL;
-+		return ret < 0 ? ret : -EINVAL;
- 	return 0;
- }
+ 	if (!hp_wmi_bios_2009_later() && hp_wmi_bios_2008_later())
+@@ -950,10 +962,12 @@ static int hp_wmi_resume_handler(struct device *device)
+ 	 * changed.
+ 	 */
+ 	if (hp_wmi_input_dev) {
+-		input_report_switch(hp_wmi_input_dev, SW_DOCK,
+-				    hp_wmi_dock_state());
+-		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+-				    hp_wmi_tablet_state());
++		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
++			input_report_switch(hp_wmi_input_dev, SW_DOCK,
++					    hp_wmi_dock_state());
++		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
++			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
++					    hp_wmi_tablet_state());
+ 		input_sync(hp_wmi_input_dev);
+ 	}
  
 -- 
 2.9.3
