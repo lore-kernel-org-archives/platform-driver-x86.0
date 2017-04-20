@@ -1,28 +1,47 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: RFC: WMI Enhancements
-Date: Thu, 20 Apr 2017 07:17:07 -0700
-Message-ID: <20170420141707.GA22057@infradead.org>
-References: <20170412230854.GA11963@fury>
- <20170419075248.GD18887@pali>
- <f3684c95b91349d3b4e512370ac1faf4@ausx13mpc120.AMER.DELL.COM>
- <201704191854.51783@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 0/9] platform/x86: hp-wmi: Driver refactoring and
+ cleanups
+Date: Thu, 20 Apr 2017 13:19:43 -0700
+Message-ID: <20170420201943.GA3209@fury>
+References: <cover.1492654448.git.dvhart@infradead.org>
+ <CAHp75VfrOxBA6hbEds-dQaAtGcMaRhNo=tSZT+gnMeAASEasmA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:36814 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:49148 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1032186AbdDTORS (ORCPT
+        with ESMTP id S1033124AbdDTUTq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2017 10:17:18 -0400
+        Thu, 20 Apr 2017 16:19:46 -0400
 Content-Disposition: inline
-In-Reply-To: <201704191854.51783@pali>
+In-Reply-To: <CAHp75VfrOxBA6hbEds-dQaAtGcMaRhNo=tSZT+gnMeAASEasmA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Mario.Limonciello@dell.com, dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>
 
-With Andy's conversion of WMI to the driver model the GUIDs should
-be our device ids.  Which means WMI can support the dynamic device
-ID model, where you can echo a id to sysfs to bind an id - that way
-people could add the GUIDs on demand to the pass through driver if
-they need them even with the whitelist approach.
+On Thu, Apr 20, 2017 at 10:38:56AM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 20, 2017 at 5:25 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > From: "Darren Hart (VMware)" <dvhart@infradead.org>
+> >
+> > This series factors out some redundant code, cleans up a number of style issues,
+> > modernizes the sysfs usage, and cleans up the return paths. All told, the driver
+> > is reduced in size by 37 lines (3.6%).
+> >
+> > I do not have an HP laptop, so I'm hoping Carlo can help out with some testing.
+> > In particular we need to verify that hotkeys and sysfs continue to work as
+> > before.
+> >
+> 
+> Series looks good to me except patch 2. So,
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> with above exception.
+
+I was on the fence with this one, which is why I separated it out. I'll drop it.
+Thanks for the review.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
