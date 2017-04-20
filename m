@@ -1,39 +1,45 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] hp-wmi: Do not shadow error values
-Date: Wed, 19 Apr 2017 13:56:44 -0700
-Message-ID: <20170419205644.GD17351@fury>
-References: <20170419203639.28788-1-carlo@caione.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH v1 0/9] platform/x86: hp-wmi: Driver refactoring and cleanups
+Date: Wed, 19 Apr 2017 19:25:12 -0700
+Message-ID: <cover.1492654448.git.dvhart@infradead.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41048 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:33808 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S938126AbdDSU4r (ORCPT
+        with ESMTP id S933601AbdDTCZu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Apr 2017 16:56:47 -0400
-Content-Disposition: inline
-In-Reply-To: <20170419203639.28788-1-carlo@caione.org>
+        Wed, 19 Apr 2017 22:25:50 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlo Caione <carlo@caione.org>
-Cc: andy@infradead.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Carlo Caione <carlo@endlessm.com>
+To: dvhart@infradead.org
+Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, carlo@caione.org
 
-On Wed, Apr 19, 2017 at 10:36:39PM +0200, Carlo Caione wrote:
-> From: Carlo Caione <carlo@endlessm.com>
-> 
-> All the helper functions (i.e. hp_wmi_dock_state, hp_wmi_tablet_state,
-> ...) using hp_wmi_perform_query to perform an HP WMI query shadow the
-> returned value in case of error.
-> 
-> We return -EINVAL only when the HP WMI query returns a positive value
-> (the specific error code) to not mix this up with the actual value
-> returned by the helper function.
-> 
-> Signed-off-by: Carlo Caione <carlo@endlessm.com>
+From: "Darren Hart (VMware)" <dvhart@infradead.org>
 
-Queued to testing, thanks Carlo.
+This series factors out some redundant code, cleans up a number of style issues,
+modernizes the sysfs usage, and cleans up the return paths. All told, the driver
+is reduced in size by 37 lines (3.6%).
 
+I do not have an HP laptop, so I'm hoping Carlo can help out with some testing.
+In particular we need to verify that hotkeys and sysfs continue to work as
+before.
+
+This series is also available here for convenience:
+git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git hp-wmi
+
+
+Darren Hart (VMware) (9):
+  platform/x86: hp-wmi: Cleanup local variable declarations
+  platform/x86: hp-wmi: Add bios_args initializer
+  platform/x86: hp-wmi: Standardize enum usage for constants
+  platform/x86: hp-wmi: Refactor redundant HPWMI_READ functions
+  platform/x86: hp-wmi: Cleanup wireless get_(hw|sw)state functions
+  platform/x86: hp-wmi: Refactor dock and tablet state fetchers
+  platform/x86: hp-wmi: Use DEVICE_ATTR_(RO|RW) helper macros
+  platform/x86: hp-wmi: Do not shadow errors in sysfs show functions
+  platform/x86: hp-wmi: Cleanup exit paths
+
+ drivers/platform/x86/hp-wmi.c | 385 +++++++++++++++++++-----------------------
+ 1 file changed, 174 insertions(+), 211 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.9.3
