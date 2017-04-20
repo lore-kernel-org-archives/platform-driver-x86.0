@@ -1,419 +1,127 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 3/9] platform/x86: hp-wmi: Standardize enum usage for
- constants
-Date: Thu, 20 Apr 2017 13:31:39 -0700
-Message-ID: <20170420203139.GB3209@fury>
-References: <cover.1492654448.git.dvhart@infradead.org>
- <cc3b1c2116f52fd13a2f9a64948d48bb380dc88a.1492654448.git.dvhart@infradead.org>
+Subject: Re: RFC: WMI Enhancements
+Date: Thu, 20 Apr 2017 13:44:36 -0700
+Message-ID: <20170420204436.GC3209@fury>
+References: <20170412230854.GA11963@fury>
+ <20170419075248.GD18887@pali>
+ <f3684c95b91349d3b4e512370ac1faf4@ausx13mpc120.AMER.DELL.COM>
+ <201704191854.51783@pali>
+ <4e3e507b116443298427002c5aafed7f@ausx13mpc120.AMER.DELL.COM>
+ <20170420131431.GM18887@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:53060 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1031651AbdDTUbm (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Apr 2017 16:31:42 -0400
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cc3b1c2116f52fd13a2f9a64948d48bb380dc88a.1492654448.git.dvhart@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, carlo@caione.org
+In-Reply-To: <20170420131431.GM18887@pali>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Mario.Limonciello@dell.com, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 19, 2017 at 07:25:15PM -0700, Darren Hart wrote:
-> From: "Darren Hart (VMware)" <dvhart@infradead.org>
+On Thu, Apr 20, 2017 at 03:14:31PM +0200, Pali Rohár wrote:
+> On Wednesday 19 April 2017 17:24:00 Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > > Sent: Wednesday, April 19, 2017 11:55 AM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: dvhart@infradead.org; rjw@rjwysocki.net; luto@amacapital.net;
+> > > len.brown@intel.com; corentin.chary@gmail.com; luto@kernel.org;
+> > > andriy.shevchenko@linux.intel.com; linux-kernel@vger.kernel.org; platform-
+> > > driver-x86@vger.kernel.org; linux-pm@vger.kernel.org
+> > > Subject: Re: RFC: WMI Enhancements
+> > > 
+> > > On Wednesday 19 April 2017 18:29:53 Mario.Limonciello@dell.com wrote:
+> > > > > As wrote above, I'm fine with explicit whitelist of WMI GUIDs which
+> > > > > will be exported to userspace after communication with vendor.
+> > > >
+> > > > What about GUID's not yet used by kernel drivers?  Would those
+> > > > default to whitelist default to blacklist?  My preference would be
+> > > > to default to whitelist. This allows new GUID's to be added later
+> > > > without needing to modify kernel for something that kernel won't
+> > > > need to do anything immediately.
+> > > 
+> > > I understood it as there would be explicit whitelist in kernel and new
+> > > GUIDs would be needed to add into whitelist, even those which do not
+> > > have kernel wmi driver.
+> > > 
+> > > Exporting all GUIDs (to userspace) which are not bind to kernel driver
+> > > has one big problem. If kernel introduce new wmi driver for such GUID
+> > > then it block userspace to access it or at least would need to provide
+> > > audit filter and something would be probably filtered. It means that
+> > > some userspace applications which would use that GUIDs stops working
+> > > after upgrading to new kernel. And we can be in situation where *user*
+> > > need to decide: either use 3rd party userspace application from vendor
+> > > which provide some special settings for your laptop, or use kernel
+> > > module which provides standard rfkill/led/input class driver.
+> > > 
+> > 
+> > If this proposal goes forward it would sound like to me an audit filter
+> > would become a prerequisite for any new WMI kernel driver.  This is not
+> > a problem to me.
 > 
-> Use enums consistently throughout the hp-wmi driver for groups of
-> related constants. Use hex and align the assignment within groups. Move
-> the *QUERY constants into an enum, create a new enum defining the READ,
-> WRITE, and ODM constants and use them instead of 0 and 1 at the call
-> sites.
+> Not for any wmi driver, only for those which would like to export wmi
+> device to userspace.
+
+Correct.
+
 > 
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> ---
->  drivers/platform/x86/hp-wmi.c | 119 +++++++++++++++++++++++-------------------
->  1 file changed, 64 insertions(+), 55 deletions(-)
+> > This audience recommends the way for users to configure the system but 
+> > of course cannot stop users from doing what they decide to do.  
 > 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index aa9d99c..60d1e4c 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
+> Of course, but in above hypothetical example, user is in situation where
+> is unable to use both 3rd vendor application and together kernel
+> rfkill/led/input driver. User must decide (by e.g. modprobe blacklist or
+> manual module loading) what want to use.
+> 
+> But ideal solution is that both 3rd vendor application for firmware
+> settings and also rfkill kernel driver would work together without need
+> to rmmod/modprobe modules and without restarting 3rd vendor application.
+> 
+> > We're all in agreement that the kernel should keep responsibility for some
+> > of these functionalities.
+> > If a new kernel WMI driver duplicates functionality that happens to find its 
+> > way in userspace and the kernel audits that out yes the userspace 
+> > application may start to  have less functionality, but better support 
+> > would live in the kernel and the user would be better supported by 
+> > the stack (for example could use standard rfkill userspace utilities).
+> 
 
-...
+Pali has raised a very good point which I want to get some feedback from Linus,
+and perhaps tglx, hpa, and gregkh on. While Mario is expressing a very pragmatic
+approach which I certainly appreciate, we have a very strong position that we do
+not break userspace.
 
-> +enum hp_wmi_command {
-> +	HPWMI_READ	= 0x00,
-> +	HPWMI_WRITE	= 0x01,
-> +	HPWMI_ODM	= 0x03,
-> +};
-> +
->  #define BIOS_ARGS_INIT(write, ctype, size)				\
->  	(struct bios_args)	{	.signature = 0x55434553,	\
->  					.command = (write) ? 0x2 : 0x1,	\
-> @@ -177,8 +186,8 @@ static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
->  /*
->   * hp_wmi_perform_query
->   *
-> - * query:	The commandtype -> What should be queried
-> - * write:	The command -> 0 read, 1 write, 3 ODM specific
-> + * query:	The commandtype (enum hp_wmi_commandtype)
-> + * write:	The command (enum hp_wmi_command)
+There have been exceptions for specific pseudo filesystems and such, but they
+are rare. We would need to document the WMI commitment from the kernel to
+userspace (e.g. any call may be filtered based on current Linux kernel WMI
+usage, which may change over time). This sounds troublesome... will give this
+some more thought.
 
-Eeek, I failed to use the enum directly and was still using the ternary operator
-in the BIOS_ARGS_INIT above. Luckily, with read as 0 and write as non-zero in
-the new ENUMs, and no usage of ODM, things happened to just work. Updated patch
-below.
+> Ok. So it is acceptable solution/API/ABI for you & other Dell people?
+> Or is something more or different needed?
+> 
+> Darren, I hope that I understood your proposal with explicit whitelist
+> correctly. And is there already another vendor which want to use wmi
+> userspace on linux?
 
-I've now:
+It might be moot with Christoph's dynamic ID comment which I need to go review
+in detail. Putting that aside for a moment, what I intended was for the platform
+driver to whitelist GUIDs. But, that doesn't necessarily mean it has an explicit
+list. The platform driver could have a blacklist and then walk through all
+available GUIDs and export everything except those on the blacklist.
 
-* dropped the BIOS_ARGS_INIT per Andy's recommendation.
-* Renumbered the hp_wmi_command to match the ternary assignment:
-  HPWMI_READ = 0x01,
-  HPWMI_WRITE = 0x02,
-* Assigned bios_args.command with one of the enums directly
-* replaced the "int write" argument with "enum hp_wmi_command command"
+Now with Christoph's idea, we may be able to maintain a blacklist of GUIDs and a
+whitelist of platforms which CAN export WMI, but not export any until userspace
+requests a specific GUID be exported at which point it is checked against the
+blacklist and then exported accordingly, at which point the WMI method filters
+handle the rest.
 
-As follows:
-
-Queued to testing, please let me know if you have any concerns.
-
-From d8193cff33906e24ac1830ecb2ca95833d058a3a Mon Sep 17 00:00:00 2001
-Message-Id: <d8193cff33906e24ac1830ecb2ca95833d058a3a.1492719993.git.dvhart@infradead.org>
-From: "Darren Hart (VMware)" <dvhart@infradead.org>
-Date: Wed, 19 Apr 2017 15:42:01 -0700
-Subject: [PATCH] platform/x86: hp-wmi: Standardize enum usage for constants
-
-Use enums consistently throughout the hp-wmi driver for groups of
-related constants. Use hex and align the assignment within groups. Move
-the *QUERY constants into an enum, create a new enum defining the READ,
-WRITE, and ODM constants and use them instead of 0 and 1 at the call
-sites. Set the command directly instead of using the ternary operator
-since both 1 and 3 as previously documented would result in the command
-being set to 0x2.
-
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Tested-by: Carlo Caione <carlo@endlessm.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/platform/x86/hp-wmi.c | 132 +++++++++++++++++++++++-------------------
- 1 file changed, 74 insertions(+), 58 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index e772105..2073f1e 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -48,41 +48,29 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
- 
--#define HPWMI_DISPLAY_QUERY 0x1
--#define HPWMI_HDDTEMP_QUERY 0x2
--#define HPWMI_ALS_QUERY 0x3
--#define HPWMI_HARDWARE_QUERY 0x4
--#define HPWMI_WIRELESS_QUERY 0x5
--#define HPWMI_BIOS_QUERY 0x9
--#define HPWMI_FEATURE_QUERY 0xb
--#define HPWMI_HOTKEY_QUERY 0xc
--#define HPWMI_FEATURE2_QUERY 0xd
--#define HPWMI_WIRELESS2_QUERY 0x1b
--#define HPWMI_POSTCODEERROR_QUERY 0x2a
--
- enum hp_wmi_radio {
--	HPWMI_WIFI = 0,
--	HPWMI_BLUETOOTH = 1,
--	HPWMI_WWAN = 2,
--	HPWMI_GPS = 3,
-+	HPWMI_WIFI	= 0x0,
-+	HPWMI_BLUETOOTH	= 0x1,
-+	HPWMI_WWAN	= 0x2,
-+	HPWMI_GPS	= 0x3,
- };
- 
- enum hp_wmi_event_ids {
--	HPWMI_DOCK_EVENT = 1,
--	HPWMI_PARK_HDD = 2,
--	HPWMI_SMART_ADAPTER = 3,
--	HPWMI_BEZEL_BUTTON = 4,
--	HPWMI_WIRELESS = 5,
--	HPWMI_CPU_BATTERY_THROTTLE = 6,
--	HPWMI_LOCK_SWITCH = 7,
--	HPWMI_LID_SWITCH = 8,
--	HPWMI_SCREEN_ROTATION = 9,
--	HPWMI_COOLSENSE_SYSTEM_MOBILE = 0x0A,
--	HPWMI_COOLSENSE_SYSTEM_HOT = 0x0B,
--	HPWMI_PROXIMITY_SENSOR = 0x0C,
--	HPWMI_BACKLIT_KB_BRIGHTNESS = 0x0D,
--	HPWMI_PEAKSHIFT_PERIOD = 0x0F,
--	HPWMI_BATTERY_CHARGE_PERIOD = 0x10,
-+	HPWMI_DOCK_EVENT		= 0x01,
-+	HPWMI_PARK_HDD			= 0x02,
-+	HPWMI_SMART_ADAPTER		= 0x03,
-+	HPWMI_BEZEL_BUTTON		= 0x04,
-+	HPWMI_WIRELESS			= 0x05,
-+	HPWMI_CPU_BATTERY_THROTTLE	= 0x06,
-+	HPWMI_LOCK_SWITCH		= 0x07,
-+	HPWMI_LID_SWITCH		= 0x08,
-+	HPWMI_SCREEN_ROTATION		= 0x09,
-+	HPWMI_COOLSENSE_SYSTEM_MOBILE	= 0x0A,
-+	HPWMI_COOLSENSE_SYSTEM_HOT	= 0x0B,
-+	HPWMI_PROXIMITY_SENSOR		= 0x0C,
-+	HPWMI_BACKLIT_KB_BRIGHTNESS	= 0x0D,
-+	HPWMI_PEAKSHIFT_PERIOD		= 0x0F,
-+	HPWMI_BATTERY_CHARGE_PERIOD	= 0x10,
- };
- 
- struct bios_args {
-@@ -93,6 +81,34 @@ struct bios_args {
- 	u32 data;
- };
- 
-+enum hp_wmi_commandtype {
-+	HPWMI_DISPLAY_QUERY		= 0x01,
-+	HPWMI_HDDTEMP_QUERY		= 0x02,
-+	HPWMI_ALS_QUERY			= 0x03,
-+	HPWMI_HARDWARE_QUERY		= 0x04,
-+	HPWMI_WIRELESS_QUERY		= 0x05,
-+	HPWMI_BATTERY_QUERY		= 0x07,
-+	HPWMI_BIOS_QUERY		= 0x09,
-+	HPWMI_FEATURE_QUERY		= 0x0b,
-+	HPWMI_HOTKEY_QUERY		= 0x0c,
-+	HPWMI_FEATURE2_QUERY		= 0x0d,
-+	HPWMI_WIRELESS2_QUERY		= 0x1b,
-+	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
-+};
-+
-+enum hp_wmi_command {
-+	HPWMI_READ	= 0x01,
-+	HPWMI_WRITE	= 0x02,
-+	HPWMI_ODM	= 0x03,
-+};
-+
-+#define BIOS_ARGS_INIT(write, ctype, size)				\
-+	(struct bios_args)	{	.signature = 0x55434553,	\
-+					.command = (write) ? 0x2 : 0x1,	\
-+					.commandtype = (ctype),		\
-+					.datasize = (size),		\
-+					.data = 0 }
-+
- struct bios_return {
- 	u32 sigpass;
- 	u32 return_code;
-@@ -170,8 +186,8 @@ static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
- /*
-  * hp_wmi_perform_query
-  *
-- * query:	The commandtype -> What should be queried
-- * write:	The command -> 0 read, 1 write, 3 ODM specific
-+ * query:	The commandtype (enum hp_wmi_commandtype)
-+ * write:	The command (enum hp_wmi_command)
-  * buffer:	Buffer used as input and/or output
-  * insize:	Size of input buffer
-  * outsize:	Size of output buffer
-@@ -182,20 +198,20 @@ static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
-  *         -EINVAL if the output buffer size exceeds buffersize
-  *
-  * Note: The buffersize must at least be the maximum of the input and output
-- *       size. E.g. Battery info query (0x7) is defined to have 1 byte input
-+ *       size. E.g. Battery info query is defined to have 1 byte input
-  *       and 128 byte output. The caller would do:
-  *       buffer = kzalloc(128, GFP_KERNEL);
-- *       ret = hp_wmi_perform_query(0x7, 0, buffer, 1, 128)
-+ *       ret = hp_wmi_perform_query(HPWMI_BATTERY_QUERY, HPWMI_READ, buffer, 1, 128)
-  */
--static int hp_wmi_perform_query(int query, int write, void *buffer,
--				int insize, int outsize)
-+static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
-+				void *buffer, int insize, int outsize)
- {
- 	struct bios_return *bios_return;
- 	int actual_outsize;
- 	union acpi_object *obj;
- 	struct bios_args args = {
- 		.signature = 0x55434553,
--		.command = write ? 0x2 : 0x1,
-+		.command = command,
- 		.commandtype = query,
- 		.datasize = insize,
- 		.data = 0,
-@@ -245,7 +261,7 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
- static int hp_wmi_display_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -255,7 +271,7 @@ static int hp_wmi_display_state(void)
- static int hp_wmi_hddtemp_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -265,7 +281,7 @@ static int hp_wmi_hddtemp_state(void)
- static int hp_wmi_als_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -275,7 +291,7 @@ static int hp_wmi_als_state(void)
- static int hp_wmi_dock_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 
- 	if (ret)
-@@ -287,7 +303,7 @@ static int hp_wmi_dock_state(void)
- static int hp_wmi_tablet_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -298,7 +314,7 @@ static int hp_wmi_tablet_state(void)
- static int __init hp_wmi_bios_2008_later(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (!ret)
- 		return 1;
-@@ -309,7 +325,7 @@ static int __init hp_wmi_bios_2008_later(void)
- static int __init hp_wmi_bios_2009_later(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (!ret)
- 		return 1;
-@@ -320,7 +336,7 @@ static int __init hp_wmi_bios_2009_later(void)
- static int __init hp_wmi_enable_hotkeys(void)
- {
- 	int value = 0x6e;
--	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
-+	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, HPWMI_WRITE, &value,
- 				       sizeof(value), 0);
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -333,7 +349,7 @@ static int hp_wmi_set_block(void *data, bool blocked)
- 	int query = BIT(r + 8) | ((!blocked) << r);
- 	int ret;
- 
--	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 1,
-+	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_WRITE,
- 				   &query, sizeof(query), 0);
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -349,7 +365,7 @@ static bool hp_wmi_get_sw_state(enum hp_wmi_radio r)
- 	int mask = 0x200 << (r * 8);
- 	int wireless = 0;
- 
--	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0,
-+	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ,
- 			     &wireless, sizeof(wireless),
- 			     sizeof(wireless));
- 	/* TBD: Pass error */
-@@ -365,7 +381,7 @@ static bool hp_wmi_get_hw_state(enum hp_wmi_radio r)
- 	int mask = 0x800 << (r * 8);
- 	int wireless = 0;
- 
--	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0,
-+	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ,
- 			     &wireless, sizeof(wireless),
- 			     sizeof(wireless));
- 	/* TBD: Pass error */
-@@ -381,7 +397,7 @@ static int hp_wmi_rfkill2_set_block(void *data, bool blocked)
- 	int rfkill_id = (int)(long)data;
- 	char buffer[4] = { 0x01, 0x00, rfkill_id, !blocked };
- 
--	if (hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, 1,
-+	if (hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_WRITE,
- 				   buffer, sizeof(buffer), 0))
- 		return -EINVAL;
- 	return 0;
-@@ -396,7 +412,7 @@ static int hp_wmi_rfkill2_refresh(void)
- 	struct bios_rfkill2_state state;
- 	int err, i;
- 
--	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, 0, &state,
-+	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
- 				   0, sizeof(state));
- 	if (err)
- 		return err;
-@@ -423,7 +439,7 @@ static int hp_wmi_rfkill2_refresh(void)
- static int hp_wmi_post_code_state(void)
- {
- 	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, 0, &state,
-+	int ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -489,7 +505,7 @@ static ssize_t set_als(struct device *dev, struct device_attribute *attr,
- 		       const char *buf, size_t count)
- {
- 	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 1, &tmp,
-+	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -510,7 +526,7 @@ static ssize_t set_postcode(struct device *dev, struct device_attribute *attr,
- 
- 	/* Clear the POST error code. It is kept until until cleared. */
- 	tmp = (u32) tmp2;
--	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, 1, &tmp,
-+	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
-@@ -583,7 +599,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_SMART_ADAPTER:
- 		break;
- 	case HPWMI_BEZEL_BUTTON:
--		ret = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
-+		ret = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, HPWMI_READ,
- 					   &key_code,
- 					   sizeof(key_code),
- 					   sizeof(key_code));
-@@ -718,12 +734,12 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- {
- 	int err, wireless = 0;
- 
--	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0, &wireless,
-+	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
- 				   sizeof(wireless), sizeof(wireless));
- 	if (err)
- 		return err;
- 
--	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 1, &wireless,
-+	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_WRITE, &wireless,
- 				   sizeof(wireless), 0);
- 	if (err)
- 		return err;
-@@ -803,7 +819,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 	struct bios_rfkill2_state state;
- 	int err, i;
- 
--	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, 0, &state,
-+	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
- 				   0, sizeof(state));
- 	if (err)
- 		return err;
--- 
-2.9.3
-
+> 
+> -- 
+> Pali Rohár
+> pali.rohar@gmail.com
+> 
 
 -- 
 Darren Hart
