@@ -1,190 +1,172 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: [PATCH 4/9] platform/x86: hp-wmi: Refactor redundant HPWMI_READ functions
-Date: Wed, 19 Apr 2017 19:25:16 -0700
-Message-ID: <1dd50801a0dbb8bd6ec1411b5c644a01a35b0136.1492654448.git.dvhart@infradead.org>
+Subject: [PATCH 9/9] platform/x86: hp-wmi: Cleanup exit paths
+Date: Wed, 19 Apr 2017 19:25:21 -0700
+Message-ID: <dda34c89b29681e4bb3bf614746a561c5a820476.1492654448.git.dvhart@infradead.org>
 References: <cover.1492654448.git.dvhart@infradead.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:52437 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1763359AbdDTC0Z (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 19 Apr 2017 22:26:25 -0400
 In-Reply-To: <cover.1492654448.git.dvhart@infradead.org>
 In-Reply-To: <cover.1492654448.git.dvhart@infradead.org>
 References: <cover.1492654448.git.dvhart@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org
 Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, carlo@caione.org
-List-Id: platform-driver-x86.vger.kernel.org
 
 From: "Darren Hart (VMware)" <dvhart@infradead.org>
 
-Several functions perform the same WMI read int with different query
-arguments. Refactor this into a single hp_wmi_read_int function.
+Several exit paths were more complex than they needed to be. Remove
+superfluous conditionals, use labels common cleanup, do not shadow
+negative error codes.
 
 Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 ---
- drivers/platform/x86/hp-wmi.c | 82 +++++++++++++------------------------------
- 1 file changed, 24 insertions(+), 58 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 63 ++++++++++++++++++++++---------------------
+ 1 file changed, 33 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 60d1e4c..758c229 100644
+index 90b8652..effb5d5 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -252,55 +252,35 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
- 	return 0;
+@@ -217,7 +217,7 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
+ 	struct bios_return *bios_return;
+ 	union acpi_object *obj;
+ 	int actual_outsize;
+-	u32 rc;
++	int ret = 0;
+ 
+ 	if (WARN_ON(insize > sizeof(args.data)))
+ 		return -EINVAL;
+@@ -229,32 +229,32 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
+ 
+ 	if (!obj)
+ 		return -EINVAL;
+-	else if (obj->type != ACPI_TYPE_BUFFER) {
+-		kfree(obj);
+-		return -EINVAL;
++
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		ret = -EINVAL;
++		goto out_free;
+ 	}
+ 
+ 	bios_return = (struct bios_return *)obj->buffer.pointer;
+-	rc = bios_return->return_code;
++	ret = bios_return->return_code;
+ 
+-	if (rc) {
+-		if (rc != HPWMI_RET_UNKNOWN_CMDTYPE)
+-			pr_warn("query 0x%x returned error 0x%x\n", query, rc);
+-		kfree(obj);
+-		return rc;
++	if (ret) {
++		if (ret != HPWMI_RET_UNKNOWN_CMDTYPE)
++			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
++		goto out_free;
+ 	}
+ 
+-	if (!outsize) {
+-		/* ignore output data */
+-		kfree(obj);
+-		return 0;
+-	}
++	/* Ignore output data of zero size */
++	if (!outsize)
++		goto out_free;
+ 
+ 	actual_outsize = min(outsize, (int)(obj->buffer.length - sizeof(*bios_return)));
+ 	memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual_outsize);
+ 	memset(buffer + actual_outsize, 0, outsize - actual_outsize);
++
++out_free:
+ 	kfree(obj);
+-	return 0;
++	return ret;
  }
  
--static int hp_wmi_display_state(void)
-+static int hp_wmi_read_int(int query)
+ static int hp_wmi_read_int(int query)
+@@ -307,9 +307,8 @@ static int __init hp_wmi_enable_hotkeys(void)
+ 	int value = 0x6e;
+ 	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, HPWMI_WRITE, &value,
+ 				       sizeof(value), 0);
+-	if (ret)
+-		return ret < 0 ? ret : -EINVAL;
+-	return 0;
++
++	return ret <= 0 ? ret : -EINVAL;
+ }
+ 
+ static int hp_wmi_set_block(void *data, bool blocked)
+@@ -320,9 +319,8 @@ static int hp_wmi_set_block(void *data, bool blocked)
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_WRITE,
+ 				   &query, sizeof(query), 0);
+-	if (ret)
+-		return ret < 0 ? ret : -EINVAL;
+-	return 0;
++
++	return ret <= 0 ? ret : -EINVAL;
+ }
+ 
+ static const struct rfkill_ops hp_wmi_rfkill_ops = {
+@@ -357,11 +355,12 @@ static int hp_wmi_rfkill2_set_block(void *data, bool blocked)
  {
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
--	return state;
--}
-+	int val = 0, ret;
+ 	int rfkill_id = (int)(long)data;
+ 	char buffer[4] = { 0x01, 0x00, rfkill_id, !blocked };
++	int ret;
  
--static int hp_wmi_hddtemp_state(void)
--{
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
--	return state;
--}
-+	ret = hp_wmi_perform_query(query, HPWMI_READ, &val,
-+				   sizeof(val), sizeof(val));
+-	if (hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_WRITE,
+-				   buffer, sizeof(buffer), 0))
+-		return -EINVAL;
+-	return 0;
++	ret = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_WRITE,
++				   buffer, sizeof(buffer), 0);
++
++	return ret <= 0 ? ret : -EINVAL;
+ }
  
--static int hp_wmi_als_state(void)
--{
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
+ static const struct rfkill_ops hp_wmi_rfkill2_ops = {
+@@ -472,13 +471,17 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+ 	u32 tmp;
+ 
+ 	ret = kstrtoul(buf, 10, &tmp2);
+-	if (ret || tmp2 != 1)
+-		return -EINVAL;
++	if (!ret && tmp2 != 1)
++		ret = -EINVAL;
++	if (ret)
++		goto out;
+ 
+ 	/* Clear the POST error code. It is kept until until cleared. */
+ 	tmp = (u32) tmp2;
+ 	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_WRITE, &tmp,
+ 				       sizeof(tmp), sizeof(tmp));
++
++out:
  	if (ret)
  		return ret < 0 ? ret : -EINVAL;
--	return state;
-+
-+	return val;
- }
  
- static int hp_wmi_dock_state(void)
- {
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
-+	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+@@ -683,7 +686,7 @@ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
+ 	int err, wireless;
  
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
-+	if (state < 0)
-+		return state;
- 
- 	return state & 0x1;
- }
- 
- static int hp_wmi_tablet_state(void)
- {
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
-+	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
-+
-+	if (state < 0)
-+		return state;
- 
- 	return (state & 0x4) ? 1 : 0;
- }
-@@ -430,20 +410,10 @@ static int hp_wmi_rfkill2_refresh(void)
- 	return 0;
- }
- 
--static int hp_wmi_post_code_state(void)
--{
--	int state = 0;
--	int ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, HPWMI_READ, &state,
--				       sizeof(state), sizeof(state));
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
--	return state;
--}
--
- static ssize_t show_display(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
--	int value = hp_wmi_display_state();
-+	int value = hp_wmi_read_int(HPWMI_DISPLAY_QUERY);
- 	if (value < 0)
- 		return -EINVAL;
- 	return sprintf(buf, "%d\n", value);
-@@ -452,7 +422,7 @@ static ssize_t show_display(struct device *dev, struct device_attribute *attr,
- static ssize_t show_hddtemp(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
--	int value = hp_wmi_hddtemp_state();
-+	int value = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
- 	if (value < 0)
- 		return -EINVAL;
- 	return sprintf(buf, "%d\n", value);
-@@ -461,7 +431,7 @@ static ssize_t show_hddtemp(struct device *dev, struct device_attribute *attr,
- static ssize_t show_als(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
--	int value = hp_wmi_als_state();
-+	int value = hp_wmi_read_int(HPWMI_ALS_QUERY);
- 	if (value < 0)
- 		return -EINVAL;
- 	return sprintf(buf, "%d\n", value);
-@@ -489,7 +459,7 @@ static ssize_t show_postcode(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
- 	/* Get the POST error code of previous boot failure. */
--	int value = hp_wmi_post_code_state();
-+	int value = hp_wmi_read_int(HPWMI_POSTCODEERROR_QUERY);
- 	if (value < 0)
- 		return -EINVAL;
- 	return sprintf(buf, "0x%x\n", value);
-@@ -540,9 +510,9 @@ static void hp_wmi_notify(u32 value, void *context)
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
- 	u32 event_id, event_data;
- 	union acpi_object *obj;
--	int key_code = 0, ret;
- 	acpi_status status;
- 	u32 *location;
-+	int key_code;
- 
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
-@@ -593,11 +563,8 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_SMART_ADAPTER:
- 		break;
- 	case HPWMI_BEZEL_BUTTON:
--		ret = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, HPWMI_READ,
--					   &key_code,
--					   sizeof(key_code),
--					   sizeof(key_code));
--		if (ret)
-+		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
-+		if (key_code < 0)
- 			break;
- 
- 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
-@@ -726,12 +693,11 @@ static void cleanup_sysfs(struct platform_device *device)
- 
- static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- {
--	int err, wireless = 0;
-+	int err, wireless;
- 
--	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_READ, &wireless,
--				   sizeof(wireless), sizeof(wireless));
--	if (err)
--		return err;
-+	wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
-+	if (wireless)
-+		return wireless;
+ 	wireless = hp_wmi_read_int(HPWMI_WIRELESS_QUERY);
+-	if (wireless)
++	if (wireless < 0)
+ 		return wireless;
  
  	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, HPWMI_WRITE, &wireless,
- 				   sizeof(wireless), 0);
+@@ -769,7 +772,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+ 				   0, sizeof(state));
+ 	if (err)
+-		return err;
++		return err < 0 ? err : -EINVAL;
+ 
+ 	if (state.count > HPWMI_MAX_RFKILL2_DEVICES) {
+ 		pr_warn("unable to parse 0x1b query output\n");
 -- 
 2.9.3
