@@ -1,93 +1,114 @@
-From: joeyli <jlee@suse.com>
+From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH] drivers/platform/x86: Add driver for INT0002 ACPI device
-Date: Fri, 21 Apr 2017 18:28:52 +0800
-Message-ID: <20170421102852.GE7636@linux-l9pv.suse>
+Date: Fri, 21 Apr 2017 13:52:24 +0200
+Message-ID: <bd024a28-9c48-7a1c-cee9-54ea66870e5d@redhat.com>
 References: <20170421074157.19159-1-hdegoede@redhat.com>
+ <s5hfuh2mayi.wl-tiwai@suse.de>
+ <24d0d0f1-93dc-8413-651d-104703cdb216@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:56989 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1036720AbdDUK3F (ORCPT
-        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Fri, 21 Apr 2017 06:29:05 -0400
-Content-Disposition: inline
-In-Reply-To: <20170421074157.19159-1-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <24d0d0f1-93dc-8413-651d-104703cdb216@redhat.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 21, 2017 at 09:41:57AM +0200, Hans de Goede wrote:
-> Some peripherals on Baytrail and Cherrytrail platforms signal PME to the
-> PMC to wakeup the system. When this happens software needs to clear the
-> PME_B0_STS bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
-> 
-> This is modelled in ACPI through the INT0002 ACPI device.
-> 
-> This commit adds a driver which will bind to that device, call the
-> ACPI event handler for the wakeup and clear the interrupt source
-> avoiding the irq storm.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/Kconfig         |  10 ++
->  drivers/platform/x86/Makefile        |   1 +
->  drivers/platform/x86/intel_int0002.c | 232 +++++++++++++++++++++++++++++++++++
->  3 files changed, 243 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_int0002.c
-> 
-[...snip]
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_int0002.c
-> @@ -0,0 +1,232 @@
-> +/*
-> + * Intel INT0002 "Virtual GPIO" driver
-> + *
-> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-> + *
-> + * Loosely based on android x86 kernel code which is:
-> + *
-> + * Copyright (c) 2014, Intel Corporation.
-> + *
-> + * Author: Dyut Kumar Sil <dyut.k.sil@intel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Some peripherals on Baytrail and Cherrytrail platforms signal PME to the
-> + * PMC to wakeup the system. When this happens software needs to clear the
-> + * PME_B0_STS bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
-> + *
-> + * This is modelled in ACPI through the INT0002 ACPI device, which is
-> + * called a "Virtual GPIO controller" in ACPI because it defines the event
-> + * handler to call when the PME triggers through _AEI and _L02 / _E02
-> + * methods as would be done for a real GPIO interrupt.
-> + * 
-> + * This driver will bind to the INT0002 device, call the ACPI event handler
-> + * for the wakeup and clear the interrupt source avoiding the irq storm.
-> + */
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +#include <asm/io.h>
-> +#include <linux/acpi.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +
-> +#define GPE0A_PME_STS_BIT               0x2000
-> +#define GPE0A_PME_EN_BIT                0x2000
+Hi,
 
-Maybe it's minor. Could you please consider to change the name to
-GPE0A_PME_B0_STS_BIT and GPE0A_PME_B0_EN_BIT?
+On 21-04-17 12:11, Hans de Goede wrote:
+> Hi,
+> 
+> On 21-04-17 10:17, Takashi Iwai wrote:
+>> On Fri, 21 Apr 2017 09:41:57 +0200,
+>> Hans de Goede wrote:
+>>>
+>>> Some peripherals on Baytrail and Cherrytrail platforms signal PME to the
+>>> PMC to wakeup the system. When this happens software needs to clear the
+>>> PME_B0_STS bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
+>>>
+>>> This is modelled in ACPI through the INT0002 ACPI device.
+>>>
+>>> This commit adds a driver which will bind to that device, call the
+>>> ACPI event handler for the wakeup and clear the interrupt source
+>>> avoiding the irq storm.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> This patch requires your previous "always present" patchset, right?
+> 
+> On boards where the _STA for INT0002 returns 0, that patchset
+> is needed for the driver to bind to the device, so yes it has
+> a functional requirement on some (most it seems) board, but
+> only at run-time, it can be merged independently.
+> 
+>> Some nitpicking:
+>>
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/intel_int0002.c
+>> ...
+>>> +struct int0002_data {
+>>> +    struct spinlock lock;
+>>> +    struct device *dev;
+>>> +    const struct x86_cpu_id *cpu_id;
+>>> +    acpi_handle handle;
+>>> +    char ev_name[5];
+>>
+>> Are 5 bytes enough?  I see the code below:
+>>
+>>> +        snprintf(data->ev_name, sizeof(data->ev_name), "_%c%02X",
+>>> +            res->data.gpio.triggering ? 'E' : 'L',
+>>> +            res->data.gpio.pin_table[0]);
+>>
+>> So it counts 6 including NUL.
+> 
+> The name is e.g. _E02 or _L02 so 5 bytes including the NUL is enough :)
+> 
+>>
+>>> +static int int0002_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct int0002_data *data;
+>>> +    struct acpi_resource *res;
+>>> +    acpi_status status;
+>>> +    acpi_handle hdl;
+>>> +    int irq, ret;
+>>> +
+>>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>> +    if (!data) {
+>>> +        dev_err(dev, "can't allocate memory for int0002\n");
+>>
+>> The error message is mostly superfluous.
+> 
+> Agreed, will fix for v2.
+> 
+>>> +static int int0002_runtime_suspend(struct device *dev)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int int0002_runtime_resume(struct device *dev)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops int0002_pm_ops = {
+>>> +    .runtime_suspend = int0002_runtime_suspend,
+>>> +    .runtime_resume = int0002_runtime_resume,
+>>> +};
+>>
+>> Do we need these runtime PM?  If not, we can remove the header
+>> inclusion, too.
+> 
+> We enable runtime pm for this device, at which point these
+> are mandatory.
 
-Because it's easy to confuse with the PME_STS/PME_EN bit
-(0x800, bit 11) 
+Correction, I thought the driver was enabling runtime pm but
+it does not, so these can simply be removed. Will fix for v2.
 
-Thanks a lot!
-Joey Lee
+Regards,
+
+Hans
