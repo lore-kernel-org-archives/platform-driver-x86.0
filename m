@@ -1,60 +1,47 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
-Date: Fri, 21 Apr 2017 22:06:57 +0300
-Message-ID: <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
-References: <20170421152434.3834-1-linux@rempel-privat.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: INT33FE: add I2C dependency
+Date: Fri, 21 Apr 2017 23:03:13 +0200
+Message-ID: <20170421210331.876697-1-arnd@arndb.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f182.google.com ([209.85.216.182]:36098 "EHLO
-        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1424570AbdDUTG7 (ORCPT
+Received: from mout.kundenserver.de ([212.227.126.134]:49854 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1041148AbdDUVER (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Apr 2017 15:06:59 -0400
-Received: by mail-qt0-f182.google.com with SMTP id g60so76938690qtd.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Apr 2017 12:06:59 -0700 (PDT)
-In-Reply-To: <20170421152434.3834-1-linux@rempel-privat.de>
+        Fri, 21 Apr 2017 17:04:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Apr 21, 2017 at 6:24 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
-> some laptops, for example ASUS UX330UAK, have brocken als_get function
-> but working als_set funktion. In this case, ALS will stay turned off.
+When I2C is disabled, we get a link error:
 
-Please, spell check the above.
+drivers/platform/built-in.o: In function `cht_int33fe_remove':
+intel_cht_int33fe.c:(.text+0x8ba): undefined reference to `i2c_unregister_device'
+drivers/platform/built-in.o: In function `cht_int33fe_probe':
+intel_cht_int33fe.c:(.text+0x9ec): undefined reference to `i2c_acpi_new_device'
+intel_cht_int33fe.c:(.text+0xa7a): undefined reference to `i2c_unregister_device'
 
-some -> Some
-brocken -> broken
-funktion -> function
+This adds a Kconfig dependency to ensure I2C is available to this
+driver.
 
->
->              Method (WMNB, 3, Serialized)
->             {
->             ...
->                If (Local0 == 0x53545344)
->                 {
->                 ...
->                     If (IIA0 == 0x00050001)
->                     {
->                         If (!ALSP)
->                         {
->                             Return (0x02)
->                         }
->
->                         Local0 = (GALS & 0x10)    <<<---- bug,
->                                                     should be: (GALS () & 0x10)
+Fixes: 1cd706df8a9c ("platform/x86: Add Intel Cherry Trail ACPI INT33FE device driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-How GALS is defined in ASL?
-
-> Since it works without problems on Windows I assume ASUS WMI driver for Win
-> never trying to get ALS state, and instead it is setting it by default to ON.
->
-> This patch will do the same. Turn ALS on by default.
-
-It would be good to see if there is no regression added.
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 76ced87efde5..4c7db1fbac26 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -782,7 +782,7 @@ config ACPI_CMPC
+ 
+ config INTEL_CHT_INT33FE
+ 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
+-	depends on X86 && ACPI
++	depends on X86 && ACPI && I2C
+ 	---help---
+ 	  This driver add support for the INT33FE ACPI device found on
+ 	  some Intel Cherry Trail devices.
 -- 
-With Best Regards,
-Andy Shevchenko
+2.9.0
