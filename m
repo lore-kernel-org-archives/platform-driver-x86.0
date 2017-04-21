@@ -1,35 +1,42 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: INT33FE: add I2C dependency
-Date: Fri, 21 Apr 2017 14:42:19 -0700
-Message-ID: <20170421214219.GB31650@fury>
-References: <20170421210331.876697-1-arnd@arndb.de>
+Subject: Re: [PATCH v2 8/8] platform: x86: intel_bxtwc_tmu: remove first
+ level irq unmask
+Date: Fri, 21 Apr 2017 15:00:25 -0700
+Message-ID: <20170421220025.GC31650@fury>
+References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170421210331.876697-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 21, 2017 at 11:03:13PM +0200, Arnd Bergmann wrote:
-> When I2C is disabled, we get a link error:
+On Fri, Apr 14, 2017 at 04:26:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> drivers/platform/built-in.o: In function `cht_int33fe_remove':
-> intel_cht_int33fe.c:(.text+0x8ba): undefined reference to `i2c_unregister_device'
-> drivers/platform/built-in.o: In function `cht_int33fe_probe':
-> intel_cht_int33fe.c:(.text+0x9ec): undefined reference to `i2c_acpi_new_device'
-> intel_cht_int33fe.c:(.text+0xa7a): undefined reference to `i2c_unregister_device'
-> 
-> This adds a Kconfig dependency to ensure I2C is available to this
-> driver.
-> 
-> Fixes: 1cd706df8a9c ("platform/x86: Add Intel Cherry Trail ACPI INT33FE device driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Currently in WCOVE PMIC mfd driver, all second level irq chips
 
-Thanks Arnd, Tobias submitted a fix a short time ago, it'll be in next tomorrow.
-Thanks!
+By currently I believe you mean after the earlier patch in this series is
+applied, correct? This one is dependent on the previous one?
+
+> are chained to the respective first level irqs. So there is no
+> need for explicitly unmasking the first level irq in this
+> driver. This patches removes this level 1 irq unmask support.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+For platform drivers x86:
+
+Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
+
+Are you working with a specific maintainers to pull this in as a series? With so
+many subsystems, we need to coordinate to make sure we don't make a mess for
+Linus. Given the interdependencies, I'd recommend someone pull the series in as
+a whole - maybe into MFD? Lee, do you have a preference?
 
 -- 
 Darren Hart
