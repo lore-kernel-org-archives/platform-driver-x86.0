@@ -1,73 +1,58 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: INT33FE: add i2c dependency
-Date: Fri, 21 Apr 2017 09:19:10 +0200
-Message-ID: <62aa9baa-6630-2f09-96a7-3328af823db6@redhat.com>
-References: <20170420125159.23846-1-tobias.regnery@gmail.com>
+From: <wesley.sydnor@louisvillemsd.org>
+Subject: (unknown)
+Date: Fri, 21 Apr 2017 07:38:14 -0000
+Message-ID: <149276029410.20069.8125779592283677513@ttknet.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: application/zip; name="EMAIL_751643779_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:55808 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1035764AbdDUHTO (ORCPT
+Received: from 114.240.access.ttknet.ru ([90.150.240.114]:41586 "HELO
+        ttknet.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1036092AbdDUHiS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Apr 2017 03:19:14 -0400
-In-Reply-To: <20170420125159.23846-1-tobias.regnery@gmail.com>
-Content-Language: en-US
+        Fri, 21 Apr 2017 03:38:18 -0400
+Subject: 
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Tobias Regnery <tobias.regnery@gmail.com>, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-Hi,
-
-On 20-04-17 14:51, Tobias Regnery wrote:
-> With CONFIG_I2C=m and CONFIG_INTEL_CHT_INT33FE=y we see the following link
-> errors:
-> 
-> drivers/built-in.o: In function 'cht_int33fe_remove':
-> intel_cht_int33fe.c:(.text+0x391f6e): undefined reference to 'i2c_unregister_device'
-> intel_cht_int33fe.c:(.text+0x391f76): undefined reference to 'i2c_unregister_device'
-> intel_cht_int33fe.c:(.text+0x391f7d): undefined reference to 'i2c_unregister_device'
-> drivers/built-in.o: In function 'cht_int33fe_probe':
-> intel_cht_int33fe.c:(.text+0x392147): undefined reference to 'i2c_acpi_new_device'
-> intel_cht_int33fe.c:(.text+0x392185): undefined reference to 'i2c_acpi_new_device'
-> intel_cht_int33fe.c:(.text+0x3921bd): undefined reference to 'i2c_acpi_new_device'
-> intel_cht_int33fe.c:(.text+0x3921d9): undefined reference to 'i2c_unregister_device'
-> intel_cht_int33fe.c:(.text+0x3921e8): undefined reference to 'i2c_unregister_device'
-> drivers/built-in.o: In function 'cht_int33fe_driver_init':
-> intel_cht_int33fe.c:(.init.text+0x2386d): undefined reference to 'i2c_register_driver'
-> drivers/built-in.o: In function 'cht_int33fe_driver_exit':
-> intel_cht_int33fe.c:(.exit.text+0x206e): undefined reference to 'i2c_del_driver'
-> 
-> Fix this by adding a kconfig dependency on the I2C subsystem.
-> 
-> Fixes: 1cd706df8a9c ("platform/x86: Add Intel Cherry Trail ACPI INT33FE device driver")
-> Signed-off-by: Tobias Regnery <tobias.regnery@gmail.com>
-
-Thank you for catching this:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->   drivers/platform/x86/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 6b33db6c9d22..ea264fefb845 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -783,7 +783,7 @@ config ACPI_CMPC
->   
->   config INTEL_CHT_INT33FE
->   	tristate "Intel Cherry Trail ACPI INT33FE Driver"
-> -	depends on X86 && ACPI
-> +	depends on X86 && ACPI && I2C
->   	---help---
->   	  This driver add support for the INT33FE ACPI device found on
->   	  some Intel Cherry Trail devices.
-> 
+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
