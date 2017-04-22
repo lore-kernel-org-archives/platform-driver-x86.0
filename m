@@ -1,37 +1,168 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 8/8] platform: x86: intel_bxtwc_tmu: remove first level
- irq unmask
-Date: Sat, 22 Apr 2017 05:52:32 +0300
-Message-ID: <CAHp75VeGQ=Zb=azNZCEfA25VdvuQcbMJoHuXkyQ24KOh4WQjRw@mail.gmail.com>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170421220025.GC31650@fury> <d9ead97f-db7b-a0b0-4eb1-1c783ee1e841@linux.intel.com>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
+Date: Sat, 22 Apr 2017 08:14:08 +0200
+Message-ID: <1b6c4351-7052-2986-510d-dade3a88770f@rempel-privat.de>
+References: <20170421152434.3834-1-linux@rempel-privat.de>
+ <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="El8sDcgMkjxJB0Kopo15onOg7CcVWxrvW"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f171.google.com ([209.85.216.171]:34914 "EHLO
-        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1041088AbdDVCwd (ORCPT
+Received: from mout.gmx.net ([212.227.17.22]:63664 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S932625AbdDVGPN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Apr 2017 22:52:33 -0400
-In-Reply-To: <d9ead97f-db7b-a0b0-4eb1-1c783ee1e841@linux.intel.com>
+        Sat, 22 Apr 2017 02:15:13 -0400
+In-Reply-To: <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "Zhang, Rui" <rui.zhang@intel.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Sat, Apr 22, 2017 at 1:34 AM, sathyanarayanan kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--El8sDcgMkjxJB0Kopo15onOg7CcVWxrvW
+Content-Type: multipart/mixed; boundary="E4DGAsW0uRJF6pLwFoj50qPg2AcCEuemq";
+ protected-headers="v1"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+ Platform Driver <platform-driver-x86@vger.kernel.org>
+Message-ID: <1b6c4351-7052-2986-510d-dade3a88770f@rempel-privat.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
+References: <20170421152434.3834-1-linux@rempel-privat.de>
+ <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
+In-Reply-To: <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
 
-> Thanks for brining it up. I was planning to ask either Andy or Lee regarding
-> this issue after all patches in the series are reviewed.
+--E4DGAsW0uRJF6pLwFoj50qPg2AcCEuemq
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Darren, I'm planning to review this soon.
+Am 21.04.2017 um 21:06 schrieb Andy Shevchenko:
+> On Fri, Apr 21, 2017 at 6:24 PM, Oleksij Rempel <linux@rempel-privat.de=
+> wrote:
+>> some laptops, for example ASUS UX330UAK, have brocken als_get function=
 
-P.S. We have few series flying around regarding to Intel PMIC(s): my
-for Kconfig naming, Hans' for Crystal Cove (touches Kconfig as well),
-and Sathya's series. I hope Lee can collect them in proper order.
+>> but working als_set funktion. In this case, ALS will stay turned off.
+>=20
+> Please, spell check the above.
+>=20
+> some -> Some
+> brocken -> broken
+> funktion -> function
 
--- 
-With Best Regards,
-Andy Shevchenko
+ok. thank you.
+
+>>
+>>              Method (WMNB, 3, Serialized)
+>>             {
+>>             ...
+>>                If (Local0 =3D=3D 0x53545344)
+>>                 {
+>>                 ...
+>>                     If (IIA0 =3D=3D 0x00050001)
+>>                     {
+>>                         If (!ALSP)
+>>                         {
+>>                             Return (0x02)
+>>                         }
+>>
+>>                         Local0 =3D (GALS & 0x10)    <<<---- bug,
+>>                                                     should be: (GALS (=
+) & 0x10)
+>=20
+> How GALS is defined in ASL?
+
+                    Method (GALS, 0, NotSerialized)
+                    {
+                        Local0 =3D Zero
+                        Local0 |=3D 0x20
+                        If (ALAE)
+                        {
+                            Local0 |=3D 0x10
+                        }
+
+                        Local1 =3D 0x0A
+                        Local1 <<=3D 0x08
+                        Local0 |=3D Local1
+                        Return (Local0)
+                    }
+
+
+beside, same part of code on ASUS UX32A, which works just fine:
+
+                    If ((IIA0 =3D=3D 0x00050001))
+                    {
+                        If (!ALSP)
+                        {
+                            Return (0x02)
+                        }
+
+                        Local0 =3D (GALS () & 0x10)
+                        If (Local0)
+                        {
+                            Return (0x00050001)
+                        }
+                        Else
+                        {
+                            Return (0x00050000)
+                        }
+                    }
+
+                    If ((IIA0 =3D=3D 0x00050013))
+                    {
+                        Local0 =3D (GALS () & 0x0F0F)
+                        Return (Local0)
+                    }
+
+=2E...
+            Method (GALS, 0, NotSerialized)
+            {
+                Local0 =3D (LBTN & 0x0F)
+                Local0 |=3D 0x20
+                If (ALAE)
+                {
+                    Local0 |=3D 0x10
+                }
+
+                Local1 =3D (0x0B - One)
+                Local1 <<=3D 0x08
+                Local0 |=3D Local1
+                Return (Local0)
+            }
+
+
+>> Since it works without problems on Windows I assume ASUS WMI driver fo=
+r Win
+>> never trying to get ALS state, and instead it is setting it by default=
+ to ON.
+>>
+>> This patch will do the same. Turn ALS on by default.
+>=20
+> It would be good to see if there is no regression added.
+
+sure. Is there anything i can do for this, except continue to use this
+patch with my HW?
+
+--=20
+Regards,
+Oleksij
+
+
+--E4DGAsW0uRJF6pLwFoj50qPg2AcCEuemq--
+
+--El8sDcgMkjxJB0Kopo15onOg7CcVWxrvW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF4EAREIAAYFAlj69LUACgkQHwImuRkmbWlkpgD+P5jE78ThgOS2xCZjkNB4UgS8
+WwE0MltLBISs6vjw8fkA/ROmwuiP50Z0EyXKlr2RytFDGpDEUTXp/DdWf9f6n/qG
+=l4NY
+-----END PGP SIGNATURE-----
+
+--El8sDcgMkjxJB0Kopo15onOg7CcVWxrvW--
