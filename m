@@ -1,100 +1,212 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] Keyboard backlight on Dell E7470 not adjustable from /sys entry
-Date: Sun, 23 Apr 2017 21:41:23 +0200
-Message-ID: <201704232141.23690@pali>
-References: <20170423055648.25711-1-arcadiy@ivanov.biz>
+From: Arcadiy Ivanov <arcadiy@ivanov.biz>
+Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
+ AC settings
+Date: Sun, 23 Apr 2017 16:30:15 -0400
+Message-ID: <df5b2b51-2049-cc5d-3703-ccb8d22be74b@ivanov.biz>
+References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3649349.dxsKAjh63g";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:34205 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1045928AbdDWTl0 (ORCPT
+Received: from mout.perfora.net ([74.208.4.196]:62827 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1046054AbdDWUgY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 23 Apr 2017 15:41:26 -0400
-Received: by mail-wm0-f66.google.com with SMTP id z129so13571279wmb.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Apr 2017 12:41:26 -0700 (PDT)
-In-Reply-To: <20170423055648.25711-1-arcadiy@ivanov.biz>
+        Sun, 23 Apr 2017 16:36:24 -0400
+In-Reply-To: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arcadiy Ivanov <arcadiy@ivanov.biz>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart3649349.dxsKAjh63g
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+I've tested the patch over 4.10.10 on Fedora 25 and it works both on and 
+off AC power on Dell Precision 7510.
+Thanks a lot!
 
-On Sunday 23 April 2017 07:56:48 Arcadiy Ivanov wrote:
-> @@ -1115,6 +1131,7 @@ struct kbd_state {
->  	u8 als_setting;
->  	u8 als_value;
->  	u8 level;
-> +	u8 timeout_ac;
-
-It is timeout value + timeout units. It needs to be used later in
-function for getting and setting timeout.
-
->  };
-> =20
->  static const int kbd_tokens[] =3D {
-> @@ -1140,6 +1157,25 @@ static u8 kbd_previous_mode_bit;
-> =20
->  static bool kbd_led_present;
-> =20
-> +#define pr_kbd_smi(x) \
-> +    pr_debug("func %s\n\tinputs: %#010x %#010x %#010x %#010x, outputs: %=
-#010x %#010x %#010x %#010x", \
-> +        __func__, \
-> +        x->input[0], x->input[1], x->input[2], x->input[3],\
-> +        x->output[0], x->output[1], x->output[2], x->output[3])
+On 2017-04-23 15:40, Pali Rohár wrote:
+> When changing keyboard backlight state on new Dell laptops, firmware
+> expects a new timeout AC value filled in Set New State SMBIOS call.
+>
+> Without it any change of keyboard backlight state on new Dell laptops
+> fails. And user can see following error message in dmesg:
+>
+>    dell_laptop: Setting old previous keyboard state failed
+>    leds dell::kbd_backlight: Setting an LED's brightness failed (-6)
+>
+> This patch adds support for retrieving current timeout AC values and also
+> updating them. Current timeout value in sysfs is displayed based on current
+> AC status, like current display brightness value.
+>
+> Detection if Dell laptop supports or not new timeout AC settings is done by
+> checking existence of Keyboard Backlight with AC SMBIOS token (0x0451).
+>
+> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> ---
+> I have not tested this patch yet as I do not have affected machine. I would
+> appreciate some testing of this patch on more new Dell laptops. Without
+> this patch changing keyboard backlight is not possible on affected machines.
+> ---
+>   drivers/platform/x86/dell-laptop.c |   59 ++++++++++++++++++++++++++++++++----
+>   1 file changed, 53 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index f57dd28..cddf3c2 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -42,6 +42,7 @@
+>   #define KBD_LED_AUTO_50_TOKEN 0x02EB
+>   #define KBD_LED_AUTO_75_TOKEN 0x02EC
+>   #define KBD_LED_AUTO_100_TOKEN 0x02F6
+> +#define KBD_LED_AC_TOKEN 0x0451
+>   
+>   struct quirk_entry {
+>   	u8 touchpad_led;
+> @@ -1024,7 +1025,7 @@ static void touchpad_led_exit(void)
+>    *     bit 2     Pointing stick
+>    *     bit 3     Any mouse
+>    *     bits 4-7  Reserved for future use
+> - *  cbRES2, byte3  Current Timeout
+> + *  cbRES2, byte3  Current Timeout on battery
+>    *     bits 7:6  Timeout units indicator:
+>    *     00b       Seconds
+>    *     01b       Minutes
+> @@ -1036,6 +1037,15 @@ static void touchpad_led_exit(void)
+>    *  cbRES3, byte0  Current setting of ALS value that turns the light on or off.
+>    *  cbRES3, byte1  Current ALS reading
+>    *  cbRES3, byte2  Current keyboard light level.
+> + *  cbRES3, byte3  Current timeout on AC Power
+> + *     bits 7:6  Timeout units indicator:
+> + *     00b       Seconds
+> + *     01b       Minutes
+> + *     10b       Hours
+> + *     11b       Days
+> + *     Bits 5:0  Timeout value (0-63) in sec/min/hr/day
+> + *     NOTE: A value of 0 means always on (no timeout) if any bits of RES3 byte2
+> + *     are set upon return from the upon return from the [Get Feature information] call.
+>    *
+>    * cbArg1 0x2 = Set New State
+>    *  cbRES1         Standard return codes (0, -1, -2)
+> @@ -1058,7 +1068,7 @@ static void touchpad_led_exit(void)
+>    *     bit 2     Pointing stick
+>    *     bit 3     Any mouse
+>    *     bits 4-7  Reserved for future use
+> - *  cbArg2, byte3  Desired Timeout
+> + *  cbArg2, byte3  Desired Timeout on battery
+>    *     bits 7:6  Timeout units indicator:
+>    *     00b       Seconds
+>    *     01b       Minutes
+> @@ -1067,6 +1077,13 @@ static void touchpad_led_exit(void)
+>    *     bits 5:0  Timeout value (0-63) in sec/min/hr/day
+>    *  cbArg3, byte0  Desired setting of ALS value that turns the light on or off.
+>    *  cbArg3, byte2  Desired keyboard light level.
+> + *  cbArg3, byte3  Desired Timeout on AC power
+> + *     bits 7:6  Timeout units indicator:
+> + *     00b       Seconds
+> + *     01b       Minutes
+> + *     10b       Hours
+> + *     11b       Days
+> + *     bits 5:0  Timeout value (0-63) in sec/min/hr/day
+>    */
+>   
+>   
+> @@ -1112,6 +1129,8 @@ struct kbd_state {
+>   	u8 triggers;
+>   	u8 timeout_value;
+>   	u8 timeout_unit;
+> +	u8 timeout_value_ac;
+> +	u8 timeout_unit_ac;
+>   	u8 als_setting;
+>   	u8 als_value;
+>   	u8 level;
+> @@ -1131,6 +1150,7 @@ struct kbd_state {
+>   static struct kbd_info kbd_info;
+>   static bool kbd_als_supported;
+>   static bool kbd_triggers_supported;
+> +static bool kbd_timeout_ac_supported;
+>   
+>   static u8 kbd_mode_levels[16];
+>   static int kbd_mode_levels_count;
+> @@ -1269,6 +1289,8 @@ static int kbd_get_state(struct kbd_state *state)
+>   	state->als_setting = buffer->output[2] & 0xFF;
+>   	state->als_value = (buffer->output[2] >> 8) & 0xFF;
+>   	state->level = (buffer->output[2] >> 16) & 0xFF;
+> +	state->timeout_value_ac = (buffer->output[2] >> 24) & 0x3F;
+> +	state->timeout_unit_ac = (buffer->output[2] >> 30) & 0x3;
+>   
+>    out:
+>   	dell_smbios_release_buffer();
+> @@ -1288,6 +1310,8 @@ static int kbd_set_state(struct kbd_state *state)
+>   	buffer->input[1] |= (state->timeout_unit & 0x3) << 30;
+>   	buffer->input[2] = state->als_setting & 0xFF;
+>   	buffer->input[2] |= (state->level & 0xFF) << 16;
+> +	buffer->input[2] |= (state->timeout_value_ac & 0x3F) << 24;
+> +	buffer->input[2] |= (state->timeout_unit_ac & 0x3) << 30;
+>   	dell_smbios_send_request(4, 11);
+>   	ret = buffer->output[0];
+>   	dell_smbios_release_buffer();
+> @@ -1394,6 +1418,13 @@ static inline int kbd_init_info(void)
+>   	if (ret)
+>   		return ret;
+>   
+> +	/* NOTE: Old models without KBD_LED_AC_TOKEN token supports only one
+> +	 *       timeout value which is shared for both battery and AC power
+> +	 *       settings. So do not try to set AC values on old models.
+> +	 */
+> +	if (dell_smbios_find_token(KBD_LED_AC_TOKEN))
+> +		kbd_timeout_ac_supported = true;
 > +
-> +#define pr_kbd_state(x) \
-> +    pr_debug("func %s\n\tmode_bit: %#04x, triggers: %#04x, timeout_value=
-: %#04x, timeout_unit: %#04x, " \
-> +            "als_setting: %#04x, als_value: %#04x, level: %#04x, timeout=
-_ac: %#04x", \
-> +        __func__, \
-> +        x->mode_bit, x->triggers, x->timeout_value, x->timeout_unit, x->=
-als_setting, x->als_value, x-
->level, \
-> +        x->timeout_ac)
+>   	kbd_get_state(&state);
+>   
+>   	/* NOTE: timeout value is stored in 6 bits so max value is 63 */
+> @@ -1573,8 +1604,14 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
+>   		return ret;
+>   
+>   	new_state = state;
+> -	new_state.timeout_value = value;
+> -	new_state.timeout_unit = unit;
 > +
-> +#define pr_kbd_info(x) \
-> +    pr_debug("func %s\n\tmodes: %#06x, type: %#04x, triggers: %#04x, lev=
-els: %#04x, seconds: %#04x, " \
-> +            "minutes: %#04x, hours: %#04x, days: %#04x", \
-> +        __func__, \
-> +        x->modes, x->type, x->triggers, x->levels, x->seconds, x->minute=
-s, x->hours, x->days)
+> +	if (kbd_timeout_ac_supported && power_supply_is_system_supplied() > 0) {
+> +		new_state.timeout_value_ac = value;
+> +		new_state.timeout_unit_ac = unit;
+> +	} else {
+> +		new_state.timeout_value = value;
+> +		new_state.timeout_unit = unit;
+> +	}
+>   
+>   	ret = kbd_set_state_safe(&new_state, &state);
+>   	if (ret)
+> @@ -1587,16 +1624,26 @@ static ssize_t kbd_led_timeout_show(struct device *dev,
+>   				    struct device_attribute *attr, char *buf)
+>   {
+>   	struct kbd_state state;
+> +	int value;
+>   	int ret;
+>   	int len;
+> +	u8 unit;
+>   
+>   	ret = kbd_get_state(&state);
+>   	if (ret)
+>   		return ret;
+>   
+> -	len = sprintf(buf, "%d", state.timeout_value);
+> +	if (kbd_timeout_ac_supported && power_supply_is_system_supplied() > 0) {
+> +		value = state.timeout_value_ac;
+> +		unit = state.timeout_unit_ac;
+> +	} else {
+> +		value = state.timeout_value;
+> +		unit = state.timeout_unit;
+> +	}
 > +
+> +	len = sprintf(buf, "%d", value);
+>   
+> -	switch (state.timeout_unit) {
+> +	switch (unit) {
+>   	case KBD_TIMEOUT_SECONDS:
+>   		return len + sprintf(buf+len, "s\n");
+>   	case KBD_TIMEOUT_MINUTES:
 
-Such macros are not needed in mainline code. They are probably useful
-in time of writing patch, but not later to have them present in final
-driver code.
 
-I sent a new patch (you are in recipients list too) which fixes getting
-and setting timeout value when on AC. It also handles detection of
-timeout AC value based on existence of 0x0451 SMBIOS token like Mario
-suggested.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart3649349.dxsKAjh63g
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlj9A2MACgkQi/DJPQPkQ1Js3ACdFMVnlq1dgegPSibH23RenRel
-MFgAniQjNZMz9YxeGztHBSVr9U0gqHxK
-=ji0K
------END PGP SIGNATURE-----
-
---nextPart3649349.dxsKAjh63g--
+-- 
+Arcadiy Ivanov
+arcadiy@ivanov.biz | @arcivanov | https://ivanov.biz
+https://github.com/arcivanov
