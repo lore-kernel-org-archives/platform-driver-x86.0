@@ -1,48 +1,49 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH v2] platform/x86: Add driver for INT0002 ACPI device
-Date: Mon, 24 Apr 2017 17:19:42 +0800
-Message-ID: <20170424091942.GN7636@linux-l9pv.suse>
-References: <20170421125246.3982-1-hdegoede@redhat.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 8/8] platform: x86: intel_bxtwc_tmu: remove first
+ level irq unmask
+Date: Mon, 24 Apr 2017 10:24:01 +0100
+Message-ID: <20170424092401.uijlbkcxosoy4zmt@dell>
+References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170421220025.GC31650@fury>
+ <d9ead97f-db7b-a0b0-4eb1-1c783ee1e841@linux.intel.com>
+ <CAHp75VeGQ=Zb=azNZCEfA25VdvuQcbMJoHuXkyQ24KOh4WQjRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:46389 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1167623AbdDXJTz (ORCPT
-        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-        Mon, 24 Apr 2017 05:19:55 -0400
+Received: from mail-wr0-f169.google.com ([209.85.128.169]:32956 "EHLO
+        mail-wr0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1167701AbdDXJYF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 24 Apr 2017 05:24:05 -0400
+Received: by mail-wr0-f169.google.com with SMTP id w50so64566298wrc.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 02:24:04 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <20170421125246.3982-1-hdegoede@redhat.com>
+In-Reply-To: <CAHp75VeGQ=Zb=azNZCEfA25VdvuQcbMJoHuXkyQ24KOh4WQjRw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "Zhang, Rui" <rui.zhang@intel.com>, Andy Shevchenko <andy@infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 
-Hi,
+On Sat, 22 Apr 2017, Andy Shevchenko wrote:
 
-On Fri, Apr 21, 2017 at 02:52:46PM +0200, Hans de Goede wrote:
-> Some peripherals on Baytrail and Cherrytrail platforms signal PME to the
-> PMC to wakeup the system. When this happens software needs to clear the
-> PME_B0_STS bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
+> On Sat, Apr 22, 2017 at 1:34 AM, sathyanarayanan kuppuswamy
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 > 
-> This is modelled in ACPI through the INT0002 ACPI device.
+> > Thanks for brining it up. I was planning to ask either Andy or Lee regarding
+> > this issue after all patches in the series are reviewed.
 > 
-> This commit adds a driver which will bind to that device, call the
-> ACPI event handler for the wakeup and clear the interrupt source
-> avoiding the irq storm.
+> Darren, I'm planning to review this soon.
 > 
-> Cc: joeyli <jlee@suse.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Takashi Iwai <tiwai@suse.de>
-> ---
-> Changes in v2:
-> -Remove dev_err after malloc failure
-> -Remove unused empty runtime pm callbacks
-> -s/GPE0A_PME_/GPE0A_PME_B0_/
-> -Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
+> P.S. We have few series flying around regarding to Intel PMIC(s): my
+> for Kconfig naming, Hans' for Crystal Cove (touches Kconfig as well),
+> and Sathya's series. I hope Lee can collect them in proper order.
 
-Please feel free to add:
-	Reviewed-by: Joey Lee <jlee@suse.com>
+That could be easier said than done.
 
-Thanks a lot!
-Joey Lee
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
