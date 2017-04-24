@@ -1,63 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 8/8] platform: x86: intel_bxtwc_tmu: remove first
- level irq unmask
-Date: Mon, 24 Apr 2017 10:26:35 +0100
-Message-ID: <20170424092635.oznzvugqxdisw7k7@dell>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170421220025.GC31650@fury>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: intel_turbo_max_3 non-modularity
+Date: Mon, 24 Apr 2017 11:31:03 +0200
+Message-ID: <20170424113103.0de3ea31@endymion>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f178.google.com ([209.85.128.178]:34346 "EHLO
-        mail-wr0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1167951AbdDXJ0j (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:42533 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1167999AbdDXJbM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2017 05:26:39 -0400
-Received: by mail-wr0-f178.google.com with SMTP id z109so88041458wrb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 02:26:39 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20170421220025.GC31650@fury>
+        Mon, 24 Apr 2017 05:31:12 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>
 
-On Fri, 21 Apr 2017, Darren Hart wrote:
+Hi all,
 
-> On Fri, Apr 14, 2017 at 04:26:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > Currently in WCOVE PMIC mfd driver, all second level irq chips
-> 
-> By currently I believe you mean after the earlier patch in this series is
-> applied, correct? This one is dependent on the previous one?
-> 
-> > are chained to the respective first level irqs. So there is no
-> > need for explicitly unmasking the first level irq in this
-> > driver. This patches removes this level 1 irq unmask support.
-> > 
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> For platform drivers x86:
-> 
-> Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
-> 
-> Are you working with a specific maintainers to pull this in as a series? With so
-> many subsystems, we need to coordinate to make sure we don't make a mess for
-> Linus. Given the interdependencies, I'd recommend someone pull the series in as
-> a whole - maybe into MFD? Lee, do you have a preference?
+I see that the intel_turbo_max_3 driver was originally supposed to be
+modular, and then support for that possibility was removed. Is there
+any fundamental reason why this driver can't be built as a module?
 
-I am happy to take the set, however I think v4.12 is an unlikely
-candidate, since there still have quite a few patches which are yet to
-receive review and the merge-window opens in 6 days.
+I am asking because the description of the driver says:
 
-Once we have all the required Acks, I'll push the set into -next where
-it can sit for a good soak test until v4.13.
+"This driver is only required when the system is not using Hardware
+P-States (HWP). In HWP mode, priority can be read from ACPI tables."
 
+This pretty much implies that this driver will be useless on a wide
+range (maybe even the majority?) of systems. Given this, not being
+forced to build the driver into the kernel would seem preferable.
+
+Thanks,
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jean Delvare
+SUSE L3 Support
