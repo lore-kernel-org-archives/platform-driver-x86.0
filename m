@@ -1,109 +1,128 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 04/10] platform/x86: fujitsu-laptop: rework backlight power synchronization
-Date: Mon, 24 Apr 2017 15:33:28 +0200
-Message-ID: <20170424133334.7064-5-kernel@kempniu.pl>
+Subject: [PATCH 05/10] platform/x86: fujitsu-laptop: distinguish current uses of device-specific data
+Date: Mon, 24 Apr 2017 15:33:29 +0200
+Message-ID: <20170424133334.7064-6-kernel@kempniu.pl>
 References: <20170424133334.7064-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:34622 "EHLO
+        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1171307AbdDXNdo (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 24 Apr 2017 09:33:44 -0400
+Received: by mail-lf0-f67.google.com with SMTP id x72so16554013lfb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 06:33:43 -0700 (PDT)
 In-Reply-To: <20170424133334.7064-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-fujitsu-laptop registers two ACPI drivers: one for ACPI device FUJ02B1
-enabling backlight control and another for ACPI device FUJ02E3 which
-handles various other stuff (hotkeys, LEDs, etc.)  So far, these two
-drivers have been entangled by calls to fext_backlight() (previously
-known as call_fext_func()) in the backlight part of the module which use
-module-wide data managed by the other part of the module and accesses to
-the backlight device from within acpi_fujitsu_laptop_add().  This
-entaglement can be solved by storing an independently fetched ACPI
-handle to the FUJ02E3 device inside the data structure managed by the
-backlight part of the module.
-
-Add a field to struct fujitsu_bl for storing a handle to the FUJ02E3
-ACPI device.  Make fext_backlight() calls use that handle instead of the
-one from struct fujitsu_laptop.  Move backlight power synchronization
-from acpi_fujitsu_laptop_add() to fujitsu_backlight_register().
-
-This makes the bl_device field of struct fujitsu_bl redundant, so remove
-it.
+In portions of the driver which use device-specific data, rename local
+variables from fujitsu_bl and fujitsu_laptop to priv in order to clearly
+distinguish these parts from code that uses module-wide data.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 48 +++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index ea3210ee83ec..5f6b34a97348 100644
+index 5f6b34a97348..536b601c7067 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -131,9 +131,9 @@
- /* Device controlling the backlight and associated keys */
- struct fujitsu_bl {
- 	acpi_handle handle;
-+	acpi_handle fext_handle;
- 	struct input_dev *input;
- 	char phys[32];
--	struct backlight_device *bl_device;
- 	unsigned int max_brightness;
- 	unsigned int brightness_level;
- };
-@@ -290,10 +290,12 @@ static int bl_get_brightness(struct backlight_device *b)
+@@ -369,26 +369,26 @@ static const struct key_entry keymap_backlight[] = {
  
- static int bl_update_status(struct backlight_device *b)
+ static int acpi_fujitsu_bl_input_setup(struct acpi_device *device)
  {
--	if (b->props.power == FB_BLANK_POWERDOWN)
--		fext_backlight(fujitsu_laptop->handle, 0x1, 0x4, 0x3);
--	else
--		fext_backlight(fujitsu_laptop->handle, 0x1, 0x4, 0x0);
-+	if (fujitsu_bl->fext_handle) {
-+		if (b->props.power == FB_BLANK_POWERDOWN)
-+			fext_backlight(fujitsu_bl->fext_handle, 0x1, 0x4, 0x3);
-+		else
-+			fext_backlight(fujitsu_bl->fext_handle, 0x1, 0x4, 0x0);
-+	}
+-	struct fujitsu_bl *fujitsu_bl = acpi_driver_data(device);
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	int ret;
  
- 	return set_lcd_level(b->props.brightness);
+-	fujitsu_bl->input = devm_input_allocate_device(&device->dev);
+-	if (!fujitsu_bl->input)
++	priv->input = devm_input_allocate_device(&device->dev);
++	if (!priv->input)
+ 		return -ENOMEM;
+ 
+-	snprintf(fujitsu_bl->phys, sizeof(fujitsu_bl->phys),
+-		 "%s/video/input0", acpi_device_hid(device));
++	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
++		 acpi_device_hid(device));
+ 
+-	fujitsu_bl->input->name = acpi_device_name(device);
+-	fujitsu_bl->input->phys = fujitsu_bl->phys;
+-	fujitsu_bl->input->id.bustype = BUS_HOST;
+-	fujitsu_bl->input->id.product = 0x06;
++	priv->input->name = acpi_device_name(device);
++	priv->input->phys = priv->phys;
++	priv->input->id.bustype = BUS_HOST;
++	priv->input->id.product = 0x06;
+ 
+-	ret = sparse_keymap_setup(fujitsu_bl->input, keymap_backlight, NULL);
++	ret = sparse_keymap_setup(priv->input, keymap_backlight, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-	return input_register_device(fujitsu_bl->input);
++	return input_register_device(priv->input);
  }
-@@ -397,6 +399,7 @@ static int fujitsu_backlight_register(struct acpi_device *device)
- 		.type = BACKLIGHT_PLATFORM
- 	};
- 	struct backlight_device *bd;
-+	acpi_status status;
  
- 	bd = devm_backlight_device_register(&device->dev, "fujitsu-laptop",
- 					    &device->dev, NULL,
-@@ -404,7 +407,10 @@ static int fujitsu_backlight_register(struct acpi_device *device)
- 	if (IS_ERR(bd))
- 		return PTR_ERR(bd);
+ static int fujitsu_backlight_register(struct acpi_device *device)
+@@ -566,27 +566,27 @@ static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
  
--	fujitsu_bl->bl_device = bd;
-+	status = acpi_get_handle(NULL, "\\_SB.FEXT", &fujitsu_bl->fext_handle);
-+	if (ACPI_SUCCESS(status) &&
-+	    fext_backlight(fujitsu_bl->fext_handle, 0x2, 0x4, 0x0) == 3)
-+		bd->props.power = FB_BLANK_POWERDOWN;
+ static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
+ {
+-	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
++	struct fujitsu_laptop *priv = acpi_driver_data(device);
+ 	int ret;
+ 
+-	fujitsu_laptop->input = devm_input_allocate_device(&device->dev);
+-	if (!fujitsu_laptop->input)
++	priv->input = devm_input_allocate_device(&device->dev);
++	if (!priv->input)
+ 		return -ENOMEM;
+ 
+-	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
+-		 "%s/video/input0", acpi_device_hid(device));
++	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
++		 acpi_device_hid(device));
+ 
+-	fujitsu_laptop->input->name = acpi_device_name(device);
+-	fujitsu_laptop->input->phys = fujitsu_laptop->phys;
+-	fujitsu_laptop->input->id.bustype = BUS_HOST;
+-	fujitsu_laptop->input->id.product = 0x06;
++	priv->input->name = acpi_device_name(device);
++	priv->input->phys = priv->phys;
++	priv->input->id.bustype = BUS_HOST;
++	priv->input->id.product = 0x06;
+ 
+ 	dmi_check_system(fujitsu_laptop_dmi_table);
+-	ret = sparse_keymap_setup(fujitsu_laptop->input, keymap, NULL);
++	ret = sparse_keymap_setup(priv->input, keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+-	return input_register_device(fujitsu_laptop->input);
++	return input_register_device(priv->input);
+ }
+ 
+ static int fujitsu_laptop_platform_add(void)
+@@ -885,11 +885,11 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+ 
+ static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
+ {
+-	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
++	struct fujitsu_laptop *priv = acpi_driver_data(device);
+ 
+ 	fujitsu_laptop_platform_remove();
+ 
+-	kfifo_free(&fujitsu_laptop->fifo);
++	kfifo_free(&priv->fifo);
  
  	return 0;
  }
-@@ -861,15 +867,6 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	pr_info("BTNI: [0x%x]\n", fext_buttons(fujitsu_laptop->handle,
- 					       0x0, 0x0, 0x0));
- 
--	/* Sync backlight power status */
--	if (fujitsu_bl->bl_device &&
--	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		if (fext_backlight(fujitsu_laptop->handle, 0x2, 0x4, 0x0) == 3)
--			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
--		else
--			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
--	}
--
- 	error = acpi_fujitsu_laptop_leds_register(device);
- 	if (error)
- 		goto err_free_fifo;
 -- 
 2.12.2
