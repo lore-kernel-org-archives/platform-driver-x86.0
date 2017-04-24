@@ -1,68 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: fix cpufv sysfs file permission
-Date: Mon, 24 Apr 2017 12:14:14 +0300
-Message-ID: <CAHp75Vf7qKmbzJLfsHJXw_DQ3t8+WKHLEzLHweAq5eE2TTHKNA@mail.gmail.com>
-References: <20170422021945.5260-1-jeremy.lefaure@lse.epita.fr>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH v2] platform/x86: Add driver for INT0002 ACPI device
+Date: Mon, 24 Apr 2017 17:19:42 +0800
+Message-ID: <20170424091942.GN7636@linux-l9pv.suse>
+References: <20170421125246.3982-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170422021945.5260-1-jeremy.lefaure@lse.epita.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SsOpcsOpbXkgTGVmYXVyZQ==?= <jeremy.lefaure@lse.epita.fr>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp.nue.novell.com ([195.135.221.5]:46389 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1167623AbdDXJTz (ORCPT
+        <rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+        Mon, 24 Apr 2017 05:19:55 -0400
+Content-Disposition: inline
+In-Reply-To: <20170421125246.3982-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
 
-On Sat, Apr 22, 2017 at 5:19 AM, J=C3=A9r=C3=A9my Lefaure
-<jeremy.lefaure@lse.epita.fr> wrote:
-> The cpufv sysfs file is defined as readable by anyone even if the
-> attribute does not have a show function. The result of every read is an
-> IO error. This file should be write only.
+Hi,
 
-Per se patch looks good to me, though would be better to add show()
-hook as well?
-
->
-> Signed-off-by: J=C3=A9r=C3=A9my Lefaure <jeremy.lefaure@lse.epita.fr>
+On Fri, Apr 21, 2017 at 02:52:46PM +0200, Hans de Goede wrote:
+> Some peripherals on Baytrail and Cherrytrail platforms signal PME to the
+> PMC to wakeup the system. When this happens software needs to clear the
+> PME_B0_STS bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
+> 
+> This is modelled in ACPI through the INT0002 ACPI device.
+> 
+> This commit adds a driver which will bind to that device, call the
+> ACPI event handler for the wakeup and clear the interrupt source
+> avoiding the irq storm.
+> 
+> Cc: joeyli <jlee@suse.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Takashi Iwai <tiwai@suse.de>
 > ---
->  drivers/platform/x86/asus-wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index 8499d3ae4257..0ace471cb700 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1761,7 +1761,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_D=
-EVID_CARDREADER);
->  ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESUME)=
-;
->  ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENABLE)=
-;
->
-> -static ssize_t store_cpufv(struct device *dev, struct device_attribute *=
-attr,
-> +static ssize_t cpufv_store(struct device *dev, struct device_attribute *=
-attr,
->                            const char *buf, size_t count)
->  {
->         int value, rv;
-> @@ -1778,7 +1778,7 @@ static ssize_t store_cpufv(struct device *dev, stru=
-ct device_attribute *attr,
->         return count;
->  }
->
-> -static DEVICE_ATTR(cpufv, S_IRUGO | S_IWUSR, NULL, store_cpufv);
-> +static DEVICE_ATTR_WO(cpufv);
->
->  static struct attribute *platform_attributes[] =3D {
->         &dev_attr_cpufv.attr,
-> --
-> 2.12.2
->
+> Changes in v2:
+> -Remove dev_err after malloc failure
+> -Remove unused empty runtime pm callbacks
+> -s/GPE0A_PME_/GPE0A_PME_B0_/
+> -Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
 
+Please feel free to add:
+	Reviewed-by: Joey Lee <jlee@suse.com>
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks a lot!
+Joey Lee
