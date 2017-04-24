@@ -1,69 +1,37 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86/intel-vbtn: add volume up and down
-Date: Mon, 24 Apr 2017 23:55:17 +0300
-Message-ID: <CAHp75VcrdF13VAAJFTPasOqUBFkVmTYLRUF9ZbnnRem52FTWtA@mail.gmail.com>
-References: <20170424204727.8872-1-madman2003@shikahr.net>
+From: "Ms. Katherine" <ulia@distral.ro>
+Subject: EXTREMELY IMPORTANT
+Date: Mon, 24 Apr 2017 20:02:28 +0100
+Message-ID: <20170424190235.4479951B3A36@mail.distral.ro>
+Reply-To: kathrynnmison@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:35354 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S975202AbdDXUzS (ORCPT
+Received: from mail.distral.ro ([5.2.192.160]:46527 "EHLO mail.distral.ro"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S977970AbdDXVBw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2017 16:55:18 -0400
-In-Reply-To: <20170424204727.8872-1-madman2003@shikahr.net>
+        Mon, 24 Apr 2017 17:01:52 -0400
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Maarten Maathuis <madman2003@gmail.com>
-Cc: AceLan Kao <acelan.kao@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maarten Maathuis <madman2003@shikahr.net>
+To: Recipients <ulia@distral.ro>
 
-On Mon, Apr 24, 2017 at 11:47 PM, Maarten Maathuis <madman2003@gmail.com> wrote:
-> Tested on HP Elite X2 1012 G1.
-> Matches event report of Lenovo Helix 2
-> (https://www.spinics.net/lists/ibm-acpi-devel/msg03982.html).
+Dear Beloved, Sorry for the inconvenience, I am getting in touch with you regarding an extremely important and urgent matter, Please I need your urgent assistance and idea to finish up a project (Orphanage Home) Due to my health condition, Everything is available to finish up the project, All I need is your idea and trust.
 
-Thanks for the patch.
+Sehr geehrte Geliebte, traurig für die Unannehmlichkeiten, ich bin in Kontakt mit Ihnen über eine äußerst wichtige und dringende Angelegenheit, Bitte brauche ich Ihre dringende Hilfe und Idee, um ein Projekt zu beenden (Orphanage Home) Wegen meines Gesundheitszustandes ist alles verfügbar Beenden Sie das Projekt, Alles was ich brauche ist Ihre Idee und Vertrauen.
 
-A bit of work still required.
+Please contact me for more details.
+Contact Email: kathrynnmison@gmail.com
 
-According to Submitting Patches document [1] we need your Signed-off-by tag.
+Thanks
 
-Besides that see my comment below.
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
-[1] https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
-
-
-> ---
->  drivers/platform/x86/intel-vbtn.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index 554e82ebe83c..1fbebbad350d 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -35,8 +35,12 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
->
->  /* In theory, these are HID usages. */
->  static const struct key_entry intel_vbtn_keymap[] = {
-
-> -       { KE_IGNORE, 0xC0, { KEY_POWER } },     /* power key press */
-> -       { KE_KEY, 0xC1, { KEY_POWER } },        /* power key release */
-> +       { KE_IGNORE, 0xC0, { KEY_POWER } },      /* power key press */
-> +       { KE_KEY, 0xC1, { KEY_POWER } },         /* power key release */
-
-As far as I can see nothing should happen on these lines. I think your
-editor (or maybe email setup) is configured somehow wrongly. We expect
-TAB as an indentation starter.
-
-We also encourage to use git send-email tool instead of manual
-submitting patches through some (broken) MUAs.
-
-> +       { KE_KEY, 0xC4, { KEY_VOLUMEUP} },       /* volume-up key press */
-> +       { KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },   /* volume-up key release */
-> +       { KE_KEY, 0xC6, { KEY_VOLUMEDOWN} },     /* volume-down key press */
-> +       { KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } }, /* volume-down key release */
->         { KE_END },
 
 -- 
-With Best Regards,
-Andy Shevchenko
+This message has been scanned for viruses and
+dangerous content by MailScanner, and is
+believed to be clean.
