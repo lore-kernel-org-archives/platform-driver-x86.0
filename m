@@ -1,279 +1,272 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 09/10] platform/x86: fujitsu-laptop: use device-specific data in LED-related code
-Date: Mon, 24 Apr 2017 15:33:33 +0200
-Message-ID: <20170424133334.7064-10-kernel@kempniu.pl>
+Subject: [PATCH 07/10] platform/x86: fujitsu-laptop: use device-specific data in backlight code
+Date: Mon, 24 Apr 2017 15:33:31 +0200
+Message-ID: <20170424133334.7064-8-kernel@kempniu.pl>
 References: <20170424133334.7064-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:34658 "EHLO
-        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1171329AbdDXNds (ORCPT
+Received: from mail-lf0-f66.google.com ([209.85.215.66]:34638 "EHLO
+        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1171387AbdDXNdp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2017 09:33:48 -0400
-Received: by mail-lf0-f68.google.com with SMTP id x72so16554190lfb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 06:33:46 -0700 (PDT)
+        Mon, 24 Apr 2017 09:33:45 -0400
+Received: by mail-lf0-f66.google.com with SMTP id x72so16554081lfb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 06:33:45 -0700 (PDT)
 In-Reply-To: <20170424133334.7064-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-In order to perform their duties, all LED callbacks need a handle to the
-FUJ02E3 ACPI device.  If that handle is to be fetched without accessing
-module-wide data, it needs to be extracted from data that gets passed to
-the LED callbacks as arguments.  However, LED core does not currently
-support supplying driver-specific pointers to struct led_classdev
-callbacks, so the latter will have to be implemented a bit differently
-than backlight device callbacks and platform device attribute callbacks.
-
-As the FUJ02E3 ACPI device is the parent device of all LED class devices
-registered by fujitsu-laptop, we can get to the struct acpi_device
-representing the former by following the parent link present inside the
-struct device belonging to the struct led_classdev passed as an argument
-to each LED callback.  Note that acpi_driver_data() is not used to
-retrieve the ACPI handle.  Doing that would break cleanup upon module
-removal, because the managed LED class device release callback,
-devm_led_classdev_release(), would be called after the bus-level device
-removal callback, acpi_device_remove(), which sets the driver_data
-member of struct acpi_device to NULL and as devm_led_classdev_release()
-calls led_classdev_unregister(), which in turn resets the LED's
-brightness to LED_OFF, LED callbacks would not be able to retrieve the
-ACPI handle needed to perform that operation.  To work around this, the
-handle is retrieved directly from struct acpi_device as the latter is
-guaranteed to be available upon brightness reset because parent device's
-reference count is only decremented once brightness gets reset.
-
-To get rid of module-wide structures defining LED class devices,
-allocate them dynamically using devm_kzalloc() and initialize them in
-acpi_fujitsu_laptop_leds_register().
+To prevent using module-wide data in backlight-related code, employ
+acpi_driver_data() and bl_get_data() to fetch device-specific data to
+work on in each function.  This makes the input local variable in
+acpi_fujitsu_bl_notify() redundant, so remove it.  Remove the
+module-wide struct fujitsu_bl as it is now redundant.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 113 ++++++++++++++++------------------
- 1 file changed, 53 insertions(+), 60 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 89 ++++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index f26abc41266e..77082e35f26a 100644
+index 780e11b43d27..fb46652250c7 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -635,6 +635,7 @@ static void fujitsu_laptop_platform_remove(void)
- static int logolamp_set(struct led_classdev *cdev,
- 			enum led_brightness brightness)
+@@ -138,7 +138,6 @@ struct fujitsu_bl {
+ 	unsigned int brightness_level;
+ };
+ 
+-static struct fujitsu_bl *fujitsu_bl;
+ static int use_alt_lcd_levels = -1;
+ static bool disable_brightness_adjust;
+ 
+@@ -209,14 +208,15 @@ static int fext_leds(acpi_handle handle, int op, int feature, int state)
+ 
+ /* Hardware access for LCD brightness control */
+ 
+-static int set_lcd_level(int level)
++static int set_lcd_level(struct acpi_device *device, int level)
  {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	int poweron = FUNC_LED_ON, always = FUNC_LED_ON;
- 	int ret;
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	acpi_status status;
+ 	char *method;
  
-@@ -644,136 +645,120 @@ static int logolamp_set(struct led_classdev *cdev,
- 	if (brightness < LED_FULL)
- 		always = FUNC_LED_OFF;
+ 	switch (use_alt_lcd_levels) {
+ 	case -1:
+-		if (acpi_has_method(fujitsu_bl->handle, "SBL2"))
++		if (acpi_has_method(priv->handle, "SBL2"))
+ 			method = "SBL2";
+ 		else
+ 			method = "SBLL";
+@@ -232,72 +232,77 @@ static int set_lcd_level(int level)
+ 	vdbg_printk(FUJLAPTOP_DBG_TRACE, "set lcd level via %s [%d]\n",
+ 		    method, level);
  
--	ret = fext_leds(fujitsu_laptop->handle, 0x1, LOGOLAMP_POWERON, poweron);
-+	ret = fext_leds(handle, 0x1, LOGOLAMP_POWERON, poweron);
- 	if (ret < 0)
- 		return ret;
+-	if (level < 0 || level >= fujitsu_bl->max_brightness)
++	if (level < 0 || level >= priv->max_brightness)
+ 		return -EINVAL;
  
--	return fext_leds(fujitsu_laptop->handle, 0x1, LOGOLAMP_ALWAYS, always);
-+	return fext_leds(handle, 0x1, LOGOLAMP_ALWAYS, always);
+-	status = acpi_execute_simple_method(fujitsu_bl->handle, method, level);
++	status = acpi_execute_simple_method(priv->handle, method, level);
+ 	if (ACPI_FAILURE(status)) {
+ 		vdbg_printk(FUJLAPTOP_DBG_ERROR, "Failed to evaluate %s\n",
+ 			    method);
+ 		return -ENODEV;
+ 	}
+ 
+-	fujitsu_bl->brightness_level = level;
++	priv->brightness_level = level;
+ 
+ 	return 0;
  }
  
- static enum led_brightness logolamp_get(struct led_classdev *cdev)
+-static int get_lcd_level(void)
++static int get_lcd_level(struct acpi_device *device)
  {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	int ret;
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	unsigned long long state = 0;
+ 	acpi_status status = AE_OK;
  
--	ret = fext_leds(fujitsu_laptop->handle, 0x2, LOGOLAMP_ALWAYS, 0x0);
-+	ret = fext_leds(handle, 0x2, LOGOLAMP_ALWAYS, 0x0);
- 	if (ret == FUNC_LED_ON)
- 		return LED_FULL;
+ 	vdbg_printk(FUJLAPTOP_DBG_TRACE, "get lcd level via GBLL\n");
  
--	ret = fext_leds(fujitsu_laptop->handle, 0x2, LOGOLAMP_POWERON, 0x0);
-+	ret = fext_leds(handle, 0x2, LOGOLAMP_POWERON, 0x0);
- 	if (ret == FUNC_LED_ON)
- 		return LED_HALF;
+-	status = acpi_evaluate_integer(fujitsu_bl->handle, "GBLL", NULL,
+-				       &state);
++	status = acpi_evaluate_integer(priv->handle, "GBLL", NULL, &state);
+ 	if (ACPI_FAILURE(status))
+ 		return 0;
  
- 	return LED_OFF;
+-	fujitsu_bl->brightness_level = state & 0x0fffffff;
++	priv->brightness_level = state & 0x0fffffff;
+ 
+-	return fujitsu_bl->brightness_level;
++	return priv->brightness_level;
  }
  
--static struct led_classdev logolamp_led = {
--	.name = "fujitsu::logolamp",
--	.brightness_set_blocking = logolamp_set,
--	.brightness_get = logolamp_get
--};
--
- static int kblamps_set(struct led_classdev *cdev,
- 		       enum led_brightness brightness)
+-static int get_max_brightness(void)
++static int get_max_brightness(struct acpi_device *device)
  {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	unsigned long long state = 0;
+ 	acpi_status status = AE_OK;
+ 
+ 	vdbg_printk(FUJLAPTOP_DBG_TRACE, "get max lcd level via RBLL\n");
+ 
+-	status = acpi_evaluate_integer(fujitsu_bl->handle, "RBLL", NULL,
+-				       &state);
++	status = acpi_evaluate_integer(priv->handle, "RBLL", NULL, &state);
+ 	if (ACPI_FAILURE(status))
+ 		return -1;
+ 
+-	fujitsu_bl->max_brightness = state;
++	priv->max_brightness = state;
+ 
+-	return fujitsu_bl->max_brightness;
++	return priv->max_brightness;
+ }
+ 
+ /* Backlight device stuff */
+ 
+ static int bl_get_brightness(struct backlight_device *b)
+ {
+-	return b->props.power == FB_BLANK_POWERDOWN ? 0 : get_lcd_level();
++	struct acpi_device *device = bl_get_data(b);
 +
- 	if (brightness >= LED_FULL)
--		return fext_leds(fujitsu_laptop->handle, 0x1, KEYBOARD_LAMPS,
--				 FUNC_LED_ON);
-+		return fext_leds(handle, 0x1, KEYBOARD_LAMPS, FUNC_LED_ON);
- 	else
--		return fext_leds(fujitsu_laptop->handle, 0x1, KEYBOARD_LAMPS,
--				 FUNC_LED_OFF);
-+		return fext_leds(handle, 0x1, KEYBOARD_LAMPS, FUNC_LED_OFF);
++	return b->props.power == FB_BLANK_POWERDOWN ? 0 : get_lcd_level(device);
  }
  
- static enum led_brightness kblamps_get(struct led_classdev *cdev)
+ static int bl_update_status(struct backlight_device *b)
  {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	enum led_brightness brightness = LED_OFF;
- 
--	if (fext_leds(fujitsu_laptop->handle,
--		      0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
-+	if (fext_leds(handle, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
- 		brightness = LED_FULL;
- 
- 	return brightness;
- }
- 
--static struct led_classdev kblamps_led = {
--	.name = "fujitsu::kblamps",
--	.brightness_set_blocking = kblamps_set,
--	.brightness_get = kblamps_get
--};
--
- static int radio_led_set(struct led_classdev *cdev,
- 			 enum led_brightness brightness)
- {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
+-	if (fujitsu_bl->fext_handle) {
++	struct acpi_device *device = bl_get_data(b);
++	struct fujitsu_bl *priv = acpi_driver_data(device);
 +
- 	if (brightness >= LED_FULL)
--		return fext_flags(fujitsu_laptop->handle, 0x5, RADIO_LED_ON,
--				  RADIO_LED_ON);
-+		return fext_flags(handle, 0x5, RADIO_LED_ON, RADIO_LED_ON);
- 	else
--		return fext_flags(fujitsu_laptop->handle, 0x5, RADIO_LED_ON,
--				  0x0);
-+		return fext_flags(handle, 0x5, RADIO_LED_ON, 0x0);
++	if (priv->fext_handle) {
+ 		if (b->props.power == FB_BLANK_POWERDOWN)
+-			fext_backlight(fujitsu_bl->fext_handle, 0x1, 0x4, 0x3);
++			fext_backlight(priv->fext_handle, 0x1, 0x4, 0x3);
+ 		else
+-			fext_backlight(fujitsu_bl->fext_handle, 0x1, 0x4, 0x0);
++			fext_backlight(priv->fext_handle, 0x1, 0x4, 0x0);
+ 	}
+ 
+-	return set_lcd_level(b->props.brightness);
++	return set_lcd_level(device, b->props.brightness);
  }
  
- static enum led_brightness radio_led_get(struct led_classdev *cdev)
+ static const struct backlight_ops fujitsu_bl_ops = {
+@@ -393,23 +398,24 @@ static int acpi_fujitsu_bl_input_setup(struct acpi_device *device)
+ 
+ static int fujitsu_backlight_register(struct acpi_device *device)
  {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	enum led_brightness brightness = LED_OFF;
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	const struct backlight_properties props = {
+-		.brightness = fujitsu_bl->brightness_level,
+-		.max_brightness = fujitsu_bl->max_brightness - 1,
++		.brightness = priv->brightness_level,
++		.max_brightness = priv->max_brightness - 1,
+ 		.type = BACKLIGHT_PLATFORM
+ 	};
+ 	struct backlight_device *bd;
+ 	acpi_status status;
  
--	if (fext_flags(fujitsu_laptop->handle, 0x4, 0x0, 0x0) & RADIO_LED_ON)
-+	if (fext_flags(handle, 0x4, 0x0, 0x0) & RADIO_LED_ON)
- 		brightness = LED_FULL;
+ 	bd = devm_backlight_device_register(&device->dev, "fujitsu-laptop",
+-					    &device->dev, NULL,
++					    &device->dev, device,
+ 					    &fujitsu_bl_ops, &props);
+ 	if (IS_ERR(bd))
+ 		return PTR_ERR(bd);
  
- 	return brightness;
- }
+-	status = acpi_get_handle(NULL, "\\_SB.FEXT", &fujitsu_bl->fext_handle);
++	status = acpi_get_handle(NULL, "\\_SB.FEXT", &priv->fext_handle);
+ 	if (ACPI_SUCCESS(status) &&
+-	    fext_backlight(fujitsu_bl->fext_handle, 0x2, 0x4, 0x0) == 3)
++	    fext_backlight(priv->fext_handle, 0x2, 0x4, 0x0) == 3)
+ 		bd->props.power = FB_BLANK_POWERDOWN;
  
--static struct led_classdev radio_led = {
--	.name = "fujitsu::radio_led",
--	.brightness_set_blocking = radio_led_set,
--	.brightness_get = radio_led_get,
--	.default_trigger = "rfkill-any"
--};
+ 	return 0;
+@@ -431,8 +437,7 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	fujitsu_bl = priv;
+-	fujitsu_bl->handle = device->handle;
++	priv->handle = device->handle;
+ 	sprintf(acpi_device_name(device), "%s", ACPI_FUJITSU_BL_DEVICE_NAME);
+ 	sprintf(acpi_device_class(device), "%s", ACPI_FUJITSU_CLASS);
+ 	device->driver_data = priv;
+@@ -441,7 +446,7 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	if (error)
+ 		return error;
+ 
+-	error = acpi_bus_update_power(fujitsu_bl->handle, &state);
++	error = acpi_bus_update_power(priv->handle, &state);
+ 	if (error) {
+ 		pr_err("Error reading power state\n");
+ 		return error;
+@@ -451,17 +456,17 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	       acpi_device_name(device), acpi_device_bid(device),
+ 	       !device->power.state ? "on" : "off");
+ 
+-	if (acpi_has_method(device->handle, METHOD_NAME__INI)) {
++	if (acpi_has_method(priv->handle, METHOD_NAME__INI)) {
+ 		vdbg_printk(FUJLAPTOP_DBG_INFO, "Invoking _INI\n");
+ 		if (ACPI_FAILURE
+ 		    (acpi_evaluate_object
+-		     (device->handle, METHOD_NAME__INI, NULL, NULL)))
++		     (priv->handle, METHOD_NAME__INI, NULL, NULL)))
+ 			pr_err("_INI Method failed\n");
+ 	}
+ 
+-	if (get_max_brightness() <= 0)
+-		fujitsu_bl->max_brightness = FUJITSU_LCD_N_LEVELS;
+-	get_lcd_level();
++	if (get_max_brightness(device) <= 0)
++		priv->max_brightness = FUJITSU_LCD_N_LEVELS;
++	get_lcd_level(device);
+ 
+ 	error = fujitsu_backlight_register(device);
+ 	if (error)
+@@ -474,21 +479,19 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 
+ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+ {
+-	struct input_dev *input;
++	struct fujitsu_bl *priv = acpi_driver_data(device);
+ 	int oldb, newb;
+ 
+-	input = fujitsu_bl->input;
 -
- static int eco_led_set(struct led_classdev *cdev,
- 		       enum led_brightness brightness)
- {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	int curr;
+ 	if (event != ACPI_FUJITSU_NOTIFY_CODE1) {
+ 		vdbg_printk(FUJLAPTOP_DBG_WARN,
+ 			    "unsupported event [0x%x]\n", event);
+-		sparse_keymap_report_event(input, -1, 1, true);
++		sparse_keymap_report_event(priv->input, -1, 1, true);
+ 		return;
+ 	}
  
--	curr = fext_leds(fujitsu_laptop->handle, 0x2, ECO_LED, 0x0);
-+	curr = fext_leds(handle, 0x2, ECO_LED, 0x0);
- 	if (brightness >= LED_FULL)
--		return fext_leds(fujitsu_laptop->handle, 0x1, ECO_LED,
--				 curr | ECO_LED_ON);
-+		return fext_leds(handle, 0x1, ECO_LED, curr | ECO_LED_ON);
- 	else
--		return fext_leds(fujitsu_laptop->handle, 0x1, ECO_LED,
--				 curr & ~ECO_LED_ON);
-+		return fext_leds(handle, 0x1, ECO_LED, curr & ~ECO_LED_ON);
+-	oldb = fujitsu_bl->brightness_level;
+-	get_lcd_level();
+-	newb = fujitsu_bl->brightness_level;
++	oldb = priv->brightness_level;
++	get_lcd_level(device);
++	newb = priv->brightness_level;
+ 
+ 	vdbg_printk(FUJLAPTOP_DBG_TRACE, "brightness button event [%i -> %i]\n",
+ 		    oldb, newb);
+@@ -497,9 +500,9 @@ static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
+ 		return;
+ 
+ 	if (!disable_brightness_adjust)
+-		set_lcd_level(newb);
++		set_lcd_level(device, newb);
+ 
+-	sparse_keymap_report_event(input, oldb < newb, 1, true);
++	sparse_keymap_report_event(priv->input, oldb < newb, 1, true);
  }
  
- static enum led_brightness eco_led_get(struct led_classdev *cdev)
- {
-+	acpi_handle handle = to_acpi_device(cdev->dev->parent)->handle;
- 	enum led_brightness brightness = LED_OFF;
- 
--	if (fext_leds(fujitsu_laptop->handle, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
-+	if (fext_leds(handle, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
- 		brightness = LED_FULL;
- 
- 	return brightness;
- }
- 
--static struct led_classdev eco_led = {
--	.name = "fujitsu::eco_led",
--	.brightness_set_blocking = eco_led_set,
--	.brightness_get = eco_led_get
--};
--
- static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- {
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
-+	struct led_classdev *led;
- 	int result;
- 
--	if (fext_leds(fujitsu_laptop->handle,
--		      0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
--		result = devm_led_classdev_register(&device->dev,
--						    &logolamp_led);
-+	if (fext_leds(priv->handle, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
-+		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		led->name = "fujitsu::logolamp";
-+		led->brightness_set_blocking = logolamp_set;
-+		led->brightness_get = logolamp_get;
-+		result = devm_led_classdev_register(&device->dev, led);
- 		if (result)
- 			return result;
- 	}
- 
--	if ((fext_leds(fujitsu_laptop->handle,
--		       0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
--	    (fext_buttons(fujitsu_laptop->handle, 0x0, 0x0, 0x0) == 0x0)) {
--		result = devm_led_classdev_register(&device->dev, &kblamps_led);
-+	if ((fext_leds(priv->handle, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
-+	    (fext_buttons(priv->handle, 0x0, 0x0, 0x0) == 0x0)) {
-+		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		led->name = "fujitsu::kblamps";
-+		led->brightness_set_blocking = kblamps_set;
-+		led->brightness_get = kblamps_get;
-+		result = devm_led_classdev_register(&device->dev, led);
- 		if (result)
- 			return result;
- 	}
-@@ -784,8 +769,13 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 	 * to also have an RF LED.  Therefore use bit 24 as an indicator
- 	 * that an RF LED is present.
- 	 */
--	if (fext_buttons(fujitsu_laptop->handle, 0x0, 0x0, 0x0) & BIT(24)) {
--		result = devm_led_classdev_register(&device->dev, &radio_led);
-+	if (fext_buttons(priv->handle, 0x0, 0x0, 0x0) & BIT(24)) {
-+		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		led->name = "fujitsu::radio_led";
-+		led->brightness_set_blocking = radio_led_set;
-+		led->brightness_get = radio_led_get;
-+		led->default_trigger = "rfkill-any";
-+		result = devm_led_classdev_register(&device->dev, led);
- 		if (result)
- 			return result;
- 	}
-@@ -795,10 +785,13 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 	 * bit 14 seems to indicate presence of said led as well.
- 	 * Confirm by testing the status.
- 	 */
--	if ((fext_leds(fujitsu_laptop->handle, 0x0, 0x0, 0x0) & BIT(14)) &&
--	    (fext_leds(fujitsu_laptop->handle,
--		       0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
--		result = devm_led_classdev_register(&device->dev, &eco_led);
-+	if ((fext_leds(priv->handle, 0x0, 0x0, 0x0) & BIT(14)) &&
-+	    (fext_leds(priv->handle, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
-+		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		led->name = "fujitsu::eco_led";
-+		led->brightness_set_blocking = eco_led_set;
-+		led->brightness_get = eco_led_get;
-+		result = devm_led_classdev_register(&device->dev, led);
- 		if (result)
- 			return result;
- 	}
+ /* ACPI device for hotkey handling */
 -- 
 2.12.2
