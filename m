@@ -1,128 +1,92 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 05/10] platform/x86: fujitsu-laptop: distinguish current uses of device-specific data
-Date: Mon, 24 Apr 2017 15:33:29 +0200
-Message-ID: <20170424133334.7064-6-kernel@kempniu.pl>
+Subject: [PATCH 06/10] platform/x86: fujitsu-laptop: allocate struct fujitsu_bl in acpi_fujitsu_bl_add()
+Date: Mon, 24 Apr 2017 15:33:30 +0200
+Message-ID: <20170424133334.7064-7-kernel@kempniu.pl>
 References: <20170424133334.7064-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f67.google.com ([209.85.215.67]:34622 "EHLO
-        mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1171307AbdDXNdo (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2017 09:33:44 -0400
-Received: by mail-lf0-f67.google.com with SMTP id x72so16554013lfb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Apr 2017 06:33:43 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170424133334.7064-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-In portions of the driver which use device-specific data, rename local
-variables from fujitsu_bl and fujitsu_laptop to priv in order to clearly
-distinguish these parts from code that uses module-wide data.
+Only allocate memory for struct fujitsu_bl when the FUJ02B1 ACPI device
+is present.  Use devm_kzalloc() for allocating memory to simplify
+cleanup.
+
+Until all backlight-related code is modified to only use device-specific
+data, the pointer to the allocated memory still has to be stored in a
+module-wide variable.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 48 +++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 5f6b34a97348..536b601c7067 100644
+index 536b601c7067..780e11b43d27 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -369,26 +369,26 @@ static const struct key_entry keymap_backlight[] = {
+@@ -417,6 +417,7 @@ static int fujitsu_backlight_register(struct acpi_device *device)
  
- static int acpi_fujitsu_bl_input_setup(struct acpi_device *device)
+ static int acpi_fujitsu_bl_add(struct acpi_device *device)
  {
--	struct fujitsu_bl *fujitsu_bl = acpi_driver_data(device);
-+	struct fujitsu_bl *priv = acpi_driver_data(device);
- 	int ret;
++	struct fujitsu_bl *priv;
+ 	int state = 0;
+ 	int error;
  
--	fujitsu_bl->input = devm_input_allocate_device(&device->dev);
--	if (!fujitsu_bl->input)
-+	priv->input = devm_input_allocate_device(&device->dev);
-+	if (!priv->input)
- 		return -ENOMEM;
+@@ -426,10 +427,15 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
+ 	if (!device)
+ 		return -EINVAL;
  
--	snprintf(fujitsu_bl->phys, sizeof(fujitsu_bl->phys),
--		 "%s/video/input0", acpi_device_hid(device));
-+	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
-+		 acpi_device_hid(device));
++	priv = devm_kzalloc(&device->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	fujitsu_bl = priv;
+ 	fujitsu_bl->handle = device->handle;
+ 	sprintf(acpi_device_name(device), "%s", ACPI_FUJITSU_BL_DEVICE_NAME);
+ 	sprintf(acpi_device_class(device), "%s", ACPI_FUJITSU_CLASS);
+-	device->driver_data = fujitsu_bl;
++	device->driver_data = priv;
  
--	fujitsu_bl->input->name = acpi_device_name(device);
--	fujitsu_bl->input->phys = fujitsu_bl->phys;
--	fujitsu_bl->input->id.bustype = BUS_HOST;
--	fujitsu_bl->input->id.product = 0x06;
-+	priv->input->name = acpi_device_name(device);
-+	priv->input->phys = priv->phys;
-+	priv->input->id.bustype = BUS_HOST;
-+	priv->input->id.product = 0x06;
+ 	error = acpi_fujitsu_bl_input_setup(device);
+ 	if (error)
+@@ -1018,13 +1024,9 @@ static int __init fujitsu_init(void)
+ 	if (acpi_disabled)
+ 		return -ENODEV;
  
--	ret = sparse_keymap_setup(fujitsu_bl->input, keymap_backlight, NULL);
-+	ret = sparse_keymap_setup(priv->input, keymap_backlight, NULL);
+-	fujitsu_bl = kzalloc(sizeof(struct fujitsu_bl), GFP_KERNEL);
+-	if (!fujitsu_bl)
+-		return -ENOMEM;
+-
+ 	ret = acpi_bus_register_driver(&acpi_fujitsu_bl_driver);
  	if (ret)
- 		return ret;
+-		goto err_free_fujitsu_bl;
++		return ret;
  
--	return input_register_device(fujitsu_bl->input);
-+	return input_register_device(priv->input);
+ 	/* Register platform stuff */
+ 
+@@ -1054,8 +1056,6 @@ static int __init fujitsu_init(void)
+ 	platform_driver_unregister(&fujitsu_pf_driver);
+ err_unregister_acpi:
+ 	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
+-err_free_fujitsu_bl:
+-	kfree(fujitsu_bl);
+ 
+ 	return ret;
+ }
+@@ -1070,8 +1070,6 @@ static void __exit fujitsu_cleanup(void)
+ 
+ 	acpi_bus_unregister_driver(&acpi_fujitsu_bl_driver);
+ 
+-	kfree(fujitsu_bl);
+-
+ 	pr_info("driver unloaded\n");
  }
  
- static int fujitsu_backlight_register(struct acpi_device *device)
-@@ -566,27 +566,27 @@ static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
- 
- static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
- {
--	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 	int ret;
- 
--	fujitsu_laptop->input = devm_input_allocate_device(&device->dev);
--	if (!fujitsu_laptop->input)
-+	priv->input = devm_input_allocate_device(&device->dev);
-+	if (!priv->input)
- 		return -ENOMEM;
- 
--	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
--		 "%s/video/input0", acpi_device_hid(device));
-+	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
-+		 acpi_device_hid(device));
- 
--	fujitsu_laptop->input->name = acpi_device_name(device);
--	fujitsu_laptop->input->phys = fujitsu_laptop->phys;
--	fujitsu_laptop->input->id.bustype = BUS_HOST;
--	fujitsu_laptop->input->id.product = 0x06;
-+	priv->input->name = acpi_device_name(device);
-+	priv->input->phys = priv->phys;
-+	priv->input->id.bustype = BUS_HOST;
-+	priv->input->id.product = 0x06;
- 
- 	dmi_check_system(fujitsu_laptop_dmi_table);
--	ret = sparse_keymap_setup(fujitsu_laptop->input, keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input, keymap, NULL);
- 	if (ret)
- 		return ret;
- 
--	return input_register_device(fujitsu_laptop->input);
-+	return input_register_device(priv->input);
- }
- 
- static int fujitsu_laptop_platform_add(void)
-@@ -885,11 +885,11 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 
- static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
- {
--	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 
- 	fujitsu_laptop_platform_remove();
- 
--	kfifo_free(&fujitsu_laptop->fifo);
-+	kfifo_free(&priv->fifo);
- 
- 	return 0;
- }
 -- 
 2.12.2
