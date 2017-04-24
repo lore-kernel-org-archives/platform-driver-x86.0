@@ -1,115 +1,51 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: Silead DMI driver
-Date: Mon, 24 Apr 2017 09:59:35 -0700
-Message-ID: <20170424165935.GA12374@dtor-ws>
-References: <20170424132356.044ae04f@endymion>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] drm/etnaviv: add thermal dependency
+Date: Mon, 24 Apr 2017 19:39:27 +0200
+Message-ID: <CAK8P3a39B5C9ZcE7ZBMe9FaoTiBP5Dp4o_25V05nC5O8J+fTrg@mail.gmail.com>
+References: <20170419181209.537907-1-arnd@arndb.de> <1493030694.2891.10.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:35888 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760740AbdDXQ7j (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Apr 2017 12:59:39 -0400
-Content-Disposition: inline
-In-Reply-To: <20170424132356.044ae04f@endymion>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1493030694.2891.10.camel@pengutronix.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Sujith Thomas <sujith.thomas@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Russell King <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner <christian.gmeiner@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, etnaviv@lists.freedesktop.org, dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Jean,
+On Mon, Apr 24, 2017 at 12:44 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Am Mittwoch, den 19.04.2017, 20:11 +0200 schrieb Arnd Bergmann:
+>> When CONFIG_THERMAL is enabled as a loadable module, and etnaviv is
+>> built-in, we get a link error:
+>>
+>> drivers/gpu/drm/etnaviv/etnaviv_gpu.o: In function `etnaviv_gpu_bind':
+>> etnaviv_gpu.c:(.text.etnaviv_gpu_bind+0x34): undefined reference to `thermal_of_cooling_device_register'
+>> etnaviv_gpu.c:(.text.etnaviv_gpu_bind+0xe0): undefined reference to `thermal_cooling_device_unregister'
+>> drivers/gpu/drm/etnaviv/etnaviv_gpu.o: In function `etnaviv_gpu_unbind':
+>> etnaviv_gpu.c:(.text.etnaviv_gpu_unbind+0xf0): undefined reference to `thermal_cooling_device_unregister'
+>>
+>> This adds a Kconfig dependency to prevent etnaviv from being built-in
+>> with CONFIG_THERMAL=m, while still allowing the valid configurations.
+>> Unfortunately, simply adding the dependency here breaks Kconfig through
+>> a dependency loop involving lots of symbols all the way until ACPI_VIDEO,
+>> which is the only video driver that explicitly selects 'THERMAL'. Turning
+>> this into a 'depends on' addresses the problem.
+>> For completeness, I'm also removing the redundant 'select THERMAL'
+>> from INTEL_MENLOW, so no other driver uses that statement.
+>>
+>> Fixes: bcdfb5e56dc5 ("drm/etnaviv: add etnaviv cooling device")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> This patch mixes a few things, so the subject doesn't really fit. I'm
+> fine with taking the patch trough my tree, if I can get an ACK on the
+> ACPI part.
 
-On Mon, Apr 24, 2017 at 01:23:56PM +0200, Jean Delvare wrote:
-> Hi all,
-> 
-> I'm looking at drivers/platform/x86/silead_dmi.c which is being added
-> to kernel v4.11 and I do not like what I see.
-> 
-> This driver is for very specific hardware. Most users won't need it.
-> Still this driver can only be built into the kernel, no modular option
-> available.
-> 
-> Apparently this first issue is caused by the necessity to add the
-> notifier at a specific point in the init sequence. Do I understand
-> correctly that the I2C device will be instantiated by the ACPI core as
-> it enumerates devices found in the ACPI tables, and you want to add the
-> missing properties at that exact point of the init sequence?
+Actually the ACPI part triggered a new warning that I haven't figured
+out completely yet. Please disregard my patch for the moment.
 
-Yes.
+I think we can just drop the dependency in ACPI_VIDEO, but I'm not
+entirely sure yet if we could hit a broken configuration with THERMAL=m
+and ACPI_VIDEO=y in that case. Unfortunately we cannot use the
+same trick in ACPI_VIDEO that I used for ETNAVIV, because of
+another circular dependency in ACPI.
 
-> 
-> As a side note, the comment about the init sequence says: "after i2c
-> core is initialized and i2c bus itself is ready" but I don't think
-> there is any actual guarantee on the latter. I see no dependency on
-> the i2c bus driver, only on the i2c core. What i2c bus driver are we
-> talking about and how can you be sure it is already loaded at that
-> point? (Not that it should matter but I'm curious.)
-
-We are talking about the i2c bus in the Linux driver model sense, i.e.
-
-	extern struct bus_type i2c_bus_type;
-
-No I2C hardware is needed at this time.
-
-> 
-> To make things worse, I see that this driver registers a bus notifier
-> unconditionally. So it will be registered on virtually _every_ x86
-> system out there, and will kick in and perform DMI checks for every I2C
-> device being added, even though most people don't need it at all. Is
-> there any excuse for not checking the DMI data _before_ registering the
-> bus notifier, so the whole thing can be skipped on the 99% of systems
-> where it is irrelevant? That wouldn't solve the undue memory
-> consumption but at least it would limit the impact on boot time.
-
-If you take a look at next you will see that we no longer register bus
-notifier unconditionally. I also thought that Hans was going to annotate
-most of the items as __initconst so that unneeded memory can be
-discarded after boot, but for that some other patches to device
-properties should trickle through various subsystems. In the end you'll
-end up with just the properties for the board you need.
-
-> 
-> I have to say I don't understand the whole complexity of the design. As
-> I understand it, the properties which are being added are only consumed
-> by the "silead" touchscreen driver. I see no necessity to add the
-> missing properties before that driver is even loaded. Can't you just
-> look for the ACPI companion device at the time the silead driver tries
-> to bind to the i2c device, and add the missing properties before
-> performing the actual probe? This would be so much simpler. What am I
-> missing?
-
-So the idea is that I am trying to make drivers in input/
-platform-independent, and move platform quirks out of them. With generic
-device properties we can finally move away from ad-hoc platform data,
-and rely on proper bindings, and that ensures at least some engineering
-control.
-
-So while looking for the ACPI companion device might be indeed very
-easy, it pushes dependencies on ACPI and platform knowledge into the
-generic driver, which I am trying to avoid. I believe
-drivers/platform/x86/ is a good place to stash all x86 platform quirks.
-
-I agree that tying this up with I2C bus notifier might not be the best
-solution overall (it was simply available tight at this time) and we
-could look into hooking this up into ACPI device enumeration to supply
-missing properties.
-
-> 
-> PS: I hope this code will die, but if it stays, I see that you call
-> to_i2c_client() on the notified device without checking if it is an
-> i2c_client. It could be an i2c_adapter instead, and then you are
-> forcibly mapping a struct i2c_client on top of a struct i2c_adapter.
-> Good luck when you will access client->name a few lines later...
-> i2c_verify_client() is what you want to use instead of to_i2c_client()
-> in that situtation.
-
-That is also should be fixed in -next. Because i2c_adapter structure is
-big enough so that looking up client->name in adapter is not going to
-blow up, nor will it likely to match, it was decided it could stay till
-next merge window.
-
-Thanks.
-
--- 
-Dmitry
+        Arnd
