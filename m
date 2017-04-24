@@ -1,45 +1,68 @@
-From: Arcadiy Ivanov <arcadiy@ivanov.biz>
-Subject: Re: [PATCH] Keyboard backlight on Dell E7470 not adjustable from /sys
- entry
-Date: Sun, 23 Apr 2017 16:54:33 -0400
-Message-ID: <274da9d5-187a-6bb5-35c7-c39d396ad14a@ivanov.biz>
-References: <20170423055648.25711-1-arcadiy@ivanov.biz>
- <201704232141.23690@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: fix cpufv sysfs file permission
+Date: Mon, 24 Apr 2017 12:14:14 +0300
+Message-ID: <CAHp75Vf7qKmbzJLfsHJXw_DQ3t8+WKHLEzLHweAq5eE2TTHKNA@mail.gmail.com>
+References: <20170422021945.5260-1-jeremy.lefaure@lse.epita.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.perfora.net ([74.208.4.194]:55775 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1163430AbdDWUyk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 23 Apr 2017 16:54:40 -0400
-In-Reply-To: <201704232141.23690@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170422021945.5260-1-jeremy.lefaure@lse.epita.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SsOpcsOpbXkgTGVmYXVyZQ==?= <jeremy.lefaure@lse.epita.fr>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 2017-04-23 15:41, Pali Rohár wrote:
-> Such macros are not needed in mainline code. They are probably useful
-> in time of writing patch, but not later to have them present in final
-> driver code.
+On Sat, Apr 22, 2017 at 5:19 AM, J=C3=A9r=C3=A9my Lefaure
+<jeremy.lefaure@lse.epita.fr> wrote:
+> The cpufv sysfs file is defined as readable by anyone even if the
+> attribute does not have a show function. The result of every read is an
+> IO error. This file should be write only.
+
+Per se patch looks good to me, though would be better to add show()
+hook as well?
+
 >
-> I sent a new patch (you are in recipients list too) which fixes getting
-> and setting timeout value when on AC. It also handles detection of
-> timeout AC value based on existence of 0x0451 SMBIOS token like Mario
-> suggested.
+> Signed-off-by: J=C3=A9r=C3=A9my Lefaure <jeremy.lefaure@lse.epita.fr>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-Your patch is great, thanks!
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index 8499d3ae4257..0ace471cb700 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1761,7 +1761,7 @@ ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_D=
+EVID_CARDREADER);
+>  ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESUME)=
+;
+>  ASUS_WMI_CREATE_DEVICE_ATTR(als_enable, 0644, ASUS_WMI_DEVID_ALS_ENABLE)=
+;
+>
+> -static ssize_t store_cpufv(struct device *dev, struct device_attribute *=
+attr,
+> +static ssize_t cpufv_store(struct device *dev, struct device_attribute *=
+attr,
+>                            const char *buf, size_t count)
+>  {
+>         int value, rv;
+> @@ -1778,7 +1778,7 @@ static ssize_t store_cpufv(struct device *dev, stru=
+ct device_attribute *attr,
+>         return count;
+>  }
+>
+> -static DEVICE_ATTR(cpufv, S_IRUGO | S_IWUSR, NULL, store_cpufv);
+> +static DEVICE_ATTR_WO(cpufv);
+>
+>  static struct attribute *platform_attributes[] =3D {
+>         &dev_attr_cpufv.attr,
+> --
+> 2.12.2
+>
 
-Regarding the debug macros: there are quite a few additional reserved 
-bits still left in the relevant data structures that may cause trouble 
-in the future. IMO having those macros available may speed up developing 
-fixes in the future.
 
-Thanks again,
 
--- 
-Arcadiy Ivanov
-arcadiy@ivanov.biz | @arcivanov | https://ivanov.biz
-https://github.com/arcivanov
+--=20
+With Best Regards,
+Andy Shevchenko
