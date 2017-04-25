@@ -1,55 +1,55 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
- AC settings
-Date: Tue, 25 Apr 2017 13:49:31 +0000
-Message-ID: <c140b70b460f45afa43bdfd7dec723b3@ausx13mpc120.AMER.DELL.COM>
-References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
- <CAHp75VfCiqeddWu9xfMud4sEWAvk+CDXTkgO5zbb++QhiTL=Bw@mail.gmail.com>
- <20170425125453.GK30553@pali>
- <CAHp75VdjZ4Ti1YPZVq8_fjUh0xuDbQ-EtZQQjaWQf2fhZs2mRw@mail.gmail.com>
- <20170425134044.GL30553@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: Resizeable PCI BAR support V4
+Date: Tue, 25 Apr 2017 17:25:25 +0300
+Message-ID: <CAHp75Ve5FickRJjba3iCumivRP0dr64n_9Y4tbMY3WGxCuyufA@mail.gmail.com>
+References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:24053 "EHLO
-        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1430759AbdDYNvY (ORCPT
+Received: from mail-qt0-f171.google.com ([209.85.216.171]:33443 "EHLO
+        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1032683AbdDYOZ1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 09:51:24 -0400
-In-Reply-To: <20170425134044.GL30553@pali>
-Content-Language: en-US
+        Tue, 25 Apr 2017 10:25:27 -0400
+In-Reply-To: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, andy.shevchenko@gmail.com
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, arcadiy@ivanov.biz, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
+Cc: helgaas@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCAyNSwgMjAxNyA4
-OjQxIEFNDQo+IFRvOiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+
-DQo+IENjOiBNYXR0aGV3IEdhcnJldHQgPG1qZzU5QHNyY2YudWNhbS5vcmc+OyBEYXJyZW4gSGFy
-dA0KPiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFk
-ZWFkLm9yZz47IEFyY2FkaXkgSXZhbm92DQo+IDxhcmNhZGl5QGl2YW5vdi5iaXo+OyBMaW1vbmNp
-ZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsNCj4gUGxhdGZvcm0gRHJp
-dmVyIDxwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRlbGwtbGFwdG9wOiBB
-ZGRzIHN1cHBvcnQgZm9yIGtleWJvYXJkIGJhY2tsaWdodCB0aW1lb3V0IEFDDQo+IHNldHRpbmdz
-DQo+IA0KPiBPbiBUdWVzZGF5IDI1IEFwcmlsIDIwMTcgMTY6MzI6MzYgQW5keSBTaGV2Y2hlbmtv
-IHdyb3RlOg0KPiA+IE9uIFR1ZSwgQXByIDI1LCAyMDE3IGF0IDM6NTQgUE0sIFBhbGkgUm9ow6Fy
-IDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gPiBPbiBUdWVzZGF5IDI1IEFwcmls
-IDIwMTcgMTU6MzY6NTYgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4+IE9uIFN1biwgQXBy
-IDIzLCAyMDE3IGF0IDEwOjQwIFBNLCBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+
-IHdyb3RlOg0KPiA+DQo+ID4gPj4gVGhpcyBwYXRjaCBtaXNzZXMgZmV3IG90aGVycyB0aGF0IHdl
-cmUgYXBwbGllZCB0byBvdXIgdGVzdGluZyAvIGZvci1uZXh0Lg0KPiA+ID4NCj4gPiA+IEFoLi4u
-IHNvcnJ5IGZvciB0aGF0IDotKCBBbmQgSSB3YXMgaW4gaW1wcmVzc2lvbiB0aGF0IHRoZXJlIHdl
-cmUgZml4ZXMNCj4gPiA+IGZvciB0aGF0IGNvZGUgd2hpY2ggdXNlIG11dGV4ZXMuLi4gTm93IEkg
-a25vdyB3aHkgSSBoYXZlIG5vdCBzZWVuIHRoZW0hDQo+ID4gPg0KPiA+ID4+IEkgaGF2ZSBhcHBs
-aWVkIGl0IHRvIHRlc3Rpbmcgd2l0aCBjb3JyZWN0ZWQgY29uZmxpY3QgKGVhc3kgdG8gZml4KSwN
-Cj4gPiA+PiB0aG91Z2ggY2hlY2sgaWYgZXZlcnl0aGluZyBzdGlsbCBhcyBzdXBwb3NlZCB0byBi
-ZS4NCj4gPiA+DQo+ID4gPiBDYW4geW91IHNlbmQgYSBsaW5rIHRvIHlvdXIgZml4Pw0KPiA+DQo+
-ID4gU3VyZSwgaGVyZSBpdCBpczoNCj4gPiBodHRwOi8vZ2l0LmluZnJhZGVhZC5vcmcvbGludXgt
-cGxhdGZvcm0tZHJpdmVycy0NCj4geDg2LmdpdC9jb21taXQvYmNmN2Q4YTMwZTI4ODhmNzhhMTk3
-NzhhMTZkM2RkOGMxMGI0YjBhZA0KPiANCj4gSXQgaXMgT0suDQo+IA0KDQpQYWxpLA0KDQpDb25z
-aWRlcmluZyB0aGlzIGlzIG5lZ2F0aXZlbHkgYWZmZWN0aW5nIGZvbGtzIG9uIHN0YWJsZSBrZXJu
-ZWwgcmVsZWFzZXMgdG9vDQp3aGVuIHVzaW5nIHRoaXMgbmV3ZXIgSFcsIHdvdWxkIHlvdSBjb25z
-aWRlciB0byBzZW5kIHRvIEBzdGFibGUgdG9vPw0KDQpUaGFua3MsDQo=
+On Tue, Apr 25, 2017 at 4:19 PM, Christian K=C3=B6nig
+<deathsimple@vodafone.de> wrote:
+> Hi everyone,
+>
+> This is the fourth incarnation of this set of patches.
+
+It would be nice if you put (next time) version of the series in each
+patch. Usually it's done quite easy by passing -vX (where X is version
+number) to git format-patch.
+
+> It enables device
+> drivers to resize and most likely also relocate the PCI BAR of devices
+> they manage to allow the CPU to access all of the device local memory at =
+once.
+>
+> This is very useful for GFX device drivers where the default PCI BAR is o=
+nly
+> about 256MB in size for compatibility reasons, but the device easily have
+> multiple gigabyte of local memory.
+>
+> Some changes since V3:
+> 1. A lot of minor style cleanups.
+> 2. Make internal  functions for changing BARs directly private to the PCI=
+ subsystem.
+> 3. Fail if any BAR is still in use when we try to change it.
+> 4. Handle intermediate bridges as well.
+> 5. Print some more messages when changing something.
+>
+> Please review and/or comment,
+
+Would look later (perhaps this week),
+
+--=20
+With Best Regards,
+Andy Shevchenko
