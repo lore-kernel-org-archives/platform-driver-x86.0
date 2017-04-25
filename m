@@ -1,130 +1,74 @@
-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH 4/4] drm/amdgpu: resize VRAM BAR for CPU access v2
-Date: Tue, 25 Apr 2017 15:19:54 +0200
-Message-ID: <1493126394-1239-5-git-send-email-deathsimple@vodafone.de>
-References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Tue, 25 Apr 2017 16:29:05 +0300
+Message-ID: <CAHp75VcZAtpVDW2BbHZ5-3NZX4tgmz24U4=-oYTq-_h+eUTdFw@mail.gmail.com>
+References: <aefdf4f6a7b0cf4af92d51ce2b9b73284cc03ffe.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: helgaas@kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:35266 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1430559AbdDYN3H (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 25 Apr 2017 09:29:07 -0400
+In-Reply-To: <aefdf4f6a7b0cf4af92d51ce2b9b73284cc03ffe.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
 
-RnJvbTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgoKVHJ5IHRv
-IHJlc2l6ZSBCQVIwIHRvIGxldCBDUFUgYWNjZXNzIGFsbCBvZiBWUkFNLgoKdjI6IHJlYmFzZWQs
-IHN0eWxlIGNsZWFudXBzLCBkaXNhYmxlIG1lbSBkZWNvZGUgYmVmb3JlIHJlc2l6ZSwKICAgIGhh
-bmRsZSBnbWNfdjkgYXMgd2VsbCwgcm91bmQgc2l6ZSB1cCB0byBwb3dlciBvZiB0d28uCgpTaWdu
-ZWQtb2ZmLWJ5OiBDaHJpc3RpYW4gS8O2bmlnIDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+Ci0t
-LQogZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1LmggICAgICAgIHwgIDEgKwogZHJp
-dmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jIHwgMzcgKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjdfMC5j
-ICAgICAgfCAgOCArKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjhfMC5j
-ICAgICAgfCAgOCArKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjlfMC5j
-ICAgICAgfCAxMCArKysrLS0tLQogNSBmaWxlcyBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCAx
-MCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9h
-bWRncHUuaCBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oCmluZGV4IDRhMTZl
-M2MuLjk0ODQwNjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdw
-dS5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oCkBAIC0xODc5LDYg
-KzE4NzksNyBAQCB1aW50NjRfdCBhbWRncHVfdHRtX3R0X3B0ZV9mbGFncyhzdHJ1Y3QgYW1kZ3B1
-X2RldmljZSAqYWRldiwgc3RydWN0IHR0bV90dCAqdHRtLAogCQkJCSBzdHJ1Y3QgdHRtX21lbV9y
-ZWcgKm1lbSk7CiB2b2lkIGFtZGdwdV92cmFtX2xvY2F0aW9uKHN0cnVjdCBhbWRncHVfZGV2aWNl
-ICphZGV2LCBzdHJ1Y3QgYW1kZ3B1X21jICptYywgdTY0IGJhc2UpOwogdm9pZCBhbWRncHVfZ3R0
-X2xvY2F0aW9uKHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2LCBzdHJ1Y3QgYW1kZ3B1X21jICpt
-Yyk7Cit2b2lkIGFtZGdwdV9yZXNpemVfYmFyMChzdHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRldik7
-CiB2b2lkIGFtZGdwdV90dG1fc2V0X2FjdGl2ZV92cmFtX3NpemUoc3RydWN0IGFtZGdwdV9kZXZp
-Y2UgKmFkZXYsIHU2NCBzaXplKTsKIGludCBhbWRncHVfdHRtX2luaXQoc3RydWN0IGFtZGdwdV9k
-ZXZpY2UgKmFkZXYpOwogdm9pZCBhbWRncHVfdHRtX2Zpbmkoc3RydWN0IGFtZGdwdV9kZXZpY2Ug
-KmFkZXYpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rl
-dmljZS5jIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jCmluZGV4
-IGEwOWFkM2NmLi5kNWNhNzdhIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
-dS9hbWRncHVfZGV2aWNlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1
-X2RldmljZS5jCkBAIC02OTUsNiArNjk1LDQzIEBAIHZvaWQgYW1kZ3B1X2d0dF9sb2NhdGlvbihz
-dHJ1Y3QgYW1kZ3B1X2RldmljZSAqYWRldiwgc3RydWN0IGFtZGdwdV9tYyAqbWMpCiAJCQltYy0+
-Z3R0X3NpemUgPj4gMjAsIG1jLT5ndHRfc3RhcnQsIG1jLT5ndHRfZW5kKTsKIH0KIAorLyoqCisg
-KiBhbWRncHVfcmVzaXplX2JhcjAgLSB0cnkgdG8gcmVzaXplIEJBUjAKKyAqCisgKiBAYWRldjog
-YW1kZ3B1X2RldmljZSBwb2ludGVyCisgKgorICogVHJ5IHRvIHJlc2l6ZSBCQVIwIHRvIG1ha2Ug
-YWxsIFZSQU0gQ1BVIGFjY2Vzc2libGUuCisgKi8KK3ZvaWQgYW1kZ3B1X3Jlc2l6ZV9iYXIwKHN0
-cnVjdCBhbWRncHVfZGV2aWNlICphZGV2KQoreworCXU2NCBzcGFjZV9uZWVkZWQgPSByb3VuZHVw
-X3Bvd19vZl90d28oYWRldi0+bWMucmVhbF92cmFtX3NpemUpOworCXUzMiByYmFyX3NpemUgPSBv
-cmRlcl9iYXNlXzIoKChzcGFjZV9uZWVkZWQgPj4gMjApIHwgMSkpIC0xOworCXUxNiBjbWQ7CisJ
-aW50IHI7CisKKwkvKiBGcmVlIHRoZSBkb29yYmVsbCBtYXBwaW5nLCBpdCBtb3N0IGxpa2VseSBu
-ZWVkcyB0byBtb3ZlIGFzIHdlbGwgKi8KKwlhbWRncHVfZG9vcmJlbGxfZmluaShhZGV2KTsKKwlw
-Y2lfcmVsZWFzZV9yZXNvdXJjZShhZGV2LT5wZGV2LCAyKTsKKworCS8qIERpc2FibGUgbWVtb3J5
-IGRlY29kaW5nIHdoaWxlIHdlIGNoYW5nZSB0aGUgQkFSIGFkZHJlc3NlcyBhbmQgc2l6ZSAqLwor
-CXBjaV9yZWFkX2NvbmZpZ193b3JkKGFkZXYtPnBkZXYsIFBDSV9DT01NQU5ELCAmY21kKTsKKwlw
-Y2lfd3JpdGVfY29uZmlnX3dvcmQoYWRldi0+cGRldiwgUENJX0NPTU1BTkQsCisJCQkgICAgICBj
-bWQgJiB+UENJX0NPTU1BTkRfTUVNT1JZKTsKKworCXIgPSBwY2lfcmVzaXplX3Jlc291cmNlKGFk
-ZXYtPnBkZXYsIDAsIHJiYXJfc2l6ZSk7CisJaWYgKHIgPT0gLUVOT1NQQykKKwkJRFJNX0lORk8o
-Ik5vdCBlbm91Z2ggUENJIGFkZHJlc3Mgc3BhY2UgZm9yIGEgbGFyZ2UgQkFSLiIpOworCWVsc2Ug
-aWYgKHIgJiYgciAhPSAtRU5PVFNVUFApCisJCURSTV9FUlJPUigiUHJvYmxlbSByZXNpemluZyBC
-QVIwICglZCkuIiwgcik7CisKKwlwY2lfd3JpdGVfY29uZmlnX3dvcmQoYWRldi0+cGRldiwgUENJ
-X0NPTU1BTkQsIGNtZCk7CisKKwkvKiBXaGVuIHRoZSBkb29yYmVsbCBCQVIgaXNuJ3QgYXZhaWxh
-YmxlIHdlIGhhdmUgbm8gY2hhbmNlIG9mCisJICogdXNpbmcgdGhlIGRldmljZS4KKwkgKi8KKwlC
-VUdfT04oYW1kZ3B1X2Rvb3JiZWxsX2luaXQoYWRldikpOworfQorCiAvKgogICogR1BVIGhlbHBl
-cnMgZnVuY3Rpb24uCiAgKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1
-L2dtY192N18wLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjdfMC5jCmluZGV4
-IGE5MDgzYTEuLmFlNzE1MjQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1
-L2dtY192N18wLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y3XzAuYwpA
-QCAtMzcyLDEzICszNzIsMTUgQEAgc3RhdGljIGludCBnbWNfdjdfMF9tY19pbml0KHN0cnVjdCBh
-bWRncHVfZGV2aWNlICphZGV2KQogCQl9CiAJCWFkZXYtPm1jLnZyYW1fd2lkdGggPSBudW1jaGFu
-ICogY2hhbnNpemU7CiAJfQotCS8qIENvdWxkIGFwZXIgc2l6ZSByZXBvcnQgMCA/ICovCi0JYWRl
-di0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYsIDApOwotCWFk
-ZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7CiAJLyog
-c2l6ZSBpbiBNQiBvbiBzaSAqLwogCWFkZXYtPm1jLm1jX3ZyYW1fc2l6ZSA9IFJSRUczMihtbUNP
-TkZJR19NRU1TSVpFKSAqIDEwMjRVTEwgKiAxMDI0VUxMOwogCWFkZXYtPm1jLnJlYWxfdnJhbV9z
-aXplID0gUlJFRzMyKG1tQ09ORklHX01FTVNJWkUpICogMTAyNFVMTCAqIDEwMjRVTEw7CiAKKwlp
-ZiAoIShhZGV2LT5mbGFncyAmIEFNRF9JU19BUFUpKQorCQlhbWRncHVfcmVzaXplX2JhcjAoYWRl
-dik7CisJYWRldi0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYs
-IDApOworCWFkZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwg
-MCk7CisKICNpZmRlZiBDT05GSUdfWDg2XzY0CiAJaWYgKGFkZXYtPmZsYWdzICYgQU1EX0lTX0FQ
-VSkgewogCQlhZGV2LT5tYy5hcGVyX2Jhc2UgPSAoKHU2NClSUkVHMzIobW1NQ19WTV9GQl9PRkZT
-RVQpKSA8PCAyMjsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192
-OF8wLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjhfMC5jCmluZGV4IDRhYzk5
-NzguLjE2NTVkZTIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192
-OF8wLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y4XzAuYwpAQCAtNTM0
-LDEzICs1MzQsMTUgQEAgc3RhdGljIGludCBnbWNfdjhfMF9tY19pbml0KHN0cnVjdCBhbWRncHVf
-ZGV2aWNlICphZGV2KQogCQl9CiAJCWFkZXYtPm1jLnZyYW1fd2lkdGggPSBudW1jaGFuICogY2hh
-bnNpemU7CiAJfQotCS8qIENvdWxkIGFwZXIgc2l6ZSByZXBvcnQgMCA/ICovCi0JYWRldi0+bWMu
-YXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYsIDApOwotCWFkZXYtPm1j
-LmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7CiAJLyogc2l6ZSBp
-biBNQiBvbiBzaSAqLwogCWFkZXYtPm1jLm1jX3ZyYW1fc2l6ZSA9IFJSRUczMihtbUNPTkZJR19N
-RU1TSVpFKSAqIDEwMjRVTEwgKiAxMDI0VUxMOwogCWFkZXYtPm1jLnJlYWxfdnJhbV9zaXplID0g
-UlJFRzMyKG1tQ09ORklHX01FTVNJWkUpICogMTAyNFVMTCAqIDEwMjRVTEw7CiAKKwlpZiAoIShh
-ZGV2LT5mbGFncyAmIEFNRF9JU19BUFUpKQorCQlhbWRncHVfcmVzaXplX2JhcjAoYWRldik7CisJ
-YWRldi0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYsIDApOwor
-CWFkZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7CisK
-ICNpZmRlZiBDT05GSUdfWDg2XzY0CiAJaWYgKGFkZXYtPmZsYWdzICYgQU1EX0lTX0FQVSkgewog
-CQlhZGV2LT5tYy5hcGVyX2Jhc2UgPSAoKHU2NClSUkVHMzIobW1NQ19WTV9GQl9PRkZTRVQpKSA8
-PCAyMjsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OV8wLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjlfMC5jCmluZGV4IGU1ZDRkZmUuLjRi
-YmVmNzkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OV8wLmMK
-KysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y5XzAuYwpAQCAtNDY5LDE2ICs0
-NjksMTggQEAgc3RhdGljIGludCBnbWNfdjlfMF9tY19pbml0KHN0cnVjdCBhbWRncHVfZGV2aWNl
-ICphZGV2KQogCX0KIAlhZGV2LT5tYy52cmFtX3dpZHRoID0gbnVtY2hhbiAqIGNoYW5zaXplOwog
-Ci0JLyogQ291bGQgYXBlciBzaXplIHJlcG9ydCAwID8gKi8KLQlhZGV2LT5tYy5hcGVyX2Jhc2Ug
-PSBwY2lfcmVzb3VyY2Vfc3RhcnQoYWRldi0+cGRldiwgMCk7Ci0JYWRldi0+bWMuYXBlcl9zaXpl
-ID0gcGNpX3Jlc291cmNlX2xlbihhZGV2LT5wZGV2LCAwKTsKIAkvKiBzaXplIGluIE1CIG9uIHNp
-ICovCiAJYWRldi0+bWMubWNfdnJhbV9zaXplID0KIAkJbmJpb192Nl8xX2dldF9tZW1zaXplKGFk
-ZXYpICogMTAyNFVMTCAqIDEwMjRVTEw7CiAJYWRldi0+bWMucmVhbF92cmFtX3NpemUgPSBhZGV2
-LT5tYy5tY192cmFtX3NpemU7Ci0JYWRldi0+bWMudmlzaWJsZV92cmFtX3NpemUgPSBhZGV2LT5t
-Yy5hcGVyX3NpemU7CisKKwlpZiAoIShhZGV2LT5mbGFncyAmIEFNRF9JU19BUFUpKQorCQlhbWRn
-cHVfcmVzaXplX2JhcjAoYWRldik7CisJYWRldi0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNl
-X3N0YXJ0KGFkZXYtPnBkZXYsIDApOworCWFkZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJj
-ZV9sZW4oYWRldi0+cGRldiwgMCk7CiAKIAkvKiBJbiBjYXNlIHRoZSBQQ0kgQkFSIGlzIGxhcmdl
-ciB0aGFuIHRoZSBhY3R1YWwgYW1vdW50IG9mIHZyYW0gKi8KKwlhZGV2LT5tYy52aXNpYmxlX3Zy
-YW1fc2l6ZSA9IGFkZXYtPm1jLmFwZXJfc2l6ZTsKIAlpZiAoYWRldi0+bWMudmlzaWJsZV92cmFt
-X3NpemUgPiBhZGV2LT5tYy5yZWFsX3ZyYW1fc2l6ZSkKIAkJYWRldi0+bWMudmlzaWJsZV92cmFt
-X3NpemUgPSBhZGV2LT5tYy5yZWFsX3ZyYW1fc2l6ZTsKIAotLSAKMi43LjQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Apr 10, 2017 at 1:00 AM, Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> According to Broxton APL spec, PMC MIMO resources for Global Control
+> Registers(GCR) are located at 4K(0x1000) offset from IPC base address.
+> In this driver, PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
+> region base address from IPC base address and its current value of
+> 0x1008 is incorrect because it points to location for PMC_CFG register
+> and not the GCR base address itself.
+>
+> GCR Base = IPC1 Base + 0x1000.
+>
+> This patch fixes this offset issue.
+
+The whole series has been pushed to testing, thanks.
+
+>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Changes since v6:
+>  *  Updated commit message
+>
+> Changes since v5:
+>  *  None
+>
+> Changes since v4:
+>  *  None
+>
+> Changes since v3:
+>  * Updated the commit history
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 0651d47..0a33592 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -82,7 +82,7 @@
+>  /* exported resources from IFWI */
+>  #define PLAT_RESOURCE_IPC_INDEX                0
+>  #define PLAT_RESOURCE_IPC_SIZE         0x1000
+> -#define PLAT_RESOURCE_GCR_OFFSET       0x1008
+> +#define PLAT_RESOURCE_GCR_OFFSET       0x1000
+>  #define PLAT_RESOURCE_GCR_SIZE         0x1000
+>  #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
+>  #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
+> --
+> 2.7.4
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
