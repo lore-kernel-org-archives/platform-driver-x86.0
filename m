@@ -1,201 +1,80 @@
-From: Alex Deucher <alexdeucher@gmail.com>
-Subject: Re: [PATCH 4/4] drm/amdgpu: resize VRAM BAR for CPU access v2
-Date: Tue, 25 Apr 2017 12:29:36 -0400
-Message-ID: <CADnq5_M3ZkD049dYQvw_FAz_KCHy0LTPEm3TU6vr9yfGFd_BDw@mail.gmail.com>
-References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
- <1493126394-1239-5-git-send-email-deathsimple@vodafone.de>
- <CADnq5_NHDo3Y0Ao_5uWQ=Q2mb5-qYZu9Z-cx1M48cfD0rxMi2w@mail.gmail.com>
- <9d345f33-a291-1647-9d03-d0df17733b14@vodafone.de>
- <CADnq5_PquOLg1RLNE36-ZXGpSZFBu_N56-3Ox18CXu6oG2nk=w@mail.gmail.com>
- <acd547a0-17d9-e5ba-8005-07a8f47c2f74@vodafone.de>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v7 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
+Date: Tue, 25 Apr 2017 10:34:43 -0700
+Message-ID: <c1a6ee3d-ded0-fc6d-3f3e-d7f8b4c2e323@linux.intel.com>
+References: <aefdf4f6a7b0cf4af92d51ce2b9b73284cc03ffe.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAHp75VcZAtpVDW2BbHZ5-3NZX4tgmz24U4=-oYTq-_h+eUTdFw@mail.gmail.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <acd547a0-17d9-e5ba-8005-07a8f47c2f74@vodafone.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:36869 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1432456AbdDYRiU (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 25 Apr 2017 13:38:20 -0400
+In-Reply-To: <CAHp75VcZAtpVDW2BbHZ5-3NZX4tgmz24U4=-oYTq-_h+eUTdFw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgMTI6MjIgUE0sIENocmlzdGlhbiBLw7ZuaWcKPGRlYXRo
-c2ltcGxlQHZvZGFmb25lLmRlPiB3cm90ZToKPiBBbSAyNS4wNC4yMDE3IHVtIDE3OjE0IHNjaHJp
-ZWIgQWxleCBEZXVjaGVyOgo+Pgo+PiBPbiBUdWUsIEFwciAyNSwgMjAxNyBhdCAxMTowOSBBTSwg
-Q2hyaXN0aWFuIEvDtm5pZwo+PiA8ZGVhdGhzaW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgo+Pj4K
-Pj4+IEFtIDI1LjA0LjIwMTcgdW0gMTY6MzQgc2NocmllYiBBbGV4IERldWNoZXI6Cj4+Pj4KPj4+
-PiBPbiBUdWUsIEFwciAyNSwgMjAxNyBhdCA5OjE5IEFNLCBDaHJpc3RpYW4gS8O2bmlnCj4+Pj4g
-PGRlYXRoc2ltcGxlQHZvZGFmb25lLmRlPiB3cm90ZToKPj4+Pj4KPj4+Pj4gRnJvbTogQ2hyaXN0
-aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgo+Pj4+Pgo+Pj4+PiBUcnkgdG8g
-cmVzaXplIEJBUjAgdG8gbGV0IENQVSBhY2Nlc3MgYWxsIG9mIFZSQU0uCj4+Pj4+Cj4+Pj4+IHYy
-OiByZWJhc2VkLCBzdHlsZSBjbGVhbnVwcywgZGlzYWJsZSBtZW0gZGVjb2RlIGJlZm9yZSByZXNp
-emUsCj4+Pj4+ICAgICAgIGhhbmRsZSBnbWNfdjkgYXMgd2VsbCwgcm91bmQgc2l6ZSB1cCB0byBw
-b3dlciBvZiB0d28uCj4+Pj4+Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IENocmlzdGlhbiBLw7ZuaWcg
-PGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4KPj4+Pj4gLS0tCj4+Pj4+ICAgIGRyaXZlcnMvZ3B1
-L2RybS9hbWQvYW1kZ3B1L2FtZGdwdS5oICAgICAgICB8ICAxICsKPj4+Pj4gICAgZHJpdmVycy9n
-cHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jIHwgMzcKPj4+Pj4gKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCj4+Pj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dt
-Y192N18wLmMgICAgICB8ICA4ICsrKystLS0KPj4+Pj4gICAgZHJpdmVycy9ncHUvZHJtL2FtZC9h
-bWRncHUvZ21jX3Y4XzAuYyAgICAgIHwgIDggKysrKy0tLQo+Pj4+PiAgICBkcml2ZXJzL2dwdS9k
-cm0vYW1kL2FtZGdwdS9nbWNfdjlfMC5jICAgICAgfCAxMCArKysrLS0tLQo+Pj4+PiAgICA1IGZp
-bGVzIGNoYW5nZWQsIDU0IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1LmgKPj4+Pj4g
-Yi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHUuaAo+Pj4+PiBpbmRleCA0YTE2ZTNj
-Li45NDg0MDYyIDEwMDY0NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9h
-bWRncHUuaAo+Pj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHUuaAo+
-Pj4+PiBAQCAtMTg3OSw2ICsxODc5LDcgQEAgdWludDY0X3QgYW1kZ3B1X3R0bV90dF9wdGVfZmxh
-Z3Moc3RydWN0Cj4+Pj4+IGFtZGdwdV9kZXZpY2UgKmFkZXYsIHN0cnVjdCB0dG1fdHQgKnR0bSwK
-Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgdHRtX21lbV9y
-ZWcgKm1lbSk7Cj4+Pj4+ICAgIHZvaWQgYW1kZ3B1X3ZyYW1fbG9jYXRpb24oc3RydWN0IGFtZGdw
-dV9kZXZpY2UgKmFkZXYsIHN0cnVjdAo+Pj4+PiBhbWRncHVfbWMKPj4+Pj4gKm1jLCB1NjQgYmFz
-ZSk7Cj4+Pj4+ICAgIHZvaWQgYW1kZ3B1X2d0dF9sb2NhdGlvbihzdHJ1Y3QgYW1kZ3B1X2Rldmlj
-ZSAqYWRldiwgc3RydWN0Cj4+Pj4+IGFtZGdwdV9tYwo+Pj4+PiAqbWMpOwo+Pj4+PiArdm9pZCBh
-bWRncHVfcmVzaXplX2JhcjAoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFkZXYpOwo+Pj4+PiAgICB2
-b2lkIGFtZGdwdV90dG1fc2V0X2FjdGl2ZV92cmFtX3NpemUoc3RydWN0IGFtZGdwdV9kZXZpY2Ug
-KmFkZXYsIHU2NAo+Pj4+PiBzaXplKTsKPj4+Pj4gICAgaW50IGFtZGdwdV90dG1faW5pdChzdHJ1
-Y3QgYW1kZ3B1X2RldmljZSAqYWRldik7Cj4+Pj4+ICAgIHZvaWQgYW1kZ3B1X3R0bV9maW5pKHN0
-cnVjdCBhbWRncHVfZGV2aWNlICphZGV2KTsKPj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2UuYwo+Pj4+PiBiL2RyaXZlcnMvZ3B1L2RybS9h
-bWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2UuYwo+Pj4+PiBpbmRleCBhMDlhZDNjZi4uZDVjYTc3YSAx
-MDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rldmlj
-ZS5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2Uu
-Ywo+Pj4+PiBAQCAtNjk1LDYgKzY5NSw0MyBAQCB2b2lkIGFtZGdwdV9ndHRfbG9jYXRpb24oc3Ry
-dWN0IGFtZGdwdV9kZXZpY2UKPj4+Pj4gKmFkZXYsCj4+Pj4+IHN0cnVjdCBhbWRncHVfbWMgKm1j
-KQo+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgIG1jLT5ndHRfc2l6ZSA+PiAyMCwgbWMt
-Pmd0dF9zdGFydCwKPj4+Pj4gbWMtPmd0dF9lbmQpOwo+Pj4+PiAgICB9Cj4+Pj4+Cj4+Pj4+ICsv
-KioKPj4+Pj4gKyAqIGFtZGdwdV9yZXNpemVfYmFyMCAtIHRyeSB0byByZXNpemUgQkFSMAo+Pj4+
-PiArICoKPj4+Pj4gKyAqIEBhZGV2OiBhbWRncHVfZGV2aWNlIHBvaW50ZXIKPj4+Pj4gKyAqCj4+
-Pj4+ICsgKiBUcnkgdG8gcmVzaXplIEJBUjAgdG8gbWFrZSBhbGwgVlJBTSBDUFUgYWNjZXNzaWJs
-ZS4KPj4+Pj4gKyAqLwo+Pj4+PiArdm9pZCBhbWRncHVfcmVzaXplX2JhcjAoc3RydWN0IGFtZGdw
-dV9kZXZpY2UgKmFkZXYpCj4+Pj4KPj4+PiBJJ2Qgc3VnZ2VzdCByZW5hbWluZyB0aGlzIHRvIGFt
-ZGdwdV9kZXZpY2VfcmVzaXplX2JhcigpIHRvIHRyeSBhbmQKPj4+PiBpbXBvc2Ugc29tZSBjb25z
-aXN0ZW5jeSBpbiB0aGlzIGZpbGUsIGJ1dCBub3QgYSBiaWcgZGVhbCBlaXRoZXIgd2F5Lgo+Pj4+
-Cj4+Pj4+ICt7Cj4+Pj4+ICsgICAgICAgdTY0IHNwYWNlX25lZWRlZCA9IHJvdW5kdXBfcG93X29m
-X3R3byhhZGV2LT5tYy5yZWFsX3ZyYW1fc2l6ZSk7Cj4+Pj4+ICsgICAgICAgdTMyIHJiYXJfc2l6
-ZSA9IG9yZGVyX2Jhc2VfMigoKHNwYWNlX25lZWRlZCA+PiAyMCkgfCAxKSkgLTE7Cj4+Pj4+ICsg
-ICAgICAgdTE2IGNtZDsKPj4+Pj4gKyAgICAgICBpbnQgcjsKPj4+Pj4gKwo+Pj4+PiArICAgICAg
-IC8qIEZyZWUgdGhlIGRvb3JiZWxsIG1hcHBpbmcsIGl0IG1vc3QgbGlrZWx5IG5lZWRzIHRvIG1v
-dmUgYXMKPj4+Pj4gd2VsbCAqLwo+Pj4+PiArICAgICAgIGFtZGdwdV9kb29yYmVsbF9maW5pKGFk
-ZXYpOwo+Pj4+PiArICAgICAgIHBjaV9yZWxlYXNlX3Jlc291cmNlKGFkZXYtPnBkZXYsIDIpOwo+
-Pj4+Cj4+Pj4gVGhpcyBzaG91bGQgY2hlY2sgZm9yIGlmIChhZGV2LT5hc2ljX3R5cGUgPj0gQ0hJ
-UF9CT05BSVJFKSBzaW5jZSBTSQo+Pj4+IGRpZG4ndCBoYXZlIGRvb3JiZWxscy4KPj4+Pgo+Pj4+
-PiArCj4+Pj4+ICsgICAgICAgLyogRGlzYWJsZSBtZW1vcnkgZGVjb2Rpbmcgd2hpbGUgd2UgY2hh
-bmdlIHRoZSBCQVIgYWRkcmVzc2VzCj4+Pj4+IGFuZAo+Pj4+PiBzaXplICovCj4+Pj4+ICsgICAg
-ICAgcGNpX3JlYWRfY29uZmlnX3dvcmQoYWRldi0+cGRldiwgUENJX0NPTU1BTkQsICZjbWQpOwo+
-Pj4+PiArICAgICAgIHBjaV93cml0ZV9jb25maWdfd29yZChhZGV2LT5wZGV2LCBQQ0lfQ09NTUFO
-RCwKPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY21kICYgflBDSV9DT01NQU5E
-X01FTU9SWSk7Cj4+Pj4+ICsKPj4+Pj4gKyAgICAgICByID0gcGNpX3Jlc2l6ZV9yZXNvdXJjZShh
-ZGV2LT5wZGV2LCAwLCByYmFyX3NpemUpOwo+Pj4+PiArICAgICAgIGlmIChyID09IC1FTk9TUEMp
-Cj4+Pj4+ICsgICAgICAgICAgICAgICBEUk1fSU5GTygiTm90IGVub3VnaCBQQ0kgYWRkcmVzcyBz
-cGFjZSBmb3IgYSBsYXJnZQo+Pj4+PiBCQVIuIik7Cj4+Pj4+ICsgICAgICAgZWxzZSBpZiAociAm
-JiByICE9IC1FTk9UU1VQUCkKPj4+Pj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigiUHJvYmxl
-bSByZXNpemluZyBCQVIwICglZCkuIiwgcik7Cj4+Pj4+ICsKPj4+Pj4gKyAgICAgICBwY2lfd3Jp
-dGVfY29uZmlnX3dvcmQoYWRldi0+cGRldiwgUENJX0NPTU1BTkQsIGNtZCk7Cj4+Pj4+ICsKPj4+
-Pj4gKyAgICAgICAvKiBXaGVuIHRoZSBkb29yYmVsbCBCQVIgaXNuJ3QgYXZhaWxhYmxlIHdlIGhh
-dmUgbm8gY2hhbmNlIG9mCj4+Pj4+ICsgICAgICAgICogdXNpbmcgdGhlIGRldmljZS4KPj4+Pj4g
-KyAgICAgICAgKi8KPj4+Pj4gKyAgICAgICBCVUdfT04oYW1kZ3B1X2Rvb3JiZWxsX2luaXQoYWRl
-dikpOwo+Pj4+Cj4+Pj4gU2FtZSBoZXJlLgo+Pj4+Cj4+Pj4+ICt9Cj4+Pj4+ICsKPj4+Pj4gICAg
-LyoKPj4+Pj4gICAgICogR1BVIGhlbHBlcnMgZnVuY3Rpb24uCj4+Pj4+ICAgICAqLwo+Pj4+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y3XzAuYwo+Pj4+PiBi
-L2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192N18wLmMKPj4+Pj4gaW5kZXggYTkwODNh
-MS4uYWU3MTUyNCAxMDA2NDQKPj4+Pgo+Pj4+IFdoYXQgYWJvdXQgU0kgKGdtY192Nl8wLmMpPwo+
-Pj4KPj4+Cj4+PiBBcyBmYXIgYXMgSSBrbm93IHRoZXJlIGlzIG5vIFNJIGhhcmR3YXJlIHdpdGgg
-cmVzaXplYWJsZSBCQVIgc3VwcG9ydC4KPj4+Cj4+PiBUaGUgYWxsIFZJIGdlbmVyYXRpb24gY2Fu
-IGRvIHRoaXMsIGJ1dCBJJ20gbm90IDEwMCUgc3VyZSBpZiB0aGVyZSBhcmVuJ3QKPj4+IGFueQo+
-Pj4gQm9uYWlyZXMgb3V0IHRoZXJlIHdoaWNoIGNhbiBoYW5kbGUgaXQgYXMgd2VsbCB0aGF0J3Mg
-d2h5IEkgYWRkZWQgZ21jX3Y3Cj4+PiBzdXBwb3J0Lgo+Pj4KPj4+IFN0aWxsIG5lZWQgdG8gZG91
-YmxlIGNoZWNrIHRoYXQuCj4+Cj4+IEkgdGhpbmsgTkkgb3IgZXZlbiBldmVyZ3JlZW4gc3VwcG9y
-dGVkIHJlc2l6ZWFibGUgYmFycyBpbiB0aGVvcnksCj4+IGFsdGhvdWdoIEknbSBub3Qgc3VyZSBp
-ZiBhbnkgYm9hcmRzIHdlcmUgZnVzZWQgdG8gZXhwb3NlIGl0Lgo+Cj4KPiBJbiB0aGVvcnkgeWVz
-LCBpbiBwcmFjdGljZSBuby4KPgo+IFRoZWlyIFBDSUUgY29uZmlnIHNwYWNlIGRlZmluZXMgdGhl
-IG5lY2Vzc2FyeSByZWdpc3RlcnMsIGJ1dCBJIGhhdmVuJ3QgZm91bmQKPiBhbnkgYm9hcmQgZnJv
-bSBFdmVyZ3JlZW4sIE5JLCBTSSBvciBDSUsgZ2VuZXJhdGlvbiB3aGVyZSB0aGF0IGlzIGFjdHVh
-bGx5Cj4gdmFsaWRhdGVkLgo+Cj4gVG9uZ2EgaXMgdGhlIGZpcnN0IG9uZSBJJ20gMTAwJSBzdXJl
-IHRoYXQgaXQgaXMgc3VwcG9ydGVkIGFuZCBJIGhhdmUKPiBoYXJkd2FyZSB0byB0ZXN0IGl0Lgo+
-Cj4gSSB3b3VsZCByYXRoZXIgZHJvcCBCb25haXJlIHN1cHBvcnQgYXMgd2VsbCBhbmQgd2FpdCBm
-b3Igc29tZWJvZHkgd2l0aCB0aGUKPiBoYXJkd2FyZSB0byBjb21wbGFpbiBzbyB0aGF0IHdlIGNh
-biB0ZXN0IGFuZCBlbmFibGUgaXQuCgpJIG1heSBoYXZlIHNvbWUgd29ya3N0YXRpb24gQ0kgcGFy
-dHMgdGhhdCBzdXBwb3J0IGl0LgoKQWxleAoKPgo+IENocmlzdGlhbi4KPgo+Cj4+Cj4+IEFsZXgK
-Pj4KPj4KPj4+IENocmlzdGlhbi4KPj4+Cj4+Pgo+Pj4+IEFsZXgKPj4+Pgo+Pj4+PiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjdfMC5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9hbWQvYW1kZ3B1L2dtY192N18wLmMKPj4+Pj4gQEAgLTM3MiwxMyArMzcyLDE1IEBA
-IHN0YXRpYyBpbnQgZ21jX3Y3XzBfbWNfaW5pdChzdHJ1Y3QgYW1kZ3B1X2RldmljZQo+Pj4+PiAq
-YWRldikKPj4+Pj4gICAgICAgICAgICAgICAgICAgfQo+Pj4+PiAgICAgICAgICAgICAgICAgICBh
-ZGV2LT5tYy52cmFtX3dpZHRoID0gbnVtY2hhbiAqIGNoYW5zaXplOwo+Pj4+PiAgICAgICAgICAg
-fQo+Pj4+PiAtICAgICAgIC8qIENvdWxkIGFwZXIgc2l6ZSByZXBvcnQgMCA/ICovCj4+Pj4+IC0g
-ICAgICAgYWRldi0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNlX3N0YXJ0KGFkZXYtPnBkZXYs
-IDApOwo+Pj4+PiAtICAgICAgIGFkZXYtPm1jLmFwZXJfc2l6ZSA9IHBjaV9yZXNvdXJjZV9sZW4o
-YWRldi0+cGRldiwgMCk7Cj4+Pj4+ICAgICAgICAgICAvKiBzaXplIGluIE1CIG9uIHNpICovCj4+
-Pj4+ICAgICAgICAgICBhZGV2LT5tYy5tY192cmFtX3NpemUgPSBSUkVHMzIobW1DT05GSUdfTUVN
-U0laRSkgKiAxMDI0VUxMICoKPj4+Pj4gMTAyNFVMTDsKPj4+Pj4gICAgICAgICAgIGFkZXYtPm1j
-LnJlYWxfdnJhbV9zaXplID0gUlJFRzMyKG1tQ09ORklHX01FTVNJWkUpICogMTAyNFVMTAo+Pj4+
-PiAqCj4+Pj4+IDEwMjRVTEw7Cj4+Pj4+Cj4+Pj4+ICsgICAgICAgaWYgKCEoYWRldi0+ZmxhZ3Mg
-JiBBTURfSVNfQVBVKSkKPj4+Pj4gKyAgICAgICAgICAgICAgIGFtZGdwdV9yZXNpemVfYmFyMChh
-ZGV2KTsKPj4+Pj4gKyAgICAgICBhZGV2LT5tYy5hcGVyX2Jhc2UgPSBwY2lfcmVzb3VyY2Vfc3Rh
-cnQoYWRldi0+cGRldiwgMCk7Cj4+Pj4+ICsgICAgICAgYWRldi0+bWMuYXBlcl9zaXplID0gcGNp
-X3Jlc291cmNlX2xlbihhZGV2LT5wZGV2LCAwKTsKPj4+Pj4gKwo+Pj4+PiAgICAjaWZkZWYgQ09O
-RklHX1g4Nl82NAo+Pj4+PiAgICAgICAgICAgaWYgKGFkZXYtPmZsYWdzICYgQU1EX0lTX0FQVSkg
-ewo+Pj4+PiAgICAgICAgICAgICAgICAgICBhZGV2LT5tYy5hcGVyX2Jhc2UgPSAoKHU2NClSUkVH
-MzIobW1NQ19WTV9GQl9PRkZTRVQpKQo+Pj4+PiA8PAo+Pj4+PiAyMjsKPj4+Pj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OF8wLmMKPj4+Pj4gYi9kcml2ZXJz
-L2dwdS9kcm0vYW1kL2FtZGdwdS9nbWNfdjhfMC5jCj4+Pj4+IGluZGV4IDRhYzk5NzguLjE2NTVk
-ZTIgMTAwNjQ0Cj4+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OF8w
-LmMKPj4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21jX3Y4XzAuYwo+Pj4+
-PiBAQCAtNTM0LDEzICs1MzQsMTUgQEAgc3RhdGljIGludCBnbWNfdjhfMF9tY19pbml0KHN0cnVj
-dCBhbWRncHVfZGV2aWNlCj4+Pj4+ICphZGV2KQo+Pj4+PiAgICAgICAgICAgICAgICAgICB9Cj4+
-Pj4+ICAgICAgICAgICAgICAgICAgIGFkZXYtPm1jLnZyYW1fd2lkdGggPSBudW1jaGFuICogY2hh
-bnNpemU7Cj4+Pj4+ICAgICAgICAgICB9Cj4+Pj4+IC0gICAgICAgLyogQ291bGQgYXBlciBzaXpl
-IHJlcG9ydCAwID8gKi8KPj4+Pj4gLSAgICAgICBhZGV2LT5tYy5hcGVyX2Jhc2UgPSBwY2lfcmVz
-b3VyY2Vfc3RhcnQoYWRldi0+cGRldiwgMCk7Cj4+Pj4+IC0gICAgICAgYWRldi0+bWMuYXBlcl9z
-aXplID0gcGNpX3Jlc291cmNlX2xlbihhZGV2LT5wZGV2LCAwKTsKPj4+Pj4gICAgICAgICAgIC8q
-IHNpemUgaW4gTUIgb24gc2kgKi8KPj4+Pj4gICAgICAgICAgIGFkZXYtPm1jLm1jX3ZyYW1fc2l6
-ZSA9IFJSRUczMihtbUNPTkZJR19NRU1TSVpFKSAqIDEwMjRVTEwgKgo+Pj4+PiAxMDI0VUxMOwo+
-Pj4+PiAgICAgICAgICAgYWRldi0+bWMucmVhbF92cmFtX3NpemUgPSBSUkVHMzIobW1DT05GSUdf
-TUVNU0laRSkgKiAxMDI0VUxMCj4+Pj4+ICoKPj4+Pj4gMTAyNFVMTDsKPj4+Pj4KPj4+Pj4gKyAg
-ICAgICBpZiAoIShhZGV2LT5mbGFncyAmIEFNRF9JU19BUFUpKQo+Pj4+PiArICAgICAgICAgICAg
-ICAgYW1kZ3B1X3Jlc2l6ZV9iYXIwKGFkZXYpOwo+Pj4+PiArICAgICAgIGFkZXYtPm1jLmFwZXJf
-YmFzZSA9IHBjaV9yZXNvdXJjZV9zdGFydChhZGV2LT5wZGV2LCAwKTsKPj4+Pj4gKyAgICAgICBh
-ZGV2LT5tYy5hcGVyX3NpemUgPSBwY2lfcmVzb3VyY2VfbGVuKGFkZXYtPnBkZXYsIDApOwo+Pj4+
-PiArCj4+Pj4+ICAgICNpZmRlZiBDT05GSUdfWDg2XzY0Cj4+Pj4+ICAgICAgICAgICBpZiAoYWRl
-di0+ZmxhZ3MgJiBBTURfSVNfQVBVKSB7Cj4+Pj4+ICAgICAgICAgICAgICAgICAgIGFkZXYtPm1j
-LmFwZXJfYmFzZSA9ICgodTY0KVJSRUczMihtbU1DX1ZNX0ZCX09GRlNFVCkpCj4+Pj4+IDw8Cj4+
-Pj4+IDIyOwo+Pj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvZ21j
-X3Y5XzAuYwo+Pj4+PiBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2dtY192OV8wLmMKPj4+
-Pj4gaW5kZXggZTVkNGRmZS4uNGJiZWY3OSAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9hbWRncHUvZ21jX3Y5XzAuYwo+Pj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1k
-L2FtZGdwdS9nbWNfdjlfMC5jCj4+Pj4+IEBAIC00NjksMTYgKzQ2OSwxOCBAQCBzdGF0aWMgaW50
-IGdtY192OV8wX21jX2luaXQoc3RydWN0IGFtZGdwdV9kZXZpY2UKPj4+Pj4gKmFkZXYpCj4+Pj4+
-ICAgICAgICAgICB9Cj4+Pj4+ICAgICAgICAgICBhZGV2LT5tYy52cmFtX3dpZHRoID0gbnVtY2hh
-biAqIGNoYW5zaXplOwo+Pj4+Pgo+Pj4+PiAtICAgICAgIC8qIENvdWxkIGFwZXIgc2l6ZSByZXBv
-cnQgMCA/ICovCj4+Pj4+IC0gICAgICAgYWRldi0+bWMuYXBlcl9iYXNlID0gcGNpX3Jlc291cmNl
-X3N0YXJ0KGFkZXYtPnBkZXYsIDApOwo+Pj4+PiAtICAgICAgIGFkZXYtPm1jLmFwZXJfc2l6ZSA9
-IHBjaV9yZXNvdXJjZV9sZW4oYWRldi0+cGRldiwgMCk7Cj4+Pj4+ICAgICAgICAgICAvKiBzaXpl
-IGluIE1CIG9uIHNpICovCj4+Pj4+ICAgICAgICAgICBhZGV2LT5tYy5tY192cmFtX3NpemUgPQo+
-Pj4+PiAgICAgICAgICAgICAgICAgICBuYmlvX3Y2XzFfZ2V0X21lbXNpemUoYWRldikgKiAxMDI0
-VUxMICogMTAyNFVMTDsKPj4+Pj4gICAgICAgICAgIGFkZXYtPm1jLnJlYWxfdnJhbV9zaXplID0g
-YWRldi0+bWMubWNfdnJhbV9zaXplOwo+Pj4+PiAtICAgICAgIGFkZXYtPm1jLnZpc2libGVfdnJh
-bV9zaXplID0gYWRldi0+bWMuYXBlcl9zaXplOwo+Pj4+PiArCj4+Pj4+ICsgICAgICAgaWYgKCEo
-YWRldi0+ZmxhZ3MgJiBBTURfSVNfQVBVKSkKPj4+Pj4gKyAgICAgICAgICAgICAgIGFtZGdwdV9y
-ZXNpemVfYmFyMChhZGV2KTsKPj4+Pj4gKyAgICAgICBhZGV2LT5tYy5hcGVyX2Jhc2UgPSBwY2lf
-cmVzb3VyY2Vfc3RhcnQoYWRldi0+cGRldiwgMCk7Cj4+Pj4+ICsgICAgICAgYWRldi0+bWMuYXBl
-cl9zaXplID0gcGNpX3Jlc291cmNlX2xlbihhZGV2LT5wZGV2LCAwKTsKPj4+Pj4KPj4+Pj4gICAg
-ICAgICAgIC8qIEluIGNhc2UgdGhlIFBDSSBCQVIgaXMgbGFyZ2VyIHRoYW4gdGhlIGFjdHVhbCBh
-bW91bnQgb2YKPj4+Pj4gdnJhbQo+Pj4+PiAqLwo+Pj4+PiArICAgICAgIGFkZXYtPm1jLnZpc2li
-bGVfdnJhbV9zaXplID0gYWRldi0+bWMuYXBlcl9zaXplOwo+Pj4+PiAgICAgICAgICAgaWYgKGFk
-ZXYtPm1jLnZpc2libGVfdnJhbV9zaXplID4gYWRldi0+bWMucmVhbF92cmFtX3NpemUpCj4+Pj4+
-ICAgICAgICAgICAgICAgICAgIGFkZXYtPm1jLnZpc2libGVfdnJhbV9zaXplID0gYWRldi0+bWMu
-cmVhbF92cmFtX3NpemU7Cj4+Pj4+Cj4+Pj4+IC0tCj4+Pj4+IDIuNy40Cj4+Pj4+Cj4+Pj4+IF9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+Pj4+IGRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKPj4+Pj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+
-Pj4+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo+Pj4KPj4+Cj4+Pgo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+
+
+On 04/25/2017 06:29 AM, Andy Shevchenko wrote:
+> On Mon, Apr 10, 2017 at 1:00 AM, Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>> According to Broxton APL spec, PMC MIMO resources for Global Control
+>> Registers(GCR) are located at 4K(0x1000) offset from IPC base address.
+>> In this driver, PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
+>> region base address from IPC base address and its current value of
+>> 0x1008 is incorrect because it points to location for PMC_CFG register
+>> and not the GCR base address itself.
+>>
+>> GCR Base = IPC1 Base + 0x1000.
+>>
+>> This patch fixes this offset issue.
+> The whole series has been pushed to testing, thanks.
+Thanks Andy.
+>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_ipc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Changes since v6:
+>>   *  Updated commit message
+>>
+>> Changes since v5:
+>>   *  None
+>>
+>> Changes since v4:
+>>   *  None
+>>
+>> Changes since v3:
+>>   * Updated the commit history
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+>> index 0651d47..0a33592 100644
+>> --- a/drivers/platform/x86/intel_pmc_ipc.c
+>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+>> @@ -82,7 +82,7 @@
+>>   /* exported resources from IFWI */
+>>   #define PLAT_RESOURCE_IPC_INDEX                0
+>>   #define PLAT_RESOURCE_IPC_SIZE         0x1000
+>> -#define PLAT_RESOURCE_GCR_OFFSET       0x1008
+>> +#define PLAT_RESOURCE_GCR_OFFSET       0x1000
+>>   #define PLAT_RESOURCE_GCR_SIZE         0x1000
+>>   #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
+>>   #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
+>> --
+>> 2.7.4
+>>
+>
+>
+
+-- 
+Sathyanarayanan Kuppuswamy
+Android kernel developer
