@@ -1,80 +1,94 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v7 1/6] platform/x86: intel_pmc_ipc: fix gcr offset
-Date: Tue, 25 Apr 2017 10:34:43 -0700
-Message-ID: <c1a6ee3d-ded0-fc6d-3f3e-d7f8b4c2e323@linux.intel.com>
-References: <aefdf4f6a7b0cf4af92d51ce2b9b73284cc03ffe.1491773609.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VcZAtpVDW2BbHZ5-3NZX4tgmz24U4=-oYTq-_h+eUTdFw@mail.gmail.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
+Date: Tue, 25 Apr 2017 20:42:44 +0200
+Message-ID: <c8e5d303-7a46-9ce3-c567-09bc43be5dc8@rempel-privat.de>
+References: <20170421152434.3834-1-linux@rempel-privat.de>
+ <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
+ <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
+ <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="L5em703mTQmbSGv4k5bB8wP4QjTQ4gtH8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:36869 "EHLO mga03.intel.com"
+Received: from mout.gmx.net ([212.227.15.19]:52909 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1432456AbdDYRiU (ORCPT
+        id S1428808AbdDYSn2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 13:38:20 -0400
-In-Reply-To: <CAHp75VcZAtpVDW2BbHZ5-3NZX4tgmz24U4=-oYTq-_h+eUTdFw@mail.gmail.com>
+        Tue, 25 Apr 2017 14:43:28 -0400
+In-Reply-To: <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, David Box <david.e.box@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--L5em703mTQmbSGv4k5bB8wP4QjTQ4gtH8
+Content-Type: multipart/mixed; boundary="laRB9KwvliNXxioj661vEuh4Cg6UHbXGp";
+ protected-headers="v1"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+ Platform Driver <platform-driver-x86@vger.kernel.org>
+Message-ID: <c8e5d303-7a46-9ce3-c567-09bc43be5dc8@rempel-privat.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
+References: <20170421152434.3834-1-linux@rempel-privat.de>
+ <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
+ <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
+ <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
+In-Reply-To: <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
+
+--laRB9KwvliNXxioj661vEuh4Cg6UHbXGp
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Am 25.04.2017 um 14:25 schrieb Andy Shevchenko:
+> On Sat, Apr 22, 2017 at 9:55 AM, Oleksij Rempel <linux@rempel-privat.de=
+> wrote:
+>> Am 21.04.2017 um 21:06 schrieb Andy Shevchenko:
+>>> On Fri, Apr 21, 2017 at 6:24 PM, Oleksij Rempel <linux@rempel-privat.=
+de> wrote:
+>>>> some laptops, for example ASUS UX330UAK, have brocken als_get functi=
+on
+>>>> but working als_set funktion. In this case, ALS will stay turned off=
+=2E
+>=20
+>>>> This patch will do the same. Turn ALS on by default.
+>>>
+>>> It would be good to see if there is no regression added.
+>>
+>> I just send this email to ASUS support, may be some thing will happen:=
+
+>> https://pastebin.com/TLjbbNMc
+>=20
+> Okay, let's wait a bit and if there no answer submit v2 based on review=
+=2E
+
+Oh well, the answer is like usual. We support Windows 10, make shit and
+bla bla...
+
+I'll send v2 ASAP.
+
+--=20
+Regards,
+Oleksij
 
 
+--laRB9KwvliNXxioj661vEuh4Cg6UHbXGp--
 
-On 04/25/2017 06:29 AM, Andy Shevchenko wrote:
-> On Mon, Apr 10, 2017 at 1:00 AM, Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> According to Broxton APL spec, PMC MIMO resources for Global Control
->> Registers(GCR) are located at 4K(0x1000) offset from IPC base address.
->> In this driver, PLAT_RESOURCE_GCR_OFFSET macro defines the offset of GCR
->> region base address from IPC base address and its current value of
->> 0x1008 is incorrect because it points to location for PMC_CFG register
->> and not the GCR base address itself.
->>
->> GCR Base = IPC1 Base + 0x1000.
->>
->> This patch fixes this offset issue.
-> The whole series has been pushed to testing, thanks.
-Thanks Andy.
->
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Changes since v6:
->>   *  Updated commit message
->>
->> Changes since v5:
->>   *  None
->>
->> Changes since v4:
->>   *  None
->>
->> Changes since v3:
->>   * Updated the commit history
->>
->> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
->> index 0651d47..0a33592 100644
->> --- a/drivers/platform/x86/intel_pmc_ipc.c
->> +++ b/drivers/platform/x86/intel_pmc_ipc.c
->> @@ -82,7 +82,7 @@
->>   /* exported resources from IFWI */
->>   #define PLAT_RESOURCE_IPC_INDEX                0
->>   #define PLAT_RESOURCE_IPC_SIZE         0x1000
->> -#define PLAT_RESOURCE_GCR_OFFSET       0x1008
->> +#define PLAT_RESOURCE_GCR_OFFSET       0x1000
->>   #define PLAT_RESOURCE_GCR_SIZE         0x1000
->>   #define PLAT_RESOURCE_BIOS_DATA_INDEX  1
->>   #define PLAT_RESOURCE_BIOS_IFACE_INDEX 2
->> --
->> 2.7.4
->>
->
->
+--L5em703mTQmbSGv4k5bB8wP4QjTQ4gtH8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
--- 
-Sathyanarayanan Kuppuswamy
-Android kernel developer
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlj/mKQACgkQHwImuRkmbWmgGwD7BjP4NlOU6Dh4dAA4VjRiEflI
+3OqdHm1P0ZpLGu8giVcA/3y8dtEXB9x/3aaFfwx6qljqAfevcO4zngSrzmKYddRI
+=9DNu
+-----END PGP SIGNATURE-----
+
+--L5em703mTQmbSGv4k5bB8wP4QjTQ4gtH8--
