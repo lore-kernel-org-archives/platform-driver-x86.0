@@ -1,60 +1,39 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86/intel-vbtn: add volume up and down
-Date: Tue, 25 Apr 2017 15:13:27 +0300
-Message-ID: <CAHp75VcJZrVNMKNx=bFoz2PMw3cB98bHsTcSYU1PVTnBveciMw@mail.gmail.com>
-References: <20170424213521.10406-1-madman2003@shikahr.net>
+Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
+Date: Tue, 25 Apr 2017 15:25:59 +0300
+Message-ID: <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
+References: <20170421152434.3834-1-linux@rempel-privat.de> <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
+ <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:33452 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1947311AbdDYMNa (ORCPT
+Received: from mail-qk0-f177.google.com ([209.85.220.177]:33640 "EHLO
+        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1946862AbdDYM0B (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 08:13:30 -0400
-In-Reply-To: <20170424213521.10406-1-madman2003@shikahr.net>
+        Tue, 25 Apr 2017 08:26:01 -0400
+Received: by mail-qk0-f177.google.com with SMTP id h123so57058242qke.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2017 05:26:00 -0700 (PDT)
+In-Reply-To: <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Maarten Maathuis <madman2003@gmail.com>
-Cc: AceLan Kao <acelan.kao@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maarten Maathuis <madman2003@shikahr.net>
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Tue, Apr 25, 2017 at 12:35 AM, Maarten Maathuis <madman2003@gmail.com> wrote:
-> Tested on HP Elite X2 1012 G1.
-> Matches event report of Lenovo Helix 2
-> (https://www.spinics.net/lists/ibm-acpi-devel/msg03982.html).
+On Sat, Apr 22, 2017 at 9:55 AM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+> Am 21.04.2017 um 21:06 schrieb Andy Shevchenko:
+>> On Fri, Apr 21, 2017 at 6:24 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+>>> some laptops, for example ASUS UX330UAK, have brocken als_get function
+>>> but working als_set funktion. In this case, ALS will stay turned off.
+
+>>> This patch will do the same. Turn ALS on by default.
+>>
+>> It would be good to see if there is no regression added.
 >
-> V2: Fix indent and add sign-off
-> V3: Missing whitespace correction
+> I just send this email to ASUS support, may be some thing will happen:
+> https://pastebin.com/TLjbbNMc
 
-Slightly modified (*) version pushed to testing, thanks!
-
-*) Fixed subject, removed changelog from commit message, improved indentation
-
->
-> Signed-off-by: Maarten Maathuis <madman2003@shikahr.net>
-> ---
->  drivers/platform/x86/intel-vbtn.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index 554e82ebe83c..dc270fe793a1 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -37,6 +37,10 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
->  static const struct key_entry intel_vbtn_keymap[] = {
->         { KE_IGNORE, 0xC0, { KEY_POWER } },     /* power key press */
->         { KE_KEY, 0xC1, { KEY_POWER } },        /* power key release */
-> +       { KE_KEY, 0xC4, { KEY_VOLUMEUP } },     /* volume-up key press */
-> +       { KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },  /* volume-up key release */
-> +       { KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },   /* volume-down key press */
-> +       { KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },        /* volume-down key release */
->         { KE_END },
->  };
->
-> --
-> 2.12.2
->
-
-
+Okay, let's wait a bit and if there no answer submit v2 based on review.
 
 -- 
 With Best Regards,
