@@ -1,118 +1,156 @@
 From: Alex Deucher <alexdeucher@gmail.com>
-Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 30h-3fh) Processors v2
-Date: Tue, 25 Apr 2017 11:00:28 -0400
-Message-ID: <CADnq5_Mg1vmpL-8N8kZY_yhsT982xjVOGj5-JuBZPGXVupzCKA@mail.gmail.com>
-References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de> <1493126394-1239-4-git-send-email-deathsimple@vodafone.de>
+Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v4
+Date: Tue, 25 Apr 2017 11:00:58 -0400
+Message-ID: <CADnq5_ObA0rHAgy3=-BU5pgRD=cnCVWjhcnDXktTyO+f45QSMQ@mail.gmail.com>
+References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
+ <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yb0-f195.google.com ([209.85.213.195]:35295 "EHLO
-        mail-yb0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1948587AbdDYPAa (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 11:00:30 -0400
-In-Reply-To: <1493126394-1239-4-git-send-email-deathsimple@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Cc: Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 25, 2017 at 9:19 AM, Christian K=C3=B6nig
-<deathsimple@vodafone.de> wrote:
-> From: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> Most BIOS don't enable this because of compatibility reasons.
->
-> Manually enable a 64bit BAR of 64GB size so that we have
-> enough room for PCI devices.
->
-> v2: style cleanups, increase size, add resource name, set correct flags,
->     print message that windows was added
->
-> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> ---
->  arch/x86/pci/fixup.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 53 insertions(+)
->
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 6d52b94..8d949c4 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -571,3 +571,56 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0,=
- pci_invalid_bar);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-> +
-> +static void pci_amd_enable_64bit_bar(struct pci_dev *dev)
-> +{
-> +       uint32_t base, limit, high;
-> +       struct resource *res, *conflict;
-> +       unsigned i;
-> +
-> +       for (i =3D 0; i < 8; ++i) {
-> +               pci_read_config_dword(dev, 0x80 + i * 0x8, &base);
-> +               pci_read_config_dword(dev, 0x180 + i * 0x4, &high);
-
-Might be nice to define names for the register offsets.
-
-
-> +
-> +               /* Is this slot free? */
-> +               if ((base & 0x3) =3D=3D 0x0)
-> +                       break;
-> +
-> +               base >>=3D 8;
-> +               base |=3D high << 24;
-> +
-> +               /* Abort if a slot already configures a 64bit BAR. */
-> +               if (base > 0x10000)
-> +                       return;
-> +       }
-> +       if (i =3D=3D 8)
-> +               return;
-> +
-> +       res =3D kzalloc(sizeof(*res), GFP_KERNEL);
-> +       if (!res)
-> +               return;
-> +
-> +       res->name =3D "PCI Bus 0000:00";
-> +       res->flags =3D IORESOURCE_PREFETCH | IORESOURCE_MEM |
-> +               IORESOURCE_MEM_64 | IORESOURCE_WINDOW;
-> +       res->start =3D 0x100000000;
-> +       res->end =3D 0xfd00000000 - 1;
-> +
-> +       /* Just grab the free area behind system memory for this */
-> +       while ((conflict =3D request_resource_conflict(&iomem_resource, r=
-es)))
-> +               res->start =3D conflict->end + 1;
-> +
-> +       dev_info(&dev->dev, "adding root bus resource %pR\n", res);
-> +
-> +       base =3D ((res->start >> 8) & 0xffffff00) | 0x3;
-> +       limit =3D ((res->end + 1) >> 8) & 0xffffff00;
-> +       high =3D ((res->start >> 40) & 0xff) |
-> +               ((((res->end + 1) >> 40) & 0xff) << 16);
-> +
-> +       pci_write_config_dword(dev, 0x180 + i * 0x4, high);
-> +       pci_write_config_dword(dev, 0x84 + i * 0x8, limit);
-> +       pci_write_config_dword(dev, 0x80 + i * 0x8, base);
-
-Same here.  Either way:
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-
-> +
-> +       pci_bus_add_resource(dev->bus, res, 0);
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x141b, pci_amd_enable_64bit_=
-bar);
-> --
-> 2.7.4
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgOToxOSBBTSwgQ2hyaXN0aWFuIEvDtm5pZwo8ZGVhdGhz
+aW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgo+IEZyb206IENocmlzdGlhbiBLw7ZuaWcgPGNocmlz
+dGlhbi5rb2VuaWdAYW1kLmNvbT4KPgo+IEp1c3QgdGhlIGRlZmluZXMgYW5kIGhlbHBlciBmdW5j
+dGlvbnMgdG8gcmVhZCB0aGUgcG9zc2libGUgc2l6ZXMgb2YgYSBCQVIgYW5kCj4gdXBkYXRlIGl0
+J3Mgc2l6ZS4KPgo+IFNlZSBodHRwczovL3BjaXNpZy5jb20vc2l0ZXMvZGVmYXVsdC9maWxlcy9z
+cGVjaWZpY2F0aW9uX2RvY3VtZW50cy9FQ05fUmVzaXphYmxlLUJBUl8yNEFwcjIwMDgucGRmCj4g
+YW5kIFBDSWUgcjMuMSwgc2VjIDcuMjIuCj4KPiBUaGlzIGlzIHVzZWZ1bCBmb3IgaGFyZHdhcmUg
+d2l0aCBsYXJnZSBsb2NhbCBzdG9yYWdlIChtb3N0bHkgR0ZYKSB3aGljaCBvbmx5Cj4gZXhwb3Nl
+IDI1Nk1CIEJBUnMgaW5pdGlhbGx5IHRvIGJlIGNvbXBhdGlibGUgd2l0aCAzMmJpdCBzeXN0ZW1z
+Lgo+Cj4gdjI6IHByb3ZpZGUgcmVhZCBoZWxwZXIgYXMgd2VsbAo+IHYzOiBpbXByb3ZlIGZ1bmN0
+aW9uIG5hbWVzLCB1c2UgdW5zaWduZWQgdmFsdWVzLCBhZGQgYmV0dGVyIGNvbW1lbnRzLgo+IHY0
+OiBtb3ZlIGRlZmluaXRpb24sIGltcHJvdmUgY29tbWl0IG1lc3NhZ2UsIHMvYmFyL0JBUi8KPgo+
+IFNpZ25lZC1vZmYtYnk6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNv
+bT4KCgpQYXRjaGVzIDEsIDI6ClJldmlld2VkLWJ5OiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5k
+ZXVjaGVyQGFtZC5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL3BjaS9wY2kuYyAgICAgICAgICAgICB8
+IDExNSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVy
+cy9wY2kvcGNpLmggICAgICAgICAgICAgfCAgIDQgKysKPiAgaW5jbHVkZS91YXBpL2xpbnV4L3Bj
+aV9yZWdzLmggfCAgMTEgKysrLQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEyOCBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS5jIGIvZHJp
+dmVycy9wY2kvcGNpLmMKPiBpbmRleCBiYTM0OTA3Li5jMmQ5Zjc4IDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvcGNpL3BjaS5jCj4gKysrIGIvZHJpdmVycy9wY2kvcGNpLmMKPiBAQCAtMjk0NCw2ICsy
+OTQ0LDEyMSBAQCBib29sIHBjaV9hY3NfcGF0aF9lbmFibGVkKHN0cnVjdCBwY2lfZGV2ICpzdGFy
+dCwKPiAgfQo+Cj4gIC8qKgo+ICsgKiBwY2lfcmJhcl9nZXRfcG9zc2libGVfc2l6ZXMgLSBnZXQg
+cG9zc2libGUgc2l6ZXMgZm9yIEJBUgo+ICsgKiBAZGV2OiBQQ0kgZGV2aWNlCj4gKyAqIEBiYXI6
+IEJBUiB0byBxdWVyeQo+ICsgKgo+ICsgKiBHZXQgdGhlIHBvc3NpYmxlIHNpemVzIG9mIGEgcmVz
+aXplYWJsZSBCQVIgYXMgYml0bWFzayBkZWZpbmVkIGluIHRoZSBzcGVjCj4gKyAqIChiaXQgMD0x
+TUIsIGJpdCAxOT01MTJHQikuIFJldHVybnMgMCBpZiBCQVIgaXNuJ3QgcmVzaXplYWJsZS4KPiAr
+ICovCj4gK3UzMiBwY2lfcmJhcl9nZXRfcG9zc2libGVfc2l6ZXMoc3RydWN0IHBjaV9kZXYgKnBk
+ZXYsIGludCBiYXIpCj4gK3sKPiArICAgICAgIHVuc2lnbmVkIHBvcywgbmJhcnM7Cj4gKyAgICAg
+ICB1MzIgY3RybCwgY2FwOwo+ICsgICAgICAgdW5zaWduZWQgaTsKPiArCj4gKyAgICAgICBwb3Mg
+PSBwY2lfZmluZF9leHRfY2FwYWJpbGl0eShwZGV2LCBQQ0lfRVhUX0NBUF9JRF9SRUJBUik7Cj4g
+KyAgICAgICBpZiAoIXBvcykKPiArICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gKwo+ICsgICAg
+ICAgcGNpX3JlYWRfY29uZmlnX2R3b3JkKHBkZXYsIHBvcyArIFBDSV9SRUJBUl9DVFJMLCAmY3Ry
+bCk7Cj4gKyAgICAgICBuYmFycyA9IChjdHJsICYgUENJX1JFQkFSX0NUUkxfTkJBUl9NQVNLKSA+
+PiBQQ0lfUkVCQVJfQ1RSTF9OQkFSX1NISUZUOwo+ICsKPiArICAgICAgIGZvciAoaSA9IDA7IGkg
+PCBuYmFyczsgKytpLCBwb3MgKz0gOCkgewo+ICsgICAgICAgICAgICAgICBpbnQgYmFyX2lkeDsK
+PiArCj4gKyAgICAgICAgICAgICAgIHBjaV9yZWFkX2NvbmZpZ19kd29yZChwZGV2LCBwb3MgKyBQ
+Q0lfUkVCQVJfQ1RSTCwgJmN0cmwpOwo+ICsgICAgICAgICAgICAgICBiYXJfaWR4ID0gKGN0cmwg
+JiBQQ0lfUkVCQVJfQ1RSTF9CQVJfSURYX01BU0spID4+Cj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBQQ0lfUkVCQVJfQ1RSTF9CQVJfSURYX1NISUZUOwo+ICsgICAgICAgICAgICAg
+ICBpZiAoYmFyX2lkeCAhPSBiYXIpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7
+Cj4gKwo+ICsgICAgICAgICAgICAgICBwY2lfcmVhZF9jb25maWdfZHdvcmQocGRldiwgcG9zICsg
+UENJX1JFQkFSX0NBUCwgJmNhcCk7Cj4gKyAgICAgICAgICAgICAgIHJldHVybiAoY2FwICYgUENJ
+X1JFQkFSX0NUUkxfU0laRVNfTUFTSykgPj4KPiArICAgICAgICAgICAgICAgICAgICAgICBQQ0lf
+UkVCQVJfQ1RSTF9TSVpFU19TSElGVDsKPiArICAgICAgIH0KPiArCj4gKyAgICAgICByZXR1cm4g
+MDsKPiArfQo+ICsKPiArLyoqCj4gKyAqIHBjaV9yYmFyX2dldF9jdXJyZW50X3NpemUgLSBnZXQg
+dGhlIGN1cnJlbnQgc2l6ZSBvZiBhIEJBUgo+ICsgKiBAZGV2OiBQQ0kgZGV2aWNlCj4gKyAqIEBi
+YXI6IEJBUiB0byBzZXQgc2l6ZSB0bwo+ICsgKgo+ICsgKiBSZWFkIHRoZSBzaXplIG9mIGEgQkFS
+IGZyb20gdGhlIHJlc2l6ZWFibGUgQkFSIGNvbmZpZy4KPiArICogUmV0dXJucyBzaXplIGlmIGZv
+dW5kIG9yIG5lZ2F0aXYgZXJyb3IgY29kZS4KPiArICovCj4gK2ludCBwY2lfcmJhcl9nZXRfY3Vy
+cmVudF9zaXplKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgYmFyKQo+ICt7Cj4gKyAgICAgICB1
+bnNpZ25lZCBwb3MsIG5iYXJzOwo+ICsgICAgICAgdTMyIGN0cmw7Cj4gKyAgICAgICB1bnNpZ25l
+ZCBpOwo+ICsKPiArICAgICAgIHBvcyA9IHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KHBkZXYsIFBD
+SV9FWFRfQ0FQX0lEX1JFQkFSKTsKPiArICAgICAgIGlmICghcG9zKQo+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gLUVOT1RTVVBQOwo+ICsKPiArICAgICAgIHBjaV9yZWFkX2NvbmZpZ19kd29yZChw
+ZGV2LCBwb3MgKyBQQ0lfUkVCQVJfQ1RSTCwgJmN0cmwpOwo+ICsgICAgICAgbmJhcnMgPSAoY3Ry
+bCAmIFBDSV9SRUJBUl9DVFJMX05CQVJfTUFTSykgPj4gUENJX1JFQkFSX0NUUkxfTkJBUl9TSElG
+VDsKPiArCj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbmJhcnM7ICsraSwgcG9zICs9IDgpIHsK
+PiArICAgICAgICAgICAgICAgaW50IGJhcl9pZHg7Cj4gKwo+ICsgICAgICAgICAgICAgICBwY2lf
+cmVhZF9jb25maWdfZHdvcmQocGRldiwgcG9zICsgUENJX1JFQkFSX0NUUkwsICZjdHJsKTsKPiAr
+ICAgICAgICAgICAgICAgYmFyX2lkeCA9IChjdHJsICYgUENJX1JFQkFSX0NUUkxfQkFSX0lEWF9N
+QVNLKSA+Pgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUENJX1JFQkFSX0NUUkxf
+QkFSX0lEWF9TSElGVDsKPiArICAgICAgICAgICAgICAgaWYgKGJhcl9pZHggIT0gYmFyKQo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOwo+ICsKPiArICAgICAgICAgICAgICAgcmV0
+dXJuIChjdHJsICYgUENJX1JFQkFSX0NUUkxfQkFSX1NJWkVfTUFTSykgPj4KPiArICAgICAgICAg
+ICAgICAgICAgICAgICBQQ0lfUkVCQVJfQ1RSTF9CQVJfU0laRV9TSElGVDsKPiArICAgICAgIH0K
+PiArCj4gKyAgICAgICByZXR1cm4gLUVOT0VOVDsKPiArfQo+ICsKPiArLyoqCj4gKyAqIHBjaV9y
+YmFyX3NldF9zaXplIC0gc2V0IGEgbmV3IHNpemUgZm9yIGEgQkFSCj4gKyAqIEBkZXY6IFBDSSBk
+ZXZpY2UKPiArICogQGJhcjogQkFSIHRvIHNldCBzaXplIHRvCj4gKyAqIEBzaXplOiBuZXcgc2l6
+ZSBhcyBkZWZpbmVkIGluIHRoZSBzcGVjIChsb2cyKHNpemUgaW4gYnl0ZXMpIC0gMjApCj4gKyAq
+Cj4gKyAqIFNldCB0aGUgbmV3IHNpemUgb2YgYSBCQVIgYXMgZGVmaW5lZCBpbiB0aGUgc3BlYyAo
+MD0xTUIsIDE5PTUxMkdCKS4KPiArICogUmV0dXJucyB0cnVlIGlmIHJlc2l6aW5nIHdhcyBzdWNj
+ZXNzZnVsLCBmYWxzZSBvdGhlcndpc2UuCj4gKyAqLwo+ICtpbnQgcGNpX3JiYXJfc2V0X3NpemUo
+c3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBiYXIsIGludCBzaXplKQo+ICt7Cj4gKyAgICAgICB1
+bnNpZ25lZCBwb3MsIG5iYXJzOwo+ICsgICAgICAgdTMyIGN0cmw7Cj4gKyAgICAgICB1bnNpZ25l
+ZCBpOwo+ICsKPiArICAgICAgIHBvcyA9IHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KHBkZXYsIFBD
+SV9FWFRfQ0FQX0lEX1JFQkFSKTsKPiArICAgICAgIGlmICghcG9zKQo+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gLUVOT1RTVVBQOwo+ICsKPiArICAgICAgIHBjaV9yZWFkX2NvbmZpZ19kd29yZChw
+ZGV2LCBwb3MgKyBQQ0lfUkVCQVJfQ1RSTCwgJmN0cmwpOwo+ICsgICAgICAgbmJhcnMgPSAoY3Ry
+bCAmIFBDSV9SRUJBUl9DVFJMX05CQVJfTUFTSykgPj4gUENJX1JFQkFSX0NUUkxfTkJBUl9TSElG
+VDsKPiArCj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbmJhcnM7ICsraSwgcG9zICs9IDgpIHsK
+PiArICAgICAgICAgICAgICAgaW50IGJhcl9pZHg7Cj4gKwo+ICsgICAgICAgICAgICAgICBwY2lf
+cmVhZF9jb25maWdfZHdvcmQocGRldiwgcG9zICsgUENJX1JFQkFSX0NUUkwsICZjdHJsKTsKPiAr
+ICAgICAgICAgICAgICAgYmFyX2lkeCA9IChjdHJsICYgUENJX1JFQkFSX0NUUkxfQkFSX0lEWF9N
+QVNLKSA+Pgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUENJX1JFQkFSX0NUUkxf
+QkFSX0lEWF9TSElGVDsKPiArICAgICAgICAgICAgICAgaWYgKGJhcl9pZHggIT0gYmFyKQo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOwo+ICsKPiArICAgICAgICAgICAgICAgY3Ry
+bCAmPSB+UENJX1JFQkFSX0NUUkxfQkFSX1NJWkVfTUFTSzsKPiArICAgICAgICAgICAgICAgY3Ry
+bCB8PSBzaXplIDw8IFBDSV9SRUJBUl9DVFJMX0JBUl9TSVpFX1NISUZUOwo+ICsgICAgICAgICAg
+ICAgICBwY2lfd3JpdGVfY29uZmlnX2R3b3JkKHBkZXYsIHBvcyArIFBDSV9SRUJBUl9DVFJMLCBj
+dHJsKTsKPiArICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAg
+ICAgcmV0dXJuIC1FTk9FTlQ7Cj4gK30KPiArCj4gKy8qKgo+ICAgKiBwY2lfc3dpenpsZV9pbnRl
+cnJ1cHRfcGluIC0gc3dpenpsZSBJTlR4IGZvciBkZXZpY2UgYmVoaW5kIGJyaWRnZQo+ICAgKiBA
+ZGV2OiB0aGUgUENJIGRldmljZQo+ICAgKiBAcGluOiB0aGUgSU5UeCBwaW4gKDE9SU5UQSwgMj1J
+TlRCLCAzPUlOVEMsIDQ9SU5URCkKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpLmggYi9k
+cml2ZXJzL3BjaS9wY2kuaAo+IGluZGV4IDQ1MTg1NjIuLjFkMjdjMjIgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9wY2kvcGNpLmgKPiArKysgYi9kcml2ZXJzL3BjaS9wY2kuaAo+IEBAIC0zNTYsNCAr
+MzU2LDggQEAgc3RhdGljIGlubGluZSBpbnQgcGNpX2Rldl9zcGVjaWZpY19yZXNldChzdHJ1Y3Qg
+cGNpX2RldiAqZGV2LCBpbnQgcHJvYmUpCj4gIH0KPiAgI2VuZGlmCj4KPiArdTMyIHBjaV9yYmFy
+X2dldF9wb3NzaWJsZV9zaXplcyhzdHJ1Y3QgcGNpX2RldiAqcGRldiwgaW50IGJhcik7Cj4gK2lu
+dCBwY2lfcmJhcl9nZXRfY3VycmVudF9zaXplKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgYmFy
+KTsKPiAraW50IHBjaV9yYmFyX3NldF9zaXplKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBpbnQgYmFy
+LCBpbnQgc2l6ZSk7Cj4gKwo+ICAjZW5kaWYgLyogRFJJVkVSU19QQ0lfSCAqLwo+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL3VhcGkvbGludXgvcGNpX3JlZ3MuaCBiL2luY2x1ZGUvdWFwaS9saW51eC9w
+Y2lfcmVncy5oCj4gaW5kZXggZTVhMmU2OC4uYTc1NDI5ZSAxMDA2NDQKPiAtLS0gYS9pbmNsdWRl
+L3VhcGkvbGludXgvcGNpX3JlZ3MuaAo+ICsrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9wY2lfcmVn
+cy5oCj4gQEAgLTkzMiw5ICs5MzIsMTYgQEAKPiAgI2RlZmluZSBQQ0lfU0FUQV9TSVpFT0ZfTE9O
+RyAgIDE2Cj4KPiAgLyogUmVzaXphYmxlIEJBUnMgKi8KPiArI2RlZmluZSBQQ0lfUkVCQVJfQ0FQ
+ICAgICAgICAgIDQgICAgICAgLyogY2FwYWJpbGl0eSByZWdpc3RlciAqLwo+ICsjZGVmaW5lICBQ
+Q0lfUkVCQVJfQ1RSTF9TSVpFU19NQVNLICAgICAoMHhGRkZGRiA8PCA0KSAgLyogbWFzayBmb3Ig
+c2l6ZXMgKi8KPiArI2RlZmluZSAgUENJX1JFQkFSX0NUUkxfU0laRVNfU0hJRlQgICAgNCAgICAg
+ICAvKiBzaGlmdCBmb3Igc2l6ZXMgKi8KPiAgI2RlZmluZSBQQ0lfUkVCQVJfQ1RSTCAgICAgICAg
+IDggICAgICAgLyogY29udHJvbCByZWdpc3RlciAqLwo+IC0jZGVmaW5lICBQQ0lfUkVCQVJfQ1RS
+TF9OQkFSX01BU0sgICAgICAoNyA8PCA1KSAgICAgICAgLyogbWFzayBmb3IgIyBiYXJzICovCj4g
+LSNkZWZpbmUgIFBDSV9SRUJBUl9DVFJMX05CQVJfU0hJRlQgICAgIDUgICAgICAgLyogc2hpZnQg
+Zm9yICMgYmFycyAqLwo+ICsjZGVmaW5lICBQQ0lfUkVCQVJfQ1RSTF9CQVJfSURYX01BU0sgICAo
+NyA8PCAwKSAgICAgICAgLyogbWFzayBmb3IgQkFSIGluZGV4ICovCj4gKyNkZWZpbmUgIFBDSV9S
+RUJBUl9DVFJMX0JBUl9JRFhfU0hJRlQgIDAgICAgICAgLyogc2hpZnQgZm9yIEJBUiBpbmRleCAq
+Lwo+ICsjZGVmaW5lICBQQ0lfUkVCQVJfQ1RSTF9OQkFSX01BU0sgICAgICAoNyA8PCA1KSAgICAg
+ICAgLyogbWFzayBmb3IgIyBCQVJzICovCj4gKyNkZWZpbmUgIFBDSV9SRUJBUl9DVFJMX05CQVJf
+U0hJRlQgICAgIDUgICAgICAgLyogc2hpZnQgZm9yICMgQkFScyAqLwo+ICsjZGVmaW5lICBQQ0lf
+UkVCQVJfQ1RSTF9CQVJfU0laRV9NQVNLICAoMHgxRiA8PCA4KSAgICAgLyogbWFzayBmb3IgQkFS
+IHNpemUgKi8KPiArI2RlZmluZSAgUENJX1JFQkFSX0NUUkxfQkFSX1NJWkVfU0hJRlQgOCAgICAg
+ICAvKiBzaGlmdCBmb3IgQkFSIHNpemUgKi8KPgo+ICAvKiBEeW5hbWljIFBvd2VyIEFsbG9jYXRp
+b24gKi8KPiAgI2RlZmluZSBQQ0lfRFBBX0NBUCAgICAgICAgICAgIDQgICAgICAgLyogY2FwYWJp
+bGl0eSByZWdpc3RlciAqLwo+IC0tCj4gMi43LjQKPgo+IF9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
