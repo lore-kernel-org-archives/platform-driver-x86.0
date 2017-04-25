@@ -1,112 +1,59 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH] platform/x86/intel-vbtn: add volume up and down
-Date: Tue, 25 Apr 2017 14:15:11 +0800
-Message-ID: <CAMz9Wg8Jp4pkB8QOh3Dd6LGxMhf4sodHgtJWY-=qMhkrztP0zw@mail.gmail.com>
-References: <20170424212908.10055-1-madman2003@shikahr.net>
- <CAHp75VeWJt0uVbKg_8_GBP3-JUQ3H0BLzBjFeyqcRfekK9VjNA@mail.gmail.com>
- <CAGZ4FEQab4++YbomLh1GP-cbEKrFy3WPbb=3Cc1bt1MnVWQ0mQ@mail.gmail.com>
- <CAFv23Q=RihxVZCvvpqdWT5R2NPZAwH3p1fhdS6QLbG2OH3W9BA@mail.gmail.com> <CAGZ4FEQa2cq9xVd4=7X1V-oTGduDYaa0U-hOfQopv4AY-dgkTg@mail.gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: Silead DMI driver
+Date: Tue, 25 Apr 2017 12:19:39 +0200
+Message-ID: <20170425121939.7dbdfeed@endymion>
+References: <20170424132356.044ae04f@endymion>
+        <1493034496.24567.163.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f51.google.com ([74.125.82.51]:38136 "EHLO
-        mail-wm0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752566AbdDYGPS (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:53801 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S943258AbdDYKTm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 02:15:18 -0400
-In-Reply-To: <CAGZ4FEQa2cq9xVd4=7X1V-oTGduDYaa0U-hOfQopv4AY-dgkTg@mail.gmail.com>
+        Tue, 25 Apr 2017 06:19:42 -0400
+In-Reply-To: <1493034496.24567.163.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Maarten Maathuis <madman2003@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maarten Maathuis <madman2003@shikahr.net>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-In the beginning, we just need the power button function, so I didn't
-implement all the keys to the driver.
-And we didn't get any further requirement from the following projects
-we were working on,
-so I'm not aware that there are machines other than Dell using this driver.
+On Mon, 24 Apr 2017 14:48:16 +0300, Andy Shevchenko wrote:
+> On Mon, 2017-04-24 at 13:23 +0200, Jean Delvare wrote:
+> > I'm looking at drivers/platform/x86/silead_dmi.c which is being added
+> > to kernel v4.11 and I do not like what I see.
+> 
+> I don't like it either by some other reasons.
+> 
+> > I have to say I don't understand the whole complexity of the design.
+> > As I understand it, the properties which are being added are only
+> > consumed by the "silead" touchscreen driver. I see no necessity to add
+> > the missing properties before that driver is even loaded. Can't you
+> > just look for the ACPI companion device at the time the silead driver
+> > tries to bind to the i2c device, and add the missing properties before
+> > performing the actual probe? This would be so much simpler. What am I
+> > missing?
+> 
+> As far as I understand it would be as simple as adding a quirk in actual
+> driver (touchscreen), but there is strong objection of adding quirks to
+> the drivers/input/* from Dmitry as I noticed during discussion [1] about
+> GPIO ACPI library fixes I'm working on.
+> 
+> [1] https://lkml.org/lkml/2017/4/4/593
 
-I'll try filling up all events on the spec later.
+Thanks for the pointer Andy. OK, I can understand the argument of
+Dmitry that platform-specific quirks do not belong to the device
+drivers, even though in practice I'm not sure the cost of having a
+separate platform driver for the purpose is always worth it - depends
+on how "popular" the device is, I suppose.
 
-2017-04-25 13:01 GMT+08:00 Maarten Maathuis <madman2003@gmail.com>:
-> On Tue, Apr 25, 2017 at 4:43 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
->> According the spec. I have, the values are correct.
->> Please merge it, thanks.
->>
->
-> Is there a reason the whole spec isn't implemented?
-> Is it under NDA?
->
->> 2017-04-25 5:41 GMT+08:00 Maarten Maathuis <madman2003@gmail.com>:
->>> On Mon, Apr 24, 2017 at 11:37 PM, Andy Shevchenko
->>> <andy.shevchenko@gmail.com> wrote:
->>>> On Tue, Apr 25, 2017 at 12:29 AM, Maarten Maathuis <madman2003@gmail.com> wrote:
->>>>> Tested on HP Elite X2 1012 G1.
->>>>> Matches event report of Lenovo Helix 2
->>>>> (https://www.spinics.net/lists/ibm-acpi-devel/msg03982.html).
->>>>>
->>>>
->>>> Much better!
->>>>
->>>>> V2: Fix indent and add sign-off
->>>>
->>>> Usually this line goes after --- (body delimiter).
->>>> No need to resend this time. I would wait a bit for actual
->>>> author/driver maintainer to comment. Otherwise patch looks good enough
->>>> to me.
->>>
->>> The intent is not have this in the commit message?
->>> I'll keep an eye out if i can place it below "---" next time.
->>> Although i suspect the message would end in the actual code diff,
->>> which seems odd.
->>>
->>>>
->>>>>
->>>>> Signed-off-by: Maarten Maathuis <madman2003@shikahr.net>
->>>>> ---
->>>>>  drivers/platform/x86/intel-vbtn.c | 4 ++++
->>>>>  1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
->>>>> index 554e82ebe83c..1616cb9c4ae5 100644
->>>>> --- a/drivers/platform/x86/intel-vbtn.c
->>>>> +++ b/drivers/platform/x86/intel-vbtn.c
->>>>> @@ -37,6 +37,10 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
->>>>>  static const struct key_entry intel_vbtn_keymap[] = {
->>>>>         { KE_IGNORE, 0xC0, { KEY_POWER } },     /* power key press */
->>>>>         { KE_KEY, 0xC1, { KEY_POWER } },        /* power key release */
->>>>> +       { KE_KEY, 0xC4, { KEY_VOLUMEUP} },      /* volume-up key press */
->>>>> +       { KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },  /* volume-up key release */
->>>>> +       { KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },   /* volume-down key press */
->>>>> +       { KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },        /* volume-down key release */
->>>>>         { KE_END },
->>>>>  };
->>>>>
->>>>> --
->>>>> 2.12.2
->>>>>
->>>>
->>>>
->>>>
->>>> --
->>>> With Best Regards,
->>>> Andy Shevchenko
->>>
->>>
->>>
->>> --
->>> Far away from the primal instinct, the song seems to fade away, the
->>> river get wider between your thoughts and the things we do and say.
->
->
->
-> --
-> Far away from the primal instinct, the song seems to fade away, the
-> river get wider between your thoughts and the things we do and say.
-
-
+But still, this can't justify non-modular platform code that will run
+on every X86 system out there. Any piece of platform-specific quirks,
+we should be able to build as a module, otherwise it simply doesn't
+scale. PCI quirks and such are enough pain already without inventing
+more flavors of bloat :-(
 
 -- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Jean Delvare
+SUSE L3 Support
