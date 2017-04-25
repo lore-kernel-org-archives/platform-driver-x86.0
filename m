@@ -1,40 +1,42 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: try to set als by default
-Date: Tue, 25 Apr 2017 15:25:59 +0300
-Message-ID: <CAHp75Vcnm3h9D5OPFeoKyCr2VJP4kK+kbueW8eNuSs2U7Ttqsg@mail.gmail.com>
-References: <20170421152434.3834-1-linux@rempel-privat.de> <CAHp75VfRio2j+AQfC2qFmyjHpVGTqgANw91XP98CihyTeE14ww@mail.gmail.com>
- <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: fix cpufv sysfs file permission
+Date: Tue, 25 Apr 2017 15:27:34 +0300
+Message-ID: <CAHp75VcB3SPW_HhS+403dLjr-O6cTT2iD=jKbSKXzrQDSEhY0w@mail.gmail.com>
+References: <20170422021945.5260-1-jeremy.lefaure@lse.epita.fr>
+ <CAHp75Vf7qKmbzJLfsHJXw_DQ3t8+WKHLEzLHweAq5eE2TTHKNA@mail.gmail.com> <20170424113117.03ba9c77@blatinox-laptop.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f177.google.com ([209.85.220.177]:33640 "EHLO
-        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1946862AbdDYM0B (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 08:26:01 -0400
-Received: by mail-qk0-f177.google.com with SMTP id h123so57058242qke.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Apr 2017 05:26:00 -0700 (PDT)
-In-Reply-To: <cf184d2b-7736-3342-3a17-21ca998b8e0e@rempel-privat.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170424113117.03ba9c77@blatinox-laptop.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SsOpcsOpbXkgTGVmYXVyZQ==?= <jeremy.lefaure@lse.epita.fr>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Apr 22, 2017 at 9:55 AM, Oleksij Rempel <linux@rempel-privat.de> wrote:
-> Am 21.04.2017 um 21:06 schrieb Andy Shevchenko:
->> On Fri, Apr 21, 2017 at 6:24 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
->>> some laptops, for example ASUS UX330UAK, have brocken als_get function
->>> but working als_set funktion. In this case, ALS will stay turned off.
-
->>> This patch will do the same. Turn ALS on by default.
->>
->> It would be good to see if there is no regression added.
+On Mon, Apr 24, 2017 at 6:31 PM, J=C3=A9r=C3=A9my Lefaure
+<jeremy.lefaure@lse.epita.fr> wrote:
+> On Mon, 24 Apr 2017 12:14:14 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 >
-> I just send this email to ASUS support, may be some thing will happen:
-> https://pastebin.com/TLjbbNMc
+>> On Sat, Apr 22, 2017 at 5:19 AM, J=C3=A9r=C3=A9my Lefaure
+>> <jeremy.lefaure@lse.epita.fr> wrote:
+>> > The cpufv sysfs file is defined as readable by anyone even if the
+>> > attribute does not have a show function. The result of every read is a=
+n
+>> > IO error. This file should be write only.
+>>
+>> Per se patch looks good to me, though would be better to add show()
+>> hook as well?
+>>
+> It depends if we want to keep it write-only as it is documented in
+> Documentation/ABI/testing/sysfs-platform-asus-wmi.
+>
+> If we want to have this file read/write, I can send a v2 of this patch.
 
-Okay, let's wait a bit and if there no answer submit v2 based on review.
+I dunno we need.
+So, since no answer from anyone I pushed this to testing, thanks!
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
