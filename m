@@ -1,59 +1,61 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: Silead DMI driver
-Date: Tue, 25 Apr 2017 12:19:39 +0200
-Message-ID: <20170425121939.7dbdfeed@endymion>
-References: <20170424132356.044ae04f@endymion>
-        <1493034496.24567.163.camel@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86/intel-vbtn: add volume up and down
+Date: Tue, 25 Apr 2017 15:13:27 +0300
+Message-ID: <CAHp75VcJZrVNMKNx=bFoz2PMw3cB98bHsTcSYU1PVTnBveciMw@mail.gmail.com>
+References: <20170424213521.10406-1-madman2003@shikahr.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:53801 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S943258AbdDYKTm (ORCPT
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:33452 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1947311AbdDYMNa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Apr 2017 06:19:42 -0400
-In-Reply-To: <1493034496.24567.163.camel@linux.intel.com>
+        Tue, 25 Apr 2017 08:13:30 -0400
+In-Reply-To: <20170424213521.10406-1-madman2003@shikahr.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Maarten Maathuis <madman2003@gmail.com>
+Cc: AceLan Kao <acelan.kao@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maarten Maathuis <madman2003@shikahr.net>
 
-On Mon, 24 Apr 2017 14:48:16 +0300, Andy Shevchenko wrote:
-> On Mon, 2017-04-24 at 13:23 +0200, Jean Delvare wrote:
-> > I'm looking at drivers/platform/x86/silead_dmi.c which is being added
-> > to kernel v4.11 and I do not like what I see.
-> 
-> I don't like it either by some other reasons.
-> 
-> > I have to say I don't understand the whole complexity of the design.
-> > As I understand it, the properties which are being added are only
-> > consumed by the "silead" touchscreen driver. I see no necessity to add
-> > the missing properties before that driver is even loaded. Can't you
-> > just look for the ACPI companion device at the time the silead driver
-> > tries to bind to the i2c device, and add the missing properties before
-> > performing the actual probe? This would be so much simpler. What am I
-> > missing?
-> 
-> As far as I understand it would be as simple as adding a quirk in actual
-> driver (touchscreen), but there is strong objection of adding quirks to
-> the drivers/input/* from Dmitry as I noticed during discussion [1] about
-> GPIO ACPI library fixes I'm working on.
-> 
-> [1] https://lkml.org/lkml/2017/4/4/593
+On Tue, Apr 25, 2017 at 12:35 AM, Maarten Maathuis <madman2003@gmail.com> wrote:
+> Tested on HP Elite X2 1012 G1.
+> Matches event report of Lenovo Helix 2
+> (https://www.spinics.net/lists/ibm-acpi-devel/msg03982.html).
+>
+> V2: Fix indent and add sign-off
+> V3: Missing whitespace correction
 
-Thanks for the pointer Andy. OK, I can understand the argument of
-Dmitry that platform-specific quirks do not belong to the device
-drivers, even though in practice I'm not sure the cost of having a
-separate platform driver for the purpose is always worth it - depends
-on how "popular" the device is, I suppose.
+Slightly modified (*) version pushed to testing, thanks!
 
-But still, this can't justify non-modular platform code that will run
-on every X86 system out there. Any piece of platform-specific quirks,
-we should be able to build as a module, otherwise it simply doesn't
-scale. PCI quirks and such are enough pain already without inventing
-more flavors of bloat :-(
+*) Fixed subject, removed changelog from commit message, improved indentation
+
+>
+> Signed-off-by: Maarten Maathuis <madman2003@shikahr.net>
+> ---
+>  drivers/platform/x86/intel-vbtn.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> index 554e82ebe83c..dc270fe793a1 100644
+> --- a/drivers/platform/x86/intel-vbtn.c
+> +++ b/drivers/platform/x86/intel-vbtn.c
+> @@ -37,6 +37,10 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
+>  static const struct key_entry intel_vbtn_keymap[] = {
+>         { KE_IGNORE, 0xC0, { KEY_POWER } },     /* power key press */
+>         { KE_KEY, 0xC1, { KEY_POWER } },        /* power key release */
+> +       { KE_KEY, 0xC4, { KEY_VOLUMEUP } },     /* volume-up key press */
+> +       { KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },  /* volume-up key release */
+> +       { KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },   /* volume-down key press */
+> +       { KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },        /* volume-down key release */
+>         { KE_END },
+>  };
+>
+> --
+> 2.12.2
+>
+
+
 
 -- 
-Jean Delvare
-SUSE L3 Support
+With Best Regards,
+Andy Shevchenko
