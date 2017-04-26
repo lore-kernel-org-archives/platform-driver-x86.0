@@ -1,68 +1,163 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 8/8] platform: x86: intel_bxtwc_tmu: remove first level
- irq unmask
-Date: Wed, 26 Apr 2017 18:44:43 +0300
-Message-ID: <CAHp75VebW8Fi2Hzkk=9z_Ktq=xc7MjUWUE00p72OeyxcP9826w@mail.gmail.com>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <93377b77b9493d79de48741b030fa1b03f80094f.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170421220025.GC31650@fury> <d9ead97f-db7b-a0b0-4eb1-1c783ee1e841@linux.intel.com>
- <CAHp75VeGQ=Zb=azNZCEfA25VdvuQcbMJoHuXkyQ24KOh4WQjRw@mail.gmail.com>
- <20170424092401.uijlbkcxosoy4zmt@dell> <CAHp75Vd-V1jzPcEj1ZgA204gL_+ToeO7itbxjE_2e2ptki_PpQ@mail.gmail.com>
- <20170424122439.nwrlincsvhjq4ljf@dell>
+Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v4
+Date: Wed, 26 Apr 2017 19:45:30 +0300
+Message-ID: <CAHp75VfJKkFTXbia=CiZapriEg6ObUh=js6cKJv3xe=2DBHbqA@mail.gmail.com>
+References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de> <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170424122439.nwrlincsvhjq4ljf@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "Zhang, Rui" <rui.zhang@intel.com>, Andy Shevchenko <andy@infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f178.google.com ([209.85.220.178]:33965 "EHLO
+        mail-qk0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754405AbdDZQpc (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 26 Apr 2017 12:45:32 -0400
+In-Reply-To: <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
+Cc: helgaas@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Apr 24, 2017 at 3:24 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 24 Apr 2017, Andy Shevchenko wrote:
+On Tue, Apr 25, 2017 at 4:19 PM, Christian K=C3=B6nig
+<deathsimple@vodafone.de> wrote:
+> From: Christian K=C3=B6nig <christian.koenig@amd.com>
 >
->> On Mon, Apr 24, 2017 at 12:24 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> > On Sat, 22 Apr 2017, Andy Shevchenko wrote:
->> >
->> >> On Sat, Apr 22, 2017 at 1:34 AM, sathyanarayanan kuppuswamy
->> >> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> >>
->> >> > Thanks for brining it up. I was planning to ask either Andy or Lee regarding
->> >> > this issue after all patches in the series are reviewed.
->> >>
->> >> Darren, I'm planning to review this soon.
->> >>
->> >> P.S. We have few series flying around regarding to Intel PMIC(s): my
->> >> for Kconfig naming, Hans' for Crystal Cove (touches Kconfig as well),
->> >> and Sathya's series. I hope Lee can collect them in proper order.
->> >
->> > That could be easier said than done.
->>
->> Some of them are already in your tree, then apply
->> - my Kconfig patch which makes Broxton Whiskey Cove to be built
->> independently of Crystal Cove (I didn't notice that patch in your
->> tree, though some of your mail told it had been applied)
->> - Hans' series regarding CherryTrail Whiskey Cove support (if it has all ACKs)
->> - this series after my review.
->>
->> Does it sound doable?
+> Just the defines and helper functions to read the possible sizes of a BAR=
+ and
+> update it's size.
 >
-> My Inbox is now empty, so all patches are now either applied or
-> waiting further Acks/Actions.
+> See https://pcisig.com/sites/default/files/specification_documents/ECN_Re=
+sizable-BAR_24Apr2008.pdf
+> and PCIe r3.1, sec 7.22.
+>
+> This is useful for hardware with large local storage (mostly GFX) which o=
+nly
+> expose 256MB BARs initially to be compatible with 32bit systems.
 
-I reviewed the series and found it suitable to apply.
-The GPIO Whiskey Cove patch will do a conflict (in GPIO tree is
-another patch that adds GPIO IRQ masks in a way by using GENMASK(),
-so, we might avoid this doing the same in patch 5 here).
+> +u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar)
+> +{
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> +       unsigned pos, nbars;
+> +       u32 ctrl, cap;
+> +       unsigned i;
 
-for entire series.
+Are we supposed to use plain 'unsigned' nowadays? I would go with
+'unsigned int'.
 
-> I'm pretty certain that this set is not going in before v4.13.
+> +}
 
-It is now on your side :-)
+> + * Returns size if found or negativ error code.
 
--- 
+Typo: negative.
+
+> +int pci_rbar_get_current_size(struct pci_dev *pdev, int bar)
+> +{
+> +       unsigned pos, nbars;
+
+> +       u32 ctrl;
+> +       unsigned i;
+
+Reversed tree order?
+
+> +       for (i =3D 0; i < nbars; ++i, pos +=3D 8) {
+> +               int bar_idx;
+> +
+> +               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+> +               bar_idx =3D (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
+> +                               PCI_REBAR_CTRL_BAR_IDX_SHIFT;
+> +               if (bar_idx !=3D bar)
+> +                       continue;
+> +
+> +               return (ctrl & PCI_REBAR_CTRL_BAR_SIZE_MASK) >>
+> +                       PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
+> +       }
+
+This one the same as previous function, the difference only in what is
+returned. CAre to split static helper function for both?
+
+> +       return -ENOENT;
+> +}
+
+> +/**
+> + * pci_rbar_set_size - set a new size for a BAR
+> + * @dev: PCI device
+> + * @bar: BAR to set size to
+
+> + * @size: new size as defined in the spec (log2(size in bytes) - 20)
+
+Not clear is it rounded up / down. I would go with "...in the spec
+(0=3D1MB, 19=3D512GB)".
+
+> + *
+> + * Set the new size of a BAR as defined in the spec (0=3D1MB, 19=3D512GB=
+).
+> + * Returns true if resizing was successful, false otherwise.
+> + */
+
+> +int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size)
+> +{
+> +       unsigned pos, nbars;
+> +       u32 ctrl;
+> +       unsigned i;
+
+
+> +
+> +       pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
+> +       if (!pos)
+> +               return -ENOTSUPP;
+> +
+> +       pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+> +       nbars =3D (ctrl & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBA=
+R_SHIFT;
+> +
+> +       for (i =3D 0; i < nbars; ++i, pos +=3D 8) {
+> +               int bar_idx;
+> +
+> +               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
+> +               bar_idx =3D (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
+> +                               PCI_REBAR_CTRL_BAR_IDX_SHIFT;
+> +               if (bar_idx !=3D bar)
+> +                       continue;
+
+Above is duplicating previous.
+
+So,
+static int ..._find_rbar(..., u32 *ctrl)
+{
+}
+
+Returns: (i.e.) 0 - found, 1 - not found, -ERRNO.
+
+ret =3D _find_rbar();
+if (ret < 0)
+ return ret;
+if (ret)
+ return -ENOENT;
+...
+return 0;
+
+So, please refactor.
+
+> +
+> +               ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE_MASK;
+> +               ctrl |=3D size << PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
+> +               pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
+> +               return 0;
+> +       }
+> +
+> +       return -ENOENT;
+> +}
+
+> -#define  PCI_REBAR_CTRL_NBAR_MASK      (7 << 5)        /* mask for # bar=
+s */
+> -#define  PCI_REBAR_CTRL_NBAR_SHIFT     5       /* shift for # bars */
+
+> +#define  PCI_REBAR_CTRL_NBAR_MASK      (7 << 5)        /* mask for # BAR=
+s */
+> +#define  PCI_REBAR_CTRL_NBAR_SHIFT     5       /* shift for # BARs */
+
+I understand why, but I dunno it worth to do.
+
+--=20
 With Best Regards,
 Andy Shevchenko
