@@ -1,72 +1,92 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 30h-3fh) Processors v2
-Date: Wed, 26 Apr 2017 20:18:15 +0300
-Message-ID: <CAHp75Vf5ETss24VkMpNn388D5AT5Yckeav0nSS-ESn-AdiHSGQ@mail.gmail.com>
-References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
- <1493126394-1239-4-git-send-email-deathsimple@vodafone.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
+ AC settings
+Date: Wed, 26 Apr 2017 15:40:49 -0700
+Message-ID: <20170426224049.GB3879@fury>
+References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
+ <CAHp75VfCiqeddWu9xfMud4sEWAvk+CDXTkgO5zbb++QhiTL=Bw@mail.gmail.com>
+ <20170425125453.GK30553@pali>
+ <CAHp75VdjZ4Ti1YPZVq8_fjUh0xuDbQ-EtZQQjaWQf2fhZs2mRw@mail.gmail.com>
+ <20170425134044.GL30553@pali>
+ <c140b70b460f45afa43bdfd7dec723b3@ausx13mpc120.AMER.DELL.COM>
+ <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1493126394-1239-4-git-send-email-deathsimple@vodafone.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, helgaas@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:57529 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1031883AbdDZWky (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 26 Apr 2017 18:40:54 -0400
+Content-Disposition: inline
+In-Reply-To: <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Arcadiy Ivanov <arcadiy@ivanov.biz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgNDoxOSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8ZGVhdGhz
-aW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgo+IEZyb206IENocmlzdGlhbiBLw7ZuaWcgPGNocmlz
-dGlhbi5rb2VuaWdAYW1kLmNvbT4KPgo+IE1vc3QgQklPUyBkb24ndCBlbmFibGUgdGhpcyBiZWNh
-dXNlIG9mIGNvbXBhdGliaWxpdHkgcmVhc29ucy4KPgo+IE1hbnVhbGx5IGVuYWJsZSBhIDY0Yml0
-IEJBUiBvZiA2NEdCIHNpemUgc28gdGhhdCB3ZSBoYXZlCj4gZW5vdWdoIHJvb20gZm9yIFBDSSBk
-ZXZpY2VzLgoKPiArc3RhdGljIHZvaWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKHN0cnVjdCBw
-Y2lfZGV2ICpkZXYpCj4gK3sKCj4gKyAgICAgICB1aW50MzJfdCBiYXNlLCBsaW1pdCwgaGlnaDsK
-CklzIHUzMiBvciB1aW50MzJfdCB1c2VkIGFjdHVhbGx5IGluIHRoaXMgZmlsZT8KCj4gKyAgICAg
-ICBzdHJ1Y3QgcmVzb3VyY2UgKnJlcywgKmNvbmZsaWN0OwoKPiArICAgICAgIHVuc2lnbmVkIGk7
-Cgp1bnNpZ25lZCBpbnQgaTsKClJldmVyc2VkIHRyZWUgb3JkZXIuCgo+ICsgICAgICAgZm9yIChp
-ID0gMDsgaSA8IDg7ICsraSkgewo+ICsgICAgICAgICAgICAgICBwY2lfcmVhZF9jb25maWdfZHdv
-cmQoZGV2LCAweDgwICsgaSAqIDB4OCwgJmJhc2UpOwo+ICsgICAgICAgICAgICAgICBwY2lfcmVh
-ZF9jb25maWdfZHdvcmQoZGV2LCAweDE4MCArIGkgKiAweDQsICZoaWdoKTsKPiArCj4gKyAgICAg
-ICAgICAgICAgIC8qIElzIHRoaXMgc2xvdCBmcmVlPyAqLwo+ICsgICAgICAgICAgICAgICBpZiAo
-KGJhc2UgJiAweDMpID09IDB4MCkKPiArICAgICAgICAgICAgICAgICAgICAgICBicmVhazsKPiAr
-Cj4gKyAgICAgICAgICAgICAgIGJhc2UgPj49IDg7Cj4gKyAgICAgICAgICAgICAgIGJhc2UgfD0g
-aGlnaCA8PCAyNDsKPiArCj4gKyAgICAgICAgICAgICAgIC8qIEFib3J0IGlmIGEgc2xvdCBhbHJl
-YWR5IGNvbmZpZ3VyZXMgYSA2NGJpdCBCQVIuICovCj4gKyAgICAgICAgICAgICAgIGlmIChiYXNl
-ID4gMHgxMDAwMCkKPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47Cj4gKyAgICAgICB9
-Cj4gKyAgICAgICBpZiAoaSA9PSA4KQo+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gKwo+ICsg
-ICAgICAgcmVzID0ga3phbGxvYyhzaXplb2YoKnJlcyksIEdGUF9LRVJORUwpOwo+ICsgICAgICAg
-aWYgKCFyZXMpCj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiArCj4gKyAgICAgICByZXMtPm5h
-bWUgPSAiUENJIEJ1cyAwMDAwOjAwIjsKCj4gKyAgICAgICByZXMtPmZsYWdzID0gSU9SRVNPVVJD
-RV9QUkVGRVRDSCB8IElPUkVTT1VSQ0VfTUVNIHwKPiArICAgICAgICAgICAgICAgSU9SRVNPVVJD
-RV9NRU1fNjQgfCBJT1JFU09VUkNFX1dJTkRPVzsKCllvdSBhcmUgdXNpbmcgdGhpcyBjb25zdGFu
-dCB0d2ljZSBBRkFJQ1MsIHBlcmhhcHMgZGVmaW5lIGl0IGluIGdlbmVyaWMKcGNpLmggYW5kIHJl
-LXVzZT8KCj4gKyAgICAgICByZXMtPnN0YXJ0ID0gMHgxMDAwMDAwMDA7Cj4gKyAgICAgICByZXMt
-PmVuZCA9IDB4ZmQwMDAwMDAwMCAtIDE7CgpQZXJoYXBzIHlvdSBmb3Jnb3QgdWwgLyB1bGwgaW4g
-bWFueSBwbGFjZXMgaW4geW91ciBjb2RlLiBDYXJlIHRvCmNvbXBpbGUgZm9yIDMyLWJpdCBhbmQg
-Zml4IHRoZSB3YXJuaW5ncz8KCj4gKyAgICAgICBkZXZfaW5mbygmZGV2LT5kZXYsICJhZGRpbmcg
-cm9vdCBidXMgcmVzb3VyY2UgJXBSXG4iLCByZXMpOwoKU29tZSBvZiB5b3VyIG1lc3NhZ2VzIEkg
-dGhpbmsgYXJlIHJhdGhlciBkZXZfZGJnKCkgdGhhbiBkZXZfaW5mbygpLgoKPiArICAgICAgIGJh
-c2UgPSAoKHJlcy0+c3RhcnQgPj4gOCkgJiAweGZmZmZmZjAwKSB8IDB4MzsKPiArICAgICAgIGxp
-bWl0ID0gKChyZXMtPmVuZCArIDEpID4+IDgpICYgMHhmZmZmZmYwMDsKPiArICAgICAgIGhpZ2gg
-PSAoKHJlcy0+c3RhcnQgPj4gNDApICYgMHhmZikgfAo+ICsgICAgICAgICAgICAgICAoKCgocmVz
-LT5lbmQgKyAxKSA+PiA0MCkgJiAweGZmKSA8PCAxNik7CgpJdCB3b3VsZCBiZSBuaWNlIHRvIGhh
-dmUgdGhlIG1hZ2ljcyBkZWZpbmVkIChqdXN0IG9uIHRvcCBvZiB0aGlzIGZ1bmN0aW9uKSBsaWtl
-CgojZGVmaW5lIFBDSV9BTURfQkFSX1hYWF9NQVNLIEdFTk1BU0soLi4uKQojZGVmaW5lIFBDSV9B
-TURfQkFSX1hYWF9TSElGVCBubgoKPiArICAgICAgIHBjaV93cml0ZV9jb25maWdfZHdvcmQoZGV2
-LCAweDE4MCArIGkgKiAweDQsIGhpZ2gpOwo+ICsgICAgICAgcGNpX3dyaXRlX2NvbmZpZ19kd29y
-ZChkZXYsIDB4ODQgKyBpICogMHg4LCBsaW1pdCk7Cj4gKyAgICAgICBwY2lfd3JpdGVfY29uZmln
-X2R3b3JkKGRldiwgMHg4MCArIGkgKiAweDgsIGJhc2UpOwoKRGl0dG8gZm9yIHBvczpzLgoKPiAr
-Cj4gKyAgICAgICBwY2lfYnVzX2FkZF9yZXNvdXJjZShkZXYtPmJ1cywgcmVzLCAwKTsKPiArfQoK
-LS0gCldpdGggQmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Apr 25, 2017 at 05:50:57PM -0400, Arcadiy Ivanov wrote:
+> On 2017-04-25 09:49, Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > > Sent: Tuesday, April 25, 2017 8:41 AM
+> > > To: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
+> > > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>; Arcadiy Ivanov
+> > > <arcadiy@ivanov.biz>; Limonciello, Mario <Mario_Limonciello@Dell.com>;
+> > > Platform Driver <platform-driver-x86@vger.kernel.org>; linux-
+> > > kernel@vger.kernel.org
+> > > Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout AC
+> > > settings
+> > > 
+> > > On Tuesday 25 April 2017 16:32:36 Andy Shevchenko wrote:
+> > > > On Tue, Apr 25, 2017 at 3:54 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > > > On Tuesday 25 April 2017 15:36:56 Andy Shevchenko wrote:
+> > > > > > On Sun, Apr 23, 2017 at 10:40 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > > > > This patch misses few others that were applied to our testing / for-next.
+> > > > > Ah... sorry for that :-( And I was in impression that there were fixes
+> > > > > for that code which use mutexes... Now I know why I have not seen them!
+> > > > > 
+> > > > > > I have applied it to testing with corrected conflict (easy to fix),
+> > > > > > though check if everything still as supposed to be.
+> > > > > Can you send a link to your fix?
+> > > > Sure, here it is:
+> > > > http://git.infradead.org/linux-platform-drivers-
+> > > x86.git/commit/bcf7d8a30e2888f78a19778a16d3dd8c10b4b0ad
+> > > 
+> > > It is OK.
+> > > 
+> > Pali,
+> > 
+> > Considering this is negatively affecting folks on stable kernel releases too
+> > when using this newer HW, would you consider to send to @stable too?
+> > 
+> > Thanks,
+> 
+> I second that. Thanks!
+> 
+
+In order for this to go back to stable, we will need to include the list of
+dependencies per stable-kernel-rules.txt. This can be done after it is merged,
+but if you can provide the set of Cc: stable lines needed, we can look at
+getting this into testing now so no further action will be required.
+
+...
+
+Upon closer inspection, this does fail the 100 lines including context stable
+rule by an additional 55 lines. This is a process issue I've been thinking about
+for a while and trying to find the best way to express this problem and what a
+viable solution might look like. As it stands, fixes such as these are
+effectively limited to current and future kernel versions. I do think there is a
+need for vendors to be able to update their drivers upstream to work with current
+hardware without requiring a bleeding edge kernel. Perhaps "leaf node drivers"
+should have a looser set of stable rules, but that is not currently the way the
+upstream stable kernel rules work (at least as far as I understand them).
+
++Greg KH who has the ultimate say on this. Greg, have I misrepresented anything
+here?
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
