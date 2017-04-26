@@ -1,163 +1,120 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v4
-Date: Wed, 26 Apr 2017 19:45:30 +0300
-Message-ID: <CAHp75VfJKkFTXbia=CiZapriEg6ObUh=js6cKJv3xe=2DBHbqA@mail.gmail.com>
-References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de> <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
+Subject: Re: [PATCH 2/4] PCI: add functionality for resizing resources v3
+Date: Wed, 26 Apr 2017 20:00:34 +0300
+Message-ID: <CAHp75VfSFBYgHRsX2JSH0zdSEW8VvXbNMVvBBsD9kKgzGr-v2w@mail.gmail.com>
+References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
+ <1493126394-1239-3-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f178.google.com ([209.85.220.178]:33965 "EHLO
-        mail-qk0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754405AbdDZQpc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2017 12:45:32 -0400
-In-Reply-To: <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1493126394-1239-3-git-send-email-deathsimple@vodafone.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: helgaas@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, helgaas@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 25, 2017 at 4:19 PM, Christian K=C3=B6nig
-<deathsimple@vodafone.de> wrote:
-> From: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> Just the defines and helper functions to read the possible sizes of a BAR=
- and
-> update it's size.
->
-> See https://pcisig.com/sites/default/files/specification_documents/ECN_Re=
-sizable-BAR_24Apr2008.pdf
-> and PCIe r3.1, sec 7.22.
->
-> This is useful for hardware with large local storage (mostly GFX) which o=
-nly
-> expose 256MB BARs initially to be compatible with 32bit systems.
-
-> +u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar)
-> +{
-
-> +       unsigned pos, nbars;
-> +       u32 ctrl, cap;
-> +       unsigned i;
-
-Are we supposed to use plain 'unsigned' nowadays? I would go with
-'unsigned int'.
-
-> +}
-
-> + * Returns size if found or negativ error code.
-
-Typo: negative.
-
-> +int pci_rbar_get_current_size(struct pci_dev *pdev, int bar)
-> +{
-> +       unsigned pos, nbars;
-
-> +       u32 ctrl;
-> +       unsigned i;
-
-Reversed tree order?
-
-> +       for (i =3D 0; i < nbars; ++i, pos +=3D 8) {
-> +               int bar_idx;
-> +
-> +               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> +               bar_idx =3D (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
-> +                               PCI_REBAR_CTRL_BAR_IDX_SHIFT;
-> +               if (bar_idx !=3D bar)
-> +                       continue;
-> +
-> +               return (ctrl & PCI_REBAR_CTRL_BAR_SIZE_MASK) >>
-> +                       PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-> +       }
-
-This one the same as previous function, the difference only in what is
-returned. CAre to split static helper function for both?
-
-> +       return -ENOENT;
-> +}
-
-> +/**
-> + * pci_rbar_set_size - set a new size for a BAR
-> + * @dev: PCI device
-> + * @bar: BAR to set size to
-
-> + * @size: new size as defined in the spec (log2(size in bytes) - 20)
-
-Not clear is it rounded up / down. I would go with "...in the spec
-(0=3D1MB, 19=3D512GB)".
-
-> + *
-> + * Set the new size of a BAR as defined in the spec (0=3D1MB, 19=3D512GB=
-).
-> + * Returns true if resizing was successful, false otherwise.
-> + */
-
-> +int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size)
-> +{
-> +       unsigned pos, nbars;
-> +       u32 ctrl;
-> +       unsigned i;
-
-
-> +
-> +       pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-> +       if (!pos)
-> +               return -ENOTSUPP;
-> +
-> +       pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> +       nbars =3D (ctrl & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBA=
-R_SHIFT;
-> +
-> +       for (i =3D 0; i < nbars; ++i, pos +=3D 8) {
-> +               int bar_idx;
-> +
-> +               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> +               bar_idx =3D (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
-> +                               PCI_REBAR_CTRL_BAR_IDX_SHIFT;
-> +               if (bar_idx !=3D bar)
-> +                       continue;
-
-Above is duplicating previous.
-
-So,
-static int ..._find_rbar(..., u32 *ctrl)
-{
-}
-
-Returns: (i.e.) 0 - found, 1 - not found, -ERRNO.
-
-ret =3D _find_rbar();
-if (ret < 0)
- return ret;
-if (ret)
- return -ENOENT;
-...
-return 0;
-
-So, please refactor.
-
-> +
-> +               ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE_MASK;
-> +               ctrl |=3D size << PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-> +               pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-> +               return 0;
-> +       }
-> +
-> +       return -ENOENT;
-> +}
-
-> -#define  PCI_REBAR_CTRL_NBAR_MASK      (7 << 5)        /* mask for # bar=
-s */
-> -#define  PCI_REBAR_CTRL_NBAR_SHIFT     5       /* shift for # bars */
-
-> +#define  PCI_REBAR_CTRL_NBAR_MASK      (7 << 5)        /* mask for # BAR=
-s */
-> +#define  PCI_REBAR_CTRL_NBAR_SHIFT     5       /* shift for # BARs */
-
-I understand why, but I dunno it worth to do.
-
---=20
-With Best Regards,
-Andy Shevchenko
+T24gVHVlLCBBcHIgMjUsIDIwMTcgYXQgNDoxOSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8ZGVhdGhz
+aW1wbGVAdm9kYWZvbmUuZGU+IHdyb3RlOgo+IEZyb206IENocmlzdGlhbiBLw7ZuaWcgPGNocmlz
+dGlhbi5rb2VuaWdAYW1kLmNvbT4KPgo+IFRoaXMgYWxsb3dzIGRldmljZSBkcml2ZXJzIHRvIHJl
+cXVlc3QgcmVzaXppbmcgdGhlaXIgQkFScy4KPgo+IFRoZSBmdW5jdGlvbiBvbmx5IHRyaWVzIHRv
+IHJlcHJvZ3JhbSB0aGUgd2luZG93cyBvZiB0aGUgYnJpZGdlIGRpcmVjdGx5IGFib3ZlCj4gdGhl
+IHJlcXVlc3RpbmcgZGV2aWNlIGFuZCBvbmx5IHRoZSBCQVIgb2YgdGhlIHNhbWUgdHlwZSAodXN1
+YWxseSBtZW0sIDY0Yml0LAo+IHByZWZldGNoYWJsZSkuIFRoaXMgaXMgZG9uZSB0byBtYWtlIHN1
+cmUgbm90IHRvIGRpc3R1cmIgb3RoZXIgZHJpdmVycyBieQo+IGNoYW5naW5nIHRoZSBCQVJzIG9m
+IHRoZWlyIGRldmljZXMuCj4KPiBJZiByZXByb2dyYW1taW5nIHRoZSBicmlkZ2UgQkFSIGZhaWxz
+IHRoZSBvbGQgc3RhdHVzIGlzIHJlc3RvcmVkIGFuZCAtRU5PU1BDCj4gcmV0dXJuZWQgdG8gdGhl
+IGNhbGxpbmcgZGV2aWNlIGRyaXZlci4KCj4gK2ludCBwY2lfcmVhc3NpZ25fYnJpZGdlX3Jlc291
+cmNlcyhzdHJ1Y3QgcGNpX2RldiAqYnJpZGdlLCB1bnNpZ25lZCBsb25nIHR5cGUpCj4gK3sKPiAr
+ICAgICAgIGNvbnN0IHVuc2lnbmVkIGxvbmcgdHlwZV9tYXNrID0gSU9SRVNPVVJDRV9JTyB8IElP
+UkVTT1VSQ0VfTUVNIHwKPiArICAgICAgICAgICAgICAgSU9SRVNPVVJDRV9QUkVGRVRDSCB8IElP
+UkVTT1VSQ0VfTUVNXzY0OwoKPiArCgpSZWR1bmRhbnQuCgo+ICsgICAgICAgc3RydWN0IHBjaV9k
+ZXZfcmVzb3VyY2UgKmRldl9yZXM7Cj4gKyAgICAgICBMSVNUX0hFQUQoc2F2ZWQpOwo+ICsgICAg
+ICAgTElTVF9IRUFEKGFkZGVkKTsKPiArICAgICAgIExJU1RfSEVBRChmYWlsZWQpOwoKPiArICAg
+ICAgIHVuc2lnbmVkIGk7Cgp1bnNpZ25lZCBpbnQgaTsKCj4gKyAgICAgICBpbnQgcmV0ID0gMDsK
+PiArCj4gKyAgICAgICAvKiBXYWxrIHRvIHRoZSByb290IEJVUywgcmVsZWFzaW5nIGJyaWRnZSBC
+QVJzIHdoZW4gcG9zc2libGUgKi8KCj4gKyAgICAgICB3aGlsZSAoMSkgewoKVGhpcyByYWlzZXMg
+cmVkIGZsYWcuIENhcmUgdG8gcmVmYWN0b3I/CkFsc28gZG8ge30gd2hpbGUgKCkgc3ludGF4IGFs
+bG93cyBmYXN0ZXIgdG8gZ2V0IHRoYXQgdGhlIGxvb3AgYm9keQpnb2VzIGF0IGxlYXN0IG9uY2Uu
+Cgo+ICsgICAgICAgICAgICAgICBmb3IgKGkgPSBQQ0lfQlJJREdFX1JFU09VUkNFUzsgaSA8IFBD
+SV9CUklER0VfUkVTT1VSQ0VfRU5EOwo+ICsgICAgICAgICAgICAgICAgICAgIGkrKykgewoKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlcyA9ICZicmlkZ2UtPnJl
+c291cmNlW2ldOwo+ICsKCj4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKChyZXMtPmZsYWdz
+ICYgdHlwZV9tYXNrKSAhPSAodHlwZSAmIHR5cGVfbWFzaykpCgpJIHdvdWxkIHJhdGhlciBnbyB3
+aXRoCgppZiAoKHJlcy0+ZmxhZ3MgXiB0eXBlKSAmIHR5cGVfbWFzaykKCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgLyogSWdub3JlIEJBUnMgd2hpY2ggYXJlIHN0aWxsIGluIHVzZSAqLwo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGlmIChyZXMtPmNoaWxkKQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY29udGludWU7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IGFkZF90
+b19saXN0KCZzYXZlZCwgYnJpZGdlLCByZXMsIDAsIDApOwo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGlmIChyZXQpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGNsZWFu
+dXA7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChyZXMtPnBhcmVudCkKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbGVhc2VfcmVzb3VyY2UocmVzKTsKCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgcmVzLT5zdGFydCA9IDA7Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcmVzLT5lbmQgPSAwOwoKPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfaW5mbygm
+YnJpZGdlLT5kZXYsICJCQVIgJWQ6IHJlbGVhc2VkICVwUlxuIiwKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBpLCByZXMpOwoKSSBkb2Vzbid0IG1ha2UgbXVjaCBzZW5zZSB0byBt
+ZSBhZnRlciB6ZXJvaW5nIGEgcmFuZ2UuCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFr
+Owo+ICsgICAgICAgICAgICAgICB9Cj4gKyAgICAgICAgICAgICAgIGlmIChpID09IFBDSV9CUklE
+R0VfUkVTT1VSQ0VfRU5EKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwo+ICsKPiAr
+ICAgICAgICAgICAgICAgaWYgKCFicmlkZ2UtPmJ1cyB8fCAhYnJpZGdlLT5idXMtPnNlbGYpCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gKwo+ICsgICAgICAgICAgICAgICBicmlk
+Z2UgPSBicmlkZ2UtPmJ1cy0+c2VsZjsKPiArICAgICAgIH0KPiArCj4gKyAgICAgICBpZiAobGlz
+dF9lbXB0eSgmc2F2ZWQpKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0VOVDsKPiArCj4g
+KyAgICAgICBfX3BjaV9idXNfc2l6ZV9icmlkZ2VzKGJyaWRnZS0+c3Vib3JkaW5hdGUsICZhZGRl
+ZCk7Cj4gKyAgICAgICBfX3BjaV9icmlkZ2VfYXNzaWduX3Jlc291cmNlcyhicmlkZ2UsICZhZGRl
+ZCwgJmZhaWxlZCk7Cj4gKyAgICAgICBCVUdfT04oIWxpc3RfZW1wdHkoJmFkZGVkKSk7Cj4gKwo+
+ICsgICAgICAgaWYgKCFsaXN0X2VtcHR5KCZmYWlsZWQpKSB7Cj4gKyAgICAgICAgICAgICAgIHJl
+dCA9IC1FTk9TUEM7Cj4gKyAgICAgICAgICAgICAgIGdvdG8gY2xlYW51cDsKPiArICAgICAgIH0K
+Cj4gKwo+ICsKClJlbW92ZSBleHRyYSBlbXB0eSBsaW5lLgoKPiArICAgICAgIGxpc3RfZm9yX2Vh
+Y2hfZW50cnkoZGV2X3JlcywgJnNhdmVkLCBsaXN0KSB7Cj4gKyAgICAgICAgICAgICAgIC8qIFNr
+aXAgdGhlIGJyaWRnZSB3ZSBqdXN0IGFzc2lnbmVkIHJlc291cmNlcyBmb3IuICovCj4gKyAgICAg
+ICAgICAgICAgIGlmIChicmlkZ2UgPT0gZGV2X3Jlcy0+ZGV2KQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIGNvbnRpbnVlOwo+ICsKPiArICAgICAgICAgICAgICAgYnJpZGdlID0gZGV2X3Jlcy0+
+ZGV2Owo+ICsgICAgICAgICAgICAgICBwY2lfc2V0dXBfYnJpZGdlKGJyaWRnZS0+c3Vib3JkaW5h
+dGUpOwo+ICsgICAgICAgfQo+ICsKCj4gKyAgICAgICBmcmVlX2xpc3QoJnNhdmVkKTsKPiArICAg
+ICAgIGZyZWVfbGlzdCgmZmFpbGVkKTsKPiArICAgICAgIHJldHVybiByZXQ7CgpZb3UgbWlnaHQg
+cmUtdXNlIHR3byBsaW5lcyB3aXRoIGJlbG93LCBidXQgcGVyaGFwcyBiZXR0ZXIgdG8gc2hvdwp3
+aGljaCBjYXNlIHJldHVybnMgMCBleHBsaWNpdGx5IGFuZCBkcm9wIGFzc2lnbm1lbnQgcmV0ID0g
+MCBhYm92ZS4KCj4gKwo+ICtjbGVhbnVwOgo+ICsgICAgICAgLyogcmVzdG9yZSBzaXplIGFuZCBm
+bGFncyAqLwo+ICsgICAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeShkZXZfcmVzLCAmZmFpbGVkLCBs
+aXN0KSB7Cj4gKyAgICAgICAgICAgICAgIHN0cnVjdCByZXNvdXJjZSAqcmVzID0gZGV2X3Jlcy0+
+cmVzOwo+ICsKPiArICAgICAgICAgICAgICAgcmVzLT5zdGFydCA9IGRldl9yZXMtPnN0YXJ0Owo+
+ICsgICAgICAgICAgICAgICByZXMtPmVuZCA9IGRldl9yZXMtPmVuZDsKPiArICAgICAgICAgICAg
+ICAgcmVzLT5mbGFncyA9IGRldl9yZXMtPmZsYWdzOwo+ICsgICAgICAgfQo+ICsgICAgICAgZnJl
+ZV9saXN0KCZmYWlsZWQpOwo+ICsKPiArICAgICAgIC8qIFJldmVydCB0byB0aGUgb2xkIGNvbmZp
+Z3VyYXRpb24gKi8KPiArICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkoZGV2X3JlcywgJnNhdmVk
+LCBsaXN0KSB7Cj4gKyAgICAgICAgICAgICAgIHN0cnVjdCByZXNvdXJjZSAqcmVzID0gZGV2X3Jl
+cy0+cmVzOwo+ICsKPiArICAgICAgICAgICAgICAgYnJpZGdlID0gZGV2X3Jlcy0+ZGV2Owo+ICsg
+ICAgICAgICAgICAgICBpID0gcmVzIC0gYnJpZGdlLT5yZXNvdXJjZTsKPiArCj4gKyAgICAgICAg
+ICAgICAgIHJlcy0+c3RhcnQgPSBkZXZfcmVzLT5zdGFydDsKPiArICAgICAgICAgICAgICAgcmVz
+LT5lbmQgPSBkZXZfcmVzLT5lbmQ7Cj4gKyAgICAgICAgICAgICAgIHJlcy0+ZmxhZ3MgPSBkZXZf
+cmVzLT5mbGFnczsKPiArCj4gKyAgICAgICAgICAgICAgIHBjaV9jbGFpbV9yZXNvdXJjZShicmlk
+Z2UsIGkpOwo+ICsgICAgICAgICAgICAgICBwY2lfc2V0dXBfYnJpZGdlKGJyaWRnZS0+c3Vib3Jk
+aW5hdGUpOwo+ICsgICAgICAgfQoKPiArICAgICAgIGZyZWVfbGlzdCgmc2F2ZWQpOwo+ICsKPiAr
+ICAgICAgIHJldHVybiByZXQ7Cgo+ICt9Cgo+ICt2b2lkIHBjaV9yZWxlYXNlX3Jlc291cmNlKHN0
+cnVjdCBwY2lfZGV2ICpkZXYsIGludCByZXNubykKPiArewo+ICsgICAgICAgc3RydWN0IHJlc291
+cmNlICpyZXMgPSBkZXYtPnJlc291cmNlICsgcmVzbm87Cj4gKwo+ICsgICAgICAgcmVsZWFzZV9y
+ZXNvdXJjZShyZXMpOwoKPiArICAgICAgIHJlcy0+ZW5kID0gcmVzb3VyY2Vfc2l6ZShyZXMpIC0g
+MTsKPiArICAgICAgIHJlcy0+c3RhcnQgPSAwOwo+ICsgICAgICAgcmVzLT5mbGFncyB8PSBJT1JF
+U09VUkNFX1VOU0VUOwoKPiArICAgICAgIGRldl9pbmZvKCZkZXYtPmRldiwgIkJBUiAlZDogcmVs
+ZWFzZWQgJXBSXG4iLCByZXNubywgcmVzKTsKCk1ha2VzIGxpdHRsZSBzZW5zZSB0byBtZSBhZnRl
+ciB5b3UgY2xlYXJlZCBpbmZvcm1hdGlvbiBvdXQuCgo+ICt9Cj4gK0VYUE9SVF9TWU1CT0wocGNp
+X3JlbGVhc2VfcmVzb3VyY2UpOwo+ICsKPiAraW50IHBjaV9yZXNpemVfcmVzb3VyY2Uoc3RydWN0
+IHBjaV9kZXYgKmRldiwgaW50IHJlc25vLCBpbnQgc2l6ZSkKPiArewo+ICsgICAgICAgc3RydWN0
+IHJlc291cmNlICpyZXMgPSBkZXYtPnJlc291cmNlICsgcmVzbm87Cgo+ICsgICAgICAgdTY0IGJ5
+dGVzID0gMVVMTCA8PCAoc2l6ZSArIDIwKTsKCj4gKyAgICAgICByZXMtPmVuZCA9IHJlcy0+c3Rh
+cnQgKyAoMVVMTCA8PCAob2xkICsgMjApKSAtIDE7CgpQZXJoYXBzIG1hY3JvIG9yIGhlbHBlcj8K
+CnN0YXRpYyBpbmxpbmUgdTY0IHJiYXJfc2l6ZV90b19ieXRlcyhzaXplKQp7CnJldHVybiAxVUxM
+IDw8IChzaXplICsgMjApOwp9CgotLSAKV2l0aCBCZXN0IFJlZ2FyZHMsCkFuZHkgU2hldmNoZW5r
+bwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
