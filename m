@@ -1,74 +1,81 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: intel_turbo_max_3 non-modularity
-Date: Thu, 27 Apr 2017 16:18:46 -0700
-Message-ID: <1493335126.69096.481.camel@linux.intel.com>
-References: <20170424113103.0de3ea31@endymion>
-         <20170424140218.GR16239@windriver.com> <20170427214843.GB29261@fury>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: Silead DMI driver
+Date: Thu, 27 Apr 2017 16:58:34 -0700
+Message-ID: <20170427235834.GC33675@dtor-ws>
+References: <20170424132356.044ae04f@endymion>
+ <1493034496.24567.163.camel@linux.intel.com>
+ <20170425121939.7dbdfeed@endymion>
+ <20170427211322.GA29261@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:57509 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S936461AbdD0XSs (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:33227 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935427AbdD0X6i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Apr 2017 19:18:48 -0400
-In-Reply-To: <20170427214843.GB29261@fury>
+        Thu, 27 Apr 2017 19:58:38 -0400
+Content-Disposition: inline
+In-Reply-To: <20170427211322.GA29261@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Jean Delvare <jdelvare@suse.de>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Jean Delvare <jdelvare@suse.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Thu, 2017-04-27 at 14:48 -0700, Darren Hart wrote:
-> On Mon, Apr 24, 2017 at 10:02:18AM -0400, Paul Gortmaker wrote:
+On Thu, Apr 27, 2017 at 02:13:22PM -0700, Darren Hart wrote:
+> On Tue, Apr 25, 2017 at 12:19:39PM +0200, Jean Delvare wrote:
+> > On Mon, 24 Apr 2017 14:48:16 +0300, Andy Shevchenko wrote:
+> > > On Mon, 2017-04-24 at 13:23 +0200, Jean Delvare wrote:
+> > > > I'm looking at drivers/platform/x86/silead_dmi.c which is being added
+> > > > to kernel v4.11 and I do not like what I see.
+> > > 
+> > > I don't like it either by some other reasons.
+> > > 
+> > > > I have to say I don't understand the whole complexity of the design.
+> > > > As I understand it, the properties which are being added are only
+> > > > consumed by the "silead" touchscreen driver. I see no necessity to add
+> > > > the missing properties before that driver is even loaded. Can't you
+> > > > just look for the ACPI companion device at the time the silead driver
+> > > > tries to bind to the i2c device, and add the missing properties before
+> > > > performing the actual probe? This would be so much simpler. What am I
+> > > > missing?
+> > > 
+> > > As far as I understand it would be as simple as adding a quirk in actual
+> > > driver (touchscreen), but there is strong objection of adding quirks to
+> > > the drivers/input/* from Dmitry as I noticed during discussion [1] about
+> > > GPIO ACPI library fixes I'm working on.
+> > > 
+> > > [1] https://lkml.org/lkml/2017/4/4/593
 > > 
-> > [intel_turbo_max_3 non-modularity] On 24/04/2017 (Mon 11:31) Jean
-> > Delvare wrote:
+> > Thanks for the pointer Andy. OK, I can understand the argument of
+> > Dmitry that platform-specific quirks do not belong to the device
+> > drivers, even though in practice I'm not sure the cost of having a
+> > separate platform driver for the purpose is always worth it - depends
+> > on how "popular" the device is, I suppose.
 > > 
-[...]
-
-> > > 
-> > Re-reading the thread, it was stated that the driver needed exports
-> > of
-> > some scheduler functions that weren't currently exported.  To me,
-> > that
-> > means one of two things -- the driver is poking at scheduler
-> > internals
-> > that it shouldn't be and needs to be modified accordingly, or that
-> > someone needs to convince the sched folks that there is valid use
-> > cases
-> > for exports of these functions, and _then_ enable modularity.
+> > But still, this can't justify non-modular platform code that will run
+> > on every X86 system out there. Any piece of platform-specific quirks,
+> > we should be able to build as a module, otherwise it simply doesn't
+> > scale. PCI quirks and such are enough pain already without inventing
+> > more flavors of bloat :-(
 > > 
-> > I didn't try to build it as a module, so I can't say what the sched
-> > dependencies were, or if they looked valid.  But I have seen the
-> > sched
 > 
-> Reverting Paul's non-module patch and adding "tristate" "default m",
-> it builds
-> cleanly, but fails modpost:
+> Jean makes a good point. I would insist on this if the Kconfig default was y or
+> if distros were likely to enable this by default. However, this is for the still
+> very rare x86 tablet and is likely to only be enabled for those systems which
+> require it.
 > 
-> ERROR: "sched_set_itmt_core_prio"
-> [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
-> ERROR: "sched_set_itmt_support"
-> [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
-> 
-> Peter, Google is failing me for a statement from you on
-> EXPORT_SYMBOL'ing sched_
-> functions, so can you weigh in here? Have you and Srinivas already
-> discussed
-> this and determined it was unacceptable to export the two sched itmt
-> related
-> functions above?
-Before to this patch, only intel_pstate driver called these two
-sched_xx() functions. intel_pstate can be only be built-in, so no
-effort was made to export these functions when they were developed to
-add ITMT support.
-But turbo_max_3 driver driver will only load on a subset of non HWP
-Broadwell systems, making module is not a bad idea. To do that we can
-export these two sched_xx() functions as they are only related to ITMT
-function anyway.
-If Peter agrees, I can send a patch to change this.
+> To emphasize its role, perhaps this driver should have a depends on TOUCHSCREEN_SILEAD?
 
+Yeah, that makes sense to me.
 
-Thanks,
-Srinivas
+> 
+> While the default for Kconfig is n if not explicitly set to m or y, perhaps
+> "default n" should be added to TOUCHSCREEN_SILEAD and SILEAD_DMI to make it more
+> explicit. I don't know if there is an official preference on "default n"
+> statements or not.
+> 
+
+Thanks.
+
+-- 
+Dmitry
