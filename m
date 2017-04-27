@@ -1,73 +1,80 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Silead DMI driver
-Date: Thu, 27 Apr 2017 14:13:22 -0700
-Message-ID: <20170427211322.GA29261@fury>
-References: <20170424132356.044ae04f@endymion>
- <1493034496.24567.163.camel@linux.intel.com>
- <20170425121939.7dbdfeed@endymion>
+Subject: Re: intel_turbo_max_3 non-modularity
+Date: Thu, 27 Apr 2017 14:48:43 -0700
+Message-ID: <20170427214843.GB29261@fury>
+References: <20170424113103.0de3ea31@endymion>
+ <20170424140218.GR16239@windriver.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:35170 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:42097 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755466AbdD0VNa (ORCPT
+        with ESMTP id S1162258AbdD0Vss (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Apr 2017 17:13:30 -0400
+        Thu, 27 Apr 2017 17:48:48 -0400
 Content-Disposition: inline
-In-Reply-To: <20170425121939.7dbdfeed@endymion>
+In-Reply-To: <20170424140218.GR16239@windriver.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Jean Delvare <jdelvare@suse.de>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
 
-On Tue, Apr 25, 2017 at 12:19:39PM +0200, Jean Delvare wrote:
-> On Mon, 24 Apr 2017 14:48:16 +0300, Andy Shevchenko wrote:
-> > On Mon, 2017-04-24 at 13:23 +0200, Jean Delvare wrote:
-> > > I'm looking at drivers/platform/x86/silead_dmi.c which is being added
-> > > to kernel v4.11 and I do not like what I see.
-> > 
-> > I don't like it either by some other reasons.
-> > 
-> > > I have to say I don't understand the whole complexity of the design.
-> > > As I understand it, the properties which are being added are only
-> > > consumed by the "silead" touchscreen driver. I see no necessity to add
-> > > the missing properties before that driver is even loaded. Can't you
-> > > just look for the ACPI companion device at the time the silead driver
-> > > tries to bind to the i2c device, and add the missing properties before
-> > > performing the actual probe? This would be so much simpler. What am I
-> > > missing?
-> > 
-> > As far as I understand it would be as simple as adding a quirk in actual
-> > driver (touchscreen), but there is strong objection of adding quirks to
-> > the drivers/input/* from Dmitry as I noticed during discussion [1] about
-> > GPIO ACPI library fixes I'm working on.
-> > 
-> > [1] https://lkml.org/lkml/2017/4/4/593
+On Mon, Apr 24, 2017 at 10:02:18AM -0400, Paul Gortmaker wrote:
+> [intel_turbo_max_3 non-modularity] On 24/04/2017 (Mon 11:31) Jean Delvare wrote:
 > 
-> Thanks for the pointer Andy. OK, I can understand the argument of
-> Dmitry that platform-specific quirks do not belong to the device
-> drivers, even though in practice I'm not sure the cost of having a
-> separate platform driver for the purpose is always worth it - depends
-> on how "popular" the device is, I suppose.
+> > Hi all,
+> > 
+> > I see that the intel_turbo_max_3 driver was originally supposed to be
+> > modular, and then support for that possibility was removed. Is there
+> > any fundamental reason why this driver can't be built as a module?
+
+Thanks for asking the question Jean,
+
++Srinivas
++Peterz
+
 > 
-> But still, this can't justify non-modular platform code that will run
-> on every X86 system out there. Any piece of platform-specific quirks,
-> we should be able to build as a module, otherwise it simply doesn't
-> scale. PCI quirks and such are enough pain already without inventing
-> more flavors of bloat :-(
+> Re-reading the thread, it was stated that the driver needed exports of
+> some scheduler functions that weren't currently exported.  To me, that
+> means one of two things -- the driver is poking at scheduler internals
+> that it shouldn't be and needs to be modified accordingly, or that
+> someone needs to convince the sched folks that there is valid use cases
+> for exports of these functions, and _then_ enable modularity.
 > 
+> I didn't try to build it as a module, so I can't say what the sched
+> dependencies were, or if they looked valid.  But I have seen the sched
 
-Jean makes a good point. I would insist on this if the Kconfig default was y or
-if distros were likely to enable this by default. However, this is for the still
-very rare x86 tablet and is likely to only be enabled for those systems which
-require it.
+Reverting Paul's non-module patch and adding "tristate" "default m", it builds
+cleanly, but fails modpost:
 
-To emphasize its role, perhaps this driver should have a depends on TOUCHSCREEN_SILEAD?
+ERROR: "sched_set_itmt_core_prio" [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
+ERROR: "sched_set_itmt_support" [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
 
-While the default for Kconfig is n if not explicitly set to m or y, perhaps
-"default n" should be added to TOUCHSCREEN_SILEAD and SILEAD_DMI to make it more
-explicit. I don't know if there is an official preference on "default n"
-statements or not.
+Peter, Google is failing me for a statement from you on EXPORT_SYMBOL'ing sched_
+functions, so can you weigh in here? Have you and Srinivas already discussed
+this and determined it was unacceptable to export the two sched itmt related
+functions above?
+
+Thanks,
+
+> folks being not impressed at how certain arch specific PM/freq stuff has
+> been implemented in the past, which is why I mention it as a possibility.
+> 
+> P.
+> --
+> 
+> > 
+> > I am asking because the description of the driver says:
+> > 
+> > "This driver is only required when the system is not using Hardware
+> > P-States (HWP). In HWP mode, priority can be read from ACPI tables."
+> > 
+> > This pretty much implies that this driver will be useless on a wide
+> > range (maybe even the majority?) of systems. Given this, not being
+> > forced to build the driver into the kernel would seem preferable.
+> > 
+> > Thanks, -- Jean Delvare SUSE L3 Support
+> 
 
 -- 
 Darren Hart
