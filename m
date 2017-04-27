@@ -1,90 +1,74 @@
-From: <wesley.sydnor@louisvillemsd.org>
-Subject: 2740 platform-driver-x86
-Date: Thu, 27 Apr 2017 12:34:52 -0000
-Message-ID: <149329649217.4258.10120521226733570036@hinet.net>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: Silead DMI driver
+Date: Thu, 27 Apr 2017 14:13:22 -0700
+Message-ID: <20170427211322.GA29261@fury>
+References: <20170424132356.044ae04f@endymion>
+ <1493034496.24567.163.camel@linux.intel.com>
+ <20170425121939.7dbdfeed@endymion>
 Mime-Version: 1.0
-Content-Type: application/zip; name="46.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 111-240-191-201.dynamic-ip.hinet.net ([111.240.191.201]:47678
-        "HELO hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S1031282AbdD0MfE (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:35170 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1755466AbdD0VNa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Apr 2017 08:35:04 -0400
-Content-Disposition: attachment
+        Thu, 27 Apr 2017 17:13:30 -0400
+Content-Disposition: inline
+In-Reply-To: <20170425121939.7dbdfeed@endymion>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-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
+On Tue, Apr 25, 2017 at 12:19:39PM +0200, Jean Delvare wrote:
+> On Mon, 24 Apr 2017 14:48:16 +0300, Andy Shevchenko wrote:
+> > On Mon, 2017-04-24 at 13:23 +0200, Jean Delvare wrote:
+> > > I'm looking at drivers/platform/x86/silead_dmi.c which is being added
+> > > to kernel v4.11 and I do not like what I see.
+> > 
+> > I don't like it either by some other reasons.
+> > 
+> > > I have to say I don't understand the whole complexity of the design.
+> > > As I understand it, the properties which are being added are only
+> > > consumed by the "silead" touchscreen driver. I see no necessity to add
+> > > the missing properties before that driver is even loaded. Can't you
+> > > just look for the ACPI companion device at the time the silead driver
+> > > tries to bind to the i2c device, and add the missing properties before
+> > > performing the actual probe? This would be so much simpler. What am I
+> > > missing?
+> > 
+> > As far as I understand it would be as simple as adding a quirk in actual
+> > driver (touchscreen), but there is strong objection of adding quirks to
+> > the drivers/input/* from Dmitry as I noticed during discussion [1] about
+> > GPIO ACPI library fixes I'm working on.
+> > 
+> > [1] https://lkml.org/lkml/2017/4/4/593
+> 
+> Thanks for the pointer Andy. OK, I can understand the argument of
+> Dmitry that platform-specific quirks do not belong to the device
+> drivers, even though in practice I'm not sure the cost of having a
+> separate platform driver for the purpose is always worth it - depends
+> on how "popular" the device is, I suppose.
+> 
+> But still, this can't justify non-modular platform code that will run
+> on every X86 system out there. Any piece of platform-specific quirks,
+> we should be able to build as a module, otherwise it simply doesn't
+> scale. PCI quirks and such are enough pain already without inventing
+> more flavors of bloat :-(
+> 
+
+Jean makes a good point. I would insist on this if the Kconfig default was y or
+if distros were likely to enable this by default. However, this is for the still
+very rare x86 tablet and is likely to only be enabled for those systems which
+require it.
+
+To emphasize its role, perhaps this driver should have a depends on TOUCHSCREEN_SILEAD?
+
+While the default for Kconfig is n if not explicitly set to m or y, perhaps
+"default n" should be added to TOUCHSCREEN_SILEAD and SILEAD_DMI to make it more
+explicit. I don't know if there is an official preference on "default n"
+statements or not.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
