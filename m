@@ -1,8 +1,8 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
  AC settings
-Date: Fri, 28 Apr 2017 09:27:23 +0200
-Message-ID: <20170428072723.GM26695@pali>
+Date: Fri, 28 Apr 2017 09:48:03 +0200
+Message-ID: <20170428074803.GA12712@kroah.com>
 References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
  <CAHp75VfCiqeddWu9xfMud4sEWAvk+CDXTkgO5zbb++QhiTL=Bw@mail.gmail.com>
  <20170425125453.GK30553@pali>
@@ -12,26 +12,26 @@ References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
  <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
  <20170426224049.GB3879@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:33062 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753333AbdD1H10 (ORCPT
+Received: from mail.linuxfoundation.org ([140.211.169.12]:51208 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1424554AbdD1HsN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 03:27:26 -0400
+        Fri, 28 Apr 2017 03:48:13 -0400
 Content-Disposition: inline
 In-Reply-To: <20170426224049.GB3879@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Arcadiy Ivanov <arcadiy@ivanov.biz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mario.Limonciello@dell.com, andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arcadiy Ivanov <arcadiy@ivanov.biz>, Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wednesday 26 April 2017 15:40:49 Darren Hart wrote:
+On Wed, Apr 26, 2017 at 03:40:49PM -0700, Darren Hart wrote:
 > On Tue, Apr 25, 2017 at 05:50:57PM -0400, Arcadiy Ivanov wrote:
 > > On 2017-04-25 09:49, Mario.Limonciello@dell.com wrote:
 > > > > -----Original Message-----
-> > > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > > > From: Pali Roh�r [mailto:pali.rohar@gmail.com]
 > > > > Sent: Tuesday, April 25, 2017 8:41 AM
 > > > > To: Andy Shevchenko <andy.shevchenko@gmail.com>
 > > > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
@@ -43,9 +43,9 @@ On Wednesday 26 April 2017 15:40:49 Darren Hart wrote:
 > > > > settings
 > > > > 
 > > > > On Tuesday 25 April 2017 16:32:36 Andy Shevchenko wrote:
-> > > > > On Tue, Apr 25, 2017 at 3:54 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > > > On Tue, Apr 25, 2017 at 3:54 PM, Pali Roh�r <pali.rohar@gmail.com> wrote:
 > > > > > > On Tuesday 25 April 2017 15:36:56 Andy Shevchenko wrote:
-> > > > > > > On Sun, Apr 23, 2017 at 10:40 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > > > > > On Sun, Apr 23, 2017 at 10:40 PM, Pali Roh�r <pali.rohar@gmail.com> wrote:
 > > > > > > > This patch misses few others that were applied to our testing / for-next.
 > > > > > > Ah... sorry for that :-( And I was in impression that there were fixes
 > > > > > > for that code which use mutexes... Now I know why I have not seen them!
@@ -65,9 +65,7 @@ On Wednesday 26 April 2017 15:40:49 Darren Hart wrote:
 > > > when using this newer HW, would you consider to send to @stable too?
 > > > 
 > > > Thanks,
-
-I'm fine with it, if Greg or stable maintainers approve this change.
-
+> > 
 > > I second that. Thanks!
 > > 
 > 
@@ -90,8 +88,12 @@ I'm fine with it, if Greg or stable maintainers approve this change.
 > 
 > +Greg KH who has the ultimate say on this. Greg, have I misrepresented anything
 > here?
-> 
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Nope, I usually defer to the maintainer of the subsystem to see if the
+patch should be a valid stable patch or not.  So if you think it should
+be applied, and it's a "bit" larger than normal, that's fine, no
+objection from me.
+
+thanks,
+
+greg k-h
