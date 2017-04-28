@@ -1,54 +1,53 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] platform/x86: Make SILEAD_DMI depend on
- TOUCHSCREEN_SILEAD
-Date: Fri, 28 Apr 2017 14:09:00 -0700
-Message-ID: <20170428210900.GG4949@dtor-ws>
-References: <20170428210019.GA32026@fury>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: intel_turbo_max_3 non-modularity
+Date: Fri, 28 Apr 2017 23:34:34 +0200
+Message-ID: <20170428213434.lljyvywigcguupjm@hirez.programming.kicks-ass.net>
+References: <20170424113103.0de3ea31@endymion>
+ <20170424140218.GR16239@windriver.com>
+ <20170428094930.6ba0ba1f@endymion>
+ <20170428174437.GO23334@windriver.com>
+ <20170428204949.GA3960@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:35110 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1163425AbdD1VJD (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:32849 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2992790AbdD1Vej (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 17:09:03 -0400
+        Fri, 28 Apr 2017 17:34:39 -0400
 Content-Disposition: inline
-In-Reply-To: <20170428210019.GA32026@fury>
+In-Reply-To: <20170428204949.GA3960@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Darren Hart (VMware)" <dvhart@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Jean Delvare <jdelvare@suse.de>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Jean Delvare <jdelvare@suse.de>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-On Fri, Apr 28, 2017 at 02:00:19PM -0700, Darren Hart (VMware) wrote:
-> SILEAD_DMI provides platform specific data for the TOUCHSCREEN_SILEAD
-> driver. Make this explicitly clear in the Kconfig depends.
+On Fri, Apr 28, 2017 at 01:49:49PM -0700, Darren Hart wrote:
+> > > Non-modular drivers do not scale. This is a serious issue considering
+> > > the growth rate of the kernel.
+> > 
+> > Again, this is an oversimplification that doesn't reflect reality.
+> > There are many valid reasons why some drivers be built-in only.  The
+> > whole world isn't a distro looking to say "=m" to every config option
+> > simply because they don't have the time or resources to actually triage
+> > them all and see what is relevant for their use case(es).
+> > 
 > 
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Jean Delvare <jdelvare@suse.de>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/platform/x86/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9e5b2c2..5690664 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1101,7 +1101,7 @@ config INTEL_TURBO_MAX_3
->  
->  config SILEAD_DMI
->  	bool "Tablets with Silead touchscreens"
-> -	depends on ACPI && DMI && I2C=y && INPUT
-> +	depends on ACPI && DMI && I2C=y && INPUT && TOUCHSCREEN_SILEAD
+> The point is valid though, and something we need to be keeping an eye on,
+> especially with all the non-architectural SoC feature drivers we're seeing code
+> roll in for. I appreciate you raising the concern Jean.
 
-Bikeshed: TOUCHSCREEN_SILEAD already depends on INPUT, so you can drop
-INPUT dependency.
+FWIW:
 
-Otherwise
+There's things like ACPI-Processor-Idle and intel_idle that need to be
+built-in for correctness sake.
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+They can mark the TSC unstable, and this should be done before we run
+userspace, which with unstable TSC could see wobbly time before we kill
+the TSC.
 
--- 
-Dmitry
+This is a somewhat non-obvious case, and on the face of it those could
+be modular drivers. But building them as modules gets them loaded far
+too late if ever.
+
+These are subtle things and easily overlooked.
