@@ -1,75 +1,148 @@
 From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: intel_turbo_max_3 non-modularity
-Date: Fri, 28 Apr 2017 10:40:10 +0200
-Message-ID: <20170428104010.2fc36751@endymion>
-References: <20170424113103.0de3ea31@endymion>
-        <20170424140218.GR16239@windriver.com>
-        <20170427214843.GB29261@fury>
-        <1493335126.69096.481.camel@linux.intel.com>
+Subject: Re: Silead DMI driver
+Date: Fri, 28 Apr 2017 11:33:21 +0200
+Message-ID: <20170428113321.2ceb103b@endymion>
+References: <20170424132356.044ae04f@endymion>
+        <20170424165935.GA12374@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:43342 "EHLO mx1.suse.de"
+Received: from mx2.suse.de ([195.135.220.15]:57512 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1424968AbdD1IkP (ORCPT
+        id S1755444AbdD1JdZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 04:40:15 -0400
-In-Reply-To: <1493335126.69096.481.camel@linux.intel.com>
+        Fri, 28 Apr 2017 05:33:25 -0400
+In-Reply-To: <20170424165935.GA12374@dtor-ws>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Hi Darren and Srinivas,
+Hi Dmitry,
 
-Thanks a lot for stepping in.
+On Mon, 24 Apr 2017 09:59:35 -0700, Dmitry Torokhov wrote:
+> On Mon, Apr 24, 2017 at 01:23:56PM +0200, Jean Delvare wrote:
+> > As a side note, the comment about the init sequence says: "after i2c
+> > core is initialized and i2c bus itself is ready" but I don't think
+> > there is any actual guarantee on the latter. I see no dependency on
+> > the i2c bus driver, only on the i2c core. What i2c bus driver are we
+> > talking about and how can you be sure it is already loaded at that
+> > point? (Not that it should matter but I'm curious.)
+> 
+> We are talking about the i2c bus in the Linux driver model sense, i.e.
+> 
+> 	extern struct bus_type i2c_bus_type;
+> 
+> No I2C hardware is needed at this time.
 
-On Thu, 27 Apr 2017 16:18:46 -0700, Srinivas Pandruvada wrote:
-> On Thu, 2017-04-27 at 14:48 -0700, Darren Hart wrote:
-> > Reverting Paul's non-module patch and adding "tristate" "default m",
-> > it builds cleanly, but fails modpost:
+Thanks for the clarification. The wording is misleading then, in my
+views at least, i2c_bus_type belongs to the i2c core, so "after i2c
+core is initialized" would be enough.
 
-This was on my to-do list, thanks for saving me some time :-)
+> > To make things worse, I see that this driver registers a bus notifier
+> > unconditionally. So it will be registered on virtually _every_ x86
+> > system out there, and will kick in and perform DMI checks for every I2C
+> > device being added, even though most people don't need it at all. Is
+> > there any excuse for not checking the DMI data _before_ registering the
+> > bus notifier, so the whole thing can be skipped on the 99% of systems
+> > where it is irrelevant? That wouldn't solve the undue memory
+> > consumption but at least it would limit the impact on boot time.
+> 
+> If you take a look at next you will see that we no longer register bus
+> notifier unconditionally.
 
-For the record, Paul's patch also added a few missing includes, which
-should be preserved.
+I did not think of looking there, my bad. Indeed I see this is already
+fixed, which is good.
 
-> > ERROR: "sched_set_itmt_core_prio"
-> > [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
-> > ERROR: "sched_set_itmt_support"
-> > [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
-> > 
-> > Peter, Google is failing me for a statement from you on EXPORT_SYMBOL'ing sched_
-> > functions, so can you weigh in here? Have you and Srinivas already discussed
-> > this and determined it was unacceptable to export the two sched itmt related
-> > functions above?
->
-> Before to this patch, only intel_pstate driver called these two
-> sched_xx() functions. intel_pstate can be only be built-in, so no
-> effort was made to export these functions when they were developed to
-> add ITMT support.
+> I also thought that Hans was going to annotate
+> most of the items as __initconst so that unneeded memory can be
+> discarded after boot, but for that some other patches to device
+> properties should trickle through various subsystems. In the end you'll
+> end up with just the properties for the board you need.
 
-By the way, is there any fundamental reason why intel_pstate could not
-be modularized? Or was it just another instance of needing functions
-which were not exported yet? I know that the intel_pstate driver is
-widely used nowadays, but still, this is a CPU-specific driver that
-not all x86 users need, and it isn't slim. It would be nice to be able
-to build it as a module too.
+That's better, but won't you still have to live with
+silead_ts_dmi_notifier_call() and silead_ts_dmi_add_props() loaded
+forever, and the notification hook enabled,  even if you don't have any
+Silead touchscreen on your x86 system? I can't see how a
+notification-based implementation could clean up everything, as you
+supposedly don't know when you will be called (which is my main concern
+about this implementation - you should be able to run the fixup code
+once and be done with it.)
 
-> But turbo_max_3 driver driver will only load on a subset of non HWP
-> Broadwell systems, making module is not a bad idea. To do that we can
+> > I have to say I don't understand the whole complexity of the design. As
+> > I understand it, the properties which are being added are only consumed
+> > by the "silead" touchscreen driver. I see no necessity to add the
+> > missing properties before that driver is even loaded. Can't you just
+> > look for the ACPI companion device at the time the silead driver tries
+> > to bind to the i2c device, and add the missing properties before
+> > performing the actual probe? This would be so much simpler. What am I
+> > missing?
+> 
+> So the idea is that I am trying to make drivers in input/
+> platform-independent, and move platform quirks out of them. With generic
+> device properties we can finally move away from ad-hoc platform data,
+> and rely on proper bindings, and that ensures at least some engineering
+> control.
+> 
+> So while looking for the ACPI companion device might be indeed very
+> easy, it pushes dependencies on ACPI and platform knowledge into the
+> generic driver, which I am trying to avoid. I believe
+> drivers/platform/x86/ is a good place to stash all x86 platform quirks.
 
-It was also my understanding that the scope of this driver was limited,
-which is why I was worried that it could only be built-in.
+While this is a laudable goal, how will it scale in practice? I mean,
+most drivers do need quirks in one form or another. Are we really going
+to double the number of "drivers" (as in .c files and modules) and
+Kconfig options to cleanly separate quirks from the device drivers
+proper?
 
-> export these two sched_xx() functions as they are only related to ITMT
-> function anyway.
-> If Peter agrees, I can send a patch to change this.
+From my perspective, you are solving the problem that all users of a
+driver shouldn't have to pay for platforms which did get things wrong,
+but your solution causes all users of the platform to pay the overhead
+instead. Which is statistically a much larger number of people. If we
+are going to be unfair, we might as well go for the most simple
+solution.
 
-That would be great.
+So I'm sorry but I can't see how your approach is better than just
+ifdef'd platform-specific code in the device driver, as we have been
+doing so far.
 
-Thanks,
+> I agree that tying this up with I2C bus notifier might not be the best
+> solution overall (it was simply available tight at this time) and we
+> could look into hooking this up into ACPI device enumeration to supply
+> missing properties.
+
+I have a hard time understanding how you did not come up with this idea
+first, to be honest. If the problem you need to solve is caused by
+missing data in the ACPI tables, injecting the missing data at the ACPI
+level would seem to be the most straightforward way to go. Fixing the
+problem as close as possible to its source. But I will admit I am not
+familiar enough with the ACPI subsystem implementation to say if that
+can be done today or if preparatory work is needed.
+
+> > PS: I hope this code will die, but if it stays, I see that you call
+> > to_i2c_client() on the notified device without checking if it is an
+> > i2c_client. It could be an i2c_adapter instead, and then you are
+> > forcibly mapping a struct i2c_client on top of a struct i2c_adapter.
+> > Good luck when you will access client->name a few lines later...
+> > i2c_verify_client() is what you want to use instead of to_i2c_client()
+> > in that situtation.
+> 
+> That is also should be fixed in -next. Because i2c_adapter structure is
+> big enough so that looking up client->name in adapter is not going to
+> blow up, nor will it likely to match, it was decided it could stay till
+> next merge window.
+
+I'm speechless. If you believe that this kind of bug isn't worth fixing
+quickly, I'll go disable that piece of cra^H^Hode from the opeSUSE
+kernel for the time being. And then, go figure if/when anyone will
+remember to re-enable it once it is in an acceptable state.
+
+I thought the rule about upstream kernel code acceptance was that you
+should get things right first, no matter how much time and how many
+iterations it takes, and then we commit the result. Apparently this has
+changed while I was not looking :-(
+
 -- 
 Jean Delvare
 SUSE L3 Support
