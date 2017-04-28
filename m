@@ -1,53 +1,43 @@
 From: Peter Zijlstra <peterz@infradead.org>
 Subject: Re: intel_turbo_max_3 non-modularity
-Date: Fri, 28 Apr 2017 23:34:34 +0200
-Message-ID: <20170428213434.lljyvywigcguupjm@hirez.programming.kicks-ass.net>
+Date: Fri, 28 Apr 2017 23:39:15 +0200
+Message-ID: <20170428213915.cisp5owm5pqr7sav@hirez.programming.kicks-ass.net>
 References: <20170424113103.0de3ea31@endymion>
  <20170424140218.GR16239@windriver.com>
- <20170428094930.6ba0ba1f@endymion>
- <20170428174437.GO23334@windriver.com>
- <20170428204949.GA3960@fury>
+ <20170427214843.GB29261@fury>
+ <1493335126.69096.481.camel@linux.intel.com>
+ <20170428075514.dmywqqe5lpad67w5@hirez.programming.kicks-ass.net>
+ <20170428152021.51d3b9c5@endymion>
+ <20170428134658.debsavx7vjkj3zgz@hirez.programming.kicks-ass.net>
+ <20170428154954.GA7257@fury>
+ <20170428163417.uwrd73vrnqjp6vck@hirez.programming.kicks-ass.net>
+ <20170428205839.GB3960@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:32849 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2992790AbdD1Vej (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:33310 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1033352AbdD1VjX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 17:34:39 -0400
+        Fri, 28 Apr 2017 17:39:23 -0400
 Content-Disposition: inline
-In-Reply-To: <20170428204949.GA3960@fury>
+In-Reply-To: <20170428205839.GB3960@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Jean Delvare <jdelvare@suse.de>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Jean Delvare <jdelvare@suse.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
 
-On Fri, Apr 28, 2017 at 01:49:49PM -0700, Darren Hart wrote:
-> > > Non-modular drivers do not scale. This is a serious issue considering
-> > > the growth rate of the kernel.
-> > 
-> > Again, this is an oversimplification that doesn't reflect reality.
-> > There are many valid reasons why some drivers be built-in only.  The
-> > whole world isn't a distro looking to say "=m" to every config option
-> > simply because they don't have the time or resources to actually triage
-> > them all and see what is relevant for their use case(es).
-> > 
+On Fri, Apr 28, 2017 at 01:58:39PM -0700, Darren Hart wrote:
 > 
-> The point is valid though, and something we need to be keeping an eye on,
-> especially with all the non-architectural SoC feature drivers we're seeing code
-> roll in for. I appreciate you raising the concern Jean.
+> OK, while I maintain there are some inconsistencies in our policies, I don't
+> disagree that there are core kernel internals that should not be exposed to
+> drivers (whether modular or not) and these seem like such functions.
+> 
+> Approaching this from that angle, as I mentioned just a moment ago, Peter would
+> you be willing to entertain the idea of an interface which allows modular
+> drivers to advise the scheduler on what they know of the system without giving
+> them explicit control? And leaving any actuation on that information to the
+> scheduler?
 
-FWIW:
-
-There's things like ACPI-Processor-Idle and intel_idle that need to be
-built-in for correctness sake.
-
-They can mark the TSC unstable, and this should be done before we run
-userspace, which with unstable TSC could see wobbly time before we kill
-the TSC.
-
-This is a somewhat non-obvious case, and on the face of it those could
-be modular drivers. But building them as modules gets them loaded far
-too late if ever.
-
-These are subtle things and easily overlooked.
+People are free to propose patches, they'll land in the regular
+(terminally backlogged) queue to stare at :-)
