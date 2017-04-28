@@ -1,74 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: intel_turbo_max_3 non-modularity
-Date: Fri, 28 Apr 2017 13:58:39 -0700
-Message-ID: <20170428205839.GB3960@fury>
-References: <20170424113103.0de3ea31@endymion>
- <20170424140218.GR16239@windriver.com>
- <20170427214843.GB29261@fury>
- <1493335126.69096.481.camel@linux.intel.com>
- <20170428075514.dmywqqe5lpad67w5@hirez.programming.kicks-ass.net>
- <20170428152021.51d3b9c5@endymion>
- <20170428134658.debsavx7vjkj3zgz@hirez.programming.kicks-ass.net>
- <20170428154954.GA7257@fury>
- <20170428163417.uwrd73vrnqjp6vck@hirez.programming.kicks-ass.net>
+From: "Darren Hart (VMware)" <dvhart@infradead.org>
+Subject: [PATCH] platform/x86: Make SILEAD_DMI depend on TOUCHSCREEN_SILEAD
+Date: Fri, 28 Apr 2017 14:00:19 -0700
+Message-ID: <20170428210019.GA32026@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:36371 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:39596 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1422682AbdD1U6n (ORCPT
+        with ESMTP id S1423378AbdD1VAV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 16:58:43 -0400
+        Fri, 28 Apr 2017 17:00:21 -0400
 Content-Disposition: inline
-In-Reply-To: <20170428163417.uwrd73vrnqjp6vck@hirez.programming.kicks-ass.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jean Delvare <jdelvare@suse.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Jean Delvare <jdelvare@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Fri, Apr 28, 2017 at 06:34:17PM +0200, Peter Zijlstra wrote:
-> On Fri, Apr 28, 2017 at 08:49:54AM -0700, Darren Hart wrote:
-> > On Fri, Apr 28, 2017 at 03:46:58PM +0200, Peter Zijlstra wrote:
-> 
-> > > How are they available? The only way a module can access this is by
-> > > grubbing around kernel internals, basically doing a manual link stage.
-> > 
-> > Well it's a rare thing, but I don't agree. The driver can use this function
-> > already, to do so it just builds itself in and not as a module.
-> 
-> And _that_ is the crucial difference. It means that the source needs to
-> be available to whomever builds the kernel.
-> 
-> It means that whoever builds the kernel can validate behaviour.
-> 
-> All that goes out the window the moment you expose an interface to
-> modules.
-> 
-> > Further, we (the kernel community) have made it abundantly clear that we
-> > couldn't care less about out of tree drivers, so they shouldn't even be part of
-> > this discussion. So the only code that matters is in-tree drivers, and they can
-> > already use this....
-> 
-> I don't much care for out-of-tree crap (as you well know), but the fact
-> is that it exists and people do use it. Heck some binary only modules
-> are even quite common/popular :-(
-> 
-> So I think its realistic to be weary of our module interface.
-> 
-> > What makes this one so special?
-> 
-> It can completely mess up the load-balancer if used in creative ways. I
-> just don't want to spend a minute having to worry about that.
+SILEAD_DMI provides platform specific data for the TOUCHSCREEN_SILEAD
+driver. Make this explicitly clear in the Kconfig depends.
 
-OK, while I maintain there are some inconsistencies in our policies, I don't
-disagree that there are core kernel internals that should not be exposed to
-drivers (whether modular or not) and these seem like such functions.
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Jean Delvare <jdelvare@suse.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Approaching this from that angle, as I mentioned just a moment ago, Peter would
-you be willing to entertain the idea of an interface which allows modular
-drivers to advise the scheduler on what they know of the system without giving
-them explicit control? And leaving any actuation on that information to the
-scheduler?
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9e5b2c2..5690664 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1101,7 +1101,7 @@ config INTEL_TURBO_MAX_3
+ 
+ config SILEAD_DMI
+ 	bool "Tablets with Silead touchscreens"
+-	depends on ACPI && DMI && I2C=y && INPUT
++	depends on ACPI && DMI && I2C=y && INPUT && TOUCHSCREEN_SILEAD
+ 	---help---
+ 	  Certain ACPI based tablets with Silead touchscreens do not have
+ 	  enough data in ACPI tables for the touchscreen driver to handle
+-- 
+2.9.3
+
 
 -- 
 Darren Hart
