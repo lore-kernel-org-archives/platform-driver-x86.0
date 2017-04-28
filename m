@@ -1,99 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout
- AC settings
-Date: Fri, 28 Apr 2017 09:48:03 +0200
-Message-ID: <20170428074803.GA12712@kroah.com>
-References: <1492976447-10339-1-git-send-email-pali.rohar@gmail.com>
- <CAHp75VfCiqeddWu9xfMud4sEWAvk+CDXTkgO5zbb++QhiTL=Bw@mail.gmail.com>
- <20170425125453.GK30553@pali>
- <CAHp75VdjZ4Ti1YPZVq8_fjUh0xuDbQ-EtZQQjaWQf2fhZs2mRw@mail.gmail.com>
- <20170425134044.GL30553@pali>
- <c140b70b460f45afa43bdfd7dec723b3@ausx13mpc120.AMER.DELL.COM>
- <e217a6c7-7c13-37bc-369a-cd464a5c6fbe@ivanov.biz>
- <20170426224049.GB3879@fury>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: intel_turbo_max_3 non-modularity
+Date: Fri, 28 Apr 2017 09:49:30 +0200
+Message-ID: <20170428094930.6ba0ba1f@endymion>
+References: <20170424113103.0de3ea31@endymion>
+        <20170424140218.GR16239@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:51208 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1424554AbdD1HsN (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:40387 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1424586AbdD1Hte (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 03:48:13 -0400
-Content-Disposition: inline
-In-Reply-To: <20170426224049.GB3879@fury>
+        Fri, 28 Apr 2017 03:49:34 -0400
+In-Reply-To: <20170424140218.GR16239@windriver.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Arcadiy Ivanov <arcadiy@ivanov.biz>, Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Wed, Apr 26, 2017 at 03:40:49PM -0700, Darren Hart wrote:
-> On Tue, Apr 25, 2017 at 05:50:57PM -0400, Arcadiy Ivanov wrote:
-> > On 2017-04-25 09:49, Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > > Sent: Tuesday, April 25, 2017 8:41 AM
-> > > > To: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>; Darren Hart
-> > > > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>; Arcadiy Ivanov
-> > > > <arcadiy@ivanov.biz>; Limonciello, Mario <Mario_Limonciello@Dell.com>;
-> > > > Platform Driver <platform-driver-x86@vger.kernel.org>; linux-
-> > > > kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH] dell-laptop: Adds support for keyboard backlight timeout AC
-> > > > settings
-> > > > 
-> > > > On Tuesday 25 April 2017 16:32:36 Andy Shevchenko wrote:
-> > > > > On Tue, Apr 25, 2017 at 3:54 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > > > > On Tuesday 25 April 2017 15:36:56 Andy Shevchenko wrote:
-> > > > > > > On Sun, Apr 23, 2017 at 10:40 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > > > > > This patch misses few others that were applied to our testing / for-next.
-> > > > > > Ah... sorry for that :-( And I was in impression that there were fixes
-> > > > > > for that code which use mutexes... Now I know why I have not seen them!
-> > > > > > 
-> > > > > > > I have applied it to testing with corrected conflict (easy to fix),
-> > > > > > > though check if everything still as supposed to be.
-> > > > > > Can you send a link to your fix?
-> > > > > Sure, here it is:
-> > > > > http://git.infradead.org/linux-platform-drivers-
-> > > > x86.git/commit/bcf7d8a30e2888f78a19778a16d3dd8c10b4b0ad
-> > > > 
-> > > > It is OK.
-> > > > 
-> > > Pali,
-> > > 
-> > > Considering this is negatively affecting folks on stable kernel releases too
-> > > when using this newer HW, would you consider to send to @stable too?
-> > > 
-> > > Thanks,
-> > 
-> > I second that. Thanks!
-> > 
-> 
-> In order for this to go back to stable, we will need to include the list of
-> dependencies per stable-kernel-rules.txt. This can be done after it is merged,
-> but if you can provide the set of Cc: stable lines needed, we can look at
-> getting this into testing now so no further action will be required.
-> 
-> ...
-> 
-> Upon closer inspection, this does fail the 100 lines including context stable
-> rule by an additional 55 lines. This is a process issue I've been thinking about
-> for a while and trying to find the best way to express this problem and what a
-> viable solution might look like. As it stands, fixes such as these are
-> effectively limited to current and future kernel versions. I do think there is a
-> need for vendors to be able to update their drivers upstream to work with current
-> hardware without requiring a bleeding edge kernel. Perhaps "leaf node drivers"
-> should have a looser set of stable rules, but that is not currently the way the
-> upstream stable kernel rules work (at least as far as I understand them).
-> 
-> +Greg KH who has the ultimate say on this. Greg, have I misrepresented anything
-> here?
+Hi Paul,
 
-Nope, I usually defer to the maintainer of the subsystem to see if the
-patch should be a valid stable patch or not.  So if you think it should
-be applied, and it's a "bit" larger than normal, that's fine, no
-objection from me.
+On Mon, 24 Apr 2017 10:02:18 -0400, Paul Gortmaker wrote:
+> [intel_turbo_max_3 non-modularity] On 24/04/2017 (Mon 11:31) Jean Delvare wrote:
+> 
+> > I see that the intel_turbo_max_3 driver was originally supposed to be
+> > modular, and then support for that possibility was removed. Is there
+> > any fundamental reason why this driver can't be built as a module?
+> 
+> Re-reading the thread, it was stated that the driver needed exports of
+> some scheduler functions that weren't currently exported.  To me, that
+> means one of two things -- the driver is poking at scheduler internals
+> that it shouldn't be and needs to be modified accordingly, or that
+> someone needs to convince the sched folks that there is valid use cases
+> for exports of these functions, and _then_ enable modularity.
+> 
+> I didn't try to build it as a module, so I can't say what the sched
+> dependencies were, or if they looked valid.  But I have seen the sched
+> folks being not impressed at how certain arch specific PM/freq stuff has
+> been implemented in the past, which is why I mention it as a possibility.
 
-thanks,
+Thanks for the explanations. I understand that the purpose of your
+patch (commit af050abb5c2e, "platform/x86: intel_turbo_max_3: make it
+explicitly non-modular") was to get things square, and I have seen many
+similar patches from you in the past. However please realize that going
+for the easiest solution (dropping modular support altogether) isn't
+always the best thing to do.
 
-greg k-h
+It's the same story as fixing compiler warnings. One should either look
+for the right way to fix them, or leave things as they are, to give
+others a chance to step in. Similar to compiler warnings, half-modular
+code is also an opportunity to make things better. In my experience,
+once the code is cleanly non-modular, the chances that someone looks
+into why it is so and whether it could be modularized get significantly
+lower.
+
+Non-modular drivers do not scale. This is a serious issue considering
+the growth rate of the kernel.
+
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
