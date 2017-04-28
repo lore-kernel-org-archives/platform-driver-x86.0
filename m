@@ -1,34 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Fri, 28 Apr 2017 22:17:33 +0300
-Message-ID: <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com>
-References: <20170217184756.15181-1-rrs@debian.org> <1487759058.9334.7.camel@debian.org>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: intel_turbo_max_3 non-modularity
+Date: Fri, 28 Apr 2017 13:35:35 -0700
+Message-ID: <1493411735.69096.494.camel@linux.intel.com>
+References: <20170424113103.0de3ea31@endymion>
+         <20170424140218.GR16239@windriver.com> <20170427214843.GB29261@fury>
+         <1493335126.69096.481.camel@linux.intel.com>
+         <20170428104010.2fc36751@endymion>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f171.google.com ([209.85.216.171]:32908 "EHLO
-        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1164277AbdD1TRf (ORCPT
+Received: from mga05.intel.com ([192.55.52.43]:33823 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S939582AbdD1Ufi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 15:17:35 -0400
-In-Reply-To: <1487759058.9334.7.camel@debian.org>
+        Fri, 28 Apr 2017 16:35:38 -0400
+In-Reply-To: <20170428104010.2fc36751@endymion>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ritesh Raj Sarraf <rrs@debian.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
 
-On Wed, Feb 22, 2017 at 12:24 PM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
+Hi Jean,
 
-> Any further comment on this patch ? Will this be accepted ?
-> Please give a N/ACK.
 
-Sorry for a long delay, but I can't go with this without clear
-understanding that there is indeed no other ways available.
-From what I read in the above link the main issue that driver doesn't
-send SW_TABLET_MODE event through input device.
-I think this is the best approach how it should go.
+[...]
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > 
+> By the way, is there any fundamental reason why intel_pstate could
+> not
+> be modularized? Or was it just another instance of needing functions
+> which were not exported yet? I know that the intel_pstate driver is
+> widely used nowadays, but still, this is a CPU-specific driver that
+> not all x86 users need, and it isn't slim. It would be nice to be
+> able
+> to build it as a module too.
+> 
+I wish it can be a module. The problem is the race between acpi-cpufreq 
+and intel_pstate when built as modules. Since every distribution will
+have both of these configs set.
+Based on the load order any of this driver can load as cpufreq scaling
+driver. We want intel_pstate should be tried first and if can't be
+supported then acpi-cpufreq should be used.
+
+There are two PM trace event this depends on, which require built in
+but that can be solved.
+
+So if anybody has suggestion on how to solve this, this can be done.
+
+Thanks,
+Srinivas
