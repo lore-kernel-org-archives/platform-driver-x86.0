@@ -1,72 +1,75 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: setup accelerometer when appropriate acpi device was found
-Date: Fri, 28 Apr 2017 16:23:59 +0800
-Message-ID: <20170428082359.20034-1-jlee@suse.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: intel_turbo_max_3 non-modularity
+Date: Fri, 28 Apr 2017 10:40:10 +0200
+Message-ID: <20170428104010.2fc36751@endymion>
+References: <20170424113103.0de3ea31@endymion>
+        <20170424140218.GR16239@windriver.com>
+        <20170427214843.GB29261@fury>
+        <1493335126.69096.481.camel@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35908 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1033096AbdD1IYk (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:43342 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1424968AbdD1IkP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2017 04:24:40 -0400
+        Fri, 28 Apr 2017 04:40:15 -0400
+In-Reply-To: <1493335126.69096.481.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
 
-The 98d610c3739a patch was introduced since v4.11-rc1 that it causes
-that the accelerometer input device will not be created on workable
-machines because the HID string comparing logic is wrong.
+Hi Darren and Srinivas,
 
-And, the patch doesn't prevent that the accelerometer input device
-be created on the machines that have no BST0001. That's because
-the acpi_get_devices() returns success even it didn't find any
-match device.
+Thanks a lot for stepping in.
 
-This patch fixed the HID string comparing logic of BST0001 device.
-And, it also makes sure that the acpi_get_devices() returns
-acpi_handle for BST0001.
+On Thu, 27 Apr 2017 16:18:46 -0700, Srinivas Pandruvada wrote:
+> On Thu, 2017-04-27 at 14:48 -0700, Darren Hart wrote:
+> > Reverting Paul's non-module patch and adding "tristate" "default m",
+> > it builds cleanly, but fails modpost:
 
-Fixes: 98d610c3739a ("acer-wmi: setup accelerometer when machine has appropriate notify event")
-Reference: https://bugzilla.kernel.org/show_bug.cgi?id=193761
-Reported-by: Samuel Sieb <samuel-kbugs@sieb.net>
-Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+This was on my to-do list, thanks for saving me some time :-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index dac0fbe..dbb4e6e 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1896,7 +1896,7 @@ static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
- 	if (!strcmp(ctx, "SENR")) {
- 		if (acpi_bus_get_device(ah, &dev))
- 			return AE_OK;
--		if (!strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
-+		if (strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
- 			return AE_OK;
- 	} else
- 		return AE_OK;
-@@ -1917,8 +1917,7 @@ static int __init acer_wmi_get_handle(const char *name, const char *prop,
- 	handle = NULL;
- 	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
- 					(void *)name, &handle);
--
--	if (ACPI_SUCCESS(status)) {
-+	if (ACPI_SUCCESS(status) && handle) {
- 		*ah = handle;
- 		return 0;
- 	} else {
-@@ -2290,8 +2289,8 @@ static int __init acer_wmi_init(void)
- 		if (err)
- 			return err;
- 		err = acer_wmi_accel_setup();
--		if (err)
--			return err;
-+		if (err && err != -ENODEV)
-+			pr_warn("Cannot enable accelerometer\n");
- 	}
- 
- 	err = platform_driver_register(&acer_platform_driver);
+For the record, Paul's patch also added a few missing includes, which
+should be preserved.
+
+> > ERROR: "sched_set_itmt_core_prio"
+> > [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
+> > ERROR: "sched_set_itmt_support"
+> > [drivers/platform/x86/intel_turbo_max_3.ko] undefined!
+> > 
+> > Peter, Google is failing me for a statement from you on EXPORT_SYMBOL'ing sched_
+> > functions, so can you weigh in here? Have you and Srinivas already discussed
+> > this and determined it was unacceptable to export the two sched itmt related
+> > functions above?
+>
+> Before to this patch, only intel_pstate driver called these two
+> sched_xx() functions. intel_pstate can be only be built-in, so no
+> effort was made to export these functions when they were developed to
+> add ITMT support.
+
+By the way, is there any fundamental reason why intel_pstate could not
+be modularized? Or was it just another instance of needing functions
+which were not exported yet? I know that the intel_pstate driver is
+widely used nowadays, but still, this is a CPU-specific driver that
+not all x86 users need, and it isn't slim. It would be nice to be able
+to build it as a module too.
+
+> But turbo_max_3 driver driver will only load on a subset of non HWP
+> Broadwell systems, making module is not a bad idea. To do that we can
+
+It was also my understanding that the scope of this driver was limited,
+which is why I was worried that it could only be built-in.
+
+> export these two sched_xx() functions as they are only related to ITMT
+> function anyway.
+> If Peter agrees, I can send a patch to change this.
+
+That would be great.
+
+Thanks,
 -- 
-2.6.2
+Jean Delvare
+SUSE L3 Support
