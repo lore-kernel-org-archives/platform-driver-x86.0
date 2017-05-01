@@ -1,83 +1,66 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Mon, 1 May 2017 09:05:43 -0700
-Message-ID: <20170501160543.GA29387@fury>
-References: <20170217184756.15181-1-rrs@debian.org>
- <1487759058.9334.7.camel@debian.org>
- <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com>
- <1493448775.9725.5.camel@debian.org>
- <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
+Subject: Re: [PATCH 02/10] platform/x86: fujitsu-laptop: shorten names of
+ acpi_handle fields
+Date: Mon, 1 May 2017 09:09:41 -0700
+Message-ID: <20170501160941.GB29387@fury>
+References: <20170424133334.7064-1-kernel@kempniu.pl>
+ <20170424133334.7064-3-kernel@kempniu.pl>
+ <20170501131926.GC25546@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41888 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:54924 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753683AbdEAQFp (ORCPT
+        with ESMTP id S1752535AbdEAQJp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 May 2017 12:05:45 -0400
+        Mon, 1 May 2017 12:09:45 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
+In-Reply-To: <20170501131926.GC25546@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Ritesh Raj Sarraf <rrs@debian.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Apr 30, 2017 at 03:54:43PM +0300, Andy Shevchenko wrote:
-> On Sat, Apr 29, 2017 at 9:52 AM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
-> > Hello,
-> >
-> > On Fri, 2017-04-28 at 22:17 +0300, Andy Shevchenko wrote:
-> >> On Wed, Feb 22, 2017 at 12:24 PM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
-> >>
-> >> > Any further comment on this patch ? Will this be accepted ?
-> >> > Please give a N/ACK.
-> >>
-> >> Sorry for a long delay,
-
-Eeek, likewise. This one fell off my stack. We've improved our patch management
-process since this was originally submitted, so hopefully this is more and more
-rare.
-
-> >> but I can't go with this without clear
-> >> understanding that there is indeed no other ways available.
-> >> From what I read in the above link
-> >
-> > i am assuming you are referring to the launchpad bug report here.
+On Mon, May 01, 2017 at 10:49:26PM +0930, Jonathan Woithe wrote:
+> On Mon, Apr 24, 2017 at 03:33:26PM +0200, Micha?? K??pie?? wrote:
+> > As both struct fujitsu_bl and struct fujitsu_laptop represent data
+> > associated with ACPI devices, drop the "acpi_" prefix from the names of
+> > the relevant fields of these structures to save some horizontal space.
+> > 
+> > Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+> > ---
+> >  drivers/platform/x86/fujitsu-laptop.c | 23 +++++++++++------------
+> >  1 file changed, 11 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> > index 3f232967af04..3695e8075aa6 100644
+> > --- a/drivers/platform/x86/fujitsu-laptop.c
+> > +++ b/drivers/platform/x86/fujitsu-laptop.c
+> > @@ -130,7 +130,7 @@
+> >  
+> >  /* Device controlling the backlight and associated keys */
+> >  struct fujitsu_bl {
+> > -	acpi_handle acpi_handle;
+> > +	acpi_handle handle;
 > 
-> Correct.
-> 
-> >> the main issue that driver doesn't
-> >> send SW_TABLET_MODE event through input device.
-> >
-> > Well. Yes. That is one part. If SW_TABLET_MODE is done in the driver, much
-> > better. My patch was simply in line with some of the other drivers (hp-wmi and
-> > thinkpad_acpi) to get it working for Lenovo Yoga series.
-> 
-> sysfs ABI for drivers that provide input interface is quite strong for
-> my opinion. It means I'm not totally objecting, but I would accept it
-> if and only if there is nothing else could be done.
+> I must admit I'm not entirely convinced about this change.  "handle" to me
+> is very generic and it's not immediately clear from the source usage what it
+> might be a handle of.  A later patch in the series introduces an additional
+> handle which includes a suitable suffix, which leaves us with generic and
+> specific handles within the code.  Although it consumes an additional 5
+> characters, my feeling is that the additional clarification is worth it.
 
-Agreed, we've recently wanted to remove certain sysfs attributes from another
-driver as they were obsolete and better implemented in other ways, but once they
-are there, are hands are tied.
+ACPI handles are commonly "handle" in other drivers - and it does make me cringe
+to see the type reused as the variable name :-) That much at least, I appreciate
+in this patch.
 
-That said, we will support getting these systems functional. From what I see in
-the patch you are implementing a polling sysfs interface. Have you verified that
-there is no event we can capture and send the SW_TABLET_MODE along to the input
-system?
+dvhart@fury:~/source/linux/linux-pdx86 [testing]
+$ git grep "acpi_handle handle" | wc -l
+520
 
-Finally, I just want to point out that while it may seem capricious for us to
-resist accepting a new sysfs attribute that exists in other drivers, please note
-that the thinkpad driver (for example) is ancient and implements multiple
-mechanisms for several things and should not be considered as a reference for
-new code. hp_wmi is another story.
-
-Andy, we may also need to consult on a set of common laptop attributes that we
-will accept in general. This would ease review and also lead to some more
-uniformity in the sysfs attributes of the most common features (like tablet
-mode, touchpad, etc.). That said, the value are likely to be platform specific
-and it could prove difficult to map all that variety to a common set of values.
+dvhart@fury:~/source/linux/linux-pdx86 [testing]
+$ git grep "acpi_handle acpi_handle" | wc -l
+4
 
 -- 
 Darren Hart
