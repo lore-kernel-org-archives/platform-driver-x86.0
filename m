@@ -1,97 +1,97 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 04/10] platform/x86: fujitsu-laptop: rework backlight
- power synchronization
-Date: Mon, 1 May 2017 09:17:43 -0700
-Message-ID: <20170501161743.GC29387@fury>
-References: <20170424133334.7064-1-kernel@kempniu.pl>
- <20170424133334.7064-5-kernel@kempniu.pl>
- <20170501133245.GD25546@marvin.atrad.com.au>
+From: Ritesh Raj Sarraf <rrs@debian.org>
+Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface
+ for touchpad state
+Date: Mon, 01 May 2017 23:57:27 +0530
+Message-ID: <1493663247.10973.1.camel@debian.org>
+References: <20170217184756.15181-1-rrs@debian.org>
+         <1487759058.9334.7.camel@debian.org>
+         <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com>
+         <1493448775.9725.5.camel@debian.org>
+         <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
+         <20170501160543.GA29387@fury>
+Reply-To: rrs@debian.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-EKQs4on9NoR8H6MIQrUu"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:59390 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758174AbdEAQRq (ORCPT
+Received: from mail-pf0-f174.google.com ([209.85.192.174]:33219 "EHLO
+        mail-pf0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751341AbdEAS1s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 May 2017 12:17:46 -0400
-Content-Disposition: inline
-In-Reply-To: <20170501133245.GD25546@marvin.atrad.com.au>
+        Mon, 1 May 2017 14:27:48 -0400
+Received: by mail-pf0-f174.google.com with SMTP id q20so24083139pfg.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 May 2017 11:27:47 -0700 (PDT)
+In-Reply-To: <20170501160543.GA29387@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, May 01, 2017 at 11:02:45PM +0930, Jonathan Woithe wrote:
-> On Mon, Apr 24, 2017 at 03:33:28PM +0200, Micha?? K??pie?? wrote:
-> > fujitsu-laptop registers two ACPI drivers: one for ACPI device FUJ02B1
-> > enabling backlight control and another for ACPI device FUJ02E3 which
-> > handles various other stuff (hotkeys, LEDs, etc.)  So far, these two
-> > drivers have been entangled by calls to fext_backlight() (previously
-> > known as call_fext_func()) in the backlight part of the module which use
-> > module-wide data managed by the other part of the module and accesses to
-> > the backlight device from within acpi_fujitsu_laptop_add().  This
-> > entaglement can be solved by storing an independently fetched ACPI
-> > handle to the FUJ02E3 device inside the data structure managed by the
-> > backlight part of the module.
-> > 
-> > Add a field to struct fujitsu_bl for storing a handle to the FUJ02E3
-> > ACPI device.  Make fext_backlight() calls use that handle instead of the
-> > one from struct fujitsu_laptop.  Move backlight power synchronization
-> > from acpi_fujitsu_laptop_add() to fujitsu_backlight_register().
-> > 
-> > This makes the bl_device field of struct fujitsu_bl redundant, so remove
-> > it.
-> > 
-> > Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
-> > ---
-> >  drivers/platform/x86/fujitsu-laptop.c | 27 ++++++++++++---------------
-> >  1 file changed, 12 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> > index ea3210ee83ec..5f6b34a97348 100644
-> > --- a/drivers/platform/x86/fujitsu-laptop.c
-> > +++ b/drivers/platform/x86/fujitsu-laptop.c
-> > @@ -131,9 +131,9 @@
-> >  /* Device controlling the backlight and associated keys */
-> >  struct fujitsu_bl {
-> >  	acpi_handle handle;
-> > +	acpi_handle fext_handle;
-> 
-> This is the extra "handle" field I eluded to in my comment about an earlier
-> part of this patch series.  The end result is two "handle" fields: one whose
-> job is obvious (fext_handle) and one whose name in no way reflects what it
-> might be used for (handle).  One could of course adopt the view that any
-> unqualified handle is a generic acpi handle, but I like the clarification
-> which comes with the additional suffix.  Perhaps "acpi_handle" is too
-> generic and I'm certainly not opposed to the use of something more specific. 
-> However, IMHO leaving it as "handle" seems like an unnecessary obfuscation
-> without much gain.
 
-Yeah, that's a fair criticism. Naming is hard. I can see the argument for
-"handle" is for the system in general, "fext_handle" is for this specific subset
-of functionality". The alternative appears to be "plt_handle", "fuj_handle",
-"main_handle", or "hk_led_etc_handle ;-)" which honestly doesn't add any new
-information or is just silly. So, if you want to prefix handle, go ahead and do
-so, but I don't think it's a big deal.
+--=-EKQs4on9NoR8H6MIQrUu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> This change reinforces the shift away from ACPI drivers linked to specific
-> ACPI devices, and towards a focus on the driver's functionality (backlight
-> and "various other stuff").  With the evolution of the hardware I think this
-> makes sense.  While the "other stuff" still needs a driver, the backlight
-> component is not always needed.  The case for separation therefore makes
-> sense.
-> 
-> As a point of discussion though, since the backlight driver needs access to
-> both FUJ02B1 and FUJ02E3, should we consider rolling both ACPI drivers into
-> one?  Aside from conceptual neatness and perhaps a small runtime memory
-> footprint saving in the event that no backlight control functionality need
-> be provided by fujitsu-laptop, is there a whole lot to be gained through the
-> use of two separate drivers?
+On Mon, 2017-05-01 at 09:05 -0700, Darren Hart wrote:
+> > sysfs ABI for drivers that provide input interface is quite strong for
+> > my opinion. It means I'm not totally objecting, but I would accept it
+> > if and only if there is nothing else could be done.
+>=20
+> Agreed, we've recently wanted to remove certain sysfs attributes from ano=
+ther
+> driver as they were obsolete and better implemented in other ways, but on=
+ce
+> they
+> are there, are hands are tied.
+>=20
+> That said, we will support getting these systems functional. From what I =
+see
+> in
+> the patch you are implementing a polling sysfs interface. Have you verifi=
+ed
+> that
+> there is no event we can capture and send the SW_TABLET_MODE along to the
+> input
+> system?
 
-This on the other hand is something we need to consider carefully. I'd like to
-hear from Michal on this before I comment further.
+I believe it does generate an event (at least on my Yoga 2 13 variant). IIR=
+C,
+when I talked to Andy initially about the driver's limitation, we did do an
+exercise [1] to determine if an event was generated.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+Cooking this patch (sysfs interface) was much quicker and easy. I looked at=
+ the
+other example drivers, that do SW_TABLET_MODE, but left it there. I don't t=
+hink
+I have all the necessary information to get that done for the ideapad drive=
+r.
+
+
+[1] https://patchwork.kernel.org/patch/9546987/
+
+--=20
+Ritesh Raj Sarraf | http://people.debian.org/~rrs
+Debian - The Universal Operating System
+--=-EKQs4on9NoR8H6MIQrUu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQCVDstmIVAB/Yn02pjpYo/LhdWkFAlkHfg8ACgkQpjpYo/Lh
+dWnWyw//Wm7L2KjYXqv+DsBGsSKbHf2YVpkwOrmf7jfjRGI+Vw8KfqLl/8HywYh8
+2bdqi3gtI2Wmo1qPNhGuo3fKlXE0dH0qMmqn+5Wrs/ccQEUfhUQKZKpcfeC2LqwC
+0kYNkoT5LOtSNoeAVfkEEWiD5Zz/L2z+IG5EdYInN8dG4ovRwFdBNOSqaVpWwDHY
+z9xB1sMn4X+DhpUOrXhIzmJoggTx99cFr3aS1xyt+PYKGcbGjUhOdMU1duyVRKOG
+p37btOVbKjTsShGfoBu4j/H9MaMKqWQMS413CTZUCnysAg6JXXn5YmTe2p7L2i1A
+mMdSE5Ya6pvb0Hs4PZEIsE4GObvHC8/EhMkSZ1UQE2NkhniBKCguBpi4BImAialK
+IWKoAON6sWuVNLk/HWPDKvLbSfVPE19eUscNGfstfnEQBpU0nFXEaL0jce73t8eu
+ENbSlhzBAKhkEwUbYukTtxUpEo/yvZPyk5y5QtWiTxmIna1oC3rZ0zemtiUMmvJu
+M7I3MN6JucBkAVX85WMfZ2iqpOvSczppBkmA5aBhuNGtTlQocVenR1eSgmBbF5S0
+ADUAx3P7DN4E5Lq0R+u82Ig8dUronBUROxS9o1sXSKd5uW+WfdKu7tYVZNq+9z3j
+zIgy/mJQVsx1dvA83VCA+JZwBAjJ6j+DONg+bqvpAttvudK2+wc=
+=vkcZ
+-----END PGP SIGNATURE-----
+
+--=-EKQs4on9NoR8H6MIQrUu--
