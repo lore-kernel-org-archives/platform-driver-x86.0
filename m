@@ -1,52 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Sun, 30 Apr 2017 15:54:43 +0300
-Message-ID: <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
-References: <20170217184756.15181-1-rrs@debian.org> <1487759058.9334.7.camel@debian.org>
- <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com> <1493448775.9725.5.camel@debian.org>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Mon, 1 May 2017 22:35:36 +0930
+Message-ID: <20170501130536.GA25546@marvin.atrad.com.au>
+References: <20170424133334.7064-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f170.google.com ([209.85.216.170]:33045 "EHLO
-        mail-qt0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S969829AbdD3Myp (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:59024 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1949993AbdEANGd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2017 08:54:45 -0400
-In-Reply-To: <1493448775.9725.5.camel@debian.org>
+        Mon, 1 May 2017 09:06:33 -0400
+Content-Disposition: inline
+In-Reply-To: <20170424133334.7064-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ritesh Raj Sarraf <rrs@debian.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Apr 29, 2017 at 9:52 AM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
-> Hello,
->
-> On Fri, 2017-04-28 at 22:17 +0300, Andy Shevchenko wrote:
->> On Wed, Feb 22, 2017 at 12:24 PM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
->>
->> > Any further comment on this patch ? Will this be accepted ?
->> > Please give a N/ACK.
->>
->> Sorry for a long delay, but I can't go with this without clear
->> understanding that there is indeed no other ways available.
->> From what I read in the above link
->
-> i am assuming you are referring to the launchpad bug report here.
+Hi Michael
 
-Correct.
+On Mon, Apr 24, 2017 at 03:33:24PM +0200, Micha?? K??pie?? wrote:
+> fujitsu-laptop registers two ACPI drivers.  Whenever an ACPI device with
+> a matching identifier is found by the ACPI bus, a new instance of the
+> relevant driver is bound to that ACPI device.  However, both ACPI
+> drivers registered by fujitsu-laptop access module-wide global data
+> structures, assuming neither ACPI driver will ever be instantiated more
+> than once.  While there are currently no indications of such issues
+> happening in the wild, it is theoretically possible for multiple
+> FUJ02B1/FUJ02E3 ACPI devices to be present in the firmware, which would
+> cause two instances of the relevant driver to simultaneously access
+> module-wide globals without any locking in place.  Also, modern Fujitsu
+> laptops ship without the FUJ02B1 ACPI device present in firmware,
+> causing memory to be needlessly allocated inside fujitsu_init().
+> 
+> To future-proof the module and lay the groundwork for separating the two
+> aforementioned ACPI drivers into separate modules, move away from
+> module-wide global data structures by using device-specific data
+> instead.
 
->> the main issue that driver doesn't
->> send SW_TABLET_MODE event through input device.
->
-> Well. Yes. That is one part. If SW_TABLET_MODE is done in the driver, much
-> better. My patch was simply in line with some of the other drivers (hp-wmi and
-> thinkpad_acpi) to get it working for Lenovo Yoga series.
+Apologies for the delay in getting this first set of feedback to you.  It's
+a combination of the extent of the patch set and a very busy week.
 
-sysfs ABI for drivers that provide input interface is quite strong for
-my opinion. It means I'm not totally objecting, but I would accept it
-if and only if there is nothing else could be done.
+This patch set represents another worthwhile clean up of the fujitsu-laptop
+driver.  While I sincerely doubt any laptop vendor will place more than one
+FUJ02B1 (or FUJ02E3) in a single machine, removing the dependency on global
+variables makes the driver self contained and more consistent.  I have some
+points of clarification which I will post as follow ups to the respective
+patchs.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards
+  jonathan
