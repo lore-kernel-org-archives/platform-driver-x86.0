@@ -1,73 +1,213 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Mon, 1 May 2017 12:16:30 -0700
-Message-ID: <20170501191630.GD29387@fury>
-References: <20170217184756.15181-1-rrs@debian.org>
- <1487759058.9334.7.camel@debian.org>
- <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com>
- <1493448775.9725.5.camel@debian.org>
- <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
- <20170501160543.GA29387@fury>
- <1493663247.10973.1.camel@debian.org>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Tue, 2 May 2017 15:21:44 +0200
+Message-ID: <20170502132144.GA6808@ozzy.nask.waw.pl>
+References: <20170424133334.7064-1-kernel@kempniu.pl>
+ <20170501130536.GA25546@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:36222 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750741AbdEATQd (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 May 2017 15:16:33 -0400
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1493663247.10973.1.camel@debian.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ritesh Raj Sarraf <rrs@debian.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20170501130536.GA25546@marvin.atrad.com.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 01, 2017 at 11:57:27PM +0530, Ritesh Raj Sarraf wrote:
-> On Mon, 2017-05-01 at 09:05 -0700, Darren Hart wrote:
-> > > sysfs ABI for drivers that provide input interface is quite strong for
-> > > my opinion. It means I'm not totally objecting, but I would accept it
-> > > if and only if there is nothing else could be done.
+> Hi Michael
+> 
+> On Mon, Apr 24, 2017 at 03:33:24PM +0200, Micha?? K??pie?? wrote:
+> > fujitsu-laptop registers two ACPI drivers.  Whenever an ACPI device with
+> > a matching identifier is found by the ACPI bus, a new instance of the
+> > relevant driver is bound to that ACPI device.  However, both ACPI
+> > drivers registered by fujitsu-laptop access module-wide global data
+> > structures, assuming neither ACPI driver will ever be instantiated more
+> > than once.  While there are currently no indications of such issues
+> > happening in the wild, it is theoretically possible for multiple
+> > FUJ02B1/FUJ02E3 ACPI devices to be present in the firmware, which would
+> > cause two instances of the relevant driver to simultaneously access
+> > module-wide globals without any locking in place.  Also, modern Fujitsu
+> > laptops ship without the FUJ02B1 ACPI device present in firmware,
+> > causing memory to be needlessly allocated inside fujitsu_init().
 > > 
-> > Agreed, we've recently wanted to remove certain sysfs attributes from another
-> > driver as they were obsolete and better implemented in other ways, but once
-> > they
-> > are there, are hands are tied.
-> > 
-> > That said, we will support getting these systems functional. From what I see
-> > in
-> > the patch you are implementing a polling sysfs interface. Have you verified
-> > that
-> > there is no event we can capture and send the SW_TABLET_MODE along to the
-> > input
-> > system?
+> > To future-proof the module and lay the groundwork for separating the two
+> > aforementioned ACPI drivers into separate modules, move away from
+> > module-wide global data structures by using device-specific data
+> > instead.
 > 
-> I believe it does generate an event (at least on my Yoga 2 13 variant). IIRC,
-> when I talked to Andy initially about the driver's limitation, we did do an
-> exercise [1] to determine if an event was generated.
+> Apologies for the delay in getting this first set of feedback to you.  It's
+> a combination of the extent of the patch set and a very busy week.
 > 
-> Cooking this patch (sysfs interface) was much quicker and easy. I looked at the
-> other example drivers, that do SW_TABLET_MODE, but left it there. I don't think
-> I have all the necessary information to get that done for the ideapad driver.
-> 
-> 
-> [1] https://patchwork.kernel.org/patch/9546987/
+> This patch set represents another worthwhile clean up of the fujitsu-laptop
+> driver.  While I sincerely doubt any laptop vendor will place more than one
+> FUJ02B1 (or FUJ02E3) in a single machine, removing the dependency on global
+> variables makes the driver self contained and more consistent.  I have some
+> points of clarification which I will post as follow ups to the respective
+> patchs.
 
-Thanks. We really want to avoid user-space having to write platform specific
-sysfs attribute access to determine system state for common things like "should
-I show the on screen keyboard?". That doesn't scale and will result in a very
-sparse support matrix in general.
+Jonathan,
 
-Something I am not particularly well versed in is the issue with hotkeys,
-xinput, and only working in Xorg rather than wayland. Where in the stack is this
-limitation created? I assume it is above the kernel - no reason Wayland can't
-read SW_TABLET_MODE from the input subsystem correct?
+Thanks for the review.  My hidden agenda, which, in retrospect,
+I probably should have included in the cover letter, follows.
 
-I believe I have a couple systems which will replicate this issue so I'll try to
-spend some time with them to see what else might be done.
+In order to avoid accessing global structures from call_fext_func(), we
+need to pass it an ACPI handle to FUJ02E3.  This decreases code
+readability in two ways: by increasing the function's parameter count
+from an already challenging four to an even worse five and by causing
+line breaks to be inserted (due to the 80-column line rule) in places
+they were previously not necessary in.
+
+To counter this growing obfuscation, patches 01/10, 02/10 and 05/10 (all
+called out in your review) work in tandem to ensure that all uses of
+call_fext_func() remain legible _and_ fit in one line.  All three of
+these patches are needed to prevent line breaks from being inserted
+(granted, that is an arbitrary objective), because call_fext_func()
+needs to get the ACPI handle somehow and the latter is stored in a field
+of a device-specific structure.  Thus, for all call sites, these patches
+shorten:
+
+  - (01/10) name of the called function,
+  - (02/10) name of the field holding the ACPI handle,
+  - (05/10) name of the variable denoting device-specific data.
+
+In other words, these patches are the only sane approach I could come up
+with to ensure that, in the end, _all_ uses of call_fext_func() neatly
+fit into a single line, thus ensuring reasonable readability even when
+taking the added parameter (ACPI handle) into consideration.
+
+I have pasted some examples at the end of this message of what a few
+call_fext_func() call sites look like after adding the ACPI handle
+parameter and fixing the code to make checkpatch happy, both with ("new
+style") and without ("old style") the above three patches applied.  As
+you can see, compound conditional expressions benefit the most from the
+changes I suggested.
+
+Separating fext_backlight() from the other functions of call_fext_func()
+also has the added benefit of only exposing that specific function from
+fujitsu-laptop to fujitsu-backlight (where fujitsu-backlight is the
+backlight part of the current module), shall the module be split into
+two.
+
+And thus we come back to the question of "to split or not to split".
+The three options we have are:
+
+  - one module, two drivers: current, suboptimal, state of affairs,
+
+  - two modules, one driver in each: the original cleanup approach I
+    have been targeting in all of my patch series for fujitsu-laptop,
+
+  - one module, one driver handling both ACPI devices: the new approach
+    you suggested in your review.
+
+I have not considered the last option until now as I deemed it
+unacceptable in light of the kernel's philosophy in this regard.
+However, such an approach might not be bad in and of itself, because:
+
+  - FUJ02B1 is not fully standalone as it needs FUJ02E3 on some models,
+
+  - FUJ02E3 is present in all models we know of, while FUJ02B1 seems to
+    be phased out in newer models,
+
+  - userspace is unlikely to care which input device each hotkey event
+    comes from,
+
+  - the memory footprint of both drivers is negligible, considering that
+    both are only loaded on machines with hundreds of MB of RAM.
+
+So we could perhaps make fujitsu-laptop register _one_ ACPI driver,
+which binds to the FUJ02E3 device and only deals with backlight when the
+FUJ02B1 device is present and the vendor interface is either
+automatically selected by the kernel or explicitly requested by the
+user.  We would then have a single device-specific structure ("priv"
+would not be ambiguous any more) holding two ACPI handles ("fjex_handle"
+and "fext_handle"?) and all the other fields from both struct fujitsu_bl
+and struct fujitsu_laptop.  Please note that I have not played with this
+idea in code yet and perhaps handling the added complexity will make the
+driver more, not less, convoluted.
+
+Darren, does the above sound more like a viable plan or rather a pipe
+dream?  Answering Jonathan's question, there is no added benefit from
+splitting fujitsu-laptop into two separate modules, it is only about
+following the "one module, one driver" philosophy.  Any answer to this
+question puts the variable naming discussion on a specific track, so
+perhaps this is the first dilemma that we should sort out.
+
+------------------------------------------------------------------------
+old style:
+	if ((call_fext_func(fujitsu_laptop->acpi_handle, FUNC_LEDS,
+			    0x0, 0x0, 0x0) & BIT(14)) &&
+	    (call_fext_func(fujitsu_laptop->acpi_handle, FUNC_LEDS,
+	    		    0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
+new style:
+	if ((fext_leds(priv->handle, 0x0, 0x0, 0x0) & BIT(14)) &&
+	    (fext_leds(priv->handle, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
+------------------------------------------------------------------------
+old style:
+	if ((fujitsu_laptop->flags_supported & BIT(26)) &&
+	    (call_fext_func(fujitsu_laptop->acpi_handle, FUNC_FLAGS,
+	    	            0x1, 0x0, 0x0) & BIT(26)))
+new style:
+	if ((priv->flags_supported & BIT(26)) &&
+	    (fext_flags(priv->handle, 0x1, 0x0, 0x0) & BIT(26)))
+------------------------------------------------------------------------
+old style:
+	if (fujitsu_laptop->fext_handle) {
+		if (b->props.power == FB_BLANK_POWERDOWN)
+			call_fext_func(fujitsu_bl->fext_handle, FUNC_BACKLIGHT,
+				       0x1, 0x4, 0x3);
+		else
+			call_fext_func(fujitsu_bl->fext_handle, FUNC_BACKLIGHT,
+				       0x1, 0x4, 0x0);
+	}
+new style:
+	if (priv->fext_handle) {
+		if (b->props.power == FB_BLANK_POWERDOWN)
+			fext_backlight(priv->fext_handle, 0x1, 0x4, 0x3);
+		else
+			fext_backlight(priv->fext_handle, 0x1, 0x4, 0x0);
+	}
+------------------------------------------------------------------------
+old style:
+	if (brightness >= LED_FULL)
+		return call_fext_func(handle, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
+				      FUNC_LED_ON);
+	else
+		return call_fext_func(handle, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
+				      FUNC_LED_OFF);
+new style:
+	if (brightness >= LED_FULL)
+		return fext_leds(handle, 0x1, KEYBOARD_LAMPS, FUNC_LED_ON);
+	else
+		return fext_leds(handle, 0x1, KEYBOARD_LAMPS, FUNC_LED_OFF);
+------------------------------------------------------------------------
+old style:
+	if (call_fext_func(handle, FUNC_LEDS, 0x2, KEYBOARD_LAMPS,
+			   0x0) == FUNC_LED_ON)
+		brightness = LED_FULL;
+new style:
+	if (fext_leds(handle, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
+		brightness = LED_FULL;
+------------------------------------------------------------------------
+old style:
+	if ((call_fext_func(fujitsu_laptop->acpi_handle, FUNC_LEDS,
+			    0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
+	    (call_fext_func(fujitsu_laptop->acpi_handle, FUNC_LEDS,
+	    		    0x0, 0x0, 0x0) == 0x0)) {
+new style:
+	if ((fext_leds(priv->handle, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
+	    (fext_buttons(priv->handle, 0x0, 0x0, 0x0) == 0x0)) {
+------------------------------------------------------------------------
+old style:
+	while (call_fext_func(fujitsu_laptop->acpi_handle, FUNC_BUTTONS,
+			      0x1, 0x0, 0x0) != 0 &&
+	       i++ < MAX_HOTKEY_RINGBUFFER_SIZE)
+new style:
+	while (fext_buttons(priv->handle, 0x1, 0x0, 0x0) != 0 &&
+	       i++ < MAX_HOTKEY_RINGBUFFER_SIZE)
+------------------------------------------------------------------------
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Best regards,
+Michał Kępień
