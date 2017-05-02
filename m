@@ -1,40 +1,67 @@
 From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple@vodafone.de>
-Subject: Re: [PATCH 1/4] PCI: add resizeable BAR infrastructure v4
-Date: Tue, 2 May 2017 16:56:55 +0200
-Message-ID: <bd126097-1aa4-eeb0-39fd-2e8820b448c5@vodafone.de>
+Subject: Re: [PATCH 2/4] PCI: add functionality for resizing resources v3
+Date: Tue, 2 May 2017 17:51:36 +0200
+Message-ID: <6238d127-1c70-8235-e247-bb6cb3f4c040@vodafone.de>
 References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
- <1493126394-1239-2-git-send-email-deathsimple@vodafone.de>
- <CAHp75VfJKkFTXbia=CiZapriEg6ObUh=js6cKJv3xe=2DBHbqA@mail.gmail.com>
+ <1493126394-1239-3-git-send-email-deathsimple@vodafone.de>
+ <CAHp75VfSFBYgHRsX2JSH0zdSEW8VvXbNMVvBBsD9kKgzGr-v2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAHp75VfJKkFTXbia=CiZapriEg6ObUh=js6cKJv3xe=2DBHbqA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfSFBYgHRsX2JSH0zdSEW8VvXbNMVvBBsD9kKgzGr-v2w@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, helgaas@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: helgaas@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-QW0gMjYuMDQuMjAxNyB1bSAxODo0NSBzY2hyaWViIEFuZHkgU2hldmNoZW5rbzoKPiBbU05JUF0K
-Pj4gLSNkZWZpbmUgIFBDSV9SRUJBUl9DVFJMX05CQVJfTUFTSyAgICAgICg3IDw8IDUpICAgICAg
-ICAvKiBtYXNrIGZvciAjIGJhcnMgKi8KPj4gLSNkZWZpbmUgIFBDSV9SRUJBUl9DVFJMX05CQVJf
-U0hJRlQgICAgIDUgICAgICAgLyogc2hpZnQgZm9yICMgYmFycyAqLwo+PiArI2RlZmluZSAgUENJ
-X1JFQkFSX0NUUkxfTkJBUl9NQVNLICAgICAgKDcgPDwgNSkgICAgICAgIC8qIG1hc2sgZm9yICMg
-QkFScyAqLwo+PiArI2RlZmluZSAgUENJX1JFQkFSX0NUUkxfTkJBUl9TSElGVCAgICAgNSAgICAg
-ICAvKiBzaGlmdCBmb3IgIyBCQVJzICovCj4gSSB1bmRlcnN0YW5kIHdoeSwgYnV0IEkgZHVubm8g
-aXQgd29ydGggdG8gZG8uCkJqb3JuIHN1Z2dlc3RlZCB0aGF0LiBFaXRoZXIgd2F5IGlzIGZpbmUg
-d2l0aCBtZSwgYnV0IGhlIG5lZWRzIHRvIHN0aWNrIApoaXMgc2lnbmVkLW9mLWJ5IG9uIGl0IHdo
-ZW4gcHVzaGluZyBpdCB1cHN0cmVhbS4gU28gaGlzIG9waW5pb24gdXN1YWxseSAKd2lucy4KCkFs
-bCBvdGhlciBjb21tZW50cyB3aWxsIGJlIGludGVncmF0ZWQgaW4gdGhlIG5leHQgdmVyc2lvbiBv
-ZiB0aGUgcGF0Y2guCgpUaGFua3MgZm9yIHRoZSByZXZpZXcsCkNocmlzdGlhbi4KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Am 26.04.2017 um 19:00 schrieb Andy Shevchenko:
+> On Tue, Apr 25, 2017 at 4:19 PM, Christian König
+> <deathsimple@vodafone.de> wrote:
+>> From: Christian König <christian.koenig@amd.com>
+>>
+>> This allows device drivers to request resizing their BARs.
+>>
+>> The function only tries to reprogram the windows of the bridge directly above
+>> the requesting device and only the BAR of the same type (usually mem, 64bit,
+>> prefetchable). This is done to make sure not to disturb other drivers by
+>> changing the BARs of their devices.
+>>
+>> If reprogramming the bridge BAR fails the old status is restored and -ENOSPC
+>> returned to the calling device driver.
+>> +int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+>> +{
+>> +       const unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
+>> +               IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
+>> +
+> Redundant.
+
+Redundant, but also a reminder to myself that I wanted to ask something 
+about that.
+
+This type_mask is used already three times in this file, shouldn't we 
+add a define for that?
+
+> [SNIP]
+>> +       list_for_each_entry(dev_res, &saved, list) {
+>> +               /* Skip the bridge we just assigned resources for. */
+>> +               if (bridge == dev_res->dev)
+>> +                       continue;
+>> +
+>> +               bridge = dev_res->dev;
+>> +               pci_setup_bridge(bridge->subordinate);
+>> +       }
+>> +
+>> +       free_list(&saved);
+>> +       free_list(&failed);
+>> +       return ret;
+> You might re-use two lines with below, but perhaps better to show
+> which case returns 0 explicitly and drop assignment ret = 0 above.
+
+Good point, but actually the free_list(&failed) is superfluous here 
+since when the failed list isn't empty we end up in the cleanup path.
+
+Going to fix all other comments in the next version.
+
+Regards,
+Christian.
