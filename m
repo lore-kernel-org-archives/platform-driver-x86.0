@@ -1,170 +1,242 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH 5/5] drm/amdgpu: resize VRAM BAR for CPU access v2
-Date: Thu,  4 May 2017 11:31:10 +0200
-Message-ID: <1493890270-1188-6-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH 3/5] PCI: add functionality for resizing resources v4
+Date: Thu,  4 May 2017 11:31:08 +0200
+Message-ID: <1493890270-1188-4-git-send-email-deathsimple@vodafone.de>
 References: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:48263 "EHLO
-        pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751251AbdEDJbU (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 May 2017 05:31:20 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 From: Christian König <christian.koenig@amd.com>
 
-Try to resize BAR0 to let CPU access all of VRAM.
+This allows device drivers to request resizing their BARs.
 
-v2: rebased, style cleanups, disable mem decode before resize,
-    handle gmc_v9 as well, round size up to power of two.
+The function only tries to reprogram the windows of the bridge directly above
+the requesting device and only the BAR of the same type (usually mem, 64bit,
+prefetchable). This is done to make sure not to disturb other drivers by
+changing the BARs of their devices.
+
+If reprogramming the bridge BAR fails the old status is restored and -ENOSPC
+returned to the calling device driver.
+
+v2: rebase on changes in rbar support
+v3: style cleanups, fail if memory decoding is enabled or resources
+    still allocated, resize all unused bridge BARs,
+    drop calling pci_reenable_device
+v4: print resources before releasing them, style cleanups,
+    use pci_rbar_size_to_bytes, use PCI_RES_TYPE_MASK
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 37 ++++++++++++++++++++++++++++++
- drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c      |  8 ++++---
- drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c      |  8 ++++---
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c      | 10 ++++----
- 5 files changed, 54 insertions(+), 10 deletions(-)
+ drivers/pci/setup-bus.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/setup-res.c | 59 +++++++++++++++++++++++++++++
+ include/linux/pci.h     |  3 ++
+ 3 files changed, 160 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index 0ee4d87..ed49e92 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -1884,6 +1884,7 @@ uint64_t amdgpu_ttm_tt_pte_flags(struct amdgpu_device *adev, struct ttm_tt *ttm,
- 				 struct ttm_mem_reg *mem);
- void amdgpu_vram_location(struct amdgpu_device *adev, struct amdgpu_mc *mc, u64 base);
- void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc);
-+void amdgpu_resize_bar0(struct amdgpu_device *adev);
- void amdgpu_ttm_set_active_vram_size(struct amdgpu_device *adev, u64 size);
- int amdgpu_ttm_init(struct amdgpu_device *adev);
- void amdgpu_ttm_fini(struct amdgpu_device *adev);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index e685ca9..523936a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -695,6 +695,43 @@ void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc)
- 			mc->gtt_size >> 20, mc->gtt_start, mc->gtt_end);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index bb1001e..2b73e0e 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1919,6 +1919,104 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
  }
+ EXPORT_SYMBOL_GPL(pci_assign_unassigned_bridge_resources);
  
-+/**
-+ * amdgpu_resize_bar0 - try to resize BAR0
-+ *
-+ * @adev: amdgpu_device pointer
-+ *
-+ * Try to resize BAR0 to make all VRAM CPU accessible.
-+ */
-+void amdgpu_resize_bar0(struct amdgpu_device *adev)
++int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
 +{
-+	u64 space_needed = roundup_pow_of_two(adev->mc.real_vram_size);
-+	u32 rbar_size = order_base_2(((space_needed >> 20) | 1)) -1;
-+	u16 cmd;
-+	int r;
++	struct pci_dev_resource *dev_res;
++	LIST_HEAD(saved);
++	LIST_HEAD(added);
++	LIST_HEAD(failed);
++	unsigned int i;
++	int ret;
 +
-+	/* Free the doorbell mapping, it most likely needs to move as well */
-+	amdgpu_doorbell_fini(adev);
-+	pci_release_resource(adev->pdev, 2);
++	/* Walk to the root BUS, releasing bridge BARs when possible */
++	while (1) {
++		for (i = PCI_BRIDGE_RESOURCES; i < PCI_BRIDGE_RESOURCE_END;
++		     i++) {
++			struct resource *res = &bridge->resource[i];
 +
-+	/* Disable memory decoding while we change the BAR addresses and size */
-+	pci_read_config_word(adev->pdev, PCI_COMMAND, &cmd);
-+	pci_write_config_word(adev->pdev, PCI_COMMAND,
-+			      cmd & ~PCI_COMMAND_MEMORY);
++			if ((res->flags ^ type) & PCI_RES_TYPE_MASK)
++				continue;
 +
-+	r = pci_resize_resource(adev->pdev, 0, rbar_size);
-+	if (r == -ENOSPC)
-+		DRM_INFO("Not enough PCI address space for a large BAR.");
-+	else if (r && r != -ENOTSUPP)
-+		DRM_ERROR("Problem resizing BAR0 (%d).", r);
++			/* Ignore BARs which are still in use */
++			if (res->child)
++				continue;
 +
-+	pci_write_config_word(adev->pdev, PCI_COMMAND, cmd);
++			ret = add_to_list(&saved, bridge, res, 0, 0);
++			if (ret)
++				goto cleanup;
 +
-+	/* When the doorbell BAR isn't available we have no chance of
-+	 * using the device.
-+	 */
-+	BUG_ON(amdgpu_doorbell_init(adev));
++			dev_info(&bridge->dev, "BAR %d: releasing %pR\n",
++				 i, res);
++
++			if (res->parent)
++				release_resource(res);
++			res->start = 0;
++			res->end = 0;
++			break;
++		}
++		if (i == PCI_BRIDGE_RESOURCE_END)
++			break;
++
++		if (!bridge->bus || !bridge->bus->self)
++			break;
++
++		bridge = bridge->bus->self;
++	}
++
++	if (list_empty(&saved))
++		return -ENOENT;
++
++	__pci_bus_size_bridges(bridge->subordinate, &added);
++	__pci_bridge_assign_resources(bridge, &added, &failed);
++	BUG_ON(!list_empty(&added));
++
++	if (!list_empty(&failed)) {
++		ret = -ENOSPC;
++		goto cleanup;
++	}
++
++	list_for_each_entry(dev_res, &saved, list) {
++		/* Skip the bridge we just assigned resources for. */
++		if (bridge == dev_res->dev)
++			continue;
++
++		bridge = dev_res->dev;
++		pci_setup_bridge(bridge->subordinate);
++	}
++
++	free_list(&saved);
++	return 0;
++
++cleanup:
++	/* restore size and flags */
++	list_for_each_entry(dev_res, &failed, list) {
++		struct resource *res = dev_res->res;
++
++		res->start = dev_res->start;
++		res->end = dev_res->end;
++		res->flags = dev_res->flags;
++	}
++	free_list(&failed);
++
++	/* Revert to the old configuration */
++	list_for_each_entry(dev_res, &saved, list) {
++		struct resource *res = dev_res->res;
++
++		bridge = dev_res->dev;
++		i = res - bridge->resource;
++
++		res->start = dev_res->start;
++		res->end = dev_res->end;
++		res->flags = dev_res->flags;
++
++		pci_claim_resource(bridge, i);
++		pci_setup_bridge(bridge->subordinate);
++	}
++	free_list(&saved);
++
++	return ret;
 +}
 +
- /*
-  * GPU helpers function.
-  */
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
-index a9083a1..ae71524 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
-@@ -372,13 +372,15 @@ static int gmc_v7_0_mc_init(struct amdgpu_device *adev)
- 		}
- 		adev->mc.vram_width = numchan * chansize;
- 	}
--	/* Could aper size report 0 ? */
--	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
--	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
- 	/* size in MB on si */
- 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
- 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ void pci_assign_unassigned_bus_resources(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index 9526e34..65420ac 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -363,6 +363,65 @@ int pci_reassign_resource(struct pci_dev *dev, int resno, resource_size_t addsiz
+ 	return 0;
+ }
  
-+	if (!(adev->flags & AMD_IS_APU))
-+		amdgpu_resize_bar0(adev);
-+	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
-+	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
++void pci_release_resource(struct pci_dev *dev, int resno)
++{
++	struct resource *res = dev->resource + resno;
 +
- #ifdef CONFIG_X86_64
- 	if (adev->flags & AMD_IS_APU) {
- 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
-index 4ac9978..1655de2 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
-@@ -534,13 +534,15 @@ static int gmc_v8_0_mc_init(struct amdgpu_device *adev)
- 		}
- 		adev->mc.vram_width = numchan * chansize;
- 	}
--	/* Could aper size report 0 ? */
--	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
--	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
- 	/* size in MB on si */
- 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
- 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
- 
-+	if (!(adev->flags & AMD_IS_APU))
-+		amdgpu_resize_bar0(adev);
-+	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
-+	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
++	dev_info(&dev->dev, "BAR %d: releasing %pR\n", resno, res);
++	release_resource(res);
++	res->end = resource_size(res) - 1;
++	res->start = 0;
++	res->flags |= IORESOURCE_UNSET;
++}
++EXPORT_SYMBOL(pci_release_resource);
 +
- #ifdef CONFIG_X86_64
- 	if (adev->flags & AMD_IS_APU) {
- 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index b9f11fa..d65728a 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -469,16 +469,18 @@ static int gmc_v9_0_mc_init(struct amdgpu_device *adev)
- 	}
- 	adev->mc.vram_width = numchan * chansize;
- 
--	/* Could aper size report 0 ? */
--	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
--	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
- 	/* size in MB on si */
- 	adev->mc.mc_vram_size =
- 		nbio_v6_1_get_memsize(adev) * 1024ULL * 1024ULL;
- 	adev->mc.real_vram_size = adev->mc.mc_vram_size;
--	adev->mc.visible_vram_size = adev->mc.aper_size;
++int pci_resize_resource(struct pci_dev *dev, int resno, int size)
++{
++	struct resource *res = dev->resource + resno;
++	int old, ret = 0;
++	u32 sizes;
++	u16 cmd;
 +
-+	if (!(adev->flags & AMD_IS_APU))
-+		amdgpu_resize_bar0(adev);
-+	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
-+	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
- 
- 	/* In case the PCI BAR is larger than the actual amount of vram */
-+	adev->mc.visible_vram_size = adev->mc.aper_size;
- 	if (adev->mc.visible_vram_size > adev->mc.real_vram_size)
- 		adev->mc.visible_vram_size = adev->mc.real_vram_size;
- 
++	pci_read_config_word(dev, PCI_COMMAND, &cmd);
++	if (cmd & PCI_COMMAND_MEMORY)
++		return -EBUSY;
++
++	sizes = pci_rbar_get_possible_sizes(dev, resno);
++	if (!sizes)
++		return -ENOTSUPP;
++
++	if (!(sizes & BIT(size)))
++		return -EINVAL;
++
++	old = pci_rbar_get_current_size(dev, resno);
++	if (old < 0)
++		return old;
++
++	/* Make sure the resource isn't assigned before making it larger. */
++	pci_release_resource(dev, resno);
++
++	ret = pci_rbar_set_size(dev, resno, size);
++	if (ret)
++		goto error_reassign;
++
++	res->end = res->start + pci_rbar_size_to_bytes(size) - 1;
++
++	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
++	if (ret)
++		goto error_resize;
++
++	return 0;
++
++error_resize:
++	pci_rbar_set_size(dev, resno, old);
++	res->end = res->start + pci_rbar_size_to_bytes(old) - 1;
++
++error_reassign:
++	pci_assign_unassigned_bus_resources(dev->bus);
++	return ret;
++}
++EXPORT_SYMBOL(pci_resize_resource);
++
+ int pci_enable_resources(struct pci_dev *dev, int mask)
+ {
+ 	u16 cmd, old_cmd;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index a38772a..f0a630a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1055,6 +1055,8 @@ void pci_reset_bridge_secondary_bus(struct pci_dev *dev);
+ void pci_update_resource(struct pci_dev *dev, int resno);
+ int __must_check pci_assign_resource(struct pci_dev *dev, int i);
+ int __must_check pci_reassign_resource(struct pci_dev *dev, int i, resource_size_t add_size, resource_size_t align);
++void pci_release_resource(struct pci_dev *dev, int resno);
++int __must_check pci_resize_resource(struct pci_dev *dev, int i, int size);
+ int pci_select_bars(struct pci_dev *dev, unsigned long flags);
+ bool pci_device_is_present(struct pci_dev *pdev);
+ void pci_ignore_hotplug(struct pci_dev *dev);
+@@ -1135,6 +1137,7 @@ void pci_assign_unassigned_resources(void);
+ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge);
+ void pci_assign_unassigned_bus_resources(struct pci_bus *bus);
+ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus);
++int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type);
+ void pdev_enable_device(struct pci_dev *);
+ int pci_enable_resources(struct pci_dev *, int mask);
+ void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
 -- 
 2.7.4
