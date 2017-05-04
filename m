@@ -1,195 +1,170 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH 2/5] PCI: add resizeable BAR infrastructure v5
-Date: Thu,  4 May 2017 11:31:07 +0200
-Message-ID: <1493890270-1188-3-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH 5/5] drm/amdgpu: resize VRAM BAR for CPU access v2
+Date: Thu,  4 May 2017 11:31:10 +0200
+Message-ID: <1493890270-1188-6-git-send-email-deathsimple@vodafone.de>
 References: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from pegasos-out.vodafone.de ([80.84.1.38]:48263 "EHLO
+        pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751251AbdEDJbU (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 4 May 2017 05:31:20 -0400
 In-Reply-To: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
 From: Christian König <christian.koenig@amd.com>
 
-Just the defines and helper functions to read the possible sizes of a BAR and
-update it's size.
+Try to resize BAR0 to let CPU access all of VRAM.
 
-See https://pcisig.com/sites/default/files/specification_documents/ECN_Resizable-BAR_24Apr2008.pdf
-and PCIe r3.1, sec 7.22.
-
-This is useful for hardware with large local storage (mostly GFX) which only
-expose 256MB BARs initially to be compatible with 32bit systems.
-
-v2: provide read helper as well
-v3: improve function names, use unsigned values, add better comments.
-v4: move definition, improve commit message, s/bar/BAR/
-v5: split out helper to find ctrl reg pos, style fixes, comment fixes,
-    add pci_rbar_size_to_bytes as well
+v2: rebased, style cleanups, disable mem decode before resize,
+    handle gmc_v9 as well, round size up to power of two.
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/pci/pci.c             | 104 ++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h             |   8 ++++
- include/uapi/linux/pci_regs.h |  11 ++++-
- 3 files changed, 121 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 37 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c      |  8 ++++---
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c      |  8 ++++---
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c      | 10 ++++----
+ 5 files changed, 54 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ba34907..0cbf4a6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2944,6 +2944,110 @@ bool pci_acs_path_enabled(struct pci_dev *start,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+index 0ee4d87..ed49e92 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+@@ -1884,6 +1884,7 @@ uint64_t amdgpu_ttm_tt_pte_flags(struct amdgpu_device *adev, struct ttm_tt *ttm,
+ 				 struct ttm_mem_reg *mem);
+ void amdgpu_vram_location(struct amdgpu_device *adev, struct amdgpu_mc *mc, u64 base);
+ void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc);
++void amdgpu_resize_bar0(struct amdgpu_device *adev);
+ void amdgpu_ttm_set_active_vram_size(struct amdgpu_device *adev, u64 size);
+ int amdgpu_ttm_init(struct amdgpu_device *adev);
+ void amdgpu_ttm_fini(struct amdgpu_device *adev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index e685ca9..523936a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -695,6 +695,43 @@ void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc)
+ 			mc->gtt_size >> 20, mc->gtt_start, mc->gtt_end);
  }
  
- /**
-+ * pci_rbar_find_pos - find position of resize ctrl reg for BAR
-+ * @dev: PCI device
-+ * @bar: BAR to find
++/**
++ * amdgpu_resize_bar0 - try to resize BAR0
 + *
-+ * Helper to find the postion of the ctrl register for a BAR.
-+ * Returns -ENOTSUPP of resizeable BARs are not supported at all.
-+ * Returns -ENOENT if not ctrl register for the BAR could be found.
++ * @adev: amdgpu_device pointer
++ *
++ * Try to resize BAR0 to make all VRAM CPU accessible.
 + */
-+static int pci_rbar_find_pos(struct pci_dev *pdev, int bar)
++void amdgpu_resize_bar0(struct amdgpu_device *adev)
 +{
-+	unsigned int pos, nbars;
-+	unsigned int i;
-+	u32 ctrl;
++	u64 space_needed = roundup_pow_of_two(adev->mc.real_vram_size);
++	u32 rbar_size = order_base_2(((space_needed >> 20) | 1)) -1;
++	u16 cmd;
++	int r;
 +
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	if (!pos)
-+		return -ENOTSUPP;
++	/* Free the doorbell mapping, it most likely needs to move as well */
++	amdgpu_doorbell_fini(adev);
++	pci_release_resource(adev->pdev, 2);
 +
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	nbars = (ctrl & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
++	/* Disable memory decoding while we change the BAR addresses and size */
++	pci_read_config_word(adev->pdev, PCI_COMMAND, &cmd);
++	pci_write_config_word(adev->pdev, PCI_COMMAND,
++			      cmd & ~PCI_COMMAND_MEMORY);
 +
-+	for (i = 0; i < nbars; ++i, pos += 8) {
-+		int bar_idx;
++	r = pci_resize_resource(adev->pdev, 0, rbar_size);
++	if (r == -ENOSPC)
++		DRM_INFO("Not enough PCI address space for a large BAR.");
++	else if (r && r != -ENOTSUPP)
++		DRM_ERROR("Problem resizing BAR0 (%d).", r);
 +
-+		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+		bar_idx = (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
-+				PCI_REBAR_CTRL_BAR_IDX_SHIFT;
-+		if (bar_idx == bar)
-+			return pos;
-+	}
++	pci_write_config_word(adev->pdev, PCI_COMMAND, cmd);
 +
-+	return -ENOENT;
++	/* When the doorbell BAR isn't available we have no chance of
++	 * using the device.
++	 */
++	BUG_ON(amdgpu_doorbell_init(adev));
 +}
 +
-+/**
-+ * pci_rbar_get_possible_sizes - get possible sizes for BAR
-+ * @dev: PCI device
-+ * @bar: BAR to query
-+ *
-+ * Get the possible sizes of a resizeable BAR as bitmask defined in the spec
-+ * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizeable.
-+ */
-+u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar)
-+{
-+	u32 cap;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return 0;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
-+	return (cap & PCI_REBAR_CTRL_SIZES_MASK) >>
-+		PCI_REBAR_CTRL_SIZES_SHIFT;
-+}
-+
-+/**
-+ * pci_rbar_get_current_size - get the current size of a BAR
-+ * @dev: PCI device
-+ * @bar: BAR to set size to
-+ *
-+ * Read the size of a BAR from the resizeable BAR config.
-+ * Returns size if found or negative error code.
-+ */
-+int pci_rbar_get_current_size(struct pci_dev *pdev, int bar)
-+{
-+	u32 ctrl;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return pos;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	return (ctrl & PCI_REBAR_CTRL_BAR_SIZE_MASK) >>
-+		PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-+}
-+
-+/**
-+ * pci_rbar_set_size - set a new size for a BAR
-+ * @dev: PCI device
-+ * @bar: BAR to set size to
-+ * @size: new size as defined in the spec (0=1MB, 19=512GB)
-+ *
-+ * Set the new size of a BAR as defined in the spec.
-+ * Returns zero if resizing was successful, error code otherwise.
-+ */
-+int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size)
-+{
-+	u32 ctrl;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return pos;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE_MASK;
-+	ctrl |= size << PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-+	pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-+	return 0;
-+}
-+
-+/**
-  * pci_swizzle_interrupt_pin - swizzle INTx for device behind bridge
-  * @dev: the PCI device
-  * @pin: the INTx pin (1=INTA, 2=INTB, 3=INTC, 4=INTD)
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3868828..6290e5c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -359,4 +359,12 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, int probe)
- }
- #endif
+ /*
+  * GPU helpers function.
+  */
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+index a9083a1..ae71524 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+@@ -372,13 +372,15 @@ static int gmc_v7_0_mc_init(struct amdgpu_device *adev)
+ 		}
+ 		adev->mc.vram_width = numchan * chansize;
+ 	}
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
  
-+u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar);
-+int pci_rbar_get_current_size(struct pci_dev *pdev, int bar);
-+int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size);
-+static inline u64 pci_rbar_size_to_bytes(int size)
-+{
-+	return 1ULL << (size + 20);
-+}
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
 +
- #endif /* DRIVERS_PCI_H */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index e5a2e68..a75429e 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -932,9 +932,16 @@
- #define PCI_SATA_SIZEOF_LONG	16
+ #ifdef CONFIG_X86_64
+ 	if (adev->flags & AMD_IS_APU) {
+ 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+index 4ac9978..1655de2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+@@ -534,13 +534,15 @@ static int gmc_v8_0_mc_init(struct amdgpu_device *adev)
+ 		}
+ 		adev->mc.vram_width = numchan * chansize;
+ 	}
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
  
- /* Resizable BARs */
-+#define PCI_REBAR_CAP		4	/* capability register */
-+#define  PCI_REBAR_CTRL_SIZES_MASK	(0xFFFFF << 4)	/* mask for sizes */
-+#define  PCI_REBAR_CTRL_SIZES_SHIFT	4	/* shift for sizes */
- #define PCI_REBAR_CTRL		8	/* control register */
--#define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # bars */
--#define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # bars */
-+#define  PCI_REBAR_CTRL_BAR_IDX_MASK	(7 << 0)	/* mask for BAR index */
-+#define  PCI_REBAR_CTRL_BAR_IDX_SHIFT	0	/* shift for BAR index */
-+#define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # BARs */
-+#define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # BARs */
-+#define  PCI_REBAR_CTRL_BAR_SIZE_MASK	(0x1F << 8)	/* mask for BAR size */
-+#define  PCI_REBAR_CTRL_BAR_SIZE_SHIFT	8	/* shift for BAR size */
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
++
+ #ifdef CONFIG_X86_64
+ 	if (adev->flags & AMD_IS_APU) {
+ 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index b9f11fa..d65728a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -469,16 +469,18 @@ static int gmc_v9_0_mc_init(struct amdgpu_device *adev)
+ 	}
+ 	adev->mc.vram_width = numchan * chansize;
  
- /* Dynamic Power Allocation */
- #define PCI_DPA_CAP		4	/* capability register */
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size =
+ 		nbio_v6_1_get_memsize(adev) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = adev->mc.mc_vram_size;
+-	adev->mc.visible_vram_size = adev->mc.aper_size;
++
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 
+ 	/* In case the PCI BAR is larger than the actual amount of vram */
++	adev->mc.visible_vram_size = adev->mc.aper_size;
+ 	if (adev->mc.visible_vram_size > adev->mc.real_vram_size)
+ 		adev->mc.visible_vram_size = adev->mc.real_vram_size;
+ 
 -- 
 2.7.4
