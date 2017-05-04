@@ -1,127 +1,122 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Silead DMI driver
-Date: Thu, 4 May 2017 15:48:47 -0700
-Message-ID: <20170504224847.GB4793@fury>
-References: <20170424132356.044ae04f@endymion>
- <1493034496.24567.163.camel@linux.intel.com>
- <20170425121939.7dbdfeed@endymion>
- <20170427211322.GA29261@fury>
- <20170503101953.3b03ccf2@endymion>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Fri, 5 May 2017 09:10:58 +0930
+Message-ID: <20170504234058.GC21562@marvin.atrad.com.au>
+References: <20170424133334.7064-1-kernel@kempniu.pl>
+ <20170501130536.GA25546@marvin.atrad.com.au>
+ <20170502132144.GA6808@ozzy.nask.waw.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:37872 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752401AbdEDWsv (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:34994 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751525AbdEDXnz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 May 2017 18:48:51 -0400
+        Thu, 4 May 2017 19:43:55 -0400
 Content-Disposition: inline
-In-Reply-To: <20170503101953.3b03ccf2@endymion>
+In-Reply-To: <20170502132144.GA6808@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, May 03, 2017 at 10:19:53AM +0200, Jean Delvare wrote:
-> Hi Darren,
+Hi Michael
+
+On Tue, May 02, 2017 at 03:21:44PM +0200, Micha?? K??pie?? wrote:
+> In order to avoid accessing global structures from call_fext_func(), we
+> need to pass it an ACPI handle to FUJ02E3.  This decreases code
+> readability in two ways: by increasing the function's parameter count
+> from an already challenging four to an even worse five and by causing
+> line breaks to be inserted (due to the 80-column line rule) in places
+> they were previously not necessary in.
 > 
-> On Thu, 27 Apr 2017 14:13:22 -0700, Darren Hart wrote:
-> > On Tue, Apr 25, 2017 at 12:19:39PM +0200, Jean Delvare wrote:
-> > > Thanks for the pointer Andy. OK, I can understand the argument of
-> > > Dmitry that platform-specific quirks do not belong to the device
-> > > drivers, even though in practice I'm not sure the cost of having a
-> > > separate platform driver for the purpose is always worth it - depends
-> > > on how "popular" the device is, I suppose.
-> > > 
-> > > But still, this can't justify non-modular platform code that will run
-> > > on every X86 system out there. Any piece of platform-specific quirks,
-> > > we should be able to build as a module, otherwise it simply doesn't
-> > > scale. PCI quirks and such are enough pain already without inventing
-> > > more flavors of bloat :-(
-> > 
-> > Jean makes a good point. I would insist on this if the Kconfig default was y or
-> > if distros were likely to enable this by default. However, this is for the still
-> > very rare x86 tablet and is likely to only be enabled for those systems which
-> > require it.
+> To counter this growing obfuscation, patches 01/10, 02/10 and 05/10 (all
+> called out in your review) work in tandem to ensure that all uses of
+> call_fext_func() remain legible _and_ fit in one line.  All three of
+> these patches are needed to prevent line breaks from being inserted
+> (granted, that is an arbitrary objective), because call_fext_func()
+> needs to get the ACPI handle somehow and the latter is stored in a field
+> of a device-specific structure. ...
+
+Thanks for the explanation of your rationale behind patchs 1, 2 and 5.  In
+short, they are (at the lowest level) cosmetic aimed at the adherence to the
+80-column guideline, but for the reasons you outlined this is not
+necessarily a bad thing.
+
+> And thus we come back to the question of "to split or not to split".
+> The three options we have are:
 > 
-> The problem is that there is no clear line of what hardware openSUSE
-> kernels should support or not. I don't know if other general purpose
-> Linux distributions have made any statement on the matter, but we have
-> not. As a matter of fact, the person in charge of deciding what to do
-> with new kernel drivers did enable both Silead touchscreen options in
-> our standard i386 and x86_64 kernels.
-
-I'd assert that wasn't the right call. Happy to discuss with them if they are
-interested.
-
+>   - one module, two drivers: current, suboptimal, state of affairs,
 > 
-> There are also people working on getting openSUSE to run on odd
-> hardware such as the GPD Win, and we have ARM kernels running on
-> embedded platforms. As X86-based embedded platforms are getting
-> popular, what sense would it make to support everything from X86
-> servers to embedded ARM but rule out X86 tablets? Especially when
-> hybrid laptop/tablet designs are becoming more popular as well. The
-> same touchscreen device used for pure tablets may be used for hybrid
-> models tomorrow.
-
-I suppose it depends what you mean by support. If you mean have one kernel that
-runs on everything from embedded dev boards to HPC, I think you'll find that to
-be an untenable goal. In my time maintaining the Yocto Project BSPs for Intel,
-it is still the case that embedded systems prefer to run more tailored kernels.
-We tried to reduce that change as much as possible on IA, by at least building
-from the same source branch, but ultimately, people want to change configuration
-options on embedded systems.
-
+>   - two modules, one driver in each: the original cleanup approach I
+>     have been targeting in all of my patch series for fujitsu-laptop,
 > 
-> This is one of the reasons why modular drivers are a must. If we enable
-> them when we shouldn't have, the cost stays low. Of course it would be
-> better if we could just enable what we really need, but in practice
-> this is terribly hard to achieve. This is also the reason why I am
-> actively promoting the mentioning of intended target hardware on new
-> drivers, to limit the risks of us enabling drivers on kernels that
-> don't need it.
+>   - one module, one driver handling both ACPI devices: the new approach
+>     you suggested in your review.
 > 
-
-This works great for Desktops and Datacenters, but it doesn't hold up very long
-in discussions with the more embedded and special purpose device space. 
-
-> > (...)
-> > While the default for Kconfig is n if not explicitly set to m or y, perhaps
-> > "default n" should be added to TOUCHSCREEN_SILEAD and SILEAD_DMI to make it more
-> > explicit. I don't know if there is an official preference on "default n"
-> > statements or not.
+> I have not considered the last option until now as I deemed it
+> unacceptable in light of the kernel's philosophy in this regard.
+> However, such an approach might not be bad in and of itself, because:
 > 
-> I wondered before as well. But given that n is the default default, and
-> an explicit default is not listed by "make config" nor "make
-> menuconfig", I can't see the value of "default n". It makes no
-> difference for the user. In fact my never-ending project list has a
-> point "Kconfig: kill all default n and add a test to checkpatch so they
-> don't come back". Chances that I get to that one before retirement are
-> low though.
+>   - FUJ02B1 is not fully standalone as it needs FUJ02E3 on some models,
 
-:-) Agreed on all points
+This to me is a fairly strong indication that migrating to the "one module
+one driver" approach is worthwhile considering.  If we do split we will end
+up with two modules interacting with FUJ02E3, at least on some hardware. 
+Conceptually it makes more sense to me that all interaction with FUJ02E3 is
+instigated from one module/driver as it will make it easier to ensure that
+minipulations of FUJ02E3 for one task don't have unintended side effects for
+others.
 
-> 
-> I am not convinced that a default value for a device driver makes any
-> sense in the first place. If you don't need support for the device, you
-> don't enable the driver, period. I can't see how a default answer can
-> be relevant. In this specific case, the default answer should be n if
-> not building a kernel for tablets. But would become y if building a
-> kernel for tablets. What reason would there be to favor one scenario
-> over the other?
+>   - FUJ02E3 is present in all models we know of, while FUJ02B1 seems to
+>     be phased out in newer models,
 
-The liklihood of use is the most compelling argument. e1000 is very likely to be
-used relative to silead-touchscreen, for example. If it's highly specialized, it
-should typically be default n (or not default y|m as discussed above). Of course
-people like you ultimately are on the hook to make that call.
+Agreed.  Furthermore, if FUJ02E3 is phased out it is reasonable to expect
+that any platform driver required by the resulting hardware would be so
+different to fujitsu-laptop that a new driver would be needed anyway.
 
-> 
-> I believe default values are only useful for driver feature options,
-> general kernel configuration options, or automatic selection of hidden
-> options.
+>   - userspace is unlikely to care which input device each hotkey event
+>     comes from,
 
-I can see that view, especiacally coming from your position.
+Agreed.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+>   - the memory footprint of both drivers is negligible, considering that
+>     both are only loaded on machines with hundreds of MB of RAM.
+
+Agreed.
+
+> So we could perhaps make fujitsu-laptop register _one_ ACPI driver,
+> which binds to the FUJ02E3 device and only deals with backlight when the
+> FUJ02B1 device is present and the vendor interface is either
+> automatically selected by the kernel or explicitly requested by the
+> user.  We would then have a single device-specific structure ("priv"
+> would not be ambiguous any more) holding two ACPI handles ("fjex_handle"
+> and "fext_handle"?) and all the other fields from both struct fujitsu_bl
+> and struct fujitsu_laptop.
+
+Yes, these are the kinds of benefits I was thinking about.
+
+> Please note that I have not played with this idea in code yet and perhaps
+> handling the added complexity will make the driver more, not less,
+> convoluted.
+
+I understand.  Since FUJ02B1 is only relevant to the backlight I can't see
+how the above approach would result in a signficant increase in complexity,
+but like you I haven't had a close look at the implications.
+
+> Darren, does the above sound more like a viable plan or rather a pipe
+> dream?  Answering Jonathan's question, there is no added benefit from
+> splitting fujitsu-laptop into two separate modules, it is only about
+> following the "one module, one driver" philosophy.  Any answer to this
+> question puts the variable naming discussion on a specific track, so
+> perhaps this is the first dilemma that we should sort out.
+
+I agree.  We should resolve the question of the split/no-split option first
+since the answer does influence many of the other pending questions. 
+
+Darren: I would therefore be interested in your take on the three options
+(as summarised by Michael) so we can determine a way forward.
+
+Regards
+  jonathan
