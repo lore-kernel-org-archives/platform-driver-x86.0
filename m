@@ -1,17 +1,17 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH 1/5] PCI: add a define for the PCI resource type mask
-Date: Thu,  4 May 2017 11:31:06 +0200
-Message-ID: <1493890270-1188-2-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH 4/5] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models 30h-3fh) Processors v3
+Date: Thu,  4 May 2017 11:31:09 +0200
+Message-ID: <1493890270-1188-5-git-send-email-deathsimple@vodafone.de>
 References: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:48233 "EHLO
+Received: from pegasos-out.vodafone.de ([80.84.1.38]:48252 "EHLO
         pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751476AbdEDJbR (ORCPT
+        with ESMTP id S1751870AbdEDJbT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 May 2017 05:31:17 -0400
+        Thu, 4 May 2017 05:31:19 -0400
 In-Reply-To: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -19,87 +19,96 @@ To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kern
 
 From: Christian König <christian.koenig@amd.com>
 
-We use this mask multiple times in the bus setup.
+Most BIOS don't enable this because of compatibility reasons.
+
+Manually enable a 64bit BAR of 64GB size so that we have
+enough room for PCI devices.
+
+v2: style cleanups, increase size, add resource name, set correct flags,
+    print message that windows was added
+v3: add defines for all the magic numbers, style cleanups
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/pci/pci.h       |  3 +++
- drivers/pci/setup-bus.c | 14 +++++---------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ arch/x86/pci/fixup.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 4518562..3868828 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -6,6 +6,9 @@
- 
- #define PCI_FIND_CAP_TTL	48
- 
-+#define PCI_RES_TYPE_MASK (IORESOURCE_IO | IORESOURCE_MEM | \
-+			   IORESOURCE_PREFETCH | IORESOURCE_MEM_64)
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 6d52b94..1c36ed6 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -571,3 +571,72 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
 +
- extern const unsigned char pcie_link_speed[];
- 
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f30ca75..bb1001e 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1532,8 +1532,6 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
- {
- 	struct pci_dev *dev = bus->self;
- 	struct resource *r;
--	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
--				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
- 	unsigned old_flags = 0;
- 	struct resource *b_res;
- 	int idx = 1;
-@@ -1576,7 +1574,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
- 	 */
- 	release_child_resources(r);
- 	if (!release_resource(r)) {
--		type = old_flags = r->flags & type_mask;
-+		type = old_flags = r->flags & PCI_RES_TYPE_MASK;
- 		dev_printk(KERN_DEBUG, &dev->dev, "resource %d %pR released\n",
- 					PCI_BRIDGE_RESOURCES + idx, r);
- 		/* keep the old size */
-@@ -1767,8 +1765,6 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	enum release_type rel_type = leaf_only;
- 	LIST_HEAD(fail_head);
- 	struct pci_dev_resource *fail_res;
--	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
--				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
- 	int pci_try_num = 1;
- 	enum enable_type enable_local;
- 
-@@ -1827,7 +1823,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	 */
- 	list_for_each_entry(fail_res, &fail_head, list)
- 		pci_bus_release_bridge_resources(fail_res->dev->bus,
--						 fail_res->flags & type_mask,
-+						 fail_res->flags &
-+						 PCI_RES_TYPE_MASK,
- 						 rel_type);
- 
- 	/* restore size and flags */
-@@ -1871,8 +1868,6 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 	LIST_HEAD(fail_head);
- 	struct pci_dev_resource *fail_res;
- 	int retval;
--	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
--				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
- 
- again:
- 	__pci_bus_size_bridges(parent, &add_list);
-@@ -1898,7 +1893,8 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 	 */
- 	list_for_each_entry(fail_res, &fail_head, list)
- 		pci_bus_release_bridge_resources(fail_res->dev->bus,
--						 fail_res->flags & type_mask,
-+						 fail_res->flags &
-+						 PCI_RES_TYPE_MASK,
- 						 whole_subtree);
- 
- 	/* restore size and flags */
++#define AMD_141b_MMIO_BASE(x)	(0x80 + (x) * 0x8)
++#define AMD_141b_MMIO_BASE_RE_MASK		BIT(0)
++#define AMD_141b_MMIO_BASE_WE_MASK		BIT(1)
++#define AMD_141b_MMIO_BASE_MMIOBASE_MASK	GENMASK(31,8)
++
++#define AMD_141b_MMIO_LIMIT(x)	(0x84 + (x) * 0x8)
++#define AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK	GENMASK(31,8)
++
++#define AMD_141b_MMIO_HIGH(x)	(0x180 + (x) * 0x4)
++#define AMD_141b_MMIO_HIGH_MMIOBASE_MASK	GENMASK(7,0)
++#define AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT	16
++#define AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK	GENMASK(23,16)
++
++static void pci_amd_enable_64bit_bar(struct pci_dev *dev)
++{
++	struct resource *res, *conflict;
++	u32 base, limit, high;
++	unsigned i;
++
++	for (i = 0; i < 8; ++i) {
++		pci_read_config_dword(dev, AMD_141b_MMIO_BASE(i), &base);
++		pci_read_config_dword(dev, AMD_141b_MMIO_HIGH(i), &high);
++
++		/* Is this slot free? */
++		if (!(base & (AMD_141b_MMIO_BASE_RE_MASK |
++			      AMD_141b_MMIO_BASE_WE_MASK)))
++			break;
++
++		base >>= 8;
++		base |= high << 24;
++
++		/* Abort if a slot already configures a 64bit BAR. */
++		if (base > 0x10000)
++			return;
++	}
++	if (i == 8)
++		return;
++
++	res = kzalloc(sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return;
++
++	res->name = "PCI Bus 0000:00";
++	res->flags = IORESOURCE_PREFETCH | IORESOURCE_MEM |
++		IORESOURCE_MEM_64 | IORESOURCE_WINDOW;
++	res->start = 0x100000000ull;
++	res->end = 0xfd00000000ull - 1;
++
++	/* Just grab the free area behind system memory for this */
++	while ((conflict = request_resource_conflict(&iomem_resource, res)))
++		res->start = conflict->end + 1;
++
++	dev_info(&dev->dev, "adding root bus resource %pR\n", res);
++
++	base = ((res->start >> 8) & AMD_141b_MMIO_BASE_MMIOBASE_MASK) |
++		AMD_141b_MMIO_BASE_RE_MASK | AMD_141b_MMIO_BASE_WE_MASK;
++	limit = ((res->end + 1) >> 8) & AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK;
++	high = ((res->start >> 40) & AMD_141b_MMIO_HIGH_MMIOBASE_MASK) |
++		((((res->end + 1) >> 40) << AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT)
++		 & AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK);
++
++	pci_write_config_dword(dev, AMD_141b_MMIO_HIGH(i), high);
++	pci_write_config_dword(dev, AMD_141b_MMIO_LIMIT(i), limit);
++	pci_write_config_dword(dev, AMD_141b_MMIO_BASE(i), base);
++
++	pci_bus_add_resource(dev->bus, res, 0);
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x141b, pci_amd_enable_64bit_bar);
 -- 
 2.7.4
