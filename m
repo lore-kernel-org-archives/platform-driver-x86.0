@@ -1,72 +1,35 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4] platform/x86: ideapad-laptop: Add sysfs interface for
- touchpad state
-Date: Wed, 3 May 2017 09:11:04 -0700
-Message-ID: <20170503161104.GA30927@fury>
-References: <20170217184756.15181-1-rrs@debian.org>
- <1487759058.9334.7.camel@debian.org>
- <CAHp75VcGYLSsnDgb_dzD0NVCK+aR6w7jZWfR+4nN-BfnAcdRWA@mail.gmail.com>
- <1493448775.9725.5.camel@debian.org>
- <CAHp75Vds7Vc3aJWpOO8uqo-y+PzUO+PNrhsjnHxGRs4WXt935A@mail.gmail.com>
- <1493822196.17987.3.camel@debian.org>
- <CAHp75Vefzv_1UdRyWVN3tCzTiPpWX616spNLbXoG=VEORuUyFA@mail.gmail.com>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple@vodafone.de>
+Subject: Re: [PATCH 2/4] PCI: add functionality for resizing resources v3
+Date: Thu, 4 May 2017 11:23:27 +0200
+Message-ID: <5a9a94f3-34b3-9484-a455-f5b2ee0b4d51@vodafone.de>
+References: <1493126394-1239-1-git-send-email-deathsimple@vodafone.de>
+ <1493126394-1239-3-git-send-email-deathsimple@vodafone.de>
+ <CAHp75VfSFBYgHRsX2JSH0zdSEW8VvXbNMVvBBsD9kKgzGr-v2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:58131 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751836AbdECQLH (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 May 2017 12:11:07 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vefzv_1UdRyWVN3tCzTiPpWX616spNLbXoG=VEORuUyFA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAHp75VfSFBYgHRsX2JSH0zdSEW8VvXbNMVvBBsD9kKgzGr-v2w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Ritesh Raj Sarraf <rrs@debian.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, helgaas@kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 03, 2017 at 05:42:02PM +0300, Andy Shevchenko wrote:
-> On Wed, May 3, 2017 at 5:36 PM, Ritesh Raj Sarraf <rrs@debian.org> wrote:
-> > Resending again, as Google servers are behaving weird lately.
-> >
-> > On Sun, 2017-04-30 at 15:54 +0300, Andy Shevchenko wrote:
-> >> > > the main issue that driver doesn't
-> >> > > send SW_TABLET_MODE event through input device.
-> >> >
-> >> > Well. Yes. That is one part. If SW_TABLET_MODE is done in the driver, much
-> >> > better. My patch was simply in line with some of the other drivers (hp-wmi
-> >> > and
-> >> > thinkpad_acpi) to get it working for Lenovo Yoga series.
-> >>
-> >> sysfs ABI for drivers that provide input interface is quite strong for
-> >> my opinion. It means I'm not totally objecting, but I would accept it
-> >> if and only if there is nothing else could be done.
-> >
-> > The need we have in the user application is for read-only access.
-> 
-> I does not matter at all! You are proposing a part of ABI which will
-> be closer to what is "carved in stone". Here is the problem.
-> 
-> So, I'm really trying hard to get avoid such "small things" which
-> would make our lives quite hard in long term prospective while fixing
-> short-term issues in a good will.
-> 
-> Please, consider to do it better. For now I didn't hear any proof that
-> there is no other way to achieve your goal.
-
-I spent a day with the Lenovo Yoga 2 11 I have available, and have not yet found
-a reliable means of detecting the tablet mode (reverse engineering these things
-isn't something I'm expert at though). I've reached out to the original author
-for some context, but that didn't lead to any revelations as of yet.
-
-Ultimately, this sysfs attribute is no better or worse than others that exist in
-our tree. So until we can provide a better solution, we do need to be careful
-to not inadvertently favor one laptop driver over another while seeking to avoid
-sysfs stable API issues.
-
-I do think we need to start distinguishing between core kernel userspace
-interfaces and leaf node driver sysfs attributes.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+QW0gMjYuMDQuMjAxNyB1bSAxOTowMCBzY2hyaWViIEFuZHkgU2hldmNoZW5rbzoKPiBbU05JUF0K
+Pj4gKyAgICAgICB3aGlsZSAoMSkgewo+IFRoaXMgcmFpc2VzIHJlZCBmbGFnLiBDYXJlIHRvIHJl
+ZmFjdG9yPwo+IEFsc28gZG8ge30gd2hpbGUgKCkgc3ludGF4IGFsbG93cyBmYXN0ZXIgdG8gZ2V0
+IHRoYXQgdGhlIGxvb3AgYm9keQo+IGdvZXMgYXQgbGVhc3Qgb25jZS4KCkkndmUgdHJpZWQgdG8g
+cmVmYWN0b3IgdGhpcywgYnV0IGNvdWxkbid0IGNvbWUgdXAgd2l0aCBzb21ldGhpbmcgd2hpY2gg
+CndvcmtzIGFuZCBpcyByZWFkYWJsZSBhdCB0aGUgc2FtZSB0aW1lLgoKQW55IHN1Z2dlc3Rpb24g
+aG93IHRoaXMgc2hvdWxkIGxvb2sgbGlrZT8KCkNocmlzdGlhbi4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
