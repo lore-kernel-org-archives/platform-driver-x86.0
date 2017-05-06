@@ -1,52 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead of
- module-wide globals
-Date: Sat, 6 May 2017 17:23:06 +0300
-Message-ID: <CAHp75VdYqK4QnncCHeiTWqaERtzJeLO+MWTEMXL9hbqaEX0USg@mail.gmail.com>
-References: <20170424133334.7064-1-kernel@kempniu.pl> <20170501130536.GA25546@marvin.atrad.com.au>
- <20170502132144.GA6808@ozzy.nask.waw.pl> <20170504234058.GC21562@marvin.atrad.com.au>
- <20170505161556.GC4793@fury> <20170506123107.GA2516@kmp-mobile.hq.kempniu.pl>
- <20170506124516.GA1075@kmp-mobile.hq.kempniu.pl> <CAHp75VdPd_5tBCggknRFkirGN1Z5h0LLoq-DazuHwxcY-=AjHQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Geliang Tang <geliangtang@gmail.com>
+Subject: [PATCH] platform/x86: toshiba_acpi: use memdup_user_nul
+Date: Sat,  6 May 2017 23:40:19 +0800
+Message-ID: <fac5b29b1e0ced6836e41c58f86da08ec523cc42.1493779654.git.geliangtang@gmail.com>
+References: <6baf3aa45d0b5e0fd016b508bac905ebf8443aac.1493779294.git.geliangtang@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f176.google.com ([209.85.220.176]:35277 "EHLO
-        mail-qk0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750995AbdEFOXI (ORCPT
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:34923 "EHLO
+        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753350AbdEFPkk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2017 10:23:08 -0400
-In-Reply-To: <CAHp75VdPd_5tBCggknRFkirGN1Z5h0LLoq-DazuHwxcY-=AjHQ@mail.gmail.com>
+        Sat, 6 May 2017 11:40:40 -0400
+In-Reply-To: <6baf3aa45d0b5e0fd016b508bac905ebf8443aac.1493779294.git.geliangtang@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Geliang Tang <geliangtang@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, May 6, 2017 at 5:21 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, May 6, 2017 at 3:45 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
-niu.pl> wrote:
->
->> To be fair, one thing that may be "unnatural" with this approach is that
->> even though fujitsu-backlight would depend on fujitsu-laptop, it would
->> still have to get a handle to FUJ02E3 using:
->>
->>     acpi_get_handle(NULL, "\\_SB.FEXT", ...)
->>
->> because call_fext_func() - and thus fext_backlight() - needs to be
->> passed a handle to FUJ02E3 and the two ACPI devices (FUJ02B1 handled by
->> fujitsu-backlight and FUJ02E3 handled by fujitsu-laptop) are not related
->> from the perspective of the ACPI device hierarchy.  Unless there is a
->> better way of implementing this, in which case I am open to suggestions.
->
-> There are two areas to check with:
-> 1. Remote graph node
-> https://lwn.net/Articles/718184/
-> 2. Component framework (only works in case when all devices are
-> mandatory to have).
+Use memdup_user_nul() helper instead of open-coding to simplify the
+code.
 
-Ah, and third one is MFD framework.
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index d0daf75..88f9f79 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1502,14 +1502,9 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 	int ret;
+ 	u32 video_out;
+ 
+-	cmd = kmalloc(count + 1, GFP_KERNEL);
+-	if (!cmd)
+-		return -ENOMEM;
+-	if (copy_from_user(cmd, buf, count)) {
+-		kfree(cmd);
+-		return -EFAULT;
+-	}
+-	cmd[count] = '\0';
++	cmd = memdup_user_nul(buf, count);
++	if (IS_ERR(cmd))
++		return PTR_ERR(cmd);
+ 
+ 	buffer = cmd;
+ 
+-- 
+2.9.3
