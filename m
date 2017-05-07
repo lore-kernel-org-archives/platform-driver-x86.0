@@ -1,37 +1,57 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 1/1] thinkpad_acpi: Add support for status (external
- cover) LED
-Date: Sun, 7 May 2017 20:49:03 -0300
-Message-ID: <20170507234903.GA15137@khazad-dum.debian.net>
-References: <20170119172132.36029-1-agoode@google.com>
- <20170507163812.GA14896@xo-6d-61-c0.localdomain>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: Resizeable PCI BAR support v5
+Date: Sun, 7 May 2017 13:50:07 +0300
+Message-ID: <CAHp75VcrKTirCH6gHj1DoLzz5JhfzpvVb34M9e5-OQOjO4Mymw@mail.gmail.com>
+References: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55597 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751270AbdEGXtM (ORCPT
+Received: from mail-qk0-f173.google.com ([209.85.220.173]:36791 "EHLO
+        mail-qk0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751629AbdEGX4l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 May 2017 19:49:12 -0400
-Content-Disposition: inline
-In-Reply-To: <20170507163812.GA14896@xo-6d-61-c0.localdomain>
+        Sun, 7 May 2017 19:56:41 -0400
+In-Reply-To: <1493890270-1188-1-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Adam Goode <agoode@google.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Sun, 07 May 2017, Pavel Machek wrote:
-> On Thu 2017-01-19 12:21:32, Adam Goode wrote:
-> > This allows the control of the red status LED, which is the dot of the "i"
-> > in the word "ThinkPad" on the outside cover of newer models.
-> > 
-> > In the manual, both this LED and the power LED are referred to as
-> > the "system-status indicators" without distinction between the two, so
-> > I chose "status" as the LED name.
-> 
-> Could we name it something like external_status or something? "status" is way too generic.
+On Thu, May 4, 2017 at 12:31 PM, Christian K=C3=B6nig
+<deathsimple@vodafone.de> wrote:
+> Hi everyone,
+>
+> this is the fifth incarnation of this set of patches. It enables device
+> drivers to resize and most likely also relocate the PCI BAR of devices
+> they manage to allow the CPU to access all of the device local memory at =
+once.
+>
+> This is very useful for GFX device drivers where the default PCI BAR is o=
+nly
+> about 256MB in size for compatibility reasons, but the device easily have
+> multiple gigabyte of local memory.
+>
+> Noteable changed compared to v4:
+> 1. Patch #1 is new and a minor cleanup to the PCI code.
+> 2. Some more helpers added to patch #2
+> 3. We now print a note to syslog before releasing resources.
+> 4. Add defines for registers and bits used to add new root hub window.
+>
+> I've addressed mostly every review comment I've got so far and it looks l=
+ike we
+> are getting closer to landing this. Any more suggestions/hints how we cou=
+ld
+> improve the patchset would be very welcome.
+>
 
-"thinkdot" ;-)
+Thanks for an update.
 
--- 
-  Henrique Holschuh
+I'm going to comment individual patches.
+
+Just for the future, please use versioning in the patches themselves
+(hint: -vX to git-format-patch).
+
+--=20
+With Best Regards,
+Andy Shevchenko
