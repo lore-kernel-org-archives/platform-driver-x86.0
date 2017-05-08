@@ -1,11 +1,8 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Mon, 8 May 2017 18:26:53 +0000
-Message-ID: <27661c9222e2452aa78ab1d1c1cd9015@ausx13mpc120.AMER.DELL.COM>
-References: <201704191854.51783@pali>
- <4e3e507b116443298427002c5aafed7f@ausx13mpc120.AMER.DELL.COM>
- <20170420131431.GM18887@pali> <20170420204436.GC3209@fury>
- <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: RFC: WMI Enhancements
+Date: Mon, 8 May 2017 12:09:00 -0700
+Message-ID: <20170508190900.GF17700@fury>
+References: <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
  <20170505234436.GB25865@fury>
  <beb9a835eaf243fab151627e919eccf3@ausx13mpc120.AMER.DELL.COM>
  <CALCETrUgPgk7uVdYx4zJzXQHpk5zALmzSp3Zcz9+FPAe6bA5LQ@mail.gmail.com>
@@ -14,29 +11,44 @@ References: <201704191854.51783@pali>
  <20170508154725.GD17700@fury>
  <CAHp75VdZrdBMGLcXoZhsjd14jbDaYMikThon6hC-s3fWsGb0ug@mail.gmail.com>
  <CAOg5c--wkQgvsmhTynAKyG9iWaHjRWC5Z+MXzVJVw66vxSz4Zw@mail.gmail.com>
+ <27661c9222e2452aa78ab1d1c1cd9015@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAOg5c--wkQgvsmhTynAKyG9iWaHjRWC5Z+MXzVJVw66vxSz4Zw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: a.bokovoy@gmail.com, andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <27661c9222e2452aa78ab1d1c1cd9015@ausx13mpc120.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: a.bokovoy@gmail.com, andy.shevchenko@gmail.com, luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-KFJlc3BvbmRpbmcgYXMgcGxhaW4gdGV4dCwgeW91ciBlbWFpbCBwcm9iYWJseSBnb3QgcHVudGVk
-IGZyb20gdGhlIE1MIGZyb20gYmVpbmcgSFRNTCkNCg0KPg0KPiAuLi4NCj4NCj4gSSdtIG5vdCBz
-dXJlIHdoYXQgeW91IGFyZSBhc2tpbmcgYWJvdXQuIFNhbWJhIGRvZXMgbm90IGRlYWwgd2l0aCBX
-TUkgYXQgYWxsLiBUaGUgc3RhdGUgb2YgYWZmYWlycyBpcyANCj4gZXhwbGFpbmVkIGF0IGh0dHBz
-Oi8vcG93ZXJzaGVsbC5vcmcvMjAxNS8wNC8yNC9tYW5hZ2VtZW50LWluZm9ybWF0aW9uLXRoZS1v
-bWljaW13bWltaWRtdGYtZGljdGlvbmFyeS8gDQo+IC0tIG9sZCBXTUkgKERDT00vUlBDLWJhc2Vk
-KSBpcyBkZXByZWNhdGVkLCBuZXcgV01JIGJhc2VkIG9uIFdTLU1BTiBpcyBzdXBwb3J0ZWQgYW5k
-IE9NSSBpcyB0aGUgDQo+IGltcGxlbWVudGF0aW9uLiBXZSB1c2VkIHRvIGhhdmUgYSB2ZXJ5IGxp
-bWl0ZWQgYXR0ZW10IGF0IHdyaXRpbmcgRENPTSBzdGFjayBhbmQgbm9ib2R5IHdvcmtlZCBvbg0K
-PiBpdCBmb3IgeWVhcnMgc28gaXQgZ290IHJlbW92ZWQuDQoNClRoYW5rcyEgIFRoYXQgd2FzIGEg
-dmVyeSBpbnRlcmVzdGluZyByZWFkLg0KDQo+IE1pY3Jvc29mdCBoYXMgYWxyZWFkeSBwdWJsaXNo
-ZWQgYSBNT0YgcGFyc2VyIGFzIHBhcnQgb2YgT01JIHdvcms6IGh0dHBzOi8vZ2l0aHViLmNvbS9N
-aWNyb3NvZnQvb21pLyANCj4gdW5kZXIgTUlUIGxpY2Vuc2UuDQoNClVuZm9ydHVuYXRlbHkgdGhh
-dCdzIGV4cGVjdGluZyB0ZXh0IE1PRiwgbm90IHRoaXMgaW50ZXJtZWRpYXJ5IGNvbXBpbGVkIGZv
-cm1hdC4NCg0K
+On Mon, May 08, 2017 at 06:26:53PM +0000, Mario.Limonciello@dell.com wrote:
+> (Responding as plain text, your email probably got punted from the ML from being HTML)
+> 
+> >
+> > ...
+> >
+> > I'm not sure what you are asking about. Samba does not deal with WMI at all. The state of affairs is 
+> > explained at https://powershell.org/2015/04/24/management-information-the-omicimwmimidmtf-dictionary/ 
+> > -- old WMI (DCOM/RPC-based) is deprecated, new WMI based on WS-MAN is supported and OMI is the 
+> > implementation. We used to have a very limited attemt at writing DCOM stack and nobody worked on
+> > it for years so it got removed.
+> 
+> Thanks!  That was a very interesting read.
+> 
+> > Microsoft has already published a MOF parser as part of OMI work: https://github.com/Microsoft/omi/ 
+> > under MIT license.
+> 
+> Unfortunately that's expecting text MOF, not this intermediary compiled format.
+> 
+
+I presume which of these to use is the decision of the vendor? Is there a
+transition going on from BMOF to Text MOF? Or will both be part of products for
+the near term?
+
+I'm trying to understand if BMOF is a legacy thing now, or if it will continue
+to be used in new designs.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
