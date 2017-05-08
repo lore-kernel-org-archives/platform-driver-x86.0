@@ -1,209 +1,113 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: peaq-wmi: Add new peaq-wmi driver
-Date: Mon, 8 May 2017 14:04:41 -0700
-Message-ID: <20170508210441.GG17700@fury>
-References: <20170508195631.2704-1-hdegoede@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: RFC: WMI Enhancements
+Date: Mon, 8 May 2017 21:18:11 +0000
+Message-ID: <77e4e46f58354e10874ed0515f514fc2@ausx13mpc120.AMER.DELL.COM>
+References: <20170412230854.GA11963@fury> <201705081917.34242@pali>
+ <c073b5f67d1e495481613711753356ba@ausx13mpc120.AMER.DELL.COM>
+ <201705082259.51850@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:56944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752172AbdEHVEo (ORCPT
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:26987 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750954AbdEHVSO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 May 2017 17:04:44 -0400
-Content-Disposition: inline
-In-Reply-To: <20170508195631.2704-1-hdegoede@redhat.com>
+        Mon, 8 May 2017 17:18:14 -0400
+In-Reply-To: <201705082259.51850@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-On Mon, May 08, 2017 at 09:56:31PM +0200, Hans de Goede wrote:
-> PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
-> devices, which is actually quite a nice device. Under Windows it has
-> Dolby software for "better" sound and you can select different equalizer
-> presets using a special button.
-> 
-> This WMI interface for this button is not really nice, as it does not do
-> notifies (it really does not I tripple checked), but since I had already
-> figured out the entire WMI interface for this I decided to go the full
-> mile anyways and also implent a WMI based input driver for this using
-> input_polldev since, well, we need to poll.
-> 
-> This commit adds support for this button making it report KEY_SOUND input
-> events. KEY_SOUND is already used in various places to switch sound into
-> theatre mode and things like that so it seems appropriate here.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-
-Thanks Hans,
-
-A couple nits below, otherwise, looks good to me.
-
-+Dmitry in case he cares to weigh in on input/input-polldev usage
-
-> ---
->  drivers/platform/x86/Kconfig    |  7 +++
->  drivers/platform/x86/Makefile   |  1 +
->  drivers/platform/x86/peaq-wmi.c | 94 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 102 insertions(+)
->  create mode 100644 drivers/platform/x86/peaq-wmi.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index be2ffbd6eb6c..2bac2b2644f9 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -660,6 +660,13 @@ config MSI_WMI
->  	 To compile this driver as a module, choose M here: the module will
->  	 be called msi-wmi.
->  
-> +config PEAQ_WMI
-> +	tristate "PEAQ 2-in-1 WMI hotkey driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-> +
->  config TOPSTAR_LAPTOP
->  	tristate "Topstar Laptop Extras"
->  	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index de4ffb594ba5..02487f95dd27 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
->  obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
->  obj-$(CONFIG_ACPI_WMI)		+= wmi.o
->  obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
-> +obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
->  obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
->  obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
->  
-> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> new file mode 100644
-> index 000000000000..8cd6b962ce5e
-> --- /dev/null
-> +++ b/drivers/platform/x86/peaq-wmi.c
-> @@ -0,0 +1,94 @@
-> +/*
-> + * PEAQ 2-in-1 WMI hotkey driver
-> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/input.h>
-
-input-polldev includes input, no need for both.
-
-> +#include <linux/input-polldev.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +
-> +#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
-> +#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
-> +#define PEAQ_POLL_INTERVAL_MS		250
-> +
-> +MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
-> +
-> +struct input_polled_dev *peaq_poll_dev;
-> +int peaq_ignore_events_counter;
-
-Please make local globals static if they are needed.
-
-Once we make WMI a bus with devices, we should be able to clean this up with
-devm.
-
-> +
-> +/*
-> + * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
-> + * set on both press and release. The WMI method checks and clears that flag.
-> + * So for a press + release we will get back One from the WMI method either once
-> + * (if polling after the release) or twice (polling between press and release).
-> + * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
-> + */
-> +static void peaq_wmi_poll(struct input_polled_dev *dev)
-> +{
-> +	union acpi_object obj;
-> +	struct acpi_buffer buffer = { sizeof(obj), &obj };
-> +	acpi_status status;
-> +
-> +	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
-> +				     PEAQ_DOLBY_BUTTON_METHOD_ID,
-> +				     NULL, &buffer);
-> +	if (ACPI_FAILURE(status))
-> +		return;
-> +
-> +	if (obj.type != ACPI_TYPE_INTEGER) {
-> +		dev_err(&peaq_poll_dev->input->dev,
-> +			"Error WMBC did not return an integer\n");
-> +		return;
-> +	}
-> +
-> +	if (peaq_ignore_events_counter && --peaq_ignore_events_counter > 0)
-> +		return;
-> +
-> +	if (obj.integer.value) {
-> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
-> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
-> +		input_sync(peaq_poll_dev->input);
-> +		peaq_ignore_events_counter = 500 / peaq_poll_dev->poll_interval;
-
-Might as well define 500 above with the interval and keep these parameters
-together, keep the units obvious, etc. e.g.
-
-#define PEAQ_POLL_IGNORE_MS 500
-
-Or similar
-
-> +	}
-> +}
-> +
-> +static int __init peaq_wmi_init(void)
-> +{
-> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-> +		return -ENODEV;
-> +
-> +	peaq_poll_dev = input_allocate_polled_device();
-> +	if (!peaq_poll_dev)
-> +		return -ENOMEM;
-> +
-> +	peaq_poll_dev->poll = peaq_wmi_poll;
-> +	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
-> +	peaq_poll_dev->poll_interval_max = 1000; /* 1 second */
-> +	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
-
-Are there additional keys/buttons?
-
-> +	peaq_poll_dev->input->phys = "wmi/input0";
-> +	peaq_poll_dev->input->id.bustype = BUS_HOST;
-> +	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
-> +
-> +	return input_register_polled_device(peaq_poll_dev);
-> +}
-> +
-> +static void __exit peaq_wmi_exit(void)
-> +{
-> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-> +		return;
-> +
-> +	input_unregister_polled_device(peaq_poll_dev);
-> +}
-> +
-> +module_init(peaq_wmi_init);
-> +module_exit(peaq_wmi_exit);
-> +
-> +MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
-> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.12.2
-> 
-> 
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIE1heSA4LCAyMDE3IDQ6MDAg
+UE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+
+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgcmp3QHJqd3lzb2NraS5uZXQ7IGx1dG9AYW1h
+Y2FwaXRhbC5uZXQ7DQo+IGxlbi5icm93bkBpbnRlbC5jb207IGNvcmVudGluLmNoYXJ5QGdtYWls
+LmNvbTsgbHV0b0BrZXJuZWwub3JnOw0KPiBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5j
+b207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBsYXRmb3JtLQ0KPiBkcml2ZXIteDg2
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
+OiBSRkM6IFdNSSBFbmhhbmNlbWVudHMNCj4gDQo+IE9uIE1vbmRheSAwOCBNYXkgMjAxNyAyMToy
+MTo0NSBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRvOnBhbGkucm9o
+YXJAZ21haWwuY29tXQ0KPiA+ID4gU2VudDogTW9uZGF5LCBNYXkgOCwgMjAxNyAxMjoxOCBQTQ0K
+PiA+ID4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+
+DQo+ID4gPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBsdXRv
+QGFtYWNhcGl0YWwubmV0Ow0KPiA+ID4gbGVuLmJyb3duQGludGVsLmNvbTsgY29yZW50aW4uY2hh
+cnlAZ21haWwuY29tOyBsdXRvQGtlcm5lbC5vcmc7DQo+ID4gPiBhbmRyaXkuc2hldmNoZW5rb0Bs
+aW51eC5pbnRlbC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBwbGF0
+Zm9ybS0gZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9y
+Zw0KPiA+ID4gU3ViamVjdDogUmU6IFJGQzogV01JIEVuaGFuY2VtZW50cw0KPiA+ID4NCj4gPiA+
+IE9uIEZyaWRheSAwNSBNYXkgMjAxNyAyMzo1NTo0NiBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNv
+bSB3cm90ZToNCj4gPiA+ID4gVW5mb3J0dW5hdGVseSB0aGUgTU9GIGRhdGEgdGhhdCBjb21lcyBv
+dXQgb2Ygd21pLW1vZiBpcyBzbyBjYWxsZWQNCj4gPiA+ID4gIkJpbmFyeSBNT0YiIHdoaWNoIGhh
+cyBiZWVuIHByZS1jb21waWxlZCB0byBhbiBpbnRlcm1lZGlhdGUNCj4gPiA+ID4gZm9ybWF0IHdp
+dGggbW9mY29tcC5leGUgb24gV2luZG93cy4gVGhlIGZvcm1hdCBvZiBiaW5hcnkgTU9GIGlzDQo+
+ID4gPiA+IG5vdCBkb2N1bWVudGVkIGFuZCB0aGUgb25seSBrbm93biB3YXkgdG8gZ2V0IHRleHQg
+bW9mIGJhY2sgb3V0DQo+ID4gPiA+IGlzIGJ5IHVzaW5nIG1vZmNvbXAuZXhlIHdpdGggc29tZSBl
+c290ZXJpYyBhcmd1bWVudHMuDQo+ID4gPiA+DQo+ID4gPiA+IG1vZmNvbXAuZXhlIC1NT0Y6cmVj
+b3ZlcmVkLm1vZiAtTUZMOm1zXzQwOS5tb2YgLUFtZW5kbWVudDpNU180MDkNCj4gPiA+ID4gYmlu
+YXJ5X21vZl9maWxlDQo+ID4gPg0KPiA+ID4gTG9va3MgbGlrZSB0aGF0IGJpbmFyeSBNT0YgZmls
+ZSBoYXMgIndlbGwta25vd24iIGZpbGUgZXh0ZW5zaW9uDQo+ID4gPiAuYm1mLiBGaWxlIGl0c2Vs
+ZiBzdGFydHMgd2l0aCBtYWdpYyBoYWRlciAiRk9NQiIgd2hpY2ggaXMgaW4NCj4gPiA+IHJldmVy
+c2UgQk1PRiAoYmluYXJ5IG1vZikuIEJ1dCBJIHdhcyBub3QgYWJsZSB0byBmaW5kIGFueQ0KPiA+
+ID4gc3BlY2lmaWNhdGlvbiBub3IgYW55IG90aGVyIGRldGFpbHMuIEFzIHRoaXMgYmluYXJ5IGZv
+cm1hdCBpcw0KPiA+ID4gZGF0ZWQgYmFjayB0byBXaW45eCBJIGd1ZXNzIGRhdGEgd291bGQgY29t
+cHJlc3NlZCBieSBzb21lIG9sZCBNUw0KPiA+ID4gY29tcHJlc3Npb24gYWxnb3JpdGhtIChDQUI/
+KS4NCj4gPg0KPiA+IEFjdHVhbGx5IGNvbXBhcmluZyBhIGNvdXBsZSBvZiBiaW5hcnkgTU9GIGZp
+bGVzIHRoZSBmaXJzdCA4IGxvb2sgbGlrZQ0KPiA+IHRoZSBoZWFkZXIgdG8gbWUuDQo+ID4NCj4g
+PiAweDQ2LCAweDRmLCAweDRkLCAweDQyLCAweDAxLCAweDAwLCAweDAwLCAweDAwDQo+ID4NCj4g
+PiBPbiBhIGNvbXBpbGVkIERlbGwgYmluYXJ5IE1PRiB0aGUgbmV4dCBhcmU6DQo+ID4NCj4gPiAw
+eGVkLCAweDA0LCAweDAwLCAweDAwLA0KPiA+DQo+ID4gVGhpcyBsb29rcyBsaWtlIHRoZSBzaXpl
+IG9mIHRoZSByZW1haW5pbmcgZGF0YSBhZnRlciB0YWtpbmcgb3V0IDE2DQo+ID4gZm9yIHRoZSBo
+ZWFkZXJzIDRlZCA9IDEyNjENCj4gPiBUb3RhbCBzaXplIGlzIDEyNzcNCj4gPg0KPiA+IDB4ZDgs
+IDB4MTUsIDB4MDAsIDB4MDANCj4gPiBNYXliZSBhIGNoZWNrc3VtPw0KPiA+DQo+ID4gQnV0IHRo
+YXQgZmlyc3QgMTYgYnl0ZXMgZG9lcyBsb29rIGxpa2UgdGhlIGhlYWRlciBzdHJ1Y3R1cmUgdG8g
+bWUuDQo+IA0KPiBHb29kIGNhdGNoISBZb3VyIG9ic2VydmF0aW9uIGZvciBmaXJzdCAxMiBieXRl
+cyBwYXNzZXMgYWxzbyBmb3IgbXkNCj4gY2hlY2tzLg0KPiANCj4gTmV4dCA0IGJ5dGVzIChhZnRl
+ciBwb3NzaWJsZSBjaGVja3N1bSkgYXQgMHgxMCBhcmUgYWx3YXlzIHNhbWU6DQo+IDB4NDQgMHg1
+MyAweDAwIDB4MDEuDQo+IA0KPiBBbmQgSSBndWVzcyB0aGlzIHNob3VsZCBiZSBjb21wcmVzc2lv
+biBoZWFkZXIuIEluIHRpbWUgb2YgV2luOXgNCj4gTWljcm9zb2Z0IGhhZCBvd24gbm9uLXN0YW5k
+YXJkIGNvbXByZXNzaW9uIGZvciBkaXNrcyBjYWxsZWQgRG91YmxlU3BhY2UuDQo+IElJUkMgaXQg
+d2FzIHNvbWUgbW9kaWZpY2F0aW9uIG9mIExaNzcgYWxnb3JpdGhtLiBBbmQgMHg0NCAweDUzIDB4
+MDAgMHgwMQ0KPiBpcyBEUzAxLiBNYXliZSBpdCBpcyByZWFsbHkgRG91YmxlU3BhY2UgY29tcHJl
+c3Npb24gdXNlZCBmb3IgYmluYXJ5IE1PRj8NCj4gDQo+IEknbSBnb2luZyB0byBmaW5kIHNwZWNp
+ZmljYXRpb24gb2YgdGhhdCBvbGQgY29tcHJlc3Npb24gYWxnb3JpdGhtLi4uDQo+IA0KNDQgNTMg
+bG9va3MgcHJvbWlzaW5nIHRvIGJlIHF1YW50dW0gY29tcHJlc3Npb24uDQpodHRwczovL2VuLndp
+a2lwZWRpYS5vcmcvd2lraS9RdWFudHVtX2NvbXByZXNzaW9uDQoNClRoYXTigJlzIGFsc28gd2hh
+dCAnZmlsZScgbWFnaWMgZGV0ZWN0cyBmcm9tIGl0IHRvby4NCiQgZmlsZSBtb2Yuc3RyaXBwZWQg
+DQptb2Yuc3RyaXBwZWQ6IFF1YW50dW0gYXJjaGl2ZSBkYXRhDQoNCj4gPiA+IE1vcmVvdmVyIHZp
+YSB0b29sIHdtaW9mY2suZXhlIGl0IGlzIHBvc3NpYmxlIHRvIGdlbmVyYXRlIGhlYWRlcg0KPiA+
+ID4gZmlsZSBmb3INCj4gPiA+DQo+ID4gPiBXTUkgZHJpdmVyIGZyb20gYmluYXJ5IG1vZiBmaWxl
+Og0KPiA+ID4gICB3bWlvZmNrLmV4ZSAtaGZpbGUuaCAtbSAtdSBmaWxlLmJtZg0KPiA+ID4NCj4g
+PiA+IEFuZCB3aGF0IGlzIGludGVyZXN0aW5nIHRoYXQgaW4gdGhpcyBmaWxlIGFyZSBhbHNvIGNv
+bW1lbnRzIHdoaWNoDQo+ID4gPiBsb29rcyBsaWtlIGNvbWVzIGZyb20gdGhhdCBiaW5hcnkgbW9m
+IGZpbGUuDQo+ID4NCj4gPiBBaCBpbnRlcmVzdGluZy4gIFRoZSAiY29tbWVudHMiIHRoYXQgY29t
+ZSBvdXQgb2YgdGhhdCBhcmUgYWN0dWFsbHkNCj4gPiB3aGF0J3MgbWFwcGVkIHRvIHRoZSAiRGVz
+Y3JpcHRpb24iIGZpZWxkIGluIHRoZSBXTUkgcmVwb3NpdG9yeSB3aGVuDQo+ID4gdGhlIGJpbmFy
+eSBNT0YgaXMgbG9hZGVkLg0KPiA+DQo+ID4gVGhleSBhcmUgbm90IHRoZSBkZXZlbG9wZXIgY29t
+bWVudHMgdGhhdCB3ZXJlIHBsYWNlZCBpbiB0aGUgb3JpZ2luYWwNCj4gPiBNT0YgZGF0YS4gIEkg
+d291bGQgc3VwcG9zZSB0aG9zZSBhcmUgbG9zdCB3aGVuIGNvbXBpbGluZyB0byBiaW5hcnkNCj4g
+PiBNT0YuDQo+IA0KPiBIbS4uIHJpZ2h0IHRoZXkgYXJlIHByZXNlbnQgaW4gZGVjb21waWxlZCBN
+T0YgZmlsZSBpbiBEZXNjcmlwdGlvbiBmaWVsZC4NCj4gDQo+ID4gPiBXaGVuIEkgbG9va2VkIGlu
+dG8gb3V0cHV0IGZyb20gbW9mY29tcC5leGUgd2l0aCBhYm92ZSBhcmdzLCB0aGF0DQo+ID4gPiBN
+T0Ygb3V0cHV0IGRpZCBub3QgY29udGFpbiBjb21tZW50cywgc28gbG9va3MgbGlrZSB3ZSBzdGls
+bCBjYW4NCj4gPiA+IG1pc3Mgc29tZXRoaW5nLg0KPiA+ID4NCj4gPiA+IFNlZTogaHR0cDovL2Js
+b2cubmlldHJ6ZWJhLnBsLzIwMTEvMTIvbW9mLWRlY29tcGlsYXRpb24uaHRtbA0KPiA+DQo+ID4g
+QWN0dWFsbHkgSSBzZWUgd21pbW9mY2sgb3V0cHV0IHRvIGJlIG1pc3Npbmcgc29tZSBpbXBvcnRh
+bnQgYml0cy4NCj4gPiBGb3IgZXhhbXBsZSBvbiBhIERlbGwgc3lzdGVtIFlvdSdsbCBnZXQgYSBj
+bGFzcyBCRm4gZGVjbGFyZWQgZnJvbQ0KPiA+IG1vZmNvbXAgb3V0cHV0LCBidXQgbm90aGluZyBm
+cm9tIHdtaW1vZmNrIG91dHB1dC4NCj4gPg0KPiA+IFRoZSBtb3N0IGltcG9ydGFudCB0aGluZyB0
+aGF0IHlvdSdyZSByZWFsbHkgZ2V0dGluZyBvdXQgb2YgdGhpcyBNT0YNCj4gPiBpcyB0aGUgc2l6
+ZSwgc3RydWN0dXJlIGFuZCBmb3JtYXQgb2YgdGhlIGJ1ZmZlciB0aGF0IHlvdSB3b3VsZCBiZQ0K
+PiA+IHNlbmRpbmcgdG8gQVNMLg0KPiA+DQo+ID4gQmFjayB0byB0aGUgcG9pbnQgd2Ugd2VyZSBk
+aXNjdXNzaW5nIG9mIGEgcG90ZW50aWFsIGZpbHRlciwgdGhlDQo+ID4gaW5mb3JtYXRpb24gaW4g
+dGhlIE1PRiBjb3VsZCBwb3NzaWJseSBiZSB2ZXJ5IHVzZWZ1bCB0byBkZWNsYXJpbmcNCj4gPiB3
+aGF0IGlzIGdvaW5nIGludG8gdGhlIGZpbHRlci4NCj4gDQo+IEluIHRoYXQgaGVhZGVyIGZpbGUg
+Z2VuZXJhdGVkIGJ5IHdtaW9mY2suZXhlIEkgc2VlIGRlZmluaXRpb25zIGZvciBCRm4uDQpUaGVy
+ZSBpcyBhIGRlZmluaXRpb24gYnV0IGl0J3MgbWlzc2luZyB0aGUgZm9ybWF0IG9mIHRoZSBhcmd1
+bWVudCBmcm9tDQp3aGF0IEkgY2FuIHRlbGwuDQoNCkluIGFueSBjYXNlLCB0aGlzIHdpbGwgYmUg
+dGFuZ2VudGlhbCB0byB0aGlzIGRpc2N1c3Npb24sIGJ1dCB1c2VmdWwgZm9yDQpyZXZlcnNlIGVu
+Z2luZWVyaW5nIHRoZSBiaW5hcnkgbW9mIGZvcm1hdC4NCg==
