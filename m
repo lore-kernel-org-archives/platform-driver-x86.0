@@ -1,84 +1,154 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
- of module-wide globals
-Date: Mon, 8 May 2017 09:01:02 -0700
-Message-ID: <20170508160102.GE17700@fury>
-References: <20170424133334.7064-1-kernel@kempniu.pl>
- <20170501130536.GA25546@marvin.atrad.com.au>
- <20170502132144.GA6808@ozzy.nask.waw.pl>
- <20170504234058.GC21562@marvin.atrad.com.au>
- <20170505161556.GC4793@fury>
- <20170506123107.GA2516@kmp-mobile.hq.kempniu.pl>
- <20170506124516.GA1075@kmp-mobile.hq.kempniu.pl>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: RFC: WMI Enhancements
+Date: Mon, 8 May 2017 16:00:52 +0000
+Message-ID: <eb9aba888e854c1b92911ba2e94975b2@ausx13mpc120.AMER.DELL.COM>
+References: <201704191854.51783@pali>
+ <4e3e507b116443298427002c5aafed7f@ausx13mpc120.AMER.DELL.COM>
+ <20170420131431.GM18887@pali> <20170420204436.GC3209@fury>
+ <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+ <20170505234436.GB25865@fury>
+ <beb9a835eaf243fab151627e919eccf3@ausx13mpc120.AMER.DELL.COM>
+ <CALCETrUgPgk7uVdYx4zJzXQHpk5zALmzSp3Zcz9+FPAe6bA5LQ@mail.gmail.com>
+ <20170508152907.GA17700@fury>
+ <f8a3fa82d06142838ea39d8b1db7c25b@ausx13mpc120.AMER.DELL.COM>
+ <20170508154725.GD17700@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:56831 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750815AbdEHQBI (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 May 2017 12:01:08 -0400
-Content-Disposition: inline
-In-Reply-To: <20170506124516.GA1075@kmp-mobile.hq.kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170508154725.GD17700@fury>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
-> > Just to make sure we are all on the same page here, choosing the "two
-> > separate modules, each with one driver for one ACPI device" approach
-> > would mean ending up with two modules:
-> > 
-> >   - fujitsu-laptop, binding to the FUJ02E3 ACPI device, handling
-> >     everything _except_ backlight,
-> > 
-> >   - fujitsu-backlight, binding to the FUJ02B1 ACPI device, handling
-> >     backlight and depending on fujitsu-laptop.
-> > 
-> > We would need to export one function from fujitsu-laptop, namely
-> > fext_backlight().  I understand this would require creating a separate
-> > header file which would then be included in fujitsu-backlight.
-> > 
-> > fext_backlight() causes the FUNC method of the FUJ02E3 ACPI device to be
-> > called.  This method is marked as Serialized, which AFAIU means we do
-> > not need a separate lock in kernel code because all calls to this method
-> > are implicitly serialized by firmware itself.
-> > 
-> > I do not see anything "unnatural" in this approach, but I would love to
-> > be corrected if I am wrong.
-> 
-> To be fair, one thing that may be "unnatural" with this approach is that
-> even though fujitsu-backlight would depend on fujitsu-laptop, it would
-> still have to get a handle to FUJ02E3 using:
-> 
->     acpi_get_handle(NULL, "\\_SB.FEXT", ...)
->     
-> because call_fext_func() - and thus fext_backlight() - needs to be
-> passed a handle to FUJ02E3 and the two ACPI devices (FUJ02B1 handled by
-> fujitsu-backlight and FUJ02E3 handled by fujitsu-laptop) are not related
-> from the perspective of the ACPI device hierarchy.  Unless there is a
-> better way of implementing this, in which case I am open to suggestions.
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Monday, May 8, 2017 10:47 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: luto@kernel.org; pali.rohar@gmail.com; rjw@rjwysocki.net;
+> len.brown@intel.com; corentin.chary@gmail.com;
+> andriy.shevchenko@linux.intel.com; linux-kernel@vger.kernel.org; platform=
+-
+> driver-x86@vger.kernel.org; linux-pm@vger.kernel.org
+> Subject: Re: RFC: WMI Enhancements
+>=20
+> On Mon, May 08, 2017 at 03:36:31PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > > -----Original Message-----
+> > > From: Darren Hart [mailto:dvhart@infradead.org]
+> > > Sent: Monday, May 8, 2017 10:29 AM
+> > > To: Andy Lutomirski <luto@kernel.org>
+> > > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; Pali Roh=E1r
+> > > <pali.rohar@gmail.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Br=
+own
+> > > <len.brown@intel.com>; Corentin Chary <corentin.chary@gmail.com>; And=
+y
+> > > Shevchenko <andriy.shevchenko@linux.intel.com>; linux-
+> kernel@vger.kernel.org;
+> > > platform-driver-x86@vger.kernel.org; linux-pm@vger.kernel.org
+> > > Subject: Re: RFC: WMI Enhancements
+> > >
+> > > On Fri, May 05, 2017 at 06:25:08PM -0700, Andy Lutomirski wrote:
+> > > > On Fri, May 5, 2017 at 5:51 PM,  <Mario.Limonciello@dell.com> wrote=
+:
+> > > > >> -----Original Message-----
+> > > > >> From: Darren Hart [mailto:dvhart@infradead.org]
+> > > > >> Sent: Friday, May 5, 2017 6:45 PM
+> > > > >> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > >> Cc: pali.rohar@gmail.com; rjw@rjwysocki.net; luto@amacapital.net=
+;
+> > > > >> len.brown@intel.com; corentin.chary@gmail.com; luto@kernel.org;
+> > > > >> andriy.shevchenko@linux.intel.com; linux-kernel@vger.kernel.org;
+> platform-
+> > > > >> driver-x86@vger.kernel.org; linux-pm@vger.kernel.org
+> > > > >> Subject: Re: RFC: WMI Enhancements
+> > > >
+> > > >
+> > > > > I meant that to say that at least for now Andy's wmi-mof driver s=
+hould still
+> be
+> > > merged.
+> > > > > If something is going to build on top of this to do WBEM tools, t=
+hey'll need
+> that
+> > > MOF
+> > > > > data once someone figures out how to nicely deconstruct it.
+> > > > >
+> > > >
+> > > > The thing I don't like about my own driver is that, as a WMI device
+> > > > driver, it can be loaded before the rest of the bus finishes probin=
+g.
+> > > > So user programs that are notified asynchronously that the wmi-mof
+> > > > driver is loaded and try to use future functionality (ioctl to issu=
+e a
+> > > > MOF-based method call?) might end up doing so before the rest of th=
+e
+> > > > bus is probed.
+> > > >
+> > > > This could be addressed by always exposing the wmi-mof device last
+> > > > (sort of -- it can be a module) or perhaps by moving MOF functional=
+ity
+> > > > to the core driver.  Or maybe it's not really a problem.
+> > >
+> > > Thanks Andy, I'll keep that in mind and see if I can come up with som=
+ething to
+> > > address it while working on WMI this week.
+> > >
+> > > The other problem with wmi-mof is that there will be no immediate ope=
+n
+> source
+> > > consumers of the interface, and none on the horizon. We can't even te=
+st it to
+> > > any meaningful degree on Linux. I suspect this will be met with stiff
+> > > resistance.
+> >
+> > Well FWIW I did a quick PoC check with the binary that I got out of it =
+to make
+> > sure it matched what was supposed to be.  I brought it over to a Win10 =
+box and
+> > decompiled using the mofcmp tool and those crazy arguments I mentioned =
+and
+> > it was correct.
+> >
+> > I'd argue that even if there is no open source tools available today, n=
+ot making
+> > the data available to userspace makes it difficult to even attempt to s=
+tart
+> > to reverse engineer.
+> >
+> > Kernel config with default of "N" perhaps for wmi-mof?
+>=20
+> All true. There is a precedent we're working against on this. I'll includ=
+e it in
+> my leveling-up thread today or tomorrow.
+>=20
+> > >
+> > > >
+> > > > Also, isn't there a way to ask Microsoft to document this?  Are you
+> > > > supposed to "ask a question" on this forum, perhaps:
+> > > >
+> > > > https://msdn.microsoft.com/en-us/library/gg134029.aspx
+> > > >
+> > > > I'm guessing the Samba team knows how to do this, too.
+> > > >
+> >
+> > Microsoft treats this as an "intermediary" format.  I'm not convinced
+> > that anyone other than MS knows anything about it today.
+> >
+> > I agree asking them to document it is probably the right way to go.
+> >
+>=20
+> Mario, you are most likely in a better position to do that than I am. Wou=
+ld you
+> take that on?
+>=20
 
-At a high level, I would consider the handle to be private data which should be
-encapsulated in fujitsu_laptop. Or... where is FEXT in the ACPI hierarchy
-relative to FUJ02E3?
+Sure, I've made a request in that forum here:
+https://social.msdn.microsoft.com/Forums/en-US/cc3e50d6-c71d-4ce7-b765-6191=
+f1788697/binary-mof-format?forum=3Dos_specifications
 
-Assuming FEXT is below FUJ02E3, the we appear to be making an assumption that
-there is only one FUJ02E3 on the system. While I think this is perfectly
-reasonable, it does contradict the argumentation from some of the other patches
-in this series.
+I'll keep you apprise if there is any further details provided by MS.
 
-If FEXT is not below fujitsu laptop... then it is a shared function which either
-one of them can own and serialize (or not if fw indeed handles that).
-
-Either way, the owning driver should abstract away the private data and present
-an interface the other can use with only the "public" information.
-
-I suggest investigating the various mechanisms Andy pointed at and revisiting
-this after that.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+Thanks,
