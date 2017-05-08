@@ -1,70 +1,42 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: RFC: WMI Enhancements
-Date: Mon, 8 May 2017 19:17:34 +0200
-Message-ID: <201705081917.34242@pali>
-References: <20170412230854.GA11963@fury> <20170420204436.GC3209@fury> <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: RFC: WMI Enhancements
+Date: Mon, 8 May 2017 18:26:53 +0000
+Message-ID: <27661c9222e2452aa78ab1d1c1cd9015@ausx13mpc120.AMER.DELL.COM>
+References: <201704191854.51783@pali>
+ <4e3e507b116443298427002c5aafed7f@ausx13mpc120.AMER.DELL.COM>
+ <20170420131431.GM18887@pali> <20170420204436.GC3209@fury>
+ <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+ <20170505234436.GB25865@fury>
+ <beb9a835eaf243fab151627e919eccf3@ausx13mpc120.AMER.DELL.COM>
+ <CALCETrUgPgk7uVdYx4zJzXQHpk5zALmzSp3Zcz9+FPAe6bA5LQ@mail.gmail.com>
+ <20170508152907.GA17700@fury>
+ <f8a3fa82d06142838ea39d8b1db7c25b@ausx13mpc120.AMER.DELL.COM>
+ <20170508154725.GD17700@fury>
+ <CAHp75VdZrdBMGLcXoZhsjd14jbDaYMikThon6hC-s3fWsGb0ug@mail.gmail.com>
+ <CAOg5c--wkQgvsmhTynAKyG9iWaHjRWC5Z+MXzVJVw66vxSz4Zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart4069339.OeqetiiWL2";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <CAOg5c--wkQgvsmhTynAKyG9iWaHjRWC5Z+MXzVJVw66vxSz4Zw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-pm-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: a.bokovoy@gmail.com, andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart4069339.OeqetiiWL2
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Friday 05 May 2017 23:55:46 Mario.Limonciello@dell.com wrote:
-> Unfortunately the MOF data that comes out of wmi-mof is so called
-> "Binary MOF" which has been pre-compiled to an intermediate format
-> with mofcomp.exe on Windows. The format of binary MOF is not
-> documented and the only known way to get text mof back out is by
-> using mofcomp.exe with some esoteric arguments.
->=20
-> mofcomp.exe -MOF:recovered.mof -MFL:ms_409.mof -Amendment:MS_409
-> binary_mof_file
-
-Looks like that binary MOF file has "well-known" file extension .bmf.=20
-=46ile itself starts with magic hader "FOMB" which is in reverse BMOF=20
-(binary mof). But I was not able to find any specification nor any other=20
-details. As this binary format is dated back to Win9x I guess data would=20
-compressed by some old MS compression algorithm (CAB?).
-
-Moreover via tool wmiofck.exe it is possible to generate header file for=20
-WMI driver from binary mof file:
-
-  wmiofck.exe -hfile.h -m -u file.bmf
-
-And what is interesting that in this file are also comments which looks=20
-like comes from that binary mof file.
-
-When I looked into output from mofcomp.exe with above args, that MOF=20
-output did not contain comments, so looks like we still can miss=20
-something.
-
-See: http://blog.nietrzeba.pl/2011/12/mof-decompilation.html
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart4069339.OeqetiiWL2
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlkQqC4ACgkQi/DJPQPkQ1LN+ACfbct5S0mkwzCw/nD1v6hGHa2y
-zZ4An0UO6x9kfPY8l+47AOLRf/kQ/nAB
-=ohuJ
------END PGP SIGNATURE-----
-
---nextPart4069339.OeqetiiWL2--
+KFJlc3BvbmRpbmcgYXMgcGxhaW4gdGV4dCwgeW91ciBlbWFpbCBwcm9iYWJseSBnb3QgcHVudGVk
+IGZyb20gdGhlIE1MIGZyb20gYmVpbmcgSFRNTCkNCg0KPg0KPiAuLi4NCj4NCj4gSSdtIG5vdCBz
+dXJlIHdoYXQgeW91IGFyZSBhc2tpbmcgYWJvdXQuIFNhbWJhIGRvZXMgbm90IGRlYWwgd2l0aCBX
+TUkgYXQgYWxsLiBUaGUgc3RhdGUgb2YgYWZmYWlycyBpcyANCj4gZXhwbGFpbmVkIGF0IGh0dHBz
+Oi8vcG93ZXJzaGVsbC5vcmcvMjAxNS8wNC8yNC9tYW5hZ2VtZW50LWluZm9ybWF0aW9uLXRoZS1v
+bWljaW13bWltaWRtdGYtZGljdGlvbmFyeS8gDQo+IC0tIG9sZCBXTUkgKERDT00vUlBDLWJhc2Vk
+KSBpcyBkZXByZWNhdGVkLCBuZXcgV01JIGJhc2VkIG9uIFdTLU1BTiBpcyBzdXBwb3J0ZWQgYW5k
+IE9NSSBpcyB0aGUgDQo+IGltcGxlbWVudGF0aW9uLiBXZSB1c2VkIHRvIGhhdmUgYSB2ZXJ5IGxp
+bWl0ZWQgYXR0ZW10IGF0IHdyaXRpbmcgRENPTSBzdGFjayBhbmQgbm9ib2R5IHdvcmtlZCBvbg0K
+PiBpdCBmb3IgeWVhcnMgc28gaXQgZ290IHJlbW92ZWQuDQoNClRoYW5rcyEgIFRoYXQgd2FzIGEg
+dmVyeSBpbnRlcmVzdGluZyByZWFkLg0KDQo+IE1pY3Jvc29mdCBoYXMgYWxyZWFkeSBwdWJsaXNo
+ZWQgYSBNT0YgcGFyc2VyIGFzIHBhcnQgb2YgT01JIHdvcms6IGh0dHBzOi8vZ2l0aHViLmNvbS9N
+aWNyb3NvZnQvb21pLyANCj4gdW5kZXIgTUlUIGxpY2Vuc2UuDQoNClVuZm9ydHVuYXRlbHkgdGhh
+dCdzIGV4cGVjdGluZyB0ZXh0IE1PRiwgbm90IHRoaXMgaW50ZXJtZWRpYXJ5IGNvbXBpbGVkIGZv
+cm1hdC4NCg0K
