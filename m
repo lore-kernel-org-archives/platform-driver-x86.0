@@ -1,139 +1,209 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: RFC: WMI Enhancements
-Date: Mon, 8 May 2017 22:59:51 +0200
-Message-ID: <201705082259.51850@pali>
-References: <20170412230854.GA11963@fury> <201705081917.34242@pali> <c073b5f67d1e495481613711753356ba@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: peaq-wmi: Add new peaq-wmi driver
+Date: Mon, 8 May 2017 14:04:41 -0700
+Message-ID: <20170508210441.GG17700@fury>
+References: <20170508195631.2704-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3264345.fIZSCH1u9c";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <c073b5f67d1e495481613711753356ba@ausx13mpc120.AMER.DELL.COM>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:56944 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752172AbdEHVEo (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 8 May 2017 17:04:44 -0400
+Content-Disposition: inline
+In-Reply-To: <20170508195631.2704-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart3264345.fIZSCH1u9c
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 08, 2017 at 09:56:31PM +0200, Hans de Goede wrote:
+> PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
+> devices, which is actually quite a nice device. Under Windows it has
+> Dolby software for "better" sound and you can select different equalizer
+> presets using a special button.
+> 
+> This WMI interface for this button is not really nice, as it does not do
+> notifies (it really does not I tripple checked), but since I had already
+> figured out the entire WMI interface for this I decided to go the full
+> mile anyways and also implent a WMI based input driver for this using
+> input_polldev since, well, we need to poll.
+> 
+> This commit adds support for this button making it report KEY_SOUND input
+> events. KEY_SOUND is already used in various places to switch sound into
+> theatre mode and things like that so it seems appropriate here.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-On Monday 08 May 2017 21:21:45 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > Sent: Monday, May 8, 2017 12:18 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; rjw@rjwysocki.net; luto@amacapital.net;
-> > len.brown@intel.com; corentin.chary@gmail.com; luto@kernel.org;
-> > andriy.shevchenko@linux.intel.com; linux-kernel@vger.kernel.org;
-> > platform- driver-x86@vger.kernel.org; linux-pm@vger.kernel.org
-> > Subject: Re: RFC: WMI Enhancements
-> >=20
-> > On Friday 05 May 2017 23:55:46 Mario.Limonciello@dell.com wrote:
-> > > Unfortunately the MOF data that comes out of wmi-mof is so called
-> > > "Binary MOF" which has been pre-compiled to an intermediate
-> > > format with mofcomp.exe on Windows. The format of binary MOF is
-> > > not documented and the only known way to get text mof back out
-> > > is by using mofcomp.exe with some esoteric arguments.
-> > >=20
-> > > mofcomp.exe -MOF:recovered.mof -MFL:ms_409.mof -Amendment:MS_409
-> > > binary_mof_file
-> >=20
-> > Looks like that binary MOF file has "well-known" file extension
-> > .bmf. File itself starts with magic hader "FOMB" which is in
-> > reverse BMOF (binary mof). But I was not able to find any
-> > specification nor any other details. As this binary format is
-> > dated back to Win9x I guess data would compressed by some old MS
-> > compression algorithm (CAB?).
->=20
-> Actually comparing a couple of binary MOF files the first 8 look like
-> the header to me.
->=20
-> 0x46, 0x4f, 0x4d, 0x42, 0x01, 0x00, 0x00, 0x00
->=20
-> On a compiled Dell binary MOF the next are:
->=20
-> 0xed, 0x04, 0x00, 0x00,
->=20
-> This looks like the size of the remaining data after taking out 16
-> for the headers 4ed =3D 1261
-> Total size is 1277
->=20
-> 0xd8, 0x15, 0x00, 0x00
-> Maybe a checksum?
->=20
-> But that first 16 bytes does look like the header structure to me.
+Thanks Hans,
 
-Good catch! Your observation for first 12 bytes passes also for my=20
-checks.
+A couple nits below, otherwise, looks good to me.
 
-Next 4 bytes (after possible checksum) at 0x10 are always same:
-0x44 0x53 0x00 0x01.
++Dmitry in case he cares to weigh in on input/input-polldev usage
 
-And I guess this should be compression header. In time of Win9x=20
-Microsoft had own non-standard compression for disks called DoubleSpace.=20
-IIRC it was some modification of LZ77 algorithm. And 0x44 0x53 0x00 0x01=20
-is DS01. Maybe it is really DoubleSpace compression used for binary MOF?
+> ---
+>  drivers/platform/x86/Kconfig    |  7 +++
+>  drivers/platform/x86/Makefile   |  1 +
+>  drivers/platform/x86/peaq-wmi.c | 94 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 102 insertions(+)
+>  create mode 100644 drivers/platform/x86/peaq-wmi.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index be2ffbd6eb6c..2bac2b2644f9 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -660,6 +660,13 @@ config MSI_WMI
+>  	 To compile this driver as a module, choose M here: the module will
+>  	 be called msi-wmi.
+>  
+> +config PEAQ_WMI
+> +	tristate "PEAQ 2-in-1 WMI hotkey driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+> +
+>  config TOPSTAR_LAPTOP
+>  	tristate "Topstar Laptop Extras"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index de4ffb594ba5..02487f95dd27 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
+>  obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
+>  obj-$(CONFIG_ACPI_WMI)		+= wmi.o
+>  obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
+> +obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
+>  obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
+>  obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+>  
+> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+> new file mode 100644
+> index 000000000000..8cd6b962ce5e
+> --- /dev/null
+> +++ b/drivers/platform/x86/peaq-wmi.c
+> @@ -0,0 +1,94 @@
+> +/*
+> + * PEAQ 2-in-1 WMI hotkey driver
+> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/input.h>
 
-I'm going to find specification of that old compression algorithm...
+input-polldev includes input, no need for both.
 
-> > Moreover via tool wmiofck.exe it is possible to generate header
-> > file for
-> >=20
-> > WMI driver from binary mof file:
-> >   wmiofck.exe -hfile.h -m -u file.bmf
-> >=20
-> > And what is interesting that in this file are also comments which
-> > looks like comes from that binary mof file.
->=20
-> Ah interesting.  The "comments" that come out of that are actually
-> what's mapped to the "Description" field in the WMI repository when
-> the binary MOF is loaded.
->=20
-> They are not the developer comments that were placed in the original
-> MOF data.  I would suppose those are lost when compiling to binary
-> MOF.
+> +#include <linux/input-polldev.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +
+> +#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
+> +#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
+> +#define PEAQ_POLL_INTERVAL_MS		250
+> +
+> +MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
+> +
+> +struct input_polled_dev *peaq_poll_dev;
+> +int peaq_ignore_events_counter;
 
-Hm.. right they are present in decompiled MOF file in Description field.
+Please make local globals static if they are needed.
 
-> > When I looked into output from mofcomp.exe with above args, that
-> > MOF output did not contain comments, so looks like we still can
-> > miss something.
-> >=20
-> > See: http://blog.nietrzeba.pl/2011/12/mof-decompilation.html
->=20
-> Actually I see wmimofck output to be missing some important bits.
-> For example on a Dell system You'll get a class BFn declared from
-> mofcomp output, but nothing from wmimofck output.
->=20
-> The most important thing that you're really getting out of this MOF
-> is the size, structure and format of the buffer that you would be
-> sending to ASL.
->=20
-> Back to the point we were discussing of a potential filter, the
-> information in the MOF could possibly be very useful to declaring
-> what is going into the filter.
+Once we make WMI a bus with devices, we should be able to clean this up with
+devm.
 
-In that header file generated by wmiofck.exe I see definitions for BFn.=20
-And there are also sizes for BFn buffers, together with some types.
+> +
+> +/*
+> + * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
+> + * set on both press and release. The WMI method checks and clears that flag.
+> + * So for a press + release we will get back One from the WMI method either once
+> + * (if polling after the release) or twice (polling between press and release).
+> + * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
+> + */
+> +static void peaq_wmi_poll(struct input_polled_dev *dev)
+> +{
+> +	union acpi_object obj;
+> +	struct acpi_buffer buffer = { sizeof(obj), &obj };
+> +	acpi_status status;
+> +
+> +	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
+> +				     PEAQ_DOLBY_BUTTON_METHOD_ID,
+> +				     NULL, &buffer);
+> +	if (ACPI_FAILURE(status))
+> +		return;
+> +
+> +	if (obj.type != ACPI_TYPE_INTEGER) {
+> +		dev_err(&peaq_poll_dev->input->dev,
+> +			"Error WMBC did not return an integer\n");
+> +		return;
+> +	}
+> +
+> +	if (peaq_ignore_events_counter && --peaq_ignore_events_counter > 0)
+> +		return;
+> +
+> +	if (obj.integer.value) {
+> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
+> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
+> +		input_sync(peaq_poll_dev->input);
+> +		peaq_ignore_events_counter = 500 / peaq_poll_dev->poll_interval;
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Might as well define 500 above with the interval and keep these parameters
+together, keep the units obvious, etc. e.g.
 
---nextPart3264345.fIZSCH1u9c
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+#define PEAQ_POLL_IGNORE_MS 500
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Or similar
 
-iEYEABECAAYFAlkQ3EcACgkQi/DJPQPkQ1L4TQCgqWs0ngw/3AxBGBjxQFgcsRMX
-ZCsAoJbDq4RC5ifTAq2k9HWItEVTuTN6
-=3t8E
------END PGP SIGNATURE-----
+> +	}
+> +}
+> +
+> +static int __init peaq_wmi_init(void)
+> +{
+> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+> +		return -ENODEV;
+> +
+> +	peaq_poll_dev = input_allocate_polled_device();
+> +	if (!peaq_poll_dev)
+> +		return -ENOMEM;
+> +
+> +	peaq_poll_dev->poll = peaq_wmi_poll;
+> +	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
+> +	peaq_poll_dev->poll_interval_max = 1000; /* 1 second */
+> +	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
 
---nextPart3264345.fIZSCH1u9c--
+Are there additional keys/buttons?
+
+> +	peaq_poll_dev->input->phys = "wmi/input0";
+> +	peaq_poll_dev->input->id.bustype = BUS_HOST;
+> +	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
+> +
+> +	return input_register_polled_device(peaq_poll_dev);
+> +}
+> +
+> +static void __exit peaq_wmi_exit(void)
+> +{
+> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+> +		return;
+> +
+> +	input_unregister_polled_device(peaq_poll_dev);
+> +}
+> +
+> +module_init(peaq_wmi_init);
+> +module_exit(peaq_wmi_exit);
+> +
+> +MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.12.2
+> 
+> 
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
