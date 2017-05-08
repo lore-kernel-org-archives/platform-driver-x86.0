@@ -1,88 +1,78 @@
 From: <Mario.Limonciello@dell.com>
 Subject: RE: RFC: WMI Enhancements
-Date: Mon, 8 May 2017 19:11:57 +0000
-Message-ID: <2aa696fd37b24c2ca18fc9f30b664ab1@ausx13mpc120.AMER.DELL.COM>
-References: <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
- <20170505234436.GB25865@fury>
- <beb9a835eaf243fab151627e919eccf3@ausx13mpc120.AMER.DELL.COM>
- <CALCETrUgPgk7uVdYx4zJzXQHpk5zALmzSp3Zcz9+FPAe6bA5LQ@mail.gmail.com>
- <20170508152907.GA17700@fury>
- <f8a3fa82d06142838ea39d8b1db7c25b@ausx13mpc120.AMER.DELL.COM>
- <20170508154725.GD17700@fury>
- <CAHp75VdZrdBMGLcXoZhsjd14jbDaYMikThon6hC-s3fWsGb0ug@mail.gmail.com>
- <CAOg5c--wkQgvsmhTynAKyG9iWaHjRWC5Z+MXzVJVw66vxSz4Zw@mail.gmail.com>
- <27661c9222e2452aa78ab1d1c1cd9015@ausx13mpc120.AMER.DELL.COM>
- <20170508190900.GF17700@fury>
+Date: Mon, 8 May 2017 19:21:45 +0000
+Message-ID: <c073b5f67d1e495481613711753356ba@ausx13mpc120.AMER.DELL.COM>
+References: <20170412230854.GA11963@fury> <20170420204436.GC3209@fury>
+ <775ffd8f3327497cabd15ee7826cedaf@ausx13mpc120.AMER.DELL.COM>
+ <201705081917.34242@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170508190900.GF17700@fury>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:36219 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1754120AbdEHTVu (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 8 May 2017 15:21:50 -0400
+In-Reply-To: <201705081917.34242@pali>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: a.bokovoy@gmail.com, andy.shevchenko@gmail.com, luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, len.brown@intel.com, corentin.chary@gmail.com, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Monday, May 8, 2017 2:09 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: a.bokovoy@gmail.com; andy.shevchenko@gmail.com; luto@kernel.org;
-> pali.rohar@gmail.com; rjw@rjwysocki.net; len.brown@intel.com;
-> corentin.chary@gmail.com; andriy.shevchenko@linux.intel.com; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
-> pm@vger.kernel.org
-> Subject: Re: RFC: WMI Enhancements
->=20
-> On Mon, May 08, 2017 at 06:26:53PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > (Responding as plain text, your email probably got punted from the ML f=
-rom
-> being HTML)
-> >
-> > >
-> > > ...
-> > >
-> > > I'm not sure what you are asking about. Samba does not deal with WMI =
-at all.
-> The state of affairs is
-> > > explained at https://powershell.org/2015/04/24/management-information=
--
-> the-omicimwmimidmtf-dictionary/
-> > > -- old WMI (DCOM/RPC-based) is deprecated, new WMI based on WS-MAN is
-> supported and OMI is the
-> > > implementation. We used to have a very limited attemt at writing DCOM=
- stack
-> and nobody worked on
-> > > it for years so it got removed.
-> >
-> > Thanks!  That was a very interesting read.
-> >
-> > > Microsoft has already published a MOF parser as part of OMI work:
-> https://github.com/Microsoft/omi/
-> > > under MIT license.
-> >
-> > Unfortunately that's expecting text MOF, not this intermediary compiled=
- format.
-> >
->=20
-> I presume which of these to use is the decision of the vendor?=20
-
-No, MS documentation indicates to store binary MOF in the ACPI buffer.
-
->Is there a
-> transition going on from BMOF to Text MOF? Or will both be part of produc=
-ts for
-> the near term?
->=20
-
-Binary MOF will be part of products unless MS or a standards group decides =
-to=20
-announce something new for OEM's to use in this space.
-
-> I'm trying to understand if BMOF is a legacy thing now, or if it will con=
-tinue
-> to be used in new designs.
-
-Should be continued to use in new designs.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
+aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBNYXkgOCwgMjAxNyAx
+MjoxOCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
+LmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyByandAcmp3eXNvY2tpLm5ldDsgbHV0
+b0BhbWFjYXBpdGFsLm5ldDsNCj4gbGVuLmJyb3duQGludGVsLmNvbTsgY29yZW50aW4uY2hhcnlA
+Z21haWwuY29tOyBsdXRvQGtlcm5lbC5vcmc7DQo+IGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4Lmlu
+dGVsLmNvbTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tDQo+IGRyaXZl
+ci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogUmU6IFJGQzogV01JIEVuaGFuY2VtZW50cw0KPiANCj4gT24gRnJpZGF5IDA1IE1heSAyMDE3
+IDIzOjU1OjQ2IE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+IFVuZm9ydHVu
+YXRlbHkgdGhlIE1PRiBkYXRhIHRoYXQgY29tZXMgb3V0IG9mIHdtaS1tb2YgaXMgc28gY2FsbGVk
+DQo+ID4gIkJpbmFyeSBNT0YiIHdoaWNoIGhhcyBiZWVuIHByZS1jb21waWxlZCB0byBhbiBpbnRl
+cm1lZGlhdGUgZm9ybWF0DQo+ID4gd2l0aCBtb2Zjb21wLmV4ZSBvbiBXaW5kb3dzLiBUaGUgZm9y
+bWF0IG9mIGJpbmFyeSBNT0YgaXMgbm90DQo+ID4gZG9jdW1lbnRlZCBhbmQgdGhlIG9ubHkga25v
+d24gd2F5IHRvIGdldCB0ZXh0IG1vZiBiYWNrIG91dCBpcyBieQ0KPiA+IHVzaW5nIG1vZmNvbXAu
+ZXhlIHdpdGggc29tZSBlc290ZXJpYyBhcmd1bWVudHMuDQo+ID4NCj4gPiBtb2Zjb21wLmV4ZSAt
+TU9GOnJlY292ZXJlZC5tb2YgLU1GTDptc180MDkubW9mIC1BbWVuZG1lbnQ6TVNfNDA5DQo+ID4g
+YmluYXJ5X21vZl9maWxlDQo+IA0KPiBMb29rcyBsaWtlIHRoYXQgYmluYXJ5IE1PRiBmaWxlIGhh
+cyAid2VsbC1rbm93biIgZmlsZSBleHRlbnNpb24gLmJtZi4NCj4gRmlsZSBpdHNlbGYgc3RhcnRz
+IHdpdGggbWFnaWMgaGFkZXIgIkZPTUIiIHdoaWNoIGlzIGluIHJldmVyc2UgQk1PRg0KPiAoYmlu
+YXJ5IG1vZikuIEJ1dCBJIHdhcyBub3QgYWJsZSB0byBmaW5kIGFueSBzcGVjaWZpY2F0aW9uIG5v
+ciBhbnkgb3RoZXINCj4gZGV0YWlscy4gQXMgdGhpcyBiaW5hcnkgZm9ybWF0IGlzIGRhdGVkIGJh
+Y2sgdG8gV2luOXggSSBndWVzcyBkYXRhIHdvdWxkDQo+IGNvbXByZXNzZWQgYnkgc29tZSBvbGQg
+TVMgY29tcHJlc3Npb24gYWxnb3JpdGhtIChDQUI/KS4NCg0KQWN0dWFsbHkgY29tcGFyaW5nIGEg
+Y291cGxlIG9mIGJpbmFyeSBNT0YgZmlsZXMgdGhlIGZpcnN0IDggbG9vayBsaWtlIHRoZSANCmhl
+YWRlciB0byBtZS4NCg0KMHg0NiwgMHg0ZiwgMHg0ZCwgMHg0MiwgMHgwMSwgMHgwMCwgMHgwMCwg
+MHgwMA0KDQpPbiBhIGNvbXBpbGVkIERlbGwgYmluYXJ5IE1PRiB0aGUgbmV4dCBhcmU6DQoNCjB4
+ZWQsIDB4MDQsIDB4MDAsIDB4MDAsDQoNClRoaXMgbG9va3MgbGlrZSB0aGUgc2l6ZSBvZiB0aGUg
+cmVtYWluaW5nIGRhdGEgYWZ0ZXIgdGFraW5nIG91dCAxNiBmb3IgdGhlIGhlYWRlcnMNCjRlZCA9
+IDEyNjENClRvdGFsIHNpemUgaXMgMTI3Nw0KDQoweGQ4LCAweDE1LCAweDAwLCAweDAwDQpNYXli
+ZSBhIGNoZWNrc3VtPw0KDQpCdXQgdGhhdCBmaXJzdCAxNiBieXRlcyBkb2VzIGxvb2sgbGlrZSB0
+aGUgaGVhZGVyIHN0cnVjdHVyZSB0byBtZS4NCg0KPiANCj4gTW9yZW92ZXIgdmlhIHRvb2wgd21p
+b2Zjay5leGUgaXQgaXMgcG9zc2libGUgdG8gZ2VuZXJhdGUgaGVhZGVyIGZpbGUgZm9yDQo+IFdN
+SSBkcml2ZXIgZnJvbSBiaW5hcnkgbW9mIGZpbGU6DQo+IA0KPiAgIHdtaW9mY2suZXhlIC1oZmls
+ZS5oIC1tIC11IGZpbGUuYm1mDQo+IA0KPiBBbmQgd2hhdCBpcyBpbnRlcmVzdGluZyB0aGF0IGlu
+IHRoaXMgZmlsZSBhcmUgYWxzbyBjb21tZW50cyB3aGljaCBsb29rcw0KPiBsaWtlIGNvbWVzIGZy
+b20gdGhhdCBiaW5hcnkgbW9mIGZpbGUuDQoNCkFoIGludGVyZXN0aW5nLiAgVGhlICJjb21tZW50
+cyIgdGhhdCBjb21lIG91dCBvZiB0aGF0IGFyZSBhY3R1YWxseSB3aGF0J3MNCm1hcHBlZCB0byB0
+aGUgIkRlc2NyaXB0aW9uIiBmaWVsZCBpbiB0aGUgV01JIHJlcG9zaXRvcnkgd2hlbiB0aGUgYmlu
+YXJ5DQpNT0YgaXMgbG9hZGVkLiAgDQoNClRoZXkgYXJlIG5vdCB0aGUgZGV2ZWxvcGVyIGNvbW1l
+bnRzIHRoYXQgd2VyZSBwbGFjZWQgaW4gdGhlIG9yaWdpbmFsDQpNT0YgZGF0YS4gIEkgd291bGQg
+c3VwcG9zZSB0aG9zZSBhcmUgbG9zdCB3aGVuIGNvbXBpbGluZyB0byBiaW5hcnkgTU9GLg0KDQo+
+IA0KPiBXaGVuIEkgbG9va2VkIGludG8gb3V0cHV0IGZyb20gbW9mY29tcC5leGUgd2l0aCBhYm92
+ZSBhcmdzLCB0aGF0IE1PRg0KPiBvdXRwdXQgZGlkIG5vdCBjb250YWluIGNvbW1lbnRzLCBzbyBs
+b29rcyBsaWtlIHdlIHN0aWxsIGNhbiBtaXNzDQo+IHNvbWV0aGluZy4NCj4gDQo+IFNlZTogaHR0
+cDovL2Jsb2cubmlldHJ6ZWJhLnBsLzIwMTEvMTIvbW9mLWRlY29tcGlsYXRpb24uaHRtbA0KDQpB
+Y3R1YWxseSBJIHNlZSB3bWltb2ZjayBvdXRwdXQgdG8gYmUgbWlzc2luZyBzb21lIGltcG9ydGFu
+dCBiaXRzLg0KRm9yIGV4YW1wbGUgb24gYSBEZWxsIHN5c3RlbSBZb3UnbGwgZ2V0IGEgY2xhc3Mg
+QkZuIGRlY2xhcmVkIGZyb20NCm1vZmNvbXAgb3V0cHV0LCBidXQgbm90aGluZyBmcm9tIHdtaW1v
+ZmNrIG91dHB1dC4NCg0KVGhlIG1vc3QgaW1wb3J0YW50IHRoaW5nIHRoYXQgeW91J3JlIHJlYWxs
+eSBnZXR0aW5nIG91dCBvZiB0aGlzIE1PRiBpcw0KdGhlIHNpemUsIHN0cnVjdHVyZSBhbmQgZm9y
+bWF0IG9mIHRoZSBidWZmZXIgdGhhdCB5b3Ugd291bGQgYmUgc2VuZGluZyANCnRvIEFTTC4NCg0K
+QmFjayB0byB0aGUgcG9pbnQgd2Ugd2VyZSBkaXNjdXNzaW5nIG9mIGEgcG90ZW50aWFsIGZpbHRl
+ciwgdGhlIGluZm9ybWF0aW9uDQppbiB0aGUgTU9GIGNvdWxkIHBvc3NpYmx5IGJlIHZlcnkgdXNl
+ZnVsIHRvIGRlY2xhcmluZyB3aGF0IGlzIGdvaW5nIGludG8gdGhlIA0KZmlsdGVyLg0K
