@@ -1,137 +1,72 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead of module-wide globals
-Date: Tue, 09 May 2017 23:24:31 +0200
-Message-ID: <2402801.hhjSWhyBjd@aspire.rjw.lan>
-References: <20170424133334.7064-1-kernel@kempniu.pl> <20170509093524.GA19713@ozzy.nask.waw.pl> <20170509164734.GB17858@fury>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: RFC: WMI Enhancements
+Date: Wed, 10 May 2017 00:38:47 +0200
+Message-ID: <201705100038.47998@pali>
+References: <20170412230854.GA11963@fury> <738221cbaca94d10a0de7c03116df60e@ausx13mpc120.AMER.DELL.COM> <CAHp75Vc0rXwYKega9nJMrMe0tua6hrM7GTKOOJNsTNYR7KfGOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.net.pl ([79.96.170.134]:53183 "EHLO
-        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750914AbdEIVbA (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 17:31:00 -0400
-In-Reply-To: <20170509164734.GB17858@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart38325841.DVDzrorDOI";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vc0rXwYKega9nJMrMe0tua6hrM7GTKOOJNsTNYR7KfGOA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, "Brown, Len" <len.brown@intel.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday, May 09, 2017 09:47:34 AM Darren Hart wrote:
-> On Tue, May 09, 2017 at 11:35:24AM +0200, Michał Kępień wrote:
-> > > On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
-> > > > > Just to make sure we are all on the same page here, choosing the "two
-> > > > > separate modules, each with one driver for one ACPI device" approach
-> > > > > would mean ending up with two modules:
-> > > > > 
-> > > > >   - fujitsu-laptop, binding to the FUJ02E3 ACPI device, handling
-> > > > >     everything _except_ backlight,
-> > > > > 
-> > > > >   - fujitsu-backlight, binding to the FUJ02B1 ACPI device, handling
-> > > > >     backlight and depending on fujitsu-laptop.
-> > > > > 
-> > > > > We would need to export one function from fujitsu-laptop, namely
-> > > > > fext_backlight().  I understand this would require creating a separate
-> > > > > header file which would then be included in fujitsu-backlight.
-> > > > > 
-> > > > > fext_backlight() causes the FUNC method of the FUJ02E3 ACPI device to be
-> > > > > called.  This method is marked as Serialized, which AFAIU means we do
-> > > > > not need a separate lock in kernel code because all calls to this method
-> > > > > are implicitly serialized by firmware itself.
-> > > > > 
-> > > > > I do not see anything "unnatural" in this approach, but I would love to
-> > > > > be corrected if I am wrong.
-> > > > 
-> > > > To be fair, one thing that may be "unnatural" with this approach is that
-> > > > even though fujitsu-backlight would depend on fujitsu-laptop, it would
-> > > > still have to get a handle to FUJ02E3 using:
-> > > > 
-> > > >     acpi_get_handle(NULL, "\\_SB.FEXT", ...)
-> > > >     
-> > > > because call_fext_func() - and thus fext_backlight() - needs to be
-> > > > passed a handle to FUJ02E3 and the two ACPI devices (FUJ02B1 handled by
-> > > > fujitsu-backlight and FUJ02E3 handled by fujitsu-laptop) are not related
-> > > > from the perspective of the ACPI device hierarchy.  Unless there is a
-> > > > better way of implementing this, in which case I am open to suggestions.
-> > > 
-> > > At a high level, I would consider the handle to be private data which should be
-> > > encapsulated in fujitsu_laptop. Or... where is FEXT in the ACPI hierarchy
-> > > relative to FUJ02E3?
-> > 
-> > FEXT *is* FUJ02E3:
-> > 
-> > Device (FEXT)
-> > {
-> >     Name (_HID, "FUJ02E3")  // _HID: Hardware ID
-> >     ...
-> >     Method (FUNC, 4, Serialized)
-> >     {
-> >         ...
-> >     }
-> >     ...
-> > }
-> > 
-> > See also below.
-> > 
-> > > Assuming FEXT is below FUJ02E3, the we appear to be making an assumption that
-> > > there is only one FUJ02E3 on the system. While I think this is perfectly
-> > > reasonable, it does contradict the argumentation from some of the other patches
-> > > in this series.
-> > 
-> > Exactly.  The whole purpose of this patch series is to stop using
-> > module-wide data.  We have a different situation here than in the case
-> > of e.g. dell-smbios, which coordinates access to a module-wide buffer it
-> > allocates.  
-> > 
-> > > If FEXT is not below fujitsu laptop... then it is a shared function which either
-> > > one of them can own and serialize (or not if fw indeed handles that).
-> > > 
-> > > Either way, the owning driver should abstract away the private data and present
-> > > an interface the other can use with only the "public" information.
-> > 
-> > I feel the problem at hand needs a fresh explanation.  I will be as
-> > concise as possible.
-> > 
-> > We are considering two ACPI devices present on Fujitsu laptops:
-> > 
-> >   - FJEX:
-> >       * path: \_SB_.PCI0.LPCB.FJEX
-> >       * HID: FUJ02B1
-> >       * methods invoked by kernel: GBLL, RBLL, SBLL, SBL2
-> >       * handles: backlight level (LCD brightness)
-> > 
-> >   - FEXT:
-> >       * path: \_SB_.FEXT
-> >       * HID: FUJ02E3
-> >       * methods invoked by kernel: FUNC
-> >       * handles: hotkey, LEDs, platform attributes, backlight power
-> >                                                     ^^^^^^^^^^^^^^^
-> 
-> This is very concise and describes the problem clearly, thank you!
-> 
-> > 
-> > The problem is that if we split the ACPI drivers for those two devices
-> > into separate modules, the FJEX driver will need to access the FUNC
-> > method of device FEXT, handled by another driver in another module.
-> > 
-> > One way of solving this cleanly is to store a handle to the most
-> > recently found FEXT instance (there should always be at most one anyway)
-> > in a module-wide variable inside the FEXT driver, but that defeats the
-> > purpose of this series.
-> > 
-> > Another solution is proposed by patch 04/10 of this series: make the
-> > FJEX driver independently grab a handle to FEXT using the absolute ACPI
-> > path to the latter.  It feels unnatural (AFAICT only one driver outside
-> > drivers/acpi, namely pcc-cpufreq, does that), but it is safe and allows
-> > us to drop all module-wide data.
-> 
-> Rafael's take on this would be useful.
+--nextPart38325841.DVDzrorDOI
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Well, can you point me to patch [04/10] then?
+I updated my bmfdec.c (git://github.com/pali/bmfdec.git) and here is
+guessed header description:
 
-Or better resend the whole series with a CC to linux-acpi (which it should go
-to to start with IMO).
+/*
+ * BMF file is compressed by DS-01 algorithm with additional header:
+ * 4 bytes: 46 4f 4d 42 - 'F' 'O' 'M' 'B'
+ * 4 bytes: 01 00 00 00 - version 0x01
+ * 4 bytes: size of compressed data (low endian) without this header
+ * 4 bytes: size of decompressed data (low endian) without this header
+ */
 
-Thanks,
-Rafael
+/*
+ * Decompressed part of BMF file contains:
+ * 4 bytes: 46 4f 4d 42 - 'F' 'O' 'M' 'B'
+ * 4 bytes: N =3D size of first part (low endian) since beginning
+ * N-8 bytes: first part data
+ * 16 bytes: 42 4d 4f 46 51 55 41 4c 46 4c 41 56 4f 52 31 31 - "BMOFQUALFLA=
+VOR11"
+ * M bytes: second part data of unknown length
+ */
+
+=46irst part of decompressed data contains UTF-16 strings terminated by
+two zero bytes and between two strings are some binary data. Those
+strings are just literals found in decompiled MOF file, so looks like
+binary parts just decodes types and MOF language keywords.
+
+And it looks like second part is not required and sometimes missing.
+It contains only binary data, no idea what is there.
+
+Now somebody with knowledge of MOF language should be able to describe
+what and how is stored in first part.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart38325841.DVDzrorDOI
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlkSRPcACgkQi/DJPQPkQ1K3lwCdHWmW+L1kdx6iW0IliK4L0iwa
+JPQAn1H5WilA/ppCfq8asP5ty65Vi6xE
+=qXhu
+-----END PGP SIGNATURE-----
+
+--nextPart38325841.DVDzrorDOI--
