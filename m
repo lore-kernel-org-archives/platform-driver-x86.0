@@ -1,58 +1,41 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/3] platform/x86: thinkpad_acpi: Make logic straight in hotkey_exit()
-Date: Tue,  9 May 2017 17:17:19 +0300
-Message-ID: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:58772 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753697AbdEIORi (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 10:17:38 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH v1 3/3] platform/x86: thinkpad_acpi: Add a comment about 0 in module_param_call()
+Date: Tue,  9 May 2017 17:17:21 +0300
+Message-ID: <20170509141721.15841-3-andriy.shevchenko@linux.intel.com>
+References: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Richard Weinberger <richard.weinberger@gmail.com>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-The commit 4be73005e4dc
+As per discussion [1] there are only few users of module_param_call() in
+kernel which prevent to read module parameters back.
 
-	("thinkpad-acpi: remove uneeded tp_features.hotkey tests in hotkey_exit")
+It thinkpad_acpi driver there is even no method do so. Thus, for now,
+add just a comment to explain why 0 is used as permissions in
+module_param_call().
 
-adds a complex logic behind hotkey status check in a way
-it started mixing logical operations with bitwise ones.
+[1]: https://patchwork.ozlabs.org/patch/713245/
 
-Refactor the code to make it straight and slightly clearer.
-
+Cc: Richard Weinberger <richard.weinberger@gmail.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 7b6cb0c69b02..7740b5e1b998 100644
+index e6fbb2579dd9..f5bc888b2ef4 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3090,6 +3090,8 @@ static void tpacpi_send_radiosw_update(void)
+@@ -9663,6 +9663,7 @@ module_param_named(enable, alsa_enable, bool, 0444);
+ MODULE_PARM_DESC(enable, "Enable the ALSA interface for the ACPI EC Mixer");
+ #endif /* CONFIG_THINKPAD_ACPI_ALSA_SUPPORT */
  
- static void hotkey_exit(void)
- {
-+	int res;
-+
- #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
- 	mutex_lock(&hotkey_mutex);
- 	hotkey_poll_stop_sync();
-@@ -3101,11 +3103,8 @@ static void hotkey_exit(void)
- 
- 	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
- 		   "restoring original HKEY status and mask\n");
--	/* yes, there is a bitwise or below, we want the
--	 * functions to be called even if one of them fail */
--	if (((tp_features.hotkey_mask &&
--	      hotkey_mask_set(hotkey_orig_mask)) |
--	     hotkey_status_set(false)) != 0)
-+	res = tp_features.hotkey_mask ? hotkey_mask_set(hotkey_orig_mask) : 0;
-+	if (hotkey_status_set(false) || res)
- 		pr_err("failed to restore hot key mask "
- 		       "to BIOS defaults\n");
- }
++/* The module parameter can't be read back, that's why 0 is used here */
+ #define TPACPI_PARAM(feature) \
+ 	module_param_call(feature, set_ibm_param, NULL, NULL, 0); \
+ 	MODULE_PARM_DESC(feature, "Simulates thinkpad-acpi procfs command at module load, see documentation")
 -- 
 2.11.0
