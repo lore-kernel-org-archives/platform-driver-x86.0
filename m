@@ -1,58 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: RFC: WMI Enhancements
-Date: Tue, 9 May 2017 22:26:31 +0300
-Message-ID: <CAHp75Vc0rXwYKega9nJMrMe0tua6hrM7GTKOOJNsTNYR7KfGOA@mail.gmail.com>
-References: <20170412230854.GA11963@fury> <201705082259.51850@pali>
- <77e4e46f58354e10874ed0515f514fc2@ausx13mpc120.AMER.DELL.COM>
- <201705090017.44210@pali> <3ceae37c323d43f8b1cf6c9aafe55d5e@ausx13mpc120.AMER.DELL.COM>
- <20170509072903.GA22559@pali> <46fe1658d33647559b46c3a390a581ed@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VfxVeBvo5bXjusi-ANNDEdCG0KAWrr2udu_GueQkhcd+Q@mail.gmail.com> <738221cbaca94d10a0de7c03116df60e@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform/x86: peaq-wmi: Add new peaq-wmi driver
+Date: Tue, 9 May 2017 14:21:27 -0700
+Message-ID: <20170509212127.GA11404@fury>
+References: <20170509075431.17864-1-hdegoede@redhat.com>
+ <20170509160055.GA17858@fury>
+ <4a3f31f9-39d9-efef-342c-30f1aeb7035c@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f177.google.com ([209.85.220.177]:33633 "EHLO
-        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752276AbdEIT0d (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:45540 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750751AbdEIVVa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 15:26:33 -0400
-In-Reply-To: <738221cbaca94d10a0de7c03116df60e@ausx13mpc120.AMER.DELL.COM>
+        Tue, 9 May 2017 17:21:30 -0400
+Content-Disposition: inline
+In-Reply-To: <4a3f31f9-39d9-efef-342c-30f1aeb7035c@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, "Brown, Len" <len.brown@intel.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, May 9, 2017 at 10:16 PM,  <Mario.Limonciello@dell.com> wrote:
+On Tue, May 09, 2017 at 08:33:13PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 05/09/2017 06:00 PM, Darren Hart wrote:
+> > On Tue, May 09, 2017 at 09:54:31AM +0200, Hans de Goede wrote:
+> > > PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
+> > > devices, which is actually quite a nice device. Under Windows it has
+> > > Dolby software for "better" sound and you can select different equalizer
+> > > presets using a special button.
+> > > 
+> > > This WMI interface for this button is not really nice, as it does not do
+> > > notifies (it really does not I tripple checked), but since I had already
+> > > figured out the entire WMI interface for this I decided to go the full
+> > > mile anyways and also implent a WMI based input driver for this using
+> > > input_polldev since, well, we need to poll.
+> > > 
+> > > This commit adds support for this button making it report KEY_SOUND input
+> > > events. KEY_SOUND is already used in various places to switch sound into
+> > > theatre mode and things like that so it seems appropriate here.
+> > > 
+> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > +Dmitry (in case he wants to add a Reviewed-by, left all context below)
+> > 
+> > Queued to testing, thanks Hans.
+> 
+> I just noticed that this is causing dmesg spew about the driver not
+> passing enough arguments to the WMBC method (it only consumes 2,
+> but apparently its signature says it takes 3). So I need to do a v3
+> fixing this, please drop this from your testing branch for now.
 
-
->> > 46 4f 4d 42 54 15 00 00  01 00 00 00 01 00 00 00
->> > That's now FOMBT
->>
->> I think you just mistakenly take 0x54 as letter when it looks more like
->>
-
->> 0x00001554
-
-This one looks like offset (or size 5460)
-
->> 0x00000001
->> 0x00000001
->>
->> from the above dump.
-> Ah, that's true, but second word is different than original was main point.
-> We didn't know what that represented (maybe it's part of magic header).
->
-
-> 46 4f 4d 42 01 00 00 00  ed 04 00 00 d8 15 00 00
-> 0x00000001
-
-0x000015d8
-
-Again, looks like offset (or size).
-
-0x000004ed
-
-
-
+Done.
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
