@@ -1,47 +1,102 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: Resizeable PCI BAR support v6
-Date: Tue,  9 May 2017 18:49:02 +0200
-Message-ID: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH v6 1/5] PCI: add a define for the PCI resource type mask v2
+Date: Tue,  9 May 2017 18:49:03 +0200
+Message-ID: <1494348547-1465-2-git-send-email-deathsimple@vodafone.de>
+References: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:54508 "EHLO
-        pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754685AbdEIQtP (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 12:49:15 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by pegasos-out.vodafone.de (Rohrpostix1  Daemon) with ESMTP id 2B540261EF4
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2017 18:49:14 +0200 (CEST)
-Received: from pegasos-out.vodafone.de ([127.0.0.1])
-        by localhost (rohrpostix1.prod.vfnet.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id y5cOMeQAd8BG for <platform-driver-x86@vger.kernel.org>;
-        Tue,  9 May 2017 18:49:12 +0200 (CEST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
+Sender: linux-pci-owner@vger.kernel.org
 To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi everyone,
+From: Christian König <christian.koenig@amd.com>
 
-is is the sixth incarnation of this set of patches. It enables device
-drivers to resize and most likely also relocate the PCI BAR of devices
-they manage to allow the CPU to access all of the device local memory at once.
+We use this mask multiple times in the bus setup.
 
-This is very useful for GFX device drivers where the default PCI BAR is only
-about 256MB in size for compatibility reasons, but the device easily have
-multiple gigabyte of local memory.
+v2: fix some style nit picks
 
-Noteable changed compared to v5:
-1. Added some rb.
-2. Followed Andy's suggestion on patch #3 to use a next
-   pointer to make it more readable.
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ drivers/pci/pci.h       |  4 ++++
+ drivers/pci/setup-bus.c | 12 +++---------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-Mostly every comment addressed now, so next question is how we want to
-merge this upstream?
-
-I would suggest patches #1-#4 through some PCI branch and we send #5 through the drm
-maintainer as soon as the dependencies are accepted?
-
-Thanks for all the help,
-Christian.
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 4518562..56ad106 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -6,6 +6,10 @@
+ 
+ #define PCI_FIND_CAP_TTL	48
+ 
++#define PCI_RES_TYPE_MASK \
++	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
++	 IORESOURCE_MEM_64)
++
+ extern const unsigned char pcie_link_speed[];
+ 
+ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index f30ca75..efebd70 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1532,8 +1532,6 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ {
+ 	struct pci_dev *dev = bus->self;
+ 	struct resource *r;
+-	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
+-				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
+ 	unsigned old_flags = 0;
+ 	struct resource *b_res;
+ 	int idx = 1;
+@@ -1576,7 +1574,7 @@ static void pci_bridge_release_resources(struct pci_bus *bus,
+ 	 */
+ 	release_child_resources(r);
+ 	if (!release_resource(r)) {
+-		type = old_flags = r->flags & type_mask;
++		type = old_flags = r->flags & PCI_RES_TYPE_MASK;
+ 		dev_printk(KERN_DEBUG, &dev->dev, "resource %d %pR released\n",
+ 					PCI_BRIDGE_RESOURCES + idx, r);
+ 		/* keep the old size */
+@@ -1767,8 +1765,6 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	enum release_type rel_type = leaf_only;
+ 	LIST_HEAD(fail_head);
+ 	struct pci_dev_resource *fail_res;
+-	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
+-				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
+ 	int pci_try_num = 1;
+ 	enum enable_type enable_local;
+ 
+@@ -1827,7 +1823,7 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	 */
+ 	list_for_each_entry(fail_res, &fail_head, list)
+ 		pci_bus_release_bridge_resources(fail_res->dev->bus,
+-						 fail_res->flags & type_mask,
++						 fail_res->flags & PCI_RES_TYPE_MASK,
+ 						 rel_type);
+ 
+ 	/* restore size and flags */
+@@ -1871,8 +1867,6 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 	LIST_HEAD(fail_head);
+ 	struct pci_dev_resource *fail_res;
+ 	int retval;
+-	unsigned long type_mask = IORESOURCE_IO | IORESOURCE_MEM |
+-				  IORESOURCE_PREFETCH | IORESOURCE_MEM_64;
+ 
+ again:
+ 	__pci_bus_size_bridges(parent, &add_list);
+@@ -1898,7 +1892,7 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ 	 */
+ 	list_for_each_entry(fail_res, &fail_head, list)
+ 		pci_bus_release_bridge_resources(fail_res->dev->bus,
+-						 fail_res->flags & type_mask,
++						 fail_res->flags & PCI_RES_TYPE_MASK,
+ 						 whole_subtree);
+ 
+ 	/* restore size and flags */
+-- 
+2.7.4
