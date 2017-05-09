@@ -1,59 +1,64 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 2/3] platform/x86: thinkpad_acpi: Join string
- literals back
-Date: Tue, 09 May 2017 20:33:05 +0300
-Message-ID: <1494351185.30052.94.camel@linux.intel.com>
-References: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
-         <20170509141721.15841-2-andriy.shevchenko@linux.intel.com>
-         <20170509171040.GD19242@khazad-dum.debian.net>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: RFC: WMI Enhancements
+Date: Tue, 9 May 2017 18:10:19 +0000
+Message-ID: <46fe1658d33647559b46c3a390a581ed@ausx13mpc120.AMER.DELL.COM>
+References: <20170412230854.GA11963@fury> <201705082259.51850@pali>
+ <77e4e46f58354e10874ed0515f514fc2@ausx13mpc120.AMER.DELL.COM>
+ <201705090017.44210@pali>
+ <3ceae37c323d43f8b1cf6c9aafe55d5e@ausx13mpc120.AMER.DELL.COM>
+ <20170509072903.GA22559@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:36424 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752049AbdEIRej (ORCPT
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:35583 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750805AbdEISKX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 13:34:39 -0400
-In-Reply-To: <20170509171040.GD19242@khazad-dum.debian.net>
+        Tue, 9 May 2017 14:10:23 -0400
+In-Reply-To: <20170509072903.GA22559@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
 
-On Tue, 2017-05-09 at 14:10 -0300, Henrique de Moraes Holschuh wrote:
-
-Thanks for review, my comments below.
-
-> On Tue, 09 May 2017, Andy Shevchenko wrote:
-> > There is no point to keep string literal split. It even makes
-> > slightly
-> > harder to maintain and debug.
-> 
-> Ooold code, from a time when random people would annoy others over
-> 80-column instead of doing useful reviews...
-
-Yes, I know, nowadays checkpatch doesn't complain on them.
-
-> > While here, print negative error without changing a sign as it is a
-> > common pattern in the kernel.
-> 
-> A separate patch for this would be better: it would be easier to
-> actually check that no functional changes crept in by mistake.
-
-It doesn't make sense to me. It would touch same lines of code I do
-already here and it's only one place, see below.
-
-> >  	rc = fan_set_enable();
-> >  	if (rc < 0) {
-> > -		pr_err("fan watchdog: error %d while enabling fan,
-> > "
-> > -		       "will try again later...\n", -rc);
-> > +		pr_err("fan watchdog: error %d while enabling fan,
-> > will try again later...\n",
-> > +		       rc);
-
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkgOSwgMjAxNyAyOjI5
+IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29t
+Pg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBsdXRvQGFt
+YWNhcGl0YWwubmV0Ow0KPiBsZW4uYnJvd25AaW50ZWwuY29tOyBjb3JlbnRpbi5jaGFyeUBnbWFp
+bC5jb207IGx1dG9Aa2VybmVsLm9yZzsNCj4gYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwu
+Y29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS0NCj4gZHJpdmVyLXg4
+NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogUkZDOiBXTUkgRW5oYW5jZW1lbnRzDQo+IA0KPiBPbiBUdWVzZGF5IDA5IE1heSAyMDE3IDAx
+OjEwOjU0IE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4NCj4gPiA+IEkg
+Zm91bmQgZG1zZG9zIGltcGxlbWVudGF0aW9uIG9mIHRoYXQgRFMgY29tcHJlc3Npb24gYXQ6DQo+
+ID4gPiBodHRwOi8vY21wLmZlbGsuY3Z1dC5jei9+cGlzYS9kbXNkb3MNCj4gPiA+DQo+ID4gPiBU
+aGVuIHRvb2sgcmVsZXZhbnQgZGVjb21wcmVzc2lvbiBjb2RlIGFuZCBpdCByZWFsbHkgZGVjb21w
+cmVzc2VkIHRoYXQNCj4gPiA+IGJpbmFyeSBNT0YgV01JIGJ1ZmZlci4gQnV0IHN0aWxsIGRlY29t
+cHJlc3NlZCBmb3JtYXQgaXMgYmluYXJ5LCBidXQgSQ0KPiA+ID4gbm93IHNlZSBhbGwgV01JIEdV
+SUQgZW5jb2RlZCBpbiBVVEYtMTYuIERlY29tcHJlc3NlZCBCTUYgZmlsZSBoYXMgYWdhaW4NCj4g
+PiA+ICJGT01CIiBtYWdpYyBoZWFkZXIuDQo+ID4NCj4gPiBXZWxsIHRoYXQncyBncmVhdC4gIElz
+IGl0IHBvc3NpYmxlIHRoYXQgdGhpcyBjb21wcmVzc2lvbiBpcyB1c2VkIGZvciBldmVyeSB0aW1l
+DQo+ID4gYSBjbGFzcyB3YXMgZGVjbGFyZWQ/DQo+IA0KPiBMb29rcyBsaWtlIG5vdC4gVGhhdCBk
+ZWNvbXByZXNzZWQgb3V0cHV0IHNlZW1zIHRvIGJlIG5vdCBjb21wcmVzc2VkDQo+IGFueW1vcmUu
+IEp1c3QgdXNlIHNhbWUgbWFnaWMgaGVhZGVyLg0KQWN0dWFsbHkgaXQgbG9va3MgbGlrZSBhIG5l
+dyBtYWdpYyBoZWFkZXIgdG8gbWUgYWZ0ZXIgZGVjb21wcmVzc2VkLg0KDQo0NiA0ZiA0ZCA0MiA1
+NCAxNSAwMCAwMCAgMDEgMDAgMDAgMDAgMDEgMDAgMDAgMDANClRoYXQncyBub3cgRk9NQlQNCg0K
+PiANCj4gTm93IGl0IGxvb2tzIGxpa2UgYmluYXJ5IHJlcHJlc2VudGF0aW9uIG9mIE1PRi4gV2hl
+cmUgc3RydWN0dXJlcyBhbmQNCj4gdHlwZXMgYXJlIGVuY29kZWQgYnkgYmluYXJ5IHNlcXVlbmNl
+cy4NClllcywgYW5kIEkgbm90aWNlIGluIGhlcmUgZXZlbiBtZW50aW9ucyBvZiB0aGUgbG9jYWxl
+ICh3aGljaCB3YXMgcmVxdWlyZWQNCnRvIGRlY29tcHJlc3MgdXNpbmcgbW9mY29tcCB0b28pLg0K
+DQowMDAwMDE1MCAgMDggMDAgMDAgMDAgMDAgMDAgMDAgMDAgIDEwIDAwIDAwIDAwIDRjIDAwIDZm
+IDAwICB8Li4uLi4uLi4uLi4uTC5vLnwNCjAwMDAwMTYwICA2MyAwMCA2MSAwMCA2YyAwMCA2NSAw
+MCAgMDAgMDAgMDAgMDAgNGQgMDAgNTMgMDAgIHxjLmEubC5lLi4uLi5NLlMufA0KMDAwMDAxNzAg
+IDVjIDAwIDMwIDAwIDc4IDAwIDM0IDAwICAzMCAwMCAzOSAwMCAwMCAwMCAwMCAwMCAgfFwuMC54
+LjQuMC45Li4uLi58DQoNCj4gDQo+ID4gPg0KPiA+ID4gSSBwdXNoZWQgbXkgZGVjb21wcmVzc2lv
+biB1dGlsaXR5IGhlcmU6DQo+ID4gPiBodHRwczovL2dpdGh1Yi5jb20vcGFsaS9ibWZkZWMNCj4g
+Pg0KPiA+IERpZCB5b3UgZm9yZ2V0IGFub3RoZXIgY29tbWl0IGZvciBwdWxsaW5nIGluIGFyZ3Vt
+ZW50cyBhbmQgb3BlbmluZyBhIGZpbGUNCj4gPiBvciB3ZXJlIHlvdSBqdXN0IHB1dHRpbmcgdGhl
+IHdob2xlIGJ1ZmZlciBpbnRvIHBpbj8NCj4gDQo+IFdob2xlIEJNRiBmaWxlIHNob3VsZCBiZSBv
+biBzdGRpbiAod2l0aCB0aGF0IDE2IGJ5dGVzIGhlYWRlcikgYW5kIGlzDQo+IGRlY29tcHJlc3Nl
+ZCBvbiBzdGRvdXQuDQpPaCBteSBtaXN0YWtlLCB0aGF0IHdhc24ndCBjbGVhciB3aGVuIEkgZ2xh
+bmNlZCBhdCBpdC4NCg==
