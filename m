@@ -1,203 +1,88 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: peaq-wmi: Add new peaq-wmi driver
-Date: Tue, 9 May 2017 10:27:06 -0700
-Message-ID: <20170509172706.GA37151@dtor-ws>
-References: <20170509075431.17864-1-hdegoede@redhat.com>
- <20170509160055.GA17858@fury>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/3] platform/x86: thinkpad_acpi: Make logic straight
+ in hotkey_exit()
+Date: Tue, 09 May 2017 20:28:51 +0300
+Message-ID: <1494350931.30052.92.camel@linux.intel.com>
+References: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
+         <20170509170206.GB19242@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170509160055.GA17858@fury>
+In-Reply-To: <20170509170206.GB19242@khazad-dum.debian.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 09, 2017 at 09:00:55AM -0700, Darren Hart wrote:
-> On Tue, May 09, 2017 at 09:54:31AM +0200, Hans de Goede wrote:
-> > PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
-> > devices, which is actually quite a nice device. Under Windows it has
-> > Dolby software for "better" sound and you can select different equalizer
-> > presets using a special button.
+On Tue, 2017-05-09 at 14:02 -0300, Henrique de Moraes Holschuh wrote:
+
+Thanks for review, my comments below.
+
+> On Tue, 09 May 2017, Andy Shevchenko wrote:
+> > The commit 4be73005e4dc
 > > 
-> > This WMI interface for this button is not really nice, as it does not do
-> > notifies (it really does not I tripple checked), but since I had already
-> > figured out the entire WMI interface for this I decided to go the full
-> > mile anyways and also implent a WMI based input driver for this using
-> > input_polldev since, well, we need to poll.
+> > 	("thinkpad-acpi: remove uneeded tp_features.hotkey tests in
+> > hotkey_exit")
 > > 
-> > This commit adds support for this button making it report KEY_SOUND input
-> > events. KEY_SOUND is already used in various places to switch sound into
-> > theatre mode and things like that so it seems appropriate here.
+> > adds a complex logic behind hotkey status check in a way
+> > it started mixing logical operations with bitwise ones.
 > > 
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > Refactor the code to make it straight and slightly clearer.
 > 
-> +Dmitry (in case he wants to add a Reviewed-by, left all context below)
+> Eh, I find this actually less clear, given the comment that was in the
+> old code, which you deleted.
 
-Looks good to me.
-
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+For me doing 'bitwise or' on negative return code and boolean looks
+weird...
 
 > 
-> Queued to testing, thanks Hans.
+> Please keep the important part of the comment at the very least.
+
+...that's why comment has been added I suppose, and my patch makes it
+not needed.
+
+Though, I better just drop the change completely, I didn't pay attention
+if compiler warns about current implementation, I think it should.
+
 > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > ---
-> > Changes in v2:
-> > -Drop unneeded #include <linux/input.h>
-> > -Add and use PEAQ_POLL_IGNORE_MS and PEAQ_POLL_MAX_MS defines
-> > -Make globals static
-> > -Call input_sync between reporting the button down and up
-> > -Ignore events for at least 1 poll after an event even if the user has set
-> >  poll_interval > PEAQ_POLL_IGNORE_MS
-> > ---
-> >  drivers/platform/x86/Kconfig    |  7 +++
-> >  drivers/platform/x86/Makefile   |  1 +
-> >  drivers/platform/x86/peaq-wmi.c | 97 +++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 105 insertions(+)
-> >  create mode 100644 drivers/platform/x86/peaq-wmi.c
+> >  drivers/platform/x86/thinkpad_acpi.c | 9 ++++-----
+> >  1 file changed, 4 insertions(+), 5 deletions(-)
 > > 
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index be2ffbd6eb6c..2bac2b2644f9 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -660,6 +660,13 @@ config MSI_WMI
-> >  	 To compile this driver as a module, choose M here: the module will
-> >  	 be called msi-wmi.
-> >  
-> > +config PEAQ_WMI
-> > +	tristate "PEAQ 2-in-1 WMI hotkey driver"
-> > +	depends on ACPI_WMI
-> > +	depends on INPUT
-> > +	help
-> > +	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> > b/drivers/platform/x86/thinkpad_acpi.c
+> > index 7b6cb0c69b02..7740b5e1b998 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> > @@ -3090,6 +3090,8 @@ static void tpacpi_send_radiosw_update(void)
+> >  
+> >  static void hotkey_exit(void)
+> >  {
+> > +	int res;
 > > +
-> >  config TOPSTAR_LAPTOP
-> >  	tristate "Topstar Laptop Extras"
-> >  	depends on ACPI
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> > index de4ffb594ba5..02487f95dd27 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
-> >  obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
-> >  obj-$(CONFIG_ACPI_WMI)		+= wmi.o
-> >  obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
-> > +obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
-> >  obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
-> >  obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
-> >  
-> > diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> > new file mode 100644
-> > index 000000000000..47b36b2fa895
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/peaq-wmi.c
-> > @@ -0,0 +1,97 @@
-> > +/*
-> > + * PEAQ 2-in-1 WMI hotkey driver
-> > + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/input-polldev.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +
-> > +#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
-> > +#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
-> > +#define PEAQ_POLL_INTERVAL_MS		250
-> > +#define PEAQ_POLL_IGNORE_MS		500
-> > +#define PEAQ_POLL_MAX_MS		1000
-> > +
-> > +MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
-> > +
-> > +static struct input_polled_dev *peaq_poll_dev;
-> > +static unsigned int peaq_ignore_events_counter;
-> > +
-> > +/*
-> > + * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
-> > + * set on both press and release. The WMI method checks and clears that flag.
-> > + * So for a press + release we will get back One from the WMI method either once
-> > + * (if polling after the release) or twice (polling between press and release).
-> > + * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
-> > + */
-> > +static void peaq_wmi_poll(struct input_polled_dev *dev)
-> > +{
-> > +	union acpi_object obj;
-> > +	struct acpi_buffer buffer = { sizeof(obj), &obj };
-> > +	acpi_status status;
-> > +
-> > +	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
-> > +				     PEAQ_DOLBY_BUTTON_METHOD_ID,
-> > +				     NULL, &buffer);
-> > +	if (ACPI_FAILURE(status))
-> > +		return;
-> > +
-> > +	if (obj.type != ACPI_TYPE_INTEGER) {
-> > +		dev_err(&peaq_poll_dev->input->dev,
-> > +			"Error WMBC did not return an integer\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (peaq_ignore_events_counter && --peaq_ignore_events_counter > 0)
-> > +		return;
-> > +
-> > +	if (obj.integer.value) {
-> > +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
-> > +		input_sync(peaq_poll_dev->input);
-> > +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
-> > +		input_sync(peaq_poll_dev->input);
-> > +		peaq_ignore_events_counter = max(1u,
-> > +			PEAQ_POLL_IGNORE_MS / peaq_poll_dev->poll_interval);
-> > +	}
-> > +}
-> > +
-> > +static int __init peaq_wmi_init(void)
-> > +{
-> > +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-> > +		return -ENODEV;
-> > +
-> > +	peaq_poll_dev = input_allocate_polled_device();
-> > +	if (!peaq_poll_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	peaq_poll_dev->poll = peaq_wmi_poll;
-> > +	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
-> > +	peaq_poll_dev->poll_interval_max = PEAQ_POLL_MAX_MS;
-> > +	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
-> > +	peaq_poll_dev->input->phys = "wmi/input0";
-> > +	peaq_poll_dev->input->id.bustype = BUS_HOST;
-> > +	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
-> > +
-> > +	return input_register_polled_device(peaq_poll_dev);
-> > +}
-> > +
-> > +static void __exit peaq_wmi_exit(void)
-> > +{
-> > +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-> > +		return;
-> > +
-> > +	input_unregister_polled_device(peaq_poll_dev);
-> > +}
-> > +
-> > +module_init(peaq_wmi_init);
-> > +module_exit(peaq_wmi_exit);
-> > +
-> > +MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
-> > +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-> > +MODULE_LICENSE("GPL");
-> > -- 
-> > 2.12.2
-> > 
-> > 
+> >  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+> >  	mutex_lock(&hotkey_mutex);
+> >  	hotkey_poll_stop_sync();
+> > @@ -3101,11 +3103,8 @@ static void hotkey_exit(void)
+> >  
+> >  	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
+> >  		   "restoring original HKEY status and mask\n");
+> > -	/* yes, there is a bitwise or below, we want the
+> > -	 * functions to be called even if one of them fail */
+> > -	if (((tp_features.hotkey_mask &&
+> > -	      hotkey_mask_set(hotkey_orig_mask)) |
+> > -	     hotkey_status_set(false)) != 0)
+> > +	res = tp_features.hotkey_mask ?
+> > hotkey_mask_set(hotkey_orig_mask) : 0;
+> > +	if (hotkey_status_set(false) || res)
+> >  		pr_err("failed to restore hot key mask "
+> >  		       "to BIOS defaults\n");
+> >  }
 > 
-> -- 
-> Darren Hart
-> VMware Open Source Technology Center
+> 
 
 -- 
-Dmitry
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
