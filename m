@@ -1,24 +1,24 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH v6 2/5] PCI: add resizeable BAR infrastructure v5
-Date: Tue,  9 May 2017 18:49:04 +0200
-Message-ID: <1494348547-1465-3-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH v6 4/5] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models 30h-3fh) Processors v3
+Date: Tue,  9 May 2017 18:49:06 +0200
+Message-ID: <1494348547-1465-5-git-send-email-deathsimple@vodafone.de>
 References: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:54546 "EHLO
+Received: from pegasos-out.vodafone.de ([80.84.1.38]:54561 "EHLO
         pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755061AbdEIQtS (ORCPT
+        with ESMTP id S1755045AbdEIQtT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 12:49:18 -0400
+        Tue, 9 May 2017 12:49:19 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by pegasos-out.vodafone.de (Rohrpostix1  Daemon) with ESMTP id 3693B261F1E
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2017 18:49:17 +0200 (CEST)
+        by pegasos-out.vodafone.de (Rohrpostix1  Daemon) with ESMTP id 14795261E95
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2017 18:49:18 +0200 (CEST)
 Received: from pegasos-out.vodafone.de ([127.0.0.1])
         by localhost (rohrpostix1.prod.vfnet.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id d93AHBB+WIeP for <platform-driver-x86@vger.kernel.org>;
-        Tue,  9 May 2017 18:49:14 +0200 (CEST)
+        with ESMTP id IEFGiTXcQW7d for <platform-driver-x86@vger.kernel.org>;
+        Tue,  9 May 2017 18:49:16 +0200 (CEST)
 In-Reply-To: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -26,183 +26,97 @@ To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kern
 
 From: Christian König <christian.koenig@amd.com>
 
-Just the defines and helper functions to read the possible sizes of a BAR and
-update it's size.
+Most BIOS don't enable this because of compatibility reasons.
 
-See https://pcisig.com/sites/default/files/specification_documents/ECN_Resizable-BAR_24Apr2008.pdf
-and PCIe r3.1, sec 7.22.
+Manually enable a 64bit BAR of 64GB size so that we have
+enough room for PCI devices.
 
-This is useful for hardware with large local storage (mostly GFX) which only
-expose 256MB BARs initially to be compatible with 32bit systems.
-
-v2: provide read helper as well
-v3: improve function names, use unsigned values, add better comments.
-v4: move definition, improve commit message, s/bar/BAR/
-v5: split out helper to find ctrl reg pos, style fixes, comment fixes,
-    add pci_rbar_size_to_bytes as well
+v2: style cleanups, increase size, add resource name, set correct flags,
+    print message that windows was added
+v3: add defines for all the magic numbers, style cleanups
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pci/pci.c             | 104 ++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h             |   8 ++++
- include/uapi/linux/pci_regs.h |  11 ++++-
- 3 files changed, 121 insertions(+), 2 deletions(-)
+ arch/x86/pci/fixup.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ba34907..0cbf4a6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2944,6 +2944,110 @@ bool pci_acs_path_enabled(struct pci_dev *start,
- }
- 
- /**
-+ * pci_rbar_find_pos - find position of resize ctrl reg for BAR
-+ * @dev: PCI device
-+ * @bar: BAR to find
-+ *
-+ * Helper to find the postion of the ctrl register for a BAR.
-+ * Returns -ENOTSUPP of resizeable BARs are not supported at all.
-+ * Returns -ENOENT if not ctrl register for the BAR could be found.
-+ */
-+static int pci_rbar_find_pos(struct pci_dev *pdev, int bar)
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 6d52b94..1c36ed6 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -571,3 +571,72 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
++
++#define AMD_141b_MMIO_BASE(x)	(0x80 + (x) * 0x8)
++#define AMD_141b_MMIO_BASE_RE_MASK		BIT(0)
++#define AMD_141b_MMIO_BASE_WE_MASK		BIT(1)
++#define AMD_141b_MMIO_BASE_MMIOBASE_MASK	GENMASK(31,8)
++
++#define AMD_141b_MMIO_LIMIT(x)	(0x84 + (x) * 0x8)
++#define AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK	GENMASK(31,8)
++
++#define AMD_141b_MMIO_HIGH(x)	(0x180 + (x) * 0x4)
++#define AMD_141b_MMIO_HIGH_MMIOBASE_MASK	GENMASK(7,0)
++#define AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT	16
++#define AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK	GENMASK(23,16)
++
++static void pci_amd_enable_64bit_bar(struct pci_dev *dev)
 +{
-+	unsigned int pos, nbars;
-+	unsigned int i;
-+	u32 ctrl;
++	struct resource *res, *conflict;
++	u32 base, limit, high;
++	unsigned i;
 +
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	if (!pos)
-+		return -ENOTSUPP;
++	for (i = 0; i < 8; ++i) {
++		pci_read_config_dword(dev, AMD_141b_MMIO_BASE(i), &base);
++		pci_read_config_dword(dev, AMD_141b_MMIO_HIGH(i), &high);
 +
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	nbars = (ctrl & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
++		/* Is this slot free? */
++		if (!(base & (AMD_141b_MMIO_BASE_RE_MASK |
++			      AMD_141b_MMIO_BASE_WE_MASK)))
++			break;
 +
-+	for (i = 0; i < nbars; ++i, pos += 8) {
-+		int bar_idx;
++		base >>= 8;
++		base |= high << 24;
 +
-+		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+		bar_idx = (ctrl & PCI_REBAR_CTRL_BAR_IDX_MASK) >>
-+				PCI_REBAR_CTRL_BAR_IDX_SHIFT;
-+		if (bar_idx == bar)
-+			return pos;
++		/* Abort if a slot already configures a 64bit BAR. */
++		if (base > 0x10000)
++			return;
 +	}
++	if (i == 8)
++		return;
 +
-+	return -ENOENT;
++	res = kzalloc(sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return;
++
++	res->name = "PCI Bus 0000:00";
++	res->flags = IORESOURCE_PREFETCH | IORESOURCE_MEM |
++		IORESOURCE_MEM_64 | IORESOURCE_WINDOW;
++	res->start = 0x100000000ull;
++	res->end = 0xfd00000000ull - 1;
++
++	/* Just grab the free area behind system memory for this */
++	while ((conflict = request_resource_conflict(&iomem_resource, res)))
++		res->start = conflict->end + 1;
++
++	dev_info(&dev->dev, "adding root bus resource %pR\n", res);
++
++	base = ((res->start >> 8) & AMD_141b_MMIO_BASE_MMIOBASE_MASK) |
++		AMD_141b_MMIO_BASE_RE_MASK | AMD_141b_MMIO_BASE_WE_MASK;
++	limit = ((res->end + 1) >> 8) & AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK;
++	high = ((res->start >> 40) & AMD_141b_MMIO_HIGH_MMIOBASE_MASK) |
++		((((res->end + 1) >> 40) << AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT)
++		 & AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK);
++
++	pci_write_config_dword(dev, AMD_141b_MMIO_HIGH(i), high);
++	pci_write_config_dword(dev, AMD_141b_MMIO_LIMIT(i), limit);
++	pci_write_config_dword(dev, AMD_141b_MMIO_BASE(i), base);
++
++	pci_bus_add_resource(dev->bus, res, 0);
 +}
-+
-+/**
-+ * pci_rbar_get_possible_sizes - get possible sizes for BAR
-+ * @dev: PCI device
-+ * @bar: BAR to query
-+ *
-+ * Get the possible sizes of a resizeable BAR as bitmask defined in the spec
-+ * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizeable.
-+ */
-+u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar)
-+{
-+	u32 cap;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return 0;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
-+	return (cap & PCI_REBAR_CTRL_SIZES_MASK) >>
-+		PCI_REBAR_CTRL_SIZES_SHIFT;
-+}
-+
-+/**
-+ * pci_rbar_get_current_size - get the current size of a BAR
-+ * @dev: PCI device
-+ * @bar: BAR to set size to
-+ *
-+ * Read the size of a BAR from the resizeable BAR config.
-+ * Returns size if found or negative error code.
-+ */
-+int pci_rbar_get_current_size(struct pci_dev *pdev, int bar)
-+{
-+	u32 ctrl;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return pos;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	return (ctrl & PCI_REBAR_CTRL_BAR_SIZE_MASK) >>
-+		PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-+}
-+
-+/**
-+ * pci_rbar_set_size - set a new size for a BAR
-+ * @dev: PCI device
-+ * @bar: BAR to set size to
-+ * @size: new size as defined in the spec (0=1MB, 19=512GB)
-+ *
-+ * Set the new size of a BAR as defined in the spec.
-+ * Returns zero if resizing was successful, error code otherwise.
-+ */
-+int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size)
-+{
-+	u32 ctrl;
-+	int pos;
-+
-+	pos = pci_rbar_find_pos(pdev, bar);
-+	if (pos < 0)
-+		return pos;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE_MASK;
-+	ctrl |= size << PCI_REBAR_CTRL_BAR_SIZE_SHIFT;
-+	pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-+	return 0;
-+}
-+
-+/**
-  * pci_swizzle_interrupt_pin - swizzle INTx for device behind bridge
-  * @dev: the PCI device
-  * @pin: the INTx pin (1=INTA, 2=INTB, 3=INTC, 4=INTD)
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 56ad106..a37fc9c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -360,4 +360,12 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, int probe)
- }
- #endif
- 
-+u32 pci_rbar_get_possible_sizes(struct pci_dev *pdev, int bar);
-+int pci_rbar_get_current_size(struct pci_dev *pdev, int bar);
-+int pci_rbar_set_size(struct pci_dev *pdev, int bar, int size);
-+static inline u64 pci_rbar_size_to_bytes(int size)
-+{
-+	return 1ULL << (size + 20);
-+}
-+
- #endif /* DRIVERS_PCI_H */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index e5a2e68..a75429e 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -932,9 +932,16 @@
- #define PCI_SATA_SIZEOF_LONG	16
- 
- /* Resizable BARs */
-+#define PCI_REBAR_CAP		4	/* capability register */
-+#define  PCI_REBAR_CTRL_SIZES_MASK	(0xFFFFF << 4)	/* mask for sizes */
-+#define  PCI_REBAR_CTRL_SIZES_SHIFT	4	/* shift for sizes */
- #define PCI_REBAR_CTRL		8	/* control register */
--#define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # bars */
--#define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # bars */
-+#define  PCI_REBAR_CTRL_BAR_IDX_MASK	(7 << 0)	/* mask for BAR index */
-+#define  PCI_REBAR_CTRL_BAR_IDX_SHIFT	0	/* shift for BAR index */
-+#define  PCI_REBAR_CTRL_NBAR_MASK	(7 << 5)	/* mask for # BARs */
-+#define  PCI_REBAR_CTRL_NBAR_SHIFT	5	/* shift for # BARs */
-+#define  PCI_REBAR_CTRL_BAR_SIZE_MASK	(0x1F << 8)	/* mask for BAR size */
-+#define  PCI_REBAR_CTRL_BAR_SIZE_SHIFT	8	/* shift for BAR size */
- 
- /* Dynamic Power Allocation */
- #define PCI_DPA_CAP		4	/* capability register */
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x141b, pci_amd_enable_64bit_bar);
 -- 
 2.7.4
