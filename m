@@ -1,24 +1,24 @@
 From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple@vodafone.de>
-Subject: [PATCH v6 4/5] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models 30h-3fh) Processors v3
-Date: Tue,  9 May 2017 18:49:06 +0200
-Message-ID: <1494348547-1465-5-git-send-email-deathsimple@vodafone.de>
+Subject: [PATCH v6 5/5] drm/amdgpu: resize VRAM BAR for CPU access v2
+Date: Tue,  9 May 2017 18:49:07 +0200
+Message-ID: <1494348547-1465-6-git-send-email-deathsimple@vodafone.de>
 References: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:54561 "EHLO
+Received: from pegasos-out.vodafone.de ([80.84.1.38]:54545 "EHLO
         pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755045AbdEIQtT (ORCPT
+        with ESMTP id S1755061AbdEIQtU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 12:49:19 -0400
+        Tue, 9 May 2017 12:49:20 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by pegasos-out.vodafone.de (Rohrpostix1  Daemon) with ESMTP id 14795261E95
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2017 18:49:18 +0200 (CEST)
+        by pegasos-out.vodafone.de (Rohrpostix1  Daemon) with ESMTP id 69080261EFB
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2017 18:49:19 +0200 (CEST)
 Received: from pegasos-out.vodafone.de ([127.0.0.1])
         by localhost (rohrpostix1.prod.vfnet.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IEFGiTXcQW7d for <platform-driver-x86@vger.kernel.org>;
-        Tue,  9 May 2017 18:49:16 +0200 (CEST)
+        with ESMTP id AUqVsgH9HOse for <platform-driver-x86@vger.kernel.org>;
+        Tue,  9 May 2017 18:49:17 +0200 (CEST)
 In-Reply-To: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -26,97 +26,152 @@ To: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, helgaas@kern
 
 From: Christian König <christian.koenig@amd.com>
 
-Most BIOS don't enable this because of compatibility reasons.
+Try to resize BAR0 to let CPU access all of VRAM.
 
-Manually enable a 64bit BAR of 64GB size so that we have
-enough room for PCI devices.
-
-v2: style cleanups, increase size, add resource name, set correct flags,
-    print message that windows was added
-v3: add defines for all the magic numbers, style cleanups
+v2: rebased, style cleanups, disable mem decode before resize,
+    handle gmc_v9 as well, round size up to power of two.
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- arch/x86/pci/fixup.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 37 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c      |  8 ++++---
+ drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c      |  8 ++++---
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c      | 10 ++++----
+ 5 files changed, 54 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index 6d52b94..1c36ed6 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -571,3 +571,72 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2fc0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
-+
-+#define AMD_141b_MMIO_BASE(x)	(0x80 + (x) * 0x8)
-+#define AMD_141b_MMIO_BASE_RE_MASK		BIT(0)
-+#define AMD_141b_MMIO_BASE_WE_MASK		BIT(1)
-+#define AMD_141b_MMIO_BASE_MMIOBASE_MASK	GENMASK(31,8)
-+
-+#define AMD_141b_MMIO_LIMIT(x)	(0x84 + (x) * 0x8)
-+#define AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK	GENMASK(31,8)
-+
-+#define AMD_141b_MMIO_HIGH(x)	(0x180 + (x) * 0x4)
-+#define AMD_141b_MMIO_HIGH_MMIOBASE_MASK	GENMASK(7,0)
-+#define AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT	16
-+#define AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK	GENMASK(23,16)
-+
-+static void pci_amd_enable_64bit_bar(struct pci_dev *dev)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+index 5310781..d6f5286 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+@@ -1884,6 +1884,7 @@ uint64_t amdgpu_ttm_tt_pte_flags(struct amdgpu_device *adev, struct ttm_tt *ttm,
+ 				 struct ttm_mem_reg *mem);
+ void amdgpu_vram_location(struct amdgpu_device *adev, struct amdgpu_mc *mc, u64 base);
+ void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc);
++void amdgpu_resize_bar0(struct amdgpu_device *adev);
+ void amdgpu_ttm_set_active_vram_size(struct amdgpu_device *adev, u64 size);
+ int amdgpu_ttm_init(struct amdgpu_device *adev);
+ void amdgpu_ttm_fini(struct amdgpu_device *adev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 2719c02..4e83a56 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -694,6 +694,43 @@ void amdgpu_gtt_location(struct amdgpu_device *adev, struct amdgpu_mc *mc)
+ 			mc->gtt_size >> 20, mc->gtt_start, mc->gtt_end);
+ }
+ 
++/**
++ * amdgpu_resize_bar0 - try to resize BAR0
++ *
++ * @adev: amdgpu_device pointer
++ *
++ * Try to resize BAR0 to make all VRAM CPU accessible.
++ */
++void amdgpu_resize_bar0(struct amdgpu_device *adev)
 +{
-+	struct resource *res, *conflict;
-+	u32 base, limit, high;
-+	unsigned i;
++	u64 space_needed = roundup_pow_of_two(adev->mc.real_vram_size);
++	u32 rbar_size = order_base_2(((space_needed >> 20) | 1)) -1;
++	u16 cmd;
++	int r;
 +
-+	for (i = 0; i < 8; ++i) {
-+		pci_read_config_dword(dev, AMD_141b_MMIO_BASE(i), &base);
-+		pci_read_config_dword(dev, AMD_141b_MMIO_HIGH(i), &high);
++	/* Free the doorbell mapping, it most likely needs to move as well */
++	amdgpu_doorbell_fini(adev);
++	pci_release_resource(adev->pdev, 2);
 +
-+		/* Is this slot free? */
-+		if (!(base & (AMD_141b_MMIO_BASE_RE_MASK |
-+			      AMD_141b_MMIO_BASE_WE_MASK)))
-+			break;
++	/* Disable memory decoding while we change the BAR addresses and size */
++	pci_read_config_word(adev->pdev, PCI_COMMAND, &cmd);
++	pci_write_config_word(adev->pdev, PCI_COMMAND,
++			      cmd & ~PCI_COMMAND_MEMORY);
 +
-+		base >>= 8;
-+		base |= high << 24;
++	r = pci_resize_resource(adev->pdev, 0, rbar_size);
++	if (r == -ENOSPC)
++		DRM_INFO("Not enough PCI address space for a large BAR.");
++	else if (r && r != -ENOTSUPP)
++		DRM_ERROR("Problem resizing BAR0 (%d).", r);
 +
-+		/* Abort if a slot already configures a 64bit BAR. */
-+		if (base > 0x10000)
-+			return;
-+	}
-+	if (i == 8)
-+		return;
++	pci_write_config_word(adev->pdev, PCI_COMMAND, cmd);
 +
-+	res = kzalloc(sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return;
-+
-+	res->name = "PCI Bus 0000:00";
-+	res->flags = IORESOURCE_PREFETCH | IORESOURCE_MEM |
-+		IORESOURCE_MEM_64 | IORESOURCE_WINDOW;
-+	res->start = 0x100000000ull;
-+	res->end = 0xfd00000000ull - 1;
-+
-+	/* Just grab the free area behind system memory for this */
-+	while ((conflict = request_resource_conflict(&iomem_resource, res)))
-+		res->start = conflict->end + 1;
-+
-+	dev_info(&dev->dev, "adding root bus resource %pR\n", res);
-+
-+	base = ((res->start >> 8) & AMD_141b_MMIO_BASE_MMIOBASE_MASK) |
-+		AMD_141b_MMIO_BASE_RE_MASK | AMD_141b_MMIO_BASE_WE_MASK;
-+	limit = ((res->end + 1) >> 8) & AMD_141b_MMIO_LIMIT_MMIOLIMIT_MASK;
-+	high = ((res->start >> 40) & AMD_141b_MMIO_HIGH_MMIOBASE_MASK) |
-+		((((res->end + 1) >> 40) << AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT)
-+		 & AMD_141b_MMIO_HIGH_MMIOLIMIT_MASK);
-+
-+	pci_write_config_dword(dev, AMD_141b_MMIO_HIGH(i), high);
-+	pci_write_config_dword(dev, AMD_141b_MMIO_LIMIT(i), limit);
-+	pci_write_config_dword(dev, AMD_141b_MMIO_BASE(i), base);
-+
-+	pci_bus_add_resource(dev->bus, res, 0);
++	/* When the doorbell BAR isn't available we have no chance of
++	 * using the device.
++	 */
++	BUG_ON(amdgpu_doorbell_init(adev));
 +}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x141b, pci_amd_enable_64bit_bar);
++
+ /*
+  * GPU helpers function.
+  */
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+index a9083a1..ae71524 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v7_0.c
+@@ -372,13 +372,15 @@ static int gmc_v7_0_mc_init(struct amdgpu_device *adev)
+ 		}
+ 		adev->mc.vram_width = numchan * chansize;
+ 	}
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
++
+ #ifdef CONFIG_X86_64
+ 	if (adev->flags & AMD_IS_APU) {
+ 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+index 4ac9978..1655de2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v8_0.c
+@@ -534,13 +534,15 @@ static int gmc_v8_0_mc_init(struct amdgpu_device *adev)
+ 		}
+ 		adev->mc.vram_width = numchan * chansize;
+ 	}
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = RREG32(mmCONFIG_MEMSIZE) * 1024ULL * 1024ULL;
+ 
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
++
+ #ifdef CONFIG_X86_64
+ 	if (adev->flags & AMD_IS_APU) {
+ 		adev->mc.aper_base = ((u64)RREG32(mmMC_VM_FB_OFFSET)) << 22;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index b9f11fa..d65728a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -469,16 +469,18 @@ static int gmc_v9_0_mc_init(struct amdgpu_device *adev)
+ 	}
+ 	adev->mc.vram_width = numchan * chansize;
+ 
+-	/* Could aper size report 0 ? */
+-	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
+-	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 	/* size in MB on si */
+ 	adev->mc.mc_vram_size =
+ 		nbio_v6_1_get_memsize(adev) * 1024ULL * 1024ULL;
+ 	adev->mc.real_vram_size = adev->mc.mc_vram_size;
+-	adev->mc.visible_vram_size = adev->mc.aper_size;
++
++	if (!(adev->flags & AMD_IS_APU))
++		amdgpu_resize_bar0(adev);
++	adev->mc.aper_base = pci_resource_start(adev->pdev, 0);
++	adev->mc.aper_size = pci_resource_len(adev->pdev, 0);
+ 
+ 	/* In case the PCI BAR is larger than the actual amount of vram */
++	adev->mc.visible_vram_size = adev->mc.aper_size;
+ 	if (adev->mc.visible_vram_size > adev->mc.real_vram_size)
+ 		adev->mc.visible_vram_size = adev->mc.real_vram_size;
+ 
 -- 
 2.7.4
