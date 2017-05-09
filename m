@@ -1,64 +1,211 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: RFC: WMI Enhancements
-Date: Tue, 9 May 2017 18:10:19 +0000
-Message-ID: <46fe1658d33647559b46c3a390a581ed@ausx13mpc120.AMER.DELL.COM>
-References: <20170412230854.GA11963@fury> <201705082259.51850@pali>
- <77e4e46f58354e10874ed0515f514fc2@ausx13mpc120.AMER.DELL.COM>
- <201705090017.44210@pali>
- <3ceae37c323d43f8b1cf6c9aafe55d5e@ausx13mpc120.AMER.DELL.COM>
- <20170509072903.GA22559@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2] platform/x86: peaq-wmi: Add new peaq-wmi driver
+Date: Tue, 9 May 2017 20:33:13 +0200
+Message-ID: <4a3f31f9-39d9-efef-342c-30f1aeb7035c@redhat.com>
+References: <20170509075431.17864-1-hdegoede@redhat.com>
+ <20170509160055.GA17858@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:35583 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750805AbdEISKX (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:40272 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753940AbdEISdR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 14:10:23 -0400
-In-Reply-To: <20170509072903.GA22559@pali>
-Content-Language: en-US
+        Tue, 9 May 2017 14:33:17 -0400
+In-Reply-To: <20170509160055.GA17858@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, rjw@rjwysocki.net, luto@amacapital.net, len.brown@intel.com, corentin.chary@gmail.com, luto@kernel.org, andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkgOSwgMjAxNyAyOjI5
-IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29t
-Pg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBsdXRvQGFt
-YWNhcGl0YWwubmV0Ow0KPiBsZW4uYnJvd25AaW50ZWwuY29tOyBjb3JlbnRpbi5jaGFyeUBnbWFp
-bC5jb207IGx1dG9Aa2VybmVsLm9yZzsNCj4gYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwu
-Y29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS0NCj4gZHJpdmVyLXg4
-NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
-ZTogUkZDOiBXTUkgRW5oYW5jZW1lbnRzDQo+IA0KPiBPbiBUdWVzZGF5IDA5IE1heSAyMDE3IDAx
-OjEwOjU0IE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4NCj4gPiA+IEkg
-Zm91bmQgZG1zZG9zIGltcGxlbWVudGF0aW9uIG9mIHRoYXQgRFMgY29tcHJlc3Npb24gYXQ6DQo+
-ID4gPiBodHRwOi8vY21wLmZlbGsuY3Z1dC5jei9+cGlzYS9kbXNkb3MNCj4gPiA+DQo+ID4gPiBU
-aGVuIHRvb2sgcmVsZXZhbnQgZGVjb21wcmVzc2lvbiBjb2RlIGFuZCBpdCByZWFsbHkgZGVjb21w
-cmVzc2VkIHRoYXQNCj4gPiA+IGJpbmFyeSBNT0YgV01JIGJ1ZmZlci4gQnV0IHN0aWxsIGRlY29t
-cHJlc3NlZCBmb3JtYXQgaXMgYmluYXJ5LCBidXQgSQ0KPiA+ID4gbm93IHNlZSBhbGwgV01JIEdV
-SUQgZW5jb2RlZCBpbiBVVEYtMTYuIERlY29tcHJlc3NlZCBCTUYgZmlsZSBoYXMgYWdhaW4NCj4g
-PiA+ICJGT01CIiBtYWdpYyBoZWFkZXIuDQo+ID4NCj4gPiBXZWxsIHRoYXQncyBncmVhdC4gIElz
-IGl0IHBvc3NpYmxlIHRoYXQgdGhpcyBjb21wcmVzc2lvbiBpcyB1c2VkIGZvciBldmVyeSB0aW1l
-DQo+ID4gYSBjbGFzcyB3YXMgZGVjbGFyZWQ/DQo+IA0KPiBMb29rcyBsaWtlIG5vdC4gVGhhdCBk
-ZWNvbXByZXNzZWQgb3V0cHV0IHNlZW1zIHRvIGJlIG5vdCBjb21wcmVzc2VkDQo+IGFueW1vcmUu
-IEp1c3QgdXNlIHNhbWUgbWFnaWMgaGVhZGVyLg0KQWN0dWFsbHkgaXQgbG9va3MgbGlrZSBhIG5l
-dyBtYWdpYyBoZWFkZXIgdG8gbWUgYWZ0ZXIgZGVjb21wcmVzc2VkLg0KDQo0NiA0ZiA0ZCA0MiA1
-NCAxNSAwMCAwMCAgMDEgMDAgMDAgMDAgMDEgMDAgMDAgMDANClRoYXQncyBub3cgRk9NQlQNCg0K
-PiANCj4gTm93IGl0IGxvb2tzIGxpa2UgYmluYXJ5IHJlcHJlc2VudGF0aW9uIG9mIE1PRi4gV2hl
-cmUgc3RydWN0dXJlcyBhbmQNCj4gdHlwZXMgYXJlIGVuY29kZWQgYnkgYmluYXJ5IHNlcXVlbmNl
-cy4NClllcywgYW5kIEkgbm90aWNlIGluIGhlcmUgZXZlbiBtZW50aW9ucyBvZiB0aGUgbG9jYWxl
-ICh3aGljaCB3YXMgcmVxdWlyZWQNCnRvIGRlY29tcHJlc3MgdXNpbmcgbW9mY29tcCB0b28pLg0K
-DQowMDAwMDE1MCAgMDggMDAgMDAgMDAgMDAgMDAgMDAgMDAgIDEwIDAwIDAwIDAwIDRjIDAwIDZm
-IDAwICB8Li4uLi4uLi4uLi4uTC5vLnwNCjAwMDAwMTYwICA2MyAwMCA2MSAwMCA2YyAwMCA2NSAw
-MCAgMDAgMDAgMDAgMDAgNGQgMDAgNTMgMDAgIHxjLmEubC5lLi4uLi5NLlMufA0KMDAwMDAxNzAg
-IDVjIDAwIDMwIDAwIDc4IDAwIDM0IDAwICAzMCAwMCAzOSAwMCAwMCAwMCAwMCAwMCAgfFwuMC54
-LjQuMC45Li4uLi58DQoNCj4gDQo+ID4gPg0KPiA+ID4gSSBwdXNoZWQgbXkgZGVjb21wcmVzc2lv
-biB1dGlsaXR5IGhlcmU6DQo+ID4gPiBodHRwczovL2dpdGh1Yi5jb20vcGFsaS9ibWZkZWMNCj4g
-Pg0KPiA+IERpZCB5b3UgZm9yZ2V0IGFub3RoZXIgY29tbWl0IGZvciBwdWxsaW5nIGluIGFyZ3Vt
-ZW50cyBhbmQgb3BlbmluZyBhIGZpbGUNCj4gPiBvciB3ZXJlIHlvdSBqdXN0IHB1dHRpbmcgdGhl
-IHdob2xlIGJ1ZmZlciBpbnRvIHBpbj8NCj4gDQo+IFdob2xlIEJNRiBmaWxlIHNob3VsZCBiZSBv
-biBzdGRpbiAod2l0aCB0aGF0IDE2IGJ5dGVzIGhlYWRlcikgYW5kIGlzDQo+IGRlY29tcHJlc3Nl
-ZCBvbiBzdGRvdXQuDQpPaCBteSBtaXN0YWtlLCB0aGF0IHdhc24ndCBjbGVhciB3aGVuIEkgZ2xh
-bmNlZCBhdCBpdC4NCg==
+Hi,
+
+On 05/09/2017 06:00 PM, Darren Hart wrote:
+> On Tue, May 09, 2017 at 09:54:31AM +0200, Hans de Goede wrote:
+>> PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
+>> devices, which is actually quite a nice device. Under Windows it has
+>> Dolby software for "better" sound and you can select different equalizer
+>> presets using a special button.
+>>
+>> This WMI interface for this button is not really nice, as it does not do
+>> notifies (it really does not I tripple checked), but since I had already
+>> figured out the entire WMI interface for this I decided to go the full
+>> mile anyways and also implent a WMI based input driver for this using
+>> input_polldev since, well, we need to poll.
+>>
+>> This commit adds support for this button making it report KEY_SOUND input
+>> events. KEY_SOUND is already used in various places to switch sound into
+>> theatre mode and things like that so it seems appropriate here.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> +Dmitry (in case he wants to add a Reviewed-by, left all context below)
+>
+> Queued to testing, thanks Hans.
+
+I just noticed that this is causing dmesg spew about the driver not
+passing enough arguments to the WMBC method (it only consumes 2,
+but apparently its signature says it takes 3). So I need to do a v3
+fixing this, please drop this from your testing branch for now.
+
+Regards,
+
+Hans
+
+
+
+>
+>> ---
+>> Changes in v2:
+>> -Drop unneeded #include <linux/input.h>
+>> -Add and use PEAQ_POLL_IGNORE_MS and PEAQ_POLL_MAX_MS defines
+>> -Make globals static
+>> -Call input_sync between reporting the button down and up
+>> -Ignore events for at least 1 poll after an event even if the user has set
+>>  poll_interval > PEAQ_POLL_IGNORE_MS
+>> ---
+>>  drivers/platform/x86/Kconfig    |  7 +++
+>>  drivers/platform/x86/Makefile   |  1 +
+>>  drivers/platform/x86/peaq-wmi.c | 97 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 105 insertions(+)
+>>  create mode 100644 drivers/platform/x86/peaq-wmi.c
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index be2ffbd6eb6c..2bac2b2644f9 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -660,6 +660,13 @@ config MSI_WMI
+>>  	 To compile this driver as a module, choose M here: the module will
+>>  	 be called msi-wmi.
+>>
+>> +config PEAQ_WMI
+>> +	tristate "PEAQ 2-in-1 WMI hotkey driver"
+>> +	depends on ACPI_WMI
+>> +	depends on INPUT
+>> +	help
+>> +	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+>> +
+>>  config TOPSTAR_LAPTOP
+>>  	tristate "Topstar Laptop Extras"
+>>  	depends on ACPI
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>> index de4ffb594ba5..02487f95dd27 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
+>>  obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
+>>  obj-$(CONFIG_ACPI_WMI)		+= wmi.o
+>>  obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
+>> +obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
+>>  obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
+>>  obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+>>
+>> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+>> new file mode 100644
+>> index 000000000000..47b36b2fa895
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/peaq-wmi.c
+>> @@ -0,0 +1,97 @@
+>> +/*
+>> + * PEAQ 2-in-1 WMI hotkey driver
+>> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/input-polldev.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +
+>> +#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
+>> +#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
+>> +#define PEAQ_POLL_INTERVAL_MS		250
+>> +#define PEAQ_POLL_IGNORE_MS		500
+>> +#define PEAQ_POLL_MAX_MS		1000
+>> +
+>> +MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
+>> +
+>> +static struct input_polled_dev *peaq_poll_dev;
+>> +static unsigned int peaq_ignore_events_counter;
+>> +
+>> +/*
+>> + * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
+>> + * set on both press and release. The WMI method checks and clears that flag.
+>> + * So for a press + release we will get back One from the WMI method either once
+>> + * (if polling after the release) or twice (polling between press and release).
+>> + * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
+>> + */
+>> +static void peaq_wmi_poll(struct input_polled_dev *dev)
+>> +{
+>> +	union acpi_object obj;
+>> +	struct acpi_buffer buffer = { sizeof(obj), &obj };
+>> +	acpi_status status;
+>> +
+>> +	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
+>> +				     PEAQ_DOLBY_BUTTON_METHOD_ID,
+>> +				     NULL, &buffer);
+>> +	if (ACPI_FAILURE(status))
+>> +		return;
+>> +
+>> +	if (obj.type != ACPI_TYPE_INTEGER) {
+>> +		dev_err(&peaq_poll_dev->input->dev,
+>> +			"Error WMBC did not return an integer\n");
+>> +		return;
+>> +	}
+>> +
+>> +	if (peaq_ignore_events_counter && --peaq_ignore_events_counter > 0)
+>> +		return;
+>> +
+>> +	if (obj.integer.value) {
+>> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
+>> +		input_sync(peaq_poll_dev->input);
+>> +		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
+>> +		input_sync(peaq_poll_dev->input);
+>> +		peaq_ignore_events_counter = max(1u,
+>> +			PEAQ_POLL_IGNORE_MS / peaq_poll_dev->poll_interval);
+>> +	}
+>> +}
+>> +
+>> +static int __init peaq_wmi_init(void)
+>> +{
+>> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+>> +		return -ENODEV;
+>> +
+>> +	peaq_poll_dev = input_allocate_polled_device();
+>> +	if (!peaq_poll_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	peaq_poll_dev->poll = peaq_wmi_poll;
+>> +	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
+>> +	peaq_poll_dev->poll_interval_max = PEAQ_POLL_MAX_MS;
+>> +	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
+>> +	peaq_poll_dev->input->phys = "wmi/input0";
+>> +	peaq_poll_dev->input->id.bustype = BUS_HOST;
+>> +	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
+>> +
+>> +	return input_register_polled_device(peaq_poll_dev);
+>> +}
+>> +
+>> +static void __exit peaq_wmi_exit(void)
+>> +{
+>> +	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+>> +		return;
+>> +
+>> +	input_unregister_polled_device(peaq_poll_dev);
+>> +}
+>> +
+>> +module_init(peaq_wmi_init);
+>> +module_exit(peaq_wmi_exit);
+>> +
+>> +MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
+>> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 2.12.2
+>>
+>>
+>
