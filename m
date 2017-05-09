@@ -1,72 +1,71 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: RFC: WMI Enhancements
-Date: Wed, 10 May 2017 00:38:47 +0200
-Message-ID: <201705100038.47998@pali>
-References: <20170412230854.GA11963@fury> <738221cbaca94d10a0de7c03116df60e@ausx13mpc120.AMER.DELL.COM> <CAHp75Vc0rXwYKega9nJMrMe0tua6hrM7GTKOOJNsTNYR7KfGOA@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: WMI and Kernel:User interface
+Date: Tue, 9 May 2017 16:16:39 -0700
+Message-ID: <20170509231639.GB11404@fury>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart38325841.DVDzrorDOI";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc0rXwYKega9nJMrMe0tua6hrM7GTKOOJNsTNYR7KfGOA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, "Brown, Len" <len.brown@intel.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:38585 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750931AbdEIXQo (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 9 May 2017 19:16:44 -0400
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
---nextPart38325841.DVDzrorDOI
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Linus and Greg,
 
-I updated my bmfdec.c (git://github.com/pali/bmfdec.git) and here is
-guessed header description:
+We are in the process of redesigning the Windows Management Instrumentation
+(WMI) [1] system in the kernel. WMI is the Microsoft implementation of Web-Based
+Enterprise Management (WBEM). We are looking to provide WMI access to userspace,
+while allowing the kernel to filter requests that conflict with its own usage.
+We'd like your take on how this approach relates to our commitment to not break
+userspace.
 
-/*
- * BMF file is compressed by DS-01 algorithm with additional header:
- * 4 bytes: 46 4f 4d 42 - 'F' 'O' 'M' 'B'
- * 4 bytes: 01 00 00 00 - version 0x01
- * 4 bytes: size of compressed data (low endian) without this header
- * 4 bytes: size of decompressed data (low endian) without this header
- */
+For this discussion, we are specifically referring to ACPI PNP0C14 WMI
+devices, consisting of a GUID and a set of methods and events, as well as a
+precompiled intermediate description of the methods and arguments (MOF). Exposed
+to userspace, these methods provide for BIOS interaction and are used for system
+management as well as LEDs, hot keys, radio switches, etc. There is vendor
+interest in achieving feature parity with Windows by exposing WMI methods to
+userspace for system management.
 
-/*
- * Decompressed part of BMF file contains:
- * 4 bytes: 46 4f 4d 42 - 'F' 'O' 'M' 'B'
- * 4 bytes: N =3D size of first part (low endian) since beginning
- * N-8 bytes: first part data
- * 16 bytes: 42 4d 4f 46 51 55 41 4c 46 4c 41 56 4f 52 31 31 - "BMOFQUALFLA=
-VOR11"
- * M bytes: second part data of unknown length
- */
+While it appears WMI intended to be accessed from userspace, we have
+made use of it in the kernel to support various laptop features by connecting
+the WMI methods to other subsystems, notably input, leds, and rfkill [2]. The
+challenge is continuing to use WMI for these platform features, while allowing
+userspace to use it for system management tasks. Unfortunately, the WMI methods
+are not guaranteed to be split up along granular functional lines, and we will
+certainly face situations where the same GUID::METHOD_ID will be needed for a
+kernel feature (say LED support) as well as a system management task.
 
-=46irst part of decompressed data contains UTF-16 strings terminated by
-two zero bytes and between two strings are some binary data. Those
-strings are just literals found in decompiled MOF file, so looks like
-binary parts just decodes types and MOF language keywords.
+To address this, I have proposed [3] that exporting WMI be opt-in, only done at
+the request of and in collaboration with a vendor, with the kernel platform
+driver given the opportunity to filter requests. This filtering would need to be
+at the method and argument inspection level, such as checking for specific bits
+in the input buffer, and rejecting the request if they conflict with an in
+kernel usage (that's worst case, in some cases just GUID or method ID could be
+sufficient).
 
-And it looks like second part is not required and sometimes missing.
-It contains only binary data, no idea what is there.
+Because the kernel and the platform drivers are under continual development, and
+new systems appear regularly, we will encounter necessary changes to the
+platform driver WMI request filters. These changes could be considered a change
+to the kernel provided WMI interface to userspace. For example, we could
+regularly accept a call to $GUID::$METHOD_ID with bit 4 of the buffer set, and
+later deny the call when we determine it interferes with kernel usage.
 
-Now somebody with knowledge of MOF language should be able to describe
-what and how is stored in first part.
+In your view, is it acceptable to provide a chardev interface, for example,
+exposing WMI methods to userspace, with the understanding that the kernel may
+choose to filter certain requests which conflict with its own use? And that this
+filtering may change as new features are added to the platform drivers?
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+1. https://msdn.microsoft.com/en-us/library/aa384642(v=vs.85).aspx
+2. https://lwn.net/Articles/391230/
+3. https://lists.gt.net/linux/kernel/2671309/?page=1;
 
---nextPart38325841.DVDzrorDOI
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlkSRPcACgkQi/DJPQPkQ1K3lwCdHWmW+L1kdx6iW0IliK4L0iwa
-JPQAn1H5WilA/ppCfq8asP5ty65Vi6xE
-=qXhu
------END PGP SIGNATURE-----
-
---nextPart38325841.DVDzrorDOI--
+-- 
+Darren Hart
+VMware Open Source Technology Center
