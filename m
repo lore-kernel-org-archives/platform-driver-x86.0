@@ -1,53 +1,80 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH v1 2/3] platform/x86: thinkpad_acpi: Join string literals
- back
-Date: Tue, 09 May 2017 21:24:35 -0300
-Message-ID: <1494375875.1064702.971453736.29BB0B11@webmail.messagingengine.com>
-References: <20170509141721.15841-1-andriy.shevchenko@linux.intel.com>
- <20170509141721.15841-2-andriy.shevchenko@linux.intel.com>
- <20170509171040.GD19242@khazad-dum.debian.net>
- <1494351185.30052.94.camel@linux.intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: WMI and Kernel:User interface
+Date: Wed, 10 May 2017 07:13:41 +0200
+Message-ID: <20170510051341.GA17835@kroah.com>
+References: <20170509231639.GB11404@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:57001 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750951AbdEJAYg (ORCPT
+Received: from mail.linuxfoundation.org ([140.211.169.12]:52832 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751731AbdEJFNv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2017 20:24:36 -0400
-In-Reply-To: <1494351185.30052.94.camel@linux.intel.com>
+        Wed, 10 May 2017 01:13:51 -0400
+Content-Disposition: inline
+In-Reply-To: <20170509231639.GB11404@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Tue, May 9, 2017, at 14:33, Andy Shevchenko wrote:
-> On Tue, 2017-05-09 at 14:10 -0300, Henrique de Moraes Holschuh wrote:
-> > > While here, print negative error without changing a sign as it is a
-> > > common pattern in the kernel.
-> >=20
-> > A separate patch for this would be better: it would be easier to
-> > actually check that no functional changes crept in by mistake.
->=20
-> It doesn't make sense to me. It would touch same lines of code I do
-> already here and it's only one place, see below.
+On Tue, May 09, 2017 at 04:16:39PM -0700, Darren Hart wrote:
+> Linus and Greg,
+> 
+> We are in the process of redesigning the Windows Management Instrumentation
+> (WMI) [1] system in the kernel. WMI is the Microsoft implementation of Web-Based
+> Enterprise Management (WBEM). We are looking to provide WMI access to userspace,
+> while allowing the kernel to filter requests that conflict with its own usage.
+> We'd like your take on how this approach relates to our commitment to not break
+> userspace.
+> 
+> For this discussion, we are specifically referring to ACPI PNP0C14 WMI
+> devices, consisting of a GUID and a set of methods and events, as well as a
+> precompiled intermediate description of the methods and arguments (MOF). Exposed
+> to userspace, these methods provide for BIOS interaction and are used for system
+> management as well as LEDs, hot keys, radio switches, etc. There is vendor
+> interest in achieving feature parity with Windows by exposing WMI methods to
+> userspace for system management.
+> 
+> While it appears WMI intended to be accessed from userspace, we have
+> made use of it in the kernel to support various laptop features by connecting
+> the WMI methods to other subsystems, notably input, leds, and rfkill [2]. The
+> challenge is continuing to use WMI for these platform features, while allowing
+> userspace to use it for system management tasks. Unfortunately, the WMI methods
+> are not guaranteed to be split up along granular functional lines, and we will
+> certainly face situations where the same GUID::METHOD_ID will be needed for a
+> kernel feature (say LED support) as well as a system management task.
+> 
+> To address this, I have proposed [3] that exporting WMI be opt-in, only done at
+> the request of and in collaboration with a vendor, with the kernel platform
+> driver given the opportunity to filter requests. This filtering would need to be
+> at the method and argument inspection level, such as checking for specific bits
+> in the input buffer, and rejecting the request if they conflict with an in
+> kernel usage (that's worst case, in some cases just GUID or method ID could be
+> sufficient).
+> 
+> Because the kernel and the platform drivers are under continual development, and
+> new systems appear regularly, we will encounter necessary changes to the
+> platform driver WMI request filters. These changes could be considered a change
+> to the kernel provided WMI interface to userspace. For example, we could
+> regularly accept a call to $GUID::$METHOD_ID with bit 4 of the buffer set, and
+> later deny the call when we determine it interferes with kernel usage.
+> 
+> In your view, is it acceptable to provide a chardev interface, for example,
+> exposing WMI methods to userspace, with the understanding that the kernel may
+> choose to filter certain requests which conflict with its own use? And that this
+> filtering may change as new features are added to the platform drivers?
 
-I had to go line-by-line looking for the darn thing, instead of just
-compiling before-and-after and checking for an unchanged  object file.
+So, for example, if a new driver for a "brightness key" were added to
+the kernel, all of a sudden the "raw" access to the wmi data through the
+chardev would filtered away by the kernel and not seen by userspace?
 
-> > > =C2=A0	rc =3D fan_set_enable();
-> > > =C2=A0	if (rc < 0) {
-> > > -		pr_err("fan watchdog: error %d while enabling fan,
-> > > "
-> > > -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"will try again later...=
-\n", -rc);
-> > > +		pr_err("fan watchdog: error %d while enabling fan,
-> > > will try again later...\n",
-> > > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rc);
+Why would you want to do that?  What's wrong with providing "raw" access
+through a chardev, and the current in-kernel access as well at the same
+time?
 
-Yeah. This one.  I don't have a problem with this change at all (I acked
-it), but it took some effort to find the nail in the hailstack.
+I don't really understand what would "break" over time here.
 
---=20
-  Henrique Holschuh
+thanks,
+
+greg k-h
