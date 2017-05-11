@@ -1,97 +1,151 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
  of module-wide globals
-Date: Thu, 11 May 2017 15:40:28 +0200
-Message-ID: <20170511134028.GA1166@ozzy.nask.waw.pl>
+Date: Thu, 11 May 2017 15:52:11 +0200
+Message-ID: <20170511135211.GB1166@ozzy.nask.waw.pl>
 References: <20170424133334.7064-1-kernel@kempniu.pl>
- <20170501130536.GA25546@marvin.atrad.com.au>
- <20170502132144.GA6808@ozzy.nask.waw.pl>
- <20170504234058.GC21562@marvin.atrad.com.au>
- <20170505161556.GC4793@fury>
- <20170506123107.GA2516@kmp-mobile.hq.kempniu.pl>
- <20170506124516.GA1075@kmp-mobile.hq.kempniu.pl>
- <20170508160102.GE17700@fury>
  <20170509093524.GA19713@ozzy.nask.waw.pl>
  <20170509164734.GB17858@fury>
+ <2402801.hhjSWhyBjd@aspire.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f47.google.com ([74.125.82.47]:37532 "EHLO
-        mail-wm0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755504AbdEKNkc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2017 09:40:32 -0400
-Received: by mail-wm0-f47.google.com with SMTP id m123so36549896wma.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2017 06:40:31 -0700 (PDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170509164734.GB17858@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <2402801.hhjSWhyBjd@aspire.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> Perhaps so (overly zealous). Regarding the globals, let's be clear on the
-> motivation. We want to follow good sw engineering practice, use data
-> encapsulation, etc. However, using an explicit path to an ACPI device to avoid
-> having a static file-level global doesn't really improve encapsulation in any
-> way - it just shifts the blame :-)
-
-Indeed, thanks for a clear-headed opinion.  I got a bit carried away :)
-
-> Another reason to eliminate globals is to allow one driver to handle multiple
-> devices - all device-specific data must be bound to the device, not the driver.
-> In our case, there literally cannot be more than one _SB.FEXT. While there could
-> theoretically be more than one FUJ02E3, I think we all agree that is highly
-> improbable - and if it did happen, the explicit ACPI path approach would also be
-> broken.
-
-Good point.
-
-> The motivation to divide the drivers was to provide functional encapsulation,
-> accurately represent the system in the device tree, and to improve readability
-> and maintainability of the driver code. So long as we can keep coupling to a
-> minimum, I still think this makes sense.
+> On Tuesday, May 09, 2017 09:47:34 AM Darren Hart wrote:
+> > On Tue, May 09, 2017 at 11:35:24AM +0200, Michał Kępień wrote:
+> > > > On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
+> > > > > > Just to make sure we are all on the same page here, choosing the "two
+> > > > > > separate modules, each with one driver for one ACPI device" approach
+> > > > > > would mean ending up with two modules:
+> > > > > > 
+> > > > > >   - fujitsu-laptop, binding to the FUJ02E3 ACPI device, handling
+> > > > > >     everything _except_ backlight,
+> > > > > > 
+> > > > > >   - fujitsu-backlight, binding to the FUJ02B1 ACPI device, handling
+> > > > > >     backlight and depending on fujitsu-laptop.
+> > > > > > 
+> > > > > > We would need to export one function from fujitsu-laptop, namely
+> > > > > > fext_backlight().  I understand this would require creating a separate
+> > > > > > header file which would then be included in fujitsu-backlight.
+> > > > > > 
+> > > > > > fext_backlight() causes the FUNC method of the FUJ02E3 ACPI device to be
+> > > > > > called.  This method is marked as Serialized, which AFAIU means we do
+> > > > > > not need a separate lock in kernel code because all calls to this method
+> > > > > > are implicitly serialized by firmware itself.
+> > > > > > 
+> > > > > > I do not see anything "unnatural" in this approach, but I would love to
+> > > > > > be corrected if I am wrong.
+> > > > > 
+> > > > > To be fair, one thing that may be "unnatural" with this approach is that
+> > > > > even though fujitsu-backlight would depend on fujitsu-laptop, it would
+> > > > > still have to get a handle to FUJ02E3 using:
+> > > > > 
+> > > > >     acpi_get_handle(NULL, "\\_SB.FEXT", ...)
+> > > > >     
+> > > > > because call_fext_func() - and thus fext_backlight() - needs to be
+> > > > > passed a handle to FUJ02E3 and the two ACPI devices (FUJ02B1 handled by
+> > > > > fujitsu-backlight and FUJ02E3 handled by fujitsu-laptop) are not related
+> > > > > from the perspective of the ACPI device hierarchy.  Unless there is a
+> > > > > better way of implementing this, in which case I am open to suggestions.
+> > > > 
+> > > > At a high level, I would consider the handle to be private data which should be
+> > > > encapsulated in fujitsu_laptop. Or... where is FEXT in the ACPI hierarchy
+> > > > relative to FUJ02E3?
+> > > 
+> > > FEXT *is* FUJ02E3:
+> > > 
+> > > Device (FEXT)
+> > > {
+> > >     Name (_HID, "FUJ02E3")  // _HID: Hardware ID
+> > >     ...
+> > >     Method (FUNC, 4, Serialized)
+> > >     {
+> > >         ...
+> > >     }
+> > >     ...
+> > > }
+> > > 
+> > > See also below.
+> > > 
+> > > > Assuming FEXT is below FUJ02E3, the we appear to be making an assumption that
+> > > > there is only one FUJ02E3 on the system. While I think this is perfectly
+> > > > reasonable, it does contradict the argumentation from some of the other patches
+> > > > in this series.
+> > > 
+> > > Exactly.  The whole purpose of this patch series is to stop using
+> > > module-wide data.  We have a different situation here than in the case
+> > > of e.g. dell-smbios, which coordinates access to a module-wide buffer it
+> > > allocates.  
+> > > 
+> > > > If FEXT is not below fujitsu laptop... then it is a shared function which either
+> > > > one of them can own and serialize (or not if fw indeed handles that).
+> > > > 
+> > > > Either way, the owning driver should abstract away the private data and present
+> > > > an interface the other can use with only the "public" information.
+> > > 
+> > > I feel the problem at hand needs a fresh explanation.  I will be as
+> > > concise as possible.
+> > > 
+> > > We are considering two ACPI devices present on Fujitsu laptops:
+> > > 
+> > >   - FJEX:
+> > >       * path: \_SB_.PCI0.LPCB.FJEX
+> > >       * HID: FUJ02B1
+> > >       * methods invoked by kernel: GBLL, RBLL, SBLL, SBL2
+> > >       * handles: backlight level (LCD brightness)
+> > > 
+> > >   - FEXT:
+> > >       * path: \_SB_.FEXT
+> > >       * HID: FUJ02E3
+> > >       * methods invoked by kernel: FUNC
+> > >       * handles: hotkey, LEDs, platform attributes, backlight power
+> > >                                                     ^^^^^^^^^^^^^^^
+> > 
+> > This is very concise and describes the problem clearly, thank you!
+> > 
+> > > 
+> > > The problem is that if we split the ACPI drivers for those two devices
+> > > into separate modules, the FJEX driver will need to access the FUNC
+> > > method of device FEXT, handled by another driver in another module.
+> > > 
+> > > One way of solving this cleanly is to store a handle to the most
+> > > recently found FEXT instance (there should always be at most one anyway)
+> > > in a module-wide variable inside the FEXT driver, but that defeats the
+> > > purpose of this series.
+> > > 
+> > > Another solution is proposed by patch 04/10 of this series: make the
+> > > FJEX driver independently grab a handle to FEXT using the absolute ACPI
+> > > path to the latter.  It feels unnatural (AFAICT only one driver outside
+> > > drivers/acpi, namely pcc-cpufreq, does that), but it is safe and allows
+> > > us to drop all module-wide data.
+> > 
+> > Rafael's take on this would be useful.
 > 
-> So - static global variable for a driver with exactly one device that needs
-> offer services to another driver... not really all that horrible.
-> 
-> You could accomplish this by making call_fext_func() not static and calling it
-> from fujitsu-backlight. Or, you could further restrict it by exporting a
-> fujitsu_backlight_power() function which wraps call_fext_func() providing a
-> specific interface for fujitsu-backlight. This makes the ownership very explicit
-> and ensures the usage doesn't grow without explicit changes to fujitsu-laptop.
+> Well, can you point me to patch [04/10] then?
 
-I like the latter option more.  Exporting call_fext_func() as it is
-would mean enabling other modules to reimplement fujitsu-laptop's
-features and we do not want that.
+Here is a link:
 
-> That is probably the most practical solution IFF we still feel it is worth
-> splitting the driver into two separate modules. We need to develop a more robust
-> and objective decision making process on module granularity (when to split, when
-> to keep together). Will continue to give this more thought.
+    https://www.spinics.net/lists/platform-driver-x86/msg11412.html
 
-In light of the above, I still feel the split is worth going through
-with.  The question is whether Jonathan feels the same :)
+However, please note that in light of what Darren wrote, this specific
+patch is likely to be dropped from v2.  Thus, there may be no point in
+reviewing it after all, though your feedback would certainly be
+appreciated for future reference.
 
-Jonathan, assuming the objective of splitting the module in two, allow
-me to pick your brain a bit:
+> Or better resend the whole series with a CC to linux-acpi (which it should go
+> to to start with IMO).
 
- 1. Would you be okay with leaving "priv" as the variable name for
-    device-specific data in both drivers?  If they are to be separated,
-    "priv" would soon become unambiguous.  I do not have any strong
-    feelings about this, though.
-
- 2. Would you be okay with renaming "acpi_handle" to "handle"?  Darren
-    seems to like this idea and in light of the above we would not have
-    another ACPI handle inside struct fujitsu_bl any more.
-
- 3. You mentioned earlier that you were not really fond of the fext_*()
-    helper functions.  Would you like me to drop them and simply use
-    call_fext_func() with five arguments everywhere?  Or should I keep
-    the helper functions in v2?
-
-Thanks,
+I did not think of that as this ten-patch series mostly revolves around
+data encapsulation.  However, I think it might be worthwhile to CC
+linux-acpi for the series that will split fujitsu-laptop in two, shall
+it ever be posted.
 
 -- 
 Best regards,
