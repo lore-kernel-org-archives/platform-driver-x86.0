@@ -1,162 +1,115 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead of module-wide globals
-Date: Thu, 11 May 2017 16:37:30 +0200
-Message-ID: <2351586.Dq8uyyCcAZ@aspire.rjw.lan>
-References: <20170424133334.7064-1-kernel@kempniu.pl> <2402801.hhjSWhyBjd@aspire.rjw.lan> <20170511135211.GB1166@ozzy.nask.waw.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Thu, 11 May 2017 08:38:48 -0700
+Message-ID: <20170511153848.GF11404@fury>
+References: <20170424133334.7064-1-kernel@kempniu.pl>
+ <2402801.hhjSWhyBjd@aspire.rjw.lan>
+ <20170511135211.GB1166@ozzy.nask.waw.pl>
+ <2351586.Dq8uyyCcAZ@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.net.pl ([79.96.170.134]:47538 "EHLO
-        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S965026AbdEKOoL (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:53727 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756924AbdEKPiy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2017 10:44:11 -0400
-In-Reply-To: <20170511135211.GB1166@ozzy.nask.waw.pl>
+        Thu, 11 May 2017 11:38:54 -0400
+Content-Disposition: inline
+In-Reply-To: <2351586.Dq8uyyCcAZ@aspire.rjw.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thursday, May 11, 2017 03:52:11 PM Michał Kępień wrote:
-> > On Tuesday, May 09, 2017 09:47:34 AM Darren Hart wrote:
-> > > On Tue, May 09, 2017 at 11:35:24AM +0200, Michał Kępień wrote:
-> > > > > On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
-> > > > > > > Just to make sure we are all on the same page here, choosing the "two
-> > > > > > > separate modules, each with one driver for one ACPI device" approach
-> > > > > > > would mean ending up with two modules:
-> > > > > > > 
-> > > > > > >   - fujitsu-laptop, binding to the FUJ02E3 ACPI device, handling
-> > > > > > >     everything _except_ backlight,
-> > > > > > > 
-> > > > > > >   - fujitsu-backlight, binding to the FUJ02B1 ACPI device, handling
-> > > > > > >     backlight and depending on fujitsu-laptop.
-> > > > > > > 
-> > > > > > > We would need to export one function from fujitsu-laptop, namely
-> > > > > > > fext_backlight().  I understand this would require creating a separate
-> > > > > > > header file which would then be included in fujitsu-backlight.
-> > > > > > > 
-> > > > > > > fext_backlight() causes the FUNC method of the FUJ02E3 ACPI device to be
-> > > > > > > called.  This method is marked as Serialized, which AFAIU means we do
-> > > > > > > not need a separate lock in kernel code because all calls to this method
-> > > > > > > are implicitly serialized by firmware itself.
-> > > > > > > 
-> > > > > > > I do not see anything "unnatural" in this approach, but I would love to
-> > > > > > > be corrected if I am wrong.
-> > > > > > 
-> > > > > > To be fair, one thing that may be "unnatural" with this approach is that
-> > > > > > even though fujitsu-backlight would depend on fujitsu-laptop, it would
-> > > > > > still have to get a handle to FUJ02E3 using:
-> > > > > > 
-> > > > > >     acpi_get_handle(NULL, "\\_SB.FEXT", ...)
-> > > > > >     
-> > > > > > because call_fext_func() - and thus fext_backlight() - needs to be
-> > > > > > passed a handle to FUJ02E3 and the two ACPI devices (FUJ02B1 handled by
-> > > > > > fujitsu-backlight and FUJ02E3 handled by fujitsu-laptop) are not related
-> > > > > > from the perspective of the ACPI device hierarchy.  Unless there is a
-> > > > > > better way of implementing this, in which case I am open to suggestions.
+On Thu, May 11, 2017 at 04:37:30PM +0200, Rafael Wysocki wrote:
+> On Thursday, May 11, 2017 03:52:11 PM Michał Kępień wrote:
+> > > On Tuesday, May 09, 2017 09:47:34 AM Darren Hart wrote:
+> > > > On Tue, May 09, 2017 at 11:35:24AM +0200, Michał Kępień wrote:
+> > > > > > On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
+...
+> > > > > I feel the problem at hand needs a fresh explanation.  I will be as
+> > > > > concise as possible.
 > > > > > 
-> > > > > At a high level, I would consider the handle to be private data which should be
-> > > > > encapsulated in fujitsu_laptop. Or... where is FEXT in the ACPI hierarchy
-> > > > > relative to FUJ02E3?
-> > > > 
-> > > > FEXT *is* FUJ02E3:
-> > > > 
-> > > > Device (FEXT)
-> > > > {
-> > > >     Name (_HID, "FUJ02E3")  // _HID: Hardware ID
-> > > >     ...
-> > > >     Method (FUNC, 4, Serialized)
-> > > >     {
-> > > >         ...
-> > > >     }
-> > > >     ...
-> > > > }
-> > > > 
-> > > > See also below.
-> > > > 
-> > > > > Assuming FEXT is below FUJ02E3, the we appear to be making an assumption that
-> > > > > there is only one FUJ02E3 on the system. While I think this is perfectly
-> > > > > reasonable, it does contradict the argumentation from some of the other patches
-> > > > > in this series.
-> > > > 
-> > > > Exactly.  The whole purpose of this patch series is to stop using
-> > > > module-wide data.  We have a different situation here than in the case
-> > > > of e.g. dell-smbios, which coordinates access to a module-wide buffer it
-> > > > allocates.  
-> > > > 
-> > > > > If FEXT is not below fujitsu laptop... then it is a shared function which either
-> > > > > one of them can own and serialize (or not if fw indeed handles that).
+> > > > > We are considering two ACPI devices present on Fujitsu laptops:
 > > > > > 
-> > > > > Either way, the owning driver should abstract away the private data and present
-> > > > > an interface the other can use with only the "public" information.
+> > > > >   - FJEX:
+> > > > >       * path: \_SB_.PCI0.LPCB.FJEX
+> > > > >       * HID: FUJ02B1
+> > > > >       * methods invoked by kernel: GBLL, RBLL, SBLL, SBL2
+> > > > >       * handles: backlight level (LCD brightness)
+> > > > > 
+> > > > >   - FEXT:
+> > > > >       * path: \_SB_.FEXT
+> > > > >       * HID: FUJ02E3
+> > > > >       * methods invoked by kernel: FUNC
+> > > > >       * handles: hotkey, LEDs, platform attributes, backlight power
+> > > > >                                                     ^^^^^^^^^^^^^^^
 > > > > 
-> > > > I feel the problem at hand needs a fresh explanation.  I will be as
-> > > > concise as possible.
+> > > > This is very concise and describes the problem clearly, thank you!
 > > > > 
-> > > > We are considering two ACPI devices present on Fujitsu laptops:
+> > > > > 
+> > > > > The problem is that if we split the ACPI drivers for those two devices
+> > > > > into separate modules, the FJEX driver will need to access the FUNC
+> > > > > method of device FEXT, handled by another driver in another module.
+> > > > > 
+> > > > > One way of solving this cleanly is to store a handle to the most
+> > > > > recently found FEXT instance (there should always be at most one anyway)
+> > > > > in a module-wide variable inside the FEXT driver, but that defeats the
+> > > > > purpose of this series.
+> > > > > 
+> > > > > Another solution is proposed by patch 04/10 of this series: make the
+> > > > > FJEX driver independently grab a handle to FEXT using the absolute ACPI
+> > > > > path to the latter.  It feels unnatural (AFAICT only one driver outside
+> > > > > drivers/acpi, namely pcc-cpufreq, does that), but it is safe and allows
+> > > > > us to drop all module-wide data.
 > > > > 
-> > > >   - FJEX:
-> > > >       * path: \_SB_.PCI0.LPCB.FJEX
-> > > >       * HID: FUJ02B1
-> > > >       * methods invoked by kernel: GBLL, RBLL, SBLL, SBL2
-> > > >       * handles: backlight level (LCD brightness)
-> > > > 
-> > > >   - FEXT:
-> > > >       * path: \_SB_.FEXT
-> > > >       * HID: FUJ02E3
-> > > >       * methods invoked by kernel: FUNC
-> > > >       * handles: hotkey, LEDs, platform attributes, backlight power
-> > > >                                                     ^^^^^^^^^^^^^^^
+> > > > Rafael's take on this would be useful.
 > > > 
-> > > This is very concise and describes the problem clearly, thank you!
-> > > 
-> > > > 
-> > > > The problem is that if we split the ACPI drivers for those two devices
-> > > > into separate modules, the FJEX driver will need to access the FUNC
-> > > > method of device FEXT, handled by another driver in another module.
-> > > > 
-> > > > One way of solving this cleanly is to store a handle to the most
-> > > > recently found FEXT instance (there should always be at most one anyway)
-> > > > in a module-wide variable inside the FEXT driver, but that defeats the
-> > > > purpose of this series.
-> > > > 
-> > > > Another solution is proposed by patch 04/10 of this series: make the
-> > > > FJEX driver independently grab a handle to FEXT using the absolute ACPI
-> > > > path to the latter.  It feels unnatural (AFAICT only one driver outside
-> > > > drivers/acpi, namely pcc-cpufreq, does that), but it is safe and allows
-> > > > us to drop all module-wide data.
-> > > 
-> > > Rafael's take on this would be useful.
+> > > Well, can you point me to patch [04/10] then?
 > > 
-> > Well, can you point me to patch [04/10] then?
+> > Here is a link:
+> > 
+> >     https://www.spinics.net/lists/platform-driver-x86/msg11412.html
 > 
-> Here is a link:
+> Thanks!
 > 
->     https://www.spinics.net/lists/platform-driver-x86/msg11412.html
-
-Thanks!
-
-> However, please note that in light of what Darren wrote, this specific
-> patch is likely to be dropped from v2.  Thus, there may be no point in
-> reviewing it after all, though your feedback would certainly be
-> appreciated for future reference.
-
-OK
-
-> > Or better resend the whole series with a CC to linux-acpi (which it should go
-> > to to start with IMO).
+> > However, please note that in light of what Darren wrote, this specific
+> > patch is likely to be dropped from v2.  Thus, there may be no point in
+> > reviewing it after all, though your feedback would certainly be
+> > appreciated for future reference.
 > 
-> I did not think of that as this ten-patch series mostly revolves around
-> data encapsulation.  However, I think it might be worthwhile to CC
-> linux-acpi for the series that will split fujitsu-laptop in two, shall
-> it ever be posted.
+> OK
 
-OK, but as a rule of thumb, it is better to CC everything touching ACPI to
-linux-acpi just to let people know what you're doing if nothing else.
+Rafael's take on balancing one driver per device, versus a single driver with
+interdependent ACPI devices, even if one of them doesn't show up in the device
+hierarchy, as well as one driver calling into another one, all from his
+experience with ACPI device drivers would be valuable, and could sway my advice
+above.
 
-And if there are ACPI-related questions down the road, the context is there
-aleady, so it is generally easier to answer them then.
+> 
+> > > Or better resend the whole series with a CC to linux-acpi (which it should go
+> > > to to start with IMO).
+> > 
+> > I did not think of that as this ten-patch series mostly revolves around
+> > data encapsulation.  However, I think it might be worthwhile to CC
+> > linux-acpi for the series that will split fujitsu-laptop in two, shall
+> > it ever be posted.
+> 
+> OK, but as a rule of thumb, it is better to CC everything touching ACPI to
+> linux-acpi just to let people know what you're doing if nothing else.
+> 
+> And if there are ACPI-related questions down the road, the context is there
+> aleady, so it is generally easier to answer them then.
+> 
 
-Thanks,
-Rafael
+Agreed. Unfortunately, we don't have a good way to make this clear in
+MAINTAINERS without enumerating every driver. I'll try to make sure the regular
+contributors know this, but new folks will continue to miss it unless we can
+find a better way to make it obvious.
+
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
