@@ -1,115 +1,66 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
- of module-wide globals
-Date: Thu, 11 May 2017 08:38:48 -0700
-Message-ID: <20170511153848.GF11404@fury>
-References: <20170424133334.7064-1-kernel@kempniu.pl>
- <2402801.hhjSWhyBjd@aspire.rjw.lan>
- <20170511135211.GB1166@ozzy.nask.waw.pl>
- <2351586.Dq8uyyCcAZ@aspire.rjw.lan>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/1] thinkpad_acpi: Add support for status (external
+ cover) LED
+Date: Fri, 12 May 2017 12:43:16 +0200
+Message-ID: <20170512104315.GC6780@amd>
+References: <20170119172132.36029-1-agoode@google.com>
+ <20170507163812.GA14896@xo-6d-61-c0.localdomain>
+ <20170507234903.GA15137@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:53727 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756924AbdEKPiy (ORCPT
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45876 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751323AbdELKnT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2017 11:38:54 -0400
+        Fri, 12 May 2017 06:43:19 -0400
 Content-Disposition: inline
-In-Reply-To: <2351586.Dq8uyyCcAZ@aspire.rjw.lan>
+In-Reply-To: <20170507234903.GA15137@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-
-On Thu, May 11, 2017 at 04:37:30PM +0200, Rafael Wysocki wrote:
-> On Thursday, May 11, 2017 03:52:11 PM Michał Kępień wrote:
-> > > On Tuesday, May 09, 2017 09:47:34 AM Darren Hart wrote:
-> > > > On Tue, May 09, 2017 at 11:35:24AM +0200, Michał Kępień wrote:
-> > > > > > On Sat, May 06, 2017 at 02:45:16PM +0200, Michał Kępień wrote:
-...
-> > > > > I feel the problem at hand needs a fresh explanation.  I will be as
-> > > > > concise as possible.
-> > > > > 
-> > > > > We are considering two ACPI devices present on Fujitsu laptops:
-> > > > > 
-> > > > >   - FJEX:
-> > > > >       * path: \_SB_.PCI0.LPCB.FJEX
-> > > > >       * HID: FUJ02B1
-> > > > >       * methods invoked by kernel: GBLL, RBLL, SBLL, SBL2
-> > > > >       * handles: backlight level (LCD brightness)
-> > > > > 
-> > > > >   - FEXT:
-> > > > >       * path: \_SB_.FEXT
-> > > > >       * HID: FUJ02E3
-> > > > >       * methods invoked by kernel: FUNC
-> > > > >       * handles: hotkey, LEDs, platform attributes, backlight power
-> > > > >                                                     ^^^^^^^^^^^^^^^
-> > > > 
-> > > > This is very concise and describes the problem clearly, thank you!
-> > > > 
-> > > > > 
-> > > > > The problem is that if we split the ACPI drivers for those two devices
-> > > > > into separate modules, the FJEX driver will need to access the FUNC
-> > > > > method of device FEXT, handled by another driver in another module.
-> > > > > 
-> > > > > One way of solving this cleanly is to store a handle to the most
-> > > > > recently found FEXT instance (there should always be at most one anyway)
-> > > > > in a module-wide variable inside the FEXT driver, but that defeats the
-> > > > > purpose of this series.
-> > > > > 
-> > > > > Another solution is proposed by patch 04/10 of this series: make the
-> > > > > FJEX driver independently grab a handle to FEXT using the absolute ACPI
-> > > > > path to the latter.  It feels unnatural (AFAICT only one driver outside
-> > > > > drivers/acpi, namely pcc-cpufreq, does that), but it is safe and allows
-> > > > > us to drop all module-wide data.
-> > > > 
-> > > > Rafael's take on this would be useful.
-> > > 
-> > > Well, can you point me to patch [04/10] then?
-> > 
-> > Here is a link:
-> > 
-> >     https://www.spinics.net/lists/platform-driver-x86/msg11412.html
-> 
-> Thanks!
-> 
-> > However, please note that in light of what Darren wrote, this specific
-> > patch is likely to be dropped from v2.  Thus, there may be no point in
-> > reviewing it after all, though your feedback would certainly be
-> > appreciated for future reference.
-> 
-> OK
-
-Rafael's take on balancing one driver per device, versus a single driver with
-interdependent ACPI devices, even if one of them doesn't show up in the device
-hierarchy, as well as one driver calling into another one, all from his
-experience with ACPI device drivers would be valuable, and could sway my advice
-above.
-
-> 
-> > > Or better resend the whole series with a CC to linux-acpi (which it should go
-> > > to to start with IMO).
-> > 
-> > I did not think of that as this ten-patch series mostly revolves around
-> > data encapsulation.  However, I think it might be worthwhile to CC
-> > linux-acpi for the series that will split fujitsu-laptop in two, shall
-> > it ever be posted.
-> 
-> OK, but as a rule of thumb, it is better to CC everything touching ACPI to
-> linux-acpi just to let people know what you're doing if nothing else.
-> 
-> And if there are ACPI-related questions down the road, the context is there
-> aleady, so it is generally easier to answer them then.
-> 
-
-Agreed. Unfortunately, we don't have a good way to make this clear in
-MAINTAINERS without enumerating every driver. I'll try to make sure the regular
-contributors know this, but new folks will continue to miss it unless we can
-find a better way to make it obvious.
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Adam Goode <agoode@google.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+--Sr1nOIr3CvdE5hEN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun 2017-05-07 20:49:03, Henrique de Moraes Holschuh wrote:
+> On Sun, 07 May 2017, Pavel Machek wrote:
+> > On Thu 2017-01-19 12:21:32, Adam Goode wrote:
+> > > This allows the control of the red status LED, which is the dot of th=
+e "i"
+> > > in the word "ThinkPad" on the outside cover of newer models.
+> > >=20
+> > > In the manual, both this LED and the power LED are referred to as
+> > > the "system-status indicators" without distinction between the two, so
+> > > I chose "status" as the LED name.
+> >=20
+> > Could we name it something like external_status or something? "status" =
+is way too generic.
+>=20
+> "thinkdot" ;-)
+
+Sounds good to me ;-).
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Sr1nOIr3CvdE5hEN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlkVkcMACgkQMOfwapXb+vLC1gCfaaxDQ6FpNlMrOFBQISM9OQVS
+F9QAn1N77wLq2Cu2ohy9kxOvdwXBergQ
+=Nm+I
+-----END PGP SIGNATURE-----
+
+--Sr1nOIr3CvdE5hEN--
