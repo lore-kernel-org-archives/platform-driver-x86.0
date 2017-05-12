@@ -1,185 +1,40 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3] platform/x86: peaq-wmi: Add new peaq-wmi driver
-Date: Fri, 12 May 2017 17:11:54 +0200
-Message-ID: <20170512151154.8903-1-hdegoede@redhat.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH 1/1] thinkpad_acpi: Add support for
+ status (external cover) LED
+Date: Fri, 12 May 2017 14:23:21 -0300
+Message-ID: <20170512172321.GA16100@khazad-dum.debian.net>
+References: <20170119172132.36029-1-agoode@google.com>
+ <20170507163812.GA14896@xo-6d-61-c0.localdomain>
+ <20170507234903.GA15137@khazad-dum.debian.net>
+ <20170512104315.GC6780@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170512104315.GC6780@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Adam Goode <agoode@google.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
-devices, which is actually quite a nice device. Under Windows it has
-Dolby software for "better" sound and you can select different equalizer
-presets using a special button.
+On Fri, 12 May 2017, Pavel Machek wrote:
+> On Sun 2017-05-07 20:49:03, Henrique de Moraes Holschuh wrote:
+> > On Sun, 07 May 2017, Pavel Machek wrote:
+> > > On Thu 2017-01-19 12:21:32, Adam Goode wrote:
+> > > > This allows the control of the red status LED, which is the dot of the "i"
+> > > > in the word "ThinkPad" on the outside cover of newer models.
+> > > > 
+> > > > In the manual, both this LED and the power LED are referred to as
+> > > > the "system-status indicators" without distinction between the two, so
+> > > > I chose "status" as the LED name.
+> > > 
+> > > Could we name it something like external_status or something? "status" is way too generic.
+> > 
+> > "thinkdot" ;-)
+> 
+> Sounds good to me ;-).
 
-This WMI interface for this button is not really nice, as it does not do
-notifies (it really does not I tripple checked), but since I had already
-figured out the entire WMI interface for this I decided to go the full
-mile anyways and also implent a WMI based input driver for this using
-input_polldev since, well, we need to poll.
+Ok.  Adam, care to respin this when you have the time?
 
-This commit adds support for this button making it report KEY_SOUND input
-events. KEY_SOUND is already used in various places to switch sound into
-theatre mode and things like that so it seems appropriate here.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-Changes in v2:
--Drop unneeded #include <linux/input.h>
--Add and use PEAQ_POLL_IGNORE_MS and PEAQ_POLL_MAX_MS defines
--Make globals static
--Call input_sync between reporting the button down and up
--Ignore events for at least 1 poll after an event even if the user has set
- poll_interval > PEAQ_POLL_IGNORE_MS
-Changes in v3:
--Pass in a dummy input argument to wmi_evaluate_method to fix
- ACPI warnings about the WMBC method expecting 3 arguments and us providing
- only 2 (the method does not do anything with the 3th argument hence the
- dummy name and hence I missed this before)
----
- drivers/platform/x86/Kconfig    |  7 +++
- drivers/platform/x86/Makefile   |  1 +
- drivers/platform/x86/peaq-wmi.c | 99 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 107 insertions(+)
- create mode 100644 drivers/platform/x86/peaq-wmi.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index be2ffbd6eb6c..2bac2b2644f9 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -660,6 +660,13 @@ config MSI_WMI
- 	 To compile this driver as a module, choose M here: the module will
- 	 be called msi-wmi.
- 
-+config PEAQ_WMI
-+	tristate "PEAQ 2-in-1 WMI hotkey driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-+
- config TOPSTAR_LAPTOP
- 	tristate "Topstar Laptop Extras"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index de4ffb594ba5..02487f95dd27 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_PANASONIC_LAPTOP)	+= panasonic-laptop.o
- obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
- obj-$(CONFIG_ACPI_WMI)		+= wmi.o
- obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
-+obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
- obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
- obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
- 
-diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-new file mode 100644
-index 000000000000..23942d5b3525
---- /dev/null
-+++ b/drivers/platform/x86/peaq-wmi.c
-@@ -0,0 +1,99 @@
-+/*
-+ * PEAQ 2-in-1 WMI hotkey driver
-+ * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/input-polldev.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+#define PEAQ_DOLBY_BUTTON_GUID		"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
-+#define PEAQ_DOLBY_BUTTON_METHOD_ID	5
-+#define PEAQ_POLL_INTERVAL_MS		250
-+#define PEAQ_POLL_IGNORE_MS		500
-+#define PEAQ_POLL_MAX_MS		1000
-+
-+MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
-+
-+static struct input_polled_dev *peaq_poll_dev;
-+static unsigned int peaq_ignore_events_counter;
-+
-+/*
-+ * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
-+ * set on both press and release. The WMI method checks and clears that flag.
-+ * So for a press + release we will get back One from the WMI method either once
-+ * (if polling after the release) or twice (polling between press and release).
-+ * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
-+ */
-+static void peaq_wmi_poll(struct input_polled_dev *dev)
-+{
-+	u32 dummy = 0;
-+	union acpi_object obj;
-+	struct acpi_buffer input = { sizeof(dummy), &dummy };
-+	struct acpi_buffer output = { sizeof(obj), &obj };
-+	acpi_status status;
-+
-+	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
-+				     PEAQ_DOLBY_BUTTON_METHOD_ID,
-+				     &input, &output);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	if (obj.type != ACPI_TYPE_INTEGER) {
-+		dev_err(&peaq_poll_dev->input->dev,
-+			"Error WMBC did not return an integer\n");
-+		return;
-+	}
-+
-+	if (peaq_ignore_events_counter && --peaq_ignore_events_counter > 0)
-+		return;
-+
-+	if (obj.integer.value) {
-+		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
-+		input_sync(peaq_poll_dev->input);
-+		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
-+		input_sync(peaq_poll_dev->input);
-+		peaq_ignore_events_counter = max(1u,
-+			PEAQ_POLL_IGNORE_MS / peaq_poll_dev->poll_interval);
-+	}
-+}
-+
-+static int __init peaq_wmi_init(void)
-+{
-+	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-+		return -ENODEV;
-+
-+	peaq_poll_dev = input_allocate_polled_device();
-+	if (!peaq_poll_dev)
-+		return -ENOMEM;
-+
-+	peaq_poll_dev->poll = peaq_wmi_poll;
-+	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
-+	peaq_poll_dev->poll_interval_max = PEAQ_POLL_MAX_MS;
-+	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
-+	peaq_poll_dev->input->phys = "wmi/input0";
-+	peaq_poll_dev->input->id.bustype = BUS_HOST;
-+	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
-+
-+	return input_register_polled_device(peaq_poll_dev);
-+}
-+
-+static void __exit peaq_wmi_exit(void)
-+{
-+	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-+		return;
-+
-+	input_unregister_polled_device(peaq_poll_dev);
-+}
-+
-+module_init(peaq_wmi_init);
-+module_exit(peaq_wmi_exit);
-+
-+MODULE_DESCRIPTION("PEAQ 2-in-1 WMI hotkey driver");
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_LICENSE("GPL");
 -- 
-2.12.2
+  Henrique Holschuh
