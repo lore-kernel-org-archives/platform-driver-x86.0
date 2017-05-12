@@ -1,40 +1,44 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [PATCH 1/1] thinkpad_acpi: Add support for
- status (external cover) LED
-Date: Fri, 12 May 2017 14:23:21 -0300
-Message-ID: <20170512172321.GA16100@khazad-dum.debian.net>
-References: <20170119172132.36029-1-agoode@google.com>
- <20170507163812.GA14896@xo-6d-61-c0.localdomain>
- <20170507234903.GA15137@khazad-dum.debian.net>
- <20170512104315.GC6780@amd>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v3] platform/x86: peaq-wmi: Add new peaq-wmi driver
+Date: Fri, 12 May 2017 10:47:51 -0700
+Message-ID: <20170512174751.GB17235@fury>
+References: <20170512151154.8903-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:53544 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1758088AbdELRrx (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 12 May 2017 13:47:53 -0400
 Content-Disposition: inline
-In-Reply-To: <20170512104315.GC6780@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Adam Goode <agoode@google.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20170512151154.8903-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, 12 May 2017, Pavel Machek wrote:
-> On Sun 2017-05-07 20:49:03, Henrique de Moraes Holschuh wrote:
-> > On Sun, 07 May 2017, Pavel Machek wrote:
-> > > On Thu 2017-01-19 12:21:32, Adam Goode wrote:
-> > > > This allows the control of the red status LED, which is the dot of the "i"
-> > > > in the word "ThinkPad" on the outside cover of newer models.
-> > > > 
-> > > > In the manual, both this LED and the power LED are referred to as
-> > > > the "system-status indicators" without distinction between the two, so
-> > > > I chose "status" as the LED name.
-> > > 
-> > > Could we name it something like external_status or something? "status" is way too generic.
-> > 
-> > "thinkdot" ;-)
+On Fri, May 12, 2017 at 05:11:54PM +0200, Hans de Goede wrote:
+> PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
+> devices, which is actually quite a nice device. Under Windows it has
+> Dolby software for "better" sound and you can select different equalizer
+> presets using a special button.
 > 
-> Sounds good to me ;-).
+> This WMI interface for this button is not really nice, as it does not do
+> notifies (it really does not I tripple checked), but since I had already
+> figured out the entire WMI interface for this I decided to go the full
+> mile anyways and also implent a WMI based input driver for this using
+> input_polldev since, well, we need to poll.
+> 
+> This commit adds support for this button making it report KEY_SOUND input
+> events. KEY_SOUND is already used in various places to switch sound into
+> theatre mode and things like that so it seems appropriate here.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Ok.  Adam, care to respin this when you have the time?
-
+Queued to testing, thanks.
 -- 
-  Henrique Holschuh
+Darren Hart
+VMware Open Source Technology Center
