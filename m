@@ -1,104 +1,108 @@
-From: <susan.christian@state.sd.us>
-Subject: 38629 platform-driver-x86
-Date: Mon, 15 May 2017 09:42:46 -0000
-Message-ID: <149484136639.6152.16596709912517357570@zaural.ru>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Mon, 15 May 2017 16:27:25 -0700
+Message-ID: <20170515232725.GH17235@fury>
+References: <20170501130536.GA25546@marvin.atrad.com.au>
+ <20170502132144.GA6808@ozzy.nask.waw.pl>
+ <20170504234058.GC21562@marvin.atrad.com.au>
+ <20170505161556.GC4793@fury>
+ <20170506123107.GA2516@kmp-mobile.hq.kempniu.pl>
+ <20170506124516.GA1075@kmp-mobile.hq.kempniu.pl>
+ <20170508160102.GE17700@fury>
+ <20170509093524.GA19713@ozzy.nask.waw.pl>
+ <20170509164734.GB17858@fury>
+ <20170511134028.GA1166@ozzy.nask.waw.pl>
 Mime-Version: 1.0
-Content-Type: application/zip; name="38438.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws126.zone31-163-191.zaural.ru ([31.163.191.126]:37283 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1760441AbdEOJmu (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:48667 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751603AbdEOX1c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2017 05:42:50 -0400
-Content-Disposition: attachment
+        Mon, 15 May 2017 19:27:32 -0400
+Content-Disposition: inline
+In-Reply-To: <20170511134028.GA1166@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-UEsDBAoAAAAAAJ1Mr0oaWtdFZxIAAGcSAAAJAAAAMjQwNjYuemlwUEsDBBQAAAAIAJ1Mr0o92O+A
-0REAAEBZAAAIAAAAMjQwNjYuanOVXFlz4kYQft+q/Q+EVBGIEses8O7am30QYPBtfLC2K5UHsCUO
-c98mlf8eMQKm5+se4bzAaDRHT9/dM5rrt5fjm9fij+qoOR+UZ4nviV9+cT5++KV4cf/Urd34neeC
-eh7rCvX8pp87l4FfVJXbqklfv36qXa0eVIOo5la/HDZ0+bgKo5zO9csQsJ5+8nVxngB41aOnn58n
-Lf0wI2Ooho/X5qTq4bneJu2eJ/ohrYqqkXpOrvCiHtcNmtDAh7V3Vs+suKeLBPLBoHihuhozXLTI
-2qKJJq3+VTKjq78RvOkiQXUNoL6MXqmq1XN13VRVhM8VApQuNjdF1azz/FIGAr62Ed1knm234UOB
-0pmUe/5cXIkHJH/eFimtWjPCJo9rVG6er+sAaxtQ4tNB00n9VnPJHNY/hufCSA9xKmJwIrLAHTDz
-CZERwj6wogv9KpmROSBixCtTjnj3vC6eaHbW634h9DrXxTphtZuewNGqtyGD90MiyJTnTLi/SyJO
-3vd8SYjn0CvhUZICuVvQeIZy/KjfXYO01GGBbT+CUE+hVzUBqqUJ1WDKO2Mak51aA8roFHOb1V9t
-ZufSvweYDlqEq9aYVL+c61Q1g+xJ9x9P/EuCqfoZYzYtHoQaSZghAyAa/GwCF+hXU8ISqCImwD4t
-mKEPw/YIf73Cuy7g9oEs8g30SgVwNRkDmZs9ExKtKjhn1dpESlVdOU1aqxoCTDCrAeSTSMrWExPx
-XxIt0e4PLjWQyD3ljKhb/kkAUkY+rpyQZ9RL3BHyj1q9xh7SFdZOuL/fLTRhttqosKGgYW9fRGVH
-kQZQPgD9AtF5qE3mzR5wlG/iEDA4AEeASEmjrMuGFVfNTSwkALx/CTECyv9xuq4Pa+4llsCDLcr8
-GoMFWJQqncJoZ2hqiXYBqSzp4tv5A+CzCgxAVnfb1YBooNMdgKQGq3psQ8U5igesRf0bLLGtvF53
-5Zr3DeC+gknmRJaaxOpTufpHlLERIcWEqL3RRlmBMt5t6U/IekFcCtGqd1l6XbyBsZgLoPlmFhl+
-VcGQslfqK0LGCLDqSNFxDLyzIAw8NiWB16Y1LJo1OugjP6KHeK4XpZlnYxGuMV66Un9zIupNQPCd
-4bX9K3JAMO3pRajuhqz2iQLA/powxfsRLGWAjjtlAy2iCDBB58K3s8uM4Lpy9hBNDDClCZefLPrR
-YAA2GbHdInBd/JCclnklwk+00NvG+LdEFyTxrSyu84zAtuUHb0jUO6r+Uf5F/YMF0qw6vXqm4g0U
-pNI+MiRblP1eYnRCMA+w9EGyimvkaNyBGLXUX0FUED/mhHSde6KBQZM3RMnaAxF5btbEFRU0wePM
-tgdLZYG5XlSEgLdy4YyqfHOMIUC3JGRFCckTiKYsLFcFU+E+Z1TlNyK8/ybmbzTKswdwLWuw/CjZ
-olGhfgbytOjaA7Bq7ZkiZVNNhGFAgy/k1mQwJ2M7daeL3roz8zjshnZyPAdGDYiWfgFu8OooWJqc
-qjAMPCJeP0P3OTzXHcKiKWBkN0tEywiyNPCkt+sB4rMp/TbnUQulmgj+U0qa3MBWgHPrERYpV7/M
-5kVZefGmIvBtXZyTBgHp+gQ8WnGenVdxEkZP9CxI2ymoqBQZxoVxHLsXcUgJYWd316V0RN4ai/hw
-oNXQmwKPpzzJSrhkiJKI9EnLnscKHFWB0abjbfG1qQHkehwRAEw0FXuHnfVE6ndNkiNKZ92GLgLJ
-n3NE05oCvOLKss4xLM0BReylYCYv6+VN5U+5uQ4TjMlKRBQY8sSa6Dkm4kAthN5D1RhDKY1yrlRg
-GTnR9U1ReKGHC4BkAa99zJsH0GFBQSftXMcjWiviYGQR1Fr5F10RQ4tpW6yem0DyuKcSreUZeP7V
-rkoCh+knrutJ2SWtDzHZp/6xs0gOXeR6QkMYY3+CruQPxKiHrjgMkylHyl2qf9cBvijVwxr1YBEV
-9LO4C4a1XUQmaOfNhDxUJ3xF87McPWxd07YzEHGD/rSzfaZLQpSnuNzr5y2a3RirZTFu7pHDw1VO
-wRyIt1OgjJwFijnHKV2jByFynZ9jF6Jj0S+Pca+oJZEZP6t64JCn8hDVqHGVVN1Qvapev0+hU3zn
-oN/xTqthWaFDn9DWRaILdMK0tOcEzoJpjyygx+L4wRKnmP+aB0/yyki5Enp8zAhTn4XMNzUMqXMY
-gys1nGY17UTE6serGI8zYk/vyaPtTQgsyvlSph4wAXN8chRj4Ni4KRP3dBXUMXyyAKs6XZ4ScKpm
-UTUw9BJMeKPbG8K9VeRQGT6zvAWIr3owBVdVUS4/kgmtEZoTkV0AceTYj2bCaD6LoMCzd5wytBhu
-3ZH2YyOsU03QDbsn1JpuifBOzzIQFXeddOulVphUb0zeIaNkU7kYHUadQTvrUxdXtnn2SMjmJmoP
-kUS2yGKo5WHsvD1Mm5LVwKhtR/YNPdxBMuJa3azyDOh53c6t/nHdqmQJemmW6J2uvx6TEvJQwk/K
-QUK6AFCeMEBlWzT4omCBg2ile9kV9lAmx1T513t0NMmD894VftIO22G2IADCj1JomnJcp6jXmGfI
-Uuw4lhgq6+SBtTjxtS7ZpQDGYTXnKS6ndhEd0jns3D1FEXFaVLcxHWkgYx3Pp4zklZeSHFgOpebg
-hRHKaEAwA+BAYMpD5pIq0KMiwUu73i0DMw66FOs+1bt0Bwh6MYOi9R31rim/Hu5OHLDgu0rVUo8F
-SCLndLW4UXsxjappvhTVLjhJqtLqV2mHyLTXvMEROojqjRAc4wlCSwwt9wBB/cz3VFRBM8p2b8h4
-R0X6s4jfoqwHHVcClzM8smkhhfg6RFbHFCLaVlR3h+JWrlOf2hNOpoKE0BFoVhrTQSWHp2+Mhnsx
-PNIeEJL0bHkp63KdQ5Y9U8X40IErDBft1BEFBUXTy5O3zKGSzr/ljmLdgNUkOXFyKpfo2VKGpR7e
-kTV5uoJD40uPJI4TE4ceieEBXQG1myb9dBMknUul3gCJsw0zSHxgndg4so3At2wBAm6bc8KxznBK
-Vc+bH5FaytJfi9ZInrviOSMHEbMPtY4ogVZO1I6uV0d0EhhIBu5/GfqOsqFbkgYMWGoQkPpGHoKU
-S6eK2bDh3ps98qbhUBjgyWmk6HwcyjMeMZeDpG17mliC80hGgK0NvsV+bnuVACKvMnSCvsWNsAe3
-hyyW3AwYYhy9vxPi21c5F2jrhtuy2yEtri0lrbGJl3WkxIEXlxSVvAP1wr5Fot9zHdICJEynw6J9
-81WVUWXu2NXIh31jc3cx2d2yYRIxTMaByjuTdCNdbOPW5aBDgrQXPZfGREx6zxkMPMkGRs8EGIN2
-JUmv0l3ocFDA3ZCOBbQkiCxHBqKOp/VRIfbwTLac5zCCISIlONwQwwQpSmjJ9n0YlwjIRQtCZm4A
-S6R2xZayxTqOyb6DHmIGPEYwxG3qA6QoboHkgDGzhllEYTuIMd6qwfu20eiytBVwWbygx40zlbgC
-/aoRQU3j866D7SfBVmWY26NR/ENdPRaQ5wpkJXaPju9hi9+gVDE0MXZQiu/f7XCd0r0TqMHk/KEv
-m7ZD5Df3SJ4VONj0zQo7XbyNLbTZiqx4/KNBXSLKAFnENFpodxfuDlG5n6qCdIKR0ISFCFW7TNww
-u2RP/4bUsyonQ2HTmHOGyhAP+luwl7Wk2XJhekncxs7Z1VXo9rnZHeGPekSt48lsAq0sZx2ifcEw
-Be9kZcZjpvuImjVvl7ZaD/9VchwLOBLfqdU8cEznYru9mHZfi+8OHN3DHFPIbPINgTpioxeTWlF/
-MWjxStChMkQfkJ5c6xtMeGhzxUzyMa8kAurIYaeOnBwmud5npVD1cCwzp38qR99j64cqPDNNNUcP
-DnNx1RCz4VFCVoL2+OHocojojmwF0gCde9w8zRpA7+JUojdWamLbnh+L+JTKoVkFUArwvNZU78jZ
-G/sfSNqpvPEY0AXVCdHo8qWo3EXpANFTfxTYR/v2wRjFoD0NTyGkPC1Gm/FOxbOAVUQR9S68CCKL
-tfZKHuqMO/IeAQvIq0k0q3VVQxp9EO0woYOgGTBOerOtm4K4iIFvN1tL0o5FOTTV5MUwreVopcyJ
-hqVCq4E+P35Gs9P9y6IpMQ5C4V7iGIfjCSUu/KC9UvTJFfnPbkNK0iZWBCr9oLatZR4EiCrjtid+
-09037LQrOTZZ8QQXnqIjqVJ20BMXbmxapjYJXAvbZu3hvu4anz7MAifdOzKZcYOYB2OScdSbfnW0
-N5FVmks5Cc1IpkXSRHLK8ul3z+nS8+9U17Lz6NSTGFL/GFmxtcXXOrFm+YAgIgmlQY50ZFvE5pGy
-I/shn5xHI8Z1djdLFx1/vo2PuD1oHRkz++eZqoZ57GigZFdGlUC3r2NrqgZidnAp+bz4M9bqie0b
-GCkhyao4XQ9TZgNqieCd7BwLrGVT4VLi0tiMyBVwC5ilIlEDaftn39JspSLMx+whOiXy0uLQthBZ
-ARG3bglMyBvDlr5gBJ7ZMYcZdbDsmwbBu2LCmKOrbKd3KGbxKMdOjUMQ8vYLVREsiHe1JRfS8h7b
-Qt+9c719RTWVXbCKbIvKkozGJEkYPTFlgJbZdclXLsjrcSeetR0xlkHV7c4TNrjSLFaYCti+FcF0
-wRBZuC8mKRxPPI25RZ+LDIukscMbsk0KNSnNoX1CRnO9I7a3YnzTVtj2EKf4ylLjpoH5WRd/BRL+
-CgP/qZsmAaRv8JwQT/Oe6uKsrMtL8bO+JyDKNSB1DJTrLag9vBA/j5/c/KCfUuIVN0lYIL++SeL8
-dkO8q8cnS1kSEG47wD3Nknx8UxfPcfsDuHhgu/xgdU8XvWcKxrmsVgZN/fqFfcdhbna9YhxKF8sh
-5LexFPZ0+Ra/UG+YOVf1t22ql/CSFol0cn5xmXTEj4u6xn0watwKoQd+kUYQ0jsVuagGCofeAlOW
-HJT0IRFw6XRHxtRw/PKhMQloAjxgNle/7AYWvOzLQA+7M8fHj/HxzrHJ2H7VWE+U8chNjLDFEKWL
-5TTmMT5lCKhJ4JMuPLdgJc9A0BEM3h/v+qh3Ius5rbBfoxrC4yxCVbyGbKahADYjzLUTXao/kco0
-nlL7xK6v0ZAn5y1Cq5dNV46O+TjpSCehX7sPUtDu80rDdawYY/F7t8ZN3YCLHsVJPmQXaPsJnjMY
-auuMShIv68Mk+miE1eoXFHoPtcYsWjiRufHOe0CS1lP9GsvGvCZGdZFLpmYUK2/l7Yca0sYrzVFa
-XfFv/4RFDawfFjGRhOeGgY5Npxp+iE2Et0XOx4iYIyh6Ed2NkXFjIwCQoCa+KXlU9ydzYnFGl6IU
-FwYXY5EadaJ97qSzc0PjIkYpiVUkId5IYwowPwCJf7VfAvcGLE4vCFsgovEipxmqu/CiGSkB9sS5
-buNRRc1i3SpotRRV+C3A1inKntfCYFd+GdVw8BshQZYo2W+/fPzQvXu8apxNS2/5mecP2hcvoef1
-8UOykXTCX3+i/p6ih9oo+e3jB2/yozK470zrN8PX5Yt/fRx1+KTa7GfV35dVw1aQSIc3byaKtYmf
-zvzFJvo7nUl8/55YNfFGo9pbmo2c+Wv/70zin4S6rajV7yWuR4Xaael2eeJdtYuTcT9dPK5UT+8X
-QWn0eFUr3/Q7rbD96u6b1V1WcCft3njQaU3St37jeDGQemb22v1WL50Mr71M/Pvxw2nt7uI+7z1M
-xvObZbnYOV+EK/VntU6agUH970zUO+iPEulZbZSonjRKl5XZae38qT6+7p9d+eEw+9+k+j/Di11C
-bm09ri5iWXS98IKV8mCv4/cak6bUwXFWqx2MR0s/eKgenzfvr97mk9IKzvBupsFr4e1usvDPZysm
-fkoLY/8mDJpJ/J5o5JuhXgi1QXsl+bV6cDf8I3eQ3d//+uuXL18+r4mbFmb+6bvU+dfcfvbg86c/
-Dg5yB+7XTCKVSvyPzp+zB/u5/bDzF/frftR52Xr1C6dn151SeN9bdXrbTbcbef9pGQYpzVKwOB8O
-FG9NRlPf1kGYSfUJap2xn1kh9vJ0Vl62nq7Hqwjtor6KwZzvidDE+W+hU9kMLVQttOrSSlYsEPLA
-bfneW05PhpfF/rh5HmzYh4+b+fYfUEsBAj8AFAAAAAgAnUyvSj3Y74DREQAAQFkAAAgAJAAAAAAA
-AAAgAAAAAAAAADI0MDY2LmpzCgAgAAAAAAABABgAYC73d5nN0gFgLvd3mc3SAWAu93eZzdIBUEsF
-BgAAAAABAAEAWgAAAPcRAAAAAFBLAQI/AAoAAAAAAJ1Mr0oaWtdFZxIAAGcSAAAJACQAAAAAAAAA
-IAAAAAAAAAAyNDA2Ni56aXAKACAAAAAAAAEAGAA+Vf53mc3SAc7y+3eZzdIBzvL7d5nN0gFQSwUG
-AAAAAAEAAQBbAAAAjhIAAAAA
+On Thu, May 11, 2017 at 03:40:28PM +0200, Michał Kępień wrote:
+> > Perhaps so (overly zealous). Regarding the globals, let's be clear on the
+> > motivation. We want to follow good sw engineering practice, use data
+> > encapsulation, etc. However, using an explicit path to an ACPI device to avoid
+> > having a static file-level global doesn't really improve encapsulation in any
+> > way - it just shifts the blame :-)
+> 
+> Indeed, thanks for a clear-headed opinion.  I got a bit carried away :)
+> 
+> > Another reason to eliminate globals is to allow one driver to handle multiple
+> > devices - all device-specific data must be bound to the device, not the driver.
+> > In our case, there literally cannot be more than one _SB.FEXT. While there could
+> > theoretically be more than one FUJ02E3, I think we all agree that is highly
+> > improbable - and if it did happen, the explicit ACPI path approach would also be
+> > broken.
+> 
+> Good point.
+> 
+> > The motivation to divide the drivers was to provide functional encapsulation,
+> > accurately represent the system in the device tree, and to improve readability
+> > and maintainability of the driver code. So long as we can keep coupling to a
+> > minimum, I still think this makes sense.
+> > 
+> > So - static global variable for a driver with exactly one device that needs
+> > offer services to another driver... not really all that horrible.
+> > 
+> > You could accomplish this by making call_fext_func() not static and calling it
+> > from fujitsu-backlight. Or, you could further restrict it by exporting a
+> > fujitsu_backlight_power() function which wraps call_fext_func() providing a
+> > specific interface for fujitsu-backlight. This makes the ownership very explicit
+> > and ensures the usage doesn't grow without explicit changes to fujitsu-laptop.
+> 
+> I like the latter option more.  Exporting call_fext_func() as it is
+> would mean enabling other modules to reimplement fujitsu-laptop's
+> features and we do not want that.
+> 
+> > That is probably the most practical solution IFF we still feel it is worth
+> > splitting the driver into two separate modules. We need to develop a more robust
+> > and objective decision making process on module granularity (when to split, when
+> > to keep together). Will continue to give this more thought.
+> 
+> In light of the above, I still feel the split is worth going through
+> with.  The question is whether Jonathan feels the same :)
+> 
+
+In the interest of keeping this moving... As I'm not sure there is a "right
+answer" to split or not, and nobody screamed out against splitting, and this is
+the direction Michal seems to prefer, and he is doing the work, let's proceed
+with the split of -backlight and -laptop.
+
+> Jonathan, assuming the objective of splitting the module in two, allow
+> me to pick your brain a bit:
+> 
+>  1. Would you be okay with leaving "priv" as the variable name for
+>     device-specific data in both drivers?  If they are to be separated,
+>     "priv" would soon become unambiguous.  I do not have any strong
+>     feelings about this, though.
+> 
+>  2. Would you be okay with renaming "acpi_handle" to "handle"?  Darren
+>     seems to like this idea and in light of the above we would not have
+>     another ACPI handle inside struct fujitsu_bl any more.
+
+Both of these are easily discussed in the next series which will most likely
+have at least one respin anyway.
+
+>  3. You mentioned earlier that you were not really fond of the fext_*()
+>     helper functions.  Would you like me to drop them and simply use
+>     call_fext_func() with five arguments everywhere?  Or should I keep
+>     the helper functions in v2?
+
+I was torn on this as well - I didn't think they added much value. Let's focus
+on splitting the driver, and we can revisit this later for the -laptop driver if
+there is interest.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
