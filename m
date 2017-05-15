@@ -1,8 +1,8 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Jonathan Woithe <jwoithe@just42.net>
 Subject: Re: [PATCH 00/10] fujitsu-laptop: use device-specific data instead
  of module-wide globals
-Date: Mon, 15 May 2017 16:27:25 -0700
-Message-ID: <20170515232725.GH17235@fury>
+Date: Tue, 16 May 2017 09:26:14 +0930
+Message-ID: <20170515235614.GC14314@marvin.atrad.com.au>
 References: <20170501130536.GA25546@marvin.atrad.com.au>
  <20170502132144.GA6808@ozzy.nask.waw.pl>
  <20170504234058.GC21562@marvin.atrad.com.au>
@@ -14,47 +14,26 @@ References: <20170501130536.GA25546@marvin.atrad.com.au>
  <20170509164734.GB17858@fury>
  <20170511134028.GA1166@ozzy.nask.waw.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:48667 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751603AbdEOX1c (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:46366 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753083AbdEPAB1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2017 19:27:32 -0400
+        Mon, 15 May 2017 20:01:27 -0400
 Content-Disposition: inline
 In-Reply-To: <20170511134028.GA1166@ozzy.nask.waw.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, May 11, 2017 at 03:40:28PM +0200, Michał Kępień wrote:
-> > Perhaps so (overly zealous). Regarding the globals, let's be clear on the
-> > motivation. We want to follow good sw engineering practice, use data
-> > encapsulation, etc. However, using an explicit path to an ACPI device to avoid
-> > having a static file-level global doesn't really improve encapsulation in any
-> > way - it just shifts the blame :-)
-> 
-> Indeed, thanks for a clear-headed opinion.  I got a bit carried away :)
-> 
-> > Another reason to eliminate globals is to allow one driver to handle multiple
-> > devices - all device-specific data must be bound to the device, not the driver.
-> > In our case, there literally cannot be more than one _SB.FEXT. While there could
-> > theoretically be more than one FUJ02E3, I think we all agree that is highly
-> > improbable - and if it did happen, the explicit ACPI path approach would also be
-> > broken.
-> 
-> Good point.
-> 
-> > The motivation to divide the drivers was to provide functional encapsulation,
-> > accurately represent the system in the device tree, and to improve readability
-> > and maintainability of the driver code. So long as we can keep coupling to a
-> > minimum, I still think this makes sense.
-> > 
-> > So - static global variable for a driver with exactly one device that needs
-> > offer services to another driver... not really all that horrible.
-> > 
+Hi Michael
+
+Apologies for the delayed response - things have been a bit crazy lately. 
+Darren's mail just now has reminded me that you were awaiting feedback.
+
+On Thu, May 11, 2017 at 03:40:28PM +0200, Micha?? K??pie?? wrote:
 > > You could accomplish this by making call_fext_func() not static and calling it
 > > from fujitsu-backlight. Or, you could further restrict it by exporting a
 > > fujitsu_backlight_power() function which wraps call_fext_func() providing a
@@ -64,7 +43,9 @@ On Thu, May 11, 2017 at 03:40:28PM +0200, Michał Kępień wrote:
 > I like the latter option more.  Exporting call_fext_func() as it is
 > would mean enabling other modules to reimplement fujitsu-laptop's
 > features and we do not want that.
-> 
+
+Agreed - we don't need duplicate implementations.
+
 > > That is probably the most practical solution IFF we still feel it is worth
 > > splitting the driver into two separate modules. We need to develop a more robust
 > > and objective decision making process on module granularity (when to split, when
@@ -72,12 +53,14 @@ On Thu, May 11, 2017 at 03:40:28PM +0200, Michał Kępień wrote:
 > 
 > In light of the above, I still feel the split is worth going through
 > with.  The question is whether Jonathan feels the same :)
-> 
 
-In the interest of keeping this moving... As I'm not sure there is a "right
-answer" to split or not, and nobody screamed out against splitting, and this is
-the direction Michal seems to prefer, and he is doing the work, let's proceed
-with the split of -backlight and -laptop.
+I'm pretty much sitting on the fence regarding the split.  Darren has
+provided a compelling argument for proceeding with the split so I guess we
+can pursue that and see where it leads.  It still feels odd to me that two
+different drivers will end up touching the same hardware control, but at the
+end of the day the fact that this is necessary says more about the hardware
+design than anything else.  There isn't really a clean solution which ticks
+every box so we just need to pick one and run with it.
 
 > Jonathan, assuming the objective of splitting the module in two, allow
 > me to pick your brain a bit:
@@ -86,23 +69,37 @@ with the split of -backlight and -laptop.
 >     device-specific data in both drivers?  If they are to be separated,
 >     "priv" would soon become unambiguous.  I do not have any strong
 >     feelings about this, though.
-> 
+
+With separate drivers I don't have a problem with the generic "priv" since
+the ambiguity drops away due to the driver encapsulation.
+
 >  2. Would you be okay with renaming "acpi_handle" to "handle"?  Darren
 >     seems to like this idea and in light of the above we would not have
 >     another ACPI handle inside struct fujitsu_bl any more.
 
-Both of these are easily discussed in the next series which will most likely
-have at least one respin anyway.
+My primary concern was the presence of two ACPI handles.  If there are two
+such handles, calling one of them by a very generic term tends to make the
+code confusing IMHO.  However, since the split avoids the need for either
+driver to carry two ACPI handles this becomes a moot point and the plain
+"handle" can be justified.  This is of course contingent on the split
+happening.
 
 >  3. You mentioned earlier that you were not really fond of the fext_*()
 >     helper functions.  Would you like me to drop them and simply use
 >     call_fext_func() with five arguments everywhere?  Or should I keep
 >     the helper functions in v2?
 
-I was torn on this as well - I didn't think they added much value. Let's focus
-on splitting the driver, and we can revisit this later for the -laptop driver if
-there is interest.
+The extended explanation of the rationale for these functions (provided a
+few days later) makes their presence clearer.  In some ways though it still
+feels like this is being done solely due to the (somewhat arbitrary)
+checkpatch 80 column thing, rather than being driven by a bona fide code
+structuring issue.  Having said that, the number of parameters to
+call_fext_func() has grown to 5 as you said, and that is arguably an issue
+in its own right.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+On balance (taking your detailed explanation into consideration), since
+Darren hasn't voiced any concern about these functions and they do permit a
+clean up of the call sites I am happy for you to retain them in v2.
+
+Regards
+  jonathan
