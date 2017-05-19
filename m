@@ -1,318 +1,266 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 8/8] platform/x86: fujitsu-laptop: use device-specific data in remaining module code
-Date: Fri, 19 May 2017 09:44:48 +0200
-Message-ID: <20170519074448.12716-9-kernel@kempniu.pl>
+Subject: [PATCH v2 7/8] platform/x86: fujitsu-laptop: use device-specific data in LED-related code
+Date: Fri, 19 May 2017 09:44:47 +0200
+Message-ID: <20170519074448.12716-8-kernel@kempniu.pl>
 References: <20170519074448.12716-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:34235 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751852AbdESHpM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 19 May 2017 03:45:12 -0400
+Received: by mail-wm0-f65.google.com with SMTP id d127so16390433wmf.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 May 2017 00:45:07 -0700 (PDT)
 In-Reply-To: <20170519074448.12716-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-To avoid using module-wide data in remaining module code, employ
-acpi_driver_data() and dev_get_drvdata() to fetch device-specific data
-to work on in each function.  This makes the input local variables in
-hotkey-related callbacks and the module-wide struct fujitsu_laptop
-redundant, so remove them.  Adjust whitespace to make checkpatch happy.
+In order to perform their duties, all LED callbacks need a pointer to
+the struct acpi_device representing the FUJ02E3 ACPI device.  To limit
+the use of the module-wide pointer, the same pointer should be extracted
+from data that gets passed to LED callbacks as arguments.  However, LED
+core does not currently support supplying driver-specific pointers to
+struct led_classdev callbacks, so the latter have to be implemented a
+bit differently than backlight device callbacks and platform device
+attribute callbacks.  As the FUJ02E3 ACPI device is the parent device of
+all LED class devices registered by fujitsu-laptop, struct acpi_device
+representing the former can be extracted by following the parent link
+present inside the struct device belonging to the struct led_classdev
+passed as an argument to each LED callback.
+
+To get rid of module-wide structures defining LED class devices,
+allocate them dynamically using devm_kzalloc() and initialize them in
+acpi_fujitsu_laptop_leds_register().
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 123 ++++++++++++++++++----------------
- 1 file changed, 64 insertions(+), 59 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 102 +++++++++++++++++-----------------
+ 1 file changed, 52 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 3d33be9f88f6..1c6fdd952c75 100644
+index b78c97ebfee4..3d33be9f88f6 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -152,7 +152,6 @@ struct fujitsu_laptop {
- 	int flags_state;
- };
- 
--static struct fujitsu_laptop *fujitsu_laptop;
- static struct acpi_device *fext;
- 
- #ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
-@@ -290,9 +289,11 @@ static const struct backlight_ops fujitsu_bl_ops = {
- static ssize_t lid_show(struct device *dev, struct device_attribute *attr,
- 			char *buf)
+@@ -608,6 +608,7 @@ static void fujitsu_laptop_platform_remove(void)
+ static int logolamp_set(struct led_classdev *cdev,
+ 			enum led_brightness brightness)
  {
--	if (!(fujitsu_laptop->flags_supported & FLAG_LID))
-+	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
-+
-+	if (!(priv->flags_supported & FLAG_LID))
- 		return sprintf(buf, "unknown\n");
--	if (fujitsu_laptop->flags_state & FLAG_LID)
-+	if (priv->flags_state & FLAG_LID)
- 		return sprintf(buf, "open\n");
- 	else
- 		return sprintf(buf, "closed\n");
-@@ -301,9 +302,11 @@ static ssize_t lid_show(struct device *dev, struct device_attribute *attr,
- static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
--	if (!(fujitsu_laptop->flags_supported & FLAG_DOCK))
-+	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
-+
-+	if (!(priv->flags_supported & FLAG_DOCK))
- 		return sprintf(buf, "unknown\n");
--	if (fujitsu_laptop->flags_state & FLAG_DOCK)
-+	if (priv->flags_state & FLAG_DOCK)
- 		return sprintf(buf, "docked\n");
- 	else
- 		return sprintf(buf, "undocked\n");
-@@ -312,9 +315,11 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
- static ssize_t radios_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
--	if (!(fujitsu_laptop->flags_supported & FLAG_RFKILL))
-+	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
-+
-+	if (!(priv->flags_supported & FLAG_RFKILL))
- 		return sprintf(buf, "unknown\n");
--	if (fujitsu_laptop->flags_state & FLAG_RFKILL)
-+	if (priv->flags_state & FLAG_RFKILL)
- 		return sprintf(buf, "on\n");
- 	else
- 		return sprintf(buf, "killed\n");
-@@ -571,19 +576,22 @@ static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
- 	return input_register_device(priv->input);
- }
- 
--static int fujitsu_laptop_platform_add(void)
-+static int fujitsu_laptop_platform_add(struct acpi_device *device)
- {
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	int poweron = FUNC_LED_ON, always = FUNC_LED_ON;
  	int ret;
  
--	fujitsu_laptop->pf_device = platform_device_alloc("fujitsu-laptop", -1);
--	if (!fujitsu_laptop->pf_device)
-+	priv->pf_device = platform_device_alloc("fujitsu-laptop", -1);
-+	if (!priv->pf_device)
- 		return -ENOMEM;
+@@ -617,136 +618,128 @@ static int logolamp_set(struct led_classdev *cdev,
+ 	if (brightness < LED_FULL)
+ 		always = FUNC_LED_OFF;
  
--	ret = platform_device_add(fujitsu_laptop->pf_device);
-+	platform_set_drvdata(priv->pf_device, priv);
-+
-+	ret = platform_device_add(priv->pf_device);
- 	if (ret)
- 		goto err_put_platform_device;
+-	ret = call_fext_func(fext, FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
++	ret = call_fext_func(device, FUNC_LEDS, 0x1, LOGOLAMP_POWERON, poweron);
+ 	if (ret < 0)
+ 		return ret;
  
--	ret = sysfs_create_group(&fujitsu_laptop->pf_device->dev.kobj,
-+	ret = sysfs_create_group(&priv->pf_device->dev.kobj,
- 				 &fujitsu_pf_attribute_group);
- 	if (ret)
- 		goto err_del_platform_device;
-@@ -591,18 +599,20 @@ static int fujitsu_laptop_platform_add(void)
- 	return 0;
- 
- err_del_platform_device:
--	platform_device_del(fujitsu_laptop->pf_device);
-+	platform_device_del(priv->pf_device);
- err_put_platform_device:
--	platform_device_put(fujitsu_laptop->pf_device);
-+	platform_device_put(priv->pf_device);
- 
- 	return ret;
+-	return call_fext_func(fext, FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, always);
++	return call_fext_func(device, FUNC_LEDS, 0x1, LOGOLAMP_ALWAYS, always);
  }
  
--static void fujitsu_laptop_platform_remove(void)
-+static void fujitsu_laptop_platform_remove(struct acpi_device *device)
+ static enum led_brightness logolamp_get(struct led_classdev *cdev)
  {
--	sysfs_remove_group(&fujitsu_laptop->pf_device->dev.kobj,
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
-+
-+	sysfs_remove_group(&priv->pf_device->dev.kobj,
- 			   &fujitsu_pf_attribute_group);
--	platform_device_unregister(fujitsu_laptop->pf_device);
-+	platform_device_unregister(priv->pf_device);
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	int ret;
+ 
+-	ret = call_fext_func(fext, FUNC_LEDS, 0x2, LOGOLAMP_ALWAYS, 0x0);
++	ret = call_fext_func(device, FUNC_LEDS, 0x2, LOGOLAMP_ALWAYS, 0x0);
+ 	if (ret == FUNC_LED_ON)
+ 		return LED_FULL;
+ 
+-	ret = call_fext_func(fext, FUNC_LEDS, 0x2, LOGOLAMP_POWERON, 0x0);
++	ret = call_fext_func(device, FUNC_LEDS, 0x2, LOGOLAMP_POWERON, 0x0);
+ 	if (ret == FUNC_LED_ON)
+ 		return LED_HALF;
+ 
+ 	return LED_OFF;
  }
  
- static int logolamp_set(struct led_classdev *cdev,
-@@ -798,16 +808,15 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	WARN_ONCE(fext, "More than one FUJ02E3 ACPI device was found.  Driver may not work as intended.");
- 	fext = device;
- 
--	fujitsu_laptop = priv;
- 	sprintf(acpi_device_name(device), "%s",
- 		ACPI_FUJITSU_LAPTOP_DEVICE_NAME);
- 	sprintf(acpi_device_class(device), "%s", ACPI_FUJITSU_CLASS);
- 	device->driver_data = priv;
- 
- 	/* kfifo */
--	spin_lock_init(&fujitsu_laptop->fifo_lock);
--	error = kfifo_alloc(&fujitsu_laptop->fifo, RINGBUFFERSIZE * sizeof(int),
--			GFP_KERNEL);
-+	spin_lock_init(&priv->fifo_lock);
-+	error = kfifo_alloc(&priv->fifo, RINGBUFFERSIZE * sizeof(int),
-+			    GFP_KERNEL);
- 	if (error) {
- 		pr_err("kfifo_alloc failed\n");
- 		goto err_stop;
-@@ -836,25 +845,25 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	}
- 
- 	i = 0;
--	while (call_fext_func(fext, FUNC_BUTTONS, 0x1, 0x0, 0x0) != 0
-+	while (call_fext_func(device, FUNC_BUTTONS, 0x1, 0x0, 0x0) != 0
- 		&& (i++) < MAX_HOTKEY_RINGBUFFER_SIZE)
- 		; /* No action, result is discarded */
- 	vdbg_printk(FUJLAPTOP_DBG_INFO, "Discarded %i ringbuffer entries\n", i);
- 
--	fujitsu_laptop->flags_supported =
--		call_fext_func(fext, FUNC_FLAGS, 0x0, 0x0, 0x0);
-+	priv->flags_supported = call_fext_func(device, FUNC_FLAGS, 0x0, 0x0,
-+					       0x0);
- 
- 	/* Make sure our bitmask of supported functions is cleared if the
- 	   RFKILL function block is not implemented, like on the S7020. */
--	if (fujitsu_laptop->flags_supported == UNSUPPORTED_CMD)
--		fujitsu_laptop->flags_supported = 0;
-+	if (priv->flags_supported == UNSUPPORTED_CMD)
-+		priv->flags_supported = 0;
- 
--	if (fujitsu_laptop->flags_supported)
--		fujitsu_laptop->flags_state =
--			call_fext_func(fext, FUNC_FLAGS, 0x4, 0x0, 0x0);
-+	if (priv->flags_supported)
-+		priv->flags_state = call_fext_func(device, FUNC_FLAGS, 0x4, 0x0,
-+						   0x0);
- 
- 	/* Suspect this is a keymap of the application panel, print it */
--	pr_info("BTNI: [0x%x]\n", call_fext_func(fext,
-+	pr_info("BTNI: [0x%x]\n", call_fext_func(device,
- 						 FUNC_BUTTONS, 0x0, 0x0, 0x0));
- 
- 	/* Sync backlight power status */
-@@ -870,14 +879,14 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	if (error)
- 		goto err_free_fifo;
- 
--	error = fujitsu_laptop_platform_add();
-+	error = fujitsu_laptop_platform_add(device);
- 	if (error)
- 		goto err_free_fifo;
- 
- 	return 0;
- 
- err_free_fifo:
--	kfifo_free(&fujitsu_laptop->fifo);
-+	kfifo_free(&priv->fifo);
- err_stop:
- 	return error;
- }
-@@ -886,44 +895,42 @@ static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
- {
- 	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 
--	fujitsu_laptop_platform_remove();
-+	fujitsu_laptop_platform_remove(device);
- 
- 	kfifo_free(&priv->fifo);
- 
- 	return 0;
- }
- 
--static void acpi_fujitsu_laptop_press(int scancode)
-+static void acpi_fujitsu_laptop_press(struct acpi_device *device, int scancode)
- {
--	struct input_dev *input = fujitsu_laptop->input;
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 	int status;
- 
--	status = kfifo_in_locked(&fujitsu_laptop->fifo,
--				 (unsigned char *)&scancode, sizeof(scancode),
--				 &fujitsu_laptop->fifo_lock);
-+	status = kfifo_in_locked(&priv->fifo, (unsigned char *)&scancode,
-+				 sizeof(scancode), &priv->fifo_lock);
- 	if (status != sizeof(scancode)) {
- 		vdbg_printk(FUJLAPTOP_DBG_WARN,
- 			    "Could not push scancode [0x%x]\n", scancode);
- 		return;
- 	}
--	sparse_keymap_report_event(input, scancode, 1, false);
-+	sparse_keymap_report_event(priv->input, scancode, 1, false);
- 	vdbg_printk(FUJLAPTOP_DBG_TRACE,
- 		    "Push scancode into ringbuffer [0x%x]\n", scancode);
- }
- 
--static void acpi_fujitsu_laptop_release(void)
-+static void acpi_fujitsu_laptop_release(struct acpi_device *device)
- {
--	struct input_dev *input = fujitsu_laptop->input;
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 	int scancode, status;
- 
- 	while (true) {
--		status = kfifo_out_locked(&fujitsu_laptop->fifo,
-+		status = kfifo_out_locked(&priv->fifo,
- 					  (unsigned char *)&scancode,
--					  sizeof(scancode),
--					  &fujitsu_laptop->fifo_lock);
-+					  sizeof(scancode), &priv->fifo_lock);
- 		if (status != sizeof(scancode))
- 			return;
--		sparse_keymap_report_event(input, scancode, 0, false);
-+		sparse_keymap_report_event(priv->input, scancode, 0, false);
- 		vdbg_printk(FUJLAPTOP_DBG_TRACE,
- 			    "Pop scancode from ringbuffer [0x%x]\n", scancode);
- 	}
-@@ -931,31 +938,29 @@ static void acpi_fujitsu_laptop_release(void)
- 
- static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
- {
--	struct input_dev *input;
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 	int scancode, i = 0;
- 	unsigned int irb;
- 
--	input = fujitsu_laptop->input;
+-static struct led_classdev logolamp_led = {
+-	.name = "fujitsu::logolamp",
+-	.brightness_set_blocking = logolamp_set,
+-	.brightness_get = logolamp_get
+-};
 -
- 	if (event != ACPI_FUJITSU_NOTIFY_CODE1) {
- 		vdbg_printk(FUJLAPTOP_DBG_WARN,
- 			    "Unsupported event [0x%x]\n", event);
--		sparse_keymap_report_event(input, -1, 1, true);
-+		sparse_keymap_report_event(priv->input, -1, 1, true);
- 		return;
- 	}
- 
--	if (fujitsu_laptop->flags_supported)
--		fujitsu_laptop->flags_state =
--			call_fext_func(fext, FUNC_FLAGS, 0x4, 0x0, 0x0);
-+	if (priv->flags_supported)
-+		priv->flags_state = call_fext_func(device, FUNC_FLAGS, 0x4, 0x0,
-+						   0x0);
- 
--	while ((irb = call_fext_func(fext,
-+	while ((irb = call_fext_func(device,
- 				     FUNC_BUTTONS, 0x1, 0x0, 0x0)) != 0 &&
- 	       i++ < MAX_HOTKEY_RINGBUFFER_SIZE) {
- 		scancode = irb & 0x4ff;
--		if (sparse_keymap_entry_from_scancode(input, scancode))
--			acpi_fujitsu_laptop_press(scancode);
-+		if (sparse_keymap_entry_from_scancode(priv->input, scancode))
-+			acpi_fujitsu_laptop_press(device, scancode);
- 		else if (scancode == 0)
--			acpi_fujitsu_laptop_release();
-+			acpi_fujitsu_laptop_release(device);
- 		else
- 			vdbg_printk(FUJLAPTOP_DBG_WARN,
- 				    "Unknown GIRB result [%x]\n", irb);
-@@ -965,9 +970,9 @@ static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
- 	 * E736/E746/E756), the touchpad toggle hotkey (Fn+F4) is
- 	 * handled in software; its state is queried using FUNC_FLAGS
- 	 */
--	if ((fujitsu_laptop->flags_supported & BIT(26)) &&
--	    (call_fext_func(fext, FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26)))
--		sparse_keymap_report_event(input, BIT(26), 1, true);
-+	if ((priv->flags_supported & BIT(26)) &&
-+	    (call_fext_func(device, FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26)))
-+		sparse_keymap_report_event(priv->input, BIT(26), 1, true);
+ static int kblamps_set(struct led_classdev *cdev,
+ 		       enum led_brightness brightness)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
++
+ 	if (brightness >= LED_FULL)
+-		return call_fext_func(fext, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
++		return call_fext_func(device, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
+ 				      FUNC_LED_ON);
+ 	else
+-		return call_fext_func(fext, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
++		return call_fext_func(device, FUNC_LEDS, 0x1, KEYBOARD_LAMPS,
+ 				      FUNC_LED_OFF);
  }
  
- /* Initialization */
+ static enum led_brightness kblamps_get(struct led_classdev *cdev)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	enum led_brightness brightness = LED_OFF;
+ 
+-	if (call_fext_func(fext,
++	if (call_fext_func(device,
+ 			   FUNC_LEDS, 0x2, KEYBOARD_LAMPS, 0x0) == FUNC_LED_ON)
+ 		brightness = LED_FULL;
+ 
+ 	return brightness;
+ }
+ 
+-static struct led_classdev kblamps_led = {
+-	.name = "fujitsu::kblamps",
+-	.brightness_set_blocking = kblamps_set,
+-	.brightness_get = kblamps_get
+-};
+-
+ static int radio_led_set(struct led_classdev *cdev,
+ 			 enum led_brightness brightness)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
++
+ 	if (brightness >= LED_FULL)
+-		return call_fext_func(fext, FUNC_FLAGS, 0x5, RADIO_LED_ON,
++		return call_fext_func(device, FUNC_FLAGS, 0x5, RADIO_LED_ON,
+ 				      RADIO_LED_ON);
+ 	else
+-		return call_fext_func(fext, FUNC_FLAGS, 0x5, RADIO_LED_ON,
++		return call_fext_func(device, FUNC_FLAGS, 0x5, RADIO_LED_ON,
+ 				      0x0);
+ }
+ 
+ static enum led_brightness radio_led_get(struct led_classdev *cdev)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	enum led_brightness brightness = LED_OFF;
+ 
+-	if (call_fext_func(fext, FUNC_FLAGS, 0x4, 0x0, 0x0) & RADIO_LED_ON)
++	if (call_fext_func(device, FUNC_FLAGS, 0x4, 0x0, 0x0) & RADIO_LED_ON)
+ 		brightness = LED_FULL;
+ 
+ 	return brightness;
+ }
+ 
+-static struct led_classdev radio_led = {
+-	.name = "fujitsu::radio_led",
+-	.brightness_set_blocking = radio_led_set,
+-	.brightness_get = radio_led_get,
+-	.default_trigger = "rfkill-any"
+-};
+-
+ static int eco_led_set(struct led_classdev *cdev,
+ 		       enum led_brightness brightness)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	int curr;
+ 
+-	curr = call_fext_func(fext, FUNC_LEDS, 0x2, ECO_LED, 0x0);
++	curr = call_fext_func(device, FUNC_LEDS, 0x2, ECO_LED, 0x0);
+ 	if (brightness >= LED_FULL)
+-		return call_fext_func(fext, FUNC_LEDS, 0x1, ECO_LED,
++		return call_fext_func(device, FUNC_LEDS, 0x1, ECO_LED,
+ 				      curr | ECO_LED_ON);
+ 	else
+-		return call_fext_func(fext, FUNC_LEDS, 0x1, ECO_LED,
++		return call_fext_func(device, FUNC_LEDS, 0x1, ECO_LED,
+ 				      curr & ~ECO_LED_ON);
+ }
+ 
+ static enum led_brightness eco_led_get(struct led_classdev *cdev)
+ {
++	struct acpi_device *device = to_acpi_device(cdev->dev->parent);
+ 	enum led_brightness brightness = LED_OFF;
+ 
+-	if (call_fext_func(fext, FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
++	if (call_fext_func(device, FUNC_LEDS, 0x2, ECO_LED, 0x0) & ECO_LED_ON)
+ 		brightness = LED_FULL;
+ 
+ 	return brightness;
+ }
+ 
+-static struct led_classdev eco_led = {
+-	.name = "fujitsu::eco_led",
+-	.brightness_set_blocking = eco_led_set,
+-	.brightness_get = eco_led_get
+-};
+-
+ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ {
++	struct led_classdev *led;
+ 	int result;
+ 
+-	if (call_fext_func(fext,
++	if (call_fext_func(device,
+ 			   FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
+-		result = devm_led_classdev_register(&device->dev,
+-						    &logolamp_led);
++		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		led->name = "fujitsu::logolamp";
++		led->brightness_set_blocking = logolamp_set;
++		led->brightness_get = logolamp_get;
++		result = devm_led_classdev_register(&device->dev, led);
+ 		if (result)
+ 			return result;
+ 	}
+ 
+-	if ((call_fext_func(fext,
++	if ((call_fext_func(device,
+ 			    FUNC_LEDS, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
+-	    (call_fext_func(fext, FUNC_BUTTONS, 0x0, 0x0, 0x0) == 0x0)) {
+-		result = devm_led_classdev_register(&device->dev, &kblamps_led);
++	    (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) == 0x0)) {
++		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		led->name = "fujitsu::kblamps";
++		led->brightness_set_blocking = kblamps_set;
++		led->brightness_get = kblamps_get;
++		result = devm_led_classdev_register(&device->dev, led);
+ 		if (result)
+ 			return result;
+ 	}
+@@ -757,8 +750,13 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 	 * to also have an RF LED.  Therefore use bit 24 as an indicator
+ 	 * that an RF LED is present.
+ 	 */
+-	if (call_fext_func(fext, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {
+-		result = devm_led_classdev_register(&device->dev, &radio_led);
++	if (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {
++		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		led->name = "fujitsu::radio_led";
++		led->brightness_set_blocking = radio_led_set;
++		led->brightness_get = radio_led_get;
++		led->default_trigger = "rfkill-any";
++		result = devm_led_classdev_register(&device->dev, led);
+ 		if (result)
+ 			return result;
+ 	}
+@@ -768,10 +766,14 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 	 * bit 14 seems to indicate presence of said led as well.
+ 	 * Confirm by testing the status.
+ 	 */
+-	if ((call_fext_func(fext, FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
+-	    (call_fext_func(fext,
++	if ((call_fext_func(device, FUNC_LEDS, 0x0, 0x0, 0x0) & BIT(14)) &&
++	    (call_fext_func(device,
+ 			    FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
+-		result = devm_led_classdev_register(&device->dev, &eco_led);
++		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		led->name = "fujitsu::eco_led";
++		led->brightness_set_blocking = eco_led_set;
++		led->brightness_get = eco_led_get;
++		result = devm_led_classdev_register(&device->dev, led);
+ 		if (result)
+ 			return result;
+ 	}
 -- 
 2.13.0
