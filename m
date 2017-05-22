@@ -1,63 +1,50 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2 3/8] thermal: intel_bxt_pmic_thermal: use first level
- PMIC thermal irq
-Date: Mon, 22 May 2017 12:08:24 -0700
-Message-ID: <1af3aa9b-6772-1305-2635-a36ce6b2ba1c@linux.intel.com>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <fda73b083e5e67e8fcc9fc2d01a590f689a06c91.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170522101754.jngcdp5z5kfjycd2@dell>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: hide unused 'touchpad_store'
+Date: Mon, 22 May 2017 22:36:52 +0200
+Message-ID: <CAK8P3a0iSm682vPuva6mTk479xx92Ho2uyV07J4_iN_THEsGZA@mail.gmail.com>
+References: <20170522130709.242445-1-arnd@arndb.de> <CAHp75Ve5cN4bkA1Q2-6_N6wz0ZCsps3fOnb1Kobi_wK5=Hn4Jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170522101754.jngcdp5z5kfjycd2@dell>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve5cN4bkA1Q2-6_N6wz0ZCsps3fOnb1Kobi_wK5=Hn4Jg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Brian Masney <masneyb@onstation.org>, Ritesh Raj Sarraf <rrs@debian.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Rui/Valentin,
-
-Do you have any comments on this patch ? If you agree with this patch, 
-Can you please Ack it ?
-
-
-On 05/22/2017 03:17 AM, Lee Jones wrote:
-> On Fri, 14 Apr 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Mon, May 22, 2017 at 7:02 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, May 22, 2017 at 4:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> A readonly sysfs property must not have a 'store' function:
 >>
->> PMIC mfd driver only exports first level irq for thermal device.
->> But currently we are reading the irqs from the second level irq
->> chip, So this patch fixes this issue by adding support to use
->> first level PMIC thermal irq.
+>> drivers/platform/x86/ideapad-laptop.c:438:16: error: 'touchpad_store' defined but not used [-Werror=unused-function]
 >>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> This still needs a Maintainer Ack.
+>> We can either comment it out or remove the function entirely,
+>> without a good reason one or or another I picked the second option.
 >
+> Hmm... I was expecting something like this but didn't get a single
+> error from kbuild bot.
+>
+>>
+>> Fixes: 7f363145992c ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 >> ---
->>   drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>  drivers/platform/x86/ideapad-laptop.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> Changes since v1:
->>   * None
+>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>> index f7a4608cc60b..c4c7ae3179c0 100644
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -435,6 +435,8 @@ static ssize_t touchpad_show(struct device *dev,
+>>         return sprintf(buf, "%lu\n", result);
+>>  }
 >>
->> diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c b/drivers/thermal/intel_bxt_pmic_thermal.c
->> index 0f19a39..ef6b322 100644
->> --- a/drivers/thermal/intel_bxt_pmic_thermal.c
->> +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
->> @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct platform_device *pdev)
->>   	}
->>   
->>   	regmap = pmic->regmap;
->> -	regmap_irq_chip = pmic->irq_chip_data_level2;
->> +	regmap_irq_chip = pmic->irq_chip_data;
->>   
->>   	pmic_irq_count = 0;
->>   	while ((irq = platform_get_irq(pdev, pmic_irq_count)) != -ENXIO) {
+>> +#if 0
+>> +/* Switch to RO for now: It might be revisited in the future */
+>
+> Can we use __maybe_unused instead?
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Sure, whichever you prefer. I guess you'll just commit that patch yourself then?
+
+      Arnd
