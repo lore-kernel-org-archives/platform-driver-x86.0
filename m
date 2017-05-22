@@ -1,42 +1,63 @@
-From: ".Sarah Edward J" <mrs.sarahjohnsonn@gmail.com>
-Subject: Re: CHARITY FOUNDATION
-Date: Mon, 22 May 2017 11:22:50 -0700
-Message-ID: <CAH6ZLeiXSF2KnMJ5UAN3SkDw3SKymTxoku-gkefDEdzcegKt5A@mail.gmail.com>
-References: <CAH6ZLegFoGyo9aRi7Hh73mfcJSLAwFmhS0cvkuUX6WA2Pd3J9Q@mail.gmail.com>
- <CAH6ZLeg-eYio4q1r_YDRB78rLX0+BcTAekK+hx86E=w8_-nKfw@mail.gmail.com>
-Reply-To: sarh.edward@hotmail.com
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 3/8] thermal: intel_bxt_pmic_thermal: use first level
+ PMIC thermal irq
+Date: Mon, 22 May 2017 12:08:24 -0700
+Message-ID: <1af3aa9b-6772-1305-2635-a36ce6b2ba1c@linux.intel.com>
+References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <fda73b083e5e67e8fcc9fc2d01a590f689a06c91.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170522101754.jngcdp5z5kfjycd2@dell>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:33865 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932791AbdEVSWw (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 May 2017 14:22:52 -0400
-Received: by mail-wm0-f67.google.com with SMTP id d127so34736724wmf.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 May 2017 11:22:52 -0700 (PDT)
-In-Reply-To: <CAH6ZLeg-eYio4q1r_YDRB78rLX0+BcTAekK+hx86E=w8_-nKfw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170522101754.jngcdp5z5kfjycd2@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-***
+Hi Rui/Valentin,
 
-Peace be with you,
+Do you have any comments on this patch ? If you agree with this patch, 
+Can you please Ack it ?
 
-Gladly seek for your sincere help in setting up a Charitable
-Organization to help the less privileged, old aged and vulnerable
-people under your care,
 
-It is my desire to use my late husband wealth of $3,000,000.00 to set
-up a charity foundation to help the needy and the less privileged ones
-in your country under your care, Can you help to build this Charity
-project in your country?  All i need from you is your sincerity to use
-this funds to do this project as i desired to use it for less
-privileged ones, orphanage homes and  vulnerable people,
+On 05/22/2017 03:17 AM, Lee Jones wrote:
+> On Fri, 14 Apr 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> PMIC mfd driver only exports first level irq for thermal device.
+>> But currently we are reading the irqs from the second level irq
+>> chip, So this patch fixes this issue by adding support to use
+>> first level PMIC thermal irq.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> This still needs a Maintainer Ack.
+>
+>> ---
+>>   drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Changes since v1:
+>>   * None
+>>
+>> diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c b/drivers/thermal/intel_bxt_pmic_thermal.c
+>> index 0f19a39..ef6b322 100644
+>> --- a/drivers/thermal/intel_bxt_pmic_thermal.c
+>> +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
+>> @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct platform_device *pdev)
+>>   	}
+>>   
+>>   	regmap = pmic->regmap;
+>> -	regmap_irq_chip = pmic->irq_chip_data_level2;
+>> +	regmap_irq_chip = pmic->irq_chip_data;
+>>   
+>>   	pmic_irq_count = 0;
+>>   	while ((irq = platform_get_irq(pdev, pmic_irq_count)) != -ENXIO) {
 
-We can make the world a better place when we help one another
-sincerely from our good heart,
-
-Let read from you and know your opinion in doing this Noble Project,
-
-Mrs.Sarah.Edward
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
