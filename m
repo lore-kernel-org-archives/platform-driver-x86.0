@@ -1,61 +1,47 @@
-From: Hao Wei Tee <angelsl@angelsl.xyz>
-Subject: [PATCH v2] platform/x86: ideapad-laptop: Squelch ACPI event 1
-Date: Mon, 22 May 2017 18:38:55 +0800
-Message-ID: <7a7642d7-846e-9ead-a8d0-d10d7f85158b@angelsl.xyz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f171.google.com ([209.85.192.171]:32868 "EHLO
-        mail-pf0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752021AbdEVKjB (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 May 2017 06:39:01 -0400
-Received: by mail-pf0-f171.google.com with SMTP id e193so78618556pfh.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 May 2017 03:39:00 -0700 (PDT)
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: ideapad-laptop: hide unused 'touchpad_store'
+Date: Mon, 22 May 2017 15:07:03 +0200
+Message-ID: <20170522130709.242445-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Brian Masney <masneyb@onstation.org>, Ritesh Raj Sarraf <rrs@debian.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Don't simply throw this to userspace via the sparse_keymap (which does not
-have a mapping for scancode 1), as this causes KEY_UNKNOWN to be emitted,
-which is a nuisance and of no use at all (it is not the right way to expose
-this ACPI event to userspace, anyway, and the original intention of the commit
-which added this (cfee5d63767b2e7997c1f36420d008abbe61565c) was only to suppress
-an unhandled event log message).
+A readonly sysfs property must not have a 'store' function:
 
-Signed-off-by: Hao Wei Tee <angelsl@angelsl.xyz>
+drivers/platform/x86/ideapad-laptop.c:438:16: error: 'touchpad_store' defined but not used [-Werror=unused-function]
+
+We can either comment it out or remove the function entirely,
+without a good reason one or or another I picked the second option.
+
+Fixes: 7f363145992c ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/platform/x86/ideapad-laptop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 24ca9fbe31cc..998da7b4cd8e 100644
+index f7a4608cc60b..c4c7ae3179c0 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -810,7 +810,6 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 			case 8:
- 			case 7:
- 			case 6:
--			case 1:
- 				ideapad_input_report(priv, vpc_bit);
- 				break;
- 			case 5:
-@@ -828,6 +827,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 			case 0:
- 				ideapad_check_special_buttons(priv);
- 				break;
-+			case 1:
-+				/* Some IdeaPads report event 1 every ~20
-+				 * seconds while on battery power; some
-+				 * report this when changing to/from tablet
-+				 * mode. Squelch this event.
-+				 */
-+				break;
- 			default:
- 				pr_info("Unknown event: %lu\n", vpc_bit);
- 			}
+@@ -435,6 +435,8 @@ static ssize_t touchpad_show(struct device *dev,
+ 	return sprintf(buf, "%lu\n", result);
+ }
+ 
++#if 0
++/* Switch to RO for now: It might be revisited in the future */
+ static ssize_t touchpad_store(struct device *dev,
+ 			      struct device_attribute *attr,
+ 			      const char *buf, size_t count)
+@@ -453,7 +455,7 @@ static ssize_t touchpad_store(struct device *dev,
+ 	return count;
+ }
+ 
+-/* Switch to RO for now: It might be revisited in the future */
++#endif
+ static DEVICE_ATTR_RO(touchpad);
+ 
+ static struct attribute *ideapad_attributes[] = {
 -- 
-2.13.0
+2.9.0
