@@ -1,42 +1,28 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 0/8] fujitsu-laptop: use device-specific data instead
- of module-wide globals
-Date: Mon, 22 May 2017 08:53:23 +0930
-Message-ID: <20170521232323.GD28475@marvin.atrad.com.au>
-References: <20170519074448.12716-1-kernel@kempniu.pl>
+From: "Karthik BalaGuru  T" <karthik.t@incedoinc.com>
+Subject: i2c_register_board_info for intel platform
+Date: Mon, 22 May 2017 09:27:33 +0000
+Message-ID: <E41D83B2B2E8CB42AC13E92B4C3FABD3B89F04@TS-GGN-MBX002.ibtechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:51882 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750799AbdEUXX5 (ORCPT
+Received: from ipout.ibtechnology.com ([14.141.217.210]:41238 "EHLO
+        IPout.ibtechnology.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751979AbdEVJ1s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 May 2017 19:23:57 -0400
-Content-Disposition: inline
-In-Reply-To: <20170519074448.12716-1-kernel@kempniu.pl>
+        Mon, 22 May 2017 05:27:48 -0400
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c-owner@vger.kernel.org" <linux-i2c-owner@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Hi Michael
+Hi,
 
-On Fri, May 19, 2017 at 09:44:40AM +0200, Micha?? K??pie?? wrote:
-> fujitsu-laptop registers two ACPI drivers that access each other's
-> module-wide structures.  To improve data encapsulation and lay the
-> groundwork for separating the two aforementioned ACPI drivers into
-> separate modules, move away from module-wide global data structures by
-> using device-specific data instead.
-> :
+I am trying on an approach based on i2c_register_board_info which in turn can aid in invocation of probe of device driver.
+However, I do not find a reference in linux kernel codebase where exactly it should be added for the Intel processor (atom or equivalent) ?
+It can be helpful if someone can point to the location of addition of i2c_register_board_info for intel platform (atom or equivalent) ?
 
-I have had a quick look through this series.  To my eye it addresses the
-outcome of our discussion over the last couple of weeks, and looks good.  I
-had one query regarding patch 5/8, but that might just be a case of me not
-knowing about a subtlety of WARN_ONCE().  In any case this isn't a major
-issue and would be easily resolved if needed.
-
-Once I get feedback on patch 5/8 (and after seeing any additional comments
-from Darren et al) I can send through a reviewed-by.
-
-Regards
-  jonathan
+Thanks in advance,
+Karthik Balaguru
+Disclaimer : 
+This email communication may contain privileged and confidential information and is intended for the use of the addressee only. If you are not an intended recipient you are requested not to reproduce, copy disseminate or in any manner distribute this email communication as the same is strictly prohibited. If you have received this email in error, please notify the sender immediately by return e-mail and delete the communication sent in error. Email communications cannot be guaranteed to be secure & error free and Incedo Inc. is not liable for any errors in the email communication or for the proper, timely and complete transmission thereof.
