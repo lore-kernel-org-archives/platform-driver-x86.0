@@ -1,40 +1,54 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] platform/x86: intel_pmc_ipc: Delete unused function ipc_data_readb()
-Date: Tue, 23 May 2017 13:55:39 -0700
-Message-ID: <20170523205539.71450-1-mka@chromium.org>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v2 5/8] platform/x86: fujitsu-laptop: track the last
+ instantiated FUJ02E3 ACPI device
+Date: Tue, 23 May 2017 23:47:06 +0200
+Message-ID: <20170523214706.GA3151@kmp-mobile.hq.kempniu.pl>
+References: <20170519074448.12716-1-kernel@kempniu.pl>
+ <20170519074448.12716-6-kernel@kempniu.pl>
+ <20170521231856.GC28475@marvin.atrad.com.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170521231856.GC28475@marvin.atrad.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The function was added by commit 0a8b83530b6f ("intel_pmc_ipc: Add Intel
-Apollo Lake PMC IPC driver") in 2015 and hasn't been used since then.
-Removing it fixes the following warning when building with clang:
+> On Fri, May 19, 2017 at 09:44:45AM +0200, Micha?? K??pie?? wrote:
+> > It is easier to simply store a module-wide
+> > pointer to the last (most likely only) FUJ02E3 ACPI device found, make
+> > the aforementioned API use it and cover our bases by warning the user if
+> > firmware exposes multiple FUJ02E3 ACPI devices.
+> > :
+> > @@ -788,6 +789,9 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+> >  	if (!priv)
+> >  		return -ENOMEM;
+> >  
+> > +	WARN_ONCE(fext, "More than one FUJ02E3 ACPI device was found.  Driver may not work as intended.");
+> > +	fext = device;
+> > +
+> >  	fujitsu_laptop = priv;
+> >  	fujitsu_laptop->acpi_handle = device->handle;
+> >  	sprintf(acpi_device_name(device), "%s",
+> 
+> I thought WARN_ONCE() printed the warning when it was encountered for the
+> first time and then suppressed it on all other occasions.
 
-    drivers/platform/x86/intel_pmc_ipc.c:189:18: error: unused function
-        'ipc_data_readb' [-Werror,-Wunused-function]
+Correct.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/platform/x86/intel_pmc_ipc.c | 5 -----
- 1 file changed, 5 deletions(-)
+> If this is true
+> then we'll get the warning even when there is only one FUJ02E3 in the
+> system.  Am I missing something?
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index e4d4dfe3e1d1..aa2fd58b75c4 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -186,11 +186,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
- 	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
- }
- 
--static inline u8 ipc_data_readb(u32 offset)
--{
--	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
--}
--
- static inline u32 ipc_data_readl(u32 offset)
- {
- 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+Probably the fact that the first argument of the macro is a conditional
+expression ("fext" is functionally equivalent to "fext != NULL" in this
+case).  In other words, the warning will only ever be issued if
+acpi_fujitsu_laptop_add() is called at least twice - note the assignment
+on the line following WARN_ONCE().
+
 -- 
-2.13.0.219.gdb65acc882-goog
+Best regards,
+Michał Kępień
