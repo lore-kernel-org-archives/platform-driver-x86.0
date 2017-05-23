@@ -1,55 +1,40 @@
-From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v3 1/8] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
-Date: Tue, 23 May 2017 10:29:59 -0700
-Message-ID: <75e12563a835dc4f8e8dab26ecea46822262604b.1495559980.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20170523072615.r4widzjc6apwxpwb@dell>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] platform/x86: intel_pmc_ipc: Delete unused function ipc_data_readb()
+Date: Tue, 23 May 2017 13:55:39 -0700
+Message-ID: <20170523205539.71450-1-mka@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523072615.r4widzjc6apwxpwb@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org
-Cc: linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+The function was added by commit 0a8b83530b6f ("intel_pmc_ipc: Add Intel
+Apollo Lake PMC IPC driver") in 2015 and hasn't been used since then.
+Removing it fixes the following warning when building with clang:
 
-TMU interrupts are registered as a separate interrupt chip, and
-hence it should start its interrupt index(BXTWC_TMU_IRQ) number
-from 0. But currently, BXTWC_TMU_IRQ is defined as part of enum
-bxtwc_irqs_level2 and its index value is 11. Since this index
-value is used when calculating .num_irqs of regmap_irq_chip_tmu,
-it incorrectly reports number of irqs as 12 instead of actual
-value of 1.
+    drivers/platform/x86/intel_pmc_ipc.c:189:18: error: unused function
+        'ipc_data_readb' [-Werror,-Wunused-function]
 
-This patch fixes this issue by creating new enum of tmu irqs and
-resetting its starting index to 0.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/mfd/intel_soc_pmic_bxtwc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Changes since v1: 
- * Removed code from commit message.
-
-Changes since v2: 
- * Rebased on top of latest release.
-
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index 8c3cbf6..7cbaf1e 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -95,7 +95,10 @@ enum bxtwc_irqs_level2 {
- 	BXTWC_GPIO0_IRQ,
- 	BXTWC_GPIO1_IRQ,
- 	BXTWC_CRIT_IRQ,
--	BXTWC_TMU_IRQ,
-+};
-+
-+enum bxtwc_irqs_tmu {
-+	BXTWC_TMU_IRQ = 0,
- };
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index e4d4dfe3e1d1..aa2fd58b75c4 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -186,11 +186,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
+ 	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
+ }
  
- static const struct regmap_irq bxtwc_regmap_irqs[] = {
+-static inline u8 ipc_data_readb(u32 offset)
+-{
+-	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+-}
+-
+ static inline u32 ipc_data_readl(u32 offset)
+ {
+ 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
 -- 
-2.7.4
+2.13.0.219.gdb65acc882-goog
