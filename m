@@ -1,76 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/8] thermal: intel_bxt_pmic_thermal: use first level
- PMIC thermal irq
-Date: Tue, 23 May 2017 08:26:15 +0100
-Message-ID: <20170523072615.r4widzjc6apwxpwb@dell>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <fda73b083e5e67e8fcc9fc2d01a590f689a06c91.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <1495520652.2303.0.camel@intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Squelch ACPI event 1
+Date: Tue, 23 May 2017 19:37:12 +0300
+Message-ID: <CAHp75VefTZv+De3TU4bQMBND5wiYNmU5AHLD+ibhS0vL7f=wAw@mail.gmail.com>
+References: <7a7642d7-846e-9ead-a8d0-d10d7f85158b@angelsl.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f170.google.com ([209.85.128.170]:36724 "EHLO
-        mail-wr0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752082AbdEWH0T (ORCPT
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:34012 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935211AbdEWQhO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2017 03:26:19 -0400
-Received: by mail-wr0-f170.google.com with SMTP id l50so50953335wrc.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2017 00:26:18 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <1495520652.2303.0.camel@intel.com>
+        Tue, 23 May 2017 12:37:14 -0400
+In-Reply-To: <7a7642d7-846e-9ead-a8d0-d10d7f85158b@angelsl.xyz>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
+To: Hao Wei Tee <angelsl@angelsl.xyz>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
 
-On Tue, 23 May 2017, Zhang Rui wrote:
+On Mon, May 22, 2017 at 1:38 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
+> Don't simply throw this to userspace via the sparse_keymap (which does not
+> have a mapping for scancode 1), as this causes KEY_UNKNOWN to be emitted,
+> which is a nuisance and of no use at all (it is not the right way to expose
+> this ACPI event to userspace, anyway, and the original intention of the commit
+> which added this (cfee5d63767b2e7997c1f36420d008abbe61565c) was only to suppress
+> an unhandled event log message).
+>
 
-> On Fri, 2017-04-14 at 16:25 -0700,
-> sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.in
-> > tel.com>
-> > 
-> > PMIC mfd driver only exports first level irq for thermal device.
-> > But currently we are reading the irqs from the second level irq
-> > chip, So this patch fixes this issue by adding support to use
-> > first level PMIC thermal irq.
-> > 
-> > Signed-off-by: Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Acked-by: Zhang Rui <rui.zhang@intel.com>
+Pushed to testing, thanks.
 
-I think this is the last Ack.
+> Signed-off-by: Hao Wei Tee <angelsl@angelsl.xyz>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 24ca9fbe31cc..998da7b4cd8e 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -810,7 +810,6 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>                         case 8:
+>                         case 7:
+>                         case 6:
+> -                       case 1:
+>                                 ideapad_input_report(priv, vpc_bit);
+>                                 break;
+>                         case 5:
+> @@ -828,6 +827,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>                         case 0:
+>                                 ideapad_check_special_buttons(priv);
+>                                 break;
+> +                       case 1:
+> +                               /* Some IdeaPads report event 1 every ~20
+> +                                * seconds while on battery power; some
+> +                                * report this when changing to/from tablet
+> +                                * mode. Squelch this event.
+> +                                */
+> +                               break;
+>                         default:
+>                                 pr_info("Unknown event: %lu\n", vpc_bit);
+>                         }
+> --
+> 2.13.0
+>
 
-Please collect them all and re-submit the set so I can pick it up.
 
-> > ---
-> >  drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Changes since v1:
-> >  * None
-> > 
-> > diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c
-> > b/drivers/thermal/intel_bxt_pmic_thermal.c
-> > index 0f19a39..ef6b322 100644
-> > --- a/drivers/thermal/intel_bxt_pmic_thermal.c
-> > +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
-> > @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct
-> > platform_device *pdev)
-> >  	}
-> >  
-> >  	regmap = pmic->regmap;
-> > -	regmap_irq_chip = pmic->irq_chip_data_level2;
-> > +	regmap_irq_chip = pmic->irq_chip_data;
-> >  
-> >  	pmic_irq_count = 0;
-> >  	while ((irq = platform_get_irq(pdev, pmic_irq_count)) !=
-> > -ENXIO) {
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
