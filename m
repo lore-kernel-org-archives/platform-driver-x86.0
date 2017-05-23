@@ -1,69 +1,60 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Squelch ACPI event 1
-Date: Tue, 23 May 2017 19:37:12 +0300
-Message-ID: <CAHp75VefTZv+De3TU4bQMBND5wiYNmU5AHLD+ibhS0vL7f=wAw@mail.gmail.com>
-References: <7a7642d7-846e-9ead-a8d0-d10d7f85158b@angelsl.xyz>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: hide unused 'touchpad_store'
+Date: Tue, 23 May 2017 19:37:36 +0300
+Message-ID: <CAHp75Vd1Jj3kcwdc8oWptAcOdGNdh3+Ajna_pHDRthF1ux+wEw@mail.gmail.com>
+References: <20170522130709.242445-1-arnd@arndb.de> <CAHp75Ve5cN4bkA1Q2-6_N6wz0ZCsps3fOnb1Kobi_wK5=Hn4Jg@mail.gmail.com>
+ <CAK8P3a0iSm682vPuva6mTk479xx92Ho2uyV07J4_iN_THEsGZA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:34012 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S935211AbdEWQhO (ORCPT
+Received: from mail-qk0-f196.google.com ([209.85.220.196]:33270 "EHLO
+        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935211AbdEWQhh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2017 12:37:14 -0400
-In-Reply-To: <7a7642d7-846e-9ead-a8d0-d10d7f85158b@angelsl.xyz>
+        Tue, 23 May 2017 12:37:37 -0400
+In-Reply-To: <CAK8P3a0iSm682vPuva6mTk479xx92Ho2uyV07J4_iN_THEsGZA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hao Wei Tee <angelsl@angelsl.xyz>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Brian Masney <masneyb@onstation.org>, Ritesh Raj Sarraf <rrs@debian.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, May 22, 2017 at 1:38 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
-> Don't simply throw this to userspace via the sparse_keymap (which does not
-> have a mapping for scancode 1), as this causes KEY_UNKNOWN to be emitted,
-> which is a nuisance and of no use at all (it is not the right way to expose
-> this ACPI event to userspace, anyway, and the original intention of the commit
-> which added this (cfee5d63767b2e7997c1f36420d008abbe61565c) was only to suppress
-> an unhandled event log message).
+On Mon, May 22, 2017 at 11:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, May 22, 2017 at 7:02 PM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, May 22, 2017 at 4:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> A readonly sysfs property must not have a 'store' function:
+>>>
+>>> drivers/platform/x86/ideapad-laptop.c:438:16: error: 'touchpad_store' defined but not used [-Werror=unused-function]
+>>>
+>>> We can either comment it out or remove the function entirely,
+>>> without a good reason one or or another I picked the second option.
+>>
+>> Hmm... I was expecting something like this but didn't get a single
+>> error from kbuild bot.
+>>
+>>>
+>>> Fixes: 7f363145992c ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>>  drivers/platform/x86/ideapad-laptop.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>> index f7a4608cc60b..c4c7ae3179c0 100644
+>>> --- a/drivers/platform/x86/ideapad-laptop.c
+>>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> @@ -435,6 +435,8 @@ static ssize_t touchpad_show(struct device *dev,
+>>>         return sprintf(buf, "%lu\n", result);
+>>>  }
+>>>
+>>> +#if 0
+>>> +/* Switch to RO for now: It might be revisited in the future */
+>>
+>> Can we use __maybe_unused instead?
 >
+> Sure, whichever you prefer. I guess you'll just commit that patch yourself then?
 
-Pushed to testing, thanks.
-
-> Signed-off-by: Hao Wei Tee <angelsl@angelsl.xyz>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 24ca9fbe31cc..998da7b4cd8e 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -810,7 +810,6 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
->                         case 8:
->                         case 7:
->                         case 6:
-> -                       case 1:
->                                 ideapad_input_report(priv, vpc_bit);
->                                 break;
->                         case 5:
-> @@ -828,6 +827,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
->                         case 0:
->                                 ideapad_check_special_buttons(priv);
->                                 break;
-> +                       case 1:
-> +                               /* Some IdeaPads report event 1 every ~20
-> +                                * seconds while on battery power; some
-> +                                * report this when changing to/from tablet
-> +                                * mode. Squelch this event.
-> +                                */
-> +                               break;
->                         default:
->                                 pr_info("Unknown event: %lu\n", vpc_bit);
->                         }
-> --
-> 2.13.0
->
-
-
+Updated version pushed to testing, thanks.
 
 -- 
 With Best Regards,
