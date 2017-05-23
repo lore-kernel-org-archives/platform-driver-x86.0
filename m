@@ -1,75 +1,56 @@
-From: <horizon@qubeglobal.com>
-Subject: (unknown)
-Date: Mon, 22 May 2017 20:39:59 -0000
-Message-ID: <149548559965.6150.3243996797135936940@udm.net>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v2 3/8] thermal: intel_bxt_pmic_thermal: use first level
+ PMIC thermal irq
+Date: Tue, 23 May 2017 14:24:12 +0800
+Message-ID: <1495520652.2303.0.camel@intel.com>
+References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+         <fda73b083e5e67e8fcc9fc2d01a590f689a06c91.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="66593863594.zip"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from a241.sub87.net78.udm.net ([78.85.87.241]:41749 "HELO udm.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
-        id S932886AbdEVUkE (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 May 2017 16:40:04 -0400
-Subject: 
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <fda73b083e5e67e8fcc9fc2d01a590f689a06c91.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: sathyanarayanan.kuppuswamy@linux.intel.com, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, lee.jones@linaro.org, andy@infradead.org
+Cc: linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
-SwUGAAAAAAEAAQBPAAAA7wsAAAAA
+On Fri, 2017-04-14 at 16:25 -0700,
+sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.in
+> tel.com>
+> 
+> PMIC mfd driver only exports first level irq for thermal device.
+> But currently we are reading the irqs from the second level irq
+> chip, So this patch fixes this issue by adding support to use
+> first level PMIC thermal irq.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+Acked-by: Zhang Rui <rui.zhang@intel.com>
+
+-rui
+> ---
+>  drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Changes since v1:
+>  * None
+> 
+> diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c
+> b/drivers/thermal/intel_bxt_pmic_thermal.c
+> index 0f19a39..ef6b322 100644
+> --- a/drivers/thermal/intel_bxt_pmic_thermal.c
+> +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
+> @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct
+> platform_device *pdev)
+>  	}
+>  
+>  	regmap = pmic->regmap;
+> -	regmap_irq_chip = pmic->irq_chip_data_level2;
+> +	regmap_irq_chip = pmic->irq_chip_data;
+>  
+>  	pmic_irq_count = 0;
+>  	while ((irq = platform_get_irq(pdev, pmic_irq_count)) !=
+> -ENXIO) {
