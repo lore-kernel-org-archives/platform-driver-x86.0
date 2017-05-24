@@ -1,54 +1,33 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 0/8] fujitsu-laptop: use device-specific data instead
- of module-wide globals
-Date: Wed, 24 May 2017 09:30:18 +0930
-Message-ID: <20170524000018.GF11878@marvin.atrad.com.au>
-References: <20170519074448.12716-1-kernel@kempniu.pl>
- <20170521232323.GD28475@marvin.atrad.com.au>
+From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: Delete unused function
+ ipc_data_readb()
+Date: Wed, 24 May 2017 14:39:32 +0100
+Message-ID: <20170524143932.11593845@alans-desktop>
+References: <20170523205539.71450-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:54030 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932943AbdEXAA4 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2017 20:00:56 -0400
-Content-Disposition: inline
-In-Reply-To: <20170521232323.GD28475@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170523205539.71450-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Michael
+On Tue, 23 May 2017 13:55:39 -0700
+Matthias Kaehlcke <mka@chromium.org> wrote:
 
-On Mon, May 22, 2017 at 08:53:23AM +0930, Jonathan Woithe wrote:
-> On Fri, May 19, 2017 at 09:44:40AM +0200, Micha?? K??pie?? wrote:
-> > fujitsu-laptop registers two ACPI drivers that access each other's
-> > module-wide structures.  To improve data encapsulation and lay the
-> > groundwork for separating the two aforementioned ACPI drivers into
-> > separate modules, move away from module-wide global data structures by
-> > using device-specific data instead.
-> > :
+> The function was added by commit 0a8b83530b6f ("intel_pmc_ipc: Add Intel
+> Apollo Lake PMC IPC driver") in 2015 and hasn't been used since then.
+> Removing it fixes the following warning when building with clang:
 > 
-> I have had a quick look through this series.  To my eye it addresses the
-> outcome of our discussion over the last couple of weeks, and looks good.  I
-> had one query regarding patch 5/8, but that might just be a case of me not
-> knowing about a subtlety of WARN_ONCE().  In any case this isn't a major
-> issue and would be easily resolved if needed.
-> 
-> Once I get feedback on patch 5/8 (and after seeing any additional comments
-> from Darren et al) I can send through a reviewed-by.
+>     drivers/platform/x86/intel_pmc_ipc.c:189:18: error: unused function
+>         'ipc_data_readb' [-Werror,-Wunused-function]
 
-With the minor query in 5.8 sorted, I'm happy to proceed with this (subject
-of course to any further comments from Darren or Andy).  While not an
-endpoint in and of itslef, it is never-the-less an important step towards
-the agreed goal to separate the fujitsu-laptop module into two drivers. 
-This is motivated by the current use of two ACPI devices by the single
-fujitsu-laptop module, which is inconsistent with the kernel's "one driver
-per module" approach.
+It is however also part of the API and a consistent sensible function to
+have present should it be needed. As it's static it's eliminated
+correctly by gcc.
 
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+I'm all for eliminating unused functions but in this case I have to wonder
 
-Regards
-  jonathan
+Alan
