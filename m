@@ -1,63 +1,54 @@
 From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v2 5/8] platform/x86: fujitsu-laptop: track the last
- instantiated FUJ02E3 ACPI device
-Date: Wed, 24 May 2017 09:23:17 +0930
-Message-ID: <20170523235317.GE11878@marvin.atrad.com.au>
+Subject: Re: [PATCH v2 0/8] fujitsu-laptop: use device-specific data instead
+ of module-wide globals
+Date: Wed, 24 May 2017 09:30:18 +0930
+Message-ID: <20170524000018.GF11878@marvin.atrad.com.au>
 References: <20170519074448.12716-1-kernel@kempniu.pl>
- <20170519074448.12716-6-kernel@kempniu.pl>
- <20170521231856.GC28475@marvin.atrad.com.au>
- <20170523214706.GA3151@kmp-mobile.hq.kempniu.pl>
+ <20170521232323.GD28475@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:54016 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:54030 "EHLO
         server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933214AbdEWXyS (ORCPT
+        with ESMTP id S932943AbdEXAA4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2017 19:54:18 -0400
+        Tue, 23 May 2017 20:00:56 -0400
 Content-Disposition: inline
-In-Reply-To: <20170523214706.GA3151@kmp-mobile.hq.kempniu.pl>
+In-Reply-To: <20170521232323.GD28475@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Micha?? K??pie?? <kernel@kempniu.pl>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, May 23, 2017 at 11:47:06PM +0200, Micha?? K??pie?? wrote:
-> > On Fri, May 19, 2017 at 09:44:45AM +0200, Micha?? K??pie?? wrote:
-> > > It is easier to simply store a module-wide
-> > > pointer to the last (most likely only) FUJ02E3 ACPI device found, make
-> > > the aforementioned API use it and cover our bases by warning the user if
-> > > firmware exposes multiple FUJ02E3 ACPI devices.
-> > > :
-> > > @@ -788,6 +789,9 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
-> > >  	if (!priv)
-> > >  		return -ENOMEM;
-> > >  
-> > > +	WARN_ONCE(fext, "More than one FUJ02E3 ACPI device was found.  Driver may not work as intended.");
-> > > +	fext = device;
-> > > +
-> > >  	fujitsu_laptop = priv;
-> > >  	fujitsu_laptop->acpi_handle = device->handle;
-> > >  	sprintf(acpi_device_name(device), "%s",
-> > 
-> > I thought WARN_ONCE() printed the warning when it was encountered for the
-> > first time and then suppressed it on all other occasions.
-> 
-> Correct.
-> 
-> > If this is true
-> > then we'll get the warning even when there is only one FUJ02E3 in the
-> > system.  Am I missing something?
-> 
-> Probably the fact that the first argument of the macro is a conditional
-> expression ...
+Hi Michael
 
-Ah (having now had an opportunity to look at the source of WARN_ONCE()),
-it's tested within WARN_ONCE.
+On Mon, May 22, 2017 at 08:53:23AM +0930, Jonathan Woithe wrote:
+> On Fri, May 19, 2017 at 09:44:40AM +0200, Micha?? K??pie?? wrote:
+> > fujitsu-laptop registers two ACPI drivers that access each other's
+> > module-wide structures.  To improve data encapsulation and lay the
+> > groundwork for separating the two aforementioned ACPI drivers into
+> > separate modules, move away from module-wide global data structures by
+> > using device-specific data instead.
+> > :
+> 
+> I have had a quick look through this series.  To my eye it addresses the
+> outcome of our discussion over the last couple of weeks, and looks good.  I
+> had one query regarding patch 5/8, but that might just be a case of me not
+> knowing about a subtlety of WARN_ONCE().  In any case this isn't a major
+> issue and would be easily resolved if needed.
+> 
+> Once I get feedback on patch 5/8 (and after seeing any additional comments
+> from Darren et al) I can send through a reviewed-by.
 
-> ("fext" is functionally equivalent to "fext != NULL" in this case).
+With the minor query in 5.8 sorted, I'm happy to proceed with this (subject
+of course to any further comments from Darren or Andy).  While not an
+endpoint in and of itslef, it is never-the-less an important step towards
+the agreed goal to separate the fujitsu-laptop module into two drivers. 
+This is motivated by the current use of two ACPI devices by the single
+fujitsu-laptop module, which is inconsistent with the kernel's "one driver
+per module" approach.
 
-Indeed, by virtue of the test done in WARN_ONCE().  Ok, that makes sense.
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
 Regards
   jonathan
