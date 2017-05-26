@@ -1,57 +1,56 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_ipc: Mark ipc_data_readb() as __maybe_unused
-Date: Fri, 26 May 2017 12:53:52 +0300
-Message-ID: <CAHp75VdjrwYX72e87xKFzcdmhAd7=zZeKRU84zgBc3iNuKPXdQ@mail.gmail.com>
-References: <20170525221510.41751-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: intel_cht_int33fe: Set supplied-from property on max17047 dev
+Date: Fri, 26 May 2017 12:53:48 +0200
+Message-ID: <20170526105348.16763-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f195.google.com ([209.85.216.195]:34919 "EHLO
-        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1947312AbdEZJxy (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:41616 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965647AbdEZKxv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 May 2017 05:53:54 -0400
-In-Reply-To: <20170525221510.41751-1-mka@chromium.org>
+        Fri, 26 May 2017 06:53:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, May 26, 2017 at 1:15 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> The function is currently not used, however it is part of the API and
-> might be used in the future. Adding the attribute fixes the following
-> warning when building with clang:
->
->     drivers/platform/x86/intel_pmc_ipc.c:189:18: error: unused function
->         'ipc_data_readb' [-Werror,-Wunused-function]
->
+Devices with the intel_cht_int33fe ACPI device use a max17047 fuel-gauge
+combined with a bq24272i charger, in order for the fuel-gauge driver to
+correctly display charging / discharging status it needs to know which
+charger is supplying the battery.
 
-Pushed to testing, thanks!
+This commit sets the supplied-from device property to the name of the
+bq24272i charger for this.
 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index e4d4dfe3e1d1..bb792a52248b 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -186,7 +186,7 @@ static inline void ipc_data_writel(u32 data, u32 offset)
->         writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
->  }
->
-> -static inline u8 ipc_data_readb(u32 offset)
-> +static inline u8 __maybe_unused ipc_data_readb(u32 offset)
->  {
->         return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
->  }
-> --
-> 2.13.0.219.gdb65acc882-goog
->
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel_cht_int33fe.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 6a1b2ca5b6fe..da706e2c4232 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,6 +34,13 @@ struct cht_int33fe_data {
+ 	struct i2c_client *pi3usb30532;
+ };
+ 
++static const char * const max17047_suppliers[] = { "bq24190-charger" };
++
++static const struct property_entry max17047_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", max17047_suppliers),
++	{ }
++};
++
+ static int cht_int33fe_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -70,6 +77,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
++	board_info.properties = max17047_props;
+ 
+ 	data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
+ 	if (!data->max17047)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.13.0
