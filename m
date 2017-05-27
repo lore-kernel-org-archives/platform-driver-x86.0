@@ -1,44 +1,63 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
-Date: Sat, 27 May 2017 23:49:22 +0300
-Message-ID: <CAHp75VdmMwEvho-2tRoYz3CGz2QvLr40G6Nf7wQ76LCtxFjT4g@mail.gmail.com>
-References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
- <201705271517.30111@pali> <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
- <201705272248.13257@pali>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
+ embedded WMI MOF metadata
+Date: Sat, 27 May 2017 14:07:40 -0700
+Message-ID: <CALCETrWgFqhYCVmr+rox5GuwAO8HzenjRt7MeKJbAmV3gJCmng@mail.gmail.com>
+References: <cover.1495862272.git.dvhart@infradead.org> <27758381c6cb77efab75a266e21243a964cce0ba.1495862272.git.dvhart@infradead.org>
+ <201705271314.16241@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f173.google.com ([209.85.220.173]:36371 "EHLO
-        mail-qk0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750743AbdE0UtX (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 May 2017 16:49:23 -0400
-In-Reply-To: <201705272248.13257@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <201705271314.16241@pali>
+Sender: linux-acpi-owner@vger.kernel.org
 To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, May 27, 2017 at 11:48 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
-ote:
-> On Saturday 27 May 2017 15:33:14 Andy Shevchenko wrote:
->> On Sat, May 27, 2017 at 4:17 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> wrote:
-
->> Okay, got it. But on your opinion does it make sense to do
->>
->> pr_info("\tobject_id: %2pE\n", g->object_id);
->>
->> instead?
->>
->> For ASCII it will go as is previously, otherwise escaping would be
->> done.
+On Sat, May 27, 2017 at 4:14 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> Hi! Note that in WMI is stored binary MOF (BMOF; .bmf file; compiled
+> MOF), not ordinary MOF data which are plain text. So maybe it could make
+> sense to include "B" into name of sysfs entry? Or not? (Just suggestion)
 >
-> Both is OK for me. Do you want to send a new patch with %2pE?
+> On Saturday 27 May 2017 07:31:29 Darren Hart wrote:
+>> From: Andy Lutomirski <luto@kernel.org>
+>>
+>> Quite a few laptops (and maybe servers?) have embedded WMI MOF
+>
+> Not "a few", but "lots of" :-)
+>
+>> metadata. I think that Samba has tools to interpret it, but there is
+>> currently no interface to get the data in the first place.
+>
+> No, there is no non-ms-windows tool for interpreting those binary MOF
+> (BMF) data yet.
+>
+>> +     priv->mofdata = wmidev_block_query(wdev, 0);
+>> +     if (!priv->mofdata) {
+>> +             dev_warn(&wdev->dev, "failed to read MOF\n");
+>> +             return -EIO;
+>> +     }
+>> +
+>> +     if (priv->mofdata->type != ACPI_TYPE_BUFFER) {
+>> +             dev_warn(&wdev->dev, "MOF is not a buffer\n");
+>> +             ret = -EIO;
+>> +             goto err_free;
+>> +     }
+>
+> Are not those problems fatal for driver and therefore dev_err() better?
+>
+>> +     sysfs_bin_attr_init(&priv->mof_bin_attr);
+>> +     priv->mof_bin_attr.attr.name = "mof";
+>> +     priv->mof_bin_attr.attr.mode = 0400;
+>
+> 0400 means to be readable only by root? Is there then reason why normal
+> user should not be able to read it?
+>
 
-To me it looks slightly cleaner.
-
---=20
-With Best Regards,
-Andy Shevchenko
+I have no specific objection to making it 0444, but in general I'd
+rather expose less information to unprivileged users rather than more.
+I'm also having trouble imagining what an unprivileged user would do
+with the MOF -- it's useful for reverse engineering and it may
+eventually be useful for making WMI calls from userspace, but neither
+of those is particularly useful to unprivileged users.
