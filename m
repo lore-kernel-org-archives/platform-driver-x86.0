@@ -1,70 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-wmi: Add a better description for
- "stealth mode"
-Date: Sat, 27 May 2017 13:40:39 +0300
-Message-ID: <CAHp75VeW5M5GJcgqjPK-n0oGeWi52nK+f+Q-MmEmA+CM7EV0xw@mail.gmail.com>
-References: <a959f34a4a8586b9fd71550cf2920371daefacf0.1495862172.git.dvhart@infradead.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 16/16] platform/x86: dell-wmi: Convert to the WMI bus infrastructure
+Date: Sat, 27 May 2017 12:50:20 +0200
+Message-ID: <201705271250.20338@pali>
+References: <cover.1495862272.git.dvhart@infradead.org> <4a4da770c8d0af7e3f31e79261b43573d70a6ea6.1495862272.git.dvhart@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:36840 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755985AbdE0Kkk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 May 2017 06:40:40 -0400
-In-Reply-To: <a959f34a4a8586b9fd71550cf2920371daefacf0.1495862172.git.dvhart@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: multipart/signed;
+  boundary="nextPart1629343.TP47SBsL6z";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4a4da770c8d0af7e3f31e79261b43573d70a6ea6.1495862272.git.dvhart@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, May 27, 2017 at 8:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> From: Andy Lutomirski <luto@kernel.org>
->
-> This is based on Mario's explanation and observation of my laptop.
->
+--nextPart1629343.TP47SBsL6z
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Saturday 27 May 2017 07:31:30 Darren Hart wrote:
+> -	dell_wmi_input_dev->name =3D "Dell WMI hotkeys";
+> -	dell_wmi_input_dev->phys =3D "wmi/input0";
+> -	dell_wmi_input_dev->id.bustype =3D BUS_HOST;
+> +	priv->input_dev->name =3D "Dell WMI hotkeys";
+> +	priv->input_dev->id.bustype =3D BUS_HOST;
 
-> Suggested-by: "Pali Roh=C3=A1r" <pali.rohar@gmail.com>
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> Cc: Mario Limonciello <mario_limonciello@dell.com>
-> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> ---
->  drivers/platform/x86/dell-wmi.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-=
-wmi.c
-> index 24467b1..73aee0d 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -272,7 +272,12 @@ static const struct key_entry dell_wmi_keymap_type_0=
-010[] __initconst =3D {
->         /* RGB keyboard backlight control */
->         { KE_IGNORE, 0x154, { KEY_RESERVED } },
->
-> -       /* Stealth mode toggle */
-> +       /*
-> +        * Stealth mode toggle. This will "disable all lights and sounds"=
-.
-> +        * The action is performed by the BIOS and EC; the WMI event is j=
-ust
-> +        * a notification. On the XPS 13 9350, this is Fn+F7, and there's
-> +        * a BIOS setting to enable and disable the hotkey.
-> +        */
->         { KE_IGNORE, 0x155, { KEY_RESERVED } },
->
->         /* Rugged magnetic dock attach/detach events */
-> --
-> 2.9.4
->
+Is not there BUS_WMI, or something like that? (Just asking)
 
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--nextPart1629343.TP47SBsL6z
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
---=20
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlkpWewACgkQi/DJPQPkQ1ILCACfTlr4Uu2nQuGoCJRLc/oo+8Cw
+sfoAoKUcKXXOG7VFYWAxo3AVMW5rnL3W
+=kvTE
+-----END PGP SIGNATURE-----
+
+--nextPart1629343.TP47SBsL6z--
