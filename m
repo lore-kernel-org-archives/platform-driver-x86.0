@@ -1,69 +1,53 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
-Date: Sat, 27 May 2017 13:55:34 +0200
-Message-ID: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
+Date: Sat, 27 May 2017 16:07:09 +0300
+Message-ID: <CAHp75Vez0ZbBQ_uK1=Q7C3azwBQWerZiio0c2p4WEutXK1NhPg@mail.gmail.com>
+References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:35844 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756051AbdE0L4D (ORCPT
+Received: from mail-qt0-f171.google.com ([209.85.216.171]:34531 "EHLO
+        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752154AbdE0NHK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 May 2017 07:56:03 -0400
+        Sat, 27 May 2017 09:07:10 -0400
+In-Reply-To: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-instance_count defines number of instances of data block and instance
-itself is indexed from zero, which means first instance has number 0.
-Therefore check for invalid instance should be non-strict inequality.
+On Sat, May 27, 2017 at 2:51 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> object_id and notify_id are in one union structure and their meaning is
+> defined by flags. Therefore do not print notify_id for non-event block an=
+d
+> do not print object_id for event block. Remove also reserved member as it
+> does not have any defined meaning or type yet.
+>
+> As object_id and notify_id union members overlaps and have different type=
+s,
+> it caused that kernel print to dmesg binary data. This patch eliminates i=
+t.
 
-Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
----
-I'm marking this patch as RFC because it is not tested at all and probably
-could break existing WMI drivers. Some WMI drivers pass instance number 1
-and I'm not sure if ACPI-WMI bytecode for those machines has really two
-instances. In more cases ACPI-WMI bytecode does not check instance number
-if supports only one instance. So then any instance id can be used for
-correct execution of ACPI-WMI method.
+> -       pr_info("\tobject_id: %c%c\n", g->object_id[0], g->object_id[1]);
+> -       pr_info("\tnotify_id: %02X\n", g->notify_id);
 
-So this patch is open for discussion.
----
- drivers/platform/x86/wmi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> -       pr_info("\treserved: %02X\n", g->reserved);
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index cd7045f..df63037 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -191,7 +191,7 @@ acpi_status wmi_evaluate_method(const char *guid_string, u8 instance,
- 	if (!(block->flags & ACPI_WMI_METHOD))
- 		return AE_BAD_DATA;
- 
--	if (block->instance_count < instance)
-+	if (block->instance_count <= instance)
- 		return AE_BAD_PARAMETER;
- 
- 	input.count = 2;
-@@ -250,7 +250,7 @@ struct acpi_buffer *out)
- 	block = &wblock->gblock;
- 	handle = wblock->handle;
- 
--	if (block->instance_count < instance)
-+	if (block->instance_count <= instance)
- 		return AE_BAD_PARAMETER;
- 
- 	/* Check GUID is a data block */
-@@ -323,7 +323,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 instance,
- 	block = &wblock->gblock;
- 	handle = wblock->handle;
- 
--	if (block->instance_count < instance)
-+	if (block->instance_count <= instance)
- 		return AE_BAD_PARAMETER;
- 
- 	/* Check GUID is a data block */
--- 
-1.7.9.5
+Do we need this? Commit message doesn't clarify.
+
+> +       if (g->flags & ACPI_WMI_EVENT)
+> +               pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
+> +       else
+
+> +               pr_info("\tobject_id: %c%c\n", g->object_id[0], g->object=
+_id[1]);
+
+If this can still contain non-printable characters the %*pE can help instea=
+d.
+
+--=20
+With Best Regards,
+Andy Shevchenko
