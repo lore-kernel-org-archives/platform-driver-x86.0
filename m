@@ -1,339 +1,129 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: [PATCH 16/16] platform/x86: dell-wmi: Convert to the WMI bus infrastructure
-Date: Fri, 26 May 2017 22:31:30 -0700
-Message-ID: <4a4da770c8d0af7e3f31e79261b43573d70a6ea6.1495862272.git.dvhart@infradead.org>
-References: <cover.1495862272.git.dvhart@infradead.org>
+Subject: Re: [PATCH v1 1/1] intel_telemetry_debugfs: fix oops found while
+ load/unload module test
+Date: Fri, 26 May 2017 22:49:29 -0700
+Message-ID: <20170527054929.GA118811@localhost.localdomain>
+References: <6718d6200ee45ae58b496225d148d275a2776756.1495897832.git.priyalee.kushwaha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1495862272.git.dvhart@infradead.org>
-In-Reply-To: <cover.1495862272.git.dvhart@infradead.org>
-References: <cover.1495862272.git.dvhart@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, Darren Hart <dvhart@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:52035 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750724AbdE0Ftd (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 27 May 2017 01:49:33 -0400
+Content-Disposition: inline
+In-Reply-To: <6718d6200ee45ae58b496225d148d275a2776756.1495897832.git.priyalee.kushwaha@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: priyalee.kushwaha@intel.com
+Cc: souvik.k.chakravarty@intel.com, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+On Sat, May 27, 2017 at 08:17:39AM -0700, priyalee.kushwaha@intel.com wrote:
+> From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+> 
+> This fix oops found while testing load/unload test of
+> intel_telemetry_debugfs module. Module_init uses register_pm_notifier
+> for PM callbacks, but unregister_pm_notifier was missing from
+> module_exit.
+> 
+>  [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
+>  [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
+>  [ 97.495898] PGD 2e0a067
+>  [ 97.495899] PUD 2e0b063
+>  [ 97.498737] PMD 179e29067
+>  [ 97.501573] PTE 0
+> 
+>  [ 97.508423] Oops: 0000 1 PREEMPT SMP
+>  [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
+>  [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
+>  [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
+>  [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
+>  [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
+>  [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
+>  [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
+>  [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
+>  [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
+>  [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
+>  [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
+>  [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
+>  [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
+>  [ 97.660423] Call Trace:
+>  [ 97.663166] ? 0xffffffffa0031000
+>  [ 97.666885] register_pm_notifier+0x18/0x20
+>  [ 97.671581] telemetry_debugfs_init+0x92/0x1000
+> 
+> Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
 
-Move some initialization out of _init and into _probe.
-Update signatures and logic to use the wmi bus and device structures.
+Hi Priyalee,
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-[dvhart: drop deprecated sparse_keymap_free, order declarations, add commit msg]
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Mario Limonciello <mario_limonciello@dell.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>
-Cc: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
----
- drivers/platform/x86/dell-wmi.c | 136 +++++++++++++++++++++-------------------
- 1 file changed, 70 insertions(+), 66 deletions(-)
+Thanks for catching this, we should get a fix into the RC cycle. but I think we
+can make some small changes that will improve legibility here.
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 8a64c79..badc01e 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -36,6 +36,7 @@
- #include <linux/acpi.h>
- #include <linux/string.h>
- #include <linux/dmi.h>
-+#include <linux/wmi.h>
- #include <acpi/video.h>
- #include "dell-smbios.h"
- 
-@@ -53,6 +54,10 @@ static bool wmi_requires_smbios_request;
- MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
- MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
- 
-+struct dell_wmi_priv {
-+	struct input_dev *input_dev;
-+};
-+
- static int __init dmi_matched(const struct dmi_system_id *dmi)
- {
- 	wmi_requires_smbios_request = 1;
-@@ -86,7 +91,7 @@ static const struct dmi_system_id dell_wmi_smbios_list[] __initconst = {
-  * notifications (rather than requests for change) or are also sent
-  * via the keyboard controller so should not be sent again.
-  */
--static const struct key_entry dell_wmi_keymap_type_0000[] __initconst = {
-+static const struct key_entry dell_wmi_keymap_type_0000[] = {
- 	{ KE_IGNORE, 0x003a, { KEY_CAPSLOCK } },
- 
- 	/* Key code is followed by brightness level */
-@@ -207,7 +212,7 @@ struct dell_dmi_results {
- };
- 
- /* Uninitialized entries here are KEY_RESERVED == 0. */
--static const u16 bios_to_linux_keycode[256] __initconst = {
-+static const u16 bios_to_linux_keycode[256] = {
- 	[0]	= KEY_MEDIA,
- 	[1]	= KEY_NEXTSONG,
- 	[2]	= KEY_PLAYPAUSE,
-@@ -256,7 +261,7 @@ static const u16 bios_to_linux_keycode[256] __initconst = {
-  * These are applied if the 0xB2 DMI hotkey table is present and doesn't
-  * override them.
-  */
--static const struct key_entry dell_wmi_keymap_type_0010[] __initconst = {
-+static const struct key_entry dell_wmi_keymap_type_0010[] = {
- 	/* Fn-lock */
- 	{ KE_IGNORE, 0x151, { KEY_RESERVED } },
- 
-@@ -289,7 +294,7 @@ static const struct key_entry dell_wmi_keymap_type_0010[] __initconst = {
- /*
-  * Keymap for WMI events of type 0x0011
-  */
--static const struct key_entry dell_wmi_keymap_type_0011[] __initconst = {
-+static const struct key_entry dell_wmi_keymap_type_0011[] = {
- 	/* Battery unplugged */
- 	{ KE_IGNORE, 0xfff0, { KEY_RESERVED } },
- 
-@@ -304,13 +309,12 @@ static const struct key_entry dell_wmi_keymap_type_0011[] __initconst = {
- 	{ KE_IGNORE, 0x02f6, { KEY_RESERVED } },
- };
- 
--static struct input_dev *dell_wmi_input_dev;
--
--static void dell_wmi_process_key(int type, int code)
-+static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
- {
-+	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
- 	const struct key_entry *key;
- 
--	key = sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
-+	key = sparse_keymap_entry_from_scancode(priv->input_dev,
- 						(type << 16) | code);
- 	if (!key) {
- 		pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n",
-@@ -333,33 +337,18 @@ static void dell_wmi_process_key(int type, int code)
- 		dell_laptop_call_notifier(
- 			DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED, NULL);
- 
--	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
-+	sparse_keymap_report_entry(priv->input_dev, key, 1, true);
- }
- 
--static void dell_wmi_notify(u32 value, void *context)
-+static void dell_wmi_notify(struct wmi_device *wdev,
-+			    union acpi_object *obj)
- {
--	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
--	acpi_status status;
--	acpi_size buffer_size;
- 	u16 *buffer_entry, *buffer_end;
-+	acpi_size buffer_size;
- 	int len, i;
- 
--	status = wmi_get_event_data(value, &response);
--	if (status != AE_OK) {
--		pr_warn("bad event status 0x%x\n", status);
--		return;
--	}
--
--	obj = (union acpi_object *)response.pointer;
--	if (!obj) {
--		pr_warn("no response\n");
--		return;
--	}
--
- 	if (obj->type != ACPI_TYPE_BUFFER) {
- 		pr_warn("bad response type %x\n", obj->type);
--		kfree(obj);
- 		return;
- 	}
- 
-@@ -404,13 +393,14 @@ static void dell_wmi_notify(u32 value, void *context)
- 		switch (buffer_entry[1]) {
- 		case 0x0000: /* One key pressed or event occurred */
- 			if (len > 2)
--				dell_wmi_process_key(0x0000, buffer_entry[2]);
-+				dell_wmi_process_key(wdev, 0x0000,
-+						     buffer_entry[2]);
- 			/* Other entries could contain additional information */
- 			break;
- 		case 0x0010: /* Sequence of keys pressed */
- 		case 0x0011: /* Sequence of events occurred */
- 			for (i = 2; i < len; ++i)
--				dell_wmi_process_key(buffer_entry[1],
-+				dell_wmi_process_key(wdev, buffer_entry[1],
- 						     buffer_entry[i]);
- 			break;
- 		default: /* Unknown event */
-@@ -423,7 +413,6 @@ static void dell_wmi_notify(u32 value, void *context)
- 
- 	}
- 
--	kfree(obj);
- }
- 
- static bool have_scancode(u32 scancode, const struct key_entry *keymap, int len)
-@@ -437,9 +426,7 @@ static bool have_scancode(u32 scancode, const struct key_entry *keymap, int len)
- 	return false;
- }
- 
--static void __init handle_dmi_entry(const struct dmi_header *dm,
--				    void *opaque)
--
-+static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
- {
- 	struct dell_dmi_results *results = opaque;
- 	struct dell_bios_hotkey_table *table;
-@@ -509,19 +496,20 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
- 	results->keymap_size = pos;
- }
- 
--static int __init dell_wmi_input_setup(void)
-+static int dell_wmi_input_setup(struct wmi_device *wdev)
- {
-+	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
- 	struct dell_dmi_results dmi_results = {};
- 	struct key_entry *keymap;
- 	int err, i, pos = 0;
- 
--	dell_wmi_input_dev = input_allocate_device();
--	if (!dell_wmi_input_dev)
-+	priv->input_dev = input_allocate_device();
-+	if (!priv->input_dev)
- 		return -ENOMEM;
- 
--	dell_wmi_input_dev->name = "Dell WMI hotkeys";
--	dell_wmi_input_dev->phys = "wmi/input0";
--	dell_wmi_input_dev->id.bustype = BUS_HOST;
-+	priv->input_dev->name = "Dell WMI hotkeys";
-+	priv->input_dev->id.bustype = BUS_HOST;
-+	priv->input_dev->dev.parent = &wdev->dev;
- 
- 	if (dmi_walk(handle_dmi_entry, &dmi_results)) {
- 		/*
-@@ -596,7 +584,7 @@ static int __init dell_wmi_input_setup(void)
- 
- 	keymap[pos].type = KE_END;
- 
--	err = sparse_keymap_setup(dell_wmi_input_dev, keymap, NULL);
-+	err = sparse_keymap_setup(priv->input_dev, keymap, NULL);
- 	/*
- 	 * Sparse keymap library makes a copy of keymap so we don't need the
- 	 * original one that was allocated.
-@@ -605,17 +593,24 @@ static int __init dell_wmi_input_setup(void)
- 	if (err)
- 		goto err_free_dev;
- 
--	err = input_register_device(dell_wmi_input_dev);
-+	err = input_register_device(priv->input_dev);
- 	if (err)
- 		goto err_free_dev;
- 
- 	return 0;
- 
-  err_free_dev:
--	input_free_device(dell_wmi_input_dev);
-+	input_free_device(priv->input_dev);
- 	return err;
- }
- 
-+static void dell_wmi_input_destroy(struct wmi_device *wdev)
-+{
-+	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	input_unregister_device(priv->input_dev);
-+}
-+
- /*
-  * Descriptor buffer is 128 byte long and contains:
-  *
-@@ -714,46 +709,55 @@ static int dell_wmi_events_set_enabled(bool enable)
- 	return dell_smbios_error(ret);
- }
- 
-+static int dell_wmi_probe(struct wmi_device *wdev)
-+{
-+	struct dell_wmi_priv *priv = devm_kzalloc(
-+		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	return dell_wmi_input_setup(wdev);
-+}
-+
-+static int dell_wmi_remove(struct wmi_device *wdev)
-+{
-+	dell_wmi_input_destroy(wdev);
-+	return 0;
-+}
-+static const struct wmi_device_id dell_wmi_id_table[] = {
-+	{ .guid_string = DELL_EVENT_GUID },
-+	{ },
-+};
-+
-+static struct wmi_driver dell_wmi_driver = {
-+	.driver = {
-+		.name = "dell-wmi",
-+	},
-+	.id_table = dell_wmi_id_table,
-+	.probe = dell_wmi_probe,
-+	.remove = dell_wmi_remove,
-+	.notify = dell_wmi_notify,
-+};
-+
- static int __init dell_wmi_init(void)
- {
- 	int err;
--	acpi_status status;
--
--	if (!wmi_has_guid(DELL_EVENT_GUID) ||
--	    !wmi_has_guid(DELL_DESCRIPTOR_GUID)) {
--		pr_warn("Dell WMI GUID were not found\n");
--		return -ENODEV;
--	}
- 
- 	err = dell_wmi_check_descriptor_buffer();
- 	if (err)
- 		return err;
- 
--	err = dell_wmi_input_setup();
--	if (err)
--		return err;
--
--	status = wmi_install_notify_handler(DELL_EVENT_GUID,
--					 dell_wmi_notify, NULL);
--	if (ACPI_FAILURE(status)) {
--		input_unregister_device(dell_wmi_input_dev);
--		pr_err("Unable to register notify handler - %d\n", status);
--		return -ENODEV;
--	}
--
- 	dmi_check_system(dell_wmi_smbios_list);
- 
- 	if (wmi_requires_smbios_request) {
- 		err = dell_wmi_events_set_enabled(true);
- 		if (err) {
- 			pr_err("Failed to enable WMI events\n");
--			wmi_remove_notify_handler(DELL_EVENT_GUID);
--			input_unregister_device(dell_wmi_input_dev);
- 			return err;
- 		}
- 	}
- 
--	return 0;
-+	return wmi_driver_register(&dell_wmi_driver);
- }
- module_init(dell_wmi_init);
- 
-@@ -761,7 +765,7 @@ static void __exit dell_wmi_exit(void)
- {
- 	if (wmi_requires_smbios_request)
- 		dell_wmi_events_set_enabled(false);
--	wmi_remove_notify_handler(DELL_EVENT_GUID);
--	input_unregister_device(dell_wmi_input_dev);
-+
-+	wmi_driver_unregister(&dell_wmi_driver);
- }
- module_exit(dell_wmi_exit);
+> ---
+>  drivers/platform/x86/intel_telemetry_debugfs.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+> index ef29f18..0f93975 100644
+> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
+> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+> @@ -966,8 +966,12 @@ static int __init telemetry_debugfs_init(void)
+>  #endif /* CONFIG_PM_SLEEP */
+>  
+>  	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
+> -	if (!debugfs_conf->telemetry_dbg_dir)
+> +	if (!debugfs_conf->telemetry_dbg_dir) {
+> +#ifdef CONFIG_PM_SLEEP
+> +		unregister_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
+>  		return -ENOMEM;
+> +	}
+
+As a general rule, we try to avoid peppering code with #ifdef blocks, and prefer
+to create no-op functions, or similar. CONFIG_PM_SLEEP unfortunately doesn't
+have such no-op functions.
+
+Rather than add the CONFIG_PM_SLEEP block above, please convert the above to use
+an err= and goto statement, and create the appropriate labels below.
+
++Rafael, Len, Pavel, linux-pm: Is there a preferred approach for dealing with
+                               CONFIG_PM_SLEEP?
+
+>  
+>  	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
+>  				debugfs_conf->telemetry_dbg_dir, NULL,
+> @@ -1014,6 +1018,9 @@ static int __init telemetry_debugfs_init(void)
+>  out:
+>  	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+>  	debugfs_conf->telemetry_dbg_dir = NULL;
+
+  e.g.
+
+   out_pm:
+
+> +#ifdef CONFIG_PM_SLEEP
+> +	unregister_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
+>  
+>  	return err;
+>  }
+> @@ -1022,6 +1029,9 @@ static void __exit telemetry_debugfs_exit(void)
+>  {
+>  	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+>  	debugfs_conf->telemetry_dbg_dir = NULL;
+> +#ifdef CONFIG_PM_SLEEP
+> +	unregister_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
+>  }
+>  
+>  late_initcall(telemetry_debugfs_init);
+> -- 
+> 2.10.0
+> 
+> 
+
 -- 
-2.9.4
+Darren Hart
+VMware Open Source Technology Center
