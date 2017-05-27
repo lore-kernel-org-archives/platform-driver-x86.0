@@ -1,43 +1,73 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 16/16] platform/x86: dell-wmi: Convert to the WMI bus infrastructure
-Date: Sat, 27 May 2017 11:40:52 -0700
-Message-ID: <CALCETrWtkEazuMMrFZp4oybwjNO-8r6GNF2BLA39fJqfH8Crtw@mail.gmail.com>
-References: <cover.1495862272.git.dvhart@infradead.org> <4a4da770c8d0af7e3f31e79261b43573d70a6ea6.1495862272.git.dvhart@infradead.org>
- <201705271250.20338@pali> <CALCETrWic6ZWrjdmXTRX92U058B1SZ+xMd+5TBW+YL51ZrgeCA@mail.gmail.com>
- <3669DF37-7D17-40AD-852A-F8EDBE15A785@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 00/16] Convert WMI to a proper bus
+Date: Sat, 27 May 2017 21:49:25 +0200
+Message-ID: <3214691.4YNsAb1L33@aspire.rjw.lan>
+References: <cover.1495862272.git.dvhart@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <3669DF37-7D17-40AD-852A-F8EDBE15A785@gmail.com>
+In-Reply-To: <cover.1495862272.git.dvhart@infradead.org>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Jiri Kosina <jikos@kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, May 27, 2017 at 9:17 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On May 27, 2017 9:04:38 AM PDT, Andy Lutomirski <luto@kernel.org> wrote:
->>On Sat, May 27, 2017 at 3:50 AM, Pali Rohár <pali.rohar@gmail.com>
->>wrote:
->>> On Saturday 27 May 2017 07:31:30 Darren Hart wrote:
->>>> -     dell_wmi_input_dev->name = "Dell WMI hotkeys";
->>>> -     dell_wmi_input_dev->phys = "wmi/input0";
->>>> -     dell_wmi_input_dev->id.bustype = BUS_HOST;
->>>> +     priv->input_dev->name = "Dell WMI hotkeys";
->>>> +     priv->input_dev->id.bustype = BUS_HOST;
->>>
->>> Is not there BUS_WMI, or something like that? (Just asking)
->>>
->>
->>Jiri and/or Dmitry, what is bustype for, anyway?
->
-> The bus type could be used to help further  identifying device if it used same vendor/product for spi and i2c, for example, but there are not many if them. I'm not sure if anyone actually makes decisions based on it, but it is part of abi now.
->
->>I suppose we could add BUS_PLATFORM.
->
-> What would be the difference from BUS_HOST?
->
+On Friday, May 26, 2017 10:31:14 PM Darren Hart wrote:
+> From: "Darren Hart (VMware)" <dvhart@infradead.org>
+> 
+> This series is based on the original work of
+> Andy Lutomirski <luto@amacapital.net> [1]. I have made minor edits, and in
+> one instance, squashed two patches in which the latter undid the former.
+> 
+> This series converts WMI [2] into a proper bus, adds some useful information via
+> sysfs, and exposes the embedded MOF [3] binary. It converts dell-wmi to use the
+> new WMI bus architecture.
+> 
+> This is the first part of an ongoing effort to enhance the WMI infrastructure
+> within the kernel, and eventually expose WMI to userspace for the consumption of
+> management utilities as it was intended.
+> 
+> 1. https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=platform/wmi
+> 2. https://msdn.microsoft.com/en-us/library/windows/hardware/dn614028(v=vs.85).aspx
+> 3. https://msdn.microsoft.com/en-us/library/aa823192(v=vs.85).aspx
+> 
+> Andy Lutomirski (15):
+>   platform/x86: wmi: Drop "Mapper (un)loaded" messages
+>   platform/x86: wmi: Pass the acpi_device through to parse_wdg
+>   platform/x86: wmi: Clean up acpi_wmi_add
+>   platform/x86: wmi: Track wmi devices per ACPI device
+>   platform/x86: wmi: Turn WMI into a bus driver
+>   platform/x86: wmi: Fix error handling when creating devices
+>   platform/x86: wmi: Split devices into types and add basic sysfs attributes
+>   platform/x86: wmi: Probe data objects for read and write capabilities
+>   platform/x86: wmi: Instantiate all devices before adding them
+>   platform/x86: wmi: Incorporate acpi_install_notify_handler
+>   platform/x86: wmi: Add a new interface to read block data
+>   platform/x86: wmi: Bind the platform device, not the ACPI node
+>   platform/x86: wmi: Add an interface for subdrivers to access sibling devices
+>   platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
+>   platform/x86: dell-wmi: Convert to the WMI bus infrastructure
+> 
+> Darren Hart (VMware) (1):
+>   platform/x86: wmi: Require query for data blocks, rename writable to setable
+> 
+>  drivers/platform/x86/Kconfig    |  12 +
+>  drivers/platform/x86/Makefile   |   1 +
+>  drivers/platform/x86/dell-wmi.c | 136 ++++----
+>  drivers/platform/x86/wmi-mof.c  | 125 ++++++++
+>  drivers/platform/x86/wmi.c      | 677 ++++++++++++++++++++++++++++++++--------
+>  include/linux/wmi.h             |  59 ++++
+>  6 files changed, 815 insertions(+), 195 deletions(-)
+>  create mode 100644 drivers/platform/x86/wmi-mof.c
+>  create mode 100644 include/linux/wmi.h
 
-If BUS_HOST means that the device is part of the host as opposed to
-being plugged in, then it seems entirely reasonable.
+All of this makes sense from the ACPI core perspective, so
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+for the series and I'm assuming that it will go in via the platform/x86 tree.
+
+Thanks,
+Rafael
+
