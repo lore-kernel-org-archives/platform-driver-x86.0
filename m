@@ -1,148 +1,157 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v1 1/1] intel_telemetry_debugfs: fix oops found while
- load/unload module test
-Date: Sat, 27 May 2017 08:54:30 +0200
-Message-ID: <20170527065430.GA24739@amd>
-References: <6718d6200ee45ae58b496225d148d275a2776756.1495897832.git.priyalee.kushwaha@intel.com>
- <20170527054929.GA118811@localhost.localdomain>
+From: Hao Wei Tee <angelsl@angelsl.xyz>
+Subject: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode switch
+Date: Sat, 27 May 2017 15:31:22 +0800
+Message-ID: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56588 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753054AbdE0Gyc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 May 2017 02:54:32 -0400
-Content-Disposition: inline
-In-Reply-To: <20170527054929.GA118811@localhost.localdomain>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: priyalee.kushwaha@intel.com, souvik.k.chakravarty@intel.com, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
+This exposes the battery conservation mode present on some (?) IdeaPads.
+The mode is set by calling ACPI method SBMC with argument 3 (on) or
+5 (off). Status is reported in bit 5 of the return value of ACPI method
+GBMD.
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
+methods are the same across all IdeaPads, so it would be great if this got more
+testing across other models before it's merged.
 
-Hi!
+Signed-off-by: Hao Wei Tee <angelsl@angelsl.xyz>
+---
+ drivers/platform/x86/ideapad-laptop.c | 70 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-> On Sat, May 27, 2017 at 08:17:39AM -0700, priyalee.kushwaha@intel.com wro=
-te:
-> > From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
-> >=20
-> > This fix oops found while testing load/unload test of
-> > intel_telemetry_debugfs module. Module_init uses register_pm_notifier
-> > for PM callbacks, but unregister_pm_notifier was missing from
-> > module_exit.
-> >=20
-> >  [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa0=
-06f010
-> >  [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
-> >  [ 97.495898] PGD 2e0a067
-> >  [ 97.495899] PUD 2e0b063
-> >  [ 97.498737] PMD 179e29067
-> >  [ 97.501573] PTE 0
-> >=20
-> >  [ 97.508423] Oops: 0000 1 PREEMPT SMP
-> >  [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpi=
-o_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry=
-_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_=
-button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bl=
-uetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_=
-pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
-> >  [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-int=
-el-dev-bkc #1
-> >  [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.=
-X64.0143.B30.1701132137 01/13/2017
-> >  [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
-> >  [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
-> >  [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
-> >  [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 00000000=
-00000000
-> >  [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff=
-81e3ea20
-> >  [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 00000000=
-0000005c
-> >  [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffff=
-a0131000
-> >  [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801=
-793f3ea8
-> >  [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlG=
-S:0000000000000000
-> >  [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >  [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000=
-003406f0
-> >  [ 97.660423] Call Trace:
-> >  [ 97.663166] ? 0xffffffffa0031000
-> >  [ 97.666885] register_pm_notifier+0x18/0x20
-> >  [ 97.671581] telemetry_debugfs_init+0x92/0x1000
-> >=20
-> > Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
->=20
-> Hi Priyalee,
->=20
-> Thanks for catching this, we should get a fix into the RC cycle. but I th=
-ink we
-> can make some small changes that will improve legibility here.
->=20
-> > ---
-> >  drivers/platform/x86/intel_telemetry_debugfs.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/p=
-latform/x86/intel_telemetry_debugfs.c
-> > index ef29f18..0f93975 100644
-> > --- a/drivers/platform/x86/intel_telemetry_debugfs.c
-> > +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> > @@ -966,8 +966,12 @@ static int __init telemetry_debugfs_init(void)
-> >  #endif /* CONFIG_PM_SLEEP */
-> > =20
-> >  	debugfs_conf->telemetry_dbg_dir =3D debugfs_create_dir("telemetry", N=
-ULL);
-> > -	if (!debugfs_conf->telemetry_dbg_dir)
-> > +	if (!debugfs_conf->telemetry_dbg_dir) {
-> > +#ifdef CONFIG_PM_SLEEP
-> > +		unregister_pm_notifier(&pm_notifier);
-> > +#endif /* CONFIG_PM_SLEEP */
-> >  		return -ENOMEM;
-> > +	}
->=20
-> As a general rule, we try to avoid peppering code with #ifdef blocks, and=
- prefer
-> to create no-op functions, or similar. CONFIG_PM_SLEEP unfortunately does=
-n't
-> have such no-op functions.
->=20
-> Rather than add the CONFIG_PM_SLEEP block above, please convert the above=
- to use
-> an err=3D and goto statement, and create the appropriate labels below.
->=20
-> +Rafael, Len, Pavel, linux-pm: Is there a preferred approach for dealing =
-with
->                                CONFIG_PM_SLEEP?
-
-Yeah, empty "unregister_pm_notifier" in !CONFIG_PM_SLEEP case sounds
-like a good idea.
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlkpIqUACgkQMOfwapXb+vJCIwCgvDw6N/XCJNJpO3C8uZl0JFS3
-HDAAoKn/wsmT3Q+5eIlkZ927fNxw7Gj0
-=jANW
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d48962569364..3798a1ab1604 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -42,6 +42,7 @@
+ 
+ #define IDEAPAD_RFKILL_DEV_NUM	(3)
+ 
++#define GBMD_CONSERVATION_BIT (5)
+ #define CFG_BT_BIT	(16)
+ #define CFG_3G_BIT	(17)
+ #define CFG_WIFI_BIT	(18)
+@@ -55,6 +56,8 @@ static const char *const ideapad_wmi_fnesc_events[] = {
+ #endif
+ 
+ enum {
++	VPCCMD_CONSERVATION_ON = 3,
++	VPCCMD_CONSERVATION_OFF = 5,
+ 	VPCCMD_R_VPC1 = 0x10,
+ 	VPCCMD_R_BL_MAX,
+ 	VPCCMD_R_BL,
+@@ -123,6 +126,27 @@ static int read_method_int(acpi_handle handle, const char *method, int *val)
+ 	}
+ }
+ 
++static int conservation_mode_status(acpi_handle handle, bool *ret)
++{
++	acpi_status status;
++	unsigned long long result;
++
++	status = acpi_evaluate_integer(handle, "GBMD", NULL, &result);
++	if (ACPI_FAILURE(status))
++		return -1;
++
++	*ret = (result & (1 << GBMD_CONSERVATION_BIT)) != 0;
++	return 0;
++}
++
++static int method_sbmc(acpi_handle handle, int cmd)
++{
++	acpi_status status;
++
++	status = acpi_execute_simple_method(handle, "SBMC", cmd);
++	return ACPI_FAILURE(status) ? -1 : 0;
++}
++
+ static int method_vpcr(acpi_handle handle, int cmd, int *ret)
+ {
+ 	acpi_status status;
+@@ -218,6 +242,7 @@ static int debugfs_status_show(struct seq_file *s, void *data)
+ {
+ 	struct ideapad_private *priv = s->private;
+ 	unsigned long value;
++	bool boolval;
+ 
+ 	if (!priv)
+ 		return -EINVAL;
+@@ -250,6 +275,12 @@ static int debugfs_status_show(struct seq_file *s, void *data)
+ 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
+ 		seq_printf(s, "Camera status:\t%s(%lu)\n",
+ 			   value ? "On" : "Off", value);
++	seq_puts(s, "=====================\n");
++
++	if (!conservation_mode_status(priv->adev->handle, &boolval)) {
++		seq_printf(s, "Conservation mode:\t%s(%u)\n",
++			   boolval ? "On" : "Off", boolval);
++	}
+ 
+ 	return 0;
+ }
+@@ -456,10 +487,46 @@ static ssize_t __maybe_unused touchpad_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RO(touchpad);
+ 
++static ssize_t show_ideapad_conservation(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	bool result;
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++
++	if (conservation_mode_status(priv->adev->handle, &result))
++		return sprintf(buf, "-1\n");
++	return sprintf(buf, "%u\n", result);
++}
++
++static ssize_t store_ideapad_conservation(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	int ret;
++	bool state;
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++
++	ret = kstrtobool(buf, &state);
++	if (ret)
++		return ret;
++
++	ret = method_sbmc(priv->adev->handle, state ?
++					      VPCCMD_CONSERVATION_ON :
++					      VPCCMD_CONSERVATION_OFF);
++	if (ret < 0)
++		return -EIO;
++	return count;
++}
++
++static DEVICE_ATTR(conservation_mode, 0644, show_ideapad_conservation,
++					    store_ideapad_conservation);
++
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
+ 	&dev_attr_fan_mode.attr,
+ 	&dev_attr_touchpad.attr,
++	&dev_attr_conservation_mode.attr,
+ 	NULL
+ };
+ 
+@@ -477,6 +544,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+ 		unsigned long value;
+ 		supported = !read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
+ 					  &value);
++	} else if (attr == &dev_attr_conservation_mode.attr) {
++		supported = acpi_has_method(priv->adev->handle, "GBMD") &&
++			    acpi_has_method(priv->adev->handle, "SBMC");
+ 	} else
+ 		supported = true;
+ 
+-- 
+2.13.0
