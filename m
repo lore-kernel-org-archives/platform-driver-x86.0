@@ -1,94 +1,46 @@
-From: priyalee.kushwaha@intel.com
-Subject: [PATCH v1 1/1] intel_telemetry_debugfs: fix oops found while load/unload module test
-Date: Sat, 27 May 2017 08:17:39 -0700
-Message-ID: <6718d6200ee45ae58b496225d148d275a2776756.1495897832.git.priyalee.kushwaha@intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: [PATCH] platform/x86: dell-wmi: Add a comment explaining the 0xb2 magic number
+Date: Fri, 26 May 2017 22:15:28 -0700
+Message-ID: <e630e25d78e60a4f1c9bf4bdc725f0693d617db2.1495862128.git.dvhart@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:14454 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1756716AbdEZPUd (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:48699 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751071AbdE0FQR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 May 2017 11:20:33 -0400
+        Sat, 27 May 2017 01:16:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, souvik.k.chakravarty@intel.com, andy@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 
-From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-This fix oops found while testing load/unload test of
-intel_telemetry_debugfs module. Module_init uses register_pm_notifier
-for PM callbacks, but unregister_pm_notifier was missing from
-module_exit.
+The hotkey table is 0xb2, add a comment for clarity.
 
- [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
- [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
- [ 97.495898] PGD 2e0a067
- [ 97.495899] PUD 2e0b063
- [ 97.498737] PMD 179e29067
- [ 97.501573] PTE 0
-
- [ 97.508423] Oops: 0000 1 PREEMPT SMP
- [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
- [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
- [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
- [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
- [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
- [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
- [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
- [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
- [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
- [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
- [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
- [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
- [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
- [ 97.660423] Call Trace:
- [ 97.663166] ? 0xffffffffa0031000
- [ 97.666885] register_pm_notifier+0x18/0x20
- [ 97.671581] telemetry_debugfs_init+0x92/0x1000
-
-Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+Suggested-by: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "Pali Rohár" <pali.rohar@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 ---
- drivers/platform/x86/intel_telemetry_debugfs.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index ef29f18..0f93975 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -966,8 +966,12 @@ static int __init telemetry_debugfs_init(void)
- #endif /* CONFIG_PM_SLEEP */
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 8a64c79..24467b1 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -449,6 +449,7 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
+ 	if (results->err || results->keymap)
+ 		return;		/* We already found the hotkey table. */
  
- 	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
--	if (!debugfs_conf->telemetry_dbg_dir)
-+	if (!debugfs_conf->telemetry_dbg_dir) {
-+#ifdef CONFIG_PM_SLEEP
-+		unregister_pm_notifier(&pm_notifier);
-+#endif /* CONFIG_PM_SLEEP */
- 		return -ENOMEM;
-+	}
++	/* The Dell hotkey table is type 0xB2.  Scan until we find it. */
+ 	if (dm->type != 0xb2)
+ 		return;
  
- 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir, NULL,
-@@ -1014,6 +1018,9 @@ static int __init telemetry_debugfs_init(void)
- out:
- 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
- 	debugfs_conf->telemetry_dbg_dir = NULL;
-+#ifdef CONFIG_PM_SLEEP
-+	unregister_pm_notifier(&pm_notifier);
-+#endif /* CONFIG_PM_SLEEP */
- 
- 	return err;
- }
-@@ -1022,6 +1029,9 @@ static void __exit telemetry_debugfs_exit(void)
- {
- 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
- 	debugfs_conf->telemetry_dbg_dir = NULL;
-+#ifdef CONFIG_PM_SLEEP
-+	unregister_pm_notifier(&pm_notifier);
-+#endif /* CONFIG_PM_SLEEP */
- }
- 
- late_initcall(telemetry_debugfs_init);
 -- 
-2.10.0
+2.9.4
