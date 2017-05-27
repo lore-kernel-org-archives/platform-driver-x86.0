@@ -1,77 +1,90 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/16] Convert WMI to a proper bus
-Date: Sat, 27 May 2017 23:01:16 +0300
-Message-ID: <CAHp75Vc=fFvqf2OKEAisObkBkbHdD+RjE-kK2FDeg1GyX36v5w@mail.gmail.com>
-References: <cover.1495862272.git.dvhart@infradead.org> <3214691.4YNsAb1L33@aspire.rjw.lan>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
+Date: Sat, 27 May 2017 22:48:13 +0200
+Message-ID: <201705272248.13257@pali>
+References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com> <201705271517.30111@pali> <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <3214691.4YNsAb1L33@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart1979575.28rbZ1fWrW";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f66.google.com ([74.125.82.66]:33911 "EHLO
+        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750743AbdE0UsQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 27 May 2017 16:48:16 -0400
+In-Reply-To: <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Sat, May 27, 2017 at 10:49 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Friday, May 26, 2017 10:31:14 PM Darren Hart wrote:
->> From: "Darren Hart (VMware)" <dvhart@infradead.org>
->>
->> This series is based on the original work of
->> Andy Lutomirski <luto@amacapital.net> [1]. I have made minor edits, and in
->> one instance, squashed two patches in which the latter undid the former.
->>
->> This series converts WMI [2] into a proper bus, adds some useful information via
->> sysfs, and exposes the embedded MOF [3] binary. It converts dell-wmi to use the
->> new WMI bus architecture.
->>
->> This is the first part of an ongoing effort to enhance the WMI infrastructure
->> within the kernel, and eventually expose WMI to userspace for the consumption of
->> management utilities as it was intended.
->>
->> 1. https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=platform/wmi
->> 2. https://msdn.microsoft.com/en-us/library/windows/hardware/dn614028(v=vs.85).aspx
->> 3. https://msdn.microsoft.com/en-us/library/aa823192(v=vs.85).aspx
->>
->> Andy Lutomirski (15):
->>   platform/x86: wmi: Drop "Mapper (un)loaded" messages
->>   platform/x86: wmi: Pass the acpi_device through to parse_wdg
->>   platform/x86: wmi: Clean up acpi_wmi_add
->>   platform/x86: wmi: Track wmi devices per ACPI device
->>   platform/x86: wmi: Turn WMI into a bus driver
->>   platform/x86: wmi: Fix error handling when creating devices
->>   platform/x86: wmi: Split devices into types and add basic sysfs attributes
->>   platform/x86: wmi: Probe data objects for read and write capabilities
->>   platform/x86: wmi: Instantiate all devices before adding them
->>   platform/x86: wmi: Incorporate acpi_install_notify_handler
->>   platform/x86: wmi: Add a new interface to read block data
->>   platform/x86: wmi: Bind the platform device, not the ACPI node
->>   platform/x86: wmi: Add an interface for subdrivers to access sibling devices
->>   platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
->>   platform/x86: dell-wmi: Convert to the WMI bus infrastructure
->>
->> Darren Hart (VMware) (1):
->>   platform/x86: wmi: Require query for data blocks, rename writable to setable
->>
->>  drivers/platform/x86/Kconfig    |  12 +
->>  drivers/platform/x86/Makefile   |   1 +
->>  drivers/platform/x86/dell-wmi.c | 136 ++++----
->>  drivers/platform/x86/wmi-mof.c  | 125 ++++++++
->>  drivers/platform/x86/wmi.c      | 677 ++++++++++++++++++++++++++++++++--------
->>  include/linux/wmi.h             |  59 ++++
->>  6 files changed, 815 insertions(+), 195 deletions(-)
->>  create mode 100644 drivers/platform/x86/wmi-mof.c
->>  create mode 100644 include/linux/wmi.h
->
-> All of this makes sense from the ACPI core perspective, so
->
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+--nextPart1979575.28rbZ1fWrW
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, Rafael.
+On Saturday 27 May 2017 15:33:14 Andy Shevchenko wrote:
+> On Sat, May 27, 2017 at 4:17 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> wrote:
+> > On Saturday 27 May 2017 15:07:09 Andy Shevchenko wrote:
+> >> On Sat, May 27, 2017 at 2:51 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> >>=20
+> >> wrote:
+> >> > Remove
+> >> > also reserved member as it does not have any defined meaning or
+> >> > type yet.
+> >> >=20
+> >> > -       pr_info("\treserved: %02X\n", g->reserved);
+> >>=20
+> >> Do we need this? Commit message doesn't clarify.
+> >=20
+> > I wrote to commit message that reserved does not have defined
+> > meaning nor type. Also reserved overlap with object_id[1] so for
+> > non-event should not be print at all. And as it is reserved, I
+> > removed it.
+>=20
+> Oh, indeed.
+>=20
+> >> > +               pr_info("\tobject_id: %c%c\n", g->object_id[0],
+> >> > g->object_id[1]);
+> >>=20
+> >> If this can still contain non-printable characters the %*pE can
+> >> help instead.
+> >=20
+> > Those are printable ASCII. object_id contains two characters which
+> > are suffix for ACPI method.
+> >=20
+> > Problem was only for events when we tried to print notify_id as
+> > object_id. notify_id is binary and overlaps with object_id.
+>=20
+> Okay, got it. But on your opinion does it make sense to do
+>=20
+> pr_info("\tobject_id: %2pE\n", g->object_id);
+>=20
+> instead?
+>=20
+> For ASCII it will go as is previously, otherwise escaping would be
+> done.
 
-> for the series and I'm assuming that it will go in via the platform/x86 tree.
+Both is OK for me. Do you want to send a new patch with %2pE?
 
-Correct.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
--- 
-With Best Regards,
-Andy Shevchenko
+--nextPart1979575.28rbZ1fWrW
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlkp5g0ACgkQi/DJPQPkQ1JyEQCfWmTm6K1xSPVvrzCOM/AjcW+m
+1ZEAnieq4dK///WcsD3Uv8jh+q07ZZ/J
+=MKX7
+-----END PGP SIGNATURE-----
+
+--nextPart1979575.28rbZ1fWrW--
