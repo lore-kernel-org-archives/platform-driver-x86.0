@@ -1,54 +1,48 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 16/16] platform/x86: dell-wmi: Convert to the WMI bus
- infrastructure
-Date: Mon, 29 May 2017 19:45:05 -0700
-Message-ID: <20170530024505.GC32841@dtor-ws>
-References: <cover.1495862272.git.dvhart@infradead.org>
- <4a4da770c8d0af7e3f31e79261b43573d70a6ea6.1495862272.git.dvhart@infradead.org>
- <201705271250.20338@pali>
- <CALCETrWic6ZWrjdmXTRX92U058B1SZ+xMd+5TBW+YL51ZrgeCA@mail.gmail.com>
- <3669DF37-7D17-40AD-852A-F8EDBE15A785@gmail.com>
- <CALCETrWtkEazuMMrFZp4oybwjNO-8r6GNF2BLA39fJqfH8Crtw@mail.gmail.com>
+From: Sarah J Edward <mrs.sarahjohnsonn@gmail.com>
+Subject: Re: Building Charitable Organization
+Date: Mon, 29 May 2017 03:25:47 -0700
+Message-ID: <CAExBqu_TvaU=2yfeQkHXcyAN6t1WkJV3Fxio8_+3RgnoigNTQw@mail.gmail.com>
+References: <CAExBqu-RiObdbkZqqhNJkA0w52O8i_zjOrQq_4WaW_jNrSy2zw@mail.gmail.com>
+ <CAExBqu-RNVeOgNvEznguBpnLvCraL8hhWoqHMd_hr5OPtyyaRA@mail.gmail.com>
+ <CAExBqu-xuhEckSvdXXXrcqnDjEyEZhzjbEqoVJypuUP9ZPWgJg@mail.gmail.com>
+ <CAExBqu9BF=+cwi-SZq1mbLanNaP_EBmMMGHpcMScDCEkWMwP4w@mail.gmail.com> <CAExBqu9Fsuub4kzqVrb7FtVAQYbHe-nng=X_O9aRD=unHL3etw@mail.gmail.com>
+Reply-To: sarh.edward@hotmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALCETrWtkEazuMMrFZp4oybwjNO-8r6GNF2BLA39fJqfH8Crtw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Jiri Kosina <jikos@kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-vk0-f68.google.com ([209.85.213.68]:33329 "EHLO
+        mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750955AbdE2KZs (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 29 May 2017 06:25:48 -0400
+Received: by mail-vk0-f68.google.com with SMTP id c185so1232706vkd.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 May 2017 03:25:48 -0700 (PDT)
+In-Reply-To: <CAExBqu9Fsuub4kzqVrb7FtVAQYbHe-nng=X_O9aRD=unHL3etw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-On Sat, May 27, 2017 at 11:40:52AM -0700, Andy Lutomirski wrote:
-> On Sat, May 27, 2017 at 9:17 AM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On May 27, 2017 9:04:38 AM PDT, Andy Lutomirski <luto@kernel.org> wrote:
-> >>On Sat, May 27, 2017 at 3:50 AM, Pali Rohár <pali.rohar@gmail.com>
-> >>wrote:
-> >>> On Saturday 27 May 2017 07:31:30 Darren Hart wrote:
-> >>>> -     dell_wmi_input_dev->name = "Dell WMI hotkeys";
-> >>>> -     dell_wmi_input_dev->phys = "wmi/input0";
-> >>>> -     dell_wmi_input_dev->id.bustype = BUS_HOST;
-> >>>> +     priv->input_dev->name = "Dell WMI hotkeys";
-> >>>> +     priv->input_dev->id.bustype = BUS_HOST;
-> >>>
-> >>> Is not there BUS_WMI, or something like that? (Just asking)
-> >>>
-> >>
-> >>Jiri and/or Dmitry, what is bustype for, anyway?
-> >
-> > The bus type could be used to help further  identifying device if it used same vendor/product for spi and i2c, for example, but there are not many if them. I'm not sure if anyone actually makes decisions based on it, but it is part of abi now.
-> >
-> >>I suppose we could add BUS_PLATFORM.
-> >
-> > What would be the difference from BUS_HOST?
-> >
-> 
-> If BUS_HOST means that the device is part of the host as opposed to
-> being plugged in, then it seems entirely reasonable.
+`._..
 
-Yes, it basically means platform-specific interface.
+Glad to write to you this message,
 
--- 
-Dmitry
+I seek for your kind help in setting up a charitable organization to
+help the less privileged  people and also the elderly people under
+your care,
+
+I want to use my late husband wealth of $3,000,000.00 to set up a
+charity foundation to help the needy and the less privileged ones in
+your country under your care, Can you help to build this project in
+your country?
+
+All i need from you is your sincerity to use this funds to do this
+project as i desired to use it for less privileged ones and orphanage
+homes,
+
+We are the one who will make the world a better place when we help the
+needy sincerely,
+
+Reply and let me know your opinion in doing this noble work,
+
+Remain blessed,
+
+Mrs Sarah Edward J.
