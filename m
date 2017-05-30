@@ -1,46 +1,30 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
- embedded WMI MOF metadata
-Date: Tue, 30 May 2017 20:21:58 +0300
-Message-ID: <CAHp75Vd08=VG5521LXc80V94sOCA5JnW95P84E3Wp1YdiOTuaw@mail.gmail.com>
-References: <cover.1495862272.git.dvhart@infradead.org> <CALCETrWgFqhYCVmr+rox5GuwAO8HzenjRt7MeKJbAmV3gJCmng@mail.gmail.com>
- <1496157894.28981.31.camel@linux.intel.com> <201705301903.40406@pali>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 1/8] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
+Date: Tue, 30 May 2017 11:00:58 -0700
+Message-ID: <dfe2b88c-2470-b014-563d-2c82efc7a216@linux.intel.com>
+References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170530085423.bcqy4f3omrmf4rxg@dell>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <201705301903.40406@pali>
-Sender: linux-acpi-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170530085423.bcqy4f3omrmf4rxg@dell>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 30, 2017 at 8:03 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Tuesday 30 May 2017 17:24:54 Andy Shevchenko wrote:
->> On Sat, 2017-05-27 at 14:07 -0700, Andy Lutomirski wrote:
->> > On Sat, May 27, 2017 at 4:14 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com=
+Thanks Lee.
+
+
+On 05/30/2017 01:54 AM, Lee Jones wrote:
+> For future reference, when submitting a patch-set, you really should
+> provide a cover letter ([PATCH 00/XX]).
+Will do.
 >
->> > wrote:
 
->> > > > Quite a few laptops (and maybe servers?) have embedded WMI MOF
->> > > Not "a few", but "lots of" :-)
->> Aren't they are synonyms ("quite a few" vs "lots of")?
->
-> I understand "lots of" > "quite a few" > "a few". And synonyms do not
-> have exact meaning...
-
-I figured those two:
-
-100% quite a lot -->> 50% <<-- quite a few 0%, which means (for my
-understanding)
-that with lim (n=E2=86=92=E2=88=9E) both are =3D 50% (n represents cases of=
- use the terms).
-
-> So choose what you prefer or want...
-
-Same here!
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
