@@ -1,54 +1,31 @@
-From: Hao Wei Tee <angelsl@angelsl.xyz>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode
- switch
-Date: Tue, 30 May 2017 22:05:01 +0800
-Message-ID: <7ba76865-7fb2-615a-8bcd-35e14b862a8e@angelsl.xyz>
-References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
- <264a8ced-4336-06b9-d760-babc08ccde5c@angelsl.xyz>
- <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
+ embedded WMI MOF metadata
+Date: Tue, 30 May 2017 18:24:54 +0300
+Message-ID: <1496157894.28981.31.camel@linux.intel.com>
+References: <cover.1495862272.git.dvhart@infradead.org>
+         <27758381c6cb77efab75a266e21243a964cce0ba.1495862272.git.dvhart@infradead.org>
+         <201705271314.16241@pali>
+         <CALCETrWgFqhYCVmr+rox5GuwAO8HzenjRt7MeKJbAmV3gJCmng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CALCETrWgFqhYCVmr+rox5GuwAO8HzenjRt7MeKJbAmV3gJCmng@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 5/30/17 9:22 PM, Andy Shevchenko wrote:
-> On Sun, May 28, 2017 at 4:47 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
->> On 5/27/17 3:31 PM, Hao Wei Tee wrote:
->>> This exposes the battery conservation mode present on some (?) IdeaPads.
->>> The mode is set by calling ACPI method SBMC with argument 3 (on) or
->>> 5 (off). Status is reported in bit 5 of the return value of ACPI method
->>> GBMD.
->>>
->>> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
->>> methods are the same across all IdeaPads, so it would be great if this got more
->>> testing across other models before it's merged.
->>
->> I got someone to test on an IdeaPad Y510p. It works on that too.
-> 
-> Do we have any other option that expose something via sysfs?
-> 
+On Sat, 2017-05-27 at 14:07 -0700, Andy Lutomirski wrote:
+> On Sat, May 27, 2017 at 4:14 AM, Pali Rohár <pali.rohar@gmail.com>
+> wrote:
+> > > Quite a few laptops (and maybe servers?) have embedded WMI MOF
+> > 
+> > Not "a few", but "lots of" :-)
 
-Sorry, not sure what you meant.
+Aren't they are synonyms ("quite a few" vs "lots of")?
 
-If you meant
-
-> Do we have any other options than expose something via sysfs?
-
-I'm not sure, maybe an ioctl? That wouldn't be very convenient though.
-
-The tp_smapi module (not in mainline) that exposes the battery threshold
-functionality for ThinkPads also uses sysfs.
-
-If you meant
-
-> Do we have any other options that expose something via sysfs?
-
-yes, camera_power, fan_mode, touchpad and conservation_mode.
-
-Hao Wei
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
