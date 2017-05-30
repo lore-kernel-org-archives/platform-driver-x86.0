@@ -1,48 +1,70 @@
-From: Sarah J Edward <mrs.sarahjohnsonn@gmail.com>
-Subject: Re: Building Charitable Organization
-Date: Mon, 29 May 2017 03:25:47 -0700
-Message-ID: <CAExBqu_TvaU=2yfeQkHXcyAN6t1WkJV3Fxio8_+3RgnoigNTQw@mail.gmail.com>
-References: <CAExBqu-RiObdbkZqqhNJkA0w52O8i_zjOrQq_4WaW_jNrSy2zw@mail.gmail.com>
- <CAExBqu-RNVeOgNvEznguBpnLvCraL8hhWoqHMd_hr5OPtyyaRA@mail.gmail.com>
- <CAExBqu-xuhEckSvdXXXrcqnDjEyEZhzjbEqoVJypuUP9ZPWgJg@mail.gmail.com>
- <CAExBqu9BF=+cwi-SZq1mbLanNaP_EBmMMGHpcMScDCEkWMwP4w@mail.gmail.com> <CAExBqu9Fsuub4kzqVrb7FtVAQYbHe-nng=X_O9aRD=unHL3etw@mail.gmail.com>
-Reply-To: sarh.edward@hotmail.com
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, GPIO, Thermal and X86 due
+ for the v4.13 merge window
+Date: Tue, 30 May 2017 09:53:06 +0100
+Message-ID: <20170530085306.s4hlijutbz7gp3ay@dell>
+References: <20170523072615.r4widzjc6apwxpwb@dell>
+ <75e12563a835dc4f8e8dab26ecea46822262604b.1495559980.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f68.google.com ([209.85.213.68]:33329 "EHLO
-        mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750955AbdE2KZs (ORCPT
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:34995 "EHLO
+        mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750908AbdE3IxL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2017 06:25:48 -0400
-Received: by mail-vk0-f68.google.com with SMTP id c185so1232706vkd.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 May 2017 03:25:48 -0700 (PDT)
-In-Reply-To: <CAExBqu9Fsuub4kzqVrb7FtVAQYbHe-nng=X_O9aRD=unHL3etw@mail.gmail.com>
+        Tue, 30 May 2017 04:53:11 -0400
+Received: by mail-wm0-f45.google.com with SMTP id b84so82933744wmh.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2017 01:53:10 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <75e12563a835dc4f8e8dab26ecea46822262604b.1495559980.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
 
-`._..
+Dear fellow Maintainers,
 
-Glad to write to you this message,
+Enjoy!
 
-I seek for your kind help in setting up a charitable organization to
-help the less privileged  people and also the elderly people under
-your care,
+The following changes since commit 2ea659a9ef488125eb46da6eb571de5eae5c43f6:
 
-I want to use my late husband wealth of $3,000,000.00 to set up a
-charity foundation to help the needy and the less privileged ones in
-your country under your care, Can you help to build this project in
-your country?
+  Linux 4.12-rc1 (2017-05-13 13:19:49 -0700)
 
-All i need from you is your sincerity to use this funds to do this
-project as i desired to use it for less privileged ones and orphanage
-homes,
+are available in the git repository at:
 
-We are the one who will make the world a better place when we help the
-needy sincerely,
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-gpio-thermal-x86-v4.13
 
-Reply and let me know your opinion in doing this noble work,
+for you to fetch changes up to 6aa60f67c11c10540e43bbe5a6377f7a0231501e:
 
-Remain blessed,
+  platform: x86: intel_bxtwc_tmu: remove first level irq unmask (2017-05-30 09:34:08 +0100)
 
-Mrs Sarah Edward J.
+----------------------------------------------------------------
+Immutable branch between MFD, GPIO, Thermal and X86 due for the v4.13 merge window
+
+----------------------------------------------------------------
+Kuppuswamy Sathyanarayanan (8):
+      mfd: intel_soc_pmic_bxtwc: Fix TMU interrupt index
+      mfd: intel_soc_pmic_bxtwc: Remove thermal second level irqs
+      thermal: intel_bxt_pmic_thermal: use first level PMIC thermal irq
+      mfd: intel_soc_pmic_bxtwc: Remove second level irq for gpio device
+      gpio: gpio-wcove: use first level PMIC GPIO irq
+      mfd: intel_soc_pmic_bxtwc: Utilize devm_* functions in driver probe
+      mfd: intel_soc_pmic_bxtwc: Use chained irqs for second level irq chips
+      platform: x86: intel_bxtwc_tmu: remove first level irq unmask
+
+ drivers/gpio/gpio-wcove.c                |  14 +-
+ drivers/mfd/intel_soc_pmic_bxtwc.c       | 234 ++++++++++++++++++++-----------
+ drivers/platform/x86/intel_bxtwc_tmu.c   |   4 -
+ drivers/thermal/intel_bxt_pmic_thermal.c |   2 +-
+ include/linux/mfd/intel_soc_pmic.h       |   5 +-
+ 5 files changed, 174 insertions(+), 85 deletions(-)
+
+Kind regards,
+Lee
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
