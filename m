@@ -1,89 +1,43 @@
-From: priyalee.kushwaha@intel.com
-Subject: [PATCH v2 1/1] intel_telemetry_debugfs: fix oops found while load/unload module test
-Date: Thu,  1 Jun 2017 14:33:29 -0700
-Message-ID: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, souvik.k.chakravarty@intel.com, andy@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Priyalee Kushwaha <priyalee.kushwaha@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/1] intel_telemetry_debugfs: fix oops found while
+ load/unload module test
+Date: Thu, 1 Jun 2017 01:13:00 +0300
+Message-ID: <CAHp75Vf+JfdeiPkpHrri5wgEuPbeuOcT3JjNkQM8qtCvZuy6ww@mail.gmail.com>
+References: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f177.google.com ([209.85.216.177]:35406 "EHLO
+        mail-qt0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751086AbdEaWNB (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 31 May 2017 18:13:01 -0400
+In-Reply-To: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: priyalee.kushwaha@intel.com
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, souvik.k.chakravarty@intel.com, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+On Fri, Jun 2, 2017 at 12:33 AM,  <priyalee.kushwaha@intel.com> wrote:
+> This fix oops found while testing load/unload test of
+> intel_telemetry_debugfs module. Module_init uses register_pm_notifier
+> for PM callbacks, but unregister_pm_notifier was missing from
+> module_exit.
 
-This fix oops found while testing load/unload test of
-intel_telemetry_debugfs module. Module_init uses register_pm_notifier
-for PM callbacks, but unregister_pm_notifier was missing from
-module_exit.
+> +#ifdef CONFIG_PM_SLEEP
+> +       unregister_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
 
- [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
- [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
- [ 97.495898] PGD 2e0a067
- [ 97.495899] PUD 2e0b063
- [ 97.498737] PMD 179e29067
- [ 97.501573] PTE 0
+Neither here
 
- [ 97.508423] Oops: 0000 1 PREEMPT SMP
- [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
- [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
- [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
- [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
- [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
- [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
- [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
- [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
- [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
- [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
- [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
- [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
- [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
- [ 97.660423] Call Trace:
- [ 97.663166] ? 0xffffffffa0031000
- [ 97.666885] register_pm_notifier+0x18/0x20
- [ 97.671581] telemetry_debugfs_init+0x92/0x1000
+> +#ifdef CONFIG_PM_SLEEP
+> +       unregister_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
 
-Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
----
- drivers/platform/x86/intel_telemetry_debugfs.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Not there.
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index ef29f18..30f70b5 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -966,8 +966,10 @@ static int __init telemetry_debugfs_init(void)
- #endif /* CONFIG_PM_SLEEP */
- 
- 	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
--	if (!debugfs_conf->telemetry_dbg_dir)
--		return -ENOMEM;
-+	if (!debugfs_conf->telemetry_dbg_dir) {
-+		err = -ENOMEM;
-+		goto out_pm;
-+	}
- 
- 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir, NULL,
-@@ -1014,6 +1016,10 @@ static int __init telemetry_debugfs_init(void)
- out:
- 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
- 	debugfs_conf->telemetry_dbg_dir = NULL;
-+out_pm:
-+#ifdef CONFIG_PM_SLEEP
-+	unregister_pm_notifier(&pm_notifier);
-+#endif /* CONFIG_PM_SLEEP */
- 
- 	return err;
- }
-@@ -1022,6 +1028,9 @@ static void __exit telemetry_debugfs_exit(void)
- {
- 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
- 	debugfs_conf->telemetry_dbg_dir = NULL;
-+#ifdef CONFIG_PM_SLEEP
-+	unregister_pm_notifier(&pm_notifier);
-+#endif /* CONFIG_PM_SLEEP */
- }
- 
- late_initcall(telemetry_debugfs_init);
+AFAIU we discussed to make unregister_pm_notifier() having stubs for !PM_SLEEP.
+
 -- 
-2.10.0
+With Best Regards,
+Andy Shevchenko
