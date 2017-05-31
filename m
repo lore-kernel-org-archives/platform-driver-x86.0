@@ -1,43 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/1] intel_telemetry_debugfs: fix oops found while
+From: "Kushwaha, Priyalee" <priyalee.kushwaha@intel.com>
+Subject: RE: [PATCH v2 1/1] intel_telemetry_debugfs: fix oops found while
  load/unload module test
-Date: Thu, 1 Jun 2017 01:13:00 +0300
-Message-ID: <CAHp75Vf+JfdeiPkpHrri5wgEuPbeuOcT3JjNkQM8qtCvZuy6ww@mail.gmail.com>
+Date: Wed, 31 May 2017 22:30:55 +0000
+Message-ID: <D3EC02A5926B1B45AA54D922FFAA8B367F518323@ORSMSX112.amr.corp.intel.com>
 References: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
+ <CAHp75Vf+JfdeiPkpHrri5wgEuPbeuOcT3JjNkQM8qtCvZuy6ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f177.google.com ([209.85.216.177]:35406 "EHLO
-        mail-qt0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751086AbdEaWNB (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2017 18:13:01 -0400
-In-Reply-To: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: priyalee.kushwaha@intel.com
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, souvik.k.chakravarty@intel.com, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vf+JfdeiPkpHrri5wgEuPbeuOcT3JjNkQM8qtCvZuy6ww@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 2, 2017 at 12:33 AM,  <priyalee.kushwaha@intel.com> wrote:
-> This fix oops found while testing load/unload test of
-> intel_telemetry_debugfs module. Module_init uses register_pm_notifier
-> for PM callbacks, but unregister_pm_notifier was missing from
-> module_exit.
-
-> +#ifdef CONFIG_PM_SLEEP
-> +       unregister_pm_notifier(&pm_notifier);
-> +#endif /* CONFIG_PM_SLEEP */
-
-Neither here
-
-> +#ifdef CONFIG_PM_SLEEP
-> +       unregister_pm_notifier(&pm_notifier);
-> +#endif /* CONFIG_PM_SLEEP */
-
-Not there.
-
-AFAIU we discussed to make unregister_pm_notifier() having stubs for !PM_SLEEP.
-
--- 
-With Best Regards,
-Andy Shevchenko
+SSBub3RpY2VkIHRoYXQgYm90aCByZWdpc3Rlcl9wbV9ub3RpZmllciBhbmQgdW5yZWdpc3Rlcl9w
+bV9ub3RpZmllcigpIGhhcyBuby1vcCBkZWZpbmVkIGFscmVhZHkgZm9yICFDT05GSUdfUE1fU0xF
+RVAuIFNvIGRvbuKAmXQgbmVlZCB0byBjaGVjayBmbGFnIGFueXdoZXJlLiANClRoYW5rcyBmb3Ig
+ZmVlZGJhY2suDQoNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFuZHkgU2hl
+dmNoZW5rbyBbbWFpbHRvOmFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb21dIA0KU2VudDogV2VkbmVz
+ZGF5LCBNYXkgMzEsIDIwMTcgMzoxMyBQTQ0KVG86IEt1c2h3YWhhLCBQcml5YWxlZSA8cHJpeWFs
+ZWUua3VzaHdhaGFAaW50ZWwuY29tPg0KQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBDaGFrcmF2
+YXJ0eSwgU291dmlrIEsgPHNvdXZpay5rLmNoYWtyYXZhcnR5QGludGVsLmNvbT47IEFuZHkgU2hl
+dmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgUGxhdGZvcm0gRHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz4N
+ClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8xXSBpbnRlbF90ZWxlbWV0cnlfZGVidWdmczogZml4
+IG9vcHMgZm91bmQgd2hpbGUgbG9hZC91bmxvYWQgbW9kdWxlIHRlc3QNCg0KT24gRnJpLCBKdW4g
+MiwgMjAxNyBhdCAxMjozMyBBTSwgIDxwcml5YWxlZS5rdXNod2FoYUBpbnRlbC5jb20+IHdyb3Rl
+Og0KPiBUaGlzIGZpeCBvb3BzIGZvdW5kIHdoaWxlIHRlc3RpbmcgbG9hZC91bmxvYWQgdGVzdCBv
+ZiANCj4gaW50ZWxfdGVsZW1ldHJ5X2RlYnVnZnMgbW9kdWxlLiBNb2R1bGVfaW5pdCB1c2VzIHJl
+Z2lzdGVyX3BtX25vdGlmaWVyIA0KPiBmb3IgUE0gY2FsbGJhY2tzLCBidXQgdW5yZWdpc3Rlcl9w
+bV9ub3RpZmllciB3YXMgbWlzc2luZyBmcm9tIA0KPiBtb2R1bGVfZXhpdC4NCg0KPiArI2lmZGVm
+IENPTkZJR19QTV9TTEVFUA0KPiArICAgICAgIHVucmVnaXN0ZXJfcG1fbm90aWZpZXIoJnBtX25v
+dGlmaWVyKTsNCj4gKyNlbmRpZiAvKiBDT05GSUdfUE1fU0xFRVAgKi8NCg0KTmVpdGhlciBoZXJl
+DQoNCj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVANCj4gKyAgICAgICB1bnJlZ2lzdGVyX3BtX25v
+dGlmaWVyKCZwbV9ub3RpZmllcik7DQo+ICsjZW5kaWYgLyogQ09ORklHX1BNX1NMRUVQICovDQoN
+Ck5vdCB0aGVyZS4NCg0KQUZBSVUgd2UgZGlzY3Vzc2VkIHRvIG1ha2UgdW5yZWdpc3Rlcl9wbV9u
+b3RpZmllcigpIGhhdmluZyBzdHVicyBmb3IgIVBNX1NMRUVQLg0KDQotLQ0KV2l0aCBCZXN0IFJl
+Z2FyZHMsDQpBbmR5IFNoZXZjaGVua28NCg==
