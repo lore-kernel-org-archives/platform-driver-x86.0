@@ -1,30 +1,55 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2 1/8] mfd: intel_soc_pmic_bxtwc: fix TMU interrupt index
-Date: Tue, 30 May 2017 11:00:58 -0700
-Message-ID: <dfe2b88c-2470-b014-563d-2c82efc7a216@linux.intel.com>
-References: <0e4d82ca9cdc41c9d2a8b45258cd72659b4c2063.1492210847.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170530085423.bcqy4f3omrmf4rxg@dell>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO, Thermal and X86
+ due for the v4.13 merge window
+Date: Wed, 31 May 2017 13:38:26 +1000
+Message-ID: <20170531133826.3bee86a0@canb.auug.org.au>
+References: <20170523072615.r4widzjc6apwxpwb@dell>
+        <75e12563a835dc4f8e8dab26ecea46822262604b.1495559980.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        <20170530085306.s4hlijutbz7gp3ay@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170530085423.bcqy4f3omrmf4rxg@dell>
-Sender: linux-pm-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ozlabs.org ([103.22.144.67]:53715 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750994AbdEaDi3 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 30 May 2017 23:38:29 -0400
+In-Reply-To: <20170530085306.s4hlijutbz7gp3ay@dell>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Lee Jones <lee.jones@linaro.org>
-Cc: gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: sathyanarayanan.kuppuswamy@linux.intel.com, gnurou@gmail.com, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
 
-Thanks Lee.
+Hi all,
 
-
-On 05/30/2017 01:54 AM, Lee Jones wrote:
-> For future reference, when submitting a patch-set, you really should
-> provide a cover letter ([PATCH 00/XX]).
-Will do.
+On Tue, 30 May 2017 09:53:06 +0100 Lee Jones <lee.jones@linaro.org> wrote:
 >
+> Dear fellow Maintainers,
+> 
+> Enjoy!
+> 
+> The following changes since commit 2ea659a9ef488125eb46da6eb571de5eae5c43f6:
+> 
+>   Linux 4.12-rc1 (2017-05-13 13:19:49 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-gpio-thermal-x86-v4.13
+> 
+> for you to fetch changes up to 6aa60f67c11c10540e43bbe5a6377f7a0231501e:
+> 
+>   platform: x86: intel_bxtwc_tmu: remove first level irq unmask (2017-05-30 09:34:08 +0100)
+> 
+> ----------------------------------------------------------------
+> Immutable branch between MFD, GPIO, Thermal and X86 due for the v4.13 merge window
+> 
+> ----------------------------------------------------------------
+> Kuppuswamy Sathyanarayanan (8):
+>       mfd: intel_soc_pmic_bxtwc: Use chained irqs for second level irq chips
+
+See my other bug report on this commit ...
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Cheers,
+Stephen Rothwell
