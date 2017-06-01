@@ -1,45 +1,89 @@
-From: "Kushwaha, Priyalee" <priyalee.kushwaha@intel.com>
-Subject: RE: [PATCH v1 1/1] intel_telemetry_debugfs: fix oops found while
- load/unload module test
-Date: Wed, 31 May 2017 19:21:57 +0000
-Message-ID: <D3EC02A5926B1B45AA54D922FFAA8B367F5172A0@ORSMSX112.amr.corp.intel.com>
-References: <6718d6200ee45ae58b496225d148d275a2776756.1495897832.git.priyalee.kushwaha@intel.com>
- <20170527054929.GA118811@localhost.localdomain> <20170527065430.GA24739@amd>
- <CAHp75VecHUoxP2cYv3chTmJL=ok5_TMUMirdcH8pmcJEgdSFdw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:52849 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750898AbdEaTV7 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2017 15:21:59 -0400
-In-Reply-To: <CAHp75VecHUoxP2cYv3chTmJL=ok5_TMUMirdcH8pmcJEgdSFdw@mail.gmail.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Darren Hart <dvhart@infradead.org>, "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "Brown, Len" <len.brown@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+From: priyalee.kushwaha@intel.com
+Subject: [PATCH v2 1/1] intel_telemetry_debugfs: fix oops found while load/unload module test
+Date: Thu,  1 Jun 2017 14:33:29 -0700
+Message-ID: <709e8015ccece63cdf0c2e0cd491fd5ca2984e8d.1496351574.git.priyalee.kushwaha@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org, souvik.k.chakravarty@intel.com, andy@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-SSB3aWxsIHJlc3VibWl0IHRoZSBwYXRjaCB3aXRoIHN1Z2dlc3RlZCBjaGFuZ2VzLiANCg0KLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFuZHkgU2hldmNoZW5rbyBbbWFpbHRvOmFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb21dIA0KU2VudDogU2F0dXJkYXksIE1heSAyNywgMjAxNyAz
-OjUyIEFNDQpUbzogUGF2ZWwgTWFjaGVrIDxwYXZlbEB1Y3cuY3o+DQpDYzogRGFycmVuIEhhcnQg
-PGR2aGFydEBpbmZyYWRlYWQub3JnPjsgS3VzaHdhaGEsIFByaXlhbGVlIDxwcml5YWxlZS5rdXNo
-d2FoYUBpbnRlbC5jb20+OyBDaGFrcmF2YXJ0eSwgU291dmlrIEsgPHNvdXZpay5rLmNoYWtyYXZh
-cnR5QGludGVsLmNvbT47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUGxhdGZvcm0gRHJpdmVyIDxwbGF0Zm9ybS1kcml2
-ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IFJhZmFlbCBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5l
-dD47IEJyb3duLCBMZW4gPGxlbi5icm93bkBpbnRlbC5jb20+OyBsaW51eC1wbUB2Z2VyLmtlcm5l
-bC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMS8xXSBpbnRlbF90ZWxlbWV0cnlfZGVidWdm
-czogZml4IG9vcHMgZm91bmQgd2hpbGUgbG9hZC91bmxvYWQgbW9kdWxlIHRlc3QNCg0KT24gU2F0
-LCBNYXkgMjcsIDIwMTcgYXQgOTo1NCBBTSwgUGF2ZWwgTWFjaGVrIDxwYXZlbEB1Y3cuY3o+IHdy
-b3RlOg0KPj4gT24gU2F0LCBNYXkgMjcsIDIwMTcgYXQgMDg6MTc6MzlBTSAtMDcwMCwgcHJpeWFs
-ZWUua3VzaHdhaGFAaW50ZWwuY29tIHdyb3RlOg0KDQo+PiArUmFmYWVsLCBMZW4sIFBhdmVsLCBs
-aW51eC1wbTogSXMgdGhlcmUgYSBwcmVmZXJyZWQgYXBwcm9hY2ggZm9yIA0KPj4gK2RlYWxpbmcg
-d2l0aA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENPTkZJR19QTV9TTEVFUD8N
-Cj4NCj4gWWVhaCwgZW1wdHkgInVucmVnaXN0ZXJfcG1fbm90aWZpZXIiIGluICFDT05GSUdfUE1f
-U0xFRVAgY2FzZSBzb3VuZHMgDQo+IGxpa2UgYSBnb29kIGlkZWEuDQoNCkkgbGlrZSB0aGUgaWRl
-YSwgdGhvdWdoIEkgd291bGQgbGV0IFJhZmFlbCB0byBzcGVhayB1cC4NCg0KLS0NCldpdGggQmVz
-dCBSZWdhcmRzLA0KQW5keSBTaGV2Y2hlbmtvDQo=
+From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+
+This fix oops found while testing load/unload test of
+intel_telemetry_debugfs module. Module_init uses register_pm_notifier
+for PM callbacks, but unregister_pm_notifier was missing from
+module_exit.
+
+ [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
+ [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
+ [ 97.495898] PGD 2e0a067
+ [ 97.495899] PUD 2e0b063
+ [ 97.498737] PMD 179e29067
+ [ 97.501573] PTE 0
+
+ [ 97.508423] Oops: 0000 1 PREEMPT SMP
+ [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
+ [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
+ [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
+ [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
+ [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
+ [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
+ [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
+ [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
+ [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
+ [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
+ [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
+ [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
+ [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
+ [ 97.660423] Call Trace:
+ [ 97.663166] ? 0xffffffffa0031000
+ [ 97.666885] register_pm_notifier+0x18/0x20
+ [ 97.671581] telemetry_debugfs_init+0x92/0x1000
+
+Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+---
+ drivers/platform/x86/intel_telemetry_debugfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index ef29f18..30f70b5 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -966,8 +966,10 @@ static int __init telemetry_debugfs_init(void)
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ 	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
+-	if (!debugfs_conf->telemetry_dbg_dir)
+-		return -ENOMEM;
++	if (!debugfs_conf->telemetry_dbg_dir) {
++		err = -ENOMEM;
++		goto out_pm;
++	}
+ 
+ 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir, NULL,
+@@ -1014,6 +1016,10 @@ static int __init telemetry_debugfs_init(void)
+ out:
+ 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+ 	debugfs_conf->telemetry_dbg_dir = NULL;
++out_pm:
++#ifdef CONFIG_PM_SLEEP
++	unregister_pm_notifier(&pm_notifier);
++#endif /* CONFIG_PM_SLEEP */
+ 
+ 	return err;
+ }
+@@ -1022,6 +1028,9 @@ static void __exit telemetry_debugfs_exit(void)
+ {
+ 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+ 	debugfs_conf->telemetry_dbg_dir = NULL;
++#ifdef CONFIG_PM_SLEEP
++	unregister_pm_notifier(&pm_notifier);
++#endif /* CONFIG_PM_SLEEP */
+ }
+ 
+ late_initcall(telemetry_debugfs_init);
+-- 
+2.10.0
