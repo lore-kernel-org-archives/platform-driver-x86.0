@@ -1,19 +1,18 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 3/8] thermal: intel_bxt_pmic_thermal: Use first level
- PMIC thermal irq
-Date: Sat, 3 Jun 2017 16:00:52 +0300
-Message-ID: <CAHp75Vd5uPmz-0uyPcwYaqyGZhC7caHWj5PbfMJTzSQ6G+1o3w@mail.gmail.com>
+Subject: Re: [PATCH v5 5/8] gpio: gpio-wcove: Use first level PMIC GPIO irq
+Date: Sat, 3 Jun 2017 16:01:41 +0300
+Message-ID: <CAHp75VefidiGD2foON5C7xPM+xpUcBc-UY1BJGnb1ZD9LbCq+g@mail.gmail.com>
 References: <cover.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170531070225.bymdhhpclidwwtpt@dell> <3e58ab749a67cce5c956ef13db8563fb0a8bc190.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170531070225.bymdhhpclidwwtpt@dell> <5490d3e89249bfa9edc219ff83055ab457c8b6ea.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:33160 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750775AbdFCNAy (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:33209 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750765AbdFCNBn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Jun 2017 09:00:54 -0400
-In-Reply-To: <3e58ab749a67cce5c956ef13db8563fb0a8bc190.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Sat, 3 Jun 2017 09:01:43 -0400
+In-Reply-To: <5490d3e89249bfa9edc219ff83055ab457c8b6ea.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -23,42 +22,62 @@ On Thu, Jun 1, 2017 at 1:37 AM,
 <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 >
-> PMIC mfd driver only exports first level irq for thermal device.
+> PMIC mfd driver only exports first level irq for GPIO device.
 > But currently we are reading the irqs from the second level irq
 > chip, So this patch fixes this issue by adding support to use
-> first level PMIC thermal irq.
+> first level PMIC GPIO irq.
 >
 
-Shouldn't be this squashed to patch 2?
+Shouldn't be this squashed to patch 4?
 
 > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Zhang Rui <rui.zhang@intel.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpio-wcove.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 >
 > Changes since v1:
->  * None
+>  * used correct mask for GPIO0 and GPIO1 interrupts
 >
 > Changes since v2:
 >  * Rebased on top of latest release.
+>  * Removed IRQ0 and IRQ1 mask defines.
 >
 > Changes since v3:
->  * Rebased on top of latest release.
+>  * None
 >
-> diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c b/drivers/thermal/intel_bxt_pmic_thermal.c
-> index 0f19a39..ef6b322 100644
-> --- a/drivers/thermal/intel_bxt_pmic_thermal.c
-> +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
-> @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct platform_device *pdev)
->         }
+> diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
+> index 7b1bc20..bba7704 100644
+> --- a/drivers/gpio/gpio-wcove.c
+> +++ b/drivers/gpio/gpio-wcove.c
+> @@ -401,7 +401,7 @@ static int wcove_gpio_probe(struct platform_device *pdev)
+>         if (!wg)
+>                 return -ENOMEM;
 >
->         regmap = pmic->regmap;
-> -       regmap_irq_chip = pmic->irq_chip_data_level2;
-> +       regmap_irq_chip = pmic->irq_chip_data;
+> -       wg->regmap_irq_chip = pmic->irq_chip_data_level2;
+> +       wg->regmap_irq_chip = pmic->irq_chip_data;
 >
->         pmic_irq_count = 0;
->         while ((irq = platform_get_irq(pdev, pmic_irq_count)) != -ENXIO) {
+>         platform_set_drvdata(pdev, wg);
+>
+> @@ -449,6 +449,18 @@ static int wcove_gpio_probe(struct platform_device *pdev)
+>
+>         gpiochip_set_nested_irqchip(&wg->chip, &wcove_irqchip, virq);
+>
+> +       /* Enable GPIO0 interrupts */
+> +       ret = regmap_update_bits(wg->regmap, IRQ_MASK_BASE, GPIO_IRQ0_MASK,
+> +                                0x00);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Enable GPIO1 interrupts */
+> +       ret = regmap_update_bits(wg->regmap, IRQ_MASK_BASE + 1, GPIO_IRQ1_MASK,
+> +                                0x00);
+> +       if (ret)
+> +               return ret;
+> +
+>         return 0;
+>  }
+>
 > --
 > 2.7.4
 >
