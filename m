@@ -1,42 +1,98 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: dell-rbtn: Improve explanation about
- DELLABC6
-Date: Sat, 3 Jun 2017 12:25:48 -0700
-Message-ID: <20170603192548.GF4854@fury>
-References: <c3d605a0a82e819891fec18b4057406358878a76.1495862179.git.dvhart@infradead.org>
- <CAHp75VeV0tKOFFxOC6n7htJLb_J_4JH8_wCk-G6LBRc9poVf8Q@mail.gmail.com>
+Subject: Re: WMI and Kernel:User interface
+Date: Sat, 3 Jun 2017 12:50:58 -0700
+Message-ID: <20170603195058.GH4854@fury>
+References: <20170509231639.GB11404@fury>
+ <20170510051341.GA17835@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:48412 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:44923 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750991AbdFCTZu (ORCPT
+        with ESMTP id S1750991AbdFCTvD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Jun 2017 15:25:50 -0400
+        Sat, 3 Jun 2017 15:51:03 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeV0tKOFFxOC6n7htJLb_J_4JH8_wCk-G6LBRc9poVf8Q@mail.gmail.com>
+In-Reply-To: <20170510051341.GA17835@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Sat, May 27, 2017 at 07:27:19PM +0300, Andy Shevchenko wrote:
-> On Sat, May 27, 2017 at 8:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > From: Andy Lutomirski <luto@kernel.org>
-> >
-> > According to Mario at Dell, the DELLABC6 device should not be used on a
-> > Linux system. It also conflicts with Intel-HID and its interactions with
-> > Network Manager. Document that we are aware of the device, but that we
-> > are intentionally ignoring it.
-> >
+On Wed, May 10, 2017 at 07:13:41AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 09, 2017 at 04:16:39PM -0700, Darren Hart wrote:
+> > Linus and Greg,
+> > 
+> > We are in the process of redesigning the Windows Management Instrumentation
+> > (WMI) [1] system in the kernel. WMI is the Microsoft implementation of Web-Based
+> > Enterprise Management (WBEM). We are looking to provide WMI access to userspace,
+> > while allowing the kernel to filter requests that conflict with its own usage.
+> > We'd like your take on how this approach relates to our commitment to not break
+> > userspace.
+> > 
+> > For this discussion, we are specifically referring to ACPI PNP0C14 WMI
+> > devices, consisting of a GUID and a set of methods and events, as well as a
+> > precompiled intermediate description of the methods and arguments (MOF). Exposed
+> > to userspace, these methods provide for BIOS interaction and are used for system
+> > management as well as LEDs, hot keys, radio switches, etc. There is vendor
+> > interest in achieving feature parity with Windows by exposing WMI methods to
+> > userspace for system management.
+> > 
+> > While it appears WMI intended to be accessed from userspace, we have
+> > made use of it in the kernel to support various laptop features by connecting
+> > the WMI methods to other subsystems, notably input, leds, and rfkill [2]. The
+> > challenge is continuing to use WMI for these platform features, while allowing
+> > userspace to use it for system management tasks. Unfortunately, the WMI methods
+> > are not guaranteed to be split up along granular functional lines, and we will
+> > certainly face situations where the same GUID::METHOD_ID will be needed for a
+> > kernel feature (say LED support) as well as a system management task.
+> > 
+> > To address this, I have proposed [3] that exporting WMI be opt-in, only done at
+> > the request of and in collaboration with a vendor, with the kernel platform
+> > driver given the opportunity to filter requests. This filtering would need to be
+> > at the method and argument inspection level, such as checking for specific bits
+> > in the input buffer, and rejecting the request if they conflict with an in
+> > kernel usage (that's worst case, in some cases just GUID or method ID could be
+> > sufficient).
+> > 
+> > Because the kernel and the platform drivers are under continual development, and
+> > new systems appear regularly, we will encounter necessary changes to the
+> > platform driver WMI request filters. These changes could be considered a change
+> > to the kernel provided WMI interface to userspace. For example, we could
+> > regularly accept a call to $GUID::$METHOD_ID with bit 4 of the buffer set, and
+> > later deny the call when we determine it interferes with kernel usage.
+> > 
+> > In your view, is it acceptable to provide a chardev interface, for example,
+> > exposing WMI methods to userspace, with the understanding that the kernel may
+> > choose to filter certain requests which conflict with its own use? And that this
+> > filtering may change as new features are added to the platform drivers?
 > 
-> Pali made a good point.
-> Otherwise, FWIW:
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> So, for example, if a new driver for a "brightness key" were added to
+> the kernel, all of a sudden the "raw" access to the wmi data through the
+> chardev would filtered away by the kernel and not seen by userspace?
+> 
+> Why would you want to do that?  What's wrong with providing "raw" access
+> through a chardev, and the current in-kernel access as well at the same
+> time?
+> 
+> I don't really understand what would "break" over time here.
+> 
 
-Agreed, updated to remove specific mention of NetworkManager.
+Just a bump now that we're out of the merge window in case either Greg or Linus
+care to follow up with the responses to this.
 
-Thanks.
+To Greg's last point - any kernel state that is built up in conjunction with the
+WMI interface could be invalidated by a userspace application. It may or may not
+be recoverable, depending on the WMI implementation. This would be true for
+multiple WMI userspace applications as well, and I suppose the question is, do
+we defend the kernel drivers against this, or do we consider the kernel drivers
+on equal footing with WMI applications, and say "don't do that then" when some
+combination of apps and drivers don't play well together?
+
+> thanks,
+> 
+> greg k-h
+> 
 
 -- 
 Darren Hart
