@@ -1,205 +1,70 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v6 5/5] drm/amdgpu: resize VRAM BAR for CPU access v2
-Date: Fri, 2 Jun 2017 15:26:31 -0500
-Message-ID: <20170602202631.GA1452@bhelgaas-glaptop.roam.corp.google.com>
-References: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
- <1494348547-1465-6-git-send-email-deathsimple@vodafone.de>
- <20170601201430.GC12257@bhelgaas-glaptop.roam.corp.google.com>
- <72e061a5-9684-06e2-3021-80de8ca97bd7@vodafone.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 3/8] thermal: intel_bxt_pmic_thermal: Use first level
+ PMIC thermal irq
+Date: Sat, 3 Jun 2017 16:00:52 +0300
+Message-ID: <CAHp75Vd5uPmz-0uyPcwYaqyGZhC7caHWj5PbfMJTzSQ6G+1o3w@mail.gmail.com>
+References: <cover.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170531070225.bymdhhpclidwwtpt@dell> <3e58ab749a67cce5c956ef13db8563fb0a8bc190.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:60580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751061AbdFBU0f (ORCPT
+Received: from mail-qk0-f195.google.com ([209.85.220.195]:33160 "EHLO
+        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750775AbdFCNAy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Jun 2017 16:26:35 -0400
-Content-Disposition: inline
-In-Reply-To: <72e061a5-9684-06e2-3021-80de8ca97bd7@vodafone.de>
+        Sat, 3 Jun 2017 09:00:54 -0400
+In-Reply-To: <3e58ab749a67cce5c956ef13db8563fb0a8bc190.1496266871.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>
-Cc: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>, David Airlie <airlied@linux.ie>, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Zhang, Rui" <rui.zhang@intel.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 
-On Fri, Jun 02, 2017 at 11:32:21AM +0200, Christian König wrote:
-> Hi Bjorn,
-> 
-> sorry for not responding earlier and thanks for picking this thread
-> up again.
-> 
-> Am 01.06.2017 um 22:14 schrieb Bjorn Helgaas:
-> >[+cc ADMGPU, DRM folks]
-> >
-> >On Tue, May 09, 2017 at 06:49:07PM +0200, Christian König wrote:
-> >>[SNIP]
-> >>+/**
-> >>+ * amdgpu_resize_bar0 - try to resize BAR0
-> >>+ *
-> >>+ * @adev: amdgpu_device pointer
-> >>+ *
-> >>+ * Try to resize BAR0 to make all VRAM CPU accessible.
-> >>+ */
-> >>+void amdgpu_resize_bar0(struct amdgpu_device *adev)
-> >>+{
-> >>+	u64 space_needed = roundup_pow_of_two(adev->mc.real_vram_size);
-> >>+	u32 rbar_size = order_base_2(((space_needed >> 20) | 1)) -1;
-> >>+	u16 cmd;
-> >>+	int r;
-> >>+
-> >>+	/* Free the doorbell mapping, it most likely needs to move as well */
-> >>+	amdgpu_doorbell_fini(adev);
-> >>+	pci_release_resource(adev->pdev, 2);
-> >>+
-> >>+	/* Disable memory decoding while we change the BAR addresses and size */
-> >>+	pci_read_config_word(adev->pdev, PCI_COMMAND, &cmd);
-> >>+	pci_write_config_word(adev->pdev, PCI_COMMAND,
-> >>+			      cmd & ~PCI_COMMAND_MEMORY);
-> >>+
-> >>+	r = pci_resize_resource(adev->pdev, 0, rbar_size);
-> >>+	if (r == -ENOSPC)
-> >>+		DRM_INFO("Not enough PCI address space for a large BAR.");
-> >>+	else if (r && r != -ENOTSUPP)
-> >>+		DRM_ERROR("Problem resizing BAR0 (%d).", r);
-> >>+
-> >>+	pci_write_config_word(adev->pdev, PCI_COMMAND, cmd);
-> >>+
-> >>+	/* When the doorbell BAR isn't available we have no chance of
-> >>+	 * using the device.
-> >>+	 */
-> >>+	BUG_ON(amdgpu_doorbell_init(adev));
-> >This amdgpu_doorbell_fini()/amdgpu_doorbell_init() thing doesn't look
-> >right.  amdgpu_device_init() only calls amdgpu_doorbell_init() for
-> >"adev->asic_type >= CHIP_BONAIRE", but we call it unconditionally
-> >here.
-> >
-> >This is the call graph:
-> >
-> >   amdgpu_device_init
-> >     adev->rmmio_base = pci_resource_start(adev->pdev, 5)   # 2 for < BONAIRE
-> >     adev->rmmio = ioremap(adev->rmmio_base, ...)
-> >     DRM_INFO("register mmio base: 0x%08X\n", (uint32_t)adev->rmmio_base)
-> >     if (adev->asic_type >= CHIP_BONAIRE) {
-> >       amdgpu_doorbell_init
-> >	adev->doorbell.base = pci_resource_start(adev->pdev, 2)
-> >	adev->doorbell.ptr = ioremap(adev->doorbell.base, ...)
-> >     }
-> >     amdgpu_init
-> >       gmc_v7_0_sw_init              # gmc_v7_0_ip_funcs.sw_init
-> >	gmc_v7_0_mc_init
-> >   +         amdgpu_resize_bar0
-> >   +           amdgpu_doorbell_fini
-> >   +           pci_release_resource(adev->pdev, 2)
-> >   +           pci_resize_resource(adev->pdev, 0, size)
-> >   +           amdgpu_doorbell_init
-> >	  adev->mc.aper_base = pci_resource_start(adev->pdev, 0)
-> >
-> >If "asic_type < CHIP_BONAIRE", we ioremapped BAR 2 in
-> >amdgpu_device_init(), then we released the resource here and never
-> >updated the ioremap.
-> 
-> The first hardware with a resizeable BAR I could find is a Tonga,
-> and that is even a generation later than Bonaire.
-> 
-> So we are never going to call this code on earlier hardware generations.
+On Thu, Jun 1, 2017 at 1:37 AM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> PMIC mfd driver only exports first level irq for thermal device.
+> But currently we are reading the irqs from the second level irq
+> chip, So this patch fixes this issue by adding support to use
+> first level PMIC thermal irq.
+>
 
-The problem with that is that it's impossible for a code reader to
-verify that.  So adding a check is ugly but I think makes it more
-readable.
+Shouldn't be this squashed to patch 2?
 
-> But I think I will just move the asic_type check into the function
-> to be absolute sure.
-> 
-> > From the PCI core perspective, it would be much cleaner to do the BAR
-> >resize before the driver calls pci_enable_device().  If that could be
-> >done, there would be no need for this sort of shutdown/reinit stuff
-> >and we wouldn't have to worry about issues like these.  The amdgpu
-> >init path is pretty complicated, so I don't know whether this is
-> >possible.
-> 
-> I completely agree on this and it is actually the approach I tried first.
-> 
-> There are just two problems with this approach:
-> 1. When the amdgpu driver is loaded there can already be the VGA
-> console, Vesa or EFI driver active for the device and displaying the
-> splash screen.
-> 
-> When we resize and most likely relocate the BAR while those drivers
-> are active it will certainly cause problems.
-> 
-> What amdgpu does before trying to resize the BAR is kicking out
-> other driver and making sure it has exclusive access to the
-> hardware.
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  drivers/thermal/intel_bxt_pmic_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Changes since v1:
+>  * None
+>
+> Changes since v2:
+>  * Rebased on top of latest release.
+>
+> Changes since v3:
+>  * Rebased on top of latest release.
+>
+> diff --git a/drivers/thermal/intel_bxt_pmic_thermal.c b/drivers/thermal/intel_bxt_pmic_thermal.c
+> index 0f19a39..ef6b322 100644
+> --- a/drivers/thermal/intel_bxt_pmic_thermal.c
+> +++ b/drivers/thermal/intel_bxt_pmic_thermal.c
+> @@ -241,7 +241,7 @@ static int pmic_thermal_probe(struct platform_device *pdev)
+>         }
+>
+>         regmap = pmic->regmap;
+> -       regmap_irq_chip = pmic->irq_chip_data_level2;
+> +       regmap_irq_chip = pmic->irq_chip_data;
+>
+>         pmic_irq_count = 0;
+>         while ((irq = platform_get_irq(pdev, pmic_irq_count)) != -ENXIO) {
+> --
+> 2.7.4
+>
 
-I don't understand the problem here yet.  If you need to enable the
-device, then disable it, resize, and re-enable it, that's fine.
 
-The important thing I'm looking for is that the resize happens before
-a pci_enable_device(), because pci_enable_device() is the sync point
-where the PCI core enables resources and makes them available to the
-driver.  Drivers know that they can't look at the resources before
-that point.  There's a little bit of text about this in [1].
 
-> 2. Without taking a look at the registers you don't know how much
-> memory there actually is on the board.
-> 
-> We could always resize it to the maximum supported, but that would
-> mean we could easily waste 128GB of address space while the hardware
-> only has 8GB of VRAM.
-> 
-> That would not necessarily hurt us when we have enough address
-> space, but at least kind of sucks.
-
-Enable, read regs, disable, kick out other drivers, resize, enable.
-Does that solve this problem?
-
-> >I would also like to simplify the driver usage model and get the
-> >PCI_COMMAND_MEMORY twiddling into the PCI core instead of the driver.
-> >Ideally, the driver would do something like this:
-> >
-> >   pci_resize_resource(adev->pdev, 0, rbar_size);
-> >   pci_enable_device(adev->pdev);
-> >
-> >And the PCI core would be something along these lines:
-> >
-> >   int pci_resize_resource(dev, bar, size)
-> >   {
-> >     if (pci_is_enabled(dev))
-> >       return -EBUSY;
-> >
-> >     pci_disable_decoding(dev);          # turn off MEM, IO decoding
-> >     pci_release_resources(dev);         # (all of them)
-> >     err = pci_resize_bar(dev, bar, size);     # change BAR size (only)
-> >     if (err)
-> >       return err;
-> >
-> >     pci_assign_resources(dev);          # reassign all "dev" resources
-> >     return 0;
-> >   }
-> 
-> I already tried the approach with releasing all resources, but it
-> didn't worked so well.
-> 
-> When resizing fails because we don't have enough address space then
-> we at least want to get back to a working config.
-> 
-> Releasing everything makes that rather tricky, since I would then
-> need to keep a backup of the old config and try to restore it.
-
-If resizing fails because of lack of address space, I would expect the
-PCI core to at least restore to the previous state.  If it doesn't, I
-think that would be a defect.
-
-Having the driver specify the BARs it thinks might cause issues feels
-like a crutch.
-
-> Additional to that I'm not sure if releasing the register BAR and
-> relocating it works with amdgpu.
-
-If the BAR can't be relocated, that sounds like a hardware defect.  If
-that's really the case, you could mark it IORESOURCE_PCI_FIXED so we
-don't move it.  Or if it's an amdgpu defect, e.g., if amdgpu doesn't
-re-read the resource addresses after pci_enable_device(), you should
-fix amdgpu.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/PCI/pci.txt#n255
+-- 
+With Best Regards,
+Andy Shevchenko
