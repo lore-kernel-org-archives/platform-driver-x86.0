@@ -1,86 +1,124 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-Date: Fri, 2 Jun 2017 18:31:13 +0300
-Message-ID: <CAHp75VfR0EJYMwWpsJ=435rTUjH=1s-OYLbF-nt2V35semr4GQ@mail.gmail.com>
-References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170602151507.22391-2-hdegoede@redhat.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+From: priyalee.kushwaha@intel.com
+Subject: [PATCH v4 1/1] intel_telemetry_debugfs: fix oops found while load/unload module test
+Date: Sat,  3 Jun 2017 10:21:24 -0700
+Message-ID: <6935d670736c764f2bfdaba4bcafc6168ffa03ae.1496510090.git.priyalee.kushwaha@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:12042 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751141AbdFBRYF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 2 Jun 2017 13:24:05 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, souvik.k.chakravarty@intel.com, andy@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Priyalee Kushwaha <priyalee.kushwaha@intel.com>
 
-On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Some peripherals on Bay Trail and Cherry Trail platforms signal a
-> Power Management Event (PME) to the Power Management Controller (PMC)
-> to wakeup the system. When this happens software needs to explicitly
-> clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-> IRQ storm on IRQ 9.
->
-> This is modelled in ACPI through the INT0002 ACPI device, which is
-> called a "Virtual GPIO controller" in ACPI because it defines the
-> event handler to call when the PME triggers through _AEI and _L02
-> methods as would be done for a real GPIO interrupt in ACPI.
->
-> This commit adds a driver which registers the Virtual GPIOs expected
-> by the DSDT on these devices, letting gpiolib-acpi claim the
-> virtual GPIO and install a GPIO-interrupt handler which call the _L02
-> handler as it would for a real GPIO controller.
->
+From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
 
-Alexandre is not anymore in GPIO boat.
+This fix oops found while testing load/unload test of
+intel_telemetry_debugfs module. Module_init uses register_pm_notifier
+for PM callbacks, but unregister_pm_notifier was missing from
+module_exit.
 
-Linus, I would like to have your formal tag on this (since linux/gpio/driver.h).
+ [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
+ [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
+ [ 97.495898] PGD 2e0a067
+ [ 97.495899] PUD 2e0b063
+ [ 97.498737] PMD 179e29067
+ [ 97.501573] PTE 0
 
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
+ [ 97.508423] Oops: 0000 1 PREEMPT SMP
+ [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
+ [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
+ [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
+ [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
+ [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
+ [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
+ [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
+ [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
+ [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
+ [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
+ [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
+ [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
+ [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
+ [ 97.660423] Call Trace:
+ [ 97.663166] ? 0xffffffffa0031000
+ [ 97.666885] register_pm_notifier+0x18/0x20
+ [ 97.671581] telemetry_debugfs_init+0x92/0x1000
 
-I would move this after linux/* section.
+Signed-off-by: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+---
+ drivers/platform/x86/intel_telemetry_debugfs.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-> +#include <linux/acpi.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/suspend.h>
-
-> +/*
-> + * As this is not a real GPIO at all, but just a hack to model an event in
-
-> + * APCI the get / set functions are dummy functions.
-
-ACPI ?
-
-> + */
-
-> +static int int0002_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       const struct x86_cpu_id *cpu_id;
-> +       struct gpio_chip *chip;
-> +       int i, irq, ret;
-> +
-
-> +       /* Menlow has a different INT0002 device? <sigh> */
-> +       cpu_id = x86_match_cpu(int0002_cpu_ids);
-> +       if (!cpu_id)
-> +               return -ENODEV;
-
-Consider this in my TODO list to check if we can get rid of ancient
-Menlow code for good.
-
-> +       for (i = 0; i < GPE0A_PME_B0_VIRT_GPIO_PIN; i++)
-> +               clear_bit(i, chip->irq_valid_mask);
-
-bitmap_clear();
-
-I would fix all above when applying, so, just waiting for Linus' tag.
-
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index ef29f18..4cc2f4e 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -97,11 +97,9 @@
+ 	} \
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static u8 suspend_prep_ok;
+ static u32 suspend_shlw_ctr_temp, suspend_deep_ctr_temp;
+ static u64 suspend_shlw_res_temp, suspend_deep_res_temp;
+-#endif
+ 
+ struct telemetry_susp_stats {
+ 	u32 shlw_swake_ctr;
+@@ -807,7 +805,6 @@ static const struct file_operations telem_ioss_trc_verb_ops = {
+ 	.release	= single_release,
+ };
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static int pm_suspend_prep_cb(void)
+ {
+ 	struct telemetry_evtlog evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+@@ -937,7 +934,6 @@ static int pm_notification(struct notifier_block *this,
+ static struct notifier_block pm_notifier = {
+ 	.notifier_call = pm_notification,
+ };
+-#endif /* CONFIG_PM_SLEEP */
+ 
+ static int __init telemetry_debugfs_init(void)
+ {
+@@ -960,14 +956,13 @@ static int __init telemetry_debugfs_init(void)
+ 	if (err < 0)
+ 		return -EINVAL;
+ 
+-
+-#ifdef CONFIG_PM_SLEEP
+ 	register_pm_notifier(&pm_notifier);
+-#endif /* CONFIG_PM_SLEEP */
+ 
+ 	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
+-	if (!debugfs_conf->telemetry_dbg_dir)
+-		return -ENOMEM;
++	if (!debugfs_conf->telemetry_dbg_dir) {
++		err = -ENOMEM;
++		goto out_pm;
++	}
+ 
+ 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir, NULL,
+@@ -1014,6 +1009,8 @@ static int __init telemetry_debugfs_init(void)
+ out:
+ 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+ 	debugfs_conf->telemetry_dbg_dir = NULL;
++out_pm:
++	unregister_pm_notifier(&pm_notifier);
+ 
+ 	return err;
+ }
+@@ -1022,6 +1019,7 @@ static void __exit telemetry_debugfs_exit(void)
+ {
+ 	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+ 	debugfs_conf->telemetry_dbg_dir = NULL;
++	unregister_pm_notifier(&pm_notifier);
+ }
+ 
+ late_initcall(telemetry_debugfs_init);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.10.0
