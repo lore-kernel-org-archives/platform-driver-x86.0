@@ -1,58 +1,64 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/8] fujitsu-laptop: use device-specific data instead
- of module-wide globals
-Date: Sat, 3 Jun 2017 12:06:15 -0700
-Message-ID: <20170603190615.GD4854@fury>
-References: <20170519074448.12716-1-kernel@kempniu.pl>
- <20170521232323.GD28475@marvin.atrad.com.au>
- <20170524000018.GF11878@marvin.atrad.com.au>
+Subject: Re: [PATCH] platform/x86: dell-wmi: Add a comment explaining the
+ 0xb2 magic number
+Date: Sat, 3 Jun 2017 12:15:21 -0700
+Message-ID: <20170603191521.GE4854@fury>
+References: <e630e25d78e60a4f1c9bf4bdc725f0693d617db2.1495862128.git.dvhart@infradead.org>
+ <201705271251.37069@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:55827 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:35867 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750991AbdFCTGT (ORCPT
+        with ESMTP id S1750991AbdFCTPW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Jun 2017 15:06:19 -0400
+        Sat, 3 Jun 2017 15:15:22 -0400
 Content-Disposition: inline
-In-Reply-To: <20170524000018.GF11878@marvin.atrad.com.au>
+In-Reply-To: <201705271251.37069@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>
 
-On Wed, May 24, 2017 at 09:30:18AM +0930, Jonathan Woithe wrote:
-> Hi Michael
-> 
-> On Mon, May 22, 2017 at 08:53:23AM +0930, Jonathan Woithe wrote:
-> > On Fri, May 19, 2017 at 09:44:40AM +0200, Micha?? K??pie?? wrote:
-> > > fujitsu-laptop registers two ACPI drivers that access each other's
-> > > module-wide structures.  To improve data encapsulation and lay the
-> > > groundwork for separating the two aforementioned ACPI drivers into
-> > > separate modules, move away from module-wide global data structures by
-> > > using device-specific data instead.
-> > > :
+On Sat, May 27, 2017 at 12:51:36PM +0200, Pali Rohár wrote:
+> On Saturday 27 May 2017 07:15:28 Darren Hart wrote:
+> > From: Andy Lutomirski <luto@kernel.org>
 > > 
-> > I have had a quick look through this series.  To my eye it addresses the
-> > outcome of our discussion over the last couple of weeks, and looks good.  I
-> > had one query regarding patch 5/8, but that might just be a case of me not
-> > knowing about a subtlety of WARN_ONCE().  In any case this isn't a major
-> > issue and would be easily resolved if needed.
+> > The hotkey table is 0xb2, add a comment for clarity.
 > > 
-> > Once I get feedback on patch 5/8 (and after seeing any additional comments
-> > from Darren et al) I can send through a reviewed-by.
+> > Suggested-by: Darren Hart <dvhart@infradead.org>
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+> > Cc: "Pali Rohár" <pali.rohar@gmail.com>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> > Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/platform/x86/dell-wmi.c
+> > b/drivers/platform/x86/dell-wmi.c index 8a64c79..24467b1 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -449,6 +449,7 @@ static void __init handle_dmi_entry(const struct
+> > dmi_header *dm, if (results->err || results->keymap)
+> >  		return;		/* We already found the hotkey table. */
+> > 
+> > +	/* The Dell hotkey table is type 0xB2.  Scan until we find it. */
+> >  	if (dm->type != 0xb2)
+> >  		return;
 > 
-> With the minor query in 5.8 sorted, I'm happy to proceed with this (subject
-> of course to any further comments from Darren or Andy).  While not an
-> endpoint in and of itslef, it is never-the-less an important step towards
-> the agreed goal to separate the fujitsu-laptop module into two drivers. 
-> This is motivated by the current use of two ACPI devices by the single
-> fujitsu-laptop module, which is inconsistent with the kernel's "one driver
-> per module" approach.
+> Good. Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 > 
-> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+> (Maybe in future we should add a #define name for such magic constants)
 
-Apologies for the delay gents. Reviewed and pushed to testing.
+Thanks for the review.
+
+A define is most useful, in my opinion, when the magic number is required
+multiple times, as it avoids human error and avoids maintenance issues when
+updated, etc. I'm not necessarily opposed, but I didn't think it was necessary
+in this case.
 
 -- 
 Darren Hart
