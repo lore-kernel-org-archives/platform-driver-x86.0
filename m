@@ -1,49 +1,60 @@
-From: "Sarah Edward." <mrs.sarahjohnsonn@gmail.com>
-Subject: Re: SETTING UP CHARITY PROJECT_
-Date: Mon, 5 Jun 2017 10:21:55 +0100
-Message-ID: <CAC3kjEAotjD-dCdeKabmhefoULCH8cPXxfZ0mRWaN6M3xV4m+w@mail.gmail.com>
-References: <CAC3kjEAtTjdu5ys2qU10LzmNx764ROk9scmMpSix-=f8fPHZtw@mail.gmail.com>
- <CAC3kjEDjggsWtS7+W1x=3k64yznuCcKB3iavmbc0At_eQ=2Ttg@mail.gmail.com>
-Reply-To: sarh.edward@hotmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68]:34942 "EHLO
-        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751683AbdFEJV5 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jun 2017 05:21:57 -0400
-Received: by mail-it0-f68.google.com with SMTP id 67so21130072itx.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Jun 2017 02:21:57 -0700 (PDT)
-In-Reply-To: <CAC3kjEDjggsWtS7+W1x=3k64yznuCcKB3iavmbc0At_eQ=2Ttg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+From: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v6 6/6] platform/x86: intel_bxtwc_tmu: Remove first level IRQ unmask
+Date: Mon,  5 Jun 2017 12:08:06 -0700
+Message-ID: <e0715b5794f59243193c8c41a6af929e89ff703c.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <CAHp75VcQfSkn7NAWSC2Vq=8RCC0M1p9zvVFjJFLyEo17GDvHsA@mail.gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcQfSkn7NAWSC2Vq=8RCC0M1p9zvVFjJFLyEo17GDvHsA@mail.gmail.com>
+In-Reply-To: <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: gnurou@gmail.com, heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-`._..
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Peace be with you,
+Currently in WCOVE PMIC MFD driver, all second level IRQ chips
+are chained to the respective first level IRQs. So there is no
+need for explicitly unmasking the first level IRQ in this
+driver. This patches removes this level 1 IRQ unmask support.
 
-Glad to write to you this message,
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ drivers/platform/x86/intel_bxtwc_tmu.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-I seek for your kind help in setting up a charitable organization to
-help the less privileged  people and also the elderly people under
-your care,
+Changes since v1:
+ * None
 
-I want to use my late husband wealth of $3,000,000.00 to set up a
-charity foundation to help the needy and the less privileged ones in
-your country under your care, Can you help to build this project in
-your country?
+Changes since v2:
+ * Rebased on top of latest release.
 
-All i need from you is your sincerity to use this funds to do this
-project as i desired to use it for less privileged ones and orphanage
-homes,
+Changes since v3:
+ * None
 
-We are the one who will make the world a better place when we help the
-needy sincerely,
+Changes since v4:
+ * Changed commit subject from "platform: x86:" "to platform/x86:"
 
-Reply and let me know your opinion in doing this noble work for the
-help of mankind,
+Changes since v5:
+ * Changed irq->IRQ, mfd->MFD.
 
-Be blessed,
-
-Mrs Sarah Edward J.
+diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel_bxtwc_tmu.c
+index e202abd..ea865d4 100644
+--- a/drivers/platform/x86/intel_bxtwc_tmu.c
++++ b/drivers/platform/x86/intel_bxtwc_tmu.c
+@@ -92,10 +92,6 @@ static int bxt_wcove_tmu_probe(struct platform_device *pdev)
+ 	}
+ 	wctmu->irq = virq;
+ 
+-	/* Enable TMU interrupts */
+-	regmap_update_bits(wctmu->regmap, BXTWC_MIRQLVL1,
+-				  BXTWC_MIRQLVL1_MTMU, 0);
+-
+ 	/* Unmask TMU second level Wake & System alarm */
+ 	regmap_update_bits(wctmu->regmap, BXTWC_MTMUIRQ_REG,
+ 				  BXTWC_TMU_ALRM_MASK, 0);
+-- 
+2.7.4
