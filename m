@@ -1,70 +1,65 @@
-From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH] platform/x86/acer-wmi: Detect RF Button capability
-Date: Tue,  6 Jun 2017 13:07:22 -0700
-Message-ID: <20170606200722.4240-1-jprvita@endlessm.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded Binary WMI MOF metadata
+Date: Tue, 6 Jun 2017 22:50:52 +0200
+Message-ID: <201706062250.52564@pali>
+References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org> <20170606100440.GA4690@pali> <20170606170201.GC32509@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:35434 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751239AbdFFUHu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2017 16:07:50 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart1637567.GHILeTuNXC";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170606170201.GC32509@fury>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-If a machine reports a RF Button in the communication button device
-bitmap, we need to remove it before calling Get Device Status otherwise
-it will return the "Undefined device" (0xE2) error code.
+--nextPart1637567.GHILeTuNXC
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Although this may be a BIOS bug, we don't really need to get or set the
-RF Button status. The status indicator LED embedded in the button is
-controlled by firmware logic, depending on the status of the wireless
-radios present on the machine (WiFi || WWAN).
+On Tuesday 06 June 2017 19:02:01 Darren Hart wrote:
+> On Tue, Jun 06, 2017 at 12:04:40PM +0200, Pali Roh=C3=A1r wrote:
+> > On Monday 05 June 2017 20:16:44 Andy Lutomirski wrote:
+> > > +#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+> > > +MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
+> >=20
+> > Cannot we generate MODULE_ALIAS from module_wmi_driver()? IIRC it
+> > is working for i2c drivers.
+>=20
+> I could see this being automated since we always use wmi:GUID, but it
+> isn't currently. Happy to consider it as a follow on.
+>=20
+> Do you have a specific i2c example you think we should consider
+> following?
 
-This commit fixes the wireless status indicator LED on the Acer
-TravelMate P648-G2-MG, and cleans the following message from the kernel
-log: "Get Current Device Status failed: 0xe2 - 0x0".
+=46or i2c you can specify in driver code:
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
----
- drivers/platform/x86/acer-wmi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+MODULE_DEVICE_TABLE(i2c, id_table);
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 79fa5ab3fd00..3b381178039b 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -149,6 +149,8 @@ struct event_return_value {
- #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
- #define ACER_WMID3_GDS_WIMAX		(1<<7)	/* WiMAX */
- #define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
-+#define ACER_WMID3_GDS_RFBTN		(1<<14)	/* RF Button */
-+
- #define ACER_WMID3_GDS_TOUCHPAD		(1<<1)	/* Touchpad */
- 
- /* Hotkey Customized Setting and Acer Application Status.
-@@ -221,6 +223,7 @@ struct hotkey_function_type_aa {
- #define ACER_CAP_BRIGHTNESS		(1<<3)
- #define ACER_CAP_THREEG			(1<<4)
- #define ACER_CAP_ACCEL			(1<<5)
-+#define ACER_CAP_RFBTN			(1<<6)
- #define ACER_CAP_ANY			(0xFFFFFFFF)
- 
- /*
-@@ -1264,6 +1267,10 @@ static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
- 		interface->capability |= ACER_CAP_THREEG;
- 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
- 		interface->capability |= ACER_CAP_BLUETOOTH;
-+	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN) {
-+		interface->capability |= ACER_CAP_RFBTN;
-+		commun_func_bitmap &= ~ACER_WMID3_GDS_RFBTN;
-+	}
- 
- 	commun_fn_key_number = type_aa->commun_fn_key_number;
- }
--- 
-2.11.0
+And it automatically provides (via file.mod.c) all needed MODULE_ALIAS.
+
+So when we have wmi_bmof_id_table in driver, cannot we use this?
+
+MODULE_DEVICE_TABLE(wmi, wmi_bmof_id_table);
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1637567.GHILeTuNXC
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlk3FawACgkQi/DJPQPkQ1LIJQCgxOZDFt8Aq+3oCe0ywEgQc+X3
+5dEAn3Cx0LqfH6T436SFjZL6WDGqXDP4
+=BDP8
+-----END PGP SIGNATURE-----
+
+--nextPart1637567.GHILeTuNXC--
