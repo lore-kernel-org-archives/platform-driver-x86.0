@@ -1,113 +1,71 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded
- Binary WMI MOF metadata
-Date: Tue, 6 Jun 2017 12:30:38 +0300
-Message-ID: <CAHp75VcEpnMzjomrnEQQEFp6zCJjcBugaRRHZO0GUc3FOyjF_Q@mail.gmail.com>
-References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 5/6] mfd: intel_soc_pmic_bxtwc: Use chained IRQs for
+ second level IRQ chips
+Date: Tue, 6 Jun 2017 12:29:03 +0300
+Message-ID: <20170606092903.GK26659@kuha.fi.intel.com>
+References: <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <9881880e5aac28a53398b40db468c704763e941a.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:34412 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751330AbdFFJaj (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2017 05:30:39 -0400
-In-Reply-To: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9881880e5aac28a53398b40db468c704763e941a.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: gnurou@gmail.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, lee.jones@linaro.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sathyaosid@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 6, 2017 at 6:16 AM, Andy Lutomirski <luto@kernel.org> wrote:
-> Many laptops (and maybe servers?) have embedded WMI Binary MOF metadata.
-> We do not yet have open-source tools for processing the data, although
-> one is in the works thanks to Pali:
->
->         https://github.com/pali/bmfdec
->
-> There is currently no interface to get the data in the first place. By
-> exposing it, we facilitate the development of new tools.
+On Mon, Jun 05, 2017 at 12:08:05PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Whishkey cove PMIC has support to mask/unmask interrupts at two levels.
+> At first level we can mask/unmask interrupt domains like TMU, GPIO, ADC,
+> CHGR, BCU THERMAL and PWRBTN and at second level, it provides facility
+> to mask/unmask individual interrupts belong each of this domain. For
+> example, in case of TMU, at first level we have TMU interrupt domain,
+> and at second level we have two interrupts, wake alarm, system alarm that
+> belong to the TMU interrupt domain.
+> 
+> Currently, in this driver all first level IRQs are registered as part of
+> IRQ chip(bxtwc_regmap_irq_chip). By default, after you register the IRQ
+> chip from your driver, all IRQs in that chip will masked and can only be
+> enabled if that IRQ is requested using request_irq() call. This is the
+> default Linux IRQ behavior model. And whenever a dependent device that
+> belongs to PMIC requests only the second level IRQ and not explicitly
+> unmask the first level IRQ, then in essence the second level IRQ will
+> still be disabled. For example, if TMU device driver request wake_alarm
+> IRQ and not explicitly unmask TMU level 1 IRQ then according to the default
+> Linux IRQ model,  wake_alarm IRQ will still be disabled. So the proper
+> solution to fix this issue is to use the chained IRQ chip concept. We
+> should chain all the second level chip IRQs to the corresponding first
+> level IRQ. To do this, we need to create separate IRQ chips for every
+> group of second level IRQs.
+> 
+> In case of TMU, when adding second level IRQ chip, instead of using PMIC
+> IRQ we should use the corresponding first level IRQ. So the following
+> code will change from
+> 
+> ret = regmap_add_irq_chip(pmic->regmap, pmic->irq, ...)
+> 
+> to,
+> 
+> virq = regmap_irq_get_virq(&pmic->irq_chip_data, BXTWC_TMU_LVL1_IRQ);
+> 
+> ret = regmap_add_irq_chip(pmic->regmap, virq, ...)
+> 
+> In case of Whiskey Cove Type-C driver, Since USBC IRQ is moved under
+> charger level2 IRQ chip. We should use charger IRQ chip(irq_chip_data_chgr)
+> to get the USBC virtual IRQ number.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-My comments below.
-Overall, FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+For the typec_wcove.c part:
+
+Revieved-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 
-> +config WMI_BMOF
-> +       tristate "WMI embedded Binary MOF driver"
-> +       depends on ACPI_WMI
-
-> +       default y
-
-Since it can be module it would be better to have more sane default
-(distros usually prefers modules over built-in).
-Thus, I would go, for example, with
-
-default ACPI_WMI
-
-> +       ---help---
-> +         Say Y here if you want to be able to read a firmware-embedded
-> +         WMI Binary MOF data. Using this requires userspace tools and may be
-> +         rather tedious.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called wmi-bmof.
-
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/acpi.h>
-> +#include <linux/string.h>
-> +#include <linux/dmi.h>
-> +#include <linux/wmi.h>
-> +#include <acpi/video.h>
-
-Alphabetical order? Up to you.
-
-> +#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
-
-> +MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
-
-I would gather all MODULE_* together, but it's also matter of taste.
-
-> +static ssize_t
-> +read_bmof(struct file *filp, struct kobject *kobj,
-> +        struct bin_attribute *attr,
-> +        char *buf, loff_t off, size_t count)
-> +{
-> +       struct bmof_priv *priv =
-> +               container_of(attr, struct bmof_priv, bmof_bin_attr);
-> +
-> +       if (off >= priv->bmofdata->buffer.length)
-> +               return 0;
-
-Shouldn't we return an error code here? -ERANGE or alike?
-
-> +static int wmi_bmof_probe(struct wmi_device *wdev)
-> +{
-
-> +       int ret;
-> +
-> +       struct bmof_priv *priv =
-> +               devm_kzalloc(&wdev->dev, sizeof(struct bmof_priv), GFP_KERNEL);
-
-I'm not a fan of memory allocation in definition block, so, I would rewrite this
-
-      struct bmof_priv *priv;
-      int ret;
-
-      priv = devm_kzalloc(&wdev->dev, sizeof(struct bmof_priv), GFP_KERNEL);
-
-(sizeof(*priv) by your choice)
-
-> +
-> +       if (!priv)
-> +               return -ENOMEM;
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+heikki
