@@ -1,52 +1,46 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
- embedded WMI MOF metadata
-Date: Tue, 6 Jun 2017 15:56:21 +0200
-Message-ID: <20170606135621.GC4690@pali>
-References: <cover.1495862272.git.dvhart@infradead.org>
- <201705271314.16241@pali>
- <20170605221456.GA27270@fury>
- <201706060019.26462@pali>
- <CALCETrXTejMgbQZaHOKuEM_rF4bMduEzwWZ6+7R2M+gbFo5LMg@mail.gmail.com>
- <20170606110554.GB4690@pali>
- <8aa135f430b441eb82614b22d662d1ff@ausx13mpc120.AMER.DELL.COM>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 09/16] platform/x86: wmi: Instantiate all devices before
+ adding them
+Date: Tue, 6 Jun 2017 09:03:41 -0700
+Message-ID: <CALCETrVU6epBh-OynBs+ryhSNmt_hr8VjiOhjfxjdWwvHj2r0Q@mail.gmail.com>
+References: <cover.1495862272.git.dvhart@infradead.org> <a25645295f6aaf80407ff851baa14ec039c885aa.1495862272.git.dvhart@infradead.org>
+ <20170601204339.GA1842@kmp-mobile.hq.kempniu.pl> <20170606030302.GC27270@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f43.google.com ([74.125.82.43]:38791 "EHLO
-        mail-wm0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751388AbdFFN40 (ORCPT
+Received: from mail-ua0-f174.google.com ([209.85.217.174]:34684 "EHLO
+        mail-ua0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751590AbdFFQED (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2017 09:56:26 -0400
-Content-Disposition: inline
-In-Reply-To: <8aa135f430b441eb82614b22d662d1ff@ausx13mpc120.AMER.DELL.COM>
+        Tue, 6 Jun 2017 12:04:03 -0400
+Received: by mail-ua0-f174.google.com with SMTP id m31so2176244uam.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jun 2017 09:04:02 -0700 (PDT)
+In-Reply-To: <20170606030302.GC27270@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
 
-On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com wrote:
-> Pali,
-> 
-> Amazing job with what you've done so far.  A few comments I wanted to share from my taking look at your bmf2mof and comparing to "source" MOF.
-> 1) At least in source the case used for String and Boolean is lower case.  I'm unsure if that actually matters for any MOF parsing tools, but I wanted to FYI in case it does.
+On Mon, Jun 5, 2017 at 8:03 PM, Darren Hart <dvhart@infradead.org> wrote:
+> On Thu, Jun 01, 2017 at 10:43:39PM +0200, Micha=C5=82 K=C4=99pie=C5=84 wr=
+ote:
+>> I know I have probably started sounding like a broken record by now, but
+>> I still have not seen any response (apart from the typos getting fixed)
+>> to my comments on this patch which I posted in January 2016 [1].
+>>
+>> None of the issues I found back then are really critical, but I did
+>> point out a potential memory leak (granted, an unlikely one), so it
+>> might be a good idea to at least take a second look before merging.
+>>
+>> [1] https://www.spinics.net/lists/platform-driver-x86/msg08201.html
+>
+> Thanks for being persistent, some good points in there. I'd like to just =
+squash
+> these into this patch (9/16), but I'll include them here for an ack from =
+you and
+> Andy L. that this is what you meant, and consistent with his
+> intent/understanding:
+>
 
-In MS documentation is String, Boolean and Datetime with first char
-uppercase. But looks like mofcomp accept both upper case and lower case
-variants.
-
-> 2) On my system when you expand the arguments for "void DoBFn" the source doesn't describe individual arguments like you do.  
-> Again this might not matter to MOF parsing tools but wanted to let you know in case it does.
-
-I know, this part is missing. Order of arguments are only in ID
-qualifier and not sorted + in/out de-duplicated.
-
-> source:
-> 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> bmf2mof:
-> 	void doBFn([in, Description("Fn buf"), ID(0)] BDat Data, [out, Description("Fn buf"), ID(0)] BDat Data);
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Looks good to me.
