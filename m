@@ -1,74 +1,27 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 0/6] mfd: intel_soc_pmic_bxtwc: Add chained IRQ support
-Date: Tue, 6 Jun 2017 12:36:36 +0300
-Message-ID: <CAHp75VcizTxgoVF_f+ExV2DJ+vUZveNhLS3mRC8Jr6VGkHDutg@mail.gmail.com>
-References: <CAHp75VcQfSkn7NAWSC2Vq=8RCC0M1p9zvVFjJFLyEo17GDvHsA@mail.gmail.com>
- <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded
+ Binary WMI MOF metadata
+Date: Tue, 6 Jun 2017 12:04:40 +0200
+Message-ID: <20170606100440.GA4690@pali>
+References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f196.google.com ([209.85.216.196]:36424 "EHLO
-        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751382AbdFFJgi (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2017 05:36:38 -0400
-In-Reply-To: <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Zhang, Rui" <rui.zhang@intel.com>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 5, 2017 at 10:08 PM,
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> Following patch set adds chained IRQ support to WCOVE PMIC driver.
+On Monday 05 June 2017 20:16:44 Andy Lutomirski wrote:
+> +#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+> +MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
 
-Assuming it has been tested,
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-to the patches which do not have it yet.
-
-> Changes since v3:
->  * Added fix for typec wcove driver.
->
-> Changes since v4:
->  * Squashed following two commits, to keep the patch set bisectable.
->    usb: typec: typec_wcove: Use charger irq chip to get usbc virq
->    mfd: intel_soc_pmic_bxtwc: use chained irqs for second level irq chips
->
-> Changes since v5:
-> * Changed irq->IRQ, pmic->PMIC in all commit messages.
-> * Squashed following two thermal driver related commits.
->   mfd: intel_soc_pmic_bxtwc: Remove thermal second level irqs
->   thermal: intel_bxt_pmic_thermal: Use first level PMIC thermal irq
-> * Squashed following two GPIO driver related commits.
->   mfd: intel_soc_pmic_bxtwc: Remove second level irq for gpio device
->   gpio: gpio-wcove: Use first level PMIC GPIO irq
->
-> Kuppuswamy Sathyanarayanan (6):
->   mfd: intel_soc_pmic_bxtwc: Fix TMU interrupt index
->   mfd: intel_soc_pmic_bxtwc: Remove thermal second level IRQs
->   mfd: intel_soc_pmic_bxtwc: Remove second level IRQ for gpio device
->   mfd: intel_soc_pmic_bxtwc: Utilize devm_* functions in driver probe
->   mfd: intel_soc_pmic_bxtwc: Use chained IRQs for second level IRQ chips
->   platform/x86: intel_bxtwc_tmu: Remove first level IRQ unmask
->
->  drivers/gpio/gpio-wcove.c                |  14 +-
->  drivers/mfd/intel_soc_pmic_bxtwc.c       | 232 +++++++++++++++++++++----------
->  drivers/platform/x86/intel_bxtwc_tmu.c   |   4 -
->  drivers/thermal/intel_bxt_pmic_thermal.c |   2 +-
->  drivers/usb/typec/typec_wcove.c          |   2 +-
->  include/linux/mfd/intel_soc_pmic.h       |   5 +-
->  6 files changed, 175 insertions(+), 84 deletions(-)
->
-> --
-> 2.7.4
->
-
-
+Cannot we generate MODULE_ALIAS from module_wmi_driver()? IIRC it is
+working for i2c drivers.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pali Rohár
+pali.rohar@gmail.com
