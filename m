@@ -1,97 +1,70 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded
- Binary WMI MOF metadata
-Date: Tue, 6 Jun 2017 21:45:57 +0300
-Message-ID: <CAHp75VeX0fTBcRA=GKyXVDqbi+WTSNOGBxfq0ZgB22c3+OXNTw@mail.gmail.com>
-References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
- <CAHp75VcEpnMzjomrnEQQEFp6zCJjcBugaRRHZO0GUc3FOyjF_Q@mail.gmail.com> <20170606165443.GB32509@fury>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [PATCH] platform/x86/acer-wmi: Detect RF Button capability
+Date: Tue,  6 Jun 2017 13:07:22 -0700
+Message-ID: <20170606200722.4240-1-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170606165443.GB32509@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pg0-f65.google.com ([74.125.83.65]:35434 "EHLO
+        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751239AbdFFUHu (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 6 Jun 2017 16:07:50 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux@endlessm.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 7:54 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, Jun 06, 2017 at 12:30:38PM +0300, Andy Shevchenko wrote:
->> On Tue, Jun 6, 2017 at 6:16 AM, Andy Lutomirski <luto@kernel.org> wrote:
+If a machine reports a RF Button in the communication button device
+bitmap, we need to remove it before calling Get Device Status otherwise
+it will return the "Undefined device" (0xE2) error code.
 
->> > +#include <linux/kernel.h>
->> > +#include <linux/module.h>
->> > +#include <linux/init.h>
->> > +#include <linux/slab.h>
->> > +#include <linux/types.h>
->> > +#include <linux/input.h>
->> > +#include <linux/input/sparse-keymap.h>
->> > +#include <linux/acpi.h>
->> > +#include <linux/string.h>
->> > +#include <linux/dmi.h>
->> > +#include <linux/wmi.h>
->> > +#include <acpi/video.h>
->>
->> Alphabetical order? Up to you.
->
-> OK, I failed to audit this... lots we don't need in here.
->
-> The minimum to build is:
->
-> #include <linux/wmi.h>
->
-> So assuming this was copy/pasted from another file.
+Although this may be a BIOS bug, we don't really need to get or set the
+RF Button status. The status indicator LED embedded in the button is
+controlled by firmware logic, depending on the status of the wireless
+radios present on the machine (WiFi || WWAN).
 
-> Again, no guidance in coding-style.rst on includes. Seems to me we should
-> include what we specifically require, regardless of whether or not another
-> header also happens to include it.
+This commit fixes the wireless status indicator LED on the Acer
+TravelMate P648-G2-MG, and cleans the following message from the kernel
+log: "Get Current Device Status failed: 0xe2 - 0x0".
 
-Usually it's a sane choice.
-Regarding to order the rationale I see there is easiest way to detect
-(on the glance) what headers are already there and there is no
-duplication. I saw in the past few patches to remove header
-duplication since the original list wasn't in order in the first
-place.
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+---
+ drivers/platform/x86/acer-wmi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Of course there might be exceptions.
-
-> We need acpi for example, even though wmi
-> also includes it.
->
-> We should include modules, even though acpi includes it.
->
-> We use several other things we aren't including for, like
->
-> memcpy
-> dev_kzalloc
-> sysfs_create_bin_file
->
-> So I suggest:
->
-> #include <linux/acpi.h>
-> #include <linux/device.h>
-> #include <linux/fs.h>
-> #include <linux/kernel.h>
-> #include <linux/module.h>
-> #include <linux/string.h>
-> #include <linux/sysfs.h>
-> #include <linux/types.h>
-> #include <linux/wmi.h>
->
-> Which removes:
-> #include <acpi/video.h>
-> #include <linux/dmi.h>
-> #include <linux/init.h>
-> #include <linux/input.h>
-> #include <linux/input/sparse-keymap.h>
-> #include <linux/slab.h>
->
-> And adds:
-> #include <linux/device.h>
-> #include <linux/fs.h>
-> #include <linux/sysfs.h>
-
-Works for me!
-
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 79fa5ab3fd00..3b381178039b 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -149,6 +149,8 @@ struct event_return_value {
+ #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
+ #define ACER_WMID3_GDS_WIMAX		(1<<7)	/* WiMAX */
+ #define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
++#define ACER_WMID3_GDS_RFBTN		(1<<14)	/* RF Button */
++
+ #define ACER_WMID3_GDS_TOUCHPAD		(1<<1)	/* Touchpad */
+ 
+ /* Hotkey Customized Setting and Acer Application Status.
+@@ -221,6 +223,7 @@ struct hotkey_function_type_aa {
+ #define ACER_CAP_BRIGHTNESS		(1<<3)
+ #define ACER_CAP_THREEG			(1<<4)
+ #define ACER_CAP_ACCEL			(1<<5)
++#define ACER_CAP_RFBTN			(1<<6)
+ #define ACER_CAP_ANY			(0xFFFFFFFF)
+ 
+ /*
+@@ -1264,6 +1267,10 @@ static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
+ 		interface->capability |= ACER_CAP_THREEG;
+ 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
+ 		interface->capability |= ACER_CAP_BLUETOOTH;
++	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN) {
++		interface->capability |= ACER_CAP_RFBTN;
++		commun_func_bitmap &= ~ACER_WMID3_GDS_RFBTN;
++	}
+ 
+ 	commun_fn_key_number = type_aa->commun_fn_key_number;
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
