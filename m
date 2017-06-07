@@ -1,59 +1,48 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
-Date: Wed, 7 Jun 2017 19:39:25 +0200
-Message-ID: <201706071939.25681@pali>
-References: <cover.1495862272.git.dvhart@infradead.org> <8aa135f430b441eb82614b22d662d1ff@ausx13mpc120.AMER.DELL.COM> <20170606135621.GC4690@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
+ embedded WMI MOF metadata
+Date: Wed, 7 Jun 2017 20:23:08 +0000
+Message-ID: <bc0dbbfcb0084f758d28b9000fa9f9e0@ausx13mpc124.AMER.DELL.COM>
+References: <cover.1495862272.git.dvhart@infradead.org>
+ <8aa135f430b441eb82614b22d662d1ff@ausx13mpc120.AMER.DELL.COM>
+ <20170606135621.GC4690@pali> <201706071939.25681@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1625338.1nyMpfXXsq";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170606135621.GC4690@pali>
+In-Reply-To: <201706071939.25681@pali>
+Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
+To: pali.rohar@gmail.com
 Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart1625338.1nyMpfXXsq
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 06 June 2017 15:56:21 Pali Roh=C3=A1r wrote:
-> On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com wrote:
-> > 2) On my system when you expand the arguments for "void DoBFn" the
-> > source doesn't describe individual arguments like you do. Again
-> > this might not matter to MOF parsing tools but wanted to let you
-> > know in case it does.
->=20
-> I know, this part is missing. Order of arguments are only in ID
-> qualifier and not sorted + in/out de-duplicated.
-
-Implemented! Now arguments are correctly placed based on ID qualifier.
-
-> > source:
-> > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> >=20
-> > bmf2mof:
-> > 	void doBFn([in, Description("Fn buf"), ID(0)] BDat Data, [out,
-> > 	Description("Fn buf"), ID(0)] BDat Data);
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1625338.1nyMpfXXsq
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlk4Ok0ACgkQi/DJPQPkQ1JjzwCdFg4CIAQUKKt6pRxU748j3kHx
-iakAoMytEZ7DNq4mMduutdSfxpr4BaHp
-=Sap/
------END PGP SIGNATURE-----
-
---nextPart1625338.1nyMpfXXsq--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgNywgMjAxNyAx
+MjozOSBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
+LmNvbT4NCj4gQ2M6IGx1dG9AYW1hY2FwaXRhbC5uZXQ7IGR2aGFydEBpbmZyYWRlYWQub3JnOyBw
+bGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGFuZHJpeS5zaGV2Y2hlbmtv
+QGxpbnV4LmludGVsLmNvbTsgbHV0b0BrZXJuZWwub3JnOw0KPiByandAcmp3eXNvY2tpLm5ldDsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmcN
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAxNS8xNl0gcGxhdGZvcm0veDg2OiB3bWktbW9mOiBOZXcg
+ZHJpdmVyIHRvIGV4cG9zZQ0KPiBlbWJlZGRlZCBXTUkgTU9GIG1ldGFkYXRhDQo+IA0KPiBPbiBU
+dWVzZGF5IDA2IEp1bmUgMjAxNyAxNTo1NjoyMSBQYWxpIFJvaMOhciB3cm90ZToNCj4gPiBPbiBU
+dWVzZGF5IDA2IEp1bmUgMjAxNyAxMzo0NjoxNiBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3
+cm90ZToNCj4gPiA+IDIpIE9uIG15IHN5c3RlbSB3aGVuIHlvdSBleHBhbmQgdGhlIGFyZ3VtZW50
+cyBmb3IgInZvaWQgRG9CRm4iIHRoZQ0KPiA+ID4gc291cmNlIGRvZXNuJ3QgZGVzY3JpYmUgaW5k
+aXZpZHVhbCBhcmd1bWVudHMgbGlrZSB5b3UgZG8uIEFnYWluDQo+ID4gPiB0aGlzIG1pZ2h0IG5v
+dCBtYXR0ZXIgdG8gTU9GIHBhcnNpbmcgdG9vbHMgYnV0IHdhbnRlZCB0byBsZXQgeW91DQo+ID4g
+PiBrbm93IGluIGNhc2UgaXQgZG9lcy4NCj4gPg0KPiA+IEkga25vdywgdGhpcyBwYXJ0IGlzIG1p
+c3NpbmcuIE9yZGVyIG9mIGFyZ3VtZW50cyBhcmUgb25seSBpbiBJRA0KPiA+IHF1YWxpZmllciBh
+bmQgbm90IHNvcnRlZCArIGluL291dCBkZS1kdXBsaWNhdGVkLg0KPiANCj4gSW1wbGVtZW50ZWQh
+IE5vdyBhcmd1bWVudHMgYXJlIGNvcnJlY3RseSBwbGFjZWQgYmFzZWQgb24gSUQgcXVhbGlmaWVy
+Lg0KSSB0aGluayBpdCdzIHN0aWxsIG9mZiBhIGxpdHRsZSB0aG91Z2guDQoNCldoYXQgSSdtIGdl
+dHRpbmcgYmFjayBub3cgZnJvbSBibWYybW9mIGlzOg0KCXZvaWQgRG9CRm4oW2luLCBEZXNjcmlw
+dGlvbigiRm4gYnVmIiksIG91dF0gQkRhdCBEYXRhKTsNCg0KV2hlcmVhcyBzb3VyY2UgcHV0cyBE
+ZXNjcmlwdGlvbiBhcyB0aGUgbGFzdCBhcmd1bWVudDogDQoJdm9pZCBEb0JGbihbaW4sIG91dCwg
+RGVzY3JpcHRpb24oIkZuIGJ1ZiIpXSBCRGF0IERhdGEpOw0KDQo+IA0KPiA+ID4gc291cmNlOg0K
+PiA+ID4gCXZvaWQgRG9CRm4oW2luLCBvdXQsIERlc2NyaXB0aW9uKCJGbiBidWYiKV0gQkRhdCBE
+YXRhKTsNCj4gPiA+DQo+ID4gPiBibWYybW9mOg0KPiA+ID4gCXZvaWQgZG9CRm4oW2luLCBEZXNj
+cmlwdGlvbigiRm4gYnVmIiksIElEKDApXSBCRGF0IERhdGEsIFtvdXQsDQo+ID4gPiAJRGVzY3Jp
+cHRpb24oIkZuIGJ1ZiIpLCBJRCgwKV0gQkRhdCBEYXRhKTsNCj4gDQo+IC0tDQo+IFBhbGkgUm9o
+w6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
