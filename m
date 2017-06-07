@@ -1,346 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-Date: Wed, 7 Jun 2017 17:53:38 +0300
-Message-ID: <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
-References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
+Date: Wed, 7 Jun 2017 19:39:25 +0200
+Message-ID: <201706071939.25681@pali>
+References: <cover.1495862272.git.dvhart@infradead.org> <8aa135f430b441eb82614b22d662d1ff@ausx13mpc120.AMER.DELL.COM> <20170606135621.GC4690@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed;
+  boundary="nextPart1625338.1nyMpfXXsq";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170602151507.22391-2-hdegoede@redhat.com>
+In-Reply-To: <20170606135621.GC4690@pali>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
+To: Mario.Limonciello@dell.com
+Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Some peripherals on Bay Trail and Cherry Trail platforms signal a
-> Power Management Event (PME) to the Power Management Controller (PMC)
-> to wakeup the system. When this happens software needs to explicitly
-> clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-> IRQ storm on IRQ 9.
->
-> This is modelled in ACPI through the INT0002 ACPI device, which is
-> called a "Virtual GPIO controller" in ACPI because it defines the
-> event handler to call when the PME triggers through _AEI and _L02
-> methods as would be done for a real GPIO interrupt in ACPI.
->
-> This commit adds a driver which registers the Virtual GPIOs expected
-> by the DSDT on these devices, letting gpiolib-acpi claim the
-> virtual GPIO and install a GPIO-interrupt handler which call the _L02
-> handler as it would for a real GPIO controller.
->
+--nextPart1625338.1nyMpfXXsq
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pushed to testing w/o Linus' tag (there is no one yet)
+On Tuesday 06 June 2017 15:56:21 Pali Roh=C3=A1r wrote:
+> On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com wrote:
+> > 2) On my system when you expand the arguments for "void DoBFn" the
+> > source doesn't describe individual arguments like you do. Again
+> > this might not matter to MOF parsing tools but wanted to let you
+> > know in case it does.
+>=20
+> I know, this part is missing. Order of arguments are only in ID
+> qualifier and not sorted + in/out de-duplicated.
 
-Linus, if you have objections, tell me.
+Implemented! Now arguments are correctly placed based on ID qualifier.
 
-> Cc: joeyli <jlee@suse.com>
-> Cc: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> Changes in v2:
-> -Remove dev_err after malloc failure
-> -Remove unused empty runtime pm callbacks
-> -s/GPE0A_PME_/GPE0A_PME_B0_/
-> -Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
-> Changes in v3:
-> -Rewrite as gpiochip driver letting gpiolib-acpi deal with claiming the pin
->  0x0002 and calling the _L02 event handler when the virtual gpio-irq triggers
-> -Rebase on 4.12-rc1
-> Changes in v4:
-> -Drop device_init_wakeup() from _probe(), use pm_system_wakeup() instead
->  of pm_wakeup_hard_event(chip->parent)
-> -Improve commit message
-> Changes in v5:
-> -Use BIT() macro for FOO_BIT defines
-> -Drop unneeded ACPI_PTR macro usage
-> Changes in v6:
-> -Move back to drivers/platform/x86
-> -Expand certain acronyms (PME, PMC)
-> -Use linux/gpio/driver.h include instead of linux/gpio.h
-> -Document why the get / set / direction_output functions are dummys
-> -No functional changes
-> ---
->  drivers/platform/x86/Kconfig               |  19 +++
->  drivers/platform/x86/Makefile              |   1 +
->  drivers/platform/x86/intel_int0002_vgpio.c | 218 +++++++++++++++++++++++++++++
->  3 files changed, 238 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_int0002_vgpio.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 8489020..a3ccc3c 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -794,6 +794,25 @@ config INTEL_CHT_INT33FE
->           This driver instantiates i2c-clients for these, so that standard
->           i2c drivers for these chips can bind to the them.
->
-> +config INTEL_INT0002_VGPIO
-> +       tristate "Intel ACPI INT0002 Virtual GPIO driver"
-> +       depends on GPIOLIB && ACPI
-> +       select GPIOLIB_IRQCHIP
-> +       ---help---
-> +         Some peripherals on Bay Trail and Cherry Trail platforms signal a
-> +         Power Management Event (PME) to the Power Management Controller (PMC)
-> +         to wakeup the system. When this happens software needs to explicitly
-> +         clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-> +         IRQ storm on IRQ 9.
-> +
-> +         This is modelled in ACPI through the INT0002 ACPI device, which is
-> +         called a "Virtual GPIO controller" in ACPI because it defines the
-> +         event handler to call when the PME triggers through _AEI and _L02
-> +         methods as would be done for a real GPIO interrupt in ACPI.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called intel_int0002_vgpio.
-> +
->  config INTEL_HID_EVENT
->         tristate "INTEL HID Event"
->         depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 182a3ed..ab22ce7 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -46,6 +46,7 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)       += toshiba_bluetooth.o
->  obj-$(CONFIG_TOSHIBA_HAPS)     += toshiba_haps.o
->  obj-$(CONFIG_TOSHIBA_WMI)      += toshiba-wmi.o
->  obj-$(CONFIG_INTEL_CHT_INT33FE)        += intel_cht_int33fe.o
-> +obj-$(CONFIG_INTEL_INT0002_VGPIO) += intel_int0002_vgpio.o
->  obj-$(CONFIG_INTEL_HID_EVENT)  += intel-hid.o
->  obj-$(CONFIG_INTEL_VBTN)       += intel-vbtn.o
->  obj-$(CONFIG_INTEL_SCU_IPC)    += intel_scu_ipc.o
-> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-> new file mode 100644
-> index 0000000..e524b49
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> @@ -0,0 +1,218 @@
-> +/*
-> + * Intel INT0002 "Virtual GPIO" driver
-> + *
-> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-> + *
-> + * Loosely based on android x86 kernel code which is:
-> + *
-> + * Copyright (c) 2014, Intel Corporation.
-> + *
-> + * Author: Dyut Kumar Sil <dyut.k.sil@intel.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Some peripherals on Bay Trail and Cherry Trail platforms signal a Power
-> + * Management Event (PME) to the Power Management Controller (PMC) to wakeup
-> + * the system. When this happens software needs to clear the PME bus 0 status
-> + * bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
-> + *
-> + * This is modelled in ACPI through the INT0002 ACPI device, which is
-> + * called a "Virtual GPIO controller" in ACPI because it defines the event
-> + * handler to call when the PME triggers through _AEI and _L02 / _E02
-> + * methods as would be done for a real GPIO interrupt in ACPI. Note this
-> + * is a hack to define an AML event handler for the PME while using existing
-> + * ACPI mechanisms, this is not a real GPIO at all.
-> + *
-> + * This driver will bind to the INT0002 device, and register as a GPIO
-> + * controller, letting gpiolib-acpi.c call the _L02 handler as it would
-> + * for a real GPIO controller.
-> + */
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel-family.h>
-> +#include <linux/acpi.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/suspend.h>
-> +
-> +#define DRV_NAME                       "INT0002 Virtual GPIO"
-> +
-> +/* For some reason the virtual GPIO pin tied to the GPE is numbered pin 2 */
-> +#define GPE0A_PME_B0_VIRT_GPIO_PIN     2
-> +
-> +#define GPE0A_PME_B0_STS_BIT           BIT(13)
-> +#define GPE0A_PME_B0_EN_BIT            BIT(13)
-> +#define GPE0A_STS_PORT                 0x420
-> +#define GPE0A_EN_PORT                  0x428
-> +
-> +#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> +
-> +static const struct x86_cpu_id int0002_cpu_ids[] = {
-> +/*
-> + * Limit ourselves to Cherry Trail for now, until testing shows we
-> + * need to handle the INT0002 device on Baytrail too.
-> + *     ICPU(INTEL_FAM6_ATOM_SILVERMONT1),       * Valleyview, Bay Trail *
-> + */
-> +       ICPU(INTEL_FAM6_ATOM_AIRMONT),          /* Braswell, Cherry Trail */
-> +       {}
-> +};
-> +
-> +/*
-> + * As this is not a real GPIO at all, but just a hack to model an event in
-> + * APCI the get / set functions are dummy functions.
-> + */
-> +
-> +static int int0002_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void int0002_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +                            int value)
-> +{
-> +}
-> +
-> +static int int0002_gpio_direction_output(struct gpio_chip *chip,
-> +                                        unsigned int offset, int value)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void int0002_irq_ack(struct irq_data *data)
-> +{
-> +       outl(GPE0A_PME_B0_STS_BIT, GPE0A_STS_PORT);
-> +}
-> +
-> +static void int0002_irq_unmask(struct irq_data *data)
-> +{
-> +       u32 gpe_en_reg;
-> +
-> +       gpe_en_reg = inl(GPE0A_EN_PORT);
-> +       gpe_en_reg |= GPE0A_PME_B0_EN_BIT;
-> +       outl(gpe_en_reg, GPE0A_EN_PORT);
-> +}
-> +
-> +static void int0002_irq_mask(struct irq_data *data)
-> +{
-> +       u32 gpe_en_reg;
-> +
-> +       gpe_en_reg = inl(GPE0A_EN_PORT);
-> +       gpe_en_reg &= ~GPE0A_PME_B0_EN_BIT;
-> +       outl(gpe_en_reg, GPE0A_EN_PORT);
-> +}
-> +
-> +static irqreturn_t int0002_irq(int irq, void *data)
-> +{
-> +       struct gpio_chip *chip = data;
-> +       u32 gpe_sts_reg;
-> +
-> +       gpe_sts_reg = inl(GPE0A_STS_PORT);
-> +       if (!(gpe_sts_reg & GPE0A_PME_B0_STS_BIT))
-> +               return IRQ_NONE;
-> +
-> +       generic_handle_irq(irq_find_mapping(chip->irqdomain,
-> +                                           GPE0A_PME_B0_VIRT_GPIO_PIN));
-> +
-> +       pm_system_wakeup();
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static struct irq_chip int0002_irqchip = {
-> +       .name                   = DRV_NAME,
-> +       .irq_ack                = int0002_irq_ack,
-> +       .irq_mask               = int0002_irq_mask,
-> +       .irq_unmask             = int0002_irq_unmask,
-> +};
-> +
-> +static int int0002_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       const struct x86_cpu_id *cpu_id;
-> +       struct gpio_chip *chip;
-> +       int i, irq, ret;
-> +
-> +       /* Menlow has a different INT0002 device? <sigh> */
-> +       cpu_id = x86_match_cpu(int0002_cpu_ids);
-> +       if (!cpu_id)
-> +               return -ENODEV;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(dev, "Error getting IRQ: %d\n", irq);
-> +               return irq;
-> +       }
-> +
-> +       chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +       if (!chip)
-> +               return -ENOMEM;
-> +
-> +       chip->label = DRV_NAME;
-> +       chip->parent = dev;
-> +       chip->owner = THIS_MODULE;
-> +       chip->get = int0002_gpio_get;
-> +       chip->set = int0002_gpio_set;
-> +       chip->direction_input = int0002_gpio_get;
-> +       chip->direction_output = int0002_gpio_direction_output;
-> +       chip->base = -1;
-> +       chip->ngpio = GPE0A_PME_B0_VIRT_GPIO_PIN + 1;
-> +       chip->irq_need_valid_mask = true;
-> +
-> +       ret = devm_gpiochip_add_data(&pdev->dev, chip, NULL);
-> +       if (ret) {
-> +               dev_err(dev, "Error adding gpio chip: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       for (i = 0; i < GPE0A_PME_B0_VIRT_GPIO_PIN; i++)
-> +               clear_bit(i, chip->irq_valid_mask);
-> +
-> +       /*
-> +        * We manually request the irq here instead of passing a flow-handler
-> +        * to gpiochip_set_chained_irqchip, because the irq is shared.
-> +        */
-> +       ret = devm_request_irq(dev, irq, int0002_irq,
-> +                              IRQF_SHARED | IRQF_NO_THREAD, "INT0002", chip);
-> +       if (ret) {
-> +               dev_err(dev, "Error requesting IRQ %d: %d\n", irq, ret);
-> +               return ret;
-> +       }
-> +
-> +       ret = gpiochip_irqchip_add(chip, &int0002_irqchip, 0, handle_edge_irq,
-> +                                  IRQ_TYPE_NONE);
-> +       if (ret) {
-> +               dev_err(dev, "Error adding irqchip: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       gpiochip_set_chained_irqchip(chip, &int0002_irqchip, irq, NULL);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct acpi_device_id int0002_acpi_ids[] = {
-> +       { "INT0002", 0 },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, int0002_acpi_ids);
-> +
-> +static struct platform_driver int0002_driver = {
-> +       .driver = {
-> +               .name                   = DRV_NAME,
-> +               .acpi_match_table       = int0002_acpi_ids,
-> +       },
-> +       .probe  = int0002_probe,
-> +};
-> +
-> +module_platform_driver(int0002_driver);
-> +
-> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-> +MODULE_DESCRIPTION("Intel INT0002 Virtual GPIO driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.9.4
->
+> > source:
+> > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
+> >=20
+> > bmf2mof:
+> > 	void doBFn([in, Description("Fn buf"), ID(0)] BDat Data, [out,
+> > 	Description("Fn buf"), ID(0)] BDat Data);
 
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--nextPart1625338.1nyMpfXXsq
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlk4Ok0ACgkQi/DJPQPkQ1JjzwCdFg4CIAQUKKt6pRxU748j3kHx
+iakAoMytEZ7DNq4mMduutdSfxpr4BaHp
+=Sap/
+-----END PGP SIGNATURE-----
+
+--nextPart1625338.1nyMpfXXsq--
