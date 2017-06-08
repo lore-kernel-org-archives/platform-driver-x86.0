@@ -1,46 +1,76 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 09/16] platform/x86: wmi: Instantiate all devices before
- adding them
-Date: Thu, 8 Jun 2017 06:43:41 +0200
-Message-ID: <20170608044341.GA1171@kmp-mobile.hq.kempniu.pl>
-References: <cover.1495862272.git.dvhart@infradead.org>
- <a25645295f6aaf80407ff851baa14ec039c885aa.1495862272.git.dvhart@infradead.org>
- <20170601204339.GA1842@kmp-mobile.hq.kempniu.pl>
- <20170606030302.GC27270@fury>
- <CALCETrVU6epBh-OynBs+ryhSNmt_hr8VjiOhjfxjdWwvHj2r0Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALCETrVU6epBh-OynBs+ryhSNmt_hr8VjiOhjfxjdWwvHj2r0Q@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Bhumika Goyal <bhumirks@gmail.com>
+Subject: [PATCH] platform/x86: constify rfkill_ops structures
+Date: Thu,  8 Jun 2017 16:47:31 +0530
+Message-ID: <1496920651-20298-1-git-send-email-bhumirks@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:33376 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750788AbdFHLTQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 8 Jun 2017 07:19:16 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: julia.lawall@lip6.fr, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, ike.pan@canonical.com, corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bhumika Goyal <bhumirks@gmail.com>
 
-> On Mon, Jun 5, 2017 at 8:03 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Thu, Jun 01, 2017 at 10:43:39PM +0200, Michał Kępień wrote:
-> >> I know I have probably started sounding like a broken record by now, but
-> >> I still have not seen any response (apart from the typos getting fixed)
-> >> to my comments on this patch which I posted in January 2016 [1].
-> >>
-> >> None of the issues I found back then are really critical, but I did
-> >> point out a potential memory leak (granted, an unlikely one), so it
-> >> might be a good idea to at least take a second look before merging.
-> >>
-> >> [1] https://www.spinics.net/lists/platform-driver-x86/msg08201.html
-> >
-> > Thanks for being persistent, some good points in there. I'd like to just squash
-> > these into this patch (9/16), but I'll include them here for an ack from you and
-> > Andy L. that this is what you meant, and consistent with his
-> > intent/understanding:
-> >
-> 
-> Looks good to me.
+Add const to rfkill_ops structures that are only passed as an argument
+to the functions rfkill_alloc or samsung_new_rfkill. These arguments are
+of type const, so such structures can be annotated with const.
 
-Same here.
+Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
+---
+ drivers/platform/x86/dell-rbtn.c      | 2 +-
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ drivers/platform/x86/samsung-laptop.c | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+index dcd9f40..6b5bbaf 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -110,7 +110,7 @@ static int rbtn_rfkill_set_block(void *data, bool blocked)
+ 	return -EINVAL;
+ }
+ 
+-static struct rfkill_ops rbtn_ops = {
++static const struct rfkill_ops rbtn_ops = {
+ 	.query = rbtn_rfkill_query,
+ 	.set_block = rbtn_rfkill_set_block,
+ };
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 24ca9fb..3beec1e 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -478,7 +478,7 @@ static int ideapad_rfk_set(void *data, bool blocked)
+ 	return write_ec_cmd(priv->priv->adev->handle, opcode, !blocked);
+ }
+ 
+-static struct rfkill_ops ideapad_rfk_ops = {
++static const struct rfkill_ops ideapad_rfk_ops = {
+ 	.set_block = ideapad_rfk_set,
+ };
+ 
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 8c146e2..e1e8897 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -591,7 +591,7 @@ static int seclinux_rfkill_set(void *data, bool blocked)
+ 				 !blocked);
+ }
+ 
+-static struct rfkill_ops seclinux_rfkill_ops = {
++static const struct rfkill_ops seclinux_rfkill_ops = {
+ 	.set_block = seclinux_rfkill_set,
+ };
+ 
+@@ -651,7 +651,7 @@ static void swsmi_rfkill_query(struct rfkill *rfkill, void *priv)
+ 	rfkill_set_sw_state(rfkill, !ret);
+ }
+ 
+-static struct rfkill_ops swsmi_rfkill_ops = {
++static const struct rfkill_ops swsmi_rfkill_ops = {
+ 	.set_block = swsmi_rfkill_set,
+ 	.query = swsmi_rfkill_query,
+ };
 -- 
-Best regards,
-Michał Kępień
+2.7.4
