@@ -1,43 +1,45 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
-Date: Thu, 08 Jun 2017 08:38:07 -0700
-Message-ID: <1496936287.1929.18.camel@perches.com>
-References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
-         <201705271517.30111@pali>
-         <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
-         <201705272248.13257@pali>
-         <CAHp75VdmMwEvho-2tRoYz3CGz2QvLr40G6Nf7wQ76LCtxFjT4g@mail.gmail.com>
-         <20170608151618.GE32509@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual
+ GPIO device
+Date: Thu, 8 Jun 2017 08:45:41 -0700
+Message-ID: <20170608154541.GH32509@fury>
+References: <20170602151507.22391-1-hdegoede@redhat.com>
+ <20170602151507.22391-2-hdegoede@redhat.com>
+ <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608151618.GE32509@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2017-06-08 at 08:16 -0700, Darren Hart wrote:
-> On Sat, May 27, 2017 at 11:49:22PM +0300, Andy Shevchenko wrote:
-> > On Sat, May 27, 2017 at 11:48 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > On Saturday 27 May 2017 15:33:14 Andy Shevchenko wrote:
-> > > > On Sat, May 27, 2017 at 4:17 PM, Pali Rohár <pali.rohar@gmail.com>
-> > > > wrote:
-> > > > Okay, got it. But on your opinion does it make sense to do
-> > > > 
-> > > > pr_info("\tobject_id: %2pE\n", g->object_id);
-> > > > 
-> > > > instead?
-> > > > 
-> > > > For ASCII it will go as is previously, otherwise escaping would be
-> > > > done.
-> > > 
-> > > Both is OK for me. Do you want to send a new patch with %2pE?
-> > 
-> > To me it looks slightly cleaner.
+On Wed, Jun 07, 2017 at 05:53:38PM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> > Some peripherals on Bay Trail and Cherry Trail platforms signal a
+> > Power Management Event (PME) to the Power Management Controller (PMC)
+> > to wakeup the system. When this happens software needs to explicitly
+> > clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+> > IRQ storm on IRQ 9.
+> >
+> > This is modelled in ACPI through the INT0002 ACPI device, which is
+> > called a "Virtual GPIO controller" in ACPI because it defines the
+> > event handler to call when the PME triggers through _AEI and _L02
+> > methods as would be done for a real GPIO interrupt in ACPI.
+> >
+> > This commit adds a driver which registers the Virtual GPIOs expected
+> > by the DSDT on these devices, letting gpiolib-acpi claim the
+> > virtual GPIO and install a GPIO-interrupt handler which call the _L02
+> > handler as it would for a real GPIO controller.
+> >
 > 
-> I don't want to let this one fall through the cracks. Pali, is a new one coming?
+> Pushed to testing w/o Linus' tag (there is no one yet)
 
-Perhaps
-	pr_info("\t%*pE\n", (int)sizeof(g->object_id), g->object_id);
+Will you be taking this through fixes Andy? For a 4.12-rc* target per Hans'
+response to the cover letter?
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
