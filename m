@@ -1,16 +1,16 @@
 From: Bhumika Goyal <bhumirks@gmail.com>
-Subject: [PATCH v2] dell-rbtn: constify rfkill_ops structures
-Date: Fri,  9 Jun 2017 11:27:40 +0530
-Message-ID: <1496987860-28818-1-git-send-email-bhumirks@gmail.com>
+Subject: [PATCH v2] platform/x86: samsung-laptop: constify rfkill_ops structures
+Date: Fri,  9 Jun 2017 11:31:44 +0530
+Message-ID: <1496988104-29001-1-git-send-email-bhumirks@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f67.google.com ([74.125.83.67]:35842 "EHLO
-        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751499AbdFIF7Q (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:32993 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751501AbdFIGDU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2017 01:59:16 -0400
+        Fri, 9 Jun 2017 02:03:20 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: julia.lawall@lip6.fr, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: julia.lawall@lip6.fr, corentin.chary@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Bhumika Goyal <bhumirks@gmail.com>
 
 Add const to rfkill_ops structures that are only passed as an argument
@@ -22,21 +22,30 @@ Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
 Changes since v1:
 * Split the changes to one patch per vendor.
 
- drivers/platform/x86/dell-rbtn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/samsung-laptop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
-index dcd9f40..6b5bbaf 100644
---- a/drivers/platform/x86/dell-rbtn.c
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -110,7 +110,7 @@ static int rbtn_rfkill_set_block(void *data, bool blocked)
- 	return -EINVAL;
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 8c146e2..e1e8897 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -591,7 +591,7 @@ static int seclinux_rfkill_set(void *data, bool blocked)
+ 				 !blocked);
  }
  
--static struct rfkill_ops rbtn_ops = {
-+static const struct rfkill_ops rbtn_ops = {
- 	.query = rbtn_rfkill_query,
- 	.set_block = rbtn_rfkill_set_block,
+-static struct rfkill_ops seclinux_rfkill_ops = {
++static const struct rfkill_ops seclinux_rfkill_ops = {
+ 	.set_block = seclinux_rfkill_set,
+ };
+ 
+@@ -651,7 +651,7 @@ static void swsmi_rfkill_query(struct rfkill *rfkill, void *priv)
+ 	rfkill_set_sw_state(rfkill, !ret);
+ }
+ 
+-static struct rfkill_ops swsmi_rfkill_ops = {
++static const struct rfkill_ops swsmi_rfkill_ops = {
+ 	.set_block = swsmi_rfkill_set,
+ 	.query = swsmi_rfkill_query,
  };
 -- 
 2.7.4
