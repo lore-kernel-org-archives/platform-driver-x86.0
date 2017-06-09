@@ -1,343 +1,81 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v7] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-Date: Fri,  9 Jun 2017 13:56:02 +0200
-Message-ID: <20170609115602.32029-1-hdegoede@redhat.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose
+ embedded WMI MOF metadata
+Date: Fri, 9 Jun 2017 15:46:12 +0000
+Message-ID: <67cc75c9e0ef4a21a168ab3b4dd1e727@ausx13mpc124.AMER.DELL.COM>
+References: <cover.1495862272.git.dvhart@infradead.org>
+ <201706071939.25681@pali>
+ <bc0dbbfcb0084f758d28b9000fa9f9e0@ausx13mpc124.AMER.DELL.COM>
+ <201706072250.25953@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:13418 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751633AbdFIPqf (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 9 Jun 2017 11:46:35 -0400
+In-Reply-To: <201706072250.25953@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 
-Some peripherals on Bay Trail and Cherry Trail platforms signal a
-Power Management Event (PME) to the Power Management Controller (PMC)
-to wakeup the system. When this happens software needs to explicitly
-clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-IRQ storm on IRQ 9.
-
-This is modelled in ACPI through the INT0002 ACPI device, which is
-called a "Virtual GPIO controller" in ACPI because it defines the
-event handler to call when the PME triggers through _AEI and _L02
-methods as would be done for a real GPIO interrupt in ACPI.
-
-This commit adds a driver which registers the Virtual GPIOs expected
-by the DSDT on these devices, letting gpiolib-acpi claim the
-virtual GPIO and install a GPIO-interrupt handler which call the _L02
-handler as it would for a real GPIO controller.
-
-Cc: joeyli <jlee@suse.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changes in v2:
--Remove dev_err after malloc failure
--Remove unused empty runtime pm callbacks
--s/GPE0A_PME_/GPE0A_PME_B0_/
--Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
-
-Changes in v3:
--Rewrite as gpiochip driver letting gpiolib-acpi deal with claiming the pin
- 0x0002 and calling the _L02 event handler when the virtual gpio-irq triggers
--Rebase on 4.12-rc1
-
-Changes in v4:
--Drop device_init_wakeup() from _probe(), use pm_system_wakeup() instead
- of pm_wakeup_hard_event(chip->parent)
--Improve commit message
-
-Changes in v5:
--Use BIT() macro for FOO_BIT defines
--Drop unneeded ACPI_PTR macro usage
-
-Changes in v6:
--Move back to drivers/platform/x86
--Expand certain acronyms (PME, PMC)
--Use linux/gpio/driver.h include instead of linux/gpio.h
--Document why the get / set / direction_output functions are dummys
--No functional changes
-
-Changes in v7:
--Some minor cleanups from Andy:
- -Move asm/ includes below linux/ includes
- -s/APCI/ACPI/
- -Use bitmap_clear on chip->irq_valid_mask
--Add Linus Walleij's Reviewed-by
----
- drivers/platform/x86/Kconfig               |  19 +++
- drivers/platform/x86/Makefile              |   1 +
- drivers/platform/x86/intel_int0002_vgpio.c | 219 +++++++++++++++++++++++++++++
- 3 files changed, 239 insertions(+)
- create mode 100644 drivers/platform/x86/intel_int0002_vgpio.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8489020ecf44..a3ccc3c795a5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -794,6 +794,25 @@ config INTEL_CHT_INT33FE
- 	  This driver instantiates i2c-clients for these, so that standard
- 	  i2c drivers for these chips can bind to the them.
- 
-+config INTEL_INT0002_VGPIO
-+	tristate "Intel ACPI INT0002 Virtual GPIO driver"
-+	depends on GPIOLIB && ACPI
-+	select GPIOLIB_IRQCHIP
-+	---help---
-+	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
-+	  Power Management Event (PME) to the Power Management Controller (PMC)
-+	  to wakeup the system. When this happens software needs to explicitly
-+	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-+	  IRQ storm on IRQ 9.
-+
-+	  This is modelled in ACPI through the INT0002 ACPI device, which is
-+	  called a "Virtual GPIO controller" in ACPI because it defines the
-+	  event handler to call when the PME triggers through _AEI and _L02
-+	  methods as would be done for a real GPIO interrupt in ACPI.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_int0002_vgpio.
-+
- config INTEL_HID_EVENT
- 	tristate "INTEL HID Event"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 182a3ed6605a..ab22ce77fb66 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
- obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- obj-$(CONFIG_INTEL_CHT_INT33FE)	+= intel_cht_int33fe.o
-+obj-$(CONFIG_INTEL_INT0002_VGPIO) += intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
- obj-$(CONFIG_INTEL_VBTN)	+= intel-vbtn.o
- obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-new file mode 100644
-index 000000000000..92dc230ef5b2
---- /dev/null
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -0,0 +1,219 @@
-+/*
-+ * Intel INT0002 "Virtual GPIO" driver
-+ *
-+ * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (c) 2014, Intel Corporation.
-+ *
-+ * Author: Dyut Kumar Sil <dyut.k.sil@intel.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Some peripherals on Bay Trail and Cherry Trail platforms signal a Power
-+ * Management Event (PME) to the Power Management Controller (PMC) to wakeup
-+ * the system. When this happens software needs to clear the PME bus 0 status
-+ * bit in the GPE0a_STS register to avoid an IRQ storm on IRQ 9.
-+ *
-+ * This is modelled in ACPI through the INT0002 ACPI device, which is
-+ * called a "Virtual GPIO controller" in ACPI because it defines the event
-+ * handler to call when the PME triggers through _AEI and _L02 / _E02
-+ * methods as would be done for a real GPIO interrupt in ACPI. Note this
-+ * is a hack to define an AML event handler for the PME while using existing
-+ * ACPI mechanisms, this is not a real GPIO at all.
-+ *
-+ * This driver will bind to the INT0002 device, and register as a GPIO
-+ * controller, letting gpiolib-acpi.c call the _L02 handler as it would
-+ * for a real GPIO controller.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitmap.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/suspend.h>
-+
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
-+#define DRV_NAME			"INT0002 Virtual GPIO"
-+
-+/* For some reason the virtual GPIO pin tied to the GPE is numbered pin 2 */
-+#define GPE0A_PME_B0_VIRT_GPIO_PIN	2
-+
-+#define GPE0A_PME_B0_STS_BIT		BIT(13)
-+#define GPE0A_PME_B0_EN_BIT		BIT(13)
-+#define GPE0A_STS_PORT			0x420
-+#define GPE0A_EN_PORT			0x428
-+
-+#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-+
-+static const struct x86_cpu_id int0002_cpu_ids[] = {
-+/*
-+ * Limit ourselves to Cherry Trail for now, until testing shows we
-+ * need to handle the INT0002 device on Baytrail too.
-+ *	ICPU(INTEL_FAM6_ATOM_SILVERMONT1),	 * Valleyview, Bay Trail *
-+ */
-+	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
-+	{}
-+};
-+
-+/*
-+ * As this is not a real GPIO at all, but just a hack to model an event in
-+ * ACPI the get / set functions are dummy functions.
-+ */
-+
-+static int int0002_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return 0;
-+}
-+
-+static void int0002_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			     int value)
-+{
-+}
-+
-+static int int0002_gpio_direction_output(struct gpio_chip *chip,
-+					 unsigned int offset, int value)
-+{
-+	return 0;
-+}
-+
-+static void int0002_irq_ack(struct irq_data *data)
-+{
-+	outl(GPE0A_PME_B0_STS_BIT, GPE0A_STS_PORT);
-+}
-+
-+static void int0002_irq_unmask(struct irq_data *data)
-+{
-+	u32 gpe_en_reg;
-+
-+	gpe_en_reg = inl(GPE0A_EN_PORT);
-+	gpe_en_reg |= GPE0A_PME_B0_EN_BIT;
-+	outl(gpe_en_reg, GPE0A_EN_PORT);
-+}
-+
-+static void int0002_irq_mask(struct irq_data *data)
-+{
-+	u32 gpe_en_reg;
-+
-+	gpe_en_reg = inl(GPE0A_EN_PORT);
-+	gpe_en_reg &= ~GPE0A_PME_B0_EN_BIT;
-+	outl(gpe_en_reg, GPE0A_EN_PORT);
-+}
-+
-+static irqreturn_t int0002_irq(int irq, void *data)
-+{
-+	struct gpio_chip *chip = data;
-+	u32 gpe_sts_reg;
-+
-+	gpe_sts_reg = inl(GPE0A_STS_PORT);
-+	if (!(gpe_sts_reg & GPE0A_PME_B0_STS_BIT))
-+		return IRQ_NONE;
-+
-+	generic_handle_irq(irq_find_mapping(chip->irqdomain,
-+					    GPE0A_PME_B0_VIRT_GPIO_PIN));
-+
-+	pm_system_wakeup();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irq_chip int0002_irqchip = {
-+	.name			= DRV_NAME,
-+	.irq_ack		= int0002_irq_ack,
-+	.irq_mask		= int0002_irq_mask,
-+	.irq_unmask		= int0002_irq_unmask,
-+};
-+
-+static int int0002_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct x86_cpu_id *cpu_id;
-+	struct gpio_chip *chip;
-+	int irq, ret;
-+
-+	/* Menlow has a different INT0002 device? <sigh> */
-+	cpu_id = x86_match_cpu(int0002_cpu_ids);
-+	if (!cpu_id)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "Error getting IRQ: %d\n", irq);
-+		return irq;
-+	}
-+
-+	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->label = DRV_NAME;
-+	chip->parent = dev;
-+	chip->owner = THIS_MODULE;
-+	chip->get = int0002_gpio_get;
-+	chip->set = int0002_gpio_set;
-+	chip->direction_input = int0002_gpio_get;
-+	chip->direction_output = int0002_gpio_direction_output;
-+	chip->base = -1;
-+	chip->ngpio = GPE0A_PME_B0_VIRT_GPIO_PIN + 1;
-+	chip->irq_need_valid_mask = true;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, chip, NULL);
-+	if (ret) {
-+		dev_err(dev, "Error adding gpio chip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	bitmap_clear(chip->irq_valid_mask, 0, GPE0A_PME_B0_VIRT_GPIO_PIN);
-+
-+	/*
-+	 * We manually request the irq here instead of passing a flow-handler
-+	 * to gpiochip_set_chained_irqchip, because the irq is shared.
-+	 */
-+	ret = devm_request_irq(dev, irq, int0002_irq,
-+			       IRQF_SHARED | IRQF_NO_THREAD, "INT0002", chip);
-+	if (ret) {
-+		dev_err(dev, "Error requesting IRQ %d: %d\n", irq, ret);
-+		return ret;
-+	}
-+
-+	ret = gpiochip_irqchip_add(chip, &int0002_irqchip, 0, handle_edge_irq,
-+				   IRQ_TYPE_NONE);
-+	if (ret) {
-+		dev_err(dev, "Error adding irqchip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	gpiochip_set_chained_irqchip(chip, &int0002_irqchip, irq, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id int0002_acpi_ids[] = {
-+	{ "INT0002", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, int0002_acpi_ids);
-+
-+static struct platform_driver int0002_driver = {
-+	.driver = {
-+		.name			= DRV_NAME,
-+		.acpi_match_table	= int0002_acpi_ids,
-+	},
-+	.probe	= int0002_probe,
-+};
-+
-+module_platform_driver(int0002_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Intel INT0002 Virtual GPIO driver");
-+MODULE_LICENSE("GPL");
--- 
-2.13.0
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgNywgMjAxNyAz
+OjUwIFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwu
+Y29tPg0KPiBDYzogbHV0b0BhbWFjYXBpdGFsLm5ldDsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHBs
+YXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZzsgYW5kcml5LnNoZXZjaGVua29A
+bGludXguaW50ZWwuY29tOyBsdXRvQGtlcm5lbC5vcmc7DQo+IHJqd0Byand5c29ja2kubmV0OyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDE1LzE2XSBwbGF0Zm9ybS94ODY6IHdtaS1tb2Y6IE5ldyBk
+cml2ZXIgdG8gZXhwb3NlDQo+IGVtYmVkZGVkIFdNSSBNT0YgbWV0YWRhdGENCj4gDQo+IE9uIFdl
+ZG5lc2RheSAwNyBKdW5lIDIwMTcgMjI6MjM6MDggTWFyaW8uTGltb25jaWVsbG9AZGVsbC5jb20g
+d3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogUGFs
+aSBSb2jDoXIgW21haWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gPiA+IFNlbnQ6IFdlZG5l
+c2RheSwgSnVuZSA3LCAyMDE3IDEyOjM5IFBNDQo+ID4gPiBUbzogTGltb25jaWVsbG8sIE1hcmlv
+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPiA+IENjOiBsdXRvQGFtYWNhcGl0YWwu
+bmV0OyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgcGxhdGZvcm0tZHJpdmVyLQ0KPiA+ID4geDg2QHZn
+ZXIua2VybmVsLm9yZzsgYW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tOw0KPiA+ID4g
+bHV0b0BrZXJuZWwub3JnOyByandAcmp3eXNvY2tpLm5ldDsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsNCj4gPiA+IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwub3JnIFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMTUvMTZdDQo+ID4gPiBwbGF0Zm9ybS94ODY6IHdtaS1tb2Y6IE5ldyBkcml2ZXIgdG8g
+ZXhwb3NlIGVtYmVkZGVkIFdNSSBNT0YNCj4gPiA+IG1ldGFkYXRhDQo+ID4gPg0KPiA+ID4gT24g
+VHVlc2RheSAwNiBKdW5lIDIwMTcgMTU6NTY6MjEgUGFsaSBSb2jDoXIgd3JvdGU6DQo+ID4gPiA+
+IE9uIFR1ZXNkYXkgMDYgSnVuZSAyMDE3IDEzOjQ2OjE2IE1hcmlvLkxpbW9uY2llbGxvQGRlbGwu
+Y29tIHdyb3RlOg0KPiA+ID4gPiA+IDIpIE9uIG15IHN5c3RlbSB3aGVuIHlvdSBleHBhbmQgdGhl
+IGFyZ3VtZW50cyBmb3IgInZvaWQgRG9CRm4iDQo+ID4gPiA+ID4gdGhlIHNvdXJjZSBkb2Vzbid0
+IGRlc2NyaWJlIGluZGl2aWR1YWwgYXJndW1lbnRzIGxpa2UgeW91IGRvLg0KPiA+ID4gPiA+IEFn
+YWluIHRoaXMgbWlnaHQgbm90IG1hdHRlciB0byBNT0YgcGFyc2luZyB0b29scyBidXQgd2FudGVk
+IHRvDQo+ID4gPiA+ID4gbGV0IHlvdSBrbm93IGluIGNhc2UgaXQgZG9lcy4NCj4gPiA+ID4NCj4g
+PiA+ID4gSSBrbm93LCB0aGlzIHBhcnQgaXMgbWlzc2luZy4gT3JkZXIgb2YgYXJndW1lbnRzIGFy
+ZSBvbmx5IGluIElEDQo+ID4gPiA+IHF1YWxpZmllciBhbmQgbm90IHNvcnRlZCArIGluL291dCBk
+ZS1kdXBsaWNhdGVkLg0KPiA+ID4NCj4gPiA+IEltcGxlbWVudGVkISBOb3cgYXJndW1lbnRzIGFy
+ZSBjb3JyZWN0bHkgcGxhY2VkIGJhc2VkIG9uIElEDQo+ID4gPiBxdWFsaWZpZXIuDQo+ID4NCj4g
+PiBJIHRoaW5rIGl0J3Mgc3RpbGwgb2ZmIGEgbGl0dGxlIHRob3VnaC4NCj4gPg0KPiA+IFdoYXQg
+SSdtIGdldHRpbmcgYmFjayBub3cgZnJvbSBibWYybW9mIGlzOg0KPiA+IAl2b2lkIERvQkZuKFtp
+biwgRGVzY3JpcHRpb24oIkZuIGJ1ZiIpLCBvdXRdIEJEYXQgRGF0YSk7DQo+ID4NCj4gPiBXaGVy
+ZWFzIHNvdXJjZSBwdXRzIERlc2NyaXB0aW9uIGFzIHRoZSBsYXN0IGFyZ3VtZW50Og0KPiA+IAl2
+b2lkIERvQkZuKFtpbiwgb3V0LCBEZXNjcmlwdGlvbigiRm4gYnVmIildIEJEYXQgRGF0YSk7DQo+
+IA0KPiBJbiBCTU9GIGZyb20gbXkgTGF0aXR1ZGUgRTY0NDAgdGhlcmUgYXJlIHNwZWNpZmllZCB0
+d28gcGFyYW1ldGVycyB3aXRoDQo+IGluZGV4IDAuIE9uZSB3aXRoIHF1YWxpZmllcnMgKCJpbiIs
+IERlc2NyaXB0aW9uKCJGbiBidWYiKSkgYW5kIG9uZSB3aXRoDQo+ICgib3V0IiwgRGVzY3JpcHRp
+b24oIkZuIGJ1ZiIpKS4gSSB0aGluayB5b3UgaGF2ZSBzaW1pbGFyL3NhbWUgZGF0YSBpbg0KPiBC
+TU9GLg0KPiANCj4gSW4gbXkgYm1mMm1vZiBJIGp1c3QgY29tYmluZWQgdGhvc2UgdHdvIHBhcmFt
+ZXRlcnMgaW50byBvbmUgKHdoZW4gbmFtZSwNCj4gdHlwZSBhbmQgaW5kZXggbWF0Y2hlcykgYW5k
+IGNvbmNhdGVuYXRlIGFsc28gcXVhbGlmaWVycyB3aXRoIHJlbW92aW5nDQo+IGR1cGxpY2F0ZXMu
+DQo+IA0KPiBEbyBub3Qga25vdyB3aGF0IGlzIGNvcnJlY3Qgd2F5LCBidXQgSSB0aGluayBxdWFs
+aWZpZXJzIGFyZSBqdXN0DQo+IHVub3JkZXJlZCBzZXQuIE1TIGRlY29tcGlsZXIgcHJvYmFibHkg
+cHV0ICJpbiIgYW5kICJvdXQiIHF1YWxpZmllcnMNCj4gYmVmb3JlIGFueSBvdGhlciBmb3IgYmV0
+dGVyIHJlYWRhYmlsaXR5Lg0KDQpIYXZlIHlvdSB0cmllZCB0byBydW4gaXQgdGhyb3VnaCBtb2Zj
+b21wLmV4ZSBhbmQgdGhlbiBkZWNvbXBpbGUgYWdhaW4NCndpdGggYm1mMm1vZj8gIEFzIGxvbmcg
+YXMgaXQncyBjb21pbmcgb3V0IHRoZSBzYW1lIHlvdSdyZSBwcm9iYWJseSByaWdodC4NCg0KPiAN
+Cj4gPiA+ID4gPiBzb3VyY2U6DQo+ID4gPiA+ID4gCXZvaWQgRG9CRm4oW2luLCBvdXQsIERlc2Ny
+aXB0aW9uKCJGbiBidWYiKV0gQkRhdCBEYXRhKTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IGJtZjJt
+b2Y6DQo+ID4gPiA+ID4gCXZvaWQgZG9CRm4oW2luLCBEZXNjcmlwdGlvbigiRm4gYnVmIiksIElE
+KDApXSBCRGF0IERhdGEsIFtvdXQsDQo+ID4gPiA+ID4gCURlc2NyaXB0aW9uKCJGbiBidWYiKSwg
+SUQoMCldIEJEYXQgRGF0YSk7DQo+ID4gPg0KPiA+ID4gLS0NCj4gPiA+IFBhbGkgUm9ow6FyDQo+
+ID4gPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KPiANCj4gLS0NCj4gUGFsaSBSb2jDoXINCj4gcGFs
+aS5yb2hhckBnbWFpbC5jb20NCg==
