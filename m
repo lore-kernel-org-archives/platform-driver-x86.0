@@ -1,71 +1,54 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual
- GPIO device
-Date: Fri, 09 Jun 2017 11:22:32 +0300
-Message-ID: <1496996552.22624.60.camel@linux.intel.com>
-References: <20170602151507.22391-1-hdegoede@redhat.com>
-         <20170602151507.22391-2-hdegoede@redhat.com>
-         <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
-         <20170608154541.GH32509@fury>
-         <d41ff55b-e28f-85bf-d088-392e363fb41f@redhat.com>
-         <CAJZ5v0jw3Rzjkb3J2_XE7TPBjT+7FUW90B7kg15z6_WpdNGjzA@mail.gmail.com>
-         <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
-         <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
+Date: Fri, 9 Jun 2017 10:29:02 +0200
+Message-ID: <20170609082902.GR4690@pali>
+References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
+ <201705271517.30111@pali>
+ <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
+ <201705272248.13257@pali>
+ <CAHp75VdmMwEvho-2tRoYz3CGz2QvLr40G6Nf7wQ76LCtxFjT4g@mail.gmail.com>
+ <20170608151618.GE32509@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:38046 "EHLO
+        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751535AbdFII3F (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 9 Jun 2017 04:29:05 -0400
+Content-Disposition: inline
+In-Reply-To: <20170608151618.GE32509@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, 2017-06-09 at 02:30 +0200, Rafael J. Wysocki wrote:
-> On Thu, Jun 8, 2017 at 7:40 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Jun 8, 2017 at 8:15 PM, Rafael J. Wysocki <rafael@kernel.org
-> > > wrote:
-> > > On Thu, Jun 8, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com
-> > > > wrote:
-> > > > On 06/08/2017 05:45 PM, Darren Hart wrote:
-> > > > > On Wed, Jun 07, 2017 at 05:53:38PM +0300, Andy Shevchenko
-> > > > > wrote:
-> > > > > > On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redh
-> > > > > > at.com>
-> > > > > > wrote:
-> > > > > Will you be taking this through fixes Andy? For a 4.12-rc*
-> > > > > target per
-> > > > > Hans'
-> > > > > response to the cover letter?
-> > > > Note that Rafael is planning to drop (revert) the commit which
-> > > > makes
-> > > > it (extra) desirable for this driver to get into 4.12, so we
-> > > > should
-> > > > perhaps reconsider that. I'm fine either way, but the primary
-> > > > reason
-> > > > to push this as a fix for 4.12 is no longer valid AFAICT.
-> > > 
-> > > Maybe I will just queue it up along with this series:
-> > > http://marc.info/?l=linux-kernel&m=149688087904433&w=2
-> > > if Andy and Darren agree?
+On Thursday 08 June 2017 08:16:18 Darren Hart wrote:
+> On Sat, May 27, 2017 at 11:49:22PM +0300, Andy Shevchenko wrote:
+> > On Sat, May 27, 2017 at 11:48 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > On Saturday 27 May 2017 15:33:14 Andy Shevchenko wrote:
+> > >> On Sat, May 27, 2017 at 4:17 PM, Pali Rohár <pali.rohar@gmail.com>
+> > >> wrote:
 > > 
-> > Looks like it has ties to your series, so, I see no obstacles to go
-> > via PM tree.
+> > >> Okay, got it. But on your opinion does it make sense to do
+> > >>
+> > >> pr_info("\tobject_id: %2pE\n", g->object_id);
+> > >>
+> > >> instead?
+> > >>
+> > >> For ASCII it will go as is previously, otherwise escaping would be
+> > >> done.
+> > >
+> > > Both is OK for me. Do you want to send a new patch with %2pE?
+> > 
+> > To me it looks slightly cleaner.
 > 
-> OK, thanks!
+> I don't want to let this one fall through the cracks. Pali, is a new one coming?
 
-I removed it from our testing branch, feel free to apply any time.
-
-> > Darren?
-> 
-> An ACK or equivalent from Linus W would be good to have too ...
-> 
-
-I was waiting for it about week and decided to proceed w.o. one.
-Linus is overloaded by something, though he appears from time to time in
-mailing lists.
+So.. which modifier to use? Andy already proposed two alternatives and
+basically I'm fine all 3 which are in this thread.
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Pali Rohár
+pali.rohar@gmail.com
