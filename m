@@ -1,96 +1,71 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Fri, 9 Jun 2017 08:41:51 +0200
-Message-ID: <20170609064151.GC17685@kroah.com>
-References: <20170509231639.GB11404@fury>
- <20170510051341.GA17835@kroah.com>
- <20170603195058.GH4854@fury>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual
+ GPIO device
+Date: Fri, 09 Jun 2017 11:22:32 +0300
+Message-ID: <1496996552.22624.60.camel@linux.intel.com>
+References: <20170602151507.22391-1-hdegoede@redhat.com>
+         <20170602151507.22391-2-hdegoede@redhat.com>
+         <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
+         <20170608154541.GH32509@fury>
+         <d41ff55b-e28f-85bf-d088-392e363fb41f@redhat.com>
+         <CAJZ5v0jw3Rzjkb3J2_XE7TPBjT+7FUW90B7kg15z6_WpdNGjzA@mail.gmail.com>
+         <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
+         <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170603195058.GH4854@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jun 03, 2017 at 12:50:58PM -0700, Darren Hart wrote:
-> On Wed, May 10, 2017 at 07:13:41AM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, May 09, 2017 at 04:16:39PM -0700, Darren Hart wrote:
-> > > Linus and Greg,
+On Fri, 2017-06-09 at 02:30 +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 8, 2017 at 7:40 PM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Jun 8, 2017 at 8:15 PM, Rafael J. Wysocki <rafael@kernel.org
+> > > wrote:
+> > > On Thu, Jun 8, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com
+> > > > wrote:
+> > > > On 06/08/2017 05:45 PM, Darren Hart wrote:
+> > > > > On Wed, Jun 07, 2017 at 05:53:38PM +0300, Andy Shevchenko
+> > > > > wrote:
+> > > > > > On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redh
+> > > > > > at.com>
+> > > > > > wrote:
+> > > > > Will you be taking this through fixes Andy? For a 4.12-rc*
+> > > > > target per
+> > > > > Hans'
+> > > > > response to the cover letter?
+> > > > Note that Rafael is planning to drop (revert) the commit which
+> > > > makes
+> > > > it (extra) desirable for this driver to get into 4.12, so we
+> > > > should
+> > > > perhaps reconsider that. I'm fine either way, but the primary
+> > > > reason
+> > > > to push this as a fix for 4.12 is no longer valid AFAICT.
 > > > 
-> > > We are in the process of redesigning the Windows Management Instrumentation
-> > > (WMI) [1] system in the kernel. WMI is the Microsoft implementation of Web-Based
-> > > Enterprise Management (WBEM). We are looking to provide WMI access to userspace,
-> > > while allowing the kernel to filter requests that conflict with its own usage.
-> > > We'd like your take on how this approach relates to our commitment to not break
-> > > userspace.
-> > > 
-> > > For this discussion, we are specifically referring to ACPI PNP0C14 WMI
-> > > devices, consisting of a GUID and a set of methods and events, as well as a
-> > > precompiled intermediate description of the methods and arguments (MOF). Exposed
-> > > to userspace, these methods provide for BIOS interaction and are used for system
-> > > management as well as LEDs, hot keys, radio switches, etc. There is vendor
-> > > interest in achieving feature parity with Windows by exposing WMI methods to
-> > > userspace for system management.
-> > > 
-> > > While it appears WMI intended to be accessed from userspace, we have
-> > > made use of it in the kernel to support various laptop features by connecting
-> > > the WMI methods to other subsystems, notably input, leds, and rfkill [2]. The
-> > > challenge is continuing to use WMI for these platform features, while allowing
-> > > userspace to use it for system management tasks. Unfortunately, the WMI methods
-> > > are not guaranteed to be split up along granular functional lines, and we will
-> > > certainly face situations where the same GUID::METHOD_ID will be needed for a
-> > > kernel feature (say LED support) as well as a system management task.
-> > > 
-> > > To address this, I have proposed [3] that exporting WMI be opt-in, only done at
-> > > the request of and in collaboration with a vendor, with the kernel platform
-> > > driver given the opportunity to filter requests. This filtering would need to be
-> > > at the method and argument inspection level, such as checking for specific bits
-> > > in the input buffer, and rejecting the request if they conflict with an in
-> > > kernel usage (that's worst case, in some cases just GUID or method ID could be
-> > > sufficient).
-> > > 
-> > > Because the kernel and the platform drivers are under continual development, and
-> > > new systems appear regularly, we will encounter necessary changes to the
-> > > platform driver WMI request filters. These changes could be considered a change
-> > > to the kernel provided WMI interface to userspace. For example, we could
-> > > regularly accept a call to $GUID::$METHOD_ID with bit 4 of the buffer set, and
-> > > later deny the call when we determine it interferes with kernel usage.
-> > > 
-> > > In your view, is it acceptable to provide a chardev interface, for example,
-> > > exposing WMI methods to userspace, with the understanding that the kernel may
-> > > choose to filter certain requests which conflict with its own use? And that this
-> > > filtering may change as new features are added to the platform drivers?
+> > > Maybe I will just queue it up along with this series:
+> > > http://marc.info/?l=linux-kernel&m=149688087904433&w=2
+> > > if Andy and Darren agree?
 > > 
-> > So, for example, if a new driver for a "brightness key" were added to
-> > the kernel, all of a sudden the "raw" access to the wmi data through the
-> > chardev would filtered away by the kernel and not seen by userspace?
-> > 
-> > Why would you want to do that?  What's wrong with providing "raw" access
-> > through a chardev, and the current in-kernel access as well at the same
-> > time?
-> > 
-> > I don't really understand what would "break" over time here.
-> > 
+> > Looks like it has ties to your series, so, I see no obstacles to go
+> > via PM tree.
 > 
-> Just a bump now that we're out of the merge window in case either Greg or Linus
-> care to follow up with the responses to this.
+> OK, thanks!
+
+I removed it from our testing branch, feel free to apply any time.
+
+> > Darren?
 > 
-> To Greg's last point - any kernel state that is built up in conjunction with the
-> WMI interface could be invalidated by a userspace application. It may or may not
-> be recoverable, depending on the WMI implementation. This would be true for
-> multiple WMI userspace applications as well, and I suppose the question is, do
-> we defend the kernel drivers against this, or do we consider the kernel drivers
-> on equal footing with WMI applications, and say "don't do that then" when some
-> combination of apps and drivers don't play well together?
+> An ACK or equivalent from Linus W would be good to have too ...
+> 
 
-In the end, this shouldn't really matter, as long as nothing breaks as
-far as a user notices.  And that's the key here, apis can change, but if
-you do it in a way that breaks something, or anyone notices, then it's
-not ok.
+I was waiting for it about week and decided to proceed w.o. one.
+Linus is overloaded by something, though he appears from time to time in
+mailing lists.
 
-So I don't have a solid answer other than "good luck!" :)
-
-greg k-h
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
