@@ -1,84 +1,149 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] drm/amdgpu: resize VRAM BAR for CPU access v2
-Date: Fri, 9 Jun 2017 10:59:38 +0200
-Message-ID: <55fb9500-5062-78ea-93c3-0f3e850dd31f@vodafone.de>
-References: <1494348547-1465-1-git-send-email-deathsimple@vodafone.de>
- <1494348547-1465-6-git-send-email-deathsimple@vodafone.de>
- <20170601201430.GC12257@bhelgaas-glaptop.roam.corp.google.com>
- <72e061a5-9684-06e2-3021-80de8ca97bd7@vodafone.de>
- <20170602202631.GA1452@bhelgaas-glaptop.roam.corp.google.com>
- <779a883a-265a-ae04-b0cd-8cb3599f0dc0@vodafone.de>
- <20170606231019.GC12672@bhelgaas-glaptop.roam.corp.google.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual
+ GPIO device
+Date: Fri, 09 Jun 2017 12:18:08 +0300
+Message-ID: <1496999888.22624.75.camel@linux.intel.com>
+References: <20170602151507.22391-1-hdegoede@redhat.com>
+         <20170602151507.22391-2-hdegoede@redhat.com>
+         <CACRpkdYmu34BLvSGR840+psUVwgqe1v+mBzPyKQj25R7HTQnpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20170606231019.GC12672-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alex Deucher <alexander.deucher-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYmu34BLvSGR840+psUVwgqe1v+mBzPyKQj25R7HTQnpw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-QW0gMDcuMDYuMjAxNyB1bSAwMToxMCBzY2hyaWViIEJqb3JuIEhlbGdhYXM6Cj4gW1NOSVBdCj4g
-V2hhdCBpZiB0aGUgZHJpdmVyIGRpZCBzb21ldGhpbmcgbGlrZSB0aGlzOgo+Cj4gICAgcGNpX2Rp
-c2FibGVfZGVjb2RpbmcoZGV2LCBJT1JFU09VUkNFX01FTSk7Cj4gICAgcGNpX3JlbGVhc2VfcmVz
-b3VyY2UoZGV2LCAyKTsKPiAgICBwY2lfcmVzaXplX2JhcihkZXYsIGJhciwgc2l6ZSk7Cj4gICAg
-cGNpX2Fzc2lnbl9yZXNvdXJjZXMoZGV2KTsKPiAgICBwY2lfZW5hYmxlX2RlY29kaW5nKGRldiwg
-SU9SRVNPVVJDRV9NRU0pOwo+Cj4gVGhhdCB3b3VsZCByZXF1aXJlIGFkZGluZyBwY2lfZW5hYmxl
-L2Rpc2FibGVfZGVjb2RpbmcoKSB0byB0aGUgZHJpdmVyCj4gQVBJLCBhbG9uZyB3aXRoIHRoZSBy
-ZXF1aXJlbWVudCB0aGF0IHRoZSBkcml2ZXIgZGlzY2FyZCBhbmQgcmVtYXAKPiBzb21lIHJlc291
-cmNlcyBhZnRlciBwY2lfZW5hYmxlX2RlY29kaW5nKCkuICBJIHRoaW5rCj4gcGNpX2VuYWJsZV9k
-ZWNvZGluZygpIHdvdWxkIGxvb2sgbXVjaCBsaWtlIHRoZSBleGlzdGluZwo+IHBjaV9lbmFibGVf
-cmVzb3VyY2VzKCkgZXhjZXB0IHRha2luZyBhIHJlc291cmNlIHR5cGUgaW5zdGVhZCBvZiBhCj4g
-Yml0bWFzay4KClRoaXMgaXMgcHJldHR5IGNsb3NlIHRvIHdoYXQgd2UgYWxyZWFkeSBkby4gSSdt
-IGdvaW5nIHRvIHNlbmQgb3V0IGFuIAp1cGRhdGVkIHZlcnNpb24gb2YgdGhlIHBhdGNoIGluIGEg
-bWludXRlLgoKT25lIGRpZmZlcmVuY2UgdGhhdCBJIHN0aWxsIGhhdmUgaW4gdGhpcyBwYXRjaCBp
-cwo+ICsgICAgICAgcGNpX3JlYWRfY29uZmlnX3dvcmQoYWRldi0+cGRldiwgUENJX0NPTU1BTkQs
-ICZjbWQpOwo+ICsgICAgICAgcGNpX3dyaXRlX2NvbmZpZ193b3JkKGFkZXYtPnBkZXYsIFBDSV9D
-T01NQU5ELAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNtZCAmIH5QQ0lfQ09NTUFO
-RF9NRU1PUlkpOwppbiB0aGUgZHJpdmVyIGluc3RlYWQgb2YgInBjaV9kaXNhYmxlX2RlY29kaW5n
-KGRldiwgSU9SRVNPVVJDRV9NRU0pOyIKCkkgdGhvdWdodCB0aGF0IGludHJvZHVjaW5nIGEgbmV3
-IGludGVyZmFjZSBmb3IgdGhpcyB0d28gbGluZXMgd291bGQgYmUgCm92ZXJraWxsLCBidXQgaWYg
-eW91IGZpbmQgaXQgY2xlYW5lciB0byBhZGQgdGhlIG5ldyBpbnRlcmZhY2UgSSBjYW4gCmNoYW5n
-ZSB0aGF0LgoKPiBJIHdvdWxkICpwcmVmZXIqIGlmIHdlIHJlbGVhc2VkIGFuZCByZWFzc2lnbmVk
-IGFsbCByZXNvdXJjZXMsIGJlY2F1c2UKPiB0aGVuIHRoZSBjb3JlIGhhcyBjb21wbGV0ZSBmbGV4
-aWJpbGl0eSB0byBtb3ZlIHRoaW5ncyBhcm91bmQsIGFuZCBpdCdzCj4gZWFzeSB0byBkb2N1bWVu
-dCB0aGF0IHBjaV9hc3NpZ25fcmVzb3VyY2VzKCkgbWVhbnMgeW91IGhhdmUgdG8KPiByZXJlYWQv
-cmVtYXAgZXZlcnl0aGluZy4KSSd2ZSB0cmllZCB0aGlzIGFuZCBpdCBkb2Vzbid0IHdvcmsgYXQg
-YWxsLCBzdXJwcmlzaW5nbHkgdGhlIEkvTyBwb3J0cyAKdHVybmVkIG91dCB0byBiZSBub3QgdGhl
-IGZpcnN0IHByb2JsZW0gSSd2ZSByYW4gaW50by4KClJlbGVhc2luZyBhbGwgcmVzb3VyY2VzIG1l
-YW5zIHRoYXQgd2UgYWxzbyB0cnkgdG8gcmVsZWFzZSB0aGUgCjB4YTAwMC0weGJmZmZmIChWR0Ep
-IGFuZCAweGMwMDAwLTB4ZGZmZmYgKFZCSU9TKSByYW5nZXMuCgpUaGV5IGNhbiBiZSByZWFzc2ln
-bmVkLCBidXQgc29tZWhvdyB0aGF0IHNlZW1zIHRvIGNhdXNlIHByb2JsZW1zIGxhdGVyIG9uLgoK
-PiBJZiB0aGUgZHJpdmVyIG9ubHkgcmVsZWFzZXMgc3BlY2lmaWVkIEJBUnMsIHRoZSBwY2lfYXNz
-aWduX3Jlc291cmNlcygpCj4gaW50ZXJmYWNlIGJlY29tZXMgInlvdSBuZWVkIHRvIHJlcmVhZC9y
-ZW1hcCB0aGUgQkFSIHlvdSByZXNpemVkLCBwbHVzCj4gYW55IG90aGVyIEJBUnMgeW91IHJlbGVh
-c2VkIi4gIEl0J3MgYSBsaXR0bGUgbW9yZSBjb21wbGljYXRlZCB0bwo+IGRlc2NyaWJlIGFuZCBt
-b3JlIGRlcGVuZGVudCBvbiBwcmV2aW91cyBkcml2ZXIgYWN0aW9ucy4KSG93IGFib3V0IHRoZSBk
-cml2ZXIgcmVsZWFzZXMgYWxsIHJlc291cmNlcyBpdCB3YW50cyB0byBtb3ZlLCBpbmNsdWRpbmcg
-CnRoZSByZXNpemVkIGFuZCByZWFsbG9jYXRlcyB0aGVtIGFmdGVyIHRoZSByZXNpemUgaXMgZG9u
-ZT8KCj4KPiBCdXQgcmVsZWFzaW5nIG9ubHkgdGhlIHNwZWNpZmllZCBCQVIgd2lsbCBtYWtlIHlv
-dXIgbGlmZSBlYXNpZXIgYW5kCj4gaGVscCB3aXRoIHRoZSBmYWN0IHRoYXQgbXVsdGlwbGUgZHJp
-dmVycyBtaWdodCBiZSB1c2luZyB0aGUgc2FtZSBCQVIKPiAoSSBoYXZlIHRvIHJhaXNlIG15IGV5
-ZWJyb3dzIGF0IHRoYXQpLCBzbyBJIHRoaW5rIEknbSBPSyB3aXRoIGl0LiAgQW5kCj4gaXQgd291
-bGQgYWxzbyBzaWRlLXN0ZXAgdGhlICJjYW4ndCByZXN0b3JlIHByZXZpb3VzIHN0YXRlIiBwcm9i
-bGVtLgpJIGFncmVlIHRoYXQgaXQgaXMgYSBiaXQgbW9yZSBkb2N1bWVudGF0aW9uIHdvcmsgdG8g
-ZGVzY3JpYmUgaG93IHRoZSAKaW50ZXJmYWNlIHdvcmtzLCBidXQgaXQgaXMgY2xlYXJseSBsZXNz
-IHByb2JsZW1hdGljIGR1cmluZyBydW50aW1lLgoKUGxlYXNlIHRha2UgYSBsb29rIGF0IHRoZSBu
-ZXcgdmVyc2lvbiBvZiB0aGUgcGF0Y2hlcyBhbmQgbGV0IG1lIGtub3cgCndoYXQgeW91IHRoaW5r
-LgoKUmVnYXJkcywKQ2hyaXN0aWFuLgoKPgo+IEl0J3MgYW4gImludGVyZXN0aW5nIiBhc3ltbWV0
-cnkgdGhhdCBwY2lfZW5hYmxlX2RldmljZSgpIHR1cm5zIG9uIEJBUgo+IGRlY29kaW5nIGJ1dCBk
-b2Vzbid0IHRvdWNoIGJ1cyBtYXN0ZXJpbmcsIHdoaWxlIHBjaV9kaXNhYmxlX2RldmljZSgpCj4g
-dHVybnMgb2ZmIGJ1cyBtYXN0ZXJpbmcgYnV0IGRvZXNuJ3QgdG91Y2ggQkFSIGRlY29kaW5nLgo+
-Cj4gQmpvcm4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwphbWQtZ2Z4IG1haWxpbmcgbGlzdAphbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2FtZC1nZngK
+On Fri, 2017-06-09 at 11:02 +0200, Linus Walleij wrote:
+> On Fri, Jun 2, 2017 at 5:15 PM, Hans de Goede <hdegoede@redhat.com>
+> wrote:
+> 
+> > Some peripherals on Bay Trail and Cherry Trail platforms signal a
+> > Power Management Event (PME) to the Power Management Controller
+> > (PMC)
+> > to wakeup the system. When this happens software needs to explicitly
+> > clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+> > IRQ storm on IRQ 9.
+> > 
+> > This is modelled in ACPI through the INT0002 ACPI device, which is
+> > called a "Virtual GPIO controller" in ACPI because it defines the
+> > event handler to call when the PME triggers through _AEI and _L02
+> > methods as would be done for a real GPIO interrupt in ACPI.
+> > 
+> > This commit adds a driver which registers the Virtual GPIOs expected
+> > by the DSDT on these devices, letting gpiolib-acpi claim the
+> > virtual GPIO and install a GPIO-interrupt handler which call the
+> > _L02
+> > handler as it would for a real GPIO controller.
+> > 
+> > Cc: joeyli <jlee@suse.com>
+> > Cc: Takashi Iwai <tiwai@suse.de>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> > Changes in v2:
+> > -Remove dev_err after malloc failure
+> > -Remove unused empty runtime pm callbacks
+> > -s/GPE0A_PME_/GPE0A_PME_B0_/
+> > -Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
+> > Changes in v3:
+> > -Rewrite as gpiochip driver letting gpiolib-acpi deal with claiming
+> > the pin
+> >  0x0002 and calling the _L02 event handler when the virtual gpio-irq 
+> > triggers
+> > -Rebase on 4.12-rc1
+> > Changes in v4:
+> > -Drop device_init_wakeup() from _probe(), use pm_system_wakeup()
+> > instead
+> >  of pm_wakeup_hard_event(chip->parent)
+> > -Improve commit message
+> > Changes in v5:
+> > -Use BIT() macro for FOO_BIT defines
+> > -Drop unneeded ACPI_PTR macro usage
+> > Changes in v6:
+> > -Move back to drivers/platform/x86
+> > -Expand certain acronyms (PME, PMC)
+> > -Use linux/gpio/driver.h include instead of linux/gpio.h
+> > -Document why the get / set / direction_output functions are dummys
+> > -No functional changes
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> With Andy's changes.
+
+Oops, when I removed this from PDx86 testing branch I removed my changes
+together.
+
+Here they are (Hans, perhaps you may resend with them included)
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -30,9 +30,8 @@
+  * for a real GPIO controller.
+  */
+
+-#include <asm/cpu_device_id.h>
+-#include <asm/intel-family.h>
+ #include <linux/acpi.h>
++#include <linux/bitmap.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+@@ -42,6 +41,9 @@
+ #include <linux/slab.h>
+ #include <linux/suspend.h>  
+
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
++
+ #define DRV_NAME                       "INT0002 Virtual GPIO"
+
+ /* For some reason the virtual GPIO pin tied to the GPE is numbered pin
+2 */
+@@ -66,7 +68,7 @@ static const struct x86_cpu_id int0002_cpu_ids[] = {
+
+ /*
+  * As this is not a real GPIO at all, but just a hack to model an event
+in
+- * APCI the get / set functions are dummy functions.
++ * ACPI the get / set functions are dummy functions.
+  */
+
+ static int int0002_gpio_get(struct gpio_chip *chip, unsigned int
+offset)
+@@ -137,7 +139,7 @@ static int int0002_probe(struct platform_device
+*pdev)
+        struct device *dev = &pdev->dev;
+        const struct x86_cpu_id *cpu_id;
+        struct gpio_chip *chip;
+-       int i, irq, ret;
++       int irq, ret;
+
+        /* Menlow has a different INT0002 device? <sigh> */
+        cpu_id = x86_match_cpu(int0002_cpu_ids);
+@@ -171,8 +173,7 @@ static int int0002_probe(struct platform_device
+*pdev)
+                return ret;
+        }
+
+-       for (i = 0; i < GPE0A_PME_B0_VIRT_GPIO_PIN; i++)
+-               clear_bit(i, chip->irq_valid_mask);
++       bitmap_clear(chip->irq_valid_mask, 0,
+GPE0A_PME_B0_VIRT_GPIO_PIN);
+
+        /*
+         * We manually request the irq here instead of passing a flow-
+handler
+
+> 
+> Please feel free to push this upstream through the platform tree
+> or similar.
+> 
+> Yours,
+> Linus Walleij
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
