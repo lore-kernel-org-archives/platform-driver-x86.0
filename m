@@ -1,39 +1,90 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 09/11] platform: thinkpad_acpi: convert to use
- DRIVER_ATTR_RO/RW
-Date: Fri, 9 Jun 2017 12:02:25 +0200
-Message-ID: <20170609100225.GA1297@kroah.com>
-References: <20170609090314.13991-1-gregkh@linuxfoundation.org>
- <20170609090314.13991-9-gregkh@linuxfoundation.org>
- <CAHp75VfG1OuX=FtUc79YburcCxwM3Su3j3M=0ijnU+AM8KV==A@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 5/6] drm/amdgpu: move hw generation check into amdgpu_doorbell_init
+Date: Fri, 9 Jun 2017 13:14:02 +0300
+Message-ID: <CAHp75Vfq2WwMT1tGu8VWmd5ZfWc7HCjh6PxpsXtjY8a3eoXH-g@mail.gmail.com>
+References: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de> <1496998787-6371-6-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:49778 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751515AbdFIKCe (ORCPT
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:33493 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751536AbdFIKOE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2017 06:02:34 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfG1OuX=FtUc79YburcCxwM3Su3j3M=0ijnU+AM8KV==A@mail.gmail.com>
+        Fri, 9 Jun 2017 06:14:04 -0400
+In-Reply-To: <1496998787-6371-6-git-send-email-deathsimple@vodafone.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org
 
-On Fri, Jun 09, 2017 at 12:35:35PM +0300, Andy Shevchenko wrote:
-> On Fri, Jun 9, 2017 at 12:03 PM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > We are trying to get rid of DRIVER_ATTR(), and the thinkpad_acpi
-> > driver's attributes can be trivially changed to use DRIVER_ATTR_RO() and
-> > DRIVER_ATTR_RW().
-> 
-> Which tree is it supposed to go through?
-> We might need an immutable tag / branch.
+On Fri, Jun 9, 2017 at 11:59 AM, Christian K=C3=B6nig
+<deathsimple@vodafone.de> wrote:
+> From: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> This way we can savely call it on SI as well.
 
-I can take it in my tree, sorry for not saying that in a 00/11 email, I
-forgot that for this series.
+s/savely/safely
 
-thanks,
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-greg k-h
+> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm=
+/amd/amdgpu/amdgpu_device.c
+> index a7d6804..99290af 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -419,6 +419,15 @@ void amdgpu_pci_config_reset(struct amdgpu_device *a=
+dev)
+>   */
+>  static int amdgpu_doorbell_init(struct amdgpu_device *adev)
+>  {
+> +       /* No doorbell on SI hardware generation */
+> +       if (adev->asic_type < CHIP_BONAIRE) {
+> +               adev->doorbell.base =3D 0;
+> +               adev->doorbell.size =3D 0;
+> +               adev->doorbell.num_doorbells =3D 0;
+> +               adev->doorbell.ptr =3D NULL;
+> +               return 0;
+> +       }
+> +
+>         /* doorbell bar mapping */
+>         adev->doorbell.base =3D pci_resource_start(adev->pdev, 2);
+>         adev->doorbell.size =3D pci_resource_len(adev->pdev, 2);
+> @@ -2136,9 +2145,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>         DRM_INFO("register mmio base: 0x%08X\n", (uint32_t)adev->rmmio_ba=
+se);
+>         DRM_INFO("register mmio size: %u\n", (unsigned)adev->rmmio_size);
+>
+> -       if (adev->asic_type >=3D CHIP_BONAIRE)
+> -               /* doorbell bar mapping */
+> -               amdgpu_doorbell_init(adev);
+> +       /* doorbell bar mapping */
+> +       amdgpu_doorbell_init(adev);
+>
+>         /* io port mapping */
+>         for (i =3D 0; i < DEVICE_COUNT_RESOURCE; i++) {
+> @@ -2335,8 +2343,7 @@ void amdgpu_device_fini(struct amdgpu_device *adev)
+>         adev->rio_mem =3D NULL;
+>         iounmap(adev->rmmio);
+>         adev->rmmio =3D NULL;
+> -       if (adev->asic_type >=3D CHIP_BONAIRE)
+> -               amdgpu_doorbell_fini(adev);
+> +       amdgpu_doorbell_fini(adev);
+>         amdgpu_debugfs_regs_cleanup(adev);
+>  }
+>
+> --
+> 2.7.4
+>
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
