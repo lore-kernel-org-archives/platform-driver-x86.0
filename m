@@ -1,90 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 5/6] drm/amdgpu: move hw generation check into amdgpu_doorbell_init
-Date: Fri, 9 Jun 2017 13:14:02 +0300
-Message-ID: <CAHp75Vfq2WwMT1tGu8VWmd5ZfWc7HCjh6PxpsXtjY8a3eoXH-g@mail.gmail.com>
-References: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de> <1496998787-6371-6-git-send-email-deathsimple@vodafone.de>
+Subject: Re: [PATCH v2] dell-rbtn: constify rfkill_ops structures
+Date: Fri, 9 Jun 2017 13:25:20 +0300
+Message-ID: <CAHp75VeY-FHG7EZ4KYjB=upz-Hi-tHBp5fWqWqhvm0d-SqSVMw@mail.gmail.com>
+References: <1496987860-28818-1-git-send-email-bhumirks@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:33493 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751536AbdFIKOE (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:33638 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751531AbdFIKZW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2017 06:14:04 -0400
-In-Reply-To: <1496998787-6371-6-git-send-email-deathsimple@vodafone.de>
+        Fri, 9 Jun 2017 06:25:22 -0400
+In-Reply-To: <1496987860-28818-1-git-send-email-bhumirks@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org
+To: Bhumika Goyal <bhumirks@gmail.com>
+Cc: Julia Lawall <julia.lawall@lip6.fr>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, Jun 9, 2017 at 11:59 AM, Christian K=C3=B6nig
-<deathsimple@vodafone.de> wrote:
-> From: Christian K=C3=B6nig <christian.koenig@amd.com>
+On Fri, Jun 9, 2017 at 8:57 AM, Bhumika Goyal <bhumirks@gmail.com> wrote:
+> Add const to rfkill_ops structures that are only passed as an argument
+> to the functions rfkill_alloc or samsung_new_rfkill. These arguments are
+> of type const, so such structures can be annotated with const.
 >
-> This way we can savely call it on SI as well.
 
-s/savely/safely
+All three pushed to testing, thanks
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+> Changes since v1:
+> * Split the changes to one patch per vendor.
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm=
-/amd/amdgpu/amdgpu_device.c
-> index a7d6804..99290af 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -419,6 +419,15 @@ void amdgpu_pci_config_reset(struct amdgpu_device *a=
-dev)
->   */
->  static int amdgpu_doorbell_init(struct amdgpu_device *adev)
->  {
-> +       /* No doorbell on SI hardware generation */
-> +       if (adev->asic_type < CHIP_BONAIRE) {
-> +               adev->doorbell.base =3D 0;
-> +               adev->doorbell.size =3D 0;
-> +               adev->doorbell.num_doorbells =3D 0;
-> +               adev->doorbell.ptr =3D NULL;
-> +               return 0;
-> +       }
-> +
->         /* doorbell bar mapping */
->         adev->doorbell.base =3D pci_resource_start(adev->pdev, 2);
->         adev->doorbell.size =3D pci_resource_len(adev->pdev, 2);
-> @@ -2136,9 +2145,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
->         DRM_INFO("register mmio base: 0x%08X\n", (uint32_t)adev->rmmio_ba=
-se);
->         DRM_INFO("register mmio size: %u\n", (unsigned)adev->rmmio_size);
+>  drivers/platform/x86/dell-rbtn.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> -       if (adev->asic_type >=3D CHIP_BONAIRE)
-> -               /* doorbell bar mapping */
-> -               amdgpu_doorbell_init(adev);
-> +       /* doorbell bar mapping */
-> +       amdgpu_doorbell_init(adev);
->
->         /* io port mapping */
->         for (i =3D 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> @@ -2335,8 +2343,7 @@ void amdgpu_device_fini(struct amdgpu_device *adev)
->         adev->rio_mem =3D NULL;
->         iounmap(adev->rmmio);
->         adev->rmmio =3D NULL;
-> -       if (adev->asic_type >=3D CHIP_BONAIRE)
-> -               amdgpu_doorbell_fini(adev);
-> +       amdgpu_doorbell_fini(adev);
->         amdgpu_debugfs_regs_cleanup(adev);
+> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+> index dcd9f40..6b5bbaf 100644
+> --- a/drivers/platform/x86/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell-rbtn.c
+> @@ -110,7 +110,7 @@ static int rbtn_rfkill_set_block(void *data, bool blocked)
+>         return -EINVAL;
 >  }
 >
+> -static struct rfkill_ops rbtn_ops = {
+> +static const struct rfkill_ops rbtn_ops = {
+>         .query = rbtn_rfkill_query,
+>         .set_block = rbtn_rfkill_set_block,
+>  };
 > --
 > 2.7.4
 >
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
