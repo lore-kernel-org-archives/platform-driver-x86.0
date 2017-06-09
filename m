@@ -1,75 +1,42 @@
-From: <susan.christian@state.sd.us>
-Subject: (unknown)
-Date: Fri, 09 Jun 2017 00:39:18 -0000
-Message-ID: <149696875887.29697.1554682546255156975@is74.ru>
-Mime-Version: 1.0
-Content-Type: application/zip; name="577788.zip"
-Content-Transfer-Encoding: base64
+From: Bhumika Goyal <bhumirks@gmail.com>
+Subject: [PATCH v2] dell-rbtn: constify rfkill_ops structures
+Date: Fri,  9 Jun 2017 11:27:40 +0530
+Message-ID: <1496987860-28818-1-git-send-email-bhumirks@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pool-37-140-41-223.is74.ru ([37.140.41.223]:39324 "HELO is74.ru"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751428AbdFIAjY (ORCPT
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:35842 "EHLO
+        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751499AbdFIF7Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jun 2017 20:39:24 -0400
-Content-Disposition: attachment
-Subject: 
+        Fri, 9 Jun 2017 01:59:16 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: julia.lawall@lip6.fr, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bhumika Goyal <bhumirks@gmail.com>
 
-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
-AQABAE4AAADpCwAAAAA=
+Add const to rfkill_ops structures that are only passed as an argument
+to the functions rfkill_alloc or samsung_new_rfkill. These arguments are
+of type const, so such structures can be annotated with const.
+
+Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
+---
+Changes since v1:
+* Split the changes to one patch per vendor.
+
+ drivers/platform/x86/dell-rbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+index dcd9f40..6b5bbaf 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -110,7 +110,7 @@ static int rbtn_rfkill_set_block(void *data, bool blocked)
+ 	return -EINVAL;
+ }
+ 
+-static struct rfkill_ops rbtn_ops = {
++static const struct rfkill_ops rbtn_ops = {
+ 	.query = rbtn_rfkill_query,
+ 	.set_block = rbtn_rfkill_set_block,
+ };
+-- 
+2.7.4
