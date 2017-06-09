@@ -1,54 +1,70 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform/x86: wmi: Fix printing info about WDG structure
-Date: Fri, 9 Jun 2017 10:29:02 +0200
-Message-ID: <20170609082902.GR4690@pali>
-References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com>
- <201705271517.30111@pali>
- <CAHp75VfkudDRNTh9dR=y4G5HD+OaPoxjxVZgw6=9-YpOn4sJSA@mail.gmail.com>
- <201705272248.13257@pali>
- <CAHp75VdmMwEvho-2tRoYz3CGz2QvLr40G6Nf7wQ76LCtxFjT4g@mail.gmail.com>
- <20170608151618.GE32509@fury>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
+Date: Fri, 9 Jun 2017 11:02:37 +0200
+Message-ID: <CACRpkdYmu34BLvSGR840+psUVwgqe1v+mBzPyKQj25R7HTQnpw@mail.gmail.com>
+References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:38046 "EHLO
-        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751535AbdFII3F (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2017 04:29:05 -0400
-Content-Disposition: inline
-In-Reply-To: <20170608151618.GE32509@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170602151507.22391-2-hdegoede@redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 08 June 2017 08:16:18 Darren Hart wrote:
-> On Sat, May 27, 2017 at 11:49:22PM +0300, Andy Shevchenko wrote:
-> > On Sat, May 27, 2017 at 11:48 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > On Saturday 27 May 2017 15:33:14 Andy Shevchenko wrote:
-> > >> On Sat, May 27, 2017 at 4:17 PM, Pali Rohár <pali.rohar@gmail.com>
-> > >> wrote:
-> > 
-> > >> Okay, got it. But on your opinion does it make sense to do
-> > >>
-> > >> pr_info("\tobject_id: %2pE\n", g->object_id);
-> > >>
-> > >> instead?
-> > >>
-> > >> For ASCII it will go as is previously, otherwise escaping would be
-> > >> done.
-> > >
-> > > Both is OK for me. Do you want to send a new patch with %2pE?
-> > 
-> > To me it looks slightly cleaner.
-> 
-> I don't want to let this one fall through the cracks. Pali, is a new one coming?
+On Fri, Jun 2, 2017 at 5:15 PM, Hans de Goede <hdegoede@redhat.com> wrote:
 
-So.. which modifier to use? Andy already proposed two alternatives and
-basically I'm fine all 3 which are in this thread.
+> Some peripherals on Bay Trail and Cherry Trail platforms signal a
+> Power Management Event (PME) to the Power Management Controller (PMC)
+> to wakeup the system. When this happens software needs to explicitly
+> clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+> IRQ storm on IRQ 9.
+>
+> This is modelled in ACPI through the INT0002 ACPI device, which is
+> called a "Virtual GPIO controller" in ACPI because it defines the
+> event handler to call when the PME triggers through _AEI and _L02
+> methods as would be done for a real GPIO interrupt in ACPI.
+>
+> This commit adds a driver which registers the Virtual GPIOs expected
+> by the DSDT on these devices, letting gpiolib-acpi claim the
+> virtual GPIO and install a GPIO-interrupt handler which call the _L02
+> handler as it would for a real GPIO controller.
+>
+> Cc: joeyli <jlee@suse.com>
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> Changes in v2:
+> -Remove dev_err after malloc failure
+> -Remove unused empty runtime pm callbacks
+> -s/GPE0A_PME_/GPE0A_PME_B0_/
+> -Fixed some checkpatch warnings (I forgot to run checkpatch on v1)
+> Changes in v3:
+> -Rewrite as gpiochip driver letting gpiolib-acpi deal with claiming the pin
+>  0x0002 and calling the _L02 event handler when the virtual gpio-irq triggers
+> -Rebase on 4.12-rc1
+> Changes in v4:
+> -Drop device_init_wakeup() from _probe(), use pm_system_wakeup() instead
+>  of pm_wakeup_hard_event(chip->parent)
+> -Improve commit message
+> Changes in v5:
+> -Use BIT() macro for FOO_BIT defines
+> -Drop unneeded ACPI_PTR macro usage
+> Changes in v6:
+> -Move back to drivers/platform/x86
+> -Expand certain acronyms (PME, PMC)
+> -Use linux/gpio/driver.h include instead of linux/gpio.h
+> -Document why the get / set / direction_output functions are dummys
+> -No functional changes
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+With Andy's changes.
+
+Please feel free to push this upstream through the platform tree
+or similar.
+
+Yours,
+Linus Walleij
