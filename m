@@ -1,226 +1,42 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 09/11] platform: thinkpad_acpi: convert to use DRIVER_ATTR_RO/RW
-Date: Fri,  9 Jun 2017 11:03:12 +0200
-Message-ID: <20170609090314.13991-9-gregkh@linuxfoundation.org>
-References: <20170609090314.13991-1-gregkh@linuxfoundation.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170609090314.13991-1-gregkh@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
+Date: Fri, 9 Jun 2017 11:05:00 +0200
+Message-ID: <CACRpkdYO_vOnKx-kSeOJehZg=L6d0eArphKAiEZnXVPVfsNT6A@mail.gmail.com>
+References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
+ <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
+ <20170608154541.GH32509@fury> <d41ff55b-e28f-85bf-d088-392e363fb41f@redhat.com>
+ <CAJZ5v0jw3Rzjkb3J2_XE7TPBjT+7FUW90B7kg15z6_WpdNGjzA@mail.gmail.com>
+ <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
+ <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com> <1496996552.22624.60.camel@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-it0-f52.google.com ([209.85.214.52]:36300 "EHLO
+        mail-it0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751526AbdFIJFC (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 9 Jun 2017 05:05:02 -0400
+Received: by mail-it0-f52.google.com with SMTP id m47so134771420iti.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Jun 2017 02:05:02 -0700 (PDT)
+In-Reply-To: <1496996552.22624.60.camel@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
 
-We are trying to get rid of DRIVER_ATTR(), and the thinkpad_acpi
-driver's attributes can be trivially changed to use DRIVER_ATTR_RO() and
-DRIVER_ATTR_RW().
+On Fri, Jun 9, 2017 at 10:22 AM, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: <ibm-acpi-devel@lists.sourceforge.net>
-Cc: <platform-driver-x86@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 91 +++++++++++-------------------------
- 1 file changed, 28 insertions(+), 63 deletions(-)
+> I was waiting for it about week and decided to proceed w.o. one.
+> Linus is overloaded by something, though he appears from time to time in
+> mailing lists.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 7b6cb0c69b02..f6861b551178 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1438,25 +1438,20 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_rfk_id id, char *buf)
-  */
- 
- /* interface_version --------------------------------------------------- */
--static ssize_t tpacpi_driver_interface_version_show(
--				struct device_driver *drv,
--				char *buf)
-+static ssize_t interface_version_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "0x%08x\n", TPACPI_SYSFS_VERSION);
- }
--
--static DRIVER_ATTR(interface_version, S_IRUGO,
--		tpacpi_driver_interface_version_show, NULL);
-+static DRIVER_ATTR_RO(interface_version);
- 
- /* debug_level --------------------------------------------------------- */
--static ssize_t tpacpi_driver_debug_show(struct device_driver *drv,
--						char *buf)
-+static ssize_t debug_level_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "0x%04x\n", dbg_level);
- }
- 
--static ssize_t tpacpi_driver_debug_store(struct device_driver *drv,
--						const char *buf, size_t count)
-+static ssize_t debug_level_store(struct device_driver *drv, const char *buf,
-+				 size_t count)
- {
- 	unsigned long t;
- 
-@@ -1467,34 +1462,28 @@ static ssize_t tpacpi_driver_debug_store(struct device_driver *drv,
- 
- 	return count;
- }
--
--static DRIVER_ATTR(debug_level, S_IWUSR | S_IRUGO,
--		tpacpi_driver_debug_show, tpacpi_driver_debug_store);
-+static DRIVER_ATTR_RW(debug_level);
- 
- /* version ------------------------------------------------------------- */
--static ssize_t tpacpi_driver_version_show(struct device_driver *drv,
--						char *buf)
-+static ssize_t version_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%s v%s\n",
- 			TPACPI_DESC, TPACPI_VERSION);
- }
--
--static DRIVER_ATTR(version, S_IRUGO,
--		tpacpi_driver_version_show, NULL);
-+static DRIVER_ATTR_RO(version);
- 
- /* --------------------------------------------------------------------- */
- 
- #ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
- 
- /* wlsw_emulstate ------------------------------------------------------ */
--static ssize_t tpacpi_driver_wlsw_emulstate_show(struct device_driver *drv,
--						char *buf)
-+static ssize_t wlsw_emulstate_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wlsw_emulstate);
- }
- 
--static ssize_t tpacpi_driver_wlsw_emulstate_store(struct device_driver *drv,
--						const char *buf, size_t count)
-+static ssize_t wlsw_emulstate_store(struct device_driver *drv, const char *buf,
-+				    size_t count)
- {
- 	unsigned long t;
- 
-@@ -1508,22 +1497,16 @@ static ssize_t tpacpi_driver_wlsw_emulstate_store(struct device_driver *drv,
- 
- 	return count;
- }
--
--static DRIVER_ATTR(wlsw_emulstate, S_IWUSR | S_IRUGO,
--		tpacpi_driver_wlsw_emulstate_show,
--		tpacpi_driver_wlsw_emulstate_store);
-+static DRIVER_ATTR_RW(wlsw_emulstate);
- 
- /* bluetooth_emulstate ------------------------------------------------- */
--static ssize_t tpacpi_driver_bluetooth_emulstate_show(
--					struct device_driver *drv,
--					char *buf)
-+static ssize_t bluetooth_emulstate_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_bluetooth_emulstate);
- }
- 
--static ssize_t tpacpi_driver_bluetooth_emulstate_store(
--					struct device_driver *drv,
--					const char *buf, size_t count)
-+static ssize_t bluetooth_emulstate_store(struct device_driver *drv,
-+					 const char *buf, size_t count)
- {
- 	unsigned long t;
- 
-@@ -1534,22 +1517,16 @@ static ssize_t tpacpi_driver_bluetooth_emulstate_store(
- 
- 	return count;
- }
--
--static DRIVER_ATTR(bluetooth_emulstate, S_IWUSR | S_IRUGO,
--		tpacpi_driver_bluetooth_emulstate_show,
--		tpacpi_driver_bluetooth_emulstate_store);
-+static DRIVER_ATTR_RW(bluetooth_emulstate);
- 
- /* wwan_emulstate ------------------------------------------------- */
--static ssize_t tpacpi_driver_wwan_emulstate_show(
--					struct device_driver *drv,
--					char *buf)
-+static ssize_t wwan_emulstate_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wwan_emulstate);
- }
- 
--static ssize_t tpacpi_driver_wwan_emulstate_store(
--					struct device_driver *drv,
--					const char *buf, size_t count)
-+static ssize_t wwan_emulstate_store(struct device_driver *drv, const char *buf,
-+				    size_t count)
- {
- 	unsigned long t;
- 
-@@ -1560,22 +1537,16 @@ static ssize_t tpacpi_driver_wwan_emulstate_store(
- 
- 	return count;
- }
--
--static DRIVER_ATTR(wwan_emulstate, S_IWUSR | S_IRUGO,
--		tpacpi_driver_wwan_emulstate_show,
--		tpacpi_driver_wwan_emulstate_store);
-+static DRIVER_ATTR_RW(wwan_emulstate);
- 
- /* uwb_emulstate ------------------------------------------------- */
--static ssize_t tpacpi_driver_uwb_emulstate_show(
--					struct device_driver *drv,
--					char *buf)
-+static ssize_t uwb_emulstate_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_uwb_emulstate);
- }
- 
--static ssize_t tpacpi_driver_uwb_emulstate_store(
--					struct device_driver *drv,
--					const char *buf, size_t count)
-+static ssize_t uwb_emulstate_store(struct device_driver *drv, const char *buf,
-+				   size_t count)
- {
- 	unsigned long t;
- 
-@@ -1586,10 +1557,7 @@ static ssize_t tpacpi_driver_uwb_emulstate_store(
- 
- 	return count;
- }
--
--static DRIVER_ATTR(uwb_emulstate, S_IWUSR | S_IRUGO,
--		tpacpi_driver_uwb_emulstate_show,
--		tpacpi_driver_uwb_emulstate_store);
-+static DRIVER_ATTR_RW(uwb_emulstate);
- #endif
- 
- /* --------------------------------------------------------------------- */
-@@ -8606,14 +8574,13 @@ static ssize_t fan_fan2_input_show(struct device *dev,
- static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
- 
- /* sysfs fan fan_watchdog (hwmon driver) ------------------------------- */
--static ssize_t fan_fan_watchdog_show(struct device_driver *drv,
--				     char *buf)
-+static ssize_t fan_watchdog_show(struct device_driver *drv, char *buf)
- {
- 	return snprintf(buf, PAGE_SIZE, "%u\n", fan_watchdog_maxinterval);
- }
- 
--static ssize_t fan_fan_watchdog_store(struct device_driver *drv,
--				      const char *buf, size_t count)
-+static ssize_t fan_watchdog_store(struct device_driver *drv, const char *buf,
-+				  size_t count)
- {
- 	unsigned long t;
- 
-@@ -8630,9 +8597,7 @@ static ssize_t fan_fan_watchdog_store(struct device_driver *drv,
- 
- 	return count;
- }
--
--static DRIVER_ATTR(fan_watchdog, S_IWUSR | S_IRUGO,
--		fan_fan_watchdog_show, fan_fan_watchdog_store);
-+static DRIVER_ATTR_RW(fan_watchdog);
- 
- /* --------------------------------------------------------------------- */
- static struct attribute *fan_attributes[] = {
--- 
-2.13.1
+Yeah I get overloaded from time to time, it is because overall kernel
+activity is increasing and managing the subsystems take more
+time, also I suck at prioritizing and planning. :(
+
+It would be nice to have a new co-maintainer, maybe one of the Intel
+people could step up, hm? ;)
+
+Yours,
+Linus Walleij
