@@ -1,42 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-Date: Fri, 9 Jun 2017 11:05:00 +0200
-Message-ID: <CACRpkdYO_vOnKx-kSeOJehZg=L6d0eArphKAiEZnXVPVfsNT6A@mail.gmail.com>
-References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
- <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
- <20170608154541.GH32509@fury> <d41ff55b-e28f-85bf-d088-392e363fb41f@redhat.com>
- <CAJZ5v0jw3Rzjkb3J2_XE7TPBjT+7FUW90B7kg15z6_WpdNGjzA@mail.gmail.com>
- <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
- <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com> <1496996552.22624.60.camel@linux.intel.com>
+From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
+Subject: Resizeable PCI BAR support V5
+Date: Fri,  9 Jun 2017 10:59:41 +0200
+Message-ID: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-it0-f52.google.com ([209.85.214.52]:36300 "EHLO
-        mail-it0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751526AbdFIJFC (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2017 05:05:02 -0400
-Received: by mail-it0-f52.google.com with SMTP id m47so134771420iti.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Jun 2017 02:05:02 -0700 (PDT)
-In-Reply-To: <1496996552.22624.60.camel@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
+List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 9, 2017 at 10:22 AM, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> I was waiting for it about week and decided to proceed w.o. one.
-> Linus is overloaded by something, though he appears from time to time in
-> mailing lists.
-
-Yeah I get overloaded from time to time, it is because overall kernel
-activity is increasing and managing the subsystems take more
-time, also I suck at prioritizing and planning. :(
-
-It would be nice to have a new co-maintainer, maybe one of the Intel
-people could step up, hm? ;)
-
-Yours,
-Linus Walleij
+SGkgZXZlcnlvbmUsCgpUaGlzIGlzIHRoZSBmaXRoIGluY2FybmF0aW9uIG9mIHRoaXMgc2V0IG9m
+IHBhdGNoZXMuIEl0IGVuYWJsZXMgZGV2aWNlCmRyaXZlcnMgdG8gcmVzaXplIGFuZCBtb3N0IGxp
+a2VseSBhbHNvIHJlbG9jYXRlIHRoZSBQQ0kgQkFSIG9mIGRldmljZXMgCnRoZXkgbWFuYWdlIHRv
+IGFsbG93IHRoZSBDUFUgdG8gYWNjZXNzIGFsbCBvZiB0aGUgZGV2aWNlIGxvY2FsIG1lbW9yeSBh
+dCBvbmNlLgoKVGhpcyBpcyB2ZXJ5IHVzZWZ1bCBmb3IgR0ZYIGRldmljZSBkcml2ZXJzIHdoZXJl
+IHRoZSBkZWZhdWx0IFBDSSBCQVIgaXMgb25seQphYm91dCAyNTZNQiBpbiBzaXplIGZvciBjb21w
+YXRpYmlsaXR5IHJlYXNvbnMsIGJ1dCB0aGUgZGV2aWNlIGVhc2lseSBoYXZlCm11bHRpcGxlIGdp
+Z2FieXRlIG9mIGxvY2FsIG1lbW9yeS4KClNvbWUgY2hhbmdlcyBzaW5jZSBWNDoKMS4gUmViYXNl
+ZCBvbiA0LjExLgoyLiBhZGRlZCB0aGUgcmIgZnJvbSBBbmR5IFNoZXZjaGVua28gdG8gcGF0Y2hl
+cyB3aGljaCBsb29rIGNvbXBsZXRlIG5vdy4KMy4gTW92ZSByZWxlYXNpbmcgdGhlIEJBUiBhbmQg
+cmVhbGxvY2F0aW5nIGl0IG9uIGVycm9yIHRvIHRoZSBkcml2ZXIgc2lkZS4KNC4gQWRkIGFtZGdw
+dSBzdXBwb3J0IGZvciBHTUMgVjYgaGFyZHdhcmUgZ2VuZXJhdGlvbiBhcyB3ZWxsLgoKUGxlYXNl
+IHJldmlldyBhbmQvb3IgY29tbWVudCwKQ2hyaXN0aWFuLgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KYW1kLWdmeCBtYWlsaW5nIGxpc3QKYW1kLWdmeEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9hbWQtZ2Z4Cg==
