@@ -1,72 +1,100 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: wmi: Fix printing info about WDG structure
-Date: Sat, 10 Jun 2017 14:22:50 +0300
-Message-ID: <CAHp75VfyPe=sXU_GCRcM_mqr7W8=Bp4Va0qxv61TyhOMp+0uVA@mail.gmail.com>
-References: <1495885877-7906-1-git-send-email-pali.rohar@gmail.com> <1497092231-505-1-git-send-email-pali.rohar@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
+Date: Sat, 10 Jun 2017 21:15:57 +0200
+Message-ID: <201706102115.57995@pali>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed;
+  boundary="nextPart3297869.eVptn7DLR1";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:36031 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751890AbdFJLWw (ORCPT
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:36333 "EHLO
+        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751555AbdFJTQA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Jun 2017 07:22:52 -0400
-In-Reply-To: <1497092231-505-1-git-send-email-pali.rohar@gmail.com>
+        Sat, 10 Jun 2017 15:16:00 -0400
+In-Reply-To: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Joe Perches <joe@perches.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Jun 10, 2017 at 1:57 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> object_id and notify_id are in one union structure and their meaning is
-> defined by flags. Therefore do not print notify_id for non-event block an=
-d
-> do not print object_id for event block. Remove also reserved member as it
-> does not have any defined meaning or type yet.
->
-> As object_id and notify_id union members overlaps and have different type=
-s,
-> it caused that kernel print to dmesg binary data. This patch eliminates i=
-t.
->
+--nextPart3297869.eVptn7DLR1
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Saturday 27 May 2017 13:55:34 Pali Roh=C3=A1r wrote:
+> instance_count defines number of instances of data block and instance
+> itself is indexed from zero, which means first instance has number 0.
+> Therefore check for invalid instance should be non-strict inequality.
+>=20
 > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> ---
+> I'm marking this patch as RFC because it is not tested at all and
+> probably could break existing WMI drivers. Some WMI drivers pass
+> instance number 1 and I'm not sure if ACPI-WMI bytecode for those
+> machines has really two instances. In more cases ACPI-WMI bytecode
+> does not check instance number if supports only one instance. So
+> then any instance id can be used for correct execution of ACPI-WMI
+> method.
+>=20
+> So this patch is open for discussion.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Hi! Any comments?
 
 > ---
-> Changes since v2:
->  * Use %2pE instead of %c%c as suggested by Andy Shevchenko
-> ---
->  drivers/platform/x86/wmi.c |    7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
+>  drivers/platform/x86/wmi.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
 > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index ceeb8c1..6d6f2a9 100644
+> index cd7045f..df63037 100644
 > --- a/drivers/platform/x86/wmi.c
 > +++ b/drivers/platform/x86/wmi.c
-> @@ -352,9 +352,10 @@ acpi_status wmi_set_block(const char *guid_string, u=
-8 instance,
->  static void wmi_dump_wdg(const struct guid_block *g)
->  {
->         pr_info("%pUL:\n", g->guid);
-> -       pr_info("\tobject_id: %c%c\n", g->object_id[0], g->object_id[1]);
-> -       pr_info("\tnotify_id: %02X\n", g->notify_id);
-> -       pr_info("\treserved: %02X\n", g->reserved);
-> +       if (g->flags & ACPI_WMI_EVENT)
-> +               pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
-> +       else
-> +               pr_info("\tobject_id: %2pE\n", g->object_id);
->         pr_info("\tinstance_count: %d\n", g->instance_count);
->         pr_info("\tflags: %#x", g->flags);
->         if (g->flags) {
-> --
-> 1.7.9.5
->
+> @@ -191,7 +191,7 @@ acpi_status wmi_evaluate_method(const char
+> *guid_string, u8 instance, if (!(block->flags & ACPI_WMI_METHOD))
+>  		return AE_BAD_DATA;
+>=20
+> -	if (block->instance_count < instance)
+> +	if (block->instance_count <=3D instance)
+>  		return AE_BAD_PARAMETER;
+>=20
+>  	input.count =3D 2;
+> @@ -250,7 +250,7 @@ struct acpi_buffer *out)
+>  	block =3D &wblock->gblock;
+>  	handle =3D wblock->handle;
+>=20
+> -	if (block->instance_count < instance)
+> +	if (block->instance_count <=3D instance)
+>  		return AE_BAD_PARAMETER;
+>=20
+>  	/* Check GUID is a data block */
+> @@ -323,7 +323,7 @@ acpi_status wmi_set_block(const char
+> *guid_string, u8 instance, block =3D &wblock->gblock;
+>  	handle =3D wblock->handle;
+>=20
+> -	if (block->instance_count < instance)
+> +	if (block->instance_count <=3D instance)
+>  		return AE_BAD_PARAMETER;
+>=20
+>  	/* Check GUID is a data block */
 
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--nextPart3297869.eVptn7DLR1
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
---=20
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlk8RW0ACgkQi/DJPQPkQ1K8WACgywv3Iwy1Sxf4hVF8pDbUU79A
+y4MAn1yeDyyWkQe5Ievvx1aMN8nLnw+9
+=kF1h
+-----END PGP SIGNATURE-----
+
+--nextPart3297869.eVptn7DLR1--
