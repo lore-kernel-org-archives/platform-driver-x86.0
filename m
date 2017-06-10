@@ -1,121 +1,68 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
-Date: Fri, 9 Jun 2017 23:51:32 +0200
-Message-ID: <201706092351.32996@pali>
-References: <cover.1495862272.git.dvhart@infradead.org> <201706072250.25953@pali> <67cc75c9e0ef4a21a168ab3b4dd1e727@ausx13mpc124.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 1/1] intel_telemetry_debugfs: fix oops found while
+ load/unload module test
+Date: Fri, 9 Jun 2017 17:34:59 -0700
+Message-ID: <20170610003459.GA22981@fury>
+References: <6935d670736c764f2bfdaba4bcafc6168ffa03ae.1496510090.git.priyalee.kushwaha@intel.com>
+ <CAHp75Ve+Jp2N1DwPASuLpxB19pziJ4yfnWqsKstEuY2zcPVD5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart12380891.cyckeXfetz";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <67cc75c9e0ef4a21a168ab3b4dd1e727@ausx13mpc124.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:49163 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751545AbdFJAfB (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 9 Jun 2017 20:35:01 -0400
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve+Jp2N1DwPASuLpxB19pziJ4yfnWqsKstEuY2zcPVD5g@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: priyalee.kushwaha@intel.com, souvik.k.chakravarty@intel.com, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
---nextPart12380891.cyckeXfetz
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 07, 2017 at 05:42:52PM +0300, Andy Shevchenko wrote:
+> On Sat, Jun 3, 2017 at 8:21 PM,  <priyalee.kushwaha@intel.com> wrote:
+> > From: Priyalee Kushwaha <priyalee.kushwaha@intel.com>
+> >
+> > This fix oops found while testing load/unload test of
+> > intel_telemetry_debugfs module. Module_init uses register_pm_notifier
+> > for PM callbacks, but unregister_pm_notifier was missing from
+> > module_exit.
+> >
+> >  [ 97.481860] BUG: unable to handle kernel paging request at ffffffffa006f010
+> >  [ 97.489742] IP: blocking_notifier_chain_register+0x3a/0xa0
+> >  [ 97.495898] PGD 2e0a067
+> >  [ 97.495899] PUD 2e0b063
+> >  [ 97.498737] PMD 179e29067
+> >  [ 97.501573] PTE 0
+> >
+> >  [ 97.508423] Oops: 0000 1 PREEMPT SMP
+> >  [ 97.512724] Modules linked in: intel_telemetry_debugfs intel_rapl gpio_keys dwc3 udc_core intel_telemetry_pltdrv intel_punit_ipc intel_telemetry_core rtc_cmos efivars x86_pkg_temp_thermal iwlwifi snd_hda_codec_hdmi soc_button_array btusb cfg80211 btrtl mei_me hci_uart btbcm mei btintel i915 bluetooth intel_pmc_ipc snd_hda_intel spi_pxa2xx_platform snd_hda_codec dwc3_pci snd_hda_core tpm_tis tpm_tis_core tpm efivarfs
+> >  [ 97.558453] CPU: 0 PID: 889 Comm: modprobe Not tainted 4.11.0-rc6-intel-dev-bkc #1
+> >  [ 97.566950] Hardware name: Intel Corp. Joule DVT3/SDS, BIOS GTPP181A.X64.0143.B30.1701132137 01/13/2017
+> >  [ 97.577518] task: ffff8801793a21c0 task.stack: ffff8801793f0000
+> >  [ 97.584162] RIP: 0010:blocking_notifier_chain_register+0x3a/0xa0
+> >  [ 97.590903] RSP: 0018:ffff8801793f3c58 EFLAGS: 00010286
+> >  [ 97.596802] RAX: ffffffffa006f000 RBX: ffffffff81e3ea20 RCX: 0000000000000000
+> >  [ 97.604812] RDX: ffff880179eaf210 RSI: ffffffffa0131000 RDI: ffffffff81e3ea20
+> >  [ 97.612821] RBP: ffff8801793f3c68 R08: 0000000000000006 R09: 000000000000005c
+> >  [ 97.620847] R10: 0000000000000000 R11: 0000000000000006 R12: ffffffffa0131000
+> >  [ 97.628855] R13: 0000000000000000 R14: ffff880176e35f48 R15: ffff8801793f3ea8
+> >  [ 97.636865] FS: 00007f7eeba07700(0000) GS:ffff88017fc00000(0000) knlGS:0000000000000000
+> >  [ 97.645948] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >  [ 97.652423] CR2: ffffffffa006f010 CR3: 00000001775ef000 CR4: 00000000003406f0
+> >  [ 97.660423] Call Trace:
+> >  [ 97.663166] ? 0xffffffffa0031000
+> >  [ 97.666885] register_pm_notifier+0x18/0x20
+> >  [ 97.671581] telemetry_debugfs_init+0x92/0x1000
+> 
+> Pushed to testing, thanks!
+> 
+> Darren, do we need this in v4.12-rcX?
 
-On Friday 09 June 2017 17:46:12 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > Sent: Wednesday, June 7, 2017 3:50 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: luto@amacapital.net; dvhart@infradead.org; platform-driver-
-> > x86@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> > luto@kernel.org; rjw@rjwysocki.net; linux-kernel@vger.kernel.org;
-> > linux-acpi@vger.kernel.org Subject: Re: [PATCH 15/16]
-> > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
-> > metadata
-> >=20
-> > On Wednesday 07 June 2017 22:23:08 Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > > > Sent: Wednesday, June 7, 2017 12:39 PM
-> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > > Cc: luto@amacapital.net; dvhart@infradead.org; platform-driver-
-> > > > x86@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> > > > luto@kernel.org; rjw@rjwysocki.net;
-> > > > linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org
-> > > > Subject: Re: [PATCH 15/16]
-> > > > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
-> > > > metadata
-> > > >=20
-> > > > On Tuesday 06 June 2017 15:56:21 Pali Roh=C3=A1r wrote:
-> > > > > On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com
-> > > > > wrote:
-> > > > > > 2) On my system when you expand the arguments for "void
-> > > > > > DoBFn" the source doesn't describe individual arguments
-> > > > > > like you do. Again this might not matter to MOF parsing
-> > > > > > tools but wanted to let you know in case it does.
-> > > > >=20
-> > > > > I know, this part is missing. Order of arguments are only in
-> > > > > ID qualifier and not sorted + in/out de-duplicated.
-> > > >=20
-> > > > Implemented! Now arguments are correctly placed based on ID
-> > > > qualifier.
-> > >=20
-> > > I think it's still off a little though.
-> > >=20
-> > > What I'm getting back now from bmf2mof is:
-> > > 	void DoBFn([in, Description("Fn buf"), out] BDat Data);
-> > >=20
-> > > Whereas source puts Description as the last argument:
-> > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> >=20
-> > In BMOF from my Latitude E6440 there are specified two parameters
-> > with index 0. One with qualifiers ("in", Description("Fn buf"))
-> > and one with ("out", Description("Fn buf")). I think you have
-> > similar/same data in BMOF.
-> >=20
-> > In my bmf2mof I just combined those two parameters into one (when
-> > name, type and index matches) and concatenate also qualifiers with
-> > removing duplicates.
-> >=20
-> > Do not know what is correct way, but I think qualifiers are just
-> > unordered set. MS decompiler probably put "in" and "out" qualifiers
-> > before any other for better readability.
->=20
-> Have you tried to run it through mofcomp.exe and then decompile again
-> with bmf2mof?  As long as it's coming out the same you're probably
-> right.
+If it causes an Oops, it makes sense for an rcX to me. We're currently at RC4,
+so yes.
 
-Yes, bmf2mof+mofcomp.exe+bmf2mof gives same output as just bmf2mof.
-
-> > > > > > source:
-> > > > > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> > > > > >=20
-> > > > > > bmf2mof:
-> > > > > > 	void doBFn([in, Description("Fn buf"), ID(0)] BDat Data,
-> > > > > > 	[out, Description("Fn buf"), ID(0)] BDat Data);
-> > > >=20
-> > > > --
-> > > > Pali Roh=C3=A1r
-> > > > pali.rohar@gmail.com
-> >=20
-> > --
-> > Pali Roh=C3=A1r
-> > pali.rohar@gmail.com
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart12380891.cyckeXfetz
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlk7GGQACgkQi/DJPQPkQ1IUrQCdHqU4uHacMAOz3oa/Z3s8hqez
-7mMAn2icUy0Ub9iarxWFigepK7FsjV0q
-=Nac4
------END PGP SIGNATURE-----
-
---nextPart12380891.cyckeXfetz--
+-- 
+Darren Hart
+VMware Open Source Technology Center
