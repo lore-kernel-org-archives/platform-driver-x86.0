@@ -1,108 +1,66 @@
-From: <mbalhoff@fulbright.com>
-Subject: (unknown)
-Date: Sat, 10 Jun 2017 21:10:25 -0000
-Message-ID: <149712902507.19457.3426568904919799453@17.237.104.185.dynamic.electronicamartinez.es>
+From: Hao Wei Tee <angelsl@angelsl.xyz>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode
+ switch
+Date: Sun, 11 Jun 2017 13:07:07 +0800
+Message-ID: <47e2af96-1b97-6654-e65c-eea570383abb@angelsl.xyz>
+References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
+ <264a8ced-4336-06b9-d760-babc08ccde5c@angelsl.xyz>
+ <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
+ <7ba76865-7fb2-615a-8bcd-35e14b862a8e@angelsl.xyz>
 Mime-Version: 1.0
-Content-Type: application/zip; name="436049145.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 17.237.104.185.dynamic.electronicamartinez.es ([185.104.237.17]:57543
-        "HELO 17.237.104.185.dynamic.electronicamartinez.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
-        id S1751671AbdFJVK2 (ORCPT
+Received: from mail-pf0-f173.google.com ([209.85.192.173]:36780 "EHLO
+        mail-pf0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751683AbdFKFHM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Jun 2017 17:10:28 -0400
-Content-Disposition: attachment
-Subject: 
+        Sun, 11 Jun 2017 01:07:12 -0400
+Received: by mail-pf0-f173.google.com with SMTP id x63so40859868pff.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Jun 2017 22:07:11 -0700 (PDT)
+In-Reply-To: <7ba76865-7fb2-615a-8bcd-35e14b862a8e@angelsl.xyz>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
 
-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
-AA==
+On 5/30/17 10:05 PM, Hao Wei Tee wrote:
+> On 5/30/17 9:22 PM, Andy Shevchenko wrote:
+>> On Sun, May 28, 2017 at 4:47 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
+>>> On 5/27/17 3:31 PM, Hao Wei Tee wrote:
+>>>> This exposes the battery conservation mode present on some (?) IdeaPads.
+>>>> The mode is set by calling ACPI method SBMC with argument 3 (on) or
+>>>> 5 (off). Status is reported in bit 5 of the return value of ACPI method
+>>>> GBMD.
+>>>>
+>>>> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
+>>>> methods are the same across all IdeaPads, so it would be great if this got more
+>>>> testing across other models before it's merged.
+>>>
+>>> I got someone to test on an IdeaPad Y510p. It works on that too.
+>>
+>> Do we have any other option that expose something via sysfs?
+>>
+> 
+> Sorry, not sure what you meant.
+> 
+> If you meant
+> 
+>> Do we have any other options than expose something via sysfs?
+> 
+> I'm not sure, maybe an ioctl? That wouldn't be very convenient though.
+> 
+> The tp_smapi module (not in mainline) that exposes the battery threshold
+> functionality for ThinkPads also uses sysfs.
+> 
+> If you meant
+> 
+>> Do we have any other options that expose something via sysfs?
+> 
+> yes, camera_power, fan_mode, touchpad and conservation_mode.
+
+Any thoughts on this?
+
+-- 
+Hao Wei
