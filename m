@@ -1,66 +1,69 @@
-From: Hao Wei Tee <angelsl@angelsl.xyz>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode
- switch
-Date: Sun, 11 Jun 2017 13:07:07 +0800
-Message-ID: <47e2af96-1b97-6654-e65c-eea570383abb@angelsl.xyz>
-References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
- <264a8ced-4336-06b9-d760-babc08ccde5c@angelsl.xyz>
- <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
- <7ba76865-7fb2-615a-8bcd-35e14b862a8e@angelsl.xyz>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 37/38] platform/x86: toshiba_acpi: drop assignment of
+ iio_info.driver_module
+Date: Sun, 11 Jun 2017 15:03:38 +0100
+Message-ID: <20170611150338.62de672b@kernel.org>
+References: <20170529155154.22580-1-jic23@kernel.org>
+        <20170529155154.22580-38-jic23@kernel.org>
+        <CAGdLNWGf4+5zJUe2dREadjs92Vg_SHbANjG1kz6f4JsTGL-TPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f173.google.com ([209.85.192.173]:36780 "EHLO
-        mail-pf0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751683AbdFKFHM (ORCPT
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751779AbdFKODm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Jun 2017 01:07:12 -0400
-Received: by mail-pf0-f173.google.com with SMTP id x63so40859868pff.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Jun 2017 22:07:11 -0700 (PDT)
-In-Reply-To: <7ba76865-7fb2-615a-8bcd-35e14b862a8e@angelsl.xyz>
-Content-Language: en-US
+        Sun, 11 Jun 2017 10:03:42 -0400
+In-Reply-To: <CAGdLNWGf4+5zJUe2dREadjs92Vg_SHbANjG1kz6f4JsTGL-TPQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: linux-iio@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 5/30/17 10:05 PM, Hao Wei Tee wrote:
-> On 5/30/17 9:22 PM, Andy Shevchenko wrote:
->> On Sun, May 28, 2017 at 4:47 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
->>> On 5/27/17 3:31 PM, Hao Wei Tee wrote:
->>>> This exposes the battery conservation mode present on some (?) IdeaPads.
->>>> The mode is set by calling ACPI method SBMC with argument 3 (on) or
->>>> 5 (off). Status is reported in bit 5 of the return value of ACPI method
->>>> GBMD.
->>>>
->>>> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
->>>> methods are the same across all IdeaPads, so it would be great if this got more
->>>> testing across other models before it's merged.
->>>
->>> I got someone to test on an IdeaPad Y510p. It works on that too.
->>
->> Do we have any other option that expose something via sysfs?
->>
-> 
-> Sorry, not sure what you meant.
-> 
-> If you meant
-> 
->> Do we have any other options than expose something via sysfs?
-> 
-> I'm not sure, maybe an ioctl? That wouldn't be very convenient though.
-> 
-> The tp_smapi module (not in mainline) that exposes the battery threshold
-> functionality for ThinkPads also uses sysfs.
-> 
-> If you meant
-> 
->> Do we have any other options that expose something via sysfs?
-> 
-> yes, camera_power, fan_mode, touchpad and conservation_mode.
+On Wed, 7 Jun 2017 08:53:09 -0600
+Azael Avalos <coproscefalo@gmail.com> wrote:
 
-Any thoughts on this?
+> Sorry for being this late, been a bit busy.
+That's fine, I'm still waiting for reviews on the two core patches
+at the start of the series :(  
 
--- 
-Hao Wei
+Trying to avoid playing the maintainer game and applying loads
+of my own patches without review!
+
+Thanks,
+
+Jonathan
+> 
+> 2017-05-29 9:51 GMT-06:00 Jonathan Cameron <jic23@kernel.org>:
+> > This is now handled by use of a macro for device registration.  The field
+> > in iio_info will be going away shortly as it is no longer used.
+> >
+> > Cc: Azael Avalos <coproscefalo@gmail.com>
+> > Cc: <platform-driver-x86@vger.kernel.org>  
+> 
+> Acked-by: Azael Avalos <coproscefalo@gmail.com>
+> 
+> > Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+> > ---
+> >  drivers/platform/x86/toshiba_acpi.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> > index d0daf75cbed1..ef4301f41727 100644
+> > --- a/drivers/platform/x86/toshiba_acpi.c
+> > +++ b/drivers/platform/x86/toshiba_acpi.c
+> > @@ -2515,7 +2515,6 @@ static const struct iio_chan_spec toshiba_iio_accel_channels[] = {
+> >  };
+> >
+> >  static const struct iio_info toshiba_iio_accel_info = {
+> > -       .driver_module = THIS_MODULE,
+> >         .read_raw = &toshiba_iio_accel_read_raw,
+> >  };
+> >
+> > --
+> > 2.13.0
+> >  
+> 
+> 
+> 
