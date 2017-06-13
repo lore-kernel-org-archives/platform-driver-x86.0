@@ -1,63 +1,73 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 10:07:19 -0700
-Message-ID: <20170613170719.GK27850@fury>
-References: <20170509231639.GB11404@fury>
- <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
- <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury>
- <20170613155000.GA24483@kroah.com>
- <20170613162242.GF27850@fury>
- <20170613165247.GA32546@kroah.com>
+Date: Tue, 13 Jun 2017 19:16:11 +0200
+Message-ID: <201706131916.12144@pali>
+References: <20170509231639.GB11404@fury> <20170613070535.GA13252@infradead.org> <20170613153857.GC27850@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:32803 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751805AbdFMRHY (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 13:07:24 -0400
-Content-Disposition: inline
-In-Reply-To: <20170613165247.GA32546@kroah.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart2822652.m9qIuZ5cZc";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170613153857.GC27850@fury>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 13, 2017 at 06:52:47PM +0200, Greg Kroah-Hartman wrote:
-> > As a concrete example, Dell has specifically made the request that we
-> > work on a solution that doesn't require them to come back to the kernel
-> > community each time they add a WMI GUID to their BIOS. They would like
-> > to see those GUIDs automatically exposed.
-> 
-> What do you mean exactly by "exposed"?  What do they do with these?  Why
+--nextPart2822652.m9qIuZ5cZc
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-By exposed I meant: the chardev for the WMI GUID is created
+On Tuesday 13 June 2017 17:38:57 Darren Hart wrote:
+> I'll mention this again I suspect in this thread, but rather than a
+> "WMI filter" we can implement a "WMI proxy". If a kernel driver
+> needs to own certain WMI calls for LED or Radio management, for
+> example, all such calls can be proxied through that driver. It can
+> do the necessary work to update its own state, and still perform the
+> requested funtion, transparent to the userspace caller. This should
+> accommodate the addition of new drivers and features to kernel
+> drivers, without precluding the development of userspace management
+> or platform daemons.
 
-The idea being the kernel maps WMI GUIDs to chardevs and shepherds the
-userspace calls through to the ACPI method evaluation and back. But the
-kernel wmi driver doesn't, in general, have specific knowledge of the
-methods or input and output formats.
+Such WMI proxy implemented in every WMI driver has one design problem:
 
-The existing drivers being the exception to "specific knowledge", and
-the cause of all this filter/proxy discussion. I think we have enough
-that we can put together an initial patch series, and then discuss it
-there.
+There would be two different kernel APIs to configure some firmware=20
+settings. E.g. if particular WMI method implements turning on/off radio=20
+devices, then functionality would be exported to userspace via:
 
-> isn't the Dell pre-install team sending patches for this like the
-> Windows preinstall team is doing for their hacked-to-hell copy of
-> Windows?  :)
-> 
-> Do you have an example patch of something that was needed to get a Dell
-> laptop working for a new device id that didn't work this way?
+1) standard kernel rfkill interface which is device/driver/firmware=20
+neutral (and any rfkill application can control it)
 
-Per Mario's comment, it sounds like they are and it does work this way.
-It takes 8 weeks, and they don't see a reason to go through this for WMI
-GUIDs.
+2) platform/firmware specific WMI method via newly standard /dev/wmi*=20
+interface -- and only vendor specific application could do that and it=20
+would work only for this one specific WMI GUID device
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+I do not like idea to have two kernel <--> userspace interfaces to=20
+control one thing, plus one interface would be platform dependent.
+
+In my opinion any management application which want to control radio=20
+switches should use option 1) rfkill interface.
+
+And I do not see reason for exporting same duplicate, but platform=20
+dependent interface from kernel to userspace.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2822652.m9qIuZ5cZc
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAllAHdwACgkQi/DJPQPkQ1JesACgkbBjCtkMJPw2b+/+vYTauRRp
+R8EAn2H2qNlfANznBiiALJAtZqFlftaU
+=q+5v
+-----END PGP SIGNATURE-----
+
+--nextPart2822652.m9qIuZ5cZc--
