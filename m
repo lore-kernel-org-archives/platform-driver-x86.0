@@ -1,82 +1,89 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 10:40:27 -0700
-Message-ID: <20170613174027.GL27850@fury>
-References: <20170509231639.GB11404@fury>
- <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury>
- <201706131916.12144@pali>
+Date: Tue, 13 Jun 2017 19:43:22 +0200
+Message-ID: <201706131943.22554@pali>
+References: <20170509231639.GB11404@fury> <6e3ce02ce8b74710a3335b4cfa13b9af@ausx13mpc120.AMER.DELL.COM> <20170613165714.GB32546@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed;
+  boundary="nextPart3249207.AsGMJjLD9X";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:46349 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751826AbdFMRkc (ORCPT
+Received: from mail-wr0-f177.google.com ([209.85.128.177]:33245 "EHLO
+        mail-wr0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751826AbdFMRn2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 13:40:32 -0400
-Content-Disposition: inline
-In-Reply-To: <201706131916.12144@pali>
+        Tue, 13 Jun 2017 13:43:28 -0400
+In-Reply-To: <20170613165714.GB32546@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Mario.Limonciello@dell.com, luto@kernel.org, dvhart@infradead.org, hch@infradead.org, torvalds@linux-foundation.org, andriy.shevchenko@linux.intel.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 07:16:11PM +0200, Pali Rohár wrote:
-> On Tuesday 13 June 2017 17:38:57 Darren Hart wrote:
-> > I'll mention this again I suspect in this thread, but rather than a
-> > "WMI filter" we can implement a "WMI proxy". If a kernel driver
-> > needs to own certain WMI calls for LED or Radio management, for
-> > example, all such calls can be proxied through that driver. It can
-> > do the necessary work to update its own state, and still perform the
-> > requested funtion, transparent to the userspace caller. This should
-> > accommodate the addition of new drivers and features to kernel
-> > drivers, without precluding the development of userspace management
-> > or platform daemons.
-> 
-> Such WMI proxy implemented in every WMI driver has one design problem:
-> 
-> There would be two different kernel APIs to configure some firmware 
-> settings. E.g. if particular WMI method implements turning on/off radio 
-> devices, then functionality would be exported to userspace via:
-> 
-> 1) standard kernel rfkill interface which is device/driver/firmware 
-> neutral (and any rfkill application can control it)
-> 
-> 2) platform/firmware specific WMI method via newly standard /dev/wmi* 
-> interface -- and only vendor specific application could do that and it 
-> would work only for this one specific WMI GUID device
+--nextPart3249207.AsGMJjLD9X
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, platform specific control is what WMI is for.
+Hi Greg! I will try to explain that problem with calling WMI functions.
 
-> I do not like idea to have two kernel <--> userspace interfaces to 
-> control one thing, plus one interface would be platform dependent.
-> 
-> In my opinion any management application which want to control radio 
-> switches should use option 1) rfkill interface.
+On Tuesday 13 June 2017 18:57:14 Greg KH wrote:
+> > Getting there requires work in a few areas:
+> > 1) The OEM/IBV exports the methods and the MOF (in binary form)
+> > that describes the objects that can be interacted with and what
+> > kind of data needs to be sent.
+>=20
+> What do you mean by this?
 
-Agreed, they should.
+In ACPI is stored buffer with binary MOF data. Those data contains=20
+description WMI object system where are classes with methods and=20
+attributes (similar to C++). Then there are stored mapping from=20
+particular class method/attribute to WMI id.
 
-> And I do not see reason for exporting same duplicate, but platform 
-> dependent interface from kernel to userspace.
-> 
+If you want to call WMI method (which is basically ACPI method), you=20
+need to know WMI id and call specific ACPI method with that id and other=20
+magic.
 
-So this question boils down to: do we export WMI to userspace or not?
+Taking those magic values is not easy and WMI kernel drivers just=20
+reverse engineered them from ACPI bytecode or other method.
 
-The WMI GUIDs and methods will not be divided across convenient Linux
-subsystem boundaries allowing us to pick and choose what we export. If
-we export WMI to userspace, we will be providing another means of
-access. Sometimes, this may cause conflict, and the answer may just be
-"don't do that".
+But correct way is to parse that binary MOF data and build mapping from=20
+classes, methods and attributes to WMI ids (needed for raw ACPI call).
 
-There are plenty of other examples of things you can do to screw up the
-state of your system if you have the right permissions for which the
-answer is "don't do that". Consider MEM(4), SETPCI(8), ... /dev/sda ...
-for example.
+Problem is that format of those binary MOF data is unknown (generated by=20
+program mofcomp.exe available in all MS Windows systems), but finally I=20
+was able to guess its structure and write "decompiler".
 
-So we can either export them and possibly offer some means of proxying
-where necessary, or we can not export them.
+Search for email with subject "Binary MOF buffer in WMI is finally=20
+decoded!" for more details which I sent week ago to LKML.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+> > 2) Kernel needs to provide a way to userspace to get to this data
+>=20
+> Why, what can userspace do with this?
+
+Userspace want to call WMI method "Method1" from WMI class "Class1" from=20
+namespace "Namespace1". And wants to know signature of that Method1,=20
+what are input arguments, what are outputs...
+
+Those MOF data contains descriptions of arguments and also information=20
+which ACPI method with which WMI id needs to be called to execute above=20
+"Method1".
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart3249207.AsGMJjLD9X
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAllAJDoACgkQi/DJPQPkQ1LPfQCfZcWWVCNpaRlWF7wGyJArJ7mF
+d0gAnRmLUqIQ2Tr54PlIKTIfzy1MuXuN
+=qIR6
+-----END PGP SIGNATURE-----
+
+--nextPart3249207.AsGMJjLD9X--
