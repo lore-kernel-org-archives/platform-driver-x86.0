@@ -1,111 +1,71 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 16:12:41 +0000
-Message-ID: <6e3ce02ce8b74710a3335b4cfa13b9af@ausx13mpc120.AMER.DELL.COM>
-References: <20170509231639.GB11404@fury> <201706101236.40663@pali>
- <20170612170249.GA27850@fury> <201706130017.29023@pali>
- <20170613012435.GB27850@fury> <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury> <20170613155000.GA24483@kroah.com>
- <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: WMI and Kernel:User interface
+Date: Tue, 13 Jun 2017 09:22:42 -0700
+Message-ID: <20170613162242.GF27850@fury>
+References: <20170509231639.GB11404@fury>
+ <201706101236.40663@pali>
+ <20170612170249.GA27850@fury>
+ <201706130017.29023@pali>
+ <20170613012435.GB27850@fury>
+ <20170613070535.GA13252@infradead.org>
+ <20170613153857.GC27850@fury>
+ <20170613155000.GA24483@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:17028 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750899AbdFMQMy (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:46594 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751758AbdFMQWq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 12:12:54 -0400
-In-Reply-To: <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
-Content-Language: en-US
+        Tue, 13 Jun 2017 12:22:46 -0400
+Content-Disposition: inline
+In-Reply-To: <20170613155000.GA24483@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: luto@kernel.org, gregkh@linuxfoundation.org
-Cc: dvhart@infradead.org, hch@infradead.org, pali.rohar@gmail.com, torvalds@linux-foundation.org, andriy.shevchenko@linux.intel.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IEx1dG9taXJza2kgW21h
-aWx0bzpsdXRvQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMTMsIDIwMTcgMTA6
-NTcgQU0NCj4gVG86IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc+DQo+IENjOiBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBDaHJpc3RvcGgg
-SGVsbHdpZyA8aGNoQGluZnJhZGVhZC5vcmc+Ow0KPiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBn
-bWFpbC5jb20+OyBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtDQo+IGZvdW5kYXRpb24u
-b3JnPjsgTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IEFu
-ZHkNCj4gU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPjsgUmFm
-YWVsIFd5c29ja2kNCj4gPHJqd0Byand5c29ja2kubmV0PjsgTEtNTCA8bGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBSZTogV01JIGFuZCBLZXJuZWw6VXNlciBpbnRlcmZhY2UNCj4gDQo+IE9uIFR1
-ZSwgSnVuIDEzLCAyMDE3IGF0IDg6NTAgQU0sIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgSnVuIDEzLCAyMDE3IGF0
-IDA4OjM4OjU3QU0gLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiA+PiBPbiBUdWUsIEp1biAx
-MywgMjAxNyBhdCAxMjowNTozNUFNIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4g
-Pj4gPiBIaSBEYXJyZW4sDQo+ID4+ID4NCj4gPj4gPiBmaXJzdCAtIGNhbiB5b3UgcGxlYXNlIHBy
-b3Blcmx5IHRyaW0geW91ciByZXBsaWVzIGFuZCBkb24ndCB3cml0ZQ0KPiA+PiA+IG1vcmUgdGhh
-biA3IGNoYXJhY3RlcnMgcGVyIGxpbmU/DQo+ID4+DQo+ID4+IFN1cmUuLi4gKGFsdGhvdWdoIEkg
-dGhpbmsgeW91J3ZlIGRvbmUgYWxsIHRoZSBuZWNlc3NhcnkgcHJ1bmluZyBmb3IgdGhpcw0KPiA+
-PiByZXNwb25zZSkuIDcwIEkgcHJlc3VtZSB5b3UgbWVhbj8gSSB1c3VhbGx5IGhhdmUgdHcgc2V0
-IHRvIDcyLi4uDQo+ID4+IGFwcGFyZW50bHkgSSBkcm9wcGVkIHRoYXQgc2V0dGluZyBhdCBzb21l
-IHBvaW50LiBXaWxsIGNvcnJlY3QuDQo+ID4+DQo+ID4+ID4NCj4gPj4gPiBPbiBNb24sIEp1biAx
-MiwgMjAxNyBhdCAwNjoyNDozNVBNIC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4gPj4gPiA+
-IFRoaXMgaXMgYSBiaWcgdG9waWMgZm9yIHN1cmUuIFNwZWVkIGFuZCBzY2FsZSBvZiBwbGF0Zm9y
-bSBlbmFibGluZyBpcyBzb21ldGhpbmcNCj4gPj4gPiA+IEkgd291bGQgbGlrZSB0byBzZWUgdXMg
-c3VwcG9ydCBiZXR0ZXIuIFRoZSBiYXJyaWVyIHRvIGVudHJ5IHRvIGtlcm5lbA0KPiA+PiA+ID4g
-Y2hhbmdlcyBpcyBoaWdoLCBlc3BlY2lhbGx5IGZvciB0cml2aWFsIHRoaW5ncywgbGlrZSBhZGRp
-bmcgSURzLCBHVUlEcywgZXRjLg0KPiA+PiA+ID4gd2hpY2ggd291bGQgaWRlYWxseSwgSU1ITywg
-YmUgaW4gdGhlIGhhbmRzIG9mIHRoZSBPRU1zLg0KPiA+PiA+DQo+ID4+ID4gSXQncyBub3QuICBJ
-dCdzIGEgdHJpdmlhbCBwYXRjaCwgYW5kIHlvdSBjb3ZlciBhbGwgTGludXggdXNlcnMuICBWZXJ5
-DQo+ID4+ID4gbXVjaCB1bmxpa2Ugc2F5IHRoZSB3aW5kb3dzIHdvcmxkIHdoZXJlIHlvdSBhcmUg
-c3R1Y2sgd2l0aCBpbnN0YWxsaW5nDQo+ID4+ID4gYSB2ZW5kb3Igc3BlY2lmaWMgc2V0IG9mIGRy
-aXZlcnMgZm9yZXZlci4NCj4gPj4gPg0KPiA+Pg0KPiA+PiBUaGUgcGF0Y2ggaXMgdHJpdmlhbCwg
-YnV0IHRoZSBwcm9jZXNzIGlzIHRpbWUgY29uc3VtaW5nLiBUd28gdG8gVGhyZWUNCj4gPj4gbW9u
-dGhzIHRvIHNlZSBhbiBJRCBhZGRlZCBhbmQgcmVsZWFzZWQgaXMgYmlnIGJsb2NrZXIgZm9yIGNv
-bnRlbXBvcmFyeQ0KPiA+PiBsaWZlIGN5Y2xlcy4NCj4gPg0KPiA+IFdhaXQsIHdoYXQ/ICBQbGVh
-c2UgZXhwbGFpbi4NCj4gPg0KPiA+IFllcywgaXQgY291bGQgdGFrZSB3b3JzZSBjYXNlIDItMyBt
-b250aHMgdG8gYWRkIGEgbmV3IGRldmljZSBpZCwgYnV0DQo+ID4gZG9lcyBpdCByZWFsbHk/ICBJ
-IHRha2UgbmV3IGRldmljZSBpZHMgdXAgdW50aWwgMiB3ZWVrcyBiZWZvcmUgYSAtZmluYWwNCj4g
-PiBrZXJuZWwgaXMgcmVsZWFzZWQuICBBbmQgb25jZSB0aGV5IGFyZSBpbiBMaW51cydzIHRyZWUg
-aXQncyB1c3VhbGx5IG9ubHkNCj4gPiBhIHNpbmdsZSB3ZWVrIGJlZm9yZSB0aGV5IGVuZCB1cCBp
-biBhbGwgc3RhYmxlIGtlcm5lbCByZWxlYXNlcy4NCj4gPg0KPiA+IEJ1dCB0aGF0J3MgdXBzdHJl
-YW0sIG5vIGRldmljZSBzaGlwcyB3aXRoIHVwc3RyZWFtLCB0aGV5IHNoaXAgYSBkaXN0cm8NCj4g
-PiBrZXJuZWwuICBMb29rIGF0IHRoZSBwcmUtaW5zdGFsbHMgZnJvbSBTdVNFIGFuZCBDYW5vbmlj
-YWwsIHRvIGdldCBhIG5ldw0KPiA+IGRldmljZSBpZCBpbnRvIHRoZWlyIGtlcm5lbHMgdGFrZXMg
-d2hhdCwgYSBkYXkgb3IgdHdvPyAgQW5kIHRoYXQgaXMgd2hhdA0KPiA+IHJlYWxseSBtYXR0ZXJz
-IGFzIHRoYXQgaXMgd2hhdCBnb2VzIG91dCB0aGUgZG9vciBmb3IgdGhlaXIgZGV2aWNlLg0KPiA+
-DQo+ID4gQXQgbGVhc3QgdGhhdCBpcyB0aGUgcHJvY2VzcyBmb3Igd2hlbiBfSV8gdXNlZCB0byB3
-b3JrIG9uIHByZS1pbnN0YWxsZWQNCj4gPiBMaW51eCBvbiBkZXZpY2VzLCBtYXliZSB0aGluZ3Mg
-aGF2ZSBnb3R0ZW4gYSBsb3Qgd29yc2Ugc2luY2UgSSBsZWZ0IHRoYXQNCj4gPiBidXNpbmVzcywg
-YnV0IEkgd291bGQgc3VyZSBob3BlIGl0IHdvdWxkbid0IGdldCBtYWduaXR1ZGVzIHdvcnNlLg0K
-PiA+DQo+ID4gU28gMi0zIG1vbnRocyBzZWVtcyByZWFsbHkgbG9uZyB0byBtZS4NCj4gPg0KPiAN
-Cg0KVW5sZXNzIHlvdSBjYXRjaCB0aGUgY3ljbGUganVzdCByaWdodCwgOCB3ZWVrcyBpcyBub3Jt
-YWwgZm9yIHRoZSBkZWxheSB0byANCmdldCBhIHBhdGNoIHRocm91Z2ggYSBkaXN0cm8gdG8gYW4g
-ZW5kIHVzZXIncyBtYWNoaW5lLg0KVGhleSBnbyB0aHJvdWdoIHRoZWlyIG93biBzdGFibGUgdGVz
-dGluZyBhbmQgbGV0IGl0IGJha2UgYmVmb3JlIGl0J3MgcHJvbW90ZWQuDQoNCj4gSSBzaG91bGQg
-YWRkIHRoYXQgb25lIHRoaW5nIHRoYXQncyByZWFsbHksIHJlYWxseSBuaWNlIGFib3V0IExpbnV4
-IGlzDQo+IHRoYXQsIHdoZW4geW91IGluc3RhbGwgaXQgb24gYSBzdXBwb3J0ZWQgbGFwdG9wLCBp
-dCB3b3Jrcy4gIE9uDQo+IFdpbmRvd3MsIHlvdSBlbmQgdXAgd2l0aCBhIGhvcnJpYmxlIHBpbGUg
-b2YgYmxvYXRlZCwgYnVnZ3ksDQo+IHVuc3VwcG9ydGVkIHVzZXJzcGFjZSBjcmFwd2FyZSB0byBt
-YWtlIHJhbmRvbSBidXR0b25zIHdvcmsuDQo+IA0KPiBXaGlsZSBJJ20gYWxsIGZvciBpbXByb3Zp
-bmcgdGhlIG1hbmFnYWJpbGl0eSBzaXR1YXRpb24gb24gTGludXgsIGxldCdzDQo+IHBsZWFzZSBt
-YWtlIHN1cmUgd2UgZG9uJ3QgcmVncmVzcyB0aGUgb3JkaW5hcnkgbGFwdG9wIGZ1bmN0aW9uYWxp
-dHkNCj4gc3RvcnkgYW5kIG1ha2UgaXQgYXMgYmFkIGFzIGl0IGlzIG9uIFdpbmRvd3MuICBXZSdy
-ZSBjdXJyZW50bHkgaW4gYQ0KPiBzdXJwcmlzaW5nIHNpdHVhdGlvbiBpbiB3aGljaCBsYXB0b3Bz
-IGZyZXF1ZW50bHkgd29yayAqYmV0dGVyKiBvbg0KPiBMaW51eCB0aGFuIFdpbmRvd3MsIGFuZCBJ
-IHRoaW5rIHdlIHNob3VsZCBwcmVzZXJ2ZSB0aGF0Lg0KDQpTbyBpdCdzIHdvcnRoIG1lbnRpb25p
-bmcgdGhlIG1haW4gaW1wZXR1cyBmb3IgdGhpcyAoYXQgbGVhc3QgZnJvbSBteQ0KY29tcGFueSdz
-IHBlcnNwZWN0aXZlIC0gYnV0IEkgZXhwZWN0IG90aGVycyB3b3VsZCBzaGFyZSBpdCkgaXMgdG8N
-Cm1ha2UgbWFuYWdlYWJpbGl0eSB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgaGF2aW5nIHRv
-IGluc3RhbGwNCmFkZGl0aW9uYWwgcHJvcHJpZXRhcnkgdG9vbHMuDQoNCkdldHRpbmcgdGhlcmUg
-cmVxdWlyZXMgd29yayBpbiBhIGZldyBhcmVhczoNCjEpIFRoZSBPRU0vSUJWIGV4cG9ydHMgdGhl
-IG1ldGhvZHMgYW5kIHRoZSBNT0YgKGluIGJpbmFyeSBmb3JtKQ0KdGhhdCBkZXNjcmliZXMgdGhl
-IG9iamVjdHMgdGhhdCBjYW4gYmUgaW50ZXJhY3RlZCB3aXRoIGFuZCB3aGF0DQpraW5kIG9mIGRh
-dGEgbmVlZHMgdG8gYmUgc2VudC4NCjIpIEtlcm5lbCBuZWVkcyB0byBwcm92aWRlIGEgd2F5IHRv
-IHVzZXJzcGFjZSB0byBnZXQgdG8gdGhpcyBkYXRhDQozKSBBIHVzZXJzcGFjZSBPTUkgcHJvdmlk
-ZXIgbmVlZHMgdG8gYmUgZGV2ZWxvcGVkIHRvIHJlYWQgdGhlIA0KTU9GIGFuZCBsb2FkIHRoZSBh
-Y2Nlc3NpYmxlIG9iamVjdHMgaW50byBhIHJlcG9zaXRvcnkuDQo0KSBPTUkgdG9vbHMgY2FuIHRo
-ZW4gaW50ZXJhY3Qgd2l0aCB0aGUgT01JIHJlcG9zaXRvcnkuDQoNCk9uIHRoZSBXaW5kb3dzIHNp
-ZGUsIHlvdSBjYW4gImluLWJveCIgZG8gbWFuYWdlYWJpbGl0eSBpZiB0aGUNCk9FTSBoYXMgZG9u
-ZSA8MT4gdGhpcyB3YXkuICBZb3UgY2FuIHVzZSB0b29scyBsaWtlIHBvd2Vyc2hlbGwNCnRvIGRp
-cmVjdGx5IGludGVyYWN0IHdpdGggdGhlIE9NSSByZXBvc2l0b3J5Lg0KDQpXaHkgZG9uJ3Qgd2Ug
-d2FudCB0aGUgc2FtZSB0aGluZyBvbiB0aGUgTGludXggc2lkZT8gIElmIHlvdSBwdXQNCnVwIGV4
-dHJhIGJhcnJpZXJzIHRvIGhhdmUgdG8gYWRkIElEJ3MgdG8gYSB3aGl0ZWxpc3QgeW91IGFyZSBp
-bnRyb2R1Y2luZw0KZGVsYXkgYW5kIGFydGlmaWNpYWxseSBtYWtpbmcgaXQgbW9yZSBkaWZmaWN1
-bHQgZm9yIHdoYXQ/DQo=
+On Tue, Jun 13, 2017 at 05:50:00PM +0200, Greg Kroah-Hartman wrote:
+> > The patch is trivial, but the process is time consuming. Two to Three
+> > months to see an ID added and released is big blocker for contemporary
+> > life cycles.
+> 
+> Wait, what?  Please explain.
+> 
+> Yes, it could take worse case 2-3 months to add a new device id, but
+> does it really?  I take new device ids up until 2 weeks before a -final
+> kernel is released.  And once they are in Linus's tree it's usually only
+> a single week before they end up in all stable kernel releases.
+
+Up to 2-3 months, the average would be shorter of course, as you say.
+
+> 
+> But that's upstream, no device ships with upstream, they ship a distro
+> kernel.  Look at the pre-installs from SuSE and Canonical, to get a new
+> device id into their kernels takes what, a day or two?  And that is what
+> really matters as that is what goes out the door for their device.
+
+I'd be very interested to hear more accounts of timeline to distro
+inclusion - if it is truly 1-2 days, I need to re-evaluate my position
+on this. I don't see how it could be without that being done out of band
+with mainline, which would in turn accrue technical debt which had to
+be managed each release.
+
+> 
+> At least that is the process for when _I_ used to work on pre-installed
+> Linux on devices, maybe things have gotten a lot worse since I left that
+> business, but I would sure hope it wouldn't get magnitudes worse.
+> 
+> So 2-3 months seems really long to me.
+
+As a concrete example, Dell has specifically made the request that we
+work on a solution that doesn't require them to come back to the kernel
+community each time they add a WMI GUID to their BIOS. They would like
+to see those GUIDs automatically exposed.
+
+Mario, can you provide any specific information about what the pain
+points were that led to this request?
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
