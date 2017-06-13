@@ -1,101 +1,55 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 09:39:54 -0700
-Message-ID: <20170613163954.GH27850@fury>
-References: <20170509231639.GB11404@fury>
- <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
- <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury>
- <20170613155000.GA24483@kroah.com>
- <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
+ number
+Date: Tue, 13 Jun 2017 09:49:51 -0700
+Message-ID: <20170613164951.GI27850@fury>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+ <201706102115.57995@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:32840 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:33774 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751758AbdFMQj7 (ORCPT
+        with ESMTP id S1751802AbdFMQt6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 12:39:59 -0400
+        Tue, 13 Jun 2017 12:49:58 -0400
 Content-Disposition: inline
-In-Reply-To: <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
+In-Reply-To: <201706102115.57995@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 08:56:42AM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 13, 2017 at 8:50 AM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Jun 13, 2017 at 08:38:57AM -0700, Darren Hart wrote:
-> >> On Tue, Jun 13, 2017 at 12:05:35AM -0700, Christoph Hellwig wrote:
-> >> > Hi Darren,
-> >> >
-> >> > first - can you please properly trim your replies and don't write
-> >> > more than 7 characters per line?
-> >>
-> >> Sure... (although I think you've done all the necessary pruning for this
-> >> response). 70 I presume you mean? I usually have tw set to 72...
-> >> apparently I dropped that setting at some point. Will correct.
-> >>
-> >> >
-> >> > On Mon, Jun 12, 2017 at 06:24:35PM -0700, Darren Hart wrote:
-> >> > > This is a big topic for sure. Speed and scale of platform enabling is something
-> >> > > I would like to see us support better. The barrier to entry to kernel
-> >> > > changes is high, especially for trivial things, like adding IDs, GUIDs, etc.
-> >> > > which would ideally, IMHO, be in the hands of the OEMs.
-> >> >
-> >> > It's not.  It's a trivial patch, and you cover all Linux users.  Very
-> >> > much unlike say the windows world where you are stuck with installing
-> >> > a vendor specific set of drivers forever.
-> >> >
-> >>
-> >> The patch is trivial, but the process is time consuming. Two to Three
-> >> months to see an ID added and released is big blocker for contemporary
-> >> life cycles.
-> >
-> > Wait, what?  Please explain.
-> >
-> > Yes, it could take worse case 2-3 months to add a new device id, but
-> > does it really?  I take new device ids up until 2 weeks before a -final
-> > kernel is released.  And once they are in Linus's tree it's usually only
-> > a single week before they end up in all stable kernel releases.
-> >
-> > But that's upstream, no device ships with upstream, they ship a distro
-> > kernel.  Look at the pre-installs from SuSE and Canonical, to get a new
-> > device id into their kernels takes what, a day or two?  And that is what
-> > really matters as that is what goes out the door for their device.
-> >
-> > At least that is the process for when _I_ used to work on pre-installed
-> > Linux on devices, maybe things have gotten a lot worse since I left that
-> > business, but I would sure hope it wouldn't get magnitudes worse.
-> >
-> > So 2-3 months seems really long to me.
-> >
+On Sat, Jun 10, 2017 at 09:15:57PM +0200, Pali Rohár wrote:
+> On Saturday 27 May 2017 13:55:34 Pali Rohár wrote:
+> > instance_count defines number of instances of data block and instance
+> > itself is indexed from zero, which means first instance has number 0.
+> > Therefore check for invalid instance should be non-strict inequality.
+> > 
+> > Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> > ---
+> > I'm marking this patch as RFC because it is not tested at all and
+> > probably could break existing WMI drivers. Some WMI drivers pass
+> > instance number 1 and I'm not sure if ACPI-WMI bytecode for those
+> > machines has really two instances. In more cases ACPI-WMI bytecode
+> > does not check instance number if supports only one instance. So
+> > then any instance id can be used for correct execution of ACPI-WMI
+> > method.
+> > 
+> > So this patch is open for discussion.
 > 
-> I should add that one thing that's really, really nice about Linux is
-> that, when you install it on a supported laptop, it works.  On
-> Windows, you end up with a horrible pile of bloated, buggy,
-> unsupported userspace crapware to make random buttons work.
+> Hi! Any comments?
 
-This argument, also made by others, seems to assume that if it isn't in the
-kernel it will be of poor quality. What I see a lot of in the platform
-driver bug reports are "I am not a kernel developer, ...". I believe we
-would see more participation in platform specific enabling, if more of
-it could be developed in userspace. That doesn't preclude a well
-architected, fully open source solution.
+Hi Pali,
 
-> While I'm all for improving the managability situation on Linux, let's
-> please make sure we don't regress the ordinary laptop functionality
-> story and make it as bad as it is on Windows.  We're currently in a
-> surprising situation in which laptops frequently work *better* on
-> Linux than Windows, and I think we should preserve that.
-> 
+This change appears correct to me, but your comment about this parameter being
+ignored by ACPI-WMI is definitely concerning. Since this doesn't address a
+specific failure report, and it has the potential to break functional drivers, I
+wouldn't want to merge it without some evidence that those drivers still work.
 
-I guess I haven't been running windows on enough laptops to make a good
-comparison :-D
+I'd suggest reaching out to the maintainers and contributors to the drivers you
+mention to request some help in testing.
 
 -- 
 Darren Hart
