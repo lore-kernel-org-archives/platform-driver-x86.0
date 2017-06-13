@@ -1,385 +1,255 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Mon, 12 Jun 2017 18:24:35 -0700
-Message-ID: <20170613012435.GB27850@fury>
-References: <20170509231639.GB11404@fury>
- <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
+From: <gregkh@linuxfoundation.org>
+Subject: patch "platform: thinkpad_acpi: convert to use DRIVER_ATTR_RO/RW" added to driver-core-next
+Date: Tue, 13 Jun 2017 07:58:58 +0200
+Message-ID: <149733353862124@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201706130017.29023@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.linuxfoundation.org ([140.211.169.12]:43388 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752356AbdFMF7Q (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 13 Jun 2017 01:59:16 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org, hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br, platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 12:17:28AM +0200, Pali Rohár wrote:
-> On Monday 12 June 2017 19:02:49 Darren Hart wrote:
-> > On Sat, Jun 10, 2017 at 12:36:40PM +0200, Pali Rohár wrote:
-> > > On Saturday 10 June 2017 02:46:41 Darren Hart wrote:
-> > > > On Fri, Jun 09, 2017 at 08:41:51AM +0200, Greg Kroah-Hartman
-> > > > wrote:
-> > > > > On Sat, Jun 03, 2017 at 12:50:58PM -0700, Darren Hart wrote:
-> > > > > > On Wed, May 10, 2017 at 07:13:41AM +0200, Greg Kroah-Hartman
-> > > > > > 
-> > > > > > wrote:
-> > > > > > > On Tue, May 09, 2017 at 04:16:39PM -0700, Darren Hart wrote:
-> > > > > > > > Linus and Greg,
-> > > > > > > > 
-> > > > > > > > We are in the process of redesigning the Windows
-> > > > > > > > Management Instrumentation (WMI) [1] system in the
-> > > > > > > > kernel. WMI is the Microsoft implementation of Web-Based
-> > > > > > > > Enterprise Management (WBEM). We are looking to provide
-> > > > > > > > WMI access to userspace, while allowing the kernel to
-> > > > > > > > filter requests that conflict with its own usage. We'd
-> > > > > > > > like your take on how this approach relates to our
-> > > > > > > > commitment to not break userspace.
-> > > > > > > > 
-> > > > > > > > For this discussion, we are specifically referring to
-> > > > > > > > ACPI PNP0C14 WMI devices, consisting of a GUID and a set
-> > > > > > > > of methods and events, as well as a precompiled
-> > > > > > > > intermediate description of the methods and arguments
-> > > > > > > > (MOF). Exposed to userspace, these methods provide for
-> > > > > > > > BIOS interaction and are used for system management as
-> > > > > > > > well as LEDs, hot keys, radio switches, etc. There is
-> > > > > > > > vendor interest in achieving feature parity with Windows
-> > > > > > > > by exposing WMI methods to userspace for system
-> > > > > > > > management.
-> > > > > > > > 
-> > > > > > > > While it appears WMI intended to be accessed from
-> > > > > > > > userspace, we have made use of it in the kernel to
-> > > > > > > > support various laptop features by connecting the WMI
-> > > > > > > > methods to other subsystems, notably input, leds, and
-> > > > > > > > rfkill [2]. The challenge is continuing to use WMI for
-> > > > > > > > these platform features, while allowing userspace to use
-> > > > > > > > it for system management tasks. Unfortunately, the WMI
-> > > > > > > > methods are not guaranteed to be split up along granular
-> > > > > > > > functional lines, and we will certainly face situations
-> > > > > > > > where the same GUID::METHOD_ID will be needed for a
-> > > > > > > > kernel feature (say LED support) as well as a system
-> > > > > > > > management task.
-> > > > > > > > 
-> > > > > > > > To address this, I have proposed [3] that exporting WMI
-> > > > > > > > be opt-in, only done at the request of and in
-> > > > > > > > collaboration with a vendor, with the kernel platform
-> > > > > > > > driver given the opportunity to filter requests. This
-> > > > > > > > filtering would need to be at the method and argument
-> > > > > > > > inspection level, such as checking for specific bits in
-> > > > > > > > the input buffer, and rejecting the request if they
-> > > > > > > > conflict with an in kernel usage (that's worst case, in
-> > > > > > > > some cases just GUID or method ID could be sufficient).
-> > > > > > > > 
-> > > > > > > > Because the kernel and the platform drivers are under
-> > > > > > > > continual development, and new systems appear regularly,
-> > > > > > > > we will encounter necessary changes to the platform
-> > > > > > > > driver WMI request filters. These changes could be
-> > > > > > > > considered a change to the kernel provided WMI interface
-> > > > > > > > to userspace. For example, we could regularly accept a
-> > > > > > > > call to
-> > > > > > > > $GUID::$METHOD_ID with bit 4 of the buffer set, and later
-> > > > > > > > deny the call when we determine it interferes with kernel
-> > > > > > > > usage.
-> > > > > > > > 
-> > > > > > > > In your view, is it acceptable to provide a chardev
-> > > > > > > > interface, for example, exposing WMI methods to
-> > > > > > > > userspace, with the understanding that the kernel may
-> > > > > > > > choose to filter certain requests which conflict with
-> > > > > > > > its own use? And that this filtering may change as new
-> > > > > > > > features are added to the platform drivers?
-> > > > > > > 
-> > > > > > > So, for example, if a new driver for a "brightness key"
-> > > > > > > were added to the kernel, all of a sudden the "raw" access
-> > > > > > > to the wmi data through the chardev would filtered away by
-> > > > > > > the kernel and not seen by userspace?
-> > > > > > > 
-> > > > > > > Why would you want to do that?  What's wrong with providing
-> > > > > > > "raw" access through a chardev, and the current in-kernel
-> > > > > > > access as well at the same time?
-> > > > > > > 
-> > > > > > > I don't really understand what would "break" over time
-> > > > > > > here.
-> > > > > > 
-> > > > > > Just a bump now that we're out of the merge window in case
-> > > > > > either Greg or Linus care to follow up with the responses to
-> > > > > > this.
-> > > > > > 
-> > > > > > To Greg's last point - any kernel state that is built up in
-> > > > > > conjunction with the WMI interface could be invalidated by a
-> > > > > > userspace application. It may or may not be recoverable,
-> > > > > > depending on the WMI implementation. This would be true for
-> > > > > > multiple WMI userspace applications as well, and I suppose
-> > > > > > the question is, do we defend the kernel drivers against
-> > > > > > this, or do we consider the kernel drivers on equal footing
-> > > > > > with WMI applications, and say "don't do that then" when
-> > > > > > some combination of apps and drivers don't play well
-> > > > > > together?
-> > > > > 
-> > > > > In the end, this shouldn't really matter, as long as nothing
-> > > > > breaks
-> > > 
-> > > I have one objection here:
-> > > 
-> > > If two userspace applications start to fight and use one WMI device
-> > > at same time, then it is their (userspace) problem. In any case
-> > > (how their userspace fight finish) it does not affect kernel nor
-> > > kernel drivers.
-> > > 
-> > > But once some "wrong" or "broken" userspace application starts to
-> > > fight with kernel WMI driver and kernel driver depends on internal
-> > > WMI state, then such application can cause problems to that kernel
-> > > driver.
-> > > 
-> > > And we *must* avoid breakage of kernel drivers by just broken
-> > > userspace application. Such thing could be fatal for kernel and
-> > > could case problems in other kernel drivers (which depends on this
-> > > WMI kernel driver).
-> > > 
-> > > I think we cannot accept that some userspace application could use
-> > > some race condition in WMI/ACPI firmware to change internal state
-> > > of kernel WMI driver which could cause undefined behaviour of
-> > > kernel.
-> > 
-> > These are valid concerns in my opinion. They are, in part, of our own
-> > making (see below re userspace daemons and the mapping driver). I
-> > believe we are at the beginning of a fundamental shift in how we
-> > make use of WMI in the Linux world. There will be some rough patches
-> > with the pre-existing WMI drivers within the Linux kernel.
-> > 
-> > Admittedly, all of the dangerous corner cases are not evident - at
-> > least not to me. This is in part why I proposed we take the first
-> > step, and use something concrete to help expose such things.
-> > 
-> > > > > as far as a user notices.  And that's the key here, apis can
-> > > > > change, but if you do it in a way that breaks something, or
-> > > > > anyone notices, then it's not ok.
-> > > > > 
-> > > > > So I don't have a solid answer other than "good luck!" :)
-> > > > > 
-> > > > > greg k-h
-> > > > 
-> > > > Fair enough, thanks Greg.
-> > > > 
-> > > > To all involved. I propose we move forward with:
-> > > > 
-> > > > * Design the API
-> > > > 
-> > > >   - character device per WMI device
-> > > >   - calling convention
-> > > >   - platform proof of concept
-> > > > 
-> > > > Let's see this in practice. I hope this proves the point that we
-> > > > do not have to filter these interfaces, since there is no clean
-> > > > way to do this, and the kernel module is arguably no more valid
-> > > > a user of WMI than a userspace application (perhaps less so
-> > > > given the intent of the vendor and the mechanism itself).
 
-Hey Pali,
+This is a note to let you know that I've just added the patch titled
 
-I found it difficult to respond to your points without droning on about some the
-positions I've developed over the years regarding open source projects versus
-products, platform enabling, and enabling people/companies to innovate
-independently. So while I don't necessarily want to debate all the finer points,
-I probably do need to get this out there at some point. So I'll do that here,
-and then try to bring this back to "OK fine, but are we actually going to do
-about it all?" as we continue the discussion.
+    platform: thinkpad_acpi: convert to use DRIVER_ATTR_RO/RW
 
-I think it is accurate to say that you are responding from a "where we are now"
-perspective, while much of what I'll say below is from a "what might this look
-like ideally?". Ultimately our solution has to start from where we are now, but
-I do want us to consider what the ideal might look like.
+to my driver-core git tree which can be found at
+    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+in the driver-core-next branch.
 
-> > > 
-> > > What do you mean that kernel is no more valid user of WMI? We still
-> > > have a couple of WMI drivers and without correct functionality of
-> > > them, lot of notebooks would less usable for ordinary users.
-> > 
-> > Perhaps a poor choice of wording on my part. My point was just that
-> > for a system like WMI, which was designed to expose firmware control
-> > to userspace, it is inconsistent with the intent of the mechanism to
-> > grant the Linux kernel a position of higher importance than that of
-> > a userspace management application.
-> 
-> One thing is design of some system, another thing is real usage. We know 
-> that WMI is used for reporting events when some keys are pressed (e.g. 
-> Fn keys) or used for enabling/disabling of radio devices or controlling 
-> keyboard/LID backlight. All those parts are in Linux world handled by 
-> kernel (not userspace) and therefore WMI needs to be handled in Linux 
-> kernel.
+The patch will show up in the next release of the linux-next tree
+(usually sometime within the next 24 hours during the week.)
 
-These are examples of the subsystems I was referring to below. We can already
-assign LED triggers for some things. However, when the WMI method is
-specifically used as the mechanism for toggling the LED... yes, you make a good
-point.
+The patch will also be merged in the next major kernel release
+during the merge window.
 
-> 
-> If other operating systems implements above parts of functionality in 
-> userspace and based on this fact was WMI designed, then it is not fully 
-> relevant argument for Linux.
-> 
+If you have any questions about this process, please let me know.
 
-This is a big topic for sure. Speed and scale of platform enabling is something
-I would like to see us support better. The barrier to entry to kernel
-changes is high, especially for trivial things, like adding IDs, GUIDs, etc.
-which would ideally, IMHO, be in the hands of the OEMs.
 
-To the point above, the OEMs design these systems. For a long time they mostly
-just ignored Linux, so we've done what we have to in order to get the last 5% of
-the platform working. This approach was done in a way that is efficient for us,
-so when an OEM comes in and wants to support their own product on Linux -
-they've faced with a system that wasn't designed to be efficient for them.
+From ac3054c4f6daa57c2af71abc312b396c68fde71a Mon Sep 17 00:00:00 2001
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date: Fri, 9 Jun 2017 11:03:12 +0200
+Subject: platform: thinkpad_acpi: convert to use DRIVER_ATTR_RO/RW
 
-The design of the system is relevant to the Linux kernel as working against the
-intent of the design frequently results in difficult to maintain code, often
-reverse engineered and dependent upon undefined behavior, which trips up against
-weird corner cases, updates, etc.
+We are trying to get rid of DRIVER_ATTR(), and the thinkpad_acpi
+driver's attributes can be trivially changed to use DRIVER_ATTR_RO() and
+DRIVER_ATTR_RW().
 
-Ideally, we would provide a generic way for users/OEMs/vendors to successfully
-support and maintain their own platforms, ideally with as little kernel changes
-as possible. If we can get closer to that than we are today with this WMI work,
-I think that is worth the effort.
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>
+Cc: <platform-driver-x86@vger.kernel.org>
+Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 91 +++++++++++-------------------------
+ 1 file changed, 28 insertions(+), 63 deletions(-)
 
-> And if we need to ensure correctly functionality of kernel drivers, then 
-> I think Linux kernel has a position with higher importance as some 
-> userspace application.
-> 
-> But it does not mean we cannot or do not want export other functionality 
-> to userspace. Just I still think we should be careful when some 3rd 
-> party firmware code which running in kernel mode (=ACPI-WMI bytecode) is 
-> going to be accessed by more users (both kernel drivers and userspace 
-> applications).
-> 
-> And filter layer which will accept only WMI calls which are safe for 
-> currently loaded/used kernel modules seems like a sane idea to ensure 
-> functionality of kernel plus allow userspace to do other things.
-
-My biggest concern with this approach is maintenance. Because we would be doing
-something unforeseen by the specification, the various vendor implemented WMI
-APIs are not likely to be amenable to filtering. I can see these filters
-getting extremely complicated. They are "high touch", by which I mean each
-generation of platform may require subtle tweaks, which will be difficult to
-verify they don't break past generations.
-
-> 
-> > Arguably, implementing platform support with WMI through Linux kernel
-> > modules slows platform support as it is hindered by the barrier to
-> > entry and the kernel's release process - while a generic WMI
-> 
-> But we can say mainline kernel has better code quality as some random 
-> closed source 3rd vendor application.
-
-While I think we work pretty hard at writing quality code, the code analysis
-studies I'm aware of (such as those being developed by the SIL2Linux MP project
-for the use of the Linux kernel in safety critical systems) support this
-statement for the most core code of the Linux kernel, the stuff that
-everything needs. This doesn't hold true of all parts of the kernel, however,
-with lower use drivers showing some of the highest bug rates of all subsystems
-(along with certain filesystems).
-
-> If we look in Microsoft Windows world (where that WMI is used a lot), we 
-> have there for function X specific application from each notebook 
-> vendor. And all those applications which doing function X are 
-> incompatible and every one locked for particular notebook model.
-> 
-> So I'm not sure if this is right way.
-> 
-
-There are certainly pros and cons. While this approach results in duplication of
-effort, it also allows vendors to "own their own destiny" and innovate and
-support their platforms independently. It also minimizes the amount of dead code
-accumulating for platforms that just don't exist for very long.
-
-Over the years I've become more and more supportive of the idea that the kernel is the
-place for common code everything needs - and specifically not the code that will
-live for 18 months and never be needed again. The development and maintenance
-models for these two things are fundamentally different.
-
-In general, I want to work to support the development of interfaces that allow
-people and companies to develop their new thing, without forcing them to come
-back to us repeatedly. "Enable them to enable themselves and get out of their
-way."
-
-> > interface to userspace can be readily used to write userspace
-> > drivers for these features. Obviously, there are still some gaps
-> > with interaction with other subsystems.
-> > 
-> > WMI may prove to be another one of those subsystems where userspace
-> > drivers facilitate faster innovation and platform enabling. This
-> > also helps reduce the dead code we build up in the kernel supporting
-> > devices with relatively short lifespans.
-> > 
-> > > I still think we need to some some filtering. Kernel and kernel
-> > > modules must not be confused by some random userspace application.
-> > 
-> > Keep in mind that WMI access will be a privileged operation, and I
-> > don't think characterizing these as "random userspace applications"
-> > is any more valid than "random kernel modules".
-> 
-> Kernel modules (which do not taint kernel) comes with kernel itself. 
-> They are well known and basically are part of kernel code.
-
-This is a fairly kernel-centric perspective. It works great for us, but
-many non-kernel-devs will have a different view.
-
-> 
-> Userspace applications, and if we are talking about WMI, would be 
-> probably 3rd party vendor closed-source binaries compiled for one or two 
-> specific Linux distributions. For me it is just "random userspace 
-> application" which I do not thing that would be preinstalled or part of 
-> Linux distributions, like it is for coreutils or X Server today.
-
-That is certainly not the outcome we'd be aiming for.
-
-> > In hindsight, I suspect implementing more than the mapping driver in
-> > kernel space will prove to have been a mistake. I understand why we
-> > did it, and why that precedent expanded as it has, but at speed and
-> > scale, the support these drivers provide would probably have been
-> > better implemented as userspace platform daemons using the WMI
-> > interfaces.
-> > 
-> > > Question about API:
-> > > 
-> > > Are we going to export low-level ACPI methods? Or are we going to
-> > > implement BMOF parser in kernel and export high-level
-> > > class/function API to userspace with validation of input
-> > > parameters in kernel (to prevent passing garbage from userspace to
-> > > ACPI-WMI) like it is on Windows?
-> > 
-> > What we have discussed to date is exposing each WMI device as a
-> > character device. Userspace would select the method and pass a
-> > buffer formatted per the information provided by a userspace BMOF
-> > parser. This is consistent with the design goals of WMI, per the
-> > documentation. Specifically, that the mapping driver does not have
-> > any specific knowledge about the WMI GUIDs or methods.
-> 
-> Ok.
-> 
-
-As to the "OK fine, but what are we actually going to do..." bit...
-
-In order to support broad enabling, we should avoid Whitelists which would
-require we add new GUIDs to the kernel as fast as vendors can add them.
-
-If we require filtering, it should be along the lines of an ACCEPT/DENY filter,
-which only denies specific accesses. Drivers which match a WMI GUID can register
-a filter callback, returning true or false (accept or deny). This would allow
-for the creation of management tools in cooperation with the existing
-drivers, without precluding the development of userspace platform-daemons which
-could handle all aspects of the WMI interface (if they conflict with an existing
-driver, they would need to run without that driver, which would avoid loading
-the WMI filter).
-
-Possible concerns, as before, we run the risk of a new driver being written, or
-a new feature being added to an existing driver, that needs to add a filter
-which would then deny userspace accesses previously allowed. It becomes a first
-to support the platform race.
-
-I don't see a way to both make WMI broadly useful and protect existing drivers
-without this potential risk.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 7b6cb0c69b02..f6861b551178 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1438,25 +1438,20 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_rfk_id id, char *buf)
+  */
+ 
+ /* interface_version --------------------------------------------------- */
+-static ssize_t tpacpi_driver_interface_version_show(
+-				struct device_driver *drv,
+-				char *buf)
++static ssize_t interface_version_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "0x%08x\n", TPACPI_SYSFS_VERSION);
+ }
+-
+-static DRIVER_ATTR(interface_version, S_IRUGO,
+-		tpacpi_driver_interface_version_show, NULL);
++static DRIVER_ATTR_RO(interface_version);
+ 
+ /* debug_level --------------------------------------------------------- */
+-static ssize_t tpacpi_driver_debug_show(struct device_driver *drv,
+-						char *buf)
++static ssize_t debug_level_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "0x%04x\n", dbg_level);
+ }
+ 
+-static ssize_t tpacpi_driver_debug_store(struct device_driver *drv,
+-						const char *buf, size_t count)
++static ssize_t debug_level_store(struct device_driver *drv, const char *buf,
++				 size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -1467,34 +1462,28 @@ static ssize_t tpacpi_driver_debug_store(struct device_driver *drv,
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(debug_level, S_IWUSR | S_IRUGO,
+-		tpacpi_driver_debug_show, tpacpi_driver_debug_store);
++static DRIVER_ATTR_RW(debug_level);
+ 
+ /* version ------------------------------------------------------------- */
+-static ssize_t tpacpi_driver_version_show(struct device_driver *drv,
+-						char *buf)
++static ssize_t version_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%s v%s\n",
+ 			TPACPI_DESC, TPACPI_VERSION);
+ }
+-
+-static DRIVER_ATTR(version, S_IRUGO,
+-		tpacpi_driver_version_show, NULL);
++static DRIVER_ATTR_RO(version);
+ 
+ /* --------------------------------------------------------------------- */
+ 
+ #ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+ 
+ /* wlsw_emulstate ------------------------------------------------------ */
+-static ssize_t tpacpi_driver_wlsw_emulstate_show(struct device_driver *drv,
+-						char *buf)
++static ssize_t wlsw_emulstate_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wlsw_emulstate);
+ }
+ 
+-static ssize_t tpacpi_driver_wlsw_emulstate_store(struct device_driver *drv,
+-						const char *buf, size_t count)
++static ssize_t wlsw_emulstate_store(struct device_driver *drv, const char *buf,
++				    size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -1508,22 +1497,16 @@ static ssize_t tpacpi_driver_wlsw_emulstate_store(struct device_driver *drv,
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(wlsw_emulstate, S_IWUSR | S_IRUGO,
+-		tpacpi_driver_wlsw_emulstate_show,
+-		tpacpi_driver_wlsw_emulstate_store);
++static DRIVER_ATTR_RW(wlsw_emulstate);
+ 
+ /* bluetooth_emulstate ------------------------------------------------- */
+-static ssize_t tpacpi_driver_bluetooth_emulstate_show(
+-					struct device_driver *drv,
+-					char *buf)
++static ssize_t bluetooth_emulstate_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_bluetooth_emulstate);
+ }
+ 
+-static ssize_t tpacpi_driver_bluetooth_emulstate_store(
+-					struct device_driver *drv,
+-					const char *buf, size_t count)
++static ssize_t bluetooth_emulstate_store(struct device_driver *drv,
++					 const char *buf, size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -1534,22 +1517,16 @@ static ssize_t tpacpi_driver_bluetooth_emulstate_store(
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(bluetooth_emulstate, S_IWUSR | S_IRUGO,
+-		tpacpi_driver_bluetooth_emulstate_show,
+-		tpacpi_driver_bluetooth_emulstate_store);
++static DRIVER_ATTR_RW(bluetooth_emulstate);
+ 
+ /* wwan_emulstate ------------------------------------------------- */
+-static ssize_t tpacpi_driver_wwan_emulstate_show(
+-					struct device_driver *drv,
+-					char *buf)
++static ssize_t wwan_emulstate_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wwan_emulstate);
+ }
+ 
+-static ssize_t tpacpi_driver_wwan_emulstate_store(
+-					struct device_driver *drv,
+-					const char *buf, size_t count)
++static ssize_t wwan_emulstate_store(struct device_driver *drv, const char *buf,
++				    size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -1560,22 +1537,16 @@ static ssize_t tpacpi_driver_wwan_emulstate_store(
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(wwan_emulstate, S_IWUSR | S_IRUGO,
+-		tpacpi_driver_wwan_emulstate_show,
+-		tpacpi_driver_wwan_emulstate_store);
++static DRIVER_ATTR_RW(wwan_emulstate);
+ 
+ /* uwb_emulstate ------------------------------------------------- */
+-static ssize_t tpacpi_driver_uwb_emulstate_show(
+-					struct device_driver *drv,
+-					char *buf)
++static ssize_t uwb_emulstate_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_uwb_emulstate);
+ }
+ 
+-static ssize_t tpacpi_driver_uwb_emulstate_store(
+-					struct device_driver *drv,
+-					const char *buf, size_t count)
++static ssize_t uwb_emulstate_store(struct device_driver *drv, const char *buf,
++				   size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -1586,10 +1557,7 @@ static ssize_t tpacpi_driver_uwb_emulstate_store(
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(uwb_emulstate, S_IWUSR | S_IRUGO,
+-		tpacpi_driver_uwb_emulstate_show,
+-		tpacpi_driver_uwb_emulstate_store);
++static DRIVER_ATTR_RW(uwb_emulstate);
+ #endif
+ 
+ /* --------------------------------------------------------------------- */
+@@ -8606,14 +8574,13 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+ 
+ /* sysfs fan fan_watchdog (hwmon driver) ------------------------------- */
+-static ssize_t fan_fan_watchdog_show(struct device_driver *drv,
+-				     char *buf)
++static ssize_t fan_watchdog_show(struct device_driver *drv, char *buf)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%u\n", fan_watchdog_maxinterval);
+ }
+ 
+-static ssize_t fan_fan_watchdog_store(struct device_driver *drv,
+-				      const char *buf, size_t count)
++static ssize_t fan_watchdog_store(struct device_driver *drv, const char *buf,
++				  size_t count)
+ {
+ 	unsigned long t;
+ 
+@@ -8630,9 +8597,7 @@ static ssize_t fan_fan_watchdog_store(struct device_driver *drv,
+ 
+ 	return count;
+ }
+-
+-static DRIVER_ATTR(fan_watchdog, S_IWUSR | S_IRUGO,
+-		fan_fan_watchdog_show, fan_fan_watchdog_store);
++static DRIVER_ATTR_RW(fan_watchdog);
+ 
+ /* --------------------------------------------------------------------- */
+ static struct attribute *fan_attributes[] = {
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.13.1
