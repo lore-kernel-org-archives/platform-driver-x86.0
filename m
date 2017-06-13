@@ -1,109 +1,87 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 20:00:30 +0200
-Message-ID: <201706132000.30449@pali>
-References: <20170509231639.GB11404@fury> <201706131916.12144@pali> <20170613174027.GL27850@fury>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
+Date: Tue, 13 Jun 2017 20:04:57 +0200
+Message-ID: <201706132004.58051@pali>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com> <201706102115.57995@pali> <20170613164951.GI27850@fury>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart2290942.pCovsuuPNb";
+  boundary="nextPart2304693.NMtAXrQBWh";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170613174027.GL27850@fury>
+In-Reply-To: <20170613164951.GI27850@fury>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart2290942.pCovsuuPNb
+--nextPart2304693.NMtAXrQBWh
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tuesday 13 June 2017 19:40:27 Darren Hart wrote:
-> On Tue, Jun 13, 2017 at 07:16:11PM +0200, Pali Roh=C3=A1r wrote:
-> > On Tuesday 13 June 2017 17:38:57 Darren Hart wrote:
-> > > I'll mention this again I suspect in this thread, but rather than
-> > > a "WMI filter" we can implement a "WMI proxy". If a kernel
-> > > driver needs to own certain WMI calls for LED or Radio
-> > > management, for example, all such calls can be proxied through
-> > > that driver. It can do the necessary work to update its own
-> > > state, and still perform the requested funtion, transparent to
-> > > the userspace caller. This should accommodate the addition of
-> > > new drivers and features to kernel drivers, without precluding
-> > > the development of userspace management or platform daemons.
+On Tuesday 13 June 2017 18:49:51 Darren Hart wrote:
+> On Sat, Jun 10, 2017 at 09:15:57PM +0200, Pali Roh=C3=A1r wrote:
+> > On Saturday 27 May 2017 13:55:34 Pali Roh=C3=A1r wrote:
+> > > instance_count defines number of instances of data block and
+> > > instance itself is indexed from zero, which means first instance
+> > > has number 0. Therefore check for invalid instance should be
+> > > non-strict inequality.
+> > >=20
+> > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > > ---
+> > > I'm marking this patch as RFC because it is not tested at all and
+> > > probably could break existing WMI drivers. Some WMI drivers pass
+> > > instance number 1 and I'm not sure if ACPI-WMI bytecode for those
+> > > machines has really two instances. In more cases ACPI-WMI
+> > > bytecode does not check instance number if supports only one
+> > > instance. So then any instance id can be used for correct
+> > > execution of ACPI-WMI method.
+> > >=20
+> > > So this patch is open for discussion.
 > >=20
-> > Such WMI proxy implemented in every WMI driver has one design
-> > problem:
-> >=20
-> > There would be two different kernel APIs to configure some firmware
-> > settings. E.g. if particular WMI method implements turning on/off
-> > radio devices, then functionality would be exported to userspace
-> > via:
-> >=20
-> > 1) standard kernel rfkill interface which is device/driver/firmware
-> > neutral (and any rfkill application can control it)
-> >=20
-> > 2) platform/firmware specific WMI method via newly standard
-> > /dev/wmi* interface -- and only vendor specific application could
-> > do that and it would work only for this one specific WMI GUID
-> > device
+> > Hi! Any comments?
 >=20
-> Yes, platform specific control is what WMI is for.
+> Hi Pali,
 >=20
-> > I do not like idea to have two kernel <--> userspace interfaces to
-> > control one thing, plus one interface would be platform dependent.
-> >=20
-> > In my opinion any management application which want to control
-> > radio switches should use option 1) rfkill interface.
->=20
-> Agreed, they should.
->=20
-> > And I do not see reason for exporting same duplicate, but platform
-> > dependent interface from kernel to userspace.
->=20
-> So this question boils down to: do we export WMI to userspace or not?
->=20
-> The WMI GUIDs and methods will not be divided across convenient Linux
-> subsystem boundaries allowing us to pick and choose what we export.
-> If we export WMI to userspace, we will be providing another means of
-> access. Sometimes, this may cause conflict, and the answer may just
-> be "don't do that".
->=20
-> There are plenty of other examples of things you can do to screw up
-> the state of your system if you have the right permissions for which
-> the answer is "don't do that". Consider MEM(4), SETPCI(8), ...
-> /dev/sda ... for example.
+> This change appears correct to me, but your comment about this
+> parameter being ignored by ACPI-WMI is definitely concerning. Since
+> this doesn't address a specific failure report, and it has the
+> potential to break functional drivers, I wouldn't want to merge it
+> without some evidence that those drivers still work.
 
-I know. There is also iopl(3). But this nor above examples are not tools=20
-for such activity. (Yes, there is e.g. lspci which can be switched to=20
-use iopl(3), but also it is not for normal usage.)
+I agree that it should not be merged without any other testing or=20
+discussion. Reason why I marked it as RFC.
 
-But on the other hand proposed WMI API designed are for such usage and=20
-developers are directly motivated to use it.
+ACPI bytecode (which implements WMI functions) is often ignoring=20
+instance method if there is only one instance. So it does not have to=20
+decide which instance to call based on parameter.
 
-> So we can either export them and possibly offer some means of
-> proxying where necessary, or we can not export them.
+IIRC it is also stated in that MSDN documentation.
 
-I just tried to show that proposed proxy has above problem and looks=20
-like anti-pattern for linux kernel. As this should be evaluated when=20
-going to accept or reject it.
+> I'd suggest reaching out to the maintainers and contributors to the
+> drivers you mention to request some help in testing.
+
+Seems sane. Grep for all methods with instance number different as zero=20
+(or just number one -- which can be suspicious as somebody could thought=20
+that indexing is from one, not zer) and try to receive ACPI/BMOF data=20
+and verify it.
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart2290942.pCovsuuPNb
+--nextPart2304693.NMtAXrQBWh
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAllAKD4ACgkQi/DJPQPkQ1IaCQCfTxBPsOaZl45UbwocRTHfCeg2
-cmgAn3W1l18ljoQTd3WpZnJcRls52U4F
-=ouLy
+iEYEABECAAYFAllAKUoACgkQi/DJPQPkQ1KXoACZAT5Xcurz9PNyteqEzSvmgBLK
+JMUAnjFe4zcT+AyY3mJqKmM6JmZiOiux
+=WnF9
 -----END PGP SIGNATURE-----
 
---nextPart2290942.pCovsuuPNb--
+--nextPart2304693.NMtAXrQBWh--
