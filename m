@@ -1,81 +1,78 @@
-From: <susan.christian@state.sd.us>
-Subject: (unknown)
-Date: Tue, 13 Jun 2017 11:59:20 -0000
-Message-ID: <149735516063.29695.15212037858096075622@zaural.ru>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: WMI and Kernel:User interface
+Date: Tue, 13 Jun 2017 14:07:41 +0200
+Message-ID: <20170613120741.GG5248@pali>
+References: <20170509231639.GB11404@fury>
+ <201706101236.40663@pali>
+ <20170612170249.GA27850@fury>
+ <201706130017.29023@pali>
+ <20170613012435.GB27850@fury>
+ <20170613070535.GA13252@infradead.org>
 Mime-Version: 1.0
-Content-Type: application/zip; name="78954.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws113.zone31-163-183.zaural.ru ([31.163.183.113]:52832 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1752187AbdFML7Z (ORCPT
+Received: from mail-wr0-f194.google.com ([209.85.128.194]:35644 "EHLO
+        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752249AbdFMMHp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 07:59:25 -0400
-Content-Disposition: attachment
-Subject: 
+        Tue, 13 Jun 2017 08:07:45 -0400
+Content-Disposition: inline
+In-Reply-To: <20170613070535.GA13252@infradead.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-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
-AAAEAAAAAFBLBQYAAAAAAQABAE8AAABNDQAAAAA=
+On Tuesday 13 June 2017 00:05:35 Christoph Hellwig wrote:
+> On Mon, Jun 12, 2017 at 06:24:35PM -0700, Darren Hart wrote:
+> > This is a big topic for sure. Speed and scale of platform enabling is something
+> > I would like to see us support better. The barrier to entry to kernel
+> > changes is high, especially for trivial things, like adding IDs, GUIDs, etc.
+> > which would ideally, IMHO, be in the hands of the OEMs.
+> 
+> It's not.  It's a trivial patch, and you cover all Linux users.  Very
+> much unlike say the windows world where you are stuck with installing
+> a vendor specific set of drivers forever.
+
+Yes, adding new GUID is same hard as adding new PCI ID or USB ID. It is
+really trivial patch.
+
+> > Ideally, we would provide a generic way for users/OEMs/vendors to successfully
+> > support and maintain their own platforms, ideally with as little kernel changes
+> > as possible. If we can get closer to that than we are today with this WMI work,
+> > I think that is worth the effort.
+> 
+> Hell no!  The last thing we need on Linux is systems that once support
+> us added don't just work out of the box because you're missing your
+> vendor blob.
+
+Seeing vendor blob compiled for one particular userspace and
+distribution which would be needed for having working notebook support
+on Linux is way to the hell.
+
+Here I agree with Christoph.
+
+> > > And filter layer which will accept only WMI calls which are safe for 
+> > > currently loaded/used kernel modules seems like a sane idea to ensure 
+> > > functionality of kernel plus allow userspace to do other things.
+> > 
+> > My biggest concern with this approach is maintenance. Because we would be doing
+> > something unforeseen by the specification, the various vendor implemented WMI
+> > APIs are not likely to be amenable to filtering. I can see these filters
+> > getting extremely complicated. They are "high touch", by which I mean each
+> > generation of platform may require subtle tweaks, which will be difficult to
+> > verify they don't break past generations.
+> 
+> Agreed.  As mentioned before I think the only sensible approach is
+> white listing GUIDs that have a valid userspace use case.  And use
+> the dynamic IDs approach to add them for debugging and reverse
+> engineering.
+
+In some cases filter function can be simple in some cases hard. I can
+image that usage of while listing, plus in some cases also filtering
+(when it would be relatively easy to implement).
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
