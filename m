@@ -1,147 +1,111 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Tue, 13 Jun 2017 09:07:32 -0700
-Message-ID: <20170613160732.GE27850@fury>
-References: <20170509231639.GB11404@fury>
- <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
- <20170613125107.GH5248@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: WMI and Kernel:User interface
+Date: Tue, 13 Jun 2017 16:12:41 +0000
+Message-ID: <6e3ce02ce8b74710a3335b4cfa13b9af@ausx13mpc120.AMER.DELL.COM>
+References: <20170509231639.GB11404@fury> <201706101236.40663@pali>
+ <20170612170249.GA27850@fury> <201706130017.29023@pali>
+ <20170613012435.GB27850@fury> <20170613070535.GA13252@infradead.org>
+ <20170613153857.GC27850@fury> <20170613155000.GA24483@kroah.com>
+ <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:49274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751768AbdFMQHi (ORCPT
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:17028 "EHLO
+        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750899AbdFMQMy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2017 12:07:38 -0400
-Content-Disposition: inline
-In-Reply-To: <20170613125107.GH5248@pali>
+        Tue, 13 Jun 2017 12:12:54 -0400
+In-Reply-To: <CALCETrUMegZYe8vnikoRw3yN2GqubX=Xi3b26wzB0p407QOfOQ@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: luto@kernel.org, gregkh@linuxfoundation.org
+Cc: dvhart@infradead.org, hch@infradead.org, pali.rohar@gmail.com, torvalds@linux-foundation.org, andriy.shevchenko@linux.intel.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 02:51:07PM +0200, Pali Rohár wrote:
-> If function of that WMI method is in Windows world handled by userspace,
-> it does not mean that in Linux we need to create way how to handle such
-> thing in userspace -- argument "WMI was designed to access firmware
-> functions from userspace" is not relevant in such Linux scenario.
-
-We're looping now :-) We disagree on this point. That's OK, I think I
-see a solution that will address both sides coming.
-
-> > Ideally, we would provide a generic way for users/OEMs/vendors to successfully
-> > support and maintain their own platforms, ideally with as little kernel changes
-> > as possible. If we can get closer to that than we are today with this WMI work,
-> > I think that is worth the effort.
-> 
-> If OEM vendors are uncooperative, why should be ever create some
-> interface to call WMI methods? That looks like "we are going to cook
-
-This line of thinking just leads to a stalemate in my opinion.
-
-> something, we do not know who will eat it nor how it should taste".
-> 
-> I know only Mario from Dell and their need to call SMBIOS functions
-> exported by one WMI GUID. Why no other OEM vendor entered into this
-> discussion?
-
-I'm really happy to see the level of interaction from Dell we are
-seeing.  They're doing the right thing, engaging the kernel development
-community in an open environment, at the right conferences, etc. That's
-enough for me to engage and work on solving a problem with them.
-
-> 
-> Even if there are bugs, GPLv2 license of kernel allows anybody to fix
-> them.
-> 
-> EULA of 3rd vendor closed userspace application not only disallow it,
-> but also make it impossible (due to missing public sources).
-
-You're conflating issues by assuming that any user of the WMI userspace
-interface will be proprietary. Sure, some will, just as some kernel
-modules are binary, but that argument can be applied to any interface.
-
-> 
-> > > Userspace applications, and if we are talking about WMI, would be 
-> > > probably 3rd party vendor closed-source binaries compiled for one or two 
-> > > specific Linux distributions. For me it is just "random userspace 
-> > > application" which I do not thing that would be preinstalled or part of 
-> > > Linux distributions, like it is for coreutils or X Server today.
-> > 
-> > That is certainly not the outcome we'd be aiming for.
-> 
-> Keep in mind that switching WMI to userspace for new features would mean
-> need to install that software to make "new feature" work correctly. And
-> user would be needed to install it from vendor after installation of
-> system or distributions starts to packs ton of vendor closed source
-> software... No I think having need for such blobs is really way to the
-> hell for Linux world.
-
-Again, you're assuming that if it isn't in the kernel it will be poor
-quality, binary only, and distro dependent. Even if a vendor did attempt
-something like that, there is nothing preventing interested users from
-creating an open source solution that would be distro agnostic. And,
-with the wmi method proxy concept, we could still just do it in the
-kernel.
-
-> > 
-> > As to the "OK fine, but what are we actually going to do..." bit...
-> > 
-> > In order to support broad enabling, we should avoid Whitelists which would
-> > require we add new GUIDs to the kernel as fast as vendors can add them.
-> 
-> Based on fact that whitelisting is trivial to manage and easy to
-> implement, I do not think that avoiding whitelisting it a good idea.
-
-As above, it isn't just the technical complexity, which is obviously
-trivial, it's the timeline. It's possible dynamic IDs may address this.
-I believe the proxy method also addresses the underlying concerns.
-
-I don't see a compelling enough reason to manage GUID whitelists.
-
-> 
-> > If we require filtering, it should be along the lines of an ACCEPT/DENY filter,
-> > which only denies specific accesses. Drivers which match a WMI GUID can register
-> > a filter callback, returning true or false (accept or deny). This would allow
-> > for the creation of management tools in cooperation with the existing
-> > drivers, without precluding the development of userspace platform-daemons which
-> > could handle all aspects of the WMI interface (if they conflict with an existing
-> > driver, they would need to run without that driver, which would avoid loading
-> > the WMI filter).
-> 
-> Yes, agree. And if filtering for current WMI kernel driver is hard (or
-> impossible), then such filter implemented in WMI driver would DENY any
-> call from userspace.
-> 
-> > Possible concerns, as before, we run the risk of a new driver being written, or
-> > a new feature being added to an existing driver, that needs to add a filter
-> > which would then deny userspace accesses previously allowed. It becomes a first
-> > to support the platform race.
-> 
-> With whitelisting the risk is lower. And we can mark userspace interface
-> as experimental for now and make part of interface that kernel can block
-> arbitrary userspace request.
-
-And finally, to the filter vs. proxy idea - phew! :-)
-
-It occurred to me this morning while thinking about this problem and
-considering Greg KH's previous comment about it's OK to change the
-interface, so long as it doesn't break anything. If instead of DENYing a
-method call, we allow a driver to PROXY a method call, we make the
-change transparent to userspace, and still retain the ability for kernel
-drivers to claim ownership of certain WMI method signatures, and ensure
-consistent internal state.
-
-When a WMI driver binds to a GUID, it can also register a
-wmi_method_proxy for that GUID. When a method call is received, the
-proxy is called with the method ID, input and output buffers. The proxy
-can choose to handle the call itself and populate the output buffer, or
-not, and let the WMI system execute it.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IEx1dG9taXJza2kgW21h
+aWx0bzpsdXRvQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMTMsIDIwMTcgMTA6
+NTcgQU0NCj4gVG86IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc+DQo+IENjOiBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBDaHJpc3RvcGgg
+SGVsbHdpZyA8aGNoQGluZnJhZGVhZC5vcmc+Ow0KPiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBn
+bWFpbC5jb20+OyBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtDQo+IGZvdW5kYXRpb24u
+b3JnPjsgTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IEFu
+ZHkNCj4gU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPjsgUmFm
+YWVsIFd5c29ja2kNCj4gPHJqd0Byand5c29ja2kubmV0PjsgTEtNTCA8bGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZw0K
+PiBTdWJqZWN0OiBSZTogV01JIGFuZCBLZXJuZWw6VXNlciBpbnRlcmZhY2UNCj4gDQo+IE9uIFR1
+ZSwgSnVuIDEzLCAyMDE3IGF0IDg6NTAgQU0sIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA8Z3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgSnVuIDEzLCAyMDE3IGF0
+IDA4OjM4OjU3QU0gLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiA+PiBPbiBUdWUsIEp1biAx
+MywgMjAxNyBhdCAxMjowNTozNUFNIC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4g
+Pj4gPiBIaSBEYXJyZW4sDQo+ID4+ID4NCj4gPj4gPiBmaXJzdCAtIGNhbiB5b3UgcGxlYXNlIHBy
+b3Blcmx5IHRyaW0geW91ciByZXBsaWVzIGFuZCBkb24ndCB3cml0ZQ0KPiA+PiA+IG1vcmUgdGhh
+biA3IGNoYXJhY3RlcnMgcGVyIGxpbmU/DQo+ID4+DQo+ID4+IFN1cmUuLi4gKGFsdGhvdWdoIEkg
+dGhpbmsgeW91J3ZlIGRvbmUgYWxsIHRoZSBuZWNlc3NhcnkgcHJ1bmluZyBmb3IgdGhpcw0KPiA+
+PiByZXNwb25zZSkuIDcwIEkgcHJlc3VtZSB5b3UgbWVhbj8gSSB1c3VhbGx5IGhhdmUgdHcgc2V0
+IHRvIDcyLi4uDQo+ID4+IGFwcGFyZW50bHkgSSBkcm9wcGVkIHRoYXQgc2V0dGluZyBhdCBzb21l
+IHBvaW50LiBXaWxsIGNvcnJlY3QuDQo+ID4+DQo+ID4+ID4NCj4gPj4gPiBPbiBNb24sIEp1biAx
+MiwgMjAxNyBhdCAwNjoyNDozNVBNIC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4gPj4gPiA+
+IFRoaXMgaXMgYSBiaWcgdG9waWMgZm9yIHN1cmUuIFNwZWVkIGFuZCBzY2FsZSBvZiBwbGF0Zm9y
+bSBlbmFibGluZyBpcyBzb21ldGhpbmcNCj4gPj4gPiA+IEkgd291bGQgbGlrZSB0byBzZWUgdXMg
+c3VwcG9ydCBiZXR0ZXIuIFRoZSBiYXJyaWVyIHRvIGVudHJ5IHRvIGtlcm5lbA0KPiA+PiA+ID4g
+Y2hhbmdlcyBpcyBoaWdoLCBlc3BlY2lhbGx5IGZvciB0cml2aWFsIHRoaW5ncywgbGlrZSBhZGRp
+bmcgSURzLCBHVUlEcywgZXRjLg0KPiA+PiA+ID4gd2hpY2ggd291bGQgaWRlYWxseSwgSU1ITywg
+YmUgaW4gdGhlIGhhbmRzIG9mIHRoZSBPRU1zLg0KPiA+PiA+DQo+ID4+ID4gSXQncyBub3QuICBJ
+dCdzIGEgdHJpdmlhbCBwYXRjaCwgYW5kIHlvdSBjb3ZlciBhbGwgTGludXggdXNlcnMuICBWZXJ5
+DQo+ID4+ID4gbXVjaCB1bmxpa2Ugc2F5IHRoZSB3aW5kb3dzIHdvcmxkIHdoZXJlIHlvdSBhcmUg
+c3R1Y2sgd2l0aCBpbnN0YWxsaW5nDQo+ID4+ID4gYSB2ZW5kb3Igc3BlY2lmaWMgc2V0IG9mIGRy
+aXZlcnMgZm9yZXZlci4NCj4gPj4gPg0KPiA+Pg0KPiA+PiBUaGUgcGF0Y2ggaXMgdHJpdmlhbCwg
+YnV0IHRoZSBwcm9jZXNzIGlzIHRpbWUgY29uc3VtaW5nLiBUd28gdG8gVGhyZWUNCj4gPj4gbW9u
+dGhzIHRvIHNlZSBhbiBJRCBhZGRlZCBhbmQgcmVsZWFzZWQgaXMgYmlnIGJsb2NrZXIgZm9yIGNv
+bnRlbXBvcmFyeQ0KPiA+PiBsaWZlIGN5Y2xlcy4NCj4gPg0KPiA+IFdhaXQsIHdoYXQ/ICBQbGVh
+c2UgZXhwbGFpbi4NCj4gPg0KPiA+IFllcywgaXQgY291bGQgdGFrZSB3b3JzZSBjYXNlIDItMyBt
+b250aHMgdG8gYWRkIGEgbmV3IGRldmljZSBpZCwgYnV0DQo+ID4gZG9lcyBpdCByZWFsbHk/ICBJ
+IHRha2UgbmV3IGRldmljZSBpZHMgdXAgdW50aWwgMiB3ZWVrcyBiZWZvcmUgYSAtZmluYWwNCj4g
+PiBrZXJuZWwgaXMgcmVsZWFzZWQuICBBbmQgb25jZSB0aGV5IGFyZSBpbiBMaW51cydzIHRyZWUg
+aXQncyB1c3VhbGx5IG9ubHkNCj4gPiBhIHNpbmdsZSB3ZWVrIGJlZm9yZSB0aGV5IGVuZCB1cCBp
+biBhbGwgc3RhYmxlIGtlcm5lbCByZWxlYXNlcy4NCj4gPg0KPiA+IEJ1dCB0aGF0J3MgdXBzdHJl
+YW0sIG5vIGRldmljZSBzaGlwcyB3aXRoIHVwc3RyZWFtLCB0aGV5IHNoaXAgYSBkaXN0cm8NCj4g
+PiBrZXJuZWwuICBMb29rIGF0IHRoZSBwcmUtaW5zdGFsbHMgZnJvbSBTdVNFIGFuZCBDYW5vbmlj
+YWwsIHRvIGdldCBhIG5ldw0KPiA+IGRldmljZSBpZCBpbnRvIHRoZWlyIGtlcm5lbHMgdGFrZXMg
+d2hhdCwgYSBkYXkgb3IgdHdvPyAgQW5kIHRoYXQgaXMgd2hhdA0KPiA+IHJlYWxseSBtYXR0ZXJz
+IGFzIHRoYXQgaXMgd2hhdCBnb2VzIG91dCB0aGUgZG9vciBmb3IgdGhlaXIgZGV2aWNlLg0KPiA+
+DQo+ID4gQXQgbGVhc3QgdGhhdCBpcyB0aGUgcHJvY2VzcyBmb3Igd2hlbiBfSV8gdXNlZCB0byB3
+b3JrIG9uIHByZS1pbnN0YWxsZWQNCj4gPiBMaW51eCBvbiBkZXZpY2VzLCBtYXliZSB0aGluZ3Mg
+aGF2ZSBnb3R0ZW4gYSBsb3Qgd29yc2Ugc2luY2UgSSBsZWZ0IHRoYXQNCj4gPiBidXNpbmVzcywg
+YnV0IEkgd291bGQgc3VyZSBob3BlIGl0IHdvdWxkbid0IGdldCBtYWduaXR1ZGVzIHdvcnNlLg0K
+PiA+DQo+ID4gU28gMi0zIG1vbnRocyBzZWVtcyByZWFsbHkgbG9uZyB0byBtZS4NCj4gPg0KPiAN
+Cg0KVW5sZXNzIHlvdSBjYXRjaCB0aGUgY3ljbGUganVzdCByaWdodCwgOCB3ZWVrcyBpcyBub3Jt
+YWwgZm9yIHRoZSBkZWxheSB0byANCmdldCBhIHBhdGNoIHRocm91Z2ggYSBkaXN0cm8gdG8gYW4g
+ZW5kIHVzZXIncyBtYWNoaW5lLg0KVGhleSBnbyB0aHJvdWdoIHRoZWlyIG93biBzdGFibGUgdGVz
+dGluZyBhbmQgbGV0IGl0IGJha2UgYmVmb3JlIGl0J3MgcHJvbW90ZWQuDQoNCj4gSSBzaG91bGQg
+YWRkIHRoYXQgb25lIHRoaW5nIHRoYXQncyByZWFsbHksIHJlYWxseSBuaWNlIGFib3V0IExpbnV4
+IGlzDQo+IHRoYXQsIHdoZW4geW91IGluc3RhbGwgaXQgb24gYSBzdXBwb3J0ZWQgbGFwdG9wLCBp
+dCB3b3Jrcy4gIE9uDQo+IFdpbmRvd3MsIHlvdSBlbmQgdXAgd2l0aCBhIGhvcnJpYmxlIHBpbGUg
+b2YgYmxvYXRlZCwgYnVnZ3ksDQo+IHVuc3VwcG9ydGVkIHVzZXJzcGFjZSBjcmFwd2FyZSB0byBt
+YWtlIHJhbmRvbSBidXR0b25zIHdvcmsuDQo+IA0KPiBXaGlsZSBJJ20gYWxsIGZvciBpbXByb3Zp
+bmcgdGhlIG1hbmFnYWJpbGl0eSBzaXR1YXRpb24gb24gTGludXgsIGxldCdzDQo+IHBsZWFzZSBt
+YWtlIHN1cmUgd2UgZG9uJ3QgcmVncmVzcyB0aGUgb3JkaW5hcnkgbGFwdG9wIGZ1bmN0aW9uYWxp
+dHkNCj4gc3RvcnkgYW5kIG1ha2UgaXQgYXMgYmFkIGFzIGl0IGlzIG9uIFdpbmRvd3MuICBXZSdy
+ZSBjdXJyZW50bHkgaW4gYQ0KPiBzdXJwcmlzaW5nIHNpdHVhdGlvbiBpbiB3aGljaCBsYXB0b3Bz
+IGZyZXF1ZW50bHkgd29yayAqYmV0dGVyKiBvbg0KPiBMaW51eCB0aGFuIFdpbmRvd3MsIGFuZCBJ
+IHRoaW5rIHdlIHNob3VsZCBwcmVzZXJ2ZSB0aGF0Lg0KDQpTbyBpdCdzIHdvcnRoIG1lbnRpb25p
+bmcgdGhlIG1haW4gaW1wZXR1cyBmb3IgdGhpcyAoYXQgbGVhc3QgZnJvbSBteQ0KY29tcGFueSdz
+IHBlcnNwZWN0aXZlIC0gYnV0IEkgZXhwZWN0IG90aGVycyB3b3VsZCBzaGFyZSBpdCkgaXMgdG8N
+Cm1ha2UgbWFuYWdlYWJpbGl0eSB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgaGF2aW5nIHRv
+IGluc3RhbGwNCmFkZGl0aW9uYWwgcHJvcHJpZXRhcnkgdG9vbHMuDQoNCkdldHRpbmcgdGhlcmUg
+cmVxdWlyZXMgd29yayBpbiBhIGZldyBhcmVhczoNCjEpIFRoZSBPRU0vSUJWIGV4cG9ydHMgdGhl
+IG1ldGhvZHMgYW5kIHRoZSBNT0YgKGluIGJpbmFyeSBmb3JtKQ0KdGhhdCBkZXNjcmliZXMgdGhl
+IG9iamVjdHMgdGhhdCBjYW4gYmUgaW50ZXJhY3RlZCB3aXRoIGFuZCB3aGF0DQpraW5kIG9mIGRh
+dGEgbmVlZHMgdG8gYmUgc2VudC4NCjIpIEtlcm5lbCBuZWVkcyB0byBwcm92aWRlIGEgd2F5IHRv
+IHVzZXJzcGFjZSB0byBnZXQgdG8gdGhpcyBkYXRhDQozKSBBIHVzZXJzcGFjZSBPTUkgcHJvdmlk
+ZXIgbmVlZHMgdG8gYmUgZGV2ZWxvcGVkIHRvIHJlYWQgdGhlIA0KTU9GIGFuZCBsb2FkIHRoZSBh
+Y2Nlc3NpYmxlIG9iamVjdHMgaW50byBhIHJlcG9zaXRvcnkuDQo0KSBPTUkgdG9vbHMgY2FuIHRo
+ZW4gaW50ZXJhY3Qgd2l0aCB0aGUgT01JIHJlcG9zaXRvcnkuDQoNCk9uIHRoZSBXaW5kb3dzIHNp
+ZGUsIHlvdSBjYW4gImluLWJveCIgZG8gbWFuYWdlYWJpbGl0eSBpZiB0aGUNCk9FTSBoYXMgZG9u
+ZSA8MT4gdGhpcyB3YXkuICBZb3UgY2FuIHVzZSB0b29scyBsaWtlIHBvd2Vyc2hlbGwNCnRvIGRp
+cmVjdGx5IGludGVyYWN0IHdpdGggdGhlIE9NSSByZXBvc2l0b3J5Lg0KDQpXaHkgZG9uJ3Qgd2Ug
+d2FudCB0aGUgc2FtZSB0aGluZyBvbiB0aGUgTGludXggc2lkZT8gIElmIHlvdSBwdXQNCnVwIGV4
+dHJhIGJhcnJpZXJzIHRvIGhhdmUgdG8gYWRkIElEJ3MgdG8gYSB3aGl0ZWxpc3QgeW91IGFyZSBp
+bnRyb2R1Y2luZw0KZGVsYXkgYW5kIGFydGlmaWNpYWxseSBtYWtpbmcgaXQgbW9yZSBkaWZmaWN1
+bHQgZm9yIHdoYXQ/DQo=
