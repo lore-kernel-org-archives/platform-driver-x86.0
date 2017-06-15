@@ -1,53 +1,53 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
  number
-Date: Thu, 15 Jun 2017 15:59:02 +0200
-Message-ID: <20170615135902.GS5248@pali>
+Date: Thu, 15 Jun 2017 15:16:15 +0000
+Message-ID: <8c0becdd535d4a58b5dbc72eda082e12@ausx13mpc120.AMER.DELL.COM>
 References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
- <201706102115.57995@pali>
- <20170613164951.GI27850@fury>
- <201706132004.58051@pali>
- <20170613184228.GC22450@fury>
- <20170614154654.GA22981@pali>
+ <201706102115.57995@pali> <20170613164951.GI27850@fury>
+ <201706132004.58051@pali> <20170613184228.GC22450@fury>
+ <20170614154654.GA22981@pali> <20170615135902.GS5248@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:36809 "EHLO
-        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751985AbdFON7F (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jun 2017 09:59:05 -0400
-Content-Disposition: inline
-In-Reply-To: <20170614154654.GA22981@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com, Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615135902.GS5248@pali>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com, dvhart@infradead.org
+Cc: andy@infradead.org, luto@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Mario, are you able to check if instance number passed to
-wmi_evaluate_method in following dell WMI drivers is correct and should
-be really 1?
-
-I suspect that it should be zero, as instance number is indexed from
-zero.
-
-There is no comment in those dell WMI drivers why it is 1, nor what 1
-means.
-
-Ideally it needs to be checked in ACPI byte code, MOF file and WDG dump.
-
-On Wednesday 14 June 2017 17:46:54 Pali Rohár wrote:
-> Function wmi_evaluate_method:
-...
->   alienware-wmi.c:
->   instance=1 /* no comment why, guid=A70591CE-A997-11DA-B012-B622A1EF5492 */
->   instance=1 /* no comment why, guid=A80593CE-A997-11DA-B012-B622A1EF5492 */
->   instance=1 /* no comment why, guid=A70591CE-A997-11DA-B012-B622A1EF5492 */
-...
->   dell-wmi-led.c:
->   instance=1 /* no comment why, guid=F6E4FE6E-909D-47cb-8BAB-C9F6F2F8D396 */
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAxNSwgMjAxNyA4
+OjU5IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwu
+Y29tPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3JnPg0KPiBDYzogQW5keSBT
+aGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBBbmR5IEx1dG9taXJza2kgPGx1dG9Aa2Vy
+bmVsLm9yZz47DQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFJGQzogcGxhdGZv
+cm0veDg2OiB3bWk6IEZpeCBjaGVjayBmb3IgbWV0aG9kIGluc3RhbmNlDQo+IG51bWJlcg0KPiAN
+Cj4gTWFyaW8sIGFyZSB5b3UgYWJsZSB0byBjaGVjayBpZiBpbnN0YW5jZSBudW1iZXIgcGFzc2Vk
+IHRvDQo+IHdtaV9ldmFsdWF0ZV9tZXRob2QgaW4gZm9sbG93aW5nIGRlbGwgV01JIGRyaXZlcnMg
+aXMgY29ycmVjdCBhbmQgc2hvdWxkDQo+IGJlIHJlYWxseSAxPw0KPiANCj4gSSBzdXNwZWN0IHRo
+YXQgaXQgc2hvdWxkIGJlIHplcm8sIGFzIGluc3RhbmNlIG51bWJlciBpcyBpbmRleGVkIGZyb20N
+Cj4gemVyby4NCj4gDQo+IFRoZXJlIGlzIG5vIGNvbW1lbnQgaW4gdGhvc2UgZGVsbCBXTUkgZHJp
+dmVycyB3aHkgaXQgaXMgMSwgbm9yIHdoYXQgMQ0KPiBtZWFucy4NCj4gDQo+IElkZWFsbHkgaXQg
+bmVlZHMgdG8gYmUgY2hlY2tlZCBpbiBBQ1BJIGJ5dGUgY29kZSwgTU9GIGZpbGUgYW5kIFdERyBk
+dW1wLg0KPiANCkkgdGhpbmsgeW91J3JlIGxpa2VseSBjb3JyZWN0LiAgSSBkb24ndCBoYXZlIGEg
+Ym94IHRoYXQgc3VwcG9ydHMgYWxpZW53YXJlLXdtaQ0Kb3IgZGVsbC13bWktbGVkLmMgaGFuZHkg
+YXQgdGhlIGN1cnJlbnQgbW9tZW50IHRvIGNvbmZpcm0gdGhpcyBoeXBvdGhlc2lzIHRob3VnaC4N
+CkknbGwgY29uZmlybSB0aGlzIGxhdGVyLg0KDQpJIGRpZG4ndCByZWFsaXplIGl0IHdhcyB6ZXJv
+IGluZGV4ZWQgd2hlbiBJIHdyb3RlIGFsaWVud2FyZS13bWksIGFuZCBJJ20gZ3Vlc3NpbmcNCnRo
+ZSBhdXRob3Igb2YgZGVsbC13bWktbGVkIGRpZG4ndCBlaXRoZXIuDQoNClRoZSByZWFzb24gaXQn
+cyBwcm9iYWJseSB3b3JraW5nIGlzIHRoZSBBQ1BJIGJ5dGUgY29kZSBpc24ndCBhY3R1YWxseSBj
+aGVja2luZw0KdGhlIGluc3RhbmNlIHNpbmNlIG1vc3QgdGltZXMgX1dERyB3aWxsIG9ubHkgY2Fs
+bCBvdXQgb25lIGluc3RhbmNlLg0KDQo+IE9uIFdlZG5lc2RheSAxNCBKdW5lIDIwMTcgMTc6NDY6
+NTQgUGFsaSBSb2jDoXIgd3JvdGU6DQo+ID4gRnVuY3Rpb24gd21pX2V2YWx1YXRlX21ldGhvZDoN
+Cj4gLi4uDQo+ID4gICBhbGllbndhcmUtd21pLmM6DQo+ID4gICBpbnN0YW5jZT0xIC8qIG5vIGNv
+bW1lbnQgd2h5LCBndWlkPUE3MDU5MUNFLUE5OTctMTFEQS1CMDEyLQ0KPiBCNjIyQTFFRjU0OTIg
+Ki8NCj4gPiAgIGluc3RhbmNlPTEgLyogbm8gY29tbWVudCB3aHksIGd1aWQ9QTgwNTkzQ0UtQTk5
+Ny0xMURBLUIwMTItDQo+IEI2MjJBMUVGNTQ5MiAqLw0KPiA+ICAgaW5zdGFuY2U9MSAvKiBubyBj
+b21tZW50IHdoeSwgZ3VpZD1BNzA1OTFDRS1BOTk3LTExREEtQjAxMi0NCj4gQjYyMkExRUY1NDky
+ICovDQo+IC4uLg0KPiA+ICAgZGVsbC13bWktbGVkLmM6DQo+ID4gICBpbnN0YW5jZT0xIC8qIG5v
+IGNvbW1lbnQgd2h5LCBndWlkPUY2RTRGRTZFLTkwOUQtNDdjYi04QkFCLQ0KPiBDOUY2RjJGOEQz
+OTYgKi8JDQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
