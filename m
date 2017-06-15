@@ -1,76 +1,67 @@
-From: <angers@pythagorejiujitsu.com>
-Subject: (unknown)
-Date: Wed, 14 Jun 2017 20:41:42 -0000
-Message-ID: <149747290227.12492.9436671343767213545@permonline.ru>
-Mime-Version: 1.0
-Content-Type: application/zip; name="1598538396047.zip"
-Content-Transfer-Encoding: base64
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 1/2] platform/x86: silead_dmi: Add touchscreen info for PoV mobii wintab p800w
+Date: Thu, 15 Jun 2017 08:48:31 +0200
+Message-ID: <20170615064832.4148-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 90.150.119.146.permonline.ru ([90.150.119.146]:59764 "HELO
-        permonline.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with SMTP id S1752008AbdFNUlq (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:34834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750784AbdFOGse (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jun 2017 16:41:46 -0400
-Content-Disposition: attachment
-Subject: 
+        Thu, 15 Jun 2017 02:48:34 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-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
-AAAAAAEAAQBPAAAAJQwAAAAA
+Add touchscreen info for the Point of View mobii wintab p800w tablet.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index db3a877d2160..46c5e1ebfb53 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -93,6 +93,20 @@ static const struct silead_ts_dmi_data gp_electronic_t701_data = {
+ 	.properties	= gp_electronic_t701_props,
+ };
+ 
++static const struct property_entry pov_mobii_wintab_p800w_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1800),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl3692-pov-mobii-wintab-p800w.fw"),
++	{ }
++};
++
++static const struct silead_ts_dmi_data pov_mobii_wintab_p800w_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= pov_mobii_wintab_p800w_props,
++};
++
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -139,6 +153,17 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "BYT70A.YNCHENG.WIN.007"),
+ 		},
+ 	},
++	{
++		/* Point of View mobii wintab p800w */
++		.driver_data = (void *)&pov_mobii_wintab_p800w_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
++			DMI_MATCH(DMI_BIOS_VERSION, "3BAIR1013"),
++			/* Above matches are too generic, add bios-date match */
++			DMI_MATCH(DMI_BIOS_DATE, "08/22/2014"),
++		},
++	},
+ 	{ },
+ };
+ 
+-- 
+2.13.0
