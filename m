@@ -1,53 +1,129 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
- number
-Date: Thu, 15 Jun 2017 15:16:15 +0000
-Message-ID: <8c0becdd535d4a58b5dbc72eda082e12@ausx13mpc120.AMER.DELL.COM>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
- <201706102115.57995@pali> <20170613164951.GI27850@fury>
- <201706132004.58051@pali> <20170613184228.GC22450@fury>
- <20170614154654.GA22981@pali> <20170615135902.GS5248@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
+Date: Thu, 15 Jun 2017 18:46:21 +0200
+Message-ID: <201706151846.22230@pali>
+References: <cover.1495862272.git.dvhart@infradead.org> <67cc75c9e0ef4a21a168ab3b4dd1e727@ausx13mpc124.AMER.DELL.COM> <201706092351.32996@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed;
+  boundary="nextPart2786954.xfPGS941Hr";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615135902.GS5248@pali>
-Content-Language: en-US
+In-Reply-To: <201706092351.32996@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, dvhart@infradead.org
-Cc: andy@infradead.org, luto@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAxNSwgMjAxNyA4
-OjU5IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwu
-Y29tPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3JnPg0KPiBDYzogQW5keSBT
-aGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBBbmR5IEx1dG9taXJza2kgPGx1dG9Aa2Vy
-bmVsLm9yZz47DQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFJGQzogcGxhdGZv
-cm0veDg2OiB3bWk6IEZpeCBjaGVjayBmb3IgbWV0aG9kIGluc3RhbmNlDQo+IG51bWJlcg0KPiAN
-Cj4gTWFyaW8sIGFyZSB5b3UgYWJsZSB0byBjaGVjayBpZiBpbnN0YW5jZSBudW1iZXIgcGFzc2Vk
-IHRvDQo+IHdtaV9ldmFsdWF0ZV9tZXRob2QgaW4gZm9sbG93aW5nIGRlbGwgV01JIGRyaXZlcnMg
-aXMgY29ycmVjdCBhbmQgc2hvdWxkDQo+IGJlIHJlYWxseSAxPw0KPiANCj4gSSBzdXNwZWN0IHRo
-YXQgaXQgc2hvdWxkIGJlIHplcm8sIGFzIGluc3RhbmNlIG51bWJlciBpcyBpbmRleGVkIGZyb20N
-Cj4gemVyby4NCj4gDQo+IFRoZXJlIGlzIG5vIGNvbW1lbnQgaW4gdGhvc2UgZGVsbCBXTUkgZHJp
-dmVycyB3aHkgaXQgaXMgMSwgbm9yIHdoYXQgMQ0KPiBtZWFucy4NCj4gDQo+IElkZWFsbHkgaXQg
-bmVlZHMgdG8gYmUgY2hlY2tlZCBpbiBBQ1BJIGJ5dGUgY29kZSwgTU9GIGZpbGUgYW5kIFdERyBk
-dW1wLg0KPiANCkkgdGhpbmsgeW91J3JlIGxpa2VseSBjb3JyZWN0LiAgSSBkb24ndCBoYXZlIGEg
-Ym94IHRoYXQgc3VwcG9ydHMgYWxpZW53YXJlLXdtaQ0Kb3IgZGVsbC13bWktbGVkLmMgaGFuZHkg
-YXQgdGhlIGN1cnJlbnQgbW9tZW50IHRvIGNvbmZpcm0gdGhpcyBoeXBvdGhlc2lzIHRob3VnaC4N
-CkknbGwgY29uZmlybSB0aGlzIGxhdGVyLg0KDQpJIGRpZG4ndCByZWFsaXplIGl0IHdhcyB6ZXJv
-IGluZGV4ZWQgd2hlbiBJIHdyb3RlIGFsaWVud2FyZS13bWksIGFuZCBJJ20gZ3Vlc3NpbmcNCnRo
-ZSBhdXRob3Igb2YgZGVsbC13bWktbGVkIGRpZG4ndCBlaXRoZXIuDQoNClRoZSByZWFzb24gaXQn
-cyBwcm9iYWJseSB3b3JraW5nIGlzIHRoZSBBQ1BJIGJ5dGUgY29kZSBpc24ndCBhY3R1YWxseSBj
-aGVja2luZw0KdGhlIGluc3RhbmNlIHNpbmNlIG1vc3QgdGltZXMgX1dERyB3aWxsIG9ubHkgY2Fs
-bCBvdXQgb25lIGluc3RhbmNlLg0KDQo+IE9uIFdlZG5lc2RheSAxNCBKdW5lIDIwMTcgMTc6NDY6
-NTQgUGFsaSBSb2jDoXIgd3JvdGU6DQo+ID4gRnVuY3Rpb24gd21pX2V2YWx1YXRlX21ldGhvZDoN
-Cj4gLi4uDQo+ID4gICBhbGllbndhcmUtd21pLmM6DQo+ID4gICBpbnN0YW5jZT0xIC8qIG5vIGNv
-bW1lbnQgd2h5LCBndWlkPUE3MDU5MUNFLUE5OTctMTFEQS1CMDEyLQ0KPiBCNjIyQTFFRjU0OTIg
-Ki8NCj4gPiAgIGluc3RhbmNlPTEgLyogbm8gY29tbWVudCB3aHksIGd1aWQ9QTgwNTkzQ0UtQTk5
-Ny0xMURBLUIwMTItDQo+IEI2MjJBMUVGNTQ5MiAqLw0KPiA+ICAgaW5zdGFuY2U9MSAvKiBubyBj
-b21tZW50IHdoeSwgZ3VpZD1BNzA1OTFDRS1BOTk3LTExREEtQjAxMi0NCj4gQjYyMkExRUY1NDky
-ICovDQo+IC4uLg0KPiA+ICAgZGVsbC13bWktbGVkLmM6DQo+ID4gICBpbnN0YW5jZT0xIC8qIG5v
-IGNvbW1lbnQgd2h5LCBndWlkPUY2RTRGRTZFLTkwOUQtNDdjYi04QkFCLQ0KPiBDOUY2RjJGOEQz
-OTYgKi8JDQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
+--nextPart2786954.xfPGS941Hr
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Friday 09 June 2017 23:51:32 Pali Roh=C3=A1r wrote:
+> On Friday 09 June 2017 17:46:12 Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > > Sent: Wednesday, June 7, 2017 3:50 PM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: luto@amacapital.net; dvhart@infradead.org; platform-driver-
+> > > x86@vger.kernel.org; andriy.shevchenko@linux.intel.com;
+> > > luto@kernel.org; rjw@rjwysocki.net; linux-kernel@vger.kernel.org;
+> > > linux-acpi@vger.kernel.org Subject: Re: [PATCH 15/16]
+> > > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
+> > > metadata
+> > >=20
+> > > On Wednesday 07 June 2017 22:23:08 Mario.Limonciello@dell.com
+> > > wrote:
+> > > > > -----Original Message-----
+> > > > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > > > > Sent: Wednesday, June 7, 2017 12:39 PM
+> > > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > > Cc: luto@amacapital.net; dvhart@infradead.org;
+> > > > > platform-driver- x86@vger.kernel.org;
+> > > > > andriy.shevchenko@linux.intel.com; luto@kernel.org;
+> > > > > rjw@rjwysocki.net;
+> > > > > linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org
+> > > > > Subject: Re: [PATCH 15/16]
+> > > > > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
+> > > > > metadata
+> > > > >=20
+> > > > > On Tuesday 06 June 2017 15:56:21 Pali Roh=C3=A1r wrote:
+> > > > > > On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com
+> > > > > >=20
+> > > > > > wrote:
+> > > > > > > 2) On my system when you expand the arguments for "void
+> > > > > > > DoBFn" the source doesn't describe individual arguments
+> > > > > > > like you do. Again this might not matter to MOF parsing
+> > > > > > > tools but wanted to let you know in case it does.
+> > > > > >=20
+> > > > > > I know, this part is missing. Order of arguments are only
+> > > > > > in ID qualifier and not sorted + in/out de-duplicated.
+> > > > >=20
+> > > > > Implemented! Now arguments are correctly placed based on ID
+> > > > > qualifier.
+> > > >=20
+> > > > I think it's still off a little though.
+> > > >=20
+> > > > What I'm getting back now from bmf2mof is:
+> > > > 	void DoBFn([in, Description("Fn buf"), out] BDat Data);
+> > > >=20
+> > > > Whereas source puts Description as the last argument:
+> > > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
+> > >=20
+> > > In BMOF from my Latitude E6440 there are specified two parameters
+> > > with index 0. One with qualifiers ("in", Description("Fn buf"))
+> > > and one with ("out", Description("Fn buf")). I think you have
+> > > similar/same data in BMOF.
+> > >=20
+> > > In my bmf2mof I just combined those two parameters into one (when
+> > > name, type and index matches) and concatenate also qualifiers
+> > > with removing duplicates.
+> > >=20
+> > > Do not know what is correct way, but I think qualifiers are just
+> > > unordered set. MS decompiler probably put "in" and "out"
+> > > qualifiers before any other for better readability.
+> >=20
+> > Have you tried to run it through mofcomp.exe and then decompile
+> > again with bmf2mof?  As long as it's coming out the same you're
+> > probably right.
+>=20
+> Yes, bmf2mof+mofcomp.exe+bmf2mof gives same output as just bmf2mof.
+
+I changed order for printing qualifiers in bmf2mof. "in" and "out" are=20
+now printed before all others. So you should see now same output.
+
+> > > > > > > source:
+> > > > > > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
+> > > > > > >=20
+> > > > > > > bmf2mof:
+> > > > > > > 	void doBFn([in, Description("Fn buf"), ID(0)] BDat
+> > > > > > > 	Data,
+> > > > > > > 	[out, Description("Fn buf"), ID(0)] BDat Data);
+> > > > >=20
+> > > > > --
+> > > > > Pali Roh=C3=A1r
+> > > > > pali.rohar@gmail.com
+> > >=20
+> > > --
+> > > Pali Roh=C3=A1r
+> > > pali.rohar@gmail.com
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2786954.xfPGS941Hr
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAllCud4ACgkQi/DJPQPkQ1K3OACfbZmoWi1JWWtiEVSR0q6sSKoX
+JZQAn3gpnoFagkyti8viZ+fahwWi54oz
+=dzFs
+-----END PGP SIGNATURE-----
+
+--nextPart2786954.xfPGS941Hr--
