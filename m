@@ -1,129 +1,55 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 15/16] platform/x86: wmi-mof: New driver to expose embedded WMI MOF metadata
-Date: Thu, 15 Jun 2017 18:46:21 +0200
-Message-ID: <201706151846.22230@pali>
-References: <cover.1495862272.git.dvhart@infradead.org> <67cc75c9e0ef4a21a168ab3b4dd1e727@ausx13mpc124.AMER.DELL.COM> <201706092351.32996@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/2] platform/x86: silead_dmi: Add touchscreen info for
+ PoV mobii wintab p800w
+Date: Thu, 15 Jun 2017 09:53:11 -0700
+Message-ID: <20170615165311.GF22450@fury>
+References: <20170615064832.4148-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2786954.xfPGS941Hr";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201706092351.32996@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: luto@amacapital.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, luto@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:56613 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750803AbdFOQxO (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 15 Jun 2017 12:53:14 -0400
+Content-Disposition: inline
+In-Reply-To: <20170615064832.4148-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart2786954.xfPGS941Hr
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 15, 2017 at 08:48:31AM +0200, Hans de Goede wrote:
+> Add touchscreen info for the Point of View mobii wintab p800w tablet.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 
-On Friday 09 June 2017 23:51:32 Pali Roh=C3=A1r wrote:
-> On Friday 09 June 2017 17:46:12 Mario.Limonciello@dell.com wrote:
-> > > -----Original Message-----
-> > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > > Sent: Wednesday, June 7, 2017 3:50 PM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: luto@amacapital.net; dvhart@infradead.org; platform-driver-
-> > > x86@vger.kernel.org; andriy.shevchenko@linux.intel.com;
-> > > luto@kernel.org; rjw@rjwysocki.net; linux-kernel@vger.kernel.org;
-> > > linux-acpi@vger.kernel.org Subject: Re: [PATCH 15/16]
-> > > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
-> > > metadata
-> > >=20
-> > > On Wednesday 07 June 2017 22:23:08 Mario.Limonciello@dell.com
-> > > wrote:
-> > > > > -----Original Message-----
-> > > > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > > > > Sent: Wednesday, June 7, 2017 12:39 PM
-> > > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > > > Cc: luto@amacapital.net; dvhart@infradead.org;
-> > > > > platform-driver- x86@vger.kernel.org;
-> > > > > andriy.shevchenko@linux.intel.com; luto@kernel.org;
-> > > > > rjw@rjwysocki.net;
-> > > > > linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org
-> > > > > Subject: Re: [PATCH 15/16]
-> > > > > platform/x86: wmi-mof: New driver to expose embedded WMI MOF
-> > > > > metadata
-> > > > >=20
-> > > > > On Tuesday 06 June 2017 15:56:21 Pali Roh=C3=A1r wrote:
-> > > > > > On Tuesday 06 June 2017 13:46:16 Mario.Limonciello@dell.com
-> > > > > >=20
-> > > > > > wrote:
-> > > > > > > 2) On my system when you expand the arguments for "void
-> > > > > > > DoBFn" the source doesn't describe individual arguments
-> > > > > > > like you do. Again this might not matter to MOF parsing
-> > > > > > > tools but wanted to let you know in case it does.
-> > > > > >=20
-> > > > > > I know, this part is missing. Order of arguments are only
-> > > > > > in ID qualifier and not sorted + in/out de-duplicated.
-> > > > >=20
-> > > > > Implemented! Now arguments are correctly placed based on ID
-> > > > > qualifier.
-> > > >=20
-> > > > I think it's still off a little though.
-> > > >=20
-> > > > What I'm getting back now from bmf2mof is:
-> > > > 	void DoBFn([in, Description("Fn buf"), out] BDat Data);
-> > > >=20
-> > > > Whereas source puts Description as the last argument:
-> > > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> > >=20
-> > > In BMOF from my Latitude E6440 there are specified two parameters
-> > > with index 0. One with qualifiers ("in", Description("Fn buf"))
-> > > and one with ("out", Description("Fn buf")). I think you have
-> > > similar/same data in BMOF.
-> > >=20
-> > > In my bmf2mof I just combined those two parameters into one (when
-> > > name, type and index matches) and concatenate also qualifiers
-> > > with removing duplicates.
-> > >=20
-> > > Do not know what is correct way, but I think qualifiers are just
-> > > unordered set. MS decompiler probably put "in" and "out"
-> > > qualifiers before any other for better readability.
-> >=20
-> > Have you tried to run it through mofcomp.exe and then decompile
-> > again with bmf2mof?  As long as it's coming out the same you're
-> > probably right.
->=20
-> Yes, bmf2mof+mofcomp.exe+bmf2mof gives same output as just bmf2mof.
+...
 
-I changed order for printing qualifiers in bmf2mof. "in" and "out" are=20
-now printed before all others. So you should see now same output.
+> +		/* Point of View mobii wintab p800w */
+> +		.driver_data = (void *)&pov_mobii_wintab_p800w_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> +			DMI_MATCH(DMI_BIOS_VERSION, "3BAIR1013"),
+> +			/* Above matches are too generic, add bios-date match */
+> +			DMI_MATCH(DMI_BIOS_DATE, "08/22/2014"),
 
-> > > > > > > source:
-> > > > > > > 	void DoBFn([in, out, Description("Fn buf")] BDat Data);
-> > > > > > >=20
-> > > > > > > bmf2mof:
-> > > > > > > 	void doBFn([in, Description("Fn buf"), ID(0)] BDat
-> > > > > > > 	Data,
-> > > > > > > 	[out, Description("Fn buf"), ID(0)] BDat Data);
-> > > > >=20
-> > > > > --
-> > > > > Pali Roh=C3=A1r
-> > > > > pali.rohar@gmail.com
-> > >=20
-> > > --
-> > > Pali Roh=C3=A1r
-> > > pali.rohar@gmail.com
+This is the first time I've seen a BIOS date match used to determine hardware
+features. DMI matching is a (necessary) hack to begin with (the vendors should
+be providing this data via ACPI _DSD anyway) but a date match means we would
+need a kernel patch every time one of these tablets gets a BIOS update...
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+With words like "Aptio CRB" it's clear the vendor isn't doing their job and just
+using unmodified reference code. The problem with this of course is that the
+vendor is not providing a way to identify this hardware.
 
---nextPart2786954.xfPGS941Hr
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+Andy, I'd appreciate your thoughts on this... I'm leaning towards not accepting
+bios date (or indeed, BIOS version) as a way to identify a platform.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAllCud4ACgkQi/DJPQPkQ1K3OACfbZmoWi1JWWtiEVSR0q6sSKoX
-JZQAn3gpnoFagkyti8viZ+fahwWi54oz
-=dzFs
------END PGP SIGNATURE-----
-
---nextPart2786954.xfPGS941Hr--
+-- 
+Darren Hart
+VMware Open Source Technology Center
