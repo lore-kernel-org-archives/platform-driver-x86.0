@@ -1,62 +1,53 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] platform/x86: silead_dmi: Add touchscreen info for Pipo W2S tablet
-Date: Thu, 15 Jun 2017 08:48:32 +0200
-Message-ID: <20170615064832.4148-2-hdegoede@redhat.com>
-References: <20170615064832.4148-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615064832.4148-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
+ number
+Date: Thu, 15 Jun 2017 15:59:02 +0200
+Message-ID: <20170615135902.GS5248@pali>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+ <201706102115.57995@pali>
+ <20170613164951.GI27850@fury>
+ <201706132004.58051@pali>
+ <20170613184228.GC22450@fury>
+ <20170614154654.GA22981@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:36809 "EHLO
+        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751985AbdFON7F (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 15 Jun 2017 09:59:05 -0400
+Content-Disposition: inline
+In-Reply-To: <20170614154654.GA22981@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com, Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add touchscreen info for Pipo W2S tablet.
+Mario, are you able to check if instance number passed to
+wmi_evaluate_method in following dell WMI drivers is correct and should
+be really 1?
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+I suspect that it should be zero, as instance number is indexed from
+zero.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 46c5e1ebfb53..25cbea307a5e 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -107,6 +107,21 @@ static const struct silead_ts_dmi_data pov_mobii_wintab_p800w_data = {
- 	.properties	= pov_mobii_wintab_p800w_props,
- };
- 
-+static const struct property_entry pipo_w2s_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl1680-pipo-w2s.fw"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data pipo_w2s_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= pipo_w2s_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -164,6 +179,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "08/22/2014"),
- 		},
- 	},
-+	{
-+		/* Pipo W2S */
-+		.driver_data = (void *)&pipo_w2s_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PIPO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "W2S"),
-+		},
-+	},
- 	{ },
- };
- 
+There is no comment in those dell WMI drivers why it is 1, nor what 1
+means.
+
+Ideally it needs to be checked in ACPI byte code, MOF file and WDG dump.
+
+On Wednesday 14 June 2017 17:46:54 Pali Rohár wrote:
+> Function wmi_evaluate_method:
+...
+>   alienware-wmi.c:
+>   instance=1 /* no comment why, guid=A70591CE-A997-11DA-B012-B622A1EF5492 */
+>   instance=1 /* no comment why, guid=A80593CE-A997-11DA-B012-B622A1EF5492 */
+>   instance=1 /* no comment why, guid=A70591CE-A997-11DA-B012-B622A1EF5492 */
+...
+>   dell-wmi-led.c:
+>   instance=1 /* no comment why, guid=F6E4FE6E-909D-47cb-8BAB-C9F6F2F8D396 */
+
 -- 
-2.13.0
+Pali Rohár
+pali.rohar@gmail.com
