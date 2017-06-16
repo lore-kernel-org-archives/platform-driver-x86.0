@@ -1,94 +1,121 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
- number
-Date: Fri, 16 Jun 2017 16:33:54 +0000
-Message-ID: <c466b978c72a4a49a08dd84e72103963@ausx13mpc120.AMER.DELL.COM>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
- <201706102115.57995@pali> <20170613164951.GI27850@fury>
- <201706132004.58051@pali> <20170613184228.GC22450@fury>
- <20170614154654.GA22981@pali> <20170615135902.GS5248@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/2] platform/x86: silead_dmi: Add touchscreen info for
+ PoV mobii wintab p800w
+Date: Fri, 16 Jun 2017 16:38:29 -0700
+Message-ID: <20170616233829.GA16249@fury>
+References: <20170615064832.4148-1-hdegoede@redhat.com>
+ <20170615165311.GF22450@fury>
+ <CAHp75VeMN3eeQPbxive1JO2iGKr4g0g5RByoRTpZCpCjYvAb3A@mail.gmail.com>
+ <7ea77786-beed-2bc5-9b93-4d2ee05a2d9c@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, dvhart@infradead.org
-Cc: andy@infradead.org, luto@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:37208 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750927AbdFPXid (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 16 Jun 2017 19:38:33 -0400
+Content-Disposition: inline
+In-Reply-To: <7ea77786-beed-2bc5-9b93-4d2ee05a2d9c@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW1vbmNpZWxsbywgTWFyaW8N
-Cj4gU2VudDogVGh1cnNkYXksIEp1bmUgMTUsIDIwMTcgMTA6MTYgQU0NCj4gVG86ICdQYWxpIFJv
-aMOhcicgPHBhbGkucm9oYXJAZ21haWwuY29tPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRl
-YWQub3JnPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBBbmR5
-IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47DQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJF
-OiBbUEFUQ0hdIFJGQzogcGxhdGZvcm0veDg2OiB3bWk6IEZpeCBjaGVjayBmb3IgbWV0aG9kIGlu
-c3RhbmNlDQo+IG51bWJlcg0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-IEZyb206IFBhbGkgUm9ow6FyIFttYWlsdG86cGFsaS5yb2hhckBnbWFpbC5jb21dDQo+ID4gU2Vu
-dDogVGh1cnNkYXksIEp1bmUgMTUsIDIwMTcgODo1OSBBTQ0KPiA+IFRvOiBMaW1vbmNpZWxsbywg
-TWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsgRGFycmVuIEhhcnQNCj4gPiA8ZHZo
-YXJ0QGluZnJhZGVhZC5vcmc+DQo+ID4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRl
-YWQub3JnPjsgQW5keSBMdXRvbWlyc2tpDQo+IDxsdXRvQGtlcm5lbC5vcmc+Ow0KPiA+IHBsYXRm
-b3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUkZDOiBwbGF0Zm9ybS94ODY6IHdtaTogRml4
-IGNoZWNrIGZvciBtZXRob2QgaW5zdGFuY2UNCj4gPiBudW1iZXINCj4gPg0KPiA+IE1hcmlvLCBh
-cmUgeW91IGFibGUgdG8gY2hlY2sgaWYgaW5zdGFuY2UgbnVtYmVyIHBhc3NlZCB0bw0KPiA+IHdt
-aV9ldmFsdWF0ZV9tZXRob2QgaW4gZm9sbG93aW5nIGRlbGwgV01JIGRyaXZlcnMgaXMgY29ycmVj
-dCBhbmQgc2hvdWxkDQo+ID4gYmUgcmVhbGx5IDE/DQo+ID4NCj4gPiBJIHN1c3BlY3QgdGhhdCBp
-dCBzaG91bGQgYmUgemVybywgYXMgaW5zdGFuY2UgbnVtYmVyIGlzIGluZGV4ZWQgZnJvbQ0KPiA+
-IHplcm8uDQo+ID4NCj4gPiBUaGVyZSBpcyBubyBjb21tZW50IGluIHRob3NlIGRlbGwgV01JIGRy
-aXZlcnMgd2h5IGl0IGlzIDEsIG5vciB3aGF0IDENCj4gPiBtZWFucy4NCj4gPg0KPiA+IElkZWFs
-bHkgaXQgbmVlZHMgdG8gYmUgY2hlY2tlZCBpbiBBQ1BJIGJ5dGUgY29kZSwgTU9GIGZpbGUgYW5k
-IFdERyBkdW1wLg0KPiA+DQo+IEkgdGhpbmsgeW91J3JlIGxpa2VseSBjb3JyZWN0LiAgSSBkb24n
-dCBoYXZlIGEgYm94IHRoYXQgc3VwcG9ydHMgYWxpZW53YXJlLXdtaQ0KPiBvciBkZWxsLXdtaS1s
-ZWQuYyBoYW5keSBhdCB0aGUgY3VycmVudCBtb21lbnQgdG8gY29uZmlybSB0aGlzIGh5cG90aGVz
-aXMgdGhvdWdoLg0KPiBJJ2xsIGNvbmZpcm0gdGhpcyBsYXRlci4NCj4gDQo+IEkgZGlkbid0IHJl
-YWxpemUgaXQgd2FzIHplcm8gaW5kZXhlZCB3aGVuIEkgd3JvdGUgYWxpZW53YXJlLXdtaSwgYW5k
-IEknbSBndWVzc2luZw0KPiB0aGUgYXV0aG9yIG9mIGRlbGwtd21pLWxlZCBkaWRuJ3QgZWl0aGVy
-Lg0KPiANCj4gVGhlIHJlYXNvbiBpdCdzIHByb2JhYmx5IHdvcmtpbmcgaXMgdGhlIEFDUEkgYnl0
-ZSBjb2RlIGlzbid0IGFjdHVhbGx5IGNoZWNraW5nDQo+IHRoZSBpbnN0YW5jZSBzaW5jZSBtb3N0
-IHRpbWVzIF9XREcgd2lsbCBvbmx5IGNhbGwgb3V0IG9uZSBpbnN0YW5jZS4NCg0KSSBjb25maXJt
-ZWQgeW91J3JlIGNvcnJlY3QuICBTd2l0Y2hpbmcgaW5zdGFuY2Ugb3ZlciB0byAwIHdvcmtzIHBy
-b3Blcmx5IG9uIGFuIA0KQVNNMjAwIChzdXBwb3J0ZWQgYnkgYWxpZW53YXJlLXdtaSkuDQoNClNp
-bmNlIG9ubHkgb25lIGluc3RhbmNlIGlzIHN1cHBvcnRlZCB0aGUgQVNMIGRvZXNuJ3QgY2hlY2sg
-QXJnMCBhdCBhbGwuDQpzbmlwcGV0Og0KICAgICAgICAgICAgTWV0aG9kIChXTUFYLCAzLCBOb3RT
-ZXJpYWxpemVkKQ0KICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgIElmICgoQXJnMSA9PSBP
-bmUpKQ0KICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgQ3JlYXRlQnl0ZUZp
-ZWxkIChBcmcyLCBaZXJvLCBTT1VSKQ0KICAgICAgICAgICAgICAgICAgICBJZiAoKFNPVVIgPT0g
-T25lKSkNCiAgICAgICAgICAgICAgICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICAgR1Uw
-MSA9IChHVTAxIHwgMHg4MCkNCiAgICAgICAgICAgICAgICAgICAgICAgIEdJTzEgPSAoR0lPMSAm
-IDB4N0YpDQogICAgICAgICAgICAgICAgICAgICAgICBHTDAxID0gKEdMMDEgJiAweDdGKQ0KICAg
-ICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChaZXJvKQ0KICAgICAgICAgICAgICAgICAgICB9
-DQoNCiAgICAgICAgICAgICAgICAgICAgSWYgKChTT1VSID09IDB4MDIpKQ0KICAgICAgICAgICAg
-ICAgICAgICB7DQogICAgICAgICAgICAgICAgICAgICAgICBHVTAxID0gKEdVMDEgfCAweDgwKQ0K
-ICAgICAgICAgICAgICAgICAgICAgICAgR0lPMSA9IChHSU8xICYgMHg3RikNCiAgICAgICAgICAg
-ICAgICAgICAgICAgIEdMMDEgPSAoR0wwMSB8IDB4ODApDQogICAgICAgICAgICAgICAgICAgICAg
-ICBSZXR1cm4gKFplcm8pDQogICAgICAgICAgICAgICAgICAgIH0NCg0KICAgICAgICAgICAgICAg
-ICAgICBJZiAoKFNPVVIgPT0gMHgwMykpDQogICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAg
-ICAgICAgICAgICAgICAgIElmICgoQ04wMCA9PSBaZXJvKSkNCiAgICAgICAgICAgICAgICAgICAg
-ICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBDTjAwID0gT25lDQogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgSWYgKCgoR0wwMSAmIDB4ODApID09IDB4ODApKQ0KICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR0ww
-MSAmPSAweDdGDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFJldHVybiAoWmVybykN
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9DQoNCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBJZiAoKChHTDAxICYgMHg4MCkgPT0gWmVybykpDQogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgew0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHTDAxIHw9IDB4ODANCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChaZXJvKQ0KICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgICAgIH0NCg0KICAgICAgICAg
-ICAgICAgICAgICAgICAgSWYgKChDTjAwID09IE9uZSkpDQogICAgICAgICAgICAgICAgICAgICAg
-ICB7DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgQ04wMCA9IFplcm8NCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBSZXR1cm4gKFplcm8pDQogICAgICAgICAgICAgICAgICAgICAgICB9
-DQoNCiAgICAgICAgICAgICAgICAgICAgICAgIFJldHVybiAoT25lKQ0KICAgICAgICAgICAgICAg
-ICAgICB9DQoNCiAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChPbmUpDQogICAgICAgICAgICAg
-ICAgfQ0KDQo+IA0KPiA+IE9uIFdlZG5lc2RheSAxNCBKdW5lIDIwMTcgMTc6NDY6NTQgUGFsaSBS
-b2jDoXIgd3JvdGU6DQo+ID4gPiBGdW5jdGlvbiB3bWlfZXZhbHVhdGVfbWV0aG9kOg0KPiA+IC4u
-Lg0KPiA+ID4gICBhbGllbndhcmUtd21pLmM6DQo+ID4gPiAgIGluc3RhbmNlPTEgLyogbm8gY29t
-bWVudCB3aHksIGd1aWQ9QTcwNTkxQ0UtQTk5Ny0xMURBLUIwMTItDQo+ID4gQjYyMkExRUY1NDky
-ICovDQo+ID4gPiAgIGluc3RhbmNlPTEgLyogbm8gY29tbWVudCB3aHksIGd1aWQ9QTgwNTkzQ0Ut
-QTk5Ny0xMURBLUIwMTItDQo+ID4gQjYyMkExRUY1NDkyICovDQo+ID4gPiAgIGluc3RhbmNlPTEg
-Lyogbm8gY29tbWVudCB3aHksIGd1aWQ9QTcwNTkxQ0UtQTk5Ny0xMURBLUIwMTItDQo+ID4gQjYy
-MkExRUY1NDkyICovDQo+ID4gLi4uDQo+ID4gPiAgIGRlbGwtd21pLWxlZC5jOg0KPiA+ID4gICBp
-bnN0YW5jZT0xIC8qIG5vIGNvbW1lbnQgd2h5LCBndWlkPUY2RTRGRTZFLTkwOUQtNDdjYi04QkFC
-LQ0KPiA+IEM5RjZGMkY4RDM5NiAqLw0KPiA+DQo+ID4gLS0NCj4gPiBQYWxpIFJvaMOhcg0KPiA+
-IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
+On Fri, Jun 16, 2017 at 03:22:45PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 16-06-17 14:44, Andy Shevchenko wrote:
+> > On Thu, Jun 15, 2017 at 7:53 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > > On Thu, Jun 15, 2017 at 08:48:31AM +0200, Hans de Goede wrote:
+> > 
+> > > > +             /* Point of View mobii wintab p800w */
+> > > > +             .driver_data = (void *)&pov_mobii_wintab_p800w_data,
+> > > > +             .matches = {
+> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
+> > > > +                     DMI_MATCH(DMI_BIOS_VERSION, "3BAIR1013"),
+> > > > +                     /* Above matches are too generic, add bios-date match */
+> > > > +                     DMI_MATCH(DMI_BIOS_DATE, "08/22/2014"),
+> > > 
+> > > This is the first time I've seen a BIOS date match used to determine hardware
+> > > features. DMI matching is a (necessary) hack to begin with (the vendors should
+> > > be providing this data via ACPI _DSD anyway) but a date match means we would
+> > > need a kernel patch every time one of these tablets gets a BIOS update...
+> > > 
+> > > With words like "Aptio CRB" it's clear the vendor isn't doing their job and just
+> > > using unmodified reference code. The problem with this of course is that the
+> > > vendor is not providing a way to identify this hardware.
+> > > 
+> > > Andy, I'd appreciate your thoughts on this... I'm leaning towards not accepting
+> > > bios date (or indeed, BIOS version) as a way to identify a platform.
+> > 
+> > The question is what is the anticipated amount of affected devices
+> > with BIOS date included and otherwise?
+> 
+> I expect there to be collisions (false positive matches) without the
+> BIOS_DATE check, a quick web-search finds other devices with a
+> 3BAIR1013 bios version. Those don't necessarily also use a Silead
+> touchscreen (which is needed for a collision to happen), but given
+> the popularity of Silead touchscreens on cheap devices a collision
+> is not unlikely.
+> 
+> With the bios-date check added, I expect this match to be unique,
+> for it to not be unique we would need to be really unlucky.
+> 
+> > If Hans believes that there will be no update for some devices,
+> 
+> Yeah I'm pretty sure this specific device will not see any
+> BIOS updates ever.
+> 
+> > while there are devices with the same DMI strings, but different date and
+> > _fixed_ issue, I think we have no other choice for now.
+> > Also can we use some other strings to distinguish group of devices
+> > which are affected?
+> 
+> bios_date: 08/22/2014
+> bios_vendor: American Megatrends Inc.
+> bios_version: 3BAIR1013
+> board_asset_tag: To be filled by O.E.M.
+> board_name: Aptio CRB
+> board_serial: T80091A4C11B0848
+> board_vendor: AMI Corporation
+> board_version: To be filled by O.E.M.
+> chassis_asset_tag: To Be Filled By O.E.M.
+> chassis_serial: To Be Filled By O.E.M.
+> chassis_type: 3
+> chassis_vendor: To Be Filled By O.E.M.
+> chassis_version: To Be Filled By O.E.M.
+> product_name: To be filled by O.E.M.
+> product_serial: To be filled by O.E.M.
+> product_uuid: 03000200-0400-0500-0006-000700080009
+> product_version: To be filled by O.E.M.
+> sys_vendor: To be filled by O.E.M.
+> 
+> The product-uuid is a known example uuid, so is
+> no good. The board_serial might be useful, but
+> only if it is unique for the model and not per
+> tablet. Unfortunately I only have 1 of these
+> tablets, so I cannot tell.
+
+Do we have any indication that this BIOS Date isn't just the default value
+provided by AMI? Does it offer any more information than the BIOS Version?
+
+I suppose we may be able to do some kind of a partial match on the Board Serial
+if even that is platform specific (I suspect it is with the T800 at the
+beginning.
+
+The sloppy handling of this firmware really irks me. That's obviously not Hans'
+fault, so we'll take the patch. If we see a conflict in the future, we'll just
+have to compare the other DMI strings for a match and see what we can do.... I'm
+even tempted to insert a printk on this match, dumping the DMI values and
+requesting the user to copy.paste them into an email to this list....
+
+I think we've already spent too much time on this patch based on this review:
+https://www.notebookcheck.net/Point-of-View-Mobii-WinTab-800W-Tablet-Review.129561.0.html
+
+Nice...
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
