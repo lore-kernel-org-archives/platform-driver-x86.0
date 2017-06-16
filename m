@@ -1,61 +1,100 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: silead_dmi: Add touchscreen info for
- PoV mobii wintab p800w
-Date: Fri, 16 Jun 2017 15:44:45 +0300
-Message-ID: <CAHp75VeMN3eeQPbxive1JO2iGKr4g0g5RByoRTpZCpCjYvAb3A@mail.gmail.com>
-References: <20170615064832.4148-1-hdegoede@redhat.com> <20170615165311.GF22450@fury>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: Binary MOF buffer in WMI is finally decoded!
+Date: Fri, 16 Jun 2017 14:53:25 +0200
+Message-ID: <201706161453.25827@pali>
+References: <201706041809.21573@pali> <201706060008.49125@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:36216 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752649AbdFPMoq (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2017 08:44:46 -0400
-In-Reply-To: <20170615165311.GF22450@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: multipart/signed;
+  boundary="nextPart2732324.r0xfYvRC2Y";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201706060008.49125@pali>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mario.Limonciello@dell.com, Rafael Wysocki <rjw@rjwysocki.net>, Andy Lutomirski <luto@amacapital.net>, andriy.shevchenko@linux.intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 15, 2017 at 7:53 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Thu, Jun 15, 2017 at 08:48:31AM +0200, Hans de Goede wrote:
+--nextPart2732324.r0xfYvRC2Y
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
->> +             /* Point of View mobii wintab p800w */
->> +             .driver_data = (void *)&pov_mobii_wintab_p800w_data,
->> +             .matches = {
->> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
->> +                     DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
->> +                     DMI_MATCH(DMI_BIOS_VERSION, "3BAIR1013"),
->> +                     /* Above matches are too generic, add bios-date match */
->> +                     DMI_MATCH(DMI_BIOS_DATE, "08/22/2014"),
->
-> This is the first time I've seen a BIOS date match used to determine hardware
-> features. DMI matching is a (necessary) hack to begin with (the vendors should
-> be providing this data via ACPI _DSD anyway) but a date match means we would
-> need a kernel patch every time one of these tablets gets a BIOS update...
->
-> With words like "Aptio CRB" it's clear the vendor isn't doing their job and just
-> using unmodified reference code. The problem with this of course is that the
-> vendor is not providing a way to identify this hardware.
->
-> Andy, I'd appreciate your thoughts on this... I'm leaning towards not accepting
-> bios date (or indeed, BIOS version) as a way to identify a platform.
+On Tuesday 06 June 2017 00:08:49 Pali Roh=C3=A1r wrote:
+> On Sunday 04 June 2017 18:09:21 Pali Roh=C3=A1r wrote:
+> > Hi!
+> >=20
+> > As already mentioned in RFC: WMI Enhancements thread [1], I looked
+> > at binary MOF buffer used by WMI which is included in ACPI DSDT
+> > table.
+> >=20
+> > That binary MOF buffer contains description of WMI methods and
+> > structures used by ACPI-WMI. It also contains mapping from human
+> > readable function names to ACPI-WMI magical numbers used for
+> > calling WMI methods via ACPI.
+> >=20
+> > Basically in that binary MOF buffer is description of structures
+> > used as input and output arguments for WMI methods/function calls.
+> >=20
+> > Until now, there were not information nor any parser of those
+> > binary MOF files (.bmf file). There is some Microsoft proprietary
+> > tool which can compile text MOF file to binary and vice versa.
+> >=20
+> > I was able to decode that binary MOF format and wrote simple
+> > bmfparse tool. It is available in git repository [2]. Currently
+> > parsing of function parameters is not implemented yet.
+> >=20
+> > Binary MOF format is compressed by prehistoric DS-01 algorithm
+> > (modification of LZ-77) which was used as compression algorithm for
+> > FAT-16. Maybe you remember DMSDOS or DoubleSpace... After
+> > decompression, the whole format is so shitty, probably half of data
+> > are just lengths of sub structures and sub-sub-... structures.
+> >=20
+> > I hope this bmfparse program would help in writing new wmi drivers
+> > for Linux or inspection of available WMI methods.
+> >=20
+> > Probably we could implement parser of BMOF in kernel and allow
+> > validation of function parameters or usage of human readable names
+> > of WMI methods?
+> >=20
+> > [1] -
+> > https://www.spinics.net/lists/platform-driver-x86/msg11574.html
+> > [2] - https://github.com/pali/bmfdec
+>=20
+> Small update: function parameters are now decoded too. I fixed some
+> problems and added new tool bmf2mof which decompile BMF file back to
+> UTF-8 encoded plain text MOF file. It is in git repository:
+>=20
+> https://github.com/pali/bmfdec
+>=20
+> I run it on more binary WMI MOF buffers and it successfully parsed
+> everything.
+>=20
+> So if you have some time, I would like you to ask for testing those
+> tools if they can parse binary WMI MOF buffers without problems.
+>=20
+> As I wrote it by just looking at decompressed dumps without any
+> documentation, it does not have to be correct or working... Also
+> there are no proper checks for buffer overflows yet.
 
-The question is what is the anticipated amount of affected devices
-with BIOS date included and otherwise?
+Now added support for parsing BMOFQUALFLAVOR11 part. Which means whole=20
+parsing of BMOF files should be complete now.
 
-If Hans believes that there will be no update for some devices, while
-there are devices with the same DMI strings, but different date and
-_fixed_ issue, I think we have no other choice for now.
-Also can we use some other strings to distinguish group of devices
-which are affected?
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-In pinctrl-cherryview.c we faced same issue, though for now there all
-platforms are affected (first approach was to distinguish with BIOS
-date) and we decide to go with black and white lists (white is empty
-for now and will be created whenever we will have an update).
+--nextPart2732324.r0xfYvRC2Y
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
--- 
-With Best Regards,
-Andy Shevchenko
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAllD1MUACgkQi/DJPQPkQ1KK5QCfb8F7nXNthYfEFXTWbOumn6K8
+o3UAoKaz7o2DhXkmxGSoZK6VJZs1OIGt
+=yS2+
+-----END PGP SIGNATURE-----
+
+--nextPart2732324.r0xfYvRC2Y--
