@@ -1,27 +1,29 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] platform/x86: silead_dmi: Add touchscreen info for
- Pipo W2S tablet
-Date: Thu, 15 Jun 2017 10:06:24 -0700
-Message-ID: <20170615170624.GG22450@fury>
-References: <20170615064832.4148-1-hdegoede@redhat.com>
- <20170615064832.4148-2-hdegoede@redhat.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 0/7] fujitsu-laptop: ACPI-related cleanups
+Date: Fri, 16 Jun 2017 06:40:51 +0200
+Message-ID: <20170616044058.30443-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170615064832.4148-2-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 15, 2017 at 08:48:32AM +0200, Hans de Goede wrote:
-> Add touchscreen info for Pipo W2S tablet.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+In preparation for splitting fujitsu-laptop into two separate modules, I
+prepared two more cleanup series to minimize the amount of code being
+moved around.  This first series contains all patches that touch ACPI in
+some way, which is why I am CCing linux-acpi as per Rafael's previous
+advice.
 
-Queued to testing, thanks Hans!
+This patch series was based on platform-driver-x86/for-next and tested
+on a Lifebook S7020.
+
+ drivers/platform/x86/Kconfig          |  10 --
+ drivers/platform/x86/fujitsu-laptop.c | 187 +++++++++-------------------------
+ 2 files changed, 48 insertions(+), 149 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.13.1
+
