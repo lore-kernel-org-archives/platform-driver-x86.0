@@ -1,62 +1,59 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Fix bogus keyboard backlight
- sysfs interface
-Date: Sun, 18 Jun 2017 15:44:50 +0300
-Message-ID: <CAHp75Vc9OaAMm47PANHGCCtuyjt6y368e3nmx+aJe6DEWXFyTw@mail.gmail.com>
-References: <20170616073539.1185-1-kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add Y720-15IKBN to no_hw_rfkill
+Date: Sun, 18 Jun 2017 15:48:21 +0300
+Message-ID: <CAHp75VfM7+Bij6nCi6adHZ8gqvk5VdVyOgkNZi6COjKZWaWzsA@mail.gmail.com>
+References: <20170618123758.4660-1-olle@liljenzin.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:35190 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752187AbdFRMow (ORCPT
+Received: from mail-qt0-f193.google.com ([209.85.216.193]:34889 "EHLO
+        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752102AbdFRMsW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jun 2017 08:44:52 -0400
-In-Reply-To: <20170616073539.1185-1-kai.heng.feng@canonical.com>
+        Sun, 18 Jun 2017 08:48:22 -0400
+Received: by mail-qt0-f193.google.com with SMTP id x58so16576914qtc.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Jun 2017 05:48:22 -0700 (PDT)
+In-Reply-To: <20170618123758.4660-1-olle@liljenzin.se>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Olle Liljenzin <olle@liljenzin.se>
+Cc: Ike Panhc <ike.pan@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Fri, Jun 16, 2017 at 10:35 AM, Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
-> Dell Latitude 3160 does not have keyboard backlight, but there is a
-> sysfs interface for it, which does nothing at all.
+On Sun, Jun 18, 2017 at 3:37 PM, Olle Liljenzin <olle@liljenzin.se> wrote:
+> Lenovo Legion Y720-15IKBN is yet another Lenovo model that does not
+> have an hw rfkill switch, resulting in wifi always reported as hard
+> blocked.
 >
-> KBD_LED_OFF_TOKEN is the only token can be found. Since it doesn't have
-> KBD_LED_ON_TOKEN or KBD_LED_AUTO_*_TOKEN, it should be safe to assume it
-> does not support keyboard backlight.
+> Add the model to the list of models without rfkill switch.
 >
-> Reports keyboard backlight is supported only when tokens other than
-> KBD_LED_OFF_TOKEN can be found.
 
-Okay, I'm waiting for v2 with Pali's or mine suggestion applied.
+Both patches pushed to testing, thanks.
 
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
 > ---
->  drivers/platform/x86/dell-laptop.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index ec202094bd50..743d7ce8c0c8 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -1510,7 +1510,11 @@ static void kbd_init(void)
->         ret = kbd_init_info();
->         kbd_init_tokens();
->
-> -       if (kbd_token_bits != 0 || ret == 0)
-> +       /*
-> +        * If KBD_LED_OFF_TOKEN is the only token,
-> +        * consider there is no keyboard backlight.
-> +        */
-> +       if ((kbd_token_bits & ~BIT(5)) != 0 || ret == 0)
->                 kbd_led_present = true;
->  }
->
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 4bd575d..0decfd4 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -918,6 +918,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>                 },
+>         },
+>         {
+> +               .ident = "Lenovo Legion Y720-15IKBN",
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBN"),
+> +               },
+> +       },
+> +       {
+>                 .ident = "Lenovo Yoga 2 11 / 13 / Pro",
+>                 .matches = {
+>                         DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 > --
-> 2.13.1
+> 2.9.4
 >
 
 
