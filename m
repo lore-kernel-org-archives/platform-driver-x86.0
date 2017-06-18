@@ -1,76 +1,46 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 0/7] fujitsu-laptop: ACPI-related cleanups
-Date: Sun, 18 Jun 2017 20:05:15 +0930
-Message-ID: <20170618103515.GH26810@marvin.atrad.com.au>
-References: <20170616044058.30443-1-kernel@kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Olle Liljenzin <olle@liljenzin.se>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add Y520-15IKBN to no_hw_rfkill
+Date: Sun, 18 Jun 2017 13:09:31 +0200
+Message-ID: <20170618110931.2299-1-olle@liljenzin.se>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:51604 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751071AbdFRKgL (ORCPT
+Received: from host224-206.customer.mediateknik.net ([194.132.224.206]:45706
+        "EHLO ludenben.liljenzin.se" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752825AbdFRMFG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jun 2017 06:36:11 -0400
-Content-Disposition: inline
-In-Reply-To: <20170616044058.30443-1-kernel@kempniu.pl>
+        Sun, 18 Jun 2017 08:05:06 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+To: ike.pan@canonical.com
+Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, olle@liljenzin.se
 
-Hi Michel
+Lenovo Legion Y520-15IKBN is yet another Lenovo model that does not
+have an hw rfkill switch, resulting in wifi always reported as hard
+blocked.
 
-On Fri, Jun 16, 2017 at 06:40:51AM +0200, Micha?? K??pie?? wrote:
-> In preparation for splitting fujitsu-laptop into two separate modules, I
-> prepared two more cleanup series to minimize the amount of code being
-> moved around.  This first series contains all patches that touch ACPI in
-> some way, which is why I am CCing linux-acpi as per Rafael's previous
-> advice.
-> 
-> This patch series was based on platform-driver-x86/for-next and tested
-> on a Lifebook S7020.
+Add the model to the list of models without rfkill switch.
 
-As far as I can tell this series looks good.  It is, as you said, another
-step towards the splitting of this driver into two separate modules.  I have
-a few brief comments.
+Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Patch 1: 
- - The argument for this change assumes that the execution methodology of
-   the acpi_os_execute() remains as is, since this is what guarantees the
-   absence of concurrency concerns.  If it is fair to assume that we don't
-   have to worry about such things which may never happen then there's no
-   problem with this patch.
-
-Patch 2:
- - No problem.
-
-Patch 3: 
- - No problem.
-
-Patch 4: 
- - Presumedly the change in device path doesn't count as an API change. 
-   Given that, I have no objection since the argument put forward makes
-   sense.
-
-Patch 5:
- - I am not overly familiar with the power management infrastructure within 
-   the ACPI subsystem, but the presented argument seems sensible to me. 
-   This patch is therefore fine if the given assumptions hold.
-
-Patch 6:
- - This seems fair.
-
-Patch 7: 
- - The motivations which lead to the creation of the debug Kconfig option
-   are now moot.  The elimination of this and the custom logging code is
-   therefore entirely justified.
-
-To summarise, I see no major issues with this patch set so long as the minor
-details noted above are of no consequence.  Applying this will assist with
-the end-goal of splitting the driver into two modules since it will minimise
-the changes needed at the time the split is carried out.
-
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-
-Regards
-  jonathan
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 24ca9fb..4bd575d 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -911,6 +911,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		},
+ 	},
+ 	{
++		.ident = "Lenovo Legion Y520-15IKBN",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKBN"),
++		},
++	},
++	{
+ 		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-- 
+2.9.4
