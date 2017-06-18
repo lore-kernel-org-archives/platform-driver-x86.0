@@ -1,46 +1,66 @@
-From: Olle Liljenzin <olle@liljenzin.se>
-Subject: [PATCH] platform/x86: ideapad-laptop: Add Y720-15IKBN to no_hw_rfkill
-Date: Sun, 18 Jun 2017 14:37:58 +0200
-Message-ID: <20170618123758.4660-1-olle@liljenzin.se>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Fix bogus keyboard backlight
+ sysfs interface
+Date: Sun, 18 Jun 2017 15:44:50 +0300
+Message-ID: <CAHp75Vc9OaAMm47PANHGCCtuyjt6y368e3nmx+aJe6DEWXFyTw@mail.gmail.com>
+References: <20170616073539.1185-1-kai.heng.feng@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from host224-206.customer.mediateknik.net ([194.132.224.206]:48278
-        "EHLO ludenben.liljenzin.se" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752825AbdFRMif (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:35190 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752187AbdFRMow (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jun 2017 08:38:35 -0400
+        Sun, 18 Jun 2017 08:44:52 -0400
+In-Reply-To: <20170616073539.1185-1-kai.heng.feng@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, olle@liljenzin.se
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Lenovo Legion Y720-15IKBN is yet another Lenovo model that does not
-have an hw rfkill switch, resulting in wifi always reported as hard
-blocked.
+On Fri, Jun 16, 2017 at 10:35 AM, Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> Dell Latitude 3160 does not have keyboard backlight, but there is a
+> sysfs interface for it, which does nothing at all.
+>
+> KBD_LED_OFF_TOKEN is the only token can be found. Since it doesn't have
+> KBD_LED_ON_TOKEN or KBD_LED_AUTO_*_TOKEN, it should be safe to assume it
+> does not support keyboard backlight.
+>
+> Reports keyboard backlight is supported only when tokens other than
+> KBD_LED_OFF_TOKEN can be found.
 
-Add the model to the list of models without rfkill switch.
+Okay, I'm waiting for v2 with Pali's or mine suggestion applied.
 
-Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
----
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/platform/x86/dell-laptop.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index ec202094bd50..743d7ce8c0c8 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -1510,7 +1510,11 @@ static void kbd_init(void)
+>         ret = kbd_init_info();
+>         kbd_init_tokens();
+>
+> -       if (kbd_token_bits != 0 || ret == 0)
+> +       /*
+> +        * If KBD_LED_OFF_TOKEN is the only token,
+> +        * consider there is no keyboard backlight.
+> +        */
+> +       if ((kbd_token_bits & ~BIT(5)) != 0 || ret == 0)
+>                 kbd_led_present = true;
+>  }
+>
+> --
+> 2.13.1
+>
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 4bd575d..0decfd4 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -918,6 +918,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo Legion Y720-15IKBN",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBN"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+
+
 -- 
-2.9.4
+With Best Regards,
+Andy Shevchenko
