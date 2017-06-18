@@ -1,97 +1,76 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
-Date: Sat, 17 Jun 2017 18:47:54 +0200
-Message-ID: <201706171847.54407@pali>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com> <20170613184228.GC22450@fury> <20170614154654.GA22981@pali>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 0/7] fujitsu-laptop: ACPI-related cleanups
+Date: Sun, 18 Jun 2017 20:05:15 +0930
+Message-ID: <20170618103515.GH26810@marvin.atrad.com.au>
+References: <20170616044058.30443-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2777505.xa2oJlV29D";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f173.google.com ([209.85.128.173]:36863 "EHLO
-        mail-wr0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750720AbdFQQr5 (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:51604 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751071AbdFRKgL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Jun 2017 12:47:57 -0400
-In-Reply-To: <20170614154654.GA22981@pali>
+        Sun, 18 Jun 2017 06:36:11 -0400
+Content-Disposition: inline
+In-Reply-To: <20170616044058.30443-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <jlee@suse.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, Dave Airlie <airlied@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart2777505.xa2oJlV29D
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Michel
 
-> So problematic drivers which use instance=3D1 without any comments are:
->=20
->   acer-wmi
->   asus-wmi
->   mxm-wmi
+On Fri, Jun 16, 2017 at 06:40:51AM +0200, Micha?? K??pie?? wrote:
+> In preparation for splitting fujitsu-laptop into two separate modules, I
+> prepared two more cleanup series to minimize the amount of code being
+> moved around.  This first series contains all patches that touch ACPI in
+> some way, which is why I am CCing linux-acpi as per Rafael's previous
+> advice.
+> 
+> This patch series was based on platform-driver-x86/for-next and tested
+> on a Lifebook S7020.
 
-Adding authors & maintainers of those drivers in loop.
+As far as I can tell this series looks good.  It is, as you said, another
+step towards the splitting of this driver into two separate modules.  I have
+a few brief comments.
 
-WMI instance number is indexed from zero and therefore first instance
-number is 0, not 1. Can you check if for drivers and wmi functions
-(specified below) is really correct to use WMI instance number one?
+Patch 1: 
+ - The argument for this change assumes that the execution methodology of
+   the acpi_os_execute() remains as is, since this is what guarantees the
+   absence of concurrency concerns.  If it is fair to assume that we don't
+   have to worry about such things which may never happen then there's no
+   problem with this patch.
 
-In case in _WDG is specified for particular GUID that instance_count is
-1, it means the only allowed instance number is 0 (first and the only
-one).
+Patch 2:
+ - No problem.
 
-In some cases, when there is only one instance for WMI method, ACPI WMI
-bytecode does not check instance number, so any passed value is
-accepted by ACPI. But in current patch I'm trying to fix check for
-valid instance number based on instance_count information from _WDG.
+Patch 3: 
+ - No problem.
 
-So I need to know if nothing would be broken. And in case those driver
-issue invalid/incorrect instance number, they needs to be fixed.
+Patch 4: 
+ - Presumedly the change in device path doesn't count as an API change. 
+   Given that, I have no objection since the argument put forward makes
+   sense.
 
-Can you look at it? Simple look into _WDG dump should be enough... just
-check if instance number called from wmi driver is less then
-instance_count from _WDG.
+Patch 5:
+ - I am not overly familiar with the power management infrastructure within 
+   the ACPI subsystem, but the presented argument seems sensible to me. 
+   This patch is therefore fine if the given assumptions hold.
 
-On Wednesday 14 June 2017 17:46:54 Pali Roh=C3=A1r wrote:
-> Function wmi_query_block:
->=20
->   acer-wmi.c:
->   instance=3D1 /* no comment why, guid=3D95764E09-FB56-4E83-B31A-37761F60=
-994A */
->=20
-=20
-> Function wmi_evaluate_method:
->=20
->   acer-wmi.c:
->   instance=3D1 /* no comment why, guid=3D67C3371D-95A3-4C37-BB61-DD47B491=
-DAAB */
->   instance=3D1 /* no comment why, guid=3D6AF4F258-B401-42FD-BE91-3D4AC2D7=
-C0D3 */
->=20
->   asus-wmi.c:
->   instance=3D1 /* no comment why, guid=3D97845ED0-4E6D-11DE-8A39-0800200C=
-9A66 */
->=20
->   mxm-wmi.c:
->   instance=3D1 /* no comment why, guid=3DF6CB5C3C-9CAE-4EBD-B577-931EA32A=
-2CC0 */
+Patch 6:
+ - This seems fair.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Patch 7: 
+ - The motivations which lead to the creation of the debug Kconfig option
+   are now moot.  The elimination of this and the custom logging code is
+   therefore entirely justified.
 
---nextPart2777505.xa2oJlV29D
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+To summarise, I see no major issues with this patch set so long as the minor
+details noted above are of no consequence.  Applying this will assist with
+the end-goal of splitting the driver into two modules since it will minimise
+the changes needed at the time the split is carried out.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
-iEYEABECAAYFAllFXToACgkQi/DJPQPkQ1Js7ACgwkcqLel1uqbpY5zXkP3Ns082
-sjcAoJAwgIk1elXhqQctLj4Z1oma2Afi
-=wkyP
------END PGP SIGNATURE-----
-
---nextPart2777505.xa2oJlV29D--
+Regards
+  jonathan
