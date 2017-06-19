@@ -1,87 +1,57 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: dell-laptop: Fix bogus keyboard
- backlight sysfs interface
-Date: Mon, 19 Jun 2017 12:43:25 +0200
-Message-ID: <20170619104325.GC32387@pali>
-References: <20170619102739.30449-1-kai.heng.feng@canonical.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD and X86 due for the v4.13
+ merge window
+Date: Mon, 19 Jun 2017 15:48:49 +0100
+Message-ID: <20170619144849.ltx2qny5v66od3ml@dell>
+References: <CAHp75VcQfSkn7NAWSC2Vq=8RCC0M1p9zvVFjJFLyEo17GDvHsA@mail.gmail.com>
+ <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:35775 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753769AbdFSKn2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2017 06:43:28 -0400
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170619102739.30449-1-kai.heng.feng@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: andy@infradead.org, mjg59@srcf.ucam.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: gnurou@gmail.com, heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linus.walleij@linaro.org, edubezval@gmail.com, dvhart@infradead.org, rui.zhang@intel.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sathyaosid@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 19 June 2017 18:27:39 Kai-Heng Feng wrote:
-> Dell Latitude 3160 does not have keyboard backlight, but there is a
-> sysfs interface for it, which does nothing at all.
-> 
-> KBD_LED_ON_TOKEN is the only token can be found. Since it doesn't have
-> KBD_LED_OFF_TOKEN or KBD_LED_AUTO_*_TOKEN, it should be safe to assume
-> at least both ON and OFF token should be present to support keyboard
-> backlight.
+Enjoy!
 
-This is not truth. E.g. E6440 does not have ON token, but has more AUTO
-tokens.
+The following changes since commit 2ea659a9ef488125eb46da6eb571de5eae5c43f6:
 
-> Models which do not use SMBIOS token to control keyboard backlight, also
-> have this issue. Brightness level is 0 on these models. Verified on Dell
-> Inspiron 3565.
-> 
-> Reports keyboard backlight is supported only when at least two modes are
-> present.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+  Linux 4.12-rc1 (2017-05-13 13:19:49 -0700)
 
-But logic in code looks to be correct now. So fix commit message and you
-can add my Reviewed-by.
+are available in the git repository at:
 
-> ---
-> 
-> v3:
-> Change the logic, there should be at least two modes present to claim it
-> supports backlight. Suggested by Pali Rohár.
-> 
-> v2:
-> The only token can be found is actually KBD_LED_ON_TOKEN, which is BIT(5),
-> instead of KBD_LED_OFF_TOKEN. Change commit log accordingly.
-> 
-> Use token bit to make the intention more clear.
-> Also consider kbd_mode_levels_count and kbd_info.levels, suggested by
-> Pali Rohár.
-> 
-> Use XOR to simplify the bitmask comparison, suggested by
-> Andy Shevchenko.
-> 
->  drivers/platform/x86/dell-laptop.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index ec202094bd50..f42159fd2031 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -1510,7 +1510,11 @@ static void kbd_init(void)
->  	ret = kbd_init_info();
->  	kbd_init_tokens();
->  
-> -	if (kbd_token_bits != 0 || ret == 0)
-> +	/*
-> +	 * Only supports keyboard backlight when it has at least two modes.
-> +	 */
-> +	if ((ret == 0 && (kbd_info.levels != 0 || kbd_mode_levels_count >= 2))
-> +	    || kbd_get_valid_token_counts() >= 2)
->  		kbd_led_present = true;
->  }
->  
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-x86-v4.13
+
+for you to fetch changes up to 94d68594a7b4fd2eec457f22110de644e1c4ee57:
+
+  platform/x86: intel_bxtwc_tmu: Remove first level IRQ unmask (2017-06-19 15:45:30 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and X86 due for the v4.13 merge window
+
+----------------------------------------------------------------
+Kuppuswamy Sathyanarayanan (6):
+      mfd: intel_soc_pmic_bxtwc: Fix TMU interrupt index
+      mfd: intel_soc_pmic_bxtwc: Remove thermal second level IRQs
+      mfd: intel_soc_pmic_bxtwc: Remove second level IRQ for gpio device
+      mfd: intel_soc_pmic_bxtwc: Utilize devm_* functions in driver probe
+      mfd: intel_soc_pmic_bxtwc: Use chained IRQs for second level IRQ chips
+      platform/x86: intel_bxtwc_tmu: Remove first level IRQ unmask
+
+ drivers/gpio/gpio-wcove.c                |  14 +-
+ drivers/mfd/intel_soc_pmic_bxtwc.c       | 232 +++++++++++++++++++++----------
+ drivers/platform/x86/intel_bxtwc_tmu.c   |   4 -
+ drivers/thermal/intel_bxt_pmic_thermal.c |   2 +-
+ drivers/usb/typec/typec_wcove.c          |   2 +-
+ include/linux/mfd/intel_soc_pmic.h       |   5 +-
+ 6 files changed, 175 insertions(+), 84 deletions(-)
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
