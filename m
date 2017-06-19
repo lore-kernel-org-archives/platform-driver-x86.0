@@ -1,96 +1,35 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded
- Binary WMI MOF metadata
-Date: Mon, 19 Jun 2017 09:23:45 -0700
-Message-ID: <CALCETrXKLLfBr_pA45u+-VB_cGda6MrehQoSfoHQSn4Dgvgo7g@mail.gmail.com>
-References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
- <201706191807.42574@pali> <074e9d5668864a81b255df178ed28814@ausx13mpc120.AMER.DELL.COM>
- <201706191819.37016@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD and X86 due for the
+ v4.13 merge window
+Date: Mon, 19 Jun 2017 12:54:38 -0700
+Message-ID: <20170619195438.GB16249@fury>
+References: <CAHp75VcQfSkn7NAWSC2Vq=8RCC0M1p9zvVFjJFLyEo17GDvHsA@mail.gmail.com>
+ <cover.1496687716.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170619144849.ltx2qny5v66od3ml@dell>
+ <CAHp75VcoS4khrYJ_6_hr_s+7eOz0GUA0qrjv5uKvw5KqQUuRMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ua0-f181.google.com ([209.85.217.181]:34788 "EHLO
-        mail-ua0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751732AbdFSQYH (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2017 12:24:07 -0400
-Received: by mail-ua0-f181.google.com with SMTP id d45so22390325uai.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jun 2017 09:24:07 -0700 (PDT)
-In-Reply-To: <201706191819.37016@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Mario.Limonciello@dell.com, Andrew Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcoS4khrYJ_6_hr_s+7eOz0GUA0qrjv5uKvw5KqQUuRMA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Alexandre Courbot <gnurou@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "Zhang, Rui" <rui.zhang@intel.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 19, 2017 at 9:19 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Monday 19 June 2017 18:13:13 Mario.Limonciello@dell.com wrote:
->> > -----Original Message-----
->> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
->> > Sent: Monday, June 19, 2017 11:08 AM
->> > To: Andy Lutomirski <luto@kernel.org>
->> > Cc: platform-driver-x86@vger.kernel.org; Andy Shevchenko
->> > <andriy.shevchenko@linux.intel.com>; Andy Lutomirski
->> > <luto@amacapital.net>; Limonciello, Mario
->> > <Mario_Limonciello@Dell.com>; Rafael Wysocki <rjw@rjwysocki.net>;
->> > linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org Subject:
->> > Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose
->> > embedded Binary WMI MOF metadata
->> >
->> > On Tuesday 06 June 2017 05:16:44 Andy Lutomirski wrote:
->> > > Many laptops (and maybe servers?) have embedded WMI Binary MOF
->> > > metadata. We do not yet have open-source tools for processing the
->> > >
->> > > data, although one is in the works thanks to Pali:
->> > >   https://github.com/pali/bmfdec
->> > >
->> > > There is currently no interface to get the data in the first
->> > > place. By exposing it, we facilitate the development of new
->> > > tools.
->> > >
->> > > Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> > > Cc: Andy Lutomirski <luto@amacapital.net>
->> > > Cc: Mario Limonciello <mario_limonciello@dell.com>
->> > > Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> > > Cc: linux-kernel@vger.kernel.org
->> > > Cc: platform-driver-x86@vger.kernel.org
->> > > Cc: linux-acpi@vger.kernel.org
->> > > [dvhart: make sysfs mof binary read only, fixup comment block
->> > > format] [dvhart: use bmof terminology and dev_err instead of
->> > > dev_warn] Acked-by: Rafael J. Wysocki
->> > > <rafael.j.wysocki@intel.com> Signed-off-by: Darren Hart (VMware)
->> > > <dvhart@infradead.org> ---
->> > >
->> > > since-v1:
->> > >  * address Pali's comments:
->> > >    * update the cover letter for clarity and accuracy
->> > >    * update mof->bmof and MOF to Binary MOF throughout the patch
->> > >    * use dev_err instead of dev_warn in wmi_bmof_probe
->> > >
->> > >  drivers/platform/x86/Kconfig    |  12 ++++
->> > >  drivers/platform/x86/Makefile   |   1 +
->> > >  drivers/platform/x86/wmi-bmof.c | 125
->> >
->> > Another suggestion (unrelated to this patch): For working with
->> > ACPI-WMI, this binary MOF buffer is not enough. It is needed also
->> > content of _WDG buffer. What about exporting it too via sysfs?
->> > Probably not part of of wmi-bmof driver, but wmi driver itself.
->>
->> I think this depends upon how the userspace access to WMI methods
->> gets implemented, no?  If userpsace access to WMI methods show up as
->> /dev/wmi-$GUID-$INSTANCE and those internally to the kernel map to
->> the proper ASL methods for example, what you get from wmi-bmof
->> should be enough shouldn't it?
->
-> Ok. Such interface for userspace application could be enough.
->
-> But for debugging purposes or writing new WMI driver it is needed to
-> have both _WDG + BMOF.
+On Mon, Jun 19, 2017 at 06:08:27PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 19, 2017 at 5:48 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> > Enjoy!
+> 
+> Thanks!
+> 
+> I suppose this one kbuild bot doesn't complain about :-)
+> 
+> Darren, do we need it or we can survive until v4.13-rc1?
 
-With the busification patches applied, all the _WDG data should be
-available in sysfs in parsed form.  I have no particular objection to
-adding a new sysfs for debugfs file to give the raw binary blob, but
-I'm not sure it's needed.
+I suggest merging it to a local branch for safe keeping and if we see
+conflicts in subsequent patches, we can apply it. I doubt it will be a problem.
 
---Andy
+-- 
+Darren Hart
+VMware Open Source Technology Center
