@@ -1,63 +1,85 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add Y720-15IKBN to no_hw_rfkill
-Date: Sun, 18 Jun 2017 15:48:21 +0300
-Message-ID: <CAHp75VfM7+Bij6nCi6adHZ8gqvk5VdVyOgkNZi6COjKZWaWzsA@mail.gmail.com>
-References: <20170618123758.4660-1-olle@liljenzin.se>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2] platform/x86: dell-laptop: Fix bogus keyboard backlight sysfs interface
+Date: Mon, 19 Jun 2017 15:36:29 +0800
+Message-ID: <20170619073629.14239-1-kai.heng.feng@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:34889 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752102AbdFRMsW (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:38854 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752531AbdFSHgi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jun 2017 08:48:22 -0400
-Received: by mail-qt0-f193.google.com with SMTP id x58so16576914qtc.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Jun 2017 05:48:22 -0700 (PDT)
-In-Reply-To: <20170618123758.4660-1-olle@liljenzin.se>
+        Mon, 19 Jun 2017 03:36:38 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Olle Liljenzin <olle@liljenzin.se>
-Cc: Ike Panhc <ike.pan@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: andy@infradead.org, mjg59@srcf.ucam.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-On Sun, Jun 18, 2017 at 3:37 PM, Olle Liljenzin <olle@liljenzin.se> wrote:
-> Lenovo Legion Y720-15IKBN is yet another Lenovo model that does not
-> have an hw rfkill switch, resulting in wifi always reported as hard
-> blocked.
->
-> Add the model to the list of models without rfkill switch.
->
+Dell Latitude 3160 does not have keyboard backlight, but there is a
+sysfs interface for it, which does nothing at all.
 
-Both patches pushed to testing, thanks.
+KBD_LED_ON_TOKEN is the only token can be found. Since it doesn't have
+KBD_LED_OFF_TOKEN or KBD_LED_AUTO_*_TOKEN, it should be safe to assume it
+does not support keyboard backlight.
 
-> Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 4bd575d..0decfd4 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -918,6 +918,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->                 },
->         },
->         {
-> +               .ident = "Lenovo Legion Y720-15IKBN",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBN"),
-> +               },
-> +       },
-> +       {
->                 .ident = "Lenovo Yoga 2 11 / 13 / Pro",
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> --
-> 2.9.4
->
+Models which do not use SMBIOS to control keyboard backlight, also have
+this issue. Brightness level is 0 on these models. Verified on Dell
+Inspiron 3565.
 
+Reports keyboard backlight is supported only when tokens other than
+KBD_LED_ON_TOKEN can be found, or brightness level is not 0.
 
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
 
+v2:
+The only token can be found is actually KBD_LED_ON_TOKEN, which is BIT(5),
+instead of KBD_LED_OFF_TOKEN. Change commit log accordingly.
+
+Use token bit to make the intention more clear.
+Also consider kbd_mode_levels_count and kbd_info.levels, suggested by
+Pali Rohár.
+
+Use XOR to simplify the bitmask comparison, suggested by
+Andy Shevchenko.
+
+ drivers/platform/x86/dell-laptop.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index ec202094bd50..4b21fc982cb0 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -1148,6 +1148,15 @@ static const int kbd_tokens[] = {
+ 	KBD_LED_ON_TOKEN,
+ };
+ 
++enum kbd_led_token_bit {
++	KBD_LED_TOKEN_BIT_OFF = 0,
++	KBD_LED_TOKEN_BIT_AUTO_25,
++	KBD_LED_TOKEN_BIT_AUTO_50,
++	KBD_LED_TOKEN_BIT_AUTO_75,
++	KBD_LED_TOKEN_BIT_AUTO_100,
++	KBD_LED_TOKEN_BIT_ON,
++};
++
+ static u16 kbd_token_bits;
+ 
+ static struct kbd_info kbd_info;
+@@ -1510,7 +1519,12 @@ static void kbd_init(void)
+ 	ret = kbd_init_info();
+ 	kbd_init_tokens();
+ 
+-	if (kbd_token_bits != 0 || ret == 0)
++	/*
++	 * If brightness level is 0, or KBD_LED_ON_TOKEN is the only token,
++	 * consider there is no keyboard backlight.
++	 */
++	if ((ret == 0 && (kbd_info.levels || kbd_mode_levels_count)) ||
++	    kbd_token_bits ^ BIT(KBD_LED_TOKEN_BIT_ON))
+ 		kbd_led_present = true;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.13.1
