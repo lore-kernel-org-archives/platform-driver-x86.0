@@ -1,159 +1,185 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: WMI and Kernel:User interface
-Date: Mon, 19 Jun 2017 20:37:25 -0700
-Message-ID: <20170620033725.GC16249@fury>
-References: <201706130017.29023@pali>
- <20170613012435.GB27850@fury>
- <20170613070535.GA13252@infradead.org>
- <20170613153857.GC27850@fury>
- <20170613155000.GA24483@kroah.com>
- <20170613162242.GF27850@fury>
- <20170613165247.GA32546@kroah.com>
- <20170613170719.GK27850@fury>
- <20170614043853.GE10146@kroah.com>
- <CALCETrWvkXe7yjMYK8GrY8LMfMWWLL7GoWq4_H0nDWJ+ay8-fg@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix
+ warning about deprecated hwmon_device_register
+Date: Tue, 20 Jun 2017 02:16:33 -0300
+Message-ID: <20170620051633.GB15974@khazad-dum.debian.net>
+References: <20170620030208.15997-1-kernel@fomichev.me>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:49428 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750916AbdFTDhf (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2017 23:37:35 -0400
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrWvkXe7yjMYK8GrY8LMfMWWLL7GoWq4_H0nDWJ+ay8-fg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christoph Hellwig <hch@infradead.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mario Limonciello <mario_limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20170620030208.15997-1-kernel-klOrIKU+5EClnMjI0IkVqw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Stanislav Fomichev <kernel-klOrIKU+5EClnMjI0IkVqw@public.gmane.org>
+Cc: dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 19, 2017 at 03:10:09PM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 13, 2017 at 9:38 PM, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Jun 13, 2017 at 10:07:19AM -0700, Darren Hart wrote:
-> >> On Tue, Jun 13, 2017 at 06:52:47PM +0200, Greg Kroah-Hartman wrote:
-> >> > > As a concrete example, Dell has specifically made the request that we
-> >> > > work on a solution that doesn't require them to come back to the kernel
-> >> > > community each time they add a WMI GUID to their BIOS. They would like
-> >> > > to see those GUIDs automatically exposed.
-> >> >
-> >> > What do you mean exactly by "exposed"?  What do they do with these?  Why
-> >>
-> >> By exposed I meant: the chardev for the WMI GUID is created
-> >>
-> >> The idea being the kernel maps WMI GUIDs to chardevs and shepherds the
-> >> userspace calls through to the ACPI method evaluation and back. But the
-> >> kernel wmi driver doesn't, in general, have specific knowledge of the
-> >> methods or input and output formats.
-> >
-> > Hah, and those people who insist on "secure boot" are going to allow
-> > userspace access to ACPI methods like this?  Well, I guess as Windows
-> > does it, it must be ok...
-> >
-> > I'll shut up now and just wait for patches :)
-> >
+On Mon, 19 Jun 2017, Stanislav Fomichev wrote:
+> Use hwmon_device_register_with_groups instead of deprecated
+> hwmon_device_register and fix a dmesg warning.
 > 
-> Darren, Pali, etc, I wanted to throw out another idea for handling some of this
-> stuff without risking blobification: make WMI button work declaratively.  Here's
-> what I mean:
+> This patch however changes the userspace API.
+> hwmon_device_register_with_groups takes `hwmon' name as an argument and creates
+> a name file in the `hwmon' device, not in the `platform_device'. This
+> allows us to remove custom `name' device attribute, but in order to make
+> lm-sensors happy we also have to move fans and thermal attributes to the
+> `hwmon' device.
+
+Can you clarify that with a ls -l of the "before" and "after"?
+
+Also, does it change anything visible to lmsensors users (such as the
+sensor/adapter name or address)? If so, please post a "before" and
+"after"...
+
+> Even though this patch changes userspace API, it's still compatible with
+> the lm-sensors. Starting with lm-sensors 3.0 (circa 2007), it looks at both
+> hwmon and the backing device for the name and other attributes.
+
+I am not sure this is OK or not, it *is* an userspace ABI break.  I am
+not really opposed to it, as long as it is done properly.  Let's see
+what our subsystem maintainers think of it.
+
+That said: the patch is still incomplete, because this driver has
+documentation that also needs to be updated...
+
+Please update Documentation/laptops/thinkpad-acpi.txt  with the changes
+to the thinkpad_hwmon sensor interfaces.  Search for "hwmon" on that
+text, that should locate everything.
+
+Also, please bump "#define TPACPI_SYSFS_VERSION 0x020700" to 0x020800 in
+drivers/platform/x86/thinkpad_acpi.c, and update the interface changelog
+table at the end of Documentation/laptops/thinkpad-acpi.txt.
+
+(that assumes the change is not a major ABI break, please reply with
+that "ls -l" I asked above: we might need to bump that
+TPACPI_SYSFS_VERSION to 0x030000, instead...)
+
+> Signed-off-by: Stanislav Fomichev <kernel-klOrIKU+5EClnMjI0IkVqw@public.gmane.org>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 36 ++++++++++--------------------------
+>  1 file changed, 10 insertions(+), 26 deletions(-)
 > 
-> Currently, we have a whole bunch of WMI drivers that have a bunch of code
-> to do more or less the same thing.  They bind to a WMI event device,
-> parse events,
-> turn them into scancodes, and feed them to sparse_keymap_report_event.
-> 
-> What if we created a single driver that did this generically?  The core would
-> filter a WMI event device and look up each event by trying to match
-> it to a pattern.  A pattern is literally a bunch of bytes, where 1-4
-> of those bytes
-> are all NULL in the pattern but are marked as containing a scancode.  If there's
-> a match, the result is fed to sparse_keymap_report_event().  A pattern
-> would look
-> like (totally made up):
-> 
-> 05 74 AB [0] [1] FF [2] [3]
-> 
-> [0] means that this byte is the low byte of the scancode.  [1] means
-> second byte of the scancode.  05 is a literal.
-> 
-> The scancode would also be programmable.
-> 
-> Then we let WMI drivers bind the device and feed the core a sparse
-> keymap and a pattern or list of patterns.  We'd also let the keymap
-> and the patterns be queried and edited from userspace.  Then, if a new
-> laptop comes out, some hwdb could feed the pattern to the kernel, and
-> the kernel would log the pattern that was fed in.  Then, later on, we
-> could update the kernel driver, or we could just leave the whole
-> pattern list in userspace.
-> 
-> Hmm?
-> 
-
-Hi Andy,
-
-So here is what the documentation [1] says about events, in part:
------
-WMI allows notifications of significant events to be delivered to interested
-user-mode applications. Each type of event is uniquely named by a GUID. Events
-may also carry a data block with additional information about the event. 
-
-...
-
-The mapping process is similar for events. The _WDG control method provides a
-mapping between the WMI event GUID that represents the event and the
-notification code specified in the ASL notify instruction. For example, when
-ACPI provides a callback to the mapper that a control method executed a
-notify(mapper-device, 0x81) function, the mapper will look up the WMI GUID
-mapped to 0x81 and use this WMI GUID in building the WMI event. Before launching
-the WMI event, the mapper will evaluate _WED to retrieve any additional data
-that belongs with the event.
------
-
-I like the idea of generalizing the work and creating this event-handler type
-driver. My concern/objection is that there is nothing governing how hotkeys or
-buttons are implemented with WMI. A single event could be used with a specific
-scancode in the "additional data" for each hotkey/button. Alternatively, a
-different event with no data could be used for each hotkey/button individually.
-Other horrible stateful events could be constructed as well in which the
-scancodes of event X are modified by the most recent event Y's 5th bit of
-"additional data".
-
-Let's have a look at the "additional data" structures from the various drivers.
-
-acer_wmi:
-struct event_return_value {
-        u8 function;
-        u8 key_num;
-        u16 device_state;
-        u32 reserved;
-} __attribute__((packed));
-
-asus*wmi:
-ACPI_TYPE_INTEGER
-Encodes keys, but also brightness values from a range.
-
-dell-wmi:
-Type and code, where type may be, for example, "sequence" and then each byte of
-buffen length is processed as a key.
-
-hp-wmi:
-Event ID and Data, data size varies by version. Although a specific ID triggers
-hotkeys, with a single scancode key for the hp_wmi_keymap.
-
-msi-wmi:
-ACPI_TYPE_INTEGER
-scancode to key is straight forward, but includes a "dead zone" for a period to
-avoid duplicate events, and check for acpi backlight handling prior to reporting
-brightness keys.
-
-All told, these 5 drivers use events for hotkey in very different ways. I expect
-a high degree of variety across vendors. WMI was designed as a solution for
-platform (model) specific features, and that's evident in the implementations we
-know about. I think attempting anything more specific than the mapping driver in
-feature drivers (as opposed to platform drivers) will be unsuccessful.
-
-1. https://msdn.microsoft.com/en-us/library/windows/hardware/dn614028(v=vs.85).aspx
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 7b6cb0c69b02..0e0a1616f273 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6401,7 +6401,7 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+>  
+>  	switch (thermal_read_mode) {
+>  	case TPACPI_THERMAL_TPEC_16:
+> -		res = sysfs_create_group(&tpacpi_sensors_pdev->dev.kobj,
+> +		res = sysfs_create_group(&tpacpi_hwmon->kobj,
+>  				&thermal_temp_input16_group);
+>  		if (res)
+>  			return res;
+> @@ -6409,7 +6409,7 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+>  	case TPACPI_THERMAL_TPEC_8:
+>  	case TPACPI_THERMAL_ACPI_TMP07:
+>  	case TPACPI_THERMAL_ACPI_UPDT:
+> -		res = sysfs_create_group(&tpacpi_sensors_pdev->dev.kobj,
+> +		res = sysfs_create_group(&tpacpi_hwmon->kobj,
+>  				&thermal_temp_input8_group);
+>  		if (res)
+>  			return res;
+> @@ -6426,13 +6426,13 @@ static void thermal_exit(void)
+>  {
+>  	switch (thermal_read_mode) {
+>  	case TPACPI_THERMAL_TPEC_16:
+> -		sysfs_remove_group(&tpacpi_sensors_pdev->dev.kobj,
+> +		sysfs_remove_group(&tpacpi_hwmon->kobj,
+>  				   &thermal_temp_input16_group);
+>  		break;
+>  	case TPACPI_THERMAL_TPEC_8:
+>  	case TPACPI_THERMAL_ACPI_TMP07:
+>  	case TPACPI_THERMAL_ACPI_UPDT:
+> -		sysfs_remove_group(&tpacpi_sensors_pdev->dev.kobj,
+> +		sysfs_remove_group(&tpacpi_hwmon->kobj,
+>  				   &thermal_temp_input8_group);
+>  		break;
+>  	case TPACPI_THERMAL_NONE:
+> @@ -8773,7 +8773,7 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  			fan_attributes[ARRAY_SIZE(fan_attributes)-2] =
+>  					&dev_attr_fan2_input.attr;
+>  		}
+> -		rc = sysfs_create_group(&tpacpi_sensors_pdev->dev.kobj,
+> +		rc = sysfs_create_group(&tpacpi_hwmon->kobj,
+>  					 &fan_attr_group);
+>  		if (rc < 0)
+>  			return rc;
+> @@ -8781,7 +8781,7 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		rc = driver_create_file(&tpacpi_hwmon_pdriver.driver,
+>  					&driver_attr_fan_watchdog);
+>  		if (rc < 0) {
+> -			sysfs_remove_group(&tpacpi_sensors_pdev->dev.kobj,
+> +			sysfs_remove_group(&tpacpi_hwmon->kobj,
+>  					&fan_attr_group);
+>  			return rc;
+>  		}
+> @@ -8796,7 +8796,7 @@ static void fan_exit(void)
+>  		    "cancelling any pending fan watchdog tasks\n");
+>  
+>  	/* FIXME: can we really do this unconditionally? */
+> -	sysfs_remove_group(&tpacpi_sensors_pdev->dev.kobj, &fan_attr_group);
+> +	sysfs_remove_group(&tpacpi_hwmon->kobj, &fan_attr_group);
+>  	driver_remove_file(&tpacpi_hwmon_pdriver.driver,
+>  			   &driver_attr_fan_watchdog);
+>  
+> @@ -9229,16 +9229,6 @@ static void hotkey_driver_event(const unsigned int scancode)
+>  	tpacpi_driver_event(TP_HKEY_EV_HOTKEY_BASE + scancode);
+>  }
+>  
+> -/* sysfs name ---------------------------------------------------------- */
+> -static ssize_t thinkpad_acpi_pdev_name_show(struct device *dev,
+> -			   struct device_attribute *attr,
+> -			   char *buf)
+> -{
+> -	return snprintf(buf, PAGE_SIZE, "%s\n", TPACPI_NAME);
+> -}
+> -
+> -static DEVICE_ATTR(name, S_IRUGO, thinkpad_acpi_pdev_name_show, NULL);
+> -
+>  /* --------------------------------------------------------------------- */
+>  
+>  /* /proc support */
+> @@ -9782,8 +9772,6 @@ static void thinkpad_acpi_module_exit(void)
+>  	if (tpacpi_hwmon)
+>  		hwmon_device_unregister(tpacpi_hwmon);
+>  
+> -	if (tp_features.sensors_pdev_attrs_registered)
+> -		device_remove_file(&tpacpi_sensors_pdev->dev, &dev_attr_name);
+>  	if (tpacpi_sensors_pdev)
+>  		platform_device_unregister(tpacpi_sensors_pdev);
+>  	if (tpacpi_pdev)
+> @@ -9904,14 +9892,10 @@ static int __init thinkpad_acpi_module_init(void)
+>  		thinkpad_acpi_module_exit();
+>  		return ret;
+>  	}
+> -	ret = device_create_file(&tpacpi_sensors_pdev->dev, &dev_attr_name);
+> -	if (ret) {
+> -		pr_err("unable to create sysfs hwmon device attributes\n");
+> -		thinkpad_acpi_module_exit();
+> -		return ret;
+> -	}
+>  	tp_features.sensors_pdev_attrs_registered = 1;
+> -	tpacpi_hwmon = hwmon_device_register(&tpacpi_sensors_pdev->dev);
+> +	tpacpi_hwmon = hwmon_device_register_with_groups(
+> +		&tpacpi_sensors_pdev->dev, TPACPI_NAME, NULL, NULL);
+> +
+>  	if (IS_ERR(tpacpi_hwmon)) {
+>  		ret = PTR_ERR(tpacpi_hwmon);
+>  		tpacpi_hwmon = NULL;
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
