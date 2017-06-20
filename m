@@ -1,103 +1,93 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] acer-wmi: Using zero as the first WMI instance number
-Date: Tue, 20 Jun 2017 20:22:46 +0300
-Message-ID: <CAHp75Vd1ZRpZc3P5qnsiWTiURCUSOjsRfPKgShe3seJmsh1GRQ@mail.gmail.com>
-References: <20170620090623.18364-1-jlee@suse.com> <20170620164851.GA32699@pali>
+Subject: Re: [PATCH v4] platform/x86: dell-laptop: Fix bogus keyboard
+ backlight sysfs interface
+Date: Tue, 20 Jun 2017 20:25:36 +0300
+Message-ID: <CAHp75Vc+9X5LKnoaO=Q3UGqH4Ok-pBxKpgE5zFSpcX_1e9v2=A@mail.gmail.com>
+References: <20170620030519.629-1-kai.heng.feng@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:35116 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751096AbdFTRWs (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:35489 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751140AbdFTRZm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jun 2017 13:22:48 -0400
-In-Reply-To: <20170620164851.GA32699@pali>
+        Tue, 20 Jun 2017 13:25:42 -0400
+In-Reply-To: <20170620030519.629-1-kai.heng.feng@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Lee, Chun-Yi" <jlee@suse.com>, Andy Shevchenko <andy@infradead.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, Jun 20, 2017 at 7:48 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Tuesday 20 June 2017 17:06:23 Lee, Chun-Yi wrote:
->> Pali Roh=C3=A1r found that there have some wmi query/evaluation
->> code that they used 'one' as the first WMI instance number.
->> But the number is indexed from zero that it's must less than
->> the instance_count in _WDG.
->>
->> This patch changes those instance number from one to zero.
->>
->> Cc: Darren Hart <dvhart@infradead.org>
->> Cc: Andy Shevchenko <andy@infradead.org>
->> Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+On Tue, Jun 20, 2017 at 6:05 AM, Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> Dell Latitude 3160 does not have keyboard backlight, but there is a
+> sysfs interface for it, which does nothing at all.
 >
-> Looks good, Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-Unfortunately patchwork ignores this tag.
-So, in the future please:
-- put a tag on a separate line
-- do _not_ prepend it by any characters including white spaces (except
-new line :-) )
-
-No need to resend this one.
+> KBD_LED_ON_TOKEN is the only token can be found. Since it doesn't have
+> KBD_LED_OFF_TOKEN or KBD_LED_AUTO_*_TOKEN, it should be safe to assume
+> at least two tokens should be present to support keyboard backlight.
+> Not all models have ON token - they may have multiple AUTO tokens instead=
+.
+>
+> Models which do not use SMBIOS token to control keyboard backlight, also
+> have this issue. Brightness level is 0 on these models. Verified on Dell
+> Inspiron 3565.
+>
+> Reports keyboard backlight is supported only when at least two modes are
+> present.
+>
 
 Pushed to testing, thanks!
 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
 >
->> ---
->>  drivers/platform/x86/acer-wmi.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer=
--wmi.c
->> index 79fa5ab..ef420b6 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -700,7 +700,7 @@ struct acpi_buffer *result)
->>       input.length =3D sizeof(struct wmab_args);
->>       input.pointer =3D (u8 *)regbuf;
->>
->> -     status =3D wmi_evaluate_method(AMW0_GUID1, 1, 1, &input, result);
->> +     status =3D wmi_evaluate_method(AMW0_GUID1, 0, 1, &input, result);
->>
->>       return status;
->>  }
->> @@ -965,7 +965,7 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
->>       u32 tmp =3D 0;
->>       acpi_status status;
->>
->> -     status =3D wmi_evaluate_method(WMID_GUID1, 1, method_id, &input, &=
-result);
->> +     status =3D wmi_evaluate_method(WMID_GUID1, 0, method_id, &input, &=
-result);
->>
->>       if (ACPI_FAILURE(status))
->>               return status;
->> @@ -1275,7 +1275,7 @@ static acpi_status __init WMID_set_capabilities(vo=
-id)
->>       acpi_status status;
->>       u32 devices;
->>
->> -     status =3D wmi_query_block(WMID_GUID2, 1, &out);
->> +     status =3D wmi_query_block(WMID_GUID2, 0, &out);
->>       if (ACPI_FAILURE(status))
->>               return status;
->>
->> @@ -2018,7 +2018,7 @@ static u32 get_wmid_devices(void)
->>       acpi_status status;
->>       u32 devices =3D 0;
->>
->> -     status =3D wmi_query_block(WMID_GUID2, 1, &out);
->> +     status =3D wmi_query_block(WMID_GUID2, 0, &out);
->>       if (ACPI_FAILURE(status))
->>               return 0;
->>
+> v4:
+> Change commit log - not all models have ON token.
+>
+> v3:
+> Change the logic, there should be at least two modes present to claim it
+> supports backlight. Suggested by Pali Roh=C3=A1r.
+>
+> v2:
+> The only token can be found is actually KBD_LED_ON_TOKEN, which is BIT(5)=
+,
+> instead of KBD_LED_OFF_TOKEN. Change commit log accordingly.
+>
+> Use token bit to make the intention more clear.
+> Also consider kbd_mode_levels_count and kbd_info.levels, suggested by
+> Pali Roh=C3=A1r.
+>
+> Use XOR to simplify the bitmask comparison, suggested by
+> Andy Shevchenko.
+>
+>  drivers/platform/x86/dell-laptop.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
+ll-laptop.c
+> index ec202094bd50..f42159fd2031 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -1510,7 +1510,11 @@ static void kbd_init(void)
+>         ret =3D kbd_init_info();
+>         kbd_init_tokens();
+>
+> -       if (kbd_token_bits !=3D 0 || ret =3D=3D 0)
+> +       /*
+> +        * Only supports keyboard backlight when it has at least two mode=
+s.
+> +        */
+> +       if ((ret =3D=3D 0 && (kbd_info.levels !=3D 0 || kbd_mode_levels_c=
+ount >=3D 2))
+> +           || kbd_get_valid_token_counts() >=3D 2)
+>                 kbd_led_present =3D true;
+>  }
 >
 > --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+> 2.13.1
+>
 
 
 
