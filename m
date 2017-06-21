@@ -1,62 +1,81 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH] alienware-wmi: Adjust instance of all wmi_evaluate_method calls to 0
-Date: Wed, 21 Jun 2017 17:01:35 -0500
-Message-ID: <1498082495-3329-1-git-send-email-mario.limonciello@dell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:32940 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752353AbdFUWBv (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jun 2017 18:01:51 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: do not use kfifo for
+ storing hotkey scancodes
+Date: Thu, 22 Jun 2017 09:20:21 +0930
+Message-ID: <20170621235021.GA32131@marvin.atrad.com.au>
+References: <20170616044058.30443-1-kernel@kempniu.pl>
+ <20170616044058.30443-2-kernel@kempniu.pl>
+ <20170621181543.GB25900@fury>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170621181543.GB25900@fury>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Rafael Wysocki <rjw@rjwysocki.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Pali recently noticed that WMI instances are zero indexed.
+On Wed, Jun 21, 2017 at 11:15:43AM -0700, Darren Hart wrote:
+> On Fri, Jun 16, 2017 at 06:40:52AM +0200, Micha?? K??pie?? wrote:
+> > -#define RINGBUFFERSIZE 40
+> >  
+> >  /* Debugging */
+> >  #define FUJLAPTOP_DBG_ERROR	  0x0001
+> > @@ -146,8 +144,8 @@ struct fujitsu_laptop {
+> >  	struct input_dev *input;
+> >  	char phys[32];
+> >  	struct platform_device *pf_device;
+> > -	struct kfifo fifo;
+> > -	spinlock_t fifo_lock;
+> > +	int scancode_buf[40];
+> 
+> Do we know why 40 was used here? A single use magic number is fine, but it
+> would be good to document why it is what it is if we know.
 
-The only reason that these calls all worked properly is because the ASL
-didn't verify the instance number.
+I am unsure as to why 40 was chosen as the size.  The support for the
+hotkeys was contributed by Peter Gruber in 2008 who had a Fujitsu laptop
+which featured this functionality (mine doesn't).  I obviously can't speak
+for Peter but I suspect that he simply picked a number which seemed
+reasonable at the time.  I am unaware of any specific reason why the size
+was set at 40, and to be honest never throught to ask at the time the patch
+was proposed.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/alienware-wmi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+If we need a reason to justify the value of 40, I guess the best option is
+"because it seems reasonable".
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index d6b3492..9866fec 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -303,7 +303,7 @@ static int alienware_update_led(struct platform_zone *zone)
- 	}
- 	pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
- 
--	status = wmi_evaluate_method(guid, 1, method_id, &input, NULL);
-+	status = wmi_evaluate_method(guid, 0, method_id, &input, NULL);
- 	if (ACPI_FAILURE(status))
- 		pr_err("alienware-wmi: zone set failure: %u\n", status);
- 	return ACPI_FAILURE(status);
-@@ -352,7 +352,7 @@ static int wmax_brightness(int brightness)
- 	};
- 	input.length = (acpi_size) sizeof(args);
- 	input.pointer = &args;
--	status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
-+	status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 				     WMAX_METHOD_BRIGHTNESS, &input, NULL);
- 	if (ACPI_FAILURE(status))
- 		pr_err("alienware-wmi: brightness set failure: %u\n", status);
-@@ -506,10 +506,10 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
- 	if (out_data != NULL) {
- 		output.length = ACPI_ALLOCATE_BUFFER;
- 		output.pointer = NULL;
--		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
-+		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, &output);
- 	} else
--		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
-+		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, NULL);
- 
- 	if (ACPI_SUCCESS(status) && out_data != NULL) {
--- 
-2.7.4
+I think the buffer size could probably be reduced a little without impacting
+on functionality.  I suspect the value was chosen so as to be well above the
+number of events which could be generated ahead of a button release (which
+effectively releases all buttons held at that stage).  The number of hot
+keys is limited (I don't think any model has more than 5), so reducing the
+buffer somewhat appears safe (perhaps to 32 if there were any advantages to
+having the size be a power of two).  There seems little point doing this in
+the name of memory saving since the amount saved is trivially small.
+
+Looking through my correspondance with Peter from 2008 (which was largely
+off-list for reasons I do not recall), it seems the reason the kfifo was
+used was due to Peter's concern about concurrent processing of mulitple
+events across different CPUs.  Since at the time we couldn't determine
+whether this was a real issue Peter took the safe route and used a kfifo. 
+If the assumption that it cannot happen is known to hold in all cases there
+is clearly no need for the more complex construct (at least on the basis of
+concurrency arguments).
+
+I've given some more thought to the following point (from the original patch
+submission):
+> In order to simplify implementation, hotkey input device behavior is
+> slightly changed (from FIFO to LIFO).  The order of release events
+> generated by the input device should not matter from end user
+> perspective as upon releasing any hotkey the firmware only produces a
+> single event which means "all hotkeys were released".
+
+This will effectively alter the order the button events are seen by
+userspace though, won't it?  It would mean that (for example) a user who
+presses (and holds) the "media" key before "email" will end up with "email"
+being acted on first.  This may surprise them.  Then again, I suppose it
+could be argued that such usage is unusual and therefore is likely to be
+rare - and therefore not worth bothering about.
+
+Regards
+  jonathan
