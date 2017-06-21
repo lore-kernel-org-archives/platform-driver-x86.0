@@ -1,52 +1,34 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: do not use kfifo for
- storing hotkey scancodes
-Date: Wed, 21 Jun 2017 11:15:43 -0700
-Message-ID: <20170621181543.GB25900@fury>
+Subject: Re: [PATCH 5/7] platform/x86: fujitsu-laptop: do not update ACPI
+ device power status
+Date: Wed, 21 Jun 2017 13:17:27 -0700
+Message-ID: <20170621201727.GC25900@fury>
 References: <20170616044058.30443-1-kernel@kempniu.pl>
- <20170616044058.30443-2-kernel@kempniu.pl>
+ <20170616044058.30443-6-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170616044058.30443-2-kernel@kempniu.pl>
-Sender: linux-acpi-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Rafael Wysocki <rjw@rjwysocki.net>
+In-Reply-To: <20170616044058.30443-6-kernel@kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 16, 2017 at 06:40:52AM +0200, Michał Kępień wrote:
-> All ACPI device notify callbacks are invoked using acpi_os_execute(),
-> which causes the supplied callback to be queued to a static workqueue
-> which always executes on CPU 0.  This means that there is no possibility
-> for any ACPI device notify callback to be concurrently executed on
-> multiple CPUs, which in the case of fujitsu-laptop means that using a
-> locked kfifo for handling hotkeys is redundant: as hotkey scancodes are
-> only pushed and popped from within acpi_fujitsu_laptop_notify(), no risk
-> of concurrent pushing and popping exists.
+On Fri, Jun 16, 2017 at 06:40:56AM +0200, Michał Kępień wrote:
+> Calling acpi_bus_update_power() for ACPI devices FUJ02B1 and FUJ02E3 is
+> pointless as they are not power manageable (neither _PS0 nor _PR0 is
+> defined for any of them), which causes their power state to be inherited
+> from their parent devices.  Given the ACPI paths of these two devices
+> (\_SB.PCI0.LPCB.FJEX, \_SB.FEXT), their parent devices are also not
+> power manageable.  These parent devices will thus have their power state
+> initialized to ACPI_STATE_D0, which in turn causes the power state for
+> both FUJ02B1 and FUJ02E3 to always be ACPI_STATE_D0 ("on").
+> 
 
-Was the kfifo causing a problem currently or for the migration to separate
-modules? Is this purely a simplification?
-
-Rafael, the above rationale appears sound to me. Do you have any concerns?
-
-...
-
-> -#define RINGBUFFERSIZE 40
->  
->  /* Debugging */
->  #define FUJLAPTOP_DBG_ERROR	  0x0001
-> @@ -146,8 +144,8 @@ struct fujitsu_laptop {
->  	struct input_dev *input;
->  	char phys[32];
->  	struct platform_device *pf_device;
-> -	struct kfifo fifo;
-> -	spinlock_t fifo_lock;
-> +	int scancode_buf[40];
-
-Do we know why 40 was used here? A single use magic number is fine, but it would
-be good to document why it is what it is if we know.
+How confident are we that all implementations of these two ACPI devices lack
+_PS0 and _PR0 ?
 
 -- 
 Darren Hart
