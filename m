@@ -1,73 +1,62 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
- number
-Date: Wed, 21 Jun 2017 21:52:12 +0000
-Message-ID: <753a822799094c44ade76a66b1e1036a@ausx13mpc120.AMER.DELL.COM>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
- <20170615135902.GS5248@pali>
- <c466b978c72a4a49a08dd84e72103963@ausx13mpc120.AMER.DELL.COM>
- <201706171834.36487@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] alienware-wmi: Adjust instance of all wmi_evaluate_method calls to 0
+Date: Wed, 21 Jun 2017 17:01:35 -0500
+Message-ID: <1498082495-3329-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:35277 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751979AbdFUVwT (ORCPT
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:32940 "EHLO
+        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752353AbdFUWBv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jun 2017 17:52:19 -0400
-In-Reply-To: <201706171834.36487@pali>
-Content-Language: en-US
+        Wed, 21 Jun 2017 18:01:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy@infradead.org, luto@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgSnVuZSAxNywgMjAxNyAx
-MTozNSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBhbmR5QGluZnJhZGVhZC5vcmc7IGx1
-dG9Aa2VybmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFJGQzog
-cGxhdGZvcm0veDg2OiB3bWk6IEZpeCBjaGVjayBmb3IgbWV0aG9kIGluc3RhbmNlDQo+IG51bWJl
-cg0KPiANCj4gT24gRnJpZGF5IDE2IEp1bmUgMjAxNyAxODozMzo1NCBNYXJpby5MaW1vbmNpZWxs
-b0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4g
-PiBGcm9tOiBMaW1vbmNpZWxsbywgTWFyaW8NCj4gPiA+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDE1
-LCAyMDE3IDEwOjE2IEFNDQo+ID4gPiBUbzogJ1BhbGkgUm9ow6FyJyA8cGFsaS5yb2hhckBnbWFp
-bC5jb20+OyBEYXJyZW4gSGFydA0KPiA+ID4gPGR2aGFydEBpbmZyYWRlYWQub3JnPiBDYzogQW5k
-eSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+Ow0KPiA+ID4gQW5keSBMdXRvbWlyc2tp
-IDxsdXRvQGtlcm5lbC5vcmc+Ow0KPiA+ID4gcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJFOiBb
-UEFUQ0hdIFJGQzogcGxhdGZvcm0veDg2OiB3bWk6IEZpeCBjaGVjayBmb3IgbWV0aG9kDQo+ID4g
-PiBpbnN0YW5jZSBudW1iZXINCj4gPiA+DQo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+ID4gPiA+IEZyb206IFBhbGkgUm9ow6FyIFttYWlsdG86cGFsaS5yb2hhckBnbWFpbC5j
-b21dDQo+ID4gPiA+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDE1LCAyMDE3IDg6NTkgQU0NCj4gPiA+
-ID4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBE
-YXJyZW4gSGFydA0KPiA+ID4gPiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+DQo+ID4gPiA+IENjOiBB
-bmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz47IEFuZHkgTHV0b21pcnNraQ0KPiA+
-ID4NCj4gPiA+IDxsdXRvQGtlcm5lbC5vcmc+Ow0KPiA+ID4NCj4gPiA+ID4gcGxhdGZvcm0tZHJp
-dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g
-PiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUkZDOiBwbGF0Zm9ybS94ODY6IHdtaTogRml4IGNo
-ZWNrIGZvciBtZXRob2QNCj4gPiA+ID4gaW5zdGFuY2UgbnVtYmVyDQo+ID4gPiA+DQo+ID4gPiA+
-IE1hcmlvLCBhcmUgeW91IGFibGUgdG8gY2hlY2sgaWYgaW5zdGFuY2UgbnVtYmVyIHBhc3NlZCB0
-bw0KPiA+ID4gPiB3bWlfZXZhbHVhdGVfbWV0aG9kIGluIGZvbGxvd2luZyBkZWxsIFdNSSBkcml2
-ZXJzIGlzIGNvcnJlY3QgYW5kDQo+ID4gPiA+IHNob3VsZCBiZSByZWFsbHkgMT8NCj4gPiA+ID4N
-Cj4gPiA+ID4gSSBzdXNwZWN0IHRoYXQgaXQgc2hvdWxkIGJlIHplcm8sIGFzIGluc3RhbmNlIG51
-bWJlciBpcyBpbmRleGVkDQo+ID4gPiA+IGZyb20gemVyby4NCj4gPiA+ID4NCj4gPiA+ID4gVGhl
-cmUgaXMgbm8gY29tbWVudCBpbiB0aG9zZSBkZWxsIFdNSSBkcml2ZXJzIHdoeSBpdCBpcyAxLCBu
-b3INCj4gPiA+ID4gd2hhdCAxIG1lYW5zLg0KPiA+ID4gPg0KPiA+ID4gPiBJZGVhbGx5IGl0IG5l
-ZWRzIHRvIGJlIGNoZWNrZWQgaW4gQUNQSSBieXRlIGNvZGUsIE1PRiBmaWxlIGFuZA0KPiA+ID4g
-PiBXREcgZHVtcC4NCj4gPiA+DQo+ID4gPiBJIHRoaW5rIHlvdSdyZSBsaWtlbHkgY29ycmVjdC4g
-IEkgZG9uJ3QgaGF2ZSBhIGJveCB0aGF0IHN1cHBvcnRzDQo+ID4gPiBhbGllbndhcmUtd21pIG9y
-IGRlbGwtd21pLWxlZC5jIGhhbmR5IGF0IHRoZSBjdXJyZW50IG1vbWVudCB0bw0KPiA+ID4gY29u
-ZmlybSB0aGlzIGh5cG90aGVzaXMgdGhvdWdoLiBJJ2xsIGNvbmZpcm0gdGhpcyBsYXRlci4NCj4g
-PiA+DQo+ID4gPiBJIGRpZG4ndCByZWFsaXplIGl0IHdhcyB6ZXJvIGluZGV4ZWQgd2hlbiBJIHdy
-b3RlIGFsaWVud2FyZS13bWksDQo+ID4gPiBhbmQgSSdtIGd1ZXNzaW5nIHRoZSBhdXRob3Igb2Yg
-ZGVsbC13bWktbGVkIGRpZG4ndCBlaXRoZXIuDQo+ID4gPg0KPiA+ID4gVGhlIHJlYXNvbiBpdCdz
-IHByb2JhYmx5IHdvcmtpbmcgaXMgdGhlIEFDUEkgYnl0ZSBjb2RlIGlzbid0DQo+ID4gPiBhY3R1
-YWxseSBjaGVja2luZyB0aGUgaW5zdGFuY2Ugc2luY2UgbW9zdCB0aW1lcyBfV0RHIHdpbGwgb25s
-eQ0KPiA+ID4gY2FsbCBvdXQgb25lIGluc3RhbmNlLg0KPiA+DQo+ID4gSSBjb25maXJtZWQgeW91
-J3JlIGNvcnJlY3QuICBTd2l0Y2hpbmcgaW5zdGFuY2Ugb3ZlciB0byAwIHdvcmtzDQo+ID4gcHJv
-cGVybHkgb24gYW4gQVNNMjAwIChzdXBwb3J0ZWQgYnkgYWxpZW53YXJlLXdtaSkuDQo+IA0KPiBD
-YW4geW91IGNoZWNrIHdoYXQgaXMgdGhlIHZhbHVlIGluIHRoZSBpbnN0YW5jZV9jb3VudCBpbiBf
-V0RHPw0KPiANCg0KSW5zdGFuY2UgY291bnQgaXMgMS4NCg0KVGhhbmtzLA0K
+Pali recently noticed that WMI instances are zero indexed.
+
+The only reason that these calls all worked properly is because the ASL
+didn't verify the instance number.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/alienware-wmi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index d6b3492..9866fec 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -303,7 +303,7 @@ static int alienware_update_led(struct platform_zone *zone)
+ 	}
+ 	pr_debug("alienware-wmi: guid %s method %d\n", guid, method_id);
+ 
+-	status = wmi_evaluate_method(guid, 1, method_id, &input, NULL);
++	status = wmi_evaluate_method(guid, 0, method_id, &input, NULL);
+ 	if (ACPI_FAILURE(status))
+ 		pr_err("alienware-wmi: zone set failure: %u\n", status);
+ 	return ACPI_FAILURE(status);
+@@ -352,7 +352,7 @@ static int wmax_brightness(int brightness)
+ 	};
+ 	input.length = (acpi_size) sizeof(args);
+ 	input.pointer = &args;
+-	status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
++	status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 				     WMAX_METHOD_BRIGHTNESS, &input, NULL);
+ 	if (ACPI_FAILURE(status))
+ 		pr_err("alienware-wmi: brightness set failure: %u\n", status);
+@@ -506,10 +506,10 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
+ 	if (out_data != NULL) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+ 		output.pointer = NULL;
+-		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
++		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, &output);
+ 	} else
+-		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
++		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, NULL);
+ 
+ 	if (ACPI_SUCCESS(status) && out_data != NULL) {
+-- 
+2.7.4
