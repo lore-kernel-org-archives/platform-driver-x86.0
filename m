@@ -1,80 +1,27 @@
-From: <angers@pythagorejiujitsu.com>
-Subject: (unknown)
-Date: Wed, 21 Jun 2017 06:16:20 -0000
-Message-ID: <149802578057.12492.17695932845919650618@zaural.ru>
-Mime-Version: 1.0
-Content-Type: application/zip; name="089372.zip"
-Content-Transfer-Encoding: base64
+From: Bhumika Goyal <bhumirks@gmail.com>
+Subject: [PATCH 0/2] platform/x86: add const to thermal_cooling_device_ops structures
+Date: Wed, 21 Jun 2017 12:34:15 +0530
+Message-ID: <1498028657-12059-1-git-send-email-bhumirks@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws139.zone31-163-155.zaural.ru ([31.163.155.139]:36431 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751149AbdFUGQZ (ORCPT
+Received: from mail-pg0-f67.google.com ([74.125.83.67]:34239 "EHLO
+        mail-pg0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751742AbdFUHGX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jun 2017 02:16:25 -0400
-Content-Disposition: attachment
-Subject: 
+        Wed, 21 Jun 2017 03:06:23 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: julia.lawall@lip6.fr, peter@piie.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, sujith.thomas@intel.com
+Cc: Bhumika Goyal <bhumirks@gmail.com>
 
-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
+Declare thermal_cooling_device_ops structures as const.
+
+Bhumika Goyal (2):
+  acerhdf: add const to thermal_cooling_device_ops structure
+  intel_menlow: add const to thermal_cooling_device_ops structure
+
+ drivers/platform/x86/acerhdf.c      | 2 +-
+ drivers/platform/x86/intel_menlow.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
