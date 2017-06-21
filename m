@@ -1,36 +1,53 @@
-From: Bhumika Goyal <bhumirks@gmail.com>
-Subject: [PATCH 2/2] intel_menlow: add const to thermal_cooling_device_ops structure
-Date: Wed, 21 Jun 2017 12:34:17 +0530
-Message-ID: <1498028657-12059-3-git-send-email-bhumirks@gmail.com>
-References: <1498028657-12059-1-git-send-email-bhumirks@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498028657-12059-1-git-send-email-bhumirks@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: julia.lawall@lip6.fr, peter@piie.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, sujith.thomas@intel.com
-Cc: Bhumika Goyal <bhumirks@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: do not use kfifo for
+ storing hotkey scancodes
+Date: Wed, 21 Jun 2017 11:15:43 -0700
+Message-ID: <20170621181543.GB25900@fury>
+References: <20170616044058.30443-1-kernel@kempniu.pl>
+ <20170616044058.30443-2-kernel@kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170616044058.30443-2-kernel@kempniu.pl>
+Sender: linux-acpi-owner@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Rafael Wysocki <rjw@rjwysocki.net>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Declare thermal_cooling_device_ops structure as const as it is only passed
-as an argument to the function thermal_cooling_device_register and this
-argument is of type const. So, declare the structure as const.
+On Fri, Jun 16, 2017 at 06:40:52AM +0200, Michał Kępień wrote:
+> All ACPI device notify callbacks are invoked using acpi_os_execute(),
+> which causes the supplied callback to be queued to a static workqueue
+> which always executes on CPU 0.  This means that there is no possibility
+> for any ACPI device notify callback to be concurrently executed on
+> multiple CPUs, which in the case of fujitsu-laptop means that using a
+> locked kfifo for handling hotkeys is redundant: as hotkey scancodes are
+> only pushed and popped from within acpi_fujitsu_laptop_notify(), no risk
+> of concurrent pushing and popping exists.
 
-Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
----
- drivers/platform/x86/intel_menlow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Was the kfifo causing a problem currently or for the migration to separate
+modules? Is this purely a simplification?
 
-diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-index cbe0102..ef9b0af 100644
---- a/drivers/platform/x86/intel_menlow.c
-+++ b/drivers/platform/x86/intel_menlow.c
-@@ -142,7 +142,7 @@ static int memory_set_cur_bandwidth(struct thermal_cooling_device *cdev,
- 	return 0;
- }
- 
--static struct thermal_cooling_device_ops memory_cooling_ops = {
-+static const struct thermal_cooling_device_ops memory_cooling_ops = {
- 	.get_max_state = memory_get_max_bandwidth,
- 	.get_cur_state = memory_get_cur_bandwidth,
- 	.set_cur_state = memory_set_cur_bandwidth,
+Rafael, the above rationale appears sound to me. Do you have any concerns?
+
+...
+
+> -#define RINGBUFFERSIZE 40
+>  
+>  /* Debugging */
+>  #define FUJLAPTOP_DBG_ERROR	  0x0001
+> @@ -146,8 +144,8 @@ struct fujitsu_laptop {
+>  	struct input_dev *input;
+>  	char phys[32];
+>  	struct platform_device *pf_device;
+> -	struct kfifo fifo;
+> -	spinlock_t fifo_lock;
+> +	int scancode_buf[40];
+
+Do we know why 40 was used here? A single use magic number is fine, but it would
+be good to document why it is what it is if we know.
+
 -- 
-2.7.4
+Darren Hart
+VMware Open Source Technology Center
