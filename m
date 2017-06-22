@@ -1,71 +1,40 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [PATCH] x86/intel_telemetry: Add debugfs entry for S0ix residency
-Date: Thu, 22 Jun 2017 19:11:58 +0530
-Message-ID: <1498138918-30544-1-git-send-email-rajneesh.bhardwaj@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, shanth.murthy@intel.com, souvik.k.chakravarty@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: do not use kfifo for
+ storing hotkey scancodes
+Date: Thu, 22 Jun 2017 22:08:56 +0200
+Message-ID: <20170622200856.GA4194@kmp-mobile.hq.kempniu.pl>
+References: <20170616044058.30443-1-kernel@kempniu.pl>
+ <20170616044058.30443-2-kernel@kempniu.pl>
+ <20170621181543.GB25900@fury>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170621181543.GB25900@fury>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This adds a debugfs consumer for the exported kernel API
-intel_pmc_read_s0ix_residency. This debugfs entry reads S0ix residency
-directly from the PMC hardware counters.
+> On Fri, Jun 16, 2017 at 06:40:52AM +0200, Michał Kępień wrote:
+> > All ACPI device notify callbacks are invoked using acpi_os_execute(),
+> > which causes the supplied callback to be queued to a static workqueue
+> > which always executes on CPU 0.  This means that there is no possibility
+> > for any ACPI device notify callback to be concurrently executed on
+> > multiple CPUs, which in the case of fujitsu-laptop means that using a
+> > locked kfifo for handling hotkeys is redundant: as hotkey scancodes are
+> > only pushed and popped from within acpi_fujitsu_laptop_notify(), no risk
+> > of concurrent pushing and popping exists.
+> 
+> Was the kfifo causing a problem currently or for the migration to separate
+> modules? Is this purely a simplification?
 
-TEST:
-- echo freeze > /sys/power/state
-- Wake the system, read the S0ix residency i.e.
-  cat /sys/kernel/debug/telemetry/s0ix_residency_usec
+It is just another step in stripping fujitsu-laptop down to its bare
+essentials.  If my reasoning quoted above is correct, using a locked
+kfifo needlessly suggests potential concurrency issues, but it is
+definitely not an error.
 
-Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
----
- drivers/platform/x86/intel_telemetry_debugfs.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index efc0140..2eacb16 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -713,6 +713,24 @@ static int telem_soc_state_open(struct inode *inode, struct file *file)
- 	.release	= single_release,
- };
- 
-+static int telem_s0ix_res_get(void *data, u64 *val)
-+{
-+	u64 s0ix_total_res = 0;
-+	int ret;
-+
-+	ret = intel_pmc_s0ix_counter_read(&s0ix_total_res);
-+	if (ret) {
-+		pr_err("Failed to read S0ix residency");
-+		return ret;
-+	}
-+
-+	*val = s0ix_total_res;
-+
-+	return 0;
-+}
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(telem_s0ix_fops, telem_s0ix_res_get, NULL, "%llu\n");
-+
- static int telem_pss_trc_verb_show(struct seq_file *s, void *unused)
- {
- 	u32 verbosity;
-@@ -994,6 +1012,14 @@ static int __init telemetry_debugfs_init(void)
- 		goto out;
- 	}
- 
-+	f = debugfs_create_file("s0ix_residency_usec", S_IFREG | S_IRUGO,
-+				debugfs_conf->telemetry_dbg_dir,
-+				NULL, &telem_s0ix_fops);
-+	if (!f) {
-+		pr_err("s0ix_residency_us debugfs register failed\n");
-+		goto out;
-+	}
-+
- 	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir, NULL,
- 				&telem_pss_trc_verb_ops);
 -- 
-1.9.1
+Best regards,
+Michał Kępień
