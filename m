@@ -1,117 +1,71 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
-Date: Thu, 22 Jun 2017 09:33:55 +0200
-Message-ID: <201706220933.55718@pali>
-References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com> <201706171834.36487@pali> <753a822799094c44ade76a66b1e1036a@ausx13mpc120.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2421509.cGOOPB985b";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:36566 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751116AbdFVHeA (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jun 2017 03:34:00 -0400
-In-Reply-To: <753a822799094c44ade76a66b1e1036a@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, andy@infradead.org, luto@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: [PATCH] x86/intel_telemetry: Add debugfs entry for S0ix residency
+Date: Thu, 22 Jun 2017 19:11:58 +0530
+Message-ID: <1498138918-30544-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, shanth.murthy@intel.com, souvik.k.chakravarty@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart2421509.cGOOPB985b
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+This adds a debugfs consumer for the exported kernel API
+intel_pmc_read_s0ix_residency. This debugfs entry reads S0ix residency
+directly from the PMC hardware counters.
 
-On Wednesday 21 June 2017 23:52:12 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > Sent: Saturday, June 17, 2017 11:35 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; andy@infradead.org; luto@kernel.org;
-> > platform-driver- x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method
-> > instance number
-> >=20
-> > On Friday 16 June 2017 18:33:54 Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Limonciello, Mario
-> > > > Sent: Thursday, June 15, 2017 10:16 AM
-> > > > To: 'Pali Roh=C3=A1r' <pali.rohar@gmail.com>; Darren Hart
-> > > > <dvhart@infradead.org> Cc: Andy Shevchenko
-> > > > <andy@infradead.org>; Andy Lutomirski <luto@kernel.org>;
-> > > > platform-driver-x86@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org Subject: RE: [PATCH] RFC:
-> > > > platform/x86: wmi: Fix check for method instance number
-> > > >=20
-> > > > > -----Original Message-----
-> > > > > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
-> > > > > Sent: Thursday, June 15, 2017 8:59 AM
-> > > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>; Darren
-> > > > > Hart <dvhart@infradead.org>
-> > > > > Cc: Andy Shevchenko <andy@infradead.org>; Andy Lutomirski
-> > > >=20
-> > > > <luto@kernel.org>;
-> > > >=20
-> > > > > platform-driver-x86@vger.kernel.org;
-> > > > > linux-kernel@vger.kernel.org Subject: Re: [PATCH] RFC:
-> > > > > platform/x86: wmi: Fix check for method instance number
-> > > > >=20
-> > > > > Mario, are you able to check if instance number passed to
-> > > > > wmi_evaluate_method in following dell WMI drivers is correct
-> > > > > and should be really 1?
-> > > > >=20
-> > > > > I suspect that it should be zero, as instance number is
-> > > > > indexed from zero.
-> > > > >=20
-> > > > > There is no comment in those dell WMI drivers why it is 1,
-> > > > > nor what 1 means.
-> > > > >=20
-> > > > > Ideally it needs to be checked in ACPI byte code, MOF file
-> > > > > and WDG dump.
-> > > >=20
-> > > > I think you're likely correct.  I don't have a box that
-> > > > supports alienware-wmi or dell-wmi-led.c handy at the current
-> > > > moment to confirm this hypothesis though. I'll confirm this
-> > > > later.
-> > > >=20
-> > > > I didn't realize it was zero indexed when I wrote
-> > > > alienware-wmi, and I'm guessing the author of dell-wmi-led
-> > > > didn't either.
-> > > >=20
-> > > > The reason it's probably working is the ACPI byte code isn't
-> > > > actually checking the instance since most times _WDG will only
-> > > > call out one instance.
-> > >=20
-> > > I confirmed you're correct.  Switching instance over to 0 works
-> > > properly on an ASM200 (supported by alienware-wmi).
-> >=20
-> > Can you check what is the value in the instance_count in _WDG?
->=20
-> Instance count is 1.
->=20
-> Thanks,
+TEST:
+- echo freeze > /sys/power/state
+- Wake the system, read the S0ix residency i.e.
+  cat /sys/kernel/debug/telemetry/s0ix_residency_usec
 
-Ok, in this case instance number should be zero in driver code. Will you=20
-send patch for fixing it?
+Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+---
+ drivers/platform/x86/intel_telemetry_debugfs.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart2421509.cGOOPB985b
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAllLcuMACgkQi/DJPQPkQ1LMSQCeO/oyrrr8yllZ4K9Jf+O0SXGJ
-Rx8AoLeWEvByj2fGsEqxHYz1hG0TWbkS
-=JOty
------END PGP SIGNATURE-----
-
---nextPart2421509.cGOOPB985b--
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index efc0140..2eacb16 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -713,6 +713,24 @@ static int telem_soc_state_open(struct inode *inode, struct file *file)
+ 	.release	= single_release,
+ };
+ 
++static int telem_s0ix_res_get(void *data, u64 *val)
++{
++	u64 s0ix_total_res = 0;
++	int ret;
++
++	ret = intel_pmc_s0ix_counter_read(&s0ix_total_res);
++	if (ret) {
++		pr_err("Failed to read S0ix residency");
++		return ret;
++	}
++
++	*val = s0ix_total_res;
++
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(telem_s0ix_fops, telem_s0ix_res_get, NULL, "%llu\n");
++
+ static int telem_pss_trc_verb_show(struct seq_file *s, void *unused)
+ {
+ 	u32 verbosity;
+@@ -994,6 +1012,14 @@ static int __init telemetry_debugfs_init(void)
+ 		goto out;
+ 	}
+ 
++	f = debugfs_create_file("s0ix_residency_usec", S_IFREG | S_IRUGO,
++				debugfs_conf->telemetry_dbg_dir,
++				NULL, &telem_s0ix_fops);
++	if (!f) {
++		pr_err("s0ix_residency_us debugfs register failed\n");
++		goto out;
++	}
++
+ 	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir, NULL,
+ 				&telem_pss_trc_verb_ops);
+-- 
+1.9.1
