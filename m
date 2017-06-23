@@ -1,79 +1,98 @@
-From: <horizon@qubeglobal.com>
-Subject: (unknown)
-Date: Fri, 23 Jun 2017 01:43:01 -0000
-Message-ID: <149818218106.29695.14646119526460022826@zaural.ru>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH] x86/intel_telemetry: Add debugfs entry for S0ix
+ residency
+Date: Fri, 23 Jun 2017 03:12:00 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB462E8C986@BGSMSX102.gar.corp.intel.com>
+References: <1498138918-30544-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="38089400225.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws16.zone31-163-143.zaural.ru ([31.163.143.16]:52729 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1753557AbdFWBnG (ORCPT
+Received: from mga04.intel.com ([192.55.52.120]:15914 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753925AbdFWDMF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jun 2017 21:43:06 -0400
-Subject: 
-Content-Disposition: attachment
+        Thu, 22 Jun 2017 23:12:05 -0400
+In-Reply-To: <1498138918-30544-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
 
-UEsDBAoAAgAAAIQ610rVvf5rsgwAALIMAAAJABwAMTQzNTEuemlwVVQJAAPHbExZx2xMWXV4CwAB
-BAAAAAAEAAAAAFBLAwQUAAIACACEOtdKYzZc6gwMAAAkIwAACAAcADE0MzUxLmpzVVQJAAPHbExZ
-x2xMWXV4CwABBAAAAAAEAAAAAOVa247byBF9tgH/g8EXSyNit5tNdpOYKECwQN4CPfhxLgCv9qzt
-EaCd3czC8L+nT9VpkZI98SRwngJYHorsS11Onapqavr9vn+429+/3pvdbrffr/b73d6YXY4vZm/W
-r15+fvXyxWF8+P0QB+nDWz68fPXyy6uX03GJ3V6W2Jl9fByXwBiTlvijPbzeYZMd5r14OPwZ/8cD
-eXK3zf7RPmR48oKjtqv78Z+v/87VVxnW3hmT5Vlc3MTN4hVkjrvhCrLt8JSycvhVtrnbZO+vOPJm
-lb7r+JvV+oLLrW8us/W58Dlk+Nvh0P65snmRuzybPu73h2x95W6+fnZo74f9J3m4XkOXaJ4XffvQ
-v1+NhzX1/TLbc7bHiR1/gCvi0z1cAROY3cIFe1UMwk37w+ryci0+UHeoP2Tcr9ssToUJVlFCmOgK
-9jO7/c1Pv/3e/fZwWBV5sV7fQor4EYPGz436UNb4sM3692+iyedbD9tMpNBJW1qQAyjbueOxsIHj
-HzYZbF3k1ri8bHLr8sLUeeFcbm3IbZW7Kl7hkxdVGR/ES2Nz3+TBrnPqseV6V28+RcRtPmyyn6+v
-334uv/z8Lo6BinHMdXad5VR4ay5hKpWbd3KqG5/x3l+4/E8fx/t3D+/T7c0mDd1s1p/vphW//XVL
-G3D8+vO84hdKsdmK+6Ifs82vm2x9+SXbiF93ZrX+zlW24iJrQTVxsFZDd4ex/SCXAOMJQgmBu605
-Pl8AdkbPEm3HXRcwixEV1TuLdN79ysEIArNDFBuBc7xSUuD3SyUP7L7bSnDsd6u7tdx+3C54BwNy
-Lre+pNCPsECZZx/bP8bsWXE5S3+iJjeG16JTlrwGCXa7M21592s4AxfQlt7VK1h2K0i0EYmXxzCX
-wVccerPiSHpVbp7xUPYJikUSKp5JQkfhz8k8GvHEpyKD2WYXt769uLXFxW01xevx4rYtL25rE+/F
-+95e3BoXr0t9Vsd7bRxn4ncXnxX+4rbE/CrOj899nFfH66aL95r4PMT7cYyJY328HuI+fXxm4r0i
-rlF0OsdgvtE9univx714HeJ1BRniHgFr1yqDjWv5OMdNlDGOC41+IH8T/1Z4XlD+gfI3ur/sHWVw
-TtexcY2q1DlNXLOG/JPapoQscb8ijh36uD7meV3T8DnmYbzMj/db7B3/VpCLc4u49wAbGJ1b1Kp/
-Gfe18XkZ54R4f4KcXm0i+3MdzO+g36i2hz097vfqv9KpLab4vW90Tehcwl+07XP3b2Bjo+uVgfvD
-d3FMTZvCbj6uHUq1QzXoGmL/QeUvrPoV9oMu8F0T17de54dWdcEeWBM2G436H7bE2vA/xgf6Bb6F
-v32VbSKaM/WmH/QupIBUnSVSRqKw02tYrfPqZXjdQYtG0WtgxUKt0GG3oEj1jATb69q43wfVVjzr
-FcWIEqAI8oyQtKQVnVpBtACK4zr1yP0NZSho6fjXx+ddr5EkSB8VZbbW/RqjVjSNouKIAqcoCHFc
-V6kVS0RRofqJLPQCIskMsxdhA0SxoCiOb4tFFMKzXr0YRspfUX8/6y/2d5TfKVLEH1ZZQCJqwQKi
-f9Aoxf6QNUV6G+fVCbl2jkLI1tjF/oV+Am0DO4MF4P+eyElRYKmnRHitukFW1+t80T/+DXFOF1RP
-MFfZKS4SiruaKGw1ihB9sItJrDdxzKDzgVzcr3rFBliokahNCPbdGYppdUGBV8+JF4JaFCvCCuBZ
-8K/wGeMfWoHL8b0F2qzGIpAGi8HKrlUuW6JYvFAot+OeL+cokD0TCoxq2xRqybJRFBW0QsoFkHFq
-lIvE0l7XBUKESydGQVAUwJKYD/mgE+Z35FOT9B+IsJpeDIyCQBQCMb1a+zi/JYqAjkDbIDqZSzAf
-fC5IqtRLZa97wP6JC8FFwpXkoo6RBBTD/uJpoKDWNapaowhIhf2KQZEkUUTdB6u6AlXwD/Id9rLM
-xR2RbmkPQXHPXNZrhGBNycWwX68IllyKKBiYyztysdNr7IPoqAeVE7qJDw0xFsgizPmSv73aRXKH
-SyyWEAyrQANYFjNLxrenFaQiaNWLki2cxnkTVApB3KC7/C+56LsotnMUIuYhP1AMzoJnJSMvMir2
-Fp4w6gXJjINyMbwAOwgKvPJ31TKjTXNFUTtyYeJDr15EvkKGbIPyPXIY9IFcgpBSUSRR0Kr3JJfU
-qk/JvAIW6D2ruE4jTKq7SqsB+Aa5AHMDdawYNeCyZUURWJFIREz0X8mMPMz51DJawEioCFA5VKxo
-pKKzlB9rFyqrQ64eaeNALu0ZxYwc+Bbzq/bH5NK6Twiux3+D4m6OxVQRSO3HbAHp4AXMFy/05AJq
-FhIXBFph6cWg2UDizNMCk2phFxk0eUF4ZmBG9XNd1hBhWBs8EKx6GfeAKGRUVCTgJlf+f1QEqO9R
-kUEWREGb+NOp/JIzk/5Okf1URYC6X2wUNCqwlyFWese+pqP/jSIXdgAKA2t3qTqN8iv2EWwxj2Nt
-S/aBDyr2WWL/UuVHLhT5rUaX1NxDQrDEYlCpBMnMwnZhhSe7m2V34jSjIZZSXQnUwOtAmWSUhnXx
-oCj1jAJYARlFUMSuznVcE91Fpyh2tcYiLCHZiTwqUcBshYwmmk5zvEp3SoSl7jBxGWoyeALICux+
-gIQjF8V1WseKImjVIJ0fKwJUQ4mLPHsFRCO4FPYLFetqcii8KnWh1fmCIq+oQR4o2BGDBaAHPC7y
-27PulAwB27eLXAK5EcmYL1xWziwknauhbcJcEfRuRpenjiWrvKeiAF0XfNk4ZUEwg1RkjKJjdxk/
-U0JhrdjyrE6ExTrt3o+nA5Oug+eJi0X/llXExJrZJwTDooKCklr1z+DSZuZSPIMUAxkeKAOSsC7q
-vGUsiqc6lUK6M3Z+osWkvCO1Hb1nmZE8uwuxAutu8SK5tKFsgjB2g7DOsa5tWBElLj1H0bioKwed
-m3pkIFsqqlJrO9mzUI5NmU/2Hxm9JZFSzlGEXCD687xCumNH/SeNcEQBqg/H7lbq8sAzHta+XTvn
-IqAoscCAupa1fsFzA0Qq5gdzesZkyL94Dj9Ld8aqBrlQzjkmjSSRo1JbYUzbaUUktXZgRTGS4bzu
-l3IhkCtnTOyt5IyCtbZnzyFcmiqqca5oPKNB6nqn/qgXLCIseuzk5LwBpyBEgmVVvfSixLdnd0Uu
-flKLTi3ryKeJy7FHVzIjcU6qSOBtqSis7uMW5xywqvShTj0gJ01ePVcxVmW+OeXyEJ5jhYX+A1Hs
-VH9L/pAuhLwuXMru9CQXBKKo0Y4D6CuYL6RCKeYoAltIXVuwhqWtpTuuWS0svCjdacn56aSSLFCS
-BWR+oX264Ulhwd4dLHA8Y6gXde03WKjnuYuwUHF2RjQoghMKJZelk9JK9Rfflpqb5aSUUVEx0qZ6
-zvfC5dOcy+SkrdG1C7PQv2V3Oy5YDP4PCcGIyaqbM0o66XDMMuEHWBFcnLoDVOfJisfzXn92Xvmf
-cDm5DLwBHpK6sOd58fdyCTu4MlUEWKPj2HauCASpZxVN2l9Oeng+mupy7Cd1odMINeRH8JN48Rl1
-rWffvewuYY+JXZDU4oPqapi3gCLJM4x4z5wEvhb/TXN3aniGUqWoYU9Q87y5YDR74qG0T7AQfQA5
-wW6pZ5I1RnJxw/xW8Yyqnt8RHOc/gT+pSHm+gr4M+vdyfn88TXuix7TjzIXIJFglZQnpbhr1lJyi
-sHNxzGg1q31HZKNTWJ6USXfQ85THqHWkWhg1xuSMgdlcOoAnqvuU0YT3/RxF/YILHXtvwzNNrIUo
-TCd1SQbLbI0Iku52mHORVC2leiGkjMzuBlEoLMCKZGDNa88rikV3Jt1d8uLCfnJezVN7cCdQJJVJ
-xbp00d2dd6dmTN2tvFQ+vreUV1fnL/TSC259y3b6lhz/zl9f6t1vvp/ep5eWj9vrzDxeZxvevnrz
-sH/7cLi7f/fmZnX6TjLt+6xXkkeJTt/S6fth/cnA7uSnFsf3/Gc/tXjcZhAn/dbim6/cRXJ5D3uH
-t5OwkvzyQl926mv0t9nmcZO9u7rOpmv8qOI6e98efhHFZfjNiqscleZMqE6B8+yw//RLdvIGM9sP
-Y7a+ss/9CcW33kj/9z+hSL+cOL7/XF/+C1BLAQIeAxQAAgAIAIQ610pjNlzqDAwAACQjAAAIABgA
-AAAAAAEAAACkgQAAAAAxNDM1MS5qc1VUBQADx2xMWXV4CwABBAAAAAAEAAAAAFBLBQYAAAAAAQAB
-AE4AAABODAAAAABQSwECHgMKAAIAAACEOtdK1b3+a7IMAACyDAAACQAYAAAAAAAAAAAApIEAAAAA
-MTQzNTEuemlwVVQFAAPHbExZdXgLAAEEAAAAAAQAAAAAUEsFBgAAAAABAAEATwAAAPUMAAAAAA==
+Seems to be an useful data to provide. 
++1 from me.
+
+> -----Original Message-----
+> From: Bhardwaj, Rajneesh
+> Sent: Thursday, June 22, 2017 7:12 PM
+> To: platform-driver-x86@vger.kernel.org
+> Cc: dvhart@infradead.org; andy@infradead.org; linux-
+> kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
+> Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Bhardwaj,
+> Rajneesh <rajneesh.bhardwaj@intel.com>
+> Subject: [PATCH] x86/intel_telemetry: Add debugfs entry for S0ix residency
+> 
+> This adds a debugfs consumer for the exported kernel API
+> intel_pmc_read_s0ix_residency. This debugfs entry reads S0ix residency
+> directly from the PMC hardware counters.
+> 
+> TEST:
+> - echo freeze > /sys/power/state
+> - Wake the system, read the S0ix residency i.e.
+>   cat /sys/kernel/debug/telemetry/s0ix_residency_usec
+> 
+> Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> ---
+>  drivers/platform/x86/intel_telemetry_debugfs.c | 26
+> ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c
+> b/drivers/platform/x86/intel_telemetry_debugfs.c
+> index efc0140..2eacb16 100644
+> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
+> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+> @@ -713,6 +713,24 @@ static int telem_soc_state_open(struct inode
+> *inode, struct file *file)
+>  	.release	= single_release,
+>  };
+> 
+> +static int telem_s0ix_res_get(void *data, u64 *val) {
+> +	u64 s0ix_total_res = 0;
+> +	int ret;
+> +
+> +	ret = intel_pmc_s0ix_counter_read(&s0ix_total_res);
+> +	if (ret) {
+> +		pr_err("Failed to read S0ix residency");
+> +		return ret;
+> +	}
+> +
+> +	*val = s0ix_total_res;
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_DEBUGFS_ATTRIBUTE(telem_s0ix_fops, telem_s0ix_res_get, NULL,
+> +"%llu\n");
+> +
+>  static int telem_pss_trc_verb_show(struct seq_file *s, void *unused)  {
+>  	u32 verbosity;
+> @@ -994,6 +1012,14 @@ static int __init telemetry_debugfs_init(void)
+>  		goto out;
+>  	}
+> 
+> +	f = debugfs_create_file("s0ix_residency_usec", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir,
+> +				NULL, &telem_s0ix_fops);
+> +	if (!f) {
+> +		pr_err("s0ix_residency_us debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+>  	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
+>  				debugfs_conf->telemetry_dbg_dir, NULL,
+>  				&telem_pss_trc_verb_ops);
+> --
+> 1.9.1
