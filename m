@@ -1,42 +1,55 @@
 From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH] platform: x86: toshiba_haps: constify haps_attr_group
-Date: Fri, 23 Jun 2017 14:05:56 +0530
-Message-ID: <a306a1ed8fd74ec9d9647e96270451b5b4c06edd.1498206793.git.arvind.yadav.cs@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f66.google.com ([74.125.83.66]:34464 "EHLO
-        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751217AbdFWIgj (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 23 Jun 2017 04:36:39 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: coproscefalo@gmail.com, dvhart@infradead.org, andy@infradead.org
+Subject: [PATCH] sony-laptop: constify sony_laptop_input_* and spic_attribute_group
+Date: Fri, 23 Jun 2017 14:26:42 +0530
+Message-ID: <9c35451ff9a31757b76d708733bbe5736c0d2dc6.1498208007.git.arvind.yadav.cs@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: malattia@linux.it, dvhart@infradead.org, andy@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 File size before:
    text	   data	    bss	    dec	    hex	filename
-   1471	    528	      8	   2007	    7d7	drivers/platform/x86/toshiba_haps.o
+  31273	   5176	    372	  36821	   8fd5	drivers/platform/x86/sony-laptop.o
 
 File size After adding 'const':
    text	   data	    bss	    dec	    hex	filename
-   1519	    464	      8	   1991	    7c7	drivers/platform/x86/toshiba_haps.o
+  31593	   4856	    372	  36821	   8fd5	drivers/platform/x86/sony-laptop.o
 
 Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
 ---
- drivers/platform/x86/toshiba_haps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/sony-laptop.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_haps.c b/drivers/platform/x86/toshiba_haps.c
-index b3dec52..fb27366 100644
---- a/drivers/platform/x86/toshiba_haps.c
-+++ b/drivers/platform/x86/toshiba_haps.c
-@@ -132,7 +132,7 @@ static ssize_t reset_protection_store(struct device *dev,
- 	NULL,
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index aa2ee51..5fc2047 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -222,7 +222,7 @@ struct sony_laptop_keypress {
+ /* Correspondance table between sonypi events
+  * and input layer indexes in the keymap
+  */
+-static int sony_laptop_input_index[] = {
++static const int sony_laptop_input_index[] = {
+ 	-1,	/*  0 no event */
+ 	-1,	/*  1 SONYPI_EVENT_JOGDIAL_DOWN */
+ 	-1,	/*  2 SONYPI_EVENT_JOGDIAL_UP */
+@@ -299,7 +299,7 @@ struct sony_laptop_keypress {
+ 	59,	/* 72 SONYPI_EVENT_VENDOR_PRESSED */
  };
  
--static struct attribute_group haps_attr_group = {
-+static const struct attribute_group haps_attr_group = {
- 	.attrs = haps_attributes,
+-static int sony_laptop_input_keycode_map[] = {
++static const int sony_laptop_input_keycode_map[] = {
+ 	KEY_CAMERA,	/*  0 SONYPI_EVENT_CAPTURE_PRESSED */
+ 	KEY_RESERVED,	/*  1 SONYPI_EVENT_CAPTURE_RELEASED */
+ 	KEY_RESERVED,	/*  2 SONYPI_EVENT_CAPTURE_PARTIALPRESSED */
+@@ -4032,7 +4032,7 @@ struct device_attribute spic_attr_##_name = __ATTR(_name,	\
+ 	NULL
+ };
+ 
+-static struct attribute_group spic_attribute_group = {
++static const struct attribute_group spic_attribute_group = {
+ 	.attrs = spic_attributes
  };
  
 -- 
