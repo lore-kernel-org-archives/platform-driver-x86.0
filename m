@@ -1,35 +1,38 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi-led: Adjust instance of all wmi_evaluate_method
- calls to 0
-Date: Fri, 23 Jun 2017 14:18:53 -0700
-Message-ID: <20170623211853.GB1728@fury>
-References: <1498228521-2796-1-git-send-email-mario.limonciello@dell.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: do not use kfifo for storing hotkey scancodes
+Date: Sat, 24 Jun 2017 02:25:46 +0200
+Message-ID: <40512901.HXkrFCdsVg@aspire.rjw.lan>
+References: <20170616044058.30443-1-kernel@kempniu.pl> <20170616044058.30443-2-kernel@kempniu.pl> <20170621181543.GB25900@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:39563 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754564AbdFWVSz (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 23 Jun 2017 17:18:55 -0400
-Content-Disposition: inline
-In-Reply-To: <1498228521-2796-1-git-send-email-mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Louis Davis <louis.davis@dell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170621181543.GB25900@fury>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 23, 2017 at 09:35:21AM -0500, Mario Limonciello wrote:
-> Pali recently noticed that WMI instances are zero indexed.
+On Wednesday, June 21, 2017 11:15:43 AM Darren Hart wrote:
+> On Fri, Jun 16, 2017 at 06:40:52AM +0200, Michał Kępień wrote:
+> > All ACPI device notify callbacks are invoked using acpi_os_execute(),
+> > which causes the supplied callback to be queued to a static workqueue
+> > which always executes on CPU 0.  This means that there is no possibility
+> > for any ACPI device notify callback to be concurrently executed on
+> > multiple CPUs, which in the case of fujitsu-laptop means that using a
+> > locked kfifo for handling hotkeys is redundant: as hotkey scancodes are
+> > only pushed and popped from within acpi_fujitsu_laptop_notify(), no risk
+> > of concurrent pushing and popping exists.
 > 
-> The only reason that these calls all worked properly is because the ASL
-> didn't verify the instance number.
+> Was the kfifo causing a problem currently or for the migration to separate
+> modules? Is this purely a simplification?
 > 
-> Signed-off-by: Louis Davis <louis.davis@dell.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> Rafael, the above rationale appears sound to me. Do you have any concerns?
 
-Thanks, queued to testing.
+I actually do.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+While this is the case today, making the driver code depend on it in a hard way
+sort of makes it difficult to change in the future if need be.
+
+Thanks,
+Rafael
