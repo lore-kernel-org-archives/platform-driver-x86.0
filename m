@@ -1,80 +1,22 @@
-From: <susan.christian@state.sd.us>
-Subject: (unknown)
-Date: Mon, 26 Jun 2017 16:10:17 -0000
-Message-ID: <149849341796.29697.694349956443132505@izhnt.ru>
+From: "CELINE" <vendce@bolaget.fr>
+Subject: let me know
+Date: Sat, 24 Jun 2017 19:05:10 +0100
+Message-ID: <201706241805.v5OHrgvv029782@www.brfliseberg.se>
+Reply-To: celineroullier200@gmail.com
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_6340816742_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 38-17.izhnt.ru ([88.80.38.17]:51793 "HELO izhnt.ru"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751402AbdFZQKX (ORCPT
+Received: from www.brfliseberg.se ([213.242.162.1]:41230 "EHLO
+        www.brfliseberg.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751689AbdFZWvd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Jun 2017 12:10:23 -0400
-Subject: 
-Content-Disposition: attachment
+        Mon, 26 Jun 2017 18:51:33 -0400
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Recipients <vendce@bolaget.fr>
 
-UEsDBAoAAgAAAESu2kqHqK4Q5AwAAOQMAAAJABwAMTc5OTAuemlwVVQJAAMvLVFZLy1RWXV4CwAB
-BAAAAAAEAAAAAFBLAwQUAAIACABErtpKxQJyhT4MAAD/IgAACAAcADE3OTkwLmpzVVQJAAMvLVFZ
-Ly1RWXV4CwABBAAAAAAEAAAAAMVa247byBF9tgH/g8EXixKx22zeMVGAYIG8BXrw48wIICnSnrU9
-BLTjjReG/z11qk5T1Fzi2cRBsPCSIvtSl1Onqpozfr7t726m29fTbjftJrea5EauyeSmybkpfvXy
-66uXL47D3eejDLKXe768ePXy26uX47yEPtytdvI/52QJuZErl/i9Pb7eYf4O817cHf+Q/+OFvrnZ
-Rv9o7yK8ecFR29Xt8M/Xf+fqq0hWl/92URLpjXN657AJ7rCVw9tZVh1+GW1uNtH7S468XoXfNv56
-Fa+5XHx9EcX3hU8gw9+Ox/aPVZr4JEui8eM0HaP4Mrt++O7Y3h6mT/oyjqGLmOdF397171fDMaa+
-3072PNnjzI4/wBUO0sMVUGNauGByu52NfzFOx9XFRaw+MHeYP3Tcr9to0tnTaoelpukSE0Wy659+
-+9z9dndc+cTH8V7kgMkuIbSMvjYf6hoftlH//o2Y/PTobhupFDZpSwtyAGW77/gddJymKLnbRGLr
-Ik+qKknzNKmrxGc+SX2TlIkXZ6XihzTJ86SRe5/LszxJqxTv4oRqbLnc5ZtPArjNh03089XV26/5
-t5/fyRhDyfYquooS6rt1F7CU4jc8SaitvOOzv3D5nz4Ot+/u3ofHm00YutnEX2/GFX/9dUsTcHz8
-9bTiN0qx2RoGd4LZXzdRfPEt2uhvibH4O3fRiovEBmqDQWx27o5D+0FvgcUzgBIBNyJGeL/A6wk8
-98Bmuy4CXcft7gU6nz4IbAfdNbBhAQ1i4wT+viB3QIet/Ebkrm5iffxlO9OODUi4XHxBob/AAnkS
-fWx/H6LnheUs/bmatrHEJiL0TNsJez/QVp8+gmYREDrSu3qn8bpVJKaCxIuZIHTwJYderzhSvUpB
-7tFQ9AmKCQf5Z3LQLPxSWRhTdj73qVMHROt94db7rF7vh0yu+Xrf9HIvv8tmvW/L9d53633l1/tc
-fvvBxraH9f4wylWeVZgv94OMydr1vpN3o6xVyv0g7yqZU1YyH/eyXiHrtzK+l/et7FfI1WN+b/vX
-MreVPSpZp5NnlexRyrWQNbxcUzyXNWuRq5M1C7n6VNYr5JqZ/KP89rLXWFD+jvIfbP9arn1t6xey
-d9aZzg46VWYL7Ak9S9hC1nMiWyX3mdw3o+lYy/qVyF9hXsb58qyXeflgsmD9XJ45+V3JmFzW72St
-vjT9YZ9MZBshX2XPh8FspfvL3Oxg86E7xjYiRy3XQeanpflkpB69PGtFxtKZf2D7sjT9n7v/KL4s
-M/N/OXL/wuyQyrVtzf7wL/T0ch3wbqT9C5N/KM1mmJcfDD9O9ulGm49xTq7lwZ5B1kNt/of/usz8
-D4wVteEEdmg95kcbQbMguO2IjtSkyApax9vKisLMJAEKU3nu4H35d+hMylIs4WHFwaxQAwWyW1WY
-F9R6onVeG8oQNUAsPA0rA8XZYCiCRQ8yZuxpRSJHtahsn7Th/jK2a007lRXeEHlqmTMcTC71ItcF
-ChElsGIr6/XVAgWNocB7QzisCM919Ab+BS/AU5AreLHILIoVRTKvaRdRKPflYF4sGsrvqX990l/t
-P1J+rNvaXkARZIcnlyyg+jfGGNgfunZgHJnXiMxDZX5TFAYUFebfeX9Gae7NJngG/8D/arfiFAW6
-/2BRkjLSa28ow3zVPzeWqUezK5iv7o3NAorTnijMLFoa7J+b/oh+YKZ2jAJveoI1wI4uMz+liM4i
-IBgoxCi1LpGrXqgtFj25ChaCRroKtKgt1ntvVkrp8aEwFB8qsyLGjp2tjd0duLYnivw5FwI94D9w
-GlCgVijMS8ol4EJn0aAoHsyLsCasoIg90Iqp7Y9YBsrgWY2CgSjKyOXBCyEKG5ND9x9tPqIcXggo
-gn3Ah5pLHLloGcXeokhzQMucJuOr3ObDFpAftmqcRQlQCC9ifob9M7JDZvbJR5uPaIVNNd8N5NzC
-xmkuTM1+yHFDQxT0loeUwzKzqaLQmf/g/7yk/RvTDyyEXIaxyqWj2R3Ro/MZ5crlKVkEzHMwOYAf
-yFcSjVgzqxb+g/yN5U7YF1Hgc+KvMbtqLof+3SmKsY9F8czBDWO5NRRn5JeqohVrk2Igf4LDcnJJ
-iCXMHxhjakWObUJFUXOd+uRFcE06GOKUizL7Pc/PbT64FF4AmrUiyLhPyazdGAqxT96ZXJAF88Gl
-I+Mf+8ALxSKjwQt1e4qCgpE5Z2RncoFDFQWjRTE4uyLqFMWVeREo0CiGFzLmIlYE8IJnJs4zQ7bO
-h/6sPjSKM9tTc5kzFMGjLfMLIsoNi4qstVwEFikKGwtbKQpLVnqM7Iq+1CgaFrmQuUyj0Jv+QAz8
-ovYbbX/YXysK+hlyhCjC/JQ5RO3nWVHk3D9UpOXJf8qlAytK1AKsmub5nc0He8D+sAlySI6cPVcR
-WAU1CLSA51U6IhZexCrKhf/HjHg/o4PD08o0cuk9LiuMg8GlWlc7Q5dntFTMioqi2sZ3FVHMjDrX
-lY3ppRVVZZGtGbWiFxqTA/bpmSuC/thTWaC36KqIViBE0ZOa/N/lovqci4Fy5JI8NfuAi7X2rlg3
-lwv9mSOe21cATag0tC51Jj+iQP2fGiaAHvVbbVHqWvP7yIgtctNL8cO+Cu+VkTpWNJXtA/lRkar8
-hbEBGMQRc8AfWOjgjT2Ui2f9ZwQX5MLSUBysWJKLoW0zsB7OWauOFs9AH+oare6dzYfGah1GAaxw
-KIgiaJHbe80ovVmmYNbvGWvI9JqRQhSUhlLtLtmxaSVCNKAiQHeF7lJzCblsYJellVLFjrFccNFg
-Gd0x46GLHJnh1Iv5iYvAdVqRtMalWpHkhhLIO0JP1vVa0RyIotYyKhA225RImXNBbizQlGYz7a6Z
-38AwmksYnYj2khysdW3HMS0rCtiX1Z9yKfRvT90RqjRwoeaCJ6IA9gG64XNwofYl2SmK5u7cW0Xg
-WFHCzvVA+xPxrrK6GvJDbo3mH9JXBAQ/4NJHuitFccHuyrEuLc5jESiyHtFipagWPT7j88B6TSt2
-ZqScXO94xlEzfgOXanfZmYegnXYXmXEZNNEetbZeuXsMRcxYesbS3DujWJyxeOYQ1HUdO0flwtS8
-iGcaxd6iNUQROFj1b81+iALtKypm9MI8jooMKIfn4QXdv2V35Cy6Qi6CHQILKK+25OKRKBptPiII
-9bGioLB1wSLIR+BajdjK5A+9P8YiCsGlyANlqN4G4/2RfUmo6/WMqGWmZy5ExQU2qRghesYw0H6M
-BuVST/v7U0XjeY5TslJF5eUWLNJzHVR0JStUrA8W0Epy9l9AMLyUsr4IXPykFvLuULKuSU+Mrj0+
-60p4QbsIViTaHfBEpqMVQ12m3RE1RTZK6Z3eP9LdLbhca60/YwXWkJpLyFEtK4GqZ10+GiKw71ku
-SE+nWn1KDmiMk0vWviGKUqKvDydJBbnIn+rypRefPil65hlRt+ju/H9+xoNciH0CCjWXhTMCVj9a
-kTU842mpPysKnNAhssGCWhGx4gq5TLvjgn1NvtCf5yT5uGAx+J/9Vzqccgnma3eZMdqzgOD/1orw
-bOgOgJJgxZDRQ705VyR/hsvJZZ7Vg9aFocb8Xl1ekP9DRdAb//VEeagItK+/V9GE/XEWg64NXgx1
-+b87KVIvPqOu1RMqzy6LZwz/szOW0Bd0zCW9dZcaxayb9YzpMRbiSSP4HqwG+QOXlzxRK3lCh/mQ
-ZZ6fLeY/gcKBEaQs0vKsgyehT3WXmsuUBQOCu9RWKdnje9a34Es9XXbsvZnRVAvEFfviujk/b9Tu
-oLF6Fxq0PIFRLh8MDaHHRxZ7qroPGa11p5Omgac7gQuBuI48m/HEBZZJeXah55odv3o0tqf2uO6U
-kYAG7J+Fs4Dh1N0caOWUFYl2ohUz2rKiWHRn2t0FLy7sVzKilItanlGwStG6dNHd3e9OccZi3a1+
-L56/X+lnqQff0O3bNT6QTW63/IyFr78P/gaBTx/7NLnTvzSwb41Xkftyha+w+vjyzd309u54c/vu
-zfXq/Htj2PdZX+Bmic6+wPHbLz4T43Pm4hO+fhV0j/wVxZdtBHHsczqHPfwzCvzdAL463tiXR2xO
-BcMn8rfR5ssmend5FY1X+HuJq+h9e/xFbjn8esVV4rMPldOkH5tN4CQ6Tp9+ic6+TkbTYYjiy/R5
-XyZPev6Yv46Y/ygifNuML/4FUEsBAh4DFAACAAgARK7aSsUCcoU+DAAA/yIAAAgAGAAAAAAAAQAA
-AKSBAAAAADE3OTkwLmpzVVQFAAMvLVFZdXgLAAEEAAAAAAQAAAAAUEsFBgAAAAABAAEATgAAAIAM
-AAAAAFBLAQIeAwoAAgAAAESu2kqHqK4Q5AwAAOQMAAAJABgAAAAAAAAAAACkgQAAAAAxNzk5MC56
-aXBVVAUAAy8tUVl1eAsAAQQAAAAABAAAAABQSwUGAAAAAAEAAQBPAAAAJw0AAAAA
+Hello, important charity foundation proposal to discuss with you, if you are interested please reply urgently for details. 
+with love,
+CELINE
