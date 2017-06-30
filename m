@@ -1,136 +1,39 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <deathsimple@vodafone.de>
-Subject: Re: Resizeable PCI BAR support V5
-Date: Fri, 30 Jun 2017 14:55:41 +0200
-Message-ID: <92b1fd57-2ad0-ab7b-33e3-3f4227dcc2db@vodafone.de>
-References: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de>
- <b71010ca149411909076e83d1c22b2b8@nuetzel-hh.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from pegasos-out.vodafone.de ([80.84.1.38]:48391 "EHLO
-        pegasos-out.vodafone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751563AbdF3Mzt (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Jun 2017 08:55:49 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by pegasos-out.vodafone.de (Rohrpostix2  Daemon) with ESMTP id 9FBEF6C01EA
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jun 2017 14:55:47 +0200 (CEST)
-Received: from pegasos-out.vodafone.de ([127.0.0.1])
-        by localhost (rohrpostix2.prod.vfnet.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Usn2-YoZtRrW for <platform-driver-x86@vger.kernel.org>;
-        Fri, 30 Jun 2017 14:55:45 +0200 (CEST)
-In-Reply-To: <b71010ca149411909076e83d1c22b2b8@nuetzel-hh.de>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Dieter_N=c3=bctzel?= <Dieter@nuetzel-hh.de>
-Cc: helgaas@kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: sony-laptop: revert 'const' on keymap
+Date: Fri, 30 Jun 2017 17:45:09 +0200
+Message-ID: <20170630154524.3611399-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mattia Dongili <malattia@linux.it>, Darren Hart <dvhart@infradead.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Dieter,
+Marking sony_laptop_input_keycode_map 'const' sounds like a good
+idea in principle, but unfortunately causes a compiler warning:
 
-thanks a lot for testing that.
+drivers/platform/x86/sony-laptop.c: In function 'sony_laptop_setup_input':
+drivers/platform/x86/sony-laptop.c:494:19: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-array-qualifiers]
 
-> But I think my poor little FUJITSU PRIMERGY TX150 S7, Xeon X3470 
-> (Nehalem), PCIe 2.0, 24 GB is to old for this stuff... 
-Well, actually you only need to figure out how to enable a PCIe window 
-above the 4GB limit.
+This reverts that part of the previous cleanup patch.
 
-Could be that the BIOS supports this with the ACPI tables (totally 
-unlikely) or you could try to dig up the Northbridge documentation for 
-this CPU from Intel and use my patch for the AMD CPUs as blueprint how 
-to do this on an Intel CPU as well.
+Fixes: a0f0a5e1978b ("platform/x86: sony-laptop: constify few static structures")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/sony-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fact is you GFX hardware is perfectly capable of doing this, it's just 
-that the BIOS/Motherboard didn't enabled a PCIe window per default to 
-avoid problems with 32bit OSes.
-
-Regards,
-Christian.
-
-Am 30.06.2017 um 01:51 schrieb Dieter Nützel:
-> Hello Christian,
->
-> I've running this since you've sent it on-top of amd-staging-4.11. But 
-> I think my poor little FUJITSU PRIMERGY TX150 S7, Xeon X3470 
-> (Nehalem), PCIe 2.0, 24 GB is to old for this stuff...
->
-> [    1.066475] pci 0000:05:00.0: VF(n) BAR0 space: [mem 
-> 0x00000000-0x0003ffff 64bit] (contains BAR0 for 16 VFs)
-> [    1.066489] pci 0000:05:00.0: VF(n) BAR2 space: [mem 
-> 0x00000000-0x003fffff 64bit] (contains BAR2 for 16 VFs)
-> [    1.121656] pci 0000:00:1c.0: BAR 15: assigned [mem 
-> 0x80000000-0x801fffff 64bit pref]
-> [    1.121659] pci 0000:00:1c.6: BAR 15: assigned [mem 
-> 0x80200000-0x803fffff 64bit pref]
-> [    1.121662] pci 0000:01:00.0: BAR 6: assigned [mem 
-> 0xb0120000-0xb013ffff pref]
-> [    1.121681] pci 0000:05:00.0: BAR 6: assigned [mem 
-> 0xb0280000-0xb02fffff pref]
-> [    1.121683] pci 0000:05:00.0: BAR 9: no space for [mem size 
-> 0x00400000 64bit]
-> [    1.121684] pci 0000:05:00.0: BAR 9: failed to assign [mem size 
-> 0x00400000 64bit]
-> [    1.121685] pci 0000:05:00.0: BAR 7: no space for [mem size 
-> 0x00040000 64bit]
-> [    1.121687] pci 0000:05:00.0: BAR 7: failed to assign [mem size 
-> 0x00040000 64bit]
-> [    3.874180] amdgpu 0000:01:00.0: BAR 0: releasing [mem 
-> 0xc0000000-0xcfffffff 64bit pref]
-> [    3.874182] amdgpu 0000:01:00.0: BAR 2: releasing [mem 
-> 0xb0400000-0xb05fffff 64bit pref]
-> [    3.874198] pcieport 0000:00:03.0: BAR 15: releasing [mem 
-> 0xb0400000-0xcfffffff 64bit pref]
-> [    3.874215] pcieport 0000:00:03.0: BAR 15: no space for [mem size 
-> 0x300000000 64bit pref]
-> [    3.874217] pcieport 0000:00:03.0: BAR 15: failed to assign [mem 
-> size 0x300000000 64bit pref]
-> [    3.874221] amdgpu 0000:01:00.0: BAR 0: no space for [mem size 
-> 0x200000000 64bit pref]
-> [    3.874223] amdgpu 0000:01:00.0: BAR 0: failed to assign [mem size 
-> 0x200000000 64bit pref]
-> [    3.874226] amdgpu 0000:01:00.0: BAR 2: no space for [mem size 
-> 0x00200000 64bit pref]
-> [    3.874227] amdgpu 0000:01:00.0: BAR 2: failed to assign [mem size 
-> 0x00200000 64bit pref]
-> [    3.874258] [drm] Not enough PCI address space for a large BAR.
-> [    3.874261] amdgpu 0000:01:00.0: BAR 0: assigned [mem 
-> 0xc0000000-0xcfffffff 64bit pref]
-> [    3.874269] amdgpu 0000:01:00.0: BAR 2: assigned [mem 
-> 0xb0400000-0xb05fffff 64bit pref]
-> [    3.874288] [drm] Detected VRAM RAM=8192M, BAR=256M
->
-> Anyway rebase for current amd-staging-4.11 needed.
-> Find attached dmesg-amd-staging-4.11-1.g7262353-default+.log.xz
->
-> Greetings,
-> Dieter
->
-> Am 09.06.2017 10:59, schrieb Christian König:
->> Hi everyone,
->>
->> This is the fith incarnation of this set of patches. It enables device
->> drivers to resize and most likely also relocate the PCI BAR of devices
->> they manage to allow the CPU to access all of the device local memory 
->> at once.
->>
->> This is very useful for GFX device drivers where the default PCI BAR 
->> is only
->> about 256MB in size for compatibility reasons, but the device easily 
->> have
->> multiple gigabyte of local memory.
->>
->> Some changes since V4:
->> 1. Rebased on 4.11.
->> 2. added the rb from Andy Shevchenko to patches which look complete now.
->> 3. Move releasing the BAR and reallocating it on error to the driver 
->> side.
->> 4. Add amdgpu support for GMC V6 hardware generation as well.
->>
->> Please review and/or comment,
->> Christian.
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 5fc20473d51e..bfae79534f44 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -299,7 +299,7 @@ static const int sony_laptop_input_index[] = {
+ 	59,	/* 72 SONYPI_EVENT_VENDOR_PRESSED */
+ };
+ 
+-static const int sony_laptop_input_keycode_map[] = {
++static int sony_laptop_input_keycode_map[] = {
+ 	KEY_CAMERA,	/*  0 SONYPI_EVENT_CAPTURE_PRESSED */
+ 	KEY_RESERVED,	/*  1 SONYPI_EVENT_CAPTURE_RELEASED */
+ 	KEY_RESERVED,	/*  2 SONYPI_EVENT_CAPTURE_PARTIALPRESSED */
+-- 
+2.9.0
