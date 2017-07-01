@@ -1,37 +1,28 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: sony-laptop: revert 'const' on keymap
-Date: Fri, 30 Jun 2017 20:30:08 -0700
-Message-ID: <20170701033008.GA24772@fury>
-References: <20170630154524.3611399-1-arnd@arndb.de>
- <CAHp75VfU8Pa+xoCP=ybCr067TbcOn+OU4VR=YJpXN__P-swJxw@mail.gmail.com>
- <20170630182102.GE26257@fury>
- <CAHp75Vc1SjaXZij0n1kTe3Q5VQqYeiyVoEzCJMvBhKjTpTiJxQ@mail.gmail.com>
+From: Stanislav Fomichev <kernel@fomichev.me>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix warning about
+ deprecated hwmon_device_register
+Date: Fri, 30 Jun 2017 23:02:18 -0700
+Message-ID: <20170701060217.GA9594@sdf-laptop>
+References: <20170620051633.GB15974@khazad-dum.debian.net>
+ <20170621034513.4023-1-kernel@fomichev.me>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:40857 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751370AbdGADaN (ORCPT
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:34091 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751442AbdGAGCV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Jun 2017 23:30:13 -0400
+        Sat, 1 Jul 2017 02:02:21 -0400
+Received: by mail-pf0-f194.google.com with SMTP id c24so4774904pfe.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jun 2017 23:02:20 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc1SjaXZij0n1kTe3Q5VQqYeiyVoEzCJMvBhKjTpTiJxQ@mail.gmail.com>
+In-Reply-To: <20170621034513.4023-1-kernel@fomichev.me>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andy@infradead.org>, Mattia Dongili <malattia@linux.it>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: hmh@hmh.eng.br
+Cc: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Stanislav Fomichev <sdf@google.com>
 
-On Fri, Jun 30, 2017 at 11:50:52PM +0300, Andy Shevchenko wrote:
-> On Fri, Jun 30, 2017 at 9:21 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Fri, Jun 30, 2017 at 06:58:24PM +0300, Andy Shevchenko wrote:
-> >> On Fri, Jun 30, 2017 at 6:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> 
-> > Will you squash it, or shall I?
-> 
-> Please, handle this, thanks!
-
-Done. Thanks all, and apologies for the noise on this one.
+Henrique, any comments on the v2?
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Stanislav Fomichev
