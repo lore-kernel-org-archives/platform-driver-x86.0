@@ -1,51 +1,64 @@
-From: Sven Eckelmann <sven@narfation.org>
-Subject: [PATCH] platform/x86: ideapad-laptop: Add IdeaPad V510-15IKB to no_hw_rfkill
-Date: Sat,  1 Jul 2017 08:20:18 +0200
-Message-ID: <20170701062018.6493-1-sven@narfation.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add touchscreen info for I.T.Works TW891 2-in-1
+Date: Sat,  1 Jul 2017 12:15:22 +0200
+Message-ID: <20170701101522.13646-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from narfation.org ([79.140.41.39]:43224 "EHLO v3-1039.vlinux.de"
+Received: from mx1.redhat.com ([209.132.183.28]:35198 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751563AbdGAG1U (ORCPT
+        id S1751753AbdGAKPY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 1 Jul 2017 02:27:20 -0400
+        Sat, 1 Jul 2017 06:15:24 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Sven Eckelmann <sven@narfation.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Like other Lenovo models the IdeaPad V510-15IKB does not have an hw
-rfkill switch. This results in hard-blocked radios after boot, resulting
-in always blocked radios rendering them unusable.
+Add touchscreen info for I.T.Works TW891 2-in-1.
 
-Add the IdeaPad V510-15IKB to the no_hw_rfkill DMI list and allows using
-the built-in radios.
-
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Commit message "borrowed" from
-ccc7179f4d94 ("platform/x86: ideapad-laptop: Add IdeaPad V310-15ISK to no_hw_rfkill")
+ drivers/platform/x86/silead_dmi.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 527e5d9ab9bf..f23e4ad7c564 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -916,6 +916,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index 25cbea307a5e..6218deb22319 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -122,6 +122,20 @@ static const struct silead_ts_dmi_data pipo_w2s_data = {
+ 	.properties	= pipo_w2s_props,
+ };
+ 
++static const struct property_entry itworks_tw891_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1600),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 890),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-itworks-tw891.fw"),
++	{ }
++};
++
++static const struct silead_ts_dmi_data itworks_tw891_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= itworks_tw891_props,
++};
++
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -187,6 +201,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "W2S"),
  		},
  	},
- 	{
-+		.ident = "Lenovo V510-15IKB",
++	{
++		/* I.T.Works TW891 */
++		.driver_data = (void *)&itworks_tw891_data,
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V510-15IKB"),
++			DMI_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW891"),
 +		},
 +	},
-+	{
- 		.ident = "Lenovo ideapad 310-15IKB",
- 		.matches = {
- 		        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+ 	{ },
+ };
+ 
 -- 
-2.11.0
+2.13.0
