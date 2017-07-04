@@ -1,147 +1,51 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ideapad-laptop: Add several models to no_hw_rfkill
-Date: Tue, 4 Jul 2017 13:30:14 +0300
-Message-ID: <CAHp75Vf9gwbf4CNMv3C942=4yQkus2ZzMeBnDYW=6f7Z3XwbGg@mail.gmail.com>
-References: <17d47016-4b33-984b-7134-0ab1b237f30c@flygoat.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: wmi-bmof: New driver to expose embedded
+ Binary WMI MOF metadata
+Date: Tue, 4 Jul 2017 15:28:19 +0200
+Message-ID: <20170704132819.GE2102@pali>
+References: <cd020900567e5c26af29e0735a3945a855d26a30.1496718529.git.dvhart@infradead.org>
+ <20170606100440.GA4690@pali>
+ <20170606170201.GC32509@fury>
+ <201706062250.52564@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17d47016-4b33-984b-7134-0ab1b237f30c@flygoat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yang Jiaxun <yjx@flygoat.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201706062250.52564@pali>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Lutomirski <luto@amacapital.net>, Mario Limonciello <mario_limonciello@dell.com>, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 4, 2017 at 8:26 AM, Yang Jiaxun <yjx@flygoat.com> wrote:
-> From 8db74a4eef334f614bf727232e5b88f67f824862 Mon Sep 17 00:00:00 2001
-> From: Yang Jiaxun <yjx@flygoat.com>
-> Date: Tue, 4 Jul 2017 11:28:41 +0800
-> Subject: [PATCH] ideapad-laptop: Add several models to no_hw_rfkill
->
-> Some Lenovo ideapad models do not have hardware rfkill switches, but trying
-> to read the rfkill switches through the ideapad-laptop module. It caused to
-> always reported blocking breaking wifi.
->
-> Fix it by adding those models to no_hw_rfkill list.
+On Tuesday 06 June 2017 22:50:52 Pali Rohár wrote:
+> On Tuesday 06 June 2017 19:02:01 Darren Hart wrote:
+> > On Tue, Jun 06, 2017 at 12:04:40PM +0200, Pali Rohár wrote:
+> > > On Monday 05 June 2017 20:16:44 Andy Lutomirski wrote:
+> > > > +#define WMI_BMOF_GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+> > > > +MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
+> > > 
+> > > Cannot we generate MODULE_ALIAS from module_wmi_driver()? IIRC it
+> > > is working for i2c drivers.
+> > 
+> > I could see this being automated since we always use wmi:GUID, but it
+> > isn't currently. Happy to consider it as a follow on.
+> > 
+> > Do you have a specific i2c example you think we should consider
+> > following?
+> 
+> For i2c you can specify in driver code:
+> 
+> MODULE_DEVICE_TABLE(i2c, id_table);
+> 
+> And it automatically provides (via file.mod.c) all needed MODULE_ALIAS.
+> 
+> So when we have wmi_bmof_id_table in driver, cannot we use this?
+> 
+> MODULE_DEVICE_TABLE(wmi, wmi_bmof_id_table);
 
-Thanks for the patch, though...
-
-Please, fix your email client that our patchwork can track.
-
-Moreover, fix the indentation in the way it's already done in the
-driver (your patch should not have "-" (minus) lines AFAIU).
-
->
-> Signed-off-by: Yang Jiaxun <yjx@flygoat.com>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 78
-> +++++++++++++++++++++++++++++++++--
->  1 file changed, 74 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c
-> b/drivers/platform/x86/ideapad-laptop.c
-> index 527e5d9..3ebc5c7 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -909,17 +909,87 @@ static const struct dmi_system_id no_hw_rfkill_list[]
-> = {
->          },
->      },
->      {
-> +        .ident = "Lenovo V310-14IKB",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14IKB"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo V310-14ISK",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo V310-15IKB",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15IKB"),
-> +        },
-> +    },
-> +    {
->          .ident = "Lenovo V310-15ISK",
->          .matches = {
-> -                DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -                DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 300-15IBR",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IBR"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 300-15IKB",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IKB"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 300S-11IBR",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300S-11BR"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 310-15ABR",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ABR"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 310-15IAP",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IAP"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad 310-15ISK",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
->          },
->      },
->      {
->          .ident = "Lenovo ideapad 310-15IKB",
->          .matches = {
-> -                DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -                DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
-> +        },
-> +    },
-> +    {
-> +        .ident = "Lenovo ideapad Y700-14ISK",
-> +        .matches = {
-> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-14ISK"),
->          },
->      },
->      {
-> --
-> 2.7.4
->
-
-
+Just reminder for above idea ↑↑↑
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pali Rohár
+pali.rohar@gmail.com
