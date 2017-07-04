@@ -1,81 +1,144 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Add IdeaPad V310-14ISK
- to no_hw_rfkill
-Date: Mon, 3 Jul 2017 14:59:25 +0300
-Message-ID: <CAHp75VfJZ1o=Hhf3U3yNTvv6qQdSZcTBaQBo8uPEvxC8eec5yg@mail.gmail.com>
-References: <CAFwVRQH5fQJOPUaM42P78pSHs9Vu_T-QSHT+1a-6x1HQaeKowA@mail.gmail.com>
- <CAHp75Vd7d+84UCQRVasd-X7H_RD0ov0__8S_L-hiYMs38bGF3Q@mail.gmail.com>
+Subject: Re: [PATCH] ideapad-laptop: Add several models to no_hw_rfkill
+Date: Tue, 4 Jul 2017 13:30:14 +0300
+Message-ID: <CAHp75Vf9gwbf4CNMv3C942=4yQkus2ZzMeBnDYW=6f7Z3XwbGg@mail.gmail.com>
+References: <17d47016-4b33-984b-7134-0ab1b237f30c@flygoat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f195.google.com ([209.85.216.195]:36122 "EHLO
-        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752855AbdGCL71 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 Jul 2017 07:59:27 -0400
-Received: by mail-qt0-f195.google.com with SMTP id v31so23114033qtb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Jul 2017 04:59:26 -0700 (PDT)
-In-Reply-To: <CAHp75Vd7d+84UCQRVasd-X7H_RD0ov0__8S_L-hiYMs38bGF3Q@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bin Li <bin.li@canonical.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <17d47016-4b33-984b-7134-0ab1b237f30c@flygoat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yang Jiaxun <yjx@flygoat.com>
+Cc: Ike Panhc <ike.pan@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 3, 2017 at 2:56 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Jun 30, 2017 at 6:05 AM, Bin Li <bin.li@canonical.com> wrote:
->> Like other Lenovo models the IdeaPad V310-14ISK does not have an hw
->> rfkill switch. This results in hard-blocked radios after boot, resulting
->> in always blocked radios rendering them unusable.
->>
->> Add the IdeaPad V310-14ISK to the no_hw_rfkill DMI list and allows using
->> the built-in radios.
->>
+On Tue, Jul 4, 2017 at 8:26 AM, Yang Jiaxun <yjx@flygoat.com> wrote:
+> From 8db74a4eef334f614bf727232e5b88f67f824862 Mon Sep 17 00:00:00 2001
+> From: Yang Jiaxun <yjx@flygoat.com>
+> Date: Tue, 4 Jul 2017 11:28:41 +0800
+> Subject: [PATCH] ideapad-laptop: Add several models to no_hw_rfkill
 >
-> Hmm... I didn't get yet what's wrong with this email, patchwork didn't
-> catch it from the stream.
-> For now I'm going to apply it manually.
+> Some Lenovo ideapad models do not have hardware rfkill switches, but trying
+> to read the rfkill switches through the ideapad-laptop module. It caused to
+> always reported blocking breaking wifi.
+>
+> Fix it by adding those models to no_hw_rfkill list.
 
-Sorry, but you have to fix your email path (client, MX?) and resend it
-(please, rebase on top of testing since we have there one more patch
-for the same table).
-It's broken, see below (HTML?)
+Thanks for the patch, though...
+
+Please, fix your email client that our patchwork can track.
+
+Moreover, fix the indentation in the way it's already done in the
+driver (your patch should not have "-" (minus) lines AFAIU).
 
 >
->> Signed-off-by: Bin Li <bin.li@canonical.com>
->> ---
->>  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c
->> b/drivers/platform/x86/ideapad-laptop.c
->> index 24ca9fb..8336af4 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -869,6 +869,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] =
->> {
->>   },
->>   },
->>   {
->> + .ident = "Lenovo V310-14ISK",
->> + .matches = {
->> + DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> + DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
->> + },
->> + },
->> + {
->>   .ident = "Lenovo V310-15ISK",
->>   .matches = {
->>          DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> --
->> 2.7.4
->>
+> Signed-off-by: Yang Jiaxun <yjx@flygoat.com>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 78
+> +++++++++++++++++++++++++++++++++--
+>  1 file changed, 74 insertions(+), 4 deletions(-)
 >
->
->
+> diff --git a/drivers/platform/x86/ideapad-laptop.c
+> b/drivers/platform/x86/ideapad-laptop.c
+> index 527e5d9..3ebc5c7 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -909,17 +909,87 @@ static const struct dmi_system_id no_hw_rfkill_list[]
+> = {
+>          },
+>      },
+>      {
+> +        .ident = "Lenovo V310-14IKB",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14IKB"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo V310-14ISK",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo V310-15IKB",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15IKB"),
+> +        },
+> +    },
+> +    {
+>          .ident = "Lenovo V310-15ISK",
+>          .matches = {
+> -                DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -                DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 300-15IBR",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IBR"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 300-15IKB",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IKB"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 300S-11IBR",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300S-11BR"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 310-15ABR",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ABR"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 310-15IAP",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IAP"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad 310-15ISK",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
+>          },
+>      },
+>      {
+>          .ident = "Lenovo ideapad 310-15IKB",
+>          .matches = {
+> -                DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -                DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
+> +        },
+> +    },
+> +    {
+> +        .ident = "Lenovo ideapad Y700-14ISK",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-14ISK"),
+>          },
+>      },
+>      {
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.7.4
+>
 
 
 
