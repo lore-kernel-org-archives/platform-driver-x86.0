@@ -1,61 +1,85 @@
-From: <angers@pythagorejiujitsu.com>
-Subject: (unknown)
-Date: Wed, 05 Jul 2017 06:42:45 -0000
-Message-ID: <149923696550.12492.156427221884131995@zaural.ru>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance
+ number
+Date: Wed, 5 Jul 2017 11:51:13 +0200
+Message-ID: <20170705095113.GI2102@pali>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com>
+ <20170613184228.GC22450@fury>
+ <20170614154654.GA22981@pali>
+ <201706171847.54407@pali>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EBAY_1112994_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws145.zone31-163-150.zaural.ru ([31.163.150.145]:33935 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1750796AbdGEGmt (ORCPT
+Received: from mail-wr0-f195.google.com ([209.85.128.195]:33866 "EHLO
+        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750841AbdGEJvR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 Jul 2017 02:42:49 -0400
-Content-Disposition: attachment
-Subject: 
+        Wed, 5 Jul 2017 05:51:17 -0400
+Content-Disposition: inline
+In-Reply-To: <201706171847.54407@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: "Lee, Chun-Yi" <jlee@suse.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, Dave Airlie <airlied@redhat.com>, Oleksij Rempel <linux@rempel-privat.de>, =?utf-8?B?Sm/Do28=?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-UEsDBBQDAAAIAKwU5Uoozk56nAgAAJ8IAAAOAAAANDM4MTYxNDcxNy56aXB1lvc/GwgAxaNWa9PQ
-FDEONeuceUatIpSaQQixV9WuTUVtpUStcCXmqRQhFTVbrTNKKyJIKa2aKdEU0Yu23Prt7nPv/fA+
-7/PeH/C1t2ZlA7ICAGcBWODGtZ/pAzbfOQGAEyAAwAcAAH7+WU1bTUsNCoH5qt6IaYIlxlcZC5wu
-RXQyis7MORYdWral2hVWNWqLavnuMgREhqUEYJqE7tpBfL+46HWv6vB9f3Ro0G2N5E5oaiO/yyuT
-tKzW7dmKaxwmd626LnA0K3iUqc5/fIKwL6u4A637xmpquxX44fpSg7SEF/DStc74Qfruzn6AMFQd
-zSO6XDLrTclwaL6B9ALnofQiqZVklMYACN4+z3KRs8P+usy8UFH/rO58Loh68LmQyNK8g8l+o7eT
-S+IHokHtNlo3Cx4ZBkaPeDVIdjKbaDUJQUHXs8yrRlCkBsvstbsND7vqbzfYBBYN7lE2f8OFIArd
-tSTESZvLqIVgLXqO5oDZZQuVWJp3ykPedpxJ1TXN83kwUwGE6PVs9llc2bFVjE5JLiinjhITFvUt
-1f3DRcqGLdeSj5nQmpP5II4RIMq+UCfx3VmgM91Smrd+IoPS49MSh/Sjro+pF//ub71HdTKbl4jj
-1Tyh6MqN7KwtCXCuWzmfBYPFyjNipSV8300mu/sWqGlK3ifGx+0E4p18sYstdblVN5acnPtRt/0T
-tB4saKq93ily4YqHs3UBt4KpOfD7+UMW72UYj72Itm8DfiXrdEen6XqK59wfnXz+2AOOUE6tV4LU
-zWu7DpIYn8eGJ+Ftbc6CHd3cy9z92aRDO5JK+sY4u3b4FhfsoUeJwUf8bhJFEE/bVKvmHDawQz5W
-Pu8NuUANVhEsVZdSOscKbat3rJOaUZoaIf42rtZryGewcC5yeW4hL6x42V9d7Jak21JfFcEsaI6m
-F+/0aU8cueb8ukZwapPBPCZcycntqjUKcuBLheYpfm1t6Od2KMnTlxramBrZV7biex5inNJZChkT
-smwud0vIe4WO5dv8MGcR7qdOxwU+jJvsjuU5xvzC42EyhVZwb50sXnnG/2N4JcaIYJ5A9jh7QkpY
-u/k5p/SRdezRvdaBlKfL77UyD0UCQhmjVvg5wyv6p0RmwgzN84jzBRalPlTT4sSbfzvQ/UAsefXJ
-SptkcWRvHzztR6D1RkNFB+Kp7uvBlsCDm+jRKuxaT54Y9Y5QoZ0C4c1L7YkJGaOiR2D3Yki4RFZi
-414xL1FVFqi3itv1m3bRUhn6/bD7KKXe8BSRYPudue9bnoMi+cLR5YWoYEw8xt8vyMJmE754Bgex
-US6WgflzN3/1XBDofIRu9ZKpR01akX0X30K2M4uIDpJ1a0hb5MrgVbnD8+KppxJgGj31/V3VpPz8
-H+WU4th8pYWVabluUBW2TvX7SeyOH+8B6oZMhA8mpMWG+oORdrwtbDOouLCLZPJ9paRYYPppT3ZK
-CDw65l3LsULDvE9D9eXl4NHxd6a+A8zRHbisA5RqIGtT9IpFldmCfjap34QDhpgfO11LDPlJn19E
-YzZzMfeHNtRVNN1kEJYUI/DYg5GuCd2b1Ot9q5oPKm8cP0mGGqiSwGV8zkrgcX4zwpaiP1bB+WRR
-HsSZjwe5ysMyv7husNY4cjelBp2+UGxLscQddqxANHCWQa0g5rTC18Ic2IlT7gYnNumpv46we1CP
-SLs83KCBzLkjohJeIDPtOSnIbuL7y0rwkOWWuaZM5RPoajPaMsu9CCs5Cn3AHu6mXSoQR2bXxlRD
-0iW2cb++kDGk06/oIj4pvos8uLl6wX/AY8WHhWesIGPr+a7xweUieww1ISPWmH7noItU3vVtxnMv
-ufRw9oF58ZZEzblEACA6tPFwo0QQ7SDB/I4cgaAnAdHUuFqrAv26MI3NvRmL2T2RH9LxgRKJkQiW
-MnDzaIeKuOOx7XSeqX+01DPV3n1X0AmemAX25Od5EPcFJQzkazNQ6wzjdjyyDsDWU2C1lLwJnOfC
-hXg+u2nkxQ6oF3G6Ni3AyBALGXv/qR2chDuvLrW/y9BPtUPmbQR3k6W6zJ1BLzJoNXfODCrSiJXd
-rZjhqx1chgYFrd7nmG7O9MyBc0JswTFKN0y3suMwu+pwQDRMecl4li0XmSrbfGzo2YnO3ZFBkVQs
-0jmnbh1ngsXkuDIFwi/cw+3eOuVW+KxtVycoG/iAMJ4UFX8cYafufpZJ1p3hPvcNT7IUQ7QSFIjD
-0qcJWUF6vFqchuve5XJmvZJ6nen5kWmv3uA0dEKdIt9zrCSMbkdku3Iwep5PRF0KWQEFzmRd2sQh
-/dZLAPVkrElm5COrrx5yFXcRPKjqBC8VosWGRloe7/m3nBt0JbwT1o3KnxDVL7ZiVeFlNGK8qgY2
-IMoXy0Zu7x25mF/kmZCV+amPiCzz5pAZo9i7AEOq2m9FUEbkuV0ahJ7WWvSQ1mVjtKNCvf30r2zl
-L2jM98XP9wrCC+fHaYelPvKDccVarfvKsIFvDrUlWhMECOEnSt/T0cZtvuTEuU+M6igq7WD6OTY6
-7YqDe+abAItljK60X4wZCRvaOGImFGlnVzg7aYXX16/cHHkZ/uZX9+iKlSjJdb5Va1M9py/M/AjB
-KcFUy8YtDhF2tMvwVXXW2LwcVWz4mfhVUsaoKEHMO1IHjUZremK4Ch6LEvBVge+2OSr2aAH7qyY0
-z3uueNWVlwjTu6SGCoudCViPfNOkW4Q9v7xfWNxDDyD584hL1Vh5H+gVQ7b/63EhWkMJ8YzzUnKT
-DoJv7kihUluzY7alQn4tRmxKn27ih1GGtM+HC5ONKvXaqpOSN2NdnY/ASvl1km8pQfF+ypfLYIUT
-9qhq/SCfKvlbrrkCGHECY3SRaaZwB9UrGH+b1d6a5YwR6/+hgizgH0khG9MB/wEHLoDU3ysLAAQA
-fOdRcGOQWP6d9tbsHH9//rT3n6l49q/2B1BLAQI/AxQDAAAIAKwU5Uoozk56nAgAAJ8IAAAOACQA
-AAAAAAAAIICkgQAAAAA0MzgxNjE0NzE3LnppcAoAIAAAAAAAAQAYAICTpShZ9dIBgJOlKFn10gGA
-k6UoWfXSAVBLBQYAAAAAAQABAGAAAADICAAAAAA=
+On Saturday 17 June 2017 18:47:54 Pali Rohár wrote:
+> > So problematic drivers which use instance=1 without any comments are:
+> > 
+> >   acer-wmi
+> >   asus-wmi
+> >   mxm-wmi
+> 
+> Adding authors & maintainers of those drivers in loop.
+
+Hi!
+
+Dell drivers and acer-wmi are fixed now. So only asus-wmi and mxm-wmi
+needs to be investigated.
+
+Adding more people who developed those drivers recently in loop. Can you
+check if instance number is used correctly or not?
+
+> WMI instance number is indexed from zero and therefore first instance
+> number is 0, not 1. Can you check if for drivers and wmi functions
+> (specified below) is really correct to use WMI instance number one?
+> 
+> In case in _WDG is specified for particular GUID that instance_count is
+> 1, it means the only allowed instance number is 0 (first and the only
+> one).
+> 
+> In some cases, when there is only one instance for WMI method, ACPI WMI
+> bytecode does not check instance number, so any passed value is
+> accepted by ACPI. But in current patch I'm trying to fix check for
+> valid instance number based on instance_count information from _WDG.
+> 
+> So I need to know if nothing would be broken. And in case those driver
+> issue invalid/incorrect instance number, they needs to be fixed.
+> 
+> Can you look at it? Simple look into _WDG dump should be enough... just
+> check if instance number called from wmi driver is less then
+> instance_count from _WDG.
+> 
+> On Wednesday 14 June 2017 17:46:54 Pali Rohár wrote:
+> > Function wmi_query_block:
+> > 
+> >   acer-wmi.c:
+> >   instance=1 /* no comment why, guid=95764E09-FB56-4E83-B31A-37761F60994A */
+> > 
+>  
+> > Function wmi_evaluate_method:
+> > 
+> >   acer-wmi.c:
+> >   instance=1 /* no comment why, guid=67C3371D-95A3-4C37-BB61-DD47B491DAAB */
+> >   instance=1 /* no comment why, guid=6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3 */
+> > 
+> >   asus-wmi.c:
+> >   instance=1 /* no comment why, guid=97845ED0-4E6D-11DE-8A39-0800200C9A66 */
+> > 
+> >   mxm-wmi.c:
+> >   instance=1 /* no comment why, guid=F6CB5C3C-9CAE-4EBD-B577-931EA32A2CC0 */
+> 
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
