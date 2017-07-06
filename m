@@ -1,58 +1,79 @@
-From: Bin Li <libin.charles@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: Add IdeaPad V310-14ISK
- to no_hw_rfkill
-Date: Fri, 7 Jul 2017 00:01:45 +0800
-Message-ID: <CAGBH1r4zhcGNDZweHFms5Kfz2ZNrK1cA+TeA+42dOE8aRkJM1A@mail.gmail.com>
-References: <1499332949-8732-1-git-send-email-bin.li@canonical.com>
- <CAHp75VcGQ9ULH_6y1nwi=MdP3Z4GjPv+7e1U02SrnbMvEb06DQ@mail.gmail.com> <CAHp75VegYPSp8Ai7LVOZQzicQdLckvtTGyH3SHikVwhhHqOHdA@mail.gmail.com>
+From: "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+Subject: [PATCH] platform/x86: fujitsu-laptop: add NULL check on
+ devm_kzalloc() return value
+Date: Thu, 6 Jul 2017 17:19:02 -0500
+Message-ID: <20170706221902.GA29514@embeddedgus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f172.google.com ([209.85.220.172]:35856 "EHLO
-        mail-qk0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751653AbdGFQBr (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 6 Jul 2017 12:01:47 -0400
-Received: by mail-qk0-f172.google.com with SMTP id p21so6044048qke.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Jul 2017 09:01:46 -0700 (PDT)
-In-Reply-To: <CAHp75VegYPSp8Ai7LVOZQzicQdLckvtTGyH3SHikVwhhHqOHdA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bin Li <bin.li@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <garsilva@embeddedor.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Andy,
+Check return value from call to devm_kzalloc()
+in order to prevent a NULL pointer dereference.
 
- Yes, I also found it in mailing list, thanks a lot!
-Sincerely Yours,
+This issue was detected using Coccinelle and the following semantic patch:
 
-Bin Li (=E6=9D=8E=E5=BD=AC)
+@@
+expression x;
+identifier fld;
+@@
 
-http://www.bjgug.org/
+* x = devm_kzalloc(...);
+  ... when != x == NULL
+  x->fld
 
+Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
+---
+ drivers/platform/x86/fujitsu-laptop.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-On Thu, Jul 6, 2017 at 7:50 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Jul 6, 2017 at 2:48 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Thu, Jul 6, 2017 at 12:22 PM, Bin Li <bin.li@canonical.com> wrote:
->>> Like other Lenovo models the IdeaPad V310-14ISK does not have an hw
->>> rfkill switch. This results in hard-blocked radios after boot, resultin=
-g
->>> in always blocked radios rendering them unusable.
->>>
->>> Add the IdeaPad V310-14ISK to the no_hw_rfkill DMI list and allows usin=
-g
->>> the built-in radios.
->>
->> Pushed to testing, thanks!
->
-> Ah, sorry, have to remove it. We already have a record done by commit
-> 710c059c248a
-> ("platform/x86: ideapad-laptop: Add several models to no_hw_rfkill")
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index c1a8528..593a350 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -695,6 +695,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 	if (call_fext_func(device,
+ 			   FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
+ 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		if (!led)
++			return -ENOMEM;
++
+ 		led->name = "fujitsu::logolamp";
+ 		led->brightness_set_blocking = logolamp_set;
+ 		led->brightness_get = logolamp_get;
+@@ -707,6 +710,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 			    FUNC_LEDS, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
+ 	    (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) == 0x0)) {
+ 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		if (!led)
++			return -ENOMEM;
++
+ 		led->name = "fujitsu::kblamps";
+ 		led->brightness_set_blocking = kblamps_set;
+ 		led->brightness_get = kblamps_get;
+@@ -723,6 +729,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 	 */
+ 	if (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {
+ 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		if (!led)
++			return -ENOMEM;
++
+ 		led->name = "fujitsu::radio_led";
+ 		led->brightness_set_blocking = radio_led_set;
+ 		led->brightness_get = radio_led_get;
+@@ -741,6 +750,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+ 	    (call_fext_func(device,
+ 			    FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
+ 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
++		if (!led)
++			return -ENOMEM;
++
+ 		led->name = "fujitsu::eco_led";
+ 		led->brightness_set_blocking = eco_led_set;
+ 		led->brightness_get = eco_led_get;
+-- 
+2.5.0
