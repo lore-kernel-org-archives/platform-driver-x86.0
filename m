@@ -1,79 +1,43 @@
-From: "Gustavo A. R. Silva" <garsilva@embeddedor.com>
-Subject: [PATCH] platform/x86: fujitsu-laptop: add NULL check on
- devm_kzalloc() return value
-Date: Thu, 6 Jul 2017 17:19:02 -0500
-Message-ID: <20170706221902.GA29514@embeddedgus>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: silead_dmi: Add touchscreen info for
+ I.T.Works TW891 2-in-1
+Date: Thu, 6 Jul 2017 15:39:15 -0700
+Message-ID: <20170706223915.GA19728@fury>
+References: <20170701101522.13646-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:41286 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751619AbdGFWjS (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 6 Jul 2017 18:39:18 -0400
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <garsilva@embeddedor.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20170701101522.13646-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Check return value from call to devm_kzalloc()
-in order to prevent a NULL pointer dereference.
+On Sat, Jul 01, 2017 at 12:15:22PM +0200, Hans de Goede wrote:
+> Add touchscreen info for I.T.Works TW891 2-in-1.
+> 
 
-This issue was detected using Coccinelle and the following semantic patch:
+...
 
-@@
-expression x;
-identifier fld;
-@@
+> +		/* I.T.Works TW891 */
+> +		.driver_data = (void *)&itworks_tw891_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "To be filled by O.E.M."),
 
-* x = devm_kzalloc(...);
-  ... when != x == NULL
-  x->fld
+*groan* you're trolling me now right? ;-)
 
-Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
----
- drivers/platform/x86/fujitsu-laptop.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "TW891"),
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index c1a8528..593a350 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -695,6 +695,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 	if (call_fext_func(device,
- 			   FUNC_LEDS, 0x0, 0x0, 0x0) & LOGOLAMP_POWERON) {
- 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		if (!led)
-+			return -ENOMEM;
-+
- 		led->name = "fujitsu::logolamp";
- 		led->brightness_set_blocking = logolamp_set;
- 		led->brightness_get = logolamp_get;
-@@ -707,6 +710,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 			    FUNC_LEDS, 0x0, 0x0, 0x0) & KEYBOARD_LAMPS) &&
- 	    (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) == 0x0)) {
- 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		if (!led)
-+			return -ENOMEM;
-+
- 		led->name = "fujitsu::kblamps";
- 		led->brightness_set_blocking = kblamps_set;
- 		led->brightness_get = kblamps_get;
-@@ -723,6 +729,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 	 */
- 	if (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {
- 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		if (!led)
-+			return -ENOMEM;
-+
- 		led->name = "fujitsu::radio_led";
- 		led->brightness_set_blocking = radio_led_set;
- 		led->brightness_get = radio_led_get;
-@@ -741,6 +750,9 @@ static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
- 	    (call_fext_func(device,
- 			    FUNC_LEDS, 0x2, ECO_LED, 0x0) != UNSUPPORTED_CMD)) {
- 		led = devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
-+		if (!led)
-+			return -ENOMEM;
-+
- 		led->name = "fujitsu::eco_led";
- 		led->brightness_set_blocking = eco_led_set;
- 		led->brightness_get = eco_led_get;
+I presume there are no other identifying strings?
+
+Pushed to testing.
+
 -- 
-2.5.0
+Darren Hart
+VMware Open Source Technology Center
