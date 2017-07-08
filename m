@@ -1,53 +1,36 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: add NULL check on
- devm_kzalloc() return value
-Date: Fri, 7 Jul 2017 10:02:08 -0700
-Message-ID: <20170707170208.GB30284@fury>
-References: <20170706221902.GA29514@embeddedgus>
- <20170707001900.GE6573@marvin.atrad.com.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41783 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750938AbdGGRCT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Jul 2017 13:02:19 -0400
-Content-Disposition: inline
-In-Reply-To: <20170707001900.GE6573@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: "Gustavo A. R. Silva" <garsilva@embeddedor.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Derek Basehore <dbasehore@chromium.org>
+Subject: [PATCH v5 1/5] x86: stub out pmc function
+Date: Fri,  7 Jul 2017 17:02:59 -0700
+Message-ID: <20170708000303.21863-1-dbasehore@chromium.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jul 07, 2017 at 09:49:00AM +0930, Jonathan Woithe wrote:
-> On Thu, Jul 06, 2017 at 05:19:02PM -0500, Gustavo A. R. Silva wrote:
-> > Check return value from call to devm_kzalloc()
-> > in order to prevent a NULL pointer dereference.
-> > 
-> > This issue was detected using Coccinelle and the following semantic patch:
-> > 
-> > @@
-> > expression x;
-> > identifier fld;
-> > @@
-> > 
-> > * x = devm_kzalloc(...);
-> >   ... when != x == NULL
-> >   x->fld
-> > 
-> > Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
-> 
-> These checks should be added in the interest of code correctness. 
-> devm_kzalloc() can fail (even if it's extremely unlikely in practice) so we
-> should check for this.
-> 
-> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+This creates an inline function of intel_pmc_slp_s0_counter_read for
+!CONFIG_INTEL_PMC_CORE.
 
-Thanks Gustavo and Jonathan,
+Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+---
+ arch/x86/include/asm/pmc_core.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Queued to testing.
-
+diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm/pmc_core.h
+index d4855f11136d..5d142d915f30 100644
+--- a/arch/x86/include/asm/pmc_core.h
++++ b/arch/x86/include/asm/pmc_core.h
+@@ -22,6 +22,10 @@
+ #define _ASM_PMC_CORE_H
+ 
+ /* API to read SLP_S0_RESIDENCY counter */
+-int intel_pmc_slp_s0_counter_read(u32 *data);
++#ifdef CONFIG_INTEL_PMC_CORE
++extern int intel_pmc_slp_s0_counter_read(u32 *data);
++#else
++static inline int intel_pmc_slp_s0_counter_read(u32 *data) { return -EPERM; }
++#endif
+ 
+ #endif /* _ASM_PMC_CORE_H */
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.13.2.725.g09c95d1e9-goog
