@@ -1,55 +1,80 @@
-From: "Gustavo A. R. Silva" <garsilva@embeddedor.com>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: add NULL check on
- devm_kzalloc() return value
-Date: Mon, 10 Jul 2017 14:37:30 -0500
-Message-ID: <20170710143730.Horde.NEj351PakRT3Rq0tNW6il2m@gator4166.hostgator.com>
-References: <20170706221902.GA29514@embeddedgus>
- <20170707001900.GE6573@marvin.atrad.com.au> <20170707170208.GB30284@fury>
+From: "dbasehore ." <dbasehore@chromium.org>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Mon, 10 Jul 2017 14:11:11 -0700
+Message-ID: <CAGAzgspCPrmoSZ7MFKER7MF0Jo4Le=rqbf5+B0r662cb651o6A@mail.gmail.com>
+References: <20170708000303.21863-1-dbasehore@chromium.org>
+ <20170708000303.21863-2-dbasehore@chromium.org> <CAHp75Vcw7uG+d42Td9d7vzmzWu2b_LMKzeO=aHc5kWSDbS54KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170707170208.GB30284@fury>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vcw7uG+d42Td9d7vzmzWu2b_LMKzeO=aHc5kWSDbS54KA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "x86@kernel.org" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren, Jonathan,
-
-Quoting Darren Hart <dvhart@infradead.org>:
-
-> On Fri, Jul 07, 2017 at 09:49:00AM +0930, Jonathan Woithe wrote:
->> On Thu, Jul 06, 2017 at 05:19:02PM -0500, Gustavo A. R. Silva wrote:
->> > Check return value from call to devm_kzalloc()
->> > in order to prevent a NULL pointer dereference.
->> >
->> > This issue was detected using Coccinelle and the following semantic patch:
->> >
->> > @@
->> > expression x;
->> > identifier fld;
->> > @@
->> >
->> > * x = devm_kzalloc(...);
->> >   ... when != x == NULL
->> >   x->fld
->> >
->> > Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
+On Sat, Jul 8, 2017 at 9:05 AM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sat, Jul 8, 2017 at 3:03 AM, Derek Basehore <dbasehore@chromium.org> wrote:
+>> Adds a new feature to tick to schedule wakeups on a CPU during freeze.
+>> This won't fully wake up the system (devices are not resumed), but
+>> allow simple platform functionality to be run during freeze with
+>> little power impact.
 >>
->> These checks should be added in the interest of code correctness.
->> devm_kzalloc() can fail (even if it's extremely unlikely in practice) so we
->> should check for this.
+>> This implementation allows an idle driver to setup a timer event with
+>> the clock event device when entering freeze by calling
+>> tick_set_freeze_event. Only one caller should exist for the function.
 >>
->> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+>> tick_freeze_event_expired is used to check if the timer went off when
+>> the CPU wakes.
+>>
+>> The event is cleared by tick_clear_freeze_event.
 >
-> Thanks Gustavo and Jonathan,
+>> +int tick_set_freeze_event(int cpu, ktime_t delta)
+>> +{
 >
-> Queued to testing.
+>> +               printk_deferred(KERN_WARNING
+>> +                               "[%s] unsupported by clock event device\n",
 >
+> Can it be one line?
 
-Glad to help. :)
+Sure. It seems that some of these lines were at 80 characters on one
+line anyways. Putting some of these on one line breaks the 80
+character limit and doesn't help with grepping through code, though.
 
-Thanks
---
-Gustavo A. R. Silva
+>
+>> +               printk_deferred(KERN_WARNING
+>> +                               "[%s] clock event device in use\n",
+>
+> Ditto.
+>
+>> +               printk_deferred(KERN_WARNING
+>> +                               "[%s] %lluns outside range: [%lluns, %lluns]\n",
+>
+> Ditto.
+>
+>> +               printk_deferred(KERN_WARNING
+>> +                               "Failed to program freeze event\n");
+>
+> Ditto.
+>
+>> +int tick_freeze_event_expired(int cpu)
+>> +{
+>> +       struct clock_event_device *dev = per_cpu(tick_cpu_device, cpu).evtdev;
+>> +
+>> +       if (!(dev && dev->event_expired))
+>
+> Usually we use a pattern (!x || !x->y). At least for me it looks
+> slightly better to read.
+
+Will do.
+
+>
+>> +               return 0;
+>> +
+>> +       return dev->event_expired(dev);
+>> +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
