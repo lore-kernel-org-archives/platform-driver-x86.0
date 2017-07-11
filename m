@@ -1,31 +1,32 @@
-From: Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v5 5/5] intel_idle: Add S0ix validation
-Date: Tue, 11 Jul 2017 11:43:51 -0400
-Message-ID: <CAJvTdKmV9KitivMQXGb4GiDTJVuUxHHsym+uQULKNw1w63fUAQ@mail.gmail.com>
-References: <20170708000303.21863-1-dbasehore@chromium.org>
- <4255011.FH94tfVCB1@aspire.rjw.lan> <CAGAzgsq-4VZRGgeS7XSzP+QHMpUx9jRGa-ANk3=UxD9BxwKuRg@mail.gmail.com>
- <2519579.h5lvWVZraV@aspire.rjw.lan>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: peaq-wmi: Fix peaq_ignore_events_counter
+ handling off by 1
+Date: Tue, 11 Jul 2017 09:13:33 -0700
+Message-ID: <20170711161333.GD25390@fury>
+References: <20170711114134.6706-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2519579.h5lvWVZraV@aspire.rjw.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "dbasehore ." <dbasehore@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux-pm mailing list <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:59461 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932758AbdGKQNv (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 11 Jul 2017 12:13:51 -0400
+Content-Disposition: inline
+In-Reply-To: <20170711114134.6706-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-I acknowledge the specific need for this check to assure a great
-user-experience on specific hardware.
+On Tue, Jul 11, 2017 at 01:41:34PM +0200, Hans de Goede wrote:
+> If peaq_ignore_events_counter gets set to 1 we should skip polling 1
+> time, rather then ignoring it.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-I also concur the motivation to make mechanisms general and generic so
-they can be re-used.
-
-However, it isn't clear to me that this check would be used outside of
-some very specific scenarios,
-and so we may be trying too hard to make it general, and the code
-would be simpler
-if we focus on that.  We can always make it more general when we have
-more use-cases...
+Thanks Hans, queued to testing.
 
 -- 
-Len Brown, Intel Open Source Technology Center
+Darren Hart
+VMware Open Source Technology Center
