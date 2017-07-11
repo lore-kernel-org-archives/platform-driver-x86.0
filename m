@@ -1,39 +1,44 @@
 From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH 0/7] Constify platform/x86 attribute_group structures.
-Date: Tue, 11 Jul 2017 16:18:13 +0530
-Message-ID: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:35719 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752577AbdGKKsu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jul 2017 06:48:50 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 1/7] platform/x86: fujitsu-laptop: constify attribute_group structures.
+Date: Tue, 11 Jul 2017 16:18:14 +0530
+Message-ID: <1499770100-18632-2-git-send-email-arvind.yadav.cs@gmail.com>
+References: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, andy@infradead.org, jwoithe@just42.net, cezary.jackiewicz@gmail.com, corentin.chary@gmail.com, laforge@gnumonks.org, coproscefalo@gmail.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 attribute_groups are not supposed to change at runtime. All functions
 working with attribute_groups provided by <linux/sysfs.h> work
 with const attribute_group. So mark the non-const structs as const.
 
-Arvind Yadav (7):
-  [PATCH 1/7] platform/x86: fujitsu-laptop: constify attribute_group structures.
-  [PATCH 2/7] platform/x86: compal-laptop: constify attribute_group structures.
-  [PATCH 3/7] platform/x86: samsung-laptop: constify attribute_group structures.
-  [PATCH 4/7] platform/x86: alienware-wmi: constify attribute_group structures.
-  [PATCH 5/7] platform/x86: panasonic-laptop: constify attribute_group structures.
-  [PATCH 6/7] platform/x86: asus-wmi: constify attribute_group structures.
-  [PATCH 7/7] platform/x86: toshiba_acpi: constify attribute_group structures.
+File size before:
+   text	   data	    bss	    dec	    hex	filename
+   7474	   1205	     24	   8703	   21ff	drivers/platform/x86/fujitsu-laptop.o
 
- drivers/platform/x86/alienware-wmi.c    | 6 +++---
- drivers/platform/x86/asus-wmi.c         | 4 ++--
- drivers/platform/x86/compal-laptop.c    | 2 +-
- drivers/platform/x86/fujitsu-laptop.c   | 2 +-
- drivers/platform/x86/panasonic-laptop.c | 2 +-
- drivers/platform/x86/samsung-laptop.c   | 2 +-
- drivers/platform/x86/toshiba_acpi.c     | 2 +-
- 7 files changed, 10 insertions(+), 10 deletions(-)
+File size After adding 'const':
+   text	   data	    bss	    dec	    hex	filename
+   7538	   1141	     24	   8703	   21ff	drivers/platform/x86/fujitsu-laptop.o
 
+Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
+---
+ drivers/platform/x86/fujitsu-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index c1a8528..7973342 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -317,7 +317,7 @@ static ssize_t radios_show(struct device *dev, struct device_attribute *attr,
+ 	NULL
+ };
+ 
+-static struct attribute_group fujitsu_pf_attribute_group = {
++static const struct attribute_group fujitsu_pf_attribute_group = {
+ 	.attrs = fujitsu_pf_attributes
+ };
+ 
 -- 
 1.9.1
