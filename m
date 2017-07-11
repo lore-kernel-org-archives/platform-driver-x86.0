@@ -1,7 +1,7 @@
 From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH 1/7] platform/x86: fujitsu-laptop: constify attribute_group structures.
-Date: Tue, 11 Jul 2017 16:18:14 +0530
-Message-ID: <1499770100-18632-2-git-send-email-arvind.yadav.cs@gmail.com>
+Subject: [PATCH 2/7] platform/x86: compal-laptop: constify attribute_group structures.
+Date: Tue, 11 Jul 2017 16:18:15 +0530
+Message-ID: <1499770100-18632-3-git-send-email-arvind.yadav.cs@gmail.com>
 References: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
@@ -16,28 +16,28 @@ with const attribute_group. So mark the non-const structs as const.
 
 File size before:
    text	   data	    bss	    dec	    hex	filename
-   7474	   1205	     24	   8703	   21ff	drivers/platform/x86/fujitsu-laptop.o
+   6781	   6144	     34	  12959	   329f	drivers/platform/x86/compal-laptop.o
 
 File size After adding 'const':
    text	   data	    bss	    dec	    hex	filename
-   7538	   1141	     24	   8703	   21ff	drivers/platform/x86/fujitsu-laptop.o
+   6845	   6080	     34	  12959	   329f	drivers/platform/x86/compal-laptop.o
 
 Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 2 +-
+ drivers/platform/x86/compal-laptop.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index c1a8528..7973342 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -317,7 +317,7 @@ static ssize_t radios_show(struct device *dev, struct device_attribute *attr,
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index e1c2b6d..a8e4a53 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -718,7 +718,7 @@ static DEVICE_ATTR(pwm1_enable,
+ 	&dev_attr_wake_up_mouse.attr,
  	NULL
  };
- 
--static struct attribute_group fujitsu_pf_attribute_group = {
-+static const struct attribute_group fujitsu_pf_attribute_group = {
- 	.attrs = fujitsu_pf_attributes
+-static struct attribute_group compal_platform_attr_group = {
++static const struct attribute_group compal_platform_attr_group = {
+ 	.attrs = compal_platform_attrs
  };
  
 -- 
