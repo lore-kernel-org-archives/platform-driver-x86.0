@@ -1,7 +1,7 @@
 From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH 4/7] platform/x86: alienware-wmi: constify attribute_group structures.
-Date: Tue, 11 Jul 2017 16:18:17 +0530
-Message-ID: <1499770100-18632-5-git-send-email-arvind.yadav.cs@gmail.com>
+Subject: [PATCH 5/7] platform/x86: panasonic-laptop: constify attribute_group structures.
+Date: Tue, 11 Jul 2017 16:18:18 +0530
+Message-ID: <1499770100-18632-6-git-send-email-arvind.yadav.cs@gmail.com>
 References: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1499770100-18632-1-git-send-email-arvind.yadav.cs@gmail.com>
@@ -16,47 +16,29 @@ with const attribute_group. So mark the non-const structs as const.
 
 File size before:
    text	   data	    bss	    dec	    hex	filename
-   6932	   1016	     48	   7996	   1f3c	drivers/platform/x86/alienware-wmi.o
+   2505	    600	      4	   3109	    c25	drivers/platform/x86/panasonic-laptop.o
 
 File size After adding 'const':
    text	   data	    bss	    dec	    hex	filename
-   7060	    888	     48	   7996	   1f64	drivers/platform/x86/alienware-wmi.o
+   2569	    536	      4	   3109	    c25	drivers/platform/x86/panasonic-laptop.o
 
 Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
 ---
- drivers/platform/x86/alienware-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/panasonic-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 9866fec..0831b42 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -604,7 +604,7 @@ static DEVICE_ATTR(source, S_IRUGO | S_IWUSR, show_hdmi_source,
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 76b0a58..5c39b32 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -437,7 +437,7 @@ static ssize_t set_sticky(struct device *dev, struct device_attribute *attr,
  	NULL,
  };
  
--static struct attribute_group hdmi_attribute_group = {
-+static const struct attribute_group hdmi_attribute_group = {
- 	.name = "hdmi",
- 	.attrs = hdmi_attrs,
- };
-@@ -660,7 +660,7 @@ static ssize_t show_amplifier_status(struct device *dev,
- 	NULL,
- };
- 
--static struct attribute_group amplifier_attribute_group = {
-+static const struct attribute_group amplifier_attribute_group = {
- 	.name = "amplifier",
- 	.attrs = amplifier_attrs,
- };
-@@ -741,7 +741,7 @@ static ssize_t toggle_deepsleep(struct device *dev,
- 	NULL,
- };
- 
--static struct attribute_group deepsleep_attribute_group = {
-+static const struct attribute_group deepsleep_attribute_group = {
- 	.name = "deepsleep",
- 	.attrs = deepsleep_attrs,
+-static struct attribute_group pcc_attr_group = {
++static const struct attribute_group pcc_attr_group = {
+ 	.name	= NULL,		/* put in device directory */
+ 	.attrs	= pcc_sysfs_entries,
  };
 -- 
 1.9.1
