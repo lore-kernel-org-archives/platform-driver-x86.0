@@ -1,44 +1,46 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 4/6] x86/PCI: Enable a 64bit BAR on AMD Family 15h
- (Models 30h-3fh) Processors v4
-Date: Tue, 11 Jul 2017 20:50:18 +0300
-Message-ID: <CAHp75VdaO+-AyMObfS_p3+y+6RR1Qa6_o783mjhsZBAYzC3wyg@mail.gmail.com>
-References: <1499698794-1718-5-git-send-email-deathsimple@vodafone.de> <201707112000.h3N0wEJq%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201707112000.h3N0wEJq%fengguang.wu@intel.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple@vodafone.de>, kbuild-all@01.org, Bjorn Helgaas <helgaas@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add entry for Ployer Momo7w tablet touchscreen
+Date: Wed, 12 Jul 2017 13:15:11 +0200
+Message-ID: <20170712111511.18758-1-hdegoede@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:37324 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1755296AbdGLLPO (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 12 Jul 2017 07:15:14 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 3:07 PM, kbuild test robot <lkp@intel.com> wrote:
+This Ployer Momo7w revision has the same hardware as the Trekstor
+ST70416-6, so we re-use the surftab_wintron70_st70416_6_data.
 
->         make ARCH=i386
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/silead_dmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Yeah, either this code shouldn't have been built on 32-bit arch at
-all, or be portable.
-
->    arch/x86/pci/fixup.c: In function 'pci_amd_enable_64bit_bar':
->>> arch/x86/pci/fixup.c:674:15: warning: large integer implicitly truncated to unsigned type [-Woverflow]
->      res->start = 0x100000000ull;
->                   ^~~~~~~~~~~~~~
->    arch/x86/pci/fixup.c:675:13: warning: large integer implicitly truncated to unsigned type [-Woverflow]
->      res->end = 0xfd00000000ull - 1;
->                 ^~~~~~~~~~~~~~~
->>> arch/x86/pci/fixup.c:686:22: warning: right shift count >= width of type [-Wshift-count-overflow]
-
-I suppose explicit casting will help.
-
->      high = ((res->start >> 40) & AMD_141b_MMIO_HIGH_MMIOBASE_MASK) |
->                          ^~
->    arch/x86/pci/fixup.c:687:21: warning: right shift count >= width of type [-Wshift-count-overflow]
->       ((((res->end + 1) >> 40) << AMD_141b_MMIO_HIGH_MMIOLIMIT_SHIFT)
->                         ^~
-
-These can be done via upper_32_bits() + shift.
-
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index f9e840aa5592..1157a7b646d6 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -174,6 +174,16 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 		},
+ 	},
+ 	{
++		/* Ployer Momo7w (same hardware as the Trekstor ST70416-6) */
++		.driver_data = (void *)&surftab_wintron70_st70416_6_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Shenzhen PLOYER"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MOMO7W"),
++			/* Exact match, different versions need different fw */
++			DMI_MATCH(DMI_BIOS_VERSION, "MOMO.G.WI71C.MABMRBA02"),
++		},
++	},
++	{
+ 		/* GP-electronic T701 */
+ 		.driver_data = (void *)&gp_electronic_t701_data,
+ 		.matches = {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.13.0
