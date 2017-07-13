@@ -1,62 +1,38 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 3/5] x86, apic: Add freeze event support
-Date: Thu, 13 Jul 2017 07:13:05 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1707130712030.2332@nanos>
-References: <20170708000303.21863-1-dbasehore@chromium.org> <20170708000303.21863-3-dbasehore@chromium.org>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Thu, 13 Jul 2017 09:32:00 +0200
+Message-ID: <20170713073200.uh3oxqowei6vxvwy@hirez.programming.kicks-ass.net>
+References: <20170708000303.21863-1-dbasehore@chromium.org>
+ <20170708000303.21863-2-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from Galois.linutronix.de ([146.0.238.70]:46236 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750949AbdGMFNM (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:37233 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750846AbdGMHcI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Jul 2017 01:13:12 -0400
-In-Reply-To: <20170708000303.21863-3-dbasehore@chromium.org>
+        Thu, 13 Jul 2017 03:32:08 -0400
+Content-Disposition: inline
+In-Reply-To: <20170708000303.21863-2-dbasehore@chromium.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Derek Basehore <dbasehore@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
 
-On Fri, 7 Jul 2017, Derek Basehore wrote:
-
-> This adds support to the clock event devices created by apic to use
-> freeze events. The apic is able to run a timer during freeze with near
-> zero power impact on modern CPUs such as skylake. This will allow
-> S0ix, suspend-to-idle, to be validated on Intel CPUs that support it.
+On Fri, Jul 07, 2017 at 05:03:00PM -0700, Derek Basehore wrote:
+> Adds a new feature to tick to schedule wakeups on a CPU during freeze.
+> This won't fully wake up the system (devices are not resumed), but
+> allow simple platform functionality to be run during freeze with
+> little power impact.
 > 
-> This is needed because bugs with power settings on the SoC can prevent
-> S0ix entry. There is also no way to check this before idling all of
-> the CPUs.
+> This implementation allows an idle driver to setup a timer event with
+> the clock event device when entering freeze by calling
+> tick_set_freeze_event. Only one caller should exist for the function.
 > 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->  arch/x86/kernel/apic/apic.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
+> tick_freeze_event_expired is used to check if the timer went off when
+> the CPU wakes.
 > 
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index 98b3dd8cf2bf..adc69d2f11ce 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -480,6 +480,26 @@ static int lapic_next_deadline(unsigned long delta,
->  	return 0;
->  }
->  
-> +static int lapic_event_expired(struct clock_event_device *evt)
+> The event is cleared by tick_clear_freeze_event.
 
-That want's to have a boolean return.
-
-> +{
-> +	u32 cct;
-> +
-> +	cct = apic_read(APIC_TMCCT);
-> +	return cct == 0 ? 1 : 0;
-
-which makes that:
-
-      	return !cct;
-
-> +}
-
-Thanks,
-
-	tglx
+Why? What's wrong with using the RTC stuff? RTC should be able to wake
+suspended systems, see RTCWAKE(8).
