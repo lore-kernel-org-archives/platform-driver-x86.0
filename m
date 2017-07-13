@@ -1,17 +1,24 @@
 From: "dbasehore ." <dbasehore@chromium.org>
 Subject: Re: [PATCH v5 5/5] intel_idle: Add S0ix validation
-Date: Wed, 12 Jul 2017 16:14:10 -0700
-Message-ID: <CAGAzgsqZvfR9WtYDq5yaSDiKK8LSivE5uOTsUorVtWxfy18SEA@mail.gmail.com>
+Date: Wed, 12 Jul 2017 18:06:05 -0700
+Message-ID: <CAGAzgsrJrzQW60A5UDxSUQj_ALEsX-xkwkruJP3eax2qac9Atw@mail.gmail.com>
 References: <20170708000303.21863-1-dbasehore@chromium.org>
  <20170708000303.21863-5-dbasehore@chromium.org> <alpine.DEB.2.20.1707130003150.2510@nanos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f178.google.com ([209.85.128.178]:33196 "EHLO
+        mail-wr0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750817AbdGMBGH (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 12 Jul 2017 21:06:07 -0400
+Received: by mail-wr0-f178.google.com with SMTP id r103so45688471wrb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2017 18:06:07 -0700 (PDT)
 In-Reply-To: <alpine.DEB.2.20.1707130003150.2510@nanos>
-Sender: linux-pm-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Linux-pm mailing list <linux-pm@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
 On Wed, Jul 12, 2017 at 3:16 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
 > On Fri, 7 Jul 2017, Derek Basehore wrote:
@@ -43,9 +50,6 @@ On Wed, Jul 12, 2017 at 3:16 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
 > away, then the check timer can't be programmed and the system will happily
 > stay for 10 minutes in some shallow C state without notice. Not really
 > useful.
-
-Are hrtimers not suspended after timekeeping_suspend is called?
-
 >
 > You know upfront whether the i915 power wells (or whatever other machinery)
 > is not powered off to allow the system to enter a specific power state. If
@@ -53,20 +57,16 @@ Are hrtimers not suspended after timekeeping_suspend is called?
 > register power related facilities and then check them in that idle freeze
 > enter state, then you get immediate information WHY this happens and not
 > just the by chance notification about the fact that it happened.
-
-It's not always something that can be checked by software. There was
-one case where an ordering for powering down audio hardware prevented
-proper PC10 entry, but there didn't seem to be any way to check that.
-Hardware watchdogs also have the same lack of clarity, but most if not
-all desktop and mobile processors ship with one. Overall, this seems
-to be the best that can be done at this point in freeze, and we can't
-really rely on every part of the system properly validating it's state
-in its suspend operation.
-
 >
 > I might be missing something, but aside of the issues I have with the
 > tick/clockevents abuse, this looks like some half baken ad hoc debugging
 > aid of dubious value.
+
+This isn't just for debugging. If we just wanted it for debugging, we
+could read the slp s0 counter on resume. This is also to fail suspend
+to idle fast so it can be tried again (or just shutdown the machine)
+when a user closes the machine for the weekend.
+
 >
 > Thanks,
 >
