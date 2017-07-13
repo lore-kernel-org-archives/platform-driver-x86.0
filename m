@@ -1,192 +1,81 @@
-From: "dbasehore ." <dbasehore@chromium.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
-Date: Wed, 12 Jul 2017 18:18:56 -0700
-Message-ID: <CAGAzgspJ1HoT_RsxCv-sGAWGeLw+cLCkN=kMUTika8fBeA2YxA@mail.gmail.com>
-References: <20170708000303.21863-1-dbasehore@chromium.org>
- <20170708000303.21863-2-dbasehore@chromium.org> <alpine.DEB.2.20.1707122248270.2510@nanos>
+Date: Thu, 13 Jul 2017 06:54:35 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1707130641520.2332@nanos>
+References: <20170708000303.21863-1-dbasehore@chromium.org> <20170708000303.21863-2-dbasehore@chromium.org> <alpine.DEB.2.20.1707122248270.2510@nanos> <CAGAzgspJ1HoT_RsxCv-sGAWGeLw+cLCkN=kMUTika8fBeA2YxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f175.google.com ([209.85.128.175]:34335 "EHLO
-        mail-wr0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750808AbdGMBS7 (ORCPT
+Received: from Galois.linutronix.de ([146.0.238.70]:46191 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750773AbdGMEys (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jul 2017 21:18:59 -0400
-Received: by mail-wr0-f175.google.com with SMTP id 77so45880893wrb.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2017 18:18:58 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.20.1707122248270.2510@nanos>
+        Thu, 13 Jul 2017 00:54:48 -0400
+In-Reply-To: <CAGAzgspJ1HoT_RsxCv-sGAWGeLw+cLCkN=kMUTika8fBeA2YxA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Linux-pm mailing list <linux-pm@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, x86@kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Linux-pm mailing list <linux-pm@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
 
-On Wed, Jul 12, 2017 at 2:25 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Fri, 7 Jul 2017, Derek Basehore wrote:
->> Adds a new feature to tick to schedule wakeups on a CPU during freeze.
->> This won't fully wake up the system (devices are not resumed), but
->> allow simple platform functionality to be run during freeze with
->> little power impact.
->>
->> This implementation allows an idle driver to setup a timer event with
->> the clock event device when entering freeze by calling
->> tick_set_freeze_event. Only one caller should exist for the function.
->
-> Emphasis on should.
->
->> tick_freeze_event_expired is used to check if the timer went off when
->> the CPU wakes.
->
-> That makes me shudder.
->
->> +/*
->> + * Clockevent device may run during freeze
->> + */
->> +# define CLOCK_EVT_FEAT_FREEZE_NONSTOP       0x000100
->
-> Is that really restricted to freezing?
+Derek,
 
-I'm not going to make the call on what firmware may do when it enters
-suspend. Even if it's not supposed to do anything, it still might.
+On Wed, 12 Jul 2017, dbasehore . wrote:
+> On Wed, Jul 12, 2017 at 2:25 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Fri, 7 Jul 2017, Derek Basehore wrote:
+> >> +/*
+> >> + * Clockevent device may run during freeze
+> >> + */
+> >> +# define CLOCK_EVT_FEAT_FREEZE_NONSTOP       0x000100
+> >
+> > Is that really restricted to freezing?
+> 
+> I'm not going to make the call on what firmware may do when it enters
+> suspend. Even if it's not supposed to do anything, it still might.
 
->
->> +/**
->> + * tick_set_freeze_event - Set timer to wake up the CPU from freeze.
->> + *
->> + * @cpu:     CPU to set the clock event for
->> + * @delta:   time to wait before waking the CPU
->> + *
->> + * Returns 0 on success and -EERROR on failure.
->> + */
->> +int tick_set_freeze_event(int cpu, ktime_t delta)
->> +{
->> +     struct clock_event_device *dev = per_cpu(tick_cpu_device, cpu).evtdev;
->
-> This is fundamentally wrong. If that is invoked for
->
->      cpu != smp_processor_id()
->
-> then everything below is utter crap because you CANNOT access a real per
-> cpu timer of a remote CPU. x86 will silently fiddle on the current CPU and
-> others will create an utter mess or simply crash and burn.
->
-> The only way to use this is w/o the 'cpu' argument and restricted to the
-> clock events device of the CPU on which this is invoked.
->
->> +     u64 delta_ns;
->> +     int ret;
->> +
->> +     if (!dev->set_next_event ||
->
-> We have a feature flag for that.
->
->> +         !(dev->features & CLOCK_EVT_FEAT_FREEZE_NONSTOP)) {
->> +             printk_deferred(KERN_WARNING
->> +                             "[%s] unsupported by clock event device\n",
->> +                             __func__);
->
-> Please get rid of these __func__ uglies. And looking at it, get rid of all
-> of this printk stuff. You have proper return codes, so the call site can
-> act accordingly.
->
->> +             return -EPERM;
->> +     }
->> +
->> +     if (!clockevent_state_shutdown(dev)) {
->
-> What puts the device in shutdown mode when the machine is in freeze state?
+The feature is a description of the hardware capability not of the
+way how it's used by software.
 
-tick_freeze does through timekeeping_suspend or tick_suspend_local
-depending on whether it's the last CPU to freeze or not.
+> >> +     if (!clockevent_state_shutdown(dev)) {
+> >
+> > What puts the device in shutdown mode when the machine is in freeze state?
+> 
+> tick_freeze does through timekeeping_suspend or tick_suspend_local
+> depending on whether it's the last CPU to freeze or not.
 
->
->> +             printk_deferred(KERN_WARNING
->> +                             "[%s] clock event device in use\n",
->> +                             __func__);
->> +             return -EBUSY;
->> +     }
->> +
->> +     delta_ns = ktime_to_ns(delta);
->> +     if (delta_ns > dev->max_delta_ns || delta_ns < dev->min_delta_ns) {
->> +             printk_deferred(KERN_WARNING
->> +                             "[%s] %lluns outside range: [%lluns, %lluns]\n",
->> +                             __func__, delta_ns, dev->min_delta_ns,
->> +                             dev->max_delta_ns);
->> +             return -ERANGE;
->> +     }
->> +
->> +     clockevents_tick_resume(dev);
->
-> That looks wrong as well. What did call suspend on that device?
->
-> I'm not aware that freeze will actually call suspend on anything down deep
-> in the core code. Can you please explain this magic here?
+Ok. I completely forgot about the inner workings of freeze. So this check
+for shutdown actually wants to have a printk, because that's a state which
+is wrong. The nonavailability of oneshot mode is just factual information
+that this is not possible and does not justify dmesg spam.
 
-tick_freeze in tick-common.c calls the tick suspend code.
+> >> +     clockevents_tick_resume(dev);
+> >
+> > That looks wrong as well. What did call suspend on that device?
+> >
+> > I'm not aware that freeze will actually call suspend on anything down deep
+> > in the core code. Can you please explain this magic here?
+> 
+> tick_freeze in tick-common.c calls the tick suspend code.
 
->
->> +     clockevents_switch_state(dev, CLOCK_EVT_STATE_ONESHOT);
->> +     ret = dev->set_next_event((delta_ns * dev->mult) >> dev->shift, dev);
->> +     if (ret < 0) {
->> +             printk_deferred(KERN_WARNING
->> +                             "Failed to program freeze event\n");
->> +             clockevents_shutdown(dev);
->> +     }
->> +     return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(tick_set_freeze_event);
->> +
->> +/**
->> + * tick_freeze_event_expired - Check if the programmed freeze event expired
->> + *
->> + * @cpu:     CPU to check the clock event device for an expired event
->> + *
->> + * Returns 1 if the event expired and 0 otherwise.
->> + */
->> +int tick_freeze_event_expired(int cpu)
->> +{
->> +     struct clock_event_device *dev = per_cpu(tick_cpu_device, cpu).evtdev;
->> +
->> +     if (!(dev && dev->event_expired))
->> +             return 0;
->> +
->> +     return dev->event_expired(dev);
->
-> Same issue vs. the cpu argument as above.
->
->> +}
->> +
->> +/**
->> + * tick_clear_freeze_event - Shuts down the clock device after programming a
->> + * freeze event.
->> + *
->> + * @cpu:     CPU to shutdown the clock device for
->> + *
->> + * Returns 0 on success and -EERROR otherwise.
->> + */
->> +int tick_clear_freeze_event(int cpu)
->> +{
->> +     struct clock_event_device *dev = per_cpu(tick_cpu_device, cpu).evtdev;
->
-> Ditto.
->
->> +     if (!dev)
->> +             return -ENODEV;
->> +
->> +     if (!clockevent_state_oneshot(dev))
->> +             return -EBUSY;
->
-> All of this lacks an explanation how any of this is safe vs. the normal
-> operation of clock event devices and the tick device code.
->
-> This lacks documentation of calling conventions and checks which make sure
-> they are obeyed.
+Fair enough.
 
-If I get rid of passing in the cpu id, the only thing left to check
-seems to be making sure that tick_clear_freeze_event is called on the
-same CPU as tick_set_freeze_event. Am I missing something? I'll add
-Documentation.
+> > All of this lacks an explanation how any of this is safe vs. the normal
+> > operation of clock event devices and the tick device code.
+> >
+> > This lacks documentation of calling conventions and checks which make sure
+> > they are obeyed.
+> 
+> If I get rid of passing in the cpu id, the only thing left to check
+> seems to be making sure that tick_clear_freeze_event is called on the
+> same CPU as tick_set_freeze_event.
 
->
-> Thanks,
->
->         tglx
+Yes, you want to store that information somewhere.
+
+> Am I missing something? I'll add Documentation.
+
+Please make that whole thing depend on a Kconfig option. There is no point
+having the code and the exports there for everyone while it has only a
+single user.
+
+Thanks,
+
+	tglx
