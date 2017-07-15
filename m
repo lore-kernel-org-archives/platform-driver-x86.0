@@ -1,46 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 17/22] platform/x86: alienware-wmi: fix format string
- overflow warning
-Date: Fri, 14 Jul 2017 22:49:44 +0300
-Message-ID: <CAHp75Vfmp8Vh+f9X8tezorOOuMokQSez4r7BTPhhuorHCCBgZg@mail.gmail.com>
-References: <20170714120720.906842-1-arnd@arndb.de> <20170714120720.906842-18-arnd@arndb.de>
- <CAHp75Vd2eZAj++QdGraspjpTX=VPVR6qY+iCZiHsySGvUcGVmQ@mail.gmail.com> <CAK8P3a2dRg9vepvM7mOyg14E4JCd51oJ-ZWzr+au=N+puwWayA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Sat, 15 Jul 2017 14:39:09 +0200
+Message-ID: <7467728.lI8lN4PjS8@aspire.rjw.lan>
+References: <20170708000303.21863-1-dbasehore@chromium.org> <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com> <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2dRg9vepvM7mOyg14E4JCd51oJ-ZWzr+au=N+puwWayA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, Andrew Morton <akpm@linux-foundation.org>, netdev <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, linux-scsi <linux-scsi@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Mario Limonciello <mario.limonciello@dell.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jul 14, 2017 at 10:37 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Fri, Jul 14, 2017 at 9:18 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Fri, Jul 14, 2017 at 3:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->>> gcc points out a possible format string overflow for a large value of 'zone':
+On Thursday, July 13, 2017 03:58:53 PM dbasehore . wrote:
+> On Thu, Jul 13, 2017 at 8:09 AM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > On Thu, Jul 13, 2017 at 9:32 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> >> On Fri, Jul 07, 2017 at 05:03:00PM -0700, Derek Basehore wrote:
+> >>> Adds a new feature to tick to schedule wakeups on a CPU during freeze.
+> >>> This won't fully wake up the system (devices are not resumed), but
+> >>> allow simple platform functionality to be run during freeze with
+> >>> little power impact.
+> >>>
+> >>> This implementation allows an idle driver to setup a timer event with
+> >>> the clock event device when entering freeze by calling
+> >>> tick_set_freeze_event. Only one caller should exist for the function.
+> >>>
+> >>> tick_freeze_event_expired is used to check if the timer went off when
+> >>> the CPU wakes.
+> >>>
+> >>> The event is cleared by tick_clear_freeze_event.
+> >>
+> >> Why? What's wrong with using the RTC stuff? RTC should be able to wake
+> >> suspended systems, see RTCWAKE(8).
+> >
+> > The RTC interrupt is an SCI (on ACPI systems) and we don't handle it
+> > at this point, so we don't know what woke us up until we re-enable
+> > interrupt handlers and run the one for the SCI.
+> 
+> To add to that point, RTC wake ups are valid for fully waking up the
+> system. The clock event wake up wasn't used for waking up the system
+> before, so we know that we don't have to check if it should wake up
+> the system entirely. The way rtc timers work right now, I think that
+> we'd have to go all the way through resume devices to figure out if we
+> should resume to user space or freeze again.
 
->> Here we need to convert
->>
->> int i;
->>
->> to
->>
->> u8 i;
->
-> That was my first impulse, but then I decided not to change the
-> idiomatic 'int i' for the index variable to 'u8' as that would be
-> less idiomatic.
->
->> I will take it after addressing above.
->>
->> P.S. You may do this change across the file.
->
-> How about changing it to 'u8 zone'?
+Actually, that's not exactly the case any more.
 
-I'm ultimately fine with that (just gentle reminder you might fix all
-3 occurrences of it in that driver).
+After some changes that went in for 4.13-rc1 there is an additional decision
+point in the resume path, after the noirq stage, where we can decide to go back
+to sleep if that's the right thing to do.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This means that in principle you might hack the CMOS RTC driver to do something
+more sophisticated than just calling pm_wakeup_hard_event() in rtc_handler().
+
+That's ACPI-specific, but I think you have ACPI on all of the systems where the
+residency counders are going to be checked anyway.
+
+Thanks,
+Rafael
