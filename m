@@ -1,61 +1,64 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
-Date: Sat, 15 Jul 2017 14:39:09 +0200
-Message-ID: <7467728.lI8lN4PjS8@aspire.rjw.lan>
-References: <20170708000303.21863-1-dbasehore@chromium.org> <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com> <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH 3/3] platform/x86: Add Audio domain PG status events
+Date: Mon, 17 Jul 2017 05:18:30 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB462E90061@BGSMSX102.gar.corp.intel.com>
+References: <1500033228-634-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <1500033228-634-3-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "dbasehore ." <dbasehore@chromium.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga04.intel.com ([192.55.52.120]:42243 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751093AbdGQFSe (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 17 Jul 2017 01:18:34 -0400
+In-Reply-To: <1500033228-634-3-git-send-email-rajneesh.bhardwaj@intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
 
-On Thursday, July 13, 2017 03:58:53 PM dbasehore . wrote:
-> On Thu, Jul 13, 2017 at 8:09 AM, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > On Thu, Jul 13, 2017 at 9:32 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> >> On Fri, Jul 07, 2017 at 05:03:00PM -0700, Derek Basehore wrote:
-> >>> Adds a new feature to tick to schedule wakeups on a CPU during freeze.
-> >>> This won't fully wake up the system (devices are not resumed), but
-> >>> allow simple platform functionality to be run during freeze with
-> >>> little power impact.
-> >>>
-> >>> This implementation allows an idle driver to setup a timer event with
-> >>> the clock event device when entering freeze by calling
-> >>> tick_set_freeze_event. Only one caller should exist for the function.
-> >>>
-> >>> tick_freeze_event_expired is used to check if the timer went off when
-> >>> the CPU wakes.
-> >>>
-> >>> The event is cleared by tick_clear_freeze_event.
-> >>
-> >> Why? What's wrong with using the RTC stuff? RTC should be able to wake
-> >> suspended systems, see RTCWAKE(8).
-> >
-> > The RTC interrupt is an SCI (on ACPI systems) and we don't handle it
-> > at this point, so we don't know what woke us up until we re-enable
-> > interrupt handlers and run the one for the SCI.
+
+
+> -----Original Message-----
+> From: Bhardwaj, Rajneesh
+> Sent: Friday, July 14, 2017 5:24 PM
+> To: platform-driver-x86@vger.kernel.org
+> Cc: dvhart@infradead.org; andy@infradead.org; linux-
+> kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
+> Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Bhardwaj,
+> Rajneesh <rajneesh.bhardwaj@intel.com>
+> Subject: [PATCH 3/3] platform/x86: Add Audio domain PG status events
 > 
-> To add to that point, RTC wake ups are valid for fully waking up the
-> system. The clock event wake up wasn't used for waking up the system
-> before, so we know that we don't have to check if it should wake up
-> the system entirely. The way rtc timers work right now, I think that
-> we'd have to go all the way through resume devices to figure out if we
-> should resume to user space or freeze again.
+> From: "Murthy, Shanth" <shanth.murthy@intel.com>
+> 
+> This patch adds events to ioss telemetry to read the power gating status for
+> the audio domain.
+> 
+> Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> ---
+>  arch/x86/include/asm/intel_telemetry.h        | 2 +-
+>  drivers/platform/x86/intel_telemetry_pltdrv.c | 6 ++++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/intel_telemetry.h
+> b/arch/x86/include/asm/intel_telemetry.h
+> index 85029b58d0cd..4eeae0a4f9a2 100644
+> --- a/arch/x86/include/asm/intel_telemetry.h
+> +++ b/arch/x86/include/asm/intel_telemetry.h
+> @@ -17,7 +17,7 @@
+>  #define INTEL_TELEMETRY_H
+> 
+>  #define TELEM_MAX_EVENTS_SRAM		28
+> -#define TELEM_MAX_OS_ALLOCATED_EVENTS	20
+> +#define TELEM_MAX_OS_ALLOCATED_EVENTS	25
 
-Actually, that's not exactly the case any more.
+This is something that should not be done without testing. There was an understanding to not use more than 20 counters in OS, so that tools like SoCWatch could use the rest 8 without total reconfiguration of the events. With this change we are not leaving much for tools and it may break SoCwatch/IMON or other tools dependent on using just 8. 
+The better way for this would be for the userspace tool to configure the extra 5 events via add_config() call and not increase the OS usage ceiling.
 
-After some changes that went in for 4.13-rc1 there is an additional decision
-point in the resume path, after the noirq stage, where we can decide to go back
-to sleep if that's the right thing to do.
+Or you could add some more sysfs apis for get/set events and do it via a daemon/script.
 
-This means that in principle you might hack the CMOS RTC driver to do something
-more sophisticated than just calling pm_wakeup_hard_event() in rtc_handler().
-
-That's ACPI-specific, but I think you have ACPI on all of the systems where the
-residency counders are going to be checked anyway.
-
-Thanks,
-Rafael
+<snip>....
