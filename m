@@ -1,76 +1,36 @@
-From: <sorbisches.internat@t-online.de>
-Subject: (unknown)
-Date: Tue, 18 Jul 2017 06:22:29 -0000
-Message-ID: <150035894918.2738.11462586374268693082@puntonet.ec>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Tue, 18 Jul 2017 08:40:35 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1707180838570.1945@nanos>
+References: <20170708000303.21863-1-dbasehore@chromium.org> <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com> <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com> <7467728.lI8lN4PjS8@aspire.rjw.lan>
+ <CAGAzgsq1c3HdMJ9801uqB+7USK9mqt9xtZTbH=EYv0KDLe+8=A@mail.gmail.com> <CAJZ5v0jaHAExRdwwhJU9p+tDB1ESEXqgfU_DLXev0su3qZaNBA@mail.gmail.com> <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_51153308_platform-driver-x86.zip
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from corp-190-110-208-78.mec.puntonet.ec ([190.110.208.78]:50547
-        "HELO puntonet.ec" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with SMTP id S1750931AbdGRGWd (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jul 2017 02:22:33 -0400
-Subject: 
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
+On Mon, 17 Jul 2017, dbasehore . wrote:
+> On Mon, Jul 17, 2017 at 6:33 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> I could make a patch to try it out. I would probably add a flag to rtc
+> timers to indicate whether it wakes the system (default true). We
+> would have to add a sync with the rtc irq and the rtc irqwork. I would
+> probably add a rtc_timer_sync function that would flush the rtc irq
+> and flush the irqwork. I would call this after the freeze_ops sync
+> function since the sci irq needs to finish before syncing with the rtc
+> irq. Also, pm_wakeup_irq seems racy with the current implementation of
+> s2idle_loop since the RTC irq could be mistakenly set as pm_wakeup_irq
+> when something else actually triggered the full wakeup. Fortunately, I
+> don't think pm_wakeup_irq is used for anything except debugging, but
+> we might change that.
+
+There is another option which you might consider. We can reserve one of the
+HPET comparators for that purpose and have a special interrupt handler for
+it. Checking the HPET for expiry from the low level code should be trivial.
+
+Thanks,
+
+	tglx
