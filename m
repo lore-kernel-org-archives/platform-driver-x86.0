@@ -1,54 +1,44 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] msi-wmi: remove unnecessary static in msi_wmi_notify()
-Date: Tue, 18 Jul 2017 16:49:37 -0500
-Message-ID: <20170718214937.GA27363@embeddedgus>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Tue, 18 Jul 2017 23:53:42 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1707182352340.2425@nanos>
+References: <20170708000303.21863-1-dbasehore@chromium.org> <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com> <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com> <7467728.lI8lN4PjS8@aspire.rjw.lan>
+ <CAGAzgsq1c3HdMJ9801uqB+7USK9mqt9xtZTbH=EYv0KDLe+8=A@mail.gmail.com> <CAJZ5v0jaHAExRdwwhJU9p+tDB1ESEXqgfU_DLXev0su3qZaNBA@mail.gmail.com> <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com> <alpine.DEB.2.20.1707180838570.1945@nanos>
+ <CAGAzgsqwOhTYz9D=XYkMYHBZsmajUH8HJoMOJOe3DfG8WVusRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <CAGAzgsqwOhTYz9D=XYkMYHBZsmajUH8HJoMOJOe3DfG8WVusRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: "dbasehore ." <dbasehore@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Remove unnecessary static on local variable _key_. Such variable is
-initialized before being used, on every execution path throughout
-the function. The static has no benefit and, removing it reduces
-the object file size.
+On Tue, 18 Jul 2017, dbasehore . wrote:
+> On Mon, Jul 17, 2017 at 11:40 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Mon, 17 Jul 2017, dbasehore . wrote:
+> >> On Mon, Jul 17, 2017 at 6:33 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >> I could make a patch to try it out. I would probably add a flag to rtc
+> >> timers to indicate whether it wakes the system (default true). We
+> >> would have to add a sync with the rtc irq and the rtc irqwork. I would
+> >> probably add a rtc_timer_sync function that would flush the rtc irq
+> >> and flush the irqwork. I would call this after the freeze_ops sync
+> >> function since the sci irq needs to finish before syncing with the rtc
+> >> irq. Also, pm_wakeup_irq seems racy with the current implementation of
+> >> s2idle_loop since the RTC irq could be mistakenly set as pm_wakeup_irq
+> >> when something else actually triggered the full wakeup. Fortunately, I
+> >> don't think pm_wakeup_irq is used for anything except debugging, but
+> >> we might change that.
+> >
+> > There is another option which you might consider. We can reserve one of the
+> > HPET comparators for that purpose and have a special interrupt handler for
+> > it. Checking the HPET for expiry from the low level code should be trivial.
+> >
+> Does that handle setting up new timers properly or does the timer sync
+> code still need to be written?
 
-This issue was detected using Coccinelle and the following semantic patch:
-https://github.com/GustavoARSilva/coccinelle/blob/master/static/static_unused.cocci
+Sorry, I don't understand the question. What is timer sync code?
 
-In the following log you can see a significant difference in the object
-file size. Also, there is a significant difference in the bss segment.
-This log is the output of the size command, before and after the code
-change:
+Thanks,
 
-before:
-   text    data     bss     dec     hex filename
-   6530    3736     320   10586    295a drivers/platform/x86/msi-wmi.o
-
-after:
-   text    data     bss     dec     hex filename
-   6494    3648     256   10398    289e drivers/platform/x86/msi-wmi.o
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/platform/x86/msi-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-index f6209b7..6201382 100644
---- a/drivers/platform/x86/msi-wmi.c
-+++ b/drivers/platform/x86/msi-wmi.c
-@@ -184,7 +184,7 @@ static const struct backlight_ops msi_backlight_ops = {
- static void msi_wmi_notify(u32 value, void *context)
- {
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
--	static struct key_entry *key;
-+	struct key_entry *key;
- 	union acpi_object *obj;
- 	acpi_status status;
- 
--- 
-2.5.0
+	tglx
