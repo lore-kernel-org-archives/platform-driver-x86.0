@@ -1,53 +1,64 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ibm_rtl: remove unnecessary static in ibm_rtl_write()
-Date: Tue, 18 Jul 2017 17:01:45 -0500
-Message-ID: <20170718220145.GA11460@embeddedgus>
+From: "dbasehore ." <dbasehore@chromium.org>
+Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
+Date: Tue, 18 Jul 2017 15:03:13 -0700
+Message-ID: <CAGAzgsoqjwK1HPK7jPKhC+YhH7EbVLjbYm+p-UARGmK_hvB=+A@mail.gmail.com>
+References: <20170708000303.21863-1-dbasehore@chromium.org>
+ <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com>
+ <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com>
+ <7467728.lI8lN4PjS8@aspire.rjw.lan> <CAGAzgsq1c3HdMJ9801uqB+7USK9mqt9xtZTbH=EYv0KDLe+8=A@mail.gmail.com>
+ <CAJZ5v0jaHAExRdwwhJU9p+tDB1ESEXqgfU_DLXev0su3qZaNBA@mail.gmail.com>
+ <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com>
+ <alpine.DEB.2.20.1707180838570.1945@nanos> <CAGAzgsqwOhTYz9D=XYkMYHBZsmajUH8HJoMOJOe3DfG8WVusRA@mail.gmail.com>
+ <alpine.DEB.2.20.1707182352340.2425@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f172.google.com ([209.85.128.172]:36306 "EHLO
+        mail-wr0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752482AbdGRWDQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 18 Jul 2017 18:03:16 -0400
+Received: by mail-wr0-f172.google.com with SMTP id y43so48237854wrd.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jul 2017 15:03:15 -0700 (PDT)
+In-Reply-To: <alpine.DEB.2.20.1707182352340.2425@nanos>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
 
-Remove unnecessary static on local variable cmd_port_val. Such variable
-is initialized before being used, on every execution path throughout
-the function. The static has no benefit and, removing it reduces the
-object file size.
+On Tue, Jul 18, 2017 at 2:53 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Tue, 18 Jul 2017, dbasehore . wrote:
+>> On Mon, Jul 17, 2017 at 11:40 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>> > On Mon, 17 Jul 2017, dbasehore . wrote:
+>> >> On Mon, Jul 17, 2017 at 6:33 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>> >> I could make a patch to try it out. I would probably add a flag to rtc
+>> >> timers to indicate whether it wakes the system (default true). We
+>> >> would have to add a sync with the rtc irq and the rtc irqwork. I would
+>> >> probably add a rtc_timer_sync function that would flush the rtc irq
+>> >> and flush the irqwork. I would call this after the freeze_ops sync
+>> >> function since the sci irq needs to finish before syncing with the rtc
+>> >> irq. Also, pm_wakeup_irq seems racy with the current implementation of
+>> >> s2idle_loop since the RTC irq could be mistakenly set as pm_wakeup_irq
+>> >> when something else actually triggered the full wakeup. Fortunately, I
+>> >> don't think pm_wakeup_irq is used for anything except debugging, but
+>> >> we might change that.
+>> >
+>> > There is another option which you might consider. We can reserve one of the
+>> > HPET comparators for that purpose and have a special interrupt handler for
+>> > it. Checking the HPET for expiry from the low level code should be trivial.
+>> >
+>> Does that handle setting up new timers properly or does the timer sync
+>> code still need to be written?
+>
+> Sorry, I don't understand the question. What is timer sync code?
+>
 
-This issue was detected using Coccinelle and the following semantic patch:
-https://github.com/GustavoARSilva/coccinelle/blob/master/static/static_unused.cocci
+Does the comparator allow you to have a completely separate alarm set
+in the hardware? If there's another timer setup (say some user
+specified wake alarm), we need to program that alarm after the current
+one goes off if we aren't able to program multiple alarms at the same
+time.
 
-In the following log you can see a difference in the object file size.
-This log is the output of the size command, before and after the code
-change:
-
-before:
-   text    data     bss     dec     hex filename
-   3932    3440     512    7884    1ecc drivers/platform/x86/ibm_rtl.o
-
-after:
-   text    data     bss     dec     hex filename
-   3887    3384     448    7719    1e27 drivers/platform/x86/ibm_rtl.o
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/platform/x86/ibm_rtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index c62e5e1..610ac83 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -103,7 +103,7 @@ static void rtl_port_unmap(void __iomem *addr)
- static int ibm_rtl_write(u8 value)
- {
- 	int ret = 0, count = 0;
--	static u32 cmd_port_val;
-+	u32 cmd_port_val;
- 
- 	RTL_DEBUG("%s(%d)\n", __func__, value);
- 
--- 
-2.5.0
+> Thanks,
+>
+>         tglx
