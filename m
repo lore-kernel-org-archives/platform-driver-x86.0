@@ -1,36 +1,42 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 2/5] tick: Add freeze timer events
-Date: Tue, 18 Jul 2017 08:40:35 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1707180838570.1945@nanos>
-References: <20170708000303.21863-1-dbasehore@chromium.org> <CAJZ5v0horA+vgR3bAbEu+AiqEFJ7JyZ49nTv6FBPHRvmXOUFpQ@mail.gmail.com> <CAGAzgsoFugSw=UQsJmep0woGg70J3nie0-EtvtQ4Ec1NG1usOg@mail.gmail.com> <7467728.lI8lN4PjS8@aspire.rjw.lan>
- <CAGAzgsq1c3HdMJ9801uqB+7USK9mqt9xtZTbH=EYv0KDLe+8=A@mail.gmail.com> <CAJZ5v0jaHAExRdwwhJU9p+tDB1ESEXqgfU_DLXev0su3qZaNBA@mail.gmail.com> <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] platform/x86: peaq-wmi: silence a static checker warning
+Date: Tue, 18 Jul 2017 12:28:49 +0300
+Message-ID: <20170718092849.nim5tiaycdenfyfz@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGAzgsqhV=e8ZuwA7NtOX_tg+HfQfYGg6oTTTRa2bp-LBOZ54w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "dbasehore ." <dbasehore@chromium.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Zijlstra <peterz@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, the arch/x86 maintainers <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <len.brown@intel.com>, Linux PM <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from userp1040.oracle.com ([156.151.31.81]:20204 "EHLO
+        userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751349AbdGRJ3s (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 18 Jul 2017 05:29:48 -0400
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Mon, 17 Jul 2017, dbasehore . wrote:
-> On Mon, Jul 17, 2017 at 6:33 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> I could make a patch to try it out. I would probably add a flag to rtc
-> timers to indicate whether it wakes the system (default true). We
-> would have to add a sync with the rtc irq and the rtc irqwork. I would
-> probably add a rtc_timer_sync function that would flush the rtc irq
-> and flush the irqwork. I would call this after the freeze_ops sync
-> function since the sci irq needs to finish before syncing with the rtc
-> irq. Also, pm_wakeup_irq seems racy with the current implementation of
-> s2idle_loop since the RTC irq could be mistakenly set as pm_wakeup_irq
-> when something else actually triggered the full wakeup. Fortunately, I
-> don't think pm_wakeup_irq is used for anything except debugging, but
-> we might change that.
+Static checkers complain because:
 
-There is another option which you might consider. We can reserve one of the
-HPET comparators for that purpose and have a special interrupt handler for
-it. Checking the HPET for expiry from the low level code should be trivial.
+	if (peaq_ignore_events_counter && --peaq_ignore_events_counter >= 0)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The second part of the condition is always true because
+"peaq_ignore_events_counter" is unsigned.  It doesn't cause a problem
+because the first part of the condition prevents underflows, but it's
+simple enough to make the static checker happy.
 
-Thanks,
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-	tglx
+diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+index 77d1f90b0794..ab5d5b060587 100644
+--- a/drivers/platform/x86/peaq-wmi.c
++++ b/drivers/platform/x86/peaq-wmi.c
+@@ -20,7 +20,7 @@
+ 
+ MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
+ 
+-static unsigned int peaq_ignore_events_counter;
++static int peaq_ignore_events_counter;
+ static struct input_polled_dev *peaq_poll_dev;
+ 
+ /*
