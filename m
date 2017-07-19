@@ -1,52 +1,71 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: peaq-wmi: silence a static checker warning
-Date: Wed, 19 Jul 2017 21:11:09 +0300
-Message-ID: <CAHp75Vck_T6Fi8qfu5SPUN7t3bdjmOxYRvoenOH4pyRUUSPb7A@mail.gmail.com>
-References: <CAHp75VdSD0zVFtnwF8oWt24P8DM6vZQNO93F_38yaCYBzCCBRw@mail.gmail.com>
- <20170719130718.gcskf2ofko5wv6rw@mwanda>
+Subject: Re: [PATCH] msi-wmi: remove unnecessary static in msi_wmi_notify()
+Date: Wed, 19 Jul 2017 21:11:39 +0300
+Message-ID: <CAHp75VebNSGoHC-dVHsORh1np-RwvmxC1ACqGeGAJ6EqT4m4Ug@mail.gmail.com>
+References: <20170718214937.GA27363@embeddedgus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f68.google.com ([209.85.218.68]:35983 "EHLO
-        mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756025AbdGSSLL (ORCPT
+Received: from mail-oi0-f65.google.com ([209.85.218.65]:32849 "EHLO
+        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756030AbdGSSLl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 Jul 2017 14:11:11 -0400
-In-Reply-To: <20170719130718.gcskf2ofko5wv6rw@mwanda>
+        Wed, 19 Jul 2017 14:11:41 -0400
+In-Reply-To: <20170718214937.GA27363@embeddedgus>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Jul 19, 2017 at 4:07 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> There is a harmless static checker warning here that unsigned values are
-> always >= 0.  The code looks like:
+On Wed, Jul 19, 2017 at 12:49 AM, Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+> Remove unnecessary static on local variable _key_. Such variable is
+> initialized before being used, on every execution path throughout
+> the function. The static has no benefit and, removing it reduces
+> the object file size.
 >
->         if (peaq_ignore_events_counter && --peaq_ignore_events_counter >= 0)
+> This issue was detected using Coccinelle and the following semantic patch:
+> https://github.com/GustavoARSilva/coccinelle/blob/master/static/static_unused.cocci
 >
-> The first part of the condition ensures that we never wrap around so the
-> code works as intended.  I've tweaked it slightly to avoid the warning.
+> In the following log you can see a significant difference in the object
+> file size. Also, there is a significant difference in the bss segment.
+> This log is the output of the size command, before and after the code
+> change:
+>
+> before:
+>    text    data     bss     dec     hex filename
+>    6530    3736     320   10586    295a drivers/platform/x86/msi-wmi.o
+>
+> after:
+>    text    data     bss     dec     hex filename
+>    6494    3648     256   10398    289e drivers/platform/x86/msi-wmi.o
 >
 
 Pushed to testing, thanks.
 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+P.S. Please, use subsystem prefix next time.
+
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
-> v2: Andy Shevchenko's approach is cleaner
+>  drivers/platform/x86/msi-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> index 77d1f90b0794..c68bd76954fd 100644
-> --- a/drivers/platform/x86/peaq-wmi.c
-> +++ b/drivers/platform/x86/peaq-wmi.c
-> @@ -51,7 +51,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
->                 return;
->         }
+> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+> index f6209b7..6201382 100644
+> --- a/drivers/platform/x86/msi-wmi.c
+> +++ b/drivers/platform/x86/msi-wmi.c
+> @@ -184,7 +184,7 @@ static const struct backlight_ops msi_backlight_ops = {
+>  static void msi_wmi_notify(u32 value, void *context)
+>  {
+>         struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+> -       static struct key_entry *key;
+> +       struct key_entry *key;
+>         union acpi_object *obj;
+>         acpi_status status;
 >
-> -       if (peaq_ignore_events_counter && --peaq_ignore_events_counter >= 0)
-> +       if (peaq_ignore_events_counter && peaq_ignore_events_counter--)
->                 return;
+> --
+> 2.5.0
 >
->         if (obj.integer.value) {
 
 
 
