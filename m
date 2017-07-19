@@ -1,74 +1,55 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH 3/3] platform/x86: Add Audio domain PG status events
-Date: Wed, 19 Jul 2017 19:08:25 +0530
-Message-ID: <20170719133825.GA18905@raj-desk1.iind.intel.com>
-References: <1500033228-634-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <1500033228-634-3-git-send-email-rajneesh.bhardwaj@intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB462E90061@BGSMSX102.gar.corp.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: peaq-wmi: silence a static checker warning
+Date: Wed, 19 Jul 2017 21:11:09 +0300
+Message-ID: <CAHp75Vck_T6Fi8qfu5SPUN7t3bdjmOxYRvoenOH4pyRUUSPb7A@mail.gmail.com>
+References: <CAHp75VdSD0zVFtnwF8oWt24P8DM6vZQNO93F_38yaCYBzCCBRw@mail.gmail.com>
+ <20170719130718.gcskf2ofko5wv6rw@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB462E90061@BGSMSX102.gar.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f68.google.com ([209.85.218.68]:35983 "EHLO
+        mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756025AbdGSSLL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 19 Jul 2017 14:11:11 -0400
+In-Reply-To: <20170719130718.gcskf2ofko5wv6rw@mwanda>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 10:48:30AM +0530, Chakravarty, Souvik K wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Bhardwaj, Rajneesh
-> > Sent: Friday, July 14, 2017 5:24 PM
-> > To: platform-driver-x86@vger.kernel.org
-> > Cc: dvhart@infradead.org; andy@infradead.org; linux-
-> > kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
-> > Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Bhardwaj,
-> > Rajneesh <rajneesh.bhardwaj@intel.com>
-> > Subject: [PATCH 3/3] platform/x86: Add Audio domain PG status events
-> > 
-> > From: "Murthy, Shanth" <shanth.murthy@intel.com>
-> > 
-> > This patch adds events to ioss telemetry to read the power gating status for
-> > the audio domain.
-> > 
-> > Signed-off-by: Shanth Murthy <shanth.murthy@intel.com>
-> > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > ---
-> >  arch/x86/include/asm/intel_telemetry.h        | 2 +-
-> >  drivers/platform/x86/intel_telemetry_pltdrv.c | 6 ++++++
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/include/asm/intel_telemetry.h
-> > b/arch/x86/include/asm/intel_telemetry.h
-> > index 85029b58d0cd..4eeae0a4f9a2 100644
-> > --- a/arch/x86/include/asm/intel_telemetry.h
-> > +++ b/arch/x86/include/asm/intel_telemetry.h
-> > @@ -17,7 +17,7 @@
-> >  #define INTEL_TELEMETRY_H
-> > 
-> >  #define TELEM_MAX_EVENTS_SRAM		28
-> > -#define TELEM_MAX_OS_ALLOCATED_EVENTS	20
-> > +#define TELEM_MAX_OS_ALLOCATED_EVENTS	25
-> 
-> This is something that should not be done without testing. There was an understanding to not use more than 20 counters in OS, so that tools like SoCWatch could use the rest 8 without total reconfiguration of the events. With this change we are not leaving much for tools and it may break SoCwatch/IMON or other tools dependent on using just 8. 
-> The better way for this would be for the userspace tool to configure the extra 5 events via add_config() call and not increase the OS usage ceiling.
-> 
-> Or you could add some more sysfs apis for get/set events and do it via a daemon/script.
-> 
-> <snip>....
+On Wed, Jul 19, 2017 at 4:07 PM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> There is a harmless static checker warning here that unsigned values are
+> always >= 0.  The code looks like:
+>
+>         if (peaq_ignore_events_counter && --peaq_ignore_events_counter >= 0)
+>
+> The first part of the condition ensures that we never wrap around so the
+> code works as intended.  I've tweaked it slightly to avoid the warning.
+>
 
-Thanks for the review and the feedback Souvik. Ideally user space tools
-should not put a restriction such as this one. It would be good to document
-such details.
+Pushed to testing, thanks.
 
-Is there a plan to support more than 20 events in telemetry driver? If not
-then we can probably think of removing few events and add audio related
-events maintaining total count of 20?
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> v2: Andy Shevchenko's approach is cleaner
+>
+> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+> index 77d1f90b0794..c68bd76954fd 100644
+> --- a/drivers/platform/x86/peaq-wmi.c
+> +++ b/drivers/platform/x86/peaq-wmi.c
+> @@ -51,7 +51,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
+>                 return;
+>         }
+>
+> -       if (peaq_ignore_events_counter && --peaq_ignore_events_counter >= 0)
+> +       if (peaq_ignore_events_counter && peaq_ignore_events_counter--)
+>                 return;
+>
+>         if (obj.integer.value) {
 
-For now i will respin the patches and drop this one. 
+
 
 -- 
-Best Regards,
-Rajneesh
+With Best Regards,
+Andy Shevchenko
