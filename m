@@ -1,41 +1,118 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 1/2] platform/x86: peaq-wmi: select INPUT_POLLDEV
-Date: Thu, 20 Jul 2017 18:00:50 +0200
-Message-ID: <20170720160114.3261176-1-arnd@arndb.de>
+Subject: [PATCH 2/2] platform/x86: alienware-wmi: fix format string overflow warning
+Date: Thu, 20 Jul 2017 18:00:51 +0200
+Message-ID: <20170720160114.3261176-2-arnd@arndb.de>
+References: <20170720160114.3261176-1-arnd@arndb.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170720160114.3261176-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The new driver fails to build without INPUT_POLLDEV
+gcc points out a possible format string overflow for a large value of 'zone':
 
-drivers/platform/x86/peaq-wmi.o: In function `peaq_wmi_exit':
-peaq-wmi.c:(.exit.text+0x1c): undefined reference to `input_unregister_polled_device'
-drivers/platform/x86/peaq-wmi.o: In function `peaq_wmi_init':
-peaq-wmi.c:(.init.text+0x23): undefined reference to `input_allocate_polled_device'
-peaq-wmi.c:(.init.text+0x18e): undefined reference to `input_register_polled_device'
+drivers/platform/x86/alienware-wmi.c: In function 'alienware_wmi_init':
+drivers/platform/x86/alienware-wmi.c:461:24: error: '%02X' directive writing between 2 and 8 bytes into a region of size 6 [-Werror=format-overflow=]
+   sprintf(buffer, "zone%02X", i);
+                        ^~~~
+drivers/platform/x86/alienware-wmi.c:461:19: note: directive argument in the range [0, 2147483646]
+   sprintf(buffer, "zone%02X", i);
+                   ^~~~~~~~~~
+drivers/platform/x86/alienware-wmi.c:461:3: note: 'sprintf' output between 7 and 13 bytes into a destination of size 10
 
-For some reason, all other drivers that need this use 'select'
-here rather than 'depends on', so I'm doing the same.
+This replaces the 'int' variable with an 'u8' to make sure
+it always fits, renaming the variable to 'zone' for clarity.
 
-Fixes: 13bb0fd5519d ("platform/x86: peaq-wmi: Add new peaq-wmi driver")
+Unfortunately, gcc-7.1.1 still warns about it with that change, which
+seems to be unintended by the gcc developers. I have opened a bug
+against gcc with a reduced test case. As a workaround, I also
+change the format string to use "%02hhX", which shuts up the
+warning in that version.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81483
+Link: https://patchwork.ozlabs.org/patch/788415/
+Suggested-by: Andy Shevchenko <andy@infradead.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+v2: completely rewrite the patch after discussing with Andy
+---
+ drivers/platform/x86/alienware-wmi.c | 38 ++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2b209f5d42ff..d9238e9ff54a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -672,6 +672,7 @@ config PEAQ_WMI
- 	tristate "PEAQ 2-in-1 WMI hotkey driver"
- 	depends on ACPI_WMI
- 	depends on INPUT
-+	select INPUT_POLLDEV
- 	help
- 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index 0831b428c217..c56a9ecba959 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -255,12 +255,12 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
  
+ static struct platform_zone *match_zone(struct device_attribute *attr)
+ {
+-	int i;
+-	for (i = 0; i < quirks->num_zones; i++) {
+-		if ((struct device_attribute *)zone_data[i].attr == attr) {
++	u8 zone;
++	for (zone = 0; zone < quirks->num_zones; zone++) {
++		if ((struct device_attribute *)zone_data[zone].attr == attr) {
+ 			pr_debug("alienware-wmi: matched zone location: %d\n",
+-				 zone_data[i].location);
+-			return &zone_data[i];
++				 zone_data[zone].location);
++			return &zone_data[zone];
+ 		}
+ 	}
+ 	return NULL;
+@@ -420,7 +420,7 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
+ 
+ static int alienware_zone_init(struct platform_device *dev)
+ {
+-	int i;
++	u8 zone;
+ 	char buffer[10];
+ 	char *name;
+ 
+@@ -457,19 +457,19 @@ static int alienware_zone_init(struct platform_device *dev)
+ 	if (!zone_data)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < quirks->num_zones; i++) {
+-		sprintf(buffer, "zone%02X", i);
++	for (zone = 0; zone < quirks->num_zones; zone++) {
++		sprintf(buffer, "zone%02hhX", zone);
+ 		name = kstrdup(buffer, GFP_KERNEL);
+ 		if (name == NULL)
+ 			return 1;
+-		sysfs_attr_init(&zone_dev_attrs[i].attr);
+-		zone_dev_attrs[i].attr.name = name;
+-		zone_dev_attrs[i].attr.mode = 0644;
+-		zone_dev_attrs[i].show = zone_show;
+-		zone_dev_attrs[i].store = zone_set;
+-		zone_data[i].location = i;
+-		zone_attrs[i] = &zone_dev_attrs[i].attr;
+-		zone_data[i].attr = &zone_dev_attrs[i];
++		sysfs_attr_init(&zone_dev_attrs[zone].attr);
++		zone_dev_attrs[zone].attr.name = name;
++		zone_dev_attrs[zone].attr.mode = 0644;
++		zone_dev_attrs[zone].show = zone_show;
++		zone_dev_attrs[zone].store = zone_set;
++		zone_data[zone].location = zone;
++		zone_attrs[zone] = &zone_dev_attrs[zone].attr;
++		zone_data[zone].attr = &zone_dev_attrs[zone];
+ 	}
+ 	zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
+ 	zone_attribute_group.attrs = zone_attrs;
+@@ -484,9 +484,9 @@ static void alienware_zone_exit(struct platform_device *dev)
+ 	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
+ 	led_classdev_unregister(&global_led);
+ 	if (zone_dev_attrs) {
+-		int i;
+-		for (i = 0; i < quirks->num_zones; i++)
+-			kfree(zone_dev_attrs[i].attr.name);
++		u8 zone;
++		for (zone = 0; zone < quirks->num_zones; zone++)
++			kfree(zone_dev_attrs[zone].attr.name);
+ 	}
+ 	kfree(zone_dev_attrs);
+ 	kfree(zone_data);
 -- 
 2.9.0
