@@ -1,73 +1,39 @@
-From: <tbinh.minhnd@yahoo.com>
-Subject: (unknown)
-Date: Thu, 20 Jul 2017 18:43:39 -0000
-Message-ID: <150057621981.17375.13443225051971644240@perm.ru>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/3] platform/x86: Add GLK PSS Event Table
+Date: Thu, 20 Jul 2017 14:06:27 -0700
+Message-ID: <20170720210627.GC16076@fury>
+References: <1500033228-634-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <5F7315E704FA0841B5DFCE90329B2BB462E9006C@BGSMSX102.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="145050548450.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from homeuser77.43.164.249.ccl.perm.ru ([77.43.164.249]:35519 "HELO
-        perm.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S932226AbdGTSnt (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:34501 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935477AbdGTVGa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jul 2017 14:43:49 -0400
-Subject: 
-Content-Disposition: attachment
+        Thu, 20 Jul 2017 17:06:30 -0400
+Content-Disposition: inline
+In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB462E9006C@BGSMSX102.gar.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Cc: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
 
-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
-AABdCwAAAAA=
+On Mon, Jul 17, 2017 at 05:18:54AM +0000, Chakravarty, Souvik K wrote:
+> +1 From me.
+
+Souvik, as the listed maintainer for this driver, what I require from
+you is a complete Acked-by or a Reviewed-by line, preferably the latter,
+and preferably after an actual review with comments. +1 has no semantic
+meaning in the Linux kernel development process, and one line approvals,
+especially from the same company, have little incremental value.
+
+For details, please see:
+Documentation/process/5.Posting.rst
+Documentation/submitting-patches.rst
+
+Thanks,
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
