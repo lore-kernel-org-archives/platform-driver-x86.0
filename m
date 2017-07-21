@@ -1,13 +1,13 @@
 From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages for normal users
-Date: Thu, 20 Jul 2017 20:56:48 -0700
-Message-ID: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
+Subject: [PATCH] platform/x86: intel-hid: reduce unnecessary messages for normal users
+Date: Thu, 20 Jul 2017 20:58:08 -0700
+Message-ID: <1500609488-30813-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:44333 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:44399 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750860AbdGUD46 (ORCPT
+        with ESMTP id S1755028AbdGUD6M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jul 2017 23:56:58 -0400
+        Thu, 20 Jul 2017 23:58:12 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, rjw@rjwysocki.net
@@ -18,21 +18,30 @@ messages.
 
 Signed-off-by: Alex Hung <alex.hung@canonical.com>
 ---
- drivers/platform/x86/intel-vbtn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel-hid.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 61f1063..10f92ac 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -83,7 +83,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	} else if (sparse_keymap_report_event(priv->input_dev, event, 1, true)) {
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 8519e0f..4f70b82 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -219,7 +219,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	if (event != 0xc0) {
+ 		if (!priv->array ||
+ 		    !sparse_keymap_report_event(priv->array, event, 1, true))
+-			dev_info(&device->dev, "unknown event 0x%x\n", event);
++			dev_dbg(&device->dev, "unknown event 0x%x\n", event);
  		return;
  	}
--	dev_info(&device->dev, "unknown event index 0x%x\n", event);
-+	dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+ 
+@@ -230,7 +230,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	}
+ 
+ 	if (!sparse_keymap_report_event(priv->input_dev, ev_index, 1, true))
+-		dev_info(&device->dev, "unknown event index 0x%llx\n",
++		dev_dbg(&device->dev, "unknown event index 0x%llx\n",
+ 			 ev_index);
  }
  
- static int intel_vbtn_probe(struct platform_device *device)
 -- 
 2.7.4
