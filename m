@@ -1,38 +1,40 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/3] platform/x86: Add GLK PSS Event Table
-Date: Thu, 20 Jul 2017 14:06:27 -0700
-Message-ID: <20170720210627.GC16076@fury>
-References: <1500033228-634-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB462E9006C@BGSMSX102.gar.corp.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86: peaq-wmi: select INPUT_POLLDEV
+Date: Thu, 20 Jul 2017 17:02:42 -0700
+Message-ID: <20170721000242.GD16076@fury>
+References: <20170720160114.3261176-1-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:34501 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:53494 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S935477AbdGTVGa (ORCPT
+        with ESMTP id S964851AbdGUACq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jul 2017 17:06:30 -0400
+        Thu, 20 Jul 2017 20:02:46 -0400
 Content-Disposition: inline
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB462E9006C@BGSMSX102.gar.corp.intel.com>
+In-Reply-To: <20170720160114.3261176-1-arnd@arndb.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Cc: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 05:18:54AM +0000, Chakravarty, Souvik K wrote:
-> +1 From me.
+On Thu, Jul 20, 2017 at 06:00:50PM +0200, Arnd Bergmann wrote:
+> The new driver fails to build without INPUT_POLLDEV
+> 
+> drivers/platform/x86/peaq-wmi.o: In function `peaq_wmi_exit':
+> peaq-wmi.c:(.exit.text+0x1c): undefined reference to `input_unregister_polled_device'
+> drivers/platform/x86/peaq-wmi.o: In function `peaq_wmi_init':
+> peaq-wmi.c:(.init.text+0x23): undefined reference to `input_allocate_polled_device'
+> peaq-wmi.c:(.init.text+0x18e): undefined reference to `input_register_polled_device'
+> 
+> For some reason, all other drivers that need this use 'select'
+> here rather than 'depends on', so I'm doing the same.
+> 
+> Fixes: 13bb0fd5519d ("platform/x86: peaq-wmi: Add new peaq-wmi driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Souvik, as the listed maintainer for this driver, what I require from
-you is a complete Acked-by or a Reviewed-by line, preferably the latter,
-and preferably after an actual review with comments. +1 has no semantic
-meaning in the Linux kernel development process, and one line approvals,
-especially from the same company, have little incremental value.
-
-For details, please see:
-Documentation/process/5.Posting.rst
-Documentation/submitting-patches.rst
-
-Thanks,
+Queued to fixes branch for 4.13-rcX. I'll leave patch 2/2 to andy since you
+worked that one together already.
 
 -- 
 Darren Hart
