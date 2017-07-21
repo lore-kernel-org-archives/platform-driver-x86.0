@@ -1,64 +1,32 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-hid: reduce unnecessary messages for
- normal users
-Date: Fri, 21 Jul 2017 16:17:03 -0700
-Message-ID: <20170721231703.GC7888@fury>
-References: <1500609488-30813-1-git-send-email-alex.hung@canonical.com>
+Subject: Re: [PATCH] platform/x86: wmi: Fix error handling in acpi_wmi_init()
+Date: Fri, 21 Jul 2017 16:43:01 -0700
+Message-ID: <20170721234301.GD7888@fury>
+References: <1500673686-32577-1-git-send-email-khoroshilov@ispras.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:40272 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:52173 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753111AbdGUXRF (ORCPT
+        with ESMTP id S1753502AbdGUXnE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Jul 2017 19:17:05 -0400
+        Fri, 21 Jul 2017 19:43:04 -0400
 Content-Disposition: inline
-In-Reply-To: <1500609488-30813-1-git-send-email-alex.hung@canonical.com>
+In-Reply-To: <1500673686-32577-1-git-send-email-khoroshilov@ispras.ru>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net
+To: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
 
-On Thu, Jul 20, 2017 at 08:58:08PM -0700, Alex Hung wrote:
-> Unsupported events is only useful for developers and does not meaningful
-> for users. Using dev_dbg makes more sense and reduces noise in kernel
-> messages.
+On Sat, Jul 22, 2017 at 12:48:06AM +0300, Alexey Khoroshilov wrote:
+> The order of resource deallocations is messed up in acpi_wmi_init().
+> It should be vice versa.
+> 
+> Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
 
-Similar thoughts here as to intel-vbtn. Let's discuss on that thread and apply
-the same decision here.
-
-> 
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> ---
->  drivers/platform/x86/intel-hid.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index 8519e0f..4f70b82 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -219,7 +219,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	if (event != 0xc0) {
->  		if (!priv->array ||
->  		    !sparse_keymap_report_event(priv->array, event, 1, true))
-> -			dev_info(&device->dev, "unknown event 0x%x\n", event);
-> +			dev_dbg(&device->dev, "unknown event 0x%x\n", event);
->  		return;
->  	}
->  
-> @@ -230,7 +230,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	}
->  
->  	if (!sparse_keymap_report_event(priv->input_dev, ev_index, 1, true))
-> -		dev_info(&device->dev, "unknown event index 0x%llx\n",
-> +		dev_dbg(&device->dev, "unknown event index 0x%llx\n",
->  			 ev_index);
->  }
->  
-> -- 
-> 2.7.4
-> 
-> 
+Eeek. Thank you. Applied to fixes for 4.13.X.
 
 -- 
 Darren Hart
