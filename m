@@ -1,64 +1,70 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages for normal users
-Date: Sat, 22 Jul 2017 23:51:44 +0200
-Message-ID: <1932733.PdyNOSXbJ3@aspire.rjw.lan>
-References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com> <20170721231620.GB7888@fury>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: Kernel error messages: leds fujitsu::radio_led: Setting an LED's
+ brightness failed
+Date: Sun, 23 Jul 2017 15:44:20 +0930
+Message-ID: <20170723061420.GA32194@marvin.atrad.com.au>
+References: <fede7169-e944-3ca8-8b8d-e17a95b8dcfe@gmx.de>
+ <20170720064257.GA4942@larwa.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.net.pl ([79.96.170.134]:52529 "EHLO
-        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750921AbdGVV7k (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:43658 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751814AbdGWGOp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 22 Jul 2017 17:59:40 -0400
-In-Reply-To: <20170721231620.GB7888@fury>
+        Sun, 23 Jul 2017 02:14:45 -0400
+Content-Disposition: inline
+In-Reply-To: <20170720064257.GA4942@larwa.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Alex Hung <alex.hung@canonical.com>, andy@infradead.org, platform-driver-x86@vger.kernel.org
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Harvey <harv@gmx.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Friday, July 21, 2017 04:16:20 PM Darren Hart wrote:
-> On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
-> > Unsupported events is only useful for developers and does not meaningful
-> > for users. Using dev_dbg makes more sense and reduces noise in kernel
-> > messages.
+Hi Michal
+
+On Thu, Jul 20, 2017 at 08:42:57AM +0200, Micha?? K??pie?? wrote:
+> > I found your mail address in https://patchwork.kernel.org/patch/8598801/
+> > and it seems you are somehow involved in the improvement for
+> > fujitsu-laptop LED handling. If this does not 'belong' to you, maybe you
+> > can point me in the right direction where to report the issue.
+> 
+> No worries, that is fine, though I have CCed Jonathan Woithe, who is the
+> maintainer of fujitsu-laptop, and both the platform-driver-x86 mailing
+> list and LKML (both are open lists).
+
+This is mainly to acknowledge that I have read this email.  Since my Fujitsu
+does not have any LEDs I do not have any direct experience with their use
+within the driver.  The existing LED code was contributed by others and
+recently modified by Michal's patches as part of a broader tidy up of the
+driver.  I'm more than happy for Michal to take the lead in investigating
+this since I think he has a Fujitsu with LEDs.
+
+> > I am using archlinux and as of kernel
+> > 4.11 (IIRC) there has appeared an error message in the journalctl log
+> > saying:
 > > 
-> > Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> > ---
-> >  drivers/platform/x86/intel-vbtn.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > kernel: leds fujitsu::radio_led: Setting an LED's brightness failed
+> > (-2147483648)
 > > 
-> > diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> > index 61f1063..10f92ac 100644
-> > --- a/drivers/platform/x86/intel-vbtn.c
-> > +++ b/drivers/platform/x86/intel-vbtn.c
-> > @@ -83,7 +83,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
-> >  	} else if (sparse_keymap_report_event(priv->input_dev, event, 1, true)) {
-> >  		return;
-> >  	}
-> > -	dev_info(&device->dev, "unknown event index 0x%x\n", event);
-> > +	dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> > This appears for several times:
+> > 
+> > harvey@gruenix ~/Documents/scripts $ sudo journalctl -b | grep radio_led
+> > 725:Jul 14 12:29:37 gruenix kernel: leds fujitsu::radio_led: Setting an
+> > LED's brightness failed (-2147483648)
+> :
+> 4.11 included a patch which sets the default trigger for the radio LED
+> to rfkill-any, which would explain why you only started seeing these
+> errors after upgrading to that version.  See also below.
 > 
-> info is the most common log level for these events in the platform
-> driver x86 subsystem per 'git grep -i "unknown event"'.
+> > Some of the LEDs are not working under linux, especially the bluetooth
+> > one
 > 
-> My take on this is that we want these to be reported by users,
+> Where is the Bluetooth LED located?  I cannot see it.  Can you show it
+> on a photo?  How does it behave under other operating systems?
 
-Well, for what purpose?
+Also, how did these LEDs behave under earlier Linux kernel versions?  In
+other words, is the non-functionality of these LEDs a regression in 4.11, or
+have they never worked on your laptop?
 
-> rather than rely on developers to find them all - especially as the
-> developers only see a fraction of the affected hardware.
-> 
-> Are you finding these to be causing a problem / or producing really
-> excessive log messages?
-
-These messages suggest that there's something wrong while it may just be
-events that we really don't care about.
-
-I'd rather want users to report missing functionality or things not working as
-expected than silly messages in the log that may just be meaningless in
-practice.
-
-Thanks,
-Rafael
+Regards
+  jonathan
