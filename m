@@ -1,104 +1,71 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] Telemetry: remove redundant macro definition
-Date: Mon, 24 Jul 2017 12:24:32 +0300
-Message-ID: <CAHp75VdV8o9-adsf7tpSs9BtYe8=MH2yHyQVbskbKm9_2q8XBA@mail.gmail.com>
-References: <1500560474-24268-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <1500560474-24268-2-git-send-email-rajneesh.bhardwaj@intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB462E90E8A@BGSMSX102.gar.corp.intel.com> <20170721230243.GA7888@fury>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages for normal users
+Date: Mon, 24 Jul 2017 13:41:06 +0200
+Message-ID: <4940915.tsQAtH0l4E@aspire.rjw.lan>
+References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com> <20170721231620.GB7888@fury> <CAHp75VfCht3djwme6HzrSNzkQ4vCYEwbB_kBM6fYL8L-KBu5Og@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f65.google.com ([209.85.218.65]:33595 "EHLO
-        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751403AbdGXJYd (ORCPT
+Received: from cloudserver094114.home.net.pl ([79.96.170.134]:64237 "EHLO
+        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751895AbdGXLtD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Jul 2017 05:24:33 -0400
-In-Reply-To: <20170721230243.GA7888@fury>
+        Mon, 24 Jul 2017 07:49:03 -0400
+In-Reply-To: <CAHp75VfCht3djwme6HzrSNzkQ4vCYEwbB_kBM6fYL8L-KBu5Og@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Sat, Jul 22, 2017 at 2:02 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Fri, Jul 21, 2017 at 03:29:39AM +0000, Chakravarty, Souvik K wrote:
->> Just missed the email from Darren.
->
-> :-)
->
->> Reviewed-by: Souvik K Chakravarty <souvik.k.chakravarty@intel.com>
->
-> Thank you Souvik.
->
-> While these one liners are OK for trivial changes like this, please note that
-> Andy and I depend on individual driver maintainers to provide thorough reviews,
-> and it helps to document that review to help us understand what sorts of things
-> you considered before approving the patch. Please keep this in mind in the
-> future for more complex changes.
->
-> This set is on Andy's queue, so the final review/follow-up will come from him.
->
+On Monday, July 24, 2017 12:19:25 PM Andy Shevchenko wrote:
+> On Sat, Jul 22, 2017 at 2:16 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
+> >> Unsupported events is only useful for developers and does not meaningful
+> >> for users. Using dev_dbg makes more sense and reduces noise in kernel
+> >> messages.
+> 
+> >> -     dev_info(&device->dev, "unknown event index 0x%x\n", event);
+> >> +     dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> >
+> > info is the most common log level for these events in the platform
+> > driver x86 subsystem per 'git grep -i "unknown event"'.
+> >
+> > My take on this is that we want these to be reported by users, rather
+> > than rely on developers to find them all - especially as the developers
+> > only see a fraction of the affected hardware.
+> >
+> > Are you finding these to be causing a problem / or producing really
+> > excessive log messages?
+> >
+> > Andy, what are your thoughts?
+> 
+> My opinion is slightly closer to Rafael's one.
+> 
+> I think this is a debugging context.
+> 
+> If we really care about reporting them we might go HID way, i.e. using
+> dev_printk(KERN_DEBUG ) with module parameter debug.
+> 
+> As developer I'm against that.
+> As a regular user I do not need to recompile a kernel, in case there
+> is no dynamic debug support, and it allows me to enable debug
+> messages.
+> 
+> P.S. To see how important message above is, do we have any statistics
+> how many bug reports / email we got wrt the issue and how many had
+> been addressed?
 
-Pushed both to testing, thanks!
+Well, there is one I'm aware of, but this particular one we aren't going to
+address at all, because apparently we handle the event in question anyway
+in a different way.
 
-> Thanks,
->
->>
->> > -----Original Message-----
->> > From: Chakravarty, Souvik K
->> > Sent: Friday, July 21, 2017 8:45 AM
->> > To: 'Rajneesh Bhardwaj' <rajneesh.bhardwaj@intel.com>; platform-driver-
->> > x86@vger.kernel.org
->> > Cc: dvhart@infradead.org; andy@infradead.org; linux-
->> > kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
->> > Bhardwaj, Rajneesh <rajneesh.bhardwaj@intel.com>
->> > Subject: RE: [PATCH v2 2/2] Telemetry: remove redundant macro definition
->> >
->> > Both set of two looks good. +1.
->> >
->> > > -----Original Message-----
->> > > From: platform-driver-x86-owner@vger.kernel.org
->> > > [mailto:platform-driver- x86-owner@vger.kernel.org] On Behalf Of
->> > > Rajneesh Bhardwaj
->> > > Sent: Thursday, July 20, 2017 7:51 PM
->> > > To: platform-driver-x86@vger.kernel.org
->> > > Cc: dvhart@infradead.org; andy@infradead.org; linux-
->> > > kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
->> > > Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Bhardwaj,
->> > > Rajneesh <rajneesh.bhardwaj@intel.com>
->> > > Subject: [PATCH v2 2/2] Telemetry: remove redundant macro definition
->> > >
->> > > Telemetry driver includes intel_telemetry.h which defines
->> > > TELEM_MAX_OS_ALLOCATED_EVENTS already.
->> > >
->> > > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
->> > > ---
->> > >  drivers/platform/x86/intel_telemetry_pltdrv.c | 1 -
->> > >  1 file changed, 1 deletion(-)
->> > >
->> > > diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c
->> > > b/drivers/platform/x86/intel_telemetry_pltdrv.c
->> > > index 6393b3b1d5a6..e0424d5a795a 100644
->> > > --- a/drivers/platform/x86/intel_telemetry_pltdrv.c
->> > > +++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
->> > > @@ -46,7 +46,6 @@
->> > >  #define TELEM_SAMPLING_DEFAULT_PERIOD    0xD
->> > >
->> > >  #define TELEM_MAX_EVENTS_SRAM            28
->> > > -#define TELEM_MAX_OS_ALLOCATED_EVENTS    20
->> > >  #define TELEM_SSRAM_STARTTIME_OFFSET     8
->> > >  #define TELEM_SSRAM_EVTLOG_OFFSET        16
->> > >
->> > > --
->> > > 2.7.4
->>
->>
->
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+In any case, the only situation in which this information is useful at all is
+when some functionality is missing and you want to find out why.
 
+Otherwise you get messages telling you that something *may* *be* missing,
+but as a user you have no idea what to do about that, because you don't
+even know how to report it and to whom (in case you want to report it).
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Rafael
