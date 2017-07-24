@@ -1,39 +1,62 @@
-From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 38/45] platform/x86: toshiba_acpi: drop assignment of iio_info.driver_module
-Date: Sun, 23 Jul 2017 17:26:20 +0100
-Message-ID: <20170723162627.22534-39-Jonathan.Cameron@huawei.com>
-References: <20170723162627.22534-1-Jonathan.Cameron@huawei.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170723162627.22534-1-Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages for
+ normal users
+Date: Mon, 24 Jul 2017 12:19:25 +0300
+Message-ID: <CAHp75VfCht3djwme6HzrSNzkQ4vCYEwbB_kBM6fYL8L-KBu5Og@mail.gmail.com>
+References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com> <20170721231620.GB7888@fury>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f65.google.com ([209.85.218.65]:36775 "EHLO
+        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751403AbdGXJT1 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 24 Jul 2017 05:19:27 -0400
+Received: by mail-oi0-f65.google.com with SMTP id m65so5578284oik.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jul 2017 02:19:27 -0700 (PDT)
+In-Reply-To: <20170721231620.GB7888@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Sat, Jul 22, 2017 at 2:16 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
+>> Unsupported events is only useful for developers and does not meaningful
+>> for users. Using dev_dbg makes more sense and reduces noise in kernel
+>> messages.
 
-This is now handled by use of a macro for device registration.  The field
-in iio_info will be going away shortly as it is no longer used.
+>> -     dev_info(&device->dev, "unknown event index 0x%x\n", event);
+>> +     dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+>
+> info is the most common log level for these events in the platform
+> driver x86 subsystem per 'git grep -i "unknown event"'.
+>
+> My take on this is that we want these to be reported by users, rather
+> than rely on developers to find them all - especially as the developers
+> only see a fraction of the affected hardware.
+>
+> Are you finding these to be causing a problem / or producing really
+> excessive log messages?
+>
+> Andy, what are your thoughts?
 
-Cc: <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Acked-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/platform/x86/toshiba_acpi.c | 1 -
- 1 file changed, 1 deletion(-)
+My opinion is slightly closer to Rafael's one.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index d0daf75cbed1..ef4301f41727 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2515,7 +2515,6 @@ static const struct iio_chan_spec toshiba_iio_accel_channels[] = {
- };
- 
- static const struct iio_info toshiba_iio_accel_info = {
--	.driver_module = THIS_MODULE,
- 	.read_raw = &toshiba_iio_accel_read_raw,
- };
- 
+I think this is a debugging context.
+
+If we really care about reporting them we might go HID way, i.e. using
+dev_printk(KERN_DEBUG ) with module parameter debug.
+
+As developer I'm against that.
+As a regular user I do not need to recompile a kernel, in case there
+is no dynamic debug support, and it allows me to enable debug
+messages.
+
+P.S. To see how important message above is, do we have any statistics
+how many bug reports / email we got wrt the issue and how many had
+been addressed?
+
 -- 
-2.13.3
+With Best Regards,
+Andy Shevchenko
