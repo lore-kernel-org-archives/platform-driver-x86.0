@@ -1,137 +1,101 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: alienware-wmi: fix format string
- overflow warning
-Date: Mon, 24 Jul 2017 12:22:55 +0300
-Message-ID: <CAHp75VcEaqoESA_JPtV28E4emE5JTzd4t2SVLxYcn=spFzhBmA@mail.gmail.com>
-References: <20170720160114.3261176-1-arnd@arndb.de> <20170720160114.3261176-2-arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] Telemetry: remove redundant macro definition
+Date: Mon, 24 Jul 2017 12:24:32 +0300
+Message-ID: <CAHp75VdV8o9-adsf7tpSs9BtYe8=MH2yHyQVbskbKm9_2q8XBA@mail.gmail.com>
+References: <1500560474-24268-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <1500560474-24268-2-git-send-email-rajneesh.bhardwaj@intel.com>
+ <5F7315E704FA0841B5DFCE90329B2BB462E90E8A@BGSMSX102.gar.corp.intel.com> <20170721230243.GA7888@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f66.google.com ([209.85.218.66]:37801 "EHLO
-        mail-oi0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751671AbdGXJW4 (ORCPT
+Received: from mail-oi0-f65.google.com ([209.85.218.65]:33595 "EHLO
+        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751403AbdGXJYd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Jul 2017 05:22:56 -0400
-In-Reply-To: <20170720160114.3261176-2-arnd@arndb.de>
+        Mon, 24 Jul 2017 05:24:33 -0400
+In-Reply-To: <20170721230243.GA7888@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andy@infradead.org" <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Murthy, Shanth" <shanth.murthy@intel.com>
 
-On Thu, Jul 20, 2017 at 7:00 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> gcc points out a possible format string overflow for a large value of 'zone':
+On Sat, Jul 22, 2017 at 2:02 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Fri, Jul 21, 2017 at 03:29:39AM +0000, Chakravarty, Souvik K wrote:
+>> Just missed the email from Darren.
 >
-> drivers/platform/x86/alienware-wmi.c: In function 'alienware_wmi_init':
-> drivers/platform/x86/alienware-wmi.c:461:24: error: '%02X' directive writing between 2 and 8 bytes into a region of size 6 [-Werror=format-overflow=]
->    sprintf(buffer, "zone%02X", i);
->                         ^~~~
-> drivers/platform/x86/alienware-wmi.c:461:19: note: directive argument in the range [0, 2147483646]
->    sprintf(buffer, "zone%02X", i);
->                    ^~~~~~~~~~
-> drivers/platform/x86/alienware-wmi.c:461:3: note: 'sprintf' output between 7 and 13 bytes into a destination of size 10
+> :-)
 >
-> This replaces the 'int' variable with an 'u8' to make sure
-> it always fits, renaming the variable to 'zone' for clarity.
+>> Reviewed-by: Souvik K Chakravarty <souvik.k.chakravarty@intel.com>
 >
-> Unfortunately, gcc-7.1.1 still warns about it with that change, which
-> seems to be unintended by the gcc developers. I have opened a bug
-> against gcc with a reduced test case. As a workaround, I also
-> change the format string to use "%02hhX", which shuts up the
-> warning in that version.
+> Thank you Souvik.
+>
+> While these one liners are OK for trivial changes like this, please note that
+> Andy and I depend on individual driver maintainers to provide thorough reviews,
+> and it helps to document that review to help us understand what sorts of things
+> you considered before approving the patch. Please keep this in mind in the
+> future for more complex changes.
+>
+> This set is on Andy's queue, so the final review/follow-up will come from him.
 >
 
-Thanks, pushed to testing with slight change (+ empty lines after u8
-zone; where it's applicable).
-I'm not going to move this to fixes queue since it looks to me not
-critical at all. Drop me a message if you think otherwise.
+Pushed both to testing, thanks!
 
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81483
-> Link: https://patchwork.ozlabs.org/patch/788415/
-> Suggested-by: Andy Shevchenko <andy@infradead.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: completely rewrite the patch after discussing with Andy
-> ---
->  drivers/platform/x86/alienware-wmi.c | 38 ++++++++++++++++++------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
+> Thanks,
 >
-> diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-> index 0831b428c217..c56a9ecba959 100644
-> --- a/drivers/platform/x86/alienware-wmi.c
-> +++ b/drivers/platform/x86/alienware-wmi.c
-> @@ -255,12 +255,12 @@ static int parse_rgb(const char *buf, struct platform_zone *zone)
+>>
+>> > -----Original Message-----
+>> > From: Chakravarty, Souvik K
+>> > Sent: Friday, July 21, 2017 8:45 AM
+>> > To: 'Rajneesh Bhardwaj' <rajneesh.bhardwaj@intel.com>; platform-driver-
+>> > x86@vger.kernel.org
+>> > Cc: dvhart@infradead.org; andy@infradead.org; linux-
+>> > kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
+>> > Bhardwaj, Rajneesh <rajneesh.bhardwaj@intel.com>
+>> > Subject: RE: [PATCH v2 2/2] Telemetry: remove redundant macro definition
+>> >
+>> > Both set of two looks good. +1.
+>> >
+>> > > -----Original Message-----
+>> > > From: platform-driver-x86-owner@vger.kernel.org
+>> > > [mailto:platform-driver- x86-owner@vger.kernel.org] On Behalf Of
+>> > > Rajneesh Bhardwaj
+>> > > Sent: Thursday, July 20, 2017 7:51 PM
+>> > > To: platform-driver-x86@vger.kernel.org
+>> > > Cc: dvhart@infradead.org; andy@infradead.org; linux-
+>> > > kernel@vger.kernel.org; Murthy, Shanth <shanth.murthy@intel.com>;
+>> > > Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Bhardwaj,
+>> > > Rajneesh <rajneesh.bhardwaj@intel.com>
+>> > > Subject: [PATCH v2 2/2] Telemetry: remove redundant macro definition
+>> > >
+>> > > Telemetry driver includes intel_telemetry.h which defines
+>> > > TELEM_MAX_OS_ALLOCATED_EVENTS already.
+>> > >
+>> > > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+>> > > ---
+>> > >  drivers/platform/x86/intel_telemetry_pltdrv.c | 1 -
+>> > >  1 file changed, 1 deletion(-)
+>> > >
+>> > > diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c
+>> > > b/drivers/platform/x86/intel_telemetry_pltdrv.c
+>> > > index 6393b3b1d5a6..e0424d5a795a 100644
+>> > > --- a/drivers/platform/x86/intel_telemetry_pltdrv.c
+>> > > +++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
+>> > > @@ -46,7 +46,6 @@
+>> > >  #define TELEM_SAMPLING_DEFAULT_PERIOD    0xD
+>> > >
+>> > >  #define TELEM_MAX_EVENTS_SRAM            28
+>> > > -#define TELEM_MAX_OS_ALLOCATED_EVENTS    20
+>> > >  #define TELEM_SSRAM_STARTTIME_OFFSET     8
+>> > >  #define TELEM_SSRAM_EVTLOG_OFFSET        16
+>> > >
+>> > > --
+>> > > 2.7.4
+>>
+>>
 >
->  static struct platform_zone *match_zone(struct device_attribute *attr)
->  {
-> -       int i;
-> -       for (i = 0; i < quirks->num_zones; i++) {
-> -               if ((struct device_attribute *)zone_data[i].attr == attr) {
-> +       u8 zone;
-> +       for (zone = 0; zone < quirks->num_zones; zone++) {
-> +               if ((struct device_attribute *)zone_data[zone].attr == attr) {
->                         pr_debug("alienware-wmi: matched zone location: %d\n",
-> -                                zone_data[i].location);
-> -                       return &zone_data[i];
-> +                                zone_data[zone].location);
-> +                       return &zone_data[zone];
->                 }
->         }
->         return NULL;
-> @@ -420,7 +420,7 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
->
->  static int alienware_zone_init(struct platform_device *dev)
->  {
-> -       int i;
-> +       u8 zone;
->         char buffer[10];
->         char *name;
->
-> @@ -457,19 +457,19 @@ static int alienware_zone_init(struct platform_device *dev)
->         if (!zone_data)
->                 return -ENOMEM;
->
-> -       for (i = 0; i < quirks->num_zones; i++) {
-> -               sprintf(buffer, "zone%02X", i);
-> +       for (zone = 0; zone < quirks->num_zones; zone++) {
-> +               sprintf(buffer, "zone%02hhX", zone);
->                 name = kstrdup(buffer, GFP_KERNEL);
->                 if (name == NULL)
->                         return 1;
-> -               sysfs_attr_init(&zone_dev_attrs[i].attr);
-> -               zone_dev_attrs[i].attr.name = name;
-> -               zone_dev_attrs[i].attr.mode = 0644;
-> -               zone_dev_attrs[i].show = zone_show;
-> -               zone_dev_attrs[i].store = zone_set;
-> -               zone_data[i].location = i;
-> -               zone_attrs[i] = &zone_dev_attrs[i].attr;
-> -               zone_data[i].attr = &zone_dev_attrs[i];
-> +               sysfs_attr_init(&zone_dev_attrs[zone].attr);
-> +               zone_dev_attrs[zone].attr.name = name;
-> +               zone_dev_attrs[zone].attr.mode = 0644;
-> +               zone_dev_attrs[zone].show = zone_show;
-> +               zone_dev_attrs[zone].store = zone_set;
-> +               zone_data[zone].location = zone;
-> +               zone_attrs[zone] = &zone_dev_attrs[zone].attr;
-> +               zone_data[zone].attr = &zone_dev_attrs[zone];
->         }
->         zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
->         zone_attribute_group.attrs = zone_attrs;
-> @@ -484,9 +484,9 @@ static void alienware_zone_exit(struct platform_device *dev)
->         sysfs_remove_group(&dev->dev.kobj, &zone_attribute_group);
->         led_classdev_unregister(&global_led);
->         if (zone_dev_attrs) {
-> -               int i;
-> -               for (i = 0; i < quirks->num_zones; i++)
-> -                       kfree(zone_dev_attrs[i].attr.name);
-> +               u8 zone;
-> +               for (zone = 0; zone < quirks->num_zones; zone++)
-> +                       kfree(zone_dev_attrs[zone].attr.name);
->         }
->         kfree(zone_dev_attrs);
->         kfree(zone_data);
 > --
-> 2.9.0
->
+> Darren Hart
+> VMware Open Source Technology Center
 
 
 
