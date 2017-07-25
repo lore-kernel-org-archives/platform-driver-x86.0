@@ -1,96 +1,57 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages
- for normal users
-Date: Mon, 24 Jul 2017 18:14:36 -0700
-Message-ID: <20170725011334.GA12527@fury>
-References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
- <20170721231620.GB7888@fury>
- <CAHp75VfCht3djwme6HzrSNzkQ4vCYEwbB_kBM6fYL8L-KBu5Og@mail.gmail.com>
- <4940915.tsQAtH0l4E@aspire.rjw.lan>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] platform/x86: alienware-wmi: fix format string
+ overflow warning
+Date: Tue, 25 Jul 2017 09:23:36 +0200
+Message-ID: <CAK8P3a3nHzpeRfKa3Ac9+qxEm1EdSUaUqAr_0G9+-NXZs4d34Q@mail.gmail.com>
+References: <20170720160114.3261176-1-arnd@arndb.de> <20170720160114.3261176-2-arnd@arndb.de>
+ <CAHp75VcEaqoESA_JPtV28E4emE5JTzd4t2SVLxYcn=spFzhBmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:39769 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756843AbdGYBOl (ORCPT
+Received: from mail-oi0-f68.google.com ([209.85.218.68]:36799 "EHLO
+        mail-oi0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750746AbdGYHXh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Jul 2017 21:14:41 -0400
-Content-Disposition: inline
-In-Reply-To: <4940915.tsQAtH0l4E@aspire.rjw.lan>
+        Tue, 25 Jul 2017 03:23:37 -0400
+In-Reply-To: <CAHp75VcEaqoESA_JPtV28E4emE5JTzd4t2SVLxYcn=spFzhBmA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>
 
-On Mon, Jul 24, 2017 at 01:41:06PM +0200, Rafael Wysocki wrote:
-> On Monday, July 24, 2017 12:19:25 PM Andy Shevchenko wrote:
-> > On Sat, Jul 22, 2017 at 2:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > > On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
-> > >> Unsupported events is only useful for developers and does not meaningful
-> > >> for users. Using dev_dbg makes more sense and reduces noise in kernel
-> > >> messages.
-> > 
-> > >> -     dev_info(&device->dev, "unknown event index 0x%x\n", event);
-> > >> +     dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > >
-> > > info is the most common log level for these events in the platform
-> > > driver x86 subsystem per 'git grep -i "unknown event"'.
-> > >
-> > > My take on this is that we want these to be reported by users, rather
-> > > than rely on developers to find them all - especially as the developers
-> > > only see a fraction of the affected hardware.
-> > >
-> > > Are you finding these to be causing a problem / or producing really
-> > > excessive log messages?
-> > >
-> > > Andy, what are your thoughts?
-> > 
-> > My opinion is slightly closer to Rafael's one.
-> > 
-> > I think this is a debugging context.
-> > 
-> > If we really care about reporting them we might go HID way, i.e. using
-> > dev_printk(KERN_DEBUG ) with module parameter debug.
-> > 
-> > As developer I'm against that.
-> > As a regular user I do not need to recompile a kernel, in case there
-> > is no dynamic debug support, and it allows me to enable debug
-> > messages.
-> > 
-> > P.S. To see how important message above is, do we have any statistics
-> > how many bug reports / email we got wrt the issue and how many had
-> > been addressed?
-> 
-> Well, there is one I'm aware of, but this particular one we aren't going to
-> address at all, because apparently we handle the event in question anyway
-> in a different way.
-> 
-> In any case, the only situation in which this information is useful at all is
-> when some functionality is missing and you want to find out why.
-> 
-> Otherwise you get messages telling you that something *may* *be* missing,
-> but as a user you have no idea what to do about that, because you don't
-> even know how to report it and to whom (in case you want to report it).
+On Mon, Jul 24, 2017 at 11:22 AM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Jul 20, 2017 at 7:00 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> gcc points out a possible format string overflow for a large value of 'zone':
+>>
+>> drivers/platform/x86/alienware-wmi.c: In function 'alienware_wmi_init':
+>> drivers/platform/x86/alienware-wmi.c:461:24: error: '%02X' directive writing between 2 and 8 bytes into a region of size 6 [-Werror=format-overflow=]
+>>    sprintf(buffer, "zone%02X", i);
+>>                         ^~~~
+>> drivers/platform/x86/alienware-wmi.c:461:19: note: directive argument in the range [0, 2147483646]
+>>    sprintf(buffer, "zone%02X", i);
+>>                    ^~~~~~~~~~
+>> drivers/platform/x86/alienware-wmi.c:461:3: note: 'sprintf' output between 7 and 13 bytes into a destination of size 10
+>>
+>> This replaces the 'int' variable with an 'u8' to make sure
+>> it always fits, renaming the variable to 'zone' for clarity.
+>>
+>> Unfortunately, gcc-7.1.1 still warns about it with that change, which
+>> seems to be unintended by the gcc developers. I have opened a bug
+>> against gcc with a reduced test case. As a workaround, I also
+>> change the format string to use "%02hhX", which shuts up the
+>> warning in that version.
+>>
+>
+> Thanks, pushed to testing with slight change (+ empty lines after u8
+> zone; where it's applicable).
+> I'm not going to move this to fixes queue since it looks to me not
+> critical at all. Drop me a message if you think otherwise.
 
-My thinking was along the lines of the keymaps where we explicitly add
-KE_IGNORE when it is a key we don't care about. In that case, it is
-useful to have the messages because if that occurs we want to know so we
-can update the driver.
+Sounds good, thanks! This instance is harmless, and the warning is now
+globally disabled in stable kernels (and in mainline). I plan to send a patch
+to re-enable the warning in mainline once all the other instances are
+addressed.  I don't think that Greg will backport that patch, but if he does,
+then he may need some additional 30 patches besides this one.
 
-This driver also has KE_IGNORE entries in the intel_vbtn_keymap.
-
-Are we talking about unknown keys - or are we talking about something
-else?
-
-If unknown keys, the additional messages will be minimal, and missing
-keys are most likely to be reported if the message is obvious. Given the
-sparse access to hardware by the developers, I prefer to have the
-message.
-
-If there is more to what is going on here - can someone provide an
-example of where this is causing a problem? Or where the event causing
-the message is not something we will add code to catch / ignore?
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+          Arnd
