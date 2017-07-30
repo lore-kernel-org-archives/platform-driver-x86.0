@@ -1,136 +1,110 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages
- for normal users
-Date: Fri, 28 Jul 2017 11:52:19 -0700
-Message-ID: <20170728185132.GA14567@fury>
-References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
- <4940915.tsQAtH0l4E@aspire.rjw.lan>
- <20170725011334.GA12527@fury>
- <2328303.2NTLDDWmlQ@aspire.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Paulo Alcantara <pcacjr@zytor.com>
+Subject: [PATCH] platform/x86: hp-wmi: Correctly determine method id in WMI calls
+Date: Sun, 30 Jul 2017 00:19:21 -0300
+Message-ID: <20170730031921.10324-1-pcacjr@zytor.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:55928 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752204AbdG1SwX (ORCPT
+Received: from terminus.zytor.com ([65.50.211.136]:41517 "EHLO mail.zytor.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753176AbdG3DTe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Jul 2017 14:52:23 -0400
-Content-Disposition: inline
-In-Reply-To: <2328303.2NTLDDWmlQ@aspire.rjw.lan>
+        Sat, 29 Jul 2017 23:19:34 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Patrik Kullman <patrik.kullman@gmail.com>, Mario.Limonciello@dell.com
+To: platform-driver-x86@vger.kernel.org
+Cc: Paulo Alcantara <pcacjr@zytor.com>
 
-On Fri, Jul 28, 2017 at 03:01:48AM +0200, Rafael Wysocki wrote:
-> On Monday, July 24, 2017 06:14:36 PM Darren Hart wrote:
-> > On Mon, Jul 24, 2017 at 01:41:06PM +0200, Rafael Wysocki wrote:
-> > > On Monday, July 24, 2017 12:19:25 PM Andy Shevchenko wrote:
-> > > > On Sat, Jul 22, 2017 at 2:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > > > > On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
-> > > > >> Unsupported events is only useful for developers and does not meaningful
-> > > > >> for users. Using dev_dbg makes more sense and reduces noise in kernel
-> > > > >> messages.
-> > > > 
-> > > > >> -     dev_info(&device->dev, "unknown event index 0x%x\n", event);
-> > > > >> +     dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> > > > >
-> > > > > info is the most common log level for these events in the platform
-> > > > > driver x86 subsystem per 'git grep -i "unknown event"'.
-> > > > >
-> > > > > My take on this is that we want these to be reported by users, rather
-> > > > > than rely on developers to find them all - especially as the developers
-> > > > > only see a fraction of the affected hardware.
-> > > > >
-> > > > > Are you finding these to be causing a problem / or producing really
-> > > > > excessive log messages?
-> > > > >
-> > > > > Andy, what are your thoughts?
-> > > > 
-> > > > My opinion is slightly closer to Rafael's one.
-> > > > 
-> > > > I think this is a debugging context.
-> > > > 
-> > > > If we really care about reporting them we might go HID way, i.e. using
-> > > > dev_printk(KERN_DEBUG ) with module parameter debug.
-> > > > 
-> > > > As developer I'm against that.
-> > > > As a regular user I do not need to recompile a kernel, in case there
-> > > > is no dynamic debug support, and it allows me to enable debug
-> > > > messages.
-> > > > 
-> > > > P.S. To see how important message above is, do we have any statistics
-> > > > how many bug reports / email we got wrt the issue and how many had
-> > > > been addressed?
-> > > 
-> > > Well, there is one I'm aware of, but this particular one we aren't going to
-> > > address at all, because apparently we handle the event in question anyway
-> > > in a different way.
-> > > 
-> > > In any case, the only situation in which this information is useful at all is
-> > > when some functionality is missing and you want to find out why.
-> > > 
-> > > Otherwise you get messages telling you that something *may* *be* missing,
-> > > but as a user you have no idea what to do about that, because you don't
-> > > even know how to report it and to whom (in case you want to report it).
-> > 
-> > My thinking was along the lines of the keymaps where we explicitly add
-> > KE_IGNORE when it is a key we don't care about. In that case, it is
-> > useful to have the messages because if that occurs we want to know so we
-> > can update the driver.
-> 
-> Well, I'm not sure if adding every reported event to keymaps as KE_IGNORE
-> is a good idea, because that would require somebody to figure out what the
-> event is about every time and that's work which quite frankly is not very
-> useful (the key is still ignored if it is "unknown").
-> 
-> This kind of is blacklisting which is always painful from the maintenance
-> standpoint.
+The WMI queries are performed by evaluating the WMPV() method from ACPI
+DSDT tables, and it takes three arguments: instance index, method id and
+input data (buffer).
 
-OK, yes, I've made similar arguments in other areas.
+Currently the method id is hard-coded to 0x3 in hp_wmi_perform_query()
+which means that it will perform WMI calls that expect an output data of
+size 0x80 (128). The output size is usually OK for the WMI queries we
+perform, however it would be better to pick the correct one before
+evaluating the WMI method.
 
-> 
-> > This driver also has KE_IGNORE entries in the intel_vbtn_keymap.
-> > 
-> > Are we talking about unknown keys - or are we talking about something
-> > else?
-> 
-> Unknown keys.
-> 
-> > If unknown keys, the additional messages will be minimal, and missing
-> > keys are most likely to be reported if the message is obvious. Given the
-> > sparse access to hardware by the developers, I prefer to have the
-> > message.
-> 
-> Having it does not guarantee that it will be reported and even so, it is
-> not particularly clear where to send those reports and who is going to act on
-> them.
+Which correct method id to choose can be figured out by looking at the
+following ASL code from WVPI() method:
 
-We get quite a few to bugzilla.kernel.org for this subsystem, certainly
-more than we can handle. But, your point is taken.
+...
+Name (PVSZ, Package (0x05)
+            {
+            Zero,
+            0x04,
+            0x80,
+            0x0400,
+            0x1000
+            })
+Store (Zero, Local0)
+If (LAnd (LGreaterEqual (Arg1, One), LLessEqual (Arg1, 0x05)))
+{
+    Store (DerefOf (Index (PVSZ, Subtract (Arg1, One))), Local0)
+}
+...
 
-> 
-> > If there is more to what is going on here - can someone provide an
-> > example of where this is causing a problem? Or where the event causing
-> > the message is not something we will add code to catch / ignore?
-> 
-> The particular one that tirggered this is related to the switching between
-> the "laptop" and "tablet" modes on Dell 9365 which according to Mario is
-> handled already through the ISH driver.
-> 
-> We could potentially propagate this event to user space, but we have no
-> idea how user space decides to handle it and we are not sure if this is going
-> to be used consistently for this purpose on all platforms.
+Arg1 is the method id and PVSZ is the package used to index the
+corresponding output size; 1 -> 0, 2 -> 4, 3 -> 128, 4 -> 1024, 5 ->
+4096.
 
-Yeah, this is an ongoing issue, and I don't see vendors converging on
-how they handle this.
+This patch maps the output size passed in hp_wmi_perform_query() to the
+correct method id before evaluating the WMI method.
 
-> Anyway, my opinion is that dev_dbg() messages are sufficient for such things
-> as they allow people to selectively turn the messages on and see what happens
-> if something seems to be missing, but otherwise they don't generate log noise.
+Signed-off-by: Paulo Alcantara <pcacjr@zytor.com>
+---
+ drivers/platform/x86/hp-wmi.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-I'm convinced. Thanks.
-
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 0df4209648d1..ae29b06fcc2d 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -188,6 +188,22 @@ struct rfkill2_device {
+ static int rfkill2_count;
+ static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
+ 
++/* map output size to the corresponding WMI method id */
++static inline u32 outsize_to_mid(int outsize)
++{
++	if (!outsize)
++		return 1;
++	if (outsize <= 0x4)
++		return 2;
++	if (outsize <= 0x80)
++		return 3;
++	if (outsize <= 0x400)
++		return 4;
++	if (outsize <= 0x1000)
++		return 5;
++	return (u32)-1;
++}
++
+ /*
+  * hp_wmi_perform_query
+  *
+@@ -211,6 +227,7 @@ static struct rfkill2_device rfkill2[HPWMI_MAX_RFKILL2_DEVICES];
+ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 				void *buffer, int insize, int outsize)
+ {
++	u32 mid;
+ 	struct bios_return *bios_return;
+ 	int actual_outsize;
+ 	union acpi_object *obj;
+@@ -225,11 +242,15 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	int ret = 0;
+ 
++	mid = outsize_to_mid(outsize);
++	if (WARN_ON(mid == (u32)-1))
++		return -EINVAL;
++
+ 	if (WARN_ON(insize > sizeof(args.data)))
+ 		return -EINVAL;
+ 	memcpy(&args.data, buffer, insize);
+ 
+-	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, 0x3, &input, &output);
++	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
+ 
+ 	obj = output.pointer;
+ 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.11.0
