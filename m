@@ -1,149 +1,65 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 1/2] platform: chrome: add ChromeOS specific platform functions
-Date: Mon, 31 Jul 2017 15:03:17 +0200
-Message-ID: <20170731130318.22976-2-enric.balletbo@collabora.com>
-References: <20170731130318.22976-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170731130318.22976-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Olof Johansson <olofj@chromium.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: <horizon@qubeglobal.com>
+Subject: (unknown)
+Date: Mon, 31 Jul 2017 14:52:08 -0000
+Message-ID: <150151272841.2725.15475628199959806589@zaural.ru>
+Mime-Version: 1.0
+Content-Type: application/zip; name="EMAIL_907106465_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ws142.zone31-163-130.zaural.ru ([31.163.130.142]:60924 "HELO
+        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751951AbdGaOwL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 31 Jul 2017 10:52:11 -0400
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-From: Olof Johansson <olofj@chromium.org>
-
-This driver provides abstracted interfaces to the firmware features
-provided on ChromeOS devices. It depends on a lowlevel driver to
-implement the firmware interface on the platform.
-
-Signed-off-by: Olof Johansson <olofj@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
- drivers/platform/chrome/Kconfig    |  8 +++++++
- drivers/platform/chrome/Makefile   |  2 +-
- drivers/platform/chrome/chromeos.c | 28 ++++++++++++++++++++++
- drivers/platform/chrome/chromeos.h | 49 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 86 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/chrome/chromeos.c
- create mode 100644 drivers/platform/chrome/chromeos.h
-
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 0ad6e29..ba03e0a 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -14,6 +14,14 @@ menuconfig CHROME_PLATFORMS
- 
- if CHROME_PLATFORMS
- 
-+config CHROMEOS
-+	bool
-+	depends on NVRAM && ACPI_CHROMEOS
-+	---help---
-+	  Provides abstracted interfaces to the firmware features provided on
-+	  ChromeOS devices. It depends on a lowlevel driver to implement the
-+	  firmware interface on the platform.
-+
- config CHROMEOS_LAPTOP
- 	tristate "Chrome OS Laptop"
- 	depends on I2C && DMI && X86
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 66c345c..d423bea 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -1,4 +1,4 @@
--
-+obj-$(CONFIG_CHROMEOS)			+= chromeos.o
- obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
- obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
- cros_ec_devs-objs			:= cros_ec_dev.o cros_ec_sysfs.o \
-diff --git a/drivers/platform/chrome/chromeos.c b/drivers/platform/chrome/chromeos.c
-new file mode 100644
-index 0000000..e2a0dfd
---- /dev/null
-+++ b/drivers/platform/chrome/chromeos.c
-@@ -0,0 +1,28 @@
-+/*
-+ *  ChromeOS platform support code. Glue layer between higher level functions
-+ *  and per-platform firmware interfaces.
-+ *
-+ *  Copyright (C) 2017 The Chromium OS Authors
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/module.h>
-+#include "chromeos.h"
-+
-+static struct chromeos_vbc *chromeos_vbc_ptr;
-+
-+int chromeos_vbc_register(struct chromeos_vbc *chromeos_vbc)
-+{
-+	chromeos_vbc_ptr = chromeos_vbc;
-+	return 0;
-+}
-diff --git a/drivers/platform/chrome/chromeos.h b/drivers/platform/chrome/chromeos.h
-new file mode 100644
-index 0000000..ec349e4
---- /dev/null
-+++ b/drivers/platform/chrome/chromeos.h
-@@ -0,0 +1,49 @@
-+/*
-+ *  Copyright (C) 2017 The Chromium OS Authors
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ */
-+#ifndef _DRIVERS_PLATFORM_CHROMEOS_H
-+#define _DRIVERS_PLATFORM_CHROMEOS_H
-+
-+struct chromeos_vbc {
-+	/**
-+	 * Read vboot context to buffer
-+	 *
-+	 * @param buf		Pointer to buffer for storing vboot context
-+	 * @param count		Size of buffer
-+	 * @return	on success, the number of bytes read is returned and
-+	 *		on error, -err is returned.
-+	 */
-+	ssize_t (*read)(void *buf, size_t count);
-+
-+	/**
-+	 * Write vboot context from buffer
-+	 *
-+	 * @param buf		Pointer to buffer of new vboot context content
-+	 * @param count		Size of buffer
-+	 * @return	on success, the number of bytes written is returned and
-+	 *		on error, -err is returned.
-+	 */
-+	ssize_t (*write)(const void *buf, size_t count);
-+
-+	const char *name;
-+};
-+
-+/**
-+ * Register chromeos_vbc callbacks.
-+ *
-+ * @param chromeos_vbc	Pointer to struct holding callbacks
-+ * @return	on success, return 0, on error, -err is returned.
-+ */
-+int chromeos_vbc_register(struct chromeos_vbc *chromeos_vbc);
-+
-+#endif /* _DRIVERS_PLATFORM_CHROMEOS_H */
--- 
-2.9.3
+UEsDBAoDAAAAADtV/0rwzCh5ewkAAHsJAAARAAAANTIzNjM3NjEyMzA4NC56aXBQSwMEFAMAAAgA
+O1X/SsZJJEvfCAAAySgAAAsAAABaRndUdmFhcC5qc+0a227TMPS5SPyDuSZVS2DcJCgDreu6lsFa
+2qwrCCGlidukTZMst1LQ+Bo+gzd+jGPHjrM63NEkpOXBPvG5+Njn4vi0qRGiN9NXS7SNPLxC7cQz
+Y8f3VAVPzdjoJbM6spqRmZ4odaRkkNYLsKdWG4i96usAA/tWA/GR49CJscolCMq+HzlEOlDfaSjV
+xmXlaHirH379HDkW9mLU8j3DtZAeJssA2UaMIux42EPD2JhEpo2naAADJkb90MGTJEJq03GtKgJe
+14gioEw8C1nQT5zIxqEzA/Cl4zlRjEM0/folRF3PwyFGQ8cEvI2duI6e+7aH2ho6wK67rqMPCUig
+wg4N05767gx4JziKneUy1pTLl/5DpRtoygyLlr2TqT1RhXlfjE+qHy9XwBGYmZgr7AB9ise9yRyb
+sarstHqtpjaMQ2wsiekQdRt1003A2IDiBh8aKdb9tuNiFaapo7vAKLC7rh9hNRsKcZyEHorDBDcu
+n17O1e2ehIU5zGXLMPZneNh1QWegXkOLiOogHvQ+HGXinClSs3UR3NQPV62Ovo6AomT5mc6ESb2S
+k5ItQeh4aIZOEGt7pu2ritPpjk2FUZ8KrYtqZeucGm6EqSanGCD08TvEXuK6dbJoQkxlnppGbNpI
+xWHoh6DEL7CdFvfrOcbx8/mumq4nncPlOMV7IITuE92mJHRhExT7xYcb9v71VrzRB6x/zPrbG33E
+epP1mPUef9+QZ7A+3cCHG3wa61esdzj+O/MnXN+N3t+QH3P5G3T2xvsz1k9Zv836rQ1+a2NdsaJF
+getAeLABparNfQfSp5K5ddxPjk9U2PV6HoHquHO8czAfd96A942sdrxnQjYAdyNOe4UNUMvnthfG
+LDALL8uc7ONlZuC71MKDqTsZ3Dx8F0tAwIHHHLgtATm7wQFXAlIOODKNxK5xYCVxedLsEQeSXGcJ
+8DkQSgvUJGJbGnnGgSkHtjmwJcmxpOUIw/ORs5bnj3CAu7/gAYJN9gXx/LpjCIGZi4gkcI/6yLX0
+pj2IC21A28e0vV1oM0qDtm6hTWnrnBkXlBptVwUaryAzom3C5hWtT9uwoJVWwNoF+Bltp7Tdpu1W
+gd4qaCLMRV+FrcQmyRa791sW+0XD/an9smcj0u9TK/rN3tx+HezGEhBw4DEHbktAzm5wwJWAlAOO
+TCOxaxxYSVyeNHvEgSTXWQJ8DoTSAjWJ2JZGnnFgyoFtDmxJcixpOcJ1+MiPvEf2ovt/4kW/605/
+7VebDlbhieIBdbG5szjQ01n7qB2XgoEAHwvwdilYEGYI0C0FUwE636WVhWkCXJVK8Eo1iwSYnF2b
+DPoCDEu3RCtls0tHnwlwKsBtAW6VyrVKFy8cVoz9ksuWOO+Dv3LeP/Thf+XKRY/+FT3LZxUf2784
+3eVK5ftIIuJ3eTmTTCuRCOQG7vRyBmxeLypnrjhsuFG4dRiuOzHMRcmVgx5Ch62jdPA6Gj23pQJC
+zzRnwV6rjt68Mt0D4J2/Pz50P6wX+3U03Jkt33i9Ohq7UFe4ykg1nxQWBF2NkdXGLpOS2x1xFrjy
+WnDnuwpacU9l7ssYRsumrr8+9Pb5hZHqLSYh+W1fyVUir3sKUWxb0ZVGdrvks5XejK++HI5fvrir
+QdPR9T7RBBX2Rf3FfcjvrfnKYiNO4Mq6je7euVMtXiHFmnLiAY4C34tw07fW0vWzlPWMRaWL589Z
+Nu6dUavbPvzQ99aRunrhhryicGzBnr00YlsLDc/yl2pVi30oIjjejNIR38ymAVJwz4uK0DkpLSpC
+pGhC7E2Cg1mt70VBpzmKyitBWcIAC2qksDNcg1bLDMeuPkREtxPvrHf6zpEBQq6+fXs1xxCzw9iD
+O+gWeDaqoYd1tHdskgriHRiDlgzCdWnmmXNP/wAIoKPUFPOISsKp4aoKdzHJ/RoFVZz1briD0DZQ
+alEyieJQhfly+VWQeVWbB3gmdBzFa+9koANPYR21TNLG9OORZT0HQr5n2j6OhwE2HcNt+66FQ/Uu
+zMAlgl4isjJekPf94MtCmZJcBMe5Kd3IY2Om93d3DzoL1V/37XQNmdrR5yS5ZeHC/aV51Hy+6q/q
+KOj5gyE5QzTsryxnctK0l6867zE9STjZH4YV49Z2/WBNSIRODNBCHLiGiVWFurNSVxRwvUwngSvo
+RSmK9VeyOvVvpVW4P6uY7FQlF06OD0BnvswLlflWq/5sGieWMelhCE4aCeTUY9+PIjJISfgsrRAx
+77db7snJ4Ay/LIHnusqL7v5uzpRthAhGLuKUDtP2tMpC8eK3i3NTWgTj0Su1uxsfBa+OHKjbv/EW
+w3BFDCqS8f560aThV0OcsgZHXTauDRJPZWzkgLj43Dg/pYURR61D2wpmE7dVasxSI1+Y6hyVLhx+
+z2fY7+nO8XysTrw3E92psgoy7qfu7kLfeWX1yecdv0MObZiBfEXlsVh61BW4q8XgZJNcWPsclRbW
+7jj9kV8akz8MWbDVhbHOSWlhrNe+iMhKpVISqY3LtAiUc6C0P26/N8Z7B2p3MbHCen5Cso80eplx
+6V8zKKMfIpVen+gQdE/QFulrtSoSHKvBYnrQOVoAUS6wAVj6c/onjtUcz8Lve1NVoYlCqWZzkieb
+c6v4m1kmWR8vdE9GrWz49EUqxYJKd6kyICv/VOfLE1+Fb9rWwStrYumd6mYdUPL6Am2DyOXffOKh
+M9dq2aBcjZvAHyQWhJUOchy/8GXfvxfp7byUFhHTf5E6L0ihQ3gY8j54XX89e/7eeE+OsZJL2ZmT
+TanC2VYsE5+RcHFonZvSwqr0AhdAfREMyzNSJ31hJqQkk5UrVx/cnewlCz5GJ9IVIJlzEDxDHr/i
+mbCYQ+d7I6On8uQlUipVoZBRs/gnUmo1CtN0SIQ+3boDz9bdapa1RNpiIkTWGo2HOl3V957XfkbD
+BJ1mCWvzv1QZDjqppkQR+Yr33GhyYOyn8Mn2g4VlXLQRZ0M+ZPmo+PsOQQu5ImEy5vT9CPB8TxuV
+fJ8AkW1Pnk4rfBk83fJjgJ5K9Kz7BlBLAQI/AxQDAAAIADtV/0rGSSRL3wgAAMkoAAALACQAAAAA
+AAAAIICkgQAAAABaRndUdmFhcC5qcwoAIAAAAAAAAQAYAIAOdSYLCtMBgA51JgsK0wGADnUmCwrT
+AVBLBQYAAAAAAQABAF0AAAAICQAAAABQSwECPwMKAwAAAAA7Vf9K8MwoeXsJAAB7CQAAEQAkAAAA
+AAAAACCApIEAAAAANTIzNjM3NjEyMzA4NC56aXAKACAAAAAAAAEAGAAApQ0nCwrTAQClDScLCtMB
+AKUNJwsK0wFQSwUGAAAAAAEAAQBjAAAAqgkAAAAA
