@@ -1,65 +1,47 @@
-From: <horizon@qubeglobal.com>
-Subject: (unknown)
-Date: Mon, 31 Jul 2017 14:52:08 -0000
-Message-ID: <150151272841.2725.15475628199959806589@zaural.ru>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/2] platform: x86: ChromeOS ACPI
+Date: Mon, 31 Jul 2017 08:17:18 -0700
+Message-ID: <CAOesGMhUKLiu6VwfAhUFdoa-XXjSK1Tr_TahS+4vnfAnoLJ-UA@mail.gmail.com>
+References: <20170731130318.22976-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_907106465_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ws142.zone31-163-130.zaural.ru ([31.163.130.142]:60924 "HELO
-        zaural.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751951AbdGaOwL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Jul 2017 10:52:11 -0400
-Subject: 
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170731130318.22976-1-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Benson Leung <bleung@chromium.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, vbendeb@chromium.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
+Hi,
+
+On Mon, Jul 31, 2017 at 6:03 AM, Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+> Dear all,
+>
+> The following series adds a ChromeOS ACPI device and export some values
+> reported by the ACPI in a sysfs directory. The patches comes from the
+> ChromeOS kernel and were originally created by Olof Johansson. These
+> are just a squashed version with few modifications.
+
+It might have received my authorship through rebases or moving the
+code, but it was originally implemented by Vadim Bendebury, cc:d here
+-- not by me.
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/7dcefe33416d29c524b331ebcf696a8962fbc3cb
+
+> One doubt that I have is that I'm not sure if the chromeos_acpi driver
+> should reside in drivers/platform/x86/ or in drivers/platform/chrome.
+> Any preference on this?
+
+I have no preference, but original intent of drivers/platform/chrome
+was to not organize it by architecture and have both x86 and ARM
+there. Whether that still makes sense I'll leave up to current
+maintainers.
+
+Also, I see you refreshed copyright dates to 2017 on all contents,
+instead of using at least the original and current year. Seems a
+little odd to me -- the code clearly isn't all new and written this
+year.
+
+
+-Olof
