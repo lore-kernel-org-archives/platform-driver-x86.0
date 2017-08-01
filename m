@@ -1,57 +1,104 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: intel-hid: Wake up Dell Latitude 7275 from
- suspend-to-idle
-Date: Tue, 1 Aug 2017 17:04:45 +0000
-Message-ID: <739eedabac12425e8e59f8391da4b607@ausx13mpc120.AMER.DELL.COM>
-References: <7313224.XbtxUoJtXM@aspire.rjw.lan>
- <3172146.dPhkKZoKtx@aspire.rjw.lan>
- <CAHp75VfouHVbj0X3PJfRHy2uSziq-P__N5ezbmsuUNYDwDxYKg@mail.gmail.com>
- <CAJZ5v0jimcsL3+BfyfjSxjZRjWVFXunPRDquCp-V1SHi32f+=w@mail.gmail.com>
- <CAHp75Vd-LcCR3k3-LTNYNzh-aomGcqgszFWw7HFb-u1+UJLX3A@mail.gmail.com>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/3] platform/dell-wmi: Fix driver interface version query
+Date: Tue, 1 Aug 2017 11:08:26 -0700
+Message-ID: <CALCETrUHw-bDMo6mrNM8+tdNDn71-ycb-aDtFTv82B0s8FiKHA@mail.gmail.com>
+References: <cover.1501601667.git.luto@kernel.org> <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
+ <20170801154312.GA25574@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vd-LcCR3k3-LTNYNzh-aomGcqgszFWw7HFb-u1+UJLX3A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com, rafael@kernel.org
-Cc: rjw@rjwysocki.net, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, andriy.shevchenko@linux.intel.com, jerome.debretagne@gmail.com, alex.hung@canonical.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:49264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751959AbdHASIs (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 1 Aug 2017 14:08:48 -0400
+Received: from mail-ua0-f173.google.com (mail-ua0-f173.google.com [209.85.217.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD7B22C91
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Aug 2017 18:08:47 +0000 (UTC)
+Received: by mail-ua0-f173.google.com with SMTP id w45so10516887uac.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 11:08:47 -0700 (PDT)
+In-Reply-To: <20170801154312.GA25574@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBBdWd1c3Qg
-MSwgMjAxNyA3OjM3IEFNDQo+IFRvOiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5v
-cmc+DQo+IENjOiBSYWZhZWwgSi4gV3lzb2NraSA8cmp3QHJqd3lzb2NraS5uZXQ+OyBQbGF0Zm9y
-bSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZz47IERhcnJl
-biBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IExLTUwgPGxpbnV4LQ0KPiBrZXJuZWxAdmdl
-ci5rZXJuZWwub3JnPjsgTGludXggQUNQSSA8bGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc+OyBB
-bmR5DQo+IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IErD
-qXLDtG1lIGRlIEJyZXRhZ25lDQo+IDxqZXJvbWUuZGVicmV0YWduZUBnbWFpbC5jb20+OyBMaW1v
-bmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsgQWxleCBIdW5n
-IDxhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gcGxhdGZv
-cm0veDg2OiBpbnRlbC1oaWQ6IFdha2UgdXAgRGVsbCBMYXRpdHVkZSA3Mjc1IGZyb20NCj4gc3Vz
-cGVuZC10by1pZGxlDQo+IA0KPiBPbiBUdWUsIEF1ZyAxLCAyMDE3IGF0IDI6NTYgUE0sIFJhZmFl
-bCBKLiBXeXNvY2tpIDxyYWZhZWxAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gT24gVHVlLCBBdWcg
-MSwgMjAxNyBhdCAxOjIxIEFNLCBBbmR5IFNoZXZjaGVua28NCj4gPiA8YW5keS5zaGV2Y2hlbmtv
-QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4+IE9uIFR1ZSwgQXVnIDEsIDIwMTcgYXQgMTI6NDYgQU0s
-IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD4gd3JvdGU6DQo+ID4+PiBPbiBG
-cmlkYXksIEp1bHkgMjgsIDIwMTcgMDI6MDY6MzYgQU0gUmFmYWVsIEouIFd5c29ja2kgd3JvdGU6
-DQo+IA0KPiA+Pj4gUGxlYXNlIG5vdGUgdGhhdCB0aGlzIGNoYW5nZSBpcyByZXF1aXNpdGUgZm9y
-DQo+ID4+Pg0KPiA+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODczMTU5
-Lw0KPiA+Pj4NCj4gPj4+IHNvIGFyZSB0aGVyZSBhbnkgb2JqZWN0aW9ucyBvciBjb25jZXJucz8N
-Cj4gPj4NCj4gPj4gTm90IGZyb20gbXkgc2lkZSwNCj4gPj4NCj4gPj4gQWNrZWQtYnk6IEFuZHkg
-U2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gPg0KPiA+IE9LLCB0aGFu
-a3MhDQo+ID4NCj4gPiBJJ20gZ29pbmcgdG8gcm91dGUgaXQgdGhyb3VnaCB0aGUgUE0gdHJlZSB0
-aGVuIGlmIHRoYXQncyBub3QgYSBwcm9ibGVtLg0KPiANCj4gTWFyaW8sIGFyZSB5b3Ugb2theSB3
-aXRoIHRoaXMgY2hhbmdlPw0KPiANCg0KVGhhbmtzIGZvciBjaGVja2luZy4gIEkgc3BlbnQgYSBs
-aXR0bGUgdGltZSB0aGlzIG1vcm5pbmcgdHJ5aW5nIHRvIHdhbGsgdGhyb3VnaA0KdGhlIEFTTCBh
-cyBhdHRhY2hlZCB0byB0aGUgQnVnemlsbGEgZW50cnkgYW5kIEkgdGhpbmsgdGhpcyBpcyB0aGUg
-Y29ycmVjdCBhcHByb2FjaC4NCg0KQWNrZWQtQnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5s
-aW1vbmNpZWxsb0BkZWxsLmNvbT4NCg0KSsOpcsO0bWUsDQpJIGhhdmUgb25lIHF1ZXN0aW9uIHRo
-b3VnaC4gIFRoZXNlIGV2ZW50cyBzaG91bGQgYmUgaGFwcGVuaW5nIGFzIGEgcGFpci4NClByZXNz
-OiAweENFLCBSZWxlYXNlOiAweENGLg0KV2hhdCBoYXBwZW5zIHdpdGggdGhlIGV2ZW50IG9uIHBv
-d2VyIGJ1dHRvbiByZWxlYXNlPw0KSXMgdGhhdCBzaG93aW5nIGEgbWVzc2FnZSBpbiB0aGUgbG9n
-IGR1cmluZyB3YWtldXAgZnJvbSBTMkk/DQoNClNvbWV0aGluZyBsaWtlICJ1bmtub3duIGV2ZW50
-IDB4Q0YiPw0KSWYgc28sIGl0IHdvdWxkIGJlIGdvb2QgdG8gYWxzbyBjYXRjaCBhbmQgaWdub3Jl
-IHRoYXQgdG9vLg0KDQpUaGFua3MsDQo=
+On Tue, Aug 1, 2017 at 8:43 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> On Tuesday 01 August 2017 08:37:26 Andy Lutomirski wrote:
+>> When I converted dell-wmi to the new bus infrastructure, I left the
+>> call to dell_wmi_check_descriptor_buffer() in dell_wmi_init().  This
+>> could cause two problems:
+>>
+>>  - An error message when loading the driver on a system without
+>>    dell-wmi.  We'd try to read the event descriptor even if the WMI
+>>    GUID wasn't there.
+>>
+>>  - A possible race if dell-wmi was loaded manually before wmi was
+>>    fully initialized.
+>>
+>> Fix it by moving the call to the probe function where it belongs.
+>>
+>> Fixes: bff589be59c5 ("platform/x86: dell-wmi: Convert to the WMI bus infrastructure")
+>> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> ---
+>>  drivers/platform/x86/dell-wmi.c | 12 +++++++-----
+>>  1 file changed, 7 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+>> index f8978464df31..dad8f4afa17c 100644
+>> --- a/drivers/platform/x86/dell-wmi.c
+>> +++ b/drivers/platform/x86/dell-wmi.c
+>> @@ -626,7 +626,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+>>   * WMI Interface Version     8       4    <version>
+>>   * WMI buffer length        12       4    4096
+>>   */
+>> -static int __init dell_wmi_check_descriptor_buffer(void)
+>> +static int dell_wmi_check_descriptor_buffer(void)
+>>  {
+>>       struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+>>       union acpi_object *obj;
+>> @@ -717,9 +717,15 @@ static int dell_wmi_events_set_enabled(bool enable)
+>>
+>>  static int dell_wmi_probe(struct wmi_device *wdev)
+>>  {
+>> +     int err;
+>> +
+>>       struct dell_wmi_priv *priv = devm_kzalloc(
+>>               &wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
+>>
+>> +     err = dell_wmi_check_descriptor_buffer();
+>> +     if (err)
+>> +             return err;
+>> +
+>>       dev_set_drvdata(&wdev->dev, priv);
+>>
+>>       return dell_wmi_input_setup(wdev);
+>> @@ -749,10 +755,6 @@ static int __init dell_wmi_init(void)
+>>  {
+>>       int err;
+>>
+>> -     err = dell_wmi_check_descriptor_buffer();
+>> -     if (err)
+>> -             return err;
+>> -
+>>       dmi_check_system(dell_wmi_smbios_list);
+>>
+>>       if (wmi_requires_smbios_request) {
+>
+> Hi! You should move also dell_wmi_events_set_enabled() into
+> dell_wmi_probe() as there is no need to enable receiving events prior to
+> creating input device.
+
+I thought of that and intentionally didn't do it: I wanted to leave
+enable and the disable paired properly, and there's nothing that
+tracks the enabled state per device.  Also, it's at least
+theoretically possible to have more than one instance of dell-wmi in a
+system (my laptop already has *two* wmi busses), and moving this code
+to ->probe would break this.
+
+(The current wmi.c code can't handle the same GUID on two busses, but
+it could easily be added if anyone ever finds a laptop that does
+that.)
