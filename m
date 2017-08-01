@@ -1,183 +1,92 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 2/3] platform/dell-wmi: Update dell_wmi_check_descriptor_buffer() to new model
-Date: Tue,  1 Aug 2017 08:37:27 -0700
-Message-ID: <e941330872d1a0811a390c80aa1fe817ec386d5f.1501601667.git.luto@kernel.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/3] platform/dell-wmi: Fix driver interface version query
+Date: Tue, 1 Aug 2017 17:43:12 +0200
+Message-ID: <20170801154312.GA25574@pali>
 References: <cover.1501601667.git.luto@kernel.org>
+ <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:37988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751697AbdHAPhe (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:38857 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751056AbdHAPnP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2017 11:37:34 -0400
-In-Reply-To: <cover.1501601667.git.luto@kernel.org>
-In-Reply-To: <cover.1501601667.git.luto@kernel.org>
-References: <cover.1501601667.git.luto@kernel.org>
+        Tue, 1 Aug 2017 11:43:15 -0400
+Received: by mail-wm0-f67.google.com with SMTP id y206so3617425wmd.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 08:43:14 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-This converts dell_wmi_check_descriptor_buffer() to the new driver
-model interface and puts the interface version in dell_wmi_priv
-where it belongs.
+On Tuesday 01 August 2017 08:37:26 Andy Lutomirski wrote:
+> When I converted dell-wmi to the new bus infrastructure, I left the
+> call to dell_wmi_check_descriptor_buffer() in dell_wmi_init().  This
+> could cause two problems:
+> 
+>  - An error message when loading the driver on a system without
+>    dell-wmi.  We'd try to read the event descriptor even if the WMI
+>    GUID wasn't there.
+> 
+>  - A possible race if dell-wmi was loaded manually before wmi was
+>    fully initialized.
+> 
+> Fix it by moving the call to the probe function where it belongs.
+> 
+> Fixes: bff589be59c5 ("platform/x86: dell-wmi: Convert to the WMI bus infrastructure")
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> ---
+>  drivers/platform/x86/dell-wmi.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index f8978464df31..dad8f4afa17c 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -626,7 +626,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+>   * WMI Interface Version     8       4    <version>
+>   * WMI buffer length        12       4    4096
+>   */
+> -static int __init dell_wmi_check_descriptor_buffer(void)
+> +static int dell_wmi_check_descriptor_buffer(void)
+>  {
+>  	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+>  	union acpi_object *obj;
+> @@ -717,9 +717,15 @@ static int dell_wmi_events_set_enabled(bool enable)
+>  
+>  static int dell_wmi_probe(struct wmi_device *wdev)
+>  {
+> +	int err;
+> +
+>  	struct dell_wmi_priv *priv = devm_kzalloc(
+>  		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
+>  
+> +	err = dell_wmi_check_descriptor_buffer();
+> +	if (err)
+> +		return err;
+> +
+>  	dev_set_drvdata(&wdev->dev, priv);
+>  
+>  	return dell_wmi_input_setup(wdev);
+> @@ -749,10 +755,6 @@ static int __init dell_wmi_init(void)
+>  {
+>  	int err;
+>  
+> -	err = dell_wmi_check_descriptor_buffer();
+> -	if (err)
+> -		return err;
+> -
+>  	dmi_check_system(dell_wmi_smbios_list);
+>  
+>  	if (wmi_requires_smbios_request) {
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- drivers/platform/x86/dell-wmi.c | 69 +++++++++++++++++++++++------------------
- 1 file changed, 39 insertions(+), 30 deletions(-)
+Hi! You should move also dell_wmi_events_set_enabled() into
+dell_wmi_probe() as there is no need to enable receiving events prior to
+creating input device.
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index dad8f4afa17c..28d9f8696081 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -48,7 +48,6 @@ MODULE_LICENSE("GPL");
- #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
- #define DELL_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
- 
--static u32 dell_wmi_interface_version;
- static bool wmi_requires_smbios_request;
- 
- MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
-@@ -56,6 +55,7 @@ MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
- 
- struct dell_wmi_priv {
- 	struct input_dev *input_dev;
-+	u32 interface_version;
- };
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -348,6 +348,7 @@ static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
- static void dell_wmi_notify(struct wmi_device *wdev,
- 			    union acpi_object *obj)
- {
-+	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
- 	u16 *buffer_entry, *buffer_end;
- 	acpi_size buffer_size;
- 	int len, i;
-@@ -376,7 +377,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
- 	 * So to prevent reading garbage from buffer we will process only first
- 	 * one event on devices with WMI interface version 0.
- 	 */
--	if (dell_wmi_interface_version == 0 && buffer_entry < buffer_end)
-+	if (priv->interface_version == 0 && buffer_entry < buffer_end)
- 		if (buffer_end > buffer_entry + buffer_entry[0] + 1)
- 			buffer_end = buffer_entry + buffer_entry[0] + 1;
- 
-@@ -626,61 +627,67 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
-  * WMI Interface Version     8       4    <version>
-  * WMI buffer length        12       4    4096
-  */
--static int dell_wmi_check_descriptor_buffer(void)
-+static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- {
--	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
--	acpi_status status;
-+	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+	union acpi_object *obj = NULL;
-+	struct wmi_device *desc_dev;
- 	u32 *buffer;
-+	int ret;
- 
--	status = wmi_query_block(DELL_DESCRIPTOR_GUID, 0, &out);
--	if (ACPI_FAILURE(status)) {
--		pr_err("Cannot read Dell descriptor buffer - %d\n", status);
--		return status;
-+	desc_dev = wmidev_get_other_guid(wdev, DELL_DESCRIPTOR_GUID);
-+	if (!desc_dev) {
-+		dev_err(&wdev->dev, "Dell WMI descriptor does not exist\n");
-+		return -ENODEV;
- 	}
- 
--	obj = (union acpi_object *)out.pointer;
-+	obj = wmidev_block_query(desc_dev, 0);
- 	if (!obj) {
--		pr_err("Dell descriptor buffer is empty\n");
--		return -EINVAL;
-+		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
-+		ret = -EIO;
-+		goto out;
- 	}
- 
- 	if (obj->type != ACPI_TYPE_BUFFER) {
--		pr_err("Cannot read Dell descriptor buffer\n");
--		kfree(obj);
--		return -EINVAL;
-+		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
-+		ret = -EINVAL;
-+		goto out;
- 	}
- 
- 	if (obj->buffer.length != 128) {
--		pr_err("Dell descriptor buffer has invalid length (%d)\n",
-+		dev_err(&wdev->dev,
-+			"Dell descriptor buffer has invalid length (%d)\n",
- 			obj->buffer.length);
- 		if (obj->buffer.length < 16) {
--			kfree(obj);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out;
- 		}
- 	}
- 
- 	buffer = (u32 *)obj->buffer.pointer;
- 
- 	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
--		pr_warn("Dell descriptor buffer has invalid signature (%*ph)\n",
-+		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
- 			8, buffer);
- 
- 	if (buffer[2] != 0 && buffer[2] != 1)
--		pr_warn("Dell descriptor buffer has unknown version (%d)\n",
-+		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
- 			buffer[2]);
- 
- 	if (buffer[3] != 4096)
--		pr_warn("Dell descriptor buffer has invalid buffer length (%d)\n",
-+		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
- 			buffer[3]);
- 
--	dell_wmi_interface_version = buffer[2];
-+	priv->interface_version = buffer[2];
-+	ret = 0;
- 
--	pr_info("Detected Dell WMI interface version %u\n",
--		dell_wmi_interface_version);
-+	dev_info(&wdev->dev, "Detected Dell WMI interface version %u\n",
-+		priv->interface_version);
- 
-+out:
- 	kfree(obj);
--	return 0;
-+	put_device(&desc_dev->dev);
-+	return ret;
- }
- 
- /*
-@@ -717,17 +724,19 @@ static int dell_wmi_events_set_enabled(bool enable)
- 
- static int dell_wmi_probe(struct wmi_device *wdev)
- {
-+	struct dell_wmi_priv *priv;
- 	int err;
- 
--	struct dell_wmi_priv *priv = devm_kzalloc(
-+	priv = devm_kzalloc(
- 		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	dev_set_drvdata(&wdev->dev, priv);
- 
--	err = dell_wmi_check_descriptor_buffer();
-+	err = dell_wmi_check_descriptor_buffer(wdev);
- 	if (err)
- 		return err;
- 
--	dev_set_drvdata(&wdev->dev, priv);
--
- 	return dell_wmi_input_setup(wdev);
- }
- 
 -- 
-2.13.3
+Pali Rohár
+pali.rohar@gmail.com
