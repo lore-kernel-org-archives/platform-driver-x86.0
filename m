@@ -1,55 +1,63 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/3] platform/dell-wmi: Fix driver interface version query
-Date: Tue, 1 Aug 2017 22:36:37 +0200
-Message-ID: <20170801203637.GG25574@pali>
+Subject: Re: [PATCH 3/3] platform/wmi: Expose the raw WDG data in sysfs
+Date: Tue, 1 Aug 2017 22:40:40 +0200
+Message-ID: <20170801204040.GH25574@pali>
 References: <cover.1501601667.git.luto@kernel.org>
- <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
- <20170801200601.GD3110@fury>
+ <e6df9d038af0a0ce4d4119395aaea58366ade26d.1501601667.git.luto@kernel.org>
+ <20170801200313.GC3110@fury>
+ <CALCETrX0zqq3xQgNBx41R9ZCT3_bB4EoXGrY3jWLK0e0Koo=EQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f172.google.com ([209.85.128.172]:38572 "EHLO
-        mail-wr0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752122AbdHAUgk (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:38450 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752502AbdHAUkn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2017 16:36:40 -0400
-Received: by mail-wr0-f172.google.com with SMTP id f21so11143434wrf.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 13:36:40 -0700 (PDT)
+        Tue, 1 Aug 2017 16:40:43 -0400
+Received: by mail-wm0-f67.google.com with SMTP id y206so4667066wmd.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 13:40:43 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <20170801200601.GD3110@fury>
+In-Reply-To: <CALCETrX0zqq3xQgNBx41R9ZCT3_bB4EoXGrY3jWLK0e0Koo=EQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Tuesday 01 August 2017 13:06:01 Darren Hart wrote:
-> On Tue, Aug 01, 2017 at 08:37:26AM -0700, Andy Lutomirski wrote:
-> > When I converted dell-wmi to the new bus infrastructure, I left the
-> > call to dell_wmi_check_descriptor_buffer() in dell_wmi_init().  This
-> > could cause two problems:
-> > 
-> >  - An error message when loading the driver on a system without
-> >    dell-wmi.  We'd try to read the event descriptor even if the WMI
-> >    GUID wasn't there.
-> > 
-> >  - A possible race if dell-wmi was loaded manually before wmi was
-> >    fully initialized.
-> > 
-> > Fix it by moving the call to the probe function where it belongs.
-> > 
-> > Fixes: bff589be59c5 ("platform/x86: dell-wmi: Convert to the WMI bus infrastructure")
-> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+On Tuesday 01 August 2017 13:19:16 Andy Lutomirski wrote:
+> On Tue, Aug 1, 2017 at 1:03 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Tue, Aug 01, 2017 at 08:37:28AM -0700, Andy Lutomirski wrote:
+> >> This adds a sysfs binary attribute 'wdg' on the bus device
+> >> (i.e. /sys/class/wmi_bus/wmi_bus-*/wdg) that contains the raw _WDG
+> >> data from ACPI.  This can be used along with the wmi-bmof driver to
+> >> decode the raw interface data from ACPI.
+> >
+> > I don't recall seeing mention of this is the documentation I read as a
+> > requirement to decoding the interface with the bmof. Do Windows systems export
+> > _WDG to userspace?
+> >
+> > Why do we need to export _WDG?
 > 
-> Queueing this one (1/3) to testing.
-> 
-> Pali, aside from the separate input event receiving discussion, do you have any
-> concerns with this patch? I'd like to get this to Linus this week for our 4.13-2
-> PR for this RC cycle.
+> This was a feature that Pali asked for.  Pali, since you seem to be
+> working on userspace tooling, can you explain exactly what you'd use
+> it for?
 
-It is ok, add my
+Take raw BMOF and WDG buffers from ACPI and parse them in userspace.
+Then provide needed information like mapping from MOF event name to ACPI
+event name based on info from WDG buffer.
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Ideally ability to create dump of BMOF and WDG on one computer and then
+parse those data on another.
+
+Having original BMOF and WDG structures is a good for debugging and
+development purpose.
+
+> On my laptop, at the very least, it would allow user code to determine
+> that there's a WMI GUID that doesn't show up in sysfs.  It doesn't
+> show up in sysfs because the ACPI methods are completely missing, but
+> it's still there in WDG.  This prints a warning when wmi.ko is loaded,
+> but maybe the userspace tooling would care, for debugging if nothing
+> else.
 
 -- 
 Pali Rohár
