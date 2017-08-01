@@ -1,104 +1,85 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 1/3] platform/dell-wmi: Fix driver interface version query
-Date: Tue, 1 Aug 2017 11:08:26 -0700
-Message-ID: <CALCETrUHw-bDMo6mrNM8+tdNDn71-ycb-aDtFTv82B0s8FiKHA@mail.gmail.com>
-References: <cover.1501601667.git.luto@kernel.org> <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
- <20170801154312.GA25574@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [RFC v1 1/6] platform/x86: intel_pmc_ipc: Fix error handling in ipc_pci_probe()
+Date: Tue,  1 Aug 2017 11:13:49 -0700
+Message-ID: <5d15388eeb82aed7839b6d842c26168a935c915a.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:49264 "EHLO mail.kernel.org"
+Received: from mga01.intel.com ([192.55.52.88]:47406 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751959AbdHASIs (ORCPT
+        id S1751035AbdHASOQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2017 14:08:48 -0400
-Received: from mail-ua0-f173.google.com (mail-ua0-f173.google.com [209.85.217.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDD7B22C91
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Aug 2017 18:08:47 +0000 (UTC)
-Received: by mail-ua0-f173.google.com with SMTP id w45so10516887uac.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 11:08:47 -0700 (PDT)
-In-Reply-To: <20170801154312.GA25574@pali>
+        Tue, 1 Aug 2017 14:14:16 -0400
+In-Reply-To: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: x86@kernel.org, mingo@redhat.com, qipeng.zha@intel.com, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On Tue, Aug 1, 2017 at 8:43 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> On Tuesday 01 August 2017 08:37:26 Andy Lutomirski wrote:
->> When I converted dell-wmi to the new bus infrastructure, I left the
->> call to dell_wmi_check_descriptor_buffer() in dell_wmi_init().  This
->> could cause two problems:
->>
->>  - An error message when loading the driver on a system without
->>    dell-wmi.  We'd try to read the event descriptor even if the WMI
->>    GUID wasn't there.
->>
->>  - A possible race if dell-wmi was loaded manually before wmi was
->>    fully initialized.
->>
->> Fix it by moving the call to the probe function where it belongs.
->>
->> Fixes: bff589be59c5 ("platform/x86: dell-wmi: Convert to the WMI bus infrastructure")
->> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> ---
->>  drivers/platform/x86/dell-wmi.c | 12 +++++++-----
->>  1 file changed, 7 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
->> index f8978464df31..dad8f4afa17c 100644
->> --- a/drivers/platform/x86/dell-wmi.c
->> +++ b/drivers/platform/x86/dell-wmi.c
->> @@ -626,7 +626,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
->>   * WMI Interface Version     8       4    <version>
->>   * WMI buffer length        12       4    4096
->>   */
->> -static int __init dell_wmi_check_descriptor_buffer(void)
->> +static int dell_wmi_check_descriptor_buffer(void)
->>  {
->>       struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
->>       union acpi_object *obj;
->> @@ -717,9 +717,15 @@ static int dell_wmi_events_set_enabled(bool enable)
->>
->>  static int dell_wmi_probe(struct wmi_device *wdev)
->>  {
->> +     int err;
->> +
->>       struct dell_wmi_priv *priv = devm_kzalloc(
->>               &wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
->>
->> +     err = dell_wmi_check_descriptor_buffer();
->> +     if (err)
->> +             return err;
->> +
->>       dev_set_drvdata(&wdev->dev, priv);
->>
->>       return dell_wmi_input_setup(wdev);
->> @@ -749,10 +755,6 @@ static int __init dell_wmi_init(void)
->>  {
->>       int err;
->>
->> -     err = dell_wmi_check_descriptor_buffer();
->> -     if (err)
->> -             return err;
->> -
->>       dmi_check_system(dell_wmi_smbios_list);
->>
->>       if (wmi_requires_smbios_request) {
->
-> Hi! You should move also dell_wmi_events_set_enabled() into
-> dell_wmi_probe() as there is no need to enable receiving events prior to
-> creating input device.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-I thought of that and intentionally didn't do it: I wanted to leave
-enable and the disable paired properly, and there's nothing that
-tracks the enabled state per device.  Also, it's at least
-theoretically possible to have more than one instance of dell-wmi in a
-system (my laptop already has *two* wmi busses), and moving this code
-to ->probe would break this.
+This patch adds proper error handling for failure cases in
+ipc_pci_probe() function.
 
-(The current wmi.c code can't handle the same GUID on two busses, but
-it could easily be added if anyone ever finds a laptop that does
-that.)
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index bb792a5..7b65237 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -489,33 +489,46 @@ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	ret = pci_enable_device(pdev);
+ 	if (ret)
+-		return ret;
++		goto release_device;
+ 
+ 	ret = pci_request_regions(pdev, "intel_pmc_ipc");
+ 	if (ret)
+-		return ret;
++		goto disable_device;
+ 
+ 	pci_resource = pci_resource_start(pdev, 0);
+ 	len = pci_resource_len(pdev, 0);
+ 	if (!pci_resource || !len) {
+ 		dev_err(&pdev->dev, "Failed to get resource\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto free_pci_resources;
+ 	}
+ 
+ 	init_completion(&ipcdev.cmd_complete);
+ 
+ 	if (request_irq(pdev->irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
+ 		dev_err(&pdev->dev, "Failed to request irq\n");
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto free_pci_resources;
+ 	}
+ 
+ 	ipcdev.ipc_base = ioremap_nocache(pci_resource, len);
+ 	if (!ipcdev.ipc_base) {
+ 		dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
+-		free_irq(pdev->irq, &ipcdev);
+ 		ret = -ENOMEM;
++		goto free_irq;
+ 	}
+ 
++	return 0;
++
++free_irq:
++	free_irq(pdev->irq, &ipcdev);
++free_pci_resources:
++	pci_release_regions(pdev);
++disable_device:
++	pci_disable_device(pdev);
++release_device:
++	pci_dev_put(pdev);
++
+ 	return ret;
+ }
+ 
+-- 
+2.7.4
