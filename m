@@ -1,7 +1,7 @@
 From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [RFC v1 4/6] platform: x86: Add generic Intel IPC driver
-Date: Tue,  1 Aug 2017 11:13:52 -0700
-Message-ID: <ed86bc43a959eb1aacbbca4eeb03547e25571aa8.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [RFC v1 5/6] platform/x86: intel_punit_ipc: Use generic intel ipc device calls
+Date: Tue,  1 Aug 2017 11:13:53 -0700
+Message-ID: <07b50490c4bc2b0c2c322c076a3631540a025aa6.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -12,641 +12,344 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Currently intel_scu_ipc.c, intel_pmc_ipc.c and intel_punit_ipc.c
-redundantly implements the same IPC features and has lot of code
-duplication between them. This driver addresses this issue by grouping
-the common IPC functionalities under the same driver.
+Removed redundant IPC helper functions and refactored the
+intel_punit_ipc_simple_command() and intel_punit_ipc_command()
+functions to use eneric IPC device driver APIs.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- arch/x86/include/asm/intel_ipc_dev.h | 148 ++++++++++++
- drivers/platform/x86/Kconfig         |   8 +
- drivers/platform/x86/Makefile        |   1 +
- drivers/platform/x86/intel_ipc_dev.c | 433 +++++++++++++++++++++++++++++++++++
- 4 files changed, 590 insertions(+)
- create mode 100644 arch/x86/include/asm/intel_ipc_dev.h
- create mode 100644 drivers/platform/x86/intel_ipc_dev.c
+ drivers/platform/x86/intel_punit_ipc.c | 234 ++++++++++++---------------------
+ 1 file changed, 84 insertions(+), 150 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_ipc_dev.h b/arch/x86/include/asm/intel_ipc_dev.h
-new file mode 100644
-index 0000000..29b21fa
---- /dev/null
-+++ b/arch/x86/include/asm/intel_ipc_dev.h
-@@ -0,0 +1,148 @@
-+/*
-+ * intel_ipc_dev.h: IPC class device header file
-+ *
-+ * (C) Copyright 2017 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; version 2
-+ * of the License.
-+ *
-+ */
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+index a47a41f..d113987 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -19,18 +19,22 @@
+ #include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+ #include <asm/intel_punit_ipc.h>
++#include <asm/intel_ipc_dev.h>
+ 
+ /* IPC Mailbox registers */
+ #define OFFSET_DATA_LOW		0x0
+ #define OFFSET_DATA_HIGH	0x4
+ /* bit field of interface register */
+ #define	CMD_RUN			BIT(31)
+-#define	CMD_ERRCODE_MASK	GENMASK(7, 0)
+ #define	CMD_PARA1_SHIFT		8
+ #define	CMD_PARA2_SHIFT		16
+ 
+ #define CMD_TIMEOUT_SECONDS	1
+ 
++/* IPC PUNIT commands */
++#define	IPC_DEV_PUNIT_CMD_STATUS_ERR_MASK	GENMASK(7, 0)
++#define	IPC_DEV_PUNIT_CMD_STATUS_BUSY		BIT(31)
 +
-+#include <linux/module.h>
-+#include <linux/device.h>
-+
-+/* IPC channel type */
-+#define IPC_CHANNEL_IA_PMC			0
-+#define IPC_CHANNEL_IA_PUNIT			1
-+#define IPC_CHANNEL_PMC_PUNIT			2
-+#define IPC_CHANNEL_MAX				3
-+
-+/* IPC return code */
-+#define IPC_DEV_ERR_NONE			0
-+#define IPC_DEV_ERR_CMD_NOT_SUPPORTED		1
-+#define IPC_DEV_ERR_CMD_NOT_SERVICED		2
-+#define IPC_DEV_ERR_UNABLE_TO_SERVICE		3
-+#define IPC_DEV_ERR_CMD_INVALID			4
-+#define IPC_DEV_ERR_CMD_FAILED			5
-+#define IPC_DEV_ERR_EMSECURITY			6
-+#define IPC_DEV_ERR_UNSIGNEDKERNEL		7
-+
-+/* IPC mode */
-+#define IPC_DEV_MODE_IRQ			0
-+#define IPC_DEV_MODE_POLLING			1
-+
-+/* IPC dev constants */
-+#define IPC_DEV_CMD_LOOP_CNT			3000000
-+#define IPC_DEV_CMD_TIMEOUT			3 * HZ
-+#define IPC_DEV_DATA_BUFFER_SIZE		16
-+
-+struct intel_ipc_dev;
-+
-+/**
-+ * struct intel_ipc_dev_cfg - IPC device config structure.
-+ *
-+ * IPC device drivers should provide following config options to
-+ * register new IPC device.
-+ *
-+ * @base:       IPC device memory resource start address.
-+ * @wrbuf_reg:  IPC device data write register address.
-+ * @rbuf_reg:   IPC device data read register address.
-+ * @sptr_reg:   IPC device source data pointer register address.
-+ * @dptr_reg: 	IPC device destination data pointer register address.
-+ * @status_reg: IPC command status register address.
-+ * @cmd_reg: 	IPC command register address.
-+ * @mode: 	IRQ/POLLING mode.
-+ * @irq:      	IPC device IRQ number.
-+ * @irqflags:   IPC device IRQ flags.
-+ * @chan_type:  IPC device channel type(PMC/PUNIT).
-+ * @msi:    	Enable/Disable MSI for IPC commands.
-+ *
-+ */
-+struct intel_ipc_dev_cfg {
-+	void __iomem *base;
-+	void __iomem *wrbuf_reg;
-+	void __iomem *rbuf_reg;
-+	void __iomem *sptr_reg;
-+	void __iomem *dptr_reg;
-+	void __iomem *status_reg;
-+	void __iomem *cmd_reg;
-+	int mode;
-+	int irq;
-+	int irqflags;
-+	int chan_type;
-+	bool use_msi;
+ enum {
+ 	BASE_DATA = 0,
+ 	BASE_IFACE,
+@@ -39,97 +43,19 @@ enum {
+ 
+ typedef struct {
+ 	struct device *dev;
+-	struct mutex lock;
+-	int irq;
+-	struct completion cmd_complete;
+ 	/* base of interface and data registers */
+ 	void __iomem *base[RESERVED_IPC][BASE_MAX];
++	struct intel_ipc_dev *ipc_dev[RESERVED_IPC];
+ 	IPC_TYPE type;
+ } IPC_DEV;
+ 
+ static IPC_DEV *punit_ipcdev;
+ 
+-static inline u32 ipc_read_status(IPC_DEV *ipcdev, IPC_TYPE type)
+-{
+-	return readl(ipcdev->base[type][BASE_IFACE]);
+-}
+-
+-static inline void ipc_write_cmd(IPC_DEV *ipcdev, IPC_TYPE type, u32 cmd)
+-{
+-	writel(cmd, ipcdev->base[type][BASE_IFACE]);
+-}
+-
+-static inline u32 ipc_read_data_low(IPC_DEV *ipcdev, IPC_TYPE type)
+-{
+-	return readl(ipcdev->base[type][BASE_DATA] + OFFSET_DATA_LOW);
+-}
+-
+-static inline u32 ipc_read_data_high(IPC_DEV *ipcdev, IPC_TYPE type)
+-{
+-	return readl(ipcdev->base[type][BASE_DATA] + OFFSET_DATA_HIGH);
+-}
+-
+-static inline void ipc_write_data_low(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
+-{
+-	writel(data, ipcdev->base[type][BASE_DATA] + OFFSET_DATA_LOW);
+-}
+-
+-static inline void ipc_write_data_high(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
+-{
+-	writel(data, ipcdev->base[type][BASE_DATA] + OFFSET_DATA_HIGH);
+-}
+-
+-static const char *ipc_err_string(int error)
+-{
+-	if (error == IPC_PUNIT_ERR_SUCCESS)
+-		return "no error";
+-	else if (error == IPC_PUNIT_ERR_INVALID_CMD)
+-		return "invalid command";
+-	else if (error == IPC_PUNIT_ERR_INVALID_PARAMETER)
+-		return "invalid parameter";
+-	else if (error == IPC_PUNIT_ERR_CMD_TIMEOUT)
+-		return "command timeout";
+-	else if (error == IPC_PUNIT_ERR_CMD_LOCKED)
+-		return "command locked";
+-	else if (error == IPC_PUNIT_ERR_INVALID_VR_ID)
+-		return "invalid vr id";
+-	else if (error == IPC_PUNIT_ERR_VR_ERR)
+-		return "vr error";
+-	else
+-		return "unknown error";
+-}
+-
+-static int intel_punit_ipc_check_status(IPC_DEV *ipcdev, IPC_TYPE type)
+-{
+-	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
+-	int errcode;
+-	int status;
+-
+-	if (ipcdev->irq) {
+-		if (!wait_for_completion_timeout(&ipcdev->cmd_complete,
+-						 CMD_TIMEOUT_SECONDS * HZ)) {
+-			dev_err(ipcdev->dev, "IPC timed out\n");
+-			return -ETIMEDOUT;
+-		}
+-	} else {
+-		while ((ipc_read_status(ipcdev, type) & CMD_RUN) && --loops)
+-			udelay(1);
+-		if (!loops) {
+-			dev_err(ipcdev->dev, "IPC timed out\n");
+-			return -ETIMEDOUT;
+-		}
+-	}
+-
+-	status = ipc_read_status(ipcdev, type);
+-	errcode = status & CMD_ERRCODE_MASK;
+-	if (errcode) {
+-		dev_err(ipcdev->dev, "IPC failed: %s, IPC_STS=0x%x\n",
+-			ipc_err_string(errcode), status);
+-		return -EIO;
+-	}
+-
+-	return 0;
+-}
++const char *ipc_dev_name[RESERVED_IPC] = {
++	"punit_bios_ipc",
++	"punit_gtd_ipc",
++	"punit_isp_ipc"
 +};
+ 
+ /**
+  * intel_punit_ipc_simple_command() - Simple IPC command
+@@ -146,21 +72,13 @@ int intel_punit_ipc_simple_command(int cmd, int para1, int para2)
+ 	IPC_DEV *ipcdev = punit_ipcdev;
+ 	IPC_TYPE type;
+ 	u32 val;
+-	int ret;
+-
+-	mutex_lock(&ipcdev->lock);
+ 
+-	reinit_completion(&ipcdev->cmd_complete);
+ 	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
+ 
+ 	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
+ 	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
+-	ipc_write_cmd(ipcdev, type, val);
+-	ret = intel_punit_ipc_check_status(ipcdev, type);
+ 
+-	mutex_unlock(&ipcdev->lock);
+-
+-	return ret;
++	return ipc_dev_simple_cmd(ipcdev->ipc_dev[type], val);
+ }
+ EXPORT_SYMBOL(intel_punit_ipc_simple_command);
+ 
+@@ -180,48 +98,22 @@ int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
+ {
+ 	IPC_DEV *ipcdev = punit_ipcdev;
+ 	IPC_TYPE type;
+-	u32 val;
+-	int ret;
+-
+-	mutex_lock(&ipcdev->lock);
++	u32 val, len;
+ 
+-	reinit_completion(&ipcdev->cmd_complete);
+ 	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
+-
+-	if (in) {
+-		ipc_write_data_low(ipcdev, type, *in);
+-		if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
+-			ipc_write_data_high(ipcdev, type, *++in);
+-	}
++	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
++		len = 2;
++	else
++		len = 1;
+ 
+ 	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
+ 	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
+-	ipc_write_cmd(ipcdev, type, val);
+-
+-	ret = intel_punit_ipc_check_status(ipcdev, type);
+-	if (ret)
+-		goto out;
+-
+-	if (out) {
+-		*out = ipc_read_data_low(ipcdev, type);
+-		if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
+-			*++out = ipc_read_data_high(ipcdev, type);
+-	}
+ 
+-out:
+-	mutex_unlock(&ipcdev->lock);
+-	return ret;
++	return ipc_dev_raw_cmd(ipcdev->ipc_dev[type], val, (u8*)in, len * 4,
++			out, len, 0, 0);
+ }
+ EXPORT_SYMBOL_GPL(intel_punit_ipc_command);
+ 
+-static irqreturn_t intel_punit_ioc(int irq, void *dev_id)
+-{
+-	IPC_DEV *ipcdev = dev_id;
+-
+-	complete(&ipcdev->cmd_complete);
+-	return IRQ_HANDLED;
+-}
+-
+ static int intel_punit_get_bars(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+@@ -282,9 +174,57 @@ static int intel_punit_get_bars(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int punit_ipc_err_code(int status)
++{
++	return (status & IPC_DEV_PUNIT_CMD_STATUS_ERR_MASK);
++}
 +
-+/**
-+ * struct intel_ipc_dev_ops - IPC device ops structure.
-+ *
-+ * Call backs for IPC device specific operations.
-+ *
-+ * @err_code	: Status to error code conversion function.
-+ * @busy_check	: Check for IPC busy status.
-+ * @cmd_msi	: Enable MSI for IPC commands.
-+ *
-+ */
-+struct intel_ipc_dev_ops {
-+	int (*to_err_code)(int status);
-+	int (*busy_check)(int status);
-+	u32 (*enable_msi)(u32 cmd);
++static int punit_ipc_busy_check(int status)
++{
++	return status | IPC_DEV_PUNIT_CMD_STATUS_BUSY;
++}
 +
-+};
-+
-+/**
-+ * struct intel_ipc_dev - Intel IPC device structure.
-+ *
-+ * Used with devm_intel_ipc_dev_create() to create new IPC device.
-+ *
-+ * @dev:        	IPC device object.
-+ * @cmd:  		Current IPC device command.
-+ * @cmd_complete:   	Command completion object.
-+ * @lock:   		Lock to protect IPC device structure.
-+ * @ops: 		IPC device ops pointer.
-+ * @cfg: 		IPC device cfg pointer.
-+ *
-+ */
-+struct intel_ipc_dev {
-+	struct device dev;
-+	int cmd;
-+	struct completion cmd_complete;
-+	struct mutex lock;
++static struct intel_ipc_dev *intel_punit_ipc_dev_create(struct device *dev,
++		const char *devname,
++		int irq,
++		void __iomem *base,
++		void __iomem *data)
++{
 +	struct intel_ipc_dev_ops *ops;
 +	struct intel_ipc_dev_cfg *cfg;
-+};
 +
-+#if IS_ENABLED(CONFIG_INTEL_IPC_DEV)
++        cfg = devm_kzalloc(dev, sizeof(*cfg), GFP_KERNEL);
++        if (!cfg)
++                return ERR_PTR(-ENOMEM);
 +
-+/* API to create new IPC device */
-+struct intel_ipc_dev *devm_intel_ipc_dev_create(struct device *dev,
-+		const char *devname, struct intel_ipc_dev_cfg *cfg,
-+		struct intel_ipc_dev_ops *ops);
-+
-+int ipc_dev_simple_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd);
-+int ipc_dev_raw_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd, u8 *in,
-+		u32 inlen, u32 *out, u32 outlen, u32 dptr, u32 sptr);
-+#else
-+
-+static inline struct intel_ipc_dev *devm_intel_ipc_dev_create(
-+		struct device *dev,
-+		const char *devname, struct intel_ipc_dev_cfg *cfg,
-+		struct intel_ipc_dev_ops *ops)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int ipc_dev_simple_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int ipc_dev_raw_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd,
-+		u8 *in, u32 inlen, u32 *out, u32 outlen, u32 dptr, u32 sptr)
-+{
-+	return -EINVAL;
-+}
-+
-+#endif
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b048607..030eac7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1138,6 +1138,14 @@ config SILEAD_DMI
- 	  with the OS-image for the device. This option supplies the missing
- 	  information. Enable this for x86 tablets with Silead touchscreens.
- 
-+config INTEL_IPC_DEV
-+	tristate "Intel IPC Device Driver"
-+	depends on X86_64
-+	---help---
-+	  This driver implements core features of Intel IPC device. Devices
-+	  like PMC, SCU, PUNIT, etc can use interfaces provided by this
-+	  driver to implement IPC protocol of their respective device.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 91cec17..04e11ce 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -83,3 +83,4 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-+obj-$(CONFIG_INTEL_IPC_DEV)	+= intel_ipc_dev.o
-diff --git a/drivers/platform/x86/intel_ipc_dev.c b/drivers/platform/x86/intel_ipc_dev.c
-new file mode 100644
-index 0000000..6c86b62
---- /dev/null
-+++ b/drivers/platform/x86/intel_ipc_dev.c
-@@ -0,0 +1,433 @@
-+/*
-+ * intel_ipc_dev.c: Intel IPC device class driver
-+ *
-+ * (C) Copyright 2017 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; version 2
-+ * of the License.
-+ *
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/idr.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/interrupt.h>
-+#include <asm/intel_ipc_dev.h>
-+
-+/* mutex to sync different ipc devices in same channel */
-+static struct mutex channel_lock[IPC_CHANNEL_MAX];
-+
-+static void ipc_channel_lock_init(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < IPC_CHANNEL_MAX; i++)
-+		mutex_init(&channel_lock[i]);
-+}
-+
-+static struct class intel_ipc_class = {
-+	.name = "intel_ipc",
-+	.owner = THIS_MODULE,
-+};
-+
-+static int __init intel_ipc_init(void)
-+{
-+	ipc_channel_lock_init();
-+	return class_register(&intel_ipc_class);
-+}
-+
-+static void __exit intel_ipc_exit(void)
-+{
-+	class_unregister(&intel_ipc_class);
-+}
-+
-+static int ipc_dev_lock(struct intel_ipc_dev *ipc_dev)
-+{
-+	int chan_type = ipc_dev->cfg->chan_type;
-+
-+	if (!ipc_dev)
-+		return -ENODEV;
-+
-+	if (chan_type > IPC_CHANNEL_MAX)
-+		return -EINVAL;
-+
-+	/* acquire channel lock */
-+	mutex_lock(&channel_lock[chan_type]);
-+
-+	/* acquire IPC device lock */
-+	mutex_lock(&ipc_dev->lock);
-+
-+	return 0;
-+}
-+
-+static int ipc_dev_unlock(struct intel_ipc_dev *ipc_dev)
-+{
-+	int chan_type = ipc_dev->cfg->chan_type;
-+
-+	if (!ipc_dev)
-+		return -ENODEV;
-+
-+	if (chan_type > IPC_CHANNEL_MAX)
-+		return -EINVAL;
-+
-+	/* release IPC device lock */
-+	mutex_unlock(&ipc_dev->lock);
-+
-+	/* release channel lock */
-+	mutex_unlock(&channel_lock[chan_type]);
-+
-+	return 0;
-+}
-+
-+
-+static const char *ipc_dev_err_string(struct intel_ipc_dev *ipc_dev,
-+	int error)
-+{
-+	switch (error) {
-+	case IPC_DEV_ERR_NONE:
-+		return "No error";
-+	case IPC_DEV_ERR_CMD_NOT_SUPPORTED:
-+		return "Command not-supported/Invalid";
-+	case IPC_DEV_ERR_CMD_NOT_SERVICED:
-+		return "Command not-serviced/Invalid param";
-+	case IPC_DEV_ERR_UNABLE_TO_SERVICE:
-+		return "Unable-to-service/Cmd-timeout";
-+	case IPC_DEV_ERR_CMD_INVALID:
-+		return "Command-invalid/Cmd-locked";
-+	case IPC_DEV_ERR_CMD_FAILED:
-+		return "Command-failed/Invalid-VR-id";
-+	case IPC_DEV_ERR_EMSECURITY:
-+		return "Invalid Battery/VR-Error";
-+	case IPC_DEV_ERR_UNSIGNEDKERNEL:
-+		return "Unsigned kernel";
-+	default:
-+		return "Unknown Command";
-+	};
-+}
-+
-+/* Helper function to read IPC device status register */
-+static inline u32 ipc_dev_read_status(struct intel_ipc_dev *ipc_dev)
-+{
-+	return readl(ipc_dev->cfg->status_reg);
-+}
-+
-+/* Helper function to write 32 bits to IPC device data register */
-+static inline void ipc_dev_write_datal(struct intel_ipc_dev *ipc_dev,
-+		u32 data, u32 offset)
-+{
-+	writel(data, ipc_dev->cfg->wrbuf_reg + offset);
-+}
-+
-+/* Helper function to read 32 bits from IPC device data register */
-+static inline u32 ipc_dev_read_datal(struct intel_ipc_dev *ipc_dev,
-+		u32 offset)
-+{
-+	return readl(ipc_dev->cfg->rbuf_reg + offset);
-+}
-+
-+/* Helper function to send given command to IPC device */
-+static inline void ipc_dev_send_cmd(struct intel_ipc_dev *ipc_dev,
-+		u32 cmd)
-+{
-+	ipc_dev->cmd = cmd;
-+
-+	if (ipc_dev->cfg->mode == IPC_DEV_MODE_IRQ)
-+		reinit_completion(&ipc_dev->cmd_complete);
-+
-+	if (ipc_dev->ops->enable_msi)
-+		cmd = ipc_dev->ops->enable_msi(cmd);
-+
-+	writel(cmd, ipc_dev->cfg->cmd_reg);
-+}
-+
-+static inline int ipc_dev_status_busy(struct intel_ipc_dev *ipc_dev)
-+{
-+	int status = ipc_dev_read_status(ipc_dev);
-+
-+	if (ipc_dev->ops->busy_check)
-+		return ipc_dev->ops->busy_check(status);
-+
-+	return 0;
-+}
-+
-+/* Check the status of IPC command and return err code if failed */
-+static int ipc_dev_check_status(struct intel_ipc_dev *ipc_dev)
-+{
-+	int loop_count = IPC_DEV_CMD_LOOP_CNT;
-+	int status;
-+	int ret = 0;
-+
-+	if (ipc_dev->cfg->mode == IPC_DEV_MODE_IRQ) {
-+		if (!wait_for_completion_timeout(&ipc_dev->cmd_complete,
-+				IPC_DEV_CMD_TIMEOUT))
-+			ret = -ETIMEDOUT;
-+	} else {
-+		while (ipc_dev_status_busy(ipc_dev) && --loop_count)
-+			udelay(1);
-+		if (!loop_count)
-+			ret = -ETIMEDOUT;
-+	}
-+
-+	if (ret < 0) {
-+		dev_err(&ipc_dev->dev,
-+				"IPC timed out, CMD=0x%x\n", ipc_dev->cmd);
-+		return ret;
-+	}
-+
-+	status = ipc_dev_read_status(ipc_dev);
-+
-+	if (ipc_dev->ops->to_err_code)
-+		ret = ipc_dev->ops->to_err_code(status);
-+
-+	if (ret) {
-+		dev_err(&ipc_dev->dev,
-+				"IPC failed: %s, STS=0x%x, CMD=0x%x\n",
-+				ipc_dev_err_string(ipc_dev, ret),
-+				status, ipc_dev->cmd);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ipc_dev_simple_cmd() - Send simple IPC command
-+ * @ipc_dev	: Reference to ipc device.
-+ * @cmd		: IPC command code.
-+ *
-+ * Send a simple IPC command to ipc device.
-+ * Use this when don't need to specify input/output data
-+ * and source/dest pointers.
-+ *
-+ * Return:	an IPC error code or 0 on success.
-+ */
-+
-+int ipc_dev_simple_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd)
-+{
-+	int ret;
-+
-+	ipc_dev_lock(ipc_dev);
-+	ipc_dev_send_cmd(ipc_dev, cmd);
-+	ret = ipc_dev_check_status(ipc_dev);
-+	ipc_dev_unlock(ipc_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(ipc_dev_simple_cmd);
-+
-+/**
-+ * ipc_dev_raw_cmd() - IPC command with data and pointers
-+ * @ipc_dev	: reference to ipc_dev.
-+ * @cmd		: IPC command code.
-+ * @in		: input data of this IPC command.
-+ * @inlen	: input data length in bytes.
-+ * @out		: output data of this IPC command.
-+ * @outlen	: output data length in dwords.
-+ * @sptr	: data writing to SPTR register. Use 0 if want to skip.
-+ * @dptr	: data writing to DPTR register. Use 0 if want to skip.
-+ *
-+ * Send an IPC command to device with input/output data and
-+ * source/dest pointers.
-+ *
-+ * Return:	an IPC error code or 0 on success.
-+ */
-+
-+int ipc_dev_raw_cmd(struct intel_ipc_dev *ipc_dev, u32 cmd,
-+		u8 *in, u32 inlen, u32 *out,
-+		u32 outlen, u32 dptr, u32 sptr)
-+{
-+	u32 wbuf[4] = { 0 };
-+	int ret;
-+	int i;
-+
-+	ipc_dev_lock(ipc_dev);
-+
-+	memcpy(wbuf, in, inlen);
-+
-+	/* write if dptr_reg is valid */
-+	if (ipc_dev->cfg->dptr_reg)
-+		writel(dptr, ipc_dev->cfg->dptr_reg);
-+
-+	/* write if sptr_reg is valid */
-+	if (ipc_dev->cfg->sptr_reg)
-+		writel(sptr, ipc_dev->cfg->sptr_reg);
-+
-+	/* The input data register is 32bit register and inlen
-+	 * is in Byte */
-+	for (i = 0; i < ((inlen + 3) / 4); i++)
-+		ipc_dev_write_datal(ipc_dev, wbuf[i], 4 * i);
-+
-+	ipc_dev_send_cmd(ipc_dev, cmd);
-+
-+	ret = ipc_dev_check_status(ipc_dev);
-+
-+	/* The out data register is 32bit register and outlen
-+	 * is in 32 bit */
-+	if (!ret) {
-+		for (i = 0; i < outlen; i++)
-+			*out++ = ipc_dev_read_datal(ipc_dev, 4 * i);
-+	}
-+
-+	ipc_dev_unlock(ipc_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(ipc_dev_raw_cmd);
-+
-+/* sysfs option to send simple IPC commands from userspace */
-+static ssize_t ipc_dev_cmd_reg_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct intel_ipc_dev *ipc_dev = dev_get_drvdata(dev);
-+	u32 cmd;
-+	int ret;
-+
-+	ret = sscanf(buf, "%d", &cmd);
-+	if (ret != 1) {
-+		dev_err(dev, "Error args\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = ipc_dev_simple_cmd(ipc_dev, cmd);
-+	if (ret) {
-+		dev_err(dev, "command 0x%x error with %d\n", cmd, ret);
-+		return ret;
-+	}
-+	return (ssize_t)count;
-+}
-+
-+static DEVICE_ATTR(send_cmd, S_IWUSR, NULL, ipc_dev_cmd_reg_store);
-+
-+static struct attribute *ipc_dev_attrs[] = {
-+	&dev_attr_send_cmd.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group ipc_dev_group = {
-+	.attrs = ipc_dev_attrs,
-+};
-+
-+static const struct attribute_group *ipc_dev_groups[] = {
-+	&ipc_dev_group,
-+	NULL,
-+};
-+
-+/* IPC device IRQ handler */
-+static irqreturn_t ipc_dev_irq_handler(int irq, void *dev_id)
-+{
-+	struct intel_ipc_dev *ipc_dev = (struct intel_ipc_dev *)dev_id;
-+
-+	complete(&ipc_dev->cmd_complete);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void devm_intel_ipc_dev_release(struct device *dev, void *res)
-+{
-+	struct intel_ipc_dev *ipc_dev = *(struct intel_ipc_dev **)res;
-+
-+	if (!ipc_dev)
-+		return;
-+
-+	device_del(&ipc_dev->dev);
-+
-+	kfree(ipc_dev);
-+}
-+
-+/**
-+ * devm_intel_ipc_dev_create() - Create IPC device
-+ * @dev		: IPC parent device.
-+ * @devname	: Name of the IPC device.
-+ * @cfg		: IPC device configuration.
-+ * @ops		: IPC device ops.
-+ *
-+ * Resource managed API to create IPC device with
-+ * given configuration.
-+ *
-+ * Return	: IPC device pointer or ERR_PTR(error code).
-+ */
-+struct intel_ipc_dev *devm_intel_ipc_dev_create(struct device *dev,
-+		const char *devname,
-+		struct intel_ipc_dev_cfg *cfg,
-+		struct intel_ipc_dev_ops *ops)
-+{
-+	struct intel_ipc_dev **ptr, *ipc_dev;
-+	int ret;
-+
-+	if (!dev && !devname && !cfg)
-+		return ERR_PTR(-EINVAL);
-+
-+	ptr = devres_alloc(devm_intel_ipc_dev_release, sizeof(*ptr),
-+			GFP_KERNEL);
-+	if (!ptr)
++	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
++	if (!ops)
 +		return ERR_PTR(-ENOMEM);
 +
-+	ipc_dev = kzalloc(sizeof(*ipc_dev), GFP_KERNEL);
-+	if (!ipc_dev) {
-+		ret = -ENOMEM;
-+		goto err_dev_create;
-+	}
++	/* set IPC dev ops */
++	ops->to_err_code = punit_ipc_err_code;
++	ops->busy_check = punit_ipc_busy_check;
 +
-+	ipc_dev->dev.class = &intel_ipc_class;
-+	ipc_dev->dev.parent = dev;
-+	ipc_dev->dev.groups = ipc_dev_groups;
-+	ipc_dev->cfg = cfg;
-+	ipc_dev->ops = ops;
++	if (irq > 0)
++	        cfg->mode = IPC_DEV_MODE_IRQ;
++	else
++	        cfg->mode = IPC_DEV_MODE_POLLING;
 +
-+	mutex_init(&ipc_dev->lock);
-+	init_completion(&ipc_dev->cmd_complete);
-+	dev_set_drvdata(&ipc_dev->dev, ipc_dev);
-+	dev_set_name(&ipc_dev->dev, devname);
-+	device_initialize(&ipc_dev->dev);
++	cfg->chan_type = IPC_CHANNEL_IA_PUNIT;
++	cfg->irq = irq;
++	cfg->irqflags = IRQF_NO_SUSPEND | IRQF_SHARED;
++	cfg->base = base;
++	cfg->wrbuf_reg = data;
++	cfg->rbuf_reg = data;
++	cfg->status_reg = base;
++	cfg->cmd_reg = base;
 +
-+	ret = device_add(&ipc_dev->dev);
-+	if (ret < 0) {
-+		dev_err(&ipc_dev->dev, "%s device create failed\n",
-+				__func__);
-+		ret = -ENODEV;
-+		goto err_dev_add;
-+	}
++	return devm_intel_ipc_dev_create(dev, devname, cfg, ops);
++}
 +
-+	if (ipc_dev->cfg->mode == IPC_DEV_MODE_IRQ) {
-+		if (devm_request_irq(&ipc_dev->dev,
-+				ipc_dev->cfg->irq,
-+				ipc_dev_irq_handler,
-+				ipc_dev->cfg->irqflags,
-+				dev_name(&ipc_dev->dev),
-+				ipc_dev)) {
-+			dev_err(&ipc_dev->dev,
-+					"Failed to request irq\n");
-+			goto err_irq_request;
+ static int intel_punit_ipc_probe(struct platform_device *pdev)
+ {
+-	int irq, ret;
++	int irq, ret, i;
+ 
+ 	punit_ipcdev = devm_kzalloc(&pdev->dev,
+ 				    sizeof(*punit_ipcdev), GFP_KERNEL);
+@@ -294,35 +234,30 @@ static int intel_punit_ipc_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, punit_ipcdev);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		punit_ipcdev->irq = 0;
+-		dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
+-	} else {
+-		ret = devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
+-				       IRQF_NO_SUSPEND, "intel_punit_ipc",
+-				       &punit_ipcdev);
+-		if (ret) {
+-			dev_err(&pdev->dev, "Failed to request irq: %d\n", irq);
+-			return ret;
+-		}
+-		punit_ipcdev->irq = irq;
+-	}
+ 
+ 	ret = intel_punit_get_bars(pdev);
+ 	if (ret)
+-		goto out;
++		return ret;
++
++	for (i = 0; i < RESERVED_IPC; i++) {
++		punit_ipcdev->ipc_dev[i] = intel_punit_ipc_dev_create(
++				&pdev->dev,
++				ipc_dev_name[i],
++				irq,
++				punit_ipcdev->base[i][BASE_IFACE],
++				punit_ipcdev->base[i][BASE_DATA]);
++
++		if (IS_ERR(punit_ipcdev->ipc_dev[i])) {
++			dev_err(&pdev->dev, "%s create failed\n",
++					ipc_dev_name[i]);
++			return PTR_ERR(punit_ipcdev->ipc_dev[i]);
 +		}
 +	}
-+
-+	*ptr = ipc_dev;
-+
-+	devres_add(dev, ptr);
-+
-+	return ipc_dev;
-+
-+err_irq_request:
-+	device_del(&ipc_dev->dev);
-+err_dev_add:
-+	kfree(ipc_dev);
-+err_dev_create:
-+	devres_free(ptr);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(devm_intel_ipc_dev_create);
-+
-+subsys_initcall(intel_ipc_init);
-+module_exit(intel_ipc_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel IPC device class driver");
+ 
+ 	punit_ipcdev->dev = &pdev->dev;
+-	mutex_init(&punit_ipcdev->lock);
+-	init_completion(&punit_ipcdev->cmd_complete);
+ 
+-out:
+ 	return ret;
+-}
+ 
+-static int intel_punit_ipc_remove(struct platform_device *pdev)
+-{
+-	return 0;
+ }
+ 
+ static const struct acpi_device_id punit_ipc_acpi_ids[] = {
+@@ -332,7 +267,6 @@ static const struct acpi_device_id punit_ipc_acpi_ids[] = {
+ 
+ static struct platform_driver intel_punit_ipc_driver = {
+ 	.probe = intel_punit_ipc_probe,
+-	.remove = intel_punit_ipc_remove,
+ 	.driver = {
+ 		.name = "intel_punit_ipc",
+ 		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
 -- 
 2.7.4
