@@ -1,153 +1,81 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/3] platform/dell-wmi: Fix driver interface version query
-Date: Tue, 1 Aug 2017 23:16:24 +0200
-Message-ID: <20170801211624.GJ25574@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 3/3] platform/wmi: Expose the raw WDG data in sysfs
+Date: Tue, 1 Aug 2017 14:17:02 -0700
+Message-ID: <20170801211702.GF3110@fury>
 References: <cover.1501601667.git.luto@kernel.org>
- <0cc9b015ed366f3fd104d2de707083c6ca2c2a5a.1501601667.git.luto@kernel.org>
- <20170801154312.GA25574@pali>
- <CALCETrUHw-bDMo6mrNM8+tdNDn71-ycb-aDtFTv82B0s8FiKHA@mail.gmail.com>
- <20170801204546.GI25574@pali>
- <20170801205956.GE3110@fury>
+ <e6df9d038af0a0ce4d4119395aaea58366ade26d.1501601667.git.luto@kernel.org>
+ <20170801200313.GC3110@fury>
+ <CALCETrX0zqq3xQgNBx41R9ZCT3_bB4EoXGrY3jWLK0e0Koo=EQ@mail.gmail.com>
+ <20170801204040.GH25574@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f194.google.com ([209.85.128.194]:33559 "EHLO
-        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752345AbdHAVQ2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2017 17:16:28 -0400
-Received: by mail-wr0-f194.google.com with SMTP id y43so2328331wrd.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2017 14:16:27 -0700 (PDT)
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170801205956.GE3110@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20170801204040.GH25574@pali>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 01 August 2017 13:59:56 Darren Hart wrote:
-> On Tue, Aug 01, 2017 at 10:45:46PM +0200, Pali Rohár wrote:
-> > On Tuesday 01 August 2017 11:08:26 Andy Lutomirski wrote:
-> > > On Tue, Aug 1, 2017 at 8:43 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > > On Tuesday 01 August 2017 08:37:26 Andy Lutomirski wrote:
-> > > >> When I converted dell-wmi to the new bus infrastructure, I left the
-> > > >> call to dell_wmi_check_descriptor_buffer() in dell_wmi_init().  This
-> > > >> could cause two problems:
-> > > >>
-> > > >>  - An error message when loading the driver on a system without
-> > > >>    dell-wmi.  We'd try to read the event descriptor even if the WMI
-> > > >>    GUID wasn't there.
-> > > >>
-> > > >>  - A possible race if dell-wmi was loaded manually before wmi was
-> > > >>    fully initialized.
-> > > >>
-> > > >> Fix it by moving the call to the probe function where it belongs.
-> > > >>
-> > > >> Fixes: bff589be59c5 ("platform/x86: dell-wmi: Convert to the WMI bus infrastructure")
-> > > >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> > > >> ---
-> > > >>  drivers/platform/x86/dell-wmi.c | 12 +++++++-----
-> > > >>  1 file changed, 7 insertions(+), 5 deletions(-)
-> > > >>
-> > > >> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> > > >> index f8978464df31..dad8f4afa17c 100644
-> > > >> --- a/drivers/platform/x86/dell-wmi.c
-> > > >> +++ b/drivers/platform/x86/dell-wmi.c
-> > > >> @@ -626,7 +626,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
-> > > >>   * WMI Interface Version     8       4    <version>
-> > > >>   * WMI buffer length        12       4    4096
-> > > >>   */
-> > > >> -static int __init dell_wmi_check_descriptor_buffer(void)
-> > > >> +static int dell_wmi_check_descriptor_buffer(void)
-> > > >>  {
-> > > >>       struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
-> > > >>       union acpi_object *obj;
-> > > >> @@ -717,9 +717,15 @@ static int dell_wmi_events_set_enabled(bool enable)
-> > > >>
-> > > >>  static int dell_wmi_probe(struct wmi_device *wdev)
-> > > >>  {
-> > > >> +     int err;
-> > > >> +
-> > > >>       struct dell_wmi_priv *priv = devm_kzalloc(
-> > > >>               &wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
-> > > >>
-> > > >> +     err = dell_wmi_check_descriptor_buffer();
-> > > >> +     if (err)
-> > > >> +             return err;
-> > > >> +
-> > > >>       dev_set_drvdata(&wdev->dev, priv);
-> > > >>
-> > > >>       return dell_wmi_input_setup(wdev);
-> > > >> @@ -749,10 +755,6 @@ static int __init dell_wmi_init(void)
-> > > >>  {
-> > > >>       int err;
-> > > >>
-> > > >> -     err = dell_wmi_check_descriptor_buffer();
-> > > >> -     if (err)
-> > > >> -             return err;
-> > > >> -
-> > > >>       dmi_check_system(dell_wmi_smbios_list);
-> > > >>
-> > > >>       if (wmi_requires_smbios_request) {
-> > > >
-> > > > Hi! You should move also dell_wmi_events_set_enabled() into
-> > > > dell_wmi_probe() as there is no need to enable receiving events prior to
-> > > > creating input device.
-> > > 
-> > > I thought of that and intentionally didn't do it: I wanted to leave
-> > > enable and the disable paired properly, and there's nothing that
-> > > tracks the enabled state per device.  Also, it's at least
-> > > theoretically possible to have more than one instance of dell-wmi in a
-> > > system (my laptop already has *two* wmi busses), and moving this code
-> > > to ->probe would break this.
-> > > 
-> > > (The current wmi.c code can't handle the same GUID on two busses, but
-> > > it could easily be added if anyone ever finds a laptop that does
-> > > that.)
+On Tue, Aug 01, 2017 at 10:40:40PM +0200, Pali Roh�r wrote:
+> On Tuesday 01 August 2017 13:19:16 Andy Lutomirski wrote:
+> > On Tue, Aug 1, 2017 at 1:03 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > > On Tue, Aug 01, 2017 at 08:37:28AM -0700, Andy Lutomirski wrote:
+> > >> This adds a sysfs binary attribute 'wdg' on the bus device
+> > >> (i.e. /sys/class/wmi_bus/wmi_bus-*/wdg) that contains the raw _WDG
+> > >> data from ACPI.  This can be used along with the wmi-bmof driver to
+> > >> decode the raw interface data from ACPI.
+> > >
+> > > I don't recall seeing mention of this is the documentation I read as a
+> > > requirement to decoding the interface with the bmof. Do Windows systems export
+> > > _WDG to userspace?
+> > >
+> > > Why do we need to export _WDG?
 > > 
-> > Yes, thanks for clarification, it makes sense.
-> > 
-> > Just one hypothetical situation, but as we know we should not trust what
-> > vendors put into ACPI DSDT...
-> > 
-> > Before whole wmi bus patches were introduced, function
-> > dell_wmi_events_set_enabled() was called only after every check passed:
-> > 
-> > 1) WMI GUID exists
-> > 
-> > 2) WMI descriptor buffer has correct type
-> > 
-> > 3) machine is on DMI whitelist
-> > 
-> > Now after all those patches, only the last (3) check need to pass to
-> > call that dell_wmi_events_set_enabled() function which issue SMM call.
-> > 
-> > Do not know how big this issue is, I just want to point to this
-> > hypothetical problem that SMM call could be issued also in more cases.
+> > This was a feature that Pali asked for.  Pali, since you seem to be
+> > working on userspace tooling, can you explain exactly what you'd use
+> > it for?
 > 
-> 
-> Thanks for raising the point. In my opinion, it seems reasonable to expect that
-> #1 and #2 are implicit in #3 being coded up. We don't like to rely on hard coded
-> assumptions of course. What is the failure mode if #1 or #2 aren't satisfied?
-
-What would happen if we call dell_wmi_events_set_enabled() on
-unsupported platform? E.g. on some Dell Latitudes it cause resetting
-keyboard backlight settings to default values, e.g. turn keyboard
-backlight on for every key press and turn keyboard backlight off after
-5s of inactivity.
-
-I do not know more.
-
-But yes, #3 should imply that #1 and #2 are truth too...
-
-> > 
-> > -- 
-> > Pali Rohár
-> > pali.rohar@gmail.com
-> > 
+> Take raw BMOF and WDG buffers from ACPI and parse them in userspace.
+> Then provide needed information like mapping from MOF event name to ACPI
+> event name based on info from WDG buffer.
 > 
 
+So first, I'm not opposed to adding it if that's what needed. However, I don't
+want to start pushing ACPI objects to sysfs without:
+
+1) Confirming it's necessary
+2) Getting Rafael's take on this practice, as if this is to become something we
+do, some kind of ACPI_OBJECT_SYSFS_EXPORT macro provided by ACPI would probably
+be the right way to do it.
+
+My understanding of the BMOF data is that it provided us "with a description of
+all data blocks, WMI methods, and events for the device" [1].
+
+If that's accurate, why do we need the _WDG? This just seems contrary to what
+the BMOF data is supposed to be for.
+
+> Ideally ability to create dump of BMOF and WDG on one computer and then
+> parse those data on another.
+> 
+> Having original BMOF and WDG structures is a good for debugging and
+> development purpose.
+
+For debugging purposes, the fwts and acpidump tools will provide this.
+
+> > On my laptop, at the very least, it would allow user code to determine
+> > that there's a WMI GUID that doesn't show up in sysfs.  It doesn't
+> > show up in sysfs because the ACPI methods are completely missing, but
+> > it's still there in WDG.  This prints a warning when wmi.ko is loaded,
+> > but maybe the userspace tooling would care, for debugging if nothing
+> > else.
+
+In this case, I'd argue userspace should only be aware of what the kernel
+decides to expose, based on, at the very least, compliance with the WMI
+documentation.
+
+1. https://wiki.ubuntu.com/Kernel/Reference/WMI
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Darren Hart
+VMware Open Source Technology Center
