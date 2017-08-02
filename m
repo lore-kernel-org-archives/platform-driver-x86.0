@@ -1,91 +1,249 @@
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?=
-        <jerome.debretagne@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: Wake up Dell Latitude 7275 from suspend-to-idle
-Date: Wed, 2 Aug 2017 11:07:36 +0200
-Message-ID: <CA+kEDGGe+0HgujKh0766XDVe0vmBKE-vTNep8r6_T7EcATBGmw@mail.gmail.com>
-References: <7313224.XbtxUoJtXM@aspire.rjw.lan> <3172146.dPhkKZoKtx@aspire.rjw.lan>
- <CAHp75VfouHVbj0X3PJfRHy2uSziq-P__N5ezbmsuUNYDwDxYKg@mail.gmail.com>
- <CAJZ5v0jimcsL3+BfyfjSxjZRjWVFXunPRDquCp-V1SHi32f+=w@mail.gmail.com>
- <CAHp75Vd-LcCR3k3-LTNYNzh-aomGcqgszFWw7HFb-u1+UJLX3A@mail.gmail.com> <739eedabac12425e8e59f8391da4b607@ausx13mpc120.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID API
+Date: Wed,  2 Aug 2017 16:28:34 +0300
+Message-ID: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68]:38626 "EHLO
-        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752233AbdHBJIT (ORCPT
+Received: from mga05.intel.com ([192.55.52.43]:65364 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751910AbdHBN3J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Aug 2017 05:08:19 -0400
-In-Reply-To: <739eedabac12425e8e59f8391da4b607@ausx13mpc120.AMER.DELL.COM>
+        Wed, 2 Aug 2017 09:29:09 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: andy.shevchenko@gmail.com, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, alex.hung@canonical.com
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-2017-08-01 19:04 GMT+02:00  <Mario.Limonciello@dell.com>:
->> -----Original Message-----
->> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
->> Sent: Tuesday, August 1, 2017 7:37 AM
->> To: Rafael J. Wysocki <rafael@kernel.org>
->> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Platform Driver <platform-dri=
-ver-
->> x86@vger.kernel.org>; Darren Hart <dvhart@infradead.org>; LKML <linux-
->> kernel@vger.kernel.org>; Linux ACPI <linux-acpi@vger.kernel.org>; Andy
->> Shevchenko <andriy.shevchenko@linux.intel.com>; J=C3=A9r=C3=B4me de Bret=
-agne
->> <jerome.debretagne@gmail.com>; Limonciello, Mario
->> <Mario_Limonciello@Dell.com>; Alex Hung <alex.hung@canonical.com>
->> Subject: Re: [PATCH] platform/x86: intel-hid: Wake up Dell Latitude 7275=
- from
->> suspend-to-idle
->>
->> On Tue, Aug 1, 2017 at 2:56 PM, Rafael J. Wysocki <rafael@kernel.org> wr=
-ote:
->> > On Tue, Aug 1, 2017 at 1:21 AM, Andy Shevchenko
->> > <andy.shevchenko@gmail.com> wrote:
->> >> On Tue, Aug 1, 2017 at 12:46 AM, Rafael J. Wysocki <rjw@rjwysocki.net=
-> wrote:
->> >>> On Friday, July 28, 2017 02:06:36 AM Rafael J. Wysocki wrote:
->>
->> >>> Please note that this change is requisite for
->> >>>
->> >>> https://patchwork.kernel.org/patch/9873159/
->> >>>
->> >>> so are there any objections or concerns?
->> >>
->> >> Not from my side,
->> >>
->> >> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> >
->> > OK, thanks!
->> >
->> > I'm going to route it through the PM tree then if that's not a problem=
-.
->>
->> Mario, are you okay with this change?
->>
->
-> Thanks for checking.  I spent a little time this morning trying to walk t=
-hrough
-> the ASL as attached to the Bugzilla entry and I think this is the correct=
- approach.
->
-> Acked-By: Mario Limonciello <mario.limonciello@dell.com>
->
-> J=C3=A9r=C3=B4me,
-> I have one question though.  These events should be happening as a pair.
-> Press: 0xCE, Release: 0xCF.
-> What happens with the event on power button release?
-> Is that showing a message in the log during wakeup from S2I?
->
-> Something like "unknown event 0xCF"?
+There are new types and helpers that are supposed to be used in new code.
 
-Mario, I confirm that I can see such release events in the logs:
+As a preparation to get rid of legacy types and API functions do
+the conversion here.
 
-   intel-hid INT33D5:00: unknown event 0xcf
+While here, update Copyright to reflect this change along with previous
+one for the topic.
 
-during wakeup from suspend-to-idle.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/wmi.c | 56 ++++++++++++++++++++++++----------------------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
-> If so, it would be good to also catch and ignore that too.
->
-> Thanks,
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index e32ba575e8d9..7b8fac7067dc 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -7,6 +7,8 @@
+  *   Copyright (C) 2001,2002 Richard Russon <ldm@flatcap.org>
+  *   Copyright (c) 2001-2007 Anton Altaparmakov
+  *   Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
++ *  ...replaced by generic UUID API:
++ *   Copyright (C) 2016,2017 Intel Corporation.
+  *
+  *  WMI bus infrastructure by Andrew Lutomirski and Darren Hart:
+  *    Copyright (C) 2015 Andrew Lutomirski
+@@ -53,7 +55,7 @@ MODULE_LICENSE("GPL");
+ static LIST_HEAD(wmi_block_list);
+ 
+ struct guid_block {
+-	char guid[16];
++	guid_t guid;
+ 	union {
+ 		char object_id[2];
+ 		struct {
+@@ -121,19 +123,19 @@ static struct platform_driver acpi_wmi_driver = {
+ 
+ static bool find_guid(const char *guid_string, struct wmi_block **out)
+ {
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct wmi_block *wblock;
+ 	struct guid_block *block;
+ 	struct list_head *p;
+ 
+-	if (uuid_le_to_bin(guid_string, &guid_input))
++	if (guid_parse(guid_string, &guid_input))
+ 		return false;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		wblock = list_entry(p, struct wmi_block, list);
+ 		block = &wblock->gblock;
+ 
+-		if (memcmp(block->guid, &guid_input, 16) == 0) {
++		if (guid_equal(&block->guid, &guid_input)) {
+ 			if (out)
+ 				*out = wblock;
+ 			return true;
+@@ -420,7 +422,7 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
+ 
+ static void wmi_dump_wdg(const struct guid_block *g)
+ {
+-	pr_info("%pUL:\n", g->guid);
++	pr_info("%pUL:\n", &g->guid);
+ 	if (g->flags & ACPI_WMI_EVENT)
+ 		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
+ 	else
+@@ -480,6 +482,7 @@ static void wmi_notify_debug(u32 value, void *context)
+ 
+ /**
+  * wmi_install_notify_handler - Register handler for WMI events
++ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  * @handler: Function to handle notifications
+  * @data: Data to be returned to handler when event is fired
+  *
+@@ -490,20 +493,20 @@ wmi_notify_handler handler, void *data)
+ {
+ 	struct wmi_block *block;
+ 	acpi_status status = AE_NOT_EXIST;
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct list_head *p;
+ 
+ 	if (!guid || !handler)
+ 		return AE_BAD_PARAMETER;
+ 
+-	if (uuid_le_to_bin(guid, &guid_input))
++	if (guid_parse(guid, &guid_input))
+ 		return AE_BAD_PARAMETER;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		acpi_status wmi_status;
+ 		block = list_entry(p, struct wmi_block, list);
+ 
+-		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
++		if (guid_equal(&block->gblock.guid, &guid_input)) {
+ 			if (block->handler &&
+ 			    block->handler != wmi_notify_debug)
+ 				return AE_ALREADY_ACQUIRED;
+@@ -524,6 +527,7 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
+ 
+ /**
+  * wmi_uninstall_notify_handler - Unregister handler for WMI events
++ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  *
+  * Unregister handler for events sent to the ACPI-WMI mapper device.
+  */
+@@ -531,20 +535,20 @@ acpi_status wmi_remove_notify_handler(const char *guid)
+ {
+ 	struct wmi_block *block;
+ 	acpi_status status = AE_NOT_EXIST;
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct list_head *p;
+ 
+ 	if (!guid)
+ 		return AE_BAD_PARAMETER;
+ 
+-	if (uuid_le_to_bin(guid, &guid_input))
++	if (guid_parse(guid, &guid_input))
+ 		return AE_BAD_PARAMETER;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		acpi_status wmi_status;
+ 		block = list_entry(p, struct wmi_block, list);
+ 
+-		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
++		if (guid_equal(&block->gblock.guid, &guid_input)) {
+ 			if (!block->handler ||
+ 			    block->handler == wmi_notify_debug)
+ 				return AE_NULL_ENTRY;
+@@ -633,7 +637,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
++	return sprintf(buf, "wmi:%pUL\n", &wblock->gblock.guid);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -642,7 +646,7 @@ static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	return sprintf(buf, "%pUL\n", wblock->gblock.guid);
++	return sprintf(buf, "%pUL\n", &wblock->gblock.guid);
+ }
+ static DEVICE_ATTR_RO(guid);
+ 
+@@ -725,10 +729,10 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", wblock->gblock.guid))
++	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", &wblock->gblock.guid))
+ 		return -ENOMEM;
+ 
+-	if (add_uevent_var(env, "WMI_GUID=%pUL", wblock->gblock.guid))
++	if (add_uevent_var(env, "WMI_GUID=%pUL", &wblock->gblock.guid))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+@@ -749,11 +753,11 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	const struct wmi_device_id *id = wmi_driver->id_table;
+ 
+ 	while (id->guid_string) {
+-		uuid_le driver_guid;
++		guid_t driver_guid;
+ 
+-		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
++		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
+ 			continue;
+-		if (!memcmp(&driver_guid, wblock->gblock.guid, 16))
++		if (guid_equal(&driver_guid, &wblock->gblock.guid))
+ 			return 1;
+ 
+ 		id++;
+@@ -891,7 +895,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+ 	wblock->dev.dev.bus = &wmi_bus_type;
+ 	wblock->dev.dev.parent = wmi_bus_dev;
+ 
+-	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
++	dev_set_name(&wblock->dev.dev, "%pUL", &gblock->guid);
+ 
+ 	device_initialize(&wblock->dev.dev);
+ 
+@@ -912,12 +916,12 @@ static void wmi_free_devices(struct acpi_device *device)
+ }
+ 
+ static bool guid_already_parsed(struct acpi_device *device,
+-				const u8 *guid)
++				const guid_t *guid)
+ {
+ 	struct wmi_block *wblock;
+ 
+ 	list_for_each_entry(wblock, &wmi_block_list, list) {
+-		if (memcmp(wblock->gblock.guid, guid, 16) == 0) {
++		if (guid_equal(&wblock->gblock.guid, guid)) {
+ 			/*
+ 			 * Because we historically didn't track the relationship
+ 			 * between GUIDs and ACPI nodes, we don't know whether
+@@ -972,7 +976,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+ 		 * case yet, so for now, we'll just ignore the duplicate
+ 		 * for device creation.
+ 		 */
+-		if (guid_already_parsed(device, gblock[i].guid))
++		if (guid_already_parsed(device, &gblock[i].guid))
+ 			continue;
+ 
+ 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
+@@ -1009,7 +1013,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+ 		retval = device_add(&wblock->dev.dev);
+ 		if (retval) {
+ 			dev_err(wmi_bus_dev, "failed to register %pULL\n",
+-				wblock->gblock.guid);
++				&wblock->gblock.guid);
+ 			if (debug_event)
+ 				wmi_method_enable(wblock, 0);
+ 			list_del(&wblock->list);
+@@ -1124,10 +1128,8 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
+ 		wblock->handler(event, wblock->handler_data);
+ 	}
+ 
+-	if (debug_event) {
+-		pr_info("DEBUG Event GUID: %pUL\n",
+-			wblock->gblock.guid);
+-	}
++	if (debug_event)
++		pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
+ 
+ 	acpi_bus_generate_netlink_event(
+ 		wblock->acpi_device->pnp.device_class,
+-- 
+2.13.2
