@@ -1,589 +1,155 @@
-From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Subject: RE: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
- create dependent devices
-Date: Wed, 2 Aug 2017 05:14:09 +0000
-Message-ID: <5F7315E704FA0841B5DFCE90329B2BB462E93CB3@BGSMSX102.gar.corp.intel.com>
-References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 3/3] platform/wmi: Expose the raw WDG data in sysfs
+Date: Wed, 2 Aug 2017 09:49:03 +0200
+Message-ID: <20170802074903.GO25574@pali>
+References: <cover.1501601667.git.luto@kernel.org>
+ <e6df9d038af0a0ce4d4119395aaea58366ade26d.1501601667.git.luto@kernel.org>
+ <20170801200313.GC3110@fury>
+ <CALCETrX0zqq3xQgNBx41R9ZCT3_bB4EoXGrY3jWLK0e0Koo=EQ@mail.gmail.com>
+ <20170801204040.GH25574@pali>
+ <20170801211702.GF3110@fury>
+ <20170801213112.GK25574@pali>
+ <20170801223947.GH3110@fury>
+ <CALCETrXFySnB3jq_EAn+NDTb6jsp__4Dc=0ipdFqCbaZEPSOfg@mail.gmail.com>
+ <20170802022232.GA21551@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:55416 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751185AbdHBFOO (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Aug 2017 01:14:14 -0400
-In-Reply-To: <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "andy@infradead.org" <andy@infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "sathyaosid@gmail.com" <sathyaosid@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170802022232.GA21551@fury>
+Sender: linux-pm-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Tuesday 01 August 2017 19:22:32 Darren Hart wrote:
+> On Tue, Aug 01, 2017 at 04:51:40PM -0700, Andy Lutomirski wrote:
+> > On Tue, Aug 1, 2017 at 3:39 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > > On Tue, Aug 01, 2017 at 11:31:12PM +0200, Pali Rohár wrote:
+> > >> On Tuesday 01 August 2017 14:17:02 Darren Hart wrote:
+> > > ...
+> > >> > My understanding of the BMOF data is that it provided us "with a description of
+> > >> > all data blocks, WMI methods, and events for the device" [1].
+> > >> >
+> > >> > If that's accurate, why do we need the _WDG? This just seems contrary to what
+> > >> > the BMOF data is supposed to be for.
+> > >>
+> > >> BMOF provides mapping from human class and method names to WMI GUID. WDG
+> > >> then provides mapping from WMI GUID to ACPI function names.
+> > >>
+> > >> Therefore if you upper layer in MOF world say that it want to call
+> > >> method M of class C and you want to know which ACPI function is called,
+> > >> you need to parse both BMOF and WDG to get mapping from MOF to ACPI.
+> > >> Same for WMI events.
+> > >>
+> > >> > > Ideally ability to create dump of BMOF and WDG on one computer and then
+> > >> > > parse those data on another.
+> > >> > >
+> > >> > > Having original BMOF and WDG structures is a good for debugging and
+> > >> > > development purpose.
+> > >
+> > > OK, I went and reviewed the MOF docs, our previous discussions, and your bmf2moc
+> > > code (awesome by the way). So, agreed - we need easy access to _WDG and BMOF for
 
+There was compilation bug in bmf2mof, which caused that bmf2mof show
+same output as bmfparse. Now it is fixed in git and bmf2mof really
+outputs real MOF text document (UTF-8 encoded, unlike windows which
+produce UTF-16).
 
-> -----Original Message-----
-> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
-> x86-owner@vger.kernel.org] On Behalf Of
-> sathyanarayanan.kuppuswamy@linux.intel.com
-> Sent: Tuesday, August 1, 2017 11:44 PM
-> To: x86@kernel.org; mingo@redhat.com; Zha, Qipeng
-> <qipeng.zha@intel.com>; hpa@zytor.com; dvhart@infradead.org;
-> tglx@linutronix.de; andy@infradead.org
-> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> sathyaosid@gmail.com; Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Subject: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
-> create dependent devices
-> 
-> From: Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently, we have lot of repetitive code in dependent device resource
-> allocation and device creation handling code. This logic can be improved if
-> we use MFD framework for dependent device creation. This patch adds this
-> support.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 376 +++++++++++++-------------------
-> ---
->  1 file changed, 141 insertions(+), 235 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c
-> b/drivers/platform/x86/intel_pmc_ipc.c
-> index ad0416e..43533ec 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -33,6 +33,7 @@
->  #include <linux/suspend.h>
->  #include <linux/acpi.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/mfd/core.h>
-> 
->  #include <asm/intel_pmc_ipc.h>
-> 
-> @@ -105,8 +106,6 @@
->  #define TELEM_SSRAM_SIZE		240
->  #define TELEM_PMC_SSRAM_OFFSET		0x1B00
->  #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
-> -#define TCO_PMC_OFFSET			0x8
-> -#define TCO_PMC_SIZE			0x4
-> 
->  /* PMC register bit definitions */
-> 
-> @@ -115,6 +114,13 @@
->  #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
->  #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
-> 
-> +enum {
-> +	PMC_IPC_PUNIT_MFD_BLOCK,
-> +	PMC_IPC_WATCHDOG_MFD_BLOCK,
-> +	PMC_IPC_TELEMETRY_MFD_BLOCK,
-> +	PMC_IPC_MAX_MFD_BLOCK
-> +};
-> +
->  static struct intel_pmc_ipc_dev {
->  	struct device *dev;
->  	void __iomem *ipc_base;
-> @@ -123,25 +129,12 @@ static struct intel_pmc_ipc_dev {
->  	int cmd;
->  	struct completion cmd_complete;
-> 
-> -	/* The following PMC BARs share the same ACPI device with the IPC
-> */
-> -	resource_size_t acpi_io_base;
-> -	int acpi_io_size;
-> -	struct platform_device *tco_dev;
-> -
->  	/* gcr */
->  	void __iomem *gcr_mem_base;
->  	bool has_gcr_regs;
-> 
-> -	/* punit */
-> -	struct platform_device *punit_dev;
-> -
->  	/* Telemetry */
-> -	resource_size_t telem_pmc_ssram_base;
-> -	resource_size_t telem_punit_ssram_base;
-> -	int telem_pmc_ssram_size;
-> -	int telem_punit_ssram_size;
->  	u8 telem_res_inval;
-> -	struct platform_device *telemetry_dev;
->  } ipcdev;
-> 
->  static char *ipc_err_sources[] = {
-> @@ -613,7 +606,7 @@ static const struct attribute_group intel_ipc_group
-> = {
->  	.attrs = intel_ipc_attrs,
->  };
-> 
-> -static struct resource punit_res_array[] = {
-> +static struct resource punit_ipc_resources[] = {
->  	/* Punit BIOS */
->  	{
->  		.flags = IORESOURCE_MEM,
-> @@ -637,10 +630,7 @@ static struct resource punit_res_array[] = {
->  	},
->  };
-> 
-> -#define TCO_RESOURCE_ACPI_IO		0
-> -#define TCO_RESOURCE_SMI_EN_IO		1
-> -#define TCO_RESOURCE_GCR_MEM		2
-> -static struct resource tco_res[] = {
-> +static struct resource watchdog_ipc_resources[] = {
->  	/* ACPI - TCO */
->  	{
->  		.flags = IORESOURCE_IO,
-> @@ -658,9 +648,7 @@ static struct itco_wdt_platform_data tco_info = {
->  	.update_no_reboot_bit = update_no_reboot_bit,  };
-> 
-> -#define TELEMETRY_RESOURCE_PUNIT_SSRAM	0
-> -#define TELEMETRY_RESOURCE_PMC_SSRAM	1
-> -static struct resource telemetry_res[] = {
-> +static struct resource telemetry_ipc_resources[] = {
->  	/*Telemetry*/
->  	{
->  		.flags = IORESOURCE_MEM,
-> @@ -670,224 +658,152 @@ static struct resource telemetry_res[] = {
->  	},
->  };
-> 
-> -static int ipc_create_punit_device(void) -{
-> -	struct platform_device *pdev;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> -		.name = PUNIT_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = punit_res_array,
-> -		.num_res = ARRAY_SIZE(punit_res_array),
-> -		};
-> -
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> -
-> -	ipcdev.punit_dev = pdev;
-> -
-> -	return 0;
-> -}
-> -
-> -static int ipc_create_tco_device(void)
-> -{
-> -	struct platform_device *pdev;
-> -	struct resource *res;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> -		.name = TCO_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = tco_res,
-> -		.num_res = ARRAY_SIZE(tco_res),
-> -		.data = &tco_info,
-> -		.size_data = sizeof(tco_info),
-> -		};
-> -
-> -	res = tco_res + TCO_RESOURCE_ACPI_IO;
-> -	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
-> -	res->end = res->start + TCO_REGS_SIZE - 1;
-> -
-> -	res = tco_res + TCO_RESOURCE_SMI_EN_IO;
-> -	res->start = ipcdev.acpi_io_base + SMI_EN_OFFSET;
-> -	res->end = res->start + SMI_EN_SIZE - 1;
-> -
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> -
-> -	ipcdev.tco_dev = pdev;
-> -
-> -	return 0;
-> -}
-> -
-> -static int ipc_create_telemetry_device(void) -{
-> -	struct platform_device *pdev;
-> -	struct resource *res;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> -		.name = TELEMETRY_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = telemetry_res,
-> -		.num_res = ARRAY_SIZE(telemetry_res),
-> -		};
-> -
-> -	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
-> -	res->start = ipcdev.telem_punit_ssram_base;
-> -	res->end = res->start + ipcdev.telem_punit_ssram_size - 1;
-> -
-> -	res = telemetry_res + TELEMETRY_RESOURCE_PMC_SSRAM;
-> -	res->start = ipcdev.telem_pmc_ssram_base;
-> -	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
-> -
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> -
-> -	ipcdev.telemetry_dev = pdev;
-> -
-> -	return 0;
-> -}
-> -
-> -static int ipc_create_pmc_devices(void)
-> +static int ipc_create_pmc_devices(struct platform_device *pdev)
->  {
-> -	int ret;
-> -
-> -	/* If we have ACPI based watchdog use that instead */
-> +	u8 n = 0;
-> +	struct mfd_cell *pmc_mfd_cells;
-> +
-> +	pmc_mfd_cells = devm_kzalloc(&pdev->dev,
-> +			(sizeof(*pmc_mfd_cells) *
-> PMC_IPC_MAX_MFD_BLOCK),
-> +			GFP_KERNEL);
-> +	if (!pmc_mfd_cells)
-> +		return -ENOMEM;
-> +
-> +	/* Create PUNIT IPC MFD cell */
-> +	pmc_mfd_cells[n].name = PUNIT_DEVICE_NAME;
-> +	pmc_mfd_cells[n].id = -1;
-> +	pmc_mfd_cells[n].num_resources =
-> ARRAY_SIZE(punit_ipc_resources);
-> +	pmc_mfd_cells[n].resources = punit_ipc_resources;
-> +	pmc_mfd_cells[n].ignore_resource_conflicts = 1;
-> +	n++;
+So if you are going to play with it, pull changes, run make clean and
+then make again.
 
-Since it's not really a loop, cant the enum values of MFD block be used instead of 'n'? Will be more readable/intuitive.
+> > > development purposes.
+> > >
+> > > Having the kernel expose a guid/class/method interface should provide the
+> > > abstraction Rafael called for.
+> > >
+> > > The question then, is should these two things be in sysfs, where they become
+> > > more or less permanent, or are they better off in debugfs, where they can be
+> > > used by developers as needed, but are not present on production systems, and
+> > > we are not bound to the representation we use from now until forever.
+> > >
+> > > Seems to me:
+> > >
+> > > /debug/wmi/<GUID>/bmof
+> > 
+> > I can imagine a real production userspace app that parses BMOF data.
+> > Imagine you write a thingy that calls some laptop method foo(1) where
+> > foo is defined in the MOF.  You could hardcode the mapping to the
+> > GUID, but you could also parse the BMOF.
 
-> +
-> +	/* If we have ACPI based watchdog use that instead, othewise
-> create
-> +	 * a MFD cell for iTCO watchdog*/
->  	if (!acpi_has_watchdog()) {
-> -		ret = ipc_create_tco_device();
-> -		if (ret) {
-> -			dev_err(ipcdev.dev, "Failed to add tco platform
-> device\n");
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	ret = ipc_create_punit_device();
-> -	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add punit platform
-> device\n");
-> -		platform_device_unregister(ipcdev.tco_dev);
-> +		pmc_mfd_cells[n].name = TCO_DEVICE_NAME;
-> +		pmc_mfd_cells[n].id = -1;
-> +		pmc_mfd_cells[n].platform_data = &tco_info;
-> +		pmc_mfd_cells[n].pdata_size = sizeof(tco_info);
-> +		pmc_mfd_cells[n].num_resources =
-> +			ARRAY_SIZE(watchdog_ipc_resources);
-> +		pmc_mfd_cells[n].resources = watchdog_ipc_resources;
-> +		pmc_mfd_cells[n].ignore_resource_conflicts = 1;
-> +		n++;
+If we are going to move bmof into debugfs, then it means bmof is only
+for debugging purpose.
 
-Same as above.
+But we already had discussion that MOF supports should be in userspace,
+therefore reading bmof should be in /sys (or /dev or whatever is normal
+or stable for userspace).
 
->  	}
-> 
->  	if (!ipcdev.telem_res_inval) {
-> -		ret = ipc_create_telemetry_device();
-> -		if (ret)
-> -			dev_warn(ipcdev.dev,
-> -				"Failed to add telemetry platform
-> device\n");
-> +		pmc_mfd_cells[n].name = TELEMETRY_DEVICE_NAME;
-> +		pmc_mfd_cells[n].id = -1;
-> +		pmc_mfd_cells[n].num_resources =
-> +			ARRAY_SIZE(telemetry_ipc_resources);
-> +		pmc_mfd_cells[n].resources = telemetry_ipc_resources;
-> +		pmc_mfd_cells[n].ignore_resource_conflicts = 1;
-> +		n++;
+On the other hand if we want to parse bmof in kernel and do all
+validation (which IIRC is doing also Windows kernel) before calling
+"random" AML function from userspace, then it is probably good idea to
+put bmof only in debugfs.
 
-Same as above.
+> > > /debug/wmi/<GUID>/_wdg
+> > 
+> > More like /debug/wmi/<bus name>/_wdg, but yes.  I wish there was a
+> > standard way to make a debugfs directory corresponding to a sysfs
+> > path.  Maybe this exists -- I'll look.
+> > 
+> > FWIW, almost all the _WDG data is already there in sysfs in Linus'
+> > tree.  See, for example, cat
+> > /sys/devices/platform/PNP0C14:01/wmi_bus/wmi_bus-PNP0C14:01/05901221-D566-11D1-B2F0-00A0C9062910/object_id
+> 
+> Yeah, true - I probably should have prodded on that more at the time.
 
->  	}
-> 
-> -	return ret;
-> +	return devm_mfd_add_devices(&pdev->dev, -1, pmc_mfd_cells, n,
-> NULL,
-> +				    0, NULL);
->  }
-> 
->  static int ipc_plat_get_res(struct platform_device *pdev)  {
-> -	struct resource *res, *punit_res;
-> +	struct resource *res;
->  	void __iomem *addr;
-> -	int size;
-> +	int mindex, pindex = 0;
-> 
-> +	/* Get iTCO watchdog resources */
->  	res = platform_get_resource(pdev, IORESOURCE_IO,
->  				    PLAT_RESOURCE_ACPI_IO_INDEX);
->  	if (!res) {
->  		dev_err(&pdev->dev, "Failed to get io resource\n");
->  		return -ENXIO;
->  	}
-> -	size = resource_size(res);
-> -	ipcdev.acpi_io_base = res->start;
-> -	ipcdev.acpi_io_size = size;
-> -	dev_info(&pdev->dev, "io res: %pR\n", res);
-> -
-> -	punit_res = punit_res_array;
-> -	/* This is index 0 to cover BIOS data register */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_BIOS_DATA_INDEX);
-> -	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS
-> data\n");
-> -		return -ENXIO;
-> -	}
-> -	*punit_res = *res;
-> -	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
-> -
-> -	/* This is index 1 to cover BIOS interface register */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_BIOS_IFACE_INDEX);
-> -	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS
-> iface\n");
-> -		return -ENXIO;
-> -	}
-> -	*++punit_res = *res;
-> -	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
-> -
-> -	/* This is index 2 to cover ISP data register, optional */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_ISP_DATA_INDEX);
-> -	++punit_res;
-> -	if (res) {
-> -		*punit_res = *res;
-> -		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
-> -	}
-> 
-> -	/* This is index 3 to cover ISP interface register, optional */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_ISP_IFACE_INDEX);
-> -	++punit_res;
-> -	if (res) {
-> -		*punit_res = *res;
-> -		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
-> -	}
-> -
-> -	/* This is index 4 to cover GTD data register, optional */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_GTD_DATA_INDEX);
-> -	++punit_res;
-> -	if (res) {
-> -		*punit_res = *res;
-> -		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
-> -	}
-> -
-> -	/* This is index 5 to cover GTD interface register, optional */
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_GTD_IFACE_INDEX);
-> -	++punit_res;
-> -	if (res) {
-> -		*punit_res = *res;
-> -		dev_info(&pdev->dev, "punit GTD interface res: %pR\n",
-> res);
-> -	}
-> -
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_IPC_INDEX);
-> -	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get ipc resource\n");
-> -		return -ENXIO;
-> -	}
-> -	res->end = (res->start + PLAT_RESOURCE_IPC_SIZE +
-> -		    PLAT_RESOURCE_GCR_SIZE - 1);
-> -
-> -	addr = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(addr)) {
-> -		dev_err(&pdev->dev,
-> -			"PMC I/O memory remapping failed\n");
-> -		return PTR_ERR(addr);
-> -	}
-> -
-> -	ipcdev.ipc_base = addr;
-> -
-> -	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
-> -	dev_info(&pdev->dev, "ipc res: %pR\n", res);
-> -
-> -	ipcdev.telem_res_inval = 0;
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> -				    PLAT_RESOURCE_TELEM_SSRAM_INDEX);
-> -	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get telemetry ssram
-> resource\n");
-> -		ipcdev.telem_res_inval = 1;
-> -	} else {
-> -		ipcdev.telem_punit_ssram_base = res->start +
-> -
-> 	TELEM_PUNIT_SSRAM_OFFSET;
-> -		ipcdev.telem_punit_ssram_size = TELEM_SSRAM_SIZE;
-> -		ipcdev.telem_pmc_ssram_base = res->start +
-> -
-> 	TELEM_PMC_SSRAM_OFFSET;
-> -		ipcdev.telem_pmc_ssram_size = TELEM_SSRAM_SIZE;
-> -		dev_info(&pdev->dev, "telemetry ssram res: %pR\n", res);
-> +	watchdog_ipc_resources[0].start = res->start + TCO_BASE_OFFSET;
-> +	watchdog_ipc_resources[0].end = res->start +
-> +		TCO_BASE_OFFSET + TCO_REGS_SIZE - 1;
-> +	watchdog_ipc_resources[1].start = res->start + SMI_EN_OFFSET;
-> +	watchdog_ipc_resources[1].end = res->start +
-> +		SMI_EN_OFFSET + SMI_EN_SIZE - 1;
+This has one big problem. Lot of times you want to show/parse WMI data
+from other computer (E.g. user send dumps via email and then somebody
+else parse them). Having parsed data in /sys is quite hard to pack again
+into same _WDG buffer.
 
-The 0/1 magic may be replaced with MACROS here and elsewhere.
+Plus most existing tools want to parse _WDG buffer on its own and
+provide parsed information on output.
 
-> +
-> +	dev_info(&pdev->dev, "watchdog res 0: %pR\n",
-> +			&watchdog_ipc_resources[0]);
-> +	dev_info(&pdev->dev, "watchdog res 1: %pR\n",
-> +			&watchdog_ipc_resources[1]);
-> +
-> +	for (mindex = 0; mindex <= PLAT_RESOURCE_GTD_IFACE_INDEX;
-> mindex++) {
+Here debugs for _WDG could make sense as by default it should not be
+needed for userspace, but it is really useful for debugging or writing
+new (or fixing existing) wmi kernel driver.
 
-Here we are relying on the fact that the GTD_IFACE_INDEX is at offset 7. It's however not by design but a side-effect of how the BIOS places the resources.
-So perhaps not a good idea to use it, since GTD_IFACE is not meant to be a terminator/max delimiter.
+> In general, I'm much more comfortable presenting parsed and formatted data
+> through sysfs than I am dumping ACPI buffer objects out there wholesale.
+> 
+> So we have:
+>   guid
+>   instance_count
+>   expensive
+>   notify_id
+>   object_id
+>   setable
+> 
+> Hrm. Is there something more we need that isn't already present here?
+> 
+> Need to look more closely if all the values for the Flags are covered, but
+> otherwise we seem to have already parsed and presented all the relevant content
+> in the wdg.
+> 
+> Pali, how does the "magic number identifier" in the BMOF map to the object_id?
+> Have we retained that information in what we export today?
 
-> +
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM,
-> mindex);
-> +
-> +		switch (mindex) {
-> +		/* Get PUNIT resources */
-> +		case PLAT_RESOURCE_BIOS_DATA_INDEX:
-> +		case PLAT_RESOURCE_BIOS_IFACE_INDEX:
-> +			/* BIOS resources are required, so return error if not
-> +			 * available */
-> +			if (!res) {
-> +				dev_err(&pdev->dev,
-> +					"Failed to get punit mem resource
-> %d\n",
-> +					pindex);
-> +				return -ENXIO;
-> +			}
-> +		case PLAT_RESOURCE_ISP_DATA_INDEX:
-> +		case PLAT_RESOURCE_ISP_IFACE_INDEX:
-> +		case PLAT_RESOURCE_GTD_DATA_INDEX:
-> +		case PLAT_RESOURCE_GTD_IFACE_INDEX:
-> +			/* if not valid resource, skip the rest of steps */
-> +			if (!res) {
-> +				pindex++;
-> +				continue;
-> +			}
-> +			memcpy(&punit_ipc_resources[pindex], res,
-> +					sizeof(*res));
-> +			dev_info(&pdev->dev, "PUNIT memory res: %pR\n",
-> +					&punit_ipc_resources[pindex]);
-> +			pindex++;
-> +			break;
-> +		/* Get Telemetry resources */
-> +		case PLAT_RESOURCE_TELEM_SSRAM_INDEX:
-> +			if (!res) {
-> +				dev_warn(&pdev->dev,
-> +					"Failed to get telemtry sram res\n");
-> +				ipcdev.telem_res_inval = 1;
-> +				continue;
-> +			}
-> +			telemetry_ipc_resources[0].start = res->start +
-> +				TELEM_PUNIT_SSRAM_OFFSET;
-> +			telemetry_ipc_resources[0].end = res->start +
-> +				TELEM_PUNIT_SSRAM_OFFSET +
-> TELEM_SSRAM_SIZE - 1;
-> +			telemetry_ipc_resources[1].start = res->start +
-> +				TELEM_PMC_SSRAM_OFFSET;
-> +			telemetry_ipc_resources[1].end = res->start +
-> +				TELEM_PMC_SSRAM_OFFSET +
-> TELEM_SSRAM_SIZE - 1;
-> +
-> +			dev_info(&pdev->dev, "telemetry punit ssram res:
-> %pR\n",
-> +					&telemetry_ipc_resources[0]);
-> +			dev_info(&pdev->dev, "telemetry pmc ssram res:
-> %pR\n",
-> +					&telemetry_ipc_resources[1]);
-> +			break;
-> +		/* Get IPC resources */
-> +		case PLAT_RESOURCE_IPC_INDEX:
-> +			if (!res) {
-> +				dev_err(&pdev->dev,
-> +					"Failed to get IPC resources\n");
-> +				return -ENXIO;
-> +			}
-> +			res->end = (res->start + PLAT_RESOURCE_IPC_SIZE +
-> +				    PLAT_RESOURCE_GCR_SIZE - 1);
-> +			addr = devm_ioremap_resource(&pdev->dev, res);
-> +			if (IS_ERR(addr)) {
-> +				dev_err(&pdev->dev,
-> +					"PMC I/O memory remapping
-> failed\n");
-> +				return PTR_ERR(addr);
-> +			}
-> +			ipcdev.ipc_base = addr;
-> +			ipcdev.gcr_mem_base = addr +
-> PLAT_RESOURCE_GCR_OFFSET;
-> +			dev_info(&pdev->dev, "PMC IPC resource %pR\n",
-> res);
-> +			break;
-> +		};
->  	}
-> 
->  	return 0;
-> @@ -943,7 +859,7 @@ static int ipc_plat_probe(struct platform_device
-> *pdev)
->  		return ret;
->  	}
-> 
-> -	ret = ipc_create_pmc_devices();
-> +	ret = ipc_create_pmc_devices(pdev);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create pmc devices\n");
->  		return ret;
-> @@ -952,36 +868,26 @@ static int ipc_plat_probe(struct platform_device
-> *pdev)
->  	if (devm_request_irq(&pdev->dev, ipcdev.irq, ioc,
-> IRQF_NO_SUSPEND,
->  			     "intel_pmc_ipc", &ipcdev)) {
->  		dev_err(&pdev->dev, "Failed to request irq\n");
-> -		ret = -EBUSY;
-> -		goto unregister_devices;
-> +		return -EBUSY;
->  	}
-> 
->  	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
->  			ret);
-> -		goto unregister_devices;
-> +		return ret;
->  	}
-> 
->  	ipcdev.has_gcr_regs = true;
-> 
->  	return 0;
-> -
-> -unregister_devices:
-> -	platform_device_unregister(ipcdev.tco_dev);
-> -	platform_device_unregister(ipcdev.punit_dev);
-> -	platform_device_unregister(ipcdev.telemetry_dev);
-> -
-> -	return ret;
->  }
-> 
->  static int ipc_plat_remove(struct platform_device *pdev)  {
->  	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
-> -	platform_device_unregister(ipcdev.tco_dev);
-> -	platform_device_unregister(ipcdev.punit_dev);
-> -	platform_device_unregister(ipcdev.telemetry_dev);
->  	ipcdev.dev = NULL;
-> +
->  	return 0;
->  }
-> 
-> --
-> 2.7.4
+MOF describe C++ like object system and for particular structures or
+methods there is GUID and WMI id.
+
+When you want to call WMI function implemented in ACPI you need to know:
+* name of ACPI function
+* instance number
+* WMI id
+* structure of input buffer
+
+Name of ACPI function is taken from _WDG where is mapping from GUID to
+object_id and ACPI function consist of well-known prefix and object_id
+as a suffix. GUID is present in MOF. Where to get correct instance
+number is still question for me. WMI id and structure of input buffer is
+described in MOF.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
