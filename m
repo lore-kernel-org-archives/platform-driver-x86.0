@@ -1,249 +1,611 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID API
-Date: Wed,  2 Aug 2017 16:28:34 +0300
-Message-ID: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
+ create dependent devices
+Date: Wed, 2 Aug 2017 14:59:26 -0700
+Message-ID: <746f2833-f2bf-4323-6601-9e56a5a30361@linux.intel.com>
+References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <5F7315E704FA0841B5DFCE90329B2BB462E93CB3@BGSMSX102.gar.corp.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:65364 "EHLO mga05.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:45795 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751910AbdHBN3J (ORCPT
+        id S1751104AbdHBV7m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Aug 2017 09:29:09 -0400
+        Wed, 2 Aug 2017 17:59:42 -0400
+In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB462E93CB3@BGSMSX102.gar.corp.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, "x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "andy@infradead.org" <andy@infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "sathyaosid@gmail.com" <sathyaosid@gmail.com>
 
-There are new types and helpers that are supposed to be used in new code.
 
-As a preparation to get rid of legacy types and API functions do
-the conversion here.
 
-While here, update Copyright to reflect this change along with previous
-one for the topic.
+On 08/01/2017 10:14 PM, Chakravarty, Souvik K wrote:
+>
+>> -----Original Message-----
+>> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
+>> x86-owner@vger.kernel.org] On Behalf Of
+>> sathyanarayanan.kuppuswamy@linux.intel.com
+>> Sent: Tuesday, August 1, 2017 11:44 PM
+>> To: x86@kernel.org; mingo@redhat.com; Zha, Qipeng
+>> <qipeng.zha@intel.com>; hpa@zytor.com; dvhart@infradead.org;
+>> tglx@linutronix.de; andy@infradead.org
+>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>> sathyaosid@gmail.com; Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Subject: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
+>> create dependent devices
+>>
+>> From: Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Currently, we have lot of repetitive code in dependent device resource
+>> allocation and device creation handling code. This logic can be improved if
+>> we use MFD framework for dependent device creation. This patch adds this
+>> support.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_ipc.c | 376 +++++++++++++-------------------
+>> ---
+>>   1 file changed, 141 insertions(+), 235 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c
+>> b/drivers/platform/x86/intel_pmc_ipc.c
+>> index ad0416e..43533ec 100644
+>> --- a/drivers/platform/x86/intel_pmc_ipc.c
+>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+>> @@ -33,6 +33,7 @@
+>>   #include <linux/suspend.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/io-64-nonatomic-lo-hi.h>
+>> +#include <linux/mfd/core.h>
+>>
+>>   #include <asm/intel_pmc_ipc.h>
+>>
+>> @@ -105,8 +106,6 @@
+>>   #define TELEM_SSRAM_SIZE		240
+>>   #define TELEM_PMC_SSRAM_OFFSET		0x1B00
+>>   #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
+>> -#define TCO_PMC_OFFSET			0x8
+>> -#define TCO_PMC_SIZE			0x4
+>>
+>>   /* PMC register bit definitions */
+>>
+>> @@ -115,6 +114,13 @@
+>>   #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
+>>   #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
+>>
+>> +enum {
+>> +	PMC_IPC_PUNIT_MFD_BLOCK,
+>> +	PMC_IPC_WATCHDOG_MFD_BLOCK,
+>> +	PMC_IPC_TELEMETRY_MFD_BLOCK,
+>> +	PMC_IPC_MAX_MFD_BLOCK
+>> +};
+>> +
+>>   static struct intel_pmc_ipc_dev {
+>>   	struct device *dev;
+>>   	void __iomem *ipc_base;
+>> @@ -123,25 +129,12 @@ static struct intel_pmc_ipc_dev {
+>>   	int cmd;
+>>   	struct completion cmd_complete;
+>>
+>> -	/* The following PMC BARs share the same ACPI device with the IPC
+>> */
+>> -	resource_size_t acpi_io_base;
+>> -	int acpi_io_size;
+>> -	struct platform_device *tco_dev;
+>> -
+>>   	/* gcr */
+>>   	void __iomem *gcr_mem_base;
+>>   	bool has_gcr_regs;
+>>
+>> -	/* punit */
+>> -	struct platform_device *punit_dev;
+>> -
+>>   	/* Telemetry */
+>> -	resource_size_t telem_pmc_ssram_base;
+>> -	resource_size_t telem_punit_ssram_base;
+>> -	int telem_pmc_ssram_size;
+>> -	int telem_punit_ssram_size;
+>>   	u8 telem_res_inval;
+>> -	struct platform_device *telemetry_dev;
+>>   } ipcdev;
+>>
+>>   static char *ipc_err_sources[] = {
+>> @@ -613,7 +606,7 @@ static const struct attribute_group intel_ipc_group
+>> = {
+>>   	.attrs = intel_ipc_attrs,
+>>   };
+>>
+>> -static struct resource punit_res_array[] = {
+>> +static struct resource punit_ipc_resources[] = {
+>>   	/* Punit BIOS */
+>>   	{
+>>   		.flags = IORESOURCE_MEM,
+>> @@ -637,10 +630,7 @@ static struct resource punit_res_array[] = {
+>>   	},
+>>   };
+>>
+>> -#define TCO_RESOURCE_ACPI_IO		0
+>> -#define TCO_RESOURCE_SMI_EN_IO		1
+>> -#define TCO_RESOURCE_GCR_MEM		2
+>> -static struct resource tco_res[] = {
+>> +static struct resource watchdog_ipc_resources[] = {
+>>   	/* ACPI - TCO */
+>>   	{
+>>   		.flags = IORESOURCE_IO,
+>> @@ -658,9 +648,7 @@ static struct itco_wdt_platform_data tco_info = {
+>>   	.update_no_reboot_bit = update_no_reboot_bit,  };
+>>
+>> -#define TELEMETRY_RESOURCE_PUNIT_SSRAM	0
+>> -#define TELEMETRY_RESOURCE_PMC_SSRAM	1
+>> -static struct resource telemetry_res[] = {
+>> +static struct resource telemetry_ipc_resources[] = {
+>>   	/*Telemetry*/
+>>   	{
+>>   		.flags = IORESOURCE_MEM,
+>> @@ -670,224 +658,152 @@ static struct resource telemetry_res[] = {
+>>   	},
+>>   };
+>>
+>> -static int ipc_create_punit_device(void) -{
+>> -	struct platform_device *pdev;
+>> -	const struct platform_device_info pdevinfo = {
+>> -		.parent = ipcdev.dev,
+>> -		.name = PUNIT_DEVICE_NAME,
+>> -		.id = -1,
+>> -		.res = punit_res_array,
+>> -		.num_res = ARRAY_SIZE(punit_res_array),
+>> -		};
+>> -
+>> -	pdev = platform_device_register_full(&pdevinfo);
+>> -	if (IS_ERR(pdev))
+>> -		return PTR_ERR(pdev);
+>> -
+>> -	ipcdev.punit_dev = pdev;
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static int ipc_create_tco_device(void)
+>> -{
+>> -	struct platform_device *pdev;
+>> -	struct resource *res;
+>> -	const struct platform_device_info pdevinfo = {
+>> -		.parent = ipcdev.dev,
+>> -		.name = TCO_DEVICE_NAME,
+>> -		.id = -1,
+>> -		.res = tco_res,
+>> -		.num_res = ARRAY_SIZE(tco_res),
+>> -		.data = &tco_info,
+>> -		.size_data = sizeof(tco_info),
+>> -		};
+>> -
+>> -	res = tco_res + TCO_RESOURCE_ACPI_IO;
+>> -	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
+>> -	res->end = res->start + TCO_REGS_SIZE - 1;
+>> -
+>> -	res = tco_res + TCO_RESOURCE_SMI_EN_IO;
+>> -	res->start = ipcdev.acpi_io_base + SMI_EN_OFFSET;
+>> -	res->end = res->start + SMI_EN_SIZE - 1;
+>> -
+>> -	pdev = platform_device_register_full(&pdevinfo);
+>> -	if (IS_ERR(pdev))
+>> -		return PTR_ERR(pdev);
+>> -
+>> -	ipcdev.tco_dev = pdev;
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static int ipc_create_telemetry_device(void) -{
+>> -	struct platform_device *pdev;
+>> -	struct resource *res;
+>> -	const struct platform_device_info pdevinfo = {
+>> -		.parent = ipcdev.dev,
+>> -		.name = TELEMETRY_DEVICE_NAME,
+>> -		.id = -1,
+>> -		.res = telemetry_res,
+>> -		.num_res = ARRAY_SIZE(telemetry_res),
+>> -		};
+>> -
+>> -	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
+>> -	res->start = ipcdev.telem_punit_ssram_base;
+>> -	res->end = res->start + ipcdev.telem_punit_ssram_size - 1;
+>> -
+>> -	res = telemetry_res + TELEMETRY_RESOURCE_PMC_SSRAM;
+>> -	res->start = ipcdev.telem_pmc_ssram_base;
+>> -	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
+>> -
+>> -	pdev = platform_device_register_full(&pdevinfo);
+>> -	if (IS_ERR(pdev))
+>> -		return PTR_ERR(pdev);
+>> -
+>> -	ipcdev.telemetry_dev = pdev;
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static int ipc_create_pmc_devices(void)
+>> +static int ipc_create_pmc_devices(struct platform_device *pdev)
+>>   {
+>> -	int ret;
+>> -
+>> -	/* If we have ACPI based watchdog use that instead */
+>> +	u8 n = 0;
+>> +	struct mfd_cell *pmc_mfd_cells;
+>> +
+>> +	pmc_mfd_cells = devm_kzalloc(&pdev->dev,
+>> +			(sizeof(*pmc_mfd_cells) *
+>> PMC_IPC_MAX_MFD_BLOCK),
+>> +			GFP_KERNEL);
+>> +	if (!pmc_mfd_cells)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Create PUNIT IPC MFD cell */
+>> +	pmc_mfd_cells[n].name = PUNIT_DEVICE_NAME;
+>> +	pmc_mfd_cells[n].id = -1;
+>> +	pmc_mfd_cells[n].num_resources =
+>> ARRAY_SIZE(punit_ipc_resources);
+>> +	pmc_mfd_cells[n].resources = punit_ipc_resources;
+>> +	pmc_mfd_cells[n].ignore_resource_conflicts = 1;
+>> +	n++;
+> Since it's not really a loop, cant the enum values of MFD block be used instead of 'n'? Will be more readable/intuitive.
+In this case, watchdog and telemetry device creation is optional and 
+hence we can't use fixed index when creating mfd-cells. If one of these 
+devices is not available then the number of valid-mfd-cells and the 
+index number of individual device cell in pmc_mfd_cells array will change.
+>
+>> +
+>> +	/* If we have ACPI based watchdog use that instead, othewise
+>> create
+>> +	 * a MFD cell for iTCO watchdog*/
+>>   	if (!acpi_has_watchdog()) {
+>> -		ret = ipc_create_tco_device();
+>> -		if (ret) {
+>> -			dev_err(ipcdev.dev, "Failed to add tco platform
+>> device\n");
+>> -			return ret;
+>> -		}
+>> -	}
+>> -
+>> -	ret = ipc_create_punit_device();
+>> -	if (ret) {
+>> -		dev_err(ipcdev.dev, "Failed to add punit platform
+>> device\n");
+>> -		platform_device_unregister(ipcdev.tco_dev);
+>> +		pmc_mfd_cells[n].name = TCO_DEVICE_NAME;
+>> +		pmc_mfd_cells[n].id = -1;
+>> +		pmc_mfd_cells[n].platform_data = &tco_info;
+>> +		pmc_mfd_cells[n].pdata_size = sizeof(tco_info);
+>> +		pmc_mfd_cells[n].num_resources =
+>> +			ARRAY_SIZE(watchdog_ipc_resources);
+>> +		pmc_mfd_cells[n].resources = watchdog_ipc_resources;
+>> +		pmc_mfd_cells[n].ignore_resource_conflicts = 1;
+>> +		n++;
+> Same as above.
+Same as above.
+>
+>>   	}
+>>
+>>   	if (!ipcdev.telem_res_inval) {
+>> -		ret = ipc_create_telemetry_device();
+>> -		if (ret)
+>> -			dev_warn(ipcdev.dev,
+>> -				"Failed to add telemetry platform
+>> device\n");
+>> +		pmc_mfd_cells[n].name = TELEMETRY_DEVICE_NAME;
+>> +		pmc_mfd_cells[n].id = -1;
+>> +		pmc_mfd_cells[n].num_resources =
+>> +			ARRAY_SIZE(telemetry_ipc_resources);
+>> +		pmc_mfd_cells[n].resources = telemetry_ipc_resources;
+>> +		pmc_mfd_cells[n].ignore_resource_conflicts = 1;
+>> +		n++;
+> Same as above.
+Same as above.
+>>   	}
+>>
+>> -	return ret;
+>> +	return devm_mfd_add_devices(&pdev->dev, -1, pmc_mfd_cells, n,
+>> NULL,
+>> +				    0, NULL);
+>>   }
+>>
+>>   static int ipc_plat_get_res(struct platform_device *pdev)  {
+>> -	struct resource *res, *punit_res;
+>> +	struct resource *res;
+>>   	void __iomem *addr;
+>> -	int size;
+>> +	int mindex, pindex = 0;
+>>
+>> +	/* Get iTCO watchdog resources */
+>>   	res = platform_get_resource(pdev, IORESOURCE_IO,
+>>   				    PLAT_RESOURCE_ACPI_IO_INDEX);
+>>   	if (!res) {
+>>   		dev_err(&pdev->dev, "Failed to get io resource\n");
+>>   		return -ENXIO;
+>>   	}
+>> -	size = resource_size(res);
+>> -	ipcdev.acpi_io_base = res->start;
+>> -	ipcdev.acpi_io_size = size;
+>> -	dev_info(&pdev->dev, "io res: %pR\n", res);
+>> -
+>> -	punit_res = punit_res_array;
+>> -	/* This is index 0 to cover BIOS data register */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_BIOS_DATA_INDEX);
+>> -	if (!res) {
+>> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS
+>> data\n");
+>> -		return -ENXIO;
+>> -	}
+>> -	*punit_res = *res;
+>> -	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+>> -
+>> -	/* This is index 1 to cover BIOS interface register */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_BIOS_IFACE_INDEX);
+>> -	if (!res) {
+>> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS
+>> iface\n");
+>> -		return -ENXIO;
+>> -	}
+>> -	*++punit_res = *res;
+>> -	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+>> -
+>> -	/* This is index 2 to cover ISP data register, optional */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_ISP_DATA_INDEX);
+>> -	++punit_res;
+>> -	if (res) {
+>> -		*punit_res = *res;
+>> -		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+>> -	}
+>>
+>> -	/* This is index 3 to cover ISP interface register, optional */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_ISP_IFACE_INDEX);
+>> -	++punit_res;
+>> -	if (res) {
+>> -		*punit_res = *res;
+>> -		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
+>> -	}
+>> -
+>> -	/* This is index 4 to cover GTD data register, optional */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_GTD_DATA_INDEX);
+>> -	++punit_res;
+>> -	if (res) {
+>> -		*punit_res = *res;
+>> -		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
+>> -	}
+>> -
+>> -	/* This is index 5 to cover GTD interface register, optional */
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_GTD_IFACE_INDEX);
+>> -	++punit_res;
+>> -	if (res) {
+>> -		*punit_res = *res;
+>> -		dev_info(&pdev->dev, "punit GTD interface res: %pR\n",
+>> res);
+>> -	}
+>> -
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_IPC_INDEX);
+>> -	if (!res) {
+>> -		dev_err(&pdev->dev, "Failed to get ipc resource\n");
+>> -		return -ENXIO;
+>> -	}
+>> -	res->end = (res->start + PLAT_RESOURCE_IPC_SIZE +
+>> -		    PLAT_RESOURCE_GCR_SIZE - 1);
+>> -
+>> -	addr = devm_ioremap_resource(&pdev->dev, res);
+>> -	if (IS_ERR(addr)) {
+>> -		dev_err(&pdev->dev,
+>> -			"PMC I/O memory remapping failed\n");
+>> -		return PTR_ERR(addr);
+>> -	}
+>> -
+>> -	ipcdev.ipc_base = addr;
+>> -
+>> -	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+>> -	dev_info(&pdev->dev, "ipc res: %pR\n", res);
+>> -
+>> -	ipcdev.telem_res_inval = 0;
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> -				    PLAT_RESOURCE_TELEM_SSRAM_INDEX);
+>> -	if (!res) {
+>> -		dev_err(&pdev->dev, "Failed to get telemetry ssram
+>> resource\n");
+>> -		ipcdev.telem_res_inval = 1;
+>> -	} else {
+>> -		ipcdev.telem_punit_ssram_base = res->start +
+>> -
+>> 	TELEM_PUNIT_SSRAM_OFFSET;
+>> -		ipcdev.telem_punit_ssram_size = TELEM_SSRAM_SIZE;
+>> -		ipcdev.telem_pmc_ssram_base = res->start +
+>> -
+>> 	TELEM_PMC_SSRAM_OFFSET;
+>> -		ipcdev.telem_pmc_ssram_size = TELEM_SSRAM_SIZE;
+>> -		dev_info(&pdev->dev, "telemetry ssram res: %pR\n", res);
+>> +	watchdog_ipc_resources[0].start = res->start + TCO_BASE_OFFSET;
+>> +	watchdog_ipc_resources[0].end = res->start +
+>> +		TCO_BASE_OFFSET + TCO_REGS_SIZE - 1;
+>> +	watchdog_ipc_resources[1].start = res->start + SMI_EN_OFFSET;
+>> +	watchdog_ipc_resources[1].end = res->start +
+>> +		SMI_EN_OFFSET + SMI_EN_SIZE - 1;
+> The 0/1 magic may be replaced with MACROS here and elsewhere.
+I think I tried it first and then later removed it because the length of 
+few lines go over and 80.
+>
+>> +
+>> +	dev_info(&pdev->dev, "watchdog res 0: %pR\n",
+>> +			&watchdog_ipc_resources[0]);
+>> +	dev_info(&pdev->dev, "watchdog res 1: %pR\n",
+>> +			&watchdog_ipc_resources[1]);
+>> +
+>> +	for (mindex = 0; mindex <= PLAT_RESOURCE_GTD_IFACE_INDEX;
+>> mindex++) {
+> Here we are relying on the fact that the GTD_IFACE_INDEX is at offset 7. It's however not by design but a side-effect of how the BIOS places the resources.
+> So perhaps not a good idea to use it, since GTD_IFACE is not meant to be a terminator/max delimiter.
+We can add a new macro like  "#define PLAT_RESOURCE_MAX_INDEX 8" and use 
+it in this loop.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/wmi.c | 56 ++++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 27 deletions(-)
+But, In future, If BIOS changes its resource order or removes certain 
+resources then it needs corresponding changes to this driver. And when 
+they fix that issue, they have to make sure the MAX_INDEX value is 
+appropriately modified.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e32ba575e8d9..7b8fac7067dc 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -7,6 +7,8 @@
-  *   Copyright (C) 2001,2002 Richard Russon <ldm@flatcap.org>
-  *   Copyright (c) 2001-2007 Anton Altaparmakov
-  *   Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
-+ *  ...replaced by generic UUID API:
-+ *   Copyright (C) 2016,2017 Intel Corporation.
-  *
-  *  WMI bus infrastructure by Andrew Lutomirski and Darren Hart:
-  *    Copyright (C) 2015 Andrew Lutomirski
-@@ -53,7 +55,7 @@ MODULE_LICENSE("GPL");
- static LIST_HEAD(wmi_block_list);
- 
- struct guid_block {
--	char guid[16];
-+	guid_t guid;
- 	union {
- 		char object_id[2];
- 		struct {
-@@ -121,19 +123,19 @@ static struct platform_driver acpi_wmi_driver = {
- 
- static bool find_guid(const char *guid_string, struct wmi_block **out)
- {
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct wmi_block *wblock;
- 	struct guid_block *block;
- 	struct list_head *p;
- 
--	if (uuid_le_to_bin(guid_string, &guid_input))
-+	if (guid_parse(guid_string, &guid_input))
- 		return false;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		block = &wblock->gblock;
- 
--		if (memcmp(block->guid, &guid_input, 16) == 0) {
-+		if (guid_equal(&block->guid, &guid_input)) {
- 			if (out)
- 				*out = wblock;
- 			return true;
-@@ -420,7 +422,7 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
- 
- static void wmi_dump_wdg(const struct guid_block *g)
- {
--	pr_info("%pUL:\n", g->guid);
-+	pr_info("%pUL:\n", &g->guid);
- 	if (g->flags & ACPI_WMI_EVENT)
- 		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
- 	else
-@@ -480,6 +482,7 @@ static void wmi_notify_debug(u32 value, void *context)
- 
- /**
-  * wmi_install_notify_handler - Register handler for WMI events
-+ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-  * @handler: Function to handle notifications
-  * @data: Data to be returned to handler when event is fired
-  *
-@@ -490,20 +493,20 @@ wmi_notify_handler handler, void *data)
- {
- 	struct wmi_block *block;
- 	acpi_status status = AE_NOT_EXIST;
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct list_head *p;
- 
- 	if (!guid || !handler)
- 		return AE_BAD_PARAMETER;
- 
--	if (uuid_le_to_bin(guid, &guid_input))
-+	if (guid_parse(guid, &guid_input))
- 		return AE_BAD_PARAMETER;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		acpi_status wmi_status;
- 		block = list_entry(p, struct wmi_block, list);
- 
--		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
-+		if (guid_equal(&block->gblock.guid, &guid_input)) {
- 			if (block->handler &&
- 			    block->handler != wmi_notify_debug)
- 				return AE_ALREADY_ACQUIRED;
-@@ -524,6 +527,7 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
- 
- /**
-  * wmi_uninstall_notify_handler - Unregister handler for WMI events
-+ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-  *
-  * Unregister handler for events sent to the ACPI-WMI mapper device.
-  */
-@@ -531,20 +535,20 @@ acpi_status wmi_remove_notify_handler(const char *guid)
- {
- 	struct wmi_block *block;
- 	acpi_status status = AE_NOT_EXIST;
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct list_head *p;
- 
- 	if (!guid)
- 		return AE_BAD_PARAMETER;
- 
--	if (uuid_le_to_bin(guid, &guid_input))
-+	if (guid_parse(guid, &guid_input))
- 		return AE_BAD_PARAMETER;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		acpi_status wmi_status;
- 		block = list_entry(p, struct wmi_block, list);
- 
--		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
-+		if (guid_equal(&block->gblock.guid, &guid_input)) {
- 			if (!block->handler ||
- 			    block->handler == wmi_notify_debug)
- 				return AE_NULL_ENTRY;
-@@ -633,7 +637,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
-+	return sprintf(buf, "wmi:%pUL\n", &wblock->gblock.guid);
- }
- static DEVICE_ATTR_RO(modalias);
- 
-@@ -642,7 +646,7 @@ static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	return sprintf(buf, "%pUL\n", wblock->gblock.guid);
-+	return sprintf(buf, "%pUL\n", &wblock->gblock.guid);
- }
- static DEVICE_ATTR_RO(guid);
- 
-@@ -725,10 +729,10 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", wblock->gblock.guid))
-+	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", &wblock->gblock.guid))
- 		return -ENOMEM;
- 
--	if (add_uevent_var(env, "WMI_GUID=%pUL", wblock->gblock.guid))
-+	if (add_uevent_var(env, "WMI_GUID=%pUL", &wblock->gblock.guid))
- 		return -ENOMEM;
- 
- 	return 0;
-@@ -749,11 +753,11 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	const struct wmi_device_id *id = wmi_driver->id_table;
- 
- 	while (id->guid_string) {
--		uuid_le driver_guid;
-+		guid_t driver_guid;
- 
--		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
-+		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
- 			continue;
--		if (!memcmp(&driver_guid, wblock->gblock.guid, 16))
-+		if (guid_equal(&driver_guid, &wblock->gblock.guid))
- 			return 1;
- 
- 		id++;
-@@ -891,7 +895,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
- 	wblock->dev.dev.bus = &wmi_bus_type;
- 	wblock->dev.dev.parent = wmi_bus_dev;
- 
--	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
-+	dev_set_name(&wblock->dev.dev, "%pUL", &gblock->guid);
- 
- 	device_initialize(&wblock->dev.dev);
- 
-@@ -912,12 +916,12 @@ static void wmi_free_devices(struct acpi_device *device)
- }
- 
- static bool guid_already_parsed(struct acpi_device *device,
--				const u8 *guid)
-+				const guid_t *guid)
- {
- 	struct wmi_block *wblock;
- 
- 	list_for_each_entry(wblock, &wmi_block_list, list) {
--		if (memcmp(wblock->gblock.guid, guid, 16) == 0) {
-+		if (guid_equal(&wblock->gblock.guid, guid)) {
- 			/*
- 			 * Because we historically didn't track the relationship
- 			 * between GUIDs and ACPI nodes, we don't know whether
-@@ -972,7 +976,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
- 		 * case yet, so for now, we'll just ignore the duplicate
- 		 * for device creation.
- 		 */
--		if (guid_already_parsed(device, gblock[i].guid))
-+		if (guid_already_parsed(device, &gblock[i].guid))
- 			continue;
- 
- 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
-@@ -1009,7 +1013,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
- 		retval = device_add(&wblock->dev.dev);
- 		if (retval) {
- 			dev_err(wmi_bus_dev, "failed to register %pULL\n",
--				wblock->gblock.guid);
-+				&wblock->gblock.guid);
- 			if (debug_event)
- 				wmi_method_enable(wblock, 0);
- 			list_del(&wblock->list);
-@@ -1124,10 +1128,8 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
- 		wblock->handler(event, wblock->handler_data);
- 	}
- 
--	if (debug_event) {
--		pr_info("DEBUG Event GUID: %pUL\n",
--			wblock->gblock.guid);
--	}
-+	if (debug_event)
-+		pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
- 
- 	acpi_bus_generate_netlink_event(
- 		wblock->acpi_device->pnp.device_class,
+So even using separate macro doesn't completely isolates it from BIOS 
+resource changes.
+>
+>> +
+>> +		res = platform_get_resource(pdev, IORESOURCE_MEM,
+>> mindex);
+>> +
+>> +		switch (mindex) {
+>> +		/* Get PUNIT resources */
+>> +		case PLAT_RESOURCE_BIOS_DATA_INDEX:
+>> +		case PLAT_RESOURCE_BIOS_IFACE_INDEX:
+>> +			/* BIOS resources are required, so return error if not
+>> +			 * available */
+>> +			if (!res) {
+>> +				dev_err(&pdev->dev,
+>> +					"Failed to get punit mem resource
+>> %d\n",
+>> +					pindex);
+>> +				return -ENXIO;
+>> +			}
+>> +		case PLAT_RESOURCE_ISP_DATA_INDEX:
+>> +		case PLAT_RESOURCE_ISP_IFACE_INDEX:
+>> +		case PLAT_RESOURCE_GTD_DATA_INDEX:
+>> +		case PLAT_RESOURCE_GTD_IFACE_INDEX:
+>> +			/* if not valid resource, skip the rest of steps */
+>> +			if (!res) {
+>> +				pindex++;
+>> +				continue;
+>> +			}
+>> +			memcpy(&punit_ipc_resources[pindex], res,
+>> +					sizeof(*res));
+>> +			dev_info(&pdev->dev, "PUNIT memory res: %pR\n",
+>> +					&punit_ipc_resources[pindex]);
+>> +			pindex++;
+>> +			break;
+>> +		/* Get Telemetry resources */
+>> +		case PLAT_RESOURCE_TELEM_SSRAM_INDEX:
+>> +			if (!res) {
+>> +				dev_warn(&pdev->dev,
+>> +					"Failed to get telemtry sram res\n");
+>> +				ipcdev.telem_res_inval = 1;
+>> +				continue;
+>> +			}
+>> +			telemetry_ipc_resources[0].start = res->start +
+>> +				TELEM_PUNIT_SSRAM_OFFSET;
+>> +			telemetry_ipc_resources[0].end = res->start +
+>> +				TELEM_PUNIT_SSRAM_OFFSET +
+>> TELEM_SSRAM_SIZE - 1;
+>> +			telemetry_ipc_resources[1].start = res->start +
+>> +				TELEM_PMC_SSRAM_OFFSET;
+>> +			telemetry_ipc_resources[1].end = res->start +
+>> +				TELEM_PMC_SSRAM_OFFSET +
+>> TELEM_SSRAM_SIZE - 1;
+>> +
+>> +			dev_info(&pdev->dev, "telemetry punit ssram res:
+>> %pR\n",
+>> +					&telemetry_ipc_resources[0]);
+>> +			dev_info(&pdev->dev, "telemetry pmc ssram res:
+>> %pR\n",
+>> +					&telemetry_ipc_resources[1]);
+>> +			break;
+>> +		/* Get IPC resources */
+>> +		case PLAT_RESOURCE_IPC_INDEX:
+>> +			if (!res) {
+>> +				dev_err(&pdev->dev,
+>> +					"Failed to get IPC resources\n");
+>> +				return -ENXIO;
+>> +			}
+>> +			res->end = (res->start + PLAT_RESOURCE_IPC_SIZE +
+>> +				    PLAT_RESOURCE_GCR_SIZE - 1);
+>> +			addr = devm_ioremap_resource(&pdev->dev, res);
+>> +			if (IS_ERR(addr)) {
+>> +				dev_err(&pdev->dev,
+>> +					"PMC I/O memory remapping
+>> failed\n");
+>> +				return PTR_ERR(addr);
+>> +			}
+>> +			ipcdev.ipc_base = addr;
+>> +			ipcdev.gcr_mem_base = addr +
+>> PLAT_RESOURCE_GCR_OFFSET;
+>> +			dev_info(&pdev->dev, "PMC IPC resource %pR\n",
+>> res);
+>> +			break;
+>> +		};
+>>   	}
+>>
+>>   	return 0;
+>> @@ -943,7 +859,7 @@ static int ipc_plat_probe(struct platform_device
+>> *pdev)
+>>   		return ret;
+>>   	}
+>>
+>> -	ret = ipc_create_pmc_devices();
+>> +	ret = ipc_create_pmc_devices(pdev);
+>>   	if (ret) {
+>>   		dev_err(&pdev->dev, "Failed to create pmc devices\n");
+>>   		return ret;
+>> @@ -952,36 +868,26 @@ static int ipc_plat_probe(struct platform_device
+>> *pdev)
+>>   	if (devm_request_irq(&pdev->dev, ipcdev.irq, ioc,
+>> IRQF_NO_SUSPEND,
+>>   			     "intel_pmc_ipc", &ipcdev)) {
+>>   		dev_err(&pdev->dev, "Failed to request irq\n");
+>> -		ret = -EBUSY;
+>> -		goto unregister_devices;
+>> +		return -EBUSY;
+>>   	}
+>>
+>>   	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
+>>   	if (ret) {
+>>   		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
+>>   			ret);
+>> -		goto unregister_devices;
+>> +		return ret;
+>>   	}
+>>
+>>   	ipcdev.has_gcr_regs = true;
+>>
+>>   	return 0;
+>> -
+>> -unregister_devices:
+>> -	platform_device_unregister(ipcdev.tco_dev);
+>> -	platform_device_unregister(ipcdev.punit_dev);
+>> -	platform_device_unregister(ipcdev.telemetry_dev);
+>> -
+>> -	return ret;
+>>   }
+>>
+>>   static int ipc_plat_remove(struct platform_device *pdev)  {
+>>   	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+>> -	platform_device_unregister(ipcdev.tco_dev);
+>> -	platform_device_unregister(ipcdev.punit_dev);
+>> -	platform_device_unregister(ipcdev.telemetry_dev);
+>>   	ipcdev.dev = NULL;
+>> +
+>>   	return 0;
+>>   }
+>>
+>> --
+>> 2.7.4
+>
+
 -- 
-2.13.2
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
