@@ -1,46 +1,42 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 3/3] platform/wmi: Expose the raw WDG data in sysfs
-Date: Fri, 4 Aug 2017 08:03:07 -0700
-Message-ID: <CALCETrVHGtA7nRaBCy9ZZ48Xu8hTKBgLdoGZeEHnHhPg3tdsxQ@mail.gmail.com>
-References: <cover.1501601667.git.luto@kernel.org> <e6df9d038af0a0ce4d4119395aaea58366ade26d.1501601667.git.luto@kernel.org>
- <20170801200313.GC3110@fury> <CALCETrX0zqq3xQgNBx41R9ZCT3_bB4EoXGrY3jWLK0e0Koo=EQ@mail.gmail.com>
- <20170801204040.GH25574@pali> <20170801211702.GF3110@fury>
- <20170801213112.GK25574@pali> <20170801223947.GH3110@fury>
- <CALCETrXFySnB3jq_EAn+NDTb6jsp__4Dc=0ipdFqCbaZEPSOfg@mail.gmail.com>
- <20170802022232.GA21551@fury> <20170802074903.GO25574@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID API
+Date: Fri, 4 Aug 2017 18:27:19 +0300
+Message-ID: <CAHp75VcFB1BDNUG729mi5BkhcR_aBX4MzvoyzdRx=LaAg9=EHQ@mail.gmail.com>
+References: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com> <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170802074903.GO25574@pali>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f172.google.com ([209.85.216.172]:34769 "EHLO
+        mail-qt0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752132AbdHDP1U (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 4 Aug 2017 11:27:20 -0400
+In-Reply-To: <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Aug 2, 2017 at 12:49 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> On Tuesday 01 August 2017 19:22:32 Darren Hart wrote:
+On Fri, Aug 4, 2017 at 6:01 PM, Andy Lutomirski <luto@kernel.org> wrote:
+>> On Aug 2, 2017, at 9:28 AM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>>
+>> There are new types and helpers that are supposed to be used in new code.
+>>
+>> As a preparation to get rid of legacy types and API functions do
+>> the conversion here.
+>>
+>> While here, update Copyright to reflect this change along with previous
+>> one for the topic.
 
->> Pali, how does the "magic number identifier" in the BMOF map to the object_id?
->> Have we retained that information in what we export today?
+>> struct guid_block {
+>> -    char guid[16];
+>> +    guid_t guid;
 >
-> MOF describe C++ like object system and for particular structures or
-> methods there is GUID and WMI id.
->
-> When you want to call WMI function implemented in ACPI you need to know:
-> * name of ACPI function
-> * instance number
-> * WMI id
-> * structure of input buffer
->
-> Name of ACPI function is taken from _WDG where is mapping from GUID to
-> object_id and ACPI function consist of well-known prefix and object_id
-> as a suffix. GUID is present in MOF. Where to get correct instance
-> number is still question for me. WMI id and structure of input buffer is
-> described in MOF.
+> NAK.  guid_block is a firmware interface, so opaque kernel types don't
+> belong in it.
 
-I assume that any user API for making WMI calls will have userspace
-pass in either the GUID or maybe the MOF method name, not the object
-id.
+I f we leave this, what do you think about everything else?
 
---Andy
+-- 
+With Best Regards,
+Andy Shevchenko
