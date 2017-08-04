@@ -1,59 +1,48 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH] intel-vbtn: match power button on press rather than release
-Date: Fri,  4 Aug 2017 12:00:06 -0500
-Message-ID: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:14672 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752772AbdHDRBn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Aug 2017 13:01:43 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>, dvhart@infradead.org, linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel-vbtn: match power button on press rather than
+ release
+Date: Fri, 4 Aug 2017 10:29:53 -0700
+Message-ID: <20170804172953.GC21169@fury>
+References: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: AceLan Kao <acelan.kao@canonical.com>, linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This fixes a problem where the system gets stuck in a loop
-unable to wakeup via power button in s2idle.
+On Fri, Aug 04, 2017 at 12:00:06PM -0500, Mario Limonciello wrote:
+> This fixes a problem where the system gets stuck in a loop
+> unable to wakeup via power button in s2idle.
+> 
+> The problem happens because:
+>  - press power button:
+>    - system emits 0xc0 (power press), event ignored
+>    - system emits 0xc1 (power release), event processed,
+>      emited as KEY_POWER
+>    - set wakeup_mode to true
+>    - system goes to s2idle
+>  - press power button
+>    - system emits 0xc0 (power press), wakeup_mode is true,
+>      system wakes
+>    - system emits 0xc1 (power release), event processed,
+>      emited as KEY_POWER
+>    - system goes to s2idle again
+> 
+> To avoid this situation, process the presses (which matches what
+> intel-hid does too).
+> 
+> Verified on an Dell XPS 9365
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
-The problem happens because:
- - press power button:
-   - system emits 0xc0 (power press), event ignored
-   - system emits 0xc1 (power release), event processed,
-     emited as KEY_POWER
-   - set wakeup_mode to true
-   - system goes to s2idle
- - press power button
-   - system emits 0xc0 (power press), wakeup_mode is true,
-     system wakes
-   - system emits 0xc1 (power release), event processed,
-     emited as KEY_POWER
-   - system goes to s2idle again
+This looks good to me - responding to the release is non-intuitive IMHO
+anyway.  I'd like to see agreement from AceLan, but this should go into
+the 4.13 rc cycle (at rc3 currently).
 
-To avoid this situation, process the presses (which matches what
-intel-hid does too).
-
-Verified on an Dell XPS 9365
-
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/intel-vbtn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 61f1063..4809267 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -36,8 +36,8 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
- 
- /* In theory, these are HID usages. */
- static const struct key_entry intel_vbtn_keymap[] = {
--	{ KE_IGNORE, 0xC0, { KEY_POWER } },	/* power key press */
--	{ KE_KEY, 0xC1, { KEY_POWER } },	/* power key release */
-+	{ KE_KEY, 0xC0, { KEY_POWER } },	/* power key press */
-+	{ KE_IGNORE, 0xC1, { KEY_POWER } },	/* power key release */
- 	{ KE_KEY, 0xC4, { KEY_VOLUMEUP } },		/* volume-up key press */
- 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
- 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
 -- 
-2.7.4
+Darren Hart
+VMware Open Source Technology Center
