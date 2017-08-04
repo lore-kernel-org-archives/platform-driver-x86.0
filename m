@@ -1,66 +1,110 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+From: Harvey <harv@gmx.de>
 Subject: Re: Kernel error messages: leds fujitsu::radio_led: Setting an LED's
  brightness failed
-Date: Fri, 4 Aug 2017 08:13:52 +0200
-Message-ID: <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+Date: Fri, 4 Aug 2017 10:55:05 +0200
+Message-ID: <e8477251-1f12-43c2-3760-fdf8fb221b7a@gmx.de>
 References: <fede7169-e944-3ca8-8b8d-e17a95b8dcfe@gmx.de>
  <20170720064257.GA4942@larwa.localdomain>
  <bec5d8be-fa0b-be42-7af3-fa01fb071663@gmx.de>
+ <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+Reply-To: harv@gmx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bec5d8be-fa0b-be42-7af3-fa01fb071663@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Harvey <harv@gmx.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="pVOR5sRDCaXXRsr2Te1sonMB0e43IJeuH"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mout.gmx.net ([212.227.15.19]:63720 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751891AbdHDIzV (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 4 Aug 2017 04:55:21 -0400
+In-Reply-To: <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-> Hi Michał,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pVOR5sRDCaXXRsr2Te1sonMB0e43IJeuH
+Content-Type: multipart/mixed; boundary="N1CUd2H11dhONhKrH2pC0HM2LacngK0WQ";
+ protected-headers="v1"
+From: Harvey <harv@gmx.de>
+Reply-To: harv@gmx.de
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <e8477251-1f12-43c2-3760-fdf8fb221b7a@gmx.de>
+Subject: Re: Kernel error messages: leds fujitsu::radio_led: Setting an LED's
+ brightness failed
+References: <fede7169-e944-3ca8-8b8d-e17a95b8dcfe@gmx.de>
+ <20170720064257.GA4942@larwa.localdomain>
+ <bec5d8be-fa0b-be42-7af3-fa01fb071663@gmx.de>
+ <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+In-Reply-To: <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
 
-Hi Harvey,
+--N1CUd2H11dhONhKrH2pC0HM2LacngK0WQ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for providing us with further information.
+Hi Micha=C5=82,
 
-> Now I had the time to change the harddisk in my laptop to the Win7 one
-> (It's 35 degrees out there - nice excuse to stay inside ;))
-> 
-> What I found out:
-> Neither the E nor the I LED work under Windows in my configuration.
-> There is no Bluetooth LED (maybe because there is a combined
-> WLAN/Bluetooth adapter used in the laptop?). There is only a Bluetooth
-> Icon in the taskbar to indicate Bluetooth status.
+> Thank you for providing us with further information.
 
-Okay, this seems to be consistent with the manual I linked to in my
-previous message.
+Again, glad to help where I can.
 
-> Pressing the E button brings up some kind of Energy saving applet and
-> pressing the I button brings up an applet telling me about the hardware
-> in my laptop and its current state.
+>> Pressing the E button brings up some kind of Energy saving applet and
+>> pressing the I button brings up an applet telling me about the hardwar=
+e
+>> in my laptop and its current state.
+>=20
+> These hotkeys should already work fine under Linux
 
-These hotkeys should already work fine under Linux, i.e. pressing them
-should generate input events which you can assign to any action you
-please.  If they do not work for you, please let me know so that we can
-debug further.
+Yes, they do. I already redefined them as shortcuts to start some useful
+programs.
 
-> Please tell me if I can provide more Information.
+> If I did not miss anything in your reports, there are two issues that
+> require some work:
+>=20
+>   - Fixing radio LED detection.  I have an idea how to do this, but
+>     please mind that I am quite busy lately and cannot guarantee any
+>     specific time frame for submitting a patch.
+>=20
+>   - Investigating the E LED.  This requires taking a look at the DSDT
+>     dump from your laptop and searching for clues as to how this LED is=
 
-If I did not miss anything in your reports, there are two issues that
-require some work:
+>     handled.  I will be happy to do that, but again, no promises about
+>     how much time it will take.  (And given the nature of this task, I
+>     cannot promise I will find anything reasonable at all.  I also migh=
+t
+>     ask you to do some further experiments as I do not have an E751
+>     myself.)
 
-  - Fixing radio LED detection.  I have an idea how to do this, but
-    please mind that I am quite busy lately and cannot guarantee any
-    specific time frame for submitting a patch.
+Don't forget to take a look at the I LED... And concerning time. it is
+ready when it's ready ;)
 
-  - Investigating the E LED.  This requires taking a look at the DSDT
-    dump from your laptop and searching for clues as to how this LED is
-    handled.  I will be happy to do that, but again, no promises about
-    how much time it will take.  (And given the nature of this task, I
-    cannot promise I will find anything reasonable at all.  I also might
-    ask you to do some further experiments as I do not have an E751
-    myself.)
+I will be happy to help and test anything that is required. Just send me
+a note what needs to be done.
 
--- 
-Best regards,
-Michał Kępień
+Greetings
+Harvey
+
+--=20
+I am root. If you see me laughing, you'd better have a backup!
+
+
+--N1CUd2H11dhONhKrH2pC0HM2LacngK0WQ--
+
+--pVOR5sRDCaXXRsr2Te1sonMB0e43IJeuH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRSRNvmxYqoNs6vm0SLlqqYsFRKCQUCWYQ2aQAKCRCLlqqYsFRK
+CWO8AKCEL71dHxV90tijEuqW6oeDeV/LWwCeIQNXt0Buss1+668AAc+xbBNTueA=
+=7iP0
+-----END PGP SIGNATURE-----
+
+--pVOR5sRDCaXXRsr2Te1sonMB0e43IJeuH--
