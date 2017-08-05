@@ -1,62 +1,47 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] intel-vbtn: match power button on press rather than release
-Date: Sat, 05 Aug 2017 01:30:20 +0200
-Message-ID: <11471111.T3jHVeqpMT@aspire.rjw.lan>
-References: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com> <20170804172953.GC21169@fury>
+From: Hao Wei Tee <angelsl@in04.sg>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode
+ switch
+Date: Sat, 5 Aug 2017 23:18:26 +0800
+Message-ID: <ed147557-0431-34b4-e877-14647a3be479@in04.sg>
+References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
+ <264a8ced-4336-06b9-d760-babc08ccde5c@angelsl.xyz>
+ <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.net.pl ([79.96.170.134]:52088 "EHLO
-        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752391AbdHDXid (ORCPT
+Received: from mail-pf0-f175.google.com ([209.85.192.175]:35732 "EHLO
+        mail-pf0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751392AbdHEPSa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Aug 2017 19:38:33 -0400
-In-Reply-To: <20170804172953.GC21169@fury>
+        Sat, 5 Aug 2017 11:18:30 -0400
+Received: by mail-pf0-f175.google.com with SMTP id t86so18450333pfe.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Aug 2017 08:18:30 -0700 (PDT)
+In-Reply-To: <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
+Content-Language: en-GB
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, AceLan Kao <acelan.kao@canonical.com>, linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
 
-On Friday, August 4, 2017 7:29:53 PM CEST Darren Hart wrote:
-> On Fri, Aug 04, 2017 at 12:00:06PM -0500, Mario Limonciello wrote:
-> > This fixes a problem where the system gets stuck in a loop
-> > unable to wakeup via power button in s2idle.
-> > 
-> > The problem happens because:
-> >  - press power button:
-> >    - system emits 0xc0 (power press), event ignored
-> >    - system emits 0xc1 (power release), event processed,
-> >      emited as KEY_POWER
-> >    - set wakeup_mode to true
-> >    - system goes to s2idle
-> >  - press power button
-> >    - system emits 0xc0 (power press), wakeup_mode is true,
-> >      system wakes
-> >    - system emits 0xc1 (power release), event processed,
-> >      emited as KEY_POWER
-> >    - system goes to s2idle again
-> > 
-> > To avoid this situation, process the presses (which matches what
-> > intel-hid does too).
-> > 
-> > Verified on an Dell XPS 9365
-> > 
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+On 30/5/2017 21:22, Andy Shevchenko wrote:
+> On Sun, May 28, 2017 at 4:47 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
+>> On 5/27/17 3:31 PM, Hao Wei Tee wrote:
+>>> This exposes the battery conservation mode present on some (?) IdeaPads.
+>>> The mode is set by calling ACPI method SBMC with argument 3 (on) or
+>>> 5 (off). Status is reported in bit 5 of the return value of ACPI method
+>>> GBMD.
+>>>
+>>> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
+>>> methods are the same across all IdeaPads, so it would be great if this got more
+>>> testing across other models before it's merged.
+>>
+>> I got someone to test on an IdeaPad Y510p. It works on that too.
 > 
-> This looks good to me - responding to the release is non-intuitive IMHO
-> anyway.  I'd like to see agreement from AceLan, but this should go into
-> the 4.13 rc cycle (at rc3 currently).
+> Do we have any other option that expose something via sysfs?
 
-Yes, it should, and I'm not sure if the original author's opinion matters here.
+It's been 2 months, what can I do to get this patch merged, or alternatively some other
+way of exposing this switch?
 
-The patch makes sense to everyone involved and fixes an annoying issue, so
-I don't see any real arguments against applying it.
-
-Please feel free to add my ACK to it if that helps.
-
-In any case, it has to go in before https://patchwork.kernel.org/patch/9873163/
-does, is if it doesn't go into 4.13-rc after all, please let me know.
-
-Thanks,
-Rafael
+-- 
+Hao Wei
