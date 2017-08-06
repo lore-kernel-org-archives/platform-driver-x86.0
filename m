@@ -1,41 +1,50 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 18/18] i2c-cht-wc: Add device-properties for fusb302 integration
-Date: Sun, 6 Aug 2017 19:29:08 +0300
-Message-ID: <CAHp75VfM-cGzhng4amYs=Y3nJorFud6u6R_xj4C-rSJuHePicQ@mail.gmail.com>
-References: <20170806123555.5124-1-hdegoede@redhat.com> <20170806123555.5124-19-hdegoede@redhat.com>
- <9ba933c6-daae-f30d-2c83-e9c2b756d27f@roeck-us.net> <ae6fcdce-1dd0-d29f-ce04-9d9c77f14730@redhat.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode switch
+Date: Sun, 6 Aug 2017 21:35:47 +0300
+Message-ID: <CAHp75Vcvak-FtXyKFZ2NE0g8cRzCb1oUxJaHgPx8q_sL13y_Og@mail.gmail.com>
+References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
+ <264a8ced-4336-06b9-d760-babc08ccde5c@angelsl.xyz> <CAHp75Vf3+1HPqeNbN3UEyhraA0FvrCHhNGaKwfsrtQauEdOGTw@mail.gmail.com>
+ <ed147557-0431-34b4-e877-14647a3be479@in04.sg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <ae6fcdce-1dd0-d29f-ce04-9d9c77f14730@redhat.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, devel@driverdev.osuosl.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f171.google.com ([209.85.216.171]:33725 "EHLO
+        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751341AbdHFSfs (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 6 Aug 2017 14:35:48 -0400
+In-Reply-To: <ed147557-0431-34b4-e877-14647a3be479@in04.sg>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hao Wei Tee <angelsl@in04.sg>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
 
-On Sun, Aug 6, 2017 at 6:05 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On 06-08-17 16:35, Guenter Roeck wrote:
->> On 08/06/2017 05:35 AM, Hans de Goede wrote:
+On Sat, Aug 5, 2017 at 6:18 PM, Hao Wei Tee <angelsl@in04.sg> wrote:
+> On 30/5/2017 21:22, Andy Shevchenko wrote:
+>> On Sun, May 28, 2017 at 4:47 PM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
+>>> On 5/27/17 3:31 PM, Hao Wei Tee wrote:
+>>>> This exposes the battery conservation mode present on some (?) IdeaPads.
+>>>> The mode is set by calling ACPI method SBMC with argument 3 (on) or
+>>>> 5 (off). Status is reported in bit 5 of the return value of ACPI method
+>>>> GBMD.
+>>>>
+>>>> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
+>>>> methods are the same across all IdeaPads, so it would be great if this got more
+>>>> testing across other models before it's merged.
+>>>
+>>> I got someone to test on an IdeaPad Y510p. It works on that too.
+>>
+>> Do we have any other option that expose something via sysfs?
+>
+> It's been 2 months, what can I do to get this patch merged, or alternatively some other
+> way of exposing this switch?
 
-> FWIW all DSTDs I've seen are all copy and paste and all declare a INT33FE
-> ACPI
-> device with identical i2c client addresses which strongly suggests the
-> use of the same combo. Note that on most devices this part of the DSTD is
-> not active (_STA returns 0) because they actually use a different config.
+Oh, sorry, I was pretty sure I have done something regarding to this
+patch, but apparently not.
 
-Which is quite likely just blindly copied from a reference BIOS code.
-(Reminds me that bug with GPIO pin setting for interrupt as output only)
-
-> The only extra safe-guard I can come up with is a DMI string check, but that
-> is sub-optimal since the DMI strings on these devices contain useful values
-> as "Default String" still we could add it as an extra check.
-
-...and in worst cases CPU model ID.
-
-> Since I had the same concern I've done a web search and I've been unable
-> to find any other devices which seem to use a Whiskey Cove PMIC, but that
-> does not mean that there aren't any.
-
+I'm fine with the change as long as we have no other option than sysfs here.
+I'm on vacation for few more days, I will return to this after (ping
+me let's say next Friday if you want to).
 
 -- 
 With Best Regards,
