@@ -1,112 +1,77 @@
-From: =?UTF-8?Q?Dieter_N=C3=BCtzel?= <Dieter-0hun7QTegEsDD4udEopG9Q@public.gmane.org>
-Subject: Re: Resizeable PCI BAR support V5
-Date: Mon, 07 Aug 2017 00:30:19 +0200
-Message-ID: <c4ebbddfa34dd5c3c93b7a20ac2e7948@nuetzel-hh.de>
-References: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de>
- <b71010ca149411909076e83d1c22b2b8@nuetzel-hh.de>
- <92b1fd57-2ad0-ab7b-33e3-3f4227dcc2db@vodafone.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel-vbtn: match power button on press rather than
+ release
+Date: Sun, 6 Aug 2017 16:24:18 -0700
+Message-ID: <20170806232418.GA29692@fury>
+References: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
+ <11471111.T3jHVeqpMT@aspire.rjw.lan>
+ <20170805205753.GA1277@fury>
+ <1700343.1Fm4iKlbcW@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <92b1fd57-2ad0-ab7b-33e3-3f4227dcc2db-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:47059 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751353AbdHFXYY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 6 Aug 2017 19:24:24 -0400
+Content-Disposition: inline
+In-Reply-To: <1700343.1Fm4iKlbcW@aspire.rjw.lan>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, AceLan Kao <acelan.kao@canonical.com>, linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-SGVsbG8gQ2hyaXN0aWFuLAoKYWZ0ZXIgKGxvbmcgOy0pKSB2YWNhdGlvbiwgaW5qdXJlZCB3aWZl
-IChiYWQgbHVtYmFnby9sdWNraWx5IE5PIGRpc2MgCnByb2xhcHNlKSBvbiAyY29uZCBkYXkgQCBv
-dXIgdGFyZ2V0LCBvdXIgZGF1Z2h0ZXIncyAxMnRoIGJpcnRoZGF5LCAKc2Nob29sIHN0YXJ0IGZv
-ciBib3RoIGtpZHMgYW5kIG1vc3RseSBkYWQgd29yayBJJ20gYmFjay4uLgoKRG8geW91IGhhdmUg
-YSBWNiBoYW5keS4KV2lsbCBkbyBteSBmaW5nZXJzIGRpcnR5IGlmIG5vIEludGVsIGd1eSBiZWF0
-cyBtZSBhdCBpdC4KCkdyZWV0aW5ncywKRGlldGVyCgpBbSAzMC4wNi4yMDE3IDE0OjU1LCBzY2hy
-aWViIENocmlzdGlhbiBLw7ZuaWc6Cj4gSGkgRGlldGVyLAo+IAo+IHRoYW5rcyBhIGxvdCBmb3Ig
-dGVzdGluZyB0aGF0Lgo+IAo+PiBCdXQgSSB0aGluayBteSBwb29yIGxpdHRsZSBGVUpJVFNVIFBS
-SU1FUkdZIFRYMTUwIFM3LCBYZW9uIFgzNDcwIAo+PiAoTmVoYWxlbSksIFBDSWUgMi4wLCAyNCBH
-QiBpcyB0byBvbGQgZm9yIHRoaXMgc3R1ZmYuLi4KPiBXZWxsLCBhY3R1YWxseSB5b3Ugb25seSBu
-ZWVkIHRvIGZpZ3VyZSBvdXQgaG93IHRvIGVuYWJsZSBhIFBDSWUgd2luZG93Cj4gYWJvdmUgdGhl
-IDRHQiBsaW1pdC4KPiAKPiBDb3VsZCBiZSB0aGF0IHRoZSBCSU9TIHN1cHBvcnRzIHRoaXMgd2l0
-aCB0aGUgQUNQSSB0YWJsZXMgKHRvdGFsbHkKPiB1bmxpa2VseSkgb3IgeW91IGNvdWxkIHRyeSB0
-byBkaWcgdXAgdGhlIE5vcnRoYnJpZGdlIGRvY3VtZW50YXRpb24gZm9yCj4gdGhpcyBDUFUgZnJv
-bSBJbnRlbCBhbmQgdXNlIG15IHBhdGNoIGZvciB0aGUgQU1EIENQVXMgYXMgYmx1ZXByaW50IGhv
-dwo+IHRvIGRvIHRoaXMgb24gYW4gSW50ZWwgQ1BVIGFzIHdlbGwuCj4gCj4gRmFjdCBpcyB5b3Ug
-R0ZYIGhhcmR3YXJlIGlzIHBlcmZlY3RseSBjYXBhYmxlIG9mIGRvaW5nIHRoaXMsIGl0J3MganVz
-dAo+IHRoYXQgdGhlIEJJT1MvTW90aGVyYm9hcmQgZGlkbid0IGVuYWJsZWQgYSBQQ0llIHdpbmRv
-dyBwZXIgZGVmYXVsdCB0bwo+IGF2b2lkIHByb2JsZW1zIHdpdGggMzJiaXQgT1Nlcy4KPiAKPiBS
-ZWdhcmRzLAo+IENocmlzdGlhbi4KPiAKPiBBbSAzMC4wNi4yMDE3IHVtIDAxOjUxIHNjaHJpZWIg
-RGlldGVyIE7DvHR6ZWw6Cj4+IEhlbGxvIENocmlzdGlhbiwKPj4gCj4+IEkndmUgcnVubmluZyB0
-aGlzIHNpbmNlIHlvdSd2ZSBzZW50IGl0IG9uLXRvcCBvZiBhbWQtc3RhZ2luZy00LjExLiBCdXQg
-Cj4+IEkgdGhpbmsgbXkgcG9vciBsaXR0bGUgRlVKSVRTVSBQUklNRVJHWSBUWDE1MCBTNywgWGVv
-biBYMzQ3MCAKPj4gKE5laGFsZW0pLCBQQ0llIDIuMCwgMjQgR0IgaXMgdG8gb2xkIGZvciB0aGlz
-IHN0dWZmLi4uCj4+IAo+PiBbICAgIDEuMDY2NDc1XSBwY2kgMDAwMDowNTowMC4wOiBWRihuKSBC
-QVIwIHNwYWNlOiBbbWVtIAo+PiAweDAwMDAwMDAwLTB4MDAwM2ZmZmYgNjRiaXRdIChjb250YWlu
-cyBCQVIwIGZvciAxNiBWRnMpCj4+IFsgICAgMS4wNjY0ODldIHBjaSAwMDAwOjA1OjAwLjA6IFZG
-KG4pIEJBUjIgc3BhY2U6IFttZW0gCj4+IDB4MDAwMDAwMDAtMHgwMDNmZmZmZiA2NGJpdF0gKGNv
-bnRhaW5zIEJBUjIgZm9yIDE2IFZGcykKPj4gWyAgICAxLjEyMTY1Nl0gcGNpIDAwMDA6MDA6MWMu
-MDogQkFSIDE1OiBhc3NpZ25lZCBbbWVtIAo+PiAweDgwMDAwMDAwLTB4ODAxZmZmZmYgNjRiaXQg
-cHJlZl0KPj4gWyAgICAxLjEyMTY1OV0gcGNpIDAwMDA6MDA6MWMuNjogQkFSIDE1OiBhc3NpZ25l
-ZCBbbWVtIAo+PiAweDgwMjAwMDAwLTB4ODAzZmZmZmYgNjRiaXQgcHJlZl0KPj4gWyAgICAxLjEy
-MTY2Ml0gcGNpIDAwMDA6MDE6MDAuMDogQkFSIDY6IGFzc2lnbmVkIFttZW0gCj4+IDB4YjAxMjAw
-MDAtMHhiMDEzZmZmZiBwcmVmXQo+PiBbICAgIDEuMTIxNjgxXSBwY2kgMDAwMDowNTowMC4wOiBC
-QVIgNjogYXNzaWduZWQgW21lbSAKPj4gMHhiMDI4MDAwMC0weGIwMmZmZmZmIHByZWZdCj4+IFsg
-ICAgMS4xMjE2ODNdIHBjaSAwMDAwOjA1OjAwLjA6IEJBUiA5OiBubyBzcGFjZSBmb3IgW21lbSBz
-aXplIAo+PiAweDAwNDAwMDAwIDY0Yml0XQo+PiBbICAgIDEuMTIxNjg0XSBwY2kgMDAwMDowNTow
-MC4wOiBCQVIgOTogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgCj4+IDB4MDA0MDAwMDAgNjRi
-aXRdCj4+IFsgICAgMS4xMjE2ODVdIHBjaSAwMDAwOjA1OjAwLjA6IEJBUiA3OiBubyBzcGFjZSBm
-b3IgW21lbSBzaXplIAo+PiAweDAwMDQwMDAwIDY0Yml0XQo+PiBbICAgIDEuMTIxNjg3XSBwY2kg
-MDAwMDowNTowMC4wOiBCQVIgNzogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgCj4+IDB4MDAw
-NDAwMDAgNjRiaXRdCj4+IFsgICAgMy44NzQxODBdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAw
-OiByZWxlYXNpbmcgW21lbSAKPj4gMHhjMDAwMDAwMC0weGNmZmZmZmZmIDY0Yml0IHByZWZdCj4+
-IFsgICAgMy44NzQxODJdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAyOiByZWxlYXNpbmcgW21l
-bSAKPj4gMHhiMDQwMDAwMC0weGIwNWZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQxOThd
-IHBjaWVwb3J0IDAwMDA6MDA6MDMuMDogQkFSIDE1OiByZWxlYXNpbmcgW21lbSAKPj4gMHhiMDQw
-MDAwMC0weGNmZmZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMTVdIHBjaWVwb3J0IDAw
-MDA6MDA6MDMuMDogQkFSIDE1OiBubyBzcGFjZSBmb3IgW21lbSBzaXplIAo+PiAweDMwMDAwMDAw
-MCA2NGJpdCBwcmVmXQo+PiBbICAgIDMuODc0MjE3XSBwY2llcG9ydCAwMDAwOjAwOjAzLjA6IEJB
-UiAxNTogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIAo+PiBzaXplIDB4MzAwMDAwMDAwIDY0Yml0IHBy
-ZWZdCj4+IFsgICAgMy44NzQyMjFdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAwOiBubyBzcGFj
-ZSBmb3IgW21lbSBzaXplIAo+PiAweDIwMDAwMDAwMCA2NGJpdCBwcmVmXQo+PiBbICAgIDMuODc0
-MjIzXSBhbWRncHUgMDAwMDowMTowMC4wOiBCQVIgMDogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNp
-emUgCj4+IDB4MjAwMDAwMDAwIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMjZdIGFtZGdwdSAw
-MDAwOjAxOjAwLjA6IEJBUiAyOiBubyBzcGFjZSBmb3IgW21lbSBzaXplIAo+PiAweDAwMjAwMDAw
-IDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMjddIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAy
-OiBmYWlsZWQgdG8gYXNzaWduIFttZW0gc2l6ZSAKPj4gMHgwMDIwMDAwMCA2NGJpdCBwcmVmXQo+
-PiBbICAgIDMuODc0MjU4XSBbZHJtXSBOb3QgZW5vdWdoIFBDSSBhZGRyZXNzIHNwYWNlIGZvciBh
-IGxhcmdlIEJBUi4KPj4gWyAgICAzLjg3NDI2MV0gYW1kZ3B1IDAwMDA6MDE6MDAuMDogQkFSIDA6
-IGFzc2lnbmVkIFttZW0gCj4+IDB4YzAwMDAwMDAtMHhjZmZmZmZmZiA2NGJpdCBwcmVmXQo+PiBb
-ICAgIDMuODc0MjY5XSBhbWRncHUgMDAwMDowMTowMC4wOiBCQVIgMjogYXNzaWduZWQgW21lbSAK
-Pj4gMHhiMDQwMDAwMC0weGIwNWZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyODhdIFtk
-cm1dIERldGVjdGVkIFZSQU0gUkFNPTgxOTJNLCBCQVI9MjU2TQo+PiAKPj4gQW55d2F5IHJlYmFz
-ZSBmb3IgY3VycmVudCBhbWQtc3RhZ2luZy00LjExIG5lZWRlZC4KPj4gRmluZCBhdHRhY2hlZCBk
-bWVzZy1hbWQtc3RhZ2luZy00LjExLTEuZzcyNjIzNTMtZGVmYXVsdCsubG9nLnh6Cj4+IAo+PiBH
-cmVldGluZ3MsCj4+IERpZXRlcgo+PiAKPj4gQW0gMDkuMDYuMjAxNyAxMDo1OSwgc2NocmllYiBD
-aHJpc3RpYW4gS8O2bmlnOgo+Pj4gSGkgZXZlcnlvbmUsCj4+PiAKPj4+IFRoaXMgaXMgdGhlIGZp
-dGggaW5jYXJuYXRpb24gb2YgdGhpcyBzZXQgb2YgcGF0Y2hlcy4gSXQgZW5hYmxlcyAKPj4+IGRl
-dmljZQo+Pj4gZHJpdmVycyB0byByZXNpemUgYW5kIG1vc3QgbGlrZWx5IGFsc28gcmVsb2NhdGUg
-dGhlIFBDSSBCQVIgb2YgCj4+PiBkZXZpY2VzCj4+PiB0aGV5IG1hbmFnZSB0byBhbGxvdyB0aGUg
-Q1BVIHRvIGFjY2VzcyBhbGwgb2YgdGhlIGRldmljZSBsb2NhbCBtZW1vcnkgCj4+PiBhdCBvbmNl
-Lgo+Pj4gCj4+PiBUaGlzIGlzIHZlcnkgdXNlZnVsIGZvciBHRlggZGV2aWNlIGRyaXZlcnMgd2hl
-cmUgdGhlIGRlZmF1bHQgUENJIEJBUiAKPj4+IGlzIG9ubHkKPj4+IGFib3V0IDI1Nk1CIGluIHNp
-emUgZm9yIGNvbXBhdGliaWxpdHkgcmVhc29ucywgYnV0IHRoZSBkZXZpY2UgZWFzaWx5IAo+Pj4g
-aGF2ZQo+Pj4gbXVsdGlwbGUgZ2lnYWJ5dGUgb2YgbG9jYWwgbWVtb3J5Lgo+Pj4gCj4+PiBTb21l
-IGNoYW5nZXMgc2luY2UgVjQ6Cj4+PiAxLiBSZWJhc2VkIG9uIDQuMTEuCj4+PiAyLiBhZGRlZCB0
-aGUgcmIgZnJvbSBBbmR5IFNoZXZjaGVua28gdG8gcGF0Y2hlcyB3aGljaCBsb29rIGNvbXBsZXRl
-IAo+Pj4gbm93Lgo+Pj4gMy4gTW92ZSByZWxlYXNpbmcgdGhlIEJBUiBhbmQgcmVhbGxvY2F0aW5n
-IGl0IG9uIGVycm9yIHRvIHRoZSBkcml2ZXIgCj4+PiBzaWRlLgo+Pj4gNC4gQWRkIGFtZGdwdSBz
-dXBwb3J0IGZvciBHTUMgVjYgaGFyZHdhcmUgZ2VuZXJhdGlvbiBhcyB3ZWxsLgo+Pj4gCj4+PiBQ
-bGVhc2UgcmV2aWV3IGFuZC9vciBjb21tZW50LAo+Pj4gQ2hyaXN0aWFuLgo+Pj4gCj4+PiBfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4gZHJpLWRldmVs
-IG1haWxpbmcgbGlzdAo+Pj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4gaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYW1kLWdmeCBtYWls
-aW5nIGxpc3QKYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbWQtZ2Z4Cg==
+On Sun, Aug 06, 2017 at 12:20:22AM +0200, Rafael Wysocki wrote:
+> On Saturday, August 5, 2017 10:57:53 PM CEST Darren Hart wrote:
+> > On Sat, Aug 05, 2017 at 01:30:20AM +0200, Rafael Wysocki wrote:
+> > > On Friday, August 4, 2017 7:29:53 PM CEST Darren Hart wrote:
+> > > > On Fri, Aug 04, 2017 at 12:00:06PM -0500, Mario Limonciello wrote:
+> > > > > This fixes a problem where the system gets stuck in a loop
+> > > > > unable to wakeup via power button in s2idle.
+> > > > > 
+> > > > > The problem happens because:
+> > > > >  - press power button:
+> > > > >    - system emits 0xc0 (power press), event ignored
+> > > > >    - system emits 0xc1 (power release), event processed,
+> > > > >      emited as KEY_POWER
+> > > > >    - set wakeup_mode to true
+> > > > >    - system goes to s2idle
+> > > > >  - press power button
+> > > > >    - system emits 0xc0 (power press), wakeup_mode is true,
+> > > > >      system wakes
+> > > > >    - system emits 0xc1 (power release), event processed,
+> > > > >      emited as KEY_POWER
+> > > > >    - system goes to s2idle again
+> > > > > 
+> > > > > To avoid this situation, process the presses (which matches what
+> > > > > intel-hid does too).
+> > > > > 
+> > > > > Verified on an Dell XPS 9365
+> > > > > 
+> > > > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > > > 
+> > > > This looks good to me - responding to the release is non-intuitive IMHO
+> > > > anyway.  I'd like to see agreement from AceLan, but this should go into
+> > > > the 4.13 rc cycle (at rc3 currently).
+> > > 
+> > > Yes, it should, and I'm not sure if the original author's opinion matters here.
+> > > 
+> > > The patch makes sense to everyone involved and fixes an annoying issue, so
+> > > I don't see any real arguments against applying it.
+> > > 
+> > > Please feel free to add my ACK to it if that helps.
+> > 
+> > I always try to give those in MAINTAINERS a chance to respond, but I will queue
+> > this up to fixes now.
+> 
+> Thanks!
+
+Rafael,
+
+Merged to mainline (in case you were waiting on this for the dependent
+patch you mentioned).
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
