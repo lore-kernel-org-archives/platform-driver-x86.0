@@ -1,65 +1,112 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 3/3] platform/wmi: Expose the raw WDG data in sysfs
-Date: Sun, 6 Aug 2017 15:09:47 -0700
-Message-ID: <CALCETrXjqMoa6BGkQ-jhxBR8eg3uuGEbfRS0uJrE-rNbTcQqbQ@mail.gmail.com>
-References: <cover.1501601667.git.luto@kernel.org> <20170802074903.GO25574@pali>
- <CALCETrVHGtA7nRaBCy9ZZ48Xu8hTKBgLdoGZeEHnHhPg3tdsxQ@mail.gmail.com> <201708062336.25403@pali>
+From: =?UTF-8?Q?Dieter_N=C3=BCtzel?= <Dieter-0hun7QTegEsDD4udEopG9Q@public.gmane.org>
+Subject: Re: Resizeable PCI BAR support V5
+Date: Mon, 07 Aug 2017 00:30:19 +0200
+Message-ID: <c4ebbddfa34dd5c3c93b7a20ac2e7948@nuetzel-hh.de>
+References: <1496998787-6371-1-git-send-email-deathsimple@vodafone.de>
+ <b71010ca149411909076e83d1c22b2b8@nuetzel-hh.de>
+ <92b1fd57-2ad0-ab7b-33e3-3f4227dcc2db@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <201708062336.25403@pali>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <92b1fd57-2ad0-ab7b-33e3-3f4227dcc2db-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
+List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Aug 6, 2017 at 2:36 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> On Friday 04 August 2017 17:03:07 Andy Lutomirski wrote:
->> On Wed, Aug 2, 2017 at 12:49 AM, Pali Rohár <pali.rohar@gmail.com>
->> wrote:
->> > On Tuesday 01 August 2017 19:22:32 Darren Hart wrote:
->> >> Pali, how does the "magic number identifier" in the BMOF map to
->> >> the object_id? Have we retained that information in what we
->> >> export today?
->> >
->> > MOF describe C++ like object system and for particular structures
->> > or methods there is GUID and WMI id.
->> >
->> > When you want to call WMI function implemented in ACPI you need to
->> > know: * name of ACPI function
->> > * instance number
->> > * WMI id
->> > * structure of input buffer
->> >
->> > Name of ACPI function is taken from _WDG where is mapping from GUID
->> > to object_id and ACPI function consist of well-known prefix and
->> > object_id as a suffix. GUID is present in MOF. Where to get
->> > correct instance number is still question for me. WMI id and
->> > structure of input buffer is described in MOF.
->>
->> I assume that any user API for making WMI calls will have userspace
->> pass in either the GUID or maybe the MOF method name, not the object
->> id.
->
-> So... When calling WMI method of some class it is really needed to
-> supply also instance id. On Windows caller needs to specify Instance
-> Name, e.g. ACPI\PNP0C14\0_0 which looks like correspondent to instance
-> id 0. ACPI\PNP0C14\0_2 is then to instance id 2.
->
-> Toshiba has triple (class, method, instance) in their BIOS WMI
-> documentation [1].
->
-> Therefore userspace would need to know instance count which is stored in
-> _WDG for doing WMI call.
->
-> Is there already exported instance count via sysfs?
-
-Yes.
-
->
-> [1] - https://aps2.toshiba-tro.de/kb0/TSB3803HR0000R01_TOSHIBA_BIOS_WMI_Interface_Guide_-_13_Rev_1.1.pdf
->
-> --
-> Pali Rohár
-> pali.rohar@gmail.com
+SGVsbG8gQ2hyaXN0aWFuLAoKYWZ0ZXIgKGxvbmcgOy0pKSB2YWNhdGlvbiwgaW5qdXJlZCB3aWZl
+IChiYWQgbHVtYmFnby9sdWNraWx5IE5PIGRpc2MgCnByb2xhcHNlKSBvbiAyY29uZCBkYXkgQCBv
+dXIgdGFyZ2V0LCBvdXIgZGF1Z2h0ZXIncyAxMnRoIGJpcnRoZGF5LCAKc2Nob29sIHN0YXJ0IGZv
+ciBib3RoIGtpZHMgYW5kIG1vc3RseSBkYWQgd29yayBJJ20gYmFjay4uLgoKRG8geW91IGhhdmUg
+YSBWNiBoYW5keS4KV2lsbCBkbyBteSBmaW5nZXJzIGRpcnR5IGlmIG5vIEludGVsIGd1eSBiZWF0
+cyBtZSBhdCBpdC4KCkdyZWV0aW5ncywKRGlldGVyCgpBbSAzMC4wNi4yMDE3IDE0OjU1LCBzY2hy
+aWViIENocmlzdGlhbiBLw7ZuaWc6Cj4gSGkgRGlldGVyLAo+IAo+IHRoYW5rcyBhIGxvdCBmb3Ig
+dGVzdGluZyB0aGF0Lgo+IAo+PiBCdXQgSSB0aGluayBteSBwb29yIGxpdHRsZSBGVUpJVFNVIFBS
+SU1FUkdZIFRYMTUwIFM3LCBYZW9uIFgzNDcwIAo+PiAoTmVoYWxlbSksIFBDSWUgMi4wLCAyNCBH
+QiBpcyB0byBvbGQgZm9yIHRoaXMgc3R1ZmYuLi4KPiBXZWxsLCBhY3R1YWxseSB5b3Ugb25seSBu
+ZWVkIHRvIGZpZ3VyZSBvdXQgaG93IHRvIGVuYWJsZSBhIFBDSWUgd2luZG93Cj4gYWJvdmUgdGhl
+IDRHQiBsaW1pdC4KPiAKPiBDb3VsZCBiZSB0aGF0IHRoZSBCSU9TIHN1cHBvcnRzIHRoaXMgd2l0
+aCB0aGUgQUNQSSB0YWJsZXMgKHRvdGFsbHkKPiB1bmxpa2VseSkgb3IgeW91IGNvdWxkIHRyeSB0
+byBkaWcgdXAgdGhlIE5vcnRoYnJpZGdlIGRvY3VtZW50YXRpb24gZm9yCj4gdGhpcyBDUFUgZnJv
+bSBJbnRlbCBhbmQgdXNlIG15IHBhdGNoIGZvciB0aGUgQU1EIENQVXMgYXMgYmx1ZXByaW50IGhv
+dwo+IHRvIGRvIHRoaXMgb24gYW4gSW50ZWwgQ1BVIGFzIHdlbGwuCj4gCj4gRmFjdCBpcyB5b3Ug
+R0ZYIGhhcmR3YXJlIGlzIHBlcmZlY3RseSBjYXBhYmxlIG9mIGRvaW5nIHRoaXMsIGl0J3MganVz
+dAo+IHRoYXQgdGhlIEJJT1MvTW90aGVyYm9hcmQgZGlkbid0IGVuYWJsZWQgYSBQQ0llIHdpbmRv
+dyBwZXIgZGVmYXVsdCB0bwo+IGF2b2lkIHByb2JsZW1zIHdpdGggMzJiaXQgT1Nlcy4KPiAKPiBS
+ZWdhcmRzLAo+IENocmlzdGlhbi4KPiAKPiBBbSAzMC4wNi4yMDE3IHVtIDAxOjUxIHNjaHJpZWIg
+RGlldGVyIE7DvHR6ZWw6Cj4+IEhlbGxvIENocmlzdGlhbiwKPj4gCj4+IEkndmUgcnVubmluZyB0
+aGlzIHNpbmNlIHlvdSd2ZSBzZW50IGl0IG9uLXRvcCBvZiBhbWQtc3RhZ2luZy00LjExLiBCdXQg
+Cj4+IEkgdGhpbmsgbXkgcG9vciBsaXR0bGUgRlVKSVRTVSBQUklNRVJHWSBUWDE1MCBTNywgWGVv
+biBYMzQ3MCAKPj4gKE5laGFsZW0pLCBQQ0llIDIuMCwgMjQgR0IgaXMgdG8gb2xkIGZvciB0aGlz
+IHN0dWZmLi4uCj4+IAo+PiBbICAgIDEuMDY2NDc1XSBwY2kgMDAwMDowNTowMC4wOiBWRihuKSBC
+QVIwIHNwYWNlOiBbbWVtIAo+PiAweDAwMDAwMDAwLTB4MDAwM2ZmZmYgNjRiaXRdIChjb250YWlu
+cyBCQVIwIGZvciAxNiBWRnMpCj4+IFsgICAgMS4wNjY0ODldIHBjaSAwMDAwOjA1OjAwLjA6IFZG
+KG4pIEJBUjIgc3BhY2U6IFttZW0gCj4+IDB4MDAwMDAwMDAtMHgwMDNmZmZmZiA2NGJpdF0gKGNv
+bnRhaW5zIEJBUjIgZm9yIDE2IFZGcykKPj4gWyAgICAxLjEyMTY1Nl0gcGNpIDAwMDA6MDA6MWMu
+MDogQkFSIDE1OiBhc3NpZ25lZCBbbWVtIAo+PiAweDgwMDAwMDAwLTB4ODAxZmZmZmYgNjRiaXQg
+cHJlZl0KPj4gWyAgICAxLjEyMTY1OV0gcGNpIDAwMDA6MDA6MWMuNjogQkFSIDE1OiBhc3NpZ25l
+ZCBbbWVtIAo+PiAweDgwMjAwMDAwLTB4ODAzZmZmZmYgNjRiaXQgcHJlZl0KPj4gWyAgICAxLjEy
+MTY2Ml0gcGNpIDAwMDA6MDE6MDAuMDogQkFSIDY6IGFzc2lnbmVkIFttZW0gCj4+IDB4YjAxMjAw
+MDAtMHhiMDEzZmZmZiBwcmVmXQo+PiBbICAgIDEuMTIxNjgxXSBwY2kgMDAwMDowNTowMC4wOiBC
+QVIgNjogYXNzaWduZWQgW21lbSAKPj4gMHhiMDI4MDAwMC0weGIwMmZmZmZmIHByZWZdCj4+IFsg
+ICAgMS4xMjE2ODNdIHBjaSAwMDAwOjA1OjAwLjA6IEJBUiA5OiBubyBzcGFjZSBmb3IgW21lbSBz
+aXplIAo+PiAweDAwNDAwMDAwIDY0Yml0XQo+PiBbICAgIDEuMTIxNjg0XSBwY2kgMDAwMDowNTow
+MC4wOiBCQVIgOTogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgCj4+IDB4MDA0MDAwMDAgNjRi
+aXRdCj4+IFsgICAgMS4xMjE2ODVdIHBjaSAwMDAwOjA1OjAwLjA6IEJBUiA3OiBubyBzcGFjZSBm
+b3IgW21lbSBzaXplIAo+PiAweDAwMDQwMDAwIDY0Yml0XQo+PiBbICAgIDEuMTIxNjg3XSBwY2kg
+MDAwMDowNTowMC4wOiBCQVIgNzogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNpemUgCj4+IDB4MDAw
+NDAwMDAgNjRiaXRdCj4+IFsgICAgMy44NzQxODBdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAw
+OiByZWxlYXNpbmcgW21lbSAKPj4gMHhjMDAwMDAwMC0weGNmZmZmZmZmIDY0Yml0IHByZWZdCj4+
+IFsgICAgMy44NzQxODJdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAyOiByZWxlYXNpbmcgW21l
+bSAKPj4gMHhiMDQwMDAwMC0weGIwNWZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQxOThd
+IHBjaWVwb3J0IDAwMDA6MDA6MDMuMDogQkFSIDE1OiByZWxlYXNpbmcgW21lbSAKPj4gMHhiMDQw
+MDAwMC0weGNmZmZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMTVdIHBjaWVwb3J0IDAw
+MDA6MDA6MDMuMDogQkFSIDE1OiBubyBzcGFjZSBmb3IgW21lbSBzaXplIAo+PiAweDMwMDAwMDAw
+MCA2NGJpdCBwcmVmXQo+PiBbICAgIDMuODc0MjE3XSBwY2llcG9ydCAwMDAwOjAwOjAzLjA6IEJB
+UiAxNTogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIAo+PiBzaXplIDB4MzAwMDAwMDAwIDY0Yml0IHBy
+ZWZdCj4+IFsgICAgMy44NzQyMjFdIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAwOiBubyBzcGFj
+ZSBmb3IgW21lbSBzaXplIAo+PiAweDIwMDAwMDAwMCA2NGJpdCBwcmVmXQo+PiBbICAgIDMuODc0
+MjIzXSBhbWRncHUgMDAwMDowMTowMC4wOiBCQVIgMDogZmFpbGVkIHRvIGFzc2lnbiBbbWVtIHNp
+emUgCj4+IDB4MjAwMDAwMDAwIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMjZdIGFtZGdwdSAw
+MDAwOjAxOjAwLjA6IEJBUiAyOiBubyBzcGFjZSBmb3IgW21lbSBzaXplIAo+PiAweDAwMjAwMDAw
+IDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyMjddIGFtZGdwdSAwMDAwOjAxOjAwLjA6IEJBUiAy
+OiBmYWlsZWQgdG8gYXNzaWduIFttZW0gc2l6ZSAKPj4gMHgwMDIwMDAwMCA2NGJpdCBwcmVmXQo+
+PiBbICAgIDMuODc0MjU4XSBbZHJtXSBOb3QgZW5vdWdoIFBDSSBhZGRyZXNzIHNwYWNlIGZvciBh
+IGxhcmdlIEJBUi4KPj4gWyAgICAzLjg3NDI2MV0gYW1kZ3B1IDAwMDA6MDE6MDAuMDogQkFSIDA6
+IGFzc2lnbmVkIFttZW0gCj4+IDB4YzAwMDAwMDAtMHhjZmZmZmZmZiA2NGJpdCBwcmVmXQo+PiBb
+ICAgIDMuODc0MjY5XSBhbWRncHUgMDAwMDowMTowMC4wOiBCQVIgMjogYXNzaWduZWQgW21lbSAK
+Pj4gMHhiMDQwMDAwMC0weGIwNWZmZmZmIDY0Yml0IHByZWZdCj4+IFsgICAgMy44NzQyODhdIFtk
+cm1dIERldGVjdGVkIFZSQU0gUkFNPTgxOTJNLCBCQVI9MjU2TQo+PiAKPj4gQW55d2F5IHJlYmFz
+ZSBmb3IgY3VycmVudCBhbWQtc3RhZ2luZy00LjExIG5lZWRlZC4KPj4gRmluZCBhdHRhY2hlZCBk
+bWVzZy1hbWQtc3RhZ2luZy00LjExLTEuZzcyNjIzNTMtZGVmYXVsdCsubG9nLnh6Cj4+IAo+PiBH
+cmVldGluZ3MsCj4+IERpZXRlcgo+PiAKPj4gQW0gMDkuMDYuMjAxNyAxMDo1OSwgc2NocmllYiBD
+aHJpc3RpYW4gS8O2bmlnOgo+Pj4gSGkgZXZlcnlvbmUsCj4+PiAKPj4+IFRoaXMgaXMgdGhlIGZp
+dGggaW5jYXJuYXRpb24gb2YgdGhpcyBzZXQgb2YgcGF0Y2hlcy4gSXQgZW5hYmxlcyAKPj4+IGRl
+dmljZQo+Pj4gZHJpdmVycyB0byByZXNpemUgYW5kIG1vc3QgbGlrZWx5IGFsc28gcmVsb2NhdGUg
+dGhlIFBDSSBCQVIgb2YgCj4+PiBkZXZpY2VzCj4+PiB0aGV5IG1hbmFnZSB0byBhbGxvdyB0aGUg
+Q1BVIHRvIGFjY2VzcyBhbGwgb2YgdGhlIGRldmljZSBsb2NhbCBtZW1vcnkgCj4+PiBhdCBvbmNl
+Lgo+Pj4gCj4+PiBUaGlzIGlzIHZlcnkgdXNlZnVsIGZvciBHRlggZGV2aWNlIGRyaXZlcnMgd2hl
+cmUgdGhlIGRlZmF1bHQgUENJIEJBUiAKPj4+IGlzIG9ubHkKPj4+IGFib3V0IDI1Nk1CIGluIHNp
+emUgZm9yIGNvbXBhdGliaWxpdHkgcmVhc29ucywgYnV0IHRoZSBkZXZpY2UgZWFzaWx5IAo+Pj4g
+aGF2ZQo+Pj4gbXVsdGlwbGUgZ2lnYWJ5dGUgb2YgbG9jYWwgbWVtb3J5Lgo+Pj4gCj4+PiBTb21l
+IGNoYW5nZXMgc2luY2UgVjQ6Cj4+PiAxLiBSZWJhc2VkIG9uIDQuMTEuCj4+PiAyLiBhZGRlZCB0
+aGUgcmIgZnJvbSBBbmR5IFNoZXZjaGVua28gdG8gcGF0Y2hlcyB3aGljaCBsb29rIGNvbXBsZXRl
+IAo+Pj4gbm93Lgo+Pj4gMy4gTW92ZSByZWxlYXNpbmcgdGhlIEJBUiBhbmQgcmVhbGxvY2F0aW5n
+IGl0IG9uIGVycm9yIHRvIHRoZSBkcml2ZXIgCj4+PiBzaWRlLgo+Pj4gNC4gQWRkIGFtZGdwdSBz
+dXBwb3J0IGZvciBHTUMgVjYgaGFyZHdhcmUgZ2VuZXJhdGlvbiBhcyB3ZWxsLgo+Pj4gCj4+PiBQ
+bGVhc2UgcmV2aWV3IGFuZC9vciBjb21tZW50LAo+Pj4gQ2hyaXN0aWFuLgo+Pj4gCj4+PiBfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4gZHJpLWRldmVs
+IG1haWxpbmcgbGlzdAo+Pj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4gaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYW1kLWdmeCBtYWls
+aW5nIGxpc3QKYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbWQtZ2Z4Cg==
