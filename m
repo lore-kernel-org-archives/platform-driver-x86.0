@@ -1,162 +1,133 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 10/18] staging: typec: fusb302: Add support for
- fcs,vbus-regulator-name device-property
-Date: Sun, 6 Aug 2017 08:20:31 -0700
-Message-ID: <17739181-0553-d622-4c71-4cf91efb0de0@roeck-us.net>
-References: <20170806123555.5124-1-hdegoede@redhat.com>
- <20170806123555.5124-11-hdegoede@redhat.com>
- <2d04e538-0594-0073-939e-feb6c1a66cdf@roeck-us.net>
- <6df731a5-9dc8-ae5b-dc14-d7ea5eb3890b@redhat.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method instance number
+Date: Sun, 6 Aug 2017 17:35:30 +0200
+Message-ID: <201708061735.31002@pali>
+References: <1495886134-8276-1-git-send-email-pali.rohar@gmail.com> <1588258750.25982542.1499283035221.JavaMail.zimbra@redhat.com> <201707052224.20656@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: multipart/signed;
+  boundary="nextPart4466104.iLDb3jxoXp";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <6df731a5-9dc8-ae5b-dc14-d7ea5eb3890b@redhat.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f177.google.com ([209.85.128.177]:38015 "EHLO
+        mail-wr0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751300AbdHFPfe (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 6 Aug 2017 11:35:34 -0400
+In-Reply-To: <201707052224.20656@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: David Airlie <airlied@redhat.com>, Chun-Yi Lee <jlee@suse.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, Oleksij Rempel <linux@rempel-privat.de>, =?utf-8?q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 08/06/2017 07:52 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 06-08-17 16:30, Guenter Roeck wrote:
->> On 08/06/2017 05:35 AM, Hans de Goede wrote:
->>> On devicetree platforms the fusb302 dt-node will have a vbus regulator
->>> property with a phandle to the regulator.
->>>
->>> On ACPI platforms, there are no phandles and we need to get the vbus by a
->>> system wide unique name. Add support for a new "fcs,vbus-regulator-name"
->>> device-property which ACPI platform code can set to pass the name.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>   drivers/staging/typec/fusb302/fusb302.c | 28 ++++++++++++++++++++++------
->>>   1 file changed, 22 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
->>> index e1e08f57af99..c3bcc5484ade 100644
->>> --- a/drivers/staging/typec/fusb302/fusb302.c
->>> +++ b/drivers/staging/typec/fusb302/fusb302.c
->>> @@ -1722,6 +1722,28 @@ static int fusb302_probe(struct i2c_client *client,
->>>               return -EPROBE_DEFER;
->>>       }
->>> +    /*
->>> +     * Devicetree platforms should get vbus from their dt-node.
->>> +     * On ACPI platforms, we need to get the vbus by a system wide unique
->>> +     * name, which is set in a device prop by the platform code.
->>> +     */
->>> +    if (device_property_read_string(dev, "fcs,vbus-regulator-name",
->>> +                    &name) == 0) {
->>
->> Another property to be documented and approved.
-> 
-> Again this is for kernel internal use on non-dt platforms only, so documenting
-> it in the devicetree bindings is not necessary.
+--nextPart4466104.iLDb3jxoXp
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ok.
+On Wednesday 05 July 2017 22:24:20 Pali Roh=C3=A1r wrote:
+> On Wednesday 05 July 2017 21:30:35 David Airlie wrote:
+> > ----- Original Message -----
+> >=20
+> > > From: "Pali Roh=C3=A1r" <pali.rohar@gmail.com>
+> > > To: "Chun-Yi Lee" <jlee@suse.com>, "Corentin Chary"
+> > > <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net,
+> > > "Dave Airlie" <airlied@redhat.com>, "Oleksij Rempel"
+> > > <linux@rempel-privat.de>, "Jo=C3=A3o Paulo Rechi Vita"
+> > > <jprvita@gmail.com>
+> > > Cc: "Darren Hart" <dvhart@infradead.org>, "Andy Shevchenko"
+> > > <andy@infradead.org>, "Andy Lutomirski" <luto@kernel.org>,
+> > > platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+> > > Sent: Wednesday, 5 July, 2017 7:51:13 PM
+> > > Subject: Re: [PATCH] RFC: platform/x86: wmi: Fix check for method
+> > > instance number
+> > >=20
+> > > On Saturday 17 June 2017 18:47:54 Pali Roh=C3=A1r wrote:
+> > > > > So problematic drivers which use instance=3D1 without any
+> > > > > comments
+> > > > >=20
+> > > > > are:
+> > > > >   acer-wmi
+> > > > >   asus-wmi
+> > > > >   mxm-wmi
+> > > >=20
+> > > > Adding authors & maintainers of those drivers in loop.
+> > >=20
+> > > Hi!
+> > >=20
+> > > Dell drivers and acer-wmi are fixed now. So only asus-wmi and
+> > > mxm-wmi needs to be investigated.
+> > >=20
+> > > Adding more people who developed those drivers recently in loop.
+> > > Can you check if instance number is used correctly or not?
+> >=20
+> > I've no memory of why I picked 1 or 0, I probably cut-n-paste it
+> > from somewhere else.
+> >=20
+> > Dave.
+>=20
+> And do you have at least ACPI DSDT dumps from that machine? Or are
+> you able to find some?
 
->> Also, isn't there a better way to get regulator names for dt- and non-dt systems ?
->> This would apply to every driver supporting both and using regulators, which seems
->> awkward.
-> 
-> While working on this I noticed that it is possible to add a regulator_match
-> table entry when registering a regulator, but that requires describing this
-> in regulator_init_data. Which would mean passing regulator_init_data from the
-> place where it is instantiated to where it gets registered, which would
-> mean passing a pointer through a device-property, given that this is purely kernel
-> internal that is possible, but not really how device-props are supposed to be used.
-> 
-> Also since the regulator-core only adds the mapping when registering the
-> regulator, this means that if we try to get the regulator before it has been
-> registered; and there is another regulator with the rather generic "vbus"
-> name then that will be returned instead.
-> 
-> Basically regulators are practically almost unused on x86 systems. I had to
-> add CONFIG_REGULATOR=y to my .config which is based on the Fedora 26 kernel
-> .config, so it has pretty much everything under the sun enabled. So it seems
-> that we are covering new ground here.
-> 
+Hi! For mxm-wmi I found this document:
+https://lekensteyn.nl/files/docs/mxm-2.1-software-spec.pdf
 
-We have some in hwmon, but they get by with using devm_regulator_get_optional()
-for both dt and non-dt systems. Only problem with that is that it returns
--ENODEV if regulators are not configured, which by itself is weird/odd
-(and there have been endless discussions about it).
+On page numbered 26 (resp. in PDF page 31) is information about WMI
+GUID {F6CB5C3C-9CAE-4EBD-B577-931EA32A2CC0} interface and there is
+written that instance count =3D 1.
 
-> An alternative would be to not use the regulator subsys for this at all, but
-> it does seem the logical thing to use and using get-by-name is no different
-> then what we've doing for setting the the "fusb302-typec-source" psy as supplier
-> for the charger psy class device registered by the bq24190_charger driver.
-> 
-> TL;DR: It seems that on x86, at least for existing devices where we cannot
-> control the ACPI tables that getting things by name is the thing to do.
-> 
+// Methods GUID {F6CB5C3C-9CAE-4ebd-B577-931EA32A2CC0}
+0x3C, 0x5C, 0xCB, 0xF6, 0xAE, 0x9C, 0xbd, 0x4e, 0xB5, 0x77, 0x93,
+0x1E, 0xA3, 0x2A, 0x2C, 0xC0,
+0x4D, 0x58,    // Object ID =E2=80=9CMX=E2=80=9D =3D method =E2=80=9CWMMX=
+=E2=80=9D
+1,             // Instance Count
+0x02,          // Flags (WMIACPI_REGFLAG_METHOD)
 
-Messy :-(. I don't have a better idea, unfortunately.
+And ACPI method for handling this WMI call does not check Arg0 and Arg1
+at all.
 
->>> +        /*
->>> +         * Use regulator_get_optional so that we can detect if we need
->>> +         * to defer the probe rather then getting the dummy-regulator.
->>> +         */
->>
->> Wouldn't this apply to dt systems as well ?
-> 
-> No because there will be a property named "vbus-supply" in the fusb302
-> node containing a phandle to the regulator, if the regulator to which the phandle
-> points has not been registered yet regulator_get will automatically return
-> -EPROBE_DEFER because there is a "vbus-supply" property, only if there is
-> no such property at all will it return a dummy regulator.
-> 
+So... Andy, Darren, any objections for following patch which changes
+instance number from one to zero?
 
-More messy. Again, I don't have a better idea, but it is really weird that we
-need all this code. There should really be some generic code handling all those
-differences.
+diff --git a/drivers/platform/x86/mxm-wmi.c b/drivers/platform/x86/mxm-wmi.c
+index f4bad83..35d8b9a 100644
+=2D-- a/drivers/platform/x86/mxm-wmi.c
++++ b/drivers/platform/x86/mxm-wmi.c
+@@ -53,7 +53,7 @@ int mxm_wmi_call_mxds(int adapter)
+=20
+ 	printk("calling mux switch %d\n", adapter);
+=20
+=2D	status =3D wmi_evaluate_method(MXM_WMMX_GUID, 0x1, adapter, &input,
++	status =3D wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
+ 				     &output);
+=20
+ 	if (ACPI_FAILURE(status))
+@@ -78,7 +78,7 @@ int mxm_wmi_call_mxmx(int adapter)
+=20
+ 	printk("calling mux switch %d\n", adapter);
+=20
+=2D	status =3D wmi_evaluate_method(MXM_WMMX_GUID, 0x1, adapter, &input,
++	status =3D wmi_evaluate_method(MXM_WMMX_GUID, 0x0, adapter, &input,
+ 				     &output);
+=20
+ 	if (ACPI_FAILURE(status))
 
->>> +        chip->vbus = devm_regulator_get_optional(dev, name);
->>> +        if (IS_ERR(chip->vbus)) {
->>> +            ret = PTR_ERR(chip->vbus);
->>> +            return (ret == -ENODEV) ? -EPROBE_DEFER : ret;
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-This will be stuck in returning -EPROBE_DEFER if the regulator subsystem
-is disabled. Is this acceptable ?
+--nextPart4466104.iLDb3jxoXp
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
->>> +        }
->>> +    } else {
->>> +        chip->vbus = devm_regulator_get(dev, "vbus");
->>> +        if (IS_ERR(chip->vbus))
->>> +            return PTR_ERR(chip->vbus);
->>> +    }
->>> +
->>
->> You might also want to explain why you moved this code.
-> 
-> Right, I did that because it may fail with -EPROBE_DEFER and
-> I wanted to do that before the register_psy. But as I just
-> explained the old code could do that too, so I properly should
-> just put the register_psy later.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
->>>       ret = tcpm_register_psy(chip->dev, &chip->tcpc_dev,
->>>                   "fusb302-typec-source");
->>>       if (ret < 0)
->>> @@ -1739,12 +1761,6 @@ static int fusb302_probe(struct i2c_client *client,
->>>       INIT_DELAYED_WORK(&chip->bc_lvl_handler, fusb302_bc_lvl_handler_work);
->>>       init_tcpc_dev(&chip->tcpc_dev);
->>> -    chip->vbus = devm_regulator_get(chip->dev, "vbus");
->>> -    if (IS_ERR(chip->vbus)) {
->>> -        ret = PTR_ERR(chip->vbus);
->>> -        goto destroy_workqueue;
->>> -    }
->>> -
->>>       if (client->irq) {
->>>           chip->gpio_int_n_irq = client->irq;
->>>       } else {
->>>
->>
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlmHN0IACgkQi/DJPQPkQ1J5IgCgy00kavXVFYE7GhDeNkfQuqp8
+YC0AoJc/qExBbmctBbHvmz4HjpTDObGJ
+=xZ4C
+-----END PGP SIGNATURE-----
+
+--nextPart4466104.iLDb3jxoXp--
