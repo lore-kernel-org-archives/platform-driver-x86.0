@@ -1,38 +1,68 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] intel-vbtn: match power button on press rather than
- release
-Date: Sun, 6 Aug 2017 20:54:28 -0700
-Message-ID: <20170807035428.GA14177@fury>
-References: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
- <11471111.T3jHVeqpMT@aspire.rjw.lan>
- <20170805205753.GA1277@fury>
- <1700343.1Fm4iKlbcW@aspire.rjw.lan>
- <20170806232418.GA29692@fury>
- <CAJZ5v0g3v=fQ79P1WG-L7imNBMuvh30uHz0GcAnZJcwFKptYvQ@mail.gmail.com>
- <CAFv23QnYwe5Foms1Ck8-hHKnftxNLN0K3L3waVrprbd2MUgSKw@mail.gmail.com>
+From: <sorbisches.internat@t-online.de>
+Subject: (unknown)
+Date: Mon, 07 Aug 2017 04:49:46 -0000
+Message-ID: <150208138655.17373.1278052386839060850@permonline.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/zip; name="INFO_1756598_platform-driver-x86.zip"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:58595 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751425AbdHGDyd (ORCPT
+Received: from 90.150.125.179.permonline.ru ([90.150.125.179]:33886 "HELO
+        permonline.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with SMTP id S1751411AbdHGEtu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Aug 2017 23:54:33 -0400
-Content-Disposition: inline
-In-Reply-To: <CAFv23QnYwe5Foms1Ck8-hHKnftxNLN0K3L3waVrprbd2MUgSKw@mail.gmail.com>
+        Mon, 7 Aug 2017 00:49:50 -0400
+Subject: 
+Content-Disposition: attachment
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mario Limonciello <mario.limonciello@dell.com>, Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 08:59:30AM +0800, AceLan Kao wrote:
-> Looks like I'm one hour late to ack the patch.
-> Thanks any way for the quick response.
-
-Thanks for chiming in all the same - and normally I'd have provided for
-more time. In this case, I will be away for a few days, and it was
-important to get this in sooner rather than later in the RC cycle.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+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
