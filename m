@@ -1,68 +1,70 @@
-From: <sorbisches.internat@t-online.de>
-Subject: (unknown)
-Date: Mon, 07 Aug 2017 04:49:46 -0000
-Message-ID: <150208138655.17373.1278052386839060850@permonline.ru>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 10/18] staging: typec: fusb302: Add support for
+ fcs,vbus-regulator-name device-property
+Date: Mon, 7 Aug 2017 12:10:54 +0100
+Message-ID: <20170807111054.4lp5rgc5vpnsmhim@sirena.org.uk>
+References: <20170806123555.5124-1-hdegoede@redhat.com>
+ <20170806123555.5124-11-hdegoede@redhat.com>
+ <2d04e538-0594-0073-939e-feb6c1a66cdf@roeck-us.net>
+ <85c668d5-c6f0-a94c-4dd5-1b425cdff339@redhat.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="INFO_1756598_platform-driver-x86.zip"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 90.150.125.179.permonline.ru ([90.150.125.179]:33886 "HELO
-        permonline.ru" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with SMTP id S1751411AbdHGEtu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Aug 2017 00:49:50 -0400
-Subject: 
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4vndrefazbw6nphr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <85c668d5-c6f0-a94c-4dd5-1b425cdff339@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
+
+--4vndrefazbw6nphr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, Aug 06, 2017 at 05:44:36PM +0200, Hans de Goede wrote:
+> On 06-08-17 16:30, Guenter Roeck wrote:
+> > On 08/06/2017 05:35 AM, Hans de Goede wrote:
+
+> > > On ACPI platforms, there are no phandles and we need to get the vbus by a
+> > > system wide unique name. Add support for a new "fcs,vbus-regulator-name"
+> > > device-property which ACPI platform code can set to pass the name.
+
+> > Another property to be documented and approved.
+
+> Again this is for kernel internal use on non-dt platforms only, so documenting
+> it in the devicetree bindings is not necessary.
+
+However it *is* for use on ACPI platforms and is impacting power
+management (which is something ACPI definitely models) so should be
+being documented in an ASWG spec.  We don't want Linux systems to start
+breaking the ACPI power management model with uncontrolled extensions,
+it's fine to add new bindings for things where there's just no ACPI
+specification at all but power management isn't one of those areas.
+
+> TL;DR: It seems that on x86, at least for existing devices where we cannot
+> control the ACPI tables that getting things by name is the thing to do.
+
+The idiomatic thing to do on an ACPI system at present appears to be to
+have a big DMI quirk table somewhere that instantiates the regulators
+and mappings required for them based on the machine's DMI data.  Or if
+it's a self contained PCI device or something with both regulator and
+consumer do it as part of the subfunction instantiation there.
+
+--4vndrefazbw6nphr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmISr0ACgkQJNaLcl1U
+h9CGZAf/TFk1ihl5o/RspGSbmW1K/G41OstaZTmKWAUbfmCh4dvIH8I7wHnWoPbT
+8v6WW5M4yQsd0GogUJ7qVlXh9fQ+8Xt3Wsm0CYwhkbrz7RFNX0Mb5M7DRvPBwzUv
+vXwtkqDAlcMJAJNyXAm1zjojTbNFDvjiE+cN8qb/5gESiVkVLVWjhvuhO3rlZqf5
+fTq971o4zJEDtLmc/ddaANeUmJy1y4XjrkM9O4NGl7YeeJGxQ11EuRtMuE/NahLe
+905YZcntUIpBoAMCNQALrhAu1F/1bexGuRb7hiehDT7veKC5eIbrrZvu5AHpKw5R
+gOHqSsI+3ZldCIwB8DflWnV396mwqQ==
+=feVa
+-----END PGP SIGNATURE-----
+
+--4vndrefazbw6nphr--
