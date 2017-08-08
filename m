@@ -1,81 +1,68 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 3/3] drm/etnaviv: add thermal dependency
-Date: Tue, 08 Aug 2017 13:16:13 +0200
-Message-ID: <1502190973.2934.69.camel@pengutronix.de>
-References: <20170726135312.2214309-1-arnd@arndb.de>
- <20170726135312.2214309-4-arnd@arndb.de>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH 13/18] power: supply: bq24190_charger: Export 5V boost
+ converter as regulator
+Date: Tue, 8 Aug 2017 11:57:13 -0700
+Message-ID: <CAKvHMgThHhO6S_6cfu1RWoNG5g43taUpGpPkgMsXcf42HDscDQ@mail.gmail.com>
+References: <20170806123555.5124-1-hdegoede@redhat.com> <20170806123555.5124-14-hdegoede@redhat.com>
+ <CAKvHMgRJ4CVn43BnsB1odx_B3QvfFMMqeT3BrrwVtteXFszyAQ@mail.gmail.com> <ddee22bd-7f0e-6065-8936-ce9a7e2f7a02@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170726135312.2214309-4-arnd@arndb.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>, devel@driverdev.osuosl.org, Daniel Drake <dsd@laptop.org>, Jens Frederich <jfrederich@gmail.com>, linux-acpi@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>, Russell King <linux+etnaviv@armlinux.org.uk>, Darren Hart <dvhart@infradead.org>, Len Brown <lenb@kernel.org>, intel-gfx@lists.freedesktop.org, etnaviv@lists.freedesktop.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-io0-f194.google.com ([209.85.223.194]:33854 "EHLO
+        mail-io0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752358AbdHHS5P (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 8 Aug 2017 14:57:15 -0400
+In-Reply-To: <ddee22bd-7f0e-6065-8936-ce9a7e2f7a02@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org
 
-SGkgQXJuZCwKCkFtIE1pdHR3b2NoLCBkZW4gMjYuMDcuMjAxNywgMTU6NTMgKzAyMDAgc2Nocmll
-YiBBcm5kIEJlcmdtYW5uOgo+IFdoZW4gQ09ORklHX1RIRVJNQUwgaXMgZW5hYmxlZCBhcyBhIGxv
-YWRhYmxlIG1vZHVsZSwgYW5kIGV0bmF2aXYgaXMKPiBidWlsdC1pbiwgd2UgZ2V0IGEgbGluayBl
-cnJvcjoKPiAKPiBkcml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9ldG5hdml2X2dwdS5vOiBJbiBmdW5j
-dGlvbiBgZXRuYXZpdl9ncHVfYmluZCc6Cj4gZXRuYXZpdl9ncHUuYzooLnRleHQuZXRuYXZpdl9n
-cHVfYmluZCsweDM0KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgdGhlcm1hbF9vZl9jb29saW5n
-X2RldmljZV9yZWdpc3RlcicKPiBldG5hdml2X2dwdS5jOigudGV4dC5ldG5hdml2X2dwdV9iaW5k
-KzB4ZTApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB0aGVybWFsX2Nvb2xpbmdfZGV2aWNlX3Vu
-cmVnaXN0ZXInCj4gZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZpdl9ncHUubzogSW4gZnVu
-Y3Rpb24gYGV0bmF2aXZfZ3B1X3VuYmluZCc6Cj4gZXRuYXZpdl9ncHUuYzooLnRleHQuZXRuYXZp
-dl9ncHVfdW5iaW5kKzB4ZjApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB0aGVybWFsX2Nvb2xp
-bmdfZGV2aWNlX3VucmVnaXN0ZXInCj4gCj4gVGhpcyBhZGRzIGEgS2NvbmZpZyBkZXBlbmRlbmN5
-IHRvIHByZXZlbnQgZXRuYXZpdiBmcm9tIGJlaW5nIGJ1aWx0LWluCj4gd2l0aCBDT05GSUdfVEhF
-Uk1BTD1tLCB3aGlsZSBzdGlsbCBhbGxvd2luZyB0aGUgdmFsaWQgY29uZmlndXJhdGlvbnMuCj4g
-VW5mb3J0dW5hdGVseSwgc2ltcGx5IGFkZGluZyB0aGUgZGVwZW5kZW5jeSBoZXJlIGJyZWFrcyBL
-Y29uZmlnIHRocm91Z2gKPiBhIGRlcGVuZGVuY3kgbG9vcCBpbnZvbHZpbmcgbG90cyBvZiBzeW1i
-b2xzIGFsbCB0aGUgd2F5IHVudGlsIEFDUElfVklERU8sCj4gd2hpY2ggaXMgdGhlIG9ubHkgdmlk
-ZW8gZHJpdmVyIHRoYXQgZXhwbGljaXRseSBzZWxlY3RzICdUSEVSTUFMJy4gVHVybmluZwo+IHRo
-aXMgaW50byBhICdkZXBlbmRzIG9uJyBhZGRyZXNzZXMgdGhlIHByb2JsZW0uCj4gRm9yIGNvbXBs
-ZXRlbmVzcywgSSdtIGFsc28gcmVtb3ZpbmcgdGhlIHJlZHVuZGFudCAnc2VsZWN0IFRIRVJNQUwn
-Cj4gZnJvbSBJTlRFTF9NRU5MT1csIHNvIG5vIG90aGVyIGRyaXZlciB1c2VzIHRoYXQgc3RhdGVt
-ZW50Lgo+IAo+IEZpeGVzOiBiY2RmYjVlNTZkYzUgKCJkcm0vZXRuYXZpdjogYWRkIGV0bmF2aXYg
-Y29vbGluZyBkZXZpY2UiKQo+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJu
-ZGIuZGU+Cj4gLS0tCj4gdjI6IHNwZW5kIG1vcmUgdGhvdWdodCBvbiBBQ1BJX1ZJREVPIGRlcGVu
-ZGVuY2llcywgYXMgd2UgbmVlZCBhbm90aGVyCj4gICAgIHBhdGNoIGJlZm9yZSB0aGlzLgo+IC0t
-LQo+ICBkcml2ZXJzL2FjcGkvS2NvbmZpZyAgICAgICAgICAgIHwgMiArLQo+ICBkcml2ZXJzL2dw
-dS9kcm0vZXRuYXZpdi9LY29uZmlnIHwgMSArCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25m
-aWcgICAgfCAxIC0KCkkgd291bGQgbGlrZSB0byB0YWtlIHRoaXMgcGF0Y2gsIGJ1dCBJJ20gbm90
-IHN1cmUgd2h5IGl0IGluY2x1ZGVzIHg4NgphbmQgQUNQSSBodW5rcy4KClJlZ2FyZHMsCkx1Y2Fz
-Cgo+ICAzIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAK
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL0tjb25maWcgYi9kcml2ZXJzL2FjcGkvS2NvbmZp
-Zwo+IGluZGV4IGE4ZjVhNDBlMjkxNC4uMTI4MmIyOTM2MTY0IDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvYWNwaS9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9hY3BpL0tjb25maWcKPiBAQCAtMTg0LDcg
-KzE4NCw3IEBAIGNvbmZpZyBBQ1BJX1ZJREVPCj4gIAl0cmlzdGF0ZSAiVmlkZW8iCj4gIAlkZXBl
-bmRzIG9uIFg4Ngo+ICAJZGVwZW5kcyBvbiBJTlBVVAo+IC0Jc2VsZWN0IFRIRVJNQUwKPiArCWRl
-cGVuZHMgb24gVEhFUk1BTAo+ICAJc2VsZWN0IEJBQ0tMSUdIVF9DTEFTU19ERVZJQ0UKPiAgCXNl
-bGVjdCBCQUNLTElHSFRfTENEX1NVUFBPUlQKPiAgCWRlZmF1bHQgeQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYv
-S2NvbmZpZwo+IGluZGV4IDcxY2VlNGU5ZmVmYi4uMWQ2Yzc0NGU3OTI0IDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-ZXRuYXZpdi9LY29uZmlnCj4gQEAgLTMsNiArMyw3IEBAIGNvbmZpZyBEUk1fRVROQVZJVgo+ICAJ
-dHJpc3RhdGUgIkVUTkFWSVYgKERSTSBzdXBwb3J0IGZvciBWaXZhbnRlIEdQVSBJUCBjb3Jlcyki
-Cj4gIAlkZXBlbmRzIG9uIERSTQo+ICAJZGVwZW5kcyBvbiBBUkNIX01YQyB8fCBBUkNIX0RPVkUg
-fHwgKEFSTSAmJiBDT01QSUxFX1RFU1QpCj4gKwlkZXBlbmRzIG9uIFRIRVJNQUwgfHwgVEhFUk1B
-TD1uCj4gIAlkZXBlbmRzIG9uIE1NVQo+ICAJc2VsZWN0IFNITUVNCj4gIAlzZWxlY3QgU1lOQ19G
-SUxFCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcgYi9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9LY29uZmlnCj4gaW5kZXggMmQ5ZmI0NmE4ZDExLi5kOTIzOGU5ZmY1NGEg
-MTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZwo+ICsrKyBiL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L0tjb25maWcKPiBAQCAtNTMyLDcgKzUzMiw2IEBAIGNvbmZpZyBTRU5T
-T1JTX0hEQVBTCj4gIGNvbmZpZyBJTlRFTF9NRU5MT1cKPiAgCXRyaXN0YXRlICJUaGVybWFsIE1h
-bmFnZW1lbnQgZHJpdmVyIGZvciBJbnRlbCBtZW5sb3cgcGxhdGZvcm0iCj4gIAlkZXBlbmRzIG9u
-IEFDUElfVEhFUk1BTAo+IC0Jc2VsZWN0IFRIRVJNQUwKPiAgCS0tLWhlbHAtLS0KPiAgCSAgQUNQ
-SSB0aGVybWFsIG1hbmFnZW1lbnQgZW5oYW5jZW1lbnQgZHJpdmVyIG9uCj4gIAkgIEludGVsIE1l
-bmxvdyBwbGF0Zm9ybS4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Tue, Aug 8, 2017 at 2:00 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
+>
+> On 08-08-17 10:39, Liam Breck wrote:
+>>
+>> Hi Hans,
+>>
+>> On Sun, Aug 6, 2017 at 5:35 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Register the 5V boost converter as a regulator named
+>>> "regulator-bq24190-usb-vbus". Note the name includes "bq24190" because
+>>> the bq24190 family is also used on ACPI devices where there are no
+>>> device-tree phandles, so regulator_get will fallback to the name and thus
+>>> it must be unique on the system.
+>>
+>>
+>> What we're enabling here is 5V boost for otg host mode, not vbus
+>> generally, so maybe the name should indicate that...
+>>
+>> regulator-bq24190-usb-5volt
+>> regulator-bq24190-usb-host
+>> regulator-bq24190-usb-otg-5v
+>
+>
+> I picked vbus because that gets used a lot already in similar cases,
+> but I agree that we should probably come up with a better name.
+>
+> I like "regulator-bq24190-usb-otg-5v", shall I use that for v2?
+
+There is this upstream, with "otg-vbus":
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=61274eff0ddee8f10deaa5f79085e981db52930a
+
+Related search:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/log/?qt=grep&q=otg+regulator
+
+I don't think it needs a "regulator-" prefix, and maybe the driver
+name is a suffix. We could also recommend the "regulator-name" value
+for OTG here:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/tree/Documentation/devicetree/bindings/regulator/regulator.txt
+
+a. Make the above patch wrong :-)
+usb-otg-5v (generic)
+usb-otg-5v-bq2419x (specific)
+
+b. Follow a weak precedent
+otg-vbus (generic)
+otg-vbus-bq2419x (specific)
