@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH 2/4] platform/x86: asus-wmi: Evaluate wmi method with instance number 0x0
-Date: Sat, 12 Aug 2017 09:44:16 +0200
-Message-ID: <1502523858-25716-3-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH 4/4] platform/x86: wmi: Fix check for method instance number
+Date: Sat, 12 Aug 2017 09:44:18 +0200
+Message-ID: <1502523858-25716-5-git-send-email-pali.rohar@gmail.com>
 References: <1502523858-25716-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,47 +13,45 @@ To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org
 Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-According to available DSDT dump from Asus machine, there is the only one
-instance of the WMI GUID 97845ED0-4E6D-11DE-8A39-0800200C9A66 and so it is
-0x0. Moreover corresponding method WMBC does not check Arg0 (instance
-number) at all.
-
-DSDT dump is available at:
-https://lwn.net/Articles/391249/
-
-_WDG dump:
-0xD0, 0x5E, 0x84, 0x97, 0x6D, 0x4E, 0xDE, 0x11, 0x8A, 0x39, 0x08,
-0x00, 0x20, 0x0C, 0x9A, 0x66,
-0x42, 0x43,    // Object ID "BC" = method "WMBC"
-0x01,          // Instance count
-0x02,          // Flags
+instance_count defines number of instances of data block and instance
+itself is indexed from zero, which means first instance has number 0.
+Therefore check for invalid instance should be non-strict inequality.
 
 Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/wmi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 709e3a6..48e1541 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -299,7 +299,7 @@ static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
- 	union acpi_object *obj;
- 	u32 tmp = 0;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index e32ba57..0765b17 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -218,7 +218,7 @@ acpi_status wmi_evaluate_method(const char *guid_string, u8 instance,
+ 	if (!(block->flags & ACPI_WMI_METHOD))
+ 		return AE_BAD_DATA;
  
--	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1, method_id,
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 0, method_id,
- 				     &input, &output);
+-	if (block->instance_count < instance)
++	if (block->instance_count <= instance)
+ 		return AE_BAD_PARAMETER;
  
- 	if (ACPI_FAILURE(status))
-@@ -1946,7 +1946,7 @@ static int show_call(struct seq_file *m, void *data)
- 	acpi_status status;
+ 	input.count = 2;
+@@ -265,7 +265,7 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
+ 	block = &wblock->gblock;
+ 	handle = wblock->acpi_device->handle;
  
- 	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
--				     1, asus->debug.method_id,
-+				     0, asus->debug.method_id,
- 				     &input, &output);
+-	if (block->instance_count < instance)
++	if (block->instance_count <= instance)
+ 		return AE_BAD_PARAMETER;
  
- 	if (ACPI_FAILURE(status))
+ 	/* Check GUID is a data block */
+@@ -392,7 +392,7 @@ acpi_status wmi_set_block(const char *guid_string, u8 instance,
+ 	block = &wblock->gblock;
+ 	handle = wblock->acpi_device->handle;
+ 
+-	if (block->instance_count < instance)
++	if (block->instance_count <= instance)
+ 		return AE_BAD_PARAMETER;
+ 
+ 	/* Check GUID is a data block */
 -- 
 1.7.9.5
