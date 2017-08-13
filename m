@@ -1,59 +1,94 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 3/4] platform/x86: peaq-wmi: Evaluate wmi method with
- instance number 0x0
-Date: Sat, 12 Aug 2017 22:12:43 +0200
-Message-ID: <b3560996-a117-49aa-a6bc-1fe5acfadcee@redhat.com>
-References: <1502523858-25716-1-git-send-email-pali.rohar@gmail.com>
- <1502523858-25716-4-git-send-email-pali.rohar@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode switch
+Date: Sun, 13 Aug 2017 15:15:28 +0300
+Message-ID: <CAHp75Vc6SeP6bF7U_bdvy=DBSx8G78B7LWnwGR8Tg7-1O2NK8Q@mail.gmail.com>
+References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35124 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751480AbdHLUMr (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Aug 2017 16:12:47 -0400
-In-Reply-To: <1502523858-25716-4-git-send-email-pali.rohar@gmail.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hao Wei Tee <angelsl@angelsl.xyz>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Sat, May 27, 2017 at 10:31 AM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
+> This exposes the battery conservation mode present on some (?) IdeaPads.
+> The mode is set by calling ACPI method SBMC with argument 3 (on) or
+> 5 (off). Status is reported in bit 5 of the return value of ACPI method
+> GBMD.
+>
+> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
+> methods are the same across all IdeaPads, so it would be great if this got more
+> testing across other models before it's merged.
 
-On 12-08-17 09:44, Pali Rohár wrote:
-> According to Hans de Goede, WMI interface of thh peaq-wmi module has 10
-> instances but corresponding ACPI WMBC method does not check Arg0 (instance
-> number) at all. Therefore evaluate WMI method with first instance number
-> (0x0) instead of second (0x1).
-> 
-> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
+Okay, since there is no reply from Ideapad maintainer I'm going to
+accept v2 of this. (Sorry it took so long)
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Why v2? See my comments below.
 
-Regards,
+> +#define GBMD_CONSERVATION_BIT (5)
 
-Hans
+Please separate this line, it's not in CFG_ namespace AFAIU.
 
+>  #define CFG_BT_BIT     (16)
+>  #define CFG_3G_BIT     (17)
+>  #define CFG_WIFI_BIT   (18)
 
-> ---
->   drivers/platform/x86/peaq-wmi.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> index 77d1f90..f59a5a2 100644
-> --- a/drivers/platform/x86/peaq-wmi.c
-> +++ b/drivers/platform/x86/peaq-wmi.c
-> @@ -39,7 +39,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
->   	struct acpi_buffer input = { sizeof(dummy), &dummy };
->   	struct acpi_buffer output = { sizeof(obj), &obj };
->   
-> -	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 1,
-> +	status = wmi_evaluate_method(PEAQ_DOLBY_BUTTON_GUID, 0,
->   				     PEAQ_DOLBY_BUTTON_METHOD_ID,
->   				     &input, &output);
->   	if (ACPI_FAILURE(status))
-> 
+>  enum {
+> +       VPCCMD_CONSERVATION_ON = 3,
+> +       VPCCMD_CONSERVATION_OFF = 5,
+
+This should be separate enum. Below related to EC commands, you do
+something else.
+
+>         VPCCMD_R_VPC1 = 0x10,
+>         VPCCMD_R_BL_MAX,
+>         VPCCMD_R_BL,
+
+> +static int conservation_mode_status(acpi_handle handle, bool *ret)
+
+Should be called method_gbmd(). And please use unsigned long as return value.
+
+> +{
+> +       acpi_status status;
+> +       unsigned long long result;
+> +
+> +       status = acpi_evaluate_integer(handle, "GBMD", NULL, &result);
+> +       if (ACPI_FAILURE(status))
+> +               return -1;
+
+You may use read_method_int() helper.
+
+> +
+> +       *ret = (result & (1 << GBMD_CONSERVATION_BIT)) != 0;
+
+"("  and "!= 0)" will gone with change of returned value type.
+
+> +       return 0;
+> +}
+
+> +       bool boolval;
+
+Reuse value instead.
+
+>
+>         if (!priv)
+>                 return -EINVAL;
+> @@ -250,6 +275,12 @@ static int debugfs_status_show(struct seq_file *s, void *data)
+>         if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
+>                 seq_printf(s, "Camera status:\t%s(%lu)\n",
+>                            value ? "On" : "Off", value);
+> +       seq_puts(s, "=====================\n");
+> +
+> +       if (!conservation_mode_status(priv->adev->handle, &boolval)) {
+
+Ditto.
+
+> +               seq_printf(s, "Conservation mode:\t%s(%u)\n",
+> +                          boolval ? "On" : "Off", boolval);
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
