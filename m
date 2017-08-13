@@ -1,207 +1,237 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Make the driver PCH family agnostic
-Date: Sun, 13 Aug 2017 16:49:03 +0300
-Message-ID: <CAHp75VdaeuiXFF3g_iJzkW2Fxkz0zp+q4uh3DFTXh_DwLHan+w@mail.gmail.com>
-References: <1502556609-13248-1-git-send-email-srinivas.pandruvada@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:36536 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750907AbdHMNtE (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2017 09:49:04 -0400
-In-Reply-To: <1502556609-13248-1-git-send-email-srinivas.pandruvada@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] platform/x86: wmi: Switch to use new generic UUID API
+Date: Sun, 13 Aug 2017 17:13:38 +0300
+Message-ID: <20170813141338.61667-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Aug 12, 2017 at 7:50 PM, Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
-> Although this driver did pretty good job in abstracting PCH specific
-> interfaces, but still there are some loose ends. For example
-> SLP_S0 counter (for reading SLP_S0 residency), PM config offset (for
-> checking permissions to read XRAM) and PPFEAR offset (for reading IP
-> status) is still hardcoded for a specific family of PCH.
->
-> This change extended the struct pmc_reg_map to allow per family
-> configuration of offsets and bits.
->
-> No functional change is expected with this change. This change allows
-> seamless additions to new PCH and create a baseline for other platform
-> specific extensions.
->
+There are new types and helpers that are supposed to be used in new code.
 
-Pushed to testing, thanks!
+As a preparation to get rid of legacy types and API functions do
+the conversion here.
 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 31 +++++++++++++++++++++----------
->  drivers/platform/x86/intel_pmc_core.h | 30 +++++++++++++++++++++++++++++-
->  2 files changed, 50 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 914bcd2..17e08b4 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -110,6 +110,13 @@ static const struct pmc_reg_map spt_reg_map = {
->         .pfear_sts = spt_pfear_map,
->         .mphy_sts = spt_mphy_map,
->         .pll_sts = spt_pll_map,
-> +       .slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
-> +       .ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
-> +       .regmap_length = SPT_PMC_MMIO_REG_LEN,
-> +       .ppfear0_offset = SPT_PMC_XRAM_PPFEAR0A,
-> +       .ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
-> +       .pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
-> +       .pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
->  };
->
->  static const struct pci_device_id pmc_pci_ids[] = {
-> @@ -157,12 +164,13 @@ static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
->  int intel_pmc_slp_s0_counter_read(u32 *data)
->  {
->         struct pmc_dev *pmcdev = &pmc;
-> +       const struct pmc_reg_map *map = pmcdev->map;
->         u32 value;
->
->         if (!pmcdev->has_slp_s0_res)
->                 return -EACCES;
->
-> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-> +       value = pmc_core_reg_read(pmcdev, map->slp_s0_offset);
->         *data = pmc_core_adjust_slp_s0_step(value);
->
->         return 0;
-> @@ -172,9 +180,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
->  static int pmc_core_dev_state_get(void *data, u64 *val)
->  {
->         struct pmc_dev *pmcdev = data;
-> +       const struct pmc_reg_map *map = pmcdev->map;
->         u32 value;
->
-> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
-> +       value = pmc_core_reg_read(pmcdev, map->slp_s0_offset);
->         *val = pmc_core_adjust_slp_s0_step(value);
->
->         return 0;
-> @@ -187,8 +196,8 @@ static int pmc_core_check_read_lock_bit(void)
->         struct pmc_dev *pmcdev = &pmc;
->         u32 value;
->
-> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_PM_CFG_OFFSET);
-> -       return value & BIT(SPT_PMC_READ_DISABLE_BIT);
-> +       value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_cfg_offset);
-> +       return value & BIT(pmcdev->map->pm_read_disable_bit);
->  }
->
->  #if IS_ENABLED(CONFIG_DEBUG_FS)
-> @@ -204,12 +213,13 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
->  {
->         struct pmc_dev *pmcdev = s->private;
->         const struct pmc_bit_map *map = pmcdev->map->pfear_sts;
-> -       u8 pf_regs[NUM_ENTRIES];
-> +       u8 pf_regs[PPFEAR_MAX_NUM_ENTRIES];
->         int index, iter;
->
-> -       iter = SPT_PMC_XRAM_PPFEAR0A;
-> +       iter = pmcdev->map->ppfear0_offset;
->
-> -       for (index = 0; index < NUM_ENTRIES; index++, iter++)
-> +       for (index = 0; index < pmcdev->map->ppfear_buckets &&
-> +            index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
->                 pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
->
->         for (index = 0; map[index].name; index++)
-> @@ -376,6 +386,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
->  *userbuf, size_t count, loff_t *ppos)
->  {
->         struct pmc_dev *pmcdev = &pmc;
-> +       const struct pmc_reg_map *map = pmcdev->map;
->         u32 val, buf_size, fd;
->         int err = 0;
->
-> @@ -392,9 +403,9 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
->                 goto out_unlock;
->         }
->
-> -       fd = pmc_core_reg_read(pmcdev, SPT_PMC_LTR_IGNORE_OFFSET);
-> +       fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
->         fd |= (1U << val);
-> -       pmc_core_reg_write(pmcdev, SPT_PMC_LTR_IGNORE_OFFSET, fd);
-> +       pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
->
->  out_unlock:
->         mutex_unlock(&pmcdev->lock);
-> @@ -530,8 +541,8 @@ static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
->         }
->
->         mutex_init(&pmcdev->lock);
-> -       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
->         pmcdev->map = map;
-> +       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
->
->         err = pmc_core_dbgfs_register(pmcdev);
->         if (err < 0)
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index 5a48e77..3d225a9 100644
-> --- a/drivers/platform/x86/intel_pmc_core.h
-> +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -38,7 +38,8 @@
->  #define SPT_PMC_SLP_S0_RES_COUNTER_STEP                0x64
->  #define PMC_BASE_ADDR_MASK                     ~(SPT_PMC_MMIO_REG_LEN - 1)
->  #define MTPMC_MASK                             0xffff0000
-> -#define NUM_ENTRIES                            5
-> +#define PPFEAR_MAX_NUM_ENTRIES                 5
-> +#define SPT_PPFEAR_NUM_ENTRIES                 5
->  #define SPT_PMC_READ_DISABLE_BIT               0x16
->  #define SPT_PMC_MSG_FULL_STS_BIT               0x18
->  #define NUM_RETRIES                            100
-> @@ -126,10 +127,37 @@ struct pmc_bit_map {
->         u32 bit_mask;
->  };
->
-> +/**
-> + * struct pmc_reg_map - Structure used to define parameter unique to a
-> +                       PCH family
-> + * @pfear_sts:         Maps name of IP block to PPFEAR* bit
-> + * @mphy_sts:          Maps name of MPHY lane to MPHY status lane status bit
-> + * @pll_sts:           Maps name of PLL to corresponding bit status
-> + * @slp_s0_offset:     PWRMBASE offset to read SLP_S0 residency
-> + * @ltr_ignore_offset: PWRMBASE offset to read/write LTR ignore bit
-> + * @base_address:      Base address of PWRMBASE defined in BIOS writer guide
-> + * @regmap_length:     Length of memory to map from PWRMBASE address to access
-> + * @ppfear0_offset:    PWRMBASE offset to to read PPFEAR*
-> + * @ppfear_buckets:    Number of 8 bits blocks to read all IP blocks from
-> + *                     PPFEAR
-> + * @pm_cfg_offset:     PWRMBASE offset to PM_CFG register
-> + * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
-> + *
-> + * Each PCH has unique set of register offsets and bit indexes. This structure
-> + * captures them to have a common implementation.
-> + */
->  struct pmc_reg_map {
->         const struct pmc_bit_map *pfear_sts;
->         const struct pmc_bit_map *mphy_sts;
->         const struct pmc_bit_map *pll_sts;
-> +       const u32 slp_s0_offset;
-> +       const u32 ltr_ignore_offset;
-> +       const u32 base_address;
-> +       const int regmap_length;
-> +       const u32 ppfear0_offset;
-> +       const int ppfear_buckets;
-> +       const u32 pm_cfg_offset;
-> +       const int pm_read_disable_bit;
->  };
->
->  /**
-> --
-> 2.7.4
->
+While here, update Copyright to reflect this change along with previous
+one for the topic.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2:
+ - don't touch type of guid in struct guid_block, it's an external API/ABI
+ drivers/platform/x86/wmi.c | 54 ++++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
-
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index e32ba575e8d9..a705b8984716 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -7,6 +7,8 @@
+  *   Copyright (C) 2001,2002 Richard Russon <ldm@flatcap.org>
+  *   Copyright (c) 2001-2007 Anton Altaparmakov
+  *   Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
++ *  ...replaced by generic UUID API:
++ *   Copyright (C) 2016,2017 Intel Corporation.
+  *
+  *  WMI bus infrastructure by Andrew Lutomirski and Darren Hart:
+  *    Copyright (C) 2015 Andrew Lutomirski
+@@ -121,19 +123,19 @@ static struct platform_driver acpi_wmi_driver = {
+ 
+ static bool find_guid(const char *guid_string, struct wmi_block **out)
+ {
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct wmi_block *wblock;
+ 	struct guid_block *block;
+ 	struct list_head *p;
+ 
+-	if (uuid_le_to_bin(guid_string, &guid_input))
++	if (guid_parse(guid_string, &guid_input))
+ 		return false;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		wblock = list_entry(p, struct wmi_block, list);
+ 		block = &wblock->gblock;
+ 
+-		if (memcmp(block->guid, &guid_input, 16) == 0) {
++		if (guid_equal((guid_t *)&block->guid, &guid_input)) {
+ 			if (out)
+ 				*out = wblock;
+ 			return true;
+@@ -420,7 +422,7 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
+ 
+ static void wmi_dump_wdg(const struct guid_block *g)
+ {
+-	pr_info("%pUL:\n", g->guid);
++	pr_info("%pUL:\n", &g->guid);
+ 	if (g->flags & ACPI_WMI_EVENT)
+ 		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
+ 	else
+@@ -480,6 +482,7 @@ static void wmi_notify_debug(u32 value, void *context)
+ 
+ /**
+  * wmi_install_notify_handler - Register handler for WMI events
++ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  * @handler: Function to handle notifications
+  * @data: Data to be returned to handler when event is fired
+  *
+@@ -490,20 +493,20 @@ wmi_notify_handler handler, void *data)
+ {
+ 	struct wmi_block *block;
+ 	acpi_status status = AE_NOT_EXIST;
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct list_head *p;
+ 
+ 	if (!guid || !handler)
+ 		return AE_BAD_PARAMETER;
+ 
+-	if (uuid_le_to_bin(guid, &guid_input))
++	if (guid_parse(guid, &guid_input))
+ 		return AE_BAD_PARAMETER;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		acpi_status wmi_status;
+ 		block = list_entry(p, struct wmi_block, list);
+ 
+-		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
++		if (guid_equal((guid_t *)&block->gblock.guid, &guid_input)) {
+ 			if (block->handler &&
+ 			    block->handler != wmi_notify_debug)
+ 				return AE_ALREADY_ACQUIRED;
+@@ -524,6 +527,7 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
+ 
+ /**
+  * wmi_uninstall_notify_handler - Unregister handler for WMI events
++ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+  *
+  * Unregister handler for events sent to the ACPI-WMI mapper device.
+  */
+@@ -531,20 +535,20 @@ acpi_status wmi_remove_notify_handler(const char *guid)
+ {
+ 	struct wmi_block *block;
+ 	acpi_status status = AE_NOT_EXIST;
+-	uuid_le guid_input;
++	guid_t guid_input;
+ 	struct list_head *p;
+ 
+ 	if (!guid)
+ 		return AE_BAD_PARAMETER;
+ 
+-	if (uuid_le_to_bin(guid, &guid_input))
++	if (guid_parse(guid, &guid_input))
+ 		return AE_BAD_PARAMETER;
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		acpi_status wmi_status;
+ 		block = list_entry(p, struct wmi_block, list);
+ 
+-		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
++		if (guid_equal((guid_t *)&block->gblock.guid, &guid_input)) {
+ 			if (!block->handler ||
+ 			    block->handler == wmi_notify_debug)
+ 				return AE_NULL_ENTRY;
+@@ -633,7 +637,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
++	return sprintf(buf, "wmi:%pUL\n", &wblock->gblock.guid);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -642,7 +646,7 @@ static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	return sprintf(buf, "%pUL\n", wblock->gblock.guid);
++	return sprintf(buf, "%pUL\n", &wblock->gblock.guid);
+ }
+ static DEVICE_ATTR_RO(guid);
+ 
+@@ -725,10 +729,10 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 
+-	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", wblock->gblock.guid))
++	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", &wblock->gblock.guid))
+ 		return -ENOMEM;
+ 
+-	if (add_uevent_var(env, "WMI_GUID=%pUL", wblock->gblock.guid))
++	if (add_uevent_var(env, "WMI_GUID=%pUL", &wblock->gblock.guid))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+@@ -749,11 +753,11 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	const struct wmi_device_id *id = wmi_driver->id_table;
+ 
+ 	while (id->guid_string) {
+-		uuid_le driver_guid;
++		guid_t driver_guid;
+ 
+-		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
++		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
+ 			continue;
+-		if (!memcmp(&driver_guid, wblock->gblock.guid, 16))
++		if (guid_equal(&driver_guid, (guid_t *)&wblock->gblock.guid))
+ 			return 1;
+ 
+ 		id++;
+@@ -891,7 +895,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+ 	wblock->dev.dev.bus = &wmi_bus_type;
+ 	wblock->dev.dev.parent = wmi_bus_dev;
+ 
+-	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
++	dev_set_name(&wblock->dev.dev, "%pUL", &gblock->guid);
+ 
+ 	device_initialize(&wblock->dev.dev);
+ 
+@@ -912,12 +916,12 @@ static void wmi_free_devices(struct acpi_device *device)
+ }
+ 
+ static bool guid_already_parsed(struct acpi_device *device,
+-				const u8 *guid)
++				const guid_t *guid)
+ {
+ 	struct wmi_block *wblock;
+ 
+ 	list_for_each_entry(wblock, &wmi_block_list, list) {
+-		if (memcmp(wblock->gblock.guid, guid, 16) == 0) {
++		if (guid_equal((guid_t *)&wblock->gblock.guid, guid)) {
+ 			/*
+ 			 * Because we historically didn't track the relationship
+ 			 * between GUIDs and ACPI nodes, we don't know whether
+@@ -972,7 +976,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+ 		 * case yet, so for now, we'll just ignore the duplicate
+ 		 * for device creation.
+ 		 */
+-		if (guid_already_parsed(device, gblock[i].guid))
++		if (guid_already_parsed(device, (guid_t *)&gblock[i].guid))
+ 			continue;
+ 
+ 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
+@@ -1009,7 +1013,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+ 		retval = device_add(&wblock->dev.dev);
+ 		if (retval) {
+ 			dev_err(wmi_bus_dev, "failed to register %pULL\n",
+-				wblock->gblock.guid);
++				&wblock->gblock.guid);
+ 			if (debug_event)
+ 				wmi_method_enable(wblock, 0);
+ 			list_del(&wblock->list);
+@@ -1124,10 +1128,8 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
+ 		wblock->handler(event, wblock->handler_data);
+ 	}
+ 
+-	if (debug_event) {
+-		pr_info("DEBUG Event GUID: %pUL\n",
+-			wblock->gblock.guid);
+-	}
++	if (debug_event)
++		pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
+ 
+ 	acpi_bus_generate_netlink_event(
+ 		wblock->acpi_device->pnp.device_class,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.13.2
