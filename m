@@ -1,61 +1,207 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/4] platform/x86: Fix check for method instance number
-Date: Sun, 13 Aug 2017 15:54:26 +0300
-Message-ID: <CAHp75Ve-umOB8U2HZ7iVf-0HfQX=A3-7KanEa0AY=iEhWpFuaA@mail.gmail.com>
-References: <1502523858-25716-1-git-send-email-pali.rohar@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Make the driver PCH family agnostic
+Date: Sun, 13 Aug 2017 16:49:03 +0300
+Message-ID: <CAHp75VdaeuiXFF3g_iJzkW2Fxkz0zp+q4uh3DFTXh_DwLHan+w@mail.gmail.com>
+References: <1502556609-13248-1-git-send-email-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f195.google.com ([209.85.216.195]:35323 "EHLO
-        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750911AbdHMMy2 (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:36536 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750907AbdHMNtE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2017 08:54:28 -0400
-In-Reply-To: <1502523858-25716-1-git-send-email-pali.rohar@gmail.com>
+        Sun, 13 Aug 2017 09:49:04 -0400
+In-Reply-To: <1502556609-13248-1-git-send-email-srinivas.pandruvada@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Sat, Aug 12, 2017 at 10:44 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
-ote:
-> This patch series fixes remaining mxm-wmi and asus-wmi drivers to evaluat=
-e
-> WMI methods with correct and available instance number. Now all WMI drive=
-rs
-> should call WMI functions with correct instance number and last patch fix=
-es
-> WMI check for invalid instances. Patch for paeq-wmi is optional as machin=
-e
-> has 10 instances but instance number is ignored at all. But for consisten=
-cy
-> with other drivers first instance would be used (instead of second).
+On Sat, Aug 12, 2017 at 7:50 PM, Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+> Although this driver did pretty good job in abstracting PCH specific
+> interfaces, but still there are some loose ends. For example
+> SLP_S0 counter (for reading SLP_S0 residency), PM config offset (for
+> checking permissions to read XRAM) and PPFEAR offset (for reading IP
+> status) is still hardcoded for a specific family of PCH.
+>
+> This change extended the struct pmc_reg_map to allow per family
+> configuration of offsets and bits.
+>
+> No functional change is expected with this change. This change allows
+> seamless additions to new PCH and create a baseline for other platform
+> specific extensions.
 >
 
-I pushed first 3 to testing, which seems to me right thing to do, and
-left the last one to be ACK by Darren and/or others (I'm not familiar
-so far with that code).
-Thanks!
+Pushed to testing, thanks!
 
-> Pali Roh=C3=A1r (4):
->   platform/x86: mxm-wmi: Evaluate wmi method with instance number 0x0
->   platform/x86: asus-wmi: Evaluate wmi method with instance number 0x0
->   platform/x86: peaq-wmi: Evaluate wmi method with instance number 0x0
->   platform/x86: wmi: Fix check for method instance number
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 31 +++++++++++++++++++++----------
+>  drivers/platform/x86/intel_pmc_core.h | 30 +++++++++++++++++++++++++++++-
+>  2 files changed, 50 insertions(+), 11 deletions(-)
 >
->  drivers/platform/x86/asus-wmi.c |    4 ++--
->  drivers/platform/x86/mxm-wmi.c  |    4 ++--
->  drivers/platform/x86/peaq-wmi.c |    2 +-
->  drivers/platform/x86/wmi.c      |    6 +++---
->  4 files changed, 8 insertions(+), 8 deletions(-)
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index 914bcd2..17e08b4 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -110,6 +110,13 @@ static const struct pmc_reg_map spt_reg_map = {
+>         .pfear_sts = spt_pfear_map,
+>         .mphy_sts = spt_mphy_map,
+>         .pll_sts = spt_pll_map,
+> +       .slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
+> +       .ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
+> +       .regmap_length = SPT_PMC_MMIO_REG_LEN,
+> +       .ppfear0_offset = SPT_PMC_XRAM_PPFEAR0A,
+> +       .ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+> +       .pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+> +       .pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
+>  };
 >
+>  static const struct pci_device_id pmc_pci_ids[] = {
+> @@ -157,12 +164,13 @@ static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
+>  int intel_pmc_slp_s0_counter_read(u32 *data)
+>  {
+>         struct pmc_dev *pmcdev = &pmc;
+> +       const struct pmc_reg_map *map = pmcdev->map;
+>         u32 value;
+>
+>         if (!pmcdev->has_slp_s0_res)
+>                 return -EACCES;
+>
+> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> +       value = pmc_core_reg_read(pmcdev, map->slp_s0_offset);
+>         *data = pmc_core_adjust_slp_s0_step(value);
+>
+>         return 0;
+> @@ -172,9 +180,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_slp_s0_counter_read);
+>  static int pmc_core_dev_state_get(void *data, u64 *val)
+>  {
+>         struct pmc_dev *pmcdev = data;
+> +       const struct pmc_reg_map *map = pmcdev->map;
+>         u32 value;
+>
+> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_SLP_S0_RES_COUNTER_OFFSET);
+> +       value = pmc_core_reg_read(pmcdev, map->slp_s0_offset);
+>         *val = pmc_core_adjust_slp_s0_step(value);
+>
+>         return 0;
+> @@ -187,8 +196,8 @@ static int pmc_core_check_read_lock_bit(void)
+>         struct pmc_dev *pmcdev = &pmc;
+>         u32 value;
+>
+> -       value = pmc_core_reg_read(pmcdev, SPT_PMC_PM_CFG_OFFSET);
+> -       return value & BIT(SPT_PMC_READ_DISABLE_BIT);
+> +       value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_cfg_offset);
+> +       return value & BIT(pmcdev->map->pm_read_disable_bit);
+>  }
+>
+>  #if IS_ENABLED(CONFIG_DEBUG_FS)
+> @@ -204,12 +213,13 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
+>  {
+>         struct pmc_dev *pmcdev = s->private;
+>         const struct pmc_bit_map *map = pmcdev->map->pfear_sts;
+> -       u8 pf_regs[NUM_ENTRIES];
+> +       u8 pf_regs[PPFEAR_MAX_NUM_ENTRIES];
+>         int index, iter;
+>
+> -       iter = SPT_PMC_XRAM_PPFEAR0A;
+> +       iter = pmcdev->map->ppfear0_offset;
+>
+> -       for (index = 0; index < NUM_ENTRIES; index++, iter++)
+> +       for (index = 0; index < pmcdev->map->ppfear_buckets &&
+> +            index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+>                 pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
+>
+>         for (index = 0; map[index].name; index++)
+> @@ -376,6 +386,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
+>  *userbuf, size_t count, loff_t *ppos)
+>  {
+>         struct pmc_dev *pmcdev = &pmc;
+> +       const struct pmc_reg_map *map = pmcdev->map;
+>         u32 val, buf_size, fd;
+>         int err = 0;
+>
+> @@ -392,9 +403,9 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
+>                 goto out_unlock;
+>         }
+>
+> -       fd = pmc_core_reg_read(pmcdev, SPT_PMC_LTR_IGNORE_OFFSET);
+> +       fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+>         fd |= (1U << val);
+> -       pmc_core_reg_write(pmcdev, SPT_PMC_LTR_IGNORE_OFFSET, fd);
+> +       pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
+>
+>  out_unlock:
+>         mutex_unlock(&pmcdev->lock);
+> @@ -530,8 +541,8 @@ static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>         }
+>
+>         mutex_init(&pmcdev->lock);
+> -       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>         pmcdev->map = map;
+> +       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>
+>         err = pmc_core_dbgfs_register(pmcdev);
+>         if (err < 0)
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> index 5a48e77..3d225a9 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -38,7 +38,8 @@
+>  #define SPT_PMC_SLP_S0_RES_COUNTER_STEP                0x64
+>  #define PMC_BASE_ADDR_MASK                     ~(SPT_PMC_MMIO_REG_LEN - 1)
+>  #define MTPMC_MASK                             0xffff0000
+> -#define NUM_ENTRIES                            5
+> +#define PPFEAR_MAX_NUM_ENTRIES                 5
+> +#define SPT_PPFEAR_NUM_ENTRIES                 5
+>  #define SPT_PMC_READ_DISABLE_BIT               0x16
+>  #define SPT_PMC_MSG_FULL_STS_BIT               0x18
+>  #define NUM_RETRIES                            100
+> @@ -126,10 +127,37 @@ struct pmc_bit_map {
+>         u32 bit_mask;
+>  };
+>
+> +/**
+> + * struct pmc_reg_map - Structure used to define parameter unique to a
+> +                       PCH family
+> + * @pfear_sts:         Maps name of IP block to PPFEAR* bit
+> + * @mphy_sts:          Maps name of MPHY lane to MPHY status lane status bit
+> + * @pll_sts:           Maps name of PLL to corresponding bit status
+> + * @slp_s0_offset:     PWRMBASE offset to read SLP_S0 residency
+> + * @ltr_ignore_offset: PWRMBASE offset to read/write LTR ignore bit
+> + * @base_address:      Base address of PWRMBASE defined in BIOS writer guide
+> + * @regmap_length:     Length of memory to map from PWRMBASE address to access
+> + * @ppfear0_offset:    PWRMBASE offset to to read PPFEAR*
+> + * @ppfear_buckets:    Number of 8 bits blocks to read all IP blocks from
+> + *                     PPFEAR
+> + * @pm_cfg_offset:     PWRMBASE offset to PM_CFG register
+> + * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
+> + *
+> + * Each PCH has unique set of register offsets and bit indexes. This structure
+> + * captures them to have a common implementation.
+> + */
+>  struct pmc_reg_map {
+>         const struct pmc_bit_map *pfear_sts;
+>         const struct pmc_bit_map *mphy_sts;
+>         const struct pmc_bit_map *pll_sts;
+> +       const u32 slp_s0_offset;
+> +       const u32 ltr_ignore_offset;
+> +       const u32 base_address;
+> +       const int regmap_length;
+> +       const u32 ppfear0_offset;
+> +       const int ppfear_buckets;
+> +       const u32 pm_cfg_offset;
+> +       const int pm_read_disable_bit;
+>  };
+>
+>  /**
 > --
-> 1.7.9.5
+> 2.7.4
 >
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
