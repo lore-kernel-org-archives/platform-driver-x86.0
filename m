@@ -1,237 +1,50 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] platform/x86: wmi: Switch to use new generic UUID API
-Date: Sun, 13 Aug 2017 17:13:38 +0300
-Message-ID: <20170813141338.61667-1-andriy.shevchenko@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID API
+Date: Sun, 13 Aug 2017 17:15:55 +0300
+Message-ID: <1502633755.15214.4.camel@linux.intel.com>
+References: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com>
+         <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com>
+         <CAHp75VcFB1BDNUG729mi5BkhcR_aBX4MzvoyzdRx=LaAg9=EHQ@mail.gmail.com>
+         <CALCETrVUctPyYNjkLL3uZUdxFko9=tpMchpV09VpWEhbjMT16g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:60271 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750942AbdHMOP6 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 13 Aug 2017 10:15:58 -0400
+In-Reply-To: <CALCETrVUctPyYNjkLL3uZUdxFko9=tpMchpV09VpWEhbjMT16g@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-There are new types and helpers that are supposed to be used in new code.
+On Sun, 2017-08-06 at 08:43 -0700, Andy Lutomirski wrote:
+> On Fri, Aug 4, 2017 at 8:27 AM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Aug 4, 2017 at 6:01 PM, Andy Lutomirski <luto@kernel.org>
+> > wrote:
+> > > > On Aug 2, 2017, at 9:28 AM, Andy Shevchenko <andriy.shevchenko@l
+> > > > inux.intel.com> wrote:
 
-As a preparation to get rid of legacy types and API functions do
-the conversion here.
+> > > NAK.  guid_block is a firmware interface, so opaque kernel types
+> > > don't
+> > > belong in it.
+> > 
+> > I f we leave this, what do you think about everything else?
+> 
+> Assuming it works, it's fine with me.  I'd be happy to test.
 
-While here, update Copyright to reflect this change along with previous
-one for the topic.
+Just sent v2.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2:
- - don't touch type of guid in struct guid_block, it's an external API/ABI
- drivers/platform/x86/wmi.c | 54 ++++++++++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+> Keep in mind that this beast is a *little-endian* GUID abomination,
+> and I don't see generic conversion helpers.  Something might need to
+> be added.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e32ba575e8d9..a705b8984716 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -7,6 +7,8 @@
-  *   Copyright (C) 2001,2002 Richard Russon <ldm@flatcap.org>
-  *   Copyright (c) 2001-2007 Anton Altaparmakov
-  *   Copyright (C) 2001,2002 Jakob Kemi <jakob.kemi@telia.com>
-+ *  ...replaced by generic UUID API:
-+ *   Copyright (C) 2016,2017 Intel Corporation.
-  *
-  *  WMI bus infrastructure by Andrew Lutomirski and Darren Hart:
-  *    Copyright (C) 2015 Andrew Lutomirski
-@@ -121,19 +123,19 @@ static struct platform_driver acpi_wmi_driver = {
- 
- static bool find_guid(const char *guid_string, struct wmi_block **out)
- {
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct wmi_block *wblock;
- 	struct guid_block *block;
- 	struct list_head *p;
- 
--	if (uuid_le_to_bin(guid_string, &guid_input))
-+	if (guid_parse(guid_string, &guid_input))
- 		return false;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		block = &wblock->gblock;
- 
--		if (memcmp(block->guid, &guid_input, 16) == 0) {
-+		if (guid_equal((guid_t *)&block->guid, &guid_input)) {
- 			if (out)
- 				*out = wblock;
- 			return true;
-@@ -420,7 +422,7 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
- 
- static void wmi_dump_wdg(const struct guid_block *g)
- {
--	pr_info("%pUL:\n", g->guid);
-+	pr_info("%pUL:\n", &g->guid);
- 	if (g->flags & ACPI_WMI_EVENT)
- 		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
- 	else
-@@ -480,6 +482,7 @@ static void wmi_notify_debug(u32 value, void *context)
- 
- /**
-  * wmi_install_notify_handler - Register handler for WMI events
-+ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-  * @handler: Function to handle notifications
-  * @data: Data to be returned to handler when event is fired
-  *
-@@ -490,20 +493,20 @@ wmi_notify_handler handler, void *data)
- {
- 	struct wmi_block *block;
- 	acpi_status status = AE_NOT_EXIST;
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct list_head *p;
- 
- 	if (!guid || !handler)
- 		return AE_BAD_PARAMETER;
- 
--	if (uuid_le_to_bin(guid, &guid_input))
-+	if (guid_parse(guid, &guid_input))
- 		return AE_BAD_PARAMETER;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		acpi_status wmi_status;
- 		block = list_entry(p, struct wmi_block, list);
- 
--		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
-+		if (guid_equal((guid_t *)&block->gblock.guid, &guid_input)) {
- 			if (block->handler &&
- 			    block->handler != wmi_notify_debug)
- 				return AE_ALREADY_ACQUIRED;
-@@ -524,6 +527,7 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
- 
- /**
-  * wmi_uninstall_notify_handler - Unregister handler for WMI events
-+ * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-  *
-  * Unregister handler for events sent to the ACPI-WMI mapper device.
-  */
-@@ -531,20 +535,20 @@ acpi_status wmi_remove_notify_handler(const char *guid)
- {
- 	struct wmi_block *block;
- 	acpi_status status = AE_NOT_EXIST;
--	uuid_le guid_input;
-+	guid_t guid_input;
- 	struct list_head *p;
- 
- 	if (!guid)
- 		return AE_BAD_PARAMETER;
- 
--	if (uuid_le_to_bin(guid, &guid_input))
-+	if (guid_parse(guid, &guid_input))
- 		return AE_BAD_PARAMETER;
- 
- 	list_for_each(p, &wmi_block_list) {
- 		acpi_status wmi_status;
- 		block = list_entry(p, struct wmi_block, list);
- 
--		if (memcmp(block->gblock.guid, &guid_input, 16) == 0) {
-+		if (guid_equal((guid_t *)&block->gblock.guid, &guid_input)) {
- 			if (!block->handler ||
- 			    block->handler == wmi_notify_debug)
- 				return AE_NULL_ENTRY;
-@@ -633,7 +637,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
-+	return sprintf(buf, "wmi:%pUL\n", &wblock->gblock.guid);
- }
- static DEVICE_ATTR_RO(modalias);
- 
-@@ -642,7 +646,7 @@ static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	return sprintf(buf, "%pUL\n", wblock->gblock.guid);
-+	return sprintf(buf, "%pUL\n", &wblock->gblock.guid);
- }
- static DEVICE_ATTR_RO(guid);
- 
-@@ -725,10 +729,10 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 
--	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", wblock->gblock.guid))
-+	if (add_uevent_var(env, "MODALIAS=wmi:%pUL", &wblock->gblock.guid))
- 		return -ENOMEM;
- 
--	if (add_uevent_var(env, "WMI_GUID=%pUL", wblock->gblock.guid))
-+	if (add_uevent_var(env, "WMI_GUID=%pUL", &wblock->gblock.guid))
- 		return -ENOMEM;
- 
- 	return 0;
-@@ -749,11 +753,11 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	const struct wmi_device_id *id = wmi_driver->id_table;
- 
- 	while (id->guid_string) {
--		uuid_le driver_guid;
-+		guid_t driver_guid;
- 
--		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
-+		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
- 			continue;
--		if (!memcmp(&driver_guid, wblock->gblock.guid, 16))
-+		if (guid_equal(&driver_guid, (guid_t *)&wblock->gblock.guid))
- 			return 1;
- 
- 		id++;
-@@ -891,7 +895,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
- 	wblock->dev.dev.bus = &wmi_bus_type;
- 	wblock->dev.dev.parent = wmi_bus_dev;
- 
--	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
-+	dev_set_name(&wblock->dev.dev, "%pUL", &gblock->guid);
- 
- 	device_initialize(&wblock->dev.dev);
- 
-@@ -912,12 +916,12 @@ static void wmi_free_devices(struct acpi_device *device)
- }
- 
- static bool guid_already_parsed(struct acpi_device *device,
--				const u8 *guid)
-+				const guid_t *guid)
- {
- 	struct wmi_block *wblock;
- 
- 	list_for_each_entry(wblock, &wmi_block_list, list) {
--		if (memcmp(wblock->gblock.guid, guid, 16) == 0) {
-+		if (guid_equal((guid_t *)&wblock->gblock.guid, guid)) {
- 			/*
- 			 * Because we historically didn't track the relationship
- 			 * between GUIDs and ACPI nodes, we don't know whether
-@@ -972,7 +976,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
- 		 * case yet, so for now, we'll just ignore the duplicate
- 		 * for device creation.
- 		 */
--		if (guid_already_parsed(device, gblock[i].guid))
-+		if (guid_already_parsed(device, (guid_t *)&gblock[i].guid))
- 			continue;
- 
- 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
-@@ -1009,7 +1013,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
- 		retval = device_add(&wblock->dev.dev);
- 		if (retval) {
- 			dev_err(wmi_bus_dev, "failed to register %pULL\n",
--				wblock->gblock.guid);
-+				&wblock->gblock.guid);
- 			if (debug_event)
- 				wmi_method_enable(wblock, 0);
- 			list_del(&wblock->list);
-@@ -1124,10 +1128,8 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
- 		wblock->handler(event, wblock->handler_data);
- 	}
- 
--	if (debug_event) {
--		pr_info("DEBUG Event GUID: %pUL\n",
--			wblock->gblock.guid);
--	}
-+	if (debug_event)
-+		pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
- 
- 	acpi_bus_generate_netlink_event(
- 		wblock->acpi_device->pnp.device_class,
+Do you mean something like char16_to_guid() / char16_to_uuid() ?
+
 -- 
-2.13.2
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
