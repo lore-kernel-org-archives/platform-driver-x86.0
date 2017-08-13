@@ -1,93 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Expose conservation mode switch
-Date: Sun, 13 Aug 2017 15:15:28 +0300
-Message-ID: <CAHp75Vc6SeP6bF7U_bdvy=DBSx8G78B7LWnwGR8Tg7-1O2NK8Q@mail.gmail.com>
-References: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Remove unused macro helper
+Date: Sun, 13 Aug 2017 15:23:15 +0300
+Message-ID: <CAHp75Vc1pX+aOZMLy3a87oAUYVOCmW4YntOh2oFqPJQOgna-8g@mail.gmail.com>
+References: <20170730154050.21545-1-pcacjr@zytor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b667a2be-8021-93a0-d87a-e6fa6b2aa633@angelsl.xyz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hao Wei Tee <angelsl@angelsl.xyz>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:35386 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751420AbdHMMXQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 13 Aug 2017 08:23:16 -0400
+Received: by mail-qk0-f194.google.com with SMTP id a77so7258518qkb.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Aug 2017 05:23:16 -0700 (PDT)
+In-Reply-To: <20170730154050.21545-1-pcacjr@zytor.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Paulo Alcantara <pcacjr@zytor.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Sat, May 27, 2017 at 10:31 AM, Hao Wei Tee <angelsl@angelsl.xyz> wrote:
-> This exposes the battery conservation mode present on some (?) IdeaPads.
-> The mode is set by calling ACPI method SBMC with argument 3 (on) or
-> 5 (off). Status is reported in bit 5 of the return value of ACPI method
-> GBMD.
+On Sun, Jul 30, 2017 at 6:40 PM, Paulo Alcantara <pcacjr@zytor.com> wrote:
+
+Pushed for testing with correct commit message.
+Please, fill it in the future, thanks!
+
+> Signed-off-by: Paulo Alcantara <pcacjr@zytor.com>
+> ---
+>  drivers/platform/x86/hp-wmi.c | 7 -------
+>  1 file changed, 7 deletions(-)
 >
-> This patch was written based on an IdeaPad U430p. I'm not sure if the ACPI
-> methods are the same across all IdeaPads, so it would be great if this got more
-> testing across other models before it's merged.
-
-Okay, since there is no reply from Ideapad maintainer I'm going to
-accept v2 of this. (Sorry it took so long)
-
-Why v2? See my comments below.
-
-> +#define GBMD_CONSERVATION_BIT (5)
-
-Please separate this line, it's not in CFG_ namespace AFAIU.
-
->  #define CFG_BT_BIT     (16)
->  #define CFG_3G_BIT     (17)
->  #define CFG_WIFI_BIT   (18)
-
->  enum {
-> +       VPCCMD_CONSERVATION_ON = 3,
-> +       VPCCMD_CONSERVATION_OFF = 5,
-
-This should be separate enum. Below related to EC commands, you do
-something else.
-
->         VPCCMD_R_VPC1 = 0x10,
->         VPCCMD_R_BL_MAX,
->         VPCCMD_R_BL,
-
-> +static int conservation_mode_status(acpi_handle handle, bool *ret)
-
-Should be called method_gbmd(). And please use unsigned long as return value.
-
-> +{
-> +       acpi_status status;
-> +       unsigned long long result;
-> +
-> +       status = acpi_evaluate_integer(handle, "GBMD", NULL, &result);
-> +       if (ACPI_FAILURE(status))
-> +               return -1;
-
-You may use read_method_int() helper.
-
-> +
-> +       *ret = (result & (1 << GBMD_CONSERVATION_BIT)) != 0;
-
-"("  and "!= 0)" will gone with change of returned value type.
-
-> +       return 0;
-> +}
-
-> +       bool boolval;
-
-Reuse value instead.
-
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 0df4209648d1..5a88553e31e9 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -107,13 +107,6 @@ enum hp_wmi_hardware_mask {
+>         HPWMI_TABLET_MASK       = 0x04,
+>  };
 >
->         if (!priv)
->                 return -EINVAL;
-> @@ -250,6 +275,12 @@ static int debugfs_status_show(struct seq_file *s, void *data)
->         if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
->                 seq_printf(s, "Camera status:\t%s(%lu)\n",
->                            value ? "On" : "Off", value);
-> +       seq_puts(s, "=====================\n");
-> +
-> +       if (!conservation_mode_status(priv->adev->handle, &boolval)) {
+> -#define BIOS_ARGS_INIT(write, ctype, size)                             \
+> -       (struct bios_args)      {       .signature = 0x55434553,        \
+> -                                       .command = (write) ? 0x2 : 0x1, \
+> -                                       .commandtype = (ctype),         \
+> -                                       .datasize = (size),             \
+> -                                       .data = 0 }
+> -
+>  struct bios_return {
+>         u32 sigpass;
+>         u32 return_code;
+> --
+> 2.11.0
+>
 
-Ditto.
 
-> +               seq_printf(s, "Conservation mode:\t%s(%u)\n",
-> +                          boolval ? "On" : "Off", boolval);
-> +       }
 
 -- 
 With Best Regards,
