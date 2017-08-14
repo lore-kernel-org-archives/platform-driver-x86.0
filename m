@@ -1,150 +1,136 @@
-From: Hao Wei Tee <angelsl@in04.sg>
-Subject: [PATCH v3] platform/x86: ideapad-laptop: Expose conservation mode
- switch
-Date: Tue, 15 Aug 2017 00:13:51 +0800
-Message-ID: <83ebbe48-1b85-e42b-4470-3b1be3450323@in04.sg>
-References: <cd64f959-5fa0-50e2-183a-70c28aa121d9@in04.sg>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd64f959-5fa0-50e2-183a-70c28aa121d9@in04.sg>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: intel_cht_int33fe: Work around BIOS bug on some devices
+Date: Mon, 14 Aug 2017 22:14:25 +0200
+Message-ID: <20170814201425.20991-1-hdegoede@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:58432 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751965AbdHNUO2 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 14 Aug 2017 16:14:28 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This exposes the battery conservation mode present on some (?) IdeaPads.
-The mode is set by calling ACPI method SBMC with argument 3 (on) or
-5 (off). Status is reported in bit 5 of the return value of ACPI method
-GBMD.
+At least one BIOS enumerates the max17047 both through the INT33FE ACPI
+device (it is right there in the resources table) as well as through a
+separate MAX17047 device.
 
-Signed-off-by: Hao Wei Tee <angelsl@in04.sg>
+This commit checks for the max17047 already being enumerated through
+a separate MAX17047 ACPI device and if so it uses the i2c-client
+instantiated for this and attaches the device-props for the max17047 to
+that i2c-client.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-v3: Stylistic changes
+ drivers/platform/x86/intel_cht_int33fe.c | 64 +++++++++++++++++++++++++++-----
+ 1 file changed, 54 insertions(+), 10 deletions(-)
 
- drivers/platform/x86/ideapad-laptop.c | 69 +++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 603fc6050971..fe98d4ac0df3 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -42,6 +42,8 @@
- 
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
-+#define BM_CONSERVATION_BIT (5)
-+
- #define CFG_BT_BIT	(16)
- #define CFG_3G_BIT	(17)
- #define CFG_WIFI_BIT	(18)
-@@ -54,6 +56,11 @@ static const char *const ideapad_wmi_fnesc_events[] = {
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index da706e2c4232..5f1924fb3190 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,6 +34,35 @@ struct cht_int33fe_data {
+ 	struct i2c_client *pi3usb30532;
  };
- #endif
  
-+enum {
-+	BMCMD_CONSERVATION_ON = 3,
-+	BMCMD_CONSERVATION_OFF = 5,
-+};
-+
- enum {
- 	VPCCMD_R_VPC1 = 0x10,
- 	VPCCMD_R_BL_MAX,
-@@ -123,6 +130,23 @@ static int read_method_int(acpi_handle handle, const char *method, int *val)
- 	}
- }
- 
-+static int method_gbmd(acpi_handle handle, unsigned long *ret)
++/*
++ * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
++ * the max17047 both through the INT33FE ACPI device (it is right there
++ * in the resources table) as well as through a separate MAX17047 device.
++ *
++ * These helpers are used to work around this by checking if an i2c-client
++ * for the max17047 has already been registered.
++ */
++int cht_int33fe_check_for_max17047(struct device *dev, void *data)
 +{
-+	int result, val;
++	const char *name = dev_name(dev);
++	struct i2c_client **max17047 = data;
 +
-+	result = read_method_int(handle, "GBMD", &val);
-+	*ret = val;
-+	return result;
-+}
-+
-+static int method_sbmc(acpi_handle handle, int cmd)
-+{
-+	acpi_status status;
-+
-+	status = acpi_execute_simple_method(handle, "SBMC", cmd);
-+	return ACPI_FAILURE(status) ? -1 : 0;
-+}
-+
- static int method_vpcr(acpi_handle handle, int cmd, int *ret)
- {
- 	acpi_status status;
-@@ -250,6 +274,13 @@ static int debugfs_status_show(struct seq_file *s, void *data)
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &value))
- 		seq_printf(s, "Camera status:\t%s(%lu)\n",
- 			   value ? "On" : "Off", value);
-+	seq_puts(s, "=====================\n");
-+
-+	if (!method_gbmd(priv->adev->handle, &value)) {
-+		seq_printf(s, "Conservation mode:\t%s(%lu)\n",
-+			   test_bit(BM_CONSERVATION_BIT, &value) ? "On" : "Off",
-+			   value);
++	if (name && strcmp(name, "i2c-MAX17047:00") == 0) {
++		*max17047 = to_i2c_client(dev);
++		return 1;
 +	}
++
++	return 0;
++}
++
++struct i2c_client *cht_int33fe_find_max17047(void)
++{
++	struct i2c_client *max17047 = NULL;
++
++	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
++	return max17047;
++}
++
+ static const char * const max17047_suppliers[] = { "bq24190-charger" };
+ 
+ static const struct property_entry max17047_props[] = {
+@@ -46,9 +75,10 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	struct device *dev = &client->dev;
+ 	struct i2c_board_info board_info;
+ 	struct cht_int33fe_data *data;
++	struct i2c_client *max17047;
+ 	unsigned long long ptyp;
+ 	acpi_status status;
+-	int fusb302_irq;
++	int ret, fusb302_irq;
+ 
+ 	status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
+ 	if (ACPI_FAILURE(status)) {
+@@ -75,13 +105,25 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	memset(&board_info, 0, sizeof(board_info));
+-	strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
+-	board_info.properties = max17047_props;
+-
+-	data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
+-	if (!data->max17047)
+-		return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
++	/* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
++	max17047 = cht_int33fe_find_max17047();
++	if (max17047) {
++		/* Pre-existing i2c-client for the max17047, add device-props */
++		ret = device_add_properties(&max17047->dev, max17047_props);
++		if (ret)
++			return ret;
++		/* And re-probe to get the new device-props applied. */
++		ret = device_reprobe(&max17047->dev);
++		if (ret)
++			dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
++	} else {
++		memset(&board_info, 0, sizeof(board_info));
++		strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
++		board_info.properties = max17047_props;
++		data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
++		if (!data->max17047)
++			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
++	}
+ 
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	strlcpy(board_info.type, "fusb302", I2C_NAME_SIZE);
+@@ -106,7 +148,8 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	i2c_unregister_device(data->fusb302);
+ 
+ out_unregister_max17047:
+-	i2c_unregister_device(data->max17047);
++	if (data->max17047)
++		i2c_unregister_device(data->max17047);
+ 
+ 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
+ }
+@@ -117,7 +160,8 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
+ 
+ 	i2c_unregister_device(data->pi3usb30532);
+ 	i2c_unregister_device(data->fusb302);
+-	i2c_unregister_device(data->max17047);
++	if (data->max17047)
++		i2c_unregister_device(data->max17047);
  
  	return 0;
  }
-@@ -456,10 +487,45 @@ static ssize_t __maybe_unused touchpad_store(struct device *dev,
- 
- static DEVICE_ATTR_RO(touchpad);
- 
-+static ssize_t conservation_mode_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	unsigned long result;
-+
-+	if (method_gbmd(priv->adev->handle, &result))
-+		return sprintf(buf, "-1\n");
-+	return sprintf(buf, "%u\n", test_bit(BM_CONSERVATION_BIT, &result));
-+}
-+
-+static ssize_t conservation_mode_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	bool state;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &state);
-+	if (ret)
-+		return ret;
-+
-+	ret = method_sbmc(priv->adev->handle, state ?
-+					      BMCMD_CONSERVATION_ON :
-+					      BMCMD_CONSERVATION_OFF);
-+	if (ret < 0)
-+		return -EIO;
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(conservation_mode);
-+
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
- 	&dev_attr_fan_mode.attr,
- 	&dev_attr_touchpad.attr,
-+	&dev_attr_conservation_mode.attr,
- 	NULL
- };
- 
-@@ -477,6 +543,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
- 		unsigned long value;
- 		supported = !read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
- 					  &value);
-+	} else if (attr == &dev_attr_conservation_mode.attr) {
-+		supported = acpi_has_method(priv->adev->handle, "GBMD") &&
-+			    acpi_has_method(priv->adev->handle, "SBMC");
- 	} else
- 		supported = true;
- 
 -- 
-2.14.1
+2.13.4
