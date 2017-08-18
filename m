@@ -1,26 +1,21 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: (unknown)
-Date: Fri, 18 Aug 2017 23:12:14 +0530
-Message-ID: <20170818174214.GA12519@raj-desk2.iind.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:61167 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750987AbdHRRoh (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Aug 2017 13:44:37 -0400
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, dbasehore@chromium.org, rjw@rjwysocki.net, rajatja@google.com
-
-Bcc: 
 Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add Package C-states
  residency info
-Reply-To: 
+Date: Fri, 18 Aug 2017 23:17:25 +0530
+Message-ID: <20170818174725.GB12519@raj-desk2.iind.intel.com>
+References: <1503059853-5118-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <CAHp75VfFrdiSDb_SAunCAdWZY0FPY9hxriCgVUYn00_gmOQQcw@mail.gmail.com>
+ <20170818145843.GA10366@raj-desk2.iind.intel.com>
+ <CAHp75Vd5Wnio-RCEBENtonYWOJF2+88FDvqkUv1HzV3CdcaaPA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <CAHp75Vd5Wnio-RCEBENtonYWOJF2+88FDvqkUv1HzV3CdcaaPA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, rajatja@google.com, dbasehore@chromium.org, rjw@rjwysocki.net
+List-Id: platform-driver-x86.vger.kernel.org
 
 On Fri, Aug 18, 2017 at 08:17:32PM +0300, Andy Shevchenko wrote:
 > +PeterZ (since I mentioned his name)
