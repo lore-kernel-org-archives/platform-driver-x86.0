@@ -1,110 +1,116 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add Package C-states
- residency info
-Date: Fri, 18 Aug 2017 15:29:09 -0700
-Message-ID: <20170818222909.GB15616@fury>
-References: <1503059853-5118-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VfFrdiSDb_SAunCAdWZY0FPY9hxriCgVUYn00_gmOQQcw@mail.gmail.com>
- <20170818145843.GA10366@raj-desk2.iind.intel.com>
- <CAHp75Vd5Wnio-RCEBENtonYWOJF2+88FDvqkUv1HzV3CdcaaPA@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix warning about
+ deprecated hwmon_device_register
+Date: Fri, 18 Aug 2017 16:01:06 -0700
+Message-ID: <20170818230106.GA15303@fury>
+References: <20170620051633.GB15974@khazad-dum.debian.net>
+ <20170621034513.4023-1-kernel@fomichev.me>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42255 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:58754 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751045AbdHRW3O (ORCPT
+        with ESMTP id S1751674AbdHRXBL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Aug 2017 18:29:14 -0400
+        Fri, 18 Aug 2017 19:01:11 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd5Wnio-RCEBENtonYWOJF2+88FDvqkUv1HzV3CdcaaPA@mail.gmail.com>
+In-Reply-To: <20170621034513.4023-1-kernel@fomichev.me>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Rafael Wysocki <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>
+To: Stanislav Fomichev <kernel@fomichev.me>
+Cc: hmh@hmh.eng.br, ibm-acpi@hmh.eng.br, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Stanislav Fomichev <sdf@google.com>
 
-On Fri, Aug 18, 2017 at 08:17:32PM +0300, Andy Shevchenko wrote:
-> +PeterZ (since I mentioned his name)
+On Tue, Jun 20, 2017 at 08:45:13PM -0700, Stanislav Fomichev wrote:
+> From: Stanislav Fomichev <sdf@google.com>
 > 
 
-Since we're talking C States, +Rafael and +Len
+Oi, apologies for the long delay on this.
 
-> On Fri, Aug 18, 2017 at 5:58 PM, Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@intel.com> wrote:
-> > On Fri, Aug 18, 2017 at 03:57:34PM +0300, Andy Shevchenko wrote:
-> >> On Fri, Aug 18, 2017 at 3:37 PM, Rajneesh Bhardwaj
-> >> <rajneesh.bhardwaj@intel.com> wrote:
-> >> > This patch introduces a new debugfs entry to read current Package C-state
-> >> > residency values and, one new kernel API to read the Package C-10 residency
-> >> > counter.
-> >> >
-> >> > Package C-state residency MSRs provide useful debug information about system
-> >> > idle states. In idle states system must enter deeper Package C-states.
+> Use hwmon_device_register_with_groups instead of deprecated
+> hwmon_device_register and fix a dmesg warning.
 > 
-> >> Why this patch is needed?
-> >
-> > Andy, I'll try to give some background for this.
-> >
-> > This is needed to enhance the S0ix failure debug capabilities from within
-> > the kernel. On ChromeOS we have S0ix failsafe kernel framework that is used
-> > to validate S0ix and report the blockers in case of a failure.
-> > https://patchwork.kernel.org/patch/9148999/
+> This patch however changes the userspace API.
+> hwmon_device_register_with_groups takes `hwmon' name as an argument and creates
+> a name file in the `hwmon' device, not in the `platform_device'. This
+> allows us to remove custom `name' device attribute, but in order to make
+> lm-sensors happy we also have to move fans and thermal attributes to the
+> `hwmon' device.
 > 
-> (It's not part of upstream)
+> Even though this patch changes userspace API, it's still compatible with
+> the lm-sensors. Starting with lm-sensors 3.0 (circa 2007), it looks at both
+> hwmon and the backing device for the name and other attributes.
 > 
-> > So far only intel_pmc_slp_s0_counter_read is called by this framework to
-> > check whether the previous attempt to enter S0ix was success or not.
+> before:
+> $ cat /sys/devices/platform/thinkpad_hwmon/{name,fan1_input}
+> thinkpad
+> 2007
+> $ cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon1/{name,fan1_input}
+> cat: /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon1/name: No such file or directory
+> cat: /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon1/fan1_input: No such file or directory
+> $ cat /sys/class/hwmon/hwmon1/{name,fan1_input}
+> cat: /sys/class/hwmon/hwmon1/name: No such file or directory
+> cat: /sys/class/hwmon/hwmon1/fan1_input: No such file or directory
+> $ sensors
+> thinkpad-isa-0000
+> Adapter: ISA adapter
+> fan1:        3533 RPM
 > 
-> I harder see even a single user of that API in current kernel. It
-> should be unexported and removed I think.
+> after:
+> $ cat /sys/devices/platform/thinkpad_hwmon/{name,fan1_input}
+> cat: /sys/devices/platform/thinkpad_hwmon/name: No such file or directory
+> cat: /sys/devices/platform/thinkpad_hwmon/fan1_input: No such file or directory
+> $ cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon1/{name,fan1_input}
+> thinkpad
+> 3478
+> $ cat /sys/class/hwmon/hwmon1/{name,fan1_input}
+> thinkpad
+> 3478
+> $ sensors
+> thinkpad-isa-0000
+> Adapter: ISA adapter
+> fan1:        3489 RPM
 > 
-> >  Having
-> > another PC10 counter related exported function enhances the S0ix debug since
-> > PC10 state is a prerequisite to enter S0ix.
-> >
-> >> See, we have turbostat and cpupower user space tools which do this
-> >> without any additional code to be written in kernel. What prevents
-> >> your user space application do the same?
-> >>
-> >> Moreover, we have events for cstate, I assume perf or something alike
-> >> can monitor those counters as well.
 
-I tend to agree.
+This looks very reasonable to me. The lm-sensors user experience is
+effectively unchanged, and the /sys/* changes move from a specific
+implementation to a generic implementation, taking advantage for the
+subsystem.
 
-> >
-> > You're right, perhaps the debugfs is redundant when we have those user space
-> > tools but such tools are not available readily for all platforms/distros.
-> > Interfaces like /dev/cpu/*/msr that turbostat uses are not available on all
-> > the platforms.
+> $ sensors -v
+> sensors version 3.4.0 with libsensors version 3.4.0
+> 
+> Changes since v1:
+> * Bumped TPACPI_SYSFS_VERSION
+> * Updated documentation
+> 
 
-Can these be exposed in this way for *this* platform though?
+Please see Documentation/process/submitting-patches.rst section 14
+regarding the placement of the Changelog below the --- marker line as it
+is not part of the commit message. (for future patches)
 
-> > PMC driver is a debug driver so i thought its better to show Package C-state
-> > related info for low power debug here.
-> >
-> >>
-> >> Sorry, NAK.
-> >
-> > This patch has two parts i.e. exported PC10 API and the debugfs. Based on
-> > the above explanation, if the patch is not good as is, please let me know if
-> > i should drop the debugfs part and respin a v2 with just the exported API or
-> > drop this totally.
-> >
-> > Thanks for the feedback and thanks for taking time to review!
+> Signed-off-by: Stanislav Fomichev <kernel@fomichev.me>
+> ---
+>  Documentation/laptops/thinkpad-acpi.txt |  9 ++++++--
+>  drivers/platform/x86/thinkpad_acpi.c    | 38 ++++++++++-----------------------
+>  2 files changed, 18 insertions(+), 29 deletions(-)
 > 
-> Reading above makes me think that entire design of this is misguided.
-> Since the most of values are counters they better to be accessed in a
-> way how perf does.
-> 
-> In case you need *in-kernel* facility, do some APIs (if it's not done
-> yet) for events drivers first.
-> cstate event driver is already in upstream.
-> 
-> Sorry, NAK for entire patch until it would be blessed by people like Peter Z.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
+> diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
+> index ba2e7d254842..1dbef8b8c7b1 100644
+> --- a/Documentation/laptops/thinkpad-acpi.txt
+> +++ b/Documentation/laptops/thinkpad-acpi.txt
+> @@ -121,8 +121,9 @@ space, for 2.6.23+ this is /sys/devices/platform/thinkpad_acpi/.
+>  Sysfs device attributes for the sensors and fan are on the
+>  thinkpad_hwmon device's sysfs attribute space, but you should locate it
+>  looking for a hwmon device with the name attribute of "thinkpad", or
+> -better yet, through libsensors.
+> -
+> +better yet, through libsensors. For 4.13+ sysfs attributes were moved to the
+
+This will be 4.14 because we let it sit too long. I'll correct this.
+
+I've queued this to testing for 4.14.
+
+Henrique, please shout if you have any objections here.
 
 -- 
 Darren Hart
