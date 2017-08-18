@@ -1,91 +1,85 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 04/14] staging: typec: fusb302: Get max snk mv/ma/mw
- from device-properties
-Date: Thu, 17 Aug 2017 16:41:31 -0500
-Message-ID: <20170817214131.63vetzuove7dz5pi@rob-hp-laptop>
-References: <20170815200502.17339-1-hdegoede@redhat.com>
- <20170815200502.17339-5-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 4/4] platform/x86: wmi: Fix check for method instance number
+Date: Fri, 18 Aug 2017 15:20:36 +0300
+Message-ID: <CAHp75VdMv1fNHLKsuMTeoJFSf75Sh_1te_vZJ-iCddSEEXSHCQ@mail.gmail.com>
+References: <1502523858-25716-1-git-send-email-pali.rohar@gmail.com>
+ <1502523858-25716-5-git-send-email-pali.rohar@gmail.com> <20170817152431.GA19276@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170815200502.17339-5-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Yueyao (Nathan) Zhu" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170817152431.GA19276@fury>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Aug 15, 2017 at 10:04:52PM +0200, Hans de Goede wrote:
-> This is board specific info so it should come from board config, such
-> as devicetree.
-> 
-> I've chosen to prefix these with "fcs," treating them as fusb302 driver
-> specific for now. We may want to revisit this and replace these with
-> properties which are part of a (to be written) generic type-c controller
-> devicetree binding.
-> 
-> Since this commit adds new dt-properties it also adds devicetree-bindings
-> documentation (which so far was absent for the fusb302 driver).
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: "Yueyao (Nathan) Zhu" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Use micro... instead of mili...
-> -Add devicetree bindings documentation
-> ---
->  .../devicetree/bindings/usb/fcs,fusb302.txt        | 29 ++++++++++++++++++++++
->  drivers/staging/typec/fusb302/TODO                 |  4 +++
->  drivers/staging/typec/fusb302/fusb302.c            | 18 +++++++++++++-
->  3 files changed, 50 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> new file mode 100644
-> index 0000000..ffc6c87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> @@ -0,0 +1,29 @@
-> +Fairchild FUSB302 Type-C Port controllers
-> +
-> +Required properties :
-> +- compatible            : "fcs,fusb302"
-> +- reg                   : I2C slave address
-> +- interrupts            : Interrupt specifier
-> +
-> +Optional properties :
-> +- fcs,max-snk-microvolt : Maximum voltage to negotiate when configured as sink
-> +- fcs,max-snk-microamp  : Maximum current to negotiate when configured as sink
-> +- fcs,max-snk-microwatt : Maximum power to negotiate when configured as sink
-> +			  If this is less then max-snk-microvolt *
-> +			  max-snk-microamp then the configured current will
-> +			  be clamped.
-> +- fcs,operating-snk-microwatt :
+On Thu, Aug 17, 2017 at 6:24 PM, Darren Hart <dvhart@infradead.org> wrote:
+> On Sat, Aug 12, 2017 at 09:44:18AM +0200, Pali Roh=C3=A1r wrote:
+>> instance_count defines number of instances of data block and instance
+>> itself is indexed from zero, which means first instance has number 0.
+>> Therefore check for invalid instance should be non-strict inequality.
+>>
+>> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>
+> This is correct per the WMI specification. Pali, now that Andy has
+> applied 1-3 of this series, is that all the required driver updates?
+>
+> Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
 
-Might as well spell out sink.
+Pushed to testing, thanks!
 
-Otherwise,
+>
+>
+>> ---
+>>  drivers/platform/x86/wmi.c |    6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>> index e32ba57..0765b17 100644
+>> --- a/drivers/platform/x86/wmi.c
+>> +++ b/drivers/platform/x86/wmi.c
+>> @@ -218,7 +218,7 @@ acpi_status wmi_evaluate_method(const char *guid_str=
+ing, u8 instance,
+>>       if (!(block->flags & ACPI_WMI_METHOD))
+>>               return AE_BAD_DATA;
+>>
+>> -     if (block->instance_count < instance)
+>> +     if (block->instance_count <=3D instance)
+>>               return AE_BAD_PARAMETER;
+>>
+>>       input.count =3D 2;
+>> @@ -265,7 +265,7 @@ static acpi_status __query_block(struct wmi_block *w=
+block, u8 instance,
+>>       block =3D &wblock->gblock;
+>>       handle =3D wblock->acpi_device->handle;
+>>
+>> -     if (block->instance_count < instance)
+>> +     if (block->instance_count <=3D instance)
+>>               return AE_BAD_PARAMETER;
+>>
+>>       /* Check GUID is a data block */
+>> @@ -392,7 +392,7 @@ acpi_status wmi_set_block(const char *guid_string, u=
+8 instance,
+>>       block =3D &wblock->gblock;
+>>       handle =3D wblock->acpi_device->handle;
+>>
+>> -     if (block->instance_count < instance)
+>> +     if (block->instance_count <=3D instance)
+>>               return AE_BAD_PARAMETER;
+>>
+>>       /* Check GUID is a data block */
+>> --
+>> 1.7.9.5
+>>
+>>
+>
+> --
+> Darren Hart
+> VMware Open Source Technology Center
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +                          Minimum amount of power accepted from a sink
-> +			  when negotiating
-> +
-> +Example:
-> +
-> +fusb302: typec-portc@54 {
-> +	compatible = "fcs,fusb302";
-> +	reg = <0x54>;
-> +	interrupt-parent = <&nmi_intc>;
-> +	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +	fcs,max-snk-microvolt = <12000000>;
-> +	fcs,max-snk-microamp = <3000000>;
-> +	fcs,max-snk-microwatt = <36000000>;
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+With Best Regards,
+Andy Shevchenko
