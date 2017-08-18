@@ -1,201 +1,113 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: Add Package C-states residency info
-Date: Fri, 18 Aug 2017 18:07:33 +0530
-Message-ID: <1503059853-5118-1-git-send-email-rajneesh.bhardwaj@intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC v1 0/6] PMC/PUNIT IPC driver cleanup
+Date: Fri, 18 Aug 2017 15:44:57 +0300
+Message-ID: <CAHp75VdccT_K=sHOiYe_gASL6VVcZeQTsK+8bzt8kyg_EhcnSg@mail.gmail.com>
+References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:4165 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750846AbdHRMjz (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:37295 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750881AbdHRMo7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Aug 2017 08:39:55 -0400
+        Fri, 18 Aug 2017 08:44:59 -0400
+In-Reply-To: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 
-This patch introduces a new debugfs entry to read current Package C-state
-residency values and, one new kernel API to read the Package C-10 residency
-counter.
+On Tue, Aug 1, 2017 at 9:13 PM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
 
-Package C-state residency MSRs provide useful debug information about system
-idle states. In idle states system must enter deeper Package C-states.
+> Currently intel_pmc_ipc.c, intel_punit_ipc.c, intel_scu_ipc.c drivers imp=
+lements the same IPC features.
+> This code duplication could be avoided if we implement the IPC driver as =
+a single library and let custom
+> device drivers use API provided by generic driver. This patchset mainly a=
+ddresses this issue.
+>
+> For now, Since we don't have any good test platform for SCU, I am not pla=
+nning to modify intel_scu_ipc.c.
 
-For example, on Intel Skylake/Kabylake based systems one should expect more
-Package C-8 residency in "Idle Display On" scenarios compared to higher
-Package C-states. With a self refresh display panel we must expect even more
-deeper Package C-9/C-10 residencies indicating more power savings. Package
-C-states depend not only on Core C-States but also on various IP blocks
-power gating status and LTR values.
+It should be done as well, so, we might split it into logical parts, see be=
+low.
 
-For Intel Core SoCs Package C-10 entry is a must for deeper sleep states
-such as S0ix. "Suspend-to-idle"  should ideally take this path:
-PC0 -> PC10 -> S0ix. For S0ix debug, its logical to check for Package-C10
-residency if for some reason system fails to enter S0ix.
+> This patch-set addresses following issues(except #4) in intel_pmc_ipc and=
+ intel_punit_ipc drivers.
+>
+> 1. Intel_pmc_ipc.c driver does not use any resource managed(devm_*) calls=
+.
+> 2. In Intel_pmc_ipc.c driver, dependent devices like PUNIT, Telemetry and=
+ iTCO are created manually and uses lot of redundant buffer code.
+> 3. Code duplication related to IPC helper functions in both PMC and PUNIT=
+ IPC drivers.
+> 4. Global variable is used to store the IPC device structure and it is us=
+ed across all functions in intel_pmc_ipc.c and intel_punit_ipc.c.
+>
+> Patch #1, #2 fixes the issue #1.
+>
+> Patch #3 fixes the issue #2.
+>
+> Patch #4, #5, #6 fixes the issue #3.
+>
+> To fix issue #4 we might need to make changes to drivers that use IPC API=
+s. So I am not sure whether its worth the effort. Maintainers, let me know =
+your inputs.
+>
 
-Please refer to this link for MSR details:
-https://software.intel.com/sites/default/files/managed/22/0d/335592-sdm-vol-4.pdf
+> If we have to address it, then we might need to adapt to model similar to=
+ extcon framework.
+>
+> ipc_dev =3D intel_ipc_get_dev("intel_pmc_ipc");
+>
+> PMC IPC call would look like,
+>
+> intel_pmc_ipc_command(ipc_dev, cmd, sub, in, inlen, out, outlen)
 
-Usage:
-cat /sys/kernel/debug/pmc_core/package_cstate_residency
-Package C2       : 0xec2e21735f
-Package C3       : 0xc30113ba4
-Package C6       : 0x9ef4be15c5
-Package C7       : 0x1e011904
-Package C8       : 0x3c5653cfe5a
-Package C9       : 0x0
-Package C10      : 0x16fff4289
+Yep, where ipc_dev is an opaque pointer.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
----
- * Applied on top of "Make the driver PCH family agnostic" sent by Srinivas
- * Tested on 4.13-rc4 as well as on the "testing" branch of the
-   platform/drivers/x86. 
+> More info on adapted solution (for issue #1):
+> ----------------------------------------------
+>
+> A generic Intel IPC class driver has been implemented and all common IPC =
+helper functions has been moved to this driver. It exposes APIs to create I=
+PC device channel, send raw IPC comman and simple IPC commands. It also cre=
+ates device attribute to send IPC command from user space.
+>
+> API for creating a new IPC channel device is,
+>
+> struct intel_ipc_dev *devm_intel_ipc_dev_create(struct device *dev, const=
+ char *devname, struct intel_ipc_dev_cfg *cfg, struct intel_ipc_dev_ops *op=
+s)
+>
+> The IPC channel drivers (PUNIT/PMC/SCU) when creating a new device can co=
+nfigure their device params like register mapping, irq, irq-mode, channel t=
+ype, etc  using intel_ipc_dev_cfg and intel_ipc_dev_ops arguments. After a =
+new IPC channel device is created, we can use the APIs provided by generic =
+IPC device driver to implement the custom channel specific APIs.
+>
+> For example, after using this new model, PMC ipc comand send routine will=
+ look like,
+>
+> int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out, =
+u32 outlen)
+> {
+>     // this function is implemented in generic Intel IPC class driver.
+>     return ipc_dev_raw_cmd(ipcdev.pmc_ipc_dev, f(cmd, sub), in, inlen, ou=
+t, outlen, 0, 0);
+> }
+>
+> I am still testing the driver in different products. But posted it to get=
+ some early comments. I also welcome any PMC/PUNIT driver users to check th=
+ese patches in their product.
 
- arch/x86/include/asm/pmc_core.h       |  1 +
- drivers/platform/x86/intel_pmc_core.c | 74 +++++++++++++++++++++++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  1 +
- 3 files changed, 76 insertions(+)
+So, for me the steps of refactoring would look like following:
+1) create an IPC library with regmap API and devres framework in use;
+2) convert users one-by-one;
+3) remove old leftovers and APIs.
 
-diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm/pmc_core.h
-index d4855f11136d..99f48e63fafc 100644
---- a/arch/x86/include/asm/pmc_core.h
-+++ b/arch/x86/include/asm/pmc_core.h
-@@ -23,5 +23,6 @@
- 
- /* API to read SLP_S0_RESIDENCY counter */
- int intel_pmc_slp_s0_counter_read(u32 *data);
-+int intel_pkgc10_counter_read(u64 *data);
- 
- #endif /* _ASM_PMC_CORE_H */
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 17e08b42b0a9..5eea99f24b10 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -29,11 +29,24 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/pmc_core.h>
-+#include <asm/msr.h>
- 
- #include "intel_pmc_core.h"
- 
- static struct pmc_dev pmc;
- 
-+/* PKGC MSRs are common across Intel Core cpus */
-+static const struct pmc_bit_map msr_map[] = {
-+	{"Package C2",			MSR_PKG_C2_RESIDENCY},
-+	{"Package C3",			MSR_PKG_C3_RESIDENCY},
-+	{"Package C6",			MSR_PKG_C6_RESIDENCY},
-+	{"Package C7",			MSR_PKG_C7_RESIDENCY},
-+	{"Package C8",			MSR_PKG_C8_RESIDENCY},
-+	{"Package C9",			MSR_PKG_C9_RESIDENCY},
-+	{"Package C10",			MSR_PKG_C10_RESIDENCY},
-+	{},
-+};
-+
- static const struct pmc_bit_map spt_pll_map[] = {
- 	{"MIPI PLL",			SPT_PMC_BIT_MPHY_CMN_LANE0},
- 	{"GEN2 USB2PCIE2 PLL",		SPT_PMC_BIT_MPHY_CMN_LANE1},
-@@ -110,6 +123,7 @@ static const struct pmc_reg_map spt_reg_map = {
- 	.pfear_sts = spt_pfear_map,
- 	.mphy_sts = spt_mphy_map,
- 	.pll_sts = spt_pll_map,
-+	.msr_sts = msr_map,
- 	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
- 	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
- 	.regmap_length = SPT_PMC_MMIO_REG_LEN,
-@@ -147,6 +161,26 @@ static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
- }
- 
- /**
-+ * intel_pkgc10_counter_read() - Read Package C10 residency.
-+ * @data: Out param that contains current PC10 count by reading MSR 0x632
-+ *
-+ * MSR_PKG_C10_RESIDENCY counter counts at the same frequency as the TSC.
-+ * BIT 0:59 represent the value since the last reset that this package is in
-+ * processor specific C10 states.
-+ * BIT 63:60 are reserved.
-+ *
-+ * Return: an error code or 0 on success.
-+ */
-+int intel_pkgc10_counter_read(u64 *data)
-+{
-+	if (!data)
-+		return -EINVAL;
-+
-+	return rdmsrl_safe(MSR_PKG_C10_RESIDENCY, data);
-+}
-+EXPORT_SYMBOL_GPL(intel_pkgc10_counter_read);
-+
-+/**
-  * intel_pmc_slp_s0_counter_read() - Read SLP_S0 residency.
-  * @data: Out param that contains current SLP_S0 count.
-  *
-@@ -430,6 +464,39 @@ static const struct file_operations pmc_core_ltr_ignore_ops = {
- 	.release        = single_release,
- };
- 
-+static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+	const struct pmc_bit_map *map = pmcdev->map->msr_sts;
-+	u64 pcstate_count;
-+	int index, err;
-+
-+	for (index = 0; map[index].name ; index++) {
-+		err = rdmsrl_safe(map[index].bit_mask, &pcstate_count);
-+		if (err) {
-+			pr_debug("Failed to read %s residency MSR",
-+				 map[index].name);
-+			return err;
-+		}
-+		seq_printf(s, "%s\t : 0x%llx\n", map[index].name,
-+			   pcstate_count);
-+	}
-+
-+	return 0;
-+}
-+
-+static int pmc_core_pkgc_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, pmc_core_pkgc_show, inode->i_private);
-+}
-+
-+static const struct file_operations pmc_core_pkgc_ops = {
-+	.open           = pmc_core_pkgc_open,
-+	.read           = seq_read,
-+	.llseek         = seq_lseek,
-+	.release        = single_release,
-+};
-+
- static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
- {
- 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
-@@ -474,6 +541,13 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 	if (!file)
- 		goto err;
- 
-+	file = debugfs_create_file("package_cstate_residency",
-+				   S_IFREG | S_IRUGO, dir, pmcdev,
-+				   &pmc_core_pkgc_ops);
-+
-+	if (!file)
-+		goto err;
-+
- 	return 0;
- err:
- 	pmc_core_dbgfs_unregister(pmcdev);
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 3d225a9cc09f..4423b84c53c0 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -150,6 +150,7 @@ struct pmc_reg_map {
- 	const struct pmc_bit_map *pfear_sts;
- 	const struct pmc_bit_map *mphy_sts;
- 	const struct pmc_bit_map *pll_sts;
-+	const struct pmc_bit_map *msr_sts;
- 	const u32 slp_s0_offset;
- 	const u32 ltr_ignore_offset;
- 	const u32 base_address;
--- 
-2.7.4
+--=20
+With Best Regards,
+Andy Shevchenko
