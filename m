@@ -1,13 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC v1 2/6] platform/x86: intel_pmc_ipc: Use devm_* calls in
- driver probe
-Date: Fri, 18 Aug 2017 15:24:47 +0300
-Message-ID: <CAHp75VdFAJ0zfu-tCviurB6J4er4NB_RpW6Wc+1o7tp1qPc+DA@mail.gmail.com>
-References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com> <5147288461b861d1b956e1adc3f1d61192086c34.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
+ create dependent devices
+Date: Fri, 18 Aug 2017 15:29:53 +0300
+Message-ID: <CAHp75VcLs_+CcWMaBwR8ZMpByrNc74j7eF16K6ASF4NxaF0zHg@mail.gmail.com>
+References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com> <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5147288461b861d1b956e1adc3f1d61192086c34.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
@@ -15,29 +15,55 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Tue, Aug 1, 2017 at 9:13 PM,
 <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> This patch cleans up unnecessary free/alloc calls in this driver
-> by using devm_* calls.
 
->  static int ipc_plat_remove(struct platform_device *pdev)
+> Currently, we have lot of repetitive code in dependent device resource
+> allocation and device creation handling code. This logic can be improved if
+> we use MFD framework for dependent device creation. This patch adds this
+> support.
+
+> +static int ipc_create_pmc_devices(struct platform_device *pdev)
 >  {
-> -       struct resource *res;
+> -       int ret;
 > -
->         sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+> -       /* If we have ACPI based watchdog use that instead */
+> +       u8 n = 0;
+> +       struct mfd_cell *pmc_mfd_cells;
+> +
+> +       pmc_mfd_cells = devm_kzalloc(&pdev->dev,
+> +                       (sizeof(*pmc_mfd_cells) * PMC_IPC_MAX_MFD_BLOCK),
+> +                       GFP_KERNEL);
+> +       if (!pmc_mfd_cells)
+> +               return -ENOMEM;
+> +
+> +       /* Create PUNIT IPC MFD cell */
+> +       pmc_mfd_cells[n].name = PUNIT_DEVICE_NAME;
+> +       pmc_mfd_cells[n].id = -1;
+> +       pmc_mfd_cells[n].num_resources = ARRAY_SIZE(punit_ipc_resources);
+> +       pmc_mfd_cells[n].resources = punit_ipc_resources;
+> +       pmc_mfd_cells[n].ignore_resource_conflicts = 1;
 
-> -       free_irq(ipcdev.irq, &ipcdev);
+Please, use static variables instead of allocated on a heap.
 
-Can we get an IRQ at any time here?
+> +       n++;
+> +
+> +       /* If we have ACPI based watchdog use that instead, othewise create
+> +        * a MFD cell for iTCO watchdog*/
+>         if (!acpi_has_watchdog()) {
 
->         platform_device_unregister(ipcdev.tco_dev);
->         platform_device_unregister(ipcdev.punit_dev);
->         platform_device_unregister(ipcdev.telemetry_dev);
+> +               pmc_mfd_cells[n].name = TCO_DEVICE_NAME;
+> +               pmc_mfd_cells[n].id = -1;
+> +               pmc_mfd_cells[n].platform_data = &tco_info;
+> +               pmc_mfd_cells[n].pdata_size = sizeof(tco_info);
+> +               pmc_mfd_cells[n].num_resources =
+> +                       ARRAY_SIZE(watchdog_ipc_resources);
+> +               pmc_mfd_cells[n].resources = watchdog_ipc_resources;
+> +               pmc_mfd_cells[n].ignore_resource_conflicts = 1;
+> +               n++;
+>         }
 
->         ipcdev.dev = NULL;
->         return 0;
->  }
+...and here you do mfd_add_devices() instead of this stuff.
 
+Check how lpc_ich.c designed.
 
 -- 
 With Best Regards,
