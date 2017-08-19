@@ -1,41 +1,57 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/3] platform/dell-wmi: Update
- dell_wmi_check_descriptor_buffer() to new model
-Date: Fri, 18 Aug 2017 17:14:06 -0700
-Message-ID: <20170819001406.GA27074@fury>
-References: <cover.1501601667.git.luto@kernel.org>
- <e941330872d1a0811a390c80aa1fe817ec386d5f.1501601667.git.luto@kernel.org>
- <20170801154457.GB25574@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Bhumika Goyal <bhumirks@gmail.com>
+Subject: [PATCH 00/15] drivers: make device_type const
+Date: Sat, 19 Aug 2017 13:52:11 +0530
+Message-ID: <1503130946-2854-1-git-send-email-bhumirks__33222.3066398457$1503130987$gmane$org@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:46949 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751077AbdHSAOI (ORCPT
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:34266 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751101AbdHSIWv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Aug 2017 20:14:08 -0400
-Content-Disposition: inline
-In-Reply-To: <20170801154457.GB25574@pali>
+        Sat, 19 Aug 2017 04:22:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org
+To: julia.lawall@lip6.fr, bp@alien8.de, mchehab@kernel.org, daniel.vetter@intel.com, jani.nikula@linux.intel.com, seanpaul@chromium.org, airlied@linux.ie, g.liakhovetski@gmx.de, tomas.winkler@intel.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, peda@axentia.se, kishon@ti.com, bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com, dvhart@infradead.org, andy@infradead.org, ohad@wizery.com, bjorn.andersson@linaro.org, freude@de.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jth@kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, lduncan@suse.com, cleech@redhat.com, johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.orgheik
+Cc: Bhumika Goyal <bhumirks@gmail.com>
 
-On Tue, Aug 01, 2017 at 05:44:57PM +0200, Pali Rohár wrote:
-> On Tuesday 01 August 2017 08:37:27 Andy Lutomirski wrote:
-> > This converts dell_wmi_check_descriptor_buffer() to the new driver
-> > model interface and puts the interface version in dell_wmi_priv
-> > where it belongs.
-> > 
-> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> 
-> Looks good,
-> 
-> Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Make device_type const. Done using Coccinelle.
 
-Queued to testing.
+Bhumika Goyal (15):
+  EDAC: make device_type const
+  drm: make device_type const
+  [media] i2c: make device_type const
+  [media] rc: make device_type const
+  mei: make device_type const
+  mtd:  make device_type const
+  mux: make device_type const
+  PCI: make device_type const
+  phy: tegra: make device_type const
+  platform/x86: wmi: make device_type const
+  remoteproc: make device_type const
+  s390/zcrypt: make device_type const
+  scsi: make device_type const
+  staging: greybus: make device_type const
+  usb: make device_type const
+
+ drivers/edac/edac_mc_sysfs.c           | 8 ++++----
+ drivers/edac/i7core_edac.c             | 4 ++--
+ drivers/gpu/drm/drm_sysfs.c            | 2 +-
+ drivers/gpu/drm/ttm/ttm_module.c       | 2 +-
+ drivers/media/i2c/soc_camera/mt9t031.c | 2 +-
+ drivers/media/rc/rc-main.c             | 2 +-
+ drivers/misc/mei/bus.c                 | 2 +-
+ drivers/mtd/mtdcore.c                  | 2 +-
+ drivers/mux/mux-core.c                 | 2 +-
+ drivers/pci/endpoint/pci-epf-core.c    | 4 ++--
+ drivers/phy/tegra/xusb.c               | 4 ++--
+ drivers/platform/x86/wmi.c             | 6 +++---
+ drivers/remoteproc/remoteproc_core.c   | 2 +-
+ drivers/s390/crypto/ap_card.c          | 2 +-
+ drivers/s390/crypto/ap_queue.c         | 2 +-
+ drivers/scsi/fcoe/fcoe_sysfs.c         | 4 ++--
+ drivers/scsi/scsi_transport_iscsi.c    | 4 ++--
+ drivers/staging/greybus/gbphy.c        | 2 +-
+ drivers/usb/common/ulpi.c              | 2 +-
+ 19 files changed, 29 insertions(+), 29 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+1.9.1
