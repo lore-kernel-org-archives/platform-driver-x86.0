@@ -1,32 +1,40 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: reduce unnecessary messages
- for normal users
-Date: Fri, 18 Aug 2017 16:25:53 -0700
-Message-ID: <20170818232553.GA13618@fury>
-References: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
+Subject: Re: [PATCH 2/3] platform/dell-wmi: Update
+ dell_wmi_check_descriptor_buffer() to new model
+Date: Fri, 18 Aug 2017 17:14:06 -0700
+Message-ID: <20170819001406.GA27074@fury>
+References: <cover.1501601667.git.luto@kernel.org>
+ <e941330872d1a0811a390c80aa1fe817ec386d5f.1501601667.git.luto@kernel.org>
+ <20170801154457.GB25574@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:46469 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:46949 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751566AbdHRXZz (ORCPT
+        with ESMTP id S1751077AbdHSAOI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Aug 2017 19:25:55 -0400
+        Fri, 18 Aug 2017 20:14:08 -0400
 Content-Disposition: inline
-In-Reply-To: <1500609408-30745-1-git-send-email-alex.hung@canonical.com>
+In-Reply-To: <20170801154457.GB25574@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 08:56:48PM -0700, Alex Hung wrote:
-> Unsupported events is only useful for developers and does not meaningful
-> for users. Using dev_dbg makes more sense and reduces noise in kernel
-> messages.
+On Tue, Aug 01, 2017 at 05:44:57PM +0200, Pali Rohár wrote:
+> On Tuesday 01 August 2017 08:37:27 Andy Lutomirski wrote:
+> > This converts dell_wmi_check_descriptor_buffer() to the new driver
+> > model interface and puts the interface version in dell_wmi_priv
+> > where it belongs.
+> > 
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
 > 
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> Looks good,
+> 
+> Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 
-Apologies for the delay Alex, both now queued to testing.
+Queued to testing.
 
 -- 
 Darren Hart
