@@ -1,41 +1,39 @@
-From: Bhumika Goyal <bhumirks@gmail.com>
-Subject: [PATCH 15/15] usb: make device_type const
-Date: Sat, 19 Aug 2017 13:52:26 +0530
-Message-ID: <1503130946-2854-16-git-send-email-bhumirks__15903.8916732699$1503131289$gmane$org@gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 01/15] EDAC: make device_type const
+Date: Sun, 20 Aug 2017 13:29:55 +0200
+Message-ID: <20170820112954.bi5oiebbm3i4gtru@pd.tnic>
 References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
+ <1503130946-2854-2-git-send-email-bhumirks@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:33946 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751742AbdHSI1s (ORCPT
+Received: from mail.skyhub.de ([5.9.137.197]:39844 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752769AbdHTLwG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 19 Aug 2017 04:27:48 -0400
-In-Reply-To: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
+        Sun, 20 Aug 2017 07:52:06 -0400
+Content-Disposition: inline
+In-Reply-To: <1503130946-2854-2-git-send-email-bhumirks@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: julia.lawall@lip6.fr, bp@alien8.de, mchehab@kernel.org, daniel.vetter@intel.com, jani.nikula@linux.intel.com, seanpaul@chromium.org, airlied@linux.ie, g.liakhovetski@gmx.de, tomas.winkler@intel.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, peda@axentia.se, kishon@ti.com, bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com, dvhart@infradead.org, andy@infradead.org, ohad@wizery.com, bjorn.andersson@linaro.org, freude@de.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jth@kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, lduncan@suse.com, cleech@redhat.com, johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.orgheik
-Cc: Bhumika Goyal <bhumirks@gmail.com>
+To: Bhumika Goyal <bhumirks@gmail.com>
+Cc: julia.lawall@lip6.fr, mchehab@kernel.org, daniel.vetter@intel.com, jani.nikula@linux.intel.com, seanpaul@chromium.org, airlied@linux.ie, g.liakhovetski@gmx.de, tomas.winkler@intel.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, peda@axentia.se, kishon@ti.com, bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com, dvhart@infradead.org, andy@infradead.org, ohad@wizery.com, bjorn.andersson@linaro.org, freude@de.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jth@kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, lduncan@suse.com, cleech@redhat.com, johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.inte
 
-Make this const as it is only stored in the type field of a device
-structure, which is const.
-Done using Coccinelle.
+On Sat, Aug 19, 2017 at 01:52:12PM +0530, Bhumika Goyal wrote:
+> Make these const as they are only stored in the type field of a device
+> structure, which is const.
+> Done using Coccinelle.
+> 
+> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
+> ---
+>  drivers/edac/edac_mc_sysfs.c | 8 ++++----
+>  drivers/edac/i7core_edac.c   | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 
-Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
----
- drivers/usb/common/ulpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks.
 
-diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
-index 930e8f3..4aa5195 100644
---- a/drivers/usb/common/ulpi.c
-+++ b/drivers/usb/common/ulpi.c
-@@ -135,7 +135,7 @@ static void ulpi_dev_release(struct device *dev)
- 	kfree(to_ulpi_dev(dev));
- }
- 
--static struct device_type ulpi_dev_type = {
-+static const struct device_type ulpi_dev_type = {
- 	.name = "ulpi_device",
- 	.groups = ulpi_dev_attr_groups,
- 	.release = ulpi_dev_release,
 -- 
-1.9.1
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
