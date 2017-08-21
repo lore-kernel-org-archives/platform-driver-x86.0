@@ -1,24 +1,33 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: Re: [PATCH 5/6] platform/x86: make device_attribute const
-Date: Mon, 21 Aug 2017 10:22:05 -0300
-Message-ID: <20170821132204.fhm5hu432l2jiffj@siri.cascardo.eti.br>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 4/6] qlogic: make device_attribute const
+Date: Mon, 21 Aug 2017 10:25:06 -0700 (PDT)
+Message-ID: <20170821.102506.1119648270525550825.davem@davemloft.net>
 References: <1503315792-14837-1-git-send-email-bhumirks@gmail.com>
- <1503315792-14837-6-git-send-email-bhumirks@gmail.com>
+        <1503315792-14837-5-git-send-email-bhumirks@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from trem.minaslivre.org ([148.251.208.85]:60446 "EHLO
-        grilo.cascardo.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753538AbdHUN3F (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2017 09:29:05 -0400
-Content-Disposition: inline
-In-Reply-To: <1503315792-14837-6-git-send-email-bhumirks@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bhumika Goyal <bhumirks@gmail.com>
-Cc: julia.lawall@lip6.fr, rjw@rjwysocki.net, lenb@kernel.org, jbacik@fb.com, jikos@kernel.org, benjamin.tissoires@redhat.com, manish.chopra@cavium.com, rahul.verma@cavium.com, Dept-GELinuxNICDev@cavium.com, harish.patil@cavium.com, don@syst.com.br, dvhart@infradead.org, andy@infradead.org, sre@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, nbd-general@lists.sourceforge.net, linux-input@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1503315792-14837-5-git-send-email-bhumirks@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhumirks@gmail.com
+Cc: julia.lawall@lip6.fr, rjw@rjwysocki.net, lenb@kernel.org, jbacik@fb.com, jikos@kernel.org, benjamin.tissoires@redhat.com, manish.chopra@cavium.com, rahul.verma@cavium.com, Dept-GELinuxNICDev@cavium.com, harish.patil@cavium.com, cascardo@holoscopio.com, don@syst.com.br, dvhart@infradead.org, andy@infradead.org, sre@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, nbd-general@lists.sourceforge.net, linux-input@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-For classmate-laptop.c
+From: Bhumika Goyal <bhumirks@gmail.com>
+Date: Mon, 21 Aug 2017 17:13:10 +0530
 
-Acked-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+> Make these const as they are only passed as an argument to the
+> function device_create_file and device_remove_file and the corresponding
+> arguments are of type const.
+> Done using Coccinelle
+> 
+> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
+
+Applied.
+
+But I would seriously suggest that when you have to cross subsystems
+like this, just send the patches individually to the respective
+maintainers rather than trying to make a "series" out of it.
+
+Thanks.
