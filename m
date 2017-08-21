@@ -1,46 +1,72 @@
-From: Rachel Sanders <reccruitmenttrrsrllp@gmail.com>
-Subject: RVNDF
-Date: Mon, 21 Aug 2017 12:20:50 +0100
-Message-ID: <CAC6TXgG-965Q=z0u2VR45o6MQ97RPhz-9RWazXFyYFP=OEMW_Q@mail.gmail.com>
-Reply-To: recruitmentstafingsolutionllp@gmail.com
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="f403045f561cd4f258055741abf4"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:37060 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750853AbdHULUv (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2017 07:20:51 -0400
-Received: by mail-wr0-f196.google.com with SMTP id z91so17357183wrc.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2017 04:20:51 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+From: Bhumika Goyal <bhumirks@gmail.com>
+Subject: [PATCH 0/6] drivers:  make device_attribute const
+Date: Mon, 21 Aug 2017 17:13:06 +0530
+Message-ID: <1503315792-14837-1-git-send-email-bhumirks@gmail.com>
+Return-path: <linux-block-owner@vger.kernel.org>
+Sender: linux-block-owner@vger.kernel.org
+To: julia.lawall@lip6.fr, rjw@rjwysocki.net, lenb@kernel.org, jbacik@fb.com, jikos@kernel.org, benjamin.tissoires@redhat.com, manish.chopra@cavium.com, rahul.verma@cavium.com, Dept-GELinuxNICDev@cavium.com, harish.patil@cavium.com, cascardo@holoscopio.com, don@syst.com.br, dvhart@infradead.org, andy@infradead.org, sre@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, nbd-general@lists.sourceforge.net, linux-input@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Bhumika Goyal <bhumirks@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
---f403045f561cd4f258055741abf4
-Content-Type: text/plain; charset="UTF-8"
+Make these const. Done using Coccinelle.
+
+@match disable optional_qualifier@
+identifier s;
+@@
+static struct device_attribute s = {...};
+
+@ref@
+position p;
+identifier match.s;
+@@
+s@p
+
+@good1@
+identifier match.s;
+expression e1;
+position ref.p;
+@@
+device_remove_file(e1,&s@p,...)
+
+@good2@
+identifier match.s;
+expression e1;
+position ref.p;
+@@
+device_create_file(e1,&s@p,...)
 
 
+@bad depends on  !good1 && !good2@
+position ref.p;
+identifier match.s;
+@@
+s@p
 
---f403045f561cd4f258055741abf4
-Content-Type: text/plain; charset="US-ASCII"; name="Help.txt"
-Content-Disposition: attachment; filename="Help.txt"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: file0
+@depends on forall !bad disable optional_qualifier@
+identifier match.s;
+@@
+static
++ const
+struct device_attribute s;
 
-SGVsbG8sDQoNCk15IG5hbWUgaXMgUmFjaGVsIFNhbmRlcnMuIEkgYW0gYSByZWNydWl0bWVudCBj
-b25zdWx0YW50IGF0IFJlY3J1aXRtZW50IFN0YWZmaW5nIFNvbHV0aW9ucyBMTFAuIFdlIGFyZSBy
-ZWNydWl0aW5nIHN0YWZmcyBvbiBiZWhhbGYgb2Ygb3VyIGNsaWVudCBsb2NhdGVkIGluIHRoZSBV
-bml0ZWQgS2luZ2RvbSBvbiBhIGRpcmVjdCBoaXJlIGJhc2lzLg0KDQpJIGhhdmUgY2hlY2tlZCB5
-b3VyIHByb2ZpbGUgZnJvbSBMaW5rZWRJbiBhbmQgSSB3aXNoIHRvIGludml0ZSB5b3UgdG8gYXBw
-bHkgZm9yIHRoZSBvbmdvaW5nIGpvYiB2YWNhbmN5IHJlbGF0ZWQgdG8geW91ciBleHBlcmllbmNl
-LiBLaW5kbHksIGNvbnRhY3QgbWUgZm9yIHRoZSBkZXRhaWxzIG9mIHRoZSBvbmdvaW5nIHZhY2Fu
-Y3kgaWYgeW91IGFyZSBpbnRlcmVzdGVkIGluIHdvcmtpbmcgYXQgdGhlaXIgZmFjaWxpdHkgaW4g
-VUsuIFBsZWFzZSwgaW5jbHVkZSBjb3B5IG9mIHlvdXIgbW9zdCByZWNlbnQgQ1Ygd2hlbiB5b3Ug
-cmVwbHkuIFlvdSBzaG91bGQgc3VibWl0IHlvdXIgQ1YgdG8gdGhpcyBlLW1haWwgYWRkcmVzczog
-cmVjcnVpdG1lbnRzdGFmaW5nc29sdXRpb25sbHBAZ21haWwuY29tDQoNClNpbmNlcmVseSwNCg0K
-UmFjaGVsIFNhbmRlcnMNClJlY3J1aXRtZW50IENvbnN1bHRhbnQNClJlY3J1aXRtZW50IFN0YWZm
-aW5nIFNvbHV0aW9ucyBMTFANClRoZSBBc3BlbiBCdWlsZGluZywgDQpWYW50YWdlIFBvaW50IEJ1
-c2luZXNzIFZpbGxhZ2UsIE1pdGNoZWxkZWFuLCANCkdsb3VjZXN0ZXJzaGlyZSwgR0wxNyAwREQN
-CkNvbXBhbnkgTm86IE9DMzUyMTU2DQpFbWFpbDogcmVjcnVpdG1lbnRzdGFmaW5nc29sdXRpb25s
-bHBAZ21haWwuY29t
---f403045f561cd4f258055741abf4--
+Bhumika Goyal (6):
+  ACPI: make device_attribute const
+  nbd: make device_attribute const
+  hid: make device_attribute const
+  qlogic:  make device_attribute const
+  platform/x86: make device_attribute const
+  power: supply: make device_attribute const
+
+ drivers/acpi/battery.c                               | 2 +-
+ drivers/acpi/sbs.c                                   | 2 +-
+ drivers/block/nbd.c                                  | 2 +-
+ drivers/hid/hid-core.c                               | 2 +-
+ drivers/net/ethernet/qlogic/netxen/netxen_nic_main.c | 4 ++--
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_sysfs.c    | 6 +++---
+ drivers/platform/x86/classmate-laptop.c              | 6 +++---
+ drivers/platform/x86/intel-rst.c                     | 4 ++--
+ drivers/power/supply/olpc_battery.c                  | 2 +-
+ 9 files changed, 15 insertions(+), 15 deletions(-)
+
+-- 
+1.9.1
