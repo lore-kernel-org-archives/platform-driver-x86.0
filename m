@@ -1,44 +1,48 @@
-From: Bhumika Goyal <bhumirks@gmail.com>
-Subject: Re: [PATCH 4/6] qlogic: make device_attribute const
-Date: Mon, 21 Aug 2017 22:56:56 +0530
-Message-ID: <CAOH+1jEieKFo0=+xb-8FUJgaQpa_FNyvipCuokeFQmYANby2iw@mail.gmail.com>
-References: <1503315792-14837-1-git-send-email-bhumirks@gmail.com>
- <1503315792-14837-5-git-send-email-bhumirks@gmail.com> <20170821.102506.1119648270525550825.davem@davemloft.net>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 06/15] mtd:  make device_type const
+Date: Mon, 21 Aug 2017 22:12:23 +0200
+Message-ID: <20170821221223.0a44fe32@bbrezillon>
+References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
+        <1503130946-2854-7-git-send-email-bhumirks@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-io0-f193.google.com ([209.85.223.193]:38057 "EHLO
-        mail-io0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753913AbdHUR06 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2017 13:26:58 -0400
-In-Reply-To: <20170821.102506.1119648270525550825.davem@davemloft.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Miller <davem@davemloft.net>
-Cc: Julia Lawall <julia.lawall@lip6.fr>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, jbacik@fb.com, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, manish.chopra@cavium.com, rahul.verma@cavium.com, Dept-GELinuxNICDev@cavium.com, harish.patil@cavium.com, cascardo@holoscopio.com, don@syst.com.br, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org, nbd-general@lists.sourceforge.net, linux-input@vger.kernel.org, netdev@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux PM <linux-pm@vg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1503130946-2854-7-git-send-email-bhumirks@gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Bhumika Goyal <bhumirks@gmail.com>
+Cc: julia.lawall@lip6.fr, bp@alien8.de, mchehab@kernel.org, daniel.vetter@intel.com, jani.nikula@linux.intel.com, seanpaul@chromium.org, airlied@linux.ie, g.liakhovetski@gmx.de, tomas.winkler@intel.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, peda@axentia.se, kishon@ti.com, bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com, dvhart@infradead.org, andy@infradead.org, ohad@wizery.com, bjorn.andersson@linaro.org, freude@de.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jth@kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, lduncan@suse.com, cleech@redhat.com, johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux-edac@vger
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 21, 2017 at 10:55 PM, David Miller <davem@davemloft.net> wrote:
-> From: Bhumika Goyal <bhumirks@gmail.com>
-> Date: Mon, 21 Aug 2017 17:13:10 +0530
->
->> Make these const as they are only passed as an argument to the
->> function device_create_file and device_remove_file and the corresponding
->> arguments are of type const.
->> Done using Coccinelle
->>
->> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
->
-> Applied.
->
-> But I would seriously suggest that when you have to cross subsystems
-> like this, just send the patches individually to the respective
-> maintainers rather than trying to make a "series" out of it.
->
+Le Sat, 19 Aug 2017 13:52:17 +0530,
+Bhumika Goyal <bhumirks@gmail.com> a écrit :
 
-Yes, noted. Thanks for the pointer.
+> Make this const as it is only stored in the type field of a device
+> structure, which is const.
+> Done using Coccinelle.
+> 
+
+Applied to l2-mtd/master.
 
 Thanks,
-Bhumika
 
-> Thanks.
+Boris
+
+> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
+> ---
+>  drivers/mtd/mtdcore.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index f872a99..e7ea842 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -340,7 +340,7 @@ static ssize_t mtd_bbtblocks_show(struct device *dev,
+>  };
+>  ATTRIBUTE_GROUPS(mtd);
+>  
+> -static struct device_type mtd_devtype = {
+> +static const struct device_type mtd_devtype = {
+>  	.name		= "mtd",
+>  	.groups		= mtd_groups,
+>  	.release	= mtd_release,
