@@ -1,76 +1,53 @@
 From: sathya <sathyaosid@gmail.com>
-Subject: Re: [RFC v1 3/6] platform/x86: intel_pmc_ipc: Use MFD framework to
- create dependent devices
-Date: Mon, 21 Aug 2017 22:02:31 -0700
-Message-ID: <1b46f01c-9cc8-3541-2f6d-f42c89c627ee@gmail.com>
+Subject: Re: [RFC v1 2/6] platform/x86: intel_pmc_ipc: Use devm_* calls in
+ driver probe
+Date: Mon, 21 Aug 2017 22:05:09 -0700
+Message-ID: <55cbf2a1-b5c6-c320-a8b6-4475680cdb3e@gmail.com>
 References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <0699a0a5114ae563e6d51ab9352de591779452a4.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VcLs_+CcWMaBwR8ZMpByrNc74j7eF16K6ASF4NxaF0zHg@mail.gmail.com>
+ <5147288461b861d1b956e1adc3f1d61192086c34.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAHp75VdFAJ0zfu-tCviurB6J4er4NB_RpW6Wc+1o7tp1qPc+DA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcLs_+CcWMaBwR8ZMpByrNc74j7eF16K6ASF4NxaF0zHg@mail.gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pf0-f194.google.com ([209.85.192.194]:33213 "EHLO
+        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750899AbdHVFFL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 22 Aug 2017 01:05:11 -0400
+In-Reply-To: <CAHp75VdFAJ0zfu-tCviurB6J4er4NB_RpW6Wc+1o7tp1qPc+DA@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andy,
+Hi,
 
 
-On 08/18/2017 05:29 AM, Andy Shevchenko wrote:
+On 08/18/2017 05:24 AM, Andy Shevchenko wrote:
 > On Tue, Aug 1, 2017 at 9:13 PM,
 > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->> Currently, we have lot of repetitive code in dependent device resource
->> allocation and device creation handling code. This logic can be improved if
->> we use MFD framework for dependent device creation. This patch adds this
->> support.
->> +static int ipc_create_pmc_devices(struct platform_device *pdev)
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> This patch cleans up unnecessary free/alloc calls in this driver
+>> by using devm_* calls.
+>>   static int ipc_plat_remove(struct platform_device *pdev)
 >>   {
->> -       int ret;
+>> -       struct resource *res;
 >> -
->> -       /* If we have ACPI based watchdog use that instead */
->> +       u8 n = 0;
->> +       struct mfd_cell *pmc_mfd_cells;
->> +
->> +       pmc_mfd_cells = devm_kzalloc(&pdev->dev,
->> +                       (sizeof(*pmc_mfd_cells) * PMC_IPC_MAX_MFD_BLOCK),
->> +                       GFP_KERNEL);
->> +       if (!pmc_mfd_cells)
->> +               return -ENOMEM;
->> +
->> +       /* Create PUNIT IPC MFD cell */
->> +       pmc_mfd_cells[n].name = PUNIT_DEVICE_NAME;
->> +       pmc_mfd_cells[n].id = -1;
->> +       pmc_mfd_cells[n].num_resources = ARRAY_SIZE(punit_ipc_resources);
->> +       pmc_mfd_cells[n].resources = punit_ipc_resources;
->> +       pmc_mfd_cells[n].ignore_resource_conflicts = 1;
-> Please, use static variables instead of allocated on a heap.
-I will follow the model used in lpc_ich.c. Will fix it in next version.
+>>          sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+>> -       free_irq(ipcdev.irq, &ipcdev);
+> Can we get an IRQ at any time here?
+Yes, if the ipc_plat_probe() is successful then ipcdev.irq will have 
+valid IRQ in all cases.
 >
->> +       n++;
->> +
->> +       /* If we have ACPI based watchdog use that instead, othewise create
->> +        * a MFD cell for iTCO watchdog*/
->>          if (!acpi_has_watchdog()) {
->> +               pmc_mfd_cells[n].name = TCO_DEVICE_NAME;
->> +               pmc_mfd_cells[n].id = -1;
->> +               pmc_mfd_cells[n].platform_data = &tco_info;
->> +               pmc_mfd_cells[n].pdata_size = sizeof(tco_info);
->> +               pmc_mfd_cells[n].num_resources =
->> +                       ARRAY_SIZE(watchdog_ipc_resources);
->> +               pmc_mfd_cells[n].resources = watchdog_ipc_resources;
->> +               pmc_mfd_cells[n].ignore_resource_conflicts = 1;
->> +               n++;
->>          }
-> ...and here you do mfd_add_devices() instead of this stuff.
+>>          platform_device_unregister(ipcdev.tco_dev);
+>>          platform_device_unregister(ipcdev.punit_dev);
+>>          platform_device_unregister(ipcdev.telemetry_dev);
+>>          ipcdev.dev = NULL;
+>>          return 0;
+>>   }
 >
-> Check how lpc_ich.c designed.
-Will fix it in next version.
->
-
 -
 Sathya
