@@ -1,48 +1,59 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 06/15] mtd:  make device_type const
-Date: Mon, 21 Aug 2017 22:12:23 +0200
-Message-ID: <20170821221223.0a44fe32@bbrezillon>
-References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
-        <1503130946-2854-7-git-send-email-bhumirks@gmail.com>
+From: sathya <sathyaosid@gmail.com>
+Subject: Re: [RFC v1 1/6] platform/x86: intel_pmc_ipc: Fix error handling in
+ ipc_pci_probe()
+Date: Mon, 21 Aug 2017 22:01:06 -0700
+Message-ID: <37f8b893-b93a-dbd5-dde7-6c96b3b9ab1a@gmail.com>
+References: <cover.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <5d15388eeb82aed7839b6d842c26168a935c915a.1501610760.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAHp75VeEmafhdju6Ekq1syqb7ir2Ntov7Ypbby8bFDfKPQ8+pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1503130946-2854-7-git-send-email-bhumirks@gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Bhumika Goyal <bhumirks@gmail.com>
-Cc: julia.lawall@lip6.fr, bp@alien8.de, mchehab@kernel.org, daniel.vetter@intel.com, jani.nikula@linux.intel.com, seanpaul@chromium.org, airlied@linux.ie, g.liakhovetski@gmx.de, tomas.winkler@intel.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, peda@axentia.se, kishon@ti.com, bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com, dvhart@infradead.org, andy@infradead.org, ohad@wizery.com, bjorn.andersson@linaro.org, freude@de.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jth@kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, lduncan@suse.com, cleech@redhat.com, johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux-edac@vger
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pg0-f65.google.com ([74.125.83.65]:38162 "EHLO
+        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751043AbdHVFBJ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 22 Aug 2017 01:01:09 -0400
+In-Reply-To: <CAHp75VeEmafhdju6Ekq1syqb7ir2Ntov7Ypbby8bFDfKPQ8+pw@mail.gmail.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-Le Sat, 19 Aug 2017 13:52:17 +0530,
-Bhumika Goyal <bhumirks@gmail.com> a écrit :
+Hi Andy,
 
-> Make this const as it is only stored in the type field of a device
-> structure, which is const.
-> Done using Coccinelle.
-> 
 
-Applied to l2-mtd/master.
+On 08/18/2017 05:22 AM, Andy Shevchenko wrote:
+> On Tue, Aug 1, 2017 at 9:13 PM,
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> This patch adds proper error handling for failure cases in
+>> ipc_pci_probe() function.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_ipc.c | 23 ++++++++++++++++++-----
+>>   1 file changed, 18 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+>> index bb792a5..7b65237 100644
+>> --- a/drivers/platform/x86/intel_pmc_ipc.c
+>> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+>> @@ -489,33 +489,46 @@ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>
+>>          ret = pci_enable_device(pdev);
+>>          if (ret)
+>> -               return ret;
+>> +               goto release_device;
+> Instead of doing this way and ping-ponging code in the same series,
+> better to switch to managed PCI functions in the first place.
+ok. I will merge this patch and "Use devm_* calls in driver probe" patch 
+into a single patch.
 
-Thanks,
+>
 
-Boris
-
-> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
-> ---
->  drivers/mtd/mtdcore.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> index f872a99..e7ea842 100644
-> --- a/drivers/mtd/mtdcore.c
-> +++ b/drivers/mtd/mtdcore.c
-> @@ -340,7 +340,7 @@ static ssize_t mtd_bbtblocks_show(struct device *dev,
->  };
->  ATTRIBUTE_GROUPS(mtd);
->  
-> -static struct device_type mtd_devtype = {
-> +static const struct device_type mtd_devtype = {
->  	.name		= "mtd",
->  	.groups		= mtd_groups,
->  	.release	= mtd_release,
+-
+Sathya
