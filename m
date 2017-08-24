@@ -1,47 +1,57 @@
-From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 15/15] usb: make device_type const
-Date: Tue, 22 Aug 2017 15:55:17 +0300
-Message-ID: <20170822125517.GA27604@kuha.fi.intel.com>
-References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
- <1503130946-2854-16-git-send-email-bhumirks@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503130946-2854-16-git-send-email-bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, tomas.winkler-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, freude-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org, schwidefsky-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org, heiko.carstens-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org, jth-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, lduncan-IBi9RG/b67k@public.gmane.org, cleech-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linu
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v2 0/3] Dollar Cove TI PMIC support for Intel Cherry Trail
+Date: Thu, 24 Aug 2017 10:11:38 +0200
+Message-ID: <20170824081141.5018-1-tiwai@suse.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Aug 19, 2017 at 01:52:26PM +0530, Bhumika Goyal wrote:
-> Make this const as it is only stored in the type field of a device
-> structure, which is const.
-> Done using Coccinelle.
-> 
-> Signed-off-by: Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi,
 
-Acked-by: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+this is the revised patch set to add the support for Dollar Cove TI
+PMIC found on some Intel Cherry Trail laptops / tablets.  All drivers
+are based on the original code from Intel downstream patches, with
+lots of rewrites and cleanups.  MFD driver is implemented as a
+stand-alone like a few other variants, and the input driver got a diet
+in a minimalistic form.
 
-> ---
->  drivers/usb/common/ulpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
-> index 930e8f3..4aa5195 100644
-> --- a/drivers/usb/common/ulpi.c
-> +++ b/drivers/usb/common/ulpi.c
-> @@ -135,7 +135,7 @@ static void ulpi_dev_release(struct device *dev)
->  	kfree(to_ulpi_dev(dev));
->  }
->  
-> -static struct device_type ulpi_dev_type = {
-> +static const struct device_type ulpi_dev_type = {
->  	.name = "ulpi_device",
->  	.groups = ulpi_dev_attr_groups,
->  	.release = ulpi_dev_release,
+The patch set has been tested on ASUS E100H and E200H, as well as on
+HP x210.
 
-Thanks,
+v1->v2:
+- Minor cleanups in mfd driver code as suggested by Andy
+- Move power-button driver to platform/x86, driver renames accordingly
+- Add missing wake-irq cleanup to power-button driver
+- get_raw_temp cleanup in opregion driver, mention about register
+  endianess
+
+
+thanks,
+
+Takashi
+
+===
+
+Takashi Iwai (3):
+  mfd: Add support for Cherry Trail Dollar Cove TI PMIC
+  platform/x86: Add support for Dollar Cove TI power button
+  ACPI / PMIC: Add opregion driver for Intel Dollar Cove TI PMIC
+
+ drivers/acpi/Kconfig                      |   6 +
+ drivers/acpi/Makefile                     |   1 +
+ drivers/acpi/pmic/intel_pmic_dc_ti.c      | 139 +++++++++++++++++++++++
+ drivers/mfd/Kconfig                       |  13 +++
+ drivers/mfd/Makefile                      |   1 +
+ drivers/mfd/intel_soc_pmic_dc_ti.c        | 182 ++++++++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig              |   8 ++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_dc_ti_pwrbtn.c |  96 ++++++++++++++++
+ 9 files changed, 447 insertions(+)
+ create mode 100644 drivers/acpi/pmic/intel_pmic_dc_ti.c
+ create mode 100644 drivers/mfd/intel_soc_pmic_dc_ti.c
+ create mode 100644 drivers/platform/x86/intel_dc_ti_pwrbtn.c
 
 -- 
-heikki
+2.14.0
