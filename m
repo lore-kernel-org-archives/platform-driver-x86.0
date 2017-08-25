@@ -1,78 +1,68 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 02/15] drm: make device_type const
-Date: Fri, 25 Aug 2017 15:36:24 +0200
-Message-ID: <20170825133623.3jbkpvq5k62rabf5@phenom.ffwll.local>
-References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
- <1503130946-2854-3-git-send-email-bhumirks@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1503130946-2854-3-git-send-email-bhumirks@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Bhumika Goyal <bhumirks@gmail.com>
-Cc: heikki.krogerus@linux.intel.com, airlied@linux.ie, linux-pci@vger.kernel.org, heiko.carstens@de.ibm.com, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, linux-mtd@lists.infradead.org, daniel.vetter@intel.com, kishon@ti.com, freude@de.ibm.com, boris.brezillon@free-electrons.com, jejb@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, richard@nod.at, jonathanh@nvidia.com, marek.vasut@gmail.com, fcoe-devel@open-fcoe.org, dvhart@infradead.org, tomas.winkler@intel.com, open-iscsi@googlegroups.com, linux-media@vger.kernel.org, ohad@wizery.com, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, linux-remoteproc@vger.kernel.org, johan@kernel.org, jani.nikula@linux.intel.com, julia.lawall@lip6.fr, seanpaul@chromium.org, bhelgaas@google.com, mchehab@kernel.org, linux-edac@vger.kernel.org, cleech@redhat.com, jth@
-List-Id: platform-driver-x86.vger.kernel.org
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v3 0/3] Dollar Cove TI PMIC support for Intel Cherry Trail
+Date: Fri, 25 Aug 2017 15:44:40 +0200
+Message-ID: <20170825134443.14843-1-tiwai@suse.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx2.suse.de ([195.135.220.15]:33557 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1754825AbdHYNor (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 25 Aug 2017 09:44:47 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Aug 19, 2017 at 01:52:13PM +0530, Bhumika Goyal wrote:
-> Make these const as they are only stored in the type field of a device
-> structure, which is const.
-> Done using Coccinelle.
+Hi,
 
-I can't apply this, it's missing your s-o-b line. You can just replay with
-that.
+this is the revised patch set to add the support for Dollar Cove TI
+PMIC found on some Intel Cherry Trail laptops / tablets.  All drivers
+are based on the original code from Intel downstream patches, with
+lots of rewrites and cleanups.  MFD driver is implemented as a
+stand-alone like a few other variants, and the input driver got a diet
+in a minimalistic form.
 
-Thanks, Daniel
+The patch set has been tested on ASUS E100H and E200H, as well as on
+HP x210.
 
-> ---
->  drivers/gpu/drm/drm_sysfs.c      | 2 +-
->  drivers/gpu/drm/ttm/ttm_module.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
-> index 1c5b5ce..84e4ebe 100644
-> --- a/drivers/gpu/drm/drm_sysfs.c
-> +++ b/drivers/gpu/drm/drm_sysfs.c
-> @@ -39,7 +39,7 @@
->   * drm_connector_unregister().
->   */
->  
-> -static struct device_type drm_sysfs_device_minor = {
-> +static const struct device_type drm_sysfs_device_minor = {
->  	.name = "drm_minor"
->  };
->  
-> diff --git a/drivers/gpu/drm/ttm/ttm_module.c b/drivers/gpu/drm/ttm/ttm_module.c
-> index 66fc639..e6604e0 100644
-> --- a/drivers/gpu/drm/ttm/ttm_module.c
-> +++ b/drivers/gpu/drm/ttm/ttm_module.c
-> @@ -37,7 +37,7 @@
->  static DECLARE_WAIT_QUEUE_HEAD(exit_q);
->  static atomic_t device_released;
->  
-> -static struct device_type ttm_drm_class_type = {
-> +static const struct device_type ttm_drm_class_type = {
->  	.name = "ttm",
->  	/**
->  	 * Add pm ops here.
-> -- 
-> 1.9.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+v2->v3:
+- Rename dc_ti with chtdc_ti in all places
+- Driver/kconfig renames accordingly
+- A few constifications
+- Added acks by Andy and Mika
+
+v1->v2:
+- Minor cleanups in mfd driver code as suggested by Andy
+- Move power-button driver to platform/x86, driver renames accordingly
+- Add missing wake-irq cleanup to power-button driver
+- get_raw_temp cleanup in opregion driver, mention about register
+  endianess
+
+
+thanks,
+
+Takashi
+
+===
+
+Takashi Iwai (3):
+  mfd: Add support for Cherry Trail Dollar Cove TI PMIC
+  platform/x86: Add support for Dollar Cove TI power button
+  ACPI / PMIC: Add opregion driver for Intel Dollar Cove TI PMIC
+
+ drivers/acpi/Kconfig                         |   6 +
+ drivers/acpi/Makefile                        |   1 +
+ drivers/acpi/pmic/intel_pmic_chtdc_ti.c      | 137 ++++++++++++++++++++
+ drivers/mfd/Kconfig                          |  13 ++
+ drivers/mfd/Makefile                         |   1 +
+ drivers/mfd/intel_soc_pmic_chtdc_ti.c        | 183 +++++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig                 |   8 ++
+ drivers/platform/x86/Makefile                |   1 +
+ drivers/platform/x86/intel_chtdc_ti_pwrbtn.c |  97 ++++++++++++++
+ 9 files changed, 447 insertions(+)
+ create mode 100644 drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+ create mode 100644 drivers/mfd/intel_soc_pmic_chtdc_ti.c
+ create mode 100644 drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.14.0
