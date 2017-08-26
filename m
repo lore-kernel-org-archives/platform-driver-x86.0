@@ -1,35 +1,52 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH 13/15] scsi: make device_type const
-Date: Fri, 25 Aug 2017 17:30:22 -0400
-Message-ID: <yq11snz72tt.fsf@oracle.com>
-References: <1503130946-2854-1-git-send-email-bhumirks@gmail.com>
- <1503130946-2854-14-git-send-email-bhumirks@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 3/3] ACPI / PMIC: Add opregion driver for Intel Dollar Cove TI PMIC
+Date: Sat, 26 Aug 2017 14:52:24 +0200
+Message-ID: <1951917.lb8WZjqdIa@aspire.rjw.lan>
+References: <20170825134443.14843-1-tiwai@suse.de> <CAHp75VeuEcBpQ6qcH+c=GYgNndjoLEn=C9NSJvOcYVgraOLWkQ@mail.gmail.com> <s5hvalbfyjg.wl-tiwai@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1503130946-2854-14-git-send-email-bhumirks@gmail.com> (Bhumika
- Goyal's message of "Sat, 19 Aug 2017 13:52:24 +0530")
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Bhumika Goyal <bhumirks@gmail.com>
-Cc: heikki.krogerus@linux.intel.com, airlied@linux.ie, linux-pci@vger.kernel.org, heiko.carstens@de.ibm.com, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, linux-mtd@lists.infradead.org, daniel.vetter@intel.com, kishon@ti.com, freude@de.ibm.com, boris.brezillon@free-electrons.com, jejb@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, richard@nod.at, jonathanh@nvidia.com, marek.vasut@gmail.com, fcoe-devel@open-fcoe.org, dvhart@infradead.org, tomas.winkler@intel.com, open-iscsi@googlegroups.com, linux-media@vger.kernel.org, ohad@wizery.com, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, linux-remoteproc@vger.kernel.org, johan@kernel.org, jani.nikula@linux.intel.com, julia.lawall@lip6.fr, seanpaul@chromium.org, bhelgaas@google.com, mchehab@kernel.org, linux-edac@vger.kernel.org, cleech@redhat.com, jth@
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cloudserver094114.home.net.pl ([79.96.170.134]:47498 "EHLO
+        cloudserver094114.home.net.pl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752322AbdHZNBC (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 26 Aug 2017 09:01:02 -0400
+In-Reply-To: <s5hvalbfyjg.wl-tiwai@suse.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
+On Friday, August 25, 2017 5:38:11 PM CEST Takashi Iwai wrote:
+> On Fri, 25 Aug 2017 17:24:19 +0200,
+> Andy Shevchenko wrote:
+> > 
+> > On Fri, Aug 25, 2017 at 4:44 PM, Takashi Iwai <tiwai@suse.de> wrote:
+> > 
+> > One really minor nit (fine if it will be ignored):
+> > 
+> > > +config CHTDC_TI_PMIC_OPREGION
+> > 
+> > CHTDC_TI_PMIC_OPREGION -> CHT_DC_TI_PMIC_OPREGION
+> 
+> Ah, the world is inconsistent...
+> 
+> > >  obj-$(CONFIG_XPOWER_PMIC_OPREGION) += pmic/intel_pmic_xpower.o
+> > >  obj-$(CONFIG_BXT_WC_PMIC_OPREGION) += pmic/intel_pmic_bxtwc.o
+> > >  obj-$(CONFIG_CHT_WC_PMIC_OPREGION) += pmic/intel_pmic_chtwc.o
+> > > +obj-$(CONFIG_CHTDC_TI_PMIC_OPREGION) += pmic/intel_pmic_chtdc_ti.o
+> > 
+> > Ditto (as you can notice by above context).
+> 
+> ... where the file name is combined.
+> 
+> I really don't mind, too.
+> 
+> Rafael, please let me know if you want a resubmission with this
+> correction.
 
-Bhumika,
+Yes, please (but just this one patch should be sufficient).
 
-> Make these const as they are only stored in the type field of a device
-> structure, which is const.
-
-Applied to 4.14/scsi-queue. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Rafael
