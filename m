@@ -1,80 +1,145 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 6/6] power: supply: make device_attribute const
-Date: Tue, 29 Aug 2017 10:44:21 +0200
-Message-ID: <20170829084421.4nm3uoswlx2ftc5m@earth>
-References: <1503315792-14837-1-git-send-email-bhumirks@gmail.com>
- <1503315792-14837-7-git-send-email-bhumirks@gmail.com>
+Subject: Re: [PATCH v2 08/14] power: supply: Add
+ power_supply_set_input_current_limit_from_supplier helper
+Date: Tue, 29 Aug 2017 12:54:47 +0200
+Message-ID: <20170829105447.icwb5fjwnivnbtts@earth>
+References: <20170815200502.17339-1-hdegoede@redhat.com>
+ <20170815200502.17339-9-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iboistu4ap57qf3f"
-Return-path: <netdev-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="kukzqbsxlhlacb6h"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503315792-14837-7-git-send-email-bhumirks@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Bhumika Goyal <bhumirks@gmail.com>
-Cc: julia.lawall@lip6.fr, rjw@rjwysocki.net, lenb@kernel.org, jbacik@fb.com, jikos@kernel.org, benjamin.tissoires@redhat.com, manish.chopra@cavium.com, rahul.verma@cavium.com, Dept-GELinuxNICDev@cavium.com, harish.patil@cavium.com, cascardo@holoscopio.com, don@syst.com.br, dvhart@infradead.org, andy@infradead.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, nbd-general@lists.sourceforge.net, linux-input@vger.kernel.org, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <20170815200502.17339-9-hdegoede@redhat.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Breck <liam@networkimprov.net>, Tony Lindgren <tony@atomide.com>, linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 
---iboistu4ap57qf3f
+--kukzqbsxlhlacb6h
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Aug 21, 2017 at 05:13:12PM +0530, Bhumika Goyal wrote:
-> Make these const as they are only passed as an argument to the
-> function device_create_file and device_remove_file and the corresponding
-> arguments are of type const.
-> Done using Coccinelle.
+On Tue, Aug 15, 2017 at 10:04:56PM +0200, Hans de Goede wrote:
+> On some devices the USB Type-C port power (USB PD 2.0) negotiation is
+> done by a separate port-controller IC, while the current limit is
+> controlled through another (charger) IC.
 >=20
-> Signed-off-by: Bhumika Goyal <bhumirks@gmail.com>
-> ---
+> It has been decided to model this by modelling the external Type-C
+> power brick (adapter/charger) as a power-supply class device which
+> supplies the charger-IC, with its voltage-now and current-max representing
+> the negotiated voltage and max current draw.
+>=20
+> This commit adds a power_supply_set_input_current_limit_from_supplier
+> helper function which charger power-supply drivers can call to get
+> the max-current from their supplier and have this applied
+> through their set_property call-back to their input-current-limit.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
 Thanks, queued.
 
 -- Sebastian
 
->  drivers/power/supply/olpc_battery.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/power/supply/power_supply_core.c | 41 ++++++++++++++++++++++++++=
+++++++
+>  include/linux/power_supply.h             |  2 ++
+>  2 files changed, 43 insertions(+)
 >=20
-> diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
-lpc_battery.c
-> index fc20ca3..3bc2eea 100644
-> --- a/drivers/power/supply/olpc_battery.c
-> +++ b/drivers/power/supply/olpc_battery.c
-> @@ -559,7 +559,7 @@ static ssize_t olpc_bat_error_read(struct device *dev,
->  	return sprintf(buf, "%d\n", ec_byte);
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
+ply/power_supply_core.c
+> index 0741fce..3f92574 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -375,6 +375,47 @@ int power_supply_is_system_supplied(void)
 >  }
+>  EXPORT_SYMBOL_GPL(power_supply_is_system_supplied);
 > =20
-> -static struct device_attribute olpc_bat_error =3D {
-> +static const struct device_attribute olpc_bat_error =3D {
->  	.attr =3D {
->  		.name =3D "error",
->  		.mode =3D S_IRUGO,
+> +static int __power_supply_get_supplier_max_current(struct device *dev,
+> +						   void *data)
+> +{
+> +	union power_supply_propval ret =3D {0,};
+> +	struct power_supply *epsy =3D dev_get_drvdata(dev);
+> +	struct power_supply *psy =3D data;
+> +
+> +	if (__power_supply_is_supplied_by(epsy, psy))
+> +		if (!epsy->desc->get_property(epsy,
+> +					      POWER_SUPPLY_PROP_CURRENT_MAX,
+> +					      &ret))
+> +			return ret.intval;
+> +
+> +	return 0;
+> +}
+> +
+> +int power_supply_set_input_current_limit_from_supplier(struct power_supp=
+ly *psy)
+> +{
+> +	union power_supply_propval val =3D {0,};
+> +	int curr;
+> +
+> +	if (!psy->desc->set_property)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * This function is not intended for use with a supply with multiple
+> +	 * suppliers, we simply pick the first supply to report a non 0
+> +	 * max-current.
+> +	 */
+> +	curr =3D class_for_each_device(power_supply_class, NULL, psy,
+> +				      __power_supply_get_supplier_max_current);
+> +	if (curr <=3D 0)
+> +		return (curr =3D=3D 0) ? -ENODEV : curr;
+> +
+> +	val.intval =3D curr;
+> +
+> +	return psy->desc->set_property(psy,
+> +				POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT, &val);
+> +}
+> +EXPORT_SYMBOL_GPL(power_supply_set_input_current_limit_from_supplier);
+> +
+>  int power_supply_set_battery_charged(struct power_supply *psy)
+>  {
+>  	if (atomic_read(&psy->use_cnt) >=3D 0 &&
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index de89066..79e90b3 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -332,6 +332,8 @@ extern int power_supply_get_battery_info(struct power=
+_supply *psy,
+>  					 struct power_supply_battery_info *info);
+>  extern void power_supply_changed(struct power_supply *psy);
+>  extern int power_supply_am_i_supplied(struct power_supply *psy);
+> +extern int power_supply_set_input_current_limit_from_supplier(
+> +					 struct power_supply *psy);
+>  extern int power_supply_set_battery_charged(struct power_supply *psy);
+> =20
+>  #ifdef CONFIG_POWER_SUPPLY
 > --=20
-> 1.9.1
+> 2.9.4
 >=20
 
---iboistu4ap57qf3f
+--kukzqbsxlhlacb6h
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmlKWUACgkQ2O7X88g7
-+pojrA//WxkyTMch/7SoNoIGVqwKBdT4Xv7H5s/rB2lDnXCBsBlvFDm2vskHQJjQ
-RAoHXz6vAsaYLdbG5pcgvOy4sV4jir2syPPv+GNoXAIuBkP5cx1jXJ1ZN81pWB65
-BDhCe9i27V+HUm7iNqbkXDxILcpPoQki+skr9EvDgku2sgb3XIi9/zK+Gr42THct
-APqsXxFSjDckjlZGJoyb7uS9Uo3SfP58rNaCf5jMHZ1s5IWwuvb9rEb3v6wKAcT9
-uN2/hWOr2EAvS7dCcSOMn/fpWUqx5sf2U+Gm3ki+wU71JpKEvUnpoWNiiOQ1HZ3m
-u3plo2L107xl9JYlJvxMG8dri3nyFTf9hypAqa1vtKI0oRnS10o6CiKtXSzcDHaP
-Yyto1hwy1+1gq9mUrcy3Y754/h/Rtblz3uN7Mnlg9ZHgAYm4sq+z36hVwCvDNRIi
-QspbkoBT0sYILb00j2mqiWDT5iGfGUAN1ybexqE996M3g8Ghja8BioOjO23SoxD/
-SZfWT/Mbz+fkF9ZgyH2dMEWXKPXZoUrhuZGEUzWBU8BPRCoTQEY/zIJyK+Ojguxj
-54GGUP5qq4kmUPZTj2BDzq1F03IgoFnuA7w3TqcKME920VCB/sdnfBV4wXmE4ccB
-TNpI7Ow0/V8ZPXcFxny2GdyBSDjDJbRTQ+3tsQDzhVzx3kzDs5k=
-=hkX3
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmlR/cACgkQ2O7X88g7
++pphgQ/+NCzJfHFapIZvnNiB1l6sMqydvkxVw6wVdCTFm6bxpYr3WDYm7+YdiR9R
+fVdSy2XYage7CeFdp9LWiVJw9CH+QJnu+UPZERudXwysXbcOknrMkS9zPSAaXJyr
+qHvchada9GsfEzZCIx2raCZuPEwzL/NEDBv1LwGxfB11djJM/JL49ydAoVMTfWWT
+SQUc8hYzwqcjWFBA+D3Y5TtVCCEpS/HAmgh8tb1km1xcN9k0J9pQ9A8SC66WdLaD
+nk5erb8WQGwwTT58whkjP/95mjJAbCRQyuKFURS3b3ZVEH7jduyw8Ldkf+UZtwj4
+T9f0RE7Uf0y8DNFBJAaU+ZDhOd0uEop+h8S11w5HimMxrQf0rUpqYuOLqtmn5MMS
+rfIe9hWBZSHBe7+6v3th1HGB1NUFe370mcQx5sE8U7flYf/lvlhivai5dj7/eTUQ
+omGtohX+VHYlm7H7j2Z6ZKRqon+TpAODieeNGWv+h4ZtPxZY3iMY0kupHHzkvqxG
+Xw3lxWN9V1dOtVKqWoJRONi/nkLESidQHJd1JC4IREAEUnOwkNfXDZ/tSanP6Z04
+8liRpIgp4I7THtFoIaz0zKqHNQiaEi/MbUfPl06ozRtOoQ+7ehgW1VkHQwYymRCZ
+VwkycJ955vnrdH0oGmDAyWF3j1yagIyokWRz00Bm4ApLxgdgJHE=
+=pqTw
 -----END PGP SIGNATURE-----
 
---iboistu4ap57qf3f--
+--kukzqbsxlhlacb6h--
