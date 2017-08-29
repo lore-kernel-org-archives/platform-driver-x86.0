@@ -1,24 +1,42 @@
-From: Julian Smith <sinara_group@163.com>
-Subject: Inquiry 29-08-2017
-Date: Tue, 29 Aug 2017 08:43:23 -0400 (EDT)
-Message-ID: <20170829124323.157EF105EE5@mail.dealer.com>
-Reply-To: sinara-group@bk.ru
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v4 0/2] Introduce support for mlxreg mfd core and I2C drivers
+Date: Tue, 29 Aug 2017 18:00:14 +0000
+Message-ID: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from host165-13-237-212.serverdedicati.aruba.it ([212.237.13.165]:43637
-        "EHLO mail.dealer.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1751336AbdH2Nrh (ORCPT
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:54552 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1752826AbdH2QDP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2017 09:47:37 -0400
+        Tue, 29 Aug 2017 12:03:15 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, jiri@resnulli.us, gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 
-Hello,
+This patchset adds support for the Mellanox BMC card equipped with the
+programmable devices controlling hardware.
+The support includes:
+- signal handling for chassis, ASIC, CPU events;
+- LED control;
+- exposing sysfs interface for reset control, reset monitoring and mux
+  selection for the access to remote devices at the host side.
 
-My name is Ms Julian Smith and i am from Sinara Group Co.,LTD in Russia..We are glad to know about your company from the web and we are interested in your products.Please send us your Latest catalog and price list for our trial order
+Vadim Pasternak (2):
+  mfd: Add Mellanox regmap core driver
+  mfd: Add Mellanox regmap I2C driver
 
-Julian Smith,
-Purchasing Manager
+ .../bindings/mfd/mellanox,mlxreg-core.txt          | 367 +++++++++
+ MAINTAINERS                                        |   8 +
+ drivers/mfd/Kconfig                                |  28 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mlxreg-core.c                          | 839 +++++++++++++++++++++
+ drivers/mfd/mlxreg-i2c.c                           | 183 +++++
+ include/linux/platform_data/mlxreg.h               | 138 ++++
+ 7 files changed, 1565 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
+ create mode 100644 drivers/mfd/mlxreg-core.c
+ create mode 100644 drivers/mfd/mlxreg-i2c.c
+ create mode 100644 include/linux/platform_data/mlxreg.h
+
+-- 
+2.1.4
