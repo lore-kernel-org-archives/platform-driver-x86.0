@@ -1,93 +1,48 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [patch v4 1/2] mfd: Add Mellanox regmap core driver
-Date: Wed, 30 Aug 2017 12:59:56 +0200
-Message-ID: <20170830105955.GB4926@amd>
-References: <1504029616-192277-1-git-send-email-vadimp@mellanox.com>
- <1504029616-192277-2-git-send-email-vadimp@mellanox.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID
+        API
+Date: Wed, 30 Aug 2017 14:25:45 +0200
+Message-ID: <20170830122545.GA26045@lst.de>
+References: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com> <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com> <CAHp75VcFB1BDNUG729mi5BkhcR_aBX4MzvoyzdRx=LaAg9=EHQ@mail.gmail.com> <CALCETrVUctPyYNjkLL3uZUdxFko9=tpMchpV09VpWEhbjMT16g@mail.gmail.com> <1502633755.15214.4.camel@linux.intel.com> <CALCETrX1EtzwKTwc1T==W+4GRnh0+JxyXE4rfP79ynteR2ooUg@mail.gmail.com> <CALCETrVBm7c0EYEzOsaZnDCstc64ucJu49K39UD7gzS1e-UMFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1504029616-192277-2-git-send-email-vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CALCETrVBm7c0EYEzOsaZnDCstc64ucJu49K39UD7gzS1e-UMFA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Sun, Aug 13, 2017 at 08:34:56AM -0700, Andy Lutomirski wrote:
+> > This specification defines a Uniform Resource Name namespace for
+> > UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally
+> > Unique IDentifier).
+> 
+> No, that still matches what I thought I knew: "UUID" and "GUID" are synonyms.
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, in practice they aren't - wintel GUID are big endian, and
+RFC4122 clearly states it is big endian, although it uses the term
+"network byte order":
 
-Hi!
+In the absence of explicit application or presentation protocol
+specification to the contrary, a UUID is encoded as a 128-bit object,
+as follows:
 
->  Cause of reset nodes:
->  - cpu_kernel_panic
->  - cpu_shutdown
->  - bmc_warm_reset
+The fields are encoded as 16 octets, with the sizes and order of the
+fields defined above, and with each field encoded with the Most
+Significant Byte first (known as network byte order).  Note that the
+field names, particularly for multiplexed fields, follow historical
+practice.
 
-This is not really suitable for hwmon, right?
+So yes, it is big endian, and it is defined an a sequence of octets.
 
-Can you talk to
+> 
+> typedef whatever uuid_t;
+> typedef something_different uuid_le;  /* which already existed */
+> 
+> extern void uuid_le_to_uuid(uuid_t *out, uuid_le *in);
+> extern void uuid_to_uuid_le(...);
 
-Date: Mon, 28 Aug 2017 09:31:30 -0700
-=46rom: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org,
-Subject: [PATCH v6 1/2] platform: Add driver for RAVE Supervisory Processor
-
-? He's currently trying to add very similar interface to the kernel,
-too.
-
-+What:          /sys/devices/platform/*/serial*/serial*-*/reset_reason
-+Date:          Aug 2017
-+Contact:       "Andrey Smirnov" <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+Description:    (RO) Indicates reason for last reset.
-+
-+               The following values can be reported:
-+                   * 0  -> Normal Power Off
-+                   * 1  -> Hardware Watchdog
-+                   * 2  -> Software Watchdog
-+                   * 3  -> Input Voltage Out Of Range
-+                   * 4  -> Host Requested
-+                   * 5  -> Temperature Out Of Range
-+                   * 6  -> User Requested (via long Power Button
-press)
-+                   * 7  -> Illegal Configuration Word
-+                   * 8  -> Illegal Insturction
-+                   * 9  -> Illegal Trap
-+                   * 10 -> Unknown
-+                   * 11 -> Crew Panel Requested
-+
-+                NOTE: Codes 7,8 and 9 pertain to exceptions happening
-+                in supervisory processor/its firmware and not host
-+                CPU.
-
-We really want something common between different machines.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---VrqPEDrXMn8OVzN4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlmmmqsACgkQMOfwapXb+vLGygCbBSbk1mindegCEwIDTXj16SZF
-xDMAn2B9ALeAGthjTmCG6dS0YglNmN8O
-=hpKn
------END PGP SIGNATURE-----
-
---VrqPEDrXMn8OVzN4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What's the point of converting between a RFC4122 UUID and a Wintel
+GUID?  They are used for entirely different things.
