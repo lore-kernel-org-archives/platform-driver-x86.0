@@ -1,43 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 09/11] power: supply: bq24190_charger: Get
- input_current_limit from our supplier
-Date: Wed, 30 Aug 2017 07:47:46 -0700
-Message-ID: <20170830144746.GG6008@atomide.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v3 08/11] power: supply: bq24190_charger: Export 5V boost
+ converter as regulator
+Date: Wed, 30 Aug 2017 18:32:27 +0200
+Message-ID: <20170830163227.ew3jon24s3mdajiv@earth>
 References: <20170830094814.17758-1-hdegoede@redhat.com>
- <20170830094814.17758-10-hdegoede@redhat.com>
+ <20170830094814.17758-9-hdegoede@redhat.com>
+ <20170830144649.GF6008@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from muru.com ([72.249.23.125]:38724 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751326AbdH3Oru (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Aug 2017 10:47:50 -0400
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ysqxn6cyw6biivfy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170830094814.17758-10-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Liam Breck <liam@networkimprov.net>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org
+In-Reply-To: <20170830144649.GF6008@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Liam Breck <liam@networkimprov.net>, linux-pm@vger.kernel.org, devel@driverdev.osuosl.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-* Hans de Goede <hdegoede@redhat.com> [170830 02:49]:
-> On some devices the USB Type-C port power (USB PD 2.0) negotiation is
-> done by a separate port-controller IC, while the current limit is
-> controlled through another (charger) IC.
-> 
-> It has been decided to model this by modelling the external Type-C
-> power brick (adapter/charger) as a power-supply class device which
-> supplies the charger-IC, with its voltage-now and current-max representing
-> the negotiated voltage and max current draw.
-> 
-> This commit adds support for this to the bq24190_charger driver by adding
-> an external_power_changed callback and calling
-> power_supply_set_input_current_limit_from_supplier from this callback.
-> This callback will only get called if the bq24190 has a parent-supply.
-> 
-> Note this replaces the functionality to get the current-limit from an
-> extcon device, which will be removed in a follow-up commit.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+--ysqxn6cyw6biivfy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Aug 30, 2017 at 07:46:50AM -0700, Tony Lindgren wrote:
+> * Hans de Goede <hdegoede@redhat.com> [170830 02:49]:
+> > Register the 5V boost converter as a regulator named "usb_otg_vbus".
+> >=20
+> > This commit also adds support for bq24190_platform_data, through which
+> > non device-tree platforms can pass the regulator_init_data (containing
+> > mappings for the consumer amongst other things).
+> >=20
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> This will make it easy for USB PHY drivers to implement USB host mode:
+>=20
+> Acked-by: Tony Lindgren <tony@atomide.com>
+
+Thanks, queued.
+
+-- Sebastian
+
+--ysqxn6cyw6biivfy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlmm6JgACgkQ2O7X88g7
++prGjg/+JaamhKJCKsMpNmHofemdPOvZlbmiMMGxLh6fh8CF9+xsNfyNPpHxDz9T
+IOzj5BnFJh+HyPSvxzpI44SUvmGpiUg9KTZObpnrt9aJRxX98llfj/t0t0x5jivH
+L+t0qCBk6sF5HSdan0HIpdWQisilBIeDDDYAtxZRD+7K5Tg+P2jHyJMFiD1f2f7o
+ZYClCteNHtFfFyMSKnphSnJGQEYVGYc1KzwUIxhpvre5W1tfoJtRn7muux+pGQYl
+P0LH1uOLL68QN9tvn66G3VnvlGfkGWeoew7PzxeaRofNO8PG9o+4KnMqqcif3C/e
+Q6lSQ0rnXzrNmgmU66V3pBCvVp0z6x6yIFg/+VG62sW32yP49OA2PHtOq1whCnI3
+UagpSZYQKvwMlPUKOMpP8H7A/lTwujUCP7zBnmCXlN6/gvqCVhdhlMuKHzc1xM+E
+6jD8EOs8yrBqsXoyyxfCEFgs1CSzXbmLjYCVTeVOg8EbTkkuiml5WFhSCyTbG99r
+vJ8oBl1nrXQvCnS5VUdXP3fRIsd45lnqZ6DsWT4IxaTSC6HZe2NOkSusUvrXn790
+sf3CyXjdg8gSgxDam03VTRzZdWmBIQgrMr0mehF2YXa2xylOdjnGvXjoBl5eJ/Ei
+qcNfW7qrRigIjQjb3fiPxcqZE1BbwsD41TnB6GYep9YaatWimfg=
+=0Sj2
+-----END PGP SIGNATURE-----
+
+--ysqxn6cyw6biivfy--
