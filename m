@@ -1,40 +1,70 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 00/11] Hookup typec power-negotation to the PMIC and
- charger
-Date: Thu, 31 Aug 2017 18:26:37 +0200
-Message-ID: <20170831162637.GA8353@kroah.com>
-References: <20170830094814.17758-1-hdegoede@redhat.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH v2] platform/x86: thinkpad_acpi: Fix
+ warning about deprecated hwmon_device_register
+Date: Thu, 31 Aug 2017 13:54:42 -0300
+Message-ID: <20170831165442.3zx4fkgqvvyqvoli@khazad-dum.debian.net>
+References: <20170620051633.GB15974@khazad-dum.debian.net>
+ <20170621034513.4023-1-kernel@fomichev.me>
+ <20170818230106.GA15303@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50021 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751823AbdHaQyp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 31 Aug 2017 12:54:45 -0400
 Content-Disposition: inline
-In-Reply-To: <20170830094814.17758-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Liam Breck <liam@networkimprov.net>, linux-i2c@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20170818230106.GA15303@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Stanislav Fomichev <kernel@fomichev.me>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Stanislav Fomichev <sdf@google.com>, andy@infradead.org
 
-On Wed, Aug 30, 2017 at 11:48:03AM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is v3 of my typec power-negotation hookup series. New this version:
-> - Drop a few patches merged into linux-power-supply.git/for-next
-> - Drop the "power: supply: bq24190_charger: Remove extcon handling"
->   patch *for now*, this can only be merged once all the other patches are
->   in place (and extcon handling is no longer needed)
-> - Address some review comments in some of the other patches, see the
->   per patch changelogs inside the commit messages
-> 
-> I believe that this series is ready for merging now and I would like to
-> ask the various subsys maintainers to pick up and merge these patches.
-> All the patches can be merged independent of eachother with the exception
-> of the last 2 patches:
-> 
-> i2c-cht-wc: Add device-properties for fusb302 integration
-> platform/x86: intel_cht_int33fe: Update fusb302 type string, add properties
-> 
-> Which should not be merged until all the other patches are in place.
+On Fri, 18 Aug 2017, Darren Hart wrote:
+> > before:
+> > $ cat /sys/devices/platform/thinkpad_hwmon/{name,fan1_input}
 
-staging patches all now merged, thanks!
+> > after:
+> > $ cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon1/{name,fan1_input}
+> > thinkpad
+> > 3478
+> > $ cat /sys/class/hwmon/hwmon1/{name,fan1_input}
+> > thinkpad
+> > 3478
 
-greg k-h
+I wonder what's the point of retaining the thinkpad_hwmon separate
+device [from the thinkpad_acpi platform device] then... but changing
+that might break the userspace API even further or cause other
+annoyances down the road, so I guess it is the lesser evil.
+
+> > $ sensors
+> > thinkpad-isa-0000
+> > Adapter: ISA adapter
+> > fan1:        3489 RPM
+
+Yeah, that should cover >90% of the usecases since most people just read
+these.  It *will* break write accesses using /etc/sysfs.conf and
+similar, though (to set fan mode on boot, etc).
+
+It is documented and the userspace ABI is being updated according to the
+hwmon subsystem rules *and* the thinkpad-acpi rules...  this is enough
+for me, but be warned that people might complain.
+
+> This looks very reasonable to me. The lm-sensors user experience is
+> effectively unchanged, and the /sys/* changes move from a specific
+> implementation to a generic implementation, taking advantage for the
+> subsystem.
+
+Yes, which is why I am not against the ABI change.
+
+> This will be 4.14 because we let it sit too long. I'll correct this.
+> 
+> I've queued this to testing for 4.14.
+> 
+> Henrique, please shout if you have any objections here.
+
+No objections.
+
+-- 
+  Henrique Holschuh
