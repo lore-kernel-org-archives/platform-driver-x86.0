@@ -1,59 +1,40 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_cht_int33fe: Work around BIOS bug on
- some devices
-Date: Thu, 31 Aug 2017 19:04:46 +0300
-Message-ID: <CAHp75Vdz3S5a=Vqf=rnMV9Dy+829MGNUWPmzp+B08NadBM0wNg@mail.gmail.com>
-References: <20170814201425.20991-1-hdegoede@redhat.com> <CAHp75Vdityzx+fzU_q0vULGpT3ww8C0_D0fYtEW77Hyh1yTX6A@mail.gmail.com>
- <06a1d48c-9f75-4aab-107d-f71ce8ebbb26@redhat.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 00/11] Hookup typec power-negotation to the PMIC and
+ charger
+Date: Thu, 31 Aug 2017 18:26:37 +0200
+Message-ID: <20170831162637.GA8353@kroah.com>
+References: <20170830094814.17758-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <06a1d48c-9f75-4aab-107d-f71ce8ebbb26@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20170830094814.17758-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Sebastian Reichel <sre@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Liam Breck <liam@networkimprov.net>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 14, 2017 at 11:52 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On 14-08-17 22:45, Andy Shevchenko wrote:
->> On Mon, Aug 14, 2017 at 11:14 PM, Hans de Goede <hdegoede@redhat.com>
->> wrote:
+On Wed, Aug 30, 2017 at 11:48:03AM +0200, Hans de Goede wrote:
+> Hi All,
+> 
+> Here is v3 of my typec power-negotation hookup series. New this version:
+> - Drop a few patches merged into linux-power-supply.git/for-next
+> - Drop the "power: supply: bq24190_charger: Remove extcon handling"
+>   patch *for now*, this can only be merged once all the other patches are
+>   in place (and extcon handling is no longer needed)
+> - Address some review comments in some of the other patches, see the
+>   per patch changelogs inside the commit messages
+> 
+> I believe that this series is ready for merging now and I would like to
+> ask the various subsys maintainers to pick up and merge these patches.
+> All the patches can be merged independent of eachother with the exception
+> of the last 2 patches:
+> 
+> i2c-cht-wc: Add device-properties for fusb302 integration
+> platform/x86: intel_cht_int33fe: Update fusb302 type string, add properties
+> 
+> Which should not be merged until all the other patches are in place.
 
->>> +int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->>> +{
->>> +       const char *name = dev_name(dev);
->>> +       struct i2c_client **max17047 = data;
->>> +
->>> +       if (name && strcmp(name, "i2c-MAX17047:00") == 0) {
->>
->>
->> Can we stop using bad practice of comparing against _instance_?
->> If device is suppose to be single in the system, wouldn't _HID be enough?
+staging patches all now merged, thanks!
 
-> Yes _HID would be enough, but that takes some extra code with little
-> gain IMHO, we are effectively checking the HID here as that is where
-> the device-name comes from.
->
-> Anyways if you strongly prefer a HID check I can do a v2 doing that
-> either way let me know.
-
-Currently we have the following modules where ACPI instance is used in:
-
-drivers/acpi/acpi_lpss.c
-drivers/input/touchscreen/goodix.c
-drivers/platform/x86/silead_dmi.c
-drivers/power/supply/axp288_charger.c
-
-and plenty under sound/soc/intel.
-
-I do not care right now about sound/soc/intel stuff, while everywhere
-else would be better to avoid this.
-
-Mika, Rafael, what're yours opinions regarding to use ACPI instances
-in the drivers?
-
-For me it sounds fragile.
-
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
