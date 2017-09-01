@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 07/11] extcon: intel-int3496: Add support for controlling the
- USB-role mux
-Date: Fri,  1 Sep 2017 23:48:41 +0200
-Message-ID: <20170901214845.7153-8-hdegoede@redhat.com>
+Subject: [PATCH 10/11] staging: typec: fusb302: Hook up mux support using
+ tcpc_gen_mux support
+Date: Fri,  1 Sep 2017 23:48:44 +0200
+Message-ID: <20170901214845.7153-11-hdegoede@redhat.com>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,139 +19,66 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Cherry Trail SoCs have a built-in USB-role mux for switching between
-the host and device controllers, rather then using an external mux
-controller by a GPIO.
+Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
+to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
 
-There is a driver using the mux-subsys to control this mux, this
-commit adds support to the intel-int3496 driver to get a mux_controller
-handle for the mux and set the mux through the mux-subsys rather then
-through a GPIO.
+Also document the mux-names used by the generic tcpc_mux_dev code in
+our devicetree bindings.
 
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/extcon/Kconfig                |  1 +
- drivers/extcon/extcon-intel-int3496.c | 59 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 59 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
+ drivers/staging/typec/fusb302/fusb302.c               | 11 ++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index a7bca4207f44..7ab6acc9708a 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -45,6 +45,7 @@ config EXTCON_GPIO
- config EXTCON_INTEL_INT3496
- 	tristate "Intel INT3496 ACPI device extcon driver"
- 	depends on GPIOLIB && ACPI && (X86 || COMPILE_TEST)
-+	select MULTIPLEXER
- 	help
- 	  Say Y here to enable extcon support for USB OTG ports controlled by
- 	  an Intel INT3496 ACPI device.
-diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
-index 1a45e745717d..cea9c9b1521c 100644
---- a/drivers/extcon/extcon-intel-int3496.c
-+++ b/drivers/extcon/extcon-intel-int3496.c
-@@ -23,8 +23,12 @@
- #include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/mux/consumer.h>
- #include <linux/platform_device.h>
+diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+index 472facfa5a71..63d639eadacd 100644
+--- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
++++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+@@ -6,6 +6,9 @@ Required properties :
+ - interrupts             : Interrupt specifier
  
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
- #define INT3496_GPIO_USB_ID	0
- #define INT3496_GPIO_VBUS_EN	1
- #define INT3496_GPIO_USB_MUX	2
-@@ -37,6 +41,8 @@ struct int3496_data {
- 	struct gpio_desc *gpio_usb_id;
- 	struct gpio_desc *gpio_vbus_en;
- 	struct gpio_desc *gpio_usb_mux;
-+	struct mux_control *usb_mux;
-+	bool usb_mux_set;
- 	int usb_id_irq;
- };
+ Optional properties :
++- mux-controls           : List of mux-ctrl-specifiers containing 1 or 2 muxes
++- mux-names              : "type-c-mode-mux" when using 1 mux, or
++                           "type-c-mode-mux", "usb-role-mux" when using 2 muxes
+ - fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
+ - fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
+ - fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
+diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
+index cf6355f59cd9..00d045d0246b 100644
+--- a/drivers/staging/typec/fusb302/fusb302.c
++++ b/drivers/staging/typec/fusb302/fusb302.c
+@@ -1259,7 +1259,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
+ 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
+ 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
+ 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
+-	fusb302_tcpc_dev->mux = NULL;
+ }
  
-@@ -56,11 +62,31 @@ static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
- 	{ },
- };
+ static const char * const cc_polarity_name[] = {
+@@ -1817,6 +1816,16 @@ static int fusb302_probe(struct i2c_client *client,
+ 			return -EPROBE_DEFER;
+ 	}
  
-+static struct mux_lookup acpi_int3496_cht_mux_lookup[] = {
-+	{
-+		.provider = "intel_cht_usb_mux",
-+		.dev_id   = "INT3496:00",
-+		.mux_name = "usb-role-mux",
-+	},
-+};
-+
-+#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-+
-+static const struct x86_cpu_id cht_cpu_ids[] = {
-+	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
-+	{}
-+};
-+
-+static bool int3496_soc_has_mux(void)
-+{
-+	return x86_match_cpu(cht_cpu_ids);
-+}
-+
- static void int3496_do_usb_id(struct work_struct *work)
- {
- 	struct int3496_data *data =
- 		container_of(work, struct int3496_data, work.work);
--	int id = gpiod_get_value_cansleep(data->gpio_usb_id);
-+	int ret, id = gpiod_get_value_cansleep(data->gpio_usb_id);
- 
- 	/* id == 1: PERIPHERAL, id == 0: HOST */
- 	dev_dbg(data->dev, "Connected %s cable\n", id ? "PERIPHERAL" : "HOST");
-@@ -72,6 +98,22 @@ static void int3496_do_usb_id(struct work_struct *work)
- 	if (!IS_ERR(data->gpio_usb_mux))
- 		gpiod_direction_output(data->gpio_usb_mux, id);
- 
-+	if (data->usb_mux) {
-+		/*
-+		 * The mux framework expects multiple competing users, we must
-+		 * release our previous setting before applying the new one.
-+		 */
-+		if (data->usb_mux_set)
-+			mux_control_deselect(data->usb_mux);
-+
-+		ret = mux_control_select(data->usb_mux,
-+					 id ? MUX_USB_DEVICE : MUX_USB_HOST);
-+		if (ret)
-+			dev_err(data->dev, "Error setting mux: %d\n", ret);
-+
-+		data->usb_mux_set = ret == 0;
-+	}
-+
- 	if (!IS_ERR(data->gpio_vbus_en))
- 		gpiod_direction_output(data->gpio_vbus_en, !id);
- 
-@@ -107,6 +149,21 @@ static int int3496_probe(struct platform_device *pdev)
- 	data->dev = dev;
- 	INIT_DELAYED_WORK(&data->work, int3496_do_usb_id);
- 
-+	if (int3496_soc_has_mux()) {
-+		mux_add_table(acpi_int3496_cht_mux_lookup,
-+			      ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
-+		data->usb_mux = devm_mux_control_get(dev, "usb-role-mux");
-+		/* Doing this here keeps our error handling clean. */
-+		mux_remove_table(acpi_int3496_cht_mux_lookup,
-+				 ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
-+		if (IS_ERR(data->usb_mux)) {
-+			ret = PTR_ERR(data->usb_mux);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "can't get mux: %d\n", ret);
++	chip->tcpc_dev.mux = devm_tcpc_gen_mux_create(dev);
++	if (IS_ERR(chip->tcpc_dev.mux)) {
++		ret = PTR_ERR(chip->tcpc_dev.mux);
++		/* Use of a mux is optional (for now?), ignore -ENODEV errors */
++		if (ret == -ENODEV)
++			chip->tcpc_dev.mux = NULL;
++		else
 +			return ret;
-+		}
 +	}
 +
- 	data->gpio_usb_id = devm_gpiod_get(dev, "id", GPIOD_IN);
- 	if (IS_ERR(data->gpio_usb_id)) {
- 		ret = PTR_ERR(data->gpio_usb_id);
+ 	cfg.drv_data = chip;
+ 	chip->psy = devm_power_supply_register(dev, &fusb302_psy_desc, &cfg);
+ 	if (IS_ERR(chip->psy)) {
 -- 
 2.13.5
