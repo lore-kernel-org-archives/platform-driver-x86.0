@@ -1,32 +1,35 @@
-From: admin@vmstudiochennai.com
-Subject: The #1 in weight-loss solution products gives you a special
- opportunity
-Date: Fri, 1 Sep 2017 16:10:52 +0200
-Message-ID: <xun1oi8-peuxd5-01@vmstudiochennai.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 00/11] mux/typec: Add USB / TypeC mux drivers and hook them up on some x86 systems
+Date: Fri,  1 Sep 2017 23:48:34 +0200
+Message-ID: <20170901214845.7153-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server99.bookdomains.net ([173.237.185.213]:44120 "EHLO
-        server99.bookdomains.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1752144AbdIAR7C (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:36694 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752515AbdIAVsx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Sep 2017 13:59:02 -0400
-Received: from [121.58.237.219] (port=2518 helo=[127.0.0.1])
-        by server99.bookdomains.net with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
-        (Exim 4.87)
-        (envelope-from <admin@vmstudiochennai.com>)
-        id 1dnmfH-00052M-2V
-        for platform-driver-x86@vger.kernel.org; Fri, 01 Sep 2017 18:11:19 +0400
+        Fri, 1 Sep 2017 17:48:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 
-TWlyYWN1bG91cyB0cmFkZW1hcmtlZCBhbmQgcGF0ZW50ZWQgbWVkaWNhdGlvbiB0aGF0J2xsIG1h
-a2UgeW91ciBkaWV0IHJlbWFya2FibHkgZWFzeS4NClRoZSB1bmRlbmlhYmxlIE4xIGNvbXBhbnkg
-aW4gd2VpZ2h0LWxvc3MgYWlkIHByb2R1Y3RzIG9mZmVycyB5b3UgYSBzcGVjaWFsIGNoYW5jZTog
-c3RhcnQgbGl2aW5nIHlvdXIgbGlmZSBsaWtlIHlvdSd2ZSBhbHdheXMgd2FudGVkLg0KU3RvcCBi
-ZWluZyBmYXQsIHlvdSBkbyBub3QgaGF2ZSBhbiBleGN1c2Ugbm93Lg0KVXNlIHRoaXMgbGluaywg
-aXQncyBnb2luZyB0byBjaGFuZ2UgeW91ciBsaWZlDQoNCmh0dHA6Ly9nYmpvbnQuZ3JlZW5lcnBh
-c3R1cmVzaXAueHl6L09TOHhMekl3TVRjN01UWTZNVEE2TlRFPQ0KDQpBcyBhIHNtYWxsIHRoYW5r
-IHlvdSBib251cywgd2Ugd2lsbCBnaXZlIGEgc3BlY2lhbCBkaXNjb3VudCBhbmQgYSBtb25leWJh
-Y2sgZ3VhcmFudGVlLCBpbiBjYXNlIHlvdSB3b24ndCBsb3NlIGZhdC4NCg==
+Hi All,
+
+This series consists of 4 parts:
+
+1) Core mux changes to add support for getting mux-controllers on
+   non DT platforms and to add some standardised state values for USB
+
+2) Add Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux drivers
+
+3) Hookup the Intel CHT USB mux driver for CHT devices without Type-C
+
+4) Hookup both the Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux
+   drivers to the fusb302 Type-C port controller found on some CHT x86 devs
+
+Please review, or in the case of the drivers/mux changes (which are a dep
+for some of the other patches) merge if the patches are ready.
+
+Regards,
+
+Hans
