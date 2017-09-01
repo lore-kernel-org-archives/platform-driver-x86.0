@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 10/11] staging: typec: fusb302: Hook up mux support using
- tcpc_gen_mux support
-Date: Fri,  1 Sep 2017 23:48:44 +0200
-Message-ID: <20170901214845.7153-11-hdegoede@redhat.com>
+Subject: [PATCH 11/11] platform/x86: intel_cht_int33fe: Add mux mappings for
+ the Type-C port
+Date: Fri,  1 Sep 2017 23:48:45 +0200
+Message-ID: <20170901214845.7153-12-hdegoede@redhat.com>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,66 +19,92 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
-to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+We need to add mappings for the mux subsys to be able to find the
+muxes for the fusb302 driver to be able to control the PI3USB30532
+Type-C mux and the device/host mux integrated in the CHT SoC.
 
-Also document the mux-names used by the generic tcpc_mux_dev code in
-our devicetree bindings.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
- drivers/staging/typec/fusb302/fusb302.c               | 11 ++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/platform/x86/Kconfig             |  1 +
+ drivers/platform/x86/intel_cht_int33fe.c | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-index 472facfa5a71..63d639eadacd 100644
---- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-+++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-@@ -6,6 +6,9 @@ Required properties :
- - interrupts             : Interrupt specifier
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c5554577681a..4256e05ee584 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -794,6 +794,7 @@ config ACPI_CMPC
+ config INTEL_CHT_INT33FE
+ 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
+ 	depends on X86 && ACPI && I2C && REGULATOR
++	select MULTIPLEXER
+ 	---help---
+ 	  This driver add support for the INT33FE ACPI device found on
+ 	  some Intel Cherry Trail devices.
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 24a1662be81d..611b8af9cefd 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -24,6 +24,7 @@
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/mux/consumer.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
  
- Optional properties :
-+- mux-controls           : List of mux-ctrl-specifiers containing 1 or 2 muxes
-+- mux-names              : "type-c-mode-mux" when using 1 mux, or
-+                           "type-c-mode-mux", "usb-role-mux" when using 2 muxes
- - fcs,max-sink-microvolt : Maximum voltage to negotiate when configured as sink
- - fcs,max-sink-microamp  : Maximum current to negotiate when configured as sink
- - fcs,max-sink-microwatt : Maximum power to negotiate when configured as sink
-diff --git a/drivers/staging/typec/fusb302/fusb302.c b/drivers/staging/typec/fusb302/fusb302.c
-index cf6355f59cd9..00d045d0246b 100644
---- a/drivers/staging/typec/fusb302/fusb302.c
-+++ b/drivers/staging/typec/fusb302/fusb302.c
-@@ -1259,7 +1259,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
- 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
- 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
- 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
--	fusb302_tcpc_dev->mux = NULL;
+@@ -35,6 +36,19 @@ struct cht_int33fe_data {
+ 	struct i2c_client *pi3usb30532;
+ };
+ 
++static struct mux_lookup cht_int33fe_mux_lookup[] = {
++	{
++		.provider = "i2c-pi3usb30532",
++		.dev_id   = "i2c-fusb302",
++		.mux_name = "type-c-mode-mux",
++	},
++	{
++		.provider = "intel_cht_usb_mux",
++		.dev_id   = "i2c-fusb302",
++		.mux_name = "usb-role-mux",
++	},
++};
++
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -170,6 +184,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	board_info.properties = fusb302_props;
+ 	board_info.irq = fusb302_irq;
+ 
++	mux_add_table(cht_int33fe_mux_lookup,
++		      ARRAY_SIZE(cht_int33fe_mux_lookup));
++
+ 	data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
+ 	if (!data->fusb302)
+ 		goto out_unregister_max17047;
+@@ -193,6 +210,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
++	mux_remove_table(cht_int33fe_mux_lookup,
++		      ARRAY_SIZE(cht_int33fe_mux_lookup));
++
+ 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
  }
  
- static const char * const cc_polarity_name[] = {
-@@ -1817,6 +1816,16 @@ static int fusb302_probe(struct i2c_client *client,
- 			return -EPROBE_DEFER;
- 	}
+@@ -205,6 +225,9 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
  
-+	chip->tcpc_dev.mux = devm_tcpc_gen_mux_create(dev);
-+	if (IS_ERR(chip->tcpc_dev.mux)) {
-+		ret = PTR_ERR(chip->tcpc_dev.mux);
-+		/* Use of a mux is optional (for now?), ignore -ENODEV errors */
-+		if (ret == -ENODEV)
-+			chip->tcpc_dev.mux = NULL;
-+		else
-+			return ret;
-+	}
++	mux_remove_table(cht_int33fe_mux_lookup,
++		      ARRAY_SIZE(cht_int33fe_mux_lookup));
 +
- 	cfg.drv_data = chip;
- 	chip->psy = devm_power_supply_register(dev, &fusb302_psy_desc, &cfg);
- 	if (IS_ERR(chip->psy)) {
+ 	return 0;
+ }
+ 
 -- 
 2.13.5
