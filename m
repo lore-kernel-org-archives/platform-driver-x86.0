@@ -1,110 +1,79 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 11/11] platform/x86: intel_cht_int33fe: Add mux mappings for
- the Type-C port
-Date: Fri,  1 Sep 2017 23:48:45 +0200
-Message-ID: <20170901214845.7153-12-hdegoede@redhat.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: intel_cht_int33fe: Work around BIOS bug on
+ some devices
+Date: Fri, 1 Sep 2017 23:58:55 +0200
+Message-ID: <6e064337-6105-2231-a66e-ccb6aba3440a@redhat.com>
+References: <20170814201425.20991-1-hdegoede@redhat.com>
+ <CAHp75Vdityzx+fzU_q0vULGpT3ww8C0_D0fYtEW77Hyh1yTX6A@mail.gmail.com>
+ <06a1d48c-9f75-4aab-107d-f71ce8ebbb26@redhat.com>
+ <CAHp75Vdz3S5a=Vqf=rnMV9Dy+829MGNUWPmzp+B08NadBM0wNg@mail.gmail.com>
+ <20170901091904.GV2598@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170901214845.7153-1-hdegoede@redhat.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170901091904.GV2598@lahna.fi.intel.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-We need to add mappings for the mux subsys to be able to find the
-muxes for the fusb302 driver to be able to control the PI3USB30532
-Type-C mux and the device/host mux integrated in the CHT SoC.
+Hi,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/Kconfig             |  1 +
- drivers/platform/x86/intel_cht_int33fe.c | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+On 09/01/2017 11:19 AM, Mika Westerberg wrote:
+> On Thu, Aug 31, 2017 at 07:04:46PM +0300, Andy Shevchenko wrote:
+>> On Mon, Aug 14, 2017 at 11:52 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>> On 14-08-17 22:45, Andy Shevchenko wrote:
+>>>> On Mon, Aug 14, 2017 at 11:14 PM, Hans de Goede <hdegoede@redhat.com>
+>>>> wrote:
+>>
+>>>>> +int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+>>>>> +{
+>>>>> +       const char *name = dev_name(dev);
+>>>>> +       struct i2c_client **max17047 = data;
+>>>>> +
+>>>>> +       if (name && strcmp(name, "i2c-MAX17047:00") == 0) {
+>>>>
+>>>>
+>>>> Can we stop using bad practice of comparing against _instance_?
+>>>> If device is suppose to be single in the system, wouldn't _HID be enough?
+>>
+>>> Yes _HID would be enough, but that takes some extra code with little
+>>> gain IMHO, we are effectively checking the HID here as that is where
+>>> the device-name comes from.
+>>>
+>>> Anyways if you strongly prefer a HID check I can do a v2 doing that
+>>> either way let me know.
+>>
+>> Currently we have the following modules where ACPI instance is used in:
+>>
+>> drivers/acpi/acpi_lpss.c
+>> drivers/input/touchscreen/goodix.c
+>> drivers/platform/x86/silead_dmi.c
+>> drivers/power/supply/axp288_charger.c
+>>
+>> and plenty under sound/soc/intel.
+>>
+>> I do not care right now about sound/soc/intel stuff, while everywhere
+>> else would be better to avoid this.
+>>
+>> Mika, Rafael, what're yours opinions regarding to use ACPI instances
+>> in the drivers?
+> 
+> Since the instance name is generated by the ACPI core and in theory
+> could change, I agree this is pretty fragile. Using _HID/_UID should be
+> the preferred way. However, it is not always possible so we end up doing
+> hacks like this.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c5554577681a..4256e05ee584 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -794,6 +794,7 @@ config ACPI_CMPC
- config INTEL_CHT_INT33FE
- 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
- 	depends on X86 && ACPI && I2C && REGULATOR
-+	select MULTIPLEXER
- 	---help---
- 	  This driver add support for the INT33FE ACPI device found on
- 	  some Intel Cherry Trail devices.
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 24a1662be81d..611b8af9cefd 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -24,6 +24,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/mux/consumer.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- 
-@@ -35,6 +36,19 @@ struct cht_int33fe_data {
- 	struct i2c_client *pi3usb30532;
- };
- 
-+static struct mux_lookup cht_int33fe_mux_lookup[] = {
-+	{
-+		.provider = "i2c-pi3usb30532",
-+		.dev_id   = "i2c-fusb302",
-+		.mux_name = "type-c-mode-mux",
-+	},
-+	{
-+		.provider = "intel_cht_usb_mux",
-+		.dev_id   = "i2c-fusb302",
-+		.mux_name = "usb-role-mux",
-+	},
-+};
-+
- /*
-  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
-  * the max17047 both through the INT33FE ACPI device (it is right there
-@@ -170,6 +184,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
- 	board_info.properties = fusb302_props;
- 	board_info.irq = fusb302_irq;
- 
-+	mux_add_table(cht_int33fe_mux_lookup,
-+		      ARRAY_SIZE(cht_int33fe_mux_lookup));
-+
- 	data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
- 	if (!data->fusb302)
- 		goto out_unregister_max17047;
-@@ -193,6 +210,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
- 	if (data->max17047)
- 		i2c_unregister_device(data->max17047);
- 
-+	mux_remove_table(cht_int33fe_mux_lookup,
-+		      ARRAY_SIZE(cht_int33fe_mux_lookup));
-+
- 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
- }
- 
-@@ -205,6 +225,9 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
- 	if (data->max17047)
- 		i2c_unregister_device(data->max17047);
- 
-+	mux_remove_table(cht_int33fe_mux_lookup,
-+		      ARRAY_SIZE(cht_int33fe_mux_lookup));
-+
- 	return 0;
- }
- 
--- 
-2.13.5
+Given that on the device in question where we need this workaround there
+is only ever 1 max17047, including the instance number in the check really
+is a non-problem, but if there is a strong preference for me to change
+the check over to a _HID check then I can do a v2 doing so.
+
+Regards,
+
+Hans
+
+
+
