@@ -1,44 +1,62 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID
-        API
-Date: Fri, 1 Sep 2017 10:23:03 +0200
-Message-ID: <20170901082303.GA23482@lst.de>
-References: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com> <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com> <CAHp75VcFB1BDNUG729mi5BkhcR_aBX4MzvoyzdRx=LaAg9=EHQ@mail.gmail.com> <CALCETrVUctPyYNjkLL3uZUdxFko9=tpMchpV09VpWEhbjMT16g@mail.gmail.com> <1502633755.15214.4.camel@linux.intel.com> <CALCETrX1EtzwKTwc1T==W+4GRnh0+JxyXE4rfP79ynteR2ooUg@mail.gmail.com> <CALCETrVBm7c0EYEzOsaZnDCstc64ucJu49K39UD7gzS1e-UMFA@mail.gmail.com> <20170830122545.GA26045@lst.de> <CALCETrW6+MYpX+w-NKq8Uzo8_rJk+fLGkJaZiNAr4aCFRYNUQg@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_cht_int33fe: Work around BIOS bug on
+ some devices
+Date: Fri, 1 Sep 2017 12:19:04 +0300
+Message-ID: <20170901091904.GV2598@lahna.fi.intel.com>
+References: <20170814201425.20991-1-hdegoede@redhat.com>
+ <CAHp75Vdityzx+fzU_q0vULGpT3ww8C0_D0fYtEW77Hyh1yTX6A@mail.gmail.com>
+ <06a1d48c-9f75-4aab-107d-f71ce8ebbb26@redhat.com>
+ <CAHp75Vdz3S5a=Vqf=rnMV9Dy+829MGNUWPmzp+B08NadBM0wNg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrW6+MYpX+w-NKq8Uzo8_rJk+fLGkJaZiNAr4aCFRYNUQg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAHp75Vdz3S5a=Vqf=rnMV9Dy+829MGNUWPmzp+B08NadBM0wNg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 30, 2017 at 01:01:28PM -0700, Andy Lutomirski wrote:
-> What I'm saying is: I agree that "RFC4122 UUID" and "wintel GUID" are
-> different, but the new structs aren't called "RFC4122 UUID" and
-> "wintel GUID" - they're called "uuid" and "guid".  I think the latter
-> is very far from intuitive.  I read the wmi patches several times
-> before I figured out that they were even potentially correct.
+On Thu, Aug 31, 2017 at 07:04:46PM +0300, Andy Shevchenko wrote:
+> On Mon, Aug 14, 2017 at 11:52 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 14-08-17 22:45, Andy Shevchenko wrote:
+> >> On Mon, Aug 14, 2017 at 11:14 PM, Hans de Goede <hdegoede@redhat.com>
+> >> wrote:
+> 
+> >>> +int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+> >>> +{
+> >>> +       const char *name = dev_name(dev);
+> >>> +       struct i2c_client **max17047 = data;
+> >>> +
+> >>> +       if (name && strcmp(name, "i2c-MAX17047:00") == 0) {
+> >>
+> >>
+> >> Can we stop using bad practice of comparing against _instance_?
+> >> If device is suppose to be single in the system, wouldn't _HID be enough?
+> 
+> > Yes _HID would be enough, but that takes some extra code with little
+> > gain IMHO, we are effectively checking the HID here as that is where
+> > the device-name comes from.
+> >
+> > Anyways if you strongly prefer a HID check I can do a v2 doing that
+> > either way let me know.
+> 
+> Currently we have the following modules where ACPI instance is used in:
+> 
+> drivers/acpi/acpi_lpss.c
+> drivers/input/touchscreen/goodix.c
+> drivers/platform/x86/silead_dmi.c
+> drivers/power/supply/axp288_charger.c
+> 
+> and plenty under sound/soc/intel.
+> 
+> I do not care right now about sound/soc/intel stuff, while everywhere
+> else would be better to avoid this.
+> 
+> Mika, Rafael, what're yours opinions regarding to use ACPI instances
+> in the drivers?
 
-uuid_t is the classic type for the RFC4122 UUID, userspace libuuid
-which exists on just about any platforms calls it that, and in
-the kernel XFS has been since before uuid_be was introduces. Now
-for the Wintel GUID we'd have to call it "GUID" to stay close to
-the roots, but I think guid_t is a good enough Linux-ish approximation
-for that.
-
-> 1. Make them totally separate.  Have a function to convert a string to
-> a uuid_le (or a guid_le or whatever you want to call it, as long as
-> "le" or perhaps "wintel" is involved so it's obvious.)  Have another
-> function to convert back.  Teach printk to understand %pULE.
-
-They are entirely separate - one uses the uuid_* functions, one uses
-guid_* functions.
-
-> 2. Have a function to convert back and forth so that kernel code uses
-> the real RFC4122 UUID for internal representations and keep just %pU.
-
-99% of the uses are in interfaces we don't control - on disk, on the
-wire, firmware, hypervisor.  So there really is no point in converting
-between them.
+Since the instance name is generated by the ACPI core and in theory
+could change, I agree this is pretty fragile. Using _HID/_UID should be
+the preferred way. However, it is not always possible so we end up doing
+hacks like this.
