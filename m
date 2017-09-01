@@ -1,267 +1,97 @@
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH v4 1/3] mfd: Add support for Cherry Trail Dollar Cove TI PMIC
-Date: Fri,  1 Sep 2017 15:06:30 +0200
-Message-ID: <20170901130632.28025-2-tiwai@suse.de>
-References: <20170901130632.28025-1-tiwai@suse.de>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170901130632.28025-1-tiwai@suse.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v1] platform/x86: wmi: Switch to use new generic UUID API
+Date: Fri, 1 Sep 2017 08:36:58 -0700
+Message-ID: <CALCETrXEZtEkG0ZX13u8AUfEtObjf1S9Yg2uP4e8qgsUxjR2+Q@mail.gmail.com>
+References: <20170802132834.8223-1-andriy.shevchenko@linux.intel.com>
+ <CALCETrU1vJXGUXhbwNkW1qi9c73tgxT0vWN7eO=ee21BrvNq0Q@mail.gmail.com>
+ <CAHp75VcFB1BDNUG729mi5BkhcR_aBX4MzvoyzdRx=LaAg9=EHQ@mail.gmail.com>
+ <CALCETrVUctPyYNjkLL3uZUdxFko9=tpMchpV09VpWEhbjMT16g@mail.gmail.com>
+ <1502633755.15214.4.camel@linux.intel.com> <CALCETrX1EtzwKTwc1T==W+4GRnh0+JxyXE4rfP79ynteR2ooUg@mail.gmail.com>
+ <CALCETrVBm7c0EYEzOsaZnDCstc64ucJu49K39UD7gzS1e-UMFA@mail.gmail.com>
+ <20170830122545.GA26045@lst.de> <CALCETrW6+MYpX+w-NKq8Uzo8_rJk+fLGkJaZiNAr4aCFRYNUQg@mail.gmail.com>
+ <20170901082303.GA23482@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170901082303.GA23482@lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch adds the MFD driver for Dollar Cove (TI version) PMIC with
-ACPI INT33F5 that is found on some Intel Cherry Trail devices.
-The driver is based on the original work by Intel, found at:
-  https://github.com/01org/ProductionKernelQuilts
+On Fri, Sep 1, 2017 at 1:23 AM, Christoph Hellwig <hch@lst.de> wrote:
+> On Wed, Aug 30, 2017 at 01:01:28PM -0700, Andy Lutomirski wrote:
+>> What I'm saying is: I agree that "RFC4122 UUID" and "wintel GUID" are
+>> different, but the new structs aren't called "RFC4122 UUID" and
+>> "wintel GUID" - they're called "uuid" and "guid".  I think the latter
+>> is very far from intuitive.  I read the wmi patches several times
+>> before I figured out that they were even potentially correct.
+>
+> uuid_t is the classic type for the RFC4122 UUID, userspace libuuid
+> which exists on just about any platforms calls it that, and in
+> the kernel XFS has been since before uuid_be was introduces.
 
-This is a minimal version for adding the basic resources.  Currently,
-only ACPI PMIC opregion and the external power-button are used.
+> Now
+> for the Wintel GUID we'd have to call it "GUID" to stay close to
+> the roots, but I think guid_t is a good enough Linux-ish approximation
+> for that.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
-v3->4: no change for this patch
-v2->v3:
-* Rename dc_ti with chtdc_ti in all places
-* Driver/kconfig renames accordingly
-* Added acks by Andy and Mika
-v1->v2:
-* Minor cleanups as suggested by Andy
+Why?  I guess I agree that the string "guid" of whatever case should
+be there, and, if the world actually thought that "guid" meant
+"little-endian Wintel monstrosity", I'd be fine with that.  But it
+doesn't.  I just Googled the string guid and the entire first page of
+results either directly states that guid and uuid are synonymous or
+merely fails to acknowledge the difference.  Even the link that
+actually points to Microsoft:
 
- drivers/mfd/Kconfig                   |  13 +++
- drivers/mfd/Makefile                  |   1 +
- drivers/mfd/intel_soc_pmic_chtdc_ti.c | 183 ++++++++++++++++++++++++++++++++++
- 3 files changed, 197 insertions(+)
- create mode 100644 drivers/mfd/intel_soc_pmic_chtdc_ti.c
+https://msdn.microsoft.com/en-us/library/system.guid(v=vs.110).aspx
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 94ad2c1c3d90..36e7d60f1314 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -496,6 +496,19 @@ config INTEL_SOC_PMIC_CHTWC
- 	  available before any devices using it are probed. This option also
- 	  causes the designware-i2c driver to be builtin for the same reason.
- 
-+config INTEL_SOC_PMIC_CHTDC_TI
-+	tristate "Support for Intel Cherry Trail Dollar Cove TI PMIC"
-+	depends on GPIOLIB
-+	depends on I2C
-+	depends on ACPI
-+	depends on X86
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Select this option for supporting Dollar Cove (TI version) PMIC
-+	  device that is found on some Intel Cherry Trail systems.
-+
- config MFD_INTEL_LPSS
- 	tristate
- 	select COMMON_CLK
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 080793b3fd0e..50ae64d2b22a 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -216,6 +216,7 @@ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
- obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
- obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
-+obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
- 
- obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-diff --git a/drivers/mfd/intel_soc_pmic_chtdc_ti.c b/drivers/mfd/intel_soc_pmic_chtdc_ti.c
-new file mode 100644
-index 000000000000..404adb6fc475
---- /dev/null
-+++ b/drivers/mfd/intel_soc_pmic_chtdc_ti.c
-@@ -0,0 +1,183 @@
-+/*
-+ * Device access for Dollar Cove TI PMIC
-+ * Copyright (c) 2014, Intel Corporation.
-+ *   Author: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
-+ *
-+ * Cleanup and forward-ported
-+ *   Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/interrupt.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+
-+#define CHTDC_TI_IRQLVL1	0x01
-+#define CHTDC_TI_MASK_IRQLVL1	0x02
-+
-+/* Level 1 IRQs */
-+enum {
-+	CHTDC_TI_PWRBTN = 0,	/* power button */
-+	CHTDC_TI_DIETMPWARN,	/* thermal */
-+	CHTDC_TI_ADCCMPL,	/* ADC */
-+	/* no irq 3 */
-+	CHTDC_TI_VBATLOW = 4,	/* battery */
-+	CHTDC_TI_VBUSDET,	/* power source */
-+	/* no irq 6 */
-+	CHTDC_TI_CCEOCAL = 7,	/* battery */
-+};
-+
-+static struct resource power_button_resources[] = {
-+	DEFINE_RES_IRQ(CHTDC_TI_PWRBTN),
-+};
-+
-+static struct resource thermal_resources[] = {
-+	DEFINE_RES_IRQ(CHTDC_TI_DIETMPWARN),
-+};
-+
-+static struct resource adc_resources[] = {
-+	DEFINE_RES_IRQ(CHTDC_TI_ADCCMPL),
-+};
-+
-+static struct resource pwrsrc_resources[] = {
-+	DEFINE_RES_IRQ(CHTDC_TI_VBUSDET),
-+};
-+
-+static struct resource battery_resources[] = {
-+	DEFINE_RES_IRQ(CHTDC_TI_VBATLOW),
-+	DEFINE_RES_IRQ(CHTDC_TI_CCEOCAL),
-+};
-+
-+static struct mfd_cell chtdc_ti_dev[] = {
-+	{
-+		.name = "chtdc_ti_pwrbtn",
-+		.num_resources = ARRAY_SIZE(power_button_resources),
-+		.resources = power_button_resources,
-+	},
-+	{
-+		.name = "chtdc_ti_adc",
-+		.num_resources = ARRAY_SIZE(adc_resources),
-+		.resources = adc_resources,
-+	},
-+	{
-+		.name = "chtdc_ti_thermal",
-+		.num_resources = ARRAY_SIZE(thermal_resources),
-+		.resources = thermal_resources,
-+	},
-+	{
-+		.name = "chtdc_ti_pwrsrc",
-+		.num_resources = ARRAY_SIZE(pwrsrc_resources),
-+		.resources = pwrsrc_resources,
-+	},
-+	{
-+		.name = "chtdc_ti_battery",
-+		.num_resources = ARRAY_SIZE(battery_resources),
-+		.resources = battery_resources,
-+	},
-+	{
-+		.name = "chtdc_ti_region",
-+	},
-+};
-+
-+static const struct regmap_config chtdc_ti_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 128,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static const struct regmap_irq chtdc_ti_irqs[] = {
-+	REGMAP_IRQ_REG(CHTDC_TI_PWRBTN, 0, BIT(CHTDC_TI_PWRBTN)),
-+	REGMAP_IRQ_REG(CHTDC_TI_DIETMPWARN, 0, BIT(CHTDC_TI_DIETMPWARN)),
-+	REGMAP_IRQ_REG(CHTDC_TI_ADCCMPL, 0, BIT(CHTDC_TI_ADCCMPL)),
-+	REGMAP_IRQ_REG(CHTDC_TI_VBATLOW, 0, BIT(CHTDC_TI_VBATLOW)),
-+	REGMAP_IRQ_REG(CHTDC_TI_VBUSDET, 0, BIT(CHTDC_TI_VBUSDET)),
-+	REGMAP_IRQ_REG(CHTDC_TI_CCEOCAL, 0, BIT(CHTDC_TI_CCEOCAL)),
-+};
-+
-+static const struct regmap_irq_chip chtdc_ti_irq_chip = {
-+	.name = KBUILD_MODNAME,
-+	.irqs = chtdc_ti_irqs,
-+	.num_irqs = ARRAY_SIZE(chtdc_ti_irqs),
-+	.num_regs = 1,
-+	.status_base = CHTDC_TI_IRQLVL1,
-+	.mask_base = CHTDC_TI_MASK_IRQLVL1,
-+	.ack_base = CHTDC_TI_IRQLVL1,
-+};
-+
-+static int chtdc_ti_probe(struct i2c_client *i2c)
-+{
-+	struct device *dev = &i2c->dev;
-+	struct intel_soc_pmic *pmic;
-+	int ret;
-+
-+	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
-+	if (!pmic)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, pmic);
-+
-+	pmic->regmap = devm_regmap_init_i2c(i2c, &chtdc_ti_regmap_config);
-+	if (IS_ERR(pmic->regmap))
-+		return PTR_ERR(pmic->regmap);
-+	pmic->irq = i2c->irq;
-+
-+	ret = devm_regmap_add_irq_chip(dev, pmic->regmap, pmic->irq,
-+				       IRQF_ONESHOT, 0,
-+				       &chtdc_ti_irq_chip,
-+				       &pmic->irq_chip_data);
-+	if (ret)
-+		return ret;
-+
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, chtdc_ti_dev,
-+				    ARRAY_SIZE(chtdc_ti_dev), NULL, 0,
-+				    regmap_irq_get_domain(pmic->irq_chip_data));
-+}
-+
-+static void chtdc_ti_shutdown(struct i2c_client *i2c)
-+{
-+	struct intel_soc_pmic *pmic = i2c_get_clientdata(i2c);
-+
-+	disable_irq(pmic->irq);
-+}
-+
-+static int __maybe_unused chtdc_ti_suspend(struct device *dev)
-+{
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
-+
-+	disable_irq(pmic->irq);
-+	return 0;
-+}
-+
-+static int __maybe_unused chtdc_ti_resume(struct device *dev)
-+{
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
-+
-+	enable_irq(pmic->irq);
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(chtdc_ti_pm_ops, chtdc_ti_suspend, chtdc_ti_resume);
-+
-+static const struct acpi_device_id chtdc_ti_acpi_ids[] = {
-+	{ "INT33F5" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, chtdc_ti_acpi_ids);
-+
-+static struct i2c_driver chtdc_ti_i2c_driver = {
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.pm = &chtdc_ti_pm_ops,
-+		.acpi_match_table = chtdc_ti_acpi_ids,
-+	},
-+	.probe_new = chtdc_ti_probe,
-+	.shutdown = chtdc_ti_shutdown,
-+};
-+module_i2c_driver(chtdc_ti_i2c_driver);
-+
-+MODULE_DESCRIPTION("I2C driver for Intel SoC Dollar Cove TI PMIC");
-+MODULE_LICENSE("GPL v2");
--- 
-2.14.1
+says nothing about endianness.  It mentions a constructor that accepts
+a 16 byte array and *does not document* what it means.
 
+For good measure, I Binged it, too.  Same results.
+
+So please, please, PLEASE give them names that actually explain
+something.  How about "guid_le"?  That uses the Microsoft-preferred
+"g" *and* conveys the important bit, which is that the endianness is
+screwed up.
+
+FWIW, just plain "guid' is also problematic even if the reader somehow
+realizes that it specifically means the Wintel one.  The actual
+Windows definition of GUID is:
+
+typedef struct _GUID {
+  DWORD Data1;
+  WORD  Data2;
+  WORD  Data3;
+  BYTE  Data4[8];
+} GUID;
+
+Which is not a valid substitute for the one in Linus' tree:
+
+typedef struct {
+        __u8 b[16];
+} guid_t;
+
+MS's GUID has its endianness depend on the system endianness.  The
+shiny one in uapi/uuid.h is always little-endian.  So if you really
+want to stick to MS's terminology, the new struct is wrong.
+
+Please just rename it "guid_le_t" or "guid_le".  Until/unless
+something that happens, I'm not going to ack the changes to the wmi
+driver, since I think they're entirely a step backwards and they take
+code that looks correct and make it look wrong.
+
+>
+>> 1. Make them totally separate.  Have a function to convert a string to
+>> a uuid_le (or a guid_le or whatever you want to call it, as long as
+>> "le" or perhaps "wintel" is involved so it's obvious.)  Have another
+>> function to convert back.  Teach printk to understand %pULE.
+>
+> They are entirely separate - one uses the uuid_* functions, one uses
+> guid_* functions.
+
+Keeping them separate is fine with me.  My objection is not to the API
+structure -- it's to the fact that neither the obvious reading (guid
+== uuid) nor the Wintel-centric reading (struct GUID) actually match
+what the code does.
