@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 05/11] mux: Add Intel Cherrytrail USB mux driver
-Date: Fri,  1 Sep 2017 23:48:39 +0200
-Message-ID: <20170901214845.7153-6-hdegoede@redhat.com>
+Subject: [PATCH 08/11] staging: typec: tcpm: Set mux to device mode when configured as such
+Date: Fri,  1 Sep 2017 23:48:42 +0200
+Message-ID: <20170901214845.7153-9-hdegoede@redhat.com>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170901214845.7153-1-hdegoede@redhat.com>
@@ -10,352 +10,90 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Intel Cherrytrail SoCs have an internal USB mux for muxing the otg-port
-USB data lines between the xHCI host controller and the dwc3 gadget
-controller. On some Cherrytrail systems this mux is controlled through
-AML code reacting on a GPIO IRQ connected to the USB OTG id pin (through
-an _AIE ACPI method) so things just work.
+Setting the mux to TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT when the
+data-role is device is not correct. Plenty of devices support operating
+as USB device through a (separate) USB device controller.
 
-But on other Cherrytrail systems we need to control the mux ourselves
-this driver exports the mux through the mux subsys, so that other drivers
-can control it if necessary.
+So this commit instead splits out TYPEC_MUX_USB into TYPEC_MUX_USB_HOST
+and TYPEC_MUX_USB_DEVICE and makes tcpm_set_roles() set the mux
+accordingly.
 
-This driver also updates the vbus-valid reporting to the dwc3 gadget
-controller, as this uses the same registers as the mux. This is needed
-for gadget/device mode to work properly (even on systems which control
-the mux from their AML code).
+Likewise TCPC_MUX_DP gets renamed to TCPC_MUX_DP_SRC to make clear that
+this is for configuring the Type-C port as a Display Port source, not a
+sink.
 
-Note this depends on the xhci driver registering a platform device
-named "intel_cht_usb_mux", which has an IOMEM resource 0 which points
-to the Intel Vendor Defined XHCI extended capabilities region.
+Last this commit makes tcpm_reset_port() to set the mux to
+TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT so that it does not and up
+staying in host (and with this commit also device) mode after a detach.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
--Complete rewrite as a stand-alone platform-driver rather then as a phy
- driver, since this is just a mux, not a phy
+ drivers/staging/typec/tcpm.c |  7 ++++---
+ drivers/staging/typec/tcpm.h | 22 ++++++++++++++--------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-Changes in v3:
--Make this a mux subsys driver instead of listening to USB_HOST extcon
- cable events and responding to those
----
- drivers/mux/Kconfig             |  11 ++
- drivers/mux/Makefile            |   2 +
- drivers/mux/intel_cht_usb_mux.c | 269 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 282 insertions(+)
- create mode 100644 drivers/mux/intel_cht_usb_mux.c
-
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 19e4e904c9bf..17938918bf93 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -34,6 +34,17 @@ config MUX_GPIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-gpio.
+diff --git a/drivers/staging/typec/tcpm.c b/drivers/staging/typec/tcpm.c
+index 8af62e74d54c..ffe7e26d4ed3 100644
+--- a/drivers/staging/typec/tcpm.c
++++ b/drivers/staging/typec/tcpm.c
+@@ -752,11 +752,11 @@ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
+ 	int ret;
  
-+config MUX_CHT_USB_MUX
-+	tristate "Intel Cherrytrail USB Multiplexer"
-+	depends on ACPI && X86 && EXTCON
-+	help
-+	  This driver adds support for the internal USB mux for muxing the OTG
-+	  USB data lines between the xHCI host controller and the dwc3 gadget
-+	  controller found on Intel Cherrytrail SoCs.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-intel_cht_usb_mux.
-+
- config MUX_MMIO
- 	tristate "MMIO register bitfield-controlled Multiplexer"
- 	depends on (OF && MFD_SYSCON) || COMPILE_TEST
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 0e1e59760e3f..a12e812c7966 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -6,8 +6,10 @@ mux-core-objs			:= core.o
- mux-adg792a-objs		:= adg792a.o
- mux-gpio-objs			:= gpio.o
- mux-mmio-objs			:= mmio.o
-+mux-intel_cht_usb_mux-objs	:= intel_cht_usb_mux.o
+ 	if (data == TYPEC_HOST)
+-		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
++		ret = tcpm_mux_set(port, TYPEC_MUX_USB_HOST,
+ 				   TCPC_USB_SWITCH_CONNECT);
+ 	else
+-		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
+-				   TCPC_USB_SWITCH_DISCONNECT);
++		ret = tcpm_mux_set(port, TYPEC_MUX_USB_DEVICE,
++				   TCPC_USB_SWITCH_CONNECT);
+ 	if (ret < 0)
+ 		return ret;
  
- obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
- obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
- obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-+obj-$(CONFIG_MUX_CHT_USB_MUX)	+= mux-intel_cht_usb_mux.o
-diff --git a/drivers/mux/intel_cht_usb_mux.c b/drivers/mux/intel_cht_usb_mux.c
-new file mode 100644
-index 000000000000..7b1621a081d8
---- /dev/null
-+++ b/drivers/mux/intel_cht_usb_mux.c
-@@ -0,0 +1,269 @@
-+/*
-+ * Intel Cherrytrail USB OTG MUX driver
-+ *
-+ * Copyright (c) 2016 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (C) 2014 Intel Corp.
-+ *
-+ * Author: Wu, Hao
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation, or (at your option)
-+ * any later version.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/extcon.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mux/consumer.h> /* For the MUX_USB_* defines */
-+#include <linux/mux/driver.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+
-+/* register definition */
-+#define DUAL_ROLE_CFG0			0x68
-+#define SW_VBUS_VALID			(1 << 24)
-+#define SW_IDPIN_EN			(1 << 21)
-+#define SW_IDPIN			(1 << 20)
-+
-+#define DUAL_ROLE_CFG1			0x6c
-+#define HOST_MODE			(1 << 29)
-+
-+#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
-+
-+#define DRV_NAME			"intel_cht_usb_mux"
-+
-+struct intel_cht_usb_mux {
-+	struct mutex cfg0_lock;
-+	void __iomem *base;
-+	struct extcon_dev *vbus_extcon;
-+	struct notifier_block vbus_nb;
-+	struct work_struct vbus_work;
-+};
-+
-+struct intel_cht_extcon_info {
-+	const char *hid;
-+	int hrv;
-+	const char *extcon;
-+};
-+
-+struct intel_cht_extcon_info vbus_providers[] = {
-+	{ "INT33F4", -1, "axp288_extcon" },
-+	{ "INT34D3",  3, "cht_wcove_pwrsrc" },
-+};
-+
-+static const unsigned int vbus_cable_ids[] = {
-+	EXTCON_CHG_USB_SDP, EXTCON_CHG_USB_CDP, EXTCON_CHG_USB_DCP,
-+	EXTCON_CHG_USB_ACA, EXTCON_CHG_USB_FAST,
-+};
-+
-+static void intel_cht_usb_mux_set_sw_mode(struct intel_cht_usb_mux *mux)
-+{
-+	u32 data;
-+
-+	data = readl(mux->base + DUAL_ROLE_CFG0);
-+	if (!(data & SW_IDPIN_EN)) {
-+		data |= SW_IDPIN_EN;
-+		writel(data, mux->base + DUAL_ROLE_CFG0);
-+	}
-+}
-+
-+static int intel_cht_usb_mux_set_mux(struct mux_control *mux_ctrl, int state)
-+{
-+	struct intel_cht_usb_mux *mux = mux_chip_priv(mux_ctrl->chip);
-+	unsigned long timeout;
-+	bool host_mode;
-+	u32 data;
-+
-+	mutex_lock(&mux->cfg0_lock);
-+
-+	intel_cht_usb_mux_set_sw_mode(mux);
-+
-+	/* Set idpin value as requested */
-+	data = readl(mux->base + DUAL_ROLE_CFG0);
-+	switch (state & ~MUX_USB_POLARITY_INV) {
-+	case MUX_USB_NONE:
-+	case MUX_USB_DEVICE:
-+		data |= SW_IDPIN;
-+		host_mode = false;
-+		break;
-+	default:
-+		data &= ~SW_IDPIN;
-+		host_mode = true;
-+	}
-+	writel(data, mux->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&mux->cfg0_lock);
-+
-+	/* In most case it takes about 600ms to finish mode switching */
-+	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
-+
-+	/* Polling on CFG1 register to confirm mode switch.*/
-+	while (1) {
-+		data = readl(mux->base + DUAL_ROLE_CFG1);
-+		if (!!(data & HOST_MODE) == host_mode)
-+			break;
-+
-+		/* Interval for polling is set to about 5 - 10 ms */
-+		usleep_range(5000, 10000);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_warn(&mux_ctrl->chip->dev,
-+				 "Timeout waiting for mux to switch\n");
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void intel_cht_usb_mux_set_vbus_valid(struct intel_cht_usb_mux *mux,
-+					     bool valid)
-+{
-+	u32 data;
-+
-+	mutex_lock(&mux->cfg0_lock);
-+
-+	intel_cht_usb_mux_set_sw_mode(mux);
-+
-+	data = readl(mux->base + DUAL_ROLE_CFG0);
-+	if (valid)
-+		data |= SW_VBUS_VALID;
-+	else
-+		data &= ~SW_VBUS_VALID;
-+	writel(data, mux->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&mux->cfg0_lock);
-+}
-+
-+static void intel_cht_usb_mux_vbus_work(struct work_struct *work)
-+{
-+	struct intel_cht_usb_mux *mux =
-+		container_of(work, struct intel_cht_usb_mux, vbus_work);
-+	bool vbus_present = false;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vbus_cable_ids); i++) {
-+		if (extcon_get_state(mux->vbus_extcon, vbus_cable_ids[i]) > 0) {
-+			vbus_present = true;
-+			break;
-+		}
-+	}
-+
-+	intel_cht_usb_mux_set_vbus_valid(mux, vbus_present);
-+}
-+
-+static int intel_cht_usb_mux_vbus_extcon_evt(struct notifier_block *nb,
-+					     unsigned long event, void *param)
-+{
-+	struct intel_cht_usb_mux *mux =
-+		container_of(nb, struct intel_cht_usb_mux, vbus_nb);
-+
-+	schedule_work(&mux->vbus_work);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static const struct mux_control_ops intel_cht_usb_mux_ops = {
-+	.set = intel_cht_usb_mux_set_mux,
-+};
-+
-+static int intel_cht_usb_mux_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_cht_usb_mux *mux;
-+	struct mux_chip *mux_chip;
-+	struct resource *res;
-+	resource_size_t size;
-+	int i, ret;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux));
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_chip->ops = &intel_cht_usb_mux_ops;
-+	mux_chip->mux[0].states = MUX_USB_STATES;
-+	mux = mux_chip_priv(mux_chip);
-+	mutex_init(&mux->cfg0_lock);
-+
-+	/*
-+	 * Besides controlling the mux we also need to control the vbus_valid
-+	 * flag for device/gadget mode to work properly. To do this we monitor
-+	 * the extcon interface exported by the PMIC drivers for the PMICs used
-+	 * with the Cherry Trail SoC.
-+	 *
-+	 * We try to get the extcon_dev before registering the mux as this
-+	 * may lead to us exiting with -EPROBE_DEFER.
-+	 */
-+	for (i = 0 ; i < ARRAY_SIZE(vbus_providers); i++) {
-+		if (!acpi_dev_present(vbus_providers[i].hid, NULL,
-+				      vbus_providers[i].hrv))
-+			continue;
-+
-+		mux->vbus_extcon = extcon_get_extcon_dev(
-+						vbus_providers[i].extcon);
-+		if (mux->vbus_extcon == NULL)
-+			return -EPROBE_DEFER;
-+
-+		dev_info(dev, "using extcon '%s' for vbus-valid\n",
-+			 vbus_providers[i].extcon);
-+		break;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = (res->end + 1) - res->start;
-+	mux->base = devm_ioremap_nocache(dev, res->start, size);
-+	if (IS_ERR(mux->base)) {
-+		ret = PTR_ERR(mux->base);
-+		dev_err(dev, "can't iomap registers: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_mux_chip_register(dev, mux_chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (mux->vbus_extcon) {
-+		INIT_WORK(&mux->vbus_work, intel_cht_usb_mux_vbus_work);
-+		mux->vbus_nb.notifier_call = intel_cht_usb_mux_vbus_extcon_evt;
-+		ret = devm_extcon_register_notifier_all(dev, mux->vbus_extcon,
-+							&mux->vbus_nb);
-+		if (ret) {
-+			dev_err(dev, "can't register vbus extcon notifier: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		/* Sync initial mode */
-+		schedule_work(&mux->vbus_work);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id intel_cht_usb_mux_table[] = {
-+	{ .name = DRV_NAME },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, intel_cht_usb_mux_table);
-+
-+static struct platform_driver intel_cht_usb_mux_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.id_table = intel_cht_usb_mux_table,
-+	.probe = intel_cht_usb_mux_probe,
-+};
-+
-+module_platform_driver(intel_cht_usb_mux_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Intel Cherrytrail USB mux driver");
-+MODULE_LICENSE("GPL");
+@@ -2025,6 +2025,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+ 	tcpm_init_vconn(port);
+ 	tcpm_set_current_limit(port, 0, 0);
+ 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
++	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
+ 	tcpm_set_attached_state(port, false);
+ 	port->try_src_count = 0;
+ 	port->try_snk_count = 0;
+diff --git a/drivers/staging/typec/tcpm.h b/drivers/staging/typec/tcpm.h
+index 7e9a6b7b5cd6..f662eed48c86 100644
+--- a/drivers/staging/typec/tcpm.h
++++ b/drivers/staging/typec/tcpm.h
+@@ -83,17 +83,23 @@ enum tcpc_usb_switch {
+ };
+ 
+ /* Mux state attributes */
+-#define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
+-#define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
+-#define TCPC_MUX_POLARITY_INVERTED	BIT(2)	/* Polarity inverted */
++#define TCPC_MUX_USB_DEVICE_ENABLED		BIT(0)	/* USB device enabled */
++#define TCPC_MUX_USB_HOST_ENABLED		BIT(1)	/* USB host enabled */
++#define TCPC_MUX_DP_SRC_ENABLED			BIT(2)	/* DP enabled */
++#define TCPC_MUX_POLARITY_INVERTED		BIT(3)	/* Polarity inverted */
+ 
+ /* Mux modes, decoded to attributes */
+ enum tcpc_mux_mode {
+-	TYPEC_MUX_NONE	= 0,				/* Open switch */
+-	TYPEC_MUX_USB	= TCPC_MUX_USB_ENABLED,		/* USB only */
+-	TYPEC_MUX_DP	= TCPC_MUX_DP_ENABLED,		/* DP only */
+-	TYPEC_MUX_DOCK	= TCPC_MUX_USB_ENABLED |	/* Both USB and DP */
+-			  TCPC_MUX_DP_ENABLED,
++	/* Open switch */
++	TYPEC_MUX_NONE = 0,
++	/* USB device only */
++	TYPEC_MUX_USB_DEVICE = TCPC_MUX_USB_DEVICE_ENABLED,
++	/* USB host only */
++	TYPEC_MUX_USB_HOST = TCPC_MUX_USB_HOST_ENABLED,
++	/* DP source only */
++	TYPEC_MUX_DP = TCPC_MUX_DP_SRC_ENABLED,
++	/* Both USB host and DP source */
++	TYPEC_MUX_DOCK = TCPC_MUX_USB_HOST_ENABLED | TCPC_MUX_DP_SRC_ENABLED,
+ };
+ 
+ struct tcpc_mux_dev {
 -- 
 2.13.5
