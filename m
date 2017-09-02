@@ -1,50 +1,118 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 03/11] mux: consumer.h: Add MUX_USB_* state constant defines
-Date: Sat, 2 Sep 2017 13:10:42 +0300
-Message-ID: <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com> <20170901214845.7153-4-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/11] mux: Add Intel Cherrytrail USB mux driver
+Date: Sat, 2 Sep 2017 13:19:05 +0300
+Message-ID: <CAHp75VfEmHMTh_p==2_O6R4dqzUTDr9-qpQ2n9NQ77=teAkqRg@mail.gmail.com>
+References: <20170901214845.7153-1-hdegoede@redhat.com> <20170901214845.7153-6-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f171.google.com ([209.85.216.171]:36815 "EHLO
-        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752243AbdIBKKn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Sep 2017 06:10:43 -0400
-In-Reply-To: <20170901214845.7153-4-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB <linux-usb@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170901214845.7153-6-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Add MUX_USB_* state constant defines, which can be used by USB
-> device/host and Type-C polarity/role/altmode mux drivers and consumers
-> to ensure that they agree on the meaning of the mux_control_select()
-> state argument.
+On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Intel Cherrytrail SoCs have an internal USB mux for muxing the otg-port
+> USB data lines between the xHCI host controller and the dwc3 gadget
+> controller. On some Cherrytrail systems this mux is controlled through
+> AML code reacting on a GPIO IRQ connected to the USB OTG id pin (through
+> an _AIE ACPI method) so things just work.
+>
+> But on other Cherrytrail systems we need to control the mux ourselves
+> this driver exports the mux through the mux subsys, so that other drivers
+> can control it if necessary.
+>
+> This driver also updates the vbus-valid reporting to the dwc3 gadget
+> controller, as this uses the same registers as the mux. This is needed
+> for gadget/device mode to work properly (even on systems which control
+> the mux from their AML code).
+>
+> Note this depends on the xhci driver registering a platform device
+> named "intel_cht_usb_mux", which has an IOMEM resource 0 which points
+> to the Intel Vendor Defined XHCI extended capabilities region.
 
-> +/*
-> + * Mux state values for USB muxes, used for both USB device/host role muxes
-> + * as well as for Type-C polarity/role/altmode muxes.
-> + *
-> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
-> + * inverted-polarity (Type-C plugged in upside down) can happen with any
-> + * other mux-state.
-> + */
-> +#define MUX_USB_POLARITY_INV   BIT(0)   /* Polarity inverted bit */
-> +#define MUX_USB_NONE           (1 << 1) /* Mux open / not connected */
-> +#define MUX_USB_DEVICE         (2 << 1) /* USB device mode */
-> +#define MUX_USB_HOST           (3 << 1) /* USB host mode */
-> +#define MUX_USB_HOST_AND_DP_SRC        (4 << 1) /* USB host + 2 lanes Display Port */
-> +#define MUX_USB_DP_SRC         (5 << 1) /* 4 lanes Display Port source */
-> +#define MUX_USB_STATES         (6 << 1)
+> +static void intel_cht_usb_mux_set_sw_mode(struct intel_cht_usb_mux *mux)
+> +{
+> +       u32 data;
+> +
+> +       data = readl(mux->base + DUAL_ROLE_CFG0);
 
-I would put OR'ed bits higher.
+> +       if (!(data & SW_IDPIN_EN)) {
 
-Like allocate 4 (8) bits for states and start special flagst from bit
-8 and so on.
+Do we need it? I think this kind of microoptimixzations not worth it
+for most cases.
 
+> +               data |= SW_IDPIN_EN;
+> +               writel(data, mux->base + DUAL_ROLE_CFG0);
+> +       }
+> +}
+
+> +       /* In most case it takes about 600ms to finish mode switching */
+> +       timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
+> +
+> +       /* Polling on CFG1 register to confirm mode switch.*/
+
+> +       while (1) {
+
+do {} while (time_before()); ?
+
+> +               data = readl(mux->base + DUAL_ROLE_CFG1);
+> +               if (!!(data & HOST_MODE) == host_mode)
+> +                       break;
+> +
+> +               /* Interval for polling is set to about 5 - 10 ms */
+> +               usleep_range(5000, 10000);
+> +
+> +               if (time_after(jiffies, timeout)) {
+> +                       dev_warn(&mux_ctrl->chip->dev,
+> +                                "Timeout waiting for mux to switch\n");
+> +                       break;
+> +               }
+> +       }
+
+
+> +static void intel_cht_usb_mux_vbus_work(struct work_struct *work)
+> +{
+> +       struct intel_cht_usb_mux *mux =
+> +               container_of(work, struct intel_cht_usb_mux, vbus_work);
+> +       bool vbus_present = false;
+> +       int i;
+
+unsigned int i; ?
+
+> +
+> +       for (i = 0; i < ARRAY_SIZE(vbus_cable_ids); i++) {
+> +               if (extcon_get_state(mux->vbus_extcon, vbus_cable_ids[i]) > 0) {
+> +                       vbus_present = true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       intel_cht_usb_mux_set_vbus_valid(mux, vbus_present);
+> +}
+
+> +static int intel_cht_usb_mux_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct intel_cht_usb_mux *mux;
+> +       struct mux_chip *mux_chip;
+> +       struct resource *res;
+> +       resource_size_t size;
+
+> +       int i, ret;
+
+Ditto.
+
+> +       for (i = 0 ; i < ARRAY_SIZE(vbus_providers); i++) {
+> +               if (!acpi_dev_present(vbus_providers[i].hid, NULL,
+> +                                     vbus_providers[i].hrv))
+> +                       continue;
 
 -- 
 With Best Regards,
 Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
