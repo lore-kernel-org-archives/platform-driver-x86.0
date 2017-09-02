@@ -1,57 +1,72 @@
-From: Hans de Goede <hdegoede@redhat.com>
+From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: [PATCH 03/11] mux: consumer.h: Add MUX_USB_* state constant
  defines
-Date: Sat, 2 Sep 2017 13:59:53 +0200
-Message-ID: <aeb794f9-96f4-5012-f0cb-c6513bda43bf@redhat.com>
+Date: Sat, 2 Sep 2017 07:59:57 -0700
+Message-ID: <8a05c405-3649-ac99-d4ca-3e519e1c63a8@roeck-us.net>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
  <20170901214845.7153-4-hdegoede@redhat.com>
- <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170901214845.7153-4-hdegoede@redhat.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB <linux-usb@vger.kernel.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans de Goede <hdegoede@redhat.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 02-09-17 12:10, Andy Shevchenko wrote:
-> On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Add MUX_USB_* state constant defines, which can be used by USB
->> device/host and Type-C polarity/role/altmode mux drivers and consumers
->> to ensure that they agree on the meaning of the mux_control_select()
->> state argument.
+On 09/01/2017 02:48 PM, Hans de Goede wrote:
+> Add MUX_USB_* state constant defines, which can be used by USB
+> device/host and Type-C polarity/role/altmode mux drivers and consumers
+> to ensure that they agree on the meaning of the mux_control_select()
+> state argument.
 > 
->> +/*
->> + * Mux state values for USB muxes, used for both USB device/host role muxes
->> + * as well as for Type-C polarity/role/altmode muxes.
->> + *
->> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
->> + * inverted-polarity (Type-C plugged in upside down) can happen with any
->> + * other mux-state.
->> + */
->> +#define MUX_USB_POLARITY_INV   BIT(0)   /* Polarity inverted bit */
->> +#define MUX_USB_NONE           (1 << 1) /* Mux open / not connected */
->> +#define MUX_USB_DEVICE         (2 << 1) /* USB device mode */
->> +#define MUX_USB_HOST           (3 << 1) /* USB host mode */
->> +#define MUX_USB_HOST_AND_DP_SRC        (4 << 1) /* USB host + 2 lanes Display Port */
->> +#define MUX_USB_DP_SRC         (5 << 1) /* 4 lanes Display Port source */
->> +#define MUX_USB_STATES         (6 << 1)
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   include/linux/mux/consumer.h | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
 > 
-> I would put OR'ed bits higher.
+> diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
+> index 912dd48a3a5d..e3ec9b4db962 100644
+> --- a/include/linux/mux/consumer.h
+> +++ b/include/linux/mux/consumer.h
+> @@ -15,6 +15,22 @@
+>   
+>   #include <linux/compiler.h>
+>   
+> +/*
+> + * Mux state values for USB muxes, used for both USB device/host role muxes
+> + * as well as for Type-C polarity/role/altmode muxes.
+> + *
+> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
+> + * inverted-polarity (Type-C plugged in upside down) can happen with any
+> + * other mux-state.
+> + */
+> +#define MUX_USB_POLARITY_INV	BIT(0)   /* Polarity inverted bit */
+> +#define MUX_USB_NONE		(1 << 1) /* Mux open / not connected */
+
+
+Why BIT(0) but (1 << 1) and so on ?
+
+Guenter
+
+
+> +#define MUX_USB_DEVICE		(2 << 1) /* USB device mode */
+> +#define MUX_USB_HOST		(3 << 1) /* USB host mode */
+> +#define MUX_USB_HOST_AND_DP_SRC	(4 << 1) /* USB host + 2 lanes Display Port */
+> +#define MUX_USB_DP_SRC		(5 << 1) /* 4 lanes Display Port source */
+> +#define MUX_USB_STATES		(6 << 1)
+> +
+>   struct device;
+>   struct mux_control;
+>   
 > 
-> Like allocate 4 (8) bits for states and start special flags from bit
-> 8 and so on.
-
-That is not an option because the mux framework expects a mux to declare
-how much states it has (which is where the MUX_USB_STATES define comes in)
-and any attemp to set a state higher then max_states will return with
--EINVAL.
-
-Regards,
-
-Hans
