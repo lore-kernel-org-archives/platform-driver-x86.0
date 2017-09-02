@@ -1,35 +1,50 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: intel_cht_int33fe: Work around BIOS bug on
- some devices
-Date: Sat, 2 Sep 2017 10:16:05 +0300
-Message-ID: <20170902071605.GH2598@lahna.fi.intel.com>
-References: <20170814201425.20991-1-hdegoede@redhat.com>
- <CAHp75Vdityzx+fzU_q0vULGpT3ww8C0_D0fYtEW77Hyh1yTX6A@mail.gmail.com>
- <06a1d48c-9f75-4aab-107d-f71ce8ebbb26@redhat.com>
- <CAHp75Vdz3S5a=Vqf=rnMV9Dy+829MGNUWPmzp+B08NadBM0wNg@mail.gmail.com>
- <20170901091904.GV2598@lahna.fi.intel.com>
- <6e064337-6105-2231-a66e-ccb6aba3440a@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 03/11] mux: consumer.h: Add MUX_USB_* state constant defines
+Date: Sat, 2 Sep 2017 13:10:42 +0300
+Message-ID: <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
+References: <20170901214845.7153-1-hdegoede@redhat.com> <20170901214845.7153-4-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:47257 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750980AbdIBHSV (ORCPT
+Received: from mail-qt0-f171.google.com ([209.85.216.171]:36815 "EHLO
+        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752243AbdIBKKn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Sep 2017 03:18:21 -0400
-Content-Disposition: inline
-In-Reply-To: <6e064337-6105-2231-a66e-ccb6aba3440a@redhat.com>
+        Sat, 2 Sep 2017 06:10:43 -0400
+In-Reply-To: <20170901214845.7153-4-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB <linux-usb@vger.kernel.org>
 
-On Fri, Sep 01, 2017 at 11:58:55PM +0200, Hans de Goede wrote:
-> Given that on the device in question where we need this workaround there
-> is only ever 1 max17047, including the instance number in the check really
-> is a non-problem, but if there is a strong preference for me to change
-> the check over to a _HID check then I can do a v2 doing so.
+On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Add MUX_USB_* state constant defines, which can be used by USB
+> device/host and Type-C polarity/role/altmode mux drivers and consumers
+> to ensure that they agree on the meaning of the mux_control_select()
+> state argument.
 
-I would still prefer _HID check if possible. Otherwise someone finds
-this hack later and uses it in another driver thinking it is the right
-thing to do ;-)
+> +/*
+> + * Mux state values for USB muxes, used for both USB device/host role muxes
+> + * as well as for Type-C polarity/role/altmode muxes.
+> + *
+> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
+> + * inverted-polarity (Type-C plugged in upside down) can happen with any
+> + * other mux-state.
+> + */
+> +#define MUX_USB_POLARITY_INV   BIT(0)   /* Polarity inverted bit */
+> +#define MUX_USB_NONE           (1 << 1) /* Mux open / not connected */
+> +#define MUX_USB_DEVICE         (2 << 1) /* USB device mode */
+> +#define MUX_USB_HOST           (3 << 1) /* USB host mode */
+> +#define MUX_USB_HOST_AND_DP_SRC        (4 << 1) /* USB host + 2 lanes Display Port */
+> +#define MUX_USB_DP_SRC         (5 << 1) /* 4 lanes Display Port source */
+> +#define MUX_USB_STATES         (6 << 1)
+
+I would put OR'ed bits higher.
+
+Like allocate 4 (8) bits for states and start special flagst from bit
+8 and so on.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
