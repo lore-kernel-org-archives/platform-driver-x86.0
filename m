@@ -1,119 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 11/11] platform/x86: intel_cht_int33fe: Add mux mappings
- for the Type-C port
-Date: Sat, 2 Sep 2017 13:42:59 +0300
-Message-ID: <CAHp75VdFAY6HaOh5-yBsgBoeJgpDrVUizX+zESq1Pr0-sQR6Pg@mail.gmail.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com> <20170901214845.7153-12-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 03/11] mux: consumer.h: Add MUX_USB_* state constant
+ defines
+Date: Sat, 2 Sep 2017 13:59:53 +0200
+Message-ID: <aeb794f9-96f4-5012-f0cb-c6513bda43bf@redhat.com>
+References: <20170901214845.7153-1-hdegoede@redhat.com>
+ <20170901214845.7153-4-hdegoede@redhat.com>
+ <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:38568 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751539AbdIBKnA (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Sep 2017 06:43:00 -0400
-In-Reply-To: <20170901214845.7153-12-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve_x+NaX=yw=JtL9b2napKmLcNQTJ_bWxpQy1jX4MEdYA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB <linux-usb@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> We need to add mappings for the mux subsys to be able to find the
-> muxes for the fusb302 driver to be able to control the PI3USB30532
-> Type-C mux and the device/host mux integrated in the CHT SoC.
->
+Hi,
 
-I suppose it will go via not PDx86 tree, so
+On 02-09-17 12:10, Andy Shevchenko wrote:
+> On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Add MUX_USB_* state constant defines, which can be used by USB
+>> device/host and Type-C polarity/role/altmode mux drivers and consumers
+>> to ensure that they agree on the meaning of the mux_control_select()
+>> state argument.
+> 
+>> +/*
+>> + * Mux state values for USB muxes, used for both USB device/host role muxes
+>> + * as well as for Type-C polarity/role/altmode muxes.
+>> + *
+>> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
+>> + * inverted-polarity (Type-C plugged in upside down) can happen with any
+>> + * other mux-state.
+>> + */
+>> +#define MUX_USB_POLARITY_INV   BIT(0)   /* Polarity inverted bit */
+>> +#define MUX_USB_NONE           (1 << 1) /* Mux open / not connected */
+>> +#define MUX_USB_DEVICE         (2 << 1) /* USB device mode */
+>> +#define MUX_USB_HOST           (3 << 1) /* USB host mode */
+>> +#define MUX_USB_HOST_AND_DP_SRC        (4 << 1) /* USB host + 2 lanes Display Port */
+>> +#define MUX_USB_DP_SRC         (5 << 1) /* 4 lanes Display Port source */
+>> +#define MUX_USB_STATES         (6 << 1)
+> 
+> I would put OR'ed bits higher.
+> 
+> Like allocate 4 (8) bits for states and start special flags from bit
+> 8 and so on.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+That is not an option because the mux framework expects a mux to declare
+how much states it has (which is where the MUX_USB_STATES define comes in)
+and any attemp to set a state higher then max_states will return with
+-EINVAL.
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/Kconfig             |  1 +
->  drivers/platform/x86/intel_cht_int33fe.c | 23 +++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index c5554577681a..4256e05ee584 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -794,6 +794,7 @@ config ACPI_CMPC
->  config INTEL_CHT_INT33FE
->         tristate "Intel Cherry Trail ACPI INT33FE Driver"
->         depends on X86 && ACPI && I2C && REGULATOR
-> +       select MULTIPLEXER
->         ---help---
->           This driver add support for the INT33FE ACPI device found on
->           some Intel Cherry Trail devices.
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index 24a1662be81d..611b8af9cefd 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -24,6 +24,7 @@
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> +#include <linux/mux/consumer.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->
-> @@ -35,6 +36,19 @@ struct cht_int33fe_data {
->         struct i2c_client *pi3usb30532;
->  };
->
-> +static struct mux_lookup cht_int33fe_mux_lookup[] = {
-> +       {
-> +               .provider = "i2c-pi3usb30532",
-> +               .dev_id   = "i2c-fusb302",
-> +               .mux_name = "type-c-mode-mux",
-> +       },
-> +       {
-> +               .provider = "intel_cht_usb_mux",
-> +               .dev_id   = "i2c-fusb302",
-> +               .mux_name = "usb-role-mux",
-> +       },
-> +};
-> +
->  /*
->   * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
->   * the max17047 both through the INT33FE ACPI device (it is right there
-> @@ -170,6 +184,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
->         board_info.properties = fusb302_props;
->         board_info.irq = fusb302_irq;
->
-> +       mux_add_table(cht_int33fe_mux_lookup,
-> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
-> +
->         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
->         if (!data->fusb302)
->                 goto out_unregister_max17047;
-> @@ -193,6 +210,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
->         if (data->max17047)
->                 i2c_unregister_device(data->max17047);
->
-> +       mux_remove_table(cht_int33fe_mux_lookup,
-> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
-> +
->         return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
->  }
->
-> @@ -205,6 +225,9 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
->         if (data->max17047)
->                 i2c_unregister_device(data->max17047);
->
-> +       mux_remove_table(cht_int33fe_mux_lookup,
-> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
-> +
->         return 0;
->  }
->
-> --
-> 2.13.5
->
+Regards,
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hans
