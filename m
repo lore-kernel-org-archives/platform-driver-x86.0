@@ -1,41 +1,31 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC v2 1/6] platform/x86: intel_pmc_ipc: Use devm_* calls in
- driver probe function
-Date: Sun, 3 Sep 2017 15:34:09 +0300
-Message-ID: <CAHp75VdrPp0D6sq82TR=MA2zwz=LPr6Lpd3DxPtSVaBnM6tsng@mail.gmail.com>
-References: <1504401889-113524-2-git-send-email-sathyanarayanan.kuppuswamy@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:33064 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753082AbdICMeL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 3 Sep 2017 08:34:11 -0400
-In-Reply-To: <1504401889-113524-2-git-send-email-sathyanarayanan.kuppuswamy@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v4 0/3] i2c: Hookup typec power-negotation to the PMIC and charger
+Date: Sun,  3 Sep 2017 14:41:53 +0200
+Message-ID: <20170903124156.7440-1-hdegoede@redhat.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Sep 3, 2017 at 4:24 AM,
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> This patch cleans up unnecessary free/alloc calls in ipc_plat_probe(),
-> ipc_pci_probe() and ipc_plat_get_res() functions by using devm_*
-> calls.
->
-> This patch also adds proper error handling for failure cases in
-> ipc_pci_probe() function.
+Hi Wolfram,
 
->         ret = pci_enable_device(pdev);
->         if (ret)
-> -               return ret;
-> +               goto release_device;
+Almost all patches from my patch series for hooking up typec
+power-negotation to the PMIC and charger drivers have been
+queued for merging into 4.14, leaving only the 3 patches of
+the v4 of this series.
 
-Instead you should use PCI managed function(s).
+The first 2 patches are i2c patches, if you could review and
+merge these (preferably for 4.14, but 4.15 is fine too) that would
+be great.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Darren, Andy, the single platform/x86 patch in here should only
+be merged after the 2 i2c patches are in place, otherwise users
+of the board(s) in question will end up not having any battery
+monitoring. Also note that this patch applies on top of the
+"[PATCH v2] platform/x86: intel_cht_int33fe: Work around BIOS bug on some devices"
+patch I send out yesterday.
+
+Regards,
+
+Hans
