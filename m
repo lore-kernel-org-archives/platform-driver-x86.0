@@ -1,116 +1,245 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 03/11] mux: consumer.h: Add MUX_USB_* state constant
- defines
-Date: Sat, 2 Sep 2017 21:46:12 +0200
-Message-ID: <26df089e-9b49-977d-1a73-ad021f2a0067@redhat.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com>
- <20170901214845.7153-4-hdegoede@redhat.com>
- <8a05c405-3649-ac99-d4ca-3e519e1c63a8@roeck-us.net>
- <3e777501-aa94-70ae-3dc5-f64a15fd9704@redhat.com>
- <20170902190629.GA30251@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [RFC v2 3/6] platform/x86: intel_pmc_ipc: Use regmap calls for GCR updates
+Date: Sat,  2 Sep 2017 18:24:46 -0700
+Message-ID: <1504401889-113524-4-git-send-email-sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:57024 "EHLO mx1.redhat.com"
+Received: from mga05.intel.com ([192.55.52.43]:64769 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752739AbdIBTqS (ORCPT
+        id S1752802AbdICBZk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Sep 2017 15:46:18 -0400
-In-Reply-To: <20170902190629.GA30251@roeck-us.net>
-Content-Language: en-US
+        Sat, 2 Sep 2017 21:25:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: souvik.k.chakravarty@intel.com, x86@kernel.org, mingo@redhat.com, qipeng.zha@intel.com, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, lee.jones@linaro.org, andy@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Hi,
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On 02-09-17 21:06, Guenter Roeck wrote:
-> On Sat, Sep 02, 2017 at 05:59:14PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 02-09-17 16:59, Guenter Roeck wrote:
->>> On 09/01/2017 02:48 PM, Hans de Goede wrote:
->>>> Add MUX_USB_* state constant defines, which can be used by USB
->>>> device/host and Type-C polarity/role/altmode mux drivers and consumers
->>>> to ensure that they agree on the meaning of the mux_control_select()
->>>> state argument.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>>   include/linux/mux/consumer.h | 16 ++++++++++++++++
->>>>   1 file changed, 16 insertions(+)
->>>>
->>>> diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
->>>> index 912dd48a3a5d..e3ec9b4db962 100644
->>>> --- a/include/linux/mux/consumer.h
->>>> +++ b/include/linux/mux/consumer.h
->>>> @@ -15,6 +15,22 @@
->>>>   #include <linux/compiler.h>
->>>> +/*
->>>> + * Mux state values for USB muxes, used for both USB device/host role muxes
->>>> + * as well as for Type-C polarity/role/altmode muxes.
->>>> + *
->>>> + * MUX_USB_POLARITY_INV may be or-ed together with any other mux-state as
->>>> + * inverted-polarity (Type-C plugged in upside down) can happen with any
->>>> + * other mux-state.
->>>> + */
->>>> +#define MUX_USB_POLARITY_INV    BIT(0)   /* Polarity inverted bit */
->>>> +#define MUX_USB_NONE        (1 << 1) /* Mux open / not connected */
->>>
->>>
->>> Why BIT(0) but (1 << 1) and so on ?
->>
->> Because the polarity can be or-ed together with any of the other options.
->> Each option can be selected normal and inverted polarity (connector
->> inserted upside down).
->>
-> Ah yes, it is (2 << 1), not (1 << 2).
+Currently, update_no_reboot_bit() function implemented in this driver
+uses mutex_lock to protect its register updates. But this function is
+called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
+functions in iTCO_wdt.c driver, which in turn causes "sleeping into
+atomic context" issue. This patch fixes this issue by refactoring the
+current GCR read/write/update functions with regmap APIs.
 
-Ack.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig         |   1 +
+ drivers/platform/x86/intel_pmc_ipc.c | 115 ++++++++++++-----------------------
+ 2 files changed, 40 insertions(+), 76 deletions(-)
 
-> But then why don't the options start > with (0 << 1) ?
-
-Because I somehow thought that would conflict with the polarity
-bit which of course it will not, so I will fix this for v2.
-
-Note I used BIT(0) for the flag and not say BIT(8) because the mux subsys expects
-a mux-driver to declare a max value for the state parameter to mux_control_select(),
-which is what the MUX_USB_STATES define is for. If I were to use say BIT(8) for
-the polarity then the MUX_USB_STATES value would become (256 + 5) even though we
-only have 12 unique states.
-
-> I'll have to look into the series more closely; 
-
-Thank you.
-
-> so far the polarity was
-> a separate parameter to tcpm_mux_set() and the low level API.
-
-Right, I've kept the polarity as a separate parameter at the tcpm level,
-but the mux_control_select() function has only one argument, so I or
-the polarity and the alt-mode to mux for together there.
-
-Regards,
-
-Hans
-
-
-> 
-> Guenter
-> 
->> Regards,
->>
->> Hans
->>
->>>> +#define MUX_USB_DEVICE        (2 << 1) /* USB device mode */
->>>> +#define MUX_USB_HOST        (3 << 1) /* USB host mode */
->>>> +#define MUX_USB_HOST_AND_DP_SRC    (4 << 1) /* USB host + 2 lanes Display Port */
->>>> +#define MUX_USB_DP_SRC        (5 << 1) /* 4 lanes Display Port source */
->>>> +#define MUX_USB_STATES        (6 << 1)
->>>> +
->>>>   struct device;
->>>>   struct mux_control;
->>>>
->>>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 80b8795..45f4e79 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1054,6 +1054,7 @@ config PVPANIC
+ config INTEL_PMC_IPC
+ 	tristate "Intel PMC IPC Driver"
+ 	depends on ACPI
++	select REGMAP_MMIO
+ 	---help---
+ 	This driver provides support for PMC control on some Intel platforms.
+ 	The PMC is an ARC processor which defines IPC commands for communication
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 60a4be6..222262f 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -31,9 +31,11 @@
+ #include <linux/atomic.h>
+ #include <linux/notifier.h>
+ #include <linux/suspend.h>
++#include <linux/spinlock.h>
+ #include <linux/acpi.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/mfd/core.h>
++#include <linux/regmap.h>
+ 
+ #include <asm/intel_pmc_ipc.h>
+ 
+@@ -125,7 +127,7 @@ static struct intel_pmc_ipc_dev {
+ 
+ 	/* gcr */
+ 	void __iomem *gcr_mem_base;
+-	bool has_gcr_regs;
++	struct regmap *gcr_regs;
+ 
+ 	/* Telemetry */
+ 	u8 telem_res_inval;
+@@ -150,6 +152,14 @@ static char *ipc_err_sources[] = {
+ 		"Unsigned kernel",
+ };
+ 
++static struct regmap_config gcr_regmap_config = {
++        .reg_bits = 32,
++        .reg_stride = 4,
++        .val_bits = 32,
++	.fast_io = true,
++	.max_register = PLAT_RESOURCE_GCR_SIZE,
++};
++
+ /* Prevent concurrent calls to the PMC */
+ static DEFINE_MUTEX(ipclock);
+ 
+@@ -183,21 +193,6 @@ static inline u32 ipc_data_readl(u32 offset)
+ 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+ }
+ 
+-static inline u64 gcr_data_readq(u32 offset)
+-{
+-	return readq(ipcdev.gcr_mem_base + offset);
+-}
+-
+-static inline int is_gcr_valid(u32 offset)
+-{
+-	if (!ipcdev.has_gcr_regs)
+-		return -EACCES;
+-
+-	if (offset > PLAT_RESOURCE_GCR_SIZE)
+-		return -EINVAL;
+-
+-	return 0;
+-}
+ 
+ /**
+  * intel_pmc_gcr_read() - Read PMC GCR register
+@@ -210,21 +205,10 @@ static inline int is_gcr_valid(u32 offset)
+  */
+ int intel_pmc_gcr_read(u32 offset, u32 *data)
+ {
+-	int ret;
+-
+-	mutex_lock(&ipclock);
+-
+-	ret = is_gcr_valid(offset);
+-	if (ret < 0) {
+-		mutex_unlock(&ipclock);
+-		return ret;
+-	}
+-
+-	*data = readl(ipcdev.gcr_mem_base + offset);
+-
+-	mutex_unlock(&ipclock);
++	if (!ipcdev.gcr_regs)
++		return -EACCES;
+ 
+-	return 0;
++	return regmap_read(ipcdev.gcr_regs, offset, data);
+ }
+ EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
+ 
+@@ -240,21 +224,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
+  */
+ int intel_pmc_gcr_write(u32 offset, u32 data)
+ {
+-	int ret;
+-
+-	mutex_lock(&ipclock);
+-
+-	ret = is_gcr_valid(offset);
+-	if (ret < 0) {
+-		mutex_unlock(&ipclock);
+-		return ret;
+-	}
+-
+-	writel(data, ipcdev.gcr_mem_base + offset);
+-
+-	mutex_unlock(&ipclock);
++	if (!ipcdev.gcr_regs)
++		return -EACCES;
+ 
+-	return 0;
++	return regmap_write(ipcdev.gcr_regs, offset, data);
+ }
+ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+ 
+@@ -271,33 +244,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+  */
+ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ {
+-	u32 new_val;
+-	int ret = 0;
+-
+-	mutex_lock(&ipclock);
+-
+-	ret = is_gcr_valid(offset);
+-	if (ret < 0)
+-		goto gcr_ipc_unlock;
+-
+-	new_val = readl(ipcdev.gcr_mem_base + offset);
+-
+-	new_val &= ~mask;
+-	new_val |= val & mask;
+-
+-	writel(new_val, ipcdev.gcr_mem_base + offset);
+-
+-	new_val = readl(ipcdev.gcr_mem_base + offset);
+-
+-	/* check whether the bit update is successful */
+-	if ((new_val & mask) != (val & mask)) {
+-		ret = -EIO;
+-		goto gcr_ipc_unlock;
+-	}
++	if (!ipcdev.gcr_regs)
++		return -EACCES;
+ 
+-gcr_ipc_unlock:
+-	mutex_unlock(&ipclock);
+-	return ret;
++	return regmap_update_bits(ipcdev.gcr_regs, offset, mask, val);
+ }
+ EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
+ 
+@@ -801,16 +751,24 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+ int intel_pmc_s0ix_counter_read(u64 *data)
+ {
+ 	u64 deep, shlw;
++	int ret;
+ 
+-	if (!ipcdev.has_gcr_regs)
++	if (!ipcdev.gcr_regs)
+ 		return -EACCES;
+ 
+-	deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_REG);
+-	shlw = gcr_data_readq(PMC_GCR_TELEM_SHLW_S0IX_REG);
++	ret = regmap_bulk_read(ipcdev.gcr_regs, PMC_GCR_TELEM_DEEP_S0IX_REG,
++			&deep, 2);
++	if (ret)
++		return ret;
++
++	ret = regmap_bulk_read(ipcdev.gcr_regs, PMC_GCR_TELEM_SHLW_S0IX_REG,
++			&shlw, 2);
++	if (ret)
++		return ret;
+ 
+ 	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
+ 
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
+ 
+@@ -842,6 +800,13 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++        ipcdev.gcr_regs = devm_regmap_init_mmio_clk(ipcdev.dev, NULL,
++			ipcdev.gcr_mem_base, &gcr_regmap_config);
++        if (IS_ERR(ipcdev.gcr_regs)) {
++                dev_err(ipcdev.dev, "gcr_regs regmap init failed\n");
++                return PTR_ERR(ipcdev.gcr_regs);;
++        }
++
+ 	ret = ipc_create_pmc_devices(pdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to create pmc devices\n");
+@@ -861,8 +826,6 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ipcdev.has_gcr_regs = true;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
