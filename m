@@ -1,99 +1,235 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 00/11] mux/typec: Add USB / TypeC mux drivers and hook
- them up on some x86 systems
-Date: Mon, 4 Sep 2017 13:18:58 +0200
-Message-ID: <56a7fa03-013c-8d7d-a914-a4dc1f879647@axentia.se>
+Subject: Re: [PATCH 02/11] mux: core: Add support for getting a mux controller
+ on a non DT platform
+Date: Mon, 4 Sep 2017 13:19:14 +0200
+Message-ID: <0c882d23-d008-3d61-27be-3fa22bf59521@axentia.se>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
+ <20170901214845.7153-3-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170901214845.7153-1-hdegoede@redhat.com>
+In-Reply-To: <20170901214845.7153-3-hdegoede@redhat.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans de Goede <hdegoede@redhat.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
+Cc: platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi!
+
+Some comments inline...
+
 On 2017-09-01 23:48, Hans de Goede wrote:
-> Hi All,
+> On non DT platforms we cannot get the mux_chip by pnode. Other subsystems
+> (regulator, clock, pwm) have the same problem and solve this by allowing
+> platform / board-setup code to add entries to a lookup table and then use
+> this table to look things up.
 > 
-> This series consists of 4 parts:
+> This commit adds support for getting a mux controller on a non DT platform
+> following this pattern. It is based on a simplified version of the pwm
+> subsys lookup code, the dev_id and mux_name parts of a lookup table entry
+> are mandatory in the mux-core implementation.
 > 
-> 1) Core mux changes to add support for getting mux-controllers on
->    non DT platforms and to add some standardised state values for USB
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/mux/core.c           | 96 +++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mux/consumer.h | 11 +++++
+>  2 files changed, 106 insertions(+), 1 deletion(-)
 > 
-> 2) Add Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux drivers
+> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+> index 6142493c327b..8864cc745506 100644
+> --- a/drivers/mux/core.c
+> +++ b/drivers/mux/core.c
+> @@ -24,6 +24,9 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/slab.h>
+>  
+> +static DEFINE_MUTEX(mux_lookup_lock);
+> +static LIST_HEAD(mux_lookup_list);
+> +
+>  /*
+>   * The idle-as-is "state" is not an actual state that may be selected, it
+>   * only implies that the state should not be changed. So, use that state
+> @@ -408,6 +411,23 @@ int mux_control_deselect(struct mux_control *mux)
+>  }
+>  EXPORT_SYMBOL_GPL(mux_control_deselect);
+>  
+> +static int parent_name_match(struct device *dev, const void *data)
+> +{
+> +	const char *parent_name = dev_name(dev->parent);
+> +	const char *name = data;
+> +
+> +	return strcmp(parent_name, name) == 0;
+> +}
+> +
+> +static struct mux_chip *mux_chip_get_by_name(const char *name)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(&mux_class, NULL, name, parent_name_match);
+> +
+> +	return dev ? to_mux_chip(dev) : NULL;
+> +}
+> +
+>  static int of_dev_node_match(struct device *dev, const void *data)
+>  {
+>  	return dev->of_node == data;
+> @@ -479,6 +499,42 @@ static struct mux_control *of_mux_control_get(struct device *dev,
+>  }
+>  
+>  /**
+> + * mux_add_table() - register PWM device consumers
+
+register mux controllers (because you are not registering consumers, right?
+someone is registering controllers so that they can be found by consumers?)
+
+> + * @table: array of consumers to register
+> + * @num: number of consumers in table
+
+controllers?
+
+> + */
+> +void mux_add_table(struct mux_lookup *table, size_t num)
+> +{
+> +	mutex_lock(&mux_lookup_lock);
+> +
+> +	while (num--) {
+> +		list_add_tail(&table->list, &mux_lookup_list);
+> +		table++;
+> +	}
+
+I prefer
+
+	for (; num--; table++)
+		list_add_tail(&table->list, &mux_lookup_list);
+
+> +
+> +	mutex_unlock(&mux_lookup_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_add_table);
+> +
+> +/**
+> + * mux_remove_table() - unregister PWM device consumers
+
+unregister mux controllers(?)
+
+> + * @table: array of consumers to unregister
+> + * @num: number of consumers in table
+
+controllers?
+
+> + */
+> +void mux_remove_table(struct mux_lookup *table, size_t num)
+> +{
+> +	mutex_lock(&mux_lookup_lock);
+> +
+> +	while (num--) {
+> +		list_del(&table->list);
+> +		table++;
+> +	}
+
+for() loop here as well.
+
+> +
+> +	mutex_unlock(&mux_lookup_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(mux_remove_table);
+> +
+> +/**
+>   * mux_control_get() - Get the mux-control for a device.
+>   * @dev: The device that needs a mux-control.
+>   * @mux_name: The name identifying the mux-control.
+> @@ -487,11 +543,49 @@ static struct mux_control *of_mux_control_get(struct device *dev,
+>   */
+>  struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>  {
+> +	struct mux_lookup *m, *chosen = NULL;
+> +	const char *dev_id = dev_name(dev);
+> +	struct mux_chip *mux_chip;
+> +
+>  	/* look up via DT first */
+>  	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+>  		return of_mux_control_get(dev, mux_name);
+>  
+> -	return ERR_PTR(-ENODEV);
+> +	/*
+> +	 * For non DT we look up the provider in the static table typically
+> +	 * provided by board setup code.
+> +	 *
+> +	 * If a match is found, the provider mux chip is looked up by name
+> +	 * and a mux-control is requested using the table provided index.
+> +	 */
+> +	mutex_lock(&mux_lookup_lock);
+> +	list_for_each_entry(m, &mux_lookup_list, list) {
+> +		if (WARN_ON(!m->dev_id || !m->mux_name || !m->provider))
+> +			continue;
+> +
+> +		if (strcmp(m->dev_id, dev_id) == 0 &&
+> +		    strcmp(m->mux_name, mux_name) == 0) {
+
+I want the below format (with ! instead of == 0 and the brace on the next line
+when the condition has a line break):
+
+		if (!strcmp(m->dev_id, dev_id) &&
+		    !strcmp(m->mux_name, mux_name))
+		{
+
+> +			chosen = m;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&mux_lookup_lock);
+> +
+> +	if (!chosen)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	mux_chip = mux_chip_get_by_name(chosen->provider);
+> +	if (!mux_chip)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	if (chosen->index >= mux_chip->controllers) {
+> +		dev_err(dev, "Mux lookup table index out of bounds %u >= %u\n",
+> +			chosen->index, mux_chip->controllers);
+> +		put_device(&mux_chip->dev);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return &mux_chip->mux[chosen->index];
+>  }
+>  EXPORT_SYMBOL_GPL(mux_control_get);
+>  
+> diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
+> index ea96d4c82be7..912dd48a3a5d 100644
+> --- a/include/linux/mux/consumer.h
+> +++ b/include/linux/mux/consumer.h
+> @@ -18,6 +18,17 @@
+>  struct device;
+>  struct mux_control;
+>  
+
+I want a kernel-doc comment here, describing the structure.
+
+> +struct mux_lookup {
+> +	struct list_head list;
+> +	const char *provider;
+> +	unsigned int index;
+> +	const char *dev_id;
+> +	const char *mux_name;
+> +};
+> +
+> +void mux_add_table(struct mux_lookup *table, size_t num);
+> +void mux_remove_table(struct mux_lookup *table, size_t num);
+> +
+
+I'm not sure if consumer.h is the right place for this, but it can
+be moved when I think of something better. Which I can't for the
+moment...
+
+>  unsigned int mux_control_states(struct mux_control *mux);
+>  int __must_check mux_control_select(struct mux_control *mux,
+>  				    unsigned int state);
 > 
-> 3) Hookup the Intel CHT USB mux driver for CHT devices without Type-C
-> 
-> 4) Hookup both the Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux
->    drivers to the fusb302 Type-C port controller found on some CHT x86 devs
-> 
-> Please review, or in the case of the drivers/mux changes (which are a dep
-> for some of the other patches) merge if the patches are ready.
-
-Hi Hans,
-
-I see commonalities with this and the below patch seriess from Stephen
-Boyd [added to Cc].
-
-https://lkml.org/lkml/2017/7/11/696 [PATCH 0/3] USB Mux support for Chipidea
-https://lkml.org/lkml/2017/7/14/654 [PATCH v2 0/3] USB Mux support for Chipidea
-
-Stephen had a patch that added mux_control_get_optional() that I think
-could be of use for this series?
-
-Anyway, there seems to be some interest in using the mux subsystem for
-handling the USB host/device role. I think the role-switch interface
-between the USB and mux subsystems should be done similarly, regardless
-of what particular USB driver needs to switch role using whatever
-particular mux driver. If at all possible.
-
-The way I read it, the pi3usb30532 driver is the one adding the need to
-involve the DP states and the inverted bit. Those things are not used by
-anything else, and I think it clutters up things for everybody when the
-weird needs of one driver "invades" the mux states needed to control the
-USB role. So, I would like USB role switching to have 2 states, device
-and host (0 and 1 is used by the above chipidea code). And then the USB
-switch can of course be idle, which is best represented with one of
-MUX_IDLE_DISCONNECT, MUX_IDLE_AS_IS or one of the modes depending on if
-the USB switch can or can't disconnect (or other considerations). Now,
-you can't explicitly set the idle state using mux_control_select(), it
-can only be set implicitly using mux_control_deselect(), so that will
-require some changes in the consumer logic.
-
-Regarding the pi3usb30532 driver, I think the above is in fact also
-better since the "swap bit" means something totally different when the
-switch is "open" (if I read the datasheet correctly).
-
-I.e. PI3USB30532_CONF_OPEN | PI3USB30532_CONF_SWAP is not sane, and that
-would just go away completely if the driver implemented MUX_IDLE_DISCONNECT
-as PI3USB30532_CONF_OPEN and removed the possibility to explicitly set the
-"open" state with mux_control_select().
-
-So, I think the generic USB role switch interface should be something like:
-
-#define MUX_USB_DEVICE		(0) /* USB device mode */
-#define MUX_USB_HOST		(1) /* USB host mode */
-
-And then the pi3usb30532 driver can extend that:
-
-#define MUX_PI3USB30352_HOST_AND_DP_SRC	(2)    /* USB host + 2 lanes Display Port */
-#define MUX_PI3USB30352_DP_SRC		(3)    /* 4 lanes Display Port source */
-#define MUX_PI3USB30352_POLARITY_INV	BIT(2) /* Polarity inverted bit */
-#define MUX_PI3USB30352_STATES		(8)
-
-Another idea is to expose the inverted bit as a separate mux controller,
-but I suspect that you're not too keen on operating three muxes in the
-tcpm driver... That will get simpler with mux_control_get_optional() though.
-
-BTW, I don't think these USB defines belong in mux/consumer.h, please add
-them in a new include/linux/mux/usb.h file or something. And I'd like some
-MAINTAINER entry to cover the new mux drivers...
-
-I'll respond to the individual patches with nits etc, but it generally looks
-tidy, thank you for that!
 
 Cheers,
 Peter
