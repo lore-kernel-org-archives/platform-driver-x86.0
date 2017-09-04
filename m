@@ -1,83 +1,304 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 0/3] i2c: Hookup typec power-negotation to the PMIC and
- charger
-Date: Mon, 4 Sep 2017 15:33:22 +0200
-Message-ID: <be26a8cd-e089-0997-2438-5f12ecd02988@redhat.com>
-References: <20170903124156.7440-1-hdegoede@redhat.com>
- <20170904045645.fb6scegrypdodvfl@ninjato>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
+ PMIC
+Date: Mon, 4 Sep 2017 14:37:32 +0100
+Message-ID: <20170904133732.ll6cmuvnxja242gi@dell>
+References: <20170824081141.5018-1-tiwai@suse.de>
+ <20170824081141.5018-2-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170904045645.fb6scegrypdodvfl@ninjato>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170824081141.5018-2-tiwai@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Thu, 24 Aug 2017, Takashi Iwai wrote:
 
-On 04-09-17 06:56, Wolfram Sang wrote:
-> Hi,
+> This patch adds the MFD driver for Dollar Cove TI PMIC (ACPI INT33F5)
+> that is found on some Intel Cherry Trail devices.
+> The driver is based on the original work by Intel, found at:
+>   https://github.com/01org/ProductionKernelQuilts
 > 
->> The first 2 patches are i2c patches, if you could review and
->> merge these (preferably for 4.14, but 4.15 is fine too) that would
->> be great.
+> This is a minimal version for adding the basic resources.  Currently,
+> only ACPI PMIC opregion and the external power-button are used.
 > 
-> Definately for v4.15 and I very likely won't be able to review them
-> before rc1 or rc2 time, if even that. Sorry, but I2C core changes need
-> extra careful review and I2C maintenance is largely done in my limited
-> spare time.
-
-Ok, I understand.
-
-> If you could get other people to review/tag the patches,
-> this would be very helpful.
-
-FWIW althought the first patch is a core change it is not really a big
-one and won't impact any existing drivers, but I fully understand
-you still want to take your time to review it.
-
-Andy (Shevchenko) can you perhaps take a look at the first patch
-in this series and give your opinion on it ?
-
->> Darren, Andy, the single platform/x86 patch in here should only
->> be merged after the 2 i2c patches are in place, otherwise users
->> of the board(s) in question will end up not having any battery
->> monitoring. Also note that this patch applies on top of the
->> "[PATCH v2] platform/x86: intel_cht_int33fe: Work around BIOS bug on some devices"
->> patch I send out yesterday.
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
+> v1->v2:
+> * Minor cleanups as suggested by Andy
 > 
-> Is that dependency for v4.14?
+>  drivers/mfd/Kconfig                |  13 +++
+>  drivers/mfd/Makefile               |   1 +
+>  drivers/mfd/intel_soc_pmic_dc_ti.c | 182 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 196 insertions(+)
+>  create mode 100644 drivers/mfd/intel_soc_pmic_dc_ti.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 94ad2c1c3d90..28c12bb50c9f 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -496,6 +496,19 @@ config INTEL_SOC_PMIC_CHTWC
+>  	  available before any devices using it are probed. This option also
+>  	  causes the designware-i2c driver to be builtin for the same reason.
+>  
+> +config INTEL_SOC_PMIC_DC_TI
+> +	tristate "Support for Dollar Cove TI PMIC"
+> +	depends on GPIOLIB
+> +	depends on I2C
+> +	depends on ACPI
+> +	depends on X86
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	help
+> +	  Select this option for supporting Dollar Cove TI PMIC device that is
+> +	  found on some Intel Cherry Trail systems.
+> +
+>  config MFD_INTEL_LPSS
+>  	tristate
+>  	select COMMON_CLK
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 080793b3fd0e..16c4fe519d30 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -216,6 +216,7 @@ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+> +obj-$(CONFIG_INTEL_SOC_PMIC_DC_TI)	+= intel_soc_pmic_dc_ti.o
+>  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+>  
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+> diff --git a/drivers/mfd/intel_soc_pmic_dc_ti.c b/drivers/mfd/intel_soc_pmic_dc_ti.c
+> new file mode 100644
+> index 000000000000..3ba1625eb44b
+> --- /dev/null
+> +++ b/drivers/mfd/intel_soc_pmic_dc_ti.c
+> @@ -0,0 +1,182 @@
+> +/*
+> + * Device access for Dollar Cove TI PMIC
 
-Yes that dep should make 4.14.
+Nit: '\n' here please.
 
-> Would it be an idea if I take the platform
-> patch via the i2c tree then?
+> + * Copyright (c) 2014, Intel Corporation.
+> + *   Author: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+> + *
+> + * Cleanup and forward-ported
+> + *   Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
 
-I've some other patches pending which require further changes to the
-intel_cht_int33fe driver (*), so I think it would be best if the last
-patch got merged through the platform/x86 tree. The dependencies
-between patch 2-3 are runtime only (and not fatal if missing, just
-inconvenient) so merging this to 2 separate trees should be fine
-as long as both patches get merged for 4.15.
+No licence header?
 
-Regards,
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/intel_soc_pmic.h>
 
-Hans
+Alphabetical.
 
+> +#define DC_TI_IRQLVL1		0x01
+> +#define DC_TI_MASK_IRQLVL1	0x02
+> +
+> +/* Level 1 IRQs */
+> +enum {
+> +	DC_TI_PWRBTN = 0,	/* power button */
+> +	DC_TI_DIETMPWARN,	/* thermal */
+> +	DC_TI_ADCCMPL,		/* ADC */
+> +	/* no irq 3 */
 
-*) The intel_cht_int33fe and i2c/busses/i2c-cht-wc drivers together
-instantiate 4 i2c devices which together make all the "magic" behind
-the Type-C connector on these boards happen. The patch-series
-completed by these 3 patches ties 3 of the 4 drivers together so
-that charging and battery monitoring fully works. Ideally all 4
-i2c-clients would be instantiated from a single place, e.g.
-intel_cht_int33fe.c, but the charger is hooked up through a "child"
-i2c bus on the pmic, which is where i2c/busses/i2c-cht-wc.c
-comes into play.
+"No IRQ 3"
 
-The next series adds support for the 4th chip, the type-c cross-switch/
-mux which is necessary to get superspeed usb and/or displayport working
-over the Type-C connector.
+> +	DC_TI_VBATLOW = 4,	/* battery */
+> +	DC_TI_VBUSDET,		/* power source */
+> +	/* no irq 6 */
+
+Here too.
+
+> +	DC_TI_CCEOCAL = 7,	/* battery */
+> +};
+> +
+> +static struct resource power_button_resources[] = {
+> +	DEFINE_RES_IRQ(DC_TI_PWRBTN),
+> +};
+> +
+> +static struct resource thermal_resources[] = {
+> +	DEFINE_RES_IRQ(DC_TI_DIETMPWARN),
+> +};
+> +
+> +static struct resource adc_resources[] = {
+> +	DEFINE_RES_IRQ(DC_TI_ADCCMPL),
+> +};
+> +
+> +static struct resource pwrsrc_resources[] = {
+> +	DEFINE_RES_IRQ(DC_TI_VBUSDET),
+> +};
+> +
+> +static struct resource battery_resources[] = {
+> +	DEFINE_RES_IRQ(DC_TI_VBATLOW),
+> +	DEFINE_RES_IRQ(DC_TI_CCEOCAL),
+> +};
+
+Nice.  Thanks for using those.
+
+> +static struct mfd_cell dc_ti_dev[] = {
+> +	{
+> +		.name = "dc_ti_pwrbtn",
+> +		.num_resources = ARRAY_SIZE(power_button_resources),
+> +		.resources = power_button_resources,
+> +	},
+> +	{
+
+Place these on the same line.
+
+> +		.name = "dc_ti_adc",
+> +		.num_resources = ARRAY_SIZE(adc_resources),
+> +		.resources = adc_resources,
+> +	},
+> +	{
+> +		.name = "dc_ti_thermal",
+> +		.num_resources = ARRAY_SIZE(thermal_resources),
+> +		.resources = thermal_resources,
+> +	},
+> +	{
+> +		.name = "dc_ti_pwrsrc",
+> +		.num_resources = ARRAY_SIZE(pwrsrc_resources),
+> +		.resources = pwrsrc_resources,
+> +	},
+> +	{
+> +		.name = "dc_ti_battery",
+> +		.num_resources = ARRAY_SIZE(battery_resources),
+> +		.resources = battery_resources,
+> +	},
+> +	{
+> +		.name = "dc_ti_region",
+> +	},
+
+This should be a one line entry:
+
+	{ .name = "dc_ti_region" },
+
+> +};
+> +
+> +static const struct regmap_config dc_ti_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 128,
+> +	.cache_type = REGCACHE_NONE,
+> +};
+> +
+> +static const struct regmap_irq dc_ti_irqs[] = {
+> +	REGMAP_IRQ_REG(DC_TI_PWRBTN, 0, BIT(DC_TI_PWRBTN)),
+> +	REGMAP_IRQ_REG(DC_TI_DIETMPWARN, 0, BIT(DC_TI_DIETMPWARN)),
+> +	REGMAP_IRQ_REG(DC_TI_ADCCMPL, 0, BIT(DC_TI_ADCCMPL)),
+> +	REGMAP_IRQ_REG(DC_TI_VBATLOW, 0, BIT(DC_TI_VBATLOW)),
+> +	REGMAP_IRQ_REG(DC_TI_VBUSDET, 0, BIT(DC_TI_VBUSDET)),
+> +	REGMAP_IRQ_REG(DC_TI_CCEOCAL, 0, BIT(DC_TI_CCEOCAL)),
+> +};
+> +
+> +static const struct regmap_irq_chip dc_ti_irq_chip = {
+> +	.name = KBUILD_MODNAME,
+> +	.irqs = dc_ti_irqs,
+> +	.num_irqs = ARRAY_SIZE(dc_ti_irqs),
+> +	.num_regs = 1,
+> +	.status_base = DC_TI_IRQLVL1,
+> +	.mask_base = DC_TI_MASK_IRQLVL1,
+> +	.ack_base = DC_TI_IRQLVL1,
+> +};
+> +
+> +static int dc_ti_probe(struct i2c_client *i2c)
+> +{
+> +	struct device *dev = &i2c->dev;
+> +	struct intel_soc_pmic *pmic;
+> +	int ret;
+> +
+> +	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
+> +	if (!pmic)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(i2c, pmic);
+> +
+> +	pmic->regmap = devm_regmap_init_i2c(i2c, &dc_ti_regmap_config);
+> +	if (IS_ERR(pmic->regmap))
+> +		return PTR_ERR(pmic->regmap);
+> +	pmic->irq = i2c->irq;
+> +
+> +	ret = devm_regmap_add_irq_chip(dev, pmic->regmap, pmic->irq,
+> +				       IRQF_ONESHOT, 0,
+> +				       &dc_ti_irq_chip, &pmic->irq_chip_data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, dc_ti_dev,
+> +				    ARRAY_SIZE(dc_ti_dev), NULL, 0,
+> +				    regmap_irq_get_domain(pmic->irq_chip_data));
+> +}
+> +
+> +static void dc_ti_shutdown(struct i2c_client *i2c)
+> +{
+> +	struct intel_soc_pmic *pmic = i2c_get_clientdata(i2c);
+> +
+> +	disable_irq(pmic->irq);
+> +}
+> +
+> +static int __maybe_unused dc_ti_suspend(struct device *dev)
+> +{
+> +	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
+> +
+> +	disable_irq(pmic->irq);
+
+'\n' here.
+
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused dc_ti_resume(struct device *dev)
+> +{
+> +	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
+> +
+> +	enable_irq(pmic->irq);
+
+'\n' here.
+
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(dc_ti_pm_ops, dc_ti_suspend, dc_ti_resume);
+> +
+> +static const struct acpi_device_id dc_ti_acpi_ids[] = {
+> +	{ "INT33F5" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, dc_ti_acpi_ids);
+> +
+> +static struct i2c_driver dc_ti_i2c_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+
+This makes grepping for device/driver matches difficult.  Please just
+use the raw "" string.
+
+> +		.pm = &dc_ti_pm_ops,
+> +		.acpi_match_table = dc_ti_acpi_ids,
+> +	},
+> +	.probe_new = dc_ti_probe,
+> +	.shutdown = dc_ti_shutdown,
+> +};
+> +module_i2c_driver(dc_ti_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("I2C driver for Intel SoC Dollar Cove TI PMIC");
+> +MODULE_LICENSE("GPL v2");
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
