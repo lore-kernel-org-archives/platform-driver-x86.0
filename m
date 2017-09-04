@@ -1,145 +1,206 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 11/11] platform/x86: intel_cht_int33fe: Add mux mappings
- for the Type-C port
-Date: Mon, 4 Sep 2017 16:20:35 +0200
-Message-ID: <e1be9239-daff-1f67-dc15-a504acc433a4@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 02/11] mux: core: Add support for getting a mux controller
+ on a non DT platform
+Date: Mon, 4 Sep 2017 16:21:39 +0200
+Message-ID: <24913f99-c34f-8bb6-9f30-e1ca06277dd2@redhat.com>
 References: <20170901214845.7153-1-hdegoede@redhat.com>
- <20170901214845.7153-12-hdegoede@redhat.com>
- <CAHp75VdFAY6HaOh5-yBsgBoeJgpDrVUizX+zESq1Pr0-sQR6Pg@mail.gmail.com>
+ <20170901214845.7153-3-hdegoede@redhat.com>
+ <11e60e4e-31c6-a979-1edd-fd48d4b4cb42@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VdFAY6HaOh5-yBsgBoeJgpDrVUizX+zESq1Pr0-sQR6Pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:33956 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753725AbdIDOVn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 4 Sep 2017 10:21:43 -0400
+In-Reply-To: <11e60e4e-31c6-a979-1edd-fd48d4b4cb42@gmail.com>
 Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: sathya <sathyaosid@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 
 Hi,
 
-On 02-09-17 12:42, Andy Shevchenko wrote:
-> On Sat, Sep 2, 2017 at 12:48 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> We need to add mappings for the mux subsys to be able to find the
->> muxes for the fusb302 driver to be able to control the PI3USB30532
->> Type-C mux and the device/host mux integrated in the CHT SoC.
->>
+On 02-09-17 21:13, sathya wrote:
+> Hi,
 > 
-> I suppose it will go via not PDx86 tree,
+> 
+> On 09/01/2017 02:48 PM, Hans de Goede wrote:
+>> On non DT platforms we cannot get the mux_chip by pnode. Other subsystems
+>> (regulator, clock, pwm) have the same problem and solve this by allowing
+>> platform / board-setup code to add entries to a lookup table and then use
+>> this table to look things up.
+>>
+>> This commit adds support for getting a mux controller on a non DT platform
+>> following this pattern. It is based on a simplified version of the pwm
+>> subsys lookup code, the dev_id and mux_name parts of a lookup table entry
+>> are mandatory in the mux-core implementation.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/mux/core.c           | 96 +++++++++++++++++++++++++++++++++++++++++++-
+>>   include/linux/mux/consumer.h | 11 +++++
+>>   2 files changed, 106 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+>> index 6142493c327b..8864cc745506 100644
+>> --- a/drivers/mux/core.c
+>> +++ b/drivers/mux/core.c
+>> @@ -24,6 +24,9 @@
+>>   #include <linux/of_platform.h>
+>>   #include <linux/slab.h>
+>> +static DEFINE_MUTEX(mux_lookup_lock);
+>> +static LIST_HEAD(mux_lookup_list);
+>> +
+>>   /*
+>>    * The idle-as-is "state" is not an actual state that may be selected, it
+>>    * only implies that the state should not be changed. So, use that state
+>> @@ -408,6 +411,23 @@ int mux_control_deselect(struct mux_control *mux)
+>>   }
+>>   EXPORT_SYMBOL_GPL(mux_control_deselect);
+>> +static int parent_name_match(struct device *dev, const void *data)
+>> +{
+>> +    const char *parent_name = dev_name(dev->parent);
+> Device name usually contains id section (devname.id). Did you take this into consideration ?
+>> +    const char *name = data;
+>> +
+>> +    return strcmp(parent_name, name) == 0;
+>> +}
+>> +
+>> +static struct mux_chip *mux_chip_get_by_name(const char *name)
+>> +{
+>> +    struct device *dev;
+>> +
+>> +    dev = class_find_device(&mux_class, NULL, name, parent_name_match);
+>> +
+>> +    return dev ? to_mux_chip(dev) : NULL;
+>> +}
+>> +
+>>   static int of_dev_node_match(struct device *dev, const void *data)
+>>   {
+>>       return dev->of_node == data;
+>> @@ -479,6 +499,42 @@ static struct mux_control *of_mux_control_get(struct device *dev,
+>>   }
+>>   /**
+>> + * mux_add_table() - register PWM device consumers
+> PWM -> MUX
 
-Hmm, as I just mentioned in the "[PATCH v4 0/3] i2c: Hookup typec power-negotation to the PMIC and charger"
-thread I've multiple patches for the intel_cht_int33fe.c driver pending,
-so I think it would be best if these were merged through platform/x86,
-but that is going to require a merge-tag for the mux stuff so that
-that can be merged into platform/x86 as we need some mux/consumer.h
-changes.
-
-Anyways lets figure this out as we go along, it is also going to depend
-on the timing, if the mux changes land for 4.15 but some of the other
-bits don't then this patch (which ties everything together) becomes
-4.16 material and we don't need to worry about a merge-tag,
+Thank you, good catch, fixed for v2.
 
 Regards,
 
 Hans
 
 
-
-  so
-> 
-> Acked-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   drivers/platform/x86/Kconfig             |  1 +
->>   drivers/platform/x86/intel_cht_int33fe.c | 23 +++++++++++++++++++++++
->>   2 files changed, 24 insertions(+)
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index c5554577681a..4256e05ee584 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -794,6 +794,7 @@ config ACPI_CMPC
->>   config INTEL_CHT_INT33FE
->>          tristate "Intel Cherry Trail ACPI INT33FE Driver"
->>          depends on X86 && ACPI && I2C && REGULATOR
->> +       select MULTIPLEXER
->>          ---help---
->>            This driver add support for the INT33FE ACPI device found on
->>            some Intel Cherry Trail devices.
->> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
->> index 24a1662be81d..611b8af9cefd 100644
->> --- a/drivers/platform/x86/intel_cht_int33fe.c
->> +++ b/drivers/platform/x86/intel_cht_int33fe.c
->> @@ -24,6 +24,7 @@
->>   #include <linux/i2c.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/module.h>
->> +#include <linux/mux/consumer.h>
->>   #include <linux/regulator/consumer.h>
->>   #include <linux/slab.h>
->>
->> @@ -35,6 +36,19 @@ struct cht_int33fe_data {
->>          struct i2c_client *pi3usb30532;
->>   };
->>
->> +static struct mux_lookup cht_int33fe_mux_lookup[] = {
->> +       {
->> +               .provider = "i2c-pi3usb30532",
->> +               .dev_id   = "i2c-fusb302",
->> +               .mux_name = "type-c-mode-mux",
->> +       },
->> +       {
->> +               .provider = "intel_cht_usb_mux",
->> +               .dev_id   = "i2c-fusb302",
->> +               .mux_name = "usb-role-mux",
->> +       },
+>> + * @table: array of consumers to register
+>> + * @num: number of consumers in table
+>> + */
+>> +void mux_add_table(struct mux_lookup *table, size_t num)
+>> +{
+>> +    mutex_lock(&mux_lookup_lock);
+>> +
+>> +    while (num--) {
+>> +        list_add_tail(&table->list, &mux_lookup_list);
+>> +        table++;
+>> +    }
+>> +
+>> +    mutex_unlock(&mux_lookup_lock);
+>> +}
+>> +EXPORT_SYMBOL_GPL(mux_add_table);
+>> +
+>> +/**
+>> + * mux_remove_table() - unregister PWM device consumers
+>> + * @table: array of consumers to unregister
+>> + * @num: number of consumers in table
+>> + */
+>> +void mux_remove_table(struct mux_lookup *table, size_t num)
+>> +{
+>> +    mutex_lock(&mux_lookup_lock);
+>> +
+>> +    while (num--) {
+>> +        list_del(&table->list);
+>> +        table++;
+>> +    }
+>> +
+>> +    mutex_unlock(&mux_lookup_lock);
+>> +}
+>> +EXPORT_SYMBOL_GPL(mux_remove_table);
+>> +
+>> +/**
+>>    * mux_control_get() - Get the mux-control for a device.
+>>    * @dev: The device that needs a mux-control.
+>>    * @mux_name: The name identifying the mux-control.
+>> @@ -487,11 +543,49 @@ static struct mux_control *of_mux_control_get(struct device *dev,
+>>    */
+>>   struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>>   {
+>> +    struct mux_lookup *m, *chosen = NULL;
+>> +    const char *dev_id = dev_name(dev);
+>> +    struct mux_chip *mux_chip;
+>> +
+>>       /* look up via DT first */
+>>       if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+>>           return of_mux_control_get(dev, mux_name);
+>> -    return ERR_PTR(-ENODEV);
+>> +    /*
+>> +     * For non DT we look up the provider in the static table typically
+>> +     * provided by board setup code.
+>> +     *
+>> +     * If a match is found, the provider mux chip is looked up by name
+>> +     * and a mux-control is requested using the table provided index.
+>> +     */
+>> +    mutex_lock(&mux_lookup_lock);
+>> +    list_for_each_entry(m, &mux_lookup_list, list) {
+>> +        if (WARN_ON(!m->dev_id || !m->mux_name || !m->provider))
+>> +            continue;
+>> +
+>> +        if (strcmp(m->dev_id, dev_id) == 0 &&
+>> +            strcmp(m->mux_name, mux_name) == 0) {
+>> +            chosen = m;
+>> +            break;
+>> +        }
+>> +    }
+>> +    mutex_unlock(&mux_lookup_lock);
+>> +
+>> +    if (!chosen)
+>> +        return ERR_PTR(-ENODEV);
+>> +
+>> +    mux_chip = mux_chip_get_by_name(chosen->provider);
+>> +    if (!mux_chip)
+>> +        return ERR_PTR(-EPROBE_DEFER);
+>> +
+>> +    if (chosen->index >= mux_chip->controllers) {
+>> +        dev_err(dev, "Mux lookup table index out of bounds %u >= %u\n",
+>> +            chosen->index, mux_chip->controllers);
+>> +        put_device(&mux_chip->dev);
+>> +        return ERR_PTR(-EINVAL);
+>> +    }
+>> +
+>> +    return &mux_chip->mux[chosen->index];
+>>   }
+>>   EXPORT_SYMBOL_GPL(mux_control_get);
+>> diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
+>> index ea96d4c82be7..912dd48a3a5d 100644
+>> --- a/include/linux/mux/consumer.h
+>> +++ b/include/linux/mux/consumer.h
+>> @@ -18,6 +18,17 @@
+>>   struct device;
+>>   struct mux_control;
+>> +struct mux_lookup {
+>> +    struct list_head list;
+>> +    const char *provider;
+>> +    unsigned int index;
+>> +    const char *dev_id;
+>> +    const char *mux_name;
 >> +};
 >> +
->>   /*
->>    * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
->>    * the max17047 both through the INT33FE ACPI device (it is right there
->> @@ -170,6 +184,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
->>          board_info.properties = fusb302_props;
->>          board_info.irq = fusb302_irq;
->>
->> +       mux_add_table(cht_int33fe_mux_lookup,
->> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
+>> +void mux_add_table(struct mux_lookup *table, size_t num);
+>> +void mux_remove_table(struct mux_lookup *table, size_t num);
 >> +
->>          data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
->>          if (!data->fusb302)
->>                  goto out_unregister_max17047;
->> @@ -193,6 +210,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
->>          if (data->max17047)
->>                  i2c_unregister_device(data->max17047);
->>
->> +       mux_remove_table(cht_int33fe_mux_lookup,
->> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
->> +
->>          return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
->>   }
->>
->> @@ -205,6 +225,9 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
->>          if (data->max17047)
->>                  i2c_unregister_device(data->max17047);
->>
->> +       mux_remove_table(cht_int33fe_mux_lookup,
->> +                     ARRAY_SIZE(cht_int33fe_mux_lookup));
->> +
->>          return 0;
->>   }
->>
->> --
->> 2.13.5
->>
+>>   unsigned int mux_control_states(struct mux_control *mux);
+>>   int __must_check mux_control_select(struct mux_control *mux,
+>>                       unsigned int state);
 > 
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
