@@ -1,157 +1,75 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v4 2/3] i2c-cht-wc: Add device-properties for fusb302 integration
-Date: Sun,  3 Sep 2017 14:41:55 +0200
-Message-ID: <20170903124156.7440-3-hdegoede@redhat.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 0/3] i2c: Hookup typec power-negotation to the PMIC
+ and charger
+Date: Mon, 4 Sep 2017 06:56:47 +0200
+Message-ID: <20170904045645.fb6scegrypdodvfl@ninjato>
 References: <20170903124156.7440-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rng2v3ppofqxig3k"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from sauhun.de ([88.99.104.3]:37423 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751714AbdIDE4v (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 4 Sep 2017 00:56:51 -0400
+Content-Disposition: inline
 In-Reply-To: <20170903124156.7440-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 
-Add device-properties to make the bq24292i charger connected to
-the bus get its input-current-limit from the fusb302 Type-C port
-controller which is used on boards with the cht-wc PMIC,
-as well as regulator_init_data for the 5V boost converter on
-the bq24292i.
 
-Since this means we now hook-up the bq24292i to the fusb302 Type-C port
-controller add a check for the ACPI device which instantiates the fusb302.
+--rng2v3ppofqxig3k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Set board_info.dev_name
--Define and pass regulator_init_data for the bq24292i
--Add a check for the ACPI device which instantiates the fusb302
-Changes in v4:
--Drop the ti,input-current-limit-from-supplier property on the bq24292i
- this is the default now
----
- drivers/i2c/busses/Kconfig      |  5 ++++
- drivers/i2c/busses/i2c-cht-wc.c | 51 +++++++++++++++++++++++++++++++++++------
- 2 files changed, 49 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 79c33817e412..272ef10fb629 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -197,6 +197,11 @@ config I2C_CHT_WC
- 	  SMBus controller found in the Intel Cherry Trail Whiskey Cove PMIC
- 	  found on some Intel Cherry Trail systems.
- 
-+	  Note this controller is hooked up to a TI bq24292i charger-IC,
-+	  combined with a FUSB302 Type-C port-controller as such it is advised
-+	  to also select CONFIG_CHARGER_BQ24190=m and CONFIG_TYPEC_FUSB302=m
-+	  (the fusb302 driver currently is in drivers/staging).
-+
- config I2C_NFORCE2
- 	tristate "Nvidia nForce2, nForce3 and nForce4"
- 	depends on PCI
-diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-index 21312eed09e4..82e331db8d98 100644
---- a/drivers/i2c/busses/i2c-cht-wc.c
-+++ b/drivers/i2c/busses/i2c-cht-wc.c
-@@ -16,6 +16,7 @@
-  * GNU General Public License for more details.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
- #include <linux/i2c.h>
-@@ -25,6 +26,7 @@
- #include <linux/mfd/intel_soc_pmic.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/power/bq24190_charger.h>
- #include <linux/slab.h>
- 
- #define CHT_WC_I2C_CTRL			0x5e24
-@@ -232,13 +234,35 @@ static const struct irq_chip cht_wc_i2c_irq_chip = {
- 	.name			= "cht_wc_ext_chrg_irq_chip",
- };
- 
-+static const char * const bq24190_suppliers[] = { "fusb302-typec-source" };
-+
- static const struct property_entry bq24190_props[] = {
--	PROPERTY_ENTRY_STRING("extcon-name", "cht_wcove_pwrsrc"),
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_suppliers),
- 	PROPERTY_ENTRY_BOOL("omit-battery-class"),
- 	PROPERTY_ENTRY_BOOL("disable-reset"),
- 	{ }
- };
- 
-+static struct regulator_consumer_supply fusb302_consumer = {
-+	.supply = "vbus",
-+	/* Must match fusb302 dev_name in intel_cht_int33fe.c */
-+	.dev_name = "i2c-fusb302",
-+};
-+
-+static const struct regulator_init_data bq24190_vbus_init_data = {
-+	.constraints = {
-+		/* The name is used in intel_cht_int33fe.c do not change. */
-+		.name = "cht_wc_usb_typec_vbus",
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.consumer_supplies = &fusb302_consumer,
-+	.num_consumer_supplies = 1,
-+};
-+
-+static struct bq24190_platform_data bq24190_pdata = {
-+	.regulator_init_data = &bq24190_vbus_init_data,
-+};
-+
- static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- {
- 	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
-@@ -246,7 +270,9 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- 	struct i2c_board_info board_info = {
- 		.type = "bq24190",
- 		.addr = 0x6b,
-+		.dev_name = "bq24190",
- 		.properties = bq24190_props,
-+		.platform_data = &bq24190_pdata,
- 	};
- 	int ret, reg, irq;
- 
-@@ -314,11 +340,21 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto remove_irq_domain;
- 
--	board_info.irq = adap->client_irq;
--	adap->client = i2c_new_device(&adap->adapter, &board_info);
--	if (!adap->client) {
--		ret = -ENOMEM;
--		goto del_adapter;
-+	/*
-+	 * Normally the Whiskey Cove PMIC is paired with a TI bq24292i charger,
-+	 * connected to this i2c bus, and a max17047 fuel-gauge and a fusb302
-+	 * USB Type-C controller connected to another i2c bus. In this setup
-+	 * the max17047 and fusb302 devices are enumerated through an INT33FE
-+	 * ACPI device. If this device is present register an i2c-client for
-+	 * the TI bq24292i charger.
-+	 */
-+	if (acpi_dev_present("INT33FE", NULL, -1)) {
-+		board_info.irq = adap->client_irq;
-+		adap->client = i2c_new_device(&adap->adapter, &board_info);
-+		if (!adap->client) {
-+			ret = -ENOMEM;
-+			goto del_adapter;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, adap);
-@@ -335,7 +371,8 @@ static int cht_wc_i2c_adap_i2c_remove(struct platform_device *pdev)
- {
- 	struct cht_wc_i2c_adap *adap = platform_get_drvdata(pdev);
- 
--	i2c_unregister_device(adap->client);
-+	if (adap->client)
-+		i2c_unregister_device(adap->client);
- 	i2c_del_adapter(&adap->adapter);
- 	irq_domain_remove(adap->irq_domain);
- 
--- 
-2.13.4
+> The first 2 patches are i2c patches, if you could review and
+> merge these (preferably for 4.14, but 4.15 is fine too) that would
+> be great.
+
+Definately for v4.15 and I very likely won't be able to review them
+before rc1 or rc2 time, if even that. Sorry, but I2C core changes need
+extra careful review and I2C maintenance is largely done in my limited
+spare time. If you could get other people to review/tag the patches,
+this would be very helpful.
+
+> Darren, Andy, the single platform/x86 patch in here should only
+> be merged after the 2 i2c patches are in place, otherwise users
+> of the board(s) in question will end up not having any battery
+> monitoring. Also note that this patch applies on top of the
+> "[PATCH v2] platform/x86: intel_cht_int33fe: Work around BIOS bug on some devices"
+> patch I send out yesterday.
+
+Is that dependency for v4.14? Would it be an idea if I take the platform
+patch via the i2c tree then?
+
+Regards,
+
+   Wolfram
+
+
+--rng2v3ppofqxig3k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlms3QgACgkQFA3kzBSg
+KbYRvg//ULvFA59lQDA9fSe0goAUkDYhlCkTt/gohCVBrASpOyjAOIeimgjAQU9d
+UhLI+2LJ3YzlE2oSfMWJ9I5Th9Y72O1XQT1rEGXiydQKHaK7OmdXyLB79kuM3FGZ
+OFATrp1MZMDgNiJwr3yI7khBdyufF6tzotBF0KXGWD0EOV5ILetKnYqHLMis3l4L
+77M6EGPjxgkTKP0DRx5lXIq+YV3Nn57eHt2rrR7mJIDnjDeW4jOCb4pgKUeYMA9r
+He68vBRFgMKMUPuEzSK/lgY5ZF52ZAiqPParnu3SSxv5KUFTvGDuO5veAxO/dlA3
+XJcQAucvnogZrO/WjpSL9MG9MpFN3QjkE9oDtrXHlPOZvFlgkz6jq2gLQniCPAre
+moyzXQp60zAfAqLhZJ9XxJHarFcuoMznGSRNxg/8lbMBfjXgeYQuzFeixjwOhXZe
+zUwhMj/6oT2V891YXNM8qoHpsDVF0S8T4kOmqn2YNya/ZoZIw1jkIlphVtM+Dg9Q
+3/fpMh2TSrd49hHgFPlr5o+HKEeYmifglYK2HGSPVWrJ0bsMqSuIynYIP3vzMunr
+a44q8nqcC60zHPBjcpjOeyibYXpLwo48HGwO3YOZ7OmD2gMivW0vR40lGkGm+oIm
+383pR5SLhpnBZalvoW4vsm3zftq0ukFbb51g9bnSfO94lAQgw9g=
+=+qVf
+-----END PGP SIGNATURE-----
+
+--rng2v3ppofqxig3k--
