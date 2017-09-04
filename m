@@ -1,304 +1,189 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
- PMIC
-Date: Mon, 4 Sep 2017 14:37:32 +0100
-Message-ID: <20170904133732.ll6cmuvnxja242gi@dell>
-References: <20170824081141.5018-1-tiwai@suse.de>
- <20170824081141.5018-2-tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 3/3] platform/x86: intel_cht_int33fe: Update fusb302
+ type string, add properties
+Date: Mon, 4 Sep 2017 15:38:44 +0200
+Message-ID: <56295622-0532-d940-f79f-a91bb8146068@redhat.com>
+References: <20170903124156.7440-1-hdegoede@redhat.com>
+ <20170903124156.7440-4-hdegoede@redhat.com>
+ <CAHp75Ve2yCn3R42oUSW4LYgaMcFEh9eqZh3fCG8n=Zmu68WjvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170824081141.5018-2-tiwai@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve2yCn3R42oUSW4LYgaMcFEh9eqZh3fCG8n=Zmu68WjvA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 24 Aug 2017, Takashi Iwai wrote:
+Hi,
 
-> This patch adds the MFD driver for Dollar Cove TI PMIC (ACPI INT33F5)
-> that is found on some Intel Cherry Trail devices.
-> The driver is based on the original work by Intel, found at:
->   https://github.com/01org/ProductionKernelQuilts
+On 04-09-17 08:27, Andy Shevchenko wrote:
+> On Sun, Sep 3, 2017 at 3:41 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
+>> rather then just "fusb302" and needs us to set a number of device-
+>> properties, adjust the intel_cht_int33fe driver accordingly.
+>>
+>> One of the properties set is max-snk-mv which makes the fusb302 driver
+>> negotiate up to 12V charging voltage, which is a bad idea on boards
+>> which are not setup to handle this, so this commit also adds 2 extra
+>> sanity checks to make sure that the expected Whiskey Cove PMIC +
+>> TI bq24292i charger combo, which can handle 12V, is present.
 > 
-> This is a minimal version for adding the basic resources.  Currently,
-> only ACPI PMIC opregion and the external power-button are used.
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> ---
-> v1->v2:
-> * Minor cleanups as suggested by Andy
+> (in case Wolfram would like to take it)
 > 
->  drivers/mfd/Kconfig                |  13 +++
->  drivers/mfd/Makefile               |   1 +
->  drivers/mfd/intel_soc_pmic_dc_ti.c | 182 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 196 insertions(+)
->  create mode 100644 drivers/mfd/intel_soc_pmic_dc_ti.c
+> See comments below.
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 94ad2c1c3d90..28c12bb50c9f 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -496,6 +496,19 @@ config INTEL_SOC_PMIC_CHTWC
->  	  available before any devices using it are probed. This option also
->  	  causes the designware-i2c driver to be builtin for the same reason.
->  
-> +config INTEL_SOC_PMIC_DC_TI
-> +	tristate "Support for Dollar Cove TI PMIC"
-> +	depends on GPIOLIB
-> +	depends on I2C
-> +	depends on ACPI
-> +	depends on X86
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	help
-> +	  Select this option for supporting Dollar Cove TI PMIC device that is
-> +	  found on some Intel Cherry Trail systems.
-> +
->  config MFD_INTEL_LPSS
->  	tristate
->  	select COMMON_CLK
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 080793b3fd0e..16c4fe519d30 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -216,6 +216,7 @@ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
-> +obj-$(CONFIG_INTEL_SOC_PMIC_DC_TI)	+= intel_soc_pmic_dc_ti.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> diff --git a/drivers/mfd/intel_soc_pmic_dc_ti.c b/drivers/mfd/intel_soc_pmic_dc_ti.c
-> new file mode 100644
-> index 000000000000..3ba1625eb44b
-> --- /dev/null
-> +++ b/drivers/mfd/intel_soc_pmic_dc_ti.c
-> @@ -0,0 +1,182 @@
-> +/*
-> + * Device access for Dollar Cove TI PMIC
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -Set board_info.dev_name
+>> -Adjust for changes in other patches in this patch-set
+>> ---
+>>   drivers/platform/x86/Kconfig             |  6 ++++-
+>>   drivers/platform/x86/intel_cht_int33fe.c | 44 +++++++++++++++++++++++++++++++-
+>>   2 files changed, 48 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index 80b87954f6dd..c5554577681a 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -793,7 +793,7 @@ config ACPI_CMPC
+>>
+>>   config INTEL_CHT_INT33FE
+>>          tristate "Intel Cherry Trail ACPI INT33FE Driver"
+>> -       depends on X86 && ACPI && I2C
+>> +       depends on X86 && ACPI && I2C && REGULATOR
+>>          ---help---
+>>            This driver add support for the INT33FE ACPI device found on
+>>            some Intel Cherry Trail devices.
+>> @@ -804,6 +804,10 @@ config INTEL_CHT_INT33FE
+>>            This driver instantiates i2c-clients for these, so that standard
+>>            i2c drivers for these chips can bind to the them.
+>>
+>> +         If you enable this driver it is advised to also select
+>> +         CONFIG_CHARGER_BQ24190=m, CONFIG_BATTERY_MAX17042=m and
+>> +         CONFIG_TYPEC_FUSB302=m (currently in drivers/staging).
+>> +
+> 
+> I would put FUSB302 first since it's not obvious now that remark in
+> parens is related only to it. And might be better rephase the path in
+> terms of `make menuconfig` rather than pathname in the source tree.
 
-Nit: '\n' here please.
+Ok, fixed for v5, which I will send right away.
 
-> + * Copyright (c) 2014, Intel Corporation.
-> + *   Author: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
-> + *
-> + * Cleanup and forward-ported
-> + *   Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
+Regards,
 
-No licence header?
+Hans
 
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/intel_soc_pmic.h>
 
-Alphabetical.
 
-> +#define DC_TI_IRQLVL1		0x01
-> +#define DC_TI_MASK_IRQLVL1	0x02
-> +
-> +/* Level 1 IRQs */
-> +enum {
-> +	DC_TI_PWRBTN = 0,	/* power button */
-> +	DC_TI_DIETMPWARN,	/* thermal */
-> +	DC_TI_ADCCMPL,		/* ADC */
-> +	/* no irq 3 */
-
-"No IRQ 3"
-
-> +	DC_TI_VBATLOW = 4,	/* battery */
-> +	DC_TI_VBUSDET,		/* power source */
-> +	/* no irq 6 */
-
-Here too.
-
-> +	DC_TI_CCEOCAL = 7,	/* battery */
-> +};
-> +
-> +static struct resource power_button_resources[] = {
-> +	DEFINE_RES_IRQ(DC_TI_PWRBTN),
-> +};
-> +
-> +static struct resource thermal_resources[] = {
-> +	DEFINE_RES_IRQ(DC_TI_DIETMPWARN),
-> +};
-> +
-> +static struct resource adc_resources[] = {
-> +	DEFINE_RES_IRQ(DC_TI_ADCCMPL),
-> +};
-> +
-> +static struct resource pwrsrc_resources[] = {
-> +	DEFINE_RES_IRQ(DC_TI_VBUSDET),
-> +};
-> +
-> +static struct resource battery_resources[] = {
-> +	DEFINE_RES_IRQ(DC_TI_VBATLOW),
-> +	DEFINE_RES_IRQ(DC_TI_CCEOCAL),
-> +};
-
-Nice.  Thanks for using those.
-
-> +static struct mfd_cell dc_ti_dev[] = {
-> +	{
-> +		.name = "dc_ti_pwrbtn",
-> +		.num_resources = ARRAY_SIZE(power_button_resources),
-> +		.resources = power_button_resources,
-> +	},
-> +	{
-
-Place these on the same line.
-
-> +		.name = "dc_ti_adc",
-> +		.num_resources = ARRAY_SIZE(adc_resources),
-> +		.resources = adc_resources,
-> +	},
-> +	{
-> +		.name = "dc_ti_thermal",
-> +		.num_resources = ARRAY_SIZE(thermal_resources),
-> +		.resources = thermal_resources,
-> +	},
-> +	{
-> +		.name = "dc_ti_pwrsrc",
-> +		.num_resources = ARRAY_SIZE(pwrsrc_resources),
-> +		.resources = pwrsrc_resources,
-> +	},
-> +	{
-> +		.name = "dc_ti_battery",
-> +		.num_resources = ARRAY_SIZE(battery_resources),
-> +		.resources = battery_resources,
-> +	},
-> +	{
-> +		.name = "dc_ti_region",
-> +	},
-
-This should be a one line entry:
-
-	{ .name = "dc_ti_region" },
-
-> +};
-> +
-> +static const struct regmap_config dc_ti_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 128,
-> +	.cache_type = REGCACHE_NONE,
-> +};
-> +
-> +static const struct regmap_irq dc_ti_irqs[] = {
-> +	REGMAP_IRQ_REG(DC_TI_PWRBTN, 0, BIT(DC_TI_PWRBTN)),
-> +	REGMAP_IRQ_REG(DC_TI_DIETMPWARN, 0, BIT(DC_TI_DIETMPWARN)),
-> +	REGMAP_IRQ_REG(DC_TI_ADCCMPL, 0, BIT(DC_TI_ADCCMPL)),
-> +	REGMAP_IRQ_REG(DC_TI_VBATLOW, 0, BIT(DC_TI_VBATLOW)),
-> +	REGMAP_IRQ_REG(DC_TI_VBUSDET, 0, BIT(DC_TI_VBUSDET)),
-> +	REGMAP_IRQ_REG(DC_TI_CCEOCAL, 0, BIT(DC_TI_CCEOCAL)),
-> +};
-> +
-> +static const struct regmap_irq_chip dc_ti_irq_chip = {
-> +	.name = KBUILD_MODNAME,
-> +	.irqs = dc_ti_irqs,
-> +	.num_irqs = ARRAY_SIZE(dc_ti_irqs),
-> +	.num_regs = 1,
-> +	.status_base = DC_TI_IRQLVL1,
-> +	.mask_base = DC_TI_MASK_IRQLVL1,
-> +	.ack_base = DC_TI_IRQLVL1,
-> +};
-> +
-> +static int dc_ti_probe(struct i2c_client *i2c)
-> +{
-> +	struct device *dev = &i2c->dev;
-> +	struct intel_soc_pmic *pmic;
-> +	int ret;
-> +
-> +	pmic = devm_kzalloc(dev, sizeof(*pmic), GFP_KERNEL);
-> +	if (!pmic)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, pmic);
-> +
-> +	pmic->regmap = devm_regmap_init_i2c(i2c, &dc_ti_regmap_config);
-> +	if (IS_ERR(pmic->regmap))
-> +		return PTR_ERR(pmic->regmap);
-> +	pmic->irq = i2c->irq;
-> +
-> +	ret = devm_regmap_add_irq_chip(dev, pmic->regmap, pmic->irq,
-> +				       IRQF_ONESHOT, 0,
-> +				       &dc_ti_irq_chip, &pmic->irq_chip_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, dc_ti_dev,
-> +				    ARRAY_SIZE(dc_ti_dev), NULL, 0,
-> +				    regmap_irq_get_domain(pmic->irq_chip_data));
-> +}
-> +
-> +static void dc_ti_shutdown(struct i2c_client *i2c)
-> +{
-> +	struct intel_soc_pmic *pmic = i2c_get_clientdata(i2c);
-> +
-> +	disable_irq(pmic->irq);
-> +}
-> +
-> +static int __maybe_unused dc_ti_suspend(struct device *dev)
-> +{
-> +	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
-> +
-> +	disable_irq(pmic->irq);
-
-'\n' here.
-
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused dc_ti_resume(struct device *dev)
-> +{
-> +	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
-> +
-> +	enable_irq(pmic->irq);
-
-'\n' here.
-
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(dc_ti_pm_ops, dc_ti_suspend, dc_ti_resume);
-> +
-> +static const struct acpi_device_id dc_ti_acpi_ids[] = {
-> +	{ "INT33F5" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, dc_ti_acpi_ids);
-> +
-> +static struct i2c_driver dc_ti_i2c_driver = {
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-
-This makes grepping for device/driver matches difficult.  Please just
-use the raw "" string.
-
-> +		.pm = &dc_ti_pm_ops,
-> +		.acpi_match_table = dc_ti_acpi_ids,
-> +	},
-> +	.probe_new = dc_ti_probe,
-> +	.shutdown = dc_ti_shutdown,
-> +};
-> +module_i2c_driver(dc_ti_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("I2C driver for Intel SoC Dollar Cove TI PMIC");
-> +MODULE_LICENSE("GPL v2");
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>>   config INTEL_INT0002_VGPIO
+>>          tristate "Intel ACPI INT0002 Virtual GPIO driver"
+>>          depends on GPIOLIB && ACPI
+>> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+>> index a9cbc4b8ca63..b2925d996613 100644
+>> --- a/drivers/platform/x86/intel_cht_int33fe.c
+>> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/i2c.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/module.h>
+>> +#include <linux/regulator/consumer.h>
+>>   #include <linux/slab.h>
+>>
+>>   #define EXPECTED_PTYPE         4
+>> @@ -77,12 +78,21 @@ static const struct property_entry max17047_props[] = {
+>>          { }
+>>   };
+>>
+>> +static const struct property_entry fusb302_props[] = {
+>> +       PROPERTY_ENTRY_STRING("fcs,extcon-name", "cht_wcove_pwrsrc"),
+>> +       PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
+>> +       PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
+>> +       PROPERTY_ENTRY_U32("fcs,max-sink-microwatt", 36000000),
+>> +       { }
+>> +};
+>> +
+>>   static int cht_int33fe_probe(struct i2c_client *client)
+>>   {
+>>          struct device *dev = &client->dev;
+>>          struct i2c_board_info board_info;
+>>          struct cht_int33fe_data *data;
+>>          struct i2c_client *max17047;
+>> +       struct regulator *regulator;
+>>          unsigned long long ptyp;
+>>          acpi_status status;
+>>          int ret, fusb302_irq;
+>> @@ -100,6 +110,34 @@ static int cht_int33fe_probe(struct i2c_client *client)
+>>          if (ptyp != EXPECTED_PTYPE)
+>>                  return -ENODEV;
+>>
+>> +       /* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
+>> +       if (!acpi_dev_present("INT34D3", "1", 3)) {
+>> +               dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
+>> +                       EXPECTED_PTYPE);
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       /*
+>> +        * We expect the WC PMIC to be paired with a TI bq24292i charger-IC.
+>> +        * We check for the bq24292i vbus regulator here, this has 2 purposes:
+>> +        * 1) The bq24292i allows charging with up to 12V, setting the fusb302's
+>> +        *    max-snk voltage to 12V with another charger-IC is not good.
+>> +        * 2) For the fusb302 driver to get the bq24292i vbus regulator, the
+>> +        *    regulator-map, which is part of the bq24292i regulator_init_data,
+>> +        *    must be registered before the fusb302 is instantiated, otherwise
+>> +        *    it will end up with a dummy-regulator.
+>> +        * Note "cht_wc_usb_typec_vbus" comes from the regulator_init_data
+>> +        * which is defined in i2c-cht-wc.c from where the bq24292i i2c-client
+>> +        * gets instantiated. We use regulator_get_optional here so that we
+>> +        * don't end up getting a dummy-regulator ourselves.
+>> +        */
+>> +       regulator = regulator_get_optional(dev, "cht_wc_usb_typec_vbus");
+>> +       if (IS_ERR(regulator)) {
+>> +               ret = PTR_ERR(regulator);
+>> +               return (ret == -ENODEV) ? -EPROBE_DEFER : ret;
+>> +       }
+>> +       regulator_put(regulator);
+>> +
+>>          /* The FUSB302 uses the irq at index 1 and is the only irq user */
+>>          fusb302_irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 1);
+>>          if (fusb302_irq < 0) {
+>> @@ -126,6 +164,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
+>>          } else {
+>>                  memset(&board_info, 0, sizeof(board_info));
+>>                  strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
+>> +               board_info.dev_name = "max17047";
+>>                  board_info.properties = max17047_props;
+>>                  data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
+>>                  if (!data->max17047)
+>> @@ -133,7 +172,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
+>>          }
+>>
+>>          memset(&board_info, 0, sizeof(board_info));
+>> -       strlcpy(board_info.type, "fusb302", I2C_NAME_SIZE);
+>> +       strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+>> +       board_info.dev_name = "fusb302";
+>> +       board_info.properties = fusb302_props;
+>>          board_info.irq = fusb302_irq;
+>>
+>>          data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
+>> @@ -141,6 +182,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
+>>                  goto out_unregister_max17047;
+>>
+>>          memset(&board_info, 0, sizeof(board_info));
+>> +       board_info.dev_name = "pi3usb30532";
+>>          strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
+>>
+>>          data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
+>> --
+>> 2.13.4
+>>
+> 
+> 
+> 
