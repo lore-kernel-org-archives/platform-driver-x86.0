@@ -1,53 +1,32 @@
-From: "Casal Quinteiro, Ignacio" <qignacio@amazon.com>
-Subject: ASUS X SERIES X553MA-BING-SX451B does not boot anymore
-Date: Mon, 4 Sep 2017 09:05:53 +0000
-Message-ID: <1504515953.6179.3.camel@amazon.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: ASUS X SERIES X553MA-BING-SX451B does not boot anymore
+Date: Mon, 04 Sep 2017 12:39:55 +0300
+Message-ID: <1504517995.25945.214.camel@linux.intel.com>
+References: <1504515953.6179.3.camel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:37746 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753318AbdIDJLj (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:23111 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753364AbdIDJj6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Sep 2017 05:11:39 -0400
-Content-Language: en-US
-Content-ID: <097AD82FD042194B9267A487FF464B0D@amazon.com>
+        Mon, 4 Sep 2017 05:39:58 -0400
+In-Reply-To: <1504515953.6179.3.camel@amazon.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "pierre-louis.bossart@linux.intel.com" <pierre-louis.bossart@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "irina.tirdea@intel.com" <irina.tirdea@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: "Casal Quinteiro, Ignacio" <qignacio@amazon.com>, "pierre-louis.bossart@linux.intel.com" <pierre-louis.bossart@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "irina.tirdea@intel.com" <irina.tirdea@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-SGV5IGd1eXMsDQoNCkp1c3Qgd2FudGVkIHRvIHBvaW50IHlvdSBvdXQgdG8gdGhlIGJ1ZyByZXBv
-cnQ6wqBodHRwczovL2J1Z3ppbGxhLmtlcm5lbA0KLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk2ODE5
-DQoNCi0tLQ0KDQpLZXJuZWwgNC4xMC4xNS0yMDAuZmMyNSBib290cyBhcyBleHBlY3RlZCwgaW5z
-dGVhZCB0aGUgZm9sbG93aW5nIG5ldw0Ka2VybmVscyBkbyBub3Q6DQrCoC0gNC4xMS4xMi0yMDAu
-ZmMyNQ0KwqAtIDQuMTIuOC0yMDAuZmMyNQ0KwqAtIDQuMTIuOC0zMDAuZmMyNg0KDQpIb3cgcmVw
-cm9kdWNpYmxlOg0KDQpJZiBJIHRyeSB0byBib290IHRoZSBsYXB0b3Agbm90aGluZyBoYXBwZW5z
-LCBpdCBzdGF5cyBibGFjay4gSW5zdGVhZA0Kd2l0aCB0aGUga2VybmVsIDQuMTAuMTUtMjAwLmZj
-MjUgdGhlIGZlZG9yYSBsb2dvIGFwcGVhcnMgYW5kIGJvb3RzDQp3aXRob3V0IGFueSBwcm9ibGVt
-cy4NCg0KSWYgaXQgbWF0dGVycyB0aGUgbGFwdG9wIGhhcyBhbiBpbnRlbCBjZWxlcm9uIGFuZCBh
-ZnRlciBiaXNlY3RpbmcgSSd2ZQ0KZm91bmQgdGhhdCB0aGUgY3VscHJpdCBpcyB0aGUgZm9sbG93
-aW5nIGNvbW1pdDoNCg0KMjgyYTRlNGNlNWY5OWUzYzE2NmFiYWM5Mjk0OTg4ODVhNzExZTE5ZiBp
-cyB0aGUgZmlyc3QgYmFkIGNvbW1pdA0KY29tbWl0IDI4MmE0ZTRjZTVmOTllM2MxNjZhYmFjOTI5
-NDk4ODg1YTcxMWUxOWYNCkF1dGhvcjogSXJpbmEgVGlyZGVhIDxpcmluYS50aXJkZWFAaW50ZWwu
-Y29tPg0KRGF0ZTrCoMKgwqBNb24gSmFuIDIzIDEyOjA3OjQ0IDIwMTcgLTA2MDANCg0KwqDCoMKg
-wqBwbGF0Zm9ybS94ODY6IEVuYWJsZSBBdG9tIFBNQyBwbGF0Zm9ybSBjbG9ja3MNCsKgwqDCoA0K
-wqDCoMKgwqBUaGUgQmF5VHJhaWwgYW5kIENoZXJyeVRyYWlsIHBsYXRmb3JtcyBwcm92aWRlIHBs
-YXRmb3JtIGNsb2Nrcw0KwqDCoMKgwqB0aHJvdWdoIHRoZWlyIFBvd2VyIE1hbmFnZW1lbnQgQ29u
-dHJvbGxlciAoUE1DKS4NCsKgwqDCoA0KwqDCoMKgwqBUaGUgU29DIHN1cHBvcnRzIHVwIHRvIDYg
-Y2xvY2tzIChQTUNfUExUX0NMS1swLi41XSkgd2l0aCBhDQrCoMKgwqDCoGZyZXF1ZW5jeSBvZiBl
-aXRoZXIgMTkuMiBNSHogKFBMTCkgb3IgMjUgTUh6IChYVEFMKSBmb3IgQmF5VHJhaWwNCsKgwqDC
-oMKgYW5kIGEgZnJlcXVlbmN5IG9mIDE5LjIgTUh6IChYVEFMKSBmb3IgQ2hlcnJ5VHJhaWwuIFRo
-ZXNlIGNsb2Nrcw0KwqDCoMKgwqBhcmUgYXZhaWxhYmxlIGZvciBnZW5lcmFsIHN5c3RlbSB1c2Us
-IHdoZXJlIGFwcHJvcHJpYXRlLiBGb3INCmV4YW1wbGUsDQrCoMKgwqDCoHRoZSB1c2FnZSBmb3Ig
-cGxhdGZvcm0gY2xvY2tzIHN1Z2dlc3RlZCBpbiB0aGUgZGF0YXNoZWV0IGlzIHRoZQ0KwqDCoMKg
-wqBmb2xsb3dpbmc6DQrCoMKgwqDCoMKgwqBQTFRfQ0xLWzAuLjJdIC0gQ2FtZXJhDQrCoMKgwqDC
-oMKgwqBQTFRfQ0xLWzNdIC0gQXVkaW8gQ29kZWMNCsKgwqDCoMKgwqDCoFBMVF9DTEtbNF0gLQ0K
-wqDCoMKgwqDCoMKgUExUX0NMS1s1XSAtIENPTU1zDQrCoMKgwqANCsKgwqDCoMKgU2lnbmVkLW9m
-Zi1ieTogSXJpbmEgVGlyZGVhIDxpcmluYS50aXJkZWFAaW50ZWwuY29tPg0KwqDCoMKgwqBTaWdu
-ZWQtb2ZmLWJ5OiBQaWVycmUtTG91aXMgQm9zc2FydCA8cGllcnJlLWxvdWlzLmJvc3NhcnRAbGlu
-dXguaW50DQplbC5jb20+DQrCoMKgwqDCoEFja2VkLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHJp
-eS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT4NCsKgwqDCoMKgU2lnbmVkLW9mZi1ieTogU3Rl
-cGhlbiBCb3lkIDxzYm95ZEBjb2RlYXVyb3JhLm9yZz4NCg0KDQpGb3IgcmVmZXJlbmNlIGhlcmUg
-eW91IGhhdmUgYWxzbyB0aGUgZG93bnN0cmVhbSBidWcgcmVwb3J0IEkndmUgZmlsZWQ6DQpodHRw
-czovL2J1Z3ppbGxhLnJlZGhhdC5jb20vc2hvd19idWcuY2dpP2lkPTE0ODYwMDU=
+On Mon, 2017-09-04 at 09:05 +0000, Casal Quinteiro, Ignacio wrote:
+> Hey guys,
+> 
+> Just wanted to point you out to the bug report: https://bugzilla.kerne
+> l
+> .org/show_bug.cgi?id=196819
+
+Thank you for a report, I updated it to notify Pierre-Louis. Let's
+continue there.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
