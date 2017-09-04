@@ -1,206 +1,224 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 02/11] mux: core: Add support for getting a mux controller
- on a non DT platform
-Date: Mon, 4 Sep 2017 16:21:39 +0200
-Message-ID: <24913f99-c34f-8bb6-9f30-e1ca06277dd2@redhat.com>
-References: <20170901214845.7153-1-hdegoede@redhat.com>
- <20170901214845.7153-3-hdegoede@redhat.com>
- <11e60e4e-31c6-a979-1edd-fd48d4b4cb42@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:33956 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753725AbdIDOVn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Sep 2017 10:21:43 -0400
-In-Reply-To: <11e60e4e-31c6-a979-1edd-fd48d4b4cb42@gmail.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: sathya <sathyaosid@gmail.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v5 3/3] ACPI / PMIC: Add opregion driver for Intel Dollar Cove TI PMIC
+Date: Mon,  4 Sep 2017 16:43:40 +0200
+Message-ID: <20170904144340.27693-4-tiwai@suse.de>
+References: <20170904144340.27693-1-tiwai@suse.de>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170904144340.27693-1-tiwai@suse.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+This patch adds the opregion driver for Dollar Cove TI PMIC on Intel
+Cherry Trail devices.  The patch is based on the original work by
+Intel, found at:
+      https://github.com/01org/ProductionKernelQuilts
+with many cleanups and rewrites.
 
-On 02-09-17 21:13, sathya wrote:
-> Hi,
-> 
-> 
-> On 09/01/2017 02:48 PM, Hans de Goede wrote:
->> On non DT platforms we cannot get the mux_chip by pnode. Other subsystems
->> (regulator, clock, pwm) have the same problem and solve this by allowing
->> platform / board-setup code to add entries to a lookup table and then use
->> this table to look things up.
->>
->> This commit adds support for getting a mux controller on a non DT platform
->> following this pattern. It is based on a simplified version of the pwm
->> subsys lookup code, the dev_id and mux_name parts of a lookup table entry
->> are mandatory in the mux-core implementation.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/mux/core.c           | 96 +++++++++++++++++++++++++++++++++++++++++++-
->>   include/linux/mux/consumer.h | 11 +++++
->>   2 files changed, 106 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
->> index 6142493c327b..8864cc745506 100644
->> --- a/drivers/mux/core.c
->> +++ b/drivers/mux/core.c
->> @@ -24,6 +24,9 @@
->>   #include <linux/of_platform.h>
->>   #include <linux/slab.h>
->> +static DEFINE_MUTEX(mux_lookup_lock);
->> +static LIST_HEAD(mux_lookup_list);
->> +
->>   /*
->>    * The idle-as-is "state" is not an actual state that may be selected, it
->>    * only implies that the state should not be changed. So, use that state
->> @@ -408,6 +411,23 @@ int mux_control_deselect(struct mux_control *mux)
->>   }
->>   EXPORT_SYMBOL_GPL(mux_control_deselect);
->> +static int parent_name_match(struct device *dev, const void *data)
->> +{
->> +    const char *parent_name = dev_name(dev->parent);
-> Device name usually contains id section (devname.id). Did you take this into consideration ?
->> +    const char *name = data;
->> +
->> +    return strcmp(parent_name, name) == 0;
->> +}
->> +
->> +static struct mux_chip *mux_chip_get_by_name(const char *name)
->> +{
->> +    struct device *dev;
->> +
->> +    dev = class_find_device(&mux_class, NULL, name, parent_name_match);
->> +
->> +    return dev ? to_mux_chip(dev) : NULL;
->> +}
->> +
->>   static int of_dev_node_match(struct device *dev, const void *data)
->>   {
->>       return dev->of_node == data;
->> @@ -479,6 +499,42 @@ static struct mux_control *of_mux_control_get(struct device *dev,
->>   }
->>   /**
->> + * mux_add_table() - register PWM device consumers
-> PWM -> MUX
+The driver is currently provided only as built-in to follow other
+PMIC opregion drivers convention.
 
-Thank you, good catch, fixed for v2.
+The re-enumeration of devices at probe is required for fixing the
+issues on HP x2 210 G2.  See bug#195689.
 
-Regards,
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=195689
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+v4->v5:
+* no change in this driver
+v3->v4:
+* Rename dc_ti with chtdc_ti in all places
+v2->v3:
+* Rename dc_ti with chtdc_ti in all places
+* Driver/kconfig renames accordingly
+* Constification
+* Added acks by Andy and Mika
+v1->v2:
+* get_raw_temp cleanup in opregion driver, mention about register
+  endianess
 
-Hans
+ drivers/acpi/Kconfig                    |   6 ++
+ drivers/acpi/Makefile                   |   1 +
+ drivers/acpi/pmic/intel_pmic_chtdc_ti.c | 137 ++++++++++++++++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 drivers/acpi/pmic/intel_pmic_chtdc_ti.c
 
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index 1ce52f84dc23..176fae699891 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -521,6 +521,12 @@ config CHT_WC_PMIC_OPREGION
+ 	help
+ 	  This config adds ACPI operation region support for CHT Whiskey Cove PMIC.
+ 
++config CHT_DC_TI_PMIC_OPREGION
++	bool "ACPI operation region support for Dollar Cove TI PMIC"
++	depends on INTEL_SOC_PMIC_CHTDC_TI
++	help
++	  This config adds ACPI operation region support for Dollar Cove TI PMIC.
++
+ endif
+ 
+ config ACPI_CONFIGFS
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index b1aacfc62b1f..cd228822d4a3 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -103,6 +103,7 @@ obj-$(CONFIG_CRC_PMIC_OPREGION) += pmic/intel_pmic_crc.o
+ obj-$(CONFIG_XPOWER_PMIC_OPREGION) += pmic/intel_pmic_xpower.o
+ obj-$(CONFIG_BXT_WC_PMIC_OPREGION) += pmic/intel_pmic_bxtwc.o
+ obj-$(CONFIG_CHT_WC_PMIC_OPREGION) += pmic/intel_pmic_chtwc.o
++obj-$(CONFIG_CHT_DC_TI_PMIC_OPREGION) += pmic/intel_pmic_chtdc_ti.o
+ 
+ obj-$(CONFIG_ACPI_CONFIGFS)	+= acpi_configfs.o
+ 
+diff --git a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+new file mode 100644
+index 000000000000..109c1e9c9c7a
+--- /dev/null
++++ b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+@@ -0,0 +1,137 @@
++/*
++ * Dollar Cove TI PMIC operation region driver
++ * Copyright (C) 2014 Intel Corporation. All rights reserved.
++ *
++ * Rewritten and cleaned up
++ * Copyright (C) 2017 Takashi Iwai <tiwai@suse.de>
++ */
++
++#include <linux/acpi.h>
++#include <linux/init.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/platform_device.h>
++#include "intel_pmic.h"
++
++/* registers stored in 16bit BE (high:low, total 10bit) */
++#define CHTDC_TI_VBAT		0x54
++#define CHTDC_TI_DIETEMP	0x56
++#define CHTDC_TI_BPTHERM	0x58
++#define CHTDC_TI_GPADC		0x5a
++
++static struct pmic_table chtdc_ti_power_table[] = {
++	{ .address = 0x00, .reg = 0x41 },
++	{ .address = 0x04, .reg = 0x42 },
++	{ .address = 0x08, .reg = 0x43 },
++	{ .address = 0x0c, .reg = 0x45 },
++	{ .address = 0x10, .reg = 0x46 },
++	{ .address = 0x14, .reg = 0x47 },
++	{ .address = 0x18, .reg = 0x48 },
++	{ .address = 0x1c, .reg = 0x49 },
++	{ .address = 0x20, .reg = 0x4a },
++	{ .address = 0x24, .reg = 0x4b },
++	{ .address = 0x28, .reg = 0x4c },
++	{ .address = 0x2c, .reg = 0x4d },
++	{ .address = 0x30, .reg = 0x4e },
++};
++
++static struct pmic_table chtdc_ti_thermal_table[] = {
++	{
++		.address = 0x00,
++		.reg = CHTDC_TI_GPADC
++	},
++	{
++		.address = 0x0c,
++		.reg = CHTDC_TI_GPADC
++	},
++	/* TMP2 -> SYSTEMP */
++	{
++		.address = 0x18,
++		.reg = CHTDC_TI_GPADC
++	},
++	/* TMP3 -> BPTHERM */
++	{
++		.address = 0x24,
++		.reg = CHTDC_TI_BPTHERM
++	},
++	{
++		.address = 0x30,
++		.reg = CHTDC_TI_GPADC
++	},
++	/* TMP5 -> DIETEMP */
++	{
++		.address = 0x3c,
++		.reg = CHTDC_TI_DIETEMP
++	},
++};
++
++static int chtdc_ti_pmic_get_power(struct regmap *regmap, int reg, int bit,
++				   u64 *value)
++{
++	int data;
++
++	if (regmap_read(regmap, reg, &data))
++		return -EIO;
++
++	*value = data & 1;
++	return 0;
++}
++
++static int chtdc_ti_pmic_update_power(struct regmap *regmap, int reg, int bit,
++				      bool on)
++{
++	return regmap_update_bits(regmap, reg, 1, on);
++}
++
++static int chtdc_ti_pmic_get_raw_temp(struct regmap *regmap, int reg)
++{
++	u8 buf[2];
++
++	if (regmap_bulk_read(regmap, reg, buf, 2))
++		return -EIO;
++
++	/* stored in big-endian */
++	return ((buf[0] & 0x03) << 8) | buf[1];
++}
++
++static struct intel_pmic_opregion_data chtdc_ti_pmic_opregion_data = {
++	.get_power = chtdc_ti_pmic_get_power,
++	.update_power = chtdc_ti_pmic_update_power,
++	.get_raw_temp = chtdc_ti_pmic_get_raw_temp,
++	.power_table = chtdc_ti_power_table,
++	.power_table_count = ARRAY_SIZE(chtdc_ti_power_table),
++	.thermal_table = chtdc_ti_thermal_table,
++	.thermal_table_count = ARRAY_SIZE(chtdc_ti_thermal_table),
++};
++
++static int chtdc_ti_pmic_opregion_probe(struct platform_device *pdev)
++{
++	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
++	int err;
++
++	err = intel_pmic_install_opregion_handler(&pdev->dev,
++			ACPI_HANDLE(pdev->dev.parent), pmic->regmap,
++			&chtdc_ti_pmic_opregion_data);
++	if (err < 0)
++		return err;
++
++	/* Re-enumerate devices depending on PMIC */
++	acpi_walk_dep_device_list(ACPI_HANDLE(pdev->dev.parent));
++	return 0;
++}
++
++static const struct platform_device_id chtdc_ti_pmic_opregion_id_table[] = {
++	{ .name = "chtdc_ti_region" },
++	{},
++};
++
++static struct platform_driver chtdc_ti_pmic_opregion_driver = {
++	.probe = chtdc_ti_pmic_opregion_probe,
++	.driver = {
++		.name = "cht_dollar_cove_ti_pmic",
++	},
++	.id_table = chtdc_ti_pmic_opregion_id_table,
++};
++module_platform_driver(chtdc_ti_pmic_opregion_driver);
++
++MODULE_DESCRIPTION("Dollar Cove TI PMIC opregion driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.14.1
 
->> + * @table: array of consumers to register
->> + * @num: number of consumers in table
->> + */
->> +void mux_add_table(struct mux_lookup *table, size_t num)
->> +{
->> +    mutex_lock(&mux_lookup_lock);
->> +
->> +    while (num--) {
->> +        list_add_tail(&table->list, &mux_lookup_list);
->> +        table++;
->> +    }
->> +
->> +    mutex_unlock(&mux_lookup_lock);
->> +}
->> +EXPORT_SYMBOL_GPL(mux_add_table);
->> +
->> +/**
->> + * mux_remove_table() - unregister PWM device consumers
->> + * @table: array of consumers to unregister
->> + * @num: number of consumers in table
->> + */
->> +void mux_remove_table(struct mux_lookup *table, size_t num)
->> +{
->> +    mutex_lock(&mux_lookup_lock);
->> +
->> +    while (num--) {
->> +        list_del(&table->list);
->> +        table++;
->> +    }
->> +
->> +    mutex_unlock(&mux_lookup_lock);
->> +}
->> +EXPORT_SYMBOL_GPL(mux_remove_table);
->> +
->> +/**
->>    * mux_control_get() - Get the mux-control for a device.
->>    * @dev: The device that needs a mux-control.
->>    * @mux_name: The name identifying the mux-control.
->> @@ -487,11 +543,49 @@ static struct mux_control *of_mux_control_get(struct device *dev,
->>    */
->>   struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
->>   {
->> +    struct mux_lookup *m, *chosen = NULL;
->> +    const char *dev_id = dev_name(dev);
->> +    struct mux_chip *mux_chip;
->> +
->>       /* look up via DT first */
->>       if (IS_ENABLED(CONFIG_OF) && dev->of_node)
->>           return of_mux_control_get(dev, mux_name);
->> -    return ERR_PTR(-ENODEV);
->> +    /*
->> +     * For non DT we look up the provider in the static table typically
->> +     * provided by board setup code.
->> +     *
->> +     * If a match is found, the provider mux chip is looked up by name
->> +     * and a mux-control is requested using the table provided index.
->> +     */
->> +    mutex_lock(&mux_lookup_lock);
->> +    list_for_each_entry(m, &mux_lookup_list, list) {
->> +        if (WARN_ON(!m->dev_id || !m->mux_name || !m->provider))
->> +            continue;
->> +
->> +        if (strcmp(m->dev_id, dev_id) == 0 &&
->> +            strcmp(m->mux_name, mux_name) == 0) {
->> +            chosen = m;
->> +            break;
->> +        }
->> +    }
->> +    mutex_unlock(&mux_lookup_lock);
->> +
->> +    if (!chosen)
->> +        return ERR_PTR(-ENODEV);
->> +
->> +    mux_chip = mux_chip_get_by_name(chosen->provider);
->> +    if (!mux_chip)
->> +        return ERR_PTR(-EPROBE_DEFER);
->> +
->> +    if (chosen->index >= mux_chip->controllers) {
->> +        dev_err(dev, "Mux lookup table index out of bounds %u >= %u\n",
->> +            chosen->index, mux_chip->controllers);
->> +        put_device(&mux_chip->dev);
->> +        return ERR_PTR(-EINVAL);
->> +    }
->> +
->> +    return &mux_chip->mux[chosen->index];
->>   }
->>   EXPORT_SYMBOL_GPL(mux_control_get);
->> diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
->> index ea96d4c82be7..912dd48a3a5d 100644
->> --- a/include/linux/mux/consumer.h
->> +++ b/include/linux/mux/consumer.h
->> @@ -18,6 +18,17 @@
->>   struct device;
->>   struct mux_control;
->> +struct mux_lookup {
->> +    struct list_head list;
->> +    const char *provider;
->> +    unsigned int index;
->> +    const char *dev_id;
->> +    const char *mux_name;
->> +};
->> +
->> +void mux_add_table(struct mux_lookup *table, size_t num);
->> +void mux_remove_table(struct mux_lookup *table, size_t num);
->> +
->>   unsigned int mux_control_states(struct mux_control *mux);
->>   int __must_check mux_control_select(struct mux_control *mux,
->>                       unsigned int state);
-> 
