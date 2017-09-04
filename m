@@ -1,177 +1,195 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 3/3] platform/x86: intel_cht_int33fe: Update fusb302
- type string, add properties
-Date: Mon, 4 Sep 2017 09:27:01 +0300
-Message-ID: <CAHp75Ve2yCn3R42oUSW4LYgaMcFEh9eqZh3fCG8n=Zmu68WjvA@mail.gmail.com>
-References: <20170903124156.7440-1-hdegoede@redhat.com> <20170903124156.7440-4-hdegoede@redhat.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 04/11] usb: xhci: Add Intel cherrytrail extended cap /
+ otg phy mux handling
+Date: Mon, 4 Sep 2017 10:31:58 +0300
+Message-ID: <20170904073158.GA27353@kuha.fi.intel.com>
+References: <20170901214845.7153-1-hdegoede@redhat.com>
+ <20170901214845.7153-5-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170903124156.7440-4-hdegoede@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20170901214845.7153-5-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Sep 3, 2017 at 3:41 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
-> rather then just "fusb302" and needs us to set a number of device-
-> properties, adjust the intel_cht_int33fe driver accordingly.
->
-> One of the properties set is max-snk-mv which makes the fusb302 driver
-> negotiate up to 12V charging voltage, which is a bad idea on boards
-> which are not setup to handle this, so this commit also adds 2 extra
-> sanity checks to make sure that the expected Whiskey Cove PMIC +
-> TI bq24292i charger combo, which can handle 12V, is present.
+Hi,
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-(in case Wolfram would like to take it)
-
-See comments below.
-
->
+On Fri, Sep 01, 2017 at 11:48:38PM +0200, Hans de Goede wrote:
+> The Intel cherrytrail xhci controller has an extended cap mmio-range
+> which contains registers to control the muxing to the xhci (host mode)
+> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+> 
+> Having a mux driver included in the xhci code (or under drivers/usb/host)
+> is not desirable. So this commit adds a simple handler for this extended
+> capability, which creates a platform device with the caps mmio region as
+> resource, this allows us to write a separate platform mux driver for the
+> mux.
+> 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
 > Changes in v2:
-> -Set board_info.dev_name
-> -Adjust for changes in other patches in this patch-set
+> -Check xHCI controller PCI device-id instead of only checking for the
+>  Intel Extended capability ID, as the Extended capability ID is used on
+>  other model Intel xHCI controllers too
 > ---
->  drivers/platform/x86/Kconfig             |  6 ++++-
->  drivers/platform/x86/intel_cht_int33fe.c | 44 +++++++++++++++++++++++++++++++-
->  2 files changed, 48 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 80b87954f6dd..c5554577681a 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -793,7 +793,7 @@ config ACPI_CMPC
->
->  config INTEL_CHT_INT33FE
->         tristate "Intel Cherry Trail ACPI INT33FE Driver"
-> -       depends on X86 && ACPI && I2C
-> +       depends on X86 && ACPI && I2C && REGULATOR
->         ---help---
->           This driver add support for the INT33FE ACPI device found on
->           some Intel Cherry Trail devices.
-> @@ -804,6 +804,10 @@ config INTEL_CHT_INT33FE
->           This driver instantiates i2c-clients for these, so that standard
->           i2c drivers for these chips can bind to the them.
->
-> +         If you enable this driver it is advised to also select
-> +         CONFIG_CHARGER_BQ24190=m, CONFIG_BATTERY_MAX17042=m and
-> +         CONFIG_TYPEC_FUSB302=m (currently in drivers/staging).
+>  drivers/usb/host/Makefile            |  2 +-
+>  drivers/usb/host/xhci-intel-quirks.c | 85 ++++++++++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci-pci.c          |  4 ++
+>  drivers/usb/host/xhci.h              |  2 +
+>  4 files changed, 92 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/usb/host/xhci-intel-quirks.c
+> 
+> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+> index cf2691fffcc0..441edf82eb1c 100644
+> --- a/drivers/usb/host/Makefile
+> +++ b/drivers/usb/host/Makefile
+> @@ -63,7 +63,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
+>  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
+>  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
+>  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
+> -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
+> +obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o xhci-intel-quirks.o
+>  obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
+>  obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
+>  obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
+> diff --git a/drivers/usb/host/xhci-intel-quirks.c b/drivers/usb/host/xhci-intel-quirks.c
+> new file mode 100644
+> index 000000000000..819f5f9da9ee
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-intel-quirks.c
+> @@ -0,0 +1,85 @@
+> +/*
+> + * Intel Vendor Defined XHCI extended capability handling
+> + *
+> + * Copyright (c) 2016) Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * Loosely based on android x86 kernel code which is:
+> + *
+> + * Copyright (C) 2014 Intel Corp.
+> + *
+> + * Author: Wu, Hao
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+> + * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+> + * for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program;
+> + */
 > +
-
-I would put FUSB302 first since it's not obvious now that remark in
-parens is related only to it. And might be better rephase the path in
-terms of `make menuconfig` rather than pathname in the source tree.
-
->  config INTEL_INT0002_VGPIO
->         tristate "Intel ACPI INT0002 Virtual GPIO driver"
->         depends on GPIOLIB && ACPI
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index a9cbc4b8ca63..b2925d996613 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -24,6 +24,7 @@
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->
->  #define EXPECTED_PTYPE         4
-> @@ -77,12 +78,21 @@ static const struct property_entry max17047_props[] = {
->         { }
->  };
->
-> +static const struct property_entry fusb302_props[] = {
-> +       PROPERTY_ENTRY_STRING("fcs,extcon-name", "cht_wcove_pwrsrc"),
-> +       PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
-> +       PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
-> +       PROPERTY_ENTRY_U32("fcs,max-sink-microwatt", 36000000),
-> +       { }
-> +};
+> +#include <linux/platform_device.h>
+> +#include "xhci.h"
 > +
->  static int cht_int33fe_probe(struct i2c_client *client)
->  {
->         struct device *dev = &client->dev;
->         struct i2c_board_info board_info;
->         struct cht_int33fe_data *data;
->         struct i2c_client *max17047;
-> +       struct regulator *regulator;
->         unsigned long long ptyp;
->         acpi_status status;
->         int ret, fusb302_irq;
-> @@ -100,6 +110,34 @@ static int cht_int33fe_probe(struct i2c_client *client)
->         if (ptyp != EXPECTED_PTYPE)
->                 return -ENODEV;
->
-> +       /* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
-> +       if (!acpi_dev_present("INT34D3", "1", 3)) {
-> +               dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
-> +                       EXPECTED_PTYPE);
-> +               return -ENODEV;
-> +       }
+> +/* Extended capability IDs for Intel Vendor Defined */
+> +#define XHCI_EXT_CAPS_INTEL_HOST_CAP	192
 > +
-> +       /*
-> +        * We expect the WC PMIC to be paired with a TI bq24292i charger-IC.
-> +        * We check for the bq24292i vbus regulator here, this has 2 purposes:
-> +        * 1) The bq24292i allows charging with up to 12V, setting the fusb302's
-> +        *    max-snk voltage to 12V with another charger-IC is not good.
-> +        * 2) For the fusb302 driver to get the bq24292i vbus regulator, the
-> +        *    regulator-map, which is part of the bq24292i regulator_init_data,
-> +        *    must be registered before the fusb302 is instantiated, otherwise
-> +        *    it will end up with a dummy-regulator.
-> +        * Note "cht_wc_usb_typec_vbus" comes from the regulator_init_data
-> +        * which is defined in i2c-cht-wc.c from where the bq24292i i2c-client
-> +        * gets instantiated. We use regulator_get_optional here so that we
-> +        * don't end up getting a dummy-regulator ourselves.
-> +        */
-> +       regulator = regulator_get_optional(dev, "cht_wc_usb_typec_vbus");
-> +       if (IS_ERR(regulator)) {
-> +               ret = PTR_ERR(regulator);
-> +               return (ret == -ENODEV) ? -EPROBE_DEFER : ret;
-> +       }
-> +       regulator_put(regulator);
+> +static void xhci_intel_unregister_pdev(void *arg)
+> +{
+> +	platform_device_unregister(arg);
+> +}
 > +
->         /* The FUSB302 uses the irq at index 1 and is the only irq user */
->         fusb302_irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 1);
->         if (fusb302_irq < 0) {
-> @@ -126,6 +164,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
->         } else {
->                 memset(&board_info, 0, sizeof(board_info));
->                 strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
-> +               board_info.dev_name = "max17047";
->                 board_info.properties = max17047_props;
->                 data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
->                 if (!data->max17047)
-> @@ -133,7 +172,9 @@ static int cht_int33fe_probe(struct i2c_client *client)
->         }
->
->         memset(&board_info, 0, sizeof(board_info));
-> -       strlcpy(board_info.type, "fusb302", I2C_NAME_SIZE);
-> +       strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-> +       board_info.dev_name = "fusb302";
-> +       board_info.properties = fusb302_props;
->         board_info.irq = fusb302_irq;
->
->         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
-> @@ -141,6 +182,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
->                 goto out_unregister_max17047;
->
->         memset(&board_info, 0, sizeof(board_info));
-> +       board_info.dev_name = "pi3usb30532";
->         strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
->
->         data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
-> --
-> 2.13.4
->
+> +int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci)
+> +{
+> +	struct usb_hcd *hcd = xhci_to_hcd(xhci);
+> +	struct device *dev = hcd->self.controller;
+> +	struct platform_device *pdev;
+> +	struct resource	res = { 0, };
+> +	int ret, ext_offset;
+> +
+> +	ext_offset = xhci_find_next_ext_cap(&xhci->cap_regs->hc_capbase, 0,
+> +					    XHCI_EXT_CAPS_INTEL_HOST_CAP);
+> +	if (!ext_offset) {
+> +		xhci_err(xhci, "couldn't find Intel ext caps\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	pdev = platform_device_alloc("intel_cht_usb_mux", PLATFORM_DEVID_NONE);
+> +	if (!pdev) {
+> +		xhci_err(xhci, "couldn't allocate intel_cht_usb_mux pdev\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res.start = hcd->rsrc_start + ext_offset;
+> +	res.end	  = res.start + 0x3ff;
+> +	res.name  = "intel_cht_usb_mux";
+> +	res.flags = IORESOURCE_MEM;
+> +
+> +	ret = platform_device_add_resources(pdev, &res, 1);
+> +	if (ret) {
+> +		dev_err(dev, "couldn't add resources to intel_cht_usb_mux pdev\n");
+> +		platform_device_put(pdev);
+> +		return ret;
+> +	}
+
+Previously the problem with this was that since platform bus reserves
+the memory region, usb core fails to register the hcd, as it also
+wants to reserve the same memory region. So xhci with this failed to
+probe.
+
+So has that been fixed? Does xhci really get registered with this?
+
+> +	pdev->dev.parent = dev;
+> +
+> +	ret = platform_device_add(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "couldn't register intel_cht_usb_mux pdev\n");
+> +		platform_device_put(pdev);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
+> +	if (ret) {
+> +		dev_err(dev, "couldn't add unregister action for intel_cht_usb_mux pdev\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index 8071c8fdd15e..b55c1e96abf0 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -188,6 +188,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+>  		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
+>  		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
+> +		xhci->quirks |= XHCI_INTEL_CHT_USB_MUX;
+>  	}
+>  	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+>  	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
+> @@ -328,6 +329,9 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+>  		xhci_pme_acpi_rtd3_enable(dev);
+>  
+> +	if (xhci->quirks & XHCI_INTEL_CHT_USB_MUX)
+> +		xhci_create_intel_cht_mux_pdev(xhci);
+> +
+>  	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
+>  	pm_runtime_put_noidle(&dev->dev);
+>  
+> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> index e3e935291ed6..f722ee31e50d 100644
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -1821,6 +1821,7 @@ struct xhci_hcd {
+>  #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
+>  #define XHCI_U2_DISABLE_WAKE	(1 << 27)
+>  #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
+> +#define XHCI_INTEL_CHT_USB_MUX	(1 << 29)
+
+Is that really necessary? Why not just register the platform device
+the moment we find match for the PCI device ID?
 
 
+Br,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+heikki
