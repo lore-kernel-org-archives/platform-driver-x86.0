@@ -1,8 +1,8 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
  PMIC
-Date: Tue, 5 Sep 2017 09:53:41 +0100
-Message-ID: <20170905085341.ssukn2rtyf3q65bn@dell>
+Date: Tue, 5 Sep 2017 09:54:49 +0100
+Message-ID: <20170905085449.dsadovrpmpj6vsvv@dell>
 References: <20170904144340.27693-1-tiwai@suse.de>
  <20170904144340.27693-2-tiwai@suse.de>
  <20170905072451.ephscqjqgwpnl6da@dell>
@@ -12,10 +12,10 @@ References: <20170904144340.27693-1-tiwai@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <s5hefrltv43.wl-tiwai@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-acpi-owner@vger.kernel.org
 To: Takashi Iwai <tiwai@suse.de>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -76,26 +76,10 @@ On Tue, 05 Sep 2017, Takashi Iwai wrote:
 > > Yes, you are over 2 weeks late for v4.14.  It will have to be v4.15.
 > 
 > OK, I'll ring your bells again once when 4.15 development is opened.
-> 
-> 
-> > > IMO, it'd be great if you can carry all stuff through MFD tree; or
-> > > create an immutable branch (again).  But how to handle it, when to do
-> > > it, It's all up to you guys.
-> > 
-> > If there aren't any build dependencies between the patches, each of
-> > the patches should be applied through their own trees.  What are the
-> > build-time dependencies?  Are there any?
-> 
-> No, there is no strict build-time dependency.  It's just that I don't
-> see it nice to have a commit for a dead code, partly for testing
-> purpose and partly for code consistency.  But if this makes
-> maintenance easier, I'm happy with that, too, of course.
 
-There won't be any dead code.  All of the subsystem trees are pulled
-into -next [0] where the build bots can operate on the patches as a
-whole.
-
-[0] git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+Please don't.  Just collect all the Acks you have received and sent
+out the set again changing [PATCH] for [RESEND].  Only if there
+haven't been any code changes of course. 
 
 -- 
 Lee Jones
