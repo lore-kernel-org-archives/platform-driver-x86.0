@@ -1,193 +1,192 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 02/11] mux: core: Add support for getting a mux controller on a non DT platform
-Date: Tue,  5 Sep 2017 18:42:12 +0200
-Message-ID: <20170905164221.11266-3-hdegoede@redhat.com>
+Subject: [PATCH v2 06/11] mux: Add Pericom PI3USB30532 Type-C mux driver
+Date: Tue,  5 Sep 2017 18:42:16 +0200
+Message-ID: <20170905164221.11266-7-hdegoede@redhat.com>
 References: <20170905164221.11266-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <20170905164221.11266-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On non DT platforms we cannot get the mux_chip by pnode. Other subsystems
-(regulator, clock, pwm) have the same problem and solve this by allowing
-platform / board-setup code to add entries to a lookup table and then use
-this table to look things up.
-
-This commit adds support for getting a mux controller on a non DT platform
-following this pattern. It is based on a simplified version of the pwm
-subsys lookup code, the dev_id and mux_name parts of a lookup table entry
-are mandatory in the mux-core implementation.
+Add a driver for the Pericom PI3USB30532 Type-C cross switch /
+mux chip found on some devices with a Type-C port.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Fixup some kerneldoc comments, add kerneldoc comment to structs
--Minor code-style tweaks
+-Adjust for new MUX_TYPEC_foo state defines
+-Add MAINTAINERS entry
+-Various code-style fixes
 ---
- drivers/mux/core.c           | 93 +++++++++++++++++++++++++++++++++++++++++++-
- include/linux/mux/consumer.h | 19 +++++++++
- 2 files changed, 111 insertions(+), 1 deletion(-)
+ MAINTAINERS               |  5 +++
+ drivers/mux/Kconfig       | 10 +++++
+ drivers/mux/Makefile      |  2 +
+ drivers/mux/pi3usb30532.c | 93 +++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 110 insertions(+)
+ create mode 100644 drivers/mux/pi3usb30532.c
 
-diff --git a/drivers/mux/core.c b/drivers/mux/core.c
-index 99d29f982c0e..e25bb7ab03ce 100644
---- a/drivers/mux/core.c
-+++ b/drivers/mux/core.c
-@@ -24,6 +24,9 @@
- #include <linux/of_platform.h>
- #include <linux/slab.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dfaed958db85..5527b0efcef3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8996,6 +8996,11 @@ M:	Hans de Goede <hdegoede@redhat.com>
+ S:	Maintained
+ F:	drivers/mix/intel-cht-usb-mux.c
  
-+static DEFINE_MUTEX(mux_lookup_lock);
-+static LIST_HEAD(mux_lookup_list);
++MULTIPLEXER SUBSYSTEM PI3USB30532 DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++S:	Maintained
++F:	drivers/mix/pi3usb30532.c
 +
- /*
-  * The idle-as-is "state" is not an actual state that may be selected, it
-  * only implies that the state should not be changed. So, use that state
-@@ -408,6 +411,23 @@ int mux_control_deselect(struct mux_control *mux)
- }
- EXPORT_SYMBOL_GPL(mux_control_deselect);
+ MULTISOUND SOUND DRIVER
+ M:	Andrew Veliath <andrewtv@usa.net>
+ S:	Maintained
+diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+index 947cfd7af02a..1f6f017ee920 100644
+--- a/drivers/mux/Kconfig
++++ b/drivers/mux/Kconfig
+@@ -58,4 +58,14 @@ config MUX_MMIO
+ 	  To compile the driver as a module, choose M here: the module will
+ 	  be called mux-mmio.
  
-+static int parent_name_match(struct device *dev, const void *data)
-+{
-+	const char *parent_name = dev_name(dev->parent);
-+	const char *name = data;
++config MUX_PI3USB30532
++	tristate "Pericom PI3USB30532 Type-C cross switch driver"
++	depends on I2C
++	help
++	  This driver adds support for the Pericom PI3USB30532 Type-C cross
++	  switch / mux chip found on some devices with a Type-C port.
 +
-+	return strcmp(parent_name, name) == 0;
-+}
++	  To compile the driver as a module, choose M here: the module will
++	  be called mux-pi3usb30532.
 +
-+static struct mux_chip *mux_chip_get_by_name(const char *name)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(&mux_class, NULL, name, parent_name_match);
-+
-+	return dev ? to_mux_chip(dev) : NULL;
-+}
-+
- static int of_dev_node_match(struct device *dev, const void *data)
- {
- 	return dev->of_node == data;
-@@ -480,6 +500,38 @@ static struct mux_control *of_mux_control_get(struct device *dev,
- }
+ endmenu
+diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
+index 6cf41be2754f..df381c219708 100644
+--- a/drivers/mux/Makefile
++++ b/drivers/mux/Makefile
+@@ -7,9 +7,11 @@ mux-adg792a-objs		:= adg792a.o
+ mux-gpio-objs			:= gpio.o
+ mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
+ mux-mmio-objs			:= mmio.o
++mux-pi3usb30532-objs		:= pi3usb30532.o
  
- /**
-+ * mux_add_table() - Register consumer to mux-controller mappings
-+ * @table: array of mappings to register
-+ * @num: number of mappings in table
+ obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
+ obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
+ obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
+ obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
+ obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
++obj-$(CONFIG_MUX_PI3USB30532)		+= mux-pi3usb30532.o
+diff --git a/drivers/mux/pi3usb30532.c b/drivers/mux/pi3usb30532.c
+new file mode 100644
+index 000000000000..3d959e3ee8c6
+--- /dev/null
++++ b/drivers/mux/pi3usb30532.c
+@@ -0,0 +1,93 @@
++/*
++ * Pericom PI3USB30532 Type-C cross switch / mux driver
++ *
++ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation, or (at your option)
++ * any later version.
 + */
-+void mux_add_table(struct mux_lookup *table, size_t num)
++
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mux/driver.h>
++#include <linux/mux/usb.h>
++
++#define PI3USB30532_CONF			0x00
++
++#define PI3USB30532_CONF_OPEN			0x00
++#define PI3USB30532_CONF_SWAP			0x01
++#define PI3USB30532_CONF_4LANE_DP		0x02
++#define PI3USB30532_CONF_USB3			0x04
++#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
++
++static int pi3usb30532_set_mux(struct mux_control *mux, int state)
 +{
-+	mutex_lock(&mux_lookup_lock);
++	struct i2c_client *i2c = to_i2c_client(mux->chip->dev.parent);
++	u8 conf = PI3USB30532_CONF_OPEN;
 +
-+	for (; num--; table++)
-+		list_add_tail(&table->list, &mux_lookup_list);
++	if (state == MUX_IDLE_DISCONNECT)
++		return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
 +
-+	mutex_unlock(&mux_lookup_lock);
-+}
-+EXPORT_SYMBOL_GPL(mux_add_table);
-+
-+/**
-+ * mux_remove_table() - Unregister consumer to mux-controller mappings
-+ * @table: array of mappings to unregister
-+ * @num: number of mappings in table
-+ */
-+void mux_remove_table(struct mux_lookup *table, size_t num)
-+{
-+	mutex_lock(&mux_lookup_lock);
-+
-+	for (; num--; table++)
-+		list_del(&table->list);
-+
-+	mutex_unlock(&mux_lookup_lock);
-+}
-+EXPORT_SYMBOL_GPL(mux_remove_table);
-+
-+/**
-  * mux_control_get() - Get the mux-control for a device.
-  * @dev: The device that needs a mux-control.
-  * @mux_name: The name identifying the mux-control.
-@@ -488,11 +540,50 @@ static struct mux_control *of_mux_control_get(struct device *dev,
-  */
- struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
- {
-+	struct mux_lookup *m, *chosen = NULL;
-+	const char *dev_id = dev_name(dev);
-+	struct mux_chip *mux_chip;
-+
- 	/* look up via DT first */
- 	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
- 		return of_mux_control_get(dev, mux_name);
- 
--	return ERR_PTR(-ENODEV);
-+	/*
-+	 * For non DT we look up the provider in the static table typically
-+	 * provided by board setup code.
-+	 *
-+	 * If a match is found, the provider mux chip is looked up by name
-+	 * and a mux-control is requested using the table provided index.
-+	 */
-+	mutex_lock(&mux_lookup_lock);
-+	list_for_each_entry(m, &mux_lookup_list, list) {
-+		if (WARN_ON(!m->dev_id || !m->mux_name || !m->provider))
-+			continue;
-+
-+		if (!strcmp(m->dev_id, dev_id) &&
-+		    !strcmp(m->mux_name, mux_name))
-+		{
-+			chosen = m;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&mux_lookup_lock);
-+
-+	if (!chosen)
-+		return ERR_PTR(-ENODEV);
-+
-+	mux_chip = mux_chip_get_by_name(chosen->provider);
-+	if (!mux_chip)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	if (chosen->index >= mux_chip->controllers) {
-+		dev_err(dev, "Mux lookup table index out of bounds %u >= %u\n",
-+			chosen->index, mux_chip->controllers);
-+		put_device(&mux_chip->dev);
-+		return ERR_PTR(-EINVAL);
++	switch (state & ~MUX_TYPEC_POLARITY_INV) {
++	case MUX_TYPEC_DEVICE:
++	case MUX_TYPEC_HOST:
++		conf = PI3USB30532_CONF_USB3;
++		break;
++	case MUX_TYPEC_HOST_AND_DP_SRC:
++		conf = PI3USB30532_CONF_USB3_AND_2LANE_DP;
++		break;
++	case MUX_TYPEC_DP_SRC:
++		conf = PI3USB30532_CONF_4LANE_DP;
++		break;
 +	}
 +
-+	return &mux_chip->mux[chosen->index];
- }
- EXPORT_SYMBOL_GPL(mux_control_get);
- 
-diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
-index ea96d4c82be7..62a8ec6171c9 100644
---- a/include/linux/mux/consumer.h
-+++ b/include/linux/mux/consumer.h
-@@ -18,6 +18,25 @@
- struct device;
- struct mux_control;
- 
-+/**
-+ * struct mux_lookup -	Mux consumer to mux-controller lookup table entry
-+ * @list:		List head, internal use only.
-+ * @provider:		dev_name() of the mux-chip's parent-dev.
-+ * @index:		mux-controller's index in the mux-chip's mux array
-+ * @dev_id:		dev_name() of the consumer to map to this controller
-+ * @mux_name		name the consumer passes to mux_control_get
-+ */
-+struct mux_lookup {
-+	struct list_head list;
-+	const char *provider;
-+	unsigned int index;
-+	const char *dev_id;
-+	const char *mux_name;
++	if (state & MUX_TYPEC_POLARITY_INV)
++		conf |= PI3USB30532_CONF_SWAP;
++
++	return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
++}
++
++static const struct mux_control_ops pi3usb30532_ops = {
++	.set = pi3usb30532_set_mux,
 +};
 +
-+void mux_add_table(struct mux_lookup *table, size_t num);
-+void mux_remove_table(struct mux_lookup *table, size_t num);
++static int pi3usb30532_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct mux_chip *mux_chip;
 +
- unsigned int mux_control_states(struct mux_control *mux);
- int __must_check mux_control_select(struct mux_control *mux,
- 				    unsigned int state);
++	mux_chip = devm_mux_chip_alloc(dev, 1, 0);
++	if (IS_ERR(mux_chip))
++		return PTR_ERR(mux_chip);
++
++	mux_chip->ops = &pi3usb30532_ops;
++	mux_chip->mux[0].idle_state = MUX_IDLE_DISCONNECT;
++	/* Keep initial state as is, for e.g. booting from an USB disk */
++	mux_chip->mux[0].cached_state = MUX_IDLE_DISCONNECT;
++	mux_chip->mux[0].states = MUX_TYPEC_STATES;
++
++	return devm_mux_chip_register(dev, mux_chip);
++}
++
++static const struct i2c_device_id pi3usb30532_table[] = {
++	{ "pi3usb30532" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
++
++static struct i2c_driver pi3usb30532_driver = {
++	.driver = {
++		.name = "pi3usb30532",
++	},
++	.probe_new = pi3usb30532_probe,
++	.id_table = pi3usb30532_table,
++};
++
++module_i2c_driver(pi3usb30532_driver);
++
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
++MODULE_LICENSE("GPL");
 -- 
 2.13.5
