@@ -1,7 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 06/11] mux: Add Pericom PI3USB30532 Type-C mux driver
-Date: Tue,  5 Sep 2017 18:42:16 +0200
-Message-ID: <20170905164221.11266-7-hdegoede@redhat.com>
+Subject: [PATCH v2 04/11] usb: xhci: Add Intel cherrytrail extended cap / otg
+ phy mux handling
+Date: Tue,  5 Sep 2017 18:42:14 +0200
+Message-ID: <20170905164221.11266-5-hdegoede@redhat.com>
 References: <20170905164221.11266-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,172 +22,175 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a driver for the Pericom PI3USB30532 Type-C cross switch /
-mux chip found on some devices with a Type-C port.
+The Intel cherrytrail xhci controller has an extended cap mmio-range
+which contains registers to control the muxing to the xhci (host mode)
+or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+
+Having a mux driver included in the xhci code (or under drivers/usb/host)
+is not desirable. So this commit adds a simple handler for this extended
+capability, which creates a platform device with the caps mmio region as
+resource, this allows us to write a separate platform mux driver for the
+mux.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Adjust for new MUX_TYPEC_foo state defines
--Add MAINTAINERS entry
--Various code-style fixes
+-Check xHCI controller PCI device-id instead of only checking for the
+ Intel Extended capability ID, as the Extended capability ID is used on
+ other model Intel xHCI controllers too
 ---
- MAINTAINERS               |  5 +++
- drivers/mux/Kconfig       | 10 +++++
- drivers/mux/Makefile      |  2 +
- drivers/mux/pi3usb30532.c | 93 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+)
- create mode 100644 drivers/mux/pi3usb30532.c
+ drivers/usb/host/Makefile            |  2 +-
+ drivers/usb/host/xhci-intel-quirks.c | 85 ++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-pci.c          |  4 ++
+ drivers/usb/host/xhci.h              |  2 +
+ 4 files changed, 92 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/usb/host/xhci-intel-quirks.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dfaed958db85..5527b0efcef3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8996,6 +8996,11 @@ M:	Hans de Goede <hdegoede@redhat.com>
- S:	Maintained
- F:	drivers/mix/intel-cht-usb-mux.c
- 
-+MULTIPLEXER SUBSYSTEM PI3USB30532 DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+S:	Maintained
-+F:	drivers/mix/pi3usb30532.c
-+
- MULTISOUND SOUND DRIVER
- M:	Andrew Veliath <andrewtv@usa.net>
- S:	Maintained
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 947cfd7af02a..1f6f017ee920 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -58,4 +58,14 @@ config MUX_MMIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-mmio.
- 
-+config MUX_PI3USB30532
-+	tristate "Pericom PI3USB30532 Type-C cross switch driver"
-+	depends on I2C
-+	help
-+	  This driver adds support for the Pericom PI3USB30532 Type-C cross
-+	  switch / mux chip found on some devices with a Type-C port.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-pi3usb30532.
-+
- endmenu
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 6cf41be2754f..df381c219708 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -7,9 +7,11 @@ mux-adg792a-objs		:= adg792a.o
- mux-gpio-objs			:= gpio.o
- mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
- mux-mmio-objs			:= mmio.o
-+mux-pi3usb30532-objs		:= pi3usb30532.o
- 
- obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
- obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
- obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
- obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
-+obj-$(CONFIG_MUX_PI3USB30532)		+= mux-pi3usb30532.o
-diff --git a/drivers/mux/pi3usb30532.c b/drivers/mux/pi3usb30532.c
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index cf2691fffcc0..441edf82eb1c 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -63,7 +63,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
+ obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
+ obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
+ obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
+-obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
++obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o xhci-intel-quirks.o
+ obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
+ obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
+ obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
+diff --git a/drivers/usb/host/xhci-intel-quirks.c b/drivers/usb/host/xhci-intel-quirks.c
 new file mode 100644
-index 000000000000..3d959e3ee8c6
+index 000000000000..819f5f9da9ee
 --- /dev/null
-+++ b/drivers/mux/pi3usb30532.c
-@@ -0,0 +1,93 @@
++++ b/drivers/usb/host/xhci-intel-quirks.c
+@@ -0,0 +1,85 @@
 +/*
-+ * Pericom PI3USB30532 Type-C cross switch / mux driver
++ * Intel Vendor Defined XHCI extended capability handling
 + *
-+ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (c) 2016) Hans de Goede <hdegoede@redhat.com>
++ *
++ * Loosely based on android x86 kernel code which is:
++ *
++ * Copyright (C) 2014 Intel Corp.
++ *
++ * Author: Wu, Hao
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation, or (at your option)
-+ * any later version.
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
++ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program;
 + */
 +
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
-+#include <linux/mux/usb.h>
++#include <linux/platform_device.h>
++#include "xhci.h"
 +
-+#define PI3USB30532_CONF			0x00
++/* Extended capability IDs for Intel Vendor Defined */
++#define XHCI_EXT_CAPS_INTEL_HOST_CAP	192
 +
-+#define PI3USB30532_CONF_OPEN			0x00
-+#define PI3USB30532_CONF_SWAP			0x01
-+#define PI3USB30532_CONF_4LANE_DP		0x02
-+#define PI3USB30532_CONF_USB3			0x04
-+#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
-+
-+static int pi3usb30532_set_mux(struct mux_control *mux, int state)
++static void xhci_intel_unregister_pdev(void *arg)
 +{
-+	struct i2c_client *i2c = to_i2c_client(mux->chip->dev.parent);
-+	u8 conf = PI3USB30532_CONF_OPEN;
++	platform_device_unregister(arg);
++}
 +
-+	if (state == MUX_IDLE_DISCONNECT)
-+		return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
++int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci)
++{
++	struct usb_hcd *hcd = xhci_to_hcd(xhci);
++	struct device *dev = hcd->self.controller;
++	struct platform_device *pdev;
++	struct resource	res = { 0, };
++	int ret, ext_offset;
 +
-+	switch (state & ~MUX_TYPEC_POLARITY_INV) {
-+	case MUX_TYPEC_DEVICE:
-+	case MUX_TYPEC_HOST:
-+		conf = PI3USB30532_CONF_USB3;
-+		break;
-+	case MUX_TYPEC_HOST_AND_DP_SRC:
-+		conf = PI3USB30532_CONF_USB3_AND_2LANE_DP;
-+		break;
-+	case MUX_TYPEC_DP_SRC:
-+		conf = PI3USB30532_CONF_4LANE_DP;
-+		break;
++	ext_offset = xhci_find_next_ext_cap(&xhci->cap_regs->hc_capbase, 0,
++					    XHCI_EXT_CAPS_INTEL_HOST_CAP);
++	if (!ext_offset) {
++		xhci_err(xhci, "couldn't find Intel ext caps\n");
++		return -ENODEV;
 +	}
 +
-+	if (state & MUX_TYPEC_POLARITY_INV)
-+		conf |= PI3USB30532_CONF_SWAP;
++	pdev = platform_device_alloc("intel_cht_usb_mux", PLATFORM_DEVID_NONE);
++	if (!pdev) {
++		xhci_err(xhci, "couldn't allocate intel_cht_usb_mux pdev\n");
++		return -ENOMEM;
++	}
 +
-+	return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
++	res.start = hcd->rsrc_start + ext_offset;
++	res.end	  = res.start + 0x3ff;
++	res.name  = "intel_cht_usb_mux";
++	res.flags = IORESOURCE_MEM;
++
++	ret = platform_device_add_resources(pdev, &res, 1);
++	if (ret) {
++		dev_err(dev, "couldn't add resources to intel_cht_usb_mux pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	pdev->dev.parent = dev;
++
++	ret = platform_device_add(pdev);
++	if (ret) {
++		dev_err(dev, "couldn't register intel_cht_usb_mux pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
++	if (ret) {
++		dev_err(dev, "couldn't add unregister action for intel_cht_usb_mux pdev\n");
++		return ret;
++	}
++
++	return 0;
 +}
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 8071c8fdd15e..b55c1e96abf0 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -188,6 +188,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
+ 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
++		xhci->quirks |= XHCI_INTEL_CHT_USB_MUX;
+ 	}
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
+@@ -328,6 +329,9 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+ 		xhci_pme_acpi_rtd3_enable(dev);
+ 
++	if (xhci->quirks & XHCI_INTEL_CHT_USB_MUX)
++		xhci_create_intel_cht_mux_pdev(xhci);
 +
-+static const struct mux_control_ops pi3usb30532_ops = {
-+	.set = pi3usb30532_set_mux,
-+};
-+
-+static int pi3usb30532_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct mux_chip *mux_chip;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, 0);
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_chip->ops = &pi3usb30532_ops;
-+	mux_chip->mux[0].idle_state = MUX_IDLE_DISCONNECT;
-+	/* Keep initial state as is, for e.g. booting from an USB disk */
-+	mux_chip->mux[0].cached_state = MUX_IDLE_DISCONNECT;
-+	mux_chip->mux[0].states = MUX_TYPEC_STATES;
-+
-+	return devm_mux_chip_register(dev, mux_chip);
-+}
-+
-+static const struct i2c_device_id pi3usb30532_table[] = {
-+	{ "pi3usb30532" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
-+
-+static struct i2c_driver pi3usb30532_driver = {
-+	.driver = {
-+		.name = "pi3usb30532",
-+	},
-+	.probe_new = pi3usb30532_probe,
-+	.id_table = pi3usb30532_table,
-+};
-+
-+module_i2c_driver(pi3usb30532_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
-+MODULE_LICENSE("GPL");
+ 	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
+ 	pm_runtime_put_noidle(&dev->dev);
+ 
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index e3e935291ed6..f722ee31e50d 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1821,6 +1821,7 @@ struct xhci_hcd {
+ #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
+ #define XHCI_U2_DISABLE_WAKE	(1 << 27)
+ #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
++#define XHCI_INTEL_CHT_USB_MUX	(1 << 29)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+@@ -2005,6 +2006,7 @@ void xhci_init_driver(struct hc_driver *drv,
+ 		      const struct xhci_driver_overrides *over);
+ int xhci_disable_slot(struct xhci_hcd *xhci,
+ 			struct xhci_command *command, u32 slot_id);
++int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci);
+ 
+ int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
+ int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
 -- 
 2.13.5
