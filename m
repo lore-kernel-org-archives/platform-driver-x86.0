@@ -1,35 +1,76 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 00/11] mux/typec: Add USB / TypeC mux drivers and hook them up on some x86 systems
-Date: Tue,  5 Sep 2017 18:42:10 +0200
-Message-ID: <20170905164221.11266-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 01/11] mux: core: Add of_mux_control_get helper function
+Date: Tue,  5 Sep 2017 18:42:11 +0200
+Message-ID: <20170905164221.11266-2-hdegoede@redhat.com>
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905164221.11266-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi All,
+Currently the mux_control_get implementation only deals with getting
+mux controllers on DT platforms. This commit renames the current
+implementation to of_mux_control_get to reflect this and makes
+mux_control_get a wrapper around of_mux_control_get.
 
-Here is v2 of my USB / Type-C mux series, addressing various comments
-from the reviews of v1. See the per patch changelogs for details.
+This is a preparation patch for adding support for getting muxes on
+non DT platforms.
 
-For reference here the cover letter of v1:
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/mux/core.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-This series consists of 4 parts:
+diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+index 6e5cf9d9cd99..99d29f982c0e 100644
+--- a/drivers/mux/core.c
++++ b/drivers/mux/core.c
+@@ -423,14 +423,8 @@ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+ 	return dev ? to_mux_chip(dev) : NULL;
+ }
+ 
+-/**
+- * mux_control_get() - Get the mux-control for a device.
+- * @dev: The device that needs a mux-control.
+- * @mux_name: The name identifying the mux-control.
+- *
+- * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
+- */
+-struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
++static struct mux_control *of_mux_control_get(struct device *dev,
++					      const char *mux_name)
+ {
+ 	struct device_node *np = dev->of_node;
+ 	struct of_phandle_args args;
+@@ -484,6 +478,22 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+ 
+ 	return &mux_chip->mux[controller];
+ }
++
++/**
++ * mux_control_get() - Get the mux-control for a device.
++ * @dev: The device that needs a mux-control.
++ * @mux_name: The name identifying the mux-control.
++ *
++ * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
++ */
++struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
++{
++	/* look up via DT first */
++	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
++		return of_mux_control_get(dev, mux_name);
++
++	return ERR_PTR(-ENODEV);
++}
+ EXPORT_SYMBOL_GPL(mux_control_get);
+ 
+ /**
+-- 
+2.13.5
 
-1) Core mux changes to add support for getting mux-controllers on
-   non DT platforms and to add some standardised state values for USB
-
-2) Add Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux drivers
-
-3) Hookup the Intel CHT USB mux driver for CHT devices without Type-C
-
-4) Hookup both the Intel CHT USB mux and Pericom-PI3USB30532 Type-C mux
-   drivers to the fusb302 Type-C port controller found on some CHT x86 devs
-
-Please review, or in the case of the drivers/mux changes (which are a dep
-for some of the other patches) merge if the patches are ready.
-
-Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
