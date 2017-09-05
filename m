@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 04/11] usb: xhci: Add Intel cherrytrail extended cap / otg
- phy mux handling
-Date: Tue,  5 Sep 2017 18:42:14 +0200
-Message-ID: <20170905164221.11266-5-hdegoede@redhat.com>
+Subject: [PATCH v2 08/11] staging: typec: tcpm: Set mux to device mode when
+ configured as such
+Date: Tue,  5 Sep 2017 18:42:18 +0200
+Message-ID: <20170905164221.11266-9-hdegoede@redhat.com>
 References: <20170905164221.11266-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,175 +22,90 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The Intel cherrytrail xhci controller has an extended cap mmio-range
-which contains registers to control the muxing to the xhci (host mode)
-or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+Setting the mux to TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT when the
+data-role is device is not correct. Plenty of devices support operating
+as USB device through a (separate) USB device controller.
 
-Having a mux driver included in the xhci code (or under drivers/usb/host)
-is not desirable. So this commit adds a simple handler for this extended
-capability, which creates a platform device with the caps mmio region as
-resource, this allows us to write a separate platform mux driver for the
-mux.
+So this commit instead splits out TYPEC_MUX_USB into TYPEC_MUX_USB_HOST
+and TYPEC_MUX_USB_DEVICE and makes tcpm_set_roles() set the mux
+accordingly.
+
+Likewise TCPC_MUX_DP gets renamed to TCPC_MUX_DP_SRC to make clear that
+this is for configuring the Type-C port as a Display Port source, not a
+sink.
+
+Last this commit makes tcpm_reset_port() to set the mux to
+TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT so that it does not and up
+staying in host (and with this commit also device) mode after a detach.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
--Check xHCI controller PCI device-id instead of only checking for the
- Intel Extended capability ID, as the Extended capability ID is used on
- other model Intel xHCI controllers too
----
- drivers/usb/host/Makefile            |  2 +-
- drivers/usb/host/xhci-intel-quirks.c | 85 ++++++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci-pci.c          |  4 ++
- drivers/usb/host/xhci.h              |  2 +
- 4 files changed, 92 insertions(+), 1 deletion(-)
- create mode 100644 drivers/usb/host/xhci-intel-quirks.c
+ drivers/staging/typec/tcpm.c |  7 ++++---
+ drivers/staging/typec/tcpm.h | 22 ++++++++++++++--------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index cf2691fffcc0..441edf82eb1c 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -63,7 +63,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
- obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
- obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
- obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
--obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-+obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o xhci-intel-quirks.o
- obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
- obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
- obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-diff --git a/drivers/usb/host/xhci-intel-quirks.c b/drivers/usb/host/xhci-intel-quirks.c
-new file mode 100644
-index 000000000000..819f5f9da9ee
---- /dev/null
-+++ b/drivers/usb/host/xhci-intel-quirks.c
-@@ -0,0 +1,85 @@
-+/*
-+ * Intel Vendor Defined XHCI extended capability handling
-+ *
-+ * Copyright (c) 2016) Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (C) 2014 Intel Corp.
-+ *
-+ * Author: Wu, Hao
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+ * for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program;
-+ */
-+
-+#include <linux/platform_device.h>
-+#include "xhci.h"
-+
-+/* Extended capability IDs for Intel Vendor Defined */
-+#define XHCI_EXT_CAPS_INTEL_HOST_CAP	192
-+
-+static void xhci_intel_unregister_pdev(void *arg)
-+{
-+	platform_device_unregister(arg);
-+}
-+
-+int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci)
-+{
-+	struct usb_hcd *hcd = xhci_to_hcd(xhci);
-+	struct device *dev = hcd->self.controller;
-+	struct platform_device *pdev;
-+	struct resource	res = { 0, };
-+	int ret, ext_offset;
-+
-+	ext_offset = xhci_find_next_ext_cap(&xhci->cap_regs->hc_capbase, 0,
-+					    XHCI_EXT_CAPS_INTEL_HOST_CAP);
-+	if (!ext_offset) {
-+		xhci_err(xhci, "couldn't find Intel ext caps\n");
-+		return -ENODEV;
-+	}
-+
-+	pdev = platform_device_alloc("intel_cht_usb_mux", PLATFORM_DEVID_NONE);
-+	if (!pdev) {
-+		xhci_err(xhci, "couldn't allocate intel_cht_usb_mux pdev\n");
-+		return -ENOMEM;
-+	}
-+
-+	res.start = hcd->rsrc_start + ext_offset;
-+	res.end	  = res.start + 0x3ff;
-+	res.name  = "intel_cht_usb_mux";
-+	res.flags = IORESOURCE_MEM;
-+
-+	ret = platform_device_add_resources(pdev, &res, 1);
-+	if (ret) {
-+		dev_err(dev, "couldn't add resources to intel_cht_usb_mux pdev\n");
-+		platform_device_put(pdev);
-+		return ret;
-+	}
-+
-+	pdev->dev.parent = dev;
-+
-+	ret = platform_device_add(pdev);
-+	if (ret) {
-+		dev_err(dev, "couldn't register intel_cht_usb_mux pdev\n");
-+		platform_device_put(pdev);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
-+	if (ret) {
-+		dev_err(dev, "couldn't add unregister action for intel_cht_usb_mux pdev\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 8071c8fdd15e..b55c1e96abf0 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -188,6 +188,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
- 		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
- 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
-+		xhci->quirks |= XHCI_INTEL_CHT_USB_MUX;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
- 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
-@@ -328,6 +329,9 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
- 		xhci_pme_acpi_rtd3_enable(dev);
+diff --git a/drivers/staging/typec/tcpm.c b/drivers/staging/typec/tcpm.c
+index 8af62e74d54c..ffe7e26d4ed3 100644
+--- a/drivers/staging/typec/tcpm.c
++++ b/drivers/staging/typec/tcpm.c
+@@ -752,11 +752,11 @@ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
+ 	int ret;
  
-+	if (xhci->quirks & XHCI_INTEL_CHT_USB_MUX)
-+		xhci_create_intel_cht_mux_pdev(xhci);
-+
- 	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
- 	pm_runtime_put_noidle(&dev->dev);
+ 	if (data == TYPEC_HOST)
+-		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
++		ret = tcpm_mux_set(port, TYPEC_MUX_USB_HOST,
+ 				   TCPC_USB_SWITCH_CONNECT);
+ 	else
+-		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
+-				   TCPC_USB_SWITCH_DISCONNECT);
++		ret = tcpm_mux_set(port, TYPEC_MUX_USB_DEVICE,
++				   TCPC_USB_SWITCH_CONNECT);
+ 	if (ret < 0)
+ 		return ret;
  
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index e3e935291ed6..f722ee31e50d 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1821,6 +1821,7 @@ struct xhci_hcd {
- #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
- #define XHCI_U2_DISABLE_WAKE	(1 << 27)
- #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
-+#define XHCI_INTEL_CHT_USB_MUX	(1 << 29)
+@@ -2025,6 +2025,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+ 	tcpm_init_vconn(port);
+ 	tcpm_set_current_limit(port, 0, 0);
+ 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
++	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
+ 	tcpm_set_attached_state(port, false);
+ 	port->try_src_count = 0;
+ 	port->try_snk_count = 0;
+diff --git a/drivers/staging/typec/tcpm.h b/drivers/staging/typec/tcpm.h
+index 7e9a6b7b5cd6..f662eed48c86 100644
+--- a/drivers/staging/typec/tcpm.h
++++ b/drivers/staging/typec/tcpm.h
+@@ -83,17 +83,23 @@ enum tcpc_usb_switch {
+ };
  
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
-@@ -2005,6 +2006,7 @@ void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci,
- 			struct xhci_command *command, u32 slot_id);
-+int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci);
+ /* Mux state attributes */
+-#define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
+-#define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
+-#define TCPC_MUX_POLARITY_INVERTED	BIT(2)	/* Polarity inverted */
++#define TCPC_MUX_USB_DEVICE_ENABLED		BIT(0)	/* USB device enabled */
++#define TCPC_MUX_USB_HOST_ENABLED		BIT(1)	/* USB host enabled */
++#define TCPC_MUX_DP_SRC_ENABLED			BIT(2)	/* DP enabled */
++#define TCPC_MUX_POLARITY_INVERTED		BIT(3)	/* Polarity inverted */
  
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
- int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
+ /* Mux modes, decoded to attributes */
+ enum tcpc_mux_mode {
+-	TYPEC_MUX_NONE	= 0,				/* Open switch */
+-	TYPEC_MUX_USB	= TCPC_MUX_USB_ENABLED,		/* USB only */
+-	TYPEC_MUX_DP	= TCPC_MUX_DP_ENABLED,		/* DP only */
+-	TYPEC_MUX_DOCK	= TCPC_MUX_USB_ENABLED |	/* Both USB and DP */
+-			  TCPC_MUX_DP_ENABLED,
++	/* Open switch */
++	TYPEC_MUX_NONE = 0,
++	/* USB device only */
++	TYPEC_MUX_USB_DEVICE = TCPC_MUX_USB_DEVICE_ENABLED,
++	/* USB host only */
++	TYPEC_MUX_USB_HOST = TCPC_MUX_USB_HOST_ENABLED,
++	/* DP source only */
++	TYPEC_MUX_DP = TCPC_MUX_DP_SRC_ENABLED,
++	/* Both USB host and DP source */
++	TYPEC_MUX_DOCK = TCPC_MUX_USB_HOST_ENABLED | TCPC_MUX_DP_SRC_ENABLED,
+ };
+ 
+ struct tcpc_mux_dev {
 -- 
 2.13.5
