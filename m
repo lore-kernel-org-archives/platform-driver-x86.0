@@ -1,387 +1,158 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 05/11] mux: Add Intel Cherrytrail USB mux driver
-Date: Tue,  5 Sep 2017 18:42:15 +0200
-Message-ID: <20170905164221.11266-6-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 07/11] extcon: intel-int3496: Add support for controlling the USB-role mux
+Date: Tue,  5 Sep 2017 18:42:17 +0200
+Message-ID: <20170905164221.11266-8-hdegoede@redhat.com>
 References: <20170905164221.11266-1-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170905164221.11266-1-hdegoede@redhat.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170905164221.11266-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Intel Cherrytrail SoCs have an internal USB mux for muxing the otg-port
-USB data lines between the xHCI host controller and the dwc3 gadget
-controller. On some Cherrytrail systems this mux is controlled through
-AML code reacting on a GPIO IRQ connected to the USB OTG id pin (through
-an _AIE ACPI method) so things just work.
+Cherry Trail SoCs have a built-in USB-role mux for switching between
+the host and device controllers, rather then using an external mux
+controller by a GPIO.
 
-But on other Cherrytrail systems we need to control the mux ourselves
-this driver exports the mux through the mux subsys, so that other drivers
-can control it if necessary.
+There is a driver using the mux-subsys to control this mux, this
+commit adds support to the intel-int3496 driver to get a mux_controller
+handle for the mux and set the mux through the mux-subsys rather then
+through a GPIO.
 
-This driver also updates the vbus-valid reporting to the dwc3 gadget
-controller, as this uses the same registers as the mux. This is needed
-for gadget/device mode to work properly (even on systems which control
-the mux from their AML code).
-
-Note this depends on the xhci driver registering a platform device
-named "intel_cht_usb_mux", which has an IOMEM resource 0 which points
-to the Intel Vendor Defined XHCI extended capabilities region.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
 Changes in v2:
--Complete rewrite as a stand-alone platform-driver rather then as a phy
- driver, since this is just a mux, not a phy
-
-Changes in v3:
--Make this a mux subsys driver instead of listening to USB_HOST extcon
- cable events and responding to those
-
-Changes in v4 (of patch, v2 of new mux based series):
--Rename C-file to use - in name
--Add MAINTAINERS entry
--Various code-style fixes
+-Drop || COMPILE_TEST from Kconfig deepnds on, as we will now fail to
+ compile on !X86
+-Minor code style tweaks
 ---
- MAINTAINERS                     |   5 +
- drivers/mux/Kconfig             |  11 ++
- drivers/mux/Makefile            |  10 +-
- drivers/mux/intel-cht-usb-mux.c | 257 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 279 insertions(+), 4 deletions(-)
- create mode 100644 drivers/mux/intel-cht-usb-mux.c
+ drivers/extcon/Kconfig                |  3 +-
+ drivers/extcon/extcon-intel-int3496.c | 59 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 14a2fd905217..dfaed958db85 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8991,6 +8991,11 @@ F:	include/linux/dt-bindings/mux/
- F:	include/linux/mux/
- F:	drivers/mux/
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index a7bca4207f44..168f9d710ea0 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -44,7 +44,8 @@ config EXTCON_GPIO
  
-+MULTIPLEXER SUBSYSTEM INTEL CHT USB MUX DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+S:	Maintained
-+F:	drivers/mix/intel-cht-usb-mux.c
-+
- MULTISOUND SOUND DRIVER
- M:	Andrew Veliath <andrewtv@usa.net>
- S:	Maintained
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 19e4e904c9bf..947cfd7af02a 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -34,6 +34,17 @@ config MUX_GPIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-gpio.
- 
-+config MUX_INTEL_CHT_USB_MUX
-+	tristate "Intel Cherrytrail USB Multiplexer"
-+	depends on ACPI && X86 && EXTCON
-+	help
-+	  This driver adds support for the internal USB mux for muxing the OTG
-+	  USB data lines between the xHCI host controller and the dwc3 gadget
-+	  controller found on Intel Cherrytrail SoCs.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-intel_cht_usb_mux.
-+
- config MUX_MMIO
- 	tristate "MMIO register bitfield-controlled Multiplexer"
- 	depends on (OF && MFD_SYSCON) || COMPILE_TEST
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 0e1e59760e3f..6cf41be2754f 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -5,9 +5,11 @@
- mux-core-objs			:= core.o
- mux-adg792a-objs		:= adg792a.o
- mux-gpio-objs			:= gpio.o
-+mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
- mux-mmio-objs			:= mmio.o
- 
--obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
--obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
--obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
--obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-+obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
-+obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
-+obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
-+obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
-+obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
-diff --git a/drivers/mux/intel-cht-usb-mux.c b/drivers/mux/intel-cht-usb-mux.c
-new file mode 100644
-index 000000000000..9cd1a1f5027f
---- /dev/null
-+++ b/drivers/mux/intel-cht-usb-mux.c
-@@ -0,0 +1,257 @@
-+/*
-+ * Intel Cherrytrail USB OTG MUX driver
-+ *
-+ * Copyright (c) 2016 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (C) 2014 Intel Corp.
-+ *
-+ * Author: Wu, Hao
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation, or (at your option)
-+ * any later version.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/extcon.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
+ config EXTCON_INTEL_INT3496
+ 	tristate "Intel INT3496 ACPI device extcon driver"
+-	depends on GPIOLIB && ACPI && (X86 || COMPILE_TEST)
++	depends on GPIOLIB && ACPI && X86
++	select MULTIPLEXER
+ 	help
+ 	  Say Y here to enable extcon support for USB OTG ports controlled by
+ 	  an Intel INT3496 ACPI device.
+diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
+index 1a45e745717d..3c8e17449c12 100644
+--- a/drivers/extcon/extcon-intel-int3496.c
++++ b/drivers/extcon/extcon-intel-int3496.c
+@@ -23,8 +23,13 @@
+ #include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/mux/consumer.h>
 +#include <linux/mux/usb.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
+ #include <linux/platform_device.h>
+ 
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
 +
-+/* register definition */
-+#define DUAL_ROLE_CFG0			0x68
-+#define SW_VBUS_VALID			(1 << 24)
-+#define SW_IDPIN_EN			(1 << 21)
-+#define SW_IDPIN			(1 << 20)
-+
-+#define DUAL_ROLE_CFG1			0x6c
-+#define HOST_MODE			(1 << 29)
-+
-+#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
-+
-+#define DRV_NAME			"intel_cht_usb_mux"
-+
-+struct intel_cht_usb_data {
-+	struct mutex cfg0_lock;
-+	void __iomem *base;
-+	struct extcon_dev *vbus_extcon;
-+	struct notifier_block vbus_nb;
-+	struct work_struct vbus_work;
+ #define INT3496_GPIO_USB_ID	0
+ #define INT3496_GPIO_VBUS_EN	1
+ #define INT3496_GPIO_USB_MUX	2
+@@ -37,6 +42,8 @@ struct int3496_data {
+ 	struct gpio_desc *gpio_usb_id;
+ 	struct gpio_desc *gpio_vbus_en;
+ 	struct gpio_desc *gpio_usb_mux;
++	struct mux_control *usb_mux;
++	bool usb_mux_set;
+ 	int usb_id_irq;
+ };
+ 
+@@ -56,11 +63,32 @@ static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
+ 	{ },
+ };
+ 
++static struct mux_lookup acpi_int3496_cht_mux_lookup[] = {
++	{
++		.provider = "intel_cht_usb_mux",
++		.dev_id   = "INT3496:00",
++		.mux_name = "usb-role-mux",
++	},
 +};
 +
-+struct intel_cht_extcon_info {
-+	const char *hid;
-+	int hrv;
-+	const char *extcon;
++#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
++
++static const struct x86_cpu_id cht_cpu_ids[] = {
++	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
++	{}
 +};
 +
-+static const struct intel_cht_extcon_info vbus_providers[] = {
-+	{ .hid = "INT33F4", .hrv = -1, .extcon = "axp288_extcon" },
-+	{ .hid = "INT34D3", .hrv =  3, .extcon = "cht_wcove_pwrsrc" },
-+};
-+
-+static const unsigned int vbus_cable_ids[] = {
-+	EXTCON_CHG_USB_SDP, EXTCON_CHG_USB_CDP, EXTCON_CHG_USB_DCP,
-+	EXTCON_CHG_USB_ACA, EXTCON_CHG_USB_FAST,
-+};
-+
-+static int intel_cht_usb_set_mux(struct mux_control *mux, int state)
++static bool int3496_soc_has_mux(void)
 +{
-+	struct intel_cht_usb_data *data = mux_chip_priv(mux->chip);
-+	unsigned long timeout;
-+	bool host_mode;
-+	u32 val;
-+
-+	mutex_lock(&data->cfg0_lock);
-+
-+	/* Set idpin value as requested */
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+	if (state == MUX_USB_DEVICE) {
-+		val |= SW_IDPIN;
-+		host_mode = false;
-+	} else {
-+		val &= ~SW_IDPIN;
-+		host_mode = true;
-+	}
-+	val |= SW_IDPIN_EN;
-+	writel(val, data->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&data->cfg0_lock);
-+
-+	/* In most case it takes about 600ms to finish mode switching */
-+	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
-+
-+	/* Polling on CFG1 register to confirm mode switch.*/
-+	while (1) {
-+		val = readl(data->base + DUAL_ROLE_CFG1);
-+		if (!!(val & HOST_MODE) == host_mode)
-+			break;
-+
-+		/* Interval for polling is set to about 5 - 10 ms */
-+		usleep_range(5000, 10000);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_warn(&mux->chip->dev,
-+				 "Timeout waiting for mux to switch\n");
-+			break;
-+		}
-+	}
-+
-+	return 0;
++	return x86_match_cpu(cht_cpu_ids);
 +}
 +
-+static void intel_cht_usb_set_vbus_valid(struct intel_cht_usb_data *data,
-+					     bool valid)
-+{
-+	u32 val;
+ static void int3496_do_usb_id(struct work_struct *work)
+ {
+ 	struct int3496_data *data =
+ 		container_of(work, struct int3496_data, work.work);
+ 	int id = gpiod_get_value_cansleep(data->gpio_usb_id);
++	int ret;
+ 
+ 	/* id == 1: PERIPHERAL, id == 0: HOST */
+ 	dev_dbg(data->dev, "Connected %s cable\n", id ? "PERIPHERAL" : "HOST");
+@@ -72,6 +100,22 @@ static void int3496_do_usb_id(struct work_struct *work)
+ 	if (!IS_ERR(data->gpio_usb_mux))
+ 		gpiod_direction_output(data->gpio_usb_mux, id);
+ 
++	if (data->usb_mux) {
++		/*
++		 * The mux framework expects multiple competing users, we must
++		 * release our previous setting before applying the new one.
++		 */
++		if (data->usb_mux_set)
++			mux_control_deselect(data->usb_mux);
 +
-+	mutex_lock(&data->cfg0_lock);
++		ret = mux_control_select(data->usb_mux,
++					 id ? MUX_USB_DEVICE : MUX_USB_HOST);
++		if (ret)
++			dev_err(data->dev, "Error setting mux: %d\n", ret);
 +
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+	if (valid)
-+		val |= SW_VBUS_VALID;
-+	else
-+		val &= ~SW_VBUS_VALID;
-+
-+	val |= SW_IDPIN_EN;
-+	writel(val, data->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&data->cfg0_lock);
-+}
-+
-+static void intel_cht_usb_vbus_work(struct work_struct *work)
-+{
-+	struct intel_cht_usb_data *data =
-+		container_of(work, struct intel_cht_usb_data, vbus_work);
-+	bool vbus_present = false;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vbus_cable_ids); i++) {
-+		if (extcon_get_state(data->vbus_extcon, vbus_cable_ids[i]) > 0) {
-+			vbus_present = true;
-+			break;
-+		}
++		data->usb_mux_set = ret == 0;
 +	}
 +
-+	intel_cht_usb_set_vbus_valid(data, vbus_present);
-+}
-+
-+static int intel_cht_usb_vbus_extcon_evt(struct notifier_block *nb,
-+					     unsigned long event, void *param)
-+{
-+	struct intel_cht_usb_data *data =
-+		container_of(nb, struct intel_cht_usb_data, vbus_nb);
-+
-+	schedule_work(&data->vbus_work);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static const struct mux_control_ops intel_cht_usb_ops = {
-+	.set = intel_cht_usb_set_mux,
-+};
-+
-+static int intel_cht_usb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_cht_usb_data *data;
-+	struct mux_chip *mux_chip;
-+	struct resource *res;
-+	resource_size_t size;
-+	int i, ret;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*data));
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_chip->ops = &intel_cht_usb_ops;
-+	mux_chip->mux[0].idle_state = MUX_USB_DEVICE;
-+	/* Keep initial state as is, for e.g. booting from an USB disk */
-+	mux_chip->mux[0].cached_state = MUX_USB_DEVICE;
-+	mux_chip->mux[0].states = MUX_USB_STATES;
-+	data = mux_chip_priv(mux_chip);
-+	mutex_init(&data->cfg0_lock);
-+
-+	/*
-+	 * Besides controlling the mux we also need to control the vbus_valid
-+	 * flag for device/gadget mode to work properly. To do this we monitor
-+	 * the extcon interface exported by the PMIC drivers for the PMICs used
-+	 * with the Cherry Trail SoC.
-+	 *
-+	 * We try to get the extcon_dev before registering the mux as this
-+	 * may lead to us exiting with -EPROBE_DEFER.
-+	 */
-+	for (i = 0 ; i < ARRAY_SIZE(vbus_providers); i++) {
-+		if (!acpi_dev_present(vbus_providers[i].hid, NULL,
-+				      vbus_providers[i].hrv))
-+			continue;
-+
-+		data->vbus_extcon = extcon_get_extcon_dev(
-+						vbus_providers[i].extcon);
-+		if (data->vbus_extcon == NULL)
-+			return -EPROBE_DEFER;
-+
-+		dev_info(dev, "using extcon '%s' for vbus-valid\n",
-+			 vbus_providers[i].extcon);
-+		break;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = (res->end + 1) - res->start;
-+	data->base = devm_ioremap_nocache(dev, res->start, size);
-+	if (IS_ERR(data->base)) {
-+		ret = PTR_ERR(data->base);
-+		dev_err(dev, "can't iomap registers: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_mux_chip_register(dev, mux_chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (data->vbus_extcon) {
-+		INIT_WORK(&data->vbus_work, intel_cht_usb_vbus_work);
-+		data->vbus_nb.notifier_call = intel_cht_usb_vbus_extcon_evt;
-+		ret = devm_extcon_register_notifier_all(dev, data->vbus_extcon,
-+							&data->vbus_nb);
-+		if (ret) {
-+			dev_err(dev, "can't register vbus extcon notifier: %d\n",
-+				ret);
+ 	if (!IS_ERR(data->gpio_vbus_en))
+ 		gpiod_direction_output(data->gpio_vbus_en, !id);
+ 
+@@ -107,6 +151,21 @@ static int int3496_probe(struct platform_device *pdev)
+ 	data->dev = dev;
+ 	INIT_DELAYED_WORK(&data->work, int3496_do_usb_id);
+ 
++	if (int3496_soc_has_mux()) {
++		mux_add_table(acpi_int3496_cht_mux_lookup,
++			      ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
++		data->usb_mux = devm_mux_control_get(dev, "usb-role-mux");
++		/* Doing this here keeps our error handling clean. */
++		mux_remove_table(acpi_int3496_cht_mux_lookup,
++				 ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
++		if (IS_ERR(data->usb_mux)) {
++			ret = PTR_ERR(data->usb_mux);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "can't get mux: %d\n", ret);
 +			return ret;
 +		}
-+
-+		/* Sync initial mode */
-+		schedule_work(&data->vbus_work);
 +	}
 +
-+	return 0;
-+}
-+
-+static const struct platform_device_id intel_cht_usb_table[] = {
-+	{ .name = DRV_NAME },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, intel_cht_usb_table);
-+
-+static struct platform_driver intel_cht_usb_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.id_table = intel_cht_usb_table,
-+	.probe = intel_cht_usb_probe,
-+};
-+
-+module_platform_driver(intel_cht_usb_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Intel Cherrytrail USB mux driver");
-+MODULE_LICENSE("GPL");
+ 	data->gpio_usb_id = devm_gpiod_get(dev, "id", GPIOD_IN);
+ 	if (IS_ERR(data->gpio_usb_id)) {
+ 		ret = PTR_ERR(data->gpio_usb_id);
 -- 
 2.13.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
