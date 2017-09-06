@@ -1,44 +1,53 @@
-From: "Bernat, Yehezkel" <yehezkel.bernat@intel.com>
-Subject: Re: [PATCH] Add driver to force WMI Thunderbolt controller power
+From: <Mario.Limonciello@dell.com>
+Subject: RE: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
  status
-Date: Wed, 6 Sep 2017 19:46:14 +0000
-Message-ID: <1504727178.2677.158.camel@intel.com>
+Date: Wed, 6 Sep 2017 19:49:32 +0000
+Message-ID: <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
 References: <1504720440-24423-1-git-send-email-mario.limonciello@dell.com>
          <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
-         <1504726863.2677.154.camel@intel.com>
+ <1504726863.2677.154.camel@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:54745 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751441AbdIFTqR (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2017 15:46:17 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1504726863.2677.154.camel@intel.com>
 Content-Language: en-US
-Content-ID: <83BD0648BAAE544C82CE669C86ED5E75@namprd11.prod.outlook.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "mario.limonciello@dell.com" <mario.limonciello@dell.com>
-Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "hughsient@gmail.com" <hughsient@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yehezkel.bernat@intel.com
+Cc: mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, hughsient@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-KFJlc2VuZGluZyB3aXRoIGEgZml4ZWQgQ0MgbGlzdC4gU29ycnkuKQ0KDQo+IEN1cnJlbnQgaW1w
-bGVtZW50YXRpb25zIG9mIEludGVsIFRodW5kZXJib2x0IGNvbnRyb2xsZXJzIHdpbGwgZ28NCj4g
-aW50byBhIGxvdyBwb3dlciBtb2RlIHdoZW4gbm90IGluIHVzZS4NCj7CoA0KPiBNYW55IG1hY2hp
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCZXJuYXQsIFllaGV6a2VsIFtt
+YWlsdG86eWVoZXprZWwuYmVybmF0QGludGVsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0
+ZW1iZXIgNiwgMjAxNyAyOjQxIFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xp
+bW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogbWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNv
+bTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZA
+dmdlci5rZTsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGh1Z2hzaWVudEBnbWFpbC5jb20NCj4gU3Vi
+amVjdDogUmU6IEZ3ZDogW1BBVENIXSBBZGQgZHJpdmVyIHRvIGZvcmNlIFdNSSBUaHVuZGVyYm9s
+dCBjb250cm9sbGVyIHBvd2VyDQo+IHN0YXR1cw0KPiANCj4gDQo+ID4gQ3VycmVudCBpbXBsZW1l
+bnRhdGlvbnMgb2YgSW50ZWwgVGh1bmRlcmJvbHQgY29udHJvbGxlcnMgd2lsbCBnbw0KPiA+IGlu
+dG8gYSBsb3cgcG93ZXIgbW9kZSB3aGVuIG5vdCBpbiB1c2UuDQo+ID4NCj4gPiBNYW55IG1hY2hp
 bmVzIGNvbnRhaW5pbmcgdGhlc2UgY29udHJvbGxlcnMgYWxzbyBoYXZlIGEgR1BJTyB3aXJlZCB1
-cA0KPiB0aGF0IGNhbiBmb3JjZSB0aGUgY29udHJvbGxlciBhd2FrZS7CoMKgVGhpcyBpcyBvZmZl
-cmVkIHZpYSBhIEFDUEktV01JDQo+IGludGVyZmFjZSBpbnRlbmRlZCB0byBiZSBtYW5pcHVsYXRl
-ZCBieSBhIHVzZXJzcGFjZSB1dGlsaXR5Lg0KDQoNCj4gVGhpcyBtZWNoYW5pc20gaXMgcHJvdmlk
-ZWQgYnkgSW50ZWwgdG8gT0VNcyB0byBpbmNsdWRlIGluIEJJT1MuDQo+IEl0IHVzZXMgYW4gaW5k
-dXN0cnkgd2lkZSBHVUlEIHRoYXQgaXMgcG9wdWxhdGVkIGluIGEgc2VwYXJhdGUgX1dERw0KPiBl
-bnRyeSB3aXRoIG5vIGJpbmFyeSBNT0YuDQo+wqANCj4gVGhpcyBpbnRlcmZhY2UgYWxsb3cgc29m
-dHdhcmUgc3VjaCBhcyBmd3VwZCB0byB3YWtlIHVwIHRodW5kZXJib2x0DQo+IGNvbnRyb2xsZXJz
-IHRvIHF1ZXJ5IHRoZSBmaXJtd2FyZSB2ZXJzaW9uIG9yIGZsYXNoIG5ldyBmaXJtd2FyZS4NCg0K
-QXMgdGhpcyBpcyBhIFRodW5kZXJib2x0IHNwZWNpZmljIGZ1bmN0aW9uLCBtYXliZSBpdCdzIGJl
-dHRlciB0byBiZQ0KZXhwb3NlZCBmcm9tIHRoZSBUaHVuZGVyYm9sdCBkcml2ZXI/DQoNCg0KPiAr
-DQo+ICtzdGF0aWMgREVWSUNFX0FUVFJfV08oZm9yY2VfcG93ZXIpOw0KPiArDQoNCkknbSBub3Qg
-c3VyZSB3aGF0IGlzIHRoZSBjb252ZW50aW9uIGZvciBwZXJtaXNzaW9ucyBmb3IgdGhpcyB0eXBl
-IG9mDQphdHRyaWJ1dGVzIGJ1dCBJIGZlZWwgbGlrZSB0aGlzIHdvcnRoIGJlaW5nIHJvb3Qtb25s
-eSB3cml0YWJsZSwgYXMgaXQNCmNhbiBiZSB1c2VkIHRvIHBvd2VyLW9mZiB0aGUgY29udHJvbGxl
-ciBpbiB0aGUgbWlkZGxlIG9mIGEgRlcgdXBkYXRlLA0KZm9yIGV4YW1wbGUu
+cA0KPiA+IHRoYXQgY2FuIGZvcmNlIHRoZSBjb250cm9sbGVyIGF3YWtlLsKgIFRoaXMgaXMgb2Zm
+ZXJlZCB2aWEgYSBBQ1BJLVdNSQ0KPiA+IGludGVyZmFjZSBpbnRlbmRlZCB0byBiZSBtYW5pcHVs
+YXRlZCBieSBhIHVzZXJzcGFjZSB1dGlsaXR5Lg0KPiANCj4gDQo+ID4gVGhpcyBtZWNoYW5pc20g
+aXMgcHJvdmlkZWQgYnkgSW50ZWwgdG8gT0VNcyB0byBpbmNsdWRlIGluIEJJT1MuDQo+ID4gSXQg
+dXNlcyBhbiBpbmR1c3RyeSB3aWRlIEdVSUQgdGhhdCBpcyBwb3B1bGF0ZWQgaW4gYSBzZXBhcmF0
+ZSBfV0RHDQo+ID4gZW50cnkgd2l0aCBubyBiaW5hcnkgTU9GLg0KPiA+DQo+ID4gVGhpcyBpbnRl
+cmZhY2UgYWxsb3cgc29mdHdhcmUgc3VjaCBhcyBmd3VwZCB0byB3YWtlIHVwIHRodW5kZXJib2x0
+DQo+ID4gY29udHJvbGxlcnMgdG8gcXVlcnkgdGhlIGZpcm13YXJlIHZlcnNpb24gb3IgZmxhc2gg
+bmV3IGZpcm13YXJlLg0KPiANCj4gQXMgdGhpcyBpcyBhIFRodW5kZXJib2x0IHNwZWNpZmljIGZ1
+bmN0aW9uLCBtYXliZSBpdCdzIGJldHRlciB0byBiZQ0KPiBleHBvc2VkIGZyb20gdGhlIFRodW5k
+ZXJib2x0IGRyaXZlcj8NCj4gDQoNCkkgdGhvdWdodCBhYm91dCB0aGlzIHRvbywgYnV0IHRoZSB0
+aHVuZGVyYm9sdCBkcml2ZXIgd29uJ3QgbG9hZCBpZiB0aGUNCmNvbnRyb2xsZXIgZG9lc24ndCBl
+eGlzdCBpbiB0aGUgZmlyc3QgcGxhY2UsIHdoZXJlYXMgdGhpcyBpcyBhIHBsYXRmb3JtDQpCSU9T
+IGZlYXR1cmUuICBJJ2xsIGJlIGludGVyZXN0ZWQgdG8gaGVhciBpZiBNaWthIGhhcyBhIGRpZmZl
+cmVudCBwZXJzcGVjdGl2ZQ0Kb24gaWYgdGhpcyBzaG91bGQgbGl2ZSBpbiB0aGUgVEJUIGRyaXZl
+ciBhbmQgdGhlIHByb3BlciB3YXkgdG8gZG8gaXQuDQoNCj4gDQo+ID4gKw0KPiA+ICtzdGF0aWMg
+REVWSUNFX0FUVFJfV08oZm9yY2VfcG93ZXIpOw0KPiA+ICsNCj4gDQo+IEknbSBub3Qgc3VyZSB3
+aGF0IGlzIHRoZSBjb252ZW50aW9uIGZvciBwZXJtaXNzaW9ucyBmb3IgdGhpcyB0eXBlIG9mDQo+
+IGF0dHJpYnV0ZXMgYnV0IEkgZmVlbCBsaWtlIHRoaXMgd29ydGggYmVpbmcgcm9vdC1vbmx5IHdy
+aXRhYmxlLCBhcyBpdA0KPiBjYW4gYmUgdXNlZCB0byBwb3dlci1vZmYgdGhlIGNvbnRyb2xsZXIg
+aW4gdGhlIG1pZGRsZSBvZiBhIEZXIHVwZGF0ZSwNCj4gZm9yIGV4YW1wbGUuDQoNClllYWggSSB0
+aGluayB5b3UncmUgcmlnaHQuICBJJ2xsIGFkanVzdCBpdCBpbiBhIGZvbGxvdyB1cCBwYXRjaCBp
+ZiB0aGlzIGlzIHRoZQ0KY29ycmVjdCB3YXkgdG8gZ28gYWZ0ZXJhbGwuDQoNClRoYW5rcywNCg==
