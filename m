@@ -1,19 +1,31 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI PMIC
-Date: Wed, 06 Sep 2017 12:21:31 +0200
-Message-ID: <1783868.XLEivnFYIC@aspire.rjw.lan>
-References: <20170904144340.27693-1-tiwai@suse.de> <20170906090504.oo5equym533u7u5q@dell> <s5hshg0kuo5.wl-tiwai@suse.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
+ PMIC
+Date: Wed, 6 Sep 2017 11:40:40 +0100
+Message-ID: <20170906104040.jtribzvrutdgmtqt@dell>
+References: <20170905072451.ephscqjqgwpnl6da@dell>
+ <s5hmv69twov.wl-tiwai@suse.de>
+ <20170905081049.r3gbdtr2iuom6uk6@dell>
+ <s5hefrltv43.wl-tiwai@suse.de>
+ <20170905085341.ssukn2rtyf3q65bn@dell>
+ <s5hwp5do578.wl-tiwai@suse.de>
+ <20170906075444.7apee362ij3wqall@dell>
+ <s5hd174s0b7.wl-tiwai@suse.de>
+ <20170906090504.oo5equym533u7u5q@dell>
+ <s5hshg0kuo5.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <s5hshg0kuo5.wl-tiwai@suse.de>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>, Lee Jones <lee.jones@linaro.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday, September 6, 2017 12:06:50 PM CEST Takashi Iwai wrote:
+On Wed, 06 Sep 2017, Takashi Iwai wrote:
+
 > On Wed, 06 Sep 2017 11:05:04 +0200,
 > Lee Jones wrote:
 > > 
@@ -138,14 +150,27 @@ On Wednesday, September 6, 2017 12:06:50 PM CEST Takashi Iwai wrote:
 > First of all, most of user start testing from the release kernel, so
 > you can't trust that RC covered all test cases.  (Who can blame users
 > who didn't use / test RC?)
-> 
+
+That's fine.  We are not talking about spreading the merge of a
+patch-set over different releases, or even release candidates.  All
+non-bugfix patches should be in by -rc1.
+
 > Second, you ignore the fact that the development continues after
 > merging *this* patchset.  What if a breakage is introduced after this
 > patch?  (See below)
 > 
 > They often need a full bisection between the previous release and the
 > current release.
-> 
+
+You cannot bisect a specific function back before it was merged.  It's
+impossible.
+
+P1 ---> P4 ---> P3 ---> P2
+                         ^
+Bisect only starts working here.  Prior to this point the feature
+doesn't build at all.  If it builds, but breaks, then that is a build
+dependency and is a different use-case to what we are discussing here.
+
 > > > Basically, my complaint here comes with my user's hat on.  It *is*
 > > > indeed worse than a straight application of patches in some levels.
 > > > It's unavoidable if you do in that way.
@@ -157,7 +182,12 @@ On Wednesday, September 6, 2017 12:06:50 PM CEST Takashi Iwai wrote:
 > may support multiple devices / platforms, and it might be that the bug
 > manifests itself only on a certain system that no one has tested
 > beforehand; it's a typical case we often see after the releases.
-> 
+
+If it is possible for a patch-set to break functionality, then again,
+this is a dependency and needs to be handled differently.
+
+That is not the case with your set.
+
 > > This will not happen if any
 > > parts were missing.  The order in which the pieces are applied is
 > > irrelevant if there aren't any build deps between them.  If you bisect
@@ -178,24 +208,33 @@ On Wednesday, September 6, 2017 12:06:50 PM CEST Takashi Iwai wrote:
 >   platform (commit B1) -> broken change (B2) -+   |
 >                                               v   v
 >                                             --M1--M2--> Linus RC1
-> 
+>
 > git-bisection can inspect M2, which shows already broken.  Then it
 > inspects M1, but you can't evaluate it because the target platform
 > driver can't be built without A1.  At this point, you're stuck.
 > But in this case, B1 is correct and B2 is the culprit.  How can you
 > spot it out?
-> 
+>
 > OTOH, if the merge history honors the functional dependency, you can
 > bisect properly.
 
-Exactly and not only that.
+You wouldn't use bisect for that use-case.  We only use bisect for
+features that have a working commit in Mainline.  The use-case you
+mention would be pretty trivial to debug without bisect.
 
-If the git history reflects the logical dependencies between patches,
-you should be able to figure out the reason why the code was changed
-this way (sometimes you can't anyway if commit logs suck, for example,
-but this is a different problem) which quite often is essential for
-debugging, backporting and similar.
+When we tout "history must be bisectable", we mean that it must remain
+possible to bisect existing functionality.  Bisecting functionality
+which is yet to fully land upstream is foolish.
 
-Thanks,
-Rafael
+New drivers almost never (if ever) go in as a fully working piece.
+The registration parts (DT, Platform, etc) go in via one (or several)
+tree(s) and the driver parts are normally split up into subsystems and
+go in via their own repos.  If there are *build*, *API* or *merge*
+time dependencies, then we can use immutable branches and merge via
+a single tree.  Failing that, we split them.
 
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
