@@ -1,34 +1,46 @@
-From: "Bernat, Yehezkel" <yehezkel.bernat@intel.com>
-Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
+From: <Mario.Limonciello@dell.com>
+Subject: RE: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
  status
-Date: Wed, 6 Sep 2017 20:26:39 +0000
-Message-ID: <1504729603.2677.167.camel@intel.com>
+Date: Wed, 6 Sep 2017 21:40:02 +0000
+Message-ID: <7edd73cbe3ba4d7b80a6614e93f4d538@ausx13mpc120.AMER.DELL.COM>
 References: <1504720440-24423-1-git-send-email-mario.limonciello@dell.com>
          <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
          <1504726863.2677.154.camel@intel.com>
          <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
-         <20170906200953.GA8298@fury>
+         <20170906200953.GA8298@fury> <1504729603.2677.167.camel@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170906200953.GA8298@fury>
+In-Reply-To: <1504729603.2677.167.camel@intel.com>
 Content-Language: en-US
-Content-ID: <5FFC0918889F2A45BBD2B32004BB35A9@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dvhart@infradead.org" <dvhart@infradead.org>, "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>
-Cc: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hughsient@gmail.com" <hughsient@gmail.com>
+To: yehezkel.bernat@intel.com, dvhart@infradead.org
+Cc: mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCAyMDE3LTA5LTA2IGF0IDEzOjA5IC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4g
-VGhlIG90aGVyIHF1ZXN0aW9uIEkgaGFkIGFib3V0IHRoaXMgd2FzIGlmIHRoZSB0eXBpY2FsIHVz
-ZSBjYXNlDQo+IGludm9sdmVzIHRoZSBPUywNCj4gb3IgaWYgdGhlIGZpcm13YXJlIHVwZGF0ZSAo
-Zm9yIGV4YW1wbGUpIHdvdWxkIGJlIHBlcmZvcm1lZCBhcyBwYXJ0IG9mDQo+IHRoZQ0KPiBnZW5l
-cmFsIHBsYXRmb3JtIGZpcm13YXJlIHVwZGF0ZSAoZnJvbSB0aGUgVUVGSSB1cGRhdGUgdXRpbGl0
-eSkuDQoNCkZpcnN0LCB0aGVyZSBpcyB0aGUgdXNlLWNhc2Ugb2YgYWRkLWluIGNhcmQsIHdoZXJl
-IGl0J3MgaW1wb3NzaWJsZSB0bw0KdXNlIFVFRkktYmFzZWQgdXBkYXRlLCBhcyBtdWNoIGFzIEkg
-dW5kZXJzdGFuZCwgYXMgdGhlIEJJT1MgaXNuJ3QNCmV4cGVjdGVkIHRvIGV4cG9zZSBhbiBFU1JU
-IGVudHJ5IGZvciBpdC4NCg0KRXZlbiBmb3IgYnVpbHQtaW4gY29udHJvbGxlciwgbXkgaW1wcmVz
-c2lvbiBpcyB0aGF0IG1vc3QgT0VNcyB1c2UgYSBGVw0KdXBkYXRlIGFwcGxpY2F0aW9uIChydW5u
-aW5nIG9uIFdpbmRvd3MpIGFuZCBhcmUgbm90IHB1Ymxpc2hpbmcgYSBVRUZJLQ0KYmFzZWQgc29s
-dXRpb24u
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCZXJuYXQsIFllaGV6a2VsIFtt
+YWlsdG86eWVoZXprZWwuYmVybmF0QGludGVsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0
+ZW1iZXIgNiwgMjAxNyAzOjI3IFBNDQo+IFRvOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgTGltb25j
+aWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IG1pa2Eud2Vz
+dGVyYmVyZ0BsaW51eC5pbnRlbC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBs
+YXRmb3JtLQ0KPiBkcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgaHVnaHNpZW50QGdtYWlsLmNv
+bQ0KPiBTdWJqZWN0OiBSZTogRndkOiBbUEFUQ0hdIEFkZCBkcml2ZXIgdG8gZm9yY2UgV01JIFRo
+dW5kZXJib2x0IGNvbnRyb2xsZXIgcG93ZXINCj4gc3RhdHVzDQo+IA0KPiBPbiBXZWQsIDIwMTct
+MDktMDYgYXQgMTM6MDkgLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiA+IFRoZSBvdGhlciBx
+dWVzdGlvbiBJIGhhZCBhYm91dCB0aGlzIHdhcyBpZiB0aGUgdHlwaWNhbCB1c2UgY2FzZQ0KPiA+
+IGludm9sdmVzIHRoZSBPUywNCj4gPiBvciBpZiB0aGUgZmlybXdhcmUgdXBkYXRlIChmb3IgZXhh
+bXBsZSkgd291bGQgYmUgcGVyZm9ybWVkIGFzIHBhcnQgb2YNCj4gPiB0aGUNCj4gPiBnZW5lcmFs
+IHBsYXRmb3JtIGZpcm13YXJlIHVwZGF0ZSAoZnJvbSB0aGUgVUVGSSB1cGRhdGUgdXRpbGl0eSku
+DQo+IA0KPiBGaXJzdCwgdGhlcmUgaXMgdGhlIHVzZS1jYXNlIG9mIGFkZC1pbiBjYXJkLCB3aGVy
+ZSBpdCdzIGltcG9zc2libGUgdG8NCj4gdXNlIFVFRkktYmFzZWQgdXBkYXRlLCBhcyBtdWNoIGFz
+IEkgdW5kZXJzdGFuZCwgYXMgdGhlIEJJT1MgaXNuJ3QNCj4gZXhwZWN0ZWQgdG8gZXhwb3NlIGFu
+IEVTUlQgZW50cnkgZm9yIGl0Lg0KPiANCj4gRXZlbiBmb3IgYnVpbHQtaW4gY29udHJvbGxlciwg
+bXkgaW1wcmVzc2lvbiBpcyB0aGF0IG1vc3QgT0VNcyB1c2UgYSBGVw0KPiB1cGRhdGUgYXBwbGlj
+YXRpb24gKHJ1bm5pbmcgb24gV2luZG93cykgYW5kIGFyZSBub3QgcHVibGlzaGluZyBhIFVFRkkt
+DQo+IGJhc2VkIHNvbHV0aW9uLg0KDQpZZWFoIEknZCBhZ3JlZSB3aXRoIHRoYXQgaW1wcmVzc2lv
+bi4NCg0KRXZlbiBpZiBhbiBPRU0gZG9lcyBjaG9vc2UgdG8gcHVibGlzaCBhIFVFRkkgYmFzZWQg
+c29sdXRpb24sIGl0J3Mgc3RpbGwNCnVzZWZ1bCB0byBwcmVzZW50IEZXIGluZm9ybWF0aW9uIGZv
+ciB0aGUgVEJUIGNvbnRyb2xsZXIgaW4gZnd1cGQgaG93ZXZlciB0b28uDQoNClNpbWlsYXIgdG8g
+aG93IGZ3dXBkIGRpc3BsYXlzIHRoZSBpbmZvcm1hdGlvbiBmb3IgdGhlIE1FIGV2ZW4gdGhvdWdo
+DQp0aGUgTUUgaXMgdHlwaWNhbGx5IHVwZGF0ZWQgdmlhIFVFRkkuDQo=
