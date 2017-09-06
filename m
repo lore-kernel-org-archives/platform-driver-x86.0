@@ -1,70 +1,30 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller
- power status
-Date: Wed, 6 Sep 2017 15:27:30 -0700
-Message-ID: <20170906222730.GB8298@fury>
-References: <1504720440-24423-1-git-send-email-mario.limonciello@dell.com>
- <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
- <1504726863.2677.154.camel@intel.com>
- <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
- <20170906200953.GA8298@fury>
- <1504729603.2677.167.camel@intel.com>
- <7edd73cbe3ba4d7b80a6614e93f4d538@ausx13mpc120.AMER.DELL.COM>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI PMIC
+Date: Thu, 07 Sep 2017 00:19:01 +0200
+Message-ID: <3358010.FqzdD3Emuf@aspire.rjw.lan>
+References: <20170904144340.27693-1-tiwai@suse.de> <20170906104723.qs3b7p6p6x2ixmvb@dell> <20170906105209.uoutqilops3plna2@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41622 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932380AbdIFW1d (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2017 18:27:33 -0400
-Content-Disposition: inline
-In-Reply-To: <7edd73cbe3ba4d7b80a6614e93f4d538@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: yehezkel.bernat@intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170906105209.uoutqilops3plna2@dell>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Takashi Iwai <tiwai@suse.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 06, 2017 at 09:40:02PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Bernat, Yehezkel [mailto:yehezkel.bernat@intel.com]
-> > Sent: Wednesday, September 6, 2017 3:27 PM
-> > To: dvhart@infradead.org; Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: mika.westerberg@linux.intel.com; linux-kernel@vger.kernel.org; platform-
-> > driver-x86@vger.kernel.org; hughsient@gmail.com
-> > Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
-> > status
+On Wednesday, September 6, 2017 12:52:09 PM CEST Lee Jones wrote:
+> > > In any case, I wouldn't mind it if you took the [3/3] from this series, because
+> > > if there are any conflicts with it, they will be trivial to resolve.  And I
+> > > don't need an immutable branch with it or anything like that.
 > > 
-> > On Wed, 2017-09-06 at 13:09 -0700, Darren Hart wrote:
-> > > The other question I had about this was if the typical use case
-> > > involves the OS,
-> > > or if the firmware update (for example) would be performed as part of
-> > > the
-> > > general platform firmware update (from the UEFI update utility).
-> > 
-> > First, there is the use-case of add-in card, where it's impossible to
-> > use UEFI-based update, as much as I understand, as the BIOS isn't
-> > expected to expose an ESRT entry for it.
-> > 
-> > Even for built-in controller, my impression is that most OEMs use a FW
-> > update application (running on Windows) and are not publishing a UEFI-
-> > based solution.
+> > No problem.
 > 
-> Yeah I'd agree with that impression.
-> 
-> Even if an OEM does choose to publish a UEFI based solution, it's still
-> useful to present FW information for the TBT controller in fwupd however too.
-> 
-> Similar to how fwupd displays the information for the ME even though
-> the ME is typically updated via UEFI.
+> Although you don't appear to have reviewed it?
 
-So this raises the question: can we come up with a mechanism as part of the tb
-driver that will work on both on-board controllers and add on cards? In it's
-current form, this driver will only address on-board controllers.
+I have reviewed it, although I haven't sent a tag.
 
-The TB driver could use the WMI method if it exists, or some other method to
-power it up, but present the same sysfs interface to userspace...
+Generally speaking, for drivers/acpi/pmic/ Reviewed-bys from Mika and Andy are
+sufficient (they likely are more familiar with the code in there than I am),
+but please feel free to add an ACK from me to it too. :-)
 
--- 
-Darren Hart
-VMware Open Source Technology Center
