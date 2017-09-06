@@ -1,39 +1,57 @@
-From: shenj@xproinfo.com
-Subject: You may be in serious danger
-Date: Wed, 6 Sep 2017 04:48:46 +0200
-Message-ID: <5hze65g-viod21-E7@xproinfo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.www.hl.cn ([202.91.246.120]:32906 "EHLO mail.www.hl.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753127AbdIFC6h (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2017 22:58:37 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.www.hl.cn (www.hl.cn welcome to use www.hl.cn E-Mail System!) with ESMTP id 38E961AA28D
-        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Sep 2017 10:49:01 +0800 (CST)
-Received: from mail.www.hl.cn ([127.0.0.1])
-        by localhost (mail.www.hl.cn [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gZXCqXGPLeWF for <platform-driver-x86@vger.kernel.org>;
-        Wed,  6 Sep 2017 10:49:00 +0800 (CST)
-Received: from [127.0.0.1] (unknown [106.0.181.106])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mail.www.hl.cn (www.hl.cn welcome to use www.hl.cn E-Mail System!) with ESMTPSA id 693981AA3A2
-        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Sep 2017 10:48:57 +0800 (CST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+From: "Kuppuswamy, Sathyanarayanan" <sathyaosid@gmail.com>
+Subject: Re: [RFC v2 6/6] platform/x86: intel_pmc_ipc: Use generic Intel IPC
+ device calls
+Date: Tue, 5 Sep 2017 22:27:01 -0700
+Message-ID: <7d0dbcce-0863-cfb0-6012-2c3ac0fc3c27@gmail.com>
+References: <1504401889-113524-7-git-send-email-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20170905073849.eeeo3kbncozzer46@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170905073849.eeeo3kbncozzer46@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: souvik.k.chakravarty@intel.com, x86@kernel.org, mingo@redhat.com, qipeng.zha@intel.com, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-SWYgeW91IGhhdmUgYSBiaXQgZXh0cmEgd2VpZ2h0LCBoZXJlIGlzIGEgZnJpZ2h0ZnVsIGZhY3Q6
-IGJlaW5nIG92ZXJ3ZWlnaHQgY2FuIGxlYWQgdG8gc2VyaW91cyBoZWFsdGggY29uZGl0aW9ucyBp
-bmNsdWRpbmcgaGVhcnQgZGlzZWFzZSwgdGlyZWRuZXNzLCBjb3JvbmFyeSB0aHJvbWJvc2lzLCBh
-bmQgQ0EuDQpQZW9wbGUgd2hvIGdldCBlYXJseSBoZWxwIGZvciBvYmVzaXR5IGNhbiBzdGlsbCBl
-c2NhcGUgYWxsIHRoZSBhZm9yZW1lbnRpb25lZCByaXNrcyEgDQpXZSB1cmdlIHlvdSB0byBhY3Qg
-cXVpY2tseSB0byBzYXZlIHlvdXIgbGlmZSBhbmQgaW1wcm92ZSB5b3VyIGxpZmUsIGJlY2F1c2Ug
-d2UgaGF2ZSBhIHNpbXBsZSBzb2x1dGlvbiB0aGF0IGFjdHVhbGx5IHdvcmtzIC0gdGhlc2UgZGll
-dGFyeSBwaWxscyBoZWxwIHlvdSBsb3NlIHRoZSBleGNlc3NpdmUgd2VpZ2h0IG9uIGRhaWx5IGJh
-c2lzLiANCkNsaWNrIG9uIHRoZSBsaW5rIHRvIGxlYXJuIG1vcmUgaW5mbyBhYm91dCBpdCBhbmQg
-Z2V0IGEgc3BlY2lhbCBkaXNjb3VudA0KaHR0cDovL2diam9udC5saXZlbGF1Z2hkcmVhbXJ2Lnh5
-ei9PUzgyTHpJd01UYzdNRFE2TkRnNk5EUT0NCg==
+Hi Lee,
+
+
+On 9/5/2017 12:38 AM, Lee Jones wrote:
+> On Sat, 02 Sep 2017, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Removed redundant IPC helper functions and refactored the driver to use
+>> generic IPC device driver APIs.
+>>
+>> This patch also cleans-up PMC IPC user drivers to use APIs provided
+>> by generic IPC driver.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   arch/x86/include/asm/intel_pmc_ipc.h          |  37 +--
+>>   drivers/mfd/intel_soc_pmic_bxtwc.c            |  24 +-
+>>   include/linux/mfd/intel_soc_pmic.h            |   2 +
+> I'm a bit concerned by the API.
+This is not a new change. Even before refactoring this driver, we have 
+been using u32 bit variable to pass the DPTR and SPTR address.
+>    Any reason why you're not using
+> pointers for addresses?
+I think the main reason is,  this is the expected format defined by 
+SCU/PMC spec. According to the spec document, SPTR and DPTR registers 
+are used to program the 32 bit SRAM address from which the PMC/SCU 
+firmware can read/write the data of an IPC command. if we are not using 
+SPTR or DPTR, we need to leave the value at zero.
+> pointers, you should be using NULL, instead of 0.
+>
+>>   drivers/platform/x86/intel_pmc_ipc.c          | 364 +++++++++-----------------
+>>   drivers/platform/x86/intel_telemetry_pltdrv.c | 114 ++++----
+>>   5 files changed, 215 insertions(+), 326 deletions(-)
+>>
+>> Changes since v1:
+>>   * Removed custom APIs.
+>>   * Cleaned up PMC IPC user drivers to use APIs provided by generic
+>>     IPC driver.
