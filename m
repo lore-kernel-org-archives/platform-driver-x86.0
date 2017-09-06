@@ -1,53 +1,85 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
- status
-Date: Wed, 6 Sep 2017 19:49:32 +0000
-Message-ID: <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller
+ power status
+Date: Wed, 6 Sep 2017 13:09:53 -0700
+Message-ID: <20170906200953.GA8298@fury>
 References: <1504720440-24423-1-git-send-email-mario.limonciello@dell.com>
-         <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
+ <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
  <1504726863.2677.154.camel@intel.com>
+ <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1504726863.2677.154.camel@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: yehezkel.bernat@intel.com
-Cc: mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, hughsient@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:48627 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752058AbdIFUJ4 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 6 Sep 2017 16:09:56 -0400
+Content-Disposition: inline
+In-Reply-To: <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: yehezkel.bernat@intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCZXJuYXQsIFllaGV6a2VsIFtt
-YWlsdG86eWVoZXprZWwuYmVybmF0QGludGVsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0
-ZW1iZXIgNiwgMjAxNyAyOjQxIFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xp
-bW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogbWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNv
-bTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tDQo+IGRyaXZlci14ODZA
-dmdlci5rZTsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGh1Z2hzaWVudEBnbWFpbC5jb20NCj4gU3Vi
-amVjdDogUmU6IEZ3ZDogW1BBVENIXSBBZGQgZHJpdmVyIHRvIGZvcmNlIFdNSSBUaHVuZGVyYm9s
-dCBjb250cm9sbGVyIHBvd2VyDQo+IHN0YXR1cw0KPiANCj4gDQo+ID4gQ3VycmVudCBpbXBsZW1l
-bnRhdGlvbnMgb2YgSW50ZWwgVGh1bmRlcmJvbHQgY29udHJvbGxlcnMgd2lsbCBnbw0KPiA+IGlu
-dG8gYSBsb3cgcG93ZXIgbW9kZSB3aGVuIG5vdCBpbiB1c2UuDQo+ID4NCj4gPiBNYW55IG1hY2hp
-bmVzIGNvbnRhaW5pbmcgdGhlc2UgY29udHJvbGxlcnMgYWxzbyBoYXZlIGEgR1BJTyB3aXJlZCB1
-cA0KPiA+IHRoYXQgY2FuIGZvcmNlIHRoZSBjb250cm9sbGVyIGF3YWtlLsKgIFRoaXMgaXMgb2Zm
-ZXJlZCB2aWEgYSBBQ1BJLVdNSQ0KPiA+IGludGVyZmFjZSBpbnRlbmRlZCB0byBiZSBtYW5pcHVs
-YXRlZCBieSBhIHVzZXJzcGFjZSB1dGlsaXR5Lg0KPiANCj4gDQo+ID4gVGhpcyBtZWNoYW5pc20g
-aXMgcHJvdmlkZWQgYnkgSW50ZWwgdG8gT0VNcyB0byBpbmNsdWRlIGluIEJJT1MuDQo+ID4gSXQg
-dXNlcyBhbiBpbmR1c3RyeSB3aWRlIEdVSUQgdGhhdCBpcyBwb3B1bGF0ZWQgaW4gYSBzZXBhcmF0
-ZSBfV0RHDQo+ID4gZW50cnkgd2l0aCBubyBiaW5hcnkgTU9GLg0KPiA+DQo+ID4gVGhpcyBpbnRl
-cmZhY2UgYWxsb3cgc29mdHdhcmUgc3VjaCBhcyBmd3VwZCB0byB3YWtlIHVwIHRodW5kZXJib2x0
-DQo+ID4gY29udHJvbGxlcnMgdG8gcXVlcnkgdGhlIGZpcm13YXJlIHZlcnNpb24gb3IgZmxhc2gg
-bmV3IGZpcm13YXJlLg0KPiANCj4gQXMgdGhpcyBpcyBhIFRodW5kZXJib2x0IHNwZWNpZmljIGZ1
-bmN0aW9uLCBtYXliZSBpdCdzIGJldHRlciB0byBiZQ0KPiBleHBvc2VkIGZyb20gdGhlIFRodW5k
-ZXJib2x0IGRyaXZlcj8NCj4gDQoNCkkgdGhvdWdodCBhYm91dCB0aGlzIHRvbywgYnV0IHRoZSB0
-aHVuZGVyYm9sdCBkcml2ZXIgd29uJ3QgbG9hZCBpZiB0aGUNCmNvbnRyb2xsZXIgZG9lc24ndCBl
-eGlzdCBpbiB0aGUgZmlyc3QgcGxhY2UsIHdoZXJlYXMgdGhpcyBpcyBhIHBsYXRmb3JtDQpCSU9T
-IGZlYXR1cmUuICBJJ2xsIGJlIGludGVyZXN0ZWQgdG8gaGVhciBpZiBNaWthIGhhcyBhIGRpZmZl
-cmVudCBwZXJzcGVjdGl2ZQ0Kb24gaWYgdGhpcyBzaG91bGQgbGl2ZSBpbiB0aGUgVEJUIGRyaXZl
-ciBhbmQgdGhlIHByb3BlciB3YXkgdG8gZG8gaXQuDQoNCj4gDQo+ID4gKw0KPiA+ICtzdGF0aWMg
-REVWSUNFX0FUVFJfV08oZm9yY2VfcG93ZXIpOw0KPiA+ICsNCj4gDQo+IEknbSBub3Qgc3VyZSB3
-aGF0IGlzIHRoZSBjb252ZW50aW9uIGZvciBwZXJtaXNzaW9ucyBmb3IgdGhpcyB0eXBlIG9mDQo+
-IGF0dHJpYnV0ZXMgYnV0IEkgZmVlbCBsaWtlIHRoaXMgd29ydGggYmVpbmcgcm9vdC1vbmx5IHdy
-aXRhYmxlLCBhcyBpdA0KPiBjYW4gYmUgdXNlZCB0byBwb3dlci1vZmYgdGhlIGNvbnRyb2xsZXIg
-aW4gdGhlIG1pZGRsZSBvZiBhIEZXIHVwZGF0ZSwNCj4gZm9yIGV4YW1wbGUuDQoNClllYWggSSB0
-aGluayB5b3UncmUgcmlnaHQuICBJJ2xsIGFkanVzdCBpdCBpbiBhIGZvbGxvdyB1cCBwYXRjaCBp
-ZiB0aGlzIGlzIHRoZQ0KY29ycmVjdCB3YXkgdG8gZ28gYWZ0ZXJhbGwuDQoNClRoYW5rcywNCg==
+On Wed, Sep 06, 2017 at 07:49:32PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Bernat, Yehezkel [mailto:yehezkel.bernat@intel.com]
+> > Sent: Wednesday, September 6, 2017 2:41 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: mika.westerberg@linux.intel.com; linux-kernel@vger.kernel.org; platform-
+> > driver-x86@vger.ke; dvhart@infradead.org; hughsient@gmail.com
+> > Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
+> > status
+> > 
+> > 
+> > > Current implementations of Intel Thunderbolt controllers will go
+> > > into a low power mode when not in use.
+> > >
+> > > Many machines containing these controllers also have a GPIO wired up
+> > > that can force the controller awake.  This is offered via a ACPI-WMI
+> > > interface intended to be manipulated by a userspace utility.
+> > 
+> > 
+> > > This mechanism is provided by Intel to OEMs to include in BIOS.
+> > > It uses an industry wide GUID that is populated in a separate _WDG
+> > > entry with no binary MOF.
+> > >
+> > > This interface allow software such as fwupd to wake up thunderbolt
+> > > controllers to query the firmware version or flash new firmware.
+> > 
+> > As this is a Thunderbolt specific function, maybe it's better to be
+> > exposed from the Thunderbolt driver?
+> > 
+> 
+> I thought about this too, but the thunderbolt driver won't load if the
+> controller doesn't exist in the first place, whereas this is a platform
+> BIOS feature.  I'll be interested to hear if Mika has a different perspective
+> on if this should live in the TBT driver and the proper way to do it.
+> 
+
+The other question I had about this was if the typical use case involves the OS,
+or if the firmware update (for example) would be performed as part of the
+general platform firmware update (from the UEFI update utility).
+
+> > 
+> > > +
+> > > +static DEVICE_ATTR_WO(force_power);
+> > > +
+> > 
+> > I'm not sure what is the convention for permissions for this type of
+> > attributes but I feel like this worth being root-only writable, as it
+> > can be used to power-off the controller in the middle of a FW update,
+> > for example.
+> 
+> Yeah I think you're right.  I'll adjust it in a follow up patch if this is the
+> correct way to go afterall.
+
+
+Ahhhrg, that was something I meant to follow up on as I was discussing using the
+macros with Mario previously, and I forgot. Sorry about that Mario.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
