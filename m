@@ -1,236 +1,243 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] usb: xhci: Add Intel cherrytrail extended cap /
- otg phy mux handling
-Date: Thu, 7 Sep 2017 17:49:13 +0200
-Message-ID: <40e23f9e-538f-088a-96a3-402818bcf3fb@redhat.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-5-hdegoede@redhat.com>
- <59B14628.5030700@linux.intel.com>
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v2] Add driver to force WMI Thunderbolt controller power status
+Date: Thu,  7 Sep 2017 13:47:22 -0500
+Message-ID: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59B14628.5030700-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Richard Hughes <hughsient@gmail.com>, Yehezkel Bernat <yehezkelshb@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Current implementations of Intel Thunderbolt controllers will go
+into a low power mode when not in use.
 
-On 07-09-17 15:14, Mathias Nyman wrote:
-> On 05.09.2017 19:42, Hans de Goede wrote:
->> The Intel cherrytrail xhci controller has an extended cap mmio-range
->> which contains registers to control the muxing to the xhci (host mode)
->> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
->>
->> Having a mux driver included in the xhci code (or under drivers/usb/host)
->> is not desirable. So this commit adds a simple handler for this extended
->> capability, which creates a platform device with the caps mmio region as
->> resource, this allows us to write a separate platform mux driver for the
->> mux.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -Check xHCI controller PCI device-id instead of only checking for the
->>   Intel Extended capability ID, as the Extended capability ID is used on
->>   other model Intel xHCI controllers too
->> ---
->>   drivers/usb/host/Makefile            |  2 +-
->>   drivers/usb/host/xhci-intel-quirks.c | 85 ++++++++++++++++++++++++++++++++++++
->>   drivers/usb/host/xhci-pci.c          |  4 ++
->>   drivers/usb/host/xhci.h              |  2 +
->>   4 files changed, 92 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/usb/host/xhci-intel-quirks.c
->>
->> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
->> index cf2691fffcc0..441edf82eb1c 100644
->> --- a/drivers/usb/host/Makefile
->> +++ b/drivers/usb/host/Makefile
->> @@ -63,7 +63,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)    += ohci-da8xx.o
->>   obj-$(CONFIG_USB_UHCI_HCD)    += uhci-hcd.o
->>   obj-$(CONFIG_USB_FHCI_HCD)    += fhci.o
->>   obj-$(CONFIG_USB_XHCI_HCD)    += xhci-hcd.o
->> -obj-$(CONFIG_USB_XHCI_PCI)    += xhci-pci.o
->> +obj-$(CONFIG_USB_XHCI_PCI)    += xhci-pci.o xhci-intel-quirks.o
->>   obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
->>   obj-$(CONFIG_USB_XHCI_MTK)    += xhci-mtk.o
->>   obj-$(CONFIG_USB_XHCI_TEGRA)    += xhci-tegra.o
->> diff --git a/drivers/usb/host/xhci-intel-quirks.c b/drivers/usb/host/xhci-intel-quirks.c
->> new file mode 100644
-> 
-> I think it would be better to have one place where we add handlers for
-> vendor specific extended capabilities.
-> 
-> Something like xhci-vendor-ext-caps.c, or just xhci-ext-caps.c as
-> there's a xhci-ext-caps.h header already
-> 
-> We could walk through the capability list once and add the needed handlers.
-> Something like:
-> 
-> +int xhci_ext_cap_init(void __iomem *base)
+Many machines containing these controllers also have a GPIO wired up
+that can force the controller awake.  This is offered via a ACPI-WMI
+interface intended to be manipulated by a userspace utility.
 
-This will need to take a struct xhci_hcd *xhci param instead
-as some of the ext_cap handling (including the cht mux code)
-will need access to this.
+This mechanism is provided by Intel to OEMs to include in BIOS.
+It uses an industry wide GUID that is populated in a separate _WDG
+entry with no binary MOF.
 
-> +{
-> +        u32 val;
-> +       u32 cap_offset;
-> +
-> +        cap_offset = xhci_next_ext_cap(base, 0);
-> +
-> +        while (cap_offset) {
-> +                val = readl(base + cap_offset);
-> +
-> +                switch (XHCI_EXT_CAPS_ID(val)) {
-> +                case XHCI_EXT_CAPS_VENDOR_INTEL:
-> +                        /* check hw/id/something, and call what's needed */
+This interface allows software such as fwupd to wake up thunderbolt
+controllers to query the firmware version or flash new firmware.
 
-So I see 2 options here (without making this function PCI specific)
-1) Add an u32 product_id field to struct xhci_hcd; or
-2) Use a quirk flag as my current code is doing.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+changes from v1 to v2:
+ * Add ABI documentation
+ * Update thunderbolt.rst
+ * Remove unnecessary cast
+ * Remove unneeded whitespace
+ * Adjust references of "Intel Wmi thunderbolt" -> 
+   "Intel WMI thunderbolt force power"
 
-I'm fine with doing this either way, please let me know your preference.
+ .../testing/sysfs-platform-intel-wmi-thunderbolt   | 11 +++
+ Documentation/admin-guide/thunderbolt.rst          | 15 ++++
+ MAINTAINERS                                        |  5 ++
+ drivers/platform/x86/Kconfig                       | 13 +++
+ drivers/platform/x86/Makefile                      |  1 +
+ drivers/platform/x86/intel-wmi-thunderbolt.c       | 96 ++++++++++++++++++++++
+ 6 files changed, 141 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
+ create mode 100644 drivers/platform/x86/intel-wmi-thunderbolt.c
 
-> +                        break;
-> +                case XHCI_EXT_CAPS_VENDOR_XYZ:
-> +                        /* do something */
-> +                        break;
-> +                default:
-> +                        break;
-> +                }
-> +
-> +               printk(KERN_ERR "MATTU EXT_CAP id %d\n", XHCI_EXT_CAPS_ID(val));
-> +
-> +               cap_offset = xhci_next_ext_cap(base, cap_offset);
-> +        }
-> +
-> +        return 0;
-> +}
-> 
-> xhci_next_ext_cap() doesn't exist anywhere else than my local sandbox branch yet.
-
-Can you do a "git format-patch" of that and send it to me? If you
-can give me that + your preference for how to check if we're
-dealing with a cht xhci hcd in xhci_ext_cap_init I can do a v3
-with your suggestions applied.
-
-> 
->> +
->> +/* Extended capability IDs for Intel Vendor Defined */
->> +#define XHCI_EXT_CAPS_INTEL_HOST_CAP    192
-> 
-> XHCI_EXT_CAPS_VENDOR_INTEL
-> and should be in xhci-ext-caps.h
-
-Ok.
-
-Regards,
-
-Hans
-
-
-> 
->> +
->> +static void xhci_intel_unregister_pdev(void *arg)
->> +{
->> +    platform_device_unregister(arg);
->> +}
->> +
->> +int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci)
->> +{
->> +    struct usb_hcd *hcd = xhci_to_hcd(xhci);
->> +    struct device *dev = hcd->self.controller;
->> +    struct platform_device *pdev;
->> +    struct resource    res = { 0, };
->> +    int ret, ext_offset;
->> +
->> +    ext_offset = xhci_find_next_ext_cap(&xhci->cap_regs->hc_capbase, 0,
->> +                        XHCI_EXT_CAPS_INTEL_HOST_CAP);
->> +    if (!ext_offset) {
->> +        xhci_err(xhci, "couldn't find Intel ext caps\n");
->> +        return -ENODEV;
->> +    }
->> +
->> +    pdev = platform_device_alloc("intel_cht_usb_mux", PLATFORM_DEVID_NONE);
->> +    if (!pdev) {
->> +        xhci_err(xhci, "couldn't allocate intel_cht_usb_mux pdev\n");
->> +        return -ENOMEM;
->> +    }
->> +
->> +    res.start = hcd->rsrc_start + ext_offset;
->> +    res.end      = res.start + 0x3ff;
->> +    res.name  = "intel_cht_usb_mux";
->> +    res.flags = IORESOURCE_MEM;
->> +
->> +    ret = platform_device_add_resources(pdev, &res, 1);
->> +    if (ret) {
->> +        dev_err(dev, "couldn't add resources to intel_cht_usb_mux pdev\n");
->> +        platform_device_put(pdev);
->> +        return ret;
->> +    }
->> +
->> +    pdev->dev.parent = dev;
->> +
->> +    ret = platform_device_add(pdev);
->> +    if (ret) {
->> +        dev_err(dev, "couldn't register intel_cht_usb_mux pdev\n");
->> +        platform_device_put(pdev);
->> +        return ret;
->> +    }
->> +
->> +    ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
->> +    if (ret) {
->> +        dev_err(dev, "couldn't add unregister action for intel_cht_usb_mux pdev\n");
->> +        return ret;
->> +    }
->> +
->> +    return 0;
->> +}
->> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
->> index 8071c8fdd15e..b55c1e96abf0 100644
->> --- a/drivers/usb/host/xhci-pci.c
->> +++ b/drivers/usb/host/xhci-pci.c
->> @@ -188,6 +188,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
->>       if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
->>            pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
->>           xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
->> +        xhci->quirks |= XHCI_INTEL_CHT_USB_MUX;
->>       }
->>       if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
->>           (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
->> @@ -328,6 +329,9 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->>       if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
->>           xhci_pme_acpi_rtd3_enable(dev);
->>
->> +    if (xhci->quirks & XHCI_INTEL_CHT_USB_MUX)
->> +        xhci_create_intel_cht_mux_pdev(xhci);
->> +
->>       /* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
->>       pm_runtime_put_noidle(&dev->dev);
->>
->> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
->> index e3e935291ed6..f722ee31e50d 100644
->> --- a/drivers/usb/host/xhci.h
->> +++ b/drivers/usb/host/xhci.h
->> @@ -1821,6 +1821,7 @@ struct xhci_hcd {
->>   #define XHCI_LIMIT_ENDPOINT_INTERVAL_7    (1 << 26)
->>   #define XHCI_U2_DISABLE_WAKE    (1 << 27)
->>   #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL    (1 << 28)
->> +#define XHCI_INTEL_CHT_USB_MUX    (1 << 29)
-> 
-> Everything you said about the quirk flags in v1 is true, and I hate to
-> make the bulk of xhci even more PCI dependent, but I'm running out of flag bits and
-> would like a better solution than the current quirk flags we have.
-> 
-> This isn't really your concern, this patch is just doing it the same way it has
-> always been done, but if you have a better idea I'm all ears.
-> 
-> -Mathias
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
+new file mode 100644
+index 0000000..7b8e61a
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
+@@ -0,0 +1,11 @@
++What:		/sys/devices/platform/<platform>/force_power
++Date:		September 2017
++KernelVersion:	4.14
++Contact:	"Mario LimonciellO" <mario.limonciello@dell.com>
++Description:
++		Modify the platform force power state, influencing
++		Thunderbolt controllers to turn on or off when no
++		devices are connected (write-only)
++		There are two available states:
++		    * 0 -> Force power disabled
++		    * 1 -> Force power enabled
+diff --git a/Documentation/admin-guide/thunderbolt.rst b/Documentation/admin-guide/thunderbolt.rst
+index 6a4cd1f..dadcd66 100644
+--- a/Documentation/admin-guide/thunderbolt.rst
++++ b/Documentation/admin-guide/thunderbolt.rst
+@@ -197,3 +197,18 @@ information is missing.
+ 
+ To recover from this mode, one needs to flash a valid NVM image to the
+ host host controller in the same way it is done in the previous chapter.
++
++Forcing power
++-------------
++Many OEMs include a method that can be used to force the power of a
++thunderbolt controller to an "On" state even if nothing is connected.
++If supported by your machine this will be exposed by the WMI bus with
++a sysfs attribute called "force_power".
++
++For example the intel-wmi-thunderbolt driver exposes this attribute in:
++  /sys/devices/platform/PNP0C14:00/wmi_bus/wmi_bus-PNP0C14:00/86CCFD48-205E-4A77-9C48-2021CBEDE341/force_power
++
++  To force the power to on, write 1 to this attribute file.
++  To disable force power, write 0 to this attribute file.
++
++Note: it's currently not possible to query the force power state of a platform.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1c3feff..9a6b73e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3949,6 +3949,11 @@ M:	Pali Rohár <pali.rohar@gmail.com>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-wmi.c
+ 
++INTEL WMI THUNDERBOLT FORCE POWER DRIVER
++M:	Mario Limonciello <mario.limonciello@dell.com>
++S:	Maintained
++F:	drivers/platform/x86/intel-wmi-thunderbolt.c
++
+ DELTA ST MEDIA DRIVER
+ M:	Hugues Fruchet <hugues.fruchet@st.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 80b8795..f401ae4 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -658,6 +658,19 @@ config WMI_BMOF
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called wmi-bmof.
+ 
++config INTEL_WMI_THUNDERBOLT
++	tristate "Intel WMI thunderbolt force power driver"
++	depends on ACPI_WMI
++	default ACPI_WMI
++	---help---
++	  Say Y here if you want to be able to use the WMI interface on select
++	  systems to force the power control of Intel Thunderbolt controllers.
++	  This is useful for updating the firmware when devices are not plugged
++	  into the controller.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel-wmi-thunderbolt.
++
+ config MSI_WMI
+ 	tristate "MSI WMI extras"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 91cec17..2b315d0 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -39,6 +39,7 @@ obj-$(CONFIG_PEAQ_WMI)		+= peaq-wmi.o
+ obj-$(CONFIG_SURFACE3_WMI)	+= surface3-wmi.o
+ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
++obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+ 
+ # toshiba_acpi must link after wmi to ensure that wmi devices are found
+ # before toshiba_acpi initializes
+diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+new file mode 100644
+index 0000000..e8c98dc
+--- /dev/null
++++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+@@ -0,0 +1,96 @@
++/*
++ * WMI Thunderbolt driver
++ *
++ * Copyright (C) 2017 Dell Inc. All Rights Reserved.
++ *
++ *  This program is free software; you can redistribute it and/or modify it
++ *  under the terms of the GNU General Public License version 2 as published
++ *  by the Free Software Foundation.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
++#include <linux/wmi.h>
++
++#define INTEL_WMI_THUNDERBOLT_GUID "86CCFD48-205E-4A77-9C48-2021CBEDE341"
++
++static ssize_t force_power_store(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	struct acpi_buffer input;
++	acpi_status status;
++	u8 mode;
++
++	input.length = sizeof(u8);
++	input.pointer = &mode;
++	mode = hex_to_bin(buf[0]);
++	if (mode == 0 || mode == 1) {
++		status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
++					     &input, NULL);
++		if (ACPI_FAILURE(status)) {
++			pr_err("intel-wmi-thunderbolt: failed setting %s\n",
++			       buf);
++			return -ENODEV;
++		}
++	} else {
++		pr_err("intel-wmi-thunderbolt: unsupported mode: %d", mode);
++	}
++	return count;
++}
++
++static DEVICE_ATTR_WO(force_power);
++
++static struct attribute *tbt_attrs[] = {
++	&dev_attr_force_power.attr,
++	NULL
++};
++
++static const struct attribute_group tbt_attribute_group = {
++	.attrs = tbt_attrs,
++};
++
++static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev)
++{
++	return sysfs_create_group(&wdev->dev.kobj, &tbt_attribute_group);
++}
++
++static int intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
++{
++	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
++	return 0;
++}
++
++static const struct wmi_device_id intel_wmi_thunderbolt_id_table[] = {
++	{ .guid_string = INTEL_WMI_THUNDERBOLT_GUID },
++	{ },
++};
++
++static struct wmi_driver intel_wmi_thunderbolt_driver = {
++	.driver = {
++		.name = "intel-wmi-thunderbolt",
++	},
++	.probe = intel_wmi_thunderbolt_probe,
++	.remove = intel_wmi_thunderbolt_remove,
++	.id_table = intel_wmi_thunderbolt_id_table,
++};
++
++module_wmi_driver(intel_wmi_thunderbolt_driver);
++
++MODULE_ALIAS("wmi:" INTEL_WMI_THUNDERBOLT_GUID);
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_DESCRIPTION("Intel WMI Thunderbolt force power driver");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
