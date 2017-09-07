@@ -1,35 +1,111 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] drivers/x86: add thinkpad-wmi
-Date: Thu, 7 Sep 2017 18:02:24 +0800
-Message-ID: <201709071725.1hbpOsaR%fengguang.wu@intel.com>
-References: <20170904082110.30925-1-corentin.chary@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
+ PMIC
+Date: Thu, 7 Sep 2017 11:53:48 +0100
+Message-ID: <20170907105348.i52vnf732xpxjubq@dell>
+References: <20170904144340.27693-1-tiwai@suse.de>
+ <20170904144340.27693-2-tiwai@suse.de>
+ <20170905072451.ephscqjqgwpnl6da@dell>
+ <s5hmv69twov.wl-tiwai@suse.de>
+ <20170905081049.r3gbdtr2iuom6uk6@dell>
+ <s5hefrltv43.wl-tiwai@suse.de>
+ <20170905085449.dsadovrpmpj6vsvv@dell>
+ <s5htw0ej1l2.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170904082110.30925-1-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <s5htw0ej1l2.wl-tiwai@suse.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Corentin,
+On Thu, 07 Sep 2017, Takashi Iwai wrote:
 
-[auto build test WARNING on platform-drivers-x86/for-next]
-[also build test WARNING on v4.13 next-20170906]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> On Tue, 05 Sep 2017 10:54:49 +0200,
+> Lee Jones wrote:
+> > 
+> > On Tue, 05 Sep 2017, Takashi Iwai wrote:
+> > 
+> > > On Tue, 05 Sep 2017 10:10:49 +0200,
+> > > Lee Jones wrote:
+> > > > 
+> > > > On Tue, 05 Sep 2017, Takashi Iwai wrote:
+> > > > 
+> > > > > On Tue, 05 Sep 2017 09:24:51 +0200,
+> > > > > Lee Jones wrote:
+> > > > > > 
+> > > > > > On Mon, 04 Sep 2017, Takashi Iwai wrote:
+> > > > > > 
+> > > > > > > This patch adds the MFD driver for Dollar Cove (TI version) PMIC with
+> > > > > > > ACPI INT33F5 that is found on some Intel Cherry Trail devices.
+> > > > > > > The driver is based on the original work by Intel, found at:
+> > > > > > >   https://github.com/01org/ProductionKernelQuilts
+> > > > > > > 
+> > > > > > > This is a minimal version for adding the basic resources.  Currently,
+> > > > > > > only ACPI PMIC opregion and the external power-button are used.
+> > > > > > > 
+> > > > > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
+> > > > > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > > > > ---
+> > > > > > > v4->v5:
+> > > > > > > * Minor coding-style fixes suggested by Lee
+> > > > > > > * Put GPL text
+> > > > > > > v3->v4:
+> > > > > > > * no change for this patch
+> > > > > > > v2->v3:
+> > > > > > > * Rename dc_ti with chtdc_ti in all places
+> > > > > > > * Driver/kconfig renames accordingly
+> > > > > > > * Added acks by Andy and Mika
+> > > > > > > v1->v2:
+> > > > > > > * Minor cleanups as suggested by Andy
+> > > > > > > 
+> > > > > > >  drivers/mfd/Kconfig                   |  13 +++
+> > > > > > >  drivers/mfd/Makefile                  |   1 +
+> > > > > > >  drivers/mfd/intel_soc_pmic_chtdc_ti.c | 184 ++++++++++++++++++++++++++++++++++
+> > > > > > >  3 files changed, 198 insertions(+)
+> > > > > > >  create mode 100644 drivers/mfd/intel_soc_pmic_chtdc_ti.c
+> > > > > > 
+> > > > > > For my own reference:
+> > > > > >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > > > > 
+> > > > > Thanks!
+> > > > > 
+> > > > > Now the question is how to deal with these.  It's no critical things,
+> > > > > so I'm OK to postpone for 4.15.  OTOH, it's really a new
+> > > > > device-specific stuff, thus it can't break anything else, and it'd be
+> > > > > fairly safe to add it for 4.14 although it's at a bit late stage.
+> > > > 
+> > > > Yes, you are over 2 weeks late for v4.14.  It will have to be v4.15.
+> > > 
+> > > OK, I'll ring your bells again once when 4.15 development is opened.
+> > 
+> > Please don't.  Just collect all the Acks you have received and sent
+> > out the set again changing [PATCH] for [RESEND].  Only if there
+> > haven't been any code changes of course. 
+>   
+> You seem to have applied the patches in some branch, but still do I
+> need to resend the whole patches?
 
-url:    https://github.com/0day-ci/linux/commits/Corentin-Chary/drivers-x86-add-thinkpad-wmi/20170907-125653
-base:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
+That's up to the Platform Maintainers.
 
+Since the MFD and ACPI are applied, you do not need to resend those.
 
-coccinelle warnings: (new ones prefixed by >>)
+> BTW, was patch 2/3 applied?  I miss your notification mail.
 
->> drivers/platform/x86/thinkpad-wmi.c:1196:3-8: No need to set .owner here. The core will do it.
---
->> drivers/platform/x86/thinkpad-wmi.c:1205:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Patch 2 needs to be applied into the Platform tree.
 
-Please review and possibly fold the followup patch.
+Since there are no deps between the patches, they should be applied
+into their own trees (as previously discussed).  I only applied the
+ACPI patch because Rafael asked me nicely.  Normally this should have
+gone in separately too.
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
