@@ -1,99 +1,34 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller power
- status
-Date: Thu, 7 Sep 2017 01:38:37 +0000
-Message-ID: <b347d99ca7c9439186d0c9db82210132@ausx13mpc120.AMER.DELL.COM>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: Fwd: [PATCH] Add driver to force WMI Thunderbolt controller
+ power status
+Date: Thu, 7 Sep 2017 09:36:07 +0300
+Message-ID: <20170907063607.GB2477@lahna.fi.intel.com>
 References: <1504720440-24423-1-git-send-email-mario.limonciello@dell.com>
-         <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
-         <1504726863.2677.154.camel@intel.com>
-         <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
-         <20170906200953.GA8298@fury> <1504729603.2677.167.camel@intel.com>
-         <7edd73cbe3ba4d7b80a6614e93f4d538@ausx13mpc120.AMER.DELL.COM>
-         <20170906222730.GB8298@fury> <1504737247.2677.170.camel@intel.com>
+ <CA+CmpXt9EtzObijHT3gmm=xUwFDF3Ec=SFbNnPAk+oRdzAUADQ@mail.gmail.com>
+ <1504726863.2677.154.camel@intel.com>
+ <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:30925 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751267AbdIGBjf (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:36856 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752783AbdIGGgL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2017 21:39:35 -0400
-In-Reply-To: <1504737247.2677.170.camel@intel.com>
-Content-Language: en-US
+        Thu, 7 Sep 2017 02:36:11 -0400
+Content-Disposition: inline
+In-Reply-To: <b74a2237da254faea0377fdcb93aa3e0@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: yehezkel.bernat@intel.com, dvhart@infradead.org
-Cc: mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com
+To: Mario.Limonciello@dell.com
+Cc: yehezkel.bernat@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, hughsient@gmail.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCZXJuYXQsIFllaGV6a2VsIFtt
-YWlsdG86eWVoZXprZWwuYmVybmF0QGludGVsLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0
-ZW1iZXIgNiwgMjAxNyA1OjM0IFBNDQo+IFRvOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgTGltb25j
-aWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IG1pa2Eud2Vz
-dGVyYmVyZ0BsaW51eC5pbnRlbC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBs
-YXRmb3JtLQ0KPiBkcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgaHVnaHNpZW50QGdtYWlsLmNv
-bQ0KPiBTdWJqZWN0OiBSZTogRndkOiBbUEFUQ0hdIEFkZCBkcml2ZXIgdG8gZm9yY2UgV01JIFRo
-dW5kZXJib2x0IGNvbnRyb2xsZXIgcG93ZXINCj4gc3RhdHVzDQo+IA0KPiBPbiBXZWQsIDIwMTct
-MDktMDYgYXQgMTU6MjcgLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiA+IE9uIFdlZCwgU2Vw
-IDA2LCAyMDE3IGF0IDA5OjQwOjAyUE0gKzAwMDAsIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29t
-DQo+ID4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBCZXJuYXQsIFllaGV6a2VsIFttYWlsdG86eWVoZXprZWwu
-YmVybmF0QGludGVsLmNvbV0NCj4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgNiwg
-MjAxNyAzOjI3IFBNDQo+ID4gPiA+IFRvOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgTGltb25jaWVs
-bG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEDQo+ID4gPiA+IGVsbC5jb20+DQo+ID4gPiA+
-IENjOiBtaWthLndlc3RlcmJlcmdAbGludXguaW50ZWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnDQo+ID4gPiA+IDsgcGxhdGZvcm0tDQo+ID4gPiA+IGRyaXZlci14ODZAdmdlci5r
-ZXJuZWwub3JnOyBodWdoc2llbnRAZ21haWwuY29tDQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBGd2Q6
-IFtQQVRDSF0gQWRkIGRyaXZlciB0byBmb3JjZSBXTUkgVGh1bmRlcmJvbHQNCj4gPiA+ID4gY29u
-dHJvbGxlciBwb3dlcg0KPiA+ID4gPiBzdGF0dXMNCj4gPiA+ID4NCj4gPiA+ID4gT24gV2VkLCAy
-MDE3LTA5LTA2IGF0IDEzOjA5IC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4gPiA+ID4gPg0K
-PiA+ID4gPiA+IFRoZSBvdGhlciBxdWVzdGlvbiBJIGhhZCBhYm91dCB0aGlzIHdhcyBpZiB0aGUg
-dHlwaWNhbCB1c2UgY2FzZQ0KPiA+ID4gPiA+IGludm9sdmVzIHRoZSBPUywNCj4gPiA+ID4gPiBv
-ciBpZiB0aGUgZmlybXdhcmUgdXBkYXRlIChmb3IgZXhhbXBsZSkgd291bGQgYmUgcGVyZm9ybWVk
-IGFzDQo+ID4gPiA+ID4gcGFydCBvZg0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IGdlbmVyYWwg
-cGxhdGZvcm0gZmlybXdhcmUgdXBkYXRlIChmcm9tIHRoZSBVRUZJIHVwZGF0ZQ0KPiA+ID4gPiA+
-IHV0aWxpdHkpLg0KPiA+ID4gPiBGaXJzdCwgdGhlcmUgaXMgdGhlIHVzZS1jYXNlIG9mIGFkZC1p
-biBjYXJkLCB3aGVyZSBpdCdzDQo+ID4gPiA+IGltcG9zc2libGUgdG8NCj4gPiA+ID4gdXNlIFVF
-RkktYmFzZWQgdXBkYXRlLCBhcyBtdWNoIGFzIEkgdW5kZXJzdGFuZCwgYXMgdGhlIEJJT1MgaXNu
-J3QNCj4gPiA+ID4gZXhwZWN0ZWQgdG8gZXhwb3NlIGFuIEVTUlQgZW50cnkgZm9yIGl0Lg0KPiA+
-ID4gPg0KPiA+ID4gPiBFdmVuIGZvciBidWlsdC1pbiBjb250cm9sbGVyLCBteSBpbXByZXNzaW9u
-IGlzIHRoYXQgbW9zdCBPRU1zIHVzZQ0KPiA+ID4gPiBhIEZXDQo+ID4gPiA+IHVwZGF0ZSBhcHBs
-aWNhdGlvbiAocnVubmluZyBvbiBXaW5kb3dzKSBhbmQgYXJlIG5vdCBwdWJsaXNoaW5nIGENCj4g
-PiA+ID4gVUVGSS0NCj4gPiA+ID4gYmFzZWQgc29sdXRpb24uDQo+ID4gPiBZZWFoIEknZCBhZ3Jl
-ZSB3aXRoIHRoYXQgaW1wcmVzc2lvbi4NCj4gPiA+DQo+ID4gPiBFdmVuIGlmIGFuIE9FTSBkb2Vz
-IGNob29zZSB0byBwdWJsaXNoIGEgVUVGSSBiYXNlZCBzb2x1dGlvbiwgaXQncw0KPiA+ID4gc3Rp
-bGwNCj4gPiA+IHVzZWZ1bCB0byBwcmVzZW50IEZXIGluZm9ybWF0aW9uIGZvciB0aGUgVEJUIGNv
-bnRyb2xsZXIgaW4gZnd1cGQNCj4gPiA+IGhvd2V2ZXIgdG9vLg0KPiA+ID4NCj4gPiA+IFNpbWls
-YXIgdG8gaG93IGZ3dXBkIGRpc3BsYXlzIHRoZSBpbmZvcm1hdGlvbiBmb3IgdGhlIE1FIGV2ZW4N
-Cj4gPiA+IHRob3VnaA0KPiA+ID4gdGhlIE1FIGlzIHR5cGljYWxseSB1cGRhdGVkIHZpYSBVRUZJ
-Lg0KPiA+IFNvIHRoaXMgcmFpc2VzIHRoZSBxdWVzdGlvbjogY2FuIHdlIGNvbWUgdXAgd2l0aCBh
-IG1lY2hhbmlzbSBhcyBwYXJ0DQo+ID4gb2YgdGhlIHRiDQo+ID4gZHJpdmVyIHRoYXQgd2lsbCB3
-b3JrIG9uIGJvdGggb24tYm9hcmQgY29udHJvbGxlcnMgYW5kIGFkZCBvbiBjYXJkcz8NCj4gPiBJ
-biBpdCdzDQo+ID4gY3VycmVudCBmb3JtLCB0aGlzIGRyaXZlciB3aWxsIG9ubHkgYWRkcmVzcyBv
-bi1ib2FyZCBjb250cm9sbGVycy4NCj4gDQo+IEJvdGggdGhpcyB3bWkgZHJpdmVyIGFuZCBUaHVu
-ZGVyYm9sdCBkcml2ZXIgYXJlIHJlbGV2YW50IGZvciBib3RoIG9uLQ0KPiBib2FyZCBjb250cm9s
-bGVycyBhbmQgYWRkLWluIGNhcmRzLg0KPiBNYXliZSBJJ20gbWlzc2luZyBzb21ldGhpbmcuIFdv
-dWxkIHlvdSBtaW5kIHRvIGVsYWJvcmF0ZT8NCj4gDQoNCldoYXQgdGhpcyBXTUkgZHJpdmVyIEkg
-c3VibWl0dGVkIGRvZXMgaXMgbW9kaWZpZXMgYSAicGxhdGZvcm0iIGZlYXR1cmUNCihhIEdQSU8p
-IHRoYXQgdHVybnMgb24gdGhlIG9uLWJvYXJkIGNvbnRyb2xsZXIgdG8gYSBmb3JjZWQgcG93ZXIg
-b24NCnN0YXRlLiAgSXQgdHlwaWNhbGx5IHNob3VsZG4ndCByZW1haW4gaW4gdGhpcyBzdGF0ZSBp
-ZiBub3QgaW4gdXNlIGFzIHRoYXQgd2lsbA0Kd2FzdGUgcG93ZXIuDQoNCklmIGEgc2VwYXJhdGUg
-VEJUIGRldmljZSBpcyBwbHVnZ2VkIGluIHRoYXQgd291bGQgY2F1c2UgdGhlIFRCVCBjb250cm9s
-bGVyDQp0byBhbHNvIHdha2UgdXAuICBJbiB0aGF0IGNhc2UgeW91IHdvdWxkbid0IG5lZWQgdG8g
-dXNlIHRoaXMgV01JIGRyaXZlci4NClRoYXTigJlzIHdoeSBJIHNheSB0aGlzIHNob3VsZCByZWFs
-bHkgYmUgYSBwbGF0Zm9ybSBmZWF0dXJlIHRoYXQgbWFrZXMgdGhlIHRodW5kZXJib2x0IA0KaG9z
-dCBjb250cm9sbGVyIGJlaGF2ZSBhcyBleHBlY3RlZCB3aGV0aGVyIHNvbWV0aGluZyBpcyBwbHVn
-Z2VkIGluIG9yIG5vdCB3aGVuIHF1ZXJpZWQgDQpmcm9tIGZ3dXBkLg0KDQpGcm9tIHRoZSB1c2Vy
-c3BhY2UgZnd1cGQgcGVyc3BlY3RpdmUgdGhlICh1bndyaXR0ZW4gcGF0Y2gpIGJlaGF2aW9yIHdv
-dWxkIGJlOg0KMSkgZnd1cGQgc3RhcnRzIHVwIGFuZCBkb2VzIGNvbGRwbHVnIHJvdXRpbmUNCjJh
-KSBJZiBhbnkgVEJUIGRldmljZXMgYXJlIHBsdWdnZWQgaW4sIGVudW1lcmF0ZSBldmVyeXRoaW5n
-IHVwIHRoZSBjaGFpbiBmcm9tIHVkZXYsIGRvbid0IHVzZSBmb3JjZSBwb3dlcg0KMmIpIElmIG5v
-IFRCVCBkZXZpY2VzIGFyZSBwbHVnZ2VkIGluIGJ1dCB0aGUgZm9yY2UgcG93ZXIgc3lzZnMgZmls
-ZSBpcyBhdmFpbGFibGUsIHRyeSB0byB3cml0ZSAxIHRvIGZvcmNlIHBvd2VyIHRoZSBkZXZpY2UN
-CiAgICAgMykgd2FpdCBhIGZldyBzZWNvbmRzLg0KICAgICA0KSBJZiBuZXcgZGV2aWNlcyBzaG93
-IHVwIGFmdGVyIHRoZSB3YWl0aW5nLCBlbnVtZXJhdGUuDQogICAgIDUpIFdyaXRlIDAgdG8gdGhl
-IGZvcmNlIHBvd2VyIHRvIHR1cm4gb2ZmIHRoZSBUQlQgaG9zdCBkZXZpY2UgaWYgbm90aGluZyBp
-cyBwbHVnZ2VkIGluDQoNCj4gPg0KPiA+IFRoZSBUQiBkcml2ZXIgY291bGQgdXNlIHRoZSBXTUkg
-bWV0aG9kIGlmIGl0IGV4aXN0cywgb3Igc29tZSBvdGhlcg0KPiA+IG1ldGhvZCB0bw0KPiA+IHBv
-d2VyIGl0IHVwLCBidXQgcHJlc2VudCB0aGUgc2FtZSBzeXNmcyBpbnRlcmZhY2UgdG8gdXNlcnNw
-YWNlLi4uDQo+ID4NCg==
+On Wed, Sep 06, 2017 at 07:49:32PM +0000, Mario.Limonciello@dell.com wrote:
+> > As this is a Thunderbolt specific function, maybe it's better to be
+> > exposed from the Thunderbolt driver?
+> 
+> I thought about this too, but the thunderbolt driver won't load if the
+> controller doesn't exist in the first place, whereas this is a platform
+> BIOS feature.  I'll be interested to hear if Mika has a different perspective
+> on if this should live in the TBT driver and the proper way to do it.
+
+I think it makes sense to keep it separate from the Thunderbolt driver.
