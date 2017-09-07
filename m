@@ -1,44 +1,55 @@
 From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v5 1/3] mfd: Add support for Cherry Trail Dollar Cove TI
  PMIC
-Date: Thu, 7 Sep 2017 08:39:03 +0100
-Message-ID: <20170907073903.rz6d3jd4c6yc75hf@dell>
+Date: Thu, 7 Sep 2017 09:00:18 +0100
+Message-ID: <20170907080018.zfrxvqbkdr74amwa@dell>
 References: <20170904144340.27693-1-tiwai@suse.de>
- <20170906104723.qs3b7p6p6x2ixmvb@dell>
- <20170906105209.uoutqilops3plna2@dell>
- <3358010.FqzdD3Emuf@aspire.rjw.lan>
+ <20170904144340.27693-2-tiwai@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3358010.FqzdD3Emuf@aspire.rjw.lan>
+In-Reply-To: <20170904144340.27693-2-tiwai@suse.de>
 Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Takashi Iwai <tiwai@suse.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Johannes Stezenbach <js@sig21.net>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 07 Sep 2017, Rafael J. Wysocki wrote:
+On Mon, 04 Sep 2017, Takashi Iwai wrote:
 
-> On Wednesday, September 6, 2017 12:52:09 PM CEST Lee Jones wrote:
-> > > > In any case, I wouldn't mind it if you took the [3/3] from this series, because
-> > > > if there are any conflicts with it, they will be trivial to resolve.  And I
-> > > > don't need an immutable branch with it or anything like that.
-> > > 
-> > > No problem.
-> > 
-> > Although you don't appear to have reviewed it?
+> This patch adds the MFD driver for Dollar Cove (TI version) PMIC with
+> ACPI INT33F5 that is found on some Intel Cherry Trail devices.
+> The driver is based on the original work by Intel, found at:
+>   https://github.com/01org/ProductionKernelQuilts
 > 
-> I have reviewed it, although I haven't sent a tag.
+> This is a minimal version for adding the basic resources.  Currently,
+> only ACPI PMIC opregion and the external power-button are used.
 > 
-> Generally speaking, for drivers/acpi/pmic/ Reviewed-bys from Mika and Andy are
-> sufficient (they likely are more familiar with the code in there than I am),
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> ---
+> v4->v5:
+> * Minor coding-style fixes suggested by Lee
+> * Put GPL text
+> v3->v4:
+> * no change for this patch
+> v2->v3:
+> * Rename dc_ti with chtdc_ti in all places
+> * Driver/kconfig renames accordingly
+> * Added acks by Andy and Mika
+> v1->v2:
+> * Minor cleanups as suggested by Andy
+> 
+>  drivers/mfd/Kconfig                   |  13 +++
+>  drivers/mfd/Makefile                  |   1 +
+>  drivers/mfd/intel_soc_pmic_chtdc_ti.c | 184 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 198 insertions(+)
+>  create mode 100644 drivers/mfd/intel_soc_pmic_chtdc_ti.c
 
-I don't see them in MAINTAINERS.  I thought it was Len and yourself.
-
-> but please feel free to add an ACK from me to it too. :-)
-
-Will do, thank you.
+Applied for v4.15, thanks.
 
 -- 
 Lee Jones
