@@ -1,15 +1,15 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 04/11] usb: xhci: Add Intel cherrytrail extended cap /
- otg phy mux handling
-Date: Fri, 8 Sep 2017 17:47:22 +0200
-Message-ID: <354fbada-a1d7-5542-26a0-a10034f35d6a@axentia.se>
+Subject: Re: [PATCH v2 03/11] mux: core: Add usb.h header with MUX_USB_* and
+ and MUX_TYPEC_* state constants
+Date: Fri, 8 Sep 2017 17:47:12 +0200
+Message-ID: <ef2cb0f4-00c4-fac4-2bf9-cc0230dba752@axentia.se>
 References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-5-hdegoede@redhat.com>
+ <20170905164221.11266-4-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170905164221.11266-5-hdegoede@redhat.com>
+In-Reply-To: <20170905164221.11266-4-hdegoede@redhat.com>
 Content-Language: en-US
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
@@ -25,55 +25,69 @@ Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kupp
 List-Id: platform-driver-x86.vger.kernel.org
 
 On 2017-09-05 18:42, Hans de Goede wrote:
-> The Intel cherrytrail xhci controller has an extended cap mmio-range
-> which contains registers to control the muxing to the xhci (host mode)
-> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
-> 
-> Having a mux driver included in the xhci code (or under drivers/usb/host)
-> is not desirable. So this commit adds a simple handler for this extended
-> capability, which creates a platform device with the caps mmio region as
-> resource, this allows us to write a separate platform mux driver for the
-> mux.
+> Add MUX_USB_* and MUX_TYPEC_* state constant defines, which can be used by
+> USB device/host, resp. Type-C polarity/role/altmode mux drivers and
+> consumers to ensure that they agree on the meaning of the
+> mux_control_select() state argument.
 > 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
 > Changes in v2:
-> -Check xHCI controller PCI device-id instead of only checking for the
->  Intel Extended capability ID, as the Extended capability ID is used on
->  other model Intel xHCI controllers too
+> -Start numbering of defines at 0 not 1
+> -Use a new usb.h header, rather then adding these to consumer.h
+> -Add separate MUX_USB_* and MUX_TYPEC_* defines
 > ---
->  drivers/usb/host/Makefile            |  2 +-
->  drivers/usb/host/xhci-intel-quirks.c | 85 ++++++++++++++++++++++++++++++++++++
->  drivers/usb/host/xhci-pci.c          |  4 ++
->  drivers/usb/host/xhci.h              |  2 +
->  4 files changed, 92 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/usb/host/xhci-intel-quirks.c
+>  include/linux/mux/usb.h | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 include/linux/mux/usb.h
 > 
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index cf2691fffcc0..441edf82eb1c 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -63,7 +63,7 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
->  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
->  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
->  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-> -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> +obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o xhci-intel-quirks.o
->  obj-$(CONFIG_USB_XHCI_PLATFORM) += xhci-plat-hcd.o
->  obj-$(CONFIG_USB_XHCI_MTK)	+= xhci-mtk.o
->  obj-$(CONFIG_USB_XHCI_TEGRA)	+= xhci-tegra.o
-> diff --git a/drivers/usb/host/xhci-intel-quirks.c b/drivers/usb/host/xhci-intel-quirks.c
+> diff --git a/include/linux/mux/usb.h b/include/linux/mux/usb.h
 > new file mode 100644
-> index 000000000000..819f5f9da9ee
+> index 000000000000..44df5eca5256
 > --- /dev/null
-> +++ b/drivers/usb/host/xhci-intel-quirks.c
-> @@ -0,0 +1,85 @@
+> +++ b/include/linux/mux/usb.h
+> @@ -0,0 +1,32 @@
 > +/*
-> + * Intel Vendor Defined XHCI extended capability handling
+> + * mux/usb.h - definitions for USB multiplexers
 > + *
-> + * Copyright (c) 2016) Hans de Goede <hdegoede@redhat.com>
+> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#ifndef _LINUX_MUX_USB_H
+> +#define _LINUX_MUX_USB_H
+> +
+> +/* Mux state values for USB device/host role muxes */
+> +#define MUX_USB_DEVICE		(0) /* USB device mode */
+> +#define MUX_USB_HOST		(1) /* USB host mode */
+> +#define MUX_USB_STATES		(2)
+> +
+> +/*
+> + * Mux state values for Type-C polarity/role/altmode muxes.
+> + *
+> + * MUX_TYPEC_POLARITY_INV may be or-ed together with any other mux-state as
+> + * inverted-polarity (Type-C plugged in upside down) can happen with any
+> + * other mux-state.
+> + */
+> +#define MUX_TYPEC_POLARITY_INV		BIT(0)   /* Polarity inverted bit */
+> +#define MUX_TYPEC_DEVICE		(0 << 1) /* USB device mode */
+> +#define MUX_TYPEC_HOST			(1 << 1) /* USB host mode */
+> +#define MUX_TYPEC_HOST_AND_DP_SRC	(2 << 1) /* USB host + 2 lanes DP src */
+> +#define MUX_TYPEC_DP_SRC		(3 << 1) /* 4 lanes Display Port src */
+> +#define MUX_TYPEC_STATES		(4 << 1)
 
-2017? And drop the stray bracket.
+But USB Type-C muxes need not support just these states If I read it right?
+USB Type-C seems to be usable for a variety of protocols and the above list
+seems pretty much like a special case for this mux (and perhaps a set of
+other similar muxes). But when someone with a USB Type-C mux for different
+protocols shows up, that person will probably be frustrated by these
+defines, no? Or is there something I don't see that limits USB-C to DP?
 
 Cheers,
 Peter
+
+> +
+> +#endif /* _LINUX_MUX_TYPEC_H */
+> 
