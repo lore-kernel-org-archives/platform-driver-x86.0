@@ -1,50 +1,33 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
  status
-Date: Thu, 7 Sep 2017 17:06:09 -0700
-Message-ID: <20170908000609.GC8298@fury>
+Date: Fri, 8 Sep 2017 11:07:29 +0300
+Message-ID: <20170908080729.GT2477@lahna.fi.intel.com>
 References: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
- <CA+CmpXvX=iF6R1G6Z-tifi-Nx0uXhfYZzDHFUekOCzbuPBCkrA@mail.gmail.com>
- <1504811693.15320.23.camel@intel.com>
- <0a44ddd1c4144c99abe797dcbf4fec7b@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:58990 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753242AbdIHAGO (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Sep 2017 20:06:14 -0400
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0a44ddd1c4144c99abe797dcbf4fec7b@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: yehezkel.bernat@intel.com, mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com
+In-Reply-To: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Richard Hughes <hughsient@gmail.com>, Yehezkel Bernat <yehezkelshb@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 07, 2017 at 08:09:28PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Bernat, Yehezkel [mailto:yehezkel.bernat@intel.com]
-> > Sent: Thursday, September 7, 2017 2:15 PM
-> > To: dvhart@infradead.org; Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: mika.westerberg@linux.intel.com; linux-kernel@vger.kernel.org; platform-
-> > driver-x86@vger.kernel.org; hughsient@gmail.com
-> > Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
-> > status
-> > 
-> > 
-> > > +Contact:       "Mario LimonciellO" <mario.limonciello@dell.com>
-> >                                    ^
-> > Looks like a typo
-> 
-> Yep - fat fingered shift while adding the second " :)
-> 
-> If that's all that's left, hopefully Daren can just fix it when committing.
+On Thu, Sep 07, 2017 at 01:47:22PM -0500, Mario Limonciello wrote:
 
-Yup. I'd like an Reviewed-by from Mika. Bernat, you two if you're happy with it.
-Appreciate all the reviews.
+I have a small comment which you might want to consider.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+> +static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev)
+> +{
+> +	return sysfs_create_group(&wdev->dev.kobj, &tbt_attribute_group);
+> +}
+> +
+> +static int intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
+> +{
+> +	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
+> +	return 0;
+> +}
+
+In order to notify userspace about this, what if you send KOBJ_CHANGE
+for the wdev when you add/remove this attribute?
