@@ -1,110 +1,63 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 03/11] mux: core: Add usb.h header with MUX_USB_* and
- and MUX_TYPEC_* state constants
-Date: Fri, 8 Sep 2017 19:07:37 +0200
-Message-ID: <f67ce71e-208e-9be1-8556-3bfcdda99c7f@redhat.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-4-hdegoede@redhat.com>
- <ef2cb0f4-00c4-fac4-2bf9-cc0230dba752@axentia.se>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
+ status
+Date: Fri, 8 Sep 2017 21:14:52 -0700
+Message-ID: <20170909041452.GA1084@fury>
+References: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
+ <20170908080729.GT2477@lahna.fi.intel.com>
+ <339f06ce8efd42409bf5f91dfd064e7a@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ef2cb0f4-00c4-fac4-2bf9-cc0230dba752@axentia.se>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:44711 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750899AbdIIEO4 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 9 Sep 2017 00:14:56 -0400
+Content-Disposition: inline
+In-Reply-To: <339f06ce8efd42409bf5f91dfd064e7a@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: mika.westerberg@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com, yehezkelshb@gmail.com
 
-Hi,
-
-On 08-09-17 17:47, Peter Rosin wrote:
-> On 2017-09-05 18:42, Hans de Goede wrote:
->> Add MUX_USB_* and MUX_TYPEC_* state constant defines, which can be used by
->> USB device/host, resp. Type-C polarity/role/altmode mux drivers and
->> consumers to ensure that they agree on the meaning of the
->> mux_control_select() state argument.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> -Start numbering of defines at 0 not 1
->> -Use a new usb.h header, rather then adding these to consumer.h
->> -Add separate MUX_USB_* and MUX_TYPEC_* defines
->> ---
->>   include/linux/mux/usb.h | 32 ++++++++++++++++++++++++++++++++
->>   1 file changed, 32 insertions(+)
->>   create mode 100644 include/linux/mux/usb.h
->>
->> diff --git a/include/linux/mux/usb.h b/include/linux/mux/usb.h
->> new file mode 100644
->> index 000000000000..44df5eca5256
->> --- /dev/null
->> +++ b/include/linux/mux/usb.h
->> @@ -0,0 +1,32 @@
->> +/*
->> + * mux/usb.h - definitions for USB multiplexers
->> + *
->> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +#ifndef _LINUX_MUX_USB_H
->> +#define _LINUX_MUX_USB_H
->> +
->> +/* Mux state values for USB device/host role muxes */
->> +#define MUX_USB_DEVICE		(0) /* USB device mode */
->> +#define MUX_USB_HOST		(1) /* USB host mode */
->> +#define MUX_USB_STATES		(2)
->> +
->> +/*
->> + * Mux state values for Type-C polarity/role/altmode muxes.
->> + *
->> + * MUX_TYPEC_POLARITY_INV may be or-ed together with any other mux-state as
->> + * inverted-polarity (Type-C plugged in upside down) can happen with any
->> + * other mux-state.
->> + */
->> +#define MUX_TYPEC_POLARITY_INV		BIT(0)   /* Polarity inverted bit */
->> +#define MUX_TYPEC_DEVICE		(0 << 1) /* USB device mode */
->> +#define MUX_TYPEC_HOST			(1 << 1) /* USB host mode */
->> +#define MUX_TYPEC_HOST_AND_DP_SRC	(2 << 1) /* USB host + 2 lanes DP src */
->> +#define MUX_TYPEC_DP_SRC		(3 << 1) /* 4 lanes Display Port src */
->> +#define MUX_TYPEC_STATES		(4 << 1)
+On Fri, Sep 08, 2017 at 03:15:10PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg [mailto:mika.westerberg@linux.intel.com]
+> > Sent: Friday, September 8, 2017 3:07 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; LKML <linux-kernel@vger.kernel.org>; platform-driver-
+> > x86@vger.kernel.org; Richard Hughes <hughsient@gmail.com>; Yehezkel Bernat
+> > <yehezkelshb@gmail.com>
+> > Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
+> > status
+> > 
+> > On Thu, Sep 07, 2017 at 01:47:22PM -0500, Mario Limonciello wrote:
+> > 
+> > I have a small comment which you might want to consider.
+> > 
+> > > +static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev)
+> > > +{
+> > > +	return sysfs_create_group(&wdev->dev.kobj, &tbt_attribute_group);
+> > > +}
+> > > +
+> > > +static int intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
+> > > +{
+> > > +	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
+> > > +	return 0;
+> > > +}
+> > 
+> > In order to notify userspace about this, what if you send KOBJ_CHANGE
+> > for the wdev when you add/remove this attribute?
 > 
-> But USB Type-C muxes need not support just these states If I read it right?
-> USB Type-C seems to be usable for a variety of protocols and the above list
-> seems pretty much like a special case for this mux (and perhaps a set of
-> other similar muxes). But when someone with a USB Type-C mux for different
-> protocols shows up, that person will probably be frustrated by these
-> defines, no? Or is there something I don't see that limits USB-C to DP?
+> Sure, makes sense to me.   I'll send a follow up patch.
 
-In general almost all hardware is limited to the above (+ analog audio over
-the 2 Sideband use pins, but I expect that to have a separate mux).
+Hrm, what am I missing.... the reason I recommended Mario add the attribute
+group was so this would be automatically taken care of prior to the KOBJ_ADD
+event, per the device documentation:
 
-You're right, theoretically there might be other cases, e.g. there is a spec
-for HDMI over Type-C (wishful thinking from the HDMI group, no one uses this),
-but:
+driver-model/device.txt
 
-1) I expect most muxes to implement the above set, that is what all
-hardware out there supports (well that or less).
-
-2) We can always add extra defines here, that means that a Type-C mux may
-not implement all states and return -EINVAL when asked for something it
-does not implement, which I understand is a bit weird from a mux subsys
-pov. But that can be the case anyways because even though the mux supports
-these options, the board it is used on does no necessarily have to support
-these options, e.g. there may be only 2 lanes of DP hooked up to the mux
-(or no DP at all, but then I would them to expect a different mux).
-
-So the Type-C Port Manager already needs to be passed some platform
-data describing which features the board has and keep that in mind
-when negotiation with the dongle attached to the Type-C port, so if
-we do get boards which do HDMI and no DP, then the TCPM would simply
-never use the MUX_TYPEC_HOST_AND_DP_SRC and MUX_TYPEC_DP_SRC states.
-
-Regards,
-
-Hans
+-- 
+Darren Hart
+VMware Open Source Technology Center
