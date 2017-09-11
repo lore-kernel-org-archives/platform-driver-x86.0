@@ -1,120 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 08/11] staging: typec: tcpm: Set mux to device mode
- when configured as such
-Date: Sun, 10 Sep 2017 15:56:16 -0700
-Message-ID: <d95237a4-63da-4d5e-5dba-3354df78306b@roeck-us.net>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-9-hdegoede@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
+ status
+Date: Mon, 11 Sep 2017 02:39:55 -0700
+Message-ID: <20170911093955.GA123566@localhost.localdomain>
+References: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
+ <20170908080729.GT2477@lahna.fi.intel.com>
+ <339f06ce8efd42409bf5f91dfd064e7a@ausx13mpc120.AMER.DELL.COM>
+ <20170909041452.GA1084@fury>
+ <20170909070558.GG2477@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170905164221.11266-9-hdegoede@redhat.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans de Goede <hdegoede@redhat.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170909070558.GG2477@lahna.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario.Limonciello@dell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com, yehezkelshb@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 09/05/2017 09:42 AM, Hans de Goede wrote:
-> Setting the mux to TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT when the
-> data-role is device is not correct. Plenty of devices support operating
-> as USB device through a (separate) USB device controller.
+On Sat, Sep 09, 2017 at 10:05:58AM +0300, Mika Westerberg wrote:
+> On Fri, Sep 08, 2017 at 09:14:52PM -0700, Darren Hart wrote:
+> > On Fri, Sep 08, 2017 at 03:15:10PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > -----Original Message-----
+> > > > From: Mika Westerberg [mailto:mika.westerberg@linux.intel.com]
+> > > > Sent: Friday, September 8, 2017 3:07 AM
+> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > Cc: dvhart@infradead.org; LKML <linux-kernel@vger.kernel.org>; platform-driver-
+> > > > x86@vger.kernel.org; Richard Hughes <hughsient@gmail.com>; Yehezkel Bernat
+> > > > <yehezkelshb@gmail.com>
+> > > > Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
+> > > > status
+> > > > 
+> > > > On Thu, Sep 07, 2017 at 01:47:22PM -0500, Mario Limonciello wrote:
+> > > > 
+> > > > I have a small comment which you might want to consider.
+> > > > 
+> > > > > +static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev)
+> > > > > +{
+> > > > > +	return sysfs_create_group(&wdev->dev.kobj, &tbt_attribute_group);
+> > > > > +}
+> > > > > +
+> > > > > +static int intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
+> > > > > +{
+> > > > > +	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
+> > > > > +	return 0;
+> > > > > +}
+> > > > 
+> > > > In order to notify userspace about this, what if you send KOBJ_CHANGE
+> > > > for the wdev when you add/remove this attribute?
+> > > 
+> > > Sure, makes sense to me.   I'll send a follow up patch.
+> > 
+> > Hrm, what am I missing.... the reason I recommended Mario add the attribute
+> > group was so this would be automatically taken care of prior to the KOBJ_ADD
+> > event, per the device documentation:
+> > 
+> > driver-model/device.txt
 > 
-> So this commit instead splits out TYPEC_MUX_USB into TYPEC_MUX_USB_HOST
-> and TYPEC_MUX_USB_DEVICE and makes tcpm_set_roles() set the mux
-> accordingly.
-> 
-> Likewise TCPC_MUX_DP gets renamed to TCPC_MUX_DP_SRC to make clear that
-> this is for configuring the Type-C port as a Display Port source, not a
-> sink.
-> 
-> Last this commit makes tcpm_reset_port() to set the mux to
-> TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT so that it does not and up
-> staying in host (and with this commit also device) mode after a detach.
-> 
-This sentence is hard to understand.
+> At this point the KOBJ_ADD event has already been send to the userspace
+> when the device was added to the system.
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Which device are you referring to? This attribute is bound to the device
+identified by the WMI GUID, and should be independent from the controller or any
+thunderbolt connected physical device.
 
-Otherwise
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->   drivers/staging/typec/tcpm.c |  7 ++++---
->   drivers/staging/typec/tcpm.h | 22 ++++++++++++++--------
->   2 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpm.c b/drivers/staging/typec/tcpm.c
-> index 8af62e74d54c..ffe7e26d4ed3 100644
-> --- a/drivers/staging/typec/tcpm.c
-> +++ b/drivers/staging/typec/tcpm.c
-> @@ -752,11 +752,11 @@ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
->   	int ret;
->   
->   	if (data == TYPEC_HOST)
-> -		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
-> +		ret = tcpm_mux_set(port, TYPEC_MUX_USB_HOST,
->   				   TCPC_USB_SWITCH_CONNECT);
->   	else
-> -		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
-> -				   TCPC_USB_SWITCH_DISCONNECT);
-> +		ret = tcpm_mux_set(port, TYPEC_MUX_USB_DEVICE,
-> +				   TCPC_USB_SWITCH_CONNECT);
->   	if (ret < 0)
->   		return ret;
->   
-> @@ -2025,6 +2025,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
->   	tcpm_init_vconn(port);
->   	tcpm_set_current_limit(port, 0, 0);
->   	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
-> +	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
->   	tcpm_set_attached_state(port, false);
->   	port->try_src_count = 0;
->   	port->try_snk_count = 0;
-> diff --git a/drivers/staging/typec/tcpm.h b/drivers/staging/typec/tcpm.h
-> index 7e9a6b7b5cd6..f662eed48c86 100644
-> --- a/drivers/staging/typec/tcpm.h
-> +++ b/drivers/staging/typec/tcpm.h
-> @@ -83,17 +83,23 @@ enum tcpc_usb_switch {
->   };
->   
->   /* Mux state attributes */
-> -#define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
-> -#define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
-> -#define TCPC_MUX_POLARITY_INVERTED	BIT(2)	/* Polarity inverted */
-> +#define TCPC_MUX_USB_DEVICE_ENABLED		BIT(0)	/* USB device enabled */
-> +#define TCPC_MUX_USB_HOST_ENABLED		BIT(1)	/* USB host enabled */
-> +#define TCPC_MUX_DP_SRC_ENABLED			BIT(2)	/* DP enabled */
-> +#define TCPC_MUX_POLARITY_INVERTED		BIT(3)	/* Polarity inverted */
->   
->   /* Mux modes, decoded to attributes */
->   enum tcpc_mux_mode {
-> -	TYPEC_MUX_NONE	= 0,				/* Open switch */
-> -	TYPEC_MUX_USB	= TCPC_MUX_USB_ENABLED,		/* USB only */
-> -	TYPEC_MUX_DP	= TCPC_MUX_DP_ENABLED,		/* DP only */
-> -	TYPEC_MUX_DOCK	= TCPC_MUX_USB_ENABLED |	/* Both USB and DP */
-> -			  TCPC_MUX_DP_ENABLED,
-> +	/* Open switch */
-> +	TYPEC_MUX_NONE = 0,
-> +	/* USB device only */
-> +	TYPEC_MUX_USB_DEVICE = TCPC_MUX_USB_DEVICE_ENABLED,
-> +	/* USB host only */
-> +	TYPEC_MUX_USB_HOST = TCPC_MUX_USB_HOST_ENABLED,
-> +	/* DP source only */
-> +	TYPEC_MUX_DP = TCPC_MUX_DP_SRC_ENABLED,
-> +	/* Both USB host and DP source */
-> +	TYPEC_MUX_DOCK = TCPC_MUX_USB_HOST_ENABLED | TCPC_MUX_DP_SRC_ENABLED,
->   };
->   
->   struct tcpc_mux_dev {
-> 
+-- 
+Darren Hart
+VMware Open Source Technology Center
