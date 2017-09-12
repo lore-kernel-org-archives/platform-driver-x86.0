@@ -1,43 +1,32 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] Add driver to force WMI Thunderbolt controller power
- status
-Date: Mon, 11 Sep 2017 23:40:15 +0200
-Message-ID: <20170911214015.GA128849@localhost.localdomain>
-References: <1504810042-4696-1-git-send-email-mario.limonciello@dell.com>
- <20170908080729.GT2477@lahna.fi.intel.com>
- <339f06ce8efd42409bf5f91dfd064e7a@ausx13mpc120.AMER.DELL.COM>
- <20170909041452.GA1084@fury>
- <20170909070558.GG2477@lahna.fi.intel.com>
- <20170911093955.GA123566@localhost.localdomain>
- <20170911094614.GO2477@lahna.fi.intel.com>
+From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Subject: keyboard backlight =?UTF-8?Q?max=5Fbrightness=20bug=20on=20Dell=20Latitud?=
+ =?UTF-8?Q?e=20E=36=34=31=30?=
+Date: Mon, 11 Sep 2017 23:41:43 -0700
+Message-ID: <20170911234143.669a95d04dbb6b53be537852cb8ecb8c.78944f3a28.wbe@email22.secureserver.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:54922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751004AbdIKVkU (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2017 17:40:20 -0400
-Content-Disposition: inline
-In-Reply-To: <20170911094614.GO2477@lahna.fi.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario.Limonciello@dell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com, yehezkelshb@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 11, 2017 at 12:46:14PM +0300, Mika Westerberg wrote:
-> On Mon, Sep 11, 2017 at 02:39:55AM -0700, Darren Hart wrote:
-> > Which device are you referring to? This attribute is bound to the device
-> > identified by the WMI GUID, and should be independent from the controller or any
-> > thunderbolt connected physical device.
-> 
-> I refer to "wdev->dev" whatever that is. That device has been created
-> long time before this driver is probed and thus userspace already got
-> the KOBJ_ADD uevent.
-> 
+Hi all,
 
-Ah yes, I see - at the time of device_register. Thanks Mika.
+Hans de Goede, one of the upower maintainers, suggested I alert you all
+to this bug:
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+https://bugs.freedesktop.org/show_bug.cgi?id=100041
+
+and the new one I filed via the kernel bugzilla:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=196913
+
+"keyboard backlight max_brightness value outside allowable range on Dell
+Latitude E6410 laptop"
+
+Please check it out at your earliest convenience.
+
+
+thanks,
+- Gabriel
