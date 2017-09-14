@@ -1,44 +1,48 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: Resizeable PCI BAR support V8
-Date: Thu, 14 Sep 2017 03:06:50 -0500
-Message-ID: <20170914080650.GA872@bhelgaas-glaptop.roam.corp.google.com>
-References: <1499698794-1718-1-git-send-email-deathsimple@vodafone.de>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
+Date: Thu, 14 Sep 2017 10:06:59 +0200
+Message-ID: <20170914080659.GL32278@pali>
+References: <20170911232527.669a95d04dbb6b53be537852cb8ecb8c.c30a078964.wbe@email22.secureserver.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:52776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751162AbdINIGw (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2017 04:06:52 -0400
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1499698794-1718-1-git-send-email-deathsimple@vodafone.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>
-Cc: linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+In-Reply-To: <20170911232527.669a95d04dbb6b53be537852cb8ecb8c.c30a078964.wbe@email22.secureserver.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 10, 2017 at 04:59:48PM +0200, Christian König wrote:
-> Hi everyone,
-> 
-> This is the eighth incarnation of this set of patches. It enables device
-> drivers to resize and most likely also relocate the PCI BAR of devices 
-> they manage to allow the CPU to access all of the device local memory at once.
-> 
-> This is very useful for GFX device drivers where the default PCI BAR is only
-> about 256MB in size for compatibility reasons, but the device easily have
-> multiple gigabyte of local memory.
-> 
-> Some changes since the last version:
-> 1. Rebased on Linus current master tree, going to rebase on 4.13-rc1 as soon as that is out.
-> 2. Some more documentation on how to use the new functionality in drivers.
-> 3. Only re-enable decoding when everything looks good.
-> 4. Rename the new amdgpu function to better match what it is doing.
-> 
-> Bjorn what's you'r feeling on getting this into 4.14?
+On Monday 11 September 2017 23:25:27 Gabriel M. Elder wrote:
+> <html><body><span style=3D"font-family:Verdana; color:#000; font-size:10p=
+t;"><div>Hi all,</div><div><br></div><div>Hans de Goede, one of the upower =
+maintainers, suggested I alert you all to this bug:</div><div><br></div><di=
+v><a href=3D"https://bugs.freedesktop.org/show_bug.cgi?id=3D100041" mce_hre=
+f=3D"https://bugs.freedesktop.org/show_bug.cgi?id=3D100041" title=3D"https:=
+//bugs.freedesktop.org/show_bug.cgi?id=3D100041" target=3D"_blank">https://=
+bugs.freedesktop.org/show_bug.cgi?id=3D100041</a><br></div><div><br></div><=
+div>and the new one I filed via the kernel bugzilla:</div><div><br></div><d=
+iv><a href=3D"https://bugzilla.kernel.org/show_bug.cgi?id=3D196913" mce_hre=
+f=3D"https://bugzilla.kernel.org/show_bug.cgi?id=3D196913" title=3D"https:/=
+/bugzilla.kernel.org/show_bug.cgi?id=3D196913" target=3D"_blank">https://bu=
+gzilla.kernel.org/show_bug.cgi?id=3D196913</a><br></div><div><br></div><div=
+>"<span id=3D"summary_container"><span id=3D"short_desc_nonedit_display">ke=
+yboard backlight max_brightness value outside allowable range on Dell Latit=
+ude E6410 laptop"</span></span></div><div><br></div><div>Please check it ou=
+t at your earliest convenience.</div><div><br></div><div>thanks,</div><div>=
+- Gabriel</div></span></body></html>
 
-This seems 99.9% done, but there were some kbuild issues that need to be
-resolved.  Or did I miss the resolution of those?
+Hi Gabriel, please avoid sending such html emails to mailing list as it
+is hard to read them and also you have a very big chance that email
+would be eaten by spam filter or other developers would completely
+ignore it...
 
-Bjorn
+To debug your problem, can you run smbios-keyboard-ctl tool from the
+libsmbios project? https://github.com/dell/libsmbios
+
+We would need output from --info parameter and also from --get-status.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
