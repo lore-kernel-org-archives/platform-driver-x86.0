@@ -1,38 +1,40 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] Add driver to force WMI Thunderbolt controller power
- status
-Date: Mon, 11 Sep 2017 23:44:58 +0200
-Message-ID: <20170911214458.GB128849@localhost.localdomain>
-References: <1504884191-16528-1-git-send-email-mario.limonciello@dell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1504884191-16528-1-git-send-email-mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Richard Hughes <hughsient@gmail.com>, Yehezkel Bernat <yehezkelshb@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v5 0/2] Introduce support for mlxreg mfd core driver
+Date: Thu, 14 Sep 2017 06:48:56 +0000
+Message-ID: <1505371738-128683-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org
+Cc: pavel@ucw.cz, devicetree@vger.kernel.org, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, jiri@resnulli.us, gregkh@linuxfoundation.org, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 08, 2017 at 10:23:11AM -0500, Mario Limonciello wrote:
-> Current implementations of Intel Thunderbolt controllers will go
-> into a low power mode when not in use.
-> 
-> Many machines containing these controllers also have a GPIO wired up
-> that can force the controller awake.  This is offered via a ACPI-WMI
-> interface intended to be manipulated by a userspace utility.
-> 
-> This mechanism is provided by Intel to OEMs to include in BIOS.
-> It uses an industry wide GUID that is populated in a separate _WDG
-> entry with no binary MOF.
-> 
-> This interface allows software such as fwupd to wake up thunderbolt
-> controllers to query the firmware version or flash new firmware.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+This patch adds support for the Mellanox BMC card equipped with the
+programmable devices controlling hardware.
+The support includes:
+- signal handling for chassis, ASIC, CPU events;
+- LED control;
+- exposing sysfs interface for reset control, reset monitoring and mux
+  selection for the access to remote devices at the host side.
+- device tree binding documentation;
 
-Queued for testing, thanks everyone.
+This patch depends on previously sent:
+[patch v3 1/3] platform/mellanox: Introduce Mellanox hardware
+ platform hotplug driver
+because it includes include/linux/platform_data/mlxreg.h from this patch.
+
+Vadim Pasternak (2):
+  mfd: Add Mellanox regmap core driver
+  dt-bindings: mfd: Add Device Tree bindings for Mellanox programmable
+    devices
+
+ .../bindings/mfd/mellanox,mlxreg-core.txt          | 165 ++++
+ MAINTAINERS                                        |   6 +
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/mlxreg-core.c                          | 843 +++++++++++++++++++++
+ 5 files changed, 1029 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core.txt
+ create mode 100644 drivers/mfd/mlxreg-core.c
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.1.4
