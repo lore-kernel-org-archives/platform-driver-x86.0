@@ -1,145 +1,72 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
-Date: Thu, 14 Sep 2017 16:33:57 +0200
-Message-ID: <CABFtUbQXBE+n+HV0cgMv0wLXuRkMqyp4J=Hf4BiBj8Hxc9eUaw@mail.gmail.com>
-References: <20170914063515.669a95d04dbb6b53be537852cb8ecb8c.39d3e774b5.wbe@email22.secureserver.net>
- <20170914135420.GO32278@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3] Add driver to force WMI Thunderbolt controller power
+ status
+Date: Thu, 14 Sep 2017 14:52:27 +0000
+Message-ID: <58820c0d563845659030881cd44cfe97@ausx13mpc120.AMER.DELL.COM>
+References: <1504884191-16528-1-git-send-email-mario.limonciello@dell.com>
+ <20170913172024.GA8782@wunner.de>
+ <27f4070678744d0f80761a95579b4cd3@ausx13mpc120.AMER.DELL.COM>
+ <20170914091416.GA28049@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f51.google.com ([209.85.215.51]:46166 "EHLO
-        mail-lf0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751255AbdINOd7 (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:9989 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751733AbdINOxr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2017 10:33:59 -0400
-In-Reply-To: <20170914135420.GO32278@pali>
+        Thu, 14 Sep 2017 10:53:47 -0400
+In-Reply-To: <20170914091416.GA28049@wunner.de>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: lukas@wunner.de
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hughsient@gmail.com, yehezkelshb@gmail.com, mika.westerberg@linux.intel.com
 
-2017-09-14 15:54 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
-> Adding Gabriele to thread, IIRC you have machine which uses
-> "supported keyboard light brightness levels"
-> Can you look at this bug, if your machine is affected by it too?
+> -----Original Message-----
+> From: Lukas Wunner [mailto:lukas@wunner.de]
+> Sent: Thursday, September 14, 2017 4:14 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: dvhart@infradead.org; linux-kernel@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; hughsient@gmail.com; yehezkelshb@gmail.com;
+> mika.westerberg@linux.intel.com
+> Subject: Re: [PATCH v3] Add driver to force WMI Thunderbolt controller po=
+wer
+> status
+>=20
+> On Thu, Sep 14, 2017 at 06:42:03AM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > > On Fri, Sep 08, 2017 at 10:23:11AM -0500, Mario Limonciello wrote:
+> > > > +static const struct wmi_device_id intel_wmi_thunderbolt_id_table[]=
+ =3D {
+> > > > +	{ .guid_string =3D INTEL_WMI_THUNDERBOLT_GUID },
+> > > > +	{ },
+> > > > +};
+> > >
+> > > I'm not familiar with WMI, but don't you need a MODULE_DEVICE_TABLE h=
+ere?
+> > > How does user space know which module to load upon receiving the ueve=
+nt?
+> >
+> > Some macros for WMI bus devices.
+> >
+> https://github.com/torvalds/linux/blob/e0f25a3f2d052e36ff67a9b4db835c3e27=
+e9
+> 50d8/include/linux/wmi.h#L55
+> > https://github.com/torvalds/linux/blob/master/include/linux/device.h#L1=
+487
+>=20
+> No, the init and exit hooks defined by this macro are executed
+> *after* the module has been loaded.  The question was, how does
+> the module get loaded in the first place?
+>=20
+> Looking at drivers/platform/x86/wmi.c:wmi_dev_uevent() it seems that
+> a modalias consisting of "wmi:" followed by the GUID is sent to udevd.
+> For udevd to then load the module, I suspect you need to add a
+> MODULE_DEVICE_TABLE(wmi, ...) to your driver.
 
-My keyboard has two brightness levels + off. The value of
-max_brightness is 2, as expected.
+Ah, you're looking for this code from the WMI bus driver:
+https://github.com/torvalds/linux/blob/master/drivers/platform/x86/wmi.c#L7=
+24
 
-Gabriele
-
-Yes, my laptop uses "supported keyboard light brightness levels".
->
-> Important parts in ouptput:
->
->> ... --info
->>  Supported Keyboard light brightness levels :  10
->
->> ... --get-status
->>  Current keyboard light level : 9
->
-> Gabriel, can you play with this tool, which values can be set via
-> --set-level=3D parameter? Is 10 accepted? --get-status can be used to
-> check if value was accepted.
->
-> On Thursday 14 September 2017 06:35:15 Gabriel M. Elder wrote:
->>
->> output from smbios-keyboard-ctl --info:
->>
->> Libsmbios version : 2.3.0
->> smbios-keyboard-ctl version : 2.3.0
->>
->>  Capabilities of KeyBoard Illumination on your system:
->> -------------------------------------------------------------------
->>  Supported USER Selectable Modes :
->>        Always OFF
->>        Auto: ALS- and input-activity-based On; input-activity based Off
->>        Auto: Input-activity-based On; input-activity based Off
->>
->>  Supported Keyboard illumination type :  Backlight
->>
->>  Supports Keyboard illumination on :
->>       Any Keystroke
->>       Touchpad activity
->>       Pointing stick
->>
->>  Can configure Keyboard illumination timeout unit in :
->>       Seconds
->>       Minutes
->>       Hours
->>
->>  Supported Keyboard light brightness levels :  10
->>
->>  Maximum acceptable seconds timeout value   :  255
->>
->>  Maximum acceptable minutes timeout value   :  255
->>
->>  Maximum acceptable hours timeout value     :  12
->>
->>  Maximum acceptable days timeout value      :  0
->>
->>
->> output from smbios-keyboard-ctl --get-status:
->>
->> Helper function to print current status of keyboard illumination
->>
->>  Current status of KeyBoard Illumination setting on your system:
->> -------------------------------------------------------------------
->>
->>  Configured mode state:
->>        Auto: Input-activity-based On; input-activity based Off
->>
->>  Your Keyboard will illumination on:
->>       Any Keystroke
->>       Touchpad activity
->>       Pointing stick
->>
->>  Keyboard illumination timeout has bee set at: 10  Seconds
->>
->>  Current setting of ALS value that turns the light on or off: 18
->>  Current ALS Reading : 16
->>  Current keyboard light level : 9
->>
->>
->> -------- Original Message --------
->> Subject: Re: keyboard backlight max_brightness bug on Dell Latitude
->> E6410
->> From: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> Date: Thu, September 14, 2017 3:06 am
->> To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
->> Cc: dvhart@infradead.org, andy@infradead.org,
->> platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
->>
->> On Monday 11 September 2017 23:25:27 Gabriel M. Elder wrote:
->> > Hi all,
->> > Hans de Goede, one of the upower maintainers, suggested I alert you al=
-l to this bug:
->> >
->> > https://bugs.freedesktop.org/show_bug.cgi?id=3D100041
->> >
->> > and the new one I filed via the kernel bugzilla:
->> >
->> > https://bugzilla.kernel.org/show_bug.cgi?id=3D196913
->> > "keyboard backlight max_brightness value outside allowable range on De=
-ll Latitude E6410 laptop"
->> >
->> > Please check it out at your earliest convenience.
->> >
->> > thanks,
->> > - Gabriel</html>
->>
->> Hi Gabriel, please avoid sending such html emails to mailing list as it
->> is hard to read them and also you have a very big chance that email
->> would be eaten by spam filter or other developers would completely
->> ignore it...
->>
->> To debug your problem, can you run smbios-keyboard-ctl tool from the
->> libsmbios project? https://github.com/dell/libsmbios
->>
->> We would need output from --info parameter and also from --get-status.
->>
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+That happens when the bus is initialized.
