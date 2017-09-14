@@ -1,23 +1,71 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
-Date: Thu, 14 Sep 2017 15:54:20 +0200
-Message-ID: <20170914135420.GO32278@pali>
-References: <20170914063515.669a95d04dbb6b53be537852cb8ecb8c.39d3e774b5.wbe@email22.secureserver.net>
+From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Subject: RE: keyboard backlight =?UTF-8?Q?max=5Fbrightness=20bug=20on=20Dell=20Lat?=
+ =?UTF-8?Q?itude=20E=36=34=31=30?=
+Date: Thu, 14 Sep 2017 07:32:12 -0700
+Message-ID: <20170914073212.669a95d04dbb6b53be537852cb8ecb8c.bb76a59c3e.wbe@email22.secureserver.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f49.google.com ([74.125.82.49]:43571 "EHLO
-        mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751133AbdINNyX (ORCPT
+Received: from p3plsmtp22-05-2.prod.phx3.secureserver.net ([68.178.252.62]:44355
+        "EHLO p3plwbeout22-05.prod.phx3.secureserver.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751553AbdINOco (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2017 09:54:23 -0400
-Content-Disposition: inline
-In-Reply-To: <20170914063515.669a95d04dbb6b53be537852cb8ecb8c.39d3e774b5.wbe@email22.secureserver.net>
+        Thu, 14 Sep 2017 10:32:44 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?UTF-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+
+
+I've also been updating
+https://bugzilla.kernel.org/show_bug.cgi?id=196913 btw.
+
+What source file is responsible for setting this; led-class.c?
+
+I would like to know, so I can tell it to use the correct value:
+max_brightness = supported_brightness_levels-1;  //
+!actual_max_brightness+1 :)
+
+
+# smbios-keyboard-ctl --set-level=10; echo $?
+
+Old Keyboard illumination level is: 9
+	  Set Trigger Failed. Failed to write config
+	 Error Return Code : cbRES1: 0x-2 cbRES2: 0x93512 cbRES3: 0xCFFFF 
+0
+
+# smbios-keyboard-ctl --get-status; echo $?
+Helper function to print current status of keyboard illumination
+
+ Current status of KeyBoard Illumination setting on your system: 
+-------------------------------------------------------------------
+
+ Configured mode state: 
+	 Auto: ALS- and input-activity-based On; input-activity based Off
+
+ Your Keyboard will illumination on: 
+	Any Keystroke
+	Touchpad activity
+
+ Keyboard illumination timeout has bee set at: 10  Seconds
+
+ Current setting of ALS value that turns the light on or off: 18
+ Current ALS Reading : 45
+ Current keyboard light level : 9
+0
+
+
+-------- Original Message --------
+Subject: Re: keyboard backlight max_brightness bug on Dell Latitude
+E6410
+From: Pali Rohár <pali.rohar@gmail.com>
+Date: Thu, September 14, 2017 8:54 am
+To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta
+<gabriele.mzt@gmail.com>
+Cc: dvhart@infradead.org, andy@infradead.org,
+platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Adding Gabriele to thread, IIRC you have machine which uses
 "supported keyboard light brightness levels"
@@ -26,10 +74,10 @@ Can you look at this bug, if your machine is affected by it too?
 Important parts in ouptput:
 
 > ... --info
->  Supported Keyboard light brightness levels :  10
+> Supported Keyboard light brightness levels : 10
 
 > ... --get-status
->  Current keyboard light level : 9
+> Current keyboard light level : 9
 
 Gabriel, can you play with this tool, which values can be set via
 --set-level= parameter? Is 10 accepted? --get-status can be used to
@@ -42,56 +90,56 @@ On Thursday 14 September 2017 06:35:15 Gabriel M. Elder wrote:
 > Libsmbios version : 2.3.0
 > smbios-keyboard-ctl version : 2.3.0
 > 
->  Capabilities of KeyBoard Illumination on your system: 
+> Capabilities of KeyBoard Illumination on your system: 
 > -------------------------------------------------------------------
->  Supported USER Selectable Modes : 
-> 	 Always OFF
-> 	 Auto: ALS- and input-activity-based On; input-activity based Off
-> 	 Auto: Input-activity-based On; input-activity based Off
+> Supported USER Selectable Modes : 
+> Always OFF
+> Auto: ALS- and input-activity-based On; input-activity based Off
+> Auto: Input-activity-based On; input-activity based Off
 > 
->  Supported Keyboard illumination type :  Backlight
+> Supported Keyboard illumination type : Backlight
 > 
->  Supports Keyboard illumination on : 
-> 	Any Keystroke
-> 	Touchpad activity
-> 	Pointing stick
+> Supports Keyboard illumination on : 
+> Any Keystroke
+> Touchpad activity
+> Pointing stick
 > 
->  Can configure Keyboard illumination timeout unit in : 
-> 	Seconds
-> 	Minutes
-> 	Hours
+> Can configure Keyboard illumination timeout unit in : 
+> Seconds
+> Minutes
+> Hours
 > 
->  Supported Keyboard light brightness levels :  10
+> Supported Keyboard light brightness levels : 10
 > 
->  Maximum acceptable seconds timeout value   :  255
+> Maximum acceptable seconds timeout value : 255
 > 
->  Maximum acceptable minutes timeout value   :  255
+> Maximum acceptable minutes timeout value : 255
 > 
->  Maximum acceptable hours timeout value     :  12
+> Maximum acceptable hours timeout value : 12
 > 
->  Maximum acceptable days timeout value      :  0
+> Maximum acceptable days timeout value : 0
 > 
 > 
 > output from smbios-keyboard-ctl --get-status:
 > 
 > Helper function to print current status of keyboard illumination
 > 
->  Current status of KeyBoard Illumination setting on your system: 
+> Current status of KeyBoard Illumination setting on your system: 
 > -------------------------------------------------------------------
 > 
->  Configured mode state: 
-> 	 Auto: Input-activity-based On; input-activity based Off
+> Configured mode state: 
+> Auto: Input-activity-based On; input-activity based Off
 > 
->  Your Keyboard will illumination on: 
-> 	Any Keystroke
-> 	Touchpad activity
-> 	Pointing stick
+> Your Keyboard will illumination on: 
+> Any Keystroke
+> Touchpad activity
+> Pointing stick
 > 
->  Keyboard illumination timeout has bee set at: 10  Seconds
+> Keyboard illumination timeout has bee set at: 10 Seconds
 > 
->  Current setting of ALS value that turns the light on or off: 18
->  Current ALS Reading : 16
->  Current keyboard light level : 9
+> Current setting of ALS value that turns the light on or off: 18
+> Current ALS Reading : 16
+> Current keyboard light level : 9
 > 
 > 
 > -------- Original Message --------
