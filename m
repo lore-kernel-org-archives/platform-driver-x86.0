@@ -1,23 +1,232 @@
-From: contacto@turinews.org
-Subject: It worked for me, so it'll do the same for you: first FDA approved
- brain stimulator
-Date: Sat, 16 Sep 2017 01:53:12 +0200
-Message-ID: <D9CFA97B-AA3E-BB5C-B64A-93CB9868B1B6@turinews.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH] thinkpad_acpi: Implement tablet mode resolving using
+ GMMS method
+Date: Sat, 16 Sep 2017 08:08:32 -0300
+Message-ID: <20170916110832.pca4b3ilhv77s2xm@khazad-dum.debian.net>
+References: <20170915132049.32317-1-bberg@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.wcubo.cl ([45.55.228.190]:33583 "EHLO mail.wcubo.cl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751201AbdIPAWO (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:59813 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751185AbdIPLIi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Sep 2017 20:22:14 -0400
+        Sat, 16 Sep 2017 07:08:38 -0400
+Content-Disposition: inline
+In-Reply-To: <20170915132049.32317-1-bberg@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: polak@insightinfo.com, plugstay@ig.com.br, pmittelman@cscgw.org, pizzaman101@msn.com, pl@comune.sangiorgiodelsannio.bn.it, platform-driver-x86@vger.kernel.org
+To: Benjamin Berg <bberg@redhat.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter FP1 Zhang <zhangfp1@lenovo.com>, Lyude Paul <lyude@redhat.com>
 
-VGlyZWQgb2YgZmVlbGluZyB0aXJlZD8NCkZpcnN0IElRIHN0aW11bGF0b3JzIHRoYXQgZG9uJ3Qg
-bWFrZSBpbmZsYXRlZCBzdGF0ZW1lbnRzIGFib3V0IGl0cyBiZW5lZml0cywNCmZpcnN0IGludGVs
-bGlnZW5jZSB2aXRhbWlucyB0aGF0IGFjdHVhbGx5IHN0YXRlIHRoZSBmYWN0IGJhY2tlZCB1cCBi
-eSBjbGluaWNhbCByZXNlYXJjaC4NCkdldCBzbWFydCBhbmQgc3RheSBvbiB0b3Agb2YgeW91ciBn
-YW1lIQ0KaHR0cDovL2dycy50aGF0d2hpdGVob3VzZS54eXovbGhhZ2ptZQ0K
+On Fri, 15 Sep 2017, Benjamin Berg wrote:
+> Many thinkpad laptops and convertibles provide the GMMS method to
+> resolve how far the laptop has been opened and whether it has been
+> converted into tablet mode. This allows reporting a more precise tablet
+> mode state to userspace.
+> 
+> The current implementation only reports a summarized tablet mode state
+> which is triggered as soon as the input devices become unusable as they
+> are folded away from the display.
+> 
+> This will work on all models where the CMMD method was used previously and
+> it may also work in other cases.
+> 
+> Thanks to Peter Zhang of Lenovo for providing information on how to use the
+> GMMS method to query the tablet mode.
+> 
+> Signed-off-by: Benjamin Berg <bberg@redhat.com>
+> Cc: Peter FP1 Zhang <zhangfp1@lenovo.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+
+Looks good.
+
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+---
+  PS: please send me the documentation for CMMD/GMMS off-list.
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 132 +++++++++++++++++++++++++++++++----
+>  1 file changed, 119 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 2242d6035d9e..91fab1a13a6d 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -310,8 +310,7 @@ static struct {
+>  	enum {
+>  		TP_HOTKEY_TABLET_NONE = 0,
+>  		TP_HOTKEY_TABLET_USES_MHKG,
+> -		/* X1 Yoga 2016, seen on BIOS N1FET44W */
+> -		TP_HOTKEY_TABLET_USES_CMMD,
+> +		TP_HOTKEY_TABLET_USES_GMMS,
+>  	} hotkey_tablet;
+>  	u32 kbdlight:1;
+>  	u32 light:1;
+> @@ -2044,8 +2043,28 @@ static void hotkey_poll_setup(const bool may_warn);
+>  
+>  /* HKEY.MHKG() return bits */
+>  #define TP_HOTKEY_TABLET_MASK (1 << 3)
+> -/* ThinkPad X1 Yoga (2016) */
+> -#define TP_EC_CMMD_TABLET_MODE 0x6
+> +enum {
+> +	TP_ACPI_MULTI_MODE_INVALID	= 0,
+> +	TP_ACPI_MULTI_MODE_UNKNOWN	= 1 << 0,
+> +	TP_ACPI_MULTI_MODE_LAPTOP	= 1 << 1,
+> +	TP_ACPI_MULTI_MODE_TABLET	= 1 << 2,
+> +	TP_ACPI_MULTI_MODE_FLAT		= 1 << 3,
+> +	TP_ACPI_MULTI_MODE_STAND	= 1 << 4,
+> +	TP_ACPI_MULTI_MODE_TENT		= 1 << 5,
+> +	TP_ACPI_MULTI_MODE_STAND_TENT	= 1 << 6,
+> +};
+> +
+> +enum {
+> +	/* The following modes are considered tablet mode for the purpose of
+> +	 * reporting the status to userspace. i.e. in all these modes it makes
+> +	 * sense to disable the laptop input devices such as touchpad and
+> +	 * keyboard.
+> +	 */
+> +	TP_ACPI_MULTI_MODE_TABLET_LIKE	= TP_ACPI_MULTI_MODE_TABLET |
+> +					  TP_ACPI_MULTI_MODE_STAND |
+> +					  TP_ACPI_MULTI_MODE_TENT |
+> +					  TP_ACPI_MULTI_MODE_STAND_TENT,
+> +};
+>  
+>  static int hotkey_get_wlsw(void)
+>  {
+> @@ -2066,6 +2085,90 @@ static int hotkey_get_wlsw(void)
+>  	return (status) ? TPACPI_RFK_RADIO_ON : TPACPI_RFK_RADIO_OFF;
+>  }
+>  
+> +static int hotkey_gmms_get_tablet_mode(int s, int *has_tablet_mode)
+> +{
+> +	int type = (s >> 16) & 0xffff;
+> +	int value = s & 0xffff;
+> +	int mode = TP_ACPI_MULTI_MODE_INVALID;
+> +	int valid_modes = 0;
+> +
+> +	if (has_tablet_mode)
+> +		*has_tablet_mode = 0;
+> +
+> +	switch (type) {
+> +	case 1:
+> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> +			      TP_ACPI_MULTI_MODE_TABLET |
+> +			      TP_ACPI_MULTI_MODE_STAND_TENT;
+> +		break;
+> +	case 2:
+> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> +			      TP_ACPI_MULTI_MODE_FLAT |
+> +			      TP_ACPI_MULTI_MODE_TABLET |
+> +			      TP_ACPI_MULTI_MODE_STAND |
+> +			      TP_ACPI_MULTI_MODE_TENT;
+> +		break;
+> +	case 3:
+> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> +			      TP_ACPI_MULTI_MODE_FLAT;
+> +		break;
+> +	case 4:
+> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> +			      TP_ACPI_MULTI_MODE_TABLET |
+> +			      TP_ACPI_MULTI_MODE_STAND |
+> +			      TP_ACPI_MULTI_MODE_TENT;
+> +		break;
+> +	case 5:
+> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> +			      TP_ACPI_MULTI_MODE_FLAT |
+> +			      TP_ACPI_MULTI_MODE_TABLET |
+> +			      TP_ACPI_MULTI_MODE_STAND |
+> +			      TP_ACPI_MULTI_MODE_TENT;
+> +		break;
+> +	default:
+> +		pr_err("Unknown multi mode status type %d with value 0x%04X, please report this to %s\n",
+> +		       type, value, TPACPI_MAIL);
+> +		return 0;
+> +	}
+> +
+> +	if (has_tablet_mode && (valid_modes & TP_ACPI_MULTI_MODE_TABLET_LIKE))
+> +		*has_tablet_mode = 1;
+> +
+> +	switch (value) {
+> +	case 1:
+> +		mode = TP_ACPI_MULTI_MODE_LAPTOP;
+> +		break;
+> +	case 2:
+> +		mode = TP_ACPI_MULTI_MODE_FLAT;
+> +		break;
+> +	case 3:
+> +		mode = TP_ACPI_MULTI_MODE_TABLET;
+> +		break;
+> +	case 4:
+> +		if (type == 1)
+> +			mode = TP_ACPI_MULTI_MODE_STAND_TENT;
+> +		else
+> +			mode = TP_ACPI_MULTI_MODE_STAND;
+> +		break;
+> +	case 5:
+> +		mode = TP_ACPI_MULTI_MODE_TENT;
+> +		break;
+> +	default:
+> +		if (type == 5 && value == 0xffff) {
+> +			pr_warn("Multi mode status is undetected, assuming laptop\n");
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (!(mode & valid_modes)) {
+> +		pr_err("Unknown/reserved multi mode value 0x%04X for type %d, please report this to %s\n",
+> +		       value, type, TPACPI_MAIL);
+> +		return 0;
+> +	}
+> +
+> +	return !!(mode & TP_ACPI_MULTI_MODE_TABLET_LIKE);
+> +}
+> +
+>  static int hotkey_get_tablet_mode(int *status)
+>  {
+>  	int s;
+> @@ -2077,11 +2180,11 @@ static int hotkey_get_tablet_mode(int *status)
+>  
+>  		*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
+>  		break;
+> -	case TP_HOTKEY_TABLET_USES_CMMD:
+> -		if (!acpi_evalf(ec_handle, &s, "CMMD", "d"))
+> +	case TP_HOTKEY_TABLET_USES_GMMS:
+> +		if (!acpi_evalf(hkey_handle, &s, "GMMS", "dd", 0))
+>  			return -EIO;
+>  
+> -		*status = (s == TP_EC_CMMD_TABLET_MODE);
+> +		*status = hotkey_gmms_get_tablet_mode(s, NULL);
+>  		break;
+>  	default:
+>  		break;
+> @@ -3113,16 +3216,19 @@ static int hotkey_init_tablet_mode(void)
+>  	int in_tablet_mode = 0, res;
+>  	char *type = NULL;
+>  
+> -	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
+> +	if (acpi_evalf(hkey_handle, &res, "GMMS", "qdd", 0)) {
+> +		int has_tablet_mode;
+> +
+> +		in_tablet_mode = hotkey_gmms_get_tablet_mode(res,
+> +							     &has_tablet_mode);
+> +		if (has_tablet_mode)
+> +			tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_GMMS;
+> +		type = "GMMS";
+> +	} else if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
+>  		/* For X41t, X60t, X61t Tablets... */
+>  		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_MHKG;
+>  		in_tablet_mode = !!(res & TP_HOTKEY_TABLET_MASK);
+>  		type = "MHKG";
+> -	} else if (acpi_evalf(ec_handle, &res, "CMMD", "qd")) {
+> -		/* For X1 Yoga (2016) */
+> -		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_CMMD;
+> -		in_tablet_mode = res == TP_EC_CMMD_TABLET_MODE;
+> -		type = "CMMD";
+>  	}
+>  
+>  	if (!tp_features.hotkey_tablet)
+
+-- 
+  Henrique Holschuh
