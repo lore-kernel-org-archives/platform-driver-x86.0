@@ -1,97 +1,69 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: intel-vbtn: match power button on press rather than release
-Date: Sat, 16 Sep 2017 15:45:38 +0200
-Message-ID: <201709161545.39058@pali>
-References: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
+From: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?=
+        <jerome.debretagne@gmail.com>
+Subject: [PATCH] platform/x86: intel-hid: Power button suspend on Dell Latitude 7275
+Date: Mon, 18 Sep 2017 00:57:12 +0200
+Message-ID: <20170917225712.12136-1-jerome.debretagne@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2168745.4ung4HuQjD";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:35223 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751220AbdIPNpm (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Sep 2017 09:45:42 -0400
-In-Reply-To: <1501866006-24811-1-git-send-email-mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>, dvhart@infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: AceLan Kao <acelan.kao@canonical.com>, linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart2168745.4ung4HuQjD
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 
-On Friday 04 August 2017 19:00:06 Mario Limonciello wrote:
-> This fixes a problem where the system gets stuck in a loop
-> unable to wakeup via power button in s2idle.
->=20
-> The problem happens because:
->  - press power button:
->    - system emits 0xc0 (power press), event ignored
->    - system emits 0xc1 (power release), event processed,
->      emited as KEY_POWER
->    - set wakeup_mode to true
->    - system goes to s2idle
->  - press power button
->    - system emits 0xc0 (power press), wakeup_mode is true,
->      system wakes
->    - system emits 0xc1 (power release), event processed,
->      emited as KEY_POWER
->    - system goes to s2idle again
->=20
-> To avoid this situation, process the presses (which matches what
-> intel-hid does too).
->=20
-> Verified on an Dell XPS 9365
->=20
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  drivers/platform/x86/intel-vbtn.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel-vbtn.c
-> b/drivers/platform/x86/intel-vbtn.c index 61f1063..4809267 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -36,8 +36,8 @@ static const struct acpi_device_id intel_vbtn_ids[]
-> =3D {
->=20
->  /* In theory, these are HID usages. */
->  static const struct key_entry intel_vbtn_keymap[] =3D {
-> -	{ KE_IGNORE, 0xC0, { KEY_POWER } },	/* power key press */
-> -	{ KE_KEY, 0xC1, { KEY_POWER } },	/* power key release */
-> +	{ KE_KEY, 0xC0, { KEY_POWER } },	/* power key press */
-> +	{ KE_IGNORE, 0xC1, { KEY_POWER } },	/* power key release */
->  	{ KE_KEY, 0xC4, { KEY_VOLUMEUP } },		/* volume-up key press */
->  	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release=20
-*/
->  	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+On Dell Latitude 7275 the 5-button array is not exposed in the
+ACPI tables, but still notifies are sent to the Intel HID device
+object (device ID INT33D5) in response to power button actions.
+They were ignored as the intel-hid driver was not prepared to
+take care of them until recently.
 
-Hello, maybe a stupid question, but why to not report both events "key=20
-pressed" and "key released" to userspace? IIRC kernel input layer can=20
-distinguish between these two type of events. But in intel-vbtn.c source=20
-code I see that all "release" ACPI events are ignored and just "press"=20
-are processed.
+Power button wakeup from suspend-to-idle was added in:
+635173a17b03 ("intel-hid: Wake up Dell Latitude 7275 from
+suspend-to-idle"). However power button suspend doesn't work
+yet on this platform so it would be good to add it also.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+On the affected platform (for which priv->array is NULL), add
+a new upfront check against the power button press notification
+(0xCE) to notify_handler(), outside the wakeup mode this time,
+which allows to report the power button press event and
+trigger the suspend. Also catch and ignore the corresponding
+power button release notification (0xCF) to stop it from being
+reported as an "unknown event" in the logs.
 
---nextPart2168745.4ung4HuQjD
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=196115
+Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+---
+ drivers/platform/x86/intel-hid.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlm9KwMACgkQi/DJPQPkQ1I/ywCgsSDL6U10qql0ZQnOSk+sI8HQ
-SUcAn3ZBMMD5LtR8GPIuqhavWwG36SyV
-=0spM
------END PGP SIGNATURE-----
-
---nextPart2168745.4ung4HuQjD--
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index a782c78e7c63..b19f8dcf9d8c 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -226,6 +226,22 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 		return;
+ 	}
+ 
++	/*
++	 * Needed for suspend to work on some platforms that don't expose
++	 * the 5-button array, but still send notifies with power button
++	 * event code to this device object on power button actions.
++	 *
++	 * Report the power button press; catch and ignore the button release.
++	 */
++	if (!priv->array) {
++		if (event == 0xce) {
++			input_report_key(priv->input_dev, KEY_POWER, 1);
++			input_sync(priv->input_dev);
++			return;
++		} else if (event == 0xcf)
++			return;
++	}
++
+ 	/* 0xC0 is for HID events, other values are for 5 button array */
+ 	if (event != 0xc0) {
+ 		if (!priv->array ||
