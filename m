@@ -1,53 +1,44 @@
-From: Jonathan Woithe <jwoithe@just42.net>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
  not presnt
-Date: Tue, 19 Sep 2017 13:51:50 +0930
-Message-ID: <20170919042150.GD10399@marvin.atrad.com.au>
+Date: Tue, 19 Sep 2017 06:42:24 +0200
+Message-ID: <20170919044224.GA10213@kmp-mobile.hq.kempniu.pl>
 References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
  <20170919040648.GA8426@kmp-mobile.hq.kempniu.pl>
+ <20170919042150.GD10399@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:39378 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750765AbdISEfM (ORCPT
+Received: from mail-lf0-f47.google.com ([209.85.215.47]:45317 "EHLO
+        mail-lf0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750876AbdISEm2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2017 00:35:12 -0400
+        Tue, 19 Sep 2017 00:42:28 -0400
+Received: by mail-lf0-f47.google.com with SMTP id d17so2483384lfe.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2017 21:42:28 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <20170919040648.GA8426@kmp-mobile.hq.kempniu.pl>
+In-Reply-To: <20170919042150.GD10399@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
+To: Jonathan Woithe <jwoithe@just42.net>
 Cc: Ville Syrjala <ville.syrjala@linux.intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-Hi Michal
-
-On Tue, Sep 19, 2017 at 06:06:48AM +0200, Micha?? K??pie?? wrote:
-> > My Fujitsu-Siemens Lifebook S6120 doesn't have the FUJ02E3 device,
-> > but it does have FUJ02B1. That means we do register the backlight
-> > device (and it even seems to work), but the code will oops as soon
-> > as we try to set the backlight brightness because it's trying to
-> > call call_fext_func() with a NULL device. Let's just skip those
-> > function calls when the FUJ02E3 device is not present.
+> > I need to refresh my memory a bit and think about next steps.  I still
+> > have one more cleanup series queued that is worth posting and I also
+> > need to fix radio LED detection.  My spare time is still very limited,
+> > but I will do my best to post something soon.
 > 
-> Oh, the irony...  I have literally just sat down to dust off the patch
-> series I have had queued for the past couple of months which makes the
-> driver for FUJ02B1 a separate module depending on the FUJ02E3 driver.
-> Then I saw your email and it is now clear that such a dependency is
-> bogus.  AFAIR, until now everyone involved was expecting the FUJ02E3
-> ACPI device to be present on all Fujitsu laptops.
+> In the meantime, I think we ought to consider pushing the proposed patch in
+> order to restore functionality for the S6120 - as it stands the code oopses,
+> which isn't great.  Is there any reason not to do so?
 
-Yes, this was the general concensus (although admittedly it was based on a
-relatively small sample of Fujitsu models).
+It might only be worth considering to check whether device is NULL
+inside call_fext_func() in order to prevent any further issues like this
+in the future.  However, for now bl_update_status() is the only place in
+fujitsu-laptop using the fext module-wide variable, so the patch is okay
+as it is, too.
 
-> I need to refresh my memory a bit and think about next steps.  I still
-> have one more cleanup series queued that is worth posting and I also
-> need to fix radio LED detection.  My spare time is still very limited,
-> but I will do my best to post something soon.
-
-In the meantime, I think we ought to consider pushing the proposed patch in
-order to restore functionality for the S6120 - as it stands the code oopses,
-which isn't great.  Is there any reason not to do so?
-
-Regards
-  jonathan
+-- 
+Best regards,
+Michał Kępień
