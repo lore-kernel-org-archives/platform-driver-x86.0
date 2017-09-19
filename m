@@ -1,109 +1,46 @@
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?=
-        <jerome.debretagne@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: Power button suspend on Dell
- Latitude 7275
-Date: Tue, 19 Sep 2017 00:40:48 +0200
-Message-ID: <CA+kEDGGv3twZP4od16bPHjW8-S3PHs=SpQZEF1tqr5M4cBpzFQ@mail.gmail.com>
-References: <20170917225712.12136-1-jerome.debretagne@gmail.com> <4b5c673c2858470a8b6d0af43a2cd250@ausx13mpc120.AMER.DELL.COM>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
+ not presnt
+Date: Tue, 19 Sep 2017 06:06:48 +0200
+Message-ID: <20170919040648.GA8426@kmp-mobile.hq.kempniu.pl>
+References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-io0-f196.google.com ([209.85.223.196]:34860 "EHLO
-        mail-io0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750783AbdIRWla (ORCPT
+Received: from mail-lf0-f48.google.com ([209.85.215.48]:53733 "EHLO
+        mail-lf0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750713AbdISEGx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2017 18:41:30 -0400
-In-Reply-To: <4b5c673c2858470a8b6d0af43a2cd250@ausx13mpc120.AMER.DELL.COM>
+        Tue, 19 Sep 2017 00:06:53 -0400
+Received: by mail-lf0-f48.google.com with SMTP id k9so2417341lfe.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2017 21:06:52 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alex Hung <alex.hung@canonical.com>
+To: Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-2017-09-18 23:29 GMT+02:00  <Mario.Limonciello@dell.com>:
->> -----Original Message-----
->> From: J=C3=A9r=C3=B4me de Bretagne [mailto:jerome.debretagne@gmail.com]
->> Sent: Sunday, September 17, 2017 5:57 PM
->> To: platform-driver-x86@vger.kernel.org
->> Cc: Darren Hart <dvhart@infradead.org>; LKML <linux-kernel@vger.kernel.o=
-rg>;
->> Linux ACPI <linux-acpi@vger.kernel.org>; Rafael J. Wysocki <rjw@rjwysock=
-i.net>;
->> Andy Shevchenko <andy.shevchenko@gmail.com>; Limonciello, Mario
->> <Mario_Limonciello@Dell.com>; Alex Hung <alex.hung@canonical.com>
->> Subject: [PATCH] platform/x86: intel-hid: Power button suspend on Dell L=
-atitude
->> 7275
->>
->> From: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
->>
->> On Dell Latitude 7275 the 5-button array is not exposed in the
->> ACPI tables, but still notifies are sent to the Intel HID device
->> object (device ID INT33D5) in response to power button actions.
->> They were ignored as the intel-hid driver was not prepared to
->> take care of them until recently.
->>
->> Power button wakeup from suspend-to-idle was added in:
->> 635173a17b03 ("intel-hid: Wake up Dell Latitude 7275 from
->> suspend-to-idle"). However power button suspend doesn't work
->> yet on this platform so it would be good to add it also.
->>
->> On the affected platform (for which priv->array is NULL), add
->> a new upfront check against the power button press notification
->> (0xCE) to notify_handler(), outside the wakeup mode this time,
->> which allows to report the power button press event and
->> trigger the suspend. Also catch and ignore the corresponding
->> power button release notification (0xCF) to stop it from being
->> reported as an "unknown event" in the logs.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D196115
->> Tested-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
->> Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com=
->
->> ---
->>  drivers/platform/x86/intel-hid.c | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/int=
-el-hid.c
->> index a782c78e7c63..b19f8dcf9d8c 100644
->> --- a/drivers/platform/x86/intel-hid.c
->> +++ b/drivers/platform/x86/intel-hid.c
->> @@ -226,6 +226,22 @@ static void notify_handler(acpi_handle handle, u32 =
-event,
->> void *context)
->>               return;
->>       }
->>
->> +     /*
->> +      * Needed for suspend to work on some platforms that don't expose
->> +      * the 5-button array, but still send notifies with power button
->> +      * event code to this device object on power button actions.
->> +      *
->> +      * Report the power button press; catch and ignore the button rele=
-ase.
->> +      */
->> +     if (!priv->array) {
->> +             if (event =3D=3D 0xce) {
->> +                     input_report_key(priv->input_dev, KEY_POWER, 1);
->> +                     input_sync(priv->input_dev);
->> +                     return;
->> +             } else if (event =3D=3D 0xcf)
->> +                     return;
->> +     }
->> +
->>       /* 0xC0 is for HID events, other values are for 5 button array */
->>       if (event !=3D 0xc0) {
->>               if (!priv->array ||
->
-> LGTM, it's improved from what you posted to that bug already.
->
-> Acked-By: Mario Limonciello <mario.limonciello@dell.com>
+> My Fujitsu-Siemens Lifebook S6120 doesn't have the FUJ02E3 device,
+> but it does have FUJ02B1. That means we do register the backlight
+> device (and it even seems to work), but the code will oops as soon
+> as we try to set the backlight brightness because it's trying to
+> call call_fext_func() with a NULL device. Let's just skip those
+> function calls when the FUJ02E3 device is not present.
 
-Thanks Mario.
+Oh, the irony...  I have literally just sat down to dust off the patch
+series I have had queued for the past couple of months which makes the
+driver for FUJ02B1 a separate module depending on the FUJ02E3 driver.
+Then I saw your email and it is now clear that such a dependency is
+bogus.  AFAIR, until now everyone involved was expecting the FUJ02E3
+ACPI device to be present on all Fujitsu laptops.
 
-In fact, I updated my initial fix proposal on the 12th in [1] and
-this patch matches exactly the updated version. You didn't receive
-the update notification from Bugzilla?
+I need to refresh my memory a bit and think about next steps.  I still
+have one more cleanup series queued that is worth posting and I also
+need to fix radio LED detection.  My spare time is still very limited,
+but I will do my best to post something soon.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D196115#c12
+-- 
+Best regards,
+Michał Kępień
