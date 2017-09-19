@@ -1,38 +1,60 @@
 From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: NULL pointer dereference in call_fext_func [fujitsu_laptop]
-Date: Tue, 19 Sep 2017 17:42:41 +0930
-Message-ID: <20170919081241.GF10399@marvin.atrad.com.au>
-References: <541b9a7a-2224-9b81-aef3-3f06491f91e3@suse.cz>
- <CAHp75Vd=FnWaYg-gKoQO4p8UP3VVhOT9cQ-B-3b20u2KJBRDWQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
+ not presnt
+Date: Tue, 19 Sep 2017 17:50:47 +0930
+Message-ID: <20170919082047.GG10399@marvin.atrad.com.au>
+References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
+ <20170919040648.GA8426@kmp-mobile.hq.kempniu.pl>
+ <20170919042150.GD10399@marvin.atrad.com.au>
+ <20170919044224.GA10213@kmp-mobile.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:39608 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:39640 "EHLO
         server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751283AbdISINW (ORCPT
+        with ESMTP id S1750713AbdISIV1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2017 04:13:22 -0400
+        Tue, 19 Sep 2017 04:21:27 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd=FnWaYg-gKoQO4p8UP3VVhOT9cQ-B-3b20u2KJBRDWQ@mail.gmail.com>
+In-Reply-To: <20170919044224.GA10213@kmp-mobile.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jiri Slaby <jslaby@suse.cz>, Micha?? K??pie?? <kernel@kempniu.pl>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Ville Syrjala <ville.syrjala@linux.intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On Tue, Sep 19, 2017 at 11:07:29AM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 19, 2017 at 10:56 AM, Jiri Slaby <jslaby@suse.cz> wrote:
-> > we have this report from 4.13.1:
-> > BUG: unable to handle kernel NULL pointer dereference at 00000004
-> > IP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
-> > *pdpt = 0000000035e79001 *pde = 0000000000000000
+On Tue, Sep 19, 2017 at 06:42:24AM +0200, Micha?? K??pie?? wrote:
+> > > I need to refresh my memory a bit and think about next steps.  I still
+> > > have one more cleanup series queued that is worth posting and I also
+> > > need to fix radio LED detection.  My spare time is still very limited,
+> > > but I will do my best to post something soon.
+> > 
+> > In the meantime, I think we ought to consider pushing the proposed patch in
+> > order to restore functionality for the S6120 - as it stands the code oopses,
+> > which isn't great.  Is there any reason not to do so?
 > 
-> Thanks for report.
-> 
-> Isn't it a duplicate of [1]? If so, perhaps you may continue that thread.
-> [1]: https://www.spinics.net/lists/platform-driver-x86/msg12834.html
+> It might only be worth considering to check whether device is NULL
+> inside call_fext_func() in order to prevent any further issues like this
+> in the future.  However, for now bl_update_status() is the only place in
+> fujitsu-laptop using the fext module-wide variable, so the patch is okay
+> as it is, too.
 
-Yes, it is a duplicate of [1].  I agree that discussion should continue in
-that earlier thread.
+I like the idea of addressing this locally in bl_update_status() as per the
+suggested patch.  That may make further cleanup work easier since the module
+wide variable was something which was to be possibly removed (although this
+S6120 may force a rethink of these plans as you mentioned earlier).  Having
+said that, guarding against further bugs like this is tempting.
+
+Since the proposed fix addresses the problem I'm happy for it to be pushed
+out as is:
+
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+
+That will at least stop the oops in the interim while the remaining clean up
+patch is prepared.  Addressing this problem permanently could be something
+that's rolled into that clean up work if it is deemed significant enough.
+
+Darren, Andy: can we push this fix?  It is probably something which should
+go to -stable too.
 
 Regards
   jonathan
