@@ -1,48 +1,38 @@
 From: Jonathan Woithe <jwoithe@just42.net>
 Subject: Re: NULL pointer dereference in call_fext_func [fujitsu_laptop]
-Date: Tue, 19 Sep 2017 17:40:38 +0930
-Message-ID: <20170919081038.GE10399@marvin.atrad.com.au>
+Date: Tue, 19 Sep 2017 17:42:41 +0930
+Message-ID: <20170919081241.GF10399@marvin.atrad.com.au>
 References: <541b9a7a-2224-9b81-aef3-3f06491f91e3@suse.cz>
+ <CAHp75Vd=FnWaYg-gKoQO4p8UP3VVhOT9cQ-B-3b20u2KJBRDWQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:39598 "EHLO
+Received: from server.atrad.com.au ([150.101.241.2]:39608 "EHLO
         server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751550AbdISILa (ORCPT
+        with ESMTP id S1751283AbdISINW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2017 04:11:30 -0400
+        Tue, 19 Sep 2017 04:13:22 -0400
 Content-Disposition: inline
-In-Reply-To: <541b9a7a-2224-9b81-aef3-3f06491f91e3@suse.cz>
+In-Reply-To: <CAHp75Vd=FnWaYg-gKoQO4p8UP3VVhOT9cQ-B-3b20u2KJBRDWQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jiri Slaby <jslaby@suse.cz>
-Cc: kernel@kempniu.pl, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, Linux kernel mailing list <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jiri Slaby <jslaby@suse.cz>, Micha?? K??pie?? <kernel@kempniu.pl>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>
 
-On Tue, Sep 19, 2017 at 09:56:47AM +0200, Jiri Slaby wrote:
-> we have this report from 4.13.1:
-> BUG: unable to handle kernel NULL pointer dereference at 00000004
-> IP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
-> *pdpt = 0000000035e79001 *pde = 0000000000000000
-> :
-> It looks like fext is NULL, but bl_update_status passes it down to
-> call_fext_func which obviously blows up.
+On Tue, Sep 19, 2017 at 11:07:29AM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 19, 2017 at 10:56 AM, Jiri Slaby <jslaby@suse.cz> wrote:
+> > we have this report from 4.13.1:
+> > BUG: unable to handle kernel NULL pointer dereference at 00000004
+> > IP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
+> > *pdpt = 0000000035e79001 *pde = 0000000000000000
 > 
-> This was originally reported here:
-> https://bugzilla.suse.com/show_bug.cgi?id=1058814
+> Thanks for report.
+> 
+> Isn't it a duplicate of [1]? If so, perhaps you may continue that thread.
+> [1]: https://www.spinics.net/lists/platform-driver-x86/msg12834.html
 
-Thanks for the report.
-
-This issue is already being discussed.  See the platform drivers thread
-"[PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is not
-presnt".
-
-> Any ideas?
-
-Until the above post to platform drivers it was thought that all Fujitsu
-laptops had FUJ02E3 since this was what was observed on all models we had
-access to.
-
-An interim patch is under consideration.
+Yes, it is a duplicate of [1].  I agree that discussion should continue in
+that earlier thread.
 
 Regards
   jonathan
