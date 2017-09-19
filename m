@@ -1,44 +1,78 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
- not presnt
-Date: Tue, 19 Sep 2017 06:42:24 +0200
-Message-ID: <20170919044224.GA10213@kmp-mobile.hq.kempniu.pl>
-References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
- <20170919040648.GA8426@kmp-mobile.hq.kempniu.pl>
- <20170919042150.GD10399@marvin.atrad.com.au>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: NULL pointer dereference in call_fext_func [fujitsu_laptop]
+Date: Tue, 19 Sep 2017 09:56:47 +0200
+Message-ID: <541b9a7a-2224-9b81-aef3-3f06491f91e3@suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f47.google.com ([209.85.215.47]:45317 "EHLO
-        mail-lf0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750876AbdISEm2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2017 00:42:28 -0400
-Received: by mail-lf0-f47.google.com with SMTP id d17so2483384lfe.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2017 21:42:28 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20170919042150.GD10399@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Ville Syrjala <ville.syrjala@linux.intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: kernel@kempniu.pl, jwoithe@just42.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, Linux kernel mailing list <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> > I need to refresh my memory a bit and think about next steps.  I still
-> > have one more cleanup series queued that is worth posting and I also
-> > need to fix radio LED detection.  My spare time is still very limited,
-> > but I will do my best to post something soon.
-> 
-> In the meantime, I think we ought to consider pushing the proposed patch in
-> order to restore functionality for the S6120 - as it stands the code oopses,
-> which isn't great.  Is there any reason not to do so?
+Hi,
 
-It might only be worth considering to check whether device is NULL
-inside call_fext_func() in order to prevent any further issues like this
-in the future.  However, for now bl_update_status() is the only place in
-fujitsu-laptop using the fext module-wide variable, so the patch is okay
-as it is, too.
+we have this report from 4.13.1:
+BUG: unable to handle kernel NULL pointer dereference at 00000004
+IP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
+*pdpt = 0000000035e79001 *pde = 0000000000000000
 
+Oops: 0000 [#1] PREEMPT SMP
+Modules linked in: ppdev ipw2200(+) libipw lib80211 cfg80211 smsc_ircc2
+iTCO_wdt irda iTCO_vendor_support soundcore ptp rfkill ac97_bus pps_core
+lpc_ich apanel input_polldev fujitsu_laptop parport_pc i2c_i801 parport
+joydev shpchp floppy(+) sparse_keymap pcspkr tpm_infineon video tpm
+button acpi_cpufreq ac battery dm_crypt algif_skcipher af_alg
+hid_generic usbhid sr_mod cdrom ata_generic pcmcia radeon serio_raw
+ata_piix i2c_algo_bit firewire_ohci firewire_core crc_itu_t
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops
+yenta_socket pcmcia_rsrc pcmcia_core uhci_hcd ehci_pci ehci_hcd usbcore
+ttm drm dm_mirror dm_region_hash dm_log dm_mod sg
+CPU: 0 PID: 850 Comm: systemd-backlig Not tainted 4.13.1-1-pae #1
+Hardware name: FUJITSU SIEMENS CELSIUS H230/FJNB192, BIOS Version 1.14
+08/30/2005
+task: f39e05c0 task.stack: f39b0000
+EIP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
+EFLAGS: 00010256 CPU: 0
+EAX: f39b1df8 EBX: 00000004 ECX: f39b1df0 EDX: f7ff03cf
+ESI: 00000001 EDI: f39b1e50 EBP: f39b1e5c ESP: f39b1de8
+ DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+CR0: 80050033 CR2: 00000004 CR3: 33964e40 CR4: 000006f0
+Call Trace:
+ ? bl_update_status+0x33/0x50 [fujitsu_laptop]
+ ? backlight_device_set_brightness+0x4b/0xb0
+ ? brightness_store+0x29/0x40
+ ? backlight_device_set_brightness+0xb0/0xb0
+ ? dev_attr_store+0x18/0x30
+ ? sysfs_kf_write+0x2e/0x50
+ ? sysfs_kf_bin_read+0xc0/0xc0
+ ? kernfs_fop_write+0xea/0x170
+ ? kernfs_vma_page_mkwrite+0x70/0x70
+ ? __vfs_write+0x22/0x150
+ ? common_file_perm+0x4d/0x120
+ ? __alloc_fd+0x9d/0x160
+ ? security_file_permission+0x31/0xb0
+ ? vfs_write+0x94/0x1a0
+ ? SyS_write+0x3c/0x90
+ ? do_fast_syscall_32+0x71/0x150
+ ? entry_SYSENTER_32+0x4e/0x7c
+Code: d0 c1 f8 1f c7 45 e0 01 00 00 00 89 45 d4 8b 45 0c c7 45 94 04 00
+00 00 89 45 e4 c1 f8 1f 89 45 e8 8d 45 a4 89 45 98 8d 45 9c 50 <8b> 03
+e8 e7 f4 e3 cd 85 c0 5a 75 3e f6 05 c2 23 ff f7 04 8b 45
+EIP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop] SS:ESP: 0068:f39b1de8
+CR2: 0000000000000004
+---[ end trace c655aaa8d9ba8d30 ]---
+
+It looks like fext is NULL, but bl_update_status passes it down to
+call_fext_func which obviously blows up.
+
+This was originally reported here:
+https://bugzilla.suse.com/show_bug.cgi?id=1058814
+
+Any ideas?
+
+thanks,
 -- 
-Best regards,
-Michał Kępień
+js
+suse labs
