@@ -1,74 +1,98 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH 1/2] mux: add mux_control_get_optional() API
-Date: Wed, 20 Sep 2017 09:11:47 -0700
-Message-ID: <150592390722.8926.3185526529797114235@sboyd-linaro>
-References: <20170905164221.11266-6-hdegoede@redhat.com>
- <20170908154514.4463-1-peda@axentia.se>
- <20170908154514.4463-2-peda@axentia.se>
- <64cd3a6d-cf3e-89ed-0c26-65b395d18008@axentia.se>
- <258023e8-3f5c-6aef-3f46-a377f5b0bfb5@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: intel-hid: Power button suspend on Dell
+ Latitude 7275
+Date: Wed, 20 Sep 2017 20:07:41 +0000
+Message-ID: <c288f2dae8594a438e07aea67211a308@ausx13mpc120.AMER.DELL.COM>
+References: <20170917225712.12136-1-jerome.debretagne@gmail.com>
+ <4b5c673c2858470a8b6d0af43a2cd250@ausx13mpc120.AMER.DELL.COM>
+ <CA+kEDGGv3twZP4od16bPHjW8-S3PHs=SpQZEF1tqr5M4cBpzFQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f180.google.com ([209.85.192.180]:45298 "EHLO
-        mail-pf0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751856AbdITQLx (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Sep 2017 12:11:53 -0400
-Received: by mail-pf0-f180.google.com with SMTP id z84so1762184pfi.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Sep 2017 09:11:53 -0700 (PDT)
-In-Reply-To: <258023e8-3f5c-6aef-3f46-a377f5b0bfb5@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, Peter Rosin <peda@axentia.se>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mathias Nyman <mathias.nyman@intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+kEDGGv3twZP4od16bPHjW8-S3PHs=SpQZEF1tqr5M4cBpzFQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: jerome.debretagne@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, rjw@rjwysocki.net, andy.shevchenko@gmail.com, alex.hung@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-Quoting Hans de Goede (2017-09-19 11:35:50)
-> Hi,
-> =
-
-> On 09/08/2017 05:54 PM, Peter Rosin wrote:
-> > On 2017-09-08 17:45, Peter Rosin wrote:
-> >> From: Stephen Boyd <stephen.boyd@linaro.org>
-> >>
-> >> Sometimes drivers only use muxes under certain scenarios. For
-> >> example, the chipidea usb controller may be connected to a usb
-> >> switch on some platforms, and connected directly to a usb port on
-> >> others. The driver won't know one way or the other though, so add
-> >> a mux_control_get_optional() API that allows the driver to
-> >> differentiate errors getting the mux from there not being a mux
-> >> for the driver to use at all.
-> >> ---
-> >>   Documentation/driver-model/devres.txt |   1 +
-> >>   drivers/mux/core.c                    | 104 ++++++++++++++++++++++++=
-+++-------
-> >>   include/linux/mux/consumer.h          |   4 ++
-> >>   3 files changed, 89 insertions(+), 20 deletions(-)
-> >>
-> >> I haven't tested this patch, and hence I have not signed it and I also
-> >> removed the sign-off from Stephen...
-> > =
-
-> > Huh, I definitely intended to mention that this patch is based on [1]
-> > from Stephen, but that I've made changes according to the comments in
-> > that thread (and more). And those changes are what made me remove the
-> > sign-off from Stephen...
-> =
-
-> AFAIK normally a Signed-off-by is kept if some (small-ish) changes
-> are made. The S-o-b is mostly an indication that the author is
-> ok with adding the code to the kernel under the GPL.
-> =
-
-> Anyways, Stephen are you ok with re-adding your S-o-b to
-> the version modified by Peter?
-> =
-
-
-Please add my sign off
-
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-
-and I would expect Peter to have one as well with a maintainer tag
-indicating what changed from my patch.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKw6lyw7RtZSBkZSBCcmV0YWdu
+ZSBbbWFpbHRvOmplcm9tZS5kZWJyZXRhZ25lQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBT
+ZXB0ZW1iZXIgMTgsIDIwMTcgNTo0MSBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJp
+b19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5r
+ZXJuZWwub3JnOyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+Ow0KPiBMS01MIDxs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgQUNQSSBEZXZlbCBNYWxpbmcgTGlzdCA8bGlu
+dXgtDQo+IGFjcGlAdmdlci5rZXJuZWwub3JnPjsgUmFmYWVsIEouIFd5c29ja2kgPHJqd0Byand5
+c29ja2kubmV0PjsgQW5keSBTaGV2Y2hlbmtvDQo+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29t
+PjsgQWxleCBIdW5nIDxhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSF0gcGxhdGZvcm0veDg2OiBpbnRlbC1oaWQ6IFBvd2VyIGJ1dHRvbiBzdXNwZW5kIG9uIERl
+bGwNCj4gTGF0aXR1ZGUgNzI3NQ0KPiANCj4gMjAxNy0wOS0xOCAyMzoyOSBHTVQrMDI6MDAgIDxN
+YXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbT46DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+ID4+IEZyb206IErDqXLDtG1lIGRlIEJyZXRhZ25lIFttYWlsdG86amVyb21lLmRlYnJl
+dGFnbmVAZ21haWwuY29tXQ0KPiA+PiBTZW50OiBTdW5kYXksIFNlcHRlbWJlciAxNywgMjAxNyA1
+OjU3IFBNDQo+ID4+IFRvOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiA+
+PiBDYzogRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgTEtNTCA8bGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZz47DQo+ID4+IExpbnV4IEFDUEkgPGxpbnV4LWFjcGlAdmdlci5r
+ZXJuZWwub3JnPjsgUmFmYWVsIEouIFd5c29ja2kNCj4gPHJqd0Byand5c29ja2kubmV0PjsNCj4g
+Pj4gQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsgTGltb25jaWVs
+bG8sIE1hcmlvDQo+ID4+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IEFsZXggSHVuZyA8
+YWxleC5odW5nQGNhbm9uaWNhbC5jb20+DQo+ID4+IFN1YmplY3Q6IFtQQVRDSF0gcGxhdGZvcm0v
+eDg2OiBpbnRlbC1oaWQ6IFBvd2VyIGJ1dHRvbiBzdXNwZW5kIG9uIERlbGwgTGF0aXR1ZGUNCj4g
+Pj4gNzI3NQ0KPiA+Pg0KPiA+PiBGcm9tOiBKw6lyw7RtZSBkZSBCcmV0YWduZSA8amVyb21lLmRl
+YnJldGFnbmVAZ21haWwuY29tPg0KPiA+Pg0KPiA+PiBPbiBEZWxsIExhdGl0dWRlIDcyNzUgdGhl
+IDUtYnV0dG9uIGFycmF5IGlzIG5vdCBleHBvc2VkIGluIHRoZQ0KPiA+PiBBQ1BJIHRhYmxlcywg
+YnV0IHN0aWxsIG5vdGlmaWVzIGFyZSBzZW50IHRvIHRoZSBJbnRlbCBISUQgZGV2aWNlDQo+ID4+
+IG9iamVjdCAoZGV2aWNlIElEIElOVDMzRDUpIGluIHJlc3BvbnNlIHRvIHBvd2VyIGJ1dHRvbiBh
+Y3Rpb25zLg0KPiA+PiBUaGV5IHdlcmUgaWdub3JlZCBhcyB0aGUgaW50ZWwtaGlkIGRyaXZlciB3
+YXMgbm90IHByZXBhcmVkIHRvDQo+ID4+IHRha2UgY2FyZSBvZiB0aGVtIHVudGlsIHJlY2VudGx5
+Lg0KPiA+Pg0KPiA+PiBQb3dlciBidXR0b24gd2FrZXVwIGZyb20gc3VzcGVuZC10by1pZGxlIHdh
+cyBhZGRlZCBpbjoNCj4gPj4gNjM1MTczYTE3YjAzICgiaW50ZWwtaGlkOiBXYWtlIHVwIERlbGwg
+TGF0aXR1ZGUgNzI3NSBmcm9tDQo+ID4+IHN1c3BlbmQtdG8taWRsZSIpLiBIb3dldmVyIHBvd2Vy
+IGJ1dHRvbiBzdXNwZW5kIGRvZXNuJ3Qgd29yaw0KPiA+PiB5ZXQgb24gdGhpcyBwbGF0Zm9ybSBz
+byBpdCB3b3VsZCBiZSBnb29kIHRvIGFkZCBpdCBhbHNvLg0KPiA+Pg0KPiA+PiBPbiB0aGUgYWZm
+ZWN0ZWQgcGxhdGZvcm0gKGZvciB3aGljaCBwcml2LT5hcnJheSBpcyBOVUxMKSwgYWRkDQo+ID4+
+IGEgbmV3IHVwZnJvbnQgY2hlY2sgYWdhaW5zdCB0aGUgcG93ZXIgYnV0dG9uIHByZXNzIG5vdGlm
+aWNhdGlvbg0KPiA+PiAoMHhDRSkgdG8gbm90aWZ5X2hhbmRsZXIoKSwgb3V0c2lkZSB0aGUgd2Fr
+ZXVwIG1vZGUgdGhpcyB0aW1lLA0KPiA+PiB3aGljaCBhbGxvd3MgdG8gcmVwb3J0IHRoZSBwb3dl
+ciBidXR0b24gcHJlc3MgZXZlbnQgYW5kDQo+ID4+IHRyaWdnZXIgdGhlIHN1c3BlbmQuIEFsc28g
+Y2F0Y2ggYW5kIGlnbm9yZSB0aGUgY29ycmVzcG9uZGluZw0KPiA+PiBwb3dlciBidXR0b24gcmVs
+ZWFzZSBub3RpZmljYXRpb24gKDB4Q0YpIHRvIHN0b3AgaXQgZnJvbSBiZWluZw0KPiA+PiByZXBv
+cnRlZCBhcyBhbiAidW5rbm93biBldmVudCIgaW4gdGhlIGxvZ3MuDQo+ID4+DQo+ID4+IExpbms6
+IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk2MTE1DQo+ID4+
+IFRlc3RlZC1ieTogSsOpcsO0bWUgZGUgQnJldGFnbmUgPGplcm9tZS5kZWJyZXRhZ25lQGdtYWls
+LmNvbT4NCj4gPj4gU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgZGUgQnJldGFnbmUgPGplcm9tZS5k
+ZWJyZXRhZ25lQGdtYWlsLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICBkcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9pbnRlbC1oaWQuYyB8IDE2ICsrKysrKysrKysrKysrKysNCj4gPj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxNiBpbnNlcnRpb25zKCspDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9pbnRlbC1oaWQuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jDQo+
+ID4+IGluZGV4IGE3ODJjNzhlN2M2My4uYjE5ZjhkY2Y5ZDhjIDEwMDY0NA0KPiA+PiAtLS0gYS9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC1oaWQuYw0KPiA+PiArKysgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9pbnRlbC1oaWQuYw0KPiA+PiBAQCAtMjI2LDYgKzIyNiwyMiBAQCBzdGF0aWMgdm9p
+ZCBub3RpZnlfaGFuZGxlcihhY3BpX2hhbmRsZSBoYW5kbGUsIHUzMg0KPiBldmVudCwNCj4gPj4g
+dm9pZCAqY29udGV4dCkNCj4gPj4gICAgICAgICAgICAgICByZXR1cm47DQo+ID4+ICAgICAgIH0N
+Cj4gPj4NCj4gPj4gKyAgICAgLyoNCj4gPj4gKyAgICAgICogTmVlZGVkIGZvciBzdXNwZW5kIHRv
+IHdvcmsgb24gc29tZSBwbGF0Zm9ybXMgdGhhdCBkb24ndCBleHBvc2UNCj4gPj4gKyAgICAgICog
+dGhlIDUtYnV0dG9uIGFycmF5LCBidXQgc3RpbGwgc2VuZCBub3RpZmllcyB3aXRoIHBvd2VyIGJ1
+dHRvbg0KPiA+PiArICAgICAgKiBldmVudCBjb2RlIHRvIHRoaXMgZGV2aWNlIG9iamVjdCBvbiBw
+b3dlciBidXR0b24gYWN0aW9ucy4NCj4gPj4gKyAgICAgICoNCj4gPj4gKyAgICAgICogUmVwb3J0
+IHRoZSBwb3dlciBidXR0b24gcHJlc3M7IGNhdGNoIGFuZCBpZ25vcmUgdGhlIGJ1dHRvbiByZWxl
+YXNlLg0KPiA+PiArICAgICAgKi8NCj4gPj4gKyAgICAgaWYgKCFwcml2LT5hcnJheSkgew0KPiA+
+PiArICAgICAgICAgICAgIGlmIChldmVudCA9PSAweGNlKSB7DQo+ID4+ICsgICAgICAgICAgICAg
+ICAgICAgICBpbnB1dF9yZXBvcnRfa2V5KHByaXYtPmlucHV0X2RldiwgS0VZX1BPV0VSLCAxKTsN
+Cj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIGlucHV0X3N5bmMocHJpdi0+aW5wdXRfZGV2KTsN
+Cj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIHJldHVybjsNCj4gPj4gKyAgICAgICAgICAgICB9
+IGVsc2UgaWYgKGV2ZW50ID09IDB4Y2YpDQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICByZXR1
+cm47DQo+ID4+ICsgICAgIH0NCj4gPj4gKw0KPiA+PiAgICAgICAvKiAweEMwIGlzIGZvciBISUQg
+ZXZlbnRzLCBvdGhlciB2YWx1ZXMgYXJlIGZvciA1IGJ1dHRvbiBhcnJheSAqLw0KPiA+PiAgICAg
+ICBpZiAoZXZlbnQgIT0gMHhjMCkgew0KPiA+PiAgICAgICAgICAgICAgIGlmICghcHJpdi0+YXJy
+YXkgfHwNCj4gPg0KPiA+IExHVE0sIGl0J3MgaW1wcm92ZWQgZnJvbSB3aGF0IHlvdSBwb3N0ZWQg
+dG8gdGhhdCBidWcgYWxyZWFkeS4NCj4gPg0KPiA+IEFja2VkLUJ5OiBNYXJpbyBMaW1vbmNpZWxs
+byA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQo+IA0KPiBUaGFua3MgTWFyaW8uDQo+IA0K
+PiBJbiBmYWN0LCBJIHVwZGF0ZWQgbXkgaW5pdGlhbCBmaXggcHJvcG9zYWwgb24gdGhlIDEydGgg
+aW4gWzFdIGFuZA0KPiB0aGlzIHBhdGNoIG1hdGNoZXMgZXhhY3RseSB0aGUgdXBkYXRlZCB2ZXJz
+aW9uLiBZb3UgZGlkbid0IHJlY2VpdmUNCj4gdGhlIHVwZGF0ZSBub3RpZmljYXRpb24gZnJvbSBC
+dWd6aWxsYT8NCj4gDQo+IFsxXSBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcu
+Y2dpP2lkPTE5NjExNSNjMTINCg0KTm8gSSBkaWRuJ3QgZ2V0IG9uZSAob3Igc29tZSBlbnRlcnBy
+aXNlIHNwYW0gZmlsdGVyIGhlbHBmdWxseSBhdm9pZGVkDQpsZXR0aW5nIGl0IGludG8gbXkgaW5i
+b3gpLg0KDQoNCg==
