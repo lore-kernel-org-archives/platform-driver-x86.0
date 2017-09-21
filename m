@@ -1,141 +1,87 @@
-From: =?UTF-8?q?Maxime=20Belleng=C3=A9?= <maxime.bellenge@gmail.com>
-Subject: [PATCH] Asus WMI : Add lightbar led support
-Date: Thu, 21 Sep 2017 13:20:01 +0200
-Message-ID: <20170921112001.14788-1-maxime.bellenge@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 04/11] usb: xhci: Add Intel cherrytrail extended cap /
+ otg phy mux handling
+Date: Thu, 21 Sep 2017 13:55:54 +0200
+Message-ID: <e7e99900-85d7-0e88-afde-adc3342d41ea@redhat.com>
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+ <20170905164221.11266-5-hdegoede@redhat.com>
+ <59B14628.5030700@linux.intel.com>
+ <40e23f9e-538f-088a-96a3-402818bcf3fb@redhat.com>
+ <59C1103A.9030509@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35998 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751606AbdIULUX (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2017 07:20:23 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Maxime=20Belleng=C3=A9?= <maxime.bellenge@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <59C1103A.9030509@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@linux.intel.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Some asus laptops (ROG series for example) are provided with a lightbar behind the monitor.
-This patch make posible to switch it on and off. This lightbar works exactly as any other led.
+Hi,
 
-Signed-off-by: Maxime Bellengé <maxime.bellenge@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 63 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+On 19-09-17 14:40, Mathias Nyman wrote:
+> Hi,
+> 
+> sorry about the long delay
+> 
+> On 07.09.2017 18:49, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 07-09-17 15:14, Mathias Nyman wrote:
+>>> On 05.09.2017 19:42, Hans de Goede wrote:
+>>>> The Intel cherrytrail xhci controller has an extended cap mmio-range
+>>>> which contains registers to control the muxing to the xhci (host mode)
+>>>> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+>>>>
+>>>> Having a mux driver included in the xhci code (or under drivers/usb/host)
+>>>> is not desirable. So this commit adds a simple handler for this extended
+>>>> capability, which creates a platform device with the caps mmio region as
+>>>> resource, this allows us to write a separate platform mux driver for the
+>>>> mux.
+>>>>
+>>> I think it would be better to have one place where we add handlers for
+>>> vendor specific extended capabilities.
+>>>
+>>> Something like xhci-vendor-ext-caps.c, or just xhci-ext-caps.c as
+>>> there's a xhci-ext-caps.h header already
+>>>
+>>> We could walk through the capability list once and add the needed handlers.
+>>> Something like:
+>>>
+>>> +int xhci_ext_cap_init(void __iomem *base)
+>>
+>> This will need to take a struct xhci_hcd *xhci param instead
+>> as some of the ext_cap handling (including the cht mux code)
+>> will need access to this.
+>>
+> 
+> yes, sample code added in second patch for reference/testing.
+> 
+>>
+>> So I see 2 options here (without making this function PCI specific)
+>> 1) Add an u32 product_id field to struct xhci_hcd; or
+>> 2) Use a quirk flag as my current code is doing.
+>>
+>> I'm fine with doing this either way, please let me know your preference.
+> 
+> Lets go with the quirk for now, I'll sort that out later
+> 
+>>
+>> Can you do a "git format-patch" of that and send it to me? If you
+>> can give me that + your preference for how to check if we're
+>> dealing with a cht xhci hcd in xhci_ext_cap_init I can do a v3
+>> with your suggestions applied.
+> 
+> Ended up modifying xhci_find_next_ext_cap() using id = 0 for
+> the next capability in list. Patch attached,
+> 
+> Second patch is just for reference how to use it.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 709e3a67391a..79e09cf63f33 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -119,6 +119,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
- #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
- #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
-+#define ASUS_WMI_DEVID_LIGHTBAR 	0x00050025
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
-@@ -148,6 +149,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DSTS_BIOS_BIT		0x00040000
- #define ASUS_WMI_DSTS_BRIGHTNESS_MASK	0x000000FF
- #define ASUS_WMI_DSTS_MAX_BRIGTH_MASK	0x0000FF00
-+#define ASUS_WMI_DSTS_LIGHTBAR_MASK	0x0000000F
- 
- #define ASUS_FAN_DESC			"cpu_fan"
- #define ASUS_FAN_MFUN			0x13
-@@ -222,10 +224,13 @@ struct asus_wmi {
- 	int tpd_led_wk;
- 	struct led_classdev kbd_led;
- 	int kbd_led_wk;
-+	struct led_classdev lightbar_led;
-+	int lightbar_led_wk;
- 	struct workqueue_struct *led_workqueue;
- 	struct work_struct tpd_led_work;
- 	struct work_struct kbd_led_work;
- 	struct work_struct wlan_led_work;
-+	struct work_struct lightbar_led_work;
- 
- 	struct asus_rfkill wlan;
- 	struct asus_rfkill bluetooth;
-@@ -567,6 +572,48 @@ static enum led_brightness wlan_led_get(struct led_classdev *led_cdev)
- 	return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
- }
- 
-+static void lightbar_led_update(struct work_struct *work)
-+{
-+	int ctrl_param;
-+	struct asus_wmi *asus;
-+
-+	asus = container_of(work, struct asus_wmi, lightbar_led_work);
-+
-+	ctrl_param = asus->lightbar_led_wk;
-+	asus_wmi_set_devstate(ASUS_WMI_DEVID_LIGHTBAR, ctrl_param, NULL);
-+}
-+
-+static void lightbar_led_set(struct led_classdev *led_cdev,
-+			 enum led_brightness value)
-+{
-+	struct asus_wmi *asus;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, lightbar_led);
-+
-+	asus->lightbar_led_wk = !!value;
-+	queue_work(asus->led_workqueue, &asus->lightbar_led_work);
-+}
-+
-+static enum led_brightness lightbar_led_get(struct led_classdev *led_cdev)
-+{
-+	struct asus_wmi *asus;
-+	u32 result;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, lightbar_led);
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_LIGHTBAR, &result);
-+
-+	return result & ASUS_WMI_DSTS_LIGHTBAR_MASK;
-+}
-+
-+static int lightbar_led_presence(struct asus_wmi *asus)
-+{
-+	u32 result;
-+
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_LIGHTBAR, &result);
-+
-+	return result & ASUS_WMI_DSTS_PRESENCE_BIT;
-+}
-+
- static void asus_wmi_led_exit(struct asus_wmi *asus)
- {
- 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-@@ -575,6 +622,8 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- 		led_classdev_unregister(&asus->tpd_led);
- 	if (!IS_ERR_OR_NULL(asus->wlan_led.dev))
- 		led_classdev_unregister(&asus->wlan_led);
-+	if (!IS_ERR_OR_NULL(asus->lightbar_led.dev))
-+		led_classdev_unregister(&asus->lightbar_led);
- 	if (asus->led_workqueue)
- 		destroy_workqueue(asus->led_workqueue);
- }
-@@ -630,6 +679,20 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 
- 		rv = led_classdev_register(&asus->platform_device->dev,
- 					   &asus->wlan_led);
-+		if (rv)
-+			goto error;
-+	}
-+
-+	if (lightbar_led_presence(asus)) {
-+		INIT_WORK(&asus->lightbar_led_work, lightbar_led_update);
-+
-+		asus->lightbar_led.name = "asus::lightbar";
-+		asus->lightbar_led.brightness_set = lightbar_led_set;
-+		asus->lightbar_led.brightness_get = lightbar_led_get;
-+		asus->lightbar_led.max_brightness = 1;
-+
-+		rv = led_classdev_register(&asus->platform_device->dev,
-+					   &asus->lightbar_led);
- 	}
- 
- error:
--- 
-2.13.5
+Thank you for the patches, I'm working on prepping a v3 of
+this series which includes and uses the first patch.
+
+Regards,
+
+Hans
