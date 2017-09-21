@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 02/12] platform/x86: dell-wmi: Don't match on descriptor GUID modalias
-Date: Thu, 21 Sep 2017 08:57:07 -0500
-Message-ID: <e095a34ec411e46a6e890f5215b1f85ee7338795.1505999739.git.mario.limonciello@dell.com>
+Subject: [PATCH 12/12] platform/x86: Kconfig: Change the default settings for dell-wmi-smbios
+Date: Thu, 21 Sep 2017 08:57:17 -0500
+Message-ID: <d5dc0b3aad46caa8e253deb965231e7af0af4458.1505999739.git.mario.limonciello@dell.com>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1505999739.git.mario.limonciello@dell.com>
@@ -12,27 +12,25 @@ To: dvhart@infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The descriptor GUID is not used to indicate that WMI notifications
-in the dell-wmi driver work properly.  As such a modalias should
-not be present that causes this driver to load on systems with this
-GUID.
+The dell-wmi-smbios driver should be enabled by default when ACPI_WMI
+is enabled (like many other WMI drivers).
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/dell-wmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 28d9f8696081..1fbef560ca67 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -51,7 +51,6 @@ MODULE_LICENSE("GPL");
- static bool wmi_requires_smbios_request;
- 
- MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
--MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
- 
- struct dell_wmi_priv {
- 	struct input_dev *input_dev;
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a70bcd8caa72..4f9ca51b1968 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -94,6 +94,7 @@ config ASUS_LAPTOP
+ config DELL_WMI_SMBIOS
+ 	tristate "Dell WMI SMBIOS calling interface"
+ 	depends on ACPI_WMI
++	default ACPI_WMI
+ 	---help---
+ 	This module provides common functions for kernel modules using
+ 	Dell SMBIOS over ACPI-WMI.
 -- 
 2.14.1
