@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs interface for SMBIOS tokens
-Date: Thu, 21 Sep 2017 08:57:11 -0500
-Message-ID: <1342f21a4f2c9af86d3033a9af9d9a4d05d27106.1505999739.git.mario.limonciello@dell.com>
+Subject: [PATCH 07/12] platform/x86: dell-wmi-smbios: Use Dell WMI descriptor check
+Date: Thu, 21 Sep 2017 08:57:12 -0500
+Message-ID: <1001812b63d73bf3ccd5ea6c76604cae0fa1525a.1505999739.git.mario.limonciello@dell.com>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1505999739.git.mario.limonciello@dell.com>
@@ -12,111 +12,245 @@ To: dvhart@infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently userspace tools can access system tokens via the dcdbas
-kernel module and a SMI call that will cause the platform to execute
-SMM code.
+The Dell WMI descriptor check is used as an indication that WMI
+calls are safe to run both when used with the notification
+ASL/GUID pair as well as the SMBIOS calling ASL/GUID pair.
 
-With a goal in mind of deprecating the dcdbas kernel module a different
-method for accessing these tokens from userspace needs to be created.
-
-This is intentionally marked to only be readable as root as it can
-contain sensitive information about the platform's configuration.
+As some code in dell-wmi-smbios is already a prerequisite for
+dell-wmi, move the code for performing the descriptor check into
+dell-wmi-smbios and let both drivers use it from there.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- .../ABI/testing/sysfs-platform-dell-wmi-smbios     | 16 +++++++++
- drivers/platform/x86/dell-wmi-smbios.c             | 38 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
+ drivers/platform/x86/dell-wmi-smbios.c | 78 ++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/dell-wmi-smbios.h |  3 ++
+ drivers/platform/x86/dell-wmi.c        | 75 +-------------------------------
+ 3 files changed, 82 insertions(+), 74 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios b/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
-new file mode 100644
-index 000000000000..6d151f2dffba
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
-@@ -0,0 +1,16 @@
-+What:		/sys/devices/platform/<platform>/tokens
-+Date:		October 2017
-+KernelVersion:	4.15
-+Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-+Description:
-+		A read-only description of Dell platform tokens
-+		available on the machine.
-+
-+		The tokens will be displayed in the following
-+		machine readable format with each token on a
-+		new line:
-+
-+		ID @ Location : value
-+
-+		For example token:
-+		5 @ 5 : 3
 diff --git a/drivers/platform/x86/dell-wmi-smbios.c b/drivers/platform/x86/dell-wmi-smbios.c
-index 7f896701fb7b..c3701fdadf7b 100644
+index c3701fdadf7b..9deb851ff517 100644
 --- a/drivers/platform/x86/dell-wmi-smbios.c
 +++ b/drivers/platform/x86/dell-wmi-smbios.c
-@@ -189,6 +189,34 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
- 	}
- }
+@@ -24,6 +24,7 @@
+ #include "dell-wmi-smbios.h"
  
-+static ssize_t tokens_show(struct device *dev,
-+			   struct device_attribute *attr, char *buf)
+ #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
++#define DELL_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+ 
+ struct calling_interface_structure {
+ 	struct dmi_header header;
+@@ -217,8 +218,81 @@ static const struct attribute_group smbios_attribute_group = {
+ 	.attrs = smbios_attrs,
+ };
+ 
++/*
++ * Descriptor buffer is 128 byte long and contains:
++ *
++ *       Name             Offset  Length  Value
++ * Vendor Signature          0       4    "DELL"
++ * Object Signature          4       4    " WMI"
++ * WMI Interface Version     8       4    <version>
++ * WMI buffer length        12       4    4096
++ */
++int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev, u32 *version)
 +{
-+	size_t off = 0;
-+	int i;
++	union acpi_object *obj = NULL;
++	struct wmi_device *desc_dev;
++	u32 *desc_buffer;
++	int ret;
 +
-+	for (i = 0; i < da_num_tokens; i++) {
-+		if (off > PAGE_SIZE)
-+			break;
-+		off += scnprintf(buf+off, PAGE_SIZE-off, "%x @ %x : %x\n",
-+		da_tokens[i].tokenID, da_tokens[i].location,
-+		da_tokens[i].value);
++	desc_dev = wmidev_get_other_guid(wdev, DELL_DESCRIPTOR_GUID);
++	if (!desc_dev) {
++		dev_err(&wdev->dev, "Dell WMI descriptor does not exist\n");
++		return -ENODEV;
 +	}
 +
-+	return off;
++	obj = wmidev_block_query(desc_dev, 0);
++	if (!obj) {
++		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
++		ret = -EIO;
++		goto out;
++	}
++
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (obj->buffer.length != 128) {
++		dev_err(&wdev->dev,
++			"Dell descriptor buffer has invalid length (%d)\n",
++			obj->buffer.length);
++		if (obj->buffer.length < 16) {
++			ret = -EINVAL;
++			goto out;
++		}
++	}
++
++	desc_buffer = (u32 *)obj->buffer.pointer;
++
++	if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
++			8, desc_buffer);
++
++	if (desc_buffer[2] != 0 && desc_buffer[2] != 1)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
++			desc_buffer[2]);
++
++	if (desc_buffer[3] != 4096)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
++			desc_buffer[3]);
++
++	*version = desc_buffer[2];
++	ret = 0;
++
++	dev_info(&wdev->dev, "Detected Dell WMI interface version %u\n",
++		*version);
++
++out:
++	kfree(obj);
++	put_device(&desc_dev->dev);
++	return ret;
 +}
-+
-+DEVICE_ATTR(tokens, 0400, tokens_show, NULL);
-+
-+static struct attribute *smbios_attrs[] = {
-+	&dev_attr_tokens.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group smbios_attribute_group = {
-+	.attrs = smbios_attrs,
-+};
++EXPORT_SYMBOL_GPL(dell_wmi_check_descriptor_buffer);
 +
  static int dell_wmi_smbios_probe(struct wmi_device *wdev)
  {
++	u32 interface_version;
  	int ret;
-@@ -206,8 +234,16 @@ static int dell_wmi_smbios_probe(struct wmi_device *wdev)
- 		goto fail_buffer;
+ 
+ 	dmi_walk(find_tokens, NULL);
+@@ -228,6 +302,10 @@ static int dell_wmi_smbios_probe(struct wmi_device *wdev)
+ 		return -ENODEV;
  	}
  
-+	ret = sysfs_create_group(&wdev->dev.kobj, &smbios_attribute_group);
++	ret = dell_wmi_check_descriptor_buffer(wdev, &interface_version);
 +	if (ret)
-+		goto fail_create_group;
-+	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
++		return ret;
 +
- 	return 0;
+ 	buffer = (void *)__get_free_page(GFP_KERNEL);
+ 	if (!buffer) {
+ 		ret = -ENOMEM;
+diff --git a/drivers/platform/x86/dell-wmi-smbios.h b/drivers/platform/x86/dell-wmi-smbios.h
+index e6e9990bb2b7..0521ec5d437b 100644
+--- a/drivers/platform/x86/dell-wmi-smbios.h
++++ b/drivers/platform/x86/dell-wmi-smbios.h
+@@ -17,6 +17,8 @@
+ #ifndef _DELL_WMI_SMBIOS_H_
+ #define _DELL_WMI_SMBIOS_H_
  
-+fail_create_group:
-+	free_page((unsigned long)buffer);
++#include <linux/wmi.h>
 +
- fail_buffer:
- 	kfree(da_tokens);
- 	return ret;
-@@ -215,8 +251,10 @@ static int dell_wmi_smbios_probe(struct wmi_device *wdev)
+ struct notifier_block;
  
- static int dell_wmi_smbios_remove(struct wmi_device *wdev)
- {
-+	sysfs_remove_group(&wdev->dev.kobj, &smbios_attribute_group);
- 	kfree(da_tokens);
- 	free_page((unsigned long)buffer);
-+	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
- 	return 0;
+ struct calling_interface_buffer {
+@@ -54,5 +56,6 @@ enum dell_laptop_notifier_actions {
+ int dell_laptop_register_notifier(struct notifier_block *nb);
+ int dell_laptop_unregister_notifier(struct notifier_block *nb);
+ void dell_laptop_call_notifier(unsigned long action, void *data);
++int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev, u32 *version);
+ 
+ #endif
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index e8b4d412eabc..e7011792127f 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -46,7 +46,6 @@ MODULE_DESCRIPTION("Dell laptop WMI hotkeys driver");
+ MODULE_LICENSE("GPL");
+ 
+ #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
+-#define DELL_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+ 
+ static bool wmi_requires_smbios_request;
+ 
+@@ -617,78 +616,6 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+ 	input_unregister_device(priv->input_dev);
  }
+ 
+-/*
+- * Descriptor buffer is 128 byte long and contains:
+- *
+- *       Name             Offset  Length  Value
+- * Vendor Signature          0       4    "DELL"
+- * Object Signature          4       4    " WMI"
+- * WMI Interface Version     8       4    <version>
+- * WMI buffer length        12       4    4096
+- */
+-static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+-{
+-	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+-	union acpi_object *obj = NULL;
+-	struct wmi_device *desc_dev;
+-	u32 *buffer;
+-	int ret;
+-
+-	desc_dev = wmidev_get_other_guid(wdev, DELL_DESCRIPTOR_GUID);
+-	if (!desc_dev) {
+-		dev_err(&wdev->dev, "Dell WMI descriptor does not exist\n");
+-		return -ENODEV;
+-	}
+-
+-	obj = wmidev_block_query(desc_dev, 0);
+-	if (!obj) {
+-		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
+-		ret = -EIO;
+-		goto out;
+-	}
+-
+-	if (obj->type != ACPI_TYPE_BUFFER) {
+-		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (obj->buffer.length != 128) {
+-		dev_err(&wdev->dev,
+-			"Dell descriptor buffer has invalid length (%d)\n",
+-			obj->buffer.length);
+-		if (obj->buffer.length < 16) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
+-	}
+-
+-	buffer = (u32 *)obj->buffer.pointer;
+-
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, buffer);
+-
+-	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
+-			buffer[2]);
+-
+-	if (buffer[3] != 4096)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
+-			buffer[3]);
+-
+-	priv->interface_version = buffer[2];
+-	ret = 0;
+-
+-	dev_info(&wdev->dev, "Detected Dell WMI interface version %u\n",
+-		priv->interface_version);
+-
+-out:
+-	kfree(obj);
+-	put_device(&desc_dev->dev);
+-	return ret;
+-}
+-
+ /*
+  * According to Dell SMBIOS documentation:
+  *
+@@ -732,7 +659,7 @@ static int dell_wmi_probe(struct wmi_device *wdev)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 
+-	err = dell_wmi_check_descriptor_buffer(wdev);
++	err = dell_wmi_check_descriptor_buffer(wdev, &priv->interface_version);
+ 	if (err)
+ 		return err;
  
 -- 
 2.14.1
