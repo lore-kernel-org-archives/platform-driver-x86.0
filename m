@@ -1,56 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 09/12] platform/x86: wmi: create character devices when
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 09/12] platform/x86: wmi: create character devices when
  requested by drivers
-Date: Thu, 21 Sep 2017 19:46:32 +0300
-Message-ID: <CAHp75VcD+SK2sMMzx8VKed2vVtGJzdwTcM-a5FZyRidZL6jGYw@mail.gmail.com>
-References: <cover.1505999739.git.mario.limonciello@dell.com> <0147d9b2d81428711f4e2c8cf1baff71ba81764e.1505999739.git.mario.limonciello@dell.com>
+Date: Thu, 21 Sep 2017 19:21:12 +0000
+Message-ID: <17f26fac70f049b9bea4e55d67da1ea9@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1505999739.git.mario.limonciello@dell.com>
+ <0147d9b2d81428711f4e2c8cf1baff71ba81764e.1505999739.git.mario.limonciello@dell.com>
+ <CAHp75VcD+SK2sMMzx8VKed2vVtGJzdwTcM-a5FZyRidZL6jGYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f174.google.com ([209.85.216.174]:50398 "EHLO
-        mail-qt0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751640AbdIUQqd (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2017 12:46:33 -0400
-In-Reply-To: <0147d9b2d81428711f4e2c8cf1baff71ba81764e.1505999739.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcD+SK2sMMzx8VKed2vVtGJzdwTcM-a5FZyRidZL6jGYw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 21, 2017 at 4:57 PM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> For WMI operations that are only Set or Query read or write sysfs
-> attributes created by WMI vendor drivers make sense.
->
-> For other WMI operations that are run on Method, there needs to be a
-> way to guarantee to userspace that the results from the method call
-> belong to the data request to the method call.  Sysfs attributes don't
-> work well in this scenario because two userspace processes may be
-> competing at reading/writing an attribute and step on each other's
-> data.
->
-> When a WMI vendor driver declares a set of functions in a
-> file_operations object the WMI bus driver will create a character
-> device that maps to those file operations.
->
-> The WMI vendor drivers will be responsible for managing access to
-> this character device and proper locking on it.
->
-> When a WMI vendor driver is unloaded the WMI bus driver will clean
-> up the character device.
->
-
-> @@ -44,12 +44,17 @@
->  #include <linux/platform_device.h>
->  #include <linux/wmi.h>
->  #include <linux/uuid.h>
-> +#include <linux/cdev.h>
-> +#include <linux/idr.h>
-
-Keep alphabetical ordering.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgU2VwdGVt
+YmVyIDIxLCAyMDE3IDExOjQ3IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xp
+bW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3Jt
+LWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgUGFsaSBS
+b2jDoXINCj4gPHBhbGkucm9oYXJAZ21haWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA5
+LzEyXSBwbGF0Zm9ybS94ODY6IHdtaTogY3JlYXRlIGNoYXJhY3RlciBkZXZpY2VzIHdoZW4NCj4g
+cmVxdWVzdGVkIGJ5IGRyaXZlcnMNCj4gDQo+IE9uIFRodSwgU2VwIDIxLCAyMDE3IGF0IDQ6NTcg
+UE0sIE1hcmlvIExpbW9uY2llbGxvDQo+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4gd3Jv
+dGU6DQo+ID4gRm9yIFdNSSBvcGVyYXRpb25zIHRoYXQgYXJlIG9ubHkgU2V0IG9yIFF1ZXJ5IHJl
+YWQgb3Igd3JpdGUgc3lzZnMNCj4gPiBhdHRyaWJ1dGVzIGNyZWF0ZWQgYnkgV01JIHZlbmRvciBk
+cml2ZXJzIG1ha2Ugc2Vuc2UuDQo+ID4NCj4gPiBGb3Igb3RoZXIgV01JIG9wZXJhdGlvbnMgdGhh
+dCBhcmUgcnVuIG9uIE1ldGhvZCwgdGhlcmUgbmVlZHMgdG8gYmUgYQ0KPiA+IHdheSB0byBndWFy
+YW50ZWUgdG8gdXNlcnNwYWNlIHRoYXQgdGhlIHJlc3VsdHMgZnJvbSB0aGUgbWV0aG9kIGNhbGwN
+Cj4gPiBiZWxvbmcgdG8gdGhlIGRhdGEgcmVxdWVzdCB0byB0aGUgbWV0aG9kIGNhbGwuICBTeXNm
+cyBhdHRyaWJ1dGVzIGRvbid0DQo+ID4gd29yayB3ZWxsIGluIHRoaXMgc2NlbmFyaW8gYmVjYXVz
+ZSB0d28gdXNlcnNwYWNlIHByb2Nlc3NlcyBtYXkgYmUNCj4gPiBjb21wZXRpbmcgYXQgcmVhZGlu
+Zy93cml0aW5nIGFuIGF0dHJpYnV0ZSBhbmQgc3RlcCBvbiBlYWNoIG90aGVyJ3MNCj4gPiBkYXRh
+Lg0KPiA+DQo+ID4gV2hlbiBhIFdNSSB2ZW5kb3IgZHJpdmVyIGRlY2xhcmVzIGEgc2V0IG9mIGZ1
+bmN0aW9ucyBpbiBhDQo+ID4gZmlsZV9vcGVyYXRpb25zIG9iamVjdCB0aGUgV01JIGJ1cyBkcml2
+ZXIgd2lsbCBjcmVhdGUgYSBjaGFyYWN0ZXINCj4gPiBkZXZpY2UgdGhhdCBtYXBzIHRvIHRob3Nl
+IGZpbGUgb3BlcmF0aW9ucy4NCj4gPg0KPiA+IFRoZSBXTUkgdmVuZG9yIGRyaXZlcnMgd2lsbCBi
+ZSByZXNwb25zaWJsZSBmb3IgbWFuYWdpbmcgYWNjZXNzIHRvDQo+ID4gdGhpcyBjaGFyYWN0ZXIg
+ZGV2aWNlIGFuZCBwcm9wZXIgbG9ja2luZyBvbiBpdC4NCj4gPg0KPiA+IFdoZW4gYSBXTUkgdmVu
+ZG9yIGRyaXZlciBpcyB1bmxvYWRlZCB0aGUgV01JIGJ1cyBkcml2ZXIgd2lsbCBjbGVhbg0KPiA+
+IHVwIHRoZSBjaGFyYWN0ZXIgZGV2aWNlLg0KPiA+DQo+IA0KPiA+IEBAIC00NCwxMiArNDQsMTcg
+QEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVk
+ZSA8bGludXgvd21pLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC91dWlkLmg+DQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9jZGV2Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pZHIuaD4NCj4gDQo+IEtl
+ZXAgYWxwaGFiZXRpY2FsIG9yZGVyaW5nLg0KPiANCg0KVGhlIGV4aXN0aW5nIGxpc3Qgd2Fzbid0
+IGluIGFscGhhYmV0aWNhbCBvcmRlci4gIEknbGwgc3VibWl0IGEgcGF0Y2ggaW4gdjIgZWFybGll
+cg0KaW4gdGhlIHNlcmllcyB0byBzb3J0IGFuZCB0aGVuIHB1dCB0aGVtIGluIHRoZSByaWdodCBw
+bGFjZSBmb3IgbXkgcGF0Y2guDQo=
