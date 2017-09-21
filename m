@@ -1,38 +1,29 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 03/12] platform/x86: dell-smbios: Add pr_fmt definition to driver
-Date: Thu, 21 Sep 2017 08:57:08 -0500
-Message-ID: <bb2f71df3e15c564e3603477b2288683c22250ff.1505999739.git.mario.limonciello@dell.com>
-References: <cover.1505999739.git.mario.limonciello@dell.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 03/12] platform/x86: dell-smbios: Add pr_fmt definition to driver
+Date: Thu, 21 Sep 2017 19:22:59 +0300
+Message-ID: <CAHp75VdOLjjoMgMHeqWD9h2VY3FJWb_zXLqpTf-0t9QSHEvSag@mail.gmail.com>
+References: <cover.1505999739.git.mario.limonciello@dell.com> <bb2f71df3e15c564e3603477b2288683c22250ff.1505999739.git.mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:12291 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751819AbdIUN53 (ORCPT
+Received: from mail-qk0-f175.google.com ([209.85.220.175]:47297 "EHLO
+        mail-qk0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751605AbdIUQXA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2017 09:57:29 -0400
-In-Reply-To: <cover.1505999739.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1505999739.git.mario.limonciello@dell.com>
-References: <cover.1505999739.git.mario.limonciello@dell.com>
+        Thu, 21 Sep 2017 12:23:00 -0400
+In-Reply-To: <bb2f71df3e15c564e3603477b2288683c22250ff.1505999739.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/dell-smbios.c | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Sep 21, 2017 at 4:57 PM, Mario Limonciello
+<mario.limonciello@dell.com> wrote:
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index 0a5723468bff..e9b1ca07c872 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -12,6 +12,7 @@
-  *  it under the terms of the GNU General Public License version 2 as
-  *  published by the Free Software Foundation.
-  */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
+We need a (formal) commit message even for simple patches.
+
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+
 -- 
-2.14.1
+With Best Regards,
+Andy Shevchenko
