@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 04/12] platform/x86: dell-smbios: Switch to a WMI-ACPI interface
-Date: Thu, 21 Sep 2017 08:57:09 -0500
-Message-ID: <4da87eb0d9722ed906615409586a8b4d7becd65c.1505999739.git.mario.limonciello@dell.com>
+Subject: [PATCH 05/12] platform/x86: dell-smbios: rename to dell-wmi-smbios
+Date: Thu, 21 Sep 2017 08:57:10 -0500
+Message-ID: <ed45d9110d415c705d34d75f1cce9cc023403074.1505999739.git.mario.limonciello@dell.com>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,215 +15,179 @@ To: dvhart@infradead.org
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver currently uses an SMI interface which grants direct access
-to physical memory to the platform via a pointer.
+This follows the style of the rest of the platform x86 WMI drivers.
 
-Changing this to operate over WMI-ACPI will use an ACPI OperationRegion
-for a buffer of data storage when platform calls are performed.
+Renaming the driver requires adjusting the other drivers using
+dell-smbios to pick up the newly named includes.
 
-This is a safer approach to use in kernel drivers as the platform will
-only have access to that OperationRegion.
-
-As a result, this change removes the dependency on this driver on the
-dcdbas kernel module.
+While renaming, I noticed that this driver was missing from
+MAINTAINERs. Add it to that and myself to the list of people maintaing
+it.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/Kconfig       |  8 ++--
- drivers/platform/x86/dell-smbios.c | 76 ++++++++++++++++++++++++++------------
- drivers/platform/x86/dell-smbios.h | 11 +++---
- 3 files changed, 63 insertions(+), 32 deletions(-)
+ MAINTAINERS                                          |  6 ++++++
+ drivers/platform/x86/Kconfig                         |  2 +-
+ drivers/platform/x86/Makefile                        |  2 +-
+ drivers/platform/x86/dell-laptop.c                   |  2 +-
+ .../x86/{dell-smbios.c => dell-wmi-smbios.c}         | 20 ++++++++++----------
+ .../x86/{dell-smbios.h => dell-wmi-smbios.h}         |  4 ++--
+ drivers/platform/x86/dell-wmi.c                      |  2 +-
+ 7 files changed, 22 insertions(+), 16 deletions(-)
+ rename drivers/platform/x86/{dell-smbios.c => dell-wmi-smbios.c} (92%)
+ rename drivers/platform/x86/{dell-smbios.h => dell-wmi-smbios.h} (96%)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5d8ea24a8ee7..437daa9062e1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4002,6 +4002,12 @@ M:	Pali Rohár <pali.rohar@gmail.com>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-wmi.c
+ 
++DELL WMI SMBIOS DRIVER
++M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Mario Limonciello <mario.limonciello@dell.com>
++S:	Maintained
++F:	drivers/platform/x86/dell-wmi-smbios.c
++
+ DELTA ST MEDIA DRIVER
+ M:	Hugues Fruchet <hugues.fruchet@st.com>
+ L:	linux-media@vger.kernel.org
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9e52f05daa2e..81d61c0f4ef8 100644
+index 81d61c0f4ef8..a70bcd8caa72 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -92,13 +92,13 @@ config ASUS_LAPTOP
+@@ -91,7 +91,7 @@ config ASUS_LAPTOP
+ 
  	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
  
- config DELL_SMBIOS
--	tristate
--	select DCDBAS
-+	tristate "Dell WMI SMBIOS calling interface"
-+	depends on ACPI_WMI
+-config DELL_SMBIOS
++config DELL_WMI_SMBIOS
+ 	tristate "Dell WMI SMBIOS calling interface"
+ 	depends on ACPI_WMI
  	---help---
- 	This module provides common functions for kernel modules using
--	Dell SMBIOS.
-+	Dell SMBIOS over ACPI-WMI.
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 91cec1751461..b127a3bc1fab 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -11,11 +11,11 @@ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
+ obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+-obj-$(CONFIG_DELL_SMBIOS)	+= dell-smbios.o
+ obj-$(CONFIG_DELL_LAPTOP)	+= dell-laptop.o
+ obj-$(CONFIG_DELL_WMI)		+= dell-wmi.o
+ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
+ obj-$(CONFIG_DELL_WMI_LED)	+= dell-wmi-led.o
++obj-$(CONFIG_DELL_WMI_SMBIOS)	+= dell-wmi-smbios.o
+ obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
+ obj-$(CONFIG_DELL_RBTN)		+= dell-rbtn.o
+ obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index f42159fd2031..bf569ea93e9d 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -33,7 +33,7 @@
+ #include <linux/seq_file.h>
+ #include <acpi/video.h>
+ #include "dell-rbtn.h"
+-#include "dell-smbios.h"
++#include "dell-wmi-smbios.h"
  
--	If you have a Dell laptop, say Y or M here.
-+	If you have a Dell computer, say Y or M here.
- 
- config DELL_LAPTOP
- 	tristate "Dell Laptop Extras"
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index e9b1ca07c872..c06262a89169 100644
+ #define BRIGHTNESS_TOKEN 0x7d
+ #define KBD_LED_OFF_TOKEN 0x01E1
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-wmi-smbios.c
+similarity index 92%
+rename from drivers/platform/x86/dell-smbios.c
+rename to drivers/platform/x86/dell-wmi-smbios.c
+index c06262a89169..7f896701fb7b 100644
 --- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -4,6 +4,7 @@
-  *  Copyright (c) Red Hat <mjg@redhat.com>
-  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
-  *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
-+ *  Copyright (c) 2017 Dell Inc.
-  *
-  *  Based on documentation in the libsmbios package:
-  *  Copyright (C) 2005-2014 Dell Inc.
-@@ -18,13 +19,12 @@
- #include <linux/module.h>
- #include <linux/dmi.h>
++++ b/drivers/platform/x86/dell-wmi-smbios.c
+@@ -21,7 +21,7 @@
  #include <linux/err.h>
--#include <linux/gfp.h>
  #include <linux/mutex.h>
--#include <linux/slab.h>
--#include <linux/io.h>
--#include "../../firmware/dcdbas.h"
-+#include <linux/wmi.h>
- #include "dell-smbios.h"
+ #include <linux/wmi.h>
+-#include "dell-smbios.h"
++#include "dell-wmi-smbios.h"
  
-+#define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
-+
- struct calling_interface_structure {
- 	struct dmi_header header;
- 	u16 cmdIOAddress;
-@@ -76,20 +76,39 @@ void dell_smbios_release_buffer(void)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_release_buffer);
+ #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
  
--void dell_smbios_send_request(int class, int select)
-+int run_wmi_smbios_call(struct calling_interface_buffer *buffer)
- {
--	struct smi_cmd command;
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	struct acpi_buffer input;
-+	union acpi_object *obj;
-+	acpi_status status;
-+
-+	input.length = sizeof(struct calling_interface_buffer);
-+	input.pointer = buffer;
-+
-+	status = wmi_evaluate_method(DELL_WMI_SMBIOS_GUID,
-+				     0, 1, &input, &output);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("%x/%x [%x,%x,%x,%x] call failed\n",
-+			buffer->class, buffer->select, buffer->input[0],
-+			buffer->input[1], buffer->input[2], buffer->input[3]);
-+			return -EIO;
-+	}
-+	obj = (union acpi_object *)output.pointer;
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		pr_err("invalid type : %d\n", obj->type);
-+		return -EIO;
-+	}
-+	memcpy(buffer, obj->buffer.pointer, input.length);
- 
--	command.magic = SMI_CMD_MAGIC;
--	command.command_address = da_command_address;
--	command.command_code = da_command_code;
--	command.ebx = virt_to_phys(buffer);
--	command.ecx = 0x42534931;
-+	return 0;
-+}
- 
-+void dell_smbios_send_request(int class, int select)
-+{
- 	buffer->class = class;
- 	buffer->select = select;
--
--	dcdbas_smi_request(&command);
-+	run_wmi_smbios_call(buffer);
- }
- EXPORT_SYMBOL_GPL(dell_smbios_send_request);
- 
-@@ -170,7 +189,7 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+@@ -189,7 +189,7 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
  	}
  }
  
--static int __init dell_smbios_init(void)
-+static int dell_smbios_probe(struct wmi_device *wdev)
+-static int dell_smbios_probe(struct wmi_device *wdev)
++static int dell_wmi_smbios_probe(struct wmi_device *wdev)
  {
  	int ret;
  
-@@ -181,11 +200,7 @@ static int __init dell_smbios_init(void)
- 		return -ENODEV;
- 	}
- 
--	/*
--	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
--	 * is passed to SMI handler.
--	 */
--	buffer = (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
-+	buffer = (void *)__get_free_page(GFP_KERNEL);
- 	if (!buffer) {
- 		ret = -ENOMEM;
- 		goto fail_buffer;
-@@ -198,17 +213,32 @@ static int __init dell_smbios_init(void)
+@@ -213,27 +213,27 @@ static int dell_smbios_probe(struct wmi_device *wdev)
  	return ret;
  }
  
--static void __exit dell_smbios_exit(void)
-+static int dell_smbios_remove(struct wmi_device *wdev)
+-static int dell_smbios_remove(struct wmi_device *wdev)
++static int dell_wmi_smbios_remove(struct wmi_device *wdev)
  {
  	kfree(da_tokens);
  	free_page((unsigned long)buffer);
-+	return 0;
+ 	return 0;
  }
  
--subsys_initcall(dell_smbios_init);
--module_exit(dell_smbios_exit);
-+static const struct wmi_device_id dell_smbios_id_table[] = {
-+	{ .guid_string = DELL_WMI_SMBIOS_GUID },
-+	{ },
-+};
-+
-+static struct wmi_driver dell_smbios_driver = {
-+	.driver = {
-+		.name = "dell-smbios",
-+	},
-+	.probe = dell_smbios_probe,
-+	.remove = dell_smbios_remove,
-+	.id_table = dell_smbios_id_table,
-+};
-+module_wmi_driver(dell_smbios_driver);
-+
+-static const struct wmi_device_id dell_smbios_id_table[] = {
++static const struct wmi_device_id dell_wmi_smbios_id_table[] = {
+ 	{ .guid_string = DELL_WMI_SMBIOS_GUID },
+ 	{ },
+ };
+ 
+-static struct wmi_driver dell_smbios_driver = {
++static struct wmi_driver dell_wmi_smbios_driver = {
+ 	.driver = {
+-		.name = "dell-smbios",
++		.name = "dell-wmi-smbios",
+ 	},
+-	.probe = dell_smbios_probe,
+-	.remove = dell_smbios_remove,
+-	.id_table = dell_smbios_id_table,
++	.probe = dell_wmi_smbios_probe,
++	.remove = dell_wmi_smbios_remove,
++	.id_table = dell_wmi_smbios_id_table,
+ };
+-module_wmi_driver(dell_smbios_driver);
++module_wmi_driver(dell_wmi_smbios_driver);
+ 
  
  MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
- MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
- MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
--MODULE_DESCRIPTION("Common functions for kernel modules using Dell SMBIOS");
-+MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
-+MODULE_DESCRIPTION("Common functions for kernel modules using Dell SMBIOS over WMI");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index 45cbc2292cd3..e1e29697b362 100644
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-wmi-smbios.h
+similarity index 96%
+rename from drivers/platform/x86/dell-smbios.h
+rename to drivers/platform/x86/dell-wmi-smbios.h
+index e1e29697b362..e6e9990bb2b7 100644
 --- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -4,6 +4,7 @@
-  *  Copyright (c) Red Hat <mjg@redhat.com>
-  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
-  *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
-+ *  Copyright (c) 2017 Dell Inc.
-  *
-  *  Based on documentation in the libsmbios package:
-  *  Copyright (C) 2005-2014 Dell Inc.
-@@ -18,14 +19,14 @@
++++ b/drivers/platform/x86/dell-wmi-smbios.h
+@@ -14,8 +14,8 @@
+  *  published by the Free Software Foundation.
+  */
+ 
+-#ifndef _DELL_SMBIOS_H_
+-#define _DELL_SMBIOS_H_
++#ifndef _DELL_WMI_SMBIOS_H_
++#define _DELL_WMI_SMBIOS_H_
  
  struct notifier_block;
  
--/* This structure will be modified by the firmware when we enter
-- * system management mode, hence the volatiles */
--
- struct calling_interface_buffer {
- 	u16 class;
- 	u16 select;
--	volatile u32 input[4];
--	volatile u32 output[4];
-+	u32 input[4];
-+	u32 output[4];
-+	u32 argattrib;
-+	u32 blength;
-+	u8 data[4052];
- } __packed;
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 1fbef560ca67..e8b4d412eabc 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -38,7 +38,7 @@
+ #include <linux/dmi.h>
+ #include <linux/wmi.h>
+ #include <acpi/video.h>
+-#include "dell-smbios.h"
++#include "dell-wmi-smbios.h"
  
- struct calling_interface_token {
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
 -- 
 2.14.1
