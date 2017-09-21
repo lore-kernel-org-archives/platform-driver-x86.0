@@ -1,62 +1,55 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 07/12] platform/x86: dell-wmi-smbios: Use Dell WMI
- descriptor check
-Date: Thu, 21 Sep 2017 19:44:28 +0300
-Message-ID: <CAHp75Vds+meGPSusqu5Hb1z7VtVRf55o7665Jzn0ky7CB5dnXQ@mail.gmail.com>
-References: <cover.1505999739.git.mario.limonciello@dell.com> <1001812b63d73bf3ccd5ea6c76604cae0fa1525a.1505999739.git.mario.limonciello@dell.com>
+Subject: Re: [PATCH 09/12] platform/x86: wmi: create character devices when
+ requested by drivers
+Date: Thu, 21 Sep 2017 19:46:32 +0300
+Message-ID: <CAHp75VcD+SK2sMMzx8VKed2vVtGJzdwTcM-a5FZyRidZL6jGYw@mail.gmail.com>
+References: <cover.1505999739.git.mario.limonciello@dell.com> <0147d9b2d81428711f4e2c8cf1baff71ba81764e.1505999739.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1001812b63d73bf3ccd5ea6c76604cae0fa1525a.1505999739.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f174.google.com ([209.85.216.174]:50398 "EHLO
+        mail-qt0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751640AbdIUQqd (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 21 Sep 2017 12:46:33 -0400
+In-Reply-To: <0147d9b2d81428711f4e2c8cf1baff71ba81764e.1505999739.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
 Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
 On Thu, Sep 21, 2017 at 4:57 PM, Mario Limonciello
 <mario.limonciello@dell.com> wrote:
-> The Dell WMI descriptor check is used as an indication that WMI
-> calls are safe to run both when used with the notification
-> ASL/GUID pair as well as the SMBIOS calling ASL/GUID pair.
+> For WMI operations that are only Set or Query read or write sysfs
+> attributes created by WMI vendor drivers make sense.
 >
-> As some code in dell-wmi-smbios is already a prerequisite for
-> dell-wmi, move the code for performing the descriptor check into
-> dell-wmi-smbios and let both drivers use it from there.
+> For other WMI operations that are run on Method, there needs to be a
+> way to guarantee to userspace that the results from the method call
+> belong to the data request to the method call.  Sysfs attributes don't
+> work well in this scenario because two userspace processes may be
+> competing at reading/writing an attribute and step on each other's
+> data.
+>
+> When a WMI vendor driver declares a set of functions in a
+> file_operations object the WMI bus driver will create a character
+> device that maps to those file operations.
+>
+> The WMI vendor drivers will be responsible for managing access to
+> this character device and proper locking on it.
+>
+> When a WMI vendor driver is unloaded the WMI bus driver will clean
+> up the character device.
+>
 
-> +       desc_buffer = (u32 *)obj->buffer.pointer;
-> +
+> @@ -44,12 +44,17 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/wmi.h>
+>  #include <linux/uuid.h>
+> +#include <linux/cdev.h>
+> +#include <linux/idr.h>
 
-> +       if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
+Keep alphabetical ordering.
 
-I was thinking about strncmp() here for a full line, though decide not
-to push it anyhow. Those IDs is binary data, can be anything and you
-have comment of what is expected here.
-
-But I think it would be nice to create a separate definitions and make
-comments there.
-
-> +               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
-> +                       8, desc_buffer);
-
-%8ph ?
-
-> +
-> +       if (desc_buffer[2] != 0 && desc_buffer[2] != 1)
-> +               dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
-> +                       desc_buffer[2]);
-
-%u ? u32 can't be negative and you basically allow it.
-
-> +
-> +       if (desc_buffer[3] != 4096)
-> +               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
-> +                       desc_buffer[3]);
-
-Ditto.
-
-
-P.S. I noticed this all in old code, so, you can address my comments
-in a separate patch if you find them useful.
 
 -- 
 With Best Regards,
