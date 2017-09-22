@@ -1,67 +1,132 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 07/12] platform/x86: dell-wmi-smbios: Use Dell WMI
- descriptor check
-Date: Thu, 21 Sep 2017 20:56:02 +0000
-Message-ID: <611e782b142740b6955ff86457933eb8@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1505999739.git.mario.limonciello@dell.com>
- <1001812b63d73bf3ccd5ea6c76604cae0fa1525a.1505999739.git.mario.limonciello@dell.com>
- <CAHp75Vds+meGPSusqu5Hb1z7VtVRf55o7665Jzn0ky7CB5dnXQ@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 08/11] staging: typec: tcpm: Set mux to device mode
+ when configured as such
+Date: Fri, 22 Sep 2017 16:02:27 +0200
+Message-ID: <65cf943e-668b-a9e2-bd4c-e272c87cb18f@redhat.com>
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+ <20170905164221.11266-9-hdegoede@redhat.com>
+ <d95237a4-63da-4d5e-5dba-3354df78306b@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:8786 "EHLO
-        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751728AbdIUU4E (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2017 16:56:04 -0400
-In-Reply-To: <CAHp75Vds+meGPSusqu5Hb1z7VtVRf55o7665Jzn0ky7CB5dnXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d95237a4-63da-4d5e-5dba-3354df78306b@roeck-us.net>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgU2VwdGVt
-YmVyIDIxLCAyMDE3IDExOjQ0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xp
-bW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3Jt
-LWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgUGFsaSBS
-b2jDoXINCj4gPHBhbGkucm9oYXJAZ21haWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA3
-LzEyXSBwbGF0Zm9ybS94ODY6IGRlbGwtd21pLXNtYmlvczogVXNlIERlbGwgV01JDQo+IGRlc2Ny
-aXB0b3IgY2hlY2sNCj4gDQo+IE9uIFRodSwgU2VwIDIxLCAyMDE3IGF0IDQ6NTcgUE0sIE1hcmlv
-IExpbW9uY2llbGxvDQo+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+ID4g
-VGhlIERlbGwgV01JIGRlc2NyaXB0b3IgY2hlY2sgaXMgdXNlZCBhcyBhbiBpbmRpY2F0aW9uIHRo
-YXQgV01JDQo+ID4gY2FsbHMgYXJlIHNhZmUgdG8gcnVuIGJvdGggd2hlbiB1c2VkIHdpdGggdGhl
-IG5vdGlmaWNhdGlvbg0KPiA+IEFTTC9HVUlEIHBhaXIgYXMgd2VsbCBhcyB0aGUgU01CSU9TIGNh
-bGxpbmcgQVNML0dVSUQgcGFpci4NCj4gPg0KPiA+IEFzIHNvbWUgY29kZSBpbiBkZWxsLXdtaS1z
-bWJpb3MgaXMgYWxyZWFkeSBhIHByZXJlcXVpc2l0ZSBmb3INCj4gPiBkZWxsLXdtaSwgbW92ZSB0
-aGUgY29kZSBmb3IgcGVyZm9ybWluZyB0aGUgZGVzY3JpcHRvciBjaGVjayBpbnRvDQo+ID4gZGVs
-bC13bWktc21iaW9zIGFuZCBsZXQgYm90aCBkcml2ZXJzIHVzZSBpdCBmcm9tIHRoZXJlLg0KPiAN
-Cj4gPiArICAgICAgIGRlc2NfYnVmZmVyID0gKHUzMiAqKW9iai0+YnVmZmVyLnBvaW50ZXI7DQo+
-ID4gKw0KPiANCj4gPiArICAgICAgIGlmIChkZXNjX2J1ZmZlclswXSAhPSAweDRDNEM0NTQ0ICYm
-IGRlc2NfYnVmZmVyWzFdICE9IDB4NDk0RDU3MjApDQo+IA0KPiBJIHdhcyB0aGlua2luZyBhYm91
-dCBzdHJuY21wKCkgaGVyZSBmb3IgYSBmdWxsIGxpbmUsIHRob3VnaCBkZWNpZGUgbm90DQo+IHRv
-IHB1c2ggaXQgYW55aG93LiBUaG9zZSBJRHMgaXMgYmluYXJ5IGRhdGEsIGNhbiBiZSBhbnl0aGlu
-ZyBhbmQgeW91DQo+IGhhdmUgY29tbWVudCBvZiB3aGF0IGlzIGV4cGVjdGVkIGhlcmUuDQo+IA0K
-PiBCdXQgSSB0aGluayBpdCB3b3VsZCBiZSBuaWNlIHRvIGNyZWF0ZSBhIHNlcGFyYXRlIGRlZmlu
-aXRpb25zIGFuZCBtYWtlDQo+IGNvbW1lbnRzIHRoZXJlLg0KPiANCj4gPiArICAgICAgICAgICAg
-ICAgZGV2X3dhcm4oJndkZXYtPmRldiwgIkRlbGwgZGVzY3JpcHRvciBidWZmZXIgaGFzIGludmFs
-aWQgc2lnbmF0dXJlDQo+ICglKnBoKVxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICA4
-LCBkZXNjX2J1ZmZlcik7DQo+IA0KPiAlOHBoID8NCj4gDQo+ID4gKw0KPiA+ICsgICAgICAgaWYg
-KGRlc2NfYnVmZmVyWzJdICE9IDAgJiYgZGVzY19idWZmZXJbMl0gIT0gMSkNCj4gPiArICAgICAg
-ICAgICAgICAgZGV2X3dhcm4oJndkZXYtPmRldiwgIkRlbGwgZGVzY3JpcHRvciBidWZmZXIgaGFz
-IHVua25vd24gdmVyc2lvbg0KPiAoJWQpXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGRlc2NfYnVmZmVyWzJdKTsNCj4gDQo+ICV1ID8gdTMyIGNhbid0IGJlIG5lZ2F0aXZlIGFuZCB5
-b3UgYmFzaWNhbGx5IGFsbG93IGl0Lg0KPiANCj4gPiArDQo+ID4gKyAgICAgICBpZiAoZGVzY19i
-dWZmZXJbM10gIT0gNDA5NikNCj4gPiArICAgICAgICAgICAgICAgZGV2X3dhcm4oJndkZXYtPmRl
-diwgIkRlbGwgZGVzY3JpcHRvciBidWZmZXIgaGFzIGludmFsaWQgYnVmZmVyIGxlbmd0aA0KPiAo
-JWQpXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRlc2NfYnVmZmVyWzNdKTsNCj4g
-DQo+IERpdHRvLg0KPiANCj4gDQo+IFAuUy4gSSBub3RpY2VkIHRoaXMgYWxsIGluIG9sZCBjb2Rl
-LCBzbywgeW91IGNhbiBhZGRyZXNzIG15IGNvbW1lbnRzDQo+IGluIGEgc2VwYXJhdGUgcGF0Y2gg
-aWYgeW91IGZpbmQgdGhlbSB1c2VmdWwuDQo+IA0KDQpZZWFoIHRoaXMgaXMgYWxsIG9sZCBjb2Rl
-LiAgSSd2ZSBtYWRlIHNvbWUgYWRqdXN0bWVudHMgdG8gaXQgaW4gdjIgaW4gYSBjb21wbGV0ZWx5
-IHNlcGFyYXRlDQpwYXRjaCB0aGF0IGNvbWVzIGFmdGVyIHRoZSBwYXRjaCBpdCdzICJtb3ZlZCIu
-ICBJJ2xsIHN1Ym1pdCBiYWNrIGFmdGVyIG90aGVyIGZlZWRiYWNrDQp0byB0aGlzIHNlcmllcy4N
-Cg0K
+Hi,
+
+On 09/11/2017 12:56 AM, Guenter Roeck wrote:
+> On 09/05/2017 09:42 AM, Hans de Goede wrote:
+>> Setting the mux to TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT when the
+>> data-role is device is not correct. Plenty of devices support operating
+>> as USB device through a (separate) USB device controller.
+>>
+>> So this commit instead splits out TYPEC_MUX_USB into TYPEC_MUX_USB_HOST
+>> and TYPEC_MUX_USB_DEVICE and makes tcpm_set_roles() set the mux
+>> accordingly.
+>>
+>> Likewise TCPC_MUX_DP gets renamed to TCPC_MUX_DP_SRC to make clear that
+>> this is for configuring the Type-C port as a Display Port source, not a
+>> sink.
+>>
+>> Last this commit makes tcpm_reset_port() to set the mux to
+>> TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT so that it does not and up
+>> staying in host (and with this commit also device) mode after a detach.
+>>
+> This sentence is hard to understand.
+
+Ok, changed to:
+
+"Last this commit makes tcpm_reset_port() call tcpm_mux_set(port,
+TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT) so that the mux does _not_
+stay in its last mode after a detach."
+
+For v3 of this patchset.
+
+> 
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Otherwise
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+And added your Reviewed-by.
+
+Thanks & Regards,
+
+Hans
+
+
+
+
+>
+> 
+>> ---
+>>   drivers/staging/typec/tcpm.c |  7 ++++---
+>>   drivers/staging/typec/tcpm.h | 22 ++++++++++++++--------
+>>   2 files changed, 18 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/staging/typec/tcpm.c b/drivers/staging/typec/tcpm.c
+>> index 8af62e74d54c..ffe7e26d4ed3 100644
+>> --- a/drivers/staging/typec/tcpm.c
+>> +++ b/drivers/staging/typec/tcpm.c
+>> @@ -752,11 +752,11 @@ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
+>>       int ret;
+>>       if (data == TYPEC_HOST)
+>> -        ret = tcpm_mux_set(port, TYPEC_MUX_USB,
+>> +        ret = tcpm_mux_set(port, TYPEC_MUX_USB_HOST,
+>>                      TCPC_USB_SWITCH_CONNECT);
+>>       else
+>> -        ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
+>> -                   TCPC_USB_SWITCH_DISCONNECT);
+>> +        ret = tcpm_mux_set(port, TYPEC_MUX_USB_DEVICE,
+>> +                   TCPC_USB_SWITCH_CONNECT);
+>>       if (ret < 0)
+>>           return ret;
+>> @@ -2025,6 +2025,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+>>       tcpm_init_vconn(port);
+>>       tcpm_set_current_limit(port, 0, 0);
+>>       tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
+>> +    tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
+>>       tcpm_set_attached_state(port, false);
+>>       port->try_src_count = 0;
+>>       port->try_snk_count = 0;
+>> diff --git a/drivers/staging/typec/tcpm.h b/drivers/staging/typec/tcpm.h
+>> index 7e9a6b7b5cd6..f662eed48c86 100644
+>> --- a/drivers/staging/typec/tcpm.h
+>> +++ b/drivers/staging/typec/tcpm.h
+>> @@ -83,17 +83,23 @@ enum tcpc_usb_switch {
+>>   };
+>>   /* Mux state attributes */
+>> -#define TCPC_MUX_USB_ENABLED        BIT(0)    /* USB enabled */
+>> -#define TCPC_MUX_DP_ENABLED        BIT(1)    /* DP enabled */
+>> -#define TCPC_MUX_POLARITY_INVERTED    BIT(2)    /* Polarity inverted */
+>> +#define TCPC_MUX_USB_DEVICE_ENABLED        BIT(0)    /* USB device enabled */
+>> +#define TCPC_MUX_USB_HOST_ENABLED        BIT(1)    /* USB host enabled */
+>> +#define TCPC_MUX_DP_SRC_ENABLED            BIT(2)    /* DP enabled */
+>> +#define TCPC_MUX_POLARITY_INVERTED        BIT(3)    /* Polarity inverted */
+>>   /* Mux modes, decoded to attributes */
+>>   enum tcpc_mux_mode {
+>> -    TYPEC_MUX_NONE    = 0,                /* Open switch */
+>> -    TYPEC_MUX_USB    = TCPC_MUX_USB_ENABLED,        /* USB only */
+>> -    TYPEC_MUX_DP    = TCPC_MUX_DP_ENABLED,        /* DP only */
+>> -    TYPEC_MUX_DOCK    = TCPC_MUX_USB_ENABLED |    /* Both USB and DP */
+>> -              TCPC_MUX_DP_ENABLED,
+>> +    /* Open switch */
+>> +    TYPEC_MUX_NONE = 0,
+>> +    /* USB device only */
+>> +    TYPEC_MUX_USB_DEVICE = TCPC_MUX_USB_DEVICE_ENABLED,
+>> +    /* USB host only */
+>> +    TYPEC_MUX_USB_HOST = TCPC_MUX_USB_HOST_ENABLED,
+>> +    /* DP source only */
+>> +    TYPEC_MUX_DP = TCPC_MUX_DP_SRC_ENABLED,
+>> +    /* Both USB host and DP source */
+>> +    TYPEC_MUX_DOCK = TCPC_MUX_USB_HOST_ENABLED | TCPC_MUX_DP_SRC_ENABLED,
+>>   };
+>>   struct tcpc_mux_dev {
+>>
+> 
