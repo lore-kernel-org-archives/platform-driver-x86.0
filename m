@@ -1,132 +1,264 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 08/11] staging: typec: tcpm: Set mux to device mode
- when configured as such
-Date: Fri, 22 Sep 2017 16:02:27 +0200
-Message-ID: <65cf943e-668b-a9e2-bd4c-e272c87cb18f@redhat.com>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-9-hdegoede@redhat.com>
- <d95237a4-63da-4d5e-5dba-3354df78306b@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d95237a4-63da-4d5e-5dba-3354df78306b@roeck-us.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Subject: [PATCH v3 01/14] mux: core: Add mux_control_get_optional() API
+Date: Fri, 22 Sep 2017 20:37:50 +0200
+Message-ID: <20170922183803.10701-1-hdegoede@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:52158 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751845AbdIVSiM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 22 Sep 2017 14:38:12 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
 
-Hi,
+From: Stephen Boyd <stephen.boyd@linaro.org>
 
-On 09/11/2017 12:56 AM, Guenter Roeck wrote:
-> On 09/05/2017 09:42 AM, Hans de Goede wrote:
->> Setting the mux to TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT when the
->> data-role is device is not correct. Plenty of devices support operating
->> as USB device through a (separate) USB device controller.
->>
->> So this commit instead splits out TYPEC_MUX_USB into TYPEC_MUX_USB_HOST
->> and TYPEC_MUX_USB_DEVICE and makes tcpm_set_roles() set the mux
->> accordingly.
->>
->> Likewise TCPC_MUX_DP gets renamed to TCPC_MUX_DP_SRC to make clear that
->> this is for configuring the Type-C port as a Display Port source, not a
->> sink.
->>
->> Last this commit makes tcpm_reset_port() to set the mux to
->> TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT so that it does not and up
->> staying in host (and with this commit also device) mode after a detach.
->>
-> This sentence is hard to understand.
+Sometimes drivers only use muxes under certain scenarios. For
+example, the chipidea usb controller may be connected to a usb
+switch on some platforms, and connected directly to a usb port on
+others. The driver won't know one way or the other though, so add
+a mux_control_get_optional() API that allows the driver to
+differentiate errors getting the mux from there not being a mux
+for the driver to use at all.
 
-Ok, changed to:
+Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ Documentation/driver-model/devres.txt |   1 +
+ drivers/mux/core.c                    | 104 +++++++++++++++++++++++++++-------
+ include/linux/mux/consumer.h          |   4 ++
+ 3 files changed, 89 insertions(+), 20 deletions(-)
 
-"Last this commit makes tcpm_reset_port() call tcpm_mux_set(port,
-TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT) so that the mux does _not_
-stay in its last mode after a detach."
-
-For v3 of this patchset.
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Otherwise
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-And added your Reviewed-by.
-
-Thanks & Regards,
-
-Hans
-
-
-
-
->
-> 
->> ---
->>   drivers/staging/typec/tcpm.c |  7 ++++---
->>   drivers/staging/typec/tcpm.h | 22 ++++++++++++++--------
->>   2 files changed, 18 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/staging/typec/tcpm.c b/drivers/staging/typec/tcpm.c
->> index 8af62e74d54c..ffe7e26d4ed3 100644
->> --- a/drivers/staging/typec/tcpm.c
->> +++ b/drivers/staging/typec/tcpm.c
->> @@ -752,11 +752,11 @@ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
->>       int ret;
->>       if (data == TYPEC_HOST)
->> -        ret = tcpm_mux_set(port, TYPEC_MUX_USB,
->> +        ret = tcpm_mux_set(port, TYPEC_MUX_USB_HOST,
->>                      TCPC_USB_SWITCH_CONNECT);
->>       else
->> -        ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
->> -                   TCPC_USB_SWITCH_DISCONNECT);
->> +        ret = tcpm_mux_set(port, TYPEC_MUX_USB_DEVICE,
->> +                   TCPC_USB_SWITCH_CONNECT);
->>       if (ret < 0)
->>           return ret;
->> @@ -2025,6 +2025,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
->>       tcpm_init_vconn(port);
->>       tcpm_set_current_limit(port, 0, 0);
->>       tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
->> +    tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
->>       tcpm_set_attached_state(port, false);
->>       port->try_src_count = 0;
->>       port->try_snk_count = 0;
->> diff --git a/drivers/staging/typec/tcpm.h b/drivers/staging/typec/tcpm.h
->> index 7e9a6b7b5cd6..f662eed48c86 100644
->> --- a/drivers/staging/typec/tcpm.h
->> +++ b/drivers/staging/typec/tcpm.h
->> @@ -83,17 +83,23 @@ enum tcpc_usb_switch {
->>   };
->>   /* Mux state attributes */
->> -#define TCPC_MUX_USB_ENABLED        BIT(0)    /* USB enabled */
->> -#define TCPC_MUX_DP_ENABLED        BIT(1)    /* DP enabled */
->> -#define TCPC_MUX_POLARITY_INVERTED    BIT(2)    /* Polarity inverted */
->> +#define TCPC_MUX_USB_DEVICE_ENABLED        BIT(0)    /* USB device enabled */
->> +#define TCPC_MUX_USB_HOST_ENABLED        BIT(1)    /* USB host enabled */
->> +#define TCPC_MUX_DP_SRC_ENABLED            BIT(2)    /* DP enabled */
->> +#define TCPC_MUX_POLARITY_INVERTED        BIT(3)    /* Polarity inverted */
->>   /* Mux modes, decoded to attributes */
->>   enum tcpc_mux_mode {
->> -    TYPEC_MUX_NONE    = 0,                /* Open switch */
->> -    TYPEC_MUX_USB    = TCPC_MUX_USB_ENABLED,        /* USB only */
->> -    TYPEC_MUX_DP    = TCPC_MUX_DP_ENABLED,        /* DP only */
->> -    TYPEC_MUX_DOCK    = TCPC_MUX_USB_ENABLED |    /* Both USB and DP */
->> -              TCPC_MUX_DP_ENABLED,
->> +    /* Open switch */
->> +    TYPEC_MUX_NONE = 0,
->> +    /* USB device only */
->> +    TYPEC_MUX_USB_DEVICE = TCPC_MUX_USB_DEVICE_ENABLED,
->> +    /* USB host only */
->> +    TYPEC_MUX_USB_HOST = TCPC_MUX_USB_HOST_ENABLED,
->> +    /* DP source only */
->> +    TYPEC_MUX_DP = TCPC_MUX_DP_SRC_ENABLED,
->> +    /* Both USB host and DP source */
->> +    TYPEC_MUX_DOCK = TCPC_MUX_USB_HOST_ENABLED | TCPC_MUX_DP_SRC_ENABLED,
->>   };
->>   struct tcpc_mux_dev {
->>
-> 
+diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.txt
+index 69f08c0f23a8..5e41f3ac8a05 100644
+--- a/Documentation/driver-model/devres.txt
++++ b/Documentation/driver-model/devres.txt
+@@ -343,6 +343,7 @@ MUX
+   devm_mux_chip_alloc()
+   devm_mux_chip_register()
+   devm_mux_control_get()
++  devm_mux_control_get_optional()
+ 
+ PER-CPU MEM
+   devm_alloc_percpu()
+diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+index 6e5cf9d9cd99..244bceb17877 100644
+--- a/drivers/mux/core.c
++++ b/drivers/mux/core.c
+@@ -289,6 +289,9 @@ EXPORT_SYMBOL_GPL(devm_mux_chip_register);
+  */
+ unsigned int mux_control_states(struct mux_control *mux)
+ {
++	if (!mux)
++		return 0;
++
+ 	return mux->states;
+ }
+ EXPORT_SYMBOL_GPL(mux_control_states);
+@@ -338,6 +341,9 @@ int mux_control_select(struct mux_control *mux, unsigned int state)
+ {
+ 	int ret;
+ 
++	if (!mux)
++		return 0;
++
+ 	ret = down_killable(&mux->lock);
+ 	if (ret < 0)
+ 		return ret;
+@@ -370,6 +376,9 @@ int mux_control_try_select(struct mux_control *mux, unsigned int state)
+ {
+ 	int ret;
+ 
++	if (!mux)
++		return 0;
++
+ 	if (down_trylock(&mux->lock))
+ 		return -EBUSY;
+ 
+@@ -398,6 +407,9 @@ int mux_control_deselect(struct mux_control *mux)
+ {
+ 	int ret = 0;
+ 
++	if (!mux)
++		return 0;
++
+ 	if (mux->idle_state != MUX_IDLE_AS_IS &&
+ 	    mux->idle_state != mux->cached_state)
+ 		ret = mux_control_set(mux, mux->idle_state);
+@@ -423,14 +435,8 @@ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+ 	return dev ? to_mux_chip(dev) : NULL;
+ }
+ 
+-/**
+- * mux_control_get() - Get the mux-control for a device.
+- * @dev: The device that needs a mux-control.
+- * @mux_name: The name identifying the mux-control.
+- *
+- * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
+- */
+-struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
++static struct mux_control *
++__mux_control_get(struct device *dev, const char *mux_name, bool optional)
+ {
+ 	struct device_node *np = dev->of_node;
+ 	struct of_phandle_args args;
+@@ -442,16 +448,22 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+ 	if (mux_name) {
+ 		index = of_property_match_string(np, "mux-control-names",
+ 						 mux_name);
++		if ((index == -EINVAL || index == -ENODATA) && optional)
++			return NULL;
+ 		if (index < 0) {
+ 			dev_err(dev, "mux controller '%s' not found\n",
+ 				mux_name);
+ 			return ERR_PTR(index);
+ 		}
++		/* OF does point to a mux, so it's no longer optional */
++		optional = false;
+ 	}
+ 
+ 	ret = of_parse_phandle_with_args(np,
+ 					 "mux-controls", "#mux-control-cells",
+ 					 index, &args);
++	if (ret == -ENOENT && optional)
++		return NULL;
+ 	if (ret) {
+ 		dev_err(dev, "%pOF: failed to get mux-control %s(%i)\n",
+ 			np, mux_name ?: "", index);
+@@ -484,8 +496,35 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+ 
+ 	return &mux_chip->mux[controller];
+ }
++
++/**
++ * mux_control_get() - Get the mux-control for a device.
++ * @dev: The device that needs a mux-control.
++ * @mux_name: The name identifying the mux-control.
++ *
++ * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
++ */
++struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
++{
++	return __mux_control_get(dev, mux_name, false);
++}
+ EXPORT_SYMBOL_GPL(mux_control_get);
+ 
++/**
++ * mux_control_get_optional() - Get the optional mux-control for a device.
++ * @dev: The device that needs a mux-control.
++ * @mux_name: The name identifying the mux-control.
++ *
++ * Return: NULL if no mux with the provided name is found, a pointer to
++ * the named mux-control or an ERR_PTR with a negative errno.
++ */
++struct mux_control *
++mux_control_get_optional(struct device *dev, const char *mux_name)
++{
++	return __mux_control_get(dev, mux_name, true);
++}
++EXPORT_SYMBOL_GPL(mux_control_get_optional);
++
+ /**
+  * mux_control_put() - Put away the mux-control for good.
+  * @mux: The mux-control to put away.
+@@ -494,6 +533,9 @@ EXPORT_SYMBOL_GPL(mux_control_get);
+  */
+ void mux_control_put(struct mux_control *mux)
+ {
++	if (!mux)
++		return;
++
+ 	put_device(&mux->chip->dev);
+ }
+ EXPORT_SYMBOL_GPL(mux_control_put);
+@@ -505,16 +547,8 @@ static void devm_mux_control_release(struct device *dev, void *res)
+ 	mux_control_put(mux);
+ }
+ 
+-/**
+- * devm_mux_control_get() - Get the mux-control for a device, with resource
+- *			    management.
+- * @dev: The device that needs a mux-control.
+- * @mux_name: The name identifying the mux-control.
+- *
+- * Return: Pointer to the mux-control, or an ERR_PTR with a negative errno.
+- */
+-struct mux_control *devm_mux_control_get(struct device *dev,
+-					 const char *mux_name)
++static struct mux_control *
++__devm_mux_control_get(struct device *dev, const char *mux_name, bool optional)
+ {
+ 	struct mux_control **ptr, *mux;
+ 
+@@ -522,8 +556,8 @@ struct mux_control *devm_mux_control_get(struct device *dev,
+ 	if (!ptr)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	mux = mux_control_get(dev, mux_name);
+-	if (IS_ERR(mux)) {
++	mux = __mux_control_get(dev, mux_name, optional);
++	if (IS_ERR_OR_NULL(mux)) {
+ 		devres_free(ptr);
+ 		return mux;
+ 	}
+@@ -533,8 +567,38 @@ struct mux_control *devm_mux_control_get(struct device *dev,
+ 
+ 	return mux;
+ }
++
++/**
++ * devm_mux_control_get() - Get the mux-control for a device, with resource
++ *			    management.
++ * @dev: The device that needs a mux-control.
++ * @mux_name: The name identifying the mux-control.
++ *
++ * Return: Pointer to the mux-control, or an ERR_PTR with a negative errno.
++ */
++struct mux_control *
++devm_mux_control_get(struct device *dev, const char *mux_name)
++{
++	return __devm_mux_control_get(dev, mux_name, false);
++}
+ EXPORT_SYMBOL_GPL(devm_mux_control_get);
+ 
++/**
++ * devm_mux_control_get_optional() - Get the optional mux-control for a device,
++ *				     with resource management.
++ * @dev: The device that needs a mux-control.
++ * @mux_name: The name identifying the mux-control.
++ *
++ * Return: NULL if no mux with the provided name is found, a pointer to
++ * the named mux-control or an ERR_PTR with a negative errno.
++ */
++struct mux_control *
++devm_mux_control_get_optional(struct device *dev, const char *mux_name)
++{
++	return __devm_mux_control_get(dev, mux_name, true);
++}
++EXPORT_SYMBOL_GPL(devm_mux_control_get_optional);
++
+ /*
+  * Using subsys_initcall instead of module_init here to try to ensure - for
+  * the non-modular case - that the subsystem is initialized when mux consumers
+diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
+index ea96d4c82be7..fc98547bf494 100644
+--- a/include/linux/mux/consumer.h
++++ b/include/linux/mux/consumer.h
+@@ -26,9 +26,13 @@ int __must_check mux_control_try_select(struct mux_control *mux,
+ int mux_control_deselect(struct mux_control *mux);
+ 
+ struct mux_control *mux_control_get(struct device *dev, const char *mux_name);
++struct mux_control *mux_control_get_optional(struct device *dev,
++					     const char *mux_name);
+ void mux_control_put(struct mux_control *mux);
+ 
+ struct mux_control *devm_mux_control_get(struct device *dev,
+ 					 const char *mux_name);
++struct mux_control *devm_mux_control_get_optional(struct device *dev,
++						  const char *mux_name);
+ 
+ #endif /* _LINUX_MUX_CONSUMER_H */
+-- 
+2.14.1
