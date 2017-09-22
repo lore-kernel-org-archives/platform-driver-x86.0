@@ -1,8 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 07/14] xhci: Add Intel cherrytrail extended cap / otg phy
- mux handling
-Date: Fri, 22 Sep 2017 20:37:56 +0200
-Message-ID: <20170922183803.10701-7-hdegoede@redhat.com>
+Subject: [PATCH v3 08/14] mux: Add Intel Cherrytrail USB mux driver
+Date: Fri, 22 Sep 2017 20:37:57 +0200
+Message-ID: <20170922183803.10701-8-hdegoede@redhat.com>
 References: <20170922183803.10701-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,203 +21,365 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The Intel cherrytrail xhci controller has an extended cap mmio-range
-which contains registers to control the muxing to the xhci (host mode)
-or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+Intel Cherrytrail SoCs have an internal USB mux for muxing the otg-port
+USB data lines between the xHCI host controller and the dwc3 gadget
+controller. On some Cherrytrail systems this mux is controlled through
+AML code reacting on a GPIO IRQ connected to the USB OTG id pin (through
+an _AIE ACPI method) so things just work.
 
-Having a mux driver included in the xhci code (or under drivers/usb/host)
-is not desirable. So this commit adds a simple handler for this extended
-capability, which creates a platform device with the caps mmio region as
-resource, this allows us to write a separate platform mux driver for the
-mux.
+But on other Cherrytrail systems we need to control the mux ourselves
+this driver exports the mux through the mux subsys, so that other drivers
+can control it if necessary.
 
-Note this commit adds a call to the new xhci_ext_cap_init() function
-to xhci_pci_probe(), it is added here because xhci_ext_cap_init() must
-be called only once. If in the future we also want to handle ext-caps
-on non pci XHCI HCDs from xhci_ext_cap_init() a call to it should also
-be added to other bus probe paths.
+This driver also updates the vbus-valid reporting to the dwc3 gadget
+controller, as this uses the same registers as the mux. This is needed
+for gadget/device mode to work properly (even on systems which control
+the mux from their AML code).
+
+Note this depends on the xhci driver registering a platform device
+named "intel_cht_usb_mux", which has an IOMEM resource 0 which points
+to the Intel Vendor Defined XHCI extended capabilities region.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Check xHCI controller PCI device-id instead of only checking for the
- Intel Extended capability ID, as the Extended capability ID is used on
- other model Intel xHCI controllers too
+-Complete rewrite as a stand-alone platform-driver rather then as a phy
+ driver, since this is just a mux, not a phy
 
 Changes in v3:
--Add a new generic xhci_ext_cap_init() function and handle the new
- XHCI_INTEL_CHT_USB_MUX quirk there.
----
- drivers/usb/host/Makefile        |  2 +-
- drivers/usb/host/xhci-ext-caps.c | 88 ++++++++++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci-ext-caps.h |  2 +
- drivers/usb/host/xhci-pci.c      |  5 +++
- drivers/usb/host/xhci.h          |  2 +
- 5 files changed, 98 insertions(+), 1 deletion(-)
- create mode 100644 drivers/usb/host/xhci-ext-caps.c
+-Make this a mux subsys driver instead of listening to USB_HOST extcon
+ cable events and responding to those
 
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index cf2691fffcc0..59329a9cf392 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -10,7 +10,7 @@ fhci-y += fhci-mem.o fhci-tds.o fhci-sched.o
+Changes in v4 (of patch, v2 of new mux based series):
+-Rename C-file to use - in name
+-Add MAINTAINERS entry
+-Various code-style fixes
+
+Changes in v3 of new mux based series:
+-Various code-style fixes
+-Use new init_as_is mux flag
+---
+ MAINTAINERS                     |   5 +
+ drivers/mux/Kconfig             |  11 ++
+ drivers/mux/Makefile            |  10 +-
+ drivers/mux/intel-cht-usb-mux.c | 251 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 273 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/mux/intel-cht-usb-mux.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 04e7a5b9d6bd..6cfa0e5f2d2b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9176,6 +9176,11 @@ F:	include/linux/dt-bindings/mux/
+ F:	include/linux/mux/
+ F:	drivers/mux/
  
- fhci-$(CONFIG_FHCI_DEBUG) += fhci-dbg.o
++MULTIPLEXER SUBSYSTEM INTEL CHT USB MUX DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++S:	Maintained
++F:	drivers/mux/intel-cht-usb-mux.c
++
+ MULTISOUND SOUND DRIVER
+ M:	Andrew Veliath <andrewtv@usa.net>
+ S:	Maintained
+diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+index 19e4e904c9bf..ebc04ae7ff30 100644
+--- a/drivers/mux/Kconfig
++++ b/drivers/mux/Kconfig
+@@ -34,6 +34,17 @@ config MUX_GPIO
+ 	  To compile the driver as a module, choose M here: the module will
+ 	  be called mux-gpio.
  
--xhci-hcd-y := xhci.o xhci-mem.o
-+xhci-hcd-y := xhci.o xhci-mem.o xhci-ext-caps.o
- xhci-hcd-y += xhci-ring.o xhci-hub.o xhci-dbg.o
- xhci-hcd-y += xhci-trace.o
- ifneq ($(CONFIG_USB_XHCI_MTK), )
-diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
++config MUX_INTEL_CHT_USB_MUX
++	tristate "Intel Cherrytrail USB Multiplexer"
++	depends on ACPI && X86 && EXTCON
++	help
++	  This driver adds support for the internal USB mux for muxing the OTG
++	  USB data lines between the xHCI host controller and the dwc3 gadget
++	  controller found on Intel Cherrytrail SoCs.
++
++	  To compile the driver as a module, choose M here: the module will
++	  be called mux-intel-cht-usb-mux.
++
+ config MUX_MMIO
+ 	tristate "MMIO register bitfield-controlled Multiplexer"
+ 	depends on (OF && MFD_SYSCON) || COMPILE_TEST
+diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
+index 0e1e59760e3f..6cf41be2754f 100644
+--- a/drivers/mux/Makefile
++++ b/drivers/mux/Makefile
+@@ -5,9 +5,11 @@
+ mux-core-objs			:= core.o
+ mux-adg792a-objs		:= adg792a.o
+ mux-gpio-objs			:= gpio.o
++mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
+ mux-mmio-objs			:= mmio.o
+ 
+-obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
+-obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
+-obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
+-obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
++obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
++obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
++obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
++obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
++obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
+diff --git a/drivers/mux/intel-cht-usb-mux.c b/drivers/mux/intel-cht-usb-mux.c
 new file mode 100644
-index 000000000000..8bc4787afdd0
+index 000000000000..726facefd479
 --- /dev/null
-+++ b/drivers/usb/host/xhci-ext-caps.c
-@@ -0,0 +1,88 @@
++++ b/drivers/mux/intel-cht-usb-mux.c
+@@ -0,0 +1,251 @@
 +/*
-+ * XHCI extended capability handling
++ * Intel Cherrytrail USB OTG MUX driver
 + *
-+ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (c) 2016-2017 Hans de Goede <hdegoede@redhat.com>
++ *
++ * Loosely based on android x86 kernel code which is:
++ *
++ * Copyright (C) 2014 Intel Corp.
++ *
++ * Author: Wu, Hao
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * published by the Free Software Foundation, or (at your option)
++ * any later version.
 + */
 +
++#include <linux/acpi.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/extcon.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mux/driver.h>
++#include <linux/mux/usb.h>
 +#include <linux/platform_device.h>
-+#include "xhci.h"
++#include <linux/workqueue.h>
 +
-+static void xhci_intel_unregister_pdev(void *arg)
++/* register definition */
++#define DUAL_ROLE_CFG0			0x68
++#define SW_VBUS_VALID			(1 << 24)
++#define SW_IDPIN_EN			(1 << 21)
++#define SW_IDPIN			(1 << 20)
++
++#define DUAL_ROLE_CFG1			0x6c
++#define HOST_MODE			(1 << 29)
++
++#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
++
++#define DRV_NAME			"intel_cht_usb_mux"
++
++struct intel_cht_usb_data {
++	struct mutex cfg0_lock;
++	void __iomem *base;
++	struct extcon_dev *vbus_extcon;
++	struct notifier_block vbus_nb;
++	struct work_struct vbus_work;
++};
++
++struct intel_cht_extcon_info {
++	const char *hid;
++	int hrv;
++	const char *extcon;
++};
++
++static const struct intel_cht_extcon_info vbus_providers[] = {
++	{ .hid = "INT33F4", .hrv = -1, .extcon = "axp288_extcon" },
++	{ .hid = "INT34D3", .hrv =  3, .extcon = "cht_wcove_pwrsrc" },
++};
++
++static int intel_cht_usb_set_mux(struct mux_control *mux, int state)
 +{
-+	platform_device_unregister(arg);
++	struct intel_cht_usb_data *data = mux_chip_priv(mux->chip);
++	unsigned long timeout;
++	bool host_mode;
++	u32 val;
++
++	mutex_lock(&data->cfg0_lock);
++
++	/* Set idpin value as requested */
++	val = readl(data->base + DUAL_ROLE_CFG0);
++	if (state == MUX_USB_DEVICE) {
++		val |= SW_IDPIN;
++		host_mode = false;
++	} else {
++		val &= ~SW_IDPIN;
++		host_mode = true;
++	}
++	val |= SW_IDPIN_EN;
++	writel(val, data->base + DUAL_ROLE_CFG0);
++
++	mutex_unlock(&data->cfg0_lock);
++
++	/* In most case it takes about 600ms to finish mode switching */
++	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
++
++	/* Polling on CFG1 register to confirm mode switch.*/
++	do {
++		val = readl(data->base + DUAL_ROLE_CFG1);
++		if (!!(val & HOST_MODE) == host_mode)
++			return 0;
++
++		/* Interval for polling is set to about 5 - 10 ms */
++		usleep_range(5000, 10000);
++	} while (time_before(jiffies, timeout));
++
++	dev_warn(&mux->chip->dev, "Timeout waiting for mux to switch\n");
++	return -ETIMEDOUT;
 +}
 +
-+static int xhci_create_intel_cht_mux_pdev(struct xhci_hcd *xhci, u32 cap_offset)
++static void intel_cht_usb_set_vbus_valid(struct intel_cht_usb_data *data,
++					     bool valid)
 +{
-+	struct usb_hcd *hcd = xhci_to_hcd(xhci);
-+	struct device *dev = hcd->self.controller;
-+	struct platform_device *pdev;
-+	struct resource	res = { 0, };
-+	int ret;
++	u32 val;
 +
-+	pdev = platform_device_alloc("intel_cht_usb_mux", PLATFORM_DEVID_NONE);
-+	if (!pdev) {
-+		xhci_err(xhci, "couldn't allocate intel_cht_usb_mux pdev\n");
-+		return -ENOMEM;
-+	}
++	mutex_lock(&data->cfg0_lock);
 +
-+	res.start = hcd->rsrc_start + cap_offset;
-+	res.end	  = res.start + 0x3ff;
-+	res.name  = "intel_cht_usb_mux";
-+	res.flags = IORESOURCE_MEM;
++	val = readl(data->base + DUAL_ROLE_CFG0);
++	if (valid)
++		val |= SW_VBUS_VALID;
++	else
++		val &= ~SW_VBUS_VALID;
 +
-+	ret = platform_device_add_resources(pdev, &res, 1);
-+	if (ret) {
-+		dev_err(dev, "couldn't add resources to intel_cht_usb_mux pdev\n");
-+		platform_device_put(pdev);
-+		return ret;
-+	}
++	val |= SW_IDPIN_EN;
++	writel(val, data->base + DUAL_ROLE_CFG0);
 +
-+	pdev->dev.parent = dev;
-+
-+	ret = platform_device_add(pdev);
-+	if (ret) {
-+		dev_err(dev, "couldn't register intel_cht_usb_mux pdev\n");
-+		platform_device_put(pdev);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
-+	if (ret) {
-+		dev_err(dev, "couldn't add unregister action for intel_cht_usb_mux pdev\n");
-+		return ret;
-+	}
-+
-+	return 0;
++	mutex_unlock(&data->cfg0_lock);
 +}
 +
-+int xhci_ext_cap_init(struct xhci_hcd *xhci)
++static void intel_cht_usb_vbus_work(struct work_struct *work)
 +{
-+	void __iomem *base = &xhci->cap_regs->hc_capbase;
-+	u32 cap_offset, val;
-+	int ret;
++	struct intel_cht_usb_data *data =
++		container_of(work, struct intel_cht_usb_data, vbus_work);
++	const unsigned int vbus_cables[] = {
++		EXTCON_CHG_USB_SDP, EXTCON_CHG_USB_CDP, EXTCON_CHG_USB_DCP,
++		EXTCON_CHG_USB_ACA, EXTCON_CHG_USB_FAST,
++	};
++	bool vbus_present = false;
++	int i;
 +
-+	cap_offset = xhci_find_next_ext_cap(base, 0, 0);
-+
-+	while (cap_offset) {
-+		val = readl(base + cap_offset);
-+
-+		switch (XHCI_EXT_CAPS_ID(val)) {
-+		case XHCI_EXT_CAPS_VENDOR_INTEL:
-+			if (xhci->quirks & XHCI_INTEL_CHT_USB_MUX) {
-+				ret = xhci_create_intel_cht_mux_pdev(
-+							    xhci, cap_offset);
-+				if (ret)
-+					return ret;
-+			}
++	for (i = 0; i < ARRAY_SIZE(vbus_cables); i++) {
++		if (extcon_get_state(data->vbus_extcon, vbus_cables[i]) > 0) {
++			vbus_present = true;
 +			break;
 +		}
-+		cap_offset = xhci_find_next_ext_cap(base, cap_offset, 0);
++	}
++
++	intel_cht_usb_set_vbus_valid(data, vbus_present);
++}
++
++static int intel_cht_usb_vbus_extcon_evt(struct notifier_block *nb,
++					     unsigned long event, void *param)
++{
++	struct intel_cht_usb_data *data =
++		container_of(nb, struct intel_cht_usb_data, vbus_nb);
++
++	schedule_work(&data->vbus_work);
++
++	return NOTIFY_OK;
++}
++
++static const struct mux_control_ops intel_cht_usb_ops = {
++	.set = intel_cht_usb_set_mux,
++};
++
++static int intel_cht_usb_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_cht_usb_data *data;
++	struct mux_chip *mux_chip;
++	struct resource *res;
++	resource_size_t size;
++	int i, ret;
++
++	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*data));
++	if (IS_ERR(mux_chip))
++		return PTR_ERR(mux_chip);
++
++	mux_chip->ops = &intel_cht_usb_ops;
++	mux_chip->mux[0].idle_state = MUX_USB_DEVICE;
++	/* Keep initial state as is, for e.g. booting from an USB disk */
++	mux_chip->mux[0].init_as_is = true;
++	mux_chip->mux[0].states = MUX_USB_STATES;
++	data = mux_chip_priv(mux_chip);
++	mutex_init(&data->cfg0_lock);
++
++	/*
++	 * Besides controlling the mux we also need to control the vbus_valid
++	 * flag for device/gadget mode to work properly. To do this we monitor
++	 * the extcon interface exported by the PMIC drivers for the PMICs used
++	 * with the Cherry Trail SoC.
++	 *
++	 * We try to get the extcon_dev before registering the mux as this
++	 * may lead to us exiting with -EPROBE_DEFER.
++	 */
++	for (i = 0 ; i < ARRAY_SIZE(vbus_providers); i++) {
++		if (!acpi_dev_present(vbus_providers[i].hid, NULL,
++				      vbus_providers[i].hrv))
++			continue;
++
++		data->vbus_extcon = extcon_get_extcon_dev(
++						vbus_providers[i].extcon);
++		if (data->vbus_extcon == NULL)
++			return -EPROBE_DEFER;
++
++		dev_info(dev, "using extcon '%s' for vbus-valid\n",
++			 vbus_providers[i].extcon);
++		break;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	size = (res->end + 1) - res->start;
++	data->base = devm_ioremap_nocache(dev, res->start, size);
++	if (IS_ERR(data->base)) {
++		ret = PTR_ERR(data->base);
++		dev_err(dev, "can't iomap registers: %d\n", ret);
++		return ret;
++	}
++
++	ret = devm_mux_chip_register(dev, mux_chip);
++	if (ret < 0)
++		return ret;
++
++	if (data->vbus_extcon) {
++		INIT_WORK(&data->vbus_work, intel_cht_usb_vbus_work);
++		data->vbus_nb.notifier_call = intel_cht_usb_vbus_extcon_evt;
++		ret = devm_extcon_register_notifier_all(dev, data->vbus_extcon,
++							&data->vbus_nb);
++		if (ret) {
++			dev_err(dev, "can't register vbus extcon notifier: %d\n",
++				ret);
++			return ret;
++		}
++
++		/* Sync initial mode */
++		schedule_work(&data->vbus_work);
 +	}
 +
 +	return 0;
 +}
-diff --git a/drivers/usb/host/xhci-ext-caps.h b/drivers/usb/host/xhci-ext-caps.h
-index c1b404224839..872fbec1347f 100644
---- a/drivers/usb/host/xhci-ext-caps.h
-+++ b/drivers/usb/host/xhci-ext-caps.h
-@@ -51,6 +51,8 @@
- #define XHCI_EXT_CAPS_ROUTE	5
- /* IDs 6-9 reserved */
- #define XHCI_EXT_CAPS_DEBUG	10
-+/* Vendor caps */
-+#define XHCI_EXT_CAPS_VENDOR_INTEL	192
- /* USB Legacy Support Capability - section 7.1.1 */
- #define XHCI_HC_BIOS_OWNED	(1 << 16)
- #define XHCI_HC_OS_OWNED	(1 << 24)
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 8071c8fdd15e..f088c5012503 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -188,6 +188,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
- 		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
- 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
-+		xhci->quirks |= XHCI_INTEL_CHT_USB_MUX;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
- 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
-@@ -315,6 +316,10 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 		goto dealloc_usb2_hcd;
- 	}
- 
-+	retval = xhci_ext_cap_init(xhci);
-+	if (retval)
-+		goto put_usb3_hcd;
 +
- 	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
- 			IRQF_SHARED);
- 	if (retval)
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 2abaa4d6d39d..0b3ed0044b4d 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1828,6 +1828,7 @@ struct xhci_hcd {
- #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
- #define XHCI_U2_DISABLE_WAKE	(1 << 27)
- #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
-+#define XHCI_INTEL_CHT_USB_MUX	(1 << 29)
- 
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
-@@ -2012,6 +2013,7 @@ void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci,
- 			struct xhci_command *command, u32 slot_id);
-+int xhci_ext_cap_init(struct xhci_hcd *xhci);
- 
- int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
- int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
++static const struct platform_device_id intel_cht_usb_table[] = {
++	{ .name = DRV_NAME },
++	{},
++};
++MODULE_DEVICE_TABLE(platform, intel_cht_usb_table);
++
++static struct platform_driver intel_cht_usb_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.id_table = intel_cht_usb_table,
++	.probe = intel_cht_usb_probe,
++};
++
++module_platform_driver(intel_cht_usb_driver);
++
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_DESCRIPTION("Intel Cherrytrail USB mux driver");
++MODULE_LICENSE("GPL");
 -- 
 2.14.1
