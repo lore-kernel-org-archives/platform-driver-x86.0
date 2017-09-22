@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 08/14] mux: Add Intel Cherrytrail USB mux driver
-Date: Fri, 22 Sep 2017 20:37:57 +0200
-Message-ID: <20170922183803.10701-8-hdegoede@redhat.com>
+Subject: [PATCH v3 09/14] mux: Add Pericom PI3USB30532 Type-C mux driver
+Date: Fri, 22 Sep 2017 20:37:58 +0200
+Message-ID: <20170922183803.10701-9-hdegoede@redhat.com>
 References: <20170922183803.10701-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,125 +21,88 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Intel Cherrytrail SoCs have an internal USB mux for muxing the otg-port
-USB data lines between the xHCI host controller and the dwc3 gadget
-controller. On some Cherrytrail systems this mux is controlled through
-AML code reacting on a GPIO IRQ connected to the USB OTG id pin (through
-an _AIE ACPI method) so things just work.
-
-But on other Cherrytrail systems we need to control the mux ourselves
-this driver exports the mux through the mux subsys, so that other drivers
-can control it if necessary.
-
-This driver also updates the vbus-valid reporting to the dwc3 gadget
-controller, as this uses the same registers as the mux. This is needed
-for gadget/device mode to work properly (even on systems which control
-the mux from their AML code).
-
-Note this depends on the xhci driver registering a platform device
-named "intel_cht_usb_mux", which has an IOMEM resource 0 which points
-to the Intel Vendor Defined XHCI extended capabilities region.
+Add a driver for the Pericom PI3USB30532 Type-C cross switch /
+mux chip found on some devices with a Type-C port.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Complete rewrite as a stand-alone platform-driver rather then as a phy
- driver, since this is just a mux, not a phy
-
-Changes in v3:
--Make this a mux subsys driver instead of listening to USB_HOST extcon
- cable events and responding to those
-
-Changes in v4 (of patch, v2 of new mux based series):
--Rename C-file to use - in name
+-Adjust for new MUX_TYPEC_foo state defines
 -Add MAINTAINERS entry
 -Various code-style fixes
 
-Changes in v3 of new mux based series:
--Various code-style fixes
+Changes in v3:
 -Use new init_as_is mux flag
+-Adjust for updated MUX_TYPEC_* defines
 ---
- MAINTAINERS                     |   5 +
- drivers/mux/Kconfig             |  11 ++
- drivers/mux/Makefile            |  10 +-
- drivers/mux/intel-cht-usb-mux.c | 251 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 273 insertions(+), 4 deletions(-)
- create mode 100644 drivers/mux/intel-cht-usb-mux.c
+ MAINTAINERS               |  5 +++
+ drivers/mux/Kconfig       | 10 ++++++
+ drivers/mux/Makefile      |  2 ++
+ drivers/mux/pi3usb30532.c | 92 +++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 109 insertions(+)
+ create mode 100644 drivers/mux/pi3usb30532.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 04e7a5b9d6bd..6cfa0e5f2d2b 100644
+index 6cfa0e5f2d2b..5c844fd3a23c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9176,6 +9176,11 @@ F:	include/linux/dt-bindings/mux/
- F:	include/linux/mux/
- F:	drivers/mux/
+@@ -9181,6 +9181,11 @@ M:	Hans de Goede <hdegoede@redhat.com>
+ S:	Maintained
+ F:	drivers/mux/intel-cht-usb-mux.c
  
-+MULTIPLEXER SUBSYSTEM INTEL CHT USB MUX DRIVER
++MULTIPLEXER SUBSYSTEM PI3USB30532 DRIVER
 +M:	Hans de Goede <hdegoede@redhat.com>
 +S:	Maintained
-+F:	drivers/mux/intel-cht-usb-mux.c
++F:	drivers/mux/pi3usb30532.c
 +
  MULTISOUND SOUND DRIVER
  M:	Andrew Veliath <andrewtv@usa.net>
  S:	Maintained
 diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 19e4e904c9bf..ebc04ae7ff30 100644
+index ebc04ae7ff30..f94660229d20 100644
 --- a/drivers/mux/Kconfig
 +++ b/drivers/mux/Kconfig
-@@ -34,6 +34,17 @@ config MUX_GPIO
+@@ -58,4 +58,14 @@ config MUX_MMIO
  	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-gpio.
+ 	  be called mux-mmio.
  
-+config MUX_INTEL_CHT_USB_MUX
-+	tristate "Intel Cherrytrail USB Multiplexer"
-+	depends on ACPI && X86 && EXTCON
++config MUX_PI3USB30532
++	tristate "Pericom PI3USB30532 Type-C cross switch driver"
++	depends on I2C
 +	help
-+	  This driver adds support for the internal USB mux for muxing the OTG
-+	  USB data lines between the xHCI host controller and the dwc3 gadget
-+	  controller found on Intel Cherrytrail SoCs.
++	  This driver adds support for the Pericom PI3USB30532 Type-C cross
++	  switch / mux chip found on some devices with a Type-C port.
 +
 +	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-intel-cht-usb-mux.
++	  be called mux-pi3usb30532.
 +
- config MUX_MMIO
- 	tristate "MMIO register bitfield-controlled Multiplexer"
- 	depends on (OF && MFD_SYSCON) || COMPILE_TEST
+ endmenu
 diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 0e1e59760e3f..6cf41be2754f 100644
+index 6cf41be2754f..df381c219708 100644
 --- a/drivers/mux/Makefile
 +++ b/drivers/mux/Makefile
-@@ -5,9 +5,11 @@
- mux-core-objs			:= core.o
- mux-adg792a-objs		:= adg792a.o
+@@ -7,9 +7,11 @@ mux-adg792a-objs		:= adg792a.o
  mux-gpio-objs			:= gpio.o
-+mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
+ mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
  mux-mmio-objs			:= mmio.o
++mux-pi3usb30532-objs		:= pi3usb30532.o
  
--obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
--obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
--obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
--obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-+obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
-+obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
-+obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
-+obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
-+obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
-diff --git a/drivers/mux/intel-cht-usb-mux.c b/drivers/mux/intel-cht-usb-mux.c
+ obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
+ obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
+ obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
+ obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
+ obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
++obj-$(CONFIG_MUX_PI3USB30532)		+= mux-pi3usb30532.o
+diff --git a/drivers/mux/pi3usb30532.c b/drivers/mux/pi3usb30532.c
 new file mode 100644
-index 000000000000..726facefd479
+index 000000000000..13c7c4ec0047
 --- /dev/null
-+++ b/drivers/mux/intel-cht-usb-mux.c
-@@ -0,0 +1,251 @@
++++ b/drivers/mux/pi3usb30532.c
+@@ -0,0 +1,92 @@
 +/*
-+ * Intel Cherrytrail USB OTG MUX driver
++ * Pericom PI3USB30532 Type-C cross switch / mux driver
 + *
-+ * Copyright (c) 2016-2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (C) 2014 Intel Corp.
-+ *
-+ * Author: Wu, Hao
++ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -147,239 +110,86 @@ index 000000000000..726facefd479
 + * any later version.
 + */
 +
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/extcon.h>
-+#include <linux/io.h>
++#include <linux/i2c.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/mux/driver.h>
 +#include <linux/mux/usb.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
 +
-+/* register definition */
-+#define DUAL_ROLE_CFG0			0x68
-+#define SW_VBUS_VALID			(1 << 24)
-+#define SW_IDPIN_EN			(1 << 21)
-+#define SW_IDPIN			(1 << 20)
++#define PI3USB30532_CONF			0x00
 +
-+#define DUAL_ROLE_CFG1			0x6c
-+#define HOST_MODE			(1 << 29)
++#define PI3USB30532_CONF_OPEN			0x00
++#define PI3USB30532_CONF_SWAP			0x01
++#define PI3USB30532_CONF_4LANE_DP		0x02
++#define PI3USB30532_CONF_USB3			0x04
++#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
 +
-+#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
-+
-+#define DRV_NAME			"intel_cht_usb_mux"
-+
-+struct intel_cht_usb_data {
-+	struct mutex cfg0_lock;
-+	void __iomem *base;
-+	struct extcon_dev *vbus_extcon;
-+	struct notifier_block vbus_nb;
-+	struct work_struct vbus_work;
-+};
-+
-+struct intel_cht_extcon_info {
-+	const char *hid;
-+	int hrv;
-+	const char *extcon;
-+};
-+
-+static const struct intel_cht_extcon_info vbus_providers[] = {
-+	{ .hid = "INT33F4", .hrv = -1, .extcon = "axp288_extcon" },
-+	{ .hid = "INT34D3", .hrv =  3, .extcon = "cht_wcove_pwrsrc" },
-+};
-+
-+static int intel_cht_usb_set_mux(struct mux_control *mux, int state)
++static int pi3usb30532_set_mux(struct mux_control *mux, int state)
 +{
-+	struct intel_cht_usb_data *data = mux_chip_priv(mux->chip);
-+	unsigned long timeout;
-+	bool host_mode;
-+	u32 val;
++	struct i2c_client *i2c = to_i2c_client(mux->chip->dev.parent);
++	u8 conf = PI3USB30532_CONF_OPEN;
 +
-+	mutex_lock(&data->cfg0_lock);
++	if (state == MUX_IDLE_DISCONNECT)
++		return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
 +
-+	/* Set idpin value as requested */
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+	if (state == MUX_USB_DEVICE) {
-+		val |= SW_IDPIN;
-+		host_mode = false;
-+	} else {
-+		val &= ~SW_IDPIN;
-+		host_mode = true;
-+	}
-+	val |= SW_IDPIN_EN;
-+	writel(val, data->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&data->cfg0_lock);
-+
-+	/* In most case it takes about 600ms to finish mode switching */
-+	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
-+
-+	/* Polling on CFG1 register to confirm mode switch.*/
-+	do {
-+		val = readl(data->base + DUAL_ROLE_CFG1);
-+		if (!!(val & HOST_MODE) == host_mode)
-+			return 0;
-+
-+		/* Interval for polling is set to about 5 - 10 ms */
-+		usleep_range(5000, 10000);
-+	} while (time_before(jiffies, timeout));
-+
-+	dev_warn(&mux->chip->dev, "Timeout waiting for mux to switch\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static void intel_cht_usb_set_vbus_valid(struct intel_cht_usb_data *data,
-+					     bool valid)
-+{
-+	u32 val;
-+
-+	mutex_lock(&data->cfg0_lock);
-+
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+	if (valid)
-+		val |= SW_VBUS_VALID;
-+	else
-+		val &= ~SW_VBUS_VALID;
-+
-+	val |= SW_IDPIN_EN;
-+	writel(val, data->base + DUAL_ROLE_CFG0);
-+
-+	mutex_unlock(&data->cfg0_lock);
-+}
-+
-+static void intel_cht_usb_vbus_work(struct work_struct *work)
-+{
-+	struct intel_cht_usb_data *data =
-+		container_of(work, struct intel_cht_usb_data, vbus_work);
-+	const unsigned int vbus_cables[] = {
-+		EXTCON_CHG_USB_SDP, EXTCON_CHG_USB_CDP, EXTCON_CHG_USB_DCP,
-+		EXTCON_CHG_USB_ACA, EXTCON_CHG_USB_FAST,
-+	};
-+	bool vbus_present = false;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vbus_cables); i++) {
-+		if (extcon_get_state(data->vbus_extcon, vbus_cables[i]) > 0) {
-+			vbus_present = true;
-+			break;
-+		}
-+	}
-+
-+	intel_cht_usb_set_vbus_valid(data, vbus_present);
-+}
-+
-+static int intel_cht_usb_vbus_extcon_evt(struct notifier_block *nb,
-+					     unsigned long event, void *param)
-+{
-+	struct intel_cht_usb_data *data =
-+		container_of(nb, struct intel_cht_usb_data, vbus_nb);
-+
-+	schedule_work(&data->vbus_work);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static const struct mux_control_ops intel_cht_usb_ops = {
-+	.set = intel_cht_usb_set_mux,
-+};
-+
-+static int intel_cht_usb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_cht_usb_data *data;
-+	struct mux_chip *mux_chip;
-+	struct resource *res;
-+	resource_size_t size;
-+	int i, ret;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*data));
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_chip->ops = &intel_cht_usb_ops;
-+	mux_chip->mux[0].idle_state = MUX_USB_DEVICE;
-+	/* Keep initial state as is, for e.g. booting from an USB disk */
-+	mux_chip->mux[0].init_as_is = true;
-+	mux_chip->mux[0].states = MUX_USB_STATES;
-+	data = mux_chip_priv(mux_chip);
-+	mutex_init(&data->cfg0_lock);
-+
-+	/*
-+	 * Besides controlling the mux we also need to control the vbus_valid
-+	 * flag for device/gadget mode to work properly. To do this we monitor
-+	 * the extcon interface exported by the PMIC drivers for the PMICs used
-+	 * with the Cherry Trail SoC.
-+	 *
-+	 * We try to get the extcon_dev before registering the mux as this
-+	 * may lead to us exiting with -EPROBE_DEFER.
-+	 */
-+	for (i = 0 ; i < ARRAY_SIZE(vbus_providers); i++) {
-+		if (!acpi_dev_present(vbus_providers[i].hid, NULL,
-+				      vbus_providers[i].hrv))
-+			continue;
-+
-+		data->vbus_extcon = extcon_get_extcon_dev(
-+						vbus_providers[i].extcon);
-+		if (data->vbus_extcon == NULL)
-+			return -EPROBE_DEFER;
-+
-+		dev_info(dev, "using extcon '%s' for vbus-valid\n",
-+			 vbus_providers[i].extcon);
++	switch (state & ~MUX_TYPEC_POLARITY_INV) {
++	case MUX_TYPEC_USB:
++		conf = PI3USB30532_CONF_USB3;
++		break;
++	case MUX_TYPEC_USB_AND_DP:
++		conf = PI3USB30532_CONF_USB3_AND_2LANE_DP;
++		break;
++	case MUX_TYPEC_DP:
++		conf = PI3USB30532_CONF_4LANE_DP;
 +		break;
 +	}
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = (res->end + 1) - res->start;
-+	data->base = devm_ioremap_nocache(dev, res->start, size);
-+	if (IS_ERR(data->base)) {
-+		ret = PTR_ERR(data->base);
-+		dev_err(dev, "can't iomap registers: %d\n", ret);
-+		return ret;
-+	}
++	if (state & MUX_TYPEC_POLARITY_INV)
++		conf |= PI3USB30532_CONF_SWAP;
 +
-+	ret = devm_mux_chip_register(dev, mux_chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (data->vbus_extcon) {
-+		INIT_WORK(&data->vbus_work, intel_cht_usb_vbus_work);
-+		data->vbus_nb.notifier_call = intel_cht_usb_vbus_extcon_evt;
-+		ret = devm_extcon_register_notifier_all(dev, data->vbus_extcon,
-+							&data->vbus_nb);
-+		if (ret) {
-+			dev_err(dev, "can't register vbus extcon notifier: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		/* Sync initial mode */
-+		schedule_work(&data->vbus_work);
-+	}
-+
-+	return 0;
++	return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
 +}
 +
-+static const struct platform_device_id intel_cht_usb_table[] = {
-+	{ .name = DRV_NAME },
-+	{},
++static const struct mux_control_ops pi3usb30532_ops = {
++	.set = pi3usb30532_set_mux,
 +};
-+MODULE_DEVICE_TABLE(platform, intel_cht_usb_table);
 +
-+static struct platform_driver intel_cht_usb_driver = {
++static int pi3usb30532_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct mux_chip *mux_chip;
++
++	mux_chip = devm_mux_chip_alloc(dev, 1, 0);
++	if (IS_ERR(mux_chip))
++		return PTR_ERR(mux_chip);
++
++	mux_chip->ops = &pi3usb30532_ops;
++	mux_chip->mux[0].idle_state = MUX_IDLE_DISCONNECT;
++	/* Keep initial state as is, for e.g. booting from an USB disk */
++	mux_chip->mux[0].init_as_is = true;
++	mux_chip->mux[0].states = MUX_TYPEC_STATES;
++
++	return devm_mux_chip_register(dev, mux_chip);
++}
++
++static const struct i2c_device_id pi3usb30532_table[] = {
++	{ "pi3usb30532" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
++
++static struct i2c_driver pi3usb30532_driver = {
 +	.driver = {
-+		.name = DRV_NAME,
++		.name = "pi3usb30532",
 +	},
-+	.id_table = intel_cht_usb_table,
-+	.probe = intel_cht_usb_probe,
++	.probe_new = pi3usb30532_probe,
++	.id_table = pi3usb30532_table,
 +};
 +
-+module_platform_driver(intel_cht_usb_driver);
++module_i2c_driver(pi3usb30532_driver);
 +
 +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Intel Cherrytrail USB mux driver");
++MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.14.1
