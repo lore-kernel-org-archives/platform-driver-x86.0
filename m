@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 04/14] mux: core: Add support for getting a mux controller
- on a non DT platform
-Date: Fri, 22 Sep 2017 20:37:53 +0200
-Message-ID: <20170922183803.10701-4-hdegoede@redhat.com>
+Subject: [PATCH v3 05/14] mux: core: Add usb.h header with MUX_USB_* and and
+ MUX_TYPEC_* state constants
+Date: Fri, 22 Sep 2017 20:37:54 +0200
+Message-ID: <20170922183803.10701-5-hdegoede@redhat.com>
 References: <20170922183803.10701-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,178 +22,61 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On non DT platforms we cannot get the mux_chip by pnode. Other subsystems
-(regulator, clock, pwm) have the same problem and solve this by allowing
-platform / board-setup code to add entries to a lookup table and then use
-this table to look things up.
-
-This commit adds support for getting a mux controller on a non DT platform
-following this pattern. It is based on a simplified version of the pwm
-subsys lookup code, the dev_id and mux_name parts of a lookup table entry
-are mandatory in the mux-core implementation.
+Add MUX_USB_* and MUX_TYPEC_* state constant defines, which can be used by
+USB device/host, resp. Type-C polarity/role/altmode mux drivers and
+consumers to ensure that they agree on the meaning of the
+mux_control_select() state argument.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Fixup some kerneldoc comments, add kerneldoc comment to structs
--Minor code-style tweaks
----
- drivers/mux/core.c           | 93 +++++++++++++++++++++++++++++++++++++++++++-
- include/linux/mux/consumer.h | 19 +++++++++
- 2 files changed, 111 insertions(+), 1 deletion(-)
+-Start numbering of defines at 0 not 1
+-Use a new usb.h header, rather then adding these to consumer.h
+-Add separate MUX_USB_* and MUX_TYPEC_* defines
 
-diff --git a/drivers/mux/core.c b/drivers/mux/core.c
-index 8c0a4c83cdc5..c9afc79196f0 100644
---- a/drivers/mux/core.c
-+++ b/drivers/mux/core.c
-@@ -24,6 +24,9 @@
- #include <linux/of_platform.h>
- #include <linux/slab.h>
- 
-+static DEFINE_MUTEX(mux_lookup_lock);
-+static LIST_HEAD(mux_lookup_list);
-+
- /*
-  * The idle-as-is "state" is not an actual state that may be selected, it
-  * only implies that the state should not be changed. So, use that state
-@@ -423,6 +426,23 @@ int mux_control_deselect(struct mux_control *mux)
- }
- EXPORT_SYMBOL_GPL(mux_control_deselect);
- 
-+static int parent_name_match(struct device *dev, const void *data)
-+{
-+	const char *parent_name = dev_name(dev->parent);
-+	const char *name = data;
-+
-+	return strcmp(parent_name, name) == 0;
-+}
-+
-+static struct mux_chip *mux_chip_get_by_name(const char *name)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(&mux_class, NULL, name, parent_name_match);
-+
-+	return dev ? to_mux_chip(dev) : NULL;
-+}
-+
- static int of_dev_node_match(struct device *dev, const void *data)
- {
- 	return dev->of_node == data;
-@@ -503,12 +523,83 @@ of_mux_control_get(struct device *dev, const char *mux_name, bool optional)
- static struct mux_control *
- __mux_control_get(struct device *dev, const char *mux_name, bool optional)
- {
-+	struct mux_lookup *m, *chosen = NULL;
-+	const char *dev_id = dev_name(dev);
-+	struct mux_chip *mux_chip;
-+
- 	/* look up via DT first */
- 	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
- 		return of_mux_control_get(dev, mux_name, optional);
- 
--	return optional ? NULL : ERR_PTR(-ENODEV);
-+	/*
-+	 * For non DT we look up the provider in the static table typically
-+	 * provided by board setup code.
-+	 *
-+	 * If a match is found, the provider mux chip is looked up by name
-+	 * and a mux-control is requested using the table provided index.
-+	 */
-+	mutex_lock(&mux_lookup_lock);
-+	list_for_each_entry(m, &mux_lookup_list, list) {
-+		if (WARN_ON(!m->dev_id || !m->mux_name || !m->provider))
-+			continue;
-+
-+		if (!strcmp(m->dev_id, dev_id) &&
-+		    !strcmp(m->mux_name, mux_name))
-+		{
-+			chosen = m;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&mux_lookup_lock);
-+
-+	if (!chosen)
-+		return optional ? NULL : ERR_PTR(-ENODEV);
-+
-+	mux_chip = mux_chip_get_by_name(chosen->provider);
-+	if (!mux_chip)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	if (chosen->index >= mux_chip->controllers) {
-+		dev_err(dev, "Mux lookup table index out of bounds %u >= %u\n",
-+			chosen->index, mux_chip->controllers);
-+		put_device(&mux_chip->dev);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return &mux_chip->mux[chosen->index];
-+}
-+
-+/**
-+ * mux_add_table() - Register consumer to mux-controller mappings
-+ * @table: array of mappings to register
-+ * @num: number of mappings in table
+Changes in v3:
+-Simplify MUX_TYPEC_* states, drop having separate USB HOST / DEVICE states
+---
+ include/linux/mux/usb.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 include/linux/mux/usb.h
+
+diff --git a/include/linux/mux/usb.h b/include/linux/mux/usb.h
+new file mode 100644
+index 000000000000..2fec06846e14
+--- /dev/null
++++ b/include/linux/mux/usb.h
+@@ -0,0 +1,31 @@
++/*
++ * mux/usb.h - definitions for USB multiplexers
++ *
++ * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
-+void mux_add_table(struct mux_lookup *table, size_t num)
-+{
-+	mutex_lock(&mux_lookup_lock);
++#ifndef _LINUX_MUX_USB_H
++#define _LINUX_MUX_USB_H
 +
-+	for (; num--; table++)
-+		list_add_tail(&table->list, &mux_lookup_list);
++/* Mux state values for USB device/host role muxes */
++#define MUX_USB_DEVICE		(0) /* USB device mode */
++#define MUX_USB_HOST		(1) /* USB host mode */
++#define MUX_USB_STATES		(2)
 +
-+	mutex_unlock(&mux_lookup_lock);
-+}
-+EXPORT_SYMBOL_GPL(mux_add_table);
-+
-+/**
-+ * mux_remove_table() - Unregister consumer to mux-controller mappings
-+ * @table: array of mappings to unregister
-+ * @num: number of mappings in table
++/*
++ * Mux state values for Type-C polarity/role/altmode muxes.
++ *
++ * MUX_TYPEC_POLARITY_INV may be or-ed together with any other mux-state as
++ * inverted-polarity (Type-C plugged in upside down) can happen with any
++ * other mux-state.
 + */
-+void mux_remove_table(struct mux_lookup *table, size_t num)
-+{
-+	mutex_lock(&mux_lookup_lock);
++#define MUX_TYPEC_POLARITY_INV		BIT(0)   /* Polarity inverted bit */
++#define MUX_TYPEC_USB			(0 << 1) /* USB only mode */
++#define MUX_TYPEC_USB_AND_DP		(1 << 1) /* USB host + 2 lanes DP */
++#define MUX_TYPEC_DP			(2 << 1) /* 4 lanes Display Port */
++#define MUX_TYPEC_STATES		(3 << 1)
 +
-+	for (; num--; table++)
-+		list_del(&table->list);
-+
-+	mutex_unlock(&mux_lookup_lock);
- }
-+EXPORT_SYMBOL_GPL(mux_remove_table);
- 
- /**
-  * mux_control_get() - Get the mux-control for a device.
-diff --git a/include/linux/mux/consumer.h b/include/linux/mux/consumer.h
-index fc98547bf494..eaa6d239c4f5 100644
---- a/include/linux/mux/consumer.h
-+++ b/include/linux/mux/consumer.h
-@@ -18,6 +18,25 @@
- struct device;
- struct mux_control;
- 
-+/**
-+ * struct mux_lookup -	Mux consumer to mux-controller lookup table entry
-+ * @list:		List head, internal use only.
-+ * @provider:		dev_name() of the mux-chip's parent-dev.
-+ * @index:		mux-controller's index in the mux-chip's mux array
-+ * @dev_id:		dev_name() of the consumer to map to this controller
-+ * @mux_name		name the consumer passes to mux_control_get
-+ */
-+struct mux_lookup {
-+	struct list_head list;
-+	const char *provider;
-+	unsigned int index;
-+	const char *dev_id;
-+	const char *mux_name;
-+};
-+
-+void mux_add_table(struct mux_lookup *table, size_t num);
-+void mux_remove_table(struct mux_lookup *table, size_t num);
-+
- unsigned int mux_control_states(struct mux_control *mux);
- int __must_check mux_control_select(struct mux_control *mux,
- 				    unsigned int state);
++#endif /* _LINUX_MUX_TYPEC_H */
 -- 
 2.14.1
