@@ -1,7 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 09/14] mux: Add Pericom PI3USB30532 Type-C mux driver
-Date: Fri, 22 Sep 2017 20:37:58 +0200
-Message-ID: <20170922183803.10701-9-hdegoede@redhat.com>
+Subject: [PATCH v3 10/14] extcon: intel-int3496: Add support for controlling
+ the USB-role mux
+Date: Fri, 22 Sep 2017 20:37:59 +0200
+Message-ID: <20170922183803.10701-10-hdegoede@redhat.com>
 References: <20170922183803.10701-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,175 +22,144 @@ To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com
 Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a driver for the Pericom PI3USB30532 Type-C cross switch /
-mux chip found on some devices with a Type-C port.
+Cherry Trail SoCs have a built-in USB-role mux for switching between
+the host and device controllers, rather then using an external mux
+controller by a GPIO.
+
+There is a driver using the mux-subsys to control this mux, this
+commit adds support to the intel-int3496 driver to get a mux_controller
+handle for the mux and set the mux through the mux-subsys rather then
+through a GPIO.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v2:
--Adjust for new MUX_TYPEC_foo state defines
--Add MAINTAINERS entry
--Various code-style fixes
-
-Changes in v3:
--Use new init_as_is mux flag
--Adjust for updated MUX_TYPEC_* defines
+-Drop || COMPILE_TEST from Kconfig depends on, as we will now fail to
+ compile on !X86
+-Minor code style tweaks
 ---
- MAINTAINERS               |  5 +++
- drivers/mux/Kconfig       | 10 ++++++
- drivers/mux/Makefile      |  2 ++
- drivers/mux/pi3usb30532.c | 92 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 109 insertions(+)
- create mode 100644 drivers/mux/pi3usb30532.c
+ drivers/extcon/Kconfig                |  3 +-
+ drivers/extcon/extcon-intel-int3496.c | 59 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6cfa0e5f2d2b..5c844fd3a23c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9181,6 +9181,11 @@ M:	Hans de Goede <hdegoede@redhat.com>
- S:	Maintained
- F:	drivers/mux/intel-cht-usb-mux.c
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index a7bca4207f44..168f9d710ea0 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -44,7 +44,8 @@ config EXTCON_GPIO
  
-+MULTIPLEXER SUBSYSTEM PI3USB30532 DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+S:	Maintained
-+F:	drivers/mux/pi3usb30532.c
-+
- MULTISOUND SOUND DRIVER
- M:	Andrew Veliath <andrewtv@usa.net>
- S:	Maintained
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index ebc04ae7ff30..f94660229d20 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -58,4 +58,14 @@ config MUX_MMIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-mmio.
- 
-+config MUX_PI3USB30532
-+	tristate "Pericom PI3USB30532 Type-C cross switch driver"
-+	depends on I2C
-+	help
-+	  This driver adds support for the Pericom PI3USB30532 Type-C cross
-+	  switch / mux chip found on some devices with a Type-C port.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-pi3usb30532.
-+
- endmenu
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 6cf41be2754f..df381c219708 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -7,9 +7,11 @@ mux-adg792a-objs		:= adg792a.o
- mux-gpio-objs			:= gpio.o
- mux-intel-cht-usb-mux-objs	:= intel-cht-usb-mux.o
- mux-mmio-objs			:= mmio.o
-+mux-pi3usb30532-objs		:= pi3usb30532.o
- 
- obj-$(CONFIG_MULTIPLEXER)		+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)		+= mux-adg792a.o
- obj-$(CONFIG_MUX_GPIO)			+= mux-gpio.o
- obj-$(CONFIG_MUX_INTEL_CHT_USB_MUX)	+= mux-intel-cht-usb-mux.o
- obj-$(CONFIG_MUX_MMIO)			+= mux-mmio.o
-+obj-$(CONFIG_MUX_PI3USB30532)		+= mux-pi3usb30532.o
-diff --git a/drivers/mux/pi3usb30532.c b/drivers/mux/pi3usb30532.c
-new file mode 100644
-index 000000000000..13c7c4ec0047
---- /dev/null
-+++ b/drivers/mux/pi3usb30532.c
-@@ -0,0 +1,92 @@
-+/*
-+ * Pericom PI3USB30532 Type-C cross switch / mux driver
-+ *
-+ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation, or (at your option)
-+ * any later version.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
+ config EXTCON_INTEL_INT3496
+ 	tristate "Intel INT3496 ACPI device extcon driver"
+-	depends on GPIOLIB && ACPI && (X86 || COMPILE_TEST)
++	depends on GPIOLIB && ACPI && X86
++	select MULTIPLEXER
+ 	help
+ 	  Say Y here to enable extcon support for USB OTG ports controlled by
+ 	  an Intel INT3496 ACPI device.
+diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
+index 1a45e745717d..3c8e17449c12 100644
+--- a/drivers/extcon/extcon-intel-int3496.c
++++ b/drivers/extcon/extcon-intel-int3496.c
+@@ -23,8 +23,13 @@
+ #include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/mux/consumer.h>
 +#include <linux/mux/usb.h>
+ #include <linux/platform_device.h>
+ 
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
 +
-+#define PI3USB30532_CONF			0x00
+ #define INT3496_GPIO_USB_ID	0
+ #define INT3496_GPIO_VBUS_EN	1
+ #define INT3496_GPIO_USB_MUX	2
+@@ -37,6 +42,8 @@ struct int3496_data {
+ 	struct gpio_desc *gpio_usb_id;
+ 	struct gpio_desc *gpio_vbus_en;
+ 	struct gpio_desc *gpio_usb_mux;
++	struct mux_control *usb_mux;
++	bool usb_mux_set;
+ 	int usb_id_irq;
+ };
+ 
+@@ -56,11 +63,32 @@ static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
+ 	{ },
+ };
+ 
++static struct mux_lookup acpi_int3496_cht_mux_lookup[] = {
++	{
++		.provider = "intel_cht_usb_mux",
++		.dev_id   = "INT3496:00",
++		.mux_name = "usb-role-mux",
++	},
++};
 +
-+#define PI3USB30532_CONF_OPEN			0x00
-+#define PI3USB30532_CONF_SWAP			0x01
-+#define PI3USB30532_CONF_4LANE_DP		0x02
-+#define PI3USB30532_CONF_USB3			0x04
-+#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
++#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
 +
-+static int pi3usb30532_set_mux(struct mux_control *mux, int state)
++static const struct x86_cpu_id cht_cpu_ids[] = {
++	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
++	{}
++};
++
++static bool int3496_soc_has_mux(void)
 +{
-+	struct i2c_client *i2c = to_i2c_client(mux->chip->dev.parent);
-+	u8 conf = PI3USB30532_CONF_OPEN;
++	return x86_match_cpu(cht_cpu_ids);
++}
 +
-+	if (state == MUX_IDLE_DISCONNECT)
-+		return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
+ static void int3496_do_usb_id(struct work_struct *work)
+ {
+ 	struct int3496_data *data =
+ 		container_of(work, struct int3496_data, work.work);
+ 	int id = gpiod_get_value_cansleep(data->gpio_usb_id);
++	int ret;
+ 
+ 	/* id == 1: PERIPHERAL, id == 0: HOST */
+ 	dev_dbg(data->dev, "Connected %s cable\n", id ? "PERIPHERAL" : "HOST");
+@@ -72,6 +100,22 @@ static void int3496_do_usb_id(struct work_struct *work)
+ 	if (!IS_ERR(data->gpio_usb_mux))
+ 		gpiod_direction_output(data->gpio_usb_mux, id);
+ 
++	if (data->usb_mux) {
++		/*
++		 * The mux framework expects multiple competing users, we must
++		 * release our previous setting before applying the new one.
++		 */
++		if (data->usb_mux_set)
++			mux_control_deselect(data->usb_mux);
 +
-+	switch (state & ~MUX_TYPEC_POLARITY_INV) {
-+	case MUX_TYPEC_USB:
-+		conf = PI3USB30532_CONF_USB3;
-+		break;
-+	case MUX_TYPEC_USB_AND_DP:
-+		conf = PI3USB30532_CONF_USB3_AND_2LANE_DP;
-+		break;
-+	case MUX_TYPEC_DP:
-+		conf = PI3USB30532_CONF_4LANE_DP;
-+		break;
++		ret = mux_control_select(data->usb_mux,
++					 id ? MUX_USB_DEVICE : MUX_USB_HOST);
++		if (ret)
++			dev_err(data->dev, "Error setting mux: %d\n", ret);
++
++		data->usb_mux_set = ret == 0;
 +	}
 +
-+	if (state & MUX_TYPEC_POLARITY_INV)
-+		conf |= PI3USB30532_CONF_SWAP;
+ 	if (!IS_ERR(data->gpio_vbus_en))
+ 		gpiod_direction_output(data->gpio_vbus_en, !id);
+ 
+@@ -107,6 +151,21 @@ static int int3496_probe(struct platform_device *pdev)
+ 	data->dev = dev;
+ 	INIT_DELAYED_WORK(&data->work, int3496_do_usb_id);
+ 
++	if (int3496_soc_has_mux()) {
++		mux_add_table(acpi_int3496_cht_mux_lookup,
++			      ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
++		data->usb_mux = devm_mux_control_get(dev, "usb-role-mux");
++		/* Doing this here keeps our error handling clean. */
++		mux_remove_table(acpi_int3496_cht_mux_lookup,
++				 ARRAY_SIZE(acpi_int3496_cht_mux_lookup));
++		if (IS_ERR(data->usb_mux)) {
++			ret = PTR_ERR(data->usb_mux);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "can't get mux: %d\n", ret);
++			return ret;
++		}
++	}
 +
-+	return i2c_smbus_write_byte_data(i2c, PI3USB30532_CONF, conf);
-+}
-+
-+static const struct mux_control_ops pi3usb30532_ops = {
-+	.set = pi3usb30532_set_mux,
-+};
-+
-+static int pi3usb30532_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct mux_chip *mux_chip;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, 0);
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_chip->ops = &pi3usb30532_ops;
-+	mux_chip->mux[0].idle_state = MUX_IDLE_DISCONNECT;
-+	/* Keep initial state as is, for e.g. booting from an USB disk */
-+	mux_chip->mux[0].init_as_is = true;
-+	mux_chip->mux[0].states = MUX_TYPEC_STATES;
-+
-+	return devm_mux_chip_register(dev, mux_chip);
-+}
-+
-+static const struct i2c_device_id pi3usb30532_table[] = {
-+	{ "pi3usb30532" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
-+
-+static struct i2c_driver pi3usb30532_driver = {
-+	.driver = {
-+		.name = "pi3usb30532",
-+	},
-+	.probe_new = pi3usb30532_probe,
-+	.id_table = pi3usb30532_table,
-+};
-+
-+module_i2c_driver(pi3usb30532_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
-+MODULE_LICENSE("GPL");
+ 	data->gpio_usb_id = devm_gpiod_get(dev, "id", GPIOD_IN);
+ 	if (IS_ERR(data->gpio_usb_id)) {
+ 		ret = PTR_ERR(data->gpio_usb_id);
 -- 
 2.14.1
