@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 05/14] mux: core: Add usb.h header with MUX_USB_* and and
- MUX_TYPEC_* state constants
-Date: Fri, 22 Sep 2017 20:37:54 +0200
-Message-ID: <20170922183803.10701-5-hdegoede@redhat.com>
+Subject: [PATCH v3 06/14] xhci: Add option to get next extended capability in
+ list by passing id = 0
+Date: Fri, 22 Sep 2017 20:37:55 +0200
+Message-ID: <20170922183803.10701-6-hdegoede@redhat.com>
 References: <20170922183803.10701-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,64 +19,47 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add MUX_USB_* and MUX_TYPEC_* state constant defines, which can be used by
-USB device/host, resp. Type-C polarity/role/altmode mux drivers and
-consumers to ensure that they agree on the meaning of the
-mux_control_select() state argument.
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
+Modify xhci_find_next_ext_cap(base, offset, id) to return the next
+capability offset if 0 is passed for id. Otherwise it will behave as
+previously and return the offset of the next capability with matching id
+
+capability id 0 is not used by xhci (reserved)
+
+This is useful when we want to loop through all capabilities.
+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
--Start numbering of defines at 0 not 1
--Use a new usb.h header, rather then adding these to consumer.h
--Add separate MUX_USB_* and MUX_TYPEC_* defines
+ drivers/usb/host/xhci-ext-caps.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Changes in v3:
--Simplify MUX_TYPEC_* states, drop having separate USB HOST / DEVICE states
----
- include/linux/mux/usb.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 include/linux/mux/usb.h
-
-diff --git a/include/linux/mux/usb.h b/include/linux/mux/usb.h
-new file mode 100644
-index 000000000000..2fec06846e14
---- /dev/null
-+++ b/include/linux/mux/usb.h
-@@ -0,0 +1,31 @@
-+/*
-+ * mux/usb.h - definitions for USB multiplexers
-+ *
-+ * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#ifndef _LINUX_MUX_USB_H
-+#define _LINUX_MUX_USB_H
-+
-+/* Mux state values for USB device/host role muxes */
-+#define MUX_USB_DEVICE		(0) /* USB device mode */
-+#define MUX_USB_HOST		(1) /* USB host mode */
-+#define MUX_USB_STATES		(2)
-+
-+/*
-+ * Mux state values for Type-C polarity/role/altmode muxes.
-+ *
-+ * MUX_TYPEC_POLARITY_INV may be or-ed together with any other mux-state as
-+ * inverted-polarity (Type-C plugged in upside down) can happen with any
-+ * other mux-state.
-+ */
-+#define MUX_TYPEC_POLARITY_INV		BIT(0)   /* Polarity inverted bit */
-+#define MUX_TYPEC_USB			(0 << 1) /* USB only mode */
-+#define MUX_TYPEC_USB_AND_DP		(1 << 1) /* USB host + 2 lanes DP */
-+#define MUX_TYPEC_DP			(2 << 1) /* 4 lanes Display Port */
-+#define MUX_TYPEC_STATES		(3 << 1)
-+
-+#endif /* _LINUX_MUX_TYPEC_H */
+diff --git a/drivers/usb/host/xhci-ext-caps.h b/drivers/usb/host/xhci-ext-caps.h
+index 28deea584884..c1b404224839 100644
+--- a/drivers/usb/host/xhci-ext-caps.h
++++ b/drivers/usb/host/xhci-ext-caps.h
+@@ -96,7 +96,8 @@
+  * @base	PCI MMIO registers base address.
+  * @start	address at which to start looking, (0 or HCC_PARAMS to start at
+  *		beginning of list)
+- * @id		Extended capability ID to search for.
++ * @id		Extended capability ID to search for, or 0 for the next
++ *		capability
+  *
+  * Returns the offset of the next matching extended capability structure.
+  * Some capabilities can occur several times, e.g., the XHCI_EXT_CAPS_PROTOCOL,
+@@ -122,7 +123,7 @@ static inline int xhci_find_next_ext_cap(void __iomem *base, u32 start, int id)
+ 		val = readl(base + offset);
+ 		if (val == ~0)
+ 			return 0;
+-		if (XHCI_EXT_CAPS_ID(val) == id && offset != start)
++		if (offset != start && (id == 0 || XHCI_EXT_CAPS_ID(val) == id))
+ 			return offset;
+ 
+ 		next = XHCI_EXT_CAPS_NEXT(val);
 -- 
 2.14.1
