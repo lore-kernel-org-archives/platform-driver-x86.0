@@ -1,91 +1,49 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-hid: Power button suspend on Dell
- Latitude 7275
-Date: Fri, 22 Sep 2017 16:45:43 -0700
-Message-ID: <20170922234543.GB20327@fury>
-References: <20170917225712.12136-1-jerome.debretagne@gmail.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
+ not presnt
+Date: Fri, 22 Sep 2017 17:00:48 -0700
+Message-ID: <20170923000048.GC20327@fury>
+References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:47604 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:41260 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751763AbdIVXpr (ORCPT
+        with ESMTP id S1752183AbdIWAAz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2017 19:45:47 -0400
+        Fri, 22 Sep 2017 20:00:55 -0400
 Content-Disposition: inline
-In-Reply-To: <20170917225712.12136-1-jerome.debretagne@gmail.com>
+In-Reply-To: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?B?Suly9G1l?= de Bretagne <jerome.debretagne@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>
+To: Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>
 
-On Mon, Sep 18, 2017 at 12:57:12AM +0200, Jérôme de Bretagne wrote:
-> From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+On Mon, Sep 18, 2017 at 11:00:59PM +0300, Ville Syrjala wrote:
+> From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 > 
-> On Dell Latitude 7275 the 5-button array is not exposed in the
-> ACPI tables, but still notifies are sent to the Intel HID device
-> object (device ID INT33D5) in response to power button actions.
-> They were ignored as the intel-hid driver was not prepared to
-> take care of them until recently.
-> 
-> Power button wakeup from suspend-to-idle was added in:
-> 635173a17b03 ("intel-hid: Wake up Dell Latitude 7275 from
-> suspend-to-idle"). However power button suspend doesn't work
-> yet on this platform so it would be good to add it also.
-> 
-> On the affected platform (for which priv->array is NULL), add
-> a new upfront check against the power button press notification
-> (0xCE) to notify_handler(), outside the wakeup mode this time,
-> which allows to report the power button press event and
-> trigger the suspend. Also catch and ignore the corresponding
-> power button release notification (0xCF) to stop it from being
-> reported as an "unknown event" in the logs.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=196115
-> Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-> ---
->  drivers/platform/x86/intel-hid.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index a782c78e7c63..b19f8dcf9d8c 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -226,6 +226,22 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  		return;
->  	}
->  
-> +	/*
-> +	 * Needed for suspend to work on some platforms that don't expose
-> +	 * the 5-button array, but still send notifies with power button
-> +	 * event code to this device object on power button actions.
-> +	 *
-> +	 * Report the power button press; catch and ignore the button release.
-> +	 */
-> +	if (!priv->array) {
-> +		if (event == 0xce) {
-> +			input_report_key(priv->input_dev, KEY_POWER, 1);
-> +			input_sync(priv->input_dev);
-> +			return;
-> +		} else if (event == 0xcf)
-> +			return;
+> My Fujitsu-Siemens Lifebook S6120 doesn't have the FUJ02E3 device,
+> but it does have FUJ02B1. That means we do register the backlight
+> device (and it even seems to work), but the code will oops as soon
+> as we try to set the backlight brightness because it's trying to
 
-Minor CodingStyle nit. If the if block uses parens, so does the else block. In
-this case, since the if returns, just skip the else entirely.
+I'm curious by what you mean with "it even seems to work". Since it
+crashes when adjusting, what does it do that "works" ?
 
-See Documentation/process/coding-style.rst
-The example immediatley *before* 3.1) Spaces.
-
-I've made this change and queued for testing.
-
-> +	}
-> +
->  	/* 0xC0 is for HID events, other values are for 5 button array */
->  	if (event != 0xc0) {
->  		if (!priv->array ||
+> call call_fext_func() with a NULL device. Let's just skip those
+> function calls when the FUJ02E3 device is not present.
 > 
+
+Interesting. We call call_fext_func from many locations using the
+"device" argument, or the driver static "fext".
+
+This looks to me that we should be a bit more consistent here.
+
+Finally, it seems a proper fix would be to either not register the
+backlight device if !fext or to check for !fext inside call_fext_func.
+
+Jonathan, your thoughts?
 
 -- 
 Darren Hart
