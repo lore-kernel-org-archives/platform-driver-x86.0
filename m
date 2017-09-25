@@ -1,61 +1,66 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs
  interface for SMBIOS tokens
-Date: Mon, 25 Sep 2017 20:04:21 +0300
-Message-ID: <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
+Date: Mon, 25 Sep 2017 17:31:05 +0000
+Message-ID: <bb85503730a1479c94810a12802e8027@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
  <1342f21a4f2c9af86d3033a9af9d9a4d05d27106.1505999739.git.mario.limonciello@dell.com>
  <20170925162333.GL22190@pali>
+ <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:38067 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S934032AbdIYREW (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:9978 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S934198AbdIYRbI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2017 13:04:22 -0400
-In-Reply-To: <20170925162333.GL22190@pali>
+        Mon, 25 Sep 2017 13:31:08 -0400
+In-Reply-To: <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com
+To: andy.shevchenko@gmail.com, pali.rohar@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 
-On Mon, Sep 25, 2017 at 7:23 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Thursday 21 September 2017 08:57:11 Mario Limonciello wrote:
->> Currently userspace tools can access system tokens via the dcdbas
->> kernel module and a SMI call that will cause the platform to execute
->> SMM code.
->>
->> With a goal in mind of deprecating the dcdbas kernel module a different
->> method for accessing these tokens from userspace needs to be created.
->>
->> This is intentionally marked to only be readable as root as it can
->> contain sensitive information about the platform's configuration.
->
-> Darren, Andy, any comments? I'm not quite sure if such API is suitable
-> for long term in kernel.
-
-I would try to avoid sysfs interfaces for some particular devices.
-Besides we are creating a character device. Would it be suitable there?
-
-> Basically tokens are list of tuples <id, location, value> with
-> possibility to active them, right?
->
-> Does not kernel have some better API for it?
-
-I think the best what kernel may provide is a CSV-like format with or
-without title line and different delimiter (TAB/space/etc).
-
->
-> Also, keep in mind security aspect of tokens. They represent e.g. boot
-> order priority or enable/disable some machine peripheral.
-
-For IOCTLs we may use capabilities.
-In sysfs case we may zero output based on capabilities or some other factor=
-s.
-
---=20
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIFNlcHRlbWJl
+ciAyNSwgMjAxNyAxOjA0IFBNDQo+IFRvOiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5j
+b20+DQo+IENjOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29t
+PjsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2Vy
+bmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwNi8x
+Ml0gcGxhdGZvcm0veDg2OiBkZWxsLXdtaS1zbWJpb3M6IEFkZCBhIHN5c2ZzIGludGVyZmFjZQ0K
+PiBmb3IgU01CSU9TIHRva2Vucw0KPiANCj4gT24gTW9uLCBTZXAgMjUsIDIwMTcgYXQgNzoyMyBQ
+TSwgUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPiB3cm90ZToNCj4gPiBPbiBUaHVy
+c2RheSAyMSBTZXB0ZW1iZXIgMjAxNyAwODo1NzoxMSBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToN
+Cj4gPj4gQ3VycmVudGx5IHVzZXJzcGFjZSB0b29scyBjYW4gYWNjZXNzIHN5c3RlbSB0b2tlbnMg
+dmlhIHRoZSBkY2RiYXMNCj4gPj4ga2VybmVsIG1vZHVsZSBhbmQgYSBTTUkgY2FsbCB0aGF0IHdp
+bGwgY2F1c2UgdGhlIHBsYXRmb3JtIHRvIGV4ZWN1dGUNCj4gPj4gU01NIGNvZGUuDQo+ID4+DQo+
+ID4+IFdpdGggYSBnb2FsIGluIG1pbmQgb2YgZGVwcmVjYXRpbmcgdGhlIGRjZGJhcyBrZXJuZWwg
+bW9kdWxlIGEgZGlmZmVyZW50DQo+ID4+IG1ldGhvZCBmb3IgYWNjZXNzaW5nIHRoZXNlIHRva2Vu
+cyBmcm9tIHVzZXJzcGFjZSBuZWVkcyB0byBiZSBjcmVhdGVkLg0KPiA+Pg0KPiA+PiBUaGlzIGlz
+IGludGVudGlvbmFsbHkgbWFya2VkIHRvIG9ubHkgYmUgcmVhZGFibGUgYXMgcm9vdCBhcyBpdCBj
+YW4NCj4gPj4gY29udGFpbiBzZW5zaXRpdmUgaW5mb3JtYXRpb24gYWJvdXQgdGhlIHBsYXRmb3Jt
+J3MgY29uZmlndXJhdGlvbi4NCj4gPg0KPiA+IERhcnJlbiwgQW5keSwgYW55IGNvbW1lbnRzPyBJ
+J20gbm90IHF1aXRlIHN1cmUgaWYgc3VjaCBBUEkgaXMgc3VpdGFibGUNCj4gPiBmb3IgbG9uZyB0
+ZXJtIGluIGtlcm5lbC4NCj4gDQo+IEkgd291bGQgdHJ5IHRvIGF2b2lkIHN5c2ZzIGludGVyZmFj
+ZXMgZm9yIHNvbWUgcGFydGljdWxhciBkZXZpY2VzLg0KPiBCZXNpZGVzIHdlIGFyZSBjcmVhdGlu
+ZyBhIGNoYXJhY3RlciBkZXZpY2UuIFdvdWxkIGl0IGJlIHN1aXRhYmxlIHRoZXJlPw0KDQpJZiB0
+aGUgY2hhcmFjdGVyIGRldmljZSBoYXZpbmcgMiBkaWZmZXJlbnQgaW9jdGxzIGZvciBkaWZmZXJl
+bnQgbmVlZHMgaXMNCmFjY2VwdGFibGUgSSdtIGhhcHB5IHRvIGFkanVzdCB0aGUgc2VyaWVzIHRv
+IGRvIHRoaXMgaW5zdGVhZC4NCg0KPiANCj4gPiBCYXNpY2FsbHkgdG9rZW5zIGFyZSBsaXN0IG9m
+IHR1cGxlcyA8aWQsIGxvY2F0aW9uLCB2YWx1ZT4gd2l0aA0KPiA+IHBvc3NpYmlsaXR5IHRvIGFj
+dGl2ZSB0aGVtLCByaWdodD8NCj4gPg0KDQpJIGRpZG4ndCBhZGQgYSB3YXkgdG8gYWN0aXZhdGUg
+dGhlbSB0aHJvdWdoIHRoaXMsIGl0IHdhcyBvbmx5IGZvcg0KcmVhZGluZyBwdXJwb3NlLiAgQWN0
+aXZhdGluZyB0aGVtIHNob3VsZCBiZSBwb3NzaWJsZSB0aHJvdWdoIHRoZQ0KU01CSU9TIGNhbGxp
+bmcgaW50ZXJmYWNlIHRob3VnaC4NCg0KPiA+IERvZXMgbm90IGtlcm5lbCBoYXZlIHNvbWUgYmV0
+dGVyIEFQSSBmb3IgaXQ/DQo+IA0KPiBJIHRoaW5rIHRoZSBiZXN0IHdoYXQga2VybmVsIG1heSBw
+cm92aWRlIGlzIGEgQ1NWLWxpa2UgZm9ybWF0IHdpdGggb3INCj4gd2l0aG91dCB0aXRsZSBsaW5l
+IGFuZCBkaWZmZXJlbnQgZGVsaW1pdGVyIChUQUIvc3BhY2UvZXRjKS4NCj4gDQo+ID4NCj4gPiBB
+bHNvLCBrZWVwIGluIG1pbmQgc2VjdXJpdHkgYXNwZWN0IG9mIHRva2Vucy4gVGhleSByZXByZXNl
+bnQgZS5nLiBib290DQo+ID4gb3JkZXIgcHJpb3JpdHkgb3IgZW5hYmxlL2Rpc2FibGUgc29tZSBt
+YWNoaW5lIHBlcmlwaGVyYWwuDQo+IA0KPiBGb3IgSU9DVExzIHdlIG1heSB1c2UgY2FwYWJpbGl0
+aWVzLg0KPiBJbiBzeXNmcyBjYXNlIHdlIG1heSB6ZXJvIG91dHB1dCBiYXNlZCBvbiBjYXBhYmls
+aXRpZXMgb3Igc29tZSBvdGhlciBmYWN0b3JzLg0KPiANCg0KQ2FuIHlvdSByZWNvbW1lbmQgd2hh
+dCBjYXBhYmlsaXRpZXMgeW91IHdvdWxkIHByZWZlciB0byBzZWUgdGhpcyBiYXNlZCB1cG9uPw0K
