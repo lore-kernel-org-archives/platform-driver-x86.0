@@ -1,295 +1,83 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce character
- device for userspace
-Date: Mon, 25 Sep 2017 18:31:50 +0200
-Message-ID: <20170925163150.GM22190@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 00/12] Introduce support for Dell SMBIOS over WMI
+Date: Mon, 25 Sep 2017 16:32:52 +0000
+Message-ID: <f7c7d039432d4adf965b36db65dbcd8d@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
- <a7829a31691da18e4d28e0760645ca2a3f302b66.1505999739.git.mario.limonciello@dell.com>
+ <20170925161345.GJ22190@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a7829a31691da18e4d28e0760645ca2a3f302b66.1505999739.git.mario.limonciello@dell.com>
+In-Reply-To: <20170925161345.GJ22190@pali>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 21 September 2017 08:57:16 Mario Limonciello wrote:
-> This userspace character device will be used to perform SMBIOS calls
-> from any applications sending a properly formatted 4k calling interface
-> buffer.
-> 
-> This character device is intended to deprecate the dcdbas kernel module
-> and the interface that it provides to userspace.
-> 
-> It's important for the driver to provide a R/W ioctl to ensure that
-> two competing userspace processes don't race to provide or read each
-> others data.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  Documentation/ABI/testing/dell-wmi-smbios |  19 ++++++
->  drivers/platform/x86/dell-wmi-smbios.c    | 108 ++++++++++++++++++++++++++----
->  drivers/platform/x86/dell-wmi-smbios.h    |   5 ++
->  3 files changed, 120 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/ABI/testing/dell-wmi-smbios
-> 
-> diff --git a/Documentation/ABI/testing/dell-wmi-smbios b/Documentation/ABI/testing/dell-wmi-smbios
-> new file mode 100644
-> index 000000000000..54dcf73b3031
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/dell-wmi-smbios
-> @@ -0,0 +1,19 @@
-> +What:		/dev/wmi-dell-wmi-smbios
-
-What about just /dev/dell-smbios? IOCTL provided here is just SMBIOS
-related and I think userspace does not have to care if it is via WMI or
-direct SMM mode... Important is that it provides character device for
-SMBIOS API and not how it is implemented.
-
-Anyway, Darren, Andy, do we have some convention for naming platform
-character devices?
-
-> +Date:		October 2017
-> +KernelVersion:	4.15
-> +Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-> +Description:
-> +		Perform an SMBIOS call on a supported Dell machine
-> +		through the Dell ACPI-WMI interface.
-> +
-> +		To make a call prepare a 4k buffer like this:
-> +		struct buffer {
-> +			u16 class;
-> +			u16 select;
-> +			u32 input[4];
-> +			u32 output[4];
-> +			u8 data[4060];
-> +		} __packed;
-> +
-> +		Perform this RW IOCTL to get the result:
-> +		_IOWR('D', 0, struct calling_interface_buffer)
-
-I would suggest to provide uapi header file with all needed structures
-and defines. So userspace application would have it and would not need
-to implement own buffer...
-
-> diff --git a/drivers/platform/x86/dell-wmi-smbios.c b/drivers/platform/x86/dell-wmi-smbios.c
-> index 9deb851ff517..22e47fba6a59 100644
-> --- a/drivers/platform/x86/dell-wmi-smbios.c
-> +++ b/drivers/platform/x86/dell-wmi-smbios.c
-> @@ -21,6 +21,7 @@
->  #include <linux/err.h>
->  #include <linux/mutex.h>
->  #include <linux/wmi.h>
-> +#include <linux/uaccess.h>
->  #include "dell-wmi-smbios.h"
->  
->  #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
-> @@ -34,7 +35,8 @@ struct calling_interface_structure {
->  	struct calling_interface_token tokens[];
->  } __packed;
->  
-> -static struct calling_interface_buffer *buffer;
-> +static struct calling_interface_buffer *internal_buffer;
-> +static struct calling_interface_buffer *sysfs_buffer;
->  static DEFINE_MUTEX(buffer_mutex);
->  
->  static int da_command_address;
-> @@ -61,13 +63,13 @@ struct calling_interface_buffer *dell_smbios_get_buffer(void)
->  {
->  	mutex_lock(&buffer_mutex);
->  	dell_smbios_clear_buffer();
-> -	return buffer;
-> +	return internal_buffer;
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_get_buffer);
->  
->  void dell_smbios_clear_buffer(void)
->  {
-> -	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> +	memset(internal_buffer, 0, sizeof(struct calling_interface_buffer));
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_clear_buffer);
->  
-> @@ -107,9 +109,9 @@ int run_wmi_smbios_call(struct calling_interface_buffer *buffer)
->  
->  void dell_smbios_send_request(int class, int select)
->  {
-> -	buffer->class = class;
-> -	buffer->select = select;
-> -	run_wmi_smbios_call(buffer);
-> +	internal_buffer->class = class;
-> +	internal_buffer->select = select;
-> +	run_wmi_smbios_call(internal_buffer);
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_send_request);
->  
-> @@ -218,6 +220,68 @@ static const struct attribute_group smbios_attribute_group = {
->  	.attrs = smbios_attrs,
->  };
->  
-> +static int dell_wmi_smbios_open(struct inode *inode, struct file *file)
-> +{
-> +	return nonseekable_open(inode, file);
-> +}
-> +
-> +static int dell_wmi_smbios_release(struct inode *inode, struct file *file)
-> +{
-> +	return 0;
-> +}
-> +
-> +static ssize_t dell_wmi_smbios_read(struct file *file, char __user *data,
-> +				   size_t len, loff_t *ppos)
-> +{
-> +	ssize_t size = sizeof(struct calling_interface_buffer);
-> +	void *src;
-> +
-> +	if (*ppos >= size)
-> +		return 0;
-> +	if (len >= size)
-> +		len = size;
-> +	if (*ppos + len > size)
-> +		len = size - *ppos;
-> +	src = (void __force *) (sysfs_buffer + *ppos);
-> +	if (copy_to_user(data, src, len))
-> +		return -EFAULT;
-> +
-> +	*ppos += len;
-> +	return len;
-> +}
-> +
-> +static long dell_wmi_smbios_ioctl(struct file *filp, unsigned int cmd,
-> +	unsigned long arg)
-> +{
-> +	int ret = 0;
-> +	size_t size;
-> +
-> +	if (_IOC_TYPE(cmd) != DELL_WMI_SMBIOS_IOC)
-> +		return -ENOTTY;
-> +
-> +	switch (cmd) {
-> +	case DELL_WMI_SMBIOS_CMD:
-> +		size = sizeof(struct calling_interface_buffer);
-> +		mutex_lock(&buffer_mutex);
-> +		if (copy_from_user(sysfs_buffer, (void __user *) arg, size)) {
-> +			ret = -EFAULT;
-> +			goto fail_smbios_cmd;
-> +		}
-> +		ret = run_wmi_smbios_call(sysfs_buffer);
-> +		if (ret != 0)
-> +			goto fail_smbios_cmd;
-> +		if (copy_to_user((void __user *) arg, sysfs_buffer, size))
-> +			ret = -EFAULT;
-> +fail_smbios_cmd:
-> +		mutex_unlock(&buffer_mutex);
-> +		break;
-> +	default:
-> +		pr_err("unsupported ioctl: %d.\n", cmd);
-> +		ret = -ENOIOCTLCMD;
-> +	}
-> +	return ret;
-> +}
-> +
->  /*
->   * Descriptor buffer is 128 byte long and contains:
->   *
-> @@ -306,12 +370,19 @@ static int dell_wmi_smbios_probe(struct wmi_device *wdev)
->  	if (ret)
->  		return ret;
->  
-> -	buffer = (void *)__get_free_page(GFP_KERNEL);
-> -	if (!buffer) {
-> +	internal_buffer = (void *)__get_free_page(GFP_KERNEL);
-> +	if (!internal_buffer) {
->  		ret = -ENOMEM;
-> -		goto fail_buffer;
-> +		goto fail_internal_buffer;
->  	}
->  
-> +	sysfs_buffer = (void *)__get_free_page(GFP_KERNEL);
-> +	if (!sysfs_buffer) {
-> +		ret = -ENOMEM;
-> +		goto fail_sysfs_buffer;
-> +	}
-> +	memset(sysfs_buffer, 0, sizeof(struct calling_interface_buffer));
-> +
->  	ret = sysfs_create_group(&wdev->dev.kobj, &smbios_attribute_group);
->  	if (ret)
->  		goto fail_create_group;
-> @@ -320,9 +391,12 @@ static int dell_wmi_smbios_probe(struct wmi_device *wdev)
->  	return 0;
->  
->  fail_create_group:
-> -	free_page((unsigned long)buffer);
-> +	free_page((unsigned long)sysfs_buffer);
->  
-> -fail_buffer:
-> +fail_sysfs_buffer:
-> +	free_page((unsigned long)internal_buffer);
-> +
-> +fail_internal_buffer:
->  	kfree(da_tokens);
->  	return ret;
->  }
-> @@ -331,7 +405,8 @@ static int dell_wmi_smbios_remove(struct wmi_device *wdev)
->  {
->  	sysfs_remove_group(&wdev->dev.kobj, &smbios_attribute_group);
->  	kfree(da_tokens);
-> -	free_page((unsigned long)buffer);
-> +	free_page((unsigned long)internal_buffer);
-> +	free_page((unsigned long)sysfs_buffer);
->  	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
->  	return 0;
->  }
-> @@ -341,6 +416,14 @@ static const struct wmi_device_id dell_wmi_smbios_id_table[] = {
->  	{ },
->  };
->  
-> +static const struct file_operations dell_wmi_smbios_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.read		= dell_wmi_smbios_read,
-> +	.unlocked_ioctl	= dell_wmi_smbios_ioctl,
-> +	.open		= dell_wmi_smbios_open,
-> +	.release	= dell_wmi_smbios_release,
-> +};
-> +
->  static struct wmi_driver dell_wmi_smbios_driver = {
->  	.driver = {
->  		.name = "dell-wmi-smbios",
-> @@ -348,6 +431,7 @@ static struct wmi_driver dell_wmi_smbios_driver = {
->  	.probe = dell_wmi_smbios_probe,
->  	.remove = dell_wmi_smbios_remove,
->  	.id_table = dell_wmi_smbios_id_table,
-> +	.file_operations = &dell_wmi_smbios_fops,
->  };
->  module_wmi_driver(dell_wmi_smbios_driver);
->  
-> diff --git a/drivers/platform/x86/dell-wmi-smbios.h b/drivers/platform/x86/dell-wmi-smbios.h
-> index 0521ec5d437b..b8215eb879b2 100644
-> --- a/drivers/platform/x86/dell-wmi-smbios.h
-> +++ b/drivers/platform/x86/dell-wmi-smbios.h
-> @@ -18,6 +18,7 @@
->  #define _DELL_WMI_SMBIOS_H_
->  
->  #include <linux/wmi.h>
-> +#include <linux/ioctl.h>
->  
->  struct notifier_block;
->  
-> @@ -40,6 +41,10 @@ struct calling_interface_token {
->  	};
->  };
->  
-> +#define DELL_WMI_SMBIOS_IOC   'D'
-> +#define DELL_WMI_SMBIOS_CMD   _IOWR(DELL_WMI_SMBIOS_IOC, 0, \
-> +				   struct calling_interface_buffer)
-> +
->  int dell_smbios_error(int value);
->  
->  struct calling_interface_buffer *dell_smbios_get_buffer(void);
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+SGkgUGFsaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJv
+aMOhciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIFNlcHRl
+bWJlciAyNSwgMjAxNyAxMjoxNCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19M
+aW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBMS01MIDxs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdl
+ci5rZXJuZWwub3JnOyBxdWFzaXNlY0Bnb29nbGUuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+MDAvMTJdIEludHJvZHVjZSBzdXBwb3J0IGZvciBEZWxsIFNNQklPUyBvdmVyIFdNSQ0KPiANCj4g
+T24gVGh1cnNkYXkgMjEgU2VwdGVtYmVyIDIwMTcgMDg6NTc6MDUgTWFyaW8gTGltb25jaWVsbG8g
+d3JvdGU6DQo+ID4gVGhlIGV4aXN0aW5nIHdheSB0aGF0IHRoZSBkZWxsLXNtYmlvcyBoZWxwZXIg
+bW9kdWxlIGFuZCBhc3NvY2lhdGVkDQo+ID4gb3RoZXIgZHJpdmVycyAoZGVsbC1sYXB0b3AsIGRl
+bGwtd21pKSBjb21tdW5pY2F0ZSB3aXRoIHRoZSBwbGF0Zm9ybQ0KPiA+IHJlYWxseSBpc24ndCBz
+ZWN1cmUuICBJdCByZXF1aXJlcyBjcmVhdGluZyBhIGJ1ZmZlciBpbiBwaHlzaWNhbA0KPiA+IERN
+QTMyIG1lbW9yeSBzcGFjZSBhbmQgcGFzc2luZyB0aGF0IHRvIHRoZSBwbGF0Zm9ybSB2aWEgU01N
+Lg0KPiA+DQo+ID4gU2luY2UgdGhlIHBsYXRmb3JtIGdvdCBhIHBoeXNpY2FsIG1lbW9yeSBwb2lu
+dGVyLCB5b3UndmUganVzdCBnb3QNCj4gPiB0byB0cnVzdCB0aGF0IHRoZSBwbGF0Zm9ybSBoYXMg
+b25seSBtb2RpZmllZCAoYW5kIGFjY2Vzc2VkKSBtZW1vcnkNCj4gPiB3aXRoaW4gdGhhdCBidWZm
+ZXIuDQo+IA0KPiBBbmQgd2hhdCBpcyB0aGUgcHJvYmxlbT8gVGhlIHdob2xlIG1lbW9yeSBtYW5h
+Z2VtZW50IGlzIGRvbmUgYnkga2VybmVsDQo+IGl0c2VsZiwgc28geW91IGFscmVhZHkgbmVlZCB0
+byB0cnVzdCBpdC4NCg0KVGhlcmUncyBhIGxvdCBvZiBpZnMsIGJ1dCBpdCdzIG5vdCB0aGF0IGNy
+YXp5IG9mIGEgc2NlbmFyaW8uDQoNClRoZSBwcm9ibGVtIGlzIHRoYXQgaWYgYSBtYWxpY2lvdXMg
+cGF5bG9hZCB3YXMgZGVsaXZlcmVkIHRvIHRoZSBwbGF0Zm9ybQ0KYW5kIGV4ZXJjaXNlZCBhIHZ1
+bG5lcmFiaWxpdHkgaW4gdGhlIHBsYXRmb3JtIGNvZGUgdGhhdCBwYXlsb2FkIGNvdWxkIA0KcG90
+ZW50aWFsbHkgbW9kaWZ5IG1lbW9yeSB0aGF0IGl0IHdhc24ndCBpbnRlbmRlZCB0byBtb2RpZnkg
+YW5kIHRoZSBPUw0Kd291bGQgbm90IGJlIGF3YXJlIGFzIG9wZXJhdGluZyBpbiBTTU0uDQoNCj4g
+DQo+ID4gRGVsbCBQbGF0Zm9ybSBkZXNpZ25lcnMgcmVjb2duaXplIHRoaXMgc2VjdXJpdHkgcmlz
+ayBhbmQgb2ZmZXIgYQ0KPiA+IHNhZmVyIHdheSB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSBwbGF0
+Zm9ybSBvdmVyIEFDUEkuICBUaGlzIGlzDQo+ID4gaW4gdHVybiBleHBvc2VkIHZpYSBhIFdNSSBp
+bnRlcmZhY2UgdG8gdGhlIE9TLg0KPiANCj4gSG0uLi4gSSBjYW5ub3QgdW5kZXJzdGFuZCBob3cg
+c29tZSBwcm9wcmlldGFyeSBBQ1BJIGJ5dGVjb2RlIGludGVycHJldGVkDQo+IGJ5IGtlcm5lbCBj
+YW4gYmUgc2FmZXIgYXMga2VybmVsIGNvZGUgaXRzZWxmLg0KPiANCg0KSW5oZXJlbnRseSBBQ1BJ
+IGNhbiBvbmx5IG9wZXJhdGUgb24gb3BlcmF0aW9uIHJlZ2lvbnMgYW5kIG5vdCBwaHlzaWNhbCBt
+ZW1vcnkuDQpEYXRhIHBhc3NlZCBpbnRvIEFDUEkgbmVlZHMgdG8gYmUgY29waWVkIHRvIGFuIG9w
+ZXJhdGlvbiByZWdpb24gZm9yIGFueSBBQ1BJDQpjYWxscyB0byB1c2UgaXQuDQoNCkZ1cnRoZXJt
+b3JlIHlvdSBjYW4gZGVjb21waWxlIHRoZSBBU0wgYW5kIGF1ZGl0LCB5b3UgY2FuJ3QgZG8gdGhp
+cyB3aXRoIGRpcmVjdA0KU01JL1NNTS4NCg0KPiBDYW4geW91IGRlc2NyaWJlIG1vcmUgZGV0YWls
+cyBhYm91dCB0aGlzIHNlY3VyaXR5IHJpc2s/DQo+IA0KPiA+IFdoZW4gY29tbXVuaWNhdGluZyBv
+dmVyIFdNSS1BQ1BJIHRoZSBjb21tdW5pY2F0aW9uIGRvZXNuJ3Qgb2NjdXINCj4gPiB3aXRoIHBo
+eXNpY2FsIG1lbW9yeSBwb2ludGVycy4gIFdoZW4gdGhlIEFTTCBpcyBpbnZva2VkLCB0aGUgZml4
+ZWQNCj4gPiBsZW5ndGggQUNQSSBidWZmZXIgaXMgY29waWVkIHRvIGEgc21hbGwgb3BlcmF0aW5n
+IHJlZ2lvbi4gIFRoZSBBU0wNCj4gPiB3aWxsIGludm9rZSB0aGUgU01JLCBhbmQgU01NIHdpbGwg
+b25seSBoYXZlIGFjY2VzcyB0byB0aGlzIG9wZXJhdGluZw0KPiA+IHJlZ2lvbi4gIFdoZW4gdGhl
+IEFTTCByZXR1cm5zIHRoZSBidWZmZXIgaXMgY29waWVkIGJhY2sgZm9yIHRoZSBPUw0KPiA+IHRv
+IHByb2Nlc3MuDQo+IA0KPiBJZiBwcm9ibGVtIGlzIGluIGN1cnJlbnQga2VybmVsIGltcGxlbWVu
+dGF0aW9uLCB0aGVuIGl0IGNhbiBiZSBmaXhlZC4NCj4gDQo+DQo+IEknbSBub3QgYWdhaW5zdCB1
+c2luZyBuZXcgV01JIGNvbW11bmljYXRpb24sIGJ1dCBJIGNhbm5vdCB1bmRlcnN0YW5kIGhvdw0K
+PiBrZXJuZWwgY29kZSBpdHNlbGYgaXMgbGVzcyBzYWZlciBhcyBzb21lIG90aGVyIGNvZGUgd2hp
+Y2ggaXMgaW50ZXJwcmV0ZWQNCj4gYnkga2VybmVsLiBJdCBkb2VzIG5vdCBtYWtlIHNlbnNlIGZv
+ciBtZS4NCj4gDQoNCldlbGwgd2UncmUgdGFsa2luZyBoeXBvdGhldGljYWxzIGhlcmUgaW4gdGhl
+IHdheSB0aGluZ3Mgd29yay4NClRoZXJlIGFyZW4ndCBuZWNlc3NhcmlseSBwcm9ibGVtcyB3aXRo
+IHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uLg0KDQpBbHNvLCBJIGRpZG4ndCBhbHJlYWR5IG1l
+bnRpb24gdGhpcyBleHBsaWNpdGx5IGJ1dCBJJ3ZlIGFsbHVkZWQgaXQgdG8gaXQ7DQpEZWxsIGlz
+IGRlcHJlY2F0aW5nIHRoYXQgaW50ZXJmYWNlLiAgSSBjYW4ndCBzYXkgd2hlbiwgYnV0IGl0IHdp
+bGwgc3RvcCB3b3JraW5nDQpvbiBzb21lIG5ldyBoYXJkd2FyZSBhdCBzb21lIHBvaW50Lg0KDQpU
+aGF0J3MgdGhlIG90aGVyIHJlYXNvbiB3aHkgSSdtIHB1c2hpbmcgZm9yIHRoZSBuZXcgY29tbXVu
+aWNhdGlvbiBwYXRoDQpub3cuDQoNCj4gPiBUaGlzIG1ldGhvZCBvZiBjb21tdW5pY2F0aW9uIHNo
+b3VsZCBhbHNvIGRlcHJlY2F0ZSB0aGUgdXNhZ2Ugb2YgdGhlDQo+ID4gZGNkYmFzIGtlcm5lbCBt
+b2R1bGUgYW5kIHNvZnR3YXJlIGRlcGVuZGVudCB1cG9uIGl0J3MgaW50ZXJmYWNlLg0KPiA+IElu
+c3RlYWQgb2ZmZXIgYSBzeWZzIGludGVyZmFjZSBmb3IgY29tbXVuaWNhdGluZyB3aXRoIHRoaXMg
+QVNMDQo+ID4gbWV0aG9kIHRvIGFsbG93IHVzZXJzcGFjZSB0byB1c2UgaW5zdGVhZC4NCj4gPg0K
+PiA+IFRvIGZhY2lsaWF0ZSB0aGF0IG5lZWRzIGZvciB1c2Vyc3BhY2UgYW5kIGtlcm5lbCBzcGFj
+ZSB0aGlzIHBhdGNoDQo+ID4gc2VyaWVzIGludHJvZHVjZXMgYSBnZW5lcmljIHdheSBmb3IgV01J
+IGRyaXZlcnMgdG8gYmUgYWJsZSB0bw0KPiA+IGNyZWF0ZSBjaGFyYWN0ZXIgZGV2aWNlcyB0aHJv
+dWdoIHRoZSBXTUkgYnVzIHdoZW4gZGVzaXJlZC4NCj4gPiBSZXF1aXJpbmcgV01JIGRyaXZlcnMg
+dG8gZXhwbGljdGx5IGFzayBmb3IgdGhpcyBmdW5jdGlvbmFsaXR5IHdpbGwNCj4gPiBhY3QgYXMg
+YW4gZWZmZWN0aXZlIHZlbmRvciB3aGl0ZWxpc3QuDQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0K
+PiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
