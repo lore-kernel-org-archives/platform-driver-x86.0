@@ -1,145 +1,205 @@
-From: =?UTF-8?q?Maxime=20Belleng=C3=A9?= <maxime.bellenge@gmail.com>
-Subject: [PATCH v2] Asus WMI : Add lightbar led support
-Date: Sat, 23 Sep 2017 18:23:37 +0200
-Message-ID: <20170923162337.2748-1-maxime.bellenge@gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
+ using tcpc_gen_mux support
+Date: Mon, 25 Sep 2017 12:34:58 +0200
+Message-ID: <3d207dc4-1dba-ce34-21af-bab001ec68c5@axentia.se>
+References: <20170905164221.11266-1-hdegoede@redhat.com>
+ <20170905164221.11266-11-hdegoede@redhat.com>
+ <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
+ <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
+ <CAL_JsqLNByxG-S1hokoVVA7xeouQdTNkCOouGp=r8h8Sx5BMxw@mail.gmail.com>
+ <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
+ <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
+ <e442bb48-a038-4e2e-6950-4220e28692d3@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f194.google.com ([209.85.128.194]:36678 "EHLO
-        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750778AbdIWQYG (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 23 Sep 2017 12:24:06 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Maxime=20Belleng=C3=A9?= <maxime.bellenge@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e442bb48-a038-4e2e-6950-4220e28692d3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Some asus laptops (ROG series for example) are provided
-with a lightbar behind the monitor.
-This patch make possible to switch it on and off.
-This lightbar works exactly as any other led.
+On 2017-09-13 17:48, Hans de Goede wrote:
+> Hi,
+> 
+> On 13-09-17 17:07, Rob Herring wrote:
+>> On Wed, Sep 13, 2017 at 9:06 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>>
+>>> On 13-09-17 15:38, Rob Herring wrote:
+>>>>
+>>>> On Wed, Sep 13, 2017 at 3:56 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>>
+>>>>> On 13-09-17 00:20, Rob Herring wrote:
+>>>>>>
+>>>>>>
+>>>>>> On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
+>>>>>>> to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
+>>>>>>>
+>>>>>>> Also document the mux-names used by the generic tcpc_mux_dev code in
+>>>>>>> our devicetree bindings.
+>>>>>>>
+>>>>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>>> ---
+>>>>>>>     Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
+>>>>>>>     drivers/staging/typec/fusb302/fusb302.c               | 11
+>>>>>>> ++++++++++-
+>>>>>>>     2 files changed, 13 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>>> b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>>> index 472facfa5a71..63d639eadacd 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>>> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+>>>>>>> @@ -6,6 +6,9 @@ Required properties :
+>>>>>>>     - interrupts             : Interrupt specifier
+>>>>>>>       Optional properties :
+>>>>>>> +- mux-controls           : List of mux-ctrl-specifiers containing 1 or
+>>>>>>> 2
+>>>>>>> muxes
+>>>>>>> +- mux-names              : "type-c-mode-mux" when using 1 mux, or
+>>>>>>> +                           "type-c-mode-mux", "usb-role-mux" when
+>>>>>>> using
+>>>>>>> 2 muxes
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> I'm not sure this is the right place for this. The mux is outside the
+>>>>>> FUSB302. In a type-C connector node or USB phy node would make more
+>>>>>> sense to me.
+>>>>>
+>>>>>
+>>>>>
+>>>>> The mux certainly does not belong in the USB phy node, it sits between
+>>>>> the
+>>>>> USB PHY
+>>>>> and the Type-C connector and can for example also mux the Type-C pins to
+>>>>> a
+>>>>> Display
+>>>>> Port PHY.
+>>>>
+>>>>
+>>>> Thinking about this some more, the mux(es) should be its own node(s).
+>>>> Then the question is where to put the nodes.
+>>>
+>>>
+>>> Right, the mux will be its own node per
+>>> Documentation/devicetree/bindings/mux/mux-controller.txt
+>>> the bindings bit this patch is adding is only adding phandles pointing
+>>> to that mux-node as the fusb302 "consumes" the mux functionality.
+>>>
+>>> So as such (the fusb302 is the component which should control the mux)
+>>> I do believe that the bindings this patch adds are correct.
+>>
+>> Humm, that's not how the mux binding works. The mux controller is what
+>> drives the mux select lines and is the provider. The consumer is the
+>> mux device itself. What decides the mux state is determined by what
+>> you are muxing, not which node has mux-controls property.
+>>
+>> By putting mux-controls in fusb302 node, you are saying fusb302 is a
+>> mux (or contains a mux).
+>>
+>>
+>>>>> As for putting it in a type-C connector node, currently we do not have
+>>>>> such
+>>>>> a node,
+>>>>
+>>>>
+>>>> Well, you should. Type-C connectors are certainly complicated enough
+>>>> that we'll need one. Plus we already require connector nodes for
+>>>> display outputs, so what do we do once you add display muxing?
+>>>
+>>>
+>>> An interesting question, I'm working on this for x86 + ACPI boards actually,
+>>> not a board using DT I've been adding DT bindings docs for device-properties
+>>> I use because that seems like the right thing to do where the binding is
+>>> obvious
+>>> (which I believe it is in this case as the fusb302 is the mux consumer) and
+>>> because the device-property code should work the same on x86 + ACPI
+>>> (where some platform-specific drivers attach the device properties) and
+>>> on e.g. ARM + DT.
+>>>
+>>> The rest should probably be left to be figured out when an actual DT
+>>> using device using the fusb302 or another Type-C controller shows up.
+>>
+>> Well this is a new one (maybe, I suppose others have sneaked by). If
+>> ACPI folks want to use DT bindings, then what do I care. But I have no
+>> interest in reviewing ACPI properties. The whole notion of sharing
+>> bindings between DT and ACPI beyond anything trivial is flawed IMO.
+>> The ptifalls have been discussed multiple times before, so I'm not
+>> going to repeat them here.
+> 
+> Ok, so shall I just drop the Documentation/devicetree/bindings/usb/fcs,fusb302.txt
+> part of this patch then ?
 
-V2 : fix whitespaces and typo
+I totally agree with the concern that Rob expressed about handling USB C
+muxes in a non-adhoc way. And this makes this series scary. I don't know
+enough details about USB C muxes and PD (I just have a very superficial
+mental model) to tell if this series is going down the right path. Or
+how terrible it will be to fix things up if not?
 
-Signed-off-by: Maxime Bellengé <maxime.bellenge@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 63 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+The series extends the mux subsystem with muxes that pins semantics
+to specific states. That is new, and shows up exactly here when Rob is
+not happy about the binding. And if Rob does not want this in the
+DT bindings then I'm not so sure it is wise to do it at all? This
+problem doesn't go away just because you remove the binding. I think
+I would feel much better if there was a path forward on how to
+represent USB C muxes in DT and how that would fit with the driver
+structure.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 709e3a67391a..6837e7fa52ba 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -119,6 +119,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
- #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
- #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
-+#define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
-@@ -148,6 +149,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DSTS_BIOS_BIT		0x00040000
- #define ASUS_WMI_DSTS_BRIGHTNESS_MASK	0x000000FF
- #define ASUS_WMI_DSTS_MAX_BRIGTH_MASK	0x0000FF00
-+#define ASUS_WMI_DSTS_LIGHTBAR_MASK	0x0000000F
- 
- #define ASUS_FAN_DESC			"cpu_fan"
- #define ASUS_FAN_MFUN			0x13
-@@ -222,10 +224,13 @@ struct asus_wmi {
- 	int tpd_led_wk;
- 	struct led_classdev kbd_led;
- 	int kbd_led_wk;
-+	struct led_classdev lightbar_led;
-+	int lightbar_led_wk;
- 	struct workqueue_struct *led_workqueue;
- 	struct work_struct tpd_led_work;
- 	struct work_struct kbd_led_work;
- 	struct work_struct wlan_led_work;
-+	struct work_struct lightbar_led_work;
- 
- 	struct asus_rfkill wlan;
- 	struct asus_rfkill bluetooth;
-@@ -567,6 +572,48 @@ static enum led_brightness wlan_led_get(struct led_classdev *led_cdev)
- 	return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
- }
- 
-+static void lightbar_led_update(struct work_struct *work)
-+{
-+	int ctrl_param;
-+	struct asus_wmi *asus;
-+
-+	asus = container_of(work, struct asus_wmi, lightbar_led_work);
-+
-+	ctrl_param = asus->lightbar_led_wk;
-+	asus_wmi_set_devstate(ASUS_WMI_DEVID_LIGHTBAR, ctrl_param, NULL);
-+}
-+
-+static void lightbar_led_set(struct led_classdev *led_cdev,
-+			     enum led_brightness value)
-+{
-+	struct asus_wmi *asus;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, lightbar_led);
-+
-+	asus->lightbar_led_wk = !!value;
-+	queue_work(asus->led_workqueue, &asus->lightbar_led_work);
-+}
-+
-+static enum led_brightness lightbar_led_get(struct led_classdev *led_cdev)
-+{
-+	struct asus_wmi *asus;
-+	u32 result;
-+
-+	asus = container_of(led_cdev, struct asus_wmi, lightbar_led);
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_LIGHTBAR, &result);
-+
-+	return result & ASUS_WMI_DSTS_LIGHTBAR_MASK;
-+}
-+
-+static int lightbar_led_presence(struct asus_wmi *asus)
-+{
-+	u32 result;
-+
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_LIGHTBAR, &result);
-+
-+	return result & ASUS_WMI_DSTS_PRESENCE_BIT;
-+}
-+
- static void asus_wmi_led_exit(struct asus_wmi *asus)
- {
- 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-@@ -575,6 +622,8 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- 		led_classdev_unregister(&asus->tpd_led);
- 	if (!IS_ERR_OR_NULL(asus->wlan_led.dev))
- 		led_classdev_unregister(&asus->wlan_led);
-+	if (!IS_ERR_OR_NULL(asus->lightbar_led.dev))
-+		led_classdev_unregister(&asus->lightbar_led);
- 	if (asus->led_workqueue)
- 		destroy_workqueue(asus->led_workqueue);
- }
-@@ -630,6 +679,20 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 
- 		rv = led_classdev_register(&asus->platform_device->dev,
- 					   &asus->wlan_led);
-+		if (rv)
-+			goto error;
-+	}
-+
-+	if (lightbar_led_presence(asus)) {
-+		INIT_WORK(&asus->lightbar_led_work, lightbar_led_update);
-+
-+		asus->lightbar_led.name = "asus::lightbar";
-+		asus->lightbar_led.brightness_set = lightbar_led_set;
-+		asus->lightbar_led.brightness_get = lightbar_led_get;
-+		asus->lightbar_led.max_brightness = 1;
-+
-+		rv = led_classdev_register(&asus->platform_device->dev,
-+					   &asus->lightbar_led);
- 	}
- 
- error:
--- 
-2.13.5
+If you compare to the i2c-muxes, there is a relatively new i2c-mux-gpmux
+driver that uses some general purpose mux from the mux subsystem to
+implement an i2c-mux. If USB C muxes where to be done similarly, I'd
+imagine there should be a general abstraction of what USB C muxes provide
+somewhere outside of the mux subsystem, and a bunch of implementations
+of that abstraction. One of those implementations could be to use "raw"
+muxes from the mux subsystem. Of course, this is not what this series is
+doing.
+
+Also, muxes that are not general purpose such as the ones added to the
+mux subsystem by this series could perhaps be repurposed for some other
+application, but since the interface implemented does not really obey
+the rules (the provided mux controller interacts with different sets of
+signals depending on the state) this will not be possible.
+
+These issues are what has caused me to do a lot of thinking and to sit
+silent, sorry about that, but I would like input from someone more
+experienced. If possible. But I'm not sure where to turn?
+
+As a crazy example, why is it not possible to hook up one signal pair
+from the USB C mux, not to DP, but instead to some I2C controller? Then,
+if done right, i2c-mux-gpmux could be hooked up with the relevant mux
+controller and use the signal pair for I2C, with the mux controller
+acting as a gate. So, maybe a bit crazy, but something like that is how
+I think it should work from the mux subsystem point of view. And while
+maybe crazy and while it might not be technically possible to do I2C
+over a USB C connector for some reason, I do think that whatever
+abstraction you come up with for USB C muxes, it has to deal with and
+broker requests from both the USB subsystem and whatever other
+subsystems deals with the alt pairs. Be it graphics for DP signals, or
+whatever. IIUC, the alt signals need not be graphics, and it would be
+sad to implement the USB C mux it in a way that makes it hard to use
+the alt pairs for something else.
+
+[maybe my understanding of USB C is just wrong]
+
+Cheers,
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
