@@ -1,83 +1,128 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 00/12] Introduce support for Dell SMBIOS over WMI
-Date: Mon, 25 Sep 2017 16:32:52 +0000
-Message-ID: <f7c7d039432d4adf965b36db65dbcd8d@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 00/12] Introduce support for Dell SMBIOS over WMI
+Date: Mon, 25 Sep 2017 18:49:02 +0200
+Message-ID: <20170925164902.GN22190@pali>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
  <20170925161345.GJ22190@pali>
+ <f7c7d039432d4adf965b36db65dbcd8d@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170925161345.GJ22190@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f54.google.com ([74.125.82.54]:51031 "EHLO
+        mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752558AbdIYQtF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 25 Sep 2017 12:49:05 -0400
+Content-Disposition: inline
+In-Reply-To: <f7c7d039432d4adf965b36db65dbcd8d@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
 Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
-List-Id: platform-driver-x86.vger.kernel.org
 
-SGkgUGFsaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJv
-aMOhciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIFNlcHRl
-bWJlciAyNSwgMjAxNyAxMjoxNCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19M
-aW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBMS01MIDxs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdl
-ci5rZXJuZWwub3JnOyBxdWFzaXNlY0Bnb29nbGUuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-MDAvMTJdIEludHJvZHVjZSBzdXBwb3J0IGZvciBEZWxsIFNNQklPUyBvdmVyIFdNSQ0KPiANCj4g
-T24gVGh1cnNkYXkgMjEgU2VwdGVtYmVyIDIwMTcgMDg6NTc6MDUgTWFyaW8gTGltb25jaWVsbG8g
-d3JvdGU6DQo+ID4gVGhlIGV4aXN0aW5nIHdheSB0aGF0IHRoZSBkZWxsLXNtYmlvcyBoZWxwZXIg
-bW9kdWxlIGFuZCBhc3NvY2lhdGVkDQo+ID4gb3RoZXIgZHJpdmVycyAoZGVsbC1sYXB0b3AsIGRl
-bGwtd21pKSBjb21tdW5pY2F0ZSB3aXRoIHRoZSBwbGF0Zm9ybQ0KPiA+IHJlYWxseSBpc24ndCBz
-ZWN1cmUuICBJdCByZXF1aXJlcyBjcmVhdGluZyBhIGJ1ZmZlciBpbiBwaHlzaWNhbA0KPiA+IERN
-QTMyIG1lbW9yeSBzcGFjZSBhbmQgcGFzc2luZyB0aGF0IHRvIHRoZSBwbGF0Zm9ybSB2aWEgU01N
-Lg0KPiA+DQo+ID4gU2luY2UgdGhlIHBsYXRmb3JtIGdvdCBhIHBoeXNpY2FsIG1lbW9yeSBwb2lu
-dGVyLCB5b3UndmUganVzdCBnb3QNCj4gPiB0byB0cnVzdCB0aGF0IHRoZSBwbGF0Zm9ybSBoYXMg
-b25seSBtb2RpZmllZCAoYW5kIGFjY2Vzc2VkKSBtZW1vcnkNCj4gPiB3aXRoaW4gdGhhdCBidWZm
-ZXIuDQo+IA0KPiBBbmQgd2hhdCBpcyB0aGUgcHJvYmxlbT8gVGhlIHdob2xlIG1lbW9yeSBtYW5h
-Z2VtZW50IGlzIGRvbmUgYnkga2VybmVsDQo+IGl0c2VsZiwgc28geW91IGFscmVhZHkgbmVlZCB0
-byB0cnVzdCBpdC4NCg0KVGhlcmUncyBhIGxvdCBvZiBpZnMsIGJ1dCBpdCdzIG5vdCB0aGF0IGNy
-YXp5IG9mIGEgc2NlbmFyaW8uDQoNClRoZSBwcm9ibGVtIGlzIHRoYXQgaWYgYSBtYWxpY2lvdXMg
-cGF5bG9hZCB3YXMgZGVsaXZlcmVkIHRvIHRoZSBwbGF0Zm9ybQ0KYW5kIGV4ZXJjaXNlZCBhIHZ1
-bG5lcmFiaWxpdHkgaW4gdGhlIHBsYXRmb3JtIGNvZGUgdGhhdCBwYXlsb2FkIGNvdWxkIA0KcG90
-ZW50aWFsbHkgbW9kaWZ5IG1lbW9yeSB0aGF0IGl0IHdhc24ndCBpbnRlbmRlZCB0byBtb2RpZnkg
-YW5kIHRoZSBPUw0Kd291bGQgbm90IGJlIGF3YXJlIGFzIG9wZXJhdGluZyBpbiBTTU0uDQoNCj4g
-DQo+ID4gRGVsbCBQbGF0Zm9ybSBkZXNpZ25lcnMgcmVjb2duaXplIHRoaXMgc2VjdXJpdHkgcmlz
-ayBhbmQgb2ZmZXIgYQ0KPiA+IHNhZmVyIHdheSB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSBwbGF0
-Zm9ybSBvdmVyIEFDUEkuICBUaGlzIGlzDQo+ID4gaW4gdHVybiBleHBvc2VkIHZpYSBhIFdNSSBp
-bnRlcmZhY2UgdG8gdGhlIE9TLg0KPiANCj4gSG0uLi4gSSBjYW5ub3QgdW5kZXJzdGFuZCBob3cg
-c29tZSBwcm9wcmlldGFyeSBBQ1BJIGJ5dGVjb2RlIGludGVycHJldGVkDQo+IGJ5IGtlcm5lbCBj
-YW4gYmUgc2FmZXIgYXMga2VybmVsIGNvZGUgaXRzZWxmLg0KPiANCg0KSW5oZXJlbnRseSBBQ1BJ
-IGNhbiBvbmx5IG9wZXJhdGUgb24gb3BlcmF0aW9uIHJlZ2lvbnMgYW5kIG5vdCBwaHlzaWNhbCBt
-ZW1vcnkuDQpEYXRhIHBhc3NlZCBpbnRvIEFDUEkgbmVlZHMgdG8gYmUgY29waWVkIHRvIGFuIG9w
-ZXJhdGlvbiByZWdpb24gZm9yIGFueSBBQ1BJDQpjYWxscyB0byB1c2UgaXQuDQoNCkZ1cnRoZXJt
-b3JlIHlvdSBjYW4gZGVjb21waWxlIHRoZSBBU0wgYW5kIGF1ZGl0LCB5b3UgY2FuJ3QgZG8gdGhp
-cyB3aXRoIGRpcmVjdA0KU01JL1NNTS4NCg0KPiBDYW4geW91IGRlc2NyaWJlIG1vcmUgZGV0YWls
-cyBhYm91dCB0aGlzIHNlY3VyaXR5IHJpc2s/DQo+IA0KPiA+IFdoZW4gY29tbXVuaWNhdGluZyBv
-dmVyIFdNSS1BQ1BJIHRoZSBjb21tdW5pY2F0aW9uIGRvZXNuJ3Qgb2NjdXINCj4gPiB3aXRoIHBo
-eXNpY2FsIG1lbW9yeSBwb2ludGVycy4gIFdoZW4gdGhlIEFTTCBpcyBpbnZva2VkLCB0aGUgZml4
-ZWQNCj4gPiBsZW5ndGggQUNQSSBidWZmZXIgaXMgY29waWVkIHRvIGEgc21hbGwgb3BlcmF0aW5n
-IHJlZ2lvbi4gIFRoZSBBU0wNCj4gPiB3aWxsIGludm9rZSB0aGUgU01JLCBhbmQgU01NIHdpbGwg
-b25seSBoYXZlIGFjY2VzcyB0byB0aGlzIG9wZXJhdGluZw0KPiA+IHJlZ2lvbi4gIFdoZW4gdGhl
-IEFTTCByZXR1cm5zIHRoZSBidWZmZXIgaXMgY29waWVkIGJhY2sgZm9yIHRoZSBPUw0KPiA+IHRv
-IHByb2Nlc3MuDQo+IA0KPiBJZiBwcm9ibGVtIGlzIGluIGN1cnJlbnQga2VybmVsIGltcGxlbWVu
-dGF0aW9uLCB0aGVuIGl0IGNhbiBiZSBmaXhlZC4NCj4gDQo+DQo+IEknbSBub3QgYWdhaW5zdCB1
-c2luZyBuZXcgV01JIGNvbW11bmljYXRpb24sIGJ1dCBJIGNhbm5vdCB1bmRlcnN0YW5kIGhvdw0K
-PiBrZXJuZWwgY29kZSBpdHNlbGYgaXMgbGVzcyBzYWZlciBhcyBzb21lIG90aGVyIGNvZGUgd2hp
-Y2ggaXMgaW50ZXJwcmV0ZWQNCj4gYnkga2VybmVsLiBJdCBkb2VzIG5vdCBtYWtlIHNlbnNlIGZv
-ciBtZS4NCj4gDQoNCldlbGwgd2UncmUgdGFsa2luZyBoeXBvdGhldGljYWxzIGhlcmUgaW4gdGhl
-IHdheSB0aGluZ3Mgd29yay4NClRoZXJlIGFyZW4ndCBuZWNlc3NhcmlseSBwcm9ibGVtcyB3aXRo
-IHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uLg0KDQpBbHNvLCBJIGRpZG4ndCBhbHJlYWR5IG1l
-bnRpb24gdGhpcyBleHBsaWNpdGx5IGJ1dCBJJ3ZlIGFsbHVkZWQgaXQgdG8gaXQ7DQpEZWxsIGlz
-IGRlcHJlY2F0aW5nIHRoYXQgaW50ZXJmYWNlLiAgSSBjYW4ndCBzYXkgd2hlbiwgYnV0IGl0IHdp
-bGwgc3RvcCB3b3JraW5nDQpvbiBzb21lIG5ldyBoYXJkd2FyZSBhdCBzb21lIHBvaW50Lg0KDQpU
-aGF0J3MgdGhlIG90aGVyIHJlYXNvbiB3aHkgSSdtIHB1c2hpbmcgZm9yIHRoZSBuZXcgY29tbXVu
-aWNhdGlvbiBwYXRoDQpub3cuDQoNCj4gPiBUaGlzIG1ldGhvZCBvZiBjb21tdW5pY2F0aW9uIHNo
-b3VsZCBhbHNvIGRlcHJlY2F0ZSB0aGUgdXNhZ2Ugb2YgdGhlDQo+ID4gZGNkYmFzIGtlcm5lbCBt
-b2R1bGUgYW5kIHNvZnR3YXJlIGRlcGVuZGVudCB1cG9uIGl0J3MgaW50ZXJmYWNlLg0KPiA+IElu
-c3RlYWQgb2ZmZXIgYSBzeWZzIGludGVyZmFjZSBmb3IgY29tbXVuaWNhdGluZyB3aXRoIHRoaXMg
-QVNMDQo+ID4gbWV0aG9kIHRvIGFsbG93IHVzZXJzcGFjZSB0byB1c2UgaW5zdGVhZC4NCj4gPg0K
-PiA+IFRvIGZhY2lsaWF0ZSB0aGF0IG5lZWRzIGZvciB1c2Vyc3BhY2UgYW5kIGtlcm5lbCBzcGFj
-ZSB0aGlzIHBhdGNoDQo+ID4gc2VyaWVzIGludHJvZHVjZXMgYSBnZW5lcmljIHdheSBmb3IgV01J
-IGRyaXZlcnMgdG8gYmUgYWJsZSB0bw0KPiA+IGNyZWF0ZSBjaGFyYWN0ZXIgZGV2aWNlcyB0aHJv
-dWdoIHRoZSBXTUkgYnVzIHdoZW4gZGVzaXJlZC4NCj4gPiBSZXF1aXJpbmcgV01JIGRyaXZlcnMg
-dG8gZXhwbGljdGx5IGFzayBmb3IgdGhpcyBmdW5jdGlvbmFsaXR5IHdpbGwNCj4gPiBhY3QgYXMg
-YW4gZWZmZWN0aXZlIHZlbmRvciB3aGl0ZWxpc3QuDQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0K
-PiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
+On Monday 25 September 2017 16:32:52 Mario.Limonciello@dell.com wrote:
+> Hi Pali,
+> 
+> > -----Original Message-----
+> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > Sent: Monday, September 25, 2017 12:14 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; LKML <linux-kernel@vger.kernel.org>; platform-driver-
+> > x86@vger.kernel.org; quasisec@google.com
+> > Subject: Re: [PATCH 00/12] Introduce support for Dell SMBIOS over WMI
+> > 
+> > On Thursday 21 September 2017 08:57:05 Mario Limonciello wrote:
+> > > The existing way that the dell-smbios helper module and associated
+> > > other drivers (dell-laptop, dell-wmi) communicate with the platform
+> > > really isn't secure.  It requires creating a buffer in physical
+> > > DMA32 memory space and passing that to the platform via SMM.
+> > >
+> > > Since the platform got a physical memory pointer, you've just got
+> > > to trust that the platform has only modified (and accessed) memory
+> > > within that buffer.
+> > 
+> > And what is the problem? The whole memory management is done by kernel
+> > itself, so you already need to trust it.
+> 
+> There's a lot of ifs, but it's not that crazy of a scenario.
+> 
+> The problem is that if a malicious payload was delivered to the platform
+> and exercised a vulnerability in the platform code that payload could 
+> potentially modify memory that it wasn't intended to modify and the OS
+> would not be aware as operating in SMM.
+> 
+> > 
+> > > Dell Platform designers recognize this security risk and offer a
+> > > safer way to communicate with the platform over ACPI.  This is
+> > > in turn exposed via a WMI interface to the OS.
+> > 
+> > Hm... I cannot understand how some proprietary ACPI bytecode interpreted
+> > by kernel can be safer as kernel code itself.
+> > 
+> 
+> Inherently ACPI can only operate on operation regions and not physical memory.
+> Data passed into ACPI needs to be copied to an operation region for any ACPI
+> calls to use it.
+
+But operation regions access is implemented by ACPI interpreter, which
+is again kernel code.
+
+> Furthermore you can decompile the ASL and audit, you can't do this with direct
+> SMI/SMM.
+> 
+> > Can you describe more details about this security risk?
+> > 
+> > > When communicating over WMI-ACPI the communication doesn't occur
+> > > with physical memory pointers.  When the ASL is invoked, the fixed
+> > > length ACPI buffer is copied to a small operating region.  The ASL
+> > > will invoke the SMI, and SMM will only have access to this operating
+> > > region.  When the ASL returns the buffer is copied back for the OS
+> > > to process.
+> > 
+> > If problem is in current kernel implementation, then it can be fixed.
+> > 
+> >
+> > I'm not against using new WMI communication, but I cannot understand how
+> > kernel code itself is less safer as some other code which is interpreted
+> > by kernel. It does not make sense for me.
+> > 
+> 
+> Well we're talking hypotheticals here in the way things work.
+> There aren't necessarily problems with the current implementation.
+
+Ok.
+
+> Also, I didn't already mention this explicitly but I've alluded it to it;
+> Dell is deprecating that interface.  I can't say when, but it will stop working
+> on some new hardware at some point.
+> 
+> That's the other reason why I'm pushing for the new communication path
+> now.
+
+Ok, as I wrote I'm not against new communication method and specially
+now, when you confirmed that in future new machines would not support
+"old" method...
+
+... but old communication method should stay there for older machines. I
+do not think it would be hard to have both implementations in kernel and
+choosing that which is supported on current machine.
+
+> > > This method of communication should also deprecate the usage of the
+> > > dcdbas kernel module and software dependent upon it's interface.
+> > > Instead offer a syfs interface for communicating with this ASL
+> > > method to allow userspace to use instead.
+> > >
+> > > To faciliate that needs for userspace and kernel space this patch
+> > > series introduces a generic way for WMI drivers to be able to
+> > > create character devices through the WMI bus when desired.
+> > > Requiring WMI drivers to explictly ask for this functionality will
+> > > act as an effective vendor whitelist.
+> > 
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
