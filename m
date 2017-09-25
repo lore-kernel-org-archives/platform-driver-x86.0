@@ -1,205 +1,43 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v2 10/11] staging: typec: fusb302: Hook up mux support
- using tcpc_gen_mux support
-Date: Mon, 25 Sep 2017 12:34:58 +0200
-Message-ID: <3d207dc4-1dba-ce34-21af-bab001ec68c5@axentia.se>
-References: <20170905164221.11266-1-hdegoede@redhat.com>
- <20170905164221.11266-11-hdegoede@redhat.com>
- <20170912222027.hzpejmmxkwbw6seu@rob-hp-laptop>
- <e3c8476e-9795-804b-b09f-812045d58976@redhat.com>
- <CAL_JsqLNByxG-S1hokoVVA7xeouQdTNkCOouGp=r8h8Sx5BMxw@mail.gmail.com>
- <df2008cc-a73a-5898-1ade-e0c90c759584@redhat.com>
- <CAL_JsqJ=tonhAWp7eO79zTOzV6mu0ER6hPMigqyB754L1Z2UhA@mail.gmail.com>
- <e442bb48-a038-4e2e-6950-4220e28692d3@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel-hid: Power button suspend on Dell
+ Latitude 7275
+Date: Mon, 25 Sep 2017 13:57:48 +0300
+Message-ID: <CAHp75VdJXmif+pesu=EAJ5i9dWtaNLXr3QGJdQZiKp_tURtGYg@mail.gmail.com>
+References: <20170917225712.12136-1-jerome.debretagne@gmail.com> <20170922234543.GB20327@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e442bb48-a038-4e2e-6950-4220e28692d3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170922234543.GB20327@fury>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mario Limonciello <mario.limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2017-09-13 17:48, Hans de Goede wrote:
-> Hi,
-> 
-> On 13-09-17 17:07, Rob Herring wrote:
->> On Wed, Sep 13, 2017 at 9:06 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>> Hi,
->>>
->>>
->>> On 13-09-17 15:38, Rob Herring wrote:
->>>>
->>>> On Wed, Sep 13, 2017 at 3:56 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>>
->>>>> On 13-09-17 00:20, Rob Herring wrote:
->>>>>>
->>>>>>
->>>>>> On Tue, Sep 05, 2017 at 06:42:20PM +0200, Hans de Goede wrote:
->>>>>>>
->>>>>>>
->>>>>>> Add mux support to the fusb302 driver, call devm_tcpc_gen_mux_create()
->>>>>>> to let the generic tcpc_mux_dev code create a tcpc_mux_dev for us.
->>>>>>>
->>>>>>> Also document the mux-names used by the generic tcpc_mux_dev code in
->>>>>>> our devicetree bindings.
->>>>>>>
->>>>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>>>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>>> ---
->>>>>>>     Documentation/devicetree/bindings/usb/fcs,fusb302.txt |  3 +++
->>>>>>>     drivers/staging/typec/fusb302/fusb302.c               | 11
->>>>>>> ++++++++++-
->>>>>>>     2 files changed, 13 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>>>> b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>>>> index 472facfa5a71..63d639eadacd 100644
->>>>>>> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
->>>>>>> @@ -6,6 +6,9 @@ Required properties :
->>>>>>>     - interrupts             : Interrupt specifier
->>>>>>>       Optional properties :
->>>>>>> +- mux-controls           : List of mux-ctrl-specifiers containing 1 or
->>>>>>> 2
->>>>>>> muxes
->>>>>>> +- mux-names              : "type-c-mode-mux" when using 1 mux, or
->>>>>>> +                           "type-c-mode-mux", "usb-role-mux" when
->>>>>>> using
->>>>>>> 2 muxes
->>>>>>
->>>>>>
->>>>>>
->>>>>> I'm not sure this is the right place for this. The mux is outside the
->>>>>> FUSB302. In a type-C connector node or USB phy node would make more
->>>>>> sense to me.
->>>>>
->>>>>
->>>>>
->>>>> The mux certainly does not belong in the USB phy node, it sits between
->>>>> the
->>>>> USB PHY
->>>>> and the Type-C connector and can for example also mux the Type-C pins to
->>>>> a
->>>>> Display
->>>>> Port PHY.
->>>>
->>>>
->>>> Thinking about this some more, the mux(es) should be its own node(s).
->>>> Then the question is where to put the nodes.
->>>
->>>
->>> Right, the mux will be its own node per
->>> Documentation/devicetree/bindings/mux/mux-controller.txt
->>> the bindings bit this patch is adding is only adding phandles pointing
->>> to that mux-node as the fusb302 "consumes" the mux functionality.
->>>
->>> So as such (the fusb302 is the component which should control the mux)
->>> I do believe that the bindings this patch adds are correct.
->>
->> Humm, that's not how the mux binding works. The mux controller is what
->> drives the mux select lines and is the provider. The consumer is the
->> mux device itself. What decides the mux state is determined by what
->> you are muxing, not which node has mux-controls property.
->>
->> By putting mux-controls in fusb302 node, you are saying fusb302 is a
->> mux (or contains a mux).
->>
->>
->>>>> As for putting it in a type-C connector node, currently we do not have
->>>>> such
->>>>> a node,
->>>>
->>>>
->>>> Well, you should. Type-C connectors are certainly complicated enough
->>>> that we'll need one. Plus we already require connector nodes for
->>>> display outputs, so what do we do once you add display muxing?
->>>
->>>
->>> An interesting question, I'm working on this for x86 + ACPI boards actually,
->>> not a board using DT I've been adding DT bindings docs for device-properties
->>> I use because that seems like the right thing to do where the binding is
->>> obvious
->>> (which I believe it is in this case as the fusb302 is the mux consumer) and
->>> because the device-property code should work the same on x86 + ACPI
->>> (where some platform-specific drivers attach the device properties) and
->>> on e.g. ARM + DT.
->>>
->>> The rest should probably be left to be figured out when an actual DT
->>> using device using the fusb302 or another Type-C controller shows up.
->>
->> Well this is a new one (maybe, I suppose others have sneaked by). If
->> ACPI folks want to use DT bindings, then what do I care. But I have no
->> interest in reviewing ACPI properties. The whole notion of sharing
->> bindings between DT and ACPI beyond anything trivial is flawed IMO.
->> The ptifalls have been discussed multiple times before, so I'm not
->> going to repeat them here.
-> 
-> Ok, so shall I just drop the Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> part of this patch then ?
+On Sat, Sep 23, 2017 at 2:45 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Mon, Sep 18, 2017 at 12:57:12AM +0200, J=C3=A9r=C3=B4me de Bretagne wr=
+ote:
 
-I totally agree with the concern that Rob expressed about handling USB C
-muxes in a non-adhoc way. And this makes this series scary. I don't know
-enough details about USB C muxes and PD (I just have a very superficial
-mental model) to tell if this series is going down the right path. Or
-how terrible it will be to fix things up if not?
+>> +             if (event =3D=3D 0xce) {
+>> +                     input_report_key(priv->input_dev, KEY_POWER, 1);
+>> +                     input_sync(priv->input_dev);
+>> +                     return;
+>> +             } else if (event =3D=3D 0xcf)
+>> +                     return;
+>
+> Minor CodingStyle nit. If the if block uses parens, so does the else bloc=
+k. In
+> this case, since the if returns, just skip the else entirely.
+>
+> See Documentation/process/coding-style.rst
+> The example immediatley *before* 3.1) Spaces.
+>
+> I've made this change and queued for testing.
+>
+>> +     }
 
-The series extends the mux subsystem with muxes that pins semantics
-to specific states. That is new, and shows up exactly here when Rob is
-not happy about the binding. And if Rob does not want this in the
-DT bindings then I'm not so sure it is wise to do it at all? This
-problem doesn't go away just because you remove the binding. I think
-I would feel much better if there was a path forward on how to
-represent USB C muxes in DT and how that would fit with the driver
-structure.
+Actually in this case even 'else' is redundant.
 
-If you compare to the i2c-muxes, there is a relatively new i2c-mux-gpmux
-driver that uses some general purpose mux from the mux subsystem to
-implement an i2c-mux. If USB C muxes where to be done similarly, I'd
-imagine there should be a general abstraction of what USB C muxes provide
-somewhere outside of the mux subsystem, and a bunch of implementations
-of that abstraction. One of those implementations could be to use "raw"
-muxes from the mux subsystem. Of course, this is not what this series is
-doing.
-
-Also, muxes that are not general purpose such as the ones added to the
-mux subsystem by this series could perhaps be repurposed for some other
-application, but since the interface implemented does not really obey
-the rules (the provided mux controller interacts with different sets of
-signals depending on the state) this will not be possible.
-
-These issues are what has caused me to do a lot of thinking and to sit
-silent, sorry about that, but I would like input from someone more
-experienced. If possible. But I'm not sure where to turn?
-
-As a crazy example, why is it not possible to hook up one signal pair
-from the USB C mux, not to DP, but instead to some I2C controller? Then,
-if done right, i2c-mux-gpmux could be hooked up with the relevant mux
-controller and use the signal pair for I2C, with the mux controller
-acting as a gate. So, maybe a bit crazy, but something like that is how
-I think it should work from the mux subsystem point of view. And while
-maybe crazy and while it might not be technically possible to do I2C
-over a USB C connector for some reason, I do think that whatever
-abstraction you come up with for USB C muxes, it has to deal with and
-broker requests from both the USB subsystem and whatever other
-subsystems deals with the alt pairs. Be it graphics for DP signals, or
-whatever. IIUC, the alt signals need not be graphics, and it would be
-sad to implement the USB C mux it in a way that makes it hard to use
-the alt pairs for something else.
-
-[maybe my understanding of USB C is just wrong]
-
-Cheers,
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+With Best Regards,
+Andy Shevchenko
