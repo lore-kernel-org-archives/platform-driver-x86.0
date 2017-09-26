@@ -1,39 +1,57 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v2 03/14] platform/x86: dell-wmi: Don't match on descriptor GUID modalias
-Date: Tue, 26 Sep 2017 13:50:01 -0500
-Message-ID: <b6153ced6dc75c057429a69f2d8994d784f9768e.1506451187.git.mario.limonciello@dell.com>
+Subject: [PATCH v2 05/14] platform/x86: wmi: sort include list
+Date: Tue, 26 Sep 2017 13:50:03 -0500
+Message-ID: <b7c52776821073b7dad8b64be79967f2aaf909bf.1506451187.git.mario.limonciello@dell.com>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:7889 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S967877AbdIZSuX (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 26 Sep 2017 14:50:23 -0400
 In-Reply-To: <cover.1506451187.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1506451187.git.mario.limonciello@dell.com>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-The descriptor GUID is not used to indicate that WMI notifications
-in the dell-wmi driver work properly.  As such a modalias should
-not be present that causes this driver to load on systems with this
-GUID.
+The include list is randomly assembled right now.  Sort in alphabetical
+order.
 
-Reviewed-by: Pali Pohar <pali.rohar@gmail.com>
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/dell-wmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/wmi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 28d9f8696081..1fbef560ca67 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -51,7 +51,6 @@ MODULE_LICENSE("GPL");
- static bool wmi_requires_smbios_request;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 0765b1797d4c..e19b074df01d 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -33,17 +33,17 @@
  
- MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
--MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
  
- struct dell_wmi_priv {
- 	struct input_dev *input_dev;
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+-#include <linux/types.h>
++#include <linux/acpi.h>
+ #include <linux/device.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
+ #include <linux/list.h>
+-#include <linux/acpi.h>
+-#include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+-#include <linux/wmi.h>
++#include <linux/slab.h>
++#include <linux/types.h>
+ #include <linux/uuid.h>
++#include <linux/wmi.h>
+ 
+ ACPI_MODULE_NAME("wmi");
+ MODULE_AUTHOR("Carlos Corbacho");
 -- 
 2.14.1
