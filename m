@@ -1,46 +1,91 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 14/14] platform/x86: dell-wmi-smbios: clean up wmi descriptor check
-Date: Tue, 26 Sep 2017 22:11:56 +0200
-Message-ID: <201709262211.57222@pali>
-References: <cover.1506451187.git.mario.limonciello@dell.com> <4178d2bdfc69c94fe4972fee7b97b08202890e66.1506451187.git.mario.limonciello@dell.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 12/14] platform/x86: dell-wmi-smbios: introduce
+ character device for userspace
+Date: Tue, 26 Sep 2017 20:16:48 +0000
+Message-ID: <fd379d7e9fd447a785be636fb5c30860@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1506451187.git.mario.limonciello@dell.com>
+ <dcc096b40d4a7084be54942270984159d09abe1e.1506451187.git.mario.limonciello@dell.com>
+ <201709262210.11550@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart14356241.LFkene8jV0";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4178d2bdfc69c94fe4972fee7b97b08202890e66.1506451187.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:7633 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S966403AbdIZURE (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 26 Sep 2017 16:17:04 -0400
+In-Reply-To: <201709262210.11550@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 
---nextPart14356241.LFkene8jV0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 26 September 2017 20:50:12 Mario Limonciello wrote:
-> +	if (strncmp(obj->string.pointer, "DELL WMI", 8) !=3D 0)
-
-Should not be this memcmp? IIRC we want to compare that buffer is equal=20
-to some bytes, right?
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart14356241.LFkene8jV0
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlnKtI0ACgkQi/DJPQPkQ1Ir2gCgoXxyQJCN+uDsCeHQzaZBh3Kk
-uAQAoJTED+mNA2waVl34aQvkcJodZCxr
-=11yG
------END PGP SIGNATURE-----
-
---nextPart14356241.LFkene8jV0--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIw
+MTcgNDoxMCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BE
+ZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBBbmR5IFNoZXZjaGVua28gPGFu
+ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IHF1YXNpc2Vj
+QGdvb2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxMi8xNF0gcGxhdGZvcm0veDg2
+OiBkZWxsLXdtaS1zbWJpb3M6IGludHJvZHVjZSBjaGFyYWN0ZXINCj4gZGV2aWNlIGZvciB1c2Vy
+c3BhY2UNCj4gDQo+IE9uIFR1ZXNkYXkgMjYgU2VwdGVtYmVyIDIwMTcgMjA6NTA6MTAgTWFyaW8g
+TGltb25jaWVsbG8gd3JvdGU6DQo+ID4gVGhpcyB1c2Vyc3BhY2UgY2hhcmFjdGVyIGRldmljZSB3
+aWxsIGJlIHVzZWQgdG8gcGVyZm9ybSBTTUJJT1MgY2FsbHMNCj4gPiBmcm9tIGFueSBhcHBsaWNh
+dGlvbnMuDQo+ID4NCj4gPiBJdCBjb250YWlucyAzIG9wZXJhdGluZyBJT0NUTCdzDQo+ID4gMSkg
+c2VuZGluZyBhIHByb3Blcmx5IGZvcm1hdHRlZCA0ayBjYWxsaW5nIGludGVyZmFjZSBidWZmZXIu
+DQo+ID4gMikgUXVlcnlpbmcgbnVtYmVyIG9mIHRva2VucyBpbiB0aGUgZ2l2ZW4gc3lzdGVtDQo+
+ID4gMykgQ29weWluZyB0aGUgc3RhdHVzIG9mIGFsbCB0aGVzZSB0b2tlbnMgdG8gYSBwcm9wZXJs
+eSBmb3JtYXR0ZWQNCj4gPiAgICB1c2Vyc3BhY2UgYnVmZmVyLg0KPiA+DQo+ID4gVGhpcyBjaGFy
+YWN0ZXIgZGV2aWNlIGlzIGludGVuZGVkIHRvIGRlcHJlY2F0ZSB0aGUgZGNkYmFzIGtlcm5lbA0K
+PiA+IG1vZHVsZSBhbmQgdGhlIGludGVyZmFjZSB0aGF0IGl0IHByb3ZpZGVzIHRvIHVzZXJzcGFj
+ZS4NCj4gPg0KPiA+IEl0J3MgaW1wb3J0YW50IGZvciB0aGUgZHJpdmVyIHRvIHByb3ZpZGUgYSBS
+L1cgaW9jdGwgdG8gZW5zdXJlIHRoYXQNCj4gPiB0d28gY29tcGV0aW5nIHVzZXJzcGFjZSBwcm9j
+ZXNzZXMgZG9uJ3QgcmFjZSB0byBwcm92aWRlIG9yIHJlYWQgZWFjaA0KPiA+IG90aGVycyBkYXRh
+Lg0KPiA+DQo+ID4gVGhlIGNoYXJhY3RlciBkZXZpY2Ugd2lsbCBvbmx5IGJlIGNyZWF0ZWQgaWYg
+dGhlIFdNSSBpbnRlcmZhY2Ugd2FzDQo+ID4gZm91bmQuDQo+ID4NCj4gPiBUaGUgQVBJIGZvciBp
+bnRlcmFjdGluZyB3aXRoIHRoaXMgaW50ZXJmYWNlIGlzIGRlZmluZWQgaW4NCj4gPiBkb2N1bWVu
+dGF0aW9uIGFzIHdlbGwgYXMgYSB1YXBpIGhlYWRlciBwcm92aWRlcyB0aGUgZm9ybWF0IG9mIHRo
+ZQ0KPiA+IHN0cnVjdHVyZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXJpbyBMaW1vbmNp
+ZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3VtZW50
+YXRpb24vQUJJL3Rlc3RpbmcvZGVsbC13bWktc21iaW9zIHwgIDEwICsrKw0KPiA+ICBkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS1zbWJpb3MuYyAgICB8IDExMA0KPiA+ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tLQ0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLXNt
+Ymlvcy5oICAgIHwgIDI4ICstLS0tLS0tDQo+ID4gIGluY2x1ZGUvdWFwaS9saW51eC9kZWxsLXdt
+aS1zbWJpb3MuaCAgICAgIHwgIDU1ICsrKysrKysrKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5n
+ZWQsIDE2NSBpbnNlcnRpb25zKCspLCAzOCBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vQUJJL3Rlc3RpbmcvZGVsbC13bWktc21iaW9zDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvbGludXgvZGVsbC13bWktc21iaW9zLmgNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL2RlbGwtd21pLXNt
+Ymlvcw0KPiA+IGIvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9kZWxsLXdtaS1zbWJpb3MgbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjhlYzk4ZTliN2IzNA0K
+PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL2Rl
+bGwtd21pLXNtYmlvcw0KPiA+IEBAIC0wLDAgKzEsMTAgQEANCj4gPiArV2hhdDoJCS9kZXYvd21p
+LWRlbGwtd21pLXNtYmlvcw0KPiA+ICtEYXRlOgkJT2N0b2JlciAyMDE3DQo+ID4gK0tlcm5lbFZl
+cnNpb246CTQuMTUNCj4gPiArQ29udGFjdDoJIk1hcmlvIExpbW9uY2llbGxvIiA8bWFyaW8ubGlt
+b25jaWVsbG9AZGVsbC5jb20+DQo+ID4gK0Rlc2NyaXB0aW9uOg0KPiA+ICsJCVBlcmZvcm0gU01C
+SU9TIGNhbGxzIG9uIHN1cHBvcnRlZCBEZWxsIG1hY2hpbmVzLg0KPiA+ICsJCXRocm91Z2ggdGhl
+IERlbGwgQUNQSS1XTUkgaW50ZXJmYWNlLg0KPiA+ICsNCj4gPiArCQlJT0NUTCdzIGFuZCBidWZm
+ZXIgZm9ybWF0cyBhcmUgZGVmaW5lZCBpbjoNCj4gPiArCQk8dWFwaS9saW51eC9kZWxsLXdtaS1z
+bWJpb3MuaD4NCj4gDQo+IFNob3VsZCBiZSAid21pIiBwYXJ0IG9mIGRldmljZSBuYW1lLCBldmVu
+IGlmIHdob2xlIGRyaXZlciB3b3JrIHdpdGhvdXQNCj4gV01JPw0KDQpXZWxsIGFjdHVhbGx5IHRo
+ZSBkcml2ZXIgd29uJ3QgY3JlYXRlIGEgY2hhcmFjdGVyIGRldmljZSB1bmxlc3MgV01JIGlzDQp1
+c2VkLiAgRXhwb3NpbmcgYSBjaGFyYWN0ZXIgZGV2aWNlIGZvciBub24tV01JIGlzIGp1c3QgZHVw
+bGljYXRpbmcgZGNkYmFzDQphdCBhbm90aGVyIGVuZHBvaW50IHdpdGhvdXQgYW55IHNlY3VyaXR5
+IGFkdmFudGFnZS4NCg0KPiANCj4gSSB0aGluayB0aGF0ICJ3bWkiIHNob3VsZCBiZSBwYXJ0IG9m
+IGRldmljZSBuYW1lIG9ubHkgaWYgaXQgaXMgcmVsYXRlZA0KPiB0byBXTUkgYnVzIGZ1bmN0aW9u
+cywgYW5kIG5vdCBpbiBjYXNlIHdoZW4gaXQgZXhwb3J0cyBzb21lIHZlbmRvciAoRGVsbCkNCj4g
+c3BlY2lmaWMgQVBJIHdoaWNoIG1heSBiZSBpbXBsZW1lbnRlZCB2aWEgV01JLg0KPiANCj4gRS5n
+LiB3ZSBoYXZlIC9kZXYvaTJjLSogZm9yIHJhdyBhY2Nlc3MgdG8gaTJjIGRldmljZXMuIEJ1dCB3
+ZSBkbyBub3QNCj4gaGF2ZSAvZGV2L2kyYy1zb21ldGhpbmcgZm9yIGUuZy4gUlRDIGRldmljZSBj
+b25uZWN0ZWQgdmlhIGkyYy4uLg0KDQpJIHNlZSB3aGF0IHlvdSBtZWFuIGhlcmUsIGJ1dCBJIHRo
+aW5rIHdlIG5lZWQgRGFycmVuIGFuZCBBbmR5IHRvIHdlaWdoDQppbiBoZXJlLiAgDQoNClRoZSBj
+aGFyYWN0ZXIgZGV2aWNlIGRvZXMgdXNlIFdNSSBidXMgbWV0aG9kcyAod21pX2V2YWx1YXRlX21l
+dGhvZCkuDQpUaGUgcHJpbWFyeSByZWFzb24gdG8gY3JlYXRlIHdpdGggd21pIGluIHRoZSBuYW1l
+IGlzIHRvIHNob3cgdGhhdCB0aGUgY2hhcmFjdGVyIA0KZGV2aWNlcyBhcmUgc3VwcG9zZWQgdG8g
+YmUgY3JlYXRlZCBhbmQgbWFuYWdlZCBieSB0aGUgV01JIGJ1cy4gIFZlbmRvcg0KZHJpdmVycyBz
+aG91bGQgbm90IGNyZWF0ZSB0aGVpciAib3duIi4gIEluIG15IG1pbmQgdGhpcyB3aWxsIGJlIGVz
+cGVjaWFsbHkgcmVsZXZhbnQNCm9uY2UgV01JIGJ1cyBjYW4gaW50ZXJwcmV0IE1PRiBhbmQgY3Jl
+YXRlIGEgc2V0IG9mIG1hcHBpbmdzIGZvciBhdHRyaWJ1dGVzDQpkZWZpbmVkIGluIE1PRi4NCiAN
+Cg==
