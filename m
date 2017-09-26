@@ -1,67 +1,78 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 01/12] platform/x86: dell-wmi: label driver as handling
- notifications
-Date: Mon, 25 Sep 2017 20:14:00 +0000
-Message-ID: <b8a5426211c541f8bcd938069a268a4d@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1505999739.git.mario.limonciello@dell.com>
- <2c923ea1cdb0a336bf849fa8a2d81bb93060fccb.1505999739.git.mario.limonciello@dell.com>
- <20170925160405.GG22190@pali>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
+ not presnt
+Date: Tue, 26 Sep 2017 06:49:08 +0200
+Message-ID: <20170926044908.GA9170@kmp-mobile.hq.kempniu.pl>
+References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
+ <20170923000048.GC20327@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170925160405.GG22190@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f170.google.com ([209.85.128.170]:54042 "EHLO
+        mail-wr0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935426AbdIZEtM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 26 Sep 2017 00:49:12 -0400
+Received: by mail-wr0-f170.google.com with SMTP id l22so11389056wrc.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Sep 2017 21:49:11 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20170923000048.GC20327@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIFNlcHRlbWJlciAyNSwgMjAx
-NyAxMjowNCBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BE
-ZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBMS01MIDxsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3Jn
-OyBxdWFzaXNlY0Bnb29nbGUuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMDEvMTJdIHBsYXRm
-b3JtL3g4NjogZGVsbC13bWk6IGxhYmVsIGRyaXZlciBhcyBoYW5kbGluZw0KPiBub3RpZmljYXRp
-b25zDQo+IA0KPiBPbiBUaHVyc2RheSAyMSBTZXB0ZW1iZXIgMjAxNyAwODo1NzowNiBNYXJpbyBM
-aW1vbmNpZWxsbyB3cm90ZToNCj4gPiBUaGlzIGRyaXZlciBzZXJ2ZXMgdGhlIHB1cnBvc2Ugb2Yg
-cmVzcG9uZGluZyB0byBXTUkgYmFzZWQgbm90aWZpY2F0aW9ucw0KPiA+IGZyb20gdGhlIERFTExf
-RVZFTlRfR1VJRCAoOURCQjU5OTQtQTk5Ny0xMURBLUIwMTItQjYyMkExRUY1NDkyKS4NCj4gPiBP
-dGhlciBHVUlEcyB3aWxsIGJlIGhhbmRsZWQgYnkgc2VwYXJhdGUgZHJpdmVycy4NCj4gPg0KPiA+
-IFVwZGF0ZSB0aGUgbGFuZ3VhZ2UgdXNlZCBieSB0aGlzIGRyaXZlciB0byBhdm9pZCBmdXR1cmUg
-Y29uZnVzaW9uLg0KPiANCj4gSGkhIEknbSBub3Qgc3VyZSBpZiBpZiAibm90aWZpY2F0aW9ucyIg
-d29yZCBpcyBiZXR0ZXIgdGhlbiAiZXh0cmFzIi4NCj4gQmFzaWNhbGx5IHRoZSBtb3N0IGltcG9y
-dGFudCBwYXJ0IG9mIHRoZSBkZWxsLXdtaSBkcml2ZXIgaXMgdG8gZGVsaXZlcg0KPiBrZXkgcHJl
-c3MgZXZlbnRzIHZpYSBpbnB1dCBkZXZpY2UuDQo+IA0KPiBIYXMgYW55Ym9keSBlbHNlIGJldHRl
-ciB3b3JkIG9yIGRlc2NyaXB0aW9uIGZvciB0aGlzPw0KPiANCkkgd2FzIGFjdHVhbGx5IHRlbXB0
-ZWQgdG8gcmVuYW1lIHRoZSBkcml2ZXIgaXRzZWxmIHRvIGRlbGwtd21pLW5vdGlmaWNhdGlvbnMu
-DQpSZWFsaXN0aWNhbGx5IGl0IGlzIGhvb2tpbmcgdXAgdG8gdGhlIG5vdGlmaWNhdGlvbnMgX1dF
-RDAgQU1MIG1ldGhvZCBzbyB5ZXMNCml0IGlzIHBpY2tpbmcgdXAgbm90aWZpY2F0aW9ucyBleGNs
-dXNpdmVseS4NCg0KSSB0aG91Z2h0IGFib3V0IHRoaXMgdG9vLCBidXQgSSBjYW4gYWxzbyBlbnZp
-c2lvbiB0aGF0IHRoZSBub3RpZmljYXRpb25zIHRoYXQNCmNvbWUgdGhyb3VnaCB0aGlzIGRyaXZl
-ciB0aGF0IGFyZW4ndCBjb25zdW1lZCBieSB0aGUga2VybmVsIGZvciBrZXlwcmVzcw0KcHVycG9z
-ZXMgYXJlIGFsc28gdXNlZnVsIHRvIHVzZXIgc3BhY2UgcG90ZW50aWFsbHkuICBJdCdzIG5vdCBw
-YXJ0IG9mIHRoaXMgc2VyaWVzDQpidXQgbWF5YmUgaW4gdGhlIGZ1dHVyZSBwcm92aWRpbmcgdGhv
-c2UgdGhyb3VnaCBhIGNoYXJhY3RlciBkZXZpY2UgdG9vIG1heQ0KbWFrZSBzZW5zZS4NCg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxs
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICB8IDIgKy0N
-Cj4gPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZyB8IDIgKy0NCj4gPiAgMiBmaWxlcyBj
-aGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiA+IGluZGV4IDIyODFhZjRiNDFiNi4u
-NWQ4ZWEyNGE4ZWU3IDEwMDY0NA0KPiA+IC0tLSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJ
-TlRBSU5FUlMNCj4gPiBAQCAtMzk5Niw3ICszOTk2LDcgQEAgUzoJTWFpbnRhaW5lZA0KPiA+ICBG
-OglEb2N1bWVudGF0aW9uL2RjZGJhcy50eHQNCj4gPiAgRjoJZHJpdmVycy9maXJtd2FyZS9kY2Ri
-YXMuKg0KPiA+DQo+ID4gLURFTEwgV01JIEVYVFJBUyBEUklWRVINCj4gPiArREVMTCBXTUkgTk9U
-SUZJQ0FUSU9OUyBEUklWRVINCj4gPiAgTToJTWF0dGhldyBHYXJyZXR0IDxtamc1OUBzcmNmLnVj
-YW0ub3JnPg0KPiA+ICBNOglQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+DQo+ID4g
-IFM6CU1haW50YWluZWQNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2Nv
-bmZpZyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcNCj4gPiBpbmRleCA4MGI4Nzk1NGY2
-ZGQuLjllNTJmMDVkYWEyZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9L
-Y29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZw0KPiA+IEBAIC0x
-MTYsNyArMTE2LDcgQEAgY29uZmlnIERFTExfTEFQVE9QDQo+ID4gIAlsYXB0b3BzIChleGNlcHQg
-Zm9yIHNvbWUgbW9kZWxzIGNvdmVyZWQgYnkgdGhlIENvbXBhbCBkcml2ZXIpLg0KPiA+DQo+ID4g
-IGNvbmZpZyBERUxMX1dNSQ0KPiA+IC0JdHJpc3RhdGUgIkRlbGwgV01JIGV4dHJhcyINCj4gPiAr
-CXRyaXN0YXRlICJEZWxsIFdNSSBub3RpZmljYXRpb25zIg0KPiA+ICAJZGVwZW5kcyBvbiBBQ1BJ
-X1dNSQ0KPiA+ICAJZGVwZW5kcyBvbiBETUkNCj4gPiAgCWRlcGVuZHMgb24gSU5QVVQNCj4gDQo+
-IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
+> > call call_fext_func() with a NULL device. Let's just skip those
+> > function calls when the FUJ02E3 device is not present.
+> > 
+> 
+> Interesting. We call call_fext_func from many locations using the
+> "device" argument, or the driver static "fext".
+> 
+> This looks to me that we should be a bit more consistent here.
+
+This is intentional.  The plan was to extract the backlight part of
+fujitsu-laptop into a separate module, fujitsu-backlight, which would
+use a simple two-function API exposed by fujitsu-laptop to control LCD
+backlight power.  Those functions would have to somehow access the
+FUJ02E3 ACPI device while not being ACPI callbacks.  Thus, fext is
+storing a pointer to the last (and most likely only) instantiated
+FUJ02E3 ACPI device so that it can be used for setting LCD backlight
+power from fujitsu-backlight.  See commit ca0d9eab0fb5 for a brief
+discussion of why this solution was chosen.
+
+> Finally, it seems a proper fix would be to either not register the
+> backlight device if !fext or to check for !fext inside call_fext_func.
+
+My draft patch series which splits off fujitsu-backlight includes the
+NULL check for fext inside the functions exposed by fujitsu-laptop.
+Sadly, I have not got round to submitting it yet.
+
+Just to make sure we are all on the same page here, please note that
+access to FUJ02E3 is only needed for controlling LCD backlight _power_,
+not LCD backlight _brightness_.
+
+Speaking of which, I just noticed that my S7020 can control its LCD
+brightness just fine without fujitsu-laptop being loaded.  Heck, it even
+works when booted with "noacpi".  It seems to me that on this model, LCD
+brightness control works at the firmware level and an ACPI-based driver
+is just another possible way of getting/setting LCD brightness level.
+Jonathan, IIRC you have an S7020 as well, could you please test that?
+You know better than me why this driver was needed in the first place.
+
+Ville, could you please test your S6120 for the above as well?  Please
+try unloading/blacklisting fujitsu-laptop and see whether LCD backlight
+control still works.
+
+Finally, it seems the S6120 also has a row of "application panel"
+hotkeys above the keyboard, but lacks the FUJ02E3 ACPI device, so I am
+wondering whether these hotkeys work in Linux.  Ville, do they?  In
+fact, it would be super helpful if you could post acpidumps from all
+three models you have access to (you mentioned S6120, S6010 and S7110).
+IMHO the biggest issue we have had while refactoring fujitsu-laptop is a
+narrow set of known/tested models.
+
+-- 
+Best regards,
+Michał Kępień
