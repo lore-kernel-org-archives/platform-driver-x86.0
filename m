@@ -1,133 +1,138 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 00/14] Introduce support for Dell SMBIOS over WMI
-Date: Tue, 26 Sep 2017 22:05:30 +0300
-Message-ID: <CAHp75Vd38p6YbE4okG1Bvfxp3Hv36P2ZTCQjSS_W1LrRgtjPVQ@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 00/14] Introduce support for Dell SMBIOS over WMI
+Date: Tue, 26 Sep 2017 19:17:17 +0000
+Message-ID: <7d52b19477ec4c00a51770bc292f3707@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
+ <CAHp75Vd38p6YbE4okG1Bvfxp3Hv36P2ZTCQjSS_W1LrRgtjPVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:37712 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S967161AbdIZTFc (ORCPT
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:44613 "EHLO
+        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1030327AbdIZTRU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2017 15:05:32 -0400
-In-Reply-To: <cover.1506451187.git.mario.limonciello@dell.com>
+        Tue, 26 Sep 2017 15:17:20 -0400
+In-Reply-To: <CAHp75Vd38p6YbE4okG1Bvfxp3Hv36P2ZTCQjSS_W1LrRgtjPVQ@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: andy.shevchenko@gmail.com, luto@kernel.org
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
 
-On Tue, Sep 26, 2017 at 9:49 PM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> The existing way that the dell-smbios helper module and associated
-> other drivers (dell-laptop, dell-wmi) communicate with the platform
-> really isn't secure.  It requires creating a buffer in physical
-> DMA32 memory space and passing that to the platform via SMM.
->
-> Since the platform got a physical memory pointer, you've just got
-> to trust that the platform has only modified (and accessed) memory
-> within that buffer.
->
-> Dell Platform designers recognize this security risk and offer a
-> safer way to communicate with the platform over ACPI.  This is
-> in turn exposed via a WMI interface to the OS.
->
-> When communicating over WMI-ACPI the communication doesn't occur
-> with physical memory pointers.  When the ASL is invoked, the fixed
-> length ACPI buffer is copied to a small operating region.  The ASL
-> will invoke the SMI, and SMM will only have access to this operating
-> region.  When the ASL returns the buffer is copied back for the OS
-> to process.
->
-> This method of communication should also deprecate the usage of the
-> dcdbas kernel module and software dependent upon it's interface.
-> Instead offer a character device interface for communicating with this
-> ASL method to allow userspace to use instead.
->
-> To faciliate that this patch series introduces a generic way for WMI
-> drivers to be able to create discoverable character devices through
-> the WMI bus when desired.
-> Requiring WMI drivers to explicitly ask for this functionality will
-> act as an effective vendor whitelist to character device creation.
->
-
-Thanks for an update, looks better now.
-I'm in the middle of going through it and noticed that patches 6 and 7
-sound like a fix to me.
-Perhaps better to move it to be first part of the series.
-
-Please, include Andy Lutomirski to Cc list, I'm pretty sure he is
-interested in changes like these to WMI.
-
-> changes between v1 and v2:
->  * Introduce another patch to sort the includes in wmi.c
->  * Introduce another patch to cleanup dell_wmi_check_descriptor_buffer
->    checks.
->  * Add a commit message to the pr_fmt commit
->  * Introduce includes to wmi.c in proper location
->  * Add Reviewed-by to relevant patches from Pali
->  * Make the WMI introduction patch fallback to legacy SMI
->    if compiled with CONFIG_DCDBAS
->  * Separate format of WMI and SMI buffers.  WMI buffer supports more
->    arguments and data.
->  * Adjust the rename patch for changes to fallback
->  * Drop sysfs token creation patch
->  * Adjust WMI descriptor check patch for changes to fallback
->  * introduce another patch to remove needless includes in dell-smbios.c
->  * Add token ioctl interface to character device.
->    - Can query number of tokens
->    - Can query values in all tokens
->  * Expose format of all buffers and IOCTL commands to uapi header
->  * Drop the read interface from character device.  It doesn't make
->    sense with multiple different ioctl methods.
->  * Default WMI interface to 32k (This would normally be queried via
->    MOF, but that's not possible yet)
->  * Create separate buffers for WMI and SMI.  If WMI is available,
->    free the SMI buffer.
->  * Reorder patches so all fixups come first in the series.
->
-> Mario Limonciello (14):
->   platform/x86: dell-wmi: label driver as handling notifications
->   platform/x86: dell-smbios: drop needless includes
->   platform/x86: dell-wmi: Don't match on descriptor GUID modalias
->   platform/x86: dell-smbios: Add pr_fmt definition to driver
->   platform/x86: wmi: sort include list
->   platform/x86: wmi: Cleanup exit routine in reverse order of init
->   platform/x86: wmi: destroy on cleanup rather than unregister
->   platform/x86: dell-smbios: Introduce a WMI-ACPI interface
->   platform/x86: dell-smbios: rename to dell-wmi-smbios
->   platform/x86: dell-wmi-smbios: Use Dell WMI descriptor check
->   platform/x86: wmi: create character devices when requested by drivers
->   platform/x86: dell-wmi-smbios: introduce character device for
->     userspace
->   platform/x86: Kconfig: Change the default settings for dell-wmi-smbios
->   platform/x86: dell-wmi-smbios: clean up wmi descriptor check
->
->  Documentation/ABI/testing/dell-wmi-smbios          |  10 +
->  MAINTAINERS                                        |   8 +-
->  drivers/platform/x86/Kconfig                       |  13 +-
->  drivers/platform/x86/Makefile                      |   2 +-
->  drivers/platform/x86/dell-laptop.c                 |   2 +-
->  drivers/platform/x86/dell-smbios.c                 | 213 ---------
->  drivers/platform/x86/dell-wmi-smbios.c             | 481 +++++++++++++++++++++
->  .../x86/{dell-smbios.h => dell-wmi-smbios.h}       |  28 +-
->  drivers/platform/x86/dell-wmi.c                    |  78 +---
->  drivers/platform/x86/wmi.c                         | 116 ++++-
->  include/linux/wmi.h                                |   1 +
->  include/uapi/linux/dell-wmi-smbios.h               |  55 +++
->  12 files changed, 674 insertions(+), 333 deletions(-)
->  create mode 100644 Documentation/ABI/testing/dell-wmi-smbios
->  delete mode 100644 drivers/platform/x86/dell-smbios.c
->  create mode 100644 drivers/platform/x86/dell-wmi-smbios.c
->  rename drivers/platform/x86/{dell-smbios.h => dell-wmi-smbios.h} (74%)
->  create mode 100644 include/uapi/linux/dell-wmi-smbios.h
->
-> --
-> 2.14.1
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1i
+ZXIgMjYsIDIwMTcgMzowNiBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1v
+bmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBMS01MIDxsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0gRHJpdmVyDQo+IDxwbGF0Zm9ybS1k
+cml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IFBhbGkgUm9o
+w6FyDQo+IDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAw
+MC8xNF0gSW50cm9kdWNlIHN1cHBvcnQgZm9yIERlbGwgU01CSU9TIG92ZXIgV01JDQo+IA0KPiBP
+biBUdWUsIFNlcCAyNiwgMjAxNyBhdCA5OjQ5IFBNLCBNYXJpbyBMaW1vbmNpZWxsbw0KPiA8bWFy
+aW8ubGltb25jaWVsbG9AZGVsbC5jb20+IHdyb3RlOg0KPiA+IFRoZSBleGlzdGluZyB3YXkgdGhh
+dCB0aGUgZGVsbC1zbWJpb3MgaGVscGVyIG1vZHVsZSBhbmQgYXNzb2NpYXRlZA0KPiA+IG90aGVy
+IGRyaXZlcnMgKGRlbGwtbGFwdG9wLCBkZWxsLXdtaSkgY29tbXVuaWNhdGUgd2l0aCB0aGUgcGxh
+dGZvcm0NCj4gPiByZWFsbHkgaXNuJ3Qgc2VjdXJlLiAgSXQgcmVxdWlyZXMgY3JlYXRpbmcgYSBi
+dWZmZXIgaW4gcGh5c2ljYWwNCj4gPiBETUEzMiBtZW1vcnkgc3BhY2UgYW5kIHBhc3NpbmcgdGhh
+dCB0byB0aGUgcGxhdGZvcm0gdmlhIFNNTS4NCj4gPg0KPiA+IFNpbmNlIHRoZSBwbGF0Zm9ybSBn
+b3QgYSBwaHlzaWNhbCBtZW1vcnkgcG9pbnRlciwgeW91J3ZlIGp1c3QgZ290DQo+ID4gdG8gdHJ1
+c3QgdGhhdCB0aGUgcGxhdGZvcm0gaGFzIG9ubHkgbW9kaWZpZWQgKGFuZCBhY2Nlc3NlZCkgbWVt
+b3J5DQo+ID4gd2l0aGluIHRoYXQgYnVmZmVyLg0KPiA+DQo+ID4gRGVsbCBQbGF0Zm9ybSBkZXNp
+Z25lcnMgcmVjb2duaXplIHRoaXMgc2VjdXJpdHkgcmlzayBhbmQgb2ZmZXIgYQ0KPiA+IHNhZmVy
+IHdheSB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSBwbGF0Zm9ybSBvdmVyIEFDUEkuICBUaGlzIGlz
+DQo+ID4gaW4gdHVybiBleHBvc2VkIHZpYSBhIFdNSSBpbnRlcmZhY2UgdG8gdGhlIE9TLg0KPiA+
+DQo+ID4gV2hlbiBjb21tdW5pY2F0aW5nIG92ZXIgV01JLUFDUEkgdGhlIGNvbW11bmljYXRpb24g
+ZG9lc24ndCBvY2N1cg0KPiA+IHdpdGggcGh5c2ljYWwgbWVtb3J5IHBvaW50ZXJzLiAgV2hlbiB0
+aGUgQVNMIGlzIGludm9rZWQsIHRoZSBmaXhlZA0KPiA+IGxlbmd0aCBBQ1BJIGJ1ZmZlciBpcyBj
+b3BpZWQgdG8gYSBzbWFsbCBvcGVyYXRpbmcgcmVnaW9uLiAgVGhlIEFTTA0KPiA+IHdpbGwgaW52
+b2tlIHRoZSBTTUksIGFuZCBTTU0gd2lsbCBvbmx5IGhhdmUgYWNjZXNzIHRvIHRoaXMgb3BlcmF0
+aW5nDQo+ID4gcmVnaW9uLiAgV2hlbiB0aGUgQVNMIHJldHVybnMgdGhlIGJ1ZmZlciBpcyBjb3Bp
+ZWQgYmFjayBmb3IgdGhlIE9TDQo+ID4gdG8gcHJvY2Vzcy4NCj4gPg0KPiA+IFRoaXMgbWV0aG9k
+IG9mIGNvbW11bmljYXRpb24gc2hvdWxkIGFsc28gZGVwcmVjYXRlIHRoZSB1c2FnZSBvZiB0aGUN
+Cj4gPiBkY2RiYXMga2VybmVsIG1vZHVsZSBhbmQgc29mdHdhcmUgZGVwZW5kZW50IHVwb24gaXQn
+cyBpbnRlcmZhY2UuDQo+ID4gSW5zdGVhZCBvZmZlciBhIGNoYXJhY3RlciBkZXZpY2UgaW50ZXJm
+YWNlIGZvciBjb21tdW5pY2F0aW5nIHdpdGggdGhpcw0KPiA+IEFTTCBtZXRob2QgdG8gYWxsb3cg
+dXNlcnNwYWNlIHRvIHVzZSBpbnN0ZWFkLg0KPiA+DQo+ID4gVG8gZmFjaWxpYXRlIHRoYXQgdGhp
+cyBwYXRjaCBzZXJpZXMgaW50cm9kdWNlcyBhIGdlbmVyaWMgd2F5IGZvciBXTUkNCj4gPiBkcml2
+ZXJzIHRvIGJlIGFibGUgdG8gY3JlYXRlIGRpc2NvdmVyYWJsZSBjaGFyYWN0ZXIgZGV2aWNlcyB0
+aHJvdWdoDQo+ID4gdGhlIFdNSSBidXMgd2hlbiBkZXNpcmVkLg0KPiA+IFJlcXVpcmluZyBXTUkg
+ZHJpdmVycyB0byBleHBsaWNpdGx5IGFzayBmb3IgdGhpcyBmdW5jdGlvbmFsaXR5IHdpbGwNCj4g
+PiBhY3QgYXMgYW4gZWZmZWN0aXZlIHZlbmRvciB3aGl0ZWxpc3QgdG8gY2hhcmFjdGVyIGRldmlj
+ZSBjcmVhdGlvbi4NCj4gPg0KPiANCj4gVGhhbmtzIGZvciBhbiB1cGRhdGUsIGxvb2tzIGJldHRl
+ciBub3cuDQo+IEknbSBpbiB0aGUgbWlkZGxlIG9mIGdvaW5nIHRocm91Z2ggaXQgYW5kIG5vdGlj
+ZWQgdGhhdCBwYXRjaGVzIDYgYW5kIDcNCj4gc291bmQgbGlrZSBhIGZpeCB0byBtZS4NCj4gUGVy
+aGFwcyBiZXR0ZXIgdG8gbW92ZSBpdCB0byBiZSBmaXJzdCBwYXJ0IG9mIHRoZSBzZXJpZXMuDQoN
+CkluIHYyIEknZCBzYXkgdGhhdCBhbGwgb2YgMSB0aHJvdWdoIDcgYXJlIGZpeGVzIHRoYXQgZXZl
+biBpZiB0aGUgcmVzdCBvZiB0aGUNCnNlcmllcyBkb2Vzbid0IGdldCBwdWxsZWQgaW4gaW1tZWRp
+YXRlbHkgc2hvdWxkIGxhbmQgc29vbmVyLg0KSSdsbCByZW9yZGVyIDYgYW5kIDcgZm9yIHRoZSBi
+ZWdpbm5pbmcgdGhvdWdoIGZvciB2MyBpZiB2MyBpcyBuZWNlc3NhcnkuDQoNCjggdGhyb3VnaCAx
+MyBhcmUgdGhlIHJlYWwgIm1lYXQiLCBhbmQgMTQgaXMgYSBmaXh1cC4NCg0KPiANCj4gUGxlYXNl
+LCBpbmNsdWRlIEFuZHkgTHV0b21pcnNraSB0byBDYyBsaXN0LCBJJ20gcHJldHR5IHN1cmUgaGUg
+aXMNCj4gaW50ZXJlc3RlZCBpbiBjaGFuZ2VzIGxpa2UgdGhlc2UgdG8gV01JLg0KDQpBZGRlZC4g
+IEFuZHkgeW91IHdlcmVuJ3QgQ0MnZWQgb24gdGhlIG9yaWdpbmFsIG9yIHYyIHN1Ym1pc3Npb24s
+IGJ1dCBpZiB0aGlzDQpyZXF1aXJlcyBhIHYzIEknbGwgaW5jbHVkZSB5b3UuDQoNCj4gDQo+ID4g
+Y2hhbmdlcyBiZXR3ZWVuIHYxIGFuZCB2MjoNCj4gPiAgKiBJbnRyb2R1Y2UgYW5vdGhlciBwYXRj
+aCB0byBzb3J0IHRoZSBpbmNsdWRlcyBpbiB3bWkuYw0KPiA+ICAqIEludHJvZHVjZSBhbm90aGVy
+IHBhdGNoIHRvIGNsZWFudXAgZGVsbF93bWlfY2hlY2tfZGVzY3JpcHRvcl9idWZmZXINCj4gPiAg
+ICBjaGVja3MuDQo+ID4gICogQWRkIGEgY29tbWl0IG1lc3NhZ2UgdG8gdGhlIHByX2ZtdCBjb21t
+aXQNCj4gPiAgKiBJbnRyb2R1Y2UgaW5jbHVkZXMgdG8gd21pLmMgaW4gcHJvcGVyIGxvY2F0aW9u
+DQo+ID4gICogQWRkIFJldmlld2VkLWJ5IHRvIHJlbGV2YW50IHBhdGNoZXMgZnJvbSBQYWxpDQo+
+ID4gICogTWFrZSB0aGUgV01JIGludHJvZHVjdGlvbiBwYXRjaCBmYWxsYmFjayB0byBsZWdhY3kg
+U01JDQo+ID4gICAgaWYgY29tcGlsZWQgd2l0aCBDT05GSUdfRENEQkFTDQo+ID4gICogU2VwYXJh
+dGUgZm9ybWF0IG9mIFdNSSBhbmQgU01JIGJ1ZmZlcnMuICBXTUkgYnVmZmVyIHN1cHBvcnRzIG1v
+cmUNCj4gPiAgICBhcmd1bWVudHMgYW5kIGRhdGEuDQo+ID4gICogQWRqdXN0IHRoZSByZW5hbWUg
+cGF0Y2ggZm9yIGNoYW5nZXMgdG8gZmFsbGJhY2sNCj4gPiAgKiBEcm9wIHN5c2ZzIHRva2VuIGNy
+ZWF0aW9uIHBhdGNoDQo+ID4gICogQWRqdXN0IFdNSSBkZXNjcmlwdG9yIGNoZWNrIHBhdGNoIGZv
+ciBjaGFuZ2VzIHRvIGZhbGxiYWNrDQo+ID4gICogaW50cm9kdWNlIGFub3RoZXIgcGF0Y2ggdG8g
+cmVtb3ZlIG5lZWRsZXNzIGluY2x1ZGVzIGluIGRlbGwtc21iaW9zLmMNCj4gPiAgKiBBZGQgdG9r
+ZW4gaW9jdGwgaW50ZXJmYWNlIHRvIGNoYXJhY3RlciBkZXZpY2UuDQo+ID4gICAgLSBDYW4gcXVl
+cnkgbnVtYmVyIG9mIHRva2Vucw0KPiA+ICAgIC0gQ2FuIHF1ZXJ5IHZhbHVlcyBpbiBhbGwgdG9r
+ZW5zDQo+ID4gICogRXhwb3NlIGZvcm1hdCBvZiBhbGwgYnVmZmVycyBhbmQgSU9DVEwgY29tbWFu
+ZHMgdG8gdWFwaSBoZWFkZXINCj4gPiAgKiBEcm9wIHRoZSByZWFkIGludGVyZmFjZSBmcm9tIGNo
+YXJhY3RlciBkZXZpY2UuICBJdCBkb2Vzbid0IG1ha2UNCj4gPiAgICBzZW5zZSB3aXRoIG11bHRp
+cGxlIGRpZmZlcmVudCBpb2N0bCBtZXRob2RzLg0KPiA+ICAqIERlZmF1bHQgV01JIGludGVyZmFj
+ZSB0byAzMmsgKFRoaXMgd291bGQgbm9ybWFsbHkgYmUgcXVlcmllZCB2aWENCj4gPiAgICBNT0Ys
+IGJ1dCB0aGF0J3Mgbm90IHBvc3NpYmxlIHlldCkNCj4gPiAgKiBDcmVhdGUgc2VwYXJhdGUgYnVm
+ZmVycyBmb3IgV01JIGFuZCBTTUkuICBJZiBXTUkgaXMgYXZhaWxhYmxlLA0KPiA+ICAgIGZyZWUg
+dGhlIFNNSSBidWZmZXIuDQo+ID4gICogUmVvcmRlciBwYXRjaGVzIHNvIGFsbCBmaXh1cHMgY29t
+ZSBmaXJzdCBpbiB0aGUgc2VyaWVzLg0KPiA+DQo+ID4gTWFyaW8gTGltb25jaWVsbG8gKDE0KToN
+Cj4gPiAgIHBsYXRmb3JtL3g4NjogZGVsbC13bWk6IGxhYmVsIGRyaXZlciBhcyBoYW5kbGluZyBu
+b3RpZmljYXRpb25zDQo+ID4gICBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBkcm9wIG5lZWRs
+ZXNzIGluY2x1ZGVzDQo+ID4gICBwbGF0Zm9ybS94ODY6IGRlbGwtd21pOiBEb24ndCBtYXRjaCBv
+biBkZXNjcmlwdG9yIEdVSUQgbW9kYWxpYXMNCj4gPiAgIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJp
+b3M6IEFkZCBwcl9mbXQgZGVmaW5pdGlvbiB0byBkcml2ZXINCj4gPiAgIHBsYXRmb3JtL3g4Njog
+d21pOiBzb3J0IGluY2x1ZGUgbGlzdA0KPiA+ICAgcGxhdGZvcm0veDg2OiB3bWk6IENsZWFudXAg
+ZXhpdCByb3V0aW5lIGluIHJldmVyc2Ugb3JkZXIgb2YgaW5pdA0KPiA+ICAgcGxhdGZvcm0veDg2
+OiB3bWk6IGRlc3Ryb3kgb24gY2xlYW51cCByYXRoZXIgdGhhbiB1bnJlZ2lzdGVyDQo+ID4gICBw
+bGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBJbnRyb2R1Y2UgYSBXTUktQUNQSSBpbnRlcmZhY2UN
+Cj4gPiAgIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IHJlbmFtZSB0byBkZWxsLXdtaS1zbWJp
+b3MNCj4gPiAgIHBsYXRmb3JtL3g4NjogZGVsbC13bWktc21iaW9zOiBVc2UgRGVsbCBXTUkgZGVz
+Y3JpcHRvciBjaGVjaw0KPiA+ICAgcGxhdGZvcm0veDg2OiB3bWk6IGNyZWF0ZSBjaGFyYWN0ZXIg
+ZGV2aWNlcyB3aGVuIHJlcXVlc3RlZCBieSBkcml2ZXJzDQo+ID4gICBwbGF0Zm9ybS94ODY6IGRl
+bGwtd21pLXNtYmlvczogaW50cm9kdWNlIGNoYXJhY3RlciBkZXZpY2UgZm9yDQo+ID4gICAgIHVz
+ZXJzcGFjZQ0KPiA+ICAgcGxhdGZvcm0veDg2OiBLY29uZmlnOiBDaGFuZ2UgdGhlIGRlZmF1bHQg
+c2V0dGluZ3MgZm9yIGRlbGwtd21pLXNtYmlvcw0KPiA+ICAgcGxhdGZvcm0veDg2OiBkZWxsLXdt
+aS1zbWJpb3M6IGNsZWFuIHVwIHdtaSBkZXNjcmlwdG9yIGNoZWNrDQo+ID4NCj4gPiAgRG9jdW1l
+bnRhdGlvbi9BQkkvdGVzdGluZy9kZWxsLXdtaS1zbWJpb3MgICAgICAgICAgfCAgMTAgKw0KPiA+
+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+OCArLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAxMyArLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9NYWtlZmlsZSAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMiArLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxh
+cHRvcC5jICAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9kZWxsLXNtYmlvcy5jICAgICAgICAgICAgICAgICB8IDIxMyAtLS0tLS0tLS0NCj4gPiAgZHJp
+dmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktc21iaW9zLmMgICAgICAgICAgICAgfCA0ODEgKysr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIC4uLi94ODYve2RlbGwtc21iaW9zLmggPT4gZGVsbC13
+bWktc21iaW9zLmh9ICAgICAgIHwgIDI4ICstDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
+bGwtd21pLmMgICAgICAgICAgICAgICAgICAgIHwgIDc4ICstLS0NCj4gPiAgZHJpdmVycy9wbGF0
+Zm9ybS94ODYvd21pLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMTYgKysrKy0NCj4gPiAg
+aW5jbHVkZS9saW51eC93bWkuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEg
+Kw0KPiA+ICBpbmNsdWRlL3VhcGkvbGludXgvZGVsbC13bWktc21iaW9zLmggICAgICAgICAgICAg
+ICB8ICA1NSArKysNCj4gPiAgMTIgZmlsZXMgY2hhbmdlZCwgNjc0IGluc2VydGlvbnMoKyksIDMz
+MyBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vQUJJ
+L3Rlc3RpbmcvZGVsbC13bWktc21iaW9zDQo+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS1zbWJpb3MuYw0KPiA+ICByZW5hbWUgZHJpdmVycy9w
+bGF0Zm9ybS94ODYve2RlbGwtc21iaW9zLmggPT4gZGVsbC13bWktc21iaW9zLmh9ICg3NCUpDQo+
+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvbGludXgvZGVsbC13bWktc21iaW9z
+LmgNCj4gPg0KPiA+IC0tDQo+ID4gMi4xNC4xDQo+ID4NCj4gDQo+IA0KPiANCj4gLS0NCj4gV2l0
+aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
