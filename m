@@ -1,51 +1,79 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 00/14] Introduce support for Dell SMBIOS over WMI
-Date: Wed, 27 Sep 2017 10:36:09 -0700
-Message-ID: <20170927173609.GI23572@fury>
+Subject: Re: [PATCH v2 02/14] platform/x86: dell-smbios: drop needless
+ includes
+Date: Wed, 27 Sep 2017 10:40:19 -0700
+Message-ID: <20170927174019.GJ23572@fury>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
- <CAHp75Vd38p6YbE4okG1Bvfxp3Hv36P2ZTCQjSS_W1LrRgtjPVQ@mail.gmail.com>
- <7d52b19477ec4c00a51770bc292f3707@ausx13mpc120.AMER.DELL.COM>
- <20170927171139.GG23572@fury>
- <8d7a93c2bbac47899268b9b7897c3430@ausx13mpc120.AMER.DELL.COM>
+ <cc9ebe36b3c0adee5789253b6d77a2a5e3a7e765.1506451187.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:51825 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:58108 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750852AbdI0RgM (ORCPT
+        with ESMTP id S1750752AbdI0RkV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 13:36:12 -0400
+        Wed, 27 Sep 2017 13:40:21 -0400
 Content-Disposition: inline
-In-Reply-To: <8d7a93c2bbac47899268b9b7897c3430@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <cc9ebe36b3c0adee5789253b6d77a2a5e3a7e765.1506451187.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, luto@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
 
-On Wed, Sep 27, 2017 at 05:31:14PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Darren Hart [mailto:dvhart@infradead.org]
-> > Sent: Wednesday, September 27, 2017 1:12 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: andy.shevchenko@gmail.com; luto@kernel.org; linux-kernel@vger.kernel.org;
-> > platform-driver-x86@vger.kernel.org; quasisec@google.com;
-> > pali.rohar@gmail.com
-> > Subject: Re: [PATCH v2 00/14] Introduce support for Dell SMBIOS over WMI
-> > 
-> > On Tue, Sep 26, 2017 at 07:17:17PM +0000, Mario.Limonciello@dell.com wrote:
-> > > >
-> > > > Please, include Andy Lutomirski to Cc list, I'm pretty sure he is
-> > > > interested in changes like these to WMI.
-> > >
-> > > Added.  Andy you weren't CC'ed on the original or v2 submission, but if this
-> > > requires a v3 I'll include you.
-> > 
-> > Andy should be Cc'd on all patches to  platform drivers x86 as we
-> > co-maintain the subsystem together.
+On Tue, Sep 26, 2017 at 01:50:00PM -0500, Mario Limonciello wrote:
+> These aren't needed to compile the module.
 > 
-> Andy S. was CC'ed on all of these, Andy S was recommending that I add Andy L.
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
-Ah, of course. Sorry, too many Andys :-)
+Hrm...
+
+CONFIG_DELL_SMBIOS=m
+
+$ make drivers/platform/x86/dell-smbios.ko
+
+  CC [M]  drivers/platform/x86/dell-smbios.o
+drivers/platform/x86/dell-smbios.c: In function ‘parse_da_table’:
+drivers/platform/x86/dell-smbios.c:142:18: error: implicit declaration of function ‘krealloc’ [-Werror=implicit-function-declaration]
+  new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
+                  ^~~~~~~~
+drivers/platform/x86/dell-smbios.c:142:16: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+  new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
+                ^
+drivers/platform/x86/dell-smbios.c: In function ‘dell_smbios_init’:
+drivers/platform/x86/dell-smbios.c:193:2: error: implicit declaration of function ‘kfree’ [-Werror=implicit-function-declaration]
+  kfree(da_tokens);
+  ^~~~~
+
+> ---
+>  drivers/platform/x86/dell-smbios.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+> index 0a5723468bff..6654ad44a04c 100644
+> --- a/drivers/platform/x86/dell-smbios.c
+> +++ b/drivers/platform/x86/dell-smbios.c
+> @@ -17,10 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/dmi.h>
+>  #include <linux/err.h>
+> -#include <linux/gfp.h>
+>  #include <linux/mutex.h>
+> -#include <linux/slab.h>
+
+Appears you do require slab.h...
+
+> -#include <linux/io.h>
+>  #include "../../firmware/dcdbas.h"
+>  #include "dell-smbios.h"
+>  
+> -- 
+> 2.14.1
+
+
+
+> 
+> 
 
 -- 
 Darren Hart
