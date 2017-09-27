@@ -1,48 +1,49 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
- not presnt
-Date: Wed, 27 Sep 2017 16:57:51 +0930
-Message-ID: <20170927072750.GK32089@marvin.atrad.com.au>
-References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
- <20170927065655.GA30358@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: intel-hid: Power button suspend on Dell
+ Latitude 7275
+Date: Wed, 27 Sep 2017 00:31:41 -0700
+Message-ID: <20170927073141.GB19973@fury>
+References: <20170917225712.12136-1-jerome.debretagne@gmail.com>
+ <20170922234543.GB20327@fury>
+ <CAHp75VdJXmif+pesu=EAJ5i9dWtaNLXr3QGJdQZiKp_tURtGYg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:60876 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752195AbdI0H2k (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 03:28:40 -0400
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170927065655.GA30358@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Ville Syrjala <ville.syrjala@linux.intel.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+In-Reply-To: <CAHp75VdJXmif+pesu=EAJ5i9dWtaNLXr3QGJdQZiKp_tURtGYg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: =?iso-8859-1?B?Suly9G1l?= de Bretagne <jerome.debretagne@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mario Limonciello <mario.limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren
-
-On Tue, Sep 26, 2017 at 11:56:55PM -0700, Darren Hart wrote:
-> On Mon, Sep 18, 2017 at 11:00:59PM +0300, Ville Syrjala wrote:
-> > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > 
-> > My Fujitsu-Siemens Lifebook S6120 doesn't have the FUJ02E3 device,
-> > but it does have FUJ02B1. That means we do register the backlight
-> > device (and it even seems to work), but the code will oops as soon
-> > as we try to set the backlight brightness because it's trying to
-> > call call_fext_func() with a NULL device. Let's just skip those
-> > function calls when the FUJ02E3 device is not present.
-> > 
-> > Cc: Jonathan Woithe <jwoithe@just42.net>
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> > Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+On Mon, Sep 25, 2017 at 01:57:48PM +0300, Andy Shevchenko wrote:
+> On Sat, Sep 23, 2017 at 2:45 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Mon, Sep 18, 2017 at 12:57:12AM +0200, Jérôme de Bretagne wrote:
 > 
-> Thanks for all the discussion on this patch. While there are a couple approaches
-> we can take, it is clear further clean up and refactoring is in order. To fix
-> the Ooops now, I will apply this patch to fixes and Cc Stable.
+> >> +             if (event == 0xce) {
+> >> +                     input_report_key(priv->input_dev, KEY_POWER, 1);
+> >> +                     input_sync(priv->input_dev);
+> >> +                     return;
+> >> +             } else if (event == 0xcf)
+> >> +                     return;
+> >
+> > Minor CodingStyle nit. If the if block uses parens, so does the else block. In
+> > this case, since the if returns, just skip the else entirely.
+> >
+> > See Documentation/process/coding-style.rst
+> > The example immediatley *before* 3.1) Spaces.
+> >
+> > I've made this change and queued for testing.
+> >
+> >> +     }
+> 
+> Actually in this case even 'else' is redundant.
 
-Thanks Darren.
+Yes, this is what I meant above by "skip the else entirely", and is the
+change I made prior to committing. I was just pointing out the coding
+style at the same time :-)
 
-jonathan
+-- 
+Darren Hart
+VMware Open Source Technology Center
