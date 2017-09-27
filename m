@@ -1,63 +1,67 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 02/14] platform/x86: dell-smbios: drop needless
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 02/14] platform/x86: dell-smbios: drop needless
  includes
-Date: Wed, 27 Sep 2017 17:44:34 +0000
-Message-ID: <430f9404a7da4e458562ded9d4297ce2@ausx13mpc120.AMER.DELL.COM>
+Date: Wed, 27 Sep 2017 10:58:08 -0700
+Message-ID: <20170927175808.GL23572@fury>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
  <cc9ebe36b3c0adee5789253b6d77a2a5e3a7e765.1506451187.git.mario.limonciello@dell.com>
  <20170927174019.GJ23572@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:59439 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752201AbdI0R6K (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 27 Sep 2017 13:58:10 -0400
+Content-Disposition: inline
 In-Reply-To: <20170927174019.GJ23572@fury>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXJyZW4gSGFydCBbbWFpbHRv
-OmR2aGFydEBpbmZyYWRlYWQub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAyNywg
-MjAxNyAxOjQwIFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxv
-QERlbGwuY29tPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwu
-Y29tPjsgTEtNTCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0Zm9ybS1k
-cml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcGFsaS5y
-b2hhckBnbWFpbC5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwMi8xNF0gcGxhdGZvcm0v
-eDg2OiBkZWxsLXNtYmlvczogZHJvcCBuZWVkbGVzcyBpbmNsdWRlcw0KPiANCj4gT24gVHVlLCBT
-ZXAgMjYsIDIwMTcgYXQgMDE6NTA6MDBQTSAtMDUwMCwgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6
-DQo+ID4gVGhlc2UgYXJlbid0IG5lZWRlZCB0byBjb21waWxlIHRoZSBtb2R1bGUuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AZGVs
-bC5jb20+DQo+IA0KPiBIcm0uLi4NCj4gDQo+IENPTkZJR19ERUxMX1NNQklPUz1tDQo+IA0KPiAk
-IG1ha2UgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3Mua28NCj4gDQo+ICAgQ0MgW01d
-ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5vDQo+IGRyaXZlcnMvcGxhdGZvcm0v
-eDg2L2RlbGwtc21iaW9zLmM6IEluIGZ1bmN0aW9uIOKAmHBhcnNlX2RhX3RhYmxl4oCZOg0KPiBk
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jOjE0MjoxODogZXJyb3I6IGltcGxpY2l0
-IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uDQo+IOKAmGtyZWFsbG9j4oCZIFstV2Vycm9yPWltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgIG5ld19kYV90b2tlbnMgPSBrcmVhbGxvYyhk
-YV90b2tlbnMsIChkYV9udW1fdG9rZW5zICsgdG9rZW5zKSAqDQo+ICAgICAgICAgICAgICAgICAg
-IF5+fn5+fn5+DQo+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmM6MTQyOjE2OiB3
-YXJuaW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXINCj4gZnJvbSBpbnRlZ2VyIHdpdGhvdXQg
-YSBjYXN0IFstV2ludC1jb252ZXJzaW9uXQ0KPiAgIG5ld19kYV90b2tlbnMgPSBrcmVhbGxvYyhk
-YV90b2tlbnMsIChkYV9udW1fdG9rZW5zICsgdG9rZW5zKSAqDQo+ICAgICAgICAgICAgICAgICBe
-DQo+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmM6IEluIGZ1bmN0aW9uIOKAmGRl
-bGxfc21iaW9zX2luaXTigJk6DQo+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmM6
-MTkzOjI6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbg0KPiDigJhrZnJl
-ZeKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0NCj4gICBrZnJlZShk
-YV90b2tlbnMpOw0KPiAgIF5+fn5+DQo+IA0KDQpUaGFua3MsIEkndmUgb2J2aW91c2x5IGJlZW4g
-dGVzdGluZyB0aGlzIGFuZCBkaWRuJ3Qgbm90aWNlIGl0Lg0KTm90IHN1cmUgd2h5IHRoYXQgd2Fz
-bid0IGV4cGxvZGluZyBvbiBteSBlbmQuICANCkFueXdheSBJJ2xsIGZpeCBmb3IgdjMuDQoNCj4g
-PiAtLS0NCj4gPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3MuYyB8IDMgLS0tDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni9kZWxsLQ0KPiBzbWJpb3MuYw0KPiA+IGluZGV4IDBhNTcyMzQ2OGJmZi4uNjY1NGFkNDRhMDRj
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMNCj4g
-PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gQEAgLTE3LDEw
-ICsxNyw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUg
-PGxpbnV4L2RtaS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ID4gLSNpbmNsdWRl
-IDxsaW51eC9nZnAuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+ID4gLSNpbmNs
-dWRlIDxsaW51eC9zbGFiLmg+DQo+IA0KPiBBcHBlYXJzIHlvdSBkbyByZXF1aXJlIHNsYWIuaC4u
-Lg0KPiANCj4gPiAtI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gICNpbmNsdWRlICIuLi8uLi9m
-aXJtd2FyZS9kY2RiYXMuaCINCj4gPiAgI2luY2x1ZGUgImRlbGwtc21iaW9zLmgiDQo+ID4NCj4g
-PiAtLQ0KPiA+IDIuMTQuMQ0KPiANCj4gDQo+IA0KPiA+DQo+ID4NCj4gDQo+IC0tDQo+IERhcnJl
-biBIYXJ0DQo+IFZNd2FyZSBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0K
+On Wed, Sep 27, 2017 at 10:40:19AM -0700, Darren Hart wrote:
+> On Tue, Sep 26, 2017 at 01:50:00PM -0500, Mario Limonciello wrote:
+> > These aren't needed to compile the module.
+> > 
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> 
+> Hrm...
+> 
+> CONFIG_DELL_SMBIOS=m
+> 
+> $ make drivers/platform/x86/dell-smbios.ko
+> 
+>   CC [M]  drivers/platform/x86/dell-smbios.o
+> drivers/platform/x86/dell-smbios.c: In function ‘parse_da_table’:
+> drivers/platform/x86/dell-smbios.c:142:18: error: implicit declaration of function ‘krealloc’ [-Werror=implicit-function-declaration]
+>   new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
+>                   ^~~~~~~~
+> drivers/platform/x86/dell-smbios.c:142:16: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+>   new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
+>                 ^
+> drivers/platform/x86/dell-smbios.c: In function ‘dell_smbios_init’:
+> drivers/platform/x86/dell-smbios.c:193:2: error: implicit declaration of function ‘kfree’ [-Werror=implicit-function-declaration]
+>   kfree(da_tokens);
+>   ^~~~~
+> 
+> > ---
+> >  drivers/platform/x86/dell-smbios.c | 3 ---
+...
+> > -#include <linux/slab.h>
+> 
+> Appears you do require slab.h...
+> 
+
+I've dropped this one line from this patch, and build is working again. Patches
+1-7 look ready to go to me. I'm pushing these to my review branch from some
+additional automated testing.
+
+Let me know if there are any objections for 1-7. If we can get these queued now,
+we can simplify the review effort for the major functional changes in 8-14.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
