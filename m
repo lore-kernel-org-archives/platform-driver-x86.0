@@ -1,79 +1,67 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 02/14] platform/x86: dell-smbios: drop needless
- includes
-Date: Wed, 27 Sep 2017 10:40:19 -0700
-Message-ID: <20170927174019.GJ23572@fury>
+Subject: Re: [PATCH v2 03/14] platform/x86: dell-wmi: Don't match on
+ descriptor GUID modalias
+Date: Wed, 27 Sep 2017 10:44:18 -0700
+Message-ID: <20170927174418.GK23572@fury>
 References: <cover.1506451187.git.mario.limonciello@dell.com>
- <cc9ebe36b3c0adee5789253b6d77a2a5e3a7e765.1506451187.git.mario.limonciello@dell.com>
+ <b6153ced6dc75c057429a69f2d8994d784f9768e.1506451187.git.mario.limonciello@dell.com>
+ <20170927172150.GH23572@fury>
+ <342b1e384a8f4d26b236fe2ac8c25a18@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:58108 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:50739 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750752AbdI0RkV (ORCPT
+        with ESMTP id S1751408AbdI0RoV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 13:40:21 -0400
+        Wed, 27 Sep 2017 13:44:21 -0400
 Content-Disposition: inline
-In-Reply-To: <cc9ebe36b3c0adee5789253b6d77a2a5e3a7e765.1506451187.git.mario.limonciello@dell.com>
+In-Reply-To: <342b1e384a8f4d26b236fe2ac8c25a18@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
 
-On Tue, Sep 26, 2017 at 01:50:00PM -0500, Mario Limonciello wrote:
-> These aren't needed to compile the module.
+On Wed, Sep 27, 2017 at 05:30:40PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Darren Hart [mailto:dvhart@infradead.org]
+> > Sent: Wednesday, September 27, 2017 1:22 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
+> > kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > quasisec@google.com; pali.rohar@gmail.com
+> > Subject: Re: [PATCH v2 03/14] platform/x86: dell-wmi: Don't match on descriptor
+> > GUID modalias
+> > 
+> > On Tue, Sep 26, 2017 at 01:50:01PM -0500, Mario Limonciello wrote:
+> > > The descriptor GUID is not used to indicate that WMI notifications
+> > > in the dell-wmi driver work properly.  As such a modalias should
+> > > not be present that causes this driver to load on systems with this
+> > > GUID.
+> > >
+> > > Reviewed-by: Pali Pohar <pali.rohar@gmail.com>
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > 
+> > I can do this manually, but for future reference:
+> > 
+> > Nit, in general, the author's sign off should be first, followed by
+> > reviewers and testers. The maintainer will add their sign off at the end
+> > - this keeps things clear regarding the development and delivery path.
+> > In general, assume chronological order and you'll have the right idea.
+> > 
+> > Informational tags, like Reported, Suggested, Tested, and Fixes can come
+> > before the Author sign off, which is consistent with the chronological
+> > order.
+> > 
 > 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> Operationally is there is a flag I'm missing in git-format-patch that does
+> this?  git format-patch -s puts my sign off at the very bottom, so this is a
+> manual action to re-order if I'm adding in Reviewed-by: in the patch
+> description.
 
-Hrm...
-
-CONFIG_DELL_SMBIOS=m
-
-$ make drivers/platform/x86/dell-smbios.ko
-
-  CC [M]  drivers/platform/x86/dell-smbios.o
-drivers/platform/x86/dell-smbios.c: In function ‘parse_da_table’:
-drivers/platform/x86/dell-smbios.c:142:18: error: implicit declaration of function ‘krealloc’ [-Werror=implicit-function-declaration]
-  new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
-                  ^~~~~~~~
-drivers/platform/x86/dell-smbios.c:142:16: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-  new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
-                ^
-drivers/platform/x86/dell-smbios.c: In function ‘dell_smbios_init’:
-drivers/platform/x86/dell-smbios.c:193:2: error: implicit declaration of function ‘kfree’ [-Werror=implicit-function-declaration]
-  kfree(da_tokens);
-  ^~~~~
-
-> ---
->  drivers/platform/x86/dell-smbios.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-> index 0a5723468bff..6654ad44a04c 100644
-> --- a/drivers/platform/x86/dell-smbios.c
-> +++ b/drivers/platform/x86/dell-smbios.c
-> @@ -17,10 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/dmi.h>
->  #include <linux/err.h>
-> -#include <linux/gfp.h>
->  #include <linux/mutex.h>
-> -#include <linux/slab.h>
-
-Appears you do require slab.h...
-
-> -#include <linux/io.h>
->  #include "../../firmware/dcdbas.h"
->  #include "dell-smbios.h"
->  
-> -- 
-> 2.14.1
-
-
-
-> 
-> 
+Yes, this is a manual step. Git will add your sign off for you, but it doesn't
+do it contextually, always at the end. Works for the first writing, after that
+you have to manage the tags manually. (or at least that is what I do)
 
 -- 
 Darren Hart
