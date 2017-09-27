@@ -1,53 +1,57 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 04/12] platform/x86: dell-smbios: Switch to a WMI-ACPI
- interface
-Date: Wed, 27 Sep 2017 21:15:51 +0000
-Message-ID: <80aff96a283c457b90f948ce9c7872b3@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce character
+ device for userspace
+Date: Wed, 27 Sep 2017 14:59:27 -0700
+Message-ID: <20170927215927.GP23572@fury>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
- <4da87eb0d9722ed906615409586a8b4d7becd65c.1505999739.git.mario.limonciello@dell.com>
- <c50c7b2a-7e91-a337-2442-6f0b60875491@kernel.org>
+ <a7829a31691da18e4d28e0760645ca2a3f302b66.1505999739.git.mario.limonciello@dell.com>
+ <20170925163150.GM22190@pali>
+ <CAHp75Vewet4v-kwiEGd82XicaLv_XbNt6o6q+CVqYCUFnUg+oQ@mail.gmail.com>
+ <23b3029bac144f17bd3a68a13cfe9cf4@ausx13mpc120.AMER.DELL.COM>
+ <20170927165936.GF23572@fury>
+ <5a68f1bdb7484009be88a39660d478ae@ausx13mpc120.AMER.DELL.COM>
+ <20170927185026.GM23572@fury>
+ <151663b32c9e40a48e3a49b85eda1a0e@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:30125 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751801AbdI0VP4 (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:46914 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752011AbdI0V7a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 17:15:56 -0400
-In-Reply-To: <c50c7b2a-7e91-a337-2442-6f0b60875491@kernel.org>
-Content-Language: en-US
+        Wed, 27 Sep 2017 17:59:30 -0400
+Content-Disposition: inline
+In-Reply-To: <151663b32c9e40a48e3a49b85eda1a0e@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: luto@kernel.org, dvhart@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com, pali.rohar@gmail.com
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBMdXRvbWlyc2tp
-IFttYWlsdG86bHV0b0BrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAy
-NywgMjAxNyAzOjQ4IFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2ll
-bGxvQERlbGwuY29tPjsgZHZoYXJ0QGluZnJhZGVhZC5vcmcNCj4gQ2M6IExLTUwgPGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9y
-ZzsNCj4gcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcGFsaS5yb2hhckBnbWFpbC5jb20NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCAwNC8xMl0gcGxhdGZvcm0veDg2OiBkZWxsLXNtYmlvczogU3dpdGNoIHRv
-IGEgV01JLUFDUEkNCj4gaW50ZXJmYWNlDQo+IA0KPiBPbiAwOS8yMS8yMDE3IDA2OjU3IEFNLCBN
-YXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gPiBUaGUgZHJpdmVyIGN1cnJlbnRseSB1c2VzIGFu
-IFNNSSBpbnRlcmZhY2Ugd2hpY2ggZ3JhbnRzIGRpcmVjdCBhY2Nlc3MNCj4gPiB0byBwaHlzaWNh
-bCBtZW1vcnkgdG8gdGhlIHBsYXRmb3JtIHZpYSBhIHBvaW50ZXIuDQo+ID4NCj4gPiBDaGFuZ2lu
-ZyB0aGlzIHRvIG9wZXJhdGUgb3ZlciBXTUktQUNQSSB3aWxsIHVzZSBhbiBBQ1BJIE9wZXJhdGlv
-blJlZ2lvbg0KPiA+IGZvciBhIGJ1ZmZlciBvZiBkYXRhIHN0b3JhZ2Ugd2hlbiBwbGF0Zm9ybSBj
-YWxscyBhcmUgcGVyZm9ybWVkLg0KPiA+DQo+ID4gVGhpcyBpcyBhIHNhZmVyIGFwcHJvYWNoIHRv
-IHVzZSBpbiBrZXJuZWwgZHJpdmVycyBhcyB0aGUgcGxhdGZvcm0gd2lsbA0KPiA+IG9ubHkgaGF2
-ZSBhY2Nlc3MgdG8gdGhhdCBPcGVyYXRpb25SZWdpb24uDQo+ID4NCj4gPiBBcyBhIHJlc3VsdCwg
-dGhpcyBjaGFuZ2UgcmVtb3ZlcyB0aGUgZGVwZW5kZW5jeSBvbiB0aGlzIGRyaXZlciBvbiB0aGUN
-Cj4gPiBkY2RiYXMga2VybmVsIG1vZHVsZS4NCj4gPg0KPiANCj4gPiArCXN0YXR1cyA9IHdtaV9l
-dmFsdWF0ZV9tZXRob2QoREVMTF9XTUlfU01CSU9TX0dVSUQsDQo+ID4gKwkJCQkgICAgIDAsIDEs
-ICZpbnB1dCwgJm91dHB1dCk7DQo+IA0KPiBJdCBtaWdodCBiZSBuaWNlIHRvIGFkZCBhIHdtaWRl
-dl9tZXRob2RfZXZhbHVhdGUoc3RydWN0IHdtaV9kZXZpY2UNCj4gKndkZXYsIC4uLikgZnVuY3Rp
-b24gdG8gYmV0dGVyIGFsaWdoIHdpdGggdGhlIG5ldyB3b3JsZCBvcmRlci4gIFRoZSBvbmx5DQo+
-IHJlYXNvbiBJIGRpZG4ndCBkbyBpdCBpcyB0aGF0IEkgZGlkbid0IGNvbnZlcnQgYW55IGRyaXZl
-cnMgdGhhdCB3YW50ZWQgaXQuDQoNCkdyZWF0IGlkZWEuICBJJ2xsIGFwcGx5IHRoYXQgZm9yIG15
-IG5leHQgcGF0Y2ggcmV2aXNpb24uDQpJJ20gbm90IGFib3V0IHRvIGNvbnZlcnQgYWxsIHRoZSBl
-eGlzdGluZyBkcml2ZXJzLCBidXQgb25jZSBhbGwgZXhpc3RpbmcgZHJpdmVycw0KY29uY2VwdHVh
-bGl6ZSB1c2luZyB0aGUgYnVzLCBzdG9yaW5nIGEgd21pX2RldmljZSBwb2ludGVyIGludGVybmFs
-bHksYW5kIA0KdXNpbmcgdGhpcyB0aGUgb2xkIHdtaV9ldmFsdWF0ZV9tZXRob2QgY2FuIGJlIGRy
-b3BwZWQgdG9vLg0KDQoNCg0K
+On Wed, Sep 27, 2017 at 09:12:34PM +0000, Mario.Limonciello@dell.com wrote:
+...
+> > Thanks for the concrete example, this helps a lot.
+> > 
+> > One guiding principle of this series and something Pali correctly pointed out,
+> > is that for Linux, we're keeping WMI as the implementation and exposing features
+> > to userspace through char devs and IOCTLS. You points above are consistent with
+> > that theme, and the GUIDs are not an appropriate namespace.
+> > 
+> > The driver namespace does make more sense as you suggested above:
+> > 
+> > /dev/wmi/$driver
+> > 
+> > This still has wmi in the name, but given that is the bus name, I think it's a
+> > reasonable way organize the files - and is still a well-defined naming scheme.
+> > 
+> 
+> Thanks Darren.  I'll adjust the patch.
+> Would you like me to document this chosen policy somewhere in Documentation?
+> If so, where?
+> Or to put more about our conversation in the commit message? 
+> 
+
+Some justification in the commit message for now would be best. Thanks!
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
