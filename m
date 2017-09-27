@@ -1,74 +1,91 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs
- interface for SMBIOS tokens
-Date: Wed, 27 Sep 2017 09:50:51 -0700
-Message-ID: <20170927165051.GE23572@fury>
+Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce character
+ device for userspace
+Date: Wed, 27 Sep 2017 09:59:36 -0700
+Message-ID: <20170927165936.GF23572@fury>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
- <1342f21a4f2c9af86d3033a9af9d9a4d05d27106.1505999739.git.mario.limonciello@dell.com>
- <20170925162333.GL22190@pali>
- <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
- <bb85503730a1479c94810a12802e8027@ausx13mpc120.AMER.DELL.COM>
+ <a7829a31691da18e4d28e0760645ca2a3f302b66.1505999739.git.mario.limonciello@dell.com>
+ <20170925163150.GM22190@pali>
+ <CAHp75Vewet4v-kwiEGd82XicaLv_XbNt6o6q+CVqYCUFnUg+oQ@mail.gmail.com>
+ <23b3029bac144f17bd3a68a13cfe9cf4@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bb85503730a1479c94810a12802e8027@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <23b3029bac144f17bd3a68a13cfe9cf4@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mario.Limonciello@dell.com
 Cc: andy.shevchenko@gmail.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 25, 2017 at 05:31:05PM +0000, Mario.Limonciello@dell.com wrote:
+On Mon, Sep 25, 2017 at 05:46:54PM +0000, Mario.Limonciello@dell.com wrote:
 > > -----Original Message-----
 > > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > Sent: Monday, September 25, 2017 1:04 PM
+> > Sent: Monday, September 25, 2017 12:58 PM
 > > To: Pali Rohár <pali.rohar@gmail.com>
 > > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; dvhart@infradead.org;
 > > LKML <linux-kernel@vger.kernel.org>; Platform Driver <platform-driver-
 > > x86@vger.kernel.org>; quasisec@google.com
-> > Subject: Re: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs interface
-> > for SMBIOS tokens
+> > Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce character
+> > device for userspace
 > > 
-> > On Mon, Sep 25, 2017 at 7:23 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > On Thursday 21 September 2017 08:57:11 Mario Limonciello wrote:
-> > >> Currently userspace tools can access system tokens via the dcdbas
-> > >> kernel module and a SMI call that will cause the platform to execute
-> > >> SMM code.
+> > On Mon, Sep 25, 2017 at 7:31 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > On Thursday 21 September 2017 08:57:16 Mario Limonciello wrote:
+> > >> This userspace character device will be used to perform SMBIOS calls
+> > >> from any applications sending a properly formatted 4k calling interface
+> > >> buffer.
 > > >>
-> > >> With a goal in mind of deprecating the dcdbas kernel module a different
-> > >> method for accessing these tokens from userspace needs to be created.
+> > >> This character device is intended to deprecate the dcdbas kernel module
+> > >> and the interface that it provides to userspace.
 > > >>
-> > >> This is intentionally marked to only be readable as root as it can
-> > >> contain sensitive information about the platform's configuration.
-> > >
-> > > Darren, Andy, any comments? I'm not quite sure if such API is suitable
-> > > for long term in kernel.
+> > >> It's important for the driver to provide a R/W ioctl to ensure that
+> > >> two competing userspace processes don't race to provide or read each
+> > >> others data.
 > > 
-> > I would try to avoid sysfs interfaces for some particular devices.
-> > Besides we are creating a character device. Would it be suitable there?
+> > >> +What:                /dev/wmi-dell-wmi-smbios
+> > >
+> > > What about just /dev/dell-smbios? IOCTL provided here is just SMBIOS
+> > > related and I think userspace does not have to care if it is via WMI or
+> > > direct SMM mode... Important is that it provides character device for
+> > > SMBIOS API and not how it is implemented.
+
+I agree with this point, the implementation (WMI under the covers) is
+not relevant. That said, this is an example of exposing WMI
+functionality to userspace, and I DO NOT want to have a naming
+discussion for every single WMI GUID that we choose to expose.
+
+> > >
+> > > Anyway, Darren, Andy, do we have some convention for naming platform
+> > > character devices?
+> > 
+> > For me, looking to this case, seems better to expose a folder like
+> > /dev/smbios/
+> > with actual vendor device nodes inside like
+> > /dev/smbios/dell
 > 
-> If the character device having 2 different ioctls for different needs is
-> acceptable I'm happy to adjust the series to do this instead.
-
-One piece of feedback I had re the char device was to see if we could avoid the
-need for the IOCTL altogether, I'd like to have that discussion before we add
-another.
-
+> I disagree with this.  Dell exposes smbios calling in this kernel interface but
+> other vendor drivers may also expose different methods for character devices
+> that are not SMBIOS.
+> 
+> I'm envisioning that this is just the first kernel module that will use a WMI
+> character device to userspace.  That's why I wanted to use a generic namespace.
+> 
+> I would say it could be /dev/wmi-$GUID or /dev/wmi/$driver-$GUID if you want 
+> something more generic.
+> As long as it's discovereable from uevent that's fine to me.
 > 
 > > 
-> > > Basically tokens are list of tuples <id, location, value> with
-> > > possibility to active them, right?
-> > >
-> 
-> I didn't add a way to activate them through this, it was only for
-> reading purpose.  Activating them should be possible through the
-> SMBIOS calling interface though.
-> 
+> > Darren?
 
-These are read-only as I understood it, and only with the right privileges.
-Sysfs seemed appropriate for this to me.
+I would like to see an automated and definiitive way to export WMI
+GUIDs. Something we can look at, compare to a set of rules, and say
+yay/nay. From that perspective, I like Mario's general proposal. It is
+not clear to me if the $driver- prefix adds any value though - would we
+ever have need of DRIVER_X-GUID_A and DRIVER_Y-GUID_A ??? I'm thinking
+not.
 
+/dev/wmi/$GUID
 
 -- 
 Darren Hart
