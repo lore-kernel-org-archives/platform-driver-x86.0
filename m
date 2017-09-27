@@ -1,83 +1,245 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs
- interface for SMBIOS tokens
-Date: Wed, 27 Sep 2017 19:50:49 +0000
-Message-ID: <7c2e7a1dc9864acfbe7eb78900f4748e@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce character
+ device for userspace
+Date: Wed, 27 Sep 2017 21:12:34 +0000
+Message-ID: <151663b32c9e40a48e3a49b85eda1a0e@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
- <1342f21a4f2c9af86d3033a9af9d9a4d05d27106.1505999739.git.mario.limonciello@dell.com>
- <20170925162333.GL22190@pali>
- <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
- <bb85503730a1479c94810a12802e8027@ausx13mpc120.AMER.DELL.COM>
- <20170927165051.GE23572@fury>
- <f4d8e4a5df5c4648a60392fc31c00766@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VfURDc-FPfnsO93B_P5sEz9EzxjuPjHLKArmB39ABMp1w@mail.gmail.com>
- <20170927185514.GN23572@fury>
- <3a5a8de9-0a5b-45ad-73c6-6b3ebfdd5ebb@kernel.org>
+ <a7829a31691da18e4d28e0760645ca2a3f302b66.1505999739.git.mario.limonciello@dell.com>
+ <20170925163150.GM22190@pali>
+ <CAHp75Vewet4v-kwiEGd82XicaLv_XbNt6o6q+CVqYCUFnUg+oQ@mail.gmail.com>
+ <23b3029bac144f17bd3a68a13cfe9cf4@ausx13mpc120.AMER.DELL.COM>
+ <20170927165936.GF23572@fury>
+ <5a68f1bdb7484009be88a39660d478ae@ausx13mpc120.AMER.DELL.COM>
+ <20170927185026.GM23572@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3a5a8de9-0a5b-45ad-73c6-6b3ebfdd5ebb@kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:15739 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751882AbdI0VMg (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 27 Sep 2017 17:12:36 -0400
+In-Reply-To: <20170927185026.GM23572@fury>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: luto@kernel.org, dvhart@infradead.org, andy.shevchenko@gmail.com, luto@amacapital.net
-Cc: pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IEx1dG9taXJza2kgW21h
-aWx0bzpsdXRvQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDI3LCAy
-MDE3IDM6NDkgUE0NCj4gVG86IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IEFu
-ZHkgU2hldmNoZW5rbw0KPiA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47IEFuZHkgTHV0b21p
-cnNraSA8bHV0b0BhbWFjYXBpdGFsLm5ldD4NCj4gQ2M6IExpbW9uY2llbGxvLCBNYXJpbyA8TWFy
-aW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBQYWxpIFJvaMOhcg0KPiA8cGFsaS5yb2hhckBnbWFp
-bC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBQbGF0Zm9ybSBEcml2ZXIgPHBs
-YXRmb3JtLQ0KPiBkcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5j
-b20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwNi8xMl0gcGxhdGZvcm0veDg2OiBkZWxsLXdtaS1z
-bWJpb3M6IEFkZCBhIHN5c2ZzIGludGVyZmFjZQ0KPiBmb3IgU01CSU9TIHRva2Vucw0KPiANCj4g
-T24gMDkvMjcvMjAxNyAxMTo1NSBBTSwgRGFycmVuIEhhcnQgd3JvdGU6DQo+ID4gT24gV2VkLCBT
-ZXAgMjcsIDIwMTcgYXQgMDk6MzE6NDdQTSArMDMwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0K
-PiA+PiBPbiBXZWQsIFNlcCAyNywgMjAxNyBhdCA5OjI3IFBNLCAgPE1hcmlvLkxpbW9uY2llbGxv
-QGRlbGwuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4+Pj4+PiBEYXJyZW4sIEFuZHksIGFueSBjb21t
-ZW50cz8gSSdtIG5vdCBxdWl0ZSBzdXJlIGlmIHN1Y2ggQVBJIGlzIHN1aXRhYmxlDQo+ID4+Pj4+
-Pj4gZm9yIGxvbmcgdGVybSBpbiBrZXJuZWwuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gSSB3b3VsZCB0
-cnkgdG8gYXZvaWQgc3lzZnMgaW50ZXJmYWNlcyBmb3Igc29tZSBwYXJ0aWN1bGFyIGRldmljZXMu
-DQo+ID4+Pj4+PiBCZXNpZGVzIHdlIGFyZSBjcmVhdGluZyBhIGNoYXJhY3RlciBkZXZpY2UuIFdv
-dWxkIGl0IGJlIHN1aXRhYmxlIHRoZXJlPw0KPiA+Pj4+Pg0KPiA+Pj4+PiBJZiB0aGUgY2hhcmFj
-dGVyIGRldmljZSBoYXZpbmcgMiBkaWZmZXJlbnQgaW9jdGxzIGZvciBkaWZmZXJlbnQgbmVlZHMg
-aXMNCj4gPj4+Pj4gYWNjZXB0YWJsZSBJJ20gaGFwcHkgdG8gYWRqdXN0IHRoZSBzZXJpZXMgdG8g
-ZG8gdGhpcyBpbnN0ZWFkLg0KPiA+Pj4+DQo+ID4+Pj4gT25lIHBpZWNlIG9mIGZlZWRiYWNrIEkg
-aGFkIHJlIHRoZSBjaGFyIGRldmljZSB3YXMgdG8gc2VlIGlmIHdlIGNvdWxkIGF2b2lkIHRoZQ0K
-PiA+Pj4+IG5lZWQgZm9yIHRoZSBJT0NUTCBhbHRvZ2V0aGVyLCBJJ2QgbGlrZSB0byBoYXZlIHRo
-YXQgZGlzY3Vzc2lvbiBiZWZvcmUgd2UgYWRkDQo+ID4+Pj4gYW5vdGhlci4NCj4gPj4+DQo+ID4+
-PiBNeSBvcmlnaW5hbCBkZXNpZ24gd2FzIHN5c2ZzIGZpbGVzIGZvciBldmVyeXRoaW5nIGJ1dCBp
-dCB3YXMgcmFpc2VkIGJ5IHNldmVyYWwNCj4gZm9sa3MNCj4gPj4+IHRoYXQgeW91IHJ1biBpbnRv
-IHRoZSBwb3RlbnRpYWwgb2YgdHdvIHVzZXJzcGFjZSBwcm9jZXNzZXMgc3RvbXBpbmcgb24gZWFj
-aA0KPiA+Pj4gb3RoZXIncyBkYXRhIHdoZW4gdGhleSBydW4gdGhlIEFDUEkgY2FsbC4gIFRoYXQn
-cyB3aHkgSSBuZWVkIHRvIGhhdmUgYSBtdXRleCB0bw0KPiA+Pj4gcHJvdGVjdCBhbmQgbWFrZSBz
-dXJlIHRoYXQgdXNlcnNwYWNlIGNhbGxzIGdldCB0aGUgcmlnaHQgcmVzdWx0cy4NCj4gPj4+DQo+
-ID4+DQo+ID4+Pj4+Pj4gQmFzaWNhbGx5IHRva2VucyBhcmUgbGlzdCBvZiB0dXBsZXMgPGlkLCBs
-b2NhdGlvbiwgdmFsdWU+IHdpdGgNCj4gPj4+Pj4+PiBwb3NzaWJpbGl0eSB0byBhY3RpdmUgdGhl
-bSwgcmlnaHQ/DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4NCj4gPj4+Pj4gSSBkaWRuJ3QgYWRkIGEgd2F5
-IHRvIGFjdGl2YXRlIHRoZW0gdGhyb3VnaCB0aGlzLCBpdCB3YXMgb25seSBmb3INCj4gPj4+Pj4g
-cmVhZGluZyBwdXJwb3NlLiAgQWN0aXZhdGluZyB0aGVtIHNob3VsZCBiZSBwb3NzaWJsZSB0aHJv
-dWdoIHRoZQ0KPiA+Pj4+PiBTTUJJT1MgY2FsbGluZyBpbnRlcmZhY2UgdGhvdWdoLg0KPiA+Pj4+
-Pg0KPiA+Pj4+DQo+ID4+Pj4gVGhlc2UgYXJlIHJlYWQtb25seSBhcyBJIHVuZGVyc3Rvb2QgaXQs
-IGFuZCBvbmx5IHdpdGggdGhlIHJpZ2h0IHByaXZpbGVnZXMuDQo+ID4+Pj4gU3lzZnMgc2VlbWVk
-IGFwcHJvcHJpYXRlIGZvciB0aGlzIHRvIG1lLg0KPiA+Pj4NCj4gPj4+IEFuZHkgUyB3YXMgYWdh
-aW5zdCBoYXZpbmcgdGhpcyBkYXRhIGFzIGFub3RoZXIgc3lzZnMgZmlsZS4gICBGcm9tIGEgdXNl
-cnNwYWNlDQo+ID4+PiBwZXJzcGVjdGl2ZSBJIHRoaW5rIGl0J3Mgc2ltcGxlciB0byBqdXN0IHBh
-cnNlIGEgc3lzZnMgZmlsZSB3aXRoIHJlYWQgb25seSBzdGF0aWMNCj4gPj4+IGRhdGEgYXMgcm9v
-dC4gIFdpdGggdGhlIGN1cnJlbnQgaW9jdGwgYmFzZWQgc29sdXRpb24gaXQgcmVxdWlyZXMgdXNl
-cnNwYWNlIHRvIHJ1bg0KPiA+Pj4gYW4gaW9jdGwgdG8gZGV0ZXJtaW5lIGhvdyBtYW55IHRva2Vu
-cyBleGlzdCwgdGhlbiBhbGxvY2F0ZSBhIGNodW5rIG9mIG1lbW9yeQ0KPiA+Pj4gYmlnIGVub3Vn
-aCB0byBob2xkIGFsbCB0aGUgdG9rZW4gZGF0YSBhbmQgdGhlbiBydW4gYW5vdGhlciBpb2N0bCB0
-byBnZXQgYWxsIHRoZQ0KPiB0b2tlbnMuDQo+ID4+Pg0KPiA+Pj4gQW5keSBTLCBnaXZlbiB0aGlz
-IGNoYW5nZSBiZXR3ZWVuIHYxIGFuZCB2MiB3aGF0IGRvIHlvdSBmZWVsIGlzIGJldHRlcj8NCj4g
-Pj4NCj4gPj4gSSBoYXZlIG5vIHN0cm9uZyBvcGluaW9uIG9uIHRoaXMuIFRoYXQncyB3aHkgSSBy
-ZWNvbW1lbmRlZCB0byBsaXN0ZW4gdG8gQW5keSBMLg0KPiA+DQo+ID4gK0FuZHkgTHV0b21pcnNr
-aQ0KPiA+DQo+ID4gQW5keSBMLCBhbnkgcHJlZmVyZW5jZSBvbiB5b3VyIHBhcnQgcmVnYXJkaW5n
-IGV4cG9ydGluZyB0aGVzZSB0b2tlbnMgdmlhIHN5c2ZzDQo+ID4gb3IgdGhyb3VnaCBhbiBhZGRp
-dGlvbmFsIElPQ1RMIGluIHRoZSBjaGFyZGV2Pw0KPiA+DQo+IA0KPiBOb3QgcmVhbGx5LiAgSWYg
-dGhpcyBpcyBpbmRlZWQgc3RhdGljIGRhdGEgdGhhdCBpcyBwb3RlbnRpYWxseSB1c2VmdWwNCj4g
-Zm9yIHNjcmlwdHMgYW5kIHN1Y2gsIHRoYW4gc3lzZnMgaXMga2luZCBvZiBuaWNlLg0KDQpPSyB0
-aGFua3MuICBJJ2xsIHN3aXRjaCBiYWNrIHRvIHN5c2ZzIGZvciB2My4NCg==
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Wednesday, September 27, 2017 2:50 PM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: andy.shevchenko@gmail.com; pali.rohar@gmail.com; linux-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> quasisec@google.com
+> Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce chara=
+cter
+> device for userspace
+>=20
+> On Wed, Sep 27, 2017 at 06:10:55PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > > -----Original Message-----
+> > > From: Darren Hart [mailto:dvhart@infradead.org]
+> > > Sent: Wednesday, September 27, 2017 1:00 PM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: andy.shevchenko@gmail.com; pali.rohar@gmail.com; linux-
+> > > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> > > quasisec@google.com
+> > > Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introduce c=
+haracter
+> > > device for userspace
+> > >
+> > > On Mon, Sep 25, 2017 at 05:46:54PM +0000, Mario.Limonciello@dell.com
+> wrote:
+> > > > > -----Original Message-----
+> > > > > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+> > > > > Sent: Monday, September 25, 2017 12:58 PM
+> > > > > To: Pali Roh=E1r <pali.rohar@gmail.com>
+> > > > > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>;
+> dvhart@infradead.org;
+> > > > > LKML <linux-kernel@vger.kernel.org>; Platform Driver <platform-dr=
+iver-
+> > > > > x86@vger.kernel.org>; quasisec@google.com
+> > > > > Subject: Re: [PATCH 11/12] platform/x86: dell-wmi-smbios: introdu=
+ce
+> character
+> > > > > device for userspace
+> > > > >
+> > > > > On Mon, Sep 25, 2017 at 7:31 PM, Pali Roh=E1r <pali.rohar@gmail.c=
+om>
+> wrote:
+> > > > > > On Thursday 21 September 2017 08:57:16 Mario Limonciello wrote:
+> > > > > >> This userspace character device will be used to perform SMBIOS=
+ calls
+> > > > > >> from any applications sending a properly formatted 4k calling =
+interface
+> > > > > >> buffer.
+> > > > > >>
+> > > > > >> This character device is intended to deprecate the dcdbas kern=
+el module
+> > > > > >> and the interface that it provides to userspace.
+> > > > > >>
+> > > > > >> It's important for the driver to provide a R/W ioctl to ensure=
+ that
+> > > > > >> two competing userspace processes don't race to provide or rea=
+d each
+> > > > > >> others data.
+> > > > >
+> > > > > >> +What:                /dev/wmi-dell-wmi-smbios
+> > > > > >
+> > > > > > What about just /dev/dell-smbios? IOCTL provided here is just S=
+MBIOS
+> > > > > > related and I think userspace does not have to care if it is vi=
+a WMI or
+> > > > > > direct SMM mode... Important is that it provides character devi=
+ce for
+> > > > > > SMBIOS API and not how it is implemented.
+> > >
+> > > I agree with this point, the implementation (WMI under the covers) is
+> > > not relevant. That said, this is an example of exposing WMI
+> > > functionality to userspace, and I DO NOT want to have a naming
+> > > discussion for every single WMI GUID that we choose to expose.
+> >
+> > Yes, I agree let's make sure it's stable and automatic for all drivers =
+that will use it.
+> >
+> > >
+> > > > > >
+> > > > > > Anyway, Darren, Andy, do we have some convention for naming pla=
+tform
+> > > > > > character devices?
+> > > > >
+> > > > > For me, looking to this case, seems better to expose a folder lik=
+e
+> > > > > /dev/smbios/
+> > > > > with actual vendor device nodes inside like
+> > > > > /dev/smbios/dell
+> > > >
+> > > > I disagree with this.  Dell exposes smbios calling in this kernel i=
+nterface but
+> > > > other vendor drivers may also expose different methods for characte=
+r devices
+> > > > that are not SMBIOS.
+> > > >
+> > > > I'm envisioning that this is just the first kernel module that will=
+ use a WMI
+> > > > character device to userspace.  That's why I wanted to use a generi=
+c
+> namespace.
+> > > >
+> > > > I would say it could be /dev/wmi-$GUID or /dev/wmi/$driver-$GUID if=
+ you
+> want
+> > > > something more generic.
+> > > > As long as it's discovereable from uevent that's fine to me.
+> > > >
+> > > > >
+> > > > > Darren?
+> > >
+> > > I would like to see an automated and definiitive way to export WMI
+> > > GUIDs. Something we can look at, compare to a set of rules, and say
+> > > yay/nay. From that perspective, I like Mario's general proposal. It i=
+s
+> > > not clear to me if the $driver- prefix adds any value though - would =
+we
+> > > ever have need of DRIVER_X-GUID_A and DRIVER_Y-GUID_A ??? I'm thinkin=
+g
+> > > not.
+> > >
+> > > /dev/wmi/$GUID
+> > >
+> >
+> > I don't think you should allow two drivers to use the same GUID, but wh=
+at if
+> > a driver needs to use multiple GUIDs?
+> >
+> > This obviously isn't a problem yet.
+> > I envision that as we get MOF interpretation as part of the bus we "may=
+" get into
+> > that situation with more complicated MOF design.  The vendor driver cou=
+ld
+> > register with the bus for each GUID and  request a character device for=
+ each but
+> > that's meaning userspace has to worry about knowing which GUIDs do what=
+.
+> > I think it's potentially asking for a complicated interface to userspac=
+e for the
+> future.
+> >
+> > Here's a hypothetical scenario based on some more advanced MOF design I=
+ know
+> of:
+> >
+> > Separate GUID provided for each:
+> > * All integer settings (data type)
+> > * All string settings (data type)
+> > * Notifications (event type)
+> > * enumeration types (data type)
+> > * Applying a Setting (method type)
+> > * Managing users (method type)
+> >
+> > How would a new driver for that look?  I would think you would want one=
+ driver
+> to register
+> > and encapsulate at least all of those GUIDs.
+> >
+> > I would say all the data should be exported into sysfs, but that you re=
+ally only
+> want
+> > one character device that is used for both methods.
+> >
+> > The interface to userspace would then have two IOCTL's that the driver =
+would
+> internally
+> > apply to the correct GUID.  Example:
+> > "/dev/wmi/$driver" supports 2 different IOCTL's.
+> > Internally the driver would then ferry the request through the WMI bus =
+to the
+> correct
+> > GUID based on the ioctl call number.
+> >
+> > If you went with the pass the GUID information up and create character =
+device for
+> each
+> > GUID, userspace will have to know:
+> > "I use /dev/wmi/$GUID_X" for applying the setting IOCTL on Acme Inc mac=
+hine.
+> > And
+> > "I use /dev/wmi/$GUID_Y" for managing users IOCTL on Acme Inc machine.
+> >
+> > And what if the notifications are valuable to userspace?  Would you wan=
+t to
+> create another
+> > character device for those?  I think you would just want to keep them i=
+n the same
+> device
+> > and add a poll/select file operation.
+> >
+>=20
+> Thanks for the concrete example, this helps a lot.
+>=20
+> One guiding principle of this series and something Pali correctly pointed=
+ out,
+> is that for Linux, we're keeping WMI as the implementation and exposing f=
+eatures
+> to userspace through char devs and IOCTLS. You points above are consisten=
+t with
+> that theme, and the GUIDs are not an appropriate namespace.
+>=20
+> The driver namespace does make more sense as you suggested above:
+>=20
+> /dev/wmi/$driver
+>=20
+> This still has wmi in the name, but given that is the bus name, I think i=
+t's a
+> reasonable way organize the files - and is still a well-defined naming sc=
+heme.
+>=20
+
+Thanks Darren.  I'll adjust the patch.
+Would you like me to document this chosen policy somewhere in Documentation=
+?
+If so, where?
+Or to put more about our conversation in the commit message?=20
