@@ -1,78 +1,70 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 04/12] platform/x86: dell-smbios: Switch to a WMI-ACPI
- interface
-Date: Wed, 27 Sep 2017 18:29:20 +0000
-Message-ID: <251a8b3dccf64918a777a7898f14b8b8@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 06/12] platform/x86: dell-wmi-smbios: Add a sysfs
+ interface for SMBIOS tokens
+Date: Wed, 27 Sep 2017 21:31:47 +0300
+Message-ID: <CAHp75VfURDc-FPfnsO93B_P5sEz9EzxjuPjHLKArmB39ABMp1w@mail.gmail.com>
 References: <cover.1505999739.git.mario.limonciello@dell.com>
- <4da87eb0d9722ed906615409586a8b4d7becd65c.1505999739.git.mario.limonciello@dell.com>
- <20170925161851.GK22190@pali>
- <12a6583cae694ae58b9b8c885958bcee@ausx13mpc120.AMER.DELL.COM>
- <20170927164615.GD23572@fury>
+ <1342f21a4f2c9af86d3033a9af9d9a4d05d27106.1505999739.git.mario.limonciello@dell.com>
+ <20170925162333.GL22190@pali> <CAHp75Vd-mwn5O696XM7_F5-HMc2iztxibqQA0D4vOrMQO+WQRg@mail.gmail.com>
+ <bb85503730a1479c94810a12802e8027@ausx13mpc120.AMER.DELL.COM>
+ <20170927165051.GE23572@fury> <f4d8e4a5df5c4648a60392fc31c00766@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:18647 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751016AbdI0S3W (ORCPT
+Received: from mail-qk0-f171.google.com ([209.85.220.171]:46563 "EHLO
+        mail-qk0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751555AbdI0Sbt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 14:29:22 -0400
-In-Reply-To: <20170927164615.GD23572@fury>
-Content-Language: en-US
+        Wed, 27 Sep 2017 14:31:49 -0400
+In-Reply-To: <f4d8e4a5df5c4648a60392fc31c00766@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, quasisec@google.com
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Wednesday, September 27, 2017 12:46 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: pali.rohar@gmail.com; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; quasisec@google.com
-> Subject: Re: [PATCH 04/12] platform/x86: dell-smbios: Switch to a WMI-ACP=
-I
-> interface
->=20
-> On Mon, Sep 25, 2017 at 07:28:57PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Pali Roh=E1r [mailto:pali.rohar@gmail.com]
-> > > Sent: Monday, September 25, 2017 12:19 PM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: dvhart@infradead.org; LKML <linux-kernel@vger.kernel.org>; platfo=
-rm-
-> driver-
-> > > x86@vger.kernel.org; quasisec@google.com
-> > > Subject: Re: [PATCH 04/12] platform/x86: dell-smbios: Switch to a WMI=
--ACPI
-> > > interface
-> > >
-> > > On Thursday 21 September 2017 08:57:09 Mario Limonciello wrote:
-> > > > The driver currently uses an SMI interface which grants direct acce=
-ss
-> > > > to physical memory to the platform via a pointer.
-> > > >
-> > > > Changing this to operate over WMI-ACPI will use an ACPI OperationRe=
-gion
-> > > > for a buffer of data storage when platform calls are performed.
-> > > >
-> > > > This is a safer approach to use in kernel drivers as the platform w=
-ill
-> > > > only have access to that OperationRegion.
-> > >
-> > > In my opinion direct access is safer then using ACPI wrapper for same
-> > > functionality.
-> >
-> > I'd like to hear how this is safer.
->=20
-> Again, I think the disconnect is around the term "platform". I think abov=
-e you
-> can s/platform/SMM/ right?
->=20
+On Wed, Sep 27, 2017 at 9:27 PM,  <Mario.Limonciello@dell.com> wrote:
 
-From my OEM hat we don't really refer to SMM as an entity, but "Yeah" if th=
-at
-makes it clearer I'd agree.
+>> > > > Darren, Andy, any comments? I'm not quite sure if such API is suitable
+>> > > > for long term in kernel.
+>> > >
+>> > > I would try to avoid sysfs interfaces for some particular devices.
+>> > > Besides we are creating a character device. Would it be suitable there?
+>> >
+>> > If the character device having 2 different ioctls for different needs is
+>> > acceptable I'm happy to adjust the series to do this instead.
+>>
+>> One piece of feedback I had re the char device was to see if we could avoid the
+>> need for the IOCTL altogether, I'd like to have that discussion before we add
+>> another.
+>
+> My original design was sysfs files for everything but it was raised by several folks
+> that you run into the potential of two userspace processes stomping on each
+> other's data when they run the ACPI call.  That's why I need to have a mutex to
+> protect and make sure that userspace calls get the right results.
+>
+
+>> > > > Basically tokens are list of tuples <id, location, value> with
+>> > > > possibility to active them, right?
+>> > > >
+>> >
+>> > I didn't add a way to activate them through this, it was only for
+>> > reading purpose.  Activating them should be possible through the
+>> > SMBIOS calling interface though.
+>> >
+>>
+>> These are read-only as I understood it, and only with the right privileges.
+>> Sysfs seemed appropriate for this to me.
+>
+> Andy S was against having this data as another sysfs file.   From a userspace
+> perspective I think it's simpler to just parse a sysfs file with read only static
+> data as root.  With the current ioctl based solution it requires userspace to run
+> an ioctl to determine how many tokens exist, then allocate a chunk of memory
+> big enough to hold all the token data and then run another ioctl to get all the tokens.
+>
+> Andy S, given this change between v1 and v2 what do you feel is better?
+
+I have no strong opinion on this. That's why I recommended to listen to Andy L.
+
+-- 
+With Best Regards,
+Andy Shevchenko
