@@ -1,39 +1,46 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 14/14] platform/x86: dell-wmi-smbios: clean up wmi
- descriptor check
-Date: Tue, 26 Sep 2017 20:19:50 +0000
-Message-ID: <d59f64d339a1425b9bb4ac590fff4cb9@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1506451187.git.mario.limonciello@dell.com>
- <4178d2bdfc69c94fe4972fee7b97b08202890e66.1506451187.git.mario.limonciello@dell.com>
- <201709262211.57222@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
+ not presnt
+Date: Tue, 26 Sep 2017 23:56:55 -0700
+Message-ID: <20170927065655.GA30358@fury>
+References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:18493 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S967680AbdIZUTw (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:44477 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751362AbdI0G5B (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2017 16:19:52 -0400
-In-Reply-To: <201709262211.57222@pali>
-Content-Language: en-US
+        Wed, 27 Sep 2017 02:57:01 -0400
+Content-Disposition: inline
+In-Reply-To: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, quasisec@google.com
+To: Ville Syrjala <ville.syrjala@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIw
-MTcgNDoxMiBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BE
-ZWxsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBBbmR5IFNoZXZjaGVua28gPGFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IHF1YXNpc2Vj
-QGdvb2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxNC8xNF0gcGxhdGZvcm0veDg2
-OiBkZWxsLXdtaS1zbWJpb3M6IGNsZWFuIHVwIHdtaQ0KPiBkZXNjcmlwdG9yIGNoZWNrDQo+IA0K
-PiBPbiBUdWVzZGF5IDI2IFNlcHRlbWJlciAyMDE3IDIwOjUwOjEyIE1hcmlvIExpbW9uY2llbGxv
-IHdyb3RlOg0KPiA+ICsJaWYgKHN0cm5jbXAob2JqLT5zdHJpbmcucG9pbnRlciwgIkRFTEwgV01J
-IiwgOCkgIT0gMCkNCj4gDQo+IFNob3VsZCBub3QgYmUgdGhpcyBtZW1jbXA/IElJUkMgd2Ugd2Fu
-dCB0byBjb21wYXJlIHRoYXQgYnVmZmVyIGlzIGVxdWFsDQo+IHRvIHNvbWUgYnl0ZXMsIHJpZ2h0
-Pw0KPiANCg0KSXQgdXNlZCB0byBiZSBjb21wYXJpbmcgdGhlIGJ5dGVzLCBidXQgQW5keSBTLiB0
-aG91Z2h0IHRoaXMgd2Fzbid0IHZlcnkgY2xlYXIuDQpUaGF0J3Mgd2h5IEkgYWRqdXN0ZWQgaXQg
-dG8gY29tcGFyZSB0byB0aGUgc3RyaW5ncyB0aGF0IHRoZSBieXRlcyB1c2VkIGluc3RlYWQuDQo=
+On Mon, Sep 18, 2017 at 11:00:59PM +0300, Ville Syrjala wrote:
+> From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> 
+> My Fujitsu-Siemens Lifebook S6120 doesn't have the FUJ02E3 device,
+> but it does have FUJ02B1. That means we do register the backlight
+> device (and it even seems to work), but the code will oops as soon
+> as we try to set the backlight brightness because it's trying to
+> call call_fext_func() with a NULL device. Let's just skip those
+> function calls when the FUJ02E3 device is not present.
+> 
+> Cc: Jonathan Woithe <jwoithe@just42.net>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+
+Thanks for all the discussion on this patch. While there are a couple approaches
+we can take, it is clear further clean up and refactoring is in order. To fix
+the Ooops now, I will apply this patch to fixes and Cc Stable.
+
+Thanks,
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
