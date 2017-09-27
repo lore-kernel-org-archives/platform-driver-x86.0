@@ -1,42 +1,70 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: NULL pointer dereference in call_fext_func [fujitsu_laptop]
-Date: Wed, 27 Sep 2017 00:07:54 -0700
-Message-ID: <20170927070754.GA12485@fury>
-References: <541b9a7a-2224-9b81-aef3-3f06491f91e3@suse.cz>
- <CAHp75Vd=FnWaYg-gKoQO4p8UP3VVhOT9cQ-B-3b20u2KJBRDWQ@mail.gmail.com>
- <20170919081241.GF10399@marvin.atrad.com.au>
+Subject: Re: [PATCH v2] Asus WMI : Add lightbar led support
+Date: Wed, 27 Sep 2017 00:28:21 -0700
+Message-ID: <20170927072821.GA19973@fury>
+References: <20170923162337.2748-1-maxime.bellenge@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:33953 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:55154 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751021AbdI0HIA (ORCPT
+        with ESMTP id S1751383AbdI0H2X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2017 03:08:00 -0400
+        Wed, 27 Sep 2017 03:28:23 -0400
 Content-Disposition: inline
-In-Reply-To: <20170919081241.GF10399@marvin.atrad.com.au>
+In-Reply-To: <20170923162337.2748-1-maxime.bellenge@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>
+To: Maxime =?iso-8859-1?Q?Belleng=E9?= <maxime.bellenge@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 05:42:41PM +0930, Jonathan Woithe wrote:
-> On Tue, Sep 19, 2017 at 11:07:29AM +0300, Andy Shevchenko wrote:
-> > On Tue, Sep 19, 2017 at 10:56 AM, Jiri Slaby <jslaby@suse.cz> wrote:
-> > > we have this report from 4.13.1:
-> > > BUG: unable to handle kernel NULL pointer dereference at 00000004
-> > > IP: call_fext_func.isra.3+0x82/0xf0 [fujitsu_laptop]
-> > > *pdpt = 0000000035e79001 *pde = 0000000000000000
-> > 
-> > Thanks for report.
-> > 
-> > Isn't it a duplicate of [1]? If so, perhaps you may continue that thread.
-> > [1]: https://www.spinics.net/lists/platform-driver-x86/msg12834.html
+On Sat, Sep 23, 2017 at 06:23:37PM +0200, Maxime Bellengé wrote:
+
+Hi Maxime,
+
+Thanks for the update. The patch has been applied and is queued for
+testing.
+
+In the future, please take note of the following comments - which I have
+addressed in the patch.
+
+The commit subject format:
+
+platform/x86: <driver>: Subject
+
+Whenever submitting to the Linux kernel, please take note of the format
+used in previous (especially recent) commits to the same and adjacent files.
+
+> Some asus laptops (ROG series for example) are provided
+> with a lightbar behind the monitor.
+> This patch make possible to switch it on and off.
+> This lightbar works exactly as any other led.
+
+Wrap at 72 characters or so in paragraph form.
+
 > 
-> Yes, it is a duplicate of [1].  I agree that discussion should continue in
-> that earlier thread.
+> V2 : fix whitespaces and typo
 
-A fix is queued to the fixes branch, tagged for stable 4.13.x
+Patch revision history goes below the --- line below (see the submitting
+patches documentation for details). This ensures it is automatically
+dropped during the patch application process and avoids the requirement
+for manual edits by the maintainers.
+
+> 
+> Signed-off-by: Maxime Bellengé <maxime.bellenge@gmail.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 63 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+...
+> +static void lightbar_led_update(struct work_struct *work)
+> +{
+> +	int ctrl_param;
+> +	struct asus_wmi *asus;
+
+Declare variables in descending order of line length.
 
 -- 
 Darren Hart
