@@ -1,118 +1,120 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v3 0/8] Introduce support for Dell SMBIOS over WMI
-Date: Wed, 27 Sep 2017 23:02:12 -0500
-Message-ID: <cover.1506571187.git.mario.limonciello@dell.com>
+Subject: [PATCH v3 6/8] platform/x86: dell-wmi-smbios: Add a sysfs interface for SMBIOS tokens
+Date: Wed, 27 Sep 2017 23:02:18 -0500
+Message-ID: <64094c86a6083c3d4c34d1f005e8a71d07b61240.1506571188.git.mario.limonciello@dell.com>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1506571187.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1506571187.git.mario.limonciello@dell.com>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The existing way that the dell-smbios helper module and associated
-other drivers (dell-laptop, dell-wmi) communicate with the platform
-really isn't secure.  It requires creating a buffer in physical
-DMA32 memory space and passing that to the platform via SMM.
+Currently userspace tools can access system tokens via the dcdbas
+kernel module and a SMI call that will cause the platform to execute
+SMM code.
 
-Since the platform got a physical memory pointer, you've just got
-to trust that the platform has only modified (and accessed) memory
-within that buffer.
+With a goal in mind of deprecating the dcdbas kernel module a different
+method for accessing these tokens from userspace needs to be created.
 
-Dell Platform designers recognize this security risk and offer a
-safer way to communicate with the platform over ACPI.  This is
-in turn exposed via a WMI interface to the OS.
+This is intentionally marked to only be readable as root as it can
+contain sensitive information about the platform's configuration.
 
-When communicating over WMI-ACPI the communication doesn't occur
-with physical memory pointers.  When the ASL is invoked, the fixed
-length ACPI buffer is copied to a small operating region.  The ASL
-will invoke the SMI, and SMM will only have access to this operating
-region.  When the ASL returns the buffer is copied back for the OS
-to process.
-
-This method of communication should also deprecate the usage of the
-dcdbas kernel module and software dependent upon it's interface.
-Instead offer a character device interface for communicating with this
-ASL method to allow userspace to use instead.
-
-To faciliate that this patch series introduces a generic way for WMI
-drivers to be able to create discoverable character devices through
-the WMI bus when desired.
-Requiring WMI drivers to explicitly ask for this functionality will
-act as an effective vendor whitelist to character device creation.
-
-changes between v2 and v3:
- * Drop patches 1-7, they're in Darren's review tree now
- * Add missing newline on new Documentation
- * Add Reviewed by from Edward O'Callaghan
- * Adjust path of character device from /dev/wmi-$driver to
-   /dev/wmi/$driver
- * Store wmi_device pointer rather than using a boolean has_wmi
-   to indicate driver is running in WMI mode
- * Don't guard free_page from freeing NULL (this is OK)
- * New patch: add wmidev_evaluate_method to wmi bus as recommended
-   by Andy L
- * Adjust ACPI-WMI interface for this patch change ^
- * Add back in sysfs token patch, drop 2nd and 3rd ioctls per discussion
-   on mailing list.
- * On sysfs interface: adjust the delimiter to be tabs
- * Drop the rename dell-smbios -> dell-wmi-smbios patch
- * Remove/move some unnecessary tests for CONFIG_DCDBAS
- * Reword s/platform/SMM/ in the WMI-ACPI patch.
- * Update Kconfig to recommend using CONFIG_DCDBAS on old machines.
- * Allocate buffer to the same pointer regardless of the struct 
-   assigned to it.  Keep track of the buffer size for cleaning up.
- * Explain policy around character device creation in commit message
-changes between v1 and v2:
- * Introduce another patch to sort the includes in wmi.c
- * Introduce another patch to cleanup dell_wmi_check_descriptor_buffer
-   checks.
- * Add a commit message to the pr_fmt commit
- * Introduce includes to wmi.c in proper location
- * Add Reviewed-by to relevant patches from Pali
- * Make the WMI introduction patch fallback to legacy SMI
-   if compiled with CONFIG_DCDBAS
- * Separate format of WMI and SMI buffers.  WMI buffer supports more
-   arguments and data.
- * Adjust the rename patch for changes to fallback
- * Drop sysfs token creation patch
- * Adjust WMI descriptor check patch for changes to fallback
- * introduce another patch to remove needless includes in dell-smbios.c
- * Add token ioctl interface to character device.
-   - Can query number of tokens
-   - Can query values in all tokens
- * Expose format of all buffers and IOCTL commands to uapi header
- * Drop the read interface from character device.  It doesn't make
-   sense with multiple different ioctl methods.
- * Default WMI interface to 32k (This would normally be queried via
-   MOF, but that's not possible yet)
- * Create separate buffers for WMI and SMI.  If WMI is available,
-   free the SMI buffer.
- * Reorder patches so all fixups come first in the series.
-
-Mario Limonciello (8):
-  platform/x86: wmi: Add new method wmidev_evaluate_method
-  platform/x86: dell-smbios: Introduce a WMI-ACPI interface
-  platform/x86: dell-wmi-smbios: Use Dell WMI descriptor check
-  platform/x86: wmi: create character devices when requested by drivers
-  platform/x86: dell-wmi-smbios: introduce character device for
-    userspace
-  platform/x86: dell-wmi-smbios: Add a sysfs interface for SMBIOS tokens
-  platform/x86: Kconfig: Change the default settings for dell-wmi-smbios
-  platform/x86: dell-wmi-smbios: clean up wmi descriptor check
-
- Documentation/ABI/testing/dell-wmi-smbios          |  11 +
- .../ABI/testing/sysfs-platform-dell-wmi-smbios     |  16 ++
- MAINTAINERS                                        |   6 +
- drivers/platform/x86/Kconfig                       |  15 +-
- drivers/platform/x86/dell-smbios.c                 | 315 +++++++++++++++++++--
- drivers/platform/x86/dell-smbios.h                 |  15 +-
- drivers/platform/x86/dell-wmi.c                    |  75 +----
- drivers/platform/x86/wmi.c                         | 126 ++++++++-
- include/linux/wmi.h                                |   7 +
- include/uapi/linux/dell-wmi-smbios.h               |  30 ++
- 10 files changed, 498 insertions(+), 118 deletions(-)
- create mode 100644 Documentation/ABI/testing/dell-wmi-smbios
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ .../ABI/testing/sysfs-platform-dell-wmi-smbios     | 16 ++++++++++
+ drivers/platform/x86/dell-smbios.c                 | 36 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
- create mode 100644 include/uapi/linux/dell-wmi-smbios.h
 
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios b/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
+new file mode 100644
+index 000000000000..4cbff5ffe380
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-smbios
+@@ -0,0 +1,16 @@
++What:		/sys/devices/platform/<platform>/tokens
++Date:		October 2017
++KernelVersion:	4.15
++Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
++Description:
++		A read-only description of Dell platform tokens
++		available on the machine.
++
++		The tokens will be displayed in the following
++		machine readable format with each token on a
++		new line:
++
++		ID	Location	value
++
++		For example token:
++		5	5	3
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index 4174afbade13..ac176953e46e 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -229,6 +229,34 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+ 	}
+ }
+ 
++static ssize_t tokens_show(struct device *dev,
++			   struct device_attribute *attr, char *buf)
++{
++	size_t off = 0;
++	int i;
++
++	for (i = 0; i < da_num_tokens; i++) {
++		if (off > PAGE_SIZE)
++			break;
++		off += scnprintf(buf+off, PAGE_SIZE-off, "%04x\t%04x\t%04x\n",
++		da_tokens[i].tokenID, da_tokens[i].location,
++		da_tokens[i].value);
++	}
++
++	return off;
++}
++
++DEVICE_ATTR(tokens, 0400, tokens_show, NULL);
++
++static struct attribute *smbios_attrs[] = {
++	&dev_attr_tokens.attr,
++	NULL
++};
++
++static const struct attribute_group smbios_attribute_group = {
++	.attrs = smbios_attrs,
++};
++
+ static int dell_wmi_smbios_open(struct inode *inode, struct file *file)
+ {
+ 	return nonseekable_open(inode, file);
+@@ -367,10 +395,16 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+ 		ret = -ENOMEM;
+ 		goto fail_devfs_buffer;
+ 	}
++	ret = sysfs_create_group(&wdev->dev.kobj, &smbios_attribute_group);
++	if (ret)
++		goto fail_create_group;
+ 
+ 	wmi_dev = wdev;
++	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
+ 	return 0;
+ 
++fail_create_group:
++	free_pages((unsigned long)devfs_buffer, 3);
+ fail_devfs_buffer:
+ 	free_pages((unsigned long)internal_buffer, 3);
+ 	return ret;
+@@ -381,6 +415,8 @@ static int dell_smbios_wmi_remove(struct wmi_device *wdev)
+ 	wmi_dev = NULL;
+ 	free_pages((unsigned long)internal_buffer, 3);
+ 	free_pages((unsigned long)devfs_buffer, 3);
++	sysfs_remove_group(&wdev->dev.kobj, &smbios_attribute_group);
++	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
+ 	return 0;
+ }
+ 
 -- 
 2.14.1
