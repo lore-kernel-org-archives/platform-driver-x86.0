@@ -1,932 +1,257 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC v3 7/7] platform/x86: intel_scu_ipc: Use generic Intel IPC
- device calls
-Date: Thu, 28 Sep 2017 06:35:18 -0700
-Message-ID: <c8f64c42-9802-9746-3032-b932522659e5@roeck-us.net>
-References: <cover.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <90f4d15c9ca0430f6ac4cfafe0eaf6ece6c8761c.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20170928125519.ol5suebaoqsiixm5@piout.net>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3 2/8] platform/x86: dell-smbios: Introduce a WMI-ACPI
+ interface
+Date: Thu, 28 Sep 2017 22:43:36 +0000
+Message-ID: <52059e7ff4b14fe5b4f4a187fd30d1fe@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
+ <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com>
+ <201709280853.51019@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928125519.ol5suebaoqsiixm5@piout.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:45937 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751113AbdI1Wnj (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 28 Sep 2017 18:43:39 -0400
+In-Reply-To: <201709280853.51019@pali>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, sathyanarayanan.kuppuswamy@linux.intel.com
-Cc: a.zummo@towertech.it, x86@kernel.org, wim@iguana.be, mingo@redhat.com, qipeng.zha@intel.com, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, lee.jones@linaro.org, andy@infradead.org, souvik.k.chakravarty@intel.com, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com
 
-On 09/28/2017 05:55 AM, Alexandre Belloni wrote:
-> On 04/09/2017 at 22:37:27 -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Removed redundant IPC helper functions and refactored the driver to use
->> generic IPC device driver APIs.
->>
->> This patch also cleans-up SCU IPC user drivers to use APIs provided
->> by generic IPC driver.
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> For the RTC part:
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
->  >
->> ---
->>   arch/x86/include/asm/intel_scu_ipc.h    |  23 +-
->>   arch/x86/platform/intel-mid/intel-mid.c |  12 +-
->>   drivers/platform/x86/Kconfig            |   1 +
->>   drivers/platform/x86/intel_scu_ipc.c    | 483 +++++++++++++-------------------
->>   drivers/rtc/rtc-mrst.c                  |  15 +-
->>   drivers/watchdog/intel-mid_wdt.c        |  12 +-
->>   drivers/watchdog/intel_scu_watchdog.c   |  17 +-
->>   7 files changed, 251 insertions(+), 312 deletions(-)
-
-I think it would help in general to mention at least in the description which drivers are touched.
-
-I see calls to intel_ipc_dev_get() but not associated put calls. Missing the context, it may
-well be that those are not necessary, but then how does the ipc code know that the device
-reference is no longer needed ?
-
-Guenter
-
->>
->> diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
->> index 81d3d87..5842534 100644
->> --- a/arch/x86/include/asm/intel_scu_ipc.h
->> +++ b/arch/x86/include/asm/intel_scu_ipc.h
->> @@ -14,9 +14,19 @@
->>   #define IPCMSG_COLD_BOOT	0xF3
->>   
->>   #define IPCMSG_VRTC		0xFA	 /* Set vRTC device */
->> -	/* Command id associated with message IPCMSG_VRTC */
->> -	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
->> -	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
->> +
->> +/* Command id associated with message IPCMSG_VRTC */
->> +#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
->> +#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
->> +
->> +#define INTEL_SCU_IPC_DEV	"intel_scu_ipc"
->> +#define SCU_PARAM_LEN		2
->> +
->> +static inline void scu_cmd_init(u32 *cmd, u32 param1, u32 param2)
->> +{
->> +	cmd[0] = param1;
->> +	cmd[1] = param2;
->> +}
->>   
->>   /* Read single register */
->>   int intel_scu_ipc_ioread8(u16 addr, u8 *data);
->> @@ -45,13 +55,6 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
->>   /* Update single register based on the mask */
->>   int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
->>   
->> -/* Issue commands to the SCU with or without data */
->> -int intel_scu_ipc_simple_command(int cmd, int sub);
->> -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->> -			  u32 *out, int outlen);
->> -int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
->> -			      u32 *out, int outlen, u32 dptr, u32 sptr);
->> -
->>   /* I2C control api */
->>   int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data);
->>   
->> diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
->> index 12a2725..27541e9 100644
->> --- a/arch/x86/platform/intel-mid/intel-mid.c
->> +++ b/arch/x86/platform/intel-mid/intel-mid.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/irq.h>
->>   #include <linux/export.h>
->>   #include <linux/notifier.h>
->> +#include <linux/platform_data/x86/intel_ipc_dev.h>
->>   
->>   #include <asm/setup.h>
->>   #include <asm/mpspec_def.h>
->> @@ -68,18 +69,23 @@ static void *(*get_intel_mid_ops[])(void) = INTEL_MID_OPS_INIT;
->>   enum intel_mid_cpu_type __intel_mid_cpu_chip;
->>   EXPORT_SYMBOL_GPL(__intel_mid_cpu_chip);
->>   
->> +static struct intel_ipc_dev *ipc_dev;
->> +
->>   static void intel_mid_power_off(void)
->>   {
->> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_COLD_OFF, 1};
->>   	/* Shut down South Complex via PWRMU */
->>   	intel_mid_pwr_power_off();
->>   
->>   	/* Only for Tangier, the rest will ignore this command */
->> -	intel_scu_ipc_simple_command(IPCMSG_COLD_OFF, 1);
->> +	ipc_dev_simple_cmd(ipc_dev, cmds, SCU_PARAM_LEN);
->>   };
->>   
->>   static void intel_mid_reboot(void)
->>   {
->> -	intel_scu_ipc_simple_command(IPCMSG_COLD_BOOT, 0);
->> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_COLD_BOOT, 0};
->> +
->> +	ipc_dev_simple_cmd(ipc_dev, cmds, SCU_PARAM_LEN);
->>   }
->>   
->>   static unsigned long __init intel_mid_calibrate_tsc(void)
->> @@ -206,6 +212,8 @@ void __init x86_intel_mid_early_setup(void)
->>   	x86_init.mpparse.find_smp_config = x86_init_noop;
->>   	x86_init.mpparse.get_smp_config = x86_init_uint_noop;
->>   	set_bit(MP_BUS_ISA, mp_bus_not_pci);
->> +
->> +	ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
->>   }
->>   
->>   /*
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 82479ca..e4e5822 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -850,6 +850,7 @@ config INTEL_VBTN
->>   config INTEL_SCU_IPC
->>   	bool "Intel SCU IPC Support"
->>   	depends on X86_INTEL_MID
->> +	select REGMAP_MMIO
->>   	default y
->>   	---help---
->>   	  IPC is used to bridge the communications between kernel and SCU on
->> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
->> index f7cf981..78013e4 100644
->> --- a/drivers/platform/x86/intel_scu_ipc.c
->> +++ b/drivers/platform/x86/intel_scu_ipc.c
->> @@ -24,6 +24,8 @@
->>   #include <linux/pci.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/sfi.h>
->> +#include <linux/regmap.h>
->> +#include <linux/platform_data/x86/intel_ipc_dev.h>
->>   #include <asm/intel-mid.h>
->>   #include <asm/intel_scu_ipc.h>
->>   
->> @@ -39,6 +41,25 @@
->>   #define IPC_CMD_PCNTRL_R      1 /* Register read */
->>   #define IPC_CMD_PCNTRL_M      2 /* Register read-modify-write */
->>   
->> +/* IPC dev register offsets */
->> +/*
->> + * IPC Read Buffer (Read Only):
->> + * 16 byte buffer for receiving data from SCU, if IPC command
->> + * processing results in response data
->> + */
->> +#define IPC_DEV_SCU_RBUF_OFFSET			0x90
->> +#define IPC_DEV_SCU_WRBUF_OFFSET		0x80
->> +#define IPC_DEV_SCU_SPTR_OFFSET			0x08
->> +#define IPC_DEV_SCU_DPTR_OFFSET			0x0C
->> +#define IPC_DEV_SCU_STATUS_OFFSET		0x04
->> +
->> +/* IPC dev commands */
->> +/* IPC command register IOC bit */
->> +#define	IPC_DEV_SCU_CMD_MSI			BIT(8)
->> +#define	IPC_DEV_SCU_CMD_STATUS_ERR		BIT(1)
->> +#define	IPC_DEV_SCU_CMD_STATUS_ERR_MASK		GENMASK(7, 0)
->> +#define	IPC_DEV_SCU_CMD_STATUS_BUSY		BIT(0)
->> +
->>   /*
->>    * IPC register summary
->>    *
->> @@ -59,6 +80,11 @@
->>   #define IPC_WWBUF_SIZE    20		/* IPC Write buffer Size */
->>   #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
->>   #define IPC_IOC	          0x100		/* IPC command register IOC bit */
->> +#define	IPC_CMD_SIZE            16
->> +#define	IPC_CMD_SUBCMD          12
->> +#define	IPC_RWBUF_SIZE_DWORD    5
->> +#define	IPC_WWBUF_SIZE_DWORD    5
->> +
->>   
->>   #define PCI_DEVICE_ID_LINCROFT		0x082a
->>   #define PCI_DEVICE_ID_PENWELL		0x080e
->> @@ -93,140 +119,49 @@ static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
->>   
->>   struct intel_scu_ipc_dev {
->>   	struct device *dev;
->> +	struct intel_ipc_dev *ipc_dev;
->>   	void __iomem *ipc_base;
->>   	void __iomem *i2c_base;
->> -	struct completion cmd_complete;
->> +	struct regmap *ipc_regs;
->> +	struct regmap *i2c_regs;
->>   	u8 irq_mode;
->>   };
->>   
->> -static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
->> +static struct regmap_config ipc_regmap_config = {
->> +        .reg_bits = 32,
->> +        .reg_stride = 4,
->> +        .val_bits = 32,
->> +};
->>   
->> -/*
->> - * IPC Read Buffer (Read Only):
->> - * 16 byte buffer for receiving data from SCU, if IPC command
->> - * processing results in response data
->> - */
->> -#define IPC_READ_BUFFER		0x90
->> +static struct regmap_config i2c_regmap_config = {
->> +        .reg_bits = 32,
->> +        .reg_stride = 4,
->> +        .val_bits = 32,
->> +	.fast_io = true,
->> +};
->> +
->> +static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
->>   
->>   #define IPC_I2C_CNTRL_ADDR	0
->>   #define I2C_DATA_ADDR		0x04
->>   
->> -static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
->> -
->> -/*
->> - * Send ipc command
->> - * Command Register (Write Only):
->> - * A write to this register results in an interrupt to the SCU core processor
->> - * Format:
->> - * |rfu2(8) | size(8) | command id(4) | rfu1(3) | ioc(1) | command(8)|
->> - */
->> -static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
->> -{
->> -	if (scu->irq_mode) {
->> -		reinit_completion(&scu->cmd_complete);
->> -		writel(cmd | IPC_IOC, scu->ipc_base);
->> -	}
->> -	writel(cmd, scu->ipc_base);
->> -}
->> -
->> -/*
->> - * Write ipc data
->> - * IPC Write Buffer (Write Only):
->> - * 16-byte buffer for sending data associated with IPC command to
->> - * SCU. Size of the data is specified in the IPC_COMMAND_REG register
->> - */
->> -static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
->> -{
->> -	writel(data, scu->ipc_base + 0x80 + offset);
->> -}
->> -
->> -/*
->> - * Status Register (Read Only):
->> - * Driver will read this register to get the ready/busy status of the IPC
->> - * block and error status of the IPC command that was just processed by SCU
->> - * Format:
->> - * |rfu3(8)|error code(8)|initiator id(8)|cmd id(4)|rfu1(2)|error(1)|busy(1)|
->> - */
->> -static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
->> -{
->> -	return __raw_readl(scu->ipc_base + 0x04);
->> -}
->> -
->> -/* Read ipc byte data */
->> -static inline u8 ipc_data_readb(struct intel_scu_ipc_dev *scu, u32 offset)
->> -{
->> -	return readb(scu->ipc_base + IPC_READ_BUFFER + offset);
->> -}
->> -
->> -/* Read ipc u32 data */
->> -static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
->> -{
->> -	return readl(scu->ipc_base + IPC_READ_BUFFER + offset);
->> -}
->> -
->> -/* Wait till scu status is busy */
->> -static inline int busy_loop(struct intel_scu_ipc_dev *scu)
->> -{
->> -	u32 status = ipc_read_status(scu);
->> -	u32 loop_count = 100000;
->> -
->> -	/* break if scu doesn't reset busy bit after huge retry */
->> -	while ((status & BIT(0)) && --loop_count) {
->> -		udelay(1); /* scu processing time is in few u secods */
->> -		status = ipc_read_status(scu);
->> -	}
->> -
->> -	if (status & BIT(0)) {
->> -		dev_err(scu->dev, "IPC timed out");
->> -		return -ETIMEDOUT;
->> -	}
->> -
->> -	if (status & BIT(1))
->> -		return -EIO;
->> -
->> -	return 0;
->> -}
->> -
->> -/* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
->> -static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
->> -{
->> -	int status;
->> -
->> -	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
->> -		dev_err(scu->dev, "IPC timed out\n");
->> -		return -ETIMEDOUT;
->> -	}
->> -
->> -	status = ipc_read_status(scu);
->> -	if (status & BIT(1))
->> -		return -EIO;
->> -
->> -	return 0;
->> -}
->> -
->> -static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
->> -{
->> -	return scu->irq_mode ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
->> -}
->> -
->>   /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
->>   static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
->>   {
->>   	struct intel_scu_ipc_dev *scu = &ipcdev;
->>   	int nc;
->>   	u32 offset = 0;
->> -	int err;
->> +	int err = -EIO;
->>   	u8 cbuf[IPC_WWBUF_SIZE];
->>   	u32 *wbuf = (u32 *)&cbuf;
->> +	u32 cmd[SCU_PARAM_LEN] = {0};
->> +	/* max rbuf size is 20 bytes */
->> +	u8 rbuf[IPC_RWBUF_SIZE] = {0};
->> +	u32 rbuflen = DIV_ROUND_UP(count, 4);
->>   
->>   	memset(cbuf, 0, sizeof(cbuf));
->>   
->> -	mutex_lock(&ipclock);
->> -
->> -	if (scu->dev == NULL) {
->> -		mutex_unlock(&ipclock);
->> -		return -ENODEV;
->> -	}
->> +	scu_cmd_init(cmd, op, id);
->>   
->>   	for (nc = 0; nc < count; nc++, offset += 2) {
->>   		cbuf[offset] = addr[nc];
->> @@ -234,30 +169,30 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
->>   	}
->>   
->>   	if (id == IPC_CMD_PCNTRL_R) {
->> -		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
->> -			ipc_data_writel(scu, wbuf[nc], offset);
->> -		ipc_command(scu, (count * 2) << 16 | id << 12 | 0 << 8 | op);
->> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
->> +				(u8 *)wbuf, count * 2, (u32 *)rbuf,
->> +				IPC_RWBUF_SIZE_DWORD, 0, 0);
->>   	} else if (id == IPC_CMD_PCNTRL_W) {
->>   		for (nc = 0; nc < count; nc++, offset += 1)
->>   			cbuf[offset] = data[nc];
->> -		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
->> -			ipc_data_writel(scu, wbuf[nc], offset);
->> -		ipc_command(scu, (count * 3) << 16 | id << 12 | 0 << 8 | op);
->> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
->> +				(u8 *)wbuf, count * 3, NULL, 0, 0, 0);
->> +
->>   	} else if (id == IPC_CMD_PCNTRL_M) {
->>   		cbuf[offset] = data[0];
->>   		cbuf[offset + 1] = data[1];
->> -		ipc_data_writel(scu, wbuf[0], 0); /* Write wbuff */
->> -		ipc_command(scu, 4 << 16 | id << 12 | 0 << 8 | op);
->> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
->> +				(u8 *)wbuf, 4, NULL, 0, 0, 0);
->>   	}
->>   
->> -	err = intel_scu_ipc_check_status(scu);
->>   	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
->>   		/* Workaround: values are read as 0 without memcpy_fromio */
->>   		memcpy_fromio(cbuf, scu->ipc_base + 0x90, 16);
->> -		for (nc = 0; nc < count; nc++)
->> -			data[nc] = ipc_data_readb(scu, nc);
->> +		regmap_bulk_read(scu->ipc_regs, IPC_DEV_SCU_RBUF_OFFSET,
->> +					rbuf, rbuflen);
->> +		memcpy(data, rbuf, count);
->>   	}
->> -	mutex_unlock(&ipclock);
->> +
->>   	return err;
->>   }
->>   
->> @@ -422,138 +357,6 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
->>   }
->>   EXPORT_SYMBOL(intel_scu_ipc_update_register);
->>   
->> -/**
->> - *	intel_scu_ipc_simple_command	-	send a simple command
->> - *	@cmd: command
->> - *	@sub: sub type
->> - *
->> - *	Issue a simple command to the SCU. Do not use this interface if
->> - *	you must then access data as any data values may be overwritten
->> - *	by another SCU access by the time this function returns.
->> - *
->> - *	This function may sleep. Locking for SCU accesses is handled for
->> - *	the caller.
->> - */
->> -int intel_scu_ipc_simple_command(int cmd, int sub)
->> -{
->> -	struct intel_scu_ipc_dev *scu = &ipcdev;
->> -	int err;
->> -
->> -	mutex_lock(&ipclock);
->> -	if (scu->dev == NULL) {
->> -		mutex_unlock(&ipclock);
->> -		return -ENODEV;
->> -	}
->> -	ipc_command(scu, sub << 12 | cmd);
->> -	err = intel_scu_ipc_check_status(scu);
->> -	mutex_unlock(&ipclock);
->> -	return err;
->> -}
->> -EXPORT_SYMBOL(intel_scu_ipc_simple_command);
->> -
->> -/**
->> - *	intel_scu_ipc_command	-	command with data
->> - *	@cmd: command
->> - *	@sub: sub type
->> - *	@in: input data
->> - *	@inlen: input length in dwords
->> - *	@out: output data
->> - *	@outlein: output length in dwords
->> - *
->> - *	Issue a command to the SCU which involves data transfers. Do the
->> - *	data copies under the lock but leave it for the caller to interpret
->> - */
->> -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->> -			  u32 *out, int outlen)
->> -{
->> -	struct intel_scu_ipc_dev *scu = &ipcdev;
->> -	int i, err;
->> -
->> -	mutex_lock(&ipclock);
->> -	if (scu->dev == NULL) {
->> -		mutex_unlock(&ipclock);
->> -		return -ENODEV;
->> -	}
->> -
->> -	for (i = 0; i < inlen; i++)
->> -		ipc_data_writel(scu, *in++, 4 * i);
->> -
->> -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
->> -	err = intel_scu_ipc_check_status(scu);
->> -
->> -	if (!err) {
->> -		for (i = 0; i < outlen; i++)
->> -			*out++ = ipc_data_readl(scu, 4 * i);
->> -	}
->> -
->> -	mutex_unlock(&ipclock);
->> -	return err;
->> -}
->> -EXPORT_SYMBOL(intel_scu_ipc_command);
->> -
->> -#define IPC_SPTR		0x08
->> -#define IPC_DPTR		0x0C
->> -
->> -/**
->> - * intel_scu_ipc_raw_command() - IPC command with data and pointers
->> - * @cmd:	IPC command code.
->> - * @sub:	IPC command sub type.
->> - * @in:		input data of this IPC command.
->> - * @inlen:	input data length in dwords.
->> - * @out:	output data of this IPC command.
->> - * @outlen:	output data length in dwords.
->> - * @sptr:	data writing to SPTR register.
->> - * @dptr:	data writing to DPTR register.
->> - *
->> - * Send an IPC command to SCU with input/output data and source/dest pointers.
->> - *
->> - * Return:	an IPC error code or 0 on success.
->> - */
->> -int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
->> -			      u32 *out, int outlen, u32 dptr, u32 sptr)
->> -{
->> -	struct intel_scu_ipc_dev *scu = &ipcdev;
->> -	int inbuflen = DIV_ROUND_UP(inlen, 4);
->> -	u32 inbuf[4];
->> -	int i, err;
->> -
->> -	/* Up to 16 bytes */
->> -	if (inbuflen > 4)
->> -		return -EINVAL;
->> -
->> -	mutex_lock(&ipclock);
->> -	if (scu->dev == NULL) {
->> -		mutex_unlock(&ipclock);
->> -		return -ENODEV;
->> -	}
->> -
->> -	writel(dptr, scu->ipc_base + IPC_DPTR);
->> -	writel(sptr, scu->ipc_base + IPC_SPTR);
->> -
->> -	/*
->> -	 * SRAM controller doesn't support 8-bit writes, it only
->> -	 * supports 32-bit writes, so we have to copy input data into
->> -	 * the temporary buffer, and SCU FW will use the inlen to
->> -	 * determine the actual input data length in the temporary
->> -	 * buffer.
->> -	 */
->> -	memcpy(inbuf, in, inlen);
->> -
->> -	for (i = 0; i < inbuflen; i++)
->> -		ipc_data_writel(scu, inbuf[i], 4 * i);
->> -
->> -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
->> -	err = intel_scu_ipc_check_status(scu);
->> -	if (!err) {
->> -		for (i = 0; i < outlen; i++)
->> -			*out++ = ipc_data_readl(scu, 4 * i);
->> -	}
->> -
->> -	mutex_unlock(&ipclock);
->> -	return err;
->> -}
->> -EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
->> -
->>   /* I2C commands */
->>   #define IPC_I2C_WRITE 1 /* I2C Write command */
->>   #define IPC_I2C_READ  2 /* I2C Read command */
->> @@ -575,48 +378,143 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
->>   	struct intel_scu_ipc_dev *scu = &ipcdev;
->>   	u32 cmd = 0;
->>   
->> -	mutex_lock(&ipclock);
->> -	if (scu->dev == NULL) {
->> -		mutex_unlock(&ipclock);
->> -		return -ENODEV;
->> -	}
->>   	cmd = (addr >> 24) & 0xFF;
->>   	if (cmd == IPC_I2C_READ) {
->> -		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
->> +		regmap_write(scu->i2c_regs, IPC_I2C_CNTRL_ADDR, addr);
->>   		/* Write not getting updated without delay */
->>   		mdelay(1);
->> -		*data = readl(scu->i2c_base + I2C_DATA_ADDR);
->> +		regmap_read(scu->i2c_regs, I2C_DATA_ADDR, data);
->>   	} else if (cmd == IPC_I2C_WRITE) {
->> -		writel(*data, scu->i2c_base + I2C_DATA_ADDR);
->> +		regmap_write(scu->i2c_regs, I2C_DATA_ADDR, *data);
->>   		mdelay(1);
->> -		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
->> +		regmap_write(scu->i2c_regs, IPC_I2C_CNTRL_ADDR, addr);
->>   	} else {
->>   		dev_err(scu->dev,
->>   			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
->>   
->> -		mutex_unlock(&ipclock);
->>   		return -EIO;
->>   	}
->> -	mutex_unlock(&ipclock);
->>   	return 0;
->>   }
->>   EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
->>   
->> -/*
->> - * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
->> - * When ioc bit is set to 1, caller api must wait for interrupt handler called
->> - * which in turn unlocks the caller api. Currently this is not used
->> - *
->> - * This is edge triggered so we need take no action to clear anything
->> - */
->> -static irqreturn_t ioc(int irq, void *dev_id)
->> +static int pre_simple_cmd_fn(u32 *cmd_list, u32 cmdlen)
->>   {
->> -	struct intel_scu_ipc_dev *scu = dev_id;
->> +	if (!cmd_list || cmdlen != SCU_PARAM_LEN)
->> +		return -EINVAL;
->>   
->> -	if (scu->irq_mode)
->> -		complete(&scu->cmd_complete);
->> +	cmd_list[0] |= (cmd_list[1] << IPC_CMD_SUBCMD);
->>   
->> -	return IRQ_HANDLED;
->> +	return 0;
->> +}
->> +
->> +static int pre_cmd_fn(u32 *cmd_list, u32 cmdlen, u32 *in, u32 inlen,
->> +		u32 *out, u32 outlen)
->> +{
->> +	int ret;
->> +
->> +	if (inlen > IPC_WWBUF_SIZE_DWORD || outlen > IPC_RWBUF_SIZE_DWORD)
->> +		return -EINVAL;
->> +
->> +	ret = pre_simple_cmd_fn(cmd_list, cmdlen);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	cmd_list[0] |= (inlen << IPC_CMD_SIZE);
->> +
->> +	return 0;
->> +}
->> +
->> +static int pre_raw_cmd_fn(u32 *cmd_list, u32 cmdlen, u8 *in, u32 inlen,
->> +		u32 *out, u32 outlen, u32 dptr, u32 sptr)
->> +{
->> +	int ret;
->> +
->> +	if (inlen > IPC_WWBUF_SIZE || outlen > IPC_RWBUF_SIZE_DWORD)
->> +		return -EINVAL;
->> +
->> +	ret = pre_simple_cmd_fn(cmd_list, cmdlen);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	cmd_list[0] |= (inlen << IPC_CMD_SIZE);
->> +
->> +	return 0;
->> +}
->> +
->> +static int scu_ipc_err_code(int status)
->> +{
->> +	if (status & IPC_DEV_SCU_CMD_STATUS_ERR)
->> +		return (status & IPC_DEV_SCU_CMD_STATUS_ERR_MASK);
->> +	else
->> +		return 0;
->> +}
->> +
->> +static int scu_ipc_busy_check(int status)
->> +{
->> +	return status | IPC_DEV_SCU_CMD_STATUS_BUSY;
->> +}
->> +
->> +static u32 scu_ipc_enable_msi(u32 cmd)
->> +{
->> +	return cmd | IPC_DEV_SCU_CMD_MSI;
->> +}
->> +
->> +static struct intel_ipc_dev *intel_scu_ipc_dev_create(
->> +		struct device *dev,
->> +		void __iomem *base,
->> +		int irq)
->> +{
->> +	struct intel_ipc_dev_ops *ops;
->> +	struct intel_ipc_dev_cfg *cfg;
->> +	struct regmap *ipc_regs;
->> +	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
->> +
->> +	cfg = devm_kzalloc(dev, sizeof(*cfg), GFP_KERNEL);
->> +	if (!cfg)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
->> +	if (!ops)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +        ipc_regs = devm_regmap_init_mmio_clk(dev, NULL, base,
->> +			&ipc_regmap_config);
->> +        if (IS_ERR(ipc_regs)) {
->> +                dev_err(dev, "ipc_regs regmap init failed\n");
->> +                return ERR_CAST(ipc_regs);;
->> +        }
->> +
->> +	scu->ipc_regs = ipc_regs;
->> +
->> +	/* set IPC dev ops */
->> +	ops->to_err_code = scu_ipc_err_code;
->> +	ops->busy_check = scu_ipc_busy_check;
->> +	ops->enable_msi = scu_ipc_enable_msi;
->> +	ops->pre_cmd_fn = pre_cmd_fn;
->> +	ops->pre_raw_cmd_fn = pre_raw_cmd_fn;
->> +	ops->pre_simple_cmd_fn = pre_simple_cmd_fn;
->> +
->> +	/* set cfg options */
->> +	if (scu->irq_mode)
->> +		cfg->mode = IPC_DEV_MODE_IRQ;
->> +	else
->> +		cfg->mode = IPC_DEV_MODE_POLLING;
->> +
->> +	cfg->chan_type = IPC_CHANNEL_IA_SCU;
->> +	cfg->irq = irq;
->> +	cfg->use_msi = true;
->> +	cfg->support_sptr = true;
->> +	cfg->support_dptr = true;
->> +	cfg->cmd_regs = ipc_regs;
->> +	cfg->data_regs = ipc_regs;
->> +	cfg->wrbuf_reg = IPC_DEV_SCU_WRBUF_OFFSET;
->> +	cfg->rbuf_reg = IPC_DEV_SCU_RBUF_OFFSET;
->> +	cfg->sptr_reg = IPC_DEV_SCU_SPTR_OFFSET;
->> +	cfg->dptr_reg = IPC_DEV_SCU_DPTR_OFFSET;
->> +	cfg->status_reg = IPC_DEV_SCU_STATUS_OFFSET;
->> +
->> +	return devm_intel_ipc_dev_create(dev, INTEL_SCU_IPC_DEV, cfg, ops);
->>   }
->>   
->>   /**
->> @@ -650,25 +548,34 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>   	if (err)
->>   		return err;
->>   
->> -	init_completion(&scu->cmd_complete);
->> -
->>   	scu->ipc_base = pcim_iomap_table(pdev)[0];
->>   
->> -	scu->i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
->> +	scu->i2c_base = devm_ioremap_nocache(&pdev->dev, pdata->i2c_base,
->> +			pdata->i2c_len);
->>   	if (!scu->i2c_base)
->>   		return -ENOMEM;
->>   
->> -	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_scu_ipc",
->> -			       scu);
->> -	if (err)
->> -		return err;
->> +	pci_set_drvdata(pdev, scu);
->> +
->> +        scu->i2c_regs = devm_regmap_init_mmio_clk(&pdev->dev, NULL,
->> +			scu->i2c_base, &i2c_regmap_config);
->> +        if (IS_ERR(scu->i2c_regs)) {
->> +                dev_err(&pdev->dev, "i2c_regs regmap init failed\n");
->> +                return PTR_ERR(scu->i2c_regs);;
->> +        }
->> +
->> +	scu->ipc_dev = intel_scu_ipc_dev_create(&pdev->dev, scu->ipc_base,
->> +			pdev->irq);
->> +	if (IS_ERR(scu->ipc_dev)) {
->> +		dev_err(&pdev->dev, "Failed to create SCU IPC device\n");
->> +		return PTR_ERR(scu->ipc_dev);
->> +	}
->>   
->>   	/* Assign device at last */
->>   	scu->dev = &pdev->dev;
->>   
->>   	intel_scu_devices_create();
->>   
->> -	pci_set_drvdata(pdev, scu);
->>   	return 0;
->>   }
->>   
->> diff --git a/drivers/rtc/rtc-mrst.c b/drivers/rtc/rtc-mrst.c
->> index 7334c44..a2d87e8 100644
->> --- a/drivers/rtc/rtc-mrst.c
->> +++ b/drivers/rtc/rtc-mrst.c
->> @@ -36,6 +36,7 @@
->>   #include <linux/module.h>
->>   #include <linux/init.h>
->>   #include <linux/sfi.h>
->> +#include <linux/platform_data/x86/intel_ipc_dev.h>
->>   
->>   #include <asm/intel_scu_ipc.h>
->>   #include <asm/intel-mid.h>
->> @@ -46,6 +47,7 @@ struct mrst_rtc {
->>   	struct device		*dev;
->>   	int			irq;
->>   	struct resource		*iomem;
->> +	struct intel_ipc_dev	*ipc_dev;
->>   
->>   	u8			enabled_wake;
->>   	u8			suspend_ctrl;
->> @@ -110,10 +112,11 @@ static int mrst_read_time(struct device *dev, struct rtc_time *time)
->>   
->>   static int mrst_set_time(struct device *dev, struct rtc_time *time)
->>   {
->> -	int ret;
->>   	unsigned long flags;
->>   	unsigned char mon, day, hrs, min, sec;
->>   	unsigned int yrs;
->> +	struct mrst_rtc	*mrst = dev_get_drvdata(dev);
->> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_VRTC, IPC_CMD_VRTC_SETTIME};
->>   
->>   	yrs = time->tm_year;
->>   	mon = time->tm_mon + 1;   /* tm_mon starts at zero */
->> @@ -137,8 +140,7 @@ static int mrst_set_time(struct device *dev, struct rtc_time *time)
->>   
->>   	spin_unlock_irqrestore(&rtc_lock, flags);
->>   
->> -	ret = intel_scu_ipc_simple_command(IPCMSG_VRTC, IPC_CMD_VRTC_SETTIME);
->> -	return ret;
->> +	return ipc_dev_simple_cmd(mrst->ipc_dev, cmds, SCU_PARAM_LEN);
->>   }
->>   
->>   static int mrst_read_alarm(struct device *dev, struct rtc_wkalrm *t)
->> @@ -210,6 +212,7 @@ static int mrst_set_alarm(struct device *dev, struct rtc_wkalrm *t)
->>   	struct mrst_rtc	*mrst = dev_get_drvdata(dev);
->>   	unsigned char hrs, min, sec;
->>   	int ret = 0;
->> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_VRTC, IPC_CMD_VRTC_SETALARM};
->>   
->>   	if (!mrst->irq)
->>   		return -EIO;
->> @@ -229,7 +232,7 @@ static int mrst_set_alarm(struct device *dev, struct rtc_wkalrm *t)
->>   
->>   	spin_unlock_irq(&rtc_lock);
->>   
->> -	ret = intel_scu_ipc_simple_command(IPCMSG_VRTC, IPC_CMD_VRTC_SETALARM);
->> +	ret = ipc_dev_simple_cmd(mrst->ipc_dev, cmds, SCU_PARAM_LEN);
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -329,6 +332,10 @@ static int vrtc_mrst_do_probe(struct device *dev, struct resource *iomem,
->>   	if (!iomem)
->>   		return -ENODEV;
->>   
->> +	mrst_rtc.ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
->> +	if (IS_ERR_OR_NULL(mrst_rtc.ipc_dev))
->> +		return PTR_ERR(mrst_rtc.ipc_dev);
->> +
->>   	iomem = request_mem_region(iomem->start, resource_size(iomem),
->>   				   driver_name);
->>   	if (!iomem) {
->> diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
->> index 72c108a..a73559b 100644
->> --- a/drivers/watchdog/intel-mid_wdt.c
->> +++ b/drivers/watchdog/intel-mid_wdt.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/platform_device.h>
->>   #include <linux/watchdog.h>
->>   #include <linux/platform_data/intel-mid_wdt.h>
->> +#include <linux/platform_data/x86/intel_ipc_dev.h>
->>   
->>   #include <asm/intel_scu_ipc.h>
->>   #include <asm/intel-mid.h>
->> @@ -29,6 +30,8 @@
->>   #define MID_WDT_TIMEOUT_MAX		170
->>   #define MID_WDT_DEFAULT_TIMEOUT		90
->>   
->> +static struct intel_ipc_dev *scu_ipc_dev;
->> +
->>   /* SCU watchdog messages */
->>   enum {
->>   	SCU_WATCHDOG_START = 0,
->> @@ -38,7 +41,10 @@ enum {
->>   
->>   static inline int wdt_command(int sub, u32 *in, int inlen)
->>   {
->> -	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
->> +	u32 cmds[SCU_PARAM_LEN] = {IPC_WATCHDOG, sub};
->> +
->> +	return ipc_dev_cmd(scu_ipc_dev, cmds, SCU_PARAM_LEN, in,
->> +			inlen, NULL, 0);
->>   }
->>   
->>   static int wdt_start(struct watchdog_device *wd)
->> @@ -129,6 +135,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
->>   	if (!wdt_dev)
->>   		return -ENOMEM;
->>   
->> +	scu_ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
->> +	if (IS_ERR_OR_NULL(scu_ipc_dev))
->> +		return PTR_ERR(scu_ipc_dev);
->> +
->>   	wdt_dev->info = &mid_wdt_info;
->>   	wdt_dev->ops = &mid_wdt_ops;
->>   	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
->> diff --git a/drivers/watchdog/intel_scu_watchdog.c b/drivers/watchdog/intel_scu_watchdog.c
->> index 0caab62..9457c7a 100644
->> --- a/drivers/watchdog/intel_scu_watchdog.c
->> +++ b/drivers/watchdog/intel_scu_watchdog.c
->> @@ -49,6 +49,7 @@
->>   #include <asm/intel_scu_ipc.h>
->>   #include <asm/apb_timer.h>
->>   #include <asm/intel-mid.h>
->> +#include <linux/platform_data/x86/intel_ipc_dev.h>
->>   
->>   #include "intel_scu_watchdog.h"
->>   
->> @@ -94,6 +95,8 @@ MODULE_PARM_DESC(force_boot,
->>   
->>   static struct intel_scu_watchdog_dev watchdog_device;
->>   
->> +static struct intel_ipc_dev *scu_ipc_dev;
->> +
->>   /* Forces restart, if force_reboot is set */
->>   static void watchdog_fire(void)
->>   {
->> @@ -128,18 +131,14 @@ static int watchdog_set_ipc(int soft_threshold, int threshold)
->>   	u32	*ipc_wbuf;
->>   	u8	 cbuf[16] = { '\0' };
->>   	int	 ipc_ret = 0;
->> +	u32 cmds[SCU_PARAM_LEN] = {IPC_SET_WATCHDOG_TIMER, 0};
->>   
->>   	ipc_wbuf = (u32 *)&cbuf;
->>   	ipc_wbuf[0] = soft_threshold;
->>   	ipc_wbuf[1] = threshold;
->>   
->> -	ipc_ret = intel_scu_ipc_command(
->> -			IPC_SET_WATCHDOG_TIMER,
->> -			0,
->> -			ipc_wbuf,
->> -			2,
->> -			NULL,
->> -			0);
->> +	ipc_ret = ipc_dev_cmd(scu_ipc_dev, cmds, SCU_PARAM_LEN, ipc_wbuf,
->> +			2, NULL, 0);
->>   
->>   	if (ipc_ret != 0)
->>   		pr_err("Error setting SCU watchdog timer: %x\n", ipc_ret);
->> @@ -460,6 +459,10 @@ static int __init intel_scu_watchdog_init(void)
->>   	if (check_timer_margin(timer_margin))
->>   		return -EINVAL;
->>   
->> +	scu_ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
->> +	if (IS_ERR_OR_NULL(scu_ipc_dev))
->> +		return PTR_ERR(scu_ipc_dev);
->> +
->>   	watchdog_device.timer_tbl_ptr = sfi_get_mtmr(sfi_mtimer_num-1);
->>   
->>   	if (watchdog_device.timer_tbl_ptr == NULL) {
->> -- 
->> 2.7.4
->>
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDI4LCAy
+MDE3IDI6NTQgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9A
+RGVsbC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxh
+bmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1
+dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb20NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MyAyLzhdIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IEludHJvZHVj
+ZSBhIFdNSS1BQ1BJDQo+IGludGVyZmFjZQ0KPiANCj4gT24gVGh1cnNkYXkgMjggU2VwdGVtYmVy
+IDIwMTcgMDY6MDI6MTQgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4gVGhlIGRyaXZlciBj
+dXJyZW50bHkgdXNlcyBhbiBTTUkgaW50ZXJmYWNlIHdoaWNoIGdyYW50cyBkaXJlY3QgYWNjZXNz
+DQo+ID4gdG8gcGh5c2ljYWwgbWVtb3J5IHRvIHRoZSBmaXJtd2FyZSBTTU0gbWV0aG9kcyB2aWEg
+YSBwb2ludGVyLg0KPiA+DQo+ID4gTm93IGFkZCBhIFdNSS1BQ1BJIGludGVyZmFjZSB0aGF0IGlz
+IGRldGVjdGVkIGJ5IFdNSSBwcm9iZSBhbmQgcHJlZmVycmVkDQo+ID4gb3ZlciB0aGUgU01JIGlu
+dGVyZmFjZS4NCj4gPg0KPiA+IENoYW5naW5nIHRoaXMgdG8gb3BlcmF0ZSBvdmVyIFdNSS1BQ1BJ
+IHdpbGwgdXNlIGFuIEFDUEkgT3BlcmF0aW9uUmVnaW9uDQo+ID4gZm9yIGEgYnVmZmVyIG9mIGRh
+dGEgc3RvcmFnZSB3aGVuIFNNTSBjYWxscyBhcmUgcGVyZm9ybWVkLg0KPiA+DQo+ID4gVGhpcyBp
+cyBhIHNhZmVyIGFwcHJvYWNoIHRvIHVzZSBpbiBrZXJuZWwgZHJpdmVycyBhcyB0aGUgU01NIHdp
+bGwNCj4gPiBvbmx5IGhhdmUgYWNjZXNzIHRvIHRoYXQgT3BlcmF0aW9uUmVnaW9uLg0KPiA+DQo+
+ID4gQXMgYSByZXN1bHQsIHRoaXMgY2hhbmdlIHJlbW92ZXMgdGhlIGRlcGVuZGVuY3kgb24gdGhp
+cyBkcml2ZXIgb24gdGhlDQo+ID4gZGNkYmFzIGtlcm5lbCBtb2R1bGUuICBJdCdzIG5vdyBhbiBv
+cHRpb25hbCBjb21waWxhdGlvbiBvcHRpb24uDQo+ID4NCj4gPiBXaGVuIG1vZGlmeWluZyB0aGlz
+LCBhZGQgbXlzZWxmIHRvIE1BSU5UQUlORVJTLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFy
+aW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IC0tLQ0KPiA+
+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsrDQo+ID4gIGRyaXZl
+cnMvcGxhdGZvcm0veDg2L0tjb25maWcgICAgICAgfCAgMTQgKystLQ0KPiA+ICBkcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jIHwgMTI4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrLQ0KPiAtLS0tDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmgg
+fCAgMTUgKysrKy0NCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxMzggaW5zZXJ0aW9ucygrKSwgMjUg
+ZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJ
+TkVSUw0KPiA+IGluZGV4IDA4Yjk2Zjc3ZjYxOC4uNmQ3NmIwOWY0NmNjIDEwMDY0NA0KPiA+IC0t
+LSBhL01BSU5UQUlORVJTDQo+ID4gKysrIGIvTUFJTlRBSU5FUlMNCj4gPiBAQCAtMzk5MCw2ICsz
+OTkwLDEyIEBAIFM6CU1haW50YWluZWQNCj4gPiAgRjoJZHJpdmVycy9od21vbi9kZWxsLXNtbS1o
+d21vbi5jDQo+ID4gIEY6CWluY2x1ZGUvdWFwaS9saW51eC9pOGsuaA0KPiA+DQo+ID4gK0RFTEwg
+U01CSU9TIERSSVZFUg0KPiA+ICtNOglQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+
+DQo+ID4gK006CU1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4N
+Cj4gPiArUzoJTWFpbnRhaW5lZA0KPiA+ICtGOglkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNt
+Ymlvcy4qDQo+ID4gKw0KPiA+ICBERUxMIFNZU1RFTVMgTUFOQUdFTUVOVCBCQVNFIERSSVZFUiAo
+ZGNkYmFzKQ0KPiA+ICBNOglEb3VnIFdhcnplY2hhIDxEb3VnbGFzX1dhcnplY2hhQGRlbGwuY29t
+Pg0KPiA+ICBTOglNYWludGFpbmVkDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L0tjb25maWcgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnDQo+ID4gaW5kZXggMWY3
+OTU5ZmYwNTVjLi40MTU4ODZkN2E4NTcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcNCj4g
+PiBAQCAtOTIsMTMgKzkyLDE3IEBAIGNvbmZpZyBBU1VTX0xBUFRPUA0KPiA+ICAJICBJZiB5b3Ug
+aGF2ZSBhbiBBQ1BJLWNvbXBhdGlibGUgQVNVUyBsYXB0b3AsIHNheSBZIG9yIE0gaGVyZS4NCj4g
+Pg0KPiA+ICBjb25maWcgREVMTF9TTUJJT1MNCj4gPiAtCXRyaXN0YXRlDQo+ID4gLQlzZWxlY3Qg
+RENEQkFTDQo+ID4gKwl0cmlzdGF0ZSAiRGVsbCBTTUJJT1MgY2FsbGluZyBpbnRlcmZhY2UiDQo+
+ID4gKwlkZXBlbmRzIG9uIEFDUElfV01JDQo+ID4gIAktLS1oZWxwLS0tDQo+ID4gLQlUaGlzIG1v
+ZHVsZSBwcm92aWRlcyBjb21tb24gZnVuY3Rpb25zIGZvciBrZXJuZWwgbW9kdWxlcyB1c2luZw0K
+PiA+IC0JRGVsbCBTTUJJT1MuDQo+ID4gKwlUaGlzIG1vZHVsZSBwcm92aWRlcyBjb21tb24gZnVu
+Y3Rpb25zIGZvciBrZXJuZWwgbW9kdWxlcyBhbmQNCj4gPiArICAgICAgICB1c2Vyc3BhY2UgdXNp
+bmcgRGVsbCBTTUJJT1MuDQo+ID4gKw0KPiA+ICsJSWYgeW91IGhhdmUgYSBEZWxsIGNvbXB1dGVy
+LCBzYXkgWSBvciBNIGhlcmUuDQo+ID4NCj4gPiAtCUlmIHlvdSBoYXZlIGEgRGVsbCBsYXB0b3As
+IHNheSBZIG9yIE0gaGVyZS4NCj4gPiArCUlmIHlvdSBoYXZlIGEgbWFjaGluZSBmcm9tIDwgMjAw
+NyB3aXRob3V0IGEgV01JIGludGVyZmFjZSB5b3UNCj4gPiArCW1heSBhbHNvIHdhbnQgdG8gZW5h
+YmxlIENPTkZJR19EQ0RCQVMgdG8gYWxsb3cgdGhpcyBkcml2ZXIgdG8NCj4gPiArCXdvcmsuDQo+
+ID4NCj4gPiAgY29uZmlnIERFTExfTEFQVE9QDQo+ID4gIAl0cmlzdGF0ZSAiRGVsbCBMYXB0b3Ag
+RXh0cmFzIg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlv
+cy5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC0NCj4gc21iaW9zLmMNCj4gPiBpbmRleCBl
+OWIxY2EwN2M4NzIuLjQ0NzI4MTdlZTA0NSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVs
+bC1zbWJpb3MuYw0KPiA+IEBAIC00LDYgKzQsNyBAQA0KPiA+ICAgKiAgQ29weXJpZ2h0IChjKSBS
+ZWQgSGF0IDxtamdAcmVkaGF0LmNvbT4NCj4gPiAgICogIENvcHlyaWdodCAoYykgMjAxNCBHYWJy
+aWVsZSBNYXp6b3R0YSA8Z2FicmllbGUubXp0QGdtYWlsLmNvbT4NCj4gPiAgICogIENvcHlyaWdo
+dCAoYykgMjAxNCBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+DQo+ID4gKyAqICBD
+b3B5cmlnaHQgKGMpIDIwMTcgRGVsbCBJbmMuDQo+ID4gICAqDQo+ID4gICAqICBCYXNlZCBvbiBk
+b2N1bWVudGF0aW9uIGluIHRoZSBsaWJzbWJpb3MgcGFja2FnZToNCj4gPiAgICogIENvcHlyaWdo
+dCAoQykgMjAwNS0yMDE0IERlbGwgSW5jLg0KPiA+IEBAIC0yMiw5ICsyMywxNSBAQA0KPiA+ICAj
+aW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4g
+PiAgI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gLSNpbmNsdWRlICIuLi8uLi9maXJtd2FyZS9k
+Y2RiYXMuaCINCj4gPiArI2luY2x1ZGUgPGxpbnV4L3dtaS5oPg0KPiA+ICAjaW5jbHVkZSAiZGVs
+bC1zbWJpb3MuaCINCj4gPg0KPiA+ICsjaWZkZWYgQ09ORklHX0RDREJBUw0KPiA+ICsjaW5jbHVk
+ZSAiLi4vLi4vZmlybXdhcmUvZGNkYmFzLmgiDQo+ID4gKyNlbmRpZg0KPiA+ICsNCj4gPiArI2Rl
+ZmluZSBERUxMX1dNSV9TTUJJT1NfR1VJRCAiQTgwNTkzQ0UtQTk5Ny0xMURBLUIwMTItDQo+IEI2
+MjJBMUVGNTQ5MiINCj4gPiArDQo+ID4gIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9zdHJ1Y3R1
+cmUgew0KPiA+ICAJc3RydWN0IGRtaV9oZWFkZXIgaGVhZGVyOw0KPiA+ICAJdTE2IGNtZElPQWRk
+cmVzczsNCj4gPiBAQCAtMzMsMTIgKzQwLDE0IEBAIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9z
+dHJ1Y3R1cmUgew0KPiA+ICAJc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX3Rva2VuIHRva2Vuc1td
+Ow0KPiA+ICB9IF9fcGFja2VkOw0KPiA+DQo+ID4gLXN0YXRpYyBzdHJ1Y3QgY2FsbGluZ19pbnRl
+cmZhY2VfYnVmZmVyICpidWZmZXI7DQo+ID4gK3N0YXRpYyB2b2lkICpidWZmZXI7DQo+ID4gK3N0
+YXRpYyBzaXplX3QgYnVmZmVybGVuOw0KPiA+ICBzdGF0aWMgREVGSU5FX01VVEVYKGJ1ZmZlcl9t
+dXRleCk7DQo+ID4NCj4gPiAgc3RhdGljIGludCBkYV9jb21tYW5kX2FkZHJlc3M7DQo+ID4gIHN0
+YXRpYyBpbnQgZGFfY29tbWFuZF9jb2RlOw0KPiA+ICBzdGF0aWMgaW50IGRhX251bV90b2tlbnM7
+DQo+ID4gK3N0cnVjdCB3bWlfZGV2aWNlICp3bWlfZGV2Ow0KPiA+ICBzdGF0aWMgc3RydWN0IGNh
+bGxpbmdfaW50ZXJmYWNlX3Rva2VuICpkYV90b2tlbnM7DQo+ID4NCj4gPiAgaW50IGRlbGxfc21i
+aW9zX2Vycm9yKGludCB2YWx1ZSkNCj4gPiBAQCAtNjAsMTMgKzY5LDE1IEBAIHN0cnVjdCBjYWxs
+aW5nX2ludGVyZmFjZV9idWZmZXINCj4gKmRlbGxfc21iaW9zX2dldF9idWZmZXIodm9pZCkNCj4g
+PiAgew0KPiA+ICAJbXV0ZXhfbG9jaygmYnVmZmVyX211dGV4KTsNCj4gPiAgCWRlbGxfc21iaW9z
+X2NsZWFyX2J1ZmZlcigpOw0KPiA+ICsJaWYgKHdtaV9kZXYpDQo+ID4gKwkJcmV0dXJuICYoKHN0
+cnVjdCB3bWlfY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyICopIGJ1ZmZlciktPnNtaTsNCj4gPiAg
+CXJldHVybiBidWZmZXI7DQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTF9HUEwoZGVsbF9zbWJp
+b3NfZ2V0X2J1ZmZlcik7DQo+ID4NCj4gPiAgdm9pZCBkZWxsX3NtYmlvc19jbGVhcl9idWZmZXIo
+dm9pZCkNCj4gPiAgew0KPiA+IC0JbWVtc2V0KGJ1ZmZlciwgMCwgc2l6ZW9mKHN0cnVjdCBjYWxs
+aW5nX2ludGVyZmFjZV9idWZmZXIpKTsNCj4gPiArCW1lbXNldChidWZmZXIsIDAsIGJ1ZmZlcmxl
+bik7DQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTF9HUEwoZGVsbF9zbWJpb3NfY2xlYXJfYnVm
+ZmVyKTsNCj4gPg0KPiA+IEBAIC03Niw3ICs4NywzNiBAQCB2b2lkIGRlbGxfc21iaW9zX3JlbGVh
+c2VfYnVmZmVyKHZvaWQpDQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTF9HUEwoZGVsbF9zbWJp
+b3NfcmVsZWFzZV9idWZmZXIpOw0KPiA+DQo+ID4gLXZvaWQgZGVsbF9zbWJpb3Nfc2VuZF9yZXF1
+ZXN0KGludCBjbGFzcywgaW50IHNlbGVjdCkNCj4gPiArc3RhdGljIGludCBydW5fd21pX3NtYmlv
+c19jYWxsKHN0cnVjdCB3bWlfY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyICpidWYpDQo+ID4gK3sN
+Cj4gPiArCXN0cnVjdCBhY3BpX2J1ZmZlciBvdXRwdXQgPSB7QUNQSV9BTExPQ0FURV9CVUZGRVIs
+IE5VTEx9Ow0KPiA+ICsJc3RydWN0IGFjcGlfYnVmZmVyIGlucHV0Ow0KPiA+ICsJdW5pb24gYWNw
+aV9vYmplY3QgKm9iajsNCj4gPiArCWFjcGlfc3RhdHVzIHN0YXR1czsNCj4gPiArDQo+ID4gKwlp
+bnB1dC5sZW5ndGggPSBzaXplb2Yoc3RydWN0IHdtaV9jYWxsaW5nX2ludGVyZmFjZV9idWZmZXIp
+Ow0KPiA+ICsJaW5wdXQucG9pbnRlciA9IGJ1ZjsNCj4gPiArDQo+ID4gKwlzdGF0dXMgPSB3bWlk
+ZXZfZXZhbHVhdGVfbWV0aG9kKHdtaV9kZXYsIDAsIDEsICZpbnB1dCwgJm91dHB1dCk7DQo+ID4g
+KwlpZiAoQUNQSV9GQUlMVVJFKHN0YXR1cykpIHsNCj4gPiArCQlwcl9lcnIoIiV4LyV4IFsleCwl
+eCwleCwleF0gY2FsbCBmYWlsZWRcbiIsDQo+ID4gKwkJCWJ1Zi0+c21pLmNsYXNzLCBidWYtPnNt
+aS5zZWxlY3QsDQo+ID4gKwkJCWJ1Zi0+c21pLmlucHV0WzBdLCBidWYtPnNtaS5pbnB1dFsxXSwN
+Cj4gPiArCQkJYnVmLT5zbWkuaW5wdXRbMl0sIGJ1Zi0+c21pLmlucHV0WzNdKTsNCj4gPiArCQkJ
+cmV0dXJuIC1FSU87DQo+ID4gKwl9DQo+ID4gKwlvYmogPSAodW5pb24gYWNwaV9vYmplY3QgKilv
+dXRwdXQucG9pbnRlcjsNCj4gPiArCWlmIChvYmotPnR5cGUgIT0gQUNQSV9UWVBFX0JVRkZFUikg
+ew0KPiA+ICsJCXByX2VycigiaW52YWxpZCB0eXBlIDogJWRcbiIsIG9iai0+dHlwZSk7DQo+ID4g
+KwkJcmV0dXJuIC1FSU87DQo+ID4gKwl9DQo+ID4gKwltZW1jcHkoYnVmLCBvYmotPmJ1ZmZlci5w
+b2ludGVyLCBpbnB1dC5sZW5ndGgpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+
+ID4gKw0KPiA+ICsjaWZkZWYgQ09ORklHX0RDREJBUw0KPiA+ICtzdGF0aWMgdm9pZCBydW5fc21p
+X3NtYmlvc19jYWxsKHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIgKmJ1ZikNCj4gPiAg
+ew0KPiA+ICAJc3RydWN0IHNtaV9jbWQgY29tbWFuZDsNCj4gPg0KPiA+IEBAIC04NSwxMiArMTI1
+LDI4IEBAIHZvaWQgZGVsbF9zbWJpb3Nfc2VuZF9yZXF1ZXN0KGludCBjbGFzcywgaW50IHNlbGVj
+dCkNCj4gPiAgCWNvbW1hbmQuY29tbWFuZF9jb2RlID0gZGFfY29tbWFuZF9jb2RlOw0KPiA+ICAJ
+Y29tbWFuZC5lYnggPSB2aXJ0X3RvX3BoeXMoYnVmZmVyKTsNCj4gPiAgCWNvbW1hbmQuZWN4ID0g
+MHg0MjUzNDkzMTsNCj4gPiAtDQo+ID4gLQlidWZmZXItPmNsYXNzID0gY2xhc3M7DQo+ID4gLQli
+dWZmZXItPnNlbGVjdCA9IHNlbGVjdDsNCj4gPiAtDQo+ID4gIAlkY2RiYXNfc21pX3JlcXVlc3Qo
+JmNvbW1hbmQpOw0KPiA+ICB9DQo+ID4gKyNlbHNlDQo+ID4gK3N0YXRpYyB2b2lkIHJ1bl9zbWlf
+c21iaW9zX2NhbGwoc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlciAqYnVmKSB7fQ0KPiA+
+ICsjZW5kaWYgLyogQ09ORklHX0RDREJBUyAqLw0KPiA+ICsNCj4gPiArdm9pZCBkZWxsX3NtYmlv
+c19zZW5kX3JlcXVlc3QoaW50IGNsYXNzLCBpbnQgc2VsZWN0KQ0KPiA+ICt7DQo+ID4gKwlpZiAo
+d21pX2Rldikgew0KPiA+ICsJCXN0cnVjdCB3bWlfY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyICpi
+dWYgPSBidWZmZXI7DQo+ID4gKw0KPiA+ICsJCWJ1Zi0+c21pLmNsYXNzID0gY2xhc3M7DQo+ID4g
+KwkJYnVmLT5zbWkuc2VsZWN0ID0gc2VsZWN0Ow0KPiA+ICsJCXJ1bl93bWlfc21iaW9zX2NhbGwo
+YnVmKTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1
+ZmZlciAqYnVmID0gYnVmZmVyOw0KPiA+ICsNCj4gPiArCQlidWYtPmNsYXNzID0gY2xhc3M7DQo+
+ID4gKwkJYnVmLT5zZWxlY3QgPSBzZWxlY3Q7DQo+ID4gKwkJcnVuX3NtaV9zbWJpb3NfY2FsbChi
+dWYpOw0KPiA+ICsJfQ0KPiA+ICt9DQo+ID4gIEVYUE9SVF9TWU1CT0xfR1BMKGRlbGxfc21iaW9z
+X3NlbmRfcmVxdWVzdCk7DQo+ID4NCj4gPiAgc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX3Rva2Vu
+ICpkZWxsX3NtYmlvc19maW5kX3Rva2VuKGludCB0b2tlbmlkKQ0KPiA+IEBAIC0xNzAsMTAgKzIy
+Niw0MyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgZmluZF90b2tlbnMoY29uc3Qgc3RydWN0IGRtaV9o
+ZWFkZXINCj4gKmRtLCB2b2lkICpkdW1teSkNCj4gPiAgCX0NCj4gPiAgfQ0KPiA+DQo+ID4gLXN0
+YXRpYyBpbnQgX19pbml0IGRlbGxfc21iaW9zX2luaXQodm9pZCkNCj4gPiArc3RhdGljIGludCBk
+ZWxsX3NtYmlvc193bWlfcHJvYmUoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYpDQo+ID4gK3sNCj4g
+PiArCS8qIG5vIGxvbmdlciBuZWVkIHRoZSBTTUkgcGFnZSAqLw0KPiA+ICsJZnJlZV9wYWdlKCh1
+bnNpZ25lZCBsb25nKWJ1ZmZlcik7DQo+ID4gKw0KPiA+ICsJLyogV01JIGJ1ZmZlciBzaG91bGQg
+YmUgMzJrICovDQo+ID4gKwlidWZmZXIgPSAodm9pZCAqKV9fZ2V0X2ZyZWVfcGFnZXMoR0ZQX0tF
+Uk5FTCwgMyk7DQo+ID4gKwlpZiAoIWJ1ZmZlcikNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4g
+PiArCWJ1ZmZlcmxlbiA9IHNpemVvZihzdHJ1Y3Qgd21pX2NhbGxpbmdfaW50ZXJmYWNlX2J1ZmZl
+cik7DQo+ID4gKwl3bWlfZGV2ID0gd2RldjsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgaW50IGRlbGxfc21iaW9zX3dtaV9yZW1vdmUoc3RydWN0IHdtaV9kZXZp
+Y2UgKndkZXYpDQo+ID4gIHsNCj4gPiAtCWludCByZXQ7DQo+ID4gKwl3bWlfZGV2ID0gTlVMTDsN
+Cj4gPiArCWZyZWVfcGFnZXMoKHVuc2lnbmVkIGxvbmcpYnVmZmVyLCAzKTsNCj4gPiArCXJldHVy
+biAwOw0KPiA+ICt9DQo+IA0KPiBUaGlzIGNvZGUgZG9lcyBub3Qgc2VlbSB0byBiZSBzYWZlLiBk
+ZWxsX3NtYmlvc193bWlfcHJvYmUgYW5kDQo+IGRlbGxfc21iaW9zX3dtaV9yZW1vdmUgYXJlIGNh
+bGxlZCBhdCBhbnkgdGltZSB3aGVuIGtlcm5lbCByZWdpc3RlciBuZXcNCj4gZGV2aWNlIHdoaWNo
+IG1hdGNoZXMgc29tZSBwcm9wZXJ0aWVzIE9SIHdoZW4gdXNlciBtYW51YWxseSBiaW5kIHRoaXMN
+Cj4gZHJpdmVyIHRvIHRoYXQgZGV2aWNlLg0KPiANCkknbGwgYWRqdXN0IGZvciB0aGUgYXNzdW1w
+dGlvbnMgSSBtYWRlIGFib3V0IGl0IG9ubHkgaGFwcGVuaW5nIGF0IG1vZHVsZSBpbml0Lg0KDQo+
+IGJ1ZmZlciBhbmQgd21pX2RldiBpcyBzaGFyZWQgYXMgYSBnbG9iYWwgdmFyaWFibGUgd2hpY2gg
+bWVhbnMgdGhhdCB3aGVuDQo+IHRoZXJlIGFyZSB0d28gZGV2aWNlcyB3aGljaCB3YW50IHRvIGJp
+bmQgdG8gdGhpcyBkcml2ZXIsIGtlcm5lbCB3b3VsZA0KPiBnZXQgZG91YmxlIGZyZWUgYXQgcmVt
+b3ZpbmcgdGltZS4NCg0KQnV0IHRoZXJlIGlzIG9ubHkgb25lIEdVSUQgaW4gaWRfdGFibGUuICBI
+b3cgY2FuIHR3byBkZXZpY2VzIGJpbmQgdG8gdGhpcz8NClRoaXMgc2hvdWxkIGJlIGFuIGltcG9z
+c2libGUgc2NlbmFyaW8uDQoNCj4gDQo+IERldmljZXMgZnJvbSB0aGUgYnVzIHN1YnN5c3RlbSBz
+aG91bGQgbm90IHVzZSBnbG9iYWwgc2hhcmVkIHZhcmlhYmxlcywNCj4gYnV0IHJhdGhlciBhbGxv
+Y2F0ZSBvd24gbWVtb3J5Li4uDQoNClBhcnQgb2YgdGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIG1v
+ZHVsZSBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMgbm93Lg0KSSB0aGluayB0aGVyZSB3aWxsIGhh
+dmUgdG8gYmUgZ2xvYmFsIHNoYXJlZCB2YXJpYWJsZXMgd2hlbiBvcGVyYXRpbmcgaW4gU01JDQpt
+b2RlLiAgT3IgbWF5YmUgcHV0IHRob3NlIGJpdHMgaW50byBhIHBsYXRmb3JtX2RldmljZSBmb3Ig
+U01JIG1vZGUgdXNhZ2U/DQoNClRoZSBwcm9ibGVtIEkgdGhpbmsgdGhlbiBiZWNvbWVzIGhvdyBk
+byB5b3UgaGFuZGxlIGRlbGxfc21iaW9zX3NlbmRfcmVxdWVzdD8NCldpdGhvdXQgZ2xvYmFsIHNo
+YXJlZCBtZW1vcnkgZm9yIHRoZSBtb2R1bGUgdGhlIGRlbGwtbGFwdG9wIGFuZCBkZWxsLXdtaQ0K
+bW9kdWxlcyB3b24ndCBiZSBhYmxlIHRvIHVzZSB0aGlzLg0KDQo+IA0KPiBBbHNvIG5vdGUgdGhh
+dCB1c2VyIGNhbiBhdCBhbnkgdGltZSB1bmJvdW5kIGRldmljZSBmcm9tIGRyaXZlciBhbmQgYWxz
+bw0KPiBjYW4gYmluZCBpdCBhZ2Fpbi4NCkknbGwgbWFrZSBzb21lIGFkanVzdG1lbnRzIHRvIGFj
+Y291bnQgZm9yIHRoaXMuDQoNCj4gDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgd21pX2Rldmlj
+ZV9pZCBkZWxsX3NtYmlvc193bWlfaWRfdGFibGVbXSA9IHsNCj4gPiArCXsgLmd1aWRfc3RyaW5n
+ID0gREVMTF9XTUlfU01CSU9TX0dVSUQgfSwNCj4gPiArCXsgfSwNCj4gPiArfTsNCj4gPiArDQo+
+ID4gK3N0YXRpYyBzdHJ1Y3Qgd21pX2RyaXZlciBkZWxsX3dtaV9zbWJpb3NfZHJpdmVyID0gew0K
+PiA+ICsJLmRyaXZlciA9IHsNCj4gPiArCQkubmFtZSA9ICJkZWxsLXNtYmlvcyIsDQo+ID4gKwl9
+LA0KPiA+ICsJLnByb2JlID0gZGVsbF9zbWJpb3Nfd21pX3Byb2JlLA0KPiA+ICsJLnJlbW92ZSA9
+IGRlbGxfc21iaW9zX3dtaV9yZW1vdmUsDQo+ID4gKwkuaWRfdGFibGUgPSBkZWxsX3NtYmlvc193
+bWlfaWRfdGFibGUsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9faW5pdCBkZWxs
+X3NtYmlvc19pbml0KHZvaWQpDQo+ID4gK3sNCj4gPiAgCWRtaV93YWxrKGZpbmRfdG9rZW5zLCBO
+VUxMKTsNCj4gPg0KPiA+ICAJaWYgKCFkYV90b2tlbnMpICB7DQo+ID4gQEAgLTE4MSwzNCArMjcw
+LDM5IEBAIHN0YXRpYyBpbnQgX19pbml0IGRlbGxfc21iaW9zX2luaXQodm9pZCkNCj4gPiAgCQly
+ZXR1cm4gLUVOT0RFVjsNCj4gPiAgCX0NCj4gPg0KPiA+ICsjaWZkZWYgQ09ORklHX0RDREJBUw0K
+PiA+ICAJLyoNCj4gPiAgCSAqIEFsbG9jYXRlIGJ1ZmZlciBiZWxvdyA0R0IgZm9yIFNNSSBkYXRh
+LS1vbmx5IDMyLWJpdCBwaHlzaWNhbCBhZGRyDQo+ID4gIAkgKiBpcyBwYXNzZWQgdG8gU01JIGhh
+bmRsZXIuDQo+ID4gIAkgKi8NCj4gPiAgCWJ1ZmZlciA9ICh2b2lkICopX19nZXRfZnJlZV9wYWdl
+KEdGUF9LRVJORUwgfCBHRlBfRE1BMzIpOw0KPiA+ICsJYnVmZmVybGVuID0gc2l6ZW9mKHN0cnVj
+dCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIpOw0KPiA+ICsjZWxzZQ0KPiA+ICsJYnVmZmVyID0g
+TlVMTDsNCj4gPiArI2VuZGlmIC8qIENPTkZJR19EQ0RCQVMgKi8NCj4gPiArCXdtaV9kcml2ZXJf
+cmVnaXN0ZXIoJmRlbGxfd21pX3NtYmlvc19kcml2ZXIpOw0KPiA+ICsNCj4gPiAgCWlmICghYnVm
+ZmVyKSB7DQo+ID4gLQkJcmV0ID0gLUVOT01FTTsNCj4gPiAtCQlnb3RvIGZhaWxfYnVmZmVyOw0K
+PiA+ICsJCWtmcmVlKGRhX3Rva2Vucyk7DQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gIAl9
+DQo+ID4gLQ0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gLQ0KPiA+IC1mYWlsX2J1ZmZlcjoNCj4gPiAt
+CWtmcmVlKGRhX3Rva2Vucyk7DQo+ID4gLQlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4NCj4gPiAg
+c3RhdGljIHZvaWQgX19leGl0IGRlbGxfc21iaW9zX2V4aXQodm9pZCkNCj4gPiAgew0KPiA+ICAJ
+a2ZyZWUoZGFfdG9rZW5zKTsNCj4gPiAgCWZyZWVfcGFnZSgodW5zaWduZWQgbG9uZylidWZmZXIp
+Ow0KPiA+ICsJd21pX2RyaXZlcl91bnJlZ2lzdGVyKCZkZWxsX3dtaV9zbWJpb3NfZHJpdmVyKTsN
+Cj4gPiAgfQ0KPiA+DQo+ID4gIHN1YnN5c19pbml0Y2FsbChkZWxsX3NtYmlvc19pbml0KTsNCj4g
+PiAgbW9kdWxlX2V4aXQoZGVsbF9zbWJpb3NfZXhpdCk7DQo+ID4NCj4gPiArDQo+ID4gIE1PRFVM
+RV9BVVRIT1IoIk1hdHRoZXcgR2FycmV0dCA8bWpnQHJlZGhhdC5jb20+Iik7DQo+ID4gIE1PRFVM
+RV9BVVRIT1IoIkdhYnJpZWxlIE1henpvdHRhIDxnYWJyaWVsZS5tenRAZ21haWwuY29tPiIpOw0K
+PiA+ICBNT0RVTEVfQVVUSE9SKCJQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+Iik7
+DQo+ID4gK01PRFVMRV9BVVRIT1IoIk1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxs
+b0BkZWxsLmNvbT4iKTsNCj4gPiAgTU9EVUxFX0RFU0NSSVBUSU9OKCJDb21tb24gZnVuY3Rpb25z
+IGZvciBrZXJuZWwgbW9kdWxlcyB1c2luZyBEZWxsDQo+IFNNQklPUyIpOw0KPiA+ICBNT0RVTEVf
+TElDRU5TRSgiR1BMIik7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
+bGwtc21iaW9zLmggYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiBzbWJpb3MuaA0KPiA+
+IGluZGV4IDQ1Y2JjMjI5MmNkMy4uMmY2ZmNlODFlZTY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmgNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9kZWxsLXNtYmlvcy5oDQo+ID4gQEAgLTQsNiArNCw3IEBADQo+ID4gICAqICBDb3B5cmln
+aHQgKGMpIFJlZCBIYXQgPG1qZ0ByZWRoYXQuY29tPg0KPiA+ICAgKiAgQ29weXJpZ2h0IChjKSAy
+MDE0IEdhYnJpZWxlIE1henpvdHRhIDxnYWJyaWVsZS5tenRAZ21haWwuY29tPg0KPiA+ICAgKiAg
+Q29weXJpZ2h0IChjKSAyMDE0IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4g
+PiArICogIENvcHlyaWdodCAoYykgMjAxNyBEZWxsIEluYy4NCj4gPiAgICoNCj4gPiAgICogIEJh
+c2VkIG9uIGRvY3VtZW50YXRpb24gaW4gdGhlIGxpYnNtYmlvcyBwYWNrYWdlOg0KPiA+ICAgKiAg
+Q29weXJpZ2h0IChDKSAyMDA1LTIwMTQgRGVsbCBJbmMuDQo+ID4gQEAgLTE4LDkgKzE5LDEwIEBA
+DQo+ID4NCj4gPiAgc3RydWN0IG5vdGlmaWVyX2Jsb2NrOw0KPiA+DQo+ID4gLS8qIFRoaXMgc3Ry
+dWN0dXJlIHdpbGwgYmUgbW9kaWZpZWQgYnkgdGhlIGZpcm13YXJlIHdoZW4gd2UgZW50ZXINCj4g
+PiAtICogc3lzdGVtIG1hbmFnZW1lbnQgbW9kZSwgaGVuY2UgdGhlIHZvbGF0aWxlcyAqLw0KPiA+
+IC0NCj4gPiArLyogSWYgY2FsbGVkIHRocm91Z2ggZmFsbGJhY2sgU01JIHJhdGhlciB0aGFuIFdN
+SSB0aGlzIHN0cnVjdHVyZSB3aWxsIGJlDQo+ID4gKyAqIG1vZGlmaWVkIGJ5IHRoZSBmaXJtd2Fy
+ZSB3aGVuIHdlIGVudGVyIHN5c3RlbSBtYW5hZ2VtZW50IG1vZGUsIGhlbmNlDQo+IHRoZQ0KPiA+
+ICsgKiB2b2xhdGlsZXMNCj4gPiArICovDQo+ID4gIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9i
+dWZmZXIgew0KPiA+ICAJdTE2IGNsYXNzOw0KPiA+ICAJdTE2IHNlbGVjdDsNCj4gPiBAQCAtMjgs
+NiArMzAsMTMgQEAgc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlciB7DQo+ID4gIAl2b2xh
+dGlsZSB1MzIgb3V0cHV0WzRdOw0KPiA+ICB9IF9fcGFja2VkOw0KPiA+DQo+ID4gK3N0cnVjdCB3
+bWlfY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyIHsNCj4gPiArCXN0cnVjdCBjYWxsaW5nX2ludGVy
+ZmFjZV9idWZmZXIgc21pOw0KPiA+ICsJdTMyIGFyZ2F0dHJpYjsNCj4gPiArCXUzMiBibGVuZ3Ro
+Ow0KPiA+ICsJdTggZGF0YVszMjcyNF07DQo+ID4gK30gX19wYWNrZWQ7DQo+ID4gKw0KPiA+ICBz
+dHJ1Y3QgY2FsbGluZ19pbnRlcmZhY2VfdG9rZW4gew0KPiA+ICAJdTE2IHRva2VuSUQ7DQo+ID4g
+IAl1MTYgbG9jYXRpb247DQo+ID4NCj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9o
+YXJAZ21haWwuY29tDQo=
