@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v3 1/8] platform/x86: wmi: Add new method wmidev_evaluate_method
-Date: Wed, 27 Sep 2017 23:02:13 -0500
-Message-ID: <e051629cad73aedb168b9efb935637c59d33ae90.1506571188.git.mario.limonciello@dell.com>
+Subject: [PATCH v3 8/8] platform/x86: dell-wmi-smbios: clean up wmi descriptor check
+Date: Wed, 27 Sep 2017 23:02:20 -0500
+Message-ID: <84b6170a1d3a692b53a40f795dd4f9a3052b8fe3.1506571188.git.mario.limonciello@dell.com>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1506571187.git.mario.limonciello@dell.com>
@@ -12,89 +12,40 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Drivers properly using the wmibus can pass their wmi_device
-pointer rather than the GUID back to the WMI bus to evaluate
-the proper methods.
-
-Any "new" drivers added that use the WMI bus should use this
-rather than the old wmi_evaluate_method that would take the
-GUID.
+Some cases the wrong type was used for errors and checks can be
+done more cleanly.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- drivers/platform/x86/wmi.c | 28 ++++++++++++++++++++++++----
- include/linux/wmi.h        |  6 ++++++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/platform/x86/dell-smbios.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 7a05843aff19..4d73a87c2ddf 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -200,6 +200,28 @@ static acpi_status wmi_method_enable(struct wmi_block *wblock, int enable)
-  */
- acpi_status wmi_evaluate_method(const char *guid_string, u8 instance,
- u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
-+{
-+	struct wmi_block *wblock = NULL;
-+
-+	if (!find_guid(guid_string, &wblock))
-+		return AE_ERROR;
-+	return wmidev_evaluate_method(&wblock->dev, instance, method_id,
-+				      in, out);
-+}
-+EXPORT_SYMBOL_GPL(wmi_evaluate_method);
-+
-+/**
-+ * wmidev_evaluate_method - Evaluate a WMI method
-+ * @wdev: A wmi bus device from a driver
-+ * @instance: Instance index
-+ * @method_id: Method ID to call
-+ * &in: Buffer containing input for the method call
-+ * &out: Empty buffer to return the method results
-+ *
-+ * Call an ACPI-WMI method
-+ */
-+acpi_status wmidev_evaluate_method(struct wmi_device *wdev, u8 instance,
-+	u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
- {
- 	struct guid_block *block = NULL;
- 	struct wmi_block *wblock = NULL;
-@@ -209,9 +231,7 @@ u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
- 	union acpi_object params[3];
- 	char method[5] = "WM";
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index ac176953e46e..d75b6971588e 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -346,16 +346,16 @@ int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev, u32 *version)
+ 	}
+ 	desc_buffer = (u32 *)obj->buffer.pointer;
  
--	if (!find_guid(guid_string, &wblock))
--		return AE_ERROR;
--
-+	wblock = container_of(wdev, struct wmi_block, dev);
- 	block = &wblock->gblock;
- 	handle = wblock->acpi_device->handle;
+-	if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, desc_buffer);
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			desc_buffer);
  
-@@ -246,7 +266,7 @@ u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
+ 	if (desc_buffer[2] != 0 && desc_buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+ 			desc_buffer[2]);
  
- 	return status;
- }
--EXPORT_SYMBOL_GPL(wmi_evaluate_method);
-+EXPORT_SYMBOL_GPL(wmidev_evaluate_method);
+ 	if (desc_buffer[3] != 4096)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
+ 			desc_buffer[3]);
  
- static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
- 				 struct acpi_buffer *out)
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index cd0d7734dc49..2cd10c3b89e9 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -26,6 +26,12 @@ struct wmi_device {
- 	bool setable;
- };
- 
-+/* evaluate the ACPI method associated with this device */
-+extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
-+					  u8 instance, u32 method_id,
-+					  const struct acpi_buffer *in,
-+					  struct acpi_buffer *out);
-+
- /* Caller must kfree the result. */
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
+ 	*version = desc_buffer[2];
 -- 
 2.14.1
