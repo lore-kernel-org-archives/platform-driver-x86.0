@@ -1,405 +1,929 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 2/8] platform/x86: dell-smbios: Introduce a WMI-ACPI interface
-Date: Thu, 28 Sep 2017 08:53:50 +0200
-Message-ID: <201709280853.51019@pali>
-References: <cover.1506571187.git.mario.limonciello@dell.com> <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC v3 7/7] platform/x86: intel_scu_ipc: Use generic Intel IPC
+ device calls
+Date: Thu, 28 Sep 2017 14:55:19 +0200
+Message-ID: <20170928125519.ol5suebaoqsiixm5@piout.net>
+References: <cover.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <90f4d15c9ca0430f6ac4cfafe0eaf6ece6c8761c.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1760665.q7sSV6L6B2";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:50773 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750794AbdI1Gxy (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Sep 2017 02:53:54 -0400
-In-Reply-To: <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <90f4d15c9ca0430f6ac4cfafe0eaf6ece6c8761c.1504588701.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart1760665.q7sSV6L6B2
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On 04/09/2017 at 22:37:27 -0700, sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
+> Removed redundant IPC helper functions and refactored the driver to use
+> generic IPC device driver APIs.
+> 
+> This patch also cleans-up SCU IPC user drivers to use APIs provided
+> by generic IPC driver.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-On Thursday 28 September 2017 06:02:14 Mario Limonciello wrote:
-> The driver currently uses an SMI interface which grants direct access
-> to physical memory to the firmware SMM methods via a pointer.
->=20
-> Now add a WMI-ACPI interface that is detected by WMI probe and preferred
-> over the SMI interface.
->=20
-> Changing this to operate over WMI-ACPI will use an ACPI OperationRegion
-> for a buffer of data storage when SMM calls are performed.
->=20
-> This is a safer approach to use in kernel drivers as the SMM will
-> only have access to that OperationRegion.
->=20
-> As a result, this change removes the dependency on this driver on the
-> dcdbas kernel module.  It's now an optional compilation option.
->=20
-> When modifying this, add myself to MAINTAINERS.
->=20
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+For the RTC part:
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+
 > ---
->  MAINTAINERS                        |   6 ++
->  drivers/platform/x86/Kconfig       |  14 ++--
->  drivers/platform/x86/dell-smbios.c | 128 +++++++++++++++++++++++++++++++=
-+-----
->  drivers/platform/x86/dell-smbios.h |  15 ++++-
->  4 files changed, 138 insertions(+), 25 deletions(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 08b96f77f618..6d76b09f46cc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3990,6 +3990,12 @@ S:	Maintained
->  F:	drivers/hwmon/dell-smm-hwmon.c
->  F:	include/uapi/linux/i8k.h
-> =20
-> +DELL SMBIOS DRIVER
-> +M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> +M:	Mario Limonciello <mario.limonciello@dell.com>
-> +S:	Maintained
-> +F:	drivers/platform/x86/dell-smbios.*
+>  arch/x86/include/asm/intel_scu_ipc.h    |  23 +-
+>  arch/x86/platform/intel-mid/intel-mid.c |  12 +-
+>  drivers/platform/x86/Kconfig            |   1 +
+>  drivers/platform/x86/intel_scu_ipc.c    | 483 +++++++++++++-------------------
+>  drivers/rtc/rtc-mrst.c                  |  15 +-
+>  drivers/watchdog/intel-mid_wdt.c        |  12 +-
+>  drivers/watchdog/intel_scu_watchdog.c   |  17 +-
+>  7 files changed, 251 insertions(+), 312 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+> index 81d3d87..5842534 100644
+> --- a/arch/x86/include/asm/intel_scu_ipc.h
+> +++ b/arch/x86/include/asm/intel_scu_ipc.h
+> @@ -14,9 +14,19 @@
+>  #define IPCMSG_COLD_BOOT	0xF3
+>  
+>  #define IPCMSG_VRTC		0xFA	 /* Set vRTC device */
+> -	/* Command id associated with message IPCMSG_VRTC */
+> -	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
+> -	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
 > +
->  DELL SYSTEMS MANAGEMENT BASE DRIVER (dcdbas)
->  M:	Doug Warzecha <Douglas_Warzecha@dell.com>
->  S:	Maintained
+> +/* Command id associated with message IPCMSG_VRTC */
+> +#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
+> +#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
+> +
+> +#define INTEL_SCU_IPC_DEV	"intel_scu_ipc"
+> +#define SCU_PARAM_LEN		2
+> +
+> +static inline void scu_cmd_init(u32 *cmd, u32 param1, u32 param2)
+> +{
+> +	cmd[0] = param1;
+> +	cmd[1] = param2;
+> +}
+>  
+>  /* Read single register */
+>  int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+> @@ -45,13 +55,6 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
+>  /* Update single register based on the mask */
+>  int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
+>  
+> -/* Issue commands to the SCU with or without data */
+> -int intel_scu_ipc_simple_command(int cmd, int sub);
+> -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+> -			  u32 *out, int outlen);
+> -int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
+> -			      u32 *out, int outlen, u32 dptr, u32 sptr);
+> -
+>  /* I2C control api */
+>  int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data);
+>  
+> diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
+> index 12a2725..27541e9 100644
+> --- a/arch/x86/platform/intel-mid/intel-mid.c
+> +++ b/arch/x86/platform/intel-mid/intel-mid.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/export.h>
+>  #include <linux/notifier.h>
+> +#include <linux/platform_data/x86/intel_ipc_dev.h>
+>  
+>  #include <asm/setup.h>
+>  #include <asm/mpspec_def.h>
+> @@ -68,18 +69,23 @@ static void *(*get_intel_mid_ops[])(void) = INTEL_MID_OPS_INIT;
+>  enum intel_mid_cpu_type __intel_mid_cpu_chip;
+>  EXPORT_SYMBOL_GPL(__intel_mid_cpu_chip);
+>  
+> +static struct intel_ipc_dev *ipc_dev;
+> +
+>  static void intel_mid_power_off(void)
+>  {
+> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_COLD_OFF, 1};
+>  	/* Shut down South Complex via PWRMU */
+>  	intel_mid_pwr_power_off();
+>  
+>  	/* Only for Tangier, the rest will ignore this command */
+> -	intel_scu_ipc_simple_command(IPCMSG_COLD_OFF, 1);
+> +	ipc_dev_simple_cmd(ipc_dev, cmds, SCU_PARAM_LEN);
+>  };
+>  
+>  static void intel_mid_reboot(void)
+>  {
+> -	intel_scu_ipc_simple_command(IPCMSG_COLD_BOOT, 0);
+> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_COLD_BOOT, 0};
+> +
+> +	ipc_dev_simple_cmd(ipc_dev, cmds, SCU_PARAM_LEN);
+>  }
+>  
+>  static unsigned long __init intel_mid_calibrate_tsc(void)
+> @@ -206,6 +212,8 @@ void __init x86_intel_mid_early_setup(void)
+>  	x86_init.mpparse.find_smp_config = x86_init_noop;
+>  	x86_init.mpparse.get_smp_config = x86_init_uint_noop;
+>  	set_bit(MP_BUS_ISA, mp_bus_not_pci);
+> +
+> +	ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
+>  }
+>  
+>  /*
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 1f7959ff055c..415886d7a857 100644
+> index 82479ca..e4e5822 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -92,13 +92,17 @@ config ASUS_LAPTOP
->  	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
-> =20
->  config DELL_SMBIOS
-> -	tristate
-> -	select DCDBAS
-> +	tristate "Dell SMBIOS calling interface"
-> +	depends on ACPI_WMI
+> @@ -850,6 +850,7 @@ config INTEL_VBTN
+>  config INTEL_SCU_IPC
+>  	bool "Intel SCU IPC Support"
+>  	depends on X86_INTEL_MID
+> +	select REGMAP_MMIO
+>  	default y
 >  	---help---
-> -	This module provides common functions for kernel modules using
-> -	Dell SMBIOS.
-> +	This module provides common functions for kernel modules and
-> +        userspace using Dell SMBIOS.
+>  	  IPC is used to bridge the communications between kernel and SCU on
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index f7cf981..78013e4 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/pci.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/sfi.h>
+> +#include <linux/regmap.h>
+> +#include <linux/platform_data/x86/intel_ipc_dev.h>
+>  #include <asm/intel-mid.h>
+>  #include <asm/intel_scu_ipc.h>
+>  
+> @@ -39,6 +41,25 @@
+>  #define IPC_CMD_PCNTRL_R      1 /* Register read */
+>  #define IPC_CMD_PCNTRL_M      2 /* Register read-modify-write */
+>  
+> +/* IPC dev register offsets */
+> +/*
+> + * IPC Read Buffer (Read Only):
+> + * 16 byte buffer for receiving data from SCU, if IPC command
+> + * processing results in response data
+> + */
+> +#define IPC_DEV_SCU_RBUF_OFFSET			0x90
+> +#define IPC_DEV_SCU_WRBUF_OFFSET		0x80
+> +#define IPC_DEV_SCU_SPTR_OFFSET			0x08
+> +#define IPC_DEV_SCU_DPTR_OFFSET			0x0C
+> +#define IPC_DEV_SCU_STATUS_OFFSET		0x04
 > +
-> +	If you have a Dell computer, say Y or M here.
-> =20
-> -	If you have a Dell laptop, say Y or M here.
-> +	If you have a machine from < 2007 without a WMI interface you
-> +	may also want to enable CONFIG_DCDBAS to allow this driver to
-> +	work.
-> =20
->  config DELL_LAPTOP
->  	tristate "Dell Laptop Extras"
-> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/de=
-ll-smbios.c
-> index e9b1ca07c872..4472817ee045 100644
-> --- a/drivers/platform/x86/dell-smbios.c
-> +++ b/drivers/platform/x86/dell-smbios.c
-> @@ -4,6 +4,7 @@
->   *  Copyright (c) Red Hat <mjg@redhat.com>
->   *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
->   *  Copyright (c) 2014 Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> + *  Copyright (c) 2017 Dell Inc.
+> +/* IPC dev commands */
+> +/* IPC command register IOC bit */
+> +#define	IPC_DEV_SCU_CMD_MSI			BIT(8)
+> +#define	IPC_DEV_SCU_CMD_STATUS_ERR		BIT(1)
+> +#define	IPC_DEV_SCU_CMD_STATUS_ERR_MASK		GENMASK(7, 0)
+> +#define	IPC_DEV_SCU_CMD_STATUS_BUSY		BIT(0)
+> +
+>  /*
+>   * IPC register summary
 >   *
->   *  Based on documentation in the libsmbios package:
->   *  Copyright (C) 2005-2014 Dell Inc.
-> @@ -22,9 +23,15 @@
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
->  #include <linux/io.h>
-> -#include "../../firmware/dcdbas.h"
-> +#include <linux/wmi.h>
->  #include "dell-smbios.h"
-> =20
-> +#ifdef CONFIG_DCDBAS
-> +#include "../../firmware/dcdbas.h"
-> +#endif
+> @@ -59,6 +80,11 @@
+>  #define IPC_WWBUF_SIZE    20		/* IPC Write buffer Size */
+>  #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+>  #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+> +#define	IPC_CMD_SIZE            16
+> +#define	IPC_CMD_SUBCMD          12
+> +#define	IPC_RWBUF_SIZE_DWORD    5
+> +#define	IPC_WWBUF_SIZE_DWORD    5
 > +
-> +#define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
+>  
+>  #define PCI_DEVICE_ID_LINCROFT		0x082a
+>  #define PCI_DEVICE_ID_PENWELL		0x080e
+> @@ -93,140 +119,49 @@ static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+>  
+>  struct intel_scu_ipc_dev {
+>  	struct device *dev;
+> +	struct intel_ipc_dev *ipc_dev;
+>  	void __iomem *ipc_base;
+>  	void __iomem *i2c_base;
+> -	struct completion cmd_complete;
+> +	struct regmap *ipc_regs;
+> +	struct regmap *i2c_regs;
+>  	u8 irq_mode;
+>  };
+>  
+> -static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+> +static struct regmap_config ipc_regmap_config = {
+> +        .reg_bits = 32,
+> +        .reg_stride = 4,
+> +        .val_bits = 32,
+> +};
+>  
+> -/*
+> - * IPC Read Buffer (Read Only):
+> - * 16 byte buffer for receiving data from SCU, if IPC command
+> - * processing results in response data
+> - */
+> -#define IPC_READ_BUFFER		0x90
+> +static struct regmap_config i2c_regmap_config = {
+> +        .reg_bits = 32,
+> +        .reg_stride = 4,
+> +        .val_bits = 32,
+> +	.fast_io = true,
+> +};
 > +
->  struct calling_interface_structure {
->  	struct dmi_header header;
->  	u16 cmdIOAddress;
-> @@ -33,12 +40,14 @@ struct calling_interface_structure {
->  	struct calling_interface_token tokens[];
->  } __packed;
-> =20
-> -static struct calling_interface_buffer *buffer;
-> +static void *buffer;
-> +static size_t bufferlen;
->  static DEFINE_MUTEX(buffer_mutex);
-> =20
->  static int da_command_address;
->  static int da_command_code;
->  static int da_num_tokens;
-> +struct wmi_device *wmi_dev;
->  static struct calling_interface_token *da_tokens;
-> =20
->  int dell_smbios_error(int value)
-> @@ -60,13 +69,15 @@ struct calling_interface_buffer *dell_smbios_get_buff=
-er(void)
->  {
->  	mutex_lock(&buffer_mutex);
->  	dell_smbios_clear_buffer();
-> +	if (wmi_dev)
-> +		return &((struct wmi_calling_interface_buffer *) buffer)->smi;
->  	return buffer;
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_get_buffer);
-> =20
->  void dell_smbios_clear_buffer(void)
->  {
-> -	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> +	memset(buffer, 0, bufferlen);
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_clear_buffer);
-> =20
-> @@ -76,7 +87,36 @@ void dell_smbios_release_buffer(void)
->  }
->  EXPORT_SYMBOL_GPL(dell_smbios_release_buffer);
-> =20
-> -void dell_smbios_send_request(int class, int select)
-> +static int run_wmi_smbios_call(struct wmi_calling_interface_buffer *buf)
-> +{
-> +	struct acpi_buffer output =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> +	struct acpi_buffer input;
-> +	union acpi_object *obj;
-> +	acpi_status status;
-> +
-> +	input.length =3D sizeof(struct wmi_calling_interface_buffer);
-> +	input.pointer =3D buf;
-> +
-> +	status =3D wmidev_evaluate_method(wmi_dev, 0, 1, &input, &output);
-> +	if (ACPI_FAILURE(status)) {
-> +		pr_err("%x/%x [%x,%x,%x,%x] call failed\n",
-> +			buf->smi.class, buf->smi.select,
-> +			buf->smi.input[0], buf->smi.input[1],
-> +			buf->smi.input[2], buf->smi.input[3]);
-> +			return -EIO;
-> +	}
-> +	obj =3D (union acpi_object *)output.pointer;
-> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> +		pr_err("invalid type : %d\n", obj->type);
-> +		return -EIO;
-> +	}
-> +	memcpy(buf, obj->buffer.pointer, input.length);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_DCDBAS
-> +static void run_smi_smbios_call(struct calling_interface_buffer *buf)
->  {
->  	struct smi_cmd command;
-> =20
-> @@ -85,12 +125,28 @@ void dell_smbios_send_request(int class, int select)
->  	command.command_code =3D da_command_code;
->  	command.ebx =3D virt_to_phys(buffer);
->  	command.ecx =3D 0x42534931;
+> +static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+>  
+>  #define IPC_I2C_CNTRL_ADDR	0
+>  #define I2C_DATA_ADDR		0x04
+>  
+> -static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
 > -
-> -	buffer->class =3D class;
-> -	buffer->select =3D select;
+> -/*
+> - * Send ipc command
+> - * Command Register (Write Only):
+> - * A write to this register results in an interrupt to the SCU core processor
+> - * Format:
+> - * |rfu2(8) | size(8) | command id(4) | rfu1(3) | ioc(1) | command(8)|
+> - */
+> -static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+> -{
+> -	if (scu->irq_mode) {
+> -		reinit_completion(&scu->cmd_complete);
+> -		writel(cmd | IPC_IOC, scu->ipc_base);
+> -	}
+> -	writel(cmd, scu->ipc_base);
+> -}
 > -
->  	dcdbas_smi_request(&command);
->  }
-> +#else
-> +static void run_smi_smbios_call(struct calling_interface_buffer *buf) {}
-> +#endif /* CONFIG_DCDBAS */
-> +
-> +void dell_smbios_send_request(int class, int select)
-> +{
-> +	if (wmi_dev) {
-> +		struct wmi_calling_interface_buffer *buf =3D buffer;
-> +
-> +		buf->smi.class =3D class;
-> +		buf->smi.select =3D select;
-> +		run_wmi_smbios_call(buf);
-> +	} else {
-> +		struct calling_interface_buffer *buf =3D buffer;
-> +
-> +		buf->class =3D class;
-> +		buf->select =3D select;
-> +		run_smi_smbios_call(buf);
-> +	}
-> +}
->  EXPORT_SYMBOL_GPL(dell_smbios_send_request);
-> =20
->  struct calling_interface_token *dell_smbios_find_token(int tokenid)
-> @@ -170,10 +226,43 @@ static void __init find_tokens(const struct dmi_hea=
-der *dm, void *dummy)
+> -/*
+> - * Write ipc data
+> - * IPC Write Buffer (Write Only):
+> - * 16-byte buffer for sending data associated with IPC command to
+> - * SCU. Size of the data is specified in the IPC_COMMAND_REG register
+> - */
+> -static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
+> -{
+> -	writel(data, scu->ipc_base + 0x80 + offset);
+> -}
+> -
+> -/*
+> - * Status Register (Read Only):
+> - * Driver will read this register to get the ready/busy status of the IPC
+> - * block and error status of the IPC command that was just processed by SCU
+> - * Format:
+> - * |rfu3(8)|error code(8)|initiator id(8)|cmd id(4)|rfu1(2)|error(1)|busy(1)|
+> - */
+> -static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
+> -{
+> -	return __raw_readl(scu->ipc_base + 0x04);
+> -}
+> -
+> -/* Read ipc byte data */
+> -static inline u8 ipc_data_readb(struct intel_scu_ipc_dev *scu, u32 offset)
+> -{
+> -	return readb(scu->ipc_base + IPC_READ_BUFFER + offset);
+> -}
+> -
+> -/* Read ipc u32 data */
+> -static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+> -{
+> -	return readl(scu->ipc_base + IPC_READ_BUFFER + offset);
+> -}
+> -
+> -/* Wait till scu status is busy */
+> -static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+> -{
+> -	u32 status = ipc_read_status(scu);
+> -	u32 loop_count = 100000;
+> -
+> -	/* break if scu doesn't reset busy bit after huge retry */
+> -	while ((status & BIT(0)) && --loop_count) {
+> -		udelay(1); /* scu processing time is in few u secods */
+> -		status = ipc_read_status(scu);
+> -	}
+> -
+> -	if (status & BIT(0)) {
+> -		dev_err(scu->dev, "IPC timed out");
+> -		return -ETIMEDOUT;
+> -	}
+> -
+> -	if (status & BIT(1))
+> -		return -EIO;
+> -
+> -	return 0;
+> -}
+> -
+> -/* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
+> -static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+> -{
+> -	int status;
+> -
+> -	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
+> -		dev_err(scu->dev, "IPC timed out\n");
+> -		return -ETIMEDOUT;
+> -	}
+> -
+> -	status = ipc_read_status(scu);
+> -	if (status & BIT(1))
+> -		return -EIO;
+> -
+> -	return 0;
+> -}
+> -
+> -static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
+> -{
+> -	return scu->irq_mode ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
+> -}
+> -
+>  /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
+>  static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+>  {
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  	int nc;
+>  	u32 offset = 0;
+> -	int err;
+> +	int err = -EIO;
+>  	u8 cbuf[IPC_WWBUF_SIZE];
+>  	u32 *wbuf = (u32 *)&cbuf;
+> +	u32 cmd[SCU_PARAM_LEN] = {0};
+> +	/* max rbuf size is 20 bytes */
+> +	u8 rbuf[IPC_RWBUF_SIZE] = {0};
+> +	u32 rbuflen = DIV_ROUND_UP(count, 4);
+>  
+>  	memset(cbuf, 0, sizeof(cbuf));
+>  
+> -	mutex_lock(&ipclock);
+> -
+> -	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> -		return -ENODEV;
+> -	}
+> +	scu_cmd_init(cmd, op, id);
+>  
+>  	for (nc = 0; nc < count; nc++, offset += 2) {
+>  		cbuf[offset] = addr[nc];
+> @@ -234,30 +169,30 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
 >  	}
->  }
-> =20
-> -static int __init dell_smbios_init(void)
-> +static int dell_smbios_wmi_probe(struct wmi_device *wdev)
-> +{
-> +	/* no longer need the SMI page */
-> +	free_page((unsigned long)buffer);
+>  
+>  	if (id == IPC_CMD_PCNTRL_R) {
+> -		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
+> -			ipc_data_writel(scu, wbuf[nc], offset);
+> -		ipc_command(scu, (count * 2) << 16 | id << 12 | 0 << 8 | op);
+> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
+> +				(u8 *)wbuf, count * 2, (u32 *)rbuf,
+> +				IPC_RWBUF_SIZE_DWORD, 0, 0);
+>  	} else if (id == IPC_CMD_PCNTRL_W) {
+>  		for (nc = 0; nc < count; nc++, offset += 1)
+>  			cbuf[offset] = data[nc];
+> -		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
+> -			ipc_data_writel(scu, wbuf[nc], offset);
+> -		ipc_command(scu, (count * 3) << 16 | id << 12 | 0 << 8 | op);
+> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
+> +				(u8 *)wbuf, count * 3, NULL, 0, 0, 0);
 > +
-> +	/* WMI buffer should be 32k */
-> +	buffer =3D (void *)__get_free_pages(GFP_KERNEL, 3);
-> +	if (!buffer)
-> +		return -ENOMEM;
-> +	bufferlen =3D sizeof(struct wmi_calling_interface_buffer);
-> +	wmi_dev =3D wdev;
+>  	} else if (id == IPC_CMD_PCNTRL_M) {
+>  		cbuf[offset] = data[0];
+>  		cbuf[offset + 1] = data[1];
+> -		ipc_data_writel(scu, wbuf[0], 0); /* Write wbuff */
+> -		ipc_command(scu, 4 << 16 | id << 12 | 0 << 8 | op);
+> +		err = ipc_dev_raw_cmd(scu->ipc_dev, cmd, SCU_PARAM_LEN,
+> +				(u8 *)wbuf, 4, NULL, 0, 0, 0);
+>  	}
+>  
+> -	err = intel_scu_ipc_check_status(scu);
+>  	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
+>  		/* Workaround: values are read as 0 without memcpy_fromio */
+>  		memcpy_fromio(cbuf, scu->ipc_base + 0x90, 16);
+> -		for (nc = 0; nc < count; nc++)
+> -			data[nc] = ipc_data_readb(scu, nc);
+> +		regmap_bulk_read(scu->ipc_regs, IPC_DEV_SCU_RBUF_OFFSET,
+> +					rbuf, rbuflen);
+> +		memcpy(data, rbuf, count);
+>  	}
+> -	mutex_unlock(&ipclock);
+> +
+>  	return err;
+>  }
+>  
+> @@ -422,138 +357,6 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
+>  }
+>  EXPORT_SYMBOL(intel_scu_ipc_update_register);
+>  
+> -/**
+> - *	intel_scu_ipc_simple_command	-	send a simple command
+> - *	@cmd: command
+> - *	@sub: sub type
+> - *
+> - *	Issue a simple command to the SCU. Do not use this interface if
+> - *	you must then access data as any data values may be overwritten
+> - *	by another SCU access by the time this function returns.
+> - *
+> - *	This function may sleep. Locking for SCU accesses is handled for
+> - *	the caller.
+> - */
+> -int intel_scu_ipc_simple_command(int cmd, int sub)
+> -{
+> -	struct intel_scu_ipc_dev *scu = &ipcdev;
+> -	int err;
+> -
+> -	mutex_lock(&ipclock);
+> -	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> -		return -ENODEV;
+> -	}
+> -	ipc_command(scu, sub << 12 | cmd);
+> -	err = intel_scu_ipc_check_status(scu);
+> -	mutex_unlock(&ipclock);
+> -	return err;
+> -}
+> -EXPORT_SYMBOL(intel_scu_ipc_simple_command);
+> -
+> -/**
+> - *	intel_scu_ipc_command	-	command with data
+> - *	@cmd: command
+> - *	@sub: sub type
+> - *	@in: input data
+> - *	@inlen: input length in dwords
+> - *	@out: output data
+> - *	@outlein: output length in dwords
+> - *
+> - *	Issue a command to the SCU which involves data transfers. Do the
+> - *	data copies under the lock but leave it for the caller to interpret
+> - */
+> -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+> -			  u32 *out, int outlen)
+> -{
+> -	struct intel_scu_ipc_dev *scu = &ipcdev;
+> -	int i, err;
+> -
+> -	mutex_lock(&ipclock);
+> -	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> -		return -ENODEV;
+> -	}
+> -
+> -	for (i = 0; i < inlen; i++)
+> -		ipc_data_writel(scu, *in++, 4 * i);
+> -
+> -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
+> -	err = intel_scu_ipc_check_status(scu);
+> -
+> -	if (!err) {
+> -		for (i = 0; i < outlen; i++)
+> -			*out++ = ipc_data_readl(scu, 4 * i);
+> -	}
+> -
+> -	mutex_unlock(&ipclock);
+> -	return err;
+> -}
+> -EXPORT_SYMBOL(intel_scu_ipc_command);
+> -
+> -#define IPC_SPTR		0x08
+> -#define IPC_DPTR		0x0C
+> -
+> -/**
+> - * intel_scu_ipc_raw_command() - IPC command with data and pointers
+> - * @cmd:	IPC command code.
+> - * @sub:	IPC command sub type.
+> - * @in:		input data of this IPC command.
+> - * @inlen:	input data length in dwords.
+> - * @out:	output data of this IPC command.
+> - * @outlen:	output data length in dwords.
+> - * @sptr:	data writing to SPTR register.
+> - * @dptr:	data writing to DPTR register.
+> - *
+> - * Send an IPC command to SCU with input/output data and source/dest pointers.
+> - *
+> - * Return:	an IPC error code or 0 on success.
+> - */
+> -int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
+> -			      u32 *out, int outlen, u32 dptr, u32 sptr)
+> -{
+> -	struct intel_scu_ipc_dev *scu = &ipcdev;
+> -	int inbuflen = DIV_ROUND_UP(inlen, 4);
+> -	u32 inbuf[4];
+> -	int i, err;
+> -
+> -	/* Up to 16 bytes */
+> -	if (inbuflen > 4)
+> -		return -EINVAL;
+> -
+> -	mutex_lock(&ipclock);
+> -	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> -		return -ENODEV;
+> -	}
+> -
+> -	writel(dptr, scu->ipc_base + IPC_DPTR);
+> -	writel(sptr, scu->ipc_base + IPC_SPTR);
+> -
+> -	/*
+> -	 * SRAM controller doesn't support 8-bit writes, it only
+> -	 * supports 32-bit writes, so we have to copy input data into
+> -	 * the temporary buffer, and SCU FW will use the inlen to
+> -	 * determine the actual input data length in the temporary
+> -	 * buffer.
+> -	 */
+> -	memcpy(inbuf, in, inlen);
+> -
+> -	for (i = 0; i < inbuflen; i++)
+> -		ipc_data_writel(scu, inbuf[i], 4 * i);
+> -
+> -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
+> -	err = intel_scu_ipc_check_status(scu);
+> -	if (!err) {
+> -		for (i = 0; i < outlen; i++)
+> -			*out++ = ipc_data_readl(scu, 4 * i);
+> -	}
+> -
+> -	mutex_unlock(&ipclock);
+> -	return err;
+> -}
+> -EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
+> -
+>  /* I2C commands */
+>  #define IPC_I2C_WRITE 1 /* I2C Write command */
+>  #define IPC_I2C_READ  2 /* I2C Read command */
+> @@ -575,48 +378,143 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  	u32 cmd = 0;
+>  
+> -	mutex_lock(&ipclock);
+> -	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> -		return -ENODEV;
+> -	}
+>  	cmd = (addr >> 24) & 0xFF;
+>  	if (cmd == IPC_I2C_READ) {
+> -		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
+> +		regmap_write(scu->i2c_regs, IPC_I2C_CNTRL_ADDR, addr);
+>  		/* Write not getting updated without delay */
+>  		mdelay(1);
+> -		*data = readl(scu->i2c_base + I2C_DATA_ADDR);
+> +		regmap_read(scu->i2c_regs, I2C_DATA_ADDR, data);
+>  	} else if (cmd == IPC_I2C_WRITE) {
+> -		writel(*data, scu->i2c_base + I2C_DATA_ADDR);
+> +		regmap_write(scu->i2c_regs, I2C_DATA_ADDR, *data);
+>  		mdelay(1);
+> -		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
+> +		regmap_write(scu->i2c_regs, IPC_I2C_CNTRL_ADDR, addr);
+>  	} else {
+>  		dev_err(scu->dev,
+>  			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
+>  
+> -		mutex_unlock(&ipclock);
+>  		return -EIO;
+>  	}
+> -	mutex_unlock(&ipclock);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
+>  
+> -/*
+> - * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
+> - * When ioc bit is set to 1, caller api must wait for interrupt handler called
+> - * which in turn unlocks the caller api. Currently this is not used
+> - *
+> - * This is edge triggered so we need take no action to clear anything
+> - */
+> -static irqreturn_t ioc(int irq, void *dev_id)
+> +static int pre_simple_cmd_fn(u32 *cmd_list, u32 cmdlen)
+>  {
+> -	struct intel_scu_ipc_dev *scu = dev_id;
+> +	if (!cmd_list || cmdlen != SCU_PARAM_LEN)
+> +		return -EINVAL;
+>  
+> -	if (scu->irq_mode)
+> -		complete(&scu->cmd_complete);
+> +	cmd_list[0] |= (cmd_list[1] << IPC_CMD_SUBCMD);
+>  
+> -	return IRQ_HANDLED;
 > +	return 0;
 > +}
 > +
-> +static int dell_smbios_wmi_remove(struct wmi_device *wdev)
+> +static int pre_cmd_fn(u32 *cmd_list, u32 cmdlen, u32 *in, u32 inlen,
+> +		u32 *out, u32 outlen)
+> +{
+> +	int ret;
+> +
+> +	if (inlen > IPC_WWBUF_SIZE_DWORD || outlen > IPC_RWBUF_SIZE_DWORD)
+> +		return -EINVAL;
+> +
+> +	ret = pre_simple_cmd_fn(cmd_list, cmdlen);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	cmd_list[0] |= (inlen << IPC_CMD_SIZE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pre_raw_cmd_fn(u32 *cmd_list, u32 cmdlen, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+> +{
+> +	int ret;
+> +
+> +	if (inlen > IPC_WWBUF_SIZE || outlen > IPC_RWBUF_SIZE_DWORD)
+> +		return -EINVAL;
+> +
+> +	ret = pre_simple_cmd_fn(cmd_list, cmdlen);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	cmd_list[0] |= (inlen << IPC_CMD_SIZE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int scu_ipc_err_code(int status)
+> +{
+> +	if (status & IPC_DEV_SCU_CMD_STATUS_ERR)
+> +		return (status & IPC_DEV_SCU_CMD_STATUS_ERR_MASK);
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int scu_ipc_busy_check(int status)
+> +{
+> +	return status | IPC_DEV_SCU_CMD_STATUS_BUSY;
+> +}
+> +
+> +static u32 scu_ipc_enable_msi(u32 cmd)
+> +{
+> +	return cmd | IPC_DEV_SCU_CMD_MSI;
+> +}
+> +
+> +static struct intel_ipc_dev *intel_scu_ipc_dev_create(
+> +		struct device *dev,
+> +		void __iomem *base,
+> +		int irq)
+> +{
+> +	struct intel_ipc_dev_ops *ops;
+> +	struct intel_ipc_dev_cfg *cfg;
+> +	struct regmap *ipc_regs;
+> +	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
+> +
+> +	cfg = devm_kzalloc(dev, sizeof(*cfg), GFP_KERNEL);
+> +	if (!cfg)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
+> +	if (!ops)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +        ipc_regs = devm_regmap_init_mmio_clk(dev, NULL, base,
+> +			&ipc_regmap_config);
+> +        if (IS_ERR(ipc_regs)) {
+> +                dev_err(dev, "ipc_regs regmap init failed\n");
+> +                return ERR_CAST(ipc_regs);;
+> +        }
+> +
+> +	scu->ipc_regs = ipc_regs;
+> +
+> +	/* set IPC dev ops */
+> +	ops->to_err_code = scu_ipc_err_code;
+> +	ops->busy_check = scu_ipc_busy_check;
+> +	ops->enable_msi = scu_ipc_enable_msi;
+> +	ops->pre_cmd_fn = pre_cmd_fn;
+> +	ops->pre_raw_cmd_fn = pre_raw_cmd_fn;
+> +	ops->pre_simple_cmd_fn = pre_simple_cmd_fn;
+> +
+> +	/* set cfg options */
+> +	if (scu->irq_mode)
+> +		cfg->mode = IPC_DEV_MODE_IRQ;
+> +	else
+> +		cfg->mode = IPC_DEV_MODE_POLLING;
+> +
+> +	cfg->chan_type = IPC_CHANNEL_IA_SCU;
+> +	cfg->irq = irq;
+> +	cfg->use_msi = true;
+> +	cfg->support_sptr = true;
+> +	cfg->support_dptr = true;
+> +	cfg->cmd_regs = ipc_regs;
+> +	cfg->data_regs = ipc_regs;
+> +	cfg->wrbuf_reg = IPC_DEV_SCU_WRBUF_OFFSET;
+> +	cfg->rbuf_reg = IPC_DEV_SCU_RBUF_OFFSET;
+> +	cfg->sptr_reg = IPC_DEV_SCU_SPTR_OFFSET;
+> +	cfg->dptr_reg = IPC_DEV_SCU_DPTR_OFFSET;
+> +	cfg->status_reg = IPC_DEV_SCU_STATUS_OFFSET;
+> +
+> +	return devm_intel_ipc_dev_create(dev, INTEL_SCU_IPC_DEV, cfg, ops);
+>  }
+>  
+>  /**
+> @@ -650,25 +548,34 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (err)
+>  		return err;
+>  
+> -	init_completion(&scu->cmd_complete);
+> -
+>  	scu->ipc_base = pcim_iomap_table(pdev)[0];
+>  
+> -	scu->i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
+> +	scu->i2c_base = devm_ioremap_nocache(&pdev->dev, pdata->i2c_base,
+> +			pdata->i2c_len);
+>  	if (!scu->i2c_base)
+>  		return -ENOMEM;
+>  
+> -	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_scu_ipc",
+> -			       scu);
+> -	if (err)
+> -		return err;
+> +	pci_set_drvdata(pdev, scu);
+> +
+> +        scu->i2c_regs = devm_regmap_init_mmio_clk(&pdev->dev, NULL,
+> +			scu->i2c_base, &i2c_regmap_config);
+> +        if (IS_ERR(scu->i2c_regs)) {
+> +                dev_err(&pdev->dev, "i2c_regs regmap init failed\n");
+> +                return PTR_ERR(scu->i2c_regs);;
+> +        }
+> +
+> +	scu->ipc_dev = intel_scu_ipc_dev_create(&pdev->dev, scu->ipc_base,
+> +			pdev->irq);
+> +	if (IS_ERR(scu->ipc_dev)) {
+> +		dev_err(&pdev->dev, "Failed to create SCU IPC device\n");
+> +		return PTR_ERR(scu->ipc_dev);
+> +	}
+>  
+>  	/* Assign device at last */
+>  	scu->dev = &pdev->dev;
+>  
+>  	intel_scu_devices_create();
+>  
+> -	pci_set_drvdata(pdev, scu);
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/rtc/rtc-mrst.c b/drivers/rtc/rtc-mrst.c
+> index 7334c44..a2d87e8 100644
+> --- a/drivers/rtc/rtc-mrst.c
+> +++ b/drivers/rtc/rtc-mrst.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/sfi.h>
+> +#include <linux/platform_data/x86/intel_ipc_dev.h>
+>  
+>  #include <asm/intel_scu_ipc.h>
+>  #include <asm/intel-mid.h>
+> @@ -46,6 +47,7 @@ struct mrst_rtc {
+>  	struct device		*dev;
+>  	int			irq;
+>  	struct resource		*iomem;
+> +	struct intel_ipc_dev	*ipc_dev;
+>  
+>  	u8			enabled_wake;
+>  	u8			suspend_ctrl;
+> @@ -110,10 +112,11 @@ static int mrst_read_time(struct device *dev, struct rtc_time *time)
+>  
+>  static int mrst_set_time(struct device *dev, struct rtc_time *time)
 >  {
 > -	int ret;
-> +	wmi_dev =3D NULL;
-> +	free_pages((unsigned long)buffer, 3);
-> +	return 0;
-> +}
-
-This code does not seem to be safe. dell_smbios_wmi_probe and
-dell_smbios_wmi_remove are called at any time when kernel register new
-device which matches some properties OR when user manually bind this
-driver to that device.
-
-buffer and wmi_dev is shared as a global variable which means that when
-there are two devices which want to bind to this driver, kernel would
-get double free at removing time.
-
-Devices from the bus subsystem should not use global shared variables,
-but rather allocate own memory...
-
-Also note that user can at any time unbound device from driver and also
-can bind it again.
-
-> +static const struct wmi_device_id dell_smbios_wmi_id_table[] =3D {
-> +	{ .guid_string =3D DELL_WMI_SMBIOS_GUID },
-> +	{ },
-> +};
-> +
-> +static struct wmi_driver dell_wmi_smbios_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "dell-smbios",
-> +	},
-> +	.probe =3D dell_smbios_wmi_probe,
-> +	.remove =3D dell_smbios_wmi_remove,
-> +	.id_table =3D dell_smbios_wmi_id_table,
-> +};
-> +
-> +static int __init dell_smbios_init(void)
-> +{
->  	dmi_walk(find_tokens, NULL);
-> =20
->  	if (!da_tokens)  {
-> @@ -181,34 +270,39 @@ static int __init dell_smbios_init(void)
->  		return -ENODEV;
->  	}
-> =20
-> +#ifdef CONFIG_DCDBAS
->  	/*
->  	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
->  	 * is passed to SMI handler.
->  	 */
->  	buffer =3D (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
-> +	bufferlen =3D sizeof(struct calling_interface_buffer);
-> +#else
-> +	buffer =3D NULL;
-> +#endif /* CONFIG_DCDBAS */
-> +	wmi_driver_register(&dell_wmi_smbios_driver);
-> +
->  	if (!buffer) {
-> -		ret =3D -ENOMEM;
-> -		goto fail_buffer;
-> +		kfree(da_tokens);
-> +		return -ENOMEM;
->  	}
-> -
->  	return 0;
-> -
-> -fail_buffer:
-> -	kfree(da_tokens);
+>  	unsigned long flags;
+>  	unsigned char mon, day, hrs, min, sec;
+>  	unsigned int yrs;
+> +	struct mrst_rtc	*mrst = dev_get_drvdata(dev);
+> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_VRTC, IPC_CMD_VRTC_SETTIME};
+>  
+>  	yrs = time->tm_year;
+>  	mon = time->tm_mon + 1;   /* tm_mon starts at zero */
+> @@ -137,8 +140,7 @@ static int mrst_set_time(struct device *dev, struct rtc_time *time)
+>  
+>  	spin_unlock_irqrestore(&rtc_lock, flags);
+>  
+> -	ret = intel_scu_ipc_simple_command(IPCMSG_VRTC, IPC_CMD_VRTC_SETTIME);
 > -	return ret;
+> +	return ipc_dev_simple_cmd(mrst->ipc_dev, cmds, SCU_PARAM_LEN);
 >  }
-> =20
->  static void __exit dell_smbios_exit(void)
+>  
+>  static int mrst_read_alarm(struct device *dev, struct rtc_wkalrm *t)
+> @@ -210,6 +212,7 @@ static int mrst_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+>  	struct mrst_rtc	*mrst = dev_get_drvdata(dev);
+>  	unsigned char hrs, min, sec;
+>  	int ret = 0;
+> +	u32 cmds[SCU_PARAM_LEN] = {IPCMSG_VRTC, IPC_CMD_VRTC_SETALARM};
+>  
+>  	if (!mrst->irq)
+>  		return -EIO;
+> @@ -229,7 +232,7 @@ static int mrst_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+>  
+>  	spin_unlock_irq(&rtc_lock);
+>  
+> -	ret = intel_scu_ipc_simple_command(IPCMSG_VRTC, IPC_CMD_VRTC_SETALARM);
+> +	ret = ipc_dev_simple_cmd(mrst->ipc_dev, cmds, SCU_PARAM_LEN);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -329,6 +332,10 @@ static int vrtc_mrst_do_probe(struct device *dev, struct resource *iomem,
+>  	if (!iomem)
+>  		return -ENODEV;
+>  
+> +	mrst_rtc.ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
+> +	if (IS_ERR_OR_NULL(mrst_rtc.ipc_dev))
+> +		return PTR_ERR(mrst_rtc.ipc_dev);
+> +
+>  	iomem = request_mem_region(iomem->start, resource_size(iomem),
+>  				   driver_name);
+>  	if (!iomem) {
+> diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
+> index 72c108a..a73559b 100644
+> --- a/drivers/watchdog/intel-mid_wdt.c
+> +++ b/drivers/watchdog/intel-mid_wdt.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/watchdog.h>
+>  #include <linux/platform_data/intel-mid_wdt.h>
+> +#include <linux/platform_data/x86/intel_ipc_dev.h>
+>  
+>  #include <asm/intel_scu_ipc.h>
+>  #include <asm/intel-mid.h>
+> @@ -29,6 +30,8 @@
+>  #define MID_WDT_TIMEOUT_MAX		170
+>  #define MID_WDT_DEFAULT_TIMEOUT		90
+>  
+> +static struct intel_ipc_dev *scu_ipc_dev;
+> +
+>  /* SCU watchdog messages */
+>  enum {
+>  	SCU_WATCHDOG_START = 0,
+> @@ -38,7 +41,10 @@ enum {
+>  
+>  static inline int wdt_command(int sub, u32 *in, int inlen)
 >  {
->  	kfree(da_tokens);
->  	free_page((unsigned long)buffer);
-> +	wmi_driver_unregister(&dell_wmi_smbios_driver);
+> -	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
+> +	u32 cmds[SCU_PARAM_LEN] = {IPC_WATCHDOG, sub};
+> +
+> +	return ipc_dev_cmd(scu_ipc_dev, cmds, SCU_PARAM_LEN, in,
+> +			inlen, NULL, 0);
 >  }
-> =20
->  subsys_initcall(dell_smbios_init);
->  module_exit(dell_smbios_exit);
-> =20
+>  
+>  static int wdt_start(struct watchdog_device *wd)
+> @@ -129,6 +135,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
+>  	if (!wdt_dev)
+>  		return -ENOMEM;
+>  
+> +	scu_ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
+> +	if (IS_ERR_OR_NULL(scu_ipc_dev))
+> +		return PTR_ERR(scu_ipc_dev);
 > +
->  MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
->  MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
->  MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
-> +MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
->  MODULE_DESCRIPTION("Common functions for kernel modules using Dell SMBIO=
-S");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/de=
-ll-smbios.h
-> index 45cbc2292cd3..2f6fce81ee69 100644
-> --- a/drivers/platform/x86/dell-smbios.h
-> +++ b/drivers/platform/x86/dell-smbios.h
-> @@ -4,6 +4,7 @@
->   *  Copyright (c) Red Hat <mjg@redhat.com>
->   *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
->   *  Copyright (c) 2014 Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> + *  Copyright (c) 2017 Dell Inc.
->   *
->   *  Based on documentation in the libsmbios package:
->   *  Copyright (C) 2005-2014 Dell Inc.
-> @@ -18,9 +19,10 @@
-> =20
->  struct notifier_block;
-> =20
-> -/* This structure will be modified by the firmware when we enter
-> - * system management mode, hence the volatiles */
-> -
-> +/* If called through fallback SMI rather than WMI this structure will be
-> + * modified by the firmware when we enter system management mode, hence =
-the
-> + * volatiles
-> + */
->  struct calling_interface_buffer {
->  	u16 class;
->  	u16 select;
-> @@ -28,6 +30,13 @@ struct calling_interface_buffer {
->  	volatile u32 output[4];
->  } __packed;
-> =20
-> +struct wmi_calling_interface_buffer {
-> +	struct calling_interface_buffer smi;
-> +	u32 argattrib;
-> +	u32 blength;
-> +	u8 data[32724];
-> +} __packed;
+>  	wdt_dev->info = &mid_wdt_info;
+>  	wdt_dev->ops = &mid_wdt_ops;
+>  	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
+> diff --git a/drivers/watchdog/intel_scu_watchdog.c b/drivers/watchdog/intel_scu_watchdog.c
+> index 0caab62..9457c7a 100644
+> --- a/drivers/watchdog/intel_scu_watchdog.c
+> +++ b/drivers/watchdog/intel_scu_watchdog.c
+> @@ -49,6 +49,7 @@
+>  #include <asm/intel_scu_ipc.h>
+>  #include <asm/apb_timer.h>
+>  #include <asm/intel-mid.h>
+> +#include <linux/platform_data/x86/intel_ipc_dev.h>
+>  
+>  #include "intel_scu_watchdog.h"
+>  
+> @@ -94,6 +95,8 @@ MODULE_PARM_DESC(force_boot,
+>  
+>  static struct intel_scu_watchdog_dev watchdog_device;
+>  
+> +static struct intel_ipc_dev *scu_ipc_dev;
 > +
->  struct calling_interface_token {
->  	u16 tokenID;
->  	u16 location;
->=20
+>  /* Forces restart, if force_reboot is set */
+>  static void watchdog_fire(void)
+>  {
+> @@ -128,18 +131,14 @@ static int watchdog_set_ipc(int soft_threshold, int threshold)
+>  	u32	*ipc_wbuf;
+>  	u8	 cbuf[16] = { '\0' };
+>  	int	 ipc_ret = 0;
+> +	u32 cmds[SCU_PARAM_LEN] = {IPC_SET_WATCHDOG_TIMER, 0};
+>  
+>  	ipc_wbuf = (u32 *)&cbuf;
+>  	ipc_wbuf[0] = soft_threshold;
+>  	ipc_wbuf[1] = threshold;
+>  
+> -	ipc_ret = intel_scu_ipc_command(
+> -			IPC_SET_WATCHDOG_TIMER,
+> -			0,
+> -			ipc_wbuf,
+> -			2,
+> -			NULL,
+> -			0);
+> +	ipc_ret = ipc_dev_cmd(scu_ipc_dev, cmds, SCU_PARAM_LEN, ipc_wbuf,
+> +			2, NULL, 0);
+>  
+>  	if (ipc_ret != 0)
+>  		pr_err("Error setting SCU watchdog timer: %x\n", ipc_ret);
+> @@ -460,6 +459,10 @@ static int __init intel_scu_watchdog_init(void)
+>  	if (check_timer_margin(timer_margin))
+>  		return -EINVAL;
+>  
+> +	scu_ipc_dev = intel_ipc_dev_get(INTEL_SCU_IPC_DEV);
+> +	if (IS_ERR_OR_NULL(scu_ipc_dev))
+> +		return PTR_ERR(scu_ipc_dev);
+> +
+>  	watchdog_device.timer_tbl_ptr = sfi_get_mtmr(sfi_mtimer_num-1);
+>  
+>  	if (watchdog_device.timer_tbl_ptr == NULL) {
+> -- 
+> 2.7.4
+> 
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1760665.q7sSV6L6B2
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlnMnH8ACgkQi/DJPQPkQ1IFgwCgo49s8wo741Lhdd19P0tmXFRO
-nSAAn0OYwNSrSatzfRZJNGjMt5rHfsgf
-=T8pH
------END PGP SIGNATURE-----
-
---nextPart1760665.q7sSV6L6B2--
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
