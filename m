@@ -1,124 +1,113 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3 5/8] platform/x86: dell-wmi-smbios: introduce character
- device for userspace
-Date: Sat, 30 Sep 2017 19:45:09 +0000
-Message-ID: <88e11f3c0df44cb8bc436b1d11fe4f81@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
+ descriptor check
+Date: Sat, 30 Sep 2017 19:48:39 +0000
+Message-ID: <fa02a34098914fb7a31b563d8b56dcc7@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
- <4a91eb76afa9cce7060bc30f5313d64bd51b66ca.1506571188.git.mario.limonciello@dell.com>
- <20170930020607.GD13307@fury>
+ <bea602b33e27facc77ee850ef14dfa37f6894275.1506571188.git.mario.limonciello@dell.com>
+ <20170930012912.GB13307@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:3039 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751099AbdI3TpL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Sep 2017 15:45:11 -0400
-In-Reply-To: <20170930020607.GD13307@fury>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170930012912.GB13307@fury>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org
 Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
 > -----Original Message-----
 > From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Friday, September 29, 2017 9:06 PM
+> Sent: Friday, September 29, 2017 8:29 PM
 > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
 > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
 > kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy Lutomi=
 rski
 > <luto@kernel.org>; quasisec@google.com; pali.rohar@gmail.com
-> Subject: Re: [PATCH v3 5/8] platform/x86: dell-wmi-smbios: introduce char=
-acter
-> device for userspace
+> Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
+> descriptor check
 >=20
-> On Wed, Sep 27, 2017 at 11:02:17PM -0500, Mario Limonciello wrote:
-> > This userspace character device will be used to perform SMBIOS calls
-> > from any applications.
+> On Wed, Sep 27, 2017 at 11:02:15PM -0500, Mario Limonciello wrote:
+> > The Dell WMI descriptor check is used as an indication that WMI
+> > calls are safe to run both when used with the notification
+> > ASL/GUID pair as well as the SMBIOS calling ASL/GUID pair.
 > >
-> > It provides an ioctl that will allow passing the 32k WMI calling
-> > interface buffer between userspace and kernel space.
-> >
-> > This character device is intended to deprecate the dcdbas kernel module
-> > and the interface that it provides to userspace.
-> >
-> > It's important for the driver to provide a R/W ioctl to ensure that
-> > two competing userspace processes don't race to provide or read each
-> > others data.
-> >
-> > The character device will only be created if the WMI interface was
-> > found.
-> >
-> > The API for interacting with this interface is defined in documentation
-> > as well as a uapi header provides the format of the structures.
+> > As some code in dell-wmi-smbios is already a prerequisite for
+> > dell-wmi, move the code for performing the descriptor check into
+> > dell-wmi-smbios and let both drivers use it from there.
 > >
 > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 > > ---
-> >  Documentation/ABI/testing/dell-wmi-smbios |  11 ++++
-> >  drivers/platform/x86/dell-smbios.c        | 100 ++++++++++++++++++++++=
-++---
-> ---
-> >  drivers/platform/x86/dell-smbios.h        |  19 +-----
-> >  include/uapi/linux/dell-wmi-smbios.h      |  30 +++++++++
-> >  4 files changed, 124 insertions(+), 36 deletions(-)
-> >  create mode 100644 Documentation/ABI/testing/dell-wmi-smbios
-> >  create mode 100644 include/uapi/linux/dell-wmi-smbios.h
-> >
-> > diff --git a/Documentation/ABI/testing/dell-wmi-smbios
-> b/Documentation/ABI/testing/dell-wmi-smbios
-> > new file mode 100644
-> > index 000000000000..0a4200688cb0
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/dell-wmi-smbios
-> > @@ -0,0 +1,11 @@
-> > +What:		/dev/wmi-dell-wmi-smbios
->=20
-> /dev/wmi/dell-smbios
->=20
-> > +Date:		October 2017
-> > +KernelVersion:	4.15
-> > +Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-> > +Description:
-> > +		Perform SMBIOS calls on supported Dell machines.
-> > +		through the Dell ACPI-WMI interface.
-> > +
-> > +		IOCTL's and buffer formats are defined in:
-> > +		<uapi/linux/dell-wmi-smbios.h>
-> > +
+> ...
 > > diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
 dell-
 > smbios.c
-> > index 5d793b012e5e..4174afbade13 100644
-> > --- a/drivers/platform/x86/dell-smbios.c
-> > +++ b/drivers/platform/x86/dell-smbios.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/io.h>
-> >  #include <linux/wmi.h>
-> > +#include <linux/uaccess.h>
-> >  #include "dell-smbios.h"
+> ...
 > >
-> >  #ifdef CONFIG_DCDBAS
-> > @@ -41,8 +42,9 @@ struct calling_interface_structure {
-> >  	struct calling_interface_token tokens[];
-> >  } __packed;
-> >
-> > -static void *buffer;
-> > -static size_t bufferlen;
-> > +static void *internal_buffer;
-> > +static size_t internal_bufferlen;
+> > +/*
+> > + * Descriptor buffer is 128 byte long and contains:
+> ...
+> > +	if (obj->buffer.length !=3D 128) {
+> > +		dev_err(&wdev->dev,
+> > +			"Dell descriptor buffer has invalid length (%d)\n",
+> > +			obj->buffer.length);
 >=20
-> A large portion of this changeset is dedicated to renaming these two vari=
-ables,
-> but it isn't clear why, and not mentioned in the changelog. Seems like
-> unnecessary churn. Or if we really should rename it... can it be done ear=
-lier in
-> the series when we're working with those buffers for functional reasons?
+> This seems odd. We call it an error (not a warning) if !=3D 128, but we o=
+nly abort
+> and return an error if it's < 16.
 >=20
-So the main reason for renaming was to make it easier to distinguish betwee=
-n
-the character device buffer and internal buffer.  With my current (in proce=
-ss)
-change it's much easier to distinguish.  I'll drop the renaming.
+> If it's an error, we should return an error code, if anything above 16 is
+> acceptable but 128 is preferred, the above should be a warning at best. (=
+this
+> scenario seems unlikely).
+
+Hopefully the original author can speak up to the intentions here.  I would=
+ feel
+that it should have errored out if it wasn't expected length too.
+
+>=20
+> > +		if (obj->buffer.length < 16) {
+> > +			ret =3D -EINVAL;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +	desc_buffer =3D (u32 *)obj->buffer.pointer;
+> > +
+> > +	if (desc_buffer[0] !=3D 0x4C4C4544 && desc_buffer[1] !=3D 0x494D5720)
+>=20
+> This seems like it should be an || ?
+>=20
+> (I see this is fixed in a later patch)
+>=20
+> I would have suggested fixing it, then moving it - just from a pure ease =
+of
+> review perspective. Perhaps not in the comment above that this is a verba=
+tim
+> move, some fixes are coming in subsequent patches. This is worth noting f=
+or a
+> future develop who may be choosing what to backport.
+>=20
+
+I'll re-order things so that the fixes come before the move.
+
+> >  static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+> >  {
+> > +	int ret;
+> > +	u32 interface_version;
+>=20
+> Declarations in order of decreasing line length please.
+>=20
+> > @@ -236,6 +316,7 @@ static int dell_smbios_wmi_probe(struct wmi_device
+> *wdev)
+> >  	if (!buffer)
+> >  		return -ENOMEM;
+> >  	bufferlen =3D sizeof(struct wmi_calling_interface_buffer);
+> > +
+>=20
+> Stray whitespace, should have been in the previous patch I guess?
+>=20
+>=20
+> --
+> Darren Hart
+> VMware Open Source Technology Center
