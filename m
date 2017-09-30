@@ -1,83 +1,70 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
- descriptor check
-Date: Fri, 29 Sep 2017 18:29:12 -0700
-Message-ID: <20170930012912.GB13307@fury>
+Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
+ requested by drivers
+Date: Fri, 29 Sep 2017 18:52:28 -0700
+Message-ID: <20170930015228.GC13307@fury>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
- <bea602b33e27facc77ee850ef14dfa37f6894275.1506571188.git.mario.limonciello@dell.com>
+ <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:39425 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752639AbdI3Bwd (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 29 Sep 2017 21:52:33 -0400
 Content-Disposition: inline
-In-Reply-To: <bea602b33e27facc77ee850ef14dfa37f6894275.1506571188.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael Wysocki <rjw@rjwysocki.net>, Matthew Garrett <mjg59@google.com>, Christoph Hellwig <hch@lst.de>
 
-On Wed, Sep 27, 2017 at 11:02:15PM -0500, Mario Limonciello wrote:
-> The Dell WMI descriptor check is used as an indication that WMI
-> calls are safe to run both when used with the notification
-> ASL/GUID pair as well as the SMBIOS calling ASL/GUID pair.
+
+On Wed, Sep 27, 2017 at 11:02:16PM -0500, Mario Limonciello wrote:
+> For WMI operations that are only Set or Query read or write sysfs
+> attributes created by WMI vendor drivers make sense.
 > 
-> As some code in dell-wmi-smbios is already a prerequisite for
-> dell-wmi, move the code for performing the descriptor check into
-> dell-wmi-smbios and let both drivers use it from there.
+> For other WMI operations that are run on Method, there needs to be a
+> way to guarantee to userspace that the results from the method call
+> belong to the data request to the method call.  Sysfs attributes don't
+> work well in this scenario because two userspace processes may be
+> competing at reading/writing an attribute and step on each other's
+> data.
+> 
+> When a WMI vendor driver declares a set of functions in a
+> file_operations object the WMI bus driver will create a character
+> device that maps to those file operations.
+> 
+> That character device will correspond to this path:
+> /dev/wmi/$driver
+> 
+> This policy is selected as one driver may map and use multiple
+> GUIDs and it would be better to only expose a single character
+> device.
+> 
+> The WMI vendor drivers will be responsible for managing access to
+> this character device and proper locking on it.
+> 
+> When a WMI vendor driver is unloaded the WMI bus driver will clean
+> up the character device.
 > 
 > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 > ---
-...
-> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-...
->  
-> +/*
-> + * Descriptor buffer is 128 byte long and contains:
-...
-> +	if (obj->buffer.length != 128) {
-> +		dev_err(&wdev->dev,
-> +			"Dell descriptor buffer has invalid length (%d)\n",
-> +			obj->buffer.length);
+>  drivers/platform/x86/wmi.c | 98 +++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/wmi.h        |  1 +
+>  2 files changed, 94 insertions(+), 5 deletions(-)
 
-This seems odd. We call it an error (not a warning) if != 128, but we only abort
-and return an error if it's < 16.
++Greg, Rafael, Matthew, and Christoph
 
-If it's an error, we should return an error code, if anything above 16 is
-acceptable but 128 is preferred, the above should be a warning at best. (this
-scenario seems unlikely).
+You each provided feedback regarding the method of exposing WMI methods
+to userspace. This and subsequent patches from Mario lay some of the
+core groundwork.
 
-> +		if (obj->buffer.length < 16) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +	}
-> +	desc_buffer = (u32 *)obj->buffer.pointer;
-> +
-> +	if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
+They implement an implicit whitelist as only drivers requesting the char
+dev will see it created.
 
-This seems like it should be an || ?
-
-(I see this is fixed in a later patch)
-
-I would have suggested fixing it, then moving it - just from a pure ease of
-review perspective. Perhaps not in the comment above that this is a verbatim
-move, some fixes are coming in subsequent patches. This is worth noting for a
-future develop who may be choosing what to backport.
-
->  static int dell_smbios_wmi_probe(struct wmi_device *wdev)
->  {
-> +	int ret;
-> +	u32 interface_version;
-
-Declarations in order of decreasing line length please.
-
-> @@ -236,6 +316,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
->  	if (!buffer)
->  		return -ENOMEM;
->  	bufferlen = sizeof(struct wmi_calling_interface_buffer);
-> +
-
-Stray whitespace, should have been in the previous patch I guess?
-
+https://lkml.org/lkml/2017/9/28/8
 
 -- 
 Darren Hart
