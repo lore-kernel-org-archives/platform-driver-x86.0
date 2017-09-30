@@ -1,71 +1,69 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 0/8] Introduce support for Dell SMBIOS over WMI
-Date: Fri, 29 Sep 2017 19:16:57 -0700
-Message-ID: <20170930021657.GF13307@fury>
-References: <cover.1506571187.git.mario.limonciello@dell.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3 2/8] platform/x86: dell-smbios: Introduce a WMI-ACPI interface
+Date: Sat, 30 Sep 2017 09:15:40 +0200
+Message-ID: <201709300915.40983@pali>
+References: <cover.1506571187.git.mario.limonciello@dell.com> <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com> <20170930005127.GA13307@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:48747 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752639AbdI3CRA (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Sep 2017 22:17:00 -0400
-Content-Disposition: inline
-In-Reply-To: <cover.1506571187.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com
+Content-Type: multipart/signed;
+  boundary="nextPart2934565.cT2RLlZiou";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170930005127.GA13307@fury>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 27, 2017 at 11:02:12PM -0500, Mario Limonciello wrote:
-> The existing way that the dell-smbios helper module and associated
-> other drivers (dell-laptop, dell-wmi) communicate with the platform
-> really isn't secure.  It requires creating a buffer in physical
-> DMA32 memory space and passing that to the platform via SMM.
-> 
-> Since the platform got a physical memory pointer, you've just got
-> to trust that the platform has only modified (and accessed) memory
-> within that buffer.
-> 
-> Dell Platform designers recognize this security risk and offer a
-> safer way to communicate with the platform over ACPI.  This is
-> in turn exposed via a WMI interface to the OS.
-> 
-> When communicating over WMI-ACPI the communication doesn't occur
-> with physical memory pointers.  When the ASL is invoked, the fixed
-> length ACPI buffer is copied to a small operating region.  The ASL
-> will invoke the SMI, and SMM will only have access to this operating
-> region.  When the ASL returns the buffer is copied back for the OS
-> to process.
-> 
-> This method of communication should also deprecate the usage of the
-> dcdbas kernel module and software dependent upon it's interface.
-> Instead offer a character device interface for communicating with this
-> ASL method to allow userspace to use instead.
-> 
-> To faciliate that this patch series introduces a generic way for WMI
-> drivers to be able to create discoverable character devices through
-> the WMI bus when desired.
-> Requiring WMI drivers to explicitly ask for this functionality will
-> act as an effective vendor whitelist to character device creation.
-> 
+--nextPart2934565.cT2RLlZiou
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Mario,
+On Saturday 30 September 2017 02:51:27 Darren Hart wrote:
+> > +DELL SMBIOS DRIVER
+> > +M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > +M:	Mario Limonciello <mario.limonciello@dell.com>
+> > +S:	Maintained
+> > +F:	drivers/platform/x86/dell-smbios.*
+>=20
+> Pali, do you agree with this?
 
-Looking pretty good in general.
+Yes, no problem.
 
-My biggest concern is around the dell-smbios.c "buffer" logic which is
-starting to look really hacked together as it tries to deal with the
-existing interface and the new WMI interface. Really seems like we
-should be able to introduce one level of abstraction that would clean it
-up. If not - can you explain your rationale in that patch?
+> > -static int __init dell_smbios_init(void)
+> > +static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+> > +{
+> > +	/* no longer need the SMI page */
+> > +	free_page((unsigned long)buffer);
+> > +
+> > +	/* WMI buffer should be 32k */
+> > +	buffer =3D (void *)__get_free_pages(GFP_KERNEL, 3);
+>=20
+> Assuming PAGE_SIZE here (I know, this driver, this architecture,
+> etc...). But, please use get_order() to determine number of pages
+> from a linear size:
+>=20
+> __get_free_pages(GFP_KERNEL, get_order(32768));
 
-My other concern is the freeform structure around creating the file
-operations in each driver for the chardev IOCTL. It seems like we need
-some kind of defined mapping from METHOD index to IOCTL number, or else
-some way to advertise what it is?
+I agree that specifying size (instead of count) explicitly lead to more=20
+readable code.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2934565.cT2RLlZiou
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlnPRJwACgkQi/DJPQPkQ1Lv4ACeKO5d2T83DzBSuFl3ZT2dnEDW
+s8oAoLrBMMPShOuJ3MufZbcu3DKXUtmm
+=VZt/
+-----END PGP SIGNATURE-----
+
+--nextPart2934565.cT2RLlZiou--
