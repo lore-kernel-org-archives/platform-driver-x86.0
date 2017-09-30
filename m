@@ -1,126 +1,46 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3 0/8] Introduce support for Dell SMBIOS over WMI
-Date: Sat, 30 Sep 2017 19:56:33 +0000
-Message-ID: <bff1f575d2d44b79ba9636433f19df9d@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v3 2/8] platform/x86: dell-smbios: Introduce a WMI-ACPI
+ interface
+Date: Sat, 30 Sep 2017 19:56:56 +0000
+Message-ID: <83fbdf94817c449ba858c6e57e7d5a41@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
- <20170930021657.GF13307@fury>
+ <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com>
+ <20170930005127.GA13307@fury> <201709300915.40983@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:48176 "EHLO
-        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751099AbdI3T4u (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Sep 2017 15:56:50 -0400
-In-Reply-To: <20170930021657.GF13307@fury>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201709300915.40983@pali>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com, dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Friday, September 29, 2017 9:17 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
-> kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy Lutomi=
-rski
-> <luto@kernel.org>; quasisec@google.com; pali.rohar@gmail.com
-> Subject: Re: [PATCH v3 0/8] Introduce support for Dell SMBIOS over WMI
->=20
-> On Wed, Sep 27, 2017 at 11:02:12PM -0500, Mario Limonciello wrote:
-> > The existing way that the dell-smbios helper module and associated
-> > other drivers (dell-laptop, dell-wmi) communicate with the platform
-> > really isn't secure.  It requires creating a buffer in physical
-> > DMA32 memory space and passing that to the platform via SMM.
-> >
-> > Since the platform got a physical memory pointer, you've just got
-> > to trust that the platform has only modified (and accessed) memory
-> > within that buffer.
-> >
-> > Dell Platform designers recognize this security risk and offer a
-> > safer way to communicate with the platform over ACPI.  This is
-> > in turn exposed via a WMI interface to the OS.
-> >
-> > When communicating over WMI-ACPI the communication doesn't occur
-> > with physical memory pointers.  When the ASL is invoked, the fixed
-> > length ACPI buffer is copied to a small operating region.  The ASL
-> > will invoke the SMI, and SMM will only have access to this operating
-> > region.  When the ASL returns the buffer is copied back for the OS
-> > to process.
-> >
-> > This method of communication should also deprecate the usage of the
-> > dcdbas kernel module and software dependent upon it's interface.
-> > Instead offer a character device interface for communicating with this
-> > ASL method to allow userspace to use instead.
-> >
-> > To faciliate that this patch series introduces a generic way for WMI
-> > drivers to be able to create discoverable character devices through
-> > the WMI bus when desired.
-> > Requiring WMI drivers to explicitly ask for this functionality will
-> > act as an effective vendor whitelist to character device creation.
-> >
->=20
-> Mario,
->=20
-> Looking pretty good in general.
-Darren,
-
-Thanks.
-
->=20
-> My biggest concern is around the dell-smbios.c "buffer" logic which is
-> starting to look really hacked together as it tries to deal with the
-> existing interface and the new WMI interface. Really seems like we
-> should be able to introduce one level of abstraction that would clean it
-> up. If not - can you explain your rationale in that patch?
->=20
-
-I've got some changes that I'm working out issues with still that do it lik=
-e
-one of Pali's proposals.  It creates the WMI buffer associated to the WMI
-device in a private memory structure.  Then the WMI remove function
-will be responsible to clean it up.  So on unload no if/else magic.
-During initialization I am reading a different flag from SMBIOS tables=20
-to tell if we'll support WMI or not even if the WMI device hasn't yet
-been enumerated.  This approach will allow unbinding and rebinding
-WMI without causing problems.
-
-Does that sound better?  If not, can you please give me some more
-direction on what you mean by one level of abstraction?  The "decision"
-of which to handle will have to live somewhere so there's going to have
-to be some if/else logic to know which way to go even if you abstract
-further up.
-
-> My other concern is the freeform structure around creating the file
-> operations in each driver for the chardev IOCTL. It seems like we need
-> some kind of defined mapping from METHOD index to IOCTL number, or else
-> some way to advertise what it is?
->=20
-
-I was originally thinking it would be a good way to do this cleanly too, bu=
-t my=20
-main concern is this one character device may handle multiple methods probl=
-em.
-If you map method instance (index) to ioctl number you will most likely run=
- into=20
-clashes.  So maybe it's worth not allowing that?
-
-So I've got another idea.  How about instead of a variety of freeform ioctl=
- per driver,
-provide three ioctl functions for all the character devices that come in th=
-rough
-the WMI bus to use (say IOC 'W') with either read, write or write/read.  Th=
-e WMI bus
-should be able to know which driver to pass it on to by the character devic=
-e used.
-
-That example I mentioned the one character device for a driver with 3 diffe=
-rent GUIDs
-that could contain methods would require then splitting it up into say 3 di=
-fferent drivers
-with 3 different character devices.
-
-Otherwise this might still require some creative thinking.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgU2VwdGVtYmVyIDMwLCAy
+MDE3IDI6MTYgQU0NCj4gVG86IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4g
+Q2M6IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBBbmR5
+IFNoZXZjaGVua28NCj4gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+OyBMS01MIDxsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnPjsNCj4gcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5l
+bC5vcmc7IEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3JnPjsNCj4gcXVhc2lzZWNAZ29v
+Z2xlLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvOF0gcGxhdGZvcm0veDg2OiBkZWxs
+LXNtYmlvczogSW50cm9kdWNlIGEgV01JLUFDUEkNCj4gaW50ZXJmYWNlDQo+IA0KPiBPbiBTYXR1
+cmRheSAzMCBTZXB0ZW1iZXIgMjAxNyAwMjo1MToyNyBEYXJyZW4gSGFydCB3cm90ZToNCj4gPiA+
+ICtERUxMIFNNQklPUyBEUklWRVINCj4gPiA+ICtNOglQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBn
+bWFpbC5jb20+DQo+ID4gPiArTToJTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxv
+QGRlbGwuY29tPg0KPiA+ID4gK1M6CU1haW50YWluZWQNCj4gPiA+ICtGOglkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXNtYmlvcy4qDQo+ID4NCj4gPiBQYWxpLCBkbyB5b3UgYWdyZWUgd2l0aCB0
+aGlzPw0KPiANCj4gWWVzLCBubyBwcm9ibGVtLg0KPiANCj4gPiA+IC1zdGF0aWMgaW50IF9faW5p
+dCBkZWxsX3NtYmlvc19pbml0KHZvaWQpDQo+ID4gPiArc3RhdGljIGludCBkZWxsX3NtYmlvc193
+bWlfcHJvYmUoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYpDQo+ID4gPiArew0KPiA+ID4gKwkvKiBu
+byBsb25nZXIgbmVlZCB0aGUgU01JIHBhZ2UgKi8NCj4gPiA+ICsJZnJlZV9wYWdlKCh1bnNpZ25l
+ZCBsb25nKWJ1ZmZlcik7DQo+ID4gPiArDQo+ID4gPiArCS8qIFdNSSBidWZmZXIgc2hvdWxkIGJl
+IDMyayAqLw0KPiA+ID4gKwlidWZmZXIgPSAodm9pZCAqKV9fZ2V0X2ZyZWVfcGFnZXMoR0ZQX0tF
+Uk5FTCwgMyk7DQo+ID4NCj4gPiBBc3N1bWluZyBQQUdFX1NJWkUgaGVyZSAoSSBrbm93LCB0aGlz
+IGRyaXZlciwgdGhpcyBhcmNoaXRlY3R1cmUsDQo+ID4gZXRjLi4uKS4gQnV0LCBwbGVhc2UgdXNl
+IGdldF9vcmRlcigpIHRvIGRldGVybWluZSBudW1iZXIgb2YgcGFnZXMNCj4gPiBmcm9tIGEgbGlu
+ZWFyIHNpemU6DQo+ID4NCj4gPiBfX2dldF9mcmVlX3BhZ2VzKEdGUF9LRVJORUwsIGdldF9vcmRl
+cigzMjc2OCkpOw0KPiANCj4gSSBhZ3JlZSB0aGF0IHNwZWNpZnlpbmcgc2l6ZSAoaW5zdGVhZCBv
+ZiBjb3VudCkgZXhwbGljaXRseSBsZWFkIHRvIG1vcmUNCj4gcmVhZGFibGUgY29kZS4NCj4gDQoN
+CkFscmlnaHQgd2lsbCBhZGp1c3QuDQo=
