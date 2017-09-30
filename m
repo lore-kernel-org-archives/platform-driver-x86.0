@@ -1,106 +1,85 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3 2/8] platform/x86: dell-smbios: Introduce a WMI-ACPI
- interface
-Date: Sat, 30 Sep 2017 20:01:04 +0000
-Message-ID: <755afe9768c842a187751454cc7bb6e4@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1506571187.git.mario.limonciello@dell.com>
- <7b632baafbfdc6c55c4d56225c54fd441b747286.1506571188.git.mario.limonciello@dell.com>
- <201709280853.51019@pali>
- <52059e7ff4b14fe5b4f4a187fd30d1fe@ausx13mpc120.AMER.DELL.COM>
- <20170929073545.GA13546@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI descriptor check
+Date: Sat, 30 Sep 2017 22:01:26 +0200
+Message-ID: <201709302201.27017@pali>
+References: <cover.1506571187.git.mario.limonciello@dell.com> <20170930012912.GB13307@fury> <fa02a34098914fb7a31b563d8b56dcc7@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed;
+  boundary="nextPart2090043.EaakNCKAal";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:27642 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751099AbdI3UBK (ORCPT
+Received: from mail-wr0-f179.google.com ([209.85.128.179]:45206 "EHLO
+        mail-wr0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751099AbdI3UBa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Sep 2017 16:01:10 -0400
-In-Reply-To: <20170929073545.GA13546@pali>
-Content-Language: en-US
+        Sat, 30 Sep 2017 16:01:30 -0400
+In-Reply-To: <fa02a34098914fb7a31b563d8b56dcc7@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
+To: Mario.Limonciello@dell.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIFNlcHRlbWJlciAyOSwgMjAx
-NyAyOjM2IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
-bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGFuZHkuc2hldmNoZW5rb0BnbWFp
-bC5jb207IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIt
-eDg2QHZnZXIua2VybmVsLm9yZzsgbHV0b0BrZXJuZWwub3JnOw0KPiBxdWFzaXNlY0Bnb29nbGUu
-Y29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi84XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21i
-aW9zOiBJbnRyb2R1Y2UgYSBXTUktQUNQSQ0KPiBpbnRlcmZhY2UNCj4gDQo+IE9uIFRodXJzZGF5
-IDI4IFNlcHRlbWJlciAyMDE3IDIyOjQzOjM2IE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdy
-b3RlOg0KPiA+ID4gPiBAQCAtMTcwLDEwICsyMjYsNDMgQEAgc3RhdGljIHZvaWQgX19pbml0IGZp
-bmRfdG9rZW5zKGNvbnN0IHN0cnVjdA0KPiBkbWlfaGVhZGVyDQo+ID4gPiAqZG0sIHZvaWQgKmR1
-bW15KQ0KPiA+ID4gPiAgCX0NCj4gPiA+ID4gIH0NCj4gPiA+ID4NCj4gPiA+ID4gLXN0YXRpYyBp
-bnQgX19pbml0IGRlbGxfc21iaW9zX2luaXQodm9pZCkNCj4gPiA+ID4gK3N0YXRpYyBpbnQgZGVs
-bF9zbWJpb3Nfd21pX3Byb2JlKHN0cnVjdCB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+ID4gPiArew0K
-PiA+ID4gPiArCS8qIG5vIGxvbmdlciBuZWVkIHRoZSBTTUkgcGFnZSAqLw0KPiA+ID4gPiArCWZy
-ZWVfcGFnZSgodW5zaWduZWQgbG9uZylidWZmZXIpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJLyog
-V01JIGJ1ZmZlciBzaG91bGQgYmUgMzJrICovDQo+ID4gPiA+ICsJYnVmZmVyID0gKHZvaWQgKilf
-X2dldF9mcmVlX3BhZ2VzKEdGUF9LRVJORUwsIDMpOw0KPiA+ID4gPiArCWlmICghYnVmZmVyKQ0K
-PiA+ID4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiA+ID4gKwlidWZmZXJsZW4gPSBzaXplb2Yo
-c3RydWN0IHdtaV9jYWxsaW5nX2ludGVyZmFjZV9idWZmZXIpOw0KPiA+ID4gPiArCXdtaV9kZXYg
-PSB3ZGV2Ow0KPiA+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4g
-PiA+ICtzdGF0aWMgaW50IGRlbGxfc21iaW9zX3dtaV9yZW1vdmUoc3RydWN0IHdtaV9kZXZpY2Ug
-KndkZXYpDQo+ID4gPiA+ICB7DQo+ID4gPiA+IC0JaW50IHJldDsNCj4gPiA+ID4gKwl3bWlfZGV2
-ID0gTlVMTDsNCj4gPiA+ID4gKwlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25nKWJ1ZmZlciwgMyk7
-DQo+ID4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiA+ICt9DQo+ID4gPg0KPiA+ID4gVGhpcyBjb2Rl
-IGRvZXMgbm90IHNlZW0gdG8gYmUgc2FmZS4gZGVsbF9zbWJpb3Nfd21pX3Byb2JlIGFuZA0KPiA+
-ID4gZGVsbF9zbWJpb3Nfd21pX3JlbW92ZSBhcmUgY2FsbGVkIGF0IGFueSB0aW1lIHdoZW4ga2Vy
-bmVsIHJlZ2lzdGVyIG5ldw0KPiA+ID4gZGV2aWNlIHdoaWNoIG1hdGNoZXMgc29tZSBwcm9wZXJ0
-aWVzIE9SIHdoZW4gdXNlciBtYW51YWxseSBiaW5kIHRoaXMNCj4gPiA+IGRyaXZlciB0byB0aGF0
-IGRldmljZS4NCj4gPiA+DQo+ID4gSSdsbCBhZGp1c3QgZm9yIHRoZSBhc3N1bXB0aW9ucyBJIG1h
-ZGUgYWJvdXQgaXQgb25seSBoYXBwZW5pbmcgYXQgbW9kdWxlIGluaXQuDQo+ID4NCj4gPiA+IGJ1
-ZmZlciBhbmQgd21pX2RldiBpcyBzaGFyZWQgYXMgYSBnbG9iYWwgdmFyaWFibGUgd2hpY2ggbWVh
-bnMgdGhhdCB3aGVuDQo+ID4gPiB0aGVyZSBhcmUgdHdvIGRldmljZXMgd2hpY2ggd2FudCB0byBi
-aW5kIHRvIHRoaXMgZHJpdmVyLCBrZXJuZWwgd291bGQNCj4gPiA+IGdldCBkb3VibGUgZnJlZSBh
-dCByZW1vdmluZyB0aW1lLg0KPiA+DQo+ID4gQnV0IHRoZXJlIGlzIG9ubHkgb25lIEdVSUQgaW4g
-aWRfdGFibGUuDQo+IA0KPiBUaGF0IGlzIHRydXRoLCBidXQgLi4uDQo+IA0KPiA+IEhvdyBjYW4g
-dHdvIGRldmljZXMgYmluZCB0byB0aGlzPw0KPiA+IFRoaXMgc2hvdWxkIGJlIGFuIGltcG9zc2li
-bGUgc2NlbmFyaW8uDQo+IA0KPiAuLi4gaW4gQUNQSSBEU0RUIGNhbiBiZSBtb3JlIFdNSSBfV0RH
-IGJ1ZmZlcnMgd2hpY2ggY291bGQgbGVhZCB0byBtb3JlDQo+IHdtaSBidXNlcyBhbmQgZWFjaCBj
-b3VsZCBoYXZlIG93biBHVUlELiBUaGVyZWZvcmUgdGhlcmUgaXMgYSB0aGVvcmV0aWNhbA0KPiBj
-aGFuY2UgdGhhdCBzcGVjaWFsbHkgcHJlcGFyZWQgQUNQSSBEU0RUIGNvZGUgY2FuIGNhdXNlIHRo
-aXMgcHJvYmxlbS4NCg0KSSBndWVzcyBJJ20gYSBiaXQgY29uZnVzZWQgLSBpcyB0aGlzIGZvciBw
-cm90ZWN0aW5nIGEgdXNlciB3aG8gcGF0Y2hlcyB0aGVpciBvd24NCkRTRFQgb3IgZnJvbSBhIHZl
-bmRvciByZWxlYXNpbmcgYSBzeXN0ZW0gd2l0aCB0d28gX1dERyBidWZmZXJzIHdpdGggdGhlDQpz
-YW1lIEdVSUQ/DQoNCkkgZG9uJ3QgYmVsaWV2ZSBNT0YgaGFzIGEgY29uY2VwdCBvZiB3aGljaCBX
-REcgYnVmZmVyIEdVSURzIGFyZSBhc3NpZ25lZA0KdG8uICBUaGF0IGNvdWxkIGxlYWQgdG8gbWFz
-c2l2ZWx5IHVuZGVmaW5lZCBiZWhhdmlvciB0b28gc2luY2UgdGhlIFdERyBidWZmZXINCndpbGwg
-cG90ZW50aWFsbHkgYXNzaWduIGRpZmZlcmVudCBBU0wgdG8gcHJvY2VzcyBmb3IgZWFjaCBHVUlE
-Lg0KICANCj4gDQo+ID4gPiBEZXZpY2VzIGZyb20gdGhlIGJ1cyBzdWJzeXN0ZW0gc2hvdWxkIG5v
-dCB1c2UgZ2xvYmFsIHNoYXJlZCB2YXJpYWJsZXMsDQo+ID4gPiBidXQgcmF0aGVyIGFsbG9jYXRl
-IG93biBtZW1vcnkuLi4NCj4gPg0KPiA+IFBhcnQgb2YgdGhlIHByb2JsZW0gaXMgdGhhdCB0aGlz
-IG1vZHVsZSBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMgbm93Lg0KPiA+IEkgdGhpbmsgdGhlcmUg
-d2lsbCBoYXZlIHRvIGJlIGdsb2JhbCBzaGFyZWQgdmFyaWFibGVzIHdoZW4gb3BlcmF0aW5nIGlu
-IFNNSQ0KPiA+IG1vZGUuICBPciBtYXliZSBwdXQgdGhvc2UgYml0cyBpbnRvIGEgcGxhdGZvcm1f
-ZGV2aWNlIGZvciBTTUkgbW9kZSB1c2FnZT8NCj4gPg0KPiA+IFRoZSBwcm9ibGVtIEkgdGhpbmsg
-dGhlbiBiZWNvbWVzIGhvdyBkbyB5b3UgaGFuZGxlDQo+IGRlbGxfc21iaW9zX3NlbmRfcmVxdWVz
-dD8NCj4gPiBXaXRob3V0IGdsb2JhbCBzaGFyZWQgbWVtb3J5IGZvciB0aGUgbW9kdWxlIHRoZSBk
-ZWxsLWxhcHRvcCBhbmQgZGVsbC13bWkNCj4gPiBtb2R1bGVzIHdvbid0IGJlIGFibGUgdG8gdXNl
-IHRoaXMuDQo+IA0KPiBUaGUgd2hvbGUgcHJvYmxlbSBpcyB0aGF0IFNNQklPUyBjYWxscyBhcmUg
-aW1wbGVtZW50ZWQgdmlhIHNpbmdsZXRvbg0KPiBwYXR0ZXJuLiBBbmQgdGhpcyBzaW5nbGV0b24g
-Imluc3RhbmNlIiBuZWVkcyB0byB1c2Ugc29tZXRoaW5nIHdoaWNoIGlzDQo+IG5vdCBhIHNpbmds
-ZXRvbiwgYnV0IGEgZHluYW1pYyBvYmplY3RzICh3bWkgZGV2aWNlIDwtLT4gZHJpdmVyIHBhdHRl
-cm4pLg0KPiANCj4gSWRlYSBob3cgdG8gaGFuZGxlIGl0Og0KPiAqIHB1dCB3bWkgc21iaW9zIGNh
-bGwgZnVuY3Rpb24gaW50byBvd24gZHJpdmVyDQo+ICogcHV0IHNtbSBzbWJpb3MgY2FsbCBmdW5j
-dGlvbiBpbnRvIG93biBkcml2ZXINCj4gKiBjcmVhdGUgZGlzcGF0Y2hlciBmdW5jdGlvbiB3aGlj
-aCB0YWtlIGZpcnN0IGF2YWlsYWJsZSBkZXZpY2Ugb2Ygb25lIG9mDQo+ICAgdGhlIGFib3ZlIGRy
-aXZlciBhbmQgY2FsbCBvbiB0aGVtIHNtYmlvcyBjYWxsIGZ1bmN0aW9uDQo+IA0KPiBUaGlzIHBy
-b2JsZW0gaXMgdmVyeSBzaW1pbGFyIHRvIHByb2JsZW1zIGluIG9iamVjdHMgd29ybGQuLi4gZHJp
-dmVyIGFzIGENCj4gY2xhc3MgYW5kIGRldmljZSBhcyBhIGluc3RhbmNlLg0KPiANCj4gKE9yIGlm
-IHNvbWVib2R5IGhhcyBhIGJldHRlciBpZGVhLCBsZXQgdXMga25vdy4uLikNCg0KU28gSSBsaWtl
-IHRoZSAzcmQgaWRlYSB0aGUgbW9zdCwgYW5kIGl0J3Mgd2hhdCBJJ20gd29ya2luZyBvbi4gIEkn
-dmUgZ290IHNvbWUNCnByb2JsZW1zIHdpdGggaXQgdGhhdCBJJ20gc3RpbGwgZml4aW5nLCBidXQg
-dW5sZXNzIHNvbWVvbmUgdGVsbHMgbWUgb3RoZXJ3aXNlDQpJJ2xsIGdvIGZvciB0aGF0IHdpdGgg
-djQuDQoNCj4gDQo+ID4gPiBBbHNvIG5vdGUgdGhhdCB1c2VyIGNhbiBhdCBhbnkgdGltZSB1bmJv
-dW5kIGRldmljZSBmcm9tIGRyaXZlciBhbmQgYWxzbw0KPiA+ID4gY2FuIGJpbmQgaXQgYWdhaW4u
-DQo+ID4gSSdsbCBtYWtlIHNvbWUgYWRqdXN0bWVudHMgdG8gYWNjb3VudCBmb3IgdGhpcy4NCj4g
-DQo+IFRvIHByZXZlbnQgY3Jhc2hpbmcga2VybmVsLCB0aGlzIG5lZWRzIHRvIGJlIHdyaXR0ZW4g
-Y29ycmVjdGx5LiBBbmQgdXNlcg0KPiBzaG91bGQgbm90IGJlIGFibGUgdG8gY3Jhc2gga2VybmVs
-IGp1c3Qgd2hlbiB0cnlpbmcgdG8gdW5ib3VuZCBkcml2ZXINCj4gZnJvbSB0aGUgZGV2aWNlLg0K
-PiANCg0KQWdyZWUuIA0K
+--nextPart2090043.EaakNCKAal
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Saturday 30 September 2017 21:48:39 Mario.Limonciello@dell.com wrote:
+> > > +/*
+> >=20
+> > > + * Descriptor buffer is 128 byte long and contains:
+> > ...
+> >=20
+> > > +	if (obj->buffer.length !=3D 128) {
+> > > +		dev_err(&wdev->dev,
+> > > +			"Dell descriptor buffer has invalid length (%d)\n",
+> > > +			obj->buffer.length);
+> >=20
+> > This seems odd. We call it an error (not a warning) if !=3D 128, but
+> > we only abort and return an error if it's < 16.
+> >=20
+> > If it's an error, we should return an error code, if anything above
+> > 16 is acceptable but 128 is preferred, the above should be a
+> > warning at best. (this scenario seems unlikely).
+>=20
+> Hopefully the original author can speak up to the intentions here.  I
+> would feel that it should have errored out if it wasn't expected
+> length too.
+
+Code below access first 16 bytes of buffer. Therefore to prevent buffer=20
+overflow check for 16 bytes is needed.
+
+But IIRC we decided to do not throw error and continue driver loading=20
+even when buffer length is not 128 (as expected by some Dell=20
+documentation) as it could be possible regression because driver itself=20
+does not depend on buffer length.
+
+> > > +		if (obj->buffer.length < 16) {
+> > > +			ret =3D -EINVAL;
+> > > +			goto out;
+> > > +		}
+> > > +	}
+> > > +	desc_buffer =3D (u32 *)obj->buffer.pointer;
+> > > +
+> > > +	if (desc_buffer[0] !=3D 0x4C4C4544 && desc_buffer[1] !=3D
+> > > 0x494D5720)
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2090043.EaakNCKAal
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlnP+BcACgkQi/DJPQPkQ1Kw5gCfdXFrRMn7rd9xCP9oh/U9BeAW
+7FgAn3fq24VWWncmYsRRuSplPmZtBBA3
+=WRbm
+-----END PGP SIGNATURE-----
+
+--nextPart2090043.EaakNCKAal--
