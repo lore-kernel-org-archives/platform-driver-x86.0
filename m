@@ -1,71 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v3 4/7] platform: x86: Add generic Intel IPC driver
-Date: Sun, 1 Oct 2017 17:59:20 +0300
-Message-ID: <CAHp75VecDGzs=esey6hSDWMxvYPeeiy5T-9x6MNFaHspLq0ctA@mail.gmail.com>
-References: <cover.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com> <7d1a79925df8d2e35cfbd6974706d0d1ef0fc0de.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
+ requested by drivers
+Date: Sun, 1 Oct 2017 20:03:59 +0200
+Message-ID: <20171001180359.GA14845@kroah.com>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
+ <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
+ <20170930015228.GC13307@fury>
+ <20170930081205.GA22980@kroah.com>
+ <81ddaac76f15420b800db365d694e156@ausx13mpc120.AMER.DELL.COM>
+ <20171001132336.GA26295@kroah.com>
+ <eb4f96b91dc34e59a0d3b3ee7b434161@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7d1a79925df8d2e35cfbd6974706d0d1ef0fc0de.1504588701.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, "dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.linuxfoundation.org ([140.211.169.12]:35014 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750943AbdJASDv (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 1 Oct 2017 14:03:51 -0400
+Content-Disposition: inline
+In-Reply-To: <eb4f96b91dc34e59a0d3b3ee7b434161@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-On Tue, Sep 5, 2017 at 8:37 AM,
-<sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->
-> Currently intel_scu_ipc.c, intel_pmc_ipc.c and intel_punit_ipc.c
-> redundantly implements the same IPC features and has lot of code
-> duplication between them. This driver addresses this issue by grouping
-> the common IPC functionalities under the same driver.
+On Sun, Oct 01, 2017 at 02:25:00PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Sunday, October 1, 2017 8:24 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
+> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kernel.org;
+> > quasisec@google.com; pali.rohar@gmail.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de
+> > Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
+> > requested by drivers
+> > 
+> > On Sat, Sep 30, 2017 at 07:26:57PM +0000, Mario.Limonciello@dell.com wrote:
+> > > I think what's Darren's most interested in is the that conceptually this is
+> > > an approach you can agree with.
+> > >
+> > > "A WMI vendor driver binds to the WMI bus and requests the WMI bus to
+> > create
+> > > a character device.  The WMI bus creates a character device /dev/wmi/$driver
+> > > which the WMI vendor driver will process all various file operations."
+> > 
+> > We've been over this before, let's see that actual implementation which
+> > defines the "will process all..." implementation to see if that is
+> > actually an acceptable thing.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> I'm working on changes still (that you'll be CC on), but I don't expect this specific 
+> concept to change in the future changes:
+> 
+> Bus creating character device:
+> https://patchwork.kernel.org/patch/9975283/
 
-> +static const char *ipc_dev_err_string(struct intel_ipc_dev *ipc_dev,
-> +       int error)
-> +{
-> +       switch (error) {
-> +       case IPC_DEV_ERR_NONE:
-> +               return "No error";
-> +       case IPC_DEV_ERR_CMD_NOT_SUPPORTED:
-> +               return "Command not-supported/Invalid";
-> +       case IPC_DEV_ERR_CMD_NOT_SERVICED:
-> +               return "Command not-serviced/Invalid param";
-> +       case IPC_DEV_ERR_UNABLE_TO_SERVICE:
-> +               return "Unable-to-service/Cmd-timeout";
-> +       case IPC_DEV_ERR_CMD_INVALID:
-> +               return "Command-invalid/Cmd-locked";
-> +       case IPC_DEV_ERR_CMD_FAILED:
-> +               return "Command-failed/Invalid-VR-id";
-> +       case IPC_DEV_ERR_EMSECURITY:
-> +               return "Invalid Battery/VR-Error";
-> +       case IPC_DEV_ERR_UNSIGNEDKERNEL:
-> +               return "Unsigned kernel";
-> +       default:
-> +               return "Unknown Command";
-> +       };
-> +}
+A bit hard to comment on web pages, and I would like to point out your
+obvious memory leak, but it's hard to do that this way :(
 
-Since it's continuous list you can define an array of messages like
+> Driver requesting character device:
+> https://patchwork.kernel.org/patch/9975263/
 
-const char * const *errors = {
- [..._ERR_...] = "",
- ...
+There's other issues with this patch as well, I'll wait for a real one
+in my inbox to be able to actually review it :(
 
-};
+thanks,
 
-Also you can use enum in the header and define _ERR_MAX there.
-Thus, code would be transformed to
-
-if (error < _ERR_MAX)
- return errors[error];
-
-return "Unknown Command";
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
