@@ -1,60 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 6/8] platform/x86: dell-wmi-smbios: Add a sysfs
- interface for SMBIOS tokens
-Date: Sun, 1 Oct 2017 11:51:52 +0300
-Message-ID: <CAHp75Vf34xOgBSNPxwUrGatX_+cWOP_gG3zurzBmeGWh+Duhhg@mail.gmail.com>
-References: <cover.1506571187.git.mario.limonciello@dell.com>
- <64094c86a6083c3d4c34d1f005e8a71d07b61240.1506571188.git.mario.limonciello@dell.com>
- <20170930021059.GE13307@fury>
+Subject: Re: [PATCH] thinkpad_acpi: Implement tablet mode resolving using GMMS method
+Date: Sun, 1 Oct 2017 12:31:19 +0300
+Message-ID: <CAHp75Vdif1F=OSqDL-0FbwjDkTK541cBXdzOmWeNyPm65VDdyQ@mail.gmail.com>
+References: <20170915132049.32317-1-bberg@redhat.com> <1505750434.9395.0.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:33143 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750953AbdJAIvx (ORCPT
+Received: from mail-qk0-f177.google.com ([209.85.220.177]:49027 "EHLO
+        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750950AbdJAJbU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Oct 2017 04:51:53 -0400
-In-Reply-To: <20170930021059.GE13307@fury>
+        Sun, 1 Oct 2017 05:31:20 -0400
+In-Reply-To: <1505750434.9395.0.camel@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Lyude Paul <lyude@redhat.com>
+Cc: Benjamin Berg <bberg@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter FP1 Zhang <zhangfp1@lenovo.com>
 
-On Sat, Sep 30, 2017 at 5:10 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Sep 27, 2017 at 11:02:18PM -0500, Mario Limonciello wrote:
->> Currently userspace tools can access system tokens via the dcdbas
->> kernel module and a SMI call that will cause the platform to execute
->> SMM code.
->>
->> With a goal in mind of deprecating the dcdbas kernel module a different
->> method for accessing these tokens from userspace needs to be created.
->>
->> This is intentionally marked to only be readable as root as it can
->> contain sensitive information about the platform's configuration.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
->> ---
-> ...
->> +static ssize_t tokens_show(struct device *dev,
->> +                        struct device_attribute *attr, char *buf)
->> +{
->> +     size_t off = 0;
->> +     int i;
->> +
->> +     for (i = 0; i < da_num_tokens; i++) {
->> +             if (off > PAGE_SIZE)
->> +                     break;
->> +             off += scnprintf(buf+off, PAGE_SIZE-off, "%04x\t%04x\t%04x\n",
+On Mon, Sep 18, 2017 at 7:00 PM, Lyude Paul <lyude@redhat.com> wrote:
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
 >
-> Minor Coding Style nit - spaces around binary operators: 3.1) Spaces
+> On Fri, 2017-09-15 at 15:20 +0200, Benjamin Berg wrote:
+>> Many thinkpad laptops and convertibles provide the GMMS method to
+>> resolve how far the laptop has been opened and whether it has been
+>> converted into tablet mode. This allows reporting a more precise tablet
+>> mode state to userspace.
+>>
+>> The current implementation only reports a summarized tablet mode state
+>> which is triggered as soon as the input devices become unusable as they
+>> are folded away from the display.
+>>
+>> This will work on all models where the CMMD method was used previously and
+>> it may also work in other cases.
+>>
+>> Thanks to Peter Zhang of Lenovo for providing information on how to use the
+>> GMMS method to query the tablet mode.
 
-Fresh looking to this excerpt gives me an idea that we may actually
-predict how many tokens to write beforehand. It makes output also
-cleaner in a sense to not disrupt a last token in the middle.
-
-Something like
-tokens_to_print = min(da_num_tokens, (PAGE_SIZE  - 1) / 15);
-?
+I dunno why this one didn't appear in our patchwork database.
+I'll go to apply manually soon.
+Sorry for the delay.
 
 -- 
 With Best Regards,
