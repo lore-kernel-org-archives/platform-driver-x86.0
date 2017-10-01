@@ -1,50 +1,35 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: Implement tablet mode resolving using GMMS method
-Date: Sun, 1 Oct 2017 16:06:03 +0300
-Message-ID: <CAHp75VcYD76Huyxx=8dtQ9-8-OFWUu7JpGO0gP_17HNCD6FUpw@mail.gmail.com>
-References: <20170915132049.32317-1-bberg@redhat.com> <1505750434.9395.0.camel@redhat.com>
- <CAHp75Vdif1F=OSqDL-0FbwjDkTK541cBXdzOmWeNyPm65VDdyQ@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
+ requested by drivers
+Date: Sun, 1 Oct 2017 15:23:36 +0200
+Message-ID: <20171001132336.GA26295@kroah.com>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
+ <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
+ <20170930015228.GC13307@fury>
+ <20170930081205.GA22980@kroah.com>
+ <81ddaac76f15420b800db365d694e156@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f175.google.com ([209.85.216.175]:56671 "EHLO
-        mail-qt0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751004AbdJANGF (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Oct 2017 09:06:05 -0400
-In-Reply-To: <CAHp75Vdif1F=OSqDL-0FbwjDkTK541cBXdzOmWeNyPm65VDdyQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: Benjamin Berg <bberg@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter FP1 Zhang <zhangfp1@lenovo.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <81ddaac76f15420b800db365d694e156@ausx13mpc120.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 1, 2017 at 12:31 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Sep 18, 2017 at 7:00 PM, Lyude Paul <lyude@redhat.com> wrote:
->> Reviewed-by: Lyude Paul <lyude@redhat.com>
->>
->> On Fri, 2017-09-15 at 15:20 +0200, Benjamin Berg wrote:
->>> Many thinkpad laptops and convertibles provide the GMMS method to
->>> resolve how far the laptop has been opened and whether it has been
->>> converted into tablet mode. This allows reporting a more precise tablet
->>> mode state to userspace.
->>>
->>> The current implementation only reports a summarized tablet mode state
->>> which is triggered as soon as the input devices become unusable as they
->>> are folded away from the display.
->>>
->>> This will work on all models where the CMMD method was used previously and
->>> it may also work in other cases.
->>>
->>> Thanks to Peter Zhang of Lenovo for providing information on how to use the
->>> GMMS method to query the tablet mode.
->
-> I dunno why this one didn't appear in our patchwork database.
-> I'll go to apply manually soon.
-> Sorry for the delay.
+On Sat, Sep 30, 2017 at 07:26:57PM +0000, Mario.Limonciello@dell.com wrote:
+> I think what's Darren's most interested in is the that conceptually this is
+> an approach you can agree with.
+> 
+> "A WMI vendor driver binds to the WMI bus and requests the WMI bus to create
+> a character device.  The WMI bus creates a character device /dev/wmi/$driver
+> which the WMI vendor driver will process all various file operations."
 
-Okay, now pushed to my testing queue.
+We've been over this before, let's see that actual implementation which
+defines the "will process all..." implementation to see if that is
+actually an acceptable thing.
 
--- 
-With Best Regards,
-Andy Shevchenko
+thanks,
+
+greg k-h
