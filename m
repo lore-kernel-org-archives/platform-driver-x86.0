@@ -1,43 +1,60 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
- descriptor check
-Date: Sun, 1 Oct 2017 11:43:56 +0300
-Message-ID: <CAHp75VeweaPKApXg_cpqG+vPD6UDdX1Tavt6T5gV6EK+T_R0FQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] platform/x86: dell-wmi-smbios: Add a sysfs
+ interface for SMBIOS tokens
+Date: Sun, 1 Oct 2017 11:51:52 +0300
+Message-ID: <CAHp75Vf34xOgBSNPxwUrGatX_+cWOP_gG3zurzBmeGWh+Duhhg@mail.gmail.com>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
- <bea602b33e27facc77ee850ef14dfa37f6894275.1506571188.git.mario.limonciello@dell.com>
- <20170930012912.GB13307@fury>
+ <64094c86a6083c3d4c34d1f005e8a71d07b61240.1506571188.git.mario.limonciello@dell.com>
+ <20170930021059.GE13307@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f170.google.com ([209.85.216.170]:44387 "EHLO
-        mail-qt0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750953AbdJAIn5 (ORCPT
+Received: from mail-qk0-f195.google.com ([209.85.220.195]:33143 "EHLO
+        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750953AbdJAIvx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Oct 2017 04:43:57 -0400
-In-Reply-To: <20170930012912.GB13307@fury>
+        Sun, 1 Oct 2017 04:51:53 -0400
+In-Reply-To: <20170930021059.GE13307@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-On Sat, Sep 30, 2017 at 4:29 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Sep 27, 2017 at 11:02:15PM -0500, Mario Limonciello wrote:
->> The Dell WMI descriptor check is used as an indication that WMI
->> calls are safe to run both when used with the notification
->> ASL/GUID pair as well as the SMBIOS calling ASL/GUID pair.
+On Sat, Sep 30, 2017 at 5:10 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Wed, Sep 27, 2017 at 11:02:18PM -0500, Mario Limonciello wrote:
+>> Currently userspace tools can access system tokens via the dcdbas
+>> kernel module and a SMI call that will cause the platform to execute
+>> SMM code.
 >>
->> As some code in dell-wmi-smbios is already a prerequisite for
->> dell-wmi, move the code for performing the descriptor check into
->> dell-wmi-smbios and let both drivers use it from there.
-
->> +     if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
+>> With a goal in mind of deprecating the dcdbas kernel module a different
+>> method for accessing these tokens from userspace needs to be created.
+>>
+>> This is intentionally marked to only be readable as root as it can
+>> contain sensitive information about the platform's configuration.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+>> ---
+> ...
+>> +static ssize_t tokens_show(struct device *dev,
+>> +                        struct device_attribute *attr, char *buf)
+>> +{
+>> +     size_t off = 0;
+>> +     int i;
+>> +
+>> +     for (i = 0; i < da_num_tokens; i++) {
+>> +             if (off > PAGE_SIZE)
+>> +                     break;
+>> +             off += scnprintf(buf+off, PAGE_SIZE-off, "%04x\t%04x\t%04x\n",
 >
-> This seems like it should be an || ?
->
-> (I see this is fixed in a later patch)
+> Minor Coding Style nit - spaces around binary operators: 3.1) Spaces
 
-Interesting, I proposed to use strncmp(), but it's gone again. Perhaps
-I missed what is downside of that.
+Fresh looking to this excerpt gives me an idea that we may actually
+predict how many tokens to write beforehand. It makes output also
+cleaner in a sense to not disrupt a last token in the middle.
+
+Something like
+tokens_to_print = min(da_num_tokens, (PAGE_SIZE  - 1) / 15);
+?
 
 -- 
 With Best Regards,
