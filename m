@@ -1,42 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
-Date: Mon, 2 Oct 2017 16:17:31 +0300
-Message-ID: <CAHp75VeZSkYZotboNhz8Pvu7uwytZtR0N4k2Bx+WgTdoLjGLtw@mail.gmail.com>
-References: <20170929070823.669a95d04dbb6b53be537852cb8ecb8c.0314fabe33.wbe@email22.secureserver.net>
- <20170929141125.GO13546@pali> <CAHp75VdBJxWKEsso1VrV_Q5UbU7oGx5G=DRX8SZ5K=qWx=6VBA@mail.gmail.com>
- <20171002115247.GB10938@pali> <85b11afa464948a1abcede55b7f66a25@ausx13mpc120.AMER.DELL.COM>
- <20171002131540.GE10938@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3 8/8] platform/x86: dell-wmi-smbios: clean up wmi
+ descriptor check
+Date: Mon, 2 Oct 2017 13:26:21 +0000
+Message-ID: <e0c87e855eda4840b311664789964f81@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1506571187.git.mario.limonciello@dell.com>
+ <84b6170a1d3a692b53a40f795dd4f9a3052b8fe3.1506571188.git.mario.limonciello@dell.com>
+ <CAHp75VdnzankU9CDu=_OvZVc15WivR2XCFAGuZUB3vJZV3t2=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f196.google.com ([209.85.220.196]:34698 "EHLO
-        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751010AbdJBNRc (ORCPT
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:58567 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750957AbdJBN0Y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Oct 2017 09:17:32 -0400
-In-Reply-To: <20171002131540.GE10938@pali>
+        Mon, 2 Oct 2017 09:26:24 -0400
+In-Reply-To: <CAHp75VdnzankU9CDu=_OvZVc15WivR2XCFAGuZUB3vJZV3t2=Q@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mario Limonciello <Mario.Limonciello@dell.com>
+To: andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
 
-On Mon, Oct 2, 2017 at 4:15 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wrot=
-e:
-> On Monday 02 October 2017 13:06:46 Mario.Limonciello@dell.com wrote:
-
-> Ok! Gabriel, can you provide us your DMI information about your machine?
->
-> They are included in following files:
-> /sys/class/dmi/id/sys_vendor
-> /sys/class/dmi/id/product_name
->
-> Beware that they may contain whitespace characters and it is important.
-
-I would usually suggest to run dmidecode and attach an output somewhere.
-
-(Just my 2 cents :-) )
-
---=20
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIg
+MiwgMjAxNyA4OjE2IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2ll
+bGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZl
+ci14ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+
+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgOC84XSBwbGF0Zm9ybS94ODY6IGRlbGwtd21p
+LXNtYmlvczogY2xlYW4gdXAgd21pDQo+IGRlc2NyaXB0b3IgY2hlY2sNCj4gDQo+IE9uIFRodSwg
+U2VwIDI4LCAyMDE3IGF0IDc6MDIgQU0sIE1hcmlvIExpbW9uY2llbGxvDQo+IDxtYXJpby5saW1v
+bmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+ID4gU29tZSBjYXNlcyB0aGUgd3JvbmcgdHlwZSB3
+YXMgdXNlZCBmb3IgZXJyb3JzIGFuZCBjaGVja3MgY2FuIGJlDQo+ID4gZG9uZSBtb3JlIGNsZWFu
+bHkuDQo+IA0KPiBPb3BzLCBJIGZvcmdvdCBhYm91dCB0aGlzIHBhdGNoLCBzbywgcGxlYXNlLCBk
+aXNyZWdhcmQgbXkgY29tbWVudCBXUlQNCj4gdG8gc3RybmNtcCgpIHVzZSB0byB0aGUgb3RoZXIg
+cGF0Y2guDQo+IA0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFy
+aW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEVkd2FyZCBPJ0NhbGxh
+Z2hhbiA8cXVhc2lzZWNAZ29vZ2xlLmNvbT4NCj4gDQo+IEJ0dywgbWlzc2VkIFN1Z2dlc3RlZC1i
+eT8NCg0KWWVzIHNvcnJ5IGFib3V0IHRoYXQuICBJJ2xsIGFkZCB0aGF0IGZvciB3aGVuIEkgZ2V0
+IHY0IG91dC4NCg0KPiANCj4gDQo+ID4gLSAgICAgICBpZiAoZGVzY19idWZmZXJbMF0gIT0gMHg0
+QzRDNDU0NCAmJiBkZXNjX2J1ZmZlclsxXSAhPSAweDQ5NEQ1NzIwKQ0KPiA+IC0gICAgICAgICAg
+ICAgICBkZXZfd2Fybigmd2Rldi0+ZGV2LCAiRGVsbCBkZXNjcmlwdG9yIGJ1ZmZlciBoYXMgaW52
+YWxpZCBzaWduYXR1cmUNCj4gKCUqcGgpXG4iLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAg
+IDgsIGRlc2NfYnVmZmVyKTsNCj4gPiArICAgICAgIGlmIChzdHJuY21wKG9iai0+c3RyaW5nLnBv
+aW50ZXIsICJERUxMIFdNSSIsIDgpICE9IDApDQo+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJu
+KCZ3ZGV2LT5kZXYsICJEZWxsIGRlc2NyaXB0b3IgYnVmZmVyIGhhcyBpbnZhbGlkIHNpZ25hdHVy
+ZQ0KPiAoJThwaClcbiIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGVzY19idWZmZXIp
+Ow0KPiANCj4gQW5kIGFzIERhcnJlbiBwb2ludGVkIG91dCwgdGhpcyBmaXhlcyB0aGUgbG9naWMg
+YnVnIGFzIHdlbGwuDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2
+Y2hlbmtvDQo=
