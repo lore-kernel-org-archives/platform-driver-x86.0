@@ -1,99 +1,95 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
- descriptor check
-Date: Mon, 2 Oct 2017 16:37:54 +0200
-Message-ID: <20171002143754.GH10938@pali>
-References: <cover.1506571187.git.mario.limonciello@dell.com>
- <20170930012912.GB13307@fury>
- <fa02a34098914fb7a31b563d8b56dcc7@ausx13mpc120.AMER.DELL.COM>
- <201709302201.27017@pali>
- <42642a2d212b493db280c7bac6d50564@ausx13mpc120.AMER.DELL.COM>
+From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Subject: RE: keyboard backlight =?UTF-8?Q?max=5Fbrightness=20bug=20on=20Dell=20Lat?=
+ =?UTF-8?Q?itude=20E=36=34=31=30?=
+Date: Mon, 02 Oct 2017 12:10:01 -0700
+Message-ID: <20171002121000.669a95d04dbb6b53be537852cb8ecb8c.7af7edfd14.wbe@email22.secureserver.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:47886 "EHLO
-        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751067AbdJBOh6 (ORCPT
+Received: from p3plsmtp22-01-2.prod.phx3.secureserver.net ([68.178.252.54]:51868
+        "EHLO p3plwbeout22-01.prod.phx3.secureserver.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751336AbdJBTKe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Oct 2017 10:37:58 -0400
-Content-Disposition: inline
-In-Reply-To: <42642a2d212b493db280c7bac6d50564@ausx13mpc120.AMER.DELL.COM>
+        Mon, 2 Oct 2017 15:10:34 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com
+To: Pali =?UTF-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: andy.shevchenko@gmail.com, gabriele.mzt@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario.Limonciello@dell.com
 
-On Monday 02 October 2017 14:15:11 Mario.Limonciello@dell.com wrote:
+-------- Original Message --------
+Subject: Re: keyboard backlight max_brightness bug on Dell Latitude
+E6410
+From: Pali Rohár <pali.rohar@gmail.com>
+Date: Mon, October 02, 2017 8:15 am
+To: gabriel@tekgnowsys.com
+Cc: andy.shevchenko@gmail.com, gabriel@tekgnowsys.com,
+gabriele.mzt@gmail.com, dvhart@infradead.org, andy@infradead.org,
+platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+Mario.Limonciello@dell.com
+
+On Monday 02 October 2017 13:06:46 Mario.Limonciello@dell.com wrote:
 > > -----Original Message-----
 > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > Sent: Saturday, September 30, 2017 3:01 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
-> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kernel.org;
-> > quasisec@google.com
-> > Subject: Re: [PATCH v3 3/8] platform/x86: dell-wmi-smbios: Use Dell WMI
-> > descriptor check
+> > Sent: Monday, October 2, 2017 6:53 AM
+> > To: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Gabriel M. Elder <gabriel@tekgnowsys.com>; Gabriele Mazzotta
+> > <gabriele.mzt@gmail.com>; Limonciello, Mario <Mario_Limonciello@Dell.com>;
+> > Darren Hart <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>;
+> > platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
 > > 
-> > On Saturday 30 September 2017 21:48:39 Mario.Limonciello@dell.com wrote:
-> > > > > +/*
-> > > >
-> > > > > + * Descriptor buffer is 128 byte long and contains:
-> > > > ...
-> > > >
-> > > > > +	if (obj->buffer.length != 128) {
-> > > > > +		dev_err(&wdev->dev,
-> > > > > +			"Dell descriptor buffer has invalid length (%d)\n",
-> > > > > +			obj->buffer.length);
-> > > >
-> > > > This seems odd. We call it an error (not a warning) if != 128, but
-> > > > we only abort and return an error if it's < 16.
-> > > >
-> > > > If it's an error, we should return an error code, if anything above
-> > > > 16 is acceptable but 128 is preferred, the above should be a
-> > > > warning at best. (this scenario seems unlikely).
+> > On Friday 29 September 2017 18:19:59 Andy Shevchenko wrote:
+> > > >> FYI, latest update and info relating to
+> > > >> https://bugzilla.kernel.org/show_bug.cgi?id=196913
 > > >
-> > > Hopefully the original author can speak up to the intentions here.  I
-> > > would feel that it should have errored out if it wasn't expected
-> > > length too.
+> > > Quick solution is to apply DMI to that.
 > > 
-> > Code below access first 16 bytes of buffer. Therefore to prevent buffer
-> > overflow check for 16 bytes is needed.
+> > It is only the Dell Latitude E6410 affected?
 > > 
-> > But IIRC we decided to do not throw error and continue driver loading
-> > even when buffer length is not 128 (as expected by some Dell
-> > documentation) as it could be possible regression because driver itself
-> > does not depend on buffer length.
-> > 
-> 
-> So I'm intending to change this in my next patch series.  I feel it should throw an
-> error when the buffer length isn't 128.
-> 
-> My logic is that if you don't see the proper buffer size (or the proper header)
-> then how can you trust that the rest of the data is reliable?  This means the format
-> has changed or this isn't a real descriptor as expected by Dell (say some other vendor
-> that has cloned the GUID).  It's better to abort in this situation.
-
-Error handling now is up to you -- Dell. You know the best how your
-API/ABI behave.
-
-I did that change to be fully backward compatible with possibility to
-read interface version number (needed for event handling logic).
-
-> > > > > +		if (obj->buffer.length < 16) {
-> > > > > +			ret = -EINVAL;
-> > > > > +			goto out;
-> > > > > +		}
-> > > > > +	}
-> > > > > +	desc_buffer = (u32 *)obj->buffer.pointer;
-> > > > > +
-> > > > > +	if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] !=
-> > > > > 0x494D5720)
+> > Mario, do you have any information about that API from Dell?
 > > 
 > > --
 > > Pali Rohár
 > > pali.rohar@gmail.com
+> 
+> Pali,
+> 
+> I believe this particular API shouldn't have changed over generations, so it's 
+> likely something that needs to be quirked for that generation. 
+> I haven't had a chance to check on this yet in detail though.
+> For now could you guys quirk this one and if I find out there was something
+> more systemic we can undo the quirk and do something more broad.
+> 
+> Thanks,
+
+Ok! Gabriel, can you provide us your DMI information about your machine?
+
+They are included in following files:
+/sys/class/dmi/id/sys_vendor
+/sys/class/dmi/id/product_name
+
+Beware that they may contain whitespace characters and it is important.
 
 -- 
 Pali Rohár
 pali.rohar@gmail.com
+
+-------------------------------------------------------------------------------
+# cat -v /sys/class/dmi/id/sys_vendor
+Dell Inc.
+# cat -v /sys/class/dmi/id/product_name
+Latitude E6410
+# cat -v /sys/class/dmi/id/sys_vendor | hexdump
+0000000 6544 6c6c 4920 636e 0a2e               
+000000a
+# cat -v /sys/class/dmi/id/product_name | hexdump
+0000000 614c 6974 7574 6564 4520 3436 3031 000a
+000000f
+
+Also updated https://bugzilla.kernel.org/show_bug.cgi?id=196913 with
+this info
+
+- Gabriel
+-------------------------------------------------------------------------------
