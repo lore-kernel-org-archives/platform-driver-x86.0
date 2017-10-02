@@ -1,42 +1,42 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 8/8] platform/x86: dell-wmi-smbios: clean up wmi
- descriptor check
-Date: Mon, 2 Oct 2017 16:15:53 +0300
-Message-ID: <CAHp75VdnzankU9CDu=_OvZVc15WivR2XCFAGuZUB3vJZV3t2=Q@mail.gmail.com>
-References: <cover.1506571187.git.mario.limonciello@dell.com> <84b6170a1d3a692b53a40f795dd4f9a3052b8fe3.1506571188.git.mario.limonciello@dell.com>
+Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
+Date: Mon, 2 Oct 2017 16:17:31 +0300
+Message-ID: <CAHp75VeZSkYZotboNhz8Pvu7uwytZtR0N4k2Bx+WgTdoLjGLtw@mail.gmail.com>
+References: <20170929070823.669a95d04dbb6b53be537852cb8ecb8c.0314fabe33.wbe@email22.secureserver.net>
+ <20170929141125.GO13546@pali> <CAHp75VdBJxWKEsso1VrV_Q5UbU7oGx5G=DRX8SZ5K=qWx=6VBA@mail.gmail.com>
+ <20171002115247.GB10938@pali> <85b11afa464948a1abcede55b7f66a25@ausx13mpc120.AMER.DELL.COM>
+ <20171002131540.GE10938@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84b6170a1d3a692b53a40f795dd4f9a3052b8fe3.1506571188.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f196.google.com ([209.85.220.196]:34698 "EHLO
+        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751010AbdJBNRc (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 2 Oct 2017 09:17:32 -0400
+In-Reply-To: <20171002131540.GE10938@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mario Limonciello <Mario.Limonciello@dell.com>
 
-On Thu, Sep 28, 2017 at 7:02 AM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> Some cases the wrong type was used for errors and checks can be
-> done more cleanly.
+On Mon, Oct 2, 2017 at 4:15 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wrot=
+e:
+> On Monday 02 October 2017 13:06:46 Mario.Limonciello@dell.com wrote:
 
-Oops, I forgot about this patch, so, please, disregard my comment WRT
-to strncmp() use to the other patch.
+> Ok! Gabriel, can you provide us your DMI information about your machine?
+>
+> They are included in following files:
+> /sys/class/dmi/id/sys_vendor
+> /sys/class/dmi/id/product_name
+>
+> Beware that they may contain whitespace characters and it is important.
 
+I would usually suggest to run dmidecode and attach an output somewhere.
 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+(Just my 2 cents :-) )
 
-Btw, missed Suggested-by?
-
-
-> -       if (desc_buffer[0] != 0x4C4C4544 && desc_buffer[1] != 0x494D5720)
-> -               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
-> -                       8, desc_buffer);
-> +       if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0)
-> +               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
-> +                       desc_buffer);
-
-And as Darren pointed out, this fixes the logic bug as well.
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
