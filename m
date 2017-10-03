@@ -1,69 +1,82 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3 4/8] platform/x86: wmi: create character devices when
- requested by drivers
-Date: Tue, 3 Oct 2017 15:13:35 +0000
-Message-ID: <f5c36f19007e486ba18f488d4c17363f@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v3 5/8] platform/x86: dell-wmi-smbios: introduce
+ character device for userspace
+Date: Tue, 3 Oct 2017 08:20:10 -0700
+Message-ID: <20171003152010.GB14523@fury>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
- <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
- <20171003092342.GB13295@kroah.com>
+ <4a91eb76afa9cce7060bc30f5313d64bd51b66ca.1506571188.git.mario.limonciello@dell.com>
+ <20171003092611.GC13295@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171003092342.GB13295@kroah.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20171003092611.GC13295@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: greg@kroah.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
+To: Greg KH <greg@kroah.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHcmVnIEtIIFttYWlsdG86Z3Jl
-Z0Brcm9haC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMywgMjAxNyA0OjI0IEFNDQo+
-IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBD
-YzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtv
-QGdtYWlsLmNvbT47DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0
-Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keSBMdXRvbWlyc2tpIDxsdXRv
-QGtlcm5lbC5vcmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOw0KPiBwYWxpLnJvaGFyQGdtYWlsLmNv
-bQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDQvOF0gcGxhdGZvcm0veDg2OiB3bWk6IGNyZWF0
-ZSBjaGFyYWN0ZXIgZGV2aWNlcyB3aGVuDQo+IHJlcXVlc3RlZCBieSBkcml2ZXJzDQo+IA0KPiBP
-biBXZWQsIFNlcCAyNywgMjAxNyBhdCAxMTowMjoxNlBNIC0wNTAwLCBNYXJpbyBMaW1vbmNpZWxs
-byB3cm90ZToNCj4gPiBGb3IgV01JIG9wZXJhdGlvbnMgdGhhdCBhcmUgb25seSBTZXQgb3IgUXVl
-cnkgcmVhZCBvciB3cml0ZSBzeXNmcw0KPiA+IGF0dHJpYnV0ZXMgY3JlYXRlZCBieSBXTUkgdmVu
-ZG9yIGRyaXZlcnMgbWFrZSBzZW5zZS4NCj4gPg0KPiA+IEZvciBvdGhlciBXTUkgb3BlcmF0aW9u
-cyB0aGF0IGFyZSBydW4gb24gTWV0aG9kLCB0aGVyZSBuZWVkcyB0byBiZSBhDQo+ID4gd2F5IHRv
-IGd1YXJhbnRlZSB0byB1c2Vyc3BhY2UgdGhhdCB0aGUgcmVzdWx0cyBmcm9tIHRoZSBtZXRob2Qg
-Y2FsbA0KPiA+IGJlbG9uZyB0byB0aGUgZGF0YSByZXF1ZXN0IHRvIHRoZSBtZXRob2QgY2FsbC4g
-IFN5c2ZzIGF0dHJpYnV0ZXMgZG9uJ3QNCj4gPiB3b3JrIHdlbGwgaW4gdGhpcyBzY2VuYXJpbyBi
-ZWNhdXNlIHR3byB1c2Vyc3BhY2UgcHJvY2Vzc2VzIG1heSBiZQ0KPiA+IGNvbXBldGluZyBhdCBy
-ZWFkaW5nL3dyaXRpbmcgYW4gYXR0cmlidXRlIGFuZCBzdGVwIG9uIGVhY2ggb3RoZXIncw0KPiA+
-IGRhdGEuDQo+ID4NCj4gPiBXaGVuIGEgV01JIHZlbmRvciBkcml2ZXIgZGVjbGFyZXMgYSBzZXQg
-b2YgZnVuY3Rpb25zIGluIGENCj4gPiBmaWxlX29wZXJhdGlvbnMgb2JqZWN0IHRoZSBXTUkgYnVz
-IGRyaXZlciB3aWxsIGNyZWF0ZSBhIGNoYXJhY3Rlcg0KPiA+IGRldmljZSB0aGF0IG1hcHMgdG8g
-dGhvc2UgZmlsZSBvcGVyYXRpb25zLg0KPiA+DQo+ID4gVGhhdCBjaGFyYWN0ZXIgZGV2aWNlIHdp
-bGwgY29ycmVzcG9uZCB0byB0aGlzIHBhdGg6DQo+ID4gL2Rldi93bWkvJGRyaXZlcg0KPiA+DQo+
-ID4gVGhpcyBwb2xpY3kgaXMgc2VsZWN0ZWQgYXMgb25lIGRyaXZlciBtYXkgbWFwIGFuZCB1c2Ug
-bXVsdGlwbGUNCj4gPiBHVUlEcyBhbmQgaXQgd291bGQgYmUgYmV0dGVyIHRvIG9ubHkgZXhwb3Nl
-IGEgc2luZ2xlIGNoYXJhY3Rlcg0KPiA+IGRldmljZS4NCj4gPg0KPiA+IFRoZSBXTUkgdmVuZG9y
-IGRyaXZlcnMgd2lsbCBiZSByZXNwb25zaWJsZSBmb3IgbWFuYWdpbmcgYWNjZXNzIHRvDQo+ID4g
-dGhpcyBjaGFyYWN0ZXIgZGV2aWNlIGFuZCBwcm9wZXIgbG9ja2luZyBvbiBpdC4NCj4gPg0KPiA+
-IFdoZW4gYSBXTUkgdmVuZG9yIGRyaXZlciBpcyB1bmxvYWRlZCB0aGUgV01JIGJ1cyBkcml2ZXIg
-d2lsbCBjbGVhbg0KPiA+IHVwIHRoZSBjaGFyYWN0ZXIgZGV2aWNlLg0KPiA+DQo+ID4gU2lnbmVk
-LW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYyB8IDk4DQo+ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0NCj4gPiAgaW5jbHVkZS9saW51
-eC93bWkuaCAgICAgICAgfCAgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgOTQgaW5zZXJ0aW9u
-cygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni93bWkuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQo+ID4gaW5kZXggNGQ3
-M2E4N2MyZGRmLi4xNzM5OWRmODc5NDggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9y
-bS94ODYvd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYw0KPiA+IEBA
-IC0zNCw3ICszNCw5IEBADQo+ID4gICNkZWZpbmUgcHJfZm10KGZtdCkJS0JVSUxEX01PRE5BTUUg
-IjogIiBmbXQNCj4gPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvYWNwaS5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvY2Rldi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+DQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9pZHIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPiAg
-I2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0K
-PiA+IEBAIC01MCw2ICs1Miw5IEBAIE1PRFVMRV9BVVRIT1IoIkNhcmxvcyBDb3JiYWNobyIpOw0K
-PiA+ICBNT0RVTEVfREVTQ1JJUFRJT04oIkFDUEktV01JIE1hcHBpbmcgRHJpdmVyIik7DQo+ID4g
-IE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gPg0KPiA+ICsjZGVmaW5lIFdNSV9NQVhfREVWUyAg
-TUlOT1JNQVNLDQo+ID4gK3N0YXRpYyBERUZJTkVfSURSKHdtaV9pZHIpOw0KPiANCj4gWW91IG5l
-dmVyIGZyZWUgdGhlIGlkcidzIG1lbW9yeSB3aGVuIHlvdSB1bmxvYWQgdGhlIG1vZHVsZSA6KA0K
-DQpXaG9vcHMgdGhhbmtzLCB3aWxsIGZpeC4g4pi5DQo=
+On Tue, Oct 03, 2017 at 11:26:11AM +0200, Greg KH wrote:
+> On Wed, Sep 27, 2017 at 11:02:17PM -0500, Mario Limonciello wrote:
+> > +static int dell_wmi_smbios_open(struct inode *inode, struct file *file)
+> > +{
+> > +	return nonseekable_open(inode, file);
+> > +}
+> > +
+> > +static int dell_wmi_smbios_release(struct inode *inode, struct file *file)
+> > +{
+> > +	return 0;
+> > +}
+> 
+> Why even declare an open/release if you don't do anything with them?
+> Just leave them empty.
+> 
+> > +static long dell_wmi_smbios_ioctl(struct file *filp, unsigned int cmd,
+> > +	unsigned long arg)
+> > +{
+> > +	void __user *p = (void __user *) arg;
+> > +	size_t size;
+> > +	int ret = 0;
+> > +
+> > +	if (_IOC_TYPE(cmd) != DELL_WMI_SMBIOS_IOC)
+> > +		return -ENOTTY;
+> > +
+> > +	switch (cmd) {
+> > +	case DELL_WMI_SMBIOS_CALL_CMD:
+> > +		size = sizeof(struct wmi_calling_interface_buffer);
+> > +		mutex_lock(&buffer_mutex);
+> > +		if (copy_from_user(devfs_buffer, p, size)) {
+> > +			ret = -EFAULT;
+> > +			goto fail_smbios_cmd;
+> > +		}
+> > +		ret = run_wmi_smbios_call(devfs_buffer);
+> 
+> You _are_ checking that your structures are valid here, right?  I didn't
+> see you really were, so I'll let you go audit your code paths for the
+> next set of patches.
+> 
+> But really, ugh, this seems horrible.  It's a huge vague data blob going
+> both ways, this feels ripe for abuse and other bad things.  Do you have
+> a working userspace implementation for all of this to publish at the
+> same time?
+> 
+
+This is the general challenge with WMI support, as it was designed to
+provide userspace with a way to talk to the firmware.
+
+For the more general case going forward the intent is to perform the MOF
+parsing in the kernel, which will make it possible to do some automated
+buffer validation.
+
+This particular driver is an intermediate step improving on the
+mechanism used for existing devices (libsmbios -> dcdbas -> SMM) to use
+the safer WMI entry point (using an op region instead of passing a
+physical memory pointer to SMM).
+
+But, that said... Mario, in lieu of the MOF description of the buffer,
+we should be able to do some driver specific validation of this buffer
+here.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
