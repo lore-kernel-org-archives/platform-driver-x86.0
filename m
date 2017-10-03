@@ -1,63 +1,69 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3 4/8] platform/x86: wmi: create character devices when
  requested by drivers
-Date: Tue, 3 Oct 2017 08:10:39 -0700
-Message-ID: <20171003151039.GA14523@fury>
+Date: Tue, 3 Oct 2017 15:13:35 +0000
+Message-ID: <f5c36f19007e486ba18f488d4c17363f@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
  <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
- <20171003092323.GA13295@kroah.com>
+ <20171003092342.GB13295@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171003092323.GA13295@kroah.com>
+In-Reply-To: <20171003092342.GB13295@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com
+To: greg@kroah.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 03, 2017 at 11:23:23AM +0200, Greg KH wrote:
-> On Wed, Sep 27, 2017 at 11:02:16PM -0500, Mario Limonciello wrote:
-> > For WMI operations that are only Set or Query read or write sysfs
-> > attributes created by WMI vendor drivers make sense.
-> > 
-> > For other WMI operations that are run on Method, there needs to be a
-> > way to guarantee to userspace that the results from the method call
-> > belong to the data request to the method call.  Sysfs attributes don't
-> > work well in this scenario because two userspace processes may be
-> > competing at reading/writing an attribute and step on each other's
-> > data.
-> > 
-> > When a WMI vendor driver declares a set of functions in a
-> > file_operations object the WMI bus driver will create a character
-> > device that maps to those file operations.
-> > 
-> > That character device will correspond to this path:
-> > /dev/wmi/$driver
-> > 
-> > This policy is selected as one driver may map and use multiple
-> > GUIDs and it would be better to only expose a single character
-> > device.
-> > 
-> > The WMI vendor drivers will be responsible for managing access to
-> > this character device and proper locking on it.
-> > 
-> > When a WMI vendor driver is unloaded the WMI bus driver will clean
-> > up the character device.
-> 
-> Ok, thanks to Darren, I've gone and dug these up while my boxes were
-> building stable kernels...
-> 
-> Why are you not just using the misc device interface here?  Why do you
-> need a whole new major and minor range?  Why not just register misc
-> devices dynamically as-needed?  Should be much simpler and easier to
-> maintain and reduce your code size a lot.
-
-Thank you Greg, this simplifies things quite a bit.
-
-Mario, the misc device interface will remove a lot of the boiler plate
-setup and eliminate the need to allocate a new major number.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHcmVnIEtIIFttYWlsdG86Z3Jl
+Z0Brcm9haC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMywgMjAxNyA0OjI0IEFNDQo+
+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBD
+YzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtv
+QGdtYWlsLmNvbT47DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0
+Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keSBMdXRvbWlyc2tpIDxsdXRv
+QGtlcm5lbC5vcmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOw0KPiBwYWxpLnJvaGFyQGdtYWlsLmNv
+bQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDQvOF0gcGxhdGZvcm0veDg2OiB3bWk6IGNyZWF0
+ZSBjaGFyYWN0ZXIgZGV2aWNlcyB3aGVuDQo+IHJlcXVlc3RlZCBieSBkcml2ZXJzDQo+IA0KPiBP
+biBXZWQsIFNlcCAyNywgMjAxNyBhdCAxMTowMjoxNlBNIC0wNTAwLCBNYXJpbyBMaW1vbmNpZWxs
+byB3cm90ZToNCj4gPiBGb3IgV01JIG9wZXJhdGlvbnMgdGhhdCBhcmUgb25seSBTZXQgb3IgUXVl
+cnkgcmVhZCBvciB3cml0ZSBzeXNmcw0KPiA+IGF0dHJpYnV0ZXMgY3JlYXRlZCBieSBXTUkgdmVu
+ZG9yIGRyaXZlcnMgbWFrZSBzZW5zZS4NCj4gPg0KPiA+IEZvciBvdGhlciBXTUkgb3BlcmF0aW9u
+cyB0aGF0IGFyZSBydW4gb24gTWV0aG9kLCB0aGVyZSBuZWVkcyB0byBiZSBhDQo+ID4gd2F5IHRv
+IGd1YXJhbnRlZSB0byB1c2Vyc3BhY2UgdGhhdCB0aGUgcmVzdWx0cyBmcm9tIHRoZSBtZXRob2Qg
+Y2FsbA0KPiA+IGJlbG9uZyB0byB0aGUgZGF0YSByZXF1ZXN0IHRvIHRoZSBtZXRob2QgY2FsbC4g
+IFN5c2ZzIGF0dHJpYnV0ZXMgZG9uJ3QNCj4gPiB3b3JrIHdlbGwgaW4gdGhpcyBzY2VuYXJpbyBi
+ZWNhdXNlIHR3byB1c2Vyc3BhY2UgcHJvY2Vzc2VzIG1heSBiZQ0KPiA+IGNvbXBldGluZyBhdCBy
+ZWFkaW5nL3dyaXRpbmcgYW4gYXR0cmlidXRlIGFuZCBzdGVwIG9uIGVhY2ggb3RoZXIncw0KPiA+
+IGRhdGEuDQo+ID4NCj4gPiBXaGVuIGEgV01JIHZlbmRvciBkcml2ZXIgZGVjbGFyZXMgYSBzZXQg
+b2YgZnVuY3Rpb25zIGluIGENCj4gPiBmaWxlX29wZXJhdGlvbnMgb2JqZWN0IHRoZSBXTUkgYnVz
+IGRyaXZlciB3aWxsIGNyZWF0ZSBhIGNoYXJhY3Rlcg0KPiA+IGRldmljZSB0aGF0IG1hcHMgdG8g
+dGhvc2UgZmlsZSBvcGVyYXRpb25zLg0KPiA+DQo+ID4gVGhhdCBjaGFyYWN0ZXIgZGV2aWNlIHdp
+bGwgY29ycmVzcG9uZCB0byB0aGlzIHBhdGg6DQo+ID4gL2Rldi93bWkvJGRyaXZlcg0KPiA+DQo+
+ID4gVGhpcyBwb2xpY3kgaXMgc2VsZWN0ZWQgYXMgb25lIGRyaXZlciBtYXkgbWFwIGFuZCB1c2Ug
+bXVsdGlwbGUNCj4gPiBHVUlEcyBhbmQgaXQgd291bGQgYmUgYmV0dGVyIHRvIG9ubHkgZXhwb3Nl
+IGEgc2luZ2xlIGNoYXJhY3Rlcg0KPiA+IGRldmljZS4NCj4gPg0KPiA+IFRoZSBXTUkgdmVuZG9y
+IGRyaXZlcnMgd2lsbCBiZSByZXNwb25zaWJsZSBmb3IgbWFuYWdpbmcgYWNjZXNzIHRvDQo+ID4g
+dGhpcyBjaGFyYWN0ZXIgZGV2aWNlIGFuZCBwcm9wZXIgbG9ja2luZyBvbiBpdC4NCj4gPg0KPiA+
+IFdoZW4gYSBXTUkgdmVuZG9yIGRyaXZlciBpcyB1bmxvYWRlZCB0aGUgV01JIGJ1cyBkcml2ZXIg
+d2lsbCBjbGVhbg0KPiA+IHVwIHRoZSBjaGFyYWN0ZXIgZGV2aWNlLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYyB8IDk4DQo+ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0NCj4gPiAgaW5jbHVkZS9saW51
+eC93bWkuaCAgICAgICAgfCAgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgOTQgaW5zZXJ0aW9u
+cygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni93bWkuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQo+ID4gaW5kZXggNGQ3
+M2E4N2MyZGRmLi4xNzM5OWRmODc5NDggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYw0KPiA+IEBA
+IC0zNCw3ICszNCw5IEBADQo+ID4gICNkZWZpbmUgcHJfZm10KGZtdCkJS0JVSUxEX01PRE5BTUUg
+IjogIiBmbXQNCj4gPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvYWNwaS5oPg0KPiA+ICsjaW5jbHVk
+ZSA8bGludXgvY2Rldi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+DQo+ID4gKyNp
+bmNsdWRlIDxsaW51eC9pZHIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPiAg
+I2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0K
+PiA+IEBAIC01MCw2ICs1Miw5IEBAIE1PRFVMRV9BVVRIT1IoIkNhcmxvcyBDb3JiYWNobyIpOw0K
+PiA+ICBNT0RVTEVfREVTQ1JJUFRJT04oIkFDUEktV01JIE1hcHBpbmcgRHJpdmVyIik7DQo+ID4g
+IE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gPg0KPiA+ICsjZGVmaW5lIFdNSV9NQVhfREVWUyAg
+TUlOT1JNQVNLDQo+ID4gK3N0YXRpYyBERUZJTkVfSURSKHdtaV9pZHIpOw0KPiANCj4gWW91IG5l
+dmVyIGZyZWUgdGhlIGlkcidzIG1lbW9yeSB3aGVuIHlvdSB1bmxvYWQgdGhlIG1vZHVsZSA6KA0K
+DQpXaG9vcHMgdGhhbmtzLCB3aWxsIGZpeC4g4pi5DQo=
