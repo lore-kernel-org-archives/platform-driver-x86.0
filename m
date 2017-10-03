@@ -1,18 +1,18 @@
 From: Greg KH <greg@kroah.com>
 Subject: Re: [PATCH v3 4/8] platform/x86: wmi: create character devices when
  requested by drivers
-Date: Tue, 3 Oct 2017 11:23:23 +0200
-Message-ID: <20171003092323.GA13295@kroah.com>
+Date: Tue, 3 Oct 2017 11:23:42 +0200
+Message-ID: <20171003092342.GB13295@kroah.com>
 References: <cover.1506571187.git.mario.limonciello@dell.com>
  <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50011 "EHLO
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:33153 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751190AbdJCJXN (ORCPT
+        by vger.kernel.org with ESMTP id S1751190AbdJCJXc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2017 05:23:13 -0400
+        Tue, 3 Oct 2017 05:23:32 -0400
 Content-Disposition: inline
 In-Reply-To: <17fcf9748e83ede2751a00d8248cb32cbdc610d6.1506571188.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -47,15 +47,32 @@ On Wed, Sep 27, 2017 at 11:02:16PM -0500, Mario Limonciello wrote:
 > 
 > When a WMI vendor driver is unloaded the WMI bus driver will clean
 > up the character device.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  drivers/platform/x86/wmi.c | 98 +++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/wmi.h        |  1 +
+>  2 files changed, 94 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 4d73a87c2ddf..17399df87948 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -34,7 +34,9 @@
+>  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/cdev.h>
+>  #include <linux/device.h>
+> +#include <linux/idr.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/list.h>
+> @@ -50,6 +52,9 @@ MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+>  MODULE_LICENSE("GPL");
+>  
+> +#define WMI_MAX_DEVS  MINORMASK
+> +static DEFINE_IDR(wmi_idr);
 
-Ok, thanks to Darren, I've gone and dug these up while my boxes were
-building stable kernels...
-
-Why are you not just using the misc device interface here?  Why do you
-need a whole new major and minor range?  Why not just register misc
-devices dynamically as-needed?  Should be much simpler and easier to
-maintain and reduce your code size a lot.
-
-thanks,
-
-greg k-h
+You never free the idr's memory when you unload the module :(
