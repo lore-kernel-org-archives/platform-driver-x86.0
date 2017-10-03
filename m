@@ -1,111 +1,95 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3 5/8] platform/x86: dell-wmi-smbios: introduce character
- device for userspace
-Date: Tue, 3 Oct 2017 15:49:04 +0000
-Message-ID: <5cbdbc85d3e14880a187dfb8f76b1745@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1506571187.git.mario.limonciello@dell.com>
- <4a91eb76afa9cce7060bc30f5313d64bd51b66ca.1506571188.git.mario.limonciello@dell.com>
- <20171003092611.GC13295@kroah.com> <20171003152010.GB14523@fury>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: peaq-wmi: Blacklist Lenovo ideapad 700-15ISK
+Date: Tue, 3 Oct 2017 19:28:33 +0300
+Message-ID: <CAHp75VffTebhp3At677T+jVN6ct=dTGVyUL-QUqqeDSTjAHYwg@mail.gmail.com>
+References: <20171002035600.9617-1-kai.heng.feng@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:31172 "EHLO
-        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751132AbdJCPtK (ORCPT
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:35392 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751964AbdJCQ2f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2017 11:49:10 -0400
-In-Reply-To: <20171003152010.GB14523@fury>
-Content-Language: en-US
+        Tue, 3 Oct 2017 12:28:35 -0400
+In-Reply-To: <20171002035600.9617-1-kai.heng.feng@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, greg@kroah.com
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Tuesday, October 3, 2017 10:20 AM
-> To: Greg KH <greg@kroah.com>
-> Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; Andy Shevchenko
-> <andy.shevchenko@gmail.com>; LKML <linux-kernel@vger.kernel.org>;
-> platform-driver-x86@vger.kernel.org; Andy Lutomirski <luto@kernel.org>;
-> quasisec@google.com; pali.rohar@gmail.com
-> Subject: Re: [PATCH v3 5/8] platform/x86: dell-wmi-smbios: introduce char=
-acter
-> device for userspace
->=20
-> On Tue, Oct 03, 2017 at 11:26:11AM +0200, Greg KH wrote:
-> > On Wed, Sep 27, 2017 at 11:02:17PM -0500, Mario Limonciello wrote:
-> > > +static int dell_wmi_smbios_open(struct inode *inode, struct file *fi=
-le)
-> > > +{
-> > > +	return nonseekable_open(inode, file);
-> > > +}
-> > > +
-> > > +static int dell_wmi_smbios_release(struct inode *inode, struct file =
-*file)
-> > > +{
-> > > +	return 0;
-> > > +}
-> >
-> > Why even declare an open/release if you don't do anything with them?
-> > Just leave them empty.
-> >
-> > > +static long dell_wmi_smbios_ioctl(struct file *filp, unsigned int cm=
-d,
-> > > +	unsigned long arg)
-> > > +{
-> > > +	void __user *p =3D (void __user *) arg;
-> > > +	size_t size;
-> > > +	int ret =3D 0;
-> > > +
-> > > +	if (_IOC_TYPE(cmd) !=3D DELL_WMI_SMBIOS_IOC)
-> > > +		return -ENOTTY;
-> > > +
-> > > +	switch (cmd) {
-> > > +	case DELL_WMI_SMBIOS_CALL_CMD:
-> > > +		size =3D sizeof(struct wmi_calling_interface_buffer);
-> > > +		mutex_lock(&buffer_mutex);
-> > > +		if (copy_from_user(devfs_buffer, p, size)) {
-> > > +			ret =3D -EFAULT;
-> > > +			goto fail_smbios_cmd;
-> > > +		}
-> > > +		ret =3D run_wmi_smbios_call(devfs_buffer);
-> >
-> > You _are_ checking that your structures are valid here, right?  I didn'=
-t
-> > see you really were, so I'll let you go audit your code paths for the
-> > next set of patches.
-> >
-> > But really, ugh, this seems horrible.  It's a huge vague data blob goin=
-g
-> > both ways, this feels ripe for abuse and other bad things.  Do you have
-> > a working userspace implementation for all of this to publish at the
-> > same time?
-> >
->=20
-> This is the general challenge with WMI support, as it was designed to
-> provide userspace with a way to talk to the firmware.
->=20
-> For the more general case going forward the intent is to perform the MOF
-> parsing in the kernel, which will make it possible to do some automated
-> buffer validation.
->=20
-> This particular driver is an intermediate step improving on the
-> mechanism used for existing devices (libsmbios -> dcdbas -> SMM) to use
-> the safer WMI entry point (using an op region instead of passing a
-> physical memory pointer to SMM).
->=20
-> But, that said... Mario, in lieu of the MOF description of the buffer,
-> we should be able to do some driver specific validation of this buffer
-> here.
->=20
+On Mon, Oct 2, 2017 at 6:56 AM, Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> peaq-wmi on Lenovo ideapad 700-15ISK keeps sending KEY_SOUND,
+> which makes user's repeated keys gets interrupted.
+>
+> The system does not have Dolby button, let's blacklist it.
 
-As the WMI interface exists today even the MOF doesn't describe the=20
-Content of the buffer either.  It's a buffer passed from userspace to BIOS =
-and
-back.  I described it as the struct, but I'm not really sure how that can
-be further validated by the Linux kernel without a checksum.
-This is no different than how dell-smbios and dcdbas operates.
+Pushed to my review queue, thanks!
 
-New interfaces will have description that is parsable by MOF.
+P.S. It's not going to stable per se since it wasn't working from the
+beginning correctly AFAIU.
+If it's not true, update a patch with correct Fixes tag (apparently
+not against peaq-wmi.c itself).
+
+>
+> BugLink: https://bugs.launchpad.net/bugs/1720219
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/platform/x86/peaq-wmi.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+> index bc98ef95514a..5673d5daebc3 100644
+> --- a/drivers/platform/x86/peaq-wmi.c
+> +++ b/drivers/platform/x86/peaq-wmi.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/input-polldev.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/dmi.h>
+>
+>  #define PEAQ_DOLBY_BUTTON_GUID         "ABBC0F6F-8EA1-11D1-00A0-C90629100000"
+>  #define PEAQ_DOLBY_BUTTON_METHOD_ID    5
+> @@ -64,9 +65,22 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
+>         }
+>  }
+>
+> +static const struct dmi_system_id peaq_blacklist[] __initconst = {
+> +       {
+> +               /* Lenovo ideapad 700-15ISK does not have Dolby button */
+> +               .ident = "Lenovo ideapad 700-15ISK",
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "80RU"),
+> +               },
+> +       },
+> +       {}
+> +};
+> +
+>  static int __init peaq_wmi_init(void)
+>  {
+> -       if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+> +       if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID) ||
+> +           dmi_check_system(peaq_blacklist))
+>                 return -ENODEV;
+>
+>         peaq_poll_dev = input_allocate_polled_device();
+> @@ -86,7 +100,8 @@ static int __init peaq_wmi_init(void)
+>
+>  static void __exit peaq_wmi_exit(void)
+>  {
+> -       if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+> +       if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID) ||
+> +           dmi_check_system(peaq_blacklist))
+>                 return;
+>
+>         input_unregister_polled_device(peaq_poll_dev);
+> --
+> 2.14.1
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
