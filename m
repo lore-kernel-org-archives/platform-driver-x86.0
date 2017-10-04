@@ -1,58 +1,57 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: silead_dmi: Add entry for the Chuwi Hi8 Pro tablet
-Date: Wed,  4 Oct 2017 15:30:12 +0200
-Message-ID: <20171004133012.10625-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v4 02/14] platform/x86: dell-wmi: clean up wmi descriptor check
+Date: Wed,  4 Oct 2017 17:48:28 -0500
+Message-ID: <f45c276035bd784e8dc30126b50e7f9a8b110613.1507156392.git.mario.limonciello@dell.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:47543 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751132AbdJDWsq (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 4 Oct 2017 18:48:46 -0400
+In-Reply-To: <cover.1507156392.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1507156392.git.mario.limonciello@dell.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 
-Add touchscreen platform data for the Chuwi Hi8 Pro tablet.
+Some cases the wrong type was used for errors and checks can be
+done more cleanly.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/platform/x86/silead_dmi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/platform/x86/dell-wmi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index c8ff77275366..fadfce9b3f5f 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -138,6 +138,19 @@ static const struct silead_ts_dmi_data itworks_tw891_data = {
- 	.properties	= itworks_tw891_props,
- };
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 1fbef560ca67..5973aa20f10e 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -665,16 +665,16 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
  
-+static const struct property_entry chuwi_hi8_pro_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data chuwi_hi8_pro_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= chuwi_hi8_pro_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -221,6 +234,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TW891"),
- 		},
- 	},
-+	{
-+		/* Chuwi Hi8 Pro */
-+		.driver_data = (void *)&chuwi_hi8_pro_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
-+		},
-+	},
- 	{ },
- };
+ 	buffer = (u32 *)obj->buffer.pointer;
  
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, buffer);
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			buffer);
+ 
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+ 			buffer[2]);
+ 
+ 	if (buffer[3] != 4096)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
+ 			buffer[3]);
+ 
+ 	priv->interface_version = buffer[2];
 -- 
-2.14.2
+2.14.1
