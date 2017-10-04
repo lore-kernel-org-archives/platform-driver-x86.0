@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v4 12/14] platform/x86: wmi: create character devices when requested by drivers
-Date: Wed,  4 Oct 2017 17:48:38 -0500
-Message-ID: <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
+Subject: [PATCH v4 10/14] platform/x86: dell-smbios-smm: test for WSMT
+Date: Wed,  4 Oct 2017 17:48:36 -0500
+Message-ID: <1e16313531397b43c16e147a3a5ad9e74ca3428a.1507156392.git.mario.limonciello@dell.com>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1507156392.git.mario.limonciello@dell.com>
@@ -12,207 +12,85 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-For WMI operations that are only Set or Query read or write sysfs
-attributes created by WMI vendor drivers make sense.
+WSMT is as an attestation to the OS that the platform won't
+modify memory outside of pre-defined areas.
 
-For other WMI operations that are run on Method, there needs to be a
-way to guarantee to userspace that the results from the method call
-belong to the data request to the method call.  Sysfs attributes don't
-work well in this scenario because two userspace processes may be
-competing at reading/writing an attribute and step on each other's
-data.
-
-When a WMI vendor driver declares an ioctl in a file_operations object
-the WMI bus driver will create a character device that maps to those
-file operations.
-
-That character device will correspond to this path:
-/dev/wmi/$driver
-
-The WMI bus driver will interpret the IOCTL calls, test them for
-a valid instance and pass them on to the vendor driver to run.
-
-This creates an implicit policy that only driver per character
-device.  If a module matches multiple GUID's, the wmi_devices
-will need to be all handled by the same wmi_driver if the same
-character device is used.
-
-The WMI vendor drivers will be responsible for managing access to
-this character device and proper locking on it.
-
-When a WMI vendor driver is unloaded the WMI bus driver will clean
-up the character device.
+If a platform has WSMT enabled in BIOS setup, SMM calls through
+dcdbas will fail.  The only way to access platform data in these
+instances is through the WMI SMBIOS calling interface.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- MAINTAINERS                |  1 +
- drivers/platform/x86/wmi.c | 67 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/wmi.h        |  2 ++
- include/uapi/linux/wmi.h   | 10 +++++++
- 4 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 include/uapi/linux/wmi.h
+ drivers/platform/x86/dell-smbios-smm.c | 36 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0357e9b1cfaf..6db1d84999bc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -372,6 +372,7 @@ ACPI WMI DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
- F:	drivers/platform/x86/wmi.c
-+F:	include/uapi/linux/wmi.h
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
+index 2e1c5d2dfd61..3271e9a876e9 100644
+--- a/drivers/platform/x86/dell-smbios-smm.c
++++ b/drivers/platform/x86/dell-smbios-smm.c
+@@ -25,6 +25,8 @@ static struct calling_interface_buffer *buffer;
+ struct platform_device *platform_device;
+ static DEFINE_MUTEX(smm_mutex);
  
- AD1889 ALSA SOUND DRIVER
- M:	Thibaut Varene <T-Bone@parisc-linux.org>
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index bcb41c1c7f52..5aef052b4aab 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -38,6 +38,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -69,6 +70,7 @@ struct wmi_block {
- 	struct wmi_device dev;
- 	struct list_head list;
- 	struct guid_block gblock;
-+	struct miscdevice misc_dev;
- 	struct acpi_device *acpi_device;
- 	wmi_notify_handler handler;
- 	void *handler_data;
-@@ -765,22 +767,80 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	return 0;
++#define WSMT_EN_TOKEN	0x04EC
++
+ static const struct dmi_system_id dell_device_table[] __initconst = {
+ 	{
+ 		.ident = "Dell laptop",
+@@ -76,6 +78,32 @@ void dell_smbios_smm_call(struct calling_interface_buffer *input)
  }
+ EXPORT_SYMBOL_GPL(dell_smbios_smm_call);
  
-+static long wmi_ioctl(struct file *filp, unsigned int cmd,
-+		      unsigned long arg)
++static int test_wsmt_enabled(void)
 +{
-+	struct wmi_driver *wdriver;
-+	struct wmi_block *wblock;
-+	const char *driver_name;
-+	struct list_head *p;
-+	bool found = false;
++	struct calling_interface_token *token;
++	int ret;
 +
-+	if (_IOC_TYPE(cmd) != WMI_IOC)
-+		return -ENOTTY;
++	/* if token doesn't exist, SMM will work */
++	token = dell_smbios_find_token(WSMT_EN_TOKEN);
++	if (!token)
++		return 0;
 +
-+	driver_name = filp->f_path.dentry->d_iname;
++	/* if token exists, try to access over SMM */
++	buffer->class = 0;
++	buffer->select = 0;
++	memset(buffer, 0, sizeof(struct calling_interface_buffer));
++	buffer->input[0] = token->location;
++	dell_smbios_smm_call(buffer);
 +
-+	list_for_each(p, &wmi_block_list) {
-+		wblock = list_entry(p, struct wmi_block, list);
-+		wdriver = container_of(wblock->dev.dev.driver,
-+			struct wmi_driver, driver);
-+		if (strcmp(driver_name, wdriver->driver.name) == 0) {
-+			found = true;
-+			break;
-+		}
-+	}
++	/* if lookup failed, we know WSMT was enabled */
++	if (buffer->output[0] != 0)
++		return 1;
 +
-+	if (!found ||
-+	    !wdriver->file_operations ||
-+	    !wdriver->file_operations->unlocked_ioctl)
-+		return -ENODEV;
-+
-+	/* make sure we're not calling a higher instance */
-+	if (_IOC_NR(cmd) > wblock->gblock.instance_count)
-+		return -EINVAL;
-+
-+	return wdriver->file_operations->unlocked_ioctl(filp, cmd, arg);
++	/* query token status if it didn't fail */
++	ret = (buffer->output[1] == token->value);
++	return ret;
 +}
 +
-+static const struct file_operations wmi_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= wmi_ioctl,
-+};
-+
- static int wmi_dev_probe(struct device *dev)
+ static int __init dell_smbios_smm_init(void)
  {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 	struct wmi_driver *wdriver =
- 		container_of(dev->driver, struct wmi_driver, driver);
- 	int ret = 0;
-+	char *buf;
+ 	int ret;
+@@ -88,6 +116,13 @@ static int __init dell_smbios_smm_init(void)
+ 		return -ENOMEM;
+ 	dell_smbios_get_smm_address(&da_command_address, &da_command_code);
  
- 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
- 		dev_warn(dev, "failed to enable device -- probing anyway\n");
- 
-+	/* driver wants a character device made */
-+	if (wdriver->file_operations) {
-+		buf = kmalloc(strlen(wdriver->driver.name) + 4, GFP_KERNEL);
-+		if (!buf)
-+			return -ENOMEM;
-+		strcpy(buf, "wmi/");
-+		strcpy(buf + 4, wdriver->driver.name);
-+		wblock->misc_dev.minor = MISC_DYNAMIC_MINOR;
-+		wblock->misc_dev.name = buf;
-+		wblock->misc_dev.fops = &wmi_fops;
-+		ret = misc_register(&wblock->misc_dev);
-+		if (ret) {
-+			dev_warn(dev, "failed to register char dev: %d", ret);
-+			kfree(buf);
-+		}
++	ret = test_wsmt_enabled();
++	pr_debug("WSMT enable test: %d\n", ret);
++	if (ret) {
++		ret = -ENODEV;
++		goto fail_wsmt;
 +	}
 +
- 	if (wdriver->probe) {
- 		ret = wdriver->probe(dev_to_wdev(dev));
- 		if (ret != 0 && ACPI_FAILURE(wmi_method_enable(wblock, 0)))
- 			dev_warn(dev, "failed to disable device\n");
- 	}
--
+ 	platform_device = platform_device_alloc("dell-smbios", 1);
+ 	if (!platform_device) {
+ 		ret = -ENOMEM;
+@@ -111,6 +146,7 @@ static int __init dell_smbios_smm_init(void)
+ fail_platform_device_add:
+ 	platform_device_put(platform_device);
+ 
++fail_wsmt:
+ fail_platform_device_alloc:
+ 	free_page((unsigned long)buffer);
  	return ret;
- }
- 
-@@ -791,6 +851,11 @@ static int wmi_dev_remove(struct device *dev)
- 		container_of(dev->driver, struct wmi_driver, driver);
- 	int ret = 0;
- 
-+	if (wdriver->file_operations) {
-+		kfree(wblock->misc_dev.name);
-+		misc_deregister(&wblock->misc_dev);
-+	}
-+
- 	if (wdriver->remove)
- 		ret = wdriver->remove(dev_to_wdev(dev));
- 
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index ddee427e0721..c84db3e8038d 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -18,6 +18,7 @@
- 
- #include <linux/device.h>
- #include <linux/acpi.h>
-+#include <uapi/linux/wmi.h>
- 
- struct wmi_device {
- 	struct device dev;
-@@ -43,6 +44,7 @@ struct wmi_device_id {
- struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
-+	const struct file_operations *file_operations;
- 
- 	int (*probe)(struct wmi_device *wdev);
- 	int (*remove)(struct wmi_device *wdev);
-diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
-new file mode 100644
-index 000000000000..6a811ead7db8
---- /dev/null
-+++ b/include/uapi/linux/wmi.h
-@@ -0,0 +1,10 @@
-+#ifndef _UAPI_LINUX_WMI_H
-+#define _UAPI_LINUX_WMI_H
-+
-+#define WMI_IOC 'W'
-+#define WMI_IO(instance)	_IO(WMI_IOC, instance)
-+#define WMI_IOR(instance)	_IOR(WMI_IOC, instance, void*)
-+#define WMI_IOW(instance)	_IOW(WMI_IOC, instance, void*)
-+#define WMI_IOWR(instance)	_IOWR(WMI_IOC, instance, void*)
-+
-+#endif
 -- 
 2.14.1
