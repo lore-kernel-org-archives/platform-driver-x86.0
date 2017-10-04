@@ -1,64 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC v3 3/7] platform/x86: intel_pmc_ipc: Use regmap calls for
- GCR updates
-Date: Wed, 4 Oct 2017 15:37:20 +0300
-Message-ID: <CAHp75VeUUbc2AMcuy2X-EduTWMqJSqTkU6nLW=FF8Qu-+OPy2A@mail.gmail.com>
-References: <cover.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5286489131571f149c6b75a8367ceb93cfe6e6be.1504588701.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VdGEf_e6mopQmFG5+Dv3X1f5TwV8cHn2CjA39USqN1JBw@mail.gmail.com> <5ba5b3d9-b55a-5834-04e5-b4b9a356dca7@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:38379 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751962AbdJDMhV (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2017 08:37:21 -0400
-In-Reply-To: <5ba5b3d9-b55a-5834-04e5-b4b9a356dca7@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Ingo Molnar <mingo@redhat.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add entry for the Chuwi Hi8 Pro tablet
+Date: Wed,  4 Oct 2017 15:30:12 +0200
+Message-ID: <20171004133012.10625-1-hdegoede@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 4, 2017 at 4:16 AM, sathyanarayanan kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> On 10/01/2017 07:48 AM, Andy Shevchenko wrote:
->> On Tue, Sep 5, 2017 at 8:37 AM,
->> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+Add touchscreen platform data for the Chuwi Hi8 Pro tablet.
 
->> Since it sounds as candidate for stable,
->
-> Yes.
->>
->> can we have split it to just
->> as less as possible intrusive fix + moving to regmap as a separate
->> change?
->
-> If we have to split it into two patches then,
->
-> Patch #1 will fix the "sleep in atomic context issue" by replacing
-> mutex_lock() with spin_lock()
-> in GCR read/write APIs to protect the GCR memory updates.
-> Patch #2 will remove GCR read/write/update APIs and replace it with regmap
-> APIs. But along with this
-> change we will also remove the spin_lock() added in previous patch because
-> regmap calls are already
-> protected by its own locking mechanism.
->
-> Since Patch #2 will clean up what we do in Patch #1, Do we need to split it
-> into two patches?
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/silead_dmi.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Yes, please do...
-
->> It should include Fixes: tag as well I suppose.
->
-> Agree. I will add Fixes tag in next version.
-
-...because this one will go alone to stable releases.
-
-Be also sure patch #1 will be applied on current vanilla (w/o PDx86
-queue involvement).
-
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index c8ff77275366..fadfce9b3f5f 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -138,6 +138,19 @@ static const struct silead_ts_dmi_data itworks_tw891_data = {
+ 	.properties	= itworks_tw891_props,
+ };
+ 
++static const struct property_entry chuwi_hi8_pro_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
++	{ }
++};
++
++static const struct silead_ts_dmi_data chuwi_hi8_pro_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= chuwi_hi8_pro_props,
++};
++
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -221,6 +234,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "TW891"),
+ 		},
+ 	},
++	{
++		/* Chuwi Hi8 Pro */
++		.driver_data = (void *)&chuwi_hi8_pro_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Hampoo"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
++		},
++	},
+ 	{ },
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.14.2
