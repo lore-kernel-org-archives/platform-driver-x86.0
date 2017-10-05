@@ -1,100 +1,129 @@
-From: Kees Cook <keescook@chromium.org>
-Subject: [PATCH] intel_ips: Convert timers to use timer_setup()
-Date: Wed, 4 Oct 2017 17:54:21 -0700
-Message-ID: <20171005005421.GA23936@beast>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Wed, 4 Oct 2017 18:09:09 -0700
+Message-ID: <20171005010909.GC25018@fury>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+ <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:34360 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751221AbdJEBJM (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 4 Oct 2017 21:09:12 -0400
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
 
-In preparation for unconditionally passing the struct timer_list pointer to
-all timer callbacks, switch to using the new timer_setup() and from_timer()
-to pass the timer pointer explicitly. Moves timer structure off stack and
-into struct ips_driver.
+On Wed, Oct 04, 2017 at 05:48:31PM -0500, Mario Limonciello wrote:
+> All communication on individual GUIDs should occur in separate drivers.
+> Allowing a driver to communicate with the bus to another GUID is just
+> a hack that discourages drivers to adopt the bus model.
+> 
+> The information found from the WMI descriptor driver is now exported
+> for use by other drivers.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  MAINTAINERS                                |   5 +
+>  drivers/platform/x86/Kconfig               |  12 +++
+>  drivers/platform/x86/Makefile              |   1 +
+>  drivers/platform/x86/dell-wmi-descriptor.c | 162 +++++++++++++++++++++++++++++
+>  drivers/platform/x86/dell-wmi-descriptor.h |  18 ++++
+>  drivers/platform/x86/dell-wmi.c            |  88 ++--------------
+>  6 files changed, 205 insertions(+), 81 deletions(-)
+>  create mode 100644 drivers/platform/x86/dell-wmi-descriptor.c
+>  create mode 100644 drivers/platform/x86/dell-wmi-descriptor.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 08b96f77f618..659dbeec4191 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4002,6 +4002,11 @@ M:	Pali Rohár <pali.rohar@gmail.com>
+>  S:	Maintained
+>  F:	drivers/platform/x86/dell-wmi.c
+>  
+> +DELL WMI DESCRIPTOR DRIVER
+> +M:	Mario Limonciello <mario.limonciello@dell.com>
+> +S:	Maintained
+> +F:	drivers/platform/x86/dell-wmi-descriptor.c
+> +
+>  DELTA ST MEDIA DRIVER
+>  M:	Hugues Fruchet <hugues.fruchet@st.com>
+>  L:	linux-media@vger.kernel.org
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 1f7959ff055c..bc347c326d87 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -121,6 +121,7 @@ config DELL_WMI
+>  	depends on DMI
+>  	depends on INPUT
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+> +	depends on DELL_WMI_DESCRIPTOR
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This requires commit 686fef928bba ("timer: Prepare to change timer
-callback argument type") in v4.14-rc3, but should be otherwise
-stand-alone.
----
- drivers/platform/x86/intel_ips.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+We have to be careful with the use of "select", but I think in this case it
+makes sense.
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 58dcee562d64..056afb731d79 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -300,6 +300,7 @@ struct ips_driver {
- 	struct task_struct *monitor;
- 	struct task_struct *adjust;
- 	struct dentry *debug_root;
-+	struct timer_list timer;
- 
- 	/* Average CPU core temps (all averages in .01 degrees C for precision) */
- 	u16 ctv1_avg_temp;
-@@ -942,9 +943,10 @@ static u32 calc_avg_power(struct ips_driver *ips, u32 *array)
- 	return avg;
- }
- 
--static void monitor_timeout(unsigned long arg)
-+static void monitor_timeout(struct timer_list *t)
- {
--	wake_up_process((struct task_struct *)arg);
-+	struct ips_driver *ips = from_timer(ips, t, timer);
-+	wake_up_process(ips->monitor);
- }
- 
- /**
-@@ -961,7 +963,6 @@ static void monitor_timeout(unsigned long arg)
- static int ips_monitor(void *data)
- {
- 	struct ips_driver *ips = data;
--	struct timer_list timer;
- 	unsigned long seqno_timestamp, expire, last_msecs, last_sample_period;
- 	int i;
- 	u32 *cpu_samples, *mchp_samples, old_cpu_power;
-@@ -1049,8 +1050,7 @@ static int ips_monitor(void *data)
- 	schedule_timeout_interruptible(msecs_to_jiffies(IPS_SAMPLE_PERIOD));
- 	last_sample_period = IPS_SAMPLE_PERIOD;
- 
--	setup_deferrable_timer_on_stack(&timer, monitor_timeout,
--					(unsigned long)current);
-+	timer_setup(&ips->timer, monitor_timeout, TIMER_DEFERRABLE);
- 	do {
- 		u32 cpu_val, mch_val;
- 		u16 val;
-@@ -1107,7 +1107,7 @@ static int ips_monitor(void *data)
- 		expire = jiffies + msecs_to_jiffies(IPS_SAMPLE_PERIOD);
- 
- 		__set_current_state(TASK_INTERRUPTIBLE);
--		mod_timer(&timer, expire);
-+		mod_timer(&ips->timer, expire);
- 		schedule();
- 
- 		/* Calculate actual sample period for power averaging */
-@@ -1116,8 +1116,7 @@ static int ips_monitor(void *data)
- 			last_sample_period = 1;
- 	} while (!kthread_should_stop());
- 
--	del_timer_sync(&timer);
--	destroy_timer_on_stack(&timer);
-+	del_timer_sync(&ips->timer);
- 
- 	dev_dbg(&ips->dev->dev, "ips-monitor thread stopped\n");
- 
+If you "select DELL_WMI_DESCRIPTOR" here, and maintain depends on
+ACPI_WMI (not shown in context here), then...
+
+>  	select DELL_SMBIOS
+>  	select INPUT_SPARSEKMAP
+>  	---help---
+> @@ -129,6 +130,17 @@ config DELL_WMI
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called dell-wmi.
+>  
+> +config DELL_WMI_DESCRIPTOR
+> +	tristate "Dell WMI descriptor"
+> +	depends on ACPI_WMI
+> +	default ACPI_WMI
+
+This default can be dropped, the dependency will be met if DELL_WMI can
+be enabled...
+
+> +	---help---
+> +	  Say Y here if you want to be able to read the format of WMI
+> +	  communications on some Dell laptops, desktops and IoT gateways.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called dell-wmi-descriptor.
+
+... and this can be converted to an invisible option and eliminate some
+Kconfig clutter.
+
+...
+
+
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 1366bccdf275..90d7e8e55e9b 100644
+...
+> @@ -376,7 +375,11 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>  	 * So to prevent reading garbage from buffer we will process only first
+>  	 * one event on devices with WMI interface version 0.
+>  	 */
+> -	if (priv->interface_version == 0 && buffer_entry < buffer_end)
+> +	if (!dell_wmi_get_interface_version(&interface_version)) {
+
+You've introduced a dependency on another module here and haven't
+guaranteed that dell-wmi-descriptor will have been loaded prior to this
+one.
+
+You'll want to add something like:
+
+#ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
+	if (request_module("dell_wmi_descriptor"))
+		/* FAIL */
+#endif
+
+During init.
+
 -- 
-2.7.4
-
-
--- 
-Kees Cook
-Pixel Security
+Darren Hart
+VMware Open Source Technology Center
