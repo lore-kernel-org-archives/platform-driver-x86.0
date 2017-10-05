@@ -1,85 +1,99 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 12/14] platform/x86: wmi: create character devices when
- requested by drivers
-Date: Thu, 5 Oct 2017 19:39:05 +0000
-Message-ID: <38121adacda24553a7408953157862f4@ausx13mpc120.AMER.DELL.COM>
-References: <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
- <20171005071619.GA25960@kroah.com>
- <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
- <20171005154214.GB29347@kroah.com> <20171005155156.GZ10938@pali>
- <20171005162628.GA4993@kroah.com> <20171005173925.GD31452@fury>
- <20171005184728.GB9713@kroah.com>
- <750018cd00674782a55f2b50e8aef689@ausx13mpc120.AMER.DELL.COM>
- <20171005190948.GA21238@kroah.com> <20171005193242.GD10938@pali>
+Subject: RE: [PATCH v4 11/14] platform/x86: dell-smbios-wmi: Add new WMI
+ dispatcher driver
+Date: Thu, 5 Oct 2017 19:47:38 +0000
+Message-ID: <1cf6f4e539e24b60879c8274e580cfb3@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+ <8b37d47244fbba75ea264d06d4e7966a1f8f8f7a.1507156392.git.mario.limonciello@dell.com>
+ <20171005021434.GF25018@fury>
+ <e94d06dcfaf34deab72a5170a95fe2e9@ausx13mpc120.AMER.DELL.COM>
+ <20171005175745.GE31452@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:62726 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751814AbdJETjH (ORCPT
+Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:18910 "EHLO
+        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751405AbdJETrk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 15:39:07 -0400
-In-Reply-To: <20171005193242.GD10938@pali>
+        Thu, 5 Oct 2017 15:47:40 -0400
+In-Reply-To: <20171005175745.GE31452@fury>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, greg@kroah.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciA1LCAyMDE3
-IDI6MzMgUE0NCj4gVG86IEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPg0KPiBDYzogTGltb25jaWVs
-bG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IGR2aGFydEBpbmZyYWRlYWQu
-b3JnOw0KPiBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9Aa2Vy
-bmVsLm9yZzsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IG1qZzU5
-QGdvb2dsZS5jb207IGhjaEBsc3QuZGUNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxMi8xNF0g
-cGxhdGZvcm0veDg2OiB3bWk6IGNyZWF0ZSBjaGFyYWN0ZXIgZGV2aWNlcyB3aGVuDQo+IHJlcXVl
-c3RlZCBieSBkcml2ZXJzDQo+IA0KPiBIaSBHcmVnISBJIHdvdWxkIGFuc3dlciBzb21lIG9mIHlv
-dXIgcXVlc3Rpb24uLi4NCj4gDQo+IE9uIFRodXJzZGF5IDA1IE9jdG9iZXIgMjAxNyAyMTowOTo0
-OCBHcmVnIEtIIHdyb3RlOg0KPiA+IE9uIFRodSwgT2N0IDA1LCAyMDE3IGF0IDA3OjAzOjI0UE0g
-KzAwMDAsIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gT24gV2luZG93
-cyBpdCdzIGEgZHJpdmVyLWxlc3Mgc29sdXRpb24uICBWZW5kb3JzIGRvbid0IGRvIGFueXRoaW5n
-IG90aGVyDQo+ID4gPiB0aGFuIHByb3ZpZGUgdGhlIE1PRiAod2hpY2ggZGVzY3JpYmVzIGhvdyB0
-aGUgZGF0YSBwYXNzZWQgdG8gQVNMIGxvb2tzKS4NCj4gPg0KPiA+IEhvdyBkbyB0aGV5ICJwcm92
-aWRlIGl0Ij8NCj4gDQo+IEkgZGVzY3JpYmVkIGl0IGluIG15IGVtYWlsLiBCaW5hcnkgTU9GIGlz
-IGluIEFDUEkgYnVmZmVyIHJldHVybmVkIGJ5DQo+IHdlbGwga25vd24gQUNQSSBmdW5jdGlvbi4N
-Cj4gDQo+IFZlbmRvciBmaWxscyBpbnRvIERTRFQgQUNQSSB0YWJsZSAocGFydCBvZiBCSU9TIGZp
-cm13YXJlKSBhdCBjb3JyZWN0DQo+IHBsYWNlIGJpbmFyeSBNT0YgYnVmZmVyIGFuZCBBQ1BJIGlu
-dGVycHJldGVyIHdoaWNoIGlzIHBhcnQgb2Yga2VybmVsIGNhbg0KPiBhY2Nlc3MgaXQuDQo+IA0K
-PiA+ID4gV2hlbiBXaW5kb3dzIGJvb3RzIHVwLCBfV0RHIGlzIHBhcnNlZCwNCj4gPg0KPiA+IFdo
-byBwYXJzZXMgaXQsIHRoZSBXaW5kb3dzIGtlcm5lbD8NCj4gDQo+IFllcywgc29tZSBXaW5kb3dz
-IGtlcm5lbCBkcml2ZXIgcGFyc2VzIEFDUEkncyBfV0RHIGFuZCBhbHNvIGJpbmFyeSBNT0YNCj4g
-YnVmZmVyIGZyb20gQUNQSS4NCj4gDQo+ID4gPiB0aGUgYmluYXJ5IE1PRiBpcyBsb2FkZWQgaW50
-byB0aGUgV01JIHJlcG9zaXRvcnkuDQo+ID4NCj4gPiBXaG8gZG9lcyB0aGUgbG9hZGluZz8gIFdo
-ZXJlIGRvZXMgdGhlICJXTUkgcmVwb3NpdG9yeSIgbGl2ZT8NCj4gDQo+IElJUkMgaXQgY2FuIGJl
-IGxvYWRlZCBieSBib3RoIHVzZXJzcGFjZSBhbmQga2VybmVsLiBObyBpZGVhIGFib3V0DQo+IHBl
-cm1pc3Npb25zLCBidXQgQUNQSS9XTUkga2VybmVsIGRyaXZlciBsb2FkcyB0aGF0IGJpbmFyeSBN
-T0YgZnJvbSBBQ1BJDQo+IHRhYmxlLg0KPiANCj4gVmlhIHNvbWUgdG9vbHMgdXNlciBjYW4gbG9h
-ZHMgYWxzbyBpdHMgb3duIE1PRiBidWZmZXIgaW50byAiV01JDQo+IHJlcG9zaXRvcnkiLg0KPiAN
-Cj4gPiA+IEl0J3MgdXAgdG8gZmlybXdhcmUgdG8gYmxvY2sgdGhlIGNyYXp5IHN0dWZmIHRoYXQg
-eW91IGNhbiBwdXQgaW4gYSBidWZmZXIuDQo+ID4NCj4gPiBTbyB1c2Vyc3BhY2UgY2FuIHBhc3Mg
-YW55IGJsb2IgaXQgd2FudHMgdG8gdGhlIGZpcm13YXJlIHRocm91Z2ggdGhpcw0KPiA+IGludGVy
-ZmFjZSBhbmQgdGhlIGtlcm5lbCBkb2VzIG5vdCBwYXJzZSBhbnl0aGluZz8gIEhvdyBpcyB0aGF0
-DQo+ID4gInByb3RlY3RlZCI/DQo+IA0KPiBJbiB0aGF0IGJpbmFyeSBNT0YgaXMgZGVzY3JpYmVk
-IEMrKyBzdHlsZSBvYmplY3Qgc3lzdGVtIGFuZCBtYXBwaW5nIGZyb20NCj4gdGhvc2UgY2xhc3Mv
-b2JqZWN0cyBpbnRvIEFDUEkgbWV0aG9kcy4gV2l0aCBpbmZvcm1hdGlvbiBob3cgYXJlIG1hcHBl
-ZA0KPiBvYmplY3QgbWV0aG9kIHBhcmFtZXRlcnMgKGUuZy4gaW50ZWdlciwgc3RyaW5ncywgc3Ry
-dWN0dXJlcy4uLikgaW50bw0KPiBBQ1BJIGJ1ZmZlci4gQW5kIGluIFdpbmRvd3MgeW91IGNhbiBJ
-SVJDIGNhbGwgdGhvc2UgY2xhc3Mvb2JqZWN0cw0KPiBkZWZpbmVkIGluIE1PRiBhbmQgc29tZXRo
-aW5nIChJIGJldCBXaW5kb3dzIGtlcm5lbCBkcml2ZXIpIHRyYW5zbGF0ZQ0KPiBjbGFzcyBtZXRo
-b2QgcGFyYW1ldGVycyAoaW50ZWdlcnMsIHN0cmluZ3MsIC4uLikgaW50byBrZXJuZWwgQUNQSQ0K
-PiBidWZmZXJzIGFuZCBjYWxsIGNvcnJlY3QgQUNQSSBtZXRob2QuIFNvIHRoZXJlIGlzIGp1c3Qg
-cHJvdGVjdGlvbiB0aGF0DQo+IG1ldGhvZCBpcyBjYWxsZWQgd2l0aCBjb3JyZWN0ICJzaWduYXR1
-cmUiLg0KPiANCj4gQnV0IElJUkMgRGVsbCBkZXNjcmliZSBpbiBpdHMgTU9GIG9iamVjdCBzeXN0
-ZW0sIHRoYXQgdGhlcmUgaXMgb25lIGNsYXNzDQo+IHdpdGgganVzdCBvbmUgbWV0aG9kIHdoaWNo
-IGhhcyBwYXJhbWV0ZXIgIlN0cmluZyIgYXQgc3BlY2lmaWVkIHNpemUgLS0NCj4gd2hpY2ggbWFw
-cyAxOjEgdG8gQUNQSSBidWZmZXIuDQo+IA0KDQpJbiB0aGUgY3VycmVudCBNT0YgaW1wbGVtZW50
-YXRpb24gZm9yIERlbGwgU01CSU9TIGNhbGxpbmcgaW50ZXJmYWNlIHllcyBzaW1pbGFyDQp0byB5
-b3VyIGRlc2NyaXB0aW9uLg0KT25lIGNsYXNzIGRlc2NyaWJlcyBkYXRhIGZpbGxlZCB3aXRoIGJ5
-dGVzLCBhbmQgdGhlbiB0aGUgY2xhc3MgZm9yIG1ha2luZyB0aGUgDQpjYWxsIHdpbGwgdXNlIHRo
-YXQgYXMgYW4gYXJndW1lbnQuDQoNCmNsYXNzIEJEYXQgew0KICAgIFtXbWlEYXRhSWQoMSksIHJl
-YWQsIHdyaXRlLCBEZXNjcmlwdGlvbigiZGF0YSIpXSB1aW50OCBCeXRlc1tXTUlfUEFDS0FHRV9T
-SVpFXTsgICAgICAgICAgICAgICAgICB9Ow0KDQp2b2lkIERvQkZuKFtpbiwgb3V0LCBEZXNjcmlw
-dGlvbigiRm4gYnVmIildIEJEYXQgRGF0YSk7DQoNCg==
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Thursday, October 5, 2017 12:58 PM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-
+> driver-x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
+> greg@kroah.com
+> Subject: Re: [PATCH v4 11/14] platform/x86: dell-smbios-wmi: Add new WMI
+> dispatcher driver
+>=20
+> On Thu, Oct 05, 2017 at 03:12:46PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+>=20
+> > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kc=
+onfig
+> > > > index f0b97cb8e449..ef597f440d2e 100644
+> > > > --- a/drivers/platform/x86/Kconfig
+> > > > +++ b/drivers/platform/x86/Kconfig
+> > > > @@ -93,13 +93,27 @@ config ASUS_LAPTOP
+> > > >
+> > > >  config DELL_SMBIOS
+> > > >  	tristate "Dell SMBIOS calling interface"
+> > > > -	depends on DELL_SMBIOS_SMM
+> > > > +	depends on DELL_SMBIOS_WMI || DELL_SMBIOS_SMM
+> > > >  	---help---
+> > > >  	This module provides common functions for kernel modules using
+> > > >  	Dell SMBIOS.
+> > >
+> > > You use select DELL_SMBIOS below, which implies this modules should b=
+e
+> > > invisible. Indeed, there is no need for the user to see the DELL_SMBI=
+OS
+> > > option at all now, they can select DELL_SMBIOS_WMI and or
+> > > DELL_SMBIOS_SMM, no need to keep the DELL_SMBIOS option.
+> > >
+> > So when you say make invisible, does that mean that it should never sho=
+w
+> > up in make menuconfig and just be implicitly selected?
+>=20
+> Right. It shouldn't have a prompt.
+>=20
+> >
+> > When I was adjusting Kconfig for your other feedback I noticed setting
+> something
+> > to "select $DRIVER" that invisible driver does show up just can't be tu=
+rned off.
+> > Is that what you mean?
+>=20
+> No, I mean eliminate the menu entry by eliminating the prompt.
+Do you have an example of a driver that does it this way?=20
+When I tried, CONFIG_DELL_WMI_DESCRIPTOR doesn't get saved to .config
+and then doesn't compile into a module anymore.
+
+>=20
+> >
+> > > > diff --git a/drivers/platform/x86/dell-smbios-wmi.c
+> > > b/drivers/platform/x86/dell-smbios-wmi.c
+> > > > +static void __init parse_b1_table(const struct dmi_header *dm)
+> > > > +{
+> > > > +	struct misc_bios_flags_structure *flags =3D
+> > > > +	container_of(dm, struct misc_bios_flags_structure, header);
+> > > > +
+> > > > +	/* 4 bytes header, and one word of flags */
+> > >
+> > > Assuming specifically 8 bytes of flags, independent of arch?
+> >
+> > Well platform/drivers/*x86*...
+>=20
+> I was thinking 32b vs 64b x86 which have a different definition of word s=
+ize.
+>=20
+I'll make this clearer.
