@@ -1,99 +1,89 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 11/14] platform/x86: dell-smbios-wmi: Add new WMI
- dispatcher driver
-Date: Thu, 5 Oct 2017 19:47:38 +0000
-Message-ID: <1cf6f4e539e24b60879c8274e580cfb3@ausx13mpc120.AMER.DELL.COM>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 12/14] platform/x86: wmi: create character devices
+ when requested by drivers
+Date: Thu, 5 Oct 2017 13:51:33 -0700
+Message-ID: <20171005205133.GA12321@fury>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <8b37d47244fbba75ea264d06d4e7966a1f8f8f7a.1507156392.git.mario.limonciello@dell.com>
- <20171005021434.GF25018@fury>
- <e94d06dcfaf34deab72a5170a95fe2e9@ausx13mpc120.AMER.DELL.COM>
- <20171005175745.GE31452@fury>
+ <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
+ <20171005071619.GA25960@kroah.com>
+ <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
+ <20171005154214.GB29347@kroah.com>
+ <20171005155156.GZ10938@pali>
+ <20171005162628.GA4993@kroah.com>
+ <20171005173925.GD31452@fury>
+ <20171005184728.GB9713@kroah.com>
+ <750018cd00674782a55f2b50e8aef689@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:18910 "EHLO
-        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751405AbdJETrk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 15:47:40 -0400
-In-Reply-To: <20171005175745.GE31452@fury>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <750018cd00674782a55f2b50e8aef689@ausx13mpc120.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: greg@kroah.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Thursday, October 5, 2017 12:58 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-
-> driver-x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
-> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
-> greg@kroah.com
-> Subject: Re: [PATCH v4 11/14] platform/x86: dell-smbios-wmi: Add new WMI
-> dispatcher driver
->=20
-> On Thu, Oct 05, 2017 at 03:12:46PM +0000, Mario.Limonciello@dell.com wrot=
-e:
->=20
-> > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kc=
-onfig
-> > > > index f0b97cb8e449..ef597f440d2e 100644
-> > > > --- a/drivers/platform/x86/Kconfig
-> > > > +++ b/drivers/platform/x86/Kconfig
-> > > > @@ -93,13 +93,27 @@ config ASUS_LAPTOP
-> > > >
-> > > >  config DELL_SMBIOS
-> > > >  	tristate "Dell SMBIOS calling interface"
-> > > > -	depends on DELL_SMBIOS_SMM
-> > > > +	depends on DELL_SMBIOS_WMI || DELL_SMBIOS_SMM
-> > > >  	---help---
-> > > >  	This module provides common functions for kernel modules using
-> > > >  	Dell SMBIOS.
-> > >
-> > > You use select DELL_SMBIOS below, which implies this modules should b=
-e
-> > > invisible. Indeed, there is no need for the user to see the DELL_SMBI=
-OS
-> > > option at all now, they can select DELL_SMBIOS_WMI and or
-> > > DELL_SMBIOS_SMM, no need to keep the DELL_SMBIOS option.
-> > >
-> > So when you say make invisible, does that mean that it should never sho=
-w
-> > up in make menuconfig and just be implicitly selected?
->=20
-> Right. It shouldn't have a prompt.
->=20
-> >
-> > When I was adjusting Kconfig for your other feedback I noticed setting
-> something
-> > to "select $DRIVER" that invisible driver does show up just can't be tu=
-rned off.
-> > Is that what you mean?
->=20
-> No, I mean eliminate the menu entry by eliminating the prompt.
-Do you have an example of a driver that does it this way?=20
-When I tried, CONFIG_DELL_WMI_DESCRIPTOR doesn't get saved to .config
-and then doesn't compile into a module anymore.
+On Thu, Oct 05, 2017 at 07:03:24PM +0000, Mario.Limonciello@dell.com wrote:
+> > 
+> > And how _exactly_ is this interface exposed in Windows?  Is it ad-hoc
+> > with custom kernel drivers written by each vendor?  Or does the OS
+> > provide a "sane" interface for it?
+> 
+> On Windows it's a driver-less solution.  Vendors don't do anything other
+> than provide the MOF (which describes how the data passed to ASL looks).
+> 
+> When Windows boots up, _WDG is parsed, the binary MOF is loaded into
+> the WMI repository.  The MOF describes how named objects map to GUIDs
+> which map to ASL.
+> 
+> >From Powershell or from any application that uses WMI as admin you can 
+> look up the root namespace and see all objects.  You can pass calls back
+> and forth.  There's all sorts of examples of it here:
+> https://msdn.microsoft.com/en-us/library/windows/hardware/dn614028(v=vs.85).aspx
+> 
 
->=20
-> >
-> > > > diff --git a/drivers/platform/x86/dell-smbios-wmi.c
-> > > b/drivers/platform/x86/dell-smbios-wmi.c
-> > > > +static void __init parse_b1_table(const struct dmi_header *dm)
-> > > > +{
-> > > > +	struct misc_bios_flags_structure *flags =3D
-> > > > +	container_of(dm, struct misc_bios_flags_structure, header);
-> > > > +
-> > > > +	/* 4 bytes header, and one word of flags */
-> > >
-> > > Assuming specifically 8 bytes of flags, independent of arch?
-> >
-> > Well platform/drivers/*x86*...
->=20
-> I was thinking 32b vs 64b x86 which have a different definition of word s=
-ize.
->=20
-I'll make this clearer.
+A couple snippets from this link which I believe I've shared previously
+that clarify the design intent of the WMI mechanism:
+
+"
+ACPI-to-WMI Mapper Goals for Windows Instrumentation:
+
+...
+
+* Allow OEMs to include OEM-specific data blocks, user-mode-callable
+  ACPI control methods, and events without requiring any changes to the
+  ACPI-to-WMI mapper.
+
+* Allow general-purpose data consumer applications--those written
+  without any special knowledge of the data blocks exposed by a
+  particular machine--to be able to access and understand the data
+  blocks, user-mode-callable ACPI control methods, and events being
+  mapped--including those that are OEM specific.
+
+...
+
+The following are not goals for the ACPI-to-WMI mapper:
+
+* To have specific knowledge about any data block that passes through
+  the mapper.
+
+* To provide interfaces specifically for SMBIOS data and functions. The
+  mapper is an open architecture that is not restricted to SMBIOS data
+  and functionality.
+"
+
+This model is not consistent with Linux design principles, and Mario's
+changes attempt to allow for more kernel oversight by:
+
+* Requiring a driver to be written to bind to any GUID which will expose
+  WMI methods to userspace. The goal here is to provide an effective
+  whitelist, and to promote vendor participation (they need to send the
+  patch, have it reviewed, respond to challenges on the security
+  implications, etc.)
+
+* In the future, provide for the MOF parsing within the kernel so Linux
+  will have more ability to audit messaging.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
