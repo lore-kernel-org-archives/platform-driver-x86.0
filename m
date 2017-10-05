@@ -1,75 +1,62 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 11/14] platform/x86: dell-smbios-wmi: Add new WMI
- dispatcher driver
-Date: Thu, 5 Oct 2017 10:57:45 -0700
-Message-ID: <20171005175745.GE31452@fury>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
- <8b37d47244fbba75ea264d06d4e7966a1f8f8f7a.1507156392.git.mario.limonciello@dell.com>
- <20171005021434.GF25018@fury>
- <e94d06dcfaf34deab72a5170a95fe2e9@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: peaq-wmi: Add DMI check before binding to
+ the WMI interface
+Date: Thu, 5 Oct 2017 20:59:07 +0300
+Message-ID: <CAHp75VcPvwusgznA_rx7+1bdqjHSJ-Z8CE36EktpegMBoWWCzg@mail.gmail.com>
+References: <20171005142021.4899-1-hdegoede@redhat.com> <CAHp75VezzgBXscqiVg_eFkpQdk8NPjQVyxh2FH_DuXop74KzLw@mail.gmail.com>
+ <acc2d503-877b-5862-b978-4aea41eca4b8@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e94d06dcfaf34deab72a5170a95fe2e9@ausx13mpc120.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <acc2d503-877b-5862-b978-4aea41eca4b8@redhat.com>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 05, 2017 at 03:12:46PM +0000, Mario.Limonciello@dell.com wrote:
+On Thu, Oct 5, 2017 at 5:27 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
+>
+> On 05-10-17 16:23, Andy Shevchenko wrote:
+>>
+>> On Thu, Oct 5, 2017 at 5:20 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> It seems that the WMI GUID used by the PEAQ 2-in-1 WMI hotkeys is not
+>>> as unique as a GUID should be and is used on some other devices too.
+>>>
+>>> This is causing spurious key-press reports on these other devices.
+>>>
+>>> This commits adds a DMI check to the PEAQ 2-in-1 WMI hotkeys driver to
+>>> ensure that it is actually running on a PEAQ 2-in-1, fixing the
+>>> spurious key-presses on these other devices.
+>>>
+>>
+>> Recently I have pushed similar patch (another device). Can you rebase
+>> against testing?
+>
+>
+> That patch adds a blacklist, for yet another model then the 2 bugreports:
+>
+>>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1497861
+>>> BugLink: https://bugzilla.suse.com/attachment.cgi?id=743182
+>
+>
+> which I've received. My patch adds a whitelist instead as it seems the GUID
+> used is some very generic GUID,
 
-> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > > index f0b97cb8e449..ef597f440d2e 100644
-> > > --- a/drivers/platform/x86/Kconfig
-> > > +++ b/drivers/platform/x86/Kconfig
-> > > @@ -93,13 +93,27 @@ config ASUS_LAPTOP
-> > >
-> > >  config DELL_SMBIOS
-> > >  	tristate "Dell SMBIOS calling interface"
-> > > -	depends on DELL_SMBIOS_SMM
-> > > +	depends on DELL_SMBIOS_WMI || DELL_SMBIOS_SMM
-> > >  	---help---
-> > >  	This module provides common functions for kernel modules using
-> > >  	Dell SMBIOS.
-> > 
-> > You use select DELL_SMBIOS below, which implies this modules should be
-> > invisible. Indeed, there is no need for the user to see the DELL_SMBIOS
-> > option at all now, they can select DELL_SMBIOS_WMI and or
-> > DELL_SMBIOS_SMM, no need to keep the DELL_SMBIOS option.
-> > 
-> So when you say make invisible, does that mean that it should never show
-> up in make menuconfig and just be implicitly selected?
+Since you are maintainer and moreover have a hardware to test I assume
+that's correct thing to do...
 
-Right. It shouldn't have a prompt.
+> so the blacklist patch should simply be
+> dropped,
 
-> 
-> When I was adjusting Kconfig for your other feedback I noticed setting something
-> to "select $DRIVER" that invisible driver does show up just can't be turned off.
-> Is that what you mean?
+... however, the patch can't be dropped.
 
-No, I mean eliminate the menu entry by eliminating the prompt.
+Either me, or you in v2 need to revert it. Tell me what you prefer here.
 
-> 
-> > > diff --git a/drivers/platform/x86/dell-smbios-wmi.c
-> > b/drivers/platform/x86/dell-smbios-wmi.c
-> > > +static void __init parse_b1_table(const struct dmi_header *dm)
-> > > +{
-> > > +	struct misc_bios_flags_structure *flags =
-> > > +	container_of(dm, struct misc_bios_flags_structure, header);
-> > > +
-> > > +	/* 4 bytes header, and one word of flags */
-> > 
-> > Assuming specifically 8 bytes of flags, independent of arch?
-> 
-> Well platform/drivers/*x86*...
-
-I was thinking 32b vs 64b x86 which have a different definition of word size.
-
-(and depending on context, even that changes)
-
-So... "8 bytes" ? I presume this is a fixed length independent of word size?
+In any case, please (re)send with Cc to Kai so he or bug reportes may
+have a chance to test it as well.
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+With Best Regards,
+Andy Shevchenko
