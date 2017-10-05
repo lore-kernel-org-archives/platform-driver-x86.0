@@ -1,57 +1,132 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 04/14] platform/x86: dell-wmi: increase severity of
- some failures
-Date: Thu, 5 Oct 2017 15:02:25 +0000
-Message-ID: <720fa15b9c6840e79452186ccbdd50ce@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v4 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Thu, 5 Oct 2017 15:04:47 +0000
+Message-ID: <b2bc391409724010b96170f9d206f622@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <f9dd40ebcda3238fa431a8a0d38595b808fae38b.1507156392.git.mario.limonciello@dell.com>
- <CAHp75Vd2h5K-Zi4VP=Qesx9=kEEsD-pJGWzBE_LmVVuqPt=h9w@mail.gmail.com>
+ <151b8e5bb0be0a9ef88282581d441a4211465ae7.1507156392.git.mario.limonciello@dell.com>
+ <20171005015752.GD25018@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:49088 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750965AbdJEPCh (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:57735 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751094AbdJEPEt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 11:02:37 -0400
-In-Reply-To: <CAHp75Vd2h5K-Zi4VP=Qesx9=kEEsD-pJGWzBE_LmVVuqPt=h9w@mail.gmail.com>
+        Thu, 5 Oct 2017 11:04:49 -0400
+In-Reply-To: <20171005015752.GD25018@fury>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2Jl
-ciA1LCAyMDE3IDEyOjIxIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9u
-Y2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRy
-aXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5v
-cmc+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFp
-bC5jb20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmp3QHJqd3lzb2NraS5uZXQ+OyBtamc1OUBn
-b29nbGUuY29tOyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT47DQo+IEdyZWcgS0ggPGdy
-ZWdAa3JvYWguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA0LzE0XSBwbGF0Zm9ybS94
-ODY6IGRlbGwtd21pOiBpbmNyZWFzZSBzZXZlcml0eSBvZiBzb21lDQo+IGZhaWx1cmVzDQo+IA0K
-PiBPbiBUaHUsIE9jdCA1LCAyMDE3IGF0IDE6NDggQU0sIE1hcmlvIExpbW9uY2llbGxvDQo+IDxt
-YXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+ID4gVGhlcmUgaXMgYSBsb3Qgb2Yg
-ZXJyb3IgY2hlY2tpbmcgaW4gcGxhY2UgZm9yIHRoZSBmb3JtYXQgb2YgdGhlIFdNSQ0KPiA+IGRl
-c2NyaXB0b3IgYnVmZmVyLCBidXQgc29tZSBvZiB0aGUgcG90ZW50aWFsbHkgcmFpc2VkIGlzc3Vl
-cyBzaG91bGQNCj4gPiBiZSBjb25zaWRlcmVkIGNyaXRpY2FsIGZhaWx1cmVzLg0KPiA+DQo+ID4g
-SWYgdGhlIGJ1ZmZlciBzaXplIG9yIGhlYWRlciBkb24ndCBtYXRjaCwgdGhpcyBpcyBhIGdvb2Qg
-aW5kaWNhdGlvbg0KPiA+IHRoYXQgdGhlIGJ1ZmZlciBmb3JtYXQgY2hhbmdlZCBpbiBhIHdheSB0
-aGF0IHRoZSByZXN0IG9mIHRoZSBkYXRhDQo+ID4gc2hvdWxkIG5vdCBiZSByZWxpZWQgdXBvbi4N
-Cj4gPg0KPiA+IEZvciB0aGUgcmVtYWluaW5nIGRhdGEgc2V0IHZlY3RvcnMsIGNvbnRpbnVlIHRv
-IG5vdGF0ZSBhIHdhcm5pbmcNCj4gPiBpbiB1bmRlZmluZWQgcmVzdWx0cywgYnV0IGFzIHRob3Nl
-IGFyZSBmaWVsZHMgdGhhdCB0aGUgZGVzY3JpcHRvcg0KPiA+IGludGVuZGVkIHRvIHJlZmVyIHRv
-IG90aGVyIGFwcGxpY2F0aW9ucywgZG9uJ3QgZmFpbCBpZiB0aGV5J3JlIG5ldw0KPiA+IHZhbHVl
-cy4NCj4gDQo+ID4gLSAgICAgICBpZiAoc3RybmNtcChvYmotPnN0cmluZy5wb2ludGVyLCAiREVM
-TCBXTUkiLCA4KSAhPSAwKQ0KPiA+IC0gICAgICAgICAgICAgICBkZXZfd2Fybigmd2Rldi0+ZGV2
-LCAiRGVsbCBkZXNjcmlwdG9yIGJ1ZmZlciBoYXMgaW52YWxpZCBzaWduYXR1cmUNCj4gKCU4cGgp
-XG4iLA0KPiA+ICsgICAgICAgaWYgKHN0cm5jbXAob2JqLT5zdHJpbmcucG9pbnRlciwgIkRFTEwg
-V01JIiwgOCkgIT0gMCkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKCZ3ZGV2LT5kZXYs
-ICJEZWxsIGRlc2NyaXB0b3IgYnVmZmVyIGhhcyBpbnZhbGlkIHNpZ25hdHVyZQ0KPiAoJThwaClc
-biIsDQo+IA0KPiBBIG5pdDogcGluZy1wb25nIHByb2dyYW1taW5nIGRldGVjdGVkLg0KPiBMb29r
-cyBsaWtlIGN1cnJlbnQgcGF0Y2ggMiBzaG91bGQgZ28gYXQgbGVhc3QgYWZ0ZXIgdGhpcyBvbmUu
-DQo+IA0KPiANCj4gLS0NCg0KSSdsbCByZS1vcmRlciB0aGVtLCBidXQgZWl0aGVyIHdheSBib3Ro
-IHBhdGNoZXMgYXJlIHRvdWNoaW5nIHRoZXNlIGxpbmVzIGluIHNvbWUNCndheS4NCg==
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Wednesday, October 4, 2017 8:58 PM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
+> kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy Lutomi=
+rski
+> <luto@kernel.org>; quasisec@google.com; pali.rohar@gmail.com;
+> rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Greg KH
+> <greg@kroah.com>
+> Subject: Re: [PATCH v4 09/14] platform/x86: dell-smbios: Introduce dispat=
+cher for
+> SMM calls
+>=20
+> On Wed, Oct 04, 2017 at 05:48:35PM -0500, Mario Limonciello wrote:
+> > This splits up the dell-smbios driver into two drivers:
+> > * dell-smbios
+> > * dell-smbios-smm
+> >
+> > dell-smbios can operate with multiple different dispatcher drivers to
+> > perform SMBIOS operations.
+> >
+> > Also modify the interface that dell-laptop and dell-wmi use align to th=
+is
+> > model more closely.  Rather than a single global buffer being allocated
+> > for all drivers, each driver will allocate and be responsible for it's =
+own
+> > buffer. The pointer will be passed to the calling function and each
+> > dispatcher driver will then internally copy it to the proper location t=
+o
+> > perform it's call.
+> >
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > ---
+> >  MAINTAINERS                            |   6 ++
+> >  drivers/platform/x86/Kconfig           |  17 ++-
+> >  drivers/platform/x86/Makefile          |   1 +
+> >  drivers/platform/x86/dell-laptop.c     | 191 ++++++++++++++++---------=
+--------
+> >  drivers/platform/x86/dell-smbios-smm.c | 136 +++++++++++++++++++++++
+> >  drivers/platform/x86/dell-smbios-smm.h |  22 ++++
+> >  drivers/platform/x86/dell-smbios.c     | 120 +++++++++++++--------
+> >  drivers/platform/x86/dell-smbios.h     |  13 ++-
+> >  drivers/platform/x86/dell-wmi.c        |   8 +-
+> >  9 files changed, 361 insertions(+), 153 deletions(-)
+> >  create mode 100644 drivers/platform/x86/dell-smbios-smm.c
+> >  create mode 100644 drivers/platform/x86/dell-smbios-smm.h
+> >
+> ...
+>=20
+> > +config DELL_SMBIOS_SMM
+> > +       tristate "Dell SMBIOS calling interface (SMM implementation)"
+> > +       depends on DCDBAS
+> > +       default DCDBAS
+> > +       select DELL_SMBIOS
+> > +       ---help---
+> > +       This provides an implementation for the Dell SMBIOS calling int=
+erface
+> > +       communicated over ACPI-WMI.
+>=20
+> Not over ACPI-WMI... over SMM.... right?
+
+Yep, copy paste error.
+
+>=20
+>=20
+>=20
+> > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
+dell-
+> laptop.c
+> > index f42159fd2031..c648bbfcc394 100644
+> > --- a/drivers/platform/x86/dell-laptop.c
+> > +++ b/drivers/platform/x86/dell-laptop.c
+> > @@ -85,6 +85,7 @@ static struct platform_driver platform_driver =3D {
+> >  	}
+> >  };
+> >
+> > +static struct calling_interface_buffer *buffer;
+> >  static struct platform_device *platform_device;
+> >  static struct backlight_device *dell_backlight_device;
+> >  static struct rfkill *wifi_rfkill;
+> > @@ -405,7 +406,6 @@ static const struct dmi_system_id dell_quirks[]
+> __initconst =3D {
+> >
+> >  static int dell_rfkill_set(void *data, bool blocked)
+> >  {
+> > -	struct calling_interface_buffer *buffer;
+> >  	int disable =3D blocked ? 1 : 0;
+> >  	unsigned long radio =3D (unsigned long)data;
+> >  	int hwswitch_bit =3D (unsigned long)data - 1;
+> > @@ -413,19 +413,21 @@ static int dell_rfkill_set(void *data, bool block=
+ed)
+> >  	int status;
+> >  	int ret;
+> >
+> > -	buffer =3D dell_smbios_get_buffer();
+> > -
+> > -	dell_smbios_send_request(17, 11);
+> > +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
+> > +	buffer->class =3D 17;
+> > +	buffer->select =3D 11;
+>=20
+> Please move these three lines into a function, it's used far far too
+> often to be open coded. The dell_smbios_send_request is a reasonable
+> wrapper which you could just define here as well. This would minimize
+> the change to the driver.
+>=20
+OK I'll clean this up and make some functions.
