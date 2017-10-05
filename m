@@ -1,109 +1,174 @@
 From: Greg KH <greg@kroah.com>
 Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
  userspace interface
-Date: Thu, 5 Oct 2017 09:23:21 +0200
-Message-ID: <20171005072321.GB25960@kroah.com>
+Date: Thu, 5 Oct 2017 09:33:24 +0200
+Message-ID: <20171005073324.GC25960@kroah.com>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
  <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:58323 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751209AbdJEHdP (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 5 Oct 2017 03:33:15 -0400
 Content-Disposition: inline
 In-Reply-To: <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
 Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
-List-Id: platform-driver-x86.vger.kernel.org
 
 On Wed, Oct 04, 2017 at 05:48:39PM -0500, Mario Limonciello wrote:
-> This userspace character device will be used to perform SMBIOS calls
-> from any applications.
-> 
-> It provides an ioctl that will allow passing the 32k WMI calling
-> interface buffer between userspace and kernel space.
-
-{sigh}  Did you really test this?  It feels like it wasn't, due to the
-api you are using here.  Did you run it with a 32bit userspace and 64bit
-kernel?  32bit kernel/userspace?  How well did your userspace developer
-fall down crying when you tried that?  :)
-
-> This character device is intended to deprecate the dcdbas kernel module
-> and the interface that it provides to userspace.
-
-At least that driver has a well-documented api to userspace, you are
-throwing all of that away here, are you _sure_ you want to do that?
-Seems like you just made things much harder.
-
-> It's important for the driver to provide a R/W ioctl to ensure that
-> two competing userspace processes don't race to provide or read each
-> others data.
-
-The whole goal of this patch is to provide that ioctl, right?  So of
-course it is "important" :)
-
-> The API for interacting with this interface is defined in documentation
-> as well as a uapi header provides the format of the structures.
-
-Ok, let's _just_ review that api please:
-
-> diff --git a/include/uapi/linux/dell-smbios-wmi.h b/include/uapi/linux/dell-smbios-wmi.h
-> new file mode 100644
-> index 000000000000..0d0d09b04021
-> --- /dev/null
-> +++ b/include/uapi/linux/dell-smbios-wmi.h
-> @@ -0,0 +1,25 @@
-> +#ifndef _UAPI_DELL_SMBIOS_WMI_H_
-> +#define _UAPI_DELL_SMBIOS_WMI_H_
+> +static long dell_smbios_wmi_ioctl(struct file *filp, unsigned int cmd,
+> +	unsigned long arg)
+> +{
+> +	void __user *p = (void __user *) arg;
+> +	struct wmi_smbios_ioctl *input;
+> +	struct wmi_smbios_priv *priv;
+> +	struct wmi_device *wdev;
+> +	size_t ioctl_size;
+> +	int ret = 0;
 > +
-> +#include <linux/ioctl.h>
-> +#include <linux/wmi.h>
+> +	switch (cmd) {
+> +	/* we only operate on first instance */
+> +	case DELL_WMI_SMBIOS_CMD:
+> +		wdev = get_first_wmi_device();
+> +		if (!wdev) {
+> +			pr_err("No WMI devices bound\n");
+
+dev_err(), you are a driver, never use "raw" pr_ calls.
+
+> +			return -ENODEV;
+> +		}
+> +		ioctl_size = sizeof(struct wmi_smbios_ioctl);
+> +		priv = dev_get_drvdata(&wdev->dev);
+> +		input = kmalloc(ioctl_size, GFP_KERNEL);
+> +		if (!input)
+> +			return -ENOMEM;
+> +		mutex_lock(&wmi_mutex);
+> +		if (!access_ok(VERIFY_READ, p, ioctl_size)) {
+
+Hm, any time I see an access_ok() call, I get scared.  You should almost
+never need to make that call if you are using the correct kernel apis.
+
+> +			pr_err("Unsafe userspace pointer passed\n");
+
+dev_err().
+
+> +			return -EFAULT;
+
+Memory leak!
+
+
+> +		}
+> +		if (copy_from_user(input, p, ioctl_size)) {
+> +			ret = -EFAULT;
+
+So, why did you call access_ok() followed by copy_from_user()?
+copy_from/to() handle all of that for you automatically.
+
+> +			goto fail_smbios_cmd;
+> +		}
+> +		if (input->length != priv->buffer_size) {
+> +			pr_err("Got buffer size %d expected %d\n",
+> +				input->length, priv->buffer_size);
+
+length is user provided, it can be whatever anyone sets it to.  I don't
+understand this error.
+
+> +			ret = -EINVAL;
+> +			goto fail_smbios_cmd;
+> +		}
+> +		if (!access_ok(VERIFY_WRITE, input->buf, priv->buffer_size)) {
+> +			pr_err("Unsafe userspace pointer passed\n");
+
+Again, don't need this.
+
+> +			ret = -EFAULT;
+> +			goto fail_smbios_cmd;
+> +		}
+> +		if (copy_from_user(priv->buf, input->buf, priv->buffer_size)) {
+
+Wait, input->buf is a user pointer?  Ick, see my previous email about
+your crazy api here being a mess.  This should not be needed.
+
+And as you "know" the buffer size already, why do you have userspace
+specify it?  What good is it?
+
+> +			ret = -EFAULT;
+> +			goto fail_smbios_cmd;
+> +		}
+> +		ret = run_smbios_call(wdev);
+
+No other checking of the values in the structure?  You just "trust"
+userspace to get it all right?  Hah!
+
+> +		if (ret != 0)
+> +			goto fail_smbios_cmd;
+
+You didn't run this through checkpatch :(
+
+
+> +		if (copy_to_user(input->buf, priv->buf, priv->buffer_size))
+> +			ret = -EFAULT;
+> +fail_smbios_cmd:
+> +		kfree(input);
+> +		mutex_unlock(&wmi_mutex);
+> +		break;
+> +	default:
+> +		pr_err("unsupported ioctl: %d.\n", cmd);
+> +		ret = -ENOIOCTLCMD;
+> +	}
+> +	return ret;
+> +}
 > +
-> +struct wmi_calling_interface_buffer {
-> +	u16 class;
-> +	u16 select;
-> +	u32 input[4];
-> +	u32 output[4];
-> +	u32 argattrib;
-> +	u32 blength;
-> +	u8 *data;
-> +} __packed;
-
-{sigh}
-
-For structures that cross the user/kernel boundry, you _HAVE_ to use the
-correct types.  For some things, that is easy, u16 needs to be __u16,
-u32 needs to be __u32, but u8*?  Hah, good luck!  Remember what I
-mentioned above about 32/64 bit issues?
-
-Why do you need a pointer here at all?  You are providing a huge chunk
-of memory to the ioctl, what's the use of a pointer?  How are you
-dereferenceing this pointer (remember, it's a userspace pointer, which
-you are not saying here, so odds are the kernel code is wrong...)
-
-
-> +struct wmi_smbios_ioctl {
-> +	u32 length;
-
-__u32.
-
-And why not __u64?  Is 32 bits always going to be ok?
-
-> +	struct wmi_calling_interface_buffer *buf;
-
-Another pointer?  2 pointer dereferences in the same ioctl structure?
-Crazy, you are wanting to make your life harder than it has to be...
-
-
+> +static ssize_t buffer_size_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct wmi_smbios_priv *priv = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d\n", priv->buffer_size);
+> +}
+> +static DEVICE_ATTR_RO(buffer_size);
+> +
+> +static struct attribute *smbios_wmi_attrs[] = {
+> +	&dev_attr_buffer_size.attr,
+> +	NULL
 > +};
 > +
-> +/* only offers on the single instance */
-> +#define DELL_WMI_SMBIOS_CMD		WMI_IOWR(0)
+> +static const struct attribute_group smbios_wmi_attribute_group = {
+> +	.attrs = smbios_wmi_attrs,
+> +};
+> +
+>  static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+>  {
+>  	struct wmi_smbios_priv *priv;
+> @@ -127,6 +209,11 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+>  	if (!priv->buf)
+>  		return -ENOMEM;
+>  
+> +	ret = sysfs_create_group(&wdev->dev.kobj,
+> +				 &smbios_wmi_attribute_group);
 
-I don't understand the comment, please explain it better.
+Hint, if a driver ever makes a call to sysfs_*(), something is wrong, it
+should never be needed.
 
-Please sit down and work out your api here, I don't think you have
-thought it through properly, given the number of pointers alone.
+Also, you just raced with userspace and lost :(
 
-thanks,
+There is a way to fix all of this, in a simple way, I'll leave that as
+an exercise for the reader, I've reviewed enough of this code for
+today...
+
+> +static const struct file_operations dell_smbios_wmi_fops = {
+> +	.owner		= THIS_MODULE,
+
+And who uses that field?  Hint, no one is, which is another issue that I
+forgot to review in your previous patch where you use this structure.
+What is protecting this module from being unloaded while the ioctl call
+is running?  (hint, nothing...)
+
+I need more coffee...
 
 greg k-h
