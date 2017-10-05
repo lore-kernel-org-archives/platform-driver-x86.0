@@ -1,30 +1,44 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce support for Dell SMBIOS over WMI
-Date: Thu, 5 Oct 2017 12:00:01 +0300
-Message-ID: <CAHp75Vef3qEAD4JuE6QOYKAJJt-Zd+8XH3DaV9BT1+k0J_r14Q@mail.gmail.com>
-References: <cover.1507156392.git.mario.limonciello@dell.com> <20171005000936.GB25018@fury>
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH] platform/x86: mlx-platform: make a couple of structures static
+Date: Thu,  5 Oct 2017 11:42:11 +0100
+Message-ID: <20171005104211.30440-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005000936.GB25018@fury>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
+To: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 5, 2017 at 3:09 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Oct 04, 2017 at 05:48:26PM -0500, Mario Limonciello wrote:
->>
->> NOTE: This patch is intended to go on top of the 6 patches already in
->> Darren's review tree.
->
-> I pushed these to for-next today, they should be available in linux-next
-> shortly.
+From: Colin Ian King <colin.king@canonical.com>
 
-Not before beginning of November.
+The structures mlxplat_dev and mlxplat_hotplug are local to the source
+and do not need to be in global scope, so make them static.
 
-P.S. This month no linux-next.
+Cleans up sparse warnings:
+symbol 'mlxplat_dev' was not declared. Should it be static?
+symbol 'mlxplat_hotplug' was not declared. Should it be static?
 
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/mlx-platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 4f3de2a8c4df..504256c3660d 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -216,8 +216,8 @@ static struct resource mlxplat_mlxcpld_resources[] = {
+ 	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
+ };
+ 
+-struct platform_device *mlxplat_dev;
+-struct mlxcpld_hotplug_platform_data *mlxplat_hotplug;
++static struct platform_device *mlxplat_dev;
++static struct mlxcpld_hotplug_platform_data *mlxplat_hotplug;
+ 
+ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.14.1
