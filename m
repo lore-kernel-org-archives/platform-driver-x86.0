@@ -1,43 +1,92 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 08/14] platform/x86: dell-smbios: Add a sysfs interface
- for SMBIOS tokens
-Date: Thu, 5 Oct 2017 17:22:05 +0300
-Message-ID: <CAHp75VcCqB5v1=z3VvnKKG7KT7XND0d-2S823siqaC5EZPdLXA@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Thu, 5 Oct 2017 14:22:37 +0000
+Message-ID: <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <0af6d03ee32bd5c1529a38de008aa94c03331d7e.1507156392.git.mario.limonciello@dell.com>
- <CAHp75VdT5Dofm+O4cVfADhZu_PFB345-VNbc8os_c4qDaegB-w@mail.gmail.com> <377f8d466565498aa50d8e39a0caf08d@ausx13mpc120.AMER.DELL.COM>
+        <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
+ <20171005145911.06a5644c@alans-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:34049 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751350AbdJEOWH (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 10:22:07 -0400
-In-Reply-To: <377f8d466565498aa50d8e39a0caf08d@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005145911.06a5644c@alans-desktop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: gnomes@lxorguk.ukuu.org.uk
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 5, 2017 at 4:58 PM,  <Mario.Limonciello@dell.com> wrote:
+> -----Original Message-----
+> From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
+> Sent: Thursday, October 5, 2017 8:59 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Gr=
+eg
+> KH <greg@kroah.com>
+> Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+> userspace interface
+>=20
+> On Wed,  4 Oct 2017 17:48:39 -0500
+> Mario Limonciello <mario.limonciello@dell.com> wrote:
+>=20
+> > This userspace character device will be used to perform SMBIOS calls
+> > from any applications.
+> >
+> > It provides an ioctl that will allow passing the 32k WMI calling
+> > interface buffer between userspace and kernel space.
+>=20
+> What is your security model for firing 32K of random crap at the BIOS ?
 
->> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>
->> To be clear I just suggested the output format in ->show() callback.
+Adding new class and select methods requires a review with the security
+team.  They will do STRIDE analysis and threat modeling.
+
+> Do you fuzz test the BIOS interface ?
+
+Yes there has been internal fuzz testing classes and selects used in the=20
+ACPI interface in the past.  I can't comment on how regularly that is done.
+I do think it's interesting is to use the interface in Linux for further fu=
+zz
+testing though.
+
+>=20
+> How do we know that between now and the end of the universe every call is
+> safe to execute as any random user without upsetting other users on the
+> same PC ?
+
+Any random user shouldn't be executing the ioctl.
+Only root should be executing any of these calls.
+
+If there is a particular call that is deemed too dangerous to have availabl=
+e the ioctl
+call can be filtered by the kernel module.
+
+>=20
+> Right now this patch is scary. U've fuzzed tested BIOS firmware in thepas=
+t
+> and it almost universally ended up in reaching for the power cord because
+> PC firmware is usually closed and usually crap.
 >
-> Andy, do you mean you would prefer not to be attributed in the description,
-> or should I be clearer that was your suggestion?
 
-I think that there is bigger threshold for being included one's name
-in Suggested-by tag. You have few dozens of lines changed and only one
-is suggested by me. And that one doesn't influence the initial idea,
-just a format change.
+Can you please share more context?
 
-So, I'm not against it per se, I just think it confuses more than attributes.
+> In addition you are assuming that every function you ever provide via
+> that ioctl has the same securiy model. So if one of them should only be
+> usable by the user logged in on the console the system would have to
+> enforce that for all. If you have two conflicting security policies we'd
+> have to make it root only and owned by a daemon. If a BIOS turns out to
+> have a hole then we have to make it CAP_SYS_RAWIO.
+>=20
+> /dev/dorandomvendorspecificshit is not an API and not a security policy.
+>=20
+> Alan
 
-Summarize: I would not put it in this patch.
-
--- 
-With Best Regards,
-Andy Shevchenko
+All functionality offered through this interface has the same security mode=
+l.
+This should only be made available to root, but I don't see the need for a
+daemon to further sit between calls.  The two applications that I see using
+this in the short term (fwupd and fwupdate) both run as root and would
+directly use this interface.
