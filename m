@@ -1,86 +1,75 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH v4 12/14] platform/x86: wmi: create character devices
- when requested by drivers
-Date: Thu, 5 Oct 2017 17:42:14 +0200
-Message-ID: <20171005154214.GB29347@kroah.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Thu, 5 Oct 2017 17:44:45 +0200
+Message-ID: <20171005154445.GC29347@kroah.com>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
- <20171005071619.GA25960@kroah.com>
- <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
+ <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
+ <20171005145911.06a5644c@alans-desktop>
+ <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49445 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751094AbdJEPmU (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 11:42:20 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+Cc: gnomes@lxorguk.ukuu.org.uk, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 05, 2017 at 02:35:43PM +0000, Mario.Limonciello@dell.com wrote:
+On Thu, Oct 05, 2017 at 02:22:37PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
+> > Sent: Thursday, October 5, 2017 8:59 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> > pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Greg
+> > KH <greg@kroah.com>
+> > Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+> > userspace interface
 > > 
-> > > +		strcpy(buf, "wmi/");
-> > > +		strcpy(buf + 4, wdriver->driver.name);
-> > > +		wblock->misc_dev.minor = MISC_DYNAMIC_MINOR;
-> > > +		wblock->misc_dev.name = buf;
-> > > +		wblock->misc_dev.fops = &wmi_fops;
-> > > +		ret = misc_register(&wblock->misc_dev);
-> > > +		if (ret) {
-> > > +			dev_warn(dev, "failed to register char dev: %d", ret);
-> > > +			kfree(buf);
+> > On Wed,  4 Oct 2017 17:48:39 -0500
+> > Mario Limonciello <mario.limonciello@dell.com> wrote:
 > > 
-> > Again, no unwinding needed?  Error message value returned?
+> > > This userspace character device will be used to perform SMBIOS calls
+> > > from any applications.
+> > >
+> > > It provides an ioctl that will allow passing the 32k WMI calling
+> > > interface buffer between userspace and kernel space.
+> > 
+> > What is your security model for firing 32K of random crap at the BIOS ?
 > 
-> It comes down to if the character device should be considered optional.  I'll
-> make it fail if it can't create it.
-
-Given that you are relying on it in this patch, it would be good to fail
-if something is going wrong.
-
-> > > +	if (wdriver->file_operations) {
-> > > +		kfree(wblock->misc_dev.name);
-> > > +		misc_deregister(&wblock->misc_dev);
-> > 
-> > Unregister before freeing the device name, right?
+> Adding new class and select methods requires a review with the security
+> team.  They will do STRIDE analysis and threat modeling.
 > 
-> Well if you unregister and then free the name you'll have lost the pointer.
-> So isn't that the right order?
-
-Yes, but save the pointer to the name and then free it after the larger
-structure is gone.  misc_deregister() does not free anything, so you
-still have the memory around here, no need to even use a temp variable.
-
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/wmi.h
-> > > @@ -0,0 +1,10 @@
-> > > +#ifndef _UAPI_LINUX_WMI_H
-> > > +#define _UAPI_LINUX_WMI_H
-> > > +
-> > > +#define WMI_IOC 'W'
-> > > +#define WMI_IO(instance)	_IO(WMI_IOC, instance)
-> > > +#define WMI_IOR(instance)	_IOR(WMI_IOC, instance, void*)
-> > > +#define WMI_IOW(instance)	_IOW(WMI_IOC, instance, void*)
-> > > +#define WMI_IOWR(instance)	_IOWR(WMI_IOC, instance, void*)
-> > 
-> > Ugh, void *, this is going to be "fun"...
-> > 
-> > My comments on just how fun is left for the actual driver that attempted
-> > to implement these...
-> > 
+> > Do you fuzz test the BIOS interface ?
 > 
-> So until in kernel MOF parsing is available you can't predict the format of
-> what an individual ACPI method will expect for its input.  Even when the in
-> kernel MOF parsing is made available the data types may be complex structures.
+> Yes there has been internal fuzz testing classes and selects used in the 
+> ACPI interface in the past.  I can't comment on how regularly that is done.
+> I do think it's interesting is to use the interface in Linux for further fuzz
+> testing though.
 
+That should be simple, start firing random data at this memory location
+and see what happens.  Can you brick the box?  Change the
+manufactured-date?  Change the serial number?  Normally these types of
+BIOS interfaces allow all sorts of "fun" things like this, which is why
+we have the kernel "own" the interface, to protect yourself from
+breaking the box.
 
-I have no idea what MOF is, what "parsing" is involved, or how in the
-world ACPI got involved here...
+> > How do we know that between now and the end of the universe every call is
+> > safe to execute as any random user without upsetting other users on the
+> > same PC ?
+> 
+> Any random user shouldn't be executing the ioctl.
+> Only root should be executing any of these calls.
 
-good luck!
+"only root" isn't the best protection method, you should know better :)
+
+You are going to have to do some kind of parsing/whitelisting here,
+trust us...
+
+thanks,
 
 greg k-h
