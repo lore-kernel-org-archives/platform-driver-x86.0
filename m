@@ -1,56 +1,53 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
  descriptor into it's own driver
-Date: Thu, 5 Oct 2017 17:04:26 +0000
-Message-ID: <d81a555504d3453aa9efa7faa4cc941a@ausx13mpc120.AMER.DELL.COM>
+Date: Thu, 5 Oct 2017 10:22:10 -0700
+Message-ID: <20171005172210.GC31452@fury>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
  <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
- <CAHp75VdxqbPv_fUow4gFMYwTu7CNxXAxPVkoq0UDVrh-7b5YRA@mail.gmail.com>
+ <20171005010909.GC25018@fury>
+ <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
+ <20171005071153.GA31452@fury>
+ <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
+ <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
+ <20171005141448.GB31452@fury>
+ <5a114243f6844133a89d060347d5d390@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdxqbPv_fUow4gFMYwTu7CNxXAxPVkoq0UDVrh-7b5YRA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5a114243f6844133a89d060347d5d390@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2Jl
-ciA1LCAyMDE3IDEyOjM0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9u
-Y2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRy
-aXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5v
-cmc+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFp
-bC5jb20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmp3QHJqd3lzb2NraS5uZXQ+OyBtamc1OUBn
-b29nbGUuY29tOyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT47DQo+IEdyZWcgS0ggPGdy
-ZWdAa3JvYWguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA1LzE0XSBwbGF0Zm9ybS94
-ODY6IGRlbGwtd21pLWRlc2NyaXB0b3I6IHNwbGl0IFdNSQ0KPiBkZXNjcmlwdG9yIGludG8gaXQn
-cyBvd24gZHJpdmVyDQo+IA0KPiBPbiBUaHUsIE9jdCA1LCAyMDE3IGF0IDE6NDggQU0sIE1hcmlv
-IExpbW9uY2llbGxvDQo+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+ID4g
-QWxsIGNvbW11bmljYXRpb24gb24gaW5kaXZpZHVhbCBHVUlEcyBzaG91bGQgb2NjdXIgaW4gc2Vw
-YXJhdGUgZHJpdmVycy4NCj4gPiBBbGxvd2luZyBhIGRyaXZlciB0byBjb21tdW5pY2F0ZSB3aXRo
-IHRoZSBidXMgdG8gYW5vdGhlciBHVUlEIGlzIGp1c3QNCj4gPiBhIGhhY2sgdGhhdCBkaXNjb3Vy
-YWdlcyBkcml2ZXJzIHRvIGFkb3B0IHRoZSBidXMgbW9kZWwuDQo+ID4NCj4gPiBUaGUgaW5mb3Jt
-YXRpb24gZm91bmQgZnJvbSB0aGUgV01JIGRlc2NyaXB0b3IgZHJpdmVyIGlzIG5vdyBleHBvcnRl
-ZA0KPiA+IGZvciB1c2UgYnkgb3RoZXIgZHJpdmVycy4NCj4gDQo+ID4gKyAgICAgICBwcml2ID0g
-bGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZ3bWlfbGlzdCwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRlc2NyaXB0b3JfcHJpdiwNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGlzdCk7DQo+IA0KPiA+ICsgICAg
-ICAgcHJpdiA9IGxpc3RfZmlyc3RfZW50cnlfb3JfbnVsbCgmd21pX2xpc3QsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXNjcmlwdG9yX3ByaXYs
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3QpOw0KPiAN
-Cj4gc3RhdGljIGlubGluZSAuLi50b19wcml2KC4uLikNCj4gew0KPiAgcmV0dXJuIGxpc3RfZmly
-c3RfZW50cnlfLi4uKCk7DQo+IH0NCj4gDQo+ID4gKyAgICAgICBsaXN0X2FkZF90YWlsKCZwcml2
-LT5saXN0LCAmd21pX2xpc3QpOw0KPiANCj4gPiArICAgICAgIGxpc3RfZGVsKCZwcml2LT5saXN0
-KTsNCj4gDQo+IERvIHRoZXNlIG5lZWQgbG9ja2luZz8NCg0KWWVhaCB0aGlzIHNlZW1zIGxpa2Ug
-YSBnb29kIGlkZWEuICBJJ2xsIGFkZCBpdCBpbi4NCg0KPiANCj4gPiArYm9vbCBkZWxsX3dtaV9n
-ZXRfaW50ZXJmYWNlX3ZlcnNpb24odTMyICp2ZXJzaW9uKTsNCj4gPiArYm9vbCBkZWxsX3dtaV9n
-ZXRfc2l6ZSh1MzIgKnNpemUpOw0KPiANCj4gVGhpcyBtaWdodCBuZWVkIHN0dWJzIHdoZW4gbW9k
-dWxlIGlzIG5vdCBzZWxlY3RlZCAod2hlbiBmdW5jdGlvbmFsaXR5DQo+IGlzIG9wdGlvbmFsIGlm
-IGl0IHdvdWxkIGJlIHRoZSBjYXNlKSwgb3RoZXJ3aXNlIGFsbCB1c2VycyBzaG91bGQNCj4gc2Vs
-ZWN0IGl0IGV4cGxpY2l0bHkuDQoNClBlciBEYXJyZW4ncyBvdGhlciB0aHJlYWRzIEknbSBhZGp1
-c3RpbmcgS2NvbmZpZyB0byBtYWtlIHN1cmUgdGhpcyBtb2R1bGUNCmlzIHNlbGVjdGVkLiAgSXQn
-cyByZWFsaXN0aWNhbGx5IG5vdCBvcHRpb25hbCB3aGVuIHVzaW5nIHRoZXNlIG90aGVycy4NCg==
+On Thu, Oct 05, 2017 at 02:47:15PM +0000, Mario.Limonciello@dell.com wrote:
+> > >
+> > > So I believe it should be a mandatory runtime dependency due to needing
+> > > the symbol dell_wmi_get_interface_version.  Depmod should be handling
+> > > this then no?
+> > 
+> > This was nagging me all night, and I was thinking the last time I had to
+> > use this it was indeed a runtime dependency. Sorry for the noise on
+> > this.
+> > 
+> > The kconfig needs to be setup such that dell-wmi-descriptor cannot be a
+> > module if the dependent drivers are modules.
+> > 
+> > --
+> > Darren Hart
+> > VMware Open Source Technology Center
+> 
+> Even if the others are modules shouldn't module ordering from depmod still DTRT?
+> You still won't be able to load dell-wmi.ko until dell-wmi-descriptor.ko was loaded.
+> 
+
+I worded that wrong *facepalm*, let me try again...
+
+The kconfig needs to be setup such that dell-wmi-descriptor cannot be a
+module if the dependent drivers are built-in.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
