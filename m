@@ -1,74 +1,47 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
- descriptor into it's own driver
-Date: Thu, 5 Oct 2017 13:59:36 +0000
-Message-ID: <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
+From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Thu, 5 Oct 2017 14:59:11 +0100
+Message-ID: <20171005145911.06a5644c@alans-desktop>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
- <20171005010909.GC25018@fury>
- <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
- <20171005071153.GA31452@fury>
- <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
+        <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:34804 "EHLO
-        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750965AbdJEN7i (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 09:59:38 -0400
-In-Reply-To: <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com, dvhart@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2Jl
-ciA1LCAyMDE3IDM6NDggQU0NCj4gVG86IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9y
-Zz4NCj4gQ2M6IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+
-OyBMS01MIDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IFBsYXRmb3JtIERyaXZl
-ciA8cGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWly
-c2tpIDxsdXRvQGtlcm5lbC5vcmc+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOh
-ciA8cGFsaS5yb2hhckBnbWFpbC5jb20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmp3QHJqd3lz
-b2NraS5uZXQ+OyBtamc1OUBnb29nbGUuY29tOyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5k
-ZT47DQo+IEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0
-IDA1LzE0XSBwbGF0Zm9ybS94ODY6IGRlbGwtd21pLWRlc2NyaXB0b3I6IHNwbGl0IFdNSQ0KPiBk
-ZXNjcmlwdG9yIGludG8gaXQncyBvd24gZHJpdmVyDQo+IA0KPiBPbiBUaHUsIE9jdCA1LCAyMDE3
-IGF0IDEwOjExIEFNLCBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0K
-PiA+IE9uIFRodSwgT2N0IDA1LCAyMDE3IGF0IDA4OjI5OjEwQU0gKzAzMDAsIEFuZHkgU2hldmNo
-ZW5rbyB3cm90ZToNCj4gPj4gT24gVGh1LCBPY3QgNSwgMjAxNyBhdCA0OjA5IEFNLCBEYXJyZW4g
-SGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiANCj4gPj4gPiBZb3UnbGwgd2Fu
-dCB0byBhZGQgc29tZXRoaW5nIGxpa2U6DQo+ID4+ID4NCj4gPj4gPiAjaWZkZWYgQ09ORklHX0RF
-TExfV01JX0RFU0NSSVBUT1JfTU9EVUxFDQo+ID4+ID4gICAgICAgICBpZiAocmVxdWVzdF9tb2R1
-bGUoImRlbGxfd21pX2Rlc2NyaXB0b3IiKSkNCj4gPj4gPiAgICAgICAgICAgICAgICAgLyogRkFJ
-TCAqLw0KPiA+PiA+ICNlbmRpZg0KPiA+PiA+DQo+ID4+ID4gRHVyaW5nIGluaXQuDQo+ID4+DQo+
-ID4+IEkgZG9uJ3QgdGhpbmsgI2lmZGVmIGlzIG5lZWRlZC4NCj4gPg0KPiA+IFdpdGhvdXQgdGhl
-IGlmZGVmLCB3ZSBjYW4ndCBkaXN0aW5ndWlzaCBiZXR3ZWVuIHJlcXVlc3RfbW9kdWxlIGZhaWxp
-bmcNCj4gPiB0byBsb2FkIHRoZSBtb2R1bGUgYmVjYXVzZSBpdCBpc24ndCBhdmFpbGFibGUgYW5k
-IGJlY2F1c2UgaXQgaXMNCj4gPiBidWlsdC1pbi4NCj4gPg0KPiA+Pg0KPiA+PiBXZSBtYXkganVz
-dCByZXF1ZXN0IG1vZHVsZS4NCj4gPj4NCj4gPj4gQnV0IGxvb2tpbmcgaW4gdGhlIGNvZGUgaXQg
-c2VlbXMgdGhhdCB3ZSBzaW1wbGUgbmVlZCB0byBzZWxlY3QgdGhhdA0KPiA+PiBtb2R1bGUuIE5v
-IHJlcXVlc3RfbW9kdWxlIHdpbGwgYmUgbmVlZGVkLg0KPiA+DQo+ID4gVGhlIHNlbGVjdCB3aWxs
-IGVuc3VyZSB0aGUgbW9kdWxlIGlzIGJ1aWx0LCBidXQgdGhlcmUgaXMgbm90IGd1YXJhbnRlZQ0K
-PiA+IHRvIG1vZHVsZSBsb2FkIG9yZGVyLiBUaGUgaW50ZW50IG9mIHRoZSBhYm92ZSBpcyB0byBl
-bnN1cmUgdGhlIHN5bWJvbHMNCj4gPiBmcm9tIHRoZSByZXF1aXJlZCBtb2R1bGUgYXJlIGxvYWRl
-ZC4NCj4gPg0KPiA+PiBEaWQgSSBtaXNzIHNvbWV0aGluZz8NCj4gPg0KPiA+IE9yIEkgZGlkIDot
-KSBJcyB0aGVyZSBzb21ldGhpbmcgYWJvdXQgdGhpcyBtb2R1bGUgd2hpY2ggZW5zdXJlcw0KPiA+
-IGRlbGxfd21pX2Rlc2NyaXB0b3IgaXMgbG9hZGVkIGZpcnN0Pw0KPiANCj4gSWYgdGhlcmUgaXMg
-YW4gb3B0aW9uYWwgKnJ1bi10aW1lKiBkZXBlbmRlbmN5IHdlIG5lZWQgdG8gdXNlIHNvbWVsaWtl
-DQo+IHJlcXVlc3RfbW9kdWxlKCkuIEZvciBleGFtcGxlLCB0aGlzIGlzIHRoZSBjYXNlIGZvciBp
-ZG1hNjQNCj4gKGRyaXZlcnMvZG1hKSB2cyBpbnRlbC1scHNzIChkcml2ZXJzL21mZCkuDQo+IA0K
-PiBJZiBpdCdzIG1hbmRhdG9yeSBydW4tdGltZSBkZXBlbmRlbmN5LCB0aGVuIHdlIG5lZWQgdG8g
-YWRkIHN0dWJzIHRvDQo+IHRoZSBoZWFkZXIgYW5kIHNlbGVjdCB0aGUgY2FsbGVlJ3MgbW9kdWxl
-IGluIEtjb25maWcuDQo+IA0KPiBJbiBjYXNlIHRoZXkgYXJlIGJvdGggbW9kdWxlcywgZGVwbW9k
-IGtlZXBzIGFuIG9yZGVyaW5nLg0KPiANCj4gU28sIHRoZSBjb3JuZXIgY2FzZSBoZXJlIGlzIHdo
-ZW4gdGhlIGNhbGxlciBpcyBidWlsdGluIHdoaWxlIGNhbGxlZSBpcyBtb2R1bGUuDQo+IA0KPiBU
-aGlzIGlzIGEgYml0IHRyaWNreSB0byBhZGQgdG8gS2NvbmZpZyAod2UgYWxzbyBoYXZlIHN1Y2gg
-Y2FzZXMNCj4gYmV0d2VlbiBJMkMgRGVzaWduV2FyZSBhbmQgYWNwaV9scHNzIEFGQUlSKS4NCj4g
-DQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg0KU28gSSBi
-ZWxpZXZlIGl0IHNob3VsZCBiZSBhIG1hbmRhdG9yeSBydW50aW1lIGRlcGVuZGVuY3kgZHVlIHRv
-IG5lZWRpbmcNCnRoZSBzeW1ib2wgZGVsbF93bWlfZ2V0X2ludGVyZmFjZV92ZXJzaW9uLiAgRGVw
-bW9kIHNob3VsZCBiZSBoYW5kbGluZw0KdGhpcyB0aGVuIG5vPw0K
+On Wed,  4 Oct 2017 17:48:39 -0500
+Mario Limonciello <mario.limonciello@dell.com> wrote:
+
+> This userspace character device will be used to perform SMBIOS calls
+> from any applications.
+> 
+> It provides an ioctl that will allow passing the 32k WMI calling
+> interface buffer between userspace and kernel space.
+
+What is your security model for firing 32K of random crap at the BIOS ?
+Do you fuzz test the BIOS interface ?
+
+How do we know that between now and the end of the universe every call is
+safe to execute as any random user without upsetting other users on the
+same PC ?
+
+Right now this patch is scary. U've fuzzed tested BIOS firmware in thepast
+and it almost universally ended up in reaching for the power cord because
+PC firmware is usually closed and usually crap.
+
+In addition you are assuming that every function you ever provide via
+that ioctl has the same securiy model. So if one of them should only be
+usable by the user logged in on the console the system would have to
+enforce that for all. If you have two conflicting security policies we'd
+have to make it root only and owned by a daemon. If a BIOS turns out to
+have a hole then we have to make it CAP_SYS_RAWIO.
+
+/dev/dorandomvendorspecificshit is not an API and not a security policy.
+
+Alan
