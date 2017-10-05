@@ -1,108 +1,79 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
- descriptor into it's own driver
-Date: Thu, 5 Oct 2017 07:14:48 -0700
-Message-ID: <20171005141448.GB31452@fury>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
- <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
- <20171005010909.GC25018@fury>
- <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
- <20171005071153.GA31452@fury>
- <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
- <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: peaq-wmi: Add DMI check before binding to the WMI interface
+Date: Thu,  5 Oct 2017 16:20:21 +0200
+Message-ID: <20171005142021.4899-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:54288 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751331AbdJEOOu (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:43702 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751323AbdJEOUY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 10:14:50 -0400
-Content-Disposition: inline
-In-Reply-To: <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
+        Thu, 5 Oct 2017 10:20:24 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-On Thu, Oct 05, 2017 at 01:59:36PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > Sent: Thursday, October 5, 2017 3:48 AM
-> > To: Darren Hart <dvhart@infradead.org>
-> > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; LKML <linux-
-> > kernel@vger.kernel.org>; Platform Driver <platform-driver-
-> > x86@vger.kernel.org>; Andy Lutomirski <luto@kernel.org>;
-> > quasisec@google.com; Pali Rohár <pali.rohar@gmail.com>; Rafael J. Wysocki
-> > <rjw@rjwysocki.net>; mjg59@google.com; Christoph Hellwig <hch@lst.de>;
-> > Greg KH <greg@kroah.com>
-> > Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
-> > descriptor into it's own driver
-> > 
-> > On Thu, Oct 5, 2017 at 10:11 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > > On Thu, Oct 05, 2017 at 08:29:10AM +0300, Andy Shevchenko wrote:
-> > >> On Thu, Oct 5, 2017 at 4:09 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > 
-> > >> > You'll want to add something like:
-> > >> >
-> > >> > #ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
-> > >> >         if (request_module("dell_wmi_descriptor"))
-> > >> >                 /* FAIL */
-> > >> > #endif
-> > >> >
-> > >> > During init.
-> > >>
-> > >> I don't think #ifdef is needed.
-> > >
-> > > Without the ifdef, we can't distinguish between request_module failing
-> > > to load the module because it isn't available and because it is
-> > > built-in.
-> > >
-> > >>
-> > >> We may just request module.
-> > >>
-> > >> But looking in the code it seems that we simple need to select that
-> > >> module. No request_module will be needed.
-> > >
-> > > The select will ensure the module is built, but there is not guarantee
-> > > to module load order. The intent of the above is to ensure the symbols
-> > > from the required module are loaded.
-> > >
-> > >> Did I miss something?
-> > >
-> > > Or I did :-) Is there something about this module which ensures
-> > > dell_wmi_descriptor is loaded first?
-> > 
-> > If there is an optional *run-time* dependency we need to use somelike
-> > request_module(). For example, this is the case for idma64
-> > (drivers/dma) vs intel-lpss (drivers/mfd).
-> > 
-> > If it's mandatory run-time dependency, then we need to add stubs to
-> > the header and select the callee's module in Kconfig.
-> > 
-> > In case they are both modules, depmod keeps an ordering.
-> > 
-> > So, the corner case here is when the caller is builtin while callee is module.
-> > 
-> > This is a bit tricky to add to Kconfig (we also have such cases
-> > between I2C DesignWare and acpi_lpss AFAIR).
-> > 
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> 
-> So I believe it should be a mandatory runtime dependency due to needing
-> the symbol dell_wmi_get_interface_version.  Depmod should be handling
-> this then no?
+It seems that the WMI GUID used by the PEAQ 2-in-1 WMI hotkeys is not
+as unique as a GUID should be and is used on some other devices too.
 
-This was nagging me all night, and I was thinking the last time I had to
-use this it was indeed a runtime dependency. Sorry for the noise on
-this.
+This is causing spurious key-press reports on these other devices.
 
-The kconfig needs to be setup such that dell-wmi-descriptor cannot be a
-module if the dependent drivers are modules.
+This commits adds a DMI check to the PEAQ 2-in-1 WMI hotkeys driver to
+ensure that it is actually running on a PEAQ 2-in-1, fixing the
+spurious key-presses on these other devices.
 
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1497861
+BugLink: https://bugzilla.suse.com/attachment.cgi?id=743182
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/peaq-wmi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+index bc98ef95514a..67fa3fa32011 100644
+--- a/drivers/platform/x86/peaq-wmi.c
++++ b/drivers/platform/x86/peaq-wmi.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/dmi.h>
+ #include <linux/input-polldev.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -64,8 +65,22 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
+ 	}
+ }
+ 
++/* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
++static const struct dmi_system_id peaq_dmi_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
++		},
++	},
++};
++
+ static int __init peaq_wmi_init(void)
+ {
++	/* WMI GUID is not unique, also check for a DMI match */
++	if (!dmi_check_system(peaq_dmi_table))
++		return -ENODEV;
++
+ 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+ 		return -ENODEV;
+ 
+@@ -86,6 +101,9 @@ static int __init peaq_wmi_init(void)
+ 
+ static void __exit peaq_wmi_exit(void)
+ {
++	if (!dmi_check_system(peaq_dmi_table))
++		return;
++
+ 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+ 		return;
+ 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.14.2
