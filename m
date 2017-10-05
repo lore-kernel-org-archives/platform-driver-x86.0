@@ -1,110 +1,68 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] intel_ips: Convert timers to use timer_setup()
-Date: Thu, 5 Oct 2017 11:41:18 +0300
-Message-ID: <CAHp75VdeS+dAQn_yE1gsgDzpv1+C5+c-AkgSgH5ScxAKFyRKWA@mail.gmail.com>
-References: <20171005005421.GA23936@beast>
+Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Thu, 5 Oct 2017 11:47:35 +0300
+Message-ID: <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+ <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
+ <20171005010909.GC25018@fury> <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
+ <20171005071153.GA31452@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005005421.GA23936@beast>
+In-Reply-To: <20171005071153.GA31452@fury>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 5, 2017 at 3:54 AM, Kees Cook <keescook@chromium.org> wrote:
-> In preparation for unconditionally passing the struct timer_list pointer to
-> all timer callbacks, switch to using the new timer_setup() and from_timer()
-> to pass the timer pointer explicitly. Moves timer structure off stack and
-> into struct ips_driver.
+On Thu, Oct 5, 2017 at 10:11 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Thu, Oct 05, 2017 at 08:29:10AM +0300, Andy Shevchenko wrote:
+>> On Thu, Oct 5, 2017 at 4:09 AM, Darren Hart <dvhart@infradead.org> wrote:
 
-Pushed to my testing queue, thanks!
+>> > You'll want to add something like:
+>> >
+>> > #ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
+>> >         if (request_module("dell_wmi_descriptor"))
+>> >                 /* FAIL */
+>> > #endif
+>> >
+>> > During init.
+>>
+>> I don't think #ifdef is needed.
+>
+> Without the ifdef, we can't distinguish between request_module failing
+> to load the module because it isn't available and because it is
+> built-in.
+>
+>>
+>> We may just request module.
+>>
+>> But looking in the code it seems that we simple need to select that
+>> module. No request_module will be needed.
+>
+> The select will ensure the module is built, but there is not guarantee
+> to module load order. The intent of the above is to ensure the symbols
+> from the required module are loaded.
+>
+>> Did I miss something?
+>
+> Or I did :-) Is there something about this module which ensures
+> dell_wmi_descriptor is loaded first?
 
->
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> This requires commit 686fef928bba ("timer: Prepare to change timer
-> callback argument type") in v4.14-rc3, but should be otherwise
-> stand-alone.
-> ---
->  drivers/platform/x86/intel_ips.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index 58dcee562d64..056afb731d79 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -300,6 +300,7 @@ struct ips_driver {
->         struct task_struct *monitor;
->         struct task_struct *adjust;
->         struct dentry *debug_root;
-> +       struct timer_list timer;
->
->         /* Average CPU core temps (all averages in .01 degrees C for precision) */
->         u16 ctv1_avg_temp;
-> @@ -942,9 +943,10 @@ static u32 calc_avg_power(struct ips_driver *ips, u32 *array)
->         return avg;
->  }
->
-> -static void monitor_timeout(unsigned long arg)
-> +static void monitor_timeout(struct timer_list *t)
->  {
-> -       wake_up_process((struct task_struct *)arg);
-> +       struct ips_driver *ips = from_timer(ips, t, timer);
-> +       wake_up_process(ips->monitor);
->  }
->
->  /**
-> @@ -961,7 +963,6 @@ static void monitor_timeout(unsigned long arg)
->  static int ips_monitor(void *data)
->  {
->         struct ips_driver *ips = data;
-> -       struct timer_list timer;
->         unsigned long seqno_timestamp, expire, last_msecs, last_sample_period;
->         int i;
->         u32 *cpu_samples, *mchp_samples, old_cpu_power;
-> @@ -1049,8 +1050,7 @@ static int ips_monitor(void *data)
->         schedule_timeout_interruptible(msecs_to_jiffies(IPS_SAMPLE_PERIOD));
->         last_sample_period = IPS_SAMPLE_PERIOD;
->
-> -       setup_deferrable_timer_on_stack(&timer, monitor_timeout,
-> -                                       (unsigned long)current);
-> +       timer_setup(&ips->timer, monitor_timeout, TIMER_DEFERRABLE);
->         do {
->                 u32 cpu_val, mch_val;
->                 u16 val;
-> @@ -1107,7 +1107,7 @@ static int ips_monitor(void *data)
->                 expire = jiffies + msecs_to_jiffies(IPS_SAMPLE_PERIOD);
->
->                 __set_current_state(TASK_INTERRUPTIBLE);
-> -               mod_timer(&timer, expire);
-> +               mod_timer(&ips->timer, expire);
->                 schedule();
->
->                 /* Calculate actual sample period for power averaging */
-> @@ -1116,8 +1116,7 @@ static int ips_monitor(void *data)
->                         last_sample_period = 1;
->         } while (!kthread_should_stop());
->
-> -       del_timer_sync(&timer);
-> -       destroy_timer_on_stack(&timer);
-> +       del_timer_sync(&ips->timer);
->
->         dev_dbg(&ips->dev->dev, "ips-monitor thread stopped\n");
->
-> --
-> 2.7.4
->
->
-> --
-> Kees Cook
-> Pixel Security
+If there is an optional *run-time* dependency we need to use somelike
+request_module(). For example, this is the case for idma64
+(drivers/dma) vs intel-lpss (drivers/mfd).
 
+If it's mandatory run-time dependency, then we need to add stubs to
+the header and select the callee's module in Kconfig.
 
+In case they are both modules, depmod keeps an ordering.
+
+So, the corner case here is when the caller is builtin while callee is module.
+
+This is a bit tricky to add to Kconfig (we also have such cases
+between I2C DesignWare and acpi_lpss AFAIR).
 
 -- 
 With Best Regards,
