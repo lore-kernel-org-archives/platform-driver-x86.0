@@ -1,250 +1,85 @@
 From: <Mario.Limonciello@dell.com>
 Subject: RE: [PATCH v4 12/14] platform/x86: wmi: create character devices when
  requested by drivers
-Date: Thu, 5 Oct 2017 19:34:57 +0000
-Message-ID: <2494c99c1b8a421bbe080dc8a174a80a@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
- <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
+Date: Thu, 5 Oct 2017 19:39:05 +0000
+Message-ID: <38121adacda24553a7408953157862f4@ausx13mpc120.AMER.DELL.COM>
+References: <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
  <20171005071619.GA25960@kroah.com>
  <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
  <20171005154214.GB29347@kroah.com> <20171005155156.GZ10938@pali>
  <20171005162628.GA4993@kroah.com> <20171005173925.GD31452@fury>
  <20171005184728.GB9713@kroah.com>
  <750018cd00674782a55f2b50e8aef689@ausx13mpc120.AMER.DELL.COM>
- <20171005190948.GA21238@kroah.com>
+ <20171005190948.GA21238@kroah.com> <20171005193242.GD10938@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:30697 "EHLO
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:62726 "EHLO
         esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751408AbdJETfA (ORCPT
+        by vger.kernel.org with ESMTP id S1751814AbdJETjH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 15:35:00 -0400
-In-Reply-To: <20171005190948.GA21238@kroah.com>
+        Thu, 5 Oct 2017 15:39:07 -0400
+In-Reply-To: <20171005193242.GD10938@pali>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: greg@kroah.com
-Cc: dvhart@infradead.org, pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+To: pali.rohar@gmail.com, greg@kroah.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-> -----Original Message-----
-> From: Greg KH [mailto:greg@kroah.com]
-> Sent: Thursday, October 5, 2017 2:10 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: dvhart@infradead.org; pali.rohar@gmail.com; andy.shevchenko@gmail.com=
-;
-> linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> luto@kernel.org; quasisec@google.com; rjw@rjwysocki.net;
-> mjg59@google.com; hch@lst.de
-> Subject: Re: [PATCH v4 12/14] platform/x86: wmi: create character devices=
- when
-> requested by drivers
->=20
-> On Thu, Oct 05, 2017 at 07:03:24PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:greg@kroah.com]
-> > > Sent: Thursday, October 5, 2017 1:47 PM
-> > > To: Darren Hart <dvhart@infradead.org>
-> > > Cc: Pali Roh=E1r <pali.rohar@gmail.com>; Limonciello, Mario
-> > > <Mario_Limonciello@Dell.com>; andy.shevchenko@gmail.com; linux-
-> > > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> luto@kernel.org;
-> > > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
-> > > Subject: Re: [PATCH v4 12/14] platform/x86: wmi: create character dev=
-ices
-> when
-> > > requested by drivers
-> > >
-> > > On Thu, Oct 05, 2017 at 10:39:25AM -0700, Darren Hart wrote:
-> > > > > It does, thanks.  And as we now understand it (I'm guessing it ha=
-d to be
-> > > > > semi-understood in the older wmi drivers already), validating it
-> > > > > properly seems to be the key for creating an interface that we "k=
-now" to
-> > > > > be safe.
-> > > > >
-> > > >
-> > > > We don't use the MOF data in any of the existing wmi drivers, becau=
-se
-> > > > they are all oddities which map to kernel managed subsystems (hotke=
-ys,
-> > > > LED control, RF Kill switches) rather than what WMI (Windows
-> > > > Manageability Interface) was designed for. The intent of these patc=
-hes
-> > > > to enable that management aspect of the platform.
-> > > >
-> > > > This is the biggest hurdle for WMI support.
-> > > >
-> > > > WMI was designed to bypass the OS, and is used in consumer devices
-> > > > intended to run Windows. This leads to an interface that is very ve=
-ndor
-> > > > specific and not consistently broken up into nice functional blocks=
-.
-> > > >
-> > > > Vendors would like to use this interface in Linux as it is being us=
-ed in
-> > > > Windows. Specifically, they want to be able to have a generic syste=
-m in
-> > > > the kernel which allows the WMI mechanism to be used by userspace,
-> > > > without the need to patch the kernel for every platform.
-> > >
-> > > And how _exactly_ is this interface exposed in Windows?  Is it ad-hoc
-> > > with custom kernel drivers written by each vendor?  Or does the OS
-> > > provide a "sane" interface for it?
-> >
-> > On Windows it's a driver-less solution.  Vendors don't do anything othe=
-r
-> > than provide the MOF (which describes how the data passed to ASL looks)=
-.
->=20
-> How do they "provide it"?
-
-In that link I shared you can see there is a GUID that maps to the one that
-has the binary MOF.  The MOF is compiled when the BIOS is built using
-mofcomp.exe on Windows into a binary format.
-
->=20
-> > When Windows boots up, _WDG is parsed,
->=20
-> Who parses it, the Windows kernel?
->=20
-Presumably?  Wmiacpi.sys.  I believe it to be user side, but I don't know W=
-indows
-source code and where they draw the line.
-
-> > the binary MOF is loaded into the WMI repository.
->=20
-> Who does the loading?  Where does the "WMI repository" live?
-
-Windows OS does this.  Same wmiacpi.sys I believe.  The WMI repository is a
-database that's on disk.  It doesn't just do these things, it contains MOF =
-(managed
-object format) for a bunch of stuff.  You can tweak way too many knobs with=
- it.
-
-It's store in "%windir%System32\Wbem\Repository"
-There's more info about how it works here
-https://technet.microsoft.com/en-us/library/cc753534.aspx
-
-I do have a longer term vision for Linux that CIMOM tools will be able to p=
-arse
-what the kernel shares in sysfs from the WMI bus and know how to work with=
-=20
-these character devices.
-
-My patch series is the first part of that, and there are still a lot of oth=
-er steps.
-
->=20
-> > The MOF describes how named objects map to GUIDs which map to ASL.
->=20
-> So this all lives in kernelspace?
->=20
-> > From Powershell or from any application that uses WMI as admin you can
-> > look up the root namespace and see all objects.
->=20
-> And what is the interface that powershell uses to get that information
-> from the kerenel?
-
-You query the WMI repository for available namespaces.  The stuff in the bi=
-nary
-MOF will have registered under a particular namespace.
-When you look at that namespace, you can query classes within it.
-
-Some of those classes will enumerate objects that you can read attributes.
-If you're calling a method, you need to fill in the arguments as described =
-in the
-MOF.  You can query the namespace to tell what those arguments look like.
-
-So going to my patch series, "dell-wmi-descriptor" would map out to a class
-In the namespace.  You can query it to see what the size of the buffer look=
-s
-like and what the interface is.
-
-The class that in Linux represents "dell-smbios-wmi" would map to another o=
-ne. =20
-You can't enumerate it since It's not a data type, but you can look at what=
- arguments
-it takes and if you provide the arguments it expects you can call it and th=
-e OS
-will pass it to the ASL and return the result.
-
-It's not very different than what I proposed in my patch series.
-
->=20
-> > You can pass calls back
-> > and forth.  There's all sorts of examples of it here:
-> > https://msdn.microsoft.com/en-
-> us/library/windows/hardware/dn614028(v=3Dvs.85).aspx
-> >
-> > Windows doesn't validate the data when it's passed to ASL and back.
->=20
-> How do you know?  Who does the "passing"?  The Windows kernel is just a
-> blind pipe?  If so, then what does the mappings?
-
-The application or cmdlet calling the method passes the data as described
-in the MOF which can be queried from the namespace.
-
-Windows doesn't know anything about what that data is, it can't.  All it kn=
-ows
-is the format of the data as described in the MOF.  It knows which ASL meth=
-od
-to call by the GUID in the MOF which matches the GUID in _WDG which contain=
-s
-the ASL method.
-
-I can't confidently know which parts of that are done by Windows kernel and
-which are handled by Windows userspace.  All I know is that from a "consume=
-r"
-of this the application or cmdlet runs in userspace.=20
-
->=20
-> > It just knows what it looks like, size of the buffer and relays the inf=
-ormation.
->=20
-> relays from/to what?
-
-The ASL method.
-
-Let me try to explain better.
-_WDG contains a bunch of objects.
-Each of those objects has a GUID, instance count, data type, and two letter=
-s that
-correspond to an ASL method.
-One of those objects is binary MOF.
-
-Binary MOF contains a description of namespaces, objects, their formats etc=
-.
-It also contains classes that map to GUIDs.
-
-Windows boots up, some process parses _WDG.
-It looks at binary MOF, decompiles/parses it.
-It maps the classes to GUIDs, the GUIDs to ASL methods.
-
-You call an object of a class, that will then call the ASL method.
-
-Make more sense?
->=20
-> > It's up to firmware to block the crazy stuff that you can put in a buff=
-er.
->=20
-> So userspace can pass any blob it wants to the firmware through this
-> interface and the kernel does not parse anything?  How is that
-> "protected"?
->=20
-> > > Again, I like my TPM to work, and I don't want a random rootkit explo=
-it
-> > > to be able to destroy it :)
-> >
-> > I'd like to however point out you can't kill your TPM from this interfa=
-ce.
->=20
-> On _your_ platform, can you guarantee it on any other platform?  :)
->=20
-> And I strongly doubt your BIOS would stand up to a good fuzzer, almost
-> no firmware can.  Heck, the kernel even has issues, we've been fixing
-> them for years...
->=20
-Well that's software for you.  It will always have problems, but=20
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciA1LCAyMDE3
+IDI6MzMgUE0NCj4gVG86IEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPg0KPiBDYzogTGltb25jaWVs
+bG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IGR2aGFydEBpbmZyYWRlYWQu
+b3JnOw0KPiBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9Aa2Vy
+bmVsLm9yZzsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IG1qZzU5
+QGdvb2dsZS5jb207IGhjaEBsc3QuZGUNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxMi8xNF0g
+cGxhdGZvcm0veDg2OiB3bWk6IGNyZWF0ZSBjaGFyYWN0ZXIgZGV2aWNlcyB3aGVuDQo+IHJlcXVl
+c3RlZCBieSBkcml2ZXJzDQo+IA0KPiBIaSBHcmVnISBJIHdvdWxkIGFuc3dlciBzb21lIG9mIHlv
+dXIgcXVlc3Rpb24uLi4NCj4gDQo+IE9uIFRodXJzZGF5IDA1IE9jdG9iZXIgMjAxNyAyMTowOTo0
+OCBHcmVnIEtIIHdyb3RlOg0KPiA+IE9uIFRodSwgT2N0IDA1LCAyMDE3IGF0IDA3OjAzOjI0UE0g
+KzAwMDAsIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gT24gV2luZG93
+cyBpdCdzIGEgZHJpdmVyLWxlc3Mgc29sdXRpb24uICBWZW5kb3JzIGRvbid0IGRvIGFueXRoaW5n
+IG90aGVyDQo+ID4gPiB0aGFuIHByb3ZpZGUgdGhlIE1PRiAod2hpY2ggZGVzY3JpYmVzIGhvdyB0
+aGUgZGF0YSBwYXNzZWQgdG8gQVNMIGxvb2tzKS4NCj4gPg0KPiA+IEhvdyBkbyB0aGV5ICJwcm92
+aWRlIGl0Ij8NCj4gDQo+IEkgZGVzY3JpYmVkIGl0IGluIG15IGVtYWlsLiBCaW5hcnkgTU9GIGlz
+IGluIEFDUEkgYnVmZmVyIHJldHVybmVkIGJ5DQo+IHdlbGwga25vd24gQUNQSSBmdW5jdGlvbi4N
+Cj4gDQo+IFZlbmRvciBmaWxscyBpbnRvIERTRFQgQUNQSSB0YWJsZSAocGFydCBvZiBCSU9TIGZp
+cm13YXJlKSBhdCBjb3JyZWN0DQo+IHBsYWNlIGJpbmFyeSBNT0YgYnVmZmVyIGFuZCBBQ1BJIGlu
+dGVycHJldGVyIHdoaWNoIGlzIHBhcnQgb2Yga2VybmVsIGNhbg0KPiBhY2Nlc3MgaXQuDQo+IA0K
+PiA+ID4gV2hlbiBXaW5kb3dzIGJvb3RzIHVwLCBfV0RHIGlzIHBhcnNlZCwNCj4gPg0KPiA+IFdo
+byBwYXJzZXMgaXQsIHRoZSBXaW5kb3dzIGtlcm5lbD8NCj4gDQo+IFllcywgc29tZSBXaW5kb3dz
+IGtlcm5lbCBkcml2ZXIgcGFyc2VzIEFDUEkncyBfV0RHIGFuZCBhbHNvIGJpbmFyeSBNT0YNCj4g
+YnVmZmVyIGZyb20gQUNQSS4NCj4gDQo+ID4gPiB0aGUgYmluYXJ5IE1PRiBpcyBsb2FkZWQgaW50
+byB0aGUgV01JIHJlcG9zaXRvcnkuDQo+ID4NCj4gPiBXaG8gZG9lcyB0aGUgbG9hZGluZz8gIFdo
+ZXJlIGRvZXMgdGhlICJXTUkgcmVwb3NpdG9yeSIgbGl2ZT8NCj4gDQo+IElJUkMgaXQgY2FuIGJl
+IGxvYWRlZCBieSBib3RoIHVzZXJzcGFjZSBhbmQga2VybmVsLiBObyBpZGVhIGFib3V0DQo+IHBl
+cm1pc3Npb25zLCBidXQgQUNQSS9XTUkga2VybmVsIGRyaXZlciBsb2FkcyB0aGF0IGJpbmFyeSBN
+T0YgZnJvbSBBQ1BJDQo+IHRhYmxlLg0KPiANCj4gVmlhIHNvbWUgdG9vbHMgdXNlciBjYW4gbG9h
+ZHMgYWxzbyBpdHMgb3duIE1PRiBidWZmZXIgaW50byAiV01JDQo+IHJlcG9zaXRvcnkiLg0KPiAN
+Cj4gPiA+IEl0J3MgdXAgdG8gZmlybXdhcmUgdG8gYmxvY2sgdGhlIGNyYXp5IHN0dWZmIHRoYXQg
+eW91IGNhbiBwdXQgaW4gYSBidWZmZXIuDQo+ID4NCj4gPiBTbyB1c2Vyc3BhY2UgY2FuIHBhc3Mg
+YW55IGJsb2IgaXQgd2FudHMgdG8gdGhlIGZpcm13YXJlIHRocm91Z2ggdGhpcw0KPiA+IGludGVy
+ZmFjZSBhbmQgdGhlIGtlcm5lbCBkb2VzIG5vdCBwYXJzZSBhbnl0aGluZz8gIEhvdyBpcyB0aGF0
+DQo+ID4gInByb3RlY3RlZCI/DQo+IA0KPiBJbiB0aGF0IGJpbmFyeSBNT0YgaXMgZGVzY3JpYmVk
+IEMrKyBzdHlsZSBvYmplY3Qgc3lzdGVtIGFuZCBtYXBwaW5nIGZyb20NCj4gdGhvc2UgY2xhc3Mv
+b2JqZWN0cyBpbnRvIEFDUEkgbWV0aG9kcy4gV2l0aCBpbmZvcm1hdGlvbiBob3cgYXJlIG1hcHBl
+ZA0KPiBvYmplY3QgbWV0aG9kIHBhcmFtZXRlcnMgKGUuZy4gaW50ZWdlciwgc3RyaW5ncywgc3Ry
+dWN0dXJlcy4uLikgaW50bw0KPiBBQ1BJIGJ1ZmZlci4gQW5kIGluIFdpbmRvd3MgeW91IGNhbiBJ
+SVJDIGNhbGwgdGhvc2UgY2xhc3Mvb2JqZWN0cw0KPiBkZWZpbmVkIGluIE1PRiBhbmQgc29tZXRo
+aW5nIChJIGJldCBXaW5kb3dzIGtlcm5lbCBkcml2ZXIpIHRyYW5zbGF0ZQ0KPiBjbGFzcyBtZXRo
+b2QgcGFyYW1ldGVycyAoaW50ZWdlcnMsIHN0cmluZ3MsIC4uLikgaW50byBrZXJuZWwgQUNQSQ0K
+PiBidWZmZXJzIGFuZCBjYWxsIGNvcnJlY3QgQUNQSSBtZXRob2QuIFNvIHRoZXJlIGlzIGp1c3Qg
+cHJvdGVjdGlvbiB0aGF0DQo+IG1ldGhvZCBpcyBjYWxsZWQgd2l0aCBjb3JyZWN0ICJzaWduYXR1
+cmUiLg0KPiANCj4gQnV0IElJUkMgRGVsbCBkZXNjcmliZSBpbiBpdHMgTU9GIG9iamVjdCBzeXN0
+ZW0sIHRoYXQgdGhlcmUgaXMgb25lIGNsYXNzDQo+IHdpdGgganVzdCBvbmUgbWV0aG9kIHdoaWNo
+IGhhcyBwYXJhbWV0ZXIgIlN0cmluZyIgYXQgc3BlY2lmaWVkIHNpemUgLS0NCj4gd2hpY2ggbWFw
+cyAxOjEgdG8gQUNQSSBidWZmZXIuDQo+IA0KDQpJbiB0aGUgY3VycmVudCBNT0YgaW1wbGVtZW50
+YXRpb24gZm9yIERlbGwgU01CSU9TIGNhbGxpbmcgaW50ZXJmYWNlIHllcyBzaW1pbGFyDQp0byB5
+b3VyIGRlc2NyaXB0aW9uLg0KT25lIGNsYXNzIGRlc2NyaWJlcyBkYXRhIGZpbGxlZCB3aXRoIGJ5
+dGVzLCBhbmQgdGhlbiB0aGUgY2xhc3MgZm9yIG1ha2luZyB0aGUgDQpjYWxsIHdpbGwgdXNlIHRo
+YXQgYXMgYW4gYXJndW1lbnQuDQoNCmNsYXNzIEJEYXQgew0KICAgIFtXbWlEYXRhSWQoMSksIHJl
+YWQsIHdyaXRlLCBEZXNjcmlwdGlvbigiZGF0YSIpXSB1aW50OCBCeXRlc1tXTUlfUEFDS0FHRV9T
+SVpFXTsgICAgICAgICAgICAgICAgICB9Ow0KDQp2b2lkIERvQkZuKFtpbiwgb3V0LCBEZXNjcmlw
+dGlvbigiRm4gYnVmIildIEJEYXQgRGF0YSk7DQoNCg==
