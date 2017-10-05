@@ -1,68 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
- descriptor into it's own driver
-Date: Thu, 5 Oct 2017 11:47:35 +0300
-Message-ID: <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
- <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
- <20171005010909.GC25018@fury> <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
- <20171005071153.GA31452@fury>
+Subject: Re: [PATCH v4 08/14] platform/x86: dell-smbios: Add a sysfs interface
+ for SMBIOS tokens
+Date: Thu, 5 Oct 2017 11:49:57 +0300
+Message-ID: <CAHp75VdT5Dofm+O4cVfADhZu_PFB345-VNbc8os_c4qDaegB-w@mail.gmail.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com> <0af6d03ee32bd5c1529a38de008aa94c03331d7e.1507156392.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005071153.GA31452@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f195.google.com ([209.85.216.195]:50811 "EHLO
+        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751400AbdJEIt6 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 5 Oct 2017 04:49:58 -0400
+In-Reply-To: <0af6d03ee32bd5c1529a38de008aa94c03331d7e.1507156392.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 
-On Thu, Oct 5, 2017 at 10:11 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Thu, Oct 05, 2017 at 08:29:10AM +0300, Andy Shevchenko wrote:
->> On Thu, Oct 5, 2017 at 4:09 AM, Darren Hart <dvhart@infradead.org> wrote:
-
->> > You'll want to add something like:
->> >
->> > #ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
->> >         if (request_module("dell_wmi_descriptor"))
->> >                 /* FAIL */
->> > #endif
->> >
->> > During init.
->>
->> I don't think #ifdef is needed.
+On Thu, Oct 5, 2017 at 1:48 AM, Mario Limonciello
+<mario.limonciello@dell.com> wrote:
+> Currently userspace tools can access system tokens via the dcdbas
+> kernel module and a SMI call that will cause the platform to execute
+> SMM code.
 >
-> Without the ifdef, we can't distinguish between request_module failing
-> to load the module because it isn't available and because it is
-> built-in.
+> With a goal in mind of deprecating the dcdbas kernel module a different
+> method for accessing these tokens from userspace needs to be created.
 >
->>
->> We may just request module.
->>
->> But looking in the code it seems that we simple need to select that
->> module. No request_module will be needed.
+> This is intentionally marked to only be readable as root as it can
+> contain sensitive information about the platform's configuration.
 >
-> The select will ensure the module is built, but there is not guarantee
-> to module load order. The intent of the above is to ensure the symbols
-> from the required module are loaded.
+> MAINTAINERS was missing for this driver.  Add myself and Pali to
+> maintainers list for it.
 >
->> Did I miss something?
->
-> Or I did :-) Is there something about this module which ensures
-> dell_wmi_descriptor is loaded first?
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
-If there is an optional *run-time* dependency we need to use somelike
-request_module(). For example, this is the case for idma64
-(drivers/dma) vs intel-lpss (drivers/mfd).
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-If it's mandatory run-time dependency, then we need to add stubs to
-the header and select the callee's module in Kconfig.
+To be clear I just suggested the output format in ->show() callback.
 
-In case they are both modules, depmod keeps an ordering.
-
-So, the corner case here is when the caller is builtin while callee is module.
-
-This is a bit tricky to add to Kconfig (we also have such cases
-between I2C DesignWare and acpi_lpss AFAIR).
 
 -- 
 With Best Regards,
