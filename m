@@ -1,31 +1,100 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 00/14] Introduce support for Dell SMBIOS over WMI
-Date: Wed, 4 Oct 2017 17:09:36 -0700
-Message-ID: <20171005000936.GB25018@fury>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: [PATCH] intel_ips: Convert timers to use timer_setup()
+Date: Wed, 4 Oct 2017 17:54:21 -0700
+Message-ID: <20171005005421.GA23936@beast>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:50094 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750951AbdJEAJk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2017 20:09:40 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1507156392.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 04, 2017 at 05:48:26PM -0500, Mario Limonciello wrote:
-> 
-> NOTE: This patch is intended to go on top of the 6 patches already in
-> Darren's review tree.
+In preparation for unconditionally passing the struct timer_list pointer to
+all timer callbacks, switch to using the new timer_setup() and from_timer()
+to pass the timer pointer explicitly. Moves timer structure off stack and
+into struct ips_driver.
 
-I pushed these to for-next today, they should be available in linux-next
-shortly.
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+This requires commit 686fef928bba ("timer: Prepare to change timer
+callback argument type") in v4.14-rc3, but should be otherwise
+stand-alone.
+---
+ drivers/platform/x86/intel_ips.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 58dcee562d64..056afb731d79 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -300,6 +300,7 @@ struct ips_driver {
+ 	struct task_struct *monitor;
+ 	struct task_struct *adjust;
+ 	struct dentry *debug_root;
++	struct timer_list timer;
+ 
+ 	/* Average CPU core temps (all averages in .01 degrees C for precision) */
+ 	u16 ctv1_avg_temp;
+@@ -942,9 +943,10 @@ static u32 calc_avg_power(struct ips_driver *ips, u32 *array)
+ 	return avg;
+ }
+ 
+-static void monitor_timeout(unsigned long arg)
++static void monitor_timeout(struct timer_list *t)
+ {
+-	wake_up_process((struct task_struct *)arg);
++	struct ips_driver *ips = from_timer(ips, t, timer);
++	wake_up_process(ips->monitor);
+ }
+ 
+ /**
+@@ -961,7 +963,6 @@ static void monitor_timeout(unsigned long arg)
+ static int ips_monitor(void *data)
+ {
+ 	struct ips_driver *ips = data;
+-	struct timer_list timer;
+ 	unsigned long seqno_timestamp, expire, last_msecs, last_sample_period;
+ 	int i;
+ 	u32 *cpu_samples, *mchp_samples, old_cpu_power;
+@@ -1049,8 +1050,7 @@ static int ips_monitor(void *data)
+ 	schedule_timeout_interruptible(msecs_to_jiffies(IPS_SAMPLE_PERIOD));
+ 	last_sample_period = IPS_SAMPLE_PERIOD;
+ 
+-	setup_deferrable_timer_on_stack(&timer, monitor_timeout,
+-					(unsigned long)current);
++	timer_setup(&ips->timer, monitor_timeout, TIMER_DEFERRABLE);
+ 	do {
+ 		u32 cpu_val, mch_val;
+ 		u16 val;
+@@ -1107,7 +1107,7 @@ static int ips_monitor(void *data)
+ 		expire = jiffies + msecs_to_jiffies(IPS_SAMPLE_PERIOD);
+ 
+ 		__set_current_state(TASK_INTERRUPTIBLE);
+-		mod_timer(&timer, expire);
++		mod_timer(&ips->timer, expire);
+ 		schedule();
+ 
+ 		/* Calculate actual sample period for power averaging */
+@@ -1116,8 +1116,7 @@ static int ips_monitor(void *data)
+ 			last_sample_period = 1;
+ 	} while (!kthread_should_stop());
+ 
+-	del_timer_sync(&timer);
+-	destroy_timer_on_stack(&timer);
++	del_timer_sync(&ips->timer);
+ 
+ 	dev_dbg(&ips->dev->dev, "ips-monitor thread stopped\n");
+ 
+-- 
+2.7.4
+
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Kees Cook
+Pixel Security
