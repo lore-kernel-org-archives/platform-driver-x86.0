@@ -1,80 +1,97 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v4 12/14] platform/x86: wmi: create character devices
- when requested by drivers
-Date: Thu, 5 Oct 2017 17:51:56 +0200
-Message-ID: <20171005155156.GZ10938@pali>
+Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Thu, 5 Oct 2017 17:56:19 +0200
+Message-ID: <20171005155619.GA10938@pali>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <528c9a1ca4fa2f29aedbb37d3ed13c480ef093fc.1507156392.git.mario.limonciello@dell.com>
- <20171005071619.GA25960@kroah.com>
- <aa10ae6ab119499c8bbdf613392a9605@ausx13mpc120.AMER.DELL.COM>
- <20171005154214.GB29347@kroah.com>
+ <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
+ <20171005145911.06a5644c@alans-desktop>
+ <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
+ <20171005154445.GC29347@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f48.google.com ([74.125.82.48]:47092 "EHLO
-        mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751369AbdJEPwA (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:48485 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751178AbdJEP4W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 11:52:00 -0400
+        Thu, 5 Oct 2017 11:56:22 -0400
 Content-Disposition: inline
-In-Reply-To: <20171005154214.GB29347@kroah.com>
+In-Reply-To: <20171005154445.GC29347@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <greg@kroah.com>
-Cc: Mario.Limonciello@dell.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Mario.Limonciello@dell.com, gnomes@lxorguk.ukuu.org.uk, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-On Thursday 05 October 2017 17:42:14 Greg KH wrote:
-> > > > --- /dev/null
-> > > > +++ b/include/uapi/linux/wmi.h
-> > > > @@ -0,0 +1,10 @@
-> > > > +#ifndef _UAPI_LINUX_WMI_H
-> > > > +#define _UAPI_LINUX_WMI_H
-> > > > +
-> > > > +#define WMI_IOC 'W'
-> > > > +#define WMI_IO(instance)	_IO(WMI_IOC, instance)
-> > > > +#define WMI_IOR(instance)	_IOR(WMI_IOC, instance, void*)
-> > > > +#define WMI_IOW(instance)	_IOW(WMI_IOC, instance, void*)
-> > > > +#define WMI_IOWR(instance)	_IOWR(WMI_IOC, instance, void*)
+On Thursday 05 October 2017 17:44:45 Greg KH wrote:
+> On Thu, Oct 05, 2017 at 02:22:37PM +0000, Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
+> > > Sent: Thursday, October 5, 2017 8:59 AM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > > Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> > > pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Greg
+> > > KH <greg@kroah.com>
+> > > Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
+> > > userspace interface
 > > > 
-> > > Ugh, void *, this is going to be "fun"...
+> > > On Wed,  4 Oct 2017 17:48:39 -0500
+> > > Mario Limonciello <mario.limonciello@dell.com> wrote:
 > > > 
-> > > My comments on just how fun is left for the actual driver that attempted
-> > > to implement these...
+> > > > This userspace character device will be used to perform SMBIOS calls
+> > > > from any applications.
+> > > >
+> > > > It provides an ioctl that will allow passing the 32k WMI calling
+> > > > interface buffer between userspace and kernel space.
 > > > 
+> > > What is your security model for firing 32K of random crap at the BIOS ?
 > > 
-> > So until in kernel MOF parsing is available you can't predict the format of
-> > what an individual ACPI method will expect for its input.  Even when the in
-> > kernel MOF parsing is made available the data types may be complex structures.
+> > Adding new class and select methods requires a review with the security
+> > team.  They will do STRIDE analysis and threat modeling.
+> > 
+> > > Do you fuzz test the BIOS interface ?
+> > 
+> > Yes there has been internal fuzz testing classes and selects used in the 
+> > ACPI interface in the past.  I can't comment on how regularly that is done.
+> > I do think it's interesting is to use the interface in Linux for further fuzz
+> > testing though.
 > 
+> That should be simple, start firing random data at this memory location
+> and see what happens.  Can you brick the box?  Change the
+> manufactured-date?  Change the serial number?  Normally these types of
+> BIOS interfaces allow all sorts of "fun" things like this, which is why
+> we have the kernel "own" the interface, to protect yourself from
+> breaking the box.
+
+There are also Dell calls to "permanently disable TPM" and similar which
+are irreversible. So this can be really a problem.
+
+> > > How do we know that between now and the end of the universe every call is
+> > > safe to execute as any random user without upsetting other users on the
+> > > same PC ?
+> > 
+> > Any random user shouldn't be executing the ioctl.
+> > Only root should be executing any of these calls.
 > 
-> I have no idea what MOF is, what "parsing" is involved, or how in the
-> world ACPI got involved here...
+> "only root" isn't the best protection method, you should know better :)
 > 
-> good luck!
+> You are going to have to do some kind of parsing/whitelisting here,
+> trust us...
+
+That is also why I in past suggested to create fully transparent
+whitelisting filter for all WMI calls. And properly implement particular
+filter in kernel...
+
+But that is of course hard as you need to know all details of internal
+structures and data which may be sent via userspace. To prevent e.g.
+action "permanently disable TPM" in kernel.
+
+> thanks,
 > 
 > greg k-h
-
-Hi Greg! Simple description: In ACPI is stored binary MOF buffer which
-describe format (function name, parameters, sizeof and type of
-parameters, etc) for all those calls.
-
-Basically it is what should be used for checking if userspace pass
-correct "buffer" via ioctl to WMI.
-
-But that binary MOF is undocumented, invented by Microsoft... and
-present in every one ACPI BIOS notebook (which uses WMI). It is
-de-facto industrial standard, just tools for encoding/decoding it are
-only for Microsoft Windows systems.
-
-I was able to decipher that format and wrote simple userspace parser:
-https://github.com/pali/bmfdec
-
-Funny part is that format is not encrypted, but compressed by DMSDOS
-compatible compression algorithm :-) You probably would remember old
-FAT16 days with compression...
-
-Hope that it helps you to understand it.
 
 -- 
 Pali Rohár
