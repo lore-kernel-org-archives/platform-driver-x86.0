@@ -1,143 +1,56 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
- userspace interface
-Date: Thu, 5 Oct 2017 16:48:16 +0000
-Message-ID: <9b58d0a8796948f39776d6bb38bcb9d6@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Thu, 5 Oct 2017 17:04:26 +0000
+Message-ID: <d81a555504d3453aa9efa7faa4cc941a@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
- <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
- <20171005145911.06a5644c@alans-desktop>
- <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
- <20171005154445.GC29347@kroah.com> <20171005155619.GA10938@pali>
- <20171005162810.GB4993@kroah.com>
+ <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
+ <CAHp75VdxqbPv_fUow4gFMYwTu7CNxXAxPVkoq0UDVrh-7b5YRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:39367 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751334AbdJEQsT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 12:48:19 -0400
-In-Reply-To: <20171005162810.GB4993@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VdxqbPv_fUow4gFMYwTu7CNxXAxPVkoq0UDVrh-7b5YRA@mail.gmail.com>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: gregkh@linuxfoundation.org, pali.rohar@gmail.com
-Cc: gnomes@lxorguk.ukuu.org.uk, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday, October 5, 2017 11:28 AM
-> To: Pali Roh=E1r <pali.rohar@gmail.com>
-> Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>;
-> gnomes@lxorguk.ukuu.org.uk; dvhart@infradead.org;
-> andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
-> rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
-> Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
-> userspace interface
->=20
-> On Thu, Oct 05, 2017 at 05:56:19PM +0200, Pali Roh=E1r wrote:
-> > On Thursday 05 October 2017 17:44:45 Greg KH wrote:
-> > > On Thu, Oct 05, 2017 at 02:22:37PM +0000, Mario.Limonciello@dell.com
-> wrote:
-> > > > > -----Original Message-----
-> > > > > From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
-> > > > > Sent: Thursday, October 5, 2017 8:59 AM
-> > > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > > > Cc: dvhart@infradead.org; Andy Shevchenko
-> <andy.shevchenko@gmail.com>;
-> > > > > LKML <linux-kernel@vger.kernel.org>; platform-driver-
-> x86@vger.kernel.org;
-> > > > > Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
-> > > > > pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com;
-> hch@lst.de; Greg
-> > > > > KH <greg@kroah.com>
-> > > > > Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: intr=
-oduce
-> > > > > userspace interface
-> > > > >
-> > > > > On Wed,  4 Oct 2017 17:48:39 -0500
-> > > > > Mario Limonciello <mario.limonciello@dell.com> wrote:
-> > > > >
-> > > > > > This userspace character device will be used to perform SMBIOS =
-calls
-> > > > > > from any applications.
-> > > > > >
-> > > > > > It provides an ioctl that will allow passing the 32k WMI callin=
-g
-> > > > > > interface buffer between userspace and kernel space.
-> > > > >
-> > > > > What is your security model for firing 32K of random crap at the =
-BIOS ?
-> > > >
-> > > > Adding new class and select methods requires a review with the secu=
-rity
-> > > > team.  They will do STRIDE analysis and threat modeling.
-> > > >
-> > > > > Do you fuzz test the BIOS interface ?
-> > > >
-> > > > Yes there has been internal fuzz testing classes and selects used i=
-n the
-> > > > ACPI interface in the past.  I can't comment on how regularly that =
-is done.
-> > > > I do think it's interesting is to use the interface in Linux for fu=
-rther fuzz
-> > > > testing though.
-> > >
-> > > That should be simple, start firing random data at this memory locati=
-on
-> > > and see what happens.  Can you brick the box?  Change the
-> > > manufactured-date?  Change the serial number?  Normally these types o=
-f
-> > > BIOS interfaces allow all sorts of "fun" things like this, which is w=
-hy
-> > > we have the kernel "own" the interface, to protect yourself from
-> > > breaking the box.
-> >
-> > There are also Dell calls to "permanently disable TPM" and similar whic=
-h
-> > are irreversible. So this can be really a problem.
-> >
-> > > > > How do we know that between now and the end of the universe every
-> call is
-> > > > > safe to execute as any random user without upsetting other users =
-on the
-> > > > > same PC ?
-> > > >
-> > > > Any random user shouldn't be executing the ioctl.
-> > > > Only root should be executing any of these calls.
-> > >
-> > > "only root" isn't the best protection method, you should know better =
-:)
-> > >
-> > > You are going to have to do some kind of parsing/whitelisting here,
-> > > trust us...
-> >
-> > That is also why I in past suggested to create fully transparent
-> > whitelisting filter for all WMI calls. And properly implement particula=
-r
-> > filter in kernel...
-> >
-> > But that is of course hard as you need to know all details of internal
-> > structures and data which may be sent via userspace. To prevent e.g.
-> > action "permanently disable TPM" in kernel.
->=20
-> It's not "hard" as userspace would have to know these same things if it
-> were to just have an clean "pipe" to the BIOS as it has to create and
-> parse the commands to get the BIOS to do anything.
->=20
-> So I agree with you, whitelisting seems to be the only sane solution,
-> unless people don't like their TPMs to be erased by root exploits?  :)
->=20
-> thanks,
->=20
-> greg k-h
-
-Permanently disable TPM can't be run from OS through this interface.
-Something like that requires a special manufacturing mode (which also
-can't be activated through this interface).
-
-There are some "write once" items that for the general purpose user that
-won't brick a box, but should probably be blacklisted though.
-I'll think this through some more.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2Jl
+ciA1LCAyMDE3IDEyOjM0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9u
+Y2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRy
+aXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5v
+cmc+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFp
+bC5jb20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmp3QHJqd3lzb2NraS5uZXQ+OyBtamc1OUBn
+b29nbGUuY29tOyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT47DQo+IEdyZWcgS0ggPGdy
+ZWdAa3JvYWguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDA1LzE0XSBwbGF0Zm9ybS94
+ODY6IGRlbGwtd21pLWRlc2NyaXB0b3I6IHNwbGl0IFdNSQ0KPiBkZXNjcmlwdG9yIGludG8gaXQn
+cyBvd24gZHJpdmVyDQo+IA0KPiBPbiBUaHUsIE9jdCA1LCAyMDE3IGF0IDE6NDggQU0sIE1hcmlv
+IExpbW9uY2llbGxvDQo+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+ID4g
+QWxsIGNvbW11bmljYXRpb24gb24gaW5kaXZpZHVhbCBHVUlEcyBzaG91bGQgb2NjdXIgaW4gc2Vw
+YXJhdGUgZHJpdmVycy4NCj4gPiBBbGxvd2luZyBhIGRyaXZlciB0byBjb21tdW5pY2F0ZSB3aXRo
+IHRoZSBidXMgdG8gYW5vdGhlciBHVUlEIGlzIGp1c3QNCj4gPiBhIGhhY2sgdGhhdCBkaXNjb3Vy
+YWdlcyBkcml2ZXJzIHRvIGFkb3B0IHRoZSBidXMgbW9kZWwuDQo+ID4NCj4gPiBUaGUgaW5mb3Jt
+YXRpb24gZm91bmQgZnJvbSB0aGUgV01JIGRlc2NyaXB0b3IgZHJpdmVyIGlzIG5vdyBleHBvcnRl
+ZA0KPiA+IGZvciB1c2UgYnkgb3RoZXIgZHJpdmVycy4NCj4gDQo+ID4gKyAgICAgICBwcml2ID0g
+bGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZ3bWlfbGlzdCwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRlc2NyaXB0b3JfcHJpdiwNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGlzdCk7DQo+IA0KPiA+ICsgICAg
+ICAgcHJpdiA9IGxpc3RfZmlyc3RfZW50cnlfb3JfbnVsbCgmd21pX2xpc3QsDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXNjcmlwdG9yX3ByaXYs
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3QpOw0KPiAN
+Cj4gc3RhdGljIGlubGluZSAuLi50b19wcml2KC4uLikNCj4gew0KPiAgcmV0dXJuIGxpc3RfZmly
+c3RfZW50cnlfLi4uKCk7DQo+IH0NCj4gDQo+ID4gKyAgICAgICBsaXN0X2FkZF90YWlsKCZwcml2
+LT5saXN0LCAmd21pX2xpc3QpOw0KPiANCj4gPiArICAgICAgIGxpc3RfZGVsKCZwcml2LT5saXN0
+KTsNCj4gDQo+IERvIHRoZXNlIG5lZWQgbG9ja2luZz8NCg0KWWVhaCB0aGlzIHNlZW1zIGxpa2Ug
+YSBnb29kIGlkZWEuICBJJ2xsIGFkZCBpdCBpbi4NCg0KPiANCj4gPiArYm9vbCBkZWxsX3dtaV9n
+ZXRfaW50ZXJmYWNlX3ZlcnNpb24odTMyICp2ZXJzaW9uKTsNCj4gPiArYm9vbCBkZWxsX3dtaV9n
+ZXRfc2l6ZSh1MzIgKnNpemUpOw0KPiANCj4gVGhpcyBtaWdodCBuZWVkIHN0dWJzIHdoZW4gbW9k
+dWxlIGlzIG5vdCBzZWxlY3RlZCAod2hlbiBmdW5jdGlvbmFsaXR5DQo+IGlzIG9wdGlvbmFsIGlm
+IGl0IHdvdWxkIGJlIHRoZSBjYXNlKSwgb3RoZXJ3aXNlIGFsbCB1c2VycyBzaG91bGQNCj4gc2Vs
+ZWN0IGl0IGV4cGxpY2l0bHkuDQoNClBlciBEYXJyZW4ncyBvdGhlciB0aHJlYWRzIEknbSBhZGp1
+c3RpbmcgS2NvbmZpZyB0byBtYWtlIHN1cmUgdGhpcyBtb2R1bGUNCmlzIHNlbGVjdGVkLiAgSXQn
+cyByZWFsaXN0aWNhbGx5IG5vdCBvcHRpb25hbCB3aGVuIHVzaW5nIHRoZXNlIG90aGVycy4NCg==
