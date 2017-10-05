@@ -1,47 +1,108 @@
-From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
- userspace interface
-Date: Thu, 5 Oct 2017 14:59:11 +0100
-Message-ID: <20171005145911.06a5644c@alans-desktop>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Thu, 5 Oct 2017 07:14:48 -0700
+Message-ID: <20171005141448.GB31452@fury>
 References: <cover.1507156392.git.mario.limonciello@dell.com>
-        <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
+ <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
+ <20171005010909.GC25018@fury>
+ <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
+ <20171005071153.GA31452@fury>
+ <CAHp75VdYj8A3DDNfXcXPMa7oAxfWhaAyAB-Kf_LB+oyzONyaYQ@mail.gmail.com>
+ <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:54288 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751331AbdJEOOu (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 5 Oct 2017 10:14:50 -0400
+Content-Disposition: inline
+In-Reply-To: <3be9670de8404523be04e2e319f1c1b3@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-On Wed,  4 Oct 2017 17:48:39 -0500
-Mario Limonciello <mario.limonciello@dell.com> wrote:
-
-> This userspace character device will be used to perform SMBIOS calls
-> from any applications.
+On Thu, Oct 05, 2017 at 01:59:36PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+> > Sent: Thursday, October 5, 2017 3:48 AM
+> > To: Darren Hart <dvhart@infradead.org>
+> > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; LKML <linux-
+> > kernel@vger.kernel.org>; Platform Driver <platform-driver-
+> > x86@vger.kernel.org>; Andy Lutomirski <luto@kernel.org>;
+> > quasisec@google.com; Pali Rohár <pali.rohar@gmail.com>; Rafael J. Wysocki
+> > <rjw@rjwysocki.net>; mjg59@google.com; Christoph Hellwig <hch@lst.de>;
+> > Greg KH <greg@kroah.com>
+> > Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+> > descriptor into it's own driver
+> > 
+> > On Thu, Oct 5, 2017 at 10:11 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > > On Thu, Oct 05, 2017 at 08:29:10AM +0300, Andy Shevchenko wrote:
+> > >> On Thu, Oct 5, 2017 at 4:09 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > 
+> > >> > You'll want to add something like:
+> > >> >
+> > >> > #ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
+> > >> >         if (request_module("dell_wmi_descriptor"))
+> > >> >                 /* FAIL */
+> > >> > #endif
+> > >> >
+> > >> > During init.
+> > >>
+> > >> I don't think #ifdef is needed.
+> > >
+> > > Without the ifdef, we can't distinguish between request_module failing
+> > > to load the module because it isn't available and because it is
+> > > built-in.
+> > >
+> > >>
+> > >> We may just request module.
+> > >>
+> > >> But looking in the code it seems that we simple need to select that
+> > >> module. No request_module will be needed.
+> > >
+> > > The select will ensure the module is built, but there is not guarantee
+> > > to module load order. The intent of the above is to ensure the symbols
+> > > from the required module are loaded.
+> > >
+> > >> Did I miss something?
+> > >
+> > > Or I did :-) Is there something about this module which ensures
+> > > dell_wmi_descriptor is loaded first?
+> > 
+> > If there is an optional *run-time* dependency we need to use somelike
+> > request_module(). For example, this is the case for idma64
+> > (drivers/dma) vs intel-lpss (drivers/mfd).
+> > 
+> > If it's mandatory run-time dependency, then we need to add stubs to
+> > the header and select the callee's module in Kconfig.
+> > 
+> > In case they are both modules, depmod keeps an ordering.
+> > 
+> > So, the corner case here is when the caller is builtin while callee is module.
+> > 
+> > This is a bit tricky to add to Kconfig (we also have such cases
+> > between I2C DesignWare and acpi_lpss AFAIR).
+> > 
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
 > 
-> It provides an ioctl that will allow passing the 32k WMI calling
-> interface buffer between userspace and kernel space.
+> So I believe it should be a mandatory runtime dependency due to needing
+> the symbol dell_wmi_get_interface_version.  Depmod should be handling
+> this then no?
 
-What is your security model for firing 32K of random crap at the BIOS ?
-Do you fuzz test the BIOS interface ?
+This was nagging me all night, and I was thinking the last time I had to
+use this it was indeed a runtime dependency. Sorry for the noise on
+this.
 
-How do we know that between now and the end of the universe every call is
-safe to execute as any random user without upsetting other users on the
-same PC ?
+The kconfig needs to be setup such that dell-wmi-descriptor cannot be a
+module if the dependent drivers are modules.
 
-Right now this patch is scary. U've fuzzed tested BIOS firmware in thepast
-and it almost universally ended up in reaching for the power cord because
-PC firmware is usually closed and usually crap.
-
-In addition you are assuming that every function you ever provide via
-that ioctl has the same securiy model. So if one of them should only be
-usable by the user logged in on the console the system would have to
-enforce that for all. If you have two conflicting security policies we'd
-have to make it root only and owned by a daemon. If a BIOS turns out to
-have a hole then we have to make it CAP_SYS_RAWIO.
-
-/dev/dorandomvendorspecificshit is not an API and not a security policy.
-
-Alan
+-- 
+Darren Hart
+VMware Open Source Technology Center
