@@ -1,44 +1,52 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] platform/x86: mlx-platform: make a couple of structures static
-Date: Thu,  5 Oct 2017 11:42:11 +0100
-Message-ID: <20171005104211.30440-1-colin.king@canonical.com>
+From: Mathias Nyman <mathias.nyman@intel.com>
+Subject: Re: [PATCH v3 07/14] xhci: Add Intel cherrytrail extended cap / otg
+ phy mux handling
+Date: Thu, 5 Oct 2017 14:13:32 +0300
+Message-ID: <59D613DC.5020906@intel.com>
+References: <20170922183803.10701-1-hdegoede@redhat.com>
+ <20170922183803.10701-7-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:57954 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751548AbdJELJp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 5 Oct 2017 07:09:45 -0400
+In-Reply-To: <20170922183803.10701-7-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 22.09.2017 21:37, Hans de Goede wrote:
+> The Intel cherrytrail xhci controller has an extended cap mmio-range
+> which contains registers to control the muxing to the xhci (host mode)
+> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
+>
+> Having a mux driver included in the xhci code (or under drivers/usb/host)
+> is not desirable. So this commit adds a simple handler for this extended
+> capability, which creates a platform device with the caps mmio region as
+> resource, this allows us to write a separate platform mux driver for the
+> mux.
+>
+> Note this commit adds a call to the new xhci_ext_cap_init() function
+> to xhci_pci_probe(), it is added here because xhci_ext_cap_init() must
+> be called only once. If in the future we also want to handle ext-caps
+> on non pci XHCI HCDs from xhci_ext_cap_init() a call to it should also
+> be added to other bus probe paths.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Check xHCI controller PCI device-id instead of only checking for the
+>   Intel Extended capability ID, as the Extended capability ID is used on
+>   other model Intel xHCI controllers too
+>
+> Changes in v3:
+> -Add a new generic xhci_ext_cap_init() function and handle the new
+>   XHCI_INTEL_CHT_USB_MUX quirk there.
+> ---
 
-The structures mlxplat_dev and mlxplat_hotplug are local to the source
-and do not need to be in global scope, so make them static.
-
-Cleans up sparse warnings:
-symbol 'mlxplat_dev' was not declared. Should it be static?
-symbol 'mlxplat_hotplug' was not declared. Should it be static?
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/platform/x86/mlx-platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 4f3de2a8c4df..504256c3660d 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -216,8 +216,8 @@ static struct resource mlxplat_mlxcpld_resources[] = {
- 	[0] = DEFINE_RES_IRQ_NAMED(17, "mlxcpld-hotplug"),
- };
- 
--struct platform_device *mlxplat_dev;
--struct mlxcpld_hotplug_platform_data *mlxplat_hotplug;
-+static struct platform_device *mlxplat_dev;
-+static struct mlxcpld_hotplug_platform_data *mlxplat_hotplug;
- 
- static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
- {
--- 
-2.14.1
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
