@@ -1,79 +1,43 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: peaq-wmi: Add DMI check before binding to the WMI interface
-Date: Thu,  5 Oct 2017 16:20:21 +0200
-Message-ID: <20171005142021.4899-1-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 08/14] platform/x86: dell-smbios: Add a sysfs interface
+ for SMBIOS tokens
+Date: Thu, 5 Oct 2017 17:22:05 +0300
+Message-ID: <CAHp75VcCqB5v1=z3VvnKKG7KT7XND0d-2S823siqaC5EZPdLXA@mail.gmail.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+ <0af6d03ee32bd5c1529a38de008aa94c03331d7e.1507156392.git.mario.limonciello@dell.com>
+ <CAHp75VdT5Dofm+O4cVfADhZu_PFB345-VNbc8os_c4qDaegB-w@mail.gmail.com> <377f8d466565498aa50d8e39a0caf08d@ausx13mpc120.AMER.DELL.COM>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:43702 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751323AbdJEOUY (ORCPT
+Received: from mail-qk0-f195.google.com ([209.85.220.195]:34049 "EHLO
+        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751350AbdJEOWH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 10:20:24 -0400
+        Thu, 5 Oct 2017 10:22:07 -0400
+In-Reply-To: <377f8d466565498aa50d8e39a0caf08d@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 
-It seems that the WMI GUID used by the PEAQ 2-in-1 WMI hotkeys is not
-as unique as a GUID should be and is used on some other devices too.
+On Thu, Oct 5, 2017 at 4:58 PM,  <Mario.Limonciello@dell.com> wrote:
 
-This is causing spurious key-press reports on these other devices.
+>> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>
+>> To be clear I just suggested the output format in ->show() callback.
+>
+> Andy, do you mean you would prefer not to be attributed in the description,
+> or should I be clearer that was your suggestion?
 
-This commits adds a DMI check to the PEAQ 2-in-1 WMI hotkeys driver to
-ensure that it is actually running on a PEAQ 2-in-1, fixing the
-spurious key-presses on these other devices.
+I think that there is bigger threshold for being included one's name
+in Suggested-by tag. You have few dozens of lines changed and only one
+is suggested by me. And that one doesn't influence the initial idea,
+just a format change.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1497861
-BugLink: https://bugzilla.suse.com/attachment.cgi?id=743182
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/peaq-wmi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+So, I'm not against it per se, I just think it confuses more than attributes.
 
-diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-index bc98ef95514a..67fa3fa32011 100644
---- a/drivers/platform/x86/peaq-wmi.c
-+++ b/drivers/platform/x86/peaq-wmi.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/input-polldev.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -64,8 +65,22 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
- 	}
- }
- 
-+/* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
-+static const struct dmi_system_id peaq_dmi_table[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
-+		},
-+	},
-+};
-+
- static int __init peaq_wmi_init(void)
- {
-+	/* WMI GUID is not unique, also check for a DMI match */
-+	if (!dmi_check_system(peaq_dmi_table))
-+		return -ENODEV;
-+
- 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
- 		return -ENODEV;
- 
-@@ -86,6 +101,9 @@ static int __init peaq_wmi_init(void)
- 
- static void __exit peaq_wmi_exit(void)
- {
-+	if (!dmi_check_system(peaq_dmi_table))
-+		return;
-+
- 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
- 		return;
- 
+Summarize: I would not put it in this patch.
+
 -- 
-2.14.2
+With Best Regards,
+Andy Shevchenko
