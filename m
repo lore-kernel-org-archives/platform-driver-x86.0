@@ -1,41 +1,45 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 04/14] platform/x86: dell-wmi: increase severity of
- some failures
-Date: Thu, 5 Oct 2017 08:20:51 +0300
-Message-ID: <CAHp75Vd2h5K-Zi4VP=Qesx9=kEEsD-pJGWzBE_LmVVuqPt=h9w@mail.gmail.com>
-References: <cover.1507156392.git.mario.limonciello@dell.com> <f9dd40ebcda3238fa431a8a0d38595b808fae38b.1507156392.git.mario.limonciello@dell.com>
+Subject: Re: [PATCH v4 05/14] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Thu, 5 Oct 2017 08:29:10 +0300
+Message-ID: <CAHp75Vc0umEt0cGn5-NWva6j1T0yry1Ag7Egnn4iSvz=cs_kTg@mail.gmail.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com>
+ <ff211830e3953c70aa8e0d43614619f1fb423668.1507156392.git.mario.limonciello@dell.com>
+ <20171005010909.GC25018@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f9dd40ebcda3238fa431a8a0d38595b808fae38b.1507156392.git.mario.limonciello@dell.com>
+In-Reply-To: <20171005010909.GC25018@fury>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 5, 2017 at 1:48 AM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> There is a lot of error checking in place for the format of the WMI
-> descriptor buffer, but some of the potentially raised issues should
-> be considered critical failures.
+On Thu, Oct 5, 2017 at 4:09 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Wed, Oct 04, 2017 at 05:48:31PM -0500, Mario Limonciello wrote:
+>> All communication on individual GUIDs should occur in separate drivers.
+>> Allowing a driver to communicate with the bus to another GUID is just
+>> a hack that discourages drivers to adopt the bus model.
+>>
+>> The information found from the WMI descriptor driver is now exported
+>> for use by other drivers.
+
+> You'll want to add something like:
 >
-> If the buffer size or header don't match, this is a good indication
-> that the buffer format changed in a way that the rest of the data
-> should not be relied upon.
+> #ifdef CONFIG_DELL_WMI_DESCRIPTOR_MODULE
+>         if (request_module("dell_wmi_descriptor"))
+>                 /* FAIL */
+> #endif
 >
-> For the remaining data set vectors, continue to notate a warning
-> in undefined results, but as those are fields that the descriptor
-> intended to refer to other applications, don't fail if they're new
-> values.
+> During init.
 
-> -       if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0)
-> -               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
-> +       if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
-> +               dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+I don't think #ifdef is needed.
 
-A nit: ping-pong programming detected.
-Looks like current patch 2 should go at least after this one.
+We may just request module.
 
+But looking in the code it seems that we simple need to select that
+module. No request_module will be needed.
+Did I miss something?
 
 -- 
 With Best Regards,
