@@ -1,31 +1,35 @@
-From: cfengchao@asia.com
-Subject: Tervehdys!
-Date: Wed, 04 Oct 2017 16:55:45 +0200
-Message-ID: <SBSaj9uV3Mr1YNUP0OT00002302@hometime.com>
-Reply-To: cheng.fengchao@yandex.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 50-244-196-250-static.hfc.comcastbusiness.net ([50.244.196.250]:3760
-        "EHLO hometime.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1751317AbdJELnx (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2017 07:43:53 -0400
-Content-Description: Mail message body
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <cfengchao@asia.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/6] platform/x86: intel_ips: Use PCI_VDEVICE() macro
+Date: Thu,  5 Oct 2017 14:54:17 +0300
+Message-ID: <20171005115420.2786-3-andriy.shevchenko@linux.intel.com>
+References: <20171005115420.2786-1-andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005115420.2786-1-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hyvä päivä,
+Intel vendor ID is defined globally, thus we may use PCI_VDEVICE().
 
-  Olen Kiinan teollisuus- ja kauppapankin (ICBC) toimitusjohtaja. Minulla on keskinäinen liiketoimintaehdotus, jossa viitataan suuren määrän rahan siirtämiseen ulkomaille, ja avuksesi ulkomaisena kumppanina rahastojen edunsaajana. Kaikkea tästä tapahtumasta tehdään laillisesti ilman minkäänlaista taloudellista valtasuhdetta omassa maassani ja sinun. Jos olet kiinnostunut, vastaa alla olevaan yksityiseen sähköpostiin ja annan sinulle lisätietoja ja hanketta heti, kun saan myönteisen vastauksen.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_ips.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yksityinen sähköpostiosoite: contact@chengfengchao.com
-
-
-Ystävällisin terveisin,
-
-Toimitusjohtaja.
-
-ICBC .China
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 6f6900065bc2..489ff6fff9f9 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1482,8 +1482,7 @@ ips_link_to_i915_driver(void)
+ EXPORT_SYMBOL_GPL(ips_link_to_i915_driver);
+ 
+ static const struct pci_device_id ips_id_table[] = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+-		     PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
+ 	{ 0, }
+ };
+ 
+-- 
+2.14.2
