@@ -1,45 +1,42 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] drivers/x86: add thinkpad-wmi
-Date: Wed, 4 Oct 2017 19:49:47 -0700
-Message-ID: <20171005024947.GJ25018@fury>
-References: <20170904082110.30925-1-corentin.chary@gmail.com>
- <CAHp75VcWfzEiZAt+ESoF==q0LnCgWRzBuo6FDizmSJ7V-8Rw3w@mail.gmail.com>
- <CAHR064i+x=MeuHxTfDNRUr1C_p2dW8+nORqtGQUcYE4Dcbyppg@mail.gmail.com>
- <CAHR064jrkntSf8_5kiL5x8B+_BwCHrrZajgedYe-FNt439wDpA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 04/14] platform/x86: dell-wmi: increase severity of
+ some failures
+Date: Thu, 5 Oct 2017 08:20:51 +0300
+Message-ID: <CAHp75Vd2h5K-Zi4VP=Qesx9=kEEsD-pJGWzBE_LmVVuqPt=h9w@mail.gmail.com>
+References: <cover.1507156392.git.mario.limonciello@dell.com> <f9dd40ebcda3238fa431a8a0d38595b808fae38b.1507156392.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42946 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751220AbdJECtt (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2017 22:49:49 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHR064jrkntSf8_5kiL5x8B+_BwCHrrZajgedYe-FNt439wDpA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f9dd40ebcda3238fa431a8a0d38595b808fae38b.1507156392.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 05, 2017 at 09:07:27AM +0200, Corentin Chary wrote:
-> [re-send for the mailing list, I forgot that gmail was stupid]
-> 
-> On Tue, Sep 5, 2017 at 9:05 AM, Corentin Chary <corentin.chary@gmail.com> wrote:
-> >>
-> >> I didn't read the code, does it use WMI bus which Andy L. introduced
-> >> recently?
-> >>
-> >
-> > No, I wasn't aware of it. I checked the dell-wmi conversion patch and it
-> > should not be too hard.
-> > I'll probably sent that as a patch on top the existing driver (in the same
-> > series).
+On Thu, Oct 5, 2017 at 1:48 AM, Mario Limonciello
+<mario.limonciello@dell.com> wrote:
+> There is a lot of error checking in place for the format of the WMI
+> descriptor buffer, but some of the potentially raised issues should
+> be considered critical failures.
+>
+> If the buffer size or header don't match, this is a good indication
+> that the buffer format changed in a way that the rest of the data
+> should not be relied upon.
+>
+> For the remaining data set vectors, continue to notate a warning
+> in undefined results, but as those are fields that the descriptor
+> intended to refer to other applications, don't fail if they're new
+> values.
 
-Hi Corentin,
+> -       if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0)
+> -               dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+> +       if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+> +               dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
 
-Just to make sure I haven't missed it - I believe we're waiting for a v2 of this
-patch. Is that right?
+A nit: ping-pong programming detected.
+Looks like current patch 2 should go at least after this one.
+
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+With Best Regards,
+Andy Shevchenko
