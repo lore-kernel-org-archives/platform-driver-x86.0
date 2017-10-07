@@ -1,46 +1,68 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v5 04/14] platform/x86: dell-wmi: allow 32k return size in the descriptor
-Date: Fri,  6 Oct 2017 23:59:48 -0500
-Message-ID: <099f11c2e1b9675ccb35b2c04e2855a66a455b49.1507350554.git.mario.limonciello@dell.com>
+Subject: [PATCH v5 02/14] platform/x86: dell-wmi: increase severity of some failures
+Date: Fri,  6 Oct 2017 23:59:46 -0500
+Message-ID: <3debe9758dbf401f3599442dc6ed5f4e55da51d9.1507350554.git.mario.limonciello@dell.com>
 References: <cover.1507350554.git.mario.limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:63347 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750823AbdJGFAP (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 7 Oct 2017 01:00:15 -0400
 In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
 References: <cover.1507350554.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Some platforms this year will be adopting 32k WMI buffer, so don't
-complain when encountering those.
+There is a lot of error checking in place for the format of the WMI
+descriptor buffer, but some of the potentially raised issues should
+be considered critical failures.
+
+If the buffer size or header don't match, this is a good indication
+that the buffer format changed in a way that the rest of the data
+should not be relied upon.
+
+For the remaining data set vectors, continue to notate a warning
+in undefined results, but as those are fields that the descriptor
+intended to refer to other applications, don't fail if they're new
+values.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/dell-wmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/dell-wmi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index ece2fe341f01..c8c7f4f9326c 100644
+index 1fbef560ca67..2cfaaa8faf0a 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -624,7 +624,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
-  * Vendor Signature          0       4    "DELL"
-  * Object Signature          4       4    " WMI"
-  * WMI Interface Version     8       4    <version>
-- * WMI buffer length        12       4    4096
-+ * WMI buffer length        12       4    4096 or 32768
-  */
- static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- {
-@@ -674,7 +674,7 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
- 			buffer[2]);
+@@ -657,17 +657,18 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+ 		dev_err(&wdev->dev,
+ 			"Dell descriptor buffer has invalid length (%d)\n",
+ 			obj->buffer.length);
+-		if (obj->buffer.length < 16) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		ret = -EINVAL;
++		goto out;
+ 	}
  
--	if (buffer[3] != 4096)
-+	if (desc_buffer[3] != 4096 && desc_buffer[3] != 32768)
- 		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
- 			buffer[3]);
+ 	buffer = (u32 *)obj->buffer.pointer;
  
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
++	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+ 			8, buffer);
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
 -- 
 2.14.1
