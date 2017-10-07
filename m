@@ -1,159 +1,232 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v5 10/14] platform/x86: dell-smbios: add filtering capability for requests
-Date: Fri,  6 Oct 2017 23:59:54 -0500
-Message-ID: <169beca316d562d00dc3dfb45248f42c9dc5d368.1507350554.git.mario.limonciello@dell.com>
-References: <cover.1507350554.git.mario.limonciello@dell.com>
+Subject: [PATCH v5 00/14] Introduce support for Dell SMBIOS over WMI
+Date: Fri,  6 Oct 2017 23:59:44 -0500
+Message-ID: <cover.1507350554.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
-References: <cover.1507350554.git.mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are some categories of tokens and SMBIOS calls that it makes
-sense to protect userspace from accessing.  These are calls that
-may write to one time use fields or activate hardware debugging
-capabilities.  They are not intended for general purpose use.
+The existing way that the dell-smbios helper module and associated
+other drivers (dell-laptop, dell-wmi) communicate with the platform
+really isn't secure.  It requires creating a buffer in physical
+DMA32 memory space and passing that to the platform via SMM.
 
-This same functionality may be be later extended to also intercept
-calls that may cause kernel functionality to get out of sync if
-the same functions are used by other drivers.
+Since the platform got a physical memory pointer, you've just got
+to trust that the platform has only modified (and accessed) memory
+within that buffer.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/dell-smbios.c | 76 ++++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smbios.h |  2 +
- 2 files changed, 78 insertions(+)
+Dell Platform designers recognize this security risk and offer a
+safer way to communicate with the platform over ACPI.  This is
+in turn exposed via a WMI interface to the OS.
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index 2f90ba5346bc..d1908f159be3 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -32,6 +32,7 @@ struct calling_interface_structure {
- 	struct calling_interface_token tokens[];
- } __packed;
- 
-+static u32 da_supported_commands;
- static int da_command_address;
- static int da_command_code;
- static int da_num_tokens;
-@@ -45,6 +46,14 @@ struct smbios_device {
- 	int (*call_fn)(struct calling_interface_buffer *);
- };
- 
-+static u32 token_black[] = {
-+	0x0175, 0x0176, 0x0195, 0x0196, 0x0197, 0x01DC, 0x01DD, 0x027D, 0x027E,
-+	0x027F, 0x0280, 0x0281,	0x0282, 0x0283, 0x0284, 0x02E3, 0x02FF, 0x0300,
-+	0x0301, 0x0302, 0x0325, 0x0326, 0x0332, 0x0333,	0x0334, 0x0335, 0x0350,
-+	0x0363, 0x0368, 0x03F6, 0x03F7, 0x049E, 0x049F, 0x04A0, 0x04A1, 0x04A2,
-+	0x04A3, 0x04E6, 0x04E7, 0x9000, 0x9001
-+};
-+
- static LIST_HEAD(smbios_device_list);
- 
- void dell_smbios_get_smm_address(int *address, int *code)
-@@ -104,6 +113,65 @@ void dell_smbios_unregister_device(struct device *d)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_unregister_device);
- 
-+int dell_smbios_call_filter(struct device *d,
-+			    struct calling_interface_buffer *buffer)
-+{
-+	int i;
-+	int j;
-+	u32 t;
-+
-+	/* can't make calls over 30 */
-+	if (buffer->class > 30) {
-+		dev_dbg(d, "buffer->class too big: %d\n", buffer->class);
-+		return -EINVAL;
-+	}
-+
-+	/* supported calls on the particular system */
-+	if (!(da_supported_commands & (1 << buffer->class))) {
-+		dev_dbg(d, "invalid command, supported commands: 0x%8x\n",
-+			da_supported_commands);
-+		return -EINVAL;
-+	}
-+
-+	/* diagonstics, debugging information or write once  */
-+	if ((buffer->class == 01 && buffer->select == 07) ||
-+	    (buffer->class == 06 && buffer->select == 05) ||
-+	    (buffer->class == 11 && buffer->select == 03) ||
-+	    (buffer->class == 11 && buffer->select == 07) ||
-+	    (buffer->class == 11 && buffer->select == 11) ||
-+	     buffer->class == 19) {
-+		dev_dbg(d, "blacklisted command: %d/%d\n",
-+			buffer->class, buffer->select);
-+		return -EINVAL;
-+	}
-+
-+	/* reading/writing tokens*/
-+	if ((buffer->class == 0 && buffer->select < 3) ||
-+	    (buffer->class == 1 && buffer->select < 3)) {
-+		for (i = 0; i < da_num_tokens; i++) {
-+			if (da_tokens[i].location != buffer->input[0])
-+				continue;
-+			/*blacklist reading and writing these */
-+			t = da_tokens[i].tokenID;
-+			if ((t >= 0x4000 && t <= 0x7FFF) ||
-+			    (t >= 0xA000 && t <= 0xBFFF) ||
-+			    (t >= 0xEFF0 && t <= 0xEFFF))
-+				return -EINVAL;
-+			for (j = 0; j < ARRAY_SIZE(token_black); j++)
-+				if (t == token_black[j])
-+					return -EINVAL;
-+			/* token exists and is OK */
-+			return 0;
-+		}
-+		/* token didn't exist */
-+		dev_dbg(d, "token at location %u doesn't exist\n",
-+			buffer->input[0]);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
-+
- int dell_smbios_call(struct calling_interface_buffer *buffer)
- {
- 	int (*call_fn)(struct calling_interface_buffer *) = NULL;
-@@ -127,6 +195,13 @@ int dell_smbios_call(struct calling_interface_buffer *buffer)
- 		goto out_smbios_call;
- 	}
- 
-+	if (dell_smbios_call_filter(selected_dev, buffer)) {
-+		ret = -EINVAL;
-+		dev_err(selected_dev, "Invalid call %d/%d:%8x\n",
-+			buffer->class, buffer->select, buffer->input[0]);
-+		goto out_smbios_call;
-+	}
-+
- 	ret = call_fn(buffer);
- 
- out_smbios_call:
-@@ -184,6 +259,7 @@ static void __init parse_da_table(const struct dmi_header *dm)
- 
- 	da_command_address = table->cmdIOAddress;
- 	da_command_code = table->cmdIOCode;
-+	da_supported_commands = table->supportedCmds;
- 
- 	new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
- 				 sizeof(struct calling_interface_token),
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index fe28964da499..c743c58831e5 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -45,6 +45,8 @@ void dell_smbios_unregister_device(struct device *d);
- 
- void dell_smbios_get_smm_address(int *address, int *command);
- int dell_smbios_error(int value);
-+int dell_smbios_call_filter(struct device *d,
-+			    struct calling_interface_buffer *buffer);
- int dell_smbios_call(struct calling_interface_buffer *buffer);
- 
- struct calling_interface_token *dell_smbios_find_token(int tokenid);
+When communicating over WMI-ACPI the communication doesn't occur
+with physical memory pointers.  When the ASL is invoked, the fixed
+length ACPI buffer is copied to a small operating region.  The ASL
+will invoke the SMI, and SMM will only have access to this operating
+region.  When the ASL returns the buffer is copied back for the OS
+to process.
+
+This method of communication should also deprecate the usage of the
+dcdbas kernel module and software dependent upon it's interface.
+Instead offer a character device interface for communicating with this
+ASL method to allow userspace to use instead.
+
+To faciliate that this patch series introduces a generic way for WMI
+drivers to be able to create discoverable character devices with
+a predictable IOCTL interface through the WMI bus when desired.
+Requiring WMI drivers to explicitly ask for this functionality will
+act as an effective vendor whitelist to character device creation.
+
+Some of this work is the basis for what will be a proper interpreter
+of MOF in the kernel and controls for what drivers will be able to
+do with that MOF.
+
+NOTE: This patch series is intended to go on top of platform-drivers-x86
+linux-next.
+
+For convenience the entire series including those is also available here:
+https://github.com/superm1/linux/tree/wmi-smbios
+changes between v4 and v5:
+ * Remove Andy's S suggested by in sysfs tokens patch
+ * Make some output in dell-wmi-descriptor debug only
+ * Adjust various Kconfig dependencies as recommended by Darren
+ * Drop patch to set dell-smbios to default on ACPI_WMI,
+   it's not needed after the Kconfig dependencies rework
+ * Move WSMT check patch to after WMI driver is introduced.
+ * Make common smbios call return value int as there could be
+   errors now with drivers not being loaded.
+ * Make SMBIOS call methods for all drivers return status
+ * Reorder patches 2 and 4.
+ * Don't export symbols for calling functions on dispatchers
+ * wmi patch:
+   - use sprintf instead of strcpy
+   - remove needless bool for tracking found
+   - adjust logic to look for instance_count - 1, it's zero
+     based not 1 based.
+   - Pass a callback to unlocked_ioctl instead of full file
+     operations object
+   - ioctl: Don't fail on no bound WMI driver
+   - Add missing header for uapi
+   - Make helper macros include data types
+   - add compat ioctl
+ * dell-smbios:
+   - Add filtering functionality for SMBIOS calling interface
+   - Use dev_dbg rather than pr_debug where possible
+ * dell-smbios-wmi:
+   - test for handle on b1 table
+   - correct misc flags comment
+   - drop access checks
+   - use dev_dbg instead of pr_* calls
+   - use filtering functionality
+   - add mutexes around list add/remove
+   - switch from get_first_device to get_first_priv and inline
+   - add mutex locking to prevent unloading mid-call.
+   - update to new ioctl passing
+   - fix userspace uapi to use __u32 instead of u32
+   - Don't use a header file for internal only use
+   - make sure it works with compat ioctl
+ * dell-laptop: make dell_smbios_send_request local function
+   for boilerplate calls.
+ * ioctl patch
+   - Change API to have a simpler structure to pass back and
+     forth
+   - Rename header file
+   - Export to sysfs properly
+   - Add the size of the length variable into the requested
+     buffersize to sysfs, do math in the driver when copying
+     data around.
+changes between v3 and v4:
+ * Make Dell WMI notifications driver fail notifications fail
+   when WMI descriptor driver is unavailable.
+ * Add a patch to check for Dell OEM string to stop dell-smbios 
+   module from being loaded in unsupported systems manually.
+ * Split Dell WMI descriptor into it's own driver for others to
+   query.
+ * Test the misc BIOS flags table to decide whether to run in WMI
+   or SMI mode.
+ * s/dell-wmi-smbios/dell-smbios/ in a few patch titles
+ * Add missing Suggested-by to a patch from v2 (Sorry Andy S!)
+ * Adjust cleanup order of wmi character device.
+ * Fix a remaining reference to /dev/wmi-$driver
+ * Use get_order to get size for pages
+ * Split up dell-smbios into 3 drivers:
+   dell-smbios
+   -> dell-smbios-smm
+   -> dell-smbios-wmi
+   If either of the two dispatcher drivers is unloaded but
+   the other still works, gracefully fall back to that driver
+ * Remove unneded open and release on file operations in WMI
+   driver
+ * Switch to misc character device in WMI bus.
+ * Query the size of the calling interface buffer from WMI
+   descriptor driver.
+ * Require userspace to use this information to build an
+   appropriately sized buffer.
+ * Verify the size of buffer passed from userspace matches
+   expectation of buffer processed in kernel.
+ * Add more documentation about the IOCTL API.
+ * Add in a recommendation from Andy S about outputing tokens
+ * Add a patch to test for non-functional SMM due to WSMT
+ * Define macros for IOCTL's through the WMI bus.
+ * Pass all IOCTL calls for WMI drivers through WMI bus
+   WMI bus will guarantee instance count matches and prevent
+   creating too many more IOCTLs.
+changes between v2 and v3:
+ * Drop patches 1-7, they're in Darren's review tree now
+ * Add missing newline on new Documentation
+ * Add Reviewed by from Edward O'Callaghan
+ * Adjust path of character device from /dev/wmi-$driver to
+   /dev/wmi/$driver
+ * Store wmi_device pointer rather than using a boolean has_wmi
+   to indicate driver is running in WMI mode
+ * Don't guard free_page from freeing NULL (this is OK)
+ * New patch: add wmidev_evaluate_method to wmi bus as recommended
+   by Andy L
+ * Adjust ACPI-WMI interface for this patch change ^
+ * Add back in sysfs token patch, drop 2nd and 3rd ioctls per discussion
+   on mailing list.
+ * On sysfs interface: adjust the delimiter to be tabs
+ * Drop the rename dell-smbios -> dell-wmi-smbios patch
+ * Remove/move some unnecessary tests for CONFIG_DCDBAS
+ * Reword s/platform/SMM/ in the WMI-ACPI patch.
+ * Update Kconfig to recommend using CONFIG_DCDBAS on old machines.
+ * Allocate buffer to the same pointer regardless of the struct 
+   assigned to it.  Keep track of the buffer size for cleaning up.
+ * Explain policy around character device creation in commit message
+changes between v1 and v2:
+ * Introduce another patch to sort the includes in wmi.c
+ * Introduce another patch to cleanup dell_wmi_check_descriptor_buffer
+   checks.
+ * Add a commit message to the pr_fmt commit
+ * Introduce includes to wmi.c in proper location
+ * Add Reviewed-by to relevant patches from Pali
+ * Make the WMI introduction patch fallback to legacy SMI
+   if compiled with CONFIG_DCDBAS
+ * Separate format of WMI and SMI buffers.  WMI buffer supports more
+   arguments and data.
+ * Adjust the rename patch for changes to fallback
+ * Drop sysfs token creation patch
+ * Adjust WMI descriptor check patch for changes to fallback
+ * introduce another patch to remove needless includes in dell-smbios.c
+ * Add token ioctl interface to character device.
+   - Can query number of tokens
+   - Can query values in all tokens
+ * Expose format of all buffers and IOCTL commands to uapi header
+ * Drop the read interface from character device.  It doesn't make
+   sense with multiple different ioctl methods.
+ * Default WMI interface to 32k (This would normally be queried via
+   MOF, but that's not possible yet)
+ * Create separate buffers for WMI and SMI.  If WMI is available,
+   free the SMI buffer.
+ * Reorder patches so all fixups come first in the series.
+
+Mario Limonciello (14):
+  platform/x86: wmi: Add new method wmidev_evaluate_method
+  platform/x86: dell-wmi: increase severity of some failures
+  platform/x86: dell-wmi: clean up wmi descriptor check
+  platform/x86: dell-wmi: allow 32k return size in the descriptor
+  platform/x86: dell-wmi-descriptor: split WMI descriptor into it's own
+    driver
+  platform/x86: wmi: Don't allow drivers to get each other's GUIDs
+  platform/x86: dell-smbios: only run if proper oem string is detected
+  platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens
+  platform/x86: dell-smbios: Introduce dispatcher for SMM calls
+  platform/x86: dell-smbios: add filtering capability for requests
+  platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver
+  platform/x86: dell-smbios-smm: test for WSMT
+  platform/x86: wmi: create character devices when requested by drivers
+  platform/x86: dell-smbios-wmi: introduce userspace interface
+
+ Documentation/ABI/testing/dell-smbios-wmi          |  41 +++
+ .../ABI/testing/sysfs-platform-dell-smbios         |  16 ++
+ .../ABI/testing/sysfs-platform-dell-smbios-wmi     |  10 +
+ MAINTAINERS                                        |  26 ++
+ drivers/platform/x86/Kconfig                       |  35 ++-
+ drivers/platform/x86/Makefile                      |   3 +
+ drivers/platform/x86/dell-laptop.c                 | 255 ++++++-----------
+ drivers/platform/x86/dell-smbios-smm.c             | 170 +++++++++++
+ drivers/platform/x86/dell-smbios-wmi.c             | 311 +++++++++++++++++++++
+ drivers/platform/x86/dell-smbios.c                 | 256 ++++++++++++++---
+ drivers/platform/x86/dell-smbios.h                 |  26 +-
+ drivers/platform/x86/dell-wmi-descriptor.c         | 162 +++++++++++
+ drivers/platform/x86/dell-wmi-descriptor.h         |  18 ++
+ drivers/platform/x86/dell-wmi.c                    |  99 +------
+ drivers/platform/x86/wmi.c                         | 130 +++++++--
+ include/linux/wmi.h                                |  15 +-
+ include/uapi/linux/dell-smbios.h                   |  42 +++
+ include/uapi/linux/wmi.h                           |  19 ++
+ 18 files changed, 1302 insertions(+), 332 deletions(-)
+ create mode 100644 Documentation/ABI/testing/dell-smbios-wmi
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios-wmi
+ create mode 100644 drivers/platform/x86/dell-smbios-smm.c
+ create mode 100644 drivers/platform/x86/dell-smbios-wmi.c
+ create mode 100644 drivers/platform/x86/dell-wmi-descriptor.c
+ create mode 100644 drivers/platform/x86/dell-wmi-descriptor.h
+ create mode 100644 include/uapi/linux/dell-smbios.h
+ create mode 100644 include/uapi/linux/wmi.h
+
 -- 
 2.14.1
