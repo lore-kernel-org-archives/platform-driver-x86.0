@@ -1,41 +1,39 @@
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH resend] platform/x86: peaq-wmi: Add DMI check before
- binding to the WMI interface
-Date: Sat, 7 Oct 2017 23:21:02 +0800
-Message-ID: <CAAd53p43Hea0cuA1fGUq8Ta50w5y5Z1S7sUHV7KFCucGNo29gQ@mail.gmail.com>
-References: <20171005180404.15044-1-hdegoede@redhat.com> <CAAd53p6rtLR7XvZx4pHNiHx4npBLM0oJ7+7CEjxNHxJu2rWuzA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC v4 2/8] platform/x86: intel_pmc_ipc: Use spin_lock to
+ protect GCR updates
+Date: Sat, 7 Oct 2017 19:13:16 +0300
+Message-ID: <CAHp75VdFybPNxXU5URVHBBWROV6h1eX+u_R-r5Kue08kBUmGHQ@mail.gmail.com>
+References: <cover.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com> <c2932168ae25c83f2b2ee6a570274cd0670ba543.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAd53p6rtLR7XvZx4pHNiHx4npBLM0oJ7+7CEjxNHxJu2rWuzA@mail.gmail.com>
+In-Reply-To: <c2932168ae25c83f2b2ee6a570274cd0670ba543.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Ingo Molnar <mingo@redhat.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On Fri, Oct 6, 2017 at 12:23 PM, Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
-> Hi Hans,
+On Sat, Oct 7, 2017 at 5:33 AM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 >
-> On Fri, Oct 6, 2017 at 2:04 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi All,
->>
->> This is a resend with Kai Heng Feng added to the Cc. Kai can you please
->> test this patch. This patch replaces yours, as many devices seem to be
->> affected so a whitelist is the better approach here.
+> Currently, update_no_reboot_bit() function implemented in this driver
+> uses mutex_lock() to protect its register updates. But this function is
+> called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
+> functions in iTCO_wdt.c driver, which in turn causes "sleeping into
+> atomic context" issue. This patch fixes this issue by replacing the
+> mutex_lock() with spin_lock() to protect the GCR read/write/update APIs.
 >
-> I'll let the affected user to test the patch.
 
-The user reports the new patch works.
+> Fixes: 9d855d4 ("platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS memory
+> mapping failure")
 
-Thanks.
+I think it need to be a one line.
 
->
-> Thanks!
->
->>
->> Regards,
->>
->> Hans
+Does it apply on top of v4.14-rc3 ?
+Btw, this patch should be first in the series.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
