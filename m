@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v5 07/14] platform/x86: dell-smbios: only run if proper oem string is detected
-Date: Fri,  6 Oct 2017 23:59:51 -0500
-Message-ID: <0b3a387ae29a0205106b5a1d741bbad5f684653f.1507350554.git.mario.limonciello@dell.com>
+Subject: [PATCH v5 03/14] platform/x86: dell-wmi: clean up wmi descriptor check
+Date: Fri,  6 Oct 2017 23:59:47 -0500
+Message-ID: <c11c290fb1436512ed527fefaa15331503e246e3.1507350554.git.mario.limonciello@dell.com>
 References: <cover.1507350554.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
@@ -12,36 +12,44 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The proper way to indicate that a system is a 'supported' Dell System
-is by the presence of this string in OEM strings.
-
-Allowing the driver to load on non-Dell systems will have undefined
-results.
+Some cases the wrong type was used for errors and checks can be
+done more cleanly.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/platform/x86/dell-smbios.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/dell-wmi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index e9b1ca07c872..873d1c3f7641 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -172,8 +172,15 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 2cfaaa8faf0a..ece2fe341f01 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -663,19 +663,19 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
  
- static int __init dell_smbios_init(void)
- {
-+	const struct dmi_device *valid;
- 	int ret;
+ 	buffer = (u32 *)obj->buffer.pointer;
  
-+	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
-+	if (!valid) {
-+		pr_info("Unable to run on non-Dell system\n");
-+		return -ENODEV;
-+	}
-+
- 	dmi_walk(find_tokens, NULL);
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
+-		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, buffer);
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			buffer);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
  
- 	if (!da_tokens)  {
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+ 			buffer[2]);
+ 
+ 	if (buffer[3] != 4096)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
++		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
+ 			buffer[3]);
+ 
+ 	priv->interface_version = buffer[2];
 -- 
 2.14.1
