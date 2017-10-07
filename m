@@ -1,82 +1,105 @@
-From: sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [RFC v4 5/8] platform/x86: intel_punit_ipc: Fix resource ioremap warning
-Date: Fri,  6 Oct 2017 19:33:59 -0700
-Message-ID: <e677dbe8c35639f64cb2beb753b0550998176f74.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1507340643.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v5 01/14] platform/x86: wmi: Add new method wmidev_evaluate_method
+Date: Fri,  6 Oct 2017 23:59:45 -0500
+Message-ID: <ab2960ef1d0aa5b7e5b6ad5a827a87262d6a06cf.1507350554.git.mario.limonciello@dell.com>
+References: <cover.1507350554.git.mario.limonciello@dell.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:30071 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750713AbdJGFAO (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 7 Oct 2017 01:00:14 -0400
+In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
+References: <cover.1507350554.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Drivers properly using the wmibus can pass their wmi_device
+pointer rather than the GUID back to the WMI bus to evaluate
+the proper methods.
 
-For PUNIT device, ISPDRIVER_IPC and GTDDRIVER_IPC resources are
-not mandatory. So when PMC IPC driver creates a PUNIT device, if
-these resources are not available then it creates dummy resource
-entries for these missing resources. But during PUNIT device probe
-, doing ioremap on these dummy resources generates following warning
-messages.
+Any "new" drivers added that use the WMI bus should use this
+rather than the old wmi_evaluate_method that would take the
+GUID.
 
-intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
-0x00000000]
-intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
-0x00000000]
-intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
-0x00000000]
-intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
-0x00000000]
-
-This patch fixes this issue by adding extra check for resource size
-before performing ioremap operation.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/intel_punit_ipc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/wmi.c | 28 ++++++++++++++++++++++++----
+ include/linux/wmi.h        |  6 ++++++
+ 2 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-index a47a41f..b5b8901 100644
---- a/drivers/platform/x86/intel_punit_ipc.c
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -252,28 +252,28 @@ static int intel_punit_get_bars(struct platform_device *pdev)
- 	 * - GTDRIVER_IPC BASE_IFACE
- 	 */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	if (res) {
-+	if (res && resource_size(res) > 1) {
- 		addr = devm_ioremap_resource(&pdev->dev, res);
- 		if (!IS_ERR(addr))
- 			punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
- 	}
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 7a05843aff19..4d73a87c2ddf 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -200,6 +200,28 @@ static acpi_status wmi_method_enable(struct wmi_block *wblock, int enable)
+  */
+ acpi_status wmi_evaluate_method(const char *guid_string, u8 instance,
+ u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
++{
++	struct wmi_block *wblock = NULL;
++
++	if (!find_guid(guid_string, &wblock))
++		return AE_ERROR;
++	return wmidev_evaluate_method(&wblock->dev, instance, method_id,
++				      in, out);
++}
++EXPORT_SYMBOL_GPL(wmi_evaluate_method);
++
++/**
++ * wmidev_evaluate_method - Evaluate a WMI method
++ * @wdev: A wmi bus device from a driver
++ * @instance: Instance index
++ * @method_id: Method ID to call
++ * &in: Buffer containing input for the method call
++ * &out: Empty buffer to return the method results
++ *
++ * Call an ACPI-WMI method
++ */
++acpi_status wmidev_evaluate_method(struct wmi_device *wdev, u8 instance,
++	u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
+ {
+ 	struct guid_block *block = NULL;
+ 	struct wmi_block *wblock = NULL;
+@@ -209,9 +231,7 @@ u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
+ 	union acpi_object params[3];
+ 	char method[5] = "WM";
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
--	if (res) {
-+	if (res && resource_size(res) > 1) {
- 		addr = devm_ioremap_resource(&pdev->dev, res);
- 		if (!IS_ERR(addr))
- 			punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] = addr;
- 	}
+-	if (!find_guid(guid_string, &wblock))
+-		return AE_ERROR;
+-
++	wblock = container_of(wdev, struct wmi_block, dev);
+ 	block = &wblock->gblock;
+ 	handle = wblock->acpi_device->handle;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
--	if (res) {
-+	if (res && resource_size(res) > 1) {
- 		addr = devm_ioremap_resource(&pdev->dev, res);
- 		if (!IS_ERR(addr))
- 			punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] = addr;
- 	}
+@@ -246,7 +266,7 @@ u32 method_id, const struct acpi_buffer *in, struct acpi_buffer *out)
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
--	if (res) {
-+	if (res && resource_size(res) > 1) {
- 		addr = devm_ioremap_resource(&pdev->dev, res);
- 		if (!IS_ERR(addr))
- 			punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] = addr;
+ 	return status;
+ }
+-EXPORT_SYMBOL_GPL(wmi_evaluate_method);
++EXPORT_SYMBOL_GPL(wmidev_evaluate_method);
+ 
+ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
+ 				 struct acpi_buffer *out)
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index cd0d7734dc49..2cd10c3b89e9 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -26,6 +26,12 @@ struct wmi_device {
+ 	bool setable;
+ };
+ 
++/* evaluate the ACPI method associated with this device */
++extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
++					  u8 instance, u32 method_id,
++					  const struct acpi_buffer *in,
++					  struct acpi_buffer *out);
++
+ /* Caller must kfree the result. */
+ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+ 					     u8 instance);
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
