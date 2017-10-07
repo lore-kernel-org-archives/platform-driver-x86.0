@@ -1,68 +1,89 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v5 02/14] platform/x86: dell-wmi: increase severity of some failures
-Date: Fri,  6 Oct 2017 23:59:46 -0500
-Message-ID: <3debe9758dbf401f3599442dc6ed5f4e55da51d9.1507350554.git.mario.limonciello@dell.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v5 08/14] platform/x86: dell-smbios: Add a sysfs
+ interface for SMBIOS tokens
+Date: Sat, 7 Oct 2017 08:54:21 +0200
+Message-ID: <20171007065421.GA20756@kroah.com>
 References: <cover.1507350554.git.mario.limonciello@dell.com>
+ <f8c1a8f8f04773f54c37eb14614cba88cbd7cab9.1507350554.git.mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:63347 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750823AbdJGFAP (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:59467 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751445AbdJGGyN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Oct 2017 01:00:15 -0400
-In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1507350554.git.mario.limonciello@dell.com>
-References: <cover.1507350554.git.mario.limonciello@dell.com>
+        Sat, 7 Oct 2017 02:54:13 -0400
+Content-Disposition: inline
+In-Reply-To: <f8c1a8f8f04773f54c37eb14614cba88cbd7cab9.1507350554.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-There is a lot of error checking in place for the format of the WMI
-descriptor buffer, but some of the potentially raised issues should
-be considered critical failures.
+On Fri, Oct 06, 2017 at 11:59:52PM -0500, Mario Limonciello wrote:
+> Currently userspace tools can access system tokens via the dcdbas
+> kernel module and a SMI call that will cause the platform to execute
+> SMM code.
+> 
+> With a goal in mind of deprecating the dcdbas kernel module a different
+> method for accessing these tokens from userspace needs to be created.
+> 
+> This is intentionally marked to only be readable as root as it can
+> contain sensitive information about the platform's configuration.
+> 
+> MAINTAINERS was missing for this driver.  Add myself and Pali to
+> maintainers list for it.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  .../ABI/testing/sysfs-platform-dell-smbios         | 16 ++++++
+>  MAINTAINERS                                        |  7 +++
+>  drivers/platform/x86/dell-smbios.c                 | 64 ++++++++++++++++++++++
+>  3 files changed, 87 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
+> new file mode 100644
+> index 000000000000..d97f4bd5bd91
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
+> @@ -0,0 +1,16 @@
+> +What:		/sys/devices/platform/<platform>/tokens
+> +Date:		November 2017
+> +KernelVersion:	4.15
+> +Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
+> +Description:
+> +		A read-only description of Dell platform tokens
+> +		available on the machine.
+> +
+> +		The tokens will be displayed in the following
+> +		machine readable format with each token on a
+> +		new line:
+> +
+> +		ID	Location	value
+> +
+> +		For example token:
+> +		5	5	3
 
-If the buffer size or header don't match, this is a good indication
-that the buffer format changed in a way that the rest of the data
-should not be relied upon.
+That's more than "one value per file" which is what sysfs requires, so
+this isn't acceptable, sorry.
 
-For the remaining data set vectors, continue to notate a warning
-in undefined results, but as those are fields that the descriptor
-intended to refer to other applications, don't fail if they're new
-values.
+> +static ssize_t tokens_show(struct device *dev,
+> +			   struct device_attribute *attr, char *buf)
+> +{
+> +	size_t off = 0;
+> +	int to_print;
+> +	int i;
+> +
+> +	to_print = min(da_num_tokens, (int)(PAGE_SIZE - 1) / 15);
+> +	for (i = 0; i < to_print; i++) {
+> +		off += scnprintf(buf+off, PAGE_SIZE-off, "%04x\t%04x\t%04x\n",
+> +		da_tokens[i].tokenID, da_tokens[i].location,
+> +		da_tokens[i].value);
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/dell-wmi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Huge hint, if you are checking for the max size of the buffer for sysfs,
+something is really wrong, and you need to redo your design.
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 1fbef560ca67..2cfaaa8faf0a 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -657,17 +657,18 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- 		dev_err(&wdev->dev,
- 			"Dell descriptor buffer has invalid length (%d)\n",
- 			obj->buffer.length);
--		if (obj->buffer.length < 16) {
--			ret = -EINVAL;
--			goto out;
--		}
-+		ret = -EINVAL;
-+		goto out;
- 	}
- 
- 	buffer = (u32 *)obj->buffer.pointer;
- 
--	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
--		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
-+	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
-+		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
- 			8, buffer);
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	if (buffer[2] != 0 && buffer[2] != 1)
- 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
--- 
-2.14.1
+thanks,
+
+greg k-h
