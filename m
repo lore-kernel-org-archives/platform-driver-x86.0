@@ -1,32 +1,41 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: mlx-platform: make a couple of structures static
-Date: Sat, 7 Oct 2017 17:03:41 +0300
-Message-ID: <CAHp75Vf8k-hmk4n86foSfSPZxVUQJmGNFkf8ExUKbF2nXaSy8A@mail.gmail.com>
-References: <20171005104211.30440-1-colin.king@canonical.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH resend] platform/x86: peaq-wmi: Add DMI check before
+ binding to the WMI interface
+Date: Sat, 7 Oct 2017 23:21:02 +0800
+Message-ID: <CAAd53p43Hea0cuA1fGUq8Ta50w5y5Z1S7sUHV7KFCucGNo29gQ@mail.gmail.com>
+References: <20171005180404.15044-1-hdegoede@redhat.com> <CAAd53p6rtLR7XvZx4pHNiHx4npBLM0oJ7+7CEjxNHxJu2rWuzA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <20171005104211.30440-1-colin.king@canonical.com>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>
-Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAd53p6rtLR7XvZx4pHNiHx4npBLM0oJ7+7CEjxNHxJu2rWuzA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 5, 2017 at 1:42 PM, Colin King <colin.king@canonical.com> wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The structures mlxplat_dev and mlxplat_hotplug are local to the source
-> and do not need to be in global scope, so make them static.
->
-> Cleans up sparse warnings:
-> symbol 'mlxplat_dev' was not declared. Should it be static?
-> symbol 'mlxplat_hotplug' was not declared. Should it be static?
+Hi,
 
-Thanks for the patch.
-Since Vadim did some rather big driver changes I would like to hear
-from him how to proceed with this one: either I apply it now, or after
-we get Vadim's series in.
+On Fri, Oct 6, 2017 at 12:23 PM, Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> Hi Hans,
+>
+> On Fri, Oct 6, 2017 at 2:04 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi All,
+>>
+>> This is a resend with Kai Heng Feng added to the Cc. Kai can you please
+>> test this patch. This patch replaces yours, as many devices seem to be
+>> affected so a whitelist is the better approach here.
+>
+> I'll let the affected user to test the patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The user reports the new patch works.
+
+Thanks.
+
+>
+> Thanks!
+>
+>>
+>> Regards,
+>>
+>> Hans
