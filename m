@@ -1,54 +1,62 @@
-From: "Kuppuswamy, Sathyanarayanan" <sathyaosid@gmail.com>
-Subject: Re: [RFC v4 2/8] platform/x86: intel_pmc_ipc: Use spin_lock to
- protect GCR updates
-Date: Sat, 7 Oct 2017 15:29:49 -0700
-Message-ID: <98547c75-c7a8-cdb8-a0e0-50d115df286a@gmail.com>
-References: <cover.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <c2932168ae25c83f2b2ee6a570274cd0670ba543.1507340643.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAHp75VdFybPNxXU5URVHBBWROV6h1eX+u_R-r5Kue08kBUmGHQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Sun, 8 Oct 2017 18:48:44 +0300
+Message-ID: <CAHp75VeD+KReTDfBA2mTG=DczbGf74T5Fyo7NNcaVNp0nqdXfA@mail.gmail.com>
+References: <cover.1507350554.git.mario.limonciello@dell.com> <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f193.google.com ([209.85.192.193]:38730 "EHLO
-        mail-pf0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753214AbdJGW3v (ORCPT
+Received: from mail-qt0-f193.google.com ([209.85.216.193]:49447 "EHLO
+        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753547AbdJHPsq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Oct 2017 18:29:51 -0400
-In-Reply-To: <CAHp75VdFybPNxXU5URVHBBWROV6h1eX+u_R-r5Kue08kBUmGHQ@mail.gmail.com>
-Content-Language: en-US
+        Sun, 8 Oct 2017 11:48:46 -0400
+In-Reply-To: <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Ingo Molnar <mingo@redhat.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 
-Hi,
+On Sat, Oct 7, 2017 at 7:59 AM, Mario Limonciello
+<mario.limonciello@dell.com> wrote:
+> This splits up the dell-smbios driver into two drivers:
+> * dell-smbios
+> * dell-smbios-smm
+>
+> dell-smbios can operate with multiple different dispatcher drivers to
+> perform SMBIOS operations.
+>
+> Also modify the interface that dell-laptop and dell-wmi use align to this
+> model more closely.  Rather than a single global buffer being allocated
+> for all drivers, each driver will allocate and be responsible for it's own
+> buffer. The pointer will be passed to the calling function and each
+> dispatcher driver will then internally copy it to the proper location to
+> perform it's call.
+
+>  config DELL_SMBIOS
+>         tristate
+
+> +       depends on DELL_SMBIOS_SMM
+> +
+
+If the above dependency is true (which I'm quite sure not) this split
+should never happen.
+
+> +config DELL_SMBIOS_SMM
+> +       tristate "Dell SMBIOS calling interface (SMM implementation)"
+> +       depends on DCDBAS
+> +       default DCDBAS
+> +       select DELL_SMBIOS
+>         ---help---
+> +       This provides an implementation for the Dell SMBIOS calling interface
+> +       communicated over SMI/SMM.
+>
+> +       If you have a Dell computer from <=2017 you should say Y or M here.
+> +       If you aren't sure and this module doesn't work for your computer
+> +       it just won't load.
 
 
-On 10/7/2017 9:13 AM, Andy Shevchenko wrote:
-> On Sat, Oct 7, 2017 at 5:33 AM,
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Currently, update_no_reboot_bit() function implemented in this driver
->> uses mutex_lock() to protect its register updates. But this function is
->> called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
->> functions in iTCO_wdt.c driver, which in turn causes "sleeping into
->> atomic context" issue. This patch fixes this issue by replacing the
->> mutex_lock() with spin_lock() to protect the GCR read/write/update APIs.
->>
->> Fixes: 9d855d4 ("platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS memory
->> mapping failure")
-> I think it need to be a one line.
-Fixed it in v5 version. But it crosses 80 char limit. I am not sure 
-whether its alright.
->
-> Does it apply on top of v4.14-rc3 ?
-Yes. Just checked it now.  It applies cleanly on top of v4.14-rc3. But 
-v5 patch set is re-based on top of your review branch.
-So it has dependency on a patch ( "platform/x86: intel_pmc_ipc: Use 
-devm_* calls in driver probe function") in your review branch.
-> Btw, this patch should be first in the series.
-Fixed it in v5 version.
->
->
+-- 
+With Best Regards,
+Andy Shevchenko
