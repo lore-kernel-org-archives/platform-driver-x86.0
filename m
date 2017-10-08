@@ -1,90 +1,70 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: peaq-wmi: Add DMI check before binding to
- the WMI interface
-Date: Sun, 8 Oct 2017 21:09:23 +0300
-Message-ID: <CAHp75VePt2R30r89-tDs1ZPYV8VT+4_2LqW=O7YamER85qZ3KA@mail.gmail.com>
-References: <20171005180404.15044-1-hdegoede@redhat.com> <20171005180404.15044-2-hdegoede@redhat.com>
+Subject: Re: [PATCH v5 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Sun, 8 Oct 2017 21:13:19 +0300
+Message-ID: <CAHp75VcPEtDjFSguTYd=eqfaG7h5hzCPg_d9H5rMK1O390tUBQ@mail.gmail.com>
+References: <cover.1507350554.git.mario.limonciello@dell.com>
+ <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
+ <CAHp75VeD+KReTDfBA2mTG=DczbGf74T5Fyo7NNcaVNp0nqdXfA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20171005180404.15044-2-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:34976 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751584AbdJHSNU (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 8 Oct 2017 14:13:20 -0400
+In-Reply-To: <CAHp75VeD+KReTDfBA2mTG=DczbGf74T5Fyo7NNcaVNp0nqdXfA@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
 
-On Thu, Oct 5, 2017 at 9:04 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> It seems that the WMI GUID used by the PEAQ 2-in-1 WMI hotkeys is not
-> as unique as a GUID should be and is used on some other devices too.
+On Sun, Oct 8, 2017 at 6:48 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Sat, Oct 7, 2017 at 7:59 AM, Mario Limonciello
+> <mario.limonciello@dell.com> wrote:
+>> This splits up the dell-smbios driver into two drivers:
+>> * dell-smbios
+>> * dell-smbios-smm
+>>
+>> dell-smbios can operate with multiple different dispatcher drivers to
+>> perform SMBIOS operations.
+>>
+>> Also modify the interface that dell-laptop and dell-wmi use align to this
+>> model more closely.  Rather than a single global buffer being allocated
+>> for all drivers, each driver will allocate and be responsible for it's own
+>> buffer. The pointer will be passed to the calling function and each
+>> dispatcher driver will then internally copy it to the proper location to
+>> perform it's call.
 >
-> This is causing spurious key-press reports on these other devices.
+>>  config DELL_SMBIOS
+>>         tristate
 >
-> This commits adds a DMI check to the PEAQ 2-in-1 WMI hotkeys driver to
-> ensure that it is actually running on a PEAQ 2-in-1, fixing the
-> spurious key-presses on these other devices.
+>> +       depends on DELL_SMBIOS_SMM
+>> +
 >
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1497861
-> BugLink: https://bugzilla.suse.com/attachment.cgi?id=743182
-> Cc: stable@vger.kernel.org
+> If the above dependency is true (which I'm quite sure not) this split
+> should never happen.
 
-So, I have pushed to my review queue as is, though please consider my
-comments in perhaps a separate patch.
-Thanks!
+Hmm... One more thought here.
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/peaq-wmi.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> index bc98ef95514a..67fa3fa32011 100644
-> --- a/drivers/platform/x86/peaq-wmi.c
-> +++ b/drivers/platform/x86/peaq-wmi.c
-> @@ -8,6 +8,7 @@
->   */
->
->  #include <linux/acpi.h>
-> +#include <linux/dmi.h>
->  #include <linux/input-polldev.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -64,8 +65,22 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
->         }
->  }
->
-> +/* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
-> +static const struct dmi_system_id peaq_dmi_table[] = {
-> +       {
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
-> +               },
-> +       },
-> +};
-> +
->  static int __init peaq_wmi_init(void)
->  {
-> +       /* WMI GUID is not unique, also check for a DMI match */
-> +       if (!dmi_check_system(peaq_dmi_table))
-> +               return -ENODEV;
-> +
->         if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
->                 return -ENODEV;
->
-> @@ -86,6 +101,9 @@ static int __init peaq_wmi_init(void)
->
->  static void __exit peaq_wmi_exit(void)
->  {
-> +       if (!dmi_check_system(peaq_dmi_table))
-> +               return;
-> +
->         if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
->                 return;
->
-> --
-> 2.14.2
->
+Which is library and which is not? IOW the question is "can
+DELL_SMBIOS be a standalone working module"?
 
+>
+>> +config DELL_SMBIOS_SMM
+>> +       tristate "Dell SMBIOS calling interface (SMM implementation)"
+>> +       depends on DCDBAS
+>> +       default DCDBAS
+>> +       select DELL_SMBIOS
+>>         ---help---
+>> +       This provides an implementation for the Dell SMBIOS calling interface
+>> +       communicated over SMI/SMM.
+>>
+>> +       If you have a Dell computer from <=2017 you should say Y or M here.
+>> +       If you aren't sure and this module doesn't work for your computer
+>> +       it just won't load.
 
 
 -- 
