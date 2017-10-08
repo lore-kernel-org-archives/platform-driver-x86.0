@@ -1,72 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add Package C-states
- residency info
-Date: Sun, 8 Oct 2017 21:31:39 +0300
-Message-ID: <CAHp75VdTJNt7dk1hM1X27gZDocp-XnX974c6N1FEzcf=Q6kz0w@mail.gmail.com>
-References: <1503059853-5118-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VfFrdiSDb_SAunCAdWZY0FPY9hxriCgVUYn00_gmOQQcw@mail.gmail.com>
- <20170818145843.GA10366@raj-desk2.iind.intel.com> <CAHp75Vd5Wnio-RCEBENtonYWOJF2+88FDvqkUv1HzV3CdcaaPA@mail.gmail.com>
- <20170818174725.GB12519@raj-desk2.iind.intel.com> <CACK8Z6H=B4w7n+U8R7Z7wWJTdvv5iCJpBe61mwGF34XMCDXiWw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v5 1/8] platform/x86: intel_pmc_ipc: Use spin_lock to
+ protect GCR updates
+Date: Sun, 8 Oct 2017 21:38:33 +0300
+Message-ID: <CAHp75VdaTvaOgNJE1vHHDfT2V8MYyQFnpr0qdUmBVJ2743eQKA@mail.gmail.com>
+References: <cover.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com> <e70046c8d49173840f8ee7218e8b2288301f8e67.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:50859 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751572AbdJHSbk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Oct 2017 14:31:40 -0400
-In-Reply-To: <CACK8Z6H=B4w7n+U8R7Z7wWJTdvv5iCJpBe61mwGF34XMCDXiWw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rajat Jain <rajatja@google.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Derek Basehore <dbasehore@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Derek Basehore <dbasehore@google.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e70046c8d49173840f8ee7218e8b2288301f8e67.1507414288.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zha Qipeng <qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, "dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuppuswamy Sathyanarayanan <sathyana>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Aug 19, 2017 at 2:23 AM, Rajat Jain <rajatja@google.com> wrote:
-> On Fri, Aug 18, 2017 at 10:47 AM, Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@intel.com> wrote:
->> On Fri, Aug 18, 2017 at 08:17:32PM +0300, Andy Shevchenko wrote:
->>> On Fri, Aug 18, 2017 at 5:58 PM, Rajneesh Bhardwaj
->>> <rajneesh.bhardwaj@intel.com> wrote:
->>> > On Fri, Aug 18, 2017 at 03:57:34PM +0300, Andy Shevchenko wrote:
->>> >> On Fri, Aug 18, 2017 at 3:37 PM, Rajneesh Bhardwaj
->>> >> <rajneesh.bhardwaj@intel.com> wrote:
-
->>> > This is needed to enhance the S0ix failure debug capabilities from within
->>> > the kernel. On ChromeOS we have S0ix failsafe kernel framework that is used
->>> > to validate S0ix and report the blockers in case of a failure.
->>> > https://patchwork.kernel.org/patch/9148999/
->>>
->>> (It's not part of upstream)
->>
->> Sorry i sent an older link. There are fresh attempts to get this into
->> mainline kernel and looks like there is a traction for it.
->> https://patchwork.kernel.org/patch/9831229/
->>
->> Package C-state (PC10) validation is discussed there.
+On Sun, Oct 8, 2017 at 1:19 AM,
+<sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 >
-> Yes, Derek has been trying to get it up streamed, and is currently
-> taking care of the comments. One of the comments Rafael Wysocki had
-> (https://lkml.org/lkml/2017/7/10/741), was that getting to PC10 takes
-> care of large amount of power savings, and PC10 is a logical milestone
-> to track / validate as it validates the north complex power state. To
-> do that we need an API to get the PC10 counter.
+> Currently, update_no_reboot_bit() function implemented in this driver
+> uses mutex_lock() to protect its register updates. But this function is
+> called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
+> functions in iTCO_wdt.c driver, which in turn causes "sleeping into
+> atomic context" issue. This patch fixes this issue by replacing the
+> mutex_lock() with spin_lock() to protect the GCR read/write/update APIs.
+>
+> Fixes: 9d855d4 ("platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS memory mapping failure")
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kupuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-So, how many ways we have to get that counter?
+>  * Rebased this patch on top of Andy's review branch.
 
-From HW prospective; from Linux kernel prospective; from user space prospective.
+Oh, what I asked you is to use vanilla kernel as a base.
+Please, be sure (you assured me, though it's not true) that it's
+applied against vanilla (or our fixes branch) and send just this one
+patch separately.
 
-> I do agree that an exposed API needs to have a user code that uses the
-> API. In this case it seems to be a chicken and egg problem i.e. the
-> S0ix failsafe framework (https://patchwork.kernel.org/patch/9831229/)
-> needs this API, and the API needs a user (failsafe framework) for it
-> to be accepted?
-
-So, Derek's patch as I can see didn't made upstream and the whole
-activity seems staled.
-
-I'm going to mark this as Rejected. Whenever it would be new approach
-feel free to send a new version.
+No need to resend v5 right now.
 
 -- 
 With Best Regards,
 Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
