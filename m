@@ -1,125 +1,80 @@
-From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v1 1/1] platform/x86: intel_pmc_ipc: Use spin_lock to protect GCR updates
-Date: Sun,  8 Oct 2017 13:47:51 -0700
-Message-ID: <759cf76b536ee72c899869dd04caf71f2e7eee06.1507495616.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, qipeng.zha@intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, sathyaosid@gmail.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kupuswamy@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v5 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Sun, 8 Oct 2017 21:45:09 +0000
+Message-ID: <6a652e65f1bd494ab099a43b8e84a2d0@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1507350554.git.mario.limonciello@dell.com>
+ <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
+ <CAHp75VeD+KReTDfBA2mTG=DczbGf74T5Fyo7NNcaVNp0nqdXfA@mail.gmail.com>
+ <CAHp75VcPEtDjFSguTYd=eqfaG7h5hzCPg_d9H5rMK1O390tUBQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:20636 "EHLO
+        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751241AbdJHVpL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 8 Oct 2017 17:45:11 -0400
+In-Reply-To: <CAHp75VcPEtDjFSguTYd=eqfaG7h5hzCPg_d9H5rMK1O390tUBQ@mail.gmail.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-Currently, update_no_reboot_bit() function implemented in this driver
-uses mutex_lock() to protect its register updates. But this function is
-called with in atomic context in iTCO_wdt_start() and iTCO_wdt_stop()
-functions in iTCO_wdt.c driver, which in turn causes "sleeping into
-atomic context" issue. This patch fixes this issue by replacing the
-mutex_lock() with spin_lock() to protect the GCR read/write/update APIs.
-
-Fixes: 9d855d4 ("platform/x86: intel_pmc_ipc: Fix iTCO_wdt GCS memory mapping failure")
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kupuswamy@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index bb792a5..af88221 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -33,6 +33,7 @@
- #include <linux/suspend.h>
- #include <linux/acpi.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/spinlock.h>
- 
- #include <asm/intel_pmc_ipc.h>
- 
-@@ -131,6 +132,7 @@ static struct intel_pmc_ipc_dev {
- 	/* gcr */
- 	void __iomem *gcr_mem_base;
- 	bool has_gcr_regs;
-+	spinlock_t gcr_lock;
- 
- 	/* punit */
- 	struct platform_device *punit_dev;
-@@ -225,17 +227,17 @@ int intel_pmc_gcr_read(u32 offset, u32 *data)
- {
- 	int ret;
- 
--	mutex_lock(&ipclock);
-+	spin_lock(&ipcdev.gcr_lock);
- 
- 	ret = is_gcr_valid(offset);
- 	if (ret < 0) {
--		mutex_unlock(&ipclock);
-+		spin_unlock(&ipcdev.gcr_lock);
- 		return ret;
- 	}
- 
- 	*data = readl(ipcdev.gcr_mem_base + offset);
- 
--	mutex_unlock(&ipclock);
-+	spin_unlock(&ipcdev.gcr_lock);
- 
- 	return 0;
- }
-@@ -255,17 +257,17 @@ int intel_pmc_gcr_write(u32 offset, u32 data)
- {
- 	int ret;
- 
--	mutex_lock(&ipclock);
-+	spin_lock(&ipcdev.gcr_lock);
- 
- 	ret = is_gcr_valid(offset);
- 	if (ret < 0) {
--		mutex_unlock(&ipclock);
-+		spin_unlock(&ipcdev.gcr_lock);
- 		return ret;
- 	}
- 
- 	writel(data, ipcdev.gcr_mem_base + offset);
- 
--	mutex_unlock(&ipclock);
-+	spin_unlock(&ipcdev.gcr_lock);
- 
- 	return 0;
- }
-@@ -287,7 +289,7 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	u32 new_val;
- 	int ret = 0;
- 
--	mutex_lock(&ipclock);
-+	spin_lock(&ipcdev.gcr_lock);
- 
- 	ret = is_gcr_valid(offset);
- 	if (ret < 0)
-@@ -309,7 +311,7 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	}
- 
- gcr_ipc_unlock:
--	mutex_unlock(&ipclock);
-+	spin_unlock(&ipcdev.gcr_lock);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
-@@ -487,6 +489,8 @@ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	ipcdev.dev = &pci_dev_get(pdev)->dev;
- 	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
- 
-+	spin_lock_init(&ipcdev.gcr_lock);
-+
- 	ret = pci_enable_device(pdev);
- 	if (ret)
- 		return ret;
-@@ -924,6 +928,8 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
- 	init_completion(&ipcdev.cmd_complete);
- 
-+	spin_lock_init(&ipcdev.gcr_lock);
-+
- 	ipcdev.irq = platform_get_irq(pdev, 0);
- 	if (ipcdev.irq < 0) {
- 		dev_err(&pdev->dev, "Failed to get irq\n");
--- 
-2.7.4
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIE9jdG9iZXIg
+OCwgMjAxNyAxOjEzIFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2ll
+bGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IExLTUwgPGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZl
+ci14ODZAdmdlci5rZXJuZWwub3JnPjsgQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+
+Ow0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5j
+b20+OyBSYWZhZWwgSi4gV3lzb2NraQ0KPiA8cmp3QHJqd3lzb2NraS5uZXQ+OyBtamc1OUBnb29n
+bGUuY29tOyBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT47DQo+IEdyZWcgS0ggPGdyZWdA
+a3JvYWguY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDA5LzE0XSBwbGF0Zm9ybS94ODY6
+IGRlbGwtc21iaW9zOiBJbnRyb2R1Y2UgZGlzcGF0Y2hlciBmb3INCj4gU01NIGNhbGxzDQo+IA0K
+PiBPbiBTdW4sIE9jdCA4LCAyMDE3IGF0IDY6NDggUE0sIEFuZHkgU2hldmNoZW5rbw0KPiA8YW5k
+eS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gT24gU2F0LCBPY3QgNywgMjAxNyBh
+dCA3OjU5IEFNLCBNYXJpbyBMaW1vbmNpZWxsbw0KPiA+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxs
+LmNvbT4gd3JvdGU6DQo+ID4+IFRoaXMgc3BsaXRzIHVwIHRoZSBkZWxsLXNtYmlvcyBkcml2ZXIg
+aW50byB0d28gZHJpdmVyczoNCj4gPj4gKiBkZWxsLXNtYmlvcw0KPiA+PiAqIGRlbGwtc21iaW9z
+LXNtbQ0KPiA+Pg0KPiA+PiBkZWxsLXNtYmlvcyBjYW4gb3BlcmF0ZSB3aXRoIG11bHRpcGxlIGRp
+ZmZlcmVudCBkaXNwYXRjaGVyIGRyaXZlcnMgdG8NCj4gPj4gcGVyZm9ybSBTTUJJT1Mgb3BlcmF0
+aW9ucy4NCj4gPj4NCj4gPj4gQWxzbyBtb2RpZnkgdGhlIGludGVyZmFjZSB0aGF0IGRlbGwtbGFw
+dG9wIGFuZCBkZWxsLXdtaSB1c2UgYWxpZ24gdG8gdGhpcw0KPiA+PiBtb2RlbCBtb3JlIGNsb3Nl
+bHkuICBSYXRoZXIgdGhhbiBhIHNpbmdsZSBnbG9iYWwgYnVmZmVyIGJlaW5nIGFsbG9jYXRlZA0K
+PiA+PiBmb3IgYWxsIGRyaXZlcnMsIGVhY2ggZHJpdmVyIHdpbGwgYWxsb2NhdGUgYW5kIGJlIHJl
+c3BvbnNpYmxlIGZvciBpdCdzIG93bg0KPiA+PiBidWZmZXIuIFRoZSBwb2ludGVyIHdpbGwgYmUg
+cGFzc2VkIHRvIHRoZSBjYWxsaW5nIGZ1bmN0aW9uIGFuZCBlYWNoDQo+ID4+IGRpc3BhdGNoZXIg
+ZHJpdmVyIHdpbGwgdGhlbiBpbnRlcm5hbGx5IGNvcHkgaXQgdG8gdGhlIHByb3BlciBsb2NhdGlv
+biB0bw0KPiA+PiBwZXJmb3JtIGl0J3MgY2FsbC4NCj4gPg0KPiA+PiAgY29uZmlnIERFTExfU01C
+SU9TDQo+ID4+ICAgICAgICAgdHJpc3RhdGUNCj4gPg0KPiA+PiArICAgICAgIGRlcGVuZHMgb24g
+REVMTF9TTUJJT1NfU01NDQo+ID4+ICsNCj4gPg0KPiA+IElmIHRoZSBhYm92ZSBkZXBlbmRlbmN5
+IGlzIHRydWUgKHdoaWNoIEknbSBxdWl0ZSBzdXJlIG5vdCkgdGhpcyBzcGxpdA0KPiA+IHNob3Vs
+ZCBuZXZlciBoYXBwZW4uDQo+IA0KPiBIbW0uLi4gT25lIG1vcmUgdGhvdWdodCBoZXJlLg0KPiAN
+Cj4gV2hpY2ggaXMgbGlicmFyeSBhbmQgd2hpY2ggaXMgbm90PyBJT1cgdGhlIHF1ZXN0aW9uIGlz
+ICJjYW4NCj4gREVMTF9TTUJJT1MgYmUgYSBzdGFuZGFsb25lIHdvcmtpbmcgbW9kdWxlIj8NCj4g
+DQoNCkl0IGNhbiB0ZWNobmljYWxseSBiZSBjb21waWxlZCBhcyBhIHN0YW5kYWxvbmUgbW9kdWxl
+LCBidXQgaXQgd29uJ3QgZG8gDQphbnl0aGluZyBhcyBhIHN0YW5kYWxvbmUgbW9kdWxlIGFzIG9m
+IHRoaXMgcGF0Y2guDQoNCkFmdGVyIHRoZSBzeXNmcyB0b2tlbnMgcGF0Y2ggaXQgY291bGQgYmUg
+dXNlZCB0byBwcm92aWRlIHRva2VuIGluZm9ybWF0aW9uDQp3aXRob3V0IHRoZSBTTU0gb3IgV01J
+IGRyaXZlcnMuDQooYWx0aG91Z2ggdGhpcyBpbnRlcmZhY2Ugd2lsbCBoYXZlIHRvIGNoYW5nZSBi
+YXNlZCB1cG9uIEdyZWcncyBtb3N0IHJlY2VudA0KZmVlZGJhY2spLg0KDQpJbiB0ZXJtcyBvZiB0
+cmFuc2l0aW9uaW5nIHBlb3BsZSBtb3ZpbmcgZnJvbSBvbGRlciBrZXJuZWxzIHRvIG5ldywgaXQg
+bWFrZXMNCm1vc3Qgc2Vuc2UgdG8gbWUgdGhhdCBpdCdzIGF1dG9tYXRpY2FsbHkgc2VsZWN0aW5n
+IERFTExfU01CSU9TX1NNTSBpZiB5b3UNCmhhZCBpdCBzZWxlY3RlZCBwcmV2aW91c2x5LCBidXQg
+SSdsbCBkZWZlciB0byB5b3UganVkZ2VtZW50IGlmIHRoZSBkZXBlbmRlbmN5DQpzaG91bGQgYmUg
+ZHJvcHBlZCBzaW5jZSBpdCBjYW4gYmUgYSBzdGFuZGFsb25lIG1vZHVsZSB0aGF0IGp1c3QgZG9l
+c24ndCBkbw0KYW55dGhpbmcuDQoNCj4gPg0KPiA+PiArY29uZmlnIERFTExfU01CSU9TX1NNTQ0K
+PiA+PiArICAgICAgIHRyaXN0YXRlICJEZWxsIFNNQklPUyBjYWxsaW5nIGludGVyZmFjZSAoU01N
+IGltcGxlbWVudGF0aW9uKSINCj4gPj4gKyAgICAgICBkZXBlbmRzIG9uIERDREJBUw0KPiA+PiAr
+ICAgICAgIGRlZmF1bHQgRENEQkFTDQo+ID4+ICsgICAgICAgc2VsZWN0IERFTExfU01CSU9TDQo+
+ID4+ICAgICAgICAgLS0taGVscC0tLQ0KPiA+PiArICAgICAgIFRoaXMgcHJvdmlkZXMgYW4gaW1w
+bGVtZW50YXRpb24gZm9yIHRoZSBEZWxsIFNNQklPUyBjYWxsaW5nIGludGVyZmFjZQ0KPiA+PiAr
+ICAgICAgIGNvbW11bmljYXRlZCBvdmVyIFNNSS9TTU0uDQo+ID4+DQo+ID4+ICsgICAgICAgSWYg
+eW91IGhhdmUgYSBEZWxsIGNvbXB1dGVyIGZyb20gPD0yMDE3IHlvdSBzaG91bGQgc2F5IFkgb3Ig
+TSBoZXJlLg0KPiA+PiArICAgICAgIElmIHlvdSBhcmVuJ3Qgc3VyZSBhbmQgdGhpcyBtb2R1bGUg
+ZG9lc24ndCB3b3JrIGZvciB5b3VyIGNvbXB1dGVyDQo+ID4+ICsgICAgICAgaXQganVzdCB3b24n
+dCBsb2FkLg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZj
+aGVua28NCg==
