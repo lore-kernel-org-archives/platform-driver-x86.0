@@ -1,60 +1,49 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 09/14] platform/x86: dell-smbios: Introduce dispatcher
- for SMM calls
-Date: Sun, 8 Oct 2017 18:48:44 +0300
-Message-ID: <CAHp75VeD+KReTDfBA2mTG=DczbGf74T5Fyo7NNcaVNp0nqdXfA@mail.gmail.com>
-References: <cover.1507350554.git.mario.limonciello@dell.com> <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for the PEAQ WMI hotkeys driver
+Date: Sun, 8 Oct 2017 21:08:22 +0300
+Message-ID: <CAHp75VetOUDKwSBnBs9exH2dMSJW=RzaKooo1_3aEfxC2Go3Ng@mail.gmail.com>
+References: <20171005143147.5092-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:49447 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753547AbdJHPsq (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Oct 2017 11:48:46 -0400
-In-Reply-To: <f53c8cfd7002ba288a061dacf70ad4161d203419.1507350554.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mjg59@google.com, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005143147.5092-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 7, 2017 at 7:59 AM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> This splits up the dell-smbios driver into two drivers:
-> * dell-smbios
-> * dell-smbios-smm
+On Thu, Oct 5, 2017 at 5:31 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Add an entry to make myself the maintainer of the PEAQ WMI hotkeys driver.
+
+Pushed to my review queue, thanks!
+
 >
-> dell-smbios can operate with multiple different dispatcher drivers to
-> perform SMBIOS operations.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> Also modify the interface that dell-laptop and dell-wmi use align to this
-> model more closely.  Rather than a single global buffer being allocated
-> for all drivers, each driver will allocate and be responsible for it's own
-> buffer. The pointer will be passed to the calling function and each
-> dispatcher driver will then internally copy it to the proper location to
-> perform it's call.
-
->  config DELL_SMBIOS
->         tristate
-
-> +       depends on DELL_SMBIOS_SMM
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea7d7955516e..e250a9c356c5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10544,6 +10544,12 @@ S:     Maintained
+>  F:     crypto/pcrypt.c
+>  F:     include/crypto/pcrypt.h
+>
+> +PEAQ WMI HOTKEYS DRIVER
+> +M:     Hans de Goede <hdegoede@redhat.com>
+> +L:     platform-driver-x86@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/platform/x86/peaq-wmi.c
 > +
-
-If the above dependency is true (which I'm quite sure not) this split
-should never happen.
-
-> +config DELL_SMBIOS_SMM
-> +       tristate "Dell SMBIOS calling interface (SMM implementation)"
-> +       depends on DCDBAS
-> +       default DCDBAS
-> +       select DELL_SMBIOS
->         ---help---
-> +       This provides an implementation for the Dell SMBIOS calling interface
-> +       communicated over SMI/SMM.
+>  PER-CPU MEMORY ALLOCATOR
+>  M:     Tejun Heo <tj@kernel.org>
+>  M:     Christoph Lameter <cl@linux.com>
+> --
+> 2.14.2
 >
-> +       If you have a Dell computer from <=2017 you should say Y or M here.
-> +       If you aren't sure and this module doesn't work for your computer
-> +       it just won't load.
+
 
 
 -- 
