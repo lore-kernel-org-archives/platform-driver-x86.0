@@ -1,23 +1,45 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [RFC v5 4/8] platform: x86: Add generic Intel IPC driver
-Date: Mon, 9 Oct 2017 00:11:05 -0700
-Message-ID: <20171009071104.GA17088@infradead.org>
-References: <cover.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <983bc2330acc5eb3f384e9aed7ceba22b5c7ea5f.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB4661E20EC@BGSMSX102.gar.corp.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] intel-oaktrail: Clean up dead code
+Date: Mon, 9 Oct 2017 13:21:17 +0300
+Message-ID: <CAHp75Ve7404BFgitG=HNKP0EyZN-Uoa=JOhGvaKz1N1ERs=eXQ@mail.gmail.com>
+References: <1507503469-22507-1-git-send-email-chris.gekas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:60087 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750790AbdJIHLi (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Oct 2017 03:11:38 -0400
-Content-Disposition: inline
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB4661E20EC@BGSMSX102.gar.corp.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Cc: "sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, "wim@iguana.be" <wim@iguana.be>, "mingo@redhat.com" <mingo@redhat.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "andy@infradead.org" <andy@infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, pla
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507503469-22507-1-git-send-email-chris.gekas@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christos Gkekas <chris.gekas@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-What does IPC stand for in this device?
+On Mon, Oct 9, 2017 at 1:57 AM, Christos Gkekas <chris.gekas@gmail.com> wrote:
+> A couple of macros are unused and need to be removed.
+> Also variable percent is unsigned so checking whether it is less than
+> zero is redundant.
+
+> -#define OT_EC_CAMERA_MASK      (1 << 0)
+>  #define OT_EC_BT_MASK          (1 << 1)
+>  #define OT_EC_GPS_MASK         (1 << 2)
+>  #define OT_EC_WIFI_MASK                (1 << 3)
+>  #define OT_EC_WWAN_MASK                (1 << 4)
+> -#define OT_EC_TS_MASK          (1 << 5)
+
+While they are unused they won't bring any additional code to the binary.
+The rationale to leave them is to have a bit descriptions in the code,
+so, anyone who is in possession of that old and rare hardware can do
+some tests or amendments without searching looking to documentation.
+
+
+> -       if (percent < 0 || percent > OT_EC_BL_BRIGHTNESS_MAX)
+> +       if (percent > OT_EC_BL_BRIGHTNESS_MAX)
+>                 return -EINVAL;
+
+While it's true, doesn't compiler take care about that?
+
+https://lkml.org/lkml/2006/11/28/206
+
+So, unfortunately I have no reason to take it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
