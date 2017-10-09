@@ -1,72 +1,51 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v6 06/14] platform/x86: wmi: Don't allow drivers to get each other's GUIDs
-Date: Mon,  9 Oct 2017 17:51:44 -0500
-Message-ID: <1b26d4fd2f1e85732be660ac8eed1b8d2b13ba5a.1507589249.git.mario.limonciello@dell.com>
+Subject: [PATCH v6 04/14] platform/x86: dell-wmi: allow 32k return size in the descriptor
+Date: Mon,  9 Oct 2017 17:51:42 -0500
+Message-ID: <099f11c2e1b9675ccb35b2c04e2855a66a455b49.1507589249.git.mario.limonciello@dell.com>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:32812 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1755071AbdJIWv5 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 9 Oct 2017 18:51:57 -0400
 In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-The only driver using this was dell-wmi, and it really was a hack.
-The driver was getting a data attribute from another driver and this
-type of action should not be encouraged.
-
-Rather drivers that need to interact with one another should pass
-data back and forth via exported functions.
+Some platforms this year will be adopting 32k WMI buffer, so don't
+complain when encountering those.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/wmi.c | 17 -----------------
- include/linux/wmi.h        |  4 ----
- 2 files changed, 21 deletions(-)
+ drivers/platform/x86/dell-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 4d73a87c2ddf..bcb41c1c7f52 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -368,23 +368,6 @@ union acpi_object *wmidev_block_query(struct wmi_device *wdev, u8 instance)
- }
- EXPORT_SYMBOL_GPL(wmidev_block_query);
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index ece2fe341f01..c8c7f4f9326c 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -624,7 +624,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+  * Vendor Signature          0       4    "DELL"
+  * Object Signature          4       4    " WMI"
+  * WMI Interface Version     8       4    <version>
+- * WMI buffer length        12       4    4096
++ * WMI buffer length        12       4    4096 or 32768
+  */
+ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+ {
+@@ -674,7 +674,7 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+ 			buffer[2]);
  
--struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
--					 const char *guid_string)
--{
--	struct wmi_block *this_wb = container_of(wdev, struct wmi_block, dev);
--	struct wmi_block *other_wb;
--
--	if (!find_guid(guid_string, &other_wb))
--		return NULL;
--
--	if (other_wb->acpi_device != this_wb->acpi_device)
--		return NULL;
--
--	get_device(&other_wb->dev.dev);
--	return &other_wb->dev;
--}
--EXPORT_SYMBOL_GPL(wmidev_get_other_guid);
--
- /**
-  * wmi_set_block - Write to a WMI block
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 2cd10c3b89e9..ddee427e0721 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -36,10 +36,6 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
+-	if (buffer[3] != 4096)
++	if (desc_buffer[3] != 4096 && desc_buffer[3] != 32768)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
+ 			buffer[3]);
  
--/* Gets another device on the same bus.  Caller must put_device the result. */
--extern struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
--						const char *guid_string);
--
- struct wmi_device_id {
- 	const char *guid_string;
- };
 -- 
 2.14.1
