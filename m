@@ -1,8 +1,11 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v6 13/14] platform/x86: wmi: create character devices when requested by drivers
-Date: Mon,  9 Oct 2017 17:51:51 -0500
-Message-ID: <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
+Subject: [PATCH v6 09/14] platform/x86: dell-smbios: Introduce dispatcher for SMM calls
+Date: Mon,  9 Oct 2017 17:51:47 -0500
+Message-ID: <25bf1422d8efbd631f57dcb7dd40865bae729398.1507589249.git.mario.limonciello@dell.com>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
@@ -12,210 +15,1009 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-For WMI operations that are only Set or Query read or write sysfs
-attributes created by WMI vendor drivers make sense.
+This splits up the dell-smbios driver into two drivers:
+* dell-smbios
+* dell-smbios-smm
 
-For other WMI operations that are run on Method, there needs to be a
-way to guarantee to userspace that the results from the method call
-belong to the data request to the method call.  Sysfs attributes don't
-work well in this scenario because two userspace processes may be
-competing at reading/writing an attribute and step on each other's
-data.
+dell-smbios can operate with multiple different dispatcher drivers to
+perform SMBIOS operations.
 
-When a WMI vendor driver declares an ioctl callback in the wmi_driver
-the WMI bus driver will create a character device that maps to that
-function.
-
-That character device will correspond to this path:
-/dev/wmi/$driver
-
-The WMI bus driver will interpret the IOCTL calls, test them for
-a valid instance and pass them on to the vendor driver to run.
-
-This creates an implicit policy that only driver per character
-device.  If a module matches multiple GUID's, the wmi_devices
-will need to be all handled by the same wmi_driver if the same
-character device is used.
-
-The WMI vendor drivers will be responsible for managing access to
-this character device and proper locking on it.
-
-When a WMI vendor driver is unloaded the WMI bus driver will clean
-up the character device.
+Also modify the interface that dell-laptop and dell-wmi use align to this
+model more closely.  Rather than a single global buffer being allocated
+for all drivers, each driver will allocate and be responsible for it's own
+buffer. The pointer will be passed to the calling function and each
+dispatcher driver will then internally copy it to the proper location to
+perform it's call.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- MAINTAINERS                |  1 +
- drivers/platform/x86/wmi.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/wmi.h        |  3 ++
- include/uapi/linux/wmi.h   | 19 +++++++++++++
- 4 files changed, 92 insertions(+)
- create mode 100644 include/uapi/linux/wmi.h
+ MAINTAINERS                            |   6 +
+ drivers/platform/x86/Kconfig           |  15 +-
+ drivers/platform/x86/Makefile          |   1 +
+ drivers/platform/x86/dell-laptop.c     | 255 ++++++++++++---------------------
+ drivers/platform/x86/dell-smbios-smm.c | 136 ++++++++++++++++++
+ drivers/platform/x86/dell-smbios.c     | 113 +++++++++------
+ drivers/platform/x86/dell-smbios.h     |  13 +-
+ drivers/platform/x86/dell-wmi.c        |  11 +-
+ 8 files changed, 329 insertions(+), 221 deletions(-)
+ create mode 100644 drivers/platform/x86/dell-smbios-smm.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e7514b616e13..2a99ee9fd883 100644
+index 2e3f2aea0370..8faf08ebcfee 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -372,6 +372,7 @@ ACPI WMI DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
- F:	drivers/platform/x86/wmi.c
-+F:	include/uapi/linux/wmi.h
+@@ -3974,6 +3974,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell-smbios.*
  
- AD1889 ALSA SOUND DRIVER
- M:	Thibaut Varene <T-Bone@parisc-linux.org>
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index bcb41c1c7f52..a22b0d333c8f 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -38,6 +38,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -69,6 +70,7 @@ struct wmi_block {
- 	struct wmi_device dev;
- 	struct list_head list;
- 	struct guid_block gblock;
-+	struct miscdevice misc_dev;
- 	struct acpi_device *acpi_device;
- 	wmi_notify_handler handler;
- 	void *handler_data;
-@@ -765,12 +767,74 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	return 0;
- }
++DELL SMBIOS SMM DRIVER
++M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/dell-smbios-smm.c
++
+ DELL LAPTOP DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali.rohar@gmail.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 7722923c968c..53a2de781de6 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -93,12 +93,19 @@ config ASUS_LAPTOP
  
-+static long wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-+{
-+	struct wmi_driver *wdriver = NULL;
-+	struct wmi_block *wblock = NULL;
-+	const char *driver_name;
-+	struct list_head *p;
-+	int ret;
+ config DELL_SMBIOS
+ 	tristate
+-	select DCDBAS
 +
-+	if (_IOC_TYPE(cmd) != WMI_IOC)
-+		return -ENOTTY;
-+
-+	driver_name = filp->f_path.dentry->d_iname;
-+
-+	list_for_each(p, &wmi_block_list) {
-+		wblock = list_entry(p, struct wmi_block, list);
-+		wdriver = container_of(wblock->dev.dev.driver,
-+					struct wmi_driver, driver);
-+		if (!wdriver)
-+			continue;
-+		if (strcmp(driver_name, wdriver->driver.name) == 0)
-+			break;
-+	}
-+
-+	if (!wdriver)
-+		return -ENODEV;
-+
-+	/* make sure we're not calling a higher instance than exists*/
-+	if (_IOC_NR(cmd) > wblock->gblock.instance_count - 1)
-+		return -EINVAL;
-+
-+	if (!try_module_get(wdriver->driver.owner))
-+		return -EBUSY;
-+
-+	ret = wdriver->unlocked_ioctl(&wblock->dev, cmd, arg);
-+	module_put(wdriver->driver.owner);
-+
-+	return ret;
-+}
-+
-+static const struct file_operations wmi_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= wmi_ioctl,
-+};
-+
- static int wmi_dev_probe(struct device *dev)
- {
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 	struct wmi_driver *wdriver =
- 		container_of(dev->driver, struct wmi_driver, driver);
- 	int ret = 0;
-+	char *buf;
-+
-+	/* driver wants a character device made */
-+	if (wdriver->unlocked_ioctl) {
-+		buf = kmalloc(strlen(wdriver->driver.name) + 4, GFP_KERNEL);
-+		if (!buf)
-+			return -ENOMEM;
-+		sprintf(buf, "wmi/%s", wdriver->driver.name);
-+		wblock->misc_dev.minor = MISC_DYNAMIC_MINOR;
-+		wblock->misc_dev.name = buf;
-+		wblock->misc_dev.fops = &wmi_fops;
-+		ret = misc_register(&wblock->misc_dev);
-+		if (ret) {
-+			dev_warn(dev, "failed to register char dev: %d", ret);
-+			kfree(buf);
-+			return -ENOMEM;
-+		}
-+	}
++config DELL_SMBIOS_SMM
++	tristate "Dell SMBIOS calling interface (SMM implementation)"
++	depends on DCDBAS
++	default DCDBAS
++	select DELL_SMBIOS
+ 	---help---
+-	This module provides common functions for kernel modules using
+-	Dell SMBIOS.
++	This provides an implementation for the Dell SMBIOS calling interface
++	communicated over SMI/SMM.
  
- 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
- 		dev_warn(dev, "failed to enable device -- probing anyway\n");
-@@ -791,6 +855,11 @@ static int wmi_dev_remove(struct device *dev)
- 		container_of(dev->driver, struct wmi_driver, driver);
- 	int ret = 0;
+-	If you have a Dell laptop, say Y or M here.
++	If you have a Dell computer from <=2017 you should say Y or M here.
++	If you aren't sure and this module doesn't work for your computer
++	it just won't load.
  
-+	if (wdriver->unlocked_ioctl) {
-+		misc_deregister(&wblock->misc_dev);
-+		kfree(wblock->misc_dev.name);
-+	}
-+
- 	if (wdriver->remove)
- 		ret = wdriver->remove(dev_to_wdev(dev));
- 
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index ddee427e0721..259d6ec87dd5 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -18,6 +18,7 @@
- 
- #include <linux/device.h>
- #include <linux/acpi.h>
-+#include <uapi/linux/wmi.h>
- 
- struct wmi_device {
- 	struct device dev;
-@@ -47,6 +48,8 @@ struct wmi_driver {
- 	int (*probe)(struct wmi_device *wdev);
- 	int (*remove)(struct wmi_device *wdev);
- 	void (*notify)(struct wmi_device *device, union acpi_object *data);
-+	long (*unlocked_ioctl)(struct wmi_device *wdev, unsigned int cmd,
-+				unsigned long arg);
+ config DELL_LAPTOP
+ 	tristate "Dell Laptop Extras"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 8636f5d3424f..e743615241f8 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
+ obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+ obj-$(CONFIG_DELL_SMBIOS)	+= dell-smbios.o
++obj-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
+ obj-$(CONFIG_DELL_LAPTOP)	+= dell-laptop.o
+ obj-$(CONFIG_DELL_WMI)		+= dell-wmi.o
+ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index f42159fd2031..2f65f5c15d53 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -85,6 +85,7 @@ static struct platform_driver platform_driver = {
+ 	}
  };
  
- extern int __must_check __wmi_driver_register(struct wmi_driver *driver,
-diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
++static struct calling_interface_buffer *buffer;
+ static struct platform_device *platform_device;
+ static struct backlight_device *dell_backlight_device;
+ static struct rfkill *wifi_rfkill;
+@@ -283,6 +284,23 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+ 	{ }
+ };
+ 
++int dell_send_request(u16 class, u16 select, u32 arg0, u32 arg1, u32 arg2,
++		       u32 arg3)
++{
++	int ret;
++
++	buffer->class = class;
++	buffer->select = select;
++	buffer->input[0] = arg0;
++	buffer->input[1] = arg1;
++	buffer->input[2] = arg2;
++	buffer->input[3] = arg3;
++	ret = dell_smbios_call(buffer);
++	if (ret != 0)
++		return ret;
++	return dell_smbios_error(buffer->output[0]);
++}
++
+ /*
+  * Derived from information in smbios-wireless-ctl:
+  *
+@@ -405,7 +423,6 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+ 
+ static int dell_rfkill_set(void *data, bool blocked)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int disable = blocked ? 1 : 0;
+ 	unsigned long radio = (unsigned long)data;
+ 	int hwswitch_bit = (unsigned long)data - 1;
+@@ -413,20 +430,14 @@ static int dell_rfkill_set(void *data, bool blocked)
+ 	int status;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0, 0, 0, 0);
++	if (ret)
++		return ret;
+ 	status = buffer->output[1];
+ 
+-	if (ret != 0)
+-		goto out;
+-
+-	dell_smbios_clear_buffer();
+-
+-	buffer->input[0] = 0x2;
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0x2, 0, 0, 0);
++	if (ret)
++		return ret;
+ 	hwswitch = buffer->output[1];
+ 
+ 	/* If the hardware switch controls this radio, and the hardware
+@@ -435,28 +446,19 @@ static int dell_rfkill_set(void *data, bool blocked)
+ 	    (status & BIT(0)) && !(status & BIT(16)))
+ 		disable = 1;
+ 
+-	dell_smbios_clear_buffer();
+-
+-	buffer->input[0] = (1 | (radio<<8) | (disable << 16));
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
+-
+- out:
+-	dell_smbios_release_buffer();
+-	return dell_smbios_error(ret);
++	ret = dell_send_request(17, 11, (1 | (radio<<8) | (disable << 16)),
++				0, 0, 0);
++	return ret;
+ }
+ 
+-/* Must be called with the buffer held */
+ static void dell_rfkill_update_sw_state(struct rfkill *rfkill, int radio,
+-					int status,
+-					struct calling_interface_buffer *buffer)
++					int status)
+ {
+ 	if (status & BIT(0)) {
+ 		/* Has hw-switch, sync sw_state to BIOS */
+ 		int block = rfkill_blocked(rfkill);
+-		dell_smbios_clear_buffer();
+-		buffer->input[0] = (1 | (radio << 8) | (block << 16));
+-		dell_smbios_send_request(17, 11);
++		dell_send_request(17, 11, (1 | (radio << 8) | (block << 16)),
++				  0, 0, 0);
+ 	} else {
+ 		/* No hw-switch, sync BIOS state to sw_state */
+ 		rfkill_set_sw_state(rfkill, !!(status & BIT(radio + 16)));
+@@ -472,32 +474,21 @@ static void dell_rfkill_update_hw_state(struct rfkill *rfkill, int radio,
+ 
+ static void dell_rfkill_query(struct rfkill *rfkill, void *data)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int radio = ((unsigned long)data & 0xF);
+ 	int hwswitch;
+ 	int status;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0, 0, 0, 0);
+ 	status = buffer->output[1];
+ 
+ 	if (ret != 0 || !(status & BIT(0))) {
+-		dell_smbios_release_buffer();
+ 		return;
+ 	}
+ 
+-	dell_smbios_clear_buffer();
+-
+-	buffer->input[0] = 0x2;
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0x2, 0, 0, 0);
+ 	hwswitch = buffer->output[1];
+ 
+-	dell_smbios_release_buffer();
+-
+ 	if (ret != 0)
+ 		return;
+ 
+@@ -513,27 +504,21 @@ static struct dentry *dell_laptop_dir;
+ 
+ static int dell_debugfs_show(struct seq_file *s, void *data)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int hwswitch_state;
+ 	int hwswitch_ret;
+ 	int status;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0, 0, 0, 0);
++	if (ret)
++		return ret;
+ 	status = buffer->output[1];
+ 
+-	dell_smbios_clear_buffer();
+-
+-	buffer->input[0] = 0x2;
+-	dell_smbios_send_request(17, 11);
+-	hwswitch_ret = buffer->output[0];
++	hwswitch_ret = dell_send_request(17, 11, 0x2, 0, 0, 0);
++	if (hwswitch_ret)
++		return hwswitch_ret;
+ 	hwswitch_state = buffer->output[1];
+ 
+-	dell_smbios_release_buffer();
+-
+ 	seq_printf(s, "return:\t%d\n", ret);
+ 	seq_printf(s, "status:\t0x%X\n", status);
+ 	seq_printf(s, "Bit 0 : Hardware switch supported:   %lu\n",
+@@ -613,46 +598,34 @@ static const struct file_operations dell_debugfs_fops = {
+ 
+ static void dell_update_rfkill(struct work_struct *ignored)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int hwswitch = 0;
+ 	int status;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0, 0, 0, 0);
+ 	status = buffer->output[1];
+ 
+ 	if (ret != 0)
+-		goto out;
+-
+-	dell_smbios_clear_buffer();
++		return;
+ 
+-	buffer->input[0] = 0x2;
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0x2, 0, 0, 0);
+ 
+ 	if (ret == 0 && (status & BIT(0)))
+ 		hwswitch = buffer->output[1];
+ 
+ 	if (wifi_rfkill) {
+ 		dell_rfkill_update_hw_state(wifi_rfkill, 1, status, hwswitch);
+-		dell_rfkill_update_sw_state(wifi_rfkill, 1, status, buffer);
++		dell_rfkill_update_sw_state(wifi_rfkill, 1, status);
+ 	}
+ 	if (bluetooth_rfkill) {
+ 		dell_rfkill_update_hw_state(bluetooth_rfkill, 2, status,
+ 					    hwswitch);
+-		dell_rfkill_update_sw_state(bluetooth_rfkill, 2, status,
+-					    buffer);
++		dell_rfkill_update_sw_state(bluetooth_rfkill, 2, status);
+ 	}
+ 	if (wwan_rfkill) {
+ 		dell_rfkill_update_hw_state(wwan_rfkill, 3, status, hwswitch);
+-		dell_rfkill_update_sw_state(wwan_rfkill, 3, status, buffer);
++		dell_rfkill_update_sw_state(wwan_rfkill, 3, status);
+ 	}
+-
+- out:
+-	dell_smbios_release_buffer();
+ }
+ static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
+ 
+@@ -696,7 +669,6 @@ static struct notifier_block dell_laptop_rbtn_notifier = {
+ 
+ static int __init dell_setup_rfkill(void)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int status, ret, whitelisted;
+ 	const char *product;
+ 
+@@ -712,11 +684,8 @@ static int __init dell_setup_rfkill(void)
+ 	if (!force_rfkill && !whitelisted)
+ 		return 0;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	dell_smbios_send_request(17, 11);
+-	ret = buffer->output[0];
++	ret = dell_send_request(17, 11, 0, 0, 0, 0);
+ 	status = buffer->output[1];
+-	dell_smbios_release_buffer();
+ 
+ 	/* dell wireless info smbios call is not supported */
+ 	if (ret != 0)
+@@ -869,53 +838,42 @@ static void dell_cleanup_rfkill(void)
+ 
+ static int dell_send_intensity(struct backlight_device *bd)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 	int ret;
++	u8 sel;
+ 
+ 	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+ 	if (!token)
+ 		return -ENODEV;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = token->location;
+-	buffer->input[1] = bd->props.brightness;
+-
+ 	if (power_supply_is_system_supplied() > 0)
+-		dell_smbios_send_request(1, 2);
++		sel = 2;
+ 	else
+-		dell_smbios_send_request(1, 1);
++		sel = 1;
++	ret = dell_send_request(1, sel, token->location, bd->props.brightness,
++				0, 0);
+ 
+-	ret = dell_smbios_error(buffer->output[0]);
+-
+-	dell_smbios_release_buffer();
+ 	return ret;
+ }
+ 
+ static int dell_get_intensity(struct backlight_device *bd)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 	int ret;
++	u8 sel;
+ 
+ 	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+ 	if (!token)
+ 		return -ENODEV;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = token->location;
+-
+ 	if (power_supply_is_system_supplied() > 0)
+-		dell_smbios_send_request(0, 2);
++		sel = 2;
+ 	else
+-		dell_smbios_send_request(0, 1);
++		sel = 1;
++	ret = dell_send_request(0, sel, token->location, 0, 0, 0);
+ 
+-	if (buffer->output[0])
+-		ret = dell_smbios_error(buffer->output[0]);
+-	else
++	if (ret == 0)
+ 		ret = buffer->output[1];
+-
+-	dell_smbios_release_buffer();
+ 	return ret;
+ }
+ 
+@@ -1179,20 +1137,12 @@ static DEFINE_MUTEX(kbd_led_mutex);
+ 
+ static int kbd_get_info(struct kbd_info *info)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	u8 units;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	buffer->input[0] = 0x0;
+-	dell_smbios_send_request(4, 11);
+-	ret = buffer->output[0];
+-
+-	if (ret) {
+-		ret = dell_smbios_error(ret);
+-		goto out;
+-	}
++	ret = dell_send_request(4, 11, 0, 0, 0, 0);
++	if (ret)
++		return ret;
+ 
+ 	info->modes = buffer->output[1] & 0xFFFF;
+ 	info->type = (buffer->output[1] >> 24) & 0xFF;
+@@ -1209,8 +1159,6 @@ static int kbd_get_info(struct kbd_info *info)
+ 	if (units & BIT(3))
+ 		info->days = (buffer->output[3] >> 24) & 0xFF;
+ 
+- out:
+-	dell_smbios_release_buffer();
+ 	return ret;
+ }
+ 
+@@ -1269,19 +1217,11 @@ static int kbd_set_level(struct kbd_state *state, u8 level)
+ 
+ static int kbd_get_state(struct kbd_state *state)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
+-
+-	buffer->input[0] = 0x1;
+-	dell_smbios_send_request(4, 11);
+-	ret = buffer->output[0];
+-
+-	if (ret) {
+-		ret = dell_smbios_error(ret);
+-		goto out;
+-	}
++	ret = dell_send_request(4, 11, 0x1, 0, 0, 0);
++	if (ret)
++		return ret;
+ 
+ 	state->mode_bit = ffs(buffer->output[1] & 0xFFFF);
+ 	if (state->mode_bit != 0)
+@@ -1296,31 +1236,26 @@ static int kbd_get_state(struct kbd_state *state)
+ 	state->timeout_value_ac = (buffer->output[2] >> 24) & 0x3F;
+ 	state->timeout_unit_ac = (buffer->output[2] >> 30) & 0x3;
+ 
+- out:
+-	dell_smbios_release_buffer();
+ 	return ret;
+ }
+ 
+ static int kbd_set_state(struct kbd_state *state)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	int ret;
++	u32 input1;
++	u32 input2;
++
++	input1 = BIT(state->mode_bit) & 0xFFFF;
++	input1 |= (state->triggers & 0xFF) << 16;
++	input1 |= (state->timeout_value & 0x3F) << 24;
++	input1 |= (state->timeout_unit & 0x3) << 30;
++	input2 = state->als_setting & 0xFF;
++	input2 |= (state->level & 0xFF) << 16;
++	input2 |= (state->timeout_value_ac & 0x3F) << 24;
++	input2 |= (state->timeout_unit_ac & 0x3) << 30;
++	ret = dell_send_request(4, 11, 0x2, input1, input2, 0);
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = 0x2;
+-	buffer->input[1] = BIT(state->mode_bit) & 0xFFFF;
+-	buffer->input[1] |= (state->triggers & 0xFF) << 16;
+-	buffer->input[1] |= (state->timeout_value & 0x3F) << 24;
+-	buffer->input[1] |= (state->timeout_unit & 0x3) << 30;
+-	buffer->input[2] = state->als_setting & 0xFF;
+-	buffer->input[2] |= (state->level & 0xFF) << 16;
+-	buffer->input[2] |= (state->timeout_value_ac & 0x3F) << 24;
+-	buffer->input[2] |= (state->timeout_unit_ac & 0x3) << 30;
+-	dell_smbios_send_request(4, 11);
+-	ret = buffer->output[0];
+-	dell_smbios_release_buffer();
+-
+-	return dell_smbios_error(ret);
++	return ret;
+ }
+ 
+ static int kbd_set_state_safe(struct kbd_state *state, struct kbd_state *old)
+@@ -1345,7 +1280,6 @@ static int kbd_set_state_safe(struct kbd_state *state, struct kbd_state *old)
+ 
+ static int kbd_set_token_bit(u8 bit)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 	int ret;
+ 
+@@ -1356,19 +1290,13 @@ static int kbd_set_token_bit(u8 bit)
+ 	if (!token)
+ 		return -EINVAL;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = token->location;
+-	buffer->input[1] = token->value;
+-	dell_smbios_send_request(1, 0);
+-	ret = buffer->output[0];
+-	dell_smbios_release_buffer();
++	ret = dell_send_request(1, 0, token->location, token->value, 0, 0);
+ 
+-	return dell_smbios_error(ret);
++	return ret;
+ }
+ 
+ static int kbd_get_token_bit(u8 bit)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 	int ret;
+ 	int val;
+@@ -1380,15 +1308,12 @@ static int kbd_get_token_bit(u8 bit)
+ 	if (!token)
+ 		return -EINVAL;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = token->location;
+-	dell_smbios_send_request(0, 0);
+-	ret = buffer->output[0];
++
++	ret = dell_send_request(0, 0, token->location, 0, 0, 0);
+ 	val = buffer->output[1];
+-	dell_smbios_release_buffer();
+ 
+ 	if (ret)
+-		return dell_smbios_error(ret);
++		return ret;
+ 
+ 	return (val == token->value);
+ }
+@@ -2102,7 +2027,6 @@ static struct notifier_block dell_laptop_notifier = {
+ 
+ int dell_micmute_led_set(int state)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 
+ 	if (state == 0)
+@@ -2115,11 +2039,7 @@ int dell_micmute_led_set(int state)
+ 	if (!token)
+ 		return -ENODEV;
+ 
+-	buffer = dell_smbios_get_buffer();
+-	buffer->input[0] = token->location;
+-	buffer->input[1] = token->value;
+-	dell_smbios_send_request(1, 0);
+-	dell_smbios_release_buffer();
++	dell_send_request(1, 0, token->location, token->value, 0, 0);
+ 
+ 	return state;
+ }
+@@ -2127,7 +2047,6 @@ EXPORT_SYMBOL_GPL(dell_micmute_led_set);
+ 
+ static int __init dell_init(void)
+ {
+-	struct calling_interface_buffer *buffer;
+ 	struct calling_interface_token *token;
+ 	int max_intensity = 0;
+ 	int ret;
+@@ -2158,6 +2077,10 @@ static int __init dell_init(void)
+ 		goto fail_rfkill;
+ 	}
+ 
++	buffer = (void *)get_zeroed_page(GFP_KERNEL);
++	if (!buffer)
++		goto fail_buffer;
++
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_init(&platform_device->dev);
+ 
+@@ -2175,12 +2098,9 @@ static int __init dell_init(void)
+ 
+ 	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+ 	if (token) {
+-		buffer = dell_smbios_get_buffer();
+-		buffer->input[0] = token->location;
+-		dell_smbios_send_request(0, 2);
+-		if (buffer->output[0] == 0)
++		ret = dell_send_request(0, 2, token->location, 0, 0, 0);
++		if (ret)
+ 			max_intensity = buffer->output[3];
+-		dell_smbios_release_buffer();
+ 	}
+ 
+ 	if (max_intensity) {
+@@ -2214,6 +2134,8 @@ static int __init dell_init(void)
+ fail_get_brightness:
+ 	backlight_device_unregister(dell_backlight_device);
+ fail_backlight:
++	free_page((unsigned long)buffer);
++fail_buffer:
+ 	dell_cleanup_rfkill();
+ fail_rfkill:
+ 	platform_device_del(platform_device);
+@@ -2233,6 +2155,7 @@ static void __exit dell_exit(void)
+ 		touchpad_led_exit();
+ 	kbd_led_exit();
+ 	backlight_device_unregister(dell_backlight_device);
++	free_page((unsigned long)buffer);
+ 	dell_cleanup_rfkill();
+ 	if (platform_device) {
+ 		platform_device_unregister(platform_device);
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
 new file mode 100644
-index 000000000000..2d8285ae4bd1
+index 000000000000..223531e43fea
 --- /dev/null
-+++ b/include/uapi/linux/wmi.h
-@@ -0,0 +1,19 @@
++++ b/drivers/platform/x86/dell-smbios-smm.c
+@@ -0,0 +1,136 @@
 +/*
-+ *  User API methods for ACPI-WMI mapping driver
++ *  SMI methods for use with dell-smbios
 + *
-+ *  Copyright (C) 2017 Dell, Inc.
++ *  Copyright (c) Red Hat <mjg@redhat.com>
++ *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
++ *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (c) 2017 Dell Inc.
 + *
 + *  This program is free software; you can redistribute it and/or modify
 + *  it under the terms of the GNU General Public License version 2 as
 + *  published by the Free Software Foundation.
 + */
-+#ifndef _UAPI_LINUX_WMI_H
-+#define _UAPI_LINUX_WMI_H
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#define WMI_IOC 'W'
-+#define WMI_IO(instance)		_IO(WMI_IOC, instance)
-+#define WMI_IOR(instance, type)		_IOR(WMI_IOC, instance, type)
-+#define WMI_IOW(instance, type)		_IOW(WMI_IOC, instance, type)
-+#define WMI_IOWR(instance, type)	_IOWR(WMI_IOC, instance, type)
++#include <linux/gfp.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include "../../firmware/dcdbas.h"
++#include "dell-smbios.h"
 +
-+#endif
++static int da_command_address;
++static int da_command_code;
++static struct calling_interface_buffer *buffer;
++struct platform_device *platform_device;
++static DEFINE_MUTEX(smm_mutex);
++
++static const struct dmi_system_id dell_device_table[] __initconst = {
++	{
++		.ident = "Dell laptop",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "8"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "9"), /*Laptop*/
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "10"), /*Notebook*/
++		},
++	},
++	{
++		.ident = "Dell Computer Corporation",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "8"),
++		},
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(dmi, dell_device_table);
++
++int dell_smbios_smm_call(struct calling_interface_buffer *input)
++{
++	struct smi_cmd command;
++	size_t size;
++
++	size = sizeof(struct calling_interface_buffer);
++	command.magic = SMI_CMD_MAGIC;
++	command.command_address = da_command_address;
++	command.command_code = da_command_code;
++	command.ebx = virt_to_phys(buffer);
++	command.ecx = 0x42534931;
++
++	mutex_lock(&smm_mutex);
++	memcpy(buffer, input, size);
++	dcdbas_smi_request(&command);
++	memcpy(input, buffer, size);
++	mutex_unlock(&smm_mutex);
++	return 0;
++}
++
++static int __init dell_smbios_smm_init(void)
++{
++	int ret;
++	/*
++	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
++	 * is passed to SMI handler.
++	 */
++	buffer = (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
++	if (!buffer)
++		return -ENOMEM;
++	dell_smbios_get_smm_address(&da_command_address, &da_command_code);
++
++	platform_device = platform_device_alloc("dell-smbios", 1);
++	if (!platform_device) {
++		ret = -ENOMEM;
++		goto fail_platform_device_alloc;
++	}
++
++	ret = platform_device_add(platform_device);
++	if (ret)
++		goto fail_platform_device_add;
++
++	ret = dell_smbios_register_device(&platform_device->dev,
++					  &dell_smbios_smm_call);
++	if (ret)
++		goto fail_register;
++
++	return 0;
++
++fail_register:
++	platform_device_del(platform_device);
++
++fail_platform_device_add:
++	platform_device_put(platform_device);
++
++fail_platform_device_alloc:
++	free_page((unsigned long)buffer);
++	return ret;
++}
++
++static void __exit dell_smbios_smm_exit(void)
++{
++	if (platform_device) {
++		dell_smbios_unregister_device(&platform_device->dev);
++		platform_device_unregister(platform_device);
++		free_page((unsigned long)buffer);
++	}
++}
++
++subsys_initcall(dell_smbios_smm_init);
++module_exit(dell_smbios_smm_exit);
++
++MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
++MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_DESCRIPTION("Dell SMBIOS communications over SMI");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index ade248646578..386130811a34 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -18,11 +18,9 @@
+ #include <linux/module.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+-#include <linux/gfp.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/io.h>
+-#include "../../firmware/dcdbas.h"
+ #include <linux/platform_device.h>
+ #include "dell-smbios.h"
+ 
+@@ -34,9 +32,6 @@ struct calling_interface_structure {
+ 	struct calling_interface_token tokens[];
+ } __packed;
+ 
+-static struct calling_interface_buffer *buffer;
+-static DEFINE_MUTEX(buffer_mutex);
+-
+ static int da_command_address;
+ static int da_command_code;
+ static int da_num_tokens;
+@@ -45,6 +40,22 @@ static struct calling_interface_token *da_tokens;
+ static struct device_attribute *token_location_attrs;
+ static struct device_attribute *token_value_attrs;
+ static struct attribute **token_attrs;
++static DEFINE_MUTEX(smbios_mutex);
++
++struct smbios_device {
++	struct list_head list;
++	struct device *device;
++	int (*call_fn)(struct calling_interface_buffer *);
++};
++
++static LIST_HEAD(smbios_device_list);
++
++void dell_smbios_get_smm_address(int *address, int *code)
++{
++	*address = da_command_address;
++	*code = da_command_code;
++}
++EXPORT_SYMBOL_GPL(dell_smbios_get_smm_address);
+ 
+ int dell_smbios_error(int value)
+ {
+@@ -61,42 +72,71 @@ int dell_smbios_error(int value)
+ }
+ EXPORT_SYMBOL_GPL(dell_smbios_error);
+ 
+-struct calling_interface_buffer *dell_smbios_get_buffer(void)
++int dell_smbios_register_device(struct device *d, void *call_fn)
+ {
+-	mutex_lock(&buffer_mutex);
+-	dell_smbios_clear_buffer();
+-	return buffer;
+-}
+-EXPORT_SYMBOL_GPL(dell_smbios_get_buffer);
++	struct smbios_device *priv;
+ 
+-void dell_smbios_clear_buffer(void)
+-{
+-	memset(buffer, 0, sizeof(struct calling_interface_buffer));
++	priv = devm_kzalloc(d, sizeof(struct smbios_device), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	get_device(d);
++	priv->device = d;
++	priv->call_fn = call_fn;
++	mutex_lock(&smbios_mutex);
++	list_add_tail(&priv->list, &smbios_device_list);
++	mutex_unlock(&smbios_mutex);
++	dev_dbg(d, "Added device: %s\n", d->driver->name);
++	return 0;
+ }
+-EXPORT_SYMBOL_GPL(dell_smbios_clear_buffer);
++EXPORT_SYMBOL_GPL(dell_smbios_register_device);
+ 
+-void dell_smbios_release_buffer(void)
++void dell_smbios_unregister_device(struct device *d)
+ {
+-	mutex_unlock(&buffer_mutex);
++	struct smbios_device *priv;
++
++	mutex_lock(&smbios_mutex);
++	list_for_each_entry(priv, &smbios_device_list, list) {
++		if (priv->device == d) {
++			list_del(&priv->list);
++			put_device(d);
++			break;
++		}
++	};
++	mutex_unlock(&smbios_mutex);
++	dev_dbg(d, "Remove device: %s\n", d->driver->name);
+ }
+-EXPORT_SYMBOL_GPL(dell_smbios_release_buffer);
++EXPORT_SYMBOL_GPL(dell_smbios_unregister_device);
+ 
+-void dell_smbios_send_request(int class, int select)
++int dell_smbios_call(struct calling_interface_buffer *buffer)
+ {
+-	struct smi_cmd command;
++	int (*call_fn)(struct calling_interface_buffer *) = NULL;
++	struct device *selected_dev = NULL;
++	struct smbios_device *priv;
++	int ret;
++
++	mutex_lock(&smbios_mutex);
++	list_for_each_entry(priv, &smbios_device_list, list) {
++		if (!selected_dev || priv->device->id >= selected_dev->id) {
++			dev_dbg(priv->device, "Trying device ID: %d\n",
++				priv->device->id);
++			call_fn = priv->call_fn;
++			selected_dev = priv->device;
++		}
++	};
+ 
+-	command.magic = SMI_CMD_MAGIC;
+-	command.command_address = da_command_address;
+-	command.command_code = da_command_code;
+-	command.ebx = virt_to_phys(buffer);
+-	command.ecx = 0x42534931;
++	if (!selected_dev) {
++		ret = -ENODEV;
++		pr_err("No dell-smbios drivers are loaded\n");
++		goto out_smbios_call;
++	}
+ 
+-	buffer->class = class;
+-	buffer->select = select;
++	ret = call_fn(buffer);
+ 
+-	dcdbas_smi_request(&command);
++out_smbios_call:
++	mutex_unlock(&smbios_mutex);
++	return ret;
+ }
+-EXPORT_SYMBOL_GPL(dell_smbios_send_request);
++EXPORT_SYMBOL_GPL(dell_smbios_call);
+ 
+ struct calling_interface_token *dell_smbios_find_token(int tokenid)
+ {
+@@ -355,15 +395,6 @@ static int __init dell_smbios_init(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	/*
+-	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
+-	 * is passed to SMI handler.
+-	 */
+-	buffer = (void *)__get_free_page(GFP_KERNEL | GFP_DMA32);
+-	if (!buffer) {
+-		ret = -ENOMEM;
+-		goto fail_buffer;
+-	}
+ 	ret = platform_driver_register(&platform_driver);
+ 	if (ret)
+ 		goto fail_platform_driver;
+@@ -396,22 +427,20 @@ static int __init dell_smbios_init(void)
+ 	platform_driver_unregister(&platform_driver);
+ 
+ fail_platform_driver:
+-	free_page((unsigned long)buffer);
+-
+-fail_buffer:
+ 	kfree(da_tokens);
+ 	return ret;
+ }
+ 
+ static void __exit dell_smbios_exit(void)
+ {
++	mutex_lock(&smbios_mutex);
+ 	if (platform_device) {
+ 		free_group(platform_device);
+ 		platform_device_unregister(platform_device);
+ 		platform_driver_unregister(&platform_driver);
+ 	}
+-	free_page((unsigned long)buffer);
+ 	kfree(da_tokens);
++	mutex_unlock(&smbios_mutex);
+ }
+ 
+ subsys_initcall(dell_smbios_init);
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
+index 45cbc2292cd3..fe28964da499 100644
+--- a/drivers/platform/x86/dell-smbios.h
++++ b/drivers/platform/x86/dell-smbios.h
+@@ -16,6 +16,8 @@
+ #ifndef _DELL_SMBIOS_H_
+ #define _DELL_SMBIOS_H_
+ 
++#include <linux/device.h>
++
+ struct notifier_block;
+ 
+ /* This structure will be modified by the firmware when we enter
+@@ -37,12 +39,13 @@ struct calling_interface_token {
+ 	};
+ };
+ 
+-int dell_smbios_error(int value);
+ 
+-struct calling_interface_buffer *dell_smbios_get_buffer(void);
+-void dell_smbios_clear_buffer(void);
+-void dell_smbios_release_buffer(void);
+-void dell_smbios_send_request(int class, int select);
++int dell_smbios_register_device(struct device *d, void *call_fn);
++void dell_smbios_unregister_device(struct device *d);
++
++void dell_smbios_get_smm_address(int *address, int *command);
++int dell_smbios_error(int value);
++int dell_smbios_call(struct calling_interface_buffer *buffer);
+ 
+ struct calling_interface_token *dell_smbios_find_token(int tokenid);
+ 
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 90d7e8e55e9b..b74f48d17116 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -641,13 +641,16 @@ static int dell_wmi_events_set_enabled(bool enable)
+ 	struct calling_interface_buffer *buffer;
+ 	int ret;
+ 
+-	buffer = dell_smbios_get_buffer();
++	buffer = (void *)get_zeroed_page(GFP_KERNEL);
++	buffer->class = 17;
++	buffer->select = 3;
+ 	buffer->input[0] = 0x10000;
+ 	buffer->input[1] = 0x51534554;
+ 	buffer->input[3] = enable;
+-	dell_smbios_send_request(17, 3);
+-	ret = buffer->output[0];
+-	dell_smbios_release_buffer();
++	ret = dell_smbios_call(buffer);
++	if (ret == 0)
++		ret = buffer->output[0];
++	free_page((unsigned long)buffer);
+ 
+ 	return dell_smbios_error(ret);
+ }
 -- 
 2.14.1
