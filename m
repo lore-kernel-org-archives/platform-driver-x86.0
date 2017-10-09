@@ -1,53 +1,63 @@
-From: Christos Gkekas <chris.gekas@gmail.com>
-Subject: Re: [PATCH] intel-oaktrail: Clean up dead code
-Date: Mon, 9 Oct 2017 21:45:46 +0100
-Message-ID: <20171009204546.GA2839@inspiron>
-References: <1507503469-22507-1-git-send-email-chris.gekas@gmail.com>
- <CAHp75Ve7404BFgitG=HNKP0EyZN-Uoa=JOhGvaKz1N1ERs=eXQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v6 02/14] platform/x86: dell-wmi: increase severity of some failures
+Date: Mon,  9 Oct 2017 17:51:40 -0500
+Message-ID: <3debe9758dbf401f3599442dc6ed5f4e55da51d9.1507589249.git.mario.limonciello@dell.com>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Ve7404BFgitG=HNKP0EyZN-Uoa=JOhGvaKz1N1ERs=eXQ@mail.gmail.com>
+In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 09/10/17 13:21:17 +0300, Andy Shevchenko wrote:
-> On Mon, Oct 9, 2017 at 1:57 AM, Christos Gkekas <chris.gekas@gmail.com> wrote:
-> > A couple of macros are unused and need to be removed.
-> > Also variable percent is unsigned so checking whether it is less than
-> > zero is redundant.
-> 
-> > -#define OT_EC_CAMERA_MASK      (1 << 0)
-> >  #define OT_EC_BT_MASK          (1 << 1)
-> >  #define OT_EC_GPS_MASK         (1 << 2)
-> >  #define OT_EC_WIFI_MASK                (1 << 3)
-> >  #define OT_EC_WWAN_MASK                (1 << 4)
-> > -#define OT_EC_TS_MASK          (1 << 5)
-> 
-> While they are unused they won't bring any additional code to the binary.
-> The rationale to leave them is to have a bit descriptions in the code,
-> so, anyone who is in possession of that old and rare hardware can do
-> some tests or amendments without searching looking to documentation.
-> 
-> 
-> > -       if (percent < 0 || percent > OT_EC_BL_BRIGHTNESS_MAX)
-> > +       if (percent > OT_EC_BL_BRIGHTNESS_MAX)
-> >                 return -EINVAL;
-> 
-> While it's true, doesn't compiler take care about that?
-> 
-> https://lkml.org/lkml/2006/11/28/206
-> 
-> So, unfortunately I have no reason to take it.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+There is a lot of error checking in place for the format of the WMI
+descriptor buffer, but some of the potentially raised issues should
+be considered critical failures.
 
-Fair enough, thanks for your time and feedback.
+If the buffer size or header don't match, this is a good indication
+that the buffer format changed in a way that the rest of the data
+should not be relied upon.
 
-Regards,
-Christos
+For the remaining data set vectors, continue to notate a warning
+in undefined results, but as those are fields that the descriptor
+intended to refer to other applications, don't fail if they're new
+values.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/dell-wmi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 1fbef560ca67..2cfaaa8faf0a 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -657,17 +657,18 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+ 		dev_err(&wdev->dev,
+ 			"Dell descriptor buffer has invalid length (%d)\n",
+ 			obj->buffer.length);
+-		if (obj->buffer.length < 16) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		ret = -EINVAL;
++		goto out;
+ 	}
+ 
+ 	buffer = (u32 *)obj->buffer.pointer;
+ 
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
++	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+ 			8, buffer);
++		ret = -EINVAL;
++		goto out;
++	}
+ 
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
+-- 
+2.14.1
