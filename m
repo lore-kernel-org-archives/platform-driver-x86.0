@@ -1,63 +1,73 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v6 05/14] platform/x86: dell-wmi-descriptor: split WMI
- descriptor into it's own driver
-Date: Tue, 10 Oct 2017 13:40:04 +0000
-Message-ID: <598ee368fe6b4c4d8217caa63913376f@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v6 13/14] platform/x86: wmi: create character devices when
+ requested by drivers
+Date: Tue, 10 Oct 2017 13:41:45 +0000
+Message-ID: <db8c80d86c7045fd95e8f91f777cd680@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
- <92fb25a14fbc24541cd758854b70268b3497d913.1507589249.git.mario.limonciello@dell.com>
- <20171010081749.7ohuyadwsg555cli@pali>
+ <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
+ <20171010110637.GB16994@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:47394 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1755688AbdJJNkG (ORCPT
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:13827 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1755919AbdJJNls (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Oct 2017 09:40:06 -0400
-In-Reply-To: <20171010081749.7ohuyadwsg555cli@pali>
+        Tue, 10 Oct 2017 09:41:48 -0400
+In-Reply-To: <20171010110637.GB16994@kroah.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+To: greg@kroah.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDEwLCAyMDE3
-IDM6MTggQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
-bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
-LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBBbmR5IEx1dG9t
-aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
-a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
-b2FoLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAwNS8xNF0gcGxhdGZvcm0veDg2OiBk
-ZWxsLXdtaS1kZXNjcmlwdG9yOiBzcGxpdCBXTUkNCj4gZGVzY3JpcHRvciBpbnRvIGl0J3Mgb3du
-IGRyaXZlcg0KPiANCj4gT24gTW9uZGF5IDA5IE9jdG9iZXIgMjAxNyAxNzo1MTo0MyBNYXJpbyBM
-aW1vbmNpZWxsbyB3cm90ZToNCj4gPiArYm9vbCBkZWxsX3dtaV9nZXRfaW50ZXJmYWNlX3ZlcnNp
-b24odTMyICp2ZXJzaW9uKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGVzY3JpcHRvcl9wcml2ICpw
-cml2Ow0KPiA+ICsNCj4gPiArCXByaXYgPSBsaXN0X2ZpcnN0X2VudHJ5X29yX251bGwoJndtaV9s
-aXN0LA0KPiA+ICsJCQkJCXN0cnVjdCBkZXNjcmlwdG9yX3ByaXYsDQo+ID4gKwkJCQkJbGlzdCk7
-DQo+ID4gKwlpZiAoIXByaXYpDQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiANCj4gVGhpcyBpbnRy
-b2R1Y2UgcmFjZSBjb25kaXRpb24uIEluIGNhc2UgY2FsbGVlIG9mIHRoaXMgZnVuY3Rpb24gaXMN
-Cj4gZXhlY3V0ZWQgYmVmb3JlIGJpbmRpbmcgOEQ5RERDQkMtQTk5Ny0xMURBLUIwMTItQjYyMkEx
-RUY1NDkyIFdNSSBkZXZpY2UNCj4gaW50byB0aGlzIGRlbGwtd21pLWRlc2NyaXB0b3IgZHJpdmVy
-LCB0aGVuIHRoaXMgZnVuY3Rpb24NCj4gZGVsbF93bWlfZ2V0X2ludGVyZmFjZV92ZXJzaW9uKCkg
-cmV0dXJucyBmYWxzZS4gRXZlbiBpdCBpcyBydW5uaW5nIG9uDQo+IHN1cHBvcnRlZCBtYWNoaW5l
-Lg0KPiANCj4gTG9hZGluZyBvZiBtb2R1bHVzIGFuZCBhbHNvIGJpbmRpbmcgZGV2aWNlcyB0byBk
-cml2ZXJzIChyZWdpc3RlcmVkIGJ5DQo+IG1vZHVsZXMpIGlzIGlzIGFzeW5jaHJvbm91cy4NCj4g
-DQoNCkkgc3VwcG9zZSB5b3UncmUgcmlnaHQsIG1vZHVsZSBkZXBlbmRlbmN5IG9yZGVyaW5nIGRv
-ZXNuJ3QgbmVjZXNzYXJpbHkNCmd1YXJhbnRlZSBiaW5kaW5nLiAgSSdsbCBhZGQgaW4gc29tZSBk
-ZWZlcnJlZCBwcm9iaW5nIGFuZCBiaW5kaW5nIGNoZWNraW5nLg0KDQo+IEluIGNhc2UgZXZlcnl0
-aGluZyBpcyBsaW5rZWQgaW50byB2bWxpbnV4IGJpbmFyeSwgdGhpcyBwcm9ibGVtIGNvdWxkDQo+
-IGhhcHBlbiB0b28uIEJpbmRpbmcgJiBpbml0aWFsaXphdGlvbiBvZiBXTUkgZGV2aWNlIHRvIHRo
-aXMgZHJpdmVyIGNhbiBiZQ0KPiBwb3N0cG9uZWQgYW5kIGNhbGxlZSAoZGVsbC13bWkpIHdvdWxk
-IGdldCBmYWxzZS4NCg0KPiANCj4gPiArCSp2ZXJzaW9uID0gcHJpdi0+aW50ZXJmYWNlX3ZlcnNp
-b247DQo+ID4gKwlyZXR1cm4gdHJ1ZTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChk
-ZWxsX3dtaV9nZXRfaW50ZXJmYWNlX3ZlcnNpb24pOw0KPiA+ICsNCj4gPiArYm9vbCBkZWxsX3dt
-aV9nZXRfc2l6ZSh1MzIgKnNpemUpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBkZXNjcmlwdG9yX3By
-aXYgKnByaXY7DQo+ID4gKw0KPiA+ICsJcHJpdiA9IGxpc3RfZmlyc3RfZW50cnlfb3JfbnVsbCgm
-d21pX2xpc3QsDQo+ID4gKwkJCQkJc3RydWN0IGRlc2NyaXB0b3JfcHJpdiwNCj4gPiArCQkJCQls
-aXN0KTsNCj4gPiArCWlmICghcHJpdikNCj4gPiArCQlyZXR1cm4gZmFsc2U7DQo+IA0KPiBBbmQg
-c2FtZSB0aGVyZS4NCj4gDQo+ID4gKwkqc2l6ZSA9IHByaXYtPnNpemU7DQo+ID4gKwlyZXR1cm4g
-dHJ1ZTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChkZWxsX3dtaV9nZXRfc2l6ZSk7
-DQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
+> -----Original Message-----
+> From: Greg KH [mailto:greg@kroah.com]
+> Sent: Tuesday, October 10, 2017 6:07 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
+> Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character devices=
+ when
+> requested by drivers
+>=20
+> On Mon, Oct 09, 2017 at 05:51:51PM -0500, Mario Limonciello wrote:
+> > --- /dev/null
+> > +++ b/include/uapi/linux/wmi.h
+> > @@ -0,0 +1,19 @@
+> > +/*
+> > + *  User API methods for ACPI-WMI mapping driver
+> > + *
+> > + *  Copyright (C) 2017 Dell, Inc.
+> > + *
+> > + *  This program is free software; you can redistribute it and/or modi=
+fy
+> > + *  it under the terms of the GNU General Public License version 2 as
+> > + *  published by the Free Software Foundation.
+> > + */
+> > +#ifndef _UAPI_LINUX_WMI_H
+> > +#define _UAPI_LINUX_WMI_H
+> > +
+> > +#define WMI_IOC 'W'
+> > +#define WMI_IO(instance)		_IO(WMI_IOC, instance)
+> > +#define WMI_IOR(instance, type)		_IOR(WMI_IOC, instance, type)
+> > +#define WMI_IOW(instance, type)		_IOW(WMI_IOC, instance, type)
+> > +#define WMI_IOWR(instance, type)	_IOWR(WMI_IOC, instance, type)
+>=20
+> Are these really needed in a uapi .h file?  Who needs them?  And why not
+> just use a "normal" ioctl macro in your individual driver .h file?  Do
+> these really help?
+>=20
+Since this is setting precedent that WMI drivers will use the IOC 'W' and t=
+he WMI
+bus driver will dispatch calls to the proper drivers, I think they make sen=
+se to include.
+
+I'm a little unclear - do you disagree?  Or do you just think I need to inc=
+lude a comment
+in the header file with this information?
+
+Thanks,
