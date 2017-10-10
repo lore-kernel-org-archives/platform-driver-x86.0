@@ -1,243 +1,77 @@
-From: Lyude Paul <lyude@redhat.com>
-Subject: Re: [PATCHv2] thinkpad_acpi: Implement tablet mode resolving using
- GMMS method
-Date: Tue, 10 Oct 2017 12:52:26 -0400
-Message-ID: <1507654346.16258.5.camel@redhat.com>
-References: <20171010091249.11945-1-bberg@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Tue, 10 Oct 2017 11:26:06 -0700
+Message-ID: <20171010182606.GA20986@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:46440 "EHLO mx1.redhat.com"
+Received: from mga05.intel.com ([192.55.52.43]:3758 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932075AbdJJQw2 (ORCPT
+        id S1755836AbdJJS2M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Oct 2017 12:52:28 -0400
-In-Reply-To: <20171010091249.11945-1-bberg@redhat.com>
+        Tue, 10 Oct 2017 14:28:12 -0400
+Content-Disposition: inline
+In-Reply-To: <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benjamin Berg <bberg@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Peter FP1 Zhang <zhangfp1@lenovo.com>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
-Looks good to me
-
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-On Tue, 2017-10-10 at 11:12 +0200, Benjamin Berg wrote:
-> Many thinkpad laptops and convertibles provide the GMMS method to
-> resolve how far the laptop has been opened and whether it has been
-> converted into tablet mode. This allows reporting a more precise tablet
-> mode state to userspace.
-> 
-> The current implementation only reports a summarized tablet mode state
-> which is triggered as soon as the input devices become unusable as they
-> are folded away from the display.
-> 
-> This will work on all models where the CMMD method was used previously and
-> it may also work in other cases.
-> 
-> Thanks to Peter Zhang of Lenovo for providing information on how to use the
-> GMMS method to query the tablet mode.
-> 
-> Signed-off-by: Benjamin Berg <bberg@redhat.com>
-> Cc: Peter FP1 Zhang <zhangfp1@lenovo.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> 
-> --
-> 
-> v2:
->  - It appears that mode 4 may also report the FLAT state. This has
->    been observed on an X1 Yoga 2nd Generation.
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 135 +++++++++++++++++++++++++++++++-
-> ---
->  1 file changed, 122 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 2242d6035d9e..298a0088eb0c 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -310,8 +310,7 @@ static struct {
->  	enum {
->  		TP_HOTKEY_TABLET_NONE = 0,
->  		TP_HOTKEY_TABLET_USES_MHKG,
-> -		/* X1 Yoga 2016, seen on BIOS N1FET44W */
-> -		TP_HOTKEY_TABLET_USES_CMMD,
-> +		TP_HOTKEY_TABLET_USES_GMMS,
->  	} hotkey_tablet;
->  	u32 kbdlight:1;
->  	u32 light:1;
-> @@ -2044,8 +2043,28 @@ static void hotkey_poll_setup(const bool may_warn);
->  
->  /* HKEY.MHKG() return bits */
->  #define TP_HOTKEY_TABLET_MASK (1 << 3)
-> -/* ThinkPad X1 Yoga (2016) */
-> -#define TP_EC_CMMD_TABLET_MODE 0x6
-> +enum {
-> +	TP_ACPI_MULTI_MODE_INVALID	= 0,
-> +	TP_ACPI_MULTI_MODE_UNKNOWN	= 1 << 0,
-> +	TP_ACPI_MULTI_MODE_LAPTOP	= 1 << 1,
-> +	TP_ACPI_MULTI_MODE_TABLET	= 1 << 2,
-> +	TP_ACPI_MULTI_MODE_FLAT		= 1 << 3,
-> +	TP_ACPI_MULTI_MODE_STAND	= 1 << 4,
-> +	TP_ACPI_MULTI_MODE_TENT		= 1 << 5,
-> +	TP_ACPI_MULTI_MODE_STAND_TENT	= 1 << 6,
-> +};
-> +
-> +enum {
-> +	/* The following modes are considered tablet mode for the purpose
-> of
-> +	 * reporting the status to userspace. i.e. in all these modes it
-> makes
-> +	 * sense to disable the laptop input devices such as touchpad and
-> +	 * keyboard.
-> +	 */
-> +	TP_ACPI_MULTI_MODE_TABLET_LIKE	= TP_ACPI_MULTI_MODE_TABLET |
-> +					  TP_ACPI_MULTI_MODE_STAND |
-> +					  TP_ACPI_MULTI_MODE_TENT |
-> +					  TP_ACPI_MULTI_MODE_STAND_TENT,
-> +};
->  
->  static int hotkey_get_wlsw(void)
->  {
-> @@ -2066,6 +2085,93 @@ static int hotkey_get_wlsw(void)
->  	return (status) ? TPACPI_RFK_RADIO_ON : TPACPI_RFK_RADIO_OFF;
->  }
->  
-> +static int hotkey_gmms_get_tablet_mode(int s, int *has_tablet_mode)
+On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
+> diff --git a/drivers/platform/x86/intel_sgx/sgx_encl.c b/drivers/platform/x86/intel_sgx/sgx_encl.c
+> new file mode 100644
+> index 000000000000..aa0deed08cee
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_sgx/sgx_encl.c
+> @@ -0,0 +1,989 @@
+>
+> +/**
+> + * sgx_encl_find - find an enclave
+> + * @mm:		mm struct of the current process
+> + * @addr:	address in the ELRANGE
+> + * @created	is the enclave already created?
+> + * @vma:	the resulting VMA
+> + *
+> + * Finds an enclave identified by the given address. Gives back the VMA, that is
+> + * part of the enclave, located in that address.
+> + *
+> + * Return:
+> + * 0 on success,
+> + * -EINVAL if not found,
+> + */
+> +int sgx_encl_find(struct mm_struct *mm, unsigned long addr, bool created,
+> +		  struct vm_area_struct **vma)
 > +{
-> +	int type = (s >> 16) & 0xffff;
-> +	int value = s & 0xffff;
-> +	int mode = TP_ACPI_MULTI_MODE_INVALID;
-> +	int valid_modes = 0;
+> +	struct vm_area_struct *result;
+> +	struct sgx_encl *encl;
 > +
-> +	if (has_tablet_mode)
-> +		*has_tablet_mode = 0;
+> +	result = find_vma(mm, addr);
+> +	if (!result || result->vm_ops != &sgx_vm_ops || addr < result->vm_start)
+> +		return -EINVAL;
 > +
-> +	switch (type) {
-> +	case 1:
-> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> +			      TP_ACPI_MULTI_MODE_TABLET |
-> +			      TP_ACPI_MULTI_MODE_STAND_TENT;
-> +		break;
-> +	case 2:
-> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> +			      TP_ACPI_MULTI_MODE_FLAT |
-> +			      TP_ACPI_MULTI_MODE_TABLET |
-> +			      TP_ACPI_MULTI_MODE_STAND |
-> +			      TP_ACPI_MULTI_MODE_TENT;
-> +		break;
-> +	case 3:
-> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> +			      TP_ACPI_MULTI_MODE_FLAT;
-> +		break;
-> +	case 4:
-> +		/* Flat mode is included here as it can be seen at least
-> +		 * on the X1 Yoga 2nd Gen. */
-> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> +			      TP_ACPI_MULTI_MODE_FLAT |
-> +			      TP_ACPI_MULTI_MODE_TABLET |
-> +			      TP_ACPI_MULTI_MODE_STAND |
-> +			      TP_ACPI_MULTI_MODE_TENT;
-> +		break;
-> +	case 5:
-> +		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> +			      TP_ACPI_MULTI_MODE_FLAT |
-> +			      TP_ACPI_MULTI_MODE_TABLET |
-> +			      TP_ACPI_MULTI_MODE_STAND |
-> +			      TP_ACPI_MULTI_MODE_TENT;
-> +		break;
-> +	default:
-> +		pr_err("Unknown multi mode status type %d with value
-> 0x%04X, please report this to %s\n",
-> +		       type, value, TPACPI_MAIL);
-> +		return 0;
+> +	encl = result->vm_private_data;
+> +	if (created) {
+> +		if (!encl)
+> +			return -EINVAL;
+> +	} else {
+> +		if (encl)
+> +			return -EINVAL;
 > +	}
+
+What about removing @created and returning -ENOENT (or -ENXIO?) if 
+result->vm_private_data is NULL?  Removing @created will eliminate
+any potential confusion for the common case of @created=true.  For
+@created=false, which should be limited to sgx_encl_create, I think
+that explicitly checking for "ret != -ENOENT" is more intuitive
+than checking whether or not sgx_encl_find succeeded, e.g. I knew
+the intent of the check in sgx_encl_create ahead of time and I still
+had to walk through sgx_encl_find to verify the behavior.
+
 > +
-> +	if (has_tablet_mode && (valid_modes &
-> TP_ACPI_MULTI_MODE_TABLET_LIKE))
-> +		*has_tablet_mode = 1;
-> +
-> +	switch (value) {
-> +	case 1:
-> +		mode = TP_ACPI_MULTI_MODE_LAPTOP;
-> +		break;
-> +	case 2:
-> +		mode = TP_ACPI_MULTI_MODE_FLAT;
-> +		break;
-> +	case 3:
-> +		mode = TP_ACPI_MULTI_MODE_TABLET;
-> +		break;
-> +	case 4:
-> +		if (type == 1)
-> +			mode = TP_ACPI_MULTI_MODE_STAND_TENT;
-> +		else
-> +			mode = TP_ACPI_MULTI_MODE_STAND;
-> +		break;
-> +	case 5:
-> +		mode = TP_ACPI_MULTI_MODE_TENT;
-> +		break;
-> +	default:
-> +		if (type == 5 && value == 0xffff) {
-> +			pr_warn("Multi mode status is undetected, assuming
-> laptop\n");
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	if (!(mode & valid_modes)) {
-> +		pr_err("Unknown/reserved multi mode value 0x%04X for type
-> %d, please report this to %s\n",
-> +		       value, type, TPACPI_MAIL);
-> +		return 0;
-> +	}
-> +
-> +	return !!(mode & TP_ACPI_MULTI_MODE_TABLET_LIKE);
+> +	*vma = result;
+> +	return 0;
 > +}
 > +
->  static int hotkey_get_tablet_mode(int *status)
->  {
->  	int s;
-> @@ -2077,11 +2183,11 @@ static int hotkey_get_tablet_mode(int *status)
->  
->  		*status = ((s & TP_HOTKEY_TABLET_MASK) != 0);
->  		break;
-> -	case TP_HOTKEY_TABLET_USES_CMMD:
-> -		if (!acpi_evalf(ec_handle, &s, "CMMD", "d"))
-> +	case TP_HOTKEY_TABLET_USES_GMMS:
-> +		if (!acpi_evalf(hkey_handle, &s, "GMMS", "dd", 0))
->  			return -EIO;
->  
-> -		*status = (s == TP_EC_CMMD_TABLET_MODE);
-> +		*status = hotkey_gmms_get_tablet_mode(s, NULL);
->  		break;
->  	default:
->  		break;
-> @@ -3113,16 +3219,19 @@ static int hotkey_init_tablet_mode(void)
->  	int in_tablet_mode = 0, res;
->  	char *type = NULL;
->  
-> -	if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
-> +	if (acpi_evalf(hkey_handle, &res, "GMMS", "qdd", 0)) {
-> +		int has_tablet_mode;
-> +
-> +		in_tablet_mode = hotkey_gmms_get_tablet_mode(res,
-> +							     &has_tablet_mo
-> de);
-> +		if (has_tablet_mode)
-> +			tp_features.hotkey_tablet =
-> TP_HOTKEY_TABLET_USES_GMMS;
-> +		type = "GMMS";
-> +	} else if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
->  		/* For X41t, X60t, X61t Tablets... */
->  		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_MHKG;
->  		in_tablet_mode = !!(res & TP_HOTKEY_TABLET_MASK);
->  		type = "MHKG";
-> -	} else if (acpi_evalf(ec_handle, &res, "CMMD", "qd")) {
-> -		/* For X1 Yoga (2016) */
-> -		tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_CMMD;
-> -		in_tablet_mode = res == TP_EC_CMMD_TABLET_MODE;
-> -		type = "CMMD";
->  	}
->  
->  	if (!tp_features.hotkey_tablet)
