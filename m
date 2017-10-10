@@ -1,55 +1,31 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v6 03/14] platform/x86: dell-wmi: clean up wmi descriptor check
-Date: Mon,  9 Oct 2017 17:51:41 -0500
-Message-ID: <c11c290fb1436512ed527fefaa15331503e246e3.1507589249.git.mario.limonciello@dell.com>
-References: <cover.1507589249.git.mario.limonciello@dell.com>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [RFC v5 4/8] platform: x86: Add generic Intel IPC driver
+Date: Mon, 9 Oct 2017 17:27:21 -0700
+Message-ID: <0f54e44a-5ba0-ed0f-7efe-eff05e8b79d8@linux.intel.com>
+References: <cover.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <983bc2330acc5eb3f384e9aed7ceba22b5c7ea5f.1507414288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <5F7315E704FA0841B5DFCE90329B2BB4661E20EC@BGSMSX102.gar.corp.intel.com>
+ <20171009071104.GA17088@infradead.org>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1507589249.git.mario.limonciello@dell.com>
-References: <cover.1507589249.git.mario.limonciello@dell.com>
+In-Reply-To: <20171009071104.GA17088@infradead.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
+To: Christoph Hellwig <hch@infradead.org>, "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, "wim@iguana.be" <wim@iguana.be>, "mingo@redhat.com" <mingo@redhat.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "andy@infradead.org" <andy@infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, sathyaosid@gmail.
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some cases the wrong type was used for errors and checks can be
-done more cleanly.
+Hi,
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Edward O'Callaghan <quasisec@google.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/platform/x86/dell-wmi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 2cfaaa8faf0a..ece2fe341f01 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -663,19 +663,19 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- 
- 	buffer = (u32 *)obj->buffer.pointer;
- 
--	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
--		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
--			8, buffer);
-+	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
-+		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
-+			buffer);
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (buffer[2] != 0 && buffer[2] != 1)
--		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
-+		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
- 			buffer[2]);
- 
- 	if (buffer[3] != 4096)
--		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
-+		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
- 			buffer[3]);
- 
- 	priv->interface_version = buffer[2];
+On 10/09/2017 12:11 AM, Christoph Hellwig wrote:
+> What does IPC stand for in this device?
+Inter processor communication
+
 -- 
-2.14.1
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
