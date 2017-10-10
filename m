@@ -1,83 +1,49 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
- userspace interface
-Date: Tue, 10 Oct 2017 19:51:58 +0000
-Message-ID: <dba822e525c7468a9687a7d819182ac6@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1507156392.git.mario.limonciello@dell.com>
-        <ad918eaaa2c9cab878d92be4691cb67f44d13681.1507156392.git.mario.limonciello@dell.com>
-        <20171005145911.06a5644c@alans-desktop>
-        <d8678883f1164ca4b3be13d56293cb2c@ausx13mpc120.AMER.DELL.COM>
-        <20171005154445.GC29347@kroah.com>      <20171005155619.GA10938@pali>
-        <20171005162810.GB4993@kroah.com>
-        <9b58d0a8796948f39776d6bb38bcb9d6@ausx13mpc120.AMER.DELL.COM>
- <20171010204035.1b827bfe@alans-desktop>
+Subject: RE: [PATCH v6 10/14] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Tue, 10 Oct 2017 20:31:11 +0000
+Message-ID: <6b5cc33ec5f444a58cff4aec90f799ac@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
+ <3892df796d90f3568be48b85498a7819711323db.1507589249.git.mario.limonciello@dell.com>
+ <20171010160131.wkaxfsevd6w2akep@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171010204035.1b827bfe@alans-desktop>
+In-Reply-To: <20171010160131.wkaxfsevd6w2akep@pali>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gnomes@lxorguk.ukuu.org.uk
-Cc: gregkh@linuxfoundation.org, pali.rohar@gmail.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Alan,
-
-> -----Original Message-----
-> From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
-> Sent: Tuesday, October 10, 2017 2:41 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: gregkh@linuxfoundation.org; pali.rohar@gmail.com; dvhart@infradead.or=
-g;
-> andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
-> rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
-> Subject: Re: [PATCH v4 13/14] platform/x86: dell-smbios-wmi: introduce
-> userspace interface
->=20
-> > There are some "write once" items that for the general purpose user tha=
-t
-> > won't brick a box, but should probably be blacklisted though.
-> > I'll think this through some more.
->=20
-> I would strongly urge you to do whitelisting as it's good security. If
-> you can divide the calls into something like this it fits the Linxu
-> desktop model well:
->=20
-> Safe -> anyone can do it
-> Console -> only console owner
-> Superuser -> administrator level (things that can be irritating but
-> don't persist a reboot)
-
-I've added filtering in my most recent submission (v6).
-
-I don't feel that any single one of these calls or pieces of data should
-be accessible without root.  Furthermore discussion on the merits of differ=
-ent
-levels is stepping into bikeshedding territory.=20
-If someone wants to bubble up things that they feel are safe to read or wri=
-te=20
-as user, that can be the job of a daemon or other service to decide not the=
- kernel.
-
->=20
-> Beyond that it's trickier - if you are an enterprise business then you
-> don't for example want to allow someone with root on the system to
-> subvert BIOS level settings they can't access.
-
-This level of split is actually comprehended already by the BIOS itself.  W=
-hen you
-enable an administrative password on the BIOS, you aren't able to access (r=
-ead
-or write) a variety of settings without a security key (which requires some=
- handshaking).
-
->=20
-> You need a minimum of CAP_SYS_RAWIO for anything that can (through bugs
-> or design) subvert secure boot type stuff. It's also probably an
-> appropriate check for 'anything goes' if you decide to have that
-> category. CAP_SYS_RAWIO implies total power over the machine although
-> with secureboot it's less clear.
->=20
-Secure boot can't programmatically be disabled from within OS.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDEwLCAyMDE3
+IDE6MzIgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
+LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBBbmR5IEx1dG9t
+aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
+a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
+b2FoLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAxMC8xNF0gcGxhdGZvcm0veDg2OiBk
+ZWxsLXNtYmlvczogYWRkIGZpbHRlcmluZyBjYXBhYmlsaXR5DQo+IGZvciByZXF1ZXN0cw0KPiAN
+Cj4gT24gTW9uZGF5IDA5IE9jdG9iZXIgMjAxNyAxNzo1MTo0OCBNYXJpbyBMaW1vbmNpZWxsbyB3
+cm90ZToNCj4gPiArc3RhdGljIHN0cnVjdCB0b2tlbl9yYW5nZSB0b2tlbl9ibGFja2xpc3RbXSA9
+IHsNCj4gPiArCXsweDAwMDAsIDB4MDE3NSwgMHgwMTc2fSwNCj4gPiArCXsweDAwMDAsIDB4MDE5
+NSwgMHgwMTk3fSwNCj4gPiArCXsweDAwMDAsIDB4MDFEQywgMHgwMUREfSwNCj4gPiArCXsweDAw
+MDAsIDB4MDI3RCwgMHgwMjg0fSwNCj4gPiArCXsweDAyRTMsIDB4MDAwMCwgMHgwMDAwfSwNCj4g
+PiArCXsweDAyRkYsIDB4MDAwMCwgMHgwMDAwfSwNCj4gPiArCXsweDAwMDAsIDB4MDMwMCwgMHgw
+MzAyfSwNCj4gPiArCXsweDAwMDAsIDB4MDMyNSwgMHgwMzI2fSwNCj4gPiArCXsweDAwMDAsIDB4
+MDMzMiwgMHgwMzM1fSwNCj4gPiArCXsweDAzNTAsIDB4MDAwMCwgMHgwMDAwfSwNCj4gPiArCXsw
+eDAzNjMsIDB4MDAwMCwgMHgwMDAwfSwNCj4gPiArCXsweDAzNjgsIDB4MDAwMCwgMHgwMDAwfSwN
+Cj4gPiArCXsweDAwMDAsIDB4MDNGNiwgMHgwM0Y3fSwNCj4gPiArCXsweDAwMDAsIDB4MDQ5RSwg
+MHgwNDlGfSwNCj4gPiArCXsweDAwMDAsIDB4MDRBMCwgMHgwNEEzfSwNCj4gPiArCXsweDAwMDAs
+IDB4MDRFNiwgMHgwNEU3fSwNCj4gPiArCXsweDAwMDAsIDB4NDAwMCwgMHg3RkZGfSwNCj4gPiAr
+CXsweDAwMDAsIDB4OTAwMCwgMHg5MDAxfSwNCj4gPiArCXsweDAwMDAsIDB4QTAwMCwgMHhCRkZG
+fSwNCj4gPiArCXsweDAwMDAsIDB4RUZGMCwgMHhFRkZGfSwNCj4gPiArfTsNCj4gDQo+IEhpISBU
+aGVyZSBzaG91bGQgYmUgaW5mb3JtYXRpb24gd2hhdCBpcyBoaWRkZW4gaW4gdGhvc2UgdG9rZW5z
+LCBzbyBvdGhlcg0KPiBwZW9wbGUgd291bGQgYmUgYWJsZSB0byByZXZpZXcgd2h5IGFyZSB0aG9z
+ZSB0b2tlbiBibGFja2xpc3RlZC4NCj4gDQoNCkknbGwgYWRkIHNvbWUgY29tbWVudHMgZXhwbGFp
+bmluZyB3aGF0IEkgY2FuIGFib3V0IHdoeSB0aGV5J3JlIGJsYWNrbGlzdGVkLg0KTW9zdCBvZiB0
+aGVtIGFyZSBmb3IgdXNlIGR1cmluZyBtYW51ZmFjdHVyaW5nIHRpbWUgYW5kIHRob3NlIEkgd29u
+J3QgZXhwbGFpbiBmdXJ0aGVyLg0K
