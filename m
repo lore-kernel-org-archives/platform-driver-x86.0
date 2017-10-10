@@ -1,84 +1,54 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v6 09/14] platform/x86: dell-smbios: Introduce dispatcher
- for SMM calls
-Date: Tue, 10 Oct 2017 18:01:04 +0200
-Message-ID: <20171010160104.g4hqc7fjrp5zeg3p@pali>
+Subject: Re: [PATCH v6 12/14] platform/x86: dell-smbios-smm: test for WSMT
+Date: Tue, 10 Oct 2017 21:11:09 +0200
+Message-ID: <20171010191109.ojyulgtqe3n5dv6n@pali>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
- <25bf1422d8efbd631f57dcb7dd40865bae729398.1507589249.git.mario.limonciello@dell.com>
+ <ab0790382693e8fabe191bcaed5c572bdab47ebd.1507589249.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:48700 "EHLO
+        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751156AbdJJTLO (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 10 Oct 2017 15:11:14 -0400
 Content-Disposition: inline
-In-Reply-To: <25bf1422d8efbd631f57dcb7dd40865bae729398.1507589249.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <ab0790382693e8fabe191bcaed5c572bdab47ebd.1507589249.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
 Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 09 October 2017 17:51:47 Mario Limonciello wrote:
->  static void dell_rfkill_query(struct rfkill *rfkill, void *data)
->  {
-> -	struct calling_interface_buffer *buffer;
->  	int radio = ((unsigned long)data & 0xF);
->  	int hwswitch;
->  	int status;
->  	int ret;
+On Monday 09 October 2017 17:51:50 Mario Limonciello wrote:
+> WSMT is as an attestation to the OS that the platform won't
+> modify memory outside of pre-defined areas.
+> 
+> If a platform has WSMT enabled in BIOS setup, SMM calls through
+> dcdbas will fail.  The only way to access platform data in these
+> instances is through the WMI SMBIOS calling interface.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  drivers/platform/x86/dell-smbios-smm.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
+> index 223531e43fea..ba315753e847 100644
+> --- a/drivers/platform/x86/dell-smbios-smm.c
+> +++ b/drivers/platform/x86/dell-smbios-smm.c
+> @@ -25,6 +25,8 @@ static struct calling_interface_buffer *buffer;
+>  struct platform_device *platform_device;
+>  static DEFINE_MUTEX(smm_mutex);
 >  
-> -	buffer = dell_smbios_get_buffer();
-> -
-> -	dell_smbios_send_request(17, 11);
-> -	ret = buffer->output[0];
-> +	ret = dell_send_request(17, 11, 0, 0, 0, 0);
+> +#define WSMT_EN_TOKEN	0x04EC
 
-Basically I do not like function which takes ten numeric parameters.
-Before in this code there was just function with 2 parameters, now there
-are lot of zero parameters, without information what which parameter
-means...
+Maybe there should be some comment in code what does this WSMT
+abbreviation mean...
 
-> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-> index ade248646578..386130811a34 100644
-> --- a/drivers/platform/x86/dell-smbios.c
-> +++ b/drivers/platform/x86/dell-smbios.c
-> +void dell_smbios_get_smm_address(int *address, int *code)
-> +{
-> +	*address = da_command_address;
-> +	*code = da_command_code;
-> +}
-> +EXPORT_SYMBOL_GPL(dell_smbios_get_smm_address);
-
-Should not be this function in dell-smbios-smm driver instead of the
-dispatcher? It has in name "smm" and also is specific for smm driver...
-
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 90d7e8e55e9b..b74f48d17116 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -641,13 +641,16 @@ static int dell_wmi_events_set_enabled(bool enable)
->  	struct calling_interface_buffer *buffer;
->  	int ret;
->  
-> -	buffer = dell_smbios_get_buffer();
-> +	buffer = (void *)get_zeroed_page(GFP_KERNEL);
-
-It is still needed to ask for page? Is not enough to allocate memory via
-some *alloc function?
-
-> +	buffer->class = 17;
-> +	buffer->select = 3;
->  	buffer->input[0] = 0x10000;
->  	buffer->input[1] = 0x51534554;
->  	buffer->input[3] = enable;
-> -	dell_smbios_send_request(17, 3);
-> -	ret = buffer->output[0];
-> -	dell_smbios_release_buffer();
-> +	ret = dell_smbios_call(buffer);
-> +	if (ret == 0)
-> +		ret = buffer->output[0];
-> +	free_page((unsigned long)buffer);
->  
->  	return dell_smbios_error(ret);
->  }
+>  static const struct dmi_system_id dell_device_table[] __initconst = {
+>  	{
+>  		.ident = "Dell laptop",
 
 -- 
 Pali Rohár
