@@ -1,35 +1,86 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character devices
- when requested by drivers
-Date: Tue, 10 Oct 2017 21:11:30 +0200
-Message-ID: <20171010191130.5octjwhbxouayxfv@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v6 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Tue, 10 Oct 2017 19:14:53 +0000
+Message-ID: <81c43f16545744b3bc0f157841fcbb1a@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
- <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
+ <25bf1422d8efbd631f57dcb7dd40865bae729398.1507589249.git.mario.limonciello@dell.com>
+ <20171010160104.g4hqc7fjrp5zeg3p@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:46311 "EHLO
-        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753395AbdJJTLf (ORCPT
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:62624 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751837AbdJJTOz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Oct 2017 15:11:35 -0400
-Content-Disposition: inline
-In-Reply-To: <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
+        Tue, 10 Oct 2017 15:14:55 -0400
+In-Reply-To: <20171010160104.g4hqc7fjrp5zeg3p@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-On Monday 09 October 2017 17:51:51 Mario Limonciello wrote:
-> +	/* make sure we're not calling a higher instance than exists*/
-> +	if (_IOC_NR(cmd) > wblock->gblock.instance_count - 1)
-> +		return -EINVAL;
-
-Is this condition really working? instance_count is unsigned, cmd is
-also unsigned... and when instance_count is zero, then IIRC error would
-not be thrown.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDEwLCAyMDE3
+IDExOjAxIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
+bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5k
+eS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keSBMdXRv
+bWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNv
+Y2tpLm5ldDsNCj4gbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsgR3JlZyBLSCA8Z3JlZ0Br
+cm9haC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMDkvMTRdIHBsYXRmb3JtL3g4Njog
+ZGVsbC1zbWJpb3M6IEludHJvZHVjZSBkaXNwYXRjaGVyIGZvcg0KPiBTTU0gY2FsbHMNCj4gDQo+
+IE9uIE1vbmRheSAwOSBPY3RvYmVyIDIwMTcgMTc6NTE6NDcgTWFyaW8gTGltb25jaWVsbG8gd3Jv
+dGU6DQo+ID4gIHN0YXRpYyB2b2lkIGRlbGxfcmZraWxsX3F1ZXJ5KHN0cnVjdCByZmtpbGwgKnJm
+a2lsbCwgdm9pZCAqZGF0YSkNCj4gPiAgew0KPiA+IC0Jc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNl
+X2J1ZmZlciAqYnVmZmVyOw0KPiA+ICAJaW50IHJhZGlvID0gKCh1bnNpZ25lZCBsb25nKWRhdGEg
+JiAweEYpOw0KPiA+ICAJaW50IGh3c3dpdGNoOw0KPiA+ICAJaW50IHN0YXR1czsNCj4gPiAgCWlu
+dCByZXQ7DQo+ID4NCj4gPiAtCWJ1ZmZlciA9IGRlbGxfc21iaW9zX2dldF9idWZmZXIoKTsNCj4g
+PiAtDQo+ID4gLQlkZWxsX3NtYmlvc19zZW5kX3JlcXVlc3QoMTcsIDExKTsNCj4gPiAtCXJldCA9
+IGJ1ZmZlci0+b3V0cHV0WzBdOw0KPiA+ICsJcmV0ID0gZGVsbF9zZW5kX3JlcXVlc3QoMTcsIDEx
+LCAwLCAwLCAwLCAwKTsNCj4gDQo+IEJhc2ljYWxseSBJIGRvIG5vdCBsaWtlIGZ1bmN0aW9uIHdo
+aWNoIHRha2VzIHRlbiBudW1lcmljIHBhcmFtZXRlcnMuDQo+IEJlZm9yZSBpbiB0aGlzIGNvZGUg
+dGhlcmUgd2FzIGp1c3QgZnVuY3Rpb24gd2l0aCAyIHBhcmFtZXRlcnMsIG5vdyB0aGVyZQ0KPiBh
+cmUgbG90IG9mIHplcm8gcGFyYW1ldGVycywgd2l0aG91dCBpbmZvcm1hdGlvbiB3aGF0IHdoaWNo
+IHBhcmFtZXRlcg0KPiBtZWFucy4uLg0KPiANCg0KSW4gYW4gZWFybGllciBwYXRjaCBEYXJyZW4g
+d2FudGVkIHRvIGtlZXAgZGVsbF9zZW5kX3JlcXVlc3QgYXJvdW5kIGFuZA0KcmVtb3ZlIGNvZGUg
+dGhhdCB3YXMgZHVwbGljYXRlZCBtdWx0aXBsZSB0aW1lcyB0byBjbGVhciBidWZmZXIsIHNldCBh
+cmd1bWVudHMgZXRjLA0KY2FuIHlvdSBwbGVhc2UgY29tbWVudCBvbiB3aGF0IGV4YWN0bHkgeW91
+IHdvdWxkIHByZWZlcj8NCg0KSXQncyB2ZXJ5IG9idmlvdXMgaWYgeW91IGxvb2sgYXQgdGhlIGRl
+bGxfc2VuZF9yZXF1ZXN0IGZ1bmN0aW9uIHdoYXQgaXMgaGFwcGVuaW5nLg0KDQo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLQ0KPiBzbWJpb3MuYw0KPiA+IGluZGV4IGFkZTI0ODY0NjU3OC4uMzg2MTMw
+ODExYTM0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9z
+LmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gK3Zv
+aWQgZGVsbF9zbWJpb3NfZ2V0X3NtbV9hZGRyZXNzKGludCAqYWRkcmVzcywgaW50ICpjb2RlKQ0K
+PiA+ICt7DQo+ID4gKwkqYWRkcmVzcyA9IGRhX2NvbW1hbmRfYWRkcmVzczsNCj4gPiArCSpjb2Rl
+ID0gZGFfY29tbWFuZF9jb2RlOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGRlbGxf
+c21iaW9zX2dldF9zbW1fYWRkcmVzcyk7DQo+IA0KPiBTaG91bGQgbm90IGJlIHRoaXMgZnVuY3Rp
+b24gaW4gZGVsbC1zbWJpb3Mtc21tIGRyaXZlciBpbnN0ZWFkIG9mIHRoZQ0KPiBkaXNwYXRjaGVy
+PyBJdCBoYXMgaW4gbmFtZSAic21tIiBhbmQgYWxzbyBpcyBzcGVjaWZpYyBmb3Igc21tIGRyaXZl
+ci4uLg0KDQpUaGF0IHdvdWxkIG1lYW4gcGFyc2luZyBEQSB0YWJsZSBpbiBib3RoIGRyaXZlcnMu
+ICBTaW5jZSBpdCB3YXMgYWxyZWFkeQ0KYXZhaWxhYmxlIGluIGRlbGwtc21iaW9zIGRyaXZlciwg
+aXQgbWFkZSBzZW5zZSB0byBtZSB0byBleHBvcnQgaXQgdG8gdGhlIG90aGVyDQpkcml2ZXIgdGhp
+cyB3YXkuDQoNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwt
+d21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gaW5kZXggOTBkN2U4
+ZTU1ZTliLi5iNzRmNDhkMTcxMTYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94
+ODYvZGVsbC13bWkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMN
+Cj4gPiBAQCAtNjQxLDEzICs2NDEsMTYgQEAgc3RhdGljIGludCBkZWxsX3dtaV9ldmVudHNfc2V0
+X2VuYWJsZWQoYm9vbCBlbmFibGUpDQo+ID4gIAlzdHJ1Y3QgY2FsbGluZ19pbnRlcmZhY2VfYnVm
+ZmVyICpidWZmZXI7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gLQlidWZmZXIgPSBkZWxsX3Nt
+Ymlvc19nZXRfYnVmZmVyKCk7DQo+ID4gKwlidWZmZXIgPSAodm9pZCAqKWdldF96ZXJvZWRfcGFn
+ZShHRlBfS0VSTkVMKTsNCj4gDQo+IEl0IGlzIHN0aWxsIG5lZWRlZCB0byBhc2sgZm9yIHBhZ2U/
+IElzIG5vdCBlbm91Z2ggdG8gYWxsb2NhdGUgbWVtb3J5IHZpYQ0KPiBzb21lICphbGxvYyBmdW5j
+dGlvbj8NCg0KSSB0aGluayB0aGlzIHBhcnRpY3VsYXIgb25lIG1heSBiZSBhYmxlIHRvIGdldCBh
+d2F5IHdpdGggbGVzcyBtZW1vcnkgdGhhbiBhIHBhZ2UuDQpJJ2xsIGNvbmZpcm0uDQoNCj4gDQo+
+ID4gKwlidWZmZXItPmNsYXNzID0gMTc7DQo+ID4gKwlidWZmZXItPnNlbGVjdCA9IDM7DQo+ID4g
+IAlidWZmZXItPmlucHV0WzBdID0gMHgxMDAwMDsNCj4gPiAgCWJ1ZmZlci0+aW5wdXRbMV0gPSAw
+eDUxNTM0NTU0Ow0KPiA+ICAJYnVmZmVyLT5pbnB1dFszXSA9IGVuYWJsZTsNCj4gPiAtCWRlbGxf
+c21iaW9zX3NlbmRfcmVxdWVzdCgxNywgMyk7DQo+ID4gLQlyZXQgPSBidWZmZXItPm91dHB1dFsw
+XTsNCj4gPiAtCWRlbGxfc21iaW9zX3JlbGVhc2VfYnVmZmVyKCk7DQo+ID4gKwlyZXQgPSBkZWxs
+X3NtYmlvc19jYWxsKGJ1ZmZlcik7DQo+ID4gKwlpZiAocmV0ID09IDApDQo+ID4gKwkJcmV0ID0g
+YnVmZmVyLT5vdXRwdXRbMF07DQo+ID4gKwlmcmVlX3BhZ2UoKHVuc2lnbmVkIGxvbmcpYnVmZmVy
+KTsNCj4gPg0KPiA+ICAJcmV0dXJuIGRlbGxfc21iaW9zX2Vycm9yKHJldCk7DQo+ID4gIH0NCj4g
+DQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
