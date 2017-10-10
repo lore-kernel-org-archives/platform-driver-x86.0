@@ -1,99 +1,63 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v6 13/14] platform/x86: wmi: create character devices when
- requested by drivers
-Date: Tue, 10 Oct 2017 14:00:34 +0000
-Message-ID: <c88a5812a038442689d662d56a985a37@ausx13mpc120.AMER.DELL.COM>
+Subject: RE: [PATCH v6 14/14] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Tue, 10 Oct 2017 14:17:48 +0000
+Message-ID: <ea5e28972c5a485f988256de5e4e7289@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507589249.git.mario.limonciello@dell.com>
- <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
- <20171010110637.GB16994@kroah.com>
- <db8c80d86c7045fd95e8f91f777cd680@ausx13mpc120.AMER.DELL.COM>
- <20171010135743.GC8662@kroah.com>
+ <411980beb5697e312145ef268516f4cc7c585b8f.1507589249.git.mario.limonciello@dell.com>
+ <20171010135920.GD8662@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171010135743.GC8662@kroah.com>
+In-Reply-To: <20171010135920.GD8662@kroah.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: greg@kroah.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 List-Id: platform-driver-x86.vger.kernel.org
 
+
+
 > -----Original Message-----
 > From: Greg KH [mailto:greg@kroah.com]
-> Sent: Tuesday, October 10, 2017 8:58 AM
+> Sent: Tuesday, October 10, 2017 8:59 AM
 > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kernel.=
-org;
-> quasisec@google.com; pali.rohar@gmail.com; rjw@rjwysocki.net;
-> mjg59@google.com; hch@lst.de
-> Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character devices=
- when
-> requested by drivers
+> Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
+> Subject: Re: [PATCH v6 14/14] platform/x86: dell-smbios-wmi: introduce
+> userspace interface
 >=20
-> On Tue, Oct 10, 2017 at 01:41:45PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:greg@kroah.com]
-> > > Sent: Tuesday, October 10, 2017 6:07 AM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: dvhart@infradead.org; Andy Shevchenko
-> <andy.shevchenko@gmail.com>;
-> > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.=
-org;
-> > > Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
-> > > pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
-> > > Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character dev=
-ices
-> when
-> > > requested by drivers
-> > >
-> > > On Mon, Oct 09, 2017 at 05:51:51PM -0500, Mario Limonciello wrote:
-> > > > --- /dev/null
-> > > > +++ b/include/uapi/linux/wmi.h
-> > > > @@ -0,0 +1,19 @@
-> > > > +/*
-> > > > + *  User API methods for ACPI-WMI mapping driver
-> > > > + *
-> > > > + *  Copyright (C) 2017 Dell, Inc.
-> > > > + *
-> > > > + *  This program is free software; you can redistribute it and/or =
-modify
-> > > > + *  it under the terms of the GNU General Public License version 2=
- as
-> > > > + *  published by the Free Software Foundation.
-> > > > + */
-> > > > +#ifndef _UAPI_LINUX_WMI_H
-> > > > +#define _UAPI_LINUX_WMI_H
-> > > > +
-> > > > +#define WMI_IOC 'W'
-> > > > +#define WMI_IO(instance)		_IO(WMI_IOC, instance)
-> > > > +#define WMI_IOR(instance, type)		_IOR(WMI_IOC, instance,
-> type)
-> > > > +#define WMI_IOW(instance, type)		_IOW(WMI_IOC,
-> instance, type)
-> > > > +#define WMI_IOWR(instance, type)	_IOWR(WMI_IOC, instance, type)
-> > >
-> > > Are these really needed in a uapi .h file?  Who needs them?  And why =
-not
-> > > just use a "normal" ioctl macro in your individual driver .h file?  D=
-o
-> > > these really help?
-> > >
-> > Since this is setting precedent that WMI drivers will use the IOC 'W' a=
-nd the
-> WMI
-> > bus driver will dispatch calls to the proper drivers, I think they make=
- sense to
-> include.
+> On Mon, Oct 09, 2017 at 05:51:52PM -0500, Mario Limonciello wrote:
+> > +	ret =3D device_create_file(&wdev->dev, &priv->req_buf_size_attr);
+> > +	if (ret)
+> > +		goto fail_create_sysfs;
 >=20
-> But who will use those macros?  Those drivers?
+> Why isn't the "WMI core" creating this sysfs file?  Why have per-driver
+> sysfs files, making all of the different apis totally different?  It's a
+> "common" attribute that they are all going to have to provide, right?
 >=20
-> As the individual drivers have to define the correct "instance, type",
-> this seems like a header file that is wrapping things unnecessarily.
-> Why not just put all of the needed WMI ioctls in a single file, one for
-> all of the drivers?  No need to have special per-driver ioctl .h files,
-> right?
+I hadn't really thought about that.  I suppose it's entirely reasonable
+to have a way that all WMI ioctls for future drivers will advertise the siz=
+e
+of their expected buffer the same way.
+
+So this does beg a question to others on this distribution who have worked
+on WMI drivers- do you know of any WM**/ methods with multiple instances=20
+that use different buffer sizes, or is it reasonable to expect that the buf=
+fer size=20
+is consistent between instances?
+
+Even in advanced MOF designs I haven't seen it, but this makes me
+wonder if an attribute should be created for every instance to be future pr=
+oof.
+(For example $GUID/required_buffer_size/instance0,=20
+$GUID/required_buffer_size/instance1 etc)
+
+> That way you also don't race with userspace :)
 >=20
-Sounds good to me.  I'll reshuffle.
+> thanks,
+>=20
+> greg k-h
