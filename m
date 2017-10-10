@@ -1,77 +1,53 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
- for Intel Software Guard Extensions
-Date: Tue, 10 Oct 2017 11:26:06 -0700
-Message-ID: <20171010182606.GA20986@linux.intel.com>
-References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
- <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v6 10/14] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Tue, 10 Oct 2017 20:31:57 +0200
+Message-ID: <20171010160131.wkaxfsevd6w2akep@pali>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
+ <3892df796d90f3568be48b85498a7819711323db.1507589249.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:3758 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755836AbdJJS2M (ORCPT
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:56769 "EHLO
+        mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932232AbdJJScG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Oct 2017 14:28:12 -0400
+        Tue, 10 Oct 2017 14:32:06 -0400
 Content-Disposition: inline
-In-Reply-To: <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <3892df796d90f3568be48b85498a7819711323db.1507589249.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
 
-On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
-> diff --git a/drivers/platform/x86/intel_sgx/sgx_encl.c b/drivers/platform/x86/intel_sgx/sgx_encl.c
-> new file mode 100644
-> index 000000000000..aa0deed08cee
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_sgx/sgx_encl.c
-> @@ -0,0 +1,989 @@
->
-> +/**
-> + * sgx_encl_find - find an enclave
-> + * @mm:		mm struct of the current process
-> + * @addr:	address in the ELRANGE
-> + * @created	is the enclave already created?
-> + * @vma:	the resulting VMA
-> + *
-> + * Finds an enclave identified by the given address. Gives back the VMA, that is
-> + * part of the enclave, located in that address.
-> + *
-> + * Return:
-> + * 0 on success,
-> + * -EINVAL if not found,
-> + */
-> +int sgx_encl_find(struct mm_struct *mm, unsigned long addr, bool created,
-> +		  struct vm_area_struct **vma)
-> +{
-> +	struct vm_area_struct *result;
-> +	struct sgx_encl *encl;
-> +
-> +	result = find_vma(mm, addr);
-> +	if (!result || result->vm_ops != &sgx_vm_ops || addr < result->vm_start)
-> +		return -EINVAL;
-> +
-> +	encl = result->vm_private_data;
-> +	if (created) {
-> +		if (!encl)
-> +			return -EINVAL;
-> +	} else {
-> +		if (encl)
-> +			return -EINVAL;
-> +	}
+On Monday 09 October 2017 17:51:48 Mario Limonciello wrote:
+> +static struct token_range token_blacklist[] = {
+> +	{0x0000, 0x0175, 0x0176},
+> +	{0x0000, 0x0195, 0x0197},
+> +	{0x0000, 0x01DC, 0x01DD},
+> +	{0x0000, 0x027D, 0x0284},
+> +	{0x02E3, 0x0000, 0x0000},
+> +	{0x02FF, 0x0000, 0x0000},
+> +	{0x0000, 0x0300, 0x0302},
+> +	{0x0000, 0x0325, 0x0326},
+> +	{0x0000, 0x0332, 0x0335},
+> +	{0x0350, 0x0000, 0x0000},
+> +	{0x0363, 0x0000, 0x0000},
+> +	{0x0368, 0x0000, 0x0000},
+> +	{0x0000, 0x03F6, 0x03F7},
+> +	{0x0000, 0x049E, 0x049F},
+> +	{0x0000, 0x04A0, 0x04A3},
+> +	{0x0000, 0x04E6, 0x04E7},
+> +	{0x0000, 0x4000, 0x7FFF},
+> +	{0x0000, 0x9000, 0x9001},
+> +	{0x0000, 0xA000, 0xBFFF},
+> +	{0x0000, 0xEFF0, 0xEFFF},
+> +};
 
-What about removing @created and returning -ENOENT (or -ENXIO?) if 
-result->vm_private_data is NULL?  Removing @created will eliminate
-any potential confusion for the common case of @created=true.  For
-@created=false, which should be limited to sgx_encl_create, I think
-that explicitly checking for "ret != -ENOENT" is more intuitive
-than checking whether or not sgx_encl_find succeeded, e.g. I knew
-the intent of the check in sgx_encl_create ahead of time and I still
-had to walk through sgx_encl_find to verify the behavior.
+Hi! There should be information what is hidden in those tokens, so other
+people would be able to review why are those token blacklisted.
 
-> +
-> +	*vma = result;
-> +	return 0;
-> +}
-> +
+-- 
+Pali Rohár
+pali.rohar@gmail.com
