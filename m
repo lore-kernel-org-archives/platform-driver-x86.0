@@ -1,100 +1,72 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v7 12/15] platform/x86: dell-smbios-smm: test for WSMT
-Date: Wed, 11 Oct 2017 11:27:38 -0500
-Message-ID: <0f598e216516c511477865bc3fc39d1da1211276.1507733291.git.mario.limonciello@dell.com>
+Subject: [PATCH v7 06/15] platform/x86: wmi: Don't allow drivers to get each other's GUIDs
+Date: Wed, 11 Oct 2017 11:27:32 -0500
+Message-ID: <a60d5e3f2e7815de85c4d37c87a2c086588c0dcb.1507733291.git.mario.limonciello@dell.com>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:38352 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1757511AbdJKQ1w (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Oct 2017 12:27:52 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1507733291.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1507733291.git.mario.limonciello@dell.com>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-WSMT is as an attestation to the OS that the platform won't
-modify memory outside of pre-defined areas.
+The only driver using this was dell-wmi, and it really was a hack.
+The driver was getting a data attribute from another driver and this
+type of action should not be encouraged.
 
-If a platform has WSMT enabled in BIOS setup, SMM calls through
-dcdbas will fail.  The only way to access platform data in these
-instances is through the WMI SMBIOS calling interface.
+Rather drivers that need to interact with one another should pass
+data back and forth via exported functions.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/dell-smbios-smm.c | 35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/platform/x86/wmi.c | 17 -----------------
+ include/linux/wmi.h        |  4 ----
+ 2 files changed, 21 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
-index b003d70ef7eb..0dbd28e78803 100644
---- a/drivers/platform/x86/dell-smbios-smm.c
-+++ b/drivers/platform/x86/dell-smbios-smm.c
-@@ -26,6 +26,9 @@ static struct calling_interface_buffer *buffer;
- struct platform_device *platform_device;
- static DEFINE_MUTEX(smm_mutex);
- 
-+/* When enabled this token indicates that SMM won't work */
-+#define WSMT_EN_TOKEN	0x04EC
-+
- static const struct dmi_system_id dell_device_table[] __initconst = {
- 	{
- 		.ident = "Dell laptop",
-@@ -100,6 +103,30 @@ int dell_smbios_smm_call(struct calling_interface_buffer *input)
- 	return 0;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 4d73a87c2ddf..bcb41c1c7f52 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -368,23 +368,6 @@ union acpi_object *wmidev_block_query(struct wmi_device *wdev, u8 instance)
  }
+ EXPORT_SYMBOL_GPL(wmidev_block_query);
  
-+static int test_wsmt_enabled(void)
-+{
-+	struct calling_interface_token *token;
-+
-+	/* if token doesn't exist, SMM will work */
-+	token = dell_smbios_find_token(WSMT_EN_TOKEN);
-+	if (!token)
-+		return 0;
-+
-+	/* if token exists, try to access over SMM */
-+	buffer->class = 0;
-+	buffer->select = 0;
-+	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-+	buffer->input[0] = token->location;
-+	dell_smbios_smm_call(buffer);
-+
-+	/* if lookup failed, we know WSMT was enabled */
-+	if (buffer->output[0] != 0)
-+		return 1;
-+
-+	/* query token status if it didn't fail */
-+	return (buffer->output[1] == token->value);
-+}
-+
- static int __init dell_smbios_smm_init(void)
- {
- 	int ret;
-@@ -113,6 +140,13 @@ static int __init dell_smbios_smm_init(void)
+-struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
+-					 const char *guid_string)
+-{
+-	struct wmi_block *this_wb = container_of(wdev, struct wmi_block, dev);
+-	struct wmi_block *other_wb;
+-
+-	if (!find_guid(guid_string, &other_wb))
+-		return NULL;
+-
+-	if (other_wb->acpi_device != this_wb->acpi_device)
+-		return NULL;
+-
+-	get_device(&other_wb->dev.dev);
+-	return &other_wb->dev;
+-}
+-EXPORT_SYMBOL_GPL(wmidev_get_other_guid);
+-
+ /**
+  * wmi_set_block - Write to a WMI block
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 2cd10c3b89e9..ddee427e0721 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -36,10 +36,6 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+ 					     u8 instance);
  
- 	dmi_walk(find_cmd_address, NULL);
- 
-+	ret = test_wsmt_enabled();
-+	pr_debug("WSMT enable test: %d\n", ret);
-+	if (ret) {
-+		ret = -ENODEV;
-+		goto fail_wsmt;
-+	}
-+
- 	platform_device = platform_device_alloc("dell-smbios", 1);
- 	if (!platform_device) {
- 		ret = -ENOMEM;
-@@ -136,6 +170,7 @@ static int __init dell_smbios_smm_init(void)
- fail_platform_device_add:
- 	platform_device_put(platform_device);
- 
-+fail_wsmt:
- fail_platform_device_alloc:
- 	free_page((unsigned long)buffer);
- 	return ret;
+-/* Gets another device on the same bus.  Caller must put_device the result. */
+-extern struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
+-						const char *guid_string);
+-
+ struct wmi_device_id {
+ 	const char *guid_string;
+ };
 -- 
 2.14.1
