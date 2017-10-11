@@ -1,89 +1,55 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
- for Intel Software Guard Extensions
-Date: Wed, 11 Oct 2017 14:46:51 +0300
-Message-ID: <20171011114651.tp6uf27l52kt5tf3@linux.intel.com>
-References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
- <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
- <20171010154136.GB5020@linux.intel.com>
+From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character devices
+ when requested by drivers
+Date: Wed, 11 Oct 2017 13:33:18 +0100
+Message-ID: <20171011133318.59765227@alans-desktop>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
+        <897883f9b8c45dc2cb24de1bb4642513734852d3.1507589249.git.mario.limonciello@dell.com>
+        <20171010191130.5octjwhbxouayxfv@pali>
+        <a8de75f5894f4b888e3ca16fea6c308a@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:27135 "EHLO mga14.intel.com"
+Received: from www.llwyncelyn.cymru ([82.70.14.225]:44280 "EHLO fuzix.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751526AbdJKLqx (ORCPT
+        id S1751958AbdJKMeH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Oct 2017 07:46:53 -0400
-Content-Disposition: inline
-In-Reply-To: <20171010154136.GB5020@linux.intel.com>
+        Wed, 11 Oct 2017 08:34:07 -0400
+In-Reply-To: <a8de75f5894f4b888e3ca16fea6c308a@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: pali.rohar@gmail.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-On Tue, Oct 10, 2017 at 08:41:36AM -0700, Sean Christopherson wrote:
-> On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
-> > diff --git a/drivers/platform/x86/intel_sgx/sgx_page_cache.c b/drivers/platform/x86/intel_sgx/sgx_page_cache.c
-> > new file mode 100644
-> > index 000000000000..1089b563e07b
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel_sgx/sgx_page_cache.c
-> >
-> > +/**
-> > + * sgx_alloc_page - allocate an EPC page
-> > + * @flags:	allocation flags
-> > + *
-> > + * Try to grab a page from the free EPC page list. If there is a free page
-> > + * available, it is returned to the caller. If called with SGX_ALLOC_ATOMIC,
-> > + * the function will return immediately if the list is empty. Otherwise, it
-> > + * will swap pages up until there is a free page available. Before returning
-> > + * the low watermark is checked and ksgxswapd is waken up if we are below it.
-> > + *
-> > + * Return: an EPC page or a system error code
-> > + */
-> > +struct sgx_epc_page *sgx_alloc_page(unsigned int flags)
-> > +{
-> > +	struct sgx_epc_page *entry;
-> > +
-> > +	for ( ; ; ) {
-> > +		entry = sgx_alloc_page_fast();
-> > +		if (entry)
-> > +			break;
-> > +
-> > +		/* We need at minimum two pages for the #PF handler. */
-> > +		if (atomic_read(&sgx_va_pages_cnt) >
-> > +		    (sgx_nr_total_epc_pages - 2))
-> > +			return ERR_PTR(-ENOMEM);
-> > +
-> > +		if (flags & SGX_ALLOC_ATOMIC) {
-> > +			entry = ERR_PTR(-EBUSY);
-> > +			break;
-> > +		}
-> > +
-> > +		if (signal_pending(current)) {
-> > +			entry = ERR_PTR(-ERESTARTSYS);
-> > +			break;
-> > +		}
-> > +
-> > +		sgx_swap_pages(SGX_NR_SWAP_CLUSTER_MAX);
-> > +		schedule();
-> > +	}
-> > +
-> > +	if (sgx_nr_free_pages < sgx_nr_low_pages)
-> > +		wake_up(&ksgxswapd_waitq);
-> > +
-> > +	return entry;
-> > +}
-> > +EXPORT_SYMBOL(sgx_alloc_page);
+On Tue, 10 Oct 2017 19:24:11 +0000
+<Mario.Limonciello@dell.com> wrote:
+
+> > -----Original Message-----
+> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > Sent: Tuesday, October 10, 2017 2:12 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > Andy Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>
+> > Subject: Re: [PATCH v6 13/14] platform/x86: wmi: create character devices when
+> > requested by drivers
+> > 
+> > On Monday 09 October 2017 17:51:51 Mario Limonciello wrote:  
+> > > +	/* make sure we're not calling a higher instance than exists*/
+> > > +	if (_IOC_NR(cmd) > wblock->gblock.instance_count - 1)
+> > > +		return -EINVAL;  
+> > 
+> > Is this condition really working? instance_count is unsigned, cmd is
+> > also unsigned... and when instance_count is zero, then IIRC error would
+> > not be thrown.
+> >   
 > 
-> I think it makes sense to remove the exports from sgx_page_cache.c
-> for the initial upstreaming given that the only consumer is the
-> pre-release/out-of-tree KVM module, which generally requires
-> recompiling the entire kernel anyways.
+> But instance count can't be zero.  MOF would fall apart with a zero instance count.
+> If a broken BIOS was shipped with an instance count of zero bigger problems would
+> have happened.
 
-Forgot them. Thanks.
+Maybe but you can still write the test correctly using >= instead.
 
-For the same reason as you described I removed them from
-arch/x86/include/asm/sgx.h
-
-/Jarkko
+Alan
