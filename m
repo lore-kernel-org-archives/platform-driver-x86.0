@@ -1,56 +1,61 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v7 04/15] platform/x86: dell-wmi: allow 32k return size
- in the descriptor
-Date: Wed, 11 Oct 2017 18:31:59 +0200
-Message-ID: <20171011163159.zhott3wh4fx6c76r@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v7 04/15] platform/x86: dell-wmi: allow 32k return size in
+ the descriptor
+Date: Wed, 11 Oct 2017 16:37:44 +0000
+Message-ID: <f509606e61454f4496c39c6a492db837@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
  <d25311bf73fc7cc451e2ba58249a34ce54aaac83.1507733291.git.mario.limonciello@dell.com>
+ <20171011163159.zhott3wh4fx6c76r@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d25311bf73fc7cc451e2ba58249a34ce54aaac83.1507733291.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:12934 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751961AbdJKQhx (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 11 Oct 2017 12:37:53 -0400
+In-Reply-To: <20171011163159.zhott3wh4fx6c76r@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-On Wednesday 11 October 2017 11:27:30 Mario Limonciello wrote:
-> Some platforms this year will be adopting 32k WMI buffer, so don't
-> complain when encountering those.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index ece2fe341f01..c8c7f4f9326c 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -624,7 +624,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
->   * Vendor Signature          0       4    "DELL"
->   * Object Signature          4       4    " WMI"
->   * WMI Interface Version     8       4    <version>
-> - * WMI buffer length        12       4    4096
-> + * WMI buffer length        12       4    4096 or 32768
->   */
->  static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
->  {
-> @@ -674,7 +674,7 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
->  		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
->  			buffer[2]);
->  
-> -	if (buffer[3] != 4096)
-> +	if (desc_buffer[3] != 4096 && desc_buffer[3] != 32768)
-
-Looks like that desc_buffer is not declared.
-
->  		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
->  			buffer[3]);
->  
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMTEsIDIw
+MTcgMTE6MzIgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9A
+RGVsbC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxh
+bmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBBbmR5IEx1
+dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5
+c29ja2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVn
+QGtyb2FoLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NyAwNC8xNV0gcGxhdGZvcm0veDg2
+OiBkZWxsLXdtaTogYWxsb3cgMzJrIHJldHVybiBzaXplIGluIHRoZQ0KPiBkZXNjcmlwdG9yDQo+
+IA0KPiBPbiBXZWRuZXNkYXkgMTEgT2N0b2JlciAyMDE3IDExOjI3OjMwIE1hcmlvIExpbW9uY2ll
+bGxvIHdyb3RlOg0KPiA+IFNvbWUgcGxhdGZvcm1zIHRoaXMgeWVhciB3aWxsIGJlIGFkb3B0aW5n
+IDMyayBXTUkgYnVmZmVyLCBzbyBkb24ndA0KPiA+IGNvbXBsYWluIHdoZW4gZW5jb3VudGVyaW5n
+IHRob3NlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlv
+LmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9kZWxsLXdtaS5jIHwgNCArKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvZGVsbC13bWkuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiBp
+bmRleCBlY2UyZmUzNDFmMDEuLmM4YzdmNGY5MzI2YyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+ZGVsbC13bWkuYw0KPiA+IEBAIC02MjQsNyArNjI0LDcgQEAgc3RhdGljIHZvaWQgZGVsbF93bWlf
+aW5wdXRfZGVzdHJveShzdHJ1Y3Qgd21pX2RldmljZQ0KPiAqd2RldikNCj4gPiAgICogVmVuZG9y
+IFNpZ25hdHVyZSAgICAgICAgICAwICAgICAgIDQgICAgIkRFTEwiDQo+ID4gICAqIE9iamVjdCBT
+aWduYXR1cmUgICAgICAgICAgNCAgICAgICA0ICAgICIgV01JIg0KPiA+ICAgKiBXTUkgSW50ZXJm
+YWNlIFZlcnNpb24gICAgIDggICAgICAgNCAgICA8dmVyc2lvbj4NCj4gPiAtICogV01JIGJ1ZmZl
+ciBsZW5ndGggICAgICAgIDEyICAgICAgIDQgICAgNDA5Ng0KPiA+ICsgKiBXTUkgYnVmZmVyIGxl
+bmd0aCAgICAgICAgMTIgICAgICAgNCAgICA0MDk2IG9yIDMyNzY4DQo+ID4gICAqLw0KPiA+ICBz
+dGF0aWMgaW50IGRlbGxfd21pX2NoZWNrX2Rlc2NyaXB0b3JfYnVmZmVyKHN0cnVjdCB3bWlfZGV2
+aWNlICp3ZGV2KQ0KPiA+ICB7DQo+ID4gQEAgLTY3NCw3ICs2NzQsNyBAQCBzdGF0aWMgaW50IGRl
+bGxfd21pX2NoZWNrX2Rlc2NyaXB0b3JfYnVmZmVyKHN0cnVjdA0KPiB3bWlfZGV2aWNlICp3ZGV2
+KQ0KPiA+ICAJCWRldl93YXJuKCZ3ZGV2LT5kZXYsICJEZWxsIGRlc2NyaXB0b3IgYnVmZmVyIGhh
+cyB1bmtub3duDQo+IHZlcnNpb24gKCV1KVxuIiwNCj4gPiAgCQkJYnVmZmVyWzJdKTsNCj4gPg0K
+PiA+IC0JaWYgKGJ1ZmZlclszXSAhPSA0MDk2KQ0KPiA+ICsJaWYgKGRlc2NfYnVmZmVyWzNdICE9
+IDQwOTYgJiYgZGVzY19idWZmZXJbM10gIT0gMzI3NjgpDQo+IA0KPiBMb29rcyBsaWtlIHRoYXQg
+ZGVzY19idWZmZXIgaXMgbm90IGRlY2xhcmVkLg0KDQpZZXAgdGhhbmtzIGZvciBjYXRjaGluZyB0
+aGF0IHdhcyBhIG1pc3Rha2UgZnJvbSBhbGwgdGhlIHJlYmFzaW5nIGFuZCBub3QgY29tcGlsZSB0
+ZXN0aW5nIHRoaXMNCnBhcnRpY3VsYXIgY29tbWl0LiDimLkNCg==
