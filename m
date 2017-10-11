@@ -1,100 +1,100 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v7 13/15] platform/x86: wmi: Add sysfs attribute for required_buffer_size
-Date: Wed, 11 Oct 2017 11:27:39 -0500
-Message-ID: <d2b85005e155e607cdfbe54d0cd4c9936aa6d831.1507733291.git.mario.limonciello@dell.com>
+Subject: [PATCH v7 12/15] platform/x86: dell-smbios-smm: test for WSMT
+Date: Wed, 11 Oct 2017 11:27:38 -0500
+Message-ID: <0f598e216516c511477865bc3fc39d1da1211276.1507733291.git.mario.limonciello@dell.com>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:38352 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1757511AbdJKQ1w (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 11 Oct 2017 12:27:52 -0400
 In-Reply-To: <cover.1507733291.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1507733291.git.mario.limonciello@dell.com>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Mario Limonciello <mario.limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Method type WMI objects need to be able to describe the size of
-the interface that they will expect to use.
+WSMT is as an attestation to the OS that the platform won't
+modify memory outside of pre-defined areas.
 
-Export this information to sysfs and allow vendor drivers to
-set it.
+If a platform has WSMT enabled in BIOS setup, SMM calls through
+dcdbas will fail.  The only way to access platform data in these
+instances is through the WMI SMBIOS calling interface.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/wmi.c | 31 +++++++++++++++++++++++++++++++
- include/linux/wmi.h        |  3 +++
- 2 files changed, 34 insertions(+)
+ drivers/platform/x86/dell-smbios-smm.c | 35 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index bcb41c1c7f52..63d01f98bf4c 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -72,6 +72,7 @@ struct wmi_block {
- 	struct acpi_device *acpi_device;
- 	wmi_notify_handler handler;
- 	void *handler_data;
-+	u64 req_buf_size;
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
+index b003d70ef7eb..0dbd28e78803 100644
+--- a/drivers/platform/x86/dell-smbios-smm.c
++++ b/drivers/platform/x86/dell-smbios-smm.c
+@@ -26,6 +26,9 @@ static struct calling_interface_buffer *buffer;
+ struct platform_device *platform_device;
+ static DEFINE_MUTEX(smm_mutex);
  
- 	bool read_takes_no_args;
- };
-@@ -188,6 +189,26 @@ static acpi_status wmi_method_enable(struct wmi_block *wblock, int enable)
- /*
-  * Exported WMI functions
-  */
++/* When enabled this token indicates that SMM won't work */
++#define WSMT_EN_TOKEN	0x04EC
 +
-+/**
-+ * set_required_buffer_size - Sets the buffer size needed for performing IOCTL
-+ * @wdev: A wmi bus device from a driver
-+ * @instance: Instance index
-+ *
-+ * Allocates memory needed for buffer, stores the buffer size in that memory
-+ */
-+int set_required_buffer_size(struct wmi_device *wdev, u8 instance, u64 length)
+ static const struct dmi_system_id dell_device_table[] __initconst = {
+ 	{
+ 		.ident = "Dell laptop",
+@@ -100,6 +103,30 @@ int dell_smbios_smm_call(struct calling_interface_buffer *input)
+ 	return 0;
+ }
+ 
++static int test_wsmt_enabled(void)
 +{
-+	struct wmi_block *wblock;
++	struct calling_interface_token *token;
 +
-+	wblock = container_of(wdev, struct wmi_block, dev);
-+	if (!wblock)
-+		return -ENODEV;
-+	wblock->req_buf_size = length;
-+	return 0;
++	/* if token doesn't exist, SMM will work */
++	token = dell_smbios_find_token(WSMT_EN_TOKEN);
++	if (!token)
++		return 0;
++
++	/* if token exists, try to access over SMM */
++	buffer->class = 0;
++	buffer->select = 0;
++	memset(buffer, 0, sizeof(struct calling_interface_buffer));
++	buffer->input[0] = token->location;
++	dell_smbios_smm_call(buffer);
++
++	/* if lookup failed, we know WSMT was enabled */
++	if (buffer->output[0] != 0)
++		return 1;
++
++	/* query token status if it didn't fail */
++	return (buffer->output[1] == token->value);
 +}
-+EXPORT_SYMBOL_GPL(set_required_buffer_size);
 +
- /**
-  * wmi_evaluate_method - Evaluate a WMI method
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-@@ -718,8 +739,18 @@ static struct attribute *wmi_data_attrs[] = {
- };
- ATTRIBUTE_GROUPS(wmi_data);
+ static int __init dell_smbios_smm_init(void)
+ {
+ 	int ret;
+@@ -113,6 +140,13 @@ static int __init dell_smbios_smm_init(void)
  
-+static ssize_t required_buffer_size_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct wmi_block *wblock = dev_to_wblock(dev);
-+
-+	return sprintf(buf, "%lld\n", wblock->req_buf_size);
-+}
-+static DEVICE_ATTR_RO(required_buffer_size);
-+
- static struct attribute *wmi_method_attrs[] = {
- 	&dev_attr_object_id.attr,
-+	&dev_attr_required_buffer_size.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(wmi_method);
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index ddee427e0721..a9a72a4c5ed8 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -36,6 +36,9 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
+ 	dmi_walk(find_cmd_address, NULL);
  
-+extern int set_required_buffer_size(struct wmi_device *wdev, u8 instance,
-+				    u64 length);
++	ret = test_wsmt_enabled();
++	pr_debug("WSMT enable test: %d\n", ret);
++	if (ret) {
++		ret = -ENODEV;
++		goto fail_wsmt;
++	}
 +
- struct wmi_device_id {
- 	const char *guid_string;
- };
+ 	platform_device = platform_device_alloc("dell-smbios", 1);
+ 	if (!platform_device) {
+ 		ret = -ENOMEM;
+@@ -136,6 +170,7 @@ static int __init dell_smbios_smm_init(void)
+ fail_platform_device_add:
+ 	platform_device_put(platform_device);
+ 
++fail_wsmt:
+ fail_platform_device_alloc:
+ 	free_page((unsigned long)buffer);
+ 	return ret;
 -- 
 2.14.1
