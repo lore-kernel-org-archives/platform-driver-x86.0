@@ -1,43 +1,59 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
  capability for requests
-Date: Thu, 12 Oct 2017 16:33:35 +0200
-Message-ID: <20171012143335.bbw3cxojzp66nqi2@pali>
+Date: Thu, 12 Oct 2017 14:43:45 +0000
+Message-ID: <a05251cb2dfc4683b0cb638c792ef056@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507733291.git.mario.limonciello@dell.com>
  <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
  <20171012110903.3ab4ed5e@alans-desktop>
  <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
+ <20171012143335.bbw3cxojzp66nqi2@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:55820 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751853AbdJLOdi (ORCPT
+Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:17208 "EHLO
+        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752340AbdJLOnr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2017 10:33:38 -0400
-Content-Disposition: inline
-In-Reply-To: <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
+        Thu, 12 Oct 2017 10:43:47 -0400
+In-Reply-To: <20171012143335.bbw3cxojzp66nqi2@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
+To: pali.rohar@gmail.com
 Cc: gnomes@lxorguk.ukuu.org.uk, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-On Thursday 12 October 2017 13:23:08 Mario.Limonciello@dell.com wrote:
-> The existing dcdbas calling interface tooling (libsmbios) expects to be able 
-> to access all calls and all tokens.  *The kernel doesn't filter any of it.*
-
-It does not mean that API/ABI was designed correctly or incorrectly.
-Existing old API/ABI is there and we are not going to change it...
-
-> I understand the ask to filter some calls and that's why patch 10/15 exists,
-> but please let me remind you this patch series is intended to /replace and
-> deprecate/ dcdbas userspace access.
-
-Now when there is a proposal for a new API/ABI, it should be designed
-correctly without need to redesign it again in future and address all
-problems which are found during review.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAxMiwgMjAx
+NyA5OjM0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
+bGwuY29tPg0KPiBDYzogZ25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs7IGR2aGFydEBpbmZyYWRl
+YWQub3JnOw0KPiBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9A
+a2VybmVsLm9yZzsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IG1q
+ZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7IGdyZWdAa3JvYWguY29tDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjcgMTAvMTVdIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IGFkZCBmaWx0ZXJp
+bmcgY2FwYWJpbGl0eQ0KPiBmb3IgcmVxdWVzdHMNCj4gDQo+IE9uIFRodXJzZGF5IDEyIE9jdG9i
+ZXIgMjAxNyAxMzoyMzowOCBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiBU
+aGUgZXhpc3RpbmcgZGNkYmFzIGNhbGxpbmcgaW50ZXJmYWNlIHRvb2xpbmcgKGxpYnNtYmlvcykg
+ZXhwZWN0cyB0byBiZSBhYmxlDQo+ID4gdG8gYWNjZXNzIGFsbCBjYWxscyBhbmQgYWxsIHRva2Vu
+cy4gICpUaGUga2VybmVsIGRvZXNuJ3QgZmlsdGVyIGFueSBvZiBpdC4qDQo+IA0KPiBJdCBkb2Vz
+IG5vdCBtZWFuIHRoYXQgQVBJL0FCSSB3YXMgZGVzaWduZWQgY29ycmVjdGx5IG9yIGluY29ycmVj
+dGx5Lg0KPiBFeGlzdGluZyBvbGQgQVBJL0FCSSBpcyB0aGVyZSBhbmQgd2UgYXJlIG5vdCBnb2lu
+ZyB0byBjaGFuZ2UgaXQuLi4NCj4gDQo+ID4gSSB1bmRlcnN0YW5kIHRoZSBhc2sgdG8gZmlsdGVy
+IHNvbWUgY2FsbHMgYW5kIHRoYXQncyB3aHkgcGF0Y2ggMTAvMTUgZXhpc3RzLA0KPiA+IGJ1dCBw
+bGVhc2UgbGV0IG1lIHJlbWluZCB5b3UgdGhpcyBwYXRjaCBzZXJpZXMgaXMgaW50ZW5kZWQgdG8g
+L3JlcGxhY2UgYW5kDQo+ID4gZGVwcmVjYXRlLyBkY2RiYXMgdXNlcnNwYWNlIGFjY2Vzcy4NCj4g
+DQo+IE5vdyB3aGVuIHRoZXJlIGlzIGEgcHJvcG9zYWwgZm9yIGEgbmV3IEFQSS9BQkksIGl0IHNo
+b3VsZCBiZSBkZXNpZ25lZA0KPiBjb3JyZWN0bHkgd2l0aG91dCBuZWVkIHRvIHJlZGVzaWduIGl0
+IGFnYWluIGluIGZ1dHVyZSBhbmQgYWRkcmVzcyBhbGwNCj4gcHJvYmxlbXMgd2hpY2ggYXJlIGZv
+dW5kIGR1cmluZyByZXZpZXcuDQo+IA0KDQpXZWxsIHN1cmUgSSBhbHNvIHdvdWxkIGhhdGUgdG8g
+aGF2ZSB0byByZWRlc2lnbiB0aGlzIGFnYWluIGluIHRoZSBmdXR1cmUuDQpJIGJlbGlldmUgdGhh
+dCB0aGlzIGlzIHN1ZmZpY2llbnQgbm93Lg0KDQpJJ20gbG9va2luZyB1cCBjb21tYW5kcyB0aGF0
+IEZXIGNsYWltcyBjYW4gYmUgc3VwcG9ydGVkIGFuZCBmaWx0ZXJpbmcgdGhlDQpyZXN0LiAgVGhl
+cmUncyB5b3VyIHdoaXRlbGlzdC4NCg0KSSBhZGRyZXNzZWQgdGhlIGNvbmNlcm4gb24gdGhlIHBl
+cmNlaXZlZCBkYW5nZXJvdXMgY2FsbHMgKHdyaXRlIG9uY2UsIGRlYnVnZ2luZywNCm1hbnVmYWN0
+dXJpbmcgdXNlIG9ubHkgZXRjKSBhbmQgdGhvc2UgYXJlIG5vdyBmaWx0ZXJlZC4gIFRoZXJlJ3Mg
+eW91ciBibGFja2xpc3QuDQoNCk90aGVyIHRoYW4gdGhlIG1pbm9yIGVycm9ycyB0aGF0IGtidWls
+ZCB0ZXN0IHJvYm90IGNhdWdodCBmcm9tIHY2IGFuZCB0aGUgDQpzL2Rlc2NfYnVmZmVyL2J1ZmZl
+ci8gaW4gYW4gZWFybGllciBwYXRjaCwgd2hhdCdzIGxlZnQ/DQo=
