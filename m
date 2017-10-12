@@ -1,65 +1,79 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH][next] platform/x86: intel_cht_int33fe: make a couple of
- local functions static
-Date: Thu, 12 Oct 2017 23:36:34 +0300
-Message-ID: <CAHp75Vf99OOTVqaei6FUUH9P=soNO92XKub4sdDss21PNFGLng@mail.gmail.com>
-References: <20171011093010.17173-1-colin.king@canonical.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v6 09/14] platform/x86: dell-smbios: Introduce dispatcher
+ for SMM calls
+Date: Thu, 12 Oct 2017 16:30:12 -0700
+Message-ID: <20171012233012.GA1470@fury>
+References: <cover.1507589249.git.mario.limonciello@dell.com>
+ <25bf1422d8efbd631f57dcb7dd40865bae729398.1507589249.git.mario.limonciello@dell.com>
+ <20171010160104.g4hqc7fjrp5zeg3p@pali>
+ <81c43f16545744b3bc0f157841fcbb1a@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011093010.17173-1-colin.king@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:36895 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751168AbdJLXaR (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 12 Oct 2017 19:30:17 -0400
+Content-Disposition: inline
+In-Reply-To: <81c43f16545744b3bc0f157841fcbb1a@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-+Cc: Hans
+On Tue, Oct 10, 2017 at 07:14:53PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > Sent: Tuesday, October 10, 2017 11:01 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > Andy Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>
+> > Subject: Re: [PATCH v6 09/14] platform/x86: dell-smbios: Introduce dispatcher for
+> > SMM calls
+> > 
+> > On Monday 09 October 2017 17:51:47 Mario Limonciello wrote:
+> > >  static void dell_rfkill_query(struct rfkill *rfkill, void *data)
+> > >  {
+> > > -	struct calling_interface_buffer *buffer;
+> > >  	int radio = ((unsigned long)data & 0xF);
+> > >  	int hwswitch;
+> > >  	int status;
+> > >  	int ret;
+> > >
+> > > -	buffer = dell_smbios_get_buffer();
+> > > -
+> > > -	dell_smbios_send_request(17, 11);
+> > > -	ret = buffer->output[0];
+> > > +	ret = dell_send_request(17, 11, 0, 0, 0, 0);
+> > 
+> > Basically I do not like function which takes ten numeric parameters.
+> > Before in this code there was just function with 2 parameters, now there
+> > are lot of zero parameters, without information what which parameter
+> > means...
+> > 
+> 
+> In an earlier patch Darren wanted to keep dell_send_request around and
+> remove code that was duplicated multiple times to clear buffer, set arguments etc,
+> can you please comment on what exactly you would prefer?
 
-On Wed, Oct 11, 2017 at 12:30 PM, Colin King <colin.king@canonical.com> wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The functions cht_int33fe_check_for_max17047 and cht_int33fe_find_max17047
-> are local to the source and do not need to be in global scope, so make
-> them static.
->
-> Cleans up sparse warnings:
-> symbol 'cht_int33fe_check_for_max17047' was not declared. Should it be
-> static?
-> symbol 'cht_int33fe_find_max17047' was not declared. Should it be static?
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/platform/x86/intel_cht_int33fe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index 94716b2fbc00..286c6207765d 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -42,7 +42,7 @@ struct cht_int33fe_data {
->   * These helpers are used to work around this by checking if an i2c-client
->   * for the max17047 has already been registered.
->   */
-> -int cht_int33fe_check_for_max17047(struct device *dev, void *data)
-> +static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->  {
->         struct i2c_client **max17047 = data;
->         struct acpi_device *adev;
-> @@ -62,7 +62,7 @@ int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->         return 1;
->  }
->
-> -struct i2c_client *cht_int33fe_find_max17047(void)
-> +static struct i2c_client *cht_int33fe_find_max17047(void)
->  {
->         struct i2c_client *max17047 = NULL;
->
-> --
-> 2.14.1
->
+There was a lot of boilerplate, and I think I suggested keeping the same
+interface of dell_send_request(class, select) (with 2 arguments) rather than
+replacing it with 3 or 4 lines of allocating and populating the buffer with the
+same values.
 
+I see you've updated this in v7 with two calls. I'd call that a reasonable
+compromise.
 
+> 
+> It's very obvious if you look at the dell_send_request function what is happening.
+
+There have been numerous analysis indicating that the more arguments a function
+has, the more likely bugs are to be found in those functions. 6 is a lot.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
