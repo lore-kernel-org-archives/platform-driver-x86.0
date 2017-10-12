@@ -1,59 +1,66 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
- capability for requests
-Date: Thu, 12 Oct 2017 14:43:45 +0000
-Message-ID: <a05251cb2dfc4683b0cb638c792ef056@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1507733291.git.mario.limonciello@dell.com>
- <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
- <20171012110903.3ab4ed5e@alans-desktop>
- <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
- <20171012143335.bbw3cxojzp66nqi2@pali>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Thu, 12 Oct 2017 09:48:15 -0700
+Message-ID: <20171012164815.GA8145@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:17208 "EHLO
-        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752340AbdJLOnr (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:49102 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753174AbdJLQu1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2017 10:43:47 -0400
-In-Reply-To: <20171012143335.bbw3cxojzp66nqi2@pali>
-Content-Language: en-US
+        Thu, 12 Oct 2017 12:50:27 -0400
+Content-Disposition: inline
+In-Reply-To: <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: gnomes@lxorguk.ukuu.org.uk, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAxMiwgMjAx
-NyA5OjM0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
-bGwuY29tPg0KPiBDYzogZ25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs7IGR2aGFydEBpbmZyYWRl
-YWQub3JnOw0KPiBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9A
-a2VybmVsLm9yZzsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IG1q
-ZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7IGdyZWdAa3JvYWguY29tDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjcgMTAvMTVdIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IGFkZCBmaWx0ZXJp
-bmcgY2FwYWJpbGl0eQ0KPiBmb3IgcmVxdWVzdHMNCj4gDQo+IE9uIFRodXJzZGF5IDEyIE9jdG9i
-ZXIgMjAxNyAxMzoyMzowOCBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiBU
-aGUgZXhpc3RpbmcgZGNkYmFzIGNhbGxpbmcgaW50ZXJmYWNlIHRvb2xpbmcgKGxpYnNtYmlvcykg
-ZXhwZWN0cyB0byBiZSBhYmxlDQo+ID4gdG8gYWNjZXNzIGFsbCBjYWxscyBhbmQgYWxsIHRva2Vu
-cy4gICpUaGUga2VybmVsIGRvZXNuJ3QgZmlsdGVyIGFueSBvZiBpdC4qDQo+IA0KPiBJdCBkb2Vz
-IG5vdCBtZWFuIHRoYXQgQVBJL0FCSSB3YXMgZGVzaWduZWQgY29ycmVjdGx5IG9yIGluY29ycmVj
-dGx5Lg0KPiBFeGlzdGluZyBvbGQgQVBJL0FCSSBpcyB0aGVyZSBhbmQgd2UgYXJlIG5vdCBnb2lu
-ZyB0byBjaGFuZ2UgaXQuLi4NCj4gDQo+ID4gSSB1bmRlcnN0YW5kIHRoZSBhc2sgdG8gZmlsdGVy
-IHNvbWUgY2FsbHMgYW5kIHRoYXQncyB3aHkgcGF0Y2ggMTAvMTUgZXhpc3RzLA0KPiA+IGJ1dCBw
-bGVhc2UgbGV0IG1lIHJlbWluZCB5b3UgdGhpcyBwYXRjaCBzZXJpZXMgaXMgaW50ZW5kZWQgdG8g
-L3JlcGxhY2UgYW5kDQo+ID4gZGVwcmVjYXRlLyBkY2RiYXMgdXNlcnNwYWNlIGFjY2Vzcy4NCj4g
-DQo+IE5vdyB3aGVuIHRoZXJlIGlzIGEgcHJvcG9zYWwgZm9yIGEgbmV3IEFQSS9BQkksIGl0IHNo
-b3VsZCBiZSBkZXNpZ25lZA0KPiBjb3JyZWN0bHkgd2l0aG91dCBuZWVkIHRvIHJlZGVzaWduIGl0
-IGFnYWluIGluIGZ1dHVyZSBhbmQgYWRkcmVzcyBhbGwNCj4gcHJvYmxlbXMgd2hpY2ggYXJlIGZv
-dW5kIGR1cmluZyByZXZpZXcuDQo+IA0KDQpXZWxsIHN1cmUgSSBhbHNvIHdvdWxkIGhhdGUgdG8g
-aGF2ZSB0byByZWRlc2lnbiB0aGlzIGFnYWluIGluIHRoZSBmdXR1cmUuDQpJIGJlbGlldmUgdGhh
-dCB0aGlzIGlzIHN1ZmZpY2llbnQgbm93Lg0KDQpJJ20gbG9va2luZyB1cCBjb21tYW5kcyB0aGF0
-IEZXIGNsYWltcyBjYW4gYmUgc3VwcG9ydGVkIGFuZCBmaWx0ZXJpbmcgdGhlDQpyZXN0LiAgVGhl
-cmUncyB5b3VyIHdoaXRlbGlzdC4NCg0KSSBhZGRyZXNzZWQgdGhlIGNvbmNlcm4gb24gdGhlIHBl
-cmNlaXZlZCBkYW5nZXJvdXMgY2FsbHMgKHdyaXRlIG9uY2UsIGRlYnVnZ2luZywNCm1hbnVmYWN0
-dXJpbmcgdXNlIG9ubHkgZXRjKSBhbmQgdGhvc2UgYXJlIG5vdyBmaWx0ZXJlZC4gIFRoZXJlJ3Mg
-eW91ciBibGFja2xpc3QuDQoNCk90aGVyIHRoYW4gdGhlIG1pbm9yIGVycm9ycyB0aGF0IGtidWls
-ZCB0ZXN0IHJvYm90IGNhdWdodCBmcm9tIHY2IGFuZCB0aGUgDQpzL2Rlc2NfYnVmZmVyL2J1ZmZl
-ci8gaW4gYW4gZWFybGllciBwYXRjaCwgd2hhdCdzIGxlZnQ/DQo=
+On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
+> diff --git a/drivers/platform/x86/intel_sgx/sgx_main.c b/drivers/platform/x86/intel_sgx/sgx_main.c
+> new file mode 100644
+> index 000000000000..2ad2dc88edff
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_sgx/sgx_main.c
+>
+> +static dev_t sgx_devt;
+> +
+> +static void sgx_dev_release(struct device *dev)
+> +{
+> +	struct sgx_context *ctx = container_of(dev, struct sgx_context, dev);
+> +	kfree(ctx);
+> +}
+> +
+> +static struct sgx_context *sgx_ctx_alloc(struct device *parent)
+> +{
+> +	struct sgx_context *ctx;
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	device_initialize(&ctx->dev);
+> +
+> +	ctx->dev.bus = &sgx_subsys;
+> +	ctx->dev.parent = parent;
+> +	ctx->dev.devt = MKDEV(MAJOR(sgx_devt), 0);
+> +	ctx->dev.release = sgx_dev_release;
+> +
+> +	dev_set_name(&ctx->dev, "sgx");
+
+/dev/sgx is created with 0600 permissions, does access to SGX really
+need to be restricted to root by default?
+
+> +
+> +	cdev_init(&ctx->cdev, &sgx_fops);
+> +	ctx->cdev.owner = THIS_MODULE;
+> +
+> +	dev_set_drvdata(parent, ctx);
+> +
+> +	return ctx;
+> +}
+> +
