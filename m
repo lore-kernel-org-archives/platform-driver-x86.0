@@ -1,69 +1,120 @@
-From: <mbalhoff@fulbright.com>
-Subject: (unknown)
-Date: Thu, 12 Oct 2017 13:15:24 -0000
-Message-ID: <150781412453.31213.18436321448244580540@net4me.pl>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Thu, 12 Oct 2017 13:23:08 +0000
+Message-ID: <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1507733291.git.mario.limonciello@dell.com>
+        <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
+ <20171012110903.3ab4ed5e@alans-desktop>
 Mime-Version: 1.0
-Content-Type: application/zip; name="5982826813.zip"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 91-227-197-63.net4me.pl ([91.227.197.63]:39715 "HELO net4me.pl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
-        id S1752620AbdJLNP0 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2017 09:15:26 -0400
-Subject: 
-Content-Disposition: attachment
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171012110903.3ab4ed5e@alans-desktop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: gnomes@lxorguk.ukuu.org.uk
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-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
-xPip4p6PVDYvD1L+Pf48/an99dctNuan1wcip1l3j58e6p+e59Uqf57PTZZmpnUjf+302GPMWLzU
-Uf87AHplX37Qkj9P5/p2FbnamN1Lvad/rTq7pvqBYeWVcj5os7Vg736onpz1bGc++e/rq5PAVuL3
-3ahn8/M0DAYzb6zn8pAzF+K510JfeEzQ5f+OcYP80NZ2wrOhn3+t3zeeDf3+e2zQd0+Vh4f7h/u7
-n3/5pfHp14dfTg65vvr556Epi26n7/iDWby2NxK71JK5suICYXU87NYLf7JMRDZqCX15xGTdvWrF
-M6099jO2PxwJUnva2hvcNu5NBpG8bh+ysdRxTM1grZWgHOX5bptJy2Nufldvt4LQE/yFoR1Ga1Nk
-9vyEGbQivj/czA5CpoS96bop7o6mvwo81g3UZCcvwo7TygacPZ5N+aUeKX6fjfbjncdpnSwN9GFb
-7cXSQFRmZncwZNT5VvRazmQ95Tu7dniQeqayHswWXDA/tI8C4yxzvUbSON7sRXfS6q8kWc0NF/Rw
-tNx1DtrkuIvN0OL7iRos/OVWbq07bNYeSovwmExWGtcLprN0oxzssdtn5LA9aY0M1omnSiDqc06y
-x+bJp9lYW8qHpK2KhrQOJ3yn29sdPSmyBY0fMcMN2xJXcSJP3Uk65r1Yl2fJprtsbsWRxXUiR1qr
-rDoIhqm0F+eTXmsj9xNhFmdWxzmslsJaXk7aG1GaJkpnnx4N1u02+Wx1SLS2OE0ZwVV2mSzZhjVh
-R07v2B+sO2Er57Vt7fnUVwfO1ta6jLgbdcaKZfjJ1l57/e5eSl1nxWbzhdtv7nrCxOqKfLAeKqO2
-lOhTfxM7rD6KtlKTm8x5v9sZDzJLmx2n3nDRO6iOZIk5+zorKE3X6zP+aJELEmdWlrty7situDec
-dPfTyOnZ+mTt7eVN22/NpE4UDBktPzUe8Qbn9mZZJ+iuBvLy4Iy3G10beYq0t+Prq8B240lrJXOp
-rjLCNuor/2Xt2/w65d4/UEsBAj8AFAAAAAgAoWhMSyDYrFXHCQAATysAAAgAJAAAAAAAAAAgAAAA
-AAAAADE3NzEzLmpzCgAgAAAAAAABABgAvsPSYpVD0wG+w9JilUPTAQVATWKVQ9MBUEsFBgAAAAAB
-AAEAWgAAAO0JAAAAAFBLAQI/AAoAAAAAAKFoTEvXCj9cXQoAAF0KAAAJACQAAAAAAAAAIAAAAAAA
-AAAxNzcxMy56aXAKACAAAAAAAAEAGAC2wthilUPTAbbC2GKVQ9MBy6JPYpVD0wFQSwUGAAAAAAEA
-AQBbAAAAhAoAAAAA
+> -----Original Message-----
+> From: Alan Cox [mailto:gnomes@lxorguk.ukuu.org.uk]
+> Sent: Thursday, October 12, 2017 5:09 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> Andy Lutomirski <luto@kernel.org>; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Gr=
+eg
+> KH <greg@kroah.com>
+> Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering ca=
+pability
+> for requests
+>=20
+> On Wed, 11 Oct 2017 11:27:36 -0500
+> Mario Limonciello <mario.limonciello@dell.com> wrote:
+>=20
+> > There are some categories of tokens and SMBIOS calls that it makes
+> > sense to protect userspace from accessing.  These are calls that
+> > may write to one time use fields or activate hardware debugging
+> > capabilities.  They are not intended for general purpose use.
+> >
+> > This same functionality may be be later extended to also intercept
+> > calls that may cause kernel functionality to get out of sync if
+> > the same functions are used by other drivers.
+>=20
+> This doesn't work. You are creating an API. If you then have to remove
+> parts of the API because it messes stuff up you break your API guarantee.
+
+This potential "problem" already exists in that dcdbas provides a userspace
+interface that can manipulate this same data as used by some kernel drivers=
+.
+The kernel drivers can be brought out of sync then.
+
+We discussed this a while back, you may not be aware of the discussion.
+
+The jist of it came down to that if a driver in the kernel decides to imple=
+ment
+the same functionality that is available through the calling interface but
+with a different interface that the call could be filtered through the call=
+ing
+interface.
+
+Intercepting/filtering a call doesn't mean breaking API.
+It can be handled two ways that I can see and both are valid:
+
+1) Return an error code.  The calling interface already API allows for erro=
+r=20
+return codes.  Plenty of calls _already_ return errors.  Returning
+one for a filtered call is no different.  This would  be an improvement ove=
+r how
+dcdbas and existing kernel modules handle it.
+
+2) Inspect the buffer and see that it's supposed to be handled by one of
+the existing kernel modules.  Pass the call on to the (kernel) driver that =
+already=20
+handles it, and return the result to userspace.  This will keep the kernel
+driver and the userspace return values in sync.
+
+>=20
+> As I said before, this needs to be a whitelist of stuff that is safe, and
+> it needs to have a security model.=20
+
+From the BIOS perspective if no BIOS administrator password is set the
+OS and any tools can access any item in the calling interface.  If a BIOS=20
+administrator password has been configured, many calls will return
+error codes unless the application has done a security key exchange with
+BIOS.  This is both how dcdbas works today and how this interface that I=20
+provided to replace it works.
+
+Within Linux the security model is that items accessible through this inter=
+face
+are only accessible by root.  If userspace tools choose to make items in th=
+is=20
+interface more widely accessible to say authenticated console users that's=
+=20
+their prerogative.
+
+> When you make a feature available you
+> can't nicely take it away again as you'll break people's user space.
+
+As I said above -ENODEV or -EINVAL is not the same thing as taking a featur=
+e
+away.  The character device API doesn't change when something is filtered.
+It's an error scenario.
+
+>=20
+> Start with a whitelist of the ones you know people want to use, or that
+> your existing tooling you want to enable uses. Add others as needed in
+> future releases of the kernel.
+>=20
+> Alan
+
+The existing dcdbas calling interface tooling (libsmbios) expects to be abl=
+e=20
+to access all calls and all tokens.  *The kernel doesn't filter any of it.*
+
+I understand the ask to filter some calls and that's why patch 10/15 exists=
+,
+but please let me remind you this patch series is intended to /replace and
+deprecate/ dcdbas userspace access.
