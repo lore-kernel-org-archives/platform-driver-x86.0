@@ -1,84 +1,47 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH][next] platform/x86: intel_cht_int33fe: make a couple of
- local functions static
-Date: Fri, 13 Oct 2017 15:52:04 +0200
-Message-ID: <65275ae0-aa42-9b03-4d44-19de6d01a853@redhat.com>
-References: <20171011093010.17173-1-colin.king@canonical.com>
- <CAHp75Vf99OOTVqaei6FUUH9P=soNO92XKub4sdDss21PNFGLng@mail.gmail.com>
+From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Fri, 13 Oct 2017 15:18:32 +0100
+Message-ID: <20171013151832.3ab0891d@alans-desktop>
+References: <cover.1507733291.git.mario.limonciello@dell.com>
+        <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
+        <20171012110903.3ab4ed5e@alans-desktop>
+        <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:41944 "EHLO mx1.redhat.com"
+Received: from www.llwyncelyn.cymru ([82.70.14.225]:52192 "EHLO fuzix.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753258AbdJMNwH (ORCPT
+        id S1753415AbdJMOTR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2017 09:52:07 -0400
-In-Reply-To: <CAHp75Vf99OOTVqaei6FUUH9P=soNO92XKub4sdDss21PNFGLng@mail.gmail.com>
-Content-Language: en-US
+        Fri, 13 Oct 2017 10:19:17 -0400
+In-Reply-To: <1200feb837864baa8a3be9740413f2e9@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Colin King <colin.king@canonical.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com
 
-Hi,
+> Within Linux the security model is that items accessible through this interface
+> are only accessible by root.
 
-On 12-10-17 22:36, Andy Shevchenko wrote:
-> +Cc: Hans
-> 
-> On Wed, Oct 11, 2017 at 12:30 PM, Colin King <colin.king@canonical.com> wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The functions cht_int33fe_check_for_max17047 and cht_int33fe_find_max17047
->> are local to the source and do not need to be in global scope, so make
->> them static.
->>
->> Cleans up sparse warnings:
->> symbol 'cht_int33fe_check_for_max17047' was not declared. Should it be
->> static?
->> symbol 'cht_int33fe_find_max17047' was not declared. Should it be static?
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+"root" has not been a security concept in the Linux kernel since about
+2.0. If you are relying on file permissions then at best you are using
+CAP_SYS_DAC which is too weak for this.
 
-Patch looks good to me, thank you for catching this:
+If you are allowing near unchecked communication with a third party
+entity that the user doesn't trust too much you should be requiring
+CAP_SYS_RAWIO.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+In fact it's a fair argument hat if you require CAP_SYS_RAWIO and have a
+module option you have to set to allow it that with the module loaded
+with say
 
-Regards,
+	insmod dell_smbios factory=1
 
-Hans
+does even blacklisted stuff then you are ok, because a process with
+CAP_SYS_RAWIO has enough power to totally own the machine anyway
+including taking over and doing the WMI call itself by hand in user space
+or loading its own module.
 
-
-
->> ---
->>   drivers/platform/x86/intel_cht_int33fe.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
->> index 94716b2fbc00..286c6207765d 100644
->> --- a/drivers/platform/x86/intel_cht_int33fe.c
->> +++ b/drivers/platform/x86/intel_cht_int33fe.c
->> @@ -42,7 +42,7 @@ struct cht_int33fe_data {
->>    * These helpers are used to work around this by checking if an i2c-client
->>    * for the max17047 has already been registered.
->>    */
->> -int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->> +static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->>   {
->>          struct i2c_client **max17047 = data;
->>          struct acpi_device *adev;
->> @@ -62,7 +62,7 @@ int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->>          return 1;
->>   }
->>
->> -struct i2c_client *cht_int33fe_find_max17047(void)
->> +static struct i2c_client *cht_int33fe_find_max17047(void)
->>   {
->>          struct i2c_client *max17047 = NULL;
->>
->> --
->> 2.14.1
->>
-> 
-> 
-> 
+Alan
