@@ -1,55 +1,77 @@
-From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
- capability for requests
-Date: Fri, 13 Oct 2017 20:46:11 +0100
-Message-ID: <20171013204611.7487f55c@alans-desktop>
-References: <cover.1507733291.git.mario.limonciello@dell.com>
-        <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
-        <20171012110903.3ab4ed5e@alans-desktop>
-        <20171013004645.GB1470@fury>
-        <20171013094314.GB29864@kroah.com>
-        <62ce0707d58b42618128e68f3bb9a45f@ausx13mpc124.AMER.DELL.COM>
-        <20171013161936.430f7a02@alans-desktop>
-        <dcf35817f6234dac99b51e9eea2c7c78@ausx13mpc124.AMER.DELL.COM>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Fri, 13 Oct 2017 22:58:49 +0300
+Message-ID: <20171013195849.2vt2n6542ejc6ah4@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+ <20171010182606.GA20986@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from www.llwyncelyn.cymru ([82.70.14.225]:53608 "EHLO fuzix.org"
+Received: from mga09.intel.com ([134.134.136.24]:62776 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751650AbdJMTqu (ORCPT
+        id S1752984AbdJMT6y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2017 15:46:50 -0400
-In-Reply-To: <dcf35817f6234dac99b51e9eea2c7c78@ausx13mpc124.AMER.DELL.COM>
+        Fri, 13 Oct 2017 15:58:54 -0400
+Content-Disposition: inline
+In-Reply-To: <20171010182606.GA20986@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: greg@kroah.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
-> I think I'd actually like to meld this with your other ideas and what I've 
-> currently got.  What do you think of this approach:
+On Tue, Oct 10, 2017 at 11:26:06AM -0700, Sean Christopherson wrote:
+> On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
+> > diff --git a/drivers/platform/x86/intel_sgx/sgx_encl.c b/drivers/platform/x86/intel_sgx/sgx_encl.c
+> > new file mode 100644
+> > index 000000000000..aa0deed08cee
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/intel_sgx/sgx_encl.c
+> > @@ -0,0 +1,989 @@
+> >
+> > +/**
+> > + * sgx_encl_find - find an enclave
+> > + * @mm:		mm struct of the current process
+> > + * @addr:	address in the ELRANGE
+> > + * @created	is the enclave already created?
+> > + * @vma:	the resulting VMA
+> > + *
+> > + * Finds an enclave identified by the given address. Gives back the VMA, that is
+> > + * part of the enclave, located in that address.
+> > + *
+> > + * Return:
+> > + * 0 on success,
+> > + * -EINVAL if not found,
+> > + */
+> > +int sgx_encl_find(struct mm_struct *mm, unsigned long addr, bool created,
+> > +		  struct vm_area_struct **vma)
+> > +{
+> > +	struct vm_area_struct *result;
+> > +	struct sgx_encl *encl;
+> > +
+> > +	result = find_vma(mm, addr);
+> > +	if (!result || result->vm_ops != &sgx_vm_ops || addr < result->vm_start)
+> > +		return -EINVAL;
+> > +
+> > +	encl = result->vm_private_data;
+> > +	if (created) {
+> > +		if (!encl)
+> > +			return -EINVAL;
+> > +	} else {
+> > +		if (encl)
+> > +			return -EINVAL;
+> > +	}
 > 
-> 	/* kernel community doesn't feel userspace should have access at all
-> 	  * or other kernel drivers use this
-> 	  */
-> 	if (blacklisted)
-> 		return NO;
-> 
-> 	/* unprivileged access allowed */
->  	if (whitelisted & (capabilities && whitelist->capability_need) ==
->  	whitelist->capability_need))
->  		return ALLOWED;
->  
-> 	/* not yet in whitelist, or need privs to do */
->  	if (capable(CAP_SYS_RAWIO))
->  		return ALLOWED;
->  
->  	return NO
-> 
+> What about removing @created and returning -ENOENT (or -ENXIO?) if 
+> result->vm_private_data is NULL?  Removing @created will eliminate
+> any potential confusion for the common case of @created=true.  For
+> @created=false, which should be limited to sgx_encl_create, I think
+> that explicitly checking for "ret != -ENOENT" is more intuitive
+> than checking whether or not sgx_encl_find succeeded, e.g. I knew
+> the intent of the check in sgx_encl_create ahead of time and I still
+> had to walk through sgx_encl_find to verify the behavior.
 
-This looks sensible to me. Note that the middle case isn't necessarily
-'unprviliged'. If the entyr is whitelisted and the capability_need is 0
-then it means 'anyone' but you can also set any other appropriate
-capability (eg CAP_NET_ADMIN for a WMI call that does stuff to the wifi).
+Would make sense. Thank you.
 
-Alan
+/Jarkko
