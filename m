@@ -1,69 +1,127 @@
-From: <susan.christian@state.sd.us>
-Subject: (unknown)
-Date: Fri, 13 Oct 2017 17:15:17 -0000
-Message-ID: <150791491708.32758.7452811679248789472@routit.net>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Fri, 13 Oct 2017 17:47:08 +0000
+Message-ID: <6acfc127a7a94a9cbccfed2a35c88782@ausx13mpc124.AMER.DELL.COM>
+References: <cover.1507733291.git.mario.limonciello@dell.com>
+ <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
+ <20171012110903.3ab4ed5e@alans-desktop> <20171013004645.GB1470@fury>
+ <20171013094314.GB29864@kroah.com>
+ <62ce0707d58b42618128e68f3bb9a45f@ausx13mpc124.AMER.DELL.COM>
+ <20171013155603.GA3491@kroah.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="341777621.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rt104bb121-212-211.routit.net ([212.121.104.211]:3410 "HELO
-        routit.net" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1751542AbdJMRPW (ORCPT
+Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:59970 "EHLO
+        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751981AbdJMRrK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2017 13:15:22 -0400
-Subject: 
-Content-Disposition: attachment
+        Fri, 13 Oct 2017 13:47:10 -0400
+In-Reply-To: <20171013155603.GA3491@kroah.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: greg@kroah.com
+Cc: dvhart@infradead.org, gnomes@lxorguk.ukuu.org.uk, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-UEsDBAoAAAAAAI2ITUsI0MPCewoAAHsKAAAJAAAAMTkwODYuemlwUEsDBBQAAAAIAI2ITUsa86x3
-5QkAAEwrAAAIAAAAMTkwODYuanOtWluTqkYQfk/V+Q/Gqk3cSrJxPUl2N6fOAzfFK3gXU3lAQK4C
-AoKa5L8HTTI9xl5kN3lZP2BmuvvryzTMapOdojuqtAi8mZBFlc+Vr9O0N2Z30VKeqwRFBFUI8kQC
-jy6BTYIcglYEBQQtNgTG+wlI4giaEdQlqE2QCYp8BugbBGYVhmCNoIQgm6AUJi0IkhDtHQNbsUZg
-laA5QWMNIbEtIwo9xARaIMgDVL3/VBkBU/stgSzQh5DWIwg8poBazA60tTvg6M83fE4Q5fwbPieI
-cj7YQ9BEpaIAdf4DgSOCDBO7CXzpmKNEjK8+MvAb8Cj4LrIh8ggCNUDLNQRBALZzFqRaxCGE6WAH
-QbWXxj1ohWgaw/x1AumgRshiVcqsBAlUGzVrfWEEQRfWoEaAB14IatxjRmxsLG+CV428NgfJMNxd
-lJcKRW4oS6nKCHf/o8kZQZiaOohBZsRUoI4vwvLCbQS/EoSI/ah5EECoeQQVB6q2AzFYcPqIC1MY
-F8V2AGNLxwAV22im4q63bnAD7kG5KUuJgVTD0AsKaYqKqxUd/njURzdjnKDyRQqLBspiaq9Dpnse
-svesEdkeJRy0jDFG6LJN4I2C8ErGEISmDh4V/ylRgg1Ix2I+BIOwDmWHxQ9G0v0n6HXAogmYaSZH
-WyBXQ4L4JqXfLO8iP5LrHx7r39NXBNY/VaCAzYM10hxIBzA2HIFgUUNcsERihu5hrpsDupdiuS7a
-JxF00TABzR2khmj/TxIxVI/pgNITxHYTqXRHJCgo3/EE0r67rrOzvOt0Y0Q9a4GMbiM9KfDqiEAH
-RrH/Ds8RRLXDHNXM3fAlQXQXfMupEYPwXbtImdIeeSWJgH8qO7/+VJG6g8jd8evMGRqapdiMmObp
-ZqSqV6umalQJdKY3OsTqJh33q998+KLa2Xnn389fm0YyNrTA1+N8ndNYbnF+4qTL9VHI+Fl/GHdW
-cr7c+bZvZOffCq8mRu3+l+B89ffyZ3ySkS//ay0PkfxFJ7LD5GHsGUZYe6zX6/nN86iTpKY3Pp4v
-+gZ7/l1nfjzke8JfCy3nq/NvLjqXSgTq55u5wPPv2agzIlLzN6IPX3ALN1H361VXFje9aeCP9HyZ
-f73XPkRG6KmaURsZprAPa1Uoft9Wqmb1Pv97XuykbMIP5itOHtoTtTtaHOL26a2Y3061n1vugDEI
-SglSCfJqBO58mBMTqMGkEJaCWdUMxlp3BDYIqhMETz/yBBZPoVTKiqcwiMYJQTaQYCykFblyYH1q
-WqGkZ+wpPAY1KQ4jkB8Wry7AdMsAL3l3JxHX814oTgliYSQwSTFOcRWqiNVWSedgslHH1ilSSkoR
-xqAjEsqajcUyQc0AuanDOlGMCX++ayCaJMYmRFajibvWD10f0F3uOLhkL+ReT/yRIA6e/sjRs+jV
-bpn23FfL+hqiMQLDfWAUaN7AOrmwC/MYeARx8oLILf0Uv4lOR2c1CgU12FfW/5fca1nYak9coS11
-TIFindni2Cp2KIToHsIWrWg3KgtBr5QYkVxMAMloQSldR7ANApTP7rAB6L5AbQcICwuJQHynSOhs
-KnZCn6AxrI887V2E7LUvG0LxdHECNMvFO9SNPCj2dgOYpff9V7x5Me96T7/puxtbOUGnPZ1yEOLy
-N7gstpCVPEAlK6aKbGDURmJTjRUVj4FPKfrKlv+xdBoW5sMYOI0Qi9XN3a0cLd27EYQ2cXTvdsvP
-BKI5Snn+RhNHs8zwsBiPBj3VjaCkqZu3l+LcjyVLel2E3EazvCGAAaHhow0AWgpaAixculZwJUtz
-MSUWMJqA8liYMYUrNqmbTfBNgNQAF8lhGKcivcwBntLRkCDTw7JafnwsZqg05cD0GtT0kPJslC39
-BNEVhpKDx+FFnoAsqk0s+z7VuKXL24ucvYaBZYP0GTVYxgtDQjXTO+D8Zu18x1sU2iJQuP6OBrM4
-l++e6JcUWIoqhxG9YxTviBLkCF2k3hIKNK1v2b8EcOQhLJkYFHNv70sxVzzmOzftzwsW1Q0aX3PE
-Rpt6N0Xjl+q9J3KxT0ZGHAZ+YdGA/At0YPHNYfXx36F0nb5oKtMsgXZY2S7ZmMlBbBf2lVDU82bs
-PZ87sCn10h02kFC+VcNrk1r4mjMBg5s2sjXSsfUc3vpmwJV+taN2uJsFv5gVxIsX5Qh9feKozT/G
-jb17z4sRomBsFUfi+OITHzJgTzW0u8QouWtBgXv71713NHeNGzcvQqP+yvcw+gvWq6F0PbGwEaN6
-EVwqanauItWi0aFQ9osIvoHyVQLvTycjH76w15Va7XTSkB8ykPOF/Gih8l1+0nF1yJGfUZ6OJk9/
-7n//vXY1Ip+FrHWa16g/Pr78PfO+8tv5KEVfcElLiTeu4XtLIZT+OZO5PpzIj0WMw3hhcd7AHzrp
-XmPNz2dTqt+4sZEfqrXZniNGiuZ/Uz0fCHyq/HGSYB6b3DYLxnvJSVa7npCfSlyfVDzEoWcntX8L
-uH9wAtuv5Ucc/9CU5QeuG+lwOlUVNWt5Muvx5enp+W+zvvrqasSXOWEvzy9P9e8bjafH+k9n2z98
-8f33/RGvSbNpOFhuc/paE7aZdHy3t5h3zabEe0xHH1l2O+7PtX22dZWpKa+09qYZR4HTOnhDw1LW
-PSWLtZUVOK7Y26TT2THqDmShzyZsILYGqTtaSfpu32x3t71lNo07Ri/ecAq/99xma9WN2LbGbPuq
-n/8nkDkKBK0jebM+t5ONkbKaDvODfzdZ8GF721s45t5wBbXPeJp/HKXLudxtjqdZaOw68dBXzLWa
-bt2NJOq9Fj9JZKa5yKatWTCemLaUDuR9z3WSrqKHqn9gtstd/xg64trSbCMdSvMs2iYqs5GV5m7U
-PbT1pnaMpH3Kzdhpts3dMlZ6jNBWbXbXEZfuNDP2vqU05/0WHznBINTZYTtXxO37nLBaj0wpN3I5
-mWmHSGnpJ6KdYbITJHmVbllrdNRNjV+Eojswml5X7W97hrAbWXv7sOYnbYVxB57ePTrzsa0n1mJm
-ytFwGnTa3LY/UMR13DKaKqPKknXkBX0695ebfTsIo07c5DyxpyTsZH5sun1zKyuD9spZL/lpNo61
-1nCvdxhjIPdW+0lbV8f+wV6bWeQICy1c7madmLOVzWGcZs3Rau20Z9EksfpGMJgzqqsfxXA/XTHb
-gb+0tVbACvOdNYsTt8ebO3szidodKx2vZqKj94eHmNkarhSM5JYy2y8Mdi5ZvshNOpG5Xetx12Zb
-+74+dsJRmqiG6R6DtjLhZ/O4y/Ja0J/sl6EiqVlkunOOEQVjtLUWUpv1rTk/neluuozk3lHrxP5o
-MguUnbXgjbQbqQfP2Qr95VxLxtMPX4TTlSJGx062YEw25Vokra+S8T7P0j8BUEsBAj8AFAAAAAgA
-jYhNSxrzrHflCQAATCsAAAgAJAAAAAAAAAAgAAAAAAAAADE5MDg2LmpzCgAgAAAAAAABABgA40fI
-/n9E0wHjR8j+f0TTAWN0U/5/RNMBUEsFBgAAAAABAAEAWgAAAAsKAAAAAFBLAQI/AAoAAAAAAI2I
-TUsI0MPCewoAAHsKAAAJACQAAAAAAAAAIAAAAAAAAAAxOTA4Ni56aXAKACAAAAAAAAEAGACaqcr+
-f0TTAZqpyv5/RNMB6dZV/n9E0wFQSwUGAAAAAAEAAQBbAAAAogoAAAAA
+> -----Original Message-----
+> From: Greg KH [mailto:greg@kroah.com]
+> Sent: Friday, October 13, 2017 10:56 AM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: dvhart@infradead.org; gnomes@lxorguk.ukuu.org.uk;
+> andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
+> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de
+> Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering ca=
+pability
+> for requests
+>=20
+> Just want to respond to this part first:
+>=20
+> On Fri, Oct 13, 2017 at 03:03:10PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > Take off your "kernel" hat and put on a "customer" hat for a few moment=
+s
+> > while I try to put this in practical terms why the whitelist approach d=
+oesn't
+> > scale for what I'm trying to do.
+>=20
+> Heh, you do know my background in running an enterprise kernel team,
+> right? :)
+>=20
+> > Let's say hypothetically a future version of this series that has only =
+whitelisted
+> > commands and tokens lands in a kernel that's in the next Ubuntu LTS, RH=
+EL
+> > release etc.
+> > Hardware coming out about that time works fine, you can control the var=
+ious
+> > knobs.  Then later that year some new headless hardware is released tha=
+t has
+> > zigbee controllers that work with inbox kernel drivers but you can't tu=
+rn them
+> > on and off any way BUT through the manageability interface (it's headle=
+ss!).
+> > In the manageability interface we also offer a new class/select or toke=
+n that
+> > can control the GPIO that turns on/off these radios.
+>=20
+> It's the "later" that you are missing here.  We only have code today for
+> hardware we have today.  If you come out with new hardware, you need new
+> kernel drivers for it, and as such, "old" enterprise kernels will just
+> not work properly.
+>=20
+> It's always been that way, this is nothing new, we can't predict the
+> future, and is one big reason why I think the whole "enterprise" distro
+> market is wrong and going to fail in the end :)
+>=20
+> Same goes for that new device id for the wifi chip, or the video camera
+> or the fingerprint reader.  Those have to be added to the kernel, and if
+> the distro so desires, backported to their old and crufty version.
+>=20
+
+There's plenty of cases you're absolutely right and I have a hate/hate rela=
+tionship
+regarding in this area.
+
+I was very careful in my example to pick something that it's just the manag=
+eability
+interface that changes.
+
+> This has been happening for two decades now, somehow coming up with a
+> "raw" pipe from userspace to the kernel to control the hardware just
+> because you don't want to update the kernel code, isn't going to solve
+> the issue here (hint, you now have to update your userspace code, why is
+> that suddenly easier than the kernel?)
+>=20
+
+It's easier because you can control your own destiny.
+
+Changing the kernel code means submitting something upstream,=20
+submitting something to -stable, convincing the enterprise distro folks
+to pull in your fix, adding code to your tool to test whether the kernel
+supports your newly whitelisted function adding support for this function
+to the tool and then posting that tool somewhere for consumption.
+
+Changing userspace code means changing userspace code, posting it
+somewhere and you're done.
+
+As Darren mentioned most companies are built around large organizations
+with specific touch points.  The people who decide what the next features
+will be for manageability aren't the same people who write the tools, who
+aren't the same people that implement them in the BIOS and aren't the=20
+same people that would be submitting any of this into the kernel.  Asking
+every new option to be whitelisted in the kernel and getting that translate=
+d
+into upstream, into stable, into distros, updating tools for etc is a giant=
+ process
+undertaking that companies will look at and say uh why?
+
+I think Alan's suggestions are leading this the right way though, whitelist=
+ing
+for certain unprivileged actions, blacklisting certain actions, looking for=
+ capabilities
+but still letting tools with the right capabilities or permissions do what =
+they
+want to do.  It's a balancing act.
