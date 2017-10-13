@@ -1,97 +1,66 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
- for Intel Software Guard Extensions
-Date: Fri, 13 Oct 2017 23:13:17 +0300
-Message-ID: <20171013201317.hx3g6a2245cjzgm7@linux.intel.com>
-References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
- <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
- <20171010182606.GA20986@linux.intel.com>
- <20171013195849.2vt2n6542ejc6ah4@linux.intel.com>
- <20171013200253.ou5fvexlevjet7nj@linux.intel.com>
- <20171013200824.dnwal6prligflo74@linux.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Fri, 13 Oct 2017 15:16:33 -0700
+Message-ID: <20171013221543.GA4550@fury>
+References: <cover.1507733291.git.mario.limonciello@dell.com>
+ <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
+ <20171012110903.3ab4ed5e@alans-desktop>
+ <20171013004645.GB1470@fury>
+ <20171013094314.GB29864@kroah.com>
+ <62ce0707d58b42618128e68f3bb9a45f@ausx13mpc124.AMER.DELL.COM>
+ <20171013161936.430f7a02@alans-desktop>
+ <dcf35817f6234dac99b51e9eea2c7c78@ausx13mpc124.AMER.DELL.COM>
+ <20171013204611.7487f55c@alans-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:44909 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750716AbdJMUNW (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2017 16:13:22 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171013200824.dnwal6prligflo74@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20171013204611.7487f55c@alans-desktop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Cc: Mario.Limonciello@dell.com, greg@kroah.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Oct 13, 2017 at 11:08:24PM +0300, Jarkko Sakkinen wrote:
-> On Fri, Oct 13, 2017 at 11:02:53PM +0300, Jarkko Sakkinen wrote:
-> > On Fri, Oct 13, 2017 at 10:58:49PM +0300, Jarkko Sakkinen wrote:
-> > > On Tue, Oct 10, 2017 at 11:26:06AM -0700, Sean Christopherson wrote:
-> > > > On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
-> > > > > diff --git a/drivers/platform/x86/intel_sgx/sgx_encl.c b/drivers/platform/x86/intel_sgx/sgx_encl.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..aa0deed08cee
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/platform/x86/intel_sgx/sgx_encl.c
-> > > > > @@ -0,0 +1,989 @@
-> > > > >
-> > > > > +/**
-> > > > > + * sgx_encl_find - find an enclave
-> > > > > + * @mm:		mm struct of the current process
-> > > > > + * @addr:	address in the ELRANGE
-> > > > > + * @created	is the enclave already created?
-> > > > > + * @vma:	the resulting VMA
-> > > > > + *
-> > > > > + * Finds an enclave identified by the given address. Gives back the VMA, that is
-> > > > > + * part of the enclave, located in that address.
-> > > > > + *
-> > > > > + * Return:
-> > > > > + * 0 on success,
-> > > > > + * -EINVAL if not found,
-> > > > > + */
-> > > > > +int sgx_encl_find(struct mm_struct *mm, unsigned long addr, bool created,
-> > > > > +		  struct vm_area_struct **vma)
-> > > > > +{
-> > > > > +	struct vm_area_struct *result;
-> > > > > +	struct sgx_encl *encl;
-> > > > > +
-> > > > > +	result = find_vma(mm, addr);
-> > > > > +	if (!result || result->vm_ops != &sgx_vm_ops || addr < result->vm_start)
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	encl = result->vm_private_data;
-> > > > > +	if (created) {
-> > > > > +		if (!encl)
-> > > > > +			return -EINVAL;
-> > > > > +	} else {
-> > > > > +		if (encl)
-> > > > > +			return -EINVAL;
-> > > > > +	}
-> > > > 
-> > > > What about removing @created and returning -ENOENT (or -ENXIO?) if 
-> > > > result->vm_private_data is NULL?  Removing @created will eliminate
-> > > > any potential confusion for the common case of @created=true.  For
-> > > > @created=false, which should be limited to sgx_encl_create, I think
-> > > > that explicitly checking for "ret != -ENOENT" is more intuitive
-> > > > than checking whether or not sgx_encl_find succeeded, e.g. I knew
-> > > > the intent of the check in sgx_encl_create ahead of time and I still
-> > > > had to walk through sgx_encl_find to verify the behavior.
-> > > 
-> > > Would make sense. Thank you.
-> > > 
-> > > /Jarkko
+On Fri, Oct 13, 2017 at 08:46:11PM +0100, One Thousand Gnomes wrote:
+> > I think I'd actually like to meld this with your other ideas and what I've 
+> > currently got.  What do you think of this approach:
 > > 
-> > And in the case of ioctls (sgx_encl_get()) it would probably make sense
-> > to deliver -ENOENT back to the user space instead of -EINVAL, wouldn't it?
+> > 	/* kernel community doesn't feel userspace should have access at all
+> > 	  * or other kernel drivers use this
+> > 	  */
+> > 	if (blacklisted)
+> > 		return NO;
 > > 
-> > /Jarkko
+> > 	/* unprivileged access allowed */
+> >  	if (whitelisted & (capabilities && whitelist->capability_need) ==
+> >  	whitelist->capability_need))
+> >  		return ALLOWED;
+> >  
+> > 	/* not yet in whitelist, or need privs to do */
+> >  	if (capable(CAP_SYS_RAWIO))
+> >  		return ALLOWED;
+> >  
+> >  	return NO
+> > 
 > 
-> Please ignore this response! :-)
-> 
-> /Jarkko
+> This looks sensible to me. Note that the middle case isn't necessarily
+> 'unprviliged'. If the entyr is whitelisted and the capability_need is 0
+> then it means 'anyone' but you can also set any other appropriate
+> capability (eg CAP_NET_ADMIN for a WMI call that does stuff to the wifi).
 
-Or actually why not. Does not harm to tell user space that it is an
-enclave VMA but not yet created.
+Thank you Alan. This model appears consistent in intent with some of the higher
+level WMI access privileges in the Windows OS, and translate fairly well to
+Linux.
 
-/Jarkko
+This seems like a good model at least for the dell smbios driver in this thread.
+
+I do have some concerns about the ability to audit the buffer in the general
+case. Dell uses a sensible buffer format with 'command' and 'class' fields, but
+the WMI spec explicitly makes no requirement on the format of the buffer. This
+may prove much harder to implement for other vendors depending on their format -
+but perhaps we accept that and deal with that as it comes up.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
