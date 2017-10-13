@@ -1,63 +1,55 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
- for Intel Software Guard Extensions
-Date: Fri, 13 Oct 2017 22:16:22 +0300
-Message-ID: <20171013191622.tijzukuxzghmpsas@linux.intel.com>
-References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
- <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
- <20171012164815.GA8145@linux.intel.com>
+From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v7 10/15] platform/x86: dell-smbios: add filtering
+ capability for requests
+Date: Fri, 13 Oct 2017 20:46:11 +0100
+Message-ID: <20171013204611.7487f55c@alans-desktop>
+References: <cover.1507733291.git.mario.limonciello@dell.com>
+        <83dc225624f1cde5ee1797aebc945732444ded91.1507733291.git.mario.limonciello@dell.com>
+        <20171012110903.3ab4ed5e@alans-desktop>
+        <20171013004645.GB1470@fury>
+        <20171013094314.GB29864@kroah.com>
+        <62ce0707d58b42618128e68f3bb9a45f@ausx13mpc124.AMER.DELL.COM>
+        <20171013161936.430f7a02@alans-desktop>
+        <dcf35817f6234dac99b51e9eea2c7c78@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:63692 "EHLO mga07.intel.com"
+Received: from www.llwyncelyn.cymru ([82.70.14.225]:53608 "EHLO fuzix.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751057AbdJMTQ0 (ORCPT
+        id S1751650AbdJMTqu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2017 15:16:26 -0400
-Content-Disposition: inline
-In-Reply-To: <20171012164815.GA8145@linux.intel.com>
+        Fri, 13 Oct 2017 15:46:50 -0400
+In-Reply-To: <dcf35817f6234dac99b51e9eea2c7c78@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: greg@kroah.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
 
-On Thu, Oct 12, 2017 at 09:48:15AM -0700, Sean Christopherson wrote:
-> On Tue, Oct 10, 2017 at 05:32:53PM +0300, Jarkko Sakkinen wrote:
-> > diff --git a/drivers/platform/x86/intel_sgx/sgx_main.c b/drivers/platform/x86/intel_sgx/sgx_main.c
-> > new file mode 100644
-> > index 000000000000..2ad2dc88edff
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel_sgx/sgx_main.c
-> >
-> > +static dev_t sgx_devt;
-> > +
-> > +static void sgx_dev_release(struct device *dev)
-> > +{
-> > +	struct sgx_context *ctx = container_of(dev, struct sgx_context, dev);
-> > +	kfree(ctx);
-> > +}
-> > +
-> > +static struct sgx_context *sgx_ctx_alloc(struct device *parent)
-> > +{
-> > +	struct sgx_context *ctx;
-> > +
-> > +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-> > +	if (!ctx)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	device_initialize(&ctx->dev);
-> > +
-> > +	ctx->dev.bus = &sgx_subsys;
-> > +	ctx->dev.parent = parent;
-> > +	ctx->dev.devt = MKDEV(MAJOR(sgx_devt), 0);
-> > +	ctx->dev.release = sgx_dev_release;
-> > +
-> > +	dev_set_name(&ctx->dev, "sgx");
+> I think I'd actually like to meld this with your other ideas and what I've 
+> currently got.  What do you think of this approach:
 > 
-> /dev/sgx is created with 0600 permissions, does access to SGX really
-> need to be restricted to root by default?
+> 	/* kernel community doesn't feel userspace should have access at all
+> 	  * or other kernel drivers use this
+> 	  */
+> 	if (blacklisted)
+> 		return NO;
+> 
+> 	/* unprivileged access allowed */
+>  	if (whitelisted & (capabilities && whitelist->capability_need) ==
+>  	whitelist->capability_need))
+>  		return ALLOWED;
+>  
+> 	/* not yet in whitelist, or need privs to do */
+>  	if (capable(CAP_SYS_RAWIO))
+>  		return ALLOWED;
+>  
+>  	return NO
+> 
 
-I personally am just a fan of whitelisting. It's only matter of a udev
-rule.
+This looks sensible to me. Note that the middle case isn't necessarily
+'unprviliged'. If the entyr is whitelisted and the capability_need is 0
+then it means 'anyone' but you can also set any other appropriate
+capability (eg CAP_NET_ADMIN for a WMI call that does stuff to the wifi).
 
-/Jarkko
+Alan
