@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v8 12/15] platform/x86: dell-smbios: Add filtering support
-Date: Sat, 14 Oct 2017 00:32:50 -0500
-Message-ID: <8f15da06172673db76adec86518304d2e54b2741.1507958847.git.mario.limonciello@dell.com>
+Subject: [PATCH v8 14/15] platform/x86: wmi: create userspace interface for drivers
+Date: Sat, 14 Oct 2017 00:32:52 -0500
+Message-ID: <f1e7105994dc973dea649f1fb6b0c58b0760c31b.1507958847.git.mario.limonciello@dell.com>
 References: <cover.1507958847.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1507958847.git.mario.limonciello@dell.com>
@@ -12,292 +12,266 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-When a userspace interface is introduced to dell-smbios filtering
-support will be used to make sure that userspace doesn't make calls
-deemed unsafe or that can cause the kernel drivers to get out of
-sync.
+For WMI operations that are only Set or Query read or write sysfs
+attributes created by WMI vendor drivers make sense.
 
-A blacklist is provided for the following:
-- Items that are in use by other kernel drivers
-- Items that are deemed unsafe (diagnostics, write-once, etc)
-- Any items in the blacklist will be rejected.
+For other WMI operations that are run on Method, there needs to be a
+way to guarantee to userspace that the results from the method call
+belong to the data request to the method call.  Sysfs attributes don't
+work well in this scenario because two userspace processes may be
+competing at reading/writing an attribute and step on each other's
+data.
 
-Following that a whitelist is provided as follows:
-- Each item has an associated capability.  If a userspace interface
-  accesses this item, that capability will be tested to filter
-  the request.
-- If the process provides CAP_SYS_RAWIO the whitelist will be
-  overridden.
+When a WMI vendor driver declares an ioctl callback in the wmi_driver
+the WMI bus driver will create a character device that maps to that
+function.
 
-When an item is not in the blacklist, or whitelist and the process
-is run with insufficient capabilities the call will be rejected.
+That character device will correspond to this path:
+/dev/wmi/$driver
+
+The WMI bus driver will interpret the IOCTL calls, test them for
+a valid instance and pass them on to the vendor driver to run.
+
+This creates an implicit policy that only driver per character
+device.  If a module matches multiple GUID's, the wmi_devices
+will need to be all handled by the same wmi_driver if the same
+character device is used.
+
+The WMI vendor drivers will be responsible for managing access to
+this character device and proper locking on it.
+
+When a WMI vendor driver is unloaded the WMI bus driver will clean
+up the character device.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/dell-smbios.c | 190 +++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smbios.h |  11 +++
- 2 files changed, 201 insertions(+)
+ MAINTAINERS                |   1 +
+ drivers/platform/x86/wmi.c | 116 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/wmi.h        |   6 +++
+ include/uapi/linux/wmi.h   |  26 ++++++++++
+ 4 files changed, 149 insertions(+)
+ create mode 100644 include/uapi/linux/wmi.h
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index b1939abc4216..4aede844de11 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include "dell-smbios.h"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8fd2f0d2ddf6..84afbf8ef7d5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -384,6 +384,7 @@ ACPI WMI DRIVER
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Orphan
+ F:	drivers/platform/x86/wmi.c
++F:	include/uapi/linux/wmi.h
  
-+static u32 da_supported_commands;
- static int da_num_tokens;
- static struct platform_device *platform_device;
- static struct calling_interface_token *da_tokens;
-@@ -38,6 +39,91 @@ struct smbios_device {
- 	int (*call_fn)(struct calling_interface_buffer *);
+ AD1889 ALSA SOUND DRIVER
+ M:	Thibaut Varene <T-Bone@parisc-linux.org>
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 63d01f98bf4c..d1742d392cd1 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -38,12 +38,15 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
++#include <linux/uaccess.h>
+ #include <linux/uuid.h>
+ #include <linux/wmi.h>
++#include <uapi/linux/wmi.h>
+ 
+ ACPI_MODULE_NAME("wmi");
+ MODULE_AUTHOR("Carlos Corbacho");
+@@ -69,6 +72,7 @@ struct wmi_block {
+ 	struct wmi_device dev;
+ 	struct list_head list;
+ 	struct guid_block gblock;
++	struct miscdevice misc_dev;
+ 	struct acpi_device *acpi_device;
+ 	wmi_notify_handler handler;
+ 	void *handler_data;
+@@ -796,12 +800,119 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	return 0;
+ }
+ 
++static long match_ioctl(struct file *filp, unsigned int cmd, unsigned long arg,
++			int compat)
++{
++	struct wmi_ioctl_buffer __user *input =
++		(struct wmi_ioctl_buffer __user *) arg;
++	struct wmi_driver *wdriver = NULL;
++	struct wmi_block *wblock = NULL;
++	struct wmi_block *next = NULL;
++	const char *driver_name;
++	u64 size;
++	int ret;
++
++	if (_IOC_TYPE(cmd) != WMI_IOC)
++		return -ENOTTY;
++
++	driver_name = filp->f_path.dentry->d_iname;
++
++	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
++		wdriver = container_of(wblock->dev.dev.driver,
++					struct wmi_driver, driver);
++		if (!wdriver)
++			continue;
++		if (strcmp(driver_name, wdriver->driver.name) == 0)
++			break;
++	}
++
++	if (!wdriver)
++		return -ENODEV;
++
++	/* make sure we're not calling a higher instance than exists*/
++	if (_IOC_NR(cmd) >= wblock->gblock.instance_count)
++		return -EINVAL;
++
++	/* check that required buffer size was declared by driver */
++	if (!wblock->req_buf_size) {
++		dev_err(&wblock->dev.dev, "Required buffer size not set\n");
++		return -EINVAL;
++	}
++	if (get_user(size, &input->length)) {
++		dev_dbg(&wblock->dev.dev, "Read length from user failed\n");
++		return -EFAULT;
++	}
++	/* if it's too small, abort */
++	if (size < wblock->req_buf_size) {
++		dev_err(&wblock->dev.dev,
++			"Buffer %lld too small, need at least %lld\n",
++			size, wblock->req_buf_size);
++		return -EINVAL;
++	}
++	/* if it's too big, warn, driver will only use what is needed */
++	if (size > wblock->req_buf_size)
++		dev_warn(&wblock->dev.dev,
++			"Buffer %lld is bigger than required %lld\n",
++			size, wblock->req_buf_size);
++
++	if (!try_module_get(wdriver->driver.owner))
++		return -EBUSY;
++	if (compat) {
++		if (wdriver->compat_ioctl)
++			ret = wdriver->compat_ioctl(&wblock->dev, cmd, arg);
++		else
++			ret = -ENODEV;
++	} else
++		ret = wdriver->unlocked_ioctl(&wblock->dev, cmd, arg);
++	module_put(wdriver->driver.owner);
++
++	return ret;
++}
++static long wmi_unlocked_ioctl(struct file *filp, unsigned int cmd,
++			       unsigned long arg)
++{
++	return match_ioctl(filp, cmd, arg, 0);
++}
++
++static long wmi_compat_ioctl(struct file *filp, unsigned int cmd,
++			     unsigned long arg)
++{
++	return match_ioctl(filp, cmd, arg, 1);
++}
++
++static const struct file_operations wmi_fops = {
++	.owner		= THIS_MODULE,
++	.unlocked_ioctl	= wmi_unlocked_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = wmi_compat_ioctl,
++#endif
++};
++
+ static int wmi_dev_probe(struct device *dev)
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	struct wmi_driver *wdriver =
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
++	char *buf;
++
++	/* driver wants a character device made */
++	if (wdriver->unlocked_ioctl) {
++		buf = kmalloc(strlen(wdriver->driver.name) + 4, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++		sprintf(buf, "wmi/%s", wdriver->driver.name);
++		wblock->misc_dev.minor = MISC_DYNAMIC_MINOR;
++		wblock->misc_dev.name = buf;
++		wblock->misc_dev.fops = &wmi_fops;
++		wblock->misc_dev.mode = 0444;
++		ret = misc_register(&wblock->misc_dev);
++		if (ret) {
++			dev_warn(dev, "failed to register char dev: %d", ret);
++			kfree(buf);
++			return -ENOMEM;
++		}
++	}
+ 
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
+ 		dev_warn(dev, "failed to enable device -- probing anyway\n");
+@@ -822,6 +933,11 @@ static int wmi_dev_remove(struct device *dev)
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
+ 
++	if (wdriver->unlocked_ioctl) {
++		misc_deregister(&wblock->misc_dev);
++		kfree(wblock->misc_dev.name);
++	}
++
+ 	if (wdriver->remove)
+ 		ret = wdriver->remove(dev_to_wdev(dev));
+ 
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index a9a72a4c5ed8..1f52dc49a896 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -50,6 +50,12 @@ struct wmi_driver {
+ 	int (*probe)(struct wmi_device *wdev);
+ 	int (*remove)(struct wmi_device *wdev);
+ 	void (*notify)(struct wmi_device *device, union acpi_object *data);
++	long (*unlocked_ioctl)(struct wmi_device *wdev, unsigned int cmd,
++				unsigned long arg);
++#ifdef CONFIG_COMPAT
++	long (*compat_ioctl)(struct wmi_device *wdev, unsigned int cmd,
++				unsigned long arg);
++#endif
  };
  
-+struct smbios_call {
-+	u32 need_capability;
-+	int class;
-+	int select;
+ extern int __must_check __wmi_driver_register(struct wmi_driver *driver,
+diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
+new file mode 100644
+index 000000000000..7e52350ac9b3
+--- /dev/null
++++ b/include/uapi/linux/wmi.h
+@@ -0,0 +1,26 @@
++/*
++ *  User API methods for ACPI-WMI mapping driver
++ *
++ *  Copyright (C) 2017 Dell, Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++#ifndef _UAPI_LINUX_WMI_H
++#define _UAPI_LINUX_WMI_H
++
++#include <linux/types.h>
++
++/* WMI bus will filter all WMI vendor driver requests through this IOC */
++#define WMI_IOC 'W'
++
++/* All ioctl requests through WMI should declare their size followed by
++ * relevant data objects
++ */
++struct wmi_ioctl_buffer {
++	__u64	length;
++	__u8	data[];
 +};
 +
-+/* calls that are whitelisted for given capabilities */
-+static struct smbios_call call_whitelist[] = {
-+	/* generally tokens are allowed, but may be further filtered or
-+	 * restricted by token blacklist or whitelist
-+	 */
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_STD},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_AC},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_BAT},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_STD},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_AC},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_BAT},
-+	/* used by userspace: fwupdate */
-+	{CAP_SYS_ADMIN, CLASS_ADMIN_PROP,	SELECT_ADMIN_PROP},
-+	/* used by userspace: fwupd */
-+	{CAP_SYS_ADMIN,	CLASS_INFO,		SELECT_DOCK},
-+	{CAP_SYS_ADMIN,	CLASS_FLASH_INTERFACE,	SELECT_FLASH_INTERFACE},
-+};
-+
-+/* calls that are explicitly blacklisted */
-+static struct smbios_call call_blacklist[] = {
-+	{0x0000, 01, 07}, /* manufacturing use */
-+	{0x0000, 06, 05}, /* manufacturing use */
-+	{0x0000, 11, 03}, /* write once */
-+	{0x0000, 11, 07}, /* write once */
-+	{0x0000, 11, 11}, /* write once */
-+	{0x0000, 19, -1}, /* diagnostics */
-+	/* handled by kernel: dell-laptop */
-+	{0x0000, CLASS_INFO, SELECT_RFKILL},
-+	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
-+};
-+
-+struct token_range {
-+	u32 need_capability;
-+	u16 min;
-+	u16 max;
-+};
-+
-+/* tokens that are whitelisted for given capabilities */
-+static struct token_range token_whitelist[] = {
-+	/* used by userspace: fwupdate */
-+	{CAP_SYS_ADMIN,	CAPSULE_EN_TOKEN,	CAPSULE_DIS_TOKEN},
-+	/* can indicate to userspace that WMI is needed */
-+	{0x0000,	WSMT_EN_TOKEN,		WSMT_DIS_TOKEN}
-+};
-+
-+/* tokens that are explicitly blacklisted */
-+static struct token_range token_blacklist[] = {
-+	{0x0000, 0x0058, 0x0059}, /* ME use */
-+	{0x0000, 0x00CD, 0x00D0}, /* raid shadow copy */
-+	{0x0000, 0x013A, 0x01FF}, /* sata shadow copy */
-+	{0x0000, 0x0175, 0x0176}, /* write once */
-+	{0x0000, 0x0195, 0x0197}, /* diagnostics */
-+	{0x0000, 0x01DC, 0x01DD}, /* manufacturing use */
-+	{0x0000, 0x027D, 0x0284}, /* diagnostics */
-+	{0x0000, 0x02E3, 0x02E3}, /* manufacturing use */
-+	{0x0000, 0x02FF, 0x02FF}, /* manufacturing use */
-+	{0x0000, 0x0300, 0x0302}, /* manufacturing use */
-+	{0x0000, 0x0325, 0x0326}, /* manufacturing use */
-+	{0x0000, 0x0332, 0x0335}, /* fan control */
-+	{0x0000, 0x0350, 0x0350}, /* manufacturing use */
-+	{0x0000, 0x0363, 0x0363}, /* manufacturing use */
-+	{0x0000, 0x0368, 0x0368}, /* manufacturing use */
-+	{0x0000, 0x03F6, 0x03F7}, /* manufacturing use */
-+	{0x0000, 0x049E, 0x049F}, /* manufacturing use */
-+	{0x0000, 0x04A0, 0x04A3}, /* disagnostics */
-+	{0x0000, 0x04E6, 0x04E7}, /* manufacturing use */
-+	{0x0000, 0x4000, 0x7FFF}, /* internal BIOS use */
-+	{0x0000, 0x9000, 0x9001}, /* internal BIOS use */
-+	{0x0000, 0xA000, 0xBFFF}, /* write only */
-+	{0x0000, 0xEFF0, 0xEFFF}, /* internal BIOS use */
-+	/* handled by kernel: dell-laptop */
-+	{0x0000, BRIGHTNESS_TOKEN,	BRIGHTNESS_TOKEN},
-+	{0x0000, KBD_LED_OFF_TOKEN,	KBD_LED_AUTO_TOKEN},
-+	{0x0000, KBD_LED_AC_TOKEN,	KBD_LED_AC_TOKEN},
-+	{0x0000, KBD_LED_AUTO_25_TOKEN,	KBD_LED_AUTO_75_TOKEN},
-+	{0x0000, KBD_LED_AUTO_100_TOKEN,	KBD_LED_AUTO_100_TOKEN},
-+	{0x0000, GLOBAL_MIC_MUTE_ENABLE,	GLOBAL_MIC_MUTE_DISABLE},
-+};
-+
- static LIST_HEAD(smbios_device_list);
- 
- int dell_smbios_error(int value)
-@@ -90,6 +176,108 @@ void dell_smbios_unregister_device(struct device *d)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_unregister_device);
- 
-+int dell_smbios_call_filter(struct device *d,
-+			    struct calling_interface_buffer *buffer)
-+{
-+	u16 t = 0;
-+	int i;
-+
-+	/* can't make calls over 30 */
-+	if (buffer->class > 30) {
-+		dev_dbg(d, "class too big: %u\n", buffer->class);
-+		return -EINVAL;
-+	}
-+
-+	/* supported calls on the particular system */
-+	if (!(da_supported_commands & (1 << buffer->class))) {
-+		dev_dbg(d, "invalid command, supported commands: 0x%8x\n",
-+			da_supported_commands);
-+		return -EINVAL;
-+	}
-+
-+	/* match against call blacklist  */
-+	for (i = 0; i < ARRAY_SIZE(call_blacklist); i++) {
-+		if (buffer->class != call_blacklist[i].class)
-+			continue;
-+		if (buffer->select != call_blacklist[i].select &&
-+		    call_blacklist[i].select != -1)
-+			continue;
-+		dev_dbg(d, "blacklisted command: %u/%u\n",
-+			buffer->class, buffer->select);
-+		return -EINVAL;
-+	}
-+
-+	/* if a token call, find token ID */
-+	if ((buffer->class == CLASS_TOKEN_READ && buffer->select < 3) ||
-+	    (buffer->class == CLASS_TOKEN_WRITE && buffer->select < 3)) {
-+		/* find the matching token ID */
-+		for (i = 0; i < da_num_tokens; i++) {
-+			if (da_tokens[i].location != buffer->input[0])
-+				continue;
-+			t = da_tokens[i].tokenID;
-+			break;
-+		}
-+
-+		/* token call; but token didn't exist */
-+		if (!t) {
-+			dev_dbg(d, "token at location %04x doesn't exist\n",
-+				buffer->input[0]);
-+			return -EINVAL;
-+		}
-+
-+		/* match against token blacklist */
-+		for (i = 0; i < ARRAY_SIZE(token_blacklist); i++) {
-+			if (!token_blacklist[i].min || !token_blacklist[i].max)
-+				continue;
-+			if (t >= token_blacklist[i].min &&
-+			    t <= token_blacklist[i].max)
-+				return -EINVAL;
-+		}
-+
-+		/* match against token whitelist */
-+		for (i = 0; i < ARRAY_SIZE(token_whitelist); i++) {
-+			if (!token_whitelist[i].min || !token_whitelist[i].max)
-+				continue;
-+			if (t < token_whitelist[i].min ||
-+			    t > token_whitelist[i].max)
-+				continue;
-+			if (!token_whitelist[i].need_capability ||
-+			    capable(token_whitelist[i].need_capability)) {
-+				dev_dbg(d, "whitelisted token: %x\n", t);
-+				return 0;
-+			}
-+
-+		}
-+	}
-+	/* match against call whitelist */
-+	for (i = 0; i < ARRAY_SIZE(call_whitelist); i++) {
-+		if (buffer->class != call_whitelist[i].class)
-+			continue;
-+		if (buffer->select != call_whitelist[i].select)
-+			continue;
-+		if (!call_whitelist[i].need_capability ||
-+		    capable(call_whitelist[i].need_capability)) {
-+			dev_dbg(d, "whitelisted capable command: %u/%u\n",
-+			buffer->class, buffer->select);
-+			return 0;
-+		}
-+		dev_dbg(d, "missing capability %d for %u/%u\n",
-+			call_whitelist[i].need_capability,
-+			buffer->class, buffer->select);
-+
-+	}
-+
-+	/* not in a whitelist, only allow processes with capabilities */
-+	if (capable(CAP_SYS_RAWIO)) {
-+		dev_dbg(d, "Allowing %u/%u due to CAP_SYS_RAWIO\n",
-+			buffer->class, buffer->select);
-+		return 0;
-+	}
-+
-+	return -EACCES;
-+}
-+EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
-+
- int dell_smbios_call(struct calling_interface_buffer *buffer)
- {
- 	int (*call_fn)(struct calling_interface_buffer *) = NULL;
-@@ -168,6 +356,8 @@ static void __init parse_da_table(const struct dmi_header *dm)
- 	if (dm->length < 17)
- 		return;
- 
-+	da_supported_commands = table->supportedCmds;
-+
- 	new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
- 				 sizeof(struct calling_interface_token),
- 				 GFP_KERNEL);
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index db6a16e5f87c..91b9c615452d 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -26,9 +26,14 @@
- #define SELECT_TOKEN_AC 2
- #define CLASS_KBD_BACKLIGHT 4
- #define SELECT_KBD_BACKLIGHT 11
-+#define CLASS_FLASH_INTERFACE 7
-+#define SELECT_FLASH_INTERFACE 3
-+#define CLASS_ADMIN_PROP 10
-+#define SELECT_ADMIN_PROP 3
- #define CLASS_INFO 17
- #define SELECT_RFKILL 11
- #define SELECT_APP_REGISTRATION	3
-+#define SELECT_DOCK 22
- 
- /* Tokens used in kernel drivers, any of these
-  * should be filtered from userspace access
-@@ -44,6 +49,10 @@
- #define KBD_LED_AUTO_100_TOKEN	0x02F6
- #define GLOBAL_MIC_MUTE_ENABLE	0x0364
- #define GLOBAL_MIC_MUTE_DISABLE	0x0365
-+
-+/* tokens whitelisted to userspace use */
-+#define CAPSULE_EN_TOKEN	0x0461
-+#define CAPSULE_DIS_TOKEN	0x0462
- #define WSMT_EN_TOKEN		0x04EC
- #define WSMT_DIS_TOKEN		0x04ED
- 
-@@ -80,6 +89,8 @@ int dell_smbios_register_device(struct device *d, void *call_fn);
- void dell_smbios_unregister_device(struct device *d);
- 
- int dell_smbios_error(int value);
-+int dell_smbios_call_filter(struct device *d,
-+	struct calling_interface_buffer *buffer);
- int dell_smbios_call(struct calling_interface_buffer *buffer);
- 
- struct calling_interface_token *dell_smbios_find_token(int tokenid);
++#endif
 -- 
 2.14.1
