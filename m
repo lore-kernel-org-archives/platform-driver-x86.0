@@ -1,60 +1,55 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 0/3] i2c: Hookup typec power-negotation to the PMIC and
- charger
-Date: Sat, 14 Oct 2017 14:04:11 +0200
-Message-ID: <e875d3d3-d62c-7363-e596-9c0dbeadce5d@redhat.com>
-References: <20171011094121.6108-1-hdegoede@redhat.com>
- <CAHp75VeqskRsmedvA3eAx27o8WeZzH44880T=Q=+1mD+1nSSAg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
+Date: Sat, 14 Oct 2017 16:50:27 +0300
+Message-ID: <CAHp75VdFLfWiy+wGDpJtoWCUZtLpXkpGi-s1HzRWOPnxh8foQQ@mail.gmail.com>
+References: <20170914063515.669a95d04dbb6b53be537852cb8ecb8c.39d3e774b5.wbe@email22.secureserver.net>
+ <20170914135420.GO32278@pali> <CABFtUbQXBE+n+HV0cgMv0wLXuRkMqyp4J=Hf4BiBj8Hxc9eUaw@mail.gmail.com>
+ <20170914152538.GQ32278@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751401AbdJNMEO (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:57138 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753026AbdJNNu2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2017 08:04:14 -0400
-In-Reply-To: <CAHp75VeqskRsmedvA3eAx27o8WeZzH44880T=Q=+1mD+1nSSAg@mail.gmail.com>
-Content-Language: en-US
+        Sat, 14 Oct 2017 09:50:28 -0400
+In-Reply-To: <20170914152538.GQ32278@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <Mario_Limonciello@dell.com>, "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi,
-
-On 14-10-17 12:45, Andy Shevchenko wrote:
-> On Wed, Oct 11, 2017 at 12:41 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi All,
+On Thu, Sep 14, 2017 at 6:25 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> On Thursday 14 September 2017 16:33:57 Gabriele Mazzotta wrote:
+>> 2017-09-14 15:54 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+>> > Adding Gabriele to thread, IIRC you have machine which uses
+>> > "supported keyboard light brightness levels"
+>> > Can you look at this bug, if your machine is affected by it too?
 >>
->> These are the last 3 patches from all my work to add support for
->> USB PD charging to Intel Cherry Trail devices with a Whiskey Cove PMIC
->> and fusb302 Type-C controller.
->>
->> With these 3 patches these devices change from slowly discharging
->> at 5V 0.5A to actually charging at 12V 2A, so getting these upstream
->> is important for users of these devices.
->>
->> Wolfram does not really have time to review the first 2 patches, so if
->> someone else (from the people in the Cc) can review the first 2 patches
->> and esp. the first patch, so that we can get this merged for 4.15, then
->> that would be great.
-> 
-> The person comes to my mind is Heikki,
-> Though I dunno he has time either.
+>> My keyboard has two brightness levels + off. The value of
+>> max_brightness is 2, as expected.
+>
+> Ah :-(
+>
+> So you have "Supported Keyboard light brightness levels :  2" and you
+> can se value 0, 1 or 2.
+>
+> And Gabriel has "Supported Keyboard light brightness levels :  10" and
+> can set only values 0..9. But not 10.
+>
+> Any idea how to solve this situation?
+>
+> CCing Mario from Dell. Can you recheck what is wrong here? Or why
+> Dell Latitude E6410 behaves differently?
 
-The first patch, although it is an i2c-core change, is really
-quite simple. I believe anyone can review it. But it does need
-someone other then me to take a proper look (and not just do
-a code only review) because it is a core change. Maybe there
-is another way to solve the problem (persistent / predictable
-device-names for i2c devices instantiated through board-data),
-but I don't think so.
+To be clear, am I waiting for new version?
 
-Also note this is all kernel internal stuff, so we can always
-change it later. Although it would be better to get it right in
-one go.
+In any case I mark it as Changes Requested in my patchwork queue.
 
-Regards,
+Feel free to send a new version.
 
-Hans
+--=20
+With Best Regards,
+Andy Shevchenko
