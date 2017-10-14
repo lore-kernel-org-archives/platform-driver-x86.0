@@ -1,55 +1,66 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: keyboard backlight max_brightness bug on Dell Latitude E6410
-Date: Sat, 14 Oct 2017 16:50:27 +0300
-Message-ID: <CAHp75VdFLfWiy+wGDpJtoWCUZtLpXkpGi-s1HzRWOPnxh8foQQ@mail.gmail.com>
-References: <20170914063515.669a95d04dbb6b53be537852cb8ecb8c.39d3e774b5.wbe@email22.secureserver.net>
- <20170914135420.GO32278@pali> <CABFtUbQXBE+n+HV0cgMv0wLXuRkMqyp4J=Hf4BiBj8Hxc9eUaw@mail.gmail.com>
- <20170914152538.GQ32278@pali>
+Subject: Re: [PATCH][next] platform/x86: intel_cht_int33fe: make a couple of
+ local functions static
+Date: Sat, 14 Oct 2017 16:51:54 +0300
+Message-ID: <CAHp75VfPjxRpzLGrzjWR5WaTQjvpL3x7x+UGvnHz6=ZvyCgPGg@mail.gmail.com>
+References: <20171011093010.17173-1-colin.king@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:57138 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753026AbdJNNu2 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2017 09:50:28 -0400
-In-Reply-To: <20170914152538.GQ32278@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <Mario_Limonciello@dell.com>, "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20171011093010.17173-1-colin.king@canonical.com>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Colin King <colin.king@canonical.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 14, 2017 at 6:25 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Thursday 14 September 2017 16:33:57 Gabriele Mazzotta wrote:
->> 2017-09-14 15:54 GMT+02:00 Pali Roh=C3=A1r <pali.rohar@gmail.com>:
->> > Adding Gabriele to thread, IIRC you have machine which uses
->> > "supported keyboard light brightness levels"
->> > Can you look at this bug, if your machine is affected by it too?
->>
->> My keyboard has two brightness levels + off. The value of
->> max_brightness is 2, as expected.
+On Wed, Oct 11, 2017 at 12:30 PM, Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Ah :-(
+> The functions cht_int33fe_check_for_max17047 and cht_int33fe_find_max17047
+> are local to the source and do not need to be in global scope, so make
+> them static.
 >
-> So you have "Supported Keyboard light brightness levels :  2" and you
-> can se value 0, 1 or 2.
->
-> And Gabriel has "Supported Keyboard light brightness levels :  10" and
-> can set only values 0..9. But not 10.
->
-> Any idea how to solve this situation?
->
-> CCing Mario from Dell. Can you recheck what is wrong here? Or why
-> Dell Latitude E6410 behaves differently?
+> Cleans up sparse warnings:
+> symbol 'cht_int33fe_check_for_max17047' was not declared. Should it be
+> static?
+> symbol 'cht_int33fe_find_max17047' was not declared. Should it be static?
 
-To be clear, am I waiting for new version?
+Pushed to my review queue, thanks!
 
-In any case I mark it as Changes Requested in my patchwork queue.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/platform/x86/intel_cht_int33fe.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> index 94716b2fbc00..286c6207765d 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> @@ -42,7 +42,7 @@ struct cht_int33fe_data {
+>   * These helpers are used to work around this by checking if an i2c-client
+>   * for the max17047 has already been registered.
+>   */
+> -int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+> +static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+>  {
+>         struct i2c_client **max17047 = data;
+>         struct acpi_device *adev;
+> @@ -62,7 +62,7 @@ int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+>         return 1;
+>  }
+>
+> -struct i2c_client *cht_int33fe_find_max17047(void)
+> +static struct i2c_client *cht_int33fe_find_max17047(void)
+>  {
+>         struct i2c_client *max17047 = NULL;
+>
+> --
+> 2.14.1
+>
 
-Feel free to send a new version.
 
---=20
+
+-- 
 With Best Regards,
 Andy Shevchenko
