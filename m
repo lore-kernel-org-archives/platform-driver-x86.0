@@ -1,65 +1,67 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Mon, 16 Oct 2017 15:37:05 +0200
-Message-ID: <20171016133705.cf4f5jqgq4ebhfcj@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
+Date: Mon, 16 Oct 2017 13:48:05 +0000
+Message-ID: <a9a6d127cdc94f1ba40ce0d2dff78156@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1507958847.git.mario.limonciello@dell.com>
  <20171016073307.ahdc6ogzytzwckpq@pali>
  <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
+ <20171016133705.cf4f5jqgq4ebhfcj@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:54683 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752151AbdJPNhI (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Oct 2017 09:37:08 -0400
-Content-Disposition: inline
-In-Reply-To: <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016133705.cf4f5jqgq4ebhfcj@pali>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 16 October 2017 13:23:04 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > Sent: Monday, October 16, 2017 2:33 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
-> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > <gnomes@lxorguk.ukuu.org.uk>
-> > Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-> > 
-> > Hi! Just a small idea, what about including example userspace
-> > application which would use this new API? I think such application can
-> > be useful for documentation purpose to see how this new API should be
-> > used. And in review process other people can point if there would be
-> > some problems with usage.
-> > 
-> > I do not know if it is requirement or not for introducing new kernel
-> > API, but still example code is very useful for developers when they
-> > would start to use this new API and correctly.
-> > 
-> > --
-> > Pali Rohár
-> > pali.rohar@gmail.com
-> 
-> Pali,
-> 
-> I've produced a small sample application available here:
-> https://github.com/superm1/smbios-wmi-poc
-
-Simple one-file example application. Great!
-
-Darren, Greg, Mario, I think it would be better to have this example
-application in tools/ or in Documentation/... What do you think?
-
-Looking for examples on random github repos is harder and less official
-as part of linux source tree.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMTYsIDIwMTcg
+ODozNyBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
+LmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBhbmR5LnNoZXZjaGVua29AZ21haWwu
+Y29tOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLXg4
+NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9Aa2VybmVsLm9yZzsNCj4gcXVhc2lzZWNAZ29vZ2xlLmNv
+bTsgcmp3QHJqd3lzb2NraS5uZXQ7IG1qZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7DQo+IGdy
+ZWdAa3JvYWguY29tOyBnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51aw0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHY4IDAwLzE1XSBJbnRyb2R1Y2Ugc3VwcG9ydCBmb3IgRGVsbCBTTUJJT1Mgb3ZlciBX
+TUkNCj4gDQo+IE9uIE1vbmRheSAxNiBPY3RvYmVyIDIwMTcgMTM6MjM6MDQgTWFyaW8uTGltb25j
+aWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+PiA+ID4gRnJvbTogUGFsaSBSb2jDoXIgW21haWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4g
+PiA+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAxNiwgMjAxNyAyOjMzIEFNDQo+ID4gPiBUbzogTGlt
+b25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPiA+IENjOiBk
+dmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21h
+aWwuY29tPjsNCj4gPiA+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0
+Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keQ0KPiA+ID4gTHV0b21pcnNr
+aSA8bHV0b0BrZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2NraS5u
+ZXQ7DQo+ID4gPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
+b2FoLmNvbT47IEFsYW4gQ294DQo+ID4gPiA8Z25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+
+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY4IDAwLzE1XSBJbnRyb2R1Y2Ugc3VwcG9ydCBmb3Ig
+RGVsbCBTTUJJT1Mgb3ZlciBXTUkNCj4gPiA+DQo+ID4gPiBIaSEgSnVzdCBhIHNtYWxsIGlkZWEs
+IHdoYXQgYWJvdXQgaW5jbHVkaW5nIGV4YW1wbGUgdXNlcnNwYWNlDQo+ID4gPiBhcHBsaWNhdGlv
+biB3aGljaCB3b3VsZCB1c2UgdGhpcyBuZXcgQVBJPyBJIHRoaW5rIHN1Y2ggYXBwbGljYXRpb24g
+Y2FuDQo+ID4gPiBiZSB1c2VmdWwgZm9yIGRvY3VtZW50YXRpb24gcHVycG9zZSB0byBzZWUgaG93
+IHRoaXMgbmV3IEFQSSBzaG91bGQgYmUNCj4gPiA+IHVzZWQuIEFuZCBpbiByZXZpZXcgcHJvY2Vz
+cyBvdGhlciBwZW9wbGUgY2FuIHBvaW50IGlmIHRoZXJlIHdvdWxkIGJlDQo+ID4gPiBzb21lIHBy
+b2JsZW1zIHdpdGggdXNhZ2UuDQo+ID4gPg0KPiA+ID4gSSBkbyBub3Qga25vdyBpZiBpdCBpcyBy
+ZXF1aXJlbWVudCBvciBub3QgZm9yIGludHJvZHVjaW5nIG5ldyBrZXJuZWwNCj4gPiA+IEFQSSwg
+YnV0IHN0aWxsIGV4YW1wbGUgY29kZSBpcyB2ZXJ5IHVzZWZ1bCBmb3IgZGV2ZWxvcGVycyB3aGVu
+IHRoZXkNCj4gPiA+IHdvdWxkIHN0YXJ0IHRvIHVzZSB0aGlzIG5ldyBBUEkgYW5kIGNvcnJlY3Rs
+eS4NCj4gPiA+DQo+ID4gPiAtLQ0KPiA+ID4gUGFsaSBSb2jDoXINCj4gPiA+IHBhbGkucm9oYXJA
+Z21haWwuY29tDQo+ID4NCj4gPiBQYWxpLA0KPiA+DQo+ID4gSSd2ZSBwcm9kdWNlZCBhIHNtYWxs
+IHNhbXBsZSBhcHBsaWNhdGlvbiBhdmFpbGFibGUgaGVyZToNCj4gPiBodHRwczovL2dpdGh1Yi5j
+b20vc3VwZXJtMS9zbWJpb3Mtd21pLXBvYw0KPiANCj4gU2ltcGxlIG9uZS1maWxlIGV4YW1wbGUg
+YXBwbGljYXRpb24uIEdyZWF0IQ0KPiANCj4gRGFycmVuLCBHcmVnLCBNYXJpbywgSSB0aGluayBp
+dCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSB0aGlzIGV4YW1wbGUNCj4gYXBwbGljYXRpb24gaW4g
+dG9vbHMvIG9yIGluIERvY3VtZW50YXRpb24vLi4uIFdoYXQgZG8geW91IHRoaW5rPw0KPiANCj4g
+TG9va2luZyBmb3IgZXhhbXBsZXMgb24gcmFuZG9tIGdpdGh1YiByZXBvcyBpcyBoYXJkZXIgYW5k
+IGxlc3Mgb2ZmaWNpYWwNCj4gYXMgcGFydCBvZiBsaW51eCBzb3VyY2UgdHJlZS4NCj4gDQoNCklm
+IG90aGVycyBhbHNvIGFncmVlLCBJJ20gZmluZSB3aXRoIGluY2x1ZGluZyBpdCB3aXRoIHRoZSBr
+ZXJuZWwuDQpQbGVhc2UgYWR2aXNlIHdoZXJlIGl0IHNob3VsZCBiZSBsb2NhdGVkLg0KDQpJdCB3
+YXMgb3JpZ2luYWxseSBhIFBPQyBtYWRlIGp1c3QgZm9yIG15IG93biB0ZXN0aW5nIG9mIHRoaXMg
+QVBJLiAgDQpJIHdpbGwgcHJvYmFibHkgbmVlZCB0byBjbGVhbiBpdCB1cCBhIGxpdHRsZSB0aG91
+Z2ggZm9yIHdpZGVyIGRpc3RyaWJ1dGlvbiANCnRvIHRoZSBrZXJuZWwgc28gSSB3b3VsZCBwcmVm
+ZXIgdG8gc2VuZCBpdCBpbiBhIGZvbGxvdyB1cCBwYXRjaCBpZiBubyBvdGhlcg0KZmVlZGJhY2sg
+cmVxdWlyaW5nIGNoYW5nZXMgdG8gdGhpcyBzZXJpZXMgYXMgaXMuDQoNCk9uZSBwb3NzaWJsZSBp
+c3N1ZSBpcyB0aGF0IGl0IGN1cnJlbnRseSB1c2VzIGdsaWIuICBJcyB0aGF0IE9LPw0KDQoNCg==
