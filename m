@@ -1,47 +1,65 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Mon, 16 Oct 2017 13:23:04 +0000
-Message-ID: <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
+Date: Mon, 16 Oct 2017 15:37:05 +0200
+Message-ID: <20171016133705.cf4f5jqgq4ebhfcj@pali>
 References: <cover.1507958847.git.mario.limonciello@dell.com>
  <20171016073307.ahdc6ogzytzwckpq@pali>
+ <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016073307.ahdc6ogzytzwckpq@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:54683 "EHLO
+        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752151AbdJPNhI (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 16 Oct 2017 09:37:08 -0400
+Content-Disposition: inline
+In-Reply-To: <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
-List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMTYsIDIwMTcg
-MjozMyBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBBbmR5IFNoZXZjaGVua28gPGFuZHku
-c2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnPjsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IEFuZHkNCj4gTHV0b21p
-cnNraSA8bHV0b0BrZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2Nr
-aS5uZXQ7DQo+IG1qZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7IEdyZWcgS0ggPGdyZWdAa3Jv
-YWguY29tPjsgQWxhbiBDb3gNCj4gPGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrPg0KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHY4IDAwLzE1XSBJbnRyb2R1Y2Ugc3VwcG9ydCBmb3IgRGVsbCBTTUJJ
-T1Mgb3ZlciBXTUkNCj4gDQo+IEhpISBKdXN0IGEgc21hbGwgaWRlYSwgd2hhdCBhYm91dCBpbmNs
-dWRpbmcgZXhhbXBsZSB1c2Vyc3BhY2UNCj4gYXBwbGljYXRpb24gd2hpY2ggd291bGQgdXNlIHRo
-aXMgbmV3IEFQST8gSSB0aGluayBzdWNoIGFwcGxpY2F0aW9uIGNhbg0KPiBiZSB1c2VmdWwgZm9y
-IGRvY3VtZW50YXRpb24gcHVycG9zZSB0byBzZWUgaG93IHRoaXMgbmV3IEFQSSBzaG91bGQgYmUN
-Cj4gdXNlZC4gQW5kIGluIHJldmlldyBwcm9jZXNzIG90aGVyIHBlb3BsZSBjYW4gcG9pbnQgaWYg
-dGhlcmUgd291bGQgYmUNCj4gc29tZSBwcm9ibGVtcyB3aXRoIHVzYWdlLg0KPiANCj4gSSBkbyBu
-b3Qga25vdyBpZiBpdCBpcyByZXF1aXJlbWVudCBvciBub3QgZm9yIGludHJvZHVjaW5nIG5ldyBr
-ZXJuZWwNCj4gQVBJLCBidXQgc3RpbGwgZXhhbXBsZSBjb2RlIGlzIHZlcnkgdXNlZnVsIGZvciBk
-ZXZlbG9wZXJzIHdoZW4gdGhleQ0KPiB3b3VsZCBzdGFydCB0byB1c2UgdGhpcyBuZXcgQVBJIGFu
-ZCBjb3JyZWN0bHkuDQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0KPiBwYWxpLnJvaGFyQGdtYWls
-LmNvbQ0KDQpQYWxpLA0KDQpJJ3ZlIHByb2R1Y2VkIGEgc21hbGwgc2FtcGxlIGFwcGxpY2F0aW9u
-IGF2YWlsYWJsZSBoZXJlOg0KaHR0cHM6Ly9naXRodWIuY29tL3N1cGVybTEvc21iaW9zLXdtaS1w
-b2MNCg0KSSdtIHN0aWxsIGV2YWx1YXRpbmcgd2hldGhlciB0byB1cGRhdGUgbGlic21iaW9zIHRv
-IHVzZSB0aGlzIEFQSSBvciB1cGRhdGUgDQppbmRpdmlkdWFsIGFwcGxpY2F0aW9ucyB0byB1c2Ug
-aXQgZGlyZWN0bHkuICBJZiBpbmRpdmlkdWFsIGFwcGxpY2F0aW9ucyB3aWxsDQpiZSB1cGRhdGVk
-IEkgYWxzbyBoYXZlIGNvZGUgZm9yIGZ3dXBkIHJlYWR5Og0KaHR0cHM6Ly9naXRodWIuY29tL2h1
-Z2hzaWUvZnd1cGQvcHVsbC8yNzcvY29tbWl0cy9kMDFiOGVkOGUxNzI2ZGQyYWIzZDFkOWZkNDZm
-NjI0Y2VkN2EwNmEyDQoNCkl0IHdvbid0IGJlIG1lcmdlZCB1bnRpbDoNCjEpIFRoaXMgc2VyaWVz
-IGlzIGFjY2VwdGVkIGFuZCB0YXJnZXRlZCB0byAtbmV4dA0KMikgSSBkZWNpZGUgd2hldGhlciBv
-ciBub3QgdG8gdXBkYXRlIGxpYnNtYmlvcyBpbnN0ZWFkDQoNClRoYW5rcywNCg0KDQo=
+On Monday 16 October 2017 13:23:04 Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > Sent: Monday, October 16, 2017 2:33 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
+> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > <gnomes@lxorguk.ukuu.org.uk>
+> > Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
+> > 
+> > Hi! Just a small idea, what about including example userspace
+> > application which would use this new API? I think such application can
+> > be useful for documentation purpose to see how this new API should be
+> > used. And in review process other people can point if there would be
+> > some problems with usage.
+> > 
+> > I do not know if it is requirement or not for introducing new kernel
+> > API, but still example code is very useful for developers when they
+> > would start to use this new API and correctly.
+> > 
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
+> 
+> Pali,
+> 
+> I've produced a small sample application available here:
+> https://github.com/superm1/smbios-wmi-poc
+
+Simple one-file example application. Great!
+
+Darren, Greg, Mario, I think it would be better to have this example
+application in tools/ or in Documentation/... What do you think?
+
+Looking for examples on random github repos is harder and less official
+as part of linux source tree.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
