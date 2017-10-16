@@ -1,41 +1,42 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: mlx-platform: make a couple of structures
- static
-Date: Mon, 16 Oct 2017 14:26:25 -0700
-Message-ID: <20171016212625.GB14419@fury>
-References: <20171005104211.30440-1-colin.king@canonical.com>
- <CAHp75Vf8k-hmk4n86foSfSPZxVUQJmGNFkf8ExUKbF2nXaSy8A@mail.gmail.com>
+Subject: Re: [PATCH] dell-laptop: Fix keyboard led max_brightness property
+ for Dell Latitude E6410
+Date: Mon, 16 Oct 2017 14:48:37 -0700
+Message-ID: <20171016214837.GC14419@fury>
+References: <1508083394-22823-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:33590 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753147AbdJPVsl (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 16 Oct 2017 17:48:41 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vf8k-hmk4n86foSfSPZxVUQJmGNFkf8ExUKbF2nXaSy8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Colin King <colin.king@canonical.com>, Vadim Pasternak <vadimp@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1508083394-22823-1-git-send-email-pali.rohar@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Oct 07, 2017 at 05:03:41PM +0300, Andy Shevchenko wrote:
-> On Thu, Oct 5, 2017 at 1:42 PM, Colin King <colin.king@canonical.com> wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > The structures mlxplat_dev and mlxplat_hotplug are local to the source
-> > and do not need to be in global scope, so make them static.
-> >
-> > Cleans up sparse warnings:
-> > symbol 'mlxplat_dev' was not declared. Should it be static?
-> > symbol 'mlxplat_hotplug' was not declared. Should it be static?
-> 
-> Thanks for the patch.
-> Since Vadim did some rather big driver changes I would like to hear
-> from him how to proceed with this one: either I apply it now, or after
-> we get Vadim's series in.
-> 
+On Sun, Oct 15, 2017 at 06:03:14PM +0200, Pali Rohár wrote:
+> This machine reports number of keyboard backlight led levels, instead of
+> value of the last led level index. Therefore max_brightness properly needs
+> to be subtracted by 1 to match led max_brightness API.
 
-I've asked Vadim to rework some of the mlx platform and hotplug patches, so I'll
-be taking this now as it is a minimal patch - this way it doesn't get lost.
+Which field is behaving differently?
 
-Thanks Colin.
+If I'm understanding this correctly:
+
+Since the max level is something we test for once at runtime, it seems
+to me a cleaner fix would be to check for this quirk in kbd_get_info()
+and set kbd_info.levels accordingly. The rest of the driver logic would
+then remain unchanged.
+
+The idea being to translate what the platform firmware reports into what
+the driver already understands, instead of giving the levels fields of
+the structure multiple meanings.
 
 -- 
 Darren Hart
