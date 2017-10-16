@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 04/12] x86: define the feature control MSR's SGX launch control bit
-Date: Mon, 16 Oct 2017 22:18:47 +0300
-Message-ID: <20171016191855.16964-5-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and replace_fd()
+Date: Mon, 16 Oct 2017 22:18:49 +0300
+Message-ID: <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
 References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
@@ -10,22 +10,38 @@ To: intel-sgx-kernel-dev@lists.01.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+Export create_pipe_files() and replace_fd() so that the SGX driver is
+able to create stdin and stdout pipes.
+
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
+ fs/file.c | 1 +
+ fs/pipe.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 31a7d1c0f204..43130f3c18a1 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -298,6 +298,7 @@
- #define X86_FEATURE_AVX512_VPOPCNTDQ (16*32+14) /* POPCNT for vectors of DW/QW */
- #define X86_FEATURE_LA57	(16*32+16) /* 5-level page tables */
- #define X86_FEATURE_RDPID	(16*32+22) /* RDPID instruction */
-+#define X86_FEATURE_SGX_LC	(16*32+30) /* supports SGX launch configuration */
+diff --git a/fs/file.c b/fs/file.c
+index 1fc7fbbb4510..b1fa28919b22 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -871,6 +871,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+ 	spin_unlock(&files->file_lock);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(replace_fd);
  
- /* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
- #define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery support */
+ SYSCALL_DEFINE3(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags)
+ {
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 97e5be897753..ee33a84127e7 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -784,6 +784,7 @@ int create_pipe_files(struct file **res, int flags)
+ 	iput(inode);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(create_pipe_files);
+ 
+ static int __do_pipe_flags(int *fd, struct file **files, int flags)
+ {
 -- 
 2.14.1
