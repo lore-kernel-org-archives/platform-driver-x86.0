@@ -1,67 +1,196 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Mon, 16 Oct 2017 13:48:05 +0000
-Message-ID: <a9a6d127cdc94f1ba40ce0d2dff78156@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1507958847.git.mario.limonciello@dell.com>
- <20171016073307.ahdc6ogzytzwckpq@pali>
- <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
- <20171016133705.cf4f5jqgq4ebhfcj@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v4 00/12] Intel(R) SGX Driver
+Date: Mon, 16 Oct 2017 22:18:43 +0300
+Message-ID: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016133705.cf4f5jqgq4ebhfcj@pali>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: intel-sgx-kernel-dev@lists.01.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMTYsIDIwMTcg
-ODozNyBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3JnOyBhbmR5LnNoZXZjaGVua29AZ21haWwu
-Y29tOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLXg4
-NkB2Z2VyLmtlcm5lbC5vcmc7IGx1dG9Aa2VybmVsLm9yZzsNCj4gcXVhc2lzZWNAZ29vZ2xlLmNv
-bTsgcmp3QHJqd3lzb2NraS5uZXQ7IG1qZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7DQo+IGdy
-ZWdAa3JvYWguY29tOyBnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51aw0KPiBTdWJqZWN0OiBSZTog
-W1BBVENIIHY4IDAwLzE1XSBJbnRyb2R1Y2Ugc3VwcG9ydCBmb3IgRGVsbCBTTUJJT1Mgb3ZlciBX
-TUkNCj4gDQo+IE9uIE1vbmRheSAxNiBPY3RvYmVyIDIwMTcgMTM6MjM6MDQgTWFyaW8uTGltb25j
-aWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+ID4gRnJvbTogUGFsaSBSb2jDoXIgW21haWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4g
-PiA+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAxNiwgMjAxNyAyOjMzIEFNDQo+ID4gPiBUbzogTGlt
-b25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPiA+IENjOiBk
-dmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21h
-aWwuY29tPjsNCj4gPiA+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0
-Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keQ0KPiA+ID4gTHV0b21pcnNr
-aSA8bHV0b0BrZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2NraS5u
-ZXQ7DQo+ID4gPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
-b2FoLmNvbT47IEFsYW4gQ294DQo+ID4gPiA8Z25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+
-ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY4IDAwLzE1XSBJbnRyb2R1Y2Ugc3VwcG9ydCBmb3Ig
-RGVsbCBTTUJJT1Mgb3ZlciBXTUkNCj4gPiA+DQo+ID4gPiBIaSEgSnVzdCBhIHNtYWxsIGlkZWEs
-IHdoYXQgYWJvdXQgaW5jbHVkaW5nIGV4YW1wbGUgdXNlcnNwYWNlDQo+ID4gPiBhcHBsaWNhdGlv
-biB3aGljaCB3b3VsZCB1c2UgdGhpcyBuZXcgQVBJPyBJIHRoaW5rIHN1Y2ggYXBwbGljYXRpb24g
-Y2FuDQo+ID4gPiBiZSB1c2VmdWwgZm9yIGRvY3VtZW50YXRpb24gcHVycG9zZSB0byBzZWUgaG93
-IHRoaXMgbmV3IEFQSSBzaG91bGQgYmUNCj4gPiA+IHVzZWQuIEFuZCBpbiByZXZpZXcgcHJvY2Vz
-cyBvdGhlciBwZW9wbGUgY2FuIHBvaW50IGlmIHRoZXJlIHdvdWxkIGJlDQo+ID4gPiBzb21lIHBy
-b2JsZW1zIHdpdGggdXNhZ2UuDQo+ID4gPg0KPiA+ID4gSSBkbyBub3Qga25vdyBpZiBpdCBpcyBy
-ZXF1aXJlbWVudCBvciBub3QgZm9yIGludHJvZHVjaW5nIG5ldyBrZXJuZWwNCj4gPiA+IEFQSSwg
-YnV0IHN0aWxsIGV4YW1wbGUgY29kZSBpcyB2ZXJ5IHVzZWZ1bCBmb3IgZGV2ZWxvcGVycyB3aGVu
-IHRoZXkNCj4gPiA+IHdvdWxkIHN0YXJ0IHRvIHVzZSB0aGlzIG5ldyBBUEkgYW5kIGNvcnJlY3Rs
-eS4NCj4gPiA+DQo+ID4gPiAtLQ0KPiA+ID4gUGFsaSBSb2jDoXINCj4gPiA+IHBhbGkucm9oYXJA
-Z21haWwuY29tDQo+ID4NCj4gPiBQYWxpLA0KPiA+DQo+ID4gSSd2ZSBwcm9kdWNlZCBhIHNtYWxs
-IHNhbXBsZSBhcHBsaWNhdGlvbiBhdmFpbGFibGUgaGVyZToNCj4gPiBodHRwczovL2dpdGh1Yi5j
-b20vc3VwZXJtMS9zbWJpb3Mtd21pLXBvYw0KPiANCj4gU2ltcGxlIG9uZS1maWxlIGV4YW1wbGUg
-YXBwbGljYXRpb24uIEdyZWF0IQ0KPiANCj4gRGFycmVuLCBHcmVnLCBNYXJpbywgSSB0aGluayBp
-dCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSB0aGlzIGV4YW1wbGUNCj4gYXBwbGljYXRpb24gaW4g
-dG9vbHMvIG9yIGluIERvY3VtZW50YXRpb24vLi4uIFdoYXQgZG8geW91IHRoaW5rPw0KPiANCj4g
-TG9va2luZyBmb3IgZXhhbXBsZXMgb24gcmFuZG9tIGdpdGh1YiByZXBvcyBpcyBoYXJkZXIgYW5k
-IGxlc3Mgb2ZmaWNpYWwNCj4gYXMgcGFydCBvZiBsaW51eCBzb3VyY2UgdHJlZS4NCj4gDQoNCklm
-IG90aGVycyBhbHNvIGFncmVlLCBJJ20gZmluZSB3aXRoIGluY2x1ZGluZyBpdCB3aXRoIHRoZSBr
-ZXJuZWwuDQpQbGVhc2UgYWR2aXNlIHdoZXJlIGl0IHNob3VsZCBiZSBsb2NhdGVkLg0KDQpJdCB3
-YXMgb3JpZ2luYWxseSBhIFBPQyBtYWRlIGp1c3QgZm9yIG15IG93biB0ZXN0aW5nIG9mIHRoaXMg
-QVBJLiAgDQpJIHdpbGwgcHJvYmFibHkgbmVlZCB0byBjbGVhbiBpdCB1cCBhIGxpdHRsZSB0aG91
-Z2ggZm9yIHdpZGVyIGRpc3RyaWJ1dGlvbiANCnRvIHRoZSBrZXJuZWwgc28gSSB3b3VsZCBwcmVm
-ZXIgdG8gc2VuZCBpdCBpbiBhIGZvbGxvdyB1cCBwYXRjaCBpZiBubyBvdGhlcg0KZmVlZGJhY2sg
-cmVxdWlyaW5nIGNoYW5nZXMgdG8gdGhpcyBzZXJpZXMgYXMgaXMuDQoNCk9uZSBwb3NzaWJsZSBp
-c3N1ZSBpcyB0aGF0IGl0IGN1cnJlbnRseSB1c2VzIGdsaWIuICBJcyB0aGF0IE9LPw0KDQoNCg==
+Intel(R) SGX is a set of CPU instructions that can be used by applications to
+set aside private regions of code and data. The code outside the enclave is
+disallowed to access the memory inside the enclave by the CPU access control.
+In a way you can think that SGX provides inverted sandbox. It protects the
+application from a malicious host.
+
+There is a new hardware unit in the processor called Memory Encryption Engine
+(MEE) starting from the Skylake microachitecture. BIOS can define one or many
+MEE regions that can hold enclave data by configuring them with PRMRR registers.
+
+The MEE automatically encrypts the data leaving the processor package to the MEE
+regions. The data is encrypted using a random key whose life-time is exactly one
+power cycle.
+
+You can tell if your CPU supports SGX by looking into ``/proc/cpuinfo``:
+
+	``cat /proc/cpuinfo  | grep ' sgx '``
+
+The GIT repositoy for SGX driver resides in
+
+	https://github.com/jsakkine-intel/linux-sgx.git
+
+'le' branch contains the upstream candidate patches.
+
+'master' branch contains the same patches with the following differences:
+
+* top-level patch modifies the ioctl API to be SDK compatible
+* does not use flexible launch control but instead relies on SDK provided
+  Intel launch enclave.
+
+'master' is just maintained to allow people to test the code.
+
+v4:
+* Tied life-cycle of the sgx_le_proxy process to /dev/sgx.
+* Removed __exit annotation from sgx_drv_subsys_exit().
+* Fixed a leak of a backing page in sgx_process_add_page_req() in the
+  case when vm_insert_pfn() fails.
+* Removed unused symbol exports for sgx_page_cache.c.
+* Updated sgx_alloc_page() to require encl parameter and documented the
+  behavior(Sean Christopherson).
+* Refactored a more lean API for sgx_encl_find() and documented the behavior.
+* Moved #PF handler to sgx_fault.c.
+* Replaced subsys_system_register() with plain bus_register().
+* Retry EINIT 2nd time only if MSRs are not locked.
+
+v3:
+* Check that FEATURE_CONTROL_LOCKED and FEATURE_CONTROL_SGX_ENABLE are set.
+* Return -ERESTARTSYS in __sgx_encl_add_page() when sgx_alloc_page() fails.
+* Use unused bits in epc_page->pa to store the bank number.
+* Removed #ifdef for WQ_NONREENTRANT.
+* If mmu_notifier_register() fails with -EINTR, return -ERESTARTSYS.
+* Added --remove-section=.got.plt to objcopy flags in order to prevent a
+  dummy .got.plt, which will cause an inconsistent size for the LE.
+* Documented sgx_encl_* functions.
+* Added remark about AES implementation used inside the LE.
+* Removed redundant sgx_sys_exit() from le/main.c.
+* Fixed struct sgx_secinfo alignment from 128 to 64 bytes.
+* Validate miscselect in sgx_encl_create().
+* Fixed SSA frame size calculation to take the misc region into account.
+* Implemented consistent exception handling to __encls() and __encls_ret().
+* Implemented a proper device model in order to allow sysfs attributes
+  and in-kernel API.
+* Cleaned up various "find enclave" implementations to the unified
+  sgx_encl_find().
+* Validate that vm_pgoff is zero.
+* Discard backing pages with shmem_truncate_range() after EADD.
+* Added missing EEXTEND operations to LE signing and launch.
+* Fixed SSA size for GPRS region from 168 to 184 bytes.
+* Fixed the checks for TCS flags. Now DBGOPTIN is allowed.
+* Check that TCS addresses are in ELRANGE and not just page aligned.
+* Require kernel to be compiled with X64_64 and CPU_SUP_INTEL.
+* Fixed an incorrect value for SGX_ATTR_DEBUG from 0x01 to 0x02.
+
+v2:
+* get_rand_uint32() changed the value of the pointer instead of value
+  where it is pointing at.
+* Launch enclave incorrectly used sigstruct attributes-field instead of
+  enclave attributes-field.
+* Removed unused struct sgx_add_page_req from sgx_ioctl.c
+* Removed unused sgx_has_sgx2.
+* Updated arch/x86/include/asm/sgx.h so that it provides stub
+  implementations when sgx in not enabled.
+* Removed cruft rdmsr-calls from sgx_set_pubkeyhash_msrs().
+* return -ENOMEM in sgx_alloc_page() when VA pages consume too much space
+* removed unused global sgx_nr_pids
+* moved sgx_encl_release to sgx_encl.c
+* return -ERESTARTSYS instead of -EINTR in sgx_encl_init()
+
+Haim Cohen (1):
+  x86: add SGX MSRs to msr-index.h
+
+Jarkko Sakkinen (9):
+  intel_sgx: updated MAINTAINERS
+  x86: define the feature control MSR's SGX launch control bit
+  fs/pipe.c: export create_pipe_files() and replace_fd()
+  intel_sgx: driver for Intel Software Guard Extensions
+  intel_sgx: ptrace() support
+  intel_sgx: driver documentation
+  intel_sgx: in-kernel launch enclave
+  intel_sgx: glue code for in-kernel LE
+  intel_sgx: update IA32_SGXLEPUBKEYHASH* MSRs
+
+Kai Huang (1):
+  x86: add SGX definition to cpufeature
+
+Sean Christopherson (1):
+  x86: define the feature control MSR's SGX enable bit
+
+ Documentation/index.rst                            |    1 +
+ Documentation/x86/intel_sgx.rst                    |  131 +++
+ MAINTAINERS                                        |    5 +
+ arch/x86/include/asm/cpufeatures.h                 |    2 +
+ arch/x86/include/asm/msr-index.h                   |    8 +
+ arch/x86/include/asm/sgx.h                         |  233 +++++
+ arch/x86/include/asm/sgx_arch.h                    |  268 ++++++
+ arch/x86/include/uapi/asm/sgx.h                    |  147 +++
+ drivers/platform/x86/Kconfig                       |    2 +
+ drivers/platform/x86/Makefile                      |    1 +
+ drivers/platform/x86/intel_sgx/Kconfig             |   34 +
+ drivers/platform/x86/intel_sgx/Makefile            |   32 +
+ drivers/platform/x86/intel_sgx/le/Makefile         |   26 +
+ drivers/platform/x86/intel_sgx/le/enclave/Makefile |   46 +
+ .../x86/intel_sgx/le/enclave/aes_encrypt.c         |  191 ++++
+ .../platform/x86/intel_sgx/le/enclave/cmac_mode.c  |  254 +++++
+ .../x86/intel_sgx/le/enclave/encl_bootstrap.S      |  163 ++++
+ .../intel_sgx/le/enclave/include/tinycrypt/aes.h   |  133 +++
+ .../le/enclave/include/tinycrypt/cmac_mode.h       |  194 ++++
+ .../le/enclave/include/tinycrypt/constants.h       |   59 ++
+ .../intel_sgx/le/enclave/include/tinycrypt/utils.h |   95 ++
+ drivers/platform/x86/intel_sgx/le/enclave/main.c   |  203 ++++
+ .../platform/x86/intel_sgx/le/enclave/sgx_le.lds   |   28 +
+ .../platform/x86/intel_sgx/le/enclave/sgxsign.c    |  537 +++++++++++
+ drivers/platform/x86/intel_sgx/le/enclave/utils.c  |   78 ++
+ drivers/platform/x86/intel_sgx/le/entry.S          |  117 +++
+ .../platform/x86/intel_sgx/le/include/sgx_asm.h    |   64 ++
+ .../platform/x86/intel_sgx/le/include/sgx_encl.h   |  105 ++
+ drivers/platform/x86/intel_sgx/le/main.c           |  219 +++++
+ drivers/platform/x86/intel_sgx/le/sgx_le_piggy.S   |   15 +
+ drivers/platform/x86/intel_sgx/sgx.h               |  271 ++++++
+ drivers/platform/x86/intel_sgx/sgx_encl.c          | 1007 ++++++++++++++++++++
+ drivers/platform/x86/intel_sgx/sgx_ioctl.c         |  282 ++++++
+ drivers/platform/x86/intel_sgx/sgx_le.c            |  313 ++++++
+ .../platform/x86/intel_sgx/sgx_le_proxy_piggy.S    |   15 +
+ drivers/platform/x86/intel_sgx/sgx_main.c          |  506 ++++++++++
+ drivers/platform/x86/intel_sgx/sgx_page_cache.c    |  568 +++++++++++
+ drivers/platform/x86/intel_sgx/sgx_util.c          |  397 ++++++++
+ drivers/platform/x86/intel_sgx/sgx_vma.c           |  232 +++++
+ fs/file.c                                          |    1 +
+ fs/pipe.c                                          |    1 +
+ 41 files changed, 6984 insertions(+)
+ create mode 100644 Documentation/x86/intel_sgx.rst
+ create mode 100644 arch/x86/include/asm/sgx.h
+ create mode 100644 arch/x86/include/asm/sgx_arch.h
+ create mode 100644 arch/x86/include/uapi/asm/sgx.h
+ create mode 100644 drivers/platform/x86/intel_sgx/Kconfig
+ create mode 100644 drivers/platform/x86/intel_sgx/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/le/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/aes_encrypt.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/cmac_mode.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/encl_bootstrap.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/include/tinycrypt/aes.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/include/tinycrypt/cmac_mode.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/include/tinycrypt/constants.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/include/tinycrypt/utils.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/sgx_le.lds
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/utils.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/entry.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/include/sgx_asm.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/include/sgx_encl.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/sgx_le_piggy.S
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx.h
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_encl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_ioctl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_le.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_le_proxy_piggy.S
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_page_cache.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_util.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_vma.c
+
+-- 
+2.14.1
