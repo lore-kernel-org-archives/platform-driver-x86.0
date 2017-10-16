@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 01/12] intel_sgx: updated MAINTAINERS
-Date: Mon, 16 Oct 2017 22:18:44 +0300
-Message-ID: <20171016191855.16964-2-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v4 04/12] x86: define the feature control MSR's SGX launch control bit
+Date: Mon, 16 Oct 2017 22:18:47 +0300
+Message-ID: <20171016191855.16964-5-jarkko.sakkinen@linux.intel.com>
 References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
@@ -12,24 +12,20 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2d3d750b19c0..30a4b7f97a93 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14932,6 +14932,11 @@ L:	linux-mm@kvack.org
- S:	Maintained
- F:	mm/zswap.c
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 31a7d1c0f204..43130f3c18a1 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -298,6 +298,7 @@
+ #define X86_FEATURE_AVX512_VPOPCNTDQ (16*32+14) /* POPCNT for vectors of DW/QW */
+ #define X86_FEATURE_LA57	(16*32+16) /* 5-level page tables */
+ #define X86_FEATURE_RDPID	(16*32+22) /* RDPID instruction */
++#define X86_FEATURE_SGX_LC	(16*32+30) /* supports SGX launch configuration */
  
-+INTEL SGX
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+L:	intel-sgx-kernel-dev@lists.01.org
-+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-+
- THE REST
- M:	Linus Torvalds <torvalds@linux-foundation.org>
- L:	linux-kernel@vger.kernel.org
+ /* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery support */
 -- 
 2.14.1
