@@ -1,47 +1,34 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and replace_fd()
-Date: Mon, 16 Oct 2017 22:18:49 +0300
-Message-ID: <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v4 03/12] x86: define the feature control MSR's SGX enable bit
+Date: Mon, 16 Oct 2017 22:18:46 +0300
+Message-ID: <20171016191855.16964-4-jarkko.sakkinen@linux.intel.com>
 References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: intel-sgx-kernel-dev@lists.01.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Christopherson <sean.j.christopherson@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Export create_pipe_files() and replace_fd() so that the SGX driver is
-able to create stdin and stdout pipes.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- fs/file.c | 1 +
- fs/pipe.c | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/include/asm/msr-index.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/file.c b/fs/file.c
-index 1fc7fbbb4510..b1fa28919b22 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -871,6 +871,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
- 	spin_unlock(&files->file_lock);
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(replace_fd);
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 17f5c12e1afd..b35cb98b5d60 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -435,6 +435,7 @@
+ #define FEATURE_CONTROL_LOCKED				(1<<0)
+ #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+ #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
++#define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
+ #define FEATURE_CONTROL_LMCE				(1<<20)
  
- SYSCALL_DEFINE3(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags)
- {
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 97e5be897753..ee33a84127e7 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -784,6 +784,7 @@ int create_pipe_files(struct file **res, int flags)
- 	iput(inode);
- 	return err;
- }
-+EXPORT_SYMBOL_GPL(create_pipe_files);
- 
- static int __do_pipe_flags(int *fd, struct file **files, int flags)
- {
+ #define MSR_IA32_APICBASE		0x0000001b
 -- 
 2.14.1
