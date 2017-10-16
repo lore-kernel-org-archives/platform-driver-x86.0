@@ -1,149 +1,78 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v4 08/12] intel_sgx: ptrace() support
-Date: Mon, 16 Oct 2017 22:18:51 +0300
-Message-ID: <20171016191855.16964-9-jarkko.sakkinen@linux.intel.com>
-References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: intel-sgx-kernel-dev@lists.01.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [patch v3 0/3] drivers/platform: replace module
+ x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Mon, 16 Oct 2017 13:42:11 -0700
+Message-ID: <20171016204211.GA14419@fury>
+References: <1505142759-160534-1-git-send-email-vadimp@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505142759-160534-1-git-send-email-vadimp@mellanox.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: gregkh@linuxfoundation.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, jiri@resnulli.us, pavel@ucw.cz
 List-Id: platform-driver-x86.vger.kernel.org
 
-Implemented VMA callbacks in order to ptrace() debug enclaves.
+On Mon, Sep 11, 2017 at 03:12:36PM +0000, Vadim Pasternak wrote:
+> The patchset modifies x86/mlxcpld-hotplug.c for making it architecture
+> independent, renames to mlxreg-hotplug and moves it from
+> drivers/platform/x86 folder to new drivers/platform/mellanox folder.
+> This modification also introduces regmap interface for mlxreg-hotplug
+> driver to allow hotplug event functionality over programmable devices
+> logic, when these devices can be attached to different interfaces types,
+> like I2C, LPC, SPI.
+> Module include/linux/platform_data/mlxcpld-hotplug.h is removed and new
+> module include/linux/platform_data/mlxreg.h is to be used instead.
+> Driver drivers/platform/x86/mlx-platform.c is updated according to new
+> interface.
+> Relevant Makefile and Kconfig are updated.
+> 
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- drivers/platform/x86/intel_sgx/sgx_vma.c | 115 +++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+Hi Vadim,
 
-diff --git a/drivers/platform/x86/intel_sgx/sgx_vma.c b/drivers/platform/x86/intel_sgx/sgx_vma.c
-index 2b714daa6eb7..54b588ffa71c 100644
---- a/drivers/platform/x86/intel_sgx/sgx_vma.c
-+++ b/drivers/platform/x86/intel_sgx/sgx_vma.c
-@@ -110,8 +110,123 @@ static int sgx_vma_fault(struct vm_fault *vmf)
- 		return VM_FAULT_SIGBUS;
- }
- 
-+static inline int sgx_vma_access_word(struct sgx_encl *encl,
-+				      unsigned long addr,
-+				      void *buf,
-+				      int len,
-+				      int write,
-+				      struct sgx_encl_page *encl_page,
-+				      int i)
-+{
-+	char data[sizeof(unsigned long)];
-+	int align, cnt, offset;
-+	void *vaddr;
-+	int ret;
-+
-+	offset = ((addr + i) & (PAGE_SIZE - 1)) & ~(sizeof(unsigned long) - 1);
-+	align = (addr + i) & (sizeof(unsigned long) - 1);
-+	cnt = sizeof(unsigned long) - align;
-+	cnt = min(cnt, len - i);
-+
-+	if (write) {
-+		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
-+		    (offset < 8 || (offset + (len - i)) > 16))
-+			return -ECANCELED;
-+
-+		if (align || (cnt != sizeof(unsigned long))) {
-+			vaddr = sgx_get_page(encl_page->epc_page);
-+			ret = __edbgrd((void *)((unsigned long)vaddr + offset),
-+				       (unsigned long *)data);
-+			sgx_put_page(vaddr);
-+			if (ret) {
-+				sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+				return -EFAULT;
-+			}
-+		}
-+
-+		memcpy(data + align, buf + i, cnt);
-+		vaddr = sgx_get_page(encl_page->epc_page);
-+		ret = __edbgwr((void *)((unsigned long)vaddr + offset),
-+			       (unsigned long *)data);
-+		sgx_put_page(vaddr);
-+		if (ret) {
-+			sgx_dbg(encl, "EDBGWR returned %d\n", ret);
-+			return -EFAULT;
-+		}
-+	} else {
-+		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
-+		    (offset + (len - i)) > 72)
-+			return -ECANCELED;
-+
-+		vaddr = sgx_get_page(encl_page->epc_page);
-+		ret = __edbgrd((void *)((unsigned long)vaddr + offset),
-+			       (unsigned long *)data);
-+		sgx_put_page(vaddr);
-+		if (ret) {
-+			sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+			return -EFAULT;
-+		}
-+
-+		memcpy(buf + i, data + align, cnt);
-+	}
-+
-+	return cnt;
-+}
-+
-+static int sgx_vma_access(struct vm_area_struct *vma, unsigned long addr,
-+			  void *buf, int len, int write)
-+{
-+	struct sgx_encl *encl = vma->vm_private_data;
-+	struct sgx_encl_page *entry = NULL;
-+	const char *op_str = write ? "EDBGWR" : "EDBGRD";
-+	int ret = 0;
-+	int i;
-+
-+	/* If process was forked, VMA is still there but vm_private_data is set
-+	 * to NULL.
-+	 */
-+	if (!encl)
-+		return -EFAULT;
-+
-+	if (!(encl->flags & SGX_ENCL_DEBUG) ||
-+	    !(encl->flags & SGX_ENCL_INITIALIZED) ||
-+	    (encl->flags & SGX_ENCL_DEAD))
-+		return -EFAULT;
-+
-+	sgx_dbg(encl, "%s addr=0x%lx, len=%d\n", op_str, addr, len);
-+
-+	for (i = 0; i < len; i += ret) {
-+		if (!entry || !((addr + i) & (PAGE_SIZE - 1))) {
-+			if (entry)
-+				entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
-+
-+			entry = sgx_fault_page(vma, (addr + i) & PAGE_MASK,
-+					       SGX_FAULT_RESERVE);
-+			if (IS_ERR(entry)) {
-+				ret = PTR_ERR(entry);
-+				entry = NULL;
-+				break;
-+			}
-+		}
-+
-+		/* No locks are needed because used fields are immutable after
-+		 * intialization.
-+		 */
-+		ret = sgx_vma_access_word(encl, addr, buf, len, write,
-+					  entry, i);
-+		if (ret < 0)
-+			break;
-+	}
-+
-+	if (entry)
-+		entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
-+
-+	return (ret < 0 && ret != -ECANCELED) ? ret : i;
-+}
-+
- const struct vm_operations_struct sgx_vm_ops = {
- 	.close = sgx_vma_close,
- 	.open = sgx_vma_open,
- 	.fault = sgx_vma_fault,
-+	.access = sgx_vma_access,
- };
+This didn't really land under anyone's maintainer domain. Apologies for
+the long response time here.
+
+I am happy to include the new platform/mellanox tree within the
+platform-driver-x86 purvue, as we have done with platform/chrome. If
+anyone objects, or would prefer to take this through their tree - please
+let me know.
+
+With respect to the series itself, the patches are not done in a way
+that lend themselves to incremental review. The cover letter above says
+the mlxcpld-hotplug driver is:
+
+1) made architecture independent 2) renamed to mlxreg-hotplug 3) Moved
+to platform/mellanox/
+
+But the series does the following:
+
+1) Create a new platform/mellanox/mlxreg-hotplug driver 2) Modify
+mlx-platform to use the new driver 3) Delete mlxcpld-hotplug driver
+
+This makes it very difficult to review the incremental changes to the
+hotplug driver. Please refactor the patches to take the follow approach:
+
+1) Use git-mv to move x86/mlxcpld-hotplug to mellanox/mlxreg-hotplug,
+add the necessary Kconfig and Makefile entries, and update mlx-platform
+to use the correct header. No functional changes. This gives us a
+starting point for the next steps.
+
+2) Make mlxreg-hotplug architecture independent 3) Add the new regmap
+interface
+
+Give some thought to what the incremental functional changes should be
+(2,3 above are just an example). This will become more apparent to the
+reviewer once the changes come in after the mv.
+
+You'll want to add Andy and Myself and the platform-driver-x86 mailing
+list to the MAINTAINERS file for platform/mellanox as we will still be
+responsible for reviewing the patches and submitting the pull requests
+to Linus.
+
+Thanks,
+
 -- 
-2.14.1
+Darren Hart
+VMware Open Source Technology Center
