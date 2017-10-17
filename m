@@ -1,62 +1,47 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v9 10/17] platform/x86: dell-smbios-wmi: Add new WMI
- dispatcher driver
-Date: Tue, 17 Oct 2017 21:10:44 +0200
-Message-ID: <20171017191044.priqeeymjrewo5hn@pali>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <911d505461965a47e6ffef7838fdd06a5a7044fd.1508259916.git.mario.limonciello@dell.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [patch v4 1/3] platform/x86: move Mellanox hardware platform
+ hotplug driver to platform/mellanox
+Date: Tue, 17 Oct 2017 22:11:36 +0300
+Message-ID: <CAHp75Ven5NUiYQJD0G4pnz1Fvr8As3zxe20V2jFAttuxQ+1H5w@mail.gmail.com>
+References: <1508264554-184107-1-git-send-email-vadimp@mellanox.com> <1508264554-184107-2-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <911d505461965a47e6ffef7838fdd06a5a7044fd.1508259916.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f196.google.com ([209.85.220.196]:53072 "EHLO
+        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S965734AbdJQTLi (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 17 Oct 2017 15:11:38 -0400
+In-Reply-To: <1508264554-184107-2-git-send-email-vadimp@mellanox.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>
 
-On Tuesday 17 October 2017 13:21:54 Mario Limonciello wrote:
-> +static LIST_HEAD(wmi_list);
-> +
-> +static inline struct wmi_smbios_priv *get_first_smbios_priv(void)
-> +{
-> +	return list_first_entry_or_null(&wmi_list,
-> +					struct wmi_smbios_priv,
-> +					list);
-> +}
+On Tue, Oct 17, 2017 at 9:22 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
+> It moves drivers/platform/x86/mlxcpld-hotplug.c to
+> drivers/platform/mellanox/mlxreg-hotplug.c and
+> include/linux/platform_data/mlxcpld-hotplug.h to
+> include/linux/platform_data/mlxreg.h for making hotplug driver usable for
+> the different machine architectures.
+>
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-...
+> +MELLANOX HARDWARE PLATFORM SUPPORT
+> +M:     Andy Shevchenko <andy@infradead.org>
+> +M:     Darren Hart <dvhart@infradead.org>
+> +M:     Vadim Pasternak <vadimp@mellanox.com>
+> +L:     platform-driver-x86@vger.kernel.org
+> +S:     Supported
+> +F:     drivers/platform/mellanox/
+> +
+>  MELLANOX FIRMWARE FLASH LIBRARY (mlxfw)
 
-> +int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
-> +{
-> +	struct wmi_smbios_priv *priv;
-> +	size_t difference;
-> +	size_t size;
-> +	int ret;
-> +
-> +	priv = get_first_smbios_priv();
+A ... F ... H  ... Z
 
-Mutex needs to be acquired before calling this function. Otherwise there
-is a race condition between removing element from the list returned by
-this call and later usage of structure priv.
-
-> +	if (!priv)
-> +		return -ENODEV;
-> +
-> +	size = sizeof(struct calling_interface_buffer);
-> +	difference = priv->req_buf_size - sizeof(u64) - size;
-> +
-> +	mutex_lock(&call_mutex);
-> +	memset(&priv->buf->ext, 0, difference);
-> +	memcpy(&priv->buf->std, buffer, size);
-> +	ret = run_smbios_call(priv->wdev);
-> +	memcpy(buffer, &priv->buf->std, size);
-> +	mutex_unlock(&call_mutex);
-> +
-> +	return ret;
-> +}
+Linus even created a script for that.
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+With Best Regards,
+Andy Shevchenko
