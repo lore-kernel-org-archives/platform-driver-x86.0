@@ -1,65 +1,47 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v9 03/17] platform/x86: dell-wmi: clean up wmi descriptor
- check
-Date: Tue, 17 Oct 2017 19:31:13 +0000
-Message-ID: <5da23d3566b04913aaef369cb7597e16@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <fee4013581cad412769a00c4b12eb8037c89e127.1508259916.git.mario.limonciello@dell.com>
- <20171017184445.c5endis7tzncplrz@pali>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 1/2] Input: silead - Add support for capactive home
+ button found on some x86 tablets
+Date: Tue, 17 Oct 2017 13:13:52 -0700
+Message-ID: <CAKdAkRT63uOtsFS-+WuOuzZSGVHPRxDFLg7oCJZkwbA6uBPr4w@mail.gmail.com>
+References: <20171017154512.30524-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:3947 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S965336AbdJQTbU (ORCPT
+Received: from mail-vk0-f68.google.com ([209.85.213.68]:55902 "EHLO
+        mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1760050AbdJQUNy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:31:20 -0400
-In-Reply-To: <20171017184445.c5endis7tzncplrz@pali>
-Content-Language: en-US
+        Tue, 17 Oct 2017 16:13:54 -0400
+In-Reply-To: <20171017154512.30524-1-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3
-IDE6NDUgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
-bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
-LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1dG9t
-aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
-a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
-b2FoLmNvbT47IEFsYW4gQ294DQo+IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2OSAwMy8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXdtaTogY2xlYW4g
-dXAgd21pIGRlc2NyaXB0b3INCj4gY2hlY2sNCj4gDQo+IE9uIFR1ZXNkYXkgMTcgT2N0b2JlciAy
-MDE3IDEzOjIxOjQ3IE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+IFNvbWUgY2FzZXMgdGhl
-IHdyb25nIHR5cGUgd2FzIHVzZWQgZm9yIGVycm9ycyBhbmQgY2hlY2tzIGNhbiBiZQ0KPiA+IGRv
-bmUgbW9yZSBjbGVhbmx5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVs
-bG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBFZHdhcmQg
-TydDYWxsYWdoYW4gPHF1YXNpc2VjQGdvb2dsZS5jb20+DQo+ID4gU3VnZ2VzdGVkLWJ5OiBBbmR5
-IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRy
-aXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMgfCAxMCArKysrKy0tLS0tDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYyBiL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2RlbGwtd21pLmMNCj4gPiBpbmRleCAyY2ZhYWE4ZmFmMGEuLmVjZTJmZTM0MWYwMSAx
-MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gKysr
-IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+IEBAIC02NjMsMTkgKzY2Mywx
-OSBAQCBzdGF0aWMgaW50IGRlbGxfd21pX2NoZWNrX2Rlc2NyaXB0b3JfYnVmZmVyKHN0cnVjdA0K
-PiB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+DQo+ID4gIAlidWZmZXIgPSAodTMyICopb2JqLT5idWZm
-ZXIucG9pbnRlcjsNCj4gPg0KPiA+IC0JaWYgKGJ1ZmZlclswXSAhPSAweDRDNEM0NTQ0ICYmIGJ1
-ZmZlclsxXSAhPSAweDQ5NEQ1NzIwKSB7DQo+ID4gLQkJZGV2X2Vycigmd2Rldi0+ZGV2LCAiRGVs
-bCBkZXNjcmlwdG9yIGJ1ZmZlciBoYXMgaW52YWxpZCBzaWduYXR1cmUNCj4gKCUqcGgpXG4iLA0K
-PiA+IC0JCQk4LCBidWZmZXIpOw0KPiA+ICsJaWYgKHN0cm5jbXAob2JqLT5zdHJpbmcucG9pbnRl
-ciwgIkRFTEwgV01JIiwgOCkgIT0gMCkgew0KPiA+ICsJCWRldl9lcnIoJndkZXYtPmRldiwgIkRl
-bGwgZGVzY3JpcHRvciBidWZmZXIgaGFzIGludmFsaWQgc2lnbmF0dXJlDQo+ICglOHBoKVxuIiwN
-Cj4gPiArCQkJYnVmZmVyKTsNCj4gPiAgCQlyZXQgPSAtRUlOVkFMOw0KPiA+ICAJCWdvdG8gb3V0
-Ow0KPiA+ICAJfQ0KPiA+DQo+ID4gIAlpZiAoYnVmZmVyWzJdICE9IDAgJiYgYnVmZmVyWzJdICE9
-IDEpDQo+ID4gLQkJZGV2X3dhcm4oJndkZXYtPmRldiwgIkRlbGwgZGVzY3JpcHRvciBidWZmZXIg
-aGFzIHVua25vd24NCj4gdmVyc2lvbiAoJWQpXG4iLA0KPiA+ICsJCWRldl93YXJuKCZ3ZGV2LT5k
-ZXYsICJEZWxsIGRlc2NyaXB0b3IgYnVmZmVyIGhhcyB1bmtub3duDQo+IHZlcnNpb24gKCV1KVxu
-IiwNCj4gPiAgCQkJYnVmZmVyWzJdKTsNCj4gDQo+IFRvIGJlIGNvcnJlY3QsIGJ1ZmZlclsyXSBp
-cyBvZiB0eXBlICJ1MzIiLCBub3Qgb2YgdHlwZSAidW5zaWduZWQiLiBTbw0KPiB0aGlzIHBhdGNo
-IGRvZXMgbm90IGZpeCBpdCBwcm9wZXJseS4NCj4gDQoNCldoYXQncyB0aGUgcHJvcGVyIHNvbHV0
-aW9uIHRoZW4/ICANCkNhc3QgYnVmZmVyWzJdIHRvIGEga25vd24gdHlwZSBsZW5ndGggbGlrZSB1
-bnNpZ25lZCBsb25nIGFuZCB1c2UgJWx1Pw0K
+Hi Hans,
+
+On Tue, Oct 17, 2017 at 8:45 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> On some x86 tablets with a silead touchscreen the windows logo on the
+> front is a capacitive home button. Touching this button results in a touch
+> with bits 12-15 of the Y coordinates set, while normally only the lower 12
+> are used.
+>
+> Detect this and report a KEY_LEFTMETA press when this happens. Note for
+> now we only respond to the Y coordinate bits 12-15 containing 0x01, on some
+> tablets *without* a capacative button I've noticed these bits containing
+> 0x04 when crossing the edges of the screen.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Only enable support for the home-button if a "silead,home-button"
+>  boolean device-property is set on the device
+
+You need to add this new property to
+Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+and CC Rob.
+
+Thanks!
+
+-- 
+Dmitry
