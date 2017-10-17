@@ -1,64 +1,70 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v9 04/17] platform/x86: dell-wmi: allow 32k return size
- in the descriptor
-Date: Tue, 17 Oct 2017 20:46:43 +0200
-Message-ID: <20171017184643.pfsiracfb5pfz2ym@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v9 04/17] platform/x86: dell-wmi: allow 32k return size in
+ the descriptor
+Date: Tue, 17 Oct 2017 18:56:52 +0000
+Message-ID: <b6b7e542600448ea9f9632e8cb43f301@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
  <68ba1b833a86f80b89eedfda8417ca0cc774d321.1508259916.git.mario.limonciello@dell.com>
+ <20171017184643.pfsiracfb5pfz2ym@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:56776 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1763679AbdJQSqq (ORCPT
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:9616 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1753271AbdJQS46 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 14:46:46 -0400
-Content-Disposition: inline
-In-Reply-To: <68ba1b833a86f80b89eedfda8417ca0cc774d321.1508259916.git.mario.limonciello@dell.com>
+        Tue, 17 Oct 2017 14:56:58 -0400
+In-Reply-To: <20171017184643.pfsiracfb5pfz2ym@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Tuesday 17 October 2017 13:21:48 Mario Limonciello wrote:
-> Some platforms this year will be adopting 32k WMI buffer, so don't
-> complain when encountering those.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Reviewed-by: Edward O'Callaghan <quasisec@google.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index ece2fe341f01..2578dff90a14 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -624,7 +624,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
->   * Vendor Signature          0       4    "DELL"
->   * Object Signature          4       4    " WMI"
->   * WMI Interface Version     8       4    <version>
-> - * WMI buffer length        12       4    4096
-> + * WMI buffer length        12       4    4096 or 32768
->   */
->  static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
->  {
-> @@ -674,7 +674,7 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
->  		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
->  			buffer[2]);
->  
-> -	if (buffer[3] != 4096)
-> +	if (buffer[3] != 4096 && buffer[3] != 32768)
->  		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%u)\n",
->  			buffer[3]);
->  
-
-Now, when buffer size is going to be exported to userspace and userspace
-would need to prepare correct request, would not it better to allow any
-positive buffer size? This would allow new machines to work even if
-buffer size would be increased again (or decreased).
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3
+IDE6NDcgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
+LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1dG9t
+aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
+a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
+b2FoLmNvbT47IEFsYW4gQ294DQo+IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2OSAwNC8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXdtaTogYWxsb3cg
+MzJrIHJldHVybiBzaXplIGluIHRoZQ0KPiBkZXNjcmlwdG9yDQo+IA0KPiBPbiBUdWVzZGF5IDE3
+IE9jdG9iZXIgMjAxNyAxMzoyMTo0OCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gPiBTb21l
+IHBsYXRmb3JtcyB0aGlzIHllYXIgd2lsbCBiZSBhZG9wdGluZyAzMmsgV01JIGJ1ZmZlciwgc28g
+ZG9uJ3QNCj4gPiBjb21wbGFpbiB3aGVuIGVuY291bnRlcmluZyB0aG9zZS4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNv
+bT4NCj4gPiBSZXZpZXdlZC1ieTogRWR3YXJkIE8nQ2FsbGFnaGFuIDxxdWFzaXNlY0Bnb29nbGUu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jIHwgNCAr
+Ky0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYyBi
+L2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiBpbmRleCBlY2UyZmUzNDFmMDEu
+LjI1NzhkZmY5MGExNCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxs
+LXdtaS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+IEBA
+IC02MjQsNyArNjI0LDcgQEAgc3RhdGljIHZvaWQgZGVsbF93bWlfaW5wdXRfZGVzdHJveShzdHJ1
+Y3Qgd21pX2RldmljZQ0KPiAqd2RldikNCj4gPiAgICogVmVuZG9yIFNpZ25hdHVyZSAgICAgICAg
+ICAwICAgICAgIDQgICAgIkRFTEwiDQo+ID4gICAqIE9iamVjdCBTaWduYXR1cmUgICAgICAgICAg
+NCAgICAgICA0ICAgICIgV01JIg0KPiA+ICAgKiBXTUkgSW50ZXJmYWNlIFZlcnNpb24gICAgIDgg
+ICAgICAgNCAgICA8dmVyc2lvbj4NCj4gPiAtICogV01JIGJ1ZmZlciBsZW5ndGggICAgICAgIDEy
+ICAgICAgIDQgICAgNDA5Ng0KPiA+ICsgKiBXTUkgYnVmZmVyIGxlbmd0aCAgICAgICAgMTIgICAg
+ICAgNCAgICA0MDk2IG9yIDMyNzY4DQo+ID4gICAqLw0KPiA+ICBzdGF0aWMgaW50IGRlbGxfd21p
+X2NoZWNrX2Rlc2NyaXB0b3JfYnVmZmVyKHN0cnVjdCB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+ICB7
+DQo+ID4gQEAgLTY3NCw3ICs2NzQsNyBAQCBzdGF0aWMgaW50IGRlbGxfd21pX2NoZWNrX2Rlc2Ny
+aXB0b3JfYnVmZmVyKHN0cnVjdA0KPiB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+ICAJCWRldl93YXJu
+KCZ3ZGV2LT5kZXYsICJEZWxsIGRlc2NyaXB0b3IgYnVmZmVyIGhhcyB1bmtub3duDQo+IHZlcnNp
+b24gKCV1KVxuIiwNCj4gPiAgCQkJYnVmZmVyWzJdKTsNCj4gPg0KPiA+IC0JaWYgKGJ1ZmZlclsz
+XSAhPSA0MDk2KQ0KPiA+ICsJaWYgKGJ1ZmZlclszXSAhPSA0MDk2ICYmIGJ1ZmZlclszXSAhPSAz
+Mjc2OCkNCj4gPiAgCQlkZXZfd2Fybigmd2Rldi0+ZGV2LCAiRGVsbCBkZXNjcmlwdG9yIGJ1ZmZl
+ciBoYXMgaW52YWxpZCBidWZmZXINCj4gbGVuZ3RoICgldSlcbiIsDQo+ID4gIAkJCWJ1ZmZlclsz
+XSk7DQo+ID4NCj4gDQo+IE5vdywgd2hlbiBidWZmZXIgc2l6ZSBpcyBnb2luZyB0byBiZSBleHBv
+cnRlZCB0byB1c2Vyc3BhY2UgYW5kIHVzZXJzcGFjZQ0KPiB3b3VsZCBuZWVkIHRvIHByZXBhcmUg
+Y29ycmVjdCByZXF1ZXN0LCB3b3VsZCBub3QgaXQgYmV0dGVyIHRvIGFsbG93IGFueQ0KPiBwb3Np
+dGl2ZSBidWZmZXIgc2l6ZT8gVGhpcyB3b3VsZCBhbGxvdyBuZXcgbWFjaGluZXMgdG8gd29yayBl
+dmVuIGlmDQo+IGJ1ZmZlciBzaXplIHdvdWxkIGJlIGluY3JlYXNlZCBhZ2FpbiAob3IgZGVjcmVh
+c2VkKS4NCg0KSSBzdXBwb3NlIHlvdSdyZSByaWdodCB0aGUgd2FybmluZyBpc24ndCB2ZXJ5IHVz
+ZWZ1bCBhcyB0aGUgZGF0YSBpcyBwcm9wZXJseQ0KdXNlZCB3aXRoaW4gdXNlcnNwYWNlIGFuZCB0
+aGUgcmVzdCBvZiB0aGUgZHJpdmVycyBub3cuICBJJ2xsIG1ha2Ugc29tZQ0KYWRqdXN0bWVudHMg
+dG8gcmVtb3ZlIHRoaXMgd2FybmluZyBpbnN0ZWFkLg0K
