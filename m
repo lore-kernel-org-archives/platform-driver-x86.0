@@ -1,102 +1,102 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
  oem string is detected
-Date: Tue, 17 Oct 2017 21:25:03 +0200
-Message-ID: <20171017192503.z3yh5pdmxgr7rvbp@pali>
+Date: Tue, 17 Oct 2017 19:29:08 +0000
+Message-ID: <b224d18763054eaa83147c23ca154d2b@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
  <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
  <20171017190336.iqhzmdsimx4f7mfw@pali>
  <f8132fa7a90a4954831fc3ee30be4329@ausx13mpc120.AMER.DELL.COM>
  <811c84e436424acaba9a02186db00cf8@ausx13mpc120.AMER.DELL.COM>
+ <20171017192503.z3yh5pdmxgr7rvbp@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:55839 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753816AbdJQTZG (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:14155 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S965336AbdJQT3U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:25:06 -0400
-Content-Disposition: inline
-In-Reply-To: <811c84e436424acaba9a02186db00cf8@ausx13mpc120.AMER.DELL.COM>
+        Tue, 17 Oct 2017 15:29:20 -0400
+In-Reply-To: <20171017192503.z3yh5pdmxgr7rvbp@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
+To: pali.rohar@gmail.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Tuesday 17 October 2017 19:19:02 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Limonciello, Mario
-> > Sent: Tuesday, October 17, 2017 2:11 PM
-> > To: 'Pali Rohár' <pali.rohar@gmail.com>
-> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
-> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > <gnomes@lxorguk.ukuu.org.uk>
-> > Subject: RE: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper oem
-> > string is detected
-> > 
-> > > -----Original Message-----
-> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > Sent: Tuesday, October 17, 2017 2:04 PM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
-> > Andy
-> > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > > <gnomes@lxorguk.ukuu.org.uk>
-> > > Subject: Re: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper oem
-> > > string is detected
-> > >
-> > > On Tuesday 17 October 2017 13:21:51 Mario Limonciello wrote:
-> > > > The proper way to indicate that a system is a 'supported' Dell System
-> > > > is by the presence of this string in OEM strings.
-> > > >
-> > > > Allowing the driver to load on non-Dell systems will have undefined
-> > > > results.
-> > > >
-> > > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > > > Reviewed-by: Edward O'Callaghan <quasisec@google.com>
-> > > > ---
-> > > >  drivers/platform/x86/dell-smbios.c | 7 +++++++
-> > > >  1 file changed, 7 insertions(+)
-> > > >
-> > > > diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-
-> > > smbios.c
-> > > > index e9b1ca07c872..7e779278d054 100644
-> > > > --- a/drivers/platform/x86/dell-smbios.c
-> > > > +++ b/drivers/platform/x86/dell-smbios.c
-> > > > @@ -172,8 +172,15 @@ static void __init find_tokens(const struct dmi_header
-> > > *dm, void *dummy)
-> > > >
-> > > >  static int __init dell_smbios_init(void)
-> > > >  {
-> > > > +	const struct dmi_device *valid;
-> > > >  	int ret;
-> > > >
-> > > > +	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
-> > > NULL);
-> > >
-> > > Are you sure that all Dell machines have exactly this string? IIRC this
-> > > smbios interface via SMM is supported by machines back to 2005... Also
-> > > in other DMI tables in dell-latop there is e.g. "Dell Inc." or "Dell
-> > > Computer Corporation".
-> > >
-> > I checked the spec and it's been there since systems 1999 onward.
-> > 
-> 
-> Oh and it's case it's not apparent, this is from OEM strings section.  It's not
-> the same as standard SMBIOS strings for system manufacturer, bios vendor
-> etc.  I'm checking this one specifically because a system can be rebranded.  
-> When rebranded the drivers won't load automatically, but this interface 
-> should still work on a if manually loaded.
-
-So if machine is rebranded, then this string is also changed? If string
-is changed, then this patch cause our kernel driver to refuse load on
-those machines...
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3
+IDI6MjUgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgYW5keS5zaGV2Y2hlbmtvQGdtYWls
+LmNvbTsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHBsYXRmb3JtLWRyaXZlci14
+ODZAdmdlci5rZXJuZWwub3JnOyBsdXRvQGtlcm5lbC5vcmc7DQo+IHF1YXNpc2VjQGdvb2dsZS5j
+b207IHJqd0Byand5c29ja2kubmV0OyBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOw0KPiBn
+cmVnQGtyb2FoLmNvbTsgZ25vbWVzQGx4b3JndWsudWt1dS5vcmcudWsNCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCB2OSAwNy8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXNtYmlvczogb25seSBydW4gaWYg
+cHJvcGVyIG9lbQ0KPiBzdHJpbmcgaXMgZGV0ZWN0ZWQNCj4gDQo+IE9uIFR1ZXNkYXkgMTcgT2N0
+b2JlciAyMDE3IDE5OjE5OjAyIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+
+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExpbW9uY2llbGxvLCBN
+YXJpbw0KPiA+ID4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxNywgMjAxNyAyOjExIFBNDQo+ID4g
+PiBUbzogJ1BhbGkgUm9ow6FyJyA8cGFsaS5yb2hhckBnbWFpbC5jb20+DQo+ID4gPiBDYzogZHZo
+YXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWls
+LmNvbT47DQo+ID4gPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZv
+cm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IEFuZHkNCj4gPiA+IEx1dG9taXJza2kg
+PGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29ja2kubmV0
+Ow0KPiA+ID4gbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsgR3JlZyBLSCA8Z3JlZ0Brcm9h
+aC5jb20+OyBBbGFuIENveA0KPiA+ID4gPGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrPg0KPiA+
+ID4gU3ViamVjdDogUkU6IFtQQVRDSCB2OSAwNy8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXNtYmlv
+czogb25seSBydW4gaWYgcHJvcGVyDQo+IG9lbQ0KPiA+ID4gc3RyaW5nIGlzIGRldGVjdGVkDQo+
+ID4gPg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBQ
+YWxpIFJvaMOhciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiA+ID4gPiBTZW50OiBU
+dWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3IDI6MDQgUE0NCj4gPiA+ID4gVG86IExpbW9uY2llbGxv
+LCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+DQo+ID4gPiA+IENjOiBkdmhhcnRA
+aW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29t
+PjsNCj4gPiA+ID4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3Jt
+LWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gQW5keQ0KPiA+ID4gPiBMdXRvbWly
+c2tpIDxsdXRvQGtlcm5lbC5vcmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNvY2tp
+Lm5ldDsNCj4gPiA+ID4gbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsgR3JlZyBLSCA8Z3Jl
+Z0Brcm9haC5jb20+OyBBbGFuIENveA0KPiA+ID4gPiA8Z25vbWVzQGx4b3JndWsudWt1dS5vcmcu
+dWs+DQo+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMDcvMTddIHBsYXRmb3JtL3g4Njog
+ZGVsbC1zbWJpb3M6IG9ubHkgcnVuIGlmIHByb3Blcg0KPiBvZW0NCj4gPiA+ID4gc3RyaW5nIGlz
+IGRldGVjdGVkDQo+ID4gPiA+DQo+ID4gPiA+IE9uIFR1ZXNkYXkgMTcgT2N0b2JlciAyMDE3IDEz
+OjIxOjUxIE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+ID4gPiA+IFRoZSBwcm9wZXIgd2F5
+IHRvIGluZGljYXRlIHRoYXQgYSBzeXN0ZW0gaXMgYSAnc3VwcG9ydGVkJyBEZWxsIFN5c3RlbQ0K
+PiA+ID4gPiA+IGlzIGJ5IHRoZSBwcmVzZW5jZSBvZiB0aGlzIHN0cmluZyBpbiBPRU0gc3RyaW5n
+cy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEFsbG93aW5nIHRoZSBkcml2ZXIgdG8gbG9hZCBvbiBu
+b24tRGVsbCBzeXN0ZW1zIHdpbGwgaGF2ZSB1bmRlZmluZWQNCj4gPiA+ID4gPiByZXN1bHRzLg0K
+PiA+ID4gPiA+DQo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1h
+cmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+ID4gPiA+IFJldmlld2VkLWJ5OiBFZHdhcmQg
+TydDYWxsYWdoYW4gPHF1YXNpc2VjQGdvb2dsZS5jb20+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+
+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMgfCA3ICsrKysrKysNCj4gPiA+
+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMgYi9kcml2
+ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiA+ID4gPiBzbWJpb3MuYw0KPiA+ID4gPiA+IGluZGV4
+IGU5YjFjYTA3Yzg3Mi4uN2U3NzkyNzhkMDU0IDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMNCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gPiA+ID4gQEAgLTE3Miw4ICsxNzIsMTUgQEAg
+c3RhdGljIHZvaWQgX19pbml0IGZpbmRfdG9rZW5zKGNvbnN0IHN0cnVjdA0KPiBkbWlfaGVhZGVy
+DQo+ID4gPiA+ICpkbSwgdm9pZCAqZHVtbXkpDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAgc3RhdGlj
+IGludCBfX2luaXQgZGVsbF9zbWJpb3NfaW5pdCh2b2lkKQ0KPiA+ID4gPiA+ICB7DQo+ID4gPiA+
+ID4gKwljb25zdCBzdHJ1Y3QgZG1pX2RldmljZSAqdmFsaWQ7DQo+ID4gPiA+ID4gIAlpbnQgcmV0
+Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gKwl2YWxpZCA9IGRtaV9maW5kX2RldmljZShETUlfREVW
+X1RZUEVfT0VNX1NUUklORywgIkRlbGwNCj4gU3lzdGVtIiwNCj4gPiA+ID4gTlVMTCk7DQo+ID4g
+PiA+DQo+ID4gPiA+IEFyZSB5b3Ugc3VyZSB0aGF0IGFsbCBEZWxsIG1hY2hpbmVzIGhhdmUgZXhh
+Y3RseSB0aGlzIHN0cmluZz8gSUlSQyB0aGlzDQo+ID4gPiA+IHNtYmlvcyBpbnRlcmZhY2Ugdmlh
+IFNNTSBpcyBzdXBwb3J0ZWQgYnkgbWFjaGluZXMgYmFjayB0byAyMDA1Li4uIEFsc28NCj4gPiA+
+ID4gaW4gb3RoZXIgRE1JIHRhYmxlcyBpbiBkZWxsLWxhdG9wIHRoZXJlIGlzIGUuZy4gIkRlbGwg
+SW5jLiIgb3IgIkRlbGwNCj4gPiA+ID4gQ29tcHV0ZXIgQ29ycG9yYXRpb24iLg0KPiA+ID4gPg0K
+PiA+ID4gSSBjaGVja2VkIHRoZSBzcGVjIGFuZCBpdCdzIGJlZW4gdGhlcmUgc2luY2Ugc3lzdGVt
+cyAxOTk5IG9ud2FyZC4NCj4gPiA+DQo+ID4NCj4gPiBPaCBhbmQgaXQncyBjYXNlIGl0J3Mgbm90
+IGFwcGFyZW50LCB0aGlzIGlzIGZyb20gT0VNIHN0cmluZ3Mgc2VjdGlvbi4gIEl0J3Mgbm90DQo+
+ID4gdGhlIHNhbWUgYXMgc3RhbmRhcmQgU01CSU9TIHN0cmluZ3MgZm9yIHN5c3RlbSBtYW51ZmFj
+dHVyZXIsIGJpb3MgdmVuZG9yDQo+ID4gZXRjLiAgSSdtIGNoZWNraW5nIHRoaXMgb25lIHNwZWNp
+ZmljYWxseSBiZWNhdXNlIGEgc3lzdGVtIGNhbiBiZSByZWJyYW5kZWQuDQo+ID4gV2hlbiByZWJy
+YW5kZWQgdGhlIGRyaXZlcnMgd29uJ3QgbG9hZCBhdXRvbWF0aWNhbGx5LCBidXQgdGhpcyBpbnRl
+cmZhY2UNCj4gPiBzaG91bGQgc3RpbGwgd29yayBvbiBhIGlmIG1hbnVhbGx5IGxvYWRlZC4NCj4g
+DQo+IFNvIGlmIG1hY2hpbmUgaXMgcmVicmFuZGVkLCB0aGVuIHRoaXMgc3RyaW5nIGlzIGFsc28g
+Y2hhbmdlZD8gSWYgc3RyaW5nDQo+IGlzIGNoYW5nZWQsIHRoZW4gdGhpcyBwYXRjaCBjYXVzZSBv
+dXIga2VybmVsIGRyaXZlciB0byByZWZ1c2UgbG9hZCBvbg0KPiB0aG9zZSBtYWNoaW5lcy4uLg0K
+PiANCg0KTm8sIHRoaXMgaXMgdGhlIG9ubHkgc3RyaW5nIHRoYXQgeW91IGNhbiB1c2UgdG8gdGVs
+bCBpdCdzIHN0aWxsIGEgRGVsbCBzeXN0ZW0NCndoZW4gaXQncyBiZWVuIHJlYnJhbmRlZCwgdGhh
+dCdzIHdoeSBpdCdzIHRoZSBwcm9wZXIgdGhpbmcgdG8gdXNlIGluIHRoaXMNCmRyaXZlci4NCg0K
