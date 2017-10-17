@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v9 12/17] platform/x86: dell-smbios: Add filtering support
-Date: Tue, 17 Oct 2017 13:21:56 -0500
-Message-ID: <f7c5fecc0f2b26b6ce21f5783dd4c4c1cd98eba1.1508259916.git.mario.limonciello@dell.com>
+Subject: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios communication over WMI
+Date: Tue, 17 Oct 2017 13:22:01 -0500
+Message-ID: <a60ca82dca6e453f7bd920c082de48ea4378b7d2.1508259916.git.mario.limonciello@dell.com>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508259916.git.mario.limonciello@dell.com>
@@ -12,293 +12,345 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-When a userspace interface is introduced to dell-smbios filtering
-support will be used to make sure that userspace doesn't make calls
-deemed unsafe or that can cause the kernel drivers to get out of
-sync.
+This application uses the character device /dev/wmi/dell-smbios
+to perform SMBIOS communications from userspace.
 
-A blacklist is provided for the following:
-- Items that are in use by other kernel drivers
-- Items that are deemed unsafe (diagnostics, write-once, etc)
-- Any items in the blacklist will be rejected.
-
-Following that a whitelist is provided as follows:
-- Each item has an associated capability.  If a userspace interface
-  accesses this item, that capability will be tested to filter
-  the request.
-- If the process provides CAP_SYS_RAWIO the whitelist will be
-  overridden.
-
-When an item is not in the blacklist, or whitelist and the process
-is run with insufficient capabilities the call will be rejected.
+It offers demonstrations of a few simple tasks:
+ - Running a class/select command
+ - Querying a token value
+ - Activating a token
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- drivers/platform/x86/dell-smbios.c | 190 +++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smbios.h |  11 +++
- 2 files changed, 201 insertions(+)
+ MAINTAINERS                     |   1 +
+ tools/Makefile                  |  14 +--
+ tools/wmi/Makefile              |  18 ++++
+ tools/wmi/dell-smbios-example.c | 214 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 241 insertions(+), 6 deletions(-)
+ create mode 100644 tools/wmi/Makefile
+ create mode 100644 tools/wmi/dell-smbios-example.c
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index b540cd4605f7..b2aeb740c04b 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -24,6 +24,7 @@
- #include <linux/slab.h>
- #include "dell-smbios.h"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 84afbf8ef7d5..64529a3f6910 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3997,6 +3997,7 @@ M:	Mario Limonciello <mario.limonciello@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell-smbios-wmi.c
++F:	tools/wmi/dell-smbios-example.c
  
-+static u32 da_supported_commands;
- static int da_num_tokens;
- static struct platform_device *platform_device;
- static struct calling_interface_token *da_tokens;
-@@ -38,6 +39,91 @@ struct smbios_device {
- 	int (*call_fn)(struct calling_interface_buffer *);
- };
+ DELL LAPTOP DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+diff --git a/tools/Makefile b/tools/Makefile
+index 9dfede37c8ff..9d2fd2606810 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -29,6 +29,7 @@ help:
+ 	@echo '  usb                    - USB testing tools'
+ 	@echo '  virtio                 - vhost test module'
+ 	@echo '  vm                     - misc vm tools'
++	@echo '  wmi			- WMI interface examples'
+ 	@echo '  x86_energy_perf_policy - Intel energy policy tool'
+ 	@echo ''
+ 	@echo 'You can do:'
+@@ -57,7 +58,7 @@ acpi: FORCE
+ cpupower: FORCE
+ 	$(call descend,power/$@)
  
-+struct smbios_call {
-+	u32 need_capability;
-+	int class;
-+	int select;
-+};
-+
-+/* calls that are whitelisted for given capabilities */
-+static struct smbios_call call_whitelist[] = {
-+	/* generally tokens are allowed, but may be further filtered or
-+	 * restricted by token blacklist or whitelist
-+	 */
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_STD},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_AC},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_BAT},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_STD},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_AC},
-+	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_BAT},
-+	/* used by userspace: fwupdate */
-+	{CAP_SYS_ADMIN, CLASS_ADMIN_PROP,	SELECT_ADMIN_PROP},
-+	/* used by userspace: fwupd */
-+	{CAP_SYS_ADMIN,	CLASS_INFO,		SELECT_DOCK},
-+	{CAP_SYS_ADMIN,	CLASS_FLASH_INTERFACE,	SELECT_FLASH_INTERFACE},
-+};
-+
-+/* calls that are explicitly blacklisted */
-+static struct smbios_call call_blacklist[] = {
-+	{0x0000, 01, 07}, /* manufacturing use */
-+	{0x0000, 06, 05}, /* manufacturing use */
-+	{0x0000, 11, 03}, /* write once */
-+	{0x0000, 11, 07}, /* write once */
-+	{0x0000, 11, 11}, /* write once */
-+	{0x0000, 19, -1}, /* diagnostics */
-+	/* handled by kernel: dell-laptop */
-+	{0x0000, CLASS_INFO, SELECT_RFKILL},
-+	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
-+};
-+
-+struct token_range {
-+	u32 need_capability;
-+	u16 min;
-+	u16 max;
-+};
-+
-+/* tokens that are whitelisted for given capabilities */
-+static struct token_range token_whitelist[] = {
-+	/* used by userspace: fwupdate */
-+	{CAP_SYS_ADMIN,	CAPSULE_EN_TOKEN,	CAPSULE_DIS_TOKEN},
-+	/* can indicate to userspace that WMI is needed */
-+	{0x0000,	WSMT_EN_TOKEN,		WSMT_DIS_TOKEN}
-+};
-+
-+/* tokens that are explicitly blacklisted */
-+static struct token_range token_blacklist[] = {
-+	{0x0000, 0x0058, 0x0059}, /* ME use */
-+	{0x0000, 0x00CD, 0x00D0}, /* raid shadow copy */
-+	{0x0000, 0x013A, 0x01FF}, /* sata shadow copy */
-+	{0x0000, 0x0175, 0x0176}, /* write once */
-+	{0x0000, 0x0195, 0x0197}, /* diagnostics */
-+	{0x0000, 0x01DC, 0x01DD}, /* manufacturing use */
-+	{0x0000, 0x027D, 0x0284}, /* diagnostics */
-+	{0x0000, 0x02E3, 0x02E3}, /* manufacturing use */
-+	{0x0000, 0x02FF, 0x02FF}, /* manufacturing use */
-+	{0x0000, 0x0300, 0x0302}, /* manufacturing use */
-+	{0x0000, 0x0325, 0x0326}, /* manufacturing use */
-+	{0x0000, 0x0332, 0x0335}, /* fan control */
-+	{0x0000, 0x0350, 0x0350}, /* manufacturing use */
-+	{0x0000, 0x0363, 0x0363}, /* manufacturing use */
-+	{0x0000, 0x0368, 0x0368}, /* manufacturing use */
-+	{0x0000, 0x03F6, 0x03F7}, /* manufacturing use */
-+	{0x0000, 0x049E, 0x049F}, /* manufacturing use */
-+	{0x0000, 0x04A0, 0x04A3}, /* disagnostics */
-+	{0x0000, 0x04E6, 0x04E7}, /* manufacturing use */
-+	{0x0000, 0x4000, 0x7FFF}, /* internal BIOS use */
-+	{0x0000, 0x9000, 0x9001}, /* internal BIOS use */
-+	{0x0000, 0xA000, 0xBFFF}, /* write only */
-+	{0x0000, 0xEFF0, 0xEFFF}, /* internal BIOS use */
-+	/* handled by kernel: dell-laptop */
-+	{0x0000, BRIGHTNESS_TOKEN,	BRIGHTNESS_TOKEN},
-+	{0x0000, KBD_LED_OFF_TOKEN,	KBD_LED_AUTO_TOKEN},
-+	{0x0000, KBD_LED_AC_TOKEN,	KBD_LED_AC_TOKEN},
-+	{0x0000, KBD_LED_AUTO_25_TOKEN,	KBD_LED_AUTO_75_TOKEN},
-+	{0x0000, KBD_LED_AUTO_100_TOKEN,	KBD_LED_AUTO_100_TOKEN},
-+	{0x0000, GLOBAL_MIC_MUTE_ENABLE,	GLOBAL_MIC_MUTE_DISABLE},
-+};
-+
- static LIST_HEAD(smbios_device_list);
+-cgroup firewire hv guest spi usb virtio vm net iio gpio objtool leds: FORCE
++cgroup firewire hv guest spi usb virtio vm net iio gpio objtool leds wmi: FORCE
+ 	$(call descend,$@)
  
- int dell_smbios_error(int value)
-@@ -90,6 +176,108 @@ void dell_smbios_unregister_device(struct device *d)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_unregister_device);
+ liblockdep: FORCE
+@@ -92,7 +93,7 @@ kvm_stat: FORCE
+ all: acpi cgroup cpupower gpio hv firewire liblockdep \
+ 		perf selftests spi turbostat usb \
+ 		virtio vm net x86_energy_perf_policy \
+-		tmon freefall iio objtool kvm_stat
++		tmon freefall iio objtool kvm_stat wmi
  
-+int dell_smbios_call_filter(struct device *d,
-+			    struct calling_interface_buffer *buffer)
+ acpi_install:
+ 	$(call descend,power/$(@:_install=),install)
+@@ -100,7 +101,7 @@ acpi_install:
+ cpupower_install:
+ 	$(call descend,power/$(@:_install=),install)
+ 
+-cgroup_install firewire_install gpio_install hv_install iio_install perf_install spi_install usb_install virtio_install vm_install net_install objtool_install:
++cgroup_install firewire_install gpio_install hv_install iio_install perf_install spi_install usb_install virtio_install vm_install net_install objtool_install wmi_install:
+ 	$(call descend,$(@:_install=),install)
+ 
+ liblockdep_install:
+@@ -125,7 +126,8 @@ install: acpi_install cgroup_install cpupower_install gpio_install \
+ 		hv_install firewire_install iio_install liblockdep_install \
+ 		perf_install selftests_install turbostat_install usb_install \
+ 		virtio_install vm_install net_install x86_energy_perf_policy_install \
+-		tmon_install freefall_install objtool_install kvm_stat_install
++		tmon_install freefall_install objtool_install kvm_stat_install \
++		wmi_install
+ 
+ acpi_clean:
+ 	$(call descend,power/acpi,clean)
+@@ -133,7 +135,7 @@ acpi_clean:
+ cpupower_clean:
+ 	$(call descend,power/cpupower,clean)
+ 
+-cgroup_clean hv_clean firewire_clean spi_clean usb_clean virtio_clean vm_clean net_clean iio_clean gpio_clean objtool_clean leds_clean:
++cgroup_clean hv_clean firewire_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean net_clean iio_clean gpio_clean objtool_clean leds_clean:
+ 	$(call descend,$(@:_clean=),clean)
+ 
+ liblockdep_clean:
+@@ -171,6 +173,6 @@ clean: acpi_clean cgroup_clean cpupower_clean hv_clean firewire_clean \
+ 		perf_clean selftests_clean turbostat_clean spi_clean usb_clean virtio_clean \
+ 		vm_clean net_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
+ 		freefall_clean build_clean libbpf_clean libsubcmd_clean liblockdep_clean \
+-		gpio_clean objtool_clean leds_clean
++		gpio_clean objtool_clean leds_clean wmi_clean
+ 
+ .PHONY: FORCE
+diff --git a/tools/wmi/Makefile b/tools/wmi/Makefile
+new file mode 100644
+index 000000000000..e664f1167388
+--- /dev/null
++++ b/tools/wmi/Makefile
+@@ -0,0 +1,18 @@
++PREFIX ?= /usr
++SBINDIR ?= sbin
++INSTALL ?= install
++CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include
++CC = $(CROSS_COMPILE)gcc
++
++TARGET = dell-smbios-example
++
++all: $(TARGET)
++
++%: %.c
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
++
++clean:
++	$(RM) $(TARGET)
++
++install: dell-smbios-example
++	$(INSTALL) -D -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/$(SBINDIR)/$(TARGET)
+diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-example.c
+new file mode 100644
+index 000000000000..69c4dd9c6056
+--- /dev/null
++++ b/tools/wmi/dell-smbios-example.c
+@@ -0,0 +1,214 @@
++/*
++ *  Sample application for SMBIOS communication over WMI interface
++ *  Performs the following:
++ *  - Simple class/select lookup for TPM information
++ *  - Simple query of known tokens and their values
++ *  - Simple activation of a token
++ *
++ *  Copyright (C) 2017 Dell, Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++
++/* if uapi header isn't installed, this might not yet exist */
++#ifndef __packed
++#define __packed __attribute__((packed))
++#endif
++#include <linux/wmi.h>
++
++/* It would be better to discover these using udev, but for a simple
++ * application they're hardcoded
++ */
++static const char *ioctl_devfs = "/dev/wmi/dell-smbios";
++static const char *token_sysfs =
++			"/sys/bus/platform/devices/dell-smbios.0/tokens";
++static const char *buffer_sysfs =
++			"/sys/bus/wmi/devices/A80593CE-A997-11DA-B012-B622A1EF5492/required_buffer_size";
++
++static void show_buffer(struct dell_wmi_smbios_buffer *buffer)
 +{
-+	u16 t = 0;
-+	int i;
-+
-+	/* can't make calls over 30 */
-+	if (buffer->class > 30) {
-+		dev_dbg(d, "class too big: %u\n", buffer->class);
-+		return -EINVAL;
-+	}
-+
-+	/* supported calls on the particular system */
-+	if (!(da_supported_commands & (1 << buffer->class))) {
-+		dev_dbg(d, "invalid command, supported commands: 0x%8x\n",
-+			da_supported_commands);
-+		return -EINVAL;
-+	}
-+
-+	/* match against call blacklist  */
-+	for (i = 0; i < ARRAY_SIZE(call_blacklist); i++) {
-+		if (buffer->class != call_blacklist[i].class)
-+			continue;
-+		if (buffer->select != call_blacklist[i].select &&
-+		    call_blacklist[i].select != -1)
-+			continue;
-+		dev_dbg(d, "blacklisted command: %u/%u\n",
-+			buffer->class, buffer->select);
-+		return -EINVAL;
-+	}
-+
-+	/* if a token call, find token ID */
-+	if ((buffer->class == CLASS_TOKEN_READ && buffer->select < 3) ||
-+	    (buffer->class == CLASS_TOKEN_WRITE && buffer->select < 3)) {
-+		/* find the matching token ID */
-+		for (i = 0; i < da_num_tokens; i++) {
-+			if (da_tokens[i].location != buffer->input[0])
-+				continue;
-+			t = da_tokens[i].tokenID;
-+			break;
-+		}
-+
-+		/* token call; but token didn't exist */
-+		if (!t) {
-+			dev_dbg(d, "token at location %04x doesn't exist\n",
-+				buffer->input[0]);
-+			return -EINVAL;
-+		}
-+
-+		/* match against token blacklist */
-+		for (i = 0; i < ARRAY_SIZE(token_blacklist); i++) {
-+			if (!token_blacklist[i].min || !token_blacklist[i].max)
-+				continue;
-+			if (t >= token_blacklist[i].min &&
-+			    t <= token_blacklist[i].max)
-+				return -EINVAL;
-+		}
-+
-+		/* match against token whitelist */
-+		for (i = 0; i < ARRAY_SIZE(token_whitelist); i++) {
-+			if (!token_whitelist[i].min || !token_whitelist[i].max)
-+				continue;
-+			if (t < token_whitelist[i].min ||
-+			    t > token_whitelist[i].max)
-+				continue;
-+			if (!token_whitelist[i].need_capability ||
-+			    capable(token_whitelist[i].need_capability)) {
-+				dev_dbg(d, "whitelisted token: %x\n", t);
-+				return 0;
-+			}
-+
-+		}
-+	}
-+	/* match against call whitelist */
-+	for (i = 0; i < ARRAY_SIZE(call_whitelist); i++) {
-+		if (buffer->class != call_whitelist[i].class)
-+			continue;
-+		if (buffer->select != call_whitelist[i].select)
-+			continue;
-+		if (!call_whitelist[i].need_capability ||
-+		    capable(call_whitelist[i].need_capability)) {
-+			dev_dbg(d, "whitelisted capable command: %u/%u\n",
-+			buffer->class, buffer->select);
-+			return 0;
-+		}
-+		dev_dbg(d, "missing capability %d for %u/%u\n",
-+			call_whitelist[i].need_capability,
-+			buffer->class, buffer->select);
-+
-+	}
-+
-+	/* not in a whitelist, only allow processes with capabilities */
-+	if (capable(CAP_SYS_RAWIO)) {
-+		dev_dbg(d, "Allowing %u/%u due to CAP_SYS_RAWIO\n",
-+			buffer->class, buffer->select);
-+		return 0;
-+	}
-+
-+	return -EACCES;
++	printf("Call: %x/%x [%x,%x,%x,%x]\nResults: [%8x,%8x,%8x,%8x]\n",
++	buffer->std.class, buffer->std.select,
++	buffer->std.input[0], buffer->std.input[1],
++	buffer->std.input[2], buffer->std.input[3],
++	buffer->std.output[0], buffer->std.output[1],
++	buffer->std.output[2], buffer->std.output[3]);
 +}
-+EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
 +
- int dell_smbios_call(struct calling_interface_buffer *buffer)
- {
- 	int (*call_fn)(struct calling_interface_buffer *) = NULL;
-@@ -168,6 +356,8 @@ static void __init parse_da_table(const struct dmi_header *dm)
- 	if (dm->length < 17)
- 		return;
- 
-+	da_supported_commands = table->supportedCmds;
++static int run_wmi_smbios_cmd(struct dell_wmi_smbios_buffer *buffer)
++{
++	int fd;
++	int ret;
 +
- 	new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
- 				 sizeof(struct calling_interface_token),
- 				 GFP_KERNEL);
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index db6a16e5f87c..91b9c615452d 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -26,9 +26,14 @@
- #define SELECT_TOKEN_AC 2
- #define CLASS_KBD_BACKLIGHT 4
- #define SELECT_KBD_BACKLIGHT 11
-+#define CLASS_FLASH_INTERFACE 7
-+#define SELECT_FLASH_INTERFACE 3
-+#define CLASS_ADMIN_PROP 10
-+#define SELECT_ADMIN_PROP 3
- #define CLASS_INFO 17
- #define SELECT_RFKILL 11
- #define SELECT_APP_REGISTRATION	3
-+#define SELECT_DOCK 22
- 
- /* Tokens used in kernel drivers, any of these
-  * should be filtered from userspace access
-@@ -44,6 +49,10 @@
- #define KBD_LED_AUTO_100_TOKEN	0x02F6
- #define GLOBAL_MIC_MUTE_ENABLE	0x0364
- #define GLOBAL_MIC_MUTE_DISABLE	0x0365
++	fd = open(ioctl_devfs, O_NONBLOCK);
++	ret = ioctl(fd, DELL_WMI_SMBIOS_CMD, buffer);
++	close(fd);
++	return ret;
++}
 +
-+/* tokens whitelisted to userspace use */
-+#define CAPSULE_EN_TOKEN	0x0461
-+#define CAPSULE_DIS_TOKEN	0x0462
- #define WSMT_EN_TOKEN		0x04EC
- #define WSMT_DIS_TOKEN		0x04ED
- 
-@@ -80,6 +89,8 @@ int dell_smbios_register_device(struct device *d, void *call_fn);
- void dell_smbios_unregister_device(struct device *d);
- 
- int dell_smbios_error(int value);
-+int dell_smbios_call_filter(struct device *d,
-+	struct calling_interface_buffer *buffer);
- int dell_smbios_call(struct calling_interface_buffer *buffer);
- 
- struct calling_interface_token *dell_smbios_find_token(int tokenid);
++static int find_token(__u16 token, __u16 *location, __u16 *value)
++{
++	char location_sysfs[60];
++	char value_sysfs[57];
++	char buf[4096];
++	FILE *f;
++	int ret;
++
++	ret = sprintf(value_sysfs, "%s/%04x_value", token_sysfs, token);
++	if (ret < 0) {
++		printf("sprintf value failed\n");
++		return 2;
++	}
++	f = fopen(value_sysfs, "rb");
++	if (!f) {
++		printf("failed to open %s\n", value_sysfs);
++		return 2;
++	}
++	fread(buf, 1, 4096, f);
++	fclose(f);
++	*value = (__u16) strtol(buf, NULL, 16);
++
++	ret = sprintf(location_sysfs, "%s/%04x_location", token_sysfs, token);
++	if (ret < 0) {
++		printf("sprintf location failed\n");
++		return 1;
++	}
++	f = fopen(location_sysfs, "rb");
++	if (!f) {
++		printf("failed to open %s\n", location_sysfs);
++		return 2;
++	}
++	fread(buf, 1, 4096, f);
++	fclose(f);
++	*location = (__u16) strtol(buf, NULL, 16);
++
++	if (*location)
++		return 0;
++	return 2;
++}
++
++static int token_is_active(__u16 *location, __u16 *cmpvalue,
++			   struct dell_wmi_smbios_buffer *buffer)
++{
++	int ret;
++
++	buffer->std.class = CLASS_TOKEN_READ;
++	buffer->std.select = SELECT_TOKEN_STD;
++	buffer->std.input[0] = *location;
++	ret = run_wmi_smbios_cmd(buffer);
++	if (ret != 0 || buffer->std.output[0] != 0)
++		return ret;
++	ret = (buffer->std.output[1] == *cmpvalue);
++	return ret;
++}
++
++static int query_token(__u16 token, struct dell_wmi_smbios_buffer *buffer)
++{
++	__u16 location;
++	__u16 value;
++	int ret;
++
++	ret = find_token(token, &location, &value);
++	if (ret != 0) {
++		printf("unable to find token %04x\n", token);
++		return 1;
++	}
++	return token_is_active(&location, &value, buffer);
++}
++
++static int activate_token(struct dell_wmi_smbios_buffer *buffer,
++		   __u16 token)
++{
++	__u16 location;
++	__u16 value;
++	int ret;
++
++	ret = find_token(token, &location, &value);
++	if (ret != 0) {
++		printf("unable to find token %04x\n", token);
++		return 1;
++	}
++	buffer->std.class = CLASS_TOKEN_WRITE;
++	buffer->std.select = SELECT_TOKEN_STD;
++	buffer->std.input[0] = location;
++	buffer->std.input[1] = 1;
++	ret = run_wmi_smbios_cmd(buffer);
++	return ret;
++}
++
++static int query_buffer_size(__u64 *buffer_size)
++{
++	char buf[4096];
++	FILE *f;
++
++	f = fopen(buffer_sysfs, "rb");
++	if (!f)
++		return -EINVAL;
++	fread(buf, 1, 4096, f);
++	fclose(f);
++	*buffer_size = strtol(buf, NULL, 10);
++	return EXIT_SUCCESS;
++}
++
++int main(void)
++{
++	struct dell_wmi_smbios_buffer *buffer;
++	int ret;
++	__u64 value = 0;
++
++	ret = query_buffer_size(&value);
++	if (ret == EXIT_FAILURE || !value) {
++		printf("Unable to read buffer size\n");
++		goto out;
++	}
++	printf("Detected required buffer size %lld\n", value);
++
++	buffer = malloc(value);
++	if (buffer == NULL) {
++		printf("failed to alloc memory for ioctl\n");
++		ret = -ENOMEM;
++		goto out;
++	}
++	buffer->length = value;
++
++	/* simple SMBIOS call for looking up TPM info */
++	buffer->std.class = CLASS_FLASH_INTERFACE;
++	buffer->std.select = SELECT_FLASH_INTERFACE;
++	buffer->std.input[0] = 2;
++	ret = run_wmi_smbios_cmd(buffer);
++	if (ret) {
++		printf("smbios ioctl failed: %d\n", ret);
++		ret = EXIT_FAILURE;
++		goto out;
++	}
++	show_buffer(buffer);
++
++	/* query some tokens */
++	ret = query_token(CAPSULE_EN_TOKEN, buffer);
++	printf("UEFI Capsule enabled token is: %d\n", ret);
++	ret = query_token(CAPSULE_DIS_TOKEN, buffer);
++	printf("UEFI Capsule disabled token is: %d\n", ret);
++
++	/* activate UEFI capsule token if disabled */
++	if (ret) {
++		printf("Enabling UEFI capsule token");
++		if (activate_token(buffer, CAPSULE_EN_TOKEN)) {
++			printf("activate failed\n");
++			ret = -1;
++			goto out;
++		}
++	}
++	ret = EXIT_SUCCESS;
++out:
++	free(buffer);
++	return ret;
++}
 -- 
 2.14.1
