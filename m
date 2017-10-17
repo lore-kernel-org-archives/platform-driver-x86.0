@@ -1,54 +1,114 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v9 11/17] platform/x86: dell-smbios-smm: test for WSMT
-Date: Tue, 17 Oct 2017 21:22:58 +0200
-Message-ID: <20171017192258.fx2ejggjkyzkrzle@pali>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <e552ba67da7281d184936a551501c4040510b372.1508259916.git.mario.limonciello@dell.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [patch v4 3/3] platform/mellanox: mlxreg-hotplug: modify to use
+ regmap intreface
+Date: Tue, 17 Oct 2017 22:24:07 +0300
+Message-ID: <CAHp75VfaU-GUvgFwx=+M-=DX2NRO9A3uQkxcmtY0FVRow+S9zA@mail.gmail.com>
+References: <1508264554-184107-1-git-send-email-vadimp@mellanox.com> <1508264554-184107-4-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f46.google.com ([74.125.82.46]:44503 "EHLO
-        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S937588AbdJQTXB (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:23:01 -0400
-Content-Disposition: inline
-In-Reply-To: <e552ba67da7281d184936a551501c4040510b372.1508259916.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508264554-184107-4-git-send-email-vadimp@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 17 October 2017 13:21:55 Mario Limonciello wrote:
-> +/* When enabled this indicates that SMM won't work */
-> +static int test_wsmt_enabled(void)
-> +{
-> +	struct calling_interface_token *token;
-> +
-> +	/* if token doesn't exist, SMM will work */
-> +	token = dell_smbios_find_token(WSMT_EN_TOKEN);
-> +	if (!token)
-> +		return 0;
-> +
-> +	/* if token exists, try to access over SMM */
-> +	buffer->class = CLASS_TOKEN_READ;
-> +	buffer->select = SELECT_TOKEN_STD;
-> +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> +	buffer->input[0] = token->location;
-> +	dell_smbios_smm_call(buffer);
-> +
-> +	/* if lookup failed, we know WSMT was enabled */
-> +	if (buffer->output[0] != 0)
-> +		return 1;
-> +
-> +	/* query token status if it didn't fail */
-> +	return (buffer->output[1] == token->value);
-> +}
+On Tue, Oct 17, 2017 at 9:22 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
+> It includes:
+> - restructuring  of mlxreg header file for unification of hotplug items
+>   definition;
+> - unification of hotplug items to allow any kind of item (power
+>   controller, fan eeprom, psu eeprom, asic health in common way);
+> - utilization of regmap interface to allow independency of underlying
+>   hardware. It allows to support hotplug event functionality over
+>   programmable devices logic, when these devices can be attached to
+>   different interfaces types, like I2C, LPC, SPI.
+>
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Maybe small suggestion... function returns only zero or one -- what is a
-good candidate to have return value boolean and not basic int.
+> -#define PRIV_ATTR(i) priv->mlxreg_hotplug_attr[i]
+> -#define PRIV_DEV_ATTR(i) priv->mlxreg_hotplug_dev_attr[i]
+
+> -static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
+> +static int
+> +mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
+
+This is kinda noisy change.
+
+>  {
+
+> -       for (i = 0; i < num_attrs; i++) {
+> -               PRIV_ATTR(i) = &PRIV_DEV_ATTR(i).dev_attr.attr;
+> -
+> -               if (i < priv->plat->psu_count) {
+> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
+> -                                               GFP_KERNEL, "psu%u", i + 1);
+> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_PSU;
+> -               } else if (i < priv->plat->psu_count + priv->plat->pwr_count) {
+> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
+> -                                               GFP_KERNEL, "pwr%u", i %
+> -                                               priv->plat->pwr_count + 1);
+> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_PWR;
+> -               } else {
+> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
+> -                                               GFP_KERNEL, "fan%u", i %
+> -                                               priv->plat->fan_count + 1);
+> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_FAN;
+> -               }
+> -
+> -               if (!PRIV_ATTR(i)->name) {
+> -                       dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
+> -                               i + 1);
+> -                       return -ENOMEM;
+> +       for (i = 0; i < pdata->counter; i++, item++) {
+> +               data = item->data;
+> +               for (j = 0; j < item->count; j++, data++, id++) {
+> +                       priv->mlxreg_hotplug_attr[id] =
+> +                       &priv->mlxreg_hotplug_dev_attr[id].dev_attr.attr;
+> +                       priv->mlxreg_hotplug_attr[id]->name =
+> +                               devm_kasprintf(&priv->pdev->dev, GFP_KERNEL,
+> +                                              data->label);
+> +
+> +                       if (!priv->mlxreg_hotplug_attr[id]->name) {
+> +                               dev_err(priv->dev, "Memory allocation failed for attr %d.\n",
+> +                                       id);
+> +                               return -ENOMEM;
+> +                       }
+> +
+
+> +                       priv->mlxreg_hotplug_dev_attr[id].dev_attr.attr.mode =
+> +                                                                       0444;
+> +                       priv->mlxreg_hotplug_dev_attr[id].dev_attr.show =
+> +                                               mlxreg_hotplug_attr_show;
+> +                       priv->mlxreg_hotplug_dev_attr[id].nr = i;
+> +                       priv->mlxreg_hotplug_dev_attr[id].index = j;
+
+Why you drop macros usage here?
+
+>                 }
+> -
+> -               PRIV_DEV_ATTR(i).dev_attr.attr.name = PRIV_ATTR(i)->name;
+> -               PRIV_DEV_ATTR(i).dev_attr.attr.mode = S_IRUGO;
+> -               PRIV_DEV_ATTR(i).dev_attr.show = mlxreg_hotplug_attr_show;
+> -               PRIV_DEV_ATTR(i).index = i;
+> -               sysfs_attr_init(&PRIV_DEV_ATTR(i).dev_attr.attr);
+
+
+>  #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR         0x2000
+>  #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR         0x2500
+> -#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR         0x253a
+> -#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR          0x2558
+> -#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR          0x2564
+> -#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR          0x2588
+
+> +#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR         0x3a
+> +#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR          0x58
+> +#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR          0x64
+> +#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR          0x88
+
+These now by the fact *offsets*.
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+With Best Regards,
+Andy Shevchenko
