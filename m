@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios communication over WMI
-Date: Tue, 17 Oct 2017 13:22:01 -0500
-Message-ID: <a60ca82dca6e453f7bd920c082de48ea4378b7d2.1508259916.git.mario.limonciello@dell.com>
+Subject: [PATCH v9 14/17] platform/x86: wmi: create userspace interface for drivers
+Date: Tue, 17 Oct 2017 13:21:58 -0500
+Message-ID: <9549d9d16c6c0fca8776d161074dd683768b479e.1508259916.git.mario.limonciello@dell.com>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508259916.git.mario.limonciello@dell.com>
@@ -12,138 +12,248 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This application uses the character device /dev/wmi/dell-smbios
-to perform SMBIOS communications from userspace.
+For WMI operations that are only Set or Query read or write sysfs
+attributes created by WMI vendor drivers make sense.
 
-It offers demonstrations of a few simple tasks:
- - Running a class/select command
- - Querying a token value
- - Activating a token
+For other WMI operations that are run on Method, there needs to be a
+way to guarantee to userspace that the results from the method call
+belong to the data request to the method call.  Sysfs attributes don't
+work well in this scenario because two userspace processes may be
+competing at reading/writing an attribute and step on each other's
+data.
+
+When a WMI vendor driver declares an ioctl callback in the wmi_driver
+the WMI bus driver will create a character device that maps to that
+function.
+
+That character device will correspond to this path:
+/dev/wmi/$driver
+
+The WMI bus driver will interpret the IOCTL calls, test them for
+a valid instance and pass them on to the vendor driver to run.
+
+This creates an implicit policy that only driver per character
+device.  If a module matches multiple GUID's, the wmi_devices
+will need to be all handled by the same wmi_driver if the same
+character device is used.
+
+The WMI vendor drivers will be responsible for managing access to
+this character device and proper locking on it.
+
+When a WMI vendor driver is unloaded the WMI bus driver will clean
+up the character device.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- MAINTAINERS                     |   1 +
- tools/Makefile                  |  14 +--
- tools/wmi/Makefile              |  18 ++++
- tools/wmi/dell-smbios-example.c | 214 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 241 insertions(+), 6 deletions(-)
- create mode 100644 tools/wmi/Makefile
- create mode 100644 tools/wmi/dell-smbios-example.c
+ MAINTAINERS                |   1 +
+ drivers/platform/x86/wmi.c | 120 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/wmi.h        |   6 +++
+ include/uapi/linux/wmi.h   |  26 ++++++++++
+ 4 files changed, 153 insertions(+)
+ create mode 100644 include/uapi/linux/wmi.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 84afbf8ef7d5..64529a3f6910 100644
+index 8fd2f0d2ddf6..84afbf8ef7d5 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3997,6 +3997,7 @@ M:	Mario Limonciello <mario.limonciello@dell.com>
+@@ -384,6 +384,7 @@ ACPI WMI DRIVER
  L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/dell-smbios-wmi.c
-+F:	tools/wmi/dell-smbios-example.c
+ S:	Orphan
+ F:	drivers/platform/x86/wmi.c
++F:	include/uapi/linux/wmi.h
  
- DELL LAPTOP DRIVER
- M:	Matthew Garrett <mjg59@srcf.ucam.org>
-diff --git a/tools/Makefile b/tools/Makefile
-index 9dfede37c8ff..9d2fd2606810 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -29,6 +29,7 @@ help:
- 	@echo '  usb                    - USB testing tools'
- 	@echo '  virtio                 - vhost test module'
- 	@echo '  vm                     - misc vm tools'
-+	@echo '  wmi			- WMI interface examples'
- 	@echo '  x86_energy_perf_policy - Intel energy policy tool'
- 	@echo ''
- 	@echo 'You can do:'
-@@ -57,7 +58,7 @@ acpi: FORCE
- cpupower: FORCE
- 	$(call descend,power/$@)
+ AD1889 ALSA SOUND DRIVER
+ M:	Thibaut Varene <T-Bone@parisc-linux.org>
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 63d01f98bf4c..c7de80f96183 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -38,12 +38,15 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
++#include <linux/uaccess.h>
+ #include <linux/uuid.h>
+ #include <linux/wmi.h>
++#include <uapi/linux/wmi.h>
  
--cgroup firewire hv guest spi usb virtio vm net iio gpio objtool leds: FORCE
-+cgroup firewire hv guest spi usb virtio vm net iio gpio objtool leds wmi: FORCE
- 	$(call descend,$@)
+ ACPI_MODULE_NAME("wmi");
+ MODULE_AUTHOR("Carlos Corbacho");
+@@ -69,6 +72,7 @@ struct wmi_block {
+ 	struct wmi_device dev;
+ 	struct list_head list;
+ 	struct guid_block gblock;
++	struct miscdevice misc_dev;
+ 	struct acpi_device *acpi_device;
+ 	wmi_notify_handler handler;
+ 	void *handler_data;
+@@ -796,12 +800,123 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	return 0;
+ }
  
- liblockdep: FORCE
-@@ -92,7 +93,7 @@ kvm_stat: FORCE
- all: acpi cgroup cpupower gpio hv firewire liblockdep \
- 		perf selftests spi turbostat usb \
- 		virtio vm net x86_energy_perf_policy \
--		tmon freefall iio objtool kvm_stat
-+		tmon freefall iio objtool kvm_stat wmi
++static long match_ioctl(struct file *filp, unsigned int cmd, unsigned long arg,
++			int compat)
++{
++	struct wmi_ioctl_buffer __user *input =
++		(struct wmi_ioctl_buffer __user *) arg;
++	struct wmi_driver *wdriver = NULL;
++	struct wmi_block *wblock = NULL;
++	struct wmi_block *next = NULL;
++	const char *driver_name;
++	u64 size;
++	int ret;
++
++	if (_IOC_TYPE(cmd) != WMI_IOC)
++		return -ENOTTY;
++
++	driver_name = filp->f_path.dentry->d_iname;
++
++	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
++		wdriver = container_of(wblock->dev.dev.driver,
++					struct wmi_driver, driver);
++		if (!wdriver)
++			continue;
++		if (strcmp(driver_name, wdriver->driver.name) == 0)
++			break;
++	}
++
++	if (!wdriver)
++		return -ENODEV;
++
++	/* make sure we're not calling a higher instance than exists*/
++	if (_IOC_NR(cmd) >= wblock->gblock.instance_count)
++		return -EINVAL;
++
++	/* check that required buffer size was declared by driver */
++	if (!wblock->req_buf_size) {
++		dev_err(&wblock->dev.dev, "Required buffer size not set\n");
++		return -EINVAL;
++	}
++	if (get_user(size, &input->length)) {
++		dev_dbg(&wblock->dev.dev, "Read length from user failed\n");
++		return -EFAULT;
++	}
++	/* if it's too small, abort */
++	if (size < wblock->req_buf_size) {
++		dev_err(&wblock->dev.dev,
++			"Buffer %lld too small, need at least %lld\n",
++			size, wblock->req_buf_size);
++		return -EINVAL;
++	}
++	/* if it's too big, warn, driver will only use what is needed */
++	if (size > wblock->req_buf_size)
++		dev_warn(&wblock->dev.dev,
++			"Buffer %lld is bigger than required %lld\n",
++			size, wblock->req_buf_size);
++
++	if (!try_module_get(wdriver->driver.owner))
++		return -EBUSY;
++	if (compat) {
++#ifdef CONFIG_COMPAT
++		if (wdriver->compat_ioctl)
++			ret = wdriver->compat_ioctl(&wblock->dev, cmd, arg);
++		else
++#endif
++			ret = -ENODEV;
++	} else
++		ret = wdriver->unlocked_ioctl(&wblock->dev, cmd, arg);
++	module_put(wdriver->driver.owner);
++
++	return ret;
++}
++static long wmi_unlocked_ioctl(struct file *filp, unsigned int cmd,
++			       unsigned long arg)
++{
++	return match_ioctl(filp, cmd, arg, 0);
++}
++
++#ifdef CONFIG_COMPAT
++static long wmi_compat_ioctl(struct file *filp, unsigned int cmd,
++			     unsigned long arg)
++{
++	return match_ioctl(filp, cmd, arg, 1);
++}
++#endif
++
++static const struct file_operations wmi_fops = {
++	.owner		= THIS_MODULE,
++	.unlocked_ioctl	= wmi_unlocked_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = wmi_compat_ioctl,
++#endif
++};
++
+ static int wmi_dev_probe(struct device *dev)
+ {
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	struct wmi_driver *wdriver =
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
++	char *buf;
++
++	/* driver wants a character device made */
++	if (wdriver->unlocked_ioctl) {
++		buf = kmalloc(strlen(wdriver->driver.name) + 4, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++		sprintf(buf, "wmi/%s", wdriver->driver.name);
++		wblock->misc_dev.minor = MISC_DYNAMIC_MINOR;
++		wblock->misc_dev.name = buf;
++		wblock->misc_dev.fops = &wmi_fops;
++		wblock->misc_dev.mode = 0444;
++		ret = misc_register(&wblock->misc_dev);
++		if (ret) {
++			dev_warn(dev, "failed to register char dev: %d", ret);
++			kfree(buf);
++			return -ENOMEM;
++		}
++	}
  
- acpi_install:
- 	$(call descend,power/$(@:_install=),install)
-@@ -100,7 +101,7 @@ acpi_install:
- cpupower_install:
- 	$(call descend,power/$(@:_install=),install)
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
+ 		dev_warn(dev, "failed to enable device -- probing anyway\n");
+@@ -822,6 +937,11 @@ static int wmi_dev_remove(struct device *dev)
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
  
--cgroup_install firewire_install gpio_install hv_install iio_install perf_install spi_install usb_install virtio_install vm_install net_install objtool_install:
-+cgroup_install firewire_install gpio_install hv_install iio_install perf_install spi_install usb_install virtio_install vm_install net_install objtool_install wmi_install:
- 	$(call descend,$(@:_install=),install)
++	if (wdriver->unlocked_ioctl) {
++		misc_deregister(&wblock->misc_dev);
++		kfree(wblock->misc_dev.name);
++	}
++
+ 	if (wdriver->remove)
+ 		ret = wdriver->remove(dev_to_wdev(dev));
  
- liblockdep_install:
-@@ -125,7 +126,8 @@ install: acpi_install cgroup_install cpupower_install gpio_install \
- 		hv_install firewire_install iio_install liblockdep_install \
- 		perf_install selftests_install turbostat_install usb_install \
- 		virtio_install vm_install net_install x86_energy_perf_policy_install \
--		tmon_install freefall_install objtool_install kvm_stat_install
-+		tmon_install freefall_install objtool_install kvm_stat_install \
-+		wmi_install
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index a9a72a4c5ed8..1f52dc49a896 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -50,6 +50,12 @@ struct wmi_driver {
+ 	int (*probe)(struct wmi_device *wdev);
+ 	int (*remove)(struct wmi_device *wdev);
+ 	void (*notify)(struct wmi_device *device, union acpi_object *data);
++	long (*unlocked_ioctl)(struct wmi_device *wdev, unsigned int cmd,
++				unsigned long arg);
++#ifdef CONFIG_COMPAT
++	long (*compat_ioctl)(struct wmi_device *wdev, unsigned int cmd,
++				unsigned long arg);
++#endif
+ };
  
- acpi_clean:
- 	$(call descend,power/acpi,clean)
-@@ -133,7 +135,7 @@ acpi_clean:
- cpupower_clean:
- 	$(call descend,power/cpupower,clean)
- 
--cgroup_clean hv_clean firewire_clean spi_clean usb_clean virtio_clean vm_clean net_clean iio_clean gpio_clean objtool_clean leds_clean:
-+cgroup_clean hv_clean firewire_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean net_clean iio_clean gpio_clean objtool_clean leds_clean:
- 	$(call descend,$(@:_clean=),clean)
- 
- liblockdep_clean:
-@@ -171,6 +173,6 @@ clean: acpi_clean cgroup_clean cpupower_clean hv_clean firewire_clean \
- 		perf_clean selftests_clean turbostat_clean spi_clean usb_clean virtio_clean \
- 		vm_clean net_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
- 		freefall_clean build_clean libbpf_clean libsubcmd_clean liblockdep_clean \
--		gpio_clean objtool_clean leds_clean
-+		gpio_clean objtool_clean leds_clean wmi_clean
- 
- .PHONY: FORCE
-diff --git a/tools/wmi/Makefile b/tools/wmi/Makefile
+ extern int __must_check __wmi_driver_register(struct wmi_driver *driver,
+diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
 new file mode 100644
-index 000000000000..e664f1167388
+index 000000000000..7e52350ac9b3
 --- /dev/null
-+++ b/tools/wmi/Makefile
-@@ -0,0 +1,18 @@
-+PREFIX ?= /usr
-+SBINDIR ?= sbin
-+INSTALL ?= install
-+CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include
-+CC = $(CROSS_COMPILE)gcc
-+
-+TARGET = dell-smbios-example
-+
-+all: $(TARGET)
-+
-+%: %.c
-+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
-+
-+clean:
-+	$(RM) $(TARGET)
-+
-+install: dell-smbios-example
-+	$(INSTALL) -D -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/$(SBINDIR)/$(TARGET)
-diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-example.c
-new file mode 100644
-index 000000000000..69c4dd9c6056
---- /dev/null
-+++ b/tools/wmi/dell-smbios-example.c
-@@ -0,0 +1,214 @@
++++ b/include/uapi/linux/wmi.h
+@@ -0,0 +1,26 @@
 +/*
-+ *  Sample application for SMBIOS communication over WMI interface
-+ *  Performs the following:
-+ *  - Simple class/select lookup for TPM information
-+ *  - Simple query of known tokens and their values
-+ *  - Simple activation of a token
++ *  User API methods for ACPI-WMI mapping driver
 + *
 + *  Copyright (C) 2017 Dell, Inc.
 + *
@@ -151,206 +261,22 @@ index 000000000000..69c4dd9c6056
 + *  it under the terms of the GNU General Public License version 2 as
 + *  published by the Free Software Foundation.
 + */
++#ifndef _UAPI_LINUX_WMI_H
++#define _UAPI_LINUX_WMI_H
 +
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
++#include <linux/types.h>
 +
-+/* if uapi header isn't installed, this might not yet exist */
-+#ifndef __packed
-+#define __packed __attribute__((packed))
-+#endif
-+#include <linux/wmi.h>
++/* WMI bus will filter all WMI vendor driver requests through this IOC */
++#define WMI_IOC 'W'
 +
-+/* It would be better to discover these using udev, but for a simple
-+ * application they're hardcoded
++/* All ioctl requests through WMI should declare their size followed by
++ * relevant data objects
 + */
-+static const char *ioctl_devfs = "/dev/wmi/dell-smbios";
-+static const char *token_sysfs =
-+			"/sys/bus/platform/devices/dell-smbios.0/tokens";
-+static const char *buffer_sysfs =
-+			"/sys/bus/wmi/devices/A80593CE-A997-11DA-B012-B622A1EF5492/required_buffer_size";
++struct wmi_ioctl_buffer {
++	__u64	length;
++	__u8	data[];
++};
 +
-+static void show_buffer(struct dell_wmi_smbios_buffer *buffer)
-+{
-+	printf("Call: %x/%x [%x,%x,%x,%x]\nResults: [%8x,%8x,%8x,%8x]\n",
-+	buffer->std.class, buffer->std.select,
-+	buffer->std.input[0], buffer->std.input[1],
-+	buffer->std.input[2], buffer->std.input[3],
-+	buffer->std.output[0], buffer->std.output[1],
-+	buffer->std.output[2], buffer->std.output[3]);
-+}
-+
-+static int run_wmi_smbios_cmd(struct dell_wmi_smbios_buffer *buffer)
-+{
-+	int fd;
-+	int ret;
-+
-+	fd = open(ioctl_devfs, O_NONBLOCK);
-+	ret = ioctl(fd, DELL_WMI_SMBIOS_CMD, buffer);
-+	close(fd);
-+	return ret;
-+}
-+
-+static int find_token(__u16 token, __u16 *location, __u16 *value)
-+{
-+	char location_sysfs[60];
-+	char value_sysfs[57];
-+	char buf[4096];
-+	FILE *f;
-+	int ret;
-+
-+	ret = sprintf(value_sysfs, "%s/%04x_value", token_sysfs, token);
-+	if (ret < 0) {
-+		printf("sprintf value failed\n");
-+		return 2;
-+	}
-+	f = fopen(value_sysfs, "rb");
-+	if (!f) {
-+		printf("failed to open %s\n", value_sysfs);
-+		return 2;
-+	}
-+	fread(buf, 1, 4096, f);
-+	fclose(f);
-+	*value = (__u16) strtol(buf, NULL, 16);
-+
-+	ret = sprintf(location_sysfs, "%s/%04x_location", token_sysfs, token);
-+	if (ret < 0) {
-+		printf("sprintf location failed\n");
-+		return 1;
-+	}
-+	f = fopen(location_sysfs, "rb");
-+	if (!f) {
-+		printf("failed to open %s\n", location_sysfs);
-+		return 2;
-+	}
-+	fread(buf, 1, 4096, f);
-+	fclose(f);
-+	*location = (__u16) strtol(buf, NULL, 16);
-+
-+	if (*location)
-+		return 0;
-+	return 2;
-+}
-+
-+static int token_is_active(__u16 *location, __u16 *cmpvalue,
-+			   struct dell_wmi_smbios_buffer *buffer)
-+{
-+	int ret;
-+
-+	buffer->std.class = CLASS_TOKEN_READ;
-+	buffer->std.select = SELECT_TOKEN_STD;
-+	buffer->std.input[0] = *location;
-+	ret = run_wmi_smbios_cmd(buffer);
-+	if (ret != 0 || buffer->std.output[0] != 0)
-+		return ret;
-+	ret = (buffer->std.output[1] == *cmpvalue);
-+	return ret;
-+}
-+
-+static int query_token(__u16 token, struct dell_wmi_smbios_buffer *buffer)
-+{
-+	__u16 location;
-+	__u16 value;
-+	int ret;
-+
-+	ret = find_token(token, &location, &value);
-+	if (ret != 0) {
-+		printf("unable to find token %04x\n", token);
-+		return 1;
-+	}
-+	return token_is_active(&location, &value, buffer);
-+}
-+
-+static int activate_token(struct dell_wmi_smbios_buffer *buffer,
-+		   __u16 token)
-+{
-+	__u16 location;
-+	__u16 value;
-+	int ret;
-+
-+	ret = find_token(token, &location, &value);
-+	if (ret != 0) {
-+		printf("unable to find token %04x\n", token);
-+		return 1;
-+	}
-+	buffer->std.class = CLASS_TOKEN_WRITE;
-+	buffer->std.select = SELECT_TOKEN_STD;
-+	buffer->std.input[0] = location;
-+	buffer->std.input[1] = 1;
-+	ret = run_wmi_smbios_cmd(buffer);
-+	return ret;
-+}
-+
-+static int query_buffer_size(__u64 *buffer_size)
-+{
-+	char buf[4096];
-+	FILE *f;
-+
-+	f = fopen(buffer_sysfs, "rb");
-+	if (!f)
-+		return -EINVAL;
-+	fread(buf, 1, 4096, f);
-+	fclose(f);
-+	*buffer_size = strtol(buf, NULL, 10);
-+	return EXIT_SUCCESS;
-+}
-+
-+int main(void)
-+{
-+	struct dell_wmi_smbios_buffer *buffer;
-+	int ret;
-+	__u64 value = 0;
-+
-+	ret = query_buffer_size(&value);
-+	if (ret == EXIT_FAILURE || !value) {
-+		printf("Unable to read buffer size\n");
-+		goto out;
-+	}
-+	printf("Detected required buffer size %lld\n", value);
-+
-+	buffer = malloc(value);
-+	if (buffer == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	buffer->length = value;
-+
-+	/* simple SMBIOS call for looking up TPM info */
-+	buffer->std.class = CLASS_FLASH_INTERFACE;
-+	buffer->std.select = SELECT_FLASH_INTERFACE;
-+	buffer->std.input[0] = 2;
-+	ret = run_wmi_smbios_cmd(buffer);
-+	if (ret) {
-+		printf("smbios ioctl failed: %d\n", ret);
-+		ret = EXIT_FAILURE;
-+		goto out;
-+	}
-+	show_buffer(buffer);
-+
-+	/* query some tokens */
-+	ret = query_token(CAPSULE_EN_TOKEN, buffer);
-+	printf("UEFI Capsule enabled token is: %d\n", ret);
-+	ret = query_token(CAPSULE_DIS_TOKEN, buffer);
-+	printf("UEFI Capsule disabled token is: %d\n", ret);
-+
-+	/* activate UEFI capsule token if disabled */
-+	if (ret) {
-+		printf("Enabling UEFI capsule token");
-+		if (activate_token(buffer, CAPSULE_EN_TOKEN)) {
-+			printf("activate failed\n");
-+			ret = -1;
-+			goto out;
-+		}
-+	}
-+	ret = EXIT_SUCCESS;
-+out:
-+	free(buffer);
-+	return ret;
-+}
++#endif
 -- 
 2.14.1
