@@ -1,87 +1,60 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v9 06/17] platform/x86: wmi: Don't allow drivers to get
- each other's GUIDs
-Date: Tue, 17 Oct 2017 21:00:43 +0200
-Message-ID: <20171017190043.rxv6zep4cpmgfqrb@pali>
+Subject: Re: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
+ oem string is detected
+Date: Tue, 17 Oct 2017 21:03:36 +0200
+Message-ID: <20171017190336.iqhzmdsimx4f7mfw@pali>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
- <dd01136f9fef863209c87988ab44c998c99bfdf3.1508259916.git.mario.limonciello@dell.com>
+ <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:50454 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S965517AbdJQTAq (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:00:46 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <dd01136f9fef863209c87988ab44c998c99bfdf3.1508259916.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mario Limonciello <mario.limonciello@dell.com>
 Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 17 October 2017 13:21:50 Mario Limonciello wrote:
-> The only driver using this was dell-wmi, and it really was a hack.
-> The driver was getting a data attribute from another driver and this
-> type of action should not be encouraged.
+On Tuesday 17 October 2017 13:21:51 Mario Limonciello wrote:
+> The proper way to indicate that a system is a 'supported' Dell System
+> is by the presence of this string in OEM strings.
 > 
-> Rather drivers that need to interact with one another should pass
-> data back and forth via exported functions.
+> Allowing the driver to load on non-Dell systems will have undefined
+> results.
 > 
 > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 > Reviewed-by: Edward O'Callaghan <quasisec@google.com>
-
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-
 > ---
->  drivers/platform/x86/wmi.c | 17 -----------------
->  include/linux/wmi.h        |  4 ----
->  2 files changed, 21 deletions(-)
+>  drivers/platform/x86/dell-smbios.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 4d73a87c2ddf..bcb41c1c7f52 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -368,23 +368,6 @@ union acpi_object *wmidev_block_query(struct wmi_device *wdev, u8 instance)
->  }
->  EXPORT_SYMBOL_GPL(wmidev_block_query);
+> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+> index e9b1ca07c872..7e779278d054 100644
+> --- a/drivers/platform/x86/dell-smbios.c
+> +++ b/drivers/platform/x86/dell-smbios.c
+> @@ -172,8 +172,15 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
 >  
-> -struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
-> -					 const char *guid_string)
-> -{
-> -	struct wmi_block *this_wb = container_of(wdev, struct wmi_block, dev);
-> -	struct wmi_block *other_wb;
-> -
-> -	if (!find_guid(guid_string, &other_wb))
-> -		return NULL;
-> -
-> -	if (other_wb->acpi_device != this_wb->acpi_device)
-> -		return NULL;
-> -
-> -	get_device(&other_wb->dev.dev);
-> -	return &other_wb->dev;
-> -}
-> -EXPORT_SYMBOL_GPL(wmidev_get_other_guid);
-> -
->  /**
->   * wmi_set_block - Write to a WMI block
->   * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-> index 2cd10c3b89e9..ddee427e0721 100644
-> --- a/include/linux/wmi.h
-> +++ b/include/linux/wmi.h
-> @@ -36,10 +36,6 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
->  extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
->  					     u8 instance);
+>  static int __init dell_smbios_init(void)
+>  {
+> +	const struct dmi_device *valid;
+>  	int ret;
 >  
-> -/* Gets another device on the same bus.  Caller must put_device the result. */
-> -extern struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
-> -						const char *guid_string);
-> -
->  struct wmi_device_id {
->  	const char *guid_string;
->  };
+> +	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
+
+Are you sure that all Dell machines have exactly this string? IIRC this
+smbios interface via SMM is supported by machines back to 2005... Also
+in other DMI tables in dell-latop there is e.g. "Dell Inc." or "Dell
+Computer Corporation".
+
+> +	if (!valid) {
+> +		pr_err("Unable to run on non-Dell system\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	dmi_walk(find_tokens, NULL);
+>  
+>  	if (!da_tokens)  {
 
 -- 
 Pali Rohár
