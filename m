@@ -1,98 +1,161 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Mon, 16 Oct 2017 14:56:47 -0700
-Message-ID: <20171016215647.GD14419@fury>
-References: <cover.1507958847.git.mario.limonciello@dell.com>
- <20171016073307.ahdc6ogzytzwckpq@pali>
- <0aebeec94bad4ca9baae335ef9e591b8@ausx13mpc120.AMER.DELL.COM>
- <20171016133705.cf4f5jqgq4ebhfcj@pali>
- <a9a6d127cdc94f1ba40ce0d2dff78156@ausx13mpc120.AMER.DELL.COM>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4 09/12] intel_sgx: driver documentation
+Date: Mon, 16 Oct 2017 17:51:38 -0700
+Message-ID: <35dadcde-5cb0-c40d-7aa5-191e9684be1b@infradead.org>
+References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
+ <20171016191855.16964-10-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:47121 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753253AbdJPV4v (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Oct 2017 17:56:51 -0400
-Content-Disposition: inline
-In-Reply-To: <a9a6d127cdc94f1ba40ce0d2dff78156@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016191855.16964-10-jarkko.sakkinen@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 16, 2017 at 01:48:05PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > Sent: Monday, October 16, 2017 8:37 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
-> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kernel.org;
-> > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
-> > greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
-> > Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-> > 
-> > On Monday 16 October 2017 13:23:04 Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > > Sent: Monday, October 16, 2017 2:33 AM
-> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
-> > Andy
-> > > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > > > <gnomes@lxorguk.ukuu.org.uk>
-> > > > Subject: Re: [PATCH v8 00/15] Introduce support for Dell SMBIOS over WMI
-> > > >
-> > > > Hi! Just a small idea, what about including example userspace
-> > > > application which would use this new API? I think such application can
-> > > > be useful for documentation purpose to see how this new API should be
-> > > > used. And in review process other people can point if there would be
-> > > > some problems with usage.
-> > > >
-> > > > I do not know if it is requirement or not for introducing new kernel
-> > > > API, but still example code is very useful for developers when they
-> > > > would start to use this new API and correctly.
-> > > >
-> > > > --
-> > > > Pali Rohár
-> > > > pali.rohar@gmail.com
-> > >
-> > > Pali,
-> > >
-> > > I've produced a small sample application available here:
-> > > https://github.com/superm1/smbios-wmi-poc
-> > 
-> > Simple one-file example application. Great!
-> > 
-> > Darren, Greg, Mario, I think it would be better to have this example
-> > application in tools/ or in Documentation/... What do you think?
-> > 
-> > Looking for examples on random github repos is harder and less official
-> > as part of linux source tree.
-> > 
+On 10/16/17 12:18, Jarkko Sakkinen wrote:
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  Documentation/index.rst         |   1 +
+>  Documentation/x86/intel_sgx.rst | 131 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 132 insertions(+)
+>  create mode 100644 Documentation/x86/intel_sgx.rst
 > 
-> If others also agree, I'm fine with including it with the kernel.
-> Please advise where it should be located.
-> 
-> It was originally a POC made just for my own testing of this API.  
-> I will probably need to clean it up a little though for wider distribution 
-> to the kernel so I would prefer to send it in a follow up patch if no other
-> feedback requiring changes to this series as is.
-> 
-> One possible issue is that it currently uses glib.  Is that OK?
+> diff --git a/Documentation/x86/intel_sgx.rst b/Documentation/x86/intel_sgx.rst
+> new file mode 100644
+> index 000000000000..ee7fe9487d7b
+> --- /dev/null
+> +++ b/Documentation/x86/intel_sgx.rst
+> @@ -0,0 +1,131 @@
+> +===================
+> +Intel(R) SGX driver
+> +===================
+> +
+> +Introduction
+> +============
+> +
+> +Intel(R) SGX is a set of CPU instructions that can be used by applications to
+> +set aside private regions of code and data. The code outside the enclave is
+> +disallowed to access the memory inside the enclave by the CPU access control.
+> +In a way you can think that SGX provides inverted sandbox. It protects the
+> +application from a malicious host.
+> +
+> +There is a new hardware unit in the processor called Memory Encryption Engine
+> +(MEE) starting from the Skylake microachitecture. BIOS can define one or many
 
-In my opinion, what is important is that there is an open-source
-userspace consumer of the interface. I don't think it needs to be in the
-kernel. If this was a more generic interface which could be tested on
-any hardware, then I think a selftests target would be sensible. As it
-is, this is a very specific use case, and a simple reference to the
-smbios-wmi-poc project URL in documentation someplace (or even in the
-dell-smbios driver comments) seems more than adequate to me.
+                                   microarchitecture.
+
+> +MEE regions that can hold enclave data by configuring them with PRMRR registers.
+> +
+> +The MEE automatically encrypts the data leaving the processor package to the MEE
+> +regions. The data is encrypted using a random key whose life-time is exactly one
+> +power cycle.
+> +
+> +You can tell if your CPU supports SGX by looking into ``/proc/cpuinfo``:
+> +
+> +	``cat /proc/cpuinfo  | grep ' sgx '``
+
+Are you sure about a space both before and after 'sgx'?
+
+> +
+> +Enclave data types
+> +==================
+> +
+> +SGX defines new data types to maintain information about the enclaves and their
+> +security properties.
+> +
+> +The following data structures exist in MEE regions:
+> +
+> +* **Enclave Page Cache (EPC):** memory pages for protected code and data
+> +* **Enclave Page Cache Map (EPCM):** meta-data for each EPC page
+> +
+> +The Enclave Page Cache holds following types of pages:
+> +
+> +* **SGX Enclave Control Structure (SECS)**: meta-data defining the global
+> +  properties of an enclave such as range of addresses it can access.
+> +* **Regular (REG):** containing code and data for the enclave.
+> +* **Thread Control Structure (TCS):** defines an entry point for a hardware
+> +  thread to enter into the enclave. The enclave can only be entered through
+> +  these entry points.
+> +* **Version Array (VA)**: an EPC page receives a unique 8 byte version number
+> +  when it is swapped, which is then stored into a VA page. A VA page can hold up
+> +  to 512 version numbers.
+> +
+> +Launch control
+> +==============
+> +
+> +For launching an enclave, two structures must be provided for ENCLS(EINIT):
+> +
+> +1. **SIGSTRUCT:** a signed measurement of the enclave binary.
+> +2. **EINITTOKEN:** the measurement, the public key of the signer and various
+> +   enclave attributes. This structure contains a MAC of its contents using
+> +   hardware derived symmetric key called *launch key*.
+> +
+> +The hardware platform contains a root key pair for signing the SIGTRUCT
+> +for a *launch enclave* that is able to acquire the *launch key* for
+> +creating EINITTOKEN's for other enclaves.  For the launch enclave
+> +EINITTOKEN is not needed because it is signed with the private root key.
+> +
+> +There are two feature control bits associate with launch control
+
+                                      associated            control:
+
+> +
+> +* **IA32_FEATURE_CONTROL[0]**: locks down the feature control register
+> +* **IA32_FEATURE_CONTROL[17]**: allow runtime reconfiguration of
+> +  IA32_SGXLEPUBKEYHASHn MSRs that define MRSIGNER hash for the launch
+> +  enclave. Essentially they define a signing key that does not require
+> +  EINITTOKEN to be let run.
+> +
+> +The BIOS can configure IA32_SGXLEPUBKEYHASHn MSRs before feature control
+> +register is locked.
+> +
+> +It could be tempting to implement launch control by writing the MSRs
+> +every time when an enclave is launched. This does not scale because for
+> +generic case because BIOS might lock down the MSRs before handover to
+> +the OS.
+> +
+> +Debug enclaves
+> +--------------
+> +
+> +Enclave can be set as a *debug enclave* of which memory can be read or written
+> +by using the ENCLS(EDBGRD) and ENCLS(EDBGWR) opcodes. The Intel provided launch
+> +enclave provides them always a valid EINITTOKEN and therefore they are a low
+> +hanging fruit way to try out SGX.
+> +
+> +Virtualization
+> +==============
+> +
+> +Launch control
+> +--------------
+> +
+> +The values for IA32_SGXLEPUBKEYHASHn MSRs cannot be emulated for a virtual
+> +machine guest. It would easily seem feasible to hold virtual values for these
+> +MSRs, trap ENCLS(EINIT) and use the host LE to generate a token when a guest LE
+> +is initialized.
+> +
+> +However, looking at the pseudo code of ENCLS(EINIT) from the SDM there is a
+> +constraint that the instruction will fail if ATTRIBUTES.EINITTOKENKEY is set
+> +(the documentation does not tell the reason why the constraint exists but it
+> +exists).
+> +
+> +Thus, only when the MSRs are left unlocked before handover to the OS the
+> +setting of these MSRs can be supported for VM guests.
+> +
+> +Suspend and resume
+> +------------------
+> +
+> +If the host suspends and resumes, the enclave memory for the VM guest could
+> +become invalid. This can make ENCLS leaf operations suddenly fail.
+> +
+> +The driver has a graceful fallback mechanism to manage this situation. If any of
+> +the ENCLS leaf operations fail, the driver will fallback by kicking threads out
+> +of the enclave, removing the TCS entries and marking enclave as invalid. After
+> +this no new pages can be allocated for the enclave and no entry can be done.
+
+
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+~Randy
