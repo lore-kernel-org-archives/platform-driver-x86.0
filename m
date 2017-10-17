@@ -1,114 +1,102 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [patch v4 3/3] platform/mellanox: mlxreg-hotplug: modify to use
- regmap intreface
-Date: Tue, 17 Oct 2017 22:24:07 +0300
-Message-ID: <CAHp75VfaU-GUvgFwx=+M-=DX2NRO9A3uQkxcmtY0FVRow+S9zA@mail.gmail.com>
-References: <1508264554-184107-1-git-send-email-vadimp@mellanox.com> <1508264554-184107-4-git-send-email-vadimp@mellanox.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
+ oem string is detected
+Date: Tue, 17 Oct 2017 21:25:03 +0200
+Message-ID: <20171017192503.z3yh5pdmxgr7rvbp@pali>
+References: <cover.1508259916.git.mario.limonciello@dell.com>
+ <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
+ <20171017190336.iqhzmdsimx4f7mfw@pali>
+ <f8132fa7a90a4954831fc3ee30be4329@ausx13mpc120.AMER.DELL.COM>
+ <811c84e436424acaba9a02186db00cf8@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508264554-184107-4-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:55839 "EHLO
+        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753816AbdJQTZG (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 17 Oct 2017 15:25:06 -0400
+Content-Disposition: inline
+In-Reply-To: <811c84e436424acaba9a02186db00cf8@ausx13mpc120.AMER.DELL.COM>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Tue, Oct 17, 2017 at 9:22 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
-> It includes:
-> - restructuring  of mlxreg header file for unification of hotplug items
->   definition;
-> - unification of hotplug items to allow any kind of item (power
->   controller, fan eeprom, psu eeprom, asic health in common way);
-> - utilization of regmap interface to allow independency of underlying
->   hardware. It allows to support hotplug event functionality over
->   programmable devices logic, when these devices can be attached to
->   different interfaces types, like I2C, LPC, SPI.
->
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Tuesday 17 October 2017 19:19:02 Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Limonciello, Mario
+> > Sent: Tuesday, October 17, 2017 2:11 PM
+> > To: 'Pali Rohár' <pali.rohar@gmail.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
+> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > <gnomes@lxorguk.ukuu.org.uk>
+> > Subject: RE: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper oem
+> > string is detected
+> > 
+> > > -----Original Message-----
+> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > > Sent: Tuesday, October 17, 2017 2:04 PM
+> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> > Andy
+> > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > > <gnomes@lxorguk.ukuu.org.uk>
+> > > Subject: Re: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper oem
+> > > string is detected
+> > >
+> > > On Tuesday 17 October 2017 13:21:51 Mario Limonciello wrote:
+> > > > The proper way to indicate that a system is a 'supported' Dell System
+> > > > is by the presence of this string in OEM strings.
+> > > >
+> > > > Allowing the driver to load on non-Dell systems will have undefined
+> > > > results.
+> > > >
+> > > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > > > Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+> > > > ---
+> > > >  drivers/platform/x86/dell-smbios.c | 7 +++++++
+> > > >  1 file changed, 7 insertions(+)
+> > > >
+> > > > diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-
+> > > smbios.c
+> > > > index e9b1ca07c872..7e779278d054 100644
+> > > > --- a/drivers/platform/x86/dell-smbios.c
+> > > > +++ b/drivers/platform/x86/dell-smbios.c
+> > > > @@ -172,8 +172,15 @@ static void __init find_tokens(const struct dmi_header
+> > > *dm, void *dummy)
+> > > >
+> > > >  static int __init dell_smbios_init(void)
+> > > >  {
+> > > > +	const struct dmi_device *valid;
+> > > >  	int ret;
+> > > >
+> > > > +	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
+> > > NULL);
+> > >
+> > > Are you sure that all Dell machines have exactly this string? IIRC this
+> > > smbios interface via SMM is supported by machines back to 2005... Also
+> > > in other DMI tables in dell-latop there is e.g. "Dell Inc." or "Dell
+> > > Computer Corporation".
+> > >
+> > I checked the spec and it's been there since systems 1999 onward.
+> > 
+> 
+> Oh and it's case it's not apparent, this is from OEM strings section.  It's not
+> the same as standard SMBIOS strings for system manufacturer, bios vendor
+> etc.  I'm checking this one specifically because a system can be rebranded.  
+> When rebranded the drivers won't load automatically, but this interface 
+> should still work on a if manually loaded.
 
-> -#define PRIV_ATTR(i) priv->mlxreg_hotplug_attr[i]
-> -#define PRIV_DEV_ATTR(i) priv->mlxreg_hotplug_dev_attr[i]
-
-> -static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
-> +static int
-> +mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
-
-This is kinda noisy change.
-
->  {
-
-> -       for (i = 0; i < num_attrs; i++) {
-> -               PRIV_ATTR(i) = &PRIV_DEV_ATTR(i).dev_attr.attr;
-> -
-> -               if (i < priv->plat->psu_count) {
-> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
-> -                                               GFP_KERNEL, "psu%u", i + 1);
-> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_PSU;
-> -               } else if (i < priv->plat->psu_count + priv->plat->pwr_count) {
-> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
-> -                                               GFP_KERNEL, "pwr%u", i %
-> -                                               priv->plat->pwr_count + 1);
-> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_PWR;
-> -               } else {
-> -                       PRIV_ATTR(i)->name = devm_kasprintf(&priv->pdev->dev,
-> -                                               GFP_KERNEL, "fan%u", i %
-> -                                               priv->plat->fan_count + 1);
-> -                       PRIV_DEV_ATTR(i).nr = MLXREG_HOTPLUG_ATTR_TYPE_FAN;
-> -               }
-> -
-> -               if (!PRIV_ATTR(i)->name) {
-> -                       dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
-> -                               i + 1);
-> -                       return -ENOMEM;
-> +       for (i = 0; i < pdata->counter; i++, item++) {
-> +               data = item->data;
-> +               for (j = 0; j < item->count; j++, data++, id++) {
-> +                       priv->mlxreg_hotplug_attr[id] =
-> +                       &priv->mlxreg_hotplug_dev_attr[id].dev_attr.attr;
-> +                       priv->mlxreg_hotplug_attr[id]->name =
-> +                               devm_kasprintf(&priv->pdev->dev, GFP_KERNEL,
-> +                                              data->label);
-> +
-> +                       if (!priv->mlxreg_hotplug_attr[id]->name) {
-> +                               dev_err(priv->dev, "Memory allocation failed for attr %d.\n",
-> +                                       id);
-> +                               return -ENOMEM;
-> +                       }
-> +
-
-> +                       priv->mlxreg_hotplug_dev_attr[id].dev_attr.attr.mode =
-> +                                                                       0444;
-> +                       priv->mlxreg_hotplug_dev_attr[id].dev_attr.show =
-> +                                               mlxreg_hotplug_attr_show;
-> +                       priv->mlxreg_hotplug_dev_attr[id].nr = i;
-> +                       priv->mlxreg_hotplug_dev_attr[id].index = j;
-
-Why you drop macros usage here?
-
->                 }
-> -
-> -               PRIV_DEV_ATTR(i).dev_attr.attr.name = PRIV_ATTR(i)->name;
-> -               PRIV_DEV_ATTR(i).dev_attr.attr.mode = S_IRUGO;
-> -               PRIV_DEV_ATTR(i).dev_attr.show = mlxreg_hotplug_attr_show;
-> -               PRIV_DEV_ATTR(i).index = i;
-> -               sysfs_attr_init(&PRIV_DEV_ATTR(i).dev_attr.attr);
-
-
->  #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR         0x2000
->  #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR         0x2500
-> -#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR         0x253a
-> -#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR          0x2558
-> -#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR          0x2564
-> -#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR          0x2588
-
-> +#define MLXPLAT_CPLD_LPC_REG_AGGR_ADRR         0x3a
-> +#define MLXPLAT_CPLD_LPC_REG_PSU_ADRR          0x58
-> +#define MLXPLAT_CPLD_LPC_REG_PWR_ADRR          0x64
-> +#define MLXPLAT_CPLD_LPC_REG_FAN_ADRR          0x88
-
-These now by the fact *offsets*.
+So if machine is rebranded, then this string is also changed? If string
+is changed, then this patch cause our kernel driver to refuse load on
+those machines...
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pali Rohár
+pali.rohar@gmail.com
