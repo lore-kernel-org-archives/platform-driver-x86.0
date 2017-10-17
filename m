@@ -1,11 +1,8 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v9 08/17] platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens
-Date: Tue, 17 Oct 2017 13:21:52 -0500
-Message-ID: <0705ee84be98469a350ab3bde291d0adb5bdb14b.1508259916.git.mario.limonciello@dell.com>
+Subject: [PATCH v9 12/17] platform/x86: dell-smbios: Add filtering support
+Date: Tue, 17 Oct 2017 13:21:56 -0500
+Message-ID: <f7c5fecc0f2b26b6ce21f5783dd4c4c1cd98eba1.1508259916.git.mario.limonciello@dell.com>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508259916.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1508259916.git.mario.limonciello@dell.com>
@@ -15,343 +12,293 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently userspace tools can access system tokens via the dcdbas
-kernel module and a SMI call that will cause the platform to execute
-SMM code.
+When a userspace interface is introduced to dell-smbios filtering
+support will be used to make sure that userspace doesn't make calls
+deemed unsafe or that can cause the kernel drivers to get out of
+sync.
 
-With a goal in mind of deprecating the dcdbas kernel module a different
-method for accessing these tokens from userspace needs to be created.
+A blacklist is provided for the following:
+- Items that are in use by other kernel drivers
+- Items that are deemed unsafe (diagnostics, write-once, etc)
+- Any items in the blacklist will be rejected.
 
-This is intentionally marked to only be readable as a process with
-CAP_SYS_ADMIN as it can contain sensitive information about the
-platform's configuration.
+Following that a whitelist is provided as follows:
+- Each item has an associated capability.  If a userspace interface
+  accesses this item, that capability will be tested to filter
+  the request.
+- If the process provides CAP_SYS_RAWIO the whitelist will be
+  overridden.
 
-While adding this interface I found that some tokens are duplicated.
-These need to be ignored from sysfs to avoid duplicate files.
-
-MAINTAINERS was missing for this driver.  Add myself and Pali to
-maintainers list for it.
+When an item is not in the blacklist, or whitelist and the process
+is run with insufficient capabilities the call will be rejected.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- .../ABI/testing/sysfs-platform-dell-smbios         |  21 ++
- MAINTAINERS                                        |   7 +
- drivers/platform/x86/dell-smbios.c                 | 212 ++++++++++++++++++++-
- 3 files changed, 239 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
+ drivers/platform/x86/dell-smbios.c | 190 +++++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/dell-smbios.h |  11 +++
+ 2 files changed, 201 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-new file mode 100644
-index 000000000000..205d3b6361e0
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-@@ -0,0 +1,21 @@
-+What:		/sys/devices/platform/<platform>/tokens/*
-+Date:		November 2017
-+KernelVersion:	4.15
-+Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-+Description:
-+		A read-only description of Dell platform tokens
-+		available on the machine.
-+
-+		Each token attribute is available as a pair of
-+		sysfs attributes readable by a process with
-+		CAP_SYS_ADMIN.
-+
-+		For example the token ID "5" would be available
-+		as the following attributes:
-+
-+		0005_location
-+		0005_value
-+
-+		Tokens will vary from machine to machine, and
-+		only tokens available on that machine will be
-+		displayed.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f4cf35950b08..09e774f1d0b2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3978,6 +3978,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
- S:	Maintained
- F:	drivers/net/fddi/defxx.*
- 
-+DELL SMBIOS DRIVER
-+M:	Pali Rohár <pali.rohar@gmail.com>
-+M:	Mario Limonciello <mario.limonciello@dell.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/dell-smbios.*
-+
- DELL LAPTOP DRIVER
- M:	Matthew Garrett <mjg59@srcf.ucam.org>
- M:	Pali Rohár <pali.rohar@gmail.com>
 diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
-index 7e779278d054..9e2b396861bb 100644
+index b540cd4605f7..b2aeb740c04b 100644
 --- a/drivers/platform/x86/dell-smbios.c
 +++ b/drivers/platform/x86/dell-smbios.c
-@@ -16,10 +16,12 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/capability.h>
- #include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/gfp.h>
- #include <linux/mutex.h>
-+#include <linux/platform_device.h>
+@@ -24,6 +24,7 @@
  #include <linux/slab.h>
- #include <linux/io.h>
- #include "../../firmware/dcdbas.h"
-@@ -39,7 +41,11 @@ static DEFINE_MUTEX(buffer_mutex);
- static int da_command_address;
- static int da_command_code;
+ #include "dell-smbios.h"
+ 
++static u32 da_supported_commands;
  static int da_num_tokens;
-+static struct platform_device *platform_device;
+ static struct platform_device *platform_device;
  static struct calling_interface_token *da_tokens;
-+static struct device_attribute *token_location_attrs;
-+static struct device_attribute *token_value_attrs;
-+static struct attribute **token_attrs;
+@@ -38,6 +39,91 @@ struct smbios_device {
+ 	int (*call_fn)(struct calling_interface_buffer *);
+ };
+ 
++struct smbios_call {
++	u32 need_capability;
++	int class;
++	int select;
++};
++
++/* calls that are whitelisted for given capabilities */
++static struct smbios_call call_whitelist[] = {
++	/* generally tokens are allowed, but may be further filtered or
++	 * restricted by token blacklist or whitelist
++	 */
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_STD},
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_AC},
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_READ,	SELECT_TOKEN_BAT},
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_STD},
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_AC},
++	{CAP_SYS_ADMIN,	CLASS_TOKEN_WRITE,	SELECT_TOKEN_BAT},
++	/* used by userspace: fwupdate */
++	{CAP_SYS_ADMIN, CLASS_ADMIN_PROP,	SELECT_ADMIN_PROP},
++	/* used by userspace: fwupd */
++	{CAP_SYS_ADMIN,	CLASS_INFO,		SELECT_DOCK},
++	{CAP_SYS_ADMIN,	CLASS_FLASH_INTERFACE,	SELECT_FLASH_INTERFACE},
++};
++
++/* calls that are explicitly blacklisted */
++static struct smbios_call call_blacklist[] = {
++	{0x0000, 01, 07}, /* manufacturing use */
++	{0x0000, 06, 05}, /* manufacturing use */
++	{0x0000, 11, 03}, /* write once */
++	{0x0000, 11, 07}, /* write once */
++	{0x0000, 11, 11}, /* write once */
++	{0x0000, 19, -1}, /* diagnostics */
++	/* handled by kernel: dell-laptop */
++	{0x0000, CLASS_INFO, SELECT_RFKILL},
++	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
++};
++
++struct token_range {
++	u32 need_capability;
++	u16 min;
++	u16 max;
++};
++
++/* tokens that are whitelisted for given capabilities */
++static struct token_range token_whitelist[] = {
++	/* used by userspace: fwupdate */
++	{CAP_SYS_ADMIN,	CAPSULE_EN_TOKEN,	CAPSULE_DIS_TOKEN},
++	/* can indicate to userspace that WMI is needed */
++	{0x0000,	WSMT_EN_TOKEN,		WSMT_DIS_TOKEN}
++};
++
++/* tokens that are explicitly blacklisted */
++static struct token_range token_blacklist[] = {
++	{0x0000, 0x0058, 0x0059}, /* ME use */
++	{0x0000, 0x00CD, 0x00D0}, /* raid shadow copy */
++	{0x0000, 0x013A, 0x01FF}, /* sata shadow copy */
++	{0x0000, 0x0175, 0x0176}, /* write once */
++	{0x0000, 0x0195, 0x0197}, /* diagnostics */
++	{0x0000, 0x01DC, 0x01DD}, /* manufacturing use */
++	{0x0000, 0x027D, 0x0284}, /* diagnostics */
++	{0x0000, 0x02E3, 0x02E3}, /* manufacturing use */
++	{0x0000, 0x02FF, 0x02FF}, /* manufacturing use */
++	{0x0000, 0x0300, 0x0302}, /* manufacturing use */
++	{0x0000, 0x0325, 0x0326}, /* manufacturing use */
++	{0x0000, 0x0332, 0x0335}, /* fan control */
++	{0x0000, 0x0350, 0x0350}, /* manufacturing use */
++	{0x0000, 0x0363, 0x0363}, /* manufacturing use */
++	{0x0000, 0x0368, 0x0368}, /* manufacturing use */
++	{0x0000, 0x03F6, 0x03F7}, /* manufacturing use */
++	{0x0000, 0x049E, 0x049F}, /* manufacturing use */
++	{0x0000, 0x04A0, 0x04A3}, /* disagnostics */
++	{0x0000, 0x04E6, 0x04E7}, /* manufacturing use */
++	{0x0000, 0x4000, 0x7FFF}, /* internal BIOS use */
++	{0x0000, 0x9000, 0x9001}, /* internal BIOS use */
++	{0x0000, 0xA000, 0xBFFF}, /* write only */
++	{0x0000, 0xEFF0, 0xEFFF}, /* internal BIOS use */
++	/* handled by kernel: dell-laptop */
++	{0x0000, BRIGHTNESS_TOKEN,	BRIGHTNESS_TOKEN},
++	{0x0000, KBD_LED_OFF_TOKEN,	KBD_LED_AUTO_TOKEN},
++	{0x0000, KBD_LED_AC_TOKEN,	KBD_LED_AC_TOKEN},
++	{0x0000, KBD_LED_AUTO_25_TOKEN,	KBD_LED_AUTO_75_TOKEN},
++	{0x0000, KBD_LED_AUTO_100_TOKEN,	KBD_LED_AUTO_100_TOKEN},
++	{0x0000, GLOBAL_MIC_MUTE_ENABLE,	GLOBAL_MIC_MUTE_DISABLE},
++};
++
+ static LIST_HEAD(smbios_device_list);
  
  int dell_smbios_error(int value)
- {
-@@ -157,6 +163,26 @@ static void __init parse_da_table(const struct dmi_header *dm)
- 	da_num_tokens += tokens;
+@@ -90,6 +176,108 @@ void dell_smbios_unregister_device(struct device *d)
  }
+ EXPORT_SYMBOL_GPL(dell_smbios_unregister_device);
  
-+static void zero_duplicates(struct device *dev)
++int dell_smbios_call_filter(struct device *d,
++			    struct calling_interface_buffer *buffer)
 +{
-+	int i, j;
++	u16 t = 0;
++	int i;
 +
-+	for (i = 0; i < da_num_tokens; i++) {
-+		for (j = i+1; j < da_num_tokens; j++) {
-+			if (da_tokens[i].tokenID == 0 ||
-+			    da_tokens[j].tokenID == 0)
++	/* can't make calls over 30 */
++	if (buffer->class > 30) {
++		dev_dbg(d, "class too big: %u\n", buffer->class);
++		return -EINVAL;
++	}
++
++	/* supported calls on the particular system */
++	if (!(da_supported_commands & (1 << buffer->class))) {
++		dev_dbg(d, "invalid command, supported commands: 0x%8x\n",
++			da_supported_commands);
++		return -EINVAL;
++	}
++
++	/* match against call blacklist  */
++	for (i = 0; i < ARRAY_SIZE(call_blacklist); i++) {
++		if (buffer->class != call_blacklist[i].class)
++			continue;
++		if (buffer->select != call_blacklist[i].select &&
++		    call_blacklist[i].select != -1)
++			continue;
++		dev_dbg(d, "blacklisted command: %u/%u\n",
++			buffer->class, buffer->select);
++		return -EINVAL;
++	}
++
++	/* if a token call, find token ID */
++	if ((buffer->class == CLASS_TOKEN_READ && buffer->select < 3) ||
++	    (buffer->class == CLASS_TOKEN_WRITE && buffer->select < 3)) {
++		/* find the matching token ID */
++		for (i = 0; i < da_num_tokens; i++) {
++			if (da_tokens[i].location != buffer->input[0])
 +				continue;
-+			if (da_tokens[i].tokenID == da_tokens[j].tokenID) {
-+				dev_dbg(dev, "Zeroing dup token ID %x(%x/%x)\n",
-+					da_tokens[j].tokenID,
-+					da_tokens[j].location,
-+					da_tokens[j].value);
-+				da_tokens[j].tokenID = 0;
++			t = da_tokens[i].tokenID;
++			break;
++		}
++
++		/* token call; but token didn't exist */
++		if (!t) {
++			dev_dbg(d, "token at location %04x doesn't exist\n",
++				buffer->input[0]);
++			return -EINVAL;
++		}
++
++		/* match against token blacklist */
++		for (i = 0; i < ARRAY_SIZE(token_blacklist); i++) {
++			if (!token_blacklist[i].min || !token_blacklist[i].max)
++				continue;
++			if (t >= token_blacklist[i].min &&
++			    t <= token_blacklist[i].max)
++				return -EINVAL;
++		}
++
++		/* match against token whitelist */
++		for (i = 0; i < ARRAY_SIZE(token_whitelist); i++) {
++			if (!token_whitelist[i].min || !token_whitelist[i].max)
++				continue;
++			if (t < token_whitelist[i].min ||
++			    t > token_whitelist[i].max)
++				continue;
++			if (!token_whitelist[i].need_capability ||
++			    capable(token_whitelist[i].need_capability)) {
++				dev_dbg(d, "whitelisted token: %x\n", t);
++				return 0;
 +			}
++
 +		}
 +	}
-+}
-+
- static void __init find_tokens(const struct dmi_header *dm, void *dummy)
- {
- 	switch (dm->type) {
-@@ -170,6 +196,154 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
- 	}
- }
- 
-+static int match_attribute(struct device *dev,
-+			   struct device_attribute *attr)
-+{
-+	int i;
-+
-+	for (i = 0; i < da_num_tokens * 2; i++) {
-+		if (!token_attrs[i])
++	/* match against call whitelist */
++	for (i = 0; i < ARRAY_SIZE(call_whitelist); i++) {
++		if (buffer->class != call_whitelist[i].class)
 +			continue;
-+		if (strcmp(token_attrs[i]->name, attr->attr.name) == 0)
-+			return i/2;
-+	}
-+	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
-+	return -EINVAL;
-+}
-+
-+static ssize_t location_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	int i;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	i = match_attribute(dev, attr);
-+	if (i > 0)
-+		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].location);
-+	return 0;
-+}
-+
-+static ssize_t value_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	int i;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	i = match_attribute(dev, attr);
-+	if (i > 0)
-+		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].value);
-+	return 0;
-+}
-+
-+static struct attribute_group smbios_attribute_group = {
-+	.name = "tokens"
-+};
-+
-+static struct platform_driver platform_driver = {
-+	.driver = {
-+		.name = "dell-smbios",
-+	},
-+};
-+
-+static int build_tokens_sysfs(struct platform_device *dev)
-+{
-+	char buffer_location[13];
-+	char buffer_value[10];
-+	char *location_name;
-+	char *value_name;
-+	size_t size;
-+	int ret;
-+	int i, j;
-+
-+	/* (number of tokens  + 1 for null terminated */
-+	size = sizeof(struct device_attribute) * (da_num_tokens + 1);
-+	token_location_attrs = kzalloc(size, GFP_KERNEL);
-+	if (!token_location_attrs)
-+		return -ENOMEM;
-+	token_value_attrs = kzalloc(size, GFP_KERNEL);
-+	if (!token_value_attrs)
-+		goto out_allocate_value;
-+
-+	/* need to store both location and value + terminator*/
-+	size = sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
-+	token_attrs = kzalloc(size, GFP_KERNEL);
-+	if (!token_attrs)
-+		goto out_allocate_attrs;
-+
-+	for (i = 0, j = 0; i < da_num_tokens; i++) {
-+		/* skip empty */
-+		if (da_tokens[i].tokenID == 0)
++		if (buffer->select != call_whitelist[i].select)
 +			continue;
-+		/* add location */
-+		sprintf(buffer_location, "%04x_location",
-+			da_tokens[i].tokenID);
-+		location_name = kstrdup(buffer_location, GFP_KERNEL);
-+		if (location_name == NULL)
-+			goto out_unwind_strings;
-+		sysfs_attr_init(&token_location_attrs[i].attr);
-+		token_location_attrs[i].attr.name = location_name;
-+		token_location_attrs[i].attr.mode = 0444;
-+		token_location_attrs[i].show = location_show;
-+		token_attrs[j++] = &token_location_attrs[i].attr;
++		if (!call_whitelist[i].need_capability ||
++		    capable(call_whitelist[i].need_capability)) {
++			dev_dbg(d, "whitelisted capable command: %u/%u\n",
++			buffer->class, buffer->select);
++			return 0;
++		}
++		dev_dbg(d, "missing capability %d for %u/%u\n",
++			call_whitelist[i].need_capability,
++			buffer->class, buffer->select);
 +
-+		/* add value */
-+		sprintf(buffer_value, "%04x_value",
-+			da_tokens[i].tokenID);
-+		value_name = kstrdup(buffer_value, GFP_KERNEL);
-+		if (value_name == NULL)
-+			goto loop_fail_create_value;
-+		sysfs_attr_init(&token_value_attrs[i].attr);
-+		token_value_attrs[i].attr.name = value_name;
-+		token_value_attrs[i].attr.mode = 0444;
-+		token_value_attrs[i].show = value_show;
-+		token_attrs[j++] = &token_value_attrs[i].attr;
-+		continue;
-+
-+loop_fail_create_value:
-+		kfree(value_name);
-+		goto out_unwind_strings;
 +	}
-+	smbios_attribute_group.attrs = token_attrs;
 +
-+	ret = sysfs_create_group(&dev->dev.kobj, &smbios_attribute_group);
-+	if (ret)
-+		goto out_unwind_strings;
-+	return 0;
-+
-+out_unwind_strings:
-+	for (i = i-1; i > 0; i--) {
-+		kfree(token_location_attrs[i].attr.name);
-+		kfree(token_value_attrs[i].attr.name);
++	/* not in a whitelist, only allow processes with capabilities */
++	if (capable(CAP_SYS_RAWIO)) {
++		dev_dbg(d, "Allowing %u/%u due to CAP_SYS_RAWIO\n",
++			buffer->class, buffer->select);
++		return 0;
 +	}
-+	kfree(token_attrs);
-+out_allocate_attrs:
-+	kfree(token_value_attrs);
-+out_allocate_value:
-+	kfree(token_location_attrs);
 +
-+	return -ENOMEM;
++	return -EACCES;
 +}
++EXPORT_SYMBOL_GPL(dell_smbios_call_filter);
 +
-+static void free_group(struct platform_device *pdev)
-+{
-+	int i;
-+
-+	sysfs_remove_group(&pdev->dev.kobj,
-+				&smbios_attribute_group);
-+	for (i = 0; i < da_num_tokens; i++) {
-+		kfree(token_location_attrs[i].attr.name);
-+		kfree(token_value_attrs[i].attr.name);
-+	}
-+	kfree(token_attrs);
-+	kfree(token_value_attrs);
-+	kfree(token_location_attrs);
-+}
-+
-+
- static int __init dell_smbios_init(void)
+ int dell_smbios_call(struct calling_interface_buffer *buffer)
  {
- 	const struct dmi_device *valid;
-@@ -197,9 +371,40 @@ static int __init dell_smbios_init(void)
- 		ret = -ENOMEM;
- 		goto fail_buffer;
- 	}
-+	ret = platform_driver_register(&platform_driver);
-+	if (ret)
-+		goto fail_platform_driver;
-+
-+	platform_device = platform_device_alloc("dell-smbios", 0);
-+	if (!platform_device) {
-+		ret = -ENOMEM;
-+		goto fail_platform_device_alloc;
-+	}
-+	ret = platform_device_add(platform_device);
-+	if (ret)
-+		goto fail_platform_device_add;
-+
-+	/* duplicate tokens will cause problems building sysfs files */
-+	zero_duplicates(&platform_device->dev);
-+
-+	ret = build_tokens_sysfs(platform_device);
-+	if (ret)
-+		goto fail_create_group;
+ 	int (*call_fn)(struct calling_interface_buffer *) = NULL;
+@@ -168,6 +356,8 @@ static void __init parse_da_table(const struct dmi_header *dm)
+ 	if (dm->length < 17)
+ 		return;
  
- 	return 0;
++	da_supported_commands = table->supportedCmds;
++
+ 	new_da_tokens = krealloc(da_tokens, (da_num_tokens + tokens) *
+ 				 sizeof(struct calling_interface_token),
+ 				 GFP_KERNEL);
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
+index db6a16e5f87c..91b9c615452d 100644
+--- a/drivers/platform/x86/dell-smbios.h
++++ b/drivers/platform/x86/dell-smbios.h
+@@ -26,9 +26,14 @@
+ #define SELECT_TOKEN_AC 2
+ #define CLASS_KBD_BACKLIGHT 4
+ #define SELECT_KBD_BACKLIGHT 11
++#define CLASS_FLASH_INTERFACE 7
++#define SELECT_FLASH_INTERFACE 3
++#define CLASS_ADMIN_PROP 10
++#define SELECT_ADMIN_PROP 3
+ #define CLASS_INFO 17
+ #define SELECT_RFKILL 11
+ #define SELECT_APP_REGISTRATION	3
++#define SELECT_DOCK 22
  
-+fail_create_group:
-+	platform_device_del(platform_device);
+ /* Tokens used in kernel drivers, any of these
+  * should be filtered from userspace access
+@@ -44,6 +49,10 @@
+ #define KBD_LED_AUTO_100_TOKEN	0x02F6
+ #define GLOBAL_MIC_MUTE_ENABLE	0x0364
+ #define GLOBAL_MIC_MUTE_DISABLE	0x0365
 +
-+fail_platform_device_add:
-+	platform_device_put(platform_device);
-+
-+fail_platform_device_alloc:
-+	platform_driver_unregister(&platform_driver);
-+
-+fail_platform_driver:
-+	free_page((unsigned long)buffer);
-+
- fail_buffer:
- 	kfree(da_tokens);
- 	return ret;
-@@ -207,8 +412,13 @@ static int __init dell_smbios_init(void)
++/* tokens whitelisted to userspace use */
++#define CAPSULE_EN_TOKEN	0x0461
++#define CAPSULE_DIS_TOKEN	0x0462
+ #define WSMT_EN_TOKEN		0x04EC
+ #define WSMT_DIS_TOKEN		0x04ED
  
- static void __exit dell_smbios_exit(void)
- {
--	kfree(da_tokens);
-+	if (platform_device) {
-+		free_group(platform_device);
-+		platform_device_unregister(platform_device);
-+		platform_driver_unregister(&platform_driver);
-+	}
- 	free_page((unsigned long)buffer);
-+	kfree(da_tokens);
- }
+@@ -80,6 +89,8 @@ int dell_smbios_register_device(struct device *d, void *call_fn);
+ void dell_smbios_unregister_device(struct device *d);
  
- subsys_initcall(dell_smbios_init);
+ int dell_smbios_error(int value);
++int dell_smbios_call_filter(struct device *d,
++	struct calling_interface_buffer *buffer);
+ int dell_smbios_call(struct calling_interface_buffer *buffer);
+ 
+ struct calling_interface_token *dell_smbios_find_token(int tokenid);
 -- 
 2.14.1
