@@ -1,66 +1,36 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 2/2] platform/x86: silead_dmi: Add silead,home-button property to some tablets
-Date: Tue, 17 Oct 2017 17:45:12 +0200
-Message-ID: <20171017154512.30524-2-hdegoede@redhat.com>
-References: <20171017154512.30524-1-hdegoede@redhat.com>
+From: Guillaume =?utf-8?Q?Dou=C3=A9zan-Grard?= <gdouezangrard@gmail.com>
+Subject: [PATCH 0/4] Topstar ACPI LED Workaround
+Date: Tue, 17 Oct 2017 18:17:26 +0200
+Message-ID: <cover.1508255487.git.gdouezangrard@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:33532 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S936553AbdJQPpX (ORCPT
+Received: from mail-wr0-f194.google.com ([209.85.128.194]:55902 "EHLO
+        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S934114AbdJQQRg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 11:45:23 -0400
-In-Reply-To: <20171017154512.30524-1-hdegoede@redhat.com>
+        Tue, 17 Oct 2017 12:17:36 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add "silead,home-button" property to entries for tablets which have
-a capacitive home button (typically a windows logo on the front).
+Hi Darren,
 
-This new property is checked for by the new capacitive home button
-support in the silead touchscreen driver.
+On Topstar U931 Notebooks, an issue prevents the WLAN toggle key from
+being properly managed by the Embedded Controller and successfully
+disconnect the adapter. A specific ACPI method allows to toggle the WLAN
+LED state regardless.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+These are barebone laptops, sold under quite a lot of brands and
+configurations, with different firmwares and so on. I can only say for sure
+that this issue is present for all the models sold under a specific brand,
+that's why I'm reluctant to enable this by default with a DMI check.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index fadfce9b3f5f..ac304f2318cc 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -58,6 +58,7 @@ static const struct property_entry dexp_ursus_7w_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
- 	PROPERTY_ENTRY_STRING("firmware-name", "gsl1686-dexp-ursus-7w.fw"),
- 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	{ }
- };
- 
-@@ -72,6 +73,7 @@ static const struct property_entry surftab_wintron70_st70416_6_props[] = {
- 	PROPERTY_ENTRY_STRING("firmware-name",
- 			      "gsl1686-surftab-wintron70-st70416-6.fw"),
- 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	{ }
- };
- 
-@@ -116,6 +118,7 @@ static const struct property_entry pov_mobii_wintab_p800w_props[] = {
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
- 	PROPERTY_ENTRY_STRING("firmware-name",
- 			      "gsl3692-pov-mobii-wintab-p800w.fw"),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	{ }
- };
- 
-@@ -143,6 +146,7 @@ static const struct property_entry chuwi_hi8_pro_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
- 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	{ }
- };
- 
--- 
-2.14.1
+Thus, the new `led_workaround` option registers this LED with the
+corresponding subsystem, making possible to use a software-based trigger
+(rfkill for instance to synchronize the LED with the softkill state).
+
+Thank you for your time,
