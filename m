@@ -1,47 +1,88 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/2] Input: silead - Add support for capactive home
- button found on some x86 tablets
-Date: Tue, 17 Oct 2017 13:13:52 -0700
-Message-ID: <CAKdAkRT63uOtsFS-+WuOuzZSGVHPRxDFLg7oCJZkwbA6uBPr4w@mail.gmail.com>
-References: <20171017154512.30524-1-hdegoede@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v9 05/17] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Tue, 17 Oct 2017 20:22:03 +0000
+Message-ID: <ada4a662f6c24d45a8c0bb5bcbdd80f9@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1508259916.git.mario.limonciello@dell.com>
+ <892677197340c05a67e112884cc00ea938d33e91.1508259916.git.mario.limonciello@dell.com>
+ <20171017185912.uys7e7embiv4g3ii@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f68.google.com ([209.85.213.68]:55902 "EHLO
-        mail-vk0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1760050AbdJQUNy (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 16:13:54 -0400
-In-Reply-To: <20171017154512.30524-1-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171017185912.uys7e7embiv4g3ii@pali>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Hans,
-
-On Tue, Oct 17, 2017 at 8:45 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On some x86 tablets with a silead touchscreen the windows logo on the
-> front is a capacitive home button. Touching this button results in a touch
-> with bits 12-15 of the Y coordinates set, while normally only the lower 12
-> are used.
->
-> Detect this and report a KEY_LEFTMETA press when this happens. Note for
-> now we only respond to the Y coordinate bits 12-15 containing 0x01, on some
-> tablets *without* a capacative button I've noticed these bits containing
-> 0x04 when crossing the edges of the screen.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> -Only enable support for the home-button if a "silead,home-button"
->  boolean device-property is set on the device
-
-You need to add this new property to
-Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-and CC Rob.
-
-Thanks!
-
--- 
-Dmitry
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3
+IDE6NTkgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
+bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
+LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1dG9t
+aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
+a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
+b2FoLmNvbT47IEFsYW4gQ294DQo+IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2OSAwNS8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXdtaS1kZXNjcmlw
+dG9yOiBzcGxpdCBXTUkNCj4gZGVzY3JpcHRvciBpbnRvIGl0J3Mgb3duIGRyaXZlcg0KPiANCj4g
+T24gVHVlc2RheSAxNyBPY3RvYmVyIDIwMTcgMTM6MjE6NDkgTWFyaW8gTGltb25jaWVsbG8gd3Jv
+dGU6DQo+ID4gK3N0cnVjdCBkZXNjcmlwdG9yX3ByaXYgew0KPiA+ICsJc3RydWN0IGxpc3RfaGVh
+ZCBsaXN0Ow0KPiA+ICsJdTMyIGludGVyZmFjZV92ZXJzaW9uOw0KPiA+ICsJdTMyIHNpemU7DQo+
+ID4gK307DQo+ID4gK3N0YXRpYyBMSVNUX0hFQUQod21pX2xpc3QpOw0KPiA+ICsNCj4gPiArYm9v
+bCBkZWxsX3dtaV9nZXRfaW50ZXJmYWNlX3ZlcnNpb24odTMyICp2ZXJzaW9uKQ0KPiA+ICt7DQo+
+ID4gKwlzdHJ1Y3QgZGVzY3JpcHRvcl9wcml2ICpwcml2Ow0KPiA+ICsNCj4gPiArCXByaXYgPSBs
+aXN0X2ZpcnN0X2VudHJ5X29yX251bGwoJndtaV9saXN0LA0KPiA+ICsJCQkJCXN0cnVjdCBkZXNj
+cmlwdG9yX3ByaXYsDQo+ID4gKwkJCQkJbGlzdCk7DQo+ID4gKwlpZiAoIXByaXYpDQo+ID4gKwkJ
+cmV0dXJuIGZhbHNlOw0KPiA+ICsJKnZlcnNpb24gPSBwcml2LT5pbnRlcmZhY2VfdmVyc2lvbjsN
+Cj4gDQo+IFRoZXJlIGlzIGEgcmFjZSBjb25kaXRpb24uIGRlbGxfd21pX2Rlc2NyaXB0b3JfcmVt
+b3ZlIGNhbiBiZSBjYWxsZWQNCj4gYmV0d2VlbiBsaXN0X2ZpcnN0X2VudHJ5X29yX251bGwgYW5k
+IGRlcmVmZXJlbmNpbmcgcHJpdiBwb2ludGVyLg0KPiANCg0KT0sgSSdsbCBhZGQgYSBtdXRleCBm
+b3IgdGhpcy4NCg0KPiA+ICsJcmV0dXJuIHRydWU7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJP
+TF9HUEwoZGVsbF93bWlfZ2V0X2ludGVyZmFjZV92ZXJzaW9uKTsNCj4gPiArDQo+ID4gK2Jvb2wg
+ZGVsbF93bWlfZ2V0X3NpemUodTMyICpzaXplKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGVzY3Jp
+cHRvcl9wcml2ICpwcml2Ow0KPiA+ICsNCj4gPiArCXByaXYgPSBsaXN0X2ZpcnN0X2VudHJ5X29y
+X251bGwoJndtaV9saXN0LA0KPiA+ICsJCQkJCXN0cnVjdCBkZXNjcmlwdG9yX3ByaXYsDQo+ID4g
+KwkJCQkJbGlzdCk7DQo+ID4gKwlpZiAoIXByaXYpDQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+
+ICsJKnNpemUgPSBwcml2LT5zaXplOw0KPiANCj4gQW5kIHNhbWUgdGhlcmUuDQoNCk9LIEknbGwg
+YWRkIGEgbXV0ZXggZm9yIHRoaXMuDQoNCj4gDQo+ID4gKwlyZXR1cm4gdHJ1ZTsNCj4gPiArfQ0K
+PiA+ICtFWFBPUlRfU1lNQk9MX0dQTChkZWxsX3dtaV9nZXRfc2l6ZSk7DQo+IA0KPiAuLi4NCj4g
+DQo+ID4gQEAgLTczMyw5ICs2NTksOCBAQCBzdGF0aWMgaW50IGRlbGxfd21pX3Byb2JlKHN0cnVj
+dCB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+ICAJZGV2X3Nl
+dF9kcnZkYXRhKCZ3ZGV2LT5kZXYsIHByaXYpOw0KPiA+DQo+ID4gLQllcnIgPSBkZWxsX3dtaV9j
+aGVja19kZXNjcmlwdG9yX2J1ZmZlcih3ZGV2KTsNCj4gPiAtCWlmIChlcnIpDQo+ID4gLQkJcmV0
+dXJuIGVycjsNCj4gPiArCWlmICghZGVsbF93bWlfZ2V0X2ludGVyZmFjZV92ZXJzaW9uKCZwcml2
+LT5pbnRlcmZhY2VfdmVyc2lvbikpDQo+ID4gKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7DQo+IA0K
+PiBUaGlzIGNvdWxkIGxlYWQgdG8gYW5vdGhlciBwcm9ibGVtLCB3aGVuIERlbGwgZGVjaWRlIHRv
+IGNoYW5nZSBXTUkgQVBJDQo+IGFuZCB3b3VsZCBub3QgcHJvdmlkZSBkZXNjcmlwdG9yIFdNSSBH
+VUlEIGFueW1vcmUsIGJ1dCBzdGlsbCBwcm92aWRlDQo+IGV2ZW4gV01JIEdVSUQuDQoNClRoaXMg
+aXMgZ2V0dGluZyBpbnRvIHRlcnJpdG9yeSBvZiAidW5kZWZpbmVkIG5ldyBzdHVmZiIgaG93IGNh
+biB0aGUga2VybmVsDQprbm93IHdoYXQgdG8gZG8gd2l0aCBoYXJkd2FyZSB0aGF0IGRvZXNuJ3Qg
+eWV0IGV4aXN0Pw0KQW55d2F5LCBpdHMgZmluZSB0byB0aGluayBhYm91dC4NCg0KPiANCj4gQmFz
+aWNhbGx5IGl0IGlzIG5lZWRlZCB0byBkaXN0aW5ndWlzaCBiZXR3ZWVuIHN0YXRlczoNCj4gDQo+
+IDEpIHByb2JlIGZ1bmN0aW9uIG9mIGRlbGwtd21pIHdhcyBjYWxsZWQgYmVmb3JlIHByb2JlIGZ1
+bmN0aW9uIG9mDQo+ICAgIGRlbGwtd21pLWRlc2NyaXB0b3IgZGV2aWNlIGluaXRpYWxpemF0aW9u
+DQo+IA0KPiAyKSBwcm9iZSBmdW5jdGlvbiBvZiBkZWxsLXdtaSB3YXMgY2FsbGVkLCBidXQgdGhl
+cmUgaXMgbm8gZGV2aWNlDQo+ICAgIGluc3RhbmNlIG9mIGRlbGwtd21pLWRlc2NyaXB0b3INCj4g
+DQo+IDMpIHRoZXJlIGlzIGEgZGV2aWNlIGluc3RhbmNlIG9mIGRlbGwtd21pLWRlc2NyaXB0b3Is
+IGJ1dCBkZXZpY2UgaXMgbm90DQo+ICAgIHJlZ2lzdGVyZWQgdG8gZGVsbC13bWktZGVzY3JpcHRv
+ciBkcml2ZXIsIGUuZy4gYmVjYXVzZSB1c2Vyc3BhY2UNCj4gICAgZGVjaWRlZCB0byBmb3JiaWQg
+c3VjaCB0aGluZywgb3IgYmVjYXVzZSBwcm9iaW5nIG9mDQo+ICAgIGRlbGwtd21pLWRlc2NyaXB0
+b3IgZGV2aWNlIGZhaWxlZA0KPiANCj4gNCkgcHJvYmUgZnVuY3Rpb24gb2YgZGVsbC13bWkgd2Fz
+IGNhbGxlZCBhZnRlciBwcm9iZSBmdW5jdGlvbiBvZg0KPiAgICBkZWxsLXdtaS1kZXNjcmlwdG9y
+IHN1Y2Nlc3NmdWxseQ0KPiANCj4gSSBkbyBub3Qga25vdyBob3cgdG8gaGFuZGxlIHN1Y2ggc2l0
+dWF0aW9uIG90aGVyIGRyaXZlcnMgb3IgaG93IHRvIGRvIGl0DQo+IGNvcnJlY3RseS4gSSBqdXN0
+IHdhbnRlZCB0byBzaG93IHRoZSBmYWN0IHRoYXQgYmluZGluZyBkZXZpY2UgPC0tPg0KPiBkcml2
+ZXIgY2FuIGZhaWwgaW4gbGludXgga2VybmVsIChmb3IgbW9yZSByZWFzb25zKSBhbmQgaW4gc29t
+ZSBjYXNlcw0KPiByZXBlYXRpbmcgaXQgZG9lcyBub3QgbWFrZSBzZW5zZS4uLg0KPiANCj4gTWF5
+YmUgb3RoZXIgZGV2ZWxvcGVycyB3b3VsZCBjb21tZW50IHRoaXMgcGFydD8NCg0KU28gSSB0aGlu
+ayB0aGUgc2ltcGxlIGFuc3dlciB0byB0aGlzIGlzIHRvICB1c2Ugd21pX2hhc19ndWlkIHRvIGRl
+dGVybWluZQ0KaWYgdGhlIEdVSUQgdGhhdCB3ZSdyZSBkZXBlbmRpbmcgb24gZXhpc3RzIG9uIHRo
+ZSBidXMuDQpJZiBpdCBkb2Vzbid0IGV4aXN0IGFib3J0IHRoZSBkcml2ZXIgZHVyaW5nIHByb2Jp
+bmcuDQoNCklmIHRoZSBkZXZpY2UgZXhpc3RzIG9uIHRoZSBidXMgdGhlbiBhZGRyZXNzaW5nIGVh
+Y2ggc3RhdGU6IA0KPDE+IGlzIHNvbHZlZCBieSBkZWZlcnJlZCBwcm9iaW5nDQo8Mj4gd29uJ3Qg
+aGFwcGVuDQo8Mz4gZGVsbC13bWkgc2hvdWxkIGNvbnRpbnVlIHRvIHdhaXQgaW4gZGVmZXJyZWQg
+cHJvYmluZyBpbiBjYXNlIA0KdXNlcnNwYWNlIGRlY2lkZXMgdG8gYmluZCBsYXRlciBvciBwcm9i
+aW5nIHN1Y2NlZWRlZCBsYXRlci4NCjw0PiBpcyB0aGUgZ29vZCBzaXR1YXRpb24NCg0K
