@@ -1,64 +1,62 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
- oem string is detected
-Date: Tue, 17 Oct 2017 19:10:40 +0000
-Message-ID: <f8132fa7a90a4954831fc3ee30be4329@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v9 10/17] platform/x86: dell-smbios-wmi: Add new WMI
+ dispatcher driver
+Date: Tue, 17 Oct 2017 21:10:44 +0200
+Message-ID: <20171017191044.priqeeymjrewo5hn@pali>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
- <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
- <20171017190336.iqhzmdsimx4f7mfw@pali>
+ <911d505461965a47e6ffef7838fdd06a5a7044fd.1508259916.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:28301 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1753816AbdJQTKn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:10:43 -0400
-In-Reply-To: <20171017190336.iqhzmdsimx4f7mfw@pali>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <911d505461965a47e6ffef7838fdd06a5a7044fd.1508259916.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDE3LCAyMDE3
-IDI6MDQgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVs
-bC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5
-LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1dG9t
-aXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29j
-a2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGty
-b2FoLmNvbT47IEFsYW4gQ294DQo+IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2OSAwNy8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXNtYmlvczogb25s
-eSBydW4gaWYgcHJvcGVyIG9lbQ0KPiBzdHJpbmcgaXMgZGV0ZWN0ZWQNCj4gDQo+IE9uIFR1ZXNk
-YXkgMTcgT2N0b2JlciAyMDE3IDEzOjIxOjUxIE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+
-IFRoZSBwcm9wZXIgd2F5IHRvIGluZGljYXRlIHRoYXQgYSBzeXN0ZW0gaXMgYSAnc3VwcG9ydGVk
-JyBEZWxsIFN5c3RlbQ0KPiA+IGlzIGJ5IHRoZSBwcmVzZW5jZSBvZiB0aGlzIHN0cmluZyBpbiBP
-RU0gc3RyaW5ncy4NCj4gPg0KPiA+IEFsbG93aW5nIHRoZSBkcml2ZXIgdG8gbG9hZCBvbiBub24t
-RGVsbCBzeXN0ZW1zIHdpbGwgaGF2ZSB1bmRlZmluZWQNCj4gPiByZXN1bHRzLg0KPiA+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwu
-Y29tPg0KPiA+IFJldmlld2VkLWJ5OiBFZHdhcmQgTydDYWxsYWdoYW4gPHF1YXNpc2VjQGdvb2ds
-ZS5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMg
-fCA3ICsrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLmMgYi9kcml2
-ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiBzbWJpb3MuYw0KPiA+IGluZGV4IGU5YjFjYTA3Yzg3
-Mi4uN2U3NzkyNzhkMDU0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
-bGwtc21iaW9zLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5j
-DQo+ID4gQEAgLTE3Miw4ICsxNzIsMTUgQEAgc3RhdGljIHZvaWQgX19pbml0IGZpbmRfdG9rZW5z
-KGNvbnN0IHN0cnVjdCBkbWlfaGVhZGVyDQo+ICpkbSwgdm9pZCAqZHVtbXkpDQo+ID4NCj4gPiAg
-c3RhdGljIGludCBfX2luaXQgZGVsbF9zbWJpb3NfaW5pdCh2b2lkKQ0KPiA+ICB7DQo+ID4gKwlj
-b25zdCBzdHJ1Y3QgZG1pX2RldmljZSAqdmFsaWQ7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4g
-Kwl2YWxpZCA9IGRtaV9maW5kX2RldmljZShETUlfREVWX1RZUEVfT0VNX1NUUklORywgIkRlbGwg
-U3lzdGVtIiwNCj4gTlVMTCk7DQo+IA0KPiBBcmUgeW91IHN1cmUgdGhhdCBhbGwgRGVsbCBtYWNo
-aW5lcyBoYXZlIGV4YWN0bHkgdGhpcyBzdHJpbmc/IElJUkMgdGhpcw0KPiBzbWJpb3MgaW50ZXJm
-YWNlIHZpYSBTTU0gaXMgc3VwcG9ydGVkIGJ5IG1hY2hpbmVzIGJhY2sgdG8gMjAwNS4uLiBBbHNv
-DQo+IGluIG90aGVyIERNSSB0YWJsZXMgaW4gZGVsbC1sYXRvcCB0aGVyZSBpcyBlLmcuICJEZWxs
-IEluYy4iIG9yICJEZWxsDQo+IENvbXB1dGVyIENvcnBvcmF0aW9uIi4NCj4gDQpJIGNoZWNrZWQg
-dGhlIHNwZWMgYW5kIGl0J3MgYmVlbiB0aGVyZSBzaW5jZSBzeXN0ZW1zIDE5OTkgb253YXJkLg0K
-DQo+ID4gKwlpZiAoIXZhbGlkKSB7DQo+ID4gKwkJcHJfZXJyKCJVbmFibGUgdG8gcnVuIG9uIG5v
-bi1EZWxsIHN5c3RlbVxuIik7DQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gKwl9DQo+ID4g
-Kw0KPiA+ICAJZG1pX3dhbGsoZmluZF90b2tlbnMsIE5VTEwpOw0KPiA+DQo+ID4gIAlpZiAoIWRh
-X3Rva2VucykgIHsNCj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwu
-Y29tDQo=
+On Tuesday 17 October 2017 13:21:54 Mario Limonciello wrote:
+> +static LIST_HEAD(wmi_list);
+> +
+> +static inline struct wmi_smbios_priv *get_first_smbios_priv(void)
+> +{
+> +	return list_first_entry_or_null(&wmi_list,
+> +					struct wmi_smbios_priv,
+> +					list);
+> +}
+
+...
+
+> +int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
+> +{
+> +	struct wmi_smbios_priv *priv;
+> +	size_t difference;
+> +	size_t size;
+> +	int ret;
+> +
+> +	priv = get_first_smbios_priv();
+
+Mutex needs to be acquired before calling this function. Otherwise there
+is a race condition between removing element from the list returned by
+this call and later usage of structure priv.
+
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	size = sizeof(struct calling_interface_buffer);
+> +	difference = priv->req_buf_size - sizeof(u64) - size;
+> +
+> +	mutex_lock(&call_mutex);
+> +	memset(&priv->buf->ext, 0, difference);
+> +	memcpy(&priv->buf->std, buffer, size);
+> +	ret = run_smbios_call(priv->wdev);
+> +	memcpy(buffer, &priv->buf->std, size);
+> +	mutex_unlock(&call_mutex);
+> +
+> +	return ret;
+> +}
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
