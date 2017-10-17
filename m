@@ -1,79 +1,54 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v9 07/17] platform/x86: dell-smbios: only run if proper
- oem string is detected
-Date: Tue, 17 Oct 2017 19:19:02 +0000
-Message-ID: <811c84e436424acaba9a02186db00cf8@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v9 11/17] platform/x86: dell-smbios-smm: test for WSMT
+Date: Tue, 17 Oct 2017 21:22:58 +0200
+Message-ID: <20171017192258.fx2ejggjkyzkrzle@pali>
 References: <cover.1508259916.git.mario.limonciello@dell.com>
- <255fc4b41a394542d63bf5a958314904e865a273.1508259916.git.mario.limonciello@dell.com>
- <20171017190336.iqhzmdsimx4f7mfw@pali>
- <f8132fa7a90a4954831fc3ee30be4329@ausx13mpc120.AMER.DELL.COM>
+ <e552ba67da7281d184936a551501c4040510b372.1508259916.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:12584 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S933309AbdJQTTE (ORCPT
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:44503 "EHLO
+        mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S937588AbdJQTXB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2017 15:19:04 -0400
-In-Reply-To: <f8132fa7a90a4954831fc3ee30be4329@ausx13mpc120.AMER.DELL.COM>
-Content-Language: en-US
+        Tue, 17 Oct 2017 15:23:01 -0400
+Content-Disposition: inline
+In-Reply-To: <e552ba67da7281d184936a551501c4040510b372.1508259916.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW1vbmNpZWxsbywgTWFyaW8N
-Cj4gU2VudDogVHVlc2RheSwgT2N0b2JlciAxNywgMjAxNyAyOjExIFBNDQo+IFRvOiAnUGFsaSBS
-b2jDoXInIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3Jn
-OyBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiBMS01MIDxs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtl
-cm5lbC5vcmc7IEFuZHkNCj4gTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3JnPjsgcXVhc2lzZWNA
-Z29vZ2xlLmNvbTsgcmp3QHJqd3lzb2NraS5uZXQ7DQo+IG1qZzU5QGdvb2dsZS5jb207IGhjaEBs
-c3QuZGU7IEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPjsgQWxhbiBDb3gNCj4gPGdub21lc0BseG9y
-Z3VrLnVrdXUub3JnLnVrPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY5IDA3LzE3XSBwbGF0Zm9y
-bS94ODY6IGRlbGwtc21iaW9zOiBvbmx5IHJ1biBpZiBwcm9wZXIgb2VtDQo+IHN0cmluZyBpcyBk
-ZXRlY3RlZA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IFBh
-bGkgUm9ow6FyIFttYWlsdG86cGFsaS5yb2hhckBnbWFpbC5jb21dDQo+ID4gU2VudDogVHVlc2Rh
-eSwgT2N0b2JlciAxNywgMjAxNyAyOjA0IFBNDQo+ID4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8
-TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+DQo+ID4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3Jn
-OyBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiA+IExLTUwg
-PGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIu
-a2VybmVsLm9yZzsNCj4gQW5keQ0KPiA+IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1
-YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29ja2kubmV0Ow0KPiA+IG1qZzU5QGdvb2dsZS5j
-b207IGhjaEBsc3QuZGU7IEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPjsgQWxhbiBDb3gNCj4gPiA8
-Z25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2OSAw
-Ny8xN10gcGxhdGZvcm0veDg2OiBkZWxsLXNtYmlvczogb25seSBydW4gaWYgcHJvcGVyIG9lbQ0K
-PiA+IHN0cmluZyBpcyBkZXRlY3RlZA0KPiA+DQo+ID4gT24gVHVlc2RheSAxNyBPY3RvYmVyIDIw
-MTcgMTM6MjE6NTEgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4gPiBUaGUgcHJvcGVyIHdh
-eSB0byBpbmRpY2F0ZSB0aGF0IGEgc3lzdGVtIGlzIGEgJ3N1cHBvcnRlZCcgRGVsbCBTeXN0ZW0N
-Cj4gPiA+IGlzIGJ5IHRoZSBwcmVzZW5jZSBvZiB0aGlzIHN0cmluZyBpbiBPRU0gc3RyaW5ncy4N
-Cj4gPiA+DQo+ID4gPiBBbGxvd2luZyB0aGUgZHJpdmVyIHRvIGxvYWQgb24gbm9uLURlbGwgc3lz
-dGVtcyB3aWxsIGhhdmUgdW5kZWZpbmVkDQo+ID4gPiByZXN1bHRzLg0KPiA+ID4NCj4gPiA+IFNp
-Z25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNv
-bT4NCj4gPiA+IFJldmlld2VkLWJ5OiBFZHdhcmQgTydDYWxsYWdoYW4gPHF1YXNpc2VjQGdvb2ds
-ZS5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlv
-cy5jIHwgNyArKysrKysrDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQ0K
-PiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlv
-cy5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC0NCj4gPiBzbWJpb3MuYw0KPiA+ID4gaW5k
-ZXggZTliMWNhMDdjODcyLi43ZTc3OTI3OGQwNTQgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9kZWxsLXNtYmlvcy5jDQo+ID4gPiBAQCAtMTcyLDggKzE3MiwxNSBAQCBzdGF0aWMgdm9p
-ZCBfX2luaXQgZmluZF90b2tlbnMoY29uc3Qgc3RydWN0IGRtaV9oZWFkZXINCj4gPiAqZG0sIHZv
-aWQgKmR1bW15KQ0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgaW50IF9faW5pdCBkZWxsX3NtYmlvc19p
-bml0KHZvaWQpDQo+ID4gPiAgew0KPiA+ID4gKwljb25zdCBzdHJ1Y3QgZG1pX2RldmljZSAqdmFs
-aWQ7DQo+ID4gPiAgCWludCByZXQ7DQo+ID4gPg0KPiA+ID4gKwl2YWxpZCA9IGRtaV9maW5kX2Rl
-dmljZShETUlfREVWX1RZUEVfT0VNX1NUUklORywgIkRlbGwgU3lzdGVtIiwNCj4gPiBOVUxMKTsN
-Cj4gPg0KPiA+IEFyZSB5b3Ugc3VyZSB0aGF0IGFsbCBEZWxsIG1hY2hpbmVzIGhhdmUgZXhhY3Rs
-eSB0aGlzIHN0cmluZz8gSUlSQyB0aGlzDQo+ID4gc21iaW9zIGludGVyZmFjZSB2aWEgU01NIGlz
-IHN1cHBvcnRlZCBieSBtYWNoaW5lcyBiYWNrIHRvIDIwMDUuLi4gQWxzbw0KPiA+IGluIG90aGVy
-IERNSSB0YWJsZXMgaW4gZGVsbC1sYXRvcCB0aGVyZSBpcyBlLmcuICJEZWxsIEluYy4iIG9yICJE
-ZWxsDQo+ID4gQ29tcHV0ZXIgQ29ycG9yYXRpb24iLg0KPiA+DQo+IEkgY2hlY2tlZCB0aGUgc3Bl
-YyBhbmQgaXQncyBiZWVuIHRoZXJlIHNpbmNlIHN5c3RlbXMgMTk5OSBvbndhcmQuDQo+IA0KDQpP
-aCBhbmQgaXQncyBjYXNlIGl0J3Mgbm90IGFwcGFyZW50LCB0aGlzIGlzIGZyb20gT0VNIHN0cmlu
-Z3Mgc2VjdGlvbi4gIEl0J3Mgbm90DQp0aGUgc2FtZSBhcyBzdGFuZGFyZCBTTUJJT1Mgc3RyaW5n
-cyBmb3Igc3lzdGVtIG1hbnVmYWN0dXJlciwgYmlvcyB2ZW5kb3INCmV0Yy4gIEknbSBjaGVja2lu
-ZyB0aGlzIG9uZSBzcGVjaWZpY2FsbHkgYmVjYXVzZSBhIHN5c3RlbSBjYW4gYmUgcmVicmFuZGVk
-LiAgDQpXaGVuIHJlYnJhbmRlZCB0aGUgZHJpdmVycyB3b24ndCBsb2FkIGF1dG9tYXRpY2FsbHks
-IGJ1dCB0aGlzIGludGVyZmFjZSANCnNob3VsZCBzdGlsbCB3b3JrIG9uIGEgaWYgbWFudWFsbHkg
-bG9hZGVkLg0K
+On Tuesday 17 October 2017 13:21:55 Mario Limonciello wrote:
+> +/* When enabled this indicates that SMM won't work */
+> +static int test_wsmt_enabled(void)
+> +{
+> +	struct calling_interface_token *token;
+> +
+> +	/* if token doesn't exist, SMM will work */
+> +	token = dell_smbios_find_token(WSMT_EN_TOKEN);
+> +	if (!token)
+> +		return 0;
+> +
+> +	/* if token exists, try to access over SMM */
+> +	buffer->class = CLASS_TOKEN_READ;
+> +	buffer->select = SELECT_TOKEN_STD;
+> +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
+> +	buffer->input[0] = token->location;
+> +	dell_smbios_smm_call(buffer);
+> +
+> +	/* if lookup failed, we know WSMT was enabled */
+> +	if (buffer->output[0] != 0)
+> +		return 1;
+> +
+> +	/* query token status if it didn't fail */
+> +	return (buffer->output[1] == token->value);
+> +}
+
+Maybe small suggestion... function returns only zero or one -- what is a
+good candidate to have return value boolean and not basic int.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
