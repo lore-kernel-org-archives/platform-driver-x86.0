@@ -1,61 +1,71 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] dell-laptop: Fix keyboard led max_brightness property
- for Dell Latitude E6410
-Date: Wed, 18 Oct 2017 22:09:41 +0300
-Message-ID: <CAHp75VfPW88YhJR97POu08POP+Edw2dEm1gwfGMxddLeOydtgQ@mail.gmail.com>
-References: <1508083394-22823-1-git-send-email-pali.rohar@gmail.com> <1508349961-15051-1-git-send-email-pali.rohar@gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v9 11/17] platform/x86: dell-smbios-smm: test for WSMT
+Date: Wed, 18 Oct 2017 19:10:59 +0000
+Message-ID: <c8aca75209f042e689f51c53caed80aa@ausx13mpc124.AMER.DELL.COM>
+References: <cover.1508259916.git.mario.limonciello@dell.com>
+ <e552ba67da7281d184936a551501c4040510b372.1508259916.git.mario.limonciello@dell.com>
+ <20171017192258.fx2ejggjkyzkrzle@pali> <20171018190927.GA1097@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508349961-15051-1-git-send-email-pali.rohar@gmail.com>
+In-Reply-To: <20171018190927.GA1097@fury>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Gabriel M. Elder" <gabriel@tekgnowsys.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario Limonciello <Mario.Limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: dvhart@infradead.org, pali.rohar@gmail.com
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 18, 2017 at 9:06 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> This machine reports number of keyboard backlight led levels, instead of
-> value of the last led level index. Therefore max_brightness properly need=
-s
-> to be subtracted by 1 to match led max_brightness API.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Reported-by: Gabriel M. Elder <gabriel@tekgnowsys.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D196913
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Wednesday, October 18, 2017 2:09 PM
+> To: Pali Roh=E1r <pali.rohar@gmail.com>
+> Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; Andy Shevchenko
+> <andy.shevchenko@gmail.com>; LKML <linux-kernel@vger.kernel.org>; platfor=
+m-
+> driver-x86@vger.kernel.org; Andy Lutomirski <luto@kernel.org>;
+> quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Gre=
+g
+> KH <greg@kroah.com>; Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+> Subject: Re: [PATCH v9 11/17] platform/x86: dell-smbios-smm: test for WSM=
+T
+>=20
+> On Tue, Oct 17, 2017 at 09:22:58PM +0200, Pali Roh=E1r wrote:
+> > On Tuesday 17 October 2017 13:21:55 Mario Limonciello wrote:
+> > > +/* When enabled this indicates that SMM won't work */
+> > > +static int test_wsmt_enabled(void)
+> > > +{
+> > > +	struct calling_interface_token *token;
+> > > +
+> > > +	/* if token doesn't exist, SMM will work */
+> > > +	token =3D dell_smbios_find_token(WSMT_EN_TOKEN);
+> > > +	if (!token)
+> > > +		return 0;
+> > > +
+> > > +	/* if token exists, try to access over SMM */
+> > > +	buffer->class =3D CLASS_TOKEN_READ;
+> > > +	buffer->select =3D SELECT_TOKEN_STD;
+> > > +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
+> > > +	buffer->input[0] =3D token->location;
+> > > +	dell_smbios_smm_call(buffer);
+> > > +
+> > > +	/* if lookup failed, we know WSMT was enabled */
+> > > +	if (buffer->output[0] !=3D 0)
+> > > +		return 1;
+> > > +
+> > > +	/* query token status if it didn't fail */
+> > > +	return (buffer->output[1] =3D=3D token->value);
+> > > +}
+> >
+> > Maybe small suggestion... function returns only zero or one -- what is =
+a
+> > good candidate to have return value boolean and not basic int.
+>=20
+> Yes please.
+>=20
 
-> +       u8 kbd_led_num_of_levels_instead_of_last_index;
+OK I'll adjust this (and the other things Pali sent recently) in the next s=
+ubmission.
 
-Sorry for last minute review comments.
-
-First of all, can it be just boolean?
-
-Naming... Yes, too hard as always was, is and will be.
-
-What about just
-
-kbd_led_use_levels?
-
-Also, does it make sense to create a quirks as an unsigned long and
-put there corresponding bits with definitions?
-
-/* Comment what is this for */
-#define QUIRK_KBD_LED_USE_LEVELS   0
-
-unsigned long quirks;
-
-?
-
-> +       if (quirks && quirks->kbd_led_num_of_levels_instead_of_last_index=
- && info->levels)
-> +               info->levels--;
-
-With last suggestion if becomes something like
-
-if (quirks & BIT(QUIRK_KBD_LED_USE_LEVELS) && info->levels)
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Just waiting on feedback for some of the other areas before sending off aga=
+in.
