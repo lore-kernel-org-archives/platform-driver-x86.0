@@ -1,88 +1,177 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios
- communication over WMI
-Date: Wed, 18 Oct 2017 13:55:45 +0000
-Message-ID: <e225d842e0274a1897c63089444a0814@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <a60ca82dca6e453f7bd920c082de48ea4378b7d2.1508259916.git.mario.limonciello@dell.com>
- <20171018072915.xowh23m5vr2amqcp@pali>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 09/12] intel_sgx: driver documentation
+Date: Wed, 18 Oct 2017 17:25:17 +0300
+Message-ID: <20171018142517.rhnrehdujfu6mrc7@linux.intel.com>
+References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
+ <20171016191855.16964-10-jarkko.sakkinen@linux.intel.com>
+ <35dadcde-5cb0-c40d-7aa5-191e9684be1b@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171018072915.xowh23m5vr2amqcp@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:46722 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751039AbdJROZX (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 18 Oct 2017 10:25:23 -0400
+Content-Disposition: inline
+In-Reply-To: <35dadcde-5cb0-c40d-7aa5-191e9684be1b@infradead.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIE9jdG9iZXIgMTgsIDIw
-MTcgMjoyOSBBTQ0KPiBUbzogR3JlZyBLSCA8Z3JlZ0Brcm9haC5jb20+OyBBbGFuIENveCA8Z25v
-bWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5k
-eSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
-b3JnOyBBbmR5DQo+IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2ds
-ZS5jb207IHJqd0Byand5c29ja2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRl
-OyBMaW1vbmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIHY5IDE3LzE3XSB0b29scy93bWk6IGFkZCBhIHNhbXBsZSBmb3Ig
-ZGVsbCBzbWJpb3MNCj4gY29tbXVuaWNhdGlvbiBvdmVyIFdNSQ0KPiANCj4gT24gVHVlc2RheSAx
-NyBPY3RvYmVyIDIwMTcgMTM6MjI6MDEgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4gZGlm
-ZiAtLWdpdCBhL3Rvb2xzL3dtaS9kZWxsLXNtYmlvcy1leGFtcGxlLmMgYi90b29scy93bWkvZGVs
-bC1zbWJpb3MtZXhhbXBsZS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAw
-MDAwMDAwMDAwMDAuLjY5YzRkZDljNjA1Ng0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi90
-b29scy93bWkvZGVsbC1zbWJpb3MtZXhhbXBsZS5jDQo+ID4gQEAgLTAsMCArMSwyMTQgQEANCj4g
-PiArLyoNCj4gPiArICogIFNhbXBsZSBhcHBsaWNhdGlvbiBmb3IgU01CSU9TIGNvbW11bmljYXRp
-b24gb3ZlciBXTUkgaW50ZXJmYWNlDQo+ID4gKyAqICBQZXJmb3JtcyB0aGUgZm9sbG93aW5nOg0K
-PiA+ICsgKiAgLSBTaW1wbGUgY2xhc3Mvc2VsZWN0IGxvb2t1cCBmb3IgVFBNIGluZm9ybWF0aW9u
-DQo+ID4gKyAqICAtIFNpbXBsZSBxdWVyeSBvZiBrbm93biB0b2tlbnMgYW5kIHRoZWlyIHZhbHVl
-cw0KPiA+ICsgKiAgLSBTaW1wbGUgYWN0aXZhdGlvbiBvZiBhIHRva2VuDQo+ID4gKyAqDQo+ID4g
-KyAqICBDb3B5cmlnaHQgKEMpIDIwMTcgRGVsbCwgSW5jLg0KPiA+ICsgKg0KPiA+ICsgKiAgVGhp
-cyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9v
-ciBtb2RpZnkNCj4gPiArICogIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
-UHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ID4gKyAqICBwdWJsaXNoZWQgYnkgdGhlIEZy
-ZWUgU29mdHdhcmUgRm91bmRhdGlvbi4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8
-ZXJybm8uaD4NCj4gPiArI2luY2x1ZGUgPGZjbnRsLmg+DQo+ID4gKyNpbmNsdWRlIDxzdGRpby5o
-Pg0KPiA+ICsjaW5jbHVkZSA8c3RkbGliLmg+DQo+ID4gKyNpbmNsdWRlIDxzeXMvaW9jdGwuaD4N
-Cj4gPiArI2luY2x1ZGUgPHVuaXN0ZC5oPg0KPiA+ICsNCj4gPiArLyogaWYgdWFwaSBoZWFkZXIg
-aXNuJ3QgaW5zdGFsbGVkLCB0aGlzIG1pZ2h0IG5vdCB5ZXQgZXhpc3QgKi8NCj4gPiArI2lmbmRl
-ZiBfX3BhY2tlZA0KPiA+ICsjZGVmaW5lIF9fcGFja2VkIF9fYXR0cmlidXRlX18oKHBhY2tlZCkp
-DQo+ID4gKyNlbmRpZg0KPiA+ICsjaW5jbHVkZSA8bGludXgvd21pLmg+DQo+ID4gKw0KPiA+ICsv
-KiBJdCB3b3VsZCBiZSBiZXR0ZXIgdG8gZGlzY292ZXIgdGhlc2UgdXNpbmcgdWRldiwgYnV0IGZv
-ciBhIHNpbXBsZQ0KPiA+ICsgKiBhcHBsaWNhdGlvbiB0aGV5J3JlIGhhcmRjb2RlZA0KPiA+ICsg
-Ki8NCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKmlvY3RsX2RldmZzID0gIi9kZXYvd21pL2RlbGwt
-c21iaW9zIjsNCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKnRva2VuX3N5c2ZzID0NCj4gPiArCQkJ
-Ii9zeXMvYnVzL3BsYXRmb3JtL2RldmljZXMvZGVsbC1zbWJpb3MuMC90b2tlbnMiOw0KPiA+ICtz
-dGF0aWMgY29uc3QgY2hhciAqYnVmZmVyX3N5c2ZzID0NCj4gPiArCQkJIi9zeXMvYnVzL3dtaS9k
-ZXZpY2VzL0E4MDU5M0NFLUE5OTctMTFEQS1CMDEyLQ0KPiBCNjIyQTFFRjU0OTIvcmVxdWlyZWRf
-YnVmZmVyX3NpemUiOw0KPiANCj4gR3JlZywgQWxhbiwgY291bGQgdXNlcnNwYWNlIGV4cGVjdHMg
-dGhvc2UgcGF0aHMgdG8gYmUgcGFydCBvZiBrZXJuZWwNCj4gPC0tPiB1c2Vyc3BhY2UgQUJJPyBM
-b29raW5nIGUuZy4gYXQgImRlbGwtc21iaW9zLjAiIG5hbWUgYW5kIEknbSBub3QNCj4gc3VyZSBp
-ZiB0aGlzIGlzIHNvbWV0aGluZyB3aGljaCBpcyBnb2luZyB0byBiZSBzdGFibGUgYmV0d2VlbiBr
-ZXJuZWwNCj4gdmVyc2lvbnMgYW5kIGZvcmV2ZXIgYXMgcGFydCBvZiBBQkkuDQoNCkluIG15IHNh
-bXBsZSBhcHBsaWNhdGlvbiB0byBiZSBkaXN0cmlidXRlZCB3aXRoIHRoZSBrZXJuZWwgdGhlc2Ug
-YXJlIA0KaGFyZGNvZGVkIHBhdGhzLCBidXQgaWYgbW9yZSBkZXBlbmRlbmNpZXMgd2VyZSB1c2Vk
-LCBJIHdvdWxkDQpleHBlY3QgYWxsIDMgb2YgdGhlc2UgcGF0aHMgdG8gYmUgZGlzY292ZXJlZCB1
-c2luZyB1ZGV2LiAgDQpJIGRvIGluY2x1ZGUgYSBjb21tZW50IGZvciB0aGF0IHBvaW50IHNwZWNp
-ZmljYWxseS4NCg0KPiANCj4gQWxzbyBpZiBldmVyeXRoaW5nIGlzIHBhcnQgb2Ygc21iaW9zIEFQ
-SSwgd291bGQgbm90IGl0IGJldHRlciB0byBwcm92aWRlDQo+IGV2ZXJ5dGhpbmcgdmlhIElPQ1RM
-IG92ZXIgL2Rldi93bWkvZGVsbC1zbWJpb3M/IEkgdGhpbmsgdGhpcyBjb2RlIGlzIHRvbw0KPiBj
-b21wbGljYXRlZCwganVzdCBiZWNhdXNlIGZvciBjb3JyZWN0IElPQ1RMIGJ1ZmZlciBzaXplIGl0
-IG5lZWRzIHRvIHJlYWQNCj4gb3RoZXIgcHJvcGVydGllcyB2aWEgc3lzZnMsIGV0Yy4uLiBGb3Ig
-bWUgaXQgbG9va3MgbGlrZSB0aGF0IGl0IGlzIG5vdCBhDQo+IGdvb2QgQVBJIGZvciB1c2Vyc3Bh
-Y2UgZGV2ZWxvcGVycy4NCj4gDQo+IC0tDQoNClRoaXMgZG9lcyBnaXZlIG1lIGFuIGlkZWEsIGhv
-dyBhYm91dCBhIHJlYWQgb24gdGhlIGNoYXJhY3RlciBkZXZpY2UNCndpbGwgcmV0dXJuIHJlcXVp
-cmVkIGJ1ZmZlciBzaXplIGluc3RlYWQgb2YgbmVlZGluZyB0byBmaW5kIGEgc3lzZnMgDQphdHRy
-aWJ1dGU/ICBUaGlzIHNlZW1zIG1vcmUgaW50dWl0aXZlIHRvIG1lLg0KDQpUb2tlbiBpbmZvcm1h
-dGlvbiBpcyBwcm92aWRlZCBvdmVyIHN5c2ZzIGZvciBtdWx0aXBsZSByZWFzb25zLg0KMSkgSXQn
-cyBhcHBsaWNhYmxlIHRvIGFsbCBkaXNwYXRjaGVycy4gIEV2ZW4gaWYgdGhlIFdNSSBkaXNwYXRj
-aGVyIHdhc24ndA0KdXNlZCBpdCdzIHVzZWZ1bCBmb3IgdXNlcnNwYWNlIHRvIHF1ZXJ5IHRocm91
-Z2guICBGb3IgZXhhbXBsZSB0aGUgU01JIGNhbGwNCnRvIGdldCB0b2tlbnMgaW4gbGlic21iaW9z
-IGNhbiBiZSBzaW1wbGlmaWVkIHRvIGp1c3QgcmVhZCBzeXNmcyBmaWxlcy4NCg0KMikgaXQncyBp
-bmZvcm1hdGlvbiBub3QgY29taW5nIGZyb20gQUNQSS1XTUkuICBUaGlzIHNlcmllcyBpcyBzZXR0
-aW5nDQpwcmVjZWRlbnQgZm9yIGhvdyB0byBpbnRlcmFjdCB3aXRoIEFDUEktV01JIG1ldGhvZHMg
-aW4gdXNlcnNwYWNlLg0KcHV0dGluZyBpbiByYW5kb20gZGF0YSBvbiB0aGUgSU9DVEwgdGhhdCBp
-cyBub3QgdXNlZCBpbiB0aGUgQUNQSS1XTUkNCm1ldGhvZCBvciBwcm92aWRlZCBieSB0aGUgV01J
-IGJ1cyBkb2Vzbid0IGZpdC4NCg0KMykgSXQgaXMgc3RhdGljIGluZm9ybWF0aW9uIHRoYXQgd29u
-J3QgY2hhbmdlIHVudGlsIHlvdSByZWJvb3QuDQo=
+On Mon, Oct 16, 2017 at 05:51:38PM -0700, Randy Dunlap wrote:
+> On 10/16/17 12:18, Jarkko Sakkinen wrote:
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  Documentation/index.rst         |   1 +
+> >  Documentation/x86/intel_sgx.rst | 131 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 132 insertions(+)
+> >  create mode 100644 Documentation/x86/intel_sgx.rst
+> > 
+> > diff --git a/Documentation/x86/intel_sgx.rst b/Documentation/x86/intel_sgx.rst
+> > new file mode 100644
+> > index 000000000000..ee7fe9487d7b
+> > --- /dev/null
+> > +++ b/Documentation/x86/intel_sgx.rst
+> > @@ -0,0 +1,131 @@
+> > +===================
+> > +Intel(R) SGX driver
+> > +===================
+> > +
+> > +Introduction
+> > +============
+> > +
+> > +Intel(R) SGX is a set of CPU instructions that can be used by applications to
+> > +set aside private regions of code and data. The code outside the enclave is
+> > +disallowed to access the memory inside the enclave by the CPU access control.
+> > +In a way you can think that SGX provides inverted sandbox. It protects the
+> > +application from a malicious host.
+> > +
+> > +There is a new hardware unit in the processor called Memory Encryption Engine
+> > +(MEE) starting from the Skylake microachitecture. BIOS can define one or many
+> 
+>                                    microarchitecture.
+> 
+> > +MEE regions that can hold enclave data by configuring them with PRMRR registers.
+> > +
+> > +The MEE automatically encrypts the data leaving the processor package to the MEE
+> > +regions. The data is encrypted using a random key whose life-time is exactly one
+> > +power cycle.
+> > +
+> > +You can tell if your CPU supports SGX by looking into ``/proc/cpuinfo``:
+> > +
+> > +	``cat /proc/cpuinfo  | grep ' sgx '``
+> 
+> Are you sure about a space both before and after 'sgx'?
+
+Only before would make sense.
+
+> 
+> > +
+> > +Enclave data types
+> > +==================
+> > +
+> > +SGX defines new data types to maintain information about the enclaves and their
+> > +security properties.
+> > +
+> > +The following data structures exist in MEE regions:
+> > +
+> > +* **Enclave Page Cache (EPC):** memory pages for protected code and data
+> > +* **Enclave Page Cache Map (EPCM):** meta-data for each EPC page
+> > +
+> > +The Enclave Page Cache holds following types of pages:
+> > +
+> > +* **SGX Enclave Control Structure (SECS)**: meta-data defining the global
+> > +  properties of an enclave such as range of addresses it can access.
+> > +* **Regular (REG):** containing code and data for the enclave.
+> > +* **Thread Control Structure (TCS):** defines an entry point for a hardware
+> > +  thread to enter into the enclave. The enclave can only be entered through
+> > +  these entry points.
+> > +* **Version Array (VA)**: an EPC page receives a unique 8 byte version number
+> > +  when it is swapped, which is then stored into a VA page. A VA page can hold up
+> > +  to 512 version numbers.
+> > +
+> > +Launch control
+> > +==============
+> > +
+> > +For launching an enclave, two structures must be provided for ENCLS(EINIT):
+> > +
+> > +1. **SIGSTRUCT:** a signed measurement of the enclave binary.
+> > +2. **EINITTOKEN:** the measurement, the public key of the signer and various
+> > +   enclave attributes. This structure contains a MAC of its contents using
+> > +   hardware derived symmetric key called *launch key*.
+> > +
+> > +The hardware platform contains a root key pair for signing the SIGTRUCT
+> > +for a *launch enclave* that is able to acquire the *launch key* for
+> > +creating EINITTOKEN's for other enclaves.  For the launch enclave
+> > +EINITTOKEN is not needed because it is signed with the private root key.
+> > +
+> > +There are two feature control bits associate with launch control
+> 
+>                                       associated            control:
+
+Agreed.
+
+> 
+> > +
+> > +* **IA32_FEATURE_CONTROL[0]**: locks down the feature control register
+> > +* **IA32_FEATURE_CONTROL[17]**: allow runtime reconfiguration of
+> > +  IA32_SGXLEPUBKEYHASHn MSRs that define MRSIGNER hash for the launch
+> > +  enclave. Essentially they define a signing key that does not require
+> > +  EINITTOKEN to be let run.
+> > +
+> > +The BIOS can configure IA32_SGXLEPUBKEYHASHn MSRs before feature control
+> > +register is locked.
+> > +
+> > +It could be tempting to implement launch control by writing the MSRs
+> > +every time when an enclave is launched. This does not scale because for
+> > +generic case because BIOS might lock down the MSRs before handover to
+> > +the OS.
+> > +
+> > +Debug enclaves
+> > +--------------
+> > +
+> > +Enclave can be set as a *debug enclave* of which memory can be read or written
+> > +by using the ENCLS(EDBGRD) and ENCLS(EDBGWR) opcodes. The Intel provided launch
+> > +enclave provides them always a valid EINITTOKEN and therefore they are a low
+> > +hanging fruit way to try out SGX.
+> > +
+> > +Virtualization
+> > +==============
+> > +
+> > +Launch control
+> > +--------------
+> > +
+> > +The values for IA32_SGXLEPUBKEYHASHn MSRs cannot be emulated for a virtual
+> > +machine guest. It would easily seem feasible to hold virtual values for these
+> > +MSRs, trap ENCLS(EINIT) and use the host LE to generate a token when a guest LE
+> > +is initialized.
+> > +
+> > +However, looking at the pseudo code of ENCLS(EINIT) from the SDM there is a
+> > +constraint that the instruction will fail if ATTRIBUTES.EINITTOKENKEY is set
+> > +(the documentation does not tell the reason why the constraint exists but it
+> > +exists).
+> > +
+> > +Thus, only when the MSRs are left unlocked before handover to the OS the
+> > +setting of these MSRs can be supported for VM guests.
+> > +
+> > +Suspend and resume
+> > +------------------
+> > +
+> > +If the host suspends and resumes, the enclave memory for the VM guest could
+> > +become invalid. This can make ENCLS leaf operations suddenly fail.
+> > +
+> > +The driver has a graceful fallback mechanism to manage this situation. If any of
+> > +the ENCLS leaf operations fail, the driver will fallback by kicking threads out
+> > +of the enclave, removing the TCS entries and marking enclave as invalid. After
+> > +this no new pages can be allocated for the enclave and no entry can be done.
+> 
+> 
+> 
+> -- 
+> ~Randy
+
+Thank you for the feedback.
+
+/Jarkko
