@@ -1,173 +1,210 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios
- communication over WMI
-Date: Wed, 18 Oct 2017 22:27:34 +0000
-Message-ID: <53c8c8aa295046d3a10b2bc8aeb6b610@ausx13mpc124.AMER.DELL.COM>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <a60ca82dca6e453f7bd920c082de48ea4378b7d2.1508259916.git.mario.limonciello@dell.com>
- <20171018072915.xowh23m5vr2amqcp@pali>
- <e225d842e0274a1897c63089444a0814@ausx13mpc120.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:19970 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750920AbdJRW1i (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2017 18:27:38 -0400
-In-Reply-To: <e225d842e0274a1897c63089444a0814@ausx13mpc120.AMER.DELL.COM>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de
+From: sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [RFC v6 2/9] platform/x86: intel_pmc_ipc: Use devm_* calls in driver probe function
+Date: Wed, 18 Oct 2017 17:23:05 -0700
+Message-ID: <6896e711ea8ffe8d4e636a0d014f5f53b2813c8c.1508368279.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1508368279.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1508368279.git.sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, qipeng.zha-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, souvik.k.chakravarty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sathyaosid-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW1vbmNpZWxsbywgTWFyaW8N
-Cj4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDE4LCAyMDE3IDg6NTYgQU0NCj4gVG86ICdQYWxp
-IFJvaMOhcicgPHBhbGkucm9oYXJAZ21haWwuY29tPjsgR3JlZyBLSCA8Z3JlZ0Brcm9haC5jb20+
-OyBBbGFuIENveA0KPiA8Z25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+IENjOiBkdmhhcnRA
-aW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29t
-PjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9y
-Zz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5c29ja2kubmV0Ow0KPiBtamc1OUBnb29n
-bGUuY29tOyBoY2hAbHN0LmRlDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjkgMTcvMTddIHRvb2xz
-L3dtaTogYWRkIGEgc2FtcGxlIGZvciBkZWxsIHNtYmlvcw0KPiBjb21tdW5pY2F0aW9uIG92ZXIg
-V01JDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogUGFsaSBS
-b2jDoXIgW21haWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gPiBTZW50OiBXZWRuZXNkYXks
-IE9jdG9iZXIgMTgsIDIwMTcgMjoyOSBBTQ0KPiA+IFRvOiBHcmVnIEtIIDxncmVnQGtyb2FoLmNv
-bT47IEFsYW4gQ294IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4gPiBDYzogZHZoYXJ0
-QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNv
-bT47DQo+ID4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRy
-aXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBBbmR5DQo+ID4gTHV0b21pcnNraSA8bHV0b0Br
-ZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2NraS5uZXQ7DQo+ID4g
-bWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsgTGltb25jaWVsbG8sIE1hcmlvDQo+ID4gPE1h
-cmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMTcv
-MTddIHRvb2xzL3dtaTogYWRkIGEgc2FtcGxlIGZvciBkZWxsIHNtYmlvcw0KPiA+IGNvbW11bmlj
-YXRpb24gb3ZlciBXTUkNCj4gPg0KPiA+IE9uIFR1ZXNkYXkgMTcgT2N0b2JlciAyMDE3IDEzOjIy
-OjAxIE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3dt
-aS9kZWxsLXNtYmlvcy1leGFtcGxlLmMgYi90b29scy93bWkvZGVsbC1zbWJpb3MtDQo+IGV4YW1w
-bGUuYw0KPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uNjljNGRkOWM2MDU2DQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiArKysgYi90b29scy93
-bWkvZGVsbC1zbWJpb3MtZXhhbXBsZS5jDQo+ID4gPiBAQCAtMCwwICsxLDIxNCBAQA0KPiA+ID4g
-Ky8qDQo+ID4gPiArICogIFNhbXBsZSBhcHBsaWNhdGlvbiBmb3IgU01CSU9TIGNvbW11bmljYXRp
-b24gb3ZlciBXTUkgaW50ZXJmYWNlDQo+ID4gPiArICogIFBlcmZvcm1zIHRoZSBmb2xsb3dpbmc6
-DQo+ID4gPiArICogIC0gU2ltcGxlIGNsYXNzL3NlbGVjdCBsb29rdXAgZm9yIFRQTSBpbmZvcm1h
-dGlvbg0KPiA+ID4gKyAqICAtIFNpbXBsZSBxdWVyeSBvZiBrbm93biB0b2tlbnMgYW5kIHRoZWly
-IHZhbHVlcw0KPiA+ID4gKyAqICAtIFNpbXBsZSBhY3RpdmF0aW9uIG9mIGEgdG9rZW4NCj4gPiA+
-ICsgKg0KPiA+ID4gKyAqICBDb3B5cmlnaHQgKEMpIDIwMTcgRGVsbCwgSW5jLg0KPiA+ID4gKyAq
-DQo+ID4gPiArICogIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
-dHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+ID4gPiArICogIGl0IHVuZGVyIHRoZSB0ZXJtcyBv
-ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzDQo+ID4gPiArICog
-IHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+ID4gKyAqLw0K
-PiA+ID4gKw0KPiA+ID4gKyNpbmNsdWRlIDxlcnJuby5oPg0KPiA+ID4gKyNpbmNsdWRlIDxmY250
-bC5oPg0KPiA+ID4gKyNpbmNsdWRlIDxzdGRpby5oPg0KPiA+ID4gKyNpbmNsdWRlIDxzdGRsaWIu
-aD4NCj4gPiA+ICsjaW5jbHVkZSA8c3lzL2lvY3RsLmg+DQo+ID4gPiArI2luY2x1ZGUgPHVuaXN0
-ZC5oPg0KPiA+ID4gKw0KPiA+ID4gKy8qIGlmIHVhcGkgaGVhZGVyIGlzbid0IGluc3RhbGxlZCwg
-dGhpcyBtaWdodCBub3QgeWV0IGV4aXN0ICovDQo+ID4gPiArI2lmbmRlZiBfX3BhY2tlZA0KPiA+
-ID4gKyNkZWZpbmUgX19wYWNrZWQgX19hdHRyaWJ1dGVfXygocGFja2VkKSkNCj4gPiA+ICsjZW5k
-aWYNCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvd21pLmg+DQo+ID4gPiArDQo+ID4gPiArLyogSXQg
-d291bGQgYmUgYmV0dGVyIHRvIGRpc2NvdmVyIHRoZXNlIHVzaW5nIHVkZXYsIGJ1dCBmb3IgYSBz
-aW1wbGUNCj4gPiA+ICsgKiBhcHBsaWNhdGlvbiB0aGV5J3JlIGhhcmRjb2RlZA0KPiA+ID4gKyAq
-Lw0KPiA+ID4gK3N0YXRpYyBjb25zdCBjaGFyICppb2N0bF9kZXZmcyA9ICIvZGV2L3dtaS9kZWxs
-LXNtYmlvcyI7DQo+ID4gPiArc3RhdGljIGNvbnN0IGNoYXIgKnRva2VuX3N5c2ZzID0NCj4gPiA+
-ICsJCQkiL3N5cy9idXMvcGxhdGZvcm0vZGV2aWNlcy9kZWxsLXNtYmlvcy4wL3Rva2VucyI7DQo+
-ID4gPiArc3RhdGljIGNvbnN0IGNoYXIgKmJ1ZmZlcl9zeXNmcyA9DQo+ID4gPiArCQkJIi9zeXMv
-YnVzL3dtaS9kZXZpY2VzL0E4MDU5M0NFLUE5OTctMTFEQS1CMDEyLQ0KPiA+IEI2MjJBMUVGNTQ5
-Mi9yZXF1aXJlZF9idWZmZXJfc2l6ZSI7DQo+ID4NCj4gPiBHcmVnLCBBbGFuLCBjb3VsZCB1c2Vy
-c3BhY2UgZXhwZWN0cyB0aG9zZSBwYXRocyB0byBiZSBwYXJ0IG9mIGtlcm5lbA0KPiA+IDwtLT4g
-dXNlcnNwYWNlIEFCST8gTG9va2luZyBlLmcuIGF0ICJkZWxsLXNtYmlvcy4wIiBuYW1lIGFuZCBJ
-J20gbm90DQo+ID4gc3VyZSBpZiB0aGlzIGlzIHNvbWV0aGluZyB3aGljaCBpcyBnb2luZyB0byBi
-ZSBzdGFibGUgYmV0d2VlbiBrZXJuZWwNCj4gPiB2ZXJzaW9ucyBhbmQgZm9yZXZlciBhcyBwYXJ0
-IG9mIEFCSS4NCj4gDQo+IEluIG15IHNhbXBsZSBhcHBsaWNhdGlvbiB0byBiZSBkaXN0cmlidXRl
-ZCB3aXRoIHRoZSBrZXJuZWwgdGhlc2UgYXJlDQo+IGhhcmRjb2RlZCBwYXRocywgYnV0IGlmIG1v
-cmUgZGVwZW5kZW5jaWVzIHdlcmUgdXNlZCwgSSB3b3VsZA0KPiBleHBlY3QgYWxsIDMgb2YgdGhl
-c2UgcGF0aHMgdG8gYmUgZGlzY292ZXJlZCB1c2luZyB1ZGV2Lg0KPiBJIGRvIGluY2x1ZGUgYSBj
-b21tZW50IGZvciB0aGF0IHBvaW50IHNwZWNpZmljYWxseS4NCj4gDQo+ID4NCj4gPiBBbHNvIGlm
-IGV2ZXJ5dGhpbmcgaXMgcGFydCBvZiBzbWJpb3MgQVBJLCB3b3VsZCBub3QgaXQgYmV0dGVyIHRv
-IHByb3ZpZGUNCj4gPiBldmVyeXRoaW5nIHZpYSBJT0NUTCBvdmVyIC9kZXYvd21pL2RlbGwtc21i
-aW9zPyBJIHRoaW5rIHRoaXMgY29kZSBpcyB0b28NCj4gPiBjb21wbGljYXRlZCwganVzdCBiZWNh
-dXNlIGZvciBjb3JyZWN0IElPQ1RMIGJ1ZmZlciBzaXplIGl0IG5lZWRzIHRvIHJlYWQNCj4gPiBv
-dGhlciBwcm9wZXJ0aWVzIHZpYSBzeXNmcywgZXRjLi4uIEZvciBtZSBpdCBsb29rcyBsaWtlIHRo
-YXQgaXQgaXMgbm90IGENCj4gPiBnb29kIEFQSSBmb3IgdXNlcnNwYWNlIGRldmVsb3BlcnMuDQo+
-ID4NCj4gPiAtLQ0KPiANCj4gVGhpcyBkb2VzIGdpdmUgbWUgYW4gaWRlYSwgaG93IGFib3V0IGEg
-cmVhZCBvbiB0aGUgY2hhcmFjdGVyIGRldmljZQ0KPiB3aWxsIHJldHVybiByZXF1aXJlZCBidWZm
-ZXIgc2l6ZSBpbnN0ZWFkIG9mIG5lZWRpbmcgdG8gZmluZCBhIHN5c2ZzDQo+IGF0dHJpYnV0ZT8g
-IFRoaXMgc2VlbXMgbW9yZSBpbnR1aXRpdmUgdG8gbWUuDQoNClNvIGFzIHRvIG5vdCBzZW5kIHRo
-ZSB3aG9sZSBzZXJpZXMgYWdhaW4gb25seSB0byBnZXQgdGhpcyBpZGVhIHNob3QgZG93biwNCnRo
-aXMgaXMgd2hhdCBpdCBsb29rcyBsaWtlIChtaW51cyBkb2N1bWVudGF0aW9uIHVwZGF0ZXMpLg0K
-VGhvdWdodHM/DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYyBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQppbmRleCBjN2RlODBmOTYxODMuLjkyMmE4N2Q3Y2Yz
-NCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQorKysgYi9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni93bWkuYw0KQEAgLTc5OSwyMyArNzk5LDEyIEBAIHN0YXRpYyBpbnQgd21p
-X2Rldl9tYXRjaChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcml2
-ZXIpDQogDQogCXJldHVybiAwOw0KIH0NCi0NCi1zdGF0aWMgbG9uZyBtYXRjaF9pb2N0bChzdHJ1
-Y3QgZmlsZSAqZmlscCwgdW5zaWduZWQgaW50IGNtZCwgdW5zaWduZWQgbG9uZyBhcmcsDQotCQkJ
-aW50IGNvbXBhdCkNCitzdGF0aWMgaW50IHdtaV9jaGFyX29wZW4oc3RydWN0IGlub2RlICppbm9k
-ZSwgc3RydWN0IGZpbGUgKmZpbHApDQogew0KLQlzdHJ1Y3Qgd21pX2lvY3RsX2J1ZmZlciBfX3Vz
-ZXIgKmlucHV0ID0NCi0JCShzdHJ1Y3Qgd21pX2lvY3RsX2J1ZmZlciBfX3VzZXIgKikgYXJnOw0K
-Kwljb25zdCBjaGFyICpkcml2ZXJfbmFtZSA9IGZpbHAtPmZfcGF0aC5kZW50cnktPmRfaW5hbWU7
-DQogCXN0cnVjdCB3bWlfZHJpdmVyICp3ZHJpdmVyID0gTlVMTDsNCiAJc3RydWN0IHdtaV9ibG9j
-ayAqd2Jsb2NrID0gTlVMTDsNCiAJc3RydWN0IHdtaV9ibG9jayAqbmV4dCA9IE5VTEw7DQotCWNv
-bnN0IGNoYXIgKmRyaXZlcl9uYW1lOw0KLQl1NjQgc2l6ZTsNCi0JaW50IHJldDsNCi0NCi0JaWYg
-KF9JT0NfVFlQRShjbWQpICE9IFdNSV9JT0MpDQotCQlyZXR1cm4gLUVOT1RUWTsNCi0NCi0JZHJp
-dmVyX25hbWUgPSBmaWxwLT5mX3BhdGguZGVudHJ5LT5kX2luYW1lOw0KIA0KIAlsaXN0X2Zvcl9l
-YWNoX2VudHJ5X3NhZmUod2Jsb2NrLCBuZXh0LCAmd21pX2Jsb2NrX2xpc3QsIGxpc3QpIHsNCiAJ
-CXdkcml2ZXIgPSBjb250YWluZXJfb2Yod2Jsb2NrLT5kZXYuZGV2LmRyaXZlciwNCkBAIC04MjYs
-NiArODE1LDUyIEBAIHN0YXRpYyBsb25nIG1hdGNoX2lvY3RsKHN0cnVjdCBmaWxlICpmaWxwLCB1
-bnNpZ25lZCBpbnQgY21kLCB1bnNpZ25lZCBsb25nIGFyZywNCiAJCQlicmVhazsNCiAJfQ0KIA0K
-KwlpZiAoIXdkcml2ZXIpDQorCQlyZXR1cm4gLUVOT0RFVjsNCisNCisJZmlscC0+cHJpdmF0ZV9k
-YXRhID0gd2Jsb2NrOw0KKwlub25zZWVrYWJsZV9vcGVuKGlub2RlLCBmaWxwKTsNCisJcmV0dXJu
-IDA7DQorfQ0KKw0KK3N0YXRpYyBpbnQgd21pX2NoYXJfcmVsZWFzZShzdHJ1Y3QgaW5vZGUgKmlu
-b2RlLCBzdHJ1Y3QgZmlsZSAqZmlscCkNCit7DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMg
-c3NpemVfdCB3bWlfY2hhcl9yZWFkKHN0cnVjdCBmaWxlICpmaWxwLCBjaGFyIF9fdXNlciAqYnVm
-ZmVyLA0KKwlzaXplX3QgbGVuZ3RoLCBsb2ZmX3QgKm9mZnNldCkNCit7DQorCXN0cnVjdCB3bWlf
-YmxvY2sgKndibG9jayA9IGZpbHAtPnByaXZhdGVfZGF0YTsNCisJc2l6ZV90IGNvdW50Ow0KKw0K
-KwlpZiAoKm9mZnNldCAhPSAwKQ0KKwkJcmV0dXJuIDA7DQorDQorCWNvdW50ID0gc2l6ZW9mKHdi
-bG9jay0+cmVxX2J1Zl9zaXplKTsNCisJaWYgKGNvcHlfdG9fdXNlcihidWZmZXIsICZ3YmxvY2st
-PnJlcV9idWZfc2l6ZSwgY291bnQpKQ0KKwkJcmV0dXJuIC1FRkFVTFQ7DQorDQorCSpvZmZzZXQg
-PSBjb3VudDsNCisJcmV0dXJuIGNvdW50Ow0KK30NCisNCitzdGF0aWMgbG9uZyBtYXRjaF9pb2N0
-bChzdHJ1Y3QgZmlsZSAqZmlscCwgdW5zaWduZWQgaW50IGNtZCwgdW5zaWduZWQgbG9uZyBhcmcs
-DQorCQkJaW50IGNvbXBhdCkNCit7DQorCXN0cnVjdCB3bWlfaW9jdGxfYnVmZmVyIF9fdXNlciAq
-aW5wdXQgPQ0KKwkJKHN0cnVjdCB3bWlfaW9jdGxfYnVmZmVyIF9fdXNlciAqKSBhcmc7DQorCXN0
-cnVjdCB3bWlfYmxvY2sgKndibG9jayA9IGZpbHAtPnByaXZhdGVfZGF0YTsNCisJc3RydWN0IHdt
-aV9kcml2ZXIgKndkcml2ZXIgPSBOVUxMOw0KKwl1NjQgc2l6ZTsNCisJaW50IHJldDsNCisNCisJ
-aWYgKF9JT0NfVFlQRShjbWQpICE9IFdNSV9JT0MpDQorCQlyZXR1cm4gLUVOT1RUWTsNCisNCisJ
-d2RyaXZlciA9IGNvbnRhaW5lcl9vZih3YmxvY2stPmRldi5kZXYuZHJpdmVyLA0KKwkJc3RydWN0
-IHdtaV9kcml2ZXIsIGRyaXZlcik7DQorDQogCWlmICghd2RyaXZlcikNCiAJCXJldHVybiAtRU5P
-REVWOw0KIA0KQEAgLTg4Niw2ICs5MjEsOSBAQCBzdGF0aWMgbG9uZyB3bWlfY29tcGF0X2lvY3Rs
-KHN0cnVjdCBmaWxlICpmaWxwLCB1bnNpZ25lZCBpbnQgY21kLA0KIA0KIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgZmlsZV9vcGVyYXRpb25zIHdtaV9mb3BzID0gew0KIAkub3duZXIJCT0gVEhJU19NT0RV
-TEUsDQorCS5yZWFkCQk9IHdtaV9jaGFyX3JlYWQsDQorCS5vcGVuCQk9IHdtaV9jaGFyX29wZW4s
-DQorCS5yZWxlYXNlCT0gd21pX2NoYXJfcmVsZWFzZSwNCiAJLnVubG9ja2VkX2lvY3RsCT0gd21p
-X3VubG9ja2VkX2lvY3RsLA0KICNpZmRlZiBDT05GSUdfQ09NUEFUDQogCS5jb21wYXRfaW9jdGwg
-PSB3bWlfY29tcGF0X2lvY3RsLA0KZGlmZiAtLWdpdCBhL3Rvb2xzL3dtaS9kZWxsLXNtYmlvcy1l
-eGFtcGxlLmMgYi90b29scy93bWkvZGVsbC1zbWJpb3MtZXhhbXBsZS5jDQppbmRleCA2OWM0ZGQ5
-YzYwNTYuLmE1Zjk3NjQ3YzljNSAxMDA2NDQNCi0tLSBhL3Rvb2xzL3dtaS9kZWxsLXNtYmlvcy1l
-eGFtcGxlLmMNCisrKyBiL3Rvb2xzL3dtaS9kZWxsLXNtYmlvcy1leGFtcGxlLmMNCkBAIC0zMSw4
-ICszMSw2IEBADQogc3RhdGljIGNvbnN0IGNoYXIgKmlvY3RsX2RldmZzID0gIi9kZXYvd21pL2Rl
-bGwtc21iaW9zIjsNCiBzdGF0aWMgY29uc3QgY2hhciAqdG9rZW5fc3lzZnMgPQ0KIAkJCSIvc3lz
-L2J1cy9wbGF0Zm9ybS9kZXZpY2VzL2RlbGwtc21iaW9zLjAvdG9rZW5zIjsNCi1zdGF0aWMgY29u
-c3QgY2hhciAqYnVmZmVyX3N5c2ZzID0NCi0JCQkiL3N5cy9idXMvd21pL2RldmljZXMvQTgwNTkz
-Q0UtQTk5Ny0xMURBLUIwMTItQjYyMkExRUY1NDkyL3JlcXVpcmVkX2J1ZmZlcl9zaXplIjsNCiAN
-CiBzdGF0aWMgdm9pZCBzaG93X2J1ZmZlcihzdHJ1Y3QgZGVsbF93bWlfc21iaW9zX2J1ZmZlciAq
-YnVmZmVyKQ0KIHsNCkBAIC0xNDcsMTUgKzE0NSwxMyBAQCBzdGF0aWMgaW50IGFjdGl2YXRlX3Rv
-a2VuKHN0cnVjdCBkZWxsX3dtaV9zbWJpb3NfYnVmZmVyICpidWZmZXIsDQogDQogc3RhdGljIGlu
-dCBxdWVyeV9idWZmZXJfc2l6ZShfX3U2NCAqYnVmZmVyX3NpemUpDQogew0KLQljaGFyIGJ1Zls0
-MDk2XTsNCiAJRklMRSAqZjsNCiANCi0JZiA9IGZvcGVuKGJ1ZmZlcl9zeXNmcywgInJiIik7DQor
-CWYgPSBmb3Blbihpb2N0bF9kZXZmcywgInJiIik7DQogCWlmICghZikNCiAJCXJldHVybiAtRUlO
-VkFMOw0KLQlmcmVhZChidWYsIDEsIDQwOTYsIGYpOw0KKwlmcmVhZChidWZmZXJfc2l6ZSwgc2l6
-ZW9mKF9fdTY0KSwgMSwgZik7DQogCWZjbG9zZShmKTsNCi0JKmJ1ZmZlcl9zaXplID0gc3RydG9s
-KGJ1ZiwgTlVMTCwgMTApOw0KIAlyZXR1cm4gRVhJVF9TVUNDRVNTOw0KIH0NCg0KDQo+IA0KPiBU
-b2tlbiBpbmZvcm1hdGlvbiBpcyBwcm92aWRlZCBvdmVyIHN5c2ZzIGZvciBtdWx0aXBsZSByZWFz
-b25zLg0KPiAxKSBJdCdzIGFwcGxpY2FibGUgdG8gYWxsIGRpc3BhdGNoZXJzLiAgRXZlbiBpZiB0
-aGUgV01JIGRpc3BhdGNoZXIgd2Fzbid0DQo+IHVzZWQgaXQncyB1c2VmdWwgZm9yIHVzZXJzcGFj
-ZSB0byBxdWVyeSB0aHJvdWdoLiAgRm9yIGV4YW1wbGUgdGhlIFNNSSBjYWxsDQo+IHRvIGdldCB0
-b2tlbnMgaW4gbGlic21iaW9zIGNhbiBiZSBzaW1wbGlmaWVkIHRvIGp1c3QgcmVhZCBzeXNmcyBm
-aWxlcy4NCj4gDQo+IDIpIGl0J3MgaW5mb3JtYXRpb24gbm90IGNvbWluZyBmcm9tIEFDUEktV01J
-LiAgVGhpcyBzZXJpZXMgaXMgc2V0dGluZw0KPiBwcmVjZWRlbnQgZm9yIGhvdyB0byBpbnRlcmFj
-dCB3aXRoIEFDUEktV01JIG1ldGhvZHMgaW4gdXNlcnNwYWNlLg0KPiBwdXR0aW5nIGluIHJhbmRv
-bSBkYXRhIG9uIHRoZSBJT0NUTCB0aGF0IGlzIG5vdCB1c2VkIGluIHRoZSBBQ1BJLVdNSQ0KPiBt
-ZXRob2Qgb3IgcHJvdmlkZWQgYnkgdGhlIFdNSSBidXMgZG9lc24ndCBmaXQuDQo+IA0KPiAzKSBJ
-dCBpcyBzdGF0aWMgaW5mb3JtYXRpb24gdGhhdCB3b24ndCBjaGFuZ2UgdW50aWwgeW91IHJlYm9v
-dC4NCg==
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+This patch cleans up unnecessary free/alloc calls in ipc_plat_probe(),
+ipc_pci_probe() and ipc_plat_get_res() functions by using devm_*
+calls.
+
+This patch also adds proper error handling for failure cases in
+ipc_pci_probe() function.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+[andy: fixed style issues, missed devm_free_irq(), removed unnecessary log message]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 96 +++++++++++-------------------------
+ 1 file changed, 29 insertions(+), 67 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index af88221..eadd1a1 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -482,54 +482,41 @@ static irqreturn_t ioc(int irq, void *dev_id)
+ 
+ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+-	resource_size_t pci_resource;
++	struct intel_pmc_ipc_dev *pmc = &ipcdev;
+ 	int ret;
+-	int len;
+ 
+-	ipcdev.dev = &pci_dev_get(pdev)->dev;
+-	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
++	/* Only one PMC is supported */
++	if (pmc->dev)
++		return -EBUSY;
+ 
+-	spin_lock_init(&ipcdev.gcr_lock);
++	spin_lock_init(&pmc->gcr_lock);
++
++	pmc->irq_mode = IPC_TRIGGER_MODE_IRQ;
+ 
+-	ret = pci_enable_device(pdev);
++	ret = pcim_enable_device(pdev);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = pci_request_regions(pdev, "intel_pmc_ipc");
++	ret = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
+ 	if (ret)
+ 		return ret;
+ 
+-	pci_resource = pci_resource_start(pdev, 0);
+-	len = pci_resource_len(pdev, 0);
+-	if (!pci_resource || !len) {
+-		dev_err(&pdev->dev, "Failed to get resource\n");
+-		return -ENOMEM;
+-	}
++	init_completion(&pmc->cmd_complete);
+ 
+-	init_completion(&ipcdev.cmd_complete);
++	pmc->ipc_base = pcim_iomap_table(pdev)[0];
+ 
+-	if (request_irq(pdev->irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
++	ret = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_pmc_ipc",
++				pmc);
++	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request irq\n");
+-		return -EBUSY;
++		return ret;
+ 	}
+ 
+-	ipcdev.ipc_base = ioremap_nocache(pci_resource, len);
+-	if (!ipcdev.ipc_base) {
+-		dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
+-		free_irq(pdev->irq, &ipcdev);
+-		ret = -ENOMEM;
+-	}
++	pmc->dev = &pdev->dev;
+ 
+-	return ret;
+-}
++	pci_set_drvdata(pdev, pmc);
+ 
+-static void ipc_pci_remove(struct pci_dev *pdev)
+-{
+-	free_irq(pdev->irq, &ipcdev);
+-	pci_release_regions(pdev);
+-	pci_dev_put(pdev);
+-	iounmap(ipcdev.ipc_base);
+-	ipcdev.dev = NULL;
++	return 0;
+ }
+ 
+ static const struct pci_device_id ipc_pci_ids[] = {
+@@ -544,7 +531,6 @@ static struct pci_driver ipc_pci_driver = {
+ 	.name = "intel_pmc_ipc",
+ 	.id_table = ipc_pci_ids,
+ 	.probe = ipc_pci_probe,
+-	.remove = ipc_pci_remove,
+ };
+ 
+ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+@@ -854,17 +840,12 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 	size = PLAT_RESOURCE_IPC_SIZE + PLAT_RESOURCE_GCR_SIZE;
++	res->end = res->start + size - 1;
++
++	addr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(addr))
++		return PTR_ERR(addr);
+ 
+-	if (!request_mem_region(res->start, size, pdev->name)) {
+-		dev_err(&pdev->dev, "Failed to request ipc resource\n");
+-		return -EBUSY;
+-	}
+-	addr = ioremap_nocache(res->start, size);
+-	if (!addr) {
+-		dev_err(&pdev->dev, "I/O memory remapping failed\n");
+-		release_mem_region(res->start, size);
+-		return -ENOMEM;
+-	}
+ 	ipcdev.ipc_base = addr;
+ 
+ 	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+@@ -921,7 +902,6 @@ MODULE_DEVICE_TABLE(acpi, ipc_acpi_ids);
+ 
+ static int ipc_plat_probe(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	int ret;
+ 
+ 	ipcdev.dev = &pdev->dev;
+@@ -945,11 +925,11 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 	ret = ipc_create_pmc_devices();
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to create pmc devices\n");
+-		goto err_device;
++		return ret;
+ 	}
+ 
+-	if (request_irq(ipcdev.irq, ioc, IRQF_NO_SUSPEND,
+-			"intel_pmc_ipc", &ipcdev)) {
++	if (devm_request_irq(&pdev->dev, ipcdev.irq, ioc, IRQF_NO_SUSPEND,
++			     "intel_pmc_ipc", &ipcdev)) {
+ 		dev_err(&pdev->dev, "Failed to request irq\n");
+ 		ret = -EBUSY;
+ 		goto err_irq;
+@@ -966,40 +946,22 @@ static int ipc_plat_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ err_sys:
+-	free_irq(ipcdev.irq, &ipcdev);
++	devm_free_irq(&pdev->dev, ipcdev.irq, &ipcdev);
+ err_irq:
+ 	platform_device_unregister(ipcdev.tco_dev);
+ 	platform_device_unregister(ipcdev.punit_dev);
+ 	platform_device_unregister(ipcdev.telemetry_dev);
+-err_device:
+-	iounmap(ipcdev.ipc_base);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM,
+-				    PLAT_RESOURCE_IPC_INDEX);
+-	if (res) {
+-		release_mem_region(res->start,
+-				   PLAT_RESOURCE_IPC_SIZE +
+-				   PLAT_RESOURCE_GCR_SIZE);
+-	}
++
+ 	return ret;
+ }
+ 
+ static int ipc_plat_remove(struct platform_device *pdev)
+ {
+-	struct resource *res;
+-
+ 	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+-	free_irq(ipcdev.irq, &ipcdev);
++	devm_free_irq(&pdev->dev, ipcdev.irq, &ipcdev);
+ 	platform_device_unregister(ipcdev.tco_dev);
+ 	platform_device_unregister(ipcdev.punit_dev);
+ 	platform_device_unregister(ipcdev.telemetry_dev);
+-	iounmap(ipcdev.ipc_base);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM,
+-				    PLAT_RESOURCE_IPC_INDEX);
+-	if (res) {
+-		release_mem_region(res->start,
+-				   PLAT_RESOURCE_IPC_SIZE +
+-				   PLAT_RESOURCE_GCR_SIZE);
+-	}
+ 	ipcdev.dev = NULL;
+ 	return 0;
+ }
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
