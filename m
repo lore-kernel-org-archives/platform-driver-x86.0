@@ -1,30 +1,57 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Thu, 19 Oct 2017 07:55:34 -0700
-Message-ID: <20171019145534.GA17068@infradead.org>
-References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
- <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
- <20171019080617.GA13601@infradead.org>
- <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>, intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v10 03/15] platform/x86: dell-wmi: clean up wmi descriptor check
+Date: Thu, 19 Oct 2017 12:50:06 -0500
+Message-ID: <4971fd99a4583e92029622ede71276168f0d8e43.1508434513.git.mario.limonciello@dell.com>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:50577 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752124AbdJSRuX (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 19 Oct 2017 13:50:23 -0400
+In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 
-On Thu, Oct 19, 2017 at 03:36:16PM +0300, Jarkko Sakkinen wrote:
-> On Thu, Oct 19, 2017 at 01:06:17AM -0700, Christoph Hellwig wrote:
-> > On Mon, Oct 16, 2017 at 10:18:49PM +0300, Jarkko Sakkinen wrote:
-> > > Export create_pipe_files() and replace_fd() so that the SGX driver is
-> > > able to create stdin and stdout pipes.
-> > 
-> > Err, no way.
-> 
-> What would be a better alternative?
+Some cases the wrong type was used for errors and checks can be
+done more cleanly.
 
-Don't abuse pipes for your interface.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ drivers/platform/x86/dell-wmi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 2cfaaa8faf0a..b2bd396acac5 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -663,16 +663,16 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+ 
+ 	buffer = (u32 *)obj->buffer.pointer;
+ 
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
+-		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, buffer);
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			buffer);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+ 
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
+-			buffer[2]);
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
++			(unsigned long) buffer[2]);
+ 
+ 	if (buffer[3] != 4096)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
+-- 
+2.14.1
