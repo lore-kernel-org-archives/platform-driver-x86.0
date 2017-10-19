@@ -1,62 +1,57 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v10 11/15] platform/x86: dell-smbios-smm: test for WSMT
-Date: Thu, 19 Oct 2017 20:09:26 +0200
-Message-ID: <20171019180926.h6lnfwnapswybtcb@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v10 11/15] platform/x86: dell-smbios-smm: test for WSMT
+Date: Thu, 19 Oct 2017 18:12:09 +0000
+Message-ID: <9065712bf6b14fc680ba03738b369947@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
  <657d281490de3d0a60f210f8bc57e075c9afc40e.1508434514.git.mario.limonciello@dell.com>
+ <20171019180926.h6lnfwnapswybtcb@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f175.google.com ([209.85.128.175]:50524 "EHLO
-        mail-wr0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753365AbdJSSJ3 (ORCPT
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:45649 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751406AbdJSSMa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2017 14:09:29 -0400
-Content-Disposition: inline
-In-Reply-To: <657d281490de3d0a60f210f8bc57e075c9afc40e.1508434514.git.mario.limonciello@dell.com>
+        Thu, 19 Oct 2017 14:12:30 -0400
+In-Reply-To: <20171019180926.h6lnfwnapswybtcb@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Thursday 19 October 2017 12:50:14 Mario Limonciello wrote:
-> +/* When enabled this indicates that SMM won't work */
-> +static bool test_wsmt_enabled(void)
-> +{
-> +	struct calling_interface_token *token;
-> +
-> +	/* if token doesn't exist, SMM will work */
-> +	token = dell_smbios_find_token(WSMT_EN_TOKEN);
-> +	if (!token)
-> +		return false;
-> +
-> +	/* if token exists, try to access over SMM */
-> +	buffer->class = CLASS_TOKEN_READ;
-> +	buffer->select = SELECT_TOKEN_STD;
-> +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> +	buffer->input[0] = token->location;
-> +	dell_smbios_smm_call(buffer);
-> +
-> +	/* if lookup failed, we know WSMT was enabled */
-> +	if (buffer->output[0] != 0)
-> +		return true;
-> +
-> +	/* query token status if it didn't fail */
-> +	return (buffer->output[1] == token->value);
-> +}
-> +
->  static int __init dell_smbios_smm_init(void)
->  {
->  	int ret;
-> @@ -115,6 +140,13 @@ static int __init dell_smbios_smm_init(void)
->  
->  	dmi_walk(find_cmd_address, NULL);
->  
-> +	ret = test_wsmt_enabled();
-
-ret is int, but test_wsmt_enabled() returns bool.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAxOSwgMjAx
+NyAxOjA5IFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
+bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbyA8YW5k
+eS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgQW5keQ0KPiBMdXRv
+bWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNv
+Y2tpLm5ldDsNCj4gbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsgR3JlZyBLSCA8Z3JlZ0Br
+cm9haC5jb20+OyBBbGFuIENveA0KPiA8Z25vbWVzQGx4b3JndWsudWt1dS5vcmcudWs+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjEwIDExLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zLXNt
+bTogdGVzdCBmb3IgV1NNVA0KPiANCj4gT24gVGh1cnNkYXkgMTkgT2N0b2JlciAyMDE3IDEyOjUw
+OjE0IE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+ICsvKiBXaGVuIGVuYWJsZWQgdGhpcyBp
+bmRpY2F0ZXMgdGhhdCBTTU0gd29uJ3Qgd29yayAqLw0KPiA+ICtzdGF0aWMgYm9vbCB0ZXN0X3dz
+bXRfZW5hYmxlZCh2b2lkKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY2FsbGluZ19pbnRlcmZhY2Vf
+dG9rZW4gKnRva2VuOw0KPiA+ICsNCj4gPiArCS8qIGlmIHRva2VuIGRvZXNuJ3QgZXhpc3QsIFNN
+TSB3aWxsIHdvcmsgKi8NCj4gPiArCXRva2VuID0gZGVsbF9zbWJpb3NfZmluZF90b2tlbihXU01U
+X0VOX1RPS0VOKTsNCj4gPiArCWlmICghdG9rZW4pDQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+
+ICsNCj4gPiArCS8qIGlmIHRva2VuIGV4aXN0cywgdHJ5IHRvIGFjY2VzcyBvdmVyIFNNTSAqLw0K
+PiA+ICsJYnVmZmVyLT5jbGFzcyA9IENMQVNTX1RPS0VOX1JFQUQ7DQo+ID4gKwlidWZmZXItPnNl
+bGVjdCA9IFNFTEVDVF9UT0tFTl9TVEQ7DQo+ID4gKwltZW1zZXQoYnVmZmVyLCAwLCBzaXplb2Yo
+c3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlcikpOw0KPiA+ICsJYnVmZmVyLT5pbnB1dFsw
+XSA9IHRva2VuLT5sb2NhdGlvbjsNCj4gPiArCWRlbGxfc21iaW9zX3NtbV9jYWxsKGJ1ZmZlcik7
+DQo+ID4gKw0KPiA+ICsJLyogaWYgbG9va3VwIGZhaWxlZCwgd2Uga25vdyBXU01UIHdhcyBlbmFi
+bGVkICovDQo+ID4gKwlpZiAoYnVmZmVyLT5vdXRwdXRbMF0gIT0gMCkNCj4gPiArCQlyZXR1cm4g
+dHJ1ZTsNCj4gPiArDQo+ID4gKwkvKiBxdWVyeSB0b2tlbiBzdGF0dXMgaWYgaXQgZGlkbid0IGZh
+aWwgKi8NCj4gPiArCXJldHVybiAoYnVmZmVyLT5vdXRwdXRbMV0gPT0gdG9rZW4tPnZhbHVlKTsN
+Cj4gPiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBfX2luaXQgZGVsbF9zbWJpb3Nfc21tX2lu
+aXQodm9pZCkNCj4gPiAgew0KPiA+ICAJaW50IHJldDsNCj4gPiBAQCAtMTE1LDYgKzE0MCwxMyBA
+QCBzdGF0aWMgaW50IF9faW5pdCBkZWxsX3NtYmlvc19zbW1faW5pdCh2b2lkKQ0KPiA+DQo+ID4g
+IAlkbWlfd2FsayhmaW5kX2NtZF9hZGRyZXNzLCBOVUxMKTsNCj4gPg0KPiA+ICsJcmV0ID0gdGVz
+dF93c210X2VuYWJsZWQoKTsNCj4gDQo+IHJldCBpcyBpbnQsIGJ1dCB0ZXN0X3dzbXRfZW5hYmxl
+ZCgpIHJldHVybnMgYm9vbC4NCg0KWWVzLCByZXQgaXMgcmUtdXNlZCB3aXRoaW4gdGhpcyBtZXRo
+b2QuDQowLCAxIGVudW0gaXMgYSBzdWJzZXQgb2YgaW50LCBzbyB0aGlzIHNlZW1lZCBsaWtlIGEg
+bG9naWNhbCB0aGluZyB0byBtZSB0byBkby4NCg==
