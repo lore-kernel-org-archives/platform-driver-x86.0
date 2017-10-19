@@ -1,349 +1,410 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v10 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Thu, 19 Oct 2017 12:50:03 -0500
-Message-ID: <cover.1508434513.git.mario.limonciello@dell.com>
+Subject: [PATCH v10 05/15] platform/x86: dell-wmi-descriptor: split WMI descriptor into it's own driver
+Date: Thu, 19 Oct 2017 12:50:08 -0500
+Message-ID: <d68852a032398142e5277137f2a18ff6a5bee999.1508434513.git.mario.limonciello@dell.com>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:50577 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752979AbdJSRuZ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2017 13:50:25 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The existing way that the dell-smbios helper module and associated
-other drivers (dell-laptop, dell-wmi) communicate with the platform
-really isn't secure.  It requires creating a buffer in physical
-DMA32 memory space and passing that to the platform via SMM.
+All communication on individual GUIDs should occur in separate drivers.
+Allowing a driver to communicate with the bus to another GUID is just
+a hack that discourages drivers to adopt the bus model.
 
-Since the platform got a physical memory pointer, you've just got
-to trust that the platform has only modified (and accessed) memory
-within that buffer.
+The information found from the WMI descriptor driver is now exported
+for use by other drivers.
 
-Dell Platform designers recognize this security risk and offer a
-safer way to communicate with the platform over ACPI.  This is
-in turn exposed via a WMI interface to the OS.
-
-When communicating over WMI-ACPI the communication doesn't occur
-with physical memory pointers.  When the ASL is invoked, the fixed
-length ACPI buffer is copied to a small operating region.  The ASL
-will invoke the SMI, and SMM will only have access to this operating
-region.  When the ASL returns the buffer is copied back for the OS
-to process.
-
-This method of communication should also deprecate the usage of the
-dcdbas kernel module and software dependent upon it's interface.
-Instead offer a character device interface for communicating with this
-ASL method to allow userspace to use instead.
-
-To faciliate that this patch series introduces a generic way for WMI
-drivers to be able to create discoverable character devices with
-a predictable IOCTL interface through the WMI bus when desired.
-Requiring WMI drivers to explicitly ask for this functionality will
-act as an effective vendor whitelist to character device creation.
-
-Some of this work is the basis for what will be a proper interpreter
-of MOF in the kernel and controls for what drivers will be able to
-do with that MOF.
-
-NOTE: This patch series is intended to go on top of platform-drivers-x86
-linux-next.
-
-For convenience the entire series including those is also available here:
-https://github.com/dell/linux/tree/wmi-smbios
-
-changes between v9 and v10:
- * Add reviewed by from Pali & Edward to applicable patches
- * Patch 3/7 (cleanup descriptor check)
-   - Cast u32 to unsigned long when displaying error
- * Patch 4/7 (allow 32k return size)
-   - Adjust not to show warnings when return size is unexpected
- * Patch 5/7 (split dell-wmi in two)
-   - Use wmi_has_guid to make sure DELL_WMI_DESCRIPTOR_GUID is
-     on the WMI bus during probing.
-     Prevents situations that firmware doesn't have descriptor
-     GUID available.
-   - Use a mutex to prevent race conditions.
- * Patch 10/17 (Add new WMI dispatcher)
-   - Grab mutex earlier to avoid race condition
-   - Use wmi_has_guid to make sure DELL_WMI_DESCRIPTOR_GUID is
-     on the WMI bus during probing.
-     Prevents situations that firmware doesn't have descriptor
-     GUID available.
- * Patch 11/17 (WSMT patch):
-   - Return boolean instead of int
- * Patch 13/17 (required_buffer_size patch)
-   - Merge with patch 14/17
- * Patch 14/17 (WMI character device patch)
-   - Don't offer required_buffer_size over sysfs. Offer the
-     data provided when read() from character device instead.
-   - Switch from offering an ioctl callback method to a
-     filter callback method.  The copying to/from userspace
-     is now handled by the bus driver and generic for all
-     vendor drivers.  This simplifies the amount of code
-     needed in a vendor driver callback.
-   - Allocate memory for the ioctl call when creating
-     character device
-   - Add locking to the ioctl function
-   - Remove existing Reviewed by as this has changed 
-     significantly
- * Patch 15/17 (Offer dell character device patch)
-   - Update documentation for changes in 14/17
-   - Update callback method for changes in 14/17
- * Patch 16/17 (shuffle header content)
-   - Merge into patch 15/17
- * Patch 17/17 (sample tool)
-   - Use the new read() interface from 14/17
-changes between v8 and v9:
- * Add Reviewed by from Edward to relevant patches
- * Add a new patch that introduces an example tool for using
-   character device API.
-   - Recommended by Pali
- * wmi bus character patch
-   - Add a missing #ifdef CONFIG_COMPAT caught by kbuild bot
- * dell smbios tokens patch:
-   - Add missing #include <linux/compatability.h> caught by kbuild bot.
- * dell smbios smm patch:
-   - Remove unnecessary semicolons caught by kbuild bot.
-   - Add missing header caught by kbuild bot.
-changes between v7 and v8:
- * fix typo s/desc_buffer/buffer/ in 32k split commit
- * Add missing include for <linux/types.h> in uapi
- * dell-smbios: initialize correct attribute files
- * Output class/select in debug messages in base 10.
- * Don't send the u64 length argument to ACPI call length
- * Only filter calls that originate from userspace
- * Filter kernel calls from userspace
- * Add more blacklisting/whitelisting logic per Alan Cox's 
-   recommendations
- * Adjust tokens attributes to only be accessible to CAP_SYS_ADMIN
- * Set default permissions on character device.
- * Move token, class, select definitions for items used in drivers
-   to dells-smios.h.
-changes between v6 and v7:
- * Use deferred probing in any function results needed from 
-   dell-wmi-descriptor
- * Protect against a list entry disappearing when running an ioctl from
-   WMI bus
- * Move ioctl uapi declaration into a common header file for all WMI
-   drivers.
- * New patch: create required_buffer_size for method type WMI objects 
-   in WMI core rather than vendor driver.
- * WSMT patch: Add comment explaining WSMT
- * Filtering patch: Add comments explaining what I can about blacklists.
- * WMI, dell-smbios-wmi: Add back in compat ioctl, it is needed.
-   My previous test was erroneous in forgetting to copy an updated header
-   into the chroot.
- * dell-laptop, dell-wmi: allocate less memory for buffer, page no longer
-   needed
- * dell-laptop make the changes (hopefully) more amenable to pali style
-   wise.
- * read SMM cmd address in dell-smbios-smm rather than dell-smbios
- * shuffle structure definitions for this
-changes between v5 and v6:
- * Adjust Kconfig for dell-smbios to not depend on anything.
-   - SMM and WMI drivers will both select dell-smbios
-   - Technically the module can run on it's own (it's just not useful)
- * Add a new tokens sysfs interface
- * Rework blacklisting into easily expandable structures
- * Lock modules during ioctl call from WMI bus
- * drop references to compat ioctl in both WMI and dell-smbios-wmi
-   drivers. (Made sure ioctl worked in both 32 and 64 userspace though)
- * dell-smbios-wmi 
-   - s/buffer_size/req_buf_size/ to make it clearer that userspace
-     doesn't get to set this, it's set internally.
-   - read just buffer length before reading whole structure from 
-     userspace
-   - if buffer length is too big, show a warning
-   - I tried to rename argument for unlocked_ioctl, but this caused
-     problems in matching initialization lists, so still casting.
-   - Add comments clarifying everything happening in ioctl
-changes between v4 and v5:
- * Remove Andy's S suggested by in sysfs tokens patch
- * Make some output in dell-wmi-descriptor debug only
- * Adjust various Kconfig dependencies as recommended by Darren
- * Drop patch to set dell-smbios to default on ACPI_WMI,
-   it's not needed after the Kconfig dependencies rework
- * Move WSMT check patch to after WMI driver is introduced.
- * Make common smbios call return value int as there could be
-   errors now with drivers not being loaded.
- * Make SMBIOS call methods for all drivers return status
- * Reorder patches 2 and 4.
- * Don't export symbols for calling functions on dispatchers
- * wmi patch:
-   - use sprintf instead of strcpy
-   - remove needless bool for tracking found
-   - adjust logic to look for instance_count - 1, it's zero
-     based not 1 based.
-   - Pass a callback to unlocked_ioctl instead of full file
-     operations object
-   - ioctl: Don't fail on no bound WMI driver
-   - Add missing header for uapi
-   - Make helper macros include data types
-   - add compat ioctl
- * dell-smbios:
-   - Add filtering functionality for SMBIOS calling interface
-   - Use dev_dbg rather than pr_debug where possible
- * dell-smbios-wmi:
-   - test for handle on b1 table
-   - correct misc flags comment
-   - drop access checks
-   - use dev_dbg instead of pr_* calls
-   - use filtering functionality
-   - add mutexes around list add/remove
-   - switch from get_first_device to get_first_priv and inline
-   - add mutex locking to prevent unloading mid-call.
-   - update to new ioctl passing
-   - fix userspace uapi to use __u32 instead of u32
-   - Don't use a header file for internal only use
-   - make sure it works with compat ioctl
- * dell-laptop: make dell_smbios_send_request local function
-   for boilerplate calls.
- * ioctl patch
-   - Change API to have a simpler structure to pass back and
-     forth
-   - Rename header file
-   - Export to sysfs properly
-   - Add the size of the length variable into the requested
-     buffersize to sysfs, do math in the driver when copying
-     data around.
-changes between v3 and v4:
- * Make Dell WMI notifications driver fail notifications fail
-   when WMI descriptor driver is unavailable.
- * Add a patch to check for Dell OEM string to stop dell-smbios 
-   module from being loaded in unsupported systems manually.
- * Split Dell WMI descriptor into it's own driver for others to
-   query.
- * Test the misc BIOS flags table to decide whether to run in WMI
-   or SMI mode.
- * s/dell-wmi-smbios/dell-smbios/ in a few patch titles
- * Add missing Suggested-by to a patch from v2 (Sorry Andy S!)
- * Adjust cleanup order of wmi character device.
- * Fix a remaining reference to /dev/wmi-$driver
- * Use get_order to get size for pages
- * Split up dell-smbios into 3 drivers:
-   dell-smbios
-   -> dell-smbios-smm
-   -> dell-smbios-wmi
-   If either of the two dispatcher drivers is unloaded but
-   the other still works, gracefully fall back to that driver
- * Remove unneded open and release on file operations in WMI
-   driver
- * Switch to misc character device in WMI bus.
- * Query the size of the calling interface buffer from WMI
-   descriptor driver.
- * Require userspace to use this information to build an
-   appropriately sized buffer.
- * Verify the size of buffer passed from userspace matches
-   expectation of buffer processed in kernel.
- * Add more documentation about the IOCTL API.
- * Add in a recommendation from Andy S about outputing tokens
- * Add a patch to test for non-functional SMM due to WSMT
- * Define macros for IOCTL's through the WMI bus.
- * Pass all IOCTL calls for WMI drivers through WMI bus
-   WMI bus will guarantee instance count matches and prevent
-   creating too many more IOCTLs.
-changes between v2 and v3:
- * Drop patches 1-7, they're in Darren's review tree now
- * Add missing newline on new Documentation
- * Add Reviewed by from Edward O'Callaghan
- * Adjust path of character device from /dev/wmi-$driver to
-   /dev/wmi/$driver
- * Store wmi_device pointer rather than using a boolean has_wmi
-   to indicate driver is running in WMI mode
- * Don't guard free_page from freeing NULL (this is OK)
- * New patch: add wmidev_evaluate_method to wmi bus as recommended
-   by Andy L
- * Adjust ACPI-WMI interface for this patch change ^
- * Add back in sysfs token patch, drop 2nd and 3rd ioctls per discussion
-   on mailing list.
- * On sysfs interface: adjust the delimiter to be tabs
- * Drop the rename dell-smbios -> dell-wmi-smbios patch
- * Remove/move some unnecessary tests for CONFIG_DCDBAS
- * Reword s/platform/SMM/ in the WMI-ACPI patch.
- * Update Kconfig to recommend using CONFIG_DCDBAS on old machines.
- * Allocate buffer to the same pointer regardless of the struct 
-   assigned to it.  Keep track of the buffer size for cleaning up.
- * Explain policy around character device creation in commit message
-changes between v1 and v2:
- * Introduce another patch to sort the includes in wmi.c
- * Introduce another patch to cleanup dell_wmi_check_descriptor_buffer
-   checks.
- * Add a commit message to the pr_fmt commit
- * Introduce includes to wmi.c in proper location
- * Add Reviewed-by to relevant patches from Pali
- * Make the WMI introduction patch fallback to legacy SMI
-   if compiled with CONFIG_DCDBAS
- * Separate format of WMI and SMI buffers.  WMI buffer supports more
-   arguments and data.
- * Adjust the rename patch for changes to fallback
- * Drop sysfs token creation patch
- * Adjust WMI descriptor check patch for changes to fallback
- * introduce another patch to remove needless includes in dell-smbios.c
- * Add token ioctl interface to character device.
-   - Can query number of tokens
-   - Can query values in all tokens
- * Expose format of all buffers and IOCTL commands to uapi header
- * Drop the read interface from character device.  It doesn't make
-   sense with multiple different ioctl methods.
- * Default WMI interface to 32k (This would normally be queried via
-   MOF, but that's not possible yet)
- * Create separate buffers for WMI and SMI.  If WMI is available,
-   free the SMI buffer.
- * Reorder patches so all fixups come first in the series.
-
-Mario Limonciello (15):
-  platform/x86: wmi: Add new method wmidev_evaluate_method
-  platform/x86: dell-wmi: increase severity of some failures
-  platform/x86: dell-wmi: clean up wmi descriptor check
-  platform/x86: dell-wmi: don't check length returned
-  platform/x86: dell-wmi-descriptor: split WMI descriptor into it's own
-    driver
-  platform/x86: wmi: Don't allow drivers to get each other's GUIDs
-  platform/x86: dell-smbios: only run if proper oem string is detected
-  platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens
-  platform/x86: dell-smbios: Introduce dispatcher for SMM calls
-  platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver
-  platform/x86: dell-smbios-smm: test for WSMT
-  platform/x86: dell-smbios: Add filtering support
-  platform/x86: wmi: create userspace interface for drivers
-  platform/x86: dell-smbios-wmi: introduce userspace interface
-  tools/wmi: add a sample for dell smbios communication over WMI
-
- Documentation/ABI/testing/dell-smbios-wmi          |  41 ++
- .../ABI/testing/sysfs-platform-dell-smbios         |  21 +
- MAINTAINERS                                        |  26 ++
- drivers/platform/x86/Kconfig                       |  34 +-
- drivers/platform/x86/Makefile                      |   3 +
- drivers/platform/x86/dell-laptop.c                 | 283 +++++-------
- drivers/platform/x86/dell-smbios-smm.c             | 196 ++++++++
- drivers/platform/x86/dell-smbios-wmi.c             | 281 +++++++++++
- drivers/platform/x86/dell-smbios.c                 | 512 +++++++++++++++++++--
- drivers/platform/x86/dell-smbios.h                 |  49 +-
- drivers/platform/x86/dell-wmi-descriptor.c         | 168 +++++++
- drivers/platform/x86/dell-wmi-descriptor.h         |  21 +
- drivers/platform/x86/dell-wmi.c                    |  94 +---
- drivers/platform/x86/wmi.c                         | 251 +++++++++-
- include/linux/wmi.h                                |  14 +-
- include/uapi/linux/wmi.h                           |  73 +++
- tools/Makefile                                     |  14 +-
- tools/wmi/Makefile                                 |  18 +
- tools/wmi/dell-smbios-example.c                    | 210 +++++++++
- 19 files changed, 1951 insertions(+), 358 deletions(-)
- create mode 100644 Documentation/ABI/testing/dell-smbios-wmi
- create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
- create mode 100644 drivers/platform/x86/dell-smbios-smm.c
- create mode 100644 drivers/platform/x86/dell-smbios-wmi.c
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+---
+ MAINTAINERS                                |   5 +
+ drivers/platform/x86/Kconfig               |   5 +
+ drivers/platform/x86/Makefile              |   1 +
+ drivers/platform/x86/dell-wmi-descriptor.c | 168 +++++++++++++++++++++++++++++
+ drivers/platform/x86/dell-wmi-descriptor.h |  21 ++++
+ drivers/platform/x86/dell-wmi.c            |  80 ++------------
+ 6 files changed, 206 insertions(+), 74 deletions(-)
  create mode 100644 drivers/platform/x86/dell-wmi-descriptor.c
  create mode 100644 drivers/platform/x86/dell-wmi-descriptor.h
- create mode 100644 include/uapi/linux/wmi.h
- create mode 100644 tools/wmi/Makefile
- create mode 100644 tools/wmi/dell-smbios-example.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2347e36588dc..f4cf35950b08 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4013,6 +4013,11 @@ M:	Pali Rohár <pali.rohar@gmail.com>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-wmi.c
+ 
++DELL WMI DESCRIPTOR DRIVER
++M:	Mario Limonciello <mario.limonciello@dell.com>
++S:	Maintained
++F:	drivers/platform/x86/dell-wmi-descriptor.c
++
+ DELTA ST MEDIA DRIVER
+ M:	Hugues Fruchet <hugues.fruchet@st.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1f7959ff055c..7722923c968c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -121,6 +121,7 @@ config DELL_WMI
+ 	depends on DMI
+ 	depends on INPUT
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	select DELL_WMI_DESCRIPTOR
+ 	select DELL_SMBIOS
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+@@ -129,6 +130,10 @@ config DELL_WMI
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-wmi.
+ 
++config DELL_WMI_DESCRIPTOR
++	tristate
++	depends on ACPI_WMI
++
+ config DELL_WMI_AIO
+ 	tristate "WMI Hotkeys for Dell All-In-One series"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2b315d0df3b7..8636f5d3424f 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+ obj-$(CONFIG_DELL_SMBIOS)	+= dell-smbios.o
+ obj-$(CONFIG_DELL_LAPTOP)	+= dell-laptop.o
+ obj-$(CONFIG_DELL_WMI)		+= dell-wmi.o
++obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
+ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
+ obj-$(CONFIG_DELL_WMI_LED)	+= dell-wmi-led.o
+ obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+new file mode 100644
+index 000000000000..dcf4df39ad80
+--- /dev/null
++++ b/drivers/platform/x86/dell-wmi-descriptor.c
+@@ -0,0 +1,168 @@
++/*
++ * Dell WMI descriptor driver
++ *
++ * Copyright (C) 2017 Dell Inc. All Rights Reserved.
++ *
++ *  This program is free software; you can redistribute it and/or modify it
++ *  under the terms of the GNU General Public License version 2 as published
++ *  by the Free Software Foundation.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++#include "dell-wmi-descriptor.h"
++
++struct descriptor_priv {
++	struct list_head list;
++	u32 interface_version;
++	u32 size;
++};
++static LIST_HEAD(wmi_list);
++static DEFINE_MUTEX(list_mutex);
++
++bool dell_wmi_get_interface_version(u32 *version)
++{
++	struct descriptor_priv *priv;
++	bool ret = false;
++
++	mutex_lock(&list_mutex);
++	priv = list_first_entry_or_null(&wmi_list,
++					struct descriptor_priv,
++					list);
++	if (priv) {
++		*version = priv->interface_version;
++		ret = true;
++	}
++	mutex_unlock(&list_mutex);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dell_wmi_get_interface_version);
++
++bool dell_wmi_get_size(u32 *size)
++{
++	struct descriptor_priv *priv;
++	bool ret = false;
++
++	mutex_lock(&list_mutex);
++	priv = list_first_entry_or_null(&wmi_list,
++					struct descriptor_priv,
++					list);
++	if (priv) {
++		*size = priv->size;
++		ret = true;
++	}
++	mutex_unlock(&list_mutex);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dell_wmi_get_size);
++
++/*
++ * Descriptor buffer is 128 byte long and contains:
++ *
++ *       Name             Offset  Length  Value
++ * Vendor Signature          0       4    "DELL"
++ * Object Signature          4       4    " WMI"
++ * WMI Interface Version     8       4    <version>
++ * WMI buffer length        12       4    <length>
++ */
++static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
++{
++	union acpi_object *obj = NULL;
++	struct descriptor_priv *priv;
++	u32 *buffer;
++	int ret;
++
++	obj = wmidev_block_query(wdev, 0);
++	if (!obj) {
++		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
++		ret = -EIO;
++		goto out;
++	}
++
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Although it's not technically a failure, this would lead to
++	 * unexpected behavior
++	 */
++	if (obj->buffer.length != 128) {
++		dev_err(&wdev->dev,
++			"Dell descriptor buffer has unexpected length (%d)\n",
++			obj->buffer.length);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	buffer = (u32 *)obj->buffer.pointer;
++
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			buffer);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (buffer[2] != 0 && buffer[2] != 1)
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
++			(unsigned long) buffer[2]);
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(struct descriptor_priv),
++	GFP_KERNEL);
++
++	priv->interface_version = buffer[2];
++	priv->size = buffer[3];
++	ret = 0;
++	dev_set_drvdata(&wdev->dev, priv);
++	list_add_tail(&priv->list, &wmi_list);
++
++	dev_dbg(&wdev->dev, "Detected Dell WMI interface version %lu and buffer size %lu\n",
++		(unsigned long) priv->interface_version,
++		(unsigned long) priv->size);
++
++out:
++	kfree(obj);
++	return ret;
++}
++
++static int dell_wmi_descriptor_remove(struct wmi_device *wdev)
++{
++	struct descriptor_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	mutex_lock(&list_mutex);
++	list_del(&priv->list);
++	mutex_unlock(&list_mutex);
++	return 0;
++}
++
++static const struct wmi_device_id dell_wmi_descriptor_id_table[] = {
++	{ .guid_string = DELL_WMI_DESCRIPTOR_GUID },
++	{ },
++};
++
++static struct wmi_driver dell_wmi_descriptor_driver = {
++	.driver = {
++		.name = "dell-wmi-descriptor",
++	},
++	.probe = dell_wmi_descriptor_probe,
++	.remove = dell_wmi_descriptor_remove,
++	.id_table = dell_wmi_descriptor_id_table,
++};
++
++module_wmi_driver(dell_wmi_descriptor_driver);
++
++MODULE_ALIAS("wmi:" DELL_WMI_DESCRIPTOR_GUID);
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_DESCRIPTION("Dell WMI descriptor driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
+new file mode 100644
+index 000000000000..5f7b69c2c83a
+--- /dev/null
++++ b/drivers/platform/x86/dell-wmi-descriptor.h
+@@ -0,0 +1,21 @@
++/*
++ *  Dell WMI descriptor driver
++ *
++ *  Copyright (c) 2017 Dell Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++
++#ifndef _DELL_WMI_DESCRIPTOR_H_
++#define _DELL_WMI_DESCRIPTOR_H_
++
++#include <linux/wmi.h>
++
++#define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
++
++bool dell_wmi_get_interface_version(u32 *version);
++bool dell_wmi_get_size(u32 *size);
++
++#endif
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index da4f629d0831..6d657eb97672 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -39,6 +39,7 @@
+ #include <linux/wmi.h>
+ #include <acpi/video.h>
+ #include "dell-smbios.h"
++#include "dell-wmi-descriptor.h"
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
+@@ -46,7 +47,6 @@ MODULE_DESCRIPTION("Dell laptop WMI hotkeys driver");
+ MODULE_LICENSE("GPL");
+ 
+ #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
+-#define DELL_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+ 
+ static bool wmi_requires_smbios_request;
+ 
+@@ -617,75 +617,6 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
+ 	input_unregister_device(priv->input_dev);
+ }
+ 
+-/*
+- * Descriptor buffer is 128 byte long and contains:
+- *
+- *       Name             Offset  Length  Value
+- * Vendor Signature          0       4    "DELL"
+- * Object Signature          4       4    " WMI"
+- * WMI Interface Version     8       4    <version>
+- * WMI buffer length        12       4    <length>
+- */
+-static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+-{
+-	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+-	union acpi_object *obj = NULL;
+-	struct wmi_device *desc_dev;
+-	u32 *buffer;
+-	int ret;
+-
+-	desc_dev = wmidev_get_other_guid(wdev, DELL_DESCRIPTOR_GUID);
+-	if (!desc_dev) {
+-		dev_err(&wdev->dev, "Dell WMI descriptor does not exist\n");
+-		return -ENODEV;
+-	}
+-
+-	obj = wmidev_block_query(desc_dev, 0);
+-	if (!obj) {
+-		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
+-		ret = -EIO;
+-		goto out;
+-	}
+-
+-	if (obj->type != ACPI_TYPE_BUFFER) {
+-		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (obj->buffer.length != 128) {
+-		dev_err(&wdev->dev,
+-			"Dell descriptor buffer has invalid length (%d)\n",
+-			obj->buffer.length);
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	buffer = (u32 *)obj->buffer.pointer;
+-
+-	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+-		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+-			buffer);
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
+-			(unsigned long) buffer[2]);
+-
+-	priv->interface_version = buffer[2];
+-	ret = 0;
+-
+-	dev_info(&wdev->dev, "Detected Dell WMI interface version %u\n",
+-		priv->interface_version);
+-
+-out:
+-	kfree(obj);
+-	put_device(&desc_dev->dev);
+-	return ret;
+-}
+-
+ /*
+  * According to Dell SMBIOS documentation:
+  *
+@@ -721,7 +652,9 @@ static int dell_wmi_events_set_enabled(bool enable)
+ static int dell_wmi_probe(struct wmi_device *wdev)
+ {
+ 	struct dell_wmi_priv *priv;
+-	int err;
++
++	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
++		return -ENODEV;
+ 
+ 	priv = devm_kzalloc(
+ 		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
+@@ -729,9 +662,8 @@ static int dell_wmi_probe(struct wmi_device *wdev)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 
+-	err = dell_wmi_check_descriptor_buffer(wdev);
+-	if (err)
+-		return err;
++	if (!dell_wmi_get_interface_version(&priv->interface_version))
++		return -EPROBE_DEFER;
+ 
+ 	return dell_wmi_input_setup(wdev);
+ }
 -- 
 2.14.1
