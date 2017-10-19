@@ -1,82 +1,62 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v10 06/15] platform/x86: wmi: Don't allow drivers to get each other's GUIDs
-Date: Thu, 19 Oct 2017 12:50:09 -0500
-Message-ID: <a55223673a9ca9986311d8456e3c4a77b882d55f.1508434513.git.mario.limonciello@dell.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v10 03/15] platform/x86: dell-wmi: clean up wmi
+ descriptor check
+Date: Thu, 19 Oct 2017 19:55:12 +0200
+Message-ID: <20171019175512.xhlkm5fa7aqnjl7g@pali>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
+ <4971fd99a4583e92029622ede71276168f0d8e43.1508434513.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:50583 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752761AbdJSRuY (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2017 13:50:24 -0400
-In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4971fd99a4583e92029622ede71276168f0d8e43.1508434513.git.mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The only driver using this was dell-wmi, and it really was a hack.
-The driver was getting a data attribute from another driver and this
-type of action should not be encouraged.
+On Thursday 19 October 2017 12:50:06 Mario Limonciello wrote:
+> Some cases the wrong type was used for errors and checks can be
+> done more cleanly.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Rather drivers that need to interact with one another should pass
-data back and forth via exported functions.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
----
- drivers/platform/x86/wmi.c | 17 -----------------
- include/linux/wmi.h        |  4 ----
- 2 files changed, 21 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 4d73a87c2ddf..bcb41c1c7f52 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -368,23 +368,6 @@ union acpi_object *wmidev_block_query(struct wmi_device *wdev, u8 instance)
- }
- EXPORT_SYMBOL_GPL(wmidev_block_query);
- 
--struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
--					 const char *guid_string)
--{
--	struct wmi_block *this_wb = container_of(wdev, struct wmi_block, dev);
--	struct wmi_block *other_wb;
--
--	if (!find_guid(guid_string, &other_wb))
--		return NULL;
--
--	if (other_wb->acpi_device != this_wb->acpi_device)
--		return NULL;
--
--	get_device(&other_wb->dev.dev);
--	return &other_wb->dev;
--}
--EXPORT_SYMBOL_GPL(wmidev_get_other_guid);
--
- /**
-  * wmi_set_block - Write to a WMI block
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 2cd10c3b89e9..ddee427e0721 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -36,10 +36,6 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
- 
--/* Gets another device on the same bus.  Caller must put_device the result. */
--extern struct wmi_device *wmidev_get_other_guid(struct wmi_device *wdev,
--						const char *guid_string);
--
- struct wmi_device_id {
- 	const char *guid_string;
- };
+> ---
+>  drivers/platform/x86/dell-wmi.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 2cfaaa8faf0a..b2bd396acac5 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -663,16 +663,16 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
+>  
+>  	buffer = (u32 *)obj->buffer.pointer;
+>  
+> -	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
+> -		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+> -			8, buffer);
+> +	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+> +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+> +			buffer);
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+>  
+>  	if (buffer[2] != 0 && buffer[2] != 1)
+> -		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
+> -			buffer[2]);
+> +		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
+> +			(unsigned long) buffer[2]);
+>  
+>  	if (buffer[3] != 4096)
+>  		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
+
 -- 
-2.14.1
+Pali Rohár
+pali.rohar@gmail.com
