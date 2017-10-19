@@ -1,342 +1,357 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v10 10/15] platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver
-Date: Thu, 19 Oct 2017 12:50:13 -0500
-Message-ID: <bbf3330058663b50d3f82f27dbec7b2f91e9d096.1508434514.git.mario.limonciello@dell.com>
+Subject: [PATCH v10 08/15] platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens
+Date: Thu, 19 Oct 2017 12:50:11 -0500
+Message-ID: <575ba451f9653cdaa459510261dbd391c99d1c9c.1508434513.git.mario.limonciello@dell.com>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:50583 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1753067AbdJSRu0 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2017 13:50:26 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The dell-smbios stack only currently uses an SMI interface which grants
-direct access to physical memory to the firmware SMM methods via a pointer.
+Currently userspace tools can access system tokens via the dcdbas
+kernel module and a SMI call that will cause the platform to execute
+SMM code.
 
-This dispatcher driver adds a WMI-ACPI interface that is detected by WMI
-probe and preferred over the SMI interface in dell-smbios.
+With a goal in mind of deprecating the dcdbas kernel module a different
+method for accessing these tokens from userspace needs to be created.
 
-Changing this to operate over WMI-ACPI will use an ACPI OperationRegion
-for a buffer of data storage when SMM calls are performed.
+This is intentionally marked to only be readable as a process with
+CAP_SYS_ADMIN as it can contain sensitive information about the
+platform's configuration.
 
-This is a safer approach to use in kernel drivers as the SMM will
-only have access to that OperationRegion.
+While adding this interface I found that some tokens are duplicated.
+These need to be ignored from sysfs to avoid duplicate files.
+
+MAINTAINERS was missing for this driver.  Add myself and Pali to
+maintainers list for it.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- MAINTAINERS                            |   6 +
- drivers/platform/x86/Kconfig           |  14 ++
- drivers/platform/x86/Makefile          |   1 +
- drivers/platform/x86/dell-smbios-wmi.c | 236 +++++++++++++++++++++++++++++++++
- 4 files changed, 257 insertions(+)
- create mode 100644 drivers/platform/x86/dell-smbios-wmi.c
+ .../ABI/testing/sysfs-platform-dell-smbios         |  21 ++
+ MAINTAINERS                                        |   7 +
+ drivers/platform/x86/dell-smbios.c                 | 212 ++++++++++++++++++++-
+ 3 files changed, 239 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
 
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
+new file mode 100644
+index 000000000000..205d3b6361e0
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
+@@ -0,0 +1,21 @@
++What:		/sys/devices/platform/<platform>/tokens/*
++Date:		November 2017
++KernelVersion:	4.15
++Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
++Description:
++		A read-only description of Dell platform tokens
++		available on the machine.
++
++		Each token attribute is available as a pair of
++		sysfs attributes readable by a process with
++		CAP_SYS_ADMIN.
++
++		For example the token ID "5" would be available
++		as the following attributes:
++
++		0005_location
++		0005_value
++
++		Tokens will vary from machine to machine, and
++		only tokens available on that machine will be
++		displayed.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 9dc1ee9603e7..8fd2f0d2ddf6 100644
+index f4cf35950b08..09e774f1d0b2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3991,6 +3991,12 @@ L:	platform-driver-x86@vger.kernel.org
+@@ -3978,6 +3978,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
  S:	Maintained
- F:	drivers/platform/x86/dell-smbios-smm.c
+ F:	drivers/net/fddi/defxx.*
  
-+DELL SMBIOS WMI DRIVER
++DELL SMBIOS DRIVER
++M:	Pali Rohár <pali.rohar@gmail.com>
 +M:	Mario Limonciello <mario.limonciello@dell.com>
 +L:	platform-driver-x86@vger.kernel.org
 +S:	Maintained
-+F:	drivers/platform/x86/dell-smbios-wmi.c
++F:	drivers/platform/x86/dell-smbios.*
 +
  DELL LAPTOP DRIVER
  M:	Matthew Garrett <mjg59@srcf.ucam.org>
  M:	Pali Rohár <pali.rohar@gmail.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 53a2de781de6..83aee9068c64 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -94,6 +94,20 @@ config ASUS_LAPTOP
- config DELL_SMBIOS
- 	tristate
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index 7e779278d054..9e2b396861bb 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -16,10 +16,12 @@
  
-+config DELL_SMBIOS_WMI
-+	tristate "Dell SMBIOS calling interface (WMI implementation)"
-+	depends on ACPI_WMI
-+	select DELL_WMI_DESCRIPTOR
-+	default ACPI_WMI
-+	select DELL_SMBIOS
-+	---help---
-+	This provides an implementation for the Dell SMBIOS calling interface
-+	communicated over ACPI-WMI.
-+
-+	If you have a Dell computer from >2007 you should say Y or M here.
-+	If you aren't sure and this module doesn't work for your computer
-+	it just won't load.
-+
- config DELL_SMBIOS_SMM
- 	tristate "Dell SMBIOS calling interface (SMM implementation)"
- 	depends on DCDBAS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e743615241f8..1c4234861de0 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
- obj-$(CONFIG_DELL_SMBIOS)	+= dell-smbios.o
-+obj-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
- obj-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
- obj-$(CONFIG_DELL_LAPTOP)	+= dell-laptop.o
- obj-$(CONFIG_DELL_WMI)		+= dell-wmi.o
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-new file mode 100644
-index 000000000000..d2b8438ea91f
---- /dev/null
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -0,0 +1,236 @@
-+/*
-+ *  WMI methods for use with dell-smbios
-+ *
-+ *  Copyright (c) 2017 Dell Inc.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation.
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/dmi.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/uaccess.h>
-+#include <linux/wmi.h>
-+#include "dell-smbios.h"
-+#include "dell-wmi-descriptor.h"
-+
-+static DEFINE_MUTEX(call_mutex);
-+static DEFINE_MUTEX(list_mutex);
-+static int wmi_supported;
-+
-+struct misc_bios_flags_structure {
-+	struct dmi_header header;
-+	u16 flags0;
-+} __packed;
-+#define FLAG_HAS_ACPI_WMI 0x02
-+
-+#define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
-+
-+struct dell_wmi_extensions {
-+	__u32 argattrib;
-+	__u32 blength;
-+	__u8 data[];
-+} __packed;
-+
-+struct dell_wmi_smbios_buffer {
-+	struct calling_interface_buffer std;
-+	struct dell_wmi_extensions ext;
-+} __packed;
-+
-+struct wmi_smbios_priv {
-+	struct dell_wmi_smbios_buffer *buf;
-+	struct list_head list;
-+	struct wmi_device *wdev;
-+	struct device *child;
-+	u32 req_buf_size;
-+};
-+static LIST_HEAD(wmi_list);
-+
-+static inline struct wmi_smbios_priv *get_first_smbios_priv(void)
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/capability.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/gfp.h>
+ #include <linux/mutex.h>
++#include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/io.h>
+ #include "../../firmware/dcdbas.h"
+@@ -39,7 +41,11 @@ static DEFINE_MUTEX(buffer_mutex);
+ static int da_command_address;
+ static int da_command_code;
+ static int da_num_tokens;
++static struct platform_device *platform_device;
+ static struct calling_interface_token *da_tokens;
++static struct device_attribute *token_location_attrs;
++static struct device_attribute *token_value_attrs;
++static struct attribute **token_attrs;
+ 
+ int dell_smbios_error(int value)
+ {
+@@ -157,6 +163,26 @@ static void __init parse_da_table(const struct dmi_header *dm)
+ 	da_num_tokens += tokens;
+ }
+ 
++static void zero_duplicates(struct device *dev)
 +{
-+	return list_first_entry_or_null(&wmi_list,
-+					struct wmi_smbios_priv,
-+					list);
-+}
++	int i, j;
 +
-+static int run_smbios_call(struct wmi_device *wdev)
-+{
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	struct wmi_smbios_priv *priv;
-+	struct acpi_buffer input;
-+	union acpi_object *obj;
-+	acpi_status status;
-+
-+	priv = dev_get_drvdata(&wdev->dev);
-+	input.length = priv->req_buf_size - sizeof(u64);
-+	input.pointer = &priv->buf->std;
-+
-+	dev_dbg(&wdev->dev, "evaluating: %u/%u [%x,%x,%x,%x]\n",
-+		priv->buf->std.class, priv->buf->std.select,
-+		priv->buf->std.input[0], priv->buf->std.input[1],
-+		priv->buf->std.input[2], priv->buf->std.input[3]);
-+
-+	status = wmidev_evaluate_method(wdev, 0, 1, &input, &output);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+	obj = (union acpi_object *)output.pointer;
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		dev_dbg(&wdev->dev, "received type: %d\n", obj->type);
-+		if (obj->type == ACPI_TYPE_INTEGER)
-+			dev_dbg(&wdev->dev, "SMBIOS call failed: %llu\n",
-+				obj->integer.value);
-+		return -EIO;
-+	}
-+	memcpy(&priv->buf->std, obj->buffer.pointer, obj->buffer.length);
-+	dev_dbg(&wdev->dev, "result: [%08x,%08x,%08x,%08x]\n",
-+		priv->buf->std.output[0], priv->buf->std.output[1],
-+		priv->buf->std.output[2], priv->buf->std.output[3]);
-+
-+	return 0;
-+}
-+
-+int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
-+{
-+	struct wmi_smbios_priv *priv;
-+	size_t difference;
-+	size_t size;
-+	int ret;
-+
-+	mutex_lock(&call_mutex);
-+	priv = get_first_smbios_priv();
-+	if (!priv)
-+		return -ENODEV;
-+
-+	size = sizeof(struct calling_interface_buffer);
-+	difference = priv->req_buf_size - sizeof(u64) - size;
-+
-+	memset(&priv->buf->ext, 0, difference);
-+	memcpy(&priv->buf->std, buffer, size);
-+	ret = run_smbios_call(priv->wdev);
-+	memcpy(buffer, &priv->buf->std, size);
-+	mutex_unlock(&call_mutex);
-+
-+	return ret;
-+}
-+
-+static int dell_smbios_wmi_probe(struct wmi_device *wdev)
-+{
-+	struct wmi_smbios_priv *priv;
-+	int count;
-+	int ret;
-+
-+	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(struct wmi_smbios_priv),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* WMI buffer size will be either 4k or 32k depending on machine */
-+	if (!dell_wmi_get_size(&priv->req_buf_size))
-+		return -EPROBE_DEFER;
-+
-+	count = get_order(priv->req_buf_size);
-+	priv->buf = (void *)__get_free_pages(GFP_KERNEL, count);
-+	if (!priv->buf)
-+		return -ENOMEM;
-+
-+	/* ID is used by dell-smbios to set priority of drivers */
-+	wdev->dev.id = 1;
-+	ret = dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
-+	if (ret)
-+		goto fail_register;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+	mutex_lock(&list_mutex);
-+	list_add_tail(&priv->list, &wmi_list);
-+	mutex_unlock(&list_mutex);
-+
-+	return 0;
-+
-+fail_register:
-+	free_pages((unsigned long)priv->buf, count);
-+	return ret;
-+}
-+
-+static int dell_smbios_wmi_remove(struct wmi_device *wdev)
-+{
-+	struct wmi_smbios_priv *priv = dev_get_drvdata(&wdev->dev);
-+	int count;
-+
-+	mutex_lock(&call_mutex);
-+	mutex_lock(&list_mutex);
-+	list_del(&priv->list);
-+	mutex_unlock(&list_mutex);
-+	dell_smbios_unregister_device(&wdev->dev);
-+	count = get_order(priv->req_buf_size);
-+	free_pages((unsigned long)priv->buf, count);
-+	mutex_unlock(&call_mutex);
-+	return 0;
-+}
-+
-+static const struct wmi_device_id dell_smbios_wmi_id_table[] = {
-+	{ .guid_string = DELL_WMI_SMBIOS_GUID },
-+	{ },
-+};
-+
-+static void __init parse_b1_table(const struct dmi_header *dm)
-+{
-+	struct misc_bios_flags_structure *flags =
-+	container_of(dm, struct misc_bios_flags_structure, header);
-+
-+	/* 4 bytes header, 8 bytes flags */
-+	if (dm->length < 12)
-+		return;
-+	if (dm->handle != 0xb100)
-+		return;
-+	if ((flags->flags0 & FLAG_HAS_ACPI_WMI))
-+		wmi_supported = 1;
-+}
-+
-+static void __init find_b1(const struct dmi_header *dm, void *dummy)
-+{
-+	switch (dm->type) {
-+	case 0xb1: /* misc bios flags */
-+		parse_b1_table(dm);
-+		break;
++	for (i = 0; i < da_num_tokens; i++) {
++		for (j = i+1; j < da_num_tokens; j++) {
++			if (da_tokens[i].tokenID == 0 ||
++			    da_tokens[j].tokenID == 0)
++				continue;
++			if (da_tokens[i].tokenID == da_tokens[j].tokenID) {
++				dev_dbg(dev, "Zeroing dup token ID %x(%x/%x)\n",
++					da_tokens[j].tokenID,
++					da_tokens[j].location,
++					da_tokens[j].value);
++				da_tokens[j].tokenID = 0;
++			}
++		}
 +	}
 +}
 +
-+static struct wmi_driver dell_smbios_wmi_driver = {
+ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+ {
+ 	switch (dm->type) {
+@@ -170,6 +196,154 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+ 	}
+ }
+ 
++static int match_attribute(struct device *dev,
++			   struct device_attribute *attr)
++{
++	int i;
++
++	for (i = 0; i < da_num_tokens * 2; i++) {
++		if (!token_attrs[i])
++			continue;
++		if (strcmp(token_attrs[i]->name, attr->attr.name) == 0)
++			return i/2;
++	}
++	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
++	return -EINVAL;
++}
++
++static ssize_t location_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	int i;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	i = match_attribute(dev, attr);
++	if (i > 0)
++		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].location);
++	return 0;
++}
++
++static ssize_t value_show(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	int i;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	i = match_attribute(dev, attr);
++	if (i > 0)
++		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].value);
++	return 0;
++}
++
++static struct attribute_group smbios_attribute_group = {
++	.name = "tokens"
++};
++
++static struct platform_driver platform_driver = {
 +	.driver = {
 +		.name = "dell-smbios",
 +	},
-+	.probe = dell_smbios_wmi_probe,
-+	.remove = dell_smbios_wmi_remove,
-+	.id_table = dell_smbios_wmi_id_table,
 +};
 +
-+static int __init init_dell_smbios_wmi(void)
++static int build_tokens_sysfs(struct platform_device *dev)
 +{
-+	dmi_walk(find_b1, NULL);
++	char buffer_location[13];
++	char buffer_value[10];
++	char *location_name;
++	char *value_name;
++	size_t size;
++	int ret;
++	int i, j;
 +
-+	if (!wmi_supported)
-+		return -ENODEV;
++	/* (number of tokens  + 1 for null terminated */
++	size = sizeof(struct device_attribute) * (da_num_tokens + 1);
++	token_location_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_location_attrs)
++		return -ENOMEM;
++	token_value_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_value_attrs)
++		goto out_allocate_value;
 +
-+	return wmi_driver_register(&dell_smbios_wmi_driver);
++	/* need to store both location and value + terminator*/
++	size = sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
++	token_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_attrs)
++		goto out_allocate_attrs;
++
++	for (i = 0, j = 0; i < da_num_tokens; i++) {
++		/* skip empty */
++		if (da_tokens[i].tokenID == 0)
++			continue;
++		/* add location */
++		sprintf(buffer_location, "%04x_location",
++			da_tokens[i].tokenID);
++		location_name = kstrdup(buffer_location, GFP_KERNEL);
++		if (location_name == NULL)
++			goto out_unwind_strings;
++		sysfs_attr_init(&token_location_attrs[i].attr);
++		token_location_attrs[i].attr.name = location_name;
++		token_location_attrs[i].attr.mode = 0444;
++		token_location_attrs[i].show = location_show;
++		token_attrs[j++] = &token_location_attrs[i].attr;
++
++		/* add value */
++		sprintf(buffer_value, "%04x_value",
++			da_tokens[i].tokenID);
++		value_name = kstrdup(buffer_value, GFP_KERNEL);
++		if (value_name == NULL)
++			goto loop_fail_create_value;
++		sysfs_attr_init(&token_value_attrs[i].attr);
++		token_value_attrs[i].attr.name = value_name;
++		token_value_attrs[i].attr.mode = 0444;
++		token_value_attrs[i].show = value_show;
++		token_attrs[j++] = &token_value_attrs[i].attr;
++		continue;
++
++loop_fail_create_value:
++		kfree(value_name);
++		goto out_unwind_strings;
++	}
++	smbios_attribute_group.attrs = token_attrs;
++
++	ret = sysfs_create_group(&dev->dev.kobj, &smbios_attribute_group);
++	if (ret)
++		goto out_unwind_strings;
++	return 0;
++
++out_unwind_strings:
++	for (i = i-1; i > 0; i--) {
++		kfree(token_location_attrs[i].attr.name);
++		kfree(token_value_attrs[i].attr.name);
++	}
++	kfree(token_attrs);
++out_allocate_attrs:
++	kfree(token_value_attrs);
++out_allocate_value:
++	kfree(token_location_attrs);
++
++	return -ENOMEM;
 +}
 +
-+static void __exit exit_dell_smbios_wmi(void)
++static void free_group(struct platform_device *pdev)
 +{
-+	wmi_driver_unregister(&dell_smbios_wmi_driver);
++	int i;
++
++	sysfs_remove_group(&pdev->dev.kobj,
++				&smbios_attribute_group);
++	for (i = 0; i < da_num_tokens; i++) {
++		kfree(token_location_attrs[i].attr.name);
++		kfree(token_value_attrs[i].attr.name);
++	}
++	kfree(token_attrs);
++	kfree(token_value_attrs);
++	kfree(token_location_attrs);
 +}
 +
-+module_init(init_dell_smbios_wmi);
-+module_exit(exit_dell_smbios_wmi);
 +
-+MODULE_ALIAS("wmi:" DELL_WMI_SMBIOS_GUID);
-+MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
-+MODULE_DESCRIPTION("Dell SMBIOS communications over WMI");
-+MODULE_LICENSE("GPL");
+ static int __init dell_smbios_init(void)
+ {
+ 	const struct dmi_device *valid;
+@@ -197,9 +371,40 @@ static int __init dell_smbios_init(void)
+ 		ret = -ENOMEM;
+ 		goto fail_buffer;
+ 	}
++	ret = platform_driver_register(&platform_driver);
++	if (ret)
++		goto fail_platform_driver;
++
++	platform_device = platform_device_alloc("dell-smbios", 0);
++	if (!platform_device) {
++		ret = -ENOMEM;
++		goto fail_platform_device_alloc;
++	}
++	ret = platform_device_add(platform_device);
++	if (ret)
++		goto fail_platform_device_add;
++
++	/* duplicate tokens will cause problems building sysfs files */
++	zero_duplicates(&platform_device->dev);
++
++	ret = build_tokens_sysfs(platform_device);
++	if (ret)
++		goto fail_create_group;
+ 
+ 	return 0;
+ 
++fail_create_group:
++	platform_device_del(platform_device);
++
++fail_platform_device_add:
++	platform_device_put(platform_device);
++
++fail_platform_device_alloc:
++	platform_driver_unregister(&platform_driver);
++
++fail_platform_driver:
++	free_page((unsigned long)buffer);
++
+ fail_buffer:
+ 	kfree(da_tokens);
+ 	return ret;
+@@ -207,8 +412,13 @@ static int __init dell_smbios_init(void)
+ 
+ static void __exit dell_smbios_exit(void)
+ {
+-	kfree(da_tokens);
++	if (platform_device) {
++		free_group(platform_device);
++		platform_device_unregister(platform_device);
++		platform_driver_unregister(&platform_driver);
++	}
+ 	free_page((unsigned long)buffer);
++	kfree(da_tokens);
+ }
+ 
+ subsys_initcall(dell_smbios_init);
 -- 
 2.14.1
