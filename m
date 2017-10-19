@@ -1,41 +1,30 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 0/3] i2c: Hookup typec power-negotation to the PMIC and
- charger
-Date: Thu, 19 Oct 2017 16:54:27 +0200
-Message-ID: <4f00b1f8-2574-b924-f1e6-f6e7a2ee66f8@redhat.com>
-References: <20171011094121.6108-1-hdegoede@redhat.com>
- <CAHp75VeqskRsmedvA3eAx27o8WeZzH44880T=Q=+1mD+1nSSAg@mail.gmail.com>
- <e875d3d3-d62c-7363-e596-9c0dbeadce5d@redhat.com>
- <20171019144251.hmvkaijwbgamaqoo@katana>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and
+ replace_fd()
+Date: Thu, 19 Oct 2017 07:55:34 -0700
+Message-ID: <20171019145534.GA17068@infradead.org>
+References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
+ <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
+ <20171019080617.GA13601@infradead.org>
+ <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171019144251.hmvkaijwbgamaqoo@katana>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>, intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 19-10-17 16:42, Wolfram Sang wrote:
+On Thu, Oct 19, 2017 at 03:36:16PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Oct 19, 2017 at 01:06:17AM -0700, Christoph Hellwig wrote:
+> > On Mon, Oct 16, 2017 at 10:18:49PM +0300, Jarkko Sakkinen wrote:
+> > > Export create_pipe_files() and replace_fd() so that the SGX driver is
+> > > able to create stdin and stdout pipes.
+> > 
+> > Err, no way.
 > 
->> The first patch, although it is an i2c-core change, is really
->> quite simple. I believe anyone can review it. But it does need
->> someone other then me to take a proper look (and not just do
->> a code only review) because it is a core change. Maybe there
->> is another way to solve the problem (persistent / predictable
->> device-names for i2c devices instantiated through board-data),
->> but I don't think so.
-> 
-> My plan is to hopefully meet Mark Brown (SPI and regulator maintainer)
-> at ELCE next week and have a chat with him about this series. If all
-> goes well, I'll merge it for v4.15.
+> What would be a better alternative?
 
-Great, thank you for looking into this.
-
-Regards,
-
-Hans
+Don't abuse pipes for your interface.
