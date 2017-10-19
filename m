@@ -1,7 +1,7 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v10 04/15] platform/x86: dell-wmi: don't check length returned
-Date: Thu, 19 Oct 2017 12:50:07 -0500
-Message-ID: <5aaddb6951c34b4e2302062b53c7307f73287354.1508434513.git.mario.limonciello@dell.com>
+Subject: [PATCH v10 13/15] platform/x86: wmi: create userspace interface for drivers
+Date: Thu, 19 Oct 2017 12:50:16 -0500
+Message-ID: <175838453318108ae69be344c4d3a2b75c2edc69.1508434514.git.mario.limonciello@dell.com>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
@@ -12,39 +12,404 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is intended to be variable and provided by the platform.
-Some platforms this year will be adopting a 32k WMI buffer, so don't
-complain when encountering those platforms or any other future changes.
+For WMI operations that are only Set or Query readable and writable sysfs
+attributes created by WMI vendor drivers or the bus driver makes sense.
+
+For other WMI operations that are run on Method, there needs to be a
+way to guarantee to userspace that the results from the method call
+belong to the data request to the method call.  Sysfs attributes don't
+work well in this scenario because two userspace processes may be
+competing at reading/writing an attribute and step on each other's
+data.
+
+When a WMI vendor driver declares a callback method in the wmi_driver
+the WMI bus driver will create a character device that maps to that
+function.  This callback method will be responsible for filtering
+invalid requests and performing the actual call.
+
+That character device will correspond to this path:
+/dev/wmi/$driver
+
+Performing read() on this character device will provide the size
+of the buffer that the character device needs to perform calls.
+This buffer size can be set by vendor drivers through a new symbol
+or when MOF parsing is available by the MOF.
+
+Performing ioctl() on this character device will be interpretd
+by the WMI bus driver. It will perform sanity tests for size of
+data, test them for a valid instance, copy the data from userspace
+and pass iton to the vendor driver to further process and run.
+
+This creates an implicit policy that each driver will only be allowed
+a single character device.  If a module matches multiple GUID's,
+the wmi_devices will need to be all handled by the same wmi_driver.
+
+The WMI vendor drivers will be responsible for managing inappropriate
+access to this character device and proper locking on data used by
+it.
+
+When a WMI vendor driver is unloaded the WMI bus driver will clean
+up the character device and any memory allocated for the call.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- drivers/platform/x86/dell-wmi.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ MAINTAINERS                |   1 +
+ drivers/platform/x86/wmi.c | 206 ++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/wmi.h        |   6 ++
+ include/uapi/linux/wmi.h   |  26 ++++++
+ 4 files changed, 237 insertions(+), 2 deletions(-)
+ create mode 100644 include/uapi/linux/wmi.h
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index b2bd396acac5..da4f629d0831 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -624,7 +624,7 @@ static void dell_wmi_input_destroy(struct wmi_device *wdev)
-  * Vendor Signature          0       4    "DELL"
-  * Object Signature          4       4    " WMI"
-  * WMI Interface Version     8       4    <version>
-- * WMI buffer length        12       4    4096
-+ * WMI buffer length        12       4    <length>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8fd2f0d2ddf6..84afbf8ef7d5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -384,6 +384,7 @@ ACPI WMI DRIVER
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Orphan
+ F:	drivers/platform/x86/wmi.c
++F:	include/uapi/linux/wmi.h
+ 
+ AD1889 ALSA SOUND DRIVER
+ M:	Thibaut Varene <T-Bone@parisc-linux.org>
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index bcb41c1c7f52..41fa21be79c5 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -38,12 +38,15 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
++#include <linux/uaccess.h>
+ #include <linux/uuid.h>
+ #include <linux/wmi.h>
++#include <uapi/linux/wmi.h>
+ 
+ ACPI_MODULE_NAME("wmi");
+ MODULE_AUTHOR("Carlos Corbacho");
+@@ -69,9 +72,12 @@ struct wmi_block {
+ 	struct wmi_device dev;
+ 	struct list_head list;
+ 	struct guid_block gblock;
++	struct miscdevice char_dev;
++	struct mutex char_mutex;
+ 	struct acpi_device *acpi_device;
+ 	wmi_notify_handler handler;
+ 	void *handler_data;
++	u64 req_buf_size;
+ 
+ 	bool read_takes_no_args;
+ };
+@@ -188,6 +194,26 @@ static acpi_status wmi_method_enable(struct wmi_block *wblock, int enable)
+ /*
+  * Exported WMI functions
   */
- static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
++
++/**
++ * set_required_buffer_size - Sets the buffer size needed for performing IOCTL
++ * @wdev: A wmi bus device from a driver
++ * @instance: Instance index
++ *
++ * Allocates memory needed for buffer, stores the buffer size in that memory
++ */
++int set_required_buffer_size(struct wmi_device *wdev, u8 instance, u64 length)
++{
++	struct wmi_block *wblock;
++
++	wblock = container_of(wdev, struct wmi_block, dev);
++	if (!wblock)
++		return -ENODEV;
++	wblock->req_buf_size = length;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(set_required_buffer_size);
++
+ /**
+  * wmi_evaluate_method - Evaluate a WMI method
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+@@ -764,6 +790,127 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 
+ 	return 0;
+ }
++static int wmi_char_open(struct inode *inode, struct file *filp)
++{
++	const char *driver_name = filp->f_path.dentry->d_iname;
++	struct wmi_driver *wdriver = NULL;
++	struct wmi_block *wblock = NULL;
++	struct wmi_block *next = NULL;
++
++	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
++		wdriver = container_of(wblock->dev.dev.driver,
++					struct wmi_driver, driver);
++		if (!wdriver)
++			continue;
++		if (strcmp(driver_name, wdriver->driver.name) == 0)
++			break;
++	}
++
++	if (!wdriver)
++		return -ENODEV;
++
++	filp->private_data = wblock;
++	return nonseekable_open(inode, filp);
++}
++
++static ssize_t wmi_char_read(struct file *filp, char __user *buffer,
++	size_t length, loff_t *offset)
++{
++	struct wmi_block *wblock = filp->private_data;
++	size_t count;
++
++	if (*offset != 0)
++		return 0;
++
++	count = sizeof(wblock->req_buf_size);
++	count = length < count ? length : count;
++
++	if (copy_to_user(buffer, &wblock->req_buf_size, count))
++		return -EFAULT;
++
++	*offset = count;
++	return count;
++}
++
++static long wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
++	struct wmi_ioctl_buffer __user *input =
++		(struct wmi_ioctl_buffer __user *) arg;
++	struct wmi_block *wblock = filp->private_data;
++	struct wmi_ioctl_buffer *buf = NULL;
++	struct wmi_driver *wdriver = NULL;
++	int ret;
++
++	if (_IOC_TYPE(cmd) != WMI_IOC)
++		return -ENOTTY;
++
++	wdriver = container_of(wblock->dev.dev.driver,
++		struct wmi_driver, driver);
++
++	if (!wdriver)
++		return -ENODEV;
++
++	/* make sure we're not calling a higher instance than exists*/
++	if (_IOC_NR(cmd) >= wblock->gblock.instance_count)
++		return -EINVAL;
++
++	mutex_lock(&wblock->char_mutex);
++	buf = wblock->handler_data;
++	if (get_user(buf->length, &input->length)) {
++		dev_dbg(&wblock->dev.dev, "Read length from user failed\n");
++		ret = -EFAULT;
++		goto out_ioctl;
++	}
++	/* if it's too small, abort */
++	if (buf->length < wblock->req_buf_size) {
++		dev_err(&wblock->dev.dev,
++			"Buffer %lld too small, need at least %lld\n",
++			buf->length, wblock->req_buf_size);
++		ret = -EINVAL;
++		goto out_ioctl;
++	}
++	/* if it's too big, warn, driver will only use what is needed */
++	if (buf->length > wblock->req_buf_size)
++		dev_warn(&wblock->dev.dev,
++			"Buffer %lld is bigger than required %lld\n",
++			buf->length, wblock->req_buf_size);
++
++	if (copy_from_user(buf, input, wblock->req_buf_size)) {
++		dev_dbg(&wblock->dev.dev, "Copy %llu from user failed\n",
++			wblock->req_buf_size);
++		ret = -EFAULT;
++		goto out_ioctl;
++	}
++
++	/* let the driver do any filtering and do the call */
++	if (!try_module_get(wdriver->driver.owner))
++		return -EBUSY;
++	ret = wdriver->filter_callback(&wblock->dev, cmd, buf);
++	module_put(wdriver->driver.owner);
++	if (ret)
++		goto out_ioctl;
++
++	/* return the result (only up to our internal buffer size) */
++	if (copy_to_user(input, buf, wblock->req_buf_size)) {
++		dev_dbg(&wblock->dev.dev, "Copy %llu to user failed\n",
++			wblock->req_buf_size);
++		ret = -EFAULT;
++	}
++
++out_ioctl:
++	mutex_unlock(&wblock->char_mutex);
++	return ret;
++}
++
++static const struct file_operations wmi_fops = {
++	.owner		= THIS_MODULE,
++	.read		= wmi_char_read,
++	.open		= wmi_char_open,
++	.unlocked_ioctl	= wmi_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= wmi_ioctl,
++#endif
++};
+ 
+ static int wmi_dev_probe(struct device *dev)
  {
-@@ -674,10 +674,6 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
- 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
- 			(unsigned long) buffer[2]);
+@@ -771,16 +918,63 @@ static int wmi_dev_probe(struct device *dev)
+ 	struct wmi_driver *wdriver =
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
++	int count;
++	char *buf;
  
--	if (buffer[3] != 4096)
--		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
--			buffer[3]);
--
- 	priv->interface_version = buffer[2];
- 	ret = 0;
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
+ 		dev_warn(dev, "failed to enable device -- probing anyway\n");
  
+ 	if (wdriver->probe) {
+ 		ret = wdriver->probe(dev_to_wdev(dev));
+-		if (ret != 0 && ACPI_FAILURE(wmi_method_enable(wblock, 0)))
+-			dev_warn(dev, "failed to disable device\n");
++		if (ret != 0)
++			goto probe_failure;
++	}
++
++	/* driver wants a character device made */
++	if (wdriver->filter_callback) {
++		/* check that required buffer size declared by driver or MOF */
++		if (!wblock->req_buf_size) {
++			dev_err(&wblock->dev.dev,
++				"Required buffer size not set\n");
++			ret = -EINVAL;
++			goto probe_failure;
++		}
++
++		count = get_order(wblock->req_buf_size);
++		wblock->handler_data = (void *)__get_free_pages(GFP_KERNEL,
++								count);
++		if (!wblock->handler_data) {
++			ret = -ENOMEM;
++			goto probe_failure;
++		}
++
++		buf = kmalloc(strlen(wdriver->driver.name) + 4, GFP_KERNEL);
++		if (!buf) {
++			ret = -ENOMEM;
++			goto probe_string_failure;
++		}
++		sprintf(buf, "wmi/%s", wdriver->driver.name);
++		wblock->char_dev.minor = MISC_DYNAMIC_MINOR;
++		wblock->char_dev.name = buf;
++		wblock->char_dev.fops = &wmi_fops;
++		wblock->char_dev.mode = 0444;
++		ret = misc_register(&wblock->char_dev);
++		if (ret) {
++			dev_warn(dev, "failed to register char dev: %d", ret);
++			ret = -ENOMEM;
++			goto probe_misc_failure;
++		}
+ 	}
+ 
++	return 0;
++
++probe_misc_failure:
++	kfree(buf);
++probe_string_failure:
++	kfree(wblock->handler_data);
++probe_failure:
++	if (ACPI_FAILURE(wmi_method_enable(wblock, 0)))
++		dev_warn(dev, "failed to disable device\n");
+ 	return ret;
+ }
+ 
+@@ -791,6 +985,13 @@ static int wmi_dev_remove(struct device *dev)
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
+ 
++	if (wdriver->filter_callback) {
++		misc_deregister(&wblock->char_dev);
++		kfree(wblock->char_dev.name);
++		free_pages((unsigned long)wblock->handler_data,
++			   get_order(wblock->req_buf_size));
++	}
++
+ 	if (wdriver->remove)
+ 		ret = wdriver->remove(dev_to_wdev(dev));
+ 
+@@ -847,6 +1048,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+ 
+ 	if (gblock->flags & ACPI_WMI_METHOD) {
+ 		wblock->dev.dev.type = &wmi_type_method;
++		mutex_init(&wblock->char_mutex);
+ 		goto out_init;
+ 	}
+ 
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index ddee427e0721..0516cffea805 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/acpi.h>
++#include <uapi/linux/wmi.h>
+ 
+ struct wmi_device {
+ 	struct device dev;
+@@ -36,6 +37,9 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+ 					     u8 instance);
+ 
++extern int set_required_buffer_size(struct wmi_device *wdev, u8 instance,
++				    u64 length);
++
+ struct wmi_device_id {
+ 	const char *guid_string;
+ };
+@@ -47,6 +51,8 @@ struct wmi_driver {
+ 	int (*probe)(struct wmi_device *wdev);
+ 	int (*remove)(struct wmi_device *wdev);
+ 	void (*notify)(struct wmi_device *device, union acpi_object *data);
++	long (*filter_callback)(struct wmi_device *wdev, unsigned int cmd,
++				struct wmi_ioctl_buffer *arg);
+ };
+ 
+ extern int __must_check __wmi_driver_register(struct wmi_driver *driver,
+diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
+new file mode 100644
+index 000000000000..7e52350ac9b3
+--- /dev/null
++++ b/include/uapi/linux/wmi.h
+@@ -0,0 +1,26 @@
++/*
++ *  User API methods for ACPI-WMI mapping driver
++ *
++ *  Copyright (C) 2017 Dell, Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ */
++#ifndef _UAPI_LINUX_WMI_H
++#define _UAPI_LINUX_WMI_H
++
++#include <linux/types.h>
++
++/* WMI bus will filter all WMI vendor driver requests through this IOC */
++#define WMI_IOC 'W'
++
++/* All ioctl requests through WMI should declare their size followed by
++ * relevant data objects
++ */
++struct wmi_ioctl_buffer {
++	__u64	length;
++	__u8	data[];
++};
++
++#endif
 -- 
 2.14.1
