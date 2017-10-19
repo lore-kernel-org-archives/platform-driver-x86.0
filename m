@@ -1,278 +1,141 @@
-From: "Edward O'Callaghan" <quasisec@google.com>
-Subject: Re: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios
- communication over WMI
-Date: Thu, 19 Oct 2017 14:12:14 +1100
-Message-ID: <CAD584itLkB5Mu30TBrFz6sG4M+hepDqdao_J=eugNK619Kw_nA@mail.gmail.com>
-References: <cover.1508259916.git.mario.limonciello@dell.com>
- <a60ca82dca6e453f7bd920c082de48ea4378b7d2.1508259916.git.mario.limonciello@dell.com>
- <20171018072915.xowh23m5vr2amqcp@pali> <e225d842e0274a1897c63089444a0814@ausx13mpc120.AMER.DELL.COM>
- <53c8c8aa295046d3a10b2bc8aeb6b610@ausx13mpc124.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 1/2] Input: silead - Add support for capactive home button found on some x86 tablets
+Date: Thu, 19 Oct 2017 09:17:27 +0200
+Message-ID: <20171019071728.6635-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53c8c8aa295046d3a10b2bc8aeb6b610@ausx13mpc124.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: pali.rohar@gmail.com, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net, Matthew Garrett <mjg59@google.com>, hch@lst.de
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Gregor Riepl <onitake@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Just my 2c, I like this simplification Mario.
-Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+On some x86 tablets with a silead touchscreen the windows logo on the
+front is a capacitive home button. Touching this button results in a touch
+with bits 12-15 of the Y coordinates set, while normally only the lower 12
+are used.
 
-On Thu, Oct 19, 2017 at 9:27 AM,  <Mario.Limonciello@dell.com> wrote:
->> -----Original Message-----
->> From: Limonciello, Mario
->> Sent: Wednesday, October 18, 2017 8:56 AM
->> To: 'Pali Roh=C3=A1r' <pali.rohar@gmail.com>; Greg KH <greg@kroah.com>; =
-Alan Cox
->> <gnomes@lxorguk.ukuu.org.uk>
->> Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
->> LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org=
-; Andy
->> Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
->> mjg59@google.com; hch@lst.de
->> Subject: RE: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios
->> communication over WMI
->>
->> > -----Original Message-----
->> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
->> > Sent: Wednesday, October 18, 2017 2:29 AM
->> > To: Greg KH <greg@kroah.com>; Alan Cox <gnomes@lxorguk.ukuu.org.uk>
->> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
->> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.o=
-rg;
->> Andy
->> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
->> > mjg59@google.com; hch@lst.de; Limonciello, Mario
->> > <Mario_Limonciello@Dell.com>
->> > Subject: Re: [PATCH v9 17/17] tools/wmi: add a sample for dell smbios
->> > communication over WMI
->> >
->> > On Tuesday 17 October 2017 13:22:01 Mario Limonciello wrote:
->> > > diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios=
--
->> example.c
->> > > new file mode 100644
->> > > index 000000000000..69c4dd9c6056
->> > > --- /dev/null
->> > > +++ b/tools/wmi/dell-smbios-example.c
->> > > @@ -0,0 +1,214 @@
->> > > +/*
->> > > + *  Sample application for SMBIOS communication over WMI interface
->> > > + *  Performs the following:
->> > > + *  - Simple class/select lookup for TPM information
->> > > + *  - Simple query of known tokens and their values
->> > > + *  - Simple activation of a token
->> > > + *
->> > > + *  Copyright (C) 2017 Dell, Inc.
->> > > + *
->> > > + *  This program is free software; you can redistribute it and/or m=
-odify
->> > > + *  it under the terms of the GNU General Public License version 2 =
-as
->> > > + *  published by the Free Software Foundation.
->> > > + */
->> > > +
->> > > +#include <errno.h>
->> > > +#include <fcntl.h>
->> > > +#include <stdio.h>
->> > > +#include <stdlib.h>
->> > > +#include <sys/ioctl.h>
->> > > +#include <unistd.h>
->> > > +
->> > > +/* if uapi header isn't installed, this might not yet exist */
->> > > +#ifndef __packed
->> > > +#define __packed __attribute__((packed))
->> > > +#endif
->> > > +#include <linux/wmi.h>
->> > > +
->> > > +/* It would be better to discover these using udev, but for a simpl=
-e
->> > > + * application they're hardcoded
->> > > + */
->> > > +static const char *ioctl_devfs =3D "/dev/wmi/dell-smbios";
->> > > +static const char *token_sysfs =3D
->> > > +                 "/sys/bus/platform/devices/dell-smbios.0/tokens";
->> > > +static const char *buffer_sysfs =3D
->> > > +                 "/sys/bus/wmi/devices/A80593CE-A997-11DA-B012-
->> > B622A1EF5492/required_buffer_size";
->> >
->> > Greg, Alan, could userspace expects those paths to be part of kernel
->> > <--> userspace ABI? Looking e.g. at "dell-smbios.0" name and I'm not
->> > sure if this is something which is going to be stable between kernel
->> > versions and forever as part of ABI.
->>
->> In my sample application to be distributed with the kernel these are
->> hardcoded paths, but if more dependencies were used, I would
->> expect all 3 of these paths to be discovered using udev.
->> I do include a comment for that point specifically.
->>
->> >
->> > Also if everything is part of smbios API, would not it better to provi=
-de
->> > everything via IOCTL over /dev/wmi/dell-smbios? I think this code is t=
-oo
->> > complicated, just because for correct IOCTL buffer size it needs to re=
-ad
->> > other properties via sysfs, etc... For me it looks like that it is not=
- a
->> > good API for userspace developers.
->> >
->> > --
->>
->> This does give me an idea, how about a read on the character device
->> will return required buffer size instead of needing to find a sysfs
->> attribute?  This seems more intuitive to me.
->
-> So as to not send the whole series again only to get this idea shot down,
-> this is what it looks like (minus documentation updates).
-> Thoughts?
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index c7de80f96183..922a87d7cf34 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -799,23 +799,12 @@ static int wmi_dev_match(struct device *dev, struct=
- device_driver *driver)
->
->         return 0;
->  }
-> -
-> -static long match_ioctl(struct file *filp, unsigned int cmd, unsigned lo=
-ng arg,
-> -                       int compat)
-> +static int wmi_char_open(struct inode *inode, struct file *filp)
->  {
-> -       struct wmi_ioctl_buffer __user *input =3D
-> -               (struct wmi_ioctl_buffer __user *) arg;
-> +       const char *driver_name =3D filp->f_path.dentry->d_iname;
->         struct wmi_driver *wdriver =3D NULL;
->         struct wmi_block *wblock =3D NULL;
->         struct wmi_block *next =3D NULL;
-> -       const char *driver_name;
-> -       u64 size;
-> -       int ret;
-> -
-> -       if (_IOC_TYPE(cmd) !=3D WMI_IOC)
-> -               return -ENOTTY;
-> -
-> -       driver_name =3D filp->f_path.dentry->d_iname;
->
->         list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
->                 wdriver =3D container_of(wblock->dev.dev.driver,
-> @@ -826,6 +815,52 @@ static long match_ioctl(struct file *filp, unsigned =
-int cmd, unsigned long arg,
->                         break;
->         }
->
-> +       if (!wdriver)
-> +               return -ENODEV;
-> +
-> +       filp->private_data =3D wblock;
-> +       nonseekable_open(inode, filp);
-> +       return 0;
-> +}
-> +
-> +static int wmi_char_release(struct inode *inode, struct file *filp)
-> +{
-> +       return 0;
-> +}
-> +
-> +static ssize_t wmi_char_read(struct file *filp, char __user *buffer,
-> +       size_t length, loff_t *offset)
-> +{
-> +       struct wmi_block *wblock =3D filp->private_data;
-> +       size_t count;
-> +
-> +       if (*offset !=3D 0)
-> +               return 0;
-> +
-> +       count =3D sizeof(wblock->req_buf_size);
-> +       if (copy_to_user(buffer, &wblock->req_buf_size, count))
-> +               return -EFAULT;
-> +
-> +       *offset =3D count;
-> +       return count;
-> +}
-> +
-> +static long match_ioctl(struct file *filp, unsigned int cmd, unsigned lo=
-ng arg,
-> +                       int compat)
-> +{
-> +       struct wmi_ioctl_buffer __user *input =3D
-> +               (struct wmi_ioctl_buffer __user *) arg;
-> +       struct wmi_block *wblock =3D filp->private_data;
-> +       struct wmi_driver *wdriver =3D NULL;
-> +       u64 size;
-> +       int ret;
-> +
-> +       if (_IOC_TYPE(cmd) !=3D WMI_IOC)
-> +               return -ENOTTY;
-> +
-> +       wdriver =3D container_of(wblock->dev.dev.driver,
-> +               struct wmi_driver, driver);
-> +
->         if (!wdriver)
->                 return -ENODEV;
->
-> @@ -886,6 +921,9 @@ static long wmi_compat_ioctl(struct file *filp, unsig=
-ned int cmd,
->
->  static const struct file_operations wmi_fops =3D {
->         .owner          =3D THIS_MODULE,
-> +       .read           =3D wmi_char_read,
-> +       .open           =3D wmi_char_open,
-> +       .release        =3D wmi_char_release,
->         .unlocked_ioctl =3D wmi_unlocked_ioctl,
->  #ifdef CONFIG_COMPAT
->         .compat_ioctl =3D wmi_compat_ioctl,
-> diff --git a/tools/wmi/dell-smbios-example.c b/tools/wmi/dell-smbios-exam=
-ple.c
-> index 69c4dd9c6056..a5f97647c9c5 100644
-> --- a/tools/wmi/dell-smbios-example.c
-> +++ b/tools/wmi/dell-smbios-example.c
-> @@ -31,8 +31,6 @@
->  static const char *ioctl_devfs =3D "/dev/wmi/dell-smbios";
->  static const char *token_sysfs =3D
->                         "/sys/bus/platform/devices/dell-smbios.0/tokens";
-> -static const char *buffer_sysfs =3D
-> -                       "/sys/bus/wmi/devices/A80593CE-A997-11DA-B012-B62=
-2A1EF5492/required_buffer_size";
->
->  static void show_buffer(struct dell_wmi_smbios_buffer *buffer)
->  {
-> @@ -147,15 +145,13 @@ static int activate_token(struct dell_wmi_smbios_bu=
-ffer *buffer,
->
->  static int query_buffer_size(__u64 *buffer_size)
->  {
-> -       char buf[4096];
->         FILE *f;
->
-> -       f =3D fopen(buffer_sysfs, "rb");
-> +       f =3D fopen(ioctl_devfs, "rb");
->         if (!f)
->                 return -EINVAL;
-> -       fread(buf, 1, 4096, f);
-> +       fread(buffer_size, sizeof(__u64), 1, f);
->         fclose(f);
-> -       *buffer_size =3D strtol(buf, NULL, 10);
->         return EXIT_SUCCESS;
->  }
->
->
->>
->> Token information is provided over sysfs for multiple reasons.
->> 1) It's applicable to all dispatchers.  Even if the WMI dispatcher wasn'=
-t
->> used it's useful for userspace to query through.  For example the SMI ca=
-ll
->> to get tokens in libsmbios can be simplified to just read sysfs files.
->>
->> 2) it's information not coming from ACPI-WMI.  This series is setting
->> precedent for how to interact with ACPI-WMI methods in userspace.
->> putting in random data on the IOCTL that is not used in the ACPI-WMI
->> method or provided by the WMI bus doesn't fit.
->>
->> 3) It is static information that won't change until you reboot.
+Detect this and report a KEY_LEFTMETA press when this happens. Note for
+now we only respond to the Y coordinate bits 12-15 containing 0x01, on some
+tablets *without* a capacative button I've noticed these bits containing
+0x04 when crossing the edges of the screen.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-Only enable support for the home-button if a "silead,home-button"
+ boolean device-property is set on the device
+
+Changes in v3:
+-Document the new silead,home-button property in:
+ Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+---
+ .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 +
+ drivers/input/touchscreen/silead.c                 | 46 ++++++++++++++++------
+ 2 files changed, 37 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index 6aa625e0cb8d..84752de12412 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -23,6 +23,8 @@ Optional properties:
+ - touchscreen-inverted-y  : See touchscreen.txt
+ - touchscreen-swapped-x-y : See touchscreen.txt
+ - silead,max-fingers	  : maximum number of fingers the touchscreen can detect
++- silead,home-button	  : Boolean, set to true on devices which have a
++			    capacitive home-button build into the touchscreen
+ - vddio-supply		  : regulator phandle for controller VDDIO
+ - avdd-supply		  : regulator phandle for controller AVDD
+ 
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 0dbcf105f7db..646b1e768e6b 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -56,7 +56,7 @@
+ #define SILEAD_POINT_Y_MSB_OFF	0x01
+ #define SILEAD_POINT_X_OFF	0x02
+ #define SILEAD_POINT_X_MSB_OFF	0x03
+-#define SILEAD_TOUCH_ID_MASK	0xF0
++#define SILEAD_EXTRA_DATA_MASK	0xF0
+ 
+ #define SILEAD_CMD_SLEEP_MIN	10000
+ #define SILEAD_CMD_SLEEP_MAX	20000
+@@ -109,6 +109,9 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
+ 			    INPUT_MT_TRACK);
+ 
++	if (device_property_read_bool(dev, "silead,home-button"))
++		input_set_capability(data->input, EV_KEY, KEY_LEFTMETA);
++
+ 	data->input->name = SILEAD_TS_NAME;
+ 	data->input->phys = "input/ts";
+ 	data->input->id.bustype = BUS_I2C;
+@@ -139,7 +142,8 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 	struct input_dev *input = data->input;
+ 	struct device *dev = &client->dev;
+ 	u8 *bufp, buf[SILEAD_TS_DATA_LEN];
+-	int touch_nr, error, i;
++	int touch_nr, softbutton, error, i;
++	bool softbutton_pressed = false;
+ 
+ 	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_DATA,
+ 					      SILEAD_TS_DATA_LEN, buf);
+@@ -148,21 +152,40 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 		return;
+ 	}
+ 
+-	touch_nr = buf[0];
+-	if (touch_nr > data->max_fingers) {
++	if (buf[0] > data->max_fingers) {
+ 		dev_warn(dev, "More touches reported then supported %d > %d\n",
+-			 touch_nr, data->max_fingers);
+-		touch_nr = data->max_fingers;
++			 buf[0], data->max_fingers);
++		buf[0] = data->max_fingers;
+ 	}
+ 
++	touch_nr = 0;
+ 	bufp = buf + SILEAD_POINT_DATA_LEN;
+-	for (i = 0; i < touch_nr; i++, bufp += SILEAD_POINT_DATA_LEN) {
+-		/* Bits 4-7 are the touch id */
+-		data->id[i] = (bufp[SILEAD_POINT_X_MSB_OFF] &
+-			       SILEAD_TOUCH_ID_MASK) >> 4;
+-		touchscreen_set_mt_pos(&data->pos[i], &data->prop,
++	for (i = 0; i < buf[0]; i++, bufp += SILEAD_POINT_DATA_LEN) {
++		softbutton = (bufp[SILEAD_POINT_Y_MSB_OFF] &
++			      SILEAD_EXTRA_DATA_MASK) >> 4;
++
++		if (softbutton) {
++			/*
++			 * For now only respond to softbutton == 0x01, some
++			 * tablets *without* a capacative button send 0x04
++			 * when crossing the edges of the screen.
++			 */
++			if (softbutton == 0x01)
++				softbutton_pressed = true;
++
++			continue;
++		}
++
++		/*
++		 * Bits 4-7 are the touch id, note not all models have
++		 * hardware touch ids so atm we don't use these.
++		 */
++		data->id[touch_nr] = (bufp[SILEAD_POINT_X_MSB_OFF] &
++				      SILEAD_EXTRA_DATA_MASK) >> 4;
++		touchscreen_set_mt_pos(&data->pos[touch_nr], &data->prop,
+ 			get_unaligned_le16(&bufp[SILEAD_POINT_X_OFF]) & 0xfff,
+ 			get_unaligned_le16(&bufp[SILEAD_POINT_Y_OFF]) & 0xfff);
++		touch_nr++;
+ 	}
+ 
+ 	input_mt_assign_slots(input, data->slots, data->pos, touch_nr, 0);
+@@ -178,6 +201,7 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 	}
+ 
+ 	input_mt_sync_frame(input);
++	input_report_key(input, KEY_LEFTMETA, softbutton_pressed);
+ 	input_sync(input);
+ }
+ 
+-- 
+2.14.2
