@@ -1,23 +1,41 @@
-From: Asana Hajraf <asanahajraf@freemail.hu>
-Subject: Dearest
-Date: Fri, 20 Oct 2017 06:18:10 +0000 (UTC)
-Message-ID: <756718553.808390.1508480290842@mail.yahoo.com>
-References: <756718553.808390.1508480290842.ref@mail.yahoo.com>
-Reply-To: Asana Hajraf <asana.hajraf@yahoo.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and
+ replace_fd()
+Date: Fri, 20 Oct 2017 13:14:55 +0300
+Message-ID: <20171020101436.wyeqwle5lnj425lz@linux.intel.com>
+References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
+ <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
+ <20171019080617.GA13601@infradead.org>
+ <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
+ <20171019145534.GA17068@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from sonic302-34.consmr.mail.ne1.yahoo.com ([66.163.186.160]:38053
-        "EHLO sonic302-34.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751093AbdJTGSQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Oct 2017 02:18:16 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171019145534.GA17068@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dearest,
-I am Mrs. Asana Hajraf and I am married to Mr. Hassan Hajraf from kuwait for 19 years without a child and my husband died in 2014. I am contacting you to let you know my desire to donate the sum of $4.5 million to charities in your country which I inherited from my late husband. Due to my illness of cancer were confirmed out of just eight months, so it is my desire to see that this money is invested to any organization of your choice and distributed each year among the charity organizations, motherless babies home, schools and support for the men and women homeless or what you may consider to be the benefit of those less fortunate. I do not want this fund to be invested in a manner without God. As soon as I receive your reply confirming your acceptance of the work I tell you, I will give a
- ll relevant information to authorize the release and transfer the money to you as my duly appointed representative.
-Thanks,
-Mrs Asana Hajraf.
+On Thu, Oct 19, 2017 at 07:55:34AM -0700, Christoph Hellwig wrote:
+> On Thu, Oct 19, 2017 at 03:36:16PM +0300, Jarkko Sakkinen wrote:
+> > On Thu, Oct 19, 2017 at 01:06:17AM -0700, Christoph Hellwig wrote:
+> > > On Mon, Oct 16, 2017 at 10:18:49PM +0300, Jarkko Sakkinen wrote:
+> > > > Export create_pipe_files() and replace_fd() so that the SGX driver is
+> > > > able to create stdin and stdout pipes.
+> > > 
+> > > Err, no way.
+> > 
+> > What would be a better alternative?
+> 
+> Don't abuse pipes for your interface.
+
+coredump uses pipes in a similar way. Maybe you could elaborate a bit
+why this is abusing? That could help me to find something more
+acceptable.
+
+The only reasonable alternative that comes into mind would be netlink
+socket.
+
+/Jarkko
