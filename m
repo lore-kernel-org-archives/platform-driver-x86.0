@@ -1,82 +1,23 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v10 11/15] platform/x86: dell-smbios-smm: test for WSMT
-Date: Thu, 19 Oct 2017 15:46:54 -0700
-Message-ID: <20171019224654.GC1097@fury>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
- <657d281490de3d0a60f210f8bc57e075c9afc40e.1508434514.git.mario.limonciello@dell.com>
- <20171019180926.h6lnfwnapswybtcb@pali>
- <9065712bf6b14fc680ba03738b369947@ausx13mpc120.AMER.DELL.COM>
+From: Asana Hajraf <asanahajraf@freemail.hu>
+Subject: Dearest
+Date: Fri, 20 Oct 2017 06:18:10 +0000 (UTC)
+Message-ID: <756718553.808390.1508480290842@mail.yahoo.com>
+References: <756718553.808390.1508480290842.ref@mail.yahoo.com>
+Reply-To: Asana Hajraf <asana.hajraf@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:57804 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752092AbdJSWrB (ORCPT
+Received: from sonic302-34.consmr.mail.ne1.yahoo.com ([66.163.186.160]:38053
+        "EHLO sonic302-34.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751093AbdJTGSQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2017 18:47:01 -0400
-Content-Disposition: inline
-In-Reply-To: <9065712bf6b14fc680ba03738b369947@ausx13mpc120.AMER.DELL.COM>
+        Fri, 20 Oct 2017 02:18:16 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Thu, Oct 19, 2017 at 06:12:09PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > Sent: Thursday, October 19, 2017 1:09 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
-> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > <gnomes@lxorguk.ukuu.org.uk>
-> > Subject: Re: [PATCH v10 11/15] platform/x86: dell-smbios-smm: test for WSMT
-> > 
-> > On Thursday 19 October 2017 12:50:14 Mario Limonciello wrote:
-> > > +/* When enabled this indicates that SMM won't work */
-> > > +static bool test_wsmt_enabled(void)
-> > > +{
-> > > +	struct calling_interface_token *token;
-> > > +
-> > > +	/* if token doesn't exist, SMM will work */
-> > > +	token = dell_smbios_find_token(WSMT_EN_TOKEN);
-> > > +	if (!token)
-> > > +		return false;
-> > > +
-> > > +	/* if token exists, try to access over SMM */
-> > > +	buffer->class = CLASS_TOKEN_READ;
-> > > +	buffer->select = SELECT_TOKEN_STD;
-> > > +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> > > +	buffer->input[0] = token->location;
-> > > +	dell_smbios_smm_call(buffer);
-> > > +
-> > > +	/* if lookup failed, we know WSMT was enabled */
-> > > +	if (buffer->output[0] != 0)
-> > > +		return true;
-> > > +
-> > > +	/* query token status if it didn't fail */
-> > > +	return (buffer->output[1] == token->value);
-> > > +}
-> > > +
-> > >  static int __init dell_smbios_smm_init(void)
-> > >  {
-> > >  	int ret;
-> > > @@ -115,6 +140,13 @@ static int __init dell_smbios_smm_init(void)
-> > >
-> > >  	dmi_walk(find_cmd_address, NULL);
-> > >
-> > > +	ret = test_wsmt_enabled();
-> > 
-> > ret is int, but test_wsmt_enabled() returns bool.
-> 
-> Yes, ret is re-used within this method.
-> 0, 1 enum is a subset of int, so this seemed like a logical thing to me to do.
-
-Agreed, the conversion is automatic and he tests for it and returns an
-appropriate error code. I don't see a real problem with this.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+Dearest,
+I am Mrs. Asana Hajraf and I am married to Mr. Hassan Hajraf from kuwait for 19 years without a child and my husband died in 2014. I am contacting you to let you know my desire to donate the sum of $4.5 million to charities in your country which I inherited from my late husband. Due to my illness of cancer were confirmed out of just eight months, so it is my desire to see that this money is invested to any organization of your choice and distributed each year among the charity organizations, motherless babies home, schools and support for the men and women homeless or what you may consider to be the benefit of those less fortunate. I do not want this fund to be invested in a manner without God. As soon as I receive your reply confirming your acceptance of the work I tell you, I will give a
+ ll relevant information to authorize the release and transfer the money to you as my duly appointed representative.
+Thanks,
+Mrs Asana Hajraf.
