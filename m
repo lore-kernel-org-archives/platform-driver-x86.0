@@ -1,49 +1,42 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v10 13/15] platform/x86: wmi: create userspace      interface
- for drivers
-Date: Fri, 20 Oct 2017 15:31:12 +0000
-Message-ID: <67a7b88891674cb7ac94b46833b6b564@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
- <175838453318108ae69be344c4d3a2b75c2edc69.1508434514.git.mario.limonciello@dell.com>
- <20171020132138.GA23973@kroah.com>
- <19e30ca305e449de86b702ae8900d306@ausx13mpc120.AMER.DELL.COM>
- <20171020144839.GA4550@lst.de>
- <c9ceac21e74b4b37b8393ab76bb2238f@ausx13mpc120.AMER.DELL.COM>
- <20171020150850.GA4770@lst.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 0/3] i2c: Hookup typec power-negotation to the PMIC
+ and charger
+Date: Fri, 20 Oct 2017 19:36:15 +0300
+Message-ID: <1508517375.16112.518.camel@linux.intel.com>
+References: <20171011094121.6108-1-hdegoede@redhat.com>
+         <CAHp75VeqskRsmedvA3eAx27o8WeZzH44880T=Q=+1mD+1nSSAg@mail.gmail.com>
+         <e875d3d3-d62c-7363-e596-9c0dbeadce5d@redhat.com>
+         <20171019144251.hmvkaijwbgamaqoo@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:3743 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751857AbdJTPb0 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Oct 2017 11:31:26 -0400
-In-Reply-To: <20171020150850.GA4770@lst.de>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: hch@lst.de
-Cc: greg@kroah.com, dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, gnomes@lxorguk.ukuu.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171019144251.hmvkaijwbgamaqoo@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Christoph Hellwig [mailto:hch@lst.de]
-> Sent: Friday, October 20, 2017 10:09 AM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: hch@lst.de; greg@kroah.com; dvhart@infradead.org;
-> andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
-> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com;
-> gnomes@lxorguk.ukuu.org.uk
-> Subject: Re: [PATCH v10 13/15] platform/x86: wmi: create userspace interf=
-ace for
-> drivers
->=20
-> On Fri, Oct 20, 2017 at 03:07:27PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > No drivers do this today, it's obviously not a good idea.
-> > I was just saying it's hypothetical.
->=20
-> If there is no one using the exported methods don't export them.
+On Thu, 2017-10-19 at 16:42 +0200, Wolfram Sang wrote:
+> > The first patch, although it is an i2c-core change, is really
+> > quite simple. I believe anyone can review it. But it does need
+> > someone other then me to take a proper look (and not just do
+> > a code only review) because it is a core change. Maybe there
+> > is another way to solve the problem (persistent / predictable
+> > device-names for i2c devices instantiated through board-data),
+> > but I don't think so.
+> 
+> My plan is to hopefully meet Mark Brown (SPI and regulator maintainer)
+> at ELCE next week and have a chat with him about this series.
 
-This particular one is used by patch 14/15 in this series.
+If you don't mind I would like to join. (Yes, I will be at ELC next
+week)
+
+>  If all
+> goes well, I'll merge it for v4.15.
+
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
