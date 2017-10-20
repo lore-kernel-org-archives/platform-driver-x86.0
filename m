@@ -1,41 +1,41 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 06/12] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Fri, 20 Oct 2017 13:14:55 +0300
-Message-ID: <20171020101436.wyeqwle5lnj425lz@linux.intel.com>
-References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
- <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
- <20171019080617.GA13601@infradead.org>
- <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
- <20171019145534.GA17068@infradead.org>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v10 13/15] platform/x86: wmi: create userspace interface
+ for drivers
+Date: Fri, 20 Oct 2017 15:21:38 +0200
+Message-ID: <20171020132138.GA23973@kroah.com>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+ <175838453318108ae69be344c4d3a2b75c2edc69.1508434514.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:47113 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751695AbdJTNVa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 20 Oct 2017 09:21:30 -0400
 Content-Disposition: inline
-In-Reply-To: <20171019145534.GA17068@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <175838453318108ae69be344c4d3a2b75c2edc69.1508434514.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
 
-On Thu, Oct 19, 2017 at 07:55:34AM -0700, Christoph Hellwig wrote:
-> On Thu, Oct 19, 2017 at 03:36:16PM +0300, Jarkko Sakkinen wrote:
-> > On Thu, Oct 19, 2017 at 01:06:17AM -0700, Christoph Hellwig wrote:
-> > > On Mon, Oct 16, 2017 at 10:18:49PM +0300, Jarkko Sakkinen wrote:
-> > > > Export create_pipe_files() and replace_fd() so that the SGX driver is
-> > > > able to create stdin and stdout pipes.
-> > > 
-> > > Err, no way.
-> > 
-> > What would be a better alternative?
-> 
-> Don't abuse pipes for your interface.
+On Thu, Oct 19, 2017 at 12:50:16PM -0500, Mario Limonciello wrote:
+> +	wblock = container_of(wdev, struct wmi_block, dev);
+> +	if (!wblock)
+> +		return -ENODEV;
 
-coredump uses pipes in a similar way. Maybe you could elaborate a bit
-why this is abusing? That could help me to find something more
-acceptable.
+How can container_of() ever return NULL?  If so, you have a very odd
+memory layout...
 
-The only reasonable alternative that comes into mind would be netlink
-socket.
+> +	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
+> +		wdriver = container_of(wblock->dev.dev.driver,
+> +					struct wmi_driver, driver);
+> +		if (!wdriver)
+> +			continue;
 
-/Jarkko
+Same here.  And other places in this file.
+
+thanks,
+
+greg k-h
