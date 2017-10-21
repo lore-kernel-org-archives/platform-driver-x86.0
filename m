@@ -1,57 +1,42 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: intel_turbo_max_3: Add Skylake platform
-Date: Sat, 21 Oct 2017 09:52:00 -0700
-Message-ID: <1508604720-7261-1-git-send-email-srinivas.pandruvada@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:52227 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932136AbdJUQwE (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 21 Oct 2017 12:52:04 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Subject: RE: [PATCH v2] dell-laptop: Fix keyboard led =?UTF-8?Q?max=5Fbrightness?=
+ =?UTF-8?Q?=20property=20for=20Dell=20Latitude=20E=36=34=31=30?=
+Date: Sat, 21 Oct 2017 10:55:03 -0700
+Message-ID: <20171021105503.669a95d04dbb6b53be537852cb8ecb8c.08db51c8a1.wbe@email22.secureserver.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?UTF-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Ev Kontsevoy reported that he can't see the presence of
-"/proc/sys/kernel/sched_itmt_enabled" on i9-7900x with Asrock x299
-Taichi system even if he enabled "Turbo 3.0" in the BIOS.
+-------- Original Message --------
+Subject: Re: [PATCH v2] dell-laptop: Fix keyboard led max_brightness
+property for Dell Latitude E6410
+From: Pali Rohár <pali.rohar@gmail.com>
+Date: Thu, October 19, 2017 1:31 pm
+To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett
+<mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, Gabriele
+Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com,
+platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The problem is that even if one core max is 200MHz more than others, the
-current implementation couldn't enumerate that with the way the system
-is configured.
+On Thursday 19 October 2017 11:20:35 Gabriel M. Elder wrote:
+> I will be happy to test out whichever patch(es) present the most
+> appropriate approach, as a matter of consensus.
+> 
+> Would that be the PATCH v2
+> (https://patchwork.kernel.org/patch/10015149/) that I should be testing?
 
-The system by default configured for legacy mode (no HWP or speed shift
-technology), in this mode only way we can enumerate via the mail box
-interface as implemented in this driver. We were planing to only use
-this driver for Broadwell, but we need to extend this because some
-Skylake system has same issue as Braodwell systems.
+Yes, v2.
 
-On this system BIOS allows to change to HWP mode, where we expect that
-we can enumerate favored core with ACPI-CPPC. But on this system the
-core priority is 0xff for all cores in CPPC object. So this is not an
-option.
-
-Hence this change allows Skylake systems to be enumerate favored core
-similar to Broadwell in legacy mode.
-
-Reported-and-tested-by: Ev Kontsevoy <ev@kontsevoy.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel_turbo_max_3.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel_turbo_max_3.c
-index 4f60d8e..d4ea018 100644
---- a/drivers/platform/x86/intel_turbo_max_3.c
-+++ b/drivers/platform/x86/intel_turbo_max_3.c
-@@ -125,6 +125,7 @@ static int itmt_legacy_cpu_online(unsigned int cpu)
- 
- static const struct x86_cpu_id itmt_legacy_cpu_ids[] = {
- 	ICPU(INTEL_FAM6_BROADWELL_X),
-+	ICPU(INTEL_FAM6_SKYLAKE_X),
- 	{}
- };
- 
 -- 
-2.5.5
+Pali Rohár
+pali.rohar@gmail.com
+-------- End Original Message --------
+
+Based on my testing, the v2 patch seems to work fine.
+
+- Gabriel
