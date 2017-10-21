@@ -1,63 +1,49 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 0/3] i2c: Hookup typec power-negotation to the PMIC
- and charger
-Date: Sat, 21 Oct 2017 10:33:33 +0200
-Message-ID: <20171021083332.3vkavfmrmxyjtqeh@ninjato>
-References: <20171011094121.6108-1-hdegoede@redhat.com>
- <CAHp75VeqskRsmedvA3eAx27o8WeZzH44880T=Q=+1mD+1nSSAg@mail.gmail.com>
- <e875d3d3-d62c-7363-e596-9c0dbeadce5d@redhat.com>
- <20171019144251.hmvkaijwbgamaqoo@katana>
- <1508517375.16112.518.camel@linux.intel.com>
+From: Osama Khan <osama.khan@ericsson.com>
+Subject: [PATCH] hp_accel: Add accelerometer quirk for HP ProBook 440 G4
+Date: Sat, 21 Oct 2017 10:42:21 +0000
+Message-ID: <DB6PR07MB31265A5AD192563695B8B929FA4E0@DB6PR07MB3126.eurprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p2yhpz5dxzpgphm7"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1508517375.16112.518.camel@linux.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
-
-
---p2yhpz5dxzpgphm7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from sessmg22.ericsson.net ([193.180.251.58]:61220 "EHLO
+        sessmg22.ericsson.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753278AbdJUKmZ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 21 Oct 2017 06:42:25 -0400
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi Andy,
+Added support for HP ProBook 440 G4 laptops by including the accelerometer
+orientation quirk for that device. Testing was performed based on the=20
+axis orientation guidelines here:
+https://www.kernel.org/doc/Documentation/misc-devices/lis3lv02d
+which states "If the left side is elevated, X increases (becomes positive)"
 
-> > My plan is to hopefully meet Mark Brown (SPI and regulator maintainer)
-> > at ELCE next week and have a chat with him about this series.
->=20
-> If you don't mind I would like to join. (Yes, I will be at ELC next
-> week)
+When tested, on lifting the left edge, x values became increasingly negativ=
+e
+thus indicating an inverted x-axis on the installed lis3lv02d chip.
+This was compensated by adding an entry for this device in hp_accel.c
+specifying the quirk as x_inverted. The patch was tested on a=20
+ProBook 440 G4 device and x-axis as well as y and z-axis values are now=20
+generated as per spec.
 
-Good news! Yes, sure, I'd be glad.
-
-Regards,
-
-   Wolfram
-
-
---p2yhpz5dxzpgphm7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnrBlkACgkQFA3kzBSg
-KbZhMw//ZL5yFrAkg9LbiV14UI59FhDmk2QmifBBXvDgQpZvCz9IRpGPYCd/M2Te
-sgSUJ1/pJ95i3RwD7gM5VKVLCGljR+nRDqkYzGtyz2JKlmr5qRNyXffwMollcu/X
-I1BUi6ibCdSY25F8oTYvIcYd30zdIZ5BDMUDTjPCYQbPWokB6MEkYLeuZf+SzVeg
-p0r1ixBEXQgE9uhMX8Nngcbi5ipEiw3ADJ9p/oTUxpEHeOxW6KF/55n0l7UwJ7e0
-EB0TGsmCimqlKxM0O9zJlteEMkAJahjS0xypSRmN0pDj7M/RD9opFtWPfGUolNmX
-+PBkTTZaqHkPCha1/IcVefABe+Ewm7GY22TGYmqu0FFSiVtyvsi8cmg4E4p2H6I3
-xDnWA/dG62KzIBWPMJ5ivw8eZjjJWsHNQYrinGV7O5OHfrUSFkiDmuGgNGctfWfd
-l9njsT2HSQGAzc+oA4wXAaU1o+6a5sNQVIPPNbEGIJVmovVq+CpN6n6Ziu7QQ41a
-KOmkwLCUbq/PcgoYp1zFYtBjlLMwaCOptnopITmGGpTMLbvgNVB7FuWigx6zeBAA
-GJSQgDs9XzSfwZQo3Wukr+vAQrIPpkAxNW7j0nOPb/XsMpHUam1xR08qu26/io6M
-kS5ijoR7YTtksoQXP8sKLLvkO/0ypEyIezpXUwPcWprnh3i4U0Y=
-=tRkG
------END PGP SIGNATURE-----
-
---p2yhpz5dxzpgphm7--
+Signed-off-by: Osama Khan <osama.khan@ericsson.com>
+---
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_acce=
+l.c
+index 493d8910a74e..7b12abe86b94 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -240,6 +240,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] =
+=3D {
+        AXIS_DMI_MATCH("HDX18", "HP HDX 18", x_inverted),
+        AXIS_DMI_MATCH("HPB432x", "HP ProBook 432", xy_rotated_left),
+        AXIS_DMI_MATCH("HPB440G3", "HP ProBook 440 G3", x_inverted_usd),
++       AXIS_DMI_MATCH("HPB440G4", "HP ProBook 440 G4", x_inverted),
+        AXIS_DMI_MATCH("HPB442x", "HP ProBook 442", xy_rotated_left),
+        AXIS_DMI_MATCH("HPB452x", "HP ProBook 452", y_inverted),
+        AXIS_DMI_MATCH("HPB522x", "HP ProBook 522", xy_swap),=
