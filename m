@@ -1,42 +1,34 @@
-From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
-Subject: RE: [PATCH v2] dell-laptop: Fix keyboard led =?UTF-8?Q?max=5Fbrightness?=
- =?UTF-8?Q?=20property=20for=20Dell=20Latitude=20E=36=34=31=30?=
-Date: Sat, 21 Oct 2017 10:55:03 -0700
-Message-ID: <20171021105503.669a95d04dbb6b53be537852cb8ecb8c.08db51c8a1.wbe@email22.secureserver.net>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v4 06/12] fs/pipe.c: export
+ create_pipe_files() and replace_fd()
+Date: Mon, 23 Oct 2017 05:55:39 +0300
+Message-ID: <20171023025539.epe763bvwuw5oadu@linux.intel.com>
+References: <20171016191855.16964-1-jarkko.sakkinen@linux.intel.com>
+ <20171016191855.16964-7-jarkko.sakkinen@linux.intel.com>
+ <20171019080617.GA13601@infradead.org>
+ <20171019123616.2cxu74oacerz2ljv@linux.intel.com>
+ <20171019145534.GA17068@infradead.org>
+ <20171020101436.wyeqwle5lnj425lz@linux.intel.com>
+ <ab6bc26f-f482-f23b-fcd2-85b6fbe9fcf4@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?UTF-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:29190 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751113AbdJWCzn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 22 Oct 2017 22:55:43 -0400
+Content-Disposition: inline
+In-Reply-To: <ab6bc26f-f482-f23b-fcd2-85b6fbe9fcf4@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
--------- Original Message --------
-Subject: Re: [PATCH v2] dell-laptop: Fix keyboard led max_brightness
-property for Dell Latitude E6410
-From: Pali Rohár <pali.rohar@gmail.com>
-Date: Thu, October 19, 2017 1:31 pm
-To: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
-Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett
-<mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, Gabriele
-Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com,
-platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+On Fri, Oct 20, 2017 at 07:32:42AM -0700, Dave Hansen wrote:
+> I've always been curious, and the changelog and thread are curiously
+> oblique on this topic: what the heck does this driver use pipes *for*?
 
-On Thursday 19 October 2017 11:20:35 Gabriel M. Elder wrote:
-> I will be happy to test out whichever patch(es) present the most
-> appropriate approach, as a matter of consensus.
-> 
-> Would that be the PATCH v2
-> (https://patchwork.kernel.org/patch/10015149/) that I should be testing?
+For communication with the process hosting the launch enclave.
 
-Yes, v2.
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
--------- End Original Message --------
-
-Based on my testing, the v2 patch seems to work fine.
-
-- Gabriel
+/Jarkko
