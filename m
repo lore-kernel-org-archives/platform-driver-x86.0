@@ -1,155 +1,111 @@
 From: Harvey <harv@gmx.de>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
-Date: Wed, 25 Oct 2017 15:11:11 +0200
-Message-ID: <bd3f022f-6585-134e-57ed-ea0b02f51581@gmx.de>
-References: <20171025042946.13225-1-kernel@kempniu.pl>
- <20171025063356.GE1090@marvin.atrad.com.au>
+Subject: Re: Kernel error messages: leds fujitsu::radio_led: Setting an LED's
+ brightness failed
+Date: Wed, 25 Oct 2017 15:17:56 +0200
+Message-ID: <7af5f592-df89-fd9d-916c-2e7bf941cf1f@gmx.de>
+References: <fede7169-e944-3ca8-8b8d-e17a95b8dcfe@gmx.de>
+ <20170720064257.GA4942@larwa.localdomain>
+ <bec5d8be-fa0b-be42-7af3-fa01fb071663@gmx.de>
+ <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+ <e8477251-1f12-43c2-3760-fdf8fb221b7a@gmx.de>
+ <20171025043957.GA13202@kmp-mobile.hq.kempniu.pl>
 Reply-To: harv@gmx.de
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="Ubw4NDC46xe9w80omX2cKwAEQWtNfvLVM"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.gmx.net ([212.227.15.18]:62927 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750949AbdJYNMt (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Oct 2017 09:12:49 -0400
-In-Reply-To: <20171025063356.GE1090@marvin.atrad.com.au>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>, Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+ boundary="f51w451WUfUTbOT0d3m5Oflq8U0iPT3UK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171025043957.GA13202@kmp-mobile.hq.kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Ubw4NDC46xe9w80omX2cKwAEQWtNfvLVM
-Content-Type: multipart/mixed; boundary="TKmlhGTwPTLG8frr8nlX1GDTAEjMc3RRN";
+--f51w451WUfUTbOT0d3m5Oflq8U0iPT3UK
+Content-Type: multipart/mixed; boundary="ax4tMrldwA6Ae6DEx5iDP36rUhx26NIJU";
  protected-headers="v1"
 From: Harvey <harv@gmx.de>
 Reply-To: harv@gmx.de
-To: Jonathan Woithe <jwoithe@just42.net>, Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>,
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <bd3f022f-6585-134e-57ed-ea0b02f51581@gmx.de>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
-References: <20171025042946.13225-1-kernel@kempniu.pl>
- <20171025063356.GE1090@marvin.atrad.com.au>
-In-Reply-To: <20171025063356.GE1090@marvin.atrad.com.au>
+Message-ID: <7af5f592-df89-fd9d-916c-2e7bf941cf1f@gmx.de>
+Subject: Re: Kernel error messages: leds fujitsu::radio_led: Setting an LED's
+ brightness failed
+References: <fede7169-e944-3ca8-8b8d-e17a95b8dcfe@gmx.de>
+ <20170720064257.GA4942@larwa.localdomain>
+ <bec5d8be-fa0b-be42-7af3-fa01fb071663@gmx.de>
+ <20170804061352.GA7838@kmp-mobile.hq.kempniu.pl>
+ <e8477251-1f12-43c2-3760-fdf8fb221b7a@gmx.de>
+ <20171025043957.GA13202@kmp-mobile.hq.kempniu.pl>
+In-Reply-To: <20171025043957.GA13202@kmp-mobile.hq.kempniu.pl>
 
---TKmlhGTwPTLG8frr8nlX1GDTAEjMc3RRN
+--ax4tMrldwA6Ae6DEx5iDP36rUhx26NIJU
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: de-DE
 Content-Transfer-Encoding: quoted-printable
 
-Am 25.10.2017 um 08:33 schrieb Jonathan Woithe:
-> On Wed, Oct 25, 2017 at 06:29:46AM +0200, Micha?? K??pie?? wrote:
->> Radio LED detection method implemented in commit 4f62568c1fcf
->> ("fujitsu-laptop: Support radio LED") turned out to be incorrect as it=
+Am 25.10.2017 um 06:39 schrieb Micha=C5=82 K=C4=99pie=C5=84:
+>>>   - Investigating the E LED.  This requires taking a look at the DSDT=
 
->> causes a radio LED to be erroneously detected on a Fujitsu Lifebook E7=
-51
->> which has a slide switch (and thus no radio LED).  Use bit 17 of
->> flags_supported (the value returned by method S000 of ACPI device
->> FUJ02E3) to determine whether a radio LED is present as it seems to be=
- a
->> more reliable indicator, based on comparing DSDT tables of four Fujits=
-u
->> Lifebook models (E744, E751, S7110, S8420).
->>
->> Reported-by: Heinrich Siebmanns <harv@gmx.de>
->> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+>>>     dump from your laptop and searching for clues as to how this LED =
+is
+>>>     handled.  I will be happy to do that, but again, no promises abou=
+t
+>>>     how much time it will take.  (And given the nature of this task, =
+I
+>>>     cannot promise I will find anything reasonable at all.  I also mi=
+ght
+>>>     ask you to do some further experiments as I do not have an E751
+>>>     myself.)
 >=20
-> This seems to be a reasonable approach given the most recent set of
-> observations.  Assuming it tests ok on the E751:
+> I feel stupid for only suggesting this now, but can this simply be the
+> eco LED?  The DSDT dump from your laptop suggests so, as well as the
+> description of the E LED in the manual.  Have you tried playing around
+> with /sys/class/leds/fujitsu::eco_led?
+
+No, I haven't.
+
+I tried to set brightness to 255 and back to 0:
+
+[root@gruenix ~]# echo 255 >/sys/class/leds/fujitsu::eco_led/brightness
+
+=3D> eco LED lights up!
+
+[root@gruenix ~]# cat /sys/class/leds/fujitsu::eco_led/brightness
+
+=3D> eco LED off!
+
+Tadaaa!
+
+So yes, this is the eco LED of my E751.
+
+>> Don't forget to take a look at the I LED...
 >=20
->   Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-
-It does. I applied the patch against an Archlinux vanilla 4.13.9 kernel.
-The resulting module is clean and the error messages are gone, while
-anything else seems to work as expected.
-
-So this looks ok for me.
-
-Tested-by: Heinrich Siebmanns <harv@gmx.de>
-
-> Regards
->   jonathan
+> I could not find anything in the DSDT dump from your laptop that would
+> suggest this LED can be controlled using ACPI.
 >=20
->> ---
->> I do not have a Fujitsu laptop with a radio LED for testing, so I was
->> only able to check that this patch still does not cause a radio LED to=
 
->> be detected on a Lifebook S7020.
->>
->> Harvey, could you please try this patch on your Lifebook E751 and see
->> whether the log messages you reported disappear?  I will be happy to
->> assist you off-list in case you need help with it.
->>
->>  drivers/platform/x86/fujitsu-laptop.c | 14 +++++++++-----
->>  1 file changed, 9 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/=
-x86/fujitsu-laptop.c
->> index 56a8195096a2..2cfbd3fa5136 100644
->> --- a/drivers/platform/x86/fujitsu-laptop.c
->> +++ b/drivers/platform/x86/fujitsu-laptop.c
->> @@ -691,6 +691,7 @@ static enum led_brightness eco_led_get(struct led_=
-classdev *cdev)
->> =20
->>  static int acpi_fujitsu_laptop_leds_register(struct acpi_device *devi=
-ce)
->>  {
->> +	struct fujitsu_laptop *priv =3D acpi_driver_data(device);
->>  	struct led_classdev *led;
->>  	int result;
->> =20
->> @@ -724,12 +725,15 @@ static int acpi_fujitsu_laptop_leds_register(str=
-uct acpi_device *device)
->>  	}
->> =20
->>  	/*
->> -	 * BTNI bit 24 seems to indicate the presence of a radio toggle
->> -	 * button in place of a slide switch, and all such machines appear
->> -	 * to also have an RF LED.  Therefore use bit 24 as an indicator
->> -	 * that an RF LED is present.
->> +	 * Some Fujitsu laptops have a radio toggle button in place of a sli=
-de
->> +	 * switch and all such machines appear to also have an RF LED.  Base=
-d on
->> +	 * comparing DSDT tables of four Fujitsu Lifebook models (E744, E751=
-,
->> +	 * S7110, S8420; the first one has a radio toggle button, the other
->> +	 * three have slide switches), bit 17 of flags_supported (the value
->> +	 * returned by method S000 of ACPI device FUJ02E3) seems to indicate=
-
->> +	 * whether given model has a radio toggle button.
->>  	 */
->> -	if (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)) {=
-
->> +	if (priv->flags_supported & BIT(17)) {
->>  		led =3D devm_kzalloc(&device->dev, sizeof(*led), GFP_KERNEL);
->>  		if (!led)
->>  			return -ENOMEM;
->> --=20
->> 2.14.2
->=20
+Greetings
+Harvey
 
 --=20
 I am root. If you see me laughing, you'd better have a backup!
 
 
---TKmlhGTwPTLG8frr8nlX1GDTAEjMc3RRN--
+--ax4tMrldwA6Ae6DEx5iDP36rUhx26NIJU--
 
---Ubw4NDC46xe9w80omX2cKwAEQWtNfvLVM
+--f51w451WUfUTbOT0d3m5Oflq8U0iPT3UK
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EARECAB0WIQRSRNvmxYqoNs6vm0SLlqqYsFRKCQUCWfCNbwAKCRCLlqqYsFRK
-CabTAJ46qYXhHWW4+I7eiYiH0RaERA0DAACeKxAq7jPHkRI2S4x91CUJtYVTPqw=
-=GFPO
+iF0EARECAB0WIQRSRNvmxYqoNs6vm0SLlqqYsFRKCQUCWfCPBAAKCRCLlqqYsFRK
+CYTuAJ0XiSBsoM7QD2cHGesZnBt0ApTqBACfXYRFInp3xi+MDxi/JllXOm7xb2o=
+=RzC/
 -----END PGP SIGNATURE-----
 
---Ubw4NDC46xe9w80omX2cKwAEQWtNfvLVM--
+--f51w451WUfUTbOT0d3m5Oflq8U0iPT3UK--
