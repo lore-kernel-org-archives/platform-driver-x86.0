@@ -1,558 +1,382 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] platform/x86: dell-uart-backlight: new backlight driver for DELL AIO
-Date: Thu, 26 Oct 2017 15:53:49 +0800
-Message-ID: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-uart-backlight: new backlight driver
+ for DELL AIO
+Date: Thu, 26 Oct 2017 15:54:42 +0000
+Message-ID: <08add166d5b34992ba167a878ca2a808@ausx13mpc124.AMER.DELL.COM>
+References: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f196.google.com ([209.85.192.196]:57116 "EHLO
-        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751931AbdJZHxy (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:55703 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S932320AbdJZPyp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Oct 2017 03:53:54 -0400
+        Thu, 26 Oct 2017 11:54:45 -0400
+In-Reply-To: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: acelan.kao@canonical.com, dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-The Dell AIO machines released after 2017 come with a UART interface
-to communicate with the backlight scalar board. This driver creates
-a standard backlight interface and talks to the scalar board through
-UART.
-
-In DSDT this uart port will be defined as
-   Name (_HID, "DELL0501")
-   Name (_CID, EisaId ("PNP0501")
-The 8250 PNP driver will be loaded by default, and this driver uses
-"DELL0501" to confirm the uart port is a backlight interface and
-leverages the port created by 8250 PNP driver to communicate with
-the scalar board.
-
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- MAINTAINERS                                |   6 +
- drivers/platform/x86/Kconfig               |  14 ++
- drivers/platform/x86/Makefile              |   1 +
- drivers/platform/x86/dell-uart-backlight.c | 361 +++++++++++++++++++++++++++++
- drivers/platform/x86/dell-uart-backlight.h |  88 +++++++
- 5 files changed, 470 insertions(+)
- create mode 100644 drivers/platform/x86/dell-uart-backlight.c
- create mode 100644 drivers/platform/x86/dell-uart-backlight.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d85c089..581cb09 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4013,6 +4013,12 @@ M:	Pali Rohár <pali.rohar@gmail.com>
- S:	Maintained
- F:	drivers/platform/x86/dell-wmi.c
- 
-+DELL AIO UART BACKLIGHT DRIVER
-+M:	AceLan Kao <acelan.kao@canonical.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/dell-uart-backlight.c
-+
- DELTA ST MEDIA DRIVER
- M:	Hugues Fruchet <hugues.fruchet@st.com>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 80b8795..58e26bc 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -175,6 +175,20 @@ config DELL_RBTN
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-rbtn.
- 
-+config DELL_UART_BACKLIGHT
-+	tristate "Dell AIO UART Backlight driver"
-+	depends on SERIAL_8250
-+	depends on ACPI
-+	---help---
-+	  Say Y here if you want to support Dell AIO UART backlight interface.
-+	  The Dell AIO machines released after 2017 come with a UART interface
-+	  to communicate with the backlight scalar board. This driver creates
-+	  a standard backlight interface and talks to the scalar board through
-+	  UART to adjust the AIO screen brightness.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called dell_uart_backlight.
-+
- 
- config FUJITSU_LAPTOP
- 	tristate "Fujitsu Laptop Extras"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 91cec17..3cf576f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
- obj-$(CONFIG_DELL_WMI_LED)	+= dell-wmi-led.o
- obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
- obj-$(CONFIG_DELL_RBTN)		+= dell-rbtn.o
-+obj-$(CONFIG_DELL_UART_BACKLIGHT) += dell-uart-backlight.o
- obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
- obj-$(CONFIG_HP_ACCEL)		+= hp_accel.o
-diff --git a/drivers/platform/x86/dell-uart-backlight.c b/drivers/platform/x86/dell-uart-backlight.c
-new file mode 100644
-index 0000000..400be77
---- /dev/null
-+++ b/drivers/platform/x86/dell-uart-backlight.c
-@@ -0,0 +1,361 @@
-+/*
-+ *  Dell AIO Serial Backlight Driver
-+ *
-+ *  Copyright (C) 2017 AceLan Kao <acelan.kao@canonical.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/serial_8250.h>
-+#include <linux/delay.h>
-+#include <linux/backlight.h>
-+#include <acpi/video.h>
-+
-+#include "dell-uart-backlight.h"
-+
-+struct dell_uart_backlight {
-+	struct device *dev;
-+	struct backlight_device *dell_uart_bd;
-+	struct mutex brightness_mutex;
-+	int line;
-+	int bl_power;
-+};
-+struct uart_8250_port *serial8250_get_port(int line);
-+struct tty_struct *tty;
-+struct file *ftty;
-+
-+unsigned int (*io_serial_in)(struct uart_port *p, int offset);
-+int (*uart_write)(struct tty_struct *tty, const unsigned char *buf, int count);
-+int (*uart_chars_in_buffer)(struct tty_struct *tty);
-+
-+static int dell_uart_write(struct uart_8250_port *up, __u8 *buf, int len)
-+{
-+	int actual = 0;
-+	struct uart_port *port = &up->port;
-+
-+	tty_port_tty_wakeup(&port->state->port);
-+	tty = tty_port_tty_get(&port->state->port);
-+	actual = uart_write(tty, buf, len);
-+	while (uart_chars_in_buffer(tty)) {
-+		udelay(10);
-+	}
-+
-+	return actual;
-+}
-+
-+static int dell_uart_read(struct uart_8250_port *up, __u8 *buf, int len)
-+{
-+	int i, retry;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&up->port.lock, flags);
-+	for (i = 0; i < len; i++) {
-+		retry = 10;
-+		while (!(io_serial_in(&up->port, UART_LSR) & UART_LSR_DR)) {
-+			if (--retry == 0)
-+				break;
-+			mdelay(20);
-+		}
-+
-+		if (retry == 0)
-+			break;
-+		buf[i] = io_serial_in(&up->port, UART_RX);
-+	}
-+	spin_unlock_irqrestore(&up->port.lock, flags);
-+
-+	return i;
-+}
-+
-+static void dell_uart_dump_cmd(const char *func, const char *prefix,
-+			       const char *cmd, int len)
-+{
-+	char buf[80];
-+
-+	snprintf(buf, 80, "dell_uart_backlight:%s:%s", func, prefix);
-+	if (len != 0)
-+		print_hex_dump_debug(buf, DUMP_PREFIX_NONE,
-+					16, 1, cmd, len, false);
-+	else
-+		pr_debug("dell_uart_backlight:%s:%sNULL\n", func, prefix);
-+
-+}
-+
-+/*
-+ * checksum: SUM(Length and Cmd and Data)xor 0xFF)
-+ */
-+static unsigned char dell_uart_checksum(unsigned char *buf, int len)
-+{
-+	unsigned char val = 0;
-+
-+	while (len-- > 0)
-+		val += buf[len];
-+
-+	return val ^ 0xff;
-+}
-+
-+/*
-+ * There is no command to get backlight power status,
-+ * so we set the backlight power to "on" while initializing,
-+ * and then track and report its status by bl_power variable
-+ */
-+static int dell_uart_get_bl_power(struct dell_uart_backlight *dell_pdata)
-+{
-+	return dell_pdata->bl_power;
-+}
-+
-+static int dell_uart_set_bl_power(struct backlight_device *bd, int power)
-+{
-+	struct dell_uart_bl_cmd *bl_cmd =
-+		&uart_cmd[DELL_UART_SET_BACKLIGHT_POWER];
-+	struct dell_uart_backlight *dell_pdata = bl_get_data(bd);
-+	struct uart_8250_port *uart = serial8250_get_port(dell_pdata->line);
-+	int rx_len;
-+
-+	if (power != FB_BLANK_POWERDOWN)
-+		power = FB_BLANK_UNBLANK;
-+
-+	bl_cmd->cmd[2] = power?0:1;
-+	bl_cmd->cmd[3] = dell_uart_checksum(bl_cmd->cmd, bl_cmd->tx_len - 1);
-+
-+	dell_uart_dump_cmd(__func__, "tx: ", bl_cmd->cmd, bl_cmd->tx_len);
-+
-+	if (mutex_lock_killable(&dell_pdata->brightness_mutex) < 0) {
-+		pr_debug("Failed to get mutex_lock");
-+		return 0;
-+	}
-+
-+	dell_uart_write(uart, bl_cmd->cmd, bl_cmd->tx_len);
-+	rx_len = dell_uart_read(uart, bl_cmd->ret, bl_cmd->rx_len);
-+
-+	mutex_unlock(&dell_pdata->brightness_mutex);
-+
-+	dell_uart_dump_cmd(__func__, "rx: ", bl_cmd->ret, rx_len);
-+
-+	bd->props.power = power;
-+	dell_pdata->bl_power = power;
-+
-+	return 0;
-+}
-+
-+static int dell_uart_get_brightness(struct backlight_device *bd)
-+{
-+	struct dell_uart_bl_cmd *bl_cmd = &uart_cmd[DELL_UART_GET_BRIGHTNESS];
-+	struct dell_uart_backlight *dell_pdata = bl_get_data(bd);
-+	struct uart_8250_port *uart = serial8250_get_port(dell_pdata->line);
-+	int rx_len, brightness = 0;
-+
-+	dell_uart_dump_cmd(__func__, "tx: ", bl_cmd->cmd, bl_cmd->tx_len);
-+
-+	if (mutex_lock_killable(&dell_pdata->brightness_mutex) < 0) {
-+		pr_debug("Failed to get mutex_lock");
-+		return 0;
-+	}
-+
-+	dell_uart_write(uart, bl_cmd->cmd, bl_cmd->tx_len);
-+	rx_len = dell_uart_read(uart, bl_cmd->ret, bl_cmd->rx_len);
-+
-+	mutex_unlock(&dell_pdata->brightness_mutex);
-+
-+	dell_uart_dump_cmd(__func__, "rx: ", bl_cmd->ret, rx_len);
-+
-+	brightness = (unsigned int)bl_cmd->ret[2];
-+
-+	return brightness;
-+}
-+
-+static int dell_uart_update_status(struct backlight_device *bd)
-+{
-+	struct dell_uart_bl_cmd *bl_cmd = &uart_cmd[DELL_UART_SET_BRIGHTNESS];
-+	struct dell_uart_backlight *dell_pdata = bl_get_data(bd);
-+	struct uart_8250_port *uart = serial8250_get_port(dell_pdata->line);
-+	int rx_len;
-+
-+	bl_cmd->cmd[2] = bd->props.brightness;
-+	bl_cmd->cmd[3] = dell_uart_checksum(bl_cmd->cmd, bl_cmd->tx_len - 1);
-+
-+	dell_uart_dump_cmd(__func__, "tx: ", bl_cmd->cmd, bl_cmd->tx_len);
-+
-+	if (mutex_lock_killable(&dell_pdata->brightness_mutex) < 0) {
-+		pr_debug("Failed to get mutex_lock");
-+		return 0;
-+	}
-+
-+	dell_uart_write(uart, bl_cmd->cmd, bl_cmd->tx_len);
-+	rx_len = dell_uart_read(uart, bl_cmd->ret, bl_cmd->rx_len);
-+
-+	mutex_unlock(&dell_pdata->brightness_mutex);
-+
-+	dell_uart_dump_cmd(__func__, "rx: ", bl_cmd->ret, rx_len);
-+
-+	if (bd->props.power != dell_uart_get_bl_power(dell_pdata))
-+		dell_uart_set_bl_power(bd, bd->props.power);
-+
-+	return 0;
-+}
-+
-+static void dell_uart_show_firmware_ver(struct dell_uart_backlight *dell_pdata)
-+{
-+	struct dell_uart_bl_cmd *bl_cmd = &uart_cmd[DELL_UART_GET_FIRMWARE_VER];
-+	struct uart_8250_port *uart = serial8250_get_port(dell_pdata->line);
-+	int rx_len, retry = 10;
-+
-+	dell_uart_dump_cmd(__func__, "tx: ", bl_cmd->cmd, bl_cmd->tx_len);
-+
-+	if (mutex_lock_killable(&dell_pdata->brightness_mutex) < 0) {
-+		pr_debug("Failed to get mutex_lock");
-+		return;
-+	}
-+
-+	dell_uart_write(uart, bl_cmd->cmd, bl_cmd->tx_len);
-+	while (retry-- > 0) {
-+		/* first byte is data length */
-+		dell_uart_read(uart, bl_cmd->ret, 1);
-+		rx_len = (int)bl_cmd->ret[0];
-+		if (bl_cmd->ret[0] > 80 || bl_cmd->ret[0] <= 0) {
-+			pr_debug("Failed to get firmware version\n");
-+			if (retry == 0) {
-+				mutex_unlock(&dell_pdata->brightness_mutex);
-+				return;
-+			}
-+			msleep(100);
-+			continue;
-+		}
-+
-+		dell_uart_read(uart, bl_cmd->ret+1, rx_len-1);
-+		break;
-+	}
-+	mutex_unlock(&dell_pdata->brightness_mutex);
-+
-+	dell_uart_dump_cmd(__func__, "rx: ", bl_cmd->ret, rx_len);
-+
-+	pr_debug("Firmare str(%d)= %s\n", (int)bl_cmd->ret[0], bl_cmd->ret+2);
-+}
-+
-+static const struct backlight_ops dell_uart_backlight_ops = {
-+	.get_brightness = dell_uart_get_brightness,
-+	.update_status = dell_uart_update_status,
-+};
-+
-+static int dell_uart_startup(struct dell_uart_backlight *dell_pdata)
-+{
-+	struct uart_8250_port *uartp;
-+	struct uart_port *port;
-+	int ret;
-+
-+	dell_pdata->line = 0;
-+	uartp = serial8250_get_port(dell_pdata->line);
-+	port = &uartp->port;
-+	ret = port->state->port.ops->activate(&port->state->port, port->state->port.tty);
-+	tty = port->state->port.tty;
-+	io_serial_in = port->serial_in;
-+	uart_write = tty->driver->ops->write;
-+	uart_chars_in_buffer = tty->driver->ops->chars_in_buffer;
-+
-+	return 0;
-+}
-+
-+static int dell_uart_bl_add(struct acpi_device *dev)
-+{
-+	struct dell_uart_backlight *dell_pdata;
-+	struct backlight_properties props;
-+	struct backlight_device *dell_uart_bd;
-+
-+	dell_pdata = kzalloc(sizeof(struct dell_uart_backlight), GFP_KERNEL);
-+	dell_pdata->dev = &dev->dev;
-+	dell_uart_startup(dell_pdata);
-+	dev->driver_data = dell_pdata;
-+
-+	mutex_init(&dell_pdata->brightness_mutex);
-+
-+	memset(&props, 0, sizeof(struct backlight_properties));
-+	props.type = BACKLIGHT_PLATFORM;
-+	props.max_brightness = 100;
-+
-+	dell_uart_bd = backlight_device_register("dell_uart_backlight",
-+						 &dev->dev,
-+						 dell_pdata,
-+						 &dell_uart_backlight_ops,
-+						 &props);
-+	dell_pdata->dell_uart_bd = dell_uart_bd;
-+
-+	dell_uart_show_firmware_ver(dell_pdata);
-+	dell_uart_set_bl_power(dell_uart_bd, FB_BLANK_UNBLANK);
-+	dell_uart_bd->props.brightness = 100;
-+	backlight_update_status(dell_uart_bd);
-+
-+	/* unregister acpi backlight interface */
-+	acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
-+
-+	return 0;
-+}
-+
-+static int dell_uart_bl_remove(struct acpi_device *dev)
-+{
-+	struct dell_uart_backlight *dell_pdata = dev->driver_data;
-+
-+	backlight_device_unregister(dell_pdata->dell_uart_bd);
-+
-+	return 0;
-+}
-+
-+static int dell_uart_bl_suspend(struct device *dev)
-+{
-+	filp_close(ftty, NULL);
-+	return 0;
-+}
-+
-+static int dell_uart_bl_resume(struct device *dev)
-+{
-+	ftty = filp_open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY, 0);
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(dell_uart_bl_pm, dell_uart_bl_suspend, dell_uart_bl_resume);
-+
-+static const struct acpi_device_id dell_uart_bl_ids[] = {
-+	{"DELL0501", 0},
-+	{"", 0},
-+};
-+
-+static struct acpi_driver dell_uart_backlight_driver = {
-+	.name = "Dell AIO serial backlight",
-+	.ids = dell_uart_bl_ids,
-+	.ops = {
-+		.add = dell_uart_bl_add,
-+		.remove = dell_uart_bl_remove,
-+	},
-+	.drv.pm = &dell_uart_bl_pm,
-+};
-+
-+static int __init dell_uart_bl_init(void)
-+{
-+	ftty = filp_open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY, 0);
-+
-+	return acpi_bus_register_driver(&dell_uart_backlight_driver);
-+}
-+
-+static void __exit dell_uart_bl_exit(void)
-+{
-+	filp_close(ftty, NULL);
-+
-+	acpi_bus_unregister_driver(&dell_uart_backlight_driver);
-+}
-+
-+module_init(dell_uart_bl_init);
-+module_exit(dell_uart_bl_exit);
-+MODULE_DEVICE_TABLE(acpi, dell_uart_bl_ids);
-+MODULE_DESCRIPTION("Dell AIO Serial Backlight module");
-+MODULE_AUTHOR("AceLan Kao <acelan.kao@canonical.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/dell-uart-backlight.h b/drivers/platform/x86/dell-uart-backlight.h
-new file mode 100644
-index 0000000..b8bca12
---- /dev/null
-+++ b/drivers/platform/x86/dell-uart-backlight.h
-@@ -0,0 +1,88 @@
-+/*
-+ *  Dell AIO Serial Backlight Driver
-+ *
-+ *  Copyright (C) 2017 AceLan Kao <acelan.kao@canonical.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ */
-+
-+#ifndef _DELL_UART_BACKLIGHT_H_
-+#define _DELL_UART_BACKLIGHT_H_
-+
-+enum {
-+	DELL_UART_GET_FIRMWARE_VER,
-+	DELL_UART_GET_BRIGHTNESS,
-+	DELL_UART_SET_BRIGHTNESS,
-+	DELL_UART_SET_BACKLIGHT_POWER,
-+};
-+
-+struct dell_uart_bl_cmd {
-+	unsigned char	cmd[10];
-+	unsigned char	ret[80];
-+	unsigned short	tx_len;
-+	unsigned short	rx_len;
-+};
-+
-+static struct dell_uart_bl_cmd uart_cmd[] = {
-+	/*
-+	 * Get Firmware Version: Tool uses this command to get firmware version.
-+	 * Command: 0x6A 0x06 0x8F (Length:3 Type: 0x0A, Cmd:6 Checksum:0x8F)
-+	 * Return data: 0x0D 0x06 Data checksum (Length:13,Cmd:0x06,
-+	 * 	        Data :F/W version(APRILIA=APR27-VXXX,PHINE=PHI23-VXXX),
-+	 * 	        checksum:SUM(Length and Cmd and Data)xor 0xFF .
-+	 */
-+	[DELL_UART_GET_FIRMWARE_VER] = {
-+		.cmd	= {0x6A, 0x06, 0x8F},
-+		.tx_len	= 3,
-+	},
-+	/*
-+	 * Get Brightness level: Application uses this command for scaler to get brightness.
-+	 * Command: 0x6A 0x0C 0x89 (Length:3 Type: 0x0A, Cmd:0x0C, Checksum:0x89)
-+	 * Return data: 0x04 0x0C Data checksum
-+	 * (Length:4 Cmd: 0x0C Data: brightness level checksum: SUM(Length and Cmd and Data)xor 0xFF)
-+	 *           brightness level which ranges from 0~100.
-+	 */
-+	[DELL_UART_GET_BRIGHTNESS] = {
-+		.cmd	= {0x6A, 0x0C, 0x89},
-+		.ret	= {0x04, 0x0C, 0x00, 0x00},
-+		.tx_len	= 3,
-+		.rx_len	= 4,
-+	},
-+	/* Set Brightness level: Application uses this command for scaler to set brightness.
-+	 * Command: 0x8A 0x0B Byte2 Checksum (Length:4 Type: 0x0A, Cmd:0x0B)
-+	 * 	    where Byte2 is the brightness level which ranges from 0~100.
-+	 * Return data: 0x03 0x0B 0xF1(Length:3,Cmd:B,checksum:0xF1)
-+	 * Scaler must send the 3bytes ack within 1 second when success, other value if error
-+	 */
-+	[DELL_UART_SET_BRIGHTNESS] = {
-+		.cmd	= {0x8A, 0x0B, 0x0, 0x0},
-+		.ret	= {0x03, 0x0B, 0xF1},
-+		.tx_len	= 4,
-+		.rx_len	= 3,
-+	},
-+	/*
-+	 * Screen ON/OFF Control: Application uses this command to control screen ON or OFF.
-+	 * Command: 0x8A 0x0E Byte2 Checksum (Length:4 Type: 0x0A, Cmd:0x0E) where
-+	 * 	    Byte2=0 to turn OFF the screen.
-+	 * 	    Byte2=1 to turn ON the screen
-+	 * 	    Other value of Byte2 is reserved and invalid.
-+	 * Return data: 0x03 0x0E 0xEE(Length:3,Cmd:E,checksum:0xEE)
-+	 */
-+	[DELL_UART_SET_BACKLIGHT_POWER] = {
-+		.cmd	= {0x8A, 0x0E, 0x00, 0x0},
-+		.ret	= {0x03, 0x0E, 0xEE},
-+		.tx_len	= 4,
-+		.rx_len	= 3,
-+	},
-+};
-+
-+#endif /* _DELL_UART_BACKLIGHT_H_ */
--- 
-2.7.4
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFjZUxhbiBLYW8NCj4gU2VudDogVGh1
+cnNkYXksIE9jdG9iZXIgMjYsIDIwMTcgMjo1NCBBTQ0KPiBUbzogRGFycmVuIEhhcnQgPGR2aGFy
+dEBpbmZyYWRlYWQub3JnPjsgQW5keSBTaGV2Y2hlbmtvDQo+IDxhbmR5QGluZnJhZGVhZC5vcmc+
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2
+Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIXSBwbGF0Zm9ybS94ODY6IGRlbGwtdWFy
+dC1iYWNrbGlnaHQ6IG5ldyBiYWNrbGlnaHQgZHJpdmVyIGZvciBERUxMDQo+IEFJTw0KPiANCj4g
+VGhlIERlbGwgQUlPIG1hY2hpbmVzIHJlbGVhc2VkIGFmdGVyIDIwMTcgY29tZSB3aXRoIGEgVUFS
+VCBpbnRlcmZhY2UNCj4gdG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgYmFja2xpZ2h0IHNjYWxhciBi
+b2FyZC4gVGhpcyBkcml2ZXIgY3JlYXRlcw0KPiBhIHN0YW5kYXJkIGJhY2tsaWdodCBpbnRlcmZh
+Y2UgYW5kIHRhbGtzIHRvIHRoZSBzY2FsYXIgYm9hcmQgdGhyb3VnaA0KPiBVQVJULg0KPiANCj4g
+SW4gRFNEVCB0aGlzIHVhcnQgcG9ydCB3aWxsIGJlIGRlZmluZWQgYXMNCj4gICAgTmFtZSAoX0hJ
+RCwgIkRFTEwwNTAxIikNCj4gICAgTmFtZSAoX0NJRCwgRWlzYUlkICgiUE5QMDUwMSIpDQo+IFRo
+ZSA4MjUwIFBOUCBkcml2ZXIgd2lsbCBiZSBsb2FkZWQgYnkgZGVmYXVsdCwgYW5kIHRoaXMgZHJp
+dmVyIHVzZXMNCj4gIkRFTEwwNTAxIiB0byBjb25maXJtIHRoZSB1YXJ0IHBvcnQgaXMgYSBiYWNr
+bGlnaHQgaW50ZXJmYWNlIGFuZA0KPiBsZXZlcmFnZXMgdGhlIHBvcnQgY3JlYXRlZCBieSA4MjUw
+IFBOUCBkcml2ZXIgdG8gY29tbXVuaWNhdGUgd2l0aA0KPiB0aGUgc2NhbGFyIGJvYXJkLg0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogQWNlTGFuIEthbyA8YWNlbGFuLmthb0BjYW5vbmljYWwuY29tPg0K
+PiAtLS0NCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+NiArDQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnICAgICAgICAgICAgICAgfCAgMTQg
+KysNCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L01ha2VmaWxlICAgICAgICAgICAgICB8ICAgMSAr
+DQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXVhcnQtYmFja2xpZ2h0LmMgfCAzNjENCj4g
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
+bGwtdWFydC1iYWNrbGlnaHQuaCB8ICA4OCArKysrKysrDQo+ICA1IGZpbGVzIGNoYW5nZWQsIDQ3
+MCBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wbGF0Zm9ybS94
+ODYvZGVsbC11YXJ0LWJhY2tsaWdodC5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9w
+bGF0Zm9ybS94ODYvZGVsbC11YXJ0LWJhY2tsaWdodC5oDQo+IA0KPiBkaWZmIC0tZ2l0IGEvTUFJ
+TlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KPiBpbmRleCBkODVjMDg5Li41ODFjYjA5IDEwMDY0NA0K
+PiAtLS0gYS9NQUlOVEFJTkVSUw0KPiArKysgYi9NQUlOVEFJTkVSUw0KPiBAQCAtNDAxMyw2ICs0
+MDEzLDEyIEBAIE06CVBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gIFM6CU1h
+aW50YWluZWQNCj4gIEY6CWRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gDQo+ICtE
+RUxMIEFJTyBVQVJUIEJBQ0tMSUdIVCBEUklWRVINCj4gK006CUFjZUxhbiBLYW8gPGFjZWxhbi5r
+YW9AY2Fub25pY2FsLmNvbT4NCj4gK0w6CXBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
+b3JnDQo+ICtTOglNYWludGFpbmVkDQo+ICtGOglkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXVh
+cnQtYmFja2xpZ2h0LmMNCj4gKw0KPiAgREVMVEEgU1QgTUVESUEgRFJJVkVSDQo+ICBNOglIdWd1
+ZXMgRnJ1Y2hldCA8aHVndWVzLmZydWNoZXRAc3QuY29tPg0KPiAgTDoJbGludXgtbWVkaWFAdmdl
+ci5rZXJuZWwub3JnDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmln
+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZw0KPiBpbmRleCA4MGI4Nzk1Li41OGUyNmJj
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnDQo+ICsrKyBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcNCj4gQEAgLTE3NSw2ICsxNzUsMjAgQEAgY29uZmln
+IERFTExfUkJUTg0KPiAgCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hv
+b3NlIE0gaGVyZTogdGhlIG1vZHVsZSB3aWxsDQo+ICAJICBiZSBjYWxsZWQgZGVsbC1yYnRuLg0K
+PiANCj4gK2NvbmZpZyBERUxMX1VBUlRfQkFDS0xJR0hUDQo+ICsJdHJpc3RhdGUgIkRlbGwgQUlP
+IFVBUlQgQmFja2xpZ2h0IGRyaXZlciINCj4gKwlkZXBlbmRzIG9uIFNFUklBTF84MjUwDQo+ICsJ
+ZGVwZW5kcyBvbiBBQ1BJDQo+ICsJLS0taGVscC0tLQ0KPiArCSAgU2F5IFkgaGVyZSBpZiB5b3Ug
+d2FudCB0byBzdXBwb3J0IERlbGwgQUlPIFVBUlQgYmFja2xpZ2h0IGludGVyZmFjZS4NCj4gKwkg
+IFRoZSBEZWxsIEFJTyBtYWNoaW5lcyByZWxlYXNlZCBhZnRlciAyMDE3IGNvbWUgd2l0aCBhIFVB
+UlQgaW50ZXJmYWNlDQo+ICsJICB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSBiYWNrbGlnaHQgc2Nh
+bGFyIGJvYXJkLiBUaGlzIGRyaXZlciBjcmVhdGVzDQo+ICsJICBhIHN0YW5kYXJkIGJhY2tsaWdo
+dCBpbnRlcmZhY2UgYW5kIHRhbGtzIHRvIHRoZSBzY2FsYXIgYm9hcmQgdGhyb3VnaA0KPiArCSAg
+VUFSVCB0byBhZGp1c3QgdGhlIEFJTyBzY3JlZW4gYnJpZ2h0bmVzcy4NCj4gKw0KPiArCSAgVG8g
+Y29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlIG1vZHVs
+ZSB3aWxsDQo+ICsJICBiZSBjYWxsZWQgZGVsbF91YXJ0X2JhY2tsaWdodC4NCj4gKw0KPiANCj4g
+IGNvbmZpZyBGVUpJVFNVX0xBUFRPUA0KPiAgCXRyaXN0YXRlICJGdWppdHN1IExhcHRvcCBFeHRy
+YXMiDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9NYWtlZmlsZSBiL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L01ha2VmaWxlDQo+IGluZGV4IDkxY2VjMTcuLjNjZjU3NmYgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L01ha2VmaWxlDQo+ICsrKyBiL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L01ha2VmaWxlDQo+IEBAIC0xOCw2ICsxOCw3IEBAIG9iai0kKENPTkZJR19E
+RUxMX1dNSV9BSU8pCSs9IGRlbGwtd21pLWFpby5vDQo+ICBvYmotJChDT05GSUdfREVMTF9XTUlf
+TEVEKQkrPSBkZWxsLXdtaS1sZWQubw0KPiAgb2JqLSQoQ09ORklHX0RFTExfU01PODgwMCkJKz0g
+ZGVsbC1zbW84ODAwLm8NCj4gIG9iai0kKENPTkZJR19ERUxMX1JCVE4pCQkrPSBkZWxsLXJidG4u
+bw0KPiArb2JqLSQoQ09ORklHX0RFTExfVUFSVF9CQUNLTElHSFQpICs9IGRlbGwtdWFydC1iYWNr
+bGlnaHQubw0KPiAgb2JqLSQoQ09ORklHX0FDRVJfV01JKQkJKz0gYWNlci13bWkubw0KPiAgb2Jq
+LSQoQ09ORklHX0FDRVJIREYpCQkrPSBhY2VyaGRmLm8NCj4gIG9iai0kKENPTkZJR19IUF9BQ0NF
+TCkJCSs9IGhwX2FjY2VsLm8NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
+bGwtdWFydC1iYWNrbGlnaHQuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtDQo+IHVhcnQt
+YmFja2xpZ2h0LmMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uNDAw
+YmU3Nw0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwt
+dWFydC1iYWNrbGlnaHQuYw0KPiBAQCAtMCwwICsxLDM2MSBAQA0KPiArLyoNCj4gKyAqICBEZWxs
+IEFJTyBTZXJpYWwgQmFja2xpZ2h0IERyaXZlcg0KPiArICoNCj4gKyAqICBDb3B5cmlnaHQgKEMp
+IDIwMTcgQWNlTGFuIEthbyA8YWNlbGFuLmthb0BjYW5vbmljYWwuY29tPg0KPiArICoNCj4gKyAq
+ICBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQg
+YW5kL29yIG1vZGlmeQ0KPiArICogIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVy
+YWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5DQo+ICsgKiAgdGhlIEZyZWUgU29mdHdh
+cmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3INCj4gKyAq
+ICAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiArICoNCj4gKyAqICBUaGlz
+IHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1
+bCwNCj4gKyAqICBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1w
+bGllZCB3YXJyYW50eSBvZg0KPiArICogIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBB
+IFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUNCj4gKyAqICBHTlUgR2VuZXJhbCBQdWJsaWMg
+TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLg0KPiArICoNCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVk
+ZSA8bGludXgva2VybmVsLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICsjaW5j
+bHVkZSA8bGludXgvYWNwaS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3NlcmlhbF84MjUwLmg+DQo+
+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9iYWNrbGlnaHQu
+aD4NCj4gKyNpbmNsdWRlIDxhY3BpL3ZpZGVvLmg+DQo+ICsNCj4gKyNpbmNsdWRlICJkZWxsLXVh
+cnQtYmFja2xpZ2h0LmgiDQo+ICsNCj4gK3N0cnVjdCBkZWxsX3VhcnRfYmFja2xpZ2h0IHsNCj4g
+KwlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+ICsJc3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmRlbGxf
+dWFydF9iZDsNCj4gKwlzdHJ1Y3QgbXV0ZXggYnJpZ2h0bmVzc19tdXRleDsNCj4gKwlpbnQgbGlu
+ZTsNCj4gKwlpbnQgYmxfcG93ZXI7DQo+ICt9Ow0KPiArc3RydWN0IHVhcnRfODI1MF9wb3J0ICpz
+ZXJpYWw4MjUwX2dldF9wb3J0KGludCBsaW5lKTsNCj4gK3N0cnVjdCB0dHlfc3RydWN0ICp0dHk7
+DQo+ICtzdHJ1Y3QgZmlsZSAqZnR0eTsNCj4gKw0KPiArdW5zaWduZWQgaW50ICgqaW9fc2VyaWFs
+X2luKShzdHJ1Y3QgdWFydF9wb3J0ICpwLCBpbnQgb2Zmc2V0KTsNCj4gK2ludCAoKnVhcnRfd3Jp
+dGUpKHN0cnVjdCB0dHlfc3RydWN0ICp0dHksIGNvbnN0IHVuc2lnbmVkIGNoYXIgKmJ1ZiwgaW50
+IGNvdW50KTsNCj4gK2ludCAoKnVhcnRfY2hhcnNfaW5fYnVmZmVyKShzdHJ1Y3QgdHR5X3N0cnVj
+dCAqdHR5KTsNCj4gKw0KPiArc3RhdGljIGludCBkZWxsX3VhcnRfd3JpdGUoc3RydWN0IHVhcnRf
+ODI1MF9wb3J0ICp1cCwgX191OCAqYnVmLCBpbnQgbGVuKQ0KPiArew0KPiArCWludCBhY3R1YWwg
+PSAwOw0KPiArCXN0cnVjdCB1YXJ0X3BvcnQgKnBvcnQgPSAmdXAtPnBvcnQ7DQo+ICsNCj4gKwl0
+dHlfcG9ydF90dHlfd2FrZXVwKCZwb3J0LT5zdGF0ZS0+cG9ydCk7DQo+ICsJdHR5ID0gdHR5X3Bv
+cnRfdHR5X2dldCgmcG9ydC0+c3RhdGUtPnBvcnQpOw0KPiArCWFjdHVhbCA9IHVhcnRfd3JpdGUo
+dHR5LCBidWYsIGxlbik7DQo+ICsJd2hpbGUgKHVhcnRfY2hhcnNfaW5fYnVmZmVyKHR0eSkpIHsN
+Cj4gKwkJdWRlbGF5KDEwKTsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gYWN0dWFsOw0KPiArfQ0K
+PiArDQo+ICtzdGF0aWMgaW50IGRlbGxfdWFydF9yZWFkKHN0cnVjdCB1YXJ0XzgyNTBfcG9ydCAq
+dXAsIF9fdTggKmJ1ZiwgaW50IGxlbikNCj4gK3sNCj4gKwlpbnQgaSwgcmV0cnk7DQo+ICsJdW5z
+aWduZWQgbG9uZyBmbGFnczsNCj4gKw0KPiArCXNwaW5fbG9ja19pcnFzYXZlKCZ1cC0+cG9ydC5s
+b2NrLCBmbGFncyk7DQo+ICsJZm9yIChpID0gMDsgaSA8IGxlbjsgaSsrKSB7DQo+ICsJCXJldHJ5
+ID0gMTA7DQo+ICsJCXdoaWxlICghKGlvX3NlcmlhbF9pbigmdXAtPnBvcnQsIFVBUlRfTFNSKSAm
+IFVBUlRfTFNSX0RSKSkgew0KPiArCQkJaWYgKC0tcmV0cnkgPT0gMCkNCj4gKwkJCQlicmVhazsN
+Cj4gKwkJCW1kZWxheSgyMCk7DQo+ICsJCX0NCj4gKw0KPiArCQlpZiAocmV0cnkgPT0gMCkNCj4g
+KwkJCWJyZWFrOw0KPiArCQlidWZbaV0gPSBpb19zZXJpYWxfaW4oJnVwLT5wb3J0LCBVQVJUX1JY
+KTsNCj4gKwl9DQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdXAtPnBvcnQubG9jaywgZmxh
+Z3MpOw0KPiArDQo+ICsJcmV0dXJuIGk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIGRlbGxf
+dWFydF9kdW1wX2NtZChjb25zdCBjaGFyICpmdW5jLCBjb25zdCBjaGFyICpwcmVmaXgsDQo+ICsJ
+CQkgICAgICAgY29uc3QgY2hhciAqY21kLCBpbnQgbGVuKQ0KPiArew0KPiArCWNoYXIgYnVmWzgw
+XTsNCj4gKw0KPiArCXNucHJpbnRmKGJ1ZiwgODAsICJkZWxsX3VhcnRfYmFja2xpZ2h0OiVzOiVz
+IiwgZnVuYywgcHJlZml4KTsNCj4gKwlpZiAobGVuICE9IDApDQo+ICsJCXByaW50X2hleF9kdW1w
+X2RlYnVnKGJ1ZiwgRFVNUF9QUkVGSVhfTk9ORSwNCj4gKwkJCQkJMTYsIDEsIGNtZCwgbGVuLCBm
+YWxzZSk7DQo+ICsJZWxzZQ0KPiArCQlwcl9kZWJ1ZygiZGVsbF91YXJ0X2JhY2tsaWdodDolczol
+c05VTExcbiIsIGZ1bmMsIHByZWZpeCk7DQo+ICsNCj4gK30NCj4gKw0KPiArLyoNCj4gKyAqIGNo
+ZWNrc3VtOiBTVU0oTGVuZ3RoIGFuZCBDbWQgYW5kIERhdGEpeG9yIDB4RkYpDQo+ICsgKi8NCj4g
+K3N0YXRpYyB1bnNpZ25lZCBjaGFyIGRlbGxfdWFydF9jaGVja3N1bSh1bnNpZ25lZCBjaGFyICpi
+dWYsIGludCBsZW4pDQo+ICt7DQo+ICsJdW5zaWduZWQgY2hhciB2YWwgPSAwOw0KPiArDQo+ICsJ
+d2hpbGUgKGxlbi0tID4gMCkNCj4gKwkJdmFsICs9IGJ1ZltsZW5dOw0KPiArDQo+ICsJcmV0dXJu
+IHZhbCBeIDB4ZmY7DQo+ICt9DQo+ICsNCj4gKy8qDQo+ICsgKiBUaGVyZSBpcyBubyBjb21tYW5k
+IHRvIGdldCBiYWNrbGlnaHQgcG93ZXIgc3RhdHVzLA0KPiArICogc28gd2Ugc2V0IHRoZSBiYWNr
+bGlnaHQgcG93ZXIgdG8gIm9uIiB3aGlsZSBpbml0aWFsaXppbmcsDQo+ICsgKiBhbmQgdGhlbiB0
+cmFjayBhbmQgcmVwb3J0IGl0cyBzdGF0dXMgYnkgYmxfcG93ZXIgdmFyaWFibGUNCj4gKyAqLw0K
+PiArc3RhdGljIGludCBkZWxsX3VhcnRfZ2V0X2JsX3Bvd2VyKHN0cnVjdCBkZWxsX3VhcnRfYmFj
+a2xpZ2h0ICpkZWxsX3BkYXRhKQ0KPiArew0KPiArCXJldHVybiBkZWxsX3BkYXRhLT5ibF9wb3dl
+cjsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBkZWxsX3VhcnRfc2V0X2JsX3Bvd2VyKHN0cnVj
+dCBiYWNrbGlnaHRfZGV2aWNlICpiZCwgaW50IHBvd2VyKQ0KPiArew0KPiArCXN0cnVjdCBkZWxs
+X3VhcnRfYmxfY21kICpibF9jbWQgPQ0KPiArCQkmdWFydF9jbWRbREVMTF9VQVJUX1NFVF9CQUNL
+TElHSFRfUE9XRVJdOw0KPiArCXN0cnVjdCBkZWxsX3VhcnRfYmFja2xpZ2h0ICpkZWxsX3BkYXRh
+ID0gYmxfZ2V0X2RhdGEoYmQpOw0KPiArCXN0cnVjdCB1YXJ0XzgyNTBfcG9ydCAqdWFydCA9IHNl
+cmlhbDgyNTBfZ2V0X3BvcnQoZGVsbF9wZGF0YS0+bGluZSk7DQo+ICsJaW50IHJ4X2xlbjsNCj4g
+Kw0KPiArCWlmIChwb3dlciAhPSBGQl9CTEFOS19QT1dFUkRPV04pDQo+ICsJCXBvd2VyID0gRkJf
+QkxBTktfVU5CTEFOSzsNCj4gKw0KPiArCWJsX2NtZC0+Y21kWzJdID0gcG93ZXI/MDoxOw0KPiAr
+CWJsX2NtZC0+Y21kWzNdID0gZGVsbF91YXJ0X2NoZWNrc3VtKGJsX2NtZC0+Y21kLCBibF9jbWQt
+PnR4X2xlbiAtIDEpOw0KPiArDQo+ICsJZGVsbF91YXJ0X2R1bXBfY21kKF9fZnVuY19fLCAidHg6
+ICIsIGJsX2NtZC0+Y21kLCBibF9jbWQtPnR4X2xlbik7DQo+ICsNCj4gKwlpZiAobXV0ZXhfbG9j
+a19raWxsYWJsZSgmZGVsbF9wZGF0YS0+YnJpZ2h0bmVzc19tdXRleCkgPCAwKSB7DQo+ICsJCXBy
+X2RlYnVnKCJGYWlsZWQgdG8gZ2V0IG11dGV4X2xvY2siKTsNCj4gKwkJcmV0dXJuIDA7DQo+ICsJ
+fQ0KPiArDQo+ICsJZGVsbF91YXJ0X3dyaXRlKHVhcnQsIGJsX2NtZC0+Y21kLCBibF9jbWQtPnR4
+X2xlbik7DQo+ICsJcnhfbGVuID0gZGVsbF91YXJ0X3JlYWQodWFydCwgYmxfY21kLT5yZXQsIGJs
+X2NtZC0+cnhfbGVuKTsNCj4gKw0KPiArCW11dGV4X3VubG9jaygmZGVsbF9wZGF0YS0+YnJpZ2h0
+bmVzc19tdXRleCk7DQo+ICsNCj4gKwlkZWxsX3VhcnRfZHVtcF9jbWQoX19mdW5jX18sICJyeDog
+IiwgYmxfY21kLT5yZXQsIHJ4X2xlbik7DQo+ICsNCj4gKwliZC0+cHJvcHMucG93ZXIgPSBwb3dl
+cjsNCj4gKwlkZWxsX3BkYXRhLT5ibF9wb3dlciA9IHBvd2VyOw0KPiArDQo+ICsJcmV0dXJuIDA7
+DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgZGVsbF91YXJ0X2dldF9icmlnaHRuZXNzKHN0cnVj
+dCBiYWNrbGlnaHRfZGV2aWNlICpiZCkNCj4gK3sNCj4gKwlzdHJ1Y3QgZGVsbF91YXJ0X2JsX2Nt
+ZCAqYmxfY21kID0NCj4gJnVhcnRfY21kW0RFTExfVUFSVF9HRVRfQlJJR0hUTkVTU107DQo+ICsJ
+c3RydWN0IGRlbGxfdWFydF9iYWNrbGlnaHQgKmRlbGxfcGRhdGEgPSBibF9nZXRfZGF0YShiZCk7
+DQo+ICsJc3RydWN0IHVhcnRfODI1MF9wb3J0ICp1YXJ0ID0gc2VyaWFsODI1MF9nZXRfcG9ydChk
+ZWxsX3BkYXRhLT5saW5lKTsNCj4gKwlpbnQgcnhfbGVuLCBicmlnaHRuZXNzID0gMDsNCj4gKw0K
+PiArCWRlbGxfdWFydF9kdW1wX2NtZChfX2Z1bmNfXywgInR4OiAiLCBibF9jbWQtPmNtZCwgYmxf
+Y21kLT50eF9sZW4pOw0KPiArDQo+ICsJaWYgKG11dGV4X2xvY2tfa2lsbGFibGUoJmRlbGxfcGRh
+dGEtPmJyaWdodG5lc3NfbXV0ZXgpIDwgMCkgew0KPiArCQlwcl9kZWJ1ZygiRmFpbGVkIHRvIGdl
+dCBtdXRleF9sb2NrIik7DQo+ICsJCXJldHVybiAwOw0KPiArCX0NCj4gKw0KPiArCWRlbGxfdWFy
+dF93cml0ZSh1YXJ0LCBibF9jbWQtPmNtZCwgYmxfY21kLT50eF9sZW4pOw0KPiArCXJ4X2xlbiA9
+IGRlbGxfdWFydF9yZWFkKHVhcnQsIGJsX2NtZC0+cmV0LCBibF9jbWQtPnJ4X2xlbik7DQo+ICsN
+Cj4gKwltdXRleF91bmxvY2soJmRlbGxfcGRhdGEtPmJyaWdodG5lc3NfbXV0ZXgpOw0KPiArDQo+
+ICsJZGVsbF91YXJ0X2R1bXBfY21kKF9fZnVuY19fLCAicng6ICIsIGJsX2NtZC0+cmV0LCByeF9s
+ZW4pOw0KPiArDQo+ICsJYnJpZ2h0bmVzcyA9ICh1bnNpZ25lZCBpbnQpYmxfY21kLT5yZXRbMl07
+DQo+ICsNCj4gKwlyZXR1cm4gYnJpZ2h0bmVzczsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBk
+ZWxsX3VhcnRfdXBkYXRlX3N0YXR1cyhzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYmQpDQo+ICt7
+DQo+ICsJc3RydWN0IGRlbGxfdWFydF9ibF9jbWQgKmJsX2NtZCA9DQo+ICZ1YXJ0X2NtZFtERUxM
+X1VBUlRfU0VUX0JSSUdIVE5FU1NdOw0KPiArCXN0cnVjdCBkZWxsX3VhcnRfYmFja2xpZ2h0ICpk
+ZWxsX3BkYXRhID0gYmxfZ2V0X2RhdGEoYmQpOw0KPiArCXN0cnVjdCB1YXJ0XzgyNTBfcG9ydCAq
+dWFydCA9IHNlcmlhbDgyNTBfZ2V0X3BvcnQoZGVsbF9wZGF0YS0+bGluZSk7DQo+ICsJaW50IHJ4
+X2xlbjsNCj4gKw0KPiArCWJsX2NtZC0+Y21kWzJdID0gYmQtPnByb3BzLmJyaWdodG5lc3M7DQo+
+ICsJYmxfY21kLT5jbWRbM10gPSBkZWxsX3VhcnRfY2hlY2tzdW0oYmxfY21kLT5jbWQsIGJsX2Nt
+ZC0+dHhfbGVuIC0gMSk7DQo+ICsNCj4gKwlkZWxsX3VhcnRfZHVtcF9jbWQoX19mdW5jX18sICJ0
+eDogIiwgYmxfY21kLT5jbWQsIGJsX2NtZC0+dHhfbGVuKTsNCj4gKw0KPiArCWlmIChtdXRleF9s
+b2NrX2tpbGxhYmxlKCZkZWxsX3BkYXRhLT5icmlnaHRuZXNzX211dGV4KSA8IDApIHsNCj4gKwkJ
+cHJfZGVidWcoIkZhaWxlZCB0byBnZXQgbXV0ZXhfbG9jayIpOw0KPiArCQlyZXR1cm4gMDsNCj4g
+Kwl9DQo+ICsNCj4gKwlkZWxsX3VhcnRfd3JpdGUodWFydCwgYmxfY21kLT5jbWQsIGJsX2NtZC0+
+dHhfbGVuKTsNCj4gKwlyeF9sZW4gPSBkZWxsX3VhcnRfcmVhZCh1YXJ0LCBibF9jbWQtPnJldCwg
+YmxfY21kLT5yeF9sZW4pOw0KPiArDQo+ICsJbXV0ZXhfdW5sb2NrKCZkZWxsX3BkYXRhLT5icmln
+aHRuZXNzX211dGV4KTsNCj4gKw0KPiArCWRlbGxfdWFydF9kdW1wX2NtZChfX2Z1bmNfXywgInJ4
+OiAiLCBibF9jbWQtPnJldCwgcnhfbGVuKTsNCj4gKw0KPiArCWlmIChiZC0+cHJvcHMucG93ZXIg
+IT0gZGVsbF91YXJ0X2dldF9ibF9wb3dlcihkZWxsX3BkYXRhKSkNCj4gKwkJZGVsbF91YXJ0X3Nl
+dF9ibF9wb3dlcihiZCwgYmQtPnByb3BzLnBvd2VyKTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiAr
+fQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBkZWxsX3VhcnRfc2hvd19maXJtd2FyZV92ZXIoc3RydWN0
+IGRlbGxfdWFydF9iYWNrbGlnaHQgKmRlbGxfcGRhdGEpDQo+ICt7DQo+ICsJc3RydWN0IGRlbGxf
+dWFydF9ibF9jbWQgKmJsX2NtZCA9DQo+ICZ1YXJ0X2NtZFtERUxMX1VBUlRfR0VUX0ZJUk1XQVJF
+X1ZFUl07DQo+ICsJc3RydWN0IHVhcnRfODI1MF9wb3J0ICp1YXJ0ID0gc2VyaWFsODI1MF9nZXRf
+cG9ydChkZWxsX3BkYXRhLT5saW5lKTsNCj4gKwlpbnQgcnhfbGVuLCByZXRyeSA9IDEwOw0KPiAr
+DQo+ICsJZGVsbF91YXJ0X2R1bXBfY21kKF9fZnVuY19fLCAidHg6ICIsIGJsX2NtZC0+Y21kLCBi
+bF9jbWQtPnR4X2xlbik7DQo+ICsNCj4gKwlpZiAobXV0ZXhfbG9ja19raWxsYWJsZSgmZGVsbF9w
+ZGF0YS0+YnJpZ2h0bmVzc19tdXRleCkgPCAwKSB7DQo+ICsJCXByX2RlYnVnKCJGYWlsZWQgdG8g
+Z2V0IG11dGV4X2xvY2siKTsNCj4gKwkJcmV0dXJuOw0KPiArCX0NCj4gKw0KPiArCWRlbGxfdWFy
+dF93cml0ZSh1YXJ0LCBibF9jbWQtPmNtZCwgYmxfY21kLT50eF9sZW4pOw0KPiArCXdoaWxlIChy
+ZXRyeS0tID4gMCkgew0KPiArCQkvKiBmaXJzdCBieXRlIGlzIGRhdGEgbGVuZ3RoICovDQo+ICsJ
+CWRlbGxfdWFydF9yZWFkKHVhcnQsIGJsX2NtZC0+cmV0LCAxKTsNCj4gKwkJcnhfbGVuID0gKGlu
+dClibF9jbWQtPnJldFswXTsNCj4gKwkJaWYgKGJsX2NtZC0+cmV0WzBdID4gODAgfHwgYmxfY21k
+LT5yZXRbMF0gPD0gMCkgew0KPiArCQkJcHJfZGVidWcoIkZhaWxlZCB0byBnZXQgZmlybXdhcmUg
+dmVyc2lvblxuIik7DQo+ICsJCQlpZiAocmV0cnkgPT0gMCkgew0KPiArCQkJCW11dGV4X3VubG9j
+aygmZGVsbF9wZGF0YS0+YnJpZ2h0bmVzc19tdXRleCk7DQo+ICsJCQkJcmV0dXJuOw0KPiArCQkJ
+fQ0KPiArCQkJbXNsZWVwKDEwMCk7DQo+ICsJCQljb250aW51ZTsNCj4gKwkJfQ0KPiArDQo+ICsJ
+CWRlbGxfdWFydF9yZWFkKHVhcnQsIGJsX2NtZC0+cmV0KzEsIHJ4X2xlbi0xKTsNCj4gKwkJYnJl
+YWs7DQo+ICsJfQ0KPiArCW11dGV4X3VubG9jaygmZGVsbF9wZGF0YS0+YnJpZ2h0bmVzc19tdXRl
+eCk7DQo+ICsNCj4gKwlkZWxsX3VhcnRfZHVtcF9jbWQoX19mdW5jX18sICJyeDogIiwgYmxfY21k
+LT5yZXQsIHJ4X2xlbik7DQo+ICsNCj4gKwlwcl9kZWJ1ZygiRmlybWFyZSBzdHIoJWQpPSAlc1xu
+IiwgKGludClibF9jbWQtPnJldFswXSwgYmxfY21kLT5yZXQrMik7DQo+ICt9DQo+ICsNCj4gK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgYmFja2xpZ2h0X29wcyBkZWxsX3VhcnRfYmFja2xpZ2h0X29wcyA9
+IHsNCj4gKwkuZ2V0X2JyaWdodG5lc3MgPSBkZWxsX3VhcnRfZ2V0X2JyaWdodG5lc3MsDQo+ICsJ
+LnVwZGF0ZV9zdGF0dXMgPSBkZWxsX3VhcnRfdXBkYXRlX3N0YXR1cywNCj4gK307DQo+ICsNCj4g
+K3N0YXRpYyBpbnQgZGVsbF91YXJ0X3N0YXJ0dXAoc3RydWN0IGRlbGxfdWFydF9iYWNrbGlnaHQg
+KmRlbGxfcGRhdGEpDQo+ICt7DQo+ICsJc3RydWN0IHVhcnRfODI1MF9wb3J0ICp1YXJ0cDsNCj4g
+KwlzdHJ1Y3QgdWFydF9wb3J0ICpwb3J0Ow0KPiArCWludCByZXQ7DQo+ICsNCj4gKwlkZWxsX3Bk
+YXRhLT5saW5lID0gMDsNCj4gKwl1YXJ0cCA9IHNlcmlhbDgyNTBfZ2V0X3BvcnQoZGVsbF9wZGF0
+YS0+bGluZSk7DQo+ICsJcG9ydCA9ICZ1YXJ0cC0+cG9ydDsNCj4gKwlyZXQgPSBwb3J0LT5zdGF0
+ZS0+cG9ydC5vcHMtPmFjdGl2YXRlKCZwb3J0LT5zdGF0ZS0+cG9ydCwgcG9ydC0+c3RhdGUtDQo+
+ID5wb3J0LnR0eSk7DQo+ICsJdHR5ID0gcG9ydC0+c3RhdGUtPnBvcnQudHR5Ow0KPiArCWlvX3Nl
+cmlhbF9pbiA9IHBvcnQtPnNlcmlhbF9pbjsNCj4gKwl1YXJ0X3dyaXRlID0gdHR5LT5kcml2ZXIt
+Pm9wcy0+d3JpdGU7DQo+ICsJdWFydF9jaGFyc19pbl9idWZmZXIgPSB0dHktPmRyaXZlci0+b3Bz
+LT5jaGFyc19pbl9idWZmZXI7DQo+ICsNCg0KTG9va2luZyBhdCB0aGUgY29tbWVudCBmb3Igc2Vy
+aWFsODI1MF9nZXRfcG9ydCwgaXQgc291bmRzIGxpa2UgdGhlIHNlcmlhbCBkcml2ZXINCmRvZXNu
+J3QgcmVhbGx5IHdhbnQgb3RoZXIgZHJpdmVycyB1c2luZyB0aGlzIGZ1bmN0aW9uIG91dHNpZGUg
+b2Ygc3VzcGVuZC9yZXN1bWUgY2FsbGJhY2suDQoNCi8qKg0KICogc2VyaWFsODI1MF9nZXRfcG9y
+dCAtIHJldHJpZXZlIHN0cnVjdCB1YXJ0XzgyNTBfcG9ydA0KICogQGxpbmU6IHNlcmlhbCBsaW5l
+IG51bWJlcg0KICoNCiAqIFRoaXMgZnVuY3Rpb24gcmV0cmlldmVzIHN0cnVjdCB1YXJ0XzgyNTBf
+cG9ydCBmb3IgdGhlIHNwZWNpZmljIGxpbmUuDQogKiBUaGlzIHN0cnVjdCAqbXVzdCogKm5vdCog
+YmUgdXNlZCB0byBwZXJmb3JtIGEgODI1MCBvciBzZXJpYWwgY29yZSBvcGVyYXRpb24NCiAqIHdo
+aWNoIGlzIG5vdCBhY2Nlc3NpYmxlIG90aGVyd2lzZS4gSXRzIG9ubHkgcHVycG9zZSBpcyB0byBt
+YWtlIHRoZSBzdHJ1Y3QNCiAqIGFjY2Vzc2libGUgdG8gdGhlIHJ1bnRpbWUtcG0gY2FsbGJhY2tz
+IGZvciBjb250ZXh0IHN1c3BlbmQvcmVzdG9yZS4NCiAqIFRoZSBsb2NrIGFzc3VtcHRpb24gbWFk
+ZSBoZXJlIGlzIG5vbmUgYmVjYXVzZSBydW50aW1lLXBtIHN1c3BlbmQvcmVzdW1lDQogKiBjYWxs
+YmFja3Mgc2hvdWxkIG5vdCBiZSBpbnZva2VkIGlmIHRoZXJlIGlzIGFueSBvcGVyYXRpb24gcGVy
+Zm9ybWVkIG9uIHRoZQ0KICogcG9ydC4NCiAqLw0KaHR0cDovL2VsaXhpci5mcmVlLWVsZWN0cm9u
+cy5jb20vbGludXgvdjQuMTMvc291cmNlL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfY29y
+ZS5jI0w0MDkNCg0KSWYgc2VyaWFsIGNvcmUgZG9lc24ndCBwcm92aWRlIGFuIEFQSSwgaGF2ZSB5
+b3UgYWxyZWFkeSBkaXNjdXNzZWQgd2l0aCBzZXJpYWwgbWFpbnRhaW5lciANCnRvIHJldmlldyB5
+b3VyIGFwcHJvYWNoPyAgSXQgbWlnaHQgbWFrZSBzZW5zZSB0byB3b3JrIHdpdGggc2VyaWFsIG1h
+aW50YWluZXIgdG8gcHJvdmlkZQ0KYW4gQVBJIGZvciB0aGlzIHR5cGUgb2YgdXNlY2FzZSBpZiBp
+dCBkb2Vzbid0IGV4aXN0Lg0KDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBp
+bnQgZGVsbF91YXJ0X2JsX2FkZChzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldikNCj4gK3sNCj4gKwlz
+dHJ1Y3QgZGVsbF91YXJ0X2JhY2tsaWdodCAqZGVsbF9wZGF0YTsNCj4gKwlzdHJ1Y3QgYmFja2xp
+Z2h0X3Byb3BlcnRpZXMgcHJvcHM7DQo+ICsJc3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmRlbGxf
+dWFydF9iZDsNCj4gKw0KPiArCWRlbGxfcGRhdGEgPSBremFsbG9jKHNpemVvZihzdHJ1Y3QgZGVs
+bF91YXJ0X2JhY2tsaWdodCksIEdGUF9LRVJORUwpOw0KPiArCWRlbGxfcGRhdGEtPmRldiA9ICZk
+ZXYtPmRldjsNCj4gKwlkZWxsX3VhcnRfc3RhcnR1cChkZWxsX3BkYXRhKTsNCj4gKwlkZXYtPmRy
+aXZlcl9kYXRhID0gZGVsbF9wZGF0YTsNCj4gKw0KPiArCW11dGV4X2luaXQoJmRlbGxfcGRhdGEt
+PmJyaWdodG5lc3NfbXV0ZXgpOw0KPiArDQo+ICsJbWVtc2V0KCZwcm9wcywgMCwgc2l6ZW9mKHN0
+cnVjdCBiYWNrbGlnaHRfcHJvcGVydGllcykpOw0KPiArCXByb3BzLnR5cGUgPSBCQUNLTElHSFRf
+UExBVEZPUk07DQo+ICsJcHJvcHMubWF4X2JyaWdodG5lc3MgPSAxMDA7DQoNCklzIHRoZSBtZW1z
+ZXQgb2YgemVybyBhY3R1YWxseSBuZWNlc3Nhcnk/ICBPZiB0aGUgaXRlbXMgaW4NCmJhY2tsaWdo
+dF9wcm9wZXJ0aWVzOg0KKiB5b3Ugc2V0IGJyaWdodG5lc3MgYSBmZXcgbGluZXMgbGF0ZXINCihh
+ZnRlciBpdCdzIGJlZW4gbWVtY3B5J2VkIGluIHRoZSBiYWNrbGlnaHQgZGV2aWNlKQ0KKiBZb3Ug
+c2V0IG1heCBicmlnaHRuZXNzIGV4cGxpY2l0bHkNCiogWW91IHNldCBwb3dlciBhIGZldyBsaW5l
+cyBiZWxvdw0KDQpTbyB0aGUgb25seSBhdHRyaWJ1dGUgbWlzc2luZyBpcyBmYl9ibGFuay4gIFRo
+YXQncyBtYXJrZWQgInRvIGJlIHJlbW92ZWQiLg0KDQo+ICsNCj4gKwlkZWxsX3VhcnRfYmQgPSBi
+YWNrbGlnaHRfZGV2aWNlX3JlZ2lzdGVyKCJkZWxsX3VhcnRfYmFja2xpZ2h0IiwNCj4gKwkJCQkJ
+CSAmZGV2LT5kZXYsDQo+ICsJCQkJCQkgZGVsbF9wZGF0YSwNCj4gKwkJCQkJCSAmZGVsbF91YXJ0
+X2JhY2tsaWdodF9vcHMsDQo+ICsJCQkJCQkgJnByb3BzKTsNCj4gKwlkZWxsX3BkYXRhLT5kZWxs
+X3VhcnRfYmQgPSBkZWxsX3VhcnRfYmQ7DQo+ICsNCj4gKwlkZWxsX3VhcnRfc2hvd19maXJtd2Fy
+ZV92ZXIoZGVsbF9wZGF0YSk7DQo+ICsJZGVsbF91YXJ0X3NldF9ibF9wb3dlcihkZWxsX3VhcnRf
+YmQsIEZCX0JMQU5LX1VOQkxBTkspOw0KPiArCWRlbGxfdWFydF9iZC0+cHJvcHMuYnJpZ2h0bmVz
+cyA9IDEwMDsNCj4gKwliYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhkZWxsX3VhcnRfYmQpOw0KPiAr
+DQo+ICsJLyogdW5yZWdpc3RlciBhY3BpIGJhY2tsaWdodCBpbnRlcmZhY2UgKi8NCj4gKwlhY3Bp
+X3ZpZGVvX3NldF9kbWlfYmFja2xpZ2h0X3R5cGUoYWNwaV9iYWNrbGlnaHRfdmVuZG9yKTsNCg0K
+U2luY2UgeW91IGNoYW5nZSB0aGlzIHdoZW4gdGhlIGRyaXZlciBpcyBsb2FkZWQsIHlvdSBzaG91
+bGQgY2FjaGUgdGhlIG9sZA0KdmFsdWUgYW5kIHJlc3RvcmUgaXQgd2hlbiB0aGUgZHJpdmVyIGlz
+IHVubG9hZGVkIHRvby4NCg0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRp
+YyBpbnQgZGVsbF91YXJ0X2JsX3JlbW92ZShzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldikNCj4gK3sN
+Cj4gKwlzdHJ1Y3QgZGVsbF91YXJ0X2JhY2tsaWdodCAqZGVsbF9wZGF0YSA9IGRldi0+ZHJpdmVy
+X2RhdGE7DQo+ICsNCj4gKwliYWNrbGlnaHRfZGV2aWNlX3VucmVnaXN0ZXIoZGVsbF9wZGF0YS0+
+ZGVsbF91YXJ0X2JkKTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMg
+aW50IGRlbGxfdWFydF9ibF9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gK3sNCj4gKwlm
+aWxwX2Nsb3NlKGZ0dHksIE5VTEwpOw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0
+aWMgaW50IGRlbGxfdWFydF9ibF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiArew0KPiAr
+CWZ0dHkgPSBmaWxwX29wZW4oIi9kZXYvdHR5UzAiLCBPX1JEV1IgfCBPX05PQ1RUWSB8IE9fTkRF
+TEFZLCAwKTsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIFNJTVBMRV9ERVZf
+UE1fT1BTKGRlbGxfdWFydF9ibF9wbSwgZGVsbF91YXJ0X2JsX3N1c3BlbmQsDQo+IGRlbGxfdWFy
+dF9ibF9yZXN1bWUpOw0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lk
+IGRlbGxfdWFydF9ibF9pZHNbXSA9IHsNCj4gKwl7IkRFTEwwNTAxIiwgMH0sDQo+ICsJeyIiLCAw
+fSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3QgYWNwaV9kcml2ZXIgZGVsbF91YXJ0X2Jh
+Y2tsaWdodF9kcml2ZXIgPSB7DQo+ICsJLm5hbWUgPSAiRGVsbCBBSU8gc2VyaWFsIGJhY2tsaWdo
+dCIsDQo+ICsJLmlkcyA9IGRlbGxfdWFydF9ibF9pZHMsDQo+ICsJLm9wcyA9IHsNCj4gKwkJLmFk
+ZCA9IGRlbGxfdWFydF9ibF9hZGQsDQo+ICsJCS5yZW1vdmUgPSBkZWxsX3VhcnRfYmxfcmVtb3Zl
+LA0KPiArCX0sDQo+ICsJLmRydi5wbSA9ICZkZWxsX3VhcnRfYmxfcG0sDQo+ICt9Ow0KPiArDQo+
+ICtzdGF0aWMgaW50IF9faW5pdCBkZWxsX3VhcnRfYmxfaW5pdCh2b2lkKQ0KPiArew0KPiArCWZ0
+dHkgPSBmaWxwX29wZW4oIi9kZXYvdHR5UzAiLCBPX1JEV1IgfCBPX05PQ1RUWSB8IE9fTkRFTEFZ
+LCAwKTsNCg0KSSBndWVzcyB0aGlzIGlzIHRvIHByZXZlbnQgb3RoZXIgdXNlcnNwYWNlIGFwcHMg
+ZnJvbSBhY2Nlc3NpbmcgdGhlIHBvcnQNCnNpbXVsdGFuZW91c2x5IHJpZ2h0PyAgSSB0aGluayB5
+b3UnbGwgbmVlZCB0byBjaGVjayBpZiB0aGUgb3BlbiBmYWlsZWQNCklTX0VSUihmdHR5KQ0Kb3Ig
+c2ltaWxhciB0byBtYWtlIHN1cmUgdGhhdCB0aGlzIGRyaXZlciB3b3VsZCBmYWlsIHRvIGxvYWQg
+aWYgdGhlIGZpbGUNCmRpZG4ndCBleGlzdCBvciB3YXMgb3BlbmVkIGJ5IHVzZXJzcGFjZSB3aXRo
+IGFuIGV4Y2x1c2l2ZSBsb2NrIG9yIHNvbWV0aGluZy4NCg0KPiArDQo+ICsJcmV0dXJuIGFjcGlf
+YnVzX3JlZ2lzdGVyX2RyaXZlcigmZGVsbF91YXJ0X2JhY2tsaWdodF9kcml2ZXIpOw0KPiArfQ0K
+PiArDQo+ICtzdGF0aWMgdm9pZCBfX2V4aXQgZGVsbF91YXJ0X2JsX2V4aXQodm9pZCkNCj4gK3sN
+Cj4gKwlmaWxwX2Nsb3NlKGZ0dHksIE5VTEwpOw0KPiArDQo+ICsJYWNwaV9idXNfdW5yZWdpc3Rl
+cl9kcml2ZXIoJmRlbGxfdWFydF9iYWNrbGlnaHRfZHJpdmVyKTsNCj4gK30NCj4gKw0KPiArbW9k
+dWxlX2luaXQoZGVsbF91YXJ0X2JsX2luaXQpOw0KPiArbW9kdWxlX2V4aXQoZGVsbF91YXJ0X2Js
+X2V4aXQpOw0KPiArTU9EVUxFX0RFVklDRV9UQUJMRShhY3BpLCBkZWxsX3VhcnRfYmxfaWRzKTsN
+Cj4gK01PRFVMRV9ERVNDUklQVElPTigiRGVsbCBBSU8gU2VyaWFsIEJhY2tsaWdodCBtb2R1bGUi
+KTsNCj4gK01PRFVMRV9BVVRIT1IoIkFjZUxhbiBLYW8gPGFjZWxhbi5rYW9AY2Fub25pY2FsLmNv
+bT4iKTsNCj4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2RlbGwtdWFydC1iYWNrbGlnaHQuaCBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L2RlbGwtDQo+IHVhcnQtYmFja2xpZ2h0LmgNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5k
+ZXggMDAwMDAwMC4uYjhiY2ExMg0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2RyaXZlcnMvcGxh
+dGZvcm0veDg2L2RlbGwtdWFydC1iYWNrbGlnaHQuaA0KPiBAQCAtMCwwICsxLDg4IEBADQo+ICsv
+Kg0KPiArICogIERlbGwgQUlPIFNlcmlhbCBCYWNrbGlnaHQgRHJpdmVyDQo+ICsgKg0KPiArICog
+IENvcHlyaWdodCAoQykgMjAxNyBBY2VMYW4gS2FvIDxhY2VsYW4ua2FvQGNhbm9uaWNhbC5jb20+
+DQo+ICsgKg0KPiArICogIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJl
+ZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+ICsgKiAgaXQgdW5kZXIgdGhlIHRlcm1zIG9m
+IHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkNCj4gKyAqICB0
+aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNl
+bnNlLCBvcg0KPiArICogIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uDQo+ICsg
+Kg0KPiArICogIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0
+IHdpbGwgYmUgdXNlZnVsLA0KPiArICogIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91
+dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+ICsgKiAgTUVSQ0hBTlRBQklMSVRZIG9y
+IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiArICogIEdOVSBH
+ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+ICsgKg0KPiArICovDQo+
+ICsNCj4gKyNpZm5kZWYgX0RFTExfVUFSVF9CQUNLTElHSFRfSF8NCj4gKyNkZWZpbmUgX0RFTExf
+VUFSVF9CQUNLTElHSFRfSF8NCj4gKw0KPiArZW51bSB7DQo+ICsJREVMTF9VQVJUX0dFVF9GSVJN
+V0FSRV9WRVIsDQo+ICsJREVMTF9VQVJUX0dFVF9CUklHSFRORVNTLA0KPiArCURFTExfVUFSVF9T
+RVRfQlJJR0hUTkVTUywNCj4gKwlERUxMX1VBUlRfU0VUX0JBQ0tMSUdIVF9QT1dFUiwNCj4gK307
+DQo+ICsNCj4gK3N0cnVjdCBkZWxsX3VhcnRfYmxfY21kIHsNCj4gKwl1bnNpZ25lZCBjaGFyCWNt
+ZFsxMF07DQo+ICsJdW5zaWduZWQgY2hhcglyZXRbODBdOw0KPiArCXVuc2lnbmVkIHNob3J0CXR4
+X2xlbjsNCj4gKwl1bnNpZ25lZCBzaG9ydAlyeF9sZW47DQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMg
+c3RydWN0IGRlbGxfdWFydF9ibF9jbWQgdWFydF9jbWRbXSA9IHsNCj4gKwkvKg0KPiArCSAqIEdl
+dCBGaXJtd2FyZSBWZXJzaW9uOiBUb29sIHVzZXMgdGhpcyBjb21tYW5kIHRvIGdldCBmaXJtd2Fy
+ZSB2ZXJzaW9uLg0KPiArCSAqIENvbW1hbmQ6IDB4NkEgMHgwNiAweDhGIChMZW5ndGg6MyBUeXBl
+OiAweDBBLCBDbWQ6NiBDaGVja3N1bToweDhGKQ0KPiArCSAqIFJldHVybiBkYXRhOiAweDBEIDB4
+MDYgRGF0YSBjaGVja3N1bSAoTGVuZ3RoOjEzLENtZDoweDA2LA0KPiArCSAqIAkgICAgICAgIERh
+dGEgOkYvVyB2ZXJzaW9uKEFQUklMSUE9QVBSMjctVlhYWCxQSElORT1QSEkyMy1WWFhYKSwNCj4g
+KwkgKiAJICAgICAgICBjaGVja3N1bTpTVU0oTGVuZ3RoIGFuZCBDbWQgYW5kIERhdGEpeG9yIDB4
+RkYgLg0KPiArCSAqLw0KPiArCVtERUxMX1VBUlRfR0VUX0ZJUk1XQVJFX1ZFUl0gPSB7DQo+ICsJ
+CS5jbWQJPSB7MHg2QSwgMHgwNiwgMHg4Rn0sDQo+ICsJCS50eF9sZW4JPSAzLA0KPiArCX0sDQo+
+ICsJLyoNCj4gKwkgKiBHZXQgQnJpZ2h0bmVzcyBsZXZlbDogQXBwbGljYXRpb24gdXNlcyB0aGlz
+IGNvbW1hbmQgZm9yIHNjYWxlciB0byBnZXQNCj4gYnJpZ2h0bmVzcy4NCj4gKwkgKiBDb21tYW5k
+OiAweDZBIDB4MEMgMHg4OSAoTGVuZ3RoOjMgVHlwZTogMHgwQSwgQ21kOjB4MEMsDQo+IENoZWNr
+c3VtOjB4ODkpDQo+ICsJICogUmV0dXJuIGRhdGE6IDB4MDQgMHgwQyBEYXRhIGNoZWNrc3VtDQo+
+ICsJICogKExlbmd0aDo0IENtZDogMHgwQyBEYXRhOiBicmlnaHRuZXNzIGxldmVsIGNoZWNrc3Vt
+OiBTVU0oTGVuZ3RoIGFuZA0KPiBDbWQgYW5kIERhdGEpeG9yIDB4RkYpDQo+ICsJICogICAgICAg
+ICAgIGJyaWdodG5lc3MgbGV2ZWwgd2hpY2ggcmFuZ2VzIGZyb20gMH4xMDAuDQo+ICsJICovDQo+
+ICsJW0RFTExfVUFSVF9HRVRfQlJJR0hUTkVTU10gPSB7DQo+ICsJCS5jbWQJPSB7MHg2QSwgMHgw
+QywgMHg4OX0sDQo+ICsJCS5yZXQJPSB7MHgwNCwgMHgwQywgMHgwMCwgMHgwMH0sDQo+ICsJCS50
+eF9sZW4JPSAzLA0KPiArCQkucnhfbGVuCT0gNCwNCj4gKwl9LA0KPiArCS8qIFNldCBCcmlnaHRu
+ZXNzIGxldmVsOiBBcHBsaWNhdGlvbiB1c2VzIHRoaXMgY29tbWFuZCBmb3Igc2NhbGVyIHRvIHNl
+dA0KPiBicmlnaHRuZXNzLg0KPiArCSAqIENvbW1hbmQ6IDB4OEEgMHgwQiBCeXRlMiBDaGVja3N1
+bSAoTGVuZ3RoOjQgVHlwZTogMHgwQSwgQ21kOjB4MEIpDQo+ICsJICogCSAgICB3aGVyZSBCeXRl
+MiBpcyB0aGUgYnJpZ2h0bmVzcyBsZXZlbCB3aGljaCByYW5nZXMgZnJvbSAwfjEwMC4NCj4gKwkg
+KiBSZXR1cm4gZGF0YTogMHgwMyAweDBCIDB4RjEoTGVuZ3RoOjMsQ21kOkIsY2hlY2tzdW06MHhG
+MSkNCj4gKwkgKiBTY2FsZXIgbXVzdCBzZW5kIHRoZSAzYnl0ZXMgYWNrIHdpdGhpbiAxIHNlY29u
+ZCB3aGVuIHN1Y2Nlc3MsIG90aGVyDQo+IHZhbHVlIGlmIGVycm9yDQo+ICsJICovDQo+ICsJW0RF
+TExfVUFSVF9TRVRfQlJJR0hUTkVTU10gPSB7DQo+ICsJCS5jbWQJPSB7MHg4QSwgMHgwQiwgMHgw
+LCAweDB9LA0KPiArCQkucmV0CT0gezB4MDMsIDB4MEIsIDB4RjF9LA0KPiArCQkudHhfbGVuCT0g
+NCwNCj4gKwkJLnJ4X2xlbgk9IDMsDQo+ICsJfSwNCj4gKwkvKg0KPiArCSAqIFNjcmVlbiBPTi9P
+RkYgQ29udHJvbDogQXBwbGljYXRpb24gdXNlcyB0aGlzIGNvbW1hbmQgdG8gY29udHJvbCBzY3Jl
+ZW4NCj4gT04gb3IgT0ZGLg0KPiArCSAqIENvbW1hbmQ6IDB4OEEgMHgwRSBCeXRlMiBDaGVja3N1
+bSAoTGVuZ3RoOjQgVHlwZTogMHgwQSwgQ21kOjB4MEUpDQo+IHdoZXJlDQo+ICsJICogCSAgICBC
+eXRlMj0wIHRvIHR1cm4gT0ZGIHRoZSBzY3JlZW4uDQo+ICsJICogCSAgICBCeXRlMj0xIHRvIHR1
+cm4gT04gdGhlIHNjcmVlbg0KPiArCSAqIAkgICAgT3RoZXIgdmFsdWUgb2YgQnl0ZTIgaXMgcmVz
+ZXJ2ZWQgYW5kIGludmFsaWQuDQo+ICsJICogUmV0dXJuIGRhdGE6IDB4MDMgMHgwRSAweEVFKExl
+bmd0aDozLENtZDpFLGNoZWNrc3VtOjB4RUUpDQo+ICsJICovDQo+ICsJW0RFTExfVUFSVF9TRVRf
+QkFDS0xJR0hUX1BPV0VSXSA9IHsNCj4gKwkJLmNtZAk9IHsweDhBLCAweDBFLCAweDAwLCAweDB9
+LA0KPiArCQkucmV0CT0gezB4MDMsIDB4MEUsIDB4RUV9LA0KPiArCQkudHhfbGVuCT0gNCwNCj4g
+KwkJLnJ4X2xlbgk9IDMsDQo+ICsJfSwNCj4gK307DQo+ICsNCj4gKyNlbmRpZiAvKiBfREVMTF9V
+QVJUX0JBQ0tMSUdIVF9IXyAqLw0KPiAtLQ0KPiAyLjcuNA0KDQo=
