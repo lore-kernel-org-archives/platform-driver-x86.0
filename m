@@ -1,59 +1,52 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH] platform/x86: dell-uart-backlight: new backlight driver
- for DELL AIO
-Date: Fri, 27 Oct 2017 10:21:09 +0800
-Message-ID: <CAMz9Wg9saRUE514u1RyYEuf6fDppQWgqFPyk+iiXQW3F9ZJc7A@mail.gmail.com>
-References: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
- <08add166d5b34992ba167a878ca2a808@ausx13mpc124.AMER.DELL.COM> <20171026171011.3eca122e@alans-desktop>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH resend v5 3/3] platform/x86: intel_cht_int33fe: Update
+ fusb302 type string, add properties
+Date: Fri, 27 Oct 2017 12:13:23 +0200
+Message-ID: <5f747f91-0eb8-5566-5de3-b5dfd1f134ce@redhat.com>
+References: <20171011094121.6108-1-hdegoede@redhat.com>
+ <20171011094121.6108-4-hdegoede@redhat.com>
+ <20171026203323.w5xj2mms5epda6pt@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f41.google.com ([209.85.215.41]:44942 "EHLO
-        mail-lf0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751399AbdJ0CVL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Oct 2017 22:21:11 -0400
-In-Reply-To: <20171026171011.3eca122e@alans-desktop>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc: Mario.Limonciello@dell.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171026203323.w5xj2mms5epda6pt@ninjato>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Alex,
+Hi,
 
-2017-10-27 0:10 GMT+08:00 Alan Cox <gnomes@lxorguk.ukuu.org.uk>:
->
->> > +static int __init dell_uart_bl_init(void)
->> > +{
->> > +   ftty = filp_open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY, 0);
+On 26-10-17 22:33, Wolfram Sang wrote:
+> On Wed, Oct 11, 2017 at 11:41:21AM +0200, Hans de Goede wrote:
+>> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
+>> rather then just "fusb302" and needs us to set a number of device-
+>> properties, adjust the intel_cht_int33fe driver accordingly.
 >>
->
-> You have no idea what name is assigned. This doesn't work.
-Yes, I did. The port is defined in BIOS as PNP0501 uart port,
-so the port will be registered by 8250 PNP driver as ttyS* device.
-And consider it's defined in the BIOS, so it should be the first uart
-port on the system,
-and ttyS0 would be his name.
+>> One of the properties set is max-snk-mv which makes the fusb302 driver
+>> negotiate up to 12V charging voltage, which is a bad idea on boards
+>> which are not setup to handle this, so this commit also adds 2 extra
+>> sanity checks to make sure that the expected Whiskey Cove PMIC +
+>> TI bq24292i charger combo, which can handle 12V, is present.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> I can't apply this one. Is there an immutable branch I need to pick up?
+> Or shall this go via another tree? My base is v4.14-rc5.
 
->
-> This isn't the way to do it any more because the 'tty from kernel'
-> problem finally got fixed. You can attach it as a serdev directly to the
-> kernel.
->
-> Take a look at serdev_tty_port_register/serdev_tty_port_unreg
-Yes, I'm studying serdev, but currently there are not many examples
-for reference,
-so I still have no clues how to implement it by serdev.
-I'll try using serdev_tty_port_register/serdev_tty_port_unreg to
-re-implement the driver.
-Thanks.
+It should be applied on top of this patch:
 
->
-> Alan
+http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/commitdiff/5c003458db40cf3c89aeddd22c6e934c28b5a565
 
+ From linux-platform-drivers-x86.git/for-next.
 
+So either we are going to need an immutable branch from you
+with the first patch of this series so that the platform/x86
+maintainers can merge this, or the other way around :|
 
--- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Regards,
+
+Hans
