@@ -1,63 +1,102 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: silead_dmi: Fix GP-electronic T701 entry
-Date: Fri, 27 Oct 2017 19:48:25 +0300
-Message-ID: <CAHp75VeAKSjFCEUoJWc6BmZiu70HS4Exw0p2=qwC2B09i9CwOg@mail.gmail.com>
-References: <20171019074414.16335-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
+Date: Fri, 27 Oct 2017 19:49:55 +0300
+Message-ID: <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
+References: <20171025042946.13225-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f196.google.com ([209.85.220.196]:51233 "EHLO
-        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750962AbdJ0Qs0 (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:53383 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752587AbdJ0Qt5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 12:48:26 -0400
-In-Reply-To: <20171019074414.16335-1-hdegoede@redhat.com>
+        Fri, 27 Oct 2017 12:49:57 -0400
+In-Reply-To: <20171025042946.13225-1-kernel@kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Harvey <harv@gmx.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, Oct 19, 2017 at 10:44 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> The GP-electronic T701 has its LCD panel mounted upside-down, initially
-> my plan was to fix this by transparently rotating the image in the i915
-> driver (my "drm/i915: Deal with upside-down mounted LCD" patch), but
-> that approach has been rejected instead the kernel will now export
-> a "panel orientation" property on the drm-connector for the panel and
-> let userspace deal with it.
->
-> But userspace expects the touchscreen coordinates to match the panel
-> coordinates *before* applying any rotation, so now that we no longer hide
-> the upside-down-ness of the LCD panel from userspace the coordinates being
-> generated are wrong and we need to apply a rotation of 180 degrees to the
-> coordinates to fix this.
+On Wed, Oct 25, 2017 at 7:29 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempn=
+iu.pl> wrote:
+> Radio LED detection method implemented in commit 4f62568c1fcf
+> ("fujitsu-laptop: Support radio LED") turned out to be incorrect as it
+> causes a radio LED to be erroneously detected on a Fujitsu Lifebook E751
+> which has a slide switch (and thus no radio LED).  Use bit 17 of
+> flags_supported (the value returned by method S000 of ACPI device
+> FUJ02E3) to determine whether a radio LED is present as it seems to be a
+> more reliable indicator, based on comparing DSDT tables of four Fujitsu
+> Lifebook models (E744, E751, S7110, S8420).
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Reported-by: Heinrich Siebmanns <harv@gmx.de>
+> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
 > ---
->  drivers/platform/x86/silead_dmi.c | 2 ++
->  1 file changed, 2 insertions(+)
+> I do not have a Fujitsu laptop with a radio LED for testing, so I was
+> only able to check that this patch still does not cause a radio LED to
+> be detected on a Lifebook S7020.
 >
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index a0f80f971081..ac304f2318cc 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -85,6 +85,8 @@ static const struct silead_ts_dmi_data surftab_wintron70_st70416_6_data = {
->  static const struct property_entry gp_electronic_t701_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 960),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 640),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->         PROPERTY_ENTRY_STRING("firmware-name",
->                               "gsl1680-gp-electronic-t701.fw"),
->         { }
+> Harvey, could you please try this patch on your Lifebook E751 and see
+> whether the log messages you reported disappear?  I will be happy to
+> assist you off-list in case you need help with it.
+>
+>  drivers/platform/x86/fujitsu-laptop.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86=
+/fujitsu-laptop.c
+> index 56a8195096a2..2cfbd3fa5136 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -691,6 +691,7 @@ static enum led_brightness eco_led_get(struct led_cla=
+ssdev *cdev)
+>
+>  static int acpi_fujitsu_laptop_leds_register(struct acpi_device *device)
+>  {
+> +       struct fujitsu_laptop *priv =3D acpi_driver_data(device);
+>         struct led_classdev *led;
+>         int result;
+>
+> @@ -724,12 +725,15 @@ static int acpi_fujitsu_laptop_leds_register(struct=
+ acpi_device *device)
+>         }
+>
+>         /*
+> -        * BTNI bit 24 seems to indicate the presence of a radio toggle
+> -        * button in place of a slide switch, and all such machines appea=
+r
+> -        * to also have an RF LED.  Therefore use bit 24 as an indicator
+> -        * that an RF LED is present.
+> +        * Some Fujitsu laptops have a radio toggle button in place of a =
+slide
+> +        * switch and all such machines appear to also have an RF LED.  B=
+ased on
+> +        * comparing DSDT tables of four Fujitsu Lifebook models (E744, E=
+751,
+> +        * S7110, S8420; the first one has a radio toggle button, the oth=
+er
+> +        * three have slide switches), bit 17 of flags_supported (the val=
+ue
+> +        * returned by method S000 of ACPI device FUJ02E3) seems to indic=
+ate
+> +        * whether given model has a radio toggle button.
+>          */
+> -       if (call_fext_func(device, FUNC_BUTTONS, 0x0, 0x0, 0x0) & BIT(24)=
+) {
+> +       if (priv->flags_supported & BIT(17)) {
+>                 led =3D devm_kzalloc(&device->dev, sizeof(*led), GFP_KERN=
+EL);
+>                 if (!led)
+>                         return -ENOMEM;
 > --
 > 2.14.2
 >
 
 
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
