@@ -1,75 +1,70 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: silead_dmi: Add silead,home-button
- property to some tablets
-Date: Fri, 27 Oct 2017 17:39:42 +0300
-Message-ID: <CAHp75Vf=MPfCfj3X8ob0+LT_+MT+SW9nsNzw0Pai2OcBrdqWvA@mail.gmail.com>
-References: <20171017154512.30524-1-hdegoede@redhat.com> <20171017154512.30524-2-hdegoede@redhat.com>
+Subject: Re: [PATCH 0/4] Topstar ACPI LED Workaround
+Date: Fri, 27 Oct 2017 18:21:06 +0300
+Message-ID: <CAHp75VejAgtj4swJhKCbtkBko+x2h6xzEtq-Q6gGdkNYPiW==g@mail.gmail.com>
+References: <cover.1508255487.git.gdouezangrard@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:44828 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751942AbdJ0Ojn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 10:39:43 -0400
-In-Reply-To: <20171017154512.30524-2-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1508255487.git.gdouezangrard@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 17, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Add "silead,home-button" property to entries for tablets which have
-> a capacitive home button (typically a windows logo on the front).
+On Tue, Oct 17, 2017 at 7:17 PM, Guillaume Dou=C3=A9zan-Grard
+<gdouezangrard@gmail.com> wrote:
+> Hi Darren,
 >
-> This new property is checked for by the new capacitive home button
-> support in the silead touchscreen driver.
+> On Topstar U931 Notebooks, an issue prevents the WLAN toggle key from
+> being properly managed by the Embedded Controller and successfully
+> disconnect the adapter. A specific ACPI method allows to toggle the WLAN
+> LED state regardless.
 >
+> These are barebone laptops, sold under quite a lot of brands and
+> configurations, with different firmwares and so on. I can only say for su=
+re
+> that this issue is present for all the models sold under a specific brand=
+,
+> that's why I'm reluctant to enable this by default with a DMI check.
+>
+> Thus, the new `led_workaround` option registers this LED with the
+> corresponding subsystem, making possible to use a software-based trigger
+> (rfkill for instance to synchronize the LED with the softkill state).
+>
+> Thank you for your time,
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+I have applied to my review and testing queue with some changes:
+- device names are left unchanged (it's ABI, we can't just change
+device name to whatever we want if we can't guarantee that doesn't
+break anything, at least I can't)
+- labels should mark what is expected to be executed when code chooses that=
+ path
+- I split module authors to two macro calls (this makes slightly
+better readability in the sources and when one calls modinfo)
 
-I suppose it's going through input subsystem as dependent patch?
+Can you check if it's okay with your devices and works as expected?
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/silead_dmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
+If everything okay, take my them from review-andy branch, add commit
+message to where it's missed and send a new version.
+
+Thanks.
+
 >
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index fadfce9b3f5f..ac304f2318cc 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -58,6 +58,7 @@ static const struct property_entry dexp_ursus_7w_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl1686-dexp-ursus-7w.fw"),
->         PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->         { }
->  };
+> --
+> Guillaume Dou=C3=A9zan-Grard
 >
-> @@ -72,6 +73,7 @@ static const struct property_entry surftab_wintron70_st70416_6_props[] = {
->         PROPERTY_ENTRY_STRING("firmware-name",
->                               "gsl1686-surftab-wintron70-st70416-6.fw"),
->         PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->         { }
->  };
+> Guillaume Dou=C3=A9zan-Grard (4):
+>   platform/x86: topstar-laptop: non-functional changes
+>   platform/x86: topstar-laptop: change to generic module
+>   platform/x86: topstar-laptop: add platform device
+>   platform/x86: topstar-laptop: add optional WLAN LED workaround
 >
-> @@ -116,6 +118,7 @@ static const struct property_entry pov_mobii_wintab_p800w_props[] = {
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name",
->                               "gsl3692-pov-mobii-wintab-p800w.fw"),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->         { }
->  };
->
-> @@ -143,6 +146,7 @@ static const struct property_entry chuwi_hi8_pro_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->         { }
->  };
+>  drivers/platform/x86/Kconfig          |   2 +
+>  drivers/platform/x86/topstar-laptop.c | 339 ++++++++++++++++++++++++++--=
+------
+>  2 files changed, 267 insertions(+), 74 deletions(-)
 >
 > --
 > 2.14.1
@@ -77,6 +72,6 @@ I suppose it's going through input subsystem as dependent patch?
 
 
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
