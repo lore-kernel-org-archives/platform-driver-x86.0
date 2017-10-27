@@ -1,77 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/4] Topstar ACPI LED Workaround
-Date: Fri, 27 Oct 2017 18:21:06 +0300
-Message-ID: <CAHp75VejAgtj4swJhKCbtkBko+x2h6xzEtq-Q6gGdkNYPiW==g@mail.gmail.com>
-References: <cover.1508255487.git.gdouezangrard@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH resend v5 3/3] platform/x86: intel_cht_int33fe: Update
+ fusb302 type string, add properties
+Date: Fri, 27 Oct 2017 17:24:05 +0200
+Message-ID: <62bb0948-f763-d726-9a88-d5cc2b2e2c9c@redhat.com>
+References: <20171011094121.6108-1-hdegoede@redhat.com>
+ <20171011094121.6108-4-hdegoede@redhat.com>
+ <20171026203323.w5xj2mms5epda6pt@ninjato>
+ <5f747f91-0eb8-5566-5de3-b5dfd1f134ce@redhat.com>
+ <011c294b-20c3-9c37-3606-626b2201fde9@redhat.com>
+ <20171027104126.iaoandrsng7hxehq@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1508255487.git.gdouezangrard@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171027104126.iaoandrsng7hxehq@ninjato>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 17, 2017 at 7:17 PM, Guillaume Dou=C3=A9zan-Grard
-<gdouezangrard@gmail.com> wrote:
-> Hi Darren,
->
-> On Topstar U931 Notebooks, an issue prevents the WLAN toggle key from
-> being properly managed by the Embedded Controller and successfully
-> disconnect the adapter. A specific ACPI method allows to toggle the WLAN
-> LED state regardless.
->
-> These are barebone laptops, sold under quite a lot of brands and
-> configurations, with different firmwares and so on. I can only say for su=
-re
-> that this issue is present for all the models sold under a specific brand=
-,
-> that's why I'm reluctant to enable this by default with a DMI check.
->
-> Thus, the new `led_workaround` option registers this LED with the
-> corresponding subsystem, making possible to use a software-based trigger
-> (rfkill for instance to synchronize the LED with the softkill state).
->
-> Thank you for your time,
+Hi,
 
-I have applied to my review and testing queue with some changes:
-- device names are left unchanged (it's ABI, we can't just change
-device name to whatever we want if we can't guarantee that doesn't
-break anything, at least I can't)
-- labels should mark what is expected to be executed when code chooses that=
- path
-- I split module authors to two macro calls (this makes slightly
-better readability in the sources and when one calls modinfo)
+On 27-10-17 12:41, Wolfram Sang wrote:
+> On Fri, Oct 27, 2017 at 12:31:01PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 27-10-17 12:13, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 26-10-17 22:33, Wolfram Sang wrote:
+>>>> On Wed, Oct 11, 2017 at 11:41:21AM +0200, Hans de Goede wrote:
+>>>>> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
+>>>>> rather then just "fusb302" and needs us to set a number of device-
+>>>>> properties, adjust the intel_cht_int33fe driver accordingly.
+>>>>>
+>>>>> One of the properties set is max-snk-mv which makes the fusb302 driver
+>>>>> negotiate up to 12V charging voltage, which is a bad idea on boards
+>>>>> which are not setup to handle this, so this commit also adds 2 extra
+>>>>> sanity checks to make sure that the expected Whiskey Cove PMIC +
+>>>>> TI bq24292i charger combo, which can handle 12V, is present.
+>>>>>
+>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>>>
+>>>> I can't apply this one. Is there an immutable branch I need to pick up?
+>>>> Or shall this go via another tree? My base is v4.14-rc5.
+>>>
+>>> It should be applied on top of this patch:
+>>>
+>>> http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/commitdiff/5c003458db40cf3c89aeddd22c6e934c28b5a565
+>>>
+>>>   From linux-platform-drivers-x86.git/for-next.
+>>>
+>>> So either we are going to need an immutable branch from you
+>>> with the first patch of this series so that the platform/x86
+>>> maintainers can merge this, or the other way around :|
+>>
+>> Alternatively we could push this patch as a post rc1 fix I guess.
+> 
+> I intentionally did not push out yet until this was cleared. So, I think
+> the most simple option is that I create an immutable branch with only
+> the i2c patches from you. Then linux-platform maintainers can pull in
+> my branch and your patch here on top of that. Would be my favourite.
+> 
+> D'accord everyone?
 
-Can you check if it's okay with your devices and works as expected?
+Works for me, ack.
 
-If everything okay, take my them from review-andy branch, add commit
-message to where it's missed and send a new version.
+Regards,
 
-Thanks.
-
->
-> --
-> Guillaume Dou=C3=A9zan-Grard
->
-> Guillaume Dou=C3=A9zan-Grard (4):
->   platform/x86: topstar-laptop: non-functional changes
->   platform/x86: topstar-laptop: change to generic module
->   platform/x86: topstar-laptop: add platform device
->   platform/x86: topstar-laptop: add optional WLAN LED workaround
->
->  drivers/platform/x86/Kconfig          |   2 +
->  drivers/platform/x86/topstar-laptop.c | 339 ++++++++++++++++++++++++++--=
-------
->  2 files changed, 267 insertions(+), 74 deletions(-)
->
-> --
-> 2.14.1
->
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Hans
