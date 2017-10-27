@@ -1,82 +1,48 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: [PULL REQUEST] i2c/cht-wc-fusb302-immutable branch for v4.15
-Date: Fri, 27 Oct 2017 21:35:51 +0200
-Message-ID: <20171027193546.x5wccdcd7kq3faa6@ninjato>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-uart-backlight: new backlight driver
+ for DELL AIO
+Date: Fri, 27 Oct 2017 23:23:55 +0300
+Message-ID: <CAHp75Ve6f7zcD3jNCcRFj1reMg5wupzgJEHBmSH5S6-R0_apNQ@mail.gmail.com>
+References: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
+ <08add166d5b34992ba167a878ca2a808@ausx13mpc124.AMER.DELL.COM>
+ <CAMz9Wg-gMCsZGhfy7tmo4H-BYA7FnwA0mi+1VkBaQ7A4aC-TmA@mail.gmail.com> <377b9a237f6448bba0f5a0b83c77d7bd@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ufwmqlvn7p3fmkzf"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from sauhun.de ([88.99.104.3]:35249 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752646AbdJ0Tfw (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 15:35:52 -0400
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <377b9a237f6448bba0f5a0b83c77d7bd@ausx13mpc124.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: AceLan Kao <acelan.kao@canonical.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Fri, Oct 27, 2017 at 6:52 PM,  <Mario.Limonciello@dell.com> wrote:
 
---ufwmqlvn7p3fmkzf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> and there is a new interface to deal with this kind of requirement, serdev.
+>> But serdev is introduced after v4.12, to make it work before serdev, I
+>> can't find other good solutions for it.
+>
+> Right, I know you have a need for this to work on older kernel too, so I think
+> this interface as you did it makes sense on older kernel, but please do use serdev
+> on newer kernel and as this is upstreamed.
 
-Hi,
+Exactly, we don't care about old kernels in a new code.
 
-as discussed before, here is the immutable branch for the i2c-cht-wc
-driver, so you can safely apply Hans' patch "[PATCH resend v5 3/3]
-platform/x86: intel_cht_int33fe: Update fusb302 type string, add
-properties" [1] on top of this.
+>> >> +     /* unregister acpi backlight interface */
+>> >> +     acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
+>> >
+>> > Since you change this when the driver is loaded, you should cache the old
+>> > value and restore it when the driver is unloaded too.
+>>
+>> In this case, acpi backlight doesn't work, all the backlight
+>> operations would go through UART commands.
+>> So, it safe to remove it.
+>
+> OK.
+> I think it would be good to include a command about this so that folks who
+> look at this later understand this.
 
-Thanks,
+s/command/comment/ I suppose.
 
-   Wolfram
-
-[1] http://patchwork.ozlabs.org/patch/824314/
-
-
-The following changes since commit bb176f67090ca54869fc1262c913aa69d2ede070:
-
-  Linux 4.14-rc6 (2017-10-23 06:49:47 -0400)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/cht-wc-fusb302-immutable
-
-for you to fetch changes up to 0224d45c9d46401b6d7018a96cfe049c5da7d91c:
-
-  i2c-cht-wc: Add device-properties for fusb302 integration (2017-10-27 15:51:51 +0200)
-
-----------------------------------------------------------------
-Hans de Goede (2):
-      i2c: Allow overriding dev_name through board_info
-      i2c-cht-wc: Add device-properties for fusb302 integration
-
- drivers/i2c/busses/Kconfig      |  5 ++++
- drivers/i2c/busses/i2c-cht-wc.c | 51 +++++++++++++++++++++++++++++++++++------
- drivers/i2c/i2c-core-base.c     | 10 ++++++--
- include/linux/i2c.h             |  2 ++
- 4 files changed, 59 insertions(+), 9 deletions(-)
-
---ufwmqlvn7p3fmkzf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnzipIACgkQFA3kzBSg
-KbZjEhAAo2IslrbeXykt87qA5+GLkbUyKGGLi+JIT6jfmt/wVYICUXsm0FRoLhSI
-fz8ZDxmkip7u+VNy+awvHg36hnTXq2/TLQ7nMFwLw81CPpnMOrH0Lm/YoeZHbW9g
-c+PEOBm0+QfRIc81Dk5X4/Vz19X++JvrJDPlJ9/YngLO8aeatQjJamr9ED0cGkZC
-qaOGhUAOzgDureenY0ovNQdTknTr745uAcB09FSos1z2duG99pG5vh6RF1PjJWeX
-E6WRqV7fySr9WohRhhOPPfS1QfsFrGTKALlYloVc1fGd4Bl+1/aRouL0fTaPzv7r
-Z3Kxk5ZHFENjMi1CPETkjtIBARJ8ljsHYeEjWZBdfgmh2maCtFldycHv4qag5D75
-ekM6sesItgFYhOgfEVt7qsq0e6ChrEZYWrLcRnzucoVQY3U+GfVvpvocSUf8uGwB
-1UldsL+BKmplNpi4/ynIgli7X9VoJZxtgBHMfwX1rfc5XHdM8UpgBXSwq9mhXNZq
-sLygaMG6kDRNPGa44ah2vw2aYLAhpi4KSVNi6+UFzW1Qzflh6LRS4Rs31DPgd0BQ
-RdalNtD8Tlrmnz+r5DqgCKAhs32E0dsUm1Fk0MmhNK9sNru1sCvQVsjubaHs2LJ2
-QWoIUDUPEK/XW/aILDYRFKPCa19bi1+t9778Kd4a+/JO5JDJ3bQ=
-=lZcy
------END PGP SIGNATURE-----
-
---ufwmqlvn7p3fmkzf--
+-- 
+With Best Regards,
+Andy Shevchenko
