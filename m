@@ -1,70 +1,58 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: silead_dmi: Add entry for the Digma e200 tablet
-Date: Fri, 27 Oct 2017 12:27:07 +0200
-Message-ID: <20171027102707.8313-1-hdegoede@redhat.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:52990 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752420AbdJ0K1K (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 06:27:10 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sergey Tshovrebov <sinxwal@gmail.com>
+Subject: Re: [PATCH resend v5 3/3] platform/x86: intel_cht_int33fe: Update
+ fusb302 type string, add properties
+Date: Fri, 27 Oct 2017 12:31:01 +0200
+Message-ID: <011c294b-20c3-9c37-3606-626b2201fde9@redhat.com>
+References: <20171011094121.6108-1-hdegoede@redhat.com>
+ <20171011094121.6108-4-hdegoede@redhat.com>
+ <20171026203323.w5xj2mms5epda6pt@ninjato>
+ <5f747f91-0eb8-5566-5de3-b5dfd1f134ce@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <5f747f91-0eb8-5566-5de3-b5dfd1f134ce@redhat.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Sergey Tshovrebov <sinxwal@gmail.com>
+Hi,
 
-Add touchscreen platform data for the Digma e200 tablet.
+On 27-10-17 12:13, Hans de Goede wrote:
+> Hi,
+> 
+> On 26-10-17 22:33, Wolfram Sang wrote:
+>> On Wed, Oct 11, 2017 at 11:41:21AM +0200, Hans de Goede wrote:
+>>> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
+>>> rather then just "fusb302" and needs us to set a number of device-
+>>> properties, adjust the intel_cht_int33fe driver accordingly.
+>>>
+>>> One of the properties set is max-snk-mv which makes the fusb302 driver
+>>> negotiate up to 12V charging voltage, which is a bad idea on boards
+>>> which are not setup to handle this, so this commit also adds 2 extra
+>>> sanity checks to make sure that the expected Whiskey Cove PMIC +
+>>> TI bq24292i charger combo, which can handle 12V, is present.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>
+>> I can't apply this one. Is there an immutable branch I need to pick up?
+>> Or shall this go via another tree? My base is v4.14-rc5.
+> 
+> It should be applied on top of this patch:
+> 
+> http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/commitdiff/5c003458db40cf3c89aeddd22c6e934c28b5a565
+> 
+>  From linux-platform-drivers-x86.git/for-next.
+> 
+> So either we are going to need an immutable branch from you
+> with the first patch of this series so that the platform/x86
+> maintainers can merge this, or the other way around :|
 
-Signed-off-by: Sergey Tshovrebov <sinxwal@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Alternatively we could push this patch as a post rc1 fix I guess.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index ac304f2318cc..266535c2a72f 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -155,6 +155,22 @@ static const struct silead_ts_dmi_data chuwi_hi8_pro_data = {
- 	.properties	= chuwi_hi8_pro_props,
- };
- 
-+static const struct property_entry digma_citi_e200_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl1686-digma_citi_e200.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data digma_citi_e200_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= digma_citi_e200_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -246,6 +262,15 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
- 		},
- 	},
-+	{
-+		/* Digma Citi E200 */
-+		.driver_data = (void *)&digma_citi_e200_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Digma"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "CITI E200"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+		},
-+	},
- 	{ },
- };
- 
--- 
-2.14.2
+Regards,
+
+Hans
