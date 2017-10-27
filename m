@@ -1,61 +1,102 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-uart-backlight: new backlight driver
- for DELL AIO
-Date: Fri, 27 Oct 2017 15:52:48 +0000
-Message-ID: <377b9a237f6448bba0f5a0b83c77d7bd@ausx13mpc124.AMER.DELL.COM>
-References: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
- <08add166d5b34992ba167a878ca2a808@ausx13mpc124.AMER.DELL.COM>
- <CAMz9Wg-gMCsZGhfy7tmo4H-BYA7FnwA0mi+1VkBaQ7A4aC-TmA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [RFC v6 3/9] platform/x86: intel_punit_ipc: Fix resource ioremap warning
+Date: Fri, 27 Oct 2017 19:19:25 +0300
+Message-ID: <CAHp75VeNFQLS_MM6weOW7dD7E0kRq9mUOOpnx-MLy88i7cBG1Q@mail.gmail.com>
+References: <cover.1508368279.git.sathyanarayanan.kuppuswamy@linux.intel.com> <de1b81a25959bcda0a73aa58ecc91df8207f7787.1508368279.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz9Wg-gMCsZGhfy7tmo4H-BYA7FnwA0mi+1VkBaQ7A4aC-TmA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: acelan.kao@canonical.com
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:55556 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751145AbdJ0QT1 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 27 Oct 2017 12:19:27 -0400
+In-Reply-To: <de1b81a25959bcda0a73aa58ecc91df8207f7787.1508368279.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Ingo Molnar <mingo@redhat.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>
 
-PiA+DQo+ID4gTG9va2luZyBhdCB0aGUgY29tbWVudCBmb3Igc2VyaWFsODI1MF9nZXRfcG9ydCwg
-aXQgc291bmRzIGxpa2UgdGhlIHNlcmlhbCBkcml2ZXINCj4gPiBkb2Vzbid0IHJlYWxseSB3YW50
-IG90aGVyIGRyaXZlcnMgdXNpbmcgdGhpcyBmdW5jdGlvbiBvdXRzaWRlIG9mIHN1c3BlbmQvcmVz
-dW1lDQo+IGNhbGxiYWNrLg0KPiA+DQo+ID4gLyoqDQo+ID4gICogc2VyaWFsODI1MF9nZXRfcG9y
-dCAtIHJldHJpZXZlIHN0cnVjdCB1YXJ0XzgyNTBfcG9ydA0KPiA+ICAqIEBsaW5lOiBzZXJpYWwg
-bGluZSBudW1iZXINCj4gPiAgKg0KPiA+ICAqIFRoaXMgZnVuY3Rpb24gcmV0cmlldmVzIHN0cnVj
-dCB1YXJ0XzgyNTBfcG9ydCBmb3IgdGhlIHNwZWNpZmljIGxpbmUuDQo+ID4gICogVGhpcyBzdHJ1
-Y3QgKm11c3QqICpub3QqIGJlIHVzZWQgdG8gcGVyZm9ybSBhIDgyNTAgb3Igc2VyaWFsIGNvcmUg
-b3BlcmF0aW9uDQo+ID4gICogd2hpY2ggaXMgbm90IGFjY2Vzc2libGUgb3RoZXJ3aXNlLiBJdHMg
-b25seSBwdXJwb3NlIGlzIHRvIG1ha2UgdGhlIHN0cnVjdA0KPiA+ICAqIGFjY2Vzc2libGUgdG8g
-dGhlIHJ1bnRpbWUtcG0gY2FsbGJhY2tzIGZvciBjb250ZXh0IHN1c3BlbmQvcmVzdG9yZS4NCj4g
-PiAgKiBUaGUgbG9jayBhc3N1bXB0aW9uIG1hZGUgaGVyZSBpcyBub25lIGJlY2F1c2UgcnVudGlt
-ZS1wbSBzdXNwZW5kL3Jlc3VtZQ0KPiA+ICAqIGNhbGxiYWNrcyBzaG91bGQgbm90IGJlIGludm9r
-ZWQgaWYgdGhlcmUgaXMgYW55IG9wZXJhdGlvbiBwZXJmb3JtZWQgb24gdGhlDQo+ID4gICogcG9y
-dC4NCj4gPiAgKi8NCj4gPiBodHRwOi8vZWxpeGlyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vbGlu
-dXgvdjQuMTMvc291cmNlL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfY29yZS5jI0w0MDkN
-Cj4gPg0KPiA+IElmIHNlcmlhbCBjb3JlIGRvZXNuJ3QgcHJvdmlkZSBhbiBBUEksIGhhdmUgeW91
-IGFscmVhZHkgZGlzY3Vzc2VkIHdpdGggc2VyaWFsDQo+IG1haW50YWluZXINCj4gPiB0byByZXZp
-ZXcgeW91ciBhcHByb2FjaD8gIEl0IG1pZ2h0IG1ha2Ugc2Vuc2UgdG8gd29yayB3aXRoIHNlcmlh
-bCBtYWludGFpbmVyIHRvDQo+IHByb3ZpZGUNCj4gPiBhbiBBUEkgZm9yIHRoaXMgdHlwZSBvZiB1
-c2VjYXNlIGlmIGl0IGRvZXNuJ3QgZXhpc3QuDQo+IFllcywgSSBrbm93IHRoZSBwb2ludGVyIHJl
-dHVybmVkIGZyb20gc2VyaWFsODI1MF9nZXRfcG9ydCgpIGJlY29tZXMNCj4gdW5hdmFpbGFibGUg
-YWZ0ZXIgUzMuDQo+IFNvLCBJIHByb3ZpZGUgYSBzdXNwZW5kL3Jlc3VtZSBmdW5jdGlvbiB0cnkg
-dG8gd29ya2Fyb3VuZCBpdC4NCj4gQnV0IGp1c3QgbGlrZSB0aGUgY29tbWVudCBkZXNjcmliZWQs
-IGl0J3Mgcmlza3kgdG8gcGVyZm9ybSBzZXJpYWwNCj4gb3BlcmF0aW9ucyBieSB1c2luZyB0aGUg
-c3RydWN0dXJlLA0KPiBhbmQgdGhlcmUgaXMgYSBuZXcgaW50ZXJmYWNlIHRvIGRlYWwgd2l0aCB0
-aGlzIGtpbmQgb2YgcmVxdWlyZW1lbnQsIHNlcmRldi4NCj4gQnV0IHNlcmRldiBpcyBpbnRyb2R1
-Y2VkIGFmdGVyIHY0LjEyLCB0byBtYWtlIGl0IHdvcmsgYmVmb3JlIHNlcmRldiwgSQ0KPiBjYW4n
-dCBmaW5kIG90aGVyIGdvb2Qgc29sdXRpb25zIGZvciBpdC4NCg0KUmlnaHQsIEkga25vdyB5b3Ug
-aGF2ZSBhIG5lZWQgZm9yIHRoaXMgdG8gd29yayBvbiBvbGRlciBrZXJuZWwgdG9vLCBzbyBJIHRo
-aW5rDQp0aGlzIGludGVyZmFjZSBhcyB5b3UgZGlkIGl0IG1ha2VzIHNlbnNlIG9uIG9sZGVyIGtl
-cm5lbCwgYnV0IHBsZWFzZSBkbyB1c2Ugc2VyZGV2DQpvbiBuZXdlciBrZXJuZWwgYW5kIGFzIHRo
-aXMgaXMgdXBzdHJlYW1lZC4NCg0KPiANCj4gPj4gKyAgICAgLyogdW5yZWdpc3RlciBhY3BpIGJh
-Y2tsaWdodCBpbnRlcmZhY2UgKi8NCj4gPj4gKyAgICAgYWNwaV92aWRlb19zZXRfZG1pX2JhY2ts
-aWdodF90eXBlKGFjcGlfYmFja2xpZ2h0X3ZlbmRvcik7DQo+ID4NCj4gPiBTaW5jZSB5b3UgY2hh
-bmdlIHRoaXMgd2hlbiB0aGUgZHJpdmVyIGlzIGxvYWRlZCwgeW91IHNob3VsZCBjYWNoZSB0aGUg
-b2xkDQo+ID4gdmFsdWUgYW5kIHJlc3RvcmUgaXQgd2hlbiB0aGUgZHJpdmVyIGlzIHVubG9hZGVk
-IHRvby4NCj4gDQo+IEluIHRoaXMgY2FzZSwgYWNwaSBiYWNrbGlnaHQgZG9lc24ndCB3b3JrLCBh
-bGwgdGhlIGJhY2tsaWdodA0KPiBvcGVyYXRpb25zIHdvdWxkIGdvIHRocm91Z2ggVUFSVCBjb21t
-YW5kcy4NCj4gU28sIGl0IHNhZmUgdG8gcmVtb3ZlIGl0Lg0KDQpPSy4NCkkgdGhpbmsgaXQgd291
-bGQgYmUgZ29vZCB0byBpbmNsdWRlIGEgY29tbWFuZCBhYm91dCB0aGlzIHNvIHRoYXQgZm9sa3Mg
-d2hvDQpsb29rIGF0IHRoaXMgbGF0ZXIgdW5kZXJzdGFuZCB0aGlzLg0KDQpUaGFua3MsDQo=
+On Thu, Oct 19, 2017 at 3:23 AM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> For PUNIT device, ISPDRIVER_IPC and GTDDRIVER_IPC resources are
+> not mandatory. So when PMC IPC driver creates a PUNIT device, if
+> these resources are not available then it creates dummy resource
+> entries for these missing resources. But during PUNIT device probe
+> , doing ioremap on these dummy resources generates following warning
+> messages.
+
+Applied for my review and testing queue, thanks!
+
+>
+> intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
+> 0x00000000]
+> intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
+> 0x00000000]
+> intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
+> 0x00000000]
+> intel_punit_ipc intel_punit_ipc: can't request region for resource [mem
+> 0x00000000]
+>
+> This patch fixes this issue by adding extra check for resource size
+> before performing ioremap operation.
+>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_punit_ipc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> Changes since v5:
+>  * None
+>
+> Changes since v4:
+>  * None
+>
+> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+> index a47a41f..b5b8901 100644
+> --- a/drivers/platform/x86/intel_punit_ipc.c
+> +++ b/drivers/platform/x86/intel_punit_ipc.c
+> @@ -252,28 +252,28 @@ static int intel_punit_get_bars(struct platform_device *pdev)
+>          * - GTDRIVER_IPC BASE_IFACE
+>          */
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] = addr;
+> --
+> 2.7.4
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
