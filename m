@@ -1,69 +1,76 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_turbo_max_3: Add Skylake platform
-Date: Fri, 27 Oct 2017 19:32:26 +0300
-Message-ID: <CAHp75VcXMMcQOKRmL9sgVnWPRcPDm59C=_JjPDrcHkTMABcQwg@mail.gmail.com>
-References: <1508604720-7261-1-git-send-email-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: silead_dmi: Add entry for the Digma e200 tablet
+Date: Fri, 27 Oct 2017 19:45:24 +0300
+Message-ID: <CAHp75VeP-WFkLOGyw4n4OSFFetndLCz67onuTu96C9dF5qSdiA@mail.gmail.com>
+References: <20171027102707.8313-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:54384 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751145AbdJ0Qc1 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 12:32:27 -0400
-In-Reply-To: <1508604720-7261-1-git-send-email-srinivas.pandruvada@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171027102707.8313-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sergey Tshovrebov <sinxwal@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 21, 2017 at 7:52 PM, Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
-> Ev Kontsevoy reported that he can't see the presence of
-> "/proc/sys/kernel/sched_itmt_enabled" on i9-7900x with Asrock x299
-> Taichi system even if he enabled "Turbo 3.0" in the BIOS.
+On Fri, Oct 27, 2017 at 1:27 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> From: Sergey Tshovrebov <sinxwal@gmail.com>
 >
-> The problem is that even if one core max is 200MHz more than others, the
-> current implementation couldn't enumerate that with the way the system
-> is configured.
+> Add touchscreen platform data for the Digma e200 tablet.
 >
-> The system by default configured for legacy mode (no HWP or speed shift
-> technology), in this mode only way we can enumerate via the mail box
-> interface as implemented in this driver. We were planing to only use
-> this driver for Broadwell, but we need to extend this because some
-> Skylake system has same issue as Braodwell systems.
->
-> On this system BIOS allows to change to HWP mode, where we expect that
-> we can enumerate favored core with ACPI-CPPC. But on this system the
-> core priority is 0xff for all cores in CPPC object. So this is not an
-> option.
->
-> Hence this change allows Skylake systems to be enumerate favored core
-> similar to Broadwell in legacy mode.
 
 Pushed to my review and testing queue, thanks!
 
->
-> Reported-and-tested-by: Ev Kontsevoy <ev@kontsevoy.com>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Signed-off-by: Sergey Tshovrebov <sinxwal@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/intel_turbo_max_3.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 >
-> diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel_turbo_max_3.c
-> index 4f60d8e..d4ea018 100644
-> --- a/drivers/platform/x86/intel_turbo_max_3.c
-> +++ b/drivers/platform/x86/intel_turbo_max_3.c
-> @@ -125,6 +125,7 @@ static int itmt_legacy_cpu_online(unsigned int cpu)
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+> index ac304f2318cc..266535c2a72f 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -155,6 +155,22 @@ static const struct silead_ts_dmi_data chuwi_hi8_pro_data = {
+>         .properties     = chuwi_hi8_pro_props,
+>  };
 >
->  static const struct x86_cpu_id itmt_legacy_cpu_ids[] = {
->         ICPU(INTEL_FAM6_BROADWELL_X),
-> +       ICPU(INTEL_FAM6_SKYLAKE_X),
->         {}
+> +static const struct property_entry digma_citi_e200_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl1686-digma_citi_e200.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct silead_ts_dmi_data digma_citi_e200_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = digma_citi_e200_props,
+> +};
+> +
+>  static const struct dmi_system_id silead_ts_dmi_table[] = {
+>         {
+>                 /* CUBE iwork8 Air */
+> @@ -246,6 +262,15 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
+>                 },
+>         },
+> +       {
+> +               /* Digma Citi E200 */
+> +               .driver_data = (void *)&digma_citi_e200_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Digma"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "CITI E200"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+> +               },
+> +       },
+>         { },
 >  };
 >
 > --
-> 2.5.5
+> 2.14.2
 >
 
 
