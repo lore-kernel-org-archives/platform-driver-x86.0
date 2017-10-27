@@ -1,53 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: silead_dmi: Add silead,home-button
- property to some tablets
-Date: Fri, 27 Oct 2017 18:36:34 +0300
-Message-ID: <CAHp75Ve-+Jkip+WK7qWjpH8cu++X249uR2e3vfnm6VcexgHKnw@mail.gmail.com>
-References: <20171017154512.30524-1-hdegoede@redhat.com> <20171017154512.30524-2-hdegoede@redhat.com>
- <CAHp75Vf=MPfCfj3X8ob0+LT_+MT+SW9nsNzw0Pai2OcBrdqWvA@mail.gmail.com> <2e5b4fd2-5445-a1f6-c509-5de2bb96c491@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-uart-backlight: new backlight driver
+ for DELL AIO
+Date: Fri, 27 Oct 2017 15:52:48 +0000
+Message-ID: <377b9a237f6448bba0f5a0b83c77d7bd@ausx13mpc124.AMER.DELL.COM>
+References: <1509004429-1596-1-git-send-email-acelan.kao@canonical.com>
+ <08add166d5b34992ba167a878ca2a808@ausx13mpc124.AMER.DELL.COM>
+ <CAMz9Wg-gMCsZGhfy7tmo4H-BYA7FnwA0mi+1VkBaQ7A4aC-TmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f169.google.com ([209.85.220.169]:52086 "EHLO
-        mail-qk0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750851AbdJ0Pgf (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Oct 2017 11:36:35 -0400
-In-Reply-To: <2e5b4fd2-5445-a1f6-c509-5de2bb96c491@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz9Wg-gMCsZGhfy7tmo4H-BYA7FnwA0mi+1VkBaQ7A4aC-TmA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: acelan.kao@canonical.com
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Oct 27, 2017 at 6:26 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On 27-10-17 16:39, Andy Shevchenko wrote:
->> On Tue, Oct 17, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com>
->> wrote:
->>>
->>> Add "silead,home-button" property to entries for tablets which have
->>> a capacitive home button (typically a windows logo on the front).
->>>
->>> This new property is checked for by the new capacitive home button
->>> support in the silead touchscreen driver.
-
->> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>
->> I suppose it's going through input subsystem as dependent patch?
-
-> Since silead_dmi tends to see several patches each cycle I don't
-> think that is a good idea, both patches can be merged independently.
->
-> Either patch will not do anything until the other one is merged,
-> having just one or the other present will not cause any problems,
-> so IMHO merging each patch separately is best.
-
-Fine.
-
-> It is probably a good idea to wait for an ack from RobH on the
-> property name before merging this though.
-
-Yes, this is good advice. Let's wait for Rob's Ack.
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiA+DQo+ID4gTG9va2luZyBhdCB0aGUgY29tbWVudCBmb3Igc2VyaWFsODI1MF9nZXRfcG9ydCwg
+aXQgc291bmRzIGxpa2UgdGhlIHNlcmlhbCBkcml2ZXINCj4gPiBkb2Vzbid0IHJlYWxseSB3YW50
+IG90aGVyIGRyaXZlcnMgdXNpbmcgdGhpcyBmdW5jdGlvbiBvdXRzaWRlIG9mIHN1c3BlbmQvcmVz
+dW1lDQo+IGNhbGxiYWNrLg0KPiA+DQo+ID4gLyoqDQo+ID4gICogc2VyaWFsODI1MF9nZXRfcG9y
+dCAtIHJldHJpZXZlIHN0cnVjdCB1YXJ0XzgyNTBfcG9ydA0KPiA+ICAqIEBsaW5lOiBzZXJpYWwg
+bGluZSBudW1iZXINCj4gPiAgKg0KPiA+ICAqIFRoaXMgZnVuY3Rpb24gcmV0cmlldmVzIHN0cnVj
+dCB1YXJ0XzgyNTBfcG9ydCBmb3IgdGhlIHNwZWNpZmljIGxpbmUuDQo+ID4gICogVGhpcyBzdHJ1
+Y3QgKm11c3QqICpub3QqIGJlIHVzZWQgdG8gcGVyZm9ybSBhIDgyNTAgb3Igc2VyaWFsIGNvcmUg
+b3BlcmF0aW9uDQo+ID4gICogd2hpY2ggaXMgbm90IGFjY2Vzc2libGUgb3RoZXJ3aXNlLiBJdHMg
+b25seSBwdXJwb3NlIGlzIHRvIG1ha2UgdGhlIHN0cnVjdA0KPiA+ICAqIGFjY2Vzc2libGUgdG8g
+dGhlIHJ1bnRpbWUtcG0gY2FsbGJhY2tzIGZvciBjb250ZXh0IHN1c3BlbmQvcmVzdG9yZS4NCj4g
+PiAgKiBUaGUgbG9jayBhc3N1bXB0aW9uIG1hZGUgaGVyZSBpcyBub25lIGJlY2F1c2UgcnVudGlt
+ZS1wbSBzdXNwZW5kL3Jlc3VtZQ0KPiA+ICAqIGNhbGxiYWNrcyBzaG91bGQgbm90IGJlIGludm9r
+ZWQgaWYgdGhlcmUgaXMgYW55IG9wZXJhdGlvbiBwZXJmb3JtZWQgb24gdGhlDQo+ID4gICogcG9y
+dC4NCj4gPiAgKi8NCj4gPiBodHRwOi8vZWxpeGlyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vbGlu
+dXgvdjQuMTMvc291cmNlL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfY29yZS5jI0w0MDkN
+Cj4gPg0KPiA+IElmIHNlcmlhbCBjb3JlIGRvZXNuJ3QgcHJvdmlkZSBhbiBBUEksIGhhdmUgeW91
+IGFscmVhZHkgZGlzY3Vzc2VkIHdpdGggc2VyaWFsDQo+IG1haW50YWluZXINCj4gPiB0byByZXZp
+ZXcgeW91ciBhcHByb2FjaD8gIEl0IG1pZ2h0IG1ha2Ugc2Vuc2UgdG8gd29yayB3aXRoIHNlcmlh
+bCBtYWludGFpbmVyIHRvDQo+IHByb3ZpZGUNCj4gPiBhbiBBUEkgZm9yIHRoaXMgdHlwZSBvZiB1
+c2VjYXNlIGlmIGl0IGRvZXNuJ3QgZXhpc3QuDQo+IFllcywgSSBrbm93IHRoZSBwb2ludGVyIHJl
+dHVybmVkIGZyb20gc2VyaWFsODI1MF9nZXRfcG9ydCgpIGJlY29tZXMNCj4gdW5hdmFpbGFibGUg
+YWZ0ZXIgUzMuDQo+IFNvLCBJIHByb3ZpZGUgYSBzdXNwZW5kL3Jlc3VtZSBmdW5jdGlvbiB0cnkg
+dG8gd29ya2Fyb3VuZCBpdC4NCj4gQnV0IGp1c3QgbGlrZSB0aGUgY29tbWVudCBkZXNjcmliZWQs
+IGl0J3Mgcmlza3kgdG8gcGVyZm9ybSBzZXJpYWwNCj4gb3BlcmF0aW9ucyBieSB1c2luZyB0aGUg
+c3RydWN0dXJlLA0KPiBhbmQgdGhlcmUgaXMgYSBuZXcgaW50ZXJmYWNlIHRvIGRlYWwgd2l0aCB0
+aGlzIGtpbmQgb2YgcmVxdWlyZW1lbnQsIHNlcmRldi4NCj4gQnV0IHNlcmRldiBpcyBpbnRyb2R1
+Y2VkIGFmdGVyIHY0LjEyLCB0byBtYWtlIGl0IHdvcmsgYmVmb3JlIHNlcmRldiwgSQ0KPiBjYW4n
+dCBmaW5kIG90aGVyIGdvb2Qgc29sdXRpb25zIGZvciBpdC4NCg0KUmlnaHQsIEkga25vdyB5b3Ug
+aGF2ZSBhIG5lZWQgZm9yIHRoaXMgdG8gd29yayBvbiBvbGRlciBrZXJuZWwgdG9vLCBzbyBJIHRo
+aW5rDQp0aGlzIGludGVyZmFjZSBhcyB5b3UgZGlkIGl0IG1ha2VzIHNlbnNlIG9uIG9sZGVyIGtl
+cm5lbCwgYnV0IHBsZWFzZSBkbyB1c2Ugc2VyZGV2DQpvbiBuZXdlciBrZXJuZWwgYW5kIGFzIHRo
+aXMgaXMgdXBzdHJlYW1lZC4NCg0KPiANCj4gPj4gKyAgICAgLyogdW5yZWdpc3RlciBhY3BpIGJh
+Y2tsaWdodCBpbnRlcmZhY2UgKi8NCj4gPj4gKyAgICAgYWNwaV92aWRlb19zZXRfZG1pX2JhY2ts
+aWdodF90eXBlKGFjcGlfYmFja2xpZ2h0X3ZlbmRvcik7DQo+ID4NCj4gPiBTaW5jZSB5b3UgY2hh
+bmdlIHRoaXMgd2hlbiB0aGUgZHJpdmVyIGlzIGxvYWRlZCwgeW91IHNob3VsZCBjYWNoZSB0aGUg
+b2xkDQo+ID4gdmFsdWUgYW5kIHJlc3RvcmUgaXQgd2hlbiB0aGUgZHJpdmVyIGlzIHVubG9hZGVk
+IHRvby4NCj4gDQo+IEluIHRoaXMgY2FzZSwgYWNwaSBiYWNrbGlnaHQgZG9lc24ndCB3b3JrLCBh
+bGwgdGhlIGJhY2tsaWdodA0KPiBvcGVyYXRpb25zIHdvdWxkIGdvIHRocm91Z2ggVUFSVCBjb21t
+YW5kcy4NCj4gU28sIGl0IHNhZmUgdG8gcmVtb3ZlIGl0Lg0KDQpPSy4NCkkgdGhpbmsgaXQgd291
+bGQgYmUgZ29vZCB0byBpbmNsdWRlIGEgY29tbWFuZCBhYm91dCB0aGlzIHNvIHRoYXQgZm9sa3Mg
+d2hvDQpsb29rIGF0IHRoaXMgbGF0ZXIgdW5kZXJzdGFuZCB0aGlzLg0KDQpUaGFua3MsDQo=
