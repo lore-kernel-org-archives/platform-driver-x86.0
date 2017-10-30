@@ -1,49 +1,71 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] platform/x86: peaq-wmi: Remove unnecessary checks from peaq_wmi_exit
-Date: Mon, 30 Oct 2017 14:07:38 +0100
-Message-ID: <20171030130738.14415-2-hdegoede@redhat.com>
-References: <20171030130738.14415-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171030130738.14415-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v11 05/15] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Mon, 30 Oct 2017 13:32:57 +0000
+Message-ID: <27e2d166f2ce461fb025ebf06a284d01@ausx13mpc124.AMER.DELL.COM>
+References: <cover.1508515469.git.mario.limonciello@dell.com>
+ <a740a284f62e9fbbefe0f2567e20ccf997d43e25.1508515469.git.mario.limonciello@dell.com>
+ <20171030114652.kopuffflshq2ates@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:9417 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751593AbdJ3NdA (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 30 Oct 2017 09:33:00 -0400
+In-Reply-To: <20171030114652.kopuffflshq2ates@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-peaq_wmi_exit will only ever get called if peaq_wmi_init succeeds, so
-there is no need to repeat the checks from peaq_wmi_init.
-
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/peaq-wmi.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-index 2da48ecc90c1..9b9e1f39bbfb 100644
---- a/drivers/platform/x86/peaq-wmi.c
-+++ b/drivers/platform/x86/peaq-wmi.c
-@@ -66,7 +66,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
- }
- 
- /* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
--static const struct dmi_system_id peaq_dmi_table[] = {
-+static const struct dmi_system_id peaq_dmi_table[] __initconst = {
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-@@ -102,12 +102,6 @@ static int __init peaq_wmi_init(void)
- 
- static void __exit peaq_wmi_exit(void)
- {
--	if (!dmi_check_system(peaq_dmi_table))
--		return;
--
--	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
--		return;
--
- 	input_unregister_polled_device(peaq_poll_dev);
- }
- 
--- 
-2.14.2
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
+aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5LCBPY3RvYmVyIDMwLCAy
+MDE3IDY6NDcgQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9A
+RGVsbC5jb20+DQo+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxh
+bmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsNCj4gTEtNTCA8bGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5DQo+IEx1
+dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz47IHF1YXNpc2VjQGdvb2dsZS5jb207IHJqd0Byand5
+c29ja2kubmV0Ow0KPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVn
+QGtyb2FoLmNvbT47IEFsYW4gQ294DQo+IDxnbm9tZXNAbHhvcmd1ay51a3V1Lm9yZy51az4NCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMDUvMTVdIHBsYXRmb3JtL3g4NjogZGVsbC13bWktZGVz
+Y3JpcHRvcjogc3BsaXQgV01JDQo+IGRlc2NyaXB0b3IgaW50byBpdCdzIG93biBkcml2ZXINCj4g
+DQo+IE9uIEZyaWRheSAyMCBPY3RvYmVyIDIwMTcgMTI6NDA6MjAgTWFyaW8gTGltb25jaWVsbG8g
+d3JvdGU6DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWRl
+c2NyaXB0b3IuYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWRlc2NyaXB0b3Iu
+Yw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4zMjA0
+YzQwOGUyNjENCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94
+ODYvZGVsbC13bWktZGVzY3JpcHRvci5jDQo+IA0KPiBUaGlzIGRlbGwtd21pLWRlc2NyaXB0b3Iu
+YyBsb29rcyBnb29kIG5vdyENCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2RlbGwtd21pLWRlc2NyaXB0b3IuaA0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwt
+d21pLWRlc2NyaXB0b3IuaA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAw
+MDAwMDAwMDAwLi41ZjdiNjljMmM4M2ENCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktZGVzY3JpcHRvci5oDQo+ID4gQEAgLTcyMSw3ICs2
+NTIsOSBAQCBzdGF0aWMgaW50IGRlbGxfd21pX2V2ZW50c19zZXRfZW5hYmxlZChib29sIGVuYWJs
+ZSkNCj4gPiAgc3RhdGljIGludCBkZWxsX3dtaV9wcm9iZShzdHJ1Y3Qgd21pX2RldmljZSAqd2Rl
+dikNCj4gPiAgew0KPiA+ICAJc3RydWN0IGRlbGxfd21pX3ByaXYgKnByaXY7DQo+ID4gLQlpbnQg
+ZXJyOw0KPiA+ICsNCj4gPiArCWlmICghd21pX2hhc19ndWlkKERFTExfV01JX0RFU0NSSVBUT1Jf
+R1VJRCkpDQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+ID4NCj4gPiAgCXByaXYgPSBkZXZtX2t6
+YWxsb2MoDQo+ID4gIAkJJndkZXYtPmRldiwgc2l6ZW9mKHN0cnVjdCBkZWxsX3dtaV9wcml2KSwg
+R0ZQX0tFUk5FTCk7DQo+ID4gQEAgLTcyOSw5ICs2NjIsOCBAQCBzdGF0aWMgaW50IGRlbGxfd21p
+X3Byb2JlKHN0cnVjdCB3bWlfZGV2aWNlICp3ZGV2KQ0KPiA+ICAJCXJldHVybiAtRU5PTUVNOw0K
+PiA+ICAJZGV2X3NldF9kcnZkYXRhKCZ3ZGV2LT5kZXYsIHByaXYpOw0KPiA+DQo+ID4gLQllcnIg
+PSBkZWxsX3dtaV9jaGVja19kZXNjcmlwdG9yX2J1ZmZlcih3ZGV2KTsNCj4gPiAtCWlmIChlcnIp
+DQo+ID4gLQkJcmV0dXJuIGVycjsNCj4gPiArCWlmICghZGVsbF93bWlfZ2V0X2ludGVyZmFjZV92
+ZXJzaW9uKCZwcml2LT5pbnRlcmZhY2VfdmVyc2lvbikpDQo+ID4gKwkJcmV0dXJuIC1FUFJPQkVf
+REVGRVI7DQo+IA0KPiBCdXQgaGVyZSBpcyBzdGlsbCBhIHByb2JsZW0uIFlvdSBhZGRlZCBjaGVj
+ayB0aGF0DQo+IERFTExfV01JX0RFU0NSSVBUT1JfR1VJRCBleGlzdHMgaW4gQVBDSSB0YWJsZSwg
+YnV0IGl0IGRvZXMgbm90IG1lYW4gdGhhdA0KPiBwcm9iZSBtZXRob2Qgb2YgZGVsbC13bWktZGVz
+Y3JpcHRvciBjYW5ub3QgZmFpbC4NCj4gDQo+IFdpdGggUFJPQkVfREVGRVIsIGRlbGxfd21pX3By
+b2JlIGZ1bmN0aW9uIHdvdWxkIGJlIGNhbGxlZCBsYXRlciBhZ2Fpbg0KPiBhbmQgYWdhaW4sIGV2
+ZW4gd2hlbiBwcm9iaW5nIGRlbGwtd21pLWRlc2NyaXB0b3IgZmFpbGVkIGFuZCBzbyBkZWxsLXdt
+aQ0KPiBpbiB0aGlzIGNhc2UgY2Fubm90IHdvcmsuDQo+IA0KDQpZZXMgaXQncyBwb3NzaWJsZSB0
+aGF0IHByb2JlIG1ldGhvZCBjYW4gZmFpbCwgYnV0IGl0IGRlcGVuZHMgb24gdGhlIHJlYXNvbiBm
+b3INCmZhaWx1cmUgaWYgaXQgd2lsbCBmYWlsIGFnYWluIGxhdGVyLiAgRm9yIGV4YW1wbGUgaWYg
+bm90IGVub3VnaCBtZW1vcnksIGl0IG1heSB3b3JrDQpsYXRlci4gIE9yIG1heWJlIHVzZXIgbWFu
+dWFsbHkgdW5ib3VuZCBmcm9tIEdVSUQsIHNob3VsZCBjb250aW51ZSB0byB0cnkgdW50aWwNCml0
+J3MgYm91bmQgYWdhaW4uDQoNClNvIGluIHNob3J0LCBJIGJlbGlldmUgdGhpcyBpcyB0aGUgY29y
+cmVjdCBiZWhhdmlvciB0byBhZG9wdC4NCg==
