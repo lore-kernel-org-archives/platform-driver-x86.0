@@ -1,34 +1,49 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 1/2] platform/x86: peaq_wmi: Fix missing terminating entry for peaq_dmi_table
-Date: Mon, 30 Oct 2017 14:07:37 +0100
-Message-ID: <20171030130738.14415-1-hdegoede@redhat.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
+Subject: [PATCH 2/2] platform/x86: peaq-wmi: Remove unnecessary checks from peaq_wmi_exit
+Date: Mon, 30 Oct 2017 14:07:38 +0100
+Message-ID: <20171030130738.14415-2-hdegoede@redhat.com>
+References: <20171030130738.14415-1-hdegoede@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171030130738.14415-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add missing terminating entry to peaq_dmi_table.
+peaq_wmi_exit will only ever get called if peaq_wmi_init succeeds, so
+there is no need to repeat the checks from peaq_wmi_init.
 
-Fixes: 3b95206110a2 ("platform/x86: peaq-wmi: Add DMI check before ...")
-Cc: stable@vger.kernel.org
-Reported-by: Fengguang Wu <fengguang.wu@intel.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/peaq-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/peaq-wmi.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-index 67fa3fa32011..2da48ecc90c1 100644
+index 2da48ecc90c1..9b9e1f39bbfb 100644
 --- a/drivers/platform/x86/peaq-wmi.c
 +++ b/drivers/platform/x86/peaq-wmi.c
-@@ -73,6 +73,7 @@ static const struct dmi_system_id peaq_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
- 		},
- 	},
-+	{}
- };
+@@ -66,7 +66,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
+ }
  
- static int __init peaq_wmi_init(void)
+ /* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
+-static const struct dmi_system_id peaq_dmi_table[] = {
++static const struct dmi_system_id peaq_dmi_table[] __initconst = {
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
+@@ -102,12 +102,6 @@ static int __init peaq_wmi_init(void)
+ 
+ static void __exit peaq_wmi_exit(void)
+ {
+-	if (!dmi_check_system(peaq_dmi_table))
+-		return;
+-
+-	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
+-		return;
+-
+ 	input_unregister_polled_device(peaq_poll_dev);
+ }
+ 
 -- 
 2.14.2
