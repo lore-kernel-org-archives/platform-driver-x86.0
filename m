@@ -1,47 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
-Date: Mon, 30 Oct 2017 13:21:50 +0200
-Message-ID: <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
-References: <20171025042946.13225-1-kernel@kempniu.pl> <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
- <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v11 05/15] platform/x86: dell-wmi-descriptor: split WMI
+ descriptor into it's own driver
+Date: Mon, 30 Oct 2017 12:46:52 +0100
+Message-ID: <20171030114652.kopuffflshq2ates@pali>
+References: <cover.1508515469.git.mario.limonciello@dell.com>
+ <a740a284f62e9fbbefe0f2567e20ccf997d43e25.1508515469.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
+Content-Disposition: inline
+In-Reply-To: <a740a284f62e9fbbefe0f2567e20ccf997d43e25.1508515469.git.mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Harvey <harv@gmx.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 29, 2017 at 11:28 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
-niu.pl> wrote:
->> On Wed, Oct 25, 2017 at 7:29 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@ke=
-mpniu.pl> wrote:
->> > Radio LED detection method implemented in commit 4f62568c1fcf
->> > ("fujitsu-laptop: Support radio LED") turned out to be incorrect as it
->> > causes a radio LED to be erroneously detected on a Fujitsu Lifebook E7=
-51
->> > which has a slide switch (and thus no radio LED).  Use bit 17 of
->> > flags_supported (the value returned by method S000 of ACPI device
->> > FUJ02E3) to determine whether a radio LED is present as it seems to be=
- a
->> > more reliable indicator, based on comparing DSDT tables of four Fujits=
-u
->> > Lifebook models (E744, E751, S7110, S8420).
->> >
->>
->> Pushed to my review and testing queue, thanks!
->
-> I forgot that this patch can also be tagged with:
->
-> Fixes: 4f62568c1fcf ("fujitsu-laptop: Support radio LED")
+On Friday 20 October 2017 12:40:20 Mario Limonciello wrote:
+> diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+> new file mode 100644
+> index 000000000000..3204c408e261
+> --- /dev/null
+> +++ b/drivers/platform/x86/dell-wmi-descriptor.c
 
-Added.
+This dell-wmi-descriptor.c looks good now!
 
-Do you consider this an important fix? We are at -rc7 now, I'm not
-sure it's so critical. Tell me if you consider otherwise.
+> diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
+> new file mode 100644
+> index 000000000000..5f7b69c2c83a
+> --- /dev/null
+> +++ b/drivers/platform/x86/dell-wmi-descriptor.h
+> @@ -721,7 +652,9 @@ static int dell_wmi_events_set_enabled(bool enable)
+>  static int dell_wmi_probe(struct wmi_device *wdev)
+>  {
+>  	struct dell_wmi_priv *priv;
+> -	int err;
+> +
+> +	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
+> +		return -ENODEV;
+>  
+>  	priv = devm_kzalloc(
+>  		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
+> @@ -729,9 +662,8 @@ static int dell_wmi_probe(struct wmi_device *wdev)
+>  		return -ENOMEM;
+>  	dev_set_drvdata(&wdev->dev, priv);
+>  
+> -	err = dell_wmi_check_descriptor_buffer(wdev);
+> -	if (err)
+> -		return err;
+> +	if (!dell_wmi_get_interface_version(&priv->interface_version))
+> +		return -EPROBE_DEFER;
 
---=20
-With Best Regards,
-Andy Shevchenko
+But here is still a problem. You added check that
+DELL_WMI_DESCRIPTOR_GUID exists in APCI table, but it does not mean that
+probe method of dell-wmi-descriptor cannot fail.
+
+With PROBE_DEFER, dell_wmi_probe function would be called later again
+and again, even when probing dell-wmi-descriptor failed and so dell-wmi
+in this case cannot work.
+
+>  	return dell_wmi_input_setup(wdev);
+>  }
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
