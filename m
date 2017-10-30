@@ -1,50 +1,66 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Don't oops when FUJ02E3 is
- not presnt
-Date: Mon, 30 Oct 2017 09:27:00 +1030
-Message-ID: <20171029225659.GF27493@marvin.atrad.com.au>
-References: <20170918200059.16279-1-ville.syrjala@linux.intel.com>
- <20170923000048.GC20327@fury>
- <20170926044908.GA9170@kmp-mobile.hq.kempniu.pl>
- <20171018151058.GL10981@intel.com>
- <20171025045131.GB13202@kmp-mobile.hq.kempniu.pl>
+From: Osama Khan <osama.khan@ericsson.com>
+Subject: RE: [PATCH] hp_accel: Add accelerometer quirk for HP ProBook 440 G4
+Date: Mon, 30 Oct 2017 06:10:15 +0000
+Message-ID: <DB6PR07MB312634CA42BC1E03663EE15DFA590@DB6PR07MB3126.eurprd07.prod.outlook.com>
+References: <DB6PR07MB31265A5AD192563695B8B929FA4E0@DB6PR07MB3126.eurprd07.prod.outlook.com>
+ <CAHp75Vf6JgQnKiPRGVkpeR=fj_7YTBp5Re4WxSuCUwOXysgE=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:48210 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751152AbdJ2W6A (ORCPT
+Received: from sessmg22.ericsson.net ([193.180.251.58]:51752 "EHLO
+        sessmg22.ericsson.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751540AbdJ3GKT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2017 18:58:00 -0400
-Content-Disposition: inline
-In-Reply-To: <20171025045131.GB13202@kmp-mobile.hq.kempniu.pl>
+        Mon, 30 Oct 2017 02:10:19 -0400
+In-Reply-To: <CAHp75Vf6JgQnKiPRGVkpeR=fj_7YTBp5Re4WxSuCUwOXysgE=w@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Oct 25, 2017 at 06:51:31AM +0200, Micha?? K??pie?? wrote:
-> > > Finally, it seems the S6120 also has a row of "application panel"
-> > > hotkeys above the keyboard, but lacks the FUJ02E3 ACPI device, so I am
-> > > wondering whether these hotkeys work in Linux.  Ville, do they?
-> > 
-> > They work via the apanel driver.
-> 
-> Oops, then it looks like we have two drivers which poke the same
-> hardware at the same time using different methods: apanel uses SMBus,
-> fujitsu-laptop uses ACPI (the former is inferior as it resorts to
-> polling, which causes key presses to be reported with a delay).  I just
-> loaded both drivers on my Fujitsu Lifebook S7020 and it results in
-> duplicate events being passed to userspace.  We should probably prevent
-> this, but I am not quite sure how to achieve that.
-
-That's a bit tricky.  Evidently some models need the SMBus approach because
-they lack the FUJ02E3 device.  However, on systems with the FUJ02E3 the
-ACPI method is clearly desirable.  Should apanel disable itself on systems
-where an FUJ02E3 is present (although I'm not sure how precisely to arrange
-for this to happen)?  Then again, this would only be feasible if the ACPI
-method can handle all application panel variations which are seen across the
-various models.
-
-Regards
-  jonathan
+VGhhbmtzIGZvciByZXZpZXdpbmcgdGhlIHBhdGNoLiBJJ2xsIGtlZXAgeW91ciBmZWVkYmFjayBp
+biBtaW5kIGZvciBmdXR1cmUgc3VibWlzc2lvbnMuDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQpGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFp
+bHRvOnBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYg
+T2YgQW5keSBTaGV2Y2hlbmtvDQpTZW50OiBGcmlkYXksIE9jdG9iZXIgMjcsIDIwMTcgOTozMSBQ
+TQ0KVG86IE9zYW1hIEtoYW4gPG9zYW1hLmtoYW5AZXJpY3Nzb24uY29tPg0KQ2M6IGVyaWMucGll
+bEB0cmVtcGxpbi11dGMubmV0OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSF0gaHBfYWNj
+ZWw6IEFkZCBhY2NlbGVyb21ldGVyIHF1aXJrIGZvciBIUCBQcm9Cb29rIDQ0MCBHNA0KDQpPbiBT
+YXQsIE9jdCAyMSwgMjAxNyBhdCAxOjQyIFBNLCBPc2FtYSBLaGFuIDxvc2FtYS5raGFuQGVyaWNz
+c29uLmNvbT4gd3JvdGU6DQo+IEFkZGVkIHN1cHBvcnQgZm9yIEhQIFByb0Jvb2sgNDQwIEc0IGxh
+cHRvcHMgYnkgaW5jbHVkaW5nIHRoZSANCj4gYWNjZWxlcm9tZXRlciBvcmllbnRhdGlvbiBxdWly
+ayBmb3IgdGhhdCBkZXZpY2UuIFRlc3Rpbmcgd2FzIHBlcmZvcm1lZCANCj4gYmFzZWQgb24gdGhl
+IGF4aXMgb3JpZW50YXRpb24gZ3VpZGVsaW5lcyBoZXJlOg0KPiBodHRwczovL3d3dy5rZXJuZWwu
+b3JnL2RvYy9Eb2N1bWVudGF0aW9uL21pc2MtZGV2aWNlcy9saXMzbHYwMmQNCj4gd2hpY2ggc3Rh
+dGVzICJJZiB0aGUgbGVmdCBzaWRlIGlzIGVsZXZhdGVkLCBYIGluY3JlYXNlcyAoYmVjb21lcyBw
+b3NpdGl2ZSkiDQo+DQo+IFdoZW4gdGVzdGVkLCBvbiBsaWZ0aW5nIHRoZSBsZWZ0IGVkZ2UsIHgg
+dmFsdWVzIGJlY2FtZSBpbmNyZWFzaW5nbHkgDQo+IG5lZ2F0aXZlIHRodXMgaW5kaWNhdGluZyBh
+biBpbnZlcnRlZCB4LWF4aXMgb24gdGhlIGluc3RhbGxlZCBsaXMzbHYwMmQgY2hpcC4NCj4gVGhp
+cyB3YXMgY29tcGVuc2F0ZWQgYnkgYWRkaW5nIGFuIGVudHJ5IGZvciB0aGlzIGRldmljZSBpbiBo
+cF9hY2NlbC5jIA0KPiBzcGVjaWZ5aW5nIHRoZSBxdWlyayBhcyB4X2ludmVydGVkLiBUaGUgcGF0
+Y2ggd2FzIHRlc3RlZCBvbiBhIFByb0Jvb2sgDQo+IDQ0MCBHNCBkZXZpY2UgYW5kIHgtYXhpcyBh
+cyB3ZWxsIGFzIHkgYW5kIHotYXhpcyB2YWx1ZXMgYXJlIG5vdyANCj4gZ2VuZXJhdGVkIGFzIHBl
+ciBzcGVjLg0KPg0KDQpUaGFua3MgZm9yIHRoZSBwYXRjaC4NCg0KRmlyc3Qgb2YgYWxsLCBpbmRl
+bnRhdGlvbiBpcyBtYW5nbGVkIGFuZCBpdCBkb2Vzbid0IGNsZWFybHkgYXBwbGllcy4NClNlY29u
+ZCwgd2UgdXNlIGEgcHJlZml4IHBsYXRmb3JtL3g4NiBmb3IgcGF0Y2hlcyBhZ2FpbnN0IFBEeDg2
+IHN1YnN5c3RlbS4NCg0KUC5TLiBObyBuZWVkIHRvIHJlc2VuZCB0aGlzIHRpbWUsIGp1c3QgY2hl
+Y2sgeW91ciBtYWlsIGNsaWVudCBhbmQgYmUgYXdhcmUgYWJvdXQgdGhlIHByZWZpeCBpbiB0aGUg
+ZnV0dXJlLg0KDQo+IFNpZ25lZC1vZmYtYnk6IE9zYW1hIEtoYW4gPG9zYW1hLmtoYW5AZXJpY3Nz
+b24uY29tPg0KPiAtLS0NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwX2Fj
+Y2VsLmMgDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHBfYWNjZWwuYyBpbmRleCA0OTNkODkx
+MGE3NGUuLjdiMTJhYmU4NmI5NCANCj4gMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2hwX2FjY2VsLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHBfYWNjZWwuYw0K
+PiBAQCAtMjQwLDYgKzI0MCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBs
+aXMzbHYwMmRfZG1pX2lkc1tdID0gew0KPiAgICAgICAgIEFYSVNfRE1JX01BVENIKCJIRFgxOCIs
+ICJIUCBIRFggMTgiLCB4X2ludmVydGVkKSwNCj4gICAgICAgICBBWElTX0RNSV9NQVRDSCgiSFBC
+NDMyeCIsICJIUCBQcm9Cb29rIDQzMiIsIHh5X3JvdGF0ZWRfbGVmdCksDQo+ICAgICAgICAgQVhJ
+U19ETUlfTUFUQ0goIkhQQjQ0MEczIiwgIkhQIFByb0Jvb2sgNDQwIEczIiwgDQo+IHhfaW52ZXJ0
+ZWRfdXNkKSwNCj4gKyAgICAgICBBWElTX0RNSV9NQVRDSCgiSFBCNDQwRzQiLCAiSFAgUHJvQm9v
+ayA0NDAgRzQiLCB4X2ludmVydGVkKSwNCj4gICAgICAgICBBWElTX0RNSV9NQVRDSCgiSFBCNDQy
+eCIsICJIUCBQcm9Cb29rIDQ0MiIsIHh5X3JvdGF0ZWRfbGVmdCksDQo+ICAgICAgICAgQVhJU19E
+TUlfTUFUQ0goIkhQQjQ1MngiLCAiSFAgUHJvQm9vayA0NTIiLCB5X2ludmVydGVkKSwNCj4gICAg
+ICAgICBBWElTX0RNSV9NQVRDSCgiSFBCNTIyeCIsICJIUCBQcm9Cb29rIDUyMiIsIHh5X3N3YXAp
+LA0KDQoNCg0KLS0NCldpdGggQmVzdCBSZWdhcmRzLA0KQW5keSBTaGV2Y2hlbmtvDQo=
