@@ -1,62 +1,75 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: peaq-wmi: Remove unnecessary checks
- from peaq_wmi_exit
-Date: Mon, 30 Oct 2017 16:09:11 +0200
-Message-ID: <CAHp75VcgwYgF_U9KQfdN-37t_bPXtC5G2m19sy0XJu=CEBwowg@mail.gmail.com>
-References: <20171030130738.14415-1-hdegoede@redhat.com> <20171030130738.14415-2-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
+Date: Mon, 30 Oct 2017 16:13:53 +0200
+Message-ID: <CAHp75Vf-kohM2sTeDsoT2dPbHSQDd0eGU0FDA9Ua+CXrxvzigg@mail.gmail.com>
+References: <20171025042946.13225-1-kernel@kempniu.pl> <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
+ <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl> <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
+ <20171030121257.GA28737@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171030130738.14415-2-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f170.google.com ([209.85.220.170]:43473 "EHLO
+        mail-qk0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751700AbdJ3ONy (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 30 Oct 2017 10:13:54 -0400
+In-Reply-To: <20171030121257.GA28737@marvin.atrad.com.au>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Harvey <harv@gmx.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Oct 30, 2017 at 3:07 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> peaq_wmi_exit will only ever get called if peaq_wmi_init succeeds, so
-> there is no need to repeat the checks from peaq_wmi_init.
-
-Both pushed to my review and testing queue, thanks!
-
+On Mon, Oct 30, 2017 at 2:12 PM, Jonathan Woithe <jwoithe@just42.net> wrote:
+> On Mon, Oct 30, 2017 at 01:21:50PM +0200, Andy Shevchenko wrote:
+>> On Sun, Oct 29, 2017 at 11:28 PM, Micha?? K??pie?? <kernel@kempniu.pl> wrote:
+>> >> On Wed, Oct 25, 2017 at 7:29 AM, Micha?? K??pie?? <kernel@kempniu.pl> wrote:
+>> >> > Radio LED detection method implemented in commit 4f62568c1fcf
+>> >> > ("fujitsu-laptop: Support radio LED") turned out to be incorrect as it
+>> >> > causes a radio LED to be erroneously detected on a Fujitsu Lifebook E751
+>> >> > which has a slide switch (and thus no radio LED).  Use bit 17 of
+>> >> > flags_supported (the value returned by method S000 of ACPI device
+>> >> > FUJ02E3) to determine whether a radio LED is present as it seems to be a
+>> >> > more reliable indicator, based on comparing DSDT tables of four Fujitsu
+>> >> > Lifebook models (E744, E751, S7110, S8420).
+>> >> >
+>> >>
+>> >> Pushed to my review and testing queue, thanks!
+>> >
+>> > I forgot that this patch can also be tagged with:
+>> >
+>> > Fixes: 4f62568c1fcf ("fujitsu-laptop: Support radio LED")
+>>
+>> Added.
+>>
+>> Do you consider this an important fix? We are at -rc7 now, I'm not
+>> sure it's so critical. Tell me if you consider otherwise.
 >
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/peaq-wmi.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-> index 2da48ecc90c1..9b9e1f39bbfb 100644
-> --- a/drivers/platform/x86/peaq-wmi.c
-> +++ b/drivers/platform/x86/peaq-wmi.c
-> @@ -66,7 +66,7 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
->  }
->
->  /* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
-> -static const struct dmi_system_id peaq_dmi_table[] = {
-> +static const struct dmi_system_id peaq_dmi_table[] __initconst = {
->         {
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-> @@ -102,12 +102,6 @@ static int __init peaq_wmi_init(void)
->
->  static void __exit peaq_wmi_exit(void)
->  {
-> -       if (!dmi_check_system(peaq_dmi_table))
-> -               return;
-> -
-> -       if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
-> -               return;
-> -
->         input_unregister_polled_device(peaq_poll_dev);
->  }
->
-> --
-> 2.14.2
+> I agree - from my perspective I wouldn't have thought it so critical as to
+> push it out this late in the development cycle.  It's not a regression as
+> such and is largely cosmetic.  Others may argue differently though.
 >
 
+Got it!
 
+> BTW, it looks like you may have missed my Reviewed-by tag on this patch,
+> sent on 25 Oct.  There was also a Tested-by added by Heinrich Siebmanns on
+> the same day:
+>
+> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+> Tested-by: Heinrich Siebmanns <harv@gmx.de>
+
+The first one is indeed missed and sorry, can't touch the change
+anymore (it is published now).
+The second one is there.
+
+So, I applied a patch with tags that were parsed by patchwork at that time.
+Since Heinrich's ones are there, perhaps something happened to your
+tag that it wasn't recognized, sorry.
+
+> Or perhaps such peripheral tags aren't carried forward on patches like this,
+> in which case it's a moot point.
+
+It's okay to have them.
 
 -- 
 With Best Regards,
