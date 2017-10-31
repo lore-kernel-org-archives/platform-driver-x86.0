@@ -1,38 +1,102 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: platform/x86/peaq-wmi on non-peaq devices
-Date: Tue, 31 Oct 2017 10:14:58 +0100
-Message-ID: <41b5889c-a0aa-6337-8fde-2cc1b4446a77@redhat.com>
-References: <CAPWNY8WUKOGSjCKrn9wkvMev8M_VX4eqXHk7uNF1CGH3=pGwNQ@mail.gmail.com>
+From: Harvey <harv@gmx.de>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
+Date: Tue, 31 Oct 2017 11:54:05 +0100
+Message-ID: <683ac1cb-abf5-8d16-d016-8cbb4a75964e@gmx.de>
+References: <20171025042946.13225-1-kernel@kempniu.pl>
+ <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
+ <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
+ <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
+ <20171030121257.GA28737@marvin.atrad.com.au>
+ <20171031042002.GA9788@larwa.localdomain>
+Reply-To: harv@gmx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="C6JTbFfohe3L31CtWpnsS7Xc9WarLb7fA"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:55528 "EHLO mx1.redhat.com"
+Received: from mout.gmx.net ([212.227.17.22]:58720 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750978AbdJaJPH (ORCPT
+        id S1751667AbdJaKyy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2017 05:15:07 -0400
-In-Reply-To: <CAPWNY8WUKOGSjCKrn9wkvMev8M_VX4eqXHk7uNF1CGH3=pGwNQ@mail.gmail.com>
-Content-Language: en-US
+        Tue, 31 Oct 2017 06:54:54 -0400
+In-Reply-To: <20171031042002.GA9788@larwa.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Mantas_Mikul=c4=97nas?= <grawity@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--C6JTbFfohe3L31CtWpnsS7Xc9WarLb7fA
+Content-Type: multipart/mixed; boundary="724NW2eDbtlI0mWP18vro43wwPwdsWxXt";
+ protected-headers="v1"
+From: Harvey <harv@gmx.de>
+Reply-To: harv@gmx.de
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
+ Jonathan Woithe <jwoithe@just42.net>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>,
+ Platform Driver <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <683ac1cb-abf5-8d16-d016-8cbb4a75964e@gmx.de>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
+References: <20171025042946.13225-1-kernel@kempniu.pl>
+ <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
+ <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
+ <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
+ <20171030121257.GA28737@marvin.atrad.com.au>
+ <20171031042002.GA9788@larwa.localdomain>
+In-Reply-To: <20171031042002.GA9788@larwa.localdomain>
 
-On 31-10-17 10:13, Mantas Mikulėnas wrote:
-> Hello,
-> 
-> Recently I have seen quite a few people (in Linux support channels I frequent) have issues with the peaq-wmi driver being autoloaded on *non* PEAQ devices and subsequently flooding the user with ghost keypresses. They end up having to blacklist the module locally.
-> 
-> I noticed that the WMI GUID used by the driver, {ABBC0F6F-8EA1-11D1-00A0-C90629100000}, is identical to a GUID used in *Windows driver examples* published by Microsoft. (For example, it shows up on Google at <https://github.com/Microsoft/Windows-driver-samples/blob/master/wmi/wmiacpi/device.asl>.)
-> 
-> So I'm guessing that quite a few manufacturers decided to copy&paste this GUID into their own drivers/firmwares, but use it for completely different things. Given that, instead of trying to build a DMI blacklist in the module, perhaps the right thing would be to add a DMI *whitelist*?
+--724NW2eDbtlI0mWP18vro43wwPwdsWxXt
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Correct this is already queued for 4.15, with a Cc: stable:
+> I agree as well.  The erroneous log messages will only be generated whe=
+n
+> any rfkill device in the system is enabled or disabled, so IMHO this is=
 
-http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/shortlog/refs/heads/for-next
+> mostly a nuisance thus can be handled when convenient.
 
-Regards,
+FWIW: They are generated several times during every startup of the machin=
+e:
 
-Hans
+sudo journalctl -b | grep radio_led
+718:Okt 31 11:46:21 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+744:Okt 31 11:46:22 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+760:Okt 31 11:46:22 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+790:Okt 31 11:46:22 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+793:Okt 31 11:46:22 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+893:Okt 31 11:46:29 gruenix kernel: leds fujitsu::radio_led: Setting an
+LED's brightness failed (-2147483648)
+
+But, yes. This is only a cosmetic issue. There don't seem to be too many
+people reportig this as well.
+
+Greetings
+Harvey
+
+--=20
+I am root. If you see me laughing, you'd better have a backup!
+
+
+--724NW2eDbtlI0mWP18vro43wwPwdsWxXt--
+
+--C6JTbFfohe3L31CtWpnsS7Xc9WarLb7fA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRSRNvmxYqoNs6vm0SLlqqYsFRKCQUCWfhWUwAKCRCLlqqYsFRK
+CTsxAJ9RnKDvM0VETe1/TxhEVnFMSPITlwCeID6Xdz0OvMZ37P4e+7k4Z/V3R4U=
+=NHJt
+-----END PGP SIGNATURE-----
+
+--C6JTbFfohe3L31CtWpnsS7Xc9WarLb7fA--
