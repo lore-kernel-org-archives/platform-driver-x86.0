@@ -1,73 +1,43 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: Re: [PATCH] Sony-laptop: Use common error handling code in
- sony_nc_setup_rfkill()
-Date: Tue, 31 Oct 2017 15:24:05 +0100
-Message-ID: <dadb7068-e4ed-b91d-ce31-aca2d6afd9f3@users.sourceforge.net>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v11 08/15] platform/x86: dell-smbios: Add a sysfs
+ interface for SMBIOS tokens
+Date: Tue, 31 Oct 2017 08:24:06 -0700
+Message-ID: <20171031152406.GA55546@localhost.localdomain>
+References: <cover.1508515469.git.mario.limonciello@dell.com>
+ <363404cf80b9060fca645b5e64bda8de75f59b56.1508515469.git.mario.limonciello@dell.com>
+ <20171030115608.r2y7w33an47fkple@pali>
+ <d36f99812e794d5baf53a989f7286e4e@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.15.14]:65327 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751779AbdJaOYh (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:40418 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751565AbdJaPYL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2017 10:24:37 -0400
-In-Reply-To: <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
-Content-Language: en-GB
+        Tue, 31 Oct 2017 11:24:11 -0400
+Content-Disposition: inline
+In-Reply-To: <d36f99812e794d5baf53a989f7286e4e@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-> Apparently this patch done without reading the actual code.
-
-I performed another simple software refactoring.
-
-
-> NAK.
+On Mon, Oct 30, 2017 at 01:36:16PM +0000, Mario.Limonciello@dell.com wrote:
+> > 
+> > Hint: you can move this check out of j-loop as condition is independent
+> > of it.
 > 
-> -1 is EPERM which sounds wrong here. If you would like to fix it,
-> propagate a real error codes from sony_call_snc_handle().
-
-I do not know at the moment why an error code which you find
-questionable was suggested by Marco Chiappero on 2012-05-19
-and committed by Matthew Garrett on 2012-05-31 (according the
-commit d6f15ed876b83a1a0eba1d0473eef58acc95444a: use soft rfkill
-status stored in hw).
-
-
->>         if (!rfk)
->>                 return -ENOMEM;
+> That's true, thanks.
 > 
-> Okay error code.
-
-Can any other identifier make more sense there?
-
-
->> -       }
->> +       if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0)
->> +               goto destroy_rfk;
->> +
->>         hwblock = !(result & 0x1);
->>
->>         if (sony_call_snc_handle(sony_rfkill_handle,
->> -                               sony_rfkill_address[nc_type],
->> -                               &result) < 0) {
->> -               rfkill_destroy(rfk);
->> -               return -1;
+> > 
+> > Also how many tokens are there? Is not quadratic solution too slow?
+> > 
 > 
-> Not okay and it might be different from previous case.
+> ~< 250 on most machines is what I've seen.  To me that that's a small
+> enough number that this is quick.  It only happens at initialization.
 
-The shown function call was repeated with an other parameter.
-Which error reporting would you find more appropriate then?
+Agreed, not a hot path. Prefer simplicity to performance here.
 
-
-> P.S. Don't bother us with patches on which you didn't do your home work.
-
-Do we occasionally need to distinguish better between an ordinary
-refactoring and the adjustments for additional software improvements?
-
-Regards,
-Markus
+-- 
+Darren Hart
+VMware Open Source Technology Center
