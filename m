@@ -1,55 +1,73 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform: x86: dell-smo8800: remove redundant
- assignments to byte_data
-Date: Tue, 31 Oct 2017 15:13:51 +0100
-Message-ID: <20171031141351.yrjhwweubwxptb4j@pali>
-References: <20171031110318.20985-1-colin.king@canonical.com>
- <CAHp75Vec3Hjd_keMid-x6ub5ZJqUmq1nUFiHPsxuWt8V+vzrnQ@mail.gmail.com>
- <20171031135548.u5vtsxj7hbnuioz3@pali>
- <CAHp75VfAzk4n1HQETp+r5KGE5B_HmQ0JcsOwesvowuvt=wju5g@mail.gmail.com>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: Re: [PATCH] Sony-laptop: Use common error handling code in
+ sony_nc_setup_rfkill()
+Date: Tue, 31 Oct 2017 15:24:05 +0100
+Message-ID: <dadb7068-e4ed-b91d-ce31-aca2d6afd9f3@users.sourceforge.net>
+References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+ <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:52573 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932213AbdJaONz (ORCPT
+Received: from mout.web.de ([212.227.15.14]:65327 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751779AbdJaOYh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2017 10:13:55 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfAzk4n1HQETp+r5KGE5B_HmQ0JcsOwesvowuvt=wju5g@mail.gmail.com>
+        Tue, 31 Oct 2017 10:24:37 -0400
+In-Reply-To: <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+Content-Language: en-GB
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Colin King <colin.king@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
 
-On Tuesday 31 October 2017 16:07:25 Andy Shevchenko wrote:
-> On Tue, Oct 31, 2017 at 3:55 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > On Tuesday 31 October 2017 15:47:58 Andy Shevchenko wrote:
-> >> On Tue, Oct 31, 2017 at 1:03 PM, Colin King <colin.king@canonical.com> wrote:
-> >> > From: Colin Ian King <colin.king@canonical.com>
-> >> >
-> >> > Variable byte_data is being initialized and re-assigned with values that
-> >> > are never read. Remove these as these redundant assignments. Cleans up
-> >> > clang warning:
-> >> >
-> >> > drivers/platform/x86/dell-smo8800.c:106:2: warning: Value stored to 'byte_data'
-> >> > is never read
-> >>
-> >> Thanks for the patch.
-> >>
-> >> As I read a code it was from the beginning like this. I dunno what was
-> >> a motivation of this pieces, thus I would like to hear Pali.
-> >
-> > IIRC this part of code comes from the lis3lv* driver which was used for
-> > HP EliteBook machines. As both drivers provides similar interface for
-> > userspace.
+> Apparently this patch done without reading the actual code.
+
+I performed another simple software refactoring.
+
+
+> NAK.
 > 
-> OK, though it doesn't clarify the intention of the byte_data
-> (useless?) assignments.
+> -1 is EPERM which sounds wrong here. If you would like to fix it,
+> propagate a real error codes from sony_call_snc_handle().
 
-Probably similar code pattern exists in that lis3lv* driver...
+I do not know at the moment why an error code which you find
+questionable was suggested by Marco Chiappero on 2012-05-19
+and committed by Matthew Garrett on 2012-05-31 (according the
+commit d6f15ed876b83a1a0eba1d0473eef58acc95444a: use soft rfkill
+status stored in hw).
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+
+>>         if (!rfk)
+>>                 return -ENOMEM;
+> 
+> Okay error code.
+
+Can any other identifier make more sense there?
+
+
+>> -       }
+>> +       if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0)
+>> +               goto destroy_rfk;
+>> +
+>>         hwblock = !(result & 0x1);
+>>
+>>         if (sony_call_snc_handle(sony_rfkill_handle,
+>> -                               sony_rfkill_address[nc_type],
+>> -                               &result) < 0) {
+>> -               rfkill_destroy(rfk);
+>> -               return -1;
+> 
+> Not okay and it might be different from previous case.
+
+The shown function call was repeated with an other parameter.
+Which error reporting would you find more appropriate then?
+
+
+> P.S. Don't bother us with patches on which you didn't do your home work.
+
+Do we occasionally need to distinguish better between an ordinary
+refactoring and the adjustments for additional software improvements?
+
+Regards,
+Markus
