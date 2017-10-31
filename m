@@ -1,76 +1,41 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: [PATCH] Sony-laptop: Use common error handling code in
- sony_nc_setup_rfkill()
-Date: Mon, 30 Oct 2017 21:15:21 +0100
-Message-ID: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
+Date: Tue, 31 Oct 2017 05:20:02 +0100
+Message-ID: <20171031042002.GA9788@larwa.localdomain>
+References: <20171025042946.13225-1-kernel@kempniu.pl>
+ <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
+ <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
+ <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
+ <20171030121257.GA28737@marvin.atrad.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.17.12]:51485 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752062AbdJ3UP6 (ORCPT
+Received: from mail-wm0-f53.google.com ([74.125.82.53]:43941 "EHLO
+        mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750733AbdJaEUG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Oct 2017 16:15:58 -0400
-Content-Language: en-GB
+        Tue, 31 Oct 2017 00:20:06 -0400
+Received: by mail-wm0-f53.google.com with SMTP id m72so12674342wmc.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Oct 2017 21:20:05 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20171030121257.GA28737@marvin.atrad.com.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Mattia Dongili <malattia@linux.it>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Harvey <harv@gmx.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 30 Oct 2017 21:10:49 +0100
+> > Do you consider this an important fix? We are at -rc7 now, I'm not
+> > sure it's so critical. Tell me if you consider otherwise.
+> 
+> I agree - from my perspective I wouldn't have thought it so critical as to
+> push it out this late in the development cycle.  It's not a regression as
+> such and is largely cosmetic.  Others may argue differently though.
 
-Add a jump target so that a bit of exception handling can be better reused
-at the end of this function.
+I agree as well.  The erroneous log messages will only be generated when
+any rfkill device in the system is enabled or disabled, so IMHO this is
+mostly a nuisance thus can be handled when convenient.
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
----
- drivers/platform/x86/sony-laptop.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index a16cea2be9c3..3ab6e41a8ed6 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1660,18 +1660,16 @@ static int sony_nc_setup_rfkill(struct acpi_device *device,
- 	if (!rfk)
- 		return -ENOMEM;
- 
--	if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0) {
--		rfkill_destroy(rfk);
--		return -1;
--	}
-+	if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0)
-+		goto destroy_rfk;
-+
- 	hwblock = !(result & 0x1);
- 
- 	if (sony_call_snc_handle(sony_rfkill_handle,
--				sony_rfkill_address[nc_type],
--				&result) < 0) {
--		rfkill_destroy(rfk);
--		return -1;
--	}
-+				 sony_rfkill_address[nc_type],
-+				 &result) < 0)
-+		goto destroy_rfk;
-+
- 	swblock = !(result & 0x2);
- 
- 	rfkill_init_sw_state(rfk, swblock);
-@@ -1684,6 +1682,10 @@ static int sony_nc_setup_rfkill(struct acpi_device *device,
- 	}
- 	sony_rfkill_devices[nc_type] = rfk;
- 	return err;
-+
-+destroy_rfk:
-+	rfkill_destroy(rfk);
-+	return -1;
- }
- 
- static void sony_nc_rfkill_update(void)
 -- 
-2.14.3
+Best regards,
+Michał Kępień
