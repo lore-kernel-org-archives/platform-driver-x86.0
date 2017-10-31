@@ -1,79 +1,34 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Sony-laptop: Use common error handling code in sony_nc_setup_rfkill()
-Date: Tue, 31 Oct 2017 15:33:18 +0200
-Message-ID: <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+Subject: Re: [PATCH] platform: x86: dell-smo8800: remove redundant assignments
+ to byte_data
+Date: Tue, 31 Oct 2017 15:47:58 +0200
+Message-ID: <CAHp75Vec3Hjd_keMid-x6ub5ZJqUmq1nUFiHPsxuWt8V+vzrnQ@mail.gmail.com>
+References: <20171031110318.20985-1-colin.king@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+In-Reply-To: <20171031110318.20985-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: SF Markus Elfring <elfring@users.sourceforge.net>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: Colin King <colin.king@canonical.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 30, 2017 at 10:15 PM, SF Markus Elfring
-<elfring@users.sourceforge.net> wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 30 Oct 2017 21:10:49 +0100
+On Tue, Oct 31, 2017 at 1:03 PM, Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Add a jump target so that a bit of exception handling can be better reused
-> at the end of this function.
+> Variable byte_data is being initialized and re-assigned with values that
+> are never read. Remove these as these redundant assignments. Cleans up
+> clang warning:
 >
-> This issue was detected by using the Coccinelle software.
+> drivers/platform/x86/dell-smo8800.c:106:2: warning: Value stored to 'byte_data'
+> is never read
 
-Apparently this patch done without reading the actual code.
+Thanks for the patch.
 
-NAK.
+As I read a code it was from the beginning like this. I dunno what was
+a motivation of this pieces, thus I would like to hear Pali.
 
--1 is EPERM which sounds wrong here. If you would like to fix it,
-propagate a real error codes from sony_call_snc_handle().
-
->         if (!rfk)
->                 return -ENOMEM;
-
-Okay error code.
-
->
-> -       if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0) {
-> -               rfkill_destroy(rfk);
-> -               return -1;
-
-Not okay.
-
-> -       }
-> +       if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0)
-> +               goto destroy_rfk;
-> +
->         hwblock = !(result & 0x1);
->
->         if (sony_call_snc_handle(sony_rfkill_handle,
-> -                               sony_rfkill_address[nc_type],
-> -                               &result) < 0) {
-> -               rfkill_destroy(rfk);
-> -               return -1;
-
-Not okay and it might be different from previous case.
-
-> -       }
-> +                                sony_rfkill_address[nc_type],
-> +                                &result) < 0)
-> +               goto destroy_rfk;
-> +
->         swblock = !(result & 0x2);
->
->         rfkill_init_sw_state(rfk, swblock);
-> @@ -1684,6 +1682,10 @@ static int sony_nc_setup_rfkill(struct acpi_device *device,
->         }
->         sony_rfkill_devices[nc_type] = rfk;
->         return err;
-> +
-> +destroy_rfk:
-> +       rfkill_destroy(rfk);
-> +       return -1;
-
-P.S. Don't bother us with patches on which you didn't do your home work.
-Thanks for understanding.
+Per se patch looks pretty much good to me.
 
 -- 
 With Best Regards,
