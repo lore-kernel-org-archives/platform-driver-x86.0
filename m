@@ -1,41 +1,38 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Fix radio LED detection
-Date: Tue, 31 Oct 2017 05:20:02 +0100
-Message-ID: <20171031042002.GA9788@larwa.localdomain>
-References: <20171025042946.13225-1-kernel@kempniu.pl>
- <CAHp75Vc50cjeYCp9dOfRxAaRJnjN2E5aMRA_iBHXz43=m9UUtw@mail.gmail.com>
- <20171029212806.GA8470@kmp-mobile.hq.kempniu.pl>
- <CAHp75VdJqWTgFhM8dcxkQzUfE7kEvTXQgaz04FVqgXayu8tLkg@mail.gmail.com>
- <20171030121257.GA28737@marvin.atrad.com.au>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: platform/x86/peaq-wmi on non-peaq devices
+Date: Tue, 31 Oct 2017 10:14:58 +0100
+Message-ID: <41b5889c-a0aa-6337-8fde-2cc1b4446a77@redhat.com>
+References: <CAPWNY8WUKOGSjCKrn9wkvMev8M_VX4eqXHk7uNF1CGH3=pGwNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f53.google.com ([74.125.82.53]:43941 "EHLO
-        mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750733AbdJaEUG (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:55528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750978AbdJaJPH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2017 00:20:06 -0400
-Received: by mail-wm0-f53.google.com with SMTP id m72so12674342wmc.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Oct 2017 21:20:05 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20171030121257.GA28737@marvin.atrad.com.au>
+        Tue, 31 Oct 2017 05:15:07 -0400
+In-Reply-To: <CAPWNY8WUKOGSjCKrn9wkvMev8M_VX4eqXHk7uNF1CGH3=pGwNQ@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Harvey <harv@gmx.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Mantas_Mikul=c4=97nas?= <grawity@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
-> > Do you consider this an important fix? We are at -rc7 now, I'm not
-> > sure it's so critical. Tell me if you consider otherwise.
+Hi,
+
+On 31-10-17 10:13, Mantas Mikulėnas wrote:
+> Hello,
 > 
-> I agree - from my perspective I wouldn't have thought it so critical as to
-> push it out this late in the development cycle.  It's not a regression as
-> such and is largely cosmetic.  Others may argue differently though.
+> Recently I have seen quite a few people (in Linux support channels I frequent) have issues with the peaq-wmi driver being autoloaded on *non* PEAQ devices and subsequently flooding the user with ghost keypresses. They end up having to blacklist the module locally.
+> 
+> I noticed that the WMI GUID used by the driver, {ABBC0F6F-8EA1-11D1-00A0-C90629100000}, is identical to a GUID used in *Windows driver examples* published by Microsoft. (For example, it shows up on Google at <https://github.com/Microsoft/Windows-driver-samples/blob/master/wmi/wmiacpi/device.asl>.)
+> 
+> So I'm guessing that quite a few manufacturers decided to copy&paste this GUID into their own drivers/firmwares, but use it for completely different things. Given that, instead of trying to build a DMI blacklist in the module, perhaps the right thing would be to add a DMI *whitelist*?
 
-I agree as well.  The erroneous log messages will only be generated when
-any rfkill device in the system is enabled or disabled, so IMHO this is
-mostly a nuisance thus can be handled when convenient.
+Correct this is already queued for 4.15, with a Cc: stable:
 
--- 
-Best regards,
-Michał Kępień
+http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/shortlog/refs/heads/for-next
+
+Regards,
+
+Hans
