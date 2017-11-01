@@ -1,88 +1,61 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: [PATCH v2 3/3] Sony-laptop: Use common error handling code in
- sony_nc_setup_rfkill()
-Date: Wed, 1 Nov 2017 19:49:19 +0100
-Message-ID: <522fa39e-4aad-3a18-f63f-bed36f30ee0a@users.sourceforge.net>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
- <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v12 04/16] platform/x86: dell-wmi: clean up wmi descriptor check
+Date: Wed,  1 Nov 2017 14:25:25 -0500
+Message-ID: <99baed99523a9c3072041f41701559ece685f815.1509561822.git.mario.limonciello@dell.com>
+References: <cover.1509561822.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:58038 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1754643AbdKATZn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 1 Nov 2017 15:25:43 -0400
+In-Reply-To: <cover.1509561822.git.mario.limonciello@dell.com>
+In-Reply-To: <cover.1509561822.git.mario.limonciello@dell.com>
+References: <cover.1509561822.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 1 Nov 2017 19:17:01 +0100
+Some cases the wrong type was used for errors and checks can be
+done more cleanly.
 
-Add a jump target so that a bit of exception handling can be better reused
-at the end of this function.
-
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Edward O'Callaghan <quasisec@google.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 ---
+ drivers/platform/x86/dell-wmi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-v2:
-This software refactoring was repeated after the error code handling was
-adjusted for two function calls.
-
- drivers/platform/x86/sony-laptop.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 62aa2c37b8d2..8e2ee1e221fe 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1661,31 +1661,32 @@ static int sony_nc_setup_rfkill(struct acpi_device *device,
- 		return -ENOMEM;
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 2cfaaa8faf0a..b2bd396acac5 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -663,16 +663,16 @@ static int dell_wmi_check_descriptor_buffer(struct wmi_device *wdev)
  
- 	err = sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
--	if (err < 0) {
--		rfkill_destroy(rfk);
--		return err;
--	}
-+	if (err < 0)
-+		goto destroy_rfk;
-+
- 	hwblock = !(result & 0x1);
+ 	buffer = (u32 *)obj->buffer.pointer;
  
- 	err = sony_call_snc_handle(sony_rfkill_handle,
- 				   sony_rfkill_address[nc_type],
- 				   &result);
--	if (err < 0) {
--		rfkill_destroy(rfk);
--		return err;
--	}
-+	if (err < 0)
-+		goto destroy_rfk;
-+
- 	swblock = !(result & 0x2);
+-	if (buffer[0] != 0x4C4C4544 && buffer[1] != 0x494D5720) {
+-		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%*ph)\n",
+-			8, buffer);
++	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
++		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
++			buffer);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
  
- 	rfkill_init_sw_state(rfk, swblock);
- 	rfkill_set_hw_state(rfk, hwblock);
+ 	if (buffer[2] != 0 && buffer[2] != 1)
+-		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%d)\n",
+-			buffer[2]);
++		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
++			(unsigned long) buffer[2]);
  
- 	err = rfkill_register(rfk);
--	if (err) {
--		rfkill_destroy(rfk);
--		return err;
--	}
-+	if (err)
-+		goto destroy_rfk;
-+
- 	sony_rfkill_devices[nc_type] = rfk;
- 	return err;
-+
-+destroy_rfk:
-+	rfkill_destroy(rfk);
-+	return err;
- }
- 
- static void sony_nc_rfkill_update(void)
+ 	if (buffer[3] != 4096)
+ 		dev_warn(&wdev->dev, "Dell descriptor buffer has invalid buffer length (%d)\n",
 -- 
-2.14.3
+2.14.1
