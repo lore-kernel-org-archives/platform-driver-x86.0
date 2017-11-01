@@ -1,14 +1,17 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v12 15/16] platform/x86: dell-smbios-wmi: introduce userspace interface
-Date: Wed,  1 Nov 2017 14:25:36 -0500
-Message-ID: <9e1c9584345ceb503517c55931ac4730d024c2a5.1509561822.git.mario.limonciello@dell.com>
+Subject: [PATCH v12 09/16] platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens
+Date: Wed,  1 Nov 2017 14:25:30 -0500
+Message-ID: <c54a2a8e8f840fd846d7ac8af1da1bec0e561d0f.1509561822.git.mario.limonciello@dell.com>
 References: <cover.1509561822.git.mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:63862 "EHLO
         esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1754586AbdKAT0D (ORCPT
+        by vger.kernel.org with ESMTP id S1754643AbdKAT0E (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Nov 2017 15:26:03 -0400
+        Wed, 1 Nov 2017 15:26:04 -0400
 In-Reply-To: <cover.1509561822.git.mario.limonciello@dell.com>
 In-Reply-To: <cover.1509561822.git.mario.limonciello@dell.com>
 References: <cover.1509561822.git.mario.limonciello@dell.com>
@@ -17,292 +20,344 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Mario Limonciello <mario.limonciello@dell.com>
 
-It's important for the driver to provide a R/W ioctl to ensure that
-two competing userspace processes don't race to provide or read each
-others data.
+Currently userspace tools can access system tokens via the dcdbas
+kernel module and a SMI call that will cause the platform to execute
+SMM code.
 
-This userspace character device will be used to perform SMBIOS calls
-from any applications.
+With a goal in mind of deprecating the dcdbas kernel module a different
+method for accessing these tokens from userspace needs to be created.
 
-It provides an ioctl that will allow passing the WMI calling
-interface buffer between userspace and kernel space.
+This is intentionally marked to only be readable as a process with
+CAP_SYS_ADMIN as it can contain sensitive information about the
+platform's configuration.
 
-This character device is intended to deprecate the dcdbas kernel module
-and the interface that it provides to userspace.
+While adding this interface I found that some tokens are duplicated.
+These need to be ignored from sysfs to avoid duplicate files.
 
-To perform an SMBIOS IOCTL call using the character device userspace will
-perform a read() on the the character device.  The WMI bus will provide
-a u64 variable containing the necessary size of the IOCTL buffer.
-
-The API for interacting with this interface is defined in documentation
-as well as the WMI uapi header provides the format of the structures.
-
-Not all userspace requests will be accepted.  The dell-smbios filtering
-functionality will be used to prevent access to certain tokens and calls.
-
-All whitelisted commands and tokens are now shared out to userspace so
-applications don't need to define them in their own headers.
+MAINTAINERS was missing for this driver.  Add myself and Pali to
+maintainers list for it.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 Reviewed-by: Edward O'Callaghan <quasisec@google.com>
 ---
- Documentation/ABI/testing/dell-smbios-wmi | 41 +++++++++++++++++++++++
- drivers/platform/x86/dell-smbios-wmi.c    | 54 ++++++++++++++++++++++++-------
- drivers/platform/x86/dell-smbios.h        | 32 ++----------------
- include/uapi/linux/wmi.h                  | 47 +++++++++++++++++++++++++++
- 4 files changed, 133 insertions(+), 41 deletions(-)
- create mode 100644 Documentation/ABI/testing/dell-smbios-wmi
+ .../ABI/testing/sysfs-platform-dell-smbios         |  21 ++
+ MAINTAINERS                                        |   7 +
+ drivers/platform/x86/dell-smbios.c                 | 213 ++++++++++++++++++++-
+ 3 files changed, 240 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-smbios
 
-diff --git a/Documentation/ABI/testing/dell-smbios-wmi b/Documentation/ABI/testing/dell-smbios-wmi
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
 new file mode 100644
-index 000000000000..fc919ce16008
+index 000000000000..205d3b6361e0
 --- /dev/null
-+++ b/Documentation/ABI/testing/dell-smbios-wmi
-@@ -0,0 +1,41 @@
-+What:		/dev/wmi/dell-smbios
++++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
+@@ -0,0 +1,21 @@
++What:		/sys/devices/platform/<platform>/tokens/*
 +Date:		November 2017
 +KernelVersion:	4.15
 +Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
 +Description:
-+		Perform SMBIOS calls on supported Dell machines.
-+		through the Dell ACPI-WMI interface.
++		A read-only description of Dell platform tokens
++		available on the machine.
 +
-+		IOCTL's and buffer formats are defined in:
-+		<uapi/linux/wmi.h>
++		Each token attribute is available as a pair of
++		sysfs attributes readable by a process with
++		CAP_SYS_ADMIN.
 +
-+		1) To perform an SMBIOS call from userspace, you'll need to
-+		first determine the minimum size of the calling interface
-+		buffer for your machine.
-+		Platforms that contain larger buffers can return larger
-+		objects from the system firmware.
-+		Commonly this size is either 4k or 32k.
++		For example the token ID "5" would be available
++		as the following attributes:
 +
-+		To determine the size of the buffer read() a u64 dword from
-+		the WMI character device /dev/wmi/dell-smbios.
++		0005_location
++		0005_value
 +
-+		2) After you've determined the minimum size of the calling
-+		interface buffer, you can allocate a structure that represents
-+		the structure documented above.
-+
-+		3) In the 'length' object store the size of the buffer you
-+		determined above and allocated.
-+
-+		4) In this buffer object, prepare as necessary for the SMBIOS
-+		call you're interested in.  Typically SMBIOS buffers have
-+		"class", "select", and "input" defined to values that coincide
-+		with the data you are interested in.
-+		Documenting class/select/input values is outside of the scope
-+		of this documentation. Check with the libsmbios project for
-+		further documentation on these values.
-+
-+		6) Run the call by using ioctl() as described in the header.
-+
-+		7) The output will be returned in the buffer object.
-+
-+		8) Be sure to free up your allocated object.
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index b31f457e58c3..35c13815b24c 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -30,17 +30,6 @@ struct misc_bios_flags_structure {
++		Tokens will vary from machine to machine, and
++		only tokens available on that machine will be
++		displayed.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4b654248c48e..44ff16db9260 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3978,6 +3978,13 @@ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+ S:	Maintained
+ F:	drivers/net/fddi/defxx.*
  
- #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
++DELL SMBIOS DRIVER
++M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/dell-smbios.*
++
+ DELL LAPTOP DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali.rohar@gmail.com>
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index 12a3eb153911..ed4995fdcd46 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -16,10 +16,12 @@
  
--struct dell_wmi_extensions {
--	__u32 argattrib;
--	__u32 blength;
--	__u8 data[];
--} __packed;
--
--struct dell_wmi_smbios_buffer {
--	struct calling_interface_buffer std;
--	struct dell_wmi_extensions ext;
--} __packed;
--
- struct wmi_smbios_priv {
- 	struct dell_wmi_smbios_buffer *buf;
- 	struct list_head list;
-@@ -117,6 +106,42 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
- 	return ret;
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/capability.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/gfp.h>
+ #include <linux/mutex.h>
++#include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/io.h>
+ #include "../../firmware/dcdbas.h"
+@@ -39,7 +41,11 @@ static DEFINE_MUTEX(buffer_mutex);
+ static int da_command_address;
+ static int da_command_code;
+ static int da_num_tokens;
++static struct platform_device *platform_device;
+ static struct calling_interface_token *da_tokens;
++static struct device_attribute *token_location_attrs;
++static struct device_attribute *token_value_attrs;
++static struct attribute **token_attrs;
+ 
+ int dell_smbios_error(int value)
+ {
+@@ -157,6 +163,27 @@ static void __init parse_da_table(const struct dmi_header *dm)
+ 	da_num_tokens += tokens;
  }
  
-+static long dell_smbios_wmi_filter(struct wmi_device *wdev, unsigned int cmd,
-+				   struct wmi_ioctl_buffer *arg)
++static void zero_duplicates(struct device *dev)
 +{
-+	struct wmi_smbios_priv *priv;
-+	int ret = 0;
++	int i, j;
 +
-+	switch (cmd) {
-+	case DELL_WMI_SMBIOS_CMD:
-+		mutex_lock(&call_mutex);
-+		priv = dev_get_drvdata(&wdev->dev);
-+		if (!priv) {
-+			ret = -ENODEV;
-+			goto fail_smbios_cmd;
++	for (i = 0; i < da_num_tokens; i++) {
++		if (da_tokens[i].tokenID == 0)
++			continue;
++		for (j = i+1; j < da_num_tokens; j++) {
++			if (da_tokens[j].tokenID == 0)
++				continue;
++			if (da_tokens[i].tokenID == da_tokens[j].tokenID) {
++				dev_dbg(dev, "Zeroing dup token ID %x(%x/%x)\n",
++					da_tokens[j].tokenID,
++					da_tokens[j].location,
++					da_tokens[j].value);
++				da_tokens[j].tokenID = 0;
++			}
 +		}
-+		memcpy(priv->buf, arg, priv->req_buf_size);
-+		if (dell_smbios_call_filter(&wdev->dev, &priv->buf->std)) {
-+			dev_err(&wdev->dev, "Invalid call %d/%d:%8x\n",
-+				priv->buf->std.cmd_class,
-+				priv->buf->std.cmd_select,
-+				priv->buf->std.input[0]);
-+			ret = -EFAULT;
-+			goto fail_smbios_cmd;
-+		}
-+		ret = run_smbios_call(priv->wdev);
-+		if (ret)
-+			goto fail_smbios_cmd;
-+		memcpy(arg, priv->buf, priv->req_buf_size);
-+fail_smbios_cmd:
-+		mutex_unlock(&call_mutex);
-+		break;
-+	default:
-+		ret = -ENOIOCTLCMD;
 +	}
-+	return ret;
 +}
 +
- static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
  {
- 	struct wmi_smbios_priv *priv;
-@@ -135,6 +160,12 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
- 	if (!dell_wmi_get_size(&priv->req_buf_size))
- 		return -EPROBE_DEFER;
+ 	switch (dm->type) {
+@@ -170,6 +197,154 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
+ 	}
+ }
  
-+	/* add in the length object we will use internally with ioctl */
-+	priv->req_buf_size += sizeof(u64);
-+	ret = set_required_buffer_size(wdev, priv->req_buf_size);
++static int match_attribute(struct device *dev,
++			   struct device_attribute *attr)
++{
++	int i;
++
++	for (i = 0; i < da_num_tokens * 2; i++) {
++		if (!token_attrs[i])
++			continue;
++		if (strcmp(token_attrs[i]->name, attr->attr.name) == 0)
++			return i/2;
++	}
++	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
++	return -EINVAL;
++}
++
++static ssize_t location_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	int i;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	i = match_attribute(dev, attr);
++	if (i > 0)
++		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].location);
++	return 0;
++}
++
++static ssize_t value_show(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	int i;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	i = match_attribute(dev, attr);
++	if (i > 0)
++		return scnprintf(buf, PAGE_SIZE, "%08x", da_tokens[i].value);
++	return 0;
++}
++
++static struct attribute_group smbios_attribute_group = {
++	.name = "tokens"
++};
++
++static struct platform_driver platform_driver = {
++	.driver = {
++		.name = "dell-smbios",
++	},
++};
++
++static int build_tokens_sysfs(struct platform_device *dev)
++{
++	char buffer_location[13];
++	char buffer_value[10];
++	char *location_name;
++	char *value_name;
++	size_t size;
++	int ret;
++	int i, j;
++
++	/* (number of tokens  + 1 for null terminated */
++	size = sizeof(struct device_attribute) * (da_num_tokens + 1);
++	token_location_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_location_attrs)
++		return -ENOMEM;
++	token_value_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_value_attrs)
++		goto out_allocate_value;
++
++	/* need to store both location and value + terminator*/
++	size = sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
++	token_attrs = kzalloc(size, GFP_KERNEL);
++	if (!token_attrs)
++		goto out_allocate_attrs;
++
++	for (i = 0, j = 0; i < da_num_tokens; i++) {
++		/* skip empty */
++		if (da_tokens[i].tokenID == 0)
++			continue;
++		/* add location */
++		sprintf(buffer_location, "%04x_location",
++			da_tokens[i].tokenID);
++		location_name = kstrdup(buffer_location, GFP_KERNEL);
++		if (location_name == NULL)
++			goto out_unwind_strings;
++		sysfs_attr_init(&token_location_attrs[i].attr);
++		token_location_attrs[i].attr.name = location_name;
++		token_location_attrs[i].attr.mode = 0444;
++		token_location_attrs[i].show = location_show;
++		token_attrs[j++] = &token_location_attrs[i].attr;
++
++		/* add value */
++		sprintf(buffer_value, "%04x_value",
++			da_tokens[i].tokenID);
++		value_name = kstrdup(buffer_value, GFP_KERNEL);
++		if (value_name == NULL)
++			goto loop_fail_create_value;
++		sysfs_attr_init(&token_value_attrs[i].attr);
++		token_value_attrs[i].attr.name = value_name;
++		token_value_attrs[i].attr.mode = 0444;
++		token_value_attrs[i].show = value_show;
++		token_attrs[j++] = &token_value_attrs[i].attr;
++		continue;
++
++loop_fail_create_value:
++		kfree(value_name);
++		goto out_unwind_strings;
++	}
++	smbios_attribute_group.attrs = token_attrs;
++
++	ret = sysfs_create_group(&dev->dev.kobj, &smbios_attribute_group);
 +	if (ret)
-+		return ret;
++		goto out_unwind_strings;
++	return 0;
 +
- 	count = get_order(priv->req_buf_size);
- 	priv->buf = (void *)__get_free_pages(GFP_KERNEL, count);
- 	if (!priv->buf)
-@@ -210,6 +241,7 @@ static struct wmi_driver dell_smbios_wmi_driver = {
- 	.probe = dell_smbios_wmi_probe,
- 	.remove = dell_smbios_wmi_remove,
- 	.id_table = dell_smbios_wmi_id_table,
-+	.filter_callback = dell_smbios_wmi_filter,
- };
- 
- static int __init init_dell_smbios_wmi(void)
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
-index 91e8004d48ba..138d478d9adc 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -17,23 +17,11 @@
- #define _DELL_SMBIOS_H_
- 
- #include <linux/device.h>
-+#include <uapi/linux/wmi.h>
- 
--/* Classes and selects used in kernel drivers */
--#define CLASS_TOKEN_READ 0
--#define CLASS_TOKEN_WRITE 1
--#define SELECT_TOKEN_STD 0
--#define SELECT_TOKEN_BAT 1
--#define SELECT_TOKEN_AC 2
-+/* Classes and selects used only in kernel drivers */
- #define CLASS_KBD_BACKLIGHT 4
- #define SELECT_KBD_BACKLIGHT 11
--#define CLASS_FLASH_INTERFACE 7
--#define SELECT_FLASH_INTERFACE 3
--#define CLASS_ADMIN_PROP 10
--#define SELECT_ADMIN_PROP 3
--#define CLASS_INFO 17
--#define SELECT_RFKILL 11
--#define SELECT_APP_REGISTRATION	3
--#define SELECT_DOCK 22
- 
- /* Tokens used in kernel drivers, any of these
-  * should be filtered from userspace access
-@@ -50,24 +38,8 @@
- #define GLOBAL_MIC_MUTE_ENABLE	0x0364
- #define GLOBAL_MIC_MUTE_DISABLE	0x0365
- 
--/* tokens whitelisted to userspace use */
--#define CAPSULE_EN_TOKEN	0x0461
--#define CAPSULE_DIS_TOKEN	0x0462
--#define WSMT_EN_TOKEN		0x04EC
--#define WSMT_DIS_TOKEN		0x04ED
--
- struct notifier_block;
- 
--/* This structure will be modified by the firmware when we enter
-- * system management mode, hence the volatiles */
--
--struct calling_interface_buffer {
--	u16 cmd_class;
--	u16 cmd_select;
--	volatile u32 input[4];
--	volatile u32 output[4];
--} __packed;
--
- struct calling_interface_token {
- 	u16 tokenID;
- 	u16 location;
-diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
-index 7e52350ac9b3..7a92e9e3d1c0 100644
---- a/include/uapi/linux/wmi.h
-+++ b/include/uapi/linux/wmi.h
-@@ -10,6 +10,7 @@
- #ifndef _UAPI_LINUX_WMI_H
- #define _UAPI_LINUX_WMI_H
- 
-+#include <linux/ioctl.h>
- #include <linux/types.h>
- 
- /* WMI bus will filter all WMI vendor driver requests through this IOC */
-@@ -23,4 +24,50 @@ struct wmi_ioctl_buffer {
- 	__u8	data[];
- };
- 
-+/* This structure may be modified by the firmware when we enter
-+ * system management mode through SMM, hence the volatiles
-+ */
-+struct calling_interface_buffer {
-+	__u16 cmd_class;
-+	__u16 cmd_select;
-+	volatile __u32 input[4];
-+	volatile __u32 output[4];
-+} __packed;
++out_unwind_strings:
++	for (i = i-1; i > 0; i--) {
++		kfree(token_location_attrs[i].attr.name);
++		kfree(token_value_attrs[i].attr.name);
++	}
++	kfree(token_attrs);
++out_allocate_attrs:
++	kfree(token_value_attrs);
++out_allocate_value:
++	kfree(token_location_attrs);
 +
-+struct dell_wmi_extensions {
-+	__u32 argattrib;
-+	__u32 blength;
-+	__u8 data[];
-+} __packed;
++	return -ENOMEM;
++}
 +
-+struct dell_wmi_smbios_buffer {
-+	__u64 length;
-+	struct calling_interface_buffer std;
-+	struct dell_wmi_extensions	ext;
-+} __packed;
++static void free_group(struct platform_device *pdev)
++{
++	int i;
 +
-+/* Whitelisted smbios class/select commands */
-+#define CLASS_TOKEN_READ	0
-+#define CLASS_TOKEN_WRITE	1
-+#define SELECT_TOKEN_STD	0
-+#define SELECT_TOKEN_BAT	1
-+#define SELECT_TOKEN_AC		2
-+#define CLASS_FLASH_INTERFACE	7
-+#define SELECT_FLASH_INTERFACE	3
-+#define CLASS_ADMIN_PROP	10
-+#define SELECT_ADMIN_PROP	3
-+#define CLASS_INFO		17
-+#define SELECT_RFKILL		11
-+#define SELECT_APP_REGISTRATION	3
-+#define SELECT_DOCK		22
++	sysfs_remove_group(&pdev->dev.kobj,
++				&smbios_attribute_group);
++	for (i = 0; i < da_num_tokens; i++) {
++		kfree(token_location_attrs[i].attr.name);
++		kfree(token_value_attrs[i].attr.name);
++	}
++	kfree(token_attrs);
++	kfree(token_value_attrs);
++	kfree(token_location_attrs);
++}
 +
-+/* whitelisted tokens */
-+#define CAPSULE_EN_TOKEN	0x0461
-+#define CAPSULE_DIS_TOKEN	0x0462
-+#define WSMT_EN_TOKEN		0x04EC
-+#define WSMT_DIS_TOKEN		0x04ED
 +
-+/* Dell SMBIOS calling IOCTL command used by dell-smbios-wmi */
-+#define DELL_WMI_SMBIOS_CMD	_IOWR(WMI_IOC, 0, struct dell_wmi_smbios_buffer)
+ static int __init dell_smbios_init(void)
+ {
+ 	const struct dmi_device *valid;
+@@ -197,9 +372,40 @@ static int __init dell_smbios_init(void)
+ 		ret = -ENOMEM;
+ 		goto fail_buffer;
+ 	}
++	ret = platform_driver_register(&platform_driver);
++	if (ret)
++		goto fail_platform_driver;
 +
- #endif
++	platform_device = platform_device_alloc("dell-smbios", 0);
++	if (!platform_device) {
++		ret = -ENOMEM;
++		goto fail_platform_device_alloc;
++	}
++	ret = platform_device_add(platform_device);
++	if (ret)
++		goto fail_platform_device_add;
++
++	/* duplicate tokens will cause problems building sysfs files */
++	zero_duplicates(&platform_device->dev);
++
++	ret = build_tokens_sysfs(platform_device);
++	if (ret)
++		goto fail_create_group;
+ 
+ 	return 0;
+ 
++fail_create_group:
++	platform_device_del(platform_device);
++
++fail_platform_device_add:
++	platform_device_put(platform_device);
++
++fail_platform_device_alloc:
++	platform_driver_unregister(&platform_driver);
++
++fail_platform_driver:
++	free_page((unsigned long)buffer);
++
+ fail_buffer:
+ 	kfree(da_tokens);
+ 	return ret;
+@@ -207,8 +413,13 @@ static int __init dell_smbios_init(void)
+ 
+ static void __exit dell_smbios_exit(void)
+ {
+-	kfree(da_tokens);
++	if (platform_device) {
++		free_group(platform_device);
++		platform_device_unregister(platform_device);
++		platform_driver_unregister(&platform_driver);
++	}
+ 	free_page((unsigned long)buffer);
++	kfree(da_tokens);
+ }
+ 
+ subsys_initcall(dell_smbios_init);
 -- 
 2.14.1
