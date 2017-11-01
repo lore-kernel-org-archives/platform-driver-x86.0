@@ -1,131 +1,44 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v11 05/15] platform/x86: dell-wmi-descriptor: split WMI
- descriptor into it's own driver
-Date: Wed, 1 Nov 2017 09:19:25 +0100
-Message-ID: <20171101081925.66gca5sqtqcnpksu@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v11 14/15] platform/x86: dell-smbios-wmi: introduce
+ userspace interface
+Date: Wed, 1 Nov 2017 16:15:06 +0000
+Message-ID: <de1db88b582447e7a32a2825a656147b@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1508515469.git.mario.limonciello@dell.com>
- <a740a284f62e9fbbefe0f2567e20ccf997d43e25.1508515469.git.mario.limonciello@dell.com>
- <20171030114652.kopuffflshq2ates@pali>
- <27e2d166f2ce461fb025ebf06a284d01@ausx13mpc124.AMER.DELL.COM>
- <20171031233146.GA5787@fury>
+ <ff059ff32c00694450a38ce0b8b0c2ca9b9bdb24.1508515469.git.mario.limonciello@dell.com>
+ <CAD584itfGPCg_oVrHGR_-67ft5Ue4kkBbt3rMa0E1uBrQ=Gydg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f194.google.com ([209.85.128.194]:54083 "EHLO
-        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754333AbdKAIT2 (ORCPT
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:38246 "EHLO
+        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751682AbdKAQPJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Nov 2017 04:19:28 -0400
-Content-Disposition: inline
-In-Reply-To: <20171031233146.GA5787@fury>
+        Wed, 1 Nov 2017 12:15:09 -0400
+In-Reply-To: <CAD584itfGPCg_oVrHGR_-67ft5Ue4kkBbt3rMa0E1uBrQ=Gydg@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mario.Limonciello@dell.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: quasisec@google.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-On Tuesday 31 October 2017 16:31:46 Darren Hart wrote:
-> On Mon, Oct 30, 2017 at 01:32:57PM +0000, Mario.Limonciello@dell.com wrote:
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > Sent: Monday, October 30, 2017 6:47 AM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
-> > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
-> > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > > <gnomes@lxorguk.ukuu.org.uk>
-> > > Subject: Re: [PATCH v11 05/15] platform/x86: dell-wmi-descriptor: split WMI
-> > > descriptor into it's own driver
-> > > 
-> > > On Friday 20 October 2017 12:40:20 Mario Limonciello wrote:
-> > > > diff --git a/drivers/platform/x86/dell-wmi-descriptor.c
-> > > b/drivers/platform/x86/dell-wmi-descriptor.c
-> > > > new file mode 100644
-> > > > index 000000000000..3204c408e261
-> > > > --- /dev/null
-> > > > +++ b/drivers/platform/x86/dell-wmi-descriptor.c
-> > > 
-> > > This dell-wmi-descriptor.c looks good now!
-> > > 
-> > > > diff --git a/drivers/platform/x86/dell-wmi-descriptor.h
-> > > b/drivers/platform/x86/dell-wmi-descriptor.h
-> > > > new file mode 100644
-> > > > index 000000000000..5f7b69c2c83a
-> > > > --- /dev/null
-> > > > +++ b/drivers/platform/x86/dell-wmi-descriptor.h
-> > > > @@ -721,7 +652,9 @@ static int dell_wmi_events_set_enabled(bool enable)
-> > > >  static int dell_wmi_probe(struct wmi_device *wdev)
-> > > >  {
-> > > >  	struct dell_wmi_priv *priv;
-> > > > -	int err;
-> > > > +
-> > > > +	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> > > > +		return -ENODEV;
-> > > >
-> > > >  	priv = devm_kzalloc(
-> > > >  		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
-> > > > @@ -729,9 +662,8 @@ static int dell_wmi_probe(struct wmi_device *wdev)
-> > > >  		return -ENOMEM;
-> > > >  	dev_set_drvdata(&wdev->dev, priv);
-> > > >
-> > > > -	err = dell_wmi_check_descriptor_buffer(wdev);
-> > > > -	if (err)
-> > > > -		return err;
-> > > > +	if (!dell_wmi_get_interface_version(&priv->interface_version))
-> > > > +		return -EPROBE_DEFER;
-> > > 
-> > > But here is still a problem. You added check that
-> > > DELL_WMI_DESCRIPTOR_GUID exists in APCI table, but it does not mean that
-> > > probe method of dell-wmi-descriptor cannot fail.
-> > > 
-> > > With PROBE_DEFER, dell_wmi_probe function would be called later again
-> > > and again, even when probing dell-wmi-descriptor failed and so dell-wmi
-> > > in this case cannot work.
-> > > 
-> > 
-> > Yes it's possible that probe method can fail, but it depends on the reason for
-> > failure if it will fail again later.  For example if not enough memory, it may work
-> > later.  Or maybe user manually unbound from GUID, should continue to try until
-> > it's bound again.
-> > 
-> > So in short, I believe this is the correct behavior to adopt.
-> 
-> In this case, I believe the synchronous request_module("dell-wmi-descriptor")
-> would provide the desired result. The exit status doesn't even need to be
-> checked. If that is successful, and the interface_version still returns false,
-> then it can be considered an error and we can exit. If it fails, the
-> interface_version will return false, and it is also an error.
-> 
-> This can be easily added as a single patch on top of this series:
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index dcfa5de..964ca54 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -665,8 +665,9 @@ static int dell_wmi_probe(struct wmi_device *wdev)
->  		return -ENOMEM;
->  	dev_set_drvdata(&wdev->dev, priv);
->  
-> +	request_module("dell-wmi-descriptor");
->  	if (!dell_wmi_get_interface_version(&priv->interface_version))
-> -		return -EPROBE_DEFER;
-> +		return -ENODEV;
->  
->  	return dell_wmi_input_setup(wdev);
->  }
-> 
-> Pali, I believe this addresses your concern?
-
-I'm not sure what happen if both drivers are statically linked into
-vmlinuz and dell-wmi probe method would be called before
-dell-wmi-descriptor method.
-
-What is doing request_module when requested module is statically linked
-into vmlinuz?
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiA+ICsvKiBUaGlzIHN0cnVjdHVyZSBtYXkgYmUgbW9kaWZpZWQgYnkgdGhlIGZpcm13YXJlIHdo
+ZW4gd2UgZW50ZXINCj4gPiArICogc3lzdGVtIG1hbmFnZW1lbnQgbW9kZSB0aHJvdWdoIFNNTSwg
+aGVuY2UgdGhlIHZvbGF0aWxlcw0KPiA+ICsgKi8NCj4gPiArc3RydWN0IGNhbGxpbmdfaW50ZXJm
+YWNlX2J1ZmZlciB7DQo+ID4gKyAgICAgICBfX3UxNiBjbGFzczsNCj4gDQo+IEhleSBNYXJpbywN
+Cj4gDQo+IEkganVzdCByZWFsaXplZCB0aGF0IHRoZXJlIGlzIGEgc2xpZ2h0IHByb2JsZW0gY2Fs
+bGluZyB0aGlzIGlkZW50aWZpZXINCj4gImNsYXNzIiBmb3IgdXNlcnNwYWNlIHRoYXQgaGFwcGVu
+cyB0byBiZSB3cml0dGVuIGluIEMrKyB0aGF0ICNpbmNsdWRlcw0KPiB0aGlzIGhlYWRlciBhcyBj
+bGFzcyBpcyBhIHJldmVyc2VkIHdvcmQuDQo+IFBlcmhhcHMgd2UgY291bGQgcmVuYW1lIGl0IHRv
+IGNsYXNzXyBvciBzb21ldGhpbmcgb3RoZXJ3aXNlIHVzZXJzcGFjZQ0KPiBoYXMgdG8gc2hpbSB3
+aXRoIGEgQyBvYmplY3QgYW5kIGV4dGVybiBpdCB3aXRoIG5ldyBpZGVudGlmaWVycyB0byB0aGUN
+Cj4gQysrIGNvbXBvbmVudCwgd2hpY2ggaXMgYXdrd2FyZC4NCg0KRWR3YXJkLA0KDQpBaCBkYXJu
+LCBJIHdpc2ggd2Ugd291bGQgaGF2ZSBjYXVnaHQgdGhpcyBlYXJsaWVyIGluIHRoZSBzZXJpZXMg
+ZGV2ZWxvcG1lbnQsDQpidXQgaXQncyBiZXR0ZXIgdG8gZG8gZml4IGl0IG5vdyByYXRoZXIgdGhh
+biBhZnRlciB0aGUgdWFwaSBoYXMgYmVlbiBpbmNsdWRlZCBpbg0KYSBrZXJuZWwuDQoNCkRhcnJl
+biwNCg0KSSB0aGluayBJIHNob3VsZCBhZGp1c3QgdGhlIHNlcmllcyBmb3IgdGhpcyBjaGFuZ2Ug
+dG8NCnMvY2xhc3MvY21kX2NsYXNzOyBzL3NlbGVjdC9jbWRfc2VsZWN0Lw0KLg0KQXMgLT5jbGFz
+cyBpcyB1c2VkIGluIG1hbnkgcGF0Y2hlcyBpbiB0aGUgc2VyaWVzLCBpdCB3aWxsIHJlcXVpcmUg
+YmUgYmV0dGVyIHRvDQpyZXNlbmQgYXMgdjEyIHJhdGhlciB0aGFuIGEgc2luZ2xlIHBhdGNoIHRo
+YXQgY2hhbmdlcyB0aGlzIG9uZSB0aGluZy4NCg0KSSdsbCBzZW5kIGl0IGxhdGVyIHRoaXMgYWZ0
+ZXJub29uLg0KDQpUaGFua3MsDQoNCg0KDQo=
