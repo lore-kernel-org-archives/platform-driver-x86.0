@@ -1,78 +1,71 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 0/4] Topstar ACPI LED Workaround
-Date: Fri, 3 Nov 2017 13:56:46 +0200
-Message-ID: <CAHp75VcHYRevrGMw6Tf-V371yhf=Sn+AdmMWXUWbsAV+V+0kJQ@mail.gmail.com>
-References: <cover.1509229280.git.gdouezangrard@gmail.com>
+Subject: Re: [PATCH v2 1/3] Sony-laptop: Fix exception handling in sony_nc_setup_rfkill()
+Date: Fri, 3 Nov 2017 14:00:00 +0200
+Message-ID: <CAHp75VfxCqwimP7=VJjZR457kmb6bUu=NZOquf-YdPHSvOgt1w@mail.gmail.com>
+References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+ <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+ <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net> <354baacc-58dd-7012-de2c-11042604826e@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:57138 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750826AbdKCL4s (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2017 07:56:48 -0400
-In-Reply-To: <cover.1509229280.git.gdouezangrard@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <354baacc-58dd-7012-de2c-11042604826e@users.sourceforge.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 29, 2017 at 1:49 AM, Guillaume Dou=C3=A9zan-Grard
-<gdouezangrard@gmail.com> wrote:
-> Hi Andy,
+On Wed, Nov 1, 2017 at 8:46 PM, SF Markus Elfring
+<elfring@users.sourceforge.net> wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 1 Nov 2017 18:42:45 +0100
 >
-> Thank you for your review. Changes since the previous submission are
-> highlighted below.
+> Source code review for a specific software refactoring showed the need
+> for another correction because the error code "-1" was returned so far
+> if a call of the function "sony_call_snc_handle" failed here.
+> Thus assign the return value from these two function calls also to
+> the variable "err" and provide it in case of a failure.
+>
 
-Thanks for an update.
+Applied to my review and testing queue, thanks!
 
-Unfortunately patch series needs more work (and we have time, since
-it's -rc7 already, to improve).
-
-I'm going to comment per patch slightly later.
-
+> Fixes: d6f15ed876b83a1a0eba1d0473eef58acc95444a ("sony-laptop: use soft rfkill status stored in hw")
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Link: https://lkml.org/lkml/2017/10/31/463
+> Link: https://lkml.kernel.org/r/<CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/platform/x86/sony-laptop.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 >
-> On Topstar U931 Notebooks, an issue prevents the WLAN toggle key from
-> being properly managed by the Embedded Controller and successfully
-> disconnect the adapter. A specific ACPI method allows to toggle the WLAN
-> LED state regardless.
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index a16cea2be9c3..4332cc982ce0 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -1660,17 +1660,19 @@ static int sony_nc_setup_rfkill(struct acpi_device *device,
+>         if (!rfk)
+>                 return -ENOMEM;
 >
-> These are barebone laptops, sold under quite a lot of brands and
-> configurations, with different firmwares and so on. I can only say for su=
-re
-> that this issue is present for all the models sold under a specific brand=
-,
-> that's why I'm reluctant to enable this by default with a DMI check.
+> -       if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result) < 0) {
+> +       err = sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
+> +       if (err < 0) {
+>                 rfkill_destroy(rfk);
+> -               return -1;
+> +               return err;
+>         }
+>         hwblock = !(result & 0x1);
 >
-> Thus, the new `led_workaround` option registers this LED with the
-> corresponding subsystem, making possible to use a software-based trigger
-> (rfkill for instance to synchronize the LED with the softkill state).
->
-> Thank you for your time,
->
-> --
-> Guillaume Dou=C3=A9zan-Grard
->
->
-> Changes since v1:
->
-> * leave devices names unchanged for ABI compatibility,
-> * fix label names,
-> * separate module authors definition,
-> * add commit description to Patch 3.
->
->
-> Guillaume Dou=C3=A9zan-Grard (4):
->   platform/x86: topstar-laptop: non-functional changes
->   platform/x86: topstar-laptop: change to generic module
->   platform/x86: topstar-laptop: add platform device
->   platform/x86: topstar-laptop: add optional WLAN LED workaround
->
->  drivers/platform/x86/Kconfig          |   2 +
->  drivers/platform/x86/topstar-laptop.c | 334 ++++++++++++++++++++++++++--=
-------
->  2 files changed, 265 insertions(+), 71 deletions(-)
+> -       if (sony_call_snc_handle(sony_rfkill_handle,
+> -                               sony_rfkill_address[nc_type],
+> -                               &result) < 0) {
+> +       err = sony_call_snc_handle(sony_rfkill_handle,
+> +                                  sony_rfkill_address[nc_type],
+> +                                  &result);
+> +       if (err < 0) {
+>                 rfkill_destroy(rfk);
+> -               return -1;
+> +               return err;
+>         }
+>         swblock = !(result & 0x2);
 >
 > --
 > 2.14.3
@@ -80,6 +73,6 @@ re
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
