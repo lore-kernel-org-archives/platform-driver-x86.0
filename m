@@ -1,58 +1,44 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: Re: [PATCH v2 0/3] Sony-laptop: Adjustments for
- sony_nc_setup_rfkill()
-Date: Fri, 3 Nov 2017 14:23:45 +0100
-Message-ID: <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
- <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
- <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
+From: =?UTF-8?q?Christian=20K=C3=B6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
+Subject: [PATCH 1/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
+ 00h-0fh) Processors
+Date: Fri,  3 Nov 2017 14:51:34 +0100
+Message-ID: <1509717097-1847-1-git-send-email-deathsimple@vodafone.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
+List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> I have applied first two,
-
-Thanks for another change acceptance.
-
-
-> the last one is subject to discuss a necessity of it.
-
-I can offer another bit of information for this software development discussion.
-
-The following build settings were active in my “Makefile” for this Linux test case.
-
-…
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O0 -fomit-frame-pointer -std=gnu89
-…
-
-
-The affected source file can be compiled for the processor architecture “x86_64”
-by a tool like “GCC 6.4.1+r251631-1.3” from the software distribution
-“openSUSE Tumbleweed” with the following command example.
-
-my_cc=/usr/bin/gcc-6 \
-&& my_module=drivers/platform/x86/sony-laptop.ko \
-&& git checkout ':/^Sony-laptop: Delete an unnecessary variable initialisation in sony_nc_setup_rfkill' \
-&& make -j4 CC="${my_cc}" HOSTCC="${my_cc}" allmodconfig "${my_module}" \
-&& size "${my_module}" \
-&& git checkout ':/^Sony-laptop: Use common error handling code in sony_nc_setup_rfkill' \
-&& make -j4 CC="${my_cc}" HOSTCC="${my_cc}" allmodconfig "${my_module}" \
-&& size "${my_module}"
-
-
-Do you find the following details useful for further clarification?
-
-text: -32
-data: 0
-bss:  0
-
-Regards,
-Markus
+RnJvbTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgoKSnVzdCBh
+ZGQgdGhlIGV4dHJhIFBDSS1JRCB0byB0aGUgZXhpc3RpbmcgZml4dXAuCgpTaWduZWQtb2ZmLWJ5
+OiBDaHJpc3RpYW4gS8O2bmlnIDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+Ci0tLQogYXJjaC94
+ODYvcGNpL2ZpeHVwLmMgfCAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L3BjaS9maXh1cC5jIGIvYXJjaC94
+ODYvcGNpL2ZpeHVwLmMKaW5kZXggN2I2YmQ3Ni4uMWQyMjM4ZCAxMDA2NDQKLS0tIGEvYXJjaC94
+ODYvcGNpL2ZpeHVwLmMKKysrIGIvYXJjaC94ODYvcGNpL2ZpeHVwLmMKQEAgLTYzOSw3ICs2Mzks
+NyBAQCBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg4YzEw
+LCBxdWlya19hcHBsZV9tYnBfcG93ZXJvZmYpOwogICogY29uZmlndXJpbmcgaG9zdCBicmlkZ2Ug
+d2luZG93cyB1c2luZyB0aGUgX1BSUyBhbmQgX1NSUyBtZXRob2RzLgogICoKICAqIEJ1dCB0aGlz
+IGlzIHJhcmVseSBpbXBsZW1lbnRlZCwgc28gd2UgbWFudWFsbHkgZW5hYmxlIGEgbGFyZ2UgNjRi
+aXQgQkFSIGZvcgotICogUENJZSBkZXZpY2Ugb24gQU1EIEZhbWlseSAxNWggKE1vZGVscyAzMGgt
+M2ZoKSBQcm9jZXNzb3JzIGhlcmUuCisgKiBQQ0llIGRldmljZSBvbiBBTUQgRmFtaWx5IDE1aCAo
+TW9kZWxzIDAwaC0wZmgsIDMwaC0zZmgpIFByb2Nlc3NvcnMgaGVyZS4KICAqLwogc3RhdGljIHZv
+aWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiB7CkBAIC02
+OTYsNSArNjk2LDYgQEAgc3RhdGljIHZvaWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKHN0cnVj
+dCBwY2lfZGV2ICpkZXYpCiAJcGNpX2J1c19hZGRfcmVzb3VyY2UoZGV2LT5idXMsIHJlcywgMCk7
+CiB9CiBERUNMQVJFX1BDSV9GSVhVUF9FQVJMWShQQ0lfVkVORE9SX0lEX0FNRCwgMHgxNDFiLCBw
+Y2lfYW1kX2VuYWJsZV82NGJpdF9iYXIpOworREVDTEFSRV9QQ0lfRklYVVBfRUFSTFkoUENJX1ZF
+TkRPUl9JRF9BTUQsIDB4MTYwMSwgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKTsKIAogI2VuZGlm
+Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KYW1kLWdmeCBtYWlsaW5nIGxpc3QKYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbWQtZ2Z4Cg==
