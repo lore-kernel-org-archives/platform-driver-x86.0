@@ -1,44 +1,54 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Subject: [PATCH 3/4] platform/x86: intel-vbtn: support KEY_ROTATE_DISPLAY
-Date: Fri, 3 Nov 2017 20:03:28 +0100
-Message-ID: <d9d8c15a-5c33-4a70-a2e8-dc89452d4357@rwthex-w2-a.rwth-ad.de>
-References: <20171103190329.15194-1-stefan.bruens@rwth-aachen.de>
+Subject: [PATCH 0/4] platform/x86: intel-vbtn: Add support for several more switches/buttons
+Date: Fri, 3 Nov 2017 20:03:25 +0100
+Message-ID: <b8013fda-0f69-41d7-ade3-98ca861dc30d@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171103190329.15194-1-stefan.bruens@rwth-aachen.de>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-out-2.itc.rwth-aachen.de ([134.130.5.47]:14554 "EHLO
+        mail-out-2.itc.rwth-aachen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752176AbdKCTDm (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Nov 2017 15:03:42 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Darren Hart <dvhart@infradead.org>
 
-The Rotate Lock button event is emitted on the XPS 12 (BIOS A8, but not
-on BIOS A2).
+Currently, intel-vbtn only supports the most relevant buttons, although
+there are several more events, mostly in use by convertibles.
 
-Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+This series adds support for three more events. One of these events
+is a switch (SW_*) event, which is currently not working when using
+sparse keymaps. The first patch fixes this combination.
 
----
+The second patch adds support for the SW_TABLET_MODE switch, which
+is used by current convertibles.
 
-The changes where tested on an XPS 12 with BIOS version A8 (2015-03-03).
-An earlier BIOS version (A2, ~2013) did not report the event, at least
-not using the INT33D6 plattform device.
----
- drivers/platform/x86/intel-vbtn.c | 2 ++
- 1 file changed, 2 insertions(+)
+The third patch adds support for the KEY_ROTATE_DISPLAY. On the Dell
+XPS 12 (9Q33), rotation lock is implemented as a button to toggle
+between locked and unlocked state. In locked state, the accelerometer
+should be ignored, while in unlocked the screen contents should
+autorotate based on the tablet orientation. The same functionality
+is likely implemented as a switch (SW_ROTATE_LOCK event) on different
+hardware.
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index e77b9143f9b3..89d395b8e36d 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -42,6 +42,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
- 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
-+	{ KE_KEY, 0xC8, { KEY_ROTATE_DISPLAY } },	/* rotate-lock key press */
-+	{ KE_IGNORE, 0xC9, { KEY_ROTATE_DISPLAY } },	/* rotate-lock key release */
- 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet */
- 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Laptop */
- 	{ KE_END },
+The fourth patch adds support for the "Windows logo" button/key found on
+the XPS 12 display (i.e. in tablet mode, it is the only key reachable).
+The Lenovo Helix 2 has an equivalent touch button. The event currently
+uses KEY_MENU, although a distinct key code may be a better choice.
+
+
+Stefan Brüns (4):
+  Input: sparse-keymap - send sync event for KE_SW/KW_VSW
+  platform/x86: intel-vbtn: support SW_TABLET_MODE
+  platform/x86: intel-vbtn: support KEY_ROTATE_DISPLAY
+  platform/x86: intel-vbtn: support panel front button
+
+ drivers/input/sparse-keymap.c     | 1 +
+ drivers/platform/x86/intel-vbtn.c | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
 -- 
 2.14.3
