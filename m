@@ -1,59 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Fix tablet mode detection for convertibles
-Date: Fri, 3 Nov 2017 14:53:40 +0200
-Message-ID: <CAHp75Vd5mWi4BS8tx_52u0LLP=B9EGphG12K0uEP7y7G6sQLgA@mail.gmail.com>
-References: <31e69338-e296-4e26-84ac-19fb172df2b3@rwthex-w2-a.rwth-ad.de>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: Re: [PATCH v2 0/3] Sony-laptop: Adjustments for
+ sony_nc_setup_rfkill()
+Date: Fri, 3 Nov 2017 14:23:45 +0100
+Message-ID: <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
+References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+ <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+ <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
+ <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <31e69338-e296-4e26-84ac-19fb172df2b3@rwthex-w2-a.rwth-ad.de>
+In-Reply-To: <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 3, 2017 at 4:01 AM, Stefan Br=C3=BCns
-<stefan.bruens@rwth-aachen.de> wrote:
-> Commit f9cf3b2880cc ("platform/x86: hp-wmi: Refactor dock and tablet
-> state fetchers") consolidated the methods for docking and laptop mode
-> detection, but omitted to apply the correct mask for the laptop mode
-> (it always uses the constant for docking).
->
+> I have applied first two,
 
-Looks like a good catch!
-
-Applied to my review and testing queue.
-
-> Signed-off-by: Stefan Br=C3=BCns <stefan.bruens@rwth-aachen.de>
->
-> ---
->
-> This change is untested, but restores the previous behaviour.
-> ---
->  drivers/platform/x86/hp-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
-c
-> index b4ed3dc983d5..b4224389febe 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -297,7 +297,7 @@ static int hp_wmi_hw_state(int mask)
->         if (state < 0)
->                 return state;
->
-> -       return state & 0x1;
-> +       return !!(state & mask);
->  }
->
->  static int __init hp_wmi_bios_2008_later(void)
-> --
-> 2.14.3
->
+Thanks for another change acceptance.
 
 
+> the last one is subject to discuss a necessity of it.
 
---=20
-With Best Regards,
-Andy Shevchenko
+I can offer another bit of information for this software development discussion.
+
+The following build settings were active in my “Makefile” for this Linux test case.
+
+…
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O0 -fomit-frame-pointer -std=gnu89
+…
+
+
+The affected source file can be compiled for the processor architecture “x86_64”
+by a tool like “GCC 6.4.1+r251631-1.3” from the software distribution
+“openSUSE Tumbleweed” with the following command example.
+
+my_cc=/usr/bin/gcc-6 \
+&& my_module=drivers/platform/x86/sony-laptop.ko \
+&& git checkout ':/^Sony-laptop: Delete an unnecessary variable initialisation in sony_nc_setup_rfkill' \
+&& make -j4 CC="${my_cc}" HOSTCC="${my_cc}" allmodconfig "${my_module}" \
+&& size "${my_module}" \
+&& git checkout ':/^Sony-laptop: Use common error handling code in sony_nc_setup_rfkill' \
+&& make -j4 CC="${my_cc}" HOSTCC="${my_cc}" allmodconfig "${my_module}" \
+&& size "${my_module}"
+
+
+Do you find the following details useful for further clarification?
+
+text: -32
+data: 0
+bss:  0
+
+Regards,
+Markus
