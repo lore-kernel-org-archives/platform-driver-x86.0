@@ -1,58 +1,58 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: topstar-laptop: add optional WLAN
- LED workaround
-Date: Fri, 3 Nov 2017 14:50:52 +0200
-Message-ID: <CAHp75VdN2PDDKsAM8qp1ssZB+K_zgwvJBKK7UEVvsSHV_cK73g@mail.gmail.com>
-References: <cover.1509229280.git.gdouezangrard@gmail.com> <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Fix tablet mode detection for convertibles
+Date: Fri, 3 Nov 2017 14:53:40 +0200
+Message-ID: <CAHp75Vd5mWi4BS8tx_52u0LLP=B9EGphG12K0uEP7y7G6sQLgA@mail.gmail.com>
+References: <31e69338-e296-4e26-84ac-19fb172df2b3@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f170.google.com ([209.85.220.170]:43132 "EHLO
-        mail-qk0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751676AbdKCMux (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2017 08:50:53 -0400
-In-Reply-To: <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <31e69338-e296-4e26-84ac-19fb172df2b3@rwthex-w2-a.rwth-ad.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 29, 2017 at 1:53 AM, Guillaume Dou=C3=A9zan-Grard
-<gdouezangrard@gmail.com> wrote:
-> Topstar U931 laptops provide an LED synced with the WLAN adapter
-> hard-blocking state. Unfortunately, some models seem to be defective,
-> making impossible to hard-block the adapter with the WLAN switch and
-> thus the LED is useless.
+On Fri, Nov 3, 2017 at 4:01 AM, Stefan Br=C3=BCns
+<stefan.bruens@rwth-aachen.de> wrote:
+> Commit f9cf3b2880cc ("platform/x86: hp-wmi: Refactor dock and tablet
+> state fetchers") consolidated the methods for docking and laptop mode
+> detection, but omitted to apply the correct mask for the laptop mode
+> (it always uses the constant for docking).
 >
-> An ACPI method is available to programmatically control this switch and
-> it indirectly allows to control the LED.
+
+Looks like a good catch!
+
+Applied to my review and testing queue.
+
+> Signed-off-by: Stefan Br=C3=BCns <stefan.bruens@rwth-aachen.de>
 >
-> This commit registers the LED within the corresponding subsystem, making
-> possible for instance to use an rfkill-based trigger to synchronize the
-> LED with the soft-blocking state.
+> ---
 >
-> This feature is disabled by default and can be enabled with the
-> `led_workaround` module parameter.
+> This change is untested, but restores the previous behaviour.
+> ---
+>  drivers/platform/x86/hp-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
+c
+> index b4ed3dc983d5..b4224389febe 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -297,7 +297,7 @@ static int hp_wmi_hw_state(int mask)
+>         if (state < 0)
+>                 return state;
+>
+> -       return state & 0x1;
+> +       return !!(state & mask);
+>  }
+>
+>  static int __init hp_wmi_bios_2008_later(void)
+> --
+> 2.14.3
+>
 
->  #include <linux/platform_device.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> +#include <linux/leds.h>
 
-Yep, exact place, esp. after moving platform_device to the right place.
-
-> +static bool led_workaround;
-> +module_param_named(led_workaround, led_workaround, bool, 0444);
-> +MODULE_PARM_DESC(led_workaround,
-> +               "Enables software-based WLAN LED control on systems with =
-defective hardware switch");
-
-So, this is most problematic piece in the series.
-
-We are not encouraging module parameters. Why do we need one? Can't be
-detected automatically (perhaps based on DMI strings)?
 
 --=20
 With Best Regards,
