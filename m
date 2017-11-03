@@ -1,44 +1,49 @@
-From: "=?UTF-8?q?Christian=20K=C3=B6nig?=" <ckoenig.leichtzumerken@gmail.com>
-Subject: [PATCH 1/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 00h-0fh) Processors
-Date: Fri,  3 Nov 2017 14:52:41 +0100
-Message-ID: <1509717164-1946-1-git-send-email-christian.koenig@amd.com>
+From: "=?UTF-8?q?Christian=20K=C3=B6nig?=" <ckoenig.leichtzumerken-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 4/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
+ 70h-7fh) Processors
+Date: Fri,  3 Nov 2017 14:52:44 +0100
+Message-ID: <1509717164-1946-4-git-send-email-christian.koenig@amd.com>
+References: <1509717164-1946-1-git-send-email-christian.koenig@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, helgaas@kernel.org
+Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1509717164-1946-1-git-send-email-christian.koenig-5C7GfCeVMHo@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
+List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
+ <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 SnVzdCBhZGQgdGhlIGV4dHJhIFBDSS1JRCB0byB0aGUgZXhpc3RpbmcgZml4dXAuCgpTaWduZWQt
 b2ZmLWJ5OiBDaHJpc3RpYW4gS8O2bmlnIDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+Ci0tLQog
 YXJjaC94ODYvcGNpL2ZpeHVwLmMgfCAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
 cygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L3BjaS9maXh1cC5jIGIv
-YXJjaC94ODYvcGNpL2ZpeHVwLmMKaW5kZXggN2I2YmQ3Ni4uMWQyMjM4ZCAxMDA2NDQKLS0tIGEv
+YXJjaC94ODYvcGNpL2ZpeHVwLmMKaW5kZXggM2VlYmIwZS4uODk0ZDczZCAxMDA2NDQKLS0tIGEv
 YXJjaC94ODYvcGNpL2ZpeHVwLmMKKysrIGIvYXJjaC94ODYvcGNpL2ZpeHVwLmMKQEAgLTYzOSw3
 ICs2MzksNyBAQCBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwg
 MHg4YzEwLCBxdWlya19hcHBsZV9tYnBfcG93ZXJvZmYpOwogICogY29uZmlndXJpbmcgaG9zdCBi
 cmlkZ2Ugd2luZG93cyB1c2luZyB0aGUgX1BSUyBhbmQgX1NSUyBtZXRob2RzLgogICoKICAqIEJ1
 dCB0aGlzIGlzIHJhcmVseSBpbXBsZW1lbnRlZCwgc28gd2UgbWFudWFsbHkgZW5hYmxlIGEgbGFy
 Z2UgNjRiaXQgQkFSIGZvcgotICogUENJZSBkZXZpY2Ugb24gQU1EIEZhbWlseSAxNWggKE1vZGVs
-cyAzMGgtM2ZoKSBQcm9jZXNzb3JzIGhlcmUuCisgKiBQQ0llIGRldmljZSBvbiBBTUQgRmFtaWx5
-IDE1aCAoTW9kZWxzIDAwaC0wZmgsIDMwaC0zZmgpIFByb2Nlc3NvcnMgaGVyZS4KICAqLwogc3Rh
-dGljIHZvaWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiB7
-CkBAIC02OTYsNSArNjk2LDYgQEAgc3RhdGljIHZvaWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFy
-KHN0cnVjdCBwY2lfZGV2ICpkZXYpCiAJcGNpX2J1c19hZGRfcmVzb3VyY2UoZGV2LT5idXMsIHJl
-cywgMCk7CiB9CiBERUNMQVJFX1BDSV9GSVhVUF9FQVJMWShQQ0lfVkVORE9SX0lEX0FNRCwgMHgx
-NDFiLCBwY2lfYW1kX2VuYWJsZV82NGJpdF9iYXIpOworREVDTEFSRV9QQ0lfRklYVVBfRUFSTFko
-UENJX1ZFTkRPUl9JRF9BTUQsIDB4MTYwMSwgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKTsKIAog
-I2VuZGlmCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+cyAwMGgtMWZoLCAzMGgtM2ZoLCA2MGgtNmZoKSBQcm9jZXNzb3JzCisgKiBQQ0llIGRldmljZSBv
+biBBTUQgRmFtaWx5IDE1aCAoTW9kZWxzIDAwaC0xZmgsIDMwaC0zZmgsIDYwaC03ZmgpIFByb2Nl
+c3NvcnMKICAqIGhlcmUuCiAgKi8KIHN0YXRpYyB2b2lkIHBjaV9hbWRfZW5hYmxlXzY0Yml0X2Jh
+cihzdHJ1Y3QgcGNpX2RldiAqZGV2KQpAQCAtNjk5LDYgKzY5OSw3IEBAIHN0YXRpYyB2b2lkIHBj
+aV9hbWRfZW5hYmxlXzY0Yml0X2JhcihzdHJ1Y3QgcGNpX2RldiAqZGV2KQogREVDTEFSRV9QQ0lf
+RklYVVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9BTUQsIDB4MTQwMSwgcGNpX2FtZF9lbmFibGVfNjRi
+aXRfYmFyKTsKIERFQ0xBUkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9WRU5ET1JfSURfQU1ELCAweDE0
+MWIsIHBjaV9hbWRfZW5hYmxlXzY0Yml0X2Jhcik7CiBERUNMQVJFX1BDSV9GSVhVUF9FQVJMWShQ
+Q0lfVkVORE9SX0lEX0FNRCwgMHgxNTcxLCBwY2lfYW1kX2VuYWJsZV82NGJpdF9iYXIpOworREVD
+TEFSRV9QQ0lfRklYVVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9BTUQsIDB4MTViMSwgcGNpX2FtZF9l
+bmFibGVfNjRiaXRfYmFyKTsKIERFQ0xBUkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9WRU5ET1JfSURf
+QU1ELCAweDE2MDEsIHBjaV9hbWRfZW5hYmxlXzY0Yml0X2Jhcik7CiAKICNlbmRpZgotLSAKMi43
+LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmFtZC1n
+ZnggbWFpbGluZyBsaXN0CmFtZC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vYW1kLWdmeAo=
