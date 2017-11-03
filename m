@@ -1,47 +1,50 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 0/3] Sony-laptop: Adjustments for sony_nc_setup_rfkill()
-Date: Fri, 3 Nov 2017 14:02:37 +0200
-Message-ID: <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com> <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
+Subject: Re: Status of merging "[PATCH resend v5 3/3] platform/x86:
+ intel_cht_int33fe: Update fusb302 type string, add properties"
+Date: Fri, 3 Nov 2017 14:11:47 +0200
+Message-ID: <CAHp75VfDEnfKeRoTq0MEW7k3VZG-tUFk0wVafSK-DAv4v2QoeQ@mail.gmail.com>
+References: <512ff43f-323f-5820-1cb4-6a1a6e0c632f@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: SF Markus Elfring <elfring@users.sourceforge.net>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f172.google.com ([209.85.220.172]:51723 "EHLO
+        mail-qk0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750857AbdKCMLs (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Nov 2017 08:11:48 -0400
+Received: by mail-qk0-f172.google.com with SMTP id 17so2890597qkq.8
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Nov 2017 05:11:48 -0700 (PDT)
+In-Reply-To: <512ff43f-323f-5820-1cb4-6a1a6e0c632f@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Wed, Nov 1, 2017 at 8:45 PM, SF Markus Elfring
-<elfring@users.sourceforge.net> wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 1 Nov 2017 19:34:56 +0100
+On Fri, Nov 3, 2017 at 1:06 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi Darren, Andy,
 >
-> Three update suggestions were taken into account
-> from static source code analysis.
+> What is the status of merging:
+> https://patchwork.ozlabs.org/patch/824314/
+>
+> ?
 
-I have applied first two, the last one is subject to discuss a necessity of it.
-
-So, if Darren on my side than we won't apply it, if he opposes, I
-would hear an argument why we might need it.
+Just merged and pushed, thanks!
 
 >
-> Markus Elfring (3):
->   Fix exception handling
->   Delete an unnecessary variable initialisation
->   Use common error handling code
-> ---
+> Now that Wolfram has created an immutable-branch for the 2
+> i2c commits this depends on for you to merge, this is
+> ready for merging. And since one of those 2 i2c commits
+> change the device-properties attached to the bq24190
+> charger when instantiating it, the driver for the charger
+> will now look at the fusb302 provided max-current instead
+> of at the old usb2-only extcon stuff. So without also
+> merging this patch, we end up regressing from charging
+> at 5v 2A to slowly-discharging (when on) at 5V 0.5A,
+> so we really need this in 4.15.
 >
-> v2:
-> Two additional suggestions were taken into account from a corresponding
-> source code review.
+> Regards,
 >
->  drivers/platform/x86/sony-laptop.c | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
->
-> --
-> 2.14.3
+> Hans
 >
 
 
