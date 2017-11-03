@@ -1,50 +1,101 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: Status of merging "[PATCH resend v5 3/3] platform/x86:
- intel_cht_int33fe: Update fusb302 type string, add properties"
-Date: Fri, 3 Nov 2017 14:11:47 +0200
-Message-ID: <CAHp75VfDEnfKeRoTq0MEW7k3VZG-tUFk0wVafSK-DAv4v2QoeQ@mail.gmail.com>
-References: <512ff43f-323f-5820-1cb4-6a1a6e0c632f@redhat.com>
+Subject: Re: [RFC v8 1/7] platform/x86: intel_punit_ipc: Fix resource ioremap warning
+Date: Fri, 3 Nov 2017 14:13:09 +0200
+Message-ID: <CAHp75VffZCTgsbgm3RU-vAL4Xf1A60NtDaFwaLQRp5UqtztfuQ@mail.gmail.com>
+References: <cover.1509268570.git.sathyanarayanan.kuppuswamy@linux.intel.com> <0ed06c9aabd0f6d707f3ab8024282a764ffe0318.1509268570.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f172.google.com ([209.85.220.172]:51723 "EHLO
-        mail-qk0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750857AbdKCMLs (ORCPT
+Received: from mail-qt0-f195.google.com ([209.85.216.195]:47996 "EHLO
+        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756100AbdKCMNL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2017 08:11:48 -0400
-Received: by mail-qk0-f172.google.com with SMTP id 17so2890597qkq.8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Nov 2017 05:11:48 -0700 (PDT)
-In-Reply-To: <512ff43f-323f-5820-1cb4-6a1a6e0c632f@redhat.com>
+        Fri, 3 Nov 2017 08:13:11 -0400
+In-Reply-To: <0ed06c9aabd0f6d707f3ab8024282a764ffe0318.1509268570.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, "x86@kernel.org" <x86@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Ingo Molnar <mingo@redhat.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Zha Qipeng <qipeng.zha@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Andy Shevchenko <andy@infradead.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.inte>
 
-On Fri, Nov 3, 2017 at 1:06 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi Darren, Andy,
+On Sun, Oct 29, 2017 at 11:49 AM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 >
-> What is the status of merging:
-> https://patchwork.ozlabs.org/patch/824314/
+> For PUNIT device, ISPDRIVER_IPC and GTDDRIVER_IPC resources are not
+> mandatory. So when PMC IPC driver creates a PUNIT device, if these
+> resources are not available then it creates dummy resource entries for
+> these missing resources. But during PUNIT device probe, doing ioremap on
+> these dummy resources generates following warning messages.
 >
-> ?
+> intel_punit_ipc: can't request region for resource [mem 0x00000000]
+> intel_punit_ipc: can't request region for resource [mem 0x00000000]
+> intel_punit_ipc: can't request region for resource [mem 0x00000000]
+> intel_punit_ipc: can't request region for resource [mem 0x00000000]
+>
+> This patch fixes this issue by adding extra check for resource size
+> before performing ioremap operation.
 
-Just merged and pushed, thanks!
+I think I already told that this one had been pushed to my review and
+testing queue, thanks!
 
 >
-> Now that Wolfram has created an immutable-branch for the 2
-> i2c commits this depends on for you to merge, this is
-> ready for merging. And since one of those 2 i2c commits
-> change the device-properties attached to the bq24190
-> charger when instantiating it, the driver for the charger
-> will now look at the fusb302 provided max-current instead
-> of at the old usb2-only extcon stuff. So without also
-> merging this patch, we end up regressing from charging
-> at 5v 2A to slowly-discharging (when on) at 5V 0.5A,
-> so we really need this in 4.15.
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_punit_ipc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> Regards,
+> Changes since v7:
+>  * None
 >
-> Hans
+> Changes since v6:
+>  * None
+>
+> Changes since v5:
+>  * None
+>
+> Changes since v4:
+>  * None
+>
+> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+> index a47a41f..b5b8901 100644
+> --- a/drivers/platform/x86/intel_punit_ipc.c
+> +++ b/drivers/platform/x86/intel_punit_ipc.c
+> @@ -252,28 +252,28 @@ static int intel_punit_get_bars(struct platform_device *pdev)
+>          * - GTDRIVER_IPC BASE_IFACE
+>          */
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[ISPDRIVER_IPC][BASE_DATA] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[ISPDRIVER_IPC][BASE_IFACE] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[GTDRIVER_IPC][BASE_DATA] = addr;
+>         }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
+> -       if (res) {
+> +       if (res && resource_size(res) > 1) {
+>                 addr = devm_ioremap_resource(&pdev->dev, res);
+>                 if (!IS_ERR(addr))
+>                         punit_ipcdev->base[GTDRIVER_IPC][BASE_IFACE] = addr;
+> --
+> 2.7.4
 >
 
 
