@@ -1,47 +1,76 @@
-From: "=?UTF-8?q?Christian=20K=C3=B6nig?=" <ckoenig.leichtzumerken-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/4] x86/PCI: Enable a 64bit BAR on AMD Family 15h (Models
- 10h-1fh) Processors
-Date: Fri,  3 Nov 2017 14:52:42 +0100
-Message-ID: <1509717164-1946-2-git-send-email-christian.koenig@amd.com>
-References: <1509717164-1946-1-git-send-email-christian.koenig@amd.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-*wmi*: Relay failed initial probe to
+ dependent drivers
+Date: Fri, 3 Nov 2017 14:42:55 +0000
+Message-ID: <8a19372f91e34d96ab16e8d4c31b0c86@ausx13mpc124.AMER.DELL.COM>
+References: <bdaec2635c4c38e869a5690db2426d7440222949.1509564191.git.mario.limonciello@dell.com>
+ <20171103005632.GB7971@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1509717164-1946-1-git-send-email-christian.koenig-5C7GfCeVMHo@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171103005632.GB7971@fury>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, pali.rohar@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-SnVzdCBhZGQgdGhlIGV4dHJhIFBDSS1JRCB0byB0aGUgZXhpc3RpbmcgZml4dXAuCgpTaWduZWQt
-b2ZmLWJ5OiBDaHJpc3RpYW4gS8O2bmlnIDxjaHJpc3RpYW4ua29lbmlnQGFtZC5jb20+Ci0tLQog
-YXJjaC94ODYvcGNpL2ZpeHVwLmMgfCAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L3BjaS9maXh1cC5jIGIv
-YXJjaC94ODYvcGNpL2ZpeHVwLmMKaW5kZXggMWQyMjM4ZC4uYWE4YjIwZSAxMDA2NDQKLS0tIGEv
-YXJjaC94ODYvcGNpL2ZpeHVwLmMKKysrIGIvYXJjaC94ODYvcGNpL2ZpeHVwLmMKQEAgLTYzOSw3
-ICs2MzksNyBAQCBERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwg
-MHg4YzEwLCBxdWlya19hcHBsZV9tYnBfcG93ZXJvZmYpOwogICogY29uZmlndXJpbmcgaG9zdCBi
-cmlkZ2Ugd2luZG93cyB1c2luZyB0aGUgX1BSUyBhbmQgX1NSUyBtZXRob2RzLgogICoKICAqIEJ1
-dCB0aGlzIGlzIHJhcmVseSBpbXBsZW1lbnRlZCwgc28gd2UgbWFudWFsbHkgZW5hYmxlIGEgbGFy
-Z2UgNjRiaXQgQkFSIGZvcgotICogUENJZSBkZXZpY2Ugb24gQU1EIEZhbWlseSAxNWggKE1vZGVs
-cyAwMGgtMGZoLCAzMGgtM2ZoKSBQcm9jZXNzb3JzIGhlcmUuCisgKiBQQ0llIGRldmljZSBvbiBB
-TUQgRmFtaWx5IDE1aCAoTW9kZWxzIDAwaC0xZmgsIDMwaC0zZmgpIFByb2Nlc3NvcnMgaGVyZS4K
-ICAqLwogc3RhdGljIHZvaWQgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKHN0cnVjdCBwY2lfZGV2
-ICpkZXYpCiB7CkBAIC02OTUsNiArNjk1LDcgQEAgc3RhdGljIHZvaWQgcGNpX2FtZF9lbmFibGVf
-NjRiaXRfYmFyKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiAKIAlwY2lfYnVzX2FkZF9yZXNvdXJjZShk
-ZXYtPmJ1cywgcmVzLCAwKTsKIH0KK0RFQ0xBUkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9WRU5ET1Jf
-SURfQU1ELCAweDE0MDEsIHBjaV9hbWRfZW5hYmxlXzY0Yml0X2Jhcik7CiBERUNMQVJFX1BDSV9G
-SVhVUF9FQVJMWShQQ0lfVkVORE9SX0lEX0FNRCwgMHgxNDFiLCBwY2lfYW1kX2VuYWJsZV82NGJp
-dF9iYXIpOwogREVDTEFSRV9QQ0lfRklYVVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9BTUQsIDB4MTYw
-MSwgcGNpX2FtZF9lbmFibGVfNjRiaXRfYmFyKTsKIAotLSAKMi43LjQKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmFtZC1nZnggbWFpbGluZyBsaXN0CmFt
-ZC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vYW1kLWdmeAo=
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Thursday, November 2, 2017 7:57 PM
+> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
+> kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;
+> pali.rohar@gmail.com
+> Subject: Re: [PATCH] platform/x86: dell-*wmi*: Relay failed initial probe=
+ to
+> dependent drivers
+>=20
+> On Wed, Nov 01, 2017 at 02:28:21PM -0500, Mario Limonciello wrote:
+> > dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
+> > finishing probe successfully to probe themselves.
+> >
+> > Currently if dell-wmi-descriptor fails probing in a non-recoverable way
+> > (such as invalid header) dell-wmi and dell-smbios-wmi will continue to
+> > try to redo probing due to deferred probing.
+> >
+> > To solve this have the dependent drivers query the dell-wmi-descriptor
+> > driver whether the descriptor has been determined valid. The possible
+> > results are:
+> > -EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
+> >  and use deferred probing
+> > < 0: Descriptor probed, invalid.  Dependent driver should return an
+> >  error.
+> > 0: Successful descriptor probe, dependent driver can continue
+> >
+> > Successful descriptor probe still doesn't mean that the descriptor driv=
+er
+> > is necessarily bound at the time of initialization of dependent driver.
+> > Userspace can unbind the driver, so all methods used from driver
+> > should still be verified to return success values otherwise deferred
+> > probing be used.
+> >
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+>=20
+> > diff --git a/drivers/platform/x86/dell-wmi-descriptor.c
+> b/drivers/platform/x86/dell-wmi-descriptor.c
+> > index 3204c408e261..33c6c7d66f8c 100644
+> > --- a/drivers/platform/x86/dell-wmi-descriptor.c
+> > +++ b/drivers/platform/x86/dell-wmi-descriptor.c
+> > @@ -26,9 +26,16 @@ struct descriptor_priv {
+> >  	u32 interface_version;
+> >  	u32 size;
+> >  };
+> > +static int descriptor_valid;
+>=20
+> This initializes to 0, which I believe creates an odd race window between=
+ when
+> this init is called and when the first driver calls
+> dell_wmi_get_descriptor_valid(). Seems like initializing to -EPROBE_DEFER=
+ here
+> in the declaration would be a better right approach.
+>=20
+> --
+
+Thanks, good catch.  I'll adjust.
