@@ -1,42 +1,41 @@
-From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Subject: [PATCH] platform/x86: hp-wmi: Fix tablet mode detection for convertibles
-Date: Fri, 3 Nov 2017 03:01:53 +0100
-Message-ID: <31e69338-e296-4e26-84ac-19fb172df2b3@rwthex-w2-a.rwth-ad.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Status of merging "[PATCH resend v5 3/3] platform/x86:
+ intel_cht_int33fe: Update fusb302 type string, add properties"
+Date: Fri, 3 Nov 2017 12:06:58 +0100
+Message-ID: <512ff43f-323f-5820-1cb4-6a1a6e0c632f@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:36704 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752719AbdKCLHB (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Nov 2017 07:07:01 -0400
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, platform-driver-x86@vger.kernel.org
 
-Commit f9cf3b2880cc ("platform/x86: hp-wmi: Refactor dock and tablet
-state fetchers") consolidated the methods for docking and laptop mode
-detection, but omitted to apply the correct mask for the laptop mode
-(it always uses the constant for docking).
+Hi Darren, Andy,
 
-Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+What is the status of merging:
+https://patchwork.ozlabs.org/patch/824314/
 
----
+?
 
-This change is untested, but restores the previous behaviour.
----
- drivers/platform/x86/hp-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Now that Wolfram has created an immutable-branch for the 2
+i2c commits this depends on for you to merge, this is
+ready for merging. And since one of those 2 i2c commits
+change the device-properties attached to the bq24190
+charger when instantiating it, the driver for the charger
+will now look at the fusb302 provided max-current instead
+of at the old usb2-only extcon stuff. So without also
+merging this patch, we end up regressing from charging
+at 5v 2A to slowly-discharging (when on) at 5V 0.5A,
+so we really need this in 4.15.
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index b4ed3dc983d5..b4224389febe 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -297,7 +297,7 @@ static int hp_wmi_hw_state(int mask)
- 	if (state < 0)
- 		return state;
- 
--	return state & 0x1;
-+	return !!(state & mask);
- }
- 
- static int __init hp_wmi_bios_2008_later(void)
--- 
-2.14.3
+Regards,
+
+Hans
