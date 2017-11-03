@@ -1,75 +1,85 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH resend v5 3/3] platform/x86: intel_cht_int33fe: Update
- fusb302 type string, add properties
-Date: Fri, 3 Nov 2017 13:55:26 +0200
-Message-ID: <CAHp75VfivMVGXRs-9JgBZdVSQ8rK+8aDbqProT4i6R7psZRjjg@mail.gmail.com>
-References: <20171011094121.6108-1-hdegoede@redhat.com> <20171011094121.6108-4-hdegoede@redhat.com>
- <20171026203323.w5xj2mms5epda6pt@ninjato> <5f747f91-0eb8-5566-5de3-b5dfd1f134ce@redhat.com>
- <011c294b-20c3-9c37-3606-626b2201fde9@redhat.com> <20171027104126.iaoandrsng7hxehq@ninjato>
- <62bb0948-f763-d726-9a88-d5cc2b2e2c9c@redhat.com>
+Subject: Re: [PATCH v2 0/4] Topstar ACPI LED Workaround
+Date: Fri, 3 Nov 2017 13:56:46 +0200
+Message-ID: <CAHp75VcHYRevrGMw6Tf-V371yhf=Sn+AdmMWXUWbsAV+V+0kJQ@mail.gmail.com>
+References: <cover.1509229280.git.gdouezangrard@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <62bb0948-f763-d726-9a88-d5cc2b2e2c9c@redhat.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:57138 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750826AbdKCL4s (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 3 Nov 2017 07:56:48 -0400
+In-Reply-To: <cover.1509229280.git.gdouezangrard@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Fri, Oct 27, 2017 at 6:24 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On 27-10-17 12:41, Wolfram Sang wrote:
->> On Fri, Oct 27, 2017 at 12:31:01PM +0200, Hans de Goede wrote:
->>> On 27-10-17 12:13, Hans de Goede wrote:
->>>> On 26-10-17 22:33, Wolfram Sang wrote:
->>>>>
->>>>> On Wed, Oct 11, 2017 at 11:41:21AM +0200, Hans de Goede wrote:
->>>>>>
->>>>>> The fusb302 driver as merged in staging uses "typec_fusb302" as i2c-id
->>>>>> rather then just "fusb302" and needs us to set a number of device-
->>>>>> properties, adjust the intel_cht_int33fe driver accordingly.
->>>>>>
->>>>>> One of the properties set is max-snk-mv which makes the fusb302 driver
->>>>>> negotiate up to 12V charging voltage, which is a bad idea on boards
->>>>>> which are not setup to handle this, so this commit also adds 2 extra
->>>>>> sanity checks to make sure that the expected Whiskey Cove PMIC +
->>>>>> TI bq24292i charger combo, which can handle 12V, is present.
->>>>>>
->>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>>>>
->>>>>
->>>>> I can't apply this one. Is there an immutable branch I need to pick up?
->>>>> Or shall this go via another tree? My base is v4.14-rc5.
->>>>
->>>>
->>>> It should be applied on top of this patch:
->>>>
->>>>
->>>> http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/commitdiff/5c003458db40cf3c89aeddd22c6e934c28b5a565
->>>>
->>>>   From linux-platform-drivers-x86.git/for-next.
->>>>
->>>> So either we are going to need an immutable branch from you
->>>> with the first patch of this series so that the platform/x86
->>>> maintainers can merge this, or the other way around :|
->>>
->>>
->>> Alternatively we could push this patch as a post rc1 fix I guess.
->>
->>
->> I intentionally did not push out yet until this was cleared. So, I think
->> the most simple option is that I create an immutable branch with only
->> the i2c patches from you. Then linux-platform maintainers can pull in
->> my branch and your patch here on top of that. Would be my favourite.
->>
->> D'accord everyone?
+On Sun, Oct 29, 2017 at 1:49 AM, Guillaume Dou=C3=A9zan-Grard
+<gdouezangrard@gmail.com> wrote:
+> Hi Andy,
+>
+> Thank you for your review. Changes since the previous submission are
+> highlighted below.
+
+Thanks for an update.
+
+Unfortunately patch series needs more work (and we have time, since
+it's -rc7 already, to improve).
+
+I'm going to comment per patch slightly later.
+
+>
+> On Topstar U931 Notebooks, an issue prevents the WLAN toggle key from
+> being properly managed by the Embedded Controller and successfully
+> disconnect the adapter. A specific ACPI method allows to toggle the WLAN
+> LED state regardless.
+>
+> These are barebone laptops, sold under quite a lot of brands and
+> configurations, with different firmwares and so on. I can only say for su=
+re
+> that this issue is present for all the models sold under a specific brand=
+,
+> that's why I'm reluctant to enable this by default with a DMI check.
+>
+> Thus, the new `led_workaround` option registers this LED with the
+> corresponding subsystem, making possible to use a software-based trigger
+> (rfkill for instance to synchronize the LED with the softkill state).
+>
+> Thank you for your time,
+>
+> --
+> Guillaume Dou=C3=A9zan-Grard
 >
 >
-> Works for me, ack.
+> Changes since v1:
+>
+> * leave devices names unchanged for ABI compatibility,
+> * fix label names,
+> * separate module authors definition,
+> * add commit description to Patch 3.
+>
+>
+> Guillaume Dou=C3=A9zan-Grard (4):
+>   platform/x86: topstar-laptop: non-functional changes
+>   platform/x86: topstar-laptop: change to generic module
+>   platform/x86: topstar-laptop: add platform device
+>   platform/x86: topstar-laptop: add optional WLAN LED workaround
+>
+>  drivers/platform/x86/Kconfig          |   2 +
+>  drivers/platform/x86/topstar-laptop.c | 334 ++++++++++++++++++++++++++--=
+------
+>  2 files changed, 265 insertions(+), 71 deletions(-)
+>
+> --
+> 2.14.3
+>
 
-Okay, merged, thanks!
 
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
