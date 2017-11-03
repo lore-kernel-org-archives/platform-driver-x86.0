@@ -1,66 +1,63 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v12 00/16] Introduce support for Dell SMBIOS over WMI
-Date: Thu, 2 Nov 2017 17:50:25 -0700
-Message-ID: <20171103005025.GA7971@fury>
-References: <cover.1509561822.git.mario.limonciello@dell.com>
+Subject: Re: [PATCH] platform/x86: dell-*wmi*: Relay failed initial probe to
+ dependent drivers
+Date: Thu, 2 Nov 2017 17:56:32 -0700
+Message-ID: <20171103005632.GB7971@fury>
+References: <bdaec2635c4c38e869a5690db2426d7440222949.1509564191.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:40340 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:43702 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932398AbdKCAub (ORCPT
+        with ESMTP id S932398AbdKCA4e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2017 20:50:31 -0400
+        Thu, 2 Nov 2017 20:56:34 -0400
 Content-Disposition: inline
-In-Reply-To: <cover.1509561822.git.mario.limonciello@dell.com>
+In-Reply-To: <bdaec2635c4c38e869a5690db2426d7440222949.1509564191.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, pali.rohar@gmail.com
 
-On Wed, Nov 01, 2017 at 02:25:21PM -0500, Mario Limonciello wrote:
-> The existing way that the dell-smbios helper module and associated
-> other drivers (dell-laptop, dell-wmi) communicate with the platform
-> really isn't secure.  It requires creating a buffer in physical
-> DMA32 memory space and passing that to the platform via SMM.
+On Wed, Nov 01, 2017 at 02:28:21PM -0500, Mario Limonciello wrote:
+> dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
+> finishing probe successfully to probe themselves.
 > 
-> Since the platform got a physical memory pointer, you've just got
-> to trust that the platform has only modified (and accessed) memory
-> within that buffer.
+> Currently if dell-wmi-descriptor fails probing in a non-recoverable way
+> (such as invalid header) dell-wmi and dell-smbios-wmi will continue to
+> try to redo probing due to deferred probing.
 > 
-> Dell Platform designers recognize this security risk and offer a
-> safer way to communicate with the platform over ACPI.  This is
-> in turn exposed via a WMI interface to the OS.
+> To solve this have the dependent drivers query the dell-wmi-descriptor
+> driver whether the descriptor has been determined valid. The possible
+> results are:
+> -EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
+>  and use deferred probing
+> < 0: Descriptor probed, invalid.  Dependent driver should return an
+>  error.
+> 0: Successful descriptor probe, dependent driver can continue
 > 
-> When communicating over WMI-ACPI the communication doesn't occur
-> with physical memory pointers.  When the ASL is invoked, the fixed
-> length ACPI buffer is copied to a small operating region.  The ASL
-> will invoke the SMI, and SMM will only have access to this operating
-> region.  When the ASL returns the buffer is copied back for the OS
-> to process.
+> Successful descriptor probe still doesn't mean that the descriptor driver
+> is necessarily bound at the time of initialization of dependent driver.
+> Userspace can unbind the driver, so all methods used from driver
+> should still be verified to return success values otherwise deferred
+> probing be used.
 > 
-> This method of communication should also deprecate the usage of the
-> dcdbas kernel module and software dependent upon it's interface.
-> Instead offer a character device interface for communicating with this
-> ASL method to allow userspace to use instead.
-> 
-> To faciliate that this patch series introduces a generic way for WMI
-> drivers to be able to create discoverable character devices with
-> a predictable IOCTL interface through the WMI bus when desired.
-> Requiring WMI drivers to explicitly ask for this functionality will
-> act as an effective vendor whitelist to character device creation.
-> 
-> Some of this work is the basis for what will be a proper interpreter
-> of MOF in the kernel and controls for what drivers will be able to
-> do with that MOF.
-> 
-> NOTE: This patch series is intended to go on top of platform-drivers-x86
-> linux-next.
-> 
-> For convenience the entire series including those is also available here:
-> https://github.com/dell/linux/tree/wmi-smbios
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
-Queued for testing, thanks Mario.
+> diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+> index 3204c408e261..33c6c7d66f8c 100644
+> --- a/drivers/platform/x86/dell-wmi-descriptor.c
+> +++ b/drivers/platform/x86/dell-wmi-descriptor.c
+> @@ -26,9 +26,16 @@ struct descriptor_priv {
+>  	u32 interface_version;
+>  	u32 size;
+>  };
+> +static int descriptor_valid;
+
+This initializes to 0, which I believe creates an odd race window between when
+this init is called and when the first driver calls
+dell_wmi_get_descriptor_valid(). Seems like initializing to -EPROBE_DEFER here
+in the declaration would be a better right approach.
 
 -- 
 Darren Hart
