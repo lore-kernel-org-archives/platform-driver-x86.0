@@ -1,120 +1,85 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v12 00/16] Introduce support for Dell SMBIOS over WMI
-Date: Fri, 3 Nov 2017 21:02:17 +0000
-Message-ID: <4b6dc569c44b4e60a1a3ba6bfe784653@ausx13mpc124.AMER.DELL.COM>
-References: <cover.1509561822.git.mario.limonciello@dell.com>
- <20171103005025.GA7971@fury>
- <3ee790eeb8e242f2a064905074777674@ausx13mpc124.AMER.DELL.COM>
- <20171103210035.GA21142@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 2/2] platform/x86: dell-*wmi*: Relay failed initial probe
+ to dependent drivers
+Date: Fri, 3 Nov 2017 17:53:27 -0700
+Message-ID: <20171104005327.GC24317@fury>
+References: <cover.1509725778.git.mario.limonciello@dell.com>
+ <6312b76d08d3b6b5562c773fce8e13d85036ddd5.1509725778.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:46359 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752284AbdKCVCV (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:47605 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751805AbdKDAxa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2017 17:02:21 -0400
-In-Reply-To: <20171103210035.GA21142@fury>
-Content-Language: en-US
+        Fri, 3 Nov 2017 20:53:30 -0400
+Content-Disposition: inline
+In-Reply-To: <6312b76d08d3b6b5562c773fce8e13d85036ddd5.1509725778.git.mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, pali.rohar@gmail.com
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Friday, November 3, 2017 4:01 PM
-> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: andy.shevchenko@gmail.com; linux-kernel@vger.kernel.org; platform-dri=
-ver-
-> x86@vger.kernel.org; luto@kernel.org; quasisec@google.com;
-> pali.rohar@gmail.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
-> greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
-> Subject: Re: [PATCH v12 00/16] Introduce support for Dell SMBIOS over WMI
->=20
-> On Fri, Nov 03, 2017 at 04:30:13PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > > -----Original Message-----
-> > > From: Darren Hart [mailto:dvhart@infradead.org]
-> > > Sent: Thursday, November 2, 2017 7:50 PM
-> > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
-> > > kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
-> Lutomirski
-> > > <luto@kernel.org>; quasisec@google.com; pali.rohar@gmail.com;
-> > > rjw@rjwysocki.net; mjg59@google.com; hch@lst.de; Greg KH
-> <greg@kroah.com>;
-> > > Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-> > > Subject: Re: [PATCH v12 00/16] Introduce support for Dell SMBIOS over=
- WMI
-> > >
-> > > On Wed, Nov 01, 2017 at 02:25:21PM -0500, Mario Limonciello wrote:
-> > > > The existing way that the dell-smbios helper module and associated
-> > > > other drivers (dell-laptop, dell-wmi) communicate with the platform
-> > > > really isn't secure.  It requires creating a buffer in physical
-> > > > DMA32 memory space and passing that to the platform via SMM.
-> > > >
-> > > > Since the platform got a physical memory pointer, you've just got
-> > > > to trust that the platform has only modified (and accessed) memory
-> > > > within that buffer.
-> > > >
-> > > > Dell Platform designers recognize this security risk and offer a
-> > > > safer way to communicate with the platform over ACPI.  This is
-> > > > in turn exposed via a WMI interface to the OS.
-> > > >
-> > > > When communicating over WMI-ACPI the communication doesn't occur
-> > > > with physical memory pointers.  When the ASL is invoked, the fixed
-> > > > length ACPI buffer is copied to a small operating region.  The ASL
-> > > > will invoke the SMI, and SMM will only have access to this operatin=
-g
-> > > > region.  When the ASL returns the buffer is copied back for the OS
-> > > > to process.
-> > > >
-> > > > This method of communication should also deprecate the usage of the
-> > > > dcdbas kernel module and software dependent upon it's interface.
-> > > > Instead offer a character device interface for communicating with t=
-his
-> > > > ASL method to allow userspace to use instead.
-> > > >
-> > > > To faciliate that this patch series introduces a generic way for WM=
-I
-> > > > drivers to be able to create discoverable character devices with
-> > > > a predictable IOCTL interface through the WMI bus when desired.
-> > > > Requiring WMI drivers to explicitly ask for this functionality will
-> > > > act as an effective vendor whitelist to character device creation.
-> > > >
-> > > > Some of this work is the basis for what will be a proper interprete=
-r
-> > > > of MOF in the kernel and controls for what drivers will be able to
-> > > > do with that MOF.
-> > > >
-> > > > NOTE: This patch series is intended to go on top of platform-driver=
-s-x86
-> > > > linux-next.
-> > > >
-> > > > For convenience the entire series including those is also available=
- here:
-> > > > https://github.com/dell/linux/tree/wmi-smbios
-> > >
-> > > Queued for testing, thanks Mario.
-> > >
-> > > --
-> > > Darren Hart
-> > > VMware Open Source Technology Center
-> >
-> > Thanks Darren.  BTW Did you forget to push?  I didn't see it at the tes=
-ting branch:
-> > http://git.infradead.org/users/dvhart/linux-platform-drivers-
-> x86.git/shortlog/refs/heads/testing
-> >
-> > Thanks,
-> >
->=20
-> The workflow currently goes first to review-dvhart, which 0-day will pull=
- from,
-> then to testing for integration, then to for-next. I plan to move it to t=
-esting
-> today.
+On Fri, Nov 03, 2017 at 11:27:22AM -0500, Mario Limonciello wrote:
+> dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
+> finishing probe successfully to probe themselves.
+> 
+> Currently if dell-wmi-descriptor fails probing in a non-recoverable way
+> (such as invalid header) dell-wmi and dell-smbios-wmi will continue to
+> try to redo probing due to deferred probing.
+> 
+> To solve this have the dependent drivers query the dell-wmi-descriptor
+> driver whether the descriptor has been determined valid. The possible
+> results are:
+> -EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
+>  and use deferred probing
+> < 0: Descriptor probed, invalid.  Dependent driver should return an
+>  error.
+> 0: Successful descriptor probe, dependent driver can continue
+> 
+> Successful descriptor probe still doesn't mean that the descriptor driver
+> is necessarily bound at the time of initialization of dependent driver.
+> Userspace can unbind the driver, so all methods used from driver
 
-Gotcha, thanks.
+Userspace shouldn't be able to remove the dell-wmi-descriptor driver if a
+dependent driver is loaded. It isn't clear to me in which scenario we encounter
+this problem ??
+
+
+> should still be verified to return success values otherwise deferred
+> probing be used.
+
+The part after "otherwise" is breaking my English parser...
+
+Should this read: "Userspace can unbind the driver, so all methods used from the
+driver should still be verified to return successful values, falling back to
+deferred probing in case of failure." ??
+
+> diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
+> index 5f7b69c2c83a..776cddd5e135 100644
+> --- a/drivers/platform/x86/dell-wmi-descriptor.h
+> +++ b/drivers/platform/x86/dell-wmi-descriptor.h
+> @@ -15,6 +15,13 @@
+>  
+>  #define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+>  
+> +/* possible return values:
+
+This should trigger a checkpatch error, but doesn't. Huh. For everything but
+"net", comment blocks should start with /* and not following text.
+
+/*
+ * First line.
+ * Second line.
+ */
+
+A nit, and I can clean up if no changes are deemed necessary here.
+
+> + *  -EPROBE_DEFER: probing for dell-wmi-descriptor not yet run
+> + *  0: valid descriptor, successfully probed
+> + *  < 0: invalid descriptor, don't probe dependent devices
+> + */
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
