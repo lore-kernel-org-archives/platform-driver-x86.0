@@ -1,91 +1,63 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: topstar-laptop: add optional WLAN
- LED workaround
-Date: Sun, 5 Nov 2017 15:28:09 +0200
-Message-ID: <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
-References: <cover.1509229280.git.gdouezangrard@gmail.com> <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
- <CAHp75VdN2PDDKsAM8qp1ssZB+K_zgwvJBKK7UEVvsSHV_cK73g@mail.gmail.com> <20171103150735.GA13165@localhost>
+Subject: Re: [PATCH 0/4] platform/x86: intel-vbtn: Add support for several
+ more switches/buttons
+Date: Sun, 5 Nov 2017 14:31:57 +0200
+Message-ID: <CAHp75VfxpUJRdp9hKnPnJ7-7Kfo=DnTm-NRvE-KCQ2ZJ6eehNA@mail.gmail.com>
+References: <b8013fda-0f69-41d7-ade3-98ca861dc30d@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f174.google.com ([209.85.216.174]:53689 "EHLO
-        mail-qt0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751488AbdKEN2K (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Nov 2017 08:28:10 -0500
-In-Reply-To: <20171103150735.GA13165@localhost>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <b8013fda-0f69-41d7-ade3-98ca861dc30d@rwthex-w2-a.rwth-ad.de>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 3, 2017 at 5:07 PM, Guillaume Dou=C3=A9zan-Grard
-<gdouezangrard@gmail.com> wrote:
-> On Fri, Nov 03, 2017 at 02:50:52PM +0200, Andy Shevchenko wrote:
->> On Sun, Oct 29, 2017 at 1:53 AM, Guillaume Dou=C3=A9zan-Grard
->> <gdouezangrard@gmail.com> wrote:
->> > Topstar U931 laptops provide an LED synced with the WLAN adapter
->> > hard-blocking state. Unfortunately, some models seem to be defective,
->> > making impossible to hard-block the adapter with the WLAN switch and
->> > thus the LED is useless.
->> >
->> > An ACPI method is available to programmatically control this switch an=
-d
->> > it indirectly allows to control the LED.
->> >
->> > This commit registers the LED within the corresponding subsystem, maki=
-ng
->> > possible for instance to use an rfkill-based trigger to synchronize th=
-e
->> > LED with the soft-blocking state.
->> >
->> > This feature is disabled by default and can be enabled with the
->> > `led_workaround` module parameter.
->>
->> >  #include <linux/platform_device.h>
->> >  #include <linux/input.h>
->> >  #include <linux/input/sparse-keymap.h>
->> > +#include <linux/leds.h>
->>
->> Yep, exact place, esp. after moving platform_device to the right place.
->>
->> > +static bool led_workaround;
->> > +module_param_named(led_workaround, led_workaround, bool, 0444);
->> > +MODULE_PARM_DESC(led_workaround,
->> > +               "Enables software-based WLAN LED control on systems wi=
-th defective hardware switch");
->>
->> So, this is most problematic piece in the series.
->>
->> We are not encouraging module parameters. Why do we need one? Can't be
->> detected automatically (perhaps based on DMI strings)?
+On Fri, Nov 3, 2017 at 9:03 PM, Stefan Br=C3=BCns
+<stefan.bruens@rwth-aachen.de> wrote:
+> Currently, intel-vbtn only supports the most relevant buttons, although
+> there are several more events, mostly in use by convertibles.
 >
-> Darren told me that.
-
-> I tried to answer this question in the cover letter:
-
-Perhaps it makes sense to put this explanation in the commit message.
-
-> "These are barebone laptops, sold under quite a lot of brands and
-> configurations, with different firmwares and so on. I can only say for su=
-re
-> that this issue is present for all the models sold under a specific brand=
-,
-> that's why I'm reluctant to enable this by default with a DMI check."
+> This series adds support for three more events. One of these events
+> is a switch (SW_*) event, which is currently not working when using
+> sparse keymaps. The first patch fixes this combination.
 >
-> In my case for instance, the DMI info has not been filled in by the retai=
-ller
-> since I only have the ODM base board information to identify a model.
+> The second patch adds support for the SW_TABLET_MODE switch, which
+> is used by current convertibles.
+>
+> The third patch adds support for the KEY_ROTATE_DISPLAY. On the Dell
+> XPS 12 (9Q33), rotation lock is implemented as a button to toggle
+> between locked and unlocked state. In locked state, the accelerometer
+> should be ignored, while in unlocked the screen contents should
+> autorotate based on the tablet orientation. The same functionality
+> is likely implemented as a switch (SW_ROTATE_LOCK event) on different
+> hardware.
+>
+> The fourth patch adds support for the "Windows logo" button/key found on
+> the XPS 12 display (i.e. in tablet mode, it is the only key reachable).
+> The Lenovo Helix 2 has an equivalent touch button. The event currently
+> uses KEY_MENU, although a distinct key code may be a better choice.
+>
 
-I see. I would like to have a consensus on this one with Darren, the
-rest (after addressing comments) looks good to me.
+All, except first, are applied to my review and testing queue, thanks!
 
-> For now, I will prepare a new version containing the other needed changes=
- you
-> pointed at for the other patches.
+>
+> Stefan Br=C3=BCns (4):
+>   Input: sparse-keymap - send sync event for KE_SW/KW_VSW
+>   platform/x86: intel-vbtn: support SW_TABLET_MODE
+>   platform/x86: intel-vbtn: support KEY_ROTATE_DISPLAY
+>   platform/x86: intel-vbtn: support panel front button
+>
+>  drivers/input/sparse-keymap.c     | 1 +
+>  drivers/platform/x86/intel-vbtn.c | 6 ++++++
+>  2 files changed, 7 insertions(+)
+>
+> --
+> 2.14.3
+>
 
-OK.
+
 
 --=20
 With Best Regards,
