@@ -1,63 +1,77 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/4] platform/x86: intel-vbtn: Add support for several
- more switches/buttons
-Date: Sun, 5 Nov 2017 14:31:57 +0200
-Message-ID: <CAHp75VfxpUJRdp9hKnPnJ7-7Kfo=DnTm-NRvE-KCQ2ZJ6eehNA@mail.gmail.com>
-References: <b8013fda-0f69-41d7-ade3-98ca861dc30d@rwthex-w2-a.rwth-ad.de>
+Subject: Re: [PATCH v2 0/3] Sony-laptop: Adjustments for sony_nc_setup_rfkill()
+Date: Sun, 5 Nov 2017 15:24:19 +0200
+Message-ID: <CAHp75VeyLnKG43g0LiDqirkehH4bLK7x216NV1+C8Oktp7D5UQ@mail.gmail.com>
+References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+ <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+ <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
+ <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com> <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <b8013fda-0f69-41d7-ade3-98ca861dc30d@rwthex-w2-a.rwth-ad.de>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 3, 2017 at 9:03 PM, Stefan Br=C3=BCns
-<stefan.bruens@rwth-aachen.de> wrote:
-> Currently, intel-vbtn only supports the most relevant buttons, although
-> there are several more events, mostly in use by convertibles.
+On Fri, Nov 3, 2017 at 3:23 PM, SF Markus Elfring
+<elfring@users.sourceforge.net> wrote:
+>> I have applied first two,
 >
-> This series adds support for three more events. One of these events
-> is a switch (SW_*) event, which is currently not working when using
-> sparse keymaps. The first patch fixes this combination.
+> Thanks for another change acceptance.
 >
-> The second patch adds support for the SW_TABLET_MODE switch, which
-> is used by current convertibles.
 >
-> The third patch adds support for the KEY_ROTATE_DISPLAY. On the Dell
-> XPS 12 (9Q33), rotation lock is implemented as a button to toggle
-> between locked and unlocked state. In locked state, the accelerometer
-> should be ignored, while in unlocked the screen contents should
-> autorotate based on the tablet orientation. The same functionality
-> is likely implemented as a switch (SW_ROTATE_LOCK event) on different
-> hardware.
+>> the last one is subject to discuss a necessity of it.
 >
-> The fourth patch adds support for the "Windows logo" button/key found on
-> the XPS 12 display (i.e. in tablet mode, it is the only key reachable).
-> The Lenovo Helix 2 has an equivalent touch button. The event currently
-> uses KEY_MENU, although a distinct key code may be a better choice.
+> I can offer another bit of information for this software development disc=
+ussion.
 >
+> The following build settings were active in my =E2=80=9CMakefile=E2=80=9D=
+ for this Linux test case.
+>
+> =E2=80=A6
+> HOSTCFLAGS   =3D -Wall -Wmissing-prototypes -Wstrict-prototypes -O0 -fomi=
+t-frame-pointer -std=3Dgnu89
+> =E2=80=A6
+>
+>
+> The affected source file can be compiled for the processor architecture =
+=E2=80=9Cx86_64=E2=80=9D
+> by a tool like =E2=80=9CGCC 6.4.1+r251631-1.3=E2=80=9D from the software =
+distribution
+> =E2=80=9CopenSUSE Tumbleweed=E2=80=9D with the following command example.
+>
+> my_cc=3D/usr/bin/gcc-6 \
+> && my_module=3Ddrivers/platform/x86/sony-laptop.ko \
+> && git checkout ':/^Sony-laptop: Delete an unnecessary variable initialis=
+ation in sony_nc_setup_rfkill' \
+> && make -j4 CC=3D"${my_cc}" HOSTCC=3D"${my_cc}" allmodconfig "${my_module=
+}" \
+> && size "${my_module}" \
+> && git checkout ':/^Sony-laptop: Use common error handling code in sony_n=
+c_setup_rfkill' \
+> && make -j4 CC=3D"${my_cc}" HOSTCC=3D"${my_cc}" allmodconfig "${my_module=
+}" \
+> && size "${my_module}"
+>
+>
+> Do you find the following details useful for further clarification?
+>
+> text: -32
+> data: 0
+> bss:  0
 
-All, except first, are applied to my review and testing queue, thanks!
+...but kernel is compiled with -O2 which, I suppose, will eliminate
+these repeats.
 
->
-> Stefan Br=C3=BCns (4):
->   Input: sparse-keymap - send sync event for KE_SW/KW_VSW
->   platform/x86: intel-vbtn: support SW_TABLET_MODE
->   platform/x86: intel-vbtn: support KEY_ROTATE_DISPLAY
->   platform/x86: intel-vbtn: support panel front button
->
->  drivers/input/sparse-keymap.c     | 1 +
->  drivers/platform/x86/intel-vbtn.c | 6 ++++++
->  2 files changed, 7 insertions(+)
->
-> --
-> 2.14.3
->
+So, the main question is "WHY" you are doing this change.
 
+I didn't find any convinced explanation (yet?).
 
+As an example, I would understand it if the consequent patch will
+bring locking to the function.
 
 --=20
 With Best Regards,
