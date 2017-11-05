@@ -1,53 +1,90 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: Re: Sony-laptop: Adjustments for sony_nc_setup_rfkill()
-Date: Sun, 5 Nov 2017 15:20:09 +0100
-Message-ID: <2c1996c5-0833-dcd3-c747-62eca46a433d@users.sourceforge.net>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
- <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
- <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
- <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
- <CAHp75VeyLnKG43g0LiDqirkehH4bLK7x216NV1+C8Oktp7D5UQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 4/4] platform/x86: topstar-laptop: add optional WLAN
+ LED workaround
+Date: Sun, 5 Nov 2017 14:34:43 -0800
+Message-ID: <20171105223443.GF24317@fury>
+References: <cover.1509229280.git.gdouezangrard@gmail.com>
+ <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
+ <CAHp75VdN2PDDKsAM8qp1ssZB+K_zgwvJBKK7UEVvsSHV_cK73g@mail.gmail.com>
+ <20171103150735.GA13165@localhost>
+ <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.15.4]:56185 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750778AbdKEOUv (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:54324 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750769AbdKEWep (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Nov 2017 09:20:51 -0500
-In-Reply-To: <CAHp75VeyLnKG43g0LiDqirkehH4bLK7x216NV1+C8Oktp7D5UQ@mail.gmail.com>
-Content-Language: en-GB
+        Sun, 5 Nov 2017 17:34:45 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Guillaume =?iso-8859-1?Q?Dou=E9zan-Grard?= <gdouezangrard@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
->> Do you find the following details useful for further clarification?
->>
->> text: -32
->> data: 0
->> bss:  0
+On Sun, Nov 05, 2017 at 03:28:09PM +0200, Andy Shevchenko wrote:
+> On Fri, Nov 3, 2017 at 5:07 PM, Guillaume DouÈzan-Grard
+> <gdouezangrard@gmail.com> wrote:
+> > On Fri, Nov 03, 2017 at 02:50:52PM +0200, Andy Shevchenko wrote:
+> >> On Sun, Oct 29, 2017 at 1:53 AM, Guillaume DouÈzan-Grard
+> >> <gdouezangrard@gmail.com> wrote:
+> >> > Topstar U931 laptops provide an LED synced with the WLAN adapter
+> >> > hard-blocking state. Unfortunately, some models seem to be defective,
+> >> > making impossible to hard-block the adapter with the WLAN switch and
+> >> > thus the LED is useless.
+> >> >
+> >> > An ACPI method is available to programmatically control this switch and
+> >> > it indirectly allows to control the LED.
+> >> >
+> >> > This commit registers the LED within the corresponding subsystem, making
+> >> > possible for instance to use an rfkill-based trigger to synchronize the
+> >> > LED with the soft-blocking state.
+> >> >
+> >> > This feature is disabled by default and can be enabled with the
+> >> > `led_workaround` module parameter.
+> >>
+> >> >  #include <linux/platform_device.h>
+> >> >  #include <linux/input.h>
+> >> >  #include <linux/input/sparse-keymap.h>
+> >> > +#include <linux/leds.h>
+> >>
+> >> Yep, exact place, esp. after moving platform_device to the right place.
+> >>
+> >> > +static bool led_workaround;
+> >> > +module_param_named(led_workaround, led_workaround, bool, 0444);
+> >> > +MODULE_PARM_DESC(led_workaround,
+> >> > +               "Enables software-based WLAN LED control on systems with defective hardware switch");
+> >>
+> >> So, this is most problematic piece in the series.
+> >>
+> >> We are not encouraging module parameters. Why do we need one? Can't be
+> >> detected automatically (perhaps based on DMI strings)?
+> >
+> > Darren told me that.
 > 
-> ...but kernel is compiled with -O2 which,
-
-Did you try to compare results for my update suggestion also with
-the default build configuration?
-
-
-> I suppose, will eliminate these repeats.
-
-My build results did not fit to your expectations.
-
-
-> So, the main question is "WHY" you are doing this change.
+> > I tried to answer this question in the cover letter:
 > 
-> I didn't find any convinced explanation (yet?).
+> Perhaps it makes sense to put this explanation in the commit message.
+> 
+> > "These are barebone laptops, sold under quite a lot of brands and
+> > configurations, with different firmwares and so on. I can only say for sure
+> > that this issue is present for all the models sold under a specific brand,
+> > that's why I'm reluctant to enable this by default with a DMI check."
+> >
+> > In my case for instance, the DMI info has not been filled in by the retailler
+> > since I only have the ODM base board information to identify a model.
+> 
+> I see. I would like to have a consensus on this one with Darren, the
+> rest (after addressing comments) looks good to me.
 
-Do you find a reduction of 32 bytes for the object code not interesting
-enough just by achieving such a small effect because of the replacement
-of three function calls ‚Äúrfkill_destroy‚Äù with goto statements?
+If you can definitively say that all models of brand X and this HID have this
+quirk, that is considerably better than a lot of quirks we deal with today. I
+suggest doing that and holding off on the option. If it gets to the point where
+a number otherwise unidentifiable systems have this problem, we can add the
+option then.
 
-Regards,
-Markus
+-- 
+Darren Hart
+VMware Open Source Technology Center
