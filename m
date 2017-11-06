@@ -1,90 +1,43 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 4/4] platform/x86: topstar-laptop: add optional WLAN
- LED workaround
-Date: Sun, 5 Nov 2017 14:34:43 -0800
-Message-ID: <20171105223443.GF24317@fury>
-References: <cover.1509229280.git.gdouezangrard@gmail.com>
- <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
- <CAHp75VdN2PDDKsAM8qp1ssZB+K_zgwvJBKK7UEVvsSHV_cK73g@mail.gmail.com>
- <20171103150735.GA13165@localhost>
- <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH 1/2] platform/x86: wmi: release mutex on module acquistion failure
+Date: Sun,  5 Nov 2017 21:34:33 -0600
+Message-ID: <1509939274-2813-2-git-send-email-mario.limonciello@dell.com>
+References: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:54324 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750769AbdKEWep (ORCPT
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:47905 "EHLO
+        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750914AbdKFDep (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Nov 2017 17:34:45 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
+        Sun, 5 Nov 2017 22:34:45 -0500
+In-Reply-To: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Guillaume =?iso-8859-1?Q?Dou=E9zan-Grard?= <gdouezangrard@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 
-On Sun, Nov 05, 2017 at 03:28:09PM +0200, Andy Shevchenko wrote:
-> On Fri, Nov 3, 2017 at 5:07 PM, Guillaume Douézan-Grard
-> <gdouezangrard@gmail.com> wrote:
-> > On Fri, Nov 03, 2017 at 02:50:52PM +0200, Andy Shevchenko wrote:
-> >> On Sun, Oct 29, 2017 at 1:53 AM, Guillaume Douézan-Grard
-> >> <gdouezangrard@gmail.com> wrote:
-> >> > Topstar U931 laptops provide an LED synced with the WLAN adapter
-> >> > hard-blocking state. Unfortunately, some models seem to be defective,
-> >> > making impossible to hard-block the adapter with the WLAN switch and
-> >> > thus the LED is useless.
-> >> >
-> >> > An ACPI method is available to programmatically control this switch and
-> >> > it indirectly allows to control the LED.
-> >> >
-> >> > This commit registers the LED within the corresponding subsystem, making
-> >> > possible for instance to use an rfkill-based trigger to synchronize the
-> >> > LED with the soft-blocking state.
-> >> >
-> >> > This feature is disabled by default and can be enabled with the
-> >> > `led_workaround` module parameter.
-> >>
-> >> >  #include <linux/platform_device.h>
-> >> >  #include <linux/input.h>
-> >> >  #include <linux/input/sparse-keymap.h>
-> >> > +#include <linux/leds.h>
-> >>
-> >> Yep, exact place, esp. after moving platform_device to the right place.
-> >>
-> >> > +static bool led_workaround;
-> >> > +module_param_named(led_workaround, led_workaround, bool, 0444);
-> >> > +MODULE_PARM_DESC(led_workaround,
-> >> > +               "Enables software-based WLAN LED control on systems with defective hardware switch");
-> >>
-> >> So, this is most problematic piece in the series.
-> >>
-> >> We are not encouraging module parameters. Why do we need one? Can't be
-> >> detected automatically (perhaps based on DMI strings)?
-> >
-> > Darren told me that.
-> 
-> > I tried to answer this question in the cover letter:
-> 
-> Perhaps it makes sense to put this explanation in the commit message.
-> 
-> > "These are barebone laptops, sold under quite a lot of brands and
-> > configurations, with different firmwares and so on. I can only say for sure
-> > that this issue is present for all the models sold under a specific brand,
-> > that's why I'm reluctant to enable this by default with a DMI check."
-> >
-> > In my case for instance, the DMI info has not been filled in by the retailler
-> > since I only have the ODM base board information to identify a model.
-> 
-> I see. I would like to have a consensus on this one with Darren, the
-> rest (after addressing comments) looks good to me.
+This failure mode should have also released the mutex.
 
-If you can definitively say that all models of brand X and this HID have this
-quirk, that is considerably better than a lot of quirks we deal with today. I
-suggest doing that and holding off on the option. If it gets to the point where
-a number otherwise unidentifiable systems have this problem, we can add the
-option then.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/wmi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 8c31ed4..791449a 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -868,8 +868,10 @@ static long wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	/* let the driver do any filtering and do the call */
+ 	wdriver = container_of(wblock->dev.dev.driver,
+ 			       struct wmi_driver, driver);
+-	if (!try_module_get(wdriver->driver.owner))
+-		return -EBUSY;
++	if (!try_module_get(wdriver->driver.owner)) {
++		ret = -EBUSY;
++		goto out_ioctl;
++	}
+ 	ret = wdriver->filter_callback(&wblock->dev, cmd, buf);
+ 	module_put(wdriver->driver.owner);
+ 	if (ret)
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.7.4
