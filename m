@@ -1,47 +1,53 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 2/2] platform/x86: dell-smbios-wmi: release mutex lock on WMI call failure
-Date: Sun,  5 Nov 2017 21:34:34 -0600
-Message-ID: <1509939274-2813-3-git-send-email-mario.limonciello@dell.com>
-References: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Mon, 6 Nov 2017 09:23:01 +0200
+Message-ID: <20171106072301.pdpbgqvn4laac4tz@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+ <1509652115.17230.9.camel@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga14.intel.com ([192.55.52.115]:11355 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751087AbdKFHXE (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 6 Nov 2017 02:23:04 -0500
+Content-Disposition: inline
+In-Reply-To: <1509652115.17230.9.camel@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
-Unbound devices may race with calling this function causing the mutex
-to stay locked.  This failure mode should have released the mutex too.
+On Thu, Nov 02, 2017 at 12:48:35PM -0700, Sean Christopherson wrote:
+> On Tue, 2017-10-10 at 17:32 +0300, Jarkko Sakkinen wrote:
+> > +static int __init sgx_drv_init(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = sgx_drv_subsys_init();
+> 
+> The return value of sgx_drv_subsys_init is being ignored.
+> 
+> > +
+> > +	ret = platform_driver_register(&sgx_drv);
+> > +	if (ret)
+> > +		sgx_drv_subsys_exit();
+> > +
+> > +	return ret;
+> > +}
+> > +module_init(sgx_drv_init);
+> > +
+> > +static void __exit sgx_drv_exit(void)
+> > +{
+> > +	platform_driver_unregister(&sgx_drv);
+> > +	sgx_drv_subsys_exit();
+> > +}
+> > +module_exit(sgx_drv_exit);
 
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/dell-smbios-wmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Holds still for v4. the latest version under review. Thanks.
 
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index 35c13815..5cf9b13 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -91,8 +91,10 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
- 
- 	mutex_lock(&call_mutex);
- 	priv = get_first_smbios_priv();
--	if (!priv)
--		return -ENODEV;
-+	if (!priv) {
-+		ret = -ENODEV;
-+		goto out_wmi_call;
-+	}
- 
- 	size = sizeof(struct calling_interface_buffer);
- 	difference = priv->req_buf_size - sizeof(u64) - size;
-@@ -101,6 +103,7 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
- 	memcpy(&priv->buf->std, buffer, size);
- 	ret = run_smbios_call(priv->wdev);
- 	memcpy(buffer, &priv->buf->std, size);
-+out_wmi_call:
- 	mutex_unlock(&call_mutex);
- 
- 	return ret;
--- 
-2.7.4
+/Jarkko
