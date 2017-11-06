@@ -1,28 +1,47 @@
 From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 0/2] Correct some errors caught by buildbot
-Date: Sun,  5 Nov 2017 21:34:32 -0600
-Message-ID: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:47905 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750817AbdKFDeo (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 5 Nov 2017 22:34:44 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 2/2] platform/x86: dell-smbios-wmi: release mutex lock on WMI call failure
+Date: Sun,  5 Nov 2017 21:34:34 -0600
+Message-ID: <1509939274-2813-3-git-send-email-mario.limonciello@dell.com>
+References: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1509939274-2813-1-git-send-email-mario.limonciello@dell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Some of the failure scenarios weren't releasing acquired mutexes.
-Here are some patches that correct them.
+Unbound devices may race with calling this function causing the mutex
+to stay locked.  This failure mode should have released the mutex too.
 
-Mario Limonciello (2):
-  platform/x86: wmi: release mutex on module acquistion failure
-  platform/x86: dell-smbios-wmi: release mutex lock on WMI call failure
-
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
  drivers/platform/x86/dell-smbios-wmi.c | 7 +++++--
- drivers/platform/x86/wmi.c             | 6 ++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
+index 35c13815..5cf9b13 100644
+--- a/drivers/platform/x86/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell-smbios-wmi.c
+@@ -91,8 +91,10 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
+ 
+ 	mutex_lock(&call_mutex);
+ 	priv = get_first_smbios_priv();
+-	if (!priv)
+-		return -ENODEV;
++	if (!priv) {
++		ret = -ENODEV;
++		goto out_wmi_call;
++	}
+ 
+ 	size = sizeof(struct calling_interface_buffer);
+ 	difference = priv->req_buf_size - sizeof(u64) - size;
+@@ -101,6 +103,7 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
+ 	memcpy(&priv->buf->std, buffer, size);
+ 	ret = run_smbios_call(priv->wdev);
+ 	memcpy(buffer, &priv->buf->std, size);
++out_wmi_call:
+ 	mutex_unlock(&call_mutex);
+ 
+ 	return ret;
 -- 
 2.7.4
