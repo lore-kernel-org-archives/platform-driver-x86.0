@@ -1,40 +1,59 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: Re: Sony-laptop: Adjustments for sony_nc_setup_rfkill()
-Date: Tue, 7 Nov 2017 14:54:57 +0100
-Message-ID: <8295246e-d800-521a-445c-007dc9f02208@users.sourceforge.net>
-References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
- <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
- <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
- <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
- <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
- <CAHp75VeyLnKG43g0LiDqirkehH4bLK7x216NV1+C8Oktp7D5UQ@mail.gmail.com>
- <2c1996c5-0833-dcd3-c747-62eca46a433d@users.sourceforge.net>
- <CAHp75VcU2+cbWDkt+6gd9+bHjxDpA-hA5KuQNVCn-AJr1SLANQ@mail.gmail.com>
- <570d906c-5391-b7b4-6f4c-6709634ce3bb@users.sourceforge.net>
- <CAHp75VcPkob0x54UUPnebp1TUC9UenR_+jv2PkNKZ3TKsLtEcQ@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 0/2] Account for uncorrectable failures in probing
+Date: Tue, 7 Nov 2017 16:17:06 +0000
+Message-ID: <c0175daf13144831ba320b66721da344@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1509725778.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcPkob0x54UUPnebp1TUC9UenR_+jv2PkNKZ3TKsLtEcQ@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <cover.1509725778.git.mario.limonciello@dell.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+To: pali.rohar@gmail.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy.shevchenko@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-> First two already applied.
+> -----Original Message-----
+> From: Limonciello, Mario
+> Sent: Friday, November 3, 2017 11:27 AM
+> To: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.=
+org;
+> pali.rohar@gmail.com; Limonciello, Mario <Mario_Limonciello@Dell.com>
+> Subject: [PATCH 0/2] Account for uncorrectable failures in probing
+>=20
+> Pali raised some concerns around corner case scenarios that probing
+> may fail on dell-wmi-descriptor causing dell-wmi and dell-smbios-wmi
+> to be stuck in infinite deferred probing loops.
+>=20
+> This patch series accounts for that corner case.
+>=20
+> Changes since original submission:
+> - Add as second patch that catches potential NULL pointer
+> - Avoid potential race condition between driver init and calling
+>   check for if validation successful
+> Mario Limonciello (2):
+>   platform/x86: dell-wmi-descriptor: check if memory was allocated
+>   platform/x86: dell-*wmi*: Relay failed initial probe to dependent
+>     drivers
+>=20
+>  drivers/platform/x86/dell-smbios-wmi.c     |  4 ++++
+>  drivers/platform/x86/dell-wmi-descriptor.c | 16 ++++++++++++++++
+>  drivers/platform/x86/dell-wmi-descriptor.h |  7 +++++++
+>  drivers/platform/x86/dell-wmi.c            |  5 +++++
+>  4 files changed, 32 insertions(+)
+>=20
+> --
+> 2.14.1
 
-This is nice.
+Pali,
 
+Did you have any thoughts on these two patches?  I believe they should=20
+account for the concerns you raised regarding the corner cases with=20
+probing in my series.
 
-> So, the third patch is in question, please resend it with asked commit
-> message update.
+The series is queued up in the platform-drivers-x86 testing branch and
+they are intended to be on top of that.
 
-I find such a resend questionable at the moment.
-
-Which details do you expect from the software “scripts/bloat-o-meter”
-more than I provided for the discussed Linux module already?
-
-Regards,
-Markus
+Thanks,
