@@ -1,125 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: drivers/x86: add thinkpad-wmi
-Date: Tue, 7 Nov 2017 14:46:19 +0200
-Message-ID: <CAHp75VfRggWw_yx22i0Sd0ow7r6F_5kDxqYOSUGMq+DAd9veLw@mail.gmail.com>
-References: <20171021064102.15166-1-corentin.chary@gmail.com>
- <b16e8dbf-a40a-9392-5fb6-c09ef4501171@dell.com> <CAHR064iYRWeCpAQ-FfWK+=6iiJNDGsSBu1vrEt5Sp2iFTmAo8Q@mail.gmail.com>
- <6fd4228bba1947e5b5a3ffe060ee667d@ausx13mpc120.AMER.DELL.COM>
+Subject: Re: Sony-laptop: Adjustments for sony_nc_setup_rfkill()
+Date: Tue, 7 Nov 2017 14:49:48 +0200
+Message-ID: <CAHp75VcU2+cbWDkt+6gd9+bHjxDpA-hA5KuQNVCn-AJr1SLANQ@mail.gmail.com>
+References: <f33d9aa0-1a8e-f702-7513-5c0d5b464529@users.sourceforge.net>
+ <CAHp75VcMkXCioCzmLE0+BTmkqc5RSOx9yPO0ectVHMrMvewgwg@mail.gmail.com>
+ <17ee534c-9fe6-19c4-0522-76cd3cbe5f88@users.sourceforge.net>
+ <CAHp75VfaWLSwzLpnWHj0sD9ZVVbSCi+ya_+PESXjU2FbHefE0Q@mail.gmail.com>
+ <340e5426-a9ba-2193-2735-85e918773785@users.sourceforge.net>
+ <CAHp75VeyLnKG43g0LiDqirkehH4bLK7x216NV1+C8Oktp7D5UQ@mail.gmail.com> <2c1996c5-0833-dcd3-c747-62eca46a433d@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f170.google.com ([209.85.216.170]:50628 "EHLO
-        mail-qt0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751754AbdKGMqV (ORCPT
+Received: from mail-qt0-f181.google.com ([209.85.216.181]:51276 "EHLO
+        mail-qt0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754760AbdKGMtu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Nov 2017 07:46:21 -0500
-In-Reply-To: <6fd4228bba1947e5b5a3ffe060ee667d@ausx13mpc120.AMER.DELL.COM>
+        Tue, 7 Nov 2017 07:49:50 -0500
+In-Reply-To: <2c1996c5-0833-dcd3-c747-62eca46a433d@users.sourceforge.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Marco Chiappero <marco@absence.it>, Matthew Garrett <mjg@redhat.com>, Mattia Dongili <malattia@linux.it>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
 
-On Mon, Nov 6, 2017 at 8:16 PM,  <Mario.Limonciello@dell.com> wrote:
->> On Tue, Oct 24, 2017 at 10:59 PM, Mario Limonciello
->> <Mario.Limonciello@dell.com> wrote:
-
-Mario, thanks for your comments on the subject.
-
->> > The hope is that eventually drivers on the WMI bus don't need to be very
->> > rich in code, but more intelligence comes from the bus.  That would mean
->> > that the bus parses the MOF and knows what types of data would be passed in
->> > individual method GUIDs.  The bus would know what size of data that is and
->> > what fields represent what in data objects.  The vendor drivers may add some
->> > filtering or permissions checking, but that would be it.
->> >
->> > We still don't have MOF parsing in the kernel, but I think that it's good to
->> > set up concepts that reflect how we want it to work until it's available.
->> > That should mean that if you get the interfaces right that later your driver
->> > can shrink.  My patch series isn't yet accepted, so what I'm doing isn't
->> > necessarily the way it will be done, I just want to let you know about it.
->> >
->> > The big notable differences with how we're approaching our drivers:
->> > 1) GUID's that provide methods are given direct execution paths in sysfs
->> > files through your patch.  This means that there could be a ton of different
->> > sysfs attributes that vary from vendor to vendor based on what they offer.
->> > I set up a concept that method type GUID's would be handled by the WMI bus
->> > by creating a character device in the /dev/wmi and copying in/out data for
->> > those method objects.
->>
->> Wouldn't that be a little harder to use from userspace ? (But I can
->> see how it makes it more generic).
->
-> The concept that we're working with would mean that some userspace software
-> can read sysfs attributes to understand what data format is being communicated
-> and then know how to pack data into the character device when communicating
-> with WMI bus.
->
-> This is closer to the Windows model too with PowerShell.  You query the namespace
-> to determine what methods are offered via the MOF and then you can pack the
-> data and PowerShell will ferry it out to the ASL to execute and return the results.
-
-Interoperability with Windows is a plus in my opinion. So, Windows
-user or even developer finds themselves in slightly more convenient
-environment.
-
->> > 2) You don't register all devices with the WMI bus.  Each of your GUIDs that
->> > you interact with should really be registered with the bus.  Some of the
->> > data you're interested in should be exposed there.
->> > I can't speak on behalf of Darren and Andy here, but I would anticipate they
->> > don't want "new" WMI drivers introduced that don't register and use the WMI
->> > bus properly.  I only see the single GUID that registered.
->>
->> Well, these aren't really "devices". I can register all methods to the
->> BUS  though, but it'll be weird for the end user.
->> What is your suggestion here ?
->
-> The WMI bus device model means that any "GUID" is a device associated to the WMI
-> bus.  I view your driver as putting another level of granularity on top of that.
-> Whether you adopt a character device or sysfs attributes for communicating to the
-> bus, you should still have some sort of driver that packs all the GUID's into subdevices
-> under say a platform device.
->
-> I think you should look for some feedback from Darren or Andy on how they want to
-> see this work.
-
-My preference here is to try to have as much generic and flexible
-interface in kernel that may allow user space application utilize
-customisations.
-Though I think Darren is more involved in WMI activity and can share
-his view on all of this.
-
->> > 3) Your driver provides more granular data than mine (as that's how it is
->> > exposed by Lenovo's design).  I think this is a good thing, and you should
->> > find a way to programattically expose your attributes to sysfs instead of
->> > debugfs if possible.
->> >
->> > The driver looks very good to me though, a few nested comments:
->>
->> Thanks for the review Mario. I'm afraid I won't have much more time in
->> the near future to make changes to this driver. What do you think
->> would be the minimal set of changes to make this good enough to be
->> merged ?
->
-> I'm just a contributor myself who has recently worked on a WMI driver series.
-> I would defer to Andy and Darren to decide what they would like to accept.
+On Sun, Nov 5, 2017 at 4:20 PM, SF Markus Elfring
+<elfring@users.sourceforge.net> wrote:
+>>> Do you find the following details useful for further clarification?
+>>>
+>>> text: -32
+>>> data: 0
+>>> bss:  0
 
 ...
 
-> it would be difficult to update to the
-> newer model we're working towards when we have the kernel learning how to
-> parse MOF and programmatically producing sysfs attributes for interacting with
-> character devices.
+>> So, the main question is "WHY" you are doing this change.
+>>
+>> I didn't find any convinced explanation (yet?).
+>
+> Do you find a reduction of 32 bytes for the object code not interesting
+> enough just by achieving such a small effect because of the replacement
+> of three function calls =E2=80=9Crfkill_destroy=E2=80=9D with goto statem=
+ents?
 
-...and since your stuff is scheduled for v4.15 the possibility to
-(re-)use as much as possible from it is a plus.
+Okay, it's something.
 
-> Since the kernel has to keep a stable interface to userspace you may run into a
-> situation that one day you want to update to the new interfaces and might have a
-> difficult time since you have to continue to offer a configuration option to offer these
-> old interfaces too.
+Update a commit message in your patch, use bloat-o-meter (and put its
+output to the commit message) and resend, we might reconsider then.
 
-This is a good point.
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
