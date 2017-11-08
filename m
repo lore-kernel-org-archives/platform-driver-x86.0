@@ -1,43 +1,101 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dell-smbios: fix string overflow
-Date: Wed, 8 Nov 2017 21:02:38 +0100
-Message-ID: <CAK8P3a2p6y=wXFxSvLmuWONZAJUPrDNBTj8jSke8MAsZbY2fXA@mail.gmail.com>
-References: <20171108120844.3196747-1-arnd@arndb.de> <8b46d25f-f9e6-d2e5-1b7c-abbc6dd47298@linux.intel.com>
- <01d8cf85a7984a3cb1dd92771b65b8ea@ausx13mpc120.AMER.DELL.COM> <CAHp75VckzSdKtqSNDUKBAvOzx-iu67vwJwb8pbdPBrtyPLqBew@mail.gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 10/12] intel_sgx:
+ in-kernel launch enclave
+Date: Wed, 08 Nov 2017 12:07:26 -0800
+Message-ID: <1510171646.4659.5.camel@intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+         <20171010143258.21623-11-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f65.google.com ([209.85.218.65]:45789 "EHLO
-        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751749AbdKHUCj (ORCPT
+Received: from mga07.intel.com ([134.134.136.100]:54924 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752171AbdKHUKv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Nov 2017 15:02:39 -0500
-In-Reply-To: <CAHp75VckzSdKtqSNDUKBAvOzx-iu67vwJwb8pbdPBrtyPLqBew@mail.gmail.com>
+        Wed, 8 Nov 2017 15:10:51 -0500
+In-Reply-To: <20171010143258.21623-11-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Edward O'Callaghan <quasisec@google.com>, Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
+Cc: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 8, 2017 at 8:03 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Nov 8, 2017 at 8:30 PM,  <Mario.Limonciello@dell.com> wrote:
->
-> % make W=1
->
-> which implies some warning, W=2 a lot more.
->
-> [1]: http://patches.linaro.org/cover/107779/
->
-> [2]: commit bd664f6b3e376a8ef4990f87d08271cc2d01ba9a
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Wed Jul 12 19:25:47 2017 -0700
->
->    disable new gcc-7.1.1 warnings for now
+On Tue, 2017-10-10 at 17:32 +0300, Jarkko Sakkinen wrote:
+> +static RSA *load_sign_key(const char *path)
+> +{
+> +	FILE *f;
+> +	RSA *key;
+> +
+> +	f = fopen(path, "rb");
+> +	if (!f) {
+> +		fprintf(stderr, "Unable to open %s\n", path);
+> +		return NULL;
+> +	}
+> +	key = RSA_new();
+> +	if (!PEM_read_RSAPrivateKey(f, &key, pem_passwd_cb, NULL))
+> +		return NULL;
+> +	fclose(f);
+> +
+> +	if (BN_num_bytes(key->n) != SGX_MODULUS_SIZE) {
 
-I have reverted that patch locally and this is the first time I
-actually hit a warning
-since it landed, but that reminds me that I should check whether all my
-workarounds have landed in mainline and we are ready to turn it on globally
-again.
+Dereferencing the RSA pointer (key) breaks on OpenSSL 1.1.0 as RSA is now an
+opaque object.  It's relatively easy to fudge around the issue, patch below.
 
-     Arnd
+https://github.com/openssl/openssl/issues/1491
+https://wiki.openssl.org/index.php/OpenSSL_1.1.0_Changes
+
+> +		fprintf(stderr, "Invalid key size %d\n", BN_num_bytes(key-
+> >n));
+> +		RSA_free(key);
+> +		return NULL;
+> +	}
+> +
+> +	return key;
+> +}
+> +
+
+diff --git drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
+drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
+index 27e8c61d033c..e454dc95f438 100644
+--- drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
++++ drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
+@@ -110,6 +110,17 @@ static int pem_passwd_cb(char *buf, int size, int rwflag,
+void *u)
+        return strlen(buf) >= size ? size - 1 : strlen(buf);
+ }
+ 
++static inline const BIGNUM *get_modulus(RSA *key)
++{
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++       return key->n;
++#else
++       const BIGNUM *n;
++       RSA_get0_key(key, &n, NULL, NULL);
++       return n;
++#endif
++}
++
+ static RSA *load_sign_key(const char *path)
+ {
+        FILE *f;
+@@ -125,8 +136,9 @@ static RSA *load_sign_key(const char *path)
+                return NULL;
+        fclose(f);
+ 
+-       if (BN_num_bytes(key->n) != SGX_MODULUS_SIZE) {
+-               fprintf(stderr, "Invalid key size %d\n", BN_num_bytes(key->n));
++       if (BN_num_bytes(get_modulus(key)) != SGX_MODULUS_SIZE) {
++               fprintf(stderr, "Invalid key size %d\n",
++                       BN_num_bytes(get_modulus(key)));
+                RSA_free(key);
+                return NULL;
+        }
+@@ -511,7 +523,7 @@ int main(int argc, char **argv)
+        if (!sign_key)
+                goto out;
+ 
+-       BN_bn2bin(sign_key->n, ss.modulus);
++       BN_bn2bin(get_modulus(sign_key), ss.modulus);
+ 
+        if (!measure_encl(argv[1], ss.body.mrenclave))
+                goto out;
