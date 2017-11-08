@@ -1,71 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: topstar-laptop: add optional WLAN
- LED workaround
-Date: Wed, 8 Nov 2017 12:26:00 +0200
-Message-ID: <CAHp75Vdwq=zkrsf=ONV6KjpP1huZakQ11x6Z538C-5MFrMeMPQ@mail.gmail.com>
-References: <cover.1509229280.git.gdouezangrard@gmail.com> <4bfdea8bba83cd8f7fcdfdeee283f24574e4866d.1509229280.git.gdouezangrard@gmail.com>
- <CAHp75VdN2PDDKsAM8qp1ssZB+K_zgwvJBKK7UEVvsSHV_cK73g@mail.gmail.com>
- <20171103150735.GA13165@localhost> <CAHp75VdGZPZbVUSavq7VwTprtedH7hP56UQf8zPWn9dp-ViJCg@mail.gmail.com>
- <20171105223443.GF24317@fury> <20171108002526.GA17436@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] dell-smbios: fix string overflow
+Date: Wed,  8 Nov 2017 13:08:39 +0100
+Message-ID: <20171108120844.3196747-1-arnd@arndb.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f177.google.com ([209.85.216.177]:43824 "EHLO
-        mail-qt0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751081AbdKHK0B (ORCPT
+Received: from mout.kundenserver.de ([212.227.126.133]:55830 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752033AbdKHMJ1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Nov 2017 05:26:01 -0500
-In-Reply-To: <20171108002526.GA17436@localhost>
+        Wed, 8 Nov 2017 07:09:27 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Guillaume_Dou=C3=A9zan=2DGrard?= <gdouezangrard@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Edward O'Callaghan <quasisec@google.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Nov 8, 2017 at 2:25 AM, Guillaume Dou=C3=A9zan-Grard
-<gdouezangrard@gmail.com> wrote:
-> On Sun, Nov 05, 2017 at 02:34:43PM -0800, Darren Hart wrote:
->> On Sun, Nov 05, 2017 at 03:28:09PM +0200, Andy Shevchenko wrote:
+The new sysfs code overwrites two fixed-length character arrays
+that are each one byte shorter than they need to be, to hold
+the trailing \0:
 
-> I replaced the module parameter with a board name/version DMI check,
-> that will be included for the new patch serie.
+drivers/platform/x86/dell-smbios.c: In function 'build_tokens_sysfs':
+drivers/platform/x86/dell-smbios.c:494:42: error: 'sprintf' writing a terminating nul past the end of the destination [-Werror=format-overflow=]
+   sprintf(buffer_location, "%04x_location",
+drivers/platform/x86/dell-smbios.c:494:3: note: 'sprintf' output 14 bytes into a destination of size 13
+drivers/platform/x86/dell-smbios.c:506:36: error: 'sprintf' writing a terminating nul past the end of the destination [-Werror=format-overflow=]
+   sprintf(buffer_value, "%04x_value",
+drivers/platform/x86/dell-smbios.c:506:3: note: 'sprintf' output 11 bytes into a destination of size 10
 
-Below is (as PoC) fine for me.
-Though one comment.
+This changes it to just use kasprintf(), which always gets it right.
 
-> @@ -291,10 +289,16 @@ static int topstar_acpi_add(struct acpi_device *dev=
-ice)
->         if (err)
->                 goto err_platform_exit;
->
-> -       if (led_workaround) {
-> +       /*
-> +        * Enable software-based WLAN LED control on systems with defecti=
-ve
-> +        * hardware switch.
-> +        */
+Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/dell-smbios.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-> +       if (dmi_match(DMI_BOARD_NAME, "U931")
-> +                       && dmi_match(DMI_BOARD_VERSION, "RVP7")) {
-
-I would better to see dmi_system_id table with callback that sets this
-boolean variable inside topstar structure.
-
-Something like below (adapt it to better suit your needs):
-
-static const struct dmi_system_id topstar_quirks[] =3D {
-       {
-               .callback =3D dmi_led_workaround,
-               .ident =3D "Topstar ... BLA BLA BLA",
-               .matches =3D {
-                      DMI_MATCH(DMI_BOARD_NAME, "U931"),
-                      DMI_MATCH(DMI_BOARD_VERSION, "RVP7"),
-               },
-               .driver_data =3D topstar,
-       },
-       {}
-};
-
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index d99edd803c19..6a60db515bda 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -463,8 +463,6 @@ static struct platform_driver platform_driver = {
+ 
+ static int build_tokens_sysfs(struct platform_device *dev)
+ {
+-	char buffer_location[13];
+-	char buffer_value[10];
+ 	char *location_name;
+ 	char *value_name;
+ 	size_t size;
+@@ -491,9 +489,8 @@ static int build_tokens_sysfs(struct platform_device *dev)
+ 		if (da_tokens[i].tokenID == 0)
+ 			continue;
+ 		/* add location */
+-		sprintf(buffer_location, "%04x_location",
+-			da_tokens[i].tokenID);
+-		location_name = kstrdup(buffer_location, GFP_KERNEL);
++		location_name = kasprintf(GFP_KERNEL, "%04x_location",
++					  da_tokens[i].tokenID);
+ 		if (location_name == NULL)
+ 			goto out_unwind_strings;
+ 		sysfs_attr_init(&token_location_attrs[i].attr);
+@@ -503,9 +500,8 @@ static int build_tokens_sysfs(struct platform_device *dev)
+ 		token_attrs[j++] = &token_location_attrs[i].attr;
+ 
+ 		/* add value */
+-		sprintf(buffer_value, "%04x_value",
+-			da_tokens[i].tokenID);
+-		value_name = kstrdup(buffer_value, GFP_KERNEL);
++		value_name = kasprintf(GFP_KERNEL, "%04x_value",
++				       da_tokens[i].tokenID);
+ 		if (value_name == NULL)
+ 			goto loop_fail_create_value;
+ 		sysfs_attr_init(&token_value_attrs[i].attr);
+-- 
+2.9.0
