@@ -1,163 +1,67 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH v2 2/2] platform/x86: dell-*wmi*: Relay failed initial probe to dependent drivers
-Date: Thu,  9 Nov 2017 11:49:10 -0600
-Message-ID: <2080bee9a4c98164498aa32c4f10b12bc50b183d.1510246939.git.mario.limonciello@dell.com>
-References: <cover.1510246939.git.mario.limonciello@dell.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 2/2] platform/x86: dell-*wmi*: Relay failed initial probe
+ to dependent drivers
+Date: Thu, 9 Nov 2017 09:52:41 -0800
+Message-ID: <20171109175241.GD21449@fury>
+References: <cover.1509725778.git.mario.limonciello@dell.com>
+ <6312b76d08d3b6b5562c773fce8e13d85036ddd5.1509725778.git.mario.limonciello@dell.com>
+ <20171109160249.jjiros7c4z6f76wr@pali>
+ <8746e7178fb84a1b9309a6b228af604f@ausx13mpc120.AMER.DELL.COM>
+ <20171109172834.wi3udtnuxkqolbzm@pali>
+ <2ee7e355941f4ef5a244f152d4953753@ausx13mpc120.AMER.DELL.COM>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:52654 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751219AbdKIRtU (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:43109 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750984AbdKIRwn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Nov 2017 12:49:20 -0500
-In-Reply-To: <cover.1510246939.git.mario.limonciello@dell.com>
-In-Reply-To: <cover.1510246939.git.mario.limonciello@dell.com>
-References: <cover.1510246939.git.mario.limonciello@dell.com>
+        Thu, 9 Nov 2017 12:52:43 -0500
+Content-Disposition: inline
+In-Reply-To: <2ee7e355941f4ef5a244f152d4953753@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
+To: Mario.Limonciello@dell.com
+Cc: pali.rohar@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
-finishing probe successfully to probe themselves.
+On Thu, Nov 09, 2017 at 05:34:39PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > >  static int dell_wmi_probe(struct wmi_device *wdev)
+> > > > >  {
+> > > > >  	struct dell_wmi_priv *priv;
+> > > > > +	int ret;
+> > > > >
+> > > > >  	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
+> > > > >  		return -ENODEV;
+> > > >
+> > > > Just one suggestion, is above check still needed in dell-wmi.c code?
+> > > > I think that now it should be job of dell_wmi_get_descriptor_valid()
+> > > > function to fully validate if dell wmi descriptor driver is able to
+> > > > provide all needed information for dell-wmi driver.
+> > > >
+> > >
+> > > Yes, I believe it's still needed because if the GUID isn't on the bus the probe
+> > > routine for dell-wmi-descriptor won't run and dell_wmi_get_descriptor_valid()
+> > > will continually return -EPROBE_DEFER.
+> > >
+> > > That's the exact problem this patch exists for (preventing infinite deferred
+> > > probing).
+> > >
+> > > Perhaps a "cleaner" solution is to have the init routine of dell-wmi-descriptor
+> > > do this wmi_has_guid check and set the descriptor_valid variable to -ENODEV
+> > > so that "dependent" drivers don't need to.
+> > 
+> > I understand. But I mean, if function dell_wmi_get_descriptor_valid()
+> > should not do that check for DELL_WMI_DESCRIPTOR_GUID itself.
+> > 
+> > Because every driver which would use dell-wmi-descriptor needs to
+> > do that check.
+> 
+> I'll move the check to dell_wmi_descriptor_valid().  That actually does remove
+> the need for even including the GUID #define in a header file.  All use will be
+> contained now directly in dell-wmi-descriptor.c.
 
-Currently if dell-wmi-descriptor fails probing in a non-recoverable way
-(such as invalid header) dell-wmi and dell-smbios-wmi will continue to
-try to redo probing due to deferred probing.
+This is a worthwhile improvement.
 
-To solve this have the dependent drivers query the dell-wmi-descriptor
-driver whether the descriptor has been determined valid. The possible
-results are:
--ENODEV: Descriptor GUID missing from WMI bus
--EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
- and use deferred probing
-< 0: Descriptor probed, invalid.  Dependent driver should return an
- error.
-0: Successful descriptor probe, dependent driver can continue
-
-Successful descriptor probe still doesn't mean that the descriptor driver
-is necessarily bound at the time of initialization of dependent driver.
-Userspace can unbind the driver, so all methods used from driver
-should still be verified to return success values otherwise deferred
-probing be used.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/platform/x86/dell-smbios-wmi.c     |  5 +++--
- drivers/platform/x86/dell-wmi-descriptor.c | 16 ++++++++++++++++
- drivers/platform/x86/dell-wmi-descriptor.h |  8 +++++++-
- drivers/platform/x86/dell-wmi.c            |  6 ++++--
- 4 files changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index 35c13815b24c..ca556803c8c9 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -148,8 +148,9 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
- 	int count;
- 	int ret;
- 
--	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
--		return -ENODEV;
-+	ret = dell_wmi_get_descriptor_valid();
-+	if (ret)
-+		return ret;
- 
- 	priv = devm_kzalloc(&wdev->dev, sizeof(struct wmi_smbios_priv),
- 			    GFP_KERNEL);
-diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
-index 28ef5f37cfbf..4dfef1f53481 100644
---- a/drivers/platform/x86/dell-wmi-descriptor.c
-+++ b/drivers/platform/x86/dell-wmi-descriptor.c
-@@ -21,14 +21,26 @@
- #include <linux/wmi.h>
- #include "dell-wmi-descriptor.h"
- 
-+#define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
-+
- struct descriptor_priv {
- 	struct list_head list;
- 	u32 interface_version;
- 	u32 size;
- };
-+static int descriptor_valid = -EPROBE_DEFER;
- static LIST_HEAD(wmi_list);
- static DEFINE_MUTEX(list_mutex);
- 
-+int dell_wmi_get_descriptor_valid(void)
-+{
-+	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-+		return -ENODEV;
-+
-+	return descriptor_valid;
-+}
-+EXPORT_SYMBOL_GPL(dell_wmi_get_descriptor_valid);
-+
- bool dell_wmi_get_interface_version(u32 *version)
- {
- 	struct descriptor_priv *priv;
-@@ -91,6 +103,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
- 	if (obj->type != ACPI_TYPE_BUFFER) {
- 		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
- 		ret = -EINVAL;
-+		descriptor_valid = ret;
- 		goto out;
- 	}
- 
-@@ -102,6 +115,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
- 			"Dell descriptor buffer has unexpected length (%d)\n",
- 			obj->buffer.length);
- 		ret = -EINVAL;
-+		descriptor_valid = ret;
- 		goto out;
- 	}
- 
-@@ -111,8 +125,10 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
- 		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
- 			buffer);
- 		ret = -EINVAL;
-+		descriptor_valid = ret;
- 		goto out;
- 	}
-+	descriptor_valid = 0;
- 
- 	if (buffer[2] != 0 && buffer[2] != 1)
- 		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
-diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
-index 5f7b69c2c83a..1e8cb96ffd78 100644
---- a/drivers/platform/x86/dell-wmi-descriptor.h
-+++ b/drivers/platform/x86/dell-wmi-descriptor.h
-@@ -13,7 +13,13 @@
- 
- #include <linux/wmi.h>
- 
--#define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
-+/* possible return values:
-+ *  -ENODEV: Descriptor GUID missing from WMI bus
-+ *  -EPROBE_DEFER: probing for dell-wmi-descriptor not yet run
-+ *  0: valid descriptor, successfully probed
-+ *  < 0: invalid descriptor, don't probe dependent devices
-+ */
-+int dell_wmi_get_descriptor_valid(void);
- 
- bool dell_wmi_get_interface_version(u32 *version);
- bool dell_wmi_get_size(u32 *size);
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 54321080a30d..39d2f4518483 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -655,9 +655,11 @@ static int dell_wmi_events_set_enabled(bool enable)
- static int dell_wmi_probe(struct wmi_device *wdev)
- {
- 	struct dell_wmi_priv *priv;
-+	int ret;
- 
--	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
--		return -ENODEV;
-+	ret = dell_wmi_get_descriptor_valid();
-+	if (ret)
-+		return ret;
- 
- 	priv = devm_kzalloc(
- 		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
 -- 
-2.14.1
+Darren Hart
+VMware Open Source Technology Center
