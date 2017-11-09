@@ -1,64 +1,56 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v10 00/15] Introduce support for Dell SMBIOS over WMI
-Date: Thu, 9 Nov 2017 10:52:08 +0100
-Message-ID: <20171109095208.GD6074@amd>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: dell-wmi-descriptor: check if memory
+ was allocated
+Date: Thu, 9 Nov 2017 13:07:42 +0100
+Message-ID: <20171109120742.6ctactdfgygdati3@pali>
+References: <cover.1509725778.git.mario.limonciello@dell.com>
+ <cf25805c3f247ca5c710ad9971dbc7a50e4c872c.1509725778.git.mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:55045 "EHLO
+        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754180AbdKIMHp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 9 Nov 2017 07:07:45 -0500
 Content-Disposition: inline
-In-Reply-To: <cover.1508434513.git.mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <cf25805c3f247ca5c710ad9971dbc7a50e4c872c.1509725778.git.mario.limonciello@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, pali.rohar@gmail.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
+On Friday 03 November 2017 11:27:21 Mario Limonciello wrote:
+> devm_kzalloc will return NULL pointer if no memory was allocated.
+> This should be checked.  This problem also existed when the driver
+> was dell-wmi.c.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 
-On Thu 2017-10-19 12:50:03, Mario Limonciello wrote:
-> The existing way that the dell-smbios helper module and associated
-> other drivers (dell-laptop, dell-wmi) communicate with the platform
-> really isn't secure.  It requires creating a buffer in physical
-> DMA32 memory space and passing that to the platform via SMM.
->=20
-> Since the platform got a physical memory pointer, you've just got
-> to trust that the platform has only modified (and accessed) memory
-> within that buffer.
->=20
-> Dell Platform designers recognize this security risk and offer a
-> safer way to communicate with the platform over ACPI.  This is
-> in turn exposed via a WMI interface to the OS.
->=20
-> When communicating over WMI-ACPI the communication doesn't occur
-> with physical memory pointers.  When the ASL is invoked, the fixed
-> length ACPI buffer is copied to a small operating region.  The ASL
-> will invoke the SMI, and SMM will only have access to this operating
-> region.  When the ASL returns the buffer is copied back for the OS
-> to process.
+> ---
+>  drivers/platform/x86/dell-wmi-descriptor.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+> index 3204c408e261..28ef5f37cfbf 100644
+> --- a/drivers/platform/x86/dell-wmi-descriptor.c
+> +++ b/drivers/platform/x86/dell-wmi-descriptor.c
+> @@ -121,6 +121,11 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
+>  	priv = devm_kzalloc(&wdev->dev, sizeof(struct descriptor_priv),
+>  	GFP_KERNEL);
+>  
+> +	if (!priv) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+>  	priv->interface_version = buffer[2];
+>  	priv->size = buffer[3];
+>  	ret = 0;
 
-SMM has access anywhere it wants. This may be good idea, but
-definitely not for "security" reasons.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAloEJUgACgkQMOfwapXb+vJ1HQCeL7vFIxFVpJhHSBXqrEho/OXx
-954Anj5OE5Uzvccu2jxIqC3GzlucU14l
-=e0gt
------END PGP SIGNATURE-----
-
---kvUQC+jR9YzypDnK--
+-- 
+Pali Rohár
+pali.rohar@gmail.com
