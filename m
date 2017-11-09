@@ -1,212 +1,176 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: dell-*wmi*: Relay failed initial probe
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 2/2] platform/x86: dell-*wmi*: Relay failed initial probe
  to dependent drivers
-Date: Thu, 9 Nov 2017 18:28:34 +0100
-Message-ID: <20171109172834.wi3udtnuxkqolbzm@pali>
+Date: Thu, 9 Nov 2017 17:34:39 +0000
+Message-ID: <2ee7e355941f4ef5a244f152d4953753@ausx13mpc120.AMER.DELL.COM>
 References: <cover.1509725778.git.mario.limonciello@dell.com>
  <6312b76d08d3b6b5562c773fce8e13d85036ddd5.1509725778.git.mario.limonciello@dell.com>
  <20171109160249.jjiros7c4z6f76wr@pali>
  <8746e7178fb84a1b9309a6b228af604f@ausx13mpc120.AMER.DELL.COM>
+ <20171109172834.wi3udtnuxkqolbzm@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:45105 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750736AbdKIR2i (ORCPT
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:5374 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1754463AbdKIRem (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Nov 2017 12:28:38 -0500
-Content-Disposition: inline
-In-Reply-To: <8746e7178fb84a1b9309a6b228af604f@ausx13mpc120.AMER.DELL.COM>
+        Thu, 9 Nov 2017 12:34:42 -0500
+In-Reply-To: <20171109172834.wi3udtnuxkqolbzm@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
+To: pali.rohar@gmail.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Thursday 09 November 2017 16:13:52 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > Sent: Thursday, November 9, 2017 10:03 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
-> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org
-> > Subject: Re: [PATCH 2/2] platform/x86: dell-*wmi*: Relay failed initial probe to
-> > dependent drivers
-> > 
-> > On Friday 03 November 2017 11:27:22 Mario Limonciello wrote:
-> > > dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
-> > > finishing probe successfully to probe themselves.
-> > >
-> > > Currently if dell-wmi-descriptor fails probing in a non-recoverable way
-> > > (such as invalid header) dell-wmi and dell-smbios-wmi will continue to
-> > > try to redo probing due to deferred probing.
-> > >
-> > > To solve this have the dependent drivers query the dell-wmi-descriptor
-> > > driver whether the descriptor has been determined valid. The possible
-> > > results are:
-> > > -EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
-> > >  and use deferred probing
-> > > < 0: Descriptor probed, invalid.  Dependent driver should return an
-> > >  error.
-> > > 0: Successful descriptor probe, dependent driver can continue
-> > >
-> > > Successful descriptor probe still doesn't mean that the descriptor driver
-> > > is necessarily bound at the time of initialization of dependent driver.
-> > > Userspace can unbind the driver, so all methods used from driver
-> > > should still be verified to return success values otherwise deferred
-> > > probing be used.
-> > 
-> > Darren, Andy, any comments on this patch?
-> > 
-> > I think now it should work also those corner, but legit cases.
-> > 
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > > ---
-> > >  drivers/platform/x86/dell-smbios-wmi.c     |  4 ++++
-> > >  drivers/platform/x86/dell-wmi-descriptor.c | 11 +++++++++++
-> > >  drivers/platform/x86/dell-wmi-descriptor.h |  7 +++++++
-> > >  drivers/platform/x86/dell-wmi.c            |  5 +++++
-> > >  4 files changed, 27 insertions(+)
-> > >
-> > > diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-
-> > smbios-wmi.c
-> > > index 35c13815b24c..3fa53fa174b2 100644
-> > > --- a/drivers/platform/x86/dell-smbios-wmi.c
-> > > +++ b/drivers/platform/x86/dell-smbios-wmi.c
-> > > @@ -151,6 +151,10 @@ static int dell_smbios_wmi_probe(struct wmi_device
-> > *wdev)
-> > >  	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> > >  		return -ENODEV;
-> > >
-> > > +	ret = dell_wmi_get_descriptor_valid();
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > >  	priv = devm_kzalloc(&wdev->dev, sizeof(struct wmi_smbios_priv),
-> > >  			    GFP_KERNEL);
-> > >  	if (!priv)
-> > > diff --git a/drivers/platform/x86/dell-wmi-descriptor.c
-> > b/drivers/platform/x86/dell-wmi-descriptor.c
-> > > index 28ef5f37cfbf..e7f4c3a7bfc4 100644
-> > > --- a/drivers/platform/x86/dell-wmi-descriptor.c
-> > > +++ b/drivers/platform/x86/dell-wmi-descriptor.c
-> > > @@ -26,9 +26,16 @@ struct descriptor_priv {
-> > >  	u32 interface_version;
-> > >  	u32 size;
-> > >  };
-> > > +static int descriptor_valid = -EPROBE_DEFER;
-> > >  static LIST_HEAD(wmi_list);
-> > >  static DEFINE_MUTEX(list_mutex);
-> > >
-> > > +int dell_wmi_get_descriptor_valid(void)
-> > > +{
-> > > +	return descriptor_valid;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dell_wmi_get_descriptor_valid);
-> > > +
-> > >  bool dell_wmi_get_interface_version(u32 *version)
-> > >  {
-> > >  	struct descriptor_priv *priv;
-> > > @@ -91,6 +98,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device
-> > *wdev)
-> > >  	if (obj->type != ACPI_TYPE_BUFFER) {
-> > >  		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
-> > >  		ret = -EINVAL;
-> > > +		descriptor_valid = ret;
-> > >  		goto out;
-> > >  	}
-> > >
-> > > @@ -102,6 +110,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device
-> > *wdev)
-> > >  			"Dell descriptor buffer has unexpected length (%d)\n",
-> > >  			obj->buffer.length);
-> > >  		ret = -EINVAL;
-> > > +		descriptor_valid = ret;
-> > >  		goto out;
-> > >  	}
-> > >
-> > > @@ -111,8 +120,10 @@ static int dell_wmi_descriptor_probe(struct wmi_device
-> > *wdev)
-> > >  		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature
-> > (%8ph)\n",
-> > >  			buffer);
-> > >  		ret = -EINVAL;
-> > > +		descriptor_valid = ret;
-> > >  		goto out;
-> > >  	}
-> > > +	descriptor_valid = 0;
-> > >
-> > >  	if (buffer[2] != 0 && buffer[2] != 1)
-> > >  		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown
-> > version (%lu)\n",
-> > > diff --git a/drivers/platform/x86/dell-wmi-descriptor.h
-> > b/drivers/platform/x86/dell-wmi-descriptor.h
-> > > index 5f7b69c2c83a..776cddd5e135 100644
-> > > --- a/drivers/platform/x86/dell-wmi-descriptor.h
-> > > +++ b/drivers/platform/x86/dell-wmi-descriptor.h
-> > > @@ -15,6 +15,13 @@
-> > >
-> > >  #define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-
-> > B622A1EF5492"
-> > >
-> > > +/* possible return values:
-> > > + *  -EPROBE_DEFER: probing for dell-wmi-descriptor not yet run
-> > > + *  0: valid descriptor, successfully probed
-> > > + *  < 0: invalid descriptor, don't probe dependent devices
-> > > + */
-> > > +int dell_wmi_get_descriptor_valid(void);
-> > > +
-> > >  bool dell_wmi_get_interface_version(u32 *version);
-> > >  bool dell_wmi_get_size(u32 *size);
-> > >
-> > > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> > > index 54321080a30d..bb7c1e681792 100644
-> > > --- a/drivers/platform/x86/dell-wmi.c
-> > > +++ b/drivers/platform/x86/dell-wmi.c
-> > > @@ -655,10 +655,15 @@ static int dell_wmi_events_set_enabled(bool enable)
-> > >  static int dell_wmi_probe(struct wmi_device *wdev)
-> > >  {
-> > >  	struct dell_wmi_priv *priv;
-> > > +	int ret;
-> > >
-> > >  	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> > >  		return -ENODEV;
-> > 
-> > Just one suggestion, is above check still needed in dell-wmi.c code?
-> > I think that now it should be job of dell_wmi_get_descriptor_valid()
-> > function to fully validate if dell wmi descriptor driver is able to
-> > provide all needed information for dell-wmi driver.
-> > 
-> 
-> Yes, I believe it's still needed because if the GUID isn't on the bus the probe
-> routine for dell-wmi-descriptor won't run and dell_wmi_get_descriptor_valid()
-> will continually return -EPROBE_DEFER.
-> 
-> That's the exact problem this patch exists for (preventing infinite deferred
-> probing).
-> 
-> Perhaps a "cleaner" solution is to have the init routine of dell-wmi-descriptor
-> do this wmi_has_guid check and set the descriptor_valid variable to -ENODEV 
-> so that "dependent" drivers don't need to.
-
-I understand. But I mean, if function dell_wmi_get_descriptor_valid()
-should not do that check for DELL_WMI_DESCRIPTOR_GUID itself.
-
-Because every driver which would use dell-wmi-descriptor needs to
-do that check.
-
-> > > +	ret = dell_wmi_get_descriptor_valid();
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > >  	priv = devm_kzalloc(
-> > >  		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
-> > >  	if (!priv)
-> > 
-> > --
-> > Pali Rohár
-> > pali.rohar@gmail.com
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBhbGkgUm9ow6FyDQo+IFNlbnQ6IFRo
+dXJzZGF5LCBOb3ZlbWJlciA5LCAyMDE3IDExOjI5IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFy
+aW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5v
+cmc7IGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb207IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIDIvMl0gcGxhdGZvcm0veDg2OiBkZWxsLSp3bWkqOiBSZWxheSBmYWlsZWQgaW5p
+dGlhbCBwcm9iZSB0bw0KPiBkZXBlbmRlbnQgZHJpdmVycw0KPiANCj4gT24gVGh1cnNkYXkgMDkg
+Tm92ZW1iZXIgMjAxNyAxNjoxMzo1MiBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToN
+Cj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBQYWxpIFJvaMOh
+ciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiA+ID4gU2VudDogVGh1cnNkYXksIE5v
+dmVtYmVyIDksIDIwMTcgMTA6MDMgQU0NCj4gPiA+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1h
+cmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiA+ID4gQ2M6IGR2aGFydEBpbmZyYWRlYWQub3Jn
+OyBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+Ow0KPiA+ID4gTEtN
+TCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdl
+ci5rZXJuZWwub3JnDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gcGxhdGZvcm0veDg2
+OiBkZWxsLSp3bWkqOiBSZWxheSBmYWlsZWQgaW5pdGlhbCBwcm9iZSB0bw0KPiA+ID4gZGVwZW5k
+ZW50IGRyaXZlcnMNCj4gPiA+DQo+ID4gPiBPbiBGcmlkYXkgMDMgTm92ZW1iZXIgMjAxNyAxMToy
+NzoyMiBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gPiA+ID4gZGVsbC13bWkgYW5kIGRlbGwt
+c21iaW9zLXdtaSBhcmUgZGVwZW5kZW50IHVwb24gZGVsbC13bWktZGVzY3JpcHRvcg0KPiA+ID4g
+PiBmaW5pc2hpbmcgcHJvYmUgc3VjY2Vzc2Z1bGx5IHRvIHByb2JlIHRoZW1zZWx2ZXMuDQo+ID4g
+PiA+DQo+ID4gPiA+IEN1cnJlbnRseSBpZiBkZWxsLXdtaS1kZXNjcmlwdG9yIGZhaWxzIHByb2Jp
+bmcgaW4gYSBub24tcmVjb3ZlcmFibGUgd2F5DQo+ID4gPiA+IChzdWNoIGFzIGludmFsaWQgaGVh
+ZGVyKSBkZWxsLXdtaSBhbmQgZGVsbC1zbWJpb3Mtd21pIHdpbGwgY29udGludWUgdG8NCj4gPiA+
+ID4gdHJ5IHRvIHJlZG8gcHJvYmluZyBkdWUgdG8gZGVmZXJyZWQgcHJvYmluZy4NCj4gPiA+ID4N
+Cj4gPiA+ID4gVG8gc29sdmUgdGhpcyBoYXZlIHRoZSBkZXBlbmRlbnQgZHJpdmVycyBxdWVyeSB0
+aGUgZGVsbC13bWktZGVzY3JpcHRvcg0KPiA+ID4gPiBkcml2ZXIgd2hldGhlciB0aGUgZGVzY3Jp
+cHRvciBoYXMgYmVlbiBkZXRlcm1pbmVkIHZhbGlkLiBUaGUgcG9zc2libGUNCj4gPiA+ID4gcmVz
+dWx0cyBhcmU6DQo+ID4gPiA+IC1FUFJPQkVfREVGRVI6IERlc2NyaXB0b3Igbm90IHlldCBwcm9i
+ZWQsIGRlcGVuZGVudCBkcml2ZXIgc2hvdWxkIHdhaXQNCj4gPiA+ID4gIGFuZCB1c2UgZGVmZXJy
+ZWQgcHJvYmluZw0KPiA+ID4gPiA8IDA6IERlc2NyaXB0b3IgcHJvYmVkLCBpbnZhbGlkLiAgRGVw
+ZW5kZW50IGRyaXZlciBzaG91bGQgcmV0dXJuIGFuDQo+ID4gPiA+ICBlcnJvci4NCj4gPiA+ID4g
+MDogU3VjY2Vzc2Z1bCBkZXNjcmlwdG9yIHByb2JlLCBkZXBlbmRlbnQgZHJpdmVyIGNhbiBjb250
+aW51ZQ0KPiA+ID4gPg0KPiA+ID4gPiBTdWNjZXNzZnVsIGRlc2NyaXB0b3IgcHJvYmUgc3RpbGwg
+ZG9lc24ndCBtZWFuIHRoYXQgdGhlIGRlc2NyaXB0b3IgZHJpdmVyDQo+ID4gPiA+IGlzIG5lY2Vz
+c2FyaWx5IGJvdW5kIGF0IHRoZSB0aW1lIG9mIGluaXRpYWxpemF0aW9uIG9mIGRlcGVuZGVudCBk
+cml2ZXIuDQo+ID4gPiA+IFVzZXJzcGFjZSBjYW4gdW5iaW5kIHRoZSBkcml2ZXIsIHNvIGFsbCBt
+ZXRob2RzIHVzZWQgZnJvbSBkcml2ZXINCj4gPiA+ID4gc2hvdWxkIHN0aWxsIGJlIHZlcmlmaWVk
+IHRvIHJldHVybiBzdWNjZXNzIHZhbHVlcyBvdGhlcndpc2UgZGVmZXJyZWQNCj4gPiA+ID4gcHJv
+YmluZyBiZSB1c2VkLg0KPiA+ID4NCj4gPiA+IERhcnJlbiwgQW5keSwgYW55IGNvbW1lbnRzIG9u
+IHRoaXMgcGF0Y2g/DQo+ID4gPg0KPiA+ID4gSSB0aGluayBub3cgaXQgc2hvdWxkIHdvcmsgYWxz
+byB0aG9zZSBjb3JuZXIsIGJ1dCBsZWdpdCBjYXNlcy4NCj4gPiA+DQo+ID4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4g
+PiA+ID4gLS0tDQo+ID4gPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy13bWku
+YyAgICAgfCAgNCArKysrDQo+ID4gPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS1k
+ZXNjcmlwdG9yLmMgfCAxMSArKysrKysrKysrKw0KPiA+ID4gPiAgZHJpdmVycy9wbGF0Zm9ybS94
+ODYvZGVsbC13bWktZGVzY3JpcHRvci5oIHwgIDcgKysrKysrKw0KPiA+ID4gPiAgZHJpdmVycy9w
+bGF0Zm9ybS94ODYvZGVsbC13bWkuYyAgICAgICAgICAgIHwgIDUgKysrKysNCj4gPiA+ID4gIDQg
+ZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3Mtd21pLmMNCj4gYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiA+ID4gc21iaW9zLXdtaS5jDQo+ID4gPiA+IGluZGV4IDM1
+YzEzODE1YjI0Yy4uM2ZhNTNmYTE3NGIyIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy13bWkuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXNtYmlvcy13bWkuYw0KPiA+ID4gPiBAQCAtMTUxLDYgKzE1MSwxMCBAQCBz
+dGF0aWMgaW50IGRlbGxfc21iaW9zX3dtaV9wcm9iZShzdHJ1Y3QNCj4gd21pX2RldmljZQ0KPiA+
+ID4gKndkZXYpDQo+ID4gPiA+ICAJaWYgKCF3bWlfaGFzX2d1aWQoREVMTF9XTUlfREVTQ1JJUFRP
+Ul9HVUlEKSkNCj4gPiA+ID4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gPiA+DQo+ID4gPiA+ICsJ
+cmV0ID0gZGVsbF93bWlfZ2V0X2Rlc2NyaXB0b3JfdmFsaWQoKTsNCj4gPiA+ID4gKwlpZiAocmV0
+KQ0KPiA+ID4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICAJcHJpdiA9IGRl
+dm1fa3phbGxvYygmd2Rldi0+ZGV2LCBzaXplb2Yoc3RydWN0IHdtaV9zbWJpb3NfcHJpdiksDQo+
+ID4gPiA+ICAJCQkgICAgR0ZQX0tFUk5FTCk7DQo+ID4gPiA+ICAJaWYgKCFwcml2KQ0KPiA+ID4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktZGVzY3JpcHRvci5j
+DQo+ID4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWRlc2NyaXB0b3IuYw0KPiA+
+ID4gPiBpbmRleCAyOGVmNWYzN2NmYmYuLmU3ZjRjM2E3YmZjNCAxMDA2NDQNCj4gPiA+ID4gLS0t
+IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktZGVzY3JpcHRvci5jDQo+ID4gPiA+ICsr
+KyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWRlc2NyaXB0b3IuYw0KPiA+ID4gPiBA
+QCAtMjYsOSArMjYsMTYgQEAgc3RydWN0IGRlc2NyaXB0b3JfcHJpdiB7DQo+ID4gPiA+ICAJdTMy
+IGludGVyZmFjZV92ZXJzaW9uOw0KPiA+ID4gPiAgCXUzMiBzaXplOw0KPiA+ID4gPiAgfTsNCj4g
+PiA+ID4gK3N0YXRpYyBpbnQgZGVzY3JpcHRvcl92YWxpZCA9IC1FUFJPQkVfREVGRVI7DQo+ID4g
+PiA+ICBzdGF0aWMgTElTVF9IRUFEKHdtaV9saXN0KTsNCj4gPiA+ID4gIHN0YXRpYyBERUZJTkVf
+TVVURVgobGlzdF9tdXRleCk7DQo+ID4gPiA+DQo+ID4gPiA+ICtpbnQgZGVsbF93bWlfZ2V0X2Rl
+c2NyaXB0b3JfdmFsaWQodm9pZCkNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKwlyZXR1cm4gZGVzY3Jp
+cHRvcl92YWxpZDsNCj4gPiA+ID4gK30NCj4gPiA+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGRlbGxf
+d21pX2dldF9kZXNjcmlwdG9yX3ZhbGlkKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAgYm9vbCBkZWxs
+X3dtaV9nZXRfaW50ZXJmYWNlX3ZlcnNpb24odTMyICp2ZXJzaW9uKQ0KPiA+ID4gPiAgew0KPiA+
+ID4gPiAgCXN0cnVjdCBkZXNjcmlwdG9yX3ByaXYgKnByaXY7DQo+ID4gPiA+IEBAIC05MSw2ICs5
+OCw3IEBAIHN0YXRpYyBpbnQgZGVsbF93bWlfZGVzY3JpcHRvcl9wcm9iZShzdHJ1Y3Qgd21pX2Rl
+dmljZQ0KPiA+ID4gKndkZXYpDQo+ID4gPiA+ICAJaWYgKG9iai0+dHlwZSAhPSBBQ1BJX1RZUEVf
+QlVGRkVSKSB7DQo+ID4gPiA+ICAJCWRldl9lcnIoJndkZXYtPmRldiwgIkRlbGwgZGVzY3JpcHRv
+ciBoYXMgd3JvbmcgdHlwZVxuIik7DQo+ID4gPiA+ICAJCXJldCA9IC1FSU5WQUw7DQo+ID4gPiA+
+ICsJCWRlc2NyaXB0b3JfdmFsaWQgPSByZXQ7DQo+ID4gPiA+ICAJCWdvdG8gb3V0Ow0KPiA+ID4g
+PiAgCX0NCj4gPiA+ID4NCj4gPiA+ID4gQEAgLTEwMiw2ICsxMTAsNyBAQCBzdGF0aWMgaW50IGRl
+bGxfd21pX2Rlc2NyaXB0b3JfcHJvYmUoc3RydWN0DQo+IHdtaV9kZXZpY2UNCj4gPiA+ICp3ZGV2
+KQ0KPiA+ID4gPiAgCQkJIkRlbGwgZGVzY3JpcHRvciBidWZmZXIgaGFzIHVuZXhwZWN0ZWQgbGVu
+Z3RoICglZClcbiIsDQo+ID4gPiA+ICAJCQlvYmotPmJ1ZmZlci5sZW5ndGgpOw0KPiA+ID4gPiAg
+CQlyZXQgPSAtRUlOVkFMOw0KPiA+ID4gPiArCQlkZXNjcmlwdG9yX3ZhbGlkID0gcmV0Ow0KPiA+
+ID4gPiAgCQlnb3RvIG91dDsNCj4gPiA+ID4gIAl9DQo+ID4gPiA+DQo+ID4gPiA+IEBAIC0xMTEs
+OCArMTIwLDEwIEBAIHN0YXRpYyBpbnQgZGVsbF93bWlfZGVzY3JpcHRvcl9wcm9iZShzdHJ1Y3QN
+Cj4gd21pX2RldmljZQ0KPiA+ID4gKndkZXYpDQo+ID4gPiA+ICAJCWRldl9lcnIoJndkZXYtPmRl
+diwgIkRlbGwgZGVzY3JpcHRvciBidWZmZXIgaGFzIGludmFsaWQgc2lnbmF0dXJlDQo+ID4gPiAo
+JThwaClcbiIsDQo+ID4gPiA+ICAJCQlidWZmZXIpOw0KPiA+ID4gPiAgCQlyZXQgPSAtRUlOVkFM
+Ow0KPiA+ID4gPiArCQlkZXNjcmlwdG9yX3ZhbGlkID0gcmV0Ow0KPiA+ID4gPiAgCQlnb3RvIG91
+dDsNCj4gPiA+ID4gIAl9DQo+ID4gPiA+ICsJZGVzY3JpcHRvcl92YWxpZCA9IDA7DQo+ID4gPiA+
+DQo+ID4gPiA+ICAJaWYgKGJ1ZmZlclsyXSAhPSAwICYmIGJ1ZmZlclsyXSAhPSAxKQ0KPiA+ID4g
+PiAgCQlkZXZfd2Fybigmd2Rldi0+ZGV2LCAiRGVsbCBkZXNjcmlwdG9yIGJ1ZmZlciBoYXMgdW5r
+bm93bg0KPiA+ID4gdmVyc2lvbiAoJWx1KVxuIiwNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWRlc2NyaXB0b3IuaA0KPiA+ID4gYi9kcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni9kZWxsLXdtaS1kZXNjcmlwdG9yLmgNCj4gPiA+ID4gaW5kZXggNWY3YjY5YzJj
+ODNhLi43NzZjZGRkNWUxMzUgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2RlbGwtd21pLWRlc2NyaXB0b3IuaA0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9kZWxsLXdtaS1kZXNjcmlwdG9yLmgNCj4gPiA+ID4gQEAgLTE1LDYgKzE1LDEzIEBADQo+
+ID4gPiA+DQo+ID4gPiA+ICAjZGVmaW5lIERFTExfV01JX0RFU0NSSVBUT1JfR1VJRCAiOEQ5RERD
+QkMtQTk5Ny0xMURBLUIwMTItDQo+ID4gPiBCNjIyQTFFRjU0OTIiDQo+ID4gPiA+DQo+ID4gPiA+
+ICsvKiBwb3NzaWJsZSByZXR1cm4gdmFsdWVzOg0KPiA+ID4gPiArICogIC1FUFJPQkVfREVGRVI6
+IHByb2JpbmcgZm9yIGRlbGwtd21pLWRlc2NyaXB0b3Igbm90IHlldCBydW4NCj4gPiA+ID4gKyAq
+ICAwOiB2YWxpZCBkZXNjcmlwdG9yLCBzdWNjZXNzZnVsbHkgcHJvYmVkDQo+ID4gPiA+ICsgKiAg
+PCAwOiBpbnZhbGlkIGRlc2NyaXB0b3IsIGRvbid0IHByb2JlIGRlcGVuZGVudCBkZXZpY2VzDQo+
+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK2ludCBkZWxsX3dtaV9nZXRfZGVzY3JpcHRvcl92YWxpZCh2
+b2lkKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiAgYm9vbCBkZWxsX3dtaV9nZXRfaW50ZXJmYWNlX3Zl
+cnNpb24odTMyICp2ZXJzaW9uKTsNCj4gPiA+ID4gIGJvb2wgZGVsbF93bWlfZ2V0X3NpemUodTMy
+ICpzaXplKTsNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2RlbGwtd21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiB3bWkuYw0KPiA+
+ID4gPiBpbmRleCA1NDMyMTA4MGEzMGQuLmJiN2MxZTY4MTc5MiAxMDA2NDQNCj4gPiA+ID4gLS0t
+IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4gPiA+IEBAIC02NTUsMTAgKzY1NSwxNSBAQCBz
+dGF0aWMgaW50IGRlbGxfd21pX2V2ZW50c19zZXRfZW5hYmxlZChib29sDQo+IGVuYWJsZSkNCj4g
+PiA+ID4gIHN0YXRpYyBpbnQgZGVsbF93bWlfcHJvYmUoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYp
+DQo+ID4gPiA+ICB7DQo+ID4gPiA+ICAJc3RydWN0IGRlbGxfd21pX3ByaXYgKnByaXY7DQo+ID4g
+PiA+ICsJaW50IHJldDsNCj4gPiA+ID4NCj4gPiA+ID4gIAlpZiAoIXdtaV9oYXNfZ3VpZChERUxM
+X1dNSV9ERVNDUklQVE9SX0dVSUQpKQ0KPiA+ID4gPiAgCQlyZXR1cm4gLUVOT0RFVjsNCj4gPiA+
+DQo+ID4gPiBKdXN0IG9uZSBzdWdnZXN0aW9uLCBpcyBhYm92ZSBjaGVjayBzdGlsbCBuZWVkZWQg
+aW4gZGVsbC13bWkuYyBjb2RlPw0KPiA+ID4gSSB0aGluayB0aGF0IG5vdyBpdCBzaG91bGQgYmUg
+am9iIG9mIGRlbGxfd21pX2dldF9kZXNjcmlwdG9yX3ZhbGlkKCkNCj4gPiA+IGZ1bmN0aW9uIHRv
+IGZ1bGx5IHZhbGlkYXRlIGlmIGRlbGwgd21pIGRlc2NyaXB0b3IgZHJpdmVyIGlzIGFibGUgdG8N
+Cj4gPiA+IHByb3ZpZGUgYWxsIG5lZWRlZCBpbmZvcm1hdGlvbiBmb3IgZGVsbC13bWkgZHJpdmVy
+Lg0KPiA+ID4NCj4gPg0KPiA+IFllcywgSSBiZWxpZXZlIGl0J3Mgc3RpbGwgbmVlZGVkIGJlY2F1
+c2UgaWYgdGhlIEdVSUQgaXNuJ3Qgb24gdGhlIGJ1cyB0aGUgcHJvYmUNCj4gPiByb3V0aW5lIGZv
+ciBkZWxsLXdtaS1kZXNjcmlwdG9yIHdvbid0IHJ1biBhbmQgZGVsbF93bWlfZ2V0X2Rlc2NyaXB0
+b3JfdmFsaWQoKQ0KPiA+IHdpbGwgY29udGludWFsbHkgcmV0dXJuIC1FUFJPQkVfREVGRVIuDQo+
+ID4NCj4gPiBUaGF0J3MgdGhlIGV4YWN0IHByb2JsZW0gdGhpcyBwYXRjaCBleGlzdHMgZm9yIChw
+cmV2ZW50aW5nIGluZmluaXRlIGRlZmVycmVkDQo+ID4gcHJvYmluZykuDQo+ID4NCj4gPiBQZXJo
+YXBzIGEgImNsZWFuZXIiIHNvbHV0aW9uIGlzIHRvIGhhdmUgdGhlIGluaXQgcm91dGluZSBvZiBk
+ZWxsLXdtaS1kZXNjcmlwdG9yDQo+ID4gZG8gdGhpcyB3bWlfaGFzX2d1aWQgY2hlY2sgYW5kIHNl
+dCB0aGUgZGVzY3JpcHRvcl92YWxpZCB2YXJpYWJsZSB0byAtRU5PREVWDQo+ID4gc28gdGhhdCAi
+ZGVwZW5kZW50IiBkcml2ZXJzIGRvbid0IG5lZWQgdG8uDQo+IA0KPiBJIHVuZGVyc3RhbmQuIEJ1
+dCBJIG1lYW4sIGlmIGZ1bmN0aW9uIGRlbGxfd21pX2dldF9kZXNjcmlwdG9yX3ZhbGlkKCkNCj4g
+c2hvdWxkIG5vdCBkbyB0aGF0IGNoZWNrIGZvciBERUxMX1dNSV9ERVNDUklQVE9SX0dVSUQgaXRz
+ZWxmLg0KPiANCj4gQmVjYXVzZSBldmVyeSBkcml2ZXIgd2hpY2ggd291bGQgdXNlIGRlbGwtd21p
+LWRlc2NyaXB0b3IgbmVlZHMgdG8NCj4gZG8gdGhhdCBjaGVjay4NCg0KSSdsbCBtb3ZlIHRoZSBj
+aGVjayB0byBkZWxsX3dtaV9kZXNjcmlwdG9yX3ZhbGlkKCkuICBUaGF0IGFjdHVhbGx5IGRvZXMg
+cmVtb3ZlDQp0aGUgbmVlZCBmb3IgZXZlbiBpbmNsdWRpbmcgdGhlIEdVSUQgI2RlZmluZSBpbiBh
+IGhlYWRlciBmaWxlLiAgQWxsIHVzZSB3aWxsIGJlDQpjb250YWluZWQgbm93IGRpcmVjdGx5IGlu
+IGRlbGwtd21pLWRlc2NyaXB0b3IuYy4NCg0KDQo+IA0KPiA+ID4gPiArCXJldCA9IGRlbGxfd21p
+X2dldF9kZXNjcmlwdG9yX3ZhbGlkKCk7DQo+ID4gPiA+ICsJaWYgKHJldCkNCj4gPiA+ID4gKwkJ
+cmV0dXJuIHJldDsNCj4gPiA+ID4gKw0KPiA+ID4gPiAgCXByaXYgPSBkZXZtX2t6YWxsb2MoDQo+
+ID4gPiA+ICAJCSZ3ZGV2LT5kZXYsIHNpemVvZihzdHJ1Y3QgZGVsbF93bWlfcHJpdiksIEdGUF9L
+RVJORUwpOw0KPiA+ID4gPiAgCWlmICghcHJpdikNCj4gPiA+DQo+ID4gPiAtLQ0KPiA+ID4gUGFs
+aSBSb2jDoXINCj4gPiA+IHBhbGkucm9oYXJAZ21haWwuY29tDQo+IA0KPiAtLQ0KPiBQYWxpIFJv
+aMOhcg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0K
