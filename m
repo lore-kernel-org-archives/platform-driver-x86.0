@@ -1,174 +1,96 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: dell-*wmi*: Relay failed initial
- probe to dependent drivers
-Date: Fri, 10 Nov 2017 00:47:58 +0100
-Message-ID: <20171109234758.zrhqzwt4twk6ny4p@pali>
-References: <cover.1510246939.git.mario.limonciello@dell.com>
- <2080bee9a4c98164498aa32c4f10b12bc50b183d.1510246939.git.mario.limonciello@dell.com>
+From: Stefan =?ISO-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
+Subject: Re: [PATCH v2 4/5] platform/x86: intel-vbtn: support KEY_ROTATE_LOCK_TOGGLE
+Date: Fri, 10 Nov 2017 01:15:09 +0100
+Message-ID: <6070680.Ajd9sKXNqZ@pebbles>
+References: <20171109224436.16472-1-stefan.bruens@rwth-aachen.de> <1a034599-ff6c-4a42-8252-4f6007894f4a@rwthex-w2-a.rwth-ad.de> <1510270246.2624.43.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:49472 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754627AbdKIXsB (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Nov 2017 18:48:01 -0500
-Content-Disposition: inline
-In-Reply-To: <2080bee9a4c98164498aa32c4f10b12bc50b183d.1510246939.git.mario.limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed; boundary="nextPart2213328.B2MEAP0t9l";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1510270246.2624.43.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 09 November 2017 11:49:10 Mario Limonciello wrote:
-> dell-wmi and dell-smbios-wmi are dependent upon dell-wmi-descriptor
-> finishing probe successfully to probe themselves.
-> 
-> Currently if dell-wmi-descriptor fails probing in a non-recoverable way
-> (such as invalid header) dell-wmi and dell-smbios-wmi will continue to
-> try to redo probing due to deferred probing.
-> 
-> To solve this have the dependent drivers query the dell-wmi-descriptor
-> driver whether the descriptor has been determined valid. The possible
-> results are:
-> -ENODEV: Descriptor GUID missing from WMI bus
-> -EPROBE_DEFER: Descriptor not yet probed, dependent driver should wait
->  and use deferred probing
-> < 0: Descriptor probed, invalid.  Dependent driver should return an
->  error.
-> 0: Successful descriptor probe, dependent driver can continue
-> 
-> Successful descriptor probe still doesn't mean that the descriptor driver
-> is necessarily bound at the time of initialization of dependent driver.
-> Userspace can unbind the driver, so all methods used from driver
-> should still be verified to return success values otherwise deferred
-> probing be used.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  drivers/platform/x86/dell-smbios-wmi.c     |  5 +++--
->  drivers/platform/x86/dell-wmi-descriptor.c | 16 ++++++++++++++++
->  drivers/platform/x86/dell-wmi-descriptor.h |  8 +++++++-
->  drivers/platform/x86/dell-wmi.c            |  6 ++++--
->  4 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-> index 35c13815b24c..ca556803c8c9 100644
-> --- a/drivers/platform/x86/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell-smbios-wmi.c
-> @@ -148,8 +148,9 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
->  	int count;
->  	int ret;
->  
-> -	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> -		return -ENODEV;
-> +	ret = dell_wmi_get_descriptor_valid();
-> +	if (ret)
-> +		return ret;
->  
->  	priv = devm_kzalloc(&wdev->dev, sizeof(struct wmi_smbios_priv),
->  			    GFP_KERNEL);
-> diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
-> index 28ef5f37cfbf..4dfef1f53481 100644
-> --- a/drivers/platform/x86/dell-wmi-descriptor.c
-> +++ b/drivers/platform/x86/dell-wmi-descriptor.c
-> @@ -21,14 +21,26 @@
->  #include <linux/wmi.h>
->  #include "dell-wmi-descriptor.h"
->  
-> +#define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
-> +
->  struct descriptor_priv {
->  	struct list_head list;
->  	u32 interface_version;
->  	u32 size;
->  };
-> +static int descriptor_valid = -EPROBE_DEFER;
->  static LIST_HEAD(wmi_list);
->  static DEFINE_MUTEX(list_mutex);
->  
-> +int dell_wmi_get_descriptor_valid(void)
-> +{
-> +	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> +		return -ENODEV;
-> +
-> +	return descriptor_valid;
-> +}
-> +EXPORT_SYMBOL_GPL(dell_wmi_get_descriptor_valid);
-> +
->  bool dell_wmi_get_interface_version(u32 *version)
->  {
->  	struct descriptor_priv *priv;
-> @@ -91,6 +103,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
->  	if (obj->type != ACPI_TYPE_BUFFER) {
->  		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
->  		ret = -EINVAL;
-> +		descriptor_valid = ret;
->  		goto out;
->  	}
->  
-> @@ -102,6 +115,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
->  			"Dell descriptor buffer has unexpected length (%d)\n",
->  			obj->buffer.length);
->  		ret = -EINVAL;
-> +		descriptor_valid = ret;
->  		goto out;
->  	}
->  
-> @@ -111,8 +125,10 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
->  		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
->  			buffer);
->  		ret = -EINVAL;
-> +		descriptor_valid = ret;
->  		goto out;
->  	}
-> +	descriptor_valid = 0;
->  
->  	if (buffer[2] != 0 && buffer[2] != 1)
->  		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
-> diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
-> index 5f7b69c2c83a..1e8cb96ffd78 100644
-> --- a/drivers/platform/x86/dell-wmi-descriptor.h
-> +++ b/drivers/platform/x86/dell-wmi-descriptor.h
-> @@ -13,7 +13,13 @@
->  
->  #include <linux/wmi.h>
->  
-> -#define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
-> +/* possible return values:
-> + *  -ENODEV: Descriptor GUID missing from WMI bus
-> + *  -EPROBE_DEFER: probing for dell-wmi-descriptor not yet run
-> + *  0: valid descriptor, successfully probed
-> + *  < 0: invalid descriptor, don't probe dependent devices
-> + */
-> +int dell_wmi_get_descriptor_valid(void);
->  
->  bool dell_wmi_get_interface_version(u32 *version);
->  bool dell_wmi_get_size(u32 *size);
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 54321080a30d..39d2f4518483 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -655,9 +655,11 @@ static int dell_wmi_events_set_enabled(bool enable)
->  static int dell_wmi_probe(struct wmi_device *wdev)
->  {
->  	struct dell_wmi_priv *priv;
-> +	int ret;
->  
-> -	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
-> -		return -ENODEV;
-> +	ret = dell_wmi_get_descriptor_valid();
-> +	if (ret)
-> +		return ret;
->  
->  	priv = devm_kzalloc(
->  		&wdev->dev, sizeof(struct dell_wmi_priv), GFP_KERNEL);
+--nextPart2213328.B2MEAP0t9l
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Looks good,
+On Friday, November 10, 2017 12:30:46 AM CET Bastien Nocera wrote:
+> On Thu, 2017-11-09 at 23:44 +0100, Stefan Br=FCns wrote:
+> > The Rotate Lock button event is emitted on the XPS 12 (BIOS A8, but
+> > not
+> > on BIOS A2).
+> >=20
+> > Signed-off-by: Stefan Br=FCns <stefan.bruens@rwth-aachen.de>
+> > ---
+> >=20
+> > Changes in v2:
+> > - Emit KEY_ROTATE_LOCK_TOGGLE instead of KEY_ROTATE_DISPLAY
+> > - Use separate up/down events
+> >=20
+> >  drivers/platform/x86/intel-vbtn.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/intel-vbtn.c
+> > b/drivers/platform/x86/intel-vbtn.c index e3f6375af85c..a484bcc6393b
+> > 100644
+> > --- a/drivers/platform/x86/intel-vbtn.c
+> > +++ b/drivers/platform/x86/intel-vbtn.c
+> > @@ -42,6 +42,8 @@ static const struct key_entry intel_vbtn_keymap[] =3D=
+ {
+> >=20
+> >  	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
+> >  	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+> >  	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release=20
+*/
+> >=20
+> > +	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key
+> > press */ +	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/*
+> > rotate-lock key release */
+> How are those events sent? When pressing and releasing the key, do you
+> receive 0xC8 followed by 0xC9? Or do you receive 0xC8 when pressing and
+> releasing the first time, and 0xC9 when pressing and releasing a second
+> time?
+>=20
+> If the former, then it's not going to work. The release is supposed to
+> be ignored, as you send the event with sparse_keymap_report_event().
+>=20
+> If the latter, and there's an actual state, does it disable a device
+> on-board, or activate an LED? If so, then it would need to be a switch,
+> not a key.
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Do you think I don't test the patches before sending? Let me tell you, it=20
+*does* work.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+You could also read the cover letter, where you find more details, putting =
+the=20
+patches in relation to each other.
+
+Just in case its not yet clear:
+The codes are emitted when pressing a button. It is a button, not a switch.=
+=20
+There is no state handled in hardware. On press (as noted by the code=20
+comment), event code 0xc8 is emitted. On release, event code 0xc9 is emitte=
+d.
+
+Regards,
+
+Stefan
+=2D-=20
+Stefan Br=FCns  /  Bergstra=DFe 21  /  52062 Aachen
+home: +49 241 53809034     mobile: +49 151 50412019
+--nextPart2213328.B2MEAP0t9l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSwWRWIpJbl0W4DemNvf0o9jP6qUwUCWgTvjQAKCRBvf0o9jP6q
+U7r6AJ9hiJWEwyFHYEBfvsyPxnUuRLJKAQCgp2dyb6epZGQuTUtaOg4kQnuoYiU=
+=exfs
+-----END PGP SIGNATURE-----
+
+--nextPart2213328.B2MEAP0t9l--
