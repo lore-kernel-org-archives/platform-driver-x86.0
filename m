@@ -1,58 +1,56 @@
-From: kedar kedar <k3dar7@gmail.com>
-Subject: Re: Feature request - support kbd_backlight on Hewlett-Packard
-Date: Fri, 10 Nov 2017 02:39:14 +0100
-Message-ID: <CA+5nTAKf8qX=b0+Czt==haYm32_a-KWCiOzy63Fr0=ccezr01A@mail.gmail.com>
-References: <CA+5nTALWPfriz7O63C09hUqy6bPrsO9z1mk9wjANMZqdStn=Kg@mail.gmail.com>
- <CAHp75VdwZSF=+gqvktXB5qvO9ntTWvajiUqifC72E_s5jW9yfw@mail.gmail.com> <20171109182054.GE21449@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 3/5] Input: add KEY_ROTATE_LOCK_TOGGLE
+Date: Thu, 9 Nov 2017 17:41:22 -0800
+Message-ID: <20171110014122.GC9783@fury>
+References: <20171109224436.16472-1-stefan.bruens@rwth-aachen.de>
+ <8ebdb255-b0b5-4de2-a680-e7f6713256d0@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f176.google.com ([209.85.161.176]:45169 "EHLO
-        mail-yw0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755402AbdKJBjP (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 9 Nov 2017 20:39:15 -0500
-In-Reply-To: <20171109182054.GE21449@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8ebdb255-b0b5-4de2-a680-e7f6713256d0@rwthex-w2-a.rwth-ad.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-2017-11-09 19:20 GMT+01:00, Darren Hart <dvhart@infradead.org>:
-> On Thu, Nov 09, 2017 at 02:24:44PM +0200, Andy Shevchenko wrote:
->> +Cc: correct subsystem
->>
->> On Thu, Nov 9, 2017 at 3:04 AM, kedar kedar <k3dar7@gmail.com> wrote:
->> > Hello,
->> >
->> > Can anyone please try add support for controlling keyboard backlight
->> > via sysfs on Hewlett-Packard notebooks?
->> > Maybe in a similar way as this last year patch for Thinkpad?
->> > https://lkml.org/lkml/2015/12/24/295
->> > BTW: This functionality is already supported (minimaly) on Apple,
->> > ASUS, Dell, Samsung, Sony, Thinkpad, Toshiba :-)
->>
->> I dunno if my corporate windows laptop has this feature, though I
->> can't do anything in near future regarding to this, no time.
->>
->> In any case it looks like HP stuff is kinda orphaned in PDx86
->> subsystem (just occasional fixes happen).
->
-> Hi Kedar,
->
-> is there a bugzilla entry open for this? If not, this is a good way to
-> capture the problem and share details on the system with people that may
-> be able to help but do not have the hardware platform itself.
->
->
-> https://bugzilla.kernel.org
->
-> --
-> Darren Hart
-> VMware Open Source Technology Center
->
+On Thu, Nov 09, 2017 at 11:44:34PM +0100, Stefan Brüns wrote:
+> The key has the same use as the SW_ROTATE_LOCK, but is used on devices
+> where the state is not tracked by the hardware but has to be handled
+> in software.
+> 
+> Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+> 
 
-Hi Darren,
-Thanks for answer, opened entry on bugzilla and attach DSDT from HP 8570w:
-https://bugzilla.kernel.org/show_bug.cgi?id=197829
-k3dAR
+Dmitry, this lands in the middle of series that otherwise applies to
+drivers/platform/x86. OK with you if we carry this one?
+
+> ---
+> 
+> Changes in v2:
+> - New patch, add support for KEY_ROTATE_LOCK_TOGGLE
+> 
+>  include/uapi/linux/input-event-codes.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index f4058bd4c373..ba5d709a8923 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -593,6 +593,7 @@
+>  #define BTN_DPAD_RIGHT		0x223
+>  
+>  #define KEY_ALS_TOGGLE		0x230	/* Ambient light sensor */
+> +#define KEY_ROTATE_LOCK_TOGGLE	0x231	/* Display rotation lock */
+>  
+>  #define KEY_BUTTONCONFIG		0x240	/* AL Button Configuration */
+>  #define KEY_TASKMANAGER		0x241	/* AL Task/Project Manager */
+> -- 
+> 2.15.0
+> 
+> 
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
