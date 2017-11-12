@@ -1,70 +1,78 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH] dell-laptop: Use bool type in struct quirk_entry for true/false fields
-Date: Sat, 11 Nov 2017 23:20:23 +0100
-Message-ID: <1510438823-28161-1-git-send-email-pali.rohar@gmail.com>
+From: "Gabriel M. Elder" <gabriel@tekgnowsys.com>
+Subject: RE: [PATCH v3] dell-laptop: Fix keyboard led =?UTF-8?Q?max=5Fbrightness?=
+ =?UTF-8?Q?=20property=20for=20Dell=20Latitude=20E=36=34=31=30?=
+Date: Sun, 12 Nov 2017 10:01:10 -0700
+Message-ID: <20171112100110.669a95d04dbb6b53be537852cb8ecb8c.107c268866.wbe@email22.secureserver.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:51221 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751905AbdKKWUj (ORCPT
+Received: from p3plsmtp22-06-2.prod.phx3.secureserver.net ([68.178.252.64]:49306
+        "EHLO p3plsmtp22-06.prod.phx3.secureserver.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751418AbdKLRBm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 11 Nov 2017 17:20:39 -0500
+        Sun, 12 Nov 2017 12:01:42 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Pali =?UTF-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko <andy@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-In struct quirk_entry some boolean fields used int, some u8 type. Change
-them all to bool type.
 
-Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
----
- drivers/platform/x86/dell-laptop.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+-------- Original Message --------
+Subject: Re: [PATCH v3] dell-laptop: Fix keyboard led max_brightness
+property for Dell Latitude E6410
+From: Pali Rohár <pali.rohar@gmail.com>
+Date: Sat, November 11, 2017 4:12 pm
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Andy Shevchenko
+<andy@infradead.org>, "Gabriel M. Elder" <gabriel@tekgnowsys.com>,
+Gabriele Mazzotta <gabriele.mzt@gmail.com>, Mario.Limonciello@dell.com,
+platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 7424e53..de7d04b 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -48,10 +48,10 @@
- #define KBD_LED_AC_TOKEN 0x0451
- 
- struct quirk_entry {
--	u8 touchpad_led;
--	u8 kbd_led_levels_off_1;
-+	bool touchpad_led;
-+	bool kbd_led_levels_off_1;
- 
--	int needs_kbd_timeouts;
-+	bool needs_kbd_timeouts;
- 	/*
- 	 * Ordered list of timeouts expressed in seconds.
- 	 * The list must end with -1
-@@ -62,7 +62,7 @@ struct quirk_entry {
- static struct quirk_entry *quirks;
- 
- static struct quirk_entry quirk_dell_vostro_v130 = {
--	.touchpad_led = 1,
-+	.touchpad_led = true,
- };
- 
- static int __init dmi_matched(const struct dmi_system_id *dmi)
-@@ -76,12 +76,12 @@ static int __init dmi_matched(const struct dmi_system_id *dmi)
-  * is used then BIOS silently set timeout to 0 without any error message.
-  */
- static struct quirk_entry quirk_dell_xps13_9333 = {
--	.needs_kbd_timeouts = 1,
-+	.needs_kbd_timeouts = true,
- 	.kbd_timeouts = { 0, 5, 15, 60, 5 * 60, 15 * 60, -1 },
- };
- 
- static struct quirk_entry quirk_dell_latitude_e6410 = {
--	.kbd_led_levels_off_1 = 1,
-+	.kbd_led_levels_off_1 = true,
- };
- 
- static struct platform_driver platform_driver = {
+On Thursday 02 November 2017 18:18:43 Darren Hart wrote:
+> On Thu, Nov 02, 2017 at 09:25:24PM +0100, Pali Rohár wrote:
+> > This machine reports number of keyboard backlight led levels, instead of
+> > value of the last led level index. Therefore max_brightness properly needs
+> > to be subtracted by 1 to match led max_brightness API.
+> > 
+> > Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> > Reported-by: Gabriel M. Elder <gabriel@tekgnowsys.com>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=196913
+> > ---
+> > Changes since v2:
+> > * Rename quirk entry to kbd_led_levels_off_1
+> > Changes since v1:
+> > * Update kbd_info.levels at initialization time based on quirk
+> > ---
+> > drivers/platform/x86/dell-laptop.c | 17 +++++++++++++++++
+> > 1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> > index f42159f..7424e53 100644
+> > --- a/drivers/platform/x86/dell-laptop.c
+> > +++ b/drivers/platform/x86/dell-laptop.c
+> > @@ -49,6 +49,7 @@
+> > 
+> > struct quirk_entry {
+> > u8 touchpad_led;
+> > + u8 kbd_led_levels_off_1;
+> 
+> I believe you and Andy agreed to use a boolean type here?
+
+I'm going to fix this and other entries to boolean type in another
+patch.
+
 -- 
-1.7.9.5
+Pali Rohár
+pali.rohar@gmail.com
+-------- End Original Message --------
+
+If necessary, I am willing to test whatever final proposed patch the
+community recommends, settles on, and accepts. Would you all like me to
+test the v3 patch as well? Or are we calling it good at this point, and
+can expect this to be merged into a final stable kernel release sometime
+soon? I must admit, I'm looking forward to officially making this bug go
+bye-bye!
+
+- Gabriel
