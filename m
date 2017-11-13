@@ -1,149 +1,178 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v5 07/11] intel_sgx: ptrace() support
-Date: Mon, 13 Nov 2017 21:45:24 +0200
-Message-ID: <20171113194528.28557-8-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v5 11/11] intel_sgx: driver documentation
+Date: Mon, 13 Nov 2017 21:45:28 +0200
+Message-ID: <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
 References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:65439 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1755034AbdKMTqY (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Nov 2017 14:46:24 -0500
 In-Reply-To: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: intel-sgx-kernel-dev@lists.01.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
-
-Implemented VMA callbacks in order to ptrace() debug enclaves.
 
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- drivers/platform/x86/intel_sgx/sgx_vma.c | 115 +++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ Documentation/index.rst         |   1 +
+ Documentation/x86/intel_sgx.rst | 131 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
+ create mode 100644 Documentation/x86/intel_sgx.rst
 
-diff --git a/drivers/platform/x86/intel_sgx/sgx_vma.c b/drivers/platform/x86/intel_sgx/sgx_vma.c
-index 2b714daa6eb7..e447b5a9bb96 100644
---- a/drivers/platform/x86/intel_sgx/sgx_vma.c
-+++ b/drivers/platform/x86/intel_sgx/sgx_vma.c
-@@ -110,8 +110,123 @@ static int sgx_vma_fault(struct vm_fault *vmf)
- 		return VM_FAULT_SIGBUS;
- }
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index cb7f1ba5b3b1..ccfebc260e04 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -86,6 +86,7 @@ implementation.
+    :maxdepth: 2
  
-+static inline int sgx_vma_access_word(struct sgx_encl *encl,
-+				      unsigned long addr,
-+				      void *buf,
-+				      int len,
-+				      int write,
-+				      struct sgx_encl_page *encl_page,
-+				      int i)
-+{
-+	char data[sizeof(unsigned long)];
-+	int align, cnt, offset;
-+	void *vaddr;
-+	int ret;
+    sh/index
++   x86/index
+ 
+ Korean translations
+ -------------------
+diff --git a/Documentation/x86/intel_sgx.rst b/Documentation/x86/intel_sgx.rst
+new file mode 100644
+index 000000000000..34bcf6a2a495
+--- /dev/null
++++ b/Documentation/x86/intel_sgx.rst
+@@ -0,0 +1,131 @@
++===================
++Intel(R) SGX driver
++===================
 +
-+	offset = ((addr + i) & (PAGE_SIZE - 1)) & ~(sizeof(unsigned long) - 1);
-+	align = (addr + i) & (sizeof(unsigned long) - 1);
-+	cnt = sizeof(unsigned long) - align;
-+	cnt = min(cnt, len - i);
++Introduction
++============
 +
-+	if (write) {
-+		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
-+		    (offset < 8 || (offset + (len - i)) > 16))
-+			return -ECANCELED;
++Intel(R) SGX is a set of CPU instructions that can be used by applications to
++set aside private regions of code and data. The code outside the enclave is
++disallowed to access the memory inside the enclave by the CPU access control.
++In a way you can think that SGX provides inverted sandbox. It protects the
++application from a malicious host.
 +
-+		if (align || (cnt != sizeof(unsigned long))) {
-+			vaddr = sgx_get_page(encl_page->epc_page);
-+			ret = __edbgrd((void *)((unsigned long)vaddr + offset),
-+				       (unsigned long *)data);
-+			sgx_put_page(vaddr);
-+			if (ret) {
-+				sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+				return -EFAULT;
-+			}
-+		}
++There is a new hardware unit in the processor called Memory Encryption Engine
++(MEE) starting from the Skylake microarchitecture. BIOS can define one or many
++MEE regions that can hold enclave data by configuring them with PRMRR registers.
 +
-+		memcpy(data + align, buf + i, cnt);
-+		vaddr = sgx_get_page(encl_page->epc_page);
-+		ret = __edbgwr((void *)((unsigned long)vaddr + offset),
-+			       (unsigned long *)data);
-+		sgx_put_page(vaddr);
-+		if (ret) {
-+			sgx_dbg(encl, "EDBGWR returned %d\n", ret);
-+			return -EFAULT;
-+		}
-+	} else {
-+		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
-+		    (offset + (len - i)) > 72)
-+			return -ECANCELED;
++The MEE automatically encrypts the data leaving the processor package to the MEE
++regions. The data is encrypted using a random key whose life-time is exactly one
++power cycle.
 +
-+		vaddr = sgx_get_page(encl_page->epc_page);
-+		ret = __edbgrd((void *)((unsigned long)vaddr + offset),
-+			       (unsigned long *)data);
-+		sgx_put_page(vaddr);
-+		if (ret) {
-+			sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+			return -EFAULT;
-+		}
++You can tell if your CPU supports SGX by looking into ``/proc/cpuinfo``:
 +
-+		memcpy(buf + i, data + align, cnt);
-+	}
++	``cat /proc/cpuinfo  | grep sgx``
 +
-+	return cnt;
-+}
++Enclave data types
++==================
 +
-+static int sgx_vma_access(struct vm_area_struct *vma, unsigned long addr,
-+			  void *buf, int len, int write)
-+{
-+	struct sgx_encl *encl = vma->vm_private_data;
-+	struct sgx_encl_page *entry = NULL;
-+	const char *op_str = write ? "EDBGWR" : "EDBGRD";
-+	int ret = 0;
-+	int i;
++SGX defines new data types to maintain information about the enclaves and their
++security properties.
 +
-+	/* If process was forked, VMA is still there but vm_private_data is set
-+	 * to NULL.
-+	 */
-+	if (!encl)
-+		return -EFAULT;
++The following data structures exist in MEE regions:
 +
-+	if (!(encl->flags & SGX_ENCL_DEBUG) ||
-+	    !(encl->flags & SGX_ENCL_INITIALIZED) ||
-+	    (encl->flags & SGX_ENCL_DEAD))
-+		return -EFAULT;
++* **Enclave Page Cache (EPC):** memory pages for protected code and data
++* **Enclave Page Cache Map (EPCM):** meta-data for each EPC page
 +
-+	sgx_dbg(encl, "%s addr=0x%lx, len=%d\n", op_str, addr, len);
++The Enclave Page Cache holds following types of pages:
 +
-+	for (i = 0; i < len; i += ret) {
-+		if (!entry || !((addr + i) & (PAGE_SIZE - 1))) {
-+			if (entry)
-+				entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
++* **SGX Enclave Control Structure (SECS)**: meta-data defining the global
++  properties of an enclave such as range of addresses it can access.
++* **Regular (REG):** containing code and data for the enclave.
++* **Thread Control Structure (TCS):** defines an entry point for a hardware
++  thread to enter into the enclave. The enclave can only be entered through
++  these entry points.
++* **Version Array (VA)**: an EPC page receives a unique 8 byte version number
++  when it is swapped, which is then stored into a VA page. A VA page can hold up
++  to 512 version numbers.
 +
-+			entry = sgx_fault_page(vma, (addr + i) & PAGE_MASK,
-+					       SGX_FAULT_RESERVE);
-+			if (IS_ERR(entry)) {
-+				ret = PTR_ERR(entry);
-+				entry = NULL;
-+				break;
-+			}
-+		}
++Launch control
++==============
 +
-+		/* No locks are needed because used fields are immutable after
-+		 * initialization.
-+		 */
-+		ret = sgx_vma_access_word(encl, addr, buf, len, write,
-+					  entry, i);
-+		if (ret < 0)
-+			break;
-+	}
++For launching an enclave, two structures must be provided for ENCLS(EINIT):
 +
-+	if (entry)
-+		entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
++1. **SIGSTRUCT:** a signed measurement of the enclave binary.
++2. **EINITTOKEN:** the measurement, the public key of the signer and various
++   enclave attributes. This structure contains a MAC of its contents using
++   hardware derived symmetric key called *launch key*.
 +
-+	return (ret < 0 && ret != -ECANCELED) ? ret : i;
-+}
++The hardware platform contains a root key pair for signing the SIGTRUCT
++for a *launch enclave* that is able to acquire the *launch key* for
++creating EINITTOKEN's for other enclaves.  For the launch enclave
++EINITTOKEN is not needed because it is signed with the private root key.
 +
- const struct vm_operations_struct sgx_vm_ops = {
- 	.close = sgx_vma_close,
- 	.open = sgx_vma_open,
- 	.fault = sgx_vma_fault,
-+	.access = sgx_vma_access,
- };
++There are two feature control bits associate with launch control
++
++* **IA32_FEATURE_CONTROL[0]**: locks down the feature control register
++* **IA32_FEATURE_CONTROL[17]**: allow runtime reconfiguration of
++  IA32_SGXLEPUBKEYHASHn MSRs that define MRSIGNER hash for the launch
++  enclave. Essentially they define a signing key that does not require
++  EINITTOKEN to be let run.
++
++The BIOS can configure IA32_SGXLEPUBKEYHASHn MSRs before feature control
++register is locked.
++
++It could be tempting to implement launch control by writing the MSRs
++every time when an enclave is launched. This does not scale because for
++generic case because BIOS might lock down the MSRs before handover to
++the OS.
++
++Debug enclaves
++--------------
++
++Enclave can be set as a *debug enclave* of which memory can be read or written
++by using the ENCLS(EDBGRD) and ENCLS(EDBGWR) opcodes. The Intel provided launch
++enclave provides them always a valid EINITTOKEN and therefore they are a low
++hanging fruit way to try out SGX.
++
++Virtualization
++==============
++
++Launch control
++--------------
++
++The values for IA32_SGXLEPUBKEYHASHn MSRs cannot be emulated for a virtual
++machine guest. It would easily seem feasible to hold virtual values for these
++MSRs, trap ENCLS(EINIT) and use the host LE to generate a token when a guest LE
++is initialized.
++
++However, looking at the pseudo code of ENCLS(EINIT) from the SDM there is a
++constraint that the instruction will fail if ATTRIBUTES.EINITTOKENKEY is set
++(the documentation does not tell the reason why the constraint exists but it
++exists).
++
++Thus, only when the MSRs are left unlocked before handover to the OS the
++setting of these MSRs can be supported for VM guests.
++
++Suspend and resume
++------------------
++
++If the host suspends and resumes, the enclave memory for the VM guest could
++become invalid. This can make ENCLS leaf operations suddenly fail.
++
++The driver has a graceful fallback mechanism to manage this situation. If any of
++the ENCLS leaf operations fail, the driver will fallback by kicking threads out
++of the enclave, removing the TCS entries and marking enclave as invalid. After
++this no new pages can be allocated for the enclave and no entry can be done.
++
++SGX uapi
++========
++
++.. kernel-doc:: drivers/platform/x86/intel_sgx_ioctl.c
++   :functions: sgx_ioc_enclave_create
++               sgx_ioc_enclave_add_page
++               sgx_ioc_enclave_init
++
++.. kernel-doc:: arch/x86/include/uapi/asm/sgx.h
++
++References
++==========
++
++* System Programming Manual: 39.1.4 Intel® SGX Launch Control Configuration
 -- 
 2.14.1
