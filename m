@@ -1,44 +1,40 @@
 From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] platform/x86: dell-smbios-wmi: Unlock on error in
- dell_smbios_wmi_call()
-Date: Mon, 13 Nov 2017 13:05:55 +0300
-Message-ID: <20171113100555.sbn32ls22snpfgpg@mwanda>
+Subject: [PATCH] platform/x86: wmi: Unlock on error in wmi_ioctl()
+Date: Mon, 13 Nov 2017 13:06:01 +0300
+Message-ID: <20171113100601.quq6qjvlk6ijzmri@mwanda>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from userp1040.oracle.com ([156.151.31.81]:29382 "EHLO
+        userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751296AbdKMKGk (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 13 Nov 2017 05:06:40 -0500
 Content-Disposition: inline
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-We have to unlock before returning if get_first_smbios_priv() fails.
+We need to drop a lock if try_module_get() fails.
 
-Fixes: 1a258e670434 ("platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver")
+Fixes: 44b6b7661132 ("platform/x86: wmi: create userspace interface for drivers")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-index 35c13815b24c..7b0e3ca74ca0 100644
---- a/drivers/platform/x86/dell-smbios-wmi.c
-+++ b/drivers/platform/x86/dell-smbios-wmi.c
-@@ -91,8 +91,10 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
- 
- 	mutex_lock(&call_mutex);
- 	priv = get_first_smbios_priv();
--	if (!priv)
--		return -ENODEV;
-+	if (!priv) {
-+		ret = -ENODEV;
-+		goto unlock;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 8c31ed4f0e1b..791449a2370f 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -868,8 +868,10 @@ static long wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	/* let the driver do any filtering and do the call */
+ 	wdriver = container_of(wblock->dev.dev.driver,
+ 			       struct wmi_driver, driver);
+-	if (!try_module_get(wdriver->driver.owner))
+-		return -EBUSY;
++	if (!try_module_get(wdriver->driver.owner)) {
++		ret = -EBUSY;
++		goto out_ioctl;
 +	}
- 
- 	size = sizeof(struct calling_interface_buffer);
- 	difference = priv->req_buf_size - sizeof(u64) - size;
-@@ -101,6 +103,7 @@ int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
- 	memcpy(&priv->buf->std, buffer, size);
- 	ret = run_smbios_call(priv->wdev);
- 	memcpy(buffer, &priv->buf->std, size);
-+unlock:
- 	mutex_unlock(&call_mutex);
- 
- 	return ret;
+ 	ret = wdriver->filter_callback(&wblock->dev, cmd, buf);
+ 	module_put(wdriver->driver.owner);
+ 	if (ret)
