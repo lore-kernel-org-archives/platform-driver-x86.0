@@ -1,116 +1,106 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 10/11] intel_sgx: glue code
- for in-kernel LE
-Date: Tue, 14 Nov 2017 10:16:43 -0800
-Message-ID: <1510683403.11044.2.camel@intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-         <20171113194528.28557-11-jarkko.sakkinen@linux.intel.com>
+From: Benjamin Berg <bberg@redhat.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Accept flat mode for type
+ 4 multi mode status
+Date: Tue, 14 Nov 2017 20:29:10 +0100
+Message-ID: <1510687750.5746.35.camel@redhat.com>
+References: <20171114161414.14297-1-bberg@redhat.com>
+         <CAHp75VeQXSF0ZqE6dr1=Mm0n25OJsAJ5_6uT-nb7TLKgpbsWFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-8hUM0EGieaZsGGqEwkYd"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:34095 "EHLO mga05.intel.com"
+Received: from mx1.redhat.com ([209.132.183.28]:30002 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755291AbdKNSU1 (ORCPT
+        id S1751637AbdKNT3W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2017 13:20:27 -0500
-In-Reply-To: <20171113194528.28557-11-jarkko.sakkinen@linux.intel.com>
+        Tue, 14 Nov 2017 14:29:22 -0500
+In-Reply-To: <CAHp75VeQXSF0ZqE6dr1=Mm0n25OJsAJ5_6uT-nb7TLKgpbsWFg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Peter FP1 Zhang <zhangfp1@lenovo.com>, Lyude <lyude@redhat.com>
 
-On Mon, 2017-11-13 at 21:45 +0200, Jarkko Sakkinen wrote:
-> --- a/drivers/platform/x86/intel_sgx/sgx_main.c
-> +++ b/drivers/platform/x86/intel_sgx/sgx_main.c
-> @@ -88,6 +88,37 @@ u64 sgx_encl_size_max_64;
->  u64 sgx_xfrm_mask = 0x3;
->  u32 sgx_misc_reserved;
->  u32 sgx_xsave_size_tbl[64];
-> +bool sgx_unlocked_msrs;
-> +u64 sgx_le_pubkeyhash[4];
-> +
-> +static DECLARE_RWSEM(sgx_file_sem);
-> +
-> +static int sgx_open(struct inode *inode, struct file *file)
-> +{
-> +	int ret;
-> +
-> +	down_read(&sgx_file_sem);
-> +
-> +	ret = sgx_le_start(&sgx_le_ctx);
-> +	if (ret) {
-> +		up_read(&sgx_file_sem);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgx_release(struct inode *inode, struct file *file)
-> +{
-> +	up_read(&sgx_file_sem);
-> +
-> +	if (down_write_trylock(&sgx_file_sem)) {
-> +		sgx_le_stop(&sgx_le_ctx);
-> +		up_write(&sgx_file_sem);
-> +	}
-> +
-> +	return 0;
-> +}
 
-This semaphore approach is broken due to the LE process using an anon inode for
-/dev/sgx, which results in sgx_release being called without an accompanying call
-to sgx_open.  This causes deadlocks due to a semaphore underrun.
+--=-8hUM0EGieaZsGGqEwkYd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-https://lists.01.org/pipermail/intel-sgx-kernel-dev/2017-November/000901.html
+On Tue, 2017-11-14 at 18:58 +0200, Andy Shevchenko wrote:
+> On Tue, Nov 14, 2017 at 6:14 PM, Benjamin Berg <bberg@redhat.com>
+> wrote:
+> > On the X1 Yoga 2nd Generation and most likely other notebooks the
+> > FLAT
+> > mode is reported. Decode it correctly rather than warning about an
+> > unexpected multi mode status to be reported.
+>=20
+> If we can't check on all available hardware, better to avoid "doing
+> for all" fixes.
+> I suppose DMI match can help here.
 
-[  242.659272] INFO: task lsdt:9425 blocked for more than 120 seconds.
-[  242.659783]       Not tainted 4.14.0-rc4+ #18
-[  242.660063] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this 
-[  242.660558] lsdt            D    0  9425      1 0x00000004
-[  242.660559] Call Trace:
-[  242.660564]  __schedule+0x3c2/0x8b0
-[  242.660567]  schedule+0x36/0x80
-[  242.660568]  rwsem_down_read_failed+0x10a/0x170
-[  242.660569]  call_rwsem_down_read_failed+0x18/0x30
-[  242.660570]  ? call_rwsem_down_read_failed+0x18/0x30
-[  242.660571]  down_read+0x20/0x40
-[  242.660572]  sgx_open+0x19/0x40 [intel_sgx]
-[  242.660574]  chrdev_open+0xbf/0x1b0
-[  242.660576]  do_dentry_open+0x1f8/0x300
-[  242.660577]  ? cdev_put+0x30/0x30
-[  242.660578]  vfs_open+0x4f/0x70
-[  242.660579]  path_openat+0x2ae/0x13a0
-[  242.660581]  ? mem_cgroup_uncharge_swap+0x60/0x90
-[  242.660582]  do_filp_open+0x99/0x110
-[  242.660583]  ? __check_object_size+0xfc/0x1a0
-[  242.660585]  ? __alloc_fd+0xb0/0x170
-[  242.660586]  do_sys_open+0x124/0x210
-[  242.660587]  ? do_sys_open+0x124/0x210
-[  242.660588]  SyS_open+0x1e/0x20
-[  242.660589]  entry_SYSCALL_64_fastpath+0x1e/0xa9
-[  242.660590] RIP: 0033:0x7f426cf9ec7d
-[  242.660591] RSP: 002b:00007f426b31ea60 EFLAGS: 00000293 ORIG_RAX: 
-[  242.660592] RAX: ffffffffffffffda RBX: 000000c4200ba000 RCX: 00007f426cf9ec7d
-[  242.660592] RDX: 0000000000000000 RSI: 0000000000000002 RDI: 000000000068cca7
-[  242.660593] RBP: 00007f426b31ec10 R08: 0000000000f6bc30 R09: 0000000000000000
-[  242.660593] R10: 00007f4264000078 R11: 0000000000000293 R12: 0000000000000001
-[  242.660594] R13: 0000000000000000 R14: 00007f426d31b13d R15: 00007f42640008c0
+The documentation I saw suggests that the flat mode cannot be detected
+by machines reporting a multi mode status of type 4. This is why the
+original patch excluded the FLAT mode in the list of valid modes on
+those devices.
 
->  #ifdef CONFIG_COMPAT
->  long sgx_compat_ioctl(struct file *filep, unsigned int cmd, unsigned long
-> arg)
-> @@ -141,8 +172,10 @@ static unsigned long sgx_get_unmapped_area(struct file
-> *file,
->  	return addr;
->  }
->  
-> -static const struct file_operations sgx_fops = {
-> +const struct file_operations sgx_fops = {
->  	.owner			= THIS_MODULE,
-> +	.open			= sgx_open,
-> +	.release		= sgx_release,
->  	.unlocked_ioctl		= sgx_ioctl,
->  #ifdef CONFIG_COMPAT
->  	.compat_ioctl		= sgx_compat_ioctl,
+I think it is safe to simply assume that all laptops reporting type 4
+can actually detect the flat state. Doing so will not affect actual
+state reporting on machines that may not be able to detect it. And I
+don't think that the information whether the flat state can be detected
+or not is interesting enough to bother with DMI matches.
+
+Benjamin
+
+> It would be nice to hear from Henrique and others as well.
+>=20
+>=20
+> >         case 4:
+> > -               valid_modes =3D TP_ACPI_MULTI_MODE_LAPTOP |
+> > -                             TP_ACPI_MULTI_MODE_TABLET |
+> > -                             TP_ACPI_MULTI_MODE_STAND |
+> > -                             TP_ACPI_MULTI_MODE_TENT;
+> > -               break;
+>=20
+> The common practice is to put
+> /* fallthrough */
+> instead.
+>=20
+> >         case 5:
+> > +               /* In mode 4, FLAT is not specified as a valid
+> > mode. However,
+> > +                * it can be seen at least on the X1 Yoga 2nd
+> > Generation.
+> > +                */
+>=20
+> We don't use network subsystem style of comments.
+>=20
+> >                 valid_modes =3D TP_ACPI_MULTI_MODE_LAPTOP |
+> >                               TP_ACPI_MULTI_MODE_FLAT |
+> >                               TP_ACPI_MULTI_MODE_TABLET |
+> >                               TP_ACPI_MULTI_MODE_STAND |
+> >                               TP_ACPI_MULTI_MODE_TENT;
+> >                 break;
+>=20
+>=20
+--=-8hUM0EGieaZsGGqEwkYd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEgVSeanxpB7WrDIKT0SNopmGFbCAFAloLRAcACgkQ0SNopmGF
+bCAHVQ//b6Bcpq142XASO1atZ3MBWlIhWsBX37wxeZyrQOL1Eke1S6jpVD/xsqKY
+ffx717Yr0VX6FPRDsTWK7OffqdN/4xiQLqSVpfYLzcfSeFS/yXkF/nhJ8xCFwrdg
+8N/uTfhTYmHyWhMyjBUdyJaS9NdfFOYxSXkcdwYeqFPjKMcoc1FsDX0+Vodc8VZQ
+Y4cuFMLz/P0VlADRSHjHey4Z0GO40VdaVasIWbVm+aIMwGQWsk9R4lqCnYBwua+w
+Jgc1VPhhBCiOd2y2Ut2vv6bP+Qc+z+DRKf3UBn/8NEFC79YsRpv8fqIbRaQI1dBQ
+h5wa8RFDiygqHxR3yCmBRYdVaNLKv+eEqYZdE9WW5aPXGX14sQrVG/AWd6Rh7bvl
+kw+tUHTneAfj9/yEsrcCGRKWZq6lAGNe0XWoJzee6dxq+oFEf6xin9jd7r+h848k
+9qSC3ztpS/GbBUORESM6veTu2hU2mC6rAd+YqHxRoeI20WHZJ5gi4IJDAoyZTaeX
+MWAOvO0zVu9MS+M1u/5l4+71efke4L1ymTek9p/0VEZQKstncFMbqEPNRaZC7fGG
+v7GC9Ta5FXEpzQJhr44AZ/gnboaeow8DWGNS2kbglM4BGI4vNSxKHnkxxHAmulno
+0jF4egq9rTTja3CYChHtJMUDSX9/lvYAyOYJ28dtUx2UMCemvi4=
+=8Xh7
+-----END PGP SIGNATURE-----
+
+--=-8hUM0EGieaZsGGqEwkYd--
