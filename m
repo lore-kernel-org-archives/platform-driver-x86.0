@@ -1,67 +1,74 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Tue, 14 Nov 2017 22:49:48 +0200
-Message-ID: <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171114083647.uxlaov56s2xw3pua@pd.tnic>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Tue, 14 Nov 2017 23:05:05 +0200
+Message-ID: <20171114210505.wu7kf5wef5l7ujhj@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+ <8b91bb10-de7d-c0c1-6373-7a565625525f@intel.com>
+ <20171107184709.srgrx2aa23fupmk7@linux.intel.com>
+ <1f0a2fc6-9018-1569-d358-42e912db5f10@intel.com>
+ <20171114193334.26fj2txyptd5se5c@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:53049 "EHLO mga05.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:53965 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751197AbdKNUtw (ORCPT
+        id S1756730AbdKNVFK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2017 15:49:52 -0500
+        Tue, 14 Nov 2017 16:05:10 -0500
 Content-Disposition: inline
-In-Reply-To: <20171114083647.uxlaov56s2xw3pua@pd.tnic>
+In-Reply-To: <20171114193334.26fj2txyptd5se5c@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 14, 2017 at 09:36:47AM +0100, Borislav Petkov wrote:
-> > +* **IA32_FEATURE_CONTROL[0]**: locks down the feature control register
-> > +* **IA32_FEATURE_CONTROL[17]**: allow runtime reconfiguration of
-> > +  IA32_SGXLEPUBKEYHASHn MSRs that define MRSIGNER hash for the launch
-> > +  enclave. Essentially they define a signing key that does not require
-> > +  EINITTOKEN to be let run.
-> [SNIP]
+On Tue, Nov 14, 2017 at 09:33:34PM +0200, Jarkko Sakkinen wrote:
+> On Tue, Nov 07, 2017 at 11:05:08AM -0800, Dave Hansen wrote:
+> > On 11/07/2017 10:47 AM, Jarkko Sakkinen wrote:
+> > > On Mon, Nov 06, 2017 at 07:54:00AM -0800, Dave Hansen wrote:
+> > >> On 10/10/2017 07:32 AM, Jarkko Sakkinen wrote:
+> > >>> +static LIST_HEAD(sgx_free_list);
+> > >>> +static DEFINE_SPINLOCK(sgx_free_list_lock);
+> > >>
+> > >> Is this a global list?  Will this be a scalability problem on larger
+> > >> systems?
+> > > 
+> > > It will be need to be refined for NUMA.
+> > > 
+> > > In addition, per-CPU caches would probably make sense.
+> > > 
+> > > For simplicity, I would keep it as it is up until the driver is in the
+> > > mainline.
+> > 
+> > FWIW, I don't think we should merge things that aren't performant.
+> > Global locks like this are just intolerable.  You can add this as a
+> > later patch, but please don't merge stuff like this.
 > 
-> What does that mean exactly?
+> The back pointer to struct sgx_encl_page from struct sgx_epc_page is
+> useless. I've had this in backlog already long time ago but had forgot
+> it as I've been mostly working with the launch infrastructure lately.
 > 
-> OEM vendor BIOS can control how many enclaves user can launch and what
-> signing key is loaded and lock down the feature control register so that
-> no other signing keys are loaded?
+> Your comment worked as kind of a reminder of that. Thank you.
 > 
-> Or am I misreading this?
+> Once that field is removed the whole struct is useless and EPC bank
+> converges to an array. With an array the driver should be able reserve
+> pages without a global lock.
+> 
+> I've started writing a patch to make all this happen and it is
+> progressing really well. I'm planning to include this change to v6.
+> As it simplifies code I'm going to squash it as part of the initial
+> driver patch.
+> 
+> How does this sound?
 
-Pre-boot firmware could potentially configure the root key hash for the
-enclave that signs launch tokens for other enclaves i.e. the launch
-enclave that is built and signed during the kbuild.
+Every sgx_epc_bank will have a bitmap array for reserved EPC.
 
-VMM/Hypervisor could potentially simulate such enviroment for guests.
+Every unswapped sgx_encl_page will have a pointer containing physical
+address of the EPC page in the upper bits and bank number in the lower
+bits (like sgx_epc_page has now in the 'pa' field).
 
-In these cases IA32_FEATURE_CONTROL[17] would be zeroed before locking
-the feature control, which would mean that the kernel could not write
-new values with wrmsr for the root key hash.
-
-You could use this to write policy inside the LE. The current LE is
-really simple "pass-through everything" but it could be refined to be
-something more non-trivial.
-
-The question is whether we want to allow this or not. If the answer is
-no, a check can be added to the driver initialization code whether 17 is
-set, and if not, it driver would fail to initialize.
-
-I'm not too dilated to any direction concerning this question. I just
-wrote a driver that is robust. This is where I need your feedback to do
-the right thing.
-
-> -- 
-> Regards/Gruss,
->     Boris.
-
-PS. I'll add a proper commit message. Sorry for not doing that before.
+This layout does not require a global lock.
 
 /Jarkko
