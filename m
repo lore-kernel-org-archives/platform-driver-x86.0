@@ -1,45 +1,256 @@
-From: James Morris <james.l.morris@oracle.com>
-Subject: Re: [PATCH v5 06/11] intel_sgx: driver for Intel Software Guard
- Extensions
-Date: Tue, 14 Nov 2017 10:41:50 +1100 (AEDT)
-Message-ID: <alpine.LFD.2.20.1711141039400.7290@localhost>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+From: Kai Huang <kai.huang@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 11/11] intel_sgx: driver
+ documentation
+Date: Tue, 14 Nov 2017 16:01:05 +1300
+Message-ID: <1510628465.8102.11.camel@linux.intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+         <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from userp1040.oracle.com ([156.151.31.81]:35632 "EHLO
-        userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751073AbdKMXm3 (ORCPT
+Received: from mga06.intel.com ([134.134.136.31]:13719 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751171AbdKNDBO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2017 18:42:29 -0500
-In-Reply-To: <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+        Mon, 13 Nov 2017 22:01:14 -0500
+In-Reply-To: <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, 13 Nov 2017, Jarkko Sakkinen wrote:
+On Mon, 2017-11-13 at 21:45 +0200, Jarkko Sakkinen wrote:
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  Documentation/index.rst         |   1 +
+>  Documentation/x86/intel_sgx.rst | 131
+> ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 132 insertions(+)
+>  create mode 100644 Documentation/x86/intel_sgx.rst
+> 
+> diff --git a/Documentation/index.rst b/Documentation/index.rst
+> index cb7f1ba5b3b1..ccfebc260e04 100644
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -86,6 +86,7 @@ implementation.
+>     :maxdepth: 2
+>  
+>     sh/index
+> +   x86/index
+>  
+>  Korean translations
+>  -------------------
+> diff --git a/Documentation/x86/intel_sgx.rst
+> b/Documentation/x86/intel_sgx.rst
+> new file mode 100644
+> index 000000000000..34bcf6a2a495
+> --- /dev/null
+> +++ b/Documentation/x86/intel_sgx.rst
+> @@ -0,0 +1,131 @@
+> +===================
+> +Intel(R) SGX driver
+> +===================
+> +
+> +Introduction
+> +============
+> +
+> +Intel(R) SGX is a set of CPU instructions that can be used by
+> applications to
+> +set aside private regions of code and data. The code outside the
+> enclave is
+> +disallowed to access the memory inside the enclave by the CPU access
+> control.
+> +In a way you can think that SGX provides inverted sandbox. It
+> protects the
+> +application from a malicious host.
+> +
+> +There is a new hardware unit in the processor called Memory
+> Encryption Engine
+> +(MEE) starting from the Skylake microarchitecture. BIOS can define
+> one or many
+> +MEE regions that can hold enclave data by configuring them with
+> PRMRR registers.
+> +
+> +The MEE automatically encrypts the data leaving the processor
+> package to the MEE
+> +regions. The data is encrypted using a random key whose life-time is
+> exactly one
+> +power cycle.
+
+Not sure whether you should talk about MEE staff here. They are not in
+SDM and (thus) may potentially be changed in the future.
 
 > +
-> +	secs_epc = sgx_alloc_page(0);
+> +You can tell if your CPU supports SGX by looking into
+> ``/proc/cpuinfo``:
+> +
+> +	``cat /proc/cpuinfo  | grep sgx``
+> +
+> +Enclave data types
+> +==================
+> +
+> +SGX defines new data types to maintain information about the
+> enclaves and their
+> +security properties.
+> +
+> +The following data structures exist in MEE regions:
+> +
+> +* **Enclave Page Cache (EPC):** memory pages for protected code and
+> data
+> +* **Enclave Page Cache Map (EPCM):** meta-data for each EPC page
+> +
+> +The Enclave Page Cache holds following types of pages:
+> +
+> +* **SGX Enclave Control Structure (SECS)**: meta-data defining the
+> global
+> +  properties of an enclave such as range of addresses it can access.
+> +* **Regular (REG):** containing code and data for the enclave.
+> +* **Thread Control Structure (TCS):** defines an entry point for a
+> hardware
+> +  thread to enter into the enclave. The enclave can only be entered
+> through
+> +  these entry points.
+> +* **Version Array (VA)**: an EPC page receives a unique 8 byte
+> version number
+> +  when it is swapped, which is then stored into a VA page. A VA page
+> can hold up
+> +  to 512 version numbers.
+> +
+> +Launch control
+> +==============
+> +
+> +For launching an enclave, two structures must be provided for
+> ENCLS(EINIT):
+> +
+> +1. **SIGSTRUCT:** a signed measurement of the enclave binary.
+> +2. **EINITTOKEN:** the measurement, the public key of the signer and
+> various
+> +   enclave attributes. This structure contains a MAC of its contents
+> using
+> +   hardware derived symmetric key called *launch key*.
+> +
+> +The hardware platform contains a root key pair for signing the
+> SIGTRUCT
+> +for a *launch enclave* that is able to acquire the *launch key* for
+> +creating EINITTOKEN's for other enclaves.  For the launch enclave
+> +EINITTOKEN is not needed because it is signed with the private root
+> key.
+> +
+> +There are two feature control bits associate with launch control
+> +
+> +* **IA32_FEATURE_CONTROL[0]**: locks down the feature control
+> register
+> +* **IA32_FEATURE_CONTROL[17]**: allow runtime reconfiguration of
+> +  IA32_SGXLEPUBKEYHASHn MSRs that define MRSIGNER hash for the
+> launch
+> +  enclave. Essentially they define a signing key that does not
+> require
+> +  EINITTOKEN to be let run.
+> +
+> +The BIOS can configure IA32_SGXLEPUBKEYHASHn MSRs before feature
+> control
+> +register is locked.
+> +
+> +It could be tempting to implement launch control by writing the MSRs
+> +every time when an enclave is launched. This does not scale because
+> for
+> +generic case because BIOS might lock down the MSRs before handover
+> to
+> +the OS.
+> +
+> +Debug enclaves
+> +--------------
+> +
+> +Enclave can be set as a *debug enclave* of which memory can be read
+> or written
+> +by using the ENCLS(EDBGRD) and ENCLS(EDBGWR) opcodes. The Intel
+> provided launch
+> +enclave provides them always a valid EINITTOKEN and therefore they
+> are a low
+> +hanging fruit way to try out SGX.
+> +
+> +Virtualization
+> +==============
+> +
+> +Launch control
+> +--------------
+> +
+> +The values for IA32_SGXLEPUBKEYHASHn MSRs cannot be emulated for a
+> virtual
+> +machine guest. It would easily seem feasible to hold virtual values
+> for these
+> +MSRs, trap ENCLS(EINIT) and use the host LE to generate a token when
+> a guest LE
+> +is initialized.
 
-Use SGX_ALLOC_ATOMIC instead of 0 ?
+IMHO, this statement doesn't make sense to me because of:
 
-> +	if (IS_ERR(secs_epc)) {
-> +		ret = PTR_ERR(secs_epc);
-> +		goto out;
-> +	}
-
-> +out:
-> +	if (encl)
-> +		kref_put(&encl->refcount, sgx_encl_release);
-> +	return ret;
-> +}
-
-Don't you need an sgx_free_page() somewhere here?
+- Guest LE doesn't need a token. Guest LE is nothing different from
+Host LE from HW's point of view.
+- Host LE won't (and shouldn't) generate token for any enclave from
+guest. Guset LE generates token for enclaves in the guest, just like
+host LE generates token for enclaves in the host (but not guest).
+- In fact, theoretically KVM guest can still run LE and other enclaves
+without entire host SGX driver. There's no dependency between host  LE
+and guest enclaves.
 
 
+> +
+> +However, looking at the pseudo code of ENCLS(EINIT) from the SDM
+> there is a
+> +constraint that the instruction will fail if
+> ATTRIBUTES.EINITTOKENKEY is set
+> +(the documentation does not tell the reason why the constraint
+> exists but it
+> +exists).
 
--- 
-James Morris
-<james.l.morris@oracle.com>
+Don't understand what you mean. This statement in SDM has nothing to do
+with virtualization. It's just description of hehavior of EINIT.
+
+> +
+> +Thus, only when the MSRs are left unlocked before handover to the OS
+> the
+> +setting of these MSRs can be supported for VM guests.
+
+IMHO you can just remove this "virtualization" section entirely as your
+first upstreaming driver won't consider virtualization at all.
+
+Thanks,
+-Kai
+> +
+> +Suspend and resume
+> +------------------
+> +
+> +If the host suspends and resumes, the enclave memory for the VM
+> guest could
+> +become invalid. This can make ENCLS leaf operations suddenly fail.
+> +
+> +The driver has a graceful fallback mechanism to manage this
+> situation. If any of
+> +the ENCLS leaf operations fail, the driver will fallback by kicking
+> threads out
+> +of the enclave, removing the TCS entries and marking enclave as
+> invalid. After
+> +this no new pages can be allocated for the enclave and no entry can
+> be done.
+> +
+> +SGX uapi
+> +========
+> +
+> +.. kernel-doc:: drivers/platform/x86/intel_sgx_ioctl.c
+> +   :functions: sgx_ioc_enclave_create
+> +               sgx_ioc_enclave_add_page
+> +               sgx_ioc_enclave_init
+> +
+> +.. kernel-doc:: arch/x86/include/uapi/asm/sgx.h
+> +
+> +References
+> +==========
+> +
+> +* System Programming Manual: 39.1.4 Intel® SGX Launch Control
+> Configuration
+> _______________________________________________
+> intel-sgx-kernel-dev mailing list
+> intel-sgx-kernel-dev@lists.01.org
+> https://lists.01.org/mailman/listinfo/intel-sgx-kernel-dev
