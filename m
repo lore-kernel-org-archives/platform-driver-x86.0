@@ -1,37 +1,55 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 08/11] intel_sgx: in-kernel
- launch enclave
-Date: Tue, 14 Nov 2017 22:05:05 +0200
-Message-ID: <20171114200448.52yohrd7ifwvnlgb@linux.intel.com>
+Subject: Re: [PATCH v5 06/11] intel_sgx: driver for Intel Software Guard
+ Extensions
+Date: Tue, 14 Nov 2017 22:12:25 +0200
+Message-ID: <20171114201225.d2hum3njmduiupib@linux.intel.com>
 References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com>
- <1510679109.23727.6.camel@intel.com>
+ <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+ <alpine.LFD.2.20.1711141039400.7290@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:48165 "EHLO mga06.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:41523 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1756425AbdKNUFK (ORCPT
+        id S1756539AbdKNUMa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2017 15:05:10 -0500
+        Tue, 14 Nov 2017 15:12:30 -0500
 Content-Disposition: inline
-In-Reply-To: <1510679109.23727.6.camel@intel.com>
+In-Reply-To: <alpine.LFD.2.20.1711141039400.7290@localhost>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: James Morris <james.l.morris@oracle.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Nov 14, 2017 at 09:05:09AM -0800, Sean Christopherson wrote:
-> Unless there is some conflict you are worried about, "signing_key.pem" is
-> preferable as the default name so that the key is ignored via the top-level
-> .gitignore.  The intel_sgx dir should have also a .gitignore to exclude the
-> other LE related output files:
+On Tue, Nov 14, 2017 at 10:41:50AM +1100, James Morris wrote:
+> On Mon, 13 Nov 2017, Jarkko Sakkinen wrote:
 > 
-> 	drivers/platform/x86/intel_sgx/le/enclave/sgx_le.ss
-> 	drivers/platform/x86/intel_sgx/le/enclave/sgxsign
-> 	drivers/platform/x86/intel_sgx/le/sgx_le_proxy
+> > +
+> > +	secs_epc = sgx_alloc_page(0);
+> 
+> Use SGX_ALLOC_ATOMIC instead of 0 ?
 
-OK, I'll add these to the .gitignore.
+It is used in the #PF handler where it is not safe to swap pages in the
+call context. I.e. you cannot lock mmap_sem without potentially causing
+a deadlock.
+
+> > +	if (IS_ERR(secs_epc)) {
+> > +		ret = PTR_ERR(secs_epc);
+> > +		goto out;
+> > +	}
+> 
+> > +out:
+> > +	if (encl)
+> > +		kref_put(&encl->refcount, sgx_encl_release);
+> > +	return ret;
+> > +}
+> 
+> Don't you need an sgx_free_page() somewhere here?
+
+It will get freed by sgx_encl_release().
+
+> -- 
+> James Morris
+> <james.l.morris@oracle.com>
 
 /Jarkko
