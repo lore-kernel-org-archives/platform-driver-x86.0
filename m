@@ -1,106 +1,64 @@
-From: Benjamin Berg <bberg@redhat.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Accept flat mode for type
- 4 multi mode status
-Date: Tue, 14 Nov 2017 20:29:10 +0100
-Message-ID: <1510687750.5746.35.camel@redhat.com>
-References: <20171114161414.14297-1-bberg@redhat.com>
-         <CAHp75VeQXSF0ZqE6dr1=Mm0n25OJsAJ5_6uT-nb7TLKgpbsWFg@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH RFC v3 07/12] intel_sgx: driver
+ for Intel Software Guard Extensions
+Date: Tue, 14 Nov 2017 21:33:34 +0200
+Message-ID: <20171114193334.26fj2txyptd5se5c@linux.intel.com>
+References: <20171010143258.21623-1-jarkko.sakkinen@linux.intel.com>
+ <20171010143258.21623-8-jarkko.sakkinen@linux.intel.com>
+ <8b91bb10-de7d-c0c1-6373-7a565625525f@intel.com>
+ <20171107184709.srgrx2aa23fupmk7@linux.intel.com>
+ <1f0a2fc6-9018-1569-d358-42e912db5f10@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-8hUM0EGieaZsGGqEwkYd"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:30002 "EHLO mx1.redhat.com"
+Received: from mga05.intel.com ([192.55.52.43]:27733 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751637AbdKNT3W (ORCPT
+        id S1753399AbdKNTdj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2017 14:29:22 -0500
-In-Reply-To: <CAHp75VeQXSF0ZqE6dr1=Mm0n25OJsAJ5_6uT-nb7TLKgpbsWFg@mail.gmail.com>
+        Tue, 14 Nov 2017 14:33:39 -0500
+Content-Disposition: inline
+In-Reply-To: <1f0a2fc6-9018-1569-d358-42e912db5f10@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Peter FP1 Zhang <zhangfp1@lenovo.com>, Lyude <lyude@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On Tue, Nov 07, 2017 at 11:05:08AM -0800, Dave Hansen wrote:
+> On 11/07/2017 10:47 AM, Jarkko Sakkinen wrote:
+> > On Mon, Nov 06, 2017 at 07:54:00AM -0800, Dave Hansen wrote:
+> >> On 10/10/2017 07:32 AM, Jarkko Sakkinen wrote:
+> >>> +static LIST_HEAD(sgx_free_list);
+> >>> +static DEFINE_SPINLOCK(sgx_free_list_lock);
+> >>
+> >> Is this a global list?  Will this be a scalability problem on larger
+> >> systems?
+> > 
+> > It will be need to be refined for NUMA.
+> > 
+> > In addition, per-CPU caches would probably make sense.
+> > 
+> > For simplicity, I would keep it as it is up until the driver is in the
+> > mainline.
+> 
+> FWIW, I don't think we should merge things that aren't performant.
+> Global locks like this are just intolerable.  You can add this as a
+> later patch, but please don't merge stuff like this.
 
---=-8hUM0EGieaZsGGqEwkYd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The back pointer to struct sgx_encl_page from struct sgx_epc_page is
+useless. I've had this in backlog already long time ago but had forgot
+it as I've been mostly working with the launch infrastructure lately.
 
-On Tue, 2017-11-14 at 18:58 +0200, Andy Shevchenko wrote:
-> On Tue, Nov 14, 2017 at 6:14 PM, Benjamin Berg <bberg@redhat.com>
-> wrote:
-> > On the X1 Yoga 2nd Generation and most likely other notebooks the
-> > FLAT
-> > mode is reported. Decode it correctly rather than warning about an
-> > unexpected multi mode status to be reported.
->=20
-> If we can't check on all available hardware, better to avoid "doing
-> for all" fixes.
-> I suppose DMI match can help here.
+Your comment worked as kind of a reminder of that. Thank you.
 
-The documentation I saw suggests that the flat mode cannot be detected
-by machines reporting a multi mode status of type 4. This is why the
-original patch excluded the FLAT mode in the list of valid modes on
-those devices.
+Once that field is removed the whole struct is useless and EPC bank
+converges to an array. With an array the driver should be able reserve
+pages without a global lock.
 
-I think it is safe to simply assume that all laptops reporting type 4
-can actually detect the flat state. Doing so will not affect actual
-state reporting on machines that may not be able to detect it. And I
-don't think that the information whether the flat state can be detected
-or not is interesting enough to bother with DMI matches.
+I've started writing a patch to make all this happen and it is
+progressing really well. I'm planning to include this change to v6.
+As it simplifies code I'm going to squash it as part of the initial
+driver patch.
 
-Benjamin
+How does this sound?
 
-> It would be nice to hear from Henrique and others as well.
->=20
->=20
-> >         case 4:
-> > -               valid_modes =3D TP_ACPI_MULTI_MODE_LAPTOP |
-> > -                             TP_ACPI_MULTI_MODE_TABLET |
-> > -                             TP_ACPI_MULTI_MODE_STAND |
-> > -                             TP_ACPI_MULTI_MODE_TENT;
-> > -               break;
->=20
-> The common practice is to put
-> /* fallthrough */
-> instead.
->=20
-> >         case 5:
-> > +               /* In mode 4, FLAT is not specified as a valid
-> > mode. However,
-> > +                * it can be seen at least on the X1 Yoga 2nd
-> > Generation.
-> > +                */
->=20
-> We don't use network subsystem style of comments.
->=20
-> >                 valid_modes =3D TP_ACPI_MULTI_MODE_LAPTOP |
-> >                               TP_ACPI_MULTI_MODE_FLAT |
-> >                               TP_ACPI_MULTI_MODE_TABLET |
-> >                               TP_ACPI_MULTI_MODE_STAND |
-> >                               TP_ACPI_MULTI_MODE_TENT;
-> >                 break;
->=20
->=20
---=-8hUM0EGieaZsGGqEwkYd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEgVSeanxpB7WrDIKT0SNopmGFbCAFAloLRAcACgkQ0SNopmGF
-bCAHVQ//b6Bcpq142XASO1atZ3MBWlIhWsBX37wxeZyrQOL1Eke1S6jpVD/xsqKY
-ffx717Yr0VX6FPRDsTWK7OffqdN/4xiQLqSVpfYLzcfSeFS/yXkF/nhJ8xCFwrdg
-8N/uTfhTYmHyWhMyjBUdyJaS9NdfFOYxSXkcdwYeqFPjKMcoc1FsDX0+Vodc8VZQ
-Y4cuFMLz/P0VlADRSHjHey4Z0GO40VdaVasIWbVm+aIMwGQWsk9R4lqCnYBwua+w
-Jgc1VPhhBCiOd2y2Ut2vv6bP+Qc+z+DRKf3UBn/8NEFC79YsRpv8fqIbRaQI1dBQ
-h5wa8RFDiygqHxR3yCmBRYdVaNLKv+eEqYZdE9WW5aPXGX14sQrVG/AWd6Rh7bvl
-kw+tUHTneAfj9/yEsrcCGRKWZq6lAGNe0XWoJzee6dxq+oFEf6xin9jd7r+h848k
-9qSC3ztpS/GbBUORESM6veTu2hU2mC6rAd+YqHxRoeI20WHZJ5gi4IJDAoyZTaeX
-MWAOvO0zVu9MS+M1u/5l4+71efke4L1ymTek9p/0VEZQKstncFMbqEPNRaZC7fGG
-v7GC9Ta5FXEpzQJhr44AZ/gnboaeow8DWGNS2kbglM4BGI4vNSxKHnkxxHAmulno
-0jF4egq9rTTja3CYChHtJMUDSX9/lvYAyOYJ28dtUx2UMCemvi4=
-=8Xh7
------END PGP SIGNATURE-----
-
---=-8hUM0EGieaZsGGqEwkYd--
+/Jarkko
