@@ -1,75 +1,76 @@
-From: Lyude Paul <lyude@redhat.com>
-Subject: Re: [ibm-acpi-devel] [PATCH] platform/x86: thinkpad_acpi: Accept
- flat mode for type 4 multi mode status
-Date: Tue, 14 Nov 2017 12:46:16 -0500
-Message-ID: <1510681576.13660.4.camel@redhat.com>
-References: <20171114161414.14297-1-bberg@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Tue, 14 Nov 2017 09:55:06 -0800
+Message-ID: <1510682106.3313.24.camel@intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+         <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:36644 "EHLO mx1.redhat.com"
+Received: from mga02.intel.com ([134.134.136.20]:27538 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752510AbdKNRqS (ORCPT
+        id S1754420AbdKNR6u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2017 12:46:18 -0500
-In-Reply-To: <20171114161414.14297-1-bberg@redhat.com>
+        Tue, 14 Nov 2017 12:58:50 -0500
+In-Reply-To: <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benjamin Berg <bberg@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: Peter FP1 Zhang <zhangfp1@lenovo.com>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-lgtm.
-
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-
-On Tue, 2017-11-14 at 17:14 +0100, Benjamin Berg wrote:
-> On the X1 Yoga 2nd Generation and most likely other notebooks the FLAT
-> mode is reported. Decode it correctly rather than warning about an
-> unexpected multi mode status to be reported.
+On Mon, 2017-11-13 at 21:45 +0200, Jarkko Sakkinen wrote:
+> Intel SGX is a set of CPU instructions that can be used by applications
+> to set aside private regions of code and data.  The code outside the
+> enclave is disallowed to access the memory inside the enclave by the CPU
+> access control.
 > 
-> Signed-off-by: Benjamin Berg <bberg@redhat.com>
-> Cc: Peter FP1 Zhang <zhangfp1@lenovo.com
-> Cc: Lyude <lyude@redhat.com>
+> SGX driver provides a ioctl API for loading and initializing enclaves.
+> Address range for enclaves is reserved with mmap() and they are
+> destroyed with munmap(). Enclave construction, measurement and
+> initialization is done with the provided the ioctl API.
+> 
+> The driver implements also a swapper thread ksgxswapd for EPC pages
+> backed by a private shmem file. Currently it has a limitation of not
+> swapping VA pages but there is nothing preventing to implement it later
+> on. Now it was scoped out in order to keep the implementation simple.
+> 
+> The parameter struct for SGX_IOC_ENCLAVE_INIT does not contain a
+> parameter to supply a launch token. Generating and using tokens is best
+> to be kept in the control of the kernel because it has direct binding to
+> the IA32_SGXPUBKEYHASHx MSRs (a core must have MSRs set to the same
+> value as the signer of token).
+> 
+> By giving user space any role in the launch process is a risk for
+> introducing bottlenecks as kernel must exhibit behavior that user space
+> launch daemon depends on
+
+What do you mean by bottlenecks?  Assuming you're referring to performance
+bottlenecks, this statement is flat out false.  Moving the launch enclave into
+the kernel introduces performance bottlenecks, e.g. as implemented, a single LE
+services all EINIT requests and is protected by a mutex.  That is the very
+definition of a bottleneck.
+
+The kernel will never be as performant as userspace when it comes to EINIT
+tokens because userspace can make informed decisions based on its usage model,
+e.g. number of LEs (or LE threads) to spawn, LE and token lifecycles, LE and
+token thread safety, etc...
+
+> , properietary risks (closed launch daemons on
+> closed platforms) 
+
+This justifies the need for the kernel to be able to generate launch tokens, but
+I don't think allowing userspace to also provide its own tokens adds any
+proprietary risks.
+
+> and stability risks as there would be division of
+> semantics between user space and kernel.
+> 
+
+What exactly are the stability risks?  The token itself is architecturally
+defined and isn't fundamentally different than e.g. the sigstruct.  Writing the
+LE hash MSRs as needed, e.g. for userspace LEs, isn't difficult.
+
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 91fab1a13a6d..d23c84222e9f 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -2106,26 +2106,24 @@ static int hotkey_gmms_get_tablet_mode(int s, int
-> *has_tablet_mode)
->  			      TP_ACPI_MULTI_MODE_FLAT |
->  			      TP_ACPI_MULTI_MODE_TABLET |
->  			      TP_ACPI_MULTI_MODE_STAND |
->  			      TP_ACPI_MULTI_MODE_TENT;
->  		break;
->  	case 3:
->  		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
->  			      TP_ACPI_MULTI_MODE_FLAT;
->  		break;
->  	case 4:
-> -		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> -			      TP_ACPI_MULTI_MODE_TABLET |
-> -			      TP_ACPI_MULTI_MODE_STAND |
-> -			      TP_ACPI_MULTI_MODE_TENT;
-> -		break;
->  	case 5:
-> +		/* In mode 4, FLAT is not specified as a valid mode.
-> However,
-> +		 * it can be seen at least on the X1 Yoga 2nd Generation.
-> +		 */
->  		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
->  			      TP_ACPI_MULTI_MODE_FLAT |
->  			      TP_ACPI_MULTI_MODE_TABLET |
->  			      TP_ACPI_MULTI_MODE_STAND |
->  			      TP_ACPI_MULTI_MODE_TENT;
->  		break;
->  	default:
->  		pr_err("Unknown multi mode status type %d with value
-> 0x%04X, please report this to %s\n",
->  		       type, value, TPACPI_MAIL);
->  		return 0;
