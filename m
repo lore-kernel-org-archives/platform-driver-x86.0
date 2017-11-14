@@ -1,52 +1,75 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 08/11] intel_sgx: in-kernel
- launch enclave
-Date: Tue, 14 Nov 2017 09:05:09 -0800
-Message-ID: <1510679109.23727.6.camel@intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-         <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com>
+From: Lyude Paul <lyude@redhat.com>
+Subject: Re: [ibm-acpi-devel] [PATCH] platform/x86: thinkpad_acpi: Accept
+ flat mode for type 4 multi mode status
+Date: Tue, 14 Nov 2017 12:46:16 -0500
+Message-ID: <1510681576.13660.4.camel@redhat.com>
+References: <20171114161414.14297-1-bberg@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, intel-sgx-kernel-dev@lists.01.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:36644 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752510AbdKNRqS (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 14 Nov 2017 12:46:18 -0500
+In-Reply-To: <20171114161414.14297-1-bberg@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Benjamin Berg <bberg@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Peter FP1 Zhang <zhangfp1@lenovo.com>
 
-On Mon, 2017-11-13 at 21:45 +0200, Jarkko Sakkinen wrote:
-> This commits implements the in-kernel launch enclave. It is wrapped into
-> a user space program that reads SIGSTRUCT instances from stdin and
-> outputs launch tokens to stdout.
-> 
-> The commit also adds enclave signing tool that is used by kbuild to
-> measure and sign the launch enclave.
-> 
-> CONFIG_INTEL_SGX_SIGNING_KEY points to a PEM-file for the 3072-bit RSA
-> key that is used as the LE public key pair. The default location is:
-> 
->   drivers/platform/x86/intel_sgx/intel_sgx_signing_key.pem
+lgtm.
 
-Unless there is some conflict you are worried about, "signing_key.pem" is
-preferable as the default name so that the key is ignored via the top-level
-.gitignore.  The intel_sgx dir should have also a .gitignore to exclude the
-other LE related output files:
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-	drivers/platform/x86/intel_sgx/le/enclave/sgx_le.ss
-	drivers/platform/x86/intel_sgx/le/enclave/sgxsign
-	drivers/platform/x86/intel_sgx/le/sgx_le_proxy
-
-> If the default key does not exist kbuild will generate a random key and
-> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
-> the passphrase for the LE public key.
+On Tue, 2017-11-14 at 17:14 +0100, Benjamin Berg wrote:
+> On the X1 Yoga 2nd Generation and most likely other notebooks the FLAT
+> mode is reported. Decode it correctly rather than warning about an
+> unexpected multi mode status to be reported.
 > 
-> TinyCrypt (https://github.com/01org/tinycrypt) is used as AES
-> implementation, which is not timing resistant. Eventually this needs to
-> be replaced with AES-NI based implementation that could be either
-> 
-> - re-use existing AES-NI code in the kernel
-> - have its own hand written code
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Benjamin Berg <bberg@redhat.com>
+> Cc: Peter FP1 Zhang <zhangfp1@lenovo.com
+> Cc: Lyude <lyude@redhat.com>
 > ---
+>  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index 91fab1a13a6d..d23c84222e9f 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -2106,26 +2106,24 @@ static int hotkey_gmms_get_tablet_mode(int s, int
+> *has_tablet_mode)
+>  			      TP_ACPI_MULTI_MODE_FLAT |
+>  			      TP_ACPI_MULTI_MODE_TABLET |
+>  			      TP_ACPI_MULTI_MODE_STAND |
+>  			      TP_ACPI_MULTI_MODE_TENT;
+>  		break;
+>  	case 3:
+>  		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+>  			      TP_ACPI_MULTI_MODE_FLAT;
+>  		break;
+>  	case 4:
+> -		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+> -			      TP_ACPI_MULTI_MODE_TABLET |
+> -			      TP_ACPI_MULTI_MODE_STAND |
+> -			      TP_ACPI_MULTI_MODE_TENT;
+> -		break;
+>  	case 5:
+> +		/* In mode 4, FLAT is not specified as a valid mode.
+> However,
+> +		 * it can be seen at least on the X1 Yoga 2nd Generation.
+> +		 */
+>  		valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
+>  			      TP_ACPI_MULTI_MODE_FLAT |
+>  			      TP_ACPI_MULTI_MODE_TABLET |
+>  			      TP_ACPI_MULTI_MODE_STAND |
+>  			      TP_ACPI_MULTI_MODE_TENT;
+>  		break;
+>  	default:
+>  		pr_err("Unknown multi mode status type %d with value
+> 0x%04X, please report this to %s\n",
+>  		       type, value, TPACPI_MAIL);
+>  		return 0;
