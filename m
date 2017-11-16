@@ -1,110 +1,171 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: silead_dmi: Add silead,home-button
- property to some tablets
-Date: Thu, 16 Nov 2017 15:02:20 +0100
-Message-ID: <fc1a0310-8944-27dc-a464-4ac6409b359b@redhat.com>
-References: <20171017154512.30524-1-hdegoede@redhat.com>
- <20171017154512.30524-2-hdegoede@redhat.com>
- <CAHp75Vf=MPfCfj3X8ob0+LT_+MT+SW9nsNzw0Pai2OcBrdqWvA@mail.gmail.com>
- <2e5b4fd2-5445-a1f6-c509-5de2bb96c491@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH RESEND] platform/x86: Add support for Dollar Cove TI power button
+Date: Thu, 16 Nov 2017 20:24:02 +0100
+Message-ID: <20171116192402.22905-1-tiwai@suse.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:15157 "EHLO mx1.redhat.com"
+Received: from mx2.suse.de ([195.135.220.15]:59144 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S935273AbdKPOCZ (ORCPT
+        id S934269AbdKPTYO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2017 09:02:25 -0500
-In-Reply-To: <2e5b4fd2-5445-a1f6-c509-5de2bb96c491@redhat.com>
-Content-Language: en-US
+        Thu, 16 Nov 2017 14:24:14 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andy@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-Hi,
+This provides a new input driver for supporting the power button on
+Dollar Cove TI PMIC, found on Cherrytrail-based devices.
+The patch is based on the original work by Intel, found at:
+  https://github.com/01org/ProductionKernelQuilts
 
-On 27-10-17 17:26, Hans de Goede wrote:
-> Hi,
-> 
-> On 27-10-17 16:39, Andy Shevchenko wrote:
->> On Tue, Oct 17, 2017 at 6:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->>> Add "silead,home-button" property to entries for tablets which have
->>> a capacitive home button (typically a windows logo on the front).
->>>
->>> This new property is checked for by the new capacitive home button
->>> support in the silead touchscreen driver.
->>>
->>
->> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>
->> I suppose it's going through input subsystem as dependent patch?
-> 
-> Since silead_dmi tends to see several patches each cycle I don't
-> think that is a good idea, both patches can be merged independently.
-> 
-> Either patch will not do anything until the other one is merged,
-> having just one or the other present will not cause any problems,
-> so IMHO merging each patch separately is best.
-> 
-> It is probably a good idea to wait for an ack from RobH on the
-> property name before merging this though.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
 
-This has been Acked by Rob now, so this patch is ready for merging.
-As discussed before both patches can be merged independently of
-each other.
-
-Regards,
-
-Hans
+It seems that Lee forgot to apply this one while he took two other
+patches through his MFD tree.  Since the MFD part was already merged
+to Linus tree now, it's better to go through platform tree.  Could you
+guys check this one quickly?  Thanks!
 
 
+ drivers/platform/x86/Kconfig                 | 11 ++++
+ drivers/platform/x86/Makefile                |  1 +
+ drivers/platform/x86/intel_chtdc_ti_pwrbtn.c | 94 ++++++++++++++++++++++++++++
+ 3 files changed, 106 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
 
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>   drivers/platform/x86/silead_dmi.c | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
->>> index fadfce9b3f5f..ac304f2318cc 100644
->>> --- a/drivers/platform/x86/silead_dmi.c
->>> +++ b/drivers/platform/x86/silead_dmi.c
->>> @@ -58,6 +58,7 @@ static const struct property_entry dexp_ursus_7w_props[] = {
->>>          PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
->>>          PROPERTY_ENTRY_STRING("firmware-name", "gsl1686-dexp-ursus-7w.fw"),
->>>          PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->>> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->>>          { }
->>>   };
->>>
->>> @@ -72,6 +73,7 @@ static const struct property_entry surftab_wintron70_st70416_6_props[] = {
->>>          PROPERTY_ENTRY_STRING("firmware-name",
->>>                                "gsl1686-surftab-wintron70-st70416-6.fw"),
->>>          PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->>> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->>>          { }
->>>   };
->>>
->>> @@ -116,6 +118,7 @@ static const struct property_entry pov_mobii_wintab_p800w_props[] = {
->>>          PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->>>          PROPERTY_ENTRY_STRING("firmware-name",
->>>                                "gsl3692-pov-mobii-wintab-p800w.fw"),
->>> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->>>          { }
->>>   };
->>>
->>> @@ -143,6 +146,7 @@ static const struct property_entry chuwi_hi8_pro_props[] = {
->>>          PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
->>>          PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->>>          PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
->>> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->>>          { }
->>>   };
->>>
->>> -- 
->>> 2.14.1
->>>
->>
->>
->>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 344c78f0a5c4..3ed042d13c45 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1181,6 +1181,17 @@ config SILEAD_DMI
+ 	  with the OS-image for the device. This option supplies the missing
+ 	  information. Enable this for x86 tablets with Silead touchscreens.
+ 
++config INTEL_CHTDC_TI_PWRBTN
++	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
++	depends on INTEL_SOC_PMIC_CHTDC_TI
++	depends on INPUT
++	---help---
++	  This option adds a power button driver driver for Dollar Cove TI
++	  PMIC on Intel Cherry Trail devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_chtdc_ti_pwrbtn.
++
+ endif # X86_PLATFORM_DEVICES
+ 
+ config PMC_ATOM
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index c32b34a72467..4eb0948086ec 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -88,3 +88,4 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
++obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+diff --git a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
+new file mode 100644
+index 000000000000..ddd5d9027e92
+--- /dev/null
++++ b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
+@@ -0,0 +1,94 @@
++/*
++ * Power-button driver for Dollar Cove TI PMIC
++ * Copyright (C) 2014 Intel Corp
++ * Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
++ */
++
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/slab.h>
++
++#define CHTDC_TI_SIRQ_REG	0x3
++#define SIRQ_PWRBTN_REL		BIT(0)
++
++static irqreturn_t chtdc_ti_pwrbtn_interrupt(int irq, void *dev_id)
++{
++	struct input_dev *input = dev_id;
++	struct device *dev = input->dev.parent;
++	struct regmap *regmap = dev_get_drvdata(dev);
++	int state;
++
++	if (!regmap_read(regmap, CHTDC_TI_SIRQ_REG, &state)) {
++		dev_dbg(dev, "SIRQ_REG=0x%x\n", state);
++		input_report_key(input, KEY_POWER, !(state & SIRQ_PWRBTN_REL));
++		input_sync(input);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int chtdc_ti_pwrbtn_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
++	struct input_dev *input;
++	int irq, err;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++	input->name = pdev->name;
++	input->phys = "power-button/input0";
++	input->id.bustype = BUS_HOST;
++	input_set_capability(input, EV_KEY, KEY_POWER);
++	err = input_register_device(input);
++	if (err)
++		return err;
++
++	dev_set_drvdata(dev, pmic->regmap);
++
++	err = devm_request_threaded_irq(dev, irq, NULL,
++					chtdc_ti_pwrbtn_interrupt,
++					0, KBUILD_MODNAME, input);
++	if (err)
++		return err;
++
++	device_init_wakeup(dev, true);
++	dev_pm_set_wake_irq(dev, irq);
++	return 0;
++}
++
++static int chtdc_ti_pwrbtn_remove(struct platform_device *pdev)
++{
++	dev_pm_clear_wake_irq(&pdev->dev);
++	device_init_wakeup(&pdev->dev, false);
++	return 0;
++}
++
++static const struct platform_device_id chtdc_ti_pwrbtn_id_table[] = {
++	{ .name = "chtdc_ti_pwrbtn" },
++	{},
++};
++MODULE_DEVICE_TABLE(platform, chtdc_ti_pwrbtn_id_table);
++
++static struct platform_driver chtdc_ti_pwrbtn_driver = {
++	.driver = {
++		.name	= KBUILD_MODNAME,
++	},
++	.probe		= chtdc_ti_pwrbtn_probe,
++	.remove		= chtdc_ti_pwrbtn_remove,
++	.id_table	= chtdc_ti_pwrbtn_id_table,
++};
++module_platform_driver(chtdc_ti_pwrbtn_driver);
++
++MODULE_DESCRIPTION("Power-button driver for Dollar Cove TI PMIC");
++MODULE_LICENSE("GPL v2");
+-- 
+2.15.0
