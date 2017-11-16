@@ -1,79 +1,46 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 07/11] intel_sgx: ptrace() support
-Date: Thu, 16 Nov 2017 10:28:42 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1711161016040.2191@nanos>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-8-jarkko.sakkinen@linux.intel.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/2] Input: silead - Add support for capactive home
+ button found on some x86 tablets
+Date: Thu, 16 Nov 2017 07:34:58 -0600
+Message-ID: <CAL_Jsq+28caybU9xA+xVSWSFobEuJWgNhoq+YjPHoqpzjxhMng@mail.gmail.com>
+References: <20171019071728.6635-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from Galois.linutronix.de ([146.0.238.70]:45046 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758985AbdKPJ2o (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2017 04:28:44 -0500
-In-Reply-To: <20171113194528.28557-8-jarkko.sakkinen@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171019071728.6635-1-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Gregor Riepl <onitake@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 13 Nov 2017, Jarkko Sakkinen wrote:
+On Thu, Oct 19, 2017 at 2:17 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> On some x86 tablets with a silead touchscreen the windows logo on the
+> front is a capacitive home button. Touching this button results in a touch
+> with bits 12-15 of the Y coordinates set, while normally only the lower 12
+> are used.
+>
+> Detect this and report a KEY_LEFTMETA press when this happens. Note for
+> now we only respond to the Y coordinate bits 12-15 containing 0x01, on some
+> tablets *without* a capacative button I've noticed these bits containing
 
-> Implemented VMA callbacks in order to ptrace() debug enclaves.
+capacitive
 
-The amount of information in this changelog is really overwhelming.
+> 0x04 when crossing the edges of the screen.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Only enable support for the home-button if a "silead,home-button"
+>  boolean device-property is set on the device
+>
+> Changes in v3:
+> -Document the new silead,home-button property in:
+>  Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> ---
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 +
 
-Please explain WHY you need that and HOW its supposed to work.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +static inline int sgx_vma_access_word(struct sgx_encl *encl,
-> +				      unsigned long addr,
-> +				      void *buf,
-> +				      int len,
-> +				      int write,
-> +				      struct sgx_encl_page *encl_page,
-> +				      int i)
-
-Can you find a way to waste more lines for a function declaration?
-
-Aside of that using 'i' as a argument is just broken. Arguments should be
-self explaining as far as possible and sure not using names which are
-commonly used in code for iterators etc.
-
-> +{
-> +	char data[sizeof(unsigned long)];
-> +	int align, cnt, offset;
-> +	void *vaddr;
-> +	int ret;
-> +
-> +	offset = ((addr + i) & (PAGE_SIZE - 1)) & ~(sizeof(unsigned long) - 1);
-> +	align = (addr + i) & (sizeof(unsigned long) - 1);
-
-The kernel has macros for this kind of operations.
-
-> +	cnt = sizeof(unsigned long) - align;
-> +	cnt = min(cnt, len - i);
-> +
-> +	if (write) {
-> +		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
-> +		    (offset < 8 || (offset + (len - i)) > 16))
-
-Hard coded numbers which are nowhere explained are a nono. Please use proper
-defines and explain the meaning so the code becomes understandable.
-
-> +			return -ECANCELED;
-> +
-> +		if (align || (cnt != sizeof(unsigned long))) {
-
-What the heck is this doing? The complete lack of any comment in this
-code makes review impossible.
-
-> +			vaddr = sgx_get_page(encl_page->epc_page);
-> +			ret = __edbgrd((void *)((unsigned long)vaddr + offset),
-> +				       (unsigned long *)data);
-
-This typecast mess all over the place is just wrong. You either use the
-wrong variable types or your functions have the wrong parameter type.
-
-Thanks,
-
-	tglx
+>  drivers/input/touchscreen/silead.c                 | 46 ++++++++++++++++------
+>  2 files changed, 37 insertions(+), 11 deletions(-)
