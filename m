@@ -1,132 +1,70 @@
 From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Subject: [PATCH v1 5/5] platform/x86: intel_telemetry: Improve S0ix logs
-Date: Thu, 16 Nov 2017 15:48:17 +0530
-Message-ID: <1510827497-25188-6-git-send-email-souvik.k.chakravarty@intel.com>
+Subject: [PATCH v1 1/5] platform/x86: intel_pmc_ipc: Fix register names
+Date: Thu, 16 Nov 2017 15:48:13 +0530
+Message-ID: <1510827497-25188-2-git-send-email-souvik.k.chakravarty@intel.com>
 References: <1510827497-25188-1-git-send-email-souvik.k.chakravarty@intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:26700 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S935162AbdKPN6Z (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2017 08:58:25 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1510827497-25188-1-git-send-email-souvik.k.chakravarty@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Suspend with shallow wakes is not a useful parameter since the phenomena
-does not exist on deployed devices and is only a parameter of use during
-device power-on phase. The field always reads zero. Additionally there
-are other easier methods to detect it, e.g., if the S0ix counter
-increments by more than one during suspend. Hence the field is superfluous
-and can be removed.
+GCR TELEM register names have been fixed as per the External Design
+Sepcification (EDS) of Apollolake and GeminiLake. This makes it
+possible to fetch the complete 64-bit S0ix counter using exported APIs.
 
-This patch also slightly renames the S0ix total field for better
-viewability.
+This patch also fixes some alignment issues in the macro definition
+section.
 
 Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 ---
- drivers/platform/x86/intel_telemetry_debugfs.c | 47 +++++---------------------
- 1 file changed, 8 insertions(+), 39 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 10 ++++++----
+ drivers/platform/x86/intel_pmc_ipc.c |  4 ++--
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index 2a960f6..b40bacc0 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -98,10 +98,6 @@ static u32 suspend_shlw_ctr_temp, suspend_deep_ctr_temp;
- static u64 suspend_shlw_res_temp, suspend_deep_res_temp;
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index fac89eb..b41f388 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -3,8 +3,8 @@
  
- struct telemetry_susp_stats {
--	u32 shlw_swake_ctr;
--	u32 deep_swake_ctr;
--	u64 shlw_swake_res;
--	u64 deep_swake_res;
- 	u32 shlw_ctr;
- 	u32 deep_ctr;
- 	u64 shlw_res;
-@@ -594,19 +590,15 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
+ /* Commands */
+ #define PMC_IPC_PMIC_ACCESS		0xFF
+-#define		PMC_IPC_PMIC_ACCESS_READ	0x0
+-#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
++#define	PMC_IPC_PMIC_ACCESS_READ	0x0
++#define	PMC_IPC_PMIC_ACCESS_WRITE	0x1
+ #define PMC_IPC_USB_PWR_CTRL		0xF0
+ #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
+ #define PMC_IPC_PHY_CONFIG		0xEE
+@@ -25,8 +25,10 @@
  
- 	seq_printf(s, "S0IX Shallow\t\t\t %10u\t %10llu\n",
- 		   s0ix_shlw_ctr -
--		   conf->suspend_stats.shlw_ctr -
--		   conf->suspend_stats.shlw_swake_ctr,
-+		   conf->suspend_stats.shlw_ctr,
- 		   (u64)((s0ix_shlw_res -
--		   conf->suspend_stats.shlw_res -
--		   conf->suspend_stats.shlw_swake_res)*10/192));
-+		   conf->suspend_stats.shlw_res)*10/192));
+ /* GCR reg offsets from gcr base*/
+ #define PMC_GCR_PMC_CFG_REG		0x08
+-#define PMC_GCR_TELEM_DEEP_S0IX_REG	0x78
+-#define PMC_GCR_TELEM_SHLW_S0IX_REG	0x80
++#define PMC_GCR_TELEM_DEEP_S0IX_LO_REG	0x78
++#define PMC_GCR_TELEM_DEEP_S0IX_HI_REG	0x7C
++#define PMC_GCR_TELEM_SHLW_S0IX_LO_REG	0x80
++#define PMC_GCR_TELEM_SHLW_S0IX_HI_REG	0x84
  
- 	seq_printf(s, "S0IX Deep\t\t\t %10u\t %10llu\n",
- 		   s0ix_deep_ctr -
--		   conf->suspend_stats.deep_ctr -
--		   conf->suspend_stats.deep_swake_ctr,
-+		   conf->suspend_stats.deep_ctr,
- 		   (u64)((s0ix_deep_res -
--		   conf->suspend_stats.deep_res -
--		   conf->suspend_stats.deep_swake_res)*10/192));
-+		   conf->suspend_stats.deep_res)*10/192));
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
  
- 	seq_printf(s, "Suspend(With S0ixShallow)\t %10u\t %10llu\n",
- 		   conf->suspend_stats.shlw_ctr,
-@@ -616,14 +608,8 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
- 		   conf->suspend_stats.deep_ctr,
- 		   (u64)(conf->suspend_stats.deep_res*10)/192);
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index e03fa314..1c096e7 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -883,8 +883,8 @@ int intel_pmc_s0ix_counter_read(u64 *data)
+ 	if (!ipcdev.has_gcr_regs)
+ 		return -EACCES;
  
--	seq_printf(s, "Suspend(With Shallow-Wakes)\t %10u\t %10llu\n",
--		   conf->suspend_stats.shlw_swake_ctr +
--		   conf->suspend_stats.deep_swake_ctr,
--		   (u64)((conf->suspend_stats.shlw_swake_res +
--		   conf->suspend_stats.deep_swake_res)*10/192));
--
--	seq_printf(s, "S0IX+Suspend Total\t\t %10u\t %10llu\n", s0ix_total_ctr,
--				(u64)(s0ix_total_res*10/192));
-+	seq_printf(s, "TOTAL S0IX\t\t\t %10u\t %10llu\n", s0ix_total_ctr,
-+		   (u64)(s0ix_total_res*10/192));
- 	seq_puts(s, "\n-------------------------------------------------\n");
- 	seq_puts(s, "\t\tDEVICE STATES\n");
- 	seq_puts(s, "-------------------------------------------------\n");
-@@ -927,23 +913,15 @@ static int pm_suspend_exit_cb(void)
- 	suspend_shlw_res_exit -= suspend_shlw_res_temp;
- 	suspend_deep_res_exit -= suspend_deep_res_temp;
+-	deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_REG);
+-	shlw = gcr_data_readq(PMC_GCR_TELEM_SHLW_S0IX_REG);
++	deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_LO_REG);
++	shlw = gcr_data_readq(PMC_GCR_TELEM_SHLW_S0IX_LO_REG);
  
--	if (suspend_shlw_ctr_exit == 1) {
-+	if (suspend_shlw_ctr_exit > 0) {
- 		conf->suspend_stats.shlw_ctr +=
- 		suspend_shlw_ctr_exit;
+ 	*data = S0IX_RESIDENCY_IN_USECS(deep, shlw);
  
- 		conf->suspend_stats.shlw_res +=
- 		suspend_shlw_res_exit;
- 	}
--	/* Shallow Wakes Case */
--	else if (suspend_shlw_ctr_exit > 1) {
--		conf->suspend_stats.shlw_swake_ctr +=
--		suspend_shlw_ctr_exit;
--
--		conf->suspend_stats.shlw_swake_res +=
--		suspend_shlw_res_exit;
--	}
- 
--	if (suspend_deep_ctr_exit == 1) {
-+	if (suspend_deep_ctr_exit > 0) {
- 		conf->suspend_stats.deep_ctr +=
- 		suspend_deep_ctr_exit;
- 
-@@ -951,15 +929,6 @@ static int pm_suspend_exit_cb(void)
- 		suspend_deep_res_exit;
- 	}
- 
--	/* Shallow Wakes Case */
--	else if (suspend_deep_ctr_exit > 1) {
--		conf->suspend_stats.deep_swake_ctr +=
--		suspend_deep_ctr_exit;
--
--		conf->suspend_stats.deep_swake_res +=
--		suspend_deep_res_exit;
--	}
--
- out:
- 	suspend_prep_ok = 0;
- 	return NOTIFY_OK;
 -- 
 2.7.4
