@@ -1,75 +1,79 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 09/11] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Thu, 16 Nov 2017 10:15:42 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1711161012510.2191@nanos>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-10-jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v5 07/11] intel_sgx: ptrace() support
+Date: Thu, 16 Nov 2017 10:28:42 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1711161016040.2191@nanos>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from Galois.linutronix.de ([146.0.238.70]:45007 "EHLO
+Received: from Galois.linutronix.de ([146.0.238.70]:45046 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933457AbdKPJPp (ORCPT
+        with ESMTP id S1758985AbdKPJ2o (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2017 04:15:45 -0500
-In-Reply-To: <20171113194528.28557-10-jarkko.sakkinen@linux.intel.com>
+        Thu, 16 Nov 2017 04:28:44 -0500
+In-Reply-To: <20171113194528.28557-8-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
 On Mon, 13 Nov 2017, Jarkko Sakkinen wrote:
 
-+ Cc: Al
+> Implemented VMA callbacks in order to ptrace() debug enclaves.
 
-- Cc: that intel sgx list because it's moderated and spams my inbox with
-      useless moderation mails.
+The amount of information in this changelog is really overwhelming.
 
-> Exported create_pipe_files() and replace_fd() because the SGX driver
-> needs to be able to setup pipes in order to communicate with the helper
-> process that hosts the Launch Enclave (LE). The pipe creation will be
-> done in the init-callback supplied to call_usermodehelper_setup().
-> 
-> The driver will use two pipes for communication with the LE hosting
-> process:
-> 
-> * One for writing SIGSTRUCT blobs.
-> * One for reading EINITTOKEN blobs.
+Please explain WHY you need that and HOW its supposed to work.
 
-Can you pretty please make sure that people who maintain the affected code
-are CC'd on your changes?
+> +static inline int sgx_vma_access_word(struct sgx_encl *encl,
+> +				      unsigned long addr,
+> +				      void *buf,
+> +				      int len,
+> +				      int write,
+> +				      struct sgx_encl_page *encl_page,
+> +				      int i)
 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  fs/file.c | 1 +
->  fs/pipe.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/fs/file.c b/fs/file.c
-> index 1fc7fbbb4510..b1fa28919b22 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -871,6 +871,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
->  	spin_unlock(&files->file_lock);
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(replace_fd);
->  
->  SYSCALL_DEFINE3(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags)
->  {
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 97e5be897753..ee33a84127e7 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -784,6 +784,7 @@ int create_pipe_files(struct file **res, int flags)
->  	iput(inode);
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(create_pipe_files);
->  
->  static int __do_pipe_flags(int *fd, struct file **files, int flags)
->  {
-> -- 
-> 2.14.1
-> 
-> 
+Can you find a way to waste more lines for a function declaration?
+
+Aside of that using 'i' as a argument is just broken. Arguments should be
+self explaining as far as possible and sure not using names which are
+commonly used in code for iterators etc.
+
+> +{
+> +	char data[sizeof(unsigned long)];
+> +	int align, cnt, offset;
+> +	void *vaddr;
+> +	int ret;
+> +
+> +	offset = ((addr + i) & (PAGE_SIZE - 1)) & ~(sizeof(unsigned long) - 1);
+> +	align = (addr + i) & (sizeof(unsigned long) - 1);
+
+The kernel has macros for this kind of operations.
+
+> +	cnt = sizeof(unsigned long) - align;
+> +	cnt = min(cnt, len - i);
+> +
+> +	if (write) {
+> +		if (encl_page->flags & SGX_ENCL_PAGE_TCS &&
+> +		    (offset < 8 || (offset + (len - i)) > 16))
+
+Hard coded numbers which are nowhere explained are a nono. Please use proper
+defines and explain the meaning so the code becomes understandable.
+
+> +			return -ECANCELED;
+> +
+> +		if (align || (cnt != sizeof(unsigned long))) {
+
+What the heck is this doing? The complete lack of any comment in this
+code makes review impossible.
+
+> +			vaddr = sgx_get_page(encl_page->epc_page);
+> +			ret = __edbgrd((void *)((unsigned long)vaddr + offset),
+> +				       (unsigned long *)data);
+
+This typecast mess all over the place is just wrong. You either use the
+wrong variable types or your functions have the wrong parameter type.
+
+Thanks,
+
+	tglx
