@@ -1,171 +1,155 @@
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH RESEND] platform/x86: Add support for Dollar Cove TI power button
-Date: Thu, 16 Nov 2017 20:24:02 +0100
-Message-ID: <20171116192402.22905-1-tiwai@suse.de>
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] platform/x86: dell-smbios-wmi: Disable userspace interface if missing hotfix
+Date: Thu, 16 Nov 2017 14:48:30 -0600
+Message-ID: <1510865310-19893-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:59144 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934269AbdKPTYO (ORCPT
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:63060 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S934239AbdKPUuJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2017 14:24:14 -0500
+        Thu, 16 Nov 2017 15:50:09 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 
-This provides a new input driver for supporting the power button on
-Dollar Cove TI PMIC, found on Cherrytrail-based devices.
-The patch is based on the original work by Intel, found at:
-  https://github.com/01org/ProductionKernelQuilts
+The Dell SMBIOS WMI interface will fail for some more complex calls unless
+a WMI hotfix has been included.  Most platforms have this fix available in
+a maintenance BIOS release.  In the case the driver is loaded on a
+platform without this fix, disable the userspace interface.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+A hotfix indicator is present in the dell-wmi-descriptor that represents
+whether or not more complex calls will work properly.
+
+"Simple" calls such as those used by dell-laptop and dell-wmi will continue
+to work properly so dell-smbios-wmi should not be blocked from binding and
+being used as the dell-smbios dispatcher.
+
+Suggested-by: Girish Prakash <girish.prakash@dell.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
+ drivers/platform/x86/dell-smbios-wmi.c     | 14 ++++++++++++++
+ drivers/platform/x86/dell-wmi-descriptor.c | 26 ++++++++++++++++++++++++--
+ drivers/platform/x86/dell-wmi-descriptor.h |  1 +
+ 3 files changed, 39 insertions(+), 2 deletions(-)
 
-It seems that Lee forgot to apply this one while he took two other
-patches through his MFD tree.  Since the MFD part was already merged
-to Linus tree now, it's better to go through platform tree.  Could you
-guys check this one quickly?  Thanks!
-
-
- drivers/platform/x86/Kconfig                 | 11 ++++
- drivers/platform/x86/Makefile                |  1 +
- drivers/platform/x86/intel_chtdc_ti_pwrbtn.c | 94 ++++++++++++++++++++++++++++
- 3 files changed, 106 insertions(+)
- create mode 100644 drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 344c78f0a5c4..3ed042d13c45 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1181,6 +1181,17 @@ config SILEAD_DMI
- 	  with the OS-image for the device. This option supplies the missing
- 	  information. Enable this for x86 tablets with Silead touchscreens.
+diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
+index 8ad11ef..a296551 100644
+--- a/drivers/platform/x86/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell-smbios-wmi.c
+@@ -147,9 +147,12 @@ static long dell_smbios_wmi_filter(struct wmi_device *wdev, unsigned int cmd,
  
-+config INTEL_CHTDC_TI_PWRBTN
-+	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
-+	depends on INTEL_SOC_PMIC_CHTDC_TI
-+	depends on INPUT
-+	---help---
-+	  This option adds a power button driver driver for Dollar Cove TI
-+	  PMIC on Intel Cherry Trail devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_chtdc_ti_pwrbtn.
-+
- endif # X86_PLATFORM_DEVICES
+ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+ {
++	struct wmi_driver *wdriver =
++		container_of(wdev->dev.driver, struct wmi_driver, driver);
+ 	struct wmi_smbios_priv *priv;
+ 	int count;
+ 	int ret;
++	u32 hotfix;
  
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c32b34a72467..4eb0948086ec 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_MLX_CPLD_PLATFORM)	+= mlxcpld-hotplug.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-+obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-diff --git a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
-new file mode 100644
-index 000000000000..ddd5d9027e92
---- /dev/null
-+++ b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Power-button driver for Dollar Cove TI PMIC
-+ * Copyright (C) 2014 Intel Corp
-+ * Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/device.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/slab.h>
-+
-+#define CHTDC_TI_SIRQ_REG	0x3
-+#define SIRQ_PWRBTN_REL		BIT(0)
-+
-+static irqreturn_t chtdc_ti_pwrbtn_interrupt(int irq, void *dev_id)
-+{
-+	struct input_dev *input = dev_id;
-+	struct device *dev = input->dev.parent;
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+	int state;
-+
-+	if (!regmap_read(regmap, CHTDC_TI_SIRQ_REG, &state)) {
-+		dev_dbg(dev, "SIRQ_REG=0x%x\n", state);
-+		input_report_key(input, KEY_POWER, !(state & SIRQ_PWRBTN_REL));
-+		input_sync(input);
+ 	if (!wmi_has_guid(DELL_WMI_DESCRIPTOR_GUID))
+ 		return -ENODEV;
+@@ -167,6 +170,16 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+ 	if (!dell_wmi_get_size(&priv->req_buf_size))
+ 		return -EPROBE_DEFER;
+ 
++	/* some SMBIOS calls fail unless BIOS contains hotfix */
++	if (!dell_wmi_get_hotfix(&hotfix))
++		return -EPROBE_DEFER;
++	if (!hotfix) {
++		dev_warn(&wdev->dev,
++			"WMI SMBIOS userspace interface not supported (%u)\n",
++			hotfix);
++		wdriver->filter_callback = NULL;
 +	}
 +
-+	return IRQ_HANDLED;
-+}
+ 	/* add in the length object we will use internally with ioctl */
+ 	priv->req_buf_size += sizeof(u64);
+ 	ret = set_required_buffer_size(wdev, priv->req_buf_size);
+@@ -184,6 +197,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev)
+ 	if (ret)
+ 		goto fail_register;
+ 
 +
-+static int chtdc_ti_pwrbtn_probe(struct platform_device *pdev)
+ 	priv->wdev = wdev;
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 	mutex_lock(&list_mutex);
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+index e7f4c3a..5083ce0 100644
+--- a/drivers/platform/x86/dell-wmi-descriptor.c
++++ b/drivers/platform/x86/dell-wmi-descriptor.c
+@@ -25,6 +25,7 @@ struct descriptor_priv {
+ 	struct list_head list;
+ 	u32 interface_version;
+ 	u32 size;
++	u32 hotfix;
+ };
+ static int descriptor_valid = -EPROBE_DEFER;
+ static LIST_HEAD(wmi_list);
+@@ -72,6 +73,24 @@ bool dell_wmi_get_size(u32 *size)
+ }
+ EXPORT_SYMBOL_GPL(dell_wmi_get_size);
+ 
++bool dell_wmi_get_hotfix(u32 *hotfix)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-+	struct input_dev *input;
-+	int irq, err;
++	struct descriptor_priv *priv;
++	bool ret = false;
 +
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+	input->name = pdev->name;
-+	input->phys = "power-button/input0";
-+	input->id.bustype = BUS_HOST;
-+	input_set_capability(input, EV_KEY, KEY_POWER);
-+	err = input_register_device(input);
-+	if (err)
-+		return err;
-+
-+	dev_set_drvdata(dev, pmic->regmap);
-+
-+	err = devm_request_threaded_irq(dev, irq, NULL,
-+					chtdc_ti_pwrbtn_interrupt,
-+					0, KBUILD_MODNAME, input);
-+	if (err)
-+		return err;
-+
-+	device_init_wakeup(dev, true);
-+	dev_pm_set_wake_irq(dev, irq);
-+	return 0;
++	mutex_lock(&list_mutex);
++	priv = list_first_entry_or_null(&wmi_list,
++					struct descriptor_priv,
++					list);
++	if (priv) {
++		*hotfix = priv->hotfix;
++		ret = true;
++	}
++	mutex_unlock(&list_mutex);
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(dell_wmi_get_hotfix);
 +
-+static int chtdc_ti_pwrbtn_remove(struct platform_device *pdev)
-+{
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
-+	return 0;
-+}
-+
-+static const struct platform_device_id chtdc_ti_pwrbtn_id_table[] = {
-+	{ .name = "chtdc_ti_pwrbtn" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, chtdc_ti_pwrbtn_id_table);
-+
-+static struct platform_driver chtdc_ti_pwrbtn_driver = {
-+	.driver = {
-+		.name	= KBUILD_MODNAME,
-+	},
-+	.probe		= chtdc_ti_pwrbtn_probe,
-+	.remove		= chtdc_ti_pwrbtn_remove,
-+	.id_table	= chtdc_ti_pwrbtn_id_table,
-+};
-+module_platform_driver(chtdc_ti_pwrbtn_driver);
-+
-+MODULE_DESCRIPTION("Power-button driver for Dollar Cove TI PMIC");
-+MODULE_LICENSE("GPL v2");
+ /*
+  * Descriptor buffer is 128 byte long and contains:
+  *
+@@ -80,6 +99,7 @@ EXPORT_SYMBOL_GPL(dell_wmi_get_size);
+  * Object Signature          4       4    " WMI"
+  * WMI Interface Version     8       4    <version>
+  * WMI buffer length        12       4    <length>
++ * WMI hotfix number        16       4    <hotfix>
+  */
+ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
+ {
+@@ -139,15 +159,17 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev)
+ 
+ 	priv->interface_version = buffer[2];
+ 	priv->size = buffer[3];
++	priv->hotfix = buffer[4];
+ 	ret = 0;
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 	mutex_lock(&list_mutex);
+ 	list_add_tail(&priv->list, &wmi_list);
+ 	mutex_unlock(&list_mutex);
+ 
+-	dev_dbg(&wdev->dev, "Detected Dell WMI interface version %lu and buffer size %lu\n",
++	dev_dbg(&wdev->dev, "Detected Dell WMI interface version %lu, buffer size %lu, hotfix %lu\n",
+ 		(unsigned long) priv->interface_version,
+-		(unsigned long) priv->size);
++		(unsigned long) priv->size,
++		(unsigned long) priv->hotfix);
+ 
+ out:
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell-wmi-descriptor.h
+index 776cddd..217b833 100644
+--- a/drivers/platform/x86/dell-wmi-descriptor.h
++++ b/drivers/platform/x86/dell-wmi-descriptor.h
+@@ -24,5 +24,6 @@ int dell_wmi_get_descriptor_valid(void);
+ 
+ bool dell_wmi_get_interface_version(u32 *version);
+ bool dell_wmi_get_size(u32 *size);
++bool dell_wmi_get_hotfix(u32 *hotfix);
+ 
+ #endif
 -- 
-2.15.0
+2.7.4
