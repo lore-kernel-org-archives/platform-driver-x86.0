@@ -1,188 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH RESEND] platform/x86: Add support for Dollar Cove TI power button
-Date: Fri, 17 Nov 2017 17:16:28 +0200
-Message-ID: <CAHp75VdW6E+NRTwrqQvgHtLJwRvROw1Tt4L2og+dVFcSg84KSA@mail.gmail.com>
-References: <20171116192402.22905-1-tiwai@suse.de>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86 alienware-wmi: lightbar LED support for Dell
+ Inspiron 5675.
+Date: Fri, 17 Nov 2017 15:19:53 +0000
+Message-ID: <4bebd2d741174b35869e74dc530cc90c@ausx13mpc124.AMER.DELL.COM>
+References: <1510799707-3532-1-git-send-email-chang_liu4@dell.com>
+ <CAHp75VebvMotwQkWOfMd6nUgcfENF8_28LLBWGQEk7_9v1+YRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:46395 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1757460AbdKQPQ3 (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:47617 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1758522AbdKQPUC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Nov 2017 10:16:29 -0500
-Received: by mail-qt0-f194.google.com with SMTP id r39so6764807qtr.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Nov 2017 07:16:29 -0800 (PST)
-In-Reply-To: <20171116192402.22905-1-tiwai@suse.de>
+        Fri, 17 Nov 2017 10:20:02 -0500
+In-Reply-To: <CAHp75VebvMotwQkWOfMd6nUgcfENF8_28LLBWGQEk7_9v1+YRw@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: andy.shevchenko@gmail.com, foggy.liu@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Chang.Liu4@dell.com
 
-On Thu, Nov 16, 2017 at 9:24 PM, Takashi Iwai <tiwai@suse.de> wrote:
-> This provides a new input driver for supporting the power button on
-> Dollar Cove TI PMIC, found on Cherrytrail-based devices.
-> The patch is based on the original work by Intel, found at:
->   https://github.com/01org/ProductionKernelQuilts
->
-
-Pushed to my reviewing and testing queue, thanks.
-
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=193891
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> ---
->
-> It seems that Lee forgot to apply this one while he took two other
-> patches through his MFD tree.  Since the MFD part was already merged
-> to Linus tree now, it's better to go through platform tree.  Could you
-> guys check this one quickly?  Thanks!
->
->
->  drivers/platform/x86/Kconfig                 | 11 ++++
->  drivers/platform/x86/Makefile                |  1 +
->  drivers/platform/x86/intel_chtdc_ti_pwrbtn.c | 94 ++++++++++++++++++++++++++++
->  3 files changed, 106 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 344c78f0a5c4..3ed042d13c45 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1181,6 +1181,17 @@ config SILEAD_DMI
->           with the OS-image for the device. This option supplies the missing
->           information. Enable this for x86 tablets with Silead touchscreens.
->
-> +config INTEL_CHTDC_TI_PWRBTN
-> +       tristate "Intel Cherry Trail Dollar Cove TI power button driver"
-> +       depends on INTEL_SOC_PMIC_CHTDC_TI
-> +       depends on INPUT
-> +       ---help---
-> +         This option adds a power button driver driver for Dollar Cove TI
-> +         PMIC on Intel Cherry Trail devices.
-> +
-> +         To compile this driver as a module, choose M here: the module
-> +         will be called intel_chtdc_ti_pwrbtn.
-> +
->  endif # X86_PLATFORM_DEVICES
->
->  config PMC_ATOM
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index c32b34a72467..4eb0948086ec 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -88,3 +88,4 @@ obj-$(CONFIG_PMC_ATOM)                += pmc_atom.o
->  obj-$(CONFIG_MLX_PLATFORM)     += mlx-platform.o
->  obj-$(CONFIG_MLX_CPLD_PLATFORM)        += mlxcpld-hotplug.o
->  obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-> +obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)    += intel_chtdc_ti_pwrbtn.o
-> diff --git a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
-> new file mode 100644
-> index 000000000000..ddd5d9027e92
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
-> @@ -0,0 +1,94 @@
-> +/*
-> + * Power-button driver for Dollar Cove TI PMIC
-> + * Copyright (C) 2014 Intel Corp
-> + * Copyright (c) 2017 Takashi Iwai <tiwai@suse.de>
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/device.h>
-> +#include <linux/mfd/intel_soc_pmic.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
-> +#include <linux/slab.h>
-> +
-> +#define CHTDC_TI_SIRQ_REG      0x3
-> +#define SIRQ_PWRBTN_REL                BIT(0)
-> +
-> +static irqreturn_t chtdc_ti_pwrbtn_interrupt(int irq, void *dev_id)
-> +{
-> +       struct input_dev *input = dev_id;
-> +       struct device *dev = input->dev.parent;
-> +       struct regmap *regmap = dev_get_drvdata(dev);
-> +       int state;
-> +
-> +       if (!regmap_read(regmap, CHTDC_TI_SIRQ_REG, &state)) {
-> +               dev_dbg(dev, "SIRQ_REG=0x%x\n", state);
-> +               input_report_key(input, KEY_POWER, !(state & SIRQ_PWRBTN_REL));
-> +               input_sync(input);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int chtdc_ti_pwrbtn_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-> +       struct input_dev *input;
-> +       int irq, err;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0)
-> +               return irq;
-> +       input = devm_input_allocate_device(dev);
-> +       if (!input)
-> +               return -ENOMEM;
-> +       input->name = pdev->name;
-> +       input->phys = "power-button/input0";
-> +       input->id.bustype = BUS_HOST;
-> +       input_set_capability(input, EV_KEY, KEY_POWER);
-> +       err = input_register_device(input);
-> +       if (err)
-> +               return err;
-> +
-> +       dev_set_drvdata(dev, pmic->regmap);
-> +
-> +       err = devm_request_threaded_irq(dev, irq, NULL,
-> +                                       chtdc_ti_pwrbtn_interrupt,
-> +                                       0, KBUILD_MODNAME, input);
-> +       if (err)
-> +               return err;
-> +
-> +       device_init_wakeup(dev, true);
-> +       dev_pm_set_wake_irq(dev, irq);
-> +       return 0;
-> +}
-> +
-> +static int chtdc_ti_pwrbtn_remove(struct platform_device *pdev)
-> +{
-> +       dev_pm_clear_wake_irq(&pdev->dev);
-> +       device_init_wakeup(&pdev->dev, false);
-> +       return 0;
-> +}
-> +
-> +static const struct platform_device_id chtdc_ti_pwrbtn_id_table[] = {
-> +       { .name = "chtdc_ti_pwrbtn" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(platform, chtdc_ti_pwrbtn_id_table);
-> +
-> +static struct platform_driver chtdc_ti_pwrbtn_driver = {
-> +       .driver = {
-> +               .name   = KBUILD_MODNAME,
-> +       },
-> +       .probe          = chtdc_ti_pwrbtn_probe,
-> +       .remove         = chtdc_ti_pwrbtn_remove,
-> +       .id_table       = chtdc_ti_pwrbtn_id_table,
-> +};
-> +module_platform_driver(chtdc_ti_pwrbtn_driver);
-> +
-> +MODULE_DESCRIPTION("Power-button driver for Dollar Cove TI PMIC");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.15.0
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+WWVzIGxvb2tzIGdvb2QgdG8gbWUuICBBbGllbndhcmUgYW5kIEluc3Bpcm9uIGdhbWluZyBkbyBz
+aGFyZSB0aGlzIHNhbWUgaW50ZXJmYWNlLg0KDQpBY2tlZC1ieTogTWFyaW8gTGltb25jaWVsbG8g
+PG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFtt
+YWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBC
+ZWhhbGYgT2YgQW5keSBTaGV2Y2hlbmtvDQo+IFNlbnQ6IEZyaWRheSwgTm92ZW1iZXIgMTcsIDIw
+MTcgNzozOCBBTQ0KPiBUbzogQ2hhbmcgTGl1IDxmb2dneS5saXVAZ21haWwuY29tPg0KPiBDYzog
+ZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFBsYXRm
+b3JtIERyaXZlcg0KPiA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBMaW1v
+bmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsgTGl1NCwgQ2hh
+bmcgPENoYW5nX0xpdTRARGVsbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBsYXRmb3Jt
+L3g4NiBhbGllbndhcmUtd21pOiBsaWdodGJhciBMRUQgc3VwcG9ydCBmb3IgRGVsbA0KPiBJbnNw
+aXJvbiA1Njc1Lg0KPiANCj4gT24gVGh1LCBOb3YgMTYsIDIwMTcgYXQgNDozNSBBTSwgQ2hhbmcg
+TGl1IDxmb2dneS5saXVAZ21haWwuY29tPiB3cm90ZToNCj4gPiBJbnNwaXJvbiA1Njc1IGxpZ2h0
+YmFyIGNvbXBhdGlibGUgd2l0aCB3bWkgaW50ZXJmYWNlIG9uIGFsaWVud2FyZSwNCj4gPiB0aGUg
+ZGlmZmVyZW5jZSBsaWVzIGluIHRoZSB6b25lIG51bWJlciBhbmQgY29sb3IgY29udHJvbC4NCj4g
+PiBBZGQgSW5zcGlyb24gNTY3NSBETUkgcXVpcmtzIHRvIGRldGVjdCBieSBkbWlfY2hlY2tfc3lz
+dGVtLg0KPiANCj4gTWFyaW8sIGRvIHlvdSBoYXZlIGFueSBjb21tZW50IG9uIHRoaXM/DQo+IA0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hhbmcgTGl1IDxjaGFuZ19saXU0QGRlbGwuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbGllbndhcmUtd21pLmMgfCAxNyAr
+KysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FsaWVud2FyZS13bWku
+Yw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FsaWVud2FyZS13bWkuYw0KPiA+IGluZGV4IDRl
+YjhlMWEuLjlkN2RiZDkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWxp
+ZW53YXJlLXdtaS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWxpZW53YXJlLXdt
+aS5jDQo+ID4gQEAgLTY4LDYgKzY4LDE0IEBAIHN0cnVjdCBxdWlya19lbnRyeSB7DQo+ID4NCj4g
+PiAgc3RhdGljIHN0cnVjdCBxdWlya19lbnRyeSAqcXVpcmtzOw0KPiA+DQo+ID4gKw0KPiA+ICtz
+dGF0aWMgc3RydWN0IHF1aXJrX2VudHJ5IHF1aXJrX2luc3Bpcm9uNTY3NSA9IHsNCj4gPiArICAg
+ICAgIC5udW1fem9uZXMgPSAyLA0KPiA+ICsgICAgICAgLmhkbWlfbXV4ID0gMCwNCj4gPiArICAg
+ICAgIC5hbXBsaWZpZXIgPSAwLA0KPiA+ICsgICAgICAgLmRlZXBzbHAgPSAwLA0KPiA+ICt9Ow0K
+PiA+ICsNCj4gPiAgc3RhdGljIHN0cnVjdCBxdWlya19lbnRyeSBxdWlya191bmtub3duID0gew0K
+PiA+ICAgICAgICAgLm51bV96b25lcyA9IDIsDQo+ID4gICAgICAgICAuaGRtaV9tdXggPSAwLA0K
+PiA+IEBAIC0xNzEsNiArMTc5LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9p
+ZCBhbGllbndhcmVfcXVpcmtzW10NCj4gX19pbml0Y29uc3QgPSB7DQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgfSwNCj4gPiAgICAgICAgICAuZHJpdmVyX2RhdGEgPSAmcXVpcmtfYXNtMjAxLA0K
+PiA+ICAgICAgICAgIH0sDQo+ID4gKyAgICAgICAgew0KPiA+ICsgICAgICAgIC5jYWxsYmFjayA9
+IGRtaV9tYXRjaGVkLA0KPiA+ICsgICAgICAgIC5pZGVudCA9ICJEZWxsIEluYy4gSW5zcGlyb24g
+NTY3NSIsDQo+ID4gKyAgICAgICAgLm1hdGNoZXMgPSB7DQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgRE1JX01BVENIKERNSV9TWVNfVkVORE9SLCAiRGVsbCBJbmMuIiksDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgRE1JX01BVENIKERNSV9QUk9EVUNUX05BTUUsICJJbnNwaXJvbiA1Njc1Iiks
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgfSwNCj4gPiArICAgICAgICAuZHJpdmVyX2RhdGEg
+PSAmcXVpcmtfaW5zcGlyb241Njc1LA0KPiA+ICsgICAgICAgIH0sDQo+ID4gICAgICAgICB7fQ0K
+PiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+IA0KPiANCj4gDQo+IC0tDQo+
+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
