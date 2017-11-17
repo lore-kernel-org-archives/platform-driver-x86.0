@@ -1,67 +1,105 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86 alienware-wmi: lightbar LED support for Dell
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86 alienware-wmi: lightbar LED support for Dell
  Inspiron 5675.
-Date: Fri, 17 Nov 2017 15:19:53 +0000
-Message-ID: <4bebd2d741174b35869e74dc530cc90c@ausx13mpc124.AMER.DELL.COM>
+Date: Fri, 17 Nov 2017 17:25:43 +0200
+Message-ID: <CAHp75Vd6Y4TEtD1QChwnAKjRJm_-8YfpOOS-L3YjjmC0XHpcXw@mail.gmail.com>
 References: <1510799707-3532-1-git-send-email-chang_liu4@dell.com>
- <CAHp75VebvMotwQkWOfMd6nUgcfENF8_28LLBWGQEk7_9v1+YRw@mail.gmail.com>
+ <CAHp75VebvMotwQkWOfMd6nUgcfENF8_28LLBWGQEk7_9v1+YRw@mail.gmail.com> <4bebd2d741174b35869e74dc530cc90c@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:47617 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1758522AbdKQPUC (ORCPT
+Received: from mail-qt0-f195.google.com ([209.85.216.195]:37265 "EHLO
+        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751324AbdKQPZo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Nov 2017 10:20:02 -0500
-In-Reply-To: <CAHp75VebvMotwQkWOfMd6nUgcfENF8_28LLBWGQEk7_9v1+YRw@mail.gmail.com>
-Content-Language: en-US
+        Fri, 17 Nov 2017 10:25:44 -0500
+In-Reply-To: <4bebd2d741174b35869e74dc530cc90c@ausx13mpc124.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com, foggy.liu@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Chang.Liu4@dell.com
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Chang Liu <foggy.liu@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Chang.Liu4@dell.com
 
-WWVzIGxvb2tzIGdvb2QgdG8gbWUuICBBbGllbndhcmUgYW5kIEluc3Bpcm9uIGdhbWluZyBkbyBz
-aGFyZSB0aGlzIHNhbWUgaW50ZXJmYWNlLg0KDQpBY2tlZC1ieTogTWFyaW8gTGltb25jaWVsbG8g
-PG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFtt
-YWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBC
-ZWhhbGYgT2YgQW5keSBTaGV2Y2hlbmtvDQo+IFNlbnQ6IEZyaWRheSwgTm92ZW1iZXIgMTcsIDIw
-MTcgNzozOCBBTQ0KPiBUbzogQ2hhbmcgTGl1IDxmb2dneS5saXVAZ21haWwuY29tPg0KPiBDYzog
-ZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFBsYXRm
-b3JtIERyaXZlcg0KPiA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBMaW1v
-bmNpZWxsbywgTWFyaW8NCj4gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPjsgTGl1NCwgQ2hh
-bmcgPENoYW5nX0xpdTRARGVsbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBsYXRmb3Jt
-L3g4NiBhbGllbndhcmUtd21pOiBsaWdodGJhciBMRUQgc3VwcG9ydCBmb3IgRGVsbA0KPiBJbnNw
-aXJvbiA1Njc1Lg0KPiANCj4gT24gVGh1LCBOb3YgMTYsIDIwMTcgYXQgNDozNSBBTSwgQ2hhbmcg
-TGl1IDxmb2dneS5saXVAZ21haWwuY29tPiB3cm90ZToNCj4gPiBJbnNwaXJvbiA1Njc1IGxpZ2h0
-YmFyIGNvbXBhdGlibGUgd2l0aCB3bWkgaW50ZXJmYWNlIG9uIGFsaWVud2FyZSwNCj4gPiB0aGUg
-ZGlmZmVyZW5jZSBsaWVzIGluIHRoZSB6b25lIG51bWJlciBhbmQgY29sb3IgY29udHJvbC4NCj4g
-PiBBZGQgSW5zcGlyb24gNTY3NSBETUkgcXVpcmtzIHRvIGRldGVjdCBieSBkbWlfY2hlY2tfc3lz
-dGVtLg0KPiANCj4gTWFyaW8sIGRvIHlvdSBoYXZlIGFueSBjb21tZW50IG9uIHRoaXM/DQo+IA0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hhbmcgTGl1IDxjaGFuZ19saXU0QGRlbGwuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbGllbndhcmUtd21pLmMgfCAxNyAr
-KysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FsaWVud2FyZS13bWku
-Yw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FsaWVud2FyZS13bWkuYw0KPiA+IGluZGV4IDRl
-YjhlMWEuLjlkN2RiZDkgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWxp
-ZW53YXJlLXdtaS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWxpZW53YXJlLXdt
-aS5jDQo+ID4gQEAgLTY4LDYgKzY4LDE0IEBAIHN0cnVjdCBxdWlya19lbnRyeSB7DQo+ID4NCj4g
-PiAgc3RhdGljIHN0cnVjdCBxdWlya19lbnRyeSAqcXVpcmtzOw0KPiA+DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgc3RydWN0IHF1aXJrX2VudHJ5IHF1aXJrX2luc3Bpcm9uNTY3NSA9IHsNCj4gPiArICAg
-ICAgIC5udW1fem9uZXMgPSAyLA0KPiA+ICsgICAgICAgLmhkbWlfbXV4ID0gMCwNCj4gPiArICAg
-ICAgIC5hbXBsaWZpZXIgPSAwLA0KPiA+ICsgICAgICAgLmRlZXBzbHAgPSAwLA0KPiA+ICt9Ow0K
-PiA+ICsNCj4gPiAgc3RhdGljIHN0cnVjdCBxdWlya19lbnRyeSBxdWlya191bmtub3duID0gew0K
-PiA+ICAgICAgICAgLm51bV96b25lcyA9IDIsDQo+ID4gICAgICAgICAuaGRtaV9tdXggPSAwLA0K
-PiA+IEBAIC0xNzEsNiArMTc5LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9p
-ZCBhbGllbndhcmVfcXVpcmtzW10NCj4gX19pbml0Y29uc3QgPSB7DQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgfSwNCj4gPiAgICAgICAgICAuZHJpdmVyX2RhdGEgPSAmcXVpcmtfYXNtMjAxLA0K
-PiA+ICAgICAgICAgIH0sDQo+ID4gKyAgICAgICAgew0KPiA+ICsgICAgICAgIC5jYWxsYmFjayA9
-IGRtaV9tYXRjaGVkLA0KPiA+ICsgICAgICAgIC5pZGVudCA9ICJEZWxsIEluYy4gSW5zcGlyb24g
-NTY3NSIsDQo+ID4gKyAgICAgICAgLm1hdGNoZXMgPSB7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgRE1JX01BVENIKERNSV9TWVNfVkVORE9SLCAiRGVsbCBJbmMuIiksDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgRE1JX01BVENIKERNSV9QUk9EVUNUX05BTUUsICJJbnNwaXJvbiA1Njc1Iiks
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgfSwNCj4gPiArICAgICAgICAuZHJpdmVyX2RhdGEg
-PSAmcXVpcmtfaW5zcGlyb241Njc1LA0KPiA+ICsgICAgICAgIH0sDQo+ID4gICAgICAgICB7fQ0K
-PiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+IA0KPiANCj4gDQo+IC0tDQo+
-IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Fri, Nov 17, 2017 at 5:19 PM,  <Mario.Limonciello@dell.com> wrote:
+> Yes looks good to me.  Alienware and Inspiron gaming do share this same interface.
+>
+> Acked-by: Mario Limonciello <mario.limonciello@dell.com>
+>
+
+Thank you, Mario. Pushed to my review and testing queue.
+
+>> -----Original Message-----
+>> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
+>> owner@vger.kernel.org] On Behalf Of Andy Shevchenko
+>> Sent: Friday, November 17, 2017 7:38 AM
+>> To: Chang Liu <foggy.liu@gmail.com>
+>> Cc: dvhart@infradead.org; linux-kernel@vger.kernel.org; Platform Driver
+>> <platform-driver-x86@vger.kernel.org>; Limonciello, Mario
+>> <Mario_Limonciello@Dell.com>; Liu4, Chang <Chang_Liu4@Dell.com>
+>> Subject: Re: [PATCH] platform/x86 alienware-wmi: lightbar LED support for Dell
+>> Inspiron 5675.
+>>
+>> On Thu, Nov 16, 2017 at 4:35 AM, Chang Liu <foggy.liu@gmail.com> wrote:
+>> > Inspiron 5675 lightbar compatible with wmi interface on alienware,
+>> > the difference lies in the zone number and color control.
+>> > Add Inspiron 5675 DMI quirks to detect by dmi_check_system.
+>>
+>> Mario, do you have any comment on this?
+>>
+>> >
+>> > Signed-off-by: Chang Liu <chang_liu4@dell.com>
+>> > ---
+>> >  drivers/platform/x86/alienware-wmi.c | 17 +++++++++++++++++
+>> >  1 file changed, 17 insertions(+)
+>> >
+>> > diff --git a/drivers/platform/x86/alienware-wmi.c
+>> b/drivers/platform/x86/alienware-wmi.c
+>> > index 4eb8e1a..9d7dbd9 100644
+>> > --- a/drivers/platform/x86/alienware-wmi.c
+>> > +++ b/drivers/platform/x86/alienware-wmi.c
+>> > @@ -68,6 +68,14 @@ struct quirk_entry {
+>> >
+>> >  static struct quirk_entry *quirks;
+>> >
+>> > +
+>> > +static struct quirk_entry quirk_inspiron5675 = {
+>> > +       .num_zones = 2,
+>> > +       .hdmi_mux = 0,
+>> > +       .amplifier = 0,
+>> > +       .deepslp = 0,
+>> > +};
+>> > +
+>> >  static struct quirk_entry quirk_unknown = {
+>> >         .num_zones = 2,
+>> >         .hdmi_mux = 0,
+>> > @@ -171,6 +179,15 @@ static const struct dmi_system_id alienware_quirks[]
+>> __initconst = {
+>> >                      },
+>> >          .driver_data = &quirk_asm201,
+>> >          },
+>> > +        {
+>> > +        .callback = dmi_matched,
+>> > +        .ident = "Dell Inc. Inspiron 5675",
+>> > +        .matches = {
+>> > +                    DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>> > +                    DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 5675"),
+>> > +                    },
+>> > +        .driver_data = &quirk_inspiron5675,
+>> > +        },
+>> >         {}
+>> >  };
+>> >
+>> > --
+>> > 2.7.4
+>> >
+>>
+>>
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
