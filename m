@@ -1,68 +1,65 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: dell-smbios-wmi: Disable userspace
- interface if missing hotfix
-Date: Mon, 20 Nov 2017 12:37:49 -0800
-Message-ID: <20171120203749.GA5421@fury>
-References: <1510891992-31659-1-git-send-email-mario.limonciello@dell.com>
- <20171117203922.GG22250@fury>
- <4f2192b6a6ed4764b5645efa7f6f2a54@ausx13mpc120.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kiernan Hager <kah.listaddress@gmail.com>
+Subject: [PATCH] Make asus-nb-wmi support the Zenbook UX430UQ
+Date: Mon, 20 Nov 2017 14:18:44 -0700
+Message-ID: <20171120211844.6553-1-kah.listaddress@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:35972 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752405AbdKTUh5 (ORCPT
+Received: from mail-pf0-f196.google.com ([209.85.192.196]:46409 "EHLO
+        mail-pf0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751109AbdKTVTz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2017 15:37:57 -0500
-Content-Disposition: inline
-In-Reply-To: <4f2192b6a6ed4764b5645efa7f6f2a54@ausx13mpc120.AMER.DELL.COM>
+        Mon, 20 Nov 2017 16:19:55 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kiernan Hager <kah.listaddress@gmail.com>
 
-On Mon, Nov 20, 2017 at 04:03:53PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Darren Hart [mailto:dvhart@infradead.org]
-> > Sent: Friday, November 17, 2017 2:39 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
-> > kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org
-> > Subject: Re: [PATCH v2] platform/x86: dell-smbios-wmi: Disable userspace
-> > interface if missing hotfix
-> > 
-> > On Thu, Nov 16, 2017 at 10:13:12PM -0600, Mario Limonciello wrote:
-> > > The Dell SMBIOS WMI interface will fail for some more complex calls unless
-> > > a WMI hotfix has been included.  Most platforms have this fix available in
-> > > a maintenance BIOS release.  In the case the driver is loaded on a
-> > > platform without this fix, disable the userspace interface.
-> > >
-> > > A hotfix indicator is present in the dell-wmi-descriptor that represents
-> > > whether or not more complex calls will work properly.
-> > >
-> > > "Simple" calls such as those used by dell-laptop and dell-wmi will continue
-> > > to work properly so dell-smbios-wmi should not be blocked from binding and
-> > > being used as the dell-smbios dispatcher.
-> > >
-> > > Suggested-by: Girish Prakash <girish.prakash@dell.com>
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > 
-> > Queued up, thanks Mario.
-> 
-> Darren, even though this came after the merge windows opened considering this 
-> restricts the SMBIOS interface from some platform/firmware combinations it 
-> shouldn't be offered, do you think this can be included with a future 4.15 
-> RCx PR so it can land with the rest of the series rather than targeted for 4.16?
+This patch adds support for the Zenbook UX430UQ to the asus_nb_wmi
+driver. It also renames "quirk_asus_ux330uak" to "quirk_asus_forceals"
+because it is now used for more than one model of computer, and should
+thus have a more general name.
 
-This will make 4.15.
+Signed-off-by: Kiernan Hager <kah.listaddress@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> 
-> I'd hate to get stuck in a situation that an interface deemed "broken" gets offered
-> to people it shouldn't.
-> 
-
-Agreed.
-
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 5269a01d9bdd..7fbb1c4bcdb5 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -111,7 +111,7 @@ static struct quirk_entry quirk_asus_x550lb = {
+ 	.xusb2pr = 0x01D9,
+ };
+ 
+-static struct quirk_entry quirk_asus_ux330uak = {
++static struct quirk_entry quirk_asus_forceals = {
+ 	.wmi_force_als_set = true,
+ };
+ 
+@@ -387,7 +387,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "UX330UAK"),
+ 		},
+-		.driver_data = &quirk_asus_ux330uak,
++		.driver_data = &quirk_asus_forceals,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -398,6 +398,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_x550lb,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. UX430UQ",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX430UQ")
++		},
++	.driver_data = &quirk_asus_forceals
++	},
+ 	{},
+ };
+ 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.15.0
