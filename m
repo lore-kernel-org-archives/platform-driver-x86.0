@@ -1,47 +1,40 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 09/11] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Tue, 21 Nov 2017 00:30:35 +0200
-Message-ID: <20171120223035.wsnnfsawuu6fkt3l@linux.intel.com>
+Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
+Date: Tue, 21 Nov 2017 00:37:41 +0200
+Message-ID: <20171120223741.52dj6gevcwn5jzag@linux.intel.com>
 References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-10-jarkko.sakkinen@linux.intel.com>
- <alpine.DEB.2.20.1711161012510.2191@nanos>
+ <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
+ <20171114083647.uxlaov56s2xw3pua@pd.tnic>
+ <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
+ <20171114215327.qiqze33uvhlu555g@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1711161012510.2191@nanos>
+In-Reply-To: <20171114215327.qiqze33uvhlu555g@pd.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+To: Borislav Petkov <bp@alien8.de>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 16, 2017 at 10:15:42AM +0100, Thomas Gleixner wrote:
-> On Mon, 13 Nov 2017, Jarkko Sakkinen wrote:
+On Tue, Nov 14, 2017 at 10:53:27PM +0100, Borislav Petkov wrote:
+> On Tue, Nov 14, 2017 at 10:49:48PM +0200, Jarkko Sakkinen wrote:
+> > Pre-boot firmware could potentially configure the root key hash for the
+> > enclave that signs launch tokens for other enclaves i.e. the launch
+> > enclave that is built and signed during the kbuild.
 > 
-> + Cc: Al
+> So how about firmware doesn't do anything and the machine owner decide
+> what enclaves get launched and what key hashes to load for a change?
+> I.e., let the owner really own the hardware she paid money for.
 > 
-> - Cc: that intel sgx list because it's moderated and spams my inbox with
->       useless moderation mails.
-
-I guess I'll have to apply for vger.kernel.org list then.
-
-> > Exported create_pipe_files() and replace_fd() because the SGX driver
-> > needs to be able to setup pipes in order to communicate with the helper
-> > process that hosts the Launch Enclave (LE). The pipe creation will be
-> > done in the init-callback supplied to call_usermodehelper_setup().
-> > 
-> > The driver will use two pipes for communication with the LE hosting
-> > process:
-> > 
-> > * One for writing SIGSTRUCT blobs.
-> > * One for reading EINITTOKEN blobs.
+> Or are we doing encrypted enclaves but then the firmware vendor can look
+> inside too?
 > 
-> Can you pretty please make sure that people who maintain the affected code
-> are CC'd on your changes?
+> -- 
+> Regards/Gruss,
+>     Boris.
 
-Yes. I actually have written a script to collect everything and pass to
---cc-cmd command that I use with TPM stuff and I forgot it from
-my send-email command line when I've sent these series.
+Firmware cannot access the memory inside an enclave. CPU asserts every
+memory access coming outside the enclave.
 
 /Jarkko
