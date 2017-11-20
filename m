@@ -1,39 +1,40 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Mon, 20 Nov 2017 23:42:56 +0100
-Message-ID: <20171120224256.kz3qvz4ek6ky7ywc@pd.tnic>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171114083647.uxlaov56s2xw3pua@pd.tnic>
- <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
- <20171114215327.qiqze33uvhlu555g@pd.tnic>
- <20171120223741.52dj6gevcwn5jzag@linux.intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 08/11] intel_sgx: in-kernel launch enclave
+Date: Mon, 20 Nov 2017 23:43:22 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1711202334030.2348@nanos>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com> <20171115115006.p2wkvfuojwgg26br@hirez.programming.kicks-ass.net> <20171120222535.7yqibz2rxltwvip7@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.skyhub.de ([5.9.137.197]:37580 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751149AbdKTWnN (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2017 17:43:13 -0500
-Content-Disposition: inline
-In-Reply-To: <20171120223741.52dj6gevcwn5jzag@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171120222535.7yqibz2rxltwvip7@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 21, 2017 at 12:37:41AM +0200, Jarkko Sakkinen wrote:
-> Firmware cannot access the memory inside an enclave. CPU asserts every
-> memory access coming outside the enclave.
+On Tue, 21 Nov 2017, Jarkko Sakkinen wrote:
+> On Wed, Nov 15, 2017 at 12:50:06PM +0100, Peter Zijlstra wrote:
+> > On Mon, Nov 13, 2017 at 09:45:25PM +0200, Jarkko Sakkinen wrote:
+> > > TinyCrypt (https://github.com/01org/tinycrypt) is used as AES
+> > > implementation, which is not timing resistant. Eventually this needs to
+> > > be replaced with AES-NI based implementation that could be either
+> > 
+> > > - re-use existing AES-NI code in the kernel
+> > 
+> > This. That is an absolute must. We're not going to merge custom AES
+> > implementations.
+> 
+> I'll post v6 update without update to this in order to get otherwise
+> improved version out and work on it for v7.
+> 
+> My initial idea to sort this out would be to try to compile
+> 
+>   arch/x86/crypto/aesni-intel_asm.S
+> 
+> as part of the enclave binary and use it to run AES-256.
 
-But "firmware could potentially configure the root key hash for the
-enclave." How about the owner configures the root key hash instead?
-Along with deciding whether to lock down the feature control register or
-not...
+No. The kernel has a crypto API.
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+	tglx
