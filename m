@@ -1,73 +1,68 @@
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] intel_ips: Convert timers to use timer_setup()
-Date: Mon, 20 Nov 2017 11:46:05 -0800
-Message-ID: <CAGXu5jKfqs59CpPq9FFS+xTePQ7iWXxGE7TZWQSxEox0ugV_ew@mail.gmail.com>
-References: <20171005005421.GA23936@beast> <CAHp75VdeS+dAQn_yE1gsgDzpv1+C5+c-AkgSgH5ScxAKFyRKWA@mail.gmail.com>
- <CAGXu5jJSnM7ZWqkyqVNpcmBKrGMfGx_C5wG5q63PF4SUV8HVwQ@mail.gmail.com>
- <CAHp75VedYyfOA0A_2n+fLoScO-bWoj5_qtK7cnoZ3x2AG==uXw@mail.gmail.com>
- <CAGXu5j+nuz0URjjxyLZHBek-yw7+Loqr0QQb_D6Vzj=h7zUWmg@mail.gmail.com> <20171120194523.GF379@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform/x86: dell-smbios-wmi: Disable userspace
+ interface if missing hotfix
+Date: Mon, 20 Nov 2017 12:37:49 -0800
+Message-ID: <20171120203749.GA5421@fury>
+References: <1510891992-31659-1-git-send-email-mario.limonciello@dell.com>
+ <20171117203922.GG22250@fury>
+ <4f2192b6a6ed4764b5645efa7f6f2a54@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-it0-f65.google.com ([209.85.214.65]:35996 "EHLO
-        mail-it0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752653AbdKTTqH (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:35972 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752405AbdKTUh5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2017 14:46:07 -0500
-Received: by mail-it0-f65.google.com with SMTP id 187so10964191iti.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2017 11:46:06 -0800 (PST)
-In-Reply-To: <20171120194523.GF379@fury>
+        Mon, 20 Nov 2017 15:37:57 -0500
+Content-Disposition: inline
+In-Reply-To: <4f2192b6a6ed4764b5645efa7f6f2a54@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 11:45 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Fri, Nov 17, 2017 at 05:30:48PM -0800, Kees Cook wrote:
->> On Fri, Nov 3, 2017 at 5:26 AM, Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->> > On Thu, Nov 2, 2017 at 9:55 PM, Kees Cook <keescook@chromium.org> wrote:
->> >> On Thu, Oct 5, 2017 at 1:41 AM, Andy Shevchenko
->> >> <andy.shevchenko@gmail.com> wrote:
->> >>> On Thu, Oct 5, 2017 at 3:54 AM, Kees Cook <keescook@chromium.org> wrote:
->> >>>> In preparation for unconditionally passing the struct timer_list pointer to
->> >>>> all timer callbacks, switch to using the new timer_setup() and from_timer()
->> >>>> to pass the timer pointer explicitly. Moves timer structure off stack and
->> >>>> into struct ips_driver.
->> >>>
->> >>> Pushed to my testing queue, thanks!
->> >>
->> >> Hi,
->> >>
->> >> I don't see this in -next yet. Should the tip tree carry this conversion?
->> >
->> > I thought it was a result of discussion since we lack of patch that
->> > brought the core change.
->> >
->> > However, because I merged Wolfram's immutable branch in order to apply
->> > Hans' fix, I can carry your patch as well.
->> >
->> > Either would be fine with me.
->> >
->> > Going ahead, I applied it to my review and testing queue, thanks!
->>
->> Hi again!
->>
->> I'm just checking on this patch -- I haven't seen it in a pull request
->> to Linus yet (for the merge window he's threatened will be small).
->> This is one of the remaining conversion patches I need in v4.15. Is
->> this still planned to be merged for v4.15?
->
-> Hi Kees,
->
-> It went out the day after your note above in the platform-drivers-x86-v4.15-1
-> pull request. We're working through some issues with this pull request with
-> Linus now, but yes, it will make 4.15.
+On Mon, Nov 20, 2017 at 04:03:53PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Darren Hart [mailto:dvhart@infradead.org]
+> > Sent: Friday, November 17, 2017 2:39 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; LKML <linux-
+> > kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org
+> > Subject: Re: [PATCH v2] platform/x86: dell-smbios-wmi: Disable userspace
+> > interface if missing hotfix
+> > 
+> > On Thu, Nov 16, 2017 at 10:13:12PM -0600, Mario Limonciello wrote:
+> > > The Dell SMBIOS WMI interface will fail for some more complex calls unless
+> > > a WMI hotfix has been included.  Most platforms have this fix available in
+> > > a maintenance BIOS release.  In the case the driver is loaded on a
+> > > platform without this fix, disable the userspace interface.
+> > >
+> > > A hotfix indicator is present in the dell-wmi-descriptor that represents
+> > > whether or not more complex calls will work properly.
+> > >
+> > > "Simple" calls such as those used by dell-laptop and dell-wmi will continue
+> > > to work properly so dell-smbios-wmi should not be blocked from binding and
+> > > being used as the dell-smbios dispatcher.
+> > >
+> > > Suggested-by: Girish Prakash <girish.prakash@dell.com>
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > 
+> > Queued up, thanks Mario.
+> 
+> Darren, even though this came after the merge windows opened considering this 
+> restricts the SMBIOS interface from some platform/firmware combinations it 
+> shouldn't be offered, do you think this can be included with a future 4.15 
+> RCx PR so it can land with the rest of the series rather than targeted for 4.16?
 
-Awesome, thanks! I see it in the tree now. Yay! :)
+This will make 4.15.
 
--Kees
+> 
+> I'd hate to get stuck in a situation that an interface deemed "broken" gets offered
+> to people it shouldn't.
+> 
+
+Agreed.
 
 -- 
-Kees Cook
-Pixel Security
+Darren Hart
+VMware Open Source Technology Center
