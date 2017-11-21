@@ -1,7 +1,7 @@
 From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Subject: [PATCH v2 2/4] platform/x86: intel_telemetry: Fix suspend stats
-Date: Tue, 21 Nov 2017 20:06:22 +0530
-Message-ID: <1511274984-6165-3-git-send-email-souvik.k.chakravarty@intel.com>
+Subject: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Add readq API for GCR
+Date: Tue, 21 Nov 2017 20:06:21 +0530
+Message-ID: <1511274984-6165-2-git-send-email-souvik.k.chakravarty@intel.com>
 References: <1511274984-6165-1-git-send-email-souvik.k.chakravarty@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1511274984-6165-1-git-send-email-souvik.k.chakravarty@intel.com>
@@ -10,75 +10,104 @@ To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Suspend stats are not reported consistently due to a limitation in the PMC
-firmware. This limitation causes a delay in updating the s0ix counters and
-residencies in the telemetry log upon s0ix exit. As a consequence, reading
-these counters from the suspend-exit notifier may result in zero read.
+Add intel_pmc_gcr_readq API for reading from 64-bit GCR registers.
+This API will be called from intel_telemetry. Rename intel_pmc_gcr_read
+to more appropriate intel_pmc_gcr_readl.
 
-This patch fixes this issue by cross-verifying the s0ix residencies from
-the GCR TELEM registers in case the counters are not incremented in the
-telemetry log after suspend.
-
-This fixes https://bugzilla.kernel.org/show_bug.cgi?id=197833
-
-We also remove unnecessary 'static' qualifiers from local variables.
-
-Reported-and-tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 ---
- drivers/platform/x86/intel_telemetry_debugfs.c | 29 ++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 10 ++++++++--
+ drivers/platform/x86/intel_pmc_ipc.c | 37 ++++++++++++++++++++++++++++++++----
+ 2 files changed, 41 insertions(+), 6 deletions(-)
 
-Changes since v1:
- * Use pmc_ipc_gcr_readq API to read 64-bits at a time
-
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index 4249e826..d7e90fd 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -855,9 +855,9 @@ static int pm_suspend_prep_cb(void)
- static int pm_suspend_exit_cb(void)
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index fac89eb..0aa5be9 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -36,7 +36,8 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+-int intel_pmc_gcr_read(u32 offset, u32 *data);
++int intel_pmc_gcr_readl(u32 offset, u32 *data);
++int intel_pmc_gcr_readq(u32 offset, u64 *data);
+ int intel_pmc_gcr_write(u32 offset, u32 data);
+ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+ 
+@@ -64,7 +65,12 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
+ 	return -EINVAL;
+ }
+ 
+-static inline int intel_pmc_gcr_read(u32 offset, u32 *data)
++static inline int intel_pmc_gcr_readl(u32 offset, u32 *data)
++{
++	return -EINVAL;
++}
++
++static inline int intel_pmc_gcr_readq(u32 offset, u64 *data)
  {
- 	struct telemetry_evtlog evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
--	static u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
--	static u64 suspend_shlw_res_exit, suspend_deep_res_exit;
- 	struct telemetry_debugfs_conf *conf = debugfs_conf;
-+	u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
-+	u64 suspend_shlw_res_exit, suspend_deep_res_exit;
- 	int ret, index;
+ 	return -EINVAL;
+ }
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index e03fa314..bef9c57 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -215,15 +215,15 @@ static inline int is_gcr_valid(u32 offset)
+ }
  
- 	if (!suspend_prep_ok)
-@@ -890,6 +890,31 @@ static int pm_suspend_exit_cb(void)
- 		goto out;
- 	}
+ /**
+- * intel_pmc_gcr_read() - Read PMC GCR register
++ * intel_pmc_gcr_readl() - Read a 32-bit PMC GCR register
+  * @offset:	offset of GCR register from GCR address base
+  * @data:	data pointer for storing the register output
+  *
+- * Reads the PMC GCR register of given offset.
++ * Reads the 32-bit PMC GCR register at given offset.
+  *
+  * Return:	negative value on error or 0 on success.
+  */
+-int intel_pmc_gcr_read(u32 offset, u32 *data)
++int intel_pmc_gcr_readl(u32 offset, u32 *data)
+ {
+ 	int ret;
  
-+	/*
-+	 * Due to some design limitations in the firmware, sometimes the
-+	 * counters do not get updated by the time we reach here. As a
-+	 * workaround, we try to see if this was a genuine case of sleep
-+	 * failure or not by cross-checking from PMC GCR registers directly.
-+	 */
-+	if (suspend_shlw_ctr_exit == suspend_shlw_ctr_temp &&
-+	    suspend_deep_ctr_exit == suspend_deep_ctr_temp) {
-+		ret = intel_pmc_gcr_readq(PMC_GCR_TELEM_SHLW_S0IX_REG,
-+					  &suspend_shlw_res_exit);
-+		if (ret < 0)
-+			goto out;
+@@ -241,7 +241,36 @@ int intel_pmc_gcr_read(u32 offset, u32 *data)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
++EXPORT_SYMBOL_GPL(intel_pmc_gcr_readl);
 +
-+		ret = intel_pmc_gcr_readq(PMC_GCR_TELEM_DEEP_S0IX_REG,
-+					  &suspend_deep_res_exit);
-+		if (ret < 0)
-+			goto out;
++/**
++ * intel_pmc_gcr_readq() - Read a 64-bit PMC GCR register
++ * @offset:	offset of GCR register from GCR address base
++ * @data:	data pointer for storing the register output
++ *
++ * Reads the 64-bit PMC GCR register at given offset.
++ *
++ * Return:	negative value on error or 0 on success.
++ */
++int intel_pmc_gcr_readq(u32 offset, u64 *data)
++{
++	int ret;
 +
-+		if (suspend_shlw_res_exit > suspend_shlw_res_temp)
-+			suspend_shlw_ctr_exit++;
++	spin_lock(&ipcdev.gcr_lock);
 +
-+		if (suspend_deep_res_exit > suspend_deep_res_temp)
-+			suspend_deep_ctr_exit++;
++	ret = is_gcr_valid(offset);
++	if (ret < 0) {
++		spin_unlock(&ipcdev.gcr_lock);
++		return ret;
 +	}
 +
- 	suspend_shlw_ctr_exit -= suspend_shlw_ctr_temp;
- 	suspend_deep_ctr_exit -= suspend_deep_ctr_temp;
- 	suspend_shlw_res_exit -= suspend_shlw_res_temp;
++	*data = readq(ipcdev.gcr_mem_base + offset);
++
++	spin_unlock(&ipcdev.gcr_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(intel_pmc_gcr_readq);
+ 
+ /**
+  * intel_pmc_gcr_write() - Write PMC GCR register
 -- 
 2.7.4
