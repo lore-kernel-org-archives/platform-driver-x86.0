@@ -1,22 +1,17 @@
 From: Oleksandr Natalenko <oleksandr@natalenko.name>
 Subject: Re: Dell Vostro 3360 multimedia keys
-Date: Tue, 21 Nov 2017 15:52:52 +0100
-Message-ID: <16078675.0SDe85iCY6@natalenko.name>
+Date: Tue, 21 Nov 2017 15:52:28 +0100
+Message-ID: <1716681.OUoELY8X92@natalenko.name>
 References: <5089742.2pBsoxBtzf@natalenko.name> <32854318.MItBFFhxJX@natalenko.name> <20171121135110.nbnxc3n3xxlbvyis@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from vulcan.natalenko.name ([104.207.131.136]:52882 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751221AbdKUOxU (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2017 09:53:20 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171121135110.nbnxc3n3xxlbvyis@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 Cc: Mario Limonciello <mario_limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
 Hi, Pali et al.
 
