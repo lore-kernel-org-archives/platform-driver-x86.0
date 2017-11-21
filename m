@@ -1,58 +1,64 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 08/11] intel_sgx: in-kernel launch enclave
-Date: Tue, 21 Nov 2017 00:48:26 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1711210045140.2348@nanos>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com> <20171115115006.p2wkvfuojwgg26br@hirez.programming.kicks-ass.net> <20171120222535.7yqibz2rxltwvip7@linux.intel.com>
- <alpine.DEB.2.20.1711202334030.2348@nanos> <20171120234340.tnatm3qz5nrnjtmi@linux.intel.com>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: Re: [PATCH] platform/x86: Add Acer Wireless Radio Control driver
+Date: Tue, 21 Nov 2017 11:34:12 +0800
+Message-ID: <CAB4CAwdR6_5JAFETXZ07jLfdXniRudRaM1EfYzGGrJ5q9W9MhQ@mail.gmail.com>
+References: <20171116134405.24819-1-chiu@endlessm.com> <CAHp75VcvDDuCp5M2CsMSFyFsnaP8GXAAqpGmJFq=TOsEwjw1aw@mail.gmail.com>
+ <CAB4CAweWf_66_gN3gz3AdcPojm59jP5S3fO5Ou7Nc3=MZsFUsg@mail.gmail.com> <CAHp75Vd9u3VqHh77BcW35rmSDCB-zuiNoV_6ZtWVYss-QtCjZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from Galois.linutronix.de ([146.0.238.70]:60812 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751243AbdKTXsa (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2017 18:48:30 -0500
-In-Reply-To: <20171120234340.tnatm3qz5nrnjtmi@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vd9u3VqHh77BcW35rmSDCB-zuiNoV_6ZtWVYss-QtCjZw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 21 Nov 2017, Jarkko Sakkinen wrote:
-> On Mon, Nov 20, 2017 at 11:43:22PM +0100, Thomas Gleixner wrote:
-> > On Tue, 21 Nov 2017, Jarkko Sakkinen wrote:
-> > > On Wed, Nov 15, 2017 at 12:50:06PM +0100, Peter Zijlstra wrote:
-> > > > On Mon, Nov 13, 2017 at 09:45:25PM +0200, Jarkko Sakkinen wrote:
-> > > > > TinyCrypt (https://github.com/01org/tinycrypt) is used as AES
-> > > > > implementation, which is not timing resistant. Eventually this needs to
-> > > > > be replaced with AES-NI based implementation that could be either
-> > > > 
-> > > > > - re-use existing AES-NI code in the kernel
-> > > > 
-> > > > This. That is an absolute must. We're not going to merge custom AES
-> > > > implementations.
-> > > 
-> > > I'll post v6 update without update to this in order to get otherwise
-> > > improved version out and work on it for v7.
-> > > 
-> > > My initial idea to sort this out would be to try to compile
-> > > 
-> > >   arch/x86/crypto/aesni-intel_asm.S
-> > > 
-> > > as part of the enclave binary and use it to run AES-256.
-> > 
-> > No. The kernel has a crypto API.
-> 
-> But you cannot call it from inside an enclave. A syscall will exit the
-> enclave. The launch enclave requires AES-256 to be executed inside the
-> enclave.
+On Mon, Nov 20, 2017 at 8:24 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Nov 20, 2017 at 8:31 AM, Chris Chiu <chiu@endlessm.com> wrote:
+>> On Fri, Nov 17, 2017 at 10:25 PM, Andy Shevchenko
+>> <andy.shevchenko@gmail.com> wrote:
+>>> On Thu, Nov 16, 2017 at 3:44 PM, Chris Chiu <chiu@endlessm.com> wrote:
+>
+>>>> +
+>>>> +struct acer_wireless_data {
+>>>> +       struct input_dev *idev;
+>>>
+>>>> +       struct acpi_device *adev;
+>>>
+>>> Do you need this one?
+>>> I suppose whenever you need struct device out of it you may find it
+>>> via input->parent. Right?
+>>>
+>>
+>> But I think it would make life easier to have the following line in
+>> .notify callback
+>> struct acer_wireless_data * data = acpi_driver_data(adev);
+>>
+>> I can get its parent acer_wireless_data and point to input_dev easier.
+>
+> Yes, though if I'm not mistaken, you may get rid completely of your
+> custom container and use struct input_dev for accessing that via
+> to_acpi_device(idev->dev.parent).
+>
+> It would be less code, less data structures, cleaner view.
+> Right?
+>
+>>>> +static int acer_wireless_remove(struct acpi_device *adev)
+>>>> +{
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>
+>>> No need UI suppose.
+>>>
+>>
+>> You mean remove this acer_wireless_remove which does nothing? Will do.
+>
+> Correct.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Color me confused.
-
-The launch enclave is part of the kernel, at least that's what the subject
-line claims. So why and how would it do a syscall? The kernel has it's
-internal crypto API.
-
-Thanks,
-
-	tglx
+I think I get your point. Will soon have a v2 patch later.
