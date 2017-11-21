@@ -1,60 +1,44 @@
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Failed IRQ assignment for INT0002 on Braswell
-Date: Tue, 21 Nov 2017 23:35:28 +0100
-Message-ID: <1902393.IdeYHqtVB8@natalenko.name>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 08/11] intel_sgx: in-kernel launch enclave
+Date: Wed, 22 Nov 2017 00:36:25 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1711220033040.2399@nanos>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com> <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com> <20171115115006.p2wkvfuojwgg26br@hirez.programming.kicks-ass.net> <20171120222535.7yqibz2rxltwvip7@linux.intel.com>
+ <alpine.DEB.2.20.1711202334030.2348@nanos> <20171120234340.tnatm3qz5nrnjtmi@linux.intel.com> <alpine.DEB.2.20.1711210045140.2348@nanos> <20171121122338.s5kzemsyrfmesc43@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from vulcan.natalenko.name ([104.207.131.136]:35628 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751345AbdKUWfb (ORCPT
+Received: from Galois.linutronix.de ([146.0.238.70]:36410 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751449AbdKUXga (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2017 17:35:31 -0500
+        Tue, 21 Nov 2017 18:36:30 -0500
+In-Reply-To: <20171121122338.s5kzemsyrfmesc43@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi, Hans.
+On Tue, 21 Nov 2017, Jarkko Sakkinen wrote:
 
-v4.13 kernel introduced new fancy warning in the dmesg:
+> On Tue, Nov 21, 2017 at 12:48:26AM +0100, Thomas Gleixner wrote:
+> > The launch enclave is part of the kernel, at least that's what the subject
+> > line claims. So why and how would it do a syscall? The kernel has it's
+> > internal crypto API.
+> 
+> It's part of the kernel in the way as lets say code arch/x86/realmode
+> is. It's hosted by kernel but it does not run in the same address space
+> as the kernel.
+> 
+> These constraints apply for enclaves:
+> 
+> 1. They only run in ring-3.
+> 2. They can only execute code inside their address range.
 
-===
-kernel: acpi INT0002:00: Device [GPED] is in always present list
-kernel: genirq: Flags mismatch irq 9. 00010084 (INT0002) vs. 00002080 (acpi)
-kernel: INT0002 Virtual GPIO INT0002:00: Error requesting IRQ 9: -16
-kernel: INT0002 Virtual GPIO: probe of INT0002:00 failed with error -16
-===
+Can you please explain the whole thing so people not fully familiar with
+the inner workings of your stuff can understand it? You are providing only
+tiny bits of cryptic information on each question. That's going to take
+ages ...
 
-Looking at git log, I've found that this driver was indeed introduced in v4.13 
-by the following commit:
+Thanks,
 
-===
-commit 63dada87f7ef7d4a536765c816fbbe7c4b9f3c85
-Author: Hans de Goede <hdegoede@redhat.com>
-Date:   Mon Jun 12 22:55:46 2017 +0200
-         
-    platform/x86: Add driver for ACPI INT0002 Virtual GPIO device
-===
-
-I've checked DSDT disassembly for this device, and here is relevant snippet 
-[1]. The only thing I currently understand there is that IRQ 9 is hard coded 
-(line 64), but I'm not sure where those flags come from.
-
-The hardware in J3710 CPU on ASRock J3710-ITX motherboard.
-
-Next, I've found that you also faced this warning and posted some RFC patch 
-[2], but unfortunately I do not see what that discussion ended up with.
-
-It is not that I really need GPIO on this board, but it would be nice to get 
-rid of this warning. Could you please point me to a possible fix or a way for 
-further investigation?
-
-Thanks.
-
-Regards,
-  Oleksandr
-
-[1] https://gist.github.com/2c69d6e4eb4b5c256601847a9c6aec45
-[2] https://patchwork.kernel.org/patch/9671783/
+	tglx
