@@ -1,42 +1,41 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Tue, 21 Nov 2017 12:10:09 +0100
-Message-ID: <20171121111009.d6h2pqhmlqkf7yby@pd.tnic>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v5 08/11] intel_sgx: in-kernel launch enclave
+Date: Tue, 21 Nov 2017 14:23:38 +0200
+Message-ID: <20171121122338.s5kzemsyrfmesc43@linux.intel.com>
 References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171114083647.uxlaov56s2xw3pua@pd.tnic>
- <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
- <20171114215327.qiqze33uvhlu555g@pd.tnic>
- <20171120223741.52dj6gevcwn5jzag@linux.intel.com>
- <20171120224256.kz3qvz4ek6ky7ywc@pd.tnic>
- <20171120234145.6bnm5s5ntevbzjfk@linux.intel.com>
+ <20171113194528.28557-9-jarkko.sakkinen@linux.intel.com>
+ <20171115115006.p2wkvfuojwgg26br@hirez.programming.kicks-ass.net>
+ <20171120222535.7yqibz2rxltwvip7@linux.intel.com>
+ <alpine.DEB.2.20.1711202334030.2348@nanos>
+ <20171120234340.tnatm3qz5nrnjtmi@linux.intel.com>
+ <alpine.DEB.2.20.1711210045140.2348@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:45279 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752146AbdKUMXl (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 21 Nov 2017 07:23:41 -0500
 Content-Disposition: inline
-In-Reply-To: <20171120234145.6bnm5s5ntevbzjfk@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <alpine.DEB.2.20.1711210045140.2348@nanos>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 01:41:45AM +0200, Jarkko Sakkinen wrote:
-> In potential deployments of SGX, the owner could do this either in the
-> firmware level or OS level depending whether the MSRs are configured as
-> writable in the feature control.
-> 
-> One option would be to have a config flag to decide whether to require
-> MSRs to be writable or not.
+On Tue, Nov 21, 2017 at 12:48:26AM +0100, Thomas Gleixner wrote:
+> The launch enclave is part of the kernel, at least that's what the subject
+> line claims. So why and how would it do a syscall? The kernel has it's
+> internal crypto API.
 
-"potential", "would", "could" - all carefully formulated. :-)
+It's part of the kernel in the way as lets say code arch/x86/realmode
+is. It's hosted by kernel but it does not run in the same address space
+as the kernel.
 
-Realistically, though, I'm afraid OEMs would jump on the opportunity to
-control yet another arch aspect like wasps on honey. So having a way to
-override what the firmware decided for me - without even asking me -
-would be RealGood(tm).
+These constraints apply for enclaves:
 
--- 
-Regards/Gruss,
-    Boris.
+1. They only run in ring-3.
+2. They can only execute code inside their address range.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+/Jarkko
