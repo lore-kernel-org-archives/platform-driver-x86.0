@@ -1,52 +1,54 @@
-From: Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Tue, 21 Nov 2017 15:45:31 -0800
-Message-ID: <32c3936f-f5f0-cd26-f6f8-6d710b4eb3d6@fortanix.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171114083647.uxlaov56s2xw3pua@pd.tnic>
- <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
- <20171115115412.uqdy3y74w4sdnzlo@hirez.programming.kicks-ass.net>
- <20171120224623.hpx7zcorrwo4ivhh@linux.intel.com>
- <20171121123854.rv3uxl7zndh3kr2z@linux.intel.com>
- <20171121124739.vszgiz37bhzjfnug@pd.tnic>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH -next] platform/x86: dell-laptop: fix error return code
+ in dell_init()
+Date: Tue, 21 Nov 2017 16:00:47 -0800
+Message-ID: <20171122000047.GC11270@fury>
+References: <1510666813-173192-1-git-send-email-weiyongjun1@huawei.com>
+ <22a08d901d38462d8a55f2b3b934e502@ausx13mpc120.AMER.DELL.COM>
+ <CAHp75VeO3N-Lf2ywsyc723vcd0pLED98HnSLqcRkgDpKk8xdGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-co1nam03on0112.outbound.protection.outlook.com ([104.47.40.112]:2913
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751372AbdKUXpj (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:41722 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751345AbdKVAAz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2017 18:45:39 -0500
-In-Reply-To: <20171121124739.vszgiz37bhzjfnug@pd.tnic>
-Content-Language: en-US
+        Tue, 21 Nov 2017 19:00:55 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeO3N-Lf2ywsyc723vcd0pLED98HnSLqcRkgDpKk8xdGQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Borislav Petkov <bp@alien8.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Wei Yongjun <weiyongjun1@huawei.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On 2017-11-21 04:47, Borislav Petkov wrote:
-> On Tue, Nov 21, 2017 at 02:38:54PM +0200, Jarkko Sakkinen wrote:
->>    Try to start LE. If it doesn't start i.e. is signed with a different
->>    root key than the one inside MSRs, then fail the initialization.
+On Tue, Nov 21, 2017 at 04:23:51PM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 14, 2017 at 4:38 PM,  <Mario.Limonciello@dell.com> wrote:
+> >> -----Original Message-----
+> >> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
+> >> owner@vger.kernel.org] On Behalf Of Wei Yongjun
+> >> Sent: Tuesday, November 14, 2017 7:40 AM
+> >> To: mjg59@srcf.ucam.org; pali.rohar@gmail.com; dvhart@infradead.org;
+> >> andy@infradead.org; Limonciello, Mario <Mario_Limonciello@Dell.com>
+> >> Cc: Wei Yongjun <weiyongjun1@huawei.com>; platform-driver-
+> >> x86@vger.kernel.org
+> >> Subject: [PATCH -next] platform/x86: dell-laptop: fix error return code in dell_init()
+> >>
+> >> Fix to return error code -ENOMEM from the kzalloc() error handling
+> >> case instead of 0, as done elsewhere in this function.
+> >>
+> >> Fixes: 549b4930f057 ("platform/x86: dell-smbios: Introduce dispatcher for SMM
+> >> calls")
+> >> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > 
-> But what if the one inside the MSRs is from the fw vendor and I don't
-> trust it?
+> Pushed to my review and testing queue, thanks.
 > 
+> Shall we send this as material for -rc2 ?
 
-Boris & Peter: this key has nothing to do with "trust" or "security". As 
-Sean mentioned in the other thread (PATCH v5 06/11) the kernel is fully 
-capable of enforcing any security policy on its own without help of an 
-enclave.
+I have one more queued in for-next already. So pleasae propogate this to
+for-next along with anything else you want to go out and I'll send the pull
+request tomorrow (Wed) to Linus. Then we'll do our transition to "Fixes"
+for the RC cycle (a bit later than usual).
 
- > I.e., let the owner really own the hardware she paid money for.
-
-Yes, let's. Processors with SGX have been commercially available for 
-over 2 years (and I have owned them for the same time). Why is it that I 
-still can't use a mainline kernel to get access to all the cabapilities 
-of my 2-year old hardware? Let's try not to put too much policy in the 
-kernel and let userspace decide.
-
-Jethro Beekman
+-- 
+Darren Hart
+VMware Open Source Technology Center
