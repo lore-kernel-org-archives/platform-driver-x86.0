@@ -1,39 +1,97 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Wed, 22 Nov 2017 12:00:56 +0100
-Message-ID: <20171122110056.3536wfyh4gnaglks@pd.tnic>
-References: <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171114083647.uxlaov56s2xw3pua@pd.tnic>
- <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
- <20171115115412.uqdy3y74w4sdnzlo@hirez.programming.kicks-ass.net>
- <20171120224623.hpx7zcorrwo4ivhh@linux.intel.com>
- <20171121123854.rv3uxl7zndh3kr2z@linux.intel.com>
- <20171121124739.vszgiz37bhzjfnug@pd.tnic>
- <32c3936f-f5f0-cd26-f6f8-6d710b4eb3d6@fortanix.com>
- <20171122001059.rbpcj3ugvj5th3g2@pd.tnic>
- <383f2831-b703-62c5-bf05-a990ce25f863@fortanix.com>
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Subject: Re: Failed IRQ assignment for INT0002 on Braswell
+Date: Wed, 22 Nov 2017 13:48:16 +0100
+Message-ID: <2100487.obXIbN4R9M@natalenko.name>
+References: <1902393.IdeYHqtVB8@natalenko.name> <3c09b28b-6ca5-cd1c-f5c0-f7be73f1c1b4@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <383f2831-b703-62c5-bf05-a990ce25f863@fortanix.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jethro Beekman <jethro@fortanix.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from vulcan.natalenko.name ([104.207.131.136]:17790 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751216AbdKVMsS (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 22 Nov 2017 07:48:18 -0500
+In-Reply-To: <3c09b28b-6ca5-cd1c-f5c0-f7be73f1c1b4@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 04:27:45PM -0800, Jethro Beekman wrote:
-> See http://www.spinics.net/lists/platform-driver-x86/msg13829.html under
-> "Launch control". Essentially, firmware can make it so that user has no
-> control over IA32_SGXLEPUBKEYHASHn value.
+Hi, Hans.
 
-... and we're back full circle to my initial objection: firmware should
-not be doing anything here. The user should.
+On st=C5=99eda 22. listopadu 2017 11:48:50 CET Hans de Goede wrote:
+> /* snip */
+> This should be fixed by:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/ke
+> rnel/irq?id=3D382bd4de61827dbaaf5fb4fb7b1f4be4a86505e7
+>=20
+> Which is in 4.13, but the trigger-type does not seem to be the problem in
+> your case, the problem likely is the ONESHOT flag:
+>=20
+> #define IRQF_ONESHOT            0x00002000
+>=20
+> Which appears to be set in the flags for the acpi irq handler:
+>  > kernel: genirq: Flags mismatch irq 9. 00010084 (INT0002) vs. 00002080
+>  > (acpi)
+> But that irq is requested here:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+riv
+> ers/acpi/osl.c#n570
+>=20
+>=20
+>=20
+> 	if (request_irq(irq, acpi_irq, IRQF_SHARED, "acpi", acpi_irq)) {
+> 		printk(KERN_ERR PREFIX "SCI (IRQ%d) allocation failed\n", irq);
+> 		...
+>=20
+> And IRQF_ONESHOT is not passed, so I do not understand where the 00002000=
+ in
+> the acpi irq handler flags is coming from ...
 
-The mail you're quoting is the same subthread we are at.
+Well, looks like I know where this flag comes from. I boot this machine wit=
+h=20
+"threadirqs", and IRQF_ONESHOT description says:
 
--- 
-Regards/Gruss,
-    Boris.
+=3D=3D=3D
+ 52  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler=
+=20
+finished.
+ 53  *                Used by threaded interrupts which need to keep the
+ 54  *                irq line disabled until the threaded handler has been=
+=20
+run.
+=3D=3D=3D
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+If I boot the machine without "threadirqs", looks like the device is set up=
+=20
+okay. The only message I get in the kernel log is:
+
+=3D=3D=3D
+kernel: acpi INT0002:00: Device [GPED] is in always present list
+=3D=3D=3D
+
+Grepping for IRQ 9:
+
+=3D=3D=3D
+kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+kernel: ACPI: IRQ9 used by override.
+=3D=3D=3D
+
+and 9th interrupt shows this device:
+
+=3D=3D=3D
+   9:          0          0          0          0   IO-APIC    9-fasteoi  =
+=20
+acpi, INT0002
+=3D=3D=3D
+
+Any idea why "threadirqs" makes this fail?
+
+Thanks.
+
+Regards,
+  Oleksandr
