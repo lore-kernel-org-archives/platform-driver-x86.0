@@ -1,146 +1,131 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: Failed IRQ assignment for INT0002 on Braswell
-Date: Wed, 22 Nov 2017 16:50:33 +0100
-Message-ID: <d8587e5f-79e6-22cc-570c-fa9934d09f1d@redhat.com>
-References: <1902393.IdeYHqtVB8@natalenko.name>
- <3c09b28b-6ca5-cd1c-f5c0-f7be73f1c1b4@redhat.com>
- <2100487.obXIbN4R9M@natalenko.name>
+From: Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
+Date: Wed, 22 Nov 2017 08:07:21 -0800
+Message-ID: <b1139189-99b8-94dc-c9ed-cde2d6f821dc@fortanix.com>
+References: <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
+ <20171114083647.uxlaov56s2xw3pua@pd.tnic>
+ <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
+ <20171115115412.uqdy3y74w4sdnzlo@hirez.programming.kicks-ass.net>
+ <20171120224623.hpx7zcorrwo4ivhh@linux.intel.com>
+ <20171121123854.rv3uxl7zndh3kr2z@linux.intel.com>
+ <20171121124739.vszgiz37bhzjfnug@pd.tnic>
+ <32c3936f-f5f0-cd26-f6f8-6d710b4eb3d6@fortanix.com>
+ <20171122001059.rbpcj3ugvj5th3g2@pd.tnic>
+ <383f2831-b703-62c5-bf05-a990ce25f863@fortanix.com>
+ <20171122110056.3536wfyh4gnaglks@pd.tnic>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------1D46B7FCF91E222573407C03"
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000802030206070505000309"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:40110 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751781AbdKVPuf (ORCPT
+Received: from mail-bn3nam01on0126.outbound.protection.outlook.com ([104.47.33.126]:64484
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751329AbdKVQHg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Nov 2017 10:50:35 -0500
-In-Reply-To: <2100487.obXIbN4R9M@natalenko.name>
-Content-Language: en-US
+        Wed, 22 Nov 2017 11:07:36 -0500
+In-Reply-To: <20171122110056.3536wfyh4gnaglks@pd.tnic>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 
-This is a multi-part message in MIME format.
---------------1D46B7FCF91E222573407C03
+This is a cryptographically signed message in MIME format.
+
+--------------ms000802030206070505000309
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2017-11-22 03:00, Borislav Petkov wrote:
+> ... and we're back full circle to my initial objection: firmware should=
 
-On 22-11-17 13:48, Oleksandr Natalenko wrote:
-> Hi, Hans.
-> 
-> On středa 22. listopadu 2017 11:48:50 CET Hans de Goede wrote:
->> /* snip */
->> This should be fixed by:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/ke
->> rnel/irq?id=382bd4de61827dbaaf5fb4fb7b1f4be4a86505e7
->>
->> Which is in 4.13, but the trigger-type does not seem to be the problem in
->> your case, the problem likely is the ONESHOT flag:
->>
->> #define IRQF_ONESHOT            0x00002000
->>
->> Which appears to be set in the flags for the acpi irq handler:
->>   > kernel: genirq: Flags mismatch irq 9. 00010084 (INT0002) vs. 00002080
->>   > (acpi)
->> But that irq is requested here:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/driv
->> ers/acpi/osl.c#n570
->>
->>
->>
->> 	if (request_irq(irq, acpi_irq, IRQF_SHARED, "acpi", acpi_irq)) {
->> 		printk(KERN_ERR PREFIX "SCI (IRQ%d) allocation failed\n", irq);
->> 		...
->>
->> And IRQF_ONESHOT is not passed, so I do not understand where the 00002000 in
->> the acpi irq handler flags is coming from ...
-> 
-> Well, looks like I know where this flag comes from. I boot this machine with
-> "threadirqs", and IRQF_ONESHOT description says:
-> 
-> ===
->   52  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler
-> finished.
->   53  *                Used by threaded interrupts which need to keep the
->   54  *                irq line disabled until the threaded handler has been
-> run.
-> ===
-> 
-> If I boot the machine without "threadirqs", looks like the device is set up
-> okay. The only message I get in the kernel log is:
-> 
-> ===
-> kernel: acpi INT0002:00: Device [GPED] is in always present list
-> ===
-> 
-> Grepping for IRQ 9:
-> 
-> ===
-> kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
-> kernel: ACPI: IRQ9 used by override.
-> ===
-> 
-> and 9th interrupt shows this device:
-> 
-> ===
->     9:          0          0          0          0   IO-APIC    9-fasteoi
-> acpi, INT0002
-> ===
-> 
-> Any idea why "threadirqs" makes this fail?
+> not be doing anything here. The user should.
 
-Yes, I think this is caused by the int0002 vgpio driver unnecessarily
-passing the IRQF_NO_THREAD flag, attached is a patch which should fix this,
-can you give this a try ?
+Sure, and I agree. However, there is a difference between what it should =
 
-Regards,
+be doing and what hardware/firmware that you can buy today **is** doing=20
+right now.
 
-Hans
-
---------------1D46B7FCF91E222573407C03
-Content-Type: text/x-patch;
- name="0001-platform-x86-intel_int0002_vgpio-Remove-IRQF_NO_THRE.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-platform-x86-intel_int0002_vgpio-Remove-IRQF_NO_THRE.pa";
- filename*1="tch"
-
-From a68410ecefc73b538f8123c59bd6d2aade4600ba Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Wed, 22 Nov 2017 16:36:05 +0100
-Subject: [PATCH v2] platform/x86: intel_int0002_vgpio: Remove IRQF_NO_THREAD
- irq flag
-
-Remove the IRQF_NO_THREAD irq flag, there is no need for it and it breaks
-irq-sharing with the "acpi" irq when passing "threadirqs" on the kernel
-cmdline, as the acpi/osl.c code does not pass IRQF_NO_THREAD.
-
-Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel_int0002_vgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-index f7b67e898abc..a473dc51b18d 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -180,7 +180,7 @@ static int int0002_probe(struct platform_device *pdev)
- 	 * to gpiochip_set_chained_irqchip, because the irq is shared.
- 	 */
- 	ret = devm_request_irq(dev, irq, int0002_irq,
--			       IRQF_SHARED | IRQF_NO_THREAD, "INT0002", chip);
-+			       IRQF_SHARED, "INT0002", chip);
- 	if (ret) {
- 		dev_err(dev, "Error requesting IRQ %d: %d\n", irq, ret);
- 		return ret;
--- 
-2.14.3
+Jethro Beekman
 
 
---------------1D46B7FCF91E222573407C03--
+--------------ms000802030206070505000309
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CyAwggUyMIIEGqADAgECAhEA8MVmReo60XmFXNF7R8+qGDANBgkqhkiG9w0BAQsFADCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcwOTE0MDAw
+MDAwWhcNMTgwOTE0MjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNqZXRocm9AZm9ydGFuaXgu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7i2PMd8+ac44evn+E/vAnvp
+p3rSuGpPBG8a5a7TomxjN1KilgX7juFiY7LZjZZe955hCzCoou+lyNgCCSbZzcKsYuIyydkj
+UBBGIcTSblxCbko21J3yyk0JwAwSoaxlZwKrsbjUTHSl/0E6SBQpybRZsAficbdSRz+s7jG7
+f6DtnikAtTYof+mBxwZC30Gzxh3RQEjA0PwaSP35tXffrplfazeog099eiVWLIDYA/kSaiac
+SgheMK02Wi0Iu0fGZ3Y9QMVaB2r5Bhm+hODvJv/WAjEUuZGwo3K4aR/934W79pq5bXwUReXy
+/5VxE1acjz6rFnCqBJuNgrzDiGF4ywIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF
+/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFH990qeqLXTAXNqiGOMUQIhUf9TWMA4GA1UdDwEB
+/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
+AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
+BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
+S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
+b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
+dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
+ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
+b20wHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA
+BzIiuD+ggLjwfH5xKn7eotgwkH3V6qCWD21G1++PIxuLjCzRN87rMOZcmrMa2HJkDVz4NZYe
+Er98p40JKNNVabKBI8+aF79Gfl0y3Mojr53ojV+x0wt2U04EmOXONuCHdLgxv5JvReFLXo6h
+bIZQoe4Cwfgj541QPLDzoSuMrMUAcNSjt6o/SIeIu+Udv84ET2YckxiBXDiKUXRfW+GWet3w
+1tUYrUSfwTA7Ho2YUbZu/L4FFRrUXQD6zYrB3f0sStDxWijKsRwLrdzqKVs0hsu42wZcNR/v
+YzWnJQBVuCIpr0I/rTHY4E8w5h0Hz5mPABkNxLfOYKRJ1VUMQSgHGzCCBeYwggPOoAMCAQIC
+EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYD
+VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
+TU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdC
+MRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQ
+PTRI5Or1u6zf+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivl
+JTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG
+9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoS
+WY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQAB
+o4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKv
+bIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEA
+MBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBxBggrBgEFBQcB
+AQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUFk
+ZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
+KoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
+7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaB
+Q+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKS
+TvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY
++hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5td
+hYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJ
+M/1tyZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJU
+mpvVdZ4ognzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTK
+TlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIEODCCBDQCAQEw
+ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
+RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
+Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcxMTIyMTYwNzIxWjAvBgkqhkiG9w0BCQQxIgQgrVHK
+s/w1vSqSFQXNk/g9kBZmvUHf9jn77TIFAjj9Kb0wbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
+ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
+9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
+MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
+QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5
+hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
+CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
+RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
+b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
+BQAEggEAYJp/HtGp7mTj4oXZg0iOSzTwezp1m0USB0bJue29H1+6UxUZDVCb/bzdz1hz8gn2
+c6FaYeskHFcrL6HIdvrbtb0Ngz5tqSxhQFp4xYST2eTU5AehaOgnki5Hns1k/yt94wNvJqp+
+Va11pWRpLhiCgoNANqx76FbIFuzJfr+a9F/8oDXGv0jQ6BLmEBYZOAM4Hl3f6jVcOJPZN0D3
+JXugqklyaOZEieZnP6Og51xJ9MxIKODwN0ZoJab9XTuzNXlpID78m7tL2Tsai52ikF9YwMFF
+XgUqIPDzMNqz+C5Pvknrngi7Ihdxm6A4CpOgO8LuO3CzJe6XLLvpjGmMz7axLQAAAAAAAA==
+--------------ms000802030206070505000309--
