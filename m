@@ -1,54 +1,38 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH -next] platform/x86: dell-laptop: fix error return code
- in dell_init()
-Date: Tue, 21 Nov 2017 16:00:47 -0800
-Message-ID: <20171122000047.GC11270@fury>
-References: <1510666813-173192-1-git-send-email-weiyongjun1@huawei.com>
- <22a08d901d38462d8a55f2b3b934e502@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VeO3N-Lf2ywsyc723vcd0pLED98HnSLqcRkgDpKk8xdGQ@mail.gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
+Date: Wed, 22 Nov 2017 01:10:59 +0100
+Message-ID: <20171122001059.rbpcj3ugvj5th3g2@pd.tnic>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+ <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
+ <20171114083647.uxlaov56s2xw3pua@pd.tnic>
+ <20171114204948.f6g2m62kx5gr5xtw@linux.intel.com>
+ <20171115115412.uqdy3y74w4sdnzlo@hirez.programming.kicks-ass.net>
+ <20171120224623.hpx7zcorrwo4ivhh@linux.intel.com>
+ <20171121123854.rv3uxl7zndh3kr2z@linux.intel.com>
+ <20171121124739.vszgiz37bhzjfnug@pd.tnic>
+ <32c3936f-f5f0-cd26-f6f8-6d710b4eb3d6@fortanix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751345AbdKVAAz (ORCPT
+Received: from mail.skyhub.de ([5.9.137.197]:36022 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751408AbdKVANa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2017 19:00:55 -0500
+        Tue, 21 Nov 2017 19:13:30 -0500
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeO3N-Lf2ywsyc723vcd0pLED98HnSLqcRkgDpKk8xdGQ@mail.gmail.com>
+In-Reply-To: <32c3936f-f5f0-cd26-f6f8-6d710b4eb3d6@fortanix.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Wei Yongjun <weiyongjun1@huawei.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Jethro Beekman <jethro@fortanix.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 
-On Tue, Nov 21, 2017 at 04:23:51PM +0200, Andy Shevchenko wrote:
-> On Tue, Nov 14, 2017 at 4:38 PM,  <Mario.Limonciello@dell.com> wrote:
-> >> -----Original Message-----
-> >> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
-> >> owner@vger.kernel.org] On Behalf Of Wei Yongjun
-> >> Sent: Tuesday, November 14, 2017 7:40 AM
-> >> To: mjg59@srcf.ucam.org; pali.rohar@gmail.com; dvhart@infradead.org;
-> >> andy@infradead.org; Limonciello, Mario <Mario_Limonciello@Dell.com>
-> >> Cc: Wei Yongjun <weiyongjun1@huawei.com>; platform-driver-
-> >> x86@vger.kernel.org
-> >> Subject: [PATCH -next] platform/x86: dell-laptop: fix error return code in dell_init()
-> >>
-> >> Fix to return error code -ENOMEM from the kzalloc() error handling
-> >> case instead of 0, as done elsewhere in this function.
-> >>
-> >> Fixes: 549b4930f057 ("platform/x86: dell-smbios: Introduce dispatcher for SMM
-> >> calls")
-> >> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> 
-> Pushed to my review and testing queue, thanks.
-> 
-> Shall we send this as material for -rc2 ?
+On Tue, Nov 21, 2017 at 03:45:31PM -0800, Jethro Beekman wrote:
+> Boris & Peter: this key has nothing to do with "trust" or "security".
 
-I have one more queued in for-next already. So pleasae propogate this to
-for-next along with anything else you want to go out and I'll send the pull
-request tomorrow (Wed) to Linus. Then we'll do our transition to "Fixes"
-for the RC cycle (a bit later than usual).
+But with what? Why is the firmware at all involved then?
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
