@@ -1,49 +1,60 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Add readq API for GCR
-Date: Thu, 23 Nov 2017 23:17:47 +0200
-Message-ID: <CAHp75VeJsnpxL08RXfz3KH8SogY5ivabiZZGaffPutO6uY5eCg@mail.gmail.com>
-References: <1511274984-6165-1-git-send-email-souvik.k.chakravarty@intel.com> <1511274984-6165-2-git-send-email-souvik.k.chakravarty@intel.com>
+Subject: Re: Failed IRQ assignment for INT0002 on Braswell
+Date: Thu, 23 Nov 2017 23:22:58 +0200
+Message-ID: <CAHp75VeySBo1D_HOYjcOwV7cKM4ZeEKoKZez7nDUCLLfJUZqnw@mail.gmail.com>
+References: <1902393.IdeYHqtVB8@natalenko.name> <2474990.QanOVckajO@natalenko.name>
+ <CAHp75VcfOYmOwsYgH0ri0ZDNSP_5gb0QyttBKUMuBHm1qxhkUw@mail.gmail.com> <1518924.dC7gVaPWNF@natalenko.name>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f177.google.com ([209.85.216.177]:37791 "EHLO
-        mail-qt0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752488AbdKWVRt (ORCPT
+Received: from mail-qk0-f182.google.com ([209.85.220.182]:40274 "EHLO
+        mail-qk0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752284AbdKWVW7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Nov 2017 16:17:49 -0500
-In-Reply-To: <1511274984-6165-2-git-send-email-souvik.k.chakravarty@intel.com>
+        Thu, 23 Nov 2017 16:22:59 -0500
+In-Reply-To: <1518924.dC7gVaPWNF@natalenko.name>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, Nov 21, 2017 at 4:36 PM, Souvik Kumar Chakravarty
-<souvik.k.chakravarty@intel.com> wrote:
-> Add intel_pmc_gcr_readq API for reading from 64-bit GCR registers.
-> This API will be called from intel_telemetry. Rename intel_pmc_gcr_read
-> to more appropriate intel_pmc_gcr_readl.
+On Thu, Nov 23, 2017 at 11:15 PM, Oleksandr Natalenko
+<oleksandr@natalenko.name> wrote:
+> On =C4=8Dtvrtek 23. listopadu 2017 22:08:29 CET Andy Shevchenko wrote:
+>> On Wed, Nov 22, 2017 at 8:13 PM, Oleksandr Natalenko
+>>
+>> <oleksandr@natalenko.name> wrote:
+>> > Hi, Hans.
+>> >
+>> > With this patch applied the warning is not emitted anymore with thread=
+irqs
+>> > enabled, and relevant kthread (irq/9-INT0002) is created.
+>> >
+>> > Feel free to add Reported-by/Tested-by from me once you do a submissio=
+n.
+>>
+>> First of all, please stop top-posting.
+>>
+>> Second, we are using patchwork which can automatically add tags based
+>> on given in followup emails.
+>> So, if you wish to see your tag in the commit message at the end,
+>> please, send a reply with
+>>
+>> Reported-by:
+>> Tested-by:
+>>
+>> tags.
+>>
+>> Thanks.
+>
+> Right.
+>
+> Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+> Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
 
->  int intel_pmc_s0ix_counter_read(u64 *data);
-> -int intel_pmc_gcr_read(u32 offset, u32 *data);
-> +int intel_pmc_gcr_readl(u32 offset, u32 *data);
-> +int intel_pmc_gcr_readq(u32 offset, u64 *data);
->  int intel_pmc_gcr_write(u32 offset, u32 data);
->  int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+Pushed to my review and testing queue, thanks!
 
-Ah, I didn't notice that we have a bunch of related functions.
-
-From above it looks like we better to leave read as is and introduce
-_read64() instead of _readq(). This makes names more clear in case we
-would need _update64 in the future.
-
-Something like below at the end:
-
-int intel_pmc_gcr_read(u32 offset, u32 *data);
-int intel_pmc_gcr_write(u32 offset, u32 data);
-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
-
-+int intel_pmc_gcr_read64(u32 offset, u64 *data);
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
