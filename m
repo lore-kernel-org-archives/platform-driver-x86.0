@@ -1,54 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: intel_telemetry: Fix suspend stats
-Date: Thu, 23 Nov 2017 23:25:24 +0200
-Message-ID: <CAHp75VeghsstATQ2YE2MyvbWf9etmRY9HMksiNo+Xe_jUQezvg@mail.gmail.com>
-References: <1511274984-6165-1-git-send-email-souvik.k.chakravarty@intel.com> <1511274984-6165-3-git-send-email-souvik.k.chakravarty@intel.com>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH v2 2/4] platform/x86: intel_telemetry: Fix suspend stats
+Date: Fri, 24 Nov 2017 02:51:08 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB46629311B@BGSMSX102.gar.corp.intel.com>
+References: <1511274984-6165-1-git-send-email-souvik.k.chakravarty@intel.com>
+ <1511274984-6165-3-git-send-email-souvik.k.chakravarty@intel.com>
+ <CAHp75VeghsstATQ2YE2MyvbWf9etmRY9HMksiNo+Xe_jUQezvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f175.google.com ([209.85.220.175]:40460 "EHLO
-        mail-qk0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752928AbdKWVZ0 (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:30577 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751749AbdKXCvP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 23 Nov 2017 16:25:26 -0500
-In-Reply-To: <1511274984-6165-3-git-send-email-souvik.k.chakravarty@intel.com>
+        Thu, 23 Nov 2017 21:51:15 -0500
+In-Reply-To: <CAHp75VeghsstATQ2YE2MyvbWf9etmRY9HMksiNo+Xe_jUQezvg@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>
 
-On Tue, Nov 21, 2017 at 4:36 PM, Souvik Kumar Chakravarty
-<souvik.k.chakravarty@intel.com> wrote:
-> Suspend stats are not reported consistently due to a limitation in the PMC
-> firmware. This limitation causes a delay in updating the s0ix counters and
-> residencies in the telemetry log upon s0ix exit. As a consequence, reading
-> these counters from the suspend-exit notifier may result in zero read.
->
-> This patch fixes this issue by cross-verifying the s0ix residencies from
-> the GCR TELEM registers in case the counters are not incremented in the
-> telemetry log after suspend.
->
-> This fixes https://bugzilla.kernel.org/show_bug.cgi?id=197833
->
-> We also remove unnecessary 'static' qualifiers from local variables.
->
-> Reported-and-tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-
-> -       static u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
-> -       static u64 suspend_shlw_res_exit, suspend_deep_res_exit;
->         struct telemetry_debugfs_conf *conf = debugfs_conf;
-> +       u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
-> +       u64 suspend_shlw_res_exit, suspend_deep_res_exit;
->         int ret, index;
-
-> +       if (suspend_shlw_ctr_exit == suspend_shlw_ctr_temp &&
-> +           suspend_deep_ctr_exit == suspend_deep_ctr_temp) {
-
-kbuildbot is absolutely right. How this code is supposed to work? It's flaky.
-
-Please, redesign this approach.
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gRnJpLCBOb3ZlbWJlciAyNCwgMjAxNyBhdCAyOjU1IEFNLCBBbmR5IFNoZXZjaGVua28gPGFu
+ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+IHdyb3RlOg0KPiBPbiBUdWUsIE5vdiAyMSwgMjAxNyBh
+dCA0OjM2IFBNLCBTb3V2aWsgS3VtYXIgQ2hha3JhdmFydHkNCj4gPHNvdXZpay5rLmNoYWtyYXZh
+cnR5QGludGVsLmNvbT4gd3JvdGU6DQo+ID4gU3VzcGVuZCBzdGF0cyBhcmUgbm90IHJlcG9ydGVk
+IGNvbnNpc3RlbnRseSBkdWUgdG8gYSBsaW1pdGF0aW9uIGluIHRoZQ0KPiA+IFBNQyBmaXJtd2Fy
+ZS4gVGhpcyBsaW1pdGF0aW9uIGNhdXNlcyBhIGRlbGF5IGluIHVwZGF0aW5nIHRoZSBzMGl4DQo+
+ID4gY291bnRlcnMgYW5kIHJlc2lkZW5jaWVzIGluIHRoZSB0ZWxlbWV0cnkgbG9nIHVwb24gczBp
+eCBleGl0LiBBcyBhDQo+ID4gY29uc2VxdWVuY2UsIHJlYWRpbmcgdGhlc2UgY291bnRlcnMgZnJv
+bSB0aGUgc3VzcGVuZC1leGl0IG5vdGlmaWVyIG1heSByZXN1bHQNCj4gaW4gemVybyByZWFkLg0K
+PiA+DQo+ID4gVGhpcyBwYXRjaCBmaXhlcyB0aGlzIGlzc3VlIGJ5IGNyb3NzLXZlcmlmeWluZyB0
+aGUgczBpeCByZXNpZGVuY2llcw0KPiA+IGZyb20gdGhlIEdDUiBURUxFTSByZWdpc3RlcnMgaW4g
+Y2FzZSB0aGUgY291bnRlcnMgYXJlIG5vdCBpbmNyZW1lbnRlZA0KPiA+IGluIHRoZSB0ZWxlbWV0
+cnkgbG9nIGFmdGVyIHN1c3BlbmQuDQo+ID4NCj4gPiBUaGlzIGZpeGVzIGh0dHBzOi8vYnVnemls
+bGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk3ODMzDQo+ID4NCj4gPiBXZSBhbHNvIHJl
+bW92ZSB1bm5lY2Vzc2FyeSAnc3RhdGljJyBxdWFsaWZpZXJzIGZyb20gbG9jYWwgdmFyaWFibGVz
+Lg0KPiA+DQo+ID4gUmVwb3J0ZWQtYW5kLXRlc3RlZC1ieTogUmFqbmVlc2ggQmhhcmR3YWoNCj4g
+PiA8cmFqbmVlc2guYmhhcmR3YWpAaW50ZWwuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNvdXZp
+ayBLdW1hciBDaGFrcmF2YXJ0eQ0KPiA+IDxzb3V2aWsuay5jaGFrcmF2YXJ0eUBpbnRlbC5jb20+
+DQo+IA0KPiA+IC0gICAgICAgc3RhdGljIHUzMiBzdXNwZW5kX3NobHdfY3RyX2V4aXQsIHN1c3Bl
+bmRfZGVlcF9jdHJfZXhpdDsNCj4gPiAtICAgICAgIHN0YXRpYyB1NjQgc3VzcGVuZF9zaGx3X3Jl
+c19leGl0LCBzdXNwZW5kX2RlZXBfcmVzX2V4aXQ7DQo+ID4gICAgICAgICBzdHJ1Y3QgdGVsZW1l
+dHJ5X2RlYnVnZnNfY29uZiAqY29uZiA9IGRlYnVnZnNfY29uZjsNCj4gPiArICAgICAgIHUzMiBz
+dXNwZW5kX3NobHdfY3RyX2V4aXQsIHN1c3BlbmRfZGVlcF9jdHJfZXhpdDsNCj4gPiArICAgICAg
+IHU2NCBzdXNwZW5kX3NobHdfcmVzX2V4aXQsIHN1c3BlbmRfZGVlcF9yZXNfZXhpdDsNCj4gPiAg
+ICAgICAgIGludCByZXQsIGluZGV4Ow0KPiANCj4gPiArICAgICAgIGlmIChzdXNwZW5kX3NobHdf
+Y3RyX2V4aXQgPT0gc3VzcGVuZF9zaGx3X2N0cl90ZW1wICYmDQo+ID4gKyAgICAgICAgICAgc3Vz
+cGVuZF9kZWVwX2N0cl9leGl0ID09IHN1c3BlbmRfZGVlcF9jdHJfdGVtcCkgew0KPiANCj4ga2J1
+aWxkYm90IGlzIGFic29sdXRlbHkgcmlnaHQuIEhvdyB0aGlzIGNvZGUgaXMgc3VwcG9zZWQgdG8g
+d29yaz8gSXQncyBmbGFreS4NCg0Kc3VzcGVuZF9zaGx3X2N0cl9leGl0ICYgc3VzcGVuZF9kZWVw
+X2N0cl9leGl0IGhhdmUgYWxyZWFkeSBiZWVuIGluaXRpYWxpemVkIGJlZm9yZSB0aGlzIGNvbXBh
+cmlzb24gKGNvbXBhcmluZyB0aGUgY291bnRlcnMgYmVmb3JlIGFuZCBhZnRlciBzbGVlcCkuDQpJ
+IHdpbGwgZXhwbGljaXRseSBpbml0aWFsaXplIHRoZW0gc28gdGhhdCBrYnVpbGRib3QgZG9lcyBu
+b3QgY29tcGxhaW4uDQo+IA0KPiBQbGVhc2UsIHJlZGVzaWduIHRoaXMgYXBwcm9hY2guDQo+IA0K
+PiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
