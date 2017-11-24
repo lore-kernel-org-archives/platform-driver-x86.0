@@ -1,7 +1,7 @@
 From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Subject: [PATCH v2 4/4] platform/x86: intel_telemetry: Remove redundancies
-Date: Fri, 24 Nov 2017 19:04:44 +0530
-Message-ID: <1511530484-29845-5-git-send-email-souvik.k.chakravarty@intel.com>
+Subject: [PATCH v3 2/4] platform/x86: intel_telemetry: Fix suspend stats
+Date: Fri, 24 Nov 2017 19:04:42 +0530
+Message-ID: <1511530484-29845-3-git-send-email-souvik.k.chakravarty@intel.com>
 References: <1511530484-29845-1-git-send-email-souvik.k.chakravarty@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1511530484-29845-1-git-send-email-souvik.k.chakravarty@intel.com>
@@ -10,91 +10,67 @@ To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch removes unnecessary header files and newlines.
-It also fixes some alignment issues.
+Suspend stats are not reported consistently due to a limitation in the PMC
+firmware. This limitation causes a delay in updating the s0ix counters and
+residencies in the telemetry log upon s0ix exit. As a consequence, reading
+these counters from the suspend-exit notifier may result in zero read.
 
+This patch fixes this issue by cross-verifying the s0ix residencies from
+the GCR TELEM registers in case the counters are not incremented in the
+telemetry log after suspend.
+
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=197833
+
+Reported-and-tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 ---
- drivers/platform/x86/intel_telemetry_debugfs.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_telemetry_debugfs.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+Changes since v2:
+ * Use pmc_ipc_gcr_read64() API to read 64-bits at a time
+ * Re-introduce the static qualifier to handle the case where the telemetry
+   suspend/resume log does not contain the s0ix residencies. In that case,
+   we would like to retain the values from the previous/initial cycle.
 
 Changes since v1:
- * Consolidated alignment changes into this patch
+ * Use pmc_ipc_gcr_readq API to read 64-bits at a time
 
 diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index 97aae98..ffd0474 100644
+index 4249e826..5bc4f20 100644
 --- a/drivers/platform/x86/intel_telemetry_debugfs.c
 +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -23,7 +23,6 @@
-  */
- #include <linux/debugfs.h>
- #include <linux/device.h>
--#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/seq_file.h>
-@@ -32,11 +31,10 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/intel_pmc_ipc.h>
--#include <asm/intel_punit_ipc.h>
- #include <asm/intel_telemetry.h>
+@@ -890,6 +890,31 @@ static int pm_suspend_exit_cb(void)
+ 		goto out;
+ 	}
  
--#define DRIVER_NAME	"telemetry_soc_debugfs"
--#define DRIVER_VERSION	"1.0.0"
-+#define DRIVER_NAME			"telemetry_soc_debugfs"
-+#define DRIVER_VERSION			"1.0.0"
- 
- /* ApolloLake SoC Event-IDs */
- #define TELEM_APL_PSS_PSTATES_ID	0x2802
-@@ -246,7 +244,6 @@ static struct telem_ioss_pg_info telem_apl_ioss_pg_data[] = {
- 	{"PRTC",	25},
- };
- 
--
- struct telemetry_debugfs_conf {
- 	struct telemetry_susp_stats suspend_stats;
- 	struct dentry *telemetry_dbg_dir;
-@@ -381,7 +378,6 @@ static int telem_pss_states_show(struct seq_file *s, void *unused)
- 			TELEM_APL_MASK_PCS_STATE;
- 		}
- 
--
- 		TELEM_CHECK_AND_PARSE_EVTS(conf->pss_idle_id,
- 					   conf->pss_idle_evts - 1,
- 					   pss_idle, evtlog[index].telem_evtlog,
-@@ -401,7 +397,6 @@ static int telem_pss_states_show(struct seq_file *s, void *unused)
- 					   conf->pcs_s0ix_blkd_data,
- 					   TELEM_MASK_BYTE);
- 
--
- 		TELEM_CHECK_AND_PARSE_EVTS(conf->pss_wakeup_id,
- 					   conf->pss_wakeup_evts,
- 					   pss_s0ix_wakeup,
-@@ -494,7 +489,6 @@ static const struct file_operations telem_pss_ops = {
- 	.release	= single_release,
- };
- 
--
- static int telem_ioss_states_show(struct seq_file *s, void *unused)
- {
- 	struct telemetry_evtlog evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-@@ -613,7 +607,7 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
- 		   (u64)(conf->suspend_stats.deep_res*10)/192);
- 
- 	seq_printf(s, "TOTAL S0IX\t\t\t %10u\t %10llu\n", s0ix_total_ctr,
--				(u64)(s0ix_total_res*10/192));
-+		   (u64)(s0ix_total_res*10/192));
- 	seq_puts(s, "\n-------------------------------------------------\n");
- 	seq_puts(s, "\t\tDEVICE STATES\n");
- 	seq_puts(s, "-------------------------------------------------\n");
-@@ -758,7 +752,6 @@ static const struct file_operations telem_pss_trc_verb_ops = {
- 	.release	= single_release,
- };
- 
--
- static int telem_ioss_trc_verb_show(struct seq_file *s, void *unused)
- {
- 	u32 verbosity;
++	/*
++	 * Due to some design limitations in the firmware, sometimes the
++	 * counters do not get updated by the time we reach here. As a
++	 * workaround, we try to see if this was a genuine case of sleep
++	 * failure or not by cross-checking from PMC GCR registers directly.
++	 */
++	if (suspend_shlw_ctr_exit == suspend_shlw_ctr_temp &&
++	    suspend_deep_ctr_exit == suspend_deep_ctr_temp) {
++		ret = intel_pmc_gcr_read64(PMC_GCR_TELEM_SHLW_S0IX_REG,
++					  &suspend_shlw_res_exit);
++		if (ret < 0)
++			goto out;
++
++		ret = intel_pmc_gcr_read64(PMC_GCR_TELEM_DEEP_S0IX_REG,
++					  &suspend_deep_res_exit);
++		if (ret < 0)
++			goto out;
++
++		if (suspend_shlw_res_exit > suspend_shlw_res_temp)
++			suspend_shlw_ctr_exit++;
++
++		if (suspend_deep_res_exit > suspend_deep_res_temp)
++			suspend_deep_ctr_exit++;
++	}
++
+ 	suspend_shlw_ctr_exit -= suspend_shlw_ctr_temp;
+ 	suspend_deep_ctr_exit -= suspend_deep_ctr_temp;
+ 	suspend_shlw_res_exit -= suspend_shlw_res_temp;
 -- 
 2.7.4
