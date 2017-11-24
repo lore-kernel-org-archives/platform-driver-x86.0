@@ -1,49 +1,52 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 01/11] intel_sgx: updated MAINTAINERS
-Date: Fri, 24 Nov 2017 21:18:15 +0200
-Message-ID: <20171124191815.77bbcf6vvhpzd6rg@linux.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-2-jarkko.sakkinen@linux.intel.com>
- <20171117215422.GD25974@fury>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 0/4] platform/x86: intel_telemetry: Fix logs and formatting
+Date: Fri, 24 Nov 2017 22:55:03 +0200
+Message-ID: <CAHp75VdCw6Q0Yr18jn4MZx=yRVL6zCdSohh9ss55zBSCrfZk4g@mail.gmail.com>
+References: <1511530484-29845-1-git-send-email-souvik.k.chakravarty@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.43]:31731 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751024AbdKXTSS (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 24 Nov 2017 14:18:18 -0500
-Content-Disposition: inline
-In-Reply-To: <20171117215422.GD25974@fury>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511530484-29845-1-git-send-email-souvik.k.chakravarty@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 17, 2017 at 01:54:22PM -0800, Darren Hart wrote:
-> On Mon, Nov 13, 2017 at 09:45:18PM +0200, Jarkko Sakkinen wrote:
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  MAINTAINERS | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2d3d750b19c0..30a4b7f97a93 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14932,6 +14932,11 @@ L:	linux-mm@kvack.org
-> >  S:	Maintained
-> >  F:	mm/zswap.c
-> >  
-> > +INTEL SGX
-> > +M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> It is clear from the review thus far that this is going to need
-> additional entries here. Likely from the x86 folks at the very least. If
-> not maintainers then at least reviewers (R:).
+On Fri, Nov 24, 2017 at 3:34 PM, Souvik Kumar Chakravarty
+<souvik.k.chakravarty@intel.com> wrote:
+> This patchset fixes https://bugzilla.kernel.org/show_bug.cgi?id=197833, and
+> other issues related to telemetry counters. It also cleans up formatting
+> and removes redundant code.
+>
+> It is rebased on top of the TESTING branch.
+>
 
-Point taken. I think I can cope with maintaining SGX tree once it is in
-the mainline but additional R-entries would make sense. Who do you
-suggest? I'm thinking of Dave Hansen at least.
+Pushed to my review and testing queue, thanks!
 
-/Jarkko
+> Changes since v2:
+>  * Changes in GCR read API name and adding back static qualifier to account
+>    for case of missing logs during suspend/resume
+>
+> Changes since v1:
+>  * Code-Review comments have been incorporated.
+>
+> Souvik Kumar Chakravarty (4):
+>   platform/x86: intel_pmc_ipc: Add read64 API
+>   platform/x86: intel_telemetry: Fix suspend stats
+>   platform/x86: intel_telemetry: Improve S0ix logs
+>   platform/x86: intel_telemetry: Remove redundancies
+>
+>  arch/x86/include/asm/intel_pmc_ipc.h           |  6 ++
+>  drivers/platform/x86/intel_pmc_ipc.c           | 33 +++++++++-
+>  drivers/platform/x86/intel_telemetry_debugfs.c | 83 +++++++++++---------------
+>  3 files changed, 72 insertions(+), 50 deletions(-)
+>
+> --
+> 2.7.4
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
