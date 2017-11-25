@@ -1,48 +1,55 @@
-From: Jason Gerecke <killertofu@gmail.com>
-Subject: Re: Intel "5-button array" support on MobileStudio Pro
-Date: Sat, 25 Nov 2017 10:28:23 -0800
-Message-ID: <72A46090-7434-4895-945F-25D7BD20DB40@gmail.com>
-References: <5F052604-4CFE-44AA-9E41-2DB516D150A8@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v6 05/11] x86: add SGX MSRs to msr-index.h
+Date: Sat, 25 Nov 2017 21:29:22 +0200
+Message-ID: <20171125193132.24321-6-jarkko.sakkinen@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pl0-f41.google.com ([209.85.160.41]:38346 "EHLO
-        mail-pl0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750808AbdKYS2d (ORCPT
+Received: from mga04.intel.com ([192.55.52.120]:7447 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751676AbdKYTcr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 25 Nov 2017 13:28:33 -0500
-Received: by mail-pl0-f41.google.com with SMTP id s10so6111952plj.5
-        for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2017 10:28:33 -0800 (PST)
-In-Reply-To: <5F052604-4CFE-44AA-9E41-2DB516D150A8@gmail.com>
+        Sat, 25 Nov 2017 14:32:47 -0500
+In-Reply-To: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>, Michal Kepien <kernel@kempniu.pl>
+To: platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Haim Cohen <haim.cohen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>, Kyle Huey <me@kylehuey.com>, Tom Lendacky <thomas.lendacky@amd.com>, Kan Liang <Kan.liang@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 
-On November 25, 2017 10:23:33 AM PST, Jason Gerecke <killertofu@gmail=2Ecom=
-> wrote:
->I've just filed a bug [1] about a device which appears to use the
->"5-button array" that the patch [2] added support for earlier this
->year=2E It seems that on this particular device (a Wacom MobileStudio
->Pro), there is no "HEBC" entry in the ACPI table=2E Because of this, the
->kernel does not load support for the "5-button array" that this device
->seems to use=2E
->
->Please let me know what additional information would be helpful to
->provide=2E I am able to test kernel patches=2E
->
->[1]: https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D197991
->
->[2]:=C2=A0https://patchwork=2Ekernel=2Eorg/patch/9571353/
->
->Jason
->---
->Now instead of four in the eights place /
->you=E2=80=99ve got three, =E2=80=98Cause you added one=C2=A0 /
->(That is to say, eight) to the two,=C2=A0 =C2=A0 =C2=A0/
->But you can=E2=80=99t take seven from three,=C2=A0 =C2=A0 /
->So you look at the sixty-fours=2E=2E=2E=2E
+From: Haim Cohen <haim.cohen@intel.com>
 
-Apologies: Other recipients were not properly added on the first mail=2E=
-=2E=2E
+These MSRs hold the SHA256 checksum of the currently configured root
+key for enclave signatures.
+
+Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/asm/msr-index.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index b35cb98b5d60..22e27d46d046 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -436,6 +436,7 @@
+ #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+ #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
+ #define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
++#define FEATURE_CONTROL_SGX_LAUNCH_CONTROL_ENABLE	(1<<17)
+ #define FEATURE_CONTROL_LMCE				(1<<20)
+ 
+ #define MSR_IA32_APICBASE		0x0000001b
+@@ -502,6 +503,12 @@
+ #define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
+ #define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
+ 
++/* Intel SGX MSRs */
++#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
++#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
++#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
++#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
++
+ /* Thermal Thresholds Support */
+ #define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
+ #define THERM_SHIFT_THRESHOLD0        8
+-- 
+2.14.1
