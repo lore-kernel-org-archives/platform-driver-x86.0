@@ -1,41 +1,56 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v6 04/11] x86: define IA32_FEATUE_CONTROL.SGX_LC
-Date: Sat, 25 Nov 2017 21:29:21 +0200
-Message-ID: <20171125193132.24321-5-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v6 09/11] fs/pipe.c: export create_pipe_files() and replace_fd()
+Date: Sat, 25 Nov 2017 21:29:26 +0200
+Message-ID: <20171125193132.24321-10-jarkko.sakkinen@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-fsdevel-owner@vger.kernel.org>
 In-Reply-To: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-fsdevel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Piotr Luc <piotr.luc@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
+Cc: linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, "open list:FILESYSTEMS VFS and
+        infrastructure" <linux-fsdevel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-When IA32_FEATURE_CONTROL.SGX_LC identifies that the root key for
-enclave signatures can be configured either by the OS or pre-boot
-firmware.
+Exported create_pipe_files() and replace_fd() because the SGX driver
+needs to be able to setup pipes in order to communicate with the helper
+process that hosts the Launch Enclave (LE). The pipe creation will be
+done in the init-callback supplied to call_usermodehelper_setup().
 
-If this the case, IA32_SGXLEPUBKEYHASHn MSRs (0 < n < 4) can be used to
-set the SHA256 of the root key. IA32_FEATURE_CONTROL bit 17 controls
-whether the MSRs are writable by the OS. The pre-boot firmware can
-decided whether to  set this bit before setting
-IA32_FEATURE_CONTROL.LOCK.
+The driver will use two pipes for communication with the LE hosting
+process:
+
+* One for writing SIGSTRUCT blobs.
+* One for reading EINITTOKEN blobs.
 
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
+ fs/file.c | 1 +
+ fs/pipe.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 31a7d1c0f204..43130f3c18a1 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -298,6 +298,7 @@
- #define X86_FEATURE_AVX512_VPOPCNTDQ (16*32+14) /* POPCNT for vectors of DW/QW */
- #define X86_FEATURE_LA57	(16*32+16) /* 5-level page tables */
- #define X86_FEATURE_RDPID	(16*32+22) /* RDPID instruction */
-+#define X86_FEATURE_SGX_LC	(16*32+30) /* supports SGX launch configuration */
+diff --git a/fs/file.c b/fs/file.c
+index 1fc7fbbb4510..b1fa28919b22 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -871,6 +871,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+ 	spin_unlock(&files->file_lock);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(replace_fd);
  
- /* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
- #define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery support */
+ SYSCALL_DEFINE3(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags)
+ {
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 97e5be897753..ee33a84127e7 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -784,6 +784,7 @@ int create_pipe_files(struct file **res, int flags)
+ 	iput(inode);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(create_pipe_files);
+ 
+ static int __do_pipe_flags(int *fd, struct file **files, int flags)
+ {
 -- 
 2.14.1
