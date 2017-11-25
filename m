@@ -1,155 +1,37 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v6 07/11] intel_sgx: ptrace() support
-Date: Sat, 25 Nov 2017 21:29:24 +0200
-Message-ID: <20171125193132.24321-8-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v6 03/11] x86: define IA32_FEATURE_CONTROL.SGX_ENABLE
+Date: Sat, 25 Nov 2017 21:29:20 +0200
+Message-ID: <20171125193132.24321-4-jarkko.sakkinen@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Sean Christopherson <sean.j.christopherson@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>, Kyle Huey <me@kylehuey.com>, Haim Cohen <haim.cohen@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Jim Mattson <jmattson@google.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Implemented VMA callbacks in order to ptrace() debug enclaves. With
-debug enclaves data can be read and write the memory word at a time by
-using ENCLS(EDBGRD) and ENCLS(EDBGWR) leaf instructions.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
+When IA32_FEATURE_CONTROL.SGX_ENABLE and IA32_FEATURE_CONTROL.LOCK are
+set by the pre-boot firmware, SGX is usable by the OS.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- drivers/platform/x86/intel_sgx/sgx_vma.c | 119 +++++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+ arch/x86/include/asm/msr-index.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel_sgx/sgx_vma.c b/drivers/platform/x86/intel_sgx/sgx_vma.c
-index 481f671f10ca..a8f58ea65dd5 100644
---- a/drivers/platform/x86/intel_sgx/sgx_vma.c
-+++ b/drivers/platform/x86/intel_sgx/sgx_vma.c
-@@ -110,8 +110,127 @@ static int sgx_vma_fault(struct vm_fault *vmf)
- 		return VM_FAULT_SIGBUS;
- }
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 17f5c12e1afd..b35cb98b5d60 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -435,6 +435,7 @@
+ #define FEATURE_CONTROL_LOCKED				(1<<0)
+ #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+ #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
++#define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
+ #define FEATURE_CONTROL_LMCE				(1<<20)
  
-+static int sgx_edbgrd(struct sgx_encl *encl, struct sgx_encl_page *page,
-+		      unsigned long addr, void *data)
-+{
-+	unsigned long offset;
-+	void *ptr;
-+	int ret;
-+
-+	offset = addr & PAGE_MASK;
-+
-+	if ((page->flags & SGX_ENCL_PAGE_TCS) &&
-+	    (offset + sizeof(unsigned long)) >
-+	    offsetof(struct sgx_tcs, reserved))
-+		return -ECANCELED;
-+
-+	ptr = sgx_get_page(page->epc_page);
-+	ret = __edbgrd((unsigned long)ptr + offset, data);
-+	sgx_put_page(ptr);
-+	if (ret) {
-+		sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sgx_edbgwr(struct sgx_encl *encl, struct sgx_encl_page *page,
-+		      unsigned long addr, void *data)
-+{
-+	unsigned long offset;
-+	void *ptr;
-+	int ret;
-+
-+	offset = addr & PAGE_MASK;
-+
-+	/* Writing anything else than flags will cause #GP */
-+	if ((page->flags & SGX_ENCL_PAGE_TCS) &&
-+	    offset < offsetof(struct sgx_tcs, flags) &&
-+	    (offset + sizeof(unsigned long)) >
-+	    offsetof(struct sgx_tcs, flags))
-+		return -ECANCELED;
-+
-+	ptr = sgx_get_page(page->epc_page);
-+	ret = __edbgwr((unsigned long)ptr + offset, data);
-+	sgx_put_page(ptr);
-+	if (ret) {
-+		sgx_dbg(encl, "EDBGRD returned %d\n", ret);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sgx_vma_access(struct vm_area_struct *vma, unsigned long addr,
-+			  void *buf, int len, int write)
-+{
-+	struct sgx_encl *encl = vma->vm_private_data;
-+	struct sgx_encl_page *entry = NULL;
-+	unsigned long align;
-+	char data[sizeof(unsigned long)];
-+	int offset;
-+	int cnt;
-+	int ret = 0;
-+	int i;
-+
-+	/* If process was forked, VMA is still there but vm_private_data is set
-+	 * to NULL.
-+	 */
-+	if (!encl)
-+		return -EFAULT;
-+
-+	if (!(encl->flags & SGX_ENCL_DEBUG) ||
-+	    !(encl->flags & SGX_ENCL_INITIALIZED) ||
-+	    (encl->flags & SGX_ENCL_DEAD))
-+		return -EFAULT;
-+
-+	for (i = 0; i < len; i += cnt) {
-+		if (!entry || !((addr + i) & (PAGE_SIZE - 1))) {
-+			if (entry)
-+				entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
-+
-+			entry = sgx_fault_page(vma, (addr + i) & PAGE_MASK,
-+					       SGX_FAULT_RESERVE);
-+			if (IS_ERR(entry)) {
-+				ret = PTR_ERR(entry);
-+				entry = NULL;
-+				break;
-+			}
-+		}
-+
-+		/* Locking is not needed because only immutable fields of the
-+		 * page are accessed and page itself is reserved so that it
-+		 * cannot be swapped out in the middle.
-+		 */
-+
-+		align = ALIGN_DOWN(addr + i, sizeof(unsigned long));
-+		offset = (addr + i) & (sizeof(unsigned long) - 1);
-+		cnt = sizeof(unsigned long) - offset;
-+		cnt = min(cnt, len - i);
-+
-+		ret = sgx_edbgrd(encl, entry, align, data);
-+		if (ret)
-+			return ret;
-+
-+		memcpy(data + offset, buf + i, cnt);
-+
-+		if (write) {
-+			ret = sgx_edbgwr(encl, entry, align, data);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	if (entry)
-+		entry->flags &= ~SGX_ENCL_PAGE_RESERVED;
-+
-+	return (ret < 0 && ret != -ECANCELED) ? ret : i;
-+}
-+
- const struct vm_operations_struct sgx_vm_ops = {
- 	.close = sgx_vma_close,
- 	.open = sgx_vma_open,
- 	.fault = sgx_vma_fault,
-+	.access = sgx_vma_access,
- };
+ #define MSR_IA32_APICBASE		0x0000001b
 -- 
 2.14.1
