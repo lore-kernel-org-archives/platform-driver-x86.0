@@ -1,35 +1,37 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v6 01/11] intel_sgx: updated MAINTAINERS
-Date: Sat, 25 Nov 2017 21:29:18 +0200
-Message-ID: <20171125193132.24321-2-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v6 02/11] x86: add SGX definition to cpufeature
+Date: Sat, 25 Nov 2017 21:29:19 +0200
+Message-ID: <20171125193132.24321-3-jarkko.sakkinen@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Kai Huang <kai.huang@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: Kai Huang <kai.huang@linux.intel.com>
+
+Added X86_FEATURE_SGX, which identifies that CPU supports software guard
+extensions (SGX).
+
+Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2d3d750b19c0..30a4b7f97a93 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14932,6 +14932,11 @@ L:	linux-mm@kvack.org
- S:	Maintained
- F:	mm/zswap.c
- 
-+INTEL SGX
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+L:	intel-sgx-kernel-dev@lists.01.org
-+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-+
- THE REST
- M:	Linus Torvalds <torvalds@linux-foundation.org>
- L:	linux-kernel@vger.kernel.org
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 2519c6c801c9..31a7d1c0f204 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -219,6 +219,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (ebx), word 9 */
+ #define X86_FEATURE_FSGSBASE	( 9*32+ 0) /* {RD/WR}{FS/GS}BASE instructions*/
+ #define X86_FEATURE_TSC_ADJUST	( 9*32+ 1) /* TSC adjustment MSR 0x3b */
++#define X86_FEATURE_SGX		( 9*32+ 2) /* Software Guard Extensions */
+ #define X86_FEATURE_BMI1	( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE		( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2	( 9*32+ 5) /* AVX2 instructions */
 -- 
 2.14.1
