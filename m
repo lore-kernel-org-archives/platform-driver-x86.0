@@ -1,75 +1,116 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: Intel "5-button array" support on MobileStudio Pro
-Date: Mon, 27 Nov 2017 21:42:29 +0800
-Message-ID: <CAJ=jquZVX43Od-z3OkFEuO+8sWZ=L9e_vawsGAgNWXnk3-fLHw@mail.gmail.com>
-References: <5F052604-4CFE-44AA-9E41-2DB516D150A8@gmail.com> <72A46090-7434-4895-945F-25D7BD20DB40@gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: Dell Vostro 3360 multimedia keys
+Date: Mon, 27 Nov 2017 16:56:07 +0000
+Message-ID: <a5ae5f51b4a14acab4239354f4ff812a@ausx13mpc120.AMER.DELL.COM>
+References: <5089742.2pBsoxBtzf@natalenko.name>
+ <20171121135110.nbnxc3n3xxlbvyis@pali> <1716681.OUoELY8X92@natalenko.name>
+ <201711211936.25184@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:59711 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751467AbdK0Nmc (ORCPT
+Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:1419 "EHLO
+        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1753416AbdK0Q4U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Nov 2017 08:42:32 -0500
-Received: from mail-qt0-f198.google.com ([209.85.216.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1eJJg7-00039Y-Es
-        for platform-driver-x86@vger.kernel.org; Mon, 27 Nov 2017 13:42:31 +0000
-Received: by mail-qt0-f198.google.com with SMTP id j12so9257409qtc.20
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2017 05:42:31 -0800 (PST)
-In-Reply-To: <72A46090-7434-4895-945F-25D7BD20DB40@gmail.com>
+        Mon, 27 Nov 2017 11:56:20 -0500
+In-Reply-To: <201711211936.25184@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jason Gerecke <killertofu@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Michal Kepien <kernel@kempniu.pl>
+To: pali.rohar@gmail.com, oleksandr@natalenko.name
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, dmitry.torokhov@gmail.com
 
-On Sun, Nov 26, 2017 at 2:28 AM, Jason Gerecke <killertofu@gmail.com> wrote:
-> On November 25, 2017 10:23:33 AM PST, Jason Gerecke <killertofu@gmail.com> wrote:
->>I've just filed a bug [1] about a device which appears to use the
->>"5-button array" that the patch [2] added support for earlier this
->>year. It seems that on this particular device (a Wacom MobileStudio
->>Pro), there is no "HEBC" entry in the ACPI table. Because of this, the
->>kernel does not load support for the "5-button array" that this device
->>seems to use.
-
-HEBC seems to be the control method that can report 5 button array;
-however, I think we can use either one of the below to workaround
-this:
-
-1. Add a kernel parameter and a quirk (ex. DMI strings). The downside
-is the quirk can grow if more systems do not include HEBC
-
-2. Check both HEBC & BTNL (ex. the method that enables 5 button
-array). Either one enables 5 button array and this fixes current
-problems.
-
-While 2 is preferable, nothing stops future BIOS skips BTNL in the future...
-
-Any comments? I will create a patch for testing in a few days.
-
->>
->>Please let me know what additional information would be helpful to
->>provide. I am able to test kernel patches.
->>
->>[1]: https://bugzilla.kernel.org/show_bug.cgi?id=197991
->>
->>[2]: https://patchwork.kernel.org/patch/9571353/
->>
->>Jason
->>---
->>Now instead of four in the eights place /
->>you’ve got three, ‘Cause you added one  /
->>(That is to say, eight) to the two,     /
->>But you can’t take seven from three,    /
->>So you look at the sixty-fours....
->
-> Apologies: Other recipients were not properly added on the first mail...
-
-
-
--- 
-Cheers,
-Alex Hung
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAyMSwgMjAx
+NyAxMjozNiBQTQ0KPiBUbzogT2xla3NhbmRyIE5hdGFsZW5rbyA8b2xla3NhbmRyQG5hdGFsZW5r
+by5uYW1lPg0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
+LmNvbT47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgTWF0dGhldyBHYXJyZXR0DQo+IDxtamc1OUBzcmNmLnVjYW0u
+b3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgQW5keSBTaGV2Y2hlbmtv
+DQo+IDxhbmR5QGluZnJhZGVhZC5vcmc+OyBEbWl0cnkgVG9yb2tob3YgPGRtaXRyeS50b3Jva2hv
+dkBnbWFpbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBEZWxsIFZvc3RybyAzMzYwIG11bHRpbWVkaWEg
+a2V5cw0KPiANCj4gSGkhDQo+IA0KPiBPbiBUdWVzZGF5IDIxIE5vdmVtYmVyIDIwMTcgMTU6NTI6
+MjggT2xla3NhbmRyIE5hdGFsZW5rbyB3cm90ZToNCj4gPiBIaSwgUGFsaSBldCBhbC4NCj4gPg0K
+PiA+IEFuc3dlcnMgZ28gaW5saW5lLg0KPiA+DQo+ID4gT24gw7p0ZXLDvSAyMS4gbGlzdG9wYWR1
+IDIwMTcgMTQ6NTE6MTAgQ0VUIFBhbGkgUm9ow6FyIHdyb3RlOg0KPiA+ID4gV2hhdCB3b3VsZCBo
+YXBwZW4gaWYgeW91IGVuYWJsZSB3bWlfcmVxdWlyZXNfc21iaW9zX3JlcXVlc3Q/DQo+ID4gPiBO
+b3RoaW5nPyBBbmQgc2l0dWF0aW9uIGlzIGV4YWN0bHkgc2FtZT8NCj4gPg0KPiA+IFllcywgdGhp
+cyBpcyB3aGF0IEkgZGlkIHdpdGggRE1JIHF1aXJrIHdoaWNoIGVuYWJsZXMNCj4gPiB3bWlfcmVx
+dWlyZXNfc21iaW9zX3JlcXVlc3QuIEtleXMgIjEiIGFuZCAiMiIgYmVoYXZlIHRoZSBzYW1lLCBr
+ZXkNCj4gPiAiMyIgZ2V0cyByZXBvcnRlZCB2aWEgYm90aCBhdGtiZCBhbmQgd21pIChzZWUgbXkg
+dGhvdWdodHMgYWJvdXQgdGhpcw0KPiA+IGtleSBiZWxvdykuDQo+IA0KPiBPaywgaWYgd21pX3Jl
+cXVpcmVzX3NtYmlvc19yZXF1ZXN0IGlzIHJlYWxseSBkb2luZyBub3RoaW5nLCB0aGVuIGl0DQo+
+IHNob3VsZCBub3QgYmUgdXNlZC4gSXQgZW5hYmxlcyBzb21lIFFTRVQgZmVhdHVyZSBpbiBEZWxs
+IFNNTSBtb2RlIHdoaWNoDQo+IGlzIGZvciAyIGxhcHRvcHMuDQo+IA0KPiA+ID4gPiArCS8qIERl
+bGwgVm9zdHJvIDMzNjAgY29tYmluZWQga2V5Y29kZSAqLw0KPiA+ID4gPiArCXsgS0VfS0VZLCAg
+ICAweGUwZjEsIHsgS0VZX1BST0cxIH0gfSwNCj4gPiA+ID4gKwl7IEtFX0tFWSwgICAgMHhlMGYy
+LCB7IEtFWV9QUk9HMiB9IH0sDQo+ID4gPg0KPiA+ID4gV2hhdCBpcyBwdXJwb3NlIG9mIHRob3Nl
+IHR3byBrZXlzPyBEb2VzIG5vdCBsaW51eCBrZXJuZWwgYWxyZWFkeQ0KPiA+ID4gaGF2ZSBiZXR0
+ZXIgZGVzY3JpcHRpb24gZm9yIHRoZW0gYXMgS0VZX1BST0cxIGFuZCBLRVlfUFJPRzI/DQo+ID4N
+Cj4gPiBXZWxsLCBJIGRpZG4ndCBmaW5kIEtFWV9QUk9HMS9LRVlfUFJPRzIgaW4gMDAwMCB0YWJs
+ZS4gVGh1cywgSSBqdXN0DQo+ID4gYWRkZWQgdGhlbS4gQWN0dWFsbHksIHNpbmNlIHRoZXNlIGtl
+eXMgaGF2ZSBzb21lIGljb25zIGRyYXduIG9uDQo+ID4gdGhlbSwgdGhleSBoYXZlIHNvbWUgZGVz
+aWduYXRlZCBwdXJwb3NlIChtb3N0IGxpa2VseSwNCj4gPiBXaW5kb3dzLXJlbGF0ZWQpLCBidXQg
+SSdkIHJhdGhlciB0aGluayBvZiB0aGVtIGFzIG9mIGN1c3RvbQ0KPiA+IHByb2dyYW1tYWJsZSBr
+ZXlzIHdpdGhvdXQgYW55IHNwZWNpZmljIGZ1bmN0aW9uIGFzc2lnbmVkLg0KPiANCj4gTG9va3Mg
+bGlrZSB0aGF0IERlbGwgVm9zdHJvIDMzNjAgaGF2ZSB0aGlzIG1lYW5pbmcgZm9yIG11bHRpbWVk
+aWEga2V5czoNCj4gDQo+IGZpcnN0IGtleTogTW9iaWxpdHkgQ2VudGVyDQo+IHNlY29uZCBrZXk6
+IERlbGwgU3VwcG9ydCBDZW50ZXINCj4gdGhpcmQga2V5OiBEZWxsIEluc3RhbnQgTGF1bmNoIE1h
+bmFnZXINCj4gDQo+IChzYW1lIGFzIG90aGVyIFZvc3RybyBsYXB0b3BzKQ0KDQpBcyBJIGNhbiB0
+ZWxsIHRoZSAiSW5zdGFudCBMYXVuY2giIGtleSBpcyBzdXBwb3NlZCB0byBiZSBlbWl0dGVkDQpi
+b3RoIHZpYSBXTUkgYW5kIHNjYW4gY29kZSBib3RoLg0KDQpDYW4geW91IHBsZWFzZSBjaGVjayBT
+TUJJT1MgdGFibGUgMHhiMSBvZmZzZXQgMHgwOD8gIFRoaXMgaXMgdGhlIG1pc2MNCkJJT1MgZmxh
+Z3MgdGFibGUuICBJdCdzIGJlZW4gdXNlZCBmb3IgYSBmZXcgb3RoZXIgZHJpdmVycyBmb3Igb3Ro
+ZXIgcHVycG9zZXMNCnRvby4gIEkgZXhwZWN0IHRoYXQgYml0IDEgc2hvdWxkIGJlIHNldC4gIFRo
+aXMgc2hvdWxkIGluZGljYXRlIHRoYXQgdGhlIHN5c3RlbSANCnN1cHBvcnRzIGluc3RhbnQgbGF1
+bmNoIG1hbmFnZXIgYnV0dG9uLiAgWW91IGNhbiB1c2UgdGhhdCB0byBrZXkgb2ZmIG9mIGZvcg0K
+ZGV2aWF0aW5nIGJlaGF2aW9yLg0KDQpBcyBmb3Igd2h5IHRoZXNlIHR3byBrZXlzIChmaXJzdCBh
+bmQgc2Vjb25kKSBzZWVtIHRvIGVtaXQgdGhlIHNhbWUgY29kZSwNCmtlZXAgaW4gbWluZCB0aGF0
+IHRoZXNlIHdlcmUgbWFjaGluZXMgZnJvbSBhcm91bmQgdGhlIGVyYSBvZiBXaW5kb3dzIFZpc3Rh
+Lg0KTWljcm9zb2Z0IGhhZCBhbGxvd2VkIGFwcGxpY2F0aW9ucyB0byByZWdpc3RlciB0aWxlcyBp
+biB0aGUgIm1vYmlsaXR5IGNlbnRlciIuDQoNCkRlbGwgaGFkIGFuIGFwcGxpY2F0aW9uIGF0IHRo
+YXQgdGltZSAoUXVpY2tzZXQpIHRoYXQgd291bGQgcmVjZWl2ZSB0aGUgV01JDQpldmVudHMgYW5k
+IHJlZ2lzdGVyIHRpbGVzIGluIHRoZSBtb2JpbGl0eSBjZW50ZXIuICBTbyB0aGUgYXBwbGljYXRp
+b24gY291bGQgdGhlbg0Ka25vdyB0byBvcGVuIHVwIG1vYmlsaXR5IGNlbnRlciBhcHBsZXQgd2hl
+biBpdCBuZWVkZWQgdG8gZnJvbSBXTUkgcmVxdWVzdCANCm9yIHRvIGxhdW5jaCBhbm90aGVyIGFw
+cGxpY2F0aW9uIGlmIGl0IG5lZWRlZCB0by4NCg0KVGhpcyBoYXMgYWxsIG9idmlvdXNseSBjaGFu
+Z2VkIHdpdGggbmV3ZXIgdmVyc2lvbnMgb2YgV2luZG93cy4NCg0KSSB3b3VsZCByZWNvbW1lbmQg
+dG8gaGF2ZSBhIHNlcGFyYXRlIGZ1bmN0aW9uIGluIGRlbGwtd21pIGRyaXZlciBmb3Igd2hlbiAN
+CnlvdSBzZWUgaW5zdGFudCBsYXVuY2gga2V5IGluIG1pc2MgZmxhZ3MgdGFibGUgYW5kIHRvIGFs
+bG93IGxvb2tpbmcgYXQgDQpleHRlbmRlZCBidWZmZXIgZm9yIHRoZXNlIGJlaGF2aW9ycy4NCg0K
+PiANCj4gQnV0IGRvIG5vdCBrbm93IHdoYXQgS0VZXyogYXJlIHVzZWQgb24gb3RoZXIgVm9zdHJv
+IGxhcHRvcHMgZm9yIHRob3NlDQo+IGtleXMuIEl0IHdvdWxkIGJlIGdyZWF0IHRvIHVzZSBzYW1l
+IEtFWV8qLi4uDQoNClRoZXNlIGZpcnN0IHR3byBhcmVuJ3QgaW50ZW5kZWQgdG8gYmUgZ2VuZXJh
+bGx5IG1hcHBlZCAoYXMgSSBkZXNjcmliZWQgYWJvdmUpLg0KSSB0aGluayBmb3IgTGludXggeW91
+IGNhbiBtYXAgdGhlbSBpZiB5b3UgZGVzaXJlIGJ5IG15IGFib3ZlIGRlc2NyaXB0aW9uLg0KDQo+
+IA0KPiA+ID4gLyogc25pcCAqLw0KPiA+ID4NCj4gPiA+ID4gVGhpcmQga2V5ICh0aGUgb25lIHRo
+YXQgaXMgaGFuZGxlZCB2aWEgUFMvMiBrZXlib2FyZCkgcHJvZHVjZXMNCj4gPiA+ID4gdGhpcyBp
+biB0aGUNCj4gPiA+DQo+ID4gPiA+IGtlcm5lbCBidWZmZXI6DQo+ID4gPiAvICpzbmlwICovDQo+
+ID4gPg0KPiA+ID4gU2VlbXMgeW91IHN0aWxsIGhhdmUgbm90IGNvbmZpZ3VyZWQga2V5Y29kZSBm
+b3IgeW91ciBpbnRlcm5hbCBQUy8yDQo+ID4gPiBrZXlib2FyZCB0byBtYWtlIHRoaXMga2V5IHdv
+cmtpbmcuIFVzZSAnc2V0a2V5Y29kZXMgNjAgPGtleWNvZGU+Jw0KPiA+ID4gYXMgd3JpdHRlbiBp
+biBkbWVzZy4NCj4gPg0KPiA+IFdlbGwsIEkndmUgdHJpZWQuIFRoZSBwcm9ibGVtIGlzIHRoYXQg
+aWYgSSBldmVuIGNvbmZpZ3VyZSB0aGlzIGtleQ0KPiA+IHZpYSBzZXRrZXljb2RlcywgaXQgZG9l
+c24ndCB3b3JrLg0KPiANCj4gSG0uLi4gd2h5IGl0IGRvZXMgbm90IHdvcms/DQo+IA0KPiBDQ2lu
+ZyBEbWl0cnksIGNhbiB5b3UgdGVsbCB1cyB3aGF0IG5lZWRzIHRvIGJlIGRvbmUgdG8gImFjdGl2
+ZSIga2V5IGZyb20NCj4gQVQgS2V5Ym9hcmQgZHJpdmVyIHdoaWNoIHByaW50cyBmb2xsb3dpbmcg
+bWVzc2FnZXMgdG8gZG1lc2c/DQo+IA0KPiA9PT0NCj4gTm92IDIwIDE1OjM2OjUxIHNwb2NrIGtl
+cm5lbDogYXRrYmQgc2VyaW8wOiBVbmtub3duIGtleSBwcmVzc2VkDQo+ICh0cmFuc2xhdGVkIHNl
+dCAyLCBjb2RlIDB4NjAgb24gaXNhMDA2MC9zZXJpbzApLg0KPiBOb3YgMjAgMTU6MzY6NTEgc3Bv
+Y2sga2VybmVsOiBhdGtiZCBzZXJpbzA6IFVzZSAnc2V0a2V5Y29kZXMgNjANCj4gPGtleWNvZGU+
+JyB0byBtYWtlIGl0IGtub3duLg0KPiA9PT0NCj4gDQo+IEkgd2FzIGluIGltcHJlc3Npb24gdGhh
+dCBpZiB3ZSBzZWUgc3VjaCBtZXNzYWdlIGluIGRtZXNnLCB0aGVuIGtleSBpcw0KPiB3b3JraW5n
+IGZpbmUuLi4NCj4gDQo+ID4gZXZ0ZXN0IHNob3dzIG1lICJ2YWx1ZSAyIiAodGhlDQo+ID4gc2Ft
+ZSB2YWx1ZSBpcyBzaG93biBpZiBJIHByZXNzIGFuZCBob2xkIHNvbWUgb3JkaW5hcnkga2V5LCBs
+aWtlICJBIiwNCj4gPiBmb3IgaW5zdGFuY2UpIGluc3RlYWQgb2YgMCBhbmQvb3IgMS4gTG9va3Mg
+bGlrZSBrZXkgcHJlc3MgZXZlbnQgaXMNCj4gPiBub3QgZ2VuZXJhdGVkIHByb3Blcmx5IGJ5IHRo
+aXMga2V5IHZpYSBhdGtiZC4NCj4gPg0KPiA+IFRoYXQncyB3aHkgSSB0aGluayB3bWlfcmVxdWly
+ZXNfc21iaW9zX3JlcXVlc3QgcXVpcmsgbXVzdCBiZQ0KPiA+IHBlcm1hbmVudGx5IGVuYWJsZWQg
+Zm9yIHRoaXMgbGFwdG9wLCBhbmQgM3JkIGtleSBtdXN0IGJlIGhhbmRsZWQgdmlhDQo+ID4gd21p
+IChsaWtlIHR3byBvdGhlciBrZXlzKSwgbm90IHZpYSBhdGtiZC4gQW5kIGFsbCBhdGtiZCBldmVu
+dHMgZnJvbQ0KPiA+IHRoaXMga2V5IG11c3QgYmUganVzdCBzdXBwcmVzc2VkIHZpYSB1c2Vyc3Bh
+Y2UuDQo+IA0KPiBJbiBkZWxsLXdtaSB3ZSBmaWx0ZXIgYWxsIGtleSBldmVudHMgd2hpY2ggYXJl
+IGFsc28gZGVsaXZlcmVkIHZpYSBQUy8yDQo+IEFUIEtleWJvYXJkIGRyaXZlci4gU28gZmlsdGVy
+aW5nIFBTLzIga2V5cyBpbnN0ZWFkIG9mIFdNSSBpcyBhbnRpLWRlc2lnbg0KPiBzb2x1dGlvbi4N
+Cj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
