@@ -1,84 +1,82 @@
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Re: Dell Vostro 3360 multimedia keys
-Date: Mon, 27 Nov 2017 19:32:20 +0100
-Message-ID: <9065116.JHLBT2mDoC@natalenko.name>
-References: <5089742.2pBsoxBtzf@natalenko.name> <201711211936.25184@pali> <a5ae5f51b4a14acab4239354f4ff812a@ausx13mpc120.AMER.DELL.COM>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: Dell Vostro 3360 multimedia keys
+Date: Mon, 27 Nov 2017 19:21:57 +0000
+Message-ID: <d9fb91f31d704030b1b16aca8d36ecea@ausx13mpc120.AMER.DELL.COM>
+References: <5089742.2pBsoxBtzf@natalenko.name> <201711211936.25184@pali>
+ <a5ae5f51b4a14acab4239354f4ff812a@ausx13mpc120.AMER.DELL.COM>
+ <9065116.JHLBT2mDoC@natalenko.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a5ae5f51b4a14acab4239354f4ff812a@ausx13mpc120.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:50391 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1753122AbdK0TWG (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 27 Nov 2017 14:22:06 -0500
+In-Reply-To: <9065116.JHLBT2mDoC@natalenko.name>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: oleksandr@natalenko.name
 Cc: pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, dmitry.torokhov@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
 
-Hello.
-
-On pond=C4=9Bl=C3=AD 27. listopadu 2017 17:56:07 CET Mario.Limonciello@dell=
-=2Ecom wrote:
-> > /* snip */
-> > Looks like that Dell Vostro 3360 have this meaning for multimedia keys:
-> >=20
-> > first key: Mobility Center
-> > second key: Dell Support Center
-> > third key: Dell Instant Launch Manager
-> >=20
-> > (same as other Vostro laptops)
->=20
->=20
-> As I can tell the "Instant Launch" key is supposed to be emitted
-> both via WMI and scan code both.
->=20
-> Can you please check SMBIOS table 0xb1 offset 0x08?  This is the misc
-> BIOS flags table.  It's been used for a few other drivers for other
-> purposes
-> too.  I expect that bit 1 should be set.  This should indicate
-> that the system supports instant launch manager button.  You can use that
-> to key off of for deviating behavior.
-
-Is this correct:
-
-[~]$ sudo dmidecode -t 0xb1       =20
-# dmidecode 3.1
-Getting SMBIOS data from sysfs.
-SMBIOS 2.7 present.
-
-Handle 0x003C, DMI type 177, 12 bytes
-OEM-specific Type
-        Header and Data:
-                B1 0C 3C 00 1A 0E 00 00 01 00 00 00
-
-?
-
->=20
-> As for why these two keys (first and second) seem to emit the same code,
-> keep in mind that these were machines from around the era of Windows Vist=
-a.
-> Microsoft had allowed applications to register tiles in the "mobility
-> center".=20
-> Dell had an application at that time (Quickset) that would receive the WMI
-> events and register tiles in the mobility center.  So the application cou=
-ld
-> then
-> know to open up mobility center applet when it needed to from WMI
-> request or to launch another application if it needed to.
->=20
-> This has all obviously changed with newer versions of Windows.
->=20
-> I would recommend to have a separate function in dell-wmi driver for when=
-=20
-> you see instant launch key in misc flags table and to allow looking at=20
-> extended buffer for these behaviors.
->=20
->=20
-> >=20
-> > But do not know what KEY_* are used on other Vostro laptops for those
-> > keys. It would be great to use same KEY_*...
->=20
->=20
-> These first two aren't intended to be generally mapped (as I described
-> above).
-> I think for Linux you can map them if you desire by my above
-> description.=20
-> /* snip */
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE9sZWtzYW5kciBOYXRhbGVua28NCj4g
+U2VudDogTW9uZGF5LCBOb3ZlbWJlciAyNywgMjAxNyAxMjozMiBQTQ0KPiBUbzogTGltb25jaWVs
+bG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IHBhbGkucm9oYXJA
+Z21haWwuY29tOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG1qZzU5QHNyY2YudWNhbS5vcmc7IGR2aGFydEBpbmZy
+YWRlYWQub3JnOw0KPiBhbmR5QGluZnJhZGVhZC5vcmc7IGRtaXRyeS50b3Jva2hvdkBnbWFpbC5j
+b20NCj4gU3ViamVjdDogUmU6IERlbGwgVm9zdHJvIDMzNjAgbXVsdGltZWRpYSBrZXlzDQo+IA0K
+PiBIZWxsby4NCj4gDQo+IE9uIHBvbmTEm2zDrSAyNy4gbGlzdG9wYWR1IDIwMTcgMTc6NTY6MDcg
+Q0VUIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gLyogc25pcCAqLw0K
+PiA+ID4gTG9va3MgbGlrZSB0aGF0IERlbGwgVm9zdHJvIDMzNjAgaGF2ZSB0aGlzIG1lYW5pbmcg
+Zm9yIG11bHRpbWVkaWEga2V5czoNCj4gPiA+DQo+ID4gPiBmaXJzdCBrZXk6IE1vYmlsaXR5IENl
+bnRlcg0KPiA+ID4gc2Vjb25kIGtleTogRGVsbCBTdXBwb3J0IENlbnRlcg0KPiA+ID4gdGhpcmQg
+a2V5OiBEZWxsIEluc3RhbnQgTGF1bmNoIE1hbmFnZXINCj4gPiA+DQo+ID4gPiAoc2FtZSBhcyBv
+dGhlciBWb3N0cm8gbGFwdG9wcykNCj4gPg0KPiA+DQo+ID4gQXMgSSBjYW4gdGVsbCB0aGUgIklu
+c3RhbnQgTGF1bmNoIiBrZXkgaXMgc3VwcG9zZWQgdG8gYmUgZW1pdHRlZA0KPiA+IGJvdGggdmlh
+IFdNSSBhbmQgc2NhbiBjb2RlIGJvdGguDQo+ID4NCj4gPiBDYW4geW91IHBsZWFzZSBjaGVjayBT
+TUJJT1MgdGFibGUgMHhiMSBvZmZzZXQgMHgwOD8gIFRoaXMgaXMgdGhlIG1pc2MNCj4gPiBCSU9T
+IGZsYWdzIHRhYmxlLiAgSXQncyBiZWVuIHVzZWQgZm9yIGEgZmV3IG90aGVyIGRyaXZlcnMgZm9y
+IG90aGVyDQo+ID4gcHVycG9zZXMNCj4gPiB0b28uICBJIGV4cGVjdCB0aGF0IGJpdCAxIHNob3Vs
+ZCBiZSBzZXQuICBUaGlzIHNob3VsZCBpbmRpY2F0ZQ0KPiA+IHRoYXQgdGhlIHN5c3RlbSBzdXBw
+b3J0cyBpbnN0YW50IGxhdW5jaCBtYW5hZ2VyIGJ1dHRvbi4gIFlvdSBjYW4gdXNlIHRoYXQNCj4g
+PiB0byBrZXkgb2ZmIG9mIGZvciBkZXZpYXRpbmcgYmVoYXZpb3IuDQo+IA0KPiBJcyB0aGlzIGNv
+cnJlY3Q6DQo+IA0KPiBbfl0kIHN1ZG8gZG1pZGVjb2RlIC10IDB4YjENCj4gIyBkbWlkZWNvZGUg
+My4xDQo+IEdldHRpbmcgU01CSU9TIGRhdGEgZnJvbSBzeXNmcy4NCj4gU01CSU9TIDIuNyBwcmVz
+ZW50Lg0KPiANCj4gSGFuZGxlIDB4MDAzQywgRE1JIHR5cGUgMTc3LCAxMiBieXRlcw0KPiBPRU0t
+c3BlY2lmaWMgVHlwZQ0KPiAgICAgICAgIEhlYWRlciBhbmQgRGF0YToNCj4gICAgICAgICAgICAg
+ICAgIEIxIDBDIDNDIDAwIDFBIDBFIDAwIDAwIDAxIDAwIDAwIDAwDQo+IA0KPiA/DQo+IA0KDQpM
+b29rcyByaWdodCB0byBtZS4gIEZvciBwcm9kdWNpbmcgYSBwYXRjaCBmb3IgeW91ciBzeXN0ZW0g
+eW91IGNhbiBzZWUgYW4gZXhhbXBsZSBvZiANCmhvdyBiMSBpcyBwYXJzZWQgaW4gdGhpcyBvdGhl
+ciBkcml2ZXI6DQpodHRwczovL2dpdGh1Yi5jb20vdG9ydmFsZHMvbGludXgvYmxvYi9tYXN0ZXIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3Mtd21pLmMjTDIzMQ0KDQpUaGVyZSBhcmUg
+YWN0dWFsbHkgNCBmbGFncyB3b3JkcyAodGhlIHRhYmxlIGlzIGxlbmd0aCAxMiksIGJ1dCB0aGUg
+ZXhhbXBsZSBzdHJ1Y3R1cmUgYWJvdmUNCm9ubHkgcmVmZXJlbmNlcyB0aGUgZmlyc3Qgc2luY2Ug
+aXQncyBhbGwgdGhhdCBtYXR0ZXJzIGZvciB0aGF0IGRyaXZlciAodG8gdGVzdCBpZiBXTUkgYml0
+IGlzIGFjdGl2ZSkuDQpUaGlzIGlzIHRoZSBmaXJzdCBiaXQgaW4gZmxhZ3MyLiAgRmxhZ3MwLCBm
+bGFnczEsIGZsYWdzMiwgYW5kIGZsYWdzMyB3aWxsIGVhY2ggYmUgdTE2Lg0KDQo+ID4NCj4gPiBB
+cyBmb3Igd2h5IHRoZXNlIHR3byBrZXlzIChmaXJzdCBhbmQgc2Vjb25kKSBzZWVtIHRvIGVtaXQg
+dGhlIHNhbWUgY29kZSwNCj4gPiBrZWVwIGluIG1pbmQgdGhhdCB0aGVzZSB3ZXJlIG1hY2hpbmVz
+IGZyb20gYXJvdW5kIHRoZSBlcmEgb2YgV2luZG93cyBWaXN0YS4NCj4gPiBNaWNyb3NvZnQgaGFk
+IGFsbG93ZWQgYXBwbGljYXRpb25zIHRvIHJlZ2lzdGVyIHRpbGVzIGluIHRoZSAibW9iaWxpdHkN
+Cj4gPiBjZW50ZXIiLg0KPiA+IERlbGwgaGFkIGFuIGFwcGxpY2F0aW9uIGF0IHRoYXQgdGltZSAo
+UXVpY2tzZXQpIHRoYXQgd291bGQgcmVjZWl2ZSB0aGUgV01JDQo+ID4gZXZlbnRzIGFuZCByZWdp
+c3RlciB0aWxlcyBpbiB0aGUgbW9iaWxpdHkgY2VudGVyLiAgU28gdGhlIGFwcGxpY2F0aW9uIGNv
+dWxkDQo+ID4gdGhlbg0KPiA+IGtub3cgdG8gb3BlbiB1cCBtb2JpbGl0eSBjZW50ZXIgYXBwbGV0
+IHdoZW4gaXQgbmVlZGVkIHRvIGZyb20gV01JDQo+ID4gcmVxdWVzdCBvciB0byBsYXVuY2ggYW5v
+dGhlciBhcHBsaWNhdGlvbiBpZiBpdCBuZWVkZWQgdG8uDQo+ID4NCj4gPiBUaGlzIGhhcyBhbGwg
+b2J2aW91c2x5IGNoYW5nZWQgd2l0aCBuZXdlciB2ZXJzaW9ucyBvZiBXaW5kb3dzLg0KPiA+DQo+
+ID4gSSB3b3VsZCByZWNvbW1lbmQgdG8gaGF2ZSBhIHNlcGFyYXRlIGZ1bmN0aW9uIGluIGRlbGwt
+d21pIGRyaXZlciBmb3Igd2hlbg0KPiA+IHlvdSBzZWUgaW5zdGFudCBsYXVuY2gga2V5IGluIG1p
+c2MgZmxhZ3MgdGFibGUgYW5kIHRvIGFsbG93IGxvb2tpbmcgYXQNCj4gPiBleHRlbmRlZCBidWZm
+ZXIgZm9yIHRoZXNlIGJlaGF2aW9ycy4NCj4gPg0KPiA+DQo+ID4gPg0KPiA+ID4gQnV0IGRvIG5v
+dCBrbm93IHdoYXQgS0VZXyogYXJlIHVzZWQgb24gb3RoZXIgVm9zdHJvIGxhcHRvcHMgZm9yIHRo
+b3NlDQo+ID4gPiBrZXlzLiBJdCB3b3VsZCBiZSBncmVhdCB0byB1c2Ugc2FtZSBLRVlfKi4uLg0K
+PiA+DQo+ID4NCj4gPiBUaGVzZSBmaXJzdCB0d28gYXJlbid0IGludGVuZGVkIHRvIGJlIGdlbmVy
+YWxseSBtYXBwZWQgKGFzIEkgZGVzY3JpYmVkDQo+ID4gYWJvdmUpLg0KPiA+IEkgdGhpbmsgZm9y
+IExpbnV4IHlvdSBjYW4gbWFwIHRoZW0gaWYgeW91IGRlc2lyZSBieSBteSBhYm92ZQ0KPiA+IGRl
+c2NyaXB0aW9uLg0KPiA+IC8qIHNuaXAgKi8NCg==
