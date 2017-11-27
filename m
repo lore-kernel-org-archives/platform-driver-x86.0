@@ -1,116 +1,89 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: Dell Vostro 3360 multimedia keys
-Date: Mon, 27 Nov 2017 16:56:07 +0000
-Message-ID: <a5ae5f51b4a14acab4239354f4ff812a@ausx13mpc120.AMER.DELL.COM>
-References: <5089742.2pBsoxBtzf@natalenko.name>
- <20171121135110.nbnxc3n3xxlbvyis@pali> <1716681.OUoELY8X92@natalenko.name>
- <201711211936.25184@pali>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
+Date: Mon, 27 Nov 2017 09:03:39 -0800
+Message-ID: <1511802219.9392.44.camel@intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+         <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
+         <20171117214310.GB25974@fury> <alpine.DEB.2.20.1711180023440.2186@nanos>
+         <20171120230843.ozqhqhj5h3uuds3f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:1419 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1753416AbdK0Q4U (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:56889 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753798AbdK0RHy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 27 Nov 2017 11:56:20 -0500
-In-Reply-To: <201711211936.25184@pali>
-Content-Language: en-US
+        Mon, 27 Nov 2017 12:07:54 -0500
+In-Reply-To: <20171120230843.ozqhqhj5h3uuds3f@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, oleksandr@natalenko.name
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, dmitry.torokhov@gmail.com
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAyMSwgMjAx
-NyAxMjozNiBQTQ0KPiBUbzogT2xla3NhbmRyIE5hdGFsZW5rbyA8b2xla3NhbmRyQG5hdGFsZW5r
-by5uYW1lPg0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgTWF0dGhldyBHYXJyZXR0DQo+IDxtamc1OUBzcmNmLnVjYW0u
-b3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgQW5keSBTaGV2Y2hlbmtv
-DQo+IDxhbmR5QGluZnJhZGVhZC5vcmc+OyBEbWl0cnkgVG9yb2tob3YgPGRtaXRyeS50b3Jva2hv
-dkBnbWFpbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBEZWxsIFZvc3RybyAzMzYwIG11bHRpbWVkaWEg
-a2V5cw0KPiANCj4gSGkhDQo+IA0KPiBPbiBUdWVzZGF5IDIxIE5vdmVtYmVyIDIwMTcgMTU6NTI6
-MjggT2xla3NhbmRyIE5hdGFsZW5rbyB3cm90ZToNCj4gPiBIaSwgUGFsaSBldCBhbC4NCj4gPg0K
-PiA+IEFuc3dlcnMgZ28gaW5saW5lLg0KPiA+DQo+ID4gT24gw7p0ZXLDvSAyMS4gbGlzdG9wYWR1
-IDIwMTcgMTQ6NTE6MTAgQ0VUIFBhbGkgUm9ow6FyIHdyb3RlOg0KPiA+ID4gV2hhdCB3b3VsZCBo
-YXBwZW4gaWYgeW91IGVuYWJsZSB3bWlfcmVxdWlyZXNfc21iaW9zX3JlcXVlc3Q/DQo+ID4gPiBO
-b3RoaW5nPyBBbmQgc2l0dWF0aW9uIGlzIGV4YWN0bHkgc2FtZT8NCj4gPg0KPiA+IFllcywgdGhp
-cyBpcyB3aGF0IEkgZGlkIHdpdGggRE1JIHF1aXJrIHdoaWNoIGVuYWJsZXMNCj4gPiB3bWlfcmVx
-dWlyZXNfc21iaW9zX3JlcXVlc3QuIEtleXMgIjEiIGFuZCAiMiIgYmVoYXZlIHRoZSBzYW1lLCBr
-ZXkNCj4gPiAiMyIgZ2V0cyByZXBvcnRlZCB2aWEgYm90aCBhdGtiZCBhbmQgd21pIChzZWUgbXkg
-dGhvdWdodHMgYWJvdXQgdGhpcw0KPiA+IGtleSBiZWxvdykuDQo+IA0KPiBPaywgaWYgd21pX3Jl
-cXVpcmVzX3NtYmlvc19yZXF1ZXN0IGlzIHJlYWxseSBkb2luZyBub3RoaW5nLCB0aGVuIGl0DQo+
-IHNob3VsZCBub3QgYmUgdXNlZC4gSXQgZW5hYmxlcyBzb21lIFFTRVQgZmVhdHVyZSBpbiBEZWxs
-IFNNTSBtb2RlIHdoaWNoDQo+IGlzIGZvciAyIGxhcHRvcHMuDQo+IA0KPiA+ID4gPiArCS8qIERl
-bGwgVm9zdHJvIDMzNjAgY29tYmluZWQga2V5Y29kZSAqLw0KPiA+ID4gPiArCXsgS0VfS0VZLCAg
-ICAweGUwZjEsIHsgS0VZX1BST0cxIH0gfSwNCj4gPiA+ID4gKwl7IEtFX0tFWSwgICAgMHhlMGYy
-LCB7IEtFWV9QUk9HMiB9IH0sDQo+ID4gPg0KPiA+ID4gV2hhdCBpcyBwdXJwb3NlIG9mIHRob3Nl
-IHR3byBrZXlzPyBEb2VzIG5vdCBsaW51eCBrZXJuZWwgYWxyZWFkeQ0KPiA+ID4gaGF2ZSBiZXR0
-ZXIgZGVzY3JpcHRpb24gZm9yIHRoZW0gYXMgS0VZX1BST0cxIGFuZCBLRVlfUFJPRzI/DQo+ID4N
-Cj4gPiBXZWxsLCBJIGRpZG4ndCBmaW5kIEtFWV9QUk9HMS9LRVlfUFJPRzIgaW4gMDAwMCB0YWJs
-ZS4gVGh1cywgSSBqdXN0DQo+ID4gYWRkZWQgdGhlbS4gQWN0dWFsbHksIHNpbmNlIHRoZXNlIGtl
-eXMgaGF2ZSBzb21lIGljb25zIGRyYXduIG9uDQo+ID4gdGhlbSwgdGhleSBoYXZlIHNvbWUgZGVz
-aWduYXRlZCBwdXJwb3NlIChtb3N0IGxpa2VseSwNCj4gPiBXaW5kb3dzLXJlbGF0ZWQpLCBidXQg
-SSdkIHJhdGhlciB0aGluayBvZiB0aGVtIGFzIG9mIGN1c3RvbQ0KPiA+IHByb2dyYW1tYWJsZSBr
-ZXlzIHdpdGhvdXQgYW55IHNwZWNpZmljIGZ1bmN0aW9uIGFzc2lnbmVkLg0KPiANCj4gTG9va3Mg
-bGlrZSB0aGF0IERlbGwgVm9zdHJvIDMzNjAgaGF2ZSB0aGlzIG1lYW5pbmcgZm9yIG11bHRpbWVk
-aWEga2V5czoNCj4gDQo+IGZpcnN0IGtleTogTW9iaWxpdHkgQ2VudGVyDQo+IHNlY29uZCBrZXk6
-IERlbGwgU3VwcG9ydCBDZW50ZXINCj4gdGhpcmQga2V5OiBEZWxsIEluc3RhbnQgTGF1bmNoIE1h
-bmFnZXINCj4gDQo+IChzYW1lIGFzIG90aGVyIFZvc3RybyBsYXB0b3BzKQ0KDQpBcyBJIGNhbiB0
-ZWxsIHRoZSAiSW5zdGFudCBMYXVuY2giIGtleSBpcyBzdXBwb3NlZCB0byBiZSBlbWl0dGVkDQpi
-b3RoIHZpYSBXTUkgYW5kIHNjYW4gY29kZSBib3RoLg0KDQpDYW4geW91IHBsZWFzZSBjaGVjayBT
-TUJJT1MgdGFibGUgMHhiMSBvZmZzZXQgMHgwOD8gIFRoaXMgaXMgdGhlIG1pc2MNCkJJT1MgZmxh
-Z3MgdGFibGUuICBJdCdzIGJlZW4gdXNlZCBmb3IgYSBmZXcgb3RoZXIgZHJpdmVycyBmb3Igb3Ro
-ZXIgcHVycG9zZXMNCnRvby4gIEkgZXhwZWN0IHRoYXQgYml0IDEgc2hvdWxkIGJlIHNldC4gIFRo
-aXMgc2hvdWxkIGluZGljYXRlIHRoYXQgdGhlIHN5c3RlbSANCnN1cHBvcnRzIGluc3RhbnQgbGF1
-bmNoIG1hbmFnZXIgYnV0dG9uLiAgWW91IGNhbiB1c2UgdGhhdCB0byBrZXkgb2ZmIG9mIGZvcg0K
-ZGV2aWF0aW5nIGJlaGF2aW9yLg0KDQpBcyBmb3Igd2h5IHRoZXNlIHR3byBrZXlzIChmaXJzdCBh
-bmQgc2Vjb25kKSBzZWVtIHRvIGVtaXQgdGhlIHNhbWUgY29kZSwNCmtlZXAgaW4gbWluZCB0aGF0
-IHRoZXNlIHdlcmUgbWFjaGluZXMgZnJvbSBhcm91bmQgdGhlIGVyYSBvZiBXaW5kb3dzIFZpc3Rh
-Lg0KTWljcm9zb2Z0IGhhZCBhbGxvd2VkIGFwcGxpY2F0aW9ucyB0byByZWdpc3RlciB0aWxlcyBp
-biB0aGUgIm1vYmlsaXR5IGNlbnRlciIuDQoNCkRlbGwgaGFkIGFuIGFwcGxpY2F0aW9uIGF0IHRo
-YXQgdGltZSAoUXVpY2tzZXQpIHRoYXQgd291bGQgcmVjZWl2ZSB0aGUgV01JDQpldmVudHMgYW5k
-IHJlZ2lzdGVyIHRpbGVzIGluIHRoZSBtb2JpbGl0eSBjZW50ZXIuICBTbyB0aGUgYXBwbGljYXRp
-b24gY291bGQgdGhlbg0Ka25vdyB0byBvcGVuIHVwIG1vYmlsaXR5IGNlbnRlciBhcHBsZXQgd2hl
-biBpdCBuZWVkZWQgdG8gZnJvbSBXTUkgcmVxdWVzdCANCm9yIHRvIGxhdW5jaCBhbm90aGVyIGFw
-cGxpY2F0aW9uIGlmIGl0IG5lZWRlZCB0by4NCg0KVGhpcyBoYXMgYWxsIG9idmlvdXNseSBjaGFu
-Z2VkIHdpdGggbmV3ZXIgdmVyc2lvbnMgb2YgV2luZG93cy4NCg0KSSB3b3VsZCByZWNvbW1lbmQg
-dG8gaGF2ZSBhIHNlcGFyYXRlIGZ1bmN0aW9uIGluIGRlbGwtd21pIGRyaXZlciBmb3Igd2hlbiAN
-CnlvdSBzZWUgaW5zdGFudCBsYXVuY2gga2V5IGluIG1pc2MgZmxhZ3MgdGFibGUgYW5kIHRvIGFs
-bG93IGxvb2tpbmcgYXQgDQpleHRlbmRlZCBidWZmZXIgZm9yIHRoZXNlIGJlaGF2aW9ycy4NCg0K
-PiANCj4gQnV0IGRvIG5vdCBrbm93IHdoYXQgS0VZXyogYXJlIHVzZWQgb24gb3RoZXIgVm9zdHJv
-IGxhcHRvcHMgZm9yIHRob3NlDQo+IGtleXMuIEl0IHdvdWxkIGJlIGdyZWF0IHRvIHVzZSBzYW1l
-IEtFWV8qLi4uDQoNClRoZXNlIGZpcnN0IHR3byBhcmVuJ3QgaW50ZW5kZWQgdG8gYmUgZ2VuZXJh
-bGx5IG1hcHBlZCAoYXMgSSBkZXNjcmliZWQgYWJvdmUpLg0KSSB0aGluayBmb3IgTGludXggeW91
-IGNhbiBtYXAgdGhlbSBpZiB5b3UgZGVzaXJlIGJ5IG15IGFib3ZlIGRlc2NyaXB0aW9uLg0KDQo+
-IA0KPiA+ID4gLyogc25pcCAqLw0KPiA+ID4NCj4gPiA+ID4gVGhpcmQga2V5ICh0aGUgb25lIHRo
-YXQgaXMgaGFuZGxlZCB2aWEgUFMvMiBrZXlib2FyZCkgcHJvZHVjZXMNCj4gPiA+ID4gdGhpcyBp
-biB0aGUNCj4gPiA+DQo+ID4gPiA+IGtlcm5lbCBidWZmZXI6DQo+ID4gPiAvICpzbmlwICovDQo+
-ID4gPg0KPiA+ID4gU2VlbXMgeW91IHN0aWxsIGhhdmUgbm90IGNvbmZpZ3VyZWQga2V5Y29kZSBm
-b3IgeW91ciBpbnRlcm5hbCBQUy8yDQo+ID4gPiBrZXlib2FyZCB0byBtYWtlIHRoaXMga2V5IHdv
-cmtpbmcuIFVzZSAnc2V0a2V5Y29kZXMgNjAgPGtleWNvZGU+Jw0KPiA+ID4gYXMgd3JpdHRlbiBp
-biBkbWVzZy4NCj4gPg0KPiA+IFdlbGwsIEkndmUgdHJpZWQuIFRoZSBwcm9ibGVtIGlzIHRoYXQg
-aWYgSSBldmVuIGNvbmZpZ3VyZSB0aGlzIGtleQ0KPiA+IHZpYSBzZXRrZXljb2RlcywgaXQgZG9l
-c24ndCB3b3JrLg0KPiANCj4gSG0uLi4gd2h5IGl0IGRvZXMgbm90IHdvcms/DQo+IA0KPiBDQ2lu
-ZyBEbWl0cnksIGNhbiB5b3UgdGVsbCB1cyB3aGF0IG5lZWRzIHRvIGJlIGRvbmUgdG8gImFjdGl2
-ZSIga2V5IGZyb20NCj4gQVQgS2V5Ym9hcmQgZHJpdmVyIHdoaWNoIHByaW50cyBmb2xsb3dpbmcg
-bWVzc2FnZXMgdG8gZG1lc2c/DQo+IA0KPiA9PT0NCj4gTm92IDIwIDE1OjM2OjUxIHNwb2NrIGtl
-cm5lbDogYXRrYmQgc2VyaW8wOiBVbmtub3duIGtleSBwcmVzc2VkDQo+ICh0cmFuc2xhdGVkIHNl
-dCAyLCBjb2RlIDB4NjAgb24gaXNhMDA2MC9zZXJpbzApLg0KPiBOb3YgMjAgMTU6MzY6NTEgc3Bv
-Y2sga2VybmVsOiBhdGtiZCBzZXJpbzA6IFVzZSAnc2V0a2V5Y29kZXMgNjANCj4gPGtleWNvZGU+
-JyB0byBtYWtlIGl0IGtub3duLg0KPiA9PT0NCj4gDQo+IEkgd2FzIGluIGltcHJlc3Npb24gdGhh
-dCBpZiB3ZSBzZWUgc3VjaCBtZXNzYWdlIGluIGRtZXNnLCB0aGVuIGtleSBpcw0KPiB3b3JraW5n
-IGZpbmUuLi4NCj4gDQo+ID4gZXZ0ZXN0IHNob3dzIG1lICJ2YWx1ZSAyIiAodGhlDQo+ID4gc2Ft
-ZSB2YWx1ZSBpcyBzaG93biBpZiBJIHByZXNzIGFuZCBob2xkIHNvbWUgb3JkaW5hcnkga2V5LCBs
-aWtlICJBIiwNCj4gPiBmb3IgaW5zdGFuY2UpIGluc3RlYWQgb2YgMCBhbmQvb3IgMS4gTG9va3Mg
-bGlrZSBrZXkgcHJlc3MgZXZlbnQgaXMNCj4gPiBub3QgZ2VuZXJhdGVkIHByb3Blcmx5IGJ5IHRo
-aXMga2V5IHZpYSBhdGtiZC4NCj4gPg0KPiA+IFRoYXQncyB3aHkgSSB0aGluayB3bWlfcmVxdWly
-ZXNfc21iaW9zX3JlcXVlc3QgcXVpcmsgbXVzdCBiZQ0KPiA+IHBlcm1hbmVudGx5IGVuYWJsZWQg
-Zm9yIHRoaXMgbGFwdG9wLCBhbmQgM3JkIGtleSBtdXN0IGJlIGhhbmRsZWQgdmlhDQo+ID4gd21p
-IChsaWtlIHR3byBvdGhlciBrZXlzKSwgbm90IHZpYSBhdGtiZC4gQW5kIGFsbCBhdGtiZCBldmVu
-dHMgZnJvbQ0KPiA+IHRoaXMga2V5IG11c3QgYmUganVzdCBzdXBwcmVzc2VkIHZpYSB1c2Vyc3Bh
-Y2UuDQo+IA0KPiBJbiBkZWxsLXdtaSB3ZSBmaWx0ZXIgYWxsIGtleSBldmVudHMgd2hpY2ggYXJl
-IGFsc28gZGVsaXZlcmVkIHZpYSBQUy8yDQo+IEFUIEtleWJvYXJkIGRyaXZlci4gU28gZmlsdGVy
-aW5nIFBTLzIga2V5cyBpbnN0ZWFkIG9mIFdNSSBpcyBhbnRpLWRlc2lnbg0KPiBzb2x1dGlvbi4N
-Cj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
+On Tue, 2017-11-21 at 01:08 +0200, Jarkko Sakkinen wrote:
+> On Sat, Nov 18, 2017 at 12:34:33AM +0100, Thomas Gleixner wrote:
+> > 
+> > This is architecural. From the cursory read of that series it seems there
+> > are two parts to it:
+> > 
+> >   1) The actual core handling, which should be in arch/x86 because that
+> >      hardly qualifies as a 'platform' device driver.
+> > 
+> >   2) The user space interface, which can be separated out perhaps.
+> > 
+> > I don't know how intertwingled they are, but that's hard to tell from the
+> > actual patches w/o doing a deep inspection. Jarkko should be able to answer
+> > that.
+> > 
+> > Thanks,
+> > 
+> > 	tglx
+> Darren, tglx,
+> 
+> You can leave user space device as separate module as sgx_ioctl.c merely
+> calls stuff that I have inside sgx_encl.c. VMA creation is bound to file
+> operations.
+> 
+> My questions would be:
+> 
+> 1. What is your recommendation on the deployment under arch/x86?
+> 2. Which parts should be compilable as a LKM? Only the user interface
+>    or both parts?
+> 
+> /Jarkko
+
+To enable KVM and a cgroup for EPC accounting, at a minimum arch/x86 needs to
+manage the EPC pages (alloc/free/lrus/reclaim/etc...) and LE hash MSRs.  IMO,
+ideally everything else would be left in the device driver, e.g. anything
+involving ENCLS.  Keeping the majority of the driver out of arch/x86 minimizes
+the footprint in arch/x86 and thereby the size of KVM's dependency required to
+virtualize SGX, and allows the various SGX pieces, e.g. arch, driver and KVM, to
+evolve more independently.
+
+Preferably the arch/x86 code would not be a loadable module, e.g. to simplify
+KVM support.
+
+I have a branch based on Jarkko's patches (I believe it's up-to-date with v5)
+that implements what I described.  I'd be happy to send RFC patches if that
+would help.
+
+
+Branches for those interested:
+
+https://github.com/sean-jc/linux.git sgx/arch   - move core EPC to arch/x86
+https://github.com/sean-jc/linux.git sgx/kvm    - KVM support for SGX
+https://github.com/sean-jc/linux.git sgx/lc     - KVM support for Launch Control
+https://github.com/sean-jc/linux.git sgx/cgroup - EPC cgroup
+
+
+branch relationships:
+
+    Jarkko's patches
+            |
+            |
+         sgx/arch
+        /        \
+     sgx/kvm    sgx/cgroup
+      /
+   sgx/lc
