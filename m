@@ -1,63 +1,94 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v6 05/11] x86: add SGX MSRs to msr-index.h
-Date: Tue, 28 Nov 2017 09:22:48 -0800
-Message-ID: <1511889768.9392.63.camel@intel.com>
-References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
-         <20171125193132.24321-6-jarkko.sakkinen@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: silead_dmi: Add touchscreen info for
+ SurfTab twin 10.1
+Date: Tue, 28 Nov 2017 19:44:59 +0200
+Message-ID: <CAHp75Vfd60tMzUHFQft+L0c_-nECatfi1Q_H77pK5p20PnTeZg@mail.gmail.com>
+References: <20171126183258.10758-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:65036 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751495AbdK1R1D (ORCPT
+Received: from mail-qk0-f176.google.com ([209.85.220.176]:43095 "EHLO
+        mail-qk0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753433AbdK1RpA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Nov 2017 12:27:03 -0500
-In-Reply-To: <20171125193132.24321-6-jarkko.sakkinen@linux.intel.com>
+        Tue, 28 Nov 2017 12:45:00 -0500
+In-Reply-To: <20171126183258.10758-1-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>, Kyle Huey <me@kylehuey.com>, Tom Lendacky <thomas.lendacky@amd.com>, Kan Liang <Kan.liang@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>
 
-On Sat, 2017-11-25 at 21:29 +0200, Jarkko Sakkinen wrote:
-> From: Haim Cohen <haim.cohen@intel.com>
-> 
-> These MSRs hold the SHA256 checksum of the currently configured root
-> key for enclave signatures.
+On Sun, Nov 26, 2017 at 8:32 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> From: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
+>
+> Add touchscreen info for the Trekstor SurfTab twin 10.1 ST10432-8
+> tablet. Resolution based on output of evemu-record.
+>
 
-The commit message doesn't talk about the launch control bit in the
-feature control MSR.
+Pushed to review and testing queue, thanks!
 
-> 
-> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  arch/x86/include/asm/msr-index.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/msr-index.h
-> b/arch/x86/include/asm/msr-index.h
-> index b35cb98b5d60..22e27d46d046 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -436,6 +436,7 @@
->  #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
->  #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
->  #define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
-> +#define FEATURE_CONTROL_SGX_LAUNCH_CONTROL_ENABLE	(1<<17)
->  #define FEATURE_CONTROL_LMCE				(1<<20)
->  
->  #define MSR_IA32_APICBASE		0x0000001b
-> @@ -502,6 +503,12 @@
->  #define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
->  #define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
->  
-> +/* Intel SGX MSRs */
-> +#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
-> +#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
-> +#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
-> +#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
+>  drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/sil=
+ead_dmi.c
+> index 266535c2a72f..9a3da53202cb 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -67,6 +67,21 @@ static const struct silead_ts_dmi_data dexp_ursus_7w_d=
+ata =3D {
+>         .properties     =3D dexp_ursus_7w_props,
+>  };
+>
+> +static const struct property_entry surftab_twin_10_1_st10432_8_props[] =
+=3D {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1900),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
+> +       PROPERTY_ENTRY_U32("touchscreen-inverted-y", 1),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl3670-surftab-twin-10-1-st10432-8.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       { }
+> +};
 > +
->  /* Thermal Thresholds Support */
->  #define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
->  #define THERM_SHIFT_THRESHOLD0        8
+> +static const struct silead_ts_dmi_data surftab_twin_10_1_st10432_8_data =
+=3D {
+> +       .acpi_name      =3D "MSSL1680:00",
+> +       .properties     =3D surftab_twin_10_1_st10432_8_props,
+> +};
+> +
+>  static const struct property_entry surftab_wintron70_st70416_6_props[] =
+=3D {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 884),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 632),
+> @@ -198,6 +213,14 @@ static const struct dmi_system_id silead_ts_dmi_tabl=
+e[] =3D {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "7W"),
+>                 },
+>         },
+> +       {
+> +               /* TrekStor SurfTab twin 10.1 ST10432-8 */
+> +               .driver_data =3D (void *)&surftab_twin_10_1_st10432_8_dat=
+a,
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "TrekStor"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SurfTab twin 10.1"),
+> +               },
+> +       },
+>         {
+>                 /* Trekstor Surftab Wintron 7.0 ST70416-6 */
+>                 .driver_data =3D (void *)&surftab_wintron70_st70416_6_dat=
+a,
+> --
+> 2.14.3
+>
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
