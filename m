@@ -1,44 +1,52 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v6 04/11] x86: define IA32_FEATUE_CONTROL.SGX_LC
-Date: Wed, 29 Nov 2017 00:21:41 +0200
-Message-ID: <20171128222141.pljpvoou7bglbzid@linux.intel.com>
+Subject: Re: [PATCH v6 08/11] intel_sgx: in-kernel launch enclave
+Date: Wed, 29 Nov 2017 00:38:52 +0200
+Message-ID: <20171128223852.5hcyg7kwf4su5qy5@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
- <20171125193132.24321-5-jarkko.sakkinen@linux.intel.com>
- <1511889371.9392.58.camel@intel.com>
- <1511893683.9392.100.camel@intel.com>
- <20171128205324.pqojyfqbet3h7re4@linux.intel.com>
- <20171128212407.lky32cdghxqsxd4e@linux.intel.com>
- <1511904794.18982.7.camel@intel.com>
- <20171128215513.qp2bs6462eq4pkz4@linux.intel.com>
- <1511906403.18982.17.camel@intel.com>
+ <20171125193132.24321-9-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1511906403.18982.17.camel@intel.com>
+In-Reply-To: <20171125193132.24321-9-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Piotr Luc <piotr.luc@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
+To: platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 28, 2017 at 02:00:03PM -0800, Sean Christopherson wrote:
-> What about SGX_LC_ENABLE?  The title in the MSR section of the SDM is
-> "SGX Launch Control Enable", and it's more consistent with the other
-> bits defined in feature control.  I'd also prefer that name for the
-> actual #define too, SGX_LAUNCH_CONTROL_ENABLE is overly verbose IMO.
+On Sat, Nov 25, 2017 at 09:29:25PM +0200, Jarkko Sakkinen wrote:
+> This commits implements the in-kernel launch enclave. It is wrapped into
+> a user space program that reads SIGSTRUCT instances from stdin and
+> outputs launch tokens to stdout.
+> 
+> The commit also adds enclave signing tool that is used by kbuild to
+> measure and sign the launch enclave.
+> 
+> CONFIG_INTEL_SGX_SIGNING_KEY points to a PEM-file for the 3072-bit RSA
+> key that is used as the LE public key pair. The default location is:
+> 
+>   drivers/platform/x86/intel_sgx/intel_sgx_signing_key.pem
+> 
+> If the default key does not exist kbuild will generate a random key and
+> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+> the passphrase for the LE public key.
+> 
+> TinyCrypt (https://github.com/01org/tinycrypt) is used as AES
+> implementation, which is not timing resistant. Eventually this needs to
+> be replaced with AES-NI based implementation that could be either
+> 
+> - re-use existing AES-NI code in the kernel
+> - have its own hand written code
 
-This is a bit ugly name but it is also very clear:
+The AES is the biggest remaining open I think.
 
-  FEATURE_CONTROL_SGX_LEPUBKEYHASH_WRITE_ENABLE
+I'm starting look at how to re-use kernel aesni code by linking it as
+part of the enclave binary i.e. aesni-intel_asm.S. This will render
+away TinyCrypt's AES code that is used ATM.
 
-Just pushed update to the le branch. SGX_LC_ENABLE is a nice short name
-but it does not reflect the semantics.
+I still need TinyCrypt CMAC, which I will modify to call CBC AES
+encryption routine.
 
-Maybe we could combine these and name it as
-
-  FEATURE_CONTROL_SGX_LC_WRITE_ENABLE
-
-It is not as ugly and is very clear what it does.
+Does this sound like a sufficient plan?
 
 /Jarkko
