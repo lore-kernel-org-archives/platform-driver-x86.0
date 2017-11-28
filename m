@@ -1,68 +1,92 @@
-From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Actually use mask parameter in
- hp_wmi_hw_state
-Date: Tue, 28 Nov 2017 19:06:08 +0100
-Message-ID: <e8ff5280-537e-bb60-f0ba-791117abb4a4@daenzer.net>
-References: <20171128151758.9234-1-michel@daenzer.net>
- <20171128165724.GA16349@fury>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v6 04/11] x86: define IA32_FEATUE_CONTROL.SGX_LC
+Date: Tue, 28 Nov 2017 10:28:03 -0800
+Message-ID: <1511893683.9392.100.camel@intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+         <20171125193132.24321-5-jarkko.sakkinen@linux.intel.com>
+         <1511889371.9392.58.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171128165724.GA16349@fury>
-Content-Language: en-CA
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:57313 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751796AbdK1ScR (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 28 Nov 2017 13:32:17 -0500
+In-Reply-To: <1511889371.9392.58.camel@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Piotr Luc <piotr.luc@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 
-On 2017-11-28 05:57 PM, Darren Hart wrote:
-> On Tue, Nov 28, 2017 at 04:17:58PM +0100, Michel Dänzer wrote:
->> We were always checking bit 0 (which represents the docked state)
->> regardless of the mask.
->>
->> Fixes the "tablet mode" state always being reported the same as the
->> docked state, which with current libinput can cause the built-in input
->> devices of laptops to be incorrectly disabled while docked.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: ("platform/x86: hp-wmi: Refactor dock and tablet state fetchers")
->> Signed-off-by: Michel Dänzer <michel@daenzer.net>
->> ---
->>  drivers/platform/x86/hp-wmi.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
->> index b4ed3dc983d5..2bdd6bbdb353 100644
->> --- a/drivers/platform/x86/hp-wmi.c
->> +++ b/drivers/platform/x86/hp-wmi.c
->> @@ -297,7 +297,7 @@ static int hp_wmi_hw_state(int mask)
->>  	if (state < 0)
->>  		return state;
->>  
->> -	return state & 0x1;
->> +	return (state & mask) ? 1 : 0;
-> 
-> The current code does:
-> 
-> return !!(state & mask);
-> 
-> See:
-> 9968e12 platform/x86: hp-wmi: Fix tablet mode detection for convertibles
-> 
-> Merged in 4.15-rc1
+On Tue, 2017-11-28 at 09:16 -0800, Sean Christopherson wrote:
+> On Sat, 2017-11-25 at 21:29 +0200, Jarkko Sakkinen wrote:
+> > 
+> > When IA32_FEATURE_CONTROL.SGX_LC identifies that the root key for
+> > enclave signatures can be configured either by the OS or pre-boot
+> > firmware.
+> > 
+> > If this the case, IA32_SGXLEPUBKEYHASHn MSRs (0 < n < 4) can be used
+> > to
+> > set the SHA256 of the root key. IA32_FEATURE_CONTROL bit 17 controls
+> > whether the MSRs are writable by the OS. The pre-boot firmware can
+> > decided whether to  set this bit before setting
+> > IA32_FEATURE_CONTROL.LOCK.
+> The commit message (feature control bit) doesn't match the patch (CPUID
+> bit).
 
-AFAIK commits without
+Also, assuming this message is destined for the commit that adds SGX_LC
+to feature control, I think it should first and foremost describe the
+hardware behavior.  The firmware vs OS interaction and use cases are
+valuable to document but IMO should come after the hardware description.
 
- Cc: stable@vger.kernel.org
+And though it's not documented in the SDM, I think it's worthwhile to
+describe the SGX activation sequence and its relationship with the SGX
+MSRs, e.g. the LE hash MSRs are writable prior to SGX activation.
+Without that information, it's unclear as to how the LE hash MSRs could
+be different than Intel's reset value.
 
-don't get automatically picked up for stable branches. Can you manually
-nominate 9968e12 for stable?
+So, maybe something like this?
 
+    After SGX is activated[1] the IA32_SGXLEPUBKEYHASHn MSRs are writable
+    if and only if SGX_LC is set in the IA32_FEATURE_CONTROL MSR and the
+    IA32_FEATURE_CONTROL MSR is locked, otherwise they are read-only.
 
-Thanks,
+    For example, firmware can allow the OS to change the launch enclave
+    root key by setting IA32_FEATURE_CONTROL.SGX_LC, and thus give the
+    OS complete control over the enclaves it runs.  Alternatively,
+    firmware can clear IA32_FEATURE_CONTROL.SGX_LC to lock down the root
+    key and restrict the OS to running enclaves signed with the root key
+    or whitelisted/trusted by a launch enclave (which must be signed with
+    the root key).
 
+    [1] SGX related bits in IA32_FEATURE_CONTROL cannot be set until SGX
+        is activated, e.g. by firmware.  SGX activation is triggered by
+        setting bit 0 in MSR 0x7a.  Until SGX is activated, the LE hash
+        MSRs are writable, e.g. to allow firmware to lock down the LE
+        root key with a non-Intel value.
 
--- 
-Earthling Michel Dänzer               |               http://www.amd.com
-Libre software enthusiast             |             Mesa and X developer
+> > 
+> > 
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/cpufeatures.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/x86/include/asm/cpufeatures.h
+> > b/arch/x86/include/asm/cpufeatures.h
+> > index 31a7d1c0f204..43130f3c18a1 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -298,6 +298,7 @@
+> >  #define X86_FEATURE_AVX512_VPOPCNTDQ (16*32+14) /* POPCNT for vectors
+> > of DW/QW */
+> >  #define X86_FEATURE_LA57	(16*32+16) /* 5-level page tables */
+> >  #define X86_FEATURE_RDPID	(16*32+22) /* RDPID instruction */
+> > +#define X86_FEATURE_SGX_LC	(16*32+30) /* supports SGX launch
+> > configuration */
+> >  
+> >  /* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
+> >  #define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery
+> > support */
