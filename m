@@ -1,50 +1,39 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 11/11] intel_sgx: driver documentation
-Date: Tue, 28 Nov 2017 22:46:16 +0200
-Message-ID: <20171128204616.aqll77bnyhg3eov7@linux.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-12-jarkko.sakkinen@linux.intel.com>
- <20171117214310.GB25974@fury>
- <alpine.DEB.2.20.1711180023440.2186@nanos>
- <20171120230843.ozqhqhj5h3uuds3f@linux.intel.com>
- <1511802219.9392.44.camel@intel.com>
- <20171128203748.vnf6qxs526djghin@linux.intel.com>
+Subject: Re: [PATCH v6 03/11] x86: define IA32_FEATURE_CONTROL.SGX_ENABLE
+Date: Tue, 28 Nov 2017 22:47:34 +0200
+Message-ID: <20171128204734.gcz2y3pold4nyhxe@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <20171125193132.24321-4-jarkko.sakkinen@linux.intel.com>
+ <1511889198.9392.56.camel@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:54752 "EHLO mga01.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:53783 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932187AbdK1UqQ (ORCPT
+        id S1753102AbdK1Urf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Nov 2017 15:46:16 -0500
+        Tue, 28 Nov 2017 15:47:35 -0500
 Content-Disposition: inline
-In-Reply-To: <20171128203748.vnf6qxs526djghin@linux.intel.com>
+In-Reply-To: <1511889198.9392.56.camel@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>, Kyle Huey <me@kylehuey.com>, Haim Cohen <haim.cohen@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Jim Mattson <jmattson@google.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 
-On Tue, Nov 28, 2017 at 10:37:48PM +0200, Jarkko Sakkinen wrote:
-> On Mon, Nov 27, 2017 at 09:03:39AM -0800, Sean Christopherson wrote:
-> > I have a branch based on Jarkko's patches (I believe it's up-to-date with v5)
-> > that implements what I described.  I'd be happy to send RFC patches if that
-> > would help.
+On Tue, Nov 28, 2017 at 09:13:18AM -0800, Sean Christopherson wrote:
+> On Sat, 2017-11-25 at 21:29 +0200, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > When IA32_FEATURE_CONTROL.SGX_ENABLE and IA32_FEATURE_CONTROL.LOCK are
+> > set by the pre-boot firmware, SGX is usable by the OS.
 > 
-> That would only slow things down. The code is easy to move around and
-> I'm doing infrastructure changes as part of the review process. The
-> latest version (v6) that I sent on Sat has struct sgx_epc_page removed
-> just to name an example.
+> This implies that only pre-boot firmware can write feature control, which is not
+> true.  What about:
 > 
-> Rather than sending any deprecated patches it would be more useful to
-> get input (in English) on directory layout.
-> 
-> I guess you missed v6 as it I had to drop the 01.org list temporarily.
-> It will be back in v7 as I was able to retrieve the admin password and
-> configure it in suitable way.
+>     SGX instructions (ENCLS and ENCLU) are usable if and only if SGX_ENABLE is
+>     set in the IA32_FEATURE_CONTROL MSR and said MSR is locked.
 
-Once my series has been landed, you could drop a series for review. Then
-it does make sense. I won't of course add any exports needed by KVM etc.
-I'm only doing "lowest common denominator" groundwork.
+You are correct, thanks. I'll fix this for v7.
 
 /Jarkko
