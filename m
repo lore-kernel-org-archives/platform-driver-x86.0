@@ -1,44 +1,63 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH RESEND] platform/x86: Add support for Dollar Cove TI power button
-Date: Tue, 28 Nov 2017 19:21:22 +0200
-Message-ID: <CAHp75VdAT1KxJ6cb3JYKkDC1bAi0v63ow5F5YuAnW8GPjjSL+Q@mail.gmail.com>
-References: <20171116192402.22905-1-tiwai@suse.de> <CAHp75VdW6E+NRTwrqQvgHtLJwRvROw1Tt4L2og+dVFcSg84KSA@mail.gmail.com>
- <s5hfu8ypbx2.wl-tiwai@suse.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v6 05/11] x86: add SGX MSRs to msr-index.h
+Date: Tue, 28 Nov 2017 09:22:48 -0800
+Message-ID: <1511889768.9392.63.camel@intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+         <20171125193132.24321-6-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f182.google.com ([209.85.216.182]:44657 "EHLO
-        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751842AbdK1RVX (ORCPT
+Received: from mga06.intel.com ([134.134.136.31]:65036 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751495AbdK1R1D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Nov 2017 12:21:23 -0500
-Received: by mail-qt0-f182.google.com with SMTP id j5so751113qth.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Nov 2017 09:21:23 -0800 (PST)
-In-Reply-To: <s5hfu8ypbx2.wl-tiwai@suse.de>
+        Tue, 28 Nov 2017 12:27:03 -0500
+In-Reply-To: <20171125193132.24321-6-jarkko.sakkinen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>, Kyle Huey <me@kylehuey.com>, Tom Lendacky <thomas.lendacky@amd.com>, Kan Liang <Kan.liang@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
 
-On Tue, Nov 28, 2017 at 7:10 PM, Takashi Iwai <tiwai@suse.de> wrote:
-> On Fri, 17 Nov 2017 16:16:28 +0100,
-> Andy Shevchenko wrote:
->>
->> On Thu, Nov 16, 2017 at 9:24 PM, Takashi Iwai <tiwai@suse.de> wrote:
->> > This provides a new input driver for supporting the power button on
->> > Dollar Cove TI PMIC, found on Cherrytrail-based devices.
->> > The patch is based on the original work by Intel, found at:
->> >   https://github.com/01org/ProductionKernelQuilts
->> >
->>
->> Pushed to my reviewing and testing queue, thanks.
->
-> Did the patch pass the review / test?
-> If you found anything, just let me know.
+On Sat, 2017-11-25 at 21:29 +0200, Jarkko Sakkinen wrote:
+> From: Haim Cohen <haim.cohen@intel.com>
+> 
+> These MSRs hold the SHA256 checksum of the currently configured root
+> key for enclave signatures.
 
-Yes, it's pending for promotion to published branch.
-Don't worry it just takes a bit of time.
+The commit message doesn't talk about the launch control bit in the
+feature control MSR.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/include/asm/msr-index.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h
+> b/arch/x86/include/asm/msr-index.h
+> index b35cb98b5d60..22e27d46d046 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -436,6 +436,7 @@
+>  #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+>  #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
+>  #define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
+> +#define FEATURE_CONTROL_SGX_LAUNCH_CONTROL_ENABLE	(1<<17)
+>  #define FEATURE_CONTROL_LMCE				(1<<20)
+>  
+>  #define MSR_IA32_APICBASE		0x0000001b
+> @@ -502,6 +503,12 @@
+>  #define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
+>  #define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
+>  
+> +/* Intel SGX MSRs */
+> +#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
+> +#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
+> +#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
+> +#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
+> +
+>  /* Thermal Thresholds Support */
+>  #define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
+>  #define THERM_SHIFT_THRESHOLD0        8
