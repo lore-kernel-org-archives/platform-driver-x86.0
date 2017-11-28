@@ -1,80 +1,30 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: Intel "5-button array" support on MobileStudio Pro
-Date: Tue, 28 Nov 2017 19:50:40 +0000
-Message-ID: <9f49f9caa7f543448828716efb10f57b@ausx13mpc120.AMER.DELL.COM>
-References: <5F052604-4CFE-44AA-9E41-2DB516D150A8@gmail.com>
- <72A46090-7434-4895-945F-25D7BD20DB40@gmail.com>
- <CAJ=jquZVX43Od-z3OkFEuO+8sWZ=L9e_vawsGAgNWXnk3-fLHw@mail.gmail.com>
- <CAHp75Vca-6mkNMOPzU4Chbo8qAT-CV6dnqzQBbEVfw=6_-_MGw@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 08/11] intel_sgx: in-kernel launch enclave
+Date: Tue, 28 Nov 2017 22:17:39 +0200
+Message-ID: <20171128201739.t2r4wqofqluddsxl@linux.intel.com>
+References: <20171125193132.24321-9-jarkko.sakkinen@linux.intel.com>
+ <20171127095828.GA32603@aton>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:33531 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752202AbdK1Tun (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:16470 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752191AbdK1URi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 28 Nov 2017 14:50:43 -0500
-In-Reply-To: <CAHp75Vca-6mkNMOPzU4Chbo8qAT-CV6dnqzQBbEVfw=6_-_MGw@mail.gmail.com>
-Content-Language: en-US
+        Tue, 28 Nov 2017 15:17:38 -0500
+Content-Disposition: inline
+In-Reply-To: <20171127095828.GA32603@aton>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com, alex.hung@canonical.com
-Cc: killertofu@gmail.com, platform-driver-x86@vger.kernel.org, kernel@kempniu.pl
+To: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFuZHkgU2hldmNoZW5rbw0KPiBTZW50
-OiBUdWVzZGF5LCBOb3ZlbWJlciAyOCwgMjAxNyAxOjI4IFBNDQo+IFRvOiBBbGV4IEh1bmcgPGFs
-ZXguaHVuZ0BjYW5vbmljYWwuY29tPg0KPiBDYzogSmFzb24gR2VyZWNrZSA8a2lsbGVydG9mdUBn
-bWFpbC5jb20+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gTWljaGFs
-IEtlcGllbiA8a2VybmVsQGtlbXBuaXUucGw+DQo+IFN1YmplY3Q6IFJlOiBJbnRlbCAiNS1idXR0
-b24gYXJyYXkiIHN1cHBvcnQgb24gTW9iaWxlU3R1ZGlvIFBybw0KPiANCj4gT24gTW9uLCBOb3Yg
-MjcsIDIwMTcgYXQgMzo0MiBQTSwgQWxleCBIdW5nIDxhbGV4Lmh1bmdAY2Fub25pY2FsLmNvbT4g
-d3JvdGU6DQo+ID4gT24gU3VuLCBOb3YgMjYsIDIwMTcgYXQgMjoyOCBBTSwgSmFzb24gR2VyZWNr
-ZSA8a2lsbGVydG9mdUBnbWFpbC5jb20+IHdyb3RlOg0KPiA+PiBPbiBOb3ZlbWJlciAyNSwgMjAx
-NyAxMDoyMzozMyBBTSBQU1QsIEphc29uIEdlcmVja2UNCj4gPGtpbGxlcnRvZnVAZ21haWwuY29t
-PiB3cm90ZToNCj4gPj4+SSd2ZSBqdXN0IGZpbGVkIGEgYnVnIFsxXSBhYm91dCBhIGRldmljZSB3
-aGljaCBhcHBlYXJzIHRvIHVzZSB0aGUNCj4gPj4+IjUtYnV0dG9uIGFycmF5IiB0aGF0IHRoZSBw
-YXRjaCBbMl0gYWRkZWQgc3VwcG9ydCBmb3IgZWFybGllciB0aGlzDQo+ID4+PnllYXIuIEl0IHNl
-ZW1zIHRoYXQgb24gdGhpcyBwYXJ0aWN1bGFyIGRldmljZSAoYSBXYWNvbSBNb2JpbGVTdHVkaW8N
-Cj4gPj4+UHJvKSwgdGhlcmUgaXMgbm8gIkhFQkMiIGVudHJ5IGluIHRoZSBBQ1BJIHRhYmxlLiBC
-ZWNhdXNlIG9mIHRoaXMsIHRoZQ0KPiA+Pj5rZXJuZWwgZG9lcyBub3QgbG9hZCBzdXBwb3J0IGZv
-ciB0aGUgIjUtYnV0dG9uIGFycmF5IiB0aGF0IHRoaXMgZGV2aWNlDQo+ID4+PnNlZW1zIHRvIHVz
-ZS4NCj4gPg0KPiA+IEhFQkMgc2VlbXMgdG8gYmUgdGhlIGNvbnRyb2wgbWV0aG9kIHRoYXQgY2Fu
-IHJlcG9ydCA1IGJ1dHRvbiBhcnJheTsNCj4gPiBob3dldmVyLCBJIHRoaW5rIHdlIGNhbiB1c2Ug
-ZWl0aGVyIG9uZSBvZiB0aGUgYmVsb3cgdG8gd29ya2Fyb3VuZA0KPiA+IHRoaXM6DQo+ID4NCj4g
-PiAxLiBBZGQgYSBrZXJuZWwgcGFyYW1ldGVyIGFuZCBhIHF1aXJrIChleC4gRE1JIHN0cmluZ3Mp
-LiBUaGUgZG93bnNpZGUNCj4gPiBpcyB0aGUgcXVpcmsgY2FuIGdyb3cgaWYgbW9yZSBzeXN0ZW1z
-IGRvIG5vdCBpbmNsdWRlIEhFQkMNCj4gPg0KPiA+IDIuIENoZWNrIGJvdGggSEVCQyAmIEJUTkwg
-KGV4LiB0aGUgbWV0aG9kIHRoYXQgZW5hYmxlcyA1IGJ1dHRvbg0KPiA+IGFycmF5KS4gRWl0aGVy
-IG9uZSBlbmFibGVzIDUgYnV0dG9uIGFycmF5IGFuZCB0aGlzIGZpeGVzIGN1cnJlbnQNCj4gPiBw
-cm9ibGVtcy4NCj4gPg0KPiA+IFdoaWxlIDIgaXMgcHJlZmVyYWJsZSwgbm90aGluZyBzdG9wcyBm
-dXR1cmUgQklPUyBza2lwcyBCVE5MIGluIHRoZSBmdXR1cmUuLi4NCj4gPg0KPiA+IEFueSBjb21t
-ZW50cz8gSSB3aWxsIGNyZWF0ZSBhIHBhdGNoIGZvciB0ZXN0aW5nIGluIGEgZmV3IGRheXMuDQo+
-IA0KPiBMb29raW5nIGZvciBhIHRhYmxlcyB3aXRoIEhFQkMgYW5kIHRoaXMgb25lIEkgb25seSBj
-YW4gdGVsbCB0aGF0IEkNCj4gd291bGQgYXNzdW1lIHRoYXQgdGFibGVzIHcvbyBIRUJDIGNhbiBn
-dWVzcyBIRUJDIHJldHVybnMgdmFsdWUgZm9yDQo+IHN1cHBvcnRpbmcgNS1idXR0b24gYXJyYXku
-DQo+IFRob3VnaCB0byBiZSBvbiB0aGUgc2FmZSBzaWRlIEkgd291bGQgcmF0aGVyIHZvdGUgZm9y
-IERNSSBiYXNlZCBxdWlyaw0KDQpBbmR5LA0KDQpDb3VsZCB5b3UgcHJvdmlkZSBhbnkgaW5zaWdo
-dCBob3cgdGhpcyBwb3NzaWJseSB3b3JrcyBvbiBXaW5kb3dzPw0KSSB3b3VsZCBleHBlY3QgdGhh
-dCBjb3JuZXIgY2FzZXMgbGlrZSB0aGlzIHNob3VsZCBjb21wbGV0ZWx5IGZhbGwgb3Zlcg0Kb24g
-V2luZG93cyBzaW5jZSBpdCdzIGFuIEludGVsIGRyaXZlciBhbmQgbm90IGN1c3RvbWl6ZWQgcGVy
-DQpPRU0gb3IgYW55dGhpbmcuDQoNCk1heWJlIHdvdWxkIGl0IGJlIHBvc3NpYmxlIGZvciB0aGUg
-Zm9sa3MgYXQgSW50ZWwNCndobyB3b3JrZWQgb24gdGhlIFdpbmRvd3MgZHJpdmVyIHRvIHNoYXJl
-IGluZm9ybWF0aW9uIGFib3V0IGFueXRoaW5nDQpkaWZmZXJlbnQgdGhleSdyZSBkb2luZyB3aXRo
-IHJlZ2FyZHMgdG8gc29tZXRoaW5nIGxpa2UgYSBwb3NzaWJseSBtaXNzaW5nDQpIRUJDPyAgSXQg
-d291bGQgYmUgZ29vZCB0byBkbyB0aGUgc2FtZSByYXRoZXIgdGhhbiBiYW5kYWdlIG9uIGEgYnVu
-Y2gNCm9mIHRoaW5ncyB0aWVkIHRvIERNSSBxdWlya3MuICBJZiBpdCdzIG5vdCBwb3NzaWJsZSB0
-byBvYnRhaW4gdGhhdCBpbmZvcm1hdGlvbiwNCnRoZW4gSSB3b3VsZCBhZ3JlZSBETUkgcXVpcmtz
-IG1ha2VzIHNlbnNlIHRob3VnaC4NCg0KVGhhbmtzLA0KDQo+IA0KPiA+DQo+ID4+PlBsZWFzZSBs
-ZXQgbWUga25vdyB3aGF0IGFkZGl0aW9uYWwgaW5mb3JtYXRpb24gd291bGQgYmUgaGVscGZ1bCB0
-bw0KPiA+Pj5wcm92aWRlLiBJIGFtIGFibGUgdG8gdGVzdCBrZXJuZWwgcGF0Y2hlcy4NCj4gPj4+
-DQo+ID4+PlsxXTogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0x
-OTc5OTENCj4gPj4+DQo+ID4+PlsyXTogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
-aC85NTcxMzUzLw0KPiANCj4gPj4+Tm93IGluc3RlYWQgb2YgZm91ciBpbiB0aGUgZWlnaHRzIHBs
-YWNlIC8NCj4gPj4+eW914oCZdmUgZ290IHRocmVlLCDigJhDYXVzZSB5b3UgYWRkZWQgb25lICAv
-DQo+ID4+PihUaGF0IGlzIHRvIHNheSwgZWlnaHQpIHRvIHRoZSB0d28sICAgICAvDQo+ID4+PkJ1
-dCB5b3UgY2Fu4oCZdCB0YWtlIHNldmVuIGZyb20gdGhyZWUsICAgIC8NCj4gPj4+U28geW91IGxv
-b2sgYXQgdGhlIHNpeHR5LWZvdXJzLi4uLg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdh
-cmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Mon, Nov 27, 2017 at 10:58:28AM +0100, Till Smejkal wrote:
+> >   drivers/platform/x86/intel_sgx/intel_sgx_signing_key.pem
+>                                    ^
+>                                    signing_key.pem
+> 
+> You forgot to change the name of the pem file in the commit message.
+
+Thanks for catching this :-) Will fix it for the next version.
+
+/Jarkko
