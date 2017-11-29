@@ -1,130 +1,49 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: Intel "5-button array" support on MobileStudio Pro
-Date: Wed, 29 Nov 2017 23:06:38 +0800
-Message-ID: <CAJ=jquY8Ff=P-MAMxPY2qWBwUyfz3xLaRftRw30t5tZQ5iyujA@mail.gmail.com>
-References: <5F052604-4CFE-44AA-9E41-2DB516D150A8@gmail.com>
- <72A46090-7434-4895-945F-25D7BD20DB40@gmail.com> <CAJ=jquZVX43Od-z3OkFEuO+8sWZ=L9e_vawsGAgNWXnk3-fLHw@mail.gmail.com>
- <CAHp75Vca-6mkNMOPzU4Chbo8qAT-CV6dnqzQBbEVfw=6_-_MGw@mail.gmail.com> <9f49f9caa7f543448828716efb10f57b@ausx13mpc120.AMER.DELL.COM>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 04/11] x86: define IA32_FEATUE_CONTROL.SGX_LC
+Date: Wed, 29 Nov 2017 17:38:15 +0200
+Message-ID: <20171129153815.mkjncw3t22sser3c@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <20171125193132.24321-5-jarkko.sakkinen@linux.intel.com>
+ <1511889371.9392.58.camel@intel.com>
+ <1511893683.9392.100.camel@intel.com>
+ <20171128205324.pqojyfqbet3h7re4@linux.intel.com>
+ <20171128212407.lky32cdghxqsxd4e@linux.intel.com>
+ <1511904794.18982.7.camel@intel.com>
+ <20171128215513.qp2bs6462eq4pkz4@linux.intel.com>
+ <1511906403.18982.17.camel@intel.com>
+ <20171128222141.pljpvoou7bglbzid@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:49195 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932879AbdK2PGo (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 29 Nov 2017 10:06:44 -0500
-Received: from mail-qk0-f200.google.com ([209.85.220.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1eK3wh-0003N9-KM
-        for platform-driver-x86@vger.kernel.org; Wed, 29 Nov 2017 15:06:43 +0000
-Received: by mail-qk0-f200.google.com with SMTP id v193so2313551qka.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Nov 2017 07:06:43 -0800 (PST)
-In-Reply-To: <9f49f9caa7f543448828716efb10f57b@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jason Gerecke <killertofu@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171128222141.pljpvoou7bglbzid@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Piotr Luc <piotr.luc@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 29, 2017 at 3:50 AM,  <Mario.Limonciello@dell.com> wrote:
->> -----Original Message-----
->> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
->> owner@vger.kernel.org] On Behalf Of Andy Shevchenko
->> Sent: Tuesday, November 28, 2017 1:28 PM
->> To: Alex Hung <alex.hung@canonical.com>
->> Cc: Jason Gerecke <killertofu@gmail.com>; platform-driver-x86@vger.kernel.org;
->> Michal Kepien <kernel@kempniu.pl>
->> Subject: Re: Intel "5-button array" support on MobileStudio Pro
->>
->> On Mon, Nov 27, 2017 at 3:42 PM, Alex Hung <alex.hung@canonical.com> wrote:
->> > On Sun, Nov 26, 2017 at 2:28 AM, Jason Gerecke <killertofu@gmail.com> wrote:
->> >> On November 25, 2017 10:23:33 AM PST, Jason Gerecke
->> <killertofu@gmail.com> wrote:
->> >>>I've just filed a bug [1] about a device which appears to use the
->> >>>"5-button array" that the patch [2] added support for earlier this
->> >>>year. It seems that on this particular device (a Wacom MobileStudio
->> >>>Pro), there is no "HEBC" entry in the ACPI table. Because of this, the
->> >>>kernel does not load support for the "5-button array" that this device
->> >>>seems to use.
->> >
->> > HEBC seems to be the control method that can report 5 button array;
->> > however, I think we can use either one of the below to workaround
->> > this:
->> >
->> > 1. Add a kernel parameter and a quirk (ex. DMI strings). The downside
->> > is the quirk can grow if more systems do not include HEBC
->> >
->> > 2. Check both HEBC & BTNL (ex. the method that enables 5 button
->> > array). Either one enables 5 button array and this fixes current
->> > problems.
->> >
->> > While 2 is preferable, nothing stops future BIOS skips BTNL in the future...
->> >
->> > Any comments? I will create a patch for testing in a few days.
->>
->> Looking for a tables with HEBC and this one I only can tell that I
->> would assume that tables w/o HEBC can guess HEBC returns value for
->> supporting 5-button array.
->> Though to be on the safe side I would rather vote for DMI based quirk
+On Wed, Nov 29, 2017 at 12:21:41AM +0200, Jarkko Sakkinen wrote:
+> On Tue, Nov 28, 2017 at 02:00:03PM -0800, Sean Christopherson wrote:
+> > What about SGX_LC_ENABLE?  The title in the MSR section of the SDM is
+> > "SGX Launch Control Enable", and it's more consistent with the other
+> > bits defined in feature control.  I'd also prefer that name for the
+> > actual #define too, SGX_LAUNCH_CONTROL_ENABLE is overly verbose IMO.
+> 
+> This is a bit ugly name but it is also very clear:
+> 
+>   FEATURE_CONTROL_SGX_LEPUBKEYHASH_WRITE_ENABLE
+> 
+> Just pushed update to the le branch. SGX_LC_ENABLE is a nice short name
+> but it does not reflect the semantics.
+> 
+> Maybe we could combine these and name it as
+> 
+>   FEATURE_CONTROL_SGX_LC_WRITE_ENABLE
+> 
+> It is not as ugly and is very clear what it does.
 
-After thinking through again I think staying safe with DMI quirk may
-be a good idea.
+I ended up with FEATURE_CONTROL_SGX_LC_WR. I think that is fairly
+reasonable name for bit 17.
 
-1. Only one system needs workaround now
-2. Future systems may behave differently and we will have more test samples
-
-Jason,
-Please upload output of dmidecode to
-https://bugzilla.kernel.org/show_bug.cgi?id=197991 and I can modify
-intel-hid accordingly.
-
-This may take couple days before I can find a system to test.
-
->
-> Andy,
->
-> Could you provide any insight how this possibly works on Windows?
-> I would expect that corner cases like this should completely fall over
-> on Windows since it's an Intel driver and not customized per
-> OEM or anything.
->
-> Maybe would it be possible for the folks at Intel
-> who worked on the Windows driver to share information about anything
-> different they're doing with regards to something like a possibly missing
-> HEBC?  It would be good to do the same rather than bandage on a bunch
-> of things tied to DMI quirks.  If it's not possible to obtain that information,
-> then I would agree DMI quirks makes sense though.
-
-If we can refer how it is done in Windows we can improve it but let's
-try DMI quirk first.
-
->
-> Thanks,
->
->>
->> >
->> >>>Please let me know what additional information would be helpful to
->> >>>provide. I am able to test kernel patches.
->> >>>
->> >>>[1]: https://bugzilla.kernel.org/show_bug.cgi?id=197991
->> >>>
->> >>>[2]: https://patchwork.kernel.org/patch/9571353/
->>
->> >>>Now instead of four in the eights place /
->> >>>youâ€™ve got three, â€˜Cause you added one  /
->> >>>(That is to say, eight) to the two,     /
->> >>>But you canâ€™t take seven from three,    /
->> >>>So you look at the sixty-fours....
->>
->>
->> --
->> With Best Regards,
->> Andy Shevchenko
-
-
-
--- 
-Cheers,
-Alex Hung
+/Jarkko
