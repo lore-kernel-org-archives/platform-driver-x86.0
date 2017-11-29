@@ -1,49 +1,73 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v6 04/11] x86: define IA32_FEATUE_CONTROL.SGX_LC
-Date: Wed, 29 Nov 2017 17:38:15 +0200
-Message-ID: <20171129153815.mkjncw3t22sser3c@linux.intel.com>
+Subject: Re: [PATCH v6 06/11] intel_sgx: driver for Intel Software Guard
+ Extensions
+Date: Wed, 29 Nov 2017 20:02:32 +0200
+Message-ID: <20171129180232.h3f2fbqocfj32tg7@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
- <20171125193132.24321-5-jarkko.sakkinen@linux.intel.com>
- <1511889371.9392.58.camel@intel.com>
- <1511893683.9392.100.camel@intel.com>
- <20171128205324.pqojyfqbet3h7re4@linux.intel.com>
- <20171128212407.lky32cdghxqsxd4e@linux.intel.com>
- <1511904794.18982.7.camel@intel.com>
- <20171128215513.qp2bs6462eq4pkz4@linux.intel.com>
- <1511906403.18982.17.camel@intel.com>
- <20171128222141.pljpvoou7bglbzid@linux.intel.com>
+ <20171125193132.24321-7-jarkko.sakkinen@linux.intel.com>
+ <20171126173356.ik7dhvvcojgermof@linux.intel.com>
+ <20171126184627.hegr3qzgous5ivpe@linux.intel.com>
+ <20171126190109.qfvjoq2sbz5x3ve7@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171128222141.pljpvoou7bglbzid@linux.intel.com>
+In-Reply-To: <20171126190109.qfvjoq2sbz5x3ve7@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Piotr Luc <piotr.luc@intel.com>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>
+To: platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 29, 2017 at 12:21:41AM +0200, Jarkko Sakkinen wrote:
-> On Tue, Nov 28, 2017 at 02:00:03PM -0800, Sean Christopherson wrote:
-> > What about SGX_LC_ENABLE?  The title in the MSR section of the SDM is
-> > "SGX Launch Control Enable", and it's more consistent with the other
-> > bits defined in feature control.  I'd also prefer that name for the
-> > actual #define too, SGX_LAUNCH_CONTROL_ENABLE is overly verbose IMO.
+On Sun, Nov 26, 2017 at 09:01:09PM +0200, Jarkko Sakkinen wrote:
+> On Sun, Nov 26, 2017 at 08:46:27PM +0200, Jarkko Sakkinen wrote:
+> > On Sun, Nov 26, 2017 at 07:33:56PM +0200, Jarkko Sakkinen wrote:
+> > > > +struct sgx_encl_page {
+> > > > +	unsigned long addr;
+> > > > +	unsigned int flags;
+> > > > +	void *epc_page;
+> > > > +	struct sgx_va_page *va_page;
+> > > > +	unsigned int va_offset;
+> > > > +	struct list_head list;
+> > > > +};
+> > > 
+> > > This can be without major streches hoops packed way more. There are 12
+> > > bits free for use in the addr field. I can use low three bits for flags
+> > > and upper nine bits for va_offset.
+> > > 
+> > > I think I can also quite easily union epc_page and va_page fields.
+> > > 
+> > > With these changes the struct would shrink to:
+> > > 
+> > > struct sgx_encl_page {
+> > > 	unsigned long addr;
+> > > 	union {
+> > > 		void *epc_page;
+> > > 		struct sgx_va_page *va_page;
+> > > 	};
+> > > 	struct list_head list;
+> > > };
+> > 
+> > Once I started to thinking more about this I realized that this can be
+> > shrunk even further. I can drop the list field and use a tag for loaded
+> > pages in the radix tree where these are stored. The end result would be
+> > 
+> > struct sgx_encl_page {
+> > 	unsigned long addr;
+> >  	union {
+> >  		void *epc_page;
+> >  		struct sgx_va_page *va_page;
+> >  	};
+> > };
 > 
-> This is a bit ugly name but it is also very clear:
+> With this last size optimization there is an issue that it would be nice
+> to select the pages to be swapped out in FIFO order. That kind of means
+> that tag would not work quite well.
 > 
->   FEATURE_CONTROL_SGX_LEPUBKEYHASH_WRITE_ENABLE
-> 
-> Just pushed update to the le branch. SGX_LC_ENABLE is a nice short name
-> but it does not reflect the semantics.
-> 
-> Maybe we could combine these and name it as
-> 
->   FEATURE_CONTROL_SGX_LC_WRITE_ENABLE
-> 
-> It is not as ugly and is very clear what it does.
+> I could try an approach where I have a pointer array to present a queue
+> inside struct sgx_encl for loaded pages and in that way get rid of the
+> 'list' field.
 
-I ended up with FEATURE_CONTROL_SGX_LC_WR. I think that is fairly
-reasonable name for bit 17.
+I did other optimizations except taking the list field away so it's now
+a 32 byte structure. I guess sufficient for the first mainline version.
 
 /Jarkko
