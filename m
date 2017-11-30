@@ -1,30 +1,42 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/trivial] samsung-laptop: Grammar s/are can/can/
-Date: Thu, 30 Nov 2017 14:32:39 +0100
-Message-ID: <1512048759-18075-1-git-send-email-geert+renesas@glider.be>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 09/11] fs/pipe.c: export create_pipe_files() and
+ replace_fd()
+Date: Thu, 30 Nov 2017 18:43:21 +0200
+Message-ID: <20171130164321.juvn67pu4jrjq76j@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <20171125193132.24321-10-jarkko.sakkinen@linux.intel.com>
+ <20171128143504.GA22918@infradead.org>
+ <20171128204220.j7ipouoyhsbvm7zk@linux.intel.com>
+ <20171128210551.GA12431@infradead.org>
+ <20171128215753.qnu5krswowjq6gwn@linux.intel.com>
+ <20171129231357.GA23443@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171129231357.GA23443@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Kosina <trivial@kernel.org>, Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/ABI/testing/sysfs-driver-samsung-laptop | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Nov 29, 2017 at 03:13:57PM -0800, Christoph Hellwig wrote:
+> On Tue, Nov 28, 2017 at 11:57:53PM +0200, Jarkko Sakkinen wrote:
+> > > Yes.  You still shall not play nasty games with file descriptors.
+> > 
+> > I need to put something to file descriptors in order to have a IO
+> > channels for the launch enclave hosting process.
+> 
+> Just do it like any other program - open it from your userspace
+> program using open() and related syscalls.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-index 63c1ad0212fc8624..34d3a3359cf4587f 100644
---- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-@@ -3,7 +3,7 @@ Date:		January 1, 2010
- KernelVersion:	2.6.33
- Contact:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- Description:	Some Samsung laptops have different "performance levels"
--		that are can be modified by a function key, and by this
-+		that can be modified by a function key, and by this
- 		sysfs file.  These values don't always make a whole lot
- 		of sense, but some users like to modify them to keep
- 		their fans quiet at all costs.  Reading from this file
--- 
-2.7.4
+In this case it would not work as the launch enclave is still part of
+the kernel and it would create a dependency how the user space defines
+paths. If using pipe specifically is an issue, I could easily use shmem
+file as a mean for communiation.
+
+The way I implemented is much like how I did arch/x86/realmode with HPA
+and it has kind of comparable requirements, part of the kernel but not
+exactly code living in the kernel namespace.
+
+/Jarkko
