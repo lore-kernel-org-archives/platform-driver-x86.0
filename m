@@ -1,39 +1,30 @@
-From: =?utf-8?B?QWxlxaEgS2FwaWNh?= <kapica@fel.cvut.cz>
-Subject: Problem with a notebook keyboard after plug into dock station
-Date: Thu, 30 Nov 2017 12:09:15 +0100
-Message-ID: <op.zaijxpd8dqmfw5@localhost>
-Reply-To: kapica@fel.cvut.cz
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes
-Content-Transfer-Encoding: 8bit
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/trivial] samsung-laptop: Grammar s/are can/can/
+Date: Thu, 30 Nov 2017 14:32:39 +0100
+Message-ID: <1512048759-18075-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org
+To: Jiri Kosina <trivial@kernel.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: platform-driver-x86.vger.kernel.org
 
-After the last  dist upgrade my system (I use Debian unstable amd64), was encountered a problem, that begined from the kernel 4.13 and probably concerns the wmi module. Kernel version 4.12 and lower is ok.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/ABI/testing/sysfs-driver-samsung-laptop | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have a HP ProBook 6475b notebook. When I plug-in it in the 'HP 230W Advanced Docking Station', the keyboard will stop working in the X server environment.
-
-Accepted only a code keys from external USB keyboard. But on the text console  works the notebook keyboard seamlessly too.
-
-acpi_listen:
-…
-95F24279-4D7B-43 00000080 00000000
-video/tabletmode TBLT 0000008A 00000001
-ac_adapter ACPI0003:00 00000080 00000001
-…
-
-When unplug notebook from dock station, it work again normal.
-
-I don't know if is the bug or feature, but it is very uncomfortable because external keyboard occupied place on my table.
-
-If it should be feature, please advise mee how to turn it off.
-
-Thank you,
-
-Aleš Kapica
-
+diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+index 63c1ad0212fc8624..34d3a3359cf4587f 100644
+--- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
++++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+@@ -3,7 +3,7 @@ Date:		January 1, 2010
+ KernelVersion:	2.6.33
+ Contact:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ Description:	Some Samsung laptops have different "performance levels"
+-		that are can be modified by a function key, and by this
++		that can be modified by a function key, and by this
+ 		sysfs file.  These values don't always make a whole lot
+ 		of sense, but some users like to modify them to keep
+ 		their fans quiet at all costs.  Reading from this file
 -- 
-Using Opera's revolutionary e-mail client: http://www.opera.com/mail/
+2.7.4
