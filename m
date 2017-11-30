@@ -1,46 +1,58 @@
-From: =?iso-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens@rwth-aachen.de>
-Subject: Re: [PATCH v2 3/5] Input: add KEY_ROTATE_LOCK_TOGGLE
-Date: Thu, 30 Nov 2017 17:51:37 +0000
-Message-ID: <2845999.tyV6EiPLrg@sbruens-linux>
-References: <20171109224436.16472-1-stefan.bruens@rwth-aachen.de>
- <8ebdb255-b0b5-4de2-a680-e7f6713256d0@rwthex-w2-a.rwth-ad.de>
- <1510270493.2624.49.camel@hadess.net>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: Re: [PATCH v6 09/11] fs/pipe.c: export create_pipe_files() and
+ replace_fd()
+Date: Thu, 30 Nov 2017 10:38:30 -0800
+Message-ID: <1512067110.3020.24.camel@HansenPartnership.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+         <20171125193132.24321-10-jarkko.sakkinen@linux.intel.com>
+         <20171128143504.GA22918@infradead.org>
+         <20171128204220.j7ipouoyhsbvm7zk@linux.intel.com>
+         <20171128210551.GA12431@infradead.org>
+         <20171128215753.qnu5krswowjq6gwn@linux.intel.com>
+         <20171129231357.GA23443@infradead.org>
+         <20171130164321.juvn67pu4jrjq76j@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1510270493.2624.49.camel@hadess.net>
-Content-Language: en-US
-Content-ID: <D052AFA297317F4E88E9A5837555E68F@rwth-ad.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171130164321.juvn67pu4jrjq76j@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Christoph Hellwig <hch@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Freitag, 10. November 2017 00:34:53 CET Bastien Nocera wrote:
-> On Thu, 2017-11-09 at 23:44 +0100, Stefan Br�ns wrote:
-> > The key has the same use as the SW_ROTATE_LOCK, but is used on
-> > devices
-> > where the state is not tracked by the hardware but has to be handled
-> > in software.
+On Thu, 2017-11-30 at 18:43 +0200, Jarkko Sakkinen wrote:
+> On Wed, Nov 29, 2017 at 03:13:57PM -0800, Christoph Hellwig wrote:
+> > 
+> > On Tue, Nov 28, 2017 at 11:57:53PM +0200, Jarkko Sakkinen wrote:
+> > > 
+> > > > 
+> > > > Yes.  You still shall not play nasty games with file
+> > > > descriptors.
+> > > 
+> > > I need to put something to file descriptors in order to have a IO
+> > > channels for the launch enclave hosting process.
+> > 
+> > Just do it like any other program - open it from your userspace
+> > program using open() and related syscalls.
 > 
-> I'll let the input and hid subsystem maintainers have the final say
-> here, though I think that sending out Win+O would be easier, as this is
-> already something that desktops need to support for those devices that
-> send the actual Win+O key combination when those buttons are pressed
-> there.
-> 
-> If we're going with the separate keycode, could you also file bugs
-> against xkbd-common and xkeyboard-config to get the key added to the
-> list of XF86 keysyms and to the default evdev keymap? Otherwise Wayland
-> and X11 based desktops won't be able to use it.
+> In this case it would not work as the launch enclave is still part of
+> the kernel and it would create a dependency how the user space
+> defines paths. If using pipe specifically is an issue, I could easily
+> use shmem file as a mean for communiation.
 
-Filed for xkeyboard-config:
-https://bugs.freedesktop.org/show_bug.cgi?id=103998
+Can't you simply use 
 
-and xkb-common:
-https://github.com/xkbcommon/libxkbcommon/issues/55
+sys_pipe2()
+sys_close()
+sys_dup2()
 
-Regards,
+To achieve the same effect as replace_fd()/create_pipe_files()?
 
-Stefan
+The point Christoph is making is that you can call sys_ interfaces from
+within the kernel (carefully) and have them operate like direct
+invocations.  Look at main.c:kernel_init_freeable() it's doing
+something similar to what you want, except with the console, not a pipe
+and it begins with the file table empty.
+
+James
