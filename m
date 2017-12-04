@@ -1,80 +1,64 @@
-From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Actually use mask parameter in
- hp_wmi_hw_state
-Date: Mon, 4 Dec 2017 09:31:20 +0100
-Message-ID: <406921d4-0052-19f1-e949-c8026d9cc22d@daenzer.net>
-References: <20171128151758.9234-1-michel@daenzer.net>
- <20171128165724.GA16349@fury>
- <e8ff5280-537e-bb60-f0ba-791117abb4a4@daenzer.net>
- <CAHp75VdSiR=X-Dq2dto2osc3UiTid7h=T764cZkNgXEyTpEJcg@mail.gmail.com>
- <f60a192f-c83e-9a27-4d4a-64cecaeb9378@daenzer.net>
- <20171201193929.GA18881@fury>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 06/11] intel_sgx: driver for Intel Software Guard
+ Extensions
+Date: Mon, 4 Dec 2017 10:59:50 +0200
+Message-ID: <20171204085950.dnjsec6xdihhpwbb@linux.intel.com>
+References: <20171125193132.24321-7-jarkko.sakkinen@linux.intel.com>
+ <20171130173200.GA11190@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.netline.ch ([148.251.143.178]:34498 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751205AbdLDIbY (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:2775 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753414AbdLDI74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Dec 2017 03:31:24 -0500
-In-Reply-To: <20171201193929.GA18881@fury>
-Content-Language: en-CA
+        Mon, 4 Dec 2017 03:59:56 -0500
+Content-Disposition: inline
+In-Reply-To: <20171130173200.GA11190@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On 2017-12-01 08:39 PM, Darren Hart wrote:
-> On Tue, Nov 28, 2017 at 08:41:47PM +0100, Michel Dänzer wrote:
->> On 2017-11-28 08:30 PM, Andy Shevchenko wrote:
->>> On Tue, Nov 28, 2017 at 8:06 PM, Michel Dänzer <michel@daenzer.net> wrote:
->>>> On 2017-11-28 05:57 PM, Darren Hart wrote:
->>>>> On Tue, Nov 28, 2017 at 04:17:58PM +0100, Michel Dänzer wrote:
->>>>>> We were always checking bit 0 (which represents the docked state)
->>>>>> regardless of the mask.
->>>>>>
->>>>>> Fixes the "tablet mode" state always being reported the same as the
->>>>>> docked state, which with current libinput can cause the built-in input
->>>>>> devices of laptops to be incorrectly disabled while docked.
->>>
->>>>> Merged in 4.15-rc1
->>>>
->>>> AFAIK commits without
->>>>
->>>>  Cc: stable@vger.kernel.org
->>>>
->>>> don't get automatically picked up for stable branches. Can you manually
->>>> nominate 9968e12 for stable?
->>>
->>> AFAIK Greg picks up patches based on Fixes tag as well.
->>> Feel free to ping us or just forward that one yourself if Greg will
->>> not pick up in reasonable (month?) time.
->>
->> Both 4.14.1 and 4.14.2 were released after Linus merged the fix, but
+On Thu, Nov 30, 2017 at 09:32:01AM -0800, Sean Christopherson wrote:
+> On Sat, Nov 25, 2017 at 09:29:24PM +0200, Jarkko Sakkinen wrote:
+> > +static void *sgx_try_alloc_page(void)
+> > +{
+> > +       struct sgx_epc_bank *bank;
+> > +       void *page = NULL;
+> > +       int i;
+> > +
+> > +       for (i = 0; i < sgx_nr_epc_banks; i++) {
+> > +               bank = &sgx_epc_banks[i];
+> > +
+> > +               down_write(&bank->lock);
 > 
-> Based on Documentation/process/stable-kernel-rules.rst, this seems unlikely to
-> happen automatically.
+> Is a R/W semaphore actually preferable to a spinlock?  Concurrent
+> free calls don't seem that interesting/beneficial because freeing
+> an enclave's pages isn't multiplexed across multiple CPUs, unlike
+> the allocation of EPC pages.
 
-Right, because there's no Cc: stable@vger.kernel.org in the commit log,
-that was my point above. :)
+I get about ~10-15% performance increase on high stress. It is benefical
+to spinlock.
 
+> As a whole, I'm not a fan of packing the EPC page pointers into an
+> array rather than encapsulating them in a struct+list.  The primary
+> benefit I see for the array approach is that it saves ~8 bytes per
+> free EPC page, but at a cost of increased memory usage for in-use
+> pages and severely restricting the ability to enhance/modify how
+> EPC pages are tracked, reclaimed, etc...
 
->> neither has it. Given that, and that a fair number of people seem to be
->> running into this, seems like a good idea to do it ASAP.
-> 
-> This is our responsibility to check if patches are candidates for stable, and
-> the Fixes tag should be a trigger for us, the maintainers, to do that check.
-> Sometimes we miss things, sometimes the dependencies are more than they are
-> worth. In this case, we just missed it.
-> 
-> You can just send this in yourself using the original fix and following the
-> process in stable-kernel-rules.rst.
+This is not true. You can put EPC page descriptor to any structure you
+want.
 
-I did, and Greg picked it up promptly. I forgot to Cc you guys on the
-nomination e-mail, sorry about that.
+list_head can be dropped from struct sgx_enc_page too.
 
+> The main issue is that the array approach relies on the caller to
+> handle reclaim.  This effectively makes it impossible to reclaim
+> pages from multiple processes, requires other consumers e.g. KVM
+> to implement their own reclaim logic and kthread, and prevents
+> cgroup accounting because the cgroup can't initiate reclaim.
 
--- 
-Earthling Michel Dänzer               |               http://www.amd.com
-Libre software enthusiast             |             Mesa and X developer
+Not really following here.
+
+/Jarkko
