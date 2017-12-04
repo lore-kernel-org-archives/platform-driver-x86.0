@@ -1,63 +1,65 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v6 09/11] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Mon, 4 Dec 2017 11:00:59 +0200
-Message-ID: <20171204090059.wgys4vpqklampcpy@linux.intel.com>
+Subject: Re: [PATCH v6 08/11] intel_sgx: in-kernel launch enclave
+Date: Mon, 4 Dec 2017 11:23:03 +0200
+Message-ID: <20171204092303.op7xo6nsptyvvtfv@linux.intel.com>
 References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
- <20171125193132.24321-10-jarkko.sakkinen@linux.intel.com>
- <20171128143504.GA22918@infradead.org>
- <20171128204220.j7ipouoyhsbvm7zk@linux.intel.com>
- <20171128210551.GA12431@infradead.org>
- <20171128215753.qnu5krswowjq6gwn@linux.intel.com>
- <20171129231357.GA23443@infradead.org>
- <20171130164321.juvn67pu4jrjq76j@linux.intel.com>
- <1512067110.3020.24.camel@HansenPartnership.com>
+ <20171125193132.24321-9-jarkko.sakkinen@linux.intel.com>
+ <20171128223852.5hcyg7kwf4su5qy5@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:23087 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753767AbdLDJXH (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 4 Dec 2017 04:23:07 -0500
 Content-Disposition: inline
-In-Reply-To: <1512067110.3020.24.camel@HansenPartnership.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Christoph Hellwig <hch@infradead.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20171128223852.5hcyg7kwf4su5qy5@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On Thu, Nov 30, 2017 at 10:38:30AM -0800, James Bottomley wrote:
-> On Thu, 2017-11-30 at 18:43 +0200, Jarkko Sakkinen wrote:
-> > On Wed, Nov 29, 2017 at 03:13:57PM -0800, Christoph Hellwig wrote:
-> > > 
-> > > On Tue, Nov 28, 2017 at 11:57:53PM +0200, Jarkko Sakkinen wrote:
-> > > > 
-> > > > > 
-> > > > > Yes.  You still shall not play nasty games with file
-> > > > > descriptors.
-> > > > 
-> > > > I need to put something to file descriptors in order to have a IO
-> > > > channels for the launch enclave hosting process.
-> > > 
-> > > Just do it like any other program - open it from your userspace
-> > > program using open() and related syscalls.
+On Wed, Nov 29, 2017 at 12:38:52AM +0200, Jarkko Sakkinen wrote:
+> On Sat, Nov 25, 2017 at 09:29:25PM +0200, Jarkko Sakkinen wrote:
+> > This commits implements the in-kernel launch enclave. It is wrapped into
+> > a user space program that reads SIGSTRUCT instances from stdin and
+> > outputs launch tokens to stdout.
 > > 
-> > In this case it would not work as the launch enclave is still part of
-> > the kernel and it would create a dependency how the user space
-> > defines paths. If using pipe specifically is an issue, I could easily
-> > use shmem file as a mean for communiation.
+> > The commit also adds enclave signing tool that is used by kbuild to
+> > measure and sign the launch enclave.
+> > 
+> > CONFIG_INTEL_SGX_SIGNING_KEY points to a PEM-file for the 3072-bit RSA
+> > key that is used as the LE public key pair. The default location is:
+> > 
+> >   drivers/platform/x86/intel_sgx/intel_sgx_signing_key.pem
+> > 
+> > If the default key does not exist kbuild will generate a random key and
+> > place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+> > the passphrase for the LE public key.
+> > 
+> > TinyCrypt (https://github.com/01org/tinycrypt) is used as AES
+> > implementation, which is not timing resistant. Eventually this needs to
+> > be replaced with AES-NI based implementation that could be either
+> > 
+> > - re-use existing AES-NI code in the kernel
+> > - have its own hand written code
 > 
-> Can't you simply use 
+> The AES is the biggest remaining open I think.
 > 
-> sys_pipe2()
-> sys_close()
-> sys_dup2()
+> I'm starting look at how to re-use kernel aesni code by linking it as
+> part of the enclave binary i.e. aesni-intel_asm.S. This will render
+> away TinyCrypt's AES code that is used ATM.
 > 
-> To achieve the same effect as replace_fd()/create_pipe_files()?
+> I still need TinyCrypt CMAC, which I will modify to call CBC AES
+> encryption routine.
 > 
-> The point Christoph is making is that you can call sys_ interfaces from
-> within the kernel (carefully) and have them operate like direct
-> invocations.  Look at main.c:kernel_init_freeable() it's doing
-> something similar to what you want, except with the console, not a pipe
-> and it begins with the file table empty.
+> Does this sound like a sufficient plan?
 
-Thank you. I'll take a peek.
+I'm successfully using now kernel provided aesni_enc and aesni_set_key.
+Only CMAC comes from TC. I think refactor stuff in cmac_mode.c to kernel
+coding style and call it as derived works from TC since already calls
+have replaced (AES). Makes sense to clean it up and make it pass
+checkpatch.pl.
 
 /Jarkko
