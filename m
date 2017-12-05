@@ -1,128 +1,69 @@
 From: Jason Gerecke <killertofu@gmail.com>
-Subject: Re: [PATCH] intel-hid: add a DMI quirk to support Wacom Mobile Studio Pro
-Date: Tue, 05 Dec 2017 10:01:00 -0800
-Message-ID: <A0A02DDE-F512-4523-AC1F-A63E0685B027@gmail.com>
-References: <1512460332-7420-1-git-send-email-alex.hung@canonical.com>
+Subject: Re: [PATCH v2 3/5] Input: add KEY_ROTATE_LOCK_TOGGLE
+Date: Tue, 5 Dec 2017 10:50:48 -0800
+Message-ID: <CANRwn3SzMUvNoBjp2X1jtN9XaQ98RxCCZ86Hu4sPQygTORqjKg@mail.gmail.com>
+References: <20171109224436.16472-1-stefan.bruens@rwth-aachen.de>
+ <8ebdb255-b0b5-4de2-a680-e7f6713256d0@rwthex-w2-a.rwth-ad.de>
+ <1510270493.2624.49.camel@hadess.net> <2845999.tyV6EiPLrg@sbruens-linux>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pf0-f194.google.com ([209.85.192.194]:40022 "EHLO
-        mail-pf0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752481AbdLESBF (ORCPT
+Received: from mail-vk0-f46.google.com ([209.85.213.46]:44175 "EHLO
+        mail-vk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752466AbdLESut (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Dec 2017 13:01:05 -0500
-Received: by mail-pf0-f194.google.com with SMTP id v26so712654pfl.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Dec 2017 10:01:05 -0800 (PST)
-In-Reply-To: <1512460332-7420-1-git-send-email-alex.hung@canonical.com>
+        Tue, 5 Dec 2017 13:50:49 -0500
+In-Reply-To: <2845999.tyV6EiPLrg@sbruens-linux>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>alex.hung@canonical.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
+To: =?UTF-8?B?QnLDvG5zLCBTdGVmYW4=?= <Stefan.Bruens@rwth-aachen.de>, Alex Hung <alex.hung@canonical.com>
+Cc: Bastien Nocera <hadess@hadess.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On December 4, 2017 11:52:12 PM PST, Alex Hung <alex=2Ehung@canonical=2Ecom=
-> wrote:
->HEBC method reports capabilities of 5 button array but Wacom Mobile
->Studio Pro does not have this control method=2E A DMI quirk was created
+Looks like this might also be needed for the MobileStudio Pro...
 
-Nit: s/Mobile Studio/MobileStudio/ here and in the subject and the `button=
-_array_table`
-
->to
->enable 5 button array for this system=2E
->
->Bugzilla: https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D197991
->
->Reported-by: Jason Gerecke <killertofu@gmail=2Ecom>
-
-Please use "Reported-by: Jason Gerecke <jason=2Egerecke@wacom=2Ecom>"=20
-
-Thanks again for the fix!=20
+https://bugzilla.kernel.org/show_bug.cgi?id=3D197991
 
 Jason
 ---
 Now instead of four in the eights place /
-you=E2=80=99ve got three, =E2=80=98Cause you added one=C2=A0 /
-(That is to say, eight) to the two,=C2=A0 =C2=A0 =C2=A0/
-But you can=E2=80=99t take seven from three,=C2=A0 =C2=A0 /
-So you look at the sixty-fours=2E=2E=2E=2E
+you=E2=80=99ve got three, =E2=80=98Cause you added one  /
+(That is to say, eight) to the two,     /
+But you can=E2=80=99t take seven from three,    /
+So you look at the sixty-fours....
 
->Signed-off-by: Alex Hung <alex=2Ehung@canonical=2Ecom>
->---
->drivers/platform/x86/intel-hid=2Ec | 34
->+++++++++++++++++++++++++++++++---
-> 1 file changed, 31 insertions(+), 3 deletions(-)
+
+
+On Thu, Nov 30, 2017 at 9:51 AM, Br=C3=BCns, Stefan
+<Stefan.Bruens@rwth-aachen.de> wrote:
+> On Freitag, 10. November 2017 00:34:53 CET Bastien Nocera wrote:
+>> On Thu, 2017-11-09 at 23:44 +0100, Stefan Br=C3=BCns wrote:
+>> > The key has the same use as the SW_ROTATE_LOCK, but is used on
+>> > devices
+>> > where the state is not tracked by the hardware but has to be handled
+>> > in software.
+>>
+>> I'll let the input and hid subsystem maintainers have the final say
+>> here, though I think that sending out Win+O would be easier, as this is
+>> already something that desktops need to support for those devices that
+>> send the actual Win+O key combination when those buttons are pressed
+>> there.
+>>
+>> If we're going with the separate keycode, could you also file bugs
+>> against xkbd-common and xkeyboard-config to get the key added to the
+>> list of XF86 keysyms and to the default evdev keymap? Otherwise Wayland
+>> and X11 based desktops won't be able to use it.
 >
->diff --git a/drivers/platform/x86/intel-hid=2Ec
->b/drivers/platform/x86/intel-hid=2Ec
->index f470279=2E=2E54d761c 100644
->--- a/drivers/platform/x86/intel-hid=2Ec
->+++ b/drivers/platform/x86/intel-hid=2Ec
->@@ -25,6 +25,7 @@
-> #include <linux/acpi=2Eh>
-> #include <linux/suspend=2Eh>
-> #include <acpi/acpi_bus=2Eh>
->+#include <linux/dmi=2Eh>
->=20
-> MODULE_LICENSE("GPL");
-> MODULE_AUTHOR("Alex Hung");
->@@ -73,6 +74,17 @@ static const struct key_entry intel_array_keymap[] =3D
->{
-> 	{ KE_END },
-> };
->=20
->+static const struct dmi_system_id button_array_table[] =3D {
->+	{
->+		=2Eident =3D "Wacom Mobile Studio Pro",
->+		=2Ematches =3D {
->+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
->+			DMI_MATCH(DMI_PRODUCT_NAME, "Skylake"),
->+		},
->+	},
->+	{ }
->+};
->+
-> struct intel_hid_priv {
-> 	struct input_dev *input_dev;
-> 	struct input_dev *array;
->@@ -263,10 +275,27 @@ static void notify_handler(acpi_handle handle,
->u32 event, void *context)
-> 			 ev_index);
-> }
->=20
->+static bool button_array_present(struct platform_device *device)
->+{
->+	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
->+	unsigned long long event_cap;
->+	acpi_status status;
->+	bool supported =3D false;
->+
->+	status =3D acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
->+	if (ACPI_SUCCESS(status) && (event_cap & 0x20000))
->+		supported =3D true;
->+
->+	if (dmi_check_system(button_array_table))
->+		supported =3D true;
->+
->+	return supported;
->+}
->+
-> static int intel_hid_probe(struct platform_device *device)
-> {
-> 	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
->-	unsigned long long event_cap, mode;
->+	unsigned long long mode;
-> 	struct intel_hid_priv *priv;
-> 	acpi_status status;
-> 	int err;
->@@ -299,8 +328,7 @@ static int intel_hid_probe(struct platform_device
->*device)
-> 	}
->=20
-> 	/* Setup 5 button array */
->-	status =3D acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
->-	if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
->+	if (button_array_present(device)) {
-> 		dev_info(&device->dev, "platform supports 5 button array\n");
-> 		err =3D intel_button_array_input_setup(device);
-> 		if (err)
+> Filed for xkeyboard-config:
+> https://bugs.freedesktop.org/show_bug.cgi?id=3D103998
+>
+> and xkb-common:
+> https://github.com/xkbcommon/libxkbcommon/issues/55
+>
+> Regards,
+>
+> Stefan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-input" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
