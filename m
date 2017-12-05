@@ -1,98 +1,44 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH] intel-hid: add a DMI quirk to support Wacom Mobile Studio Pro
-Date: Tue,  5 Dec 2017 15:52:12 +0800
-Message-ID: <1512460332-7420-1-git-send-email-alex.hung@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:34068 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752397AbdLEHwT (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Dec 2017 02:52:19 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: alex.hung@canonical.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
-Cc: killertofu@gmail.com
+From: Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph@boehmwalder.at>
+Subject: Re: [PATCH v2] thinkad_acpi: Support the battery wear control
+Date: Tue, 5 Dec 2017 15:22:28 +0100
+Message-ID: <20171205142228.lrfds2ih7tgf7ovy@christoph-lap>
+References: <20171203225640.GA11655@thinkpad>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171203225640.GA11655@thinkpad>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ognjen Galic <smclt30p@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-HEBC method reports capabilities of 5 button array but Wacom Mobile
-Studio Pro does not have this control method. A DMI quirk was created to
-enable 5 button array for this system.
+On Sun, Dec 03, 2017 at 11:56:40PM +0100, Ognjen Galic wrote:
+> Add support for the ACPI batteries on newer thinkpad models
+> (>Sandy Bridge) that support the setting of start and stop
+> thresholds.
+> 
+> The actual interface to the driver is a extension for the
+> existing ACPI battery driver. This was done so that users
+> can write transparently to the interface of the ACPI battery
+> driver and dont have to use some private interface
+> (for ex. /sys/devices/platform/thinkpad_acpi/).
+> 
+> Two new interfaces are created:
+> 
+> /sys/class/power_supply/BAT{0,1}/charge_start_threshold
+> /sys/class/power_supply/BAT{0,1}/charge_stop_threshold
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=197991
+Just tried this on my X1 Carbon (i7-3667U Ivy Lake):
 
-Reported-by: Jason Gerecke <killertofu@gmail.com>
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/intel-hid.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+# cat /sys/class/power_supply/BAT0/charge_stop_threshold
+100
+# cat /sys/class/power_supply/BAT0/charge_start_threshold
+100
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index f470279..54d761c 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -25,6 +25,7 @@
- #include <linux/acpi.h>
- #include <linux/suspend.h>
- #include <acpi/acpi_bus.h>
-+#include <linux/dmi.h>
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
-@@ -73,6 +74,17 @@ static const struct key_entry intel_array_keymap[] = {
- 	{ KE_END },
- };
- 
-+static const struct dmi_system_id button_array_table[] = {
-+	{
-+		.ident = "Wacom Mobile Studio Pro",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Skylake"),
-+		},
-+	},
-+	{ }
-+};
-+
- struct intel_hid_priv {
- 	struct input_dev *input_dev;
- 	struct input_dev *array;
-@@ -263,10 +275,27 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 			 ev_index);
- }
- 
-+static bool button_array_present(struct platform_device *device)
-+{
-+	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+	unsigned long long event_cap;
-+	acpi_status status;
-+	bool supported = false;
-+
-+	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
-+	if (ACPI_SUCCESS(status) && (event_cap & 0x20000))
-+		supported = true;
-+
-+	if (dmi_check_system(button_array_table))
-+		supported = true;
-+
-+	return supported;
-+}
-+
- static int intel_hid_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
--	unsigned long long event_cap, mode;
-+	unsigned long long mode;
- 	struct intel_hid_priv *priv;
- 	acpi_status status;
- 	int err;
-@@ -299,8 +328,7 @@ static int intel_hid_probe(struct platform_device *device)
- 	}
- 
- 	/* Setup 5 button array */
--	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
--	if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
-+	if (button_array_present(device)) {
- 		dev_info(&device->dev, "platform supports 5 button array\n");
- 		err = intel_button_array_input_setup(device);
- 		if (err)
--- 
-2.7.4
+That doesn't seem to make any sense.  Is my battery somehow reporting
+false values here?  Any way to cross check these values?
+
+--
+Regards,
+Christoph
