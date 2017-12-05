@@ -1,52 +1,98 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: Re: [PATCH v2] thinkpad_acpi: Support the battery wear control
-Date: Mon, 4 Dec 2017 20:55:24 +0100
-Message-ID: <20171204195524.GA25730@thinkpad>
-References: <20171203225640.GA11655@thinkpad>
- <3171660.sUGE0a2FEN@aspire.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3171660.sUGE0a2FEN@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] intel-hid: add a DMI quirk to support Wacom Mobile Studio Pro
+Date: Tue,  5 Dec 2017 15:52:12 +0800
+Message-ID: <1512460332-7420-1-git-send-email-alex.hung@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:34068 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752397AbdLEHwT (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 5 Dec 2017 02:52:19 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: alex.hung@canonical.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
+Cc: killertofu@gmail.com
 
-On Mon, Dec 04, 2017 at 03:53:32PM +0100, Rafael J. Wysocki wrote:
+HEBC method reports capabilities of 5 button array but Wacom Mobile
+Studio Pro does not have this control method. A DMI quirk was created to
+enable 5 button array for this system.
 
-> Not really.
-> 
-> This is generic code, so no thinkpad_acpi-specific stuff in this file, please,
-> even under #ifdefs.
-> 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=197991
 
-I have some ideas, and I want your confirmation if that would be
-acceptable.
+Reported-by: Jason Gerecke <killertofu@gmail.com>
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-Can I do this:
-
-Expose a new API from battery.c for platform specific hooks:
-
-struct battery_hook {
-	int (*add_battery)(struct acpi_battery* battery);
-	int (*remove_battery)(struct acpi_battery *battery);
-};
-
-battery_hook_register(struct battery_hook *hook)
-battery_hook_unregister(struct battery_hook *hook)
-
-When that hook is invoked from some other module, battery.c 
-calls the add_battery method for each battery that is added and
-remove_battery for each battery that is removed.
-
-battery.c would keep a list of the battery_hook structs and invoke 
-the add_battery and remove_battery methods as batteries get added 
-and removed. 
-
-With this API, we can add more hooks for battery features in 
-the future, not just the ThinkPad hooks.
-
-I hope you like the proposal :)
-
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index f470279..54d761c 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -25,6 +25,7 @@
+ #include <linux/acpi.h>
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
++#include <linux/dmi.h>
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Alex Hung");
+@@ -73,6 +74,17 @@ static const struct key_entry intel_array_keymap[] = {
+ 	{ KE_END },
+ };
+ 
++static const struct dmi_system_id button_array_table[] = {
++	{
++		.ident = "Wacom Mobile Studio Pro",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Skylake"),
++		},
++	},
++	{ }
++};
++
+ struct intel_hid_priv {
+ 	struct input_dev *input_dev;
+ 	struct input_dev *array;
+@@ -263,10 +275,27 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 			 ev_index);
+ }
+ 
++static bool button_array_present(struct platform_device *device)
++{
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	unsigned long long event_cap;
++	acpi_status status;
++	bool supported = false;
++
++	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
++	if (ACPI_SUCCESS(status) && (event_cap & 0x20000))
++		supported = true;
++
++	if (dmi_check_system(button_array_table))
++		supported = true;
++
++	return supported;
++}
++
+ static int intel_hid_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	unsigned long long event_cap, mode;
++	unsigned long long mode;
+ 	struct intel_hid_priv *priv;
+ 	acpi_status status;
+ 	int err;
+@@ -299,8 +328,7 @@ static int intel_hid_probe(struct platform_device *device)
+ 	}
+ 
+ 	/* Setup 5 button array */
+-	status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
+-	if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
++	if (button_array_present(device)) {
+ 		dev_info(&device->dev, "platform supports 5 button array\n");
+ 		err = intel_button_array_input_setup(device);
+ 		if (err)
+-- 
+2.7.4
