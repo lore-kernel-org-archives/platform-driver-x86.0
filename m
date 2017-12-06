@@ -1,163 +1,308 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] intel-hid: add a DMI quirk to support Wacom Mobile Studio Pro
-Date: Wed, 6 Dec 2017 10:15:29 +0800
-Message-ID: <CAJ=jqubS62bGO_b8q18iwB_TxD2NKb=h5D+6bxsVkSgR5dZt2Q@mail.gmail.com>
-References: <1512460332-7420-1-git-send-email-alex.hung@canonical.com>
- <A0A02DDE-F512-4523-AC1F-A63E0685B027@gmail.com> <CANRwn3RbwPLdpwkGQ7mvRknXifLDAKmoMXB_-fMQveirGo+azw@mail.gmail.com>
+From: Ognjen Galic <smclt30p@gmail.com>
+Subject: [PATCH 1/3] battery: Add the battery hooking API
+Date: Wed, 6 Dec 2017 23:51:35 +0100
+Message-ID: <20171206225135.GA3793@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:50977 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1754158AbdLFCPc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Dec 2017 21:15:32 -0500
-Received: from mail-qt0-f199.google.com ([209.85.216.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <alex.hung@canonical.com>)
-        id 1eMPFD-0005dY-D8
-        for platform-driver-x86@vger.kernel.org; Wed, 06 Dec 2017 02:15:31 +0000
-Received: by mail-qt0-f199.google.com with SMTP id r51so1840882qtj.17
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Dec 2017 18:15:31 -0800 (PST)
-In-Reply-To: <CANRwn3RbwPLdpwkGQ7mvRknXifLDAKmoMXB_-fMQveirGo+azw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jason Gerecke <killertofu@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 6, 2017 at 3:14 AM, Jason Gerecke <killertofu@gmail.com> wrote:
-> I may have actually spoken too soon: the patch isn't working on a
-> second device. This second device is a smaller model with a slightly
-> different board, and is also the shipping version rather than a
-> pre-release version. I'm going to gather some more dmidecode data and
-> get back to you.
+This is a patch that implements a generic hooking API for the
+generic ACPI battery driver.
 
-The updated DMI strings look better. I have updated intel-hid.c to bugzilla.
+With this new generic API, drivers can expose platform specific
+behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+in a generic way.
 
->
-> Jason
-> ---
-> Now instead of four in the eights place /
-> you’ve got three, ‘Cause you added one  /
-> (That is to say, eight) to the two,     /
-> But you can’t take seven from three,    /
-> So you look at the sixty-fours....
->
->
-> On Tue, Dec 5, 2017 at 10:01 AM, Jason Gerecke <killertofu@gmail.com> wrote:
->> On December 4, 2017 11:52:12 PM PST, Alex Hung <alex.hung@canonical.com> wrote:
->>>HEBC method reports capabilities of 5 button array but Wacom Mobile
->>>Studio Pro does not have this control method. A DMI quirk was created
->>
->> Nit: s/Mobile Studio/MobileStudio/ here and in the subject and the `button_array_table`
->>
->>>to
->>>enable 5 button array for this system.
->>>
->>>Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=197991
->>>
->>>Reported-by: Jason Gerecke <killertofu@gmail.com>
->>
->> Please use "Reported-by: Jason Gerecke <jason.gerecke@wacom.com>"
+A perfect example of the need for this API are Lenovo ThinkPads.
 
-Okay and will do
+Lenovo ThinkPads have a ACPI extension that allows the setting of
+start and stop charge thresholds in the EC and battery firmware
+via ACPI. The thinkpad_acpi module can use this API to expose
+sysfs attributes that it controls inside the ACPI battery driver
+sysfs tree, under /sys/class/power_supply/BATN/.
 
->>
->> Thanks again for the fix!
->>
->> Jason
->> ---
->> Now instead of four in the eights place /
->> you’ve got three, ‘Cause you added one  /
->> (That is to say, eight) to the two,     /
->> But you can’t take seven from three,    /
->> So you look at the sixty-fours....
->>
->>>Signed-off-by: Alex Hung <alex.hung@canonical.com>
->>>---
->>>drivers/platform/x86/intel-hid.c | 34
->>>+++++++++++++++++++++++++++++++---
->>> 1 file changed, 31 insertions(+), 3 deletions(-)
->>>
->>>diff --git a/drivers/platform/x86/intel-hid.c
->>>b/drivers/platform/x86/intel-hid.c
->>>index f470279..54d761c 100644
->>>--- a/drivers/platform/x86/intel-hid.c
->>>+++ b/drivers/platform/x86/intel-hid.c
->>>@@ -25,6 +25,7 @@
->>> #include <linux/acpi.h>
->>> #include <linux/suspend.h>
->>> #include <acpi/acpi_bus.h>
->>>+#include <linux/dmi.h>
->>>
->>> MODULE_LICENSE("GPL");
->>> MODULE_AUTHOR("Alex Hung");
->>>@@ -73,6 +74,17 @@ static const struct key_entry intel_array_keymap[] =
->>>{
->>>       { KE_END },
->>> };
->>>
->>>+static const struct dmi_system_id button_array_table[] = {
->>>+      {
->>>+              .ident = "Wacom Mobile Studio Pro",
->>>+              .matches = {
->>>+                      DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
->>>+                      DMI_MATCH(DMI_PRODUCT_NAME, "Skylake"),
->>>+              },
->>>+      },
->>>+      { }
->>>+};
->>>+
->>> struct intel_hid_priv {
->>>       struct input_dev *input_dev;
->>>       struct input_dev *array;
->>>@@ -263,10 +275,27 @@ static void notify_handler(acpi_handle handle,
->>>u32 event, void *context)
->>>                        ev_index);
->>> }
->>>
->>>+static bool button_array_present(struct platform_device *device)
->>>+{
->>>+      acpi_handle handle = ACPI_HANDLE(&device->dev);
->>>+      unsigned long long event_cap;
->>>+      acpi_status status;
->>>+      bool supported = false;
->>>+
->>>+      status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
->>>+      if (ACPI_SUCCESS(status) && (event_cap & 0x20000))
->>>+              supported = true;
->>>+
->>>+      if (dmi_check_system(button_array_table))
->>>+              supported = true;
->>>+
->>>+      return supported;
->>>+}
->>>+
->>> static int intel_hid_probe(struct platform_device *device)
->>> {
->>>       acpi_handle handle = ACPI_HANDLE(&device->dev);
->>>-      unsigned long long event_cap, mode;
->>>+      unsigned long long mode;
->>>       struct intel_hid_priv *priv;
->>>       acpi_status status;
->>>       int err;
->>>@@ -299,8 +328,7 @@ static int intel_hid_probe(struct platform_device
->>>*device)
->>>       }
->>>
->>>       /* Setup 5 button array */
->>>-      status = acpi_evaluate_integer(handle, "HEBC", NULL, &event_cap);
->>>-      if (ACPI_SUCCESS(status) && (event_cap & 0x20000)) {
->>>+      if (button_array_present(device)) {
->>>               dev_info(&device->dev, "platform supports 5 button array\n");
->>>               err = intel_button_array_input_setup(device);
->>>               if (err)
->>
+The file drivers/acpi/battery.h has been moved to
+include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+battery.c have been adjusted to reflect that.
 
+When drivers hooks into the API, the API calls add_battery() for
+each battery in the system that passes it a acpi_battery
+struct. Then, the drivers can use device_create_file() to create
+new sysfs attributes with that struct and identify the batteries
+for per-battery attributes.
 
+Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+---
+ drivers/acpi/ac.c      |   2 +-
+ drivers/acpi/battery.c | 139 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/acpi/battery.h |  11 ----
+ drivers/acpi/sbs.c     |   2 +-
+ include/acpi/battery.h |  21 ++++++++
+ 5 files changed, 160 insertions(+), 15 deletions(-)
+ delete mode 100644 drivers/acpi/battery.h
+ create mode 100644 include/acpi/battery.h
 
+diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
+index 47a7ed5..2d8de2f 100644
+--- a/drivers/acpi/ac.c
++++ b/drivers/acpi/ac.c
+@@ -33,7 +33,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
+ #include <linux/acpi.h>
+-#include "battery.h"
++#include <acpi/battery.h>
+ 
+ #define PREFIX "ACPI: "
+ 
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index 13e7b56..2951d07 100644
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -30,6 +30,7 @@
+ #include <linux/dmi.h>
+ #include <linux/delay.h>
+ #include <linux/slab.h>
++#include <linux/list.h>
+ #include <linux/suspend.h>
+ #include <asm/unaligned.h>
+ 
+@@ -42,7 +43,7 @@
+ #include <linux/acpi.h>
+ #include <linux/power_supply.h>
+ 
+-#include "battery.h"
++#include <acpi/battery.h>
+ 
+ #define PREFIX "ACPI: "
+ 
+@@ -124,6 +125,7 @@ struct acpi_battery {
+ 	struct power_supply_desc bat_desc;
+ 	struct acpi_device *device;
+ 	struct notifier_block pm_nb;
++	struct list_head list;
+ 	unsigned long update_time;
+ 	int revision;
+ 	int rate_now;
+@@ -626,6 +628,137 @@ static const struct device_attribute alarm_attr = {
+ 	.store = acpi_battery_alarm_store,
+ };
+ 
++/*
++ * The Battery Hooking API
++ *
++ * This API is used inside other drivers that need to expose
++ * platform-specific behaviour within the generic driver in a
++ * generic way.
++ *
++ */
++
++LIST_HEAD(acpi_battery_list);
++LIST_HEAD(battery_hook_list);
++
++void battery_hook_unregister(struct acpi_battery_hook *hook)
++{
++
++	struct list_head *position;
++	struct acpi_battery *battery;
++
++	/*
++	 * In order to remove a hook, we first need to
++	 * de-register all the batteries that are registered.
++	 */
++
++	list_for_each(position, &acpi_battery_list) {
++		battery = list_entry(position, struct acpi_battery, list);
++		hook->remove_battery(battery->bat);
++	}
++
++	/* Then, just remove the hook */
++
++	list_del(&hook->list);
++	pr_info("battery: extension unregistered: %s\n", hook->name);
++
++}
++EXPORT_SYMBOL_GPL(battery_hook_unregister);
++
++void battery_hook_register(struct acpi_battery_hook *hook)
++{
++	struct list_head *position;
++	struct acpi_battery *battery;
++
++	INIT_LIST_HEAD(&hook->list);
++	list_add(&hook->list, &battery_hook_list);
++
++	/*
++	 * Now that the driver is registered, we need
++	 * to notify the hook that a battery is available
++	 * for each battery, so that the driver may add
++	 * its attributes.
++	 */
++	list_for_each(position, &acpi_battery_list) {
++		battery = list_entry(position, struct acpi_battery, list);
++		if (hook->add_battery(battery->bat)) {
++
++			/*
++			 * If a add-battery returns non-zero,
++			 * the registration of the extension has failed,
++			 * we will unload it.
++			 */
++			pr_err("battery: extension failed to load: %s",
++					hook->name);
++			battery_hook_unregister(hook);
++			return;
++
++		}
++	}
++
++	pr_info("battery: new extension: %s\n", hook->name);
++
++}
++EXPORT_SYMBOL_GPL(battery_hook_register);
++
++static void battery_hook_add_battery(struct acpi_battery *battery)
++{
++
++	/*
++	 * This function gets called right after the battery sysfs
++	 * attributes have been added, so that the drivers that
++	 * define custom sysfs attributes can add their own.
++	 */
++
++	struct list_head *position;
++	struct acpi_battery_hook *hook_node;
++
++	INIT_LIST_HEAD(&battery->list);
++	list_add(&battery->list, &acpi_battery_list);
++
++	/*
++	 * Since we added a new battery to the list, we need to
++	 * iterate over the hooks and call add_battery for each
++	 * hook that was registered. This usually happens
++	 * when a battery gets hotplugged or initialized
++	 * during the battery module initialization.
++	 */
++
++	list_for_each(position, &battery_hook_list) {
++		hook_node = list_entry(position, struct acpi_battery_hook, list);
++		if (hook_node->add_battery(battery->bat)) {
++
++			/*
++			 * The notification of the extensions has failed, to
++			 * prevent further errors we will unload the extension.
++			 */
++			battery_hook_unregister(hook_node);
++			pr_err("battery: error in extension, unloading: %s",
++					hook_node->name);
++		}
++	}
++
++}
++
++static void battery_hook_remove_battery(struct acpi_battery *battery)
++{
++	struct list_head *position;
++	struct acpi_battery_hook *hook;
++
++	/*
++	 * Before removing the hook, we need to remove all
++	 * custom attributes from the battery.
++	 */
++	list_for_each(position, &battery_hook_list) {
++		hook = list_entry(position, struct acpi_battery_hook, list);
++		hook->remove_battery(battery->bat);
++	}
++
++	/* Then, just remove the battery from the list */
++
++	list_del(&battery->list);
++
++}
++
+ static int sysfs_add_battery(struct acpi_battery *battery)
+ {
+ 	struct power_supply_config psy_cfg = { .drv_data = battery, };
+@@ -647,6 +780,8 @@ static int sysfs_add_battery(struct acpi_battery *battery)
+ 	battery->bat = power_supply_register_no_ws(&battery->device->dev,
+ 				&battery->bat_desc, &psy_cfg);
+ 
++	battery_hook_add_battery(battery);
++
+ 	if (IS_ERR(battery->bat)) {
+ 		int result = PTR_ERR(battery->bat);
+ 
+@@ -663,7 +798,7 @@ static void sysfs_remove_battery(struct acpi_battery *battery)
+ 		mutex_unlock(&battery->sysfs_lock);
+ 		return;
+ 	}
+-
++	battery_hook_remove_battery(battery);
+ 	device_remove_file(&battery->bat->dev, &alarm_attr);
+ 	power_supply_unregister(battery->bat);
+ 	battery->bat = NULL;
+diff --git a/drivers/acpi/battery.h b/drivers/acpi/battery.h
+deleted file mode 100644
+index 225f493..0000000
+--- a/drivers/acpi/battery.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ACPI_BATTERY_H
+-#define __ACPI_BATTERY_H
+-
+-#define ACPI_BATTERY_CLASS "battery"
+-
+-#define ACPI_BATTERY_NOTIFY_STATUS	0x80
+-#define ACPI_BATTERY_NOTIFY_INFO	0x81
+-#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
+-
+-#endif
+diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
+index a2428e9..295b592 100644
+--- a/drivers/acpi/sbs.c
++++ b/drivers/acpi/sbs.c
+@@ -32,9 +32,9 @@
+ #include <linux/delay.h>
+ #include <linux/power_supply.h>
+ #include <linux/platform_data/x86/apple.h>
++#include <acpi/battery.h>
+ 
+ #include "sbshc.h"
+-#include "battery.h"
+ 
+ #define PREFIX "ACPI: "
+ 
+diff --git a/include/acpi/battery.h b/include/acpi/battery.h
+new file mode 100644
+index 0000000..5d8f5d9
+--- /dev/null
++++ b/include/acpi/battery.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ACPI_BATTERY_H
++#define __ACPI_BATTERY_H
++
++#define ACPI_BATTERY_CLASS "battery"
++
++#define ACPI_BATTERY_NOTIFY_STATUS	0x80
++#define ACPI_BATTERY_NOTIFY_INFO	0x81
++#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
++
++struct acpi_battery_hook {
++	const char *name;
++	int (*add_battery)(struct power_supply *battery);
++	int (*remove_battery)(struct power_supply *battery);
++	struct list_head list;
++};
++
++void battery_hook_register(struct acpi_battery_hook *hook);
++void battery_hook_unregister(struct acpi_battery_hook *hook);
++
++#endif
 -- 
-Cheers,
-Alex Hung
+2.7.4
