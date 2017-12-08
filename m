@@ -1,47 +1,45 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: Multiple MOF GUID's
-Date: Fri, 8 Dec 2017 11:32:57 -0800
-Message-ID: <CALCETrX9cTYKEDLvcS8fWJmT75Sco1_wuFPOxLESXR9J7s5BLA@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: Multiple MOF GUID's
+Date: Fri, 8 Dec 2017 20:05:25 +0000
+Message-ID: <71f2fec85e8345e68de64241046d76f6@ausx13mpc120.AMER.DELL.COM>
 References: <2c96ee1da98c41a1b8f905f00f2f5544@ausx13mpc120.AMER.DELL.COM>
+ <CALCETrX9cTYKEDLvcS8fWJmT75Sco1_wuFPOxLESXR9J7s5BLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:39334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752521AbdLHTdT (ORCPT
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:20932 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752348AbdLHUF1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Dec 2017 14:33:19 -0500
-Received: from mail-it0-f47.google.com (mail-it0-f47.google.com [209.85.214.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 789E421881
-        for <platform-driver-x86@vger.kernel.org>; Fri,  8 Dec 2017 19:33:18 +0000 (UTC)
-Received: by mail-it0-f47.google.com with SMTP id m11so6071831iti.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 08 Dec 2017 11:33:18 -0800 (PST)
-In-Reply-To: <2c96ee1da98c41a1b8f905f00f2f5544@ausx13mpc120.AMER.DELL.COM>
+        Fri, 8 Dec 2017 15:05:27 -0500
+In-Reply-To: <CALCETrX9cTYKEDLvcS8fWJmT75Sco1_wuFPOxLESXR9J7s5BLA@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>
+To: luto@kernel.org
+Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 8, 2017 at 11:30 AM,  <Mario.Limonciello@dell.com> wrote:
-> Andy,
->
-> I was looking at a system that will have many more WMI methods, and realizing that I can't
-> view the bmof for the extra methods.  This is because of b0e863029 which will show a warning
-> when multiple of the same WMI GUID's are found.
-> The same GUID 05901221-D566-11D1-B2F0-00A0C9062910 is used to describe each one of them.
-
-So there are multiple WMI instances, both of which have bmof?
-
->
-> I think the symlinks in sysfs will break if the warning is just removed.
->
-> So what should we do about this?  I think they should both be accessible from the bmof driver from
-> userspace.
-
-Fixing it will require changing the data structures to get rid of the
-global wmi_block_list.  I don't think it'll affect the ABI.  I'll
-gladly review a patch ;)
-
---Andy
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFuZHkgTHV0b21pcnNraQ0KPiBTZW50
+OiBGcmlkYXksIERlY2VtYmVyIDgsIDIwMTcgMTozMyBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1h
+cmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IFBsYXRmb3JtIERyaXZlciA8
+cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBNdWx0
+aXBsZSBNT0YgR1VJRCdzDQo+IA0KPiBPbiBGcmksIERlYyA4LCAyMDE3IGF0IDExOjMwIEFNLCAg
+PE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gPiBBbmR5LA0KPiA+DQo+ID4g
+SSB3YXMgbG9va2luZyBhdCBhIHN5c3RlbSB0aGF0IHdpbGwgaGF2ZSBtYW55IG1vcmUgV01JIG1l
+dGhvZHMsIGFuZCByZWFsaXppbmcNCj4gdGhhdCBJIGNhbid0DQo+ID4gdmlldyB0aGUgYm1vZiBm
+b3IgdGhlIGV4dHJhIG1ldGhvZHMuICBUaGlzIGlzIGJlY2F1c2Ugb2YgYjBlODYzMDI5IHdoaWNo
+IHdpbGwNCj4gc2hvdyBhIHdhcm5pbmcNCj4gPiB3aGVuIG11bHRpcGxlIG9mIHRoZSBzYW1lIFdN
+SSBHVUlEJ3MgYXJlIGZvdW5kLg0KPiA+IFRoZSBzYW1lIEdVSUQgMDU5MDEyMjEtRDU2Ni0xMUQx
+LUIyRjAtMDBBMEM5MDYyOTEwIGlzIHVzZWQgdG8gZGVzY3JpYmUNCj4gZWFjaCBvbmUgb2YgdGhl
+bS4NCj4gDQo+IFNvIHRoZXJlIGFyZSBtdWx0aXBsZSBXTUkgaW5zdGFuY2VzLCBib3RoIG9mIHdo
+aWNoIGhhdmUgYm1vZj8NCg0KWWVwLg0KDQo+IA0KPiA+DQo+ID4gSSB0aGluayB0aGUgc3ltbGlu
+a3MgaW4gc3lzZnMgd2lsbCBicmVhayBpZiB0aGUgd2FybmluZyBpcyBqdXN0IHJlbW92ZWQuDQo+
+ID4NCj4gPiBTbyB3aGF0IHNob3VsZCB3ZSBkbyBhYm91dCB0aGlzPyAgSSB0aGluayB0aGV5IHNo
+b3VsZCBib3RoIGJlIGFjY2Vzc2libGUgZnJvbSB0aGUNCj4gYm1vZiBkcml2ZXIgZnJvbQ0KPiA+
+IHVzZXJzcGFjZS4NCj4gDQo+IEZpeGluZyBpdCB3aWxsIHJlcXVpcmUgY2hhbmdpbmcgdGhlIGRh
+dGEgc3RydWN0dXJlcyB0byBnZXQgcmlkIG9mIHRoZQ0KPiBnbG9iYWwgd21pX2Jsb2NrX2xpc3Qu
+ICBJIGRvbid0IHRoaW5rIGl0J2xsIGFmZmVjdCB0aGUgQUJJLiAgSSdsbA0KPiBnbGFkbHkgcmV2
+aWV3IGEgcGF0Y2ggOykNCj4gDQoNCkFscmlnaHQgSSdsbCBzZWUgd2hhdCBJIGNhbiBkby4NCg==
