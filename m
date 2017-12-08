@@ -1,34 +1,52 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v6 09/11] fs/pipe.c: export create_pipe_files() and
- replace_fd()
-Date: Fri, 8 Dec 2017 15:05:38 +0200
-Message-ID: <20171208130538.quwqaqvawbqmehpf@linux.intel.com>
-References: <20171125193132.24321-10-jarkko.sakkinen@linux.intel.com>
- <20171128143504.GA22918@infradead.org>
- <20171128204220.j7ipouoyhsbvm7zk@linux.intel.com>
- <20171128210551.GA12431@infradead.org>
- <20171128215753.qnu5krswowjq6gwn@linux.intel.com>
- <20171129231357.GA23443@infradead.org>
- <20171130164321.juvn67pu4jrjq76j@linux.intel.com>
- <1512067110.3020.24.camel@HansenPartnership.com>
- <20171204090059.wgys4vpqklampcpy@linux.intel.com>
- <20171207173738.yfzvdo2vpgaof4ax@linux.intel.com>
+From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Subject: RE: [intel-sgx-kernel-dev] [PATCH v7 4/8] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Fri, 8 Dec 2017 15:31:38 +0000
+Message-ID: <37306EFA9975BE469F115FDE982C075BC6B39E18@ORSMSX108.amr.corp.intel.com>
+References: <20171207015614.7914-1-jarkko.sakkinen@linux.intel.com>
+ <20171207015614.7914-5-jarkko.sakkinen@linux.intel.com>
+ <37306EFA9975BE469F115FDE982C075BC6B39193@ORSMSX108.amr.corp.intel.com>
+ <20171207160548.doovfdh2lqg5brm3@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-fsdevel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171207173738.yfzvdo2vpgaof4ax@linux.intel.com>
-Sender: linux-fsdevel-owner@vger.kernel.org
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Christoph Hellwig <hch@infradead.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:36441 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753656AbdLHPbl (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 8 Dec 2017 10:31:41 -0500
+In-Reply-To: <20171207160548.doovfdh2lqg5brm3@linux.intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>
 
-On Thu, Dec 07, 2017 at 07:37:38PM +0200, Jarkko Sakkinen wrote:
-> I think I could replace pipes with anonymous inodes. Is that a better
-> idea than pipes? I can work on that v8 if the export is a show stopper
-> as it seems. We are using that to do some other stuff in tpm_vtpm_proxy.
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> On Thu, Dec 07, 2017 at 02:46:39PM +0000, Christopherson, Sean J wrote:
+> > > +	for (i = 0; i < 2; i++) {
+> > > +		va_page = list_first_entry(&encl->va_pages,
+> > > +					   struct sgx_va_page, list);
+> > > +		va_offset = sgx_alloc_va_slot(va_page);
+> > > +		if (va_offset < PAGE_SIZE)
+> > > +			break;
+> > > +
+> > > +		list_move_tail(&va_page->list, &encl->va_pages);
+> > > +	}
+> > 
+> > This is broken, there is no guarantee that the next VA page will have
+> > a free slot.  You have to walk over all VA pages to guarantee a slot
+> > is found, e.g. this caused EWB and ELDU errors.
+> 
+> I did run some extensive stress tests on this and did not experience any
+> issues. Full VA pages are always put to the end. Please point me to the
+> test where this breaks so that I can fix the issue if it persists.
 
-I'll go with the anon inode solution. It should be fairly easy
-to implement.
-
-/Jarkko
+Three VA pages in the enclave: A, B and C.  Evict all pages in the
+enclave, i.e. consume all slots in A, B and C.  The list can be in
+any order at this point, but for the sake of argument let's say the
+order is C->A->B, i.e. C was originally the last VA page in the list.
+Fault in page X, whose VA is in B.  Evict X.  This code looks at C
+and A, and finds no available slot, but continues with VA page A and
+a va_offset of PAGE_SIZE.
