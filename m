@@ -1,43 +1,38 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH][V2] intel-hid: add a DMI quirk to support Wacom
- MobileStudio Pro
-Date: Fri, 8 Dec 2017 16:04:23 -0800
-Message-ID: <20171209000423.GD14187@fury>
-References: <1512618023-30209-1-git-send-email-alex.hung@canonical.com>
+Subject: Re: [PATCH] asus-wireless: send an EV_SYN/SYN_REPORT between state
+ changes
+Date: Fri, 8 Dec 2017 16:10:58 -0800
+Message-ID: <20171209001058.GE14187@fury>
+References: <20171204002617.GA11430@jelly>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:51402 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:42337 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750788AbdLIAE1 (ORCPT
+        with ESMTP id S1751086AbdLIALH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Dec 2017 19:04:27 -0500
+        Fri, 8 Dec 2017 19:11:07 -0500
 Content-Disposition: inline
-In-Reply-To: <1512618023-30209-1-git-send-email-alex.hung@canonical.com>
+In-Reply-To: <20171204002617.GA11430@jelly>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, jason.gerecke@wacom.com
+To: Peter Hutterer <peter.hutterer@who-t.net>
+Cc: Corentin Chary <corentin.chary@gmail.com>, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 11:40:23AM +0800, Alex Hung wrote:
-> HEBC method reports capabilities of 5 button array but Wacom
-> MobileStudio Pro does not have this control method. A DMI quirk
-> was created to enable 5 button array for this system.
-
-Jason, have you been able to verify this patch with testing?
-
-> [V2] Update DMI strings from shipping systems
-
-Please place patch versioning detail below the --- in the future
-
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=197991
+On Mon, Dec 04, 2017 at 10:26:17AM +1000, Peter Hutterer wrote:
+> Sending the switch state change twice within the same frame is invalid evdev
+> protocol and only works if the client handles keys immediately as well.
+> Processing events immediately is incorrect, it forces a fake order of events
+> that does not exist on the device.
 > 
-> Reported-by: Jason Gerecke <jason.gerecke@wacom.com>
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> ---
+> Recent versions of libinput changed to only process the device state and
+> SYN_REPORT time, so now the key event is lost.
+> 
+> https://bugs.freedesktop.org/show_bug.cgi?id=104041
+> 
+> Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-here (see submitting patches docs for details)
-
+Thanks Peter, queued.
 
 -- 
 Darren Hart
