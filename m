@@ -1,39 +1,42 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-wireless: send an EV_SYN/SYN_REPORT between state
- changes
-Date: Fri, 8 Dec 2017 16:10:58 -0800
-Message-ID: <20171209001058.GE14187@fury>
-References: <20171204002617.GA11430@jelly>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH 1/2] platform/x86: wmi: prefix sysfs files in /sys/bus/wmi with the ACPI device
+Date: Fri,  8 Dec 2017 20:34:20 -0600
+Message-ID: <1512786861-1014-2-git-send-email-mario.limonciello@dell.com>
+References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42337 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751086AbdLIALH (ORCPT
+Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:57377 "EHLO
+        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752914AbdLICeq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Dec 2017 19:11:07 -0500
-Content-Disposition: inline
-In-Reply-To: <20171204002617.GA11430@jelly>
+        Fri, 8 Dec 2017 21:34:46 -0500
+In-Reply-To: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Peter Hutterer <peter.hutterer@who-t.net>
-Cc: Corentin Chary <corentin.chary@gmail.com>, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario.limonciello@dell.com>
 
-On Mon, Dec 04, 2017 at 10:26:17AM +1000, Peter Hutterer wrote:
-> Sending the switch state change twice within the same frame is invalid evdev
-> protocol and only works if the client handles keys immediately as well.
-> Processing events immediately is incorrect, it forces a fake order of events
-> that does not exist on the device.
-> 
-> Recent versions of libinput changed to only process the device state and
-> SYN_REPORT time, so now the key event is lost.
-> 
-> https://bugs.freedesktop.org/show_bug.cgi?id=104041
-> 
-> Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+It's possible for the same GUID to show up on as system twice.
+This means using solely the GUID for identify the file will not
+be sufficient.
 
-Thanks Peter, queued.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 791449a2370f..45d9010aafcf 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1081,7 +1081,8 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+ 	wblock->dev.dev.bus = &wmi_bus_type;
+ 	wblock->dev.dev.parent = wmi_bus_dev;
+ 
+-	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
++	dev_set_name(&wblock->dev.dev, "%s-%pUL",
++		     dev_name(&wblock->acpi_device->dev), gblock->guid);
+ 
+ 	device_initialize(&wblock->dev.dev);
+ 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.14.1
