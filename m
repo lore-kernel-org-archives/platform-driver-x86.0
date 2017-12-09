@@ -1,106 +1,55 @@
 From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86: wmi: Allow creating WMI devices with
- the same GUID
-Date: Sat, 9 Dec 2017 12:43:53 -0800
-Message-ID: <CALCETrUucweyaCVTurhAmcWPhU9nk+GNzmJNzi0qv8vgLPBdrA@mail.gmail.com>
-References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com> <1512786861-1014-3-git-send-email-mario.limonciello@dell.com>
+Subject: Re: [PATCH 1/2] platform/x86: wmi: prefix sysfs files in /sys/bus/wmi
+ with the ACPI device
+Date: Sat, 9 Dec 2017 13:32:29 -0800
+Message-ID: <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
+References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
+ <1512786861-1014-2-git-send-email-mario.limonciello@dell.com>
+ <DDE9D9EA-D55D-41CC-94ED-EB2A590B7BCF@amacapital.net> <1512790860266.96149@Dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751115AbdLIUoP (ORCPT
+        id S1751221AbdLIVcv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Dec 2017 15:44:15 -0500
-Received: from mail-it0-f51.google.com (mail-it0-f51.google.com [209.85.214.51])
+        Sat, 9 Dec 2017 16:32:51 -0500
+Received: from mail-io0-f172.google.com (mail-io0-f172.google.com [209.85.223.172])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B612D2191B
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Dec 2017 20:44:14 +0000 (UTC)
-Received: by mail-it0-f51.google.com with SMTP id z6so9385949iti.4
-        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Dec 2017 12:44:14 -0800 (PST)
-In-Reply-To: <1512786861-1014-3-git-send-email-mario.limonciello@dell.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F0C218E3
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Dec 2017 21:32:50 +0000 (UTC)
+Received: by mail-io0-f172.google.com with SMTP id o2so2445533ioe.8
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Dec 2017 13:32:50 -0800 (PST)
+In-Reply-To: <1512790860266.96149@Dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andrew Lutomirski <luto@kernel.org>
 
-On Fri, Dec 8, 2017 at 6:34 PM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> In: commit d1f9e4970742 ("ACPI: WMI: Survive BIOS with duplicate GUIDs")
-> parsing two of the same GUID was prevented in the WMI bus driver.
+On Fri, Dec 8, 2017 at 7:41 PM,  <Mario.Limonciello@dell.com> wrote:
+>>> On Dec 8, 2017, at 6:34 PM, Mario Limonciello <mario.limonciello@dell.com> wrote:
+>>>
+>>> It's possible for the same GUID to show up on as system twice.
+>>> This means using solely the GUID for identify the file will not
+>>> be sufficient.
+>>
+>>Isn't the file already in a per-bus directory?
 >
-> At the time no one understood why GUID 05901221-D566-11D1-B2F0-00A0C9062910
-> was being duplicated.  It's now known that GUID is used for the binary
-> MOF file of a _WDG entry in the ASL.  It's entirely possible for multiple
-> _WDG entries and for multiple instances to bind in a given driver.
+> Yep, but the symlink created in /sys/bus/wmi/devices isn't.
+> That's where the kernel complains about duplicate sysfs
+> attributes.
 >
-> NOTE:
-> The only known instance of duplicated GUID's is the WMI BMOF GUID above,
-> but it is possible that other vendors may duplicate GUIDs as well. It
-> would be better for drivers to not interact with the WMI bus by GUID
-> string but by the struct wmi_device provided by the WMI bus during
-> probing.
+> It's not exactly a pretty path I submitted, but it does avoid
+> those collisions.
+>
+> Example (with this in place from /sys/bus/wmi/devices):
+> lrwxrwxrwx 1 root root 0 Dec  8 21:39 PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A -> ../../../devices/platform/PNP0C14:04/wmi_bus/wmi_bus-PNP0C14:04/PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A
 
-I think you also need to audit all the users of wmi_block_list for
-duplicate handling.  For example, wmi_install_notify_handler()
-probably needs a break statement inside the if (memcmp(...)).
+Right, I saw that in the cover letter right after sending this.
 
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> ---
->  drivers/platform/x86/wmi.c | 31 -------------------------------
->  1 file changed, 31 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 45d9010aafcf..5ac17e360fa2 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1102,28 +1102,6 @@ static void wmi_free_devices(struct acpi_device *device)
->         }
->  }
->
-> -static bool guid_already_parsed(struct acpi_device *device,
-> -                               const u8 *guid)
-> -{
-> -       struct wmi_block *wblock;
-> -
-> -       list_for_each_entry(wblock, &wmi_block_list, list) {
-> -               if (memcmp(wblock->gblock.guid, guid, 16) == 0) {
-> -                       /*
-> -                        * Because we historically didn't track the relationship
-> -                        * between GUIDs and ACPI nodes, we don't know whether
-> -                        * we need to suppress GUIDs that are unique on a
-> -                        * given node but duplicated across nodes.
-> -                        */
-> -                       dev_warn(&device->dev, "duplicate WMI GUID %pUL (first instance was on %s)\n",
-> -                                guid, dev_name(&wblock->acpi_device->dev));
-> -                       return true;
-> -               }
-> -       }
-> -
-> -       return false;
-> -}
-> -
->  /*
->   * Parse the _WDG method for the GUID data blocks
->   */
-> @@ -1157,15 +1135,6 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
->                 if (debug_dump_wdg)
->                         wmi_dump_wdg(&gblock[i]);
->
-> -               /*
-> -                * Some WMI devices, like those for nVidia hooks, have a
-> -                * duplicate GUID. It's not clear what we should do in this
-> -                * case yet, so for now, we'll just ignore the duplicate
-> -                * for device creation.
-> -                */
-> -               if (guid_already_parsed(device, gblock[i].guid))
-> -                       continue;
-> -
->                 wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
->                 if (!wblock) {
->                         retval = -ENOMEM;
-> --
-> 2.14.1
->
+Greg, is there a cleaner way to deal with this?  There are two
+instances of the same bus type, each of which would like to have a
+device called "70FE8229-D03B-4214-A1C6-1F884B1A892A".  Can we somehow
+rename the symlinks without renaming the device, or are we just
+supposed to prefix the device name like Mario is doing here?
