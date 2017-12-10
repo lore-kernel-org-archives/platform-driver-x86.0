@@ -1,591 +1,68 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: [PATCH 3/3 v5] thinkpad_acpi: Add support for battery thresholds
-Date: Sun, 10 Dec 2017 19:06:50 +0100
-Message-ID: <20171210180650.GA2039@thinkpad>
+From: Nerijus Baliunas <nerijus@users.sourceforge.net>
+Subject: [PATCH] Add touchscreen platform data for the Onda oBook 20 Plus tablet.
+Date: Mon, 11 Dec 2017 00:02:13 +0200
+Message-ID: <20171210220213.19290-1-nerijus@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bluegene.sat.lt ([88.119.145.12]:42266 "HELO bluegene.sat.lt"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1752218AbdLJWKp (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sun, 10 Dec 2017 17:10:45 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Nerijus Baliunas <nerijus@users.sourceforge.net>
 
-This patch uses the new battery hooking API to add
-support for the ACPI battery wear control present in
-Lenovo ThinkPads that have >=SandyBridge processors.
-
-thinkpad_acpi registers two new attributes for each battery:
-
-1) Charge start threshold
-/sys/class/power_supply/BATN/charge_start_threshold
-
-Valid values are [0, 99]. A value of 0 turns off the
-start threshold wear control.
-
-2) Charge stop threshold
-/sys/class/power_supply/BATN/charge_stop_threshold
-
-Valid values are [1, 100]. A value of 100 turns off
-the stop threshold wear control. This must be
-configured first.
-
-This patch depends on the following patches:
-
-"battery: Add the battery hooking API"
-
-v2:
-* Re-write the patch to make the changes in
-battery.c generic as suggested by Rafael
-
-v3:
-* Fixed a bug where you could not set the stop
-threshold to 100% when the start threshold is 0%
-* Fixed the "Not Charging" quirk to match Lenovo's
-BIOS Firmware specification
-
-v4:
-* Fixed a bug where you could not set the start
-threshold to >stop if stop was 100%
-
-v5:
-* Migrated from symbol_get to native linking,
-to fix module dependencies
-* Fixed a bug where unloading the module would
-cause a BUG inside battery
-* Fixed a bug where you could unload battery
-before unloading thinkpad_acpi
-
-Tested-by: Kevin Locke <kevin@kevinlocke.name>
-Tested-by: Christoph Böhmwalder <christoph@boehmwalder.at>
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+Signed-off-by: Nerijus BaliÅ«nas <nerijus@users.sourceforge.net>
 ---
- drivers/platform/x86/Kconfig         |   1 +
- drivers/platform/x86/thinkpad_acpi.c | 463 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 463 insertions(+), 1 deletion(-)
+ drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2c745e8..d705c62 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -399,6 +399,7 @@ config SURFACE3_WMI
- config THINKPAD_ACPI
- 	tristate "ThinkPad ACPI Laptop Extras"
- 	depends on ACPI
-+	depends on ACPI_BATTERY
- 	depends on INPUT
- 	depends on RFKILL || RFKILL = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 117be48..04a9931 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -23,7 +23,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#define TPACPI_VERSION "0.25"
-+#define TPACPI_VERSION "0.26"
- #define TPACPI_SYSFS_VERSION 0x030000
- 
- /*
-@@ -77,6 +77,7 @@
- #include <linux/jiffies.h>
- #include <linux/workqueue.h>
- #include <linux/acpi.h>
-+#include <linux/power_supply.h>
- #include <linux/pci_ids.h>
- #include <linux/thinkpad_acpi.h>
- #include <sound/core.h>
-@@ -84,6 +85,8 @@
- #include <sound/initval.h>
- #include <linux/uaccess.h>
- #include <acpi/video.h>
-+#include <acpi/battery.h>
-+
- 
- /* ThinkPad CMOS commands */
- #define TP_CMOS_VOLUME_DOWN	0
-@@ -331,6 +334,7 @@ static struct {
- 	u32 sensors_pdev_attrs_registered:1;
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
-+	u32 battery:1;
- } tp_features;
- 
- static struct {
-@@ -9201,6 +9205,459 @@ static struct ibm_struct mute_led_driver_data = {
- 	.resume = mute_led_resume,
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index 266535c2a72f..414293e8c448 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -171,6 +171,23 @@ static const struct silead_ts_dmi_data digma_citi_e200_data = {
+ 	.properties	= digma_citi_e200_props,
  };
  
-+/***************** Battery Wear Control Driver ******************/
-+
-+/* Metadata */
-+
-+#define GET_START	"BCTG"
-+#define SET_START	"BCCS"
-+#define GET_STOP	"BCSG"
-+#define SET_STOP	"BCSS"
-+
-+#define START_ATTR "charge_start_threshold"
-+#define STOP_ATTR  "charge_stop_threshold"
-+
-+enum {
-+	BAT_ANY = 0,
-+	BAT_PRIMARY = 1,
-+	BAT_SECONDARY = 2
++static const struct property_entry onda_obook_20_plus_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-onda-obook-20-plus.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
 +};
 +
-+enum {
-+	/* Error condition bit */
-+	METHOD_ERR = (1 << 31),
++static const struct silead_ts_dmi_data onda_obook_20_plus_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= onda_obook_20_plus_props,
 +};
 +
-+enum {
-+	/* This is used in the get/set helpers */
-+	THRESHOLD_START,
-+	THRESHOLD_STOP,
-+};
-+
-+struct tpacpi_battery_driver_data {
-+	int start_charge[3];
-+	int stop_charge[3];
-+	int start_support[3];
-+	int stop_support[3];
-+	int individual_addressing;
-+};
-+
-+static struct tpacpi_battery_driver_data battery_info;
-+
-+/* ACPI helpers/functions/probes */
-+
-+/**
-+ * This evaluates a ACPI method call specific to the battery
-+ * ACPI extension. The specifics are that an error is marked
-+ * in the 32rd bit of the response, so we just check that here.
-+ *
-+ * Returns 0 on success
-+ */
-+static int tpacpi_battery_eval(char *method, int *ret, int param)
-+{
-+	if (!acpi_evalf(hkey_handle, ret, method, "dd", param)) {
-+		pr_err("%s: evaluate failed", method);
-+		return AE_ERROR;
-+	}
-+
-+	if (*ret & METHOD_ERR) {
-+		pr_err("%s evaluated but flagged as error", method);
-+		return AE_ERROR;
-+	}
-+
-+	return AE_OK;
-+}
-+
-+static int tpacpi_battery_get(int what, int battery, int *ret)
-+{
-+	switch (what) {
-+
-+	case THRESHOLD_START:
-+
-+		if (tpacpi_battery_eval(GET_START, ret, battery))
-+			return -ENODEV;
-+
-+		/* The value is in the low 8 bits of the response */
-+		*ret = *ret & 0xFF;
-+		return 0;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (tpacpi_battery_eval(GET_STOP, ret, battery))
-+			return -ENODEV;
-+
-+		/* Value is in lower 8 bits */
-+		*ret = *ret & 0xFF;
-+
-+		/*
-+		 * On the stop value, if we return 0 that
-+		 * does not make any sense. 0 means Default, which
-+		 * means that charging stops at 100%, so we return
-+		 * that.
-+		 */
-+		*ret = *ret == 0 ? 100 : *ret;
-+		return 0;
-+
-+	default:
-+		pr_crit("wrong parameter: %d", what);
-+		return -EINVAL;
-+	}
-+
-+}
-+
-+static int tpacpi_battery_set(int what, int battery, int value)
-+{
-+
-+	int param = 0x0, ret = 0xFFFFFFFF;
-+
-+	/* The first 8 bits are the value of the threshold */
-+	param = value;
-+	/* The battery ID is in bits 8-9, 2 bits */
-+	param |= (battery << 8);
-+
-+	switch (what) {
-+
-+	case THRESHOLD_START:
-+
-+		if (tpacpi_battery_eval(SET_START, &ret, param)) {
-+			pr_err("failed to set charge threshold on battery %d",
-+					battery);
-+			return -ENODEV;
-+		}
-+
-+		return 0;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (tpacpi_battery_eval(SET_STOP, &ret, param)) {
-+			pr_err("failed to set charge stop threshold: %d",
-+					battery);
-+			return -ENODEV;
-+		}
-+
-+		return 0;
-+
-+	default:
-+		pr_crit("wrong parameter: %d", what);
-+		return -EINVAL;
-+	}
-+
-+}
-+
-+static int tpacpi_battery_probe(int battery)
-+{
-+	int ret = 0;
-+
-+	/* Reset the struct */
-+	battery_info.start_support[battery] = 0x0;
-+	battery_info.stop_support[battery] = 0x0;
-+	battery_info.start_charge[battery] = 0x0;
-+	battery_info.stop_charge[battery] = 0x0;
-+
-+	/*
-+	 * 1) Get the current start threshold
-+	 * 2) Check for support
-+	 * 3) Get the current stop threshold
-+	 * 4) Check for support
-+	 */
-+
-+	if (acpi_has_method(hkey_handle, GET_START)) {
-+
-+		if (tpacpi_battery_eval(GET_START, &ret, battery)) {
-+			pr_err("Error probing battery %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+		/* Individual addressing is in bit 9 */
-+		if (ret & (1 << 9))
-+			battery_info.individual_addressing = true;
-+
-+		/* Support is marked in bit 8 */
-+		if (ret & (1 << 8))
-+			battery_info.start_support[battery] = 1;
-+		else
-+			return -ENODEV;
-+
-+		if (tpacpi_battery_get(THRESHOLD_START, battery,
-+					&battery_info.start_charge[battery])) {
-+			pr_err("Error probing battery %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+	}
-+
-+	if (acpi_has_method(hkey_handle, GET_STOP)) {
-+
-+		if (tpacpi_battery_eval(GET_STOP, &ret, battery)) {
-+			pr_err("Error probing battery stop; %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+		/* Support is marked in bit 8 */
-+		if (ret & (1 << 8))
-+			battery_info.stop_support[battery] = 1;
-+		else
-+			return -ENODEV;
-+
-+		if (tpacpi_battery_get(THRESHOLD_STOP, battery,
-+					&battery_info.stop_charge[battery])) {
-+			pr_err("Error probing battery stop: %d\n", battery);
-+			return -ENODEV;
-+		}
-+	}
-+
-+	pr_info("battery %d registered (start %d, stop %d)",
-+			battery,
-+			battery_info.start_charge[battery],
-+			battery_info.stop_charge[battery]);
-+
-+	return 0;
-+}
-+
-+/* General helper functions */
-+
-+static int tpacpi_battery_get_id(const char *battery_name)
-+{
-+
-+	if (strcmp(battery_name, "BAT0") == 0)
-+		return BAT_PRIMARY;
-+	else if (strcmp(battery_name, "BAT1") == 0)
-+		return BAT_SECONDARY;
-+
-+	/*
-+	 * If for some reason the battery is not BAT0 nor is it
-+	 * BAT1, we will assume it's the default, first battery,
-+	 * AKA primary.
-+	 */
-+	pr_warn("unknown battery %s, assuming primary", battery_name);
-+	return BAT_PRIMARY;
-+}
-+
-+static int tpacpi_battery_get_attr(struct device_attribute *attr)
-+{
-+	if (strcmp(START_ATTR, attr->attr.name) == 0)
-+		return THRESHOLD_START;
-+	else if (strcmp(STOP_ATTR, attr->attr.name) == 0)
-+		return THRESHOLD_STOP;
-+
-+	pr_crit("Invalid attribute: %s", attr->attr.name);
-+	return -EINVAL;
-+}
-+
-+/* sysfs interface */
-+
-+static ssize_t tpacpi_battery_store(struct device *dev,
-+				   struct device_attribute *devattr,
-+				   const char *buf, size_t count)
-+{
-+	int attr, battery;
-+	long value;
-+	struct power_supply *supply =
-+		container_of(dev, struct power_supply, dev);
-+
-+	if (!supply) {
-+		pr_crit("Can't upcast to power_supply!");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Some systems have support for more than
-+	 * one battery. If that is the case,
-+	 * tpacpi_battery_probe marked that addressing
-+	 * them individually is supported, so we do that
-+	 * based on the device struct.
-+	 *
-+	 * On systems that are not supported, we assume
-+	 * the primary as most of the ACPI calls fail
-+	 * with "Any Battery" as the parameter.
-+	 */
-+	if (battery_info.individual_addressing)
-+		/* BAT_PRIMARY or BAT_SECONDARY */
-+		battery = tpacpi_battery_get_id(supply->desc->name);
-+	else
-+		battery = BAT_PRIMARY;
-+
-+	if (kstrtol(buf, 10, &value))
-+		return -EINVAL;
-+
-+	attr = tpacpi_battery_get_attr(devattr);
-+
-+	switch (attr) {
-+
-+	case THRESHOLD_START:
-+
-+		if (!battery_info.start_support[battery])
-+			return -ENODEV;
-+
-+		/* valid values are [0, 99] */
-+		if (value < 0 || value > 99)
-+			return -EINVAL;
-+
-+		if (value > battery_info.stop_charge[battery])
-+			return -EINVAL;
-+
-+		if (tpacpi_battery_set(THRESHOLD_START, battery, value))
-+			return -ENODEV;
-+
-+		battery_info.start_charge[battery] = value;
-+		return count;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (!battery_info.stop_support[battery])
-+			return -ENODEV;
-+
-+		/* valid values are [1, 100] */
-+		if (value < 1 || value > 100)
-+			return -EINVAL;
-+
-+
-+		if (value < battery_info.start_charge[battery])
-+			return -EINVAL;
-+
-+		battery_info.stop_charge[battery] = value;
-+
-+		/*
-+		 * When 100 is passed to stop, we need to flip
-+		 * it to 0 as that the EC understands that as
-+		 * "Default", which will charge to 100%
-+		 */
-+		value = value == 100 ? 0 : value;
-+
-+		if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
-+			return -EINVAL;
-+
-+		return count;
-+
-+	default:
-+		pr_crit("Wrong parameter: %d", attr);
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t tpacpi_battery_show(struct device *dev,
-+				  struct device_attribute *devattr,
-+				  char *buf)
-+{
-+	int ret = 0x0, attr, battery;
-+	struct power_supply *supply =
-+		container_of(dev, struct power_supply, dev);
-+
-+	if (!supply) {
-+		pr_crit("Can't upcast to power_supply!");
-+		return -ENODEV;
-+	}
-+
-+	/* THRESHOLD_START or THRESHOLD_STOP */
-+	attr = tpacpi_battery_get_attr(devattr);
-+
-+	/*
-+	 * Some systems have support for more than
-+	 * one battery. If that is the case,
-+	 * tpacpi_battery_probe marked that addressing
-+	 * them individually is supported, so we do that
-+	 * based on the device struct.
-+	 *
-+	 * On systems that are not supported, we assume
-+	 * the primary as most of the ACPI calls fail
-+	 * with "Any Battery" as the parameter.
-+	 */
-+	if (battery_info.individual_addressing)
-+		/* BAT_PRIMARY or BAT_SECONDARY */
-+		battery = tpacpi_battery_get_id(supply->desc->name);
-+	else
-+		battery = BAT_PRIMARY;
-+
-+	if (tpacpi_battery_get(attr, battery, &ret))
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d\n", ret);
-+}
-+
-+static const struct device_attribute battery_start = {
-+	.show = tpacpi_battery_show,
-+	.store = tpacpi_battery_store,
-+	.attr = {
-+		.name = START_ATTR,
-+		.mode = 0644,
-+	},
-+};
-+
-+static const struct device_attribute battery_stop = {
-+	.show = tpacpi_battery_show,
-+	.store = tpacpi_battery_store,
-+	.attr = {
-+		.name = STOP_ATTR,
-+		.mode = 0644,
-+	},
-+};
-+
-+/* ACPI battery hooking */
-+
-+static int tpacpi_battery_add(struct power_supply *battery)
-+{
-+	int batteryid = tpacpi_battery_get_id(battery->desc->name);
-+
-+	pr_info("battery %s added", battery->desc->name);
-+
-+	if (tpacpi_battery_probe(batteryid))
-+		return -ENODEV;
-+
-+	if (device_create_file(&battery->dev, &battery_start))
-+		return -ENODEV;
-+
-+	if (device_create_file(&battery->dev, &battery_stop))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int tpacpi_battery_remove(struct power_supply *battery)
-+{
-+	pr_info("battery %s removed", battery->desc->name);
-+	device_remove_file(&battery->dev, &battery_start);
-+	device_remove_file(&battery->dev, &battery_stop);
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook = {
-+	.add_battery = tpacpi_battery_add,
-+	.remove_battery = tpacpi_battery_remove,
-+	.name = "ThinkPad Battery Extension",
-+};
-+
-+/* Subdriver init/exit */
-+
-+static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
-+{
-+	tp_features.battery = 0;
-+	battery_hook_register(&battery_hook);
-+
-+	pr_info("battery driver initialized");
-+
-+	battery_info.individual_addressing = 0;
-+	tp_features.battery = 1;
-+
-+	return 0;
-+}
-+
-+static void tpacpi_battery_exit(void)
-+{
-+	if (!tp_features.battery) {
-+		pr_info("battery driver was not loaded, not de-registering");
-+		return;
-+	}
-+
-+	battery_hook_unregister(&battery_hook);
-+}
-+
-+static struct ibm_struct battery_driver_data = {
-+	.name = "battery",
-+	.exit = tpacpi_battery_exit,
-+};
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -9647,6 +10104,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = mute_led_init,
- 		.data = &mute_led_driver_data,
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -271,6 +288,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+ 		},
  	},
 +	{
-+		.init = tpacpi_battery_init,
-+		.data = &battery_driver_data,
++		/* Onda oBook 20 Plus */
++		.driver_data = (void *)&onda_obook_20_plus_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ONDA"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "OBOOK 20 PLUS"),
++		},
 +	},
+ 	{ },
  };
  
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-2.7.4
-
+2.14.3
