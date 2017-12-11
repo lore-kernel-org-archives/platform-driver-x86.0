@@ -1,67 +1,79 @@
-From: Stefan =?ISO-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Simplify autorelease logic
-Date: Mon, 11 Dec 2017 02:48:23 +0100
-Message-ID: <3452614.9kDG2CtB8P@pebbles>
-References: <eb2e1de12dad4c11454b009075f916c63de8a2a6.1512774279.git.dvhart@infradead.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] Add touchscreen platform data for the Onda oBook 20 Plus
+ tablet.
+Date: Mon, 11 Dec 2017 11:24:27 +0100
+Message-ID: <ed1b12aa-c8e8-de6d-fdd0-fbd2636a8d54@redhat.com>
+References: <20171210220213.19290-1-nerijus@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6417077.pInx52mK6O";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-out-1.itc.rwth-aachen.de ([134.130.5.46]:2802 "EHLO
-        mail-out-1.itc.rwth-aachen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751420AbdLKBsa (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Dec 2017 20:48:30 -0500
-In-Reply-To: <eb2e1de12dad4c11454b009075f916c63de8a2a6.1512774279.git.dvhart@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Darren Hart (VMware)" <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171210220213.19290-1-nerijus@users.sourceforge.net>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Nerijus Baliunas <nerijus@users.sourceforge.net>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart6417077.pInx52mK6O
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Hi,
 
-On Saturday, December 9, 2017 12:07:08 AM CET Darren Hart (VMware) wrote:
-> The new notify_handler logic determining if autorelease should be used or
-> not is a bit awkward, and can result in more than one call to
-> sparse_keymap_report_event for the same event (scancode). The nesting
-> and long lines also made it difficult to read.
->=20
-> Simplify the logic by eliminating a level of nesting with a goto and
-> always calculate autorelease and val so we can make a single call to
-> sparse_keymap_report_event.
->=20
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> Cc: Stefan Br=FCns <stefan.bruens@rwth-aachen.de>
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> ---
-> Note: This is based on top of Stefan's v2 patch series for intel-vbtn,
-> currently in my review-dvhart branch.
->=20
->  drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
+On 10-12-17 23:02, Nerijus Baliunas wrote:
+> Signed-off-by: Nerijus Baliūnas <nerijus@users.sourceforge.net>
 
-Reviewed-by: Stefan Br=FCns <stefan.bruens@rwth-aachen.de>
-Tested-by: Stefan Br=FCns <stefan.bruens@rwth-aachen.de>
+Looks good to me:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
-Stefan
+Hans
 
-=2D-=20
-Stefan Br=FCns  /  Bergstra=DFe 21  /  52062 Aachen
-home: +49 241 53809034     mobile: +49 151 50412019
---nextPart6417077.pInx52mK6O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
 
------BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQSwWRWIpJbl0W4DemNvf0o9jP6qUwUCWi3j5wAKCRBvf0o9jP6q
-U2uqAJ0b9V4bbEA0wCSSUuZ5fEJPjz/YLwCfQMWaMC22brB+czxcn+SPP5iBFgI=
-=NAry
------END PGP SIGNATURE-----
-
---nextPart6417077.pInx52mK6O--
+> ---
+>   drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+> index 266535c2a72f..414293e8c448 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -171,6 +171,23 @@ static const struct silead_ts_dmi_data digma_citi_e200_data = {
+>   	.properties	= digma_citi_e200_props,
+>   };
+>   
+> +static const struct property_entry onda_obook_20_plus_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-onda-obook-20-plus.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +	{ }
+> +};
+> +
+> +static const struct silead_ts_dmi_data onda_obook_20_plus_data = {
+> +	.acpi_name	= "MSSL1680:00",
+> +	.properties	= onda_obook_20_plus_props,
+> +};
+> +
+>   static const struct dmi_system_id silead_ts_dmi_table[] = {
+>   	{
+>   		/* CUBE iwork8 Air */
+> @@ -271,6 +288,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+>   			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+>   		},
+>   	},
+> +	{
+> +		/* Onda oBook 20 Plus */
+> +		.driver_data = (void *)&onda_obook_20_plus_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ONDA"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "OBOOK 20 PLUS"),
+> +		},
+> +	},
+>   	{ },
+>   };
+>   
+> 
