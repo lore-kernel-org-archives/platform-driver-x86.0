@@ -1,35 +1,27 @@
-From: Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph@boehmwalder.at>
-Subject: Re: [PATCH 1/3 v5] battery: Add the battery hooking API
-Date: Mon, 11 Dec 2017 18:52:58 +0100
-Message-ID: <20171211175258.eewj7rmtqmk6hznf@localhost>
-References: <20171210180131.GA1865@thinkpad>
- <20171211120346.ast5ijqcxslfpbee@christoph-lap>
- <20171211163945.GA23317@thinkpad>
+From: Gregor Riepl <onitake@gmail.com>
+Subject: Re: [PATCH] Add touchscreen platform data for the Onda oBook 20 Plus
+ tablet.
+Date: Mon, 11 Dec 2017 19:25:40 +0100
+Message-ID: <17392159-0968-89f6-d716-137d006a0d80@gmail.com>
+References: <20171210220213.19290-1-nerijus@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from zimbra.linuxprofi.at ([93.83.54.199]:35480 "EHLO
-        zimbra.linuxprofi.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750707AbdLKRxD (ORCPT
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:33168 "EHLO
+        mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751274AbdLKSZp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Dec 2017 12:53:03 -0500
-Content-Disposition: inline
-In-Reply-To: <20171211163945.GA23317@thinkpad>
+        Mon, 11 Dec 2017 13:25:45 -0500
+In-Reply-To: <20171210220213.19290-1-nerijus@users.sourceforge.net>
+Content-Language: de-CH
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ognjen Galic <smclt30p@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+To: Nerijus Baliunas <nerijus@users.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 05:39:45PM +0100, Ognjen Galic wrote:
-> The 80-char warning can be omitted if the line looks ugly when broken.
-> This is noted in the style guide.
-Indeed, you're right here.  The line is just barely over 80 characters
-anyway, so it really doesn't matter here.
+Thanks!
 
-> About the MAINTAINERS file, I don't know how, when or why to edit that 
-> file so I did not touch it.
-That was just a warning about you moving drivers/acpi/battery.h to
-include/acpi/battery.h, which could potentially lead to an edit to
-MAINTAINERS being neccessary.  I just double-checked this and the
-include/acpi/ path was already listed in the MAINTAINERS file, so you're
-good.
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-onda-obook-20-plus.fw"),
+
+Firmware for this is available here:
+https://github.com/onitake/gsl-firmware/blob/master/firmware/linux/silead/gsl3676-onda-obook-20-plus.fw
