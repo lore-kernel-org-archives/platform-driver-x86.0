@@ -1,32 +1,29 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
-Date: Mon, 11 Dec 2017 13:54:27 +0300
-Message-ID: <20171211105427.ed6wmdsz2s4xxfht@mwanda>
+From: Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph@boehmwalder.at>
+Subject: Re: [PATCH 1/3 v5] battery: Add the battery hooking API
+Date: Mon, 11 Dec 2017 13:03:46 +0100
+Message-ID: <20171211120346.ast5ijqcxslfpbee@christoph-lap>
+References: <20171210180131.GA1865@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario.limonciello@dell.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20171210180131.GA1865@thinkpad>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ognjen Galic <smclt30p@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-This allocation won't fail in the current kernel because it's small but
-not checking for kmalloc() failures introduces static checker warnings
-so let's fix it.
+On Sun, Dec 10, 2017 at 07:01:31PM +0100, Ognjen Galic wrote:
+> Tested-by: Christoph Böhmwalder <christoph@boehmwalder.at>
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+I confirm my Tested-by on all 3 patches.
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 39d2f4518483..fb25b20df316 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -639,6 +639,8 @@ static int dell_wmi_events_set_enabled(bool enable)
- 	int ret;
- 
- 	buffer = kzalloc(sizeof(struct calling_interface_buffer), GFP_KERNEL);
-+	if (!buffer)
-+		return -ENOMEM;
- 	buffer->cmd_class = CLASS_INFO;
- 	buffer->cmd_select = SELECT_APP_REGISTRATION;
- 	buffer->input[0] = 0x10000;
+Also please note the checkpatch errors I pointed out on the previous
+revision.
+
+Thanks for taking the time to implement this!
+
+--
+Regards,
+Christoph
