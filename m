@@ -1,53 +1,31 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
-Date: Mon, 11 Dec 2017 14:58:28 +0000
-Message-ID: <ed9fa3c8c5bc45f58ff6844e628791a2@ausx13mpc120.AMER.DELL.COM>
-References: <20171211105427.ed6wmdsz2s4xxfht@mwanda>
+From: Ognjen Galic <smclt30p@gmail.com>
+Subject: Re: [PATCH 1/3 v5] battery: Add the battery hooking API
+Date: Mon, 11 Dec 2017 17:39:45 +0100
+Message-ID: <20171211163945.GA23317@thinkpad>
+References: <20171210180131.GA1865@thinkpad>
+ <20171211120346.ast5ijqcxslfpbee@christoph-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <20171211105427.ed6wmdsz2s4xxfht@mwanda>
-Content-Language: en-US
-Sender: kernel-janitors-owner@vger.kernel.org
-To: dan.carpenter@oracle.com, mjg59@srcf.ucam.org
-Cc: pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171211120346.ast5ijqcxslfpbee@christoph-lap>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> Sent: Monday, December 11, 2017 4:54 AM
-> To: Matthew Garrett <mjg59@srcf.ucam.org>; Limonciello, Mario
-> <Mario_Limonciello@Dell.com>
-> Cc: Pali Roh=E1r <pali.rohar@gmail.com>; Darren Hart <dvhart@infradead.or=
-g>;
-> Andy Shevchenko <andy@infradead.org>; platform-driver-x86@vger.kernel.org=
-;
-> kernel-janitors@vger.kernel.org
-> Subject: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
->=20
-> This allocation won't fail in the current kernel because it's small but
-> not checking for kmalloc() failures introduces static checker warnings
-> so let's fix it.
->=20
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-=
-wmi.c
-> index 39d2f4518483..fb25b20df316 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -639,6 +639,8 @@ static int dell_wmi_events_set_enabled(bool enable)
->  	int ret;
->=20
->  	buffer =3D kzalloc(sizeof(struct calling_interface_buffer), GFP_KERNEL)=
-;
-> +	if (!buffer)
-> +		return -ENOMEM;
->  	buffer->cmd_class =3D CLASS_INFO;
->  	buffer->cmd_select =3D SELECT_APP_REGISTRATION;
->  	buffer->input[0] =3D 0x10000;
+On Mon, Dec 11, 2017 at 01:03:46PM +0100, Christoph Böhmwalder wrote:
+> On Sun, Dec 10, 2017 at 07:01:31PM +0100, Ognjen Galic wrote:
+> > Tested-by: Christoph Böhmwalder <christoph@boehmwalder.at>
+> 
+> I confirm my Tested-by on all 3 patches.
+> 
+> Also please note the checkpatch errors I pointed out on the previous
+> revision.
 
-Thanks for that.
+The 80-char warning can be omitted if the line looks ugly when broken.
+This is noted in the style guide.
 
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+About the MAINTAINERS file, I don't know how, when or why to edit that 
+file so I did not touch it.
