@@ -1,61 +1,45 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
-Date: Mon, 11 Dec 2017 16:35:39 -0800
-Message-ID: <20171212003539.GE27831@fury>
-References: <20171211105427.ed6wmdsz2s4xxfht@mwanda>
- <ed9fa3c8c5bc45f58ff6844e628791a2@ausx13mpc120.AMER.DELL.COM>
+Subject: Re: [PATCH][V2] intel-hid: add a DMI quirk to support Wacom
+ MobileStudio Pro
+Date: Mon, 11 Dec 2017 16:51:18 -0800
+Message-ID: <20171212005118.GF27831@fury>
+References: <1512618023-30209-1-git-send-email-alex.hung@canonical.com>
+ <20171209000423.GD14187@fury>
+ <CANRwn3SpSfwpJk7OitXv6aLK4ES=AbHkmj7iyQsUP_dbZqbJTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42479 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:45034 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751379AbdLLAfq (ORCPT
+        with ESMTP id S1751123AbdLLAvV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Dec 2017 19:35:46 -0500
+        Mon, 11 Dec 2017 19:51:21 -0500
 Content-Disposition: inline
-In-Reply-To: <ed9fa3c8c5bc45f58ff6844e628791a2@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <CANRwn3SpSfwpJk7OitXv6aLK4ES=AbHkmj7iyQsUP_dbZqbJTA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: dan.carpenter@oracle.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Jason Gerecke <killertofu@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, andy@infradead.org, platform-driver-x86@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>
 
-On Mon, Dec 11, 2017 at 02:58:28PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> > Sent: Monday, December 11, 2017 4:54 AM
-> > To: Matthew Garrett <mjg59@srcf.ucam.org>; Limonciello, Mario
-> > <Mario_Limonciello@Dell.com>
-> > Cc: Pali Rohár <pali.rohar@gmail.com>; Darren Hart <dvhart@infradead.org>;
-> > Andy Shevchenko <andy@infradead.org>; platform-driver-x86@vger.kernel.org;
-> > kernel-janitors@vger.kernel.org
-> > Subject: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
-> > 
-> > This allocation won't fail in the current kernel because it's small but
-> > not checking for kmalloc() failures introduces static checker warnings
-> > so let's fix it.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > 
-> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> > index 39d2f4518483..fb25b20df316 100644
-> > --- a/drivers/platform/x86/dell-wmi.c
-> > +++ b/drivers/platform/x86/dell-wmi.c
-> > @@ -639,6 +639,8 @@ static int dell_wmi_events_set_enabled(bool enable)
-> >  	int ret;
-> > 
-> >  	buffer = kzalloc(sizeof(struct calling_interface_buffer), GFP_KERNEL);
-> > +	if (!buffer)
-> > +		return -ENOMEM;
-> >  	buffer->cmd_class = CLASS_INFO;
-> >  	buffer->cmd_select = SELECT_APP_REGISTRATION;
-> >  	buffer->input[0] = 0x10000;
+On Mon, Dec 11, 2017 at 02:13:40PM -0800, Jason Gerecke wrote:
+> On Fri, Dec 8, 2017 at 4:04 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Thu, Dec 07, 2017 at 11:40:23AM +0800, Alex Hung wrote:
+> >> HEBC method reports capabilities of 5 button array but Wacom
+> >> MobileStudio Pro does not have this control method. A DMI quirk
+> >> was created to enable 5 button array for this system.
+> >
+> > Jason, have you been able to verify this patch with testing?
+> >
 > 
-> Thanks for that.
+> I tested the attachment at [1], which produces an identical copy of
+> intel-hid.c as applying this patch to the
+> platform-drivers-x86/review-dvhart branch of
+> git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git.
 > 
-> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> Assuming that's the correct code, feel free to attach the following:
+> Tested-by: Jason Gerecke <jason.gerecke@wacom.com>
 
-Queued for testing, and I'll pull it back to fixes for rc3/4 as well.
+Great, thanks. Queued up for testing.
 
 -- 
 Darren Hart
