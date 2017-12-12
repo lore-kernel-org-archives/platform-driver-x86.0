@@ -1,50 +1,61 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Simplify autorelease logic
-Date: Mon, 11 Dec 2017 16:31:26 -0800
-Message-ID: <20171212003126.GD27831@fury>
-References: <eb2e1de12dad4c11454b009075f916c63de8a2a6.1512774279.git.dvhart@infradead.org>
- <3452614.9kDG2CtB8P@pebbles>
+Subject: Re: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
+Date: Mon, 11 Dec 2017 16:35:39 -0800
+Message-ID: <20171212003539.GE27831@fury>
+References: <20171211105427.ed6wmdsz2s4xxfht@mwanda>
+ <ed9fa3c8c5bc45f58ff6844e628791a2@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:51183 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:42479 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751379AbdLLAb3 (ORCPT
+        with ESMTP id S1751379AbdLLAfq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Dec 2017 19:31:29 -0500
+        Mon, 11 Dec 2017 19:35:46 -0500
 Content-Disposition: inline
-In-Reply-To: <3452614.9kDG2CtB8P@pebbles>
+In-Reply-To: <ed9fa3c8c5bc45f58ff6844e628791a2@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario.Limonciello@dell.com
+Cc: dan.carpenter@oracle.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 02:48:23AM +0100, Stefan Brüns wrote:
-> On Saturday, December 9, 2017 12:07:08 AM CET Darren Hart (VMware) wrote:
-> > The new notify_handler logic determining if autorelease should be used or
-> > not is a bit awkward, and can result in more than one call to
-> > sparse_keymap_report_event for the same event (scancode). The nesting
-> > and long lines also made it difficult to read.
+On Mon, Dec 11, 2017 at 02:58:28PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> > Sent: Monday, December 11, 2017 4:54 AM
+> > To: Matthew Garrett <mjg59@srcf.ucam.org>; Limonciello, Mario
+> > <Mario_Limonciello@Dell.com>
+> > Cc: Pali Rohár <pali.rohar@gmail.com>; Darren Hart <dvhart@infradead.org>;
+> > Andy Shevchenko <andy@infradead.org>; platform-driver-x86@vger.kernel.org;
+> > kernel-janitors@vger.kernel.org
+> > Subject: [PATCH] platform/x86: dell-wmi: check for kmalloc() errors
 > > 
-> > Simplify the logic by eliminating a level of nesting with a goto and
-> > always calculate autorelease and val so we can make a single call to
-> > sparse_keymap_report_event.
+> > This allocation won't fail in the current kernel because it's small but
+> > not checking for kmalloc() failures introduces static checker warnings
+> > so let's fix it.
 > > 
-> > Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> > Cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
-> > Cc: AceLan Kao <acelan.kao@canonical.com>
-> > ---
-> > Note: This is based on top of Stefan's v2 patch series for intel-vbtn,
-> > currently in my review-dvhart branch.
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 > > 
-> >  drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++------------
-> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> > index 39d2f4518483..fb25b20df316 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -639,6 +639,8 @@ static int dell_wmi_events_set_enabled(bool enable)
+> >  	int ret;
+> > 
+> >  	buffer = kzalloc(sizeof(struct calling_interface_buffer), GFP_KERNEL);
+> > +	if (!buffer)
+> > +		return -ENOMEM;
+> >  	buffer->cmd_class = CLASS_INFO;
+> >  	buffer->cmd_select = SELECT_APP_REGISTRATION;
+> >  	buffer->input[0] = 0x10000;
 > 
-> Reviewed-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
-> Tested-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+> Thanks for that.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
 
-Appreciate you taking the time to review and test, thank you!
+Queued for testing, and I'll pull it back to fixes for rc3/4 as well.
 
 -- 
 Darren Hart
