@@ -1,55 +1,57 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH] platform/x86: Add driver for GPD pocket custom fan controller
-Date: Tue, 12 Dec 2017 16:33:12 +0100
-Message-ID: <CAOFm3uE540=Y=pgz=tcM2djQVYZw5b8uOP5wQwJNNhCNEXuW=g@mail.gmail.com>
-References: <20171212151102.18672-1-hdegoede@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH][V2] intel-hid: add a DMI quirk to support Wacom
+ MobileStudio Pro
+Date: Tue, 12 Dec 2017 08:00:12 -0800
+Message-ID: <20171212160012.GI27831@fury>
+References: <1512618023-30209-1-git-send-email-alex.hung@canonical.com>
+ <20171209000423.GD14187@fury>
+ <CANRwn3SpSfwpJk7OitXv6aLK4ES=AbHkmj7iyQsUP_dbZqbJTA@mail.gmail.com>
+ <20171212005118.GF27831@fury>
+ <CAHp75VeDarmDs1tALkv4tiO_NMa7uhC26bF_Yc0Bv98KpK_nHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:39783 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752102AbdLLPdy (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:49699 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752256AbdLLQAP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Dec 2017 10:33:54 -0500
-Received: by mail-wr0-f196.google.com with SMTP id a41so21574317wra.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Dec 2017 07:33:53 -0800 (PST)
-In-Reply-To: <20171212151102.18672-1-hdegoede@redhat.com>
+        Tue, 12 Dec 2017 11:00:15 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeDarmDs1tALkv4tiO_NMa7uhC26bF_Yc0Bv98KpK_nHw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, James <james@panaceas.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jason Gerecke <killertofu@gmail.com>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Jason Gerecke <jason.gerecke@wacom.com>
 
-Dear Hans,
+On Tue, Dec 12, 2017 at 10:02:36AM +0200, Andy Shevchenko wrote:
+> On Tue, Dec 12, 2017 at 2:51 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Mon, Dec 11, 2017 at 02:13:40PM -0800, Jason Gerecke wrote:
+> >> On Fri, Dec 8, 2017 at 4:04 PM, Darren Hart <dvhart@infradead.org> wrote:
+> >> > On Thu, Dec 07, 2017 at 11:40:23AM +0800, Alex Hung wrote:
+> >> >> HEBC method reports capabilities of 5 button array but Wacom
+> >> >> MobileStudio Pro does not have this control method. A DMI quirk
+> >> >> was created to enable 5 button array for this system.
+> >> >
+> >> > Jason, have you been able to verify this patch with testing?
+> >> >
+> >>
+> >> I tested the attachment at [1], which produces an identical copy of
+> >> intel-hid.c as applying this patch to the
+> >> platform-drivers-x86/review-dvhart branch of
+> >> git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git.
+> >>
+> >> Assuming that's the correct code, feel free to attach the following:
+> >> Tested-by: Jason Gerecke <jason.gerecke@wacom.com>
+> >
+> > Great, thanks. Queued up for testing.
+> 
+> Just in case you didn't promote it yet, could you move inclusion to be
+> more ordered alphabetically? (After linux/acpi.h I suppose)
 
-On Tue, Dec 12, 2017 at 4:11 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Add a driver for the GPD pocket device's custom fan controller, which
-> gets controlled through 2 GPIOs listed in a FAN02501 ACPI device.
-[...]
-
-> --- /dev/null
-> +++ b/drivers/platform/x86/gpd-pocket-fan.c
-> @@ -0,0 +1,193 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-
-This should be IMHO this style as requested by Linus on list and
-documented by Thomas in the doc patches:
-// SPDX-License-Identifier: GPL-2.0
-
-
-> +MODULE_LICENSE("GPL");
-
-This module license means "GPL 2 or later" and does not match your top
-level GPL 2.0 license tag and should be instead as per module.h doc:
-MODULE_LICENSE("GPL v2");
-
-.... unless you want this to be GPL 2.0 or later all the way in which
-case it should be:
-// SPDX-License-Identifier: GPL-2.0+
-and
-MODULE_LICENSE("GPL");
-
-... though I am not sure what is the point of "or later" for a module.
+I had done that initially, but realized the entire list is in no apparent order
+and it wasn't just moving the one line he added. So it'll need to be a cleanup
+patch since all the test builds have run already.
 
 -- 
-Cordially
-Philippe Ombredanne
+Darren Hart
+VMware Open Source Technology Center
