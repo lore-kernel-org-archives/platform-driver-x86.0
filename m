@@ -1,66 +1,51 @@
-From: Jason Gerecke <killertofu@gmail.com>
-Subject: Re: [PATCH][V2] intel-hid: add a DMI quirk to support Wacom
- MobileStudio Pro
-Date: Mon, 11 Dec 2017 14:13:40 -0800
-Message-ID: <CANRwn3SpSfwpJk7OitXv6aLK4ES=AbHkmj7iyQsUP_dbZqbJTA@mail.gmail.com>
-References: <1512618023-30209-1-git-send-email-alex.hung@canonical.com> <20171209000423.GD14187@fury>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Simplify autorelease logic
+Date: Mon, 11 Dec 2017 16:31:26 -0800
+Message-ID: <20171212003126.GD27831@fury>
+References: <eb2e1de12dad4c11454b009075f916c63de8a2a6.1512774279.git.dvhart@infradead.org>
+ <3452614.9kDG2CtB8P@pebbles>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ua0-f194.google.com ([209.85.217.194]:41440 "EHLO
-        mail-ua0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750929AbdLKWNl (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:51183 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751379AbdLLAb3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Dec 2017 17:13:41 -0500
-Received: by mail-ua0-f194.google.com with SMTP id q13so13056438uaq.8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2017 14:13:41 -0800 (PST)
-In-Reply-To: <20171209000423.GD14187@fury>
+        Mon, 11 Dec 2017 19:31:29 -0500
+Content-Disposition: inline
+In-Reply-To: <3452614.9kDG2CtB8P@pebbles>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Alex Hung <alex.hung@canonical.com>, andy@infradead.org, platform-driver-x86@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>
+To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Fri, Dec 8, 2017 at 4:04 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Thu, Dec 07, 2017 at 11:40:23AM +0800, Alex Hung wrote:
->> HEBC method reports capabilities of 5 button array but Wacom
->> MobileStudio Pro does not have this control method. A DMI quirk
->> was created to enable 5 button array for this system.
->
-> Jason, have you been able to verify this patch with testing?
->
+On Mon, Dec 11, 2017 at 02:48:23AM +0100, Stefan Brüns wrote:
+> On Saturday, December 9, 2017 12:07:08 AM CET Darren Hart (VMware) wrote:
+> > The new notify_handler logic determining if autorelease should be used or
+> > not is a bit awkward, and can result in more than one call to
+> > sparse_keymap_report_event for the same event (scancode). The nesting
+> > and long lines also made it difficult to read.
+> > 
+> > Simplify the logic by eliminating a level of nesting with a goto and
+> > always calculate autorelease and val so we can make a single call to
+> > sparse_keymap_report_event.
+> > 
+> > Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+> > Cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+> > Cc: AceLan Kao <acelan.kao@canonical.com>
+> > ---
+> > Note: This is based on top of Stefan's v2 patch series for intel-vbtn,
+> > currently in my review-dvhart branch.
+> > 
+> >  drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++------------
+> >  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> Reviewed-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+> Tested-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
 
-I tested the attachment at [1], which produces an identical copy of
-intel-hid.c as applying this patch to the
-platform-drivers-x86/review-dvhart branch of
-git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git.
+Appreciate you taking the time to review and test, thank you!
 
-Assuming that's the correct code, feel free to attach the following:
-Tested-by: Jason Gerecke <jason.gerecke@wacom.com>
-
-[1]: https://bugzilla.kernel.org/attachment.cgi?id=3D261033
-
-Jason
----
-Now instead of four in the eights place /
-you=E2=80=99ve got three, =E2=80=98Cause you added one  /
-(That is to say, eight) to the two,     /
-But you can=E2=80=99t take seven from three,    /
-So you look at the sixty-fours....
-
->> [V2] Update DMI strings from shipping systems
->
-> Please place patch versioning detail below the --- in the future
->
->> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D197991
->>
->> Reported-by: Jason Gerecke <jason.gerecke@wacom.com>
->> Signed-off-by: Alex Hung <alex.hung@canonical.com>
->> ---
->
-> here (see submitting patches docs for details)
->
->
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+-- 
+Darren Hart
+VMware Open Source Technology Center
