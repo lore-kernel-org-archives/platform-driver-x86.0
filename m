@@ -1,82 +1,107 @@
 From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
- Intel Software Guard Extensions
-Date: Wed, 13 Dec 2017 23:18:29 +0000
-Message-ID: <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-         <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
-         <1510682106.3313.24.camel@intel.com>
-         <20171114202835.64rl35asldh3jgui@linux.intel.com>
- <1510770027.11044.37.camel@intel.com>
+Subject: RE: [PATCH v6 10/11] intel_sgx: glue code for in-kernel LE
+Date: Wed, 13 Dec 2017 23:34:43 +0000
+Message-ID: <37306EFA9975BE469F115FDE982C075BC6B3B619@ORSMSX108.amr.corp.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <20171125193132.24321-11-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:17216 "EHLO mga06.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:54302 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750751AbdLMXSb (ORCPT
+        id S1750785AbdLMXeo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Dec 2017 18:18:31 -0500
-In-Reply-To: <1510770027.11044.37.camel@intel.com>
+        Wed, 13 Dec 2017 18:34:44 -0500
+In-Reply-To: <20171125193132.24321-11-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-T24gV2VkLCBOb3YgMTUsIDIwMTcgYXQgMTA6MjA6MjdBTSAtMDgwMCwgU2VhbiBDaHJpc3RvcGhl
-cnNvbiB3cm90ZToNCj4gT24gVHVlLCAyMDE3LTExLTE0IGF0IDIyOjI4ICswMjAwLCBKYXJra28g
-U2Fra2luZW4gd3JvdGU6DQo+ID4gT24gVHVlLCBOb3YgMTQsIDIwMTcgYXQgMDk6NTU6MDZBTSAt
-MDgwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToNCj4gPiA+DQo+ID4gPiBXaGF0IGRvIHlv
-dSBtZWFuIGJ5IGJvdHRsZW5lY2tzPyAgQXNzdW1pbmcgeW91J3JlIHJlZmVycmluZyB0byBwZXJm
-b3JtYW5jZQ0KPiA+ID4gYm90dGxlbmVja3MsIHRoaXMgc3RhdGVtZW50IGlzIGZsYXQgb3V0IGZh
-bHNlLiAgTW92aW5nIHRoZSBsYXVuY2ggZW5jbGF2ZQ0KPiA+ID4gaW50bw0KPiA+ID4gdGhlIGtl
-cm5lbCBpbnRyb2R1Y2VzIHBlcmZvcm1hbmNlIGJvdHRsZW5lY2tzLCBlLmcuIGFzIGltcGxlbWVu
-dGVkLCBhIHNpbmdsZQ0KPiA+ID4gTEUNCj4gPiA+IHNlcnZpY2VzIGFsbCBFSU5JVCByZXF1ZXN0
-cyBhbmQgaXMgcHJvdGVjdGVkIGJ5IGEgbXV0ZXguICBUaGF0IGlzIHRoZSB2ZXJ5DQo+ID4gPiBk
-ZWZpbml0aW9uIG9mIGEgYm90dGxlbmVjay4NCj4gPiBJIGd1ZXNzIHRoZSB0ZXh0IGRvZXMgbm90
-IGRvIGEgZ29vZCBqb2IgZGVzY3JpYmluZyB3aGF0IEkgbWVhbnQuIE1heWJlIEkNCj4gPiBzaG91
-bGQgcmVmaW5lIGl0PyBZb3VyIGFyZ3VtZW50IGFib3V0IG11dGV4IGlzIGNvcnJlY3QuDQo+ID4N
-Cj4gPiBUaGUgdXNlIG9mICJib3R0bGVuZWNrIiBkb2VzIG5vdCBzcGVjaWZpY2FsbHkgcmVmZXIg
-dG8gcGVyZm9ybWFuY2UuIEknbQ0KPiA+IHdvcnJpZWQgYWJvdXQgc3BsaXR0aW5nIHRoZSB0YXNr
-cyBuZWVkZWQgdG8gbGF1bmNoIGFuIGVuY2xhdmUgYmV0d2Vlbg0KPiA+IGtlcm5lbCBhbmQgdXNl
-ciBzcGFjZS4gSXQgY291bGQgYmVjb21lIGRpZmZpY3VsdCB0byBtYW5hZ2Ugd2hlbiBtb3JlDQo+
-ID4gU0dYIGZlYXR1cmVzIGFyZSBhZGRlZC4gVGhhdCBpcyB3aGF0IEkgd2FzIHJlZmVycmluZyB3
-aGVuIEkgdXNlZCB0aGUNCj4gPiB3b3JkICJib3R0bGVuZWNrIi4NCj4gPg0KPiA+IEkgc3VwcG9z
-ZSB5b3UgdGhpbmsgSSBzaG91bGQgcmVmaW5lIHRoZSBjb21taXQgbWVzc2FnZT8NCj4gPg0KPiA+
-IEFib3V0IHRoZSBwZXJmIGJvdHRsZW5lY2suIEdpdmVuIHRoYXQgYWxsIHRoZSBkYXRhIGlzIGFs
-cmVhZHkgaW4NCj4gPiBzZ3hfbGVfY3R4IHRoZSBkcml2ZXIgY291bGQgZm9yIGV4YW1wbGUgaGF2
-ZSBvd24gTEUgcHJvY2VzcyBmb3IgZXZlcnkNCj4gPiBvcGVuZWQgL2Rldi9zZ3guIElzIHlvdXIg
-Y29tbWVudCBhbHNvIHN1Z2dlc3RpbmcgdG8gcmVmaW5lIHRoaXMgb3INCj4gPiBjb3VsZCBpdCBi
-ZSBwb3N0cG9uZWQ/DQo+DQo+IE1vcmUgdGhhdCBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IHRoZSBk
-cml2ZXIgZG9lc24ndCBhbGxvdyB1c2Vyc3BhY2UgdG8gcHJvdmlkZQ0KPiBhbiBFSU5JVCB0b2tl
-biwgYW5kIHJlY2lwcm9jYWxseSwgZG9lc24ndCBwcm92aWRlIHRoZSB0b2tlbiBiYWNrIHRvIHVz
-ZXJzcGFjZS4gDQo+IElNTywgdGhlIGFjdCBvZiBnZW5lcmF0aW5nIGFuIEVJTklUIHRva2VuIGlz
-IG9ydGhvZ29uYWwgdG8gZGVjaWRpbmcgd2hldGhlciBvcg0KPiBub3QgdG8gcnVuIHRoZSBlbmNs
-YXZlLiAgUnVubmluZyBjb2RlIGluIGEga2VybmVsLW93bmVkIGVuY2xhdmUgaXMgbm90IHNwZWNp
-ZmljDQo+IHRvIFNHWCwgZS5nLiBwYXJhbm9pZCBrZXJuZWxzIGNvdWxkIHJ1biBvdGhlciBzZW5z
-aXRpdmUgdGFza3MgaW4gYW4gZW5jbGF2ZS4NCj4gQmVpbmcgZm9yY2VkIHRvIHJ1biBhbiBlbmNs
-YXZlIHRvIGdlbmVyYXRlIGFuIEVJTklUIHRva2VuIGlzIGFuIHVuZm9ydHVuYXRlDQo+IHNwZWVk
-IGJ1bXAgdGhhdCBleGlzdHMgcHVyZWx5IGJlY2F1c2UgaGFyZHdhcmUgZG9lc24ndCBwcm92aWRl
-IHRoZSBvcHRpb24gdG8NCj4gZGlzYWJsZSBsYXVuY2ggY29udHJvbCBlbnRpcmVseS4NCj4NCj4g
-SW4gb3RoZXIgd29yZHMsIGFjY2VwdGluZyBhIHRva2VuIHZpYSB0aGUgSU9DVEwgZG9lc24ndCBt
-ZWFuIHRoZSBkcml2ZXIgaGFzIHRvDQo+IHVzZSBpdCwgZS5nLiBpdCBjYW4gYWx3YXlzIGlnbm9y
-ZSB0aGUgdG9rZW4sIGVuZm9yY2UgcGVyaW9kaWMgcmV2ZXJpZmljYXRpb24sDQo+IGNoZWNrIHRo
-YXQgdGhlIHRva2VuIHdhcyBjcmVhdGVkIGJ5IHRoZSBkcml2ZXIsIGV0Yy4uLiAgQW5kIHVzaW5n
-IHRoZSB0b2tlbg0KPiBkb2Vzbid0IHByZWNsdWRlIHRoZSBkcml2ZXIgZnJvbSByZS1ydW5uaW5n
-IGl0cyB2ZXJpZmljYXRpb24gY2hlY2tzIG91dHNpZGUgb2YNCj4gdGhlIGxhdW5jaCBlbmNsYXZl
-Lg0KDQpSZXN1cnJlY3RpbmcgdGhpcyB0aHJlYWQgbm93IHRoYXQgSSBoYXZlIGEgc3lzdGVtIHdp
-dGggbGF1bmNoIGNvbnRyb2wNCmFuZCBoYXZlIGJlZW4gYWJsZSB0byBtZWFzdXJlIHRoZSBwZXJm
-b3JtYW5jZSBpbXBhY3QuLi4NCg0KUmVnZW5lcmF0aW5nIHRoZSBFSU5JVCB0b2tlbiBldmVyeSB0
-aW1lIGFkZHMgc29tZXdoZXJlIGluIHRoZSB2aWNpbml0eQ0Kb2YgfjUlIG92ZXJoZWFkIHRvIGNy
-ZWF0aW5nIGFuIGVuY2xhdmUsIHZlcnN1cyBnZW5lcmF0aW5nIGEgdG9rZW4gb25jZQ0KYW5kIHJl
-dXNpbmcgaXQgaW4gZWFjaCBFSU5JVCBjYWxsLiAgVGhpcyBpc24ndCBhIGh1Z2UgaXNzdWUgc2lu
-Y2UgcmVhbA0Kd29ybGQgdXNhZ2UgbW9kZWxzIGxpa2VseSB3b24ndCBiZSByZS1sYXVuY2hpbmcg
-ZW5jbGF2ZXMgYXQgYSBoaWdoIHJhdGUsDQpidXQgaXQgaXMgbWVhc3VyYWJsZS4NCg0KT24gdG9w
-IG9mIG15IG90aGVyIGFyZ3VtZW50cywgdGhlIGtleSBvZiB0aGUgdG9rZW4ncyBzaWduZXIgbXVz
-dCBtYXRjaA0KdGhlIGN1cnJlbnQgdmFsdWUgaW4gdGhlIExFIGhhc2ggTVNScywgc28gZXhjZXB0
-IGZvciBmdXR1cmUgdGhlb3JldGljYWwNCnNjZW5hcmlvcyB3aGVyZSB3ZSB3YW50IHRvICJyZXZv
-a2UiIGFuIGV4aXN0aW5nIHRva2VuLCB0aGUgb25seSB3YXkgd2UNCmNhbiBlbmQgdXAgd2l0aCBh
-IHRva2VuIHdlIGRvbid0IHRydXN0IGlzIGlmIHRoZSBrZXJuZWwgbGF1bmNoIGVuY2xhdmUNCmFs
-cmVhZHkgc2NyZXdlZCB1cCBvciB1c2Vyc3BhY2UgaGFzIGFjY2VzcyB0byB0aGUgTEUncyBwcml2
-YXRlIGtleS4NCg==
+On Sat, Nov 25, 2017 at 09:29:27PM +0200, Jarkko Sakkinen wrote:
++static int __sgx_le_get_token(struct sgx_le_ctx *ctx,
++			      const struct sgx_encl *encl,
++			      const struct sgx_sigstruct *sigstruct,
++			      struct sgx_einittoken *token)
++{
++	u8 mrsigner[32];
++	ssize_t ret;
++
++	if (!ctx->tgid)
++		return -EIO;
++
++	ret = sgx_get_key_hash(ctx->tfm, sigstruct->modulus, mrsigner);
++	if (ret)
++		return ret;
++
++	if (!memcmp(mrsigner, sgx_le_pubkeyhash, 32))
++		return 0;
+
+Not sure what other code would need to be juggled to make it happen,
+but checking the enclave's signer against sgx_le_pubkeyhash needs to
+be moved outside of the sgx_le_ctx mutex, e.g. to sgx_le_get_token.
+Deadlocks can occur because the kernel's LE uses the same EINIT flow
+as normal enclaves.  If a userspace enclave is created immediately
+after opening /dev/sgx it can race with the LE to acquire the lock.
+If the userspace enclave wins, it will block indefinitely waiting
+for the LE to generate the token, while the LE is blocked waiting
+for the lock.
+
+This bug is trivial to reproduce on a single threaded system/VM.
+
+Hung task trace for the in-kernel enclave:
+
+[  484.330510] INFO: task 3:972 blocked for more than 120 seconds.
+[  484.331111]       Not tainted 4.14.0+ #21
+[  484.331507] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  484.332244] 3               D    0   972      2 0x00000000
+[  484.332248] Call Trace:
+[  484.332265]  __schedule+0x3c2/0x890
+[  484.332267]  schedule+0x36/0x80
+[  484.332268]  schedule_preempt_disabled+0xe/0x10
+[  484.332269]  __mutex_lock.isra.2+0x2b1/0x4e0
+[  484.332274]  __mutex_lock_slowpath+0x13/0x20
+[  484.332276]  mutex_lock+0x2f/0x40
+[  484.332278]  sgx_le_get_token+0x3e/0x166 [intel_sgx]
+[  484.332282]  sgx_ioc_enclave_init+0xd2/0x120 [intel_sgx]
+[  484.332283]  sgx_ioctl+0xdc/0x180 [intel_sgx]
+[  484.332306]  do_vfs_ioctl+0xa1/0x5e0
+[  484.332308]  SyS_ioctl+0x79/0x90
+[  484.332310]  entry_SYSCALL_64_fastpath+0x1e/0xa9
+
+
++
++	ret = sgx_le_write(ctx->pipes[0], sigstruct->body.mrenclave, 32);
++	if (ret)
++		return ret;
++
++	ret = sgx_le_write(ctx->pipes[0], mrsigner, 32);
++	if (ret)
++		return ret;
++
++	ret = sgx_le_write(ctx->pipes[0], &encl->attributes, sizeof(uint64_t));
++	if (ret)
++		return ret;
++
++	ret = sgx_le_write(ctx->pipes[0], &encl->xfrm, sizeof(uint64_t));
++	if (ret)
++		return ret;
++
++	return sgx_le_read(ctx->pipes[1], token, sizeof(*token));
++}
++
++int sgx_le_get_token(struct sgx_le_ctx *ctx,
++		     const struct sgx_encl *encl,
++		     const struct sgx_sigstruct *sigstruct,
++		     struct sgx_einittoken *token)
++{
++	int ret;
++
++	mutex_lock(&ctx->lock);
++	ret = __sgx_le_get_token(ctx, encl, sigstruct, token);
++	mutex_unlock(&ctx->lock);
++
++	return ret;
++}
