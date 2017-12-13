@@ -1,66 +1,34 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v7 4/8] intel_sgx: driver for
- Intel Software Guard Extensions
-Date: Tue, 12 Dec 2017 13:46:48 -0800
-Message-ID: <1513115208.27842.18.camel@intel.com>
-References: <20171207015614.7914-1-jarkko.sakkinen@linux.intel.com>
-         <20171207015614.7914-5-jarkko.sakkinen@linux.intel.com>
-         <37306EFA9975BE469F115FDE982C075BC6B39193@ORSMSX108.amr.corp.intel.com>
-         <20171207160548.doovfdh2lqg5brm3@linux.intel.com>
-         <37306EFA9975BE469F115FDE982C075BC6B39E1D@ORSMSX108.amr.corp.intel.com>
+From: Dhaval Shah <dhaval.shah@softnautics.com>
+Subject: [PATCH 0/3] platform/x86: dell-laptop: All the warnings are resolved.
+Date: Wed, 13 Dec 2017 13:43:06 +0530
+Message-ID: <20171213081309.22851-1-dhaval.shah@softnautics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:41735 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752584AbdLLVsv (ORCPT
+Received: from mail-ma1ind01on0113.outbound.protection.outlook.com ([104.47.100.113]:29640
+        "EHLO IND01-MA1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750785AbdLMION (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Dec 2017 16:48:51 -0500
-In-Reply-To: <37306EFA9975BE469F115FDE982C075BC6B39E1D@ORSMSX108.amr.corp.intel.com>
+        Wed, 13 Dec 2017 03:14:13 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>
+To: mjg59@srcf.ucam.org, pali.rohar@gmail.com, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dhaval Shah <dhaval.shah@softnautics.com>
 
-On Fri, 2017-12-08 at 07:31 -0800, Christopherson, Sean J wrote:
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> > On Thu, Dec 07, 2017 at 02:46:39PM +0000, Christopherson, Sean J wrote:
-> > > > + for (i = 0; i < 2; i++) {
-> > > > +         va_page = list_first_entry(&encl->va_pages,
-> > > > +                                    struct sgx_va_page, list);
-> > > > +         va_offset = sgx_alloc_va_slot(va_page);
-> > > > +         if (va_offset < PAGE_SIZE)
-> > > > +                 break;
-> > > > +
-> > > > +         list_move_tail(&va_page->list, &encl->va_pages);
-> > > > + }
-> > > 
-> > > This is broken, there is no guarantee that the next VA page will have
-> > > a free slot.  You have to walk over all VA pages to guarantee a slot
-> > > is found, e.g. this caused EWB and ELDU errors.
-> > 
-> > I did run some extensive stress tests on this and did not experience any
-> > issues. Full VA pages are always put to the end. Please point me to the
-> > test where this breaks so that I can fix the issue if it persists.
-> 
-> Three VA pages in the enclave: A, B and C.  Evict all pages in the
-> enclave, i.e. consume all slots in A, B and C.  The list can be in
-> any order at this point, but for the sake of argument let's say the
-> order is C->A->B, i.e. C was originally the last VA page in the list.
-> Fault in page X, whose VA is in B.  Evict X.  This code looks at C
-> and A, and finds no available slot, but continues with VA page A and
-> a va_offset of PAGE_SIZE.
+There are total three types of warnings are resolved.
+First patch  : Block comments use * on subsequent lines
+Second patch : Missing a blank line after declarations
+third patch  : braces {} are not necessary for single statement blocks.
 
-So it looks like you avoid the described case by moving B to the head of
-the list in sgx_eldu.  The bug I am seeing is still straightforward to
-theorize:
+Dhaval Shah (3):
+  platform/x86: dell-laptop: Block comments use * on subsequent lines
+  platform/x86: dell-laptop: Missing a blank line after declarations
+  platform/x86: dell-laptop: braces {} are not necessary for single
+    statement blocks
 
-    1. Three VA pages.  List = A->B->C
-    2. Fill A and B, use one entry in C.  List = C->B->A
-    3. ELDU, freeing a slot in B.  List = B->C->A
-    4. EWB, consuming the last slot in B.  List = B->C->A
-    5. ELDU, freeing a slot in A.  List = A->B->C
-    6. EWB, consuming the last slot in A.  List = A->B->C
-    7. ELDU, but both A and B are full
-    8. Explode
+ drivers/platform/x86/dell-laptop.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+-- 
+2.11.0
