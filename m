@@ -1,53 +1,39 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on
  subsequent lines
-Date: Wed, 13 Dec 2017 13:57:15 +0100
-Message-ID: <CAOFm3uGVjKxk8B-LRGEFMTC_AT78pFFfz2pjixC4up4Kn8b+pQ@mail.gmail.com>
+Date: Wed, 13 Dec 2017 14:07:26 +0100
+Message-ID: <20171213130726.zb37t6pd72ssdwot@pali>
 References: <20171213082301.23209-1-dhaval.shah@softnautics.com>
  <CAOFm3uEP-fGPiZt96QDvgXG1Ws8WgdFLbOsGumvhGSG-e7L0Ng@mail.gmail.com>
  <BM1PR0101MB1444C78FDA61BA59D578A5F8E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
- <CAOFm3uGEmR9Wq1O06CiaqncA4E7mxfgDm97NetOe0qL_mtpsSw@mail.gmail.com> <BM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+ <CAOFm3uGEmR9Wq1O06CiaqncA4E7mxfgDm97NetOe0qL_mtpsSw@mail.gmail.com>
+ <e482b906981f4b46b2336bebba28888bBM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+ <1513167907.27409.3.camel@perches.com>
+ <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f49.google.com ([74.125.82.49]:32872 "EHLO
-        mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753027AbdLMM55 (ORCPT
+Received: from mail-wm0-f50.google.com ([74.125.82.50]:44160 "EHLO
+        mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753061AbdLMNH3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Dec 2017 07:57:57 -0500
-Received: by mail-wm0-f49.google.com with SMTP id g130so21764605wme.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Dec 2017 04:57:56 -0800 (PST)
-In-Reply-To: <BM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+        Wed, 13 Dec 2017 08:07:29 -0500
+Content-Disposition: inline
+In-Reply-To: <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Dhaval Shah <dhaval.shah@softnautics.com>
-Cc: "pali.rohar@gmail.com" <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Joe Perches <joe@perches.com>, Philippe Ombredanne <pombredanne@nexb.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 
-Dhaval,
+On Wednesday 13 December 2017 12:41:03 Dhaval Shah wrote:
+> I have given this SPDX ID based on the current license info in the driver. Yeah. I give the authority to author pali.rohar@gmail.com to decide the SPDX text.
 
-On Wed, Dec 13, 2017 at 11:47 AM, Dhaval Shah
-<dhaval.shah@softnautics.com> wrote:
+Hi! I think that license of this module is clear and does not need more
+comments. Part "either version 2 of the License, or (at your option) any
+later version." expresses what it exactly mean and it is standard
+license also used by other projects.
 
-<snip>
-> > And for a short comment block like this, Linus preference is to avoid
-> > mixing comment style and go all the way C++ style as in:
-> >
-> > > // SPDX-License-Identifier: GPL-2.0
-> > > // Dell Airplane Mode Switch driver
-> > > // Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > >
-> > > ... for even less boilerplate ;)
->
-> Thanks a lot for the link.
-> Do you want to me to update along with SPDX in this patchset with V2 or w=
-e will update in the next patchset once this patch merge?
-
-That's not for me to decide, I am just a lowly licensing elf helper scruffy=
-!
-
-PS: you might want to avoid sending HTML email on lkml, FWIW.
-
---=20
-Cordially
-Philippe Ombredanne
+-- 
+Pali Rohár
+pali.rohar@gmail.com
