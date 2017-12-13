@@ -1,39 +1,82 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on
- subsequent lines
-Date: Wed, 13 Dec 2017 07:39:32 -0800
-Message-ID: <1513179572.27409.8.camel@perches.com>
-References: <20171213082301.23209-1-dhaval.shah@softnautics.com>
-         <CAOFm3uEP-fGPiZt96QDvgXG1Ws8WgdFLbOsGumvhGSG-e7L0Ng@mail.gmail.com>
-         <BM1PR0101MB1444C78FDA61BA59D578A5F8E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-         ,<CAOFm3uGEmR9Wq1O06CiaqncA4E7mxfgDm97NetOe0qL_mtpsSw@mail.gmail.com>
-         <e482b906981f4b46b2336bebba28888bBM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-        ,<1513167907.27409.3.camel@perches.com>
-         <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Wed, 13 Dec 2017 23:18:29 +0000
+Message-ID: <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+         <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+         <1510682106.3313.24.camel@intel.com>
+         <20171114202835.64rl35asldh3jgui@linux.intel.com>
+ <1510770027.11044.37.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dhaval Shah <dhaval.shah@softnautics.com>, Philippe Ombredanne <pombredanne@nexb.com>
-Cc: "pali.rohar@gmail.com" <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:17216 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750751AbdLMXSb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 13 Dec 2017 18:18:31 -0500
+In-Reply-To: <1510770027.11044.37.camel@intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Wed, 2017-12-13 at 12:41 +0000, Dhaval Shah wrote:
-> > If anyone does conversions of these license texts
-> > you have to be _extremely_ careful about what
-> > specific license identifier you use.
-> > This license includes the text
-> >         "or (at your option) any later version"
-> > which is not the same as using
-> >         SPDX-License-Identifier: GPL-2.0
-> 
-> I have given this SPDX ID based on the current license info in the driver.
-
-No, you have not.
-You have done it incorrectly.
-
-For a short description, read:
-https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_list_short_identifiers.pdf
-page 5
+T24gV2VkLCBOb3YgMTUsIDIwMTcgYXQgMTA6MjA6MjdBTSAtMDgwMCwgU2VhbiBDaHJpc3RvcGhl
+cnNvbiB3cm90ZToNCj4gT24gVHVlLCAyMDE3LTExLTE0IGF0IDIyOjI4ICswMjAwLCBKYXJra28g
+U2Fra2luZW4gd3JvdGU6DQo+ID4gT24gVHVlLCBOb3YgMTQsIDIwMTcgYXQgMDk6NTU6MDZBTSAt
+MDgwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToNCj4gPiA+DQo+ID4gPiBXaGF0IGRvIHlv
+dSBtZWFuIGJ5IGJvdHRsZW5lY2tzPyAgQXNzdW1pbmcgeW91J3JlIHJlZmVycmluZyB0byBwZXJm
+b3JtYW5jZQ0KPiA+ID4gYm90dGxlbmVja3MsIHRoaXMgc3RhdGVtZW50IGlzIGZsYXQgb3V0IGZh
+bHNlLiAgTW92aW5nIHRoZSBsYXVuY2ggZW5jbGF2ZQ0KPiA+ID4gaW50bw0KPiA+ID4gdGhlIGtl
+cm5lbCBpbnRyb2R1Y2VzIHBlcmZvcm1hbmNlIGJvdHRsZW5lY2tzLCBlLmcuIGFzIGltcGxlbWVu
+dGVkLCBhIHNpbmdsZQ0KPiA+ID4gTEUNCj4gPiA+IHNlcnZpY2VzIGFsbCBFSU5JVCByZXF1ZXN0
+cyBhbmQgaXMgcHJvdGVjdGVkIGJ5IGEgbXV0ZXguICBUaGF0IGlzIHRoZSB2ZXJ5DQo+ID4gPiBk
+ZWZpbml0aW9uIG9mIGEgYm90dGxlbmVjay4NCj4gPiBJIGd1ZXNzIHRoZSB0ZXh0IGRvZXMgbm90
+IGRvIGEgZ29vZCBqb2IgZGVzY3JpYmluZyB3aGF0IEkgbWVhbnQuIE1heWJlIEkNCj4gPiBzaG91
+bGQgcmVmaW5lIGl0PyBZb3VyIGFyZ3VtZW50IGFib3V0IG11dGV4IGlzIGNvcnJlY3QuDQo+ID4N
+Cj4gPiBUaGUgdXNlIG9mICJib3R0bGVuZWNrIiBkb2VzIG5vdCBzcGVjaWZpY2FsbHkgcmVmZXIg
+dG8gcGVyZm9ybWFuY2UuIEknbQ0KPiA+IHdvcnJpZWQgYWJvdXQgc3BsaXR0aW5nIHRoZSB0YXNr
+cyBuZWVkZWQgdG8gbGF1bmNoIGFuIGVuY2xhdmUgYmV0d2Vlbg0KPiA+IGtlcm5lbCBhbmQgdXNl
+ciBzcGFjZS4gSXQgY291bGQgYmVjb21lIGRpZmZpY3VsdCB0byBtYW5hZ2Ugd2hlbiBtb3JlDQo+
+ID4gU0dYIGZlYXR1cmVzIGFyZSBhZGRlZC4gVGhhdCBpcyB3aGF0IEkgd2FzIHJlZmVycmluZyB3
+aGVuIEkgdXNlZCB0aGUNCj4gPiB3b3JkICJib3R0bGVuZWNrIi4NCj4gPg0KPiA+IEkgc3VwcG9z
+ZSB5b3UgdGhpbmsgSSBzaG91bGQgcmVmaW5lIHRoZSBjb21taXQgbWVzc2FnZT8NCj4gPg0KPiA+
+IEFib3V0IHRoZSBwZXJmIGJvdHRsZW5lY2suIEdpdmVuIHRoYXQgYWxsIHRoZSBkYXRhIGlzIGFs
+cmVhZHkgaW4NCj4gPiBzZ3hfbGVfY3R4IHRoZSBkcml2ZXIgY291bGQgZm9yIGV4YW1wbGUgaGF2
+ZSBvd24gTEUgcHJvY2VzcyBmb3IgZXZlcnkNCj4gPiBvcGVuZWQgL2Rldi9zZ3guIElzIHlvdXIg
+Y29tbWVudCBhbHNvIHN1Z2dlc3RpbmcgdG8gcmVmaW5lIHRoaXMgb3INCj4gPiBjb3VsZCBpdCBi
+ZSBwb3N0cG9uZWQ/DQo+DQo+IE1vcmUgdGhhdCBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IHRoZSBk
+cml2ZXIgZG9lc24ndCBhbGxvdyB1c2Vyc3BhY2UgdG8gcHJvdmlkZQ0KPiBhbiBFSU5JVCB0b2tl
+biwgYW5kIHJlY2lwcm9jYWxseSwgZG9lc24ndCBwcm92aWRlIHRoZSB0b2tlbiBiYWNrIHRvIHVz
+ZXJzcGFjZS4gDQo+IElNTywgdGhlIGFjdCBvZiBnZW5lcmF0aW5nIGFuIEVJTklUIHRva2VuIGlz
+IG9ydGhvZ29uYWwgdG8gZGVjaWRpbmcgd2hldGhlciBvcg0KPiBub3QgdG8gcnVuIHRoZSBlbmNs
+YXZlLiAgUnVubmluZyBjb2RlIGluIGEga2VybmVsLW93bmVkIGVuY2xhdmUgaXMgbm90IHNwZWNp
+ZmljDQo+IHRvIFNHWCwgZS5nLiBwYXJhbm9pZCBrZXJuZWxzIGNvdWxkIHJ1biBvdGhlciBzZW5z
+aXRpdmUgdGFza3MgaW4gYW4gZW5jbGF2ZS4NCj4gQmVpbmcgZm9yY2VkIHRvIHJ1biBhbiBlbmNs
+YXZlIHRvIGdlbmVyYXRlIGFuIEVJTklUIHRva2VuIGlzIGFuIHVuZm9ydHVuYXRlDQo+IHNwZWVk
+IGJ1bXAgdGhhdCBleGlzdHMgcHVyZWx5IGJlY2F1c2UgaGFyZHdhcmUgZG9lc24ndCBwcm92aWRl
+IHRoZSBvcHRpb24gdG8NCj4gZGlzYWJsZSBsYXVuY2ggY29udHJvbCBlbnRpcmVseS4NCj4NCj4g
+SW4gb3RoZXIgd29yZHMsIGFjY2VwdGluZyBhIHRva2VuIHZpYSB0aGUgSU9DVEwgZG9lc24ndCBt
+ZWFuIHRoZSBkcml2ZXIgaGFzIHRvDQo+IHVzZSBpdCwgZS5nLiBpdCBjYW4gYWx3YXlzIGlnbm9y
+ZSB0aGUgdG9rZW4sIGVuZm9yY2UgcGVyaW9kaWMgcmV2ZXJpZmljYXRpb24sDQo+IGNoZWNrIHRo
+YXQgdGhlIHRva2VuIHdhcyBjcmVhdGVkIGJ5IHRoZSBkcml2ZXIsIGV0Yy4uLiAgQW5kIHVzaW5n
+IHRoZSB0b2tlbg0KPiBkb2Vzbid0IHByZWNsdWRlIHRoZSBkcml2ZXIgZnJvbSByZS1ydW5uaW5n
+IGl0cyB2ZXJpZmljYXRpb24gY2hlY2tzIG91dHNpZGUgb2YNCj4gdGhlIGxhdW5jaCBlbmNsYXZl
+Lg0KDQpSZXN1cnJlY3RpbmcgdGhpcyB0aHJlYWQgbm93IHRoYXQgSSBoYXZlIGEgc3lzdGVtIHdp
+dGggbGF1bmNoIGNvbnRyb2wNCmFuZCBoYXZlIGJlZW4gYWJsZSB0byBtZWFzdXJlIHRoZSBwZXJm
+b3JtYW5jZSBpbXBhY3QuLi4NCg0KUmVnZW5lcmF0aW5nIHRoZSBFSU5JVCB0b2tlbiBldmVyeSB0
+aW1lIGFkZHMgc29tZXdoZXJlIGluIHRoZSB2aWNpbml0eQ0Kb2YgfjUlIG92ZXJoZWFkIHRvIGNy
+ZWF0aW5nIGFuIGVuY2xhdmUsIHZlcnN1cyBnZW5lcmF0aW5nIGEgdG9rZW4gb25jZQ0KYW5kIHJl
+dXNpbmcgaXQgaW4gZWFjaCBFSU5JVCBjYWxsLiAgVGhpcyBpc24ndCBhIGh1Z2UgaXNzdWUgc2lu
+Y2UgcmVhbA0Kd29ybGQgdXNhZ2UgbW9kZWxzIGxpa2VseSB3b24ndCBiZSByZS1sYXVuY2hpbmcg
+ZW5jbGF2ZXMgYXQgYSBoaWdoIHJhdGUsDQpidXQgaXQgaXMgbWVhc3VyYWJsZS4NCg0KT24gdG9w
+IG9mIG15IG90aGVyIGFyZ3VtZW50cywgdGhlIGtleSBvZiB0aGUgdG9rZW4ncyBzaWduZXIgbXVz
+dCBtYXRjaA0KdGhlIGN1cnJlbnQgdmFsdWUgaW4gdGhlIExFIGhhc2ggTVNScywgc28gZXhjZXB0
+IGZvciBmdXR1cmUgdGhlb3JldGljYWwNCnNjZW5hcmlvcyB3aGVyZSB3ZSB3YW50IHRvICJyZXZv
+a2UiIGFuIGV4aXN0aW5nIHRva2VuLCB0aGUgb25seSB3YXkgd2UNCmNhbiBlbmQgdXAgd2l0aCBh
+IHRva2VuIHdlIGRvbid0IHRydXN0IGlzIGlmIHRoZSBrZXJuZWwgbGF1bmNoIGVuY2xhdmUNCmFs
+cmVhZHkgc2NyZXdlZCB1cCBvciB1c2Vyc3BhY2UgaGFzIGFjY2VzcyB0byB0aGUgTEUncyBwcml2
+YXRlIGtleS4NCg==
