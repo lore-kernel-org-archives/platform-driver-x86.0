@@ -1,54 +1,72 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-smo8800: Possible unnecessary 'out of
- memory' message
-Date: Wed, 13 Dec 2017 09:30:53 +0100
-Message-ID: <20171213083053.mywa4bgv56daxud6@pali>
-References: <20171213082354.23273-1-dhaval.shah@softnautics.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on
+ subsequent lines
+Date: Wed, 13 Dec 2017 10:24:57 +0100
+Message-ID: <CAOFm3uEP-fGPiZt96QDvgXG1Ws8WgdFLbOsGumvhGSG-e7L0Ng@mail.gmail.com>
+References: <20171213082301.23209-1-dhaval.shah@softnautics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f195.google.com ([209.85.128.195]:46765 "EHLO
-        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751880AbdLMIa4 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Dec 2017 03:30:56 -0500
-Content-Disposition: inline
-In-Reply-To: <20171213082354.23273-1-dhaval.shah@softnautics.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171213082301.23209-1-dhaval.shah@softnautics.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Dhaval Shah <dhaval.shah@softnautics.com>
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: pali.rohar@gmail.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 13 December 2017 13:53:54 Dhaval Shah wrote:
-> Removed Possible unnecessary 'out of memory' message checkpatch warnings.
+Dhaval,
+
+On Wed, Dec 13, 2017 at 9:23 AM, Dhaval Shah
+<dhaval.shah@softnautics.com> wrote:
+> Resolved Block comments use * on subsequent lines checkpatch warnings.
 > Issue found by checkpatch.
-> 
+>
 > Signed-off-by: Dhaval Shah <dhaval.shah@softnautics.com>
 > ---
->  drivers/platform/x86/dell-smo8800.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
-> index 1d87237bc731..9590d5e7c5ca 100644
-> --- a/drivers/platform/x86/dell-smo8800.c
-> +++ b/drivers/platform/x86/dell-smo8800.c
-> @@ -150,10 +150,8 @@ static int smo8800_add(struct acpi_device *device)
->  	struct smo8800_device *smo8800;
->  
->  	smo8800 = devm_kzalloc(&device->dev, sizeof(*smo8800), GFP_KERNEL);
-> -	if (!smo8800) {
-> -		dev_err(&device->dev, "failed to allocate device data\n");
+>  drivers/platform/x86/dell-rbtn.c | 26 +++++++++++++-------------
+>  drivers/platform/x86/dell-rbtn.h | 26 +++++++++++++-------------
+>  2 files changed, 26 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell=
+-rbtn.c
+> index f3afe778001e..cab93c6dcd34 100644
+> --- a/drivers/platform/x86/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell-rbtn.c
+> @@ -1,17 +1,17 @@
+>  /*
+> -    Dell Airplane Mode Switch driver
+> -    Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> -
+> -    This program is free software; you can redistribute it and/or modify
+> -    it under the terms of the GNU General Public License as published by
+> -    the Free Software Foundation; either version 2 of the License, or
+> -    (at your option) any later version.
+> -
+> -    This program is distributed in the hope that it will be useful,
+> -    but WITHOUT ANY WARRANTY; without even the implied warranty of
+> -    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> -    GNU General Public License for more details.
+> -*/
+> + *   Dell Airplane Mode Switch driver
+> + *   Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> + *
+> + *   This program is free software; you can redistribute it and/or modif=
+y
+> + *   it under the terms of the GNU General Public License as published b=
+y
+> + *   the Free Software Foundation; either version 2 of the License, or
+> + *   (at your option) any later version.
+> + *
+> + *   This program is distributed in the hope that it will be useful,
+> + *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *   GNU General Public License for more details.
+> + */
 
-Hi! Any particular reason for removing error message?
+Do you mind using the new SPDX ids instead of this long legalese?
+You can check the doc patches from Thomas for details [1]
 
-> +	if (!smo8800)
->  		return -ENOMEM;
-> -	}
->  
->  	smo8800->dev = &device->dev;
->  	smo8800->miscdev.minor = MISC_DYNAMIC_MINOR;
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+[1] https://lkml.org/lkml/2017/12/4/934
+--=20
+Cordially
+Philippe Ombredanne
