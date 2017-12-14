@@ -1,59 +1,39 @@
-From: Dhaval Shah <dhaval.shah@softnautics.com>
-Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on
- subsequent lines
-Date: Thu, 14 Dec 2017 09:12:06 +0000
-Message-ID: <BM1PR0101MB14445D796D67A2A4C0C002B4E60A0@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-References: <20171213082301.23209-1-dhaval.shah@softnautics.com>
-         <CAOFm3uEP-fGPiZt96QDvgXG1Ws8WgdFLbOsGumvhGSG-e7L0Ng@mail.gmail.com>
-         <BM1PR0101MB1444C78FDA61BA59D578A5F8E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-         ,<CAOFm3uGEmR9Wq1O06CiaqncA4E7mxfgDm97NetOe0qL_mtpsSw@mail.gmail.com>
-         <e482b906981f4b46b2336bebba28888bBM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-        ,<1513167907.27409.3.camel@perches.com>
-         <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>,<1513179572.27409.8.camel@perches.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+Date: Thu, 14 Dec 2017 13:18:54 +0200
+Message-ID: <20171214110913.k7g5qmyaiy2x66wj@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <20171212140750.GA19663@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bo1ind01on0090.outbound.protection.outlook.com ([104.47.101.90]:38624
-        "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750737AbdLNJML (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:46320 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751459AbdLNLTH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Dec 2017 04:12:11 -0500
-In-Reply-To: <1513179572.27409.8.camel@perches.com>
-Content-Language: en-US
+        Thu, 14 Dec 2017 06:19:07 -0500
+Content-Disposition: inline
+In-Reply-To: <20171212140750.GA19663@localhost>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joe Perches <joe@perches.com>, Philippe Ombredanne <pombredanne@nexb.com>
-Cc: "pali.rohar@gmail.com" <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paolo Bonzini <pbonzin>
 
-________________________________________
-> From: Joe Perches <joe@perches.com>
-> Sent: Wednesday, December 13, 2017 9:09 PM
-> To: Dhaval Shah; Philippe Ombredanne
-> Cc: pali.rohar@gmail.com; Darren Hart; Andy Shevchenko; platform-driver-x=
-86@vger.kernel.org; LKML
-> Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on sub=
-sequent lines
->=20
-> On Wed, 2017-12-13 at 12:41 +0000, Dhaval Shah wrote:
-> > > If anyone does conversions of these license texts
-> > > you have to be _extremely_ careful about what
-> > > specific license identifier you use.
-> > > This license includes the text
-> > >         "or (at your option) any later version"
-> > > which is not the same as using
-> > >         SPDX-License-Identifier: GPL-2.0
-> >
-> > I have given this SPDX ID based on the current license info in the driv=
-er.
->=20
-> No, you have not.
-> You have done it incorrectly.
->=20
-> For a short description, read:
-> https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_li=
-st_short_identifiers.pdf
-> page 5
-I got your point. SPDX text should be "SPDX-License-Identifier: GPL-2.0+".
-Am i Right?
+On Tue, Dec 12, 2017 at 03:07:50PM +0100, Pavel Machek wrote:
+> On Sat 2017-11-25 21:29:17, Jarkko Sakkinen wrote:
+> > Intel(R) SGX is a set of CPU instructions that can be used by applications to
+> > set aside private regions of code and data. The code outside the enclave is
+> > disallowed to access the memory inside the enclave by the CPU access control.
+> > In a way you can think that SGX provides inverted sandbox. It protects the
+> > application from a malicious host.
+> 
+> Would you list guarantees provided by SGX?
+> 
+> For example, host can still observe timing of cachelines being
+> accessed by "protected" app, right? Can it also introduce bit flips?
+> 
+> 								Pavel
+
+I'll put this in my backlog. Thank you.
+
+/Jarkko
