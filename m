@@ -1,48 +1,40 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/3] platform/x86: dell-laptop: All the warnings are resolved.
-Date: Thu, 14 Dec 2017 19:59:55 +0200
-Message-ID: <CAHp75VfTO9iCVFhddb1WHCL8RPKTVT7OhdOwvHJNy60V93wy0A@mail.gmail.com>
-References: <20171213081309.22851-1-dhaval.shah@softnautics.com>
+Subject: Re: [PATCH] platform/x86: dell-smo8800: Possible unnecessary 'out of
+ memory' message
+Date: Thu, 14 Dec 2017 20:02:45 +0200
+Message-ID: <CAHp75VctF44XLjphF9Q23vnDdkGP5Vm70=perP5nms_WGzZMcw@mail.gmail.com>
+References: <20171213082354.23273-1-dhaval.shah@softnautics.com> <20171213083053.mywa4bgv56daxud6@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:44229 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753698AbdLNR74 (ORCPT
+Received: from mail-qk0-f178.google.com ([209.85.220.178]:45357 "EHLO
+        mail-qk0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753698AbdLNSCq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Dec 2017 12:59:56 -0500
-In-Reply-To: <20171213081309.22851-1-dhaval.shah@softnautics.com>
+        Thu, 14 Dec 2017 13:02:46 -0500
+In-Reply-To: <20171213083053.mywa4bgv56daxud6@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dhaval Shah <dhaval.shah@softnautics.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Dhaval Shah <dhaval.shah@softnautics.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Dec 13, 2017 at 10:13 AM, Dhaval Shah
-<dhaval.shah@softnautics.com> wrote:
-> There are total three types of warnings are resolved.
-> First patch  : Block comments use * on subsequent lines
-> Second patch : Missing a blank line after declarations
-> third patch  : braces {} are not necessary for single statement blocks.
+On Wed, Dec 13, 2017 at 10:30 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
+ote:
+> On Wednesday 13 December 2017 13:53:54 Dhaval Shah wrote:
+>> Removed Possible unnecessary 'out of memory' message checkpatch warnings=
+.
+>> Issue found by checkpatch.
+
+>> -             dev_err(&device->dev, "failed to allocate device data\n");
 >
+> Hi! Any particular reason for removing error message?
 
-Can we survive without this? Does it break build or alike?
+If you look into drivers/base/dd.c (real_probe() function IIRC) it
+issues a warning when probe fails with error code.
+So, basically all error messages in ->probe() are redundant (except
+maybe those that prints more than error message itself).
 
-
-> Dhaval Shah (3):
->   platform/x86: dell-laptop: Block comments use * on subsequent lines
->   platform/x86: dell-laptop: Missing a blank line after declarations
->   platform/x86: dell-laptop: braces {} are not necessary for single
->     statement blocks
->
->  drivers/platform/x86/dell-laptop.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> --
-> 2.11.0
->
-
-
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
