@@ -1,66 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH][V2] intel-hid: add a DMI quirk to support Wacom
- MobileStudio Pro
-Date: Thu, 14 Dec 2017 11:09:49 +0200
-Message-ID: <CAHp75Ve7KD1Ha0n3X=ktNjOzLjniKvCxzygSqZK24=jFVJLC=Q@mail.gmail.com>
-References: <1512618023-30209-1-git-send-email-alex.hung@canonical.com>
- <20171209000423.GD14187@fury> <CANRwn3SpSfwpJk7OitXv6aLK4ES=AbHkmj7iyQsUP_dbZqbJTA@mail.gmail.com>
- <20171212005118.GF27831@fury> <CAHp75VeDarmDs1tALkv4tiO_NMa7uhC26bF_Yc0Bv98KpK_nHw@mail.gmail.com>
- <20171212160012.GI27831@fury> <CAHp75VcRdjJef3VmBkF-pVu+bn=ho2aX26u=u2EXukT7mkpwWw@mail.gmail.com>
- <CAJ=jqua=D9RXPq8u8OcBno2iULo0iE3AQe+4hM+pjEa=5BHWbA@mail.gmail.com>
+From: Dhaval Shah <dhaval.shah@softnautics.com>
+Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on
+ subsequent lines
+Date: Thu, 14 Dec 2017 09:12:06 +0000
+Message-ID: <BM1PR0101MB14445D796D67A2A4C0C002B4E60A0@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+References: <20171213082301.23209-1-dhaval.shah@softnautics.com>
+         <CAOFm3uEP-fGPiZt96QDvgXG1Ws8WgdFLbOsGumvhGSG-e7L0Ng@mail.gmail.com>
+         <BM1PR0101MB1444C78FDA61BA59D578A5F8E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+         ,<CAOFm3uGEmR9Wq1O06CiaqncA4E7mxfgDm97NetOe0qL_mtpsSw@mail.gmail.com>
+         <e482b906981f4b46b2336bebba28888bBM1PR0101MB144449CA7ADDBA3A03061AAFE6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+        ,<1513167907.27409.3.camel@perches.com>
+         <BM1PR0101MB1444566FE5F5FB785ED97B28E6350@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>,<1513179572.27409.8.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f177.google.com ([209.85.220.177]:38946 "EHLO
-        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750795AbdLNJJu (ORCPT
+Received: from mail-bo1ind01on0090.outbound.protection.outlook.com ([104.47.101.90]:38624
+        "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750737AbdLNJML (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Dec 2017 04:09:50 -0500
-Received: by mail-qk0-f177.google.com with SMTP id u184so5378109qkd.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Dec 2017 01:09:50 -0800 (PST)
-In-Reply-To: <CAJ=jqua=D9RXPq8u8OcBno2iULo0iE3AQe+4hM+pjEa=5BHWbA@mail.gmail.com>
+        Thu, 14 Dec 2017 04:12:11 -0500
+In-Reply-To: <1513179572.27409.8.camel@perches.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Darren Hart <dvhart@infradead.org>, Jason Gerecke <killertofu@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Jason Gerecke <jason.gerecke@wacom.com>
+To: Joe Perches <joe@perches.com>, Philippe Ombredanne <pombredanne@nexb.com>
+Cc: "pali.rohar@gmail.com" <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 
-On Thu, Dec 14, 2017 at 9:25 AM, Alex Hung <alex.hung@canonical.com> wrote:
-> On Wed, Dec 13, 2017 at 12:13 AM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Tue, Dec 12, 2017 at 6:00 PM, Darren Hart <dvhart@infradead.org> wrote:
->>> On Tue, Dec 12, 2017 at 10:02:36AM +0200, Andy Shevchenko wrote:
->>
->>>> Just in case you didn't promote it yet, could you move inclusion to be
->>>> more ordered alphabetically? (After linux/acpi.h I suppose)
->>>
->>> I had done that initially, but realized the entire list is in no apparent order
->>> and it wasn't just moving the one line he added. So it'll need to be a cleanup
->>> patch since all the test builds have run already.
->>
->> Ah, fair enough.
->
-> Do you mean the includes listed alphabetically such as below?
-
-Yes.
-
-> I can
-> send a patch to clean it up.
-
-As a standalone change it would not be required, but if you are going
-to send some behaviour changing or bigger clean up series, feel free
-to add.
-
-> #include <linux/acpi.h>
-> #include <acpi/acpi_bus.h>
-> #include <linux/dmi.h>
-> #include <linux/init.h>
-> #include <linux/input.h>
-> #include <linux/input/sparse-keymap.h>
-> #include <linux/kernel.h>
-> #include <linux/module.h>
-> #include <linux/platform_device.h>
-> #include <linux/suspend.h>
-
--- 
-With Best Regards,
-Andy Shevchenko
+________________________________________
+> From: Joe Perches <joe@perches.com>
+> Sent: Wednesday, December 13, 2017 9:09 PM
+> To: Dhaval Shah; Philippe Ombredanne
+> Cc: pali.rohar@gmail.com; Darren Hart; Andy Shevchenko; platform-driver-x=
+86@vger.kernel.org; LKML
+> Subject: Re: [PATCH] platform/x86: dell-rbtn: Block comments use * on sub=
+sequent lines
+>=20
+> On Wed, 2017-12-13 at 12:41 +0000, Dhaval Shah wrote:
+> > > If anyone does conversions of these license texts
+> > > you have to be _extremely_ careful about what
+> > > specific license identifier you use.
+> > > This license includes the text
+> > >         "or (at your option) any later version"
+> > > which is not the same as using
+> > >         SPDX-License-Identifier: GPL-2.0
+> >
+> > I have given this SPDX ID based on the current license info in the driv=
+er.
+>=20
+> No, you have not.
+> You have done it incorrectly.
+>=20
+> For a short description, read:
+> https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_li=
+st_short_identifiers.pdf
+> page 5
+I got your point. SPDX text should be "SPDX-License-Identifier: GPL-2.0+".
+Am i Right?
