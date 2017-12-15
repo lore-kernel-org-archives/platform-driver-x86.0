@@ -1,595 +1,244 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: [PATCH 3/3 v6] thinkpad_acpi: Add support for battery thresholds
-Date: Fri, 15 Dec 2017 17:58:26 +0100
-Message-ID: <20171215165826.GA6307@thinkpad>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v8 0/8] Intel SGX Driver
+Date: Fri, 15 Dec 2017 22:27:18 +0200
+Message-ID: <20171215202936.28226-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-pm@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga05.intel.com ([192.55.52.43]:9279 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1755655AbdLOU3v (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 15 Dec 2017 15:29:51 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Kai Huang <kai.huang@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS VFS and
+        infrastructure" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, Sean Christopherson <sean.j.christopherson@intel.com>, Thomas Gleixner <tg>
 
-This patch uses the new battery hooking API to add
-support for the ACPI battery wear control present in
-Lenovo ThinkPads that have >=SandyBridge processors.
+Intel(R) SGX is a set of CPU instructions that can be used by applications to
+set aside private regions of code and data. The code outside the enclave is
+disallowed to access the memory inside the enclave by the CPU access control.
+In a way you can think that SGX provides inverted sandbox. It protects the
+application from a malicious host.
 
-thinkpad_acpi registers two new attributes for each battery:
+There is a new hardware unit in the processor called Memory Encryption Engine
+(MEE) starting from the Skylake microacrhitecture. BIOS can define one or many
+MEE regions that can hold enclave data by configuring them with PRMRR
+registers.
 
-1) Charge start threshold
-/sys/class/power_supply/BATN/charge_start_threshold
+The MEE automatically encrypts the data leaving the processor package to the
+MEE regions. The data is encrypted using a random key whose life-time is
+exactly one power cycle.
 
-Valid values are [0, 99]. A value of 0 turns off the
-start threshold wear control.
+You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
 
-2) Charge stop threshold
-/sys/class/power_supply/BATN/charge_stop_threshold
+	cat /proc/cpuinfo  | grep sgx
 
-Valid values are [1, 100]. A value of 100 turns off
-the stop threshold wear control. This must be
-configured first.
+The GIT repositoy for SGX driver resides in
 
-This patch depends on the following patches:
+	https://github.com/jsakkine-intel/linux-sgx.git
 
-"battery: Add the battery hooking API"
+'le' branch contains the upstream candidate patches.
 
-v2:
-* Re-write the patch to make the changes in
-battery.c generic as suggested by Rafael
+'master' branch contains the same patches with the following differences:
 
-v3:
-* Fixed a bug where you could not set the stop
-threshold to 100% when the start threshold is 0%
-* Fixed the "Not Charging" quirk to match Lenovo's
-BIOS Firmware specification
+* top-level patch modifies the ioctl API to be SDK compatible
+* does not use flexible launch control but instead relies on SDK provided
+  Intel launch enclave.
 
-v4:
-* Fixed a bug where you could not set the start
-threshold to >stop if stop was 100%
+v8:
+* Check that public key MSRs match the LE public key hash in the
+  driver initialization when the MSRs are read-only.
+* Fix the race in VA slot allocation by checking the fullness
+  immediately after succeesful allocation.
+* Fix the race in hash mrsigner calculation between the launch
+  enclave and user enclaves by having a separate lock for hash
+  calculation.
+
+v7:
+* Fixed offset calculation in sgx_edbgr/wr(). Address was masked with PAGE_MASK
+  when it should have been masked with ~PAGE_MASK.
+* Fixed a memory leak in sgx_ioc_enclave_create().
+* Simplified swapping code by using a pointer array for a cluster
+  instead of a linked list.
+* Squeezed struct sgx_encl_page to 32 bytes.
+* Fixed deferencing of an RSA key onÂ OpenSSL 1.1.0.
+* Modified TC's CMAC to use kernel AES-NI. Restructured the code
+  a bit in order to better align with kernel conventions.
+
+v6
+* Fixed semaphore underrun when accessing /dev/sgx from the launch enclave.
+* In sgx_encl_create() s/IS_ERR(secs)/IS_ERR(encl)/.
+* Removed virtualization chapter from the documentation.
+* Changed the default filename for the signing key as signing_key.pem.
+* Reworked EPC management in a way that instead of a linked list of
+  struct sgx_epc_page instances there is an array of integers that
+  encodes address and bank of an EPC page (the same data as 'pa' field
+  earlier). The locking has been moved to the EPC bank level instead
+  of a global lock.
+* Relaxed locking requirements for EPC management. EPC pages can be
+  released back to the EPC bank concurrently.
+* Cleaned up ptrace() code.
+* Refined commit messages for new architectural constants.
+* Sorted includes in every source file.
+* Sorted local variable declarations according to the line length in
+  every function.
+* Style fixes based on Darren's comments to sgx_le.c.
 
 v5:
-* Migrated from symbol_get to native linking,
-to fix module dependencies
-* Fixed a bug where unloading the module would
-cause a BUG inside battery
-* Fixed a bug where you could unload battery
-before unloading thinkpad_acpi
+* Described IPC between the Launch Enclave and kernel in the commit messages.
+* Fixed all relevant checkpatch.pl issues that I have forgot fix in earlier
+  versions except those that exist in the imported TinyCrypt code.
+* Fixed spelling mistakes in the documentation.
+* Forgot to check the return value of sgx_drv_subsys_init().
+* Encapsulated properly page cache init and teardown.
+* Collect epc pages to a temp list in sgx_add_epc_bank
+* Removed SGX_ENCLAVE_INIT_ARCH constant.
 
-v6:
-* Fixed all the style and naming issues pointed
-out by Andy Shevchenko
+v4:
+* Tied life-cycle of the sgx_le_proxy process to /dev/sgx.
+* Removed __exit annotation from sgx_drv_subsys_exit().
+* Fixed a leak of a backing page in sgx_process_add_page_req() in the
+  case when vm_insert_pfn() fails.
+* Removed unused symbol exports for sgx_page_cache.c.
+* Updated sgx_alloc_page() to require encl parameter and documented the
+  behavior (Sean Christopherson).
+* Refactored a more lean API for sgx_encl_find() and documented the behavior.
+* Moved #PF handler to sgx_fault.c.
+* Replaced subsys_system_register() with plain bus_register().
+* Retry EINIT 2nd time only if MSRs are not locked.
 
-Tested-by: Kevin Locke <kevin@kevinlocke.name>
-Tested-by: Christoph Böhmwalder <christoph@boehmwalder.at>
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
----
- drivers/platform/x86/Kconfig         |   1 +
- drivers/platform/x86/thinkpad_acpi.c | 442 ++++++++++++++++++++++++++++++++++-
- include/linux/power_supply.h         |   2 +
- 3 files changed, 444 insertions(+), 1 deletion(-)
+v3:
+* Check that FEATURE_CONTROL_LOCKED and FEATURE_CONTROL_SGX_ENABLE are set.
+* Return -ERESTARTSYS in __sgx_encl_add_page() when sgx_alloc_page() fails.
+* Use unused bits in epc_page->pa to store the bank number.
+* Removed #ifdef for WQ_NONREENTRANT.
+* If mmu_notifier_register() fails with -EINTR, return -ERESTARTSYS.
+* Added --remove-section=.got.plt to objcopy flags in order to prevent a
+  dummy .got.plt, which will cause an inconsistent size for the LE.
+* Documented sgx_encl_* functions.
+* Added remark about AES implementation used inside the LE.
+* Removed redundant sgx_sys_exit() from le/main.c.
+* Fixed struct sgx_secinfo alignment from 128 to 64 bytes.
+* Validate miscselect in sgx_encl_create().
+* Fixed SSA frame size calculation to take the misc region into account.
+* Implemented consistent exception handling to __encls() and __encls_ret().
+* Implemented a proper device model in order to allow sysfs attributes
+  and in-kernel API.
+* Cleaned up various "find enclave" implementations to the unified
+  sgx_encl_find().
+* Validate that vm_pgoff is zero.
+* Discard backing pages with shmem_truncate_range() after EADD.
+* Added missing EEXTEND operations to LE signing and launch.
+* Fixed SSA size for GPRS region from 168 to 184 bytes.
+* Fixed the checks for TCS flags. Now DBGOPTIN is allowed.
+* Check that TCS addresses are in ELRANGE and not just page aligned.
+* Require kernel to be compiled with X64_64 and CPU_SUP_INTEL.
+* Fixed an incorrect value for SGX_ATTR_DEBUG from 0x01 to 0x02.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2c745e8..d705c62 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -399,6 +399,7 @@ config SURFACE3_WMI
- config THINKPAD_ACPI
- 	tristate "ThinkPad ACPI Laptop Extras"
- 	depends on ACPI
-+	depends on ACPI_BATTERY
- 	depends on INPUT
- 	depends on RFKILL || RFKILL = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 117be48..06bcfbd 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -23,7 +23,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#define TPACPI_VERSION "0.25"
-+#define TPACPI_VERSION "0.26"
- #define TPACPI_SYSFS_VERSION 0x030000
- 
- /*
-@@ -66,6 +66,7 @@
- #include <linux/seq_file.h>
- #include <linux/sysfs.h>
- #include <linux/backlight.h>
-+#include <linux/bitops.h>
- #include <linux/fb.h>
- #include <linux/platform_device.h>
- #include <linux/hwmon.h>
-@@ -78,13 +79,16 @@
- #include <linux/workqueue.h>
- #include <linux/acpi.h>
- #include <linux/pci_ids.h>
-+#include <linux/power_supply.h>
- #include <linux/thinkpad_acpi.h>
- #include <sound/core.h>
- #include <sound/control.h>
- #include <sound/initval.h>
- #include <linux/uaccess.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
- 
-+
- /* ThinkPad CMOS commands */
- #define TP_CMOS_VOLUME_DOWN	0
- #define TP_CMOS_VOLUME_UP	1
-@@ -331,6 +335,7 @@ static struct {
- 	u32 sensors_pdev_attrs_registered:1;
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
-+	u32 battery:1;
- } tp_features;
- 
- static struct {
-@@ -9201,6 +9206,437 @@ static struct ibm_struct mute_led_driver_data = {
- 	.resume = mute_led_resume,
- };
- 
-+/***************** Battery Wear Control Driver ******************/
-+
-+/* Metadata */
-+
-+#define GET_START	"BCTG"
-+#define SET_START	"BCCS"
-+#define GET_STOP	"BCSG"
-+#define SET_STOP	"BCSS"
-+
-+#define START_ATTR "charge_start_threshold"
-+#define STOP_ATTR  "charge_stop_threshold"
-+
-+enum {
-+	BAT_ANY = 0,
-+	BAT_PRIMARY = 1,
-+	BAT_SECONDARY = 2
-+};
-+
-+enum {
-+	/* Error condition bit */
-+	METHOD_ERR = (1 << 31),
-+};
-+
-+enum {
-+	/* This is used in the get/set helpers */
-+	THRESHOLD_START,
-+	THRESHOLD_STOP,
-+};
-+
-+struct tpacpi_battery_data {
-+	int charge_start;
-+	int start_support;
-+	int charge_stop;
-+	int stop_support;
-+};
-+
-+struct tpacpi_battery_driver_data {
-+	struct tpacpi_battery_data batteries[3];
-+	int individual_addressing;
-+};
-+
-+static struct tpacpi_battery_driver_data battery_info;
-+
-+/* ACPI helpers/functions/probes */
-+
-+/**
-+ * This evaluates a ACPI method call specific to the battery
-+ * ACPI extension. The specifics are that an error is marked
-+ * in the 32rd bit of the response, so we just check that here.
-+ *
-+ * Returns 0 on success
-+ */
-+static int tpacpi_battery_acpi_eval(char *method, int *ret, int param)
-+{
-+	if (!acpi_evalf(hkey_handle, ret, method, "dd", param)) {
-+		acpi_handle_err(hkey_handle, "%s: evaluate failed", method);
-+		return AE_ERROR;
-+	}
-+
-+	if (*ret & METHOD_ERR) {
-+		acpi_handle_err(hkey_handle,
-+				"%s evaluated but flagged as error", method);
-+		return AE_ERROR;
-+	}
-+
-+	return AE_OK;
-+}
-+
-+static int tpacpi_battery_get(int what, int battery, int *ret)
-+{
-+	switch (what) {
-+
-+	case THRESHOLD_START:
-+
-+		if (tpacpi_battery_acpi_eval(GET_START, ret, battery))
-+			return -ENODEV;
-+
-+		/* The value is in the low 8 bits of the response */
-+		*ret = *ret & 0xFF;
-+		return 0;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (tpacpi_battery_acpi_eval(GET_STOP, ret, battery))
-+			return -ENODEV;
-+
-+		/* Value is in lower 8 bits */
-+		*ret = *ret & 0xFF;
-+
-+		/*
-+		 * On the stop value, if we return 0 that
-+		 * does not make any sense. 0 means Default, which
-+		 * means that charging stops at 100%, so we return
-+		 * that.
-+		 */
-+		if (*ret == 0)
-+			*ret = 100;
-+
-+		return 0;
-+
-+	default:
-+		pr_crit("wrong parameter: %d", what);
-+		return -EINVAL;
-+	}
-+
-+}
-+
-+static int tpacpi_battery_set(int what, int battery, int value)
-+{
-+
-+	int param = 0x0, ret = 0xFFFFFFFF;
-+
-+	/* The first 8 bits are the value of the threshold */
-+	param = value;
-+	/* The battery ID is in bits 8-9, 2 bits */
-+	param |= battery << 8;
-+
-+	switch (what) {
-+
-+	case THRESHOLD_START:
-+
-+		if (tpacpi_battery_acpi_eval(SET_START, &ret, param)) {
-+			pr_err("failed to set charge threshold on battery %d",
-+					battery);
-+			return -ENODEV;
-+		}
-+
-+		return 0;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (tpacpi_battery_acpi_eval(SET_STOP, &ret, param)) {
-+			pr_err("failed to set charge stop threshold: %d", battery);
-+			return -ENODEV;
-+		}
-+
-+		return 0;
-+
-+	default:
-+		pr_crit("wrong parameter: %d", what);
-+		return -EINVAL;
-+	}
-+
-+}
-+
-+static int tpacpi_battery_probe(int battery)
-+{
-+	int ret = 0;
-+
-+	/* Reset the struct */
-+	memset(&battery_info, 0, sizeof(struct tpacpi_battery_driver_data));
-+
-+	/*
-+	 * 1) Get the current start threshold
-+	 * 2) Check for support
-+	 * 3) Get the current stop threshold
-+	 * 4) Check for support
-+	 */
-+
-+	if (acpi_has_method(hkey_handle, GET_START)) {
-+
-+		if (tpacpi_battery_acpi_eval(GET_START, &ret, battery)) {
-+			pr_err("Error probing battery %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+		/* Individual addressing is in bit 9 */
-+		if (ret & BIT(9))
-+			battery_info.individual_addressing = true;
-+
-+		/* Support is marked in bit 8 */
-+		if (ret & BIT(8))
-+			battery_info.batteries[battery].start_support = 1;
-+		else
-+			return -ENODEV;
-+
-+		if (tpacpi_battery_get(THRESHOLD_START, battery,
-+			&battery_info.batteries[battery].charge_start)) {
-+			pr_err("Error probing battery %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+	}
-+
-+	if (acpi_has_method(hkey_handle, GET_STOP)) {
-+
-+		if (tpacpi_battery_acpi_eval(GET_STOP, &ret, battery)) {
-+			pr_err("Error probing battery stop; %d\n", battery);
-+			return -ENODEV;
-+		}
-+
-+		/* Support is marked in bit 8 */
-+		if (ret & BIT(8))
-+			battery_info.batteries[battery].stop_support = 1;
-+		else
-+			return -ENODEV;
-+
-+		if (tpacpi_battery_get(THRESHOLD_STOP, battery,
-+			&battery_info.batteries[battery].charge_stop)) {
-+			pr_err("Error probing battery stop: %d\n", battery);
-+			return -ENODEV;
-+		}
-+	}
-+
-+	pr_info("battery %d registered (start %d, stop %d)",
-+			battery,
-+			battery_info.batteries[battery].charge_start,
-+			battery_info.batteries[battery].charge_stop);
-+
-+	return 0;
-+}
-+
-+/* General helper functions */
-+
-+static int tpacpi_battery_get_id(const char *battery_name)
-+{
-+
-+	if (strcmp(battery_name, "BAT0") == 0)
-+		return BAT_PRIMARY;
-+	if (strcmp(battery_name, "BAT1") == 0)
-+		return BAT_SECONDARY;
-+
-+	/*
-+	 * If for some reason the battery is not BAT0 nor is it
-+	 * BAT1, we will assume it's the default, first battery,
-+	 * AKA primary.
-+	 */
-+	pr_warn("unknown battery %s, assuming primary", battery_name);
-+	return BAT_PRIMARY;
-+}
-+
-+static int tpacpi_battery_get_attr(struct device_attribute *attr)
-+{
-+	if (strcmp(START_ATTR, attr->attr.name) == 0)
-+		return THRESHOLD_START;
-+	if (strcmp(STOP_ATTR, attr->attr.name) == 0)
-+		return THRESHOLD_STOP;
-+
-+	pr_crit("Invalid attribute: %s", attr->attr.name);
-+	return -EINVAL;
-+}
-+
-+/* sysfs interface */
-+
-+static ssize_t tpacpi_battery_store(struct device *dev,
-+				   struct device_attribute *devattr,
-+				   const char *buf, size_t count)
-+{
-+	int attr, battery;
-+	unsigned long value;
-+	struct power_supply *supply = to_power_supply(dev);
-+
-+	if (!supply) {
-+		pr_err("Can't upcast to power_supply!");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Some systems have support for more than
-+	 * one battery. If that is the case,
-+	 * tpacpi_battery_probe marked that addressing
-+	 * them individually is supported, so we do that
-+	 * based on the device struct.
-+	 *
-+	 * On systems that are not supported, we assume
-+	 * the primary as most of the ACPI calls fail
-+	 * with "Any Battery" as the parameter.
-+	 */
-+	if (battery_info.individual_addressing)
-+		/* BAT_PRIMARY or BAT_SECONDARY */
-+		battery = tpacpi_battery_get_id(supply->desc->name);
-+	else
-+		battery = BAT_PRIMARY;
-+
-+	if (kstrtoul(buf, 10, &value))
-+		return -EINVAL;
-+
-+	attr = tpacpi_battery_get_attr(devattr);
-+
-+	switch (attr) {
-+
-+	case THRESHOLD_START:
-+
-+		if (!battery_info.batteries[battery].start_support)
-+			return -ENODEV;
-+
-+		/* valid values are [0, 99] */
-+		if (value < 0 || value > 99)
-+			return -EINVAL;
-+
-+		if (value > battery_info.batteries[battery].charge_stop)
-+			return -EINVAL;
-+
-+		if (tpacpi_battery_set(THRESHOLD_START, battery, value))
-+			return -ENODEV;
-+
-+		battery_info.batteries[battery].charge_stop = value;
-+		return count;
-+
-+	case THRESHOLD_STOP:
-+
-+		if (!battery_info.batteries[battery].stop_support)
-+			return -ENODEV;
-+
-+		/* valid values are [1, 100] */
-+		if (value < 1 || value > 100)
-+			return -EINVAL;
-+
-+
-+		if (value < battery_info.batteries[battery].charge_start)
-+			return -EINVAL;
-+
-+		battery_info.batteries[battery].charge_stop = value;
-+
-+		/*
-+		 * When 100 is passed to stop, we need to flip
-+		 * it to 0 as that the EC understands that as
-+		 * "Default", which will charge to 100%
-+		 */
-+		if (value == 100)
-+			value = 0;
-+
-+		if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
-+			return -EINVAL;
-+
-+		return count;
-+
-+	default:
-+		pr_crit("Wrong parameter: %d", attr);
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t tpacpi_battery_show(struct device *dev,
-+				  struct device_attribute *devattr,
-+				  char *buf)
-+{
-+	int ret = 0x0, attr, battery;
-+	struct power_supply *supply = to_power_supply(dev);
-+
-+	if (!supply) {
-+		pr_crit("Can't upcast to power_supply!");
-+		return -ENODEV;
-+	}
-+
-+	/* THRESHOLD_START or THRESHOLD_STOP */
-+	attr = tpacpi_battery_get_attr(devattr);
-+
-+	/*
-+	 * Some systems have support for more than
-+	 * one battery. If that is the case,
-+	 * tpacpi_battery_probe marked that addressing
-+	 * them individually is supported, so we do that
-+	 * based on the device struct.
-+	 *
-+	 * On systems that are not supported, we assume
-+	 * the primary as most of the ACPI calls fail
-+	 * with "Any Battery" as the parameter.
-+	 */
-+	if (battery_info.individual_addressing)
-+		/* BAT_PRIMARY or BAT_SECONDARY */
-+		battery = tpacpi_battery_get_id(supply->desc->name);
-+	else
-+		battery = BAT_PRIMARY;
-+
-+	if (tpacpi_battery_get(attr, battery, &ret))
-+		return -ENODEV;
-+
-+	return sprintf(buf, "%d\n", ret);
-+}
-+
-+DEVICE_ATTR(charge_start_threshold, 0644,
-+		tpacpi_battery_show, tpacpi_battery_store);
-+DEVICE_ATTR(charge_stop_threshold, 0644,
-+	tpacpi_battery_show, tpacpi_battery_store);
-+
-+static struct attribute *tpacpi_battery_attrs[] = {
-+	&dev_attr_charge_start_threshold.attr,
-+	&dev_attr_charge_stop_threshold.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(tpacpi_battery);
-+
-+/* ACPI battery hooking */
-+
-+static int tpacpi_battery_add(struct power_supply *battery)
-+{
-+	int batteryid = tpacpi_battery_get_id(battery->desc->name);
-+
-+	if (tpacpi_battery_probe(batteryid))
-+		return -ENODEV;
-+
-+	if (device_add_groups(&battery->dev, tpacpi_battery_groups))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int tpacpi_battery_remove(struct power_supply *battery)
-+{
-+	device_remove_groups(&battery->dev, tpacpi_battery_groups);
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook = {
-+	.add_battery = tpacpi_battery_add,
-+	.remove_battery = tpacpi_battery_remove,
-+	.name = "ThinkPad Battery Extension",
-+};
-+
-+/* Subdriver init/exit */
-+
-+static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
-+{
-+	battery_hook_register(&battery_hook);
-+	return 0;
-+}
-+
-+static void tpacpi_battery_exit(void)
-+{
-+	battery_hook_unregister(&battery_hook);
-+}
-+
-+static struct ibm_struct battery_driver_data = {
-+	.name = "battery",
-+	.exit = tpacpi_battery_exit,
-+};
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -9647,6 +10083,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = mute_led_init,
- 		.data = &mute_led_driver_data,
- 	},
-+	{
-+		.init = tpacpi_battery_init,
-+		.data = &battery_driver_data,
-+	},
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 79e90b3..f0139b4 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -371,6 +371,8 @@ devm_power_supply_register_no_ws(struct device *parent,
- extern void power_supply_unregister(struct power_supply *psy);
- extern int power_supply_powers(struct power_supply *psy, struct device *dev);
- 
-+#define to_power_supply(device) container_of(device, struct power_supply, dev)
-+
- extern void *power_supply_get_drvdata(struct power_supply *psy);
- /* For APM emulation, think legacy userspace. */
- extern struct class *power_supply_class;
+v2:
+* get_rand_uint32() changed the value of the pointer instead of value
+  where it is pointing at.
+* Launch enclave incorrectly used sigstruct attributes-field instead of
+  enclave attributes-field.
+* Removed unused struct sgx_add_page_req from sgx_ioctl.c
+* Removed unused sgx_has_sgx2.
+* Updated arch/x86/include/asm/sgx.h so that it provides stub
+  implementations when sgx in not enabled.
+* Removed cruft rdmsr-calls from sgx_set_pubkeyhash_msrs().
+* return -ENOMEM in sgx_alloc_page() when VA pages consume too much space
+* removed unused global sgx_nr_pids
+* moved sgx_encl_release to sgx_encl.c
+* return -ERESTARTSYS instead of -EINTR in sgx_encl_init()
+
+Jarkko Sakkinen (6):
+  intel_sgx: updated MAINTAINERS
+  intel_sgx: driver for Intel Software Guard Extensions
+  intel_sgx: ptrace() support
+  intel_sgx: driver documentation
+  fs/pipe.c: export create_pipe_files()
+  intel_sgx: in-kernel launch enclave
+
+Kai Huang (1):
+  x86: add SGX definitions to cpufeature
+
+Sean Christopherson (1):
+  x86: add SGX definitions to msr-index.h
+
+ Documentation/index.rst                            |   1 +
+ Documentation/x86/intel_sgx.rst                    | 101 +++
+ MAINTAINERS                                        |   7 +
+ arch/x86/include/asm/cpufeatures.h                 |   2 +
+ arch/x86/include/asm/msr-index.h                   |   8 +
+ arch/x86/include/asm/sgx.h                         | 245 +++++
+ arch/x86/include/asm/sgx_arch.h                    | 270 ++++++
+ arch/x86/include/uapi/asm/sgx.h                    | 138 +++
+ drivers/platform/x86/Kconfig                       |   2 +
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/intel_sgx/Kconfig             |  34 +
+ drivers/platform/x86/intel_sgx/Makefile            |  32 +
+ drivers/platform/x86/intel_sgx/le/Makefile         |  27 +
+ drivers/platform/x86/intel_sgx/le/enclave/Makefile |  46 +
+ .../x86/intel_sgx/le/enclave/aesni-intel_asm.S     |   1 +
+ .../platform/x86/intel_sgx/le/enclave/cmac_mode.c  | 258 ++++++
+ .../platform/x86/intel_sgx/le/enclave/cmac_mode.h  | 103 +++
+ .../x86/intel_sgx/le/enclave/encl_bootstrap.S      | 163 ++++
+ drivers/platform/x86/intel_sgx/le/enclave/main.c   | 193 ++++
+ drivers/platform/x86/intel_sgx/le/enclave/main.h   |  66 ++
+ .../platform/x86/intel_sgx/le/enclave/sgx_le.lds   |  28 +
+ .../platform/x86/intel_sgx/le/enclave/sgxsign.c    | 551 ++++++++++++
+ drivers/platform/x86/intel_sgx/le/enclave/string.c |   1 +
+ drivers/platform/x86/intel_sgx/le/entry.S          | 117 +++
+ .../platform/x86/intel_sgx/le/include/sgx_asm.h    |  64 ++
+ drivers/platform/x86/intel_sgx/le/main.c           | 186 ++++
+ drivers/platform/x86/intel_sgx/le/main.h           |  78 ++
+ drivers/platform/x86/intel_sgx/le/sgx_le_piggy.S   |  15 +
+ drivers/platform/x86/intel_sgx/le/string.c         |  77 ++
+ drivers/platform/x86/intel_sgx/sgx.h               | 283 ++++++
+ drivers/platform/x86/intel_sgx/sgx_encl.c          | 992 +++++++++++++++++++++
+ drivers/platform/x86/intel_sgx/sgx_ioctl.c         | 283 ++++++
+ drivers/platform/x86/intel_sgx/sgx_le.c            | 307 +++++++
+ .../platform/x86/intel_sgx/sgx_le_proxy_piggy.S    |  15 +
+ drivers/platform/x86/intel_sgx/sgx_main.c          | 483 ++++++++++
+ drivers/platform/x86/intel_sgx/sgx_page_cache.c    | 642 +++++++++++++
+ drivers/platform/x86/intel_sgx/sgx_util.c          | 372 ++++++++
+ drivers/platform/x86/intel_sgx/sgx_vma.c           | 236 +++++
+ fs/pipe.c                                          |   1 +
+ 39 files changed, 6429 insertions(+)
+ create mode 100644 Documentation/x86/intel_sgx.rst
+ create mode 100644 arch/x86/include/asm/sgx.h
+ create mode 100644 arch/x86/include/asm/sgx_arch.h
+ create mode 100644 arch/x86/include/uapi/asm/sgx.h
+ create mode 100644 drivers/platform/x86/intel_sgx/Kconfig
+ create mode 100644 drivers/platform/x86/intel_sgx/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/le/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/Makefile
+ create mode 120000 drivers/platform/x86/intel_sgx/le/enclave/aesni-intel_asm.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/cmac_mode.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/cmac_mode.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/encl_bootstrap.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/main.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/sgx_le.lds
+ create mode 100644 drivers/platform/x86/intel_sgx/le/enclave/sgxsign.c
+ create mode 120000 drivers/platform/x86/intel_sgx/le/enclave/string.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/entry.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/include/sgx_asm.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/le/main.h
+ create mode 100644 drivers/platform/x86/intel_sgx/le/sgx_le_piggy.S
+ create mode 100644 drivers/platform/x86/intel_sgx/le/string.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx.h
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_encl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_ioctl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_le.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_le_proxy_piggy.S
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_page_cache.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_util.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_vma.c
+
 -- 
-2.7.4
-
+2.14.1
