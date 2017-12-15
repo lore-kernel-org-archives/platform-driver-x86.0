@@ -1,68 +1,312 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v7 4/8] intel_sgx: driver for
- Intel Software Guard Extensions
-Date: Fri, 15 Dec 2017 17:02:39 +0200
-Message-ID: <20171215150239.7n2q4yb4ka3ruzcw@linux.intel.com>
-References: <20171207015614.7914-1-jarkko.sakkinen@linux.intel.com>
- <20171207015614.7914-5-jarkko.sakkinen@linux.intel.com>
- <37306EFA9975BE469F115FDE982C075BC6B39193@ORSMSX108.amr.corp.intel.com>
- <20171207160548.doovfdh2lqg5brm3@linux.intel.com>
- <37306EFA9975BE469F115FDE982C075BC6B39E1D@ORSMSX108.amr.corp.intel.com>
- <1513115208.27842.18.camel@intel.com>
- <20171214131006.moogpmrugtx43qju@linux.intel.com>
- <37306EFA9975BE469F115FDE982C075BC6B3BD95@ORSMSX108.amr.corp.intel.com>
+From: Ognjen Galic <smclt30p@gmail.com>
+Subject: [PATCH 1/3 v6] battery: Add the battery hooking API
+Date: Fri, 15 Dec 2017 17:56:54 +0100
+Message-ID: <20171215165654.GA6209@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <37306EFA9975BE469F115FDE982C075BC6B3BD95@ORSMSX108.amr.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Cc: "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, linux-acpi@vger.kernel.org, devel@acpica.org
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 14, 2017 at 09:36:05PM +0000, Christopherson, Sean J wrote:
-> On Thu, Dec 14, 2017 at 03:10:06PM +0200, Jarkko Sakkinen wrote:
-> > On Tue, Dec 12, 2017 at 01:46:48PM -0800, Sean Christopherson wrote:
-> > > So it looks like you avoid the described case by moving B to the head of
-> > > the list in sgx_eldu.  The bug I am seeing is still straightforward to
-> > > theorize:
-> > >
-> > >     1. Three VA pages.  List = A->B->C
-> > >     2. Fill A and B, use one entry in C.  List = C->B->A
-> > >     3. ELDU, freeing a slot in B.  List = B->C->A
-> > >     4. EWB, consuming the last slot in B.  List = B->C->A
-> > >     5. ELDU, freeing a slot in A.  List = A->B->C
-> > >     6. EWB, consuming the last slot in A.  List = A->B->C
-> > >     7. ELDU, but both A and B are full
-> > >     8. Explode
-> >
-> > I see. It is easy to fix by moving back to of the list immediately after
-> > last allocation. Thanks for pointing this out.
-> 
-> Why not keep it simple and iterate over all VA pages?  You can still
-> move full pages to the back of the list to reduce the number of times
-> full pages are queried.  IMO, juggling the pages on every EWB/ELDU
-> adds complexity for little to no gain; there's no guarantee that the
-> cache/TLB benefits of reusing a VA slot justifies the potential for
-> thrashing the list, e.g. moving a previously-full VA page to the head
-> of the list on ELDU will cause that page to get bounced back to the
-> end of the list on the next EWB.  Besides, whatever performance might
-> be gained is a drop in the bucket compared to the performance hit of
-> evicting enough EPC pages to fill multiple VA pages.
-> 
-> e.g.
-> 
-> 	list_for_each_entry_safe(va_page, tmp, &encl->va_pages, list) {
-> 		va_offset = sgx_alloc_va_slot(va_page);
-> 		if (va_offset < PAGE_SIZE)
-> 			break;
-> 
-> 		list_move_tail(&va_page->list, &full_pages);
-> 	}
-> 	list_splice_tail(&full_pages, &va_page->list);
+This is a patch that implements a generic hooking API for the
+generic ACPI battery driver.
 
-It is easy to just to check whether VA page is full and move it back
-of the list if it is.
+With this new generic API, drivers can expose platform specific
+behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+in a generic way.
 
-/Jarkko
+A perfect example of the need for this API are Lenovo ThinkPads.
+
+Lenovo ThinkPads have a ACPI extension that allows the setting of
+start and stop charge thresholds in the EC and battery firmware
+via ACPI. The thinkpad_acpi module can use this API to expose
+sysfs attributes that it controls inside the ACPI battery driver
+sysfs tree, under /sys/class/power_supply/BATN/.
+
+The file drivers/acpi/battery.h has been moved to
+include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+battery.c have been adjusted to reflect that.
+
+When drivers hooks into the API, the API calls add_battery() for
+each battery in the system that passes it a acpi_battery
+struct. Then, the drivers can use device_create_file() to create
+new sysfs attributes with that struct and identify the batteries
+for per-battery attributes.
+
+Tested-by: Kevin Locke <kevin@kevinlocke.name>
+Tested-by: Christoph Böhmwalder <christoph@boehmwalder.at>
+Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+---
+ drivers/acpi/ac.c      |   2 +-
+ drivers/acpi/battery.c | 139 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/acpi/battery.h |  11 ----
+ drivers/acpi/sbs.c     |   2 +-
+ include/acpi/battery.h |  21 ++++++++
+ 5 files changed, 160 insertions(+), 15 deletions(-)
+ delete mode 100644 drivers/acpi/battery.h
+ create mode 100644 include/acpi/battery.h
+
+diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
+index 47a7ed5..2d8de2f 100644
+--- a/drivers/acpi/ac.c
++++ b/drivers/acpi/ac.c
+@@ -33,7 +33,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
+ #include <linux/acpi.h>
+-#include "battery.h"
++#include <acpi/battery.h>
+ 
+ #define PREFIX "ACPI: "
+ 
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index 13e7b56..2951d07 100644
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -30,6 +30,7 @@
+ #include <linux/dmi.h>
+ #include <linux/delay.h>
+ #include <linux/slab.h>
++#include <linux/list.h>
+ #include <linux/suspend.h>
+ #include <asm/unaligned.h>
+ 
+@@ -42,7 +43,7 @@
+ #include <linux/acpi.h>
+ #include <linux/power_supply.h>
+ 
+-#include "battery.h"
++#include <acpi/battery.h>
+ 
+ #define PREFIX "ACPI: "
+ 
+@@ -124,6 +125,7 @@ struct acpi_battery {
+ 	struct power_supply_desc bat_desc;
+ 	struct acpi_device *device;
+ 	struct notifier_block pm_nb;
++	struct list_head list;
+ 	unsigned long update_time;
+ 	int revision;
+ 	int rate_now;
+@@ -626,6 +628,137 @@ static const struct device_attribute alarm_attr = {
+ 	.store = acpi_battery_alarm_store,
+ };
+ 
++/*
++ * The Battery Hooking API
++ *
++ * This API is used inside other drivers that need to expose
++ * platform-specific behaviour within the generic driver in a
++ * generic way.
++ *
++ */
++
++LIST_HEAD(acpi_battery_list);
++LIST_HEAD(battery_hook_list);
++
++void battery_hook_unregister(struct acpi_battery_hook *hook)
++{
++
++	struct list_head *position;
++	struct acpi_battery *battery;
++
++	/*
++	 * In order to remove a hook, we first need to
++	 * de-register all the batteries that are registered.
++	 */
++
++	list_for_each(position, &acpi_battery_list) {
++		battery = list_entry(position, struct acpi_battery, list);
++		hook->remove_battery(battery->bat);
++	}
++
++	/* Then, just remove the hook */
++
++	list_del(&hook->list);
++	pr_info("battery: extension unregistered: %s\n", hook->name);
++
++}
++EXPORT_SYMBOL_GPL(battery_hook_unregister);
++
++void battery_hook_register(struct acpi_battery_hook *hook)
++{
++	struct list_head *position;
++	struct acpi_battery *battery;
++
++	INIT_LIST_HEAD(&hook->list);
++	list_add(&hook->list, &battery_hook_list);
++
++	/*
++	 * Now that the driver is registered, we need
++	 * to notify the hook that a battery is available
++	 * for each battery, so that the driver may add
++	 * its attributes.
++	 */
++	list_for_each(position, &acpi_battery_list) {
++		battery = list_entry(position, struct acpi_battery, list);
++		if (hook->add_battery(battery->bat)) {
++
++			/*
++			 * If a add-battery returns non-zero,
++			 * the registration of the extension has failed,
++			 * we will unload it.
++			 */
++			pr_err("battery: extension failed to load: %s",
++					hook->name);
++			battery_hook_unregister(hook);
++			return;
++
++		}
++	}
++
++	pr_info("battery: new extension: %s\n", hook->name);
++
++}
++EXPORT_SYMBOL_GPL(battery_hook_register);
++
++static void battery_hook_add_battery(struct acpi_battery *battery)
++{
++
++	/*
++	 * This function gets called right after the battery sysfs
++	 * attributes have been added, so that the drivers that
++	 * define custom sysfs attributes can add their own.
++	 */
++
++	struct list_head *position;
++	struct acpi_battery_hook *hook_node;
++
++	INIT_LIST_HEAD(&battery->list);
++	list_add(&battery->list, &acpi_battery_list);
++
++	/*
++	 * Since we added a new battery to the list, we need to
++	 * iterate over the hooks and call add_battery for each
++	 * hook that was registered. This usually happens
++	 * when a battery gets hotplugged or initialized
++	 * during the battery module initialization.
++	 */
++
++	list_for_each(position, &battery_hook_list) {
++		hook_node = list_entry(position, struct acpi_battery_hook, list);
++		if (hook_node->add_battery(battery->bat)) {
++
++			/*
++			 * The notification of the extensions has failed, to
++			 * prevent further errors we will unload the extension.
++			 */
++			battery_hook_unregister(hook_node);
++			pr_err("battery: error in extension, unloading: %s",
++					hook_node->name);
++		}
++	}
++
++}
++
++static void battery_hook_remove_battery(struct acpi_battery *battery)
++{
++	struct list_head *position;
++	struct acpi_battery_hook *hook;
++
++	/*
++	 * Before removing the hook, we need to remove all
++	 * custom attributes from the battery.
++	 */
++	list_for_each(position, &battery_hook_list) {
++		hook = list_entry(position, struct acpi_battery_hook, list);
++		hook->remove_battery(battery->bat);
++	}
++
++	/* Then, just remove the battery from the list */
++
++	list_del(&battery->list);
++
++}
++
+ static int sysfs_add_battery(struct acpi_battery *battery)
+ {
+ 	struct power_supply_config psy_cfg = { .drv_data = battery, };
+@@ -647,6 +780,8 @@ static int sysfs_add_battery(struct acpi_battery *battery)
+ 	battery->bat = power_supply_register_no_ws(&battery->device->dev,
+ 				&battery->bat_desc, &psy_cfg);
+ 
++	battery_hook_add_battery(battery);
++
+ 	if (IS_ERR(battery->bat)) {
+ 		int result = PTR_ERR(battery->bat);
+ 
+@@ -663,7 +798,7 @@ static void sysfs_remove_battery(struct acpi_battery *battery)
+ 		mutex_unlock(&battery->sysfs_lock);
+ 		return;
+ 	}
+-
++	battery_hook_remove_battery(battery);
+ 	device_remove_file(&battery->bat->dev, &alarm_attr);
+ 	power_supply_unregister(battery->bat);
+ 	battery->bat = NULL;
+diff --git a/drivers/acpi/battery.h b/drivers/acpi/battery.h
+deleted file mode 100644
+index 225f493..0000000
+--- a/drivers/acpi/battery.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ACPI_BATTERY_H
+-#define __ACPI_BATTERY_H
+-
+-#define ACPI_BATTERY_CLASS "battery"
+-
+-#define ACPI_BATTERY_NOTIFY_STATUS	0x80
+-#define ACPI_BATTERY_NOTIFY_INFO	0x81
+-#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
+-
+-#endif
+diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
+index a2428e9..295b592 100644
+--- a/drivers/acpi/sbs.c
++++ b/drivers/acpi/sbs.c
+@@ -32,9 +32,9 @@
+ #include <linux/delay.h>
+ #include <linux/power_supply.h>
+ #include <linux/platform_data/x86/apple.h>
++#include <acpi/battery.h>
+ 
+ #include "sbshc.h"
+-#include "battery.h"
+ 
+ #define PREFIX "ACPI: "
+ 
+diff --git a/include/acpi/battery.h b/include/acpi/battery.h
+new file mode 100644
+index 0000000..5d8f5d9
+--- /dev/null
++++ b/include/acpi/battery.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ACPI_BATTERY_H
++#define __ACPI_BATTERY_H
++
++#define ACPI_BATTERY_CLASS "battery"
++
++#define ACPI_BATTERY_NOTIFY_STATUS	0x80
++#define ACPI_BATTERY_NOTIFY_INFO	0x81
++#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
++
++struct acpi_battery_hook {
++	const char *name;
++	int (*add_battery)(struct power_supply *battery);
++	int (*remove_battery)(struct power_supply *battery);
++	struct list_head list;
++};
++
++void battery_hook_register(struct acpi_battery_hook *hook);
++void battery_hook_unregister(struct acpi_battery_hook *hook);
++
++#endif
+-- 
+2.7.4
+
