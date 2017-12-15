@@ -1,61 +1,72 @@
 From: Dhaval Shah <dhaval.shah@softnautics.com>
-Subject: Re: [PATCH 0/3] platform/x86: dell-laptop: All the warnings are
- resolved.
-Date: Fri, 15 Dec 2017 05:15:15 +0000
-Message-ID: <BM1PR0101MB14443B072F71BF4CB1F85100E60B0@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-References: <20171213081309.22851-1-dhaval.shah@softnautics.com>,<CAHp75VfTO9iCVFhddb1WHCL8RPKTVT7OhdOwvHJNy60V93wy0A@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-smbios: Block comments use * on
+ subsequent lines
+Date: Fri, 15 Dec 2017 05:17:48 +0000
+Message-ID: <BM1PR0101MB144415FCFB23134180481887E60B0@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
+References: <20171213082105.23082-1-dhaval.shah@softnautics.com>,<CAHp75VeRvQtMOUC2w9GXXwmORDOh5TjSOKZWUwv_Q-Dqxckr1Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bo1ind01on0102.outbound.protection.outlook.com ([104.47.101.102]:15555
+Received: from mail-bo1ind01on0107.outbound.protection.outlook.com ([104.47.101.107]:63982
         "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751034AbdLOFPT (ORCPT
+        id S1751136AbdLOFRv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Dec 2017 00:15:19 -0500
-In-Reply-To: <CAHp75VfTO9iCVFhddb1WHCL8RPKTVT7OhdOwvHJNy60V93wy0A@mail.gmail.com>
+        Fri, 15 Dec 2017 00:17:51 -0500
+In-Reply-To: <CAHp75VeRvQtMOUC2w9GXXwmORDOh5TjSOKZWUwv_Q-Dqxckr1Q@mail.gmail.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?iso-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: =?iso-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
 Hi Andy Shevchenko,
 
-Thanks for the review.
 ________________________________________
 > From: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Sent: Thursday, December 14, 2017 11:29 PM
 > To: Dhaval Shah
-> Cc: Matthew Garrett; Pali Roh=E1r; Andy Shevchenko; Platform Driver; linu=
-x-kernel@vger.kernel.org
-> Subject: Re: [PATCH 0/3] platform/x86: dell-laptop: All the warnings are =
-resolved.
+> Cc: Pali Roh=E1r; Mario Limonciello; dvhart@infradead.org; Andy Shevchenk=
+o; Platform Driver; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] platform/x86: dell-smbios: Block comments use * on s=
+ubsequent lines
 >=20
-> On Wed, Dec 13, 2017 at 10:13 AM, Dhaval Shah
+> On Wed, Dec 13, 2017 at 10:21 AM, Dhaval Shah
 > <dhaval.shah@softnautics.com> wrote:
-> > There are total three types of warnings are resolved.
-> > First patch  : Block comments use * on subsequent lines
-> > Second patch : Missing a blank line after declarations
-> > third patch  : braces {} are not necessary for single statement blocks.
+> > Resolved Block comments use * on subsequent lines checkpatch warnings.
+> > Issue found by checkpatch.
 > >
 >=20
-> Can we survive without this? Does it break build or alike?
+> Same comments as for the other like this
 >=20
-Yes. We can survive without this. It will not break build or alike. This ch=
-anges will not affects the functionality of the code.
-But, it overall improves the code readability.
->=20
-> > Dhaval Shah (3):
-> >   platform/x86: dell-laptop: Block comments use * on subsequent lines
-> >   platform/x86: dell-laptop: Missing a blank line after declarations
-> >   platform/x86: dell-laptop: braces {} are not necessary for single
-> >     statement blocks
+
+This changes will not affect the functionality but improves the code readab=
+ility.
+
+> > Signed-off-by: Dhaval Shah <dhaval.shah@softnautics.com>
+> > ---
+> >  drivers/platform/x86/dell-smbios.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> >  drivers/platform/x86/dell-laptop.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
+dell-smbios.c
+> > index 6a60db515bda..25a296c90e08 100644
+> > --- a/drivers/platform/x86/dell-smbios.c
+> > +++ b/drivers/platform/x86/dell-smbios.c
+> > @@ -353,7 +353,8 @@ static void __init parse_da_table(const struct dmi_=
+header *dm)
+> >                 container_of(dm, struct calling_interface_structure, he=
+ader);
 > >
+> >         /* 4 bytes of table header, plus 7 bytes of Dell header, plus a=
+t least
+> > -          6 bytes of entry */
+> > +        * 6 bytes of entry
+> > +        */
+> >
+> >         if (dm->length < 17)
+> >                 return;
 > > --
 > > 2.11.0
 > >
