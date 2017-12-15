@@ -1,72 +1,39 @@
-From: Dhaval Shah <dhaval.shah@softnautics.com>
-Subject: Re: [PATCH] platform/x86: dell-smbios: Block comments use * on
- subsequent lines
-Date: Fri, 15 Dec 2017 05:17:48 +0000
-Message-ID: <BM1PR0101MB144415FCFB23134180481887E60B0@BM1PR0101MB1444.INDPRD01.PROD.OUTLOOK.COM>
-References: <20171213082105.23082-1-dhaval.shah@softnautics.com>,<CAHp75VeRvQtMOUC2w9GXXwmORDOh5TjSOKZWUwv_Q-Dqxckr1Q@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Fri, 15 Dec 2017 17:00:20 +0200
+Message-ID: <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+ <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+ <1510682106.3313.24.camel@intel.com>
+ <20171114202835.64rl35asldh3jgui@linux.intel.com>
+ <1510770027.11044.37.camel@intel.com>
+ <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bo1ind01on0107.outbound.protection.outlook.com ([104.47.101.107]:63982
-        "EHLO IND01-BO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751136AbdLOFRv (ORCPT
+Received: from mga06.intel.com ([134.134.136.31]:14169 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752660AbdLOPAX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Dec 2017 00:17:51 -0500
-In-Reply-To: <CAHp75VeRvQtMOUC2w9GXXwmORDOh5TjSOKZWUwv_Q-Dqxckr1Q@mail.gmail.com>
-Content-Language: en-US
+        Fri, 15 Dec 2017 10:00:23 -0500
+Content-Disposition: inline
+In-Reply-To: <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?iso-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, "dvhart@infradead.org" <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Hi Andy Shevchenko,
+On Wed, Dec 13, 2017 at 11:18:29PM +0000, Christopherson, Sean J wrote:
+> Resurrecting this thread now that I have a system with launch control
+> and have been able to measure the performance impact...
+> 
+> Regenerating the EINIT token every time adds somewhere in the vicinity
+> of ~5% overhead to creating an enclave, versus generating a token once
+> and reusing it in each EINIT call.  This isn't a huge issue since real
+> world usage models likely won't be re-launching enclaves at a high rate,
+> but it is measurable.
 
-________________________________________
-> From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Sent: Thursday, December 14, 2017 11:29 PM
-> To: Dhaval Shah
-> Cc: Pali Roh=E1r; Mario Limonciello; dvhart@infradead.org; Andy Shevchenk=
-o; Platform Driver; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] platform/x86: dell-smbios: Block comments use * on s=
-ubsequent lines
->=20
-> On Wed, Dec 13, 2017 at 10:21 AM, Dhaval Shah
-> <dhaval.shah@softnautics.com> wrote:
-> > Resolved Block comments use * on subsequent lines checkpatch warnings.
-> > Issue found by checkpatch.
-> >
->=20
-> Same comments as for the other like this
->=20
+We can cache tokens in future in the kernel space, can't we?
 
-This changes will not affect the functionality but improves the code readab=
-ility.
-
-> > Signed-off-by: Dhaval Shah <dhaval.shah@softnautics.com>
-> > ---
-> >  drivers/platform/x86/dell-smbios.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-> > index 6a60db515bda..25a296c90e08 100644
-> > --- a/drivers/platform/x86/dell-smbios.c
-> > +++ b/drivers/platform/x86/dell-smbios.c
-> > @@ -353,7 +353,8 @@ static void __init parse_da_table(const struct dmi_=
-header *dm)
-> >                 container_of(dm, struct calling_interface_structure, he=
-ader);
-> >
-> >         /* 4 bytes of table header, plus 7 bytes of Dell header, plus a=
-t least
-> > -          6 bytes of entry */
-> > +        * 6 bytes of entry
-> > +        */
-> >
-> >         if (dm->length < 17)
-> >                 return;
-> > --
-> > 2.11.0
-> >
+/Jarkko
