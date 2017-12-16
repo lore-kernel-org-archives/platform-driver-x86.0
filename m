@@ -1,117 +1,103 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
-Date: Sat, 16 Dec 2017 01:35:10 +0100
-Message-ID: <CAJZ5v0gPGiBcM1T+3kjHqSOmZ2srXajt=kENdhEWqgWyDbUkUQ@mail.gmail.com>
-References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v8 4/8] intel_sgx: driver for Intel Software Guard Extensions
+Date: Sat, 16 Dec 2017 02:53:33 +0100
+Message-ID: <CAOFm3uHLCc2DT9jBvkpsA1ayprxwX41AhpUb9tr2NBz3yB3z2Q@mail.gmail.com>
+References: <20171215202936.28226-1-jarkko.sakkinen@linux.intel.com> <20171215202936.28226-5-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ot0-f195.google.com ([74.125.82.195]:43604 "EHLO
-        mail-ot0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755861AbdLPAfL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Dec 2017 19:35:11 -0500
-In-Reply-To: <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ognjen Galic <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215202936.28226-5-jarkko.sakkinen@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Suresh Siddha <suresh.b.siddha@intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, platform-driver-x86@vger.kernel.org, x86@kernel.org, LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Vinod Koul <vinod.koul@intel.com>, jessica.marz@intel.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Dec 16, 2017 at 1:33 AM, Rafael J. Wysocki <rafael@kernel.org> wrot=
-e:
-> On Fri, Dec 15, 2017 at 5:57 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
->> The EC/ACPI firmware on Lenovo ThinkPads used to report a status
->> of "Unknown" when the battery is between the charge start and
->> charge stop thresholds. On Windows, it reports "Not Charging"
->> so the quirk has been added to also report correctly.
->>
->> Now the "status" attribute returns "Not Charging" when the
->> battery on ThinkPads is not physicaly charging.
->>
->> Tested-by: Kevin Locke <kevin@kevinlocke.name>
->> Tested-by: Christoph B=C3=B6hmwalder <christoph@boehmwalder.at>
->> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
->
-> It doesn't look like this is related to the [1/3] and [3/3], so why do
-> you make it part of the series?
->
->> ---
->>  drivers/acpi/battery.c | 23 +++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>
->> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
->> index 2951d07..81e9b4e 100644
->> --- a/drivers/acpi/battery.c
->> +++ b/drivers/acpi/battery.c
->> @@ -71,6 +71,7 @@ static async_cookie_t async_cookie;
->>  static bool battery_driver_registered;
->>  static int battery_bix_broken_package;
->>  static int battery_notification_delay_ms;
->> +static int battery_quirk_thinkpad_notcharging;
->
-> Drop "thinkpad" from this name as somebody may need to use the quirk
-> for a machine from a different vendor in the future.
->
->>  static unsigned int cache_time =3D 1000;
->>  module_param(cache_time, uint, 0644);
->>  MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
->> @@ -222,6 +223,13 @@ static int acpi_battery_get_property(struct power_s=
-upply *psy,
->>                         val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
->>                 else if (acpi_battery_is_charged(battery))
->>                         val->intval =3D POWER_SUPPLY_STATUS_FULL;
->> +               /*
->> +                * On the Lenovo ThinkPad ACPI implementation, when
->> +                * neither bits 0 or 1 are set, that state is
->> +                * considered as "Not Charging".
->> +                */
->> +               else if (battery_quirk_thinkpad_notcharging)
->> +                       val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING=
-;
->>                 else
->>                         val->intval =3D POWER_SUPPLY_STATUS_UNKNOWN;
->>                 break;
->> @@ -1301,6 +1309,13 @@ battery_notification_delay_quirk(const struct dmi=
-_system_id *d)
->>         return 0;
->>  }
->>
->> +static int __init
->> +battery_quirk_not_charging(const struct dmi_system_id *d)
->
-> Don't break the above line (it will be over 80 chars long, but that's fin=
-e).
->
->> +{
->> +       battery_quirk_thinkpad_notcharging =3D 1;
->> +       return 0;
->> +}
->> +
->>  static const struct dmi_system_id bat_dmi_table[] __initconst =3D {
->>         {
->>                 .callback =3D battery_bix_broken_package_quirk,
->> @@ -1318,6 +1333,14 @@ static const struct dmi_system_id bat_dmi_table[]=
- __initconst =3D {
->>                         DMI_MATCH(DMI_PRODUCT_NAME, "Aspire V5-573G"),
->>                 },
->>         },
->> +       {
->
-> Add a comment to describe this quirk (which it is needed in the first pla=
-ce).
+Jarkko, Suresh,
 
-s/whichj/why/
+On Fri, Dec 15, 2017 at 9:27 PM, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+> Intel SGX is a set of CPU instructions that can be used by applications
+> to set aside private regions of code and data.  The code outside the
+> enclave is disallowed to access the memory inside the enclave by the CPU
+> access control.
+[...]
 
->
->> +               .callback =3D battery_quirk_not_charging,
->> +               .ident =3D "Lenovo ThinkPad",
->> +               .matches =3D {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
->> +               },
->> +       },
->>         {},
->>  };
->>
->> --
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Tested-by: Serge Ayoun <serge.ayoun@intel.com>
+
+[...]
+
+> --- /dev/null
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -0,0 +1,233 @@
+> +/*
+> + * This file is provided under a dual BSD/GPLv2 license.  When using or
+> + * redistributing this file, you may do so under either license.
+> + *
+> + * GPL LICENSE SUMMARY
+> + *
+> + * Copyright(c) 2016-2017 Intel Corporation.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * General Public License for more details.
+> + *
+> + * Contact Information:
+> + * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> + * Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+> + *
+> + * BSD LICENSE
+> + *
+> + * Copyright(c) 2016-2017 Intel Corporation.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions
+> + * are met:
+> + *
+> + *   * Redistributions of source code must retain the above copyright
+> + *     notice, this list of conditions and the following disclaimer.
+> + *   * Redistributions in binary form must reproduce the above copyright
+> + *     notice, this list of conditions and the following disclaimer in
+> + *     the documentation and/or other materials provided with the
+> + *     distribution.
+> + *   * Neither the name of Intel Corporation nor the names of its
+> + *     contributors may be used to endorse or promote products derived
+> + *     from this software without specific prior written permission.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * Authors:
+> + *
+> + * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> + * Suresh Siddha <suresh.b.siddha@intel.com>
+> + */
+
+
+Would you be kind enough to use the SPDX tags instead of this fine but
+super long (40+ lines) legalese? This is the new way as documented in
+Thomas [1] patches and already adopted by other Intel contributors.
+
+Thank you for your kind consideration!
+
+[1] https://lkml.org/lkml/2017/12/4/934
+
+CC: Vinod Koul <vinod.koul@intel.com>
+CC: Jessica Marz <jessica.marz@intel.com>
+-- 
+Cordially
+Philippe Ombredanne
