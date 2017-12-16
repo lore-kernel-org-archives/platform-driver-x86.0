@@ -1,48 +1,50 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
-Date: Sat, 16 Dec 2017 11:18:13 +0100
-Message-ID: <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
-References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
- <20171216084850.GA19033@thinkpad>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] input: silead: add Chuwi Hi8 support
+Date: Sat, 16 Dec 2017 16:15:40 +0100
+Message-ID: <4a065f11-b453-93fa-9b4a-7400fcdd1e12@redhat.com>
+References: <SLXP216MB0462B59087253DCEFF0811DB9B0B0@SLXP216MB0462.KORP216.PROD.OUTLOOK.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171216084850.GA19033@thinkpad>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ognjen Galic <smclt30p@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <SLXP216MB0462B59087253DCEFF0811DB9B0B0@SLXP216MB0462.KORP216.PROD.OUTLOOK.COM>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Maruyama Shohei <cheat.sc.linux@outlook.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Dec 16, 2017 at 9:48 AM, Ognjen Galic <smclt30p@gmail.com> wrote:
-> On Sat, Dec 16, 2017 at 01:33:55AM +0100, Rafael J. Wysocki wrote:
->> On Fri, Dec 15, 2017 at 5:57 PM, Ognjen Galic <smclt30p@gmail.com> wrote=
-:
->> > The EC/ACPI firmware on Lenovo ThinkPads used to report a status
->> > of "Unknown" when the battery is between the charge start and
->> > charge stop thresholds. On Windows, it reports "Not Charging"
->> > so the quirk has been added to also report correctly.
->> >
->> > Now the "status" attribute returns "Not Charging" when the
->> > battery on ThinkPads is not physicaly charging.
->> >
->> > Tested-by: Kevin Locke <kevin@kevinlocke.name>
->> > Tested-by: Christoph B=C3=B6hmwalder <christoph@boehmwalder.at>
->> > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
->>
->> It doesn't look like this is related to the [1/3] and [3/3], so why do
->> you make it part of the series?
->>
->
-> I made it the same series because it is practically the same feature
-> set. Without this patch and with 1/3 and 3/3 applied, there is a bug
-> where the status attribute would show "Unknown" for a battery that is
-> between the start and stop thresholds while attached to AC.
+Hi,
 
-OK, fair enough.
+On 15-12-17 21:02, Maruyama Shohei wrote:
+> This commit add ACPI support for Chuwi Hi8 tablet. On the ACPI table of
+> the tablet, GSL1680 is registered as MSSL0001, so the driver does not
+> recognize the device. This commit resolve it.
+> 
+> Signed-off-by: Shohei Maruyama <cheat.sc.linux@outlook.com>
 
-I would reorder it as the first patch in the series, then, because the
-other two are more related to each other.
+Looks good to me:
 
-Thanks,
-Rafael
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+> ---
+>   drivers/input/touchscreen/silead.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index 0dbcf105f7db..531f22891462 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -578,6 +578,7 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
+>   	{ "GSL3675", 0 },
+>   	{ "GSL3692", 0 },
+>   	{ "MSSL1680", 0 },
+> +	{ "MSSL0001", 0 },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
+> 
