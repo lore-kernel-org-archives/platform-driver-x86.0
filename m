@@ -1,76 +1,42 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Accept flat mode for type 4
- multi mode status
-Date: Mon, 18 Dec 2017 14:19:15 +0200
-Message-ID: <CAHp75VexXUL0=fLQwN11NUVKYtRw4J88yBn_CH+UiUGzOL=e+Q@mail.gmail.com>
-References: <20171114161414.14297-1-bberg@redhat.com>
+Subject: Re: [PATCH/trivial] samsung-laptop: Grammar s/are can/can/
+Date: Mon, 18 Dec 2017 14:25:28 +0200
+Message-ID: <CAHp75Vdgk06x2poit=5ic+kkeGbygcHqWKNnb-c0QvnqdJuuFw@mail.gmail.com>
+References: <1512048759-18075-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f194.google.com ([209.85.216.194]:46429 "EHLO
-        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1758264AbdLRMTQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Dec 2017 07:19:16 -0500
-Received: by mail-qt0-f194.google.com with SMTP id r39so19632494qtr.13
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2017 04:19:16 -0800 (PST)
-In-Reply-To: <20171114161414.14297-1-bberg@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benjamin Berg <bberg@redhat.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Peter FP1 Zhang <zhangfp1@lenovo.com>, Lyude <lyude@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512048759-18075-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Jiri Kosina <trivial@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 14, 2017 at 6:14 PM, Benjamin Berg <bberg@redhat.com> wrote:
-> On the X1 Yoga 2nd Generation and most likely other notebooks the FLAT
-> mode is reported. Decode it correctly rather than warning about an
-> unexpected multi mode status to be reported.
->
-> Signed-off-by: Benjamin Berg <bberg@redhat.com>
-> Cc: Peter FP1 Zhang <zhangfp1@lenovo.com
-> Cc: Lyude <lyude@redhat.com>
+On Thu, Nov 30, 2017 at 3:32 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Applied to my review and testing queue, thanks!
 
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+>  Documentation/ABI/testing/sysfs-driver-samsung-laptop | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 91fab1a13a6d..d23c84222e9f 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -2106,26 +2106,24 @@ static int hotkey_gmms_get_tablet_mode(int s, int *has_tablet_mode)
->                               TP_ACPI_MULTI_MODE_FLAT |
->                               TP_ACPI_MULTI_MODE_TABLET |
->                               TP_ACPI_MULTI_MODE_STAND |
->                               TP_ACPI_MULTI_MODE_TENT;
->                 break;
->         case 3:
->                 valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
->                               TP_ACPI_MULTI_MODE_FLAT;
->                 break;
->         case 4:
-> -               valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
-> -                             TP_ACPI_MULTI_MODE_TABLET |
-> -                             TP_ACPI_MULTI_MODE_STAND |
-> -                             TP_ACPI_MULTI_MODE_TENT;
-> -               break;
->         case 5:
-> +               /* In mode 4, FLAT is not specified as a valid mode. However,
-> +                * it can be seen at least on the X1 Yoga 2nd Generation.
-> +                */
->                 valid_modes = TP_ACPI_MULTI_MODE_LAPTOP |
->                               TP_ACPI_MULTI_MODE_FLAT |
->                               TP_ACPI_MULTI_MODE_TABLET |
->                               TP_ACPI_MULTI_MODE_STAND |
->                               TP_ACPI_MULTI_MODE_TENT;
->                 break;
->         default:
->                 pr_err("Unknown multi mode status type %d with value 0x%04X, please report this to %s\n",
->                        type, value, TPACPI_MAIL);
->                 return 0;
+> diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+> index 63c1ad0212fc8624..34d3a3359cf4587f 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+> +++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+> @@ -3,7 +3,7 @@ Date:           January 1, 2010
+>  KernelVersion: 2.6.33
+>  Contact:       Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>  Description:   Some Samsung laptops have different "performance levels"
+> -               that are can be modified by a function key, and by this
+> +               that can be modified by a function key, and by this
+>                 sysfs file.  These values don't always make a whole lot
+>                 of sense, but some users like to modify them to keep
+>                 their fans quiet at all costs.  Reading from this file
 > --
-> 2.13.6
+> 2.7.4
 >
 
 
