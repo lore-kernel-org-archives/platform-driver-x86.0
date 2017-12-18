@@ -1,55 +1,57 @@
-From: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
-Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
-Date: Mon, 18 Dec 2017 11:21:26 +0100
-Message-ID: <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com>
-References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
- <20171216084850.GA19033@thinkpad> <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v6 0/3] drivers/platform: replace module x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Mon, 18 Dec 2017 13:20:01 +0000
+Message-ID: <1513603204-13536-1-git-send-email-vadimp@mellanox.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34392 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S932655AbdLRLXa (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 18 Dec 2017 06:23:30 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
-On 16/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Sat, Dec 16, 2017 at 9:48 AM, Ognjen Galic <smclt30p@gmail.com> wrote:
->> On Sat, Dec 16, 2017 at 01:33:55AM +0100, Rafael J. Wysocki wrote:
->>> On Fri, Dec 15, 2017 at 5:57 PM, Ognjen Galic <smclt30p@gmail.com>
->>> wrote:
->>> > The EC/ACPI firmware on Lenovo ThinkPads used to report a status
->>> > of "Unknown" when the battery is between the charge start and
->>> > charge stop thresholds. On Windows, it reports "Not Charging"
->>> > so the quirk has been added to also report correctly.
->>> >
->>> > Now the "status" attribute returns "Not Charging" when the
->>> > battery on ThinkPads is not physicaly charging.
->>> >
->>> > Tested-by: Kevin Locke <kevin@kevinlocke.name>
->>> > Tested-by: Christoph B=C3=B6hmwalder <christoph@boehmwalder.at>
->>> > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
->>>
->>> It doesn't look like this is related to the [1/3] and [3/3], so why do
->>> you make it part of the series?
->>>
->>
->> I made it the same series because it is practically the same feature
->> set. Without this patch and with 1/3 and 3/3 applied, there is a bug
->> where the status attribute would show "Unknown" for a battery that is
->> between the start and stop thresholds while attached to AC.
->
-> OK, fair enough.
->
-> I would reorder it as the first patch in the series, then, because the
-> other two are more related to each other.
->
-> Thanks,
-> Rafael
->
+The patchset:
+ - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+   drivers/platform/x86/mlxcpld-hotplug.c with the modules
+   include/linux/platform_data/mlxreg.h and
+   drivers/platform/mellanox/mlxreg-hotplug.c;
+   relevant Makefile and Kconfig are updated;
+ - modifies Mellanox hotplug driver for making it architecture
+   independent. Drivers has been tested for x86 and ARM based systems.
+ - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
+   event functionality over programmable devices logic, when these devices
+   can be attached to different interfaces types, like I2C, LPC, SPI;
+   driver drivers/platform/x86/mlx-platform.c is updated according to new
+   interface.
 
-Do I really need now to re-order and re-send the whole patchset for it
-to get merged?
+Vadim Pasternak (3):
+  platform/x86: move Mellanox hardware platform hotplug driver to
+    platform/mellanox
+  platform/mellanox: mlxreg-hotplug: allow driver for ARM architecture
+  platform/mellanox: mlxreg-hotplug: modify to use regmap intreface
 
-Thanks.
+ MAINTAINERS                                   |   7 +-
+ drivers/platform/Kconfig                      |   2 +
+ drivers/platform/Makefile                     |   1 +
+ drivers/platform/mellanox/Kconfig             |  26 +
+ drivers/platform/mellanox/Makefile            |   6 +
+ drivers/platform/mellanox/mlxreg-hotplug.c    | 714 ++++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig                  |   8 -
+ drivers/platform/x86/Makefile                 |   1 -
+ drivers/platform/x86/mlx-platform.c           | 237 +++++++--
+ drivers/platform/x86/mlxcpld-hotplug.c        | 515 -------------------
+ include/linux/platform_data/mlxcpld-hotplug.h |  99 ----
+ include/linux/platform_data/mlxreg.h          | 144 ++++++
+ 12 files changed, 1082 insertions(+), 678 deletions(-)
+ create mode 100644 drivers/platform/mellanox/Kconfig
+ create mode 100644 drivers/platform/mellanox/Makefile
+ create mode 100644 drivers/platform/mellanox/mlxreg-hotplug.c
+ delete mode 100644 drivers/platform/x86/mlxcpld-hotplug.c
+ delete mode 100644 include/linux/platform_data/mlxcpld-hotplug.h
+ create mode 100644 include/linux/platform_data/mlxreg.h
+
+-- 
+2.1.4
