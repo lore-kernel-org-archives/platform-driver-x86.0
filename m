@@ -1,31 +1,82 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
-Date: Mon, 18 Dec 2017 14:36:01 +0200
-Message-ID: <CAHp75VfZaiQfridSQZh+TzpY1BGT3-Jk_2KGBKReMe7TFC507g@mail.gmail.com>
-References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
- <20171216084850.GA19033@thinkpad> <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
- <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com>
+Subject: Re: [PATCH] Add touchscreen platform data for the Onda oBook 20 Plus tablet.
+Date: Mon, 18 Dec 2017 14:41:04 +0200
+Message-ID: <CAHp75Vfkoze4HjY8dw-aiKjREOEywsUsfXFRCn47j76DCc==fw@mail.gmail.com>
+References: <20171210220213.19290-1-nerijus@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171210220213.19290-1-nerijus@users.sourceforge.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Nerijus Baliunas <nerijus@users.sourceforge.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 18, 2017 at 12:21 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com> wr=
-ote:
-> On 16/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Mon, Dec 11, 2017 at 12:02 AM, Nerijus Baliunas
+<nerijus@users.sourceforge.net> wrote:
+> Signed-off-by: Nerijus Bali=C5=ABnas <nerijus@users.sourceforge.net>
 
->> I would reorder it as the first patch in the series, then, because the
->> other two are more related to each other.
+Applied to my review and testing queue with massaged title and written
+commit message, thanks. Please, don't forget to do it yourself next
+time, otherwise it will slow review and promoting.
 
-> Do I really need now to re-order and re-send the whole patchset for it
-> to get merged?
+> ---
+>  drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/sil=
+ead_dmi.c
+> index 266535c2a72f..414293e8c448 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -171,6 +171,23 @@ static const struct silead_ts_dmi_data digma_citi_e2=
+00_data =3D {
+>         .properties     =3D digma_citi_e200_props,
+>  };
+>
+> +static const struct property_entry onda_obook_20_plus_props[] =3D {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-onda-obook-20-plu=
+s.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct silead_ts_dmi_data onda_obook_20_plus_data =3D {
+> +       .acpi_name      =3D "MSSL1680:00",
+> +       .properties     =3D onda_obook_20_plus_props,
+> +};
+> +
+>  static const struct dmi_system_id silead_ts_dmi_table[] =3D {
+>         {
+>                 /* CUBE iwork8 Air */
+> @@ -271,6 +288,14 @@ static const struct dmi_system_id silead_ts_dmi_tabl=
+e[] =3D {
+>                         DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+>                 },
+>         },
+> +       {
+> +               /* Onda oBook 20 Plus */
+> +               .driver_data =3D (void *)&onda_obook_20_plus_data,
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "ONDA"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "OBOOK 20 PLUS"),
+> +               },
+> +       },
+>         { },
+>  };
+>
+> --
+> 2.14.3
+>
 
-Through which tree it's supposed to go?
+
 
 --=20
 With Best Regards,
