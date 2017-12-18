@@ -1,296 +1,40 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: Add driver for GPD pocket custom fan controller
-Date: Mon, 18 Dec 2017 14:41:46 +0200
-Message-ID: <CAHp75Vcid1w3+NmfJyp70R98eUy_hh1Z=nGJtdqVUrkhAP8ogw@mail.gmail.com>
-References: <20171212164054.19568-1-hdegoede@redhat.com>
+From: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
+Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
+Date: Mon, 18 Dec 2017 14:33:02 +0100
+Message-ID: <CALgTWSuTYrJReUp0c4qAfd2vXAx7n26QVKJjSxco=k4MtuJiUQ@mail.gmail.com>
+References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
+ <20171216084850.GA19033@thinkpad> <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
+ <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com> <CAHp75VfZaiQfridSQZh+TzpY1BGT3-Jk_2KGBKReMe7TFC507g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212164054.19568-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, James <kernel@madingley.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfZaiQfridSQZh+TzpY1BGT3-Jk_2KGBKReMe7TFC507g@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 12, 2017 at 6:40 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Add a driver for the GPD pocket device's custom fan controller, which
-> gets controlled through 2 GPIOs listed in a FAN02501 ACPI device.
+On 18/12/2017, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Mon, Dec 18, 2017 at 12:21 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com> =
+wrote:
+>> On 16/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-
-Applied to my review and testing queue, thanks!
-
-> Cc: James <kernel@madingley.org>
-> Suggested-by: James <kernel@madingley.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> -Fix SPDX license tag
-> -Use different email address for James at his request
-> ---
->  MAINTAINERS                           |   6 ++
->  drivers/platform/x86/Kconfig          |  12 +++
->  drivers/platform/x86/Makefile         |   1 +
->  drivers/platform/x86/gpd-pocket-fan.c | 193 ++++++++++++++++++++++++++++++++++
->  4 files changed, 212 insertions(+)
->  create mode 100644 drivers/platform/x86/gpd-pocket-fan.c
+>>> I would reorder it as the first patch in the series, then, because the
+>>> other two are more related to each other.
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32e2d03a47fc..a9dbc8113bdc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5949,6 +5949,12 @@ L:       linux-input@vger.kernel.org
->  S:     Maintained
->  F:     drivers/input/touchscreen/goodix.c
+>> Do I really need now to re-order and re-send the whole patchset for it
+>> to get merged?
 >
-> +GPD POCKET FAN DRIVER
-> +M:     Hans de Goede <hdegoede@redhat.com>
-> +L:     platform-driver-x86@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/platform/x86/gpd-pocket-fan.c
-> +
->  GPIO ACPI SUPPORT
->  M:     Mika Westerberg <mika.westerberg@linux.intel.com>
->  M:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index e3cff861839d..54431e712057 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -244,6 +244,18 @@ config AMILO_RFKILL
->           This is a driver for enabling wifi on some Fujitsu-Siemens Amilo
->           laptops.
+> Through which tree it's supposed to go?
 >
-> +config GPD_POCKET_FAN
-> +       tristate "GPD Pocket Fan Controller support"
-> +       depends on ACPI
-> +       depends on THERMAL
-> +       ---help---
-> +         Driver for the GPD Pocket vendor specific FAN02501 ACPI device
-> +         which controls the fan speed on the GPD Pocket.
-> +
-> +         Without this driver the fan on the Pocket will stay off independent
-> +         of the CPU temperature. Say Y or M if the kernel may be used on a
-> +         GPD pocket.
-> +
->  config TC1100_WMI
->         tristate "HP Compaq TC1100 Tablet WMI Extras"
->         depends on !X86_64
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index c32b34a72467..9b215bda5e4c 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_HP_ACCEL)                += hp_accel.o
->  obj-$(CONFIG_HP_WIRELESS)      += hp-wireless.o
->  obj-$(CONFIG_HP_WMI)           += hp-wmi.o
->  obj-$(CONFIG_AMILO_RFKILL)     += amilo-rfkill.o
-> +obj-$(CONFIG_GPD_POCKET_FAN)   += gpd-pocket-fan.o
->  obj-$(CONFIG_TC1100_WMI)       += tc1100-wmi.o
->  obj-$(CONFIG_SONY_LAPTOP)      += sony-laptop.o
->  obj-$(CONFIG_IDEAPAD_LAPTOP)   += ideapad-laptop.o
-> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-> new file mode 100644
-> index 000000000000..c6f4d89b1437
-> --- /dev/null
-> +++ b/drivers/platform/x86/gpd-pocket-fan.c
-> @@ -0,0 +1,193 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * GPD Pocket fan controller driver
-> + *
-> + * Copyright (C) 2017 Hans de Goede <hdegoede@redhat.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +#include <linux/workqueue.h>
-> +
-> +static int temp_limits[3] = { 55000, 60000, 65000 };
-> +module_param_array(temp_limits, int, NULL, 0444);
-> +MODULE_PARM_DESC(temp_limits,
-> +                "Milli-celcius values above which the fan speed increases");
-> +
-> +static int hysteresis = 3000;
-> +module_param(hysteresis, int, 0444);
-> +MODULE_PARM_DESC(hysteresis,
-> +                "Hysteresis in milli-celcius before lowering the fan speed");
-> +
-> +struct gpd_pocket_fan_data {
-> +       struct device *dev;
-> +       struct thermal_zone_device *dts0;
-> +       struct thermal_zone_device *dts1;
-> +       struct gpio_desc *gpio0;
-> +       struct gpio_desc *gpio1;
-> +       struct delayed_work work;
-> +       int last_speed;
-> +};
-> +
-> +static void gpd_pocket_fan_set_speed(struct gpd_pocket_fan_data *fan, int speed)
-> +{
-> +       if (speed == fan->last_speed)
-> +               return;
-> +
-> +       gpiod_direction_output(fan->gpio0, !!(speed & 1));
-> +       gpiod_direction_output(fan->gpio1, !!(speed & 2));
-> +
-> +       fan->last_speed = speed;
-> +}
-> +
-> +static void gpd_pocket_fan_worker(struct work_struct *work)
-> +{
-> +       struct gpd_pocket_fan_data *fan =
-> +               container_of(work, struct gpd_pocket_fan_data, work.work);
-> +       int t0, t1, temp, speed, i;
-> +
-> +       if (thermal_zone_get_temp(fan->dts0, &t0) ||
-> +           thermal_zone_get_temp(fan->dts1, &t1)) {
-> +               dev_warn(fan->dev, "Error getting temperature\n");
-> +               queue_delayed_work(system_wq, &fan->work,
-> +                                  msecs_to_jiffies(1000));
-> +               return;
-> +       }
-> +
-> +       temp = max(t0, t1);
-> +
-> +       speed = fan->last_speed;
-> +
-> +       /* Determine minimum speed */
-> +       for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
-> +               if (temp < temp_limits[i])
-> +                       break;
-> +       }
-> +       if (speed < i)
-> +               speed = i;
-> +
-> +       /* Use hysteresis before lowering speed again */
-> +       for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
-> +               if (temp <= (temp_limits[i] - hysteresis))
-> +                       break;
-> +       }
-> +       if (speed > i)
-> +               speed = i;
-> +
-> +       if (fan->last_speed <= 0 && speed)
-> +               speed = 3; /* kick start motor */
-> +
-> +       gpd_pocket_fan_set_speed(fan, speed);
-> +
-> +       /* When mostly idle (low temp/speed), slow down the poll interval. */
-> +       queue_delayed_work(system_wq, &fan->work,
-> +                          msecs_to_jiffies(4000 / (speed + 1)));
-> +}
-> +
-> +static void gpd_pocket_fan_force_update(struct gpd_pocket_fan_data *fan)
-> +{
-> +       fan->last_speed = -1;
-> +       mod_delayed_work(system_wq, &fan->work, 0);
-> +}
-> +
-> +static int gpd_pocket_fan_probe(struct platform_device *pdev)
-> +{
-> +       struct gpd_pocket_fan_data *fan;
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
-> +               if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-> +                       dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
-> +                               temp_limits[i]);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +       if (hysteresis < 1000 || hysteresis > 10000) {
-> +               dev_err(&pdev->dev, "Invalid hysteresis %d (must be between 1000 and 10000)\n",
-> +                       hysteresis);
-> +               return -EINVAL;
-> +       }
-> +
-> +       fan = devm_kzalloc(&pdev->dev, sizeof(*fan), GFP_KERNEL);
-> +       if (!fan)
-> +               return -ENOMEM;
-> +
-> +       fan->dev = &pdev->dev;
-> +       INIT_DELAYED_WORK(&fan->work, gpd_pocket_fan_worker);
-> +
-> +       /* Note this returns a "weak" reference which we don't need to free */
-> +       fan->dts0 = thermal_zone_get_zone_by_name("soc_dts0");
-> +       if (IS_ERR(fan->dts0))
-> +               return -EPROBE_DEFER;
-> +
-> +       fan->dts1 = thermal_zone_get_zone_by_name("soc_dts1");
-> +       if (IS_ERR(fan->dts1))
-> +               return -EPROBE_DEFER;
-> +
-> +       fan->gpio0 = devm_gpiod_get_index(fan->dev, NULL, 0, GPIOD_ASIS);
-> +       if (IS_ERR(fan->gpio0))
-> +               return PTR_ERR(fan->gpio0);
-> +
-> +       fan->gpio1 = devm_gpiod_get_index(fan->dev, NULL, 1, GPIOD_ASIS);
-> +       if (IS_ERR(fan->gpio1))
-> +               return PTR_ERR(fan->gpio1);
-> +
-> +       gpd_pocket_fan_force_update(fan);
-> +
-> +       platform_set_drvdata(pdev, fan);
-> +       return 0;
-> +}
-> +
-> +static int gpd_pocket_fan_remove(struct platform_device *pdev)
-> +{
-> +       struct gpd_pocket_fan_data *fan = platform_get_drvdata(pdev);
-> +
-> +       cancel_delayed_work_sync(&fan->work);
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int gpd_pocket_fan_suspend(struct device *dev)
-> +{
-> +       struct gpd_pocket_fan_data *fan = dev_get_drvdata(dev);
-> +
-> +       gpd_pocket_fan_set_speed(fan, 0);
-> +       return 0;
-> +}
-> +
-> +static int gpd_pocket_fan_resume(struct device *dev)
-> +{
-> +       struct gpd_pocket_fan_data *fan = dev_get_drvdata(dev);
-> +
-> +       gpd_pocket_fan_force_update(fan);
-> +       return 0;
-> +}
-> +#endif
-> +static SIMPLE_DEV_PM_OPS(gpd_pocket_fan_pm_ops,
-> +                        gpd_pocket_fan_suspend,
-> +                        gpd_pocket_fan_resume);
-> +
-> +static struct acpi_device_id gpd_pocket_fan_acpi_match[] = {
-> +       { "FAN02501" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, gpd_pocket_fan_acpi_match);
-> +
-> +static struct platform_driver gpd_pocket_fan_driver = {
-> +       .probe  = gpd_pocket_fan_probe,
-> +       .remove = gpd_pocket_fan_remove,
-> +       .driver = {
-> +               .name                   = "gpd_pocket_fan",
-> +               .acpi_match_table       = gpd_pocket_fan_acpi_match,
-> +               .pm                     = &gpd_pocket_fan_pm_ops,
-> +        },
-> +};
-> +
-> +module_platform_driver(gpd_pocket_fan_driver);
-> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
-> +MODULE_DESCRIPTION("GPD pocket fan driver");
-> +MODULE_LICENSE("GPL");
 > --
-> 2.14.3
+> With Best Regards,
+> Andy Shevchenko
 >
 
+I'm afraid I don't understand the question. If you mean by Linux tree,
+it was written while 4.15-rc2 was active.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Gala
