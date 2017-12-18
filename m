@@ -1,51 +1,70 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: [PATCH 2/2] platform/x86/thinkpad_acpi: Improve a size determination
- in tpacpi_new_rfkill()
-Date: Mon, 18 Dec 2017 22:30:05 +0100
-Message-ID: <36da9194-4254-91ef-5b82-ab150801b911@users.sourceforge.net>
-References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+From: Paul Moore <paul@paul-moore.com>
+Subject: Re: [trivial PATCH] treewide: Align function definition open/close braces
+Date: Mon, 18 Dec 2017 17:04:14 -0500
+Message-ID: <CAHC9VhTEcj5o1789dZ2CR9W=buPGNa6gSJRc0m8GpUSpn1-xRA@mail.gmail.com>
+References: <1513556924.31581.51.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.17.11]:50416 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S934777AbdLRVce (ORCPT
+Received: from mail-lf0-f65.google.com ([209.85.215.65]:44618 "EHLO
+        mail-lf0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933864AbdLRWEQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Dec 2017 16:32:34 -0500
-In-Reply-To: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
-Content-Language: en-GB
+        Mon, 18 Dec 2017 17:04:16 -0500
+Received: by mail-lf0-f65.google.com with SMTP id x204so19425523lfa.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2017 14:04:16 -0800 (PST)
+In-Reply-To: <1513556924.31581.51.camel@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Jiri Kosina <trivial@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-scsi@vger.kernel.org, netdev@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-xfs@vger.kernel.org, linux-acpi@vger.kernel.org, linux-audit@redhat.com, amd-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com, ocfs2-devel@oss.oracle.com, linux-media@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 18 Dec 2017 22:13:53 +0100
+On Sun, Dec 17, 2017 at 7:28 PM, Joe Perches <joe@perches.com> wrote:
+> Some functions definitions have either the initial open brace and/or
+> the closing brace outside of column 1.
+>
+> Move those braces to column 1.
+>
+> This allows various function analyzers like gnu complexity to work
+> properly for these modified functions.
+>
+> Miscellanea:
+>
+> o Remove extra trailing ; and blank line from xfs_agf_verify
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+> git diff -w shows no difference other than the above 'Miscellanea'
+>
+> (this is against -next, but it applies against Linus' tree
+>  with a couple offsets)
+>
+>  arch/x86/include/asm/atomic64_32.h                   |  2 +-
+>  drivers/acpi/custom_method.c                         |  2 +-
+>  drivers/acpi/fan.c                                   |  2 +-
+>  drivers/gpu/drm/amd/display/dc/core/dc.c             |  2 +-
+>  drivers/media/i2c/msp3400-kthreads.c                 |  2 +-
+>  drivers/message/fusion/mptsas.c                      |  2 +-
+>  drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c |  2 +-
+>  drivers/net/wireless/ath/ath9k/xmit.c                |  2 +-
+>  drivers/platform/x86/eeepc-laptop.c                  |  2 +-
+>  drivers/rtc/rtc-ab-b5ze-s3.c                         |  2 +-
+>  drivers/scsi/dpt_i2o.c                               |  2 +-
+>  drivers/scsi/sym53c8xx_2/sym_glue.c                  |  2 +-
+>  fs/locks.c                                           |  2 +-
+>  fs/ocfs2/stack_user.c                                |  2 +-
+>  fs/xfs/libxfs/xfs_alloc.c                            |  5 ++---
+>  fs/xfs/xfs_export.c                                  |  2 +-
+>  kernel/audit.c                                       |  6 +++---
+>  kernel/trace/trace_printk.c                          |  4 ++--
+>  lib/raid6/sse2.c                                     | 14 +++++++-------
+>  sound/soc/fsl/fsl_dma.c                              |  2 +-
+>  20 files changed, 30 insertions(+), 31 deletions(-)
 
-Replace the specification of a data structure by a pointer dereference
-as the parameter for the operator "sizeof" to make the corresponding size
-determination a bit safer according to the Linux coding style convention.
+For the audit bits ...
 
-This issue was detected by using the Coccinelle software.
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 729144925880..40b7a1b9a019 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1258,7 +1258,7 @@ static int __init tpacpi_new_rfkill(const enum tpacpi_rfk_id id,
- 
- 	BUG_ON(id >= TPACPI_RFK_SW_MAX || tpacpi_rfkill_switches[id]);
- 
--	atp_rfk = kzalloc(sizeof(struct tpacpi_rfk), GFP_KERNEL);
-+	atp_rfk = kzalloc(sizeof(*atp_rfk), GFP_KERNEL);
- 	if (atp_rfk)
- 		atp_rfk->rfkill = rfkill_alloc(name,
- 						&tpacpi_pdev->dev,
 -- 
-2.15.1
+paul moore
+www.paul-moore.com
