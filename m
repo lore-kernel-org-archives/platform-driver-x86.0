@@ -1,128 +1,45 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: pmc_atom: introduce DEFINE_SHOW_ATTRIBUTE() macro
-Date: Tue, 19 Dec 2017 16:29:07 +0200
-Message-ID: <20171219142907.18132-1-andriy.shevchenko@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:45987 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1759630AbdLSO3L (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Dec 2017 09:29:11 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
+Date: Tue, 19 Dec 2017 16:34:47 +0200
+Message-ID: <CAHp75VdDXuOmL0tnQE9V4P1ZNjbw1BVZ0HFEMhJqew-JZeVtGg@mail.gmail.com>
+References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
+ <20171216084850.GA19033@thinkpad> <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
+ <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com>
+ <CAHp75VfZaiQfridSQZh+TzpY1BGT3-Jk_2KGBKReMe7TFC507g@mail.gmail.com> <CAJZ5v0jqZk6CNPQ0xZ7ktzM61iFZMLCNhGWGVX5+9OZ5qXMo_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAJZ5v0jqZk6CNPQ0xZ7ktzM61iFZMLCNhGWGVX5+9OZ5qXMo_g@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This macro deduplicates a lot of similar code in the pmc_atom.c module.
-Targeting to be moved to seq_file.h eventually.
+On Mon, Dec 18, 2017 at 7:31 PM, Rafael J. Wysocki <rafael@kernel.org> wrot=
+e:
+> On Mon, Dec 18, 2017 at 1:36 PM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Dec 18, 2017 at 12:21 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com>=
+ wrote:
+>>> On 16/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>>>> I would reorder it as the first patch in the series, then, because the
+>>>> other two are more related to each other.
+>>
+>>> Do I really need now to re-order and re-send the whole patchset for it
+>>> to get merged?
+>>
+>> Through which tree it's supposed to go?
+>
+> Wait, wait.  I haven't commented patches [1,3/3] yet, so no ACKs
+> assumed, please.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/pmc_atom.c | 56 +++++++++++++++--------------------------
- 1 file changed, 20 insertions(+), 36 deletions(-)
+I would prefer if you can take it through linux-pm.
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 77bac859342d..4b3c37b6288c 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -208,6 +208,20 @@ static const struct pmc_data cht_data = {
- 	.clks = cht_clks,
- };
- 
-+#define DEFINE_SHOW_ATTRIBUTE(__name)					\
-+static int __name ## _open(struct inode *inode, struct file *file)	\
-+{									\
-+	return single_open(file, __name ## _show, inode->i_private);	\
-+}									\
-+									\
-+static const struct file_operations __name ## _fops = {			\
-+	.owner		= THIS_MODULE,					\
-+	.open		= __name ## _open,				\
-+	.read		= seq_read,					\
-+	.llseek		= seq_lseek,					\
-+	.release	= single_release,				\
-+}
-+
- static inline u32 pmc_reg_read(struct pmc_dev *pmc, int reg_offset)
- {
- 	return readl(pmc->regmap + reg_offset);
-@@ -309,17 +323,7 @@ static int pmc_dev_state_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int pmc_dev_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, pmc_dev_state_show, inode->i_private);
--}
--
--static const struct file_operations pmc_dev_state_ops = {
--	.open		= pmc_dev_state_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(pmc_dev_state);
- 
- static int pmc_pss_state_show(struct seq_file *s, void *unused)
- {
-@@ -336,17 +340,7 @@ static int pmc_pss_state_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int pmc_pss_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, pmc_pss_state_show, inode->i_private);
--}
--
--static const struct file_operations pmc_pss_state_ops = {
--	.open		= pmc_pss_state_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(pmc_pss_state);
- 
- static int pmc_sleep_tmr_show(struct seq_file *s, void *unused)
- {
-@@ -367,17 +361,7 @@ static int pmc_sleep_tmr_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int pmc_sleep_tmr_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, pmc_sleep_tmr_show, inode->i_private);
--}
--
--static const struct file_operations pmc_sleep_tmr_ops = {
--	.open		= pmc_sleep_tmr_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(pmc_sleep_tmr);
- 
- static void pmc_dbgfs_unregister(struct pmc_dev *pmc)
- {
-@@ -395,17 +379,17 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
- 	pmc->dbgfs_dir = dir;
- 
- 	f = debugfs_create_file("dev_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_dev_state_ops);
-+				dir, pmc, &pmc_dev_state_fops);
- 	if (!f)
- 		goto err;
- 
- 	f = debugfs_create_file("pss_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_pss_state_ops);
-+				dir, pmc, &pmc_pss_state_fops);
- 	if (!f)
- 		goto err;
- 
- 	f = debugfs_create_file("sleep_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_sleep_tmr_ops);
-+				dir, pmc, &pmc_sleep_tmr_fops);
- 	if (!f)
- 		goto err;
- 
--- 
-2.15.1
+Whenever you are okay with the series let me know I would review PDx86 bits=
+.
+
+--=20
+With Best Regards,
+Andy Shevchenko
