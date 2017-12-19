@@ -1,54 +1,24 @@
-From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
- Intel Software Guard Extensions
-Date: Tue, 19 Dec 2017 18:52:02 +0000
-Message-ID: <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
- <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
- <1510682106.3313.24.camel@intel.com>
- <20171114202835.64rl35asldh3jgui@linux.intel.com>
- <1510770027.11044.37.camel@intel.com>
- <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
- <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
+From: Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [-next PATCH 0/4] sysfs and DEVICE_ATTR_<foo>
+Date: Tue, 19 Dec 2017 20:54:32 +0200
+Message-ID: <87vah2o8ev.fsf@intel.com>
+References: <cover.1513706701.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:1136 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751009AbdLSSwF (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Dec 2017 13:52:05 -0500
-In-Reply-To: <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <cover.1513706701.git.joe@perches.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, linux-nvme@lists.infradead.org, platform-driver-x86@vger.kernel.org, linux-s390@vger.kernel.org, esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org, linux-sh@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org, linux-media@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Friday, 2017-12-15, Jarkko Sakkinen wrote:
-> > Resurrecting this thread now that I have a system with launch control
-> > and have been able to measure the performance impact...
-> > 
-> > Regenerating the EINIT token every time adds somewhere in the vicinity
-> > of ~5% overhead to creating an enclave, versus generating a token once
-> > and reusing it in each EINIT call.  This isn't a huge issue since real
-> > world usage models likely won't be re-launching enclaves at a high rate,
-> > but it is measurable.
-> 
-> We can cache tokens in future in the kernel space, can't we?
+On Tue, 19 Dec 2017, Joe Perches <joe@perches.com> wrote:
+>  drivers/gpu/drm/i915/i915_sysfs.c                  | 12 ++--
 
-Yes, but why?  Deferring to userspace is less complex and likely
-more performant.
+For i915,
 
-Tokens are large enough that there would need to be some form of
-limit on the number of tokens, which brings up questions about
-how to account tokens, the cache eviction scheme, whether or not
-the size of the cache should be controllable from userspace, etc...
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-Userspace caching can likely provide better performance because
-the user/application knows the usage model and life expectancy of
-its tokens, i.e. userspace can make informed decisions about when
-to discard a token, how much memory to dedicate to caching tokens,
-etc...  And in the case of VMs, userspace can reuse tokens across
-reboots (of the VM), e.g. by saving tokens to disk.
+
+-- 
+Jani Nikula, Intel Open Source Technology Center
