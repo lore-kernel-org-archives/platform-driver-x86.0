@@ -1,60 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [-next PATCH 2/4] treewide: Use DEVICE_ATTR_RW
-Date: Tue, 19 Dec 2017 20:41:57 +0200
-Message-ID: <CAHp75VfyvA3kAtGiwJ63BOx43RuVSz-XgdK79WApytoaehOOgQ@mail.gmail.com>
-References: <cover.1513706701.git.joe@perches.com>
- <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
+From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Tue, 19 Dec 2017 18:52:02 +0000
+Message-ID: <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+ <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+ <1510682106.3313.24.camel@intel.com>
+ <20171114202835.64rl35asldh3jgui@linux.intel.com>
+ <1510770027.11044.37.camel@intel.com>
+ <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
+ <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Joe Perches <joe@perches.com>
-Cc: linux-fbdev@vger.kernel.org, David Airlie <airlied@linux.ie>, Heiko Carstens <heiko.carstens@de.ibm.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-s390@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Sebastian Ott <sebott@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Dick Kennedy <dick.kennedy@broadcom.com>, Mathias Nyman <mathias.nyman@intel.com>, Bartlomiej
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:1136 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751009AbdLSSwF (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 19 Dec 2017 13:52:05 -0500
+In-Reply-To: <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-T24gVHVlLCBEZWMgMTksIDIwMTcgYXQgODoxNSBQTSwgSm9lIFBlcmNoZXMgPGpvZUBwZXJjaGVz
-LmNvbT4gd3JvdGU6Cj4gQ29udmVydCBERVZJQ0VfQVRUUiB1c2VzIHRvIERFVklDRV9BVFRSX1JX
-IHdoZXJlIHBvc3NpYmxlLgo+Cj4gRG9uZSB3aXRoIHBlcmwgc2NyaXB0Ogo+Cj4gJCBnaXQgZ3Jl
-cCAtdyAtLW5hbWUtb25seSBERVZJQ0VfQVRUUiB8IFwKPiAgIHhhcmdzIHBlcmwgLWkgLWUgJ2xv
-Y2FsICQvOyB3aGlsZSAoPD4pIHsgcy9cYkRFVklDRV9BVFRSXHMqXChccyooXHcrKVxzKixccypc
-KD8oXHMqU19JUlVHT1xzKlx8XHMqU19JV1VTUnxccypTX0lXVVNSXHMqXHxccypTX0lSVUdPXHMq
-fFxzKjA2NDRccyopXCk/XHMqLFxzKlwxX3Nob3dccyosXHMqXDFfc3RvcmVccypcKS9ERVZJQ0Vf
-QVRUUl9SVyhcMSkvZzsgcHJpbnQ7fScKCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2NvbXBhbC1s
-YXB0b3AuYyB8IDE4ICsrKysrLS0tLS0tLS0tLQoKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni9jb21wYWwtbGFwdG9wLmMKPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9jb21wYWwtbGFw
-dG9wLmMKPiBAQCAtNjc5LDE4ICs2NzksMTIgQEAgc3RhdGljIGludCBiYXRfd3JpdGVhYmxlX3By
-b3BlcnR5KHN0cnVjdCBwb3dlcl9zdXBwbHkgKnBzeSwKPiAgLyogPT09PT09PT09PT09PT0gKi8K
-PiAgLyogRHJpdmVyIEdsb2JhbHMgKi8KPiAgLyogPT09PT09PT09PT09PT0gKi8KPiAtc3RhdGlj
-IERFVklDRV9BVFRSKHdha2VfdXBfcG1lLAo+IC0gICAgICAgICAgICAgICAwNjQ0LCB3YWtlX3Vw
-X3BtZV9zaG93LCAgICAgICAgIHdha2VfdXBfcG1lX3N0b3JlKTsKPiAtc3RhdGljIERFVklDRV9B
-VFRSKHdha2VfdXBfbW9kZW0sCj4gLSAgICAgICAgICAgICAgIDA2NDQsIHdha2VfdXBfbW9kZW1f
-c2hvdywgICAgICAgd2FrZV91cF9tb2RlbV9zdG9yZSk7Cj4gLXN0YXRpYyBERVZJQ0VfQVRUUih3
-YWtlX3VwX2xhbiwKPiAtICAgICAgICAgICAgICAgMDY0NCwgd2FrZV91cF9sYW5fc2hvdywgd2Fr
-ZV91cF9sYW5fc3RvcmUpOwo+IC1zdGF0aWMgREVWSUNFX0FUVFIod2FrZV91cF93bGFuLAo+IC0g
-ICAgICAgICAgICAgICAwNjQ0LCB3YWtlX3VwX3dsYW5fc2hvdywgICAgICAgIHdha2VfdXBfd2xh
-bl9zdG9yZSk7Cj4gLXN0YXRpYyBERVZJQ0VfQVRUUih3YWtlX3VwX2tleSwKPiAtICAgICAgICAg
-ICAgICAgMDY0NCwgd2FrZV91cF9rZXlfc2hvdywgd2FrZV91cF9rZXlfc3RvcmUpOwo+IC1zdGF0
-aWMgREVWSUNFX0FUVFIod2FrZV91cF9tb3VzZSwKPiAtICAgICAgICAgICAgICAgMDY0NCwgd2Fr
-ZV91cF9tb3VzZV9zaG93LCAgICAgICB3YWtlX3VwX21vdXNlX3N0b3JlKTsKPiArc3RhdGljIERF
-VklDRV9BVFRSX1JXKHdha2VfdXBfcG1lKTsKPiArc3RhdGljIERFVklDRV9BVFRSX1JXKHdha2Vf
-dXBfbW9kZW0pOwo+ICtzdGF0aWMgREVWSUNFX0FUVFJfUlcod2FrZV91cF9sYW4pOwo+ICtzdGF0
-aWMgREVWSUNFX0FUVFJfUlcod2FrZV91cF93bGFuKTsKPiArc3RhdGljIERFVklDRV9BVFRSX1JX
-KHdha2VfdXBfa2V5KTsKPiArc3RhdGljIERFVklDRV9BVFRSX1JXKHdha2VfdXBfbW91c2UpOwoK
-QWNrZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4KCmZv
-ciBQRHg4NiBiaXRzLgoKSGF2ZSB0byBzYXkgdGhhdCB3aGlsZSBpdCBkb2Vzbid0IGNoYW5nZSB0
-aGUgYXR0cmlidXRlcyBoZXJlLCBpdCBtaWdodApyZXF1aXJlIHN0aWxsIHRvIGJlIHJldmlzaXRl
-ZCBieSBzZWN1cml0eSBwZW9wbGUsIGlmIHRoZXkgd2lzaC4KCi0tIApXaXRoIEJlc3QgUmVnYXJk
-cywKQW5keSBTaGV2Y2hlbmtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lu
-dGVsLWdmeAo=
+On Friday, 2017-12-15, Jarkko Sakkinen wrote:
+> > Resurrecting this thread now that I have a system with launch control
+> > and have been able to measure the performance impact...
+> > 
+> > Regenerating the EINIT token every time adds somewhere in the vicinity
+> > of ~5% overhead to creating an enclave, versus generating a token once
+> > and reusing it in each EINIT call.  This isn't a huge issue since real
+> > world usage models likely won't be re-launching enclaves at a high rate,
+> > but it is measurable.
+> 
+> We can cache tokens in future in the kernel space, can't we?
+
+Yes, but why?  Deferring to userspace is less complex and likely
+more performant.
+
+Tokens are large enough that there would need to be some form of
+limit on the number of tokens, which brings up questions about
+how to account tokens, the cache eviction scheme, whether or not
+the size of the cache should be controllable from userspace, etc...
+
+Userspace caching can likely provide better performance because
+the user/application knows the usage model and life expectancy of
+its tokens, i.e. userspace can make informed decisions about when
+to discard a token, how much memory to dedicate to caching tokens,
+etc...  And in the case of VMs, userspace can reuse tokens across
+reboots (of the VM), e.g. by saving tokens to disk.
