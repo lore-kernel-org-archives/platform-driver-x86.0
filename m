@@ -1,66 +1,33 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-wmi: Add an event created by Dell
- Latitude 5495
-Date: Tue, 19 Dec 2017 15:44:31 +0100
-Message-ID: <20171219144431.p5cbwmqnhylso7ge@pali>
-References: <1513676389-29624-1-git-send-email-sylee@canonical.com>
- <CAHp75Vd+mnXVniQO5uNAuGOZY2P6sc0LAb+KVXud_hmcdRhdnw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v9 7/7] intel_sgx: in-kernel launch enclave
+Date: Tue, 19 Dec 2017 17:36:34 +0200
+Message-ID: <CAHp75VdxpqS=8DFYMhSAs6Q6myJKvx_iBW3zEvnsHhjrzpztNQ@mail.gmail.com>
+References: <20171216162200.20243-1-jarkko.sakkinen@linux.intel.com>
+ <20171216162200.20243-8-jarkko.sakkinen@linux.intel.com> <20171219135928.ospmfhabavac5gnu@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f67.google.com ([74.125.82.67]:33230 "EHLO
-        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1763817AbdLSOod (ORCPT
+Received: from mail-qt0-f180.google.com ([209.85.216.180]:34929 "EHLO
+        mail-qt0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750916AbdLSPgf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Dec 2017 09:44:33 -0500
-Received: by mail-wm0-f67.google.com with SMTP id g130so11744343wme.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Dec 2017 06:44:33 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd+mnXVniQO5uNAuGOZY2P6sc0LAb+KVXud_hmcdRhdnw@mail.gmail.com>
+        Tue, 19 Dec 2017 10:36:35 -0500
+In-Reply-To: <20171219135928.ospmfhabavac5gnu@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Shih-Yuan Lee (FourDollars)" <sylee@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: intel-sgx-kernel-dev@lists.01.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On Tuesday 19 December 2017 16:42:57 Andy Shevchenko wrote:
-> On Tue, Dec 19, 2017 at 11:39 AM, Shih-Yuan Lee (FourDollars)
-> <sylee@canonical.com> wrote:
-> > The Dell Latitude 5495 has the mic mute key.
-> >
-> 
-> Pali, I assumed this one is settled and I go ahead to apply it to my
-> review and testing queue, thanks!
-> 
-> Feel free to comment / object / ACK (it will be not published for a
-> while anyway)
+On Tue, Dec 19, 2017 at 3:59 PM, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+> I streamlined the IPC quite a bit. See the attached patch. Can be
+> applied on top of this patch.
 
-> > Signed-off-by: Shih-Yuan Lee (FourDollars) <sylee@canonical.com>
-> > ---
-> >  drivers/platform/x86/dell-wmi.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> > index fb25b20..2c99274 100644
-> > --- a/drivers/platform/x86/dell-wmi.c
-> > +++ b/drivers/platform/x86/dell-wmi.c
-> > @@ -261,6 +261,9 @@ static const u16 bios_to_linux_keycode[256] = {
-> >   * override them.
-> >   */
-> >  static const struct key_entry dell_wmi_keymap_type_0010[] = {
-> > +       /* Mic mute */
-> > +       { KE_KEY, 0x150, { KEY_MICMUTE } },
-> > +
-> >         /* Fn-lock */
-> >         { KE_IGNORE, 0x151, { KEY_RESERVED } },
-> >
-> > --
-> > 2.7.4
-> >
-> 
+Sorry, I didn't look into actual code, but WRT the attached patch,
+wouldn't be better / possible to use
+pr_fmt() to print "intel_sgx:" prefix for all pr_*() ?
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+With Best Regards,
+Andy Shevchenko
