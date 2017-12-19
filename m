@@ -1,8 +1,8 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
  Intel Software Guard Extensions
-Date: Wed, 20 Dec 2017 01:11:13 +0200
-Message-ID: <1513725073.2206.13.camel@linux.intel.com>
+Date: Tue, 19 Dec 2017 23:24:55 +0000
+Message-ID: <37306EFA9975BE469F115FDE982C075BCDEE4742@ORSMSX114.amr.corp.intel.com>
 References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
          <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
          <1510682106.3313.24.camel@intel.com>
@@ -11,54 +11,63 @@ References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
          <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
          <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
          <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
+ <1513725073.2206.13.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:42898 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753350AbdLSXY5 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 19 Dec 2017 18:24:57 -0500
+In-Reply-To: <1513725073.2206.13.camel@linux.intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2017-12-19 at 18:52 +0000, Christopherson, Sean J wrote:
-> > We can cache tokens in future in the kernel space, can't we?
-> 
-> Yes, but why?  Deferring to userspace is less complex and likely
-> more performant.
-
-That's quite strong argument especially if you are making that for
-systems running multiple independent workloads and not just a single
-application.
-
-> Tokens are large enough that there would need to be some form of
-> limit on the number of tokens, which brings up questions about
-> how to account tokens, the cache eviction scheme, whether or not
-> the size of the cache should be controllable from userspace, etc...
-
-Leaving caching decisions to the kernel also gives more freedoms to
-do global decisions.
-
-> Userspace caching can likely provide better performance because
-> the user/application knows the usage model and life expectancy of
-> its tokens, i.e. userspace can make informed decisions about when
-> to discard a token, how much memory to dedicate to caching tokens,
-> etc...  And in the case of VMs, userspace can reuse tokens across
-> reboots (of the VM), e.g. by saving tokens to disk.
-
-I'm not really convinced that your argument is sound if you consider the
-whole range of x86 systems that can run enclaves especially if the
-system is running multiple irrelated applications.
-
-And you are ignoring everything else but the performance, which is does
-not make any sense. The current design governs the Linux kernel to have
-the ultimate power, which enclaves to run with the minimized proprietary
-risk. I think that is something worth of emphasizing too.
-
-Whether the token caching is left to kernel or user space will most
-definitely introduce some non-trivial performance problems to solve
-with some unexpected workloads that we cannot imagine right now. That's
-why the governance should be the driver. Not the performance. Those
-issues can and must be sorted out in any case.
-
-/Jarkko
+T24gVHVlc2RheSwgRGVjZW1iZXIgMTksIDIwMTcgSmFya2tvIFNha2tpbmVuIHdyb3RlOg0KPiBP
+biBUdWUsIDIwMTctMTItMTkgYXQgMTg6NTIgKzAwMDAsIENocmlzdG9waGVyc29uLCBTZWFuIEog
+d3JvdGU6DQo+ID4gPiBXZSBjYW4gY2FjaGUgdG9rZW5zIGluIGZ1dHVyZSBpbiB0aGUga2VybmVs
+IHNwYWNlLCBjYW4ndCB3ZT8NCj4gPiANCj4gPiBZZXMsIGJ1dCB3aHk/ICBEZWZlcnJpbmcgdG8g
+dXNlcnNwYWNlIGlzIGxlc3MgY29tcGxleCBhbmQgbGlrZWx5DQo+ID4gbW9yZSBwZXJmb3JtYW50
+Lg0KPiANCj4gVGhhdCdzIHF1aXRlIHN0cm9uZyBhcmd1bWVudCBlc3BlY2lhbGx5IGlmIHlvdSBh
+cmUgbWFraW5nIHRoYXQgZm9yDQo+IHN5c3RlbXMgcnVubmluZyBtdWx0aXBsZSBpbmRlcGVuZGVu
+dCB3b3JrbG9hZHMgYW5kIG5vdCBqdXN0IGEgc2luZ2xlDQo+IGFwcGxpY2F0aW9uLg0KPiANCj4g
+PiBUb2tlbnMgYXJlIGxhcmdlIGVub3VnaCB0aGF0IHRoZXJlIHdvdWxkIG5lZWQgdG8gYmUgc29t
+ZSBmb3JtIG9mDQo+ID4gbGltaXQgb24gdGhlIG51bWJlciBvZiB0b2tlbnMsIHdoaWNoIGJyaW5n
+cyB1cCBxdWVzdGlvbnMgYWJvdXQNCj4gPiBob3cgdG8gYWNjb3VudCB0b2tlbnMsIHRoZSBjYWNo
+ZSBldmljdGlvbiBzY2hlbWUsIHdoZXRoZXIgb3Igbm90DQo+ID4gdGhlIHNpemUgb2YgdGhlIGNh
+Y2hlIHNob3VsZCBiZSBjb250cm9sbGFibGUgZnJvbSB1c2Vyc3BhY2UsIGV0Yy4uLg0KPiANCj4g
+TGVhdmluZyBjYWNoaW5nIGRlY2lzaW9ucyB0byB0aGUga2VybmVsIGFsc28gZ2l2ZXMgbW9yZSBm
+cmVlZG9tcyB0bw0KPiBkbyBnbG9iYWwgZGVjaXNpb25zLg0KPiANCj4gPiBVc2Vyc3BhY2UgY2Fj
+aGluZyBjYW4gbGlrZWx5IHByb3ZpZGUgYmV0dGVyIHBlcmZvcm1hbmNlIGJlY2F1c2UNCj4gPiB0
+aGUgdXNlci9hcHBsaWNhdGlvbiBrbm93cyB0aGUgdXNhZ2UgbW9kZWwgYW5kIGxpZmUgZXhwZWN0
+YW5jeSBvZg0KPiA+IGl0cyB0b2tlbnMsIGkuZS4gdXNlcnNwYWNlIGNhbiBtYWtlIGluZm9ybWVk
+IGRlY2lzaW9ucyBhYm91dCB3aGVuDQo+ID4gdG8gZGlzY2FyZCBhIHRva2VuLCBob3cgbXVjaCBt
+ZW1vcnkgdG8gZGVkaWNhdGUgdG8gY2FjaGluZyB0b2tlbnMsDQo+ID4gZXRjLi4uICBBbmQgaW4g
+dGhlIGNhc2Ugb2YgVk1zLCB1c2Vyc3BhY2UgY2FuIHJldXNlIHRva2VucyBhY3Jvc3MNCj4gPiBy
+ZWJvb3RzIChvZiB0aGUgVk0pLCBlLmcuIGJ5IHNhdmluZyB0b2tlbnMgdG8gZGlzay4NCj4gDQo+
+IEknbSBub3QgcmVhbGx5IGNvbnZpbmNlZCB0aGF0IHlvdXIgYXJndW1lbnQgaXMgc291bmQgaWYg
+eW91IGNvbnNpZGVyIHRoZQ0KPiB3aG9sZSByYW5nZSBvZiB4ODYgc3lzdGVtcyB0aGF0IGNhbiBy
+dW4gZW5jbGF2ZXMgZXNwZWNpYWxseSBpZiB0aGUNCj4gc3lzdGVtIGlzIHJ1bm5pbmcgbXVsdGlw
+bGUgaXJyZWxhdGVkIGFwcGxpY2F0aW9ucy4NCj4gDQo+IEFuZCB5b3UgYXJlIGlnbm9yaW5nIGV2
+ZXJ5dGhpbmcgZWxzZSBidXQgdGhlIHBlcmZvcm1hbmNlLCB3aGljaCBpcyBkb2VzDQo+IG5vdCBt
+YWtlIGFueSBzZW5zZS4gVGhlIGN1cnJlbnQgZGVzaWduIGdvdmVybnMgdGhlIExpbnV4IGtlcm5l
+bCB0byBoYXZlDQo+IHRoZSB1bHRpbWF0ZSBwb3dlciwgd2hpY2ggZW5jbGF2ZXMgdG8gcnVuIHdp
+dGggdGhlIG1pbmltaXplZCBwcm9wcmlldGFyeQ0KPiByaXNrLiBJIHRoaW5rIHRoYXQgaXMgc29t
+ZXRoaW5nIHdvcnRoIG9mIGVtcGhhc2l6aW5nIHRvby4NCg0KRXhwb3NpbmcgdGhlIHRva2VuIGdl
+bmVyYXRlZCBieSB0aGUgaW4ta2VybmVsIExFIGRvZXNuJ3QgYWZmZWN0IHRoZQ0Ka2VybmVsJ3Mg
+cG93ZXIgaW4gdGhlIHNsaWdodGVzdCwgZS5nLiB0aGUga2VybmVsIGRvZXNuJ3QgbmVlZCBhIExF
+DQp0byByZWZ1c2UgdG8gcnVuIGFuIGVuY2xhdmUgYW5kIGEgcHJpdmlsZWdlZCB1c2VyIGNhbiBh
+bHdheXMgbG9hZA0KYW4gb3V0LW9mLXRyZWUgZHJpdmVyIGlmIHRoZXkgcmVhbGx5IHdhbnQgdG8g
+Y2lyY3VtdmVudCB0aGUga2VybmVsJ3MNCnBvbGljaWVzLCB3aGljaCBpcyBwcm9iYWJseSBlYXNp
+ZXIgdGhhbiBzdGVhbGluZyB0aGUgTEUncyBwcml2YXRlIGtleS4NCg0KPiANCj4gV2hldGhlciB0
+aGUgdG9rZW4gY2FjaGluZyBpcyBsZWZ0IHRvIGtlcm5lbCBvciB1c2VyIHNwYWNlIHdpbGwgbW9z
+dA0KPiBkZWZpbml0ZWx5IGludHJvZHVjZSBzb21lIG5vbi10cml2aWFsIHBlcmZvcm1hbmNlIHBy
+b2JsZW1zIHRvIHNvbHZlDQo+IHdpdGggc29tZSB1bmV4cGVjdGVkIHdvcmtsb2FkcyB0aGF0IHdl
+IGNhbm5vdCBpbWFnaW5lIHJpZ2h0IG5vdy4gVGhhdCdzDQo+IHdoeSB0aGUgZ292ZXJuYW5jZSBz
+aG91bGQgYmUgdGhlIGRyaXZlci4gTm90IHRoZSBwZXJmb3JtYW5jZS4gVGhvc2UNCj4gaXNzdWVz
+IGNhbiBhbmQgbXVzdCBiZSBzb3J0ZWQgb3V0IGluIGFueSBjYXNlLg0KPg0K
