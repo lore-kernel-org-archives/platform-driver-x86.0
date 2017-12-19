@@ -1,73 +1,43 @@
-From: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Subject: RE: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
- Intel Software Guard Extensions
-Date: Tue, 19 Dec 2017 23:24:55 +0000
-Message-ID: <37306EFA9975BE469F115FDE982C075BCDEE4742@ORSMSX114.amr.corp.intel.com>
-References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
-         <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
-         <1510682106.3313.24.camel@intel.com>
-         <20171114202835.64rl35asldh3jgui@linux.intel.com>
-         <1510770027.11044.37.camel@intel.com>
-         <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
-         <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
-         <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
- <1513725073.2206.13.camel@linux.intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+Date: Wed, 20 Dec 2017 01:33:46 +0200
+Message-ID: <1513726426.2206.18.camel@linux.intel.com>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+         <20171212140750.GA19663@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:42898 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753350AbdLSXY5 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Dec 2017 18:24:57 -0500
-In-Reply-To: <1513725073.2206.13.camel@linux.intel.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-fsdevel-owner@vger.kernel.org>
+In-Reply-To: <20171212140750.GA19663@localhost>
+Sender: linux-fsdevel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paolo Bonzini <pbonzin>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gVHVlc2RheSwgRGVjZW1iZXIgMTksIDIwMTcgSmFya2tvIFNha2tpbmVuIHdyb3RlOg0KPiBP
-biBUdWUsIDIwMTctMTItMTkgYXQgMTg6NTIgKzAwMDAsIENocmlzdG9waGVyc29uLCBTZWFuIEog
-d3JvdGU6DQo+ID4gPiBXZSBjYW4gY2FjaGUgdG9rZW5zIGluIGZ1dHVyZSBpbiB0aGUga2VybmVs
-IHNwYWNlLCBjYW4ndCB3ZT8NCj4gPiANCj4gPiBZZXMsIGJ1dCB3aHk/ICBEZWZlcnJpbmcgdG8g
-dXNlcnNwYWNlIGlzIGxlc3MgY29tcGxleCBhbmQgbGlrZWx5DQo+ID4gbW9yZSBwZXJmb3JtYW50
-Lg0KPiANCj4gVGhhdCdzIHF1aXRlIHN0cm9uZyBhcmd1bWVudCBlc3BlY2lhbGx5IGlmIHlvdSBh
-cmUgbWFraW5nIHRoYXQgZm9yDQo+IHN5c3RlbXMgcnVubmluZyBtdWx0aXBsZSBpbmRlcGVuZGVu
-dCB3b3JrbG9hZHMgYW5kIG5vdCBqdXN0IGEgc2luZ2xlDQo+IGFwcGxpY2F0aW9uLg0KPiANCj4g
-PiBUb2tlbnMgYXJlIGxhcmdlIGVub3VnaCB0aGF0IHRoZXJlIHdvdWxkIG5lZWQgdG8gYmUgc29t
-ZSBmb3JtIG9mDQo+ID4gbGltaXQgb24gdGhlIG51bWJlciBvZiB0b2tlbnMsIHdoaWNoIGJyaW5n
-cyB1cCBxdWVzdGlvbnMgYWJvdXQNCj4gPiBob3cgdG8gYWNjb3VudCB0b2tlbnMsIHRoZSBjYWNo
-ZSBldmljdGlvbiBzY2hlbWUsIHdoZXRoZXIgb3Igbm90DQo+ID4gdGhlIHNpemUgb2YgdGhlIGNh
-Y2hlIHNob3VsZCBiZSBjb250cm9sbGFibGUgZnJvbSB1c2Vyc3BhY2UsIGV0Yy4uLg0KPiANCj4g
-TGVhdmluZyBjYWNoaW5nIGRlY2lzaW9ucyB0byB0aGUga2VybmVsIGFsc28gZ2l2ZXMgbW9yZSBm
-cmVlZG9tcyB0bw0KPiBkbyBnbG9iYWwgZGVjaXNpb25zLg0KPiANCj4gPiBVc2Vyc3BhY2UgY2Fj
-aGluZyBjYW4gbGlrZWx5IHByb3ZpZGUgYmV0dGVyIHBlcmZvcm1hbmNlIGJlY2F1c2UNCj4gPiB0
-aGUgdXNlci9hcHBsaWNhdGlvbiBrbm93cyB0aGUgdXNhZ2UgbW9kZWwgYW5kIGxpZmUgZXhwZWN0
-YW5jeSBvZg0KPiA+IGl0cyB0b2tlbnMsIGkuZS4gdXNlcnNwYWNlIGNhbiBtYWtlIGluZm9ybWVk
-IGRlY2lzaW9ucyBhYm91dCB3aGVuDQo+ID4gdG8gZGlzY2FyZCBhIHRva2VuLCBob3cgbXVjaCBt
-ZW1vcnkgdG8gZGVkaWNhdGUgdG8gY2FjaGluZyB0b2tlbnMsDQo+ID4gZXRjLi4uICBBbmQgaW4g
-dGhlIGNhc2Ugb2YgVk1zLCB1c2Vyc3BhY2UgY2FuIHJldXNlIHRva2VucyBhY3Jvc3MNCj4gPiBy
-ZWJvb3RzIChvZiB0aGUgVk0pLCBlLmcuIGJ5IHNhdmluZyB0b2tlbnMgdG8gZGlzay4NCj4gDQo+
-IEknbSBub3QgcmVhbGx5IGNvbnZpbmNlZCB0aGF0IHlvdXIgYXJndW1lbnQgaXMgc291bmQgaWYg
-eW91IGNvbnNpZGVyIHRoZQ0KPiB3aG9sZSByYW5nZSBvZiB4ODYgc3lzdGVtcyB0aGF0IGNhbiBy
-dW4gZW5jbGF2ZXMgZXNwZWNpYWxseSBpZiB0aGUNCj4gc3lzdGVtIGlzIHJ1bm5pbmcgbXVsdGlw
-bGUgaXJyZWxhdGVkIGFwcGxpY2F0aW9ucy4NCj4gDQo+IEFuZCB5b3UgYXJlIGlnbm9yaW5nIGV2
-ZXJ5dGhpbmcgZWxzZSBidXQgdGhlIHBlcmZvcm1hbmNlLCB3aGljaCBpcyBkb2VzDQo+IG5vdCBt
-YWtlIGFueSBzZW5zZS4gVGhlIGN1cnJlbnQgZGVzaWduIGdvdmVybnMgdGhlIExpbnV4IGtlcm5l
-bCB0byBoYXZlDQo+IHRoZSB1bHRpbWF0ZSBwb3dlciwgd2hpY2ggZW5jbGF2ZXMgdG8gcnVuIHdp
-dGggdGhlIG1pbmltaXplZCBwcm9wcmlldGFyeQ0KPiByaXNrLiBJIHRoaW5rIHRoYXQgaXMgc29t
-ZXRoaW5nIHdvcnRoIG9mIGVtcGhhc2l6aW5nIHRvby4NCg0KRXhwb3NpbmcgdGhlIHRva2VuIGdl
-bmVyYXRlZCBieSB0aGUgaW4ta2VybmVsIExFIGRvZXNuJ3QgYWZmZWN0IHRoZQ0Ka2VybmVsJ3Mg
-cG93ZXIgaW4gdGhlIHNsaWdodGVzdCwgZS5nLiB0aGUga2VybmVsIGRvZXNuJ3QgbmVlZCBhIExF
-DQp0byByZWZ1c2UgdG8gcnVuIGFuIGVuY2xhdmUgYW5kIGEgcHJpdmlsZWdlZCB1c2VyIGNhbiBh
-bHdheXMgbG9hZA0KYW4gb3V0LW9mLXRyZWUgZHJpdmVyIGlmIHRoZXkgcmVhbGx5IHdhbnQgdG8g
-Y2lyY3VtdmVudCB0aGUga2VybmVsJ3MNCnBvbGljaWVzLCB3aGljaCBpcyBwcm9iYWJseSBlYXNp
-ZXIgdGhhbiBzdGVhbGluZyB0aGUgTEUncyBwcml2YXRlIGtleS4NCg0KPiANCj4gV2hldGhlciB0
-aGUgdG9rZW4gY2FjaGluZyBpcyBsZWZ0IHRvIGtlcm5lbCBvciB1c2VyIHNwYWNlIHdpbGwgbW9z
-dA0KPiBkZWZpbml0ZWx5IGludHJvZHVjZSBzb21lIG5vbi10cml2aWFsIHBlcmZvcm1hbmNlIHBy
-b2JsZW1zIHRvIHNvbHZlDQo+IHdpdGggc29tZSB1bmV4cGVjdGVkIHdvcmtsb2FkcyB0aGF0IHdl
-IGNhbm5vdCBpbWFnaW5lIHJpZ2h0IG5vdy4gVGhhdCdzDQo+IHdoeSB0aGUgZ292ZXJuYW5jZSBz
-aG91bGQgYmUgdGhlIGRyaXZlci4gTm90IHRoZSBwZXJmb3JtYW5jZS4gVGhvc2UNCj4gaXNzdWVz
-IGNhbiBhbmQgbXVzdCBiZSBzb3J0ZWQgb3V0IGluIGFueSBjYXNlLg0KPg0K
+On Tue, 2017-12-12 at 15:07 +0100, Pavel Machek wrote:
+> On Sat 2017-11-25 21:29:17, Jarkko Sakkinen wrote:
+> > Intel(R) SGX is a set of CPU instructions that can be used by applications to
+> > set aside private regions of code and data. The code outside the enclave is
+> > disallowed to access the memory inside the enclave by the CPU access control.
+> > In a way you can think that SGX provides inverted sandbox. It protects the
+> > application from a malicious host.
+> 
+> Would you list guarantees provided by SGX?
+> 
+> For example, host can still observe timing of cachelines being
+> accessed by "protected" app, right? Can it also introduce bit flips?
+> 
+> 								Pavel
+
+I'll give a more proper response to this now that all the reported major
+issues in the code have been fixed in v9.
+
+Yes, SGX is vulnerable to the L1 cacheline timing attacks. Jethro
+Beekman wrote a great summary about this on early March:
+
+  https://jbeekman.nl/blog/2017/03/sgx-side-channel-attacks/
+
+The counter measures are the same as without SGX. It really does not
+add or degrade security in this area.
+
+/Jarkko
