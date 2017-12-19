@@ -1,45 +1,64 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: [PATCH] platform/x86/dell-smo8800: Delete an error message for a
- failed memory allocation in smo8800_add()
-Date: Tue, 19 Dec 2017 21:18:27 +0100
-Message-ID: <3ce85d6b-6b25-2988-960b-84fa0b7a8c61@users.sourceforge.net>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v5 06/11] intel_sgx: driver for
+ Intel Software Guard Extensions
+Date: Wed, 20 Dec 2017 01:11:13 +0200
+Message-ID: <1513725073.2206.13.camel@linux.intel.com>
+References: <20171113194528.28557-1-jarkko.sakkinen@linux.intel.com>
+         <20171113194528.28557-7-jarkko.sakkinen@linux.intel.com>
+         <1510682106.3313.24.camel@intel.com>
+         <20171114202835.64rl35asldh3jgui@linux.intel.com>
+         <1510770027.11044.37.camel@intel.com>
+         <37306EFA9975BE469F115FDE982C075BC6B3B5E6@ORSMSX108.amr.corp.intel.com>
+         <20171215150020.e3vq5fh2rtydzhkt@linux.intel.com>
+         <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-GB
+In-Reply-To: <37306EFA9975BE469F115FDE982C075BCDEE4562@ORSMSX114.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+To: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "intel-sgx-kernel-dev@lists.01.org" <intel-sgx-kernel-dev@lists.01.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 19 Dec 2017 21:12:10 +0100
+On Tue, 2017-12-19 at 18:52 +0000, Christopherson, Sean J wrote:
+> > We can cache tokens in future in the kernel space, can't we?
+> 
+> Yes, but why?  Deferring to userspace is less complex and likely
+> more performant.
 
-Omit an extra message for a memory allocation failure in this function.
+That's quite strong argument especially if you are making that for
+systems running multiple independent workloads and not just a single
+application.
 
-This issue was detected by using the Coccinelle software.
+> Tokens are large enough that there would need to be some form of
+> limit on the number of tokens, which brings up questions about
+> how to account tokens, the cache eviction scheme, whether or not
+> the size of the cache should be controllable from userspace, etc...
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
----
- drivers/platform/x86/dell-smo8800.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Leaving caching decisions to the kernel also gives more freedoms to
+do global decisions.
 
-diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
-index 1d87237bc731..9590d5e7c5ca 100644
---- a/drivers/platform/x86/dell-smo8800.c
-+++ b/drivers/platform/x86/dell-smo8800.c
-@@ -150,10 +150,8 @@ static int smo8800_add(struct acpi_device *device)
- 	struct smo8800_device *smo8800;
- 
- 	smo8800 = devm_kzalloc(&device->dev, sizeof(*smo8800), GFP_KERNEL);
--	if (!smo8800) {
--		dev_err(&device->dev, "failed to allocate device data\n");
-+	if (!smo8800)
- 		return -ENOMEM;
--	}
- 
- 	smo8800->dev = &device->dev;
- 	smo8800->miscdev.minor = MISC_DYNAMIC_MINOR;
--- 
-2.15.1
+> Userspace caching can likely provide better performance because
+> the user/application knows the usage model and life expectancy of
+> its tokens, i.e. userspace can make informed decisions about when
+> to discard a token, how much memory to dedicate to caching tokens,
+> etc...  And in the case of VMs, userspace can reuse tokens across
+> reboots (of the VM), e.g. by saving tokens to disk.
+
+I'm not really convinced that your argument is sound if you consider the
+whole range of x86 systems that can run enclaves especially if the
+system is running multiple irrelated applications.
+
+And you are ignoring everything else but the performance, which is does
+not make any sense. The current design governs the Linux kernel to have
+the ultimate power, which enclaves to run with the minimized proprietary
+risk. I think that is something worth of emphasizing too.
+
+Whether the token caching is left to kernel or user space will most
+definitely introduce some non-trivial performance problems to solve
+with some unexpected workloads that we cannot imagine right now. That's
+why the governance should be the driver. Not the performance. Those
+issues can and must be sorted out in any case.
+
+/Jarkko
