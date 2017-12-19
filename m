@@ -1,31 +1,47 @@
-From: Corey Minyard <minyard@acm.org>
-Subject: Re: [-next PATCH 0/4] sysfs and DEVICE_ATTR_<foo>
-Date: Tue, 19 Dec 2017 13:26:26 -0600
-Message-ID: <09832872-8e6c-3327-6e28-7ee6cc48df04@acm.org>
-References: <cover.1513706701.git.joe@perches.com>
-Reply-To: minyard@acm.org
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: [PATCH] platform/x86/mlxcpld-hotplug: Delete an error message for a
+ failed memory allocation in mlxcpld_hotplug_attr_init()
+Date: Tue, 19 Dec 2017 21:03:29 +0100
+Message-ID: <679408d6-5412-562e-8051-319302635354@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <cover.1513706701.git.joe@perches.com>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Language: en-GB
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Joe Perches <joe@perches.com>, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, linux-nvme@lists.infradead.org, platform-driver-x86@vger.kernel.org, linux-s390@vger.kernel.org, esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, linux-fbdev@vger.kernel.org, linux-sh@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org, linux-media@vger.kernel.org
+Sender: kernel-janitors-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/19/2017 12:15 PM, Joe Perches wrote:
->   drivers/char/ipmi/ipmi_msghandler.c                | 17 +++---
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 19 Dec 2017 20:56:56 +0100
 
-For ipmi:
+Omit an extra message for a memory allocation failure in this function.
 
-Acked-by: Corey Minyard <cminyard@mvista.com>
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+---
+ drivers/platform/x86/mlxcpld-hotplug.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/mlxcpld-hotplug.c b/drivers/platform/x86/mlxcpld-hotplug.c
+index aff3686b3b37..d45cb8be221f 100644
+--- a/drivers/platform/x86/mlxcpld-hotplug.c
++++ b/drivers/platform/x86/mlxcpld-hotplug.c
+@@ -165,11 +165,8 @@ static int mlxcpld_hotplug_attr_init(struct mlxcpld_hotplug_priv_data *priv)
+ 			PRIV_DEV_ATTR(i).nr = MLXCPLD_HOTPLUG_ATTR_TYPE_FAN;
+ 		}
+ 
+-		if (!PRIV_ATTR(i)->name) {
+-			dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
+-				i + 1);
++		if (!PRIV_ATTR(i)->name)
+ 			return -ENOMEM;
+-		}
+ 
+ 		PRIV_DEV_ATTR(i).dev_attr.attr.name = PRIV_ATTR(i)->name;
+ 		PRIV_DEV_ATTR(i).dev_attr.attr.mode = S_IRUGO;
+-- 
+2.15.1
+
