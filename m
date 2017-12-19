@@ -1,45 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/3 v6] battery: Add the ThinkPad "Not Charging" quirk
-Date: Tue, 19 Dec 2017 16:34:47 +0200
-Message-ID: <CAHp75VdDXuOmL0tnQE9V4P1ZNjbw1BVZ0HFEMhJqew-JZeVtGg@mail.gmail.com>
-References: <20171215165750.GA6282@thinkpad> <CAJZ5v0ida0RTUBdtpCK4rAXfdukadpTyxD0Rpp4R=kKcukyjKA@mail.gmail.com>
- <20171216084850.GA19033@thinkpad> <CAJZ5v0gWooR7rtY0qmEyERr=A+BoLWoSAHh5Reh3xE5Gvks9+g@mail.gmail.com>
- <CALgTWSv-4DSnU1MLiapL22rK-qaa45xCz6WuMnM_AeBtKYDidw@mail.gmail.com>
- <CAHp75VfZaiQfridSQZh+TzpY1BGT3-Jk_2KGBKReMe7TFC507g@mail.gmail.com> <CAJZ5v0jqZk6CNPQ0xZ7ktzM61iFZMLCNhGWGVX5+9OZ5qXMo_g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] platform/x86/thinkpad_acpi: Adjustments for four
+ function implementations
+Date: Tue, 19 Dec 2017 16:37:12 +0200
+Message-ID: <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
+References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0jqZk6CNPQ0xZ7ktzM61iFZMLCNhGWGVX5+9OZ5qXMo_g@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f194.google.com ([209.85.220.194]:41266 "EHLO
+        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752296AbdLSOhO (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 19 Dec 2017 09:37:14 -0500
+In-Reply-To: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 7:31 PM, Rafael J. Wysocki <rafael@kernel.org> wrot=
-e:
-> On Mon, Dec 18, 2017 at 1:36 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Mon, Dec 18, 2017 at 12:21 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com>=
- wrote:
->>> On 16/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
->>
->>>> I would reorder it as the first patch in the series, then, because the
->>>> other two are more related to each other.
->>
->>> Do I really need now to re-order and re-send the whole patchset for it
->>> to get merged?
->>
->> Through which tree it's supposed to go?
+On Mon, Dec 18, 2017 at 11:26 PM, SF Markus Elfring
+<elfring@users.sourceforge.net> wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 18 Dec 2017 22:23:45 +0100
 >
-> Wait, wait.  I haven't commented patches [1,3/3] yet, so no ACKs
-> assumed, please.
+> Two update suggestions were taken into account
+> from static source code analysis.
+>
+> Markus Elfring (2):
+>   Delete an error message for a failed memory allocation in three functions
 
-I would prefer if you can take it through linux-pm.
+This one is questionable since it prints error messages at ->init() stage.
+I would rather not touch this.
 
-Whenever you are okay with the series let me know I would review PDx86 bits=
-.
+>   Improve a size determination in tpacpi_new_rfkill()
 
---=20
+Doesn't make any sense right now. One style over the other.
+Nothing gets better or worth at this point.
+
+Sorry, but NAK for both.
+
+-- 
 With Best Regards,
 Andy Shevchenko
