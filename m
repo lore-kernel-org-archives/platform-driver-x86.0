@@ -1,88 +1,48 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [-next PATCH 2/4] treewide: Use DEVICE_ATTR_RW
-Date: Wed, 20 Dec 2017 14:26:18 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1712201425010.13140@hadrien>
-References: <cover.1513706701.git.joe@perches.com>
- <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
- <20171220083403.GA27231@bitmer.com> <1513761884.1234.83.camel@perches.com>
- <20171220093211.GA16177@kroah.com>
- <1513763681.1234.101.camel@perches.com> <20171220095926.GA24285@kroah.com>
- <1513767307.1234.114.camel@perches.com>
+From: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
+Subject: Re: [PATCH 1/3 v6] battery: Add the battery hooking API
+Date: Wed, 20 Dec 2017 15:30:18 +0100
+Message-ID: <CALgTWSuWoj6ecfNZmpn68uGV4m+Rz2adAWrw-Ng-7rU75SVtHQ@mail.gmail.com>
+References: <20171215165654.GA6209@thinkpad> <CAJZ5v0icKSOsxFTRonW8xEt7=oXBvCsO84FMx4ECQHTYd0_SGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1513767307.1234.114.camel@perches.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Joe Perches <joe@perches.com>
-Cc: linux-fbdev@vger.kernel.org, David Airlie <airlied@linux.ie>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-s390@vger.kernel.org, linux-omap@vger.kernel.org, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Ott <sebott@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Dick Kennedy <dick.kennedy@broadcom.com>, Mathias Nyman <mathias.nyman@intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Peter Oberparleiter <oberp>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAJZ5v0icKSOsxFTRonW8xEt7=oXBvCsO84FMx4ECQHTYd0_SGw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-CgpPbiBXZWQsIDIwIERlYyAyMDE3LCBKb2UgUGVyY2hlcyB3cm90ZToKCj4gT24gV2VkLCAyMDE3
-LTEyLTIwIGF0IDEwOjU5ICswMTAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6Cj4gPiA+ID4g
-V2h5IHlvdSBkaWRuJ3Qgc2VuZCB0aGF0IHBhdGNoIHRvIHRoZSBzeXNmcyBtYWludGFpbmVyIGlz
-IGEgYml0IG9kZC4uLiAgOikKPiA+ID4KPiA+ID4gU28gaGVyZSdzIGFuIG9wcG9ydHVuaXR5IGZv
-ciB5b3U6Cj4gPiA+Cj4gPiA+IFRoZSBzeXNmcyBtYWludGFpbmVyIGhhc24ndCBhZGRlZCBpbmNs
-dWRlL2xpbnV4L3N5c2ZzLmggdG8KPiA+ID4gdGhlIGxpc3Qgb2YgbWFpbnRhaW5lZCBmaWxlcy4u
-Lgo+ID4gPgo+ID4gPiBEUklWRVIgQ09SRSwgS09CSkVDVFMsIERFQlVHRlMgQU5EIFNZU0ZTCj4g
-PiA+IE06CUdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4g
-PiA+IFQ6CWdpdCBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
-Z3JlZ2toL2RyaXZlci1jb3JlLmdpdAo+ID4gPiBTOglTdXBwb3J0ZWQKPiA+ID4gRjoJRG9jdW1l
-bnRhdGlvbi9rb2JqZWN0LnR4dAo+ID4gPiBGOglkcml2ZXJzL2Jhc2UvCj4gPiA+IEY6CWZzL2Rl
-YnVnZnMvCj4gPiA+IEY6CWZzL3N5c2ZzLwo+ID4gPiBGOglpbmNsdWRlL2xpbnV4L2RlYnVnZnMu
-aAo+ID4gPiBGOglpbmNsdWRlL2xpbnV4L2tvYmoqCj4gPiA+IEY6CWxpYi9rb2JqKgo+ID4KPiA+
-IEhlaCwgZ29vZCBwb2ludCwgYnV0IHVzaW5nIGdldF9tYWludGFpbmVyLnBsIGRvZXMgcHV0IG1l
-IGF0IHRoZSB0b3Agb2YKPiA+IHRoZSBsaXN0IHRoYXQgeW91IHNob3VsZCBiZSBjYzppbmc6Cj4g
-Pgo+ID4gJCAuL3NjcmlwdHMvZ2V0X21haW50YWluZXIucGwgLS1maWxlIGluY2x1ZGUvbGludXgv
-c3lzZnMuaAo+ID4gR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
-Zz4gKGNvbW1pdF9zaWduZXI6My8zPTEwMCUsYXV0aG9yZWQ6Mi8zPTY3JSxhZGRlZF9saW5lczo3
-Lzg9ODglKQo+ID4gS2F0ZSBTdGV3YXJ0IDxrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnPiAo
-Y29tbWl0X3NpZ25lcjoxLzM9MzMlKQo+ID4gVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
-aXguZGU+IChjb21taXRfc2lnbmVyOjEvMz0zMyUpCj4gPiBQaGlsaXBwZSBPbWJyZWRhbm5lIDxw
-b21icmVkYW5uZUBuZXhiLmNvbT4gKGNvbW1pdF9zaWduZXI6MS8zPTMzJSkKPiA+IE5pY2sgRGVz
-YXVsbmllcnMgPG5pY2suZGVzYXVsbmllcnNAZ21haWwuY29tPiAoY29tbWl0X3NpZ25lcjoxLzM9
-MzMlLGF1dGhvcmVkOjEvMz0zMyUsYWRkZWRfbGluZXM6MS84PTEyJSxyZW1vdmVkX2xpbmVzOjEv
-MT0xMDAlKQo+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyAob3BlbiBsaXN0KQo+Cj4g
-VGhlIHNjcmlwdCBJIHVzZSB0byBzZW5kIHBhdGNoZXMgYWRkcyAtLW5vZ2l0IC0tbm9naXQtZmFs
-bGJhY2sKPiB0byBjb3B5IG9ubHkgbGlzdGVkIG1haW50YWluZXJzIGJlY2F1c2UgcGVvcGxlIHRo
-YXQgc2VuZCBjbGVhbnVwCj4gcGF0Y2hlcyBkb24ndCBnZW5lcmFsbHkgbGlrZSB0byBnZXQgcmFu
-ZG9tIHBhdGNoZXMuCj4KPiA+ID4gYnR3OiB0aGVyZSBhcmUgbWFueSB1c2VzIG9mIGEgcmV2ZXJz
-ZWQgZGVjbGFyYXRpb24gc3R5bGUgb2YgREVWSUNFX0FUVFIKPiA+ID4KPiA+ID4gSGVyZSdzIGFu
-b3RoZXIgdGhpbmcgdGhhdCBjb3VsZCBiZSBkb25lIGZvciBtb3JlIERFVklDRV9BVFRSXzxGT08+
-IHVzZXMuCj4gPiA+Cj4gPiA+ID09PQo+ID4gPgo+ID4gPiBTb21lIERFVklDRV9BVFRSIGRlZmlu
-aXRpb25zIHVzZSBhIHJldmVyc2VkIHN0YXRpYyBmdW5jdGlvbiBmb3JtIGZyb20KPiA+ID4gdGhl
-IHR5cGljYWwuICBDb252ZXJ0IHRoZW0gdG8gdXNlIHRoZSBtb3JlIGNvbW1vbiBtYWNybyBmb3Jt
-IHNvIGl0IGlzCj4gPiA+IGVhc2llciB0byBncmVwIGZvciB0aGUgc3R5bGUuCj4gW10KPiA+ID4g
-JCBnaXQgZ3JlcCAtLW5hbWUtb25seSAtdyBERVZJQ0VfQVRUUiB8IFwKPiA+ID4gICB4YXJncyBw
-ZXJsIC1pIGRldl9hdHRyX3J3X2JhY2t3YXJkcy5wZXJsCj4gPiBBaCwgbmljZSwgSSBsb3ZlIHBl
-cmwgOgo+Cj4gVGhhdCB3YXMgYSBiYWQgY29weS9wYXN0ZSBvZiB0aGUgc2NyaXB0Lgo+Cj4gVGhl
-IGFjdHVhbCBzY3JpcHQgZm9yIFJXIGlzOgo+Cj4gJCBjYXQgZGV2X2F0dHJfcndfYmFja3dhcmRz
-LnBlcmwKPiBsb2NhbCAkLzsKPiB3aGlsZSAoPD4pIHsKPiAgICAgbXkgJGZpbGUgPSAkXzsKPiAg
-ICAgd2hpbGUgKCRmaWxlID1+IG0vXGJERVZJQ0VfQVRUUlxzKlwoXHMqKFx3KylccyosL2cpIHsK
-PiAJbXkgJHZhciA9ICQxOwo+IAlpZiAoJGZpbGUgPX4gcy9cYkRFVklDRV9BVFRSXHMqXChccyok
-e3Zhcn1ccyosXHMqXCg/KFxzKlNfSVJVR09ccypcfFxzKlNfSVdVU1J8XHMqU19JV1VTUlxzKlx8
-XHMqU19JUlVHT1xzKnxccyowNjQ0XHMqKVwpP1xzKixccypzaG93XyR7dmFyfVxzKixccypzdG9y
-ZV8ke3Zhcn1ccypcKS9ERVZJQ0VfQVRUUl9SVygke3Zhcn0pL2cpIHsKPiAJICAgICRmaWxlID1+
-IHMvXGJzaG93XyR7dmFyfVxiLyR7dmFyfV9zaG93L2c7Cj4gCSAgICAkZmlsZSA9fiBzL1xic3Rv
-cmVfJHt2YXJ9XGIvJHt2YXJ9X3N0b3JlL2c7Cj4gCX0KPiAgICAgfQo+ICAgICBwcmludCAkZmls
-ZTsKPiB9Cj4KPiBUaGVyZSBhcmUgMyBkaWZmZXJlbnQgcGVybCBzY3JpcHRzIGZvciBydywgcm8s
-IGFuZCB3by4KPiBhbmQgdGhlc2Ugc2NyaXB0cywgYmVjYXVzZSBvZiBmdW5jdGlvbiByZW5hbWlu
-ZyBhbmQKPiBwb3NzaWJsZSByZXVzZSBvZiB0aGUgb3JpZ2luYWwgZnVuY3Rpb24gbmFtZXMgYnkg
-b3RoZXIKPiBzdHJpbmcgY29uY2F0ZW5hdGVkIG1hY3JvcywgY3JlYXRlIHNvbWUgYmFkIGNvbnZl
-cnNpb25zCj4gc28gdGhleSBuZWVkIHNvbWUgbWFudWFsIGNsZWFudXBzIHRvby4KPgo+IFBlcmhh
-cHMgY29jY2luZWxsZSBjb3VsZCBkbyBhIGJldHRlciBqb2Igb2YgaXQsIGJ1dAo+IGxpa2VseSBz
-dHJpbmcgY29uY2F0ZW5hdGlvbiBtYWNybyB1c2VzIGFyZSBnb2luZyB0bwo+IGJlIGhhcmQgdG8g
-ZGVhbCB3aXRoIGluIGFueSBjYXNlLgoKSSBtYWRlIGEgcnVsZSBmb3IgdGhpcyBhdCBvbmUgcG9p
-bnQsIGJ1dCB0aGVyZSBhcmUgY2FzZXMgd2hlcmUgdGhlCmZ1bmN0aW9ucyBoYXZlIHRoZSB3cm9u
-ZyBuYW1lcywgYW5kIHRoZW4gdGhlc2UgZnVuY3Rpb25zIG1heSBiZSB1c2VkCmVsc2V3aGVyZS4K
-Cmp1bGlhCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 18/12/2017, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> What if a module registering the hook is loaded after
+> sysfs_add_battery() has run for the battery object in question?
+
+The battery module keeps track of the batteries that get added or removed
+from the system. When a hook is registered, it will always get a list
+of currently
+present batteries not matter of the time when the hook is loaded.
+
+> What if it attempts to register a hook while this code is running?
+
+If was not able to produce any race conditions, but I have added some locking
+mechanisms in the new, 7th revision of the patch.
+
+> What if two entities try to add or remove hooks simultaneously?
+
+This has been solved in version 7 with mutual exclusions.
+
+> Don't you think any locking or other synchronization is necessary?
+
+I have implemented mutual exclusions.
+
+> Also, what if someone attempts to add a hook when the ACPI battery
+> module is not loaded?  Will that still work?
+
+The module that requests the hooks will fail to load with the following
+
+> [  149.259127] thinkpad_acpi: Unknown symbol battery_hook_register (err 0)
+> [  149.259158] thinkpad_acpi: Unknown symbol battery_hook_unregister (err 0)
+
+> Thanks,
+> Rafael
+>
