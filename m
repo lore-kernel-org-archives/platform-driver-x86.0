@@ -1,64 +1,83 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 1/2] platform/x86: silead_dmi: add entry for Chuwi Hi8 tablet
-Date: Wed, 20 Dec 2017 11:30:08 +0100
-Message-ID: <20171220103009.7680-2-hdegoede@redhat.com>
-References: <20171220103009.7680-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171220103009.7680-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Maruyama Shohei <cheat.sc.linux@outlook.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [-next PATCH 2/4] treewide: Use DEVICE_ATTR_RW
+Date: Wed, 20 Dec 2017 02:55:07 -0800
+Message-ID: <1513767307.1234.114.camel@perches.com>
+References: <cover.1513706701.git.joe@perches.com>
+ <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
+ <20171220083403.GA27231@bitmer.com> <1513761884.1234.83.camel@perches.com>
+ <20171220093211.GA16177@kroah.com> <1513763681.1234.101.camel@perches.com>
+ <20171220095926.GA24285@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171220095926.GA24285@kroah.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julia Lawall <julia.lawall@lip6.fr>
+Cc: linux-fbdev@vger.kernel.org, David Airlie <airlied@linux.ie>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-s390@vger.kernel.org, linux-omap@vger.kernel.org, "James E.J.
+ Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Ott <sebott@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Dick Kennedy <dick.kennedy@broadcom.com>, Mathias Nyman <mathias.nyman@intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Peter Oberparleiter <oberp>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Maruyama Shohei <cheat.sc.linux@outlook.com>
-
-This commit add entry for Chuwi Hi8 tablet.
-
-Signed-off-by: Shohei Maruyama <cheat.sc.linux@outlook.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 89bd924fb8dc..21fdce159877 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -203,6 +203,20 @@ static const struct silead_ts_dmi_data onda_obook_20_plus_data = {
- 	.properties	= onda_obook_20_plus_props,
- };
- 
-+static const struct property_entry chuwi_hi8_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1665),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi8.fw"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data chuwi_hi8_data = {
-+	.acpi_name      = "MSSL0001:00",
-+	.properties     = chuwi_hi8_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -319,6 +333,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "OBOOK 20 PLUS"),
- 		},
- 	},
-+	{
-+		/* Chuwi Hi8 */
-+		.driver_data = (void *)&chuwi_hi8_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ilife"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "S806"),
-+		},
-+	},
- 	{ },
- };
- 
--- 
-2.14.3
+T24gV2VkLCAyMDE3LTEyLTIwIGF0IDEwOjU5ICswMTAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6Cj4gPiA+IFdoeSB5b3UgZGlkbid0IHNlbmQgdGhhdCBwYXRjaCB0byB0aGUgc3lzZnMgbWFp
+bnRhaW5lciBpcyBhIGJpdCBvZGQuLi4gIDopCj4gPiAKPiA+IFNvIGhlcmUncyBhbiBvcHBvcnR1
+bml0eSBmb3IgeW91Ogo+ID4gCj4gPiBUaGUgc3lzZnMgbWFpbnRhaW5lciBoYXNuJ3QgYWRkZWQg
+aW5jbHVkZS9saW51eC9zeXNmcy5oIHRvCj4gPiB0aGUgbGlzdCBvZiBtYWludGFpbmVkIGZpbGVz
+Li4uCj4gPiAKPiA+IERSSVZFUiBDT1JFLCBLT0JKRUNUUywgREVCVUdGUyBBTkQgU1lTRlMKPiA+
+IE06CUdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4gPiBU
+OglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2dyZWdr
+aC9kcml2ZXItY29yZS5naXQKPiA+IFM6CVN1cHBvcnRlZAo+ID4gRjoJRG9jdW1lbnRhdGlvbi9r
+b2JqZWN0LnR4dAo+ID4gRjoJZHJpdmVycy9iYXNlLwo+ID4gRjoJZnMvZGVidWdmcy8KPiA+IEY6
+CWZzL3N5c2ZzLwo+ID4gRjoJaW5jbHVkZS9saW51eC9kZWJ1Z2ZzLmgKPiA+IEY6CWluY2x1ZGUv
+bGludXgva29iaioKPiA+IEY6CWxpYi9rb2JqKgo+IAo+IEhlaCwgZ29vZCBwb2ludCwgYnV0IHVz
+aW5nIGdldF9tYWludGFpbmVyLnBsIGRvZXMgcHV0IG1lIGF0IHRoZSB0b3Agb2YKPiB0aGUgbGlz
+dCB0aGF0IHlvdSBzaG91bGQgYmUgY2M6aW5nOgo+IAo+ICQgLi9zY3JpcHRzL2dldF9tYWludGFp
+bmVyLnBsIC0tZmlsZSBpbmNsdWRlL2xpbnV4L3N5c2ZzLmgKPiBHcmVnIEtyb2FoLUhhcnRtYW4g
+PGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPiAoY29tbWl0X3NpZ25lcjozLzM9MTAwJSxhdXRo
+b3JlZDoyLzM9NjclLGFkZGVkX2xpbmVzOjcvOD04OCUpCj4gS2F0ZSBTdGV3YXJ0IDxrc3Rld2Fy
+dEBsaW51eGZvdW5kYXRpb24ub3JnPiAoY29tbWl0X3NpZ25lcjoxLzM9MzMlKQo+IFRob21hcyBH
+bGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPiAoY29tbWl0X3NpZ25lcjoxLzM9MzMlKQo+IFBo
+aWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPiAoY29tbWl0X3NpZ25lcjox
+LzM9MzMlKQo+IE5pY2sgRGVzYXVsbmllcnMgPG5pY2suZGVzYXVsbmllcnNAZ21haWwuY29tPiAo
+Y29tbWl0X3NpZ25lcjoxLzM9MzMlLGF1dGhvcmVkOjEvMz0zMyUsYWRkZWRfbGluZXM6MS84PTEy
+JSxyZW1vdmVkX2xpbmVzOjEvMT0xMDAlKQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcg
+KG9wZW4gbGlzdCkKClRoZSBzY3JpcHQgSSB1c2UgdG8gc2VuZCBwYXRjaGVzIGFkZHMgLS1ub2dp
+dCAtLW5vZ2l0LWZhbGxiYWNrCnRvIGNvcHkgb25seSBsaXN0ZWQgbWFpbnRhaW5lcnMgYmVjYXVz
+ZSBwZW9wbGUgdGhhdCBzZW5kIGNsZWFudXAKcGF0Y2hlcyBkb24ndCBnZW5lcmFsbHkgbGlrZSB0
+byBnZXQgcmFuZG9tIHBhdGNoZXMuCgo+ID4gYnR3OiB0aGVyZSBhcmUgbWFueSB1c2VzIG9mIGEg
+cmV2ZXJzZWQgZGVjbGFyYXRpb24gc3R5bGUgb2YgREVWSUNFX0FUVFIKPiA+IAo+ID4gSGVyZSdz
+IGFub3RoZXIgdGhpbmcgdGhhdCBjb3VsZCBiZSBkb25lIGZvciBtb3JlIERFVklDRV9BVFRSXzxG
+T08+IHVzZXMuCj4gPiAKPiA+ID09PQo+ID4gCj4gPiBTb21lIERFVklDRV9BVFRSIGRlZmluaXRp
+b25zIHVzZSBhIHJldmVyc2VkIHN0YXRpYyBmdW5jdGlvbiBmb3JtIGZyb20KPiA+IHRoZSB0eXBp
+Y2FsLiAgQ29udmVydCB0aGVtIHRvIHVzZSB0aGUgbW9yZSBjb21tb24gbWFjcm8gZm9ybSBzbyBp
+dCBpcwo+ID4gZWFzaWVyIHRvIGdyZXAgZm9yIHRoZSBzdHlsZS4KW10KPiA+ICQgZ2l0IGdyZXAg
+LS1uYW1lLW9ubHkgLXcgREVWSUNFX0FUVFIgfCBcCj4gPiAgIHhhcmdzIHBlcmwgLWkgZGV2X2F0
+dHJfcndfYmFja3dhcmRzLnBlcmwKPiBBaCwgbmljZSwgSSBsb3ZlIHBlcmwgOgoKVGhhdCB3YXMg
+YSBiYWQgY29weS9wYXN0ZSBvZiB0aGUgc2NyaXB0LgoKVGhlIGFjdHVhbCBzY3JpcHQgZm9yIFJX
+IGlzOgoKJCBjYXQgZGV2X2F0dHJfcndfYmFja3dhcmRzLnBlcmwKbG9jYWwgJC87CndoaWxlICg8
+PikgewogICAgbXkgJGZpbGUgPSAkXzsKICAgIHdoaWxlICgkZmlsZSA9fiBtL1xiREVWSUNFX0FU
+VFJccypcKFxzKihcdyspXHMqLC9nKSB7CglteSAkdmFyID0gJDE7CglpZiAoJGZpbGUgPX4gcy9c
+YkRFVklDRV9BVFRSXHMqXChccyoke3Zhcn1ccyosXHMqXCg/KFxzKlNfSVJVR09ccypcfFxzKlNf
+SVdVU1J8XHMqU19JV1VTUlxzKlx8XHMqU19JUlVHT1xzKnxccyowNjQ0XHMqKVwpP1xzKixccypz
+aG93XyR7dmFyfVxzKixccypzdG9yZV8ke3Zhcn1ccypcKS9ERVZJQ0VfQVRUUl9SVygke3Zhcn0p
+L2cpIHsKCSAgICAkZmlsZSA9fiBzL1xic2hvd18ke3Zhcn1cYi8ke3Zhcn1fc2hvdy9nOwoJICAg
+ICRmaWxlID1+IHMvXGJzdG9yZV8ke3Zhcn1cYi8ke3Zhcn1fc3RvcmUvZzsKCX0KICAgIH0KICAg
+IHByaW50ICRmaWxlOwp9CgpUaGVyZSBhcmUgMyBkaWZmZXJlbnQgcGVybCBzY3JpcHRzIGZvciBy
+dywgcm8sIGFuZCB3by4KYW5kIHRoZXNlIHNjcmlwdHMsIGJlY2F1c2Ugb2YgZnVuY3Rpb24gcmVu
+YW1pbmcgYW5kCnBvc3NpYmxlIHJldXNlIG9mIHRoZSBvcmlnaW5hbCBmdW5jdGlvbiBuYW1lcyBi
+eSBvdGhlcgpzdHJpbmcgY29uY2F0ZW5hdGVkIG1hY3JvcywgY3JlYXRlIHNvbWUgYmFkIGNvbnZl
+cnNpb25zCnNvIHRoZXkgbmVlZCBzb21lIG1hbnVhbCBjbGVhbnVwcyB0b28uCgpQZXJoYXBzIGNv
+Y2NpbmVsbGUgY291bGQgZG8gYSBiZXR0ZXIgam9iIG9mIGl0LCBidXQKbGlrZWx5IHN0cmluZyBj
+b25jYXRlbmF0aW9uIG1hY3JvIHVzZXMgYXJlIGdvaW5nIHRvCmJlIGhhcmQgdG8gZGVhbCB3aXRo
+IGluIGFueSBjYXNlLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
