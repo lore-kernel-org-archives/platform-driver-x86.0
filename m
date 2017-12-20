@@ -1,48 +1,88 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v6 00/11] Intel SGX Driver
-Date: Wed, 20 Dec 2017 15:18:13 +0200
-Message-ID: <20171220131813.esk3ucfcvx42gmva@linux.intel.com>
-References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
- <20171212140750.GA19663@localhost>
- <1513726426.2206.18.camel@linux.intel.com>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [-next PATCH 2/4] treewide: Use DEVICE_ATTR_RW
+Date: Wed, 20 Dec 2017 14:26:18 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1712201425010.13140@hadrien>
+References: <cover.1513706701.git.joe@perches.com>
+ <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
+ <20171220083403.GA27231@bitmer.com> <1513761884.1234.83.camel@perches.com>
+ <20171220093211.GA16177@kroah.com>
+ <1513763681.1234.101.camel@perches.com> <20171220095926.GA24285@kroah.com>
+ <1513767307.1234.114.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513726426.2206.18.camel@linux.intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paolo Bonzini <pbonzin>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1513767307.1234.114.camel@perches.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Joe Perches <joe@perches.com>
+Cc: linux-fbdev@vger.kernel.org, David Airlie <airlied@linux.ie>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-s390@vger.kernel.org, linux-omap@vger.kernel.org, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Ott <sebott@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Dick Kennedy <dick.kennedy@broadcom.com>, Mathias Nyman <mathias.nyman@intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Peter Oberparleiter <oberp>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 20, 2017 at 01:33:46AM +0200, Jarkko Sakkinen wrote:
-> On Tue, 2017-12-12 at 15:07 +0100, Pavel Machek wrote:
-> > On Sat 2017-11-25 21:29:17, Jarkko Sakkinen wrote:
-> > > Intel(R) SGX is a set of CPU instructions that can be used by applications to
-> > > set aside private regions of code and data. The code outside the enclave is
-> > > disallowed to access the memory inside the enclave by the CPU access control.
-> > > In a way you can think that SGX provides inverted sandbox. It protects the
-> > > application from a malicious host.
-> > 
-> > Would you list guarantees provided by SGX?
-> > 
-> > For example, host can still observe timing of cachelines being
-> > accessed by "protected" app, right? Can it also introduce bit flips?
-> > 
-> > 								Pavel
-> 
-> I'll give a more proper response to this now that all the reported major
-> issues in the code have been fixed in v9.
-> 
-> Yes, SGX is vulnerable to the L1 cacheline timing attacks. Jethro
-> Beekman wrote a great summary about this on early March:
-> 
->   https://jbeekman.nl/blog/2017/03/sgx-side-channel-attacks/
-> 
-> The counter measures are the same as without SGX. It really does not
-> add or degrade security in this area.
-
-This came up even in my patch set :-) I.e. I switched to kernel AES-NI
-from TinyCrypt's AES because the latter is not timing resistant.
-
-/Jarkko
+CgpPbiBXZWQsIDIwIERlYyAyMDE3LCBKb2UgUGVyY2hlcyB3cm90ZToKCj4gT24gV2VkLCAyMDE3
+LTEyLTIwIGF0IDEwOjU5ICswMTAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3JvdGU6Cj4gPiA+ID4g
+V2h5IHlvdSBkaWRuJ3Qgc2VuZCB0aGF0IHBhdGNoIHRvIHRoZSBzeXNmcyBtYWludGFpbmVyIGlz
+IGEgYml0IG9kZC4uLiAgOikKPiA+ID4KPiA+ID4gU28gaGVyZSdzIGFuIG9wcG9ydHVuaXR5IGZv
+ciB5b3U6Cj4gPiA+Cj4gPiA+IFRoZSBzeXNmcyBtYWludGFpbmVyIGhhc24ndCBhZGRlZCBpbmNs
+dWRlL2xpbnV4L3N5c2ZzLmggdG8KPiA+ID4gdGhlIGxpc3Qgb2YgbWFpbnRhaW5lZCBmaWxlcy4u
+Lgo+ID4gPgo+ID4gPiBEUklWRVIgQ09SRSwgS09CSkVDVFMsIERFQlVHRlMgQU5EIFNZU0ZTCj4g
+PiA+IE06CUdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4g
+PiA+IFQ6CWdpdCBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
+Z3JlZ2toL2RyaXZlci1jb3JlLmdpdAo+ID4gPiBTOglTdXBwb3J0ZWQKPiA+ID4gRjoJRG9jdW1l
+bnRhdGlvbi9rb2JqZWN0LnR4dAo+ID4gPiBGOglkcml2ZXJzL2Jhc2UvCj4gPiA+IEY6CWZzL2Rl
+YnVnZnMvCj4gPiA+IEY6CWZzL3N5c2ZzLwo+ID4gPiBGOglpbmNsdWRlL2xpbnV4L2RlYnVnZnMu
+aAo+ID4gPiBGOglpbmNsdWRlL2xpbnV4L2tvYmoqCj4gPiA+IEY6CWxpYi9rb2JqKgo+ID4KPiA+
+IEhlaCwgZ29vZCBwb2ludCwgYnV0IHVzaW5nIGdldF9tYWludGFpbmVyLnBsIGRvZXMgcHV0IG1l
+IGF0IHRoZSB0b3Agb2YKPiA+IHRoZSBsaXN0IHRoYXQgeW91IHNob3VsZCBiZSBjYzppbmc6Cj4g
+Pgo+ID4gJCAuL3NjcmlwdHMvZ2V0X21haW50YWluZXIucGwgLS1maWxlIGluY2x1ZGUvbGludXgv
+c3lzZnMuaAo+ID4gR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
+Zz4gKGNvbW1pdF9zaWduZXI6My8zPTEwMCUsYXV0aG9yZWQ6Mi8zPTY3JSxhZGRlZF9saW5lczo3
+Lzg9ODglKQo+ID4gS2F0ZSBTdGV3YXJ0IDxrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnPiAo
+Y29tbWl0X3NpZ25lcjoxLzM9MzMlKQo+ID4gVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
+aXguZGU+IChjb21taXRfc2lnbmVyOjEvMz0zMyUpCj4gPiBQaGlsaXBwZSBPbWJyZWRhbm5lIDxw
+b21icmVkYW5uZUBuZXhiLmNvbT4gKGNvbW1pdF9zaWduZXI6MS8zPTMzJSkKPiA+IE5pY2sgRGVz
+YXVsbmllcnMgPG5pY2suZGVzYXVsbmllcnNAZ21haWwuY29tPiAoY29tbWl0X3NpZ25lcjoxLzM9
+MzMlLGF1dGhvcmVkOjEvMz0zMyUsYWRkZWRfbGluZXM6MS84PTEyJSxyZW1vdmVkX2xpbmVzOjEv
+MT0xMDAlKQo+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyAob3BlbiBsaXN0KQo+Cj4g
+VGhlIHNjcmlwdCBJIHVzZSB0byBzZW5kIHBhdGNoZXMgYWRkcyAtLW5vZ2l0IC0tbm9naXQtZmFs
+bGJhY2sKPiB0byBjb3B5IG9ubHkgbGlzdGVkIG1haW50YWluZXJzIGJlY2F1c2UgcGVvcGxlIHRo
+YXQgc2VuZCBjbGVhbnVwCj4gcGF0Y2hlcyBkb24ndCBnZW5lcmFsbHkgbGlrZSB0byBnZXQgcmFu
+ZG9tIHBhdGNoZXMuCj4KPiA+ID4gYnR3OiB0aGVyZSBhcmUgbWFueSB1c2VzIG9mIGEgcmV2ZXJz
+ZWQgZGVjbGFyYXRpb24gc3R5bGUgb2YgREVWSUNFX0FUVFIKPiA+ID4KPiA+ID4gSGVyZSdzIGFu
+b3RoZXIgdGhpbmcgdGhhdCBjb3VsZCBiZSBkb25lIGZvciBtb3JlIERFVklDRV9BVFRSXzxGT08+
+IHVzZXMuCj4gPiA+Cj4gPiA+ID09PQo+ID4gPgo+ID4gPiBTb21lIERFVklDRV9BVFRSIGRlZmlu
+aXRpb25zIHVzZSBhIHJldmVyc2VkIHN0YXRpYyBmdW5jdGlvbiBmb3JtIGZyb20KPiA+ID4gdGhl
+IHR5cGljYWwuICBDb252ZXJ0IHRoZW0gdG8gdXNlIHRoZSBtb3JlIGNvbW1vbiBtYWNybyBmb3Jt
+IHNvIGl0IGlzCj4gPiA+IGVhc2llciB0byBncmVwIGZvciB0aGUgc3R5bGUuCj4gW10KPiA+ID4g
+JCBnaXQgZ3JlcCAtLW5hbWUtb25seSAtdyBERVZJQ0VfQVRUUiB8IFwKPiA+ID4gICB4YXJncyBw
+ZXJsIC1pIGRldl9hdHRyX3J3X2JhY2t3YXJkcy5wZXJsCj4gPiBBaCwgbmljZSwgSSBsb3ZlIHBl
+cmwgOgo+Cj4gVGhhdCB3YXMgYSBiYWQgY29weS9wYXN0ZSBvZiB0aGUgc2NyaXB0Lgo+Cj4gVGhl
+IGFjdHVhbCBzY3JpcHQgZm9yIFJXIGlzOgo+Cj4gJCBjYXQgZGV2X2F0dHJfcndfYmFja3dhcmRz
+LnBlcmwKPiBsb2NhbCAkLzsKPiB3aGlsZSAoPD4pIHsKPiAgICAgbXkgJGZpbGUgPSAkXzsKPiAg
+ICAgd2hpbGUgKCRmaWxlID1+IG0vXGJERVZJQ0VfQVRUUlxzKlwoXHMqKFx3KylccyosL2cpIHsK
+PiAJbXkgJHZhciA9ICQxOwo+IAlpZiAoJGZpbGUgPX4gcy9cYkRFVklDRV9BVFRSXHMqXChccyok
+e3Zhcn1ccyosXHMqXCg/KFxzKlNfSVJVR09ccypcfFxzKlNfSVdVU1J8XHMqU19JV1VTUlxzKlx8
+XHMqU19JUlVHT1xzKnxccyowNjQ0XHMqKVwpP1xzKixccypzaG93XyR7dmFyfVxzKixccypzdG9y
+ZV8ke3Zhcn1ccypcKS9ERVZJQ0VfQVRUUl9SVygke3Zhcn0pL2cpIHsKPiAJICAgICRmaWxlID1+
+IHMvXGJzaG93XyR7dmFyfVxiLyR7dmFyfV9zaG93L2c7Cj4gCSAgICAkZmlsZSA9fiBzL1xic3Rv
+cmVfJHt2YXJ9XGIvJHt2YXJ9X3N0b3JlL2c7Cj4gCX0KPiAgICAgfQo+ICAgICBwcmludCAkZmls
+ZTsKPiB9Cj4KPiBUaGVyZSBhcmUgMyBkaWZmZXJlbnQgcGVybCBzY3JpcHRzIGZvciBydywgcm8s
+IGFuZCB3by4KPiBhbmQgdGhlc2Ugc2NyaXB0cywgYmVjYXVzZSBvZiBmdW5jdGlvbiByZW5hbWlu
+ZyBhbmQKPiBwb3NzaWJsZSByZXVzZSBvZiB0aGUgb3JpZ2luYWwgZnVuY3Rpb24gbmFtZXMgYnkg
+b3RoZXIKPiBzdHJpbmcgY29uY2F0ZW5hdGVkIG1hY3JvcywgY3JlYXRlIHNvbWUgYmFkIGNvbnZl
+cnNpb25zCj4gc28gdGhleSBuZWVkIHNvbWUgbWFudWFsIGNsZWFudXBzIHRvby4KPgo+IFBlcmhh
+cHMgY29jY2luZWxsZSBjb3VsZCBkbyBhIGJldHRlciBqb2Igb2YgaXQsIGJ1dAo+IGxpa2VseSBz
+dHJpbmcgY29uY2F0ZW5hdGlvbiBtYWNybyB1c2VzIGFyZSBnb2luZyB0bwo+IGJlIGhhcmQgdG8g
+ZGVhbCB3aXRoIGluIGFueSBjYXNlLgoKSSBtYWRlIGEgcnVsZSBmb3IgdGhpcyBhdCBvbmUgcG9p
+bnQsIGJ1dCB0aGVyZSBhcmUgY2FzZXMgd2hlcmUgdGhlCmZ1bmN0aW9ucyBoYXZlIHRoZSB3cm9u
+ZyBuYW1lcywgYW5kIHRoZW4gdGhlc2UgZnVuY3Rpb25zIG1heSBiZSB1c2VkCmVsc2V3aGVyZS4K
+Cmp1bGlhCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
