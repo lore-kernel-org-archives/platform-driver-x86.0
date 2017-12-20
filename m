@@ -1,364 +1,102 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: [PATCH 1/3 v7] battery: Add the battery hooking API
-Date: Wed, 20 Dec 2017 16:16:50 +0100
-Message-ID: <20171220151649.GA12661@thinkpad>
+From: Jidong Zhang <jidong.zhang@hotmail.com>
+Subject: Re: [alsa-devel] [-next PATCH 2/4] treewide: Use
+	DEVICE_ATTR_RW
+Date: Wed, 20 Dec 2017 07:19:24 +0000
+Message-ID: <SIXPR0301MB1323F350FB60E7F00FCAF0B59A0C0@SIXPR0301MB1323.apcprd03.prod.outlook.com>
+References: <cover.1513706701.git.joe@perches.com>
+ <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
+ <CAHp75VfyvA3kAtGiwJ63BOx43RuVSz-XgdK79WApytoaehOOgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <CAHp75VfyvA3kAtGiwJ63BOx43RuVSz-XgdK79WApytoaehOOgQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Joe Perches <joe@perches.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <heiko.carstens@de.ibm.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Ott <sebott@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is a patch that implements a generic hooking API for the
-generic ACPI battery driver.
-
-With this new generic API, drivers can expose platform specific
-behaviour via sysfs attributes in /sys/class/power_supply/BATn/
-in a generic way.
-
-A perfect example of the need for this API are Lenovo ThinkPads.
-
-Lenovo ThinkPads have a ACPI extension that allows the setting of
-start and stop charge thresholds in the EC and battery firmware
-via ACPI. The thinkpad_acpi module can use this API to expose
-sysfs attributes that it controls inside the ACPI battery driver
-sysfs tree, under /sys/class/power_supply/BATN/.
-
-The file drivers/acpi/battery.h has been moved to
-include/acpi/battery.h and the includes inside ac.c, sbs.c, and
-battery.c have been adjusted to reflect that.
-
-When drivers hooks into the API, the API calls add_battery() for
-each battery in the system that passes it a acpi_battery
-struct. Then, the drivers can use device_create_file() to create
-new sysfs attributes with that struct and identify the batteries
-for per-battery attributes.
-
-v7:
-* Implemented mutual exclusion for hooking methods and battery
-callbacks
-* Fixed a BUG where errors in other modules would occur when the
-modules that depend on battery get unloaded
-
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
----
- drivers/acpi/ac.c      |   2 +-
- drivers/acpi/battery.c | 175 ++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/acpi/battery.h |  11 ----
- drivers/acpi/sbs.c     |   2 +-
- include/acpi/battery.h |  21 ++++++
- 5 files changed, 196 insertions(+), 15 deletions(-)
- delete mode 100644 drivers/acpi/battery.h
- create mode 100644 include/acpi/battery.h
-
-diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
-index 47a7ed5..2d8de2f 100644
---- a/drivers/acpi/ac.c
-+++ b/drivers/acpi/ac.c
-@@ -33,7 +33,7 @@
- #include <linux/platform_device.h>
- #include <linux/power_supply.h>
- #include <linux/acpi.h>
--#include "battery.h"
-+#include <acpi/battery.h>
- 
- #define PREFIX "ACPI: "
- 
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 13e7b56..1794408 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -23,6 +23,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/init.h>
- #include <linux/types.h>
- #include <linux/jiffies.h>
-@@ -30,6 +31,7 @@
- #include <linux/dmi.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/list.h>
- #include <linux/suspend.h>
- #include <asm/unaligned.h>
- 
-@@ -42,7 +44,7 @@
- #include <linux/acpi.h>
- #include <linux/power_supply.h>
- 
--#include "battery.h"
-+#include <acpi/battery.h>
- 
- #define PREFIX "ACPI: "
- 
-@@ -124,6 +126,7 @@ struct acpi_battery {
- 	struct power_supply_desc bat_desc;
- 	struct acpi_device *device;
- 	struct notifier_block pm_nb;
-+	struct list_head list;
- 	unsigned long update_time;
- 	int revision;
- 	int rate_now;
-@@ -626,6 +629,171 @@ static const struct device_attribute alarm_attr = {
- 	.store = acpi_battery_alarm_store,
- };
- 
-+/*
-+ * The Battery Hooking API
-+ *
-+ * This API is used inside other drivers that need to expose
-+ * platform-specific behaviour within the generic driver in a
-+ * generic way.
-+ *
-+ */
-+
-+LIST_HEAD(acpi_battery_list);
-+LIST_HEAD(battery_hook_list);
-+DEFINE_MUTEX(hook_mutex);
-+
-+void __battery_hook_unregister(struct acpi_battery_hook *hook, int force)
-+{
-+	struct list_head *position;
-+	struct acpi_battery *battery;
-+
-+	/*
-+	 * In order to remove a hook, we first need to
-+	 * de-register all the batteries that are registered.
-+	 */
-+
-+	if (!force)
-+		mutex_lock(&hook_mutex);
-+
-+	list_for_each(position, &acpi_battery_list) {
-+		battery = list_entry(position, struct acpi_battery, list);
-+		hook->remove_battery(battery->bat);
-+	}
-+
-+	/* Then, just remove the hook */
-+
-+	list_del(&hook->list);
-+
-+	if (!force)
-+		mutex_unlock(&hook_mutex);
-+
-+	pr_info("battery: extension unregistered: %s\n", hook->name);
-+}
-+
-+void battery_hook_unregister(struct acpi_battery_hook *hook)
-+{
-+	__battery_hook_unregister(hook, 0);
-+}
-+EXPORT_SYMBOL_GPL(battery_hook_unregister);
-+
-+void battery_hook_register(struct acpi_battery_hook *hook)
-+{
-+	struct list_head *position;
-+	struct acpi_battery *battery;
-+
-+	mutex_lock(&hook_mutex);
-+	INIT_LIST_HEAD(&hook->list);
-+	list_add(&hook->list, &battery_hook_list);
-+
-+	/*
-+	 * Now that the driver is registered, we need
-+	 * to notify the hook that a battery is available
-+	 * for each battery, so that the driver may add
-+	 * its attributes.
-+	 */
-+	list_for_each(position, &acpi_battery_list) {
-+		battery = list_entry(position, struct acpi_battery, list);
-+		if (hook->add_battery(battery->bat)) {
-+
-+			/*
-+			 * If a add-battery returns non-zero,
-+			 * the registration of the extension has failed,
-+			 * and we will not add it to the list of loaded
-+			 * hooks.
-+			 */
-+			pr_err("battery: extension failed to load: %s",
-+					hook->name);
-+			__battery_hook_unregister(hook, 1);
-+			return;
-+
-+		}
-+	}
-+
-+	pr_info("battery: new extension: %s\n", hook->name);
-+	mutex_unlock(&hook_mutex);
-+}
-+EXPORT_SYMBOL_GPL(battery_hook_register);
-+
-+static void battery_hook_add_battery(struct acpi_battery *battery)
-+{
-+
-+	/*
-+	 * This function gets called right after the battery sysfs
-+	 * attributes have been added, so that the drivers that
-+	 * define custom sysfs attributes can add their own.
-+	 */
-+
-+	struct list_head *position;
-+	struct acpi_battery_hook *hook_node;
-+
-+	mutex_lock(&hook_mutex);
-+	INIT_LIST_HEAD(&battery->list);
-+	list_add(&battery->list, &acpi_battery_list);
-+
-+	/*
-+	 * Since we added a new battery to the list, we need to
-+	 * iterate over the hooks and call add_battery for each
-+	 * hook that was registered. This usually happens
-+	 * when a battery gets hotplugged or initialized
-+	 * during the battery module initialization.
-+	 */
-+
-+	list_for_each(position, &battery_hook_list) {
-+		hook_node = list_entry(position, struct acpi_battery_hook, list);
-+		if (hook_node->add_battery(battery->bat)) {
-+
-+			/*
-+			 * The notification of the extensions has failed, to
-+			 * prevent further errors we will unload the extension.
-+			 */
-+			__battery_hook_unregister(hook_node, 1);
-+			pr_err("battery: error in extension, unloading: %s",
-+					hook_node->name);
-+		}
-+	}
-+
-+	mutex_unlock(&hook_mutex);
-+}
-+
-+static void battery_hook_remove_battery(struct acpi_battery *battery)
-+{
-+	struct list_head *position;
-+	struct acpi_battery_hook *hook;
-+
-+	mutex_lock(&hook_mutex);
-+	/*
-+	 * Before removing the hook, we need to remove all
-+	 * custom attributes from the battery.
-+	 */
-+	list_for_each(position, &battery_hook_list) {
-+		hook = list_entry(position, struct acpi_battery_hook, list);
-+		hook->remove_battery(battery->bat);
-+	}
-+
-+	/* Then, just remove the battery from the list */
-+
-+	list_del(&battery->list);
-+	mutex_unlock(&hook_mutex);
-+}
-+
-+static void __exit battery_hook_exit(void)
-+{
-+	struct list_head *position;
-+	struct acpi_battery_hook *hook;
-+
-+	/*
-+	 * At this point, the acpi_bus_unregister_driver
-+	 * has called remove for all batteries. We just
-+	 * need to remove the hooks.
-+	 */
-+	list_for_each(position, &battery_hook_list) {
-+		hook = list_entry(position, struct acpi_battery_hook, list);
-+		__battery_hook_unregister(hook, 0);
-+	}
-+
-+	mutex_destroy(&hook_mutex);
-+}
-+
- static int sysfs_add_battery(struct acpi_battery *battery)
- {
- 	struct power_supply_config psy_cfg = { .drv_data = battery, };
-@@ -647,6 +815,8 @@ static int sysfs_add_battery(struct acpi_battery *battery)
- 	battery->bat = power_supply_register_no_ws(&battery->device->dev,
- 				&battery->bat_desc, &psy_cfg);
- 
-+	battery_hook_add_battery(battery);
-+
- 	if (IS_ERR(battery->bat)) {
- 		int result = PTR_ERR(battery->bat);
- 
-@@ -663,7 +833,7 @@ static void sysfs_remove_battery(struct acpi_battery *battery)
- 		mutex_unlock(&battery->sysfs_lock);
- 		return;
- 	}
--
-+	battery_hook_remove_battery(battery);
- 	device_remove_file(&battery->bat->dev, &alarm_attr);
- 	power_supply_unregister(battery->bat);
- 	battery->bat = NULL;
-@@ -1361,6 +1531,7 @@ static void __exit acpi_battery_exit(void)
- 	async_synchronize_cookie(async_cookie + 1);
- 	if (battery_driver_registered)
- 		acpi_bus_unregister_driver(&acpi_battery_driver);
-+		battery_hook_exit();
- #ifdef CONFIG_ACPI_PROCFS_POWER
- 	if (acpi_battery_dir)
- 		acpi_unlock_battery_dir(acpi_battery_dir);
-diff --git a/drivers/acpi/battery.h b/drivers/acpi/battery.h
-deleted file mode 100644
-index 225f493..0000000
---- a/drivers/acpi/battery.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ACPI_BATTERY_H
--#define __ACPI_BATTERY_H
--
--#define ACPI_BATTERY_CLASS "battery"
--
--#define ACPI_BATTERY_NOTIFY_STATUS	0x80
--#define ACPI_BATTERY_NOTIFY_INFO	0x81
--#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
--
--#endif
-diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
-index a2428e9..295b592 100644
---- a/drivers/acpi/sbs.c
-+++ b/drivers/acpi/sbs.c
-@@ -32,9 +32,9 @@
- #include <linux/delay.h>
- #include <linux/power_supply.h>
- #include <linux/platform_data/x86/apple.h>
-+#include <acpi/battery.h>
- 
- #include "sbshc.h"
--#include "battery.h"
- 
- #define PREFIX "ACPI: "
- 
-diff --git a/include/acpi/battery.h b/include/acpi/battery.h
-new file mode 100644
-index 0000000..5d8f5d9
---- /dev/null
-+++ b/include/acpi/battery.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ACPI_BATTERY_H
-+#define __ACPI_BATTERY_H
-+
-+#define ACPI_BATTERY_CLASS "battery"
-+
-+#define ACPI_BATTERY_NOTIFY_STATUS	0x80
-+#define ACPI_BATTERY_NOTIFY_INFO	0x81
-+#define ACPI_BATTERY_NOTIFY_THRESHOLD   0x82
-+
-+struct acpi_battery_hook {
-+	const char *name;
-+	int (*add_battery)(struct power_supply *battery);
-+	int (*remove_battery)(struct power_supply *battery);
-+	struct list_head list;
-+};
-+
-+void battery_hook_register(struct acpi_battery_hook *hook);
-+void battery_hook_unregister(struct acpi_battery_hook *hook);
-+
-+#endif
--- 
-2.7.4
-
+DQpEb2VzIGFueW9uZSBrbm93IGhvdyB0byB1c2UgQ29uZXhhbnQgQ1gyMDkyMSB0byBkZXZlbG9w
+IG91ciBvd24gYXBwbGljYXRpb24uIEkgY2Fubm90IGZpbmQgYW55d2hlcmUgdG8gZG93bmxvYWQg
+dGhlIHNvZnR3YXJlIGFuZCBtYW51YWxzLg0KDQpUaGFua3MgdG8gYWxsDQpKLkQNCg0KLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGFsc2EtZGV2ZWwtYm91bmNlc0BhbHNhLXByb2pl
+Y3Qub3JnIFttYWlsdG86YWxzYS1kZXZlbC1ib3VuY2VzQGFsc2EtcHJvamVjdC5vcmddIE9uIEJl
+aGFsZiBPZiBBbmR5IFNoZXZjaGVua28NClNlbnQ6IDIwMTflubQxMuaciDIw5pelIDI6NDINClRv
+OiBKb2UgUGVyY2hlcyA8am9lQHBlcmNoZXMuY29tPg0KQ2M6IGxpbnV4LWZiZGV2QHZnZXIua2Vy
+bmVsLm9yZzsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPjsgSm9vbmFzIExhaHRpbmVu
+IDxqb29uYXMubGFodGluZW5AbGludXguaW50ZWwuY29tPjsgSGVpa28gQ2Fyc3RlbnMgPGhlaWtv
+LmNhcnN0ZW5zQGRlLmlibS5jb20+OyBBTFNBIERldmVsb3BtZW50IE1haWxpbmcgTGlzdCA8YWxz
+YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnPjsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZzsgUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT47IGxpbnV4LXMzOTBAdmdl
+ci5rZXJuZWwub3JnOyBMaW51eCBPTUFQIE1haWxpbmcgTGlzdCA8bGludXgtb21hcEB2Z2VyLmtl
+cm5lbC5vcmc+OyBKYW1lcyBFLkouIEJvdHRvbWxleSA8amVqYkBsaW51eC52bmV0LmlibS5jb20+
+OyBsaW51eC1zY3NpIDxsaW51eC1zY3NpQHZnZXIua2VybmVsLm9yZz47IFRha2FzaGkgSXdhaSA8
+dGl3YWlAc3VzZS5jb20+OyBTZWJhc3RpYW4gT3R0IDxzZWJvdHRAbGludXgudm5ldC5pYm0uY29t
+PjsgSmFtZXMgU21hcnQgPGphbWVzLnNtYXJ0QGJyb2FkY29tLmNvbT47IENlemFyeSBKYWNraWV3
+aWN6IDxjZXphcnkuamFja2lld2ljekBnbWFpbC5jb20+OyBsaW51eC1zZXJpYWxAdmdlci5rZXJu
+ZWwub3JnOyBKaXJpIFNsYWJ5IDxqc2xhYnlAc3VzZS5jb20+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0
+QGluZnJhZGVhZC5vcmc+OyBaaGFuZyBSdWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+OyBEaWNrIEtl
+bm5lZHkgPGRpY2sua2VubmVkeUBicm9hZGNvbS5jb20+OyBNYXRoaWFzIE55bWFuIDxtYXRoaWFz
+Lm55bWFuQGludGVsLmNvbT47IEJhcnRsb21pZWogWm9sbmllcmtpZXdpY3ogPGIuem9sbmllcmtp
+ZUBzYW1zdW5nLmNvbT47IFBldGVyIE9iZXJwYXJsZWl0ZXIgPG9iZXJwYXJAbGludXgudm5ldC5p
+Ym0uY29tPjsgaW50ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgSmFuaSBOaWt1bGEgPGph
+bmkubmlrdWxhQGxpbnV4LmludGVsLmNvbT47IEVkdWFyZG8gVmFsZW50aW4gPGVkdWJlenZhbEBn
+bWFpbC5jb20+OyBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+OyBSb2RyaWdvIFZpdmkg
+PHJvZHJpZ28udml2aUBpbnRlbC5jb20+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZl
+ci14ODZAdmdlci5rZXJuZWwub3JnPjsgRmVsaXBlIEJhbGJpIDxiYWxiaUBrZXJuZWwub3JnPjsg
+TWFydGluIEsuIFBldGVyc2VuIDxtYXJ0aW4ucGV0ZXJzZW5Ab3JhY2xlLmNvbT47IEdyZWcgS3Jv
+YWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBsaW51eC1wbUB2Z2VyLmtl
+cm5lbC5vcmc7IFVTQiA8bGludXgtdXNiQHZnZXIua2VybmVsLm9yZz47IExpYW0gR2lyZHdvb2Qg
+PGxnaXJkd29vZEBnbWFpbC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBMdWlz
+IFIuIFJvZHJpZ3VleiA8bWNncm9mQGtlcm5lbC5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlA
+aW5mcmFkZWFkLm9yZz47IE1hcnRpbiBTY2h3aWRlZnNreSA8c2Nod2lkZWZza3lAZGUuaWJtLmNv
+bT47IEphcmtrbyBOaWt1bGEgPGphcmtrby5uaWt1bGFAYml0bWVyLmNvbT4NClN1YmplY3Q6IFJl
+OiBbYWxzYS1kZXZlbF0gWy1uZXh0IFBBVENIIDIvNF0gdHJlZXdpZGU6IFVzZSBERVZJQ0VfQVRU
+Ul9SVw0KDQpPbiBUdWUsIERlYyAxOSwgMjAxNyBhdCA4OjE1IFBNLCBKb2UgUGVyY2hlcyA8am9l
+QHBlcmNoZXMuY29tPiB3cm90ZToNCj4gQ29udmVydCBERVZJQ0VfQVRUUiB1c2VzIHRvIERFVklD
+RV9BVFRSX1JXIHdoZXJlIHBvc3NpYmxlLg0KPg0KPiBEb25lIHdpdGggcGVybCBzY3JpcHQ6DQo+
+DQo+ICQgZ2l0IGdyZXAgLXcgLS1uYW1lLW9ubHkgREVWSUNFX0FUVFIgfCBcDQo+ICAgeGFyZ3Mg
+cGVybCAtaSAtZSAnbG9jYWwgJC87IHdoaWxlICg8PikgeyBzL1xiREVWSUNFX0FUVFJccypcKFxz
+KihcdyspXHMqLFxzKlwoPyhccypTX0lSVUdPXHMqXHxccypTX0lXVVNSfFxzKlNfSVdVU1Jccypc
+fFxzKlNfSVJVR09ccyp8XHMqMDY0NFxzKilcKT9ccyosXHMqXDFfc2hvd1xzKixccypcMV9zdG9y
+ZVxzKlwpL0RFVklDRV9BVFRSX1JXKFwxKS9nOyBwcmludDt9Jw0KDQo+ICBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9jb21wYWwtbGFwdG9wLmMgfCAxOCArKysrKy0tLS0tLS0tLS0NCg0KPiAtLS0gYS9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni9jb21wYWwtbGFwdG9wLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0
+Zm9ybS94ODYvY29tcGFsLWxhcHRvcC5jDQo+IEBAIC02NzksMTggKzY3OSwxMiBAQCBzdGF0aWMg
+aW50IGJhdF93cml0ZWFibGVfcHJvcGVydHkoc3RydWN0IA0KPiBwb3dlcl9zdXBwbHkgKnBzeSwN
+Cj4gIC8qID09PT09PT09PT09PT09ICovDQo+ICAvKiBEcml2ZXIgR2xvYmFscyAqLw0KPiAgLyog
+PT09PT09PT09PT09PT0gKi8NCj4gLXN0YXRpYyBERVZJQ0VfQVRUUih3YWtlX3VwX3BtZSwNCj4g
+LSAgICAgICAgICAgICAgIDA2NDQsIHdha2VfdXBfcG1lX3Nob3csICAgICAgICAgd2FrZV91cF9w
+bWVfc3RvcmUpOw0KPiAtc3RhdGljIERFVklDRV9BVFRSKHdha2VfdXBfbW9kZW0sDQo+IC0gICAg
+ICAgICAgICAgICAwNjQ0LCB3YWtlX3VwX21vZGVtX3Nob3csICAgICAgIHdha2VfdXBfbW9kZW1f
+c3RvcmUpOw0KPiAtc3RhdGljIERFVklDRV9BVFRSKHdha2VfdXBfbGFuLA0KPiAtICAgICAgICAg
+ICAgICAgMDY0NCwgd2FrZV91cF9sYW5fc2hvdywgd2FrZV91cF9sYW5fc3RvcmUpOw0KPiAtc3Rh
+dGljIERFVklDRV9BVFRSKHdha2VfdXBfd2xhbiwNCj4gLSAgICAgICAgICAgICAgIDA2NDQsIHdh
+a2VfdXBfd2xhbl9zaG93LCAgICAgICAgd2FrZV91cF93bGFuX3N0b3JlKTsNCj4gLXN0YXRpYyBE
+RVZJQ0VfQVRUUih3YWtlX3VwX2tleSwNCj4gLSAgICAgICAgICAgICAgIDA2NDQsIHdha2VfdXBf
+a2V5X3Nob3csIHdha2VfdXBfa2V5X3N0b3JlKTsNCj4gLXN0YXRpYyBERVZJQ0VfQVRUUih3YWtl
+X3VwX21vdXNlLA0KPiAtICAgICAgICAgICAgICAgMDY0NCwgd2FrZV91cF9tb3VzZV9zaG93LCAg
+ICAgICB3YWtlX3VwX21vdXNlX3N0b3JlKTsNCj4gK3N0YXRpYyBERVZJQ0VfQVRUUl9SVyh3YWtl
+X3VwX3BtZSk7DQo+ICtzdGF0aWMgREVWSUNFX0FUVFJfUlcod2FrZV91cF9tb2RlbSk7IHN0YXRp
+YyANCj4gK0RFVklDRV9BVFRSX1JXKHdha2VfdXBfbGFuKTsgc3RhdGljIERFVklDRV9BVFRSX1JX
+KHdha2VfdXBfd2xhbik7IA0KPiArc3RhdGljIERFVklDRV9BVFRSX1JXKHdha2VfdXBfa2V5KTsg
+c3RhdGljIA0KPiArREVWSUNFX0FUVFJfUlcod2FrZV91cF9tb3VzZSk7DQoNCkFja2VkLWJ5OiBB
+bmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQoNCmZvciBQRHg4NiBi
+aXRzLg0KDQpIYXZlIHRvIHNheSB0aGF0IHdoaWxlIGl0IGRvZXNuJ3QgY2hhbmdlIHRoZSBhdHRy
+aWJ1dGVzIGhlcmUsIGl0IG1pZ2h0IHJlcXVpcmUgc3RpbGwgdG8gYmUgcmV2aXNpdGVkIGJ5IHNl
+Y3VyaXR5IHBlb3BsZSwgaWYgdGhleSB3aXNoLg0KDQotLQ0KV2l0aCBCZXN0IFJlZ2FyZHMsDQpB
+bmR5IFNoZXZjaGVua28NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fDQpBbHNhLWRldmVsIG1haWxpbmcgbGlzdA0KQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qu
+b3JnDQpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxz
+YS1kZXZlbA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+SW50ZWwtZ2Z4IG1haWxpbmcgbGlzdApJbnRlbC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vaW50ZWwtZ2Z4Cg==
