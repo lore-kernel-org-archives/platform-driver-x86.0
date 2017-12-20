@@ -1,55 +1,43 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v9 7/7] intel_sgx: in-kernel launch enclave
-Date: Wed, 20 Dec 2017 01:57:48 +0200
-Message-ID: <1513727868.2206.33.camel@linux.intel.com>
-References: <20171216162200.20243-1-jarkko.sakkinen@linux.intel.com>
-         <20171216162200.20243-8-jarkko.sakkinen@linux.intel.com>
-         <20171219135928.ospmfhabavac5gnu@linux.intel.com>
-         <CAHp75VdxpqS=8DFYMhSAs6Q6myJKvx_iBW3zEvnsHhjrzpztNQ@mail.gmail.com>
+From: Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [-next PATCH 2/4] treewide: Use DEVICE_ATTR_RW
+Date: Wed, 20 Dec 2017 10:34:03 +0200
+Message-ID: <20171220083403.GA27231@bitmer.com>
+References: <cover.1513706701.git.joe@perches.com>
+ <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:45479 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753041AbdLSX54 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Dec 2017 18:57:56 -0500
-In-Reply-To: <CAHp75VdxpqS=8DFYMhSAs6Q6myJKvx_iBW3zEvnsHhjrzpztNQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: intel-sgx-kernel-dev@lists.01.org, Platform Driver <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cd38f14f06e1f447b3159ffe8c69c0df8241bb6e.1513706701.git.joe@perches.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Ott <sebott@linux.vnet.ibm.com>, Peter Oberparleiter <oberpar@linux.vnet.ibm.com>, James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <balbi@kernel.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2017-12-19 at 17:36 +0200, Andy Shevchenko wrote:
-> On Tue, Dec 19, 2017 at 3:59 PM, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
+On Tue, Dec 19, 2017 at 10:15:07AM -0800, Joe Perches wrote:
+> Convert DEVICE_ATTR uses to DEVICE_ATTR_RW where possible.
 > 
-> > I streamlined the IPC quite a bit. See the attached patch. Can be
-> > applied on top of this patch.
-> 
-> Sorry, I didn't look into actual code, but WRT the attached patch,
-> wouldn't be better / possible to use
-> pr_fmt() to print "intel_sgx:" prefix for all pr_*() ?
+...
+  
+> diff --git a/sound/soc/omap/mcbsp.c b/sound/soc/omap/mcbsp.c
+> index 7a54e3083203..79d4dc785e5c 100644
+> --- a/sound/soc/omap/mcbsp.c
+> +++ b/sound/soc/omap/mcbsp.c
+> @@ -854,7 +854,7 @@ static ssize_t dma_op_mode_store(struct device *dev,
+>  	return size;
+>  }
+>  
+> -static DEVICE_ATTR(dma_op_mode, 0644, dma_op_mode_show, dma_op_mode_store);
+> +static DEVICE_ATTR_RW(dma_op_mode);
+>  
+While I can ack this part here if it helps generic cleanup effort I
+don't understart would it improve code readability in general? Mode 644
+is clear and don't need any grepping but for DEVICE_ATTR_RW() I had to go
+through all of these files in order to see what does it mean:
 
-Would make much sense. I can do this. In any case Ineed to update this
-series at least once more for the copyright platters. Thanks for the
-comment.
+DEVICE_ATTR_RW: include/linux/device.h
+__ATTR_RW: include/linux/sysfs.h
+S_IWUSR: include/uapi/linux/stat.h
+S_IRUGO: include/linux/stat.h
 
-Now that the series does not add anything intrusive (namely pipe exports
-or use a fragile AES implementation) I would propose to pull the current
-series as a single platform driver and move relevant code under arch/x86
-in subsequent series.
-
-I've taken great of making sure that it would be doable to move code
-later on when I first decided to make it as a plaform driver. My
-thinking has been that encapsulating the codebase to a driver would be
-the least intrusive way to mainline the first version of the SGX support
-for the Linux kernel especially when there isn't publicly available HW
-to test it yet with launch control that makes sense for Linux.
-
-I can write a detailed description to the documentation how the 
-implementation works in order to help to make the right decision for
-subsequent series. 
-
-/Jarkko
+Jarkko Nikula <jarkko.nikula@bitmer.com>
