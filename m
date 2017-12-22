@@ -1,94 +1,39 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: [PATCH v9 4/4] battery: Add the ThinkPad "Not Charging" quirk
-Date: Thu, 21 Dec 2017 20:55:12 +0100
-Message-ID: <20171221195512.GA17520@thinkpad>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andi Kleen <andi@firstfloor.org>
+Subject: [PATCH] Fix const confusion in intel-mid x86 platform drivers
+Date: Thu, 21 Dec 2017 16:14:43 -0800
+Message-ID: <20171222001443.2067-1-andi@firstfloor.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga04.intel.com ([192.55.52.120]:8045 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753482AbdLVAX1 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 21 Dec 2017 19:23:27 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: dvhart@infradead.org
+Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org, Andi Kleen <ak@linux.intel.com>
 
-The EC/ACPI firmware on Lenovo ThinkPads used to report a status
-of "Unknown" when the battery is between the charge start and
-charge stop thresholds. On Windows, it reports "Not Charging"
-so the quirk has been added to also report correctly.
+From: Andi Kleen <ak@linux.intel.com>
 
-Now the "status" attribute returns "Not Charging" when the
-battery on ThinkPads is not physicaly charging.
+const must be marked __initconst, not __initdata
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
+ arch/x86/platform/intel-mid/device_libs/platform_bt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v7:
-* Added all the style changes as suggested by Rafael
-* Re-ordered the series to make this a post-implement
-bugfix
-
-v8:
-* No changes in this patch in v8
-
-v9:
-* No changes in this patch in v9
-
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
----
- drivers/acpi/battery.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index da56c3a..d07da7f 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -72,6 +72,7 @@ static async_cookie_t async_cookie;
- static bool battery_driver_registered;
- static int battery_bix_broken_package;
- static int battery_notification_delay_ms;
-+static int battery_quirk_notcharging;
- static unsigned int cache_time = 1000;
- module_param(cache_time, uint, 0644);
- MODULE_PARM_DESC(cache_time, "cache time in milliseconds");
-@@ -223,6 +224,8 @@ static int acpi_battery_get_property(struct power_supply *psy,
- 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
- 		else if (acpi_battery_is_charged(battery))
- 			val->intval = POWER_SUPPLY_STATUS_FULL;
-+		else if (battery_quirk_notcharging)
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
- 		else
- 			val->intval = POWER_SUPPLY_STATUS_UNKNOWN;
- 		break;
-@@ -1337,6 +1340,12 @@ battery_notification_delay_quirk(const struct dmi_system_id *d)
+diff --git a/arch/x86/platform/intel-mid/device_libs/platform_bt.c b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+index dc036e511f48..2b5d86ce24c2 100644
+--- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
++++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+@@ -60,7 +60,7 @@ static int __init tng_bt_sfi_setup(struct bt_sfi_data *ddata)
  	return 0;
  }
  
-+static int __init battery_quirk_not_charging(const struct dmi_system_id *d)
-+{
-+	battery_quirk_notcharging = 1;
-+	return 0;
-+}
-+
- static const struct dmi_system_id bat_dmi_table[] __initconst = {
- 	{
- 		.callback = battery_bix_broken_package_quirk,
-@@ -1354,6 +1363,19 @@ static const struct dmi_system_id bat_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire V5-573G"),
- 		},
- 	},
-+	{
-+		/*
-+		 * On Lenovo ThinkPads the BIOS specification defines
-+		 * a state when the bits for charging and discharging
-+		 * are both set to 0. That state is "Not Charging".
-+		 */
-+		.callback = battery_quirk_not_charging,
-+		.ident = "Lenovo ThinkPad",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad"),
-+		},
-+	},
- 	{},
+-static const struct bt_sfi_data tng_bt_sfi_data __initdata = {
++static const struct bt_sfi_data tng_bt_sfi_data __initconst = {
+ 	.setup	= tng_bt_sfi_setup,
  };
  
 -- 
-2.7.4
-
+2.15.0
