@@ -1,65 +1,43 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] Fix const confusion in intel-mid x86 platform drivers
-Date: Thu, 21 Dec 2017 18:08:35 -0800
-Message-ID: <20171222020835.GA17014@fury>
-References: <20171222001443.2067-1-andi@firstfloor.org>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 0/2] platform/x86/thinkpad_acpi: Adjustments for four
+ function implementations
+Date: Fri, 22 Dec 2017 23:29:17 -0200
+Message-ID: <20171223012917.vbe6mvz4yltiyws3@khazad-dum.debian.net>
+References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+ <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:35915 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756039AbdLVCIr (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Dec 2017 21:08:47 -0500
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171222001443.2067-1-andi@firstfloor.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org, Andi Kleen <ak@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+In-Reply-To: <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: SF Markus Elfring <elfring@users.sourceforge.net>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 21, 2017 at 04:14:43PM -0800, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
+On Tue, 19 Dec 2017, Andy Shevchenko wrote:
+> On Mon, Dec 18, 2017 at 11:26 PM, SF Markus Elfring
+> <elfring@users.sourceforge.net> wrote:
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Mon, 18 Dec 2017 22:23:45 +0100
+> >
+> > Two update suggestions were taken into account
+> > from static source code analysis.
+> >
+> > Markus Elfring (2):
+> >   Delete an error message for a failed memory allocation in three functions
 > 
-> const must be marked __initconst, not __initdata
+> This one is questionable since it prints error messages at ->init() stage.
+> I would rather not touch this.
 > 
-
-Thanks Andi,
-
-This file should go through the x86 maintainers per the current MAINTAINERS
-file. So to avoid risk of duplication, added Thomas et al. to Cc.
-
-Thomas, we discussed moving more of arch/x86/platform to drivers/platform/x86.
-We have migrated pmc_atom already, but a lot remains. Do you want to pull
-patches like this in the interim, or should we move arch/x86/platform under
-our entry in MAINTAINERS now?
-
-Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
-
-
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  arch/x86/platform/intel-mid/device_libs/platform_bt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> >   Improve a size determination in tpacpi_new_rfkill()
 > 
-> diff --git a/arch/x86/platform/intel-mid/device_libs/platform_bt.c b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-> index dc036e511f48..2b5d86ce24c2 100644
-> --- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-> +++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-> @@ -60,7 +60,7 @@ static int __init tng_bt_sfi_setup(struct bt_sfi_data *ddata)
->  	return 0;
->  }
->  
-> -static const struct bt_sfi_data tng_bt_sfi_data __initdata = {
-> +static const struct bt_sfi_data tng_bt_sfi_data __initconst = {
->  	.setup	= tng_bt_sfi_setup,
->  };
->  
-> -- 
-> 2.15.0
+> Doesn't make any sense right now. One style over the other.
+> Nothing gets better or worth at this point.
 > 
-> 
+> Sorry, but NAK for both.
+
+Agreed.  NAK from me as well.
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+  Henrique Holschuh
