@@ -1,37 +1,51 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH] battery: hook_mutex can be static
-Date: Sat, 23 Dec 2017 19:04:30 +0800
-Message-ID: <20171223110430.GA50455@xian>
-References: <20171220151536.GA12278@thinkpad>
+From: Yisheng Xie <xieyisheng1@huawei.com>
+Subject: [PATCH v3 09/27] platform/x86: replace devm_ioremap_nocache with devm_ioremap
+Date: Sat, 23 Dec 2017 18:58:59 +0800
+Message-ID: <1514026739-33006-1-git-send-email-xieyisheng1@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171220151536.GA12278@thinkpad>
-Sender: linux-pm-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2721 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1757168AbdLWLHu (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 23 Dec 2017 06:07:50 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: ysxie@foxmail.com, Yisheng Xie <xieyisheng1@huawei.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 
+Default ioremap is ioremap_nocache, so devm_ioremap has the same
+function with devm_ioremap_nocache, which can just be killed to
+save the size of devres.o
 
-Fixes: 19380b8e214c ("battery: Add the battery hooking API")
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+This patch is to use use devm_ioremap instead of devm_ioremap_nocache,
+which should not have any function change but prepare for killing
+devm_ioremap_nocache.
+
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Yisheng Xie <xieyisheng1@huawei.com>
 ---
- battery.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 1794408..9324591 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -640,9 +640,9 @@ static const struct device_attribute alarm_attr = {
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 17e08b4..fe30bb9 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -532,9 +532,8 @@ static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	pmcdev->base_addr &= PMC_BASE_ADDR_MASK;
+ 	dev_dbg(&dev->dev, "PMC Core: PWRMBASE is %#x\n", pmcdev->base_addr);
  
- LIST_HEAD(acpi_battery_list);
- LIST_HEAD(battery_hook_list);
--DEFINE_MUTEX(hook_mutex);
-+static DEFINE_MUTEX(hook_mutex);
- 
--void __battery_hook_unregister(struct acpi_battery_hook *hook, int force)
-+static void __battery_hook_unregister(struct acpi_battery_hook *hook, int force)
- {
- 	struct list_head *position;
- 	struct acpi_battery *battery;
+-	pmcdev->regbase = devm_ioremap_nocache(ptr_dev,
+-					      pmcdev->base_addr,
+-					      SPT_PMC_MMIO_REG_LEN);
++	pmcdev->regbase = devm_ioremap(ptr_dev, pmcdev->base_addr,
++				       SPT_PMC_MMIO_REG_LEN);
+ 	if (!pmcdev->regbase) {
+ 		dev_dbg(&dev->dev, "PMC Core: ioremap failed.\n");
+ 		return -ENOMEM;
+-- 
+1.8.3.1
