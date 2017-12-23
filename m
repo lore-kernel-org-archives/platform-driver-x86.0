@@ -1,51 +1,38 @@
-From: Wei Yongjun <weiyongjun1@huawei.com>
-Subject: [PATCH -next] platform/x86: dell-laptop: make some local functions static
-Date: Sat, 23 Dec 2017 02:01:22 +0000
-Message-ID: <1513994482-89811-1-git-send-email-weiyongjun1@huawei.com>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: Re: platform/x86/thinkpad_acpi: Adjustments for four function
+ implementations
+Date: Sat, 23 Dec 2017 08:12:21 +0100
+Message-ID: <80ae8328-5851-01b0-cb31-474f7baf1686@users.sourceforge.net>
+References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+ <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
+ <ea910da9-ca59-b895-b071-35d9c5cbd112@users.sourceforge.net>
+ <20171223014033.jx7fzu7uzjfbzyca@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2715 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1756993AbdLWB4s (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Dec 2017 20:56:48 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, Mario Limonciello <mario.limonciello@dell.com>, quasisec@google.com
-Cc: Wei Yongjun <weiyongjun1@huawei.com>, platform-driver-x86@vger.kernel.org
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20171223014033.jx7fzu7uzjfbzyca@khazad-dum.debian.net>
+Content-Language: en-GB
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Fixes the following sparse warnings:
+>> Do you find the Linux allocation failure report insufficient in this case?
+> 
+> Leave those pr_ messages alone, please,
 
-drivers/platform/x86/dell-laptop.c:289:6: warning:
- symbol 'dell_set_arguments' was not declared. Should it be static?
-drivers/platform/x86/dell-laptop.c:298:5: warning:
- symbol 'dell_send_request' was not declared. Should it be static?
+Have you got special software development concerns?
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/platform/x86/dell-laptop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 629d960..a94936a 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -286,7 +286,7 @@ static int __init dmi_matched(const struct dmi_system_id *dmi)
- 	{ }
- };
- 
--void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
-+static void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
- {
- 	memset(buffer, 0, sizeof(struct calling_interface_buffer));
- 	buffer->input[0] = arg0;
-@@ -295,7 +295,7 @@ void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
- 	buffer->input[3] = arg3;
- }
- 
--int dell_send_request(u16 class, u16 select)
-+static int dell_send_request(u16 class, u16 select)
- {
- 	int ret;
+> unless they are really causing some sort of issue (which?).
+
+Can the code be redundant here?
+
+
+> Doing it just for "compliance" with a doc isn't nearly good enough reason.
+
+Do you give only a low value to coding style guidelines in this use case?
+
+Regards,
+Markus
