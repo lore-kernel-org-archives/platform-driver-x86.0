@@ -1,67 +1,33 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: silead_dmi: Add entry for the Trekstor Primebook C13
-Date: Mon, 25 Dec 2017 13:45:25 +0100
-Message-ID: <20171225124525.7536-2-hdegoede@redhat.com>
-References: <20171225124525.7536-1-hdegoede@redhat.com>
+From: "Sra. Angel Rania" <sra.angelrania83@gmail.com>
+Subject: Re: You will definetely be interested...
+Date: Wed, 27 Dec 2017 10:16:53 +0000
+Message-ID: <CAKx+QTsL6tbExobjfKn2Kvd+VURLikaeJ+JuuxF8mixxBiriEQ__4114.40532557226$1514369790$gmane$org@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:53282 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752204AbdLYMp3 (ORCPT
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:39820 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751871AbdL0KQ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Dec 2017 07:45:29 -0500
-In-Reply-To: <20171225124525.7536-1-hdegoede@redhat.com>
+        Wed, 27 Dec 2017 05:16:56 -0500
+Received: by mail-qt0-f194.google.com with SMTP id k19so47390960qtj.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Dec 2017 02:16:56 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add touchscreen platform data for the Trekstor Primebook C13 laptop.
+Hi Dear,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Reading your profile has given me courage in search of a reasponsable
+and trust worthy Fellow. The past has treated me so awfully but now I
+am ready to move on despite of my health condition. I will like to
+have a sincere and important discussion with you that will be in your
+favor likewise to you and your environment especially to your close
+family. Endeavor to reply me and I have attached my picture in case
+you long to know who emailed you. I will be waiting to hear from you
+as soon as possble.
+Thanks for paying attention to my mail and will appreciate so much if
+I receive a reply from you for understable details.
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 09b589fb79d4..713446ee3b61 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -232,6 +232,21 @@ static const struct silead_ts_dmi_data chuwi_vi8_data = {
- 	.properties     = chuwi_vi8_props,
- };
- 
-+static const struct property_entry trekstor_primebook_c13_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl1680-trekstor-primebook-c13.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data trekstor_primebook_c13_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= trekstor_primebook_c13_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -365,6 +380,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
- 		},
- 	},
-+	{
-+		/* Trekstor Primebook C13 */
-+		.driver_data = (void *)&trekstor_primebook_c13_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
-+		},
-+	},
- 	{ },
- };
- 
--- 
-2.14.3
+Thanks,
+
+Mrs. Rania Hassan
