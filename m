@@ -1,23 +1,23 @@
 From: Julia Lawall <julia.lawall@lip6.fr>
 Subject: Re: [PATCH v1] x86/platform/intel-mid: Revert "Make 'bt_sfi_data'
  const"
-Date: Thu, 28 Dec 2017 16:28:44 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1712281625350.8594@hadrien>
+Date: Thu, 28 Dec 2017 22:22:38 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1712282219410.2372@hadrien>
 References: <20171228100801.67744-1-andriy.shevchenko@linux.intel.com> <20171228102812.cm7yylrrq2omfw5y@gmail.com> <1514463164.7000.328.camel@linux.intel.com> <20171228121711.xwydozmtj5jhwkgj@gmail.com> <alpine.DEB.2.20.1712281323410.2220@hadrien>
  <20171228122931.ie5dggc43g6zjkkc@gmail.com> <alpine.DEB.2.20.1712281333390.2220@hadrien> <20171228125341.46xng2mzagksfyhr@gmail.com> <alpine.DEB.2.20.1712281453270.8594@hadrien> <20171228152431.2zmikdjurx6356ng@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:30621 "EHLO
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:36473 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1753565AbdL1P2r (ORCPT
+        by vger.kernel.org with ESMTP id S1751220AbdL1VWk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 10:28:47 -0500
+        Thu, 28 Dec 2017 16:22:40 -0500
 In-Reply-To: <20171228152431.2zmikdjurx6356ng@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Julia Lawall <julia.lawall@lip6.fr>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Morton <akpm@linux-foundation.org>
 
 
 
@@ -74,13 +74,7 @@ On Thu, 28 Dec 2017, Ingo Molnar wrote:
 >
 > That's OK as long as the cast is dominantly (long)->(pointer), because that
 > doesn't really risk losing the underlying type.
-
-Not sure to follow.  Currently, with the const void * the bad code
-compiles fine.  A cast before putting the value into the structure has
-been replaced by a cast on extracting it form the structure, but there is
-still a cast and the const declaration of the original structure is still
-lost.
-
+>
 > It's the (pointer)->(pointer) and (pointer)->(long) conversions that are the most
 > dangerous ones.
 >
@@ -101,8 +95,19 @@ lost.
 >
 > that way the fundamental types remains.
 
-OK this looks promising.  I will try it.
+Nothing will ensure that the data is extracted via the same field that was
+used to store it.  But one will get a message from the compiler if one
+tries to change the properties of the stored value without changing the
+field that it is stored into.
 
+Should there be a union?
+
+Is there some other kernel code that takes this solution?
+
+thanks,
+julia
+
+>
 > >
 > > I also got a couple of complaints about non-pointer types:
 > >
@@ -115,7 +120,8 @@ OK this looks promising.  I will try it.
 > >   soc_dts_thres_irq = (int)match_cpu->driver_data;
 >
 > These could use driver_data.long or so?
-
-Seems probable.
-
-julia
+>
+> Thanks,
+>
+> 	Ingo
+>
