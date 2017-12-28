@@ -1,82 +1,82 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v10 2/4] pm: add to_power_supply macro to the API
-Date: Thu, 28 Dec 2017 10:19:32 +0200
-Message-ID: <CAHp75VcpuQz4n_wRJ+f-OKf4VAVVhXzKAC+FD0EE52cs+Zv22Q@mail.gmail.com>
-References: <20171223105316.GA4352@thinkpad>
+Subject: Re: [PATCH] platform/x86: silead_dmi: Add entry for the Trekstor
+ Primebook C13
+Date: Thu, 28 Dec 2017 11:10:32 +0200
+Message-ID: <CAHp75VcrX74-5OYFrTyOp2OW5=28nWE4+OZKCfw0abWrvXLvVg@mail.gmail.com>
+References: <20171225124525.7536-1-hdegoede@redhat.com> <20171225124525.7536-2-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f196.google.com ([209.85.216.196]:46059 "EHLO
-        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752686AbdL1ITd (ORCPT
+Received: from mail-qt0-f193.google.com ([209.85.216.193]:44693 "EHLO
+        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751086AbdL1JKe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 03:19:33 -0500
-In-Reply-To: <20171223105316.GA4352@thinkpad>
+        Thu, 28 Dec 2017 04:10:34 -0500
+In-Reply-To: <20171225124525.7536-2-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ognjen Galic <smclt30p@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Sat, Dec 23, 2017 at 12:53 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
-> This patch adds the to_power_supply macro to upcast
-> a device to a power_supply struct.
+On Mon, Dec 25, 2017 at 2:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Add touchscreen platform data for the Trekstor Primebook C13 laptop.
 >
-> This is needed because the same piece of code using
-> container_of is used in various other places, so we
-> abstract away such low-level operations via a macro.
 
+Pushed to my review and testing queue, thanks!
+
+Note, the rest now on it's way to for-next (via testing)
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-
-This is wrong! You have to use *existing* --- line below. Otherwise
-all mail parsers will cut this out including your SoB tag.
-
+>  drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >
-> v9:
-> * Split the pm changes from the thinkpad_acpi patch
-> into its own patch
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+> index 09b589fb79d4..713446ee3b61 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -232,6 +232,21 @@ static const struct silead_ts_dmi_data chuwi_vi8_data = {
+>         .properties     = chuwi_vi8_props,
+>  };
 >
-> v10:
-> * No changes in this patch in v10
->
-> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
-
-Missed:
-
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> ---
->  drivers/power/supply/power_supply_core.c | 2 +-
->  include/linux/power_supply.h             | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index 82f998a..feac7b0 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -668,7 +668,7 @@ EXPORT_SYMBOL_GPL(power_supply_powers);
->
->  static void power_supply_dev_release(struct device *dev)
->  {
-> -       struct power_supply *psy = container_of(dev, struct power_supply, dev);
-> +       struct power_supply *psy = to_power_supply(dev);
->         dev_dbg(dev, "%s\n", __func__);
->         kfree(psy);
->  }
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 79e90b3..f0139b4 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -371,6 +371,8 @@ devm_power_supply_register_no_ws(struct device *parent,
->  extern void power_supply_unregister(struct power_supply *psy);
->  extern int power_supply_powers(struct power_supply *psy, struct device *dev);
->
-> +#define to_power_supply(device) container_of(device, struct power_supply, dev)
+> +static const struct property_entry trekstor_primebook_c13_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl1680-trekstor-primebook-c13.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
 > +
->  extern void *power_supply_get_drvdata(struct power_supply *psy);
->  /* For APM emulation, think legacy userspace. */
->  extern struct class *power_supply_class;
+> +static const struct silead_ts_dmi_data trekstor_primebook_c13_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = trekstor_primebook_c13_props,
+> +};
+> +
+>  static const struct dmi_system_id silead_ts_dmi_table[] = {
+>         {
+>                 /* CUBE iwork8 Air */
+> @@ -365,6 +380,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+>                         DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
+>                 },
+>         },
+> +       {
+> +               /* Trekstor Primebook C13 */
+> +               .driver_data = (void *)&trekstor_primebook_c13_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
+> +               },
+> +       },
+>         { },
+>  };
+>
+> --
+> 2.14.3
+>
 
-Should fold in the changes you sent as a separate patch.
+
 
 -- 
 With Best Regards,
