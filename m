@@ -1,82 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: silead_dmi: Add entry for the Trekstor
- Primebook C13
-Date: Thu, 28 Dec 2017 11:10:32 +0200
-Message-ID: <CAHp75VcrX74-5OYFrTyOp2OW5=28nWE4+OZKCfw0abWrvXLvVg@mail.gmail.com>
-References: <20171225124525.7536-1-hdegoede@redhat.com> <20171225124525.7536-2-hdegoede@redhat.com>
+Subject: Re: [PATCH] Fix const confusion in intel-mid x86 platform drivers
+Date: Thu, 28 Dec 2017 11:47:03 +0200
+Message-ID: <CAHp75VcgT_B8Za82ywhKkCedPRNTdm5+uHYQHEO0EfBMeUkwzA@mail.gmail.com>
+References: <20171222001443.2067-1-andi@firstfloor.org> <20171222020835.GA17014@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f193.google.com ([209.85.216.193]:44693 "EHLO
-        mail-qt0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751086AbdL1JKe (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:36601 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751580AbdL1JrE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 04:10:34 -0500
-In-Reply-To: <20171225124525.7536-2-hdegoede@redhat.com>
+        Thu, 28 Dec 2017 04:47:04 -0500
+Received: by mail-qt0-f196.google.com with SMTP id a16so50565313qtj.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Dec 2017 01:47:04 -0800 (PST)
+In-Reply-To: <20171222020835.GA17014@fury>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Bhumika Goyal <bhumirks@gmail.com>
+Cc: Andi Kleen <andi@firstfloor.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Andi Kleen <ak@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 
-On Mon, Dec 25, 2017 at 2:45 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Add touchscreen platform data for the Trekstor Primebook C13 laptop.
+On Fri, Dec 22, 2017 at 4:08 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Thu, Dec 21, 2017 at 04:14:43PM -0800, Andi Kleen wrote:
+>> From: Andi Kleen <ak@linux.intel.com>
+>>
+>> const must be marked __initconst, not __initdata
+>>
 >
-
-Pushed to my review and testing queue, thanks!
-
-Note, the rest now on it's way to for-next (via testing)
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> Thanks Andi,
 >
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index 09b589fb79d4..713446ee3b61 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -232,6 +232,21 @@ static const struct silead_ts_dmi_data chuwi_vi8_data = {
->         .properties     = chuwi_vi8_props,
->  };
+> This file should go through the x86 maintainers per the current MAINTAINERS
+> file. So to avoid risk of duplication, added Thomas et al. to Cc.
 >
-> +static const struct property_entry trekstor_primebook_c13_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
-> +       PROPERTY_ENTRY_STRING("firmware-name",
-> +                             "gsl1680-trekstor-primebook-c13.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
-> +
-> +static const struct silead_ts_dmi_data trekstor_primebook_c13_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = trekstor_primebook_c13_props,
-> +};
-> +
->  static const struct dmi_system_id silead_ts_dmi_table[] = {
->         {
->                 /* CUBE iwork8 Air */
-> @@ -365,6 +380,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
->                         DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
->                 },
->         },
-> +       {
-> +               /* Trekstor Primebook C13 */
-> +               .driver_data = (void *)&trekstor_primebook_c13_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
-> +               },
-> +       },
->         { },
->  };
+> Thomas, we discussed moving more of arch/x86/platform to drivers/platform/x86.
+> We have migrated pmc_atom already, but a lot remains. Do you want to pull
+> patches like this in the interim, or should we move arch/x86/platform under
+> our entry in MAINTAINERS now?
 >
-> --
-> 2.14.3
->
+> Reviewed-by: Darren Hart (VMware) <dvhart@infradead.org>
 
+I'm sorry, but the patch which brings const there have made already a
+regression [1].
 
+So, NAK for this either.
+
+Unbelievable that the other patch had been send w/o me in Cc list and
+blindly applied.
+
+[1]: https://github.com/andy-shev/linux/issues/20
 
 -- 
 With Best Regards,
