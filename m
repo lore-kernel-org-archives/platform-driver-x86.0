@@ -1,65 +1,87 @@
-From: Ingo Molnar <mingo@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v1] x86/platform/intel-mid: Revert "Make 'bt_sfi_data'
  const"
-Date: Thu, 28 Dec 2017 12:59:55 +0100
-Message-ID: <20171228115955.3rkmzf4gi47hpt63@gmail.com>
+Date: Thu, 28 Dec 2017 14:12:44 +0200
+Message-ID: <1514463164.7000.328.camel@linux.intel.com>
 References: <20171228100801.67744-1-andriy.shevchenko@linux.intel.com>
- <20171228102812.cm7yylrrq2omfw5y@gmail.com>
- <alpine.DEB.2.20.1712281133530.2220@hadrien>
- <20171228111216.6ebgmcdert4lgkof@gmail.com>
- <alpine.DEB.2.20.1712281221540.2220@hadrien>
+         <20171228102812.cm7yylrrq2omfw5y@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:43642 "EHLO
-        mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751431AbdL1L76 (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:6422 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751258AbdL1MMs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 06:59:58 -0500
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1712281221540.2220@hadrien>
+        Thu, 28 Dec 2017 07:12:48 -0500
+In-Reply-To: <20171228102812.cm7yylrrq2omfw5y@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julia Lawall <julia.lawall@lip6.fr>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>, julia.lawall@lip6.fr
 
-
-* Julia Lawall <julia.lawall@lip6.fr> wrote:
-
-> > So the type is the following, in include/linux/mod_devicetable.h:
-> >
-> > struct x86_cpu_id {
-> >         __u16 vendor;
-> >         __u16 family;
-> >         __u16 model;
-> >         __u16 feature;  /* bit index */
-> >         kernel_ulong_t driver_data;
-> > };
-> >
-> > Is there a syntactic method that would allow the conversion to kernel_ulong_t, but
-> > would preserve any const-ness?
-> >
-> > Barring that, maybe we could convert driver_data to 'void *', fix up all users,
-> > and not force the type - this would allow the preservation of the const attribute,
-> > I think.
-> >
-> > BTW., a quick grep suggests similar type casting patterns here:
-> >
-> > arch/x86/platform/intel-mid/pwr.c:      { PCI_VDEVICE(INTEL, PCI_DEVICE_ID_PENWELL), (kernel_ulong_t)&pnw_info },
-> > arch/x86/platform/intel-mid/pwr.c:      { PCI_VDEVICE(INTEL, PCI_DEVICE_ID_TANGIER), (kernel_ulong_t)&tng_info },
+On Thu, 2017-12-28 at 11:28 +0100, Ingo Molnar wrote:
+> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Would it be acceptable to move the cast out of the macro to the place
-> where the variable is referenced?  It wouldn't help with the compiler, but
-> it would be slightly easier for the human to check.
+> > The annoying static analyzer follow up patches make a pain rather
+> > then
+> > fixing issues.
+> > 
+> > The one done by commit 276c87054751
+> > 
+> > ("x86/platform/intel-mid: Make 'bt_sfi_data' const")
+> > 
+> > made an obvious regression [BugLink] since the struct bt_sfi_data
+> > used
+> > as a temporary container for important data that is used to fill
+> > 'parent' and 'name' fields in struct platform_device_info.
+> > 
+> > That's why revert the commit which had been apparently done w/o
+> > reading
+> > the code.
+> > 
+> > BugLink: https://github.com/andy-shev/linux/issues/20
+> > Cc: Bhumika Goyal <bhumirks@gmail.com>
+> > Cc: julia.lawall@lip6.fr
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  arch/x86/platform/intel-mid/device_libs/platform_bt.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+> > b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+> > index dc036e511f48..5a0483e7bf66 100644
+> > --- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+> > +++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
+> > @@ -60,7 +60,7 @@ static int __init tng_bt_sfi_setup(struct
+> > bt_sfi_data *ddata)
+> >  	return 0;
+> >  }
+> >  
+> > -static const struct bt_sfi_data tng_bt_sfi_data __initdata = {
+> > +static struct bt_sfi_data tng_bt_sfi_data __initdata = {
+> >  	.setup	= tng_bt_sfi_setup,
+> >  };
+> 
+> This is nasty, why didn't the compiler warn about this bug?
+> 
+> Normally when using a const data structure for a non-const purpose.
+> (Unless 
+> there's a type cast which loses the type - one of the many reasons why
+> type casts 
+> should be avoided.)
 
-It would really be preferably to not stand in the way of the compiler here.
+Now I'm trying to get this.
 
-AFACS void * should solve the problem, and it's a kernel_ulong_t equivalent in 
-terms of with, right?
+First of all, the new dependency to hci_bcm makes this one not compiled
+at all.
 
-So let's try and solve this for real. Forcing humans to discover such things is 
-always a fragile concept.
+Second, there is a cast as you truthfully predicted...
 
-Thanks,
+I would say that revert is needed, but it seems it wasn't a culprit for
+the bug (rather the new dependency is). So, it might need rewording of
+the commit message to low tone of the accusations.
 
-	Ingo
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
