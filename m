@@ -1,80 +1,83 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH -next] platform/x86: dell-laptop: make some local
- functions static
-Date: Thu, 28 Dec 2017 10:13:35 +0200
-Message-ID: <CAHp75VeAuQuQ=7QUjzc7YRbbnN6V3GR46NybF8HW7iV3ic4HjQ@mail.gmail.com>
-References: <1513994482-89811-1-git-send-email-weiyongjun1@huawei.com> <20171223083357.rkvvvlpwimndt7re@pali>
+Subject: Re: [PATCH v10 2/4] pm: add to_power_supply macro to the API
+Date: Thu, 28 Dec 2017 10:19:32 +0200
+Message-ID: <CAHp75VcpuQz4n_wRJ+f-OKf4VAVVhXzKAC+FD0EE52cs+Zv22Q@mail.gmail.com>
+References: <20171223105316.GA4352@thinkpad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f193.google.com ([209.85.220.193]:40038 "EHLO
-        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751043AbdL1INh (ORCPT
+Received: from mail-qt0-f196.google.com ([209.85.216.196]:46059 "EHLO
+        mail-qt0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752686AbdL1ITd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 03:13:37 -0500
-Received: by mail-qk0-f193.google.com with SMTP id q14so36182088qke.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Dec 2017 00:13:36 -0800 (PST)
-In-Reply-To: <20171223083357.rkvvvlpwimndt7re@pali>
+        Thu, 28 Dec 2017 03:19:33 -0500
+In-Reply-To: <20171223105316.GA4352@thinkpad>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Wei Yongjun <weiyongjun1@huawei.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, quasisec@google.com, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Ognjen Galic <smclt30p@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 
-On Sat, Dec 23, 2017 at 10:33 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
-ote:
-> On Saturday 23 December 2017 02:01:22 Wei Yongjun wrote:
->> Fixes the following sparse warnings:
->>
->> drivers/platform/x86/dell-laptop.c:289:6: warning:
->>  symbol 'dell_set_arguments' was not declared. Should it be static?
->> drivers/platform/x86/dell-laptop.c:298:5: warning:
->>  symbol 'dell_send_request' was not declared. Should it be static?
->>
-
-Pushed to my review and testing queue, thanks!
-
->> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
->> ---
->>  drivers/platform/x86/dell-laptop.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/d=
-ell-laptop.c
->> index 629d960..a94936a 100644
->> --- a/drivers/platform/x86/dell-laptop.c
->> +++ b/drivers/platform/x86/dell-laptop.c
->> @@ -286,7 +286,7 @@ static int __init dmi_matched(const struct dmi_syste=
-m_id *dmi)
->>       { }
->>  };
->>
->> -void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
->> +static void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
->>  {
->>       memset(buffer, 0, sizeof(struct calling_interface_buffer));
->>       buffer->input[0] =3D arg0;
->> @@ -295,7 +295,7 @@ void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2=
-, u32 arg3)
->>       buffer->input[3] =3D arg3;
->>  }
->>
->> -int dell_send_request(u16 class, u16 select)
->> +static int dell_send_request(u16 class, u16 select)
->>  {
->>       int ret;
->>
+On Sat, Dec 23, 2017 at 12:53 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
+> This patch adds the to_power_supply macro to upcast
+> a device to a power_supply struct.
 >
-> This is correct change, add my:
+> This is needed because the same piece of code using
+> container_of is used in various other places, so we
+> abstract away such low-level operations via a macro.
+
+> ---
+
+This is wrong! You have to use *existing* --- line below. Otherwise
+all mail parsers will cut this out including your SoB tag.
+
 >
-> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> v9:
+> * Split the pm changes from the thinkpad_acpi patch
+> into its own patch
 >
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+> v10:
+> * No changes in this patch in v10
+>
+> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
 
+Missed:
 
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
---=20
+> ---
+>  drivers/power/supply/power_supply_core.c | 2 +-
+>  include/linux/power_supply.h             | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index 82f998a..feac7b0 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -668,7 +668,7 @@ EXPORT_SYMBOL_GPL(power_supply_powers);
+>
+>  static void power_supply_dev_release(struct device *dev)
+>  {
+> -       struct power_supply *psy = container_of(dev, struct power_supply, dev);
+> +       struct power_supply *psy = to_power_supply(dev);
+>         dev_dbg(dev, "%s\n", __func__);
+>         kfree(psy);
+>  }
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 79e90b3..f0139b4 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -371,6 +371,8 @@ devm_power_supply_register_no_ws(struct device *parent,
+>  extern void power_supply_unregister(struct power_supply *psy);
+>  extern int power_supply_powers(struct power_supply *psy, struct device *dev);
+>
+> +#define to_power_supply(device) container_of(device, struct power_supply, dev)
+> +
+>  extern void *power_supply_get_drvdata(struct power_supply *psy);
+>  /* For APM emulation, think legacy userspace. */
+>  extern struct class *power_supply_class;
+
+Should fold in the changes you sent as a separate patch.
+
+-- 
 With Best Regards,
 Andy Shevchenko
