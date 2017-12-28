@@ -1,81 +1,80 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 00/11] Intel SGX Driver
-Date: Wed, 27 Dec 2017 21:46:45 +0100
-Message-ID: <20171227204645.GA14201@amd>
-References: <pavel@ucw.cz>
- <201712271030.vBRAUo3o027896@wind.enjellic.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH -next] platform/x86: dell-laptop: make some local
+ functions static
+Date: Thu, 28 Dec 2017 10:13:35 +0200
+Message-ID: <CAHp75VeAuQuQ=7QUjzc7YRbbnN6V3GR46NybF8HW7iV3ic4HjQ@mail.gmail.com>
+References: <1513994482-89811-1-git-send-email-weiyongjun1@huawei.com> <20171223083357.rkvvvlpwimndt7re@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:44624 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751184AbdL0Uqr (ORCPT
+Received: from mail-qk0-f193.google.com ([209.85.220.193]:40038 "EHLO
+        mail-qk0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751043AbdL1INh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Dec 2017 15:46:47 -0500
-Content-Disposition: inline
-In-Reply-To: <201712271030.vBRAUo3o027896@wind.enjellic.com>
+        Thu, 28 Dec 2017 03:13:37 -0500
+Received: by mail-qk0-f193.google.com with SMTP id q14so36182088qke.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Dec 2017 00:13:36 -0800 (PST)
+In-Reply-To: <20171223083357.rkvvvlpwimndt7re@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: greg@enjellic.com
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Wei Yongjun <weiyongjun1@huawei.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, quasisec@google.com, Platform Driver <platform-driver-x86@vger.kernel.org>
+
+On Sat, Dec 23, 2017 at 10:33 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
+ote:
+> On Saturday 23 December 2017 02:01:22 Wei Yongjun wrote:
+>> Fixes the following sparse warnings:
+>>
+>> drivers/platform/x86/dell-laptop.c:289:6: warning:
+>>  symbol 'dell_set_arguments' was not declared. Should it be static?
+>> drivers/platform/x86/dell-laptop.c:298:5: warning:
+>>  symbol 'dell_send_request' was not declared. Should it be static?
+>>
+
+Pushed to my review and testing queue, thanks!
+
+>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+>> ---
+>>  drivers/platform/x86/dell-laptop.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/d=
+ell-laptop.c
+>> index 629d960..a94936a 100644
+>> --- a/drivers/platform/x86/dell-laptop.c
+>> +++ b/drivers/platform/x86/dell-laptop.c
+>> @@ -286,7 +286,7 @@ static int __init dmi_matched(const struct dmi_syste=
+m_id *dmi)
+>>       { }
+>>  };
+>>
+>> -void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
+>> +static void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
+>>  {
+>>       memset(buffer, 0, sizeof(struct calling_interface_buffer));
+>>       buffer->input[0] =3D arg0;
+>> @@ -295,7 +295,7 @@ void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2=
+, u32 arg3)
+>>       buffer->input[3] =3D arg3;
+>>  }
+>>
+>> -int dell_send_request(u16 class, u16 select)
+>> +static int dell_send_request(u16 class, u16 select)
+>>  {
+>>       int ret;
+>>
+>
+> This is correct change, add my:
+>
+> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
 
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> > Would you list guarantees provided by SGX?
->=20
-> Obviously, confidentiality and integrity.  SGX was designed to address
-> an Iago threat model, a very difficult challenge to address in
-> reality.
-
-Do you have link on "Iago threat model"?
-
-> I don't have the citation immediately available, but a bit-flip attack
-> has also been described on enclaves.  Due to the nature of the
-> architecture, they tend to crash the enclave so they are more in the
-> category of a denial-of-service attack, rather then a functional
-> confidentiality or integrity compromise.
-
-So ... even with SGX, host can generate bitflips in the enclave,
-right?
-
-People usually assume that bitflip will lead "only" to
-denial-of-service, but rowhammer work shows that even "random" bit
-flips easily lead to priviledge escalation on javascript virtual
-machines, and in similar way you can get root if you have user and bit
-flips happen.
-
-So... I believe we should assume compromise is possible, not just
-denial-of-service.
-
-> Unfortunately, in the security field it is way more fun, and seemingly
-> advantageous from a reputational perspective, to break things then to
-> build solutions.... :-)(
-
-Well, yes :-). And I believe someone is going to have fun with SGX
-;-).
-									Pavel
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpEBrUACgkQMOfwapXb+vKWuwCeK8FrKdegbRzvIf2uYxC8tdjR
-PIQAn2z7LfNc/E6aU5QJCt5qUruSYG0R
-=5BJd
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+With Best Regards,
+Andy Shevchenko
