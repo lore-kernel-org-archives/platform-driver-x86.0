@@ -1,127 +1,94 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v1] x86/platform/intel-mid: Revert "Make 'bt_sfi_data'
- const"
-Date: Thu, 28 Dec 2017 22:22:38 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1712282219410.2372@hadrien>
-References: <20171228100801.67744-1-andriy.shevchenko@linux.intel.com> <20171228102812.cm7yylrrq2omfw5y@gmail.com> <1514463164.7000.328.camel@linux.intel.com> <20171228121711.xwydozmtj5jhwkgj@gmail.com> <alpine.DEB.2.20.1712281323410.2220@hadrien>
- <20171228122931.ie5dggc43g6zjkkc@gmail.com> <alpine.DEB.2.20.1712281333390.2220@hadrien> <20171228125341.46xng2mzagksfyhr@gmail.com> <alpine.DEB.2.20.1712281453270.8594@hadrien> <20171228152431.2zmikdjurx6356ng@gmail.com>
+From: Ognjen =?UTF-8?Q?Gali=C4=87?= <smclt30p@gmail.com>
+Subject: Re: [PATCH v10 2/4] pm: add to_power_supply macro to the API
+Date: Sat, 30 Dec 2017 00:49:45 +0100
+Message-ID: <1514591385.9667.0.camel@gmail.com>
+References: <20171223105316.GA4352@thinkpad>
+         <CAHp75VcpuQz4n_wRJ+f-OKf4VAVVhXzKAC+FD0EE52cs+Zv22Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:36473 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751220AbdL1VWk (ORCPT
+Received: from mail-wr0-f193.google.com ([209.85.128.193]:34017 "EHLO
+        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750709AbdL2XuB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Dec 2017 16:22:40 -0500
-In-Reply-To: <20171228152431.2zmikdjurx6356ng@gmail.com>
+        Fri, 29 Dec 2017 18:50:01 -0500
+In-Reply-To: <CAHp75VcpuQz4n_wRJ+f-OKf4VAVVhXzKAC+FD0EE52cs+Zv22Q@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Julia Lawall <julia.lawall@lip6.fr>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Morton <akpm@linux-foundation.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?ISO-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 
+On Čet, 2017-12-28 at 10:19 +0200, Andy Shevchenko wrote:
+> On Sat, Dec 23, 2017 at 12:53 PM, Ognjen Galic <smclt30p@gmail.com>
+> wrote:
+> > 
+> > This patch adds the to_power_supply macro to upcast
+> > a device to a power_supply struct.
+> > 
+> > This is needed because the same piece of code using
+> > container_of is used in various other places, so we
+> > abstract away such low-level operations via a macro.
+> > 
+> > ---
+> This is wrong! You have to use *existing* --- line below. Otherwise
+> all mail parsers will cut this out including your SoB tag.
+> 
 
+My bad I guess. Want another patch revision with that fixed or 
+something?
 
-On Thu, 28 Dec 2017, Ingo Molnar wrote:
-
->
-> * Julia Lawall <julia.lawall@lip6.fr> wrote:
->
-> >
-> >
-> > On Thu, 28 Dec 2017, Ingo Molnar wrote:
-> >
-> > >
-> > > * Julia Lawall <julia.lawall@lip6.fr> wrote:
-> > >
-> > > > > > [...] There does seem to be a few cases where the field actually does hold an
-> > > > > > integer.  I guess this is not a problem?
-> > > > >
-> > > > > Could you point to such an example?
-> > > >
-> > > > drivers/thermal/intel_soc_dts_thermal.c:#define BYT_SOC_DTS_APIC_IRQ	86
-> > > >
-> > > > and then:
-> > > >
-> > > > static const struct x86_cpu_id soc_thermal_ids[] = {
-> > > >         { X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_SILVERMONT1, 0,
-> > > >                 BYT_SOC_DTS_APIC_IRQ},
-> > > >         {}
-> > > > };
-> > > >
-> > > > and finally:
-> > > >
-> > > >  soc_dts_thres_irq = (int)match_cpu->driver_data;
-> > > >
-> > > > Also:
-> > > >
-> > > > arch/x86/kernel/apic/apic.c
-> > > >
-> > > > #define DEADLINE_MODEL_MATCH_REV(model, rev)    \
-> > > > 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev
-> > > > }
-> > > >
-> > > > DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,      0x0b000020),
-> > > > DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_CORE,     0x22),
-> > > > etc. (all 2-digit numbers in the remaining case).
-> > >
-> > > Ok - I think in these cases the resulting long->pointer type conversion is a _lot_
-> > > less dangerous than the pointer->long conversion which caused the regression.
-> > >
-> > > So unless the resulting code is excessively ugly, this feels like the right
-> > > approach to me.
-> >
-> > The problem is that this case will inevitably have a cast somewhere.
->
-> That's OK as long as the cast is dominantly (long)->(pointer), because that
-> doesn't really risk losing the underlying type.
->
-> It's the (pointer)->(pointer) and (pointer)->(long) conversions that are the most
-> dangerous ones.
->
-> > [...]  Many of the values put into the driver_data field really are const, so
-> > the type has to be const void *.  When the value is extracted from the
-> > structure, there will thus need to be a cast on it, and the current cast
-> >
-> > ddata = (struct bt_sfi_data *)id->driver_data;
-> >
-> > works fine, whether the original structure is const or not.
->
-> So since this data structure is not size critical, I'd really suggest using two or
-> three fields:
->
-> 	->driver_data.ptr
-> 	->driver_data.const_ptr
-> 	->driver_data.long
->
-> that way the fundamental types remains.
-
-Nothing will ensure that the data is extracted via the same field that was
-used to store it.  But one will get a message from the compiler if one
-tries to change the properties of the stored value without changing the
-field that it is stored into.
-
-Should there be a union?
-
-Is there some other kernel code that takes this solution?
-
-thanks,
-julia
-
->
-> >
-> > I also got a couple of complaints about non-pointer types:
-> >
-> > arch/x86/kernel/apic/apic.c:621:9: warning: cast from pointer to integer
-> > of different size [-Wpointer-to-int-cast]
-> >    rev = (u32)m->driver_data;
-> >
-> > drivers/thermal/intel_soc_dts_thermal.c:68:22: warning: cast from pointer
-> > to integer of different size [-Wpointer-to-int-cast]
-> >   soc_dts_thres_irq = (int)match_cpu->driver_data;
->
-> These could use driver_data.long or so?
->
-> Thanks,
->
-> 	Ingo
->
+> > 
+> > 
+> > v9:
+> > * Split the pm changes from the thinkpad_acpi patch
+> > into its own patch
+> > 
+> > v10:
+> > * No changes in this patch in v10
+> > 
+> > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+> Missed:
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> > 
+> > ---
+> >  drivers/power/supply/power_supply_core.c | 2 +-
+> >  include/linux/power_supply.h             | 2 ++
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/power/supply/power_supply_core.c
+> > b/drivers/power/supply/power_supply_core.c
+> > index 82f998a..feac7b0 100644
+> > --- a/drivers/power/supply/power_supply_core.c
+> > +++ b/drivers/power/supply/power_supply_core.c
+> > @@ -668,7 +668,7 @@ EXPORT_SYMBOL_GPL(power_supply_powers);
+> > 
+> >  static void power_supply_dev_release(struct device *dev)
+> >  {
+> > -       struct power_supply *psy = container_of(dev, struct
+> > power_supply, dev);
+> > +       struct power_supply *psy = to_power_supply(dev);
+> >         dev_dbg(dev, "%s\n", __func__);
+> >         kfree(psy);
+> >  }
+> > diff --git a/include/linux/power_supply.h
+> > b/include/linux/power_supply.h
+> > index 79e90b3..f0139b4 100644
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -371,6 +371,8 @@ devm_power_supply_register_no_ws(struct device
+> > *parent,
+> >  extern void power_supply_unregister(struct power_supply *psy);
+> >  extern int power_supply_powers(struct power_supply *psy, struct
+> > device *dev);
+> > 
+> > +#define to_power_supply(device) container_of(device, struct
+> > power_supply, dev)
+> > +
+> >  extern void *power_supply_get_drvdata(struct power_supply *psy);
+> >  /* For APM emulation, think legacy userspace. */
+> >  extern struct class *power_supply_class;
+> Should fold in the changes you sent as a separate patch.
+> 
