@@ -1,99 +1,126 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v11 3/5] thinkpad_acpi: Add support for battery thresholds
-Date: Mon, 1 Jan 2018 13:31:29 +0100
-Message-ID: <CAJZ5v0jmYTjhcn_z86tsNNUstbNu=+0OzMgVk85xS-rpvPfKJA@mail.gmail.com>
-References: <20171231141727.GA4643@thinkpad> <CAHp75VeYRYRpmqy_GGQ95e1YhvZGfWtsJrGbLiA4JskEmd69zg@mail.gmail.com>
- <20180101114348.GA5589@thinkpad>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v1] x86/platform/intel-mid: Revert "Make 'bt_sfi_data'
+ const"
+Date: Mon, 1 Jan 2018 16:15:32 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1801011609180.18623@hadrien>
+References: <20171228100801.67744-1-andriy.shevchenko@linux.intel.com> <20171228102812.cm7yylrrq2omfw5y@gmail.com> <1514463164.7000.328.camel@linux.intel.com> <20171228121711.xwydozmtj5jhwkgj@gmail.com> <alpine.DEB.2.20.1712281323410.2220@hadrien>
+ <20171228122931.ie5dggc43g6zjkkc@gmail.com> <alpine.DEB.2.20.1712281333390.2220@hadrien> <20171228125341.46xng2mzagksfyhr@gmail.com> <alpine.DEB.2.20.1712281453270.8594@hadrien> <20171228152431.2zmikdjurx6356ng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ot0-f193.google.com ([74.125.82.193]:46430 "EHLO
-        mail-ot0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751231AbeAAMbb (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Jan 2018 07:31:31 -0500
-In-Reply-To: <20180101114348.GA5589@thinkpad>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171228152431.2zmikdjurx6356ng@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Morton <akpm@linux-foundation.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 1, 2018 at 12:43 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com> wro=
-te:
-> On Mon, Jan 01, 2018 at 12:24:39PM +0200, Andy Shevchenko wrote:
->> On Sun, Dec 31, 2017 at 4:17 PM, Ognjen Galic <smclt30p@gmail.com> wrote=
-:
->> > thinkpad_acpi registers two new attributes for each battery:
->> >
->> > 1) Charge start threshold
->> > /sys/class/power_supply/BATN/charge_start_threshold
->> >
->> > Valid values are [0, 99]. A value of 0 turns off the
->> > start threshold wear control.
->> >
->> > 2) Charge stop threshold
->> > /sys/class/power_supply/BATN/charge_stop_threshold
->> >
->> > Valid values are [1, 100]. A value of 100 turns off
->> > the stop threshold wear control. This must be
->> > configured first.
->> >
->>
->> > This patch depends on the following patches:
->> >
->> > "battery: Add the battery hooking API"
->>
->> Since this is series, no need to put above into changelog.
->>
->> AFAICS it's not going to be backported either.
->>
->>
->> > +/**
->> > + * This evaluates a ACPI method call specific to the battery
->> > + * ACPI extension. The specifics are that an error is marked
->> > + * in the 32rd bit of the response, so we just check that here.
->> > + *
->> > + * Returns 0 on success
->> > + */
->> > +static int tpacpi_battery_acpi_eval(char *method, int *ret, int param=
-)
->> > +{
->>
->> One problem and one trick you may do.
->>
->> A problem: you return ACPI status as int. We have special type for
->> that. So, be consistent with it.
->> Looking to acpi_evalf() which is private to the module, I think you
->> need to get rid of ACPI return codes here.
+
+
+On Thu, 28 Dec 2017, Ingo Molnar wrote:
+
 >
-> What do you mean by "get rid of ACPI return codes"?
-> Are you suggesting this?
+> * Julia Lawall <julia.lawall@lip6.fr> wrote:
 >
-> static void tpacpi_battery_ac....
-
-I think that Andy was talking about returning things like AE_ERROR,
-which are of type acpi_status, as int.
-
-You should return either the Linux error codes (in which case int is
-the type to use) or ACPI error codes (in which the function should be
-defined to return acpi_status).  Do not mix them.
-
-> How would I check if the ACPI call failed if I made the function return
-> void?
+> >
+> >
+> > On Thu, 28 Dec 2017, Ingo Molnar wrote:
+> >
+> > >
+> > > * Julia Lawall <julia.lawall@lip6.fr> wrote:
+> > >
+> > > > > > [...] There does seem to be a few cases where the field actually does hold an
+> > > > > > integer.  I guess this is not a problem?
+> > > > >
+> > > > > Could you point to such an example?
+> > > >
+> > > > drivers/thermal/intel_soc_dts_thermal.c:#define BYT_SOC_DTS_APIC_IRQ	86
+> > > >
+> > > > and then:
+> > > >
+> > > > static const struct x86_cpu_id soc_thermal_ids[] = {
+> > > >         { X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_SILVERMONT1, 0,
+> > > >                 BYT_SOC_DTS_APIC_IRQ},
+> > > >         {}
+> > > > };
+> > > >
+> > > > and finally:
+> > > >
+> > > >  soc_dts_thres_irq = (int)match_cpu->driver_data;
+> > > >
+> > > > Also:
+> > > >
+> > > > arch/x86/kernel/apic/apic.c
+> > > >
+> > > > #define DEADLINE_MODEL_MATCH_REV(model, rev)    \
+> > > > 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev
+> > > > }
+> > > >
+> > > > DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,      0x0b000020),
+> > > > DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_CORE,     0x22),
+> > > > etc. (all 2-digit numbers in the remaining case).
+> > >
+> > > Ok - I think in these cases the resulting long->pointer type conversion is a _lot_
+> > > less dangerous than the pointer->long conversion which caused the regression.
+> > >
+> > > So unless the resulting code is excessively ugly, this feels like the right
+> > > approach to me.
+> >
+> > The problem is that this case will inevitably have a cast somewhere.
 >
-> I use a function return value to check if the ACPI call failed,
-> and a return integer pointer to which I write the return data to.
+> That's OK as long as the cast is dominantly (long)->(pointer), because that
+> doesn't really risk losing the underlying type.
 >
->>
->> A trick: since you are using only least significant byte of the
->> response, you can declare it as u8 *value (yeah, ret is not best name
->> here I think).
+> It's the (pointer)->(pointer) and (pointer)->(long) conversions that are the most
+> dangerous ones.
 >
-> Neat trick.
+> > [...]  Many of the values put into the driver_data field really are const, so
+> > the type has to be const void *.  When the value is extracted from the
+> > structure, there will thus need to be a cast on it, and the current cast
+> >
+> > ddata = (struct bt_sfi_data *)id->driver_data;
+> >
+> > works fine, whether the original structure is const or not.
+>
+> So since this data structure is not size critical, I'd really suggest using two or
+> three fields:
+>
+> 	->driver_data.ptr
+> 	->driver_data.const_ptr
+> 	->driver_data.long
 
-Little-endian only though.  Don't do that unless your code is
-guaranteed to always (now and in the future) run on little-endian.
+I'm still not sure this is a good idea.  If it really is a structure,
+there will be uninitialized fields that can be accessed by mistake.  And
+nothing checks if the code consistently uses the right field.
 
-Thanks,
-Rafael
+Another approach would be to make a semantic patch that finds the problem
+without too many false positives, and get that into the kernel so that the
+0-day testing service will run it on all new patches.  The idea would be
+that if there are some const structures of a given type, then all of the
+other occurrences of that type in the same file should be const.  It
+wouldn't find all occurrences of the problem, but it should find the one
+in question.  In general, the problem arises with uninterpreted data, and
+such data is typically used only in the file where it was defined (or
+perhaps in other files implementing the same driver).
+
+julia
+
+>
+> that way the fundamental types remains.
+>
+> >
+> > I also got a couple of complaints about non-pointer types:
+> >
+> > arch/x86/kernel/apic/apic.c:621:9: warning: cast from pointer to integer
+> > of different size [-Wpointer-to-int-cast]
+> >    rev = (u32)m->driver_data;
+> >
+> > drivers/thermal/intel_soc_dts_thermal.c:68:22: warning: cast from pointer
+> > to integer of different size [-Wpointer-to-int-cast]
+> >   soc_dts_thres_irq = (int)match_cpu->driver_data;
+>
+> These could use driver_data.long or so?
+>
+> Thanks,
+>
+> 	Ingo
+>
