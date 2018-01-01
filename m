@@ -1,71 +1,145 @@
-From: Ognjen Galic <smclt30p@gmail.com>
-Subject: [PATCH v11 5/5] pm: Remove to_power_supply impl in ds278*
-Date: Sun, 31 Dec 2017 15:17:57 +0100
-Message-ID: <20171231141757.GA4674@thinkpad>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 1/5] battery: Add the battery hooking API
+Date: Mon, 1 Jan 2018 11:53:16 +0200
+Message-ID: <CAHp75VeQGyzf6oSGgkcuuZ6zmsr2eac5MdBFHVQVrstKFG=nzA@mail.gmail.com>
+References: <20171231141631.GA4589@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:41693 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750762AbdLaOSC (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 31 Dec 2017 09:18:02 -0500
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20171231141631.GA4589@thinkpad>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ognjen Galic <smclt30p@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch fixes a issue introduced by patch:
-pm: add to_power_supply macro to the API
+On Sun, Dec 31, 2017 at 4:16 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
+> This is a patch that implements a generic hooking API for the
+> generic ACPI battery driver.
+>
+> With this new generic API, drivers can expose platform specific
+> behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+> in a generic way.
+>
+> A perfect example of the need for this API are Lenovo ThinkPads.
+>
+> Lenovo ThinkPads have a ACPI extension that allows the setting of
+> start and stop charge thresholds in the EC and battery firmware
+> via ACPI. The thinkpad_acpi module can use this API to expose
+> sysfs attributes that it controls inside the ACPI battery driver
+> sysfs tree, under /sys/class/power_supply/BATN/.
+>
+> The file drivers/acpi/battery.h has been moved to
+> include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+> battery.c have been adjusted to reflect that.
+>
+> When drivers hooks into the API, the API calls add_battery() for
+> each battery in the system that passes it a acpi_battery
+> struct. Then, the drivers can use device_create_file() to create
+> new sysfs attributes with that struct and identify the batteries
+> for per-battery attributes.
 
-In that patch a new macro has been defined in the
-power_supply.h header with the same name as the private
-function name in the ds278* battery modules that does the
-same thing, thus clashing and producing build errors.
+Thanks for an update. Few comments below.
 
-This patch removes that private implementation.
+(Keep in mind, please, that we are not expecting new version
+immediately, and Rafael might also apply this one without changes,
+since they are minors)
 
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+>  #include <linux/init.h>
+>  #include <linux/types.h>
+>  #include <linux/jiffies.h>
+> @@ -30,6 +31,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/delay.h>
+>  #include <linux/slab.h>
+> +#include <linux/list.h>
 
-v11:
-* Fix build error pointed out by the Intel automated
-kernel build daemon/bot
----
- drivers/power/supply/ds2780_battery.c | 5 -----
- drivers/power/supply/ds2781_battery.c | 5 -----
- 2 files changed, 10 deletions(-)
+Just a nit: perhaps add this before module.h ?
 
-diff --git a/drivers/power/supply/ds2780_battery.c b/drivers/power/supply/ds2780_battery.c
-index e5d81b4..370e910 100644
---- a/drivers/power/supply/ds2780_battery.c
-+++ b/drivers/power/supply/ds2780_battery.c
-@@ -56,11 +56,6 @@ to_ds2780_device_info(struct power_supply *psy)
- 	return power_supply_get_drvdata(psy);
- }
- 
--static inline struct power_supply *to_power_supply(struct device *dev)
--{
--	return dev_get_drvdata(dev);
--}
--
- static inline int ds2780_battery_io(struct ds2780_device_info *dev_info,
- 	char *buf, int addr, size_t count, int io)
- {
-diff --git a/drivers/power/supply/ds2781_battery.c b/drivers/power/supply/ds2781_battery.c
-index efe83ef..d1b5a19 100644
---- a/drivers/power/supply/ds2781_battery.c
-+++ b/drivers/power/supply/ds2781_battery.c
-@@ -54,11 +54,6 @@ to_ds2781_device_info(struct power_supply *psy)
- 	return power_supply_get_drvdata(psy);
- }
- 
--static inline struct power_supply *to_power_supply(struct device *dev)
--{
--	return dev_get_drvdata(dev);
--}
--
- static inline int ds2781_battery_io(struct ds2781_device_info *dev_info,
- 	char *buf, int addr, size_t count, int io)
- {
+> +void __battery_hook_unregister(struct acpi_battery_hook *hook, int force)
+> +{
+> +       struct list_head *position;
+> +       struct acpi_battery *battery;
+> +
+> +       /*
+> +        * In order to remove a hook, we first need to
+> +        * de-register all the batteries that are registered.
+> +        */
+> +
+> +       if (!force)
+
+I'm not sure force is a good name here, perhaps "locked"?
+Btw, would it be boolean?
+
+> +               mutex_lock(&hook_mutex);
+
+> +       list_for_each(position, &acpi_battery_list) {
+> +               battery = list_entry(position, struct acpi_battery, list);
+> +               hook->remove_battery(battery->bat);
+> +       }
+
+list_for_each_entry()
+
+> +
+> +       /* Then, just remove the hook */
+> +
+> +       list_del(&hook->list);
+> +
+> +       if (!force)
+> +               mutex_unlock(&hook_mutex);
+> +
+> +       pr_info("battery: extension unregistered: %s\n", hook->name);
+> +}
+
+> +void battery_hook_register(struct acpi_battery_hook *hook)
+> +{
+
+> +       list_for_each(position, &acpi_battery_list) {
+> +               battery = list_entry(position, struct acpi_battery, list);
+
+list_for_each_entry()
+
+> +                       __battery_hook_unregister(hook, 1);
+> +                       return;
+> +
+
+Perhaps you meant empty line followed by return statement.
+
+> +               }
+> +       }
+> +
+> +       pr_info("battery: new extension: %s\n", hook->name);
+
+Perhaps move "battery:" to pr_fmt() ?
+I have counted already 3 prints with it and see more below.
+
+> +       list_for_each(position, &battery_hook_list) {
+> +               hook_node = list_entry(position, struct acpi_battery_hook, list);
+
+list_for_each_entry()
+
+> +       list_for_each(position, &battery_hook_list) {
+> +               hook = list_entry(position, struct acpi_battery_hook, list);
+
+Ditto.
+
+> +       list_for_each_safe(position, temp, &battery_hook_list) {
+> +               hook = list_entry(position, struct acpi_battery_hook, list);
+
+Ditto.
+
+> --- a/drivers/acpi/battery.h
+> +++ /dev/null
+Apparently you didn't apply -M -C (perhaps with some non-default
+threshold) to avoid such thing in the patch.
+
+> --- /dev/null
+> +++ b/include/acpi/battery.h
+
+Ditto.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
