@@ -1,32 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: pdx86 backlog after the winter holidays
-Date: Tue, 2 Jan 2018 15:27:10 -0800
-Message-ID: <20180102232710.GA24794@fury>
+Subject: Re: [PATCH v2] platform/x86: silead_dmi: Add entry for the Teclast
+ X98 Plus II
+Date: Tue, 2 Jan 2018 15:40:33 -0800
+Message-ID: <20180102234033.GB24794@fury>
+References: <20180102134239.3579-1-paul@crapouillou.net>
+ <20180102183928.15267-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:34556 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750938AbeABX1M (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Jan 2018 18:27:12 -0500
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20180102183928.15267-1-paul@crapouillou.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi everyone. I've been away for a couple weeks, only checking in on
-urgent issues. Our backlog has grown a bit, but isn't terrible so far as
-patchwork is concerned, thanks to Andy for his time during the last
-couple weeks of the year.
+On Tue, Jan 02, 2018 at 07:39:27PM +0100, Paul Cercueil wrote:
+> Add touchscreen platform data for the Teclast X98 Plus II tablet.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/silead_dmi.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+>  v2: Rebased on top of http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/shortlog/refs/heads/review-andy
 
-Email is another matter of course. I'll be prioritizing the patch queue
-this week, and responding to email as I work through it. If you feel you
-have something pending and haven't seen a response by Mon Jan 8, please
-feel free to resubmit or bump the thread.
+Generally "testing" is the branch you want to base on if linus/master
+doesn't work as the review-* branches *will* rebase frequently.
+Exceptions exist of course, and this patch is just fine - just for
+future reference.
 
-Thanks all, and Happy New Year.
+Andy pushed his changes to testing already, so this is no longer
+dependent on his review queue. I have applied to review-dvhart, will go
+to testing shortly.
+
+Thank you Paul.
 
 -- 
 Darren Hart
