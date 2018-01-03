@@ -1,132 +1,232 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 00/11] Intel SGX Driver
-Date: Wed, 3 Jan 2018 10:48:39 +0100
-Message-ID: <20180103094839.GA26610@amd>
-References: <pavel@ucw.cz>
- <201801030059.w030xQGD011342@wind.enjellic.com>
+From: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>
+Subject: Re: [PATCH v11 3/5] thinkpad_acpi: Add support for battery thresholds
+Date: Wed, 3 Jan 2018 11:34:55 +0100
+Message-ID: <20180103103455.GA17803@thinkpad>
+References: <20171231141727.GA4643@thinkpad>
+ <CAHp75VeYRYRpmqy_GGQ95e1YhvZGfWtsJrGbLiA4JskEmd69zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201801030059.w030xQGD011342@wind.enjellic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: greg@enjellic.com
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro
+In-Reply-To: <CAHp75VeYRYRpmqy_GGQ95e1YhvZGfWtsJrGbLiA4JskEmd69zg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 List-Id: platform-driver-x86.vger.kernel.org
 
-
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Good evening Pavel et.al., I hope the New Year has started well for
-> everyone.
-
-:-). Stuff proceeds as usual. Too bad it is raining outside, instead
-of snowing.
-
-> > > > Would you list guarantees provided by SGX?
-> > >
-> > > Obviously, confidentiality and integrity.  SGX was designed to address
-> > > an Iago threat model, a very difficult challenge to address in
-> > > reality.
->=20
-> > Do you have link on "Iago threat model"?
->=20
-> https://cseweb.ucsd.edu/~hovav/dist/iago.pdf
->=20
-> > > I don't have the citation immediately available, but a bit-flip attack
-> > > has also been described on enclaves.  Due to the nature of the
-> > > architecture, they tend to crash the enclave so they are more in the
-> > > category of a denial-of-service attack, rather then a functional
-> > > confidentiality or integrity compromise.
->=20
-> > So ... even with SGX, host can generate bitflips in the enclave,
-> > right?
->=20
-> Correct.
-
-=2E..
-
-I'd say that you can't generate bitflips because if you do hardware
-will kill the enclave. This seems to be significant difference from
-AMD "secure" memory encryption...
-
-> > People usually assume that bitflip will lead "only" to
-> > denial-of-service, but rowhammer work shows that even "random" bit
-> > flips easily lead to priviledge escalation on javascript virtual
-> > machines, and in similar way you can get root if you have user and
-> > bit flips happen.
+On Mon, Jan 01, 2018 at 12:24:39PM +0200, Andy Shevchenko wrote:
+> On Sun, Dec 31, 2017 at 4:17 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
+> > thinkpad_acpi registers two new attributes for each battery:
 > >
-> > So... I believe we should assume compromise is possible, not just
-> > denial-of-service.
->=20
-> Prudence always dictates that one assumes the worst.  In this case
-> however, the bitflip attacks against SGX enclaves are very definitely
-> in the denial-of-service category.  The attack is designed to trigger
-> a hardware self-protection feature on the processor.
->=20
-> Each page of memory which is initialized into an enclave has a
-> metadata block associated with it which contains the integrity state
-> of that page of memory.  The MM{E,U} hardware on an SGX capable
-> platform checks this integrity data on each page fetch request arising
-> from addresses/pages inside of an enclave.
->=20
-> Forcing a bitflip in enclave memory causes the next page fetch
-> containing the bitflipped location to fail its integrity check.  Since
-> this technically shouldn't be possible, this situation was classified
-> as a hardware failure which is handled by the processor locking its
-> execution state, thus taking the machine down.
+> > 1) Charge start threshold
+> > /sys/class/power_supply/BATN/charge_start_threshold
+> >
+> > Valid values are [0, 99]. A value of 0 turns off the
+> > start threshold wear control.
+> >
+> > 2) Charge stop threshold
+> > /sys/class/power_supply/BATN/charge_stop_threshold
+> >
+> > Valid values are [1, 100]. A value of 100 turns off
+> > the stop threshold wear control. This must be
+> > configured first.
+> >
+> 
+> > This patch depends on the following patches:
+> >
+> > "battery: Add the battery hooking API"
+> 
+> Since this is series, no need to put above into changelog.
+> 
+> AFAICS it's not going to be backported either.
+> 
+> 
+> > +/**
+> > + * This evaluates a ACPI method call specific to the battery
+> > + * ACPI extension. The specifics are that an error is marked
+> > + * in the 32rd bit of the response, so we just check that here.
+> > + *
+> > + * Returns 0 on success
+> > + */
+> > +static int tpacpi_battery_acpi_eval(char *method, int *ret, int param)
+> > +{
+> 
+> One problem and one trick you may do.
+> 
+> A problem: you return ACPI status as int. We have special type for
+> that. So, be consistent with it.
+> Looking to acpi_evalf() which is private to the module, I think you
+> need to get rid of ACPI return codes here.
+> 
+> A trick: since you are using only least significant byte of the
+> response, you can declare it as u8 *value (yeah, ret is not best name
+> here I think).
 
-So you can't really do bitflips on the SGX protected memory, because
-MM{E,U} hardware will catch that and kill machine if you try?
+Not really. In one place I need bit #9, so that will stay a int.
+I have changed the acpi return value to acpi_status tho.
 
-So SGX protected memory is not swappable?
-
-> It would seem to be a misfeature for the self-protection mechanism to
-> not generate some type of trappable fault rather then generating a
-> processor lockup but hindsight is always 20/20.  Philosophically this
-> is a good example of security risk managment.  Locking a machine is
-> obviously problematic in a cloud service environment, but it has to be
-> taken in the perspective of whether or not it would be preferable to
-> have a successful privilege escalation attack which could result in
-> exfiltration of sensitive data.
-
-Ok, right, it should fault. They can fix it in new version?
-
-> > Well, yes :-). And I believe someone is going to have fun with SGX
-> > ;-).
->=20
-> Arguably not as much fun as what appears to be pending, given what
-> appears to be the difficulty of some Intel processors to deal with
-> page faults induced by speculative memory references... :-)
-
-Do you have more info on that? Will they actually leak information, or
-is it just good for rowhammering the kernel memory?
-
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpMpvcACgkQMOfwapXb+vKJFgCeOHE+GANAbpZtWBbzwCcANtOn
-MTcAnR+xaqLcIQgze7OkG4B7qCpRBier
-=iYQr
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+> 
+> So, something like
+> 
+> ..._eval(..., u8 *value, ...)
+> {
+>   int response;
+> 
+>   if (!..._evalf(..., &response, ...)) {
+>   ...
+> 
+> > +       if (!acpi_evalf(hkey_handle, ret, method, "dd", param)) {
+> > +               acpi_handle_err(hkey_handle, "%s: evaluate failed", method);
+> > +               return AE_ERROR;
+> > +       }
+> > +
+> > +       if (*ret & METHOD_ERR) {
+> 
+> if (response & ...) {
+> 
+> > +               acpi_handle_err(hkey_handle,
+> > +                               "%s evaluated but flagged as error", method);
+> > +               return AE_ERROR;
+> > +       }
+> 
+> *value = response;
+> 
+> > +
+> > +       return AE_OK;
+> > +}
+> 
+> > +static int tpacpi_battery_get(int what, int battery, int *ret)
+> > +{
+> > +       switch (what) {
+> > +
+> > +       case THRESHOLD_START:
+> > +
+> > +               if (tpacpi_battery_acpi_eval(GET_START, ret, battery))
+> > +                       return -ENODEV;
+> > +
+> 
+> > +               /* The value is in the low 8 bits of the response */
+> > +               *ret = *ret & 0xFF;
+> 
+> So, this will gone with a trick above.
+> 
+> > +               return 0;
+> > +
+> > +       case THRESHOLD_STOP:
+> > +
+> > +               if (tpacpi_battery_acpi_eval(GET_STOP, ret, battery))
+> > +                       return -ENODEV;
+> > +
+> > +               /* Value is in lower 8 bits */
+> > +               *ret = *ret & 0xFF;
+> 
+> Ditto.
+> 
+> > +
+> > +               /*
+> > +                * On the stop value, if we return 0 that
+> > +                * does not make any sense. 0 means Default, which
+> > +                * means that charging stops at 100%, so we return
+> > +                * that.
+> > +                */
+> > +               if (*ret == 0)
+> > +                       *ret = 100;
+> > +
+> > +               return 0;
+> > +
+> > +       default:
+> > +               pr_crit("wrong parameter: %d", what);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +}
+> 
+> > +static int tpacpi_battery_probe(int battery)
+> > +{
+> > +       int ret = 0;
+> > +
+> > +       memset(&battery_info, 0, sizeof(struct tpacpi_battery_driver_data));
+> > +
+> > +       /*
+> > +        * 1) Get the current start threshold
+> > +        * 2) Check for support
+> > +        * 3) Get the current stop threshold
+> > +        * 4) Check for support
+> > +        */
+> > +
+> > +       if (acpi_has_method(hkey_handle, GET_START)) {
+> > +
+> > +               if (tpacpi_battery_acpi_eval(GET_START, &ret, battery)) {
+> > +                       pr_err("Error probing battery %d\n", battery);
+> > +                       return -ENODEV;
+> > +               }
+> > +
+> > +               /* Individual addressing is in bit 9 */
+> > +               if (ret & BIT(9))
+> > +                       battery_info.individual_addressing = true;
+> > +
+> > +               /* Support is marked in bit 8 */
+> > +               if (ret & BIT(8))
+> > +                       battery_info.batteries[battery].start_support = 1;
+> > +               else
+> > +                       return -ENODEV;
+> > +
+> > +               if (tpacpi_battery_get(THRESHOLD_START, battery,
+> > +                       &battery_info.batteries[battery].charge_start)) {
+> > +                       pr_err("Error probing battery %d\n", battery);
+> > +                       return -ENODEV;
+> > +               }
+> 
+> > +
+> 
+> Please, get rid of all useless empty lines like this one, or above (in
+> between of two if:s).
+> 
+> > +       }
+> 
+> > +/* General helper functions */
+> > +
+> > +static int tpacpi_battery_get_id(const char *battery_name)
+> > +{
+> > +
+> > +       if (strcmp(battery_name, "BAT0") == 0)
+> > +               return BAT_PRIMARY;
+> > +       if (strcmp(battery_name, "BAT1") == 0)
+> > +               return BAT_SECONDARY;
+> > +
+> > +       /*
+> > +        * If for some reason the battery is not BAT0 nor is it
+> > +        * BAT1, we will assume it's the default, first battery,
+> > +        * AKA primary.
+> > +        */
+> > +       pr_warn("unknown battery %s, assuming primary", battery_name);
+> > +       return BAT_PRIMARY;
+> > +}
+> > +
+> > +/* sysfs interface */
+> > +
+> > +static ssize_t tpacpi_battery_store(int what,
+> > +                                   struct device *dev,
+> > +                                   const char *buf, size_t count)
+> > +{
+> > +       struct power_supply *supply = to_power_supply(dev);
+> > +       unsigned long value;
+> > +       int battery, errno;
+> 
+> > +       errno = kstrtoul(buf, 10, &value);
+> 
+> > +
+> 
+> Dont' split lines like these where one returns some error code
+> followed by conditional check.
+> 
+> > +       if (errno)
+> 
+> > +               return errno;
+> 
+> Besides, errno is a bad name, please consider what is used elsewhere
+> in this module (rc, ret, rval, ...?).
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
