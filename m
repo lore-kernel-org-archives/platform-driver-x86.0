@@ -1,116 +1,43 @@
-From: "Dr. Greg Wettstein" <greg@wind.enjellic.com>
-Subject: Re: [PATCH v6 00/11] Intel SGX Driver
-Date: Tue, 2 Jan 2018 18:59:26 -0600
-Message-ID: <201801030059.w030xQGD011342@wind.enjellic.com>
-References: <pavel@ucw.cz>
-Reply-To: greg@enjellic.com
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: platform/x86/thinkpad_acpi: Adjustments for four function
+ implementations
+Date: Tue, 2 Jan 2018 17:13:52 -0800
+Message-ID: <20180103011352.GE24794@fury>
+References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+ <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
+ <ea910da9-ca59-b895-b071-35d9c5cbd112@users.sourceforge.net>
+ <20171223014033.jx7fzu7uzjfbzyca@khazad-dum.debian.net>
+ <80ae8328-5851-01b0-cb31-474f7baf1686@users.sourceforge.net>
+ <20180103001034.GC24794@fury>
+ <1514940583.31497.4.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: Pavel Machek <pavel@ucw.cz>
-       "Re: [PATCH v6 00/11] Intel SGX Driver" (Dec 27,  9:46pm)
+Content-Disposition: inline
+In-Reply-To: <1514940583.31497.4.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro
+To: Joe Perches <joe@perches.com>
+Cc: SF Markus Elfring <elfring@users.sourceforge.net>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Dec 27,  9:46pm, Pavel Machek wrote:
-} Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+On Tue, Jan 02, 2018 at 04:49:43PM -0800, Joe Perches wrote:
+> On Tue, 2018-01-02 at 16:10 -0800, Darren Hart wrote:
+> > > > Leave those pr_ messages alone, please,
+> []
+> > Andy and Henrique raised a few reasons why these patches should not be
+> > accepted:
+> > 
+> > 1. This is init code (so any space savings is short lived)
+> 
+> Not exactly true.
+> 
+> The object code itself is short lived, but the
+> string constant of the format is not as it is
+> placed in const and not discarded.
 
-> Hi!
+Thanks for the clarification, appreciate it. I hadn't looked into it in enough
+detail previously.
 
-Good evening Pavel et.al., I hope the New Year has started well for
-everyone.
-
-> > > Would you list guarantees provided by SGX?
-> >
-> > Obviously, confidentiality and integrity.  SGX was designed to address
-> > an Iago threat model, a very difficult challenge to address in
-> > reality.
-
-> Do you have link on "Iago threat model"?
-
-https://cseweb.ucsd.edu/~hovav/dist/iago.pdf
-
-> > I don't have the citation immediately available, but a bit-flip attack
-> > has also been described on enclaves.  Due to the nature of the
-> > architecture, they tend to crash the enclave so they are more in the
-> > category of a denial-of-service attack, rather then a functional
-> > confidentiality or integrity compromise.
-
-> So ... even with SGX, host can generate bitflips in the enclave,
-> right?
-
-Correct.
-
-Here is the reference I was trying to recall in my last e-mail:
-
-https://sslab.gtisc.gatech.edu/assets/papers/2017/jang:sgx-bomb.pdf
-
-> People usually assume that bitflip will lead "only" to
-> denial-of-service, but rowhammer work shows that even "random" bit
-> flips easily lead to priviledge escalation on javascript virtual
-> machines, and in similar way you can get root if you have user and
-> bit flips happen.
->
-> So... I believe we should assume compromise is possible, not just
-> denial-of-service.
-
-Prudence always dictates that one assumes the worst.  In this case
-however, the bitflip attacks against SGX enclaves are very definitely
-in the denial-of-service category.  The attack is designed to trigger
-a hardware self-protection feature on the processor.
-
-Each page of memory which is initialized into an enclave has a
-metadata block associated with it which contains the integrity state
-of that page of memory.  The MM{E,U} hardware on an SGX capable
-platform checks this integrity data on each page fetch request arising
-from addresses/pages inside of an enclave.
-
-Forcing a bitflip in enclave memory causes the next page fetch
-containing the bitflipped location to fail its integrity check.  Since
-this technically shouldn't be possible, this situation was classified
-as a hardware failure which is handled by the processor locking its
-execution state, thus taking the machine down.
-
-It would seem to be a misfeature for the self-protection mechanism to
-not generate some type of trappable fault rather then generating a
-processor lockup but hindsight is always 20/20.  Philosophically this
-is a good example of security risk managment.  Locking a machine is
-obviously problematic in a cloud service environment, but it has to be
-taken in the perspective of whether or not it would be preferable to
-have a successful privilege escalation attack which could result in
-exfiltration of sensitive data.
-
-Philosophically we take the approach that for high security assurance
-environments it is virtually impossible to allow any untrusted code to
-run on a platform.  Which is why we focus on autonomous introspection
-for these environments.
-
-> > Unfortunately, in the security field it is way more fun, and
-> > seemingly advantageous from a reputational perspective, to break
-> > things then to build solutions.... :-)(
-
-> Well, yes :-). And I believe someone is going to have fun with SGX
-> ;-).
-> 									Pavel
-
-Arguably not as much fun as what appears to be pending, given what
-appears to be the difficulty of some Intel processors to deal with
-page faults induced by speculative memory references... :-)
-
-Best wishes for a productive New Year.
-
-Dr. Greg
-
-}-- End of excerpt from Pavel Machek
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"It is difficult to produce a television documentary that is both
- incisive and probing when every twelve minutes one is interrupted by
- twelve dancing rabbits singing about toilet paper."
-                                -- Rod Serling
+-- 
+Darren Hart
+VMware Open Source Technology Center
