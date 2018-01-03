@@ -1,48 +1,61 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2] platform/x86: silead_dmi: Add entry for the Teclast
- X98 Plus II
-Date: Wed, 3 Jan 2018 09:01:34 +0100
-Message-ID: <5c5301e1-48f5-5762-b1d8-95e5f4a2bd8d@redhat.com>
-References: <20180102134239.3579-1-paul@crapouillou.net>
- <20180102183928.15267-1-paul@crapouillou.net> <20180102234033.GB24794@fury>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: Re: platform/x86/thinkpad_acpi: Adjustments for four function
+ implementations
+Date: Wed, 3 Jan 2018 09:41:04 +0100
+Message-ID: <9ea2c1c7-a07d-19c3-a2dc-0c69352d9558@users.sourceforge.net>
+References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
+ <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
+ <ea910da9-ca59-b895-b071-35d9c5cbd112@users.sourceforge.net>
+ <20171223014033.jx7fzu7uzjfbzyca@khazad-dum.debian.net>
+ <80ae8328-5851-01b0-cb31-474f7baf1686@users.sourceforge.net>
+ <20180103001034.GC24794@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20180102234033.GB24794@fury>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Paul Cercueil <paul@crapouillou.net>
-Cc: Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180103001034.GC24794@fury>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+> I understand it can be frustrating to encounter different policies
+> across kernel maintainers.
 
-On 03-01-18 00:40, Darren Hart wrote:
-> On Tue, Jan 02, 2018 at 07:39:27PM +0100, Paul Cercueil wrote:
->> Add touchscreen platform data for the Teclast X98 Plus II tablet.
->>
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> Acked-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/platform/x86/silead_dmi.c | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->>   v2: Rebased on top of http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/shortlog/refs/heads/review-andy
-> 
-> Generally "testing" is the branch you want to base on if linus/master
-> doesn't work as the review-* branches *will* rebase frequently.
-> Exceptions exist of course, and this patch is just fine - just for
-> future reference.
+The change acceptance is varying for special transformation patterns.
 
-This is my "fault", I asked Paul to rebase on top of
-review-andy as that had 1 new silead_dmi patches missing
-from testing, so otherwise we would end up with a conflict when
-merging review branches. Same reason why I've been basing my
-silead_dmi patches on top of review-andy even though that is
-an unusual base to use.
+
+> You'll even run in to this with maintainers of the same subsystem
+> from time to time.
+
+Interesting, isn't it?
+
+
+> I'm supportive of cleaning up old code in general,
+
+Nice.
+
+
+> and we routinely apply such patches as these developed with cocci.
+
+Good to know …
+
+
+> 1. This is init code )so any space savings is short lived)
+
+Would you dare to achieve another small improvement there?
+
+
+> So it isn't that we place a low value on coding style guidelines,
+> but rather we place higher value on not perturbing code
+
+I can follow this view in principle.
+
+
+> we can't fully test without a demonstrable functional reasons to do so.
+
+How do you think about to get a bit nicer run time characteristics?
 
 Regards,
-
-Hans
-
+Markus
