@@ -1,71 +1,57 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v11 3/5] thinkpad_acpi: Add support for battery thresholds
-Date: Wed, 03 Jan 2018 12:24:53 +0100
-Message-ID: <7475117.k4QWeGOQkJ@aspire.rjw.lan>
-References: <20171231141727.GA4643@thinkpad> <CAHp75VeYRYRpmqy_GGQ95e1YhvZGfWtsJrGbLiA4JskEmd69zg@mail.gmail.com> <20180103103455.GA17803@thinkpad>
+Subject: [PATCH] ACPI / WMI: Call acpi_wmi_init() later
+Date: Wed, 03 Jan 2018 12:49:29 +0100
+Message-ID: <2601877.IhOx20xkUK@aspire.rjw.lan>
+References: <20171208151159.urdcrzl5qpfd6jnu@earth.li>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180103103455.GA17803@thinkpad>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?ISO-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43288 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751151AbeACLug (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 3 Jan 2018 06:50:36 -0500
+In-Reply-To: <20171208151159.urdcrzl5qpfd6jnu@earth.li>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>
+Cc: Jonathan McDowell <noodles@earth.li>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>
 
-On Wednesday, January 3, 2018 11:34:55 AM CET Ognjen Galić wrote:
-> On Mon, Jan 01, 2018 at 12:24:39PM +0200, Andy Shevchenko wrote:
-> > On Sun, Dec 31, 2017 at 4:17 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
-> > > thinkpad_acpi registers two new attributes for each battery:
-> > >
-> > > 1) Charge start threshold
-> > > /sys/class/power_supply/BATN/charge_start_threshold
-> > >
-> > > Valid values are [0, 99]. A value of 0 turns off the
-> > > start threshold wear control.
-> > >
-> > > 2) Charge stop threshold
-> > > /sys/class/power_supply/BATN/charge_stop_threshold
-> > >
-> > > Valid values are [1, 100]. A value of 100 turns off
-> > > the stop threshold wear control. This must be
-> > > configured first.
-> > >
-> > 
-> > > This patch depends on the following patches:
-> > >
-> > > "battery: Add the battery hooking API"
-> > 
-> > Since this is series, no need to put above into changelog.
-> > 
-> > AFAICS it's not going to be backported either.
-> > 
-> > 
-> > > +/**
-> > > + * This evaluates a ACPI method call specific to the battery
-> > > + * ACPI extension. The specifics are that an error is marked
-> > > + * in the 32rd bit of the response, so we just check that here.
-> > > + *
-> > > + * Returns 0 on success
-> > > + */
-> > > +static int tpacpi_battery_acpi_eval(char *method, int *ret, int param)
-> > > +{
-> > 
-> > One problem and one trick you may do.
-> > 
-> > A problem: you return ACPI status as int. We have special type for
-> > that. So, be consistent with it.
-> > Looking to acpi_evalf() which is private to the module, I think you
-> > need to get rid of ACPI return codes here.
-> > 
-> > A trick: since you are using only least significant byte of the
-> > response, you can declare it as u8 *value (yeah, ret is not best name
-> > here I think).
-> 
-> Not really. In one place I need bit #9, so that will stay a int.
-> I have changed the acpi return value to acpi_status tho.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-OK, you can resend the updated series when you're ready.
+Calling acpi_wmi_init() at the subsys_initcall() level causes ordering
+issues to appear on some systems and they are difficult to reproduce,
+because there is no guaranteed ordering between subsys_initcall()
+calls, so they may occur in different orders on different systems.
 
-Thanks,
-Rafael
+In particular, commit 86d9f48534e8 (mm/slab: fix kmemcg cache
+creation delayed issue) exposed one of these issues where genl_init()
+and acpi_wmi_init() are both called at the same initcall level, but
+the former must run before the latter so as to avoid a NULL pointer
+dereference.
+
+For this reason, move the acpi_wmi_init() invocation to the
+initcall_sync level which should still be early enough for things
+to work correctly in the WMI land.
+
+Link: https://marc.info/?t=151274596700002&r=1&w=2
+Reported-by: Jonathan McDowell <noodles@earth.li>
+Reported-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Tested-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/platform/x86/wmi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-pm/drivers/platform/x86/wmi.c
+===================================================================
+--- linux-pm.orig/drivers/platform/x86/wmi.c
++++ linux-pm/drivers/platform/x86/wmi.c
+@@ -1458,5 +1458,5 @@ static void __exit acpi_wmi_exit(void)
+ 	class_unregister(&wmi_bus_class);
+ }
+ 
+-subsys_initcall(acpi_wmi_init);
++subsys_initcall_sync(acpi_wmi_init);
+ module_exit(acpi_wmi_exit);
