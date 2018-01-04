@@ -1,98 +1,142 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v12 1/4] battery: Add the battery hooking API
-Date: Wed, 3 Jan 2018 18:40:12 +0200
-Message-ID: <CAHp75VceXVb2N7hyjoDhAq_M+=2VcDcPc+Jt-FSsWuW7D7eFww@mail.gmail.com>
-References: <20180103115847.GA10092@thinkpad> <CAHp75Vdj2rasWqdmBKGxNs9Y+Rap=UycoFdOcbG6QgA48Afq5w@mail.gmail.com>
- <20180103145307.GA17694@thinkpad>
+From: Christophe LEROY <christophe.leroy@c-s.fr>
+Subject: Re: [PATCH v3 00/27] kill devm_ioremap_nocache
+Date: Thu, 4 Jan 2018 09:05:45 +0100
+Message-ID: <1eb206ed-95e9-5839-485d-0e549ff3f505@c-s.fr>
+References: <1514026525-32538-1-git-send-email-xieyisheng1@huawei.com>
+ <20171223134831.GB10103@kroah.com>
+ <b8ff7f17-7f2c-f220-9833-7ae5bd7343d5@c-s.fr>
+ <8dd19411-5b06-0aa4-fd0e-e5b112c25dcb@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20180103145307.GA17694@thinkpad>
-Sender: linux-acpi-owner@vger.kernel.org
-To: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <8dd19411-5b06-0aa4-fd0e-e5b112c25dcb@huawei.com>
+Content-Language: fr
+Sender: linux-ide-owner@vger.kernel.org
+To: Yisheng Xie <xieyisheng1@huawei.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, ysxie@foxmail.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, boris.brezillon@free-electrons.com, richard@nod.at, marek.vasut@gmail.com, cyrille.pitchen@wedev4u.fr, linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org, b.zolnierkie@samsung.com, linux-fbdev@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, ralf@linux-mips.org, linux-mips@linux-mips.org, lgirdwood@gmail.com, broonie@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, arnd@arndb.de, andriy.shevchenko@linux.intel.com, industrypack-devel@lists.sourceforge.net, wg@grandegger.com, mkl@pengutronix.de, linux-can@vger.kernel.org, mchehab@kernel.org, linux-media@vg
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 3, 2018 at 4:53 PM, Ognjen Gali=C4=87 <smclt30p@gmail.com> wrot=
-e:
-> On Wed, Jan 03, 2018 at 04:25:42PM +0200, Andy Shevchenko wrote:
->> On Wed, Jan 3, 2018 at 1:58 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
 
->> Thanks for an update. I have couple of minors. Otherwise look pretty muc=
-h good!
+
+Le 25/12/2017 à 02:34, Yisheng Xie a écrit :
+> 
+> 
+> On 2017/12/24 17:05, christophe leroy wrote:
 >>
->> >  drivers/acpi/battery.h |  11 ----
->> >  include/acpi/battery.h |  21 +++++++
 >>
->> There are -M and -C command line parameters to git format-patch.
-
->> They can take an optional argument (percentage) of threshold.
+>> Le 23/12/2017 à 14:48, Greg KH a écrit :
+>>> On Sat, Dec 23, 2017 at 06:55:25PM +0800, Yisheng Xie wrote:
+>>>> Hi all,
+>>>>
+>>>> When I tried to use devm_ioremap function and review related code, I found
+>>>> devm_ioremap and devm_ioremap_nocache is almost the same with each other,
+>>>> except one use ioremap while the other use ioremap_nocache.
+>>>
+>>> For all arches?  Really?  Look at MIPS, and x86, they have different
+>>> functions.
+>>>
+>>>> While ioremap's
+>>>> default function is ioremap_nocache, so devm_ioremap_nocache also have the
+>>>> same function with devm_ioremap, which can just be killed to reduce the size
+>>>> of devres.o(from 20304 bytes to 18992 bytes in my compile environment).
+>>>>
+>>>> I have posted two versions, which use macro instead of function for
+>>>> devm_ioremap_nocache[1] or devm_ioremap[2]. And Greg suggest me to kill
+>>>> devm_ioremap_nocache for no need to keep a macro around for the duplicate
+>>>> thing. So here comes v3 and please help to review.
+>>>
+>>> I don't think this can be done, what am I missing?  These functions are
+>>> not identical, sorry for missing that before.
 >>
->> Playing with those numbers you can achieve
-
-^^^^ Pay attention to the above
-
+>> devm_ioremap() and devm_ioremap_nocache() are quite similar, both use devm_ioremap_release() for the release, why not just defining:
 >>
->> rename ...
+>> static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+>>                 resource_size_t size, bool nocache)
+>> {
+>> [...]
+>>      if (nocache)
+>>          addr = ioremap_nocache(offset, size);
+>>      else
+>>          addr = ioremap(offset, size);
+>> [...]
+>> }
 >>
->> line and see actual diff.
+>> then in include/linux/io.h
 >>
->> No need to resend because of this. Just an explanation for the future Gi=
-t work.
->
-> I did use thos options. I used the following command:
->
-> git format-patch -M -C --notes -v12 -o ~/patches/. @^^^^
->
-> I really don't know what you are targeting. :)
-
-Please, read what I wrote above and the manual of git-format-patch.
-
->> > +void __battery_hook_unregister(struct acpi_battery_hook *hook, int lo=
-ck)
->> > +{
->> > +       struct list_head *position;
->> > +       struct acpi_battery *battery;
+>> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>>                 resource_size_t size)
+>> {return __devm_ioremap(dev, offset, size, false);}
 >>
->> Missed empty line?
->
-> checkpatch.pl complains if there are NOT empty lines between
-> declarations and statements.
+>> static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+>>                     resource_size_t size);
+>> {return __devm_ioremap(dev, offset, size, true);}
+> 
+> Yeah, this seems good to me, right now we have devm_ioremap, devm_ioremap_wc, devm_ioremap_nocache
+> May be we can use an enum like:
+> typedef enum {
+> 	DEVM_IOREMAP = 0,
+> 	DEVM_IOREMAP_NOCACHE,
+> 	DEVM_IOREMAP_WC,
+> } devm_ioremap_type;
+> 
+> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>                  resource_size_t size)
+>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP);}
+> 
+>   static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+>                      resource_size_t size);
+>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_NOCACHE);}
+> 
+>   static inline void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
+>                      resource_size_t size);
+>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_WC);}
+> 
+>   static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+>                  resource_size_t size, devm_ioremap_type type)
+>   {
+>       void __iomem **ptr, *addr = NULL;
+>   [...]
+>       switch (type){
+>       case DEVM_IOREMAP:
+>           addr = ioremap(offset, size);
+>           break;
+>       case DEVM_IOREMAP_NOCACHE:
+>           addr = ioremap_nocache(offset, size);
+>           break;
+>       case DEVM_IOREMAP_WC:
+>           addr = ioremap_wc(offset, size);
+>           break;
+>       }
+>   [...]
+>   }
 
-checkpatch some times on one hand complains about something which it
-should not, on the other didn't take into consideration cases like
-this one.
 
-Your statement started with comment, btw.
+That looks good to me, will you submit a v4 ?
 
->> > +       /*
->> > +        * In order to remove a hook, we first need to
->> > +        * de-register all the batteries that are registered.
->> > +        */
->> > +       if (lock)
->> > +               mutex_lock(&hook_mutex);
+Christophe
 
-> I mean, it's not game-breaking, its just minor style stuff. I won't be
-> sending more revisions because of these small issues, as I think its
-> uneccessary to flood both Rafael and the mailing lists with patch
-> revisions that remove or add a few spaces. No offence, it just got old.
-
-Yes, his call anyway to apply or ask you for amendments. I'm just
-helping with review.
-
->> > +static void __exit battery_hook_exit(void)
->> > +{
->> > +       struct acpi_battery_hook *hook;
->> > +       struct acpi_battery_hook *ptr;
+> 
+> Thanks
+> Yisheng
+> 
 >>
->> Missed empty line?
->
-> See above about the checkpatch.pl stuff.
-
-See above the answer.
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+>> Christophe
+>>
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>> -- 
+>>> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+>> ---
+>> L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
+>> https://www.avast.com/antivirus
+>>
+>>
+>> .
+>>
