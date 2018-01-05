@@ -1,93 +1,40 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
- support
-Date: Fri, 5 Jan 2018 14:48:39 +0000
-Message-ID: <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
- <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
- <20180105111313.23c6vjs2x3fhtvi4@pali>
- <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
- <20180105144406.vifyj46b2ca34aol@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] platform/x86: dell-smbios: Correct notation for filtering
+Date: Fri,  5 Jan 2018 08:56:48 -0600
+Message-ID: <1515164208-32510-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180105144406.vifyj46b2ca34aol@pali>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
-LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXIteDg2LQ0K
-PiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBQYWxpIFJvaMOhcg0KPiBTZW50
-OiBGcmlkYXksIEphbnVhcnkgNSwgMjAxOCA4OjQ0IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFy
-aW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5v
-cmc7IGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb207IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbHV0b0BrZXJuZWwu
-b3JnOw0KPiBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNvY2tpLm5ldDsgbWpnNTlAZ29v
-Z2xlLmNvbTsgaGNoQGxzdC5kZTsNCj4gZ3JlZ0Brcm9haC5jb207IGdub21lc0BseG9yZ3VrLnVr
-dXUub3JnLnVrDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6
-IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVyaW5nIHN1cHBvcnQNCj4gDQo+IE9uIEZyaWRheSAwNSBK
-YW51YXJ5IDIwMTggMTQ6MzI6NTQgTWFyaW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+
-ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IHBs
-YXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86cGxhdGZvcm0t
-ZHJpdmVyLXg4Ni0NCj4gPiA+IG93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBh
-bGkgUm9ow6FyDQo+ID4gPiBTZW50OiBGcmlkYXksIEphbnVhcnkgNSwgMjAxOCA1OjEzIEFNDQo+
-ID4gPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4N
-Cj4gPiA+IENjOiBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNo
-ZXZjaGVua29AZ21haWwuY29tPjsNCj4gPiA+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gQW5keQ0KPiA+
-ID4gTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3JnPjsgcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3
-QHJqd3lzb2NraS5uZXQ7DQo+ID4gPiBtamc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVn
-IEtIIDxncmVnQGtyb2FoLmNvbT47IEFsYW4gQ294DQo+ID4gPiA8Z25vbWVzQGx4b3JndWsudWt1
-dS5vcmcudWs+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMCAxMi8xNV0gcGxhdGZvcm0v
-eDg2OiBkZWxsLXNtYmlvczogQWRkIGZpbHRlcmluZyBzdXBwb3J0DQo+ID4gPg0KPiA+ID4gSSBr
-bm93IHRoYXQgdGhpcyBwYXRjaCBpcyBhbHJlYWR5IGFwcGxpZWQgYW5kIG1lcmdlZCwgYnV0IEkg
-c3BvdHRlZCB0aGlzDQo+ID4gPiBwcm9ibGVtOg0KPiA+ID4NCj4gPiA+IE9uIFRodXJzZGF5IDE5
-IE9jdG9iZXIgMjAxNyAxMjo1MDoxNSBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gPiA+ID4g
-Ky8qIGNhbGxzIHRoYXQgYXJlIGV4cGxpY2l0bHkgYmxhY2tsaXN0ZWQgKi8NCj4gPiA+ID4gK3N0
-YXRpYyBzdHJ1Y3Qgc21iaW9zX2NhbGwgY2FsbF9ibGFja2xpc3RbXSA9IHsNCj4gPiA+ID4gKwl7
-MHgwMDAwLCAwMSwgMDd9LCAvKiBtYW51ZmFjdHVyaW5nIHVzZSAqLw0KPiA+ID4gPiArCXsweDAw
-MDAsIDA2LCAwNX0sIC8qIG1hbnVmYWN0dXJpbmcgdXNlICovDQo+ID4gPiA+ICsJezB4MDAwMCwg
-MTEsIDAzfSwgLyogd3JpdGUgb25jZSAqLw0KPiA+ID4gPiArCXsweDAwMDAsIDExLCAwN30sIC8q
-IHdyaXRlIG9uY2UgKi8NCj4gPiA+DQo+ID4gPiBOdW1iZXJzIHByZWZpeGVkIGJ5IHplcm8gbWVh
-bnMgdGhhdCB0aGV5IGFyZSBpbiBvY3RhbCBub3RhdGlvbiwgcmlnaHQ/DQo+ID4gSXMgdGhhdCBo
-b3cgdGhlIGtlcm5lbCBpbnRlcnByZXRzIGFuIGludGVnZXIgcHJlZml4IGJ5IHplcm8/DQo+IA0K
-PiBObywgdGhpcyBpcyBob3cgQyBsYW5ndWFnZSBkZWZpbmUgaXQuIFNlZSBlLmcuIEMxMSBzdGFu
-ZGFyZCwgc2VjdGlvbg0KPiA2LjQuNC4xIEludGVnZXIgY29uc3RhbnRzOg0KPiANCj4gZGVjaW1h
-bC1jb25zdGFudDoNCj4gCW5vbnplcm8tZGlnaXQNCj4gCWRlY2ltYWwtY29uc3RhbnQgZGlnaXQN
-Cj4gDQo+IG9jdGFsLWNvbnN0YW50Og0KPiAJMA0KPiAJb2N0YWwtY29uc3RhbnQgb2N0YWwtZGln
-aXQNCj4gDQo+IFNvIGluIEMgZGVjaW1hbCBudW1iZXIgY2Fubm90IHN0YXJ0IHdpdGggZGlnaXQg
-emVyby4NCj4gDQo+IEkgdGhpbmsgdGhlIHBsYWNlIHdoZXJlIG9jdGFsIG51bWJlcnMgYXJlIHVz
-ZWQgYXJlIGluIHBlcm1pc3Npb25zICgwNzc3KQ0KPiANCj4gPiBJIHByZWZpeGVkIGJ5IHplcm8g
-Zm9yIHJlYWRhYmlsaXR5LCB0aGV5J3JlIHN1cHBvc2VkIHRvIGJlIGRlY2ltYWwuDQo+ID4NCj4g
-PiA+IFRoaXMgY2FuIGxlYWQgdG8gbWlzdW5kZXJzdGFuZGluZywgY29uZnVzaW9uIG9yIHByb2Js
-ZW1zIGluIGZ1dHVyZS4uLg0KPiA+ID4NCj4gPiA+IENhbiB3ZSBoYXZlIGFsbCBudW1iZXJzIGVp
-dGhlciBpbiBoZXhhZGVjaW1hbCBvciBkZWNpbWFsIG5vdGF0aW9uPw0KPiA+DQo+ID4gQ291bGQg
-eW91IGVsYWJvcmF0ZSBtb3JlIHdoeSB0aGlzIGlzIHByb2JsZW1hdGljIHRoZSB3YXkgaXQgaXM/
-DQo+IA0KPiBDdXJyZW50bHkgaXQgaXMgbm90IHByb2JsZW0gYXMgNyBpcyBzYW1lIG51bWJlciBp
-biBvY3RhbCAoMDcpIGFuZA0KPiBkZWNpbWFsICg3KS4gcmVwcmVzZW50YXRpb24uIEJ1dCBlLmcu
-IG9jdGFsIDA3NyBpcyA2MyBpbiBkZWNpbWFsLg0KPiANCj4gPiBBcmUgeW91IG1lYW5pbmcgeW91
-IHdvdWxkIHJhdGhlciBzZWUgdGhpcz8NCj4gPiAJezB4MDAwMCwgMSwgN30sIC8qIG1hbnVmYWN0
-dXJpbmcgdXNlICovDQo+ID4gCXsweDAwMDAsIDYsIDV9LCAvKiBtYW51ZmFjdHVyaW5nIHVzZSAq
-Lw0KPiA+IAl7MHgwMDAwLCAxMSwgM30sIC8qIHdyaXRlIG9uY2UgKi8NCj4gPiAJezB4MDAwMCwg
-MTEsIDd9LCAvKiB3cml0ZSBvbmNlICovDQo+IA0KPiBZZXMsIHRoaXMgaXMgYmV0dGVyLiBJZiB5
-b3UgbmVlZCB0byBhY2hpZXZlIGFsaWdubWVudCB0aGVuIHVzZSBzcGFjZXMuDQo+IFJlYWxseSwg
-bm90IGxlYWRpbmcgemVyb3MuDQo+IA0KPiA+IFRoYXQgc2VlbXMgbGVzcyByZWFkYWJsZSB0byBt
-ZSBidXQgc2hvdWxkIGludGVycHJldCB0aGUgc2FtZSB3YXkuDQo+IA0KPiBFeGFtcGxlOg0KPiAN
-Cj4gezB4MDAwLCAwNzcsIDd9LA0KPiB7MHgwMDAsIDAwNywgN30sDQo+IA0KPiBpcyAqKm5vdCoq
-IHNhbWUgYXMNCj4gDQo+IHsweDAwMCwgIDc3LCA3fSwNCj4gezB4MDAwLCAgIDcsIDd9LA0KPiAN
-Cj4gQXMgZmlyc3QgbnVtYmVyIGluIGZpcnN0IHNlY3Rpb24gaXMgKGRlY2ltYWwpIDYzLCBub3Qg
-KGRlY2ltYWwpIDc3Lg0KPiANCj4gPiBQZXJoYXBzIGl0IHdvdWxkIGJlIGJldHRlciBpZiB5b3Ug
-c3VibWl0IGEgcGF0Y2ggd2l0aCB3aGF0IGlzIGNsZWFyZXIgdG8NCj4gPiB5b3UuDQo+ID4NCj4g
-PiA+DQo+ID4gPiA+ICsJezB4MDAwMCwgMTEsIDExfSwgLyogd3JpdGUgb25jZSAqLw0KPiA+ID4g
-PiArCXsweDAwMDAsIDE5LCAtMX0sIC8qIGRpYWdub3N0aWNzICovDQo+ID4gPiA+ICsJLyogaGFu
-ZGxlZCBieSBrZXJuZWw6IGRlbGwtbGFwdG9wICovDQo+ID4gPiA+ICsJezB4MDAwMCwgQ0xBU1Nf
-SU5GTywgU0VMRUNUX1JGS0lMTH0sDQo+ID4gPiA+ICsJezB4MDAwMCwgQ0xBU1NfS0JEX0JBQ0tM
-SUdIVCwgU0VMRUNUX0tCRF9CQUNLTElHSFR9LA0KPiA+ID4gPiArfTsNCj4gPiA+DQo+ID4gPiAt
-LQ0KPiA+ID4gUGFsaSBSb2jDoXINCj4gPiA+IHBhbGkucm9oYXJAZ21haWwuY29tDQo+IA0KPiAt
-LQ0KPiBQYWxpIFJvaMOhcg0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KDQpUaGFua3MgdmVyeSBt
-dWNoIGZvciBzaGFyaW5nLiAgSSB3YXNuJ3QgYXdhcmUgb2YgdGhpcy4gIEknbGwgc2VuZCBhIHBh
-dGNoLg0K
+The class/select were mistakingly put into octal notation but
+intended to be in decimal notation.
+
+Suggest-by: Pali Rohar <pali.rohar@gmail.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/dell-smbios.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index 6a60db5..8541cde 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -65,10 +65,10 @@ static struct smbios_call call_whitelist[] = {
+ 
+ /* calls that are explicitly blacklisted */
+ static struct smbios_call call_blacklist[] = {
+-	{0x0000, 01, 07}, /* manufacturing use */
+-	{0x0000, 06, 05}, /* manufacturing use */
+-	{0x0000, 11, 03}, /* write once */
+-	{0x0000, 11, 07}, /* write once */
++	{0x0000,  1,  7}, /* manufacturing use */
++	{0x0000,  6,  5}, /* manufacturing use */
++	{0x0000, 11,  3}, /* write once */
++	{0x0000, 11,  7}, /* write once */
+ 	{0x0000, 11, 11}, /* write once */
+ 	{0x0000, 19, -1}, /* diagnostics */
+ 	/* handled by kernel: dell-laptop */
+-- 
+2.7.4
