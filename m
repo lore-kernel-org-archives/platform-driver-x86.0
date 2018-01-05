@@ -1,78 +1,59 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2] x86/platform/intel-mid: Revert "Make 'bt_sfi_data'
- const"
-Date: Fri, 5 Jan 2018 18:41:28 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1801051837220.3205@hadrien>
-References: <20171228122523.21802-1-andriy.shevchenko@linux.intel.com>  <20171228123413.3shmkfsewmq3y4e5@gmail.com> <1515172696.7000.754.camel@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] ACPI / WMI: Call acpi_wmi_init() later
+Date: Sat, 6 Jan 2018 00:30:23 +0100
+Message-ID: <CAJZ5v0jxVUxFetwPaj76FoeQjHtSSwO+4jiEqadA1WXZ_YNNoQ@mail.gmail.com>
+References: <20171208151159.urdcrzl5qpfd6jnu@earth.li> <2601877.IhOx20xkUK@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:16190
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751796AbeAERlg (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Jan 2018 12:41:36 -0500
-In-Reply-To: <1515172696.7000.754.camel@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Fengguang Wu <fengguang.wu@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Bhumika Goyal <bhumirks@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <2601877.IhOx20xkUK@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>
+Cc: Jonathan McDowell <noodles@earth.li>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management List <linux-mm@kvack.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Wed, Jan 3, 2018 at 12:49 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Calling acpi_wmi_init() at the subsys_initcall() level causes ordering
+> issues to appear on some systems and they are difficult to reproduce,
+> because there is no guaranteed ordering between subsys_initcall()
+> calls, so they may occur in different orders on different systems.
+>
+> In particular, commit 86d9f48534e8 (mm/slab: fix kmemcg cache
+> creation delayed issue) exposed one of these issues where genl_init()
+> and acpi_wmi_init() are both called at the same initcall level, but
+> the former must run before the latter so as to avoid a NULL pointer
+> dereference.
+>
+> For this reason, move the acpi_wmi_init() invocation to the
+> initcall_sync level which should still be early enough for things
+> to work correctly in the WMI land.
+>
+> Link: https://marc.info/?t=151274596700002&r=1&w=2
+> Reported-by: Jonathan McDowell <noodles@earth.li>
+> Reported-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Tested-by: Jonathan McDowell <noodles@earth.li>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
+Guys, this fixes a crash on boot.
 
-On Fri, 5 Jan 2018, Andy Shevchenko wrote:
+If there are no concerns/objections I will just take it through the ACPI tree.
 
-> On Thu, 2017-12-28 at 13:34 +0100, Ingo Molnar wrote:
-> > * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > > v2: low the tone of accusation that this made a regression
-> >
-> > BTW., don't worry about that aspect too much: after a long debugging
-> > session it's
-> > pretty natural to be upset at whoever introduced a regression.
+> ---
+>  drivers/platform/x86/wmi.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> It appears that regression has been introduced by a new dependency to
-> the hci_bcm.c.
+> Index: linux-pm/drivers/platform/x86/wmi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/wmi.c
+> +++ linux-pm/drivers/platform/x86/wmi.c
+> @@ -1458,5 +1458,5 @@ static void __exit acpi_wmi_exit(void)
+>         class_unregister(&wmi_bus_class);
+>  }
 >
-> In any case, can we apply this one to 4.15 cycle to make others prevent
-> do an actual regressions further:
+> -subsys_initcall(acpi_wmi_init);
+> +subsys_initcall_sync(acpi_wmi_init);
+>  module_exit(acpi_wmi_exit);
 >
-> commit 03838ae1e8f692dd2bdbd49820ed668d4b7bfbc2
-> Author: Andi Kleen <ak@linux.intel.com>
-> Date:   Fri Jan 5 13:26:44 2018 +1100
->
->     arch/x86/platform/intel-mid/device_libs/platform_bt.c: fix const
-> confusion
->
-> >
-> > ( In fact a number of times I too got upset at the moron who wrote a
-> > particular
-> >   piece of buggy code, only for 'git annotate' to remind me that the
-> > moron was me. )
-> >
-> > I personally just ignore the emotional attributes, and I usually edit
-> > changelogs
-> > accordingly as well so the temporary state of mind of finding a
-> > regression doesn't
-> > trickle upstream.
-> >
-> > Plus in this particular case if we can help type propagation for
-> > driver data to
-> > become a bit cleaner then the kernel project has gained a bit through
-> > all this
-> > pain.
->
-> I has been thinking if 0day can complain about these:
-> 1) castings in new code
-> 2) applying const to older *working* code
->
-> Fengguang, what do you think?
-
-As suggested previously, I think it would be better if code that retrieves
-const structures from nonconst fields would store the result in a const
-variable.  Then the compiler would pick up the verification from there.  A
-Coccinelle script can detect cases where this property does not hold, at
-least within a single file.  This would have protected the given code and
-still allowed constant structures to be made const.
-
-julia
+> --
