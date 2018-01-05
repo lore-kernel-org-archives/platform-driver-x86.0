@@ -1,63 +1,121 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
  support
-Date: Fri, 5 Jan 2018 14:32:54 +0000
-Message-ID: <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
+Date: Fri, 5 Jan 2018 15:44:06 +0100
+Message-ID: <20180105144406.vifyj46b2ca34aol@pali>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
  <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
  <20180105111313.23c6vjs2x3fhtvi4@pali>
+ <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:44719 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751788AbeAEOc6 (ORCPT
+Received: from mail-wr0-f177.google.com ([209.85.128.177]:34910 "EHLO
+        mail-wr0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751809AbeAEOoJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Jan 2018 09:32:58 -0500
-In-Reply-To: <20180105111313.23c6vjs2x3fhtvi4@pali>
-Content-Language: en-US
+        Fri, 5 Jan 2018 09:44:09 -0500
+Content-Disposition: inline
+In-Reply-To: <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
+To: Mario.Limonciello@dell.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
-LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXIteDg2LQ0K
-PiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBQYWxpIFJvaMOhcg0KPiBTZW50
-OiBGcmlkYXksIEphbnVhcnkgNSwgMjAxOCA1OjEzIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFy
-aW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5v
-cmc7IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47DQo+IExLTUwg
-PGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIu
-a2VybmVsLm9yZzsgQW5keQ0KPiBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+OyBxdWFzaXNl
-Y0Bnb29nbGUuY29tOyByandAcmp3eXNvY2tpLm5ldDsNCj4gbWpnNTlAZ29vZ2xlLmNvbTsgaGNo
-QGxzdC5kZTsgR3JlZyBLSCA8Z3JlZ0Brcm9haC5jb20+OyBBbGFuIENveA0KPiA8Z25vbWVzQGx4
-b3JndWsudWt1dS5vcmcudWs+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0
-Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVyaW5nIHN1cHBvcnQNCj4gDQo+IEkga25v
-dyB0aGF0IHRoaXMgcGF0Y2ggaXMgYWxyZWFkeSBhcHBsaWVkIGFuZCBtZXJnZWQsIGJ1dCBJIHNw
-b3R0ZWQgdGhpcw0KPiBwcm9ibGVtOg0KPiANCj4gT24gVGh1cnNkYXkgMTkgT2N0b2JlciAyMDE3
-IDEyOjUwOjE1IE1hcmlvIExpbW9uY2llbGxvIHdyb3RlOg0KPiA+ICsvKiBjYWxscyB0aGF0IGFy
-ZSBleHBsaWNpdGx5IGJsYWNrbGlzdGVkICovDQo+ID4gK3N0YXRpYyBzdHJ1Y3Qgc21iaW9zX2Nh
-bGwgY2FsbF9ibGFja2xpc3RbXSA9IHsNCj4gPiArCXsweDAwMDAsIDAxLCAwN30sIC8qIG1hbnVm
-YWN0dXJpbmcgdXNlICovDQo+ID4gKwl7MHgwMDAwLCAwNiwgMDV9LCAvKiBtYW51ZmFjdHVyaW5n
-IHVzZSAqLw0KPiA+ICsJezB4MDAwMCwgMTEsIDAzfSwgLyogd3JpdGUgb25jZSAqLw0KPiA+ICsJ
-ezB4MDAwMCwgMTEsIDA3fSwgLyogd3JpdGUgb25jZSAqLw0KPiANCj4gTnVtYmVycyBwcmVmaXhl
-ZCBieSB6ZXJvIG1lYW5zIHRoYXQgdGhleSBhcmUgaW4gb2N0YWwgbm90YXRpb24sIHJpZ2h0Pw0K
-SXMgdGhhdCBob3cgdGhlIGtlcm5lbCBpbnRlcnByZXRzIGFuIGludGVnZXIgcHJlZml4IGJ5IHpl
-cm8/DQoNCkkgcHJlZml4ZWQgYnkgemVybyBmb3IgcmVhZGFiaWxpdHksIHRoZXkncmUgc3VwcG9z
-ZWQgdG8gYmUgZGVjaW1hbC4NCg0KPiBUaGlzIGNhbiBsZWFkIHRvIG1pc3VuZGVyc3RhbmRpbmcs
-IGNvbmZ1c2lvbiBvciBwcm9ibGVtcyBpbiBmdXR1cmUuLi4NCj4gDQo+IENhbiB3ZSBoYXZlIGFs
-bCBudW1iZXJzIGVpdGhlciBpbiBoZXhhZGVjaW1hbCBvciBkZWNpbWFsIG5vdGF0aW9uPw0KDQpD
-b3VsZCB5b3UgZWxhYm9yYXRlIG1vcmUgd2h5IHRoaXMgaXMgcHJvYmxlbWF0aWMgdGhlIHdheSBp
-dCBpcz8NCkFyZSB5b3UgbWVhbmluZyB5b3Ugd291bGQgcmF0aGVyIHNlZSB0aGlzPw0KCXsweDAw
-MDAsIDEsIDd9LCAvKiBtYW51ZmFjdHVyaW5nIHVzZSAqLw0KCXsweDAwMDAsIDYsIDV9LCAvKiBt
-YW51ZmFjdHVyaW5nIHVzZSAqLw0KCXsweDAwMDAsIDExLCAzfSwgLyogd3JpdGUgb25jZSAqLw0K
-CXsweDAwMDAsIDExLCA3fSwgLyogd3JpdGUgb25jZSAqLw0KDQpUaGF0IHNlZW1zIGxlc3MgcmVh
-ZGFibGUgdG8gbWUgYnV0IHNob3VsZCBpbnRlcnByZXQgdGhlIHNhbWUgd2F5Lg0KDQpQZXJoYXBz
-IGl0IHdvdWxkIGJlIGJldHRlciBpZiB5b3Ugc3VibWl0IGEgcGF0Y2ggd2l0aCB3aGF0IGlzIGNs
-ZWFyZXIgdG8NCnlvdS4NCg0KPiANCj4gPiArCXsweDAwMDAsIDExLCAxMX0sIC8qIHdyaXRlIG9u
-Y2UgKi8NCj4gPiArCXsweDAwMDAsIDE5LCAtMX0sIC8qIGRpYWdub3N0aWNzICovDQo+ID4gKwkv
-KiBoYW5kbGVkIGJ5IGtlcm5lbDogZGVsbC1sYXB0b3AgKi8NCj4gPiArCXsweDAwMDAsIENMQVNT
-X0lORk8sIFNFTEVDVF9SRktJTEx9LA0KPiA+ICsJezB4MDAwMCwgQ0xBU1NfS0JEX0JBQ0tMSUdI
-VCwgU0VMRUNUX0tCRF9CQUNLTElHSFR9LA0KPiA+ICt9Ow0KPiANCj4gLS0NCj4gUGFsaSBSb2jD
-oXINCj4gcGFsaS5yb2hhckBnbWFpbC5jb20NCg==
+On Friday 05 January 2018 14:32:54 Mario.Limonciello@dell.com wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
+> > owner@vger.kernel.org] On Behalf Of Pali Rohár
+> > Sent: Friday, January 5, 2018 5:13 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.com>;
+> > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org; Andy
+> > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.net;
+> > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > <gnomes@lxorguk.ukuu.org.uk>
+> > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering support
+> > 
+> > I know that this patch is already applied and merged, but I spotted this
+> > problem:
+> > 
+> > On Thursday 19 October 2017 12:50:15 Mario Limonciello wrote:
+> > > +/* calls that are explicitly blacklisted */
+> > > +static struct smbios_call call_blacklist[] = {
+> > > +	{0x0000, 01, 07}, /* manufacturing use */
+> > > +	{0x0000, 06, 05}, /* manufacturing use */
+> > > +	{0x0000, 11, 03}, /* write once */
+> > > +	{0x0000, 11, 07}, /* write once */
+> > 
+> > Numbers prefixed by zero means that they are in octal notation, right?
+> Is that how the kernel interprets an integer prefix by zero?
+
+No, this is how C language define it. See e.g. C11 standard, section
+6.4.4.1 Integer constants:
+
+decimal-constant:
+	nonzero-digit
+	decimal-constant digit
+
+octal-constant:
+	0
+	octal-constant octal-digit
+
+So in C decimal number cannot start with digit zero.
+
+I think the place where octal numbers are used are in permissions (0777)
+
+> I prefixed by zero for readability, they're supposed to be decimal.
+> 
+> > This can lead to misunderstanding, confusion or problems in future...
+> > 
+> > Can we have all numbers either in hexadecimal or decimal notation?
+> 
+> Could you elaborate more why this is problematic the way it is?
+
+Currently it is not problem as 7 is same number in octal (07) and
+decimal (7). representation. But e.g. octal 077 is 63 in decimal.
+
+> Are you meaning you would rather see this?
+> 	{0x0000, 1, 7}, /* manufacturing use */
+> 	{0x0000, 6, 5}, /* manufacturing use */
+> 	{0x0000, 11, 3}, /* write once */
+> 	{0x0000, 11, 7}, /* write once */
+
+Yes, this is better. If you need to achieve alignment then use spaces.
+Really, not leading zeros.
+
+> That seems less readable to me but should interpret the same way.
+
+Example:
+
+{0x000, 077, 7},
+{0x000, 007, 7},
+
+is **not** same as
+
+{0x000,  77, 7},
+{0x000,   7, 7},
+
+As first number in first section is (decimal) 63, not (decimal) 77.
+
+> Perhaps it would be better if you submit a patch with what is clearer to
+> you.
+> 
+> > 
+> > > +	{0x0000, 11, 11}, /* write once */
+> > > +	{0x0000, 19, -1}, /* diagnostics */
+> > > +	/* handled by kernel: dell-laptop */
+> > > +	{0x0000, CLASS_INFO, SELECT_RFKILL},
+> > > +	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
+> > > +};
+> > 
+> > --
+> > Pali Rohár
+> > pali.rohar@gmail.com
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
