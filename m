@@ -1,53 +1,125 @@
-From: "Dr. Greg Wettstein" <greg@wind.enjellic.com>
-Subject: Re: [PATCH v6 00/11] Intel SGX Driver
-Date: Thu, 4 Jan 2018 15:09:06 -0600
-Message-ID: <201801042109.w04L961C032047@wind.enjellic.com>
-References: <gregkh@linuxfoundation.org>
-Reply-To: greg@enjellic.com
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-       "Re: [PATCH v6 00/11] Intel SGX Driver" (Jan  4,  3:27pm)
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Cedric Blancher <cedric.blancher@gmail.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kerne>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Filter out spurious keyboard
+ backlight change events
+Date: Fri, 5 Jan 2018 12:40:04 +0200
+Message-ID: <CAHp75VftaqUNixkEiSkmWKf_AS3L_pzALTQo7cemVAqz3U3bVA@mail.gmail.com>
+References: <20180104085256.31431-1-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:37525 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750992AbeAEKkG (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 5 Jan 2018 05:40:06 -0500
+In-Reply-To: <20180104085256.31431-1-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Jan 4,  3:27pm, Greg Kroah-Hartman wrote:
-} Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+On Thu, Jan 4, 2018 at 10:52 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> On some Dell XPS models WMI events of type 0x0000 reporting a keycode of
+> 0xe00c get reported when the brightness of the LCD panel changes.
+>
+> This leads to us reporting false-positive kbd_led change events to
+> userspace which in turn leads to the kbd backlight OSD showing when it
+> should not.
+>
+> We already read the current keyboard backlight brightness value when
+> reporting events because the led_classdev_notify_brightness_hw_changed
+> API requires this. Compare this value to the last known value and filter
+> out duplicate events, fixing this.
+>
+> Note the fixed issue is esp. a problem on XPS models with an ambient light
+> sensor and automatic brightness adjustments turned on, this causes the kbd
+> backlight OSD to show all the time there.
+>
 
-Wild day, enjoyed by all I'm sure.
+Should it have Fixes tag?
 
-> On Thu, Jan 04, 2018 at 03:17:24PM +0100, Cedric Blancher wrote:
-> > So how does this protect against the MELTDOWN attack (CVE-2017-5754)
-> > and the MELTATOMBOMBA4 worm which uses this exploit?
+Pali, any comment on this?
 
-> It has nothing to do with it at all, sorry.
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1514969
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/dell-laptop.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index cd4725e7e0b5..2ef3297a9efc 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -1133,6 +1133,7 @@ static u8 kbd_previous_mode_bit;
+>
+>  static bool kbd_led_present;
+>  static DEFINE_MUTEX(kbd_led_mutex);
+> +static enum led_brightness kbd_led_level;
+>
+>  /*
+>   * NOTE: there are three ways to set the keyboard backlight level.
+> @@ -1947,6 +1948,7 @@ static enum led_brightness kbd_led_level_get(struct led_classdev *led_cdev)
+>  static int kbd_led_level_set(struct led_classdev *led_cdev,
+>                              enum led_brightness value)
+>  {
+> +       enum led_brightness new_value = value;
+>         struct kbd_state state;
+>         struct kbd_state new_state;
+>         u16 num;
+> @@ -1976,6 +1978,9 @@ static int kbd_led_level_set(struct led_classdev *led_cdev,
+>         }
+>
+>  out:
+> +       if (ret == 0)
+> +               kbd_led_level = new_value;
+> +
+>         mutex_unlock(&kbd_led_mutex);
+>         return ret;
+>  }
+> @@ -2003,6 +2008,9 @@ static int __init kbd_led_init(struct device *dev)
+>                 if (kbd_led.max_brightness)
+>                         kbd_led.max_brightness--;
+>         }
+> +
+> +       kbd_led_level = kbd_led_level_get(NULL);
+> +
+>         ret = led_classdev_register(dev, &kbd_led);
+>         if (ret)
+>                 kbd_led_present = false;
+> @@ -2027,13 +2035,25 @@ static void kbd_led_exit(void)
+>  static int dell_laptop_notifier_call(struct notifier_block *nb,
+>                                      unsigned long action, void *data)
+>  {
+> +       bool changed = false;
+> +       enum led_brightness new_kbd_led_level;
+> +
+>         switch (action) {
+>         case DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED:
+>                 if (!kbd_led_present)
+>                         break;
+>
+> -               led_classdev_notify_brightness_hw_changed(&kbd_led,
+> -                                               kbd_led_level_get(&kbd_led));
+> +               mutex_lock(&kbd_led_mutex);
+> +               new_kbd_led_level = kbd_led_level_get(&kbd_led);
+> +               if (kbd_led_level != new_kbd_led_level) {
+> +                       kbd_led_level = new_kbd_led_level;
+> +                       changed = true;
+> +               }
+> +               mutex_unlock(&kbd_led_mutex);
+> +
+> +               if (changed)
+> +                       led_classdev_notify_brightness_hw_changed(&kbd_led,
+> +                                                               kbd_led_level);
+>                 break;
+>         }
+>
+> --
+> 2.14.3
+>
 
-Precision seems to be everything in these discussions.
 
-Since SGX obviously does not mitigate micro-architectural state
-probing it is not an effective general remediation against MELTDOWN.
-Does your statement indicate there is solid documentation that
-MELTDOWN can be used by a process of any privilege level to dump out
-the unencrypted contents of an initialized enclave?
 
-That would obviously be a big story as well.
-
-> greg k-h
-
-Have a good evening.
-
-Greg
-
-}-- End of excerpt from Greg Kroah-Hartman
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"If you get to thinkin' you're a person of some influence, try
- orderin' somebody else's dog around."
-                                -- Cowboy Wisdom
+-- 
+With Best Regards,
+Andy Shevchenko
