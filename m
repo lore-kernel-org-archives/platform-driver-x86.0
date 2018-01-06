@@ -1,65 +1,73 @@
-From: SF Markus Elfring <elfring@users.sourceforge.net>
-Subject: Re: platform/x86/thinkpad_acpi: Adjustments for four function
- implementations
-Date: Sat, 6 Jan 2018 09:55:31 +0100
-Message-ID: <edb7173f-c732-6934-9690-7831b3f993d8@users.sourceforge.net>
-References: <81459d11-693a-eb51-9173-9c189677f422@users.sourceforge.net>
- <CAHp75Vckgw1Eqao_vsq0n8RuYJRP2JZWJz6-MxZ6Wwb8eAEVgA@mail.gmail.com>
- <ea910da9-ca59-b895-b071-35d9c5cbd112@users.sourceforge.net>
- <20171223014033.jx7fzu7uzjfbzyca@khazad-dum.debian.net>
- <80ae8328-5851-01b0-cb31-474f7baf1686@users.sourceforge.net>
- <20180103001034.GC24794@fury>
- <9ea2c1c7-a07d-19c3-a2dc-0c69352d9558@users.sourceforge.net>
- <20180106012634.GB5260@fury>
+From: Jonathan McDowell <noodles@earth.li>
+Subject: Re: [PATCH] ACPI / WMI: Call acpi_wmi_init() later
+Date: Sat, 6 Jan 2018 11:02:27 +0000
+Message-ID: <20180106110227.j2jkxjpjktcy6yjr@earth.li>
+References: <20171208151159.urdcrzl5qpfd6jnu@earth.li>
+ <2601877.IhOx20xkUK@aspire.rjw.lan>
+ <CAJZ5v0jxVUxFetwPaj76FoeQjHtSSwO+4jiEqadA1WXZ_YNNoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.web.de ([212.227.15.14]:64526 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752633AbeAFI4H (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Jan 2018 03:56:07 -0500
-In-Reply-To: <20180106012634.GB5260@fury>
-Content-Language: en-GB
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jxVUxFetwPaj76FoeQjHtSSwO+4jiEqadA1WXZ_YNNoQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management List <linux-mm@kvack.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> If this was code that affected all systems, the impact would be greater
-> - and it would be much easier to test.
+On Sat, Jan 06, 2018 at 12:30:23AM +0100, Rafael J. Wysocki wrote:
+> On Wed, Jan 3, 2018 at 12:49 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Calling acpi_wmi_init() at the subsys_initcall() level causes ordering
+> > issues to appear on some systems and they are difficult to reproduce,
+> > because there is no guaranteed ordering between subsys_initcall()
+> > calls, so they may occur in different orders on different systems.
+> >
+> > In particular, commit 86d9f48534e8 (mm/slab: fix kmemcg cache
+> > creation delayed issue) exposed one of these issues where genl_init()
+> > and acpi_wmi_init() are both called at the same initcall level, but
+> > the former must run before the latter so as to avoid a NULL pointer
+> > dereference.
+> >
+> > For this reason, move the acpi_wmi_init() invocation to the
+> > initcall_sync level which should still be early enough for things
+> > to work correctly in the WMI land.
+> >
+> > Link: https://marc.info/?t=151274596700002&r=1&w=2
+> > Reported-by: Jonathan McDowell <noodles@earth.li>
+> > Reported-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > Tested-by: Jonathan McDowell <noodles@earth.li>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Guys, this fixes a crash on boot.
+> 
+> If there are no concerns/objections I will just take it through the ACPI tree.
 
-I can follow such a view to some degree.
-Would you dare to test the deletion of questionable error messages
-more with any other software components?
+Note that I first started seeing it in v4.9 so would ideally hit the
+appropriate stable trees too.
 
+> > ---
+> >  drivers/platform/x86/wmi.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > Index: linux-pm/drivers/platform/x86/wmi.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/x86/wmi.c
+> > +++ linux-pm/drivers/platform/x86/wmi.c
+> > @@ -1458,5 +1458,5 @@ static void __exit acpi_wmi_exit(void)
+> >         class_unregister(&wmi_bus_class);
+> >  }
+> >
+> > -subsys_initcall(acpi_wmi_init);
+> > +subsys_initcall_sync(acpi_wmi_init);
+> >  module_exit(acpi_wmi_exit);
+> >
+> > --
 
-> As it applies only to Thinkpad systems,
+J.
 
-Are these models still popular enough in any areas?
-
-
-> far fewer total systems are affected, and it is much harder to
-> test/verify.
-
-Do you care for the suggested transformation patterns (in principle)?
-
-
-> If you feel that is the wrong call,
-
-It seems that the usual indication was expressed for change resistance.
-
-
-> you will need to present convincing evidence to Henrique that
-> this is worth the risk.
-
-Which risks have you got in mind for this small adjustment?
-
-
-> … - or that it would be worth the effort.
-
-Can a bit of “software fine-tuning” become useful also here?
-
-Regards,
-Markus
+-- 
+/-\                             | 101 things you can't have too much
+|@/  Debian GNU/Linux Developer |    of : 36 - Spare video tapes.
+\-                              |
