@@ -1,61 +1,46 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ACPI / WMI: Call acpi_wmi_init() later
-Date: Sat, 6 Jan 2018 14:59:25 -0800
-Message-ID: <20180106225925.GA20169@fury>
-References: <20171208151159.urdcrzl5qpfd6jnu@earth.li>
- <2601877.IhOx20xkUK@aspire.rjw.lan>
- <CAJZ5v0jxVUxFetwPaj76FoeQjHtSSwO+4jiEqadA1WXZ_YNNoQ@mail.gmail.com>
- <20180106110227.j2jkxjpjktcy6yjr@earth.li>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Olle Liljenzin <olle@liljenzin.se>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add Y720-15IKB to no_hw_rfkill
+Date: Sun,  7 Jan 2018 20:53:12 +0100
+Message-ID: <20180107195312.13130-1-olle@liljenzin.se>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:41569 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752906AbeAFW7b (ORCPT
+Received: from host224-206.customer.mediateknik.net ([194.132.224.206]:58184
+        "EHLO ludenben.liljenzin.se" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1754497AbeAGUKe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Jan 2018 17:59:31 -0500
-Content-Disposition: inline
-In-Reply-To: <20180106110227.j2jkxjpjktcy6yjr@earth.li>
+        Sun, 7 Jan 2018 15:10:34 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan McDowell <noodles@earth.li>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Memory Management List <linux-mm@kvack.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>
+To: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, piotr.baranowski@osec.pl, olle@liljenzin.se
 
-On Sat, Jan 06, 2018 at 11:02:27AM +0000, Jonathan McDowell wrote:
-> On Sat, Jan 06, 2018 at 12:30:23AM +0100, Rafael J. Wysocki wrote:
-> > On Wed, Jan 3, 2018 at 12:49 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Calling acpi_wmi_init() at the subsys_initcall() level causes ordering
-> > > issues to appear on some systems and they are difficult to reproduce,
-> > > because there is no guaranteed ordering between subsys_initcall()
-> > > calls, so they may occur in different orders on different systems.
-> > >
-> > > In particular, commit 86d9f48534e8 (mm/slab: fix kmemcg cache
-> > > creation delayed issue) exposed one of these issues where genl_init()
-> > > and acpi_wmi_init() are both called at the same initcall level, but
-> > > the former must run before the latter so as to avoid a NULL pointer
-> > > dereference.
-> > >
-> > > For this reason, move the acpi_wmi_init() invocation to the
-> > > initcall_sync level which should still be early enough for things
-> > > to work correctly in the WMI land.
-> > >
-> > > Link: https://marc.info/?t=151274596700002&r=1&w=2
-> > > Reported-by: Jonathan McDowell <noodles@earth.li>
-> > > Reported-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > > Tested-by: Jonathan McDowell <noodles@earth.li>
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> > Guys, this fixes a crash on boot.
-> > 
-> > If there are no concerns/objections I will just take it through the ACPI tree.
-> 
-> Note that I first started seeing it in v4.9 so would ideally hit the
-> appropriate stable trees too.
+Lenovo Legion Y720-15IKB is another Lenovo model without a
+hw rfkill switch, resulting in wifi always reported as hard
+blocked.
 
-Thanks, I'll take care of that.
+Add the model to the list of models without rfkill switch.
 
+Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 53ab4e0f8962..c945572485ce 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1103,6 +1103,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKBN"),
+ 		},
+ 	},
++	{
++		.ident = "Lenovo Legion Y720-15IKB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKB"),
++		},
++	},
+ 	{
+ 		.ident = "Lenovo Legion Y720-15IKBN",
+ 		.matches = {
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.14.3
