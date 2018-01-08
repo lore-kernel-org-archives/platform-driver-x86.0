@@ -1,46 +1,57 @@
-From: Olle Liljenzin <olle@liljenzin.se>
-Subject: [PATCH] platform/x86: ideapad-laptop: Add Y720-15IKB to no_hw_rfkill
-Date: Sun,  7 Jan 2018 20:53:12 +0100
-Message-ID: <20180107195312.13130-1-olle@liljenzin.se>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v7 0/3] rivers/platform: replace module x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Mon,  8 Jan 2018 14:16:36 +0000
+Message-ID: <1515420999-4133-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from host224-206.customer.mediateknik.net ([194.132.224.206]:58184
-        "EHLO ludenben.liljenzin.se" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1754497AbeAGUKe (ORCPT
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:35484 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1756727AbeAHMUH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Jan 2018 15:10:34 -0500
+        Mon, 8 Jan 2018 07:20:07 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, piotr.baranowski@osec.pl, olle@liljenzin.se
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
-Lenovo Legion Y720-15IKB is another Lenovo model without a
-hw rfkill switch, resulting in wifi always reported as hard
-blocked.
+The patchset:
+ - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+   drivers/platform/x86/mlxcpld-hotplug.c with the modules
+   include/linux/platform_data/mlxreg.h and
+   drivers/platform/mellanox/mlxreg-hotplug.c;
+   relevant Makefile and Kconfig are updated;
+ - modifies Mellanox hotplug driver for making it architecture
+   independent. Drivers has been tested for x86 and ARM based systems.
+ - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
+   event functionality over programmable devices logic, when these devices
+   can be attached to different interfaces types, like I2C, LPC, SPI;
+   driver drivers/platform/x86/mlx-platform.c is updated according to new
+   interface.
 
-Add the model to the list of models without rfkill switch.
+Vadim Pasternak (3):
+  platform/x86: move Mellanox hardware platform hotplug driver to
+    platform/mellanox
+  platform/mellanox: mlxreg-hotplug: allow driver for ARM architecture
+  platform/mellanox: mlxreg-hotplug: modify to use regmap intreface
 
-Signed-off-by: Olle Liljenzin <olle@liljenzin.se>
----
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ MAINTAINERS                                   |   7 +-
+ drivers/platform/Kconfig                      |   2 +
+ drivers/platform/Makefile                     |   1 +
+ drivers/platform/mellanox/Kconfig             |  26 +
+ drivers/platform/mellanox/Makefile            |   6 +
+ drivers/platform/mellanox/mlxreg-hotplug.c    | 714 ++++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig                  |   9 -
+ drivers/platform/x86/Makefile                 |   1 -
+ drivers/platform/x86/mlx-platform.c           | 237 +++++++--
+ drivers/platform/x86/mlxcpld-hotplug.c        | 515 -------------------
+ include/linux/platform_data/mlxcpld-hotplug.h |  99 ----
+ include/linux/platform_data/mlxreg.h          | 144 ++++++
+ 12 files changed, 1082 insertions(+), 679 deletions(-)
+ create mode 100644 drivers/platform/mellanox/Kconfig
+ create mode 100644 drivers/platform/mellanox/Makefile
+ create mode 100644 drivers/platform/mellanox/mlxreg-hotplug.c
+ delete mode 100644 drivers/platform/x86/mlxcpld-hotplug.c
+ delete mode 100644 include/linux/platform_data/mlxcpld-hotplug.h
+ create mode 100644 include/linux/platform_data/mlxreg.h
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 53ab4e0f8962..c945572485ce 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1103,6 +1103,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKBN"),
- 		},
- 	},
-+	{
-+		.ident = "Lenovo Legion Y720-15IKB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKB"),
-+		},
-+	},
- 	{
- 		.ident = "Lenovo Legion Y720-15IKBN",
- 		.matches = {
 -- 
-2.14.3
+2.1.4
