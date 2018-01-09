@@ -1,43 +1,67 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] HID: asus: only support backlight when it's not driven by WMI
-Date: Tue, 9 Jan 2018 21:58:21 +0200
-Message-ID: <CAHp75Vc962G3rufA_D1GY=Giy7u0vri4_vQnFPYCxZ_w6N_2GQ@mail.gmail.com>
-References: <20180109012042.13947-1-drake@endlessm.com> <CAHp75Veyrzh+gV_8ff7TRqWpVx4h+2Qg05j9OpNXCH+E1+hsQg@mail.gmail.com>
- <CAD8Lp46gbny3mV2CgWnrJnEpZpNo-P-GgKA5-DypykbmGoUhQg@mail.gmail.com>
+Subject: Re: platform/x86: thinkpad_acpi: unhandled HKEY 0x60b0 and 0x60b1
+Date: Tue, 9 Jan 2018 22:13:22 +0200
+Message-ID: <CAHp75VfO-0W1Fvn20T3UNK_9BW2iTueeRA=ehUXW0-QSDLCjGQ@mail.gmail.com>
+References: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f178.google.com ([209.85.220.178]:35341 "EHLO
-        mail-qk0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1759618AbeAIT6X (ORCPT
+Received: from mail-qt0-f195.google.com ([209.85.216.195]:36687 "EHLO
+        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751294AbeAIUNX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Jan 2018 14:58:23 -0500
-In-Reply-To: <CAD8Lp46gbny3mV2CgWnrJnEpZpNo-P-GgKA5-DypykbmGoUhQg@mail.gmail.com>
+        Tue, 9 Jan 2018 15:13:23 -0500
+Received: by mail-qt0-f195.google.com with SMTP id a16so19366186qtj.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Jan 2018 12:13:23 -0800 (PST)
+In-Reply-To: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Drake <drake@endlessm.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-input <linux-input@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Carlo Caione <carlo@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: David Herrmann <dh.herrmann@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-On Tue, Jan 9, 2018 at 9:41 PM, Daniel Drake <drake@endlessm.com> wrote:
-> On Tue, Jan 9, 2018 at 1:32 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> Imagine someone who on possession of laptop where it's not needed
->> having old kernel configuration.
->> Building new kernel with old configuration will bring a regression.
->>
->> Selection is also not a solution since we don't need all crap in
->> kernel because of some particular case.
->>
->> So, NO.
+On Tue, Jan 9, 2018 at 3:19 PM, David Herrmann <dh.herrmann@gmail.com> wrote:
+> Hi
 >
-> If I can't use depends nor select, then what options are left? What
-> alternative solutions do you have in mind?
+> The thinkpad_acpi driver constantly reports about unhandled events on
+> my ThinkPad X1 5gen. The logs look like this:
+>
+> kernel: thinkpad_acpi: unknown possible thermal alarm or keyboard event received
+> kernel: thinkpad_acpi: unhandled HKEY event 0x60b1
+> kernel: thinkpad_acpi: please report the conditions when this event
+> happened to ibm-acpi-devel@...
+>
+> kernel: thinkpad_acpi: unknown possible thermal alarm or keyboard event received
+> kernel: thinkpad_acpi: unhandled HKEY event 0x60b0
+> kernel: thinkpad_acpi: please report the conditions when this event
+> happened to ibm-acpi-devel@...
+>
+> I have no clue what triggers them. However, the 0x60b1 event seems to
+> notify about some kind of action, and 0x60b0 seems to notify about its
+> end (like FAN-START, and FAN-STOP). The 0x60b0 follows 0x60b1 usually
+> in a timespan between 1s-10s.
+>
+> The event occurs even when the laptop is not moved/touched, but only
+> performs random computations. The first time this occurs is usually
+> during user-space startup, which might just be the time the module is
+> loaded. So far, I did not see any other event occurring before/after
+> it, which might give any hints.
+>
+> What is the recommended way to deal with that? I am having a hard-time
+> figuring out what triggers it, but at the same time it spams the
+> system-logs to a degree that after 1h of uptime, the vast majority of
+> the system log is cluttered with those messages.
+>
+> I can provide a patch to ignore these events in the driver? Or does
+> anyone have access to Lenovo developers to ask for help?
+>
 
-If you would able to move code under corresponding WMI driver, make it
-use any means of autodetection (it looks like you found a way via
-checking return code of method call) and
-then rely on distributions that they enable necessary modules
-(HID_ASUS, ASUS_WMI or alike).
+I just googled this one:
+https://sourceforge.net/p/ibm-acpi/mailman/message/30670245/
+
+I dunno if we have any predefined events for screen_rotate_start /
+stop -alike stuff.
+
+So, patches are always welcome!
 
 -- 
 With Best Regards,
