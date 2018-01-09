@@ -1,105 +1,147 @@
-From: Matthew Thode <mthode@mthode.org>
-Subject: Re: platform/x86: thinkpad_acpi: unhandled HKEY 0x60b0 and 0x60b1
-Date: Tue, 9 Jan 2018 14:24:48 -0600
-Message-ID: <20180109202448.zd63xjr3hth4tzru@mthode.org>
-References: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
- <CAHp75VfPR2Aj3ucmsoNtiJ96UBRzg+y6nCfU3d3ZuJZE5pUehg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wahxay6nqkydiyjj"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.mthode.org ([216.82.208.22]:36988 "EHLO mx1.mthode.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751513AbeAIUeZ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Jan 2018 15:34:25 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfPR2Aj3ucmsoNtiJ96UBRzg+y6nCfU3d3ZuJZE5pUehg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Herrmann <dh.herrmann@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+From: "Dr. Greg Wettstein" <greg@wind.enjellic.com>
+Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+Date: Tue, 9 Jan 2018 15:50:23 -0600
+Message-ID: <201801092150.w09LoNtB017301@wind.enjellic.com>
+References: <jarkko.sakkinen@linux.intel.com>
+Reply-To: greg@enjellic.com
+Return-path: <linux-fsdevel-owner@vger.kernel.org>
+In-Reply-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+       "Re: [PATCH v6 00/11] Intel SGX Driver" (Jan  9,  4:25pm)
+Sender: linux-fsdevel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>, platform-driver-x86@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel>
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Jan 9,  4:25pm, Jarkko Sakkinen wrote:
+} Subject: Re: [PATCH v6 00/11] Intel SGX Driver
 
---wahxay6nqkydiyjj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good afternoon I hope the week is going well for everyone.
 
-On 18-01-09 22:16:10, Andy Shevchenko wrote:
-> +Cc: Mattew, who is an author of the patch I posted link to which earlier.
->=20
-> On Tue, Jan 9, 2018 at 3:19 PM, David Herrmann <dh.herrmann@gmail.com> wr=
-ote:
-> > Hi
-> >
-> > The thinkpad_acpi driver constantly reports about unhandled events on
-> > my ThinkPad X1 5gen. The logs look like this:
-> >
-> > kernel: thinkpad_acpi: unknown possible thermal alarm or keyboard event=
- received
-> > kernel: thinkpad_acpi: unhandled HKEY event 0x60b1
-> > kernel: thinkpad_acpi: please report the conditions when this event
-> > happened to ibm-acpi-devel@...
-> >
-> > kernel: thinkpad_acpi: unknown possible thermal alarm or keyboard event=
- received
-> > kernel: thinkpad_acpi: unhandled HKEY event 0x60b0
-> > kernel: thinkpad_acpi: please report the conditions when this event
-> > happened to ibm-acpi-devel@...
-> >
-> > I have no clue what triggers them. However, the 0x60b1 event seems to
-> > notify about some kind of action, and 0x60b0 seems to notify about its
-> > end (like FAN-START, and FAN-STOP). The 0x60b0 follows 0x60b1 usually
-> > in a timespan between 1s-10s.
-> >
-> > The event occurs even when the laptop is not moved/touched, but only
-> > performs random computations. The first time this occurs is usually
-> > during user-space startup, which might just be the time the module is
-> > loaded. So far, I did not see any other event occurring before/after
-> > it, which might give any hints.
-> >
-> > What is the recommended way to deal with that? I am having a hard-time
-> > figuring out what triggers it, but at the same time it spams the
-> > system-logs to a degree that after 1h of uptime, the vast majority of
-> > the system log is cluttered with those messages.
-> >
-> > I can provide a patch to ignore these events in the driver? Or does
-> > anyone have access to Lenovo developers to ask for help?
-> >
+In order to minimize spamming mailboxes with two mails I'm
+incorporating a reply to Jarkko's second e-mail on the Memory
+Encryption Engine below as well, since the issues are all related.
 
-I've been able to trigger it 'at will' on the X1C5.  If I hover my hand
-just below the arrow keys I'll get the first signal, after I take it
-away I get the second one.  There seems to be a delay in when I put (or
-take away) my hand to prevent spamming the logs even more.  It could be
-to sense lid close, but there's already another sensors for that I
-thought.  The only remaining thing I can guess it that it's to detect
-your hands to turn on the keyboard backlight or something.
+> On Thu, Jan 04, 2018 at 03:06:43AM -0600, Dr. Greg Wettstein wrote:
+> > If we are talking about the issues motivating the KPTI work I don't
+> > have any useful information beyond what is raging through the industry
+> > right now.
+> > 
+> > With respect to SGX, the issues giving rise to KPTI are characteristic
+> > of what this technology is designed to address.  The technical 'news'
+> > sites, which are even more of an abomination then usual with this
+> > issue, are talking about privileged information such as credentials,
+> > passwords et.al being leaked by this vulnerability.
+> > 
+> > Data committed to enclaves are only accessible by the enclave, even
+> > the kernel, by definition, can't access the memory.  Given current
+> > events that is an arguably useful behavior.
 
-I don't think it's related at all to the fingerprint sensor as I hover
-my hand to the right of it.
+> Exactly. You could think adversary using meltdown leak utilizing
+> malware as having same capabilities as peripheral connected to a
+> bus, which we can defend against with SGX.
 
---=20
-Matthew Thode
+I believe caution needs to be applied to these statements
 
---wahxay6nqkydiyjj
-Content-Type: application/pgp-signature; name="signature.asc"
+Since we design high assurance computing devices that use SGX to
+protect our autonomous introspection engine, we obviously have very
+significant concerns regarding whether the SGX security guarantees are
+still operative in the face of these micro-architectural probing
+attacks.  Absent official guidance, we have been pouring over the SGX
+architectural documents for a week in order to develop risk guidance.
 
------BEGIN PGP SIGNATURE-----
+Based on that review, our conclusion was that there was nothing
+inherent in the SGX architectural model that implies protection
+against confidentiality losses through micro-architectural side
+channel inspection.  Our conclusion was reinforced by a group in
+London which has reportedly demonstrated the effectiveness of the
+conditional branch misprediction exploit against data processed inside
+of an enclave.
 
-iQIzBAABCgAdFiEExFR3cOKGRpGbcMHPZKN76q4ZpOgFAlpVJQ8ACgkQZKN76q4Z
-pOj31w//Sufady3sjcxEY71SccvMunEZ3/U6aCFTdpj5wIDcJmoyyqTGNesvVms8
-BRucly+bXqV/msvfWUzqpjMIce4LdwPxcUO+teCHkrxaLY8Ku5/xP/sGNPL5GKRc
-psfJcykXUON6SKKWSGXVnzv7aGzN18DFRIPtknQs1jnmpcJrGQXJe5+fASnmvPPH
-y2a+k3o4BuIlrIxIgsuDc+5OKcqZpxCG5W/qyuXzKWP//QrRA+Oo4ih/xj7IRd1Y
-/pQpfK8K5AETAwMa9QeeeyY2DKTZyRo2LeUd6O5JjI18SnLpp96PbIXg/5tG9YTQ
-CaaEQ2vsaDG4a0gaYVnp2VyJ2nvL/TtrJ2JIlRyqOnKkttPKE4/vcL80048PUhTU
-vz/nv1kiD6zif31dKgHu3VcX9ptQPog36Di/4GT0gyknSZ8nvf6GxtvsH5a3RNtB
-EoqMBL6el8id3/42ztYqvUChz2HLv2B+YyiZWx61vGfqP8Ha0/MRVOnKa4aME03/
-YVogBKBeQFFgNjeetrijdl4UIi/4xlSDLmYaEZqQIK78hTNf/ypxdzQFUZApb1Ip
-UWmvBkvjhp20pUHzjUWEMrqYYwAPptzh+hUmh5ol5ciP/oYAgy4CU7/Tbbc+4qee
-R7Dz9qe8Quzgp5r1JNnHohUFPmN+gyh4lQGcFP2c/s++uRMp1jE=
-=1mmH
------END PGP SIGNATURE-----
+We have not yet verified the exploit in our lab, but given our
+architectural review there would seem to be no reason why it shouldn't
+work.  I posted a note to the SGX developer's forum early this morning
+with a summary of our analysis but haven't received any responses.
 
---wahxay6nqkydiyjj--
+To 'wit in summary.
+
+In this attack scenario, the potential lack of confidentiality inside
+of an enclave is the same as if the code was running in unprotected
+memory space.  The MM{U,E} infrastructure is servicing micro-op
+resource requests for instructions inside of an enclave, just as it
+would normally do in untrusted space.  As a result, code running in an
+enclave induces cache state changes which can be externally probed,
+ie. the effects of a forced branch mispredict on cache state are the
+same if the code executes inside of an enclave as if it were in
+untrusted memory.
+
+As I noted in my post to the SGX forum, this would be really
+interesting if it could be done by an arbitrary process against an
+enclave.  As the sample code demonstrates however, the exploit binary
+has to be able to invoke at last two ECALL's (invocation of functions
+in trusted space) in order to carry out the attack.  This is somewhat
+analogous to an exploit where a process is able to attack its own
+memory map.
+
+With respect to the other mail:
+
+> Everything going out of L1 gets encrypted. This is done to defend
+> against peripheral like adversaries and should work also against
+> meltdown.
+
+I don't believe this is an architecturally correct assertion.  The
+encryption/decryption occurs at the 'bottom' of the cache heirarchy.
+
+Based on Shay Gueron's paper, which describes the Memory Encryption
+Engine (MEE) and its security characteristics and proofs, the MEE acts
+as an extension of the memory controller and mediates CACHE<->DRAM
+traffic to the Enclave Page Cache (EPC), ie, the protected data
+region.  It is responsible for encrypting and decrypting page data as
+well as the generation of the tags which are used to populate the
+Merkle integrity tree.
+
+As I mentioned in a previous mail, the MEE is responsible for emitting
+the 'drop and lock' verification signal which locks the memory
+controller if a memory integrity check fails.  This is to support a
+fundamental design tenant of the architecture that no unverified data
+reaches the caches.
+
+Based on this I believe all of the data in the caches is in plaintext,
+not just from L1 upward.  So by inference, speculative execution is
+able to induce the population of the caches with unencrypted data and
+act on those results.  If this were not the case it would be difficult
+to understand how the demonstrated branch mispredict attack could be
+successful.
+
+With respect to protecting access to memory, the SGX modified Page
+Miss Handler (PMH) is designed to deny the final population of a TLB
+slot if the page is from an 'untrusted' virtual<->physical mapping.
+This occurs even later then the standard page access controls and it
+was the 'lateness' of those checks, in comparison to the actual
+population of the caches, which proved to be the particularly
+problematic issue in Meltdown.
+
+As a result, we remain very uneasy with respect to the confidentiality
+guarantees that are available in the face of these attacks.  Luckily
+we depend on the architecture for integrity.
+
+> /Jarkko
+
+We will try and see if we can get some engineering time to reproducing
+the branch mispredict exploit that was published and report back.
+
+Have a good evening.
+
+Dr. Greg
+
+}-- End of excerpt from Jarkko Sakkinen
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"If you get to thinkin' you're a person of some influence, try
+ orderin' somebody else's dog around."
+                                -- Cowboy Wisdom
