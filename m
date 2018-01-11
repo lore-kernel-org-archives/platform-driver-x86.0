@@ -1,73 +1,57 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: [PATCH v2 1/2] ACPI / PM: Use Low Power S0 Idle on more systems
-Date: Thu, 11 Jan 2018 02:13:58 +0100
-Message-ID: <2293881.tBporBhK0J@aspire.rjw.lan>
-References: <4046497.JI7UjL75gC@aspire.rjw.lan> <12541194.33112yYDjW@aspire.rjw.lan> <1515590661.7000.855.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v8 0/3] drivers/platform: replace module x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Thu, 11 Jan 2018 08:58:40 +0000
+Message-ID: <1515661123-76604-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46852 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752604AbeAKBPN (ORCPT
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40194 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1751876AbeAKH0w (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Jan 2018 20:15:13 -0500
-In-Reply-To: <1515590661.7000.855.camel@linux.intel.com>
+        Thu, 11 Jan 2018 02:26:52 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Valentin Manea <valy@mrs.ro>
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The patchset:
+ - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+   drivers/platform/x86/mlxcpld-hotplug.c with the modules
+   include/linux/platform_data/mlxreg.h and
+   drivers/platform/mellanox/mlxreg-hotplug.c;
+   relevant Makefile and Kconfig are updated;
+ - modifies Mellanox hotplug driver for making it architecture
+   independent. Drivers has been tested for x86 and ARM based systems.
+ - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
+   event functionality over programmable devices logic, when these devices
+   can be attached to different interfaces types, like I2C, LPC, SPI;
+   driver drivers/platform/x86/mlx-platform.c is updated according to new
+   interface.
 
-Some systems don't support the ACPI_LPS0_ENTRY and ACPI_LPS0_EXIT
-functions in their Low Power S0 Idle _DSM, but still expect EC
-events to be processed in the suspend-to-idle state for power button
-wakeup (among other things) to work.  Surface Pro3 turns out to be
-one of them.
+Vadim Pasternak (3):
+  platform/x86: move Mellanox hardware platform hotplug driver to
+    platform/mellanox
+  platform/mellanox: mlxreg-hotplug: allow driver for ARM architecture
+  platform/mellanox: mlxreg-hotplug: modify to use regmap intreface
 
-Fortunately, it still provides Low Power S0 Idle _DSM with the screen
-on/off functions supported, so modify the ACPI suspend-to-idle to use
-the Low Power S0 Idle code path for all systems supporting the
-ACPI_LPS0_ENTRY and ACPI_LPS0_EXIT or the ACPI_LPS0_SCREEN_OFF and
-ACPI_LPS0_SCREEN_ON functions in their Low Power S0 Idle _DSM.
+ MAINTAINERS                                   |   7 +-
+ drivers/platform/Kconfig                      |   2 +
+ drivers/platform/Makefile                     |   1 +
+ drivers/platform/mellanox/Kconfig             |  26 ++
+ drivers/platform/mellanox/Makefile            |   6 +
+ drivers/platform/mellanox/mlxreg-hotplug.c    | 633 ++++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig                  |   9 -
+ drivers/platform/x86/Makefile                 |   1 -
+ drivers/platform/x86/mlx-platform.c           | 237 +++++++---
+ drivers/platform/x86/mlxcpld-hotplug.c        | 515 ---------------------
+ include/linux/platform_data/mlxcpld-hotplug.h |  99 ----
+ include/linux/platform_data/mlxreg.h          | 144 ++++++
+ 12 files changed, 1001 insertions(+), 679 deletions(-)
+ create mode 100644 drivers/platform/mellanox/Kconfig
+ create mode 100644 drivers/platform/mellanox/Makefile
+ create mode 100644 drivers/platform/mellanox/mlxreg-hotplug.c
+ delete mode 100644 drivers/platform/x86/mlxcpld-hotplug.c
+ delete mode 100644 include/linux/platform_data/mlxcpld-hotplug.h
+ create mode 100644 include/linux/platform_data/mlxreg.h
 
-Potentially, that will cause more systems to use suspend-to-idle by
-default, so some future corrections may be necessary if it leads
-to issues, but let it remain more straightforward for now.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=198389#add_comment
-Reported-by: Valentin Manea <valy@mrs.ro>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
--> v2: Rename ACPI_LPS0_S2I_MASK to ACPI_LPS0_PLATFORM_MASK.
-
----
- drivers/acpi/sleep.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -707,7 +707,8 @@ static const struct acpi_device_id lps0_
- #define ACPI_LPS0_ENTRY		5
- #define ACPI_LPS0_EXIT		6
- 
--#define ACPI_S2IDLE_FUNC_MASK	((1 << ACPI_LPS0_ENTRY) | (1 << ACPI_LPS0_EXIT))
-+#define ACPI_LPS0_SCREEN_MASK	((1 << ACPI_LPS0_SCREEN_OFF) | (1 << ACPI_LPS0_SCREEN_ON))
-+#define ACPI_LPS0_PLATFORM_MASK	((1 << ACPI_LPS0_ENTRY) | (1 << ACPI_LPS0_EXIT))
- 
- static acpi_handle lps0_device_handle;
- static guid_t lps0_dsm_guid;
-@@ -910,7 +911,8 @@ static int lps0_device_attach(struct acp
- 	if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
- 		char bitmask = *(char *)out_obj->buffer.pointer;
- 
--		if ((bitmask & ACPI_S2IDLE_FUNC_MASK) == ACPI_S2IDLE_FUNC_MASK) {
-+		if ((bitmask & ACPI_LPS0_PLATFORM_MASK) == ACPI_LPS0_PLATFORM_MASK ||
-+		    (bitmask & ACPI_LPS0_SCREEN_MASK) == ACPI_LPS0_SCREEN_MASK) {
- 			lps0_dsm_func_mask = bitmask;
- 			lps0_device_handle = adev->handle;
- 			/*
+-- 
+2.1.4
