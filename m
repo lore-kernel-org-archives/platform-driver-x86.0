@@ -1,245 +1,70 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v8 2/3] platform/mellanox: mlxreg-hotplug: allow driver for ARM architecture
-Date: Thu, 11 Jan 2018 08:58:42 +0000
-Message-ID: <1515661123-76604-3-git-send-email-vadimp@mellanox.com>
-References: <1515661123-76604-1-git-send-email-vadimp@mellanox.com>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: platform/x86: thinkpad_acpi: unhandled HKEY 0x60b0 and 0x60b1
+Date: Thu, 11 Jan 2018 09:38:23 +0100
+Message-ID: <CANq1E4T8-j0kXGMGhwvyg93bKxAG8QnEOP84E+tq7UndC=cSMQ@mail.gmail.com>
+References: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
+ <CAHp75VfPR2Aj3ucmsoNtiJ96UBRzg+y6nCfU3d3ZuJZE5pUehg@mail.gmail.com>
+ <20180109202448.zd63xjr3hth4tzru@mthode.org> <CAHp75Vf_iSR-xTfOdoMab81OCHnWd2vRxdTZon_q=7+E+MzOKw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40238 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1751876AbeAKH0y (ORCPT
+Received: from mail-it0-f46.google.com ([209.85.214.46]:33824 "EHLO
+        mail-it0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932107AbeAKIiZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Jan 2018 02:26:54 -0500
-In-Reply-To: <1515661123-76604-1-git-send-email-vadimp@mellanox.com>
+        Thu, 11 Jan 2018 03:38:25 -0500
+Received: by mail-it0-f46.google.com with SMTP id m11so19099188iti.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jan 2018 00:38:25 -0800 (PST)
+In-Reply-To: <CAHp75Vf_iSR-xTfOdoMab81OCHnWd2vRxdTZon_q=7+E+MzOKw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Matthew Thode <mthode@mthode.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-It allows driver to run on x86 and ARM architecture based systems.
-Also some unnecessary includes are removed.
+Hey
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-v7->v8
- Fixes added by Vadim:
- - Drop routines using of_update_property. It causes  Kbuild error for
-   ia64 arch during on modpost, since of_update_property is not exported.
-   The intension of these routines was the dynamic enabling and disabling
-   of the device tree node, when relevant signal is received. Such node
-   has been supposed to set with the property disabled in DTS, and
-   changing property by using of_update_property just flips the device.
-   It was OK for arm and sparc, but not for ia64.
-v6->v7
- Fixes added by Vadim:
- - Dont remove include <linux/io.h> in mlxreg-hotplug.c to avoid Kbuild
-   errors. Make this change in patch 3/3.
-v5->v6:
-v4->v5:
- Comments pointed out by Andy:
- - remove unnessecary logic in Kconfig;
- - remove !COMPILE_TEST in mlxreg-hotplug;
----
- drivers/platform/mellanox/Kconfig          |  2 +-
- drivers/platform/mellanox/mlxreg-hotplug.c | 70 +++++++++++++-----------------
- drivers/platform/x86/mlx-platform.c        | 16 +++----
- include/linux/platform_data/mlxreg.h       |  6 ++-
- 4 files changed, 44 insertions(+), 50 deletions(-)
+On Wed, Jan 10, 2018 at 4:03 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Jan 9, 2018 at 10:24 PM, Matthew Thode <mthode@mthode.org> wrote:
+>> On 18-01-09 22:16:10, Andy Shevchenko wrote:
+>>> On Tue, Jan 9, 2018 at 3:19 PM, David Herrmann <dh.herrmann@gmail.com> wrote:
+>
+>> I've been able to trigger it 'at will' on the X1C5.  If I hover my hand
+>> just below the arrow keys I'll get the first signal, after I take it
+>> away I get the second one.  There seems to be a delay in when I put (or
+>> take away) my hand to prevent spamming the logs even more.  It could be
+>> to sense lid close, but there's already another sensors for that I
+>> thought.  The only remaining thing I can guess it that it's to detect
+>> your hands to turn on the keyboard backlight or something.
+>>
+>> I don't think it's related at all to the fingerprint sensor as I hover
+>> my hand to the right of it.
+>
+> Just realized that it might be an ambient sensor. Your hand makes
+> light goes differently to the sensor -> hardware sends an event.
+>
+> Whatever guys, feel free to submit a patch when you will be sure what
+> is the source of the event.
+>
+> It also makes sense to discuss somewhere near to thinkwiki.org I suppose.
 
-diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-index d735292..0267e1d 100644
---- a/drivers/platform/mellanox/Kconfig
-+++ b/drivers/platform/mellanox/Kconfig
-@@ -5,7 +5,7 @@
- 
- menuconfig MELLANOX_PLATFORM
- 	bool "Platform support for Mellanox hardware"
--	depends on X86 || COMPILE_TEST
-+	depends on X86 || ARM || COMPILE_TEST
- 	---help---
- 	  Say Y here to get to see options for platform support for
- 	  Mellanox systems. This option alone does not add any kernel code.
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 2866c76..556e612 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -41,8 +41,6 @@
- #include <linux/module.h>
- #include <linux/platform_data/mlxreg.h>
- #include <linux/platform_device.h>
--#include <linux/spinlock.h>
--#include <linux/wait.h>
- #include <linux/workqueue.h>
- 
- /* Offset of event and mask registers from status register */
-@@ -99,6 +97,35 @@ struct mlxreg_hotplug_priv_data {
- 	u8 fan_cache;
- };
- 
-+static int mlxreg_hotplug_device_create(struct mlxreg_hotplug_device *data)
-+{
-+	data->adapter = i2c_get_adapter(data->nr);
-+	if (!data->adapter)
-+		return -EFAULT;
-+
-+	data->client = i2c_new_device(data->adapter, &data->brdinfo);
-+	if (!data->client) {
-+		i2c_put_adapter(data->adapter);
-+		data->adapter = NULL;
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static void mlxreg_hotplug_device_destroy(struct mlxreg_hotplug_device *data)
-+{
-+	if (data->client) {
-+		i2c_unregister_device(data->client);
-+		data->client = NULL;
-+	}
-+
-+	if (data->adapter) {
-+		i2c_put_adapter(data->adapter);
-+		data->adapter = NULL;
-+	}
-+}
-+
- static ssize_t mlxreg_hotplug_attr_show(struct device *dev,
- 					struct device_attribute *attr,
- 					char *buf)
-@@ -184,41 +211,6 @@ static int mlxreg_hotplug_attr_init(struct mlxreg_hotplug_priv_data *priv)
- 	return 0;
- }
- 
--static int mlxreg_hotplug_device_create(struct device *dev,
--					struct mlxreg_hotplug_device *item)
--{
--	item->adapter = i2c_get_adapter(item->bus);
--	if (!item->adapter) {
--		dev_err(dev, "Failed to get adapter for bus %d\n",
--			item->bus);
--		return -EFAULT;
--	}
--
--	item->client = i2c_new_device(item->adapter, &item->brdinfo);
--	if (!item->client) {
--		dev_err(dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
--			item->brdinfo.type, item->bus, item->brdinfo.addr);
--		i2c_put_adapter(item->adapter);
--		item->adapter = NULL;
--		return -EFAULT;
--	}
--
--	return 0;
--}
--
--static void mlxreg_hotplug_device_destroy(struct mlxreg_hotplug_device *item)
--{
--	if (item->client) {
--		i2c_unregister_device(item->client);
--		item->client = NULL;
--	}
--
--	if (item->adapter) {
--		i2c_put_adapter(item->adapter);
--		item->adapter = NULL;
--	}
--}
--
- static inline void
- mlxreg_hotplug_work_helper(struct device *dev,
- 			   struct mlxreg_hotplug_device *item, u8 is_inverse,
-@@ -252,10 +244,10 @@ mlxreg_hotplug_work_helper(struct device *dev,
- 			if (is_inverse)
- 				mlxreg_hotplug_device_destroy(item + bit);
- 			else
--				mlxreg_hotplug_device_create(dev, item + bit);
-+				mlxreg_hotplug_device_create(item + bit);
- 		} else {
- 			if (is_inverse)
--				mlxreg_hotplug_device_create(dev, item + bit);
-+				mlxreg_hotplug_device_create(item + bit);
- 			else
- 				mlxreg_hotplug_device_destroy(item + bit);
- 		}
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 0fbec1f..5601714 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -141,41 +141,41 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
- static struct mlxreg_hotplug_device mlxplat_mlxcpld_psu[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c02", 0x51) },
--		.bus = 10,
-+		.nr = 10,
- 	},
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c02", 0x50) },
--		.bus = 10,
-+		.nr = 10,
- 	},
- };
- 
- static struct mlxreg_hotplug_device mlxplat_mlxcpld_pwr[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("dps460", 0x59) },
--		.bus = 10,
-+		.nr = 10,
- 	},
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("dps460", 0x58) },
--		.bus = 10,
-+		.nr = 10,
- 	},
- };
- 
- static struct mlxreg_hotplug_device mlxplat_mlxcpld_fan[] = {
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
--		.bus = 11,
-+		.nr = 11,
- 	},
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
--		.bus = 12,
-+		.nr = 12,
- 	},
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
--		.bus = 13,
-+		.nr = 13,
- 	},
- 	{
- 		.brdinfo = { I2C_BOARD_INFO("24c32", 0x50) },
--		.bus = 14,
-+		.nr = 14,
- 	},
- };
- 
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index 8dcbb8e..5c98ad1 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -39,7 +39,8 @@
-  * @adapter: I2C device adapter;
-  * @client: I2C device client;
-  * @brdinfo: device board information;
-- * @bus: I2C bus, where device is attached;
-+ * @nr: I2C device adapter number, to which device is to be attached;
-+ * @np - pointer to node platform associated with attribute;
-  *
-  * Structure represents I2C hotplug device static data (board topology) and
-  * dynamic data (related kernel objects handles).
-@@ -48,7 +49,8 @@ struct mlxreg_hotplug_device {
- 	struct i2c_adapter *adapter;
- 	struct i2c_client *client;
- 	struct i2c_board_info brdinfo;
--	u16 bus;
-+	int nr;
-+	struct device_node *np;
- };
- 
- /**
--- 
-2.1.4
+Indeed. I can reliably trigger it by moving my hand on top of the
+arrow-keys. 0x60b0 is signaled when hovered. It has a latency of
+roughly 1s. Once I remove my hand, 0x60b1 is signalled, with a latency
+of roughly 3s. Overall, the sensor is quite unreliable when I actually
+use the laptop. Sometimes to a degree that it does not react to
+anything at all. It might really be some ambient light sensor, which
+then gets confused by some unexpected lighting.
+
+Whatever it is, I think this is really meant as "palm-detection" so
+input drivers can disable trackpads, etc.
+
+I'd be fine with the patch Matthew proposed (makes the sensor a no-op):
+    https://www.snip2code.com/Snippet/3291964/0001-Add-Thinkpad-palm-detection-acpi-co/
+
+Andy, is there any reason not to merge it? Do you want this key to be
+exposed in some way? If the patch is ok, I can test it locally and
+resend with tested-by.
+
+Thanks
+David
