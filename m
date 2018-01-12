@@ -1,129 +1,61 @@
-From: Yisheng Xie <xieyisheng1@huawei.com>
-Subject: Re: [PATCH v3 00/27] kill devm_ioremap_nocache
-Date: Fri, 12 Jan 2018 17:12:12 +0800
-Message-ID: <ff498c83-d1ee-7553-e20c-a07369f8dad6@huawei.com>
-References: <1514026525-32538-1-git-send-email-xieyisheng1@huawei.com>
- <20171223134831.GB10103@kroah.com>
- <b8ff7f17-7f2c-f220-9833-7ae5bd7343d5@c-s.fr>
- <8dd19411-5b06-0aa4-fd0e-e5b112c25dcb@huawei.com>
- <1eb206ed-95e9-5839-485d-0e549ff3f505@c-s.fr>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: platform/x86: thinkpad_acpi: unhandled HKEY 0x60b0 and 0x60b1
+Date: Fri, 12 Jan 2018 11:23:41 +0100
+Message-ID: <CANq1E4SdDsA98kmzFuORkpVYWPSr9TxP-y_RXW+XjuSqPAeGgA@mail.gmail.com>
+References: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
+ <CAHp75VfPR2Aj3ucmsoNtiJ96UBRzg+y6nCfU3d3ZuJZE5pUehg@mail.gmail.com>
+ <20180109202448.zd63xjr3hth4tzru@mthode.org> <CAHp75Vf_iSR-xTfOdoMab81OCHnWd2vRxdTZon_q=7+E+MzOKw@mail.gmail.com>
+ <CANq1E4T8-j0kXGMGhwvyg93bKxAG8QnEOP84E+tq7UndC=cSMQ@mail.gmail.com> <CAHp75VeKDvahHSgPVgwVFDRn5C9fi0cr01S_yvqctN4TjOKfNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1eb206ed-95e9-5839-485d-0e549ff3f505@c-s.fr>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Christophe LEROY <christophe.leroy@c-s.fr>, Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, ysxie@foxmail.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, boris.brezillon@free-electrons.com, richard@nod.at, marek.vasut@gmail.com, cyrille.pitchen@wedev4u.fr, linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org, b.zolnierkie@samsung.com, linux-fbdev@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, ralf@linux-mips.org, linux-mips@linux-mips.org, lgirdwood@gmail.com, broonie@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, arnd@arndb.de, andriy.shevchenko@linux.intel.com, industrypack-devel@lists.sourceforge.net, wg@grandegger.com, mkl@pengutronix.deli
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-io0-f182.google.com ([209.85.223.182]:33047 "EHLO
+        mail-io0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932976AbeALKXn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 12 Jan 2018 05:23:43 -0500
+Received: by mail-io0-f182.google.com with SMTP id t63so5349891iod.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jan 2018 02:23:43 -0800 (PST)
+In-Reply-To: <CAHp75VeKDvahHSgPVgwVFDRn5C9fi0cr01S_yvqctN4TjOKfNw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Matthew Thode <mthode@mthode.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
-Hi Christophe ，
+Hi
 
-On 2018/1/4 16:05, Christophe LEROY wrote:
-> 
-> 
-> Le 25/12/2017 à 02:34, Yisheng Xie a écrit :
+On Thu, Jan 11, 2018 at 2:27 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Jan 11, 2018 at 10:38 AM, David Herrmann <dh.herrmann@gmail.com> wrote:
+>> I'd be fine with the patch Matthew proposed (makes the sensor a no-op):
+>>     https://www.snip2code.com/Snippet/3291964/0001-Add-Thinkpad-palm-detection-acpi-co/
 >>
->>
->> On 2017/12/24 17:05, christophe leroy wrote:
->>>
->>>
->>> Le 23/12/2017 à 14:48, Greg KH a écrit :
->>>> On Sat, Dec 23, 2017 at 06:55:25PM +0800, Yisheng Xie wrote:
->>>>> Hi all,
->>>>>
->>>>> When I tried to use devm_ioremap function and review related code, I found
->>>>> devm_ioremap and devm_ioremap_nocache is almost the same with each other,
->>>>> except one use ioremap while the other use ioremap_nocache.
->>>>
->>>> For all arches?  Really?  Look at MIPS, and x86, they have different
->>>> functions.
->>>>
->>>>> While ioremap's
->>>>> default function is ioremap_nocache, so devm_ioremap_nocache also have the
->>>>> same function with devm_ioremap, which can just be killed to reduce the size
->>>>> of devres.o(from 20304 bytes to 18992 bytes in my compile environment).
->>>>>
->>>>> I have posted two versions, which use macro instead of function for
->>>>> devm_ioremap_nocache[1] or devm_ioremap[2]. And Greg suggest me to kill
->>>>> devm_ioremap_nocache for no need to keep a macro around for the duplicate
->>>>> thing. So here comes v3 and please help to review.
->>>>
->>>> I don't think this can be done, what am I missing?  These functions are
->>>> not identical, sorry for missing that before.
->>>
->>> devm_ioremap() and devm_ioremap_nocache() are quite similar, both use devm_ioremap_release() for the release, why not just defining:
->>>
->>> static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
->>>                 resource_size_t size, bool nocache)
->>> {
->>> [...]
->>>      if (nocache)
->>>          addr = ioremap_nocache(offset, size);
->>>      else
->>>          addr = ioremap(offset, size);
->>> [...]
->>> }
->>>
->>> then in include/linux/io.h
->>>
->>> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
->>>                 resource_size_t size)
->>> {return __devm_ioremap(dev, offset, size, false);}
->>>
->>> static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
->>>                     resource_size_t size);
->>> {return __devm_ioremap(dev, offset, size, true);}
->>
->> Yeah, this seems good to me, right now we have devm_ioremap, devm_ioremap_wc, devm_ioremap_nocache
->> May be we can use an enum like:
->> typedef enum {
->>     DEVM_IOREMAP = 0,
->>     DEVM_IOREMAP_NOCACHE,
->>     DEVM_IOREMAP_WC,
->> } devm_ioremap_type;
->>
->> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
->>                  resource_size_t size)
->>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP);}
->>
->>   static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
->>                      resource_size_t size);
->>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_NOCACHE);}
->>
->>   static inline void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
->>                      resource_size_t size);
->>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_WC);}
->>
->>   static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
->>                  resource_size_t size, devm_ioremap_type type)
->>   {
->>       void __iomem **ptr, *addr = NULL;
->>   [...]
->>       switch (type){
->>       case DEVM_IOREMAP:
->>           addr = ioremap(offset, size);
->>           break;
->>       case DEVM_IOREMAP_NOCACHE:
->>           addr = ioremap_nocache(offset, size);
->>           break;
->>       case DEVM_IOREMAP_WC:
->>           addr = ioremap_wc(offset, size);
->>           break;
->>       }
->>   [...]
->>   }
-> 
-> 
-> That looks good to me, will you submit a v4 ?
+>> Andy, is there any reason not to merge it? Do you want this key to be
+>> exposed in some way? If the patch is ok, I can test it locally and
+>> resend with tested-by.
+>
+> I can't just crawl through internet and merge odd patches. This is one
+> reason why I added the author to Cc list.
+>
+> Another one we have an established process, so, please follow it:
+> 1) submit to mailing list (like you did your initial message);
+> 2) get time to be reviewed.
+>
+> We also use patchwork to keep history of what has been done. This
+> patch missed our patchwork queue.
+>
+> Another important point I have no hardware to test myself, so, I need
+> to be crystal clear on the change. I can't for this particular one.
+>
+> So, and at the end we have alive maintainer for that code. W/o his ACK
+> I would not proceed.
+>
+> Sorry for inconvenience, this is how it's supposed to work.
 
-Sorry for late response. And I will submit the v4 as your suggestion.
+Ugh, sorry, I just wanted to know whether I should just resend the
+patch or rework it. Maybe that was not clear from my question.
+
+Will resend. Lets continue discussion there.
 
 Thanks
-Yisheng
-
-> 
-> Christophe
-> 
->>
-
+David
