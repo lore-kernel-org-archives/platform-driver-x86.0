@@ -1,139 +1,129 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: Filter out spurious
- keyboard backlight change events
-Date: Thu, 11 Jan 2018 21:24:44 +0200
-Message-ID: <CAHp75Vd4YBZ015y7rKv5pvpgR=52uVWH9Dc9Cv80ijBEF1_C1w@mail.gmail.com>
-References: <20180111141439.19915-1-hdegoede@redhat.com>
+From: Yisheng Xie <xieyisheng1@huawei.com>
+Subject: Re: [PATCH v3 00/27] kill devm_ioremap_nocache
+Date: Fri, 12 Jan 2018 17:12:12 +0800
+Message-ID: <ff498c83-d1ee-7553-e20c-a07369f8dad6@huawei.com>
+References: <1514026525-32538-1-git-send-email-xieyisheng1@huawei.com>
+ <20171223134831.GB10103@kroah.com>
+ <b8ff7f17-7f2c-f220-9833-7ae5bd7343d5@c-s.fr>
+ <8dd19411-5b06-0aa4-fd0e-e5b112c25dcb@huawei.com>
+ <1eb206ed-95e9-5839-485d-0e549ff3f505@c-s.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:45983 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751508AbeAKTYp (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Jan 2018 14:24:45 -0500
-In-Reply-To: <20180111141439.19915-1-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1eb206ed-95e9-5839-485d-0e549ff3f505@c-s.fr>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Christophe LEROY <christophe.leroy@c-s.fr>, Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, ysxie@foxmail.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, boris.brezillon@free-electrons.com, richard@nod.at, marek.vasut@gmail.com, cyrille.pitchen@wedev4u.fr, linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org, b.zolnierkie@samsung.com, linux-fbdev@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, ralf@linux-mips.org, linux-mips@linux-mips.org, lgirdwood@gmail.com, broonie@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, arnd@arndb.de, andriy.shevchenko@linux.intel.com, industrypack-devel@lists.sourceforge.net, wg@grandegger.com, mkl@pengutronix.deli
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 11, 2018 at 4:14 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> On some Dell XPS models WMI events of type 0x0000 reporting a keycode of
-> 0xe00c get reported when the brightness of the LCD panel changes.
->
-> This leads to us reporting false-positive kbd_led change events to
-> userspace which in turn leads to the kbd backlight OSD showing when it
-> should not.
->
-> We already read the current keyboard backlight brightness value when
-> reporting events because the led_classdev_notify_brightness_hw_changed
-> API requires this. Compare this value to the last known value and filter
-> out duplicate events, fixing this.
->
-> Note the fixed issue is esp. a problem on XPS models with an ambient ligh=
-t
-> sensor and automatic brightness adjustments turned on, this causes the kb=
-d
-> backlight OSD to show all the time there.
->
+Hi Christophe ，
 
-Pushed to my review and testing queue, thanks!
+On 2018/1/4 16:05, Christophe LEROY wrote:
+> 
+> 
+> Le 25/12/2017 à 02:34, Yisheng Xie a écrit :
+>>
+>>
+>> On 2017/12/24 17:05, christophe leroy wrote:
+>>>
+>>>
+>>> Le 23/12/2017 à 14:48, Greg KH a écrit :
+>>>> On Sat, Dec 23, 2017 at 06:55:25PM +0800, Yisheng Xie wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> When I tried to use devm_ioremap function and review related code, I found
+>>>>> devm_ioremap and devm_ioremap_nocache is almost the same with each other,
+>>>>> except one use ioremap while the other use ioremap_nocache.
+>>>>
+>>>> For all arches?  Really?  Look at MIPS, and x86, they have different
+>>>> functions.
+>>>>
+>>>>> While ioremap's
+>>>>> default function is ioremap_nocache, so devm_ioremap_nocache also have the
+>>>>> same function with devm_ioremap, which can just be killed to reduce the size
+>>>>> of devres.o(from 20304 bytes to 18992 bytes in my compile environment).
+>>>>>
+>>>>> I have posted two versions, which use macro instead of function for
+>>>>> devm_ioremap_nocache[1] or devm_ioremap[2]. And Greg suggest me to kill
+>>>>> devm_ioremap_nocache for no need to keep a macro around for the duplicate
+>>>>> thing. So here comes v3 and please help to review.
+>>>>
+>>>> I don't think this can be done, what am I missing?  These functions are
+>>>> not identical, sorry for missing that before.
+>>>
+>>> devm_ioremap() and devm_ioremap_nocache() are quite similar, both use devm_ioremap_release() for the release, why not just defining:
+>>>
+>>> static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+>>>                 resource_size_t size, bool nocache)
+>>> {
+>>> [...]
+>>>      if (nocache)
+>>>          addr = ioremap_nocache(offset, size);
+>>>      else
+>>>          addr = ioremap(offset, size);
+>>> [...]
+>>> }
+>>>
+>>> then in include/linux/io.h
+>>>
+>>> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>>>                 resource_size_t size)
+>>> {return __devm_ioremap(dev, offset, size, false);}
+>>>
+>>> static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+>>>                     resource_size_t size);
+>>> {return __devm_ioremap(dev, offset, size, true);}
+>>
+>> Yeah, this seems good to me, right now we have devm_ioremap, devm_ioremap_wc, devm_ioremap_nocache
+>> May be we can use an enum like:
+>> typedef enum {
+>>     DEVM_IOREMAP = 0,
+>>     DEVM_IOREMAP_NOCACHE,
+>>     DEVM_IOREMAP_WC,
+>> } devm_ioremap_type;
+>>
+>> static inline void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>>                  resource_size_t size)
+>>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP);}
+>>
+>>   static inline void __iomem *devm_ioremap_nocache(struct device *dev, resource_size_t offset,
+>>                      resource_size_t size);
+>>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_NOCACHE);}
+>>
+>>   static inline void __iomem *devm_ioremap_wc(struct device *dev, resource_size_t offset,
+>>                      resource_size_t size);
+>>   {return __devm_ioremap(dev, offset, size, DEVM_IOREMAP_WC);}
+>>
+>>   static void __iomem *__devm_ioremap(struct device *dev, resource_size_t offset,
+>>                  resource_size_t size, devm_ioremap_type type)
+>>   {
+>>       void __iomem **ptr, *addr = NULL;
+>>   [...]
+>>       switch (type){
+>>       case DEVM_IOREMAP:
+>>           addr = ioremap(offset, size);
+>>           break;
+>>       case DEVM_IOREMAP_NOCACHE:
+>>           addr = ioremap_nocache(offset, size);
+>>           break;
+>>       case DEVM_IOREMAP_WC:
+>>           addr = ioremap_wc(offset, size);
+>>           break;
+>>       }
+>>   [...]
+>>   }
+> 
+> 
+> That looks good to me, will you submit a v4 ?
 
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1514969
-> Fixes: 9c656b0799 ("platform/x86: dell-*: Call new led hw_changed API ...=
-")
-> Acked-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> -Add Fixes tag
-> -Add Pali's Acked-by
-> ---
->  drivers/platform/x86/dell-laptop.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
-ll-laptop.c
-> index cd4725e7e0b5..2ef3297a9efc 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -1133,6 +1133,7 @@ static u8 kbd_previous_mode_bit;
->
->  static bool kbd_led_present;
->  static DEFINE_MUTEX(kbd_led_mutex);
-> +static enum led_brightness kbd_led_level;
->
->  /*
->   * NOTE: there are three ways to set the keyboard backlight level.
-> @@ -1947,6 +1948,7 @@ static enum led_brightness kbd_led_level_get(struct=
- led_classdev *led_cdev)
->  static int kbd_led_level_set(struct led_classdev *led_cdev,
->                              enum led_brightness value)
->  {
-> +       enum led_brightness new_value =3D value;
->         struct kbd_state state;
->         struct kbd_state new_state;
->         u16 num;
-> @@ -1976,6 +1978,9 @@ static int kbd_led_level_set(struct led_classdev *l=
-ed_cdev,
->         }
->
->  out:
-> +       if (ret =3D=3D 0)
-> +               kbd_led_level =3D new_value;
-> +
->         mutex_unlock(&kbd_led_mutex);
->         return ret;
->  }
-> @@ -2003,6 +2008,9 @@ static int __init kbd_led_init(struct device *dev)
->                 if (kbd_led.max_brightness)
->                         kbd_led.max_brightness--;
->         }
-> +
-> +       kbd_led_level =3D kbd_led_level_get(NULL);
-> +
->         ret =3D led_classdev_register(dev, &kbd_led);
->         if (ret)
->                 kbd_led_present =3D false;
-> @@ -2027,13 +2035,25 @@ static void kbd_led_exit(void)
->  static int dell_laptop_notifier_call(struct notifier_block *nb,
->                                      unsigned long action, void *data)
->  {
-> +       bool changed =3D false;
-> +       enum led_brightness new_kbd_led_level;
-> +
->         switch (action) {
->         case DELL_LAPTOP_KBD_BACKLIGHT_BRIGHTNESS_CHANGED:
->                 if (!kbd_led_present)
->                         break;
->
-> -               led_classdev_notify_brightness_hw_changed(&kbd_led,
-> -                                               kbd_led_level_get(&kbd_le=
-d));
-> +               mutex_lock(&kbd_led_mutex);
-> +               new_kbd_led_level =3D kbd_led_level_get(&kbd_led);
-> +               if (kbd_led_level !=3D new_kbd_led_level) {
-> +                       kbd_led_level =3D new_kbd_led_level;
-> +                       changed =3D true;
-> +               }
-> +               mutex_unlock(&kbd_led_mutex);
-> +
-> +               if (changed)
-> +                       led_classdev_notify_brightness_hw_changed(&kbd_le=
-d,
-> +                                                               kbd_led_l=
-evel);
->                 break;
->         }
->
-> --
-> 2.14.3
->
+Sorry for late response. And I will submit the v4 as your suggestion.
 
+Thanks
+Yisheng
 
+> 
+> Christophe
+> 
+>>
 
---=20
-With Best Regards,
-Andy Shevchenko
