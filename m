@@ -1,79 +1,100 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: suppress warning about palm
- detection
-Date: Fri, 12 Jan 2018 10:06:06 -0200
-Message-ID: <20180112120606.xzmn3ulvpyprza2o@khazad-dum.debian.net>
-References: <20180112110445.1876-1-dh.herrmann@gmail.com>
+Subject: Re: platform/x86: thinkpad_acpi: unhandled HKEY 0x60b0 and 0x60b1
+Date: Fri, 12 Jan 2018 10:16:04 -0200
+Message-ID: <20180112121603.4k45pbp5l3677jk7@khazad-dum.debian.net>
+References: <CANq1E4Q55Z9WZ1qPhpmbtXGLb2oPcVst2Xo3YLnxtbt6d6WK_Q@mail.gmail.com>
+ <CAHp75VfPR2Aj3ucmsoNtiJ96UBRzg+y6nCfU3d3ZuJZE5pUehg@mail.gmail.com>
+ <20180109202448.zd63xjr3hth4tzru@mthode.org>
+ <CAHp75Vf_iSR-xTfOdoMab81OCHnWd2vRxdTZon_q=7+E+MzOKw@mail.gmail.com>
+ <CANq1E4T8-j0kXGMGhwvyg93bKxAG8QnEOP84E+tq7UndC=cSMQ@mail.gmail.com>
+ <20180111105026.t6zhi5sadpkzb7sm@khazad-dum.debian.net>
+ <CANq1E4T1_+qFD4pC9CUbBf6NJQmt1ju0iHwK7K0WC+Ejb-R=gA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42281 "EHLO
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58125 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S932705AbeALMGS (ORCPT
+        by vger.kernel.org with ESMTP id S932705AbeALMQJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Jan 2018 07:06:18 -0500
+        Fri, 12 Jan 2018 07:16:09 -0500
 Content-Disposition: inline
-In-Reply-To: <20180112110445.1876-1-dh.herrmann@gmail.com>
+In-Reply-To: <CANq1E4T1_+qFD4pC9CUbBf6NJQmt1ju0iHwK7K0WC+Ejb-R=gA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: David Herrmann <dh.herrmann@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, Matthew Thode <mthode@mthode.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Matthew Thode <mthode@mthode.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
 On Fri, 12 Jan 2018, David Herrmann wrote:
-> This patch prevents the thinkpad_acpi driver from warning about 2 event
-> codes returned for keyboard palm-detection. No behavioral changes,
-> other than suppressing the warning in the kernel log. The events are
-> still forwarded via acpi-netlink channels.
+> > Please someone test this on Win10+Lenovo drivers to check for intended
+> > behavior...
 > 
-> We could, optionally, decide to forward the event through a
-> input-switch on the tpacpi input device. However, so far no suitable
-> input-code exists, and no similar drivers report such events. Hence,
-> leave it an acpi event for now.
-> 
-> Note that the event-codes are named based on empirical studies. On the
-> ThinkPad X1 5th Gen the sensor can be found underneath the arrow key.
-> 
-> Cc: Matthew Thode <mthode@mthode.org>
-> Signed-off-by: David Herrmann <dh.herrmann@gmail.com>
+> I cannot see Windows reacting to this at all. I tried different
+> combinations of the ambient-light sensor and the keyboard sensor.
 
-Well, we certainly should drop the warning, and I am fine with the
-current name for the events (they are not ABI in any way, so we can
-change that at any time if we find out it should be named differently).
+Hmm, so future functionality.  Neat!
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+I *heard* someone mentioning somewhere that a laptop was lighting up the
+keyboard when the hand was over it, and turning it off when it wasn't,
+and I though that might be one possible use...
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> There seems to be no automatic handling regarding keyboard or screen
+> brightness, nor any palm detection. Neither did I see any user-options
+> referring to these sensors.
+
+I see.
+
+> >             otherwise we will get crazyness once the underlying
+> > implementation improves/changes to better fit whatever its intended
+> > behavior.
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 117be48ff4de..128f91af716e 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -214,6 +214,10 @@ enum tpacpi_hkey_event_t {
->  	/* AC-related events */
->  	TP_HKEY_EV_AC_CHANGED		= 0x6040, /* AC status changed */
->  
-> +	/* Further user-interface events */
-> +	TP_HKEY_EV_PALM_DETECTED	= 0x60b0, /* palm hoveres keyboard */
-> +	TP_HKEY_EV_PALM_UNDETECTED	= 0x60b1, /* palm removed */
-> +
->  	/* Misc */
->  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
->  };
-> @@ -4079,6 +4083,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->  		*send_acpi_ev = false;
->  		break;
->  
-> +	case TP_HKEY_EV_PALM_DETECTED:
-> +	case TP_HKEY_EV_PALM_UNDETECTED:
-> +		/* palm detected hovering the keyboard, forward to user-space
-> +		 * via netlink for consumption */
-> +		return true;
-> +
->  	default:
->  		pr_warn("unknown possible thermal alarm or keyboard event received\n");
->  		known = false;
+> I cannot follow. The HKEY is currently reported via acpi-netlink. My
+
+Ah, not the userspace report over netlink, but if we did anything
+in-kernel with the information.
+
+> I see that it would be beneficial knowing exactly what this key
+> reports. However, I think spamming the kernel log is not the right way
+> to motivate people to investigate this. I'd be fine with printing a
+> one-time hint for those keys, or some other option. But the current
+> state makes kernel development a hassle with all the warnings printed
+> by the thinkpad-acpi driver.
+
+Agreed.
+
+In fact, I will accept a patch that changes that warning to a pr_info,
+and rewords it to a far less scary "unknown general purpose or
+thermal-related event".  The warning was added a long time ago, there
+were only thermal alarms in the 0x6000 event range at that time, I
+think.
+
+> > It could be to "turn keyboard lighting on" helper or something like that
+> > (coupled to other sensor), for all we know.  It is a bit strange for a
+> > palm-detection sensor to be over the arrow keys, and it certainly
+> > doesn't look like it is a cat-on-keyboard detector...
+> 
+> Palm-detection underneath the arrow keys sounds like the right place
+> to me. Especially as most people are right-handed, you want to detect
+> movement of the right hand. The left hand might just be resting on the
+> keyboard the entire time. Inspecting my own usage, I'd say the lower
+> right hand side of they keyboard is the perfect place for that. What
+> makes you sceptical of that?
+
+Because for some reason I thought this was about disabling the touchpad
+automatically.  Running on little sleep, here, due to Spectre.
+
+> I checked with the input developers, and there is currently no hookup
+> of any similar interfaces in libinput / xf86-input-*. So no similar
+> prior art that might be of help here.
+> 
+> > Another good place to ask around for such information are the thinkpad
+> > forums, they are far more windows-centric, but there is a *lot* of
+> > thinkpad experts lurking there...
+> 
+> Which forums are you referring to here? I am not used to debugging
+> thinkpad acpi drivers, so any hints are welcome.
+
+Here:
+https://forum.thinkpads.com/
 
 -- 
   Henrique Holschuh
