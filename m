@@ -1,40 +1,42 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: have ACPI_CMPC use depends instead of
- select for INPUT
-Date: Mon, 15 Jan 2018 12:42:29 -0800
-Message-ID: <20180115204229.GA11094@fury>
-References: <913480bb-d06a-3f13-e8fc-20f83ff499a0@infradead.org>
+Subject: Re: [patch v7 3/3] platform/mellanox: mlxreg-hotplug: modify to use
+ regmap intreface
+Date: Mon, 15 Jan 2018 12:43:06 -0800
+Message-ID: <20180115204306.GB11094@fury>
+References: <1515420999-4133-4-git-send-email-vadimp@mellanox.com>
+ <201801101447.LGVbZ8Xz%fengguang.wu@intel.com>
+ <20180115201528.GA10860@fury>
+ <CAHp75Ve_shhVTRcDDinvzdxX4ByugLbB_50yNMn4n66yjqUKBg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42571 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:42138 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750716AbeAOUma (ORCPT
+        with ESMTP id S1750716AbeAOUnK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Jan 2018 15:42:30 -0500
+        Mon, 15 Jan 2018 15:43:10 -0500
 Content-Disposition: inline
-In-Reply-To: <913480bb-d06a-3f13-e8fc-20f83ff499a0@infradead.org>
+In-Reply-To: <CAHp75Ve_shhVTRcDDinvzdxX4ByugLbB_50yNMn4n66yjqUKBg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: kbuild test robot <lkp@intel.com>, Vadim Pasternak <vadimp@mellanox.com>, kbuild-all@01.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>
 
-On Sun, Jan 14, 2018 at 09:11:18PM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Jan 15, 2018 at 10:21:33PM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 15, 2018 at 10:15 PM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Wed, Jan 10, 2018 at 03:12:48PM +0800, kbuild test robot wrote:
 > 
-> Drivers should not 'select' a subsystem. Instead they should depend
-> on it. If the subsystem is disabled, the user probably did that for
-> a purpose and one driver shouldn't be changing that.
+> >>    ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
+> >> >> ERROR: "of_update_property" [drivers/platform/mellanox/mlxreg-hotplug.ko] undefined!
+> >>    ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
+> >
+> > Vadim, three undefined errors. Assuming you successfully built the drivers prior
+> > to submission, this is likely due to a Kconfig dependency missing. Please
+> > correct and resubmit.
 > 
-> This also makes all platform/x86/ drivers consistent w.r.t depending on
-> INPUT instead of selecting it.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
+> It's already v8 is there.
 
-Thanks Randy, queued.
+Yeah, I just noticed this got reordered in my Inbox. On it.
 
 -- 
 Darren Hart
