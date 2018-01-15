@@ -1,50 +1,63 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] platform/x86: have ACPI_CMPC use depends instead of select
- for INPUT
-Date: Sun, 14 Jan 2018 21:11:18 -0800
-Message-ID: <913480bb-d06a-3f13-e8fc-20f83ff499a0@infradead.org>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [patch v7 3/3] platform/mellanox: mlxreg-hotplug: modify to use
+ regmap intreface
+Date: Mon, 15 Jan 2018 12:15:28 -0800
+Message-ID: <20180115201528.GA10860@fury>
+References: <1515420999-4133-4-git-send-email-vadimp@mellanox.com>
+ <201801101447.LGVbZ8Xz%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:35668 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753258AbeAOFLW (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:51065 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750710AbeAOUPg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Jan 2018 00:11:22 -0500
-Content-Language: en-US
+        Mon, 15 Jan 2018 15:15:36 -0500
+Content-Disposition: inline
+In-Reply-To: <201801101447.LGVbZ8Xz%fengguang.wu@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: kbuild test robot <lkp@intel.com>
+Cc: Vadim Pasternak <vadimp@mellanox.com>, kbuild-all@01.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Wed, Jan 10, 2018 at 03:12:48PM +0800, kbuild test robot wrote:
+> Hi Vadim,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on platform-drivers-x86/for-next]
+> [cannot apply to linus/master]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Vadim-Pasternak/rivers-platform-replace-module-x86-mlxcpld-hotplug-with-mellanox-mlxreg-hotplug/20180110-115215
+> base:   git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git for-next
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=ia64 
+> 
+> All errors (new ones prefixed by >>):
 
-Drivers should not 'select' a subsystem. Instead they should depend
-on it. If the subsystem is disabled, the user probably did that for
-a purpose and one driver shouldn't be changing that.
+...
 
-This also makes all platform/x86/ drivers consistent w.r.t depending on
-INPUT instead of selecting it.
+>    ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
+> >> ERROR: "of_update_property" [drivers/platform/mellanox/mlxreg-hotplug.ko] undefined!
+>    ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/Kconfig |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Vadim, three undefined errors. Assuming you successfully built the drivers prior
+to submission, this is likely due to a Kconfig dependency missing. Please
+correct and resubmit.
 
---- lnx-415-rc8.orig/drivers/platform/x86/Kconfig
-+++ lnx-415-rc8/drivers/platform/x86/Kconfig
-@@ -812,9 +812,8 @@ config TOSHIBA_WMI
- 
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
--	depends on ACPI
-+	depends on ACPI && INPUT
- 	depends on RFKILL || RFKILL=n
--	select INPUT
- 	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  Support for Intel Classmate PC ACPI devices, including some
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
