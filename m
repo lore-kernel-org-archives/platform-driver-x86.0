@@ -1,30 +1,50 @@
-From: mikhail fridman <mallory.genest@crbm.cnrs.fr>
-Subject: Congratulations
-Date: Sun, 14 Jan 2018 11:26:16 -0400
-Message-ID: <3437a3672b5cc855baa47852c24fae05__38428.3526720994$1515944713$gmane$org@crbm.cnrs.fr>
-Reply-To: mikhail.fridmann@yahoo.com
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86: have ACPI_CMPC use depends instead of select
+ for INPUT
+Date: Sun, 14 Jan 2018 21:11:18 -0800
+Message-ID: <913480bb-d06a-3f13-e8fc-20f83ff499a0@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from opale.sic.montp.cnrs.fr ([194.57.116.90]:47068 "EHLO
-        opale.sic.montp.cnrs.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751766AbeANPrL (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:35668 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753258AbeAOFLW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 14 Jan 2018 10:47:11 -0500
+        Mon, 15 Jan 2018 00:11:22 -0500
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 
+From: Randy Dunlap <rdunlap@infradead.org>
 
+Drivers should not 'select' a subsystem. Instead they should depend
+on it. If the subsystem is disabled, the user probably did that for
+a purpose and one driver shouldn't be changing that.
 
--- 
-Dear
+This also makes all platform/x86/ drivers consistent w.r.t depending on
+INPUT instead of selecting it.
 
-Congratulation i have selected you Just as I have declared on May 23, 
-2016 to give
-my fortune as charity get back to me now.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/Kconfig |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-
-Best Regards
-mikhail fridman
+--- lnx-415-rc8.orig/drivers/platform/x86/Kconfig
++++ lnx-415-rc8/drivers/platform/x86/Kconfig
+@@ -812,9 +812,8 @@ config TOSHIBA_WMI
+ 
+ config ACPI_CMPC
+ 	tristate "CMPC Laptop Extras"
+-	depends on ACPI
++	depends on ACPI && INPUT
+ 	depends on RFKILL || RFKILL=n
+-	select INPUT
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  Support for Intel Classmate PC ACPI devices, including some
