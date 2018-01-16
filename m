@@ -1,42 +1,51 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v7 3/3] platform/mellanox: mlxreg-hotplug: modify to use
- regmap intreface
-Date: Mon, 15 Jan 2018 12:43:06 -0800
-Message-ID: <20180115204306.GB11094@fury>
-References: <1515420999-4133-4-git-send-email-vadimp@mellanox.com>
- <201801101447.LGVbZ8Xz%fengguang.wu@intel.com>
- <20180115201528.GA10860@fury>
- <CAHp75Ve_shhVTRcDDinvzdxX4ByugLbB_50yNMn4n66yjqUKBg@mail.gmail.com>
+Subject: Re: [patch v8 0/3] drivers/platform: replace module
+ x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Mon, 15 Jan 2018 19:42:09 -0800
+Message-ID: <20180116034209.GA4590@fury>
+References: <1515661123-76604-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:42138 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750716AbeAOUnK (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Jan 2018 15:43:10 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve_shhVTRcDDinvzdxX4ByugLbB_50yNMn4n66yjqUKBg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: kbuild test robot <lkp@intel.com>, Vadim Pasternak <vadimp@mellanox.com>, kbuild-all@01.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?utf-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>
+In-Reply-To: <1515661123-76604-1-git-send-email-vadimp@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 15, 2018 at 10:21:33PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 15, 2018 at 10:15 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Wed, Jan 10, 2018 at 03:12:48PM +0800, kbuild test robot wrote:
-> 
-> >>    ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
-> >> >> ERROR: "of_update_property" [drivers/platform/mellanox/mlxreg-hotplug.ko] undefined!
-> >>    ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
-> >
-> > Vadim, three undefined errors. Assuming you successfully built the drivers prior
-> > to submission, this is likely due to a Kconfig dependency missing. Please
-> > correct and resubmit.
-> 
-> It's already v8 is there.
+On Thu, Jan 11, 2018 at 08:58:40AM +0000, Vadim Pasternak wrote:
+> The patchset:
+>  - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+>    drivers/platform/x86/mlxcpld-hotplug.c with the modules
+>    include/linux/platform_data/mlxreg.h and
+>    drivers/platform/mellanox/mlxreg-hotplug.c;
+>    relevant Makefile and Kconfig are updated;
+>  - modifies Mellanox hotplug driver for making it architecture
+>    independent. Drivers has been tested for x86 and ARM based systems.
+>  - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
+>    event functionality over programmable devices logic, when these devices
+>    can be attached to different interfaces types, like I2C, LPC, SPI;
+>    driver drivers/platform/x86/mlx-platform.c is updated according to new
+>    interface.
 
-Yeah, I just noticed this got reordered in my Inbox. On it.
+Individual review to follow. In general, this series is difficult to
+review as it does not present the changes in an incremental fashion. It
+appears to have been broken up from a major wholesale re-write. This is
+made evident by several stray or out of place changes which are not
+consistent with the commit messages and the very large 3/3 patch.
+
+This has waited long enough by no fault of Vadim's, and the impact is
+very localized.
+
+Vadim, I'd appreciate it if you would reply to the individual reviews,
+and I think I can work with the existing series and tweak a couple
+things in the commit messages, and possibly move a Kconfig change to a
+different patch, and we can move forward with this.
+
+To follow this email, are two patches which are minor incremental
+cleanups, which I'd appreciate your review of before I push them to
+testing.
 
 -- 
 Darren Hart
