@@ -1,33 +1,51 @@
-From: Marco Martin <notmart@gmail.com>
-Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
-Date: Thu, 18 Jan 2018 16:59:40 +0100
-Message-ID: <CAD6_BouNzAn_BDWNVYDoBNo5Cdh+taWx4uVF6amZWFPvK4Q6BA@mail.gmail.com>
-References: <1516283990-3665-1-git-send-email-notmart@gmail.com>
- <CAHp75VcKgRCjqw0U=F3ez1XaMdY+e0oVRWvrjWxNyADv8+tsKA@mail.gmail.com> <2125c5fc4eba44e5929600d3fbc0d456@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-smbios: Fix error handling in build_tokens_sysfs()
+Date: Thu, 18 Jan 2018 21:21:52 +0200
+Message-ID: <CAHp75Vc8jTpBEYc5eVx8saCXBU=SMEbbBO0zuD=8c+idSR1FFg@mail.gmail.com>
+References: <20180118104503.GA30055@mwanda> <5A607BF6.6090800@bfs.de>
+ <20180118110334.v33ypxsavbmq6qpu@mwanda> <5A6082FA.1040608@bfs.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-it0-f53.google.com ([209.85.214.53]:34471 "EHLO
-        mail-it0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932699AbeARP7l (ORCPT
+Received: from mail-qt0-f174.google.com ([209.85.216.174]:32965 "EHLO
+        mail-qt0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1754170AbeARTVx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Jan 2018 10:59:41 -0500
-In-Reply-To: <2125c5fc4eba44e5929600d3fbc0d456@ausx13mpc120.AMER.DELL.COM>
+        Thu, 18 Jan 2018 14:21:53 -0500
+In-Reply-To: <5A6082FA.1040608@bfs.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, Bhushan Shah <bhush94@gmail.com>, platform-driver-x86@vger.kernel.org
+To: wharms@bfs.de
+Cc: kernel-janitors@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-On Thu, Jan 18, 2018 at 4:23 PM,  <Mario.Limonciello@dell.com> wrote:
-> AFAIK we don't have a public specification for the ACPI interface
-> that intel-vbtn uses, it's all reverse engineered.
->
-> I think the appropriate thing to do would be open a kernel Bugzilla for your
-> issue and attach:
-> 1) kernel log without your patch (do you get unknown event index?)
-> 2) your DSDT there to review.
->
-> You can subscribe us to it.
+On Thu, Jan 18, 2018 at 1:20 PM, walter harms <wharms@bfs.de> wrote:
+> Am 18.01.2018 12:03, schrieb Dan Carpenter:
+>> On Thu, Jan 18, 2018 at 11:50:30AM +0100, walter harms wrote:
 
-done at
-https://bugzilla.kernel.org/show_bug.cgi?id=198507
+>>>>  out_unwind_strings:
+>>>> -   for (i = i-1; i > 0; i--) {
+>>>> +   for (i = i-1; i >= 0; i--) {
+>>>>             kfree(token_location_attrs[i].attr.name);
+>>>>             kfree(token_value_attrs[i].attr.name);
+>>>>     }
+
+>>> would you mind to reverse order here ?
+>>> you know programmers are terrible at couting backwards.
+>>
+>> I prefer to always unwind in reverse order so I'd prefer to leave it
+>> as-is.
+
+> It is just a comment from my side. we can leave the actual decision to the
+> current maintainer.
+
+Right.
+And maintainer would like to see simple:
+
+while (i--) {
+    kfree(token_location_attrs[i].attr.name);
+    kfree(token_value_attrs[i].attr.name);
+}
+
+-- 
+With Best Regards,
+Andy Shevchenko
