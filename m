@@ -1,48 +1,73 @@
-From: walter harms <wharms@bfs.de>
-Subject: Re: [PATCH] platform/x86: dell-smbios: Fix error handling in build_tokens_sysfs()
-Date: Thu, 18 Jan 2018 12:20:26 +0100
-Message-ID: <5A6082FA.1040608@bfs.de>
-References: <20180118104503.GA30055@mwanda> <5A607BF6.6090800@bfs.de> <20180118110334.v33ypxsavbmq6qpu@mwanda>
-Reply-To: wharms@bfs.de
+From: Marco Martin <notmart@gmail.com>
+Subject: [PATCH] Support tablet mode switch for Dell laptops
+Date: Thu, 18 Jan 2018 14:59:50 +0100
+Message-ID: <1516283990-3665-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <20180118110334.v33ypxsavbmq6qpu@mwanda>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: kernel-janitors@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:38483 "EHLO
+        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1756463AbeARN7z (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 18 Jan 2018 08:59:55 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, Marco Martin <notmart@gmail.com>
 
+Dell laptops send events to intel-vbtn.c
+0xCC when the laptop enters in tablet mode and
+0xCD when the laptop goes out of it
 
+This has been confirmed working on a Dell Inspiron 13-7352
+and an Inspiron 13-7000
 
-Am 18.01.2018 12:03, schrieb Dan Carpenter:
-> On Thu, Jan 18, 2018 at 11:50:30AM +0100, walter harms wrote:
->>> @@ -523,7 +523,7 @@ static int build_tokens_sysfs(struct platform_device *dev)
->>>  	return 0;
->>>  
->>>  out_unwind_strings:
->>> -	for (i = i-1; i > 0; i--) {
->>> +	for (i = i-1; i >= 0; i--) {
->>>  		kfree(token_location_attrs[i].attr.name);
->>>  		kfree(token_value_attrs[i].attr.name);
->>>  	}
->>
->> would you mind to reverse order here ?
->> you know programmers are terrible at couting backwards.
-> 
-> I prefer to always unwind in reverse order so I'd prefer to leave it
-> as-is.
+I'm not sure intel-vbtn is the right place for it, as it
+should be dell-specific, but this is the only device driver
+where those events arrive at all
+also, it would need a way to query the initial state of the switch
 
+CC:platform-driver-x86@vger.kernel.org
+CC:Matthew Garrett <mjg59@srcf.ucam.org>
+CC:"Pali Rohár" <pali.rohar@gmail.com>
+CC:Darren Hart <dvhart@infradead.org>
+CC:Andy Shevchenko <andy@infradead.org>
 
-It is just a comment from my side. we can leave the actual decision to the
-current maintainer.
+Signed-off-by: Marco Martin <notmart@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-re,
- wh
-
-> 
-> regards,
-> dan carpenter
-> 
-> 
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 146d02f..1fa63e8 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -61,6 +61,10 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+ 	priv->input_dev->name = "Intel Virtual Button driver";
+ 	priv->input_dev->id.bustype = BUS_HOST;
+ 
++	input_set_capability(priv->input_dev, EV_SW, SW_TABLET_MODE);
++	/*TODO: query initial state (and if the switch is present*/
++	input_report_switch(priv->input_dev, SW_TABLET_MODE, 0);
++
+ 	ret = input_register_device(priv->input_dev);
+ 	if (ret)
+ 		goto err_free_device;
+@@ -84,7 +88,13 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 
+-	if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
++	if (event == 0xCC) {
++		input_report_switch(priv->input_dev, SW_TABLET_MODE, 1);
++		input_sync(priv->input_dev);
++	} else if (event == 0xCD) {
++		input_report_switch(priv->input_dev, SW_TABLET_MODE, 0);
++		input_sync(priv->input_dev);
++	} else if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
+ 		dev_info(&device->dev, "unknown event index 0x%x\n",
+ 			 event);
+ }
+-- 
+2.7.4
