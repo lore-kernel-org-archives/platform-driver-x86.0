@@ -1,86 +1,37 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] Support tablet mode switch for Dell laptops
-Date: Thu, 18 Jan 2018 15:23:04 +0000
-Message-ID: <2125c5fc4eba44e5929600d3fbc0d456@ausx13mpc120.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
+Date: Thu, 18 Jan 2018 16:44:08 +0100
+Message-ID: <20180118154408.eyke3dtn6zlcqphi@pali>
 References: <1516283990-3665-1-git-send-email-notmart@gmail.com>
- <CAHp75VcKgRCjqw0U=F3ez1XaMdY+e0oVRWvrjWxNyADv8+tsKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcKgRCjqw0U=F3ez1XaMdY+e0oVRWvrjWxNyADv8+tsKA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1516283990-3665-1-git-send-email-notmart@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com, notmart@gmail.com
-Cc: linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
+To: Marco Martin <notmart@gmail.com>
+Cc: linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFuZHkgU2hldmNoZW5rbw0KPiBTZW50
-OiBUaHVyc2RheSwgSmFudWFyeSAxOCwgMjAxOCA5OjEzIEFNDQo+IFRvOiBNYXJjbyBNYXJ0aW4g
-PG5vdG1hcnRAZ21haWwuY29tPjsgTGltb25jaWVsbG8sIE1hcmlvDQo+IDxNYXJpb19MaW1vbmNp
-ZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBNYXR0aGV3IEdhcnJldHQNCj4gPG1qZzU5QHNyY2YudWNh
-bS5vcmc+OyBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+OyBEYXJyZW4gSGFydA0K
-PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFk
-Lm9yZz47DQo+IGJodXNoOTRAZ21haWwuY29tOyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRy
-aXZlci14ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBTdXBwb3J0
-IHRhYmxldCBtb2RlIHN3aXRjaCBmb3IgRGVsbCBsYXB0b3BzDQo+IA0KPiBPbiBUaHUsIEphbiAx
-OCwgMjAxOCBhdCAzOjU5IFBNLCBNYXJjbyBNYXJ0aW4gPG5vdG1hcnRAZ21haWwuY29tPiB3cm90
-ZToNCj4gPiBEZWxsIGxhcHRvcHMgc2VuZCBldmVudHMgdG8gaW50ZWwtdmJ0bi5jDQo+ID4gMHhD
-QyB3aGVuIHRoZSBsYXB0b3AgZW50ZXJzIGluIHRhYmxldCBtb2RlIGFuZA0KPiA+IDB4Q0Qgd2hl
-biB0aGUgbGFwdG9wIGdvZXMgb3V0IG9mIGl0DQo+ID4NCj4gPiBUaGlzIGhhcyBiZWVuIGNvbmZp
-cm1lZCB3b3JraW5nIG9uIGEgRGVsbCBJbnNwaXJvbiAxMy03MzUyDQo+ID4gYW5kIGFuIEluc3Bp
-cm9uIDEzLTcwMDANCj4gPg0KPiA+IEknbSBub3Qgc3VyZSBpbnRlbC12YnRuIGlzIHRoZSByaWdo
-dCBwbGFjZSBmb3IgaXQsIGFzIGl0DQo+ID4gc2hvdWxkIGJlIGRlbGwtc3BlY2lmaWMsIGJ1dCB0
-aGlzIGlzIHRoZSBvbmx5IGRldmljZSBkcml2ZXINCj4gPiB3aGVyZSB0aG9zZSBldmVudHMgYXJy
-aXZlIGF0IGFsbA0KPiA+IGFsc28sIGl0IHdvdWxkIG5lZWQgYSB3YXkgdG8gcXVlcnkgdGhlIGlu
-aXRpYWwgc3RhdGUgb2YgdGhlIHN3aXRjaA0KPiANCj4gWWVhaCwgdG8gbWUgc291bmRzIGxpa2Ug
-YSBoYWNrIGZvciBub3cuDQo+IFNvLCBJIHdvdWxkIGxpa2UgdG8gaGVhciBmcm9tIGV2ZXJ5b25l
-OiBQYWxpLCBNYXJpbywgRGFycmVuPw0KDQpBRkFJSyB3ZSBkb24ndCBoYXZlIGEgcHVibGljIHNw
-ZWNpZmljYXRpb24gZm9yIHRoZSBBQ1BJIGludGVyZmFjZQ0KdGhhdCBpbnRlbC12YnRuIHVzZXMs
-IGl0J3MgYWxsIHJldmVyc2UgZW5naW5lZXJlZC4NCg0KSSB0aGluayB0aGUgYXBwcm9wcmlhdGUg
-dGhpbmcgdG8gZG8gd291bGQgYmUgb3BlbiBhIGtlcm5lbCBCdWd6aWxsYSBmb3IgeW91cg0KaXNz
-dWUgYW5kIGF0dGFjaDoNCjEpIGtlcm5lbCBsb2cgd2l0aG91dCB5b3VyIHBhdGNoIChkbyB5b3Ug
-Z2V0IHVua25vd24gZXZlbnQgaW5kZXg/KQ0KMikgeW91ciBEU0RUIHRoZXJlIHRvIHJldmlldy4N
-Cg0KWW91IGNhbiBzdWJzY3JpYmUgdXMgdG8gaXQuDQoNCkFsc28geW91IHNob3VsZCBzdWJzY3Jp
-YmUgQWxleCBIdW5nLCB3aG8gaGFzIGRvbmUgbG90cyBvZiB3b3JrIG9uIGludGVsLXZidG4NCmFu
-ZCBpbnRlbC1oaWQuDQoNCj4gDQo+ID4gQ0M6cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5l
-bC5vcmcNCj4gPiBDQzpNYXR0aGV3IEdhcnJldHQgPG1qZzU5QHNyY2YudWNhbS5vcmc+DQo+ID4g
-Q0M6IlBhbGkgUm9ow6FyIiA8cGFsaS5yb2hhckBnbWFpbC5jb20+DQo+ID4gQ0M6RGFycmVuIEhh
-cnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPg0KPiA+IENDOkFuZHkgU2hldmNoZW5rbyA8YW5keUBp
-bmZyYWRlYWQub3JnPg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyY28gTWFydGluIDxub3Rt
-YXJ0QGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwt
-dmJ0bi5jIHwgMTIgKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0
-Zm9ybS94ODYvaW50ZWwtdmJ0bi5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5j
-DQo+ID4gaW5kZXggMTQ2ZDAyZi4uMWZhNjNlOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Bs
-YXRmb3JtL3g4Ni9pbnRlbC12YnRuLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9p
-bnRlbC12YnRuLmMNCj4gPiBAQCAtNjEsNiArNjEsMTAgQEAgc3RhdGljIGludCBpbnRlbF92YnRu
-X2lucHV0X3NldHVwKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKmRldmljZSkNCj4gPiAgICAg
-ICAgIHByaXYtPmlucHV0X2Rldi0+bmFtZSA9ICJJbnRlbCBWaXJ0dWFsIEJ1dHRvbiBkcml2ZXIi
-Ow0KPiA+ICAgICAgICAgcHJpdi0+aW5wdXRfZGV2LT5pZC5idXN0eXBlID0gQlVTX0hPU1Q7DQo+
-ID4NCj4gPiArICAgICAgIGlucHV0X3NldF9jYXBhYmlsaXR5KHByaXYtPmlucHV0X2RldiwgRVZf
-U1csIFNXX1RBQkxFVF9NT0RFKTsNCj4gPiArICAgICAgIC8qVE9ETzogcXVlcnkgaW5pdGlhbCBz
-dGF0ZSAoYW5kIGlmIHRoZSBzd2l0Y2ggaXMgcHJlc2VudCovDQo+ID4gKyAgICAgICBpbnB1dF9y
-ZXBvcnRfc3dpdGNoKHByaXYtPmlucHV0X2RldiwgU1dfVEFCTEVUX01PREUsIDApOw0KPiA+ICsN
-Cj4gPiAgICAgICAgIHJldCA9IGlucHV0X3JlZ2lzdGVyX2RldmljZShwcml2LT5pbnB1dF9kZXYp
-Ow0KPiA+ICAgICAgICAgaWYgKHJldCkNCj4gPiAgICAgICAgICAgICAgICAgZ290byBlcnJfZnJl
-ZV9kZXZpY2U7DQo+ID4gQEAgLTg0LDcgKzg4LDEzIEBAIHN0YXRpYyB2b2lkIG5vdGlmeV9oYW5k
-bGVyKGFjcGlfaGFuZGxlIGhhbmRsZSwgdTMyIGV2ZW50LA0KPiB2b2lkICpjb250ZXh0KQ0KPiA+
-ICAgICAgICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2aWNlID0gY29udGV4dDsNCj4gPiAg
-ICAgICAgIHN0cnVjdCBpbnRlbF92YnRuX3ByaXYgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoJmRl
-dmljZS0+ZGV2KTsNCj4gPg0KPiA+IC0gICAgICAgaWYgKCFzcGFyc2Vfa2V5bWFwX3JlcG9ydF9l
-dmVudChwcml2LT5pbnB1dF9kZXYsIGV2ZW50LCAxLCB0cnVlKSkNCj4gPiArICAgICAgIGlmIChl
-dmVudCA9PSAweENDKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlucHV0X3JlcG9ydF9zd2l0Y2go
-cHJpdi0+aW5wdXRfZGV2LCBTV19UQUJMRVRfTU9ERSwgMSk7DQo+ID4gKyAgICAgICAgICAgICAg
-IGlucHV0X3N5bmMocHJpdi0+aW5wdXRfZGV2KTsNCj4gPiArICAgICAgIH0gZWxzZSBpZiAoZXZl
-bnQgPT0gMHhDRCkgew0KPiA+ICsgICAgICAgICAgICAgICBpbnB1dF9yZXBvcnRfc3dpdGNoKHBy
-aXYtPmlucHV0X2RldiwgU1dfVEFCTEVUX01PREUsIDApOw0KPiA+ICsgICAgICAgICAgICAgICBp
-bnB1dF9zeW5jKHByaXYtPmlucHV0X2Rldik7DQo+ID4gKyAgICAgICB9IGVsc2UgaWYgKCFzcGFy
-c2Vfa2V5bWFwX3JlcG9ydF9ldmVudChwcml2LT5pbnB1dF9kZXYsIGV2ZW50LCAxLCB0cnVlKSkN
-Cj4gPiAgICAgICAgICAgICAgICAgZGV2X2luZm8oJmRldmljZS0+ZGV2LCAidW5rbm93biBldmVu
-dCBpbmRleCAweCV4XG4iLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICBldmVudCk7DQo+
-ID4gIH0NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCj4gDQo+IA0KPiANCj4gLS0NCj4gV2l0aCBC
-ZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
+On Thursday 18 January 2018 14:59:50 Marco Martin wrote:
+> -	if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
+> +	if (event == 0xCC) {
+> +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 1);
+> +		input_sync(priv->input_dev);
+> +	} else if (event == 0xCD) {
+> +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 0);
+> +		input_sync(priv->input_dev);
+> +	} else if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
+
+Is not it possible to put 0xCC and 0xCD into sparse keymap table?
+Because IIRC sparse keymap was created just to avoid that big
+if-elseif-elseif-else blocks.
+
+>  		dev_info(&device->dev, "unknown event index 0x%x\n",
+>  			 event);
+>  }
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
