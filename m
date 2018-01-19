@@ -1,196 +1,97 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [Patch v1 2/8] platform/x86: intel_pmc_core: Substitute PCI with CPUID enumeration
-Date: Fri, 19 Jan 2018 14:28:21 +0530
-Message-ID: <1516352307-20123-3-git-send-email-rajneesh.bhardwaj@intel.com>
+Subject: [Patch v1 1/8] platform/x86: intel_pmc_core: Refactor debugfs entries
+Date: Fri, 19 Jan 2018 14:28:20 +0530
+Message-ID: <1516352307-20123-2-git-send-email-rajneesh.bhardwaj@intel.com>
 References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:52690 "EHLO mga06.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:52689 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755020AbeASJDz (ORCPT
+        id S1755464AbeASJDw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 04:03:55 -0500
+        Fri, 19 Jan 2018 04:03:52 -0500
 In-Reply-To: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+When on a platform if we can't show MPHY and PLL status, don't even bother
+to create a debugfs entry as it will fail anyway. In fact unless OEM builds
+a special BIOS for test, it will fail on every production system.
 
-The Only use of PCI device enumeration here is to get the PMC base address
-which is a fixed value i.e. 0xFE000000. On some platforms this can be read
-through a non standard PCI BAR. But after Kabylake, PMC is not exposed as a
-PCI device anymore. There are other non standard methods like ACPI LPIT
-which can also be used for obtaining this value.
+This will help to add future platform support where we can't support these
+entries.
 
-For simplicity, this value can be hardcoded as it won't change.
-
-Since we don't have a PMC PCI device on any platform after Kabylake, this
-creates a foundation for future SoC support.
-
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Suggested-by: Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 91 ++++++++++++-----------------------
- drivers/platform/x86/intel_pmc_core.h |  3 +-
- 2 files changed, 33 insertions(+), 61 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 44 +++++++++++++----------------------
+ 1 file changed, 16 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 43cee8877ee3..f7616600e8ab 100644
+index cf8b3b34a979..43cee8877ee3 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -18,12 +18,12 @@
-  *
-  */
+@@ -407,43 +407,31 @@ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
  
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/debugfs.h>
- #include <linux/delay.h>
--#include <linux/device.h>
- #include <linux/io.h>
- #include <linux/module.h>
--#include <linux/pci.h>
- #include <linux/uaccess.h>
- 
- #include <asm/cpu_device_id.h>
-@@ -119,13 +119,6 @@ static const struct pmc_reg_map spt_reg_map = {
- 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
- };
- 
--static const struct pci_device_id pmc_pci_ids[] = {
--	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID),
--					(kernel_ulong_t)&spt_reg_map },
--	{ 0, },
--};
--MODULE_DEVICE_TABLE(pci, pmc_pci_ids);
--
- static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
  {
- 	return readb(pmcdev->regbase + offset);
-@@ -446,79 +439,59 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+-	struct dentry *dir, *file;
  
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_MOBILE, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)NULL},
-+		(kernel_ulong_t)&spt_reg_map},
- 	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_DESKTOP, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)NULL},
-+		(kernel_ulong_t)&spt_reg_map},
- 	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_MOBILE, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)NULL},
-+		(kernel_ulong_t)&spt_reg_map},
- 	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_DESKTOP, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)NULL},
-+		(kernel_ulong_t)&spt_reg_map},
- 	{}
- };
+-	dir = debugfs_create_dir("pmc_core", NULL);
+-	if (!dir)
+-		return -ENOMEM;
++	pmcdev->dbgfs_dir = debugfs_create_dir("pmc_core", NULL);
  
--static int pmc_core_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
-+
-+static int __init pmc_core_probe(void)
- {
--	struct device *ptr_dev = &dev->dev;
--	struct pmc_dev *pmcdev = &pmc;
- 	const struct x86_cpu_id *cpu_id;
--	const struct pmc_reg_map *map = (struct pmc_reg_map *)id->driver_data;
-+	struct pmc_dev *pmcdev = &pmc;
- 	int err;
+-	pmcdev->dbgfs_dir = dir;
+-	file = debugfs_create_file("slp_s0_residency_usec", 0444,
+-				   dir, pmcdev, &pmc_core_dev_state);
+-	if (!file)
+-		goto err;
++	if (!pmcdev->dbgfs_dir)
++		return -ENOMEM;
  
- 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
--	if (!cpu_id) {
--		dev_dbg(&dev->dev, "PMC Core: cpuid mismatch.\n");
--		return -EINVAL;
--	}
--
--	err = pcim_enable_device(dev);
--	if (err < 0) {
--		dev_dbg(&dev->dev, "PMC Core: failed to enable Power Management Controller.\n");
--		return err;
--	}
--
--	err = pci_read_config_dword(dev,
--				    SPT_PMC_BASE_ADDR_OFFSET,
--				    &pmcdev->base_addr);
--	if (err < 0) {
--		dev_dbg(&dev->dev, "PMC Core: failed to read PCI config space.\n");
--		return err;
--	}
--	pmcdev->base_addr &= PMC_BASE_ADDR_MASK;
--	dev_dbg(&dev->dev, "PMC Core: PWRMBASE is %#x\n", pmcdev->base_addr);
--
--	pmcdev->regbase = devm_ioremap_nocache(ptr_dev,
--					      pmcdev->base_addr,
--					      SPT_PMC_MMIO_REG_LEN);
--	if (!pmcdev->regbase) {
--		dev_dbg(&dev->dev, "PMC Core: ioremap failed.\n");
-+	if (!cpu_id)
-+		return -ENODEV;
-+
-+	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
-+	pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-+	pmcdev->regbase = ioremap(pmcdev->base_addr,
-+				  pmcdev->map->regmap_length);
-+	if (!pmcdev->regbase)
- 		return -ENOMEM;
--	}
+-	file = debugfs_create_file("pch_ip_power_gating_status", 0444,
+-				   dir, pmcdev, &pmc_core_ppfear_ops);
+-	if (!file)
+-		goto err;
++	debugfs_create_file("slp_s0_residency_usec", 0444, pmcdev->dbgfs_dir,
++			    pmcdev, &pmc_core_dev_state);
  
- 	mutex_init(&pmcdev->lock);
--	pmcdev->map = map;
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+-	file = debugfs_create_file("mphy_core_lanes_power_gating_status", 0444,
+-				   dir, pmcdev, &pmc_core_mphy_pg_ops);
+-	if (!file)
+-		goto err;
++	debugfs_create_file("pch_ip_power_gating_status", 0444,
++			    pmcdev->dbgfs_dir, pmcdev, &pmc_core_ppfear_ops);
  
- 	err = pmc_core_dbgfs_register(pmcdev);
--	if (err < 0)
--		dev_warn(&dev->dev, "PMC Core: debugfs register failed.\n");
-+	if (err < 0) {
-+		pr_warn(" debugfs register failed.\n");
-+		iounmap(pmcdev->regbase);
-+		return err;
-+	}
+-	file = debugfs_create_file("pll_status", 0444, dir, pmcdev,
+-				   &pmc_core_pll_ops);
+-	if (!file)
+-		goto err;
++	debugfs_create_file("ltr_ignore", 0644, pmcdev->dbgfs_dir, pmcdev,
++			    &pmc_core_ltr_ignore_ops);
  
-+	pr_info(" initialized\n");
+-	file = debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+-				   &pmc_core_ltr_ignore_ops);
++	if (pmcdev->map->pll_sts)
++		debugfs_create_file("pll_status", 0444, pmcdev->dbgfs_dir,
++				    pmcdev, &pmc_core_pll_ops);
+ 
+-	if (!file)
+-		goto err;
++	if (pmcdev->map->mphy_sts)
++		debugfs_create_file("mphy_core_lanes_power_gating_status",
++				    0444, pmcdev->dbgfs_dir, pmcdev,
++				    &pmc_core_mphy_pg_ops);
+ 
  	return 0;
+-err:
+-	pmc_core_dbgfs_unregister(pmcdev);
+-	return -ENODEV;
  }
-+module_init(pmc_core_probe)
- 
--static void pmc_core_remove(struct pci_dev *dev)
-+static void __exit pmc_core_remove(void)
- {
--	pmc_core_dbgfs_unregister(&pmc);
--	mutex_destroy(&pmc.lock);
--}
--
--static struct pci_driver intel_pmc_core_driver = {
--	.name = "intel_pmc_core",
--	.id_table = pmc_pci_ids,
--	.probe = pmc_core_probe,
--	.remove = pmc_core_remove,
--};
-+	struct pmc_dev *pmcdev = &pmc;
- 
--module_pci_driver(intel_pmc_core_driver);
-+	pmc_core_dbgfs_unregister(pmcdev);
-+	mutex_destroy(&pmcdev->lock);
-+	iounmap(pmcdev->regbase);
-+}
-+module_exit(pmc_core_remove)
- 
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("Intel PMC Core Driver");
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index e3be1d2b08cd..9df4a60a179f 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -21,8 +21,7 @@
- #ifndef PMC_CORE_H
- #define PMC_CORE_H
- 
--/* Sunrise Point Power Management Controller PCI Device ID */
--#define SPT_PMC_PCI_DEVICE_ID			0x9d21
-+#define PMC_BASE_ADDR_DEFAULT			0xFE000000
- 
- #define SPT_PMC_BASE_ADDR_OFFSET		0x48
- #define SPT_PMC_SLP_S0_RES_COUNTER_OFFSET	0x13c
+ #else
+ static inline int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
 -- 
 2.7.4
