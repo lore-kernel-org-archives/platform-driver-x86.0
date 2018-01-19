@@ -1,38 +1,47 @@
-From: 58081860@mylife.unisa.ac.za
-Subject: Darlehensangebot
-Date: Fri, 19 Jan 2018 11:03:28 +0530
-Message-ID: <AM5PR0102MB2753F4927F52DD80AB323507B5EF0@AM5PR0102MB2753.eurprd01.prod.exchangelabs.com>
-Reply-To: david.loanfirm09@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Ivan Vecera <ivecera@redhat.com>
+Subject: [PATCH] platform/x86: mlx-platform: fix module aliases
+Date: Fri, 19 Jan 2018 09:31:56 +0100
+Message-ID: <20180119083156.4082-1-ivecera@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ve1eur01hn0210.outbound.protection.outlook.com ([104.47.1.210]:59559
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750722AbeASFcB (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:35356 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1754970AbeASIb7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 00:32:01 -0500
-Content-Description: Mail message body
+        Fri, 19 Jan 2018 03:31:59 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <58081860@mylife.unisa.ac.za>
+To: platform-driver-x86@vger.kernel.org
+Cc: vadimp@mellanox.com
 
-Sch=C3=B6nen Tag,
+Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
+not loaded automatically. The patch changes them so they match
+the entries in mlxplat_dmi_table where BOARD_VENDOR and PRODUCT_NAME
+are used.
 
-Sie ben=C3=B6tigen einen echten Kredit online Ihre Rechnungen zu sichern?
-Startet ein neues Unternehmen? Sie ben=C3=B6tigen einen pers=C3=B6nlichen K=
-redit
-oder Business-Darlehen? Wir bieten ein Darlehen von =E2=82=AC 10.000 bis =
-=E2=82=AC
-500,000.000.00 mit 2% Zinsen pro Jahr und auch mit einem
-erschwinglichen R=C3=BCckzahlungsbedingungen und Zustand. Ich suche f=C3=BCr
-Darlehen und Projektinvestmentfonds ? Wir halten professionelle
-Exzellenz, unsere Definition von Exzellenz liegt in hervorragenden
-Kundenservice, erschwingliche Zahlung und R=C3=BCckzahlung Pl=C3=A4ne, schn=
-ell
-und einfach-Prozess.
-Hochachtungsvoll....
+Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
+Cc: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/platform/x86/mlx-platform.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Freundliche Gr=C3=BC=C3=9Fe,
-Herr David Williams
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 504256c3660d..b1a5bbe4acf0 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -370,8 +370,8 @@ module_exit(mlxplat_exit);
+ MODULE_AUTHOR("Vadim Pasternak (vadimp@mellanox.com)");
+ MODULE_DESCRIPTION("Mellanox platform driver");
+ MODULE_LICENSE("Dual BSD/GPL");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN24*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN27*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSB*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSX*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN21*:");
++MODULE_ALIAS("dmi:*:pnMSN24*:*:rvnMellanoxTechnologies*:");
++MODULE_ALIAS("dmi:*:pnMSN27*:*:rvnMellanoxTechnologies*:");
++MODULE_ALIAS("dmi:*:pnMSB*:*:rvnMellanoxTechnologies*:");
++MODULE_ALIAS("dmi:*:pnMSX*:*:rvnMellanoxTechnologies*:");
++MODULE_ALIAS("dmi:*:pnMSN21*:*:rvnMellanoxTechnologies*:");
+-- 
+2.13.6
