@@ -1,43 +1,55 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
-Date: Fri, 19 Jan 2018 17:01:23 +0100
-Message-ID: <20180119160123.onn7w36hmhrxoaq6@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] Support tablet mode switch for Dell laptops
+Date: Fri, 19 Jan 2018 16:09:09 +0000
+Message-ID: <abfbf75104c84a88bfc4b41789f41c66@ausx13mpc120.AMER.DELL.COM>
 References: <1516283990-3665-1-git-send-email-notmart@gmail.com>
- <20180118154408.eyke3dtn6zlcqphi@pali>
+ <20180118154408.eyke3dtn6zlcqphi@pali> <20180119160123.onn7w36hmhrxoaq6@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180118154408.eyke3dtn6zlcqphi@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, Marco Martin <notmart@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:26409 "EHLO
+        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1755581AbeASQJL (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 19 Jan 2018 11:09:11 -0500
+In-Reply-To: <20180119160123.onn7w36hmhrxoaq6@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com, dmitry.torokhov@gmail.com
+Cc: linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, notmart@gmail.com
 
-On Thursday 18 January 2018 16:44:08 Pali Rohár wrote:
-> On Thursday 18 January 2018 14:59:50 Marco Martin wrote:
-> > -	if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
-> > +	if (event == 0xCC) {
-> > +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 1);
-> > +		input_sync(priv->input_dev);
-> > +	} else if (event == 0xCD) {
-> > +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 0);
-> > +		input_sync(priv->input_dev);
-> > +	} else if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
-> 
-> Is not it possible to put 0xCC and 0xCD into sparse keymap table?
-> Because IIRC sparse keymap was created just to avoid that big
-> if-elseif-elseif-else blocks.
-
-Dmitry, can you comment above part? I think that there should be better
-way how to handle above switches and sparse keymap via one input device.
-
-> >  		dev_info(&device->dev, "unknown event index 0x%x\n",
-> >  			 event);
-> >  }
-> 
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBhbGkgUm9ow6FyDQo+IFNlbnQ6IEZy
+aWRheSwgSmFudWFyeSAxOSwgMjAxOCAxMDowMSBBTQ0KPiBUbzogRG1pdHJ5IFRvcm9raG92IDxk
+bWl0cnkudG9yb2tob3ZAZ21haWwuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgbWpnNTlAc3JjZi51Y2FtLm9yZzsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7DQo+IGFuZHlA
+aW5mcmFkZWFkLm9yZzsgYmh1c2g5NEBnbWFpbC5jb207IHBsYXRmb3JtLWRyaXZlci14ODZAdmdl
+ci5rZXJuZWwub3JnOw0KPiBNYXJjbyBNYXJ0aW4gPG5vdG1hcnRAZ21haWwuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIXSBTdXBwb3J0IHRhYmxldCBtb2RlIHN3aXRjaCBmb3IgRGVsbCBsYXB0
+b3BzDQo+IA0KPiBPbiBUaHVyc2RheSAxOCBKYW51YXJ5IDIwMTggMTY6NDQ6MDggUGFsaSBSb2jD
+oXIgd3JvdGU6DQo+ID4gT24gVGh1cnNkYXkgMTggSmFudWFyeSAyMDE4IDE0OjU5OjUwIE1hcmNv
+IE1hcnRpbiB3cm90ZToNCj4gPiA+IC0JaWYgKCFzcGFyc2Vfa2V5bWFwX3JlcG9ydF9ldmVudChw
+cml2LT5pbnB1dF9kZXYsIGV2ZW50LCAxLCB0cnVlKSkNCj4gPiA+ICsJaWYgKGV2ZW50ID09IDB4
+Q0MpIHsNCj4gPiA+ICsJCWlucHV0X3JlcG9ydF9zd2l0Y2gocHJpdi0+aW5wdXRfZGV2LCBTV19U
+QUJMRVRfTU9ERSwgMSk7DQo+ID4gPiArCQlpbnB1dF9zeW5jKHByaXYtPmlucHV0X2Rldik7DQo+
+ID4gPiArCX0gZWxzZSBpZiAoZXZlbnQgPT0gMHhDRCkgew0KPiA+ID4gKwkJaW5wdXRfcmVwb3J0
+X3N3aXRjaChwcml2LT5pbnB1dF9kZXYsIFNXX1RBQkxFVF9NT0RFLCAwKTsNCj4gPiA+ICsJCWlu
+cHV0X3N5bmMocHJpdi0+aW5wdXRfZGV2KTsNCj4gPiA+ICsJfSBlbHNlIGlmICghc3BhcnNlX2tl
+eW1hcF9yZXBvcnRfZXZlbnQocHJpdi0+aW5wdXRfZGV2LCBldmVudCwgMSwgdHJ1ZSkpDQo+ID4N
+Cj4gPiBJcyBub3QgaXQgcG9zc2libGUgdG8gcHV0IDB4Q0MgYW5kIDB4Q0QgaW50byBzcGFyc2Ug
+a2V5bWFwIHRhYmxlPw0KPiA+IEJlY2F1c2UgSUlSQyBzcGFyc2Uga2V5bWFwIHdhcyBjcmVhdGVk
+IGp1c3QgdG8gYXZvaWQgdGhhdCBiaWcNCj4gPiBpZi1lbHNlaWYtZWxzZWlmLWVsc2UgYmxvY2tz
+Lg0KPiANCj4gRG1pdHJ5LCBjYW4geW91IGNvbW1lbnQgYWJvdmUgcGFydD8gSSB0aGluayB0aGF0
+IHRoZXJlIHNob3VsZCBiZSBiZXR0ZXINCj4gd2F5IGhvdyB0byBoYW5kbGUgYWJvdmUgc3dpdGNo
+ZXMgYW5kIHNwYXJzZSBrZXltYXAgdmlhIG9uZSBpbnB1dCBkZXZpY2UuDQo+IA0KPiA+ID4gIAkJ
+ZGV2X2luZm8oJmRldmljZS0+ZGV2LCAidW5rbm93biBldmVudCBpbmRleCAweCV4XG4iLA0KPiA+
+ID4gIAkJCSBldmVudCk7DQo+ID4gPiAgfQ0KPiA+DQo+IA0KPiAtLQ0KPiBQYWxpIFJvaMOhcg0K
+PiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KDQpXZSBkaXNjdXNzZWQgYSBsaXR0bGUgbW9yZSBvbiB0
+aGUgYnVnIGhlIGZpbGVkIHdpdGggYXR0YWNoZWQgRFNEVC4gIEkgdGhpbmsgdGhhdCBpbiANCnNw
+YXJzZSBrZXltYXAgaGUgY2FuIHVzZSBLRV9WU1cgZm9yIHRoZSBlbnRyaWVzIGFuZCBzcGFyc2Ug
+a2V5bWFwIGNhbiBoYW5kbGUuDQoNCkFzc3VtaW5nIHRoYXQgd29ya3MgSSdtIGV4cGVjdGluZyBo
+aW0gdG8gcmVzdWJtaXQgc29vbiB3aXRoIHRoYXQgYW5kIHNvbWUgb3RoZXINCmNoYW5nZXMgSSBy
+ZWNvbW1lbmRlZCBvbiB0aGUgYnVnLg0K
