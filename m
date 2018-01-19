@@ -1,47 +1,46 @@
-From: Ivan Vecera <ivecera@redhat.com>
-Subject: [PATCH] platform/x86: mlx-platform: fix module aliases
-Date: Fri, 19 Jan 2018 09:31:56 +0100
-Message-ID: <20180119083156.4082-1-ivecera@redhat.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35356 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754970AbeASIb7 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 03:31:59 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: [Patch v1 3/8] ACPI / LPIT: Export lpit_read_residency_count_address()
+Date: Fri, 19 Jan 2018 14:28:22 +0530
+Message-ID: <1516352307-20123-4-git-send-email-rajneesh.bhardwaj@intel.com>
+References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: vadimp@mellanox.com
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
-not loaded automatically. The patch changes them so they match
-the entries in mlxplat_dmi_table where BOARD_VENDOR and PRODUCT_NAME
-are used.
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Export lpit_read_residency_count_address(), so that it can be used from
+drivers built as module. With the recent changes, the builtin_pci
+functionality of the intel_pmc_core driver is removed and now it can be
+built as a module to read this exported interface to calculate the PMC base
+address.
+
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+
+Tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/mlx-platform.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 504256c3660d..b1a5bbe4acf0 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -370,8 +370,8 @@ module_exit(mlxplat_exit);
- MODULE_AUTHOR("Vadim Pasternak (vadimp@mellanox.com)");
- MODULE_DESCRIPTION("Mellanox platform driver");
- MODULE_LICENSE("Dual BSD/GPL");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN24*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN27*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSB*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSX*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN21*:");
-+MODULE_ALIAS("dmi:*:pnMSN24*:*:rvnMellanoxTechnologies*:");
-+MODULE_ALIAS("dmi:*:pnMSN27*:*:rvnMellanoxTechnologies*:");
-+MODULE_ALIAS("dmi:*:pnMSB*:*:rvnMellanoxTechnologies*:");
-+MODULE_ALIAS("dmi:*:pnMSX*:*:rvnMellanoxTechnologies*:");
-+MODULE_ALIAS("dmi:*:pnMSN21*:*:rvnMellanoxTechnologies*:");
+ drivers/acpi/acpi_lpit.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/acpi/acpi_lpit.c b/drivers/acpi/acpi_lpit.c
+index e94e478dd18b..cf4fc0161164 100644
+--- a/drivers/acpi/acpi_lpit.c
++++ b/drivers/acpi/acpi_lpit.c
+@@ -100,6 +100,7 @@ int lpit_read_residency_count_address(u64 *address)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(lpit_read_residency_count_address);
+ 
+ static void lpit_update_residency(struct lpit_residency_info *info,
+ 				 struct acpi_lpit_native *lpit_native)
 -- 
-2.13.6
+2.7.4
+
