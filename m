@@ -1,78 +1,67 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
-Date: Fri, 19 Jan 2018 09:29:02 -0800
-Message-ID: <20180119172902.wgmvlehbsrjesabd@dtor-ws>
-References: <1516283990-3665-1-git-send-email-notmart@gmail.com>
- <20180118154408.eyke3dtn6zlcqphi@pali>
- <20180119160123.onn7w36hmhrxoaq6@pali>
- <abfbf75104c84a88bfc4b41789f41c66@ausx13mpc120.AMER.DELL.COM>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-smbios: Fix error handling in
+ build_tokens_sysfs()
+Date: Fri, 19 Jan 2018 18:32:27 +0000
+Message-ID: <d8c96f26da4d4fe6940db5961fc1e766@ausx13mpc120.AMER.DELL.COM>
+References: <20180118104503.GA30055@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pg0-f65.google.com ([74.125.83.65]:37072 "EHLO
-        mail-pg0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755932AbeASR3G (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 12:29:06 -0500
-Content-Disposition: inline
-In-Reply-To: <abfbf75104c84a88bfc4b41789f41c66@ausx13mpc120.AMER.DELL.COM>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: pali.rohar@gmail.com, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, notmart@gmail.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20180118104503.GA30055@mwanda>
+Content-Language: en-US
+Sender: kernel-janitors-owner@vger.kernel.org
+To: dan.carpenter@oracle.com, pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 19, 2018 at 04:09:09PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
-> > owner@vger.kernel.org] On Behalf Of Pali Rohár
-> > Sent: Friday, January 19, 2018 10:01 AM
-> > To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: linux-kernel@vger.kernel.org; mjg59@srcf.ucam.org; dvhart@infradead.org;
-> > andy@infradead.org; bhush94@gmail.com; platform-driver-x86@vger.kernel.org;
-> > Marco Martin <notmart@gmail.com>
-> > Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
-> > 
-> > On Thursday 18 January 2018 16:44:08 Pali Rohár wrote:
-> > > On Thursday 18 January 2018 14:59:50 Marco Martin wrote:
-> > > > -	if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
-> > > > +	if (event == 0xCC) {
-> > > > +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 1);
-> > > > +		input_sync(priv->input_dev);
-> > > > +	} else if (event == 0xCD) {
-> > > > +		input_report_switch(priv->input_dev, SW_TABLET_MODE, 0);
-> > > > +		input_sync(priv->input_dev);
-> > > > +	} else if (!sparse_keymap_report_event(priv->input_dev, event, 1, true))
-> > >
-> > > Is not it possible to put 0xCC and 0xCD into sparse keymap table?
-> > > Because IIRC sparse keymap was created just to avoid that big
-> > > if-elseif-elseif-else blocks.
-> > 
-> > Dmitry, can you comment above part? I think that there should be better
-> > way how to handle above switches and sparse keymap via one input device.
-> > 
-> > > >  		dev_info(&device->dev, "unknown event index 0x%x\n",
-> > > >  			 event);
-> > > >  }
-> > >
-> > 
-> > --
-> > Pali Rohár
-> > pali.rohar@gmail.com
-> 
-> We discussed a little more on the bug he filed with attached DSDT.  I think that in 
-> sparse keymap he can use KE_VSW for the entries and sparse keymap can handle.
+Thanks, yeah this is obviously the correct way to do it.
 
-No it should be KE_SW I believe, as the "keycode" encodes the state.
-See example in intel-hid.c.
+Acked-by: Mario Limonciello <mario.limonciello@dell.com>
 
-So you probably want:
-
-	...
-	{ KE_SW, 0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Press */
-	{ KE_SW, 0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Release */
-
-Thanks.
-
--- 
-Dmitry
+> -----Original Message-----
+> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> Sent: Thursday, January 18, 2018 4:45 AM
+> To: Pali Roh=E1r <pali.rohar@gmail.com>; Limonciello, Mario
+> <Mario_Limonciello@Dell.com>
+> Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
+> <andy@infradead.org>; platform-driver-x86@vger.kernel.org; kernel-
+> janitors@vger.kernel.org
+> Subject: [PATCH] platform/x86: dell-smbios: Fix error handling in
+> build_tokens_sysfs()
+>=20
+> We're freeing "value_name" which is NULL, so that's a no-op, instead of
+> "location_name" and then we don't free the first zero-th elements of
+> token_location_attrs[] and token_value_attrs[].
+>=20
+> Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface fo=
+r SMBIOS
+> tokens")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>=20
+> diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/de=
+ll-
+> smbios.c
+> index 6a60db515bda..d8a21c7ba594 100644
+> --- a/drivers/platform/x86/dell-smbios.c
+> +++ b/drivers/platform/x86/dell-smbios.c
+> @@ -512,7 +512,7 @@ static int build_tokens_sysfs(struct platform_device =
+*dev)
+>  		continue;
+>=20
+>  loop_fail_create_value:
+> -		kfree(value_name);
+> +		kfree(location_name);
+>  		goto out_unwind_strings;
+>  	}
+>  	smbios_attribute_group.attrs =3D token_attrs;
+> @@ -523,7 +523,7 @@ static int build_tokens_sysfs(struct platform_device =
+*dev)
+>  	return 0;
+>=20
+>  out_unwind_strings:
+> -	for (i =3D i-1; i > 0; i--) {
+> +	for (i =3D i-1; i >=3D 0; i--) {
+>  		kfree(token_location_attrs[i].attr.name);
+>  		kfree(token_value_attrs[i].attr.name);
+>  	}
