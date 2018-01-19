@@ -1,91 +1,59 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [Patch v1 8/8] platform/x86: intel_pmc_core: Special case for Coffeelake
-Date: Fri, 19 Jan 2018 14:28:27 +0530
-Message-ID: <1516352307-20123-9-git-send-email-rajneesh.bhardwaj@intel.com>
+Subject: [Patch v1 4/8] platform/x86: intel_pmc_core: Read base address from LPIT
+Date: Fri, 19 Jan 2018 14:28:23 +0530
+Message-ID: <1516352307-20123-5-git-send-email-rajneesh.bhardwaj@intel.com>
 References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:52690 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1755542AbeASJEZ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 04:04:25 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Intel CoffeeLake SoC uses CPU ID of KabyLake but has Cannonlake PCH, so in
-this case PMC register details from Cannonlake PCH must be used.
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-In order to identify whether the given platform is Coffeelake, scan for the
-Sunrisepoint PMC PCI Id.
+Read SLP_S0 address from ACPI LPIT table when present and use PMC
+specific SLP_S0 offset to get the base address of PMC MMIO.
 
-		KBL CPUID	SPT PCIID
--------------------------------------
-KBL	|	Y	|	Y	|
--------------------------------------
-CFL	|	Y	|	N	|
--------------------------------------
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  2 ++
- 2 files changed, 16 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index f0d067a33a56..67e85ee4ab32 100644
+index f7616600e8ab..549ee5852d4f 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -25,6 +25,7 @@
+@@ -20,6 +20,7 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/acpi.h>
+ #include <linux/debugfs.h>
  #include <linux/delay.h>
  #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
- #include <linux/uaccess.h>
- 
- #include <asm/cpu_device_id.h>
-@@ -536,6 +537,11 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 
- MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
- 
-+static const struct pci_device_id pmc_pci_ids[] = {
-+	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID), 0},
-+	{ 0, },
-+};
-+
- static int __init pmc_core_probe(void)
+@@ -455,6 +456,7 @@ static int __init pmc_core_probe(void)
  {
  	const struct x86_cpu_id *cpu_id;
-@@ -549,6 +555,14 @@ static int __init pmc_core_probe(void)
+ 	struct pmc_dev *pmcdev = &pmc;
++	u64 slp_s0_addr;
+ 	int err;
+ 
+ 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
+@@ -462,7 +464,12 @@ static int __init pmc_core_probe(void)
+ 		return -ENODEV;
  
  	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
- 
-+	/*
-+	 * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
-+	 * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
-+	 * in this case.
-+	 */
-+	if (!pci_dev_present(pmc_pci_ids))
-+		pmcdev->map = (struct pmc_reg_map *)&cnp_reg_map;
+-	pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
 +
- 	if (lpit_read_residency_count_address(&slp_s0_addr))
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
- 	else
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 8b7731e6dea2..5fa5f97870aa 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -23,6 +23,8 @@
- 
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
- 
-+/* Sunrise Point Power Management Controller PCI Device ID */
-+#define SPT_PMC_PCI_DEVICE_ID			0x9d21
- #define SPT_PMC_BASE_ADDR_OFFSET		0x48
- #define SPT_PMC_SLP_S0_RES_COUNTER_OFFSET	0x13c
- #define SPT_PMC_PM_CFG_OFFSET			0x18
++	if (lpit_read_residency_count_address(&slp_s0_addr))
++		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
++	else
++		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
+ 	if (!pmcdev->regbase)
 -- 
 2.7.4
