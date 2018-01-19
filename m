@@ -1,50 +1,66 @@
-From: Facebook Int'l <engineering@rusoil.net>
-Subject: ITS ALL ABOUT FACEBOOK
-Date: Fri, 19 Jan 2018 14:03:53 +0500 (YEKT)
-Message-ID: <318393306.347860.1516352633399.JavaMail.zimbra__13011.2562016167$1516353288$gmane$org@rusoil.net>
-Reply-To: Facebook Int'l <dustinmoskovitz.facebook@gmail.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [PATCH] platform/x86: mlx-platform: fix module aliases
+Date: Fri, 19 Jan 2018 13:37:04 +0100
+Message-ID: <87bmhq9g9b.fsf@miraculix.mork.no>
+References: <20180119083156.4082-1-ivecera@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.rusoil.net ([188.128.114.25]:40215 "EHLO mail.rusoil.net"
+Received: from canardo.mork.no ([148.122.252.1]:38391 "EHLO canardo.mork.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750923AbeASJQZ (ORCPT
+        id S1754805AbeASMhU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 04:16:25 -0500
+        Fri, 19 Jan 2018 07:37:20 -0500
+In-Reply-To: <20180119083156.4082-1-ivecera@redhat.com> (Ivan Vecera's message
+        of "Fri, 19 Jan 2018 09:31:56 +0100")
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, vadimp@mellanox.com
+
+Ivan Vecera <ivecera@redhat.com> writes:
+
+> Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
+> not loaded automatically. The patch changes them so they match
+> the entries in mlxplat_dmi_table where BOARD_VENDOR and PRODUCT_NAME
+> are used.
+>
+> Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x=
+86")
+> Cc: Vadim Pasternak <vadimp@mellanox.com>
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+>  drivers/platform/x86/mlx-platform.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/m=
+lx-platform.c
+> index 504256c3660d..b1a5bbe4acf0 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -370,8 +370,8 @@ module_exit(mlxplat_exit);
+>  MODULE_AUTHOR("Vadim Pasternak (vadimp@mellanox.com)");
+>  MODULE_DESCRIPTION("Mellanox platform driver");
+>  MODULE_LICENSE("Dual BSD/GPL");
+> -MODULE_ALIAS("dmi:*:*Mellanox*:MSN24*:");
+> -MODULE_ALIAS("dmi:*:*Mellanox*:MSN27*:");
+> -MODULE_ALIAS("dmi:*:*Mellanox*:MSB*:");
+> -MODULE_ALIAS("dmi:*:*Mellanox*:MSX*:");
+> -MODULE_ALIAS("dmi:*:*Mellanox*:MSN21*:");
+> +MODULE_ALIAS("dmi:*:pnMSN24*:*:rvnMellanoxTechnologies*:");
+> +MODULE_ALIAS("dmi:*:pnMSN27*:*:rvnMellanoxTechnologies*:");
+> +MODULE_ALIAS("dmi:*:pnMSB*:*:rvnMellanoxTechnologies*:");
+> +MODULE_ALIAS("dmi:*:pnMSX*:*:rvnMellanoxTechnologies*:");
+> +MODULE_ALIAS("dmi:*:pnMSN21*:*:rvnMellanoxTechnologies*:");
+
+Strange.  Why do so many dmi drivers depend on such long and fragile
+lists of aliases instead of simply using
+
+ MODULE_DEVICE_TABLE(dmi, ..);
+
+like most other drivers do?  Is there something wrong with file2alias?
+If so, then I believe it would be better to fix that instead.
 
 
-
-
-
-
-
-Hello ,
-
-It=E2=80=99s hard to believe it right??? Facebook celebrates its 14th year =
-anniversary.=20
-That means 14-years ago, I, Mark Zuckerberg and my pals were in our Harvard=
- dorm rooms making history,=20
-launching what would become the largest social network of all time, now rol=
-ling in billions of dollars via=20
-commercials, with company worth of over a hundred billion dollars
-To help commemorate this occasion, we are giving back to 14,000 users $14,0=
-00.00USD (Fourteen Thousand Dollars)=20
-and a grand prize of 14,000,000.USD (Fourteen Million Dollars) to 14 lucky =
-users and has launched a new feature called=20
-=E2=80=98Look Back=E2=80=99, where each user's "Look Back" compilation cont=
-ains 15 or so of your most-liked photos, statuses, and=20
-life events set to a catchy tune. Find yours at https://facebook.com/lookba=
-ck/ . It's all about 14.
-Please, get back for the verification of your details for prompt payment by=
- sending Your Unique Code (FB/BF14-13M5250UD)=20
-using your registration email, to the Verification Department at; dustinmos=
-kovitz.facebook@gmail.com
-
-Dustin Moskovitz
-Facebook Team
-Copyright =C2=A9 2018 Facebook Int'l
-
-Facebook Celebrates its 14th Year Anniversary
+Bj=C3=B8rn
