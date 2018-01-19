@@ -1,62 +1,65 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [Patch v1 5/8] platform/x86: intel_pmc_core: Convert to ICPU macro
-Date: Fri, 19 Jan 2018 14:28:24 +0530
-Message-ID: <1516352307-20123-6-git-send-email-rajneesh.bhardwaj@intel.com>
-References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+Subject: [Patch v1 0/8] platform/x86: intel_pmc_core: Add CFL/CNL Support
+Date: Fri, 19 Jan 2018 14:28:19 +0530
+Message-ID: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga06.intel.com ([134.134.136.31]:52690 "EHLO mga06.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:52686 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1754217AbeASJES (ORCPT
+        id S1755463AbeASJDw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Jan 2018 04:04:18 -0500
-In-Reply-To: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+        Fri, 19 Jan 2018 04:03:52 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 
-Use ICPU macro to refactor code related to x86_cpu_id for better
-readability.
+This series is the successor to
+https://www.spinics.net/lists/platform-driver-x86/msg14524.html and adds
+support for Intel Coffeelake and Cannonlake SoCs.
 
-Suggested-by: Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+This also presents an alternative to https://lkml.org/lkml/2017/11/17/876
+and introduces Cannonlake SoC to intel-family.h
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 549ee5852d4f..da9326740647 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -33,6 +33,9 @@
- 
- #include "intel_pmc_core.h"
- 
-+#define ICPU(cpu, data) \
-+	{ X86_VENDOR_INTEL, 6, cpu, X86_FEATURE_MWAIT, (kernel_ulong_t)data }
-+
- static struct pmc_dev pmc;
- 
- static const struct pmc_bit_map spt_pll_map[] = {
-@@ -439,14 +442,10 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
- #endif /* CONFIG_DEBUG_FS */
- 
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_MOBILE, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)&spt_reg_map},
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_DESKTOP, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)&spt_reg_map},
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_MOBILE, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)&spt_reg_map},
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_DESKTOP, X86_FEATURE_MWAIT,
--		(kernel_ulong_t)&spt_reg_map},
-+	ICPU(INTEL_FAM6_SKYLAKE_MOBILE, &spt_reg_map),
-+	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP, &spt_reg_map),
-+	ICPU(INTEL_FAM6_KABYLAKE_MOBILE, &spt_reg_map),
-+	ICPU(INTEL_FAM6_KABYLAKE_DESKTOP, &spt_reg_map),
- 	{}
- };
- 
+The following patches,
+
+ '0003-ACPI-LPIT-Export-lpit_read_residency_count_address.patch' and
+ '0006-x86-cpu-Add-Cannonlake-to-Intel-family.patch' 
+
+do not belong to platform-drivers-x86 subsystem but the other patches in the
+series depend on them so, requesting the respective MAINTAINERS for their
+review and ACK so that these two patches can also go through the
+platform-drivers-x86 subsystem.
+
+
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+
+Tested on Coffeelake, Cannonlake and Kabylake with 4.15-rc8 kernel.
+
+Rajneesh Bhardwaj (5):
+  platform/x86: intel_pmc_core: Refactor debugfs entries
+  platform/x86: intel_pmc_core: Convert to ICPU macro
+  x86/cpu: Add Cannonlake to Intel family
+  platform/x86: intel_pmc_core: Add CannonLake PCH support
+  platform/x86: intel_pmc_core: Special case for Coffeelake
+
+Srinivas Pandruvada (3):
+  platform/x86: intel_pmc_core: Substitute PCI with CPUID enumeration
+  ACPI / LPIT: Export lpit_read_residency_count_address()
+  platform/x86: intel_pmc_core: Read base address from LPIT
+
+ arch/x86/include/asm/intel-family.h   |   6 +
+ drivers/acpi/acpi_lpit.c              |   1 +
+ drivers/platform/x86/intel_pmc_core.c | 242 +++++++++++++++++++++-------------
+ drivers/platform/x86/intel_pmc_core.h |  14 +-
+ 4 files changed, 174 insertions(+), 89 deletions(-)
+
 -- 
 2.7.4
