@@ -1,17 +1,17 @@
 From: 'Darlehen' <a1615112D@fie.umich.mx>
 Subject: Garantiertes Darlehen?
-Date: Sun, 21 Jan 2018 14:43:12 -0800
-Message-ID: <20180121223321.D35BB2B32F02@correo.fie.umich.mx>
+Date: Sun, 21 Jan 2018 15:23:27 -0800
+Message-ID: <20180121231336.87C3D2DA3923@correo.fie.umich.mx>
 Reply-To: bothavillecashloans@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from correo.fie.umich.mx ([148.216.17.22]:42746 "EHLO
+Received: from correo.fie.umich.mx ([148.216.17.22]:37697 "EHLO
         correo.fie.umich.mx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751076AbeAVC0b (ORCPT
+        with ESMTP id S1750890AbeAVDNs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Jan 2018 21:26:31 -0500
+        Sun, 21 Jan 2018 22:13:48 -0500
 Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
