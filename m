@@ -1,27 +1,21 @@
-From: Ms Melisa Mehmet <dubos@lmd.polytechnique.fr>
-Subject: Proposal
-Date: Sun, 21 Jan 2018 19:38:07 +0100
-Message-ID: <31424659a036afbd575106b262843146@lmd.polytechnique.fr>
-Reply-To: miss.melisa.mehmett@gmail.com
+From: defina@ipb.ac.id
+Subject: Darlehen
+Date: Sun, 21 Jan 2018 22:35:39 +0530
+Message-ID: <20180121170453.150132B853D7__18815.8206911341$1516568476$gmane$org@mail.ipb.ac.id>
+Reply-To: alexgrtz5@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx-a.polytechnique.fr ([129.104.30.14]:41016 "EHLO
-        mx-a.polytechnique.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750873AbeAUULR (ORCPT
+Received: from [103.10.105.28] ([103.10.105.28]:21450 "EHLO ironport.ipb.ac.id"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751021AbeAUVCq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Jan 2018 15:11:17 -0500
+        Sun, 21 Jan 2018 16:02:46 -0500
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <defina@ipb.ac.id>
 
-
-
--- 
-Hello 
-
-i want to invest in your region i have some funds under my management
-please let me know if we can work together on this investment plan.
-
-Regards 
-Melisa Mehmet
+Ben=F6tigen Sie Privat- oder Gesch=E4ftskredite ohne Stress und schnelle Zu=
+stimmung? Wenn ja, kontaktieren Sie uns bitte alexgrtz5@gmail.com
