@@ -1,43 +1,98 @@
 From: Marco Martin <notmart@gmail.com>
-Subject: Re: [PATCH] Support tablet mode switch for Dell laptops
-Date: Mon, 22 Jan 2018 12:59:19 +0100
-Message-ID: <CAD6_BovkNuUZndLar=quX82GW_7-0NPYdvWPeMQt3L-c=uaP=Q@mail.gmail.com>
-References: <1516283990-3665-1-git-send-email-notmart@gmail.com>
- <20180118154408.eyke3dtn6zlcqphi@pali> <20180119160123.onn7w36hmhrxoaq6@pali>
- <abfbf75104c84a88bfc4b41789f41c66@ausx13mpc120.AMER.DELL.COM> <20180119172902.wgmvlehbsrjesabd@dtor-ws>
+Subject: [PATCH] Support intel-vbtn based tablet mode switch
+Date: Mon, 22 Jan 2018 13:48:01 +0100
+Message-ID: <1516625281-16547-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-io0-f182.google.com ([209.85.223.182]:46518 "EHLO
-        mail-io0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750890AbeAVL7U (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 06:59:20 -0500
-In-Reply-To: <20180119172902.wgmvlehbsrjesabd@dtor-ws>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mario.Limonciello@dell.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, dvhart@infradead.org, andy@infradead.org, Bhushan Shah <bhush94@gmail.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, mario.limonciello@dell.com, Marco Martin <notmart@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 19, 2018 at 6:29 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->> We discussed a little more on the bug he filed with attached DSDT.  I think that in
->> sparse keymap he can use KE_VSW for the entries and sparse keymap can handle.
->
-> No it should be KE_SW I believe, as the "keycode" encodes the state.
-> See example in intel-hid.c.
->
-> So you probably want:
->
->         ...
->         { KE_SW, 0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Press */
->         { KE_SW, 0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Release */
->
-> Thanks.
+some laptops such as Dell Inspiron 7000 series have the
+tablet mode switch implemented in intel acpi,
+the events to enter and exit the tablet mode are 0xCC and 0xCD
 
-If I add those lines to intel_vbtn_keymap and remove the two special
-cases for 0xCC and 0xCD, it does work, but only if I explicitly call
-input_sync(priv->input_dev) after sparse_keymap_report_event()
-otherwise i don't get the event (cheching for instance with evtest)
-until a sync gets called (i tried to put the sync only for 0xcd and in
-that case i get both 0xcc and 0xcd when i go out of tablet mode)
+CC: platform-driver-x86@vger.kernel.org
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: "Pali Rohár" <pali.rohar@gmail.com>
+CC: Darren Hart <dvhart@infradead.org>
+CC: Mario Limonciello <mario_limonciello@dell.com>
+CC: Andy Shevchenko <andy@infradead.org>
+
+Signed-off-by: Marco Martin <notmart@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 4809267..c4362df 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -26,6 +26,9 @@
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
+ 
++/* When NOT in tablet mode, VBDS has the flag 0x40 */
++#define TABLET_MODE_FLAG 0x40
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+ 
+@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
+ 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
++	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tabletmode in */
++	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tabletmode out */
+ 	{ KE_END },
+ };
+ 
+@@ -81,6 +86,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 			return;
+ 		}
+ 	} else if (sparse_keymap_report_event(priv->input_dev, event, 1, true)) {
++		input_sync(priv->input_dev);
+ 		return;
+ 	}
+ 	dev_info(&device->dev, "unknown event index 0x%x\n", event);
+@@ -92,6 +98,7 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+ 	int err;
++	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 
+ 	status = acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+ 	if (ACPI_FAILURE(status)) {
+@@ -110,6 +117,27 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	/* VGBS being present and returning something means
++	 * we have a tablet mode switch
++	 */
++	if (ACPI_SUCCESS(status)) {
++		union acpi_object *obj = vgbs_output.pointer;
++
++		input_set_capability(priv->input_dev, EV_SW, SW_TABLET_MODE);
++
++		if (obj && obj->type == ACPI_TYPE_INTEGER) {
++			if (obj->integer.value & TABLET_MODE_FLAG)
++				input_report_switch(priv->input_dev,
++							SW_TABLET_MODE,
++							0);
++			else
++				input_report_switch(priv->input_dev,
++							SW_TABLET_MODE,
++							1);
++		}
++	}
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.7.4
