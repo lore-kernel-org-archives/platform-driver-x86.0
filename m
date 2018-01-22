@@ -1,42 +1,59 @@
 From: Ivan Vecera <ivecera@redhat.com>
-Subject: Re: [PATCH v2] platform/x86: mlx-platform: fix module aliases
-Date: Mon, 22 Jan 2018 15:17:50 +0100
-Message-ID: <c7478fd3-a77f-6ee3-674c-ef723f6cdc81@redhat.com>
-References: <20180122101148.22135-1-ivecera@redhat.com>
- <AM4PR05MB333066D7C4F921EE90DAE360A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <CAHp75Vd2us0ytvkoAxUeo-gb8Y6siSV2mfDZZeQGYkGU5-8Hnw@mail.gmail.com>
+Subject: [PATCH v3] platform/x86: mlx-platform: fix module aliases
+Date: Mon, 22 Jan 2018 15:20:43 +0100
+Message-ID: <20180122142043.23705-1-ivecera@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:44494 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:58238 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1750955AbeAVOSD (ORCPT
+        id S1751144AbeAVOUq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 09:18:03 -0500
-In-Reply-To: <CAHp75Vd2us0ytvkoAxUeo-gb8Y6siSV2mfDZZeQGYkGU5-8Hnw@mail.gmail.com>
-Content-Language: en-US
+        Mon, 22 Jan 2018 09:20:46 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Vadim Pasternak <vadimp@mellanox.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>
+To: platform-driver-x86@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
 
-On 22.1.2018 12:48, Andy Shevchenko wrote:
-> On Mon, Jan 22, 2018 at 12:23 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
-> 
->>> +MODULE_DEVICE_TABLE(dmi, mlxplat_dmi_table);
->>
->> I am not sure about the location of MODULE_DEVICE_TABLE record.
->> Should it be placed at the end of the module or after mlxplat_dmi_table
->> declaration?
-> 
-> Yeah, it would be better.
-> I dunno if Darren is going to ask for another version or fix this
-> manually when apply.
-> To be on the safer side, send a v3 with properly attached line as
-> Vadim suggested.
-> 
-Will do.
+Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
+not loaded automatically. The driver should use MODULE_DEVICE_TABLE
+together with existing mlxplat_dmi_table instead.
 
-Thanks,
-I.
+Changes:
+v2 - conversion to usage of MODULE_DEVICE_TABLE (thanks Bjørn)
+v3 - MODULE_DEVICE_TABLE moved after mlxplat_dmi_table declaration
+
+Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
+Cc: Vadim Pasternak <vadimp@mellanox.com>
+Cc: Bjørn Mork <bjorn@mork.no>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/platform/x86/mlx-platform.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 504256c3660d..22cd011f6aee 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -286,6 +286,8 @@ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
+ 	{ }
+ };
+ 
++MODULE_DEVICE_TABLE(dmi, mlxplat_dmi_table);
++
+ static int __init mlxplat_init(void)
+ {
+ 	struct mlxplat_priv *priv;
+@@ -370,8 +372,3 @@ module_exit(mlxplat_exit);
+ MODULE_AUTHOR("Vadim Pasternak (vadimp@mellanox.com)");
+ MODULE_DESCRIPTION("Mellanox platform driver");
+ MODULE_LICENSE("Dual BSD/GPL");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN24*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN27*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSB*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSX*:");
+-MODULE_ALIAS("dmi:*:*Mellanox*:MSN21*:");
+-- 
+2.13.6
