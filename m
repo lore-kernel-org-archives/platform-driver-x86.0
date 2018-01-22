@@ -1,59 +1,37 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [PATCH v3] platform/x86: mlx-platform: fix module aliases
-Date: Mon, 22 Jan 2018 14:22:26 +0000
-Message-ID: <AM4PR05MB3330843B332E40684FFD4E26A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <20180122142043.23705-1-ivecera@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] Support intel-vbtn based tablet mode switch
+Date: Mon, 22 Jan 2018 16:46:40 +0200
+Message-ID: <CAHp75VeU358J_wEbLS0f-mU8FRvt-1iHXF6TuADJR5oi=GKkJQ@mail.gmail.com>
+References: <1516625281-16547-1-git-send-email-notmart@gmail.com>
+ <CAHp75VeaoFhJ=nF2dfQZnfFjNTWy4_9rr6K4JpUYRVZnKDLkSQ@mail.gmail.com> <CAD6_BovWVrbTqBcNE9a=kH9Kk3EzKj7yvz0_Yx0Qat7fzhJTCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:13248
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751087AbeAVOW3 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 09:22:29 -0500
-In-Reply-To: <20180122142043.23705-1-ivecera@redhat.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: =?utf-8?B?QmrDuHJuIE1vcms=?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD6_BovWVrbTqBcNE9a=kH9Kk3EzKj7yvz0_Yx0Qat7fzhJTCg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Martin <notmart@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bhushan Shah <bhush94@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@dell.com>, Mario Limonciello <mario_limonciello@dell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSXZhbiBWZWNlcmEgW21h
-aWx0bzppdmVjZXJhQHJlZGhhdC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyMiwgMjAx
-OCA0OjIxIFBNDQo+IFRvOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBD
-YzogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgQmrDuHJuIE1vcmsgPGJq
-b3JuQG1vcmsubm8+Ow0KPiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5j
-b20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2M10gcGxhdGZvcm0veDg2OiBtbHgtcGxhdGZvcm06IGZp
-eCBtb2R1bGUgYWxpYXNlcw0KPiANCj4gTWlzc2luZyBwcmVmaXggJ3BuJyBpbiBNT0RVTEVfQUxJ
-QVMgbGluZXMgY2F1c2VzIHRoYXQgdGhlIG1vZHVsZSBpcyBub3QgbG9hZGVkDQo+IGF1dG9tYXRp
-Y2FsbHkuIFRoZSBkcml2ZXIgc2hvdWxkIHVzZSBNT0RVTEVfREVWSUNFX1RBQkxFIHRvZ2V0aGVy
-IHdpdGgNCj4gZXhpc3RpbmcgbWx4cGxhdF9kbWlfdGFibGUgaW5zdGVhZC4NCj4gDQo+IENoYW5n
-ZXM6DQo+IHYyIC0gY29udmVyc2lvbiB0byB1c2FnZSBvZiBNT0RVTEVfREVWSUNFX1RBQkxFICh0
-aGFua3MgQmrDuHJuKQ0KPiB2MyAtIE1PRFVMRV9ERVZJQ0VfVEFCTEUgbW92ZWQgYWZ0ZXIgbWx4
-cGxhdF9kbWlfdGFibGUgZGVjbGFyYXRpb24NCj4gDQo+IEZpeGVzOiA2NjEzZDE4ZTkwMzggKCJw
-bGF0Zm9ybS94ODY6IG1seC1wbGF0Zm9ybTogTW92ZSBtb2R1bGUgZnJvbQ0KPiBhcmNoL3g4NiIp
-DQo+IENjOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+DQo+IENjOiBCasO4
-cm4gTW9yayA8Ympvcm5AbW9yay5ubz4NCj4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2
-Y2hlbmtvQGdtYWlsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSXZhbiBWZWNlcmEgPGl2ZWNlcmFA
-cmVkaGF0LmNvbT4NCg0KQWNrZWQtYnk6IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG1lbGxhbm94
-LmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L21seC1wbGF0Zm9ybS5jIHwg
-NyArKy0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9u
-cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L21seC1wbGF0Zm9y
-bS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvbWx4LQ0KPiBwbGF0Zm9ybS5jDQo+IGluZGV4IDUw
-NDI1NmMzNjYwZC4uMjJjZDAxMWY2YWVlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9tbHgtcGxhdGZvcm0uYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxh
-dGZvcm0uYw0KPiBAQCAtMjg2LDYgKzI4Niw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5
-c3RlbV9pZCBtbHhwbGF0X2RtaV90YWJsZVtdDQo+IF9faW5pdGNvbnN0ID0gew0KPiAgCXsgfQ0K
-PiAgfTsNCj4gDQo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGRtaSwgbWx4cGxhdF9kbWlfdGFibGUp
-Ow0KPiArDQo+ICBzdGF0aWMgaW50IF9faW5pdCBtbHhwbGF0X2luaXQodm9pZCkNCj4gIHsNCj4g
-IAlzdHJ1Y3QgbWx4cGxhdF9wcml2ICpwcml2Ow0KPiBAQCAtMzcwLDggKzM3MiwzIEBAIG1vZHVs
-ZV9leGl0KG1seHBsYXRfZXhpdCk7ICBNT0RVTEVfQVVUSE9SKCJWYWRpbQ0KPiBQYXN0ZXJuYWsg
-KHZhZGltcEBtZWxsYW5veC5jb20pIik7ICBNT0RVTEVfREVTQ1JJUFRJT04oIk1lbGxhbm94DQo+
-IHBsYXRmb3JtIGRyaXZlciIpOyAgTU9EVUxFX0xJQ0VOU0UoIkR1YWwgQlNEL0dQTCIpOyAtDQo+
-IE1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxhbm94KjpNU04yNCo6Iik7DQo+IC1NT0RVTEVfQUxJ
-QVMoImRtaToqOipNZWxsYW5veCo6TVNOMjcqOiIpOw0KPiAtTU9EVUxFX0FMSUFTKCJkbWk6Kjoq
-TWVsbGFub3gqOk1TQio6Iik7DQo+IC1NT0RVTEVfQUxJQVMoImRtaToqOipNZWxsYW5veCo6TVNY
-KjoiKTsNCj4gLU1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxhbm94KjpNU04yMSo6Iik7DQo+IC0t
-DQo+IDIuMTMuNg0KDQo=
+On Mon, Jan 22, 2018 at 3:52 PM, Marco Martin <notmart@gmail.com> wrote:
+> On Mon, Jan 22, 2018 at 2:42 PM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+
+>>> +               if (obj && obj->type == ACPI_TYPE_INTEGER) {
+>>> +                       if (obj->integer.value & TABLET_MODE_FLAG)
+>>> +                               input_report_switch(priv->input_dev,
+>>
+>>> +                                                       SW_TABLET_MODE,
+>>> +                                                       0);
+>>
+>> One line?
+>
+> checkpatch.pl was complaining about lines too long.
+
+My mailer is using true type fonts, so, I don't see clearly an
+indentation here, if you already moved SW_ under priv-> that's fine to
+leave, otherwise, just move one tab left the entire line.
+
+-- 
+With Best Regards,
+Andy Shevchenko
