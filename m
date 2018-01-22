@@ -1,59 +1,59 @@
-From: Ivan Vecera <ivecera@redhat.com>
-Subject: [PATCH v3] platform/x86: mlx-platform: fix module aliases
-Date: Mon, 22 Jan 2018 15:20:43 +0100
-Message-ID: <20180122142043.23705-1-ivecera@redhat.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [PATCH v3] platform/x86: mlx-platform: fix module aliases
+Date: Mon, 22 Jan 2018 14:22:26 +0000
+Message-ID: <AM4PR05MB3330843B332E40684FFD4E26A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <20180122142043.23705-1-ivecera@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:58238 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751144AbeAVOUq (ORCPT
+Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:13248
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751087AbeAVOW3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 09:20:46 -0500
+        Mon, 22 Jan 2018 09:22:29 -0500
+In-Reply-To: <20180122142043.23705-1-ivecera@redhat.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Vadim Pasternak <vadimp@mellanox.com>, =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: =?utf-8?B?QmrDuHJuIE1vcms=?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
-not loaded automatically. The driver should use MODULE_DEVICE_TABLE
-together with existing mlxplat_dmi_table instead.
-
-Changes:
-v2 - conversion to usage of MODULE_DEVICE_TABLE (thanks Bjørn)
-v3 - MODULE_DEVICE_TABLE moved after mlxplat_dmi_table declaration
-
-Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Bjørn Mork <bjorn@mork.no>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/platform/x86/mlx-platform.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 504256c3660d..22cd011f6aee 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -286,6 +286,8 @@ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 	{ }
- };
- 
-+MODULE_DEVICE_TABLE(dmi, mlxplat_dmi_table);
-+
- static int __init mlxplat_init(void)
- {
- 	struct mlxplat_priv *priv;
-@@ -370,8 +372,3 @@ module_exit(mlxplat_exit);
- MODULE_AUTHOR("Vadim Pasternak (vadimp@mellanox.com)");
- MODULE_DESCRIPTION("Mellanox platform driver");
- MODULE_LICENSE("Dual BSD/GPL");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN24*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN27*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSB*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSX*:");
--MODULE_ALIAS("dmi:*:*Mellanox*:MSN21*:");
--- 
-2.13.6
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSXZhbiBWZWNlcmEgW21h
+aWx0bzppdmVjZXJhQHJlZGhhdC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyMiwgMjAx
+OCA0OjIxIFBNDQo+IFRvOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBD
+YzogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgQmrDuHJuIE1vcmsgPGJq
+b3JuQG1vcmsubm8+Ow0KPiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5j
+b20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2M10gcGxhdGZvcm0veDg2OiBtbHgtcGxhdGZvcm06IGZp
+eCBtb2R1bGUgYWxpYXNlcw0KPiANCj4gTWlzc2luZyBwcmVmaXggJ3BuJyBpbiBNT0RVTEVfQUxJ
+QVMgbGluZXMgY2F1c2VzIHRoYXQgdGhlIG1vZHVsZSBpcyBub3QgbG9hZGVkDQo+IGF1dG9tYXRp
+Y2FsbHkuIFRoZSBkcml2ZXIgc2hvdWxkIHVzZSBNT0RVTEVfREVWSUNFX1RBQkxFIHRvZ2V0aGVy
+IHdpdGgNCj4gZXhpc3RpbmcgbWx4cGxhdF9kbWlfdGFibGUgaW5zdGVhZC4NCj4gDQo+IENoYW5n
+ZXM6DQo+IHYyIC0gY29udmVyc2lvbiB0byB1c2FnZSBvZiBNT0RVTEVfREVWSUNFX1RBQkxFICh0
+aGFua3MgQmrDuHJuKQ0KPiB2MyAtIE1PRFVMRV9ERVZJQ0VfVEFCTEUgbW92ZWQgYWZ0ZXIgbWx4
+cGxhdF9kbWlfdGFibGUgZGVjbGFyYXRpb24NCj4gDQo+IEZpeGVzOiA2NjEzZDE4ZTkwMzggKCJw
+bGF0Zm9ybS94ODY6IG1seC1wbGF0Zm9ybTogTW92ZSBtb2R1bGUgZnJvbQ0KPiBhcmNoL3g4NiIp
+DQo+IENjOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+DQo+IENjOiBCasO4
+cm4gTW9yayA8Ympvcm5AbW9yay5ubz4NCj4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2
+Y2hlbmtvQGdtYWlsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSXZhbiBWZWNlcmEgPGl2ZWNlcmFA
+cmVkaGF0LmNvbT4NCg0KQWNrZWQtYnk6IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG1lbGxhbm94
+LmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L21seC1wbGF0Zm9ybS5jIHwg
+NyArKy0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9u
+cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L21seC1wbGF0Zm9y
+bS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvbWx4LQ0KPiBwbGF0Zm9ybS5jDQo+IGluZGV4IDUw
+NDI1NmMzNjYwZC4uMjJjZDAxMWY2YWVlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9tbHgtcGxhdGZvcm0uYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxh
+dGZvcm0uYw0KPiBAQCAtMjg2LDYgKzI4Niw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5
+c3RlbV9pZCBtbHhwbGF0X2RtaV90YWJsZVtdDQo+IF9faW5pdGNvbnN0ID0gew0KPiAgCXsgfQ0K
+PiAgfTsNCj4gDQo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGRtaSwgbWx4cGxhdF9kbWlfdGFibGUp
+Ow0KPiArDQo+ICBzdGF0aWMgaW50IF9faW5pdCBtbHhwbGF0X2luaXQodm9pZCkNCj4gIHsNCj4g
+IAlzdHJ1Y3QgbWx4cGxhdF9wcml2ICpwcml2Ow0KPiBAQCAtMzcwLDggKzM3MiwzIEBAIG1vZHVs
+ZV9leGl0KG1seHBsYXRfZXhpdCk7ICBNT0RVTEVfQVVUSE9SKCJWYWRpbQ0KPiBQYXN0ZXJuYWsg
+KHZhZGltcEBtZWxsYW5veC5jb20pIik7ICBNT0RVTEVfREVTQ1JJUFRJT04oIk1lbGxhbm94DQo+
+IHBsYXRmb3JtIGRyaXZlciIpOyAgTU9EVUxFX0xJQ0VOU0UoIkR1YWwgQlNEL0dQTCIpOyAtDQo+
+IE1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxhbm94KjpNU04yNCo6Iik7DQo+IC1NT0RVTEVfQUxJ
+QVMoImRtaToqOipNZWxsYW5veCo6TVNOMjcqOiIpOw0KPiAtTU9EVUxFX0FMSUFTKCJkbWk6Kjoq
+TWVsbGFub3gqOk1TQio6Iik7DQo+IC1NT0RVTEVfQUxJQVMoImRtaToqOipNZWxsYW5veCo6TVNY
+KjoiKTsNCj4gLU1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxhbm94KjpNU04yMSo6Iik7DQo+IC0t
+DQo+IDIuMTMuNg0KDQo=
