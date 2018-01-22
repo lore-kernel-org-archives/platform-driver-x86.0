@@ -1,54 +1,38 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [PATCH v2] platform/x86: mlx-platform: fix module aliases
-Date: Mon, 22 Jan 2018 10:23:21 +0000
-Message-ID: <AM4PR05MB333066D7C4F921EE90DAE360A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <20180122101148.22135-1-ivecera@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: mlx-platform: fix module aliases
+Date: Mon, 22 Jan 2018 13:48:01 +0200
+Message-ID: <CAHp75Vd2us0ytvkoAxUeo-gb8Y6siSV2mfDZZeQGYkGU5-8Hnw@mail.gmail.com>
+References: <20180122101148.22135-1-ivecera@redhat.com> <AM4PR05MB333066D7C4F921EE90DAE360A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db5eur01on0042.outbound.protection.outlook.com ([104.47.2.42]:51644
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751037AbeAVKXY (ORCPT
+Received: from mail-qt0-f182.google.com ([209.85.216.182]:43967 "EHLO
+        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750955AbeAVLsC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 05:23:24 -0500
-In-Reply-To: <20180122101148.22135-1-ivecera@redhat.com>
-Content-Language: en-US
+        Mon, 22 Jan 2018 06:48:02 -0500
+Received: by mail-qt0-f182.google.com with SMTP id s3so19907965qtb.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2018 03:48:02 -0800 (PST)
+In-Reply-To: <AM4PR05MB333066D7C4F921EE90DAE360A2EC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: =?utf-8?B?QmrDuHJuIE1vcms=?= <bjorn@mork.no>
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSXZhbiBWZWNlcmEgW21h
-aWx0bzppdmVjZXJhQHJlZGhhdC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyMiwgMjAx
-OCAxMjoxMiBQTQ0KPiBUbzogcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4g
-Q2M6IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG1lbGxhbm94LmNvbT47IEJqw7hybiBNb3JrIDxi
-am9ybkBtb3JrLm5vPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjJdIHBsYXRmb3JtL3g4NjogbWx4LXBs
-YXRmb3JtOiBmaXggbW9kdWxlIGFsaWFzZXMNCj4gDQo+IE1pc3NpbmcgcHJlZml4ICdwbicgaW4g
-TU9EVUxFX0FMSUFTIGxpbmVzIGNhdXNlcyB0aGF0IHRoZSBtb2R1bGUgaXMgbm90IGxvYWRlZA0K
-PiBhdXRvbWF0aWNhbGx5LiBUaGUgZHJpdmVyIHNob3VsZCB1c2UgTU9EVUxFX0RFVklDRV9UQUJM
-RSB0b2dldGhlciB3aXRoDQo+IGV4aXN0aW5nIG1seHBsYXRfZG1pX3RhYmxlIGluc3RlYWQuDQo+
-IA0KPiBDaGFuZ2VzOg0KPiB2MiAtIGNvbnZlcnNpb24gdG8gdXNhZ2Ugb2YgTU9EVUxFX0RFVklD
-RV9UQUJMRSAodGhhbmtzIEJqw7hybikNCj4gDQo+IEZpeGVzOiA2NjEzZDE4ZTkwMzggKCJwbGF0
-Zm9ybS94ODY6IG1seC1wbGF0Zm9ybTogTW92ZSBtb2R1bGUgZnJvbQ0KPiBhcmNoL3g4NiIpDQo+
-IENjOiBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+DQo+IENjOiBCasO4cm4g
-TW9yayA8Ympvcm5AbW9yay5ubz4NCj4gU2lnbmVkLW9mZi1ieTogSXZhbiBWZWNlcmEgPGl2ZWNl
-cmFAcmVkaGF0LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZv
-cm0uYyB8IDYgKy0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDUgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvbWx4LXBs
-YXRmb3JtLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtDQo+IHBsYXRmb3JtLmMNCj4gaW5k
-ZXggNTA0MjU2YzM2NjBkLi41YThiNDc1NjY4ZmIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxh
-dGZvcm0veDg2L21seC1wbGF0Zm9ybS5jDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L21s
-eC1wbGF0Zm9ybS5jDQo+IEBAIC0zNzAsOCArMzcwLDQgQEAgbW9kdWxlX2V4aXQobWx4cGxhdF9l
-eGl0KTsgIE1PRFVMRV9BVVRIT1IoIlZhZGltDQo+IFBhc3Rlcm5hayAodmFkaW1wQG1lbGxhbm94
-LmNvbSkiKTsgIE1PRFVMRV9ERVNDUklQVElPTigiTWVsbGFub3gNCj4gcGxhdGZvcm0gZHJpdmVy
-Iik7ICBNT0RVTEVfTElDRU5TRSgiRHVhbCBCU0QvR1BMIik7IC0NCj4gTU9EVUxFX0FMSUFTKCJk
-bWk6KjoqTWVsbGFub3gqOk1TTjI0KjoiKTsNCj4gLU1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxh
-bm94KjpNU04yNyo6Iik7DQo+IC1NT0RVTEVfQUxJQVMoImRtaToqOipNZWxsYW5veCo6TVNCKjoi
-KTsNCj4gLU1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxhbm94KjpNU1gqOiIpOw0KPiAtTU9EVUxF
-X0FMSUFTKCJkbWk6KjoqTWVsbGFub3gqOk1TTjIxKjoiKTsNCj4gK01PRFVMRV9ERVZJQ0VfVEFC
-TEUoZG1pLCBtbHhwbGF0X2RtaV90YWJsZSk7DQoNCkkgYW0gbm90IHN1cmUgYWJvdXQgdGhlIGxv
-Y2F0aW9uIG9mIE1PRFVMRV9ERVZJQ0VfVEFCTEUgcmVjb3JkLg0KU2hvdWxkIGl0IGJlIHBsYWNl
-ZCBhdCB0aGUgZW5kIG9mIHRoZSBtb2R1bGUgb3IgYWZ0ZXIgbWx4cGxhdF9kbWlfdGFibGUNCmRl
-Y2xhcmF0aW9uPw0KDQoNCj4gLS0NCj4gMi4xMy42DQoNCg==
+On Mon, Jan 22, 2018 at 12:23 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
+
+>> +MODULE_DEVICE_TABLE(dmi, mlxplat_dmi_table);
+>
+> I am not sure about the location of MODULE_DEVICE_TABLE record.
+> Should it be placed at the end of the module or after mlxplat_dmi_table
+> declaration?
+
+Yeah, it would be better.
+I dunno if Darren is going to ask for another version or fix this
+manually when apply.
+To be on the safer side, send a v3 with properly attached line as
+Vadim suggested.
+
+-- 
+With Best Regards,
+Andy Shevchenko
