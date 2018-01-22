@@ -1,37 +1,68 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Support intel-vbtn based tablet mode switch
-Date: Mon, 22 Jan 2018 16:46:40 +0200
-Message-ID: <CAHp75VeU358J_wEbLS0f-mU8FRvt-1iHXF6TuADJR5oi=GKkJQ@mail.gmail.com>
-References: <1516625281-16547-1-git-send-email-notmart@gmail.com>
- <CAHp75VeaoFhJ=nF2dfQZnfFjNTWy4_9rr6K4JpUYRVZnKDLkSQ@mail.gmail.com> <CAD6_BovWVrbTqBcNE9a=kH9Kk3EzKj7yvz0_Yx0Qat7fzhJTCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/4] platform/x86: ideapad-laptop: Re-use DEFINE_SHOW_ATTRIBUTE() macro
+Date: Mon, 22 Jan 2018 18:05:45 +0200
+Message-ID: <20180122160546.51611-3-andriy.shevchenko@linux.intel.com>
+References: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD6_BovWVrbTqBcNE9a=kH9Kk3EzKj7yvz0_Yx0Qat7fzhJTCg@mail.gmail.com>
+In-Reply-To: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Martin <notmart@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bhushan Shah <bhush94@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@dell.com>, Mario Limonciello <mario_limonciello@dell.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 22, 2018 at 3:52 PM, Marco Martin <notmart@gmail.com> wrote:
-> On Mon, Jan 22, 2018 at 2:42 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+...instead of open coding file operations followed by custom ->open()
+callbacks per each attribute.
 
->>> +               if (obj && obj->type == ACPI_TYPE_INTEGER) {
->>> +                       if (obj->integer.value & TABLET_MODE_FLAG)
->>> +                               input_report_switch(priv->input_dev,
->>
->>> +                                                       SW_TABLET_MODE,
->>> +                                                       0);
->>
->> One line?
->
-> checkpatch.pl was complaining about lines too long.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
 
-My mailer is using true type fonts, so, I don't see clearly an
-indentation here, if you already moved SW_ under priv-> that's fine to
-leave, otherwise, just move one tab left the entire line.
-
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 5ab638d4d243..7e9e9bf78f1d 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -284,19 +284,7 @@ static int debugfs_status_show(struct seq_file *s, void *data)
+ 
+ 	return 0;
+ }
+-
+-static int debugfs_status_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, debugfs_status_show, inode->i_private);
+-}
+-
+-static const struct file_operations debugfs_status_fops = {
+-	.owner = THIS_MODULE,
+-	.open = debugfs_status_open,
+-	.read = seq_read,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(debugfs_status);
+ 
+ static int debugfs_cfg_show(struct seq_file *s, void *data)
+ {
+@@ -337,19 +325,7 @@ static int debugfs_cfg_show(struct seq_file *s, void *data)
+ 	}
+ 	return 0;
+ }
+-
+-static int debugfs_cfg_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, debugfs_cfg_show, inode->i_private);
+-}
+-
+-static const struct file_operations debugfs_cfg_fops = {
+-	.owner = THIS_MODULE,
+-	.open = debugfs_cfg_open,
+-	.read = seq_read,
+-	.llseek = seq_lseek,
+-	.release = single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(debugfs_cfg);
+ 
+ static int ideapad_debugfs_init(struct ideapad_private *priv)
+ {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.15.1
