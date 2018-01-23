@@ -1,55 +1,46 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v9 0/4] drivers/platform: Replace module
- x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
-Date: Mon, 22 Jan 2018 20:13:28 -0800
-Message-ID: <20180123041328.GF24956@fury>
-References: <1516213316-32278-1-git-send-email-vadimp@mellanox.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 1/4] seq_file: Introduce DEFINE_SHOW_ATTRIBUTE()
+ helper macro
+Date: Tue, 23 Jan 2018 09:15:08 +0000
+Message-ID: <20180123091508.6vpygg6ahrnynpks@dell>
+References: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:50681 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751293AbeAWENc (ORCPT
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:37673 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751116AbeAWJPL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Jan 2018 23:13:32 -0500
+        Tue, 23 Jan 2018 04:15:11 -0500
+Received: by mail-wm0-f67.google.com with SMTP id v71so387228wmv.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jan 2018 01:15:11 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <1516213316-32278-1-git-send-email-vadimp@mellanox.com>
+In-Reply-To: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org
 
-On Wed, Jan 17, 2018 at 06:21:52PM +0000, Vadim Pasternak wrote:
-> The patchset:
->  - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
->    drivers/platform/x86/mlxcpld-hotplug.c with the modules
->    include/linux/platform_data/mlxreg.h and
->    drivers/platform/mellanox/mlxreg-hotplug.c;
->    relevant Makefile and Kconfig are updated;
->  - modifies Mellanox hotplug driver for making it architecture
->    independent. Drivers has been tested for x86 and ARM based systems.
->  - includes code cleanup;
->  - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
->    event functionality over programmable devices logic, when these devices
->    can be attached to different interfaces types, like I2C, LPC, SPI;
->    driver drivers/platform/x86/mlx-platform.c is updated according to new
->    interface.
+On Mon, 22 Jan 2018, Andy Shevchenko wrote:
 
-This series is still not dividing up changes into small functional chunks. It
-"ping pongs" (adding then later removing code), and makes it difficult to review
-functional changes by surrounding them with non-functional transformations. As
-I've attempted to break this apart myself, I've discovered a few issues with the
-code - see the responses to the individual patches.
+> The DEFINE_SHOW_ATTRIBUTE() helper macro would be useful for current
+> users, which are many of them, and for new comers to decrease code
+> duplication.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/ab8500-debugfs.c    | 14 --------------
 
-You can find my broken up version here:
-http://git.infradead.org/linux-platform-drivers-x86.git/shortlog/refs/heads/review-dvhart-mellanox-v10
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-In particular, please see:
-http://git.infradead.org/linux-platform-drivers-x86.git/commit/4f0057fc3da29c04e2cefca9dc5b17577b3e4988
-
-Vadim, please respond to my questions re the individual patches, and I'll
-increment the patches in the above branch before pushing this up to testing.
+>  drivers/platform/x86/pmc_atom.c | 14 --------------
+>  include/linux/seq_file.h        | 14 ++++++++++++++
+>  net/bluetooth/hci_debugfs.c     | 13 -------------
+>  4 files changed, 14 insertions(+), 41 deletions(-)
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
