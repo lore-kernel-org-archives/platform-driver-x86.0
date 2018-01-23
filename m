@@ -1,156 +1,106 @@
-From: Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.4-stable 1/2] x86/cpu/intel: Introduce macros for Intel family numbers
-Date: Tue, 23 Jan 2018 21:38:55 +0100
-Message-ID: <20180123203856.27727-1-jslaby@suse.cz>
-References: <15163532439137@kroah.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <15163532439137@kroah.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: stable@vger.kernel.org, Dave Hansen <dave@sr71.net>, Dave Hansen <dave.hansen@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Darren Hart <dvhart@infradead.org>, Denys Vlasenko <dvlasenk@redhat.com>, Doug Thompson <dougthompson@xmission.com>, Eduardo Valentin <edubezval@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Peter Zijlstra <peterz@infradead.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [patch v9 0/4] drivers/platform: Replace module
+ x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Tue, 23 Jan 2018 13:54:43 -0800
+Message-ID: <20180123215443.GA16464@fury>
+References: <1516213316-32278-1-git-send-email-vadimp@mellanox.com>
+ <20180123041328.GF24956@fury>
+ <AM4PR05MB33304E4A2C7CC588371EF0EAA2E30@AM4PR05MB3330.eurprd05.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AM4PR05MB33304E4A2C7CC588371EF0EAA2E30@AM4PR05MB3330.eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Dave Hansen <dave@sr71.net>
+On Tue, Jan 23, 2018 at 06:04:37PM +0000, Vadim Pasternak wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Darren Hart [mailto:dvhart@infradead.org]
+> > Sent: Tuesday, January 23, 2018 6:13 AM
+> > To: Vadim Pasternak <vadimp@mellanox.com>
+> > Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
+> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnulli.us
+> > Subject: Re: [patch v9 0/4] drivers/platform: Replace module x86/mlxcpld-
+> > hotplug with mellanox/mlxreg-hotplug
+> > 
+> > On Wed, Jan 17, 2018 at 06:21:52PM +0000, Vadim Pasternak wrote:
+> > > The patchset:
+> > >  - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+> > >    drivers/platform/x86/mlxcpld-hotplug.c with the modules
+> > >    include/linux/platform_data/mlxreg.h and
+> > >    drivers/platform/mellanox/mlxreg-hotplug.c;
+> > >    relevant Makefile and Kconfig are updated;
+> > >  - modifies Mellanox hotplug driver for making it architecture
+> > >    independent. Drivers has been tested for x86 and ARM based systems.
+> > >  - includes code cleanup;
+> > >  - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
+> > >    event functionality over programmable devices logic, when these devices
+> > >    can be attached to different interfaces types, like I2C, LPC, SPI;
+> > >    driver drivers/platform/x86/mlx-platform.c is updated according to new
+> > >    interface.
+> > 
+> > This series is still not dividing up changes into small functional chunks. It "ping
+> > pongs" (adding then later removing code), and makes it difficult to review
+> > functional changes by surrounding them with non-functional transformations. As
+> > I've attempted to break this apart myself, I've discovered a few issues with the
+> > code - see the responses to the individual patches.
+> > 
+> > You can find my broken up version here:
+> > http://git.infradead.org/linux-platform-drivers-
+> > x86.git/shortlog/refs/heads/review-dvhart-mellanox-v10
+> > 
+> > In particular, please see:
+> > http://git.infradead.org/linux-platform-drivers-
+> > x86.git/commit/4f0057fc3da29c04e2cefca9dc5b17577b3e4988
+> > 
+> > Vadim, please respond to my questions re the individual patches, and I'll
+> > increment the patches in the above branch before pushing this up to testing.
+> > 
+> 
+> Hi Darren,
+> 
+> Thank you for your reviews.
+> 
+> I wanted to take update from your update git, to align the patches with series
+> you pushed to review-dvhart-mellanox-v10.
+> But I have some issue with 
+> cda61cd592ebc9534b9786c337b124a86a6e303f hash:
+> git remote update
+> Fetching origin
+> remote: error: inflate: data stream error (incorrect header check)
+> remote: error: unable to unpack cda61cd592ebc9534b9786c337b124a86a6e303f header
+> remote: fatal: loose object cda61cd592ebc9534b9786c337b124a86a6e303f (stored in ./objects/cd/a61cd592ebc9534b9786c337b124a86a6e303f) is corrupt
+> remote: aborting due to possible repository corruption on the remote side.
+> fatal: protocol error: bad pack header
+> error: Could not fetch origin
+> 
+> Same in case I just clone git anew.
 
-commit 970442c599b22ccd644ebfe94d1d303bf6f87c05 upstream.
+We're having some trouble with the repo on infradead. I have it temporarily
+available on github:
 
-Problem:
+https://github.com/dvhart/linux-pdx86/tree/review-dvhart-mellanox-v10
 
-We have a boatload of open-coded family-6 model numbers.  Half of
-them have these model numbers in hex and the other half in
-decimal.  This makes grepping for them tons of fun, if you were
-to try.
+> 
+> I am about to re-send the series started from the patch 2.
+> I currently dropped the changes related to removing dev_err (from FIXME
+> platform/mellanox: Remove redundant dev_err messa).
+> I also added one extra patch between
+> platform/mellanox: mlxreg-hotplug: Modify to use a 
+> and
+> platform/mellanox: mlxreg-hotplug: Enable building
+> 
+> And I'll not resend 
+> platform/x86: mlx-platform: Allow compilation for 32
+> since it has been moved from the series  as a separate patch.
 
-Solution:
+I'll follow up there.
 
-Consolidate all the magic numbers.  Put all the definitions in
-one header.
-
-The names here are closely derived from the comments describing
-the models from arch/x86/events/intel/core.c.  We could easily
-make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
-they seemed fine even with the longer versions to me.
-
-Do not take any of these names too literally, like "DESKTOP"
-or "MOBILE".  These are all colloquial names and not precise
-descriptions of everywhere a given model will show up.
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Dave Hansen <dave@sr71.net>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Doug Thompson <dougthompson@xmission.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: jacob.jun.pan@intel.com
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-edac@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Link: http://lkml.kernel.org/r/20160603001927.F2A7D828@viggo.jf.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/intel-family.h | 68 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 arch/x86/include/asm/intel-family.h
-
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-new file mode 100644
-index 000000000000..6999f7d01a0d
---- /dev/null
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -0,0 +1,68 @@
-+#ifndef _ASM_X86_INTEL_FAMILY_H
-+#define _ASM_X86_INTEL_FAMILY_H
-+
-+/*
-+ * "Big Core" Processors (Branded as Core, Xeon, etc...)
-+ *
-+ * The "_X" parts are generally the EP and EX Xeons, or the
-+ * "Extreme" ones, like Broadwell-E.
-+ *
-+ * Things ending in "2" are usually because we have no better
-+ * name for them.  There's no processor called "WESTMERE2".
-+ */
-+
-+#define INTEL_FAM6_CORE_YONAH		0x0E
-+#define INTEL_FAM6_CORE2_MEROM		0x0F
-+#define INTEL_FAM6_CORE2_MEROM_L	0x16
-+#define INTEL_FAM6_CORE2_PENRYN		0x17
-+#define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
-+
-+#define INTEL_FAM6_NEHALEM		0x1E
-+#define INTEL_FAM6_NEHALEM_EP		0x1A
-+#define INTEL_FAM6_NEHALEM_EX		0x2E
-+#define INTEL_FAM6_WESTMERE		0x25
-+#define INTEL_FAM6_WESTMERE2		0x1F
-+#define INTEL_FAM6_WESTMERE_EP		0x2C
-+#define INTEL_FAM6_WESTMERE_EX		0x2F
-+
-+#define INTEL_FAM6_SANDYBRIDGE		0x2A
-+#define INTEL_FAM6_SANDYBRIDGE_X	0x2D
-+#define INTEL_FAM6_IVYBRIDGE		0x3A
-+#define INTEL_FAM6_IVYBRIDGE_X		0x3E
-+
-+#define INTEL_FAM6_HASWELL_CORE		0x3C
-+#define INTEL_FAM6_HASWELL_X		0x3F
-+#define INTEL_FAM6_HASWELL_ULT		0x45
-+#define INTEL_FAM6_HASWELL_GT3E		0x46
-+
-+#define INTEL_FAM6_BROADWELL_CORE	0x3D
-+#define INTEL_FAM6_BROADWELL_XEON_D	0x56
-+#define INTEL_FAM6_BROADWELL_GT3E	0x47
-+#define INTEL_FAM6_BROADWELL_X		0x4F
-+
-+#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
-+#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
-+#define INTEL_FAM6_SKYLAKE_X		0x55
-+#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
-+#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
-+
-+/* "Small Core" Processors (Atom) */
-+
-+#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
-+#define INTEL_FAM6_ATOM_LINCROFT	0x26
-+#define INTEL_FAM6_ATOM_PENWELL		0x27
-+#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
-+#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
-+#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
-+#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
-+#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
-+#define INTEL_FAM6_ATOM_MERRIFIELD1	0x4A /* Tangier */
-+#define INTEL_FAM6_ATOM_MERRIFIELD2	0x5A /* Annidale */
-+#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
-+#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
-+
-+/* Xeon Phi */
-+
-+#define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
-+
-+#endif /* _ASM_X86_INTEL_FAMILY_H */
 -- 
-2.16.0
-
+Darren Hart
+VMware Open Source Technology Center
