@@ -1,89 +1,115 @@
-From: Marco Martin <notmart@gmail.com>
-Subject: [PATCH v4] Support intel-vbtn based tablet mode switch
-Date: Tue, 23 Jan 2018 16:18:24 +0100
-Message-ID: <1516720704-19831-1-git-send-email-notmart@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v9 0/4] drivers/platform: Replace module
+ x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
+Date: Tue, 23 Jan 2018 18:04:37 +0000
+Message-ID: <AM4PR05MB33304E4A2C7CC588371EF0EAA2E30@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1516213316-32278-1-git-send-email-vadimp@mellanox.com>
+ <20180123041328.GF24956@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f195.google.com ([209.85.128.195]:36159 "EHLO
-        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750937AbeAWPS3 (ORCPT
+Received: from mail-he1eur01on0060.outbound.protection.outlook.com ([104.47.0.60]:27125
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751508AbeAWSEl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Jan 2018 10:18:29 -0500
+        Tue, 23 Jan 2018 13:04:41 -0500
+In-Reply-To: <20180123041328.GF24956@fury>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, mario.limonciello@dell.com, Marco Martin <notmart@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
 
-Some laptops such as Dell Inspiron 7000 series have the
-tablet mode switch implemented in Intel ACPI,
-the events to enter and exit the tablet mode are 0xCC and 0xCD
 
-CC: platform-driver-x86@vger.kernel.org
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: "Pali Rohár" <pali.rohar@gmail.com>
-CC: Darren Hart <dvhart@infradead.org>
-CC: Mario Limonciello <mario_limonciello@dell.com>
-CC: Andy Shevchenko <andy@infradead.org>
 
-Signed-off-by: Marco Martin <notmart@gmail.com>
----
- drivers/platform/x86/intel-vbtn.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Tuesday, January 23, 2018 6:13 AM
+> To: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
+i.us
+> Subject: Re: [patch v9 0/4] drivers/platform: Replace module x86/mlxcpld-
+> hotplug with mellanox/mlxreg-hotplug
+>=20
+> On Wed, Jan 17, 2018 at 06:21:52PM +0000, Vadim Pasternak wrote:
+> > The patchset:
+> >  - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
+> >    drivers/platform/x86/mlxcpld-hotplug.c with the modules
+> >    include/linux/platform_data/mlxreg.h and
+> >    drivers/platform/mellanox/mlxreg-hotplug.c;
+> >    relevant Makefile and Kconfig are updated;
+> >  - modifies Mellanox hotplug driver for making it architecture
+> >    independent. Drivers has been tested for x86 and ARM based systems.
+> >  - includes code cleanup;
+> >  - introduces regmap interface for mlxreg-hotplug driver to allow hotpl=
+ug
+> >    event functionality over programmable devices logic, when these devi=
+ces
+> >    can be attached to different interfaces types, like I2C, LPC, SPI;
+> >    driver drivers/platform/x86/mlx-platform.c is updated according to n=
+ew
+> >    interface.
+>=20
+> This series is still not dividing up changes into small functional chunks=
+. It "ping
+> pongs" (adding then later removing code), and makes it difficult to revie=
+w
+> functional changes by surrounding them with non-functional transformation=
+s. As
+> I've attempted to break this apart myself, I've discovered a few issues w=
+ith the
+> code - see the responses to the individual patches.
+>=20
+> You can find my broken up version here:
+> http://git.infradead.org/linux-platform-drivers-
+> x86.git/shortlog/refs/heads/review-dvhart-mellanox-v10
+>=20
+> In particular, please see:
+> http://git.infradead.org/linux-platform-drivers-
+> x86.git/commit/4f0057fc3da29c04e2cefca9dc5b17577b3e4988
+>=20
+> Vadim, please respond to my questions re the individual patches, and I'll
+> increment the patches in the above branch before pushing this up to testi=
+ng.
+>=20
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 58c5ff3..64b4b34 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -26,6 +26,9 @@
- #include <linux/suspend.h>
- #include <acpi/acpi_bus.h>
- 
-+/* When NOT in tablet mode, VBDS has the flag 0x40 */
-+#define TABLET_MODE_FLAG 0x40
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("AceLan Kao");
- 
-@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
- 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
-+	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet mode in */
-+	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tablet mode out */
- 	{ KE_END },
- };
- 
-@@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static int intel_vbtn_probe(struct platform_device *device)
- {
-+	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	struct intel_vbtn_priv *priv;
- 	acpi_status status;
-@@ -110,6 +116,21 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return err;
- 	}
- 
-+	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	/* VGBS being present and returning something means
-+	 * we have a tablet mode switch
-+	 */
-+	if (ACPI_SUCCESS(status)) {
-+		union acpi_object *obj = vgbs_output.pointer;
-+
-+		if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+			input_set_capability(priv->input_dev, EV_SW, SW_TABLET_MODE);
-+			input_report_switch(priv->input_dev,
-+								SW_TABLET_MODE,
-+								!(obj->integer.value & TABLET_MODE_FLAG));
-+		}
-+	}
-+
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
- 					     notify_handler,
--- 
-2.7.4
+Hi Darren,
+
+Thank you for your reviews.
+
+I wanted to take update from your update git, to align the patches with ser=
+ies
+you pushed to review-dvhart-mellanox-v10.
+But I have some issue with=20
+cda61cd592ebc9534b9786c337b124a86a6e303f hash:
+git remote update
+Fetching origin
+remote: error: inflate: data stream error (incorrect header check)
+remote: error: unable to unpack cda61cd592ebc9534b9786c337b124a86a6e303f he=
+ader
+remote: fatal: loose object cda61cd592ebc9534b9786c337b124a86a6e303f (store=
+d in ./objects/cd/a61cd592ebc9534b9786c337b124a86a6e303f) is corrupt
+remote: aborting due to possible repository corruption on the remote side.
+fatal: protocol error: bad pack header
+error: Could not fetch origin
+
+Same in case I just clone git anew.
+
+I am about to re-send the series started from the patch 2.
+I currently dropped the changes related to removing dev_err (from FIXME
+platform/mellanox: Remove redundant dev_err messa).
+I also added one extra patch between
+platform/mellanox: mlxreg-hotplug: Modify to use a=20
+and
+platform/mellanox: mlxreg-hotplug: Enable building
+
+And I'll not resend=20
+platform/x86: mlx-platform: Allow compilation for 32
+since it has been moved from the series  as a separate patch.
+
+> --
+> Darren Hart
+> VMware Open Source Technology Center
