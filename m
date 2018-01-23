@@ -1,15 +1,20 @@
 From: Marco Martin <notmart@gmail.com>
-Subject: [PATCH] Support intel-vbtn based tablet mode switch
-Date: Tue, 23 Jan 2018 16:17:50 +0100
-Message-ID: <1516720670-19772-1-git-send-email-notmart@gmail.com>
+Subject: [PATCH v4] Support intel-vbtn based tablet mode switch
+Date: Tue, 23 Jan 2018 16:18:24 +0100
+Message-ID: <1516720704-19831-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f195.google.com ([209.85.128.195]:36159 "EHLO
+        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750937AbeAWPS3 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 23 Jan 2018 10:18:29 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, mario.limonciello@dell.com, Marco Martin <notmart@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
 Some laptops such as Dell Inspiron 7000 series have the
 tablet mode switch implemented in Intel ACPI,
