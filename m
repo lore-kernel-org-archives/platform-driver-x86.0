@@ -1,97 +1,77 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] Add touchscreen platform data for the Teclast X3 Plus
- tablet.
-Date: Tue, 23 Jan 2018 15:50:29 +0100
-Message-ID: <4e89391a-12ab-1d58-7ccb-03b403fd858d@redhat.com>
-References: <1516706288-177-1-git-send-email-ponces26@gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3] Support intel-vbtn based tablet mode switch
+Date: Tue, 23 Jan 2018 14:51:49 +0000
+Message-ID: <ac4ffb2b86ef450b90eec53f5a97bcbc@ausx13mpc120.AMER.DELL.COM>
+References: <1516711348-1868-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66]:39303 "EHLO
-        mail-wm0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751814AbeAWOuc (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Jan 2018 09:50:32 -0500
-Received: by mail-wm0-f66.google.com with SMTP id b21so2416223wme.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jan 2018 06:50:31 -0800 (PST)
-In-Reply-To: <1516706288-177-1-git-send-email-ponces26@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516711348-1868-1-git-send-email-notmart@gmail.com>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alberto Ponces <ponces26@gmail.com>, linux-input@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: notmart@gmail.com, linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-Nitpick, please change the patch subject to:
-
-platform/x86: silead_dmi: Add touchscreen platform data for the Teclast X3 Plus tablet
-
-On 23-01-18 12:18, Alberto Ponces wrote:
-> Add touchscreen platform data for the Teclast X3 Plus tablet. > > Signed-off-by: Alberto Ponces <ponces26@gmail.com>
-Otherwise looks good to me, so with the subject fixed this is:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-But you should rebase this on top of:
-
-http://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git/shortlog/refs/heads/testing
-
-So that it can be applied cleanly by the platform/x86 maintainers.
-
-Please send a rebased v2 with the fixed subject, you can add
-me Reviewed-by to the v2 before sending it.
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-> index 266535c..d4c1190 100644
-> --- a/drivers/platform/x86/silead_dmi.c
-> +++ b/drivers/platform/x86/silead_dmi.c
-> @@ -171,6 +171,20 @@ static const struct silead_ts_dmi_data digma_citi_e200_data = {
->   	.properties	= digma_citi_e200_props,
->   };
->   
-> +static const struct property_entry teclast_x3_plus_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-teclast-x3-plus.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
-> +};
-> +
-> +static const struct silead_ts_dmi_data teclast_x3_plus_data = {
-> +	.acpi_name	= "MSSL1680:00",
-> +	.properties	= teclast_x3_plus_props,
-> +};
-> +
->   static const struct dmi_system_id silead_ts_dmi_table[] = {
->   	{
->   		/* CUBE iwork8 Air */
-> @@ -271,6 +285,15 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
->   			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
->   		},
->   	},
-> +	{
-> +		/* Teclast X3 Plus */
-> +		.driver_data = (void *)&teclast_x3_plus_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "X3 Plus"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
-> +		},
-> +	},
->   	{ },
->   };
->   
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE1hcmNvIE1hcnRpbg0KPiBTZW50OiBU
+dWVzZGF5LCBKYW51YXJ5IDIzLCAyMDE4IDY6NDIgQU0NCj4gVG86IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmcNCj4gQ2M6IG1qZzU5QHNyY2YudWNhbS5vcmc7IHBhbGkucm9oYXJAZ21haWwu
+Y29tOyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsNCj4gYW5keUBpbmZyYWRlYWQub3JnOyBiaHVzaDk0
+QGdtYWlsLmNvbTsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IExpbW9u
+Y2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBNYXJjbyBNYXJ0aW4N
+Cj4gPG5vdG1hcnRAZ21haWwuY29tPjsgTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNp
+ZWxsb0BEZWxsLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHYzXSBTdXBwb3J0IGludGVsLXZidG4g
+YmFzZWQgdGFibGV0IG1vZGUgc3dpdGNoDQo+IA0KPiBTb21lIGxhcHRvcHMgc3VjaCBhcyBEZWxs
+IEluc3Bpcm9uIDcwMDAgc2VyaWVzIGhhdmUgdGhlDQo+IHRhYmxldCBtb2RlIHN3aXRjaCBpbXBs
+ZW1lbnRlZCBpbiBJbnRlbCBBQ1BJLA0KPiB0aGUgZXZlbnRzIHRvIGVudGVyIGFuZCBleGl0IHRo
+ZSB0YWJsZXQgbW9kZSBhcmUgMHhDQyBhbmQgMHhDRA0KPiANCj4gQ0M6IHBsYXRmb3JtLWRyaXZl
+ci14ODZAdmdlci5rZXJuZWwub3JnDQo+IENDOiBNYXR0aGV3IEdhcnJldHQgPG1qZzU5QHNyY2Yu
+dWNhbS5vcmc+DQo+IENDOiAiUGFsaSBSb2jDoXIiIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4g
+Q0M6IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4gQ0M6IE1hcmlvIExpbW9u
+Y2llbGxvIDxtYXJpb19saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4gQ0M6IEFuZHkgU2hldmNoZW5r
+byA8YW5keUBpbmZyYWRlYWQub3JnPg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gTWFydGlu
+IDxub3RtYXJ0QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRl
+bC12YnRuLmMgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+MSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWwtdmJ0bi5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jDQo+IGluZGV4
+IDU4YzVmZjMuLjY0YjRiMzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2lu
+dGVsLXZidG4uYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRuLmMNCj4g
+QEAgLTI2LDYgKzI2LDkgQEANCj4gICNpbmNsdWRlIDxsaW51eC9zdXNwZW5kLmg+DQo+ICAjaW5j
+bHVkZSA8YWNwaS9hY3BpX2J1cy5oPg0KPiANCj4gKy8qIFdoZW4gTk9UIGluIHRhYmxldCBtb2Rl
+LCBWQkRTIGhhcyB0aGUgZmxhZyAweDQwICovDQo+ICsjZGVmaW5lIFRBQkxFVF9NT0RFX0ZMQUcg
+MHg0MA0KDQpNaW5vciB0eXBvZ3JhcGhpY2FsIGVycm9yIGhlcmUsIHlvdSBtZWFuIFZHQlMgb3V0
+cHV0DQpub3QgVkRCUyByaWdodD8NCg0KVkRCUyBtYXkgYmUgaW1wbGVtZW50YXRpb24gc3BlY2lm
+aWMsIHlvdSdyZSBleHBsaWNpdGx5DQpsb29raW5nIGF0IFZHQlMuDQoNCj4gKw0KPiAgTU9EVUxF
+X0xJQ0VOU0UoIkdQTCIpOw0KPiAgTU9EVUxFX0FVVEhPUigiQWNlTGFuIEthbyIpOw0KPiANCj4g
+QEAgLTQyLDYgKzQ1LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgaW50ZWxfdmJ0
+bl9rZXltYXBbXSA9IHsNCj4gIAl7IEtFX0lHTk9SRSwgMHhDNSwgeyBLRVlfVk9MVU1FVVAgfSB9
+LAkJLyogdm9sdW1lLXVwIGtleQ0KPiByZWxlYXNlICovDQo+ICAJeyBLRV9LRVksIDB4QzYsIHsg
+S0VZX1ZPTFVNRURPV04gfSB9LAkJLyogdm9sdW1lLWRvd24NCj4ga2V5IHByZXNzICovDQo+ICAJ
+eyBLRV9JR05PUkUsIDB4QzcsIHsgS0VZX1ZPTFVNRURPV04gfSB9LAkvKiB2b2x1bWUtZG93biBr
+ZXkNCj4gcmVsZWFzZSAqLw0KPiArCXsgS0VfU1csICAweENDLCB7IC5zdyA9IHsgU1dfVEFCTEVU
+X01PREUsIDEgfSB9IH0sIC8qIFRhYmxldCBtb2RlIGluICovDQo+ICsJeyBLRV9TVywgIDB4Q0Qs
+IHsgLnN3ID0geyBTV19UQUJMRVRfTU9ERSwgMCB9IH0gfSwgLyogVGFibGV0IG1vZGUgb3V0ICov
+DQo+ICAJeyBLRV9FTkQgfSwNCj4gIH07DQo+IA0KPiBAQCAtODgsNiArOTMsNyBAQCBzdGF0aWMg
+dm9pZCBub3RpZnlfaGFuZGxlcihhY3BpX2hhbmRsZSBoYW5kbGUsIHUzMiBldmVudCwNCj4gdm9p
+ZCAqY29udGV4dCkNCj4gDQo+ICBzdGF0aWMgaW50IGludGVsX3ZidG5fcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqZGV2aWNlKQ0KPiAgew0KPiArCXN0cnVjdCBhY3BpX2J1ZmZlciB2Z2Jz
+X291dHB1dCA9IHsgQUNQSV9BTExPQ0FURV9CVUZGRVIsIE5VTEwgfTsNCj4gIAlhY3BpX2hhbmRs
+ZSBoYW5kbGUgPSBBQ1BJX0hBTkRMRSgmZGV2aWNlLT5kZXYpOw0KPiAgCXN0cnVjdCBpbnRlbF92
+YnRuX3ByaXYgKnByaXY7DQo+ICAJYWNwaV9zdGF0dXMgc3RhdHVzOw0KPiBAQCAtMTEwLDYgKzEx
+NiwyMSBAQCBzdGF0aWMgaW50IGludGVsX3ZidG5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZQ0KPiAqZGV2aWNlKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgCX0NCj4gDQo+ICsJc3RhdHVzID0g
+YWNwaV9ldmFsdWF0ZV9vYmplY3QoaGFuZGxlLCAiVkdCUyIsIE5VTEwsICZ2Z2JzX291dHB1dCk7
+DQo+ICsJLyogVkdCUyBiZWluZyBwcmVzZW50IGFuZCByZXR1cm5pbmcgc29tZXRoaW5nIG1lYW5z
+DQo+ICsJICogd2UgaGF2ZSBhIHRhYmxldCBtb2RlIHN3aXRjaA0KPiArCSAqLw0KPiArCWlmIChB
+Q1BJX1NVQ0NFU1Moc3RhdHVzKSkgew0KPiArCQl1bmlvbiBhY3BpX29iamVjdCAqb2JqID0gdmdi
+c19vdXRwdXQucG9pbnRlcjsNCj4gKw0KPiArCQlpZiAob2JqICYmIG9iai0+dHlwZSA9PSBBQ1BJ
+X1RZUEVfSU5URUdFUikgew0KPiArCQkJaW5wdXRfc2V0X2NhcGFiaWxpdHkocHJpdi0+aW5wdXRf
+ZGV2LCBFVl9TVywNCj4gU1dfVEFCTEVUX01PREUpOw0KPiArCQkJaW5wdXRfcmVwb3J0X3N3aXRj
+aChwcml2LT5pbnB1dF9kZXYsDQo+ICsNCj4gCVNXX1RBQkxFVF9NT0RFLA0KPiArCQkJCQkJCQkh
+KG9iai0NCj4gPmludGVnZXIudmFsdWUgJiBUQUJMRVRfTU9ERV9GTEFHKSk7DQo+ICsJCX0NCj4g
+Kwl9DQo+ICsNCj4gIAlzdGF0dXMgPSBhY3BpX2luc3RhbGxfbm90aWZ5X2hhbmRsZXIoaGFuZGxl
+LA0KPiAgCQkJCQkgICAgIEFDUElfREVWSUNFX05PVElGWSwNCj4gIAkJCQkJICAgICBub3RpZnlf
+aGFuZGxlciwNCj4gLS0NCj4gMi43LjQNCg0K
