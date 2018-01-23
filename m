@@ -1,46 +1,156 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v10 5/6] platform/mellanox: mlxreg-hotplug: Add check for negative adapter number value
-Date: Tue, 23 Jan 2018 20:34:24 +0000
-Message-ID: <1516739665-132304-5-git-send-email-vadimp@mellanox.com>
-References: <1516739665-132304-1-git-send-email-vadimp@mellanox.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516739665-132304-1-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.4-stable 1/2] x86/cpu/intel: Introduce macros for Intel family numbers
+Date: Tue, 23 Jan 2018 21:38:55 +0100
+Message-ID: <20180123203856.27727-1-jslaby@suse.cz>
+References: <15163532439137@kroah.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <15163532439137@kroah.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: stable@vger.kernel.org, Dave Hansen <dave@sr71.net>, Dave Hansen <dave.hansen@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Darren Hart <dvhart@infradead.org>, Denys Vlasenko <dvlasenk@redhat.com>, Doug Thompson <dougthompson@xmission.com>, Eduardo Valentin <edubezval@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Peter Zijlstra <peterz@infradead.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Verify before creation of hotplug device if the associated adapter number
-is negative. It could be in case hotplug event is not associated with
-hotplug device.
+From: Dave Hansen <dave@sr71.net>
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
-v10->v9:
- Fixes added by Vadim:
- - add this patch to the series;
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+commit 970442c599b22ccd644ebfe94d1d303bf6f87c05 upstream.
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index f841379..b0d7587 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -96,6 +96,14 @@ struct mlxreg_hotplug_priv_data {
- static int mlxreg_hotplug_device_create(struct device *dev,
- 					struct mlxreg_core_data *data)
- {
-+	/*
-+	 * Return if adapter number is negative. Return if adapter number is
-+	 * negative. It could be in case hotplug event is not associated with
-+	 * hotplug device.
-+	 */
-+	if (data->hpdev.nr < 0)
-+		return 0;
+Problem:
+
+We have a boatload of open-coded family-6 model numbers.  Half of
+them have these model numbers in hex and the other half in
+decimal.  This makes grepping for them tons of fun, if you were
+to try.
+
+Solution:
+
+Consolidate all the magic numbers.  Put all the definitions in
+one header.
+
+The names here are closely derived from the comments describing
+the models from arch/x86/events/intel/core.c.  We could easily
+make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
+they seemed fine even with the longer versions to me.
+
+Do not take any of these names too literally, like "DESKTOP"
+or "MOBILE".  These are all colloquial names and not precise
+descriptions of everywhere a given model will show up.
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Dave Hansen <dave@sr71.net>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Doug Thompson <dougthompson@xmission.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: jacob.jun.pan@intel.com
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Link: http://lkml.kernel.org/r/20160603001927.F2A7D828@viggo.jf.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/intel-family.h | 68 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 arch/x86/include/asm/intel-family.h
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+new file mode 100644
+index 000000000000..6999f7d01a0d
+--- /dev/null
++++ b/arch/x86/include/asm/intel-family.h
+@@ -0,0 +1,68 @@
++#ifndef _ASM_X86_INTEL_FAMILY_H
++#define _ASM_X86_INTEL_FAMILY_H
 +
- 	data->hpdev.adapter = i2c_get_adapter(data->hpdev.nr);
- 	if (!data->hpdev.adapter) {
- 		dev_err(dev, "Failed to get adapter for bus %d\n",
++/*
++ * "Big Core" Processors (Branded as Core, Xeon, etc...)
++ *
++ * The "_X" parts are generally the EP and EX Xeons, or the
++ * "Extreme" ones, like Broadwell-E.
++ *
++ * Things ending in "2" are usually because we have no better
++ * name for them.  There's no processor called "WESTMERE2".
++ */
++
++#define INTEL_FAM6_CORE_YONAH		0x0E
++#define INTEL_FAM6_CORE2_MEROM		0x0F
++#define INTEL_FAM6_CORE2_MEROM_L	0x16
++#define INTEL_FAM6_CORE2_PENRYN		0x17
++#define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
++
++#define INTEL_FAM6_NEHALEM		0x1E
++#define INTEL_FAM6_NEHALEM_EP		0x1A
++#define INTEL_FAM6_NEHALEM_EX		0x2E
++#define INTEL_FAM6_WESTMERE		0x25
++#define INTEL_FAM6_WESTMERE2		0x1F
++#define INTEL_FAM6_WESTMERE_EP		0x2C
++#define INTEL_FAM6_WESTMERE_EX		0x2F
++
++#define INTEL_FAM6_SANDYBRIDGE		0x2A
++#define INTEL_FAM6_SANDYBRIDGE_X	0x2D
++#define INTEL_FAM6_IVYBRIDGE		0x3A
++#define INTEL_FAM6_IVYBRIDGE_X		0x3E
++
++#define INTEL_FAM6_HASWELL_CORE		0x3C
++#define INTEL_FAM6_HASWELL_X		0x3F
++#define INTEL_FAM6_HASWELL_ULT		0x45
++#define INTEL_FAM6_HASWELL_GT3E		0x46
++
++#define INTEL_FAM6_BROADWELL_CORE	0x3D
++#define INTEL_FAM6_BROADWELL_XEON_D	0x56
++#define INTEL_FAM6_BROADWELL_GT3E	0x47
++#define INTEL_FAM6_BROADWELL_X		0x4F
++
++#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
++#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
++#define INTEL_FAM6_SKYLAKE_X		0x55
++#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
++#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
++
++/* "Small Core" Processors (Atom) */
++
++#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
++#define INTEL_FAM6_ATOM_LINCROFT	0x26
++#define INTEL_FAM6_ATOM_PENWELL		0x27
++#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
++#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
++#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
++#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
++#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
++#define INTEL_FAM6_ATOM_MERRIFIELD1	0x4A /* Tangier */
++#define INTEL_FAM6_ATOM_MERRIFIELD2	0x5A /* Annidale */
++#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
++#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
++
++/* Xeon Phi */
++
++#define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
++
++#endif /* _ASM_X86_INTEL_FAMILY_H */
 -- 
-2.1.4
+2.16.0
+
