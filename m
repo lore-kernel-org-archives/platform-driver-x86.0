@@ -1,64 +1,37 @@
-From: Alberto Ponces <ponces26@gmail.com>
-Subject: [PATCH v2] platform/x86: silead_dmi: Add touchscreen platform data for the Teclast X3 Plus tablet
-Date: Tue, 23 Jan 2018 18:33:38 +0000
-Message-ID: <1516732419-125-1-git-send-email-ponces26@gmail.com>
-References: <1516706288-177-1-git-send-email-ponces26@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v10 1/6] platform/mellanox: mlxreg-hotplug: Remove unused wait.h include
+Date: Tue, 23 Jan 2018 20:34:20 +0000
+Message-ID: <1516739665-132304-1-git-send-email-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516706288-177-1-git-send-email-ponces26@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: ponces26@gmail.com, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen platform data for the Teclast X3 Plus tablet.
+The driver does not make use of anything defined in wait.h.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Signed-off-by: Alberto Ponces <ponces26@gmail.com>
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/platform/x86/silead_dmi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+v9->v10:
+ Fixes provideded by Darren:
+ - make separate patch for cleaning unused includes;
+ - do not remove spinlock.h from includes and make;
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 048a82f..3a62409 100644
---- a/drivers/platform/x86/silead_dmi.c
-+++ b/drivers/platform/x86/silead_dmi.c
-@@ -263,6 +263,20 @@ static const struct silead_ts_dmi_data teclast_x98plus2_data = {
- 	.properties	= teclast_x98plus2_props,
- };
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 2866c76..c015fe9 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -42,7 +42,6 @@
+ #include <linux/platform_data/mlxreg.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+-#include <linux/wait.h>
+ #include <linux/workqueue.h>
  
-+static const struct property_entry teclast_x3_plus_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-teclast-x3-plus.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct silead_ts_dmi_data teclast_x3_plus_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= teclast_x3_plus_props,
-+};
-+
- static const struct dmi_system_id silead_ts_dmi_table[] = {
- 	{
- 		/* CUBE iwork8 Air */
-@@ -423,6 +437,15 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
- 		},
- 	},
-+	{
-+		/* Teclast X3 Plus */
-+		.driver_data = (void *)&teclast_x3_plus_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X3 Plus"),
-+			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
-+		},
-+	},
- 	{ },
- };
- 
+ /* Offset of event and mask registers from status register */
 -- 
-2.7.4
+2.1.4
