@@ -1,105 +1,64 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v9 0/4] drivers/platform: Replace module
- x86/mlxcpld-hotplug with mellanox/mlxreg-hotplug
-Date: Tue, 23 Jan 2018 13:54:43 -0800
-Message-ID: <20180123215443.GA16464@fury>
-References: <1516213316-32278-1-git-send-email-vadimp@mellanox.com>
- <20180123041328.GF24956@fury>
- <AM4PR05MB33304E4A2C7CC588371EF0EAA2E30@AM4PR05MB3330.eurprd05.prod.outlook.com>
+Subject: Re: [patch v10 4/6] platform/mellanox: mlxreg-hotplug: Modify to use
+ a regmap interface
+Date: Tue, 23 Jan 2018 14:58:17 -0800
+Message-ID: <20180123225817.GB16464@fury>
+References: <1516739665-132304-1-git-send-email-vadimp@mellanox.com>
+ <1516739665-132304-4-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:38171 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932334AbeAWW6V (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 23 Jan 2018 17:58:21 -0500
 Content-Disposition: inline
-In-Reply-To: <AM4PR05MB33304E4A2C7CC588371EF0EAA2E30@AM4PR05MB3330.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1516739665-132304-4-git-send-email-vadimp@mellanox.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 
-On Tue, Jan 23, 2018 at 06:04:37PM +0000, Vadim Pasternak wrote:
+On Tue, Jan 23, 2018 at 08:34:23PM +0000, Vadim Pasternak wrote:
+> Restructure mlxreg header for unification of hotplug item definitions.
 > 
+> Unify hotplug items to allow any kind of item (power controller, fan
+> eeprom, psu eeprom, asic health) in common way.
 > 
-> > -----Original Message-----
-> > From: Darren Hart [mailto:dvhart@infradead.org]
-> > Sent: Tuesday, January 23, 2018 6:13 AM
-> > To: Vadim Pasternak <vadimp@mellanox.com>
-> > Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
-> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnulli.us
-> > Subject: Re: [patch v9 0/4] drivers/platform: Replace module x86/mlxcpld-
-> > hotplug with mellanox/mlxreg-hotplug
-> > 
-> > On Wed, Jan 17, 2018 at 06:21:52PM +0000, Vadim Pasternak wrote:
-> > > The patchset:
-> > >  - replaces modules include/linux/platform_data/mlxcpld-hotplug.h and
-> > >    drivers/platform/x86/mlxcpld-hotplug.c with the modules
-> > >    include/linux/platform_data/mlxreg.h and
-> > >    drivers/platform/mellanox/mlxreg-hotplug.c;
-> > >    relevant Makefile and Kconfig are updated;
-> > >  - modifies Mellanox hotplug driver for making it architecture
-> > >    independent. Drivers has been tested for x86 and ARM based systems.
-> > >  - includes code cleanup;
-> > >  - introduces regmap interface for mlxreg-hotplug driver to allow hotplug
-> > >    event functionality over programmable devices logic, when these devices
-> > >    can be attached to different interfaces types, like I2C, LPC, SPI;
-> > >    driver drivers/platform/x86/mlx-platform.c is updated according to new
-> > >    interface.
-> > 
-> > This series is still not dividing up changes into small functional chunks. It "ping
-> > pongs" (adding then later removing code), and makes it difficult to review
-> > functional changes by surrounding them with non-functional transformations. As
-> > I've attempted to break this apart myself, I've discovered a few issues with the
-> > code - see the responses to the individual patches.
-> > 
-> > You can find my broken up version here:
-> > http://git.infradead.org/linux-platform-drivers-
-> > x86.git/shortlog/refs/heads/review-dvhart-mellanox-v10
-> > 
-> > In particular, please see:
-> > http://git.infradead.org/linux-platform-drivers-
-> > x86.git/commit/4f0057fc3da29c04e2cefca9dc5b17577b3e4988
-> > 
-> > Vadim, please respond to my questions re the individual patches, and I'll
-> > increment the patches in the above branch before pushing this up to testing.
-> > 
+> Use a hardware independent regmap interface, enabling the support of
+> hotplug events over programmable devices attached to different bus
+> types, such as I2C, LPC, or SPI. Add a device node to the
+> mlxreg_core_data structure.
 > 
-> Hi Darren,
-> 
-> Thank you for your reviews.
-> 
-> I wanted to take update from your update git, to align the patches with series
-> you pushed to review-dvhart-mellanox-v10.
-> But I have some issue with 
-> cda61cd592ebc9534b9786c337b124a86a6e303f hash:
-> git remote update
-> Fetching origin
-> remote: error: inflate: data stream error (incorrect header check)
-> remote: error: unable to unpack cda61cd592ebc9534b9786c337b124a86a6e303f header
-> remote: fatal: loose object cda61cd592ebc9534b9786c337b124a86a6e303f (stored in ./objects/cd/a61cd592ebc9534b9786c337b124a86a6e303f) is corrupt
-> remote: aborting due to possible repository corruption on the remote side.
-> fatal: protocol error: bad pack header
-> error: Could not fetch origin
-> 
-> Same in case I just clone git anew.
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+> v10->v9:
+>  Fixes provided by Vadim:
+>  - add missed description of pdev_hotplug for struct mlxplat_priv;
 
-We're having some trouble with the repo on infradead. I have it temporarily
-available on github:
+I didn't see this in the diff from my version to this one.
 
+>  - remove struct mlxplat_mlxcpld_regmap_context, which contains only
+>    the field with base address. Instead obtain locally defined base
+>    address by devm_ioport_map in mlxplat_init and pass it to
+>    devm_regmap_init;
+>  - modify mlxplat_mlxcpld_reg_read/write to use directly pointer to
+>    context;
+
+Also adds incorrect conversion of tabs to spaces in at least 3 locations ...
+
+I had also corrected various typos and the copyright statement, as well as
+reworked the commit messages. So at this point, I'd rather see these as changes
+on top of what I have cleaned up.
+
+Please compare what you have here with:
 https://github.com/dvhart/linux-pdx86/tree/review-dvhart-mellanox-v10
 
-> 
-> I am about to re-send the series started from the patch 2.
-> I currently dropped the changes related to removing dev_err (from FIXME
-> platform/mellanox: Remove redundant dev_err messa).
-> I also added one extra patch between
-> platform/mellanox: mlxreg-hotplug: Modify to use a 
-> and
-> platform/mellanox: mlxreg-hotplug: Enable building
-> 
-> And I'll not resend 
-> platform/x86: mlx-platform: Allow compilation for 32
-> since it has been moved from the series  as a separate patch.
+And send me any changes strictly on top of that.
 
-I'll follow up there.
+Are you anticipating any additional changes beyond those in this version?
 
 -- 
 Darren Hart
