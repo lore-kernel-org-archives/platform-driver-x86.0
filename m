@@ -1,77 +1,84 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3] Support intel-vbtn based tablet mode switch
-Date: Tue, 23 Jan 2018 14:51:49 +0000
-Message-ID: <ac4ffb2b86ef450b90eec53f5a97bcbc@ausx13mpc120.AMER.DELL.COM>
-References: <1516711348-1868-1-git-send-email-notmart@gmail.com>
+From: Marco Martin <notmart@gmail.com>
+Subject: [PATCH] Support intel-vbtn based tablet mode switch
+Date: Tue, 23 Jan 2018 16:17:50 +0100
+Message-ID: <1516720670-19772-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516711348-1868-1-git-send-email-notmart@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: notmart@gmail.com, linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, mario.limonciello@dell.com, Marco Martin <notmart@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE1hcmNvIE1hcnRpbg0KPiBTZW50OiBU
-dWVzZGF5LCBKYW51YXJ5IDIzLCAyMDE4IDY6NDIgQU0NCj4gVG86IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gQ2M6IG1qZzU5QHNyY2YudWNhbS5vcmc7IHBhbGkucm9oYXJAZ21haWwu
-Y29tOyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsNCj4gYW5keUBpbmZyYWRlYWQub3JnOyBiaHVzaDk0
-QGdtYWlsLmNvbTsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IExpbW9u
-Y2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBNYXJjbyBNYXJ0aW4N
-Cj4gPG5vdG1hcnRAZ21haWwuY29tPjsgTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNp
-ZWxsb0BEZWxsLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHYzXSBTdXBwb3J0IGludGVsLXZidG4g
-YmFzZWQgdGFibGV0IG1vZGUgc3dpdGNoDQo+IA0KPiBTb21lIGxhcHRvcHMgc3VjaCBhcyBEZWxs
-IEluc3Bpcm9uIDcwMDAgc2VyaWVzIGhhdmUgdGhlDQo+IHRhYmxldCBtb2RlIHN3aXRjaCBpbXBs
-ZW1lbnRlZCBpbiBJbnRlbCBBQ1BJLA0KPiB0aGUgZXZlbnRzIHRvIGVudGVyIGFuZCBleGl0IHRo
-ZSB0YWJsZXQgbW9kZSBhcmUgMHhDQyBhbmQgMHhDRA0KPiANCj4gQ0M6IHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnDQo+IENDOiBNYXR0aGV3IEdhcnJldHQgPG1qZzU5QHNyY2Yu
-dWNhbS5vcmc+DQo+IENDOiAiUGFsaSBSb2jDoXIiIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4g
-Q0M6IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4gQ0M6IE1hcmlvIExpbW9u
-Y2llbGxvIDxtYXJpb19saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4gQ0M6IEFuZHkgU2hldmNoZW5r
-byA8YW5keUBpbmZyYWRlYWQub3JnPg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gTWFydGlu
-IDxub3RtYXJ0QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRl
-bC12YnRuLmMgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-MSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
-aW50ZWwtdmJ0bi5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jDQo+IGluZGV4
-IDU4YzVmZjMuLjY0YjRiMzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2lu
-dGVsLXZidG4uYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRuLmMNCj4g
-QEAgLTI2LDYgKzI2LDkgQEANCj4gICNpbmNsdWRlIDxsaW51eC9zdXNwZW5kLmg+DQo+ICAjaW5j
-bHVkZSA8YWNwaS9hY3BpX2J1cy5oPg0KPiANCj4gKy8qIFdoZW4gTk9UIGluIHRhYmxldCBtb2Rl
-LCBWQkRTIGhhcyB0aGUgZmxhZyAweDQwICovDQo+ICsjZGVmaW5lIFRBQkxFVF9NT0RFX0ZMQUcg
-MHg0MA0KDQpNaW5vciB0eXBvZ3JhcGhpY2FsIGVycm9yIGhlcmUsIHlvdSBtZWFuIFZHQlMgb3V0
-cHV0DQpub3QgVkRCUyByaWdodD8NCg0KVkRCUyBtYXkgYmUgaW1wbGVtZW50YXRpb24gc3BlY2lm
-aWMsIHlvdSdyZSBleHBsaWNpdGx5DQpsb29raW5nIGF0IFZHQlMuDQoNCj4gKw0KPiAgTU9EVUxF
-X0xJQ0VOU0UoIkdQTCIpOw0KPiAgTU9EVUxFX0FVVEhPUigiQWNlTGFuIEthbyIpOw0KPiANCj4g
-QEAgLTQyLDYgKzQ1LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgaW50ZWxfdmJ0
-bl9rZXltYXBbXSA9IHsNCj4gIAl7IEtFX0lHTk9SRSwgMHhDNSwgeyBLRVlfVk9MVU1FVVAgfSB9
-LAkJLyogdm9sdW1lLXVwIGtleQ0KPiByZWxlYXNlICovDQo+ICAJeyBLRV9LRVksIDB4QzYsIHsg
-S0VZX1ZPTFVNRURPV04gfSB9LAkJLyogdm9sdW1lLWRvd24NCj4ga2V5IHByZXNzICovDQo+ICAJ
-eyBLRV9JR05PUkUsIDB4QzcsIHsgS0VZX1ZPTFVNRURPV04gfSB9LAkvKiB2b2x1bWUtZG93biBr
-ZXkNCj4gcmVsZWFzZSAqLw0KPiArCXsgS0VfU1csICAweENDLCB7IC5zdyA9IHsgU1dfVEFCTEVU
-X01PREUsIDEgfSB9IH0sIC8qIFRhYmxldCBtb2RlIGluICovDQo+ICsJeyBLRV9TVywgIDB4Q0Qs
-IHsgLnN3ID0geyBTV19UQUJMRVRfTU9ERSwgMCB9IH0gfSwgLyogVGFibGV0IG1vZGUgb3V0ICov
-DQo+ICAJeyBLRV9FTkQgfSwNCj4gIH07DQo+IA0KPiBAQCAtODgsNiArOTMsNyBAQCBzdGF0aWMg
-dm9pZCBub3RpZnlfaGFuZGxlcihhY3BpX2hhbmRsZSBoYW5kbGUsIHUzMiBldmVudCwNCj4gdm9p
-ZCAqY29udGV4dCkNCj4gDQo+ICBzdGF0aWMgaW50IGludGVsX3ZidG5fcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqZGV2aWNlKQ0KPiAgew0KPiArCXN0cnVjdCBhY3BpX2J1ZmZlciB2Z2Jz
-X291dHB1dCA9IHsgQUNQSV9BTExPQ0FURV9CVUZGRVIsIE5VTEwgfTsNCj4gIAlhY3BpX2hhbmRs
-ZSBoYW5kbGUgPSBBQ1BJX0hBTkRMRSgmZGV2aWNlLT5kZXYpOw0KPiAgCXN0cnVjdCBpbnRlbF92
-YnRuX3ByaXYgKnByaXY7DQo+ICAJYWNwaV9zdGF0dXMgc3RhdHVzOw0KPiBAQCAtMTEwLDYgKzEx
-NiwyMSBAQCBzdGF0aWMgaW50IGludGVsX3ZidG5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZQ0KPiAqZGV2aWNlKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgCX0NCj4gDQo+ICsJc3RhdHVzID0g
-YWNwaV9ldmFsdWF0ZV9vYmplY3QoaGFuZGxlLCAiVkdCUyIsIE5VTEwsICZ2Z2JzX291dHB1dCk7
-DQo+ICsJLyogVkdCUyBiZWluZyBwcmVzZW50IGFuZCByZXR1cm5pbmcgc29tZXRoaW5nIG1lYW5z
-DQo+ICsJICogd2UgaGF2ZSBhIHRhYmxldCBtb2RlIHN3aXRjaA0KPiArCSAqLw0KPiArCWlmIChB
-Q1BJX1NVQ0NFU1Moc3RhdHVzKSkgew0KPiArCQl1bmlvbiBhY3BpX29iamVjdCAqb2JqID0gdmdi
-c19vdXRwdXQucG9pbnRlcjsNCj4gKw0KPiArCQlpZiAob2JqICYmIG9iai0+dHlwZSA9PSBBQ1BJ
-X1RZUEVfSU5URUdFUikgew0KPiArCQkJaW5wdXRfc2V0X2NhcGFiaWxpdHkocHJpdi0+aW5wdXRf
-ZGV2LCBFVl9TVywNCj4gU1dfVEFCTEVUX01PREUpOw0KPiArCQkJaW5wdXRfcmVwb3J0X3N3aXRj
-aChwcml2LT5pbnB1dF9kZXYsDQo+ICsNCj4gCVNXX1RBQkxFVF9NT0RFLA0KPiArCQkJCQkJCQkh
-KG9iai0NCj4gPmludGVnZXIudmFsdWUgJiBUQUJMRVRfTU9ERV9GTEFHKSk7DQo+ICsJCX0NCj4g
-Kwl9DQo+ICsNCj4gIAlzdGF0dXMgPSBhY3BpX2luc3RhbGxfbm90aWZ5X2hhbmRsZXIoaGFuZGxl
-LA0KPiAgCQkJCQkgICAgIEFDUElfREVWSUNFX05PVElGWSwNCj4gIAkJCQkJICAgICBub3RpZnlf
-aGFuZGxlciwNCj4gLS0NCj4gMi43LjQNCg0K
+Some laptops such as Dell Inspiron 7000 series have the
+tablet mode switch implemented in Intel ACPI,
+the events to enter and exit the tablet mode are 0xCC and 0xCD
+
+CC: platform-driver-x86@vger.kernel.org
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: "Pali Rohár" <pali.rohar@gmail.com>
+CC: Darren Hart <dvhart@infradead.org>
+CC: Mario Limonciello <mario_limonciello@dell.com>
+CC: Andy Shevchenko <andy@infradead.org>
+
+Signed-off-by: Marco Martin <notmart@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 58c5ff3..64b4b34 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -26,6 +26,9 @@
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
+ 
++/* When NOT in tablet mode, VBDS has the flag 0x40 */
++#define TABLET_MODE_FLAG 0x40
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+ 
+@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
+ 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
++	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet mode in */
++	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tablet mode out */
+ 	{ KE_END },
+ };
+ 
+@@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
++	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+@@ -110,6 +116,21 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	/* VGBS being present and returning something means
++	 * we have a tablet mode switch
++	 */
++	if (ACPI_SUCCESS(status)) {
++		union acpi_object *obj = vgbs_output.pointer;
++
++		if (obj && obj->type == ACPI_TYPE_INTEGER) {
++			input_set_capability(priv->input_dev, EV_SW, SW_TABLET_MODE);
++			input_report_switch(priv->input_dev,
++								SW_TABLET_MODE,
++								!(obj->integer.value & TABLET_MODE_FLAG));
++		}
++	}
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.7.4
