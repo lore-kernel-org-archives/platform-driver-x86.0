@@ -1,30 +1,37 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: silead_dmi: Add touchscreen platform
- data for the Teclast X3 Plus tablet
-Date: Tue, 23 Jan 2018 15:27:54 -0800
-Message-ID: <20180123232754.GC16464@fury>
-References: <1516706288-177-1-git-send-email-ponces26@gmail.com>
- <1516732419-125-1-git-send-email-ponces26@gmail.com>
+Subject: Re: [PATCH v1 1/4] seq_file: Introduce DEFINE_SHOW_ATTRIBUTE()
+ helper macro
+Date: Tue, 23 Jan 2018 16:05:29 -0800
+Message-ID: <20180124000529.GH16464@fury>
+References: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
+ <20180123091508.6vpygg6ahrnynpks@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1516732419-125-1-git-send-email-ponces26@gmail.com>
+In-Reply-To: <20180123091508.6vpygg6ahrnynpks@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alberto Ponces <ponces26@gmail.com>
-Cc: linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jan 23, 2018 at 06:33:38PM +0000, Alberto Ponces wrote:
-> Add touchscreen platform data for the Teclast X3 Plus tablet.
+On Tue, Jan 23, 2018 at 09:15:08AM +0000, Lee Jones wrote:
+> On Mon, 22 Jan 2018, Andy Shevchenko wrote:
 > 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > The DEFINE_SHOW_ATTRIBUTE() helper macro would be useful for current
+> > users, which are many of them, and for new comers to decrease code
+> > duplication.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/mfd/ab8500-debugfs.c    | 14 --------------
 > 
-> Signed-off-by: Alberto Ponces <ponces26@gmail.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Queued, thanks.
+Thanks Andy,
 
-Note for the future: Author signoff goes first, then reviewers, then committer.
+Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
+
 
 -- 
 Darren Hart
