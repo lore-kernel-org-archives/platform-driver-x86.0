@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v11 11/12] platform/mellanox: mlxreg-hotplug: Add check for negative adapter number value
-Date: Wed, 24 Jan 2018 20:34:57 +0000
-Message-ID: <1516826098-125036-3-git-send-email-vadimp@mellanox.com>
+Subject: [patch v11 12/12] platform/mellanox: Add validation of return code of hotplug device creation routine
+Date: Wed, 24 Jan 2018 20:34:58 +0000
+Message-ID: <1516826098-125036-4-git-send-email-vadimp@mellanox.com>
 References: <1516826098-125036-1-git-send-email-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1516826098-125036-1-git-send-email-vadimp@mellanox.com>
@@ -10,33 +10,50 @@ To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Verify before creation of hotplug device if the associated adapter number
-is negative. It could be in case hotplug event is not associated with
-hotplug device.
+Adding validation of return code of mlxreg_hotplug_device_create. It could
+fail in case the requested adapter is not available or if client can not
+be connected to the adapter. Error is to be reported in case of bad flow.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index b891ec7..c806451 100644
+index c806451..e852219 100644
 --- a/drivers/platform/mellanox/mlxreg-hotplug.c
 +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -95,6 +95,14 @@ struct mlxreg_hotplug_priv_data {
+@@ -263,13 +263,15 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 			if (item->inversed)
+ 				mlxreg_hotplug_device_destroy(data);
+ 			else
+-				mlxreg_hotplug_device_create(data);
++				ret = mlxreg_hotplug_device_create(data);
+ 		} else {
+ 			if (item->inversed)
+-				mlxreg_hotplug_device_create(data);
++				ret = mlxreg_hotplug_device_create(data);
+ 			else
+ 				mlxreg_hotplug_device_destroy(data);
+ 		}
++		if (ret)
++			dev_err(priv->dev, "Failed to create hotplug device.\n");
+ 	}
  
- static int mlxreg_hotplug_device_create(struct mlxreg_core_data *data)
- {
-+	/*
-+	 * Return if adapter number is negative. Return if adapter number is
-+	 * negative. It could be in case hotplug event is not associated with
-+	 * hotplug device.
-+	 */
-+	if (data->hpdev.nr < 0)
-+		return 0;
-+
- 	data->hpdev.adapter = i2c_get_adapter(data->hpdev.nr);
- 	if (!data->hpdev.adapter)
- 		return -EFAULT;
+ 	/* Acknowledge event. */
+@@ -312,8 +314,11 @@ mlxreg_hotplug_health_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 		if (regval == MLXREG_HOTPLUG_HEALTH_MASK) {
+ 			if ((data->health_cntr++ == MLXREG_HOTPLUG_RST_CNTR) ||
+ 			    !priv->after_probe) {
+-				mlxreg_hotplug_device_create(data);
+-				data->attached = true;
++				ret = mlxreg_hotplug_device_create(data);
++				if (ret)
++					dev_err(priv->dev, "Failed to create hotplug device.\n");
++				else
++					data->attached = true;
+ 			}
+ 		} else {
+ 			if (data->attached) {
 -- 
 2.1.4
