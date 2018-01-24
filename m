@@ -1,59 +1,32 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v11 12/12] platform/mellanox: Add validation of return code of hotplug device creation routine
-Date: Wed, 24 Jan 2018 20:34:58 +0000
-Message-ID: <1516826098-125036-4-git-send-email-vadimp@mellanox.com>
-References: <1516826098-125036-1-git-send-email-vadimp@mellanox.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516826098-125036-1-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Amy Riddering <na001ci@gmail.com>
+Subject: Re:
+Date: Wed, 24 Jan 2018 22:11:09 +0000
+Message-ID: <CALukwsJZ=EkdbcTt1MLzx8WtDs=kw73UAd5zQgXEJEeoEZ6_SQ@mail.gmail.com>
+Reply-To: riddamy0@gmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-it0-f68.google.com ([209.85.214.68]:43610 "EHLO
+        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932072AbeAXWLN (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 24 Jan 2018 17:11:13 -0500
+Received: by mail-it0-f68.google.com with SMTP id u62so6963328ita.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jan 2018 14:11:12 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-Adding validation of return code of mlxreg_hotplug_device_create. It could
-fail in case the requested adapter is not available or if client can not
-be connected to the adapter. Error is to be reported in case of bad flow.
-
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index c806451..e852219 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -263,13 +263,15 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 			if (item->inversed)
- 				mlxreg_hotplug_device_destroy(data);
- 			else
--				mlxreg_hotplug_device_create(data);
-+				ret = mlxreg_hotplug_device_create(data);
- 		} else {
- 			if (item->inversed)
--				mlxreg_hotplug_device_create(data);
-+				ret = mlxreg_hotplug_device_create(data);
- 			else
- 				mlxreg_hotplug_device_destroy(data);
- 		}
-+		if (ret)
-+			dev_err(priv->dev, "Failed to create hotplug device.\n");
- 	}
- 
- 	/* Acknowledge event. */
-@@ -312,8 +314,11 @@ mlxreg_hotplug_health_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 		if (regval == MLXREG_HOTPLUG_HEALTH_MASK) {
- 			if ((data->health_cntr++ == MLXREG_HOTPLUG_RST_CNTR) ||
- 			    !priv->after_probe) {
--				mlxreg_hotplug_device_create(data);
--				data->attached = true;
-+				ret = mlxreg_hotplug_device_create(data);
-+				if (ret)
-+					dev_err(priv->dev, "Failed to create hotplug device.\n");
-+				else
-+					data->attached = true;
- 			}
- 		} else {
- 			if (data->attached) {
 -- 
-2.1.4
+Mrs. Amy Riddering contacting you for missionary work and i pray you
+will be kind enough to deliver my $7 million donation to the less
+privileged ones and God will bless your generation for doing this
+humanitarian assignment.
+
+I am a widow suffering of lung cancer which has damaged my liver and
+back bone, i decided to entrust $7M Dollars to a God fearing person
+that will use it for Charity works since i do not have any child who
+will inherit this money after i die. Please i want your urgent reply
+to know if you can handle this project and I will relocate this fund
+to you.
+
+Thanks and remain blessed.
