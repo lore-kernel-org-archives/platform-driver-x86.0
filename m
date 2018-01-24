@@ -1,120 +1,199 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v10 4/6] platform/mellanox: mlxreg-hotplug: Modify to use
- a regmap interface
-Date: Wed, 24 Jan 2018 17:05:00 +0000
-Message-ID: <VI1PR05MB334161B901EC22F7B26F3A36A2E20@VI1PR05MB3341.eurprd05.prod.outlook.com>
-References: <1516739665-132304-1-git-send-email-vadimp@mellanox.com>
- <1516739665-132304-4-git-send-email-vadimp@mellanox.com>
- <20180123225817.GB16464@fury>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
+ changes"
+Date: Wed, 24 Jan 2018 19:35:45 +0100
+Message-ID: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180123225817.GB16464@fury>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bmailout2.hostsharing.net ([83.223.90.240]:49897 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S964850AbeAXSfu (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 24 Jan 2018 13:35:50 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
 
+Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
+changes") amended this driver's ->probe hook to lock decoding of normal
+(non-legacy) I/O space accesses to the integrated GPU on dual-GPU
+MacBook Pros.  The lock stays in place until the driver is unbound.
 
+The change was made to work around an issue with the out-of-tree nvidia
+graphics driver (available at http://www.nvidia.com/object/unix.html).
+It contains the following sequence in nvidia/nv.c:
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Wednesday, January 24, 2018 12:58 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
-i.us
-> Subject: Re: [patch v10 4/6] platform/mellanox: mlxreg-hotplug: Modify to=
- use a
-> regmap interface
->=20
-> On Tue, Jan 23, 2018 at 08:34:23PM +0000, Vadim Pasternak wrote:
-> > Restructure mlxreg header for unification of hotplug item definitions.
-> >
-> > Unify hotplug items to allow any kind of item (power controller, fan
-> > eeprom, psu eeprom, asic health) in common way.
-> >
-> > Use a hardware independent regmap interface, enabling the support of
-> > hotplug events over programmable devices attached to different bus
-> > types, such as I2C, LPC, or SPI. Add a device node to the
-> > mlxreg_core_data structure.
-> >
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > ---
-> > v10->v9:
-> >  Fixes provided by Vadim:
-> >  - add missed description of pdev_hotplug for struct mlxplat_priv;
->=20
-> I didn't see this in the diff from my version to this one.
->=20
-> >  - remove struct mlxplat_mlxcpld_regmap_context, which contains only
-> >    the field with base address. Instead obtain locally defined base
-> >    address by devm_ioport_map in mlxplat_init and pass it to
-> >    devm_regmap_init;
-> >  - modify mlxplat_mlxcpld_reg_read/write to use directly pointer to
-> >    context;
->=20
-> Also adds incorrect conversion of tabs to spaces in at least 3 locations =
-...
->=20
-> I had also corrected various typos and the copyright statement, as well a=
-s
-> reworked the commit messages. So at this point, I'd rather see these as c=
-hanges
-> on top of what I have cleaned up.
->=20
-> Please compare what you have here with:
-> https://github.com/dvhart/linux-pdx86/tree/review-dvhart-mellanox-v10
->=20
-> And send me any changes strictly on top of that.
+	#if defined(CONFIG_VGA_ARB) && !defined(NVCPU_PPC64LE)
+	#if defined(VGA_DEFAULT_DEVICE)
+	    vga_tryget(VGA_DEFAULT_DEVICE, VGA_RSRC_LEGACY_MASK);
+	#endif
+	    vga_set_legacy_decoding(dev, VGA_RSRC_NONE);
+	#endif
 
-Hi Darren,
+This code was reported to cause deadlocks with VFIO already in 2013:
+https://devtalk.nvidia.com/default/topic/545560
 
-I'll send you four patches on top review-dvhart-mellanox-v10.
-There are
-- Patch to simplify IO access to regmap context.
-- Register map configuration extension with IO access verification
-  callbacks.
-- Adding check for negative adapter number value in hotplug;
-- Adding validation of return code of mlxreg_hotplug_device_create.
-  This is instead of what have been removed in "FIXME:"
+I've reported the issue to Nvidia developers once more in 2017:
+https://www.spinics.net/lists/dri-devel/msg138754.html
 
-But there were two Kbuild issues with these two patches:
-[4/9] FIXME platform/mellanox: Remove redundant dev_err messages on device_=
-create
-[6/8] platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface
+On the MacBookPro10,1, this code apparently breaks backlight control
+(which is handled by apple-gmux via an I/O region starting at 0x700),
+as reported by Petri Hodju:
+https://bugzilla.kernel.org/show_bug.cgi?id=86121
 
-This is because of incorrect order of patches: FIXME platform/mellanox
-uses filed nr which replaces field
-bus in Rename-i2c-bus-to-nr.
-0003-FIXME-platform-mellanox-Remove-redundant-dev_err-mes.patch=20
-0004-platform-mellanox-Group-create-destroy-with-attribut.patch
-0005-platform-mellanox-Rename-i2c-bus-to-nr.patch
+I tried to replicate Petri's observations on my MacBook9,1, which uses
+the same Intel Ivy Bridge + Nvidia GeForce GT 650M architecture, to no
+avail.  On my machine apple-gmux' I/O region remains accessible even
+with the nvidia driver loaded and commit 4eebd5a4e726 reverted.
+Petri reported that apple-gmux becomes accessible again after a
+suspend/resume cycle because the BIOS changed the VGA routing on the
+root port to the Nvidia GPU.  Perhaps this is a BIOS issue after all
+that can be fixed with an update?
 
-So, I'll resend the above three patches marked v11 "re-ordered".
-If it's not good I'll redo it according to your input.
+In any case, the change made by commit 4eebd5a4e726 has turned out to
+cause two new issues:
 
->=20
-> Are you anticipating any additional changes beyond those in this version?
->=20
+* Wilfried Klaebe reports a deadlock when launching Xorg because it
+  opens /dev/vga_arbiter and calls vga_get(), but apple-gmux is holding
+  a lock on I/O space indefinitely.  It looks like apple-gmux' current
+  behavior is an abuse of the vgaarb API as locks are not meant to be
+  held for longer periods:
+  https://bugzilla.kernel.org/show_bug.cgi?id=88861#c11
+  https://bugzilla.kernel.org/attachment.cgi?id=217541
 
-Additionally, after we are done with this series, I'd like to add:
-- several new systems to mlx-platform;
-- new module to mellanox folder with sysfs access to some special registers=
-,
-  like resets and reset causes registers (mlxreg-io);
-- make configuration and activation of mlxreg-io in mlx-patfrom;
+* On dual GPU MacBook Pros introduced since 2013, the integrated GPU is
+  powergated on boot und thus becomes invisible to Linux unless a custom
+  EFI protocol is used to leave it powered on.  (A patch exists but is
+  not in mainline yet due to several negative side effects.)  On these
+  machines, locking I/O to the integrated GPU (as done by 4eebd5a4e726)
+  fails and backlight control is therefore broken:
+  https://bugzilla.kernel.org/show_bug.cgi?id=105051
 
-And later, after I am done with upstream work with leds-mlxreg driver, I'd
-like to add configuration and activation of this driver in mlx-patform as w=
-ell.
+So let's revert commit 4eebd5a4e726 please.  Users experiencing the
+issue with the proprietary nvidia driver can comment out the above-
+quoted problematic code as a workaround (or try updating the BIOS).
 
-Thanks,
-Vadim.
+Cc: Petri Hodju <petrihodju@yahoo.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Bruno Prémont <bonbons@linux-vserver.org>
+Cc: Andy Ritger <aritger@nvidia.com>
+Cc: Ronald Tschalär <ronald@innovation.ch>
+Tested-by: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/platform/x86/apple-gmux.c | 48 +--------------------------------------
+ 1 file changed, 1 insertion(+), 47 deletions(-)
 
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 623d322447a2..7c4eb86c851e 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -24,7 +24,6 @@
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+ #include <linux/vga_switcheroo.h>
+-#include <linux/vgaarb.h>
+ #include <acpi/video.h>
+ #include <asm/io.h>
+ 
+@@ -54,7 +53,6 @@ struct apple_gmux_data {
+ 	bool indexed;
+ 	struct mutex index_lock;
+ 
+-	struct pci_dev *pdev;
+ 	struct backlight_device *bdev;
+ 
+ 	/* switcheroo data */
+@@ -599,23 +597,6 @@ static int gmux_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static struct pci_dev *gmux_get_io_pdev(void)
+-{
+-	struct pci_dev *pdev = NULL;
+-
+-	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))) {
+-		u16 cmd;
+-
+-		pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+-		if (!(cmd & PCI_COMMAND_IO))
+-			continue;
+-
+-		return pdev;
+-	}
+-
+-	return NULL;
+-}
+-
+ static int is_thunderbolt(struct device *dev, void *data)
+ {
+ 	return to_pci_dev(dev)->is_thunderbolt;
+@@ -631,7 +612,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 	int ret = -ENXIO;
+ 	acpi_status status;
+ 	unsigned long long gpe;
+-	struct pci_dev *pdev = NULL;
+ 
+ 	if (apple_gmux_data)
+ 		return -EBUSY;
+@@ -682,7 +662,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 			ver_minor = (version >> 16) & 0xff;
+ 			ver_release = (version >> 8) & 0xff;
+ 		} else {
+-			pr_info("gmux device not present or IO disabled\n");
++			pr_info("gmux device not present\n");
+ 			ret = -ENODEV;
+ 			goto err_release;
+ 		}
+@@ -690,23 +670,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 	pr_info("Found gmux version %d.%d.%d [%s]\n", ver_major, ver_minor,
+ 		ver_release, (gmux_data->indexed ? "indexed" : "classic"));
+ 
+-	/*
+-	 * Apple systems with gmux are EFI based and normally don't use
+-	 * VGA. In addition changing IO+MEM ownership between IGP and dGPU
+-	 * disables IO/MEM used for backlight control on some systems.
+-	 * Lock IO+MEM to GPU with active IO to prevent switch.
+-	 */
+-	pdev = gmux_get_io_pdev();
+-	if (pdev && vga_tryget(pdev,
+-			       VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM)) {
+-		pr_err("IO+MEM vgaarb-locking for PCI:%s failed\n",
+-			pci_name(pdev));
+-		ret = -EBUSY;
+-		goto err_release;
+-	} else if (pdev)
+-		pr_info("locked IO for PCI:%s\n", pci_name(pdev));
+-	gmux_data->pdev = pdev;
+-
+ 	memset(&props, 0, sizeof(props));
+ 	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
+@@ -822,10 +785,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ err_notify:
+ 	backlight_device_unregister(bdev);
+ err_release:
+-	if (gmux_data->pdev)
+-		vga_put(gmux_data->pdev,
+-			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
+-	pci_dev_put(pdev);
+ 	release_region(gmux_data->iostart, gmux_data->iolen);
+ err_free:
+ 	kfree(gmux_data);
+@@ -845,11 +804,6 @@ static void gmux_remove(struct pnp_dev *pnp)
+ 					   &gmux_notify_handler);
+ 	}
+ 
+-	if (gmux_data->pdev) {
+-		vga_put(gmux_data->pdev,
+-			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
+-		pci_dev_put(gmux_data->pdev);
+-	}
+ 	backlight_device_unregister(gmux_data->bdev);
+ 
+ 	release_region(gmux_data->iostart, gmux_data->iolen);
+-- 
+2.15.1
