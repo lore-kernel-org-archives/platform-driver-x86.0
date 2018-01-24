@@ -1,199 +1,47 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
- changes"
-Date: Wed, 24 Jan 2018 19:35:45 +0100
-Message-ID: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bmailout2.hostsharing.net ([83.223.90.240]:49897 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S964850AbeAXSfu (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Jan 2018 13:35:50 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remove redundant dev_err messages on device_create
+Date: Wed, 24 Jan 2018 20:33:37 +0000
+Message-ID: <1516826019-124903-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
-changes") amended this driver's ->probe hook to lock decoding of normal
-(non-legacy) I/O space accesses to the integrated GPU on dual-GPU
-MacBook Pros.  The lock stays in place until the driver is unbound.
+The upper layer will manage and report errors returned by the create and
+destroy functions.
 
-The change was made to work around an issue with the out-of-tree nvidia
-graphics driver (available at http://www.nvidia.com/object/unix.html).
-It contains the following sequence in nvidia/nv.c:
+FIXME: but it doesn't - we don't even check
 
-	#if defined(CONFIG_VGA_ARB) && !defined(NVCPU_PPC64LE)
-	#if defined(VGA_DEFAULT_DEVICE)
-	    vga_tryget(VGA_DEFAULT_DEVICE, VGA_RSRC_LEGACY_MASK);
-	#endif
-	    vga_set_legacy_decoding(dev, VGA_RSRC_NONE);
-	#endif
-
-This code was reported to cause deadlocks with VFIO already in 2013:
-https://devtalk.nvidia.com/default/topic/545560
-
-I've reported the issue to Nvidia developers once more in 2017:
-https://www.spinics.net/lists/dri-devel/msg138754.html
-
-On the MacBookPro10,1, this code apparently breaks backlight control
-(which is handled by apple-gmux via an I/O region starting at 0x700),
-as reported by Petri Hodju:
-https://bugzilla.kernel.org/show_bug.cgi?id=86121
-
-I tried to replicate Petri's observations on my MacBook9,1, which uses
-the same Intel Ivy Bridge + Nvidia GeForce GT 650M architecture, to no
-avail.  On my machine apple-gmux' I/O region remains accessible even
-with the nvidia driver loaded and commit 4eebd5a4e726 reverted.
-Petri reported that apple-gmux becomes accessible again after a
-suspend/resume cycle because the BIOS changed the VGA routing on the
-root port to the Nvidia GPU.  Perhaps this is a BIOS issue after all
-that can be fixed with an update?
-
-In any case, the change made by commit 4eebd5a4e726 has turned out to
-cause two new issues:
-
-* Wilfried Klaebe reports a deadlock when launching Xorg because it
-  opens /dev/vga_arbiter and calls vga_get(), but apple-gmux is holding
-  a lock on I/O space indefinitely.  It looks like apple-gmux' current
-  behavior is an abuse of the vgaarb API as locks are not meant to be
-  held for longer periods:
-  https://bugzilla.kernel.org/show_bug.cgi?id=88861#c11
-  https://bugzilla.kernel.org/attachment.cgi?id=217541
-
-* On dual GPU MacBook Pros introduced since 2013, the integrated GPU is
-  powergated on boot und thus becomes invisible to Linux unless a custom
-  EFI protocol is used to leave it powered on.  (A patch exists but is
-  not in mainline yet due to several negative side effects.)  On these
-  machines, locking I/O to the integrated GPU (as done by 4eebd5a4e726)
-  fails and backlight control is therefore broken:
-  https://bugzilla.kernel.org/show_bug.cgi?id=105051
-
-So let's revert commit 4eebd5a4e726 please.  Users experiencing the
-issue with the proprietary nvidia driver can comment out the above-
-quoted problematic code as a workaround (or try updating the BIOS).
-
-Cc: Petri Hodju <petrihodju@yahoo.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Bruno Prémont <bonbons@linux-vserver.org>
-Cc: Andy Ritger <aritger@nvidia.com>
-Cc: Ronald Tschalär <ronald@innovation.ch>
-Tested-by: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+[dvhart: refactored into smaller functional changes]
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 ---
- drivers/platform/x86/apple-gmux.c | 48 +--------------------------------------
- 1 file changed, 1 insertion(+), 47 deletions(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 623d322447a2..7c4eb86c851e 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -24,7 +24,6 @@
- #include <linux/delay.h>
- #include <linux/pci.h>
- #include <linux/vga_switcheroo.h>
--#include <linux/vgaarb.h>
- #include <acpi/video.h>
- #include <asm/io.h>
- 
-@@ -54,7 +53,6 @@ struct apple_gmux_data {
- 	bool indexed;
- 	struct mutex index_lock;
- 
--	struct pci_dev *pdev;
- 	struct backlight_device *bdev;
- 
- 	/* switcheroo data */
-@@ -599,23 +597,6 @@ static int gmux_resume(struct device *dev)
- 	return 0;
- }
- 
--static struct pci_dev *gmux_get_io_pdev(void)
--{
--	struct pci_dev *pdev = NULL;
--
--	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))) {
--		u16 cmd;
--
--		pci_read_config_word(pdev, PCI_COMMAND, &cmd);
--		if (!(cmd & PCI_COMMAND_IO))
--			continue;
--
--		return pdev;
--	}
--
--	return NULL;
--}
--
- static int is_thunderbolt(struct device *dev, void *data)
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index e55f576..0ccd327 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -187,16 +187,11 @@ static int mlxreg_hotplug_device_create(struct device *dev,
+ 					struct mlxreg_hotplug_device *item)
  {
- 	return to_pci_dev(dev)->is_thunderbolt;
-@@ -631,7 +612,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	int ret = -ENXIO;
- 	acpi_status status;
- 	unsigned long long gpe;
--	struct pci_dev *pdev = NULL;
- 
- 	if (apple_gmux_data)
- 		return -EBUSY;
-@@ -682,7 +662,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 			ver_minor = (version >> 16) & 0xff;
- 			ver_release = (version >> 8) & 0xff;
- 		} else {
--			pr_info("gmux device not present or IO disabled\n");
-+			pr_info("gmux device not present\n");
- 			ret = -ENODEV;
- 			goto err_release;
- 		}
-@@ -690,23 +670,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	pr_info("Found gmux version %d.%d.%d [%s]\n", ver_major, ver_minor,
- 		ver_release, (gmux_data->indexed ? "indexed" : "classic"));
- 
--	/*
--	 * Apple systems with gmux are EFI based and normally don't use
--	 * VGA. In addition changing IO+MEM ownership between IGP and dGPU
--	 * disables IO/MEM used for backlight control on some systems.
--	 * Lock IO+MEM to GPU with active IO to prevent switch.
--	 */
--	pdev = gmux_get_io_pdev();
--	if (pdev && vga_tryget(pdev,
--			       VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM)) {
--		pr_err("IO+MEM vgaarb-locking for PCI:%s failed\n",
--			pci_name(pdev));
--		ret = -EBUSY;
--		goto err_release;
--	} else if (pdev)
--		pr_info("locked IO for PCI:%s\n", pci_name(pdev));
--	gmux_data->pdev = pdev;
--
- 	memset(&props, 0, sizeof(props));
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
-@@ -822,10 +785,6 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- err_notify:
- 	backlight_device_unregister(bdev);
- err_release:
--	if (gmux_data->pdev)
--		vga_put(gmux_data->pdev,
--			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
--	pci_dev_put(pdev);
- 	release_region(gmux_data->iostart, gmux_data->iolen);
- err_free:
- 	kfree(gmux_data);
-@@ -845,11 +804,6 @@ static void gmux_remove(struct pnp_dev *pnp)
- 					   &gmux_notify_handler);
- 	}
- 
--	if (gmux_data->pdev) {
--		vga_put(gmux_data->pdev,
--			VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM);
--		pci_dev_put(gmux_data->pdev);
+ 	item->adapter = i2c_get_adapter(item->bus);
+-	if (!item->adapter) {
+-		dev_err(dev, "Failed to get adapter for bus %d\n",
+-			item->bus);
++	if (!item->adapter)
+ 		return -EFAULT;
 -	}
- 	backlight_device_unregister(gmux_data->bdev);
  
- 	release_region(gmux_data->iostart, gmux_data->iolen);
+ 	item->client = i2c_new_device(item->adapter, &item->brdinfo);
+ 	if (!item->client) {
+-		dev_err(dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
+-			item->brdinfo.type, item->bus, item->brdinfo.addr);
+ 		i2c_put_adapter(item->adapter);
+ 		item->adapter = NULL;
+ 		return -EFAULT;
 -- 
-2.15.1
+2.1.4
