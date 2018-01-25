@@ -1,45 +1,57 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
- changes"
-Date: Thu, 25 Jan 2018 14:38:00 -0800
-Message-ID: <20180125223800.GG24122@fury>
-References: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
+Subject: [PATCH] platform/x86: dell-laptop: Add 2-in-1 devices to the DMI whitelist
+Date: Fri, 26 Jan 2018 01:48:57 +0300
+Message-ID: <20180125224857.3622-1-alexander.n.abrosimov@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:35945 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751204AbeAYWiI (ORCPT
+Received: from mail-lf0-f68.google.com ([209.85.215.68]:35464 "EHLO
+        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751238AbeAYWtn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Jan 2018 17:38:08 -0500
-Content-Disposition: inline
-In-Reply-To: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
+        Thu, 25 Jan 2018 17:49:43 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
 
-On Wed, Jan 24, 2018 at 07:35:45PM +0100, Lukas Wunner wrote:
-> Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
-> changes") amended this driver's ->probe hook to lock decoding of normal
-> (non-legacy) I/O space accesses to the integrated GPU on dual-GPU
-> MacBook Pros.  The lock stays in place until the driver is unbound.
-> 
-...
-> 
-> So let's revert commit 4eebd5a4e726 please.  Users experiencing the
-> issue with the proprietary nvidia driver can comment out the above-
-> quoted problematic code as a workaround (or try updating the BIOS).
-> 
-> Cc: Petri Hodju <petrihodju@yahoo.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Bruno Prémont <bonbons@linux-vserver.org>
-> Cc: Andy Ritger <aritger@nvidia.com>
-> Cc: Ronald Tschalär <ronald@innovation.ch>
+SMBIOS 3.0.0 Specification introduced new Chassis Types field values for
+2-in-1 devices like tablets, convertibles and detachables. Dell's
+Inspiron 2-in-1 and XPS 2-in-1 fall into this category and they have to
+be added to the DMI whitelist, so rfkill and backlight can be controlled
+for them as for other laptops.
 
-I presume we'd like to see this applied to linux-stable as well?
+Signed-off-by: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
+---
+ drivers/platform/x86/dell-laptop.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index cd4725e7e0b5..23fc94d70ea1 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -110,6 +110,24 @@ static const struct dmi_system_id dell_device_table[] __initconst = {
+ 		},
+ 	},
+ 	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "30"), /*Tablet*/
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "31"), /*Convertible*/
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "32"), /*Detachable*/
++		},
++	},
++	{
+ 		.ident = "Dell Computer Corporation",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.13.6
