@@ -1,55 +1,48 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v11 10/12] platform/x86: mlx-platform: Extend register
- map configuration with IO access verification callbacks
-Date: Thu, 25 Jan 2018 14:16:01 -0800
-Message-ID: <20180125221601.GD24122@fury>
+Subject: Re: [patch v11 11/12] platform/mellanox: mlxreg-hotplug: Add check
+ for negative adapter number value
+Date: Thu, 25 Jan 2018 14:16:39 -0800
+Message-ID: <20180125221639.GE24122@fury>
 References: <1516826098-125036-1-git-send-email-vadimp@mellanox.com>
- <1516826098-125036-2-git-send-email-vadimp@mellanox.com>
+ <1516826098-125036-3-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:59591 "EHLO
+Received: from bombadil.infradead.org ([65.50.211.133]:33767 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751174AbeAYWQF (ORCPT
+        with ESMTP id S1751174AbeAYWQm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Jan 2018 17:16:05 -0500
+        Thu, 25 Jan 2018 17:16:42 -0500
 Content-Disposition: inline
-In-Reply-To: <1516826098-125036-2-git-send-email-vadimp@mellanox.com>
+In-Reply-To: <1516826098-125036-3-git-send-email-vadimp@mellanox.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 
-On Wed, Jan 24, 2018 at 08:34:56PM +0000, Vadim Pasternak wrote:
-> Add definitions for hotplug device masks and events offsets.
+On Wed, Jan 24, 2018 at 08:34:57PM +0000, Vadim Pasternak wrote:
+> Verify before creation of hotplug device if the associated adapter number
+> is negative. It could be in case hotplug event is not associated with
+> hotplug device.
 > 
-> Extend register map configuration with the sets of writable, readable and
-> volatile registers to allow verification prior to the access.
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  drivers/platform/mellanox/mlxreg-hotplug.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Extend register map configuration with cache type field: use flat type.
-
-This says "what" you're doing, but not why. The point of the change log is to
-help the reviewer or some future debugger to understand not WHAT you did (we
-have that in the code below) but WHY you did it - keeping in mind that we likely
-haven't spent the time you have to understand what the right thing is to do
-here, so share with us the result of your research.
-
-"Extend register map configuration with cache type field: use flat type, in
-order to XXXXXXXXXX".
-
-Please keep in mind for future patches.
-
-...
-
-> +
->  static int
->  mlxplat_mlxcpld_reg_read(void *context, unsigned int reg, unsigned int *val)
+> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+> index b891ec7..c806451 100644
+> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
+> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+> @@ -95,6 +95,14 @@ struct mlxreg_hotplug_priv_data {
+>  
+>  static int mlxreg_hotplug_device_create(struct mlxreg_core_data *data)
 >  {
-> @@ -317,6 +384,10 @@ static const struct regmap_config mlxplat_mlxcpld_regmap_config = {
->  	.reg_bits = 8,
->  	.val_bits = 8,
->  	.max_register = 255,
-> +	.cache_type = REGCACHE_FLAT,
+> +	/*
+> +	 * Return if adapter number is negative. Return if adapter number is
+> +	 * negative. It could be in case hotplug event is not associated with
+
+First sentence repeated twice. I've corrected this.
 
 -- 
 Darren Hart
