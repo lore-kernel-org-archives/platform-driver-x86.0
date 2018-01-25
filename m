@@ -1,83 +1,43 @@
-From: Jason Gerecke <killertofu@gmail.com>
-Subject: Re: [PATCH v2 3/5] Input: add KEY_ROTATE_LOCK_TOGGLE
-Date: Thu, 25 Jan 2018 08:23:56 -0800
-Message-ID: <CANRwn3R_SKzJyH3pNCpuzp+4--ebzG5VRCh9YEtj+F3VUJ1xew@mail.gmail.com>
-References: <20171109224436.16472-1-stefan.bruens@rwth-aachen.de>
- <8ebdb255-b0b5-4de2-a680-e7f6713256d0@rwthex-w2-a.rwth-ad.de>
- <1510270493.2624.49.camel@hadess.net> <2845999.tyV6EiPLrg@sbruens-linux> <CANRwn3SzMUvNoBjp2X1jtN9XaQ98RxCCZ86Hu4sPQygTORqjKg@mail.gmail.com>
+From: Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
+Subject: Re: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
+ changes"
+Date: Thu, 25 Jan 2018 21:10:48 +0100
+Message-ID: <20180125201048.x3tr3xpovo5tzduz@chaos.in-kiel.de>
+References: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f52.google.com ([209.85.213.52]:33448 "EHLO
-        mail-vk0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750980AbeAYQX6 (ORCPT
+Received: from mx01.toppoint.de ([217.70.197.24]:38085 "EHLO mx01.toppoint.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751170AbeAYUUY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Jan 2018 11:23:58 -0500
-In-Reply-To: <CANRwn3SzMUvNoBjp2X1jtN9XaQ98RxCCZ86Hu4sPQygTORqjKg@mail.gmail.com>
+        Thu, 25 Jan 2018 15:20:24 -0500
+Content-Disposition: inline
+In-Reply-To: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?QnLDvG5zLCBTdGVmYW4=?= <Stefan.Bruens@rwth-aachen.de>, Alex Hung <alex.hung@canonical.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Bastien Nocera <hadess@hadess.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Lukas Wunner <lukas@wunner.de>
 
-Any movement on this? Are we just waiting on an ACK/NAK from Dmitry?
+On Wed, Jan 24, 2018 at 07:35:45PM +0100, Lukas Wunner wrote:
+> * Wilfried Klaebe reports a deadlock when launching Xorg because it
+>   opens /dev/vga_arbiter and calls vga_get(), but apple-gmux is holding
+>   a lock on I/O space indefinitely.  It looks like apple-gmux' current
+>   behavior is an abuse of the vgaarb API as locks are not meant to be
+>   held for longer periods:
+>   https://bugzilla.kernel.org/show_bug.cgi?id=88861#c11
+>   https://bugzilla.kernel.org/attachment.cgi?id=217541
 
-Jason
----
-Now instead of four in the eights place /
-you=E2=80=99ve got three, =E2=80=98Cause you added one  /
-(That is to say, eight) to the two,     /
-But you can=E2=80=99t take seven from three,    /
-So you look at the sixty-fours....
+I can confirm that every kernel including 4eebd5a4e726 that I tried
+needed that commit reverted. Currently I run 4.15-rc9 and 4.14.14
+(without 4eebd5a4e726, of course). Somewhere inbetween, using "git
+revert 4eebd5a4e726" started acting up and I needed to work on it
+manually, but the diff I currently apply is identical to what Lukas
+submitted. 
 
+I see warnings about possible circular locking regarding vgasr_mutex,
+but haven't had a deadlock yet. I'd be happy to provide more information
+as timely as job and family allow.
 
-On Tue, Dec 5, 2017 at 10:50 AM, Jason Gerecke <killertofu@gmail.com> wrote=
-:
-> Looks like this might also be needed for the MobileStudio Pro...
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D197991
->
-> Jason
-> ---
-> Now instead of four in the eights place /
-> you=E2=80=99ve got three, =E2=80=98Cause you added one  /
-> (That is to say, eight) to the two,     /
-> But you can=E2=80=99t take seven from three,    /
-> So you look at the sixty-fours....
->
->
->
-> On Thu, Nov 30, 2017 at 9:51 AM, Br=C3=BCns, Stefan
-> <Stefan.Bruens@rwth-aachen.de> wrote:
->> On Freitag, 10. November 2017 00:34:53 CET Bastien Nocera wrote:
->>> On Thu, 2017-11-09 at 23:44 +0100, Stefan Br=C3=BCns wrote:
->>> > The key has the same use as the SW_ROTATE_LOCK, but is used on
->>> > devices
->>> > where the state is not tracked by the hardware but has to be handled
->>> > in software.
->>>
->>> I'll let the input and hid subsystem maintainers have the final say
->>> here, though I think that sending out Win+O would be easier, as this is
->>> already something that desktops need to support for those devices that
->>> send the actual Win+O key combination when those buttons are pressed
->>> there.
->>>
->>> If we're going with the separate keycode, could you also file bugs
->>> against xkbd-common and xkeyboard-config to get the key added to the
->>> list of XF86 keysyms and to the default evdev keymap? Otherwise Wayland
->>> and X11 based desktops won't be able to use it.
->>
->> Filed for xkeyboard-config:
->> https://bugs.freedesktop.org/show_bug.cgi?id=3D103998
->>
->> and xkb-common:
->> https://github.com/xkbcommon/libxkbcommon/issues/55
->>
->> Regards,
->>
->> Stefan
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-input" i=
-n
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Wilfried
