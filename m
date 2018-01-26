@@ -1,117 +1,160 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remove
- redundant dev_err messages on device_create
-Date: Fri, 26 Jan 2018 16:59:32 +0000
-Message-ID: <AM4PR05MB33307B7EE13E93C681171C94A2E00@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1516826019-124903-1-git-send-email-vadimp@mellanox.com>
- <20180125214643.GB24122@fury>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH 09/11] platform/x86: mlx-platform: Extend register map configuration with IO access verification callbacks
+Date: Fri, 26 Jan 2018 19:03:44 +0000
+Message-ID: <1516993426-11384-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:32615
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751112AbeAZQ7f (ORCPT
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:60130 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1751374AbeAZRHS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Jan 2018 11:59:35 -0500
-In-Reply-To: <20180125214643.GB24122@fury>
-Content-Language: en-US
+        Fri, 26 Jan 2018 12:07:18 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
+Add definitions for hotplug device masks and events offsets, in order to
+specify explicitly all hardware registers allowed for IO operations for
+all the drivers sharing register map with mlx-platform.
 
+Extend register map configuration with the sets of writable, readable and
+volatile registers to allow verification prior to the access. It prevents
+unexpected access to hardware registers by the drivers, sharing register
+map with mlx-platform.
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Thursday, January 25, 2018 11:47 PM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
-i.us
-> Subject: Re: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remo=
-ve
-> redundant dev_err messages on device_create
->=20
-> On Wed, Jan 24, 2018 at 08:33:37PM +0000, Vadim Pasternak wrote:
-> > The upper layer will manage and report errors returned by the create
-> > and destroy functions.
-> >
-> > FIXME: but it doesn't - we don't even check
->=20
-> I think we agreed to just drop this patch entirely, since this error is n=
-ot checked
-> elsewhere? Keeping the dev_err messages?
->=20
+Extend register map configuration with cache type field in order to have
+ability to cache hardware register value, where possible. Use simple flat
+array type for register lookups, which is most suitable in case when the
+number of the registers is not too large.
 
-Yes, we'll keep it.
-We just had conflict in patch order and I wanted to fix it, staying as much=
- as
-possible aligned with the top of mellanox v10 branch.
+Add at the end of probing routine calls to regcache_mark_dirty and
+regcache_sync in order to sync register cache with hardware values. The
+first routine indicate that hardware registers value required sync, the
+second performs sync.
 
-However currently we still  have a problem in mellanox v11 after patch
-platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface
-It dropped parameter device  in mlxreg_hotplug_device_create, which is
-Used inside the routine.
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+---
+v11->v12
+  Comments pointed out by Darren:
+  - add explanations in commit message;
+  Fixes added by Vadim:
+  - add register cache synchronization at the end of mlx-platform probing;
+---
+ drivers/platform/x86/mlx-platform.c | 77 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-I'll send a separate patch to fix it from top of v11. In other case it'll b=
-e
-necessary to fix Modify to use a regmap interface  and re-send all from=20
-5-th patch in series.
-
-Also we  should drop the patch:
-platform/x86: mlx-platform: Simplify IO access to regmap context
-It introduced the issue reported by sparse.
-
-I am resending two last patches from review-dvhart-mellanox-v11 branch
-and also patch with fix for mlxreg_hotplug_device_create, as:
-0010-platform-x86-mlx-platform-Extend-register-map-config.patch
-0011-platform-mellanox-mlxreg-hotplug-Add-check-for-negat.patch
-0012-platform-mellanox-mlxreg-hotplug-Fix-issue-of-commit.patch
-
-Thank you very much for your help,
-Vadim.
-
-> >
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > [dvhart: refactored into smaller functional changes]
-> > Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> > ---
-> >  drivers/platform/mellanox/mlxreg-hotplug.c | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c
-> > b/drivers/platform/mellanox/mlxreg-hotplug.c
-> > index e55f576..0ccd327 100644
-> > --- a/drivers/platform/mellanox/mlxreg-hotplug.c
-> > +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-> > @@ -187,16 +187,11 @@ static int mlxreg_hotplug_device_create(struct
-> device *dev,
-> >  					struct mlxreg_hotplug_device *item)  {
-> >  	item->adapter =3D i2c_get_adapter(item->bus);
-> > -	if (!item->adapter) {
-> > -		dev_err(dev, "Failed to get adapter for bus %d\n",
-> > -			item->bus);
-> > +	if (!item->adapter)
-> >  		return -EFAULT;
-> > -	}
-> >
-> >  	item->client =3D i2c_new_device(item->adapter, &item->brdinfo);
-> >  	if (!item->client) {
-> > -		dev_err(dev, "Failed to create client %s at bus %d at addr
-> 0x%02x\n",
-> > -			item->brdinfo.type, item->bus, item->brdinfo.addr);
-> >  		i2c_put_adapter(item->adapter);
-> >  		item->adapter =3D NULL;
-> >  		return -EFAULT;
-> > --
-> > 2.1.4
-> >
-> >
->=20
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index fa27ca8..2d34aa8 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -48,9 +48,18 @@
+ #define MLXPLAT_CPLD_LPC_I2C_BASE_ADRR		0x2000
+ #define MLXPLAT_CPLD_LPC_REG_BASE_ADRR		0x2500
+ #define MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET	0x3a
++#define MLXPLAT_CPLD_LPC_REG_AGGR_MASK_OFFSET	0x3b
++#define MLXPLAT_CPLD_LPC_REG_AGGRLO_OFFSET	0x40
++#define MLXPLAT_CPLD_LPC_REG_AGGRLO_MASK_OFFSET	0x41
+ #define MLXPLAT_CPLD_LPC_REG_PSU_OFFSET		0x58
++#define MLXPLAT_CPLD_LPC_REG_PSU_EVENT_OFFSET	0x59
++#define MLXPLAT_CPLD_LPC_REG_PSU_MASK_OFFSET	0x5a
+ #define MLXPLAT_CPLD_LPC_REG_PWR_OFFSET		0x64
++#define MLXPLAT_CPLD_LPC_REG_PWR_EVENT_OFFSET	0x65
++#define MLXPLAT_CPLD_LPC_REG_PWR_MASK_OFFSET	0x66
+ #define MLXPLAT_CPLD_LPC_REG_FAN_OFFSET		0x88
++#define MLXPLAT_CPLD_LPC_REG_FAN_EVENT_OFFSET	0x89
++#define MLXPLAT_CPLD_LPC_REG_FAN_MASK_OFFSET	0x8a
+ #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
+ #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
+ #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
+@@ -299,6 +308,64 @@ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn21xx_data = {
+ 	.mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
+ };
+ 
++static bool mlxplat_mlxcpld_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case MLXPLAT_CPLD_LPC_REG_AGGR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGRLO_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_MASK_OFFSET:
++		return true;
++	}
++	return false;
++}
++
++static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGRLO_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGRLO_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_MASK_OFFSET:
++		return true;
++	}
++	return false;
++}
++
++static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGRLO_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_AGGRLO_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PSU_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_PWR_MASK_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_EVENT_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_FAN_MASK_OFFSET:
++		return true;
++	}
++	return false;
++}
++
+ struct mlxplat_mlxcpld_regmap_context {
+ 	void __iomem *base;
+ };
+@@ -327,6 +394,10 @@ static const struct regmap_config mlxplat_mlxcpld_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+ 	.max_register = 255,
++	.cache_type = REGCACHE_FLAT,
++	.writeable_reg = mlxplat_mlxcpld_writeable_reg,
++	.readable_reg = mlxplat_mlxcpld_readable_reg,
++	.volatile_reg = mlxplat_mlxcpld_volatile_reg,
+ 	.reg_read = mlxplat_mlxcpld_reg_read,
+ 	.reg_write = mlxplat_mlxcpld_reg_write,
+ };
+@@ -473,6 +544,12 @@ static int __init mlxplat_init(void)
+ 		goto fail_platform_mux_register;
+ 	}
+ 
++	/* Sync registers with hardware. */
++	regcache_mark_dirty(mlxplat_hotplug->regmap);
++	err = regcache_sync(mlxplat_hotplug->regmap);
++	if (err)
++		goto fail_platform_mux_register;
++
+ 	return 0;
+ 
+ fail_platform_mux_register:
+-- 
+2.1.4
