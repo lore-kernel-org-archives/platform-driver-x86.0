@@ -1,71 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [Patch v1 0/8] platform/x86: intel_pmc_core: Add CFL/CNL Support
-Date: Fri, 26 Jan 2018 14:45:39 +0200
-Message-ID: <CAHp75VcG4gh8GWjeAiqPt2xx2R0xfijbqksAZMzpEt42s=LhUQ@mail.gmail.com>
-References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-laptop: Add 2-in-1 devices to the DMI
+ whitelist
+Date: Fri, 26 Jan 2018 14:42:19 +0000
+Message-ID: <d72f1065c98d4073b3f112cf8538f508@ausx13mpc120.AMER.DELL.COM>
+References: <20180125224857.3622-1-alexander.n.abrosimov@gmail.com>
+ <20180125230239.GA3736@fury> <20180125230615.akr2nvmmrqzfo53q@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:64980 "EHLO
+        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1753251AbeAZOx1 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 26 Jan 2018 09:53:27 -0500
+In-Reply-To: <20180125230615.akr2nvmmrqzfo53q@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com, dvhart@infradead.org
+Cc: alexander.n.abrosimov@gmail.com, mjg59@srcf.ucam.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Jan 19, 2018 at 10:58 AM, Rajneesh Bhardwaj
-<rajneesh.bhardwaj@intel.com> wrote:
-> This series is the successor to
-> https://www.spinics.net/lists/platform-driver-x86/msg14524.html and adds
-> support for Intel Coffeelake and Cannonlake SoCs.
->
-> This also presents an alternative to https://lkml.org/lkml/2017/11/17/876
-> and introduces Cannonlake SoC to intel-family.h
->
-> The following patches,
->
->  '0003-ACPI-LPIT-Export-lpit_read_residency_count_address.patch' and
->  '0006-x86-cpu-Add-Cannonlake-to-Intel-family.patch'
->
-> do not belong to platform-drivers-x86 subsystem but the other patches in the
-> series depend on them so, requesting the respective MAINTAINERS for their
-> review and ACK so that these two patches can also go through the
-> platform-drivers-x86 subsystem.
-
-I have applied 1,2, and 5 to my review and testing queue, thanks!
-
-P.S. Please, rebase and sent new version when patches  3 and 6 will get ACKa
-
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
->
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
->
-> Tested on Coffeelake, Cannonlake and Kabylake with 4.15-rc8 kernel.
->
-> Rajneesh Bhardwaj (5):
->   platform/x86: intel_pmc_core: Refactor debugfs entries
->   platform/x86: intel_pmc_core: Convert to ICPU macro
->   x86/cpu: Add Cannonlake to Intel family
->   platform/x86: intel_pmc_core: Add CannonLake PCH support
->   platform/x86: intel_pmc_core: Special case for Coffeelake
->
-> Srinivas Pandruvada (3):
->   platform/x86: intel_pmc_core: Substitute PCI with CPUID enumeration
->   ACPI / LPIT: Export lpit_read_residency_count_address()
->   platform/x86: intel_pmc_core: Read base address from LPIT
->
->  arch/x86/include/asm/intel-family.h   |   6 +
->  drivers/acpi/acpi_lpit.c              |   1 +
->  drivers/platform/x86/intel_pmc_core.c | 242 +++++++++++++++++++++-------------
->  drivers/platform/x86/intel_pmc_core.h |  14 +-
->  4 files changed, 174 insertions(+), 89 deletions(-)
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSmFudWFyeSAyNSwgMjAx
+OCA1OjA2IFBNDQo+IFRvOiBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+DQo+IENj
+OiBBbGV4YW5kZXIgQWJyb3NpbW92IDxhbGV4YW5kZXIubi5hYnJvc2ltb3ZAZ21haWwuY29tPjsg
+TWF0dGhldyBHYXJyZXR0DQo+IDxtamc1OUBzcmNmLnVjYW0ub3JnPjsgTGltb25jaWVsbG8sIE1h
+cmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IEFuZHkNCj4gU2hldmNoZW5rbyA8YW5k
+eUBpbmZyYWRlYWQub3JnPjsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBs
+YXRmb3JtL3g4NjogZGVsbC1sYXB0b3A6IEFkZCAyLWluLTEgZGV2aWNlcyB0byB0aGUgRE1JDQo+
+IHdoaXRlbGlzdA0KPiANCj4gT24gVGh1cnNkYXkgMjUgSmFudWFyeSAyMDE4IDE1OjAyOjM5IERh
+cnJlbiBIYXJ0IHdyb3RlOg0KPiA+IE9uIEZyaSwgSmFuIDI2LCAyMDE4IGF0IDAxOjQ4OjU3QU0g
+KzAzMDAsIEFsZXhhbmRlciBBYnJvc2ltb3Ygd3JvdGU6DQo+ID4gPiBTTUJJT1MgMy4wLjAgU3Bl
+Y2lmaWNhdGlvbiBpbnRyb2R1Y2VkIG5ldyBDaGFzc2lzIFR5cGVzIGZpZWxkIHZhbHVlcyBmb3IN
+Cj4gPiA+IDItaW4tMSBkZXZpY2VzIGxpa2UgdGFibGV0cywgY29udmVydGlibGVzIGFuZCBkZXRh
+Y2hhYmxlcy4gRGVsbCdzDQo+ID4gPiBJbnNwaXJvbiAyLWluLTEgYW5kIFhQUyAyLWluLTEgZmFs
+bCBpbnRvIHRoaXMgY2F0ZWdvcnkgYW5kIHRoZXkgaGF2ZSB0bw0KPiA+ID4gYmUgYWRkZWQgdG8g
+dGhlIERNSSB3aGl0ZWxpc3QsIHNvIHJma2lsbCBhbmQgYmFja2xpZ2h0IGNhbiBiZSBjb250cm9s
+bGVkDQo+ID4gPiBmb3IgdGhlbSBhcyBmb3Igb3RoZXIgbGFwdG9wcy4NCj4gPiA+DQo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgQWJyb3NpbW92IDxhbGV4YW5kZXIubi5hYnJvc2ltb3ZA
+Z21haWwuY29tPg0KPiA+DQo+ID4gVGhhbmtzIEFsZXhhbmRlci4gTG9va3MgZ29vZCAtIGp1c3Qg
+Z29pbmcgdG8gZ2l2ZSBQYWxpIGFuZCArTWFyaW8gYSBjaGFuY2UgdG8NCj4gPiByZXNwb25kIGJl
+Zm9yZSBtZXJnaW5nLi4uDQo+IA0KPiBJIGhhdmUgbm8gY29tbWVudHMgZm9yIHRoaXMuIFRoaXMg
+c2hvdWxkIGJlIGNvbmZpcm1lZCBieSBNYXJpbyBvcg0KPiBzb21lYm9keSBlbHNlIGZyb20gRGVs
+bCwgd2hpY2ggRE1JIG5hbWVzIGFyZSB1c2VkIGZvciBhIG5ldyBwcm9kdWN0cy4NCg0KWWVzIHRo
+ZXNlIGNoYXNzaXMgdHlwZXMgZnJvbSBTTUJJT1MgMy4wIGFyZSBjb3ZlcmVkIGJ5IERlbGwgc3Bl
+Y3MgYW5kIHVzZWQgZm9yIA0Kc29tZSBwcm9kdWN0cy4NCg0KVGhpcyBwYXRjaCBsb29rcyBnb29k
+IHRvIG1lLg0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2ll
+bGxvQGRlbGwuY29tPg0KPiANCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2
+L2RlbGwtbGFwdG9wLmMgfCAxOCArKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMTggaW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC0N
+Cj4gbGFwdG9wLmMNCj4gPiA+IGluZGV4IGNkNDcyNWU3ZTBiNS4uMjNmYzk0ZDcwZWExIDEwMDY0
+NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYw0KPiA+ID4g
+KysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYw0KPiA+ID4gQEAgLTExMCw2
+ICsxMTAsMjQgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkbWlfc3lzdGVtX2lkIGRlbGxfZGV2aWNl
+X3RhYmxlW10NCj4gX19pbml0Y29uc3QgPSB7DQo+ID4gPiAgCQl9LA0KPiA+ID4gIAl9LA0KPiA+
+ID4gIAl7DQo+ID4gPiArCQkubWF0Y2hlcyA9IHsNCj4gPiA+ICsJCQlETUlfTUFUQ0goRE1JX1NZ
+U19WRU5ET1IsICJEZWxsIEluYy4iKSwNCj4gPiA+ICsJCQlETUlfTUFUQ0goRE1JX0NIQVNTSVNf
+VFlQRSwgIjMwIiksIC8qVGFibGV0Ki8NCj4gPiA+ICsJCX0sDQo+ID4gPiArCX0sDQo+ID4gPiAr
+CXsNCj4gPiA+ICsJCS5tYXRjaGVzID0gew0KPiA+ID4gKwkJCURNSV9NQVRDSChETUlfU1lTX1ZF
+TkRPUiwgIkRlbGwgSW5jLiIpLA0KPiA+ID4gKwkJCURNSV9NQVRDSChETUlfQ0hBU1NJU19UWVBF
+LCAiMzEiKSwgLypDb252ZXJ0aWJsZSovDQo+ID4gPiArCQl9LA0KPiA+ID4gKwl9LA0KPiA+ID4g
+Kwl7DQo+ID4gPiArCQkubWF0Y2hlcyA9IHsNCj4gPiA+ICsJCQlETUlfTUFUQ0goRE1JX1NZU19W
+RU5ET1IsICJEZWxsIEluYy4iKSwNCj4gPiA+ICsJCQlETUlfTUFUQ0goRE1JX0NIQVNTSVNfVFlQ
+RSwgIjMyIiksIC8qRGV0YWNoYWJsZSovDQo+ID4gPiArCQl9LA0KPiA+ID4gKwl9LA0KPiA+ID4g
+Kwl7DQo+ID4gPiAgCQkuaWRlbnQgPSAiRGVsbCBDb21wdXRlciBDb3Jwb3JhdGlvbiIsDQo+ID4g
+PiAgCQkubWF0Y2hlcyA9IHsNCj4gPiA+ICAJCQlETUlfTUFUQ0goRE1JX1NZU19WRU5ET1IsICJE
+ZWxsIENvbXB1dGVyDQo+IENvcnBvcmF0aW9uIiksDQo+ID4gPiAtLQ0KPiA+ID4gMi4xMy42DQo+
+ID4gPg0KPiA+ID4NCj4gPg0KPiANCj4gLS0NCj4gUGFsaSBSb2jDoXINCj4gcGFsaS5yb2hhckBn
+bWFpbC5jb20NCg==
