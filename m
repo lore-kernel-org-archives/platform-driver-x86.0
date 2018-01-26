@@ -1,75 +1,56 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v5] Support intel-vbtn based tablet mode switch
-Date: Fri, 26 Jan 2018 15:01:22 +0000
-Message-ID: <1207f9b5b67f404c8a273ad0db661c73@ausx13mpc120.AMER.DELL.COM>
-References: <1516965688-9286-1-git-send-email-notmart@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: GPD pocket fan: Stop work on suspend
+Date: Fri, 26 Jan 2018 17:29:41 +0200
+Message-ID: <CAHp75VfOE+L3V9qCsGqjeXPYJqSX0YrEhxNddXTwSoVWGZ0qGQ@mail.gmail.com>
+References: <20180119204709.16240-1-hdegoede@redhat.com> <20180119204709.16240-3-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516965688-9286-1-git-send-email-notmart@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: notmart@gmail.com, linux-kernel@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f195.google.com ([209.85.216.195]:44910 "EHLO
+        mail-qt0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751607AbeAZP3n (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 26 Jan 2018 10:29:43 -0500
+In-Reply-To: <20180119204709.16240-3-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE1hcmNvIE1hcnRpbg0KPiBTZW50OiBG
-cmlkYXksIEphbnVhcnkgMjYsIDIwMTggNToyMSBBTQ0KPiBUbzogbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZw0KPiBDYzogbWpnNTlAc3JjZi51Y2FtLm9yZzsgcGFsaS5yb2hhckBnbWFpbC5j
-b207IGR2aGFydEBpbmZyYWRlYWQub3JnOw0KPiBhbmR5QGluZnJhZGVhZC5vcmc7IGJodXNoOTRA
-Z21haWwuY29tOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gTGltb25j
-aWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IE1hcmNvIE1hcnRpbg0K
-PiA8bm90bWFydEBnbWFpbC5jb20+OyBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2ll
-bGxvQERlbGwuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjVdIFN1cHBvcnQgaW50ZWwtdmJ0biBi
-YXNlZCB0YWJsZXQgbW9kZSBzd2l0Y2gNCj4gDQo+IFNvbWUgbGFwdG9wcyBzdWNoIGFzIERlbGwg
-SW5zcGlyb24gNzAwMCBzZXJpZXMgaGF2ZSB0aGUNCj4gdGFibGV0IG1vZGUgc3dpdGNoIGltcGxl
-bWVudGVkIGluIEludGVsIEFDUEksDQo+IHRoZSBldmVudHMgdG8gZW50ZXIgYW5kIGV4aXQgdGhl
-IHRhYmxldCBtb2RlIGFyZSAweENDIGFuZCAweENEDQo+IA0KPiBDQzogcGxhdGZvcm0tZHJpdmVy
-LXg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gQ0M6IE1hdHRoZXcgR2FycmV0dCA8bWpnNTlAc3JjZi51
-Y2FtLm9yZz4NCj4gQ0M6ICJQYWxpIFJvaMOhciIgPHBhbGkucm9oYXJAZ21haWwuY29tPg0KPiBD
-QzogRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPg0KPiBDQzogTWFyaW8gTGltb25j
-aWVsbG8gPG1hcmlvX2xpbW9uY2llbGxvQGRlbGwuY29tPg0KPiBDQzogQW5keSBTaGV2Y2hlbmtv
-IDxhbmR5QGluZnJhZGVhZC5vcmc+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXJjbyBNYXJ0aW4g
-PG5vdG1hcnRAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVs
-LXZidG4uYyB8IDIwICsrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjAg
-aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2lu
-dGVsLXZidG4uYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYw0KPiBpbmRleCA1
-OGM1ZmYzLi4zNzY1YzQxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRl
-bC12YnRuLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jDQo+IEBA
-IC0yNiw2ICsyNiw5IEBADQo+ICAjaW5jbHVkZSA8bGludXgvc3VzcGVuZC5oPg0KPiAgI2luY2x1
-ZGUgPGFjcGkvYWNwaV9idXMuaD4NCj4gDQo+ICsvKiBXaGVuIE5PVCBpbiB0YWJsZXQgbW9kZSwg
-VkdCUyByZXR1cm5zIHdpdGggdGhlIGZsYWcgMHg0MCAqLw0KPiArI2RlZmluZSBUQUJMRVRfTU9E
-RV9GTEFHIDB4NDANCj4gKw0KPiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiAgTU9EVUxFX0FV
-VEhPUigiQWNlTGFuIEthbyIpOw0KPiANCj4gQEAgLTQyLDYgKzQ1LDggQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBrZXlfZW50cnkgaW50ZWxfdmJ0bl9rZXltYXBbXSA9IHsNCj4gIAl7IEtFX0lHTk9S
-RSwgMHhDNSwgeyBLRVlfVk9MVU1FVVAgfSB9LAkJLyogdm9sdW1lLXVwIGtleQ0KPiByZWxlYXNl
-ICovDQo+ICAJeyBLRV9LRVksIDB4QzYsIHsgS0VZX1ZPTFVNRURPV04gfSB9LAkJLyogdm9sdW1l
-LWRvd24NCj4ga2V5IHByZXNzICovDQo+ICAJeyBLRV9JR05PUkUsIDB4QzcsIHsgS0VZX1ZPTFVN
-RURPV04gfSB9LAkvKiB2b2x1bWUtZG93biBrZXkNCj4gcmVsZWFzZSAqLw0KPiArCXsgS0VfU1cs
-ICAweENDLCB7IC5zdyA9IHsgU1dfVEFCTEVUX01PREUsIDEgfSB9IH0sIC8qIFRhYmxldCBtb2Rl
-IGluICovDQo+ICsJeyBLRV9TVywgIDB4Q0QsIHsgLnN3ID0geyBTV19UQUJMRVRfTU9ERSwgMCB9
-IH0gfSwgLyogVGFibGV0IG1vZGUgb3V0ICovDQo+ICAJeyBLRV9FTkQgfSwNCj4gIH07DQo+IA0K
-PiBAQCAtODgsNiArOTMsNyBAQCBzdGF0aWMgdm9pZCBub3RpZnlfaGFuZGxlcihhY3BpX2hhbmRs
-ZSBoYW5kbGUsIHUzMiBldmVudCwNCj4gdm9pZCAqY29udGV4dCkNCj4gDQo+ICBzdGF0aWMgaW50
-IGludGVsX3ZidG5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2aWNlKQ0KPiAgew0K
-PiArCXN0cnVjdCBhY3BpX2J1ZmZlciB2Z2JzX291dHB1dCA9IHsgQUNQSV9BTExPQ0FURV9CVUZG
-RVIsIE5VTEwgfTsNCj4gIAlhY3BpX2hhbmRsZSBoYW5kbGUgPSBBQ1BJX0hBTkRMRSgmZGV2aWNl
-LT5kZXYpOw0KPiAgCXN0cnVjdCBpbnRlbF92YnRuX3ByaXYgKnByaXY7DQo+ICAJYWNwaV9zdGF0
-dXMgc3RhdHVzOw0KPiBAQCAtMTEwLDYgKzExNiwyMCBAQCBzdGF0aWMgaW50IGludGVsX3ZidG5f
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqZGV2aWNlKQ0KPiAgCQlyZXR1cm4gZXJy
-Ow0KPiAgCX0NCj4gDQo+ICsJc3RhdHVzID0gYWNwaV9ldmFsdWF0ZV9vYmplY3QoaGFuZGxlLCAi
-VkdCUyIsIE5VTEwsICZ2Z2JzX291dHB1dCk7DQo+ICsJLyogVkdCUyBiZWluZyBwcmVzZW50IGFu
-ZCByZXR1cm5pbmcgc29tZXRoaW5nIG1lYW5zDQo+ICsJICogd2UgaGF2ZSBhIHRhYmxldCBtb2Rl
-IHN3aXRjaA0KPiArCSAqLw0KPiArCWlmIChBQ1BJX1NVQ0NFU1Moc3RhdHVzKSkgew0KPiArCQl1
-bmlvbiBhY3BpX29iamVjdCAqb2JqID0gdmdic19vdXRwdXQucG9pbnRlcjsNCj4gKw0KPiArCQlp
-ZiAob2JqICYmIG9iai0+dHlwZSA9PSBBQ1BJX1RZUEVfSU5URUdFUikgew0KPiArCQkJaW5wdXRf
-cmVwb3J0X3N3aXRjaChwcml2LT5pbnB1dF9kZXYsDQo+ICsNCj4gCVNXX1RBQkxFVF9NT0RFLA0K
-PiArCQkJCQkJCQkhKG9iai0NCj4gPmludGVnZXIudmFsdWUgJiBUQUJMRVRfTU9ERV9GTEFHKSk7
-DQo+ICsJCX0NCj4gKwl9DQo+ICsNCj4gIAlzdGF0dXMgPSBhY3BpX2luc3RhbGxfbm90aWZ5X2hh
-bmRsZXIoaGFuZGxlLA0KPiAgCQkJCQkgICAgIEFDUElfREVWSUNFX05PVElGWSwNCj4gIAkJCQkJ
-ICAgICBub3RpZnlfaGFuZGxlciwNCj4gLS0NCj4gMi43LjQNCg0KTG9va3MgZ29vZCB0byBtZSBu
-b3cuDQoNClJldmlld2VkLWJ5OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9A
-ZGVsbC5jb20+DQo=
+On Fri, Jan 19, 2018 at 10:47 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Stop the work on suspend, otherwise it may run between our suspend method
+> running and the system suspending, possibly restarting the fan which
+> we've just stopped.
+>
+> Note we already requeue the work on resume, so that we get a fresh speed
+> at resume.
+
+All three pushed to my reviewing and testing queue, thanks!
+
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/gpd-pocket-fan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
+> index f7b4980c0aa6..6425c9b49caa 100644
+> --- a/drivers/platform/x86/gpd-pocket-fan.c
+> +++ b/drivers/platform/x86/gpd-pocket-fan.c
+> @@ -177,6 +177,7 @@ static int gpd_pocket_fan_suspend(struct device *dev)
+>  {
+>         struct gpd_pocket_fan_data *fan = dev_get_drvdata(dev);
+>
+> +       cancel_delayed_work_sync(&fan->work);
+>         gpd_pocket_fan_set_speed(fan, gpd_pocket_fan_min_speed());
+>         return 0;
+>  }
+> --
+> 2.14.3
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
