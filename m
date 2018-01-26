@@ -1,34 +1,65 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] HID: asus: only support backlight when it's not driven by WMI
-Date: Fri, 26 Jan 2018 11:47:07 +0200
-Message-ID: <CAHp75VeFXx91TkNqPJSGwqFOcj-c7etAxxvFhDUqfS3Ws7F-cQ@mail.gmail.com>
-References: <20180109012042.13947-1-drake@endlessm.com> <CAHp75Veyrzh+gV_8ff7TRqWpVx4h+2Qg05j9OpNXCH+E1+hsQg@mail.gmail.com>
- <CAD8Lp46gbny3mV2CgWnrJnEpZpNo-P-GgKA5-DypykbmGoUhQg@mail.gmail.com>
- <CAHp75Vc962G3rufA_D1GY=Giy7u0vri4_vQnFPYCxZ_w6N_2GQ@mail.gmail.com>
- <CAMz_NCr-3taeHeZ3NF2LYXrMGf25gWgL+dzdO=Ca=Bxug2EbCw@mail.gmail.com> <CAD8Lp476c1stJOScWBuX2ZsNrORKVYnUJL1UnwCp6hQOzXASvw@mail.gmail.com>
+Subject: Re: [Patch v1 3/8] ACPI / LPIT: Export lpit_read_residency_count_address()
+Date: Fri, 26 Jan 2018 11:48:39 +0200
+Message-ID: <CAHp75VezHm3h5WRsm8ep=179qwCz=gep0hbUAcT3+qbH=_8dXQ@mail.gmail.com>
+References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com> <1516352307-20123-4-git-send-email-rajneesh.bhardwaj@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f182.google.com ([209.85.216.182]:43757 "EHLO
-        mail-qt0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753043AbeAZJrJ (ORCPT
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:39684 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752654AbeAZJsk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Jan 2018 04:47:09 -0500
-In-Reply-To: <CAD8Lp476c1stJOScWBuX2ZsNrORKVYnUJL1UnwCp6hQOzXASvw@mail.gmail.com>
+        Fri, 26 Jan 2018 04:48:40 -0500
+In-Reply-To: <1516352307-20123-4-git-send-email-rajneesh.bhardwaj@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Drake <drake@endlessm.com>
-Cc: Mustafa Kuscu <mustafakuscu@gmail.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-input <linux-input@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Carlo Caione <carlo@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 
-On Mon, Jan 15, 2018 at 10:33 PM, Daniel Drake <drake@endlessm.com> wrote:
-> On Fri, Jan 12, 2018 at 1:33 PM, Mustafa Kuscu <mustafakuscu@gmail.com> wrote:
+On Fri, Jan 19, 2018 at 10:58 AM, Rajneesh Bhardwaj
+<rajneesh.bhardwaj@intel.com> wrote:
+> From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>
+> Export lpit_read_residency_count_address(), so that it can be used from
+> drivers built as module. With the recent changes, the builtin_pci
+> functionality of the intel_pmc_core driver is removed and now it can be
+> built as a module to read this exported interface to calculate the PMC base
+> address.
+>
 
-> Andy, still waiting for any more feedback on the issue detailed in
-> this thread once you have a chance.
+This needs Ack from ACPI maintainer(s).
 
-As I said before I don't like code duplication and even more I don't
-like functionality duplication.
-So, check what can we re-use from asus-wmi.c and adopt it accordingly.
+Rafael, are you OK with exporting this method?
+
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+>
+> Tested-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>
+>  drivers/acpi/acpi_lpit.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/acpi_lpit.c b/drivers/acpi/acpi_lpit.c
+> index e94e478dd18b..cf4fc0161164 100644
+> --- a/drivers/acpi/acpi_lpit.c
+> +++ b/drivers/acpi/acpi_lpit.c
+> @@ -100,6 +100,7 @@ int lpit_read_residency_count_address(u64 *address)
+>
+>         return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(lpit_read_residency_count_address);
+>
+>  static void lpit_update_residency(struct lpit_residency_info *info,
+>                                  struct acpi_lpit_native *lpit_native)
+> --
+> 2.7.4
+>
+
+
 
 -- 
 With Best Regards,
