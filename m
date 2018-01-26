@@ -1,50 +1,45 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
- changes"
-Date: Fri, 26 Jan 2018 01:57:05 +0100
-Message-ID: <20180126005705.GA9276@wunner.de>
-References: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
- <20180125223800.GG24122@fury>
+From: Peter Schuster <verne.leboigoier@gmail.com>
+Subject: =?UTF-8?Q?Darlehen_Geld_f=C3=BCr_Einzelpersonen_und_Fachleute_in_w?=
+        =?UTF-8?Q?eniger_als_72_Stunden?=
+Date: Fri, 26 Jan 2018 08:35:23 +0100
+Message-ID: <CAD3j=Xzu8BOAoJGNfwvsRwv7N9KhiP4ofkMho5L0ypmX2wpgDQ__31019.1477802166$1516952022$gmane$org@mail.gmail.com>
+Reply-To: klaus.peterschuster@outlook.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:39799 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751826AbeAZBER (ORCPT
+Received: from mail-ot0-f172.google.com ([74.125.82.172]:41002 "EHLO
+        mail-ot0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751377AbeAZHfZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Jan 2018 20:04:17 -0500
-Content-Disposition: inline
-In-Reply-To: <20180125223800.GG24122@fury>
+        Fri, 26 Jan 2018 02:35:25 -0500
+Received: by mail-ot0-f172.google.com with SMTP id 44so9361347otk.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jan 2018 23:35:25 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
 
-On Thu, Jan 25, 2018 at 02:38:00PM -0800, Darren Hart wrote:
-> On Wed, Jan 24, 2018 at 07:35:45PM +0100, Lukas Wunner wrote:
-> > Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
-> > changes") amended this driver's ->probe hook to lock decoding of normal
-> > (non-legacy) I/O space accesses to the integrated GPU on dual-GPU
-> > MacBook Pros.  The lock stays in place until the driver is unbound.
-> > 
-> ...
-> > 
-> > So let's revert commit 4eebd5a4e726 please.  Users experiencing the
-> > issue with the proprietary nvidia driver can comment out the above-
-> > quoted problematic code as a workaround (or try updating the BIOS).
-> > 
-> > Cc: Petri Hodju <petrihodju@yahoo.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Bruno Prémont <bonbons@linux-vserver.org>
-> > Cc: Andy Ritger <aritger@nvidia.com>
-> > Cc: Ronald Tschalär <ronald@innovation.ch>
-> 
-> I presume we'd like to see this applied to linux-stable as well?
+Hallo,
 
-Fine by me.  Can you add the stable designation when applying or
-would you prefer me to respin?
+Sind Sie in einer schwierigen Situation, f=C3=BCr die Sie sich f=C3=BCr ein
+Darlehen suchen? Ben=C3=B6tigen Sie eine Finanzierung, um eine Schuld zu
+begleichen oder eine Aktivit=C3=A4t zu finanzieren? Haben Sie einen
+Verbraucherkredit, eine Hypothek, einen pers=C3=B6nlichen Kredit, eine
+Hypothek, Investition Darlehen, Schuldenkonsolidierung Darlehen oder
+andere braucht?
 
-Thanks,
+Ich bin ein einzelner Investor. I zur Verf=C3=BCgung stellen die Kredit
+kurz-, mittel- und langfristige. Ihr Finanzierungsbedingungen sind
+sehr einfach und meine Zinssatz betr=C3=A4gt 3% pro Jahr.
 
-Lukas
+F=C3=BCr alle Anfragen, bleibe ich zur Verf=C3=BCgung, um Ihre Fragen zu be=
+antworten.
+
+Danke, dass Sie mir per E-Mail an Sie von  :   klaus.peterschuster@outlook.=
+de
+
+Mit freundlichen Gr=C3=BC=C3=9Fen.
+
+Peter Schuster
+
+Financial Bank
+https://firstfinancialsa.com/de
