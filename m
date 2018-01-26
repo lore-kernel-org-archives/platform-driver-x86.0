@@ -1,118 +1,210 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v5] Support intel-vbtn based tablet mode switch
-Date: Fri, 26 Jan 2018 17:08:22 +0100
-Message-ID: <20180126160822.e7z7hkgj5e4t4iff@pali>
-References: <1516965688-9286-1-git-send-email-notmart@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1 1/2] platform/x86: intel_pmc_ipc: Use MFD framework to
+ create dependent devices
+Date: Fri, 26 Jan 2018 18:17:17 +0200
+Message-ID: <CAHp75Vd1agJyw6wz+62A+AJuoKJts8RLUAaxBe=DK5L2EBCP0w@mail.gmail.com>
+References: <fc6780c09de2218908db79fe5d77919710155a74.1516913386.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xpbjm5nfyfdfxzno"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516965688-9286-1-git-send-email-notmart@gmail.com>
+In-Reply-To: <fc6780c09de2218908db79fe5d77919710155a74.1516913386.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Martin <notmart@gmail.com>
-Cc: linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org, mario.limonciello@dell.com, Mario Limonciello <mario_limonciello@dell.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Sathyanarayanan Kuppuswamy Natarajan <sathyaosid@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Fri, Jan 26, 2018 at 12:53 AM,
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> Currently, we have lot of repetitive code in dependent device resource
+> allocation and device creation handling code. This logic can be improved if
+> we use MFD framework for dependent device creation. This patch adds this
+> support.
 
---xpbjm5nfyfdfxzno
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for an update. My comments below.
 
-On Friday 26 January 2018 12:21:28 Marco Martin wrote:
-> Some laptops such as Dell Inspiron 7000 series have the
-> tablet mode switch implemented in Intel ACPI,
-> the events to enter and exit the tablet mode are 0xCC and 0xCD
->=20
-> CC: platform-driver-x86@vger.kernel.org
-> CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> CC: "Pali Roh=C3=A1r" <pali.rohar@gmail.com>
-> CC: Darren Hart <dvhart@infradead.org>
-> CC: Mario Limonciello <mario_limonciello@dell.com>
-> CC: Andy Shevchenko <andy@infradead.org>
->=20
-> Signed-off-by: Marco Martin <notmart@gmail.com>
-> ---
->  drivers/platform/x86/intel-vbtn.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/int=
-el-vbtn.c
-> index 58c5ff3..3765c41 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -26,6 +26,9 @@
->  #include <linux/suspend.h>
->  #include <acpi/acpi_bus.h>
-> =20
-> +/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-> +#define TABLET_MODE_FLAG 0x40
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("AceLan Kao");
-> =20
-> @@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] =3D {
->  	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
->  	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
->  	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
-> +	{ KE_SW,  0xCC, { .sw =3D { SW_TABLET_MODE, 1 } } }, /* Tablet mode in =
-*/
-> +	{ KE_SW,  0xCD, { .sw =3D { SW_TABLET_MODE, 0 } } }, /* Tablet mode out=
- */
->  	{ KE_END },
->  };
-> =20
-> @@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 even=
-t, void *context)
-> =20
->  static int intel_vbtn_probe(struct platform_device *device)
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+First of all, I barely remember what I did to this patch. In any case
+this one is redundant since it will have mine when I push it to our
+repo.
+
+> @@ -508,7 +492,7 @@ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>         ret = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_pmc_ipc",
+>                                 pmc);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Failed to request irq\n");
+> +               dev_err(&pdev->dev, "Failed to request IRQ\n");
+>                 return ret;
+>         }
+
+Split this kind of changes in a separate patch.
+
+> +static int ipc_create_punit_device(struct platform_device *pdev)
 >  {
-> +	struct acpi_buffer vgbs_output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-
-Memory leak. I do not see where is allocated buffer released.
-
->  	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
->  	struct intel_vbtn_priv *priv;
->  	acpi_status status;
-> @@ -110,6 +116,20 @@ static int intel_vbtn_probe(struct platform_device *=
-device)
->  		return err;
->  	}
-> =20
-> +	status =3D acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-> +	/* VGBS being present and returning something means
-> +	 * we have a tablet mode switch
-> +	 */
-> +	if (ACPI_SUCCESS(status)) {
-> +		union acpi_object *obj =3D vgbs_output.pointer;
+> +       static struct resource punit_res[PLAT_RESOURCE_MEM_MAX_INDEX];
+> +       static struct mfd_cell punit_cell;
+> +       struct resource *res;
+> +       int ret, mindex, pindex = 0;
 > +
-> +		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
-> +			input_report_switch(priv->input_dev,
-> +								SW_TABLET_MODE,
-> +								!(obj->integer.value & TABLET_MODE_FLAG));
-> +		}
-> +	}
+> +       for (mindex = 0; mindex <= PLAT_RESOURCE_MEM_MAX_INDEX; mindex++) {
+
+'<=' ??? (Why = is here?)
+
+> +               res = platform_get_resource(pdev, IORESOURCE_MEM, mindex);
 > +
->  	status =3D acpi_install_notify_handler(handle,
->  					     ACPI_DEVICE_NOTIFY,
->  					     notify_handler,
-> --=20
-> 2.7.4
->=20
+> +               switch (mindex) {
+> +               /* Get PUNIT resources */
+> +               case PLAT_RESOURCE_BIOS_DATA_INDEX:
+> +               case PLAT_RESOURCE_BIOS_IFACE_INDEX:
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> +                       /* BIOS resources are required, so return error if not
+> +                        * available
+> +                        */
 
---xpbjm5nfyfdfxzno
-Content-Type: application/pgp-signature; name="signature.asc"
+It's not the network subsystem, please, do a proper style for
+multi-line comments.
 
------BEGIN PGP SIGNATURE-----
+> +                       if (!res) {
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWmtScwAKCRCL8Mk9A+RD
-UgSVAJ91gelWLB2N56PtWMRyLhiT+sArHQCfQIgneRekqsr2Ak6sMyv7MFjO51Q=
-=neCj
------END PGP SIGNATURE-----
+Would the following work for you?
 
---xpbjm5nfyfdfxzno--
+if (res)
+ break;
+     dev_err(&pdev->dev, "Failed to get PUNIT MEM resource %d\n", pindex);
+     return -ENXIO;
+case ...:
+...
+if (res)
+ break;
+default:
+ continue;
+
+memcpy(...);
+...
+
+> +                               dev_err(&pdev->dev,
+> +                                       "Failed to get PUNIT MEM resource %d\n",
+> +                                       pindex);
+> +                               return -ENXIO;
+> +                       }
+> +               case PLAT_RESOURCE_ISP_DATA_INDEX:
+> +               case PLAT_RESOURCE_ISP_IFACE_INDEX:
+> +               case PLAT_RESOURCE_GTD_DATA_INDEX:
+> +               case PLAT_RESOURCE_GTD_IFACE_INDEX:
+> +                       /* if valid resource found, copy the resource to PUNIT
+> +                        * resource
+> +                        */
+> +                       if (res)
+> +                               memcpy(&punit_res[pindex], res, sizeof(*res));
+> +                       punit_res[pindex].flags = IORESOURCE_MEM;
+> +                       pindex++;
+> +                       break;
+>                 };
+> +       }
+
+> +       ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, &punit_cell,
+> +                                  1, NULL, 0, NULL);
+>
+> +       dev_dbg(&pdev->dev, "Successfully created PUNIT device\n");
+>
+
+Wrong. If ret is not 0 the message is misleading.
+Just remove it.
+
+Same for the rest cases.
+
+> +       return ret;
+>  }
+
+> +static int ipc_create_wdt_device(struct platform_device *pdev)
+>  {
+> +       static struct resource wdt_ipc_res[2];
+> +       static struct mfd_cell wdt_cell;
+>         struct resource *res;
+> +       int ret;
+>
+> +       /* If we have ACPI based watchdog use that instead, othewise create
+> +        * a MFD cell for iTCO watchdog
+> +        */
+
+Style.
+
+> +       if (acpi_has_watchdog())
+> +               return 0;
+
+> +       ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, &wdt_cell,
+> +                                  1, NULL, 0, NULL);
+> +
+> +       dev_dbg(&pdev->dev, "Successfully created watchdog device\n");
+> +
+> +       return ret;
+
+What Heikki meant is to fill cells by those helper functions and call
+mfd_add_devices() only once.
+
+See lpc_ich.c as an example.
+
+>  }
+
+> +static int ipc_create_pmc_devices(struct platform_device *pdev)
+>  {
+>         int ret;
+>
+> +       ret = ipc_create_punit_device(pdev);
+> +       if (ret < 0)
+> +               return ret;
+
+Is it fatal? (Hint: it's quite likely not)
+
+> +       ret = ipc_create_wdt_device(pdev);
+> +       if (ret < 0)
+> +               return ret;
+
+Is it fatal?
+
+> +       ret = ipc_create_telemetry_device(pdev);
+> +       if (ret < 0)
+> +               return ret;
+
+Is it fatal?
+
+> +       return 0;
+>  }
+
+> +       ret = devm_request_irq(&pdev->dev, ipcdev.irq, ioc, IRQF_NO_SUSPEND,
+> +                              "intel_pmc_ipc", &ipcdev);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to request IRQ\n");
+> +               return ret;
+>         }
+>
+>         ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
+>                         ret);
+> -               goto err_sys;
+
+> +               devm_free_irq(&pdev->dev, ipcdev.irq, &ipcdev);
+
+Why do you need this one?
+
+> +               return ret;
+>         }
+>
+>         ipcdev.has_gcr_regs = true;
+>
+>         return 0;
+>  }
+
+And to the main question, what this is doing in PDx86 now? There
+should be a patch to move it under drivers/mfd.
+
+In _any case_ I need an Ack from Lee.
+
+-- 
+With Best Regards,
+Andy Shevchenko
