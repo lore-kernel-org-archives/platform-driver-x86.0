@@ -1,43 +1,117 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v5] Support intel-vbtn based tablet mode switch
-Date: Fri, 26 Jan 2018 16:29:28 +0000
-Message-ID: <37b90c6c67cf41cfa218ccedfb811a9a@ausx13mpc120.AMER.DELL.COM>
-References: <1516965688-9286-1-git-send-email-notmart@gmail.com>
- <CAHp75VftsyEGz-ap_UQDwP33yXtNEnuekLJpwm4-qXxw8Ud3vw@mail.gmail.com>
- <CAD6_BovK7A4kyBW1S5TOGxxXKnqaitSfg0bOuCkqRKSkSmicfA@mail.gmail.com>
- <5d6fd1c856db42a992f0307294c9e14b@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VfB5wD91rY9G4tob--4UNYTFXnAMzDuhM=znRunrO8Z1g@mail.gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remove
+ redundant dev_err messages on device_create
+Date: Fri, 26 Jan 2018 16:59:32 +0000
+Message-ID: <AM4PR05MB33307B7EE13E93C681171C94A2E00@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1516826019-124903-1-git-send-email-vadimp@mellanox.com>
+ <20180125214643.GB24122@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:31231 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752428AbeAZQ3c (ORCPT
+Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:32615
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751112AbeAZQ7f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Jan 2018 11:29:32 -0500
-In-Reply-To: <CAHp75VfB5wD91rY9G4tob--4UNYTFXnAMzDuhM=znRunrO8Z1g@mail.gmail.com>
+        Fri, 26 Jan 2018 11:59:35 -0500
+In-Reply-To: <20180125214643.GB24122@fury>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com
-Cc: notmart@gmail.com, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, bhush94@gmail.com, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEphbnVhcnkg
-MjYsIDIwMTggMTA6MjggQU0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbyA8TWFyaW9fTGltb25j
-aWVsbG9ARGVsbC5jb20+DQo+IENjOiBNYXJjbyBNYXJ0aW4gPG5vdG1hcnRAZ21haWwuY29tPjsg
-TGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc+OyBNYXR0aGV3IEdhcnJldHQgPG1qZzU5QHNyY2YudWNhbS5vcmc+OyBQYWxpIFJvaMOhcg0K
-PiA8cGFsaS5yb2hhckBnbWFpbC5jb20+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5v
-cmc+OyBBbmR5IFNoZXZjaGVua28NCj4gPGFuZHlAaW5mcmFkZWFkLm9yZz47IEJodXNoYW4gU2hh
-aCA8Ymh1c2g5NEBnbWFpbC5jb20+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1XSBTdXBwb3J0
-IGludGVsLXZidG4gYmFzZWQgdGFibGV0IG1vZGUgc3dpdGNoDQo+IA0KPiBPbiBGcmksIEphbiAy
-NiwgMjAxOCBhdCA2OjIyIFBNLCAgPE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToN
-Cj4gDQo+ID4gaHR0cDovL2dpdC5pbmZyYWRlYWQub3JnL3VzZXJzL2R2aGFydC9saW51eC1wbGF0
-Zm9ybS1kcml2ZXJzLXg4Ni5naXQNCj4gPiBUaGUgdGVzdGluZyBicmFuY2guDQo+IA0KPiBTaW5j
-ZSBQRHg4NiBzdWJzeXN0ZW0gaXMgbWFpbnRhaW5lZCBieSBtb3JlIHRoYW4gb25lIHBlcnNvbiB3
-ZQ0KPiBlbmNvdXJhZ2UgdG8gdXNlIGltcGVyc29uYWwgVVJMLCBpLmUuDQo+IA0KPiBodHRwOi8v
-Z2l0LmluZnJhZGVhZC5vcmcvbGludXgtcGxhdGZvcm0tZHJpdmVycy14ODYuZ2l0DQo+IA0KDQpU
-aHgsIGRpZG4ndCBrbm93IHRoYXQgZXhpc3RlZC4NCg==
+
+
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Thursday, January 25, 2018 11:47 PM
+> To: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
+i.us
+> Subject: Re: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remo=
+ve
+> redundant dev_err messages on device_create
+>=20
+> On Wed, Jan 24, 2018 at 08:33:37PM +0000, Vadim Pasternak wrote:
+> > The upper layer will manage and report errors returned by the create
+> > and destroy functions.
+> >
+> > FIXME: but it doesn't - we don't even check
+>=20
+> I think we agreed to just drop this patch entirely, since this error is n=
+ot checked
+> elsewhere? Keeping the dev_err messages?
+>=20
+
+Yes, we'll keep it.
+We just had conflict in patch order and I wanted to fix it, staying as much=
+ as
+possible aligned with the top of mellanox v10 branch.
+
+However currently we still  have a problem in mellanox v11 after patch
+platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface
+It dropped parameter device  in mlxreg_hotplug_device_create, which is
+Used inside the routine.
+
+I'll send a separate patch to fix it from top of v11. In other case it'll b=
+e
+necessary to fix Modify to use a regmap interface  and re-send all from=20
+5-th patch in series.
+
+Also we  should drop the patch:
+platform/x86: mlx-platform: Simplify IO access to regmap context
+It introduced the issue reported by sparse.
+
+I am resending two last patches from review-dvhart-mellanox-v11 branch
+and also patch with fix for mlxreg_hotplug_device_create, as:
+0010-platform-x86-mlx-platform-Extend-register-map-config.patch
+0011-platform-mellanox-mlxreg-hotplug-Add-check-for-negat.patch
+0012-platform-mellanox-mlxreg-hotplug-Fix-issue-of-commit.patch
+
+Thank you very much for your help,
+Vadim.
+
+> >
+> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > [dvhart: refactored into smaller functional changes]
+> > Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+> > ---
+> >  drivers/platform/mellanox/mlxreg-hotplug.c | 7 +------
+> >  1 file changed, 1 insertion(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c
+> > b/drivers/platform/mellanox/mlxreg-hotplug.c
+> > index e55f576..0ccd327 100644
+> > --- a/drivers/platform/mellanox/mlxreg-hotplug.c
+> > +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+> > @@ -187,16 +187,11 @@ static int mlxreg_hotplug_device_create(struct
+> device *dev,
+> >  					struct mlxreg_hotplug_device *item)  {
+> >  	item->adapter =3D i2c_get_adapter(item->bus);
+> > -	if (!item->adapter) {
+> > -		dev_err(dev, "Failed to get adapter for bus %d\n",
+> > -			item->bus);
+> > +	if (!item->adapter)
+> >  		return -EFAULT;
+> > -	}
+> >
+> >  	item->client =3D i2c_new_device(item->adapter, &item->brdinfo);
+> >  	if (!item->client) {
+> > -		dev_err(dev, "Failed to create client %s at bus %d at addr
+> 0x%02x\n",
+> > -			item->brdinfo.type, item->bus, item->brdinfo.addr);
+> >  		i2c_put_adapter(item->adapter);
+> >  		item->adapter =3D NULL;
+> >  		return -EFAULT;
+> > --
+> > 2.1.4
+> >
+> >
+>=20
+> --
+> Darren Hart
+> VMware Open Source Technology Center
