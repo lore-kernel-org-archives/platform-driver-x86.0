@@ -1,103 +1,92 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remove
- redundant dev_err messages on device_create
-Date: Sat, 27 Jan 2018 05:08:13 +0000
-Message-ID: <AM4PR05MB33306423267272590EEFC86BA2E70@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1516826019-124903-1-git-send-email-vadimp@mellanox.com>
- <20180125214643.GB24122@fury>
- <AM4PR05MB33307B7EE13E93C681171C94A2E00@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20180126234117.GB3736@fury>
+From: Marco Martin <notmart@gmail.com>
+Subject: [PATCH v6] Support intel-vbtn based tablet mode switch
+Date: Sat, 27 Jan 2018 11:15:38 +0100
+Message-ID: <1517048138-2335-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180126234117.GB3736@fury>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wr0-f193.google.com ([209.85.128.193]:39555 "EHLO
+        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751957AbeA0KPt (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 27 Jan 2018 05:15:49 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: mario_limonciello@dell.com, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com, notmart@gmail.com
 
+Some laptops such as Dell Inspiron 7000 series have the
+tablet mode switch implemented in Intel ACPI,
+the events to enter and exit the tablet mode are 0xCC and 0xCD
 
+CC: platform-driver-x86@vger.kernel.org
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: "Pali Rohár" <pali.rohar@gmail.com>
+CC: Darren Hart <dvhart@infradead.org>
+CC: Mario Limonciello <mario_limonciello@dell.com>
+CC: Andy Shevchenko <andy@infradead.org>
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Saturday, January 27, 2018 1:41 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
-> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
-i.us
-> Subject: Re: [patch v11 - re-ordered 03/12] FIXME platform/mellanox: Remo=
-ve
-> redundant dev_err messages on device_create
->=20
-> On Fri, Jan 26, 2018 at 04:59:32PM +0000, Vadim Pasternak wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Darren Hart [mailto:dvhart@infradead.org]
-> > > Sent: Thursday, January 25, 2018 11:47 PM
-> > > To: Vadim Pasternak <vadimp@mellanox.com>
-> > > Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
-> > > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> > > jiri@resnulli.us
-> > > Subject: Re: [patch v11 - re-ordered 03/12] FIXME platform/mellanox:
-> > > Remove redundant dev_err messages on device_create
-> > >
-> > > On Wed, Jan 24, 2018 at 08:33:37PM +0000, Vadim Pasternak wrote:
-> > > > The upper layer will manage and report errors returned by the
-> > > > create and destroy functions.
-> > > >
-> > > > FIXME: but it doesn't - we don't even check
-> > >
-> > > I think we agreed to just drop this patch entirely, since this error
-> > > is not checked elsewhere? Keeping the dev_err messages?
-> > >
-> >
-> > Yes, we'll keep it.
-> > We just had conflict in patch order and I wanted to fix it, staying as
-> > much as possible aligned with the top of mellanox v10 branch.
-> >
-> > However currently we still  have a problem in mellanox v11 after patch
-> > platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface It
-> > dropped parameter device  in mlxreg_hotplug_device_create, which is
-> > Used inside the routine.
-> >
-> > I'll send a separate patch to fix it from top of v11. In other case
-> > it'll be necessary to fix Modify to use a regmap interface  and
-> > re-send all from 5-th patch in series.
-> >
-> > Also we  should drop the patch:
-> > platform/x86: mlx-platform: Simplify IO access to regmap context It
-> > introduced the issue reported by sparse.
-> >
-> > I am resending two last patches from review-dvhart-mellanox-v11 branch
-> > and also patch with fix for mlxreg_hotplug_device_create, as:
-> > 0010-platform-x86-mlx-platform-Extend-register-map-config.patch
-> > 0011-platform-mellanox-mlxreg-hotplug-Add-check-for-negat.patch
-> > 0012-platform-mellanox-mlxreg-hotplug-Fix-issue-of-commit.patch
-> >
-> > Thank you very much for your help,
->=20
-> OK, please see review-dvhart-mellanox-v12 on infradead or github. I've ve=
-rified
-> this passes a clean C=3D1 (sparse) build at each patch. I believe this is=
- in a state
-> that can be moved to testing. Please confirm.
->=20
+Signed-off-by: Marco Martin <notmart@gmail.com>
 
-Confirmed.
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-> If you still want to move the dev_err messages out of the create function=
-, we
-> can do that separately. Let's get this merged so we can move forward.
->=20
-
-It's OK with me. Let's leave it as it is now.
-
-Thank you,
-Vadim.
-
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 58c5ff3..0979811 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -26,6 +26,9 @@
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
+ 
++/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
++#define TABLET_MODE_FLAG 0x40
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+ 
+@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
+ 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
++	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet mode in */
++	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tablet mode out */
+ 	{ KE_END },
+ };
+ 
+@@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
++	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+@@ -110,6 +116,22 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	/* VGBS being present and returning something means
++	 * we have a tablet mode switch
++	 */
++	if (ACPI_SUCCESS(status)) {
++		union acpi_object *obj = vgbs_output.pointer;
++
++		if (obj && obj->type == ACPI_TYPE_INTEGER) {
++			input_report_switch(priv->input_dev,
++								SW_TABLET_MODE,
++								!(obj->integer.value & TABLET_MODE_FLAG));
++		}
++	}
++
++	kfree(vgbs_output.pointer);
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.7.4
