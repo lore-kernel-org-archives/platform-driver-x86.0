@@ -1,160 +1,176 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v12 10/16] platform/x86: dell-smbios: Introduce
- dispatcher for SMM calls
-Date: Sat, 27 Jan 2018 15:48:23 +0100
-Message-ID: <20180127144823.innndhmtaus3k7op@pali>
-References: <cover.1509561822.git.mario.limonciello@dell.com>
- <19848e4dec380f91efd1536bbfad092050d232d2.1509561822.git.mario.limonciello@dell.com>
+Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
+ support
+Date: Sat, 27 Jan 2018 15:51:01 +0100
+Message-ID: <20180127145101.y4rkc36kvuqpbkji@pali>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+ <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
+ <20180105111313.23c6vjs2x3fhtvi4@pali>
+ <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
+ <20180105144406.vifyj46b2ca34aol@pali>
+ <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vx4leyovcl24qgzk"
+        protocol="application/pgp-signature"; boundary="vs76jzqd3rc2teoc"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f193.google.com ([209.85.128.193]:38324 "EHLO
-        mail-wr0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751353AbeA0Os0 (ORCPT
+Received: from mail-wm0-f50.google.com ([74.125.82.50]:36654 "EHLO
+        mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751353AbeA0OvE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Jan 2018 09:48:26 -0500
+        Sat, 27 Jan 2018 09:51:04 -0500
 Content-Disposition: inline
-In-Reply-To: <19848e4dec380f91efd1536bbfad092050d232d2.1509561822.git.mario.limonciello@dell.com>
+In-Reply-To: <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, Greg KH <greg@kroah.com>, Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+To: Mario.Limonciello@dell.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
 
---vx4leyovcl24qgzk
+--vs76jzqd3rc2teoc
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-On Wednesday 01 November 2017 14:25:31 Mario Limonciello wrote:
-> This splits up the dell-smbios driver into two drivers:
-> * dell-smbios
-> * dell-smbios-smm
+On Friday 05 January 2018 14:48:39 Mario.Limonciello@dell.com wrote:
 >=20
-> dell-smbios can operate with multiple different dispatcher drivers to
-> perform SMBIOS operations.
 >=20
-> Also modify the interface that dell-laptop and dell-wmi use align to this
-> model more closely.  Rather than a single global buffer being allocated
-> for all drivers, each driver will allocate and be responsible for it's own
-> buffer. The pointer will be passed to the calling function and each
-> dispatcher driver will then internally copy it to the proper location to
-> perform it's call.
+> > -----Original Message-----
+> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver=
+-x86-
+> > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
+> > Sent: Friday, January 5, 2018 8:44 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
+> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kerne=
+l.org;
+> > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
+> > greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
+> > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering=
+ support
+> >=20
+> > On Friday 05 January 2018 14:32:54 Mario.Limonciello@dell.com wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-dr=
+iver-x86-
+> > > > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
+> > > > Sent: Friday, January 5, 2018 5:13 AM
+> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.co=
+m>;
+> > > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kerne=
+l.org;
+> > Andy
+> > > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.ne=
+t;
+> > > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > > > <gnomes@lxorguk.ukuu.org.uk>
+> > > > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filte=
+ring support
+> > > >
+> > > > I know that this patch is already applied and merged, but I spotted=
+ this
+> > > > problem:
+> > > >
+> > > > On Thursday 19 October 2017 12:50:15 Mario Limonciello wrote:
+> > > > > +/* calls that are explicitly blacklisted */
+> > > > > +static struct smbios_call call_blacklist[] =3D {
+> > > > > +	{0x0000, 01, 07}, /* manufacturing use */
+> > > > > +	{0x0000, 06, 05}, /* manufacturing use */
+> > > > > +	{0x0000, 11, 03}, /* write once */
+> > > > > +	{0x0000, 11, 07}, /* write once */
+> > > >
+> > > > Numbers prefixed by zero means that they are in octal notation, rig=
+ht?
+> > > Is that how the kernel interprets an integer prefix by zero?
+> >=20
+> > No, this is how C language define it. See e.g. C11 standard, section
+> > 6.4.4.1 Integer constants:
+> >=20
+> > decimal-constant:
+> > 	nonzero-digit
+> > 	decimal-constant digit
+> >=20
+> > octal-constant:
+> > 	0
+> > 	octal-constant octal-digit
+> >=20
+> > So in C decimal number cannot start with digit zero.
+> >=20
+> > I think the place where octal numbers are used are in permissions (0777)
+> >=20
+> > > I prefixed by zero for readability, they're supposed to be decimal.
+> > >
+> > > > This can lead to misunderstanding, confusion or problems in future.=
+=2E.
+> > > >
+> > > > Can we have all numbers either in hexadecimal or decimal notation?
+> > >
+> > > Could you elaborate more why this is problematic the way it is?
+> >=20
+> > Currently it is not problem as 7 is same number in octal (07) and
+> > decimal (7). representation. But e.g. octal 077 is 63 in decimal.
+> >=20
+> > > Are you meaning you would rather see this?
+> > > 	{0x0000, 1, 7}, /* manufacturing use */
+> > > 	{0x0000, 6, 5}, /* manufacturing use */
+> > > 	{0x0000, 11, 3}, /* write once */
+> > > 	{0x0000, 11, 7}, /* write once */
+> >=20
+> > Yes, this is better. If you need to achieve alignment then use spaces.
+> > Really, not leading zeros.
+> >=20
+> > > That seems less readable to me but should interpret the same way.
+> >=20
+> > Example:
+> >=20
+> > {0x000, 077, 7},
+> > {0x000, 007, 7},
+> >=20
+> > is **not** same as
+> >=20
+> > {0x000,  77, 7},
+> > {0x000,   7, 7},
+> >=20
+> > As first number in first section is (decimal) 63, not (decimal) 77.
+> >=20
+> > > Perhaps it would be better if you submit a patch with what is clearer=
+ to
+> > > you.
+> > >
+> > > >
+> > > > > +	{0x0000, 11, 11}, /* write once */
+> > > > > +	{0x0000, 19, -1}, /* diagnostics */
+> > > > > +	/* handled by kernel: dell-laptop */
+> > > > > +	{0x0000, CLASS_INFO, SELECT_RFKILL},
+> > > > > +	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
+> > > > > +};
+> > > >
+> > > > --
+> > > > Pali Roh=C3=A1r
+> > > > pali.rohar@gmail.com
+> >=20
+> > --
+> > Pali Roh=C3=A1r
+> > pali.rohar@gmail.com
 >=20
-> Add defines for calls used by these methods in the dell-smbios.h header
-> for tracking purposes.
->=20
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Reviewed-by: Edward O'Callaghan <quasisec@google.com>
-> ---
-=2E..
-> @@ -85,6 +73,7 @@ static struct platform_driver platform_driver =3D {
->  	}
->  };
-> =20
-> +static struct calling_interface_buffer *buffer;
->  static struct platform_device *platform_device;
->  static struct backlight_device *dell_backlight_device;
->  static struct rfkill *wifi_rfkill;
-> @@ -283,6 +272,27 @@ static const struct dmi_system_id dell_quirks[] __in=
-itconst =3D {
->  	{ }
->  };
-> =20
-> +void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
-> +{
-> +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> +	buffer->input[0] =3D arg0;
-> +	buffer->input[1] =3D arg1;
-> +	buffer->input[2] =3D arg2;
-> +	buffer->input[3] =3D arg3;
-> +}
-> +
-> +int dell_send_request(u16 class, u16 select)
-> +{
-> +	int ret;
-> +
-> +	buffer->cmd_class =3D class;
-> +	buffer->cmd_select =3D select;
-> +	ret =3D dell_smbios_call(buffer);
-> +	if (ret !=3D 0)
-> +		return ret;
-> +	return dell_smbios_error(buffer->output[0]);
-> +}
-> +
->  /*
->   * Derived from information in smbios-wireless-ctl:
->   *
-=2E..
-> @@ -413,20 +422,16 @@ static int dell_rfkill_set(void *data, bool blocked)
->  	int status;
->  	int ret;
-> =20
-> -	buffer =3D dell_smbios_get_buffer();
-> -
-> -	dell_smbios_send_request(17, 11);
-> -	ret =3D buffer->output[0];
-> +	dell_set_arguments(0, 0, 0, 0);
-> +	ret =3D dell_send_request(CLASS_INFO, SELECT_RFKILL);
-> +	if (ret)
-> +		return ret;
->  	status =3D buffer->output[1];
+> Thanks very much for sharing.  I wasn't aware of this.  I'll send a patch.
 
-Now I'm looking at this patch again and I think it introduced a new race
-condition.
-
-Prior this patch, dell_smbios_get_buffer() acquired mutex and returned
-pointer to buffer which caller used and then released.
-
-Now buffer is allocated at module load time and is shared for all
-functions in this module. And hen is used, there is no mutex protection
-for it.
-
-First call is to dell_set_arguments() which modifies that shared buffer
-and then dell_send_request() is used to modify and pass buffer to
-another function dell_smbios_call().
-
-And function below dell_update_rfkill() is called work queue which also
-modifies buffer by dell_set_arguments() function.
-
-Therefore it looks like when dell_update_rfkill() is scheduled at the
-same time as dell_rfkill_set() is executed, then both functions
-overwrite one shared buffer and something unexpected would be sent to
-SMM.
-
-> @@ -613,46 +596,36 @@ static const struct file_operations dell_debugfs_fo=
-ps =3D {
-> =20
->  static void dell_update_rfkill(struct work_struct *ignored)
->  {
-> -	struct calling_interface_buffer *buffer;
->  	int hwswitch =3D 0;
->  	int status;
->  	int ret;
-> =20
-> -	buffer =3D dell_smbios_get_buffer();
-> -
-> -	dell_smbios_send_request(17, 11);
-> -	ret =3D buffer->output[0];
-> +	dell_set_arguments(0, 0, 0, 0);
-> +	ret =3D dell_send_request(CLASS_INFO, SELECT_RFKILL);
->  	status =3D buffer->output[1];
+Hi! Do you have a patch for it?
 
 --=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---vx4leyovcl24qgzk
+--vs76jzqd3rc2teoc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWmyRNAAKCRCL8Mk9A+RD
-UrSeAKDGwNWrSSKCTakN2QxCtTpSJDv42gCeOH+RZGItnIiWfCWoD1VTIhvDiyY=
-=kteA
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWmyR0wAKCRCL8Mk9A+RD
+UjAcAJ9LyAGZlfog/dPT/J412F/v/hkm+wCgsqG9GooWf+3KvN6MaZ7ndvT/aDM=
+=FTJ2
 -----END PGP SIGNATURE-----
 
---vx4leyovcl24qgzk--
+--vs76jzqd3rc2teoc--
