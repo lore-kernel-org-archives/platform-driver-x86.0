@@ -1,176 +1,93 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
- support
-Date: Sat, 27 Jan 2018 15:51:01 +0100
-Message-ID: <20180127145101.y4rkc36kvuqpbkji@pali>
-References: <cover.1508434513.git.mario.limonciello@dell.com>
- <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
- <20180105111313.23c6vjs2x3fhtvi4@pali>
- <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
- <20180105144406.vifyj46b2ca34aol@pali>
- <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
+From: Marco Martin <notmart@gmail.com>
+Subject: [PATCH v7] Support intel-vbtn based tablet mode switch
+Date: Sat, 27 Jan 2018 17:35:57 +0100
+Message-ID: <1517070957-2372-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vs76jzqd3rc2teoc"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f50.google.com ([74.125.82.50]:36654 "EHLO
-        mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751353AbeA0OvE (ORCPT
+Received: from mail-wr0-f196.google.com ([209.85.128.196]:42140 "EHLO
+        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751951AbeA0QhO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Jan 2018 09:51:04 -0500
-Content-Disposition: inline
-In-Reply-To: <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
+        Sat, 27 Jan 2018 11:37:14 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
+To: platform-driver-x86@vger.kernel.org
+Cc: mario_limonciello@dell.com, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com, notmart@gmail.com
 
+Some laptops such as Dell Inspiron 7000 series have the
+tablet mode switch implemented in Intel ACPI,
+the events to enter and exit the tablet mode are 0xCC and 0xCD
 
---vs76jzqd3rc2teoc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+CC: platform-driver-x86@vger.kernel.org
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: "Pali Rohár" <pali.rohar@gmail.com>
+CC: Darren Hart <dvhart@infradead.org>
+CC: Mario Limonciello <mario_limonciello@dell.com>
+CC: Andy Shevchenko <andy@infradead.org>
 
-On Friday 05 January 2018 14:48:39 Mario.Limonciello@dell.com wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver=
--x86-
-> > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
-> > Sent: Friday, January 5, 2018 8:44 AM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
-> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kerne=
-l.org;
-> > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
-> > greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
-> > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering=
- support
-> >=20
-> > On Friday 05 January 2018 14:32:54 Mario.Limonciello@dell.com wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-dr=
-iver-x86-
-> > > > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
-> > > > Sent: Friday, January 5, 2018 5:13 AM
-> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > > > Cc: dvhart@infradead.org; Andy Shevchenko <andy.shevchenko@gmail.co=
-m>;
-> > > > LKML <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kerne=
-l.org;
-> > Andy
-> > > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysocki.ne=
-t;
-> > > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
-> > > > <gnomes@lxorguk.ukuu.org.uk>
-> > > > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filte=
-ring support
-> > > >
-> > > > I know that this patch is already applied and merged, but I spotted=
- this
-> > > > problem:
-> > > >
-> > > > On Thursday 19 October 2017 12:50:15 Mario Limonciello wrote:
-> > > > > +/* calls that are explicitly blacklisted */
-> > > > > +static struct smbios_call call_blacklist[] =3D {
-> > > > > +	{0x0000, 01, 07}, /* manufacturing use */
-> > > > > +	{0x0000, 06, 05}, /* manufacturing use */
-> > > > > +	{0x0000, 11, 03}, /* write once */
-> > > > > +	{0x0000, 11, 07}, /* write once */
-> > > >
-> > > > Numbers prefixed by zero means that they are in octal notation, rig=
-ht?
-> > > Is that how the kernel interprets an integer prefix by zero?
-> >=20
-> > No, this is how C language define it. See e.g. C11 standard, section
-> > 6.4.4.1 Integer constants:
-> >=20
-> > decimal-constant:
-> > 	nonzero-digit
-> > 	decimal-constant digit
-> >=20
-> > octal-constant:
-> > 	0
-> > 	octal-constant octal-digit
-> >=20
-> > So in C decimal number cannot start with digit zero.
-> >=20
-> > I think the place where octal numbers are used are in permissions (0777)
-> >=20
-> > > I prefixed by zero for readability, they're supposed to be decimal.
-> > >
-> > > > This can lead to misunderstanding, confusion or problems in future.=
-=2E.
-> > > >
-> > > > Can we have all numbers either in hexadecimal or decimal notation?
-> > >
-> > > Could you elaborate more why this is problematic the way it is?
-> >=20
-> > Currently it is not problem as 7 is same number in octal (07) and
-> > decimal (7). representation. But e.g. octal 077 is 63 in decimal.
-> >=20
-> > > Are you meaning you would rather see this?
-> > > 	{0x0000, 1, 7}, /* manufacturing use */
-> > > 	{0x0000, 6, 5}, /* manufacturing use */
-> > > 	{0x0000, 11, 3}, /* write once */
-> > > 	{0x0000, 11, 7}, /* write once */
-> >=20
-> > Yes, this is better. If you need to achieve alignment then use spaces.
-> > Really, not leading zeros.
-> >=20
-> > > That seems less readable to me but should interpret the same way.
-> >=20
-> > Example:
-> >=20
-> > {0x000, 077, 7},
-> > {0x000, 007, 7},
-> >=20
-> > is **not** same as
-> >=20
-> > {0x000,  77, 7},
-> > {0x000,   7, 7},
-> >=20
-> > As first number in first section is (decimal) 63, not (decimal) 77.
-> >=20
-> > > Perhaps it would be better if you submit a patch with what is clearer=
- to
-> > > you.
-> > >
-> > > >
-> > > > > +	{0x0000, 11, 11}, /* write once */
-> > > > > +	{0x0000, 19, -1}, /* diagnostics */
-> > > > > +	/* handled by kernel: dell-laptop */
-> > > > > +	{0x0000, CLASS_INFO, SELECT_RFKILL},
-> > > > > +	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
-> > > > > +};
-> > > >
-> > > > --
-> > > > Pali Roh=C3=A1r
-> > > > pali.rohar@gmail.com
-> >=20
-> > --
-> > Pali Roh=C3=A1r
-> > pali.rohar@gmail.com
->=20
-> Thanks very much for sharing.  I wasn't aware of this.  I'll send a patch.
+Signed-off-by: Marco Martin <notmart@gmail.com>
 
-Hi! Do you have a patch for it?
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Acked-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---vs76jzqd3rc2teoc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWmyR0wAKCRCL8Mk9A+RD
-UjAcAJ9LyAGZlfog/dPT/J412F/v/hkm+wCgsqG9GooWf+3KvN6MaZ7ndvT/aDM=
-=FTJ2
------END PGP SIGNATURE-----
-
---vs76jzqd3rc2teoc--
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 58c5ff3..0979811 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -26,6 +26,9 @@
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
+ 
++/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
++#define TABLET_MODE_FLAG 0x40
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+ 
+@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
+ 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
++	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet mode in */
++	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tablet mode out */
+ 	{ KE_END },
+ };
+ 
+@@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
++	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+@@ -110,6 +116,22 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	/* VGBS being present and returning something means
++	 * we have a tablet mode switch
++	 */
++	if (ACPI_SUCCESS(status)) {
++		union acpi_object *obj = vgbs_output.pointer;
++
++		if (obj && obj->type == ACPI_TYPE_INTEGER) {
++			input_report_switch(priv->input_dev,
++								SW_TABLET_MODE,
++								!(obj->integer.value & TABLET_MODE_FLAG));
++		}
++	}
++
++	kfree(vgbs_output.pointer);
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.7.4
