@@ -1,93 +1,65 @@
-From: Marco Martin <notmart@gmail.com>
-Subject: [PATCH v7] Support intel-vbtn based tablet mode switch
-Date: Sat, 27 Jan 2018 17:35:57 +0100
-Message-ID: <1517070957-2372-1-git-send-email-notmart@gmail.com>
+From: Wilfred Kabore <waqasshah205@gmail.com>
+Subject: HELLO
+Date: Sun, 28 Jan 2018 00:10:03 +0000
+Message-ID: <CA+O0U9cS4Oi4QzdBpFHtPUCVNZMGb3WO5aseBb7bXA2QTrv-vQ@mail.gmail.com>
+Reply-To: kaborewilfred6@yahoo.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wr0-f196.google.com ([209.85.128.196]:42140 "EHLO
-        mail-wr0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751951AbeA0QhO (ORCPT
+Received: from mail-qk0-f196.google.com ([209.85.220.196]:45873 "EHLO
+        mail-qk0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752593AbeA1AKE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Jan 2018 11:37:14 -0500
+        Sat, 27 Jan 2018 19:10:04 -0500
+Received: by mail-qk0-f196.google.com with SMTP id z12so1487153qkf.12
+        for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jan 2018 16:10:04 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: mario_limonciello@dell.com, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com, notmart@gmail.com
 
-Some laptops such as Dell Inspiron 7000 series have the
-tablet mode switch implemented in Intel ACPI,
-the events to enter and exit the tablet mode are 0xCC and 0xCD
-
-CC: platform-driver-x86@vger.kernel.org
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: "Pali Rohár" <pali.rohar@gmail.com>
-CC: Darren Hart <dvhart@infradead.org>
-CC: Mario Limonciello <mario_limonciello@dell.com>
-CC: Andy Shevchenko <andy@infradead.org>
-
-Signed-off-by: Marco Martin <notmart@gmail.com>
-
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Acked-by: Pali Rohár <pali.rohar@gmail.com>
----
- drivers/platform/x86/intel-vbtn.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 58c5ff3..0979811 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -26,6 +26,9 @@
- #include <linux/suspend.h>
- #include <acpi/acpi_bus.h>
- 
-+/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-+#define TABLET_MODE_FLAG 0x40
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("AceLan Kao");
- 
-@@ -42,6 +45,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
- 	{ KE_IGNORE, 0xC5, { KEY_VOLUMEUP } },		/* volume-up key release */
- 	{ KE_KEY, 0xC6, { KEY_VOLUMEDOWN } },		/* volume-down key press */
- 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
-+	{ KE_SW,  0xCC, { .sw = { SW_TABLET_MODE, 1 } } }, /* Tablet mode in */
-+	{ KE_SW,  0xCD, { .sw = { SW_TABLET_MODE, 0 } } }, /* Tablet mode out */
- 	{ KE_END },
- };
- 
-@@ -88,6 +93,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static int intel_vbtn_probe(struct platform_device *device)
- {
-+	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	struct intel_vbtn_priv *priv;
- 	acpi_status status;
-@@ -110,6 +116,22 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return err;
- 	}
- 
-+	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	/* VGBS being present and returning something means
-+	 * we have a tablet mode switch
-+	 */
-+	if (ACPI_SUCCESS(status)) {
-+		union acpi_object *obj = vgbs_output.pointer;
-+
-+		if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+			input_report_switch(priv->input_dev,
-+								SW_TABLET_MODE,
-+								!(obj->integer.value & TABLET_MODE_FLAG));
-+		}
-+	}
-+
-+	kfree(vgbs_output.pointer);
-+
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
- 					     notify_handler,
 -- 
-2.7.4
+Dear Friend,
+
+I am MR. WILFRED KABORE, THE MANAGER, BILL AND EXCHANGE DEPT., BANK OF
+AFRICA - Burkina Faso.
+
+I know this message will come to you as a surprise. Don't worry I was
+totally convinced to write you, I hope that you will not expose or
+betray this
+trust and confident that i am about to repose on you for the mutual
+benefits of our families.
+
+I need your urgent assistance in transferring the sum of
+US$12.8M(Twelve Million Eight Hundred Thousand USD) into your account
+within 10 to 14 working days. This requires a private arrangement; I
+shall forward to you the details of the transaction if you indicate
+your interest in this proposal.
+
+This money has been dormant for years in our bank without claim, I
+want the bank to release the money to you as the closest person to the
+late bank's customer (owner of the account) who died along with his
+entire family during the Iraq war in 2006. I don't want the money to
+go into our bank treasurer account as an abandoned fund. So this is
+the reason why i contact you so that the bank will release the money
+to you as the next of kin to the dead customer and we share the money
+together. Please i would like you to keep this proposal as a top
+secret.
+
+Upon receipt of your reply, I will give you full details on how the
+business deal will be executed and also note that you will have 40% of
+the above
+mentioned sum.
+
+Kindly fill out this information's requested below in return then i
+will give you more details with application form for the claim.
+
+Your full name: --------
+Your Country: --------
+Phone Number: --------
+Your Age : ----------
+Your Occupation: ----------
+
+I expect your urgent response if you agree to handle this project with me.
+
+Best Regards.
+
+Wilfred Kabore
