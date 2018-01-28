@@ -1,67 +1,96 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: Dell Vostro 3360 multimedia keys
-Date: Sat, 27 Jan 2018 20:39:15 -0800
-Message-ID: <CAKdAkRQa1tZXMxg=8WX4kfFk_p+5kDakVRJDyB_r4ri3qG5eCg@mail.gmail.com>
-References: <5089742.2pBsoxBtzf@natalenko.name> <1716681.OUoELY8X92@natalenko.name>
- <201711211936.25184@pali> <1629929.m6cr89zbSo@natalenko.name> <20180127140557.xa3bdoouk5whhtbx@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Sun, 28 Jan 2018 16:39:25 +0200
+Message-ID: <CAHp75VdWA-0a_FeicHSi_FfWurQ9EvkdW0raqgoRVySTyxDJ0Q@mail.gmail.com>
+References: <20180127133209.28995-1-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f51.google.com ([209.85.213.51]:34154 "EHLO
-        mail-vk0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751783AbeA1EjQ (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Jan 2018 23:39:16 -0500
-In-Reply-To: <20180127140557.xa3bdoouk5whhtbx@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20180127133209.28995-1-pali.rohar@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
 To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Oleksandr Natalenko <oleksandr@natalenko.name>, Mario Limonciello <mario_limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jan 27, 2018 at 6:05 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+On Sat, Jan 27, 2018 at 3:32 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
 te:
-> On Tuesday 21 November 2017 19:58:24 Oleksandr Natalenko wrote:
->>
->> Just to note what I did. Here is my custom /etc/udev/hwdb.d/90-dell-
->> vostro-3360.hwdb:
->>
->> =3D=3D=3D
->> evdev:atkbd:dmi:bvnDellInc.:bvrA18:bd09/25/2013:svnDellInc.:pnVostro3360=
-:pvr:rvnDellInc.:rn0F5DWF:rvrA00:cvnDellInc.:ct8:cvr0.1:
->>   KEYBOARD_KEY_60=3Dprog4
->> =3D=3D=3D
->>
->> Here is how this key press is being detected by evtest via atkbd:
->>
->> =3D=3D=3D
->> Event: time 1511289883.083968, type 4 (EV_MSC), code 4 (MSC_SCAN), value=
- 60
->> Event: time 1511289883.083968, type 1 (EV_KEY), code 203 (KEY_PROG4), va=
-lue 2
->> Event: time 1511289883.083968, -------------- SYN_REPORT ------------
->> =3D=3D=3D
+> Dell platform team told us that some (DMI whitelisted) Dell Latitude
+> machines have ST microelectronics accelerometer at i2c address 0x29.
 >
-> So, it is working fine and there is no problem in kernel.
+> Presence of that ST microelectronics accelerometer is verified by existen=
+ce
+> of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+> ACPI device does not specify i2c address.
 >
->> But xev shows nothing when I press this key. Am I doing something wrong?
+> This patch registers lis3lv02d device for selected Dell Latitude machines
+> at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
+> i2c address 0x1d which was manually detected.
 >
-> This is bug in X Server or so. You would need to remap keycode to
-> something different as a workaround for X Server.
+> Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+> conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines s=
+o
+> lis3lv02d correctly initialize accelerometer.
+>
+> Tested on Dell Latitude E6440.
 
-No, I do not think so. Value 2 means that the key is repeated, most
-likely because the firmware did not bother to generate a "release"
-event for this key. You also need to adjust "force_release" but
-changing your hwdb entry slightly:
+> +static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
+> +                                            u32 nesting_level,
+> +                                            void *context,
+> +                                            void **return_value)
+> +{
+> +       struct acpi_device_info *info;
+> +       acpi_status status;
+> +       char *hid;
+> +
+> +       status =3D acpi_get_object_info(obj_handle, &info);
+> +       if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
+> +               return AE_OK;
+> +
+> +       hid =3D info->hardware_id.string;
+> +       if (!hid)
+> +               return AE_OK;
+> +
+> +       if (strlen(hid) < 7)
+> +               return AE_OK;
+> +
+> +       if (memcmp(hid, "SMO88", 5) !=3D 0)
+> +               return AE_OK;
+> +
+> +       *((bool *)return_value) =3D true;
+> +       return AE_CTRL_TERMINATE;
+> +}
+> +
+> +static bool is_dell_system_with_lis3lv02d(void)
+> +{
 
-KEYBOARD_KEY_60=3D!prog4
+> +       /*
+> +        * Check that ACPI device SMO88xx exists and is enabled. That ACP=
+I
+> +        * device represent our ST microelectronics lis3lv02d acceleromet=
+er but
+> +        * unfortunately without any other information (like i2c address)=
+.
+> +        */
 
-(note ! before the keycode name).
+Isn't it simple
 
-X implements its own autorepeat handling and ignores kernel key events
-with value of 2.
+return acpi_dev_present("SMO88", NULL, -1);
 
-Thanks.
+call?
+
+> +       found =3D false;
+> +       status =3D acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL=
+,
+> +                                 (void **)&found);
+> +       if (!ACPI_SUCCESS(status) || !found)
+> +               return false;
+> +
+> +       return true;
+> +}
+
 
 --=20
-Dmitry
+With Best Regards,
+Andy Shevchenko
