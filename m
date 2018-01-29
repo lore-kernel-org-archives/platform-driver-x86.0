@@ -1,113 +1,84 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v7] Support intel-vbtn based tablet mode switch
-Date: Mon, 29 Jan 2018 19:35:09 +0000
-Message-ID: <e4b1efa4a7fd4024a578cd505beb8387@ausx13mpc120.AMER.DELL.COM>
-References: <1517070957-2372-1-git-send-email-notmart@gmail.com>
- <CAHp75Ve5C=AtmE1nir1nrjPv8KkdhmTLGj4A=6M5osJyidw8jg@mail.gmail.com>
+From: Marco Martin <notmart@gmail.com>
+Subject: [PATCH] Support intel-vbtn based tablet mode switch
+Date: Mon, 29 Jan 2018 21:27:43 +0100
+Message-ID: <1517257663-2171-1-git-send-email-notmart@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:46441 "EHLO
-        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751273AbeA2TfL (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Jan 2018 14:35:11 -0500
-In-Reply-To: <CAHp75Ve5C=AtmE1nir1nrjPv8KkdhmTLGj4A=6M5osJyidw8jg@mail.gmail.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com, notmart@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: mario_limonciello@dell.com, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com, notmart@gmail.com, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBNb25kYXksIEphbnVhcnkg
-MjksIDIwMTggMTI6NTcgUE0NCj4gVG86IE1hcmNvIE1hcnRpbiA8bm90bWFydEBnbWFpbC5jb20+
-DQo+IENjOiBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
-b3JnPjsgTGltb25jaWVsbG8sIE1hcmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47
-IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgUGFsaQ0KPiBSb2jDoXIgPHBh
-bGkucm9oYXJAZ21haWwuY29tPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsg
-TWF0dGhldw0KPiBHYXJyZXR0IDxtamc1OUBzcmNmLnVjYW0ub3JnPjsgTGludXggS2VybmVsIE1h
-aWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBCaHVzaGFuIFNo
-YWggPGJodXNoOTRAZ21haWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY3XSBTdXBwb3J0
-IGludGVsLXZidG4gYmFzZWQgdGFibGV0IG1vZGUgc3dpdGNoDQo+IA0KPiBPbiBTYXQsIEphbiAy
-NywgMjAxOCBhdCA2OjM1IFBNLCBNYXJjbyBNYXJ0aW4gPG5vdG1hcnRAZ21haWwuY29tPiB3cm90
-ZToNCj4gPiBTb21lIGxhcHRvcHMgc3VjaCBhcyBEZWxsIEluc3Bpcm9uIDcwMDAgc2VyaWVzIGhh
-dmUgdGhlDQo+ID4gdGFibGV0IG1vZGUgc3dpdGNoIGltcGxlbWVudGVkIGluIEludGVsIEFDUEks
-DQo+ID4gdGhlIGV2ZW50cyB0byBlbnRlciBhbmQgZXhpdCB0aGUgdGFibGV0IG1vZGUgYXJlIDB4
-Q0MgYW5kIDB4Q0QNCj4gPg0KPiANCj4gSXQgZG9lc24ndCBhcHBseSA6LSgNCg0KTWFyY28sIEkg
-Y2FuIHNlZSBpdCBhcHBsaWVzIG9uIDQuMTUgYnV0IGl0J3Mgbm90IGFwcGx5aW5nIG9uIHBsYXRm
-b3JtLWRyaXZlcnMteDg2L3Rlc3RpbmcuICANCkl0J3MgbW9zdCBsaWtlbHkgdGhpcyBjb21taXQg
-eW91IG5lZWQgdG8gcmViYXNlIG9uIHRvcCBvZjoNCg0KY29tbWl0IDFjM2ZkZjEyNWVmNDE2MjI3
-ZTQzZmRlZGY2YjUwOTdjNDFlOGM0NjcNCkF1dGhvcjogRGFycmVuIEhhcnQgKFZNd2FyZSkgPGR2
-aGFydEBpbmZyYWRlYWQub3JnPg0KRGF0ZTogICBGcmkgRGVjIDggMTQ6NTc6NTQgMjAxNyAtMDgw
-MA0KDQogICAgcGxhdGZvcm0veDg2OiBpbnRlbC12YnRuOiBTaW1wbGlmeSBhdXRvcmVsZWFzZSBs
-b2dpYw0KICAgIA0KICAgIFRoZSBuZXcgbm90aWZ5X2hhbmRsZXIgbG9naWMgZGV0ZXJtaW5pbmcg
-aWYgYXV0b3JlbGVhc2Ugc2hvdWxkIGJlIHVzZWQgb3INCiAgICBub3QgaXMgYSBiaXQgYXdrd2Fy
-ZCwgYW5kIGNhbiByZXN1bHQgaW4gbW9yZSB0aGFuIG9uZSBjYWxsIHRvDQogICAgc3BhcnNlX2tl
-eW1hcF9yZXBvcnRfZXZlbnQgZm9yIHRoZSBzYW1lIGV2ZW50IChzY2FuY29kZSkuIFRoZSBuZXN0
-aW5nDQogICAgYW5kIGxvbmcgbGluZXMgYWxzbyBtYWRlIGl0IGRpZmZpY3VsdCB0byByZWFkLg0K
-ICAgIA0KICAgIFNpbXBsaWZ5IHRoZSBsb2dpYyBieSBlbGltaW5hdGluZyBhIGxldmVsIG9mIG5l
-c3Rpbmcgd2l0aCBhIGdvdG8gYW5kDQogICAgYWx3YXlzIGNhbGN1bGF0ZSBhdXRvcmVsZWFzZSBh
-bmQgdmFsIHNvIHdlIGNhbiBtYWtlIGEgc2luZ2xlIGNhbGwgdG8NCiAgICBzcGFyc2Vfa2V5bWFw
-X3JlcG9ydF9ldmVudC4NCiAgICANCiAgICBTaWduZWQtb2ZmLWJ5OiBEYXJyZW4gSGFydCAoVk13
-YXJlKSA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+DQogICAgUmV2aWV3ZWQtYnk6IFN0ZWZhbiBCcsO8
-bnMgPHN0ZWZhbi5icnVlbnNAcnd0aC1hYWNoZW4uZGU+DQogICAgVGVzdGVkLWJ5OiBTdGVmYW4g
-QnLDvG5zIDxzdGVmYW4uYnJ1ZW5zQHJ3dGgtYWFjaGVuLmRlPg0KICAgIENjOiBBY2VMYW4gS2Fv
-IDxhY2VsYW4ua2FvQGNhbm9uaWNhbC5jb20+DQoNCj4gDQo+ID4gQ0M6IHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnDQo+ID4gQ0M6IE1hdHRoZXcgR2FycmV0dCA8bWpnNTlAc3Jj
-Zi51Y2FtLm9yZz4NCj4gPiBDQzogIlBhbGkgUm9ow6FyIiA8cGFsaS5yb2hhckBnbWFpbC5jb20+
-DQo+ID4gQ0M6IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4gPiBDQzogTWFy
-aW8gTGltb25jaWVsbG8gPG1hcmlvX2xpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IENDOiBBbmR5
-IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IE1hcmNvIE1hcnRpbiA8bm90bWFydEBnbWFpbC5jb20+DQo+ID4NCj4gPiBSZXZpZXdlZC1ieTog
-TWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0KPiA+IEFja2Vk
-LWJ5OiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRy
-aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYyB8IDIyICsrKysrKysrKysrKysrKysrKysr
-KysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRuLmMgYi9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9pbnRlbC12YnRuLmMNCj4gPiBpbmRleCA1OGM1ZmYzLi4wOTc5ODExIDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYw0KPiA+ICsrKyBiL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYw0KPiA+IEBAIC0yNiw2ICsyNiw5IEBADQo+
-ID4gICNpbmNsdWRlIDxsaW51eC9zdXNwZW5kLmg+DQo+ID4gICNpbmNsdWRlIDxhY3BpL2FjcGlf
-YnVzLmg+DQo+ID4NCj4gPiArLyogV2hlbiBOT1QgaW4gdGFibGV0IG1vZGUsIFZHQlMgcmV0dXJu
-cyB3aXRoIHRoZSBmbGFnIDB4NDAgKi8NCj4gPiArI2RlZmluZSBUQUJMRVRfTU9ERV9GTEFHIDB4
-NDANCj4gPiArDQo+ID4gIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gPiAgTU9EVUxFX0FVVEhP
-UigiQWNlTGFuIEthbyIpOw0KPiA+DQo+ID4gQEAgLTQyLDYgKzQ1LDggQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBrZXlfZW50cnkgaW50ZWxfdmJ0bl9rZXltYXBbXSA9IHsNCj4gPiAgICAgICAgIHsg
-S0VfSUdOT1JFLCAweEM1LCB7IEtFWV9WT0xVTUVVUCB9IH0sICAgICAgICAgIC8qIHZvbHVtZS11
-cCBrZXkgcmVsZWFzZSAqLw0KPiA+ICAgICAgICAgeyBLRV9LRVksIDB4QzYsIHsgS0VZX1ZPTFVN
-RURPV04gfSB9LCAgICAgICAgICAgLyogdm9sdW1lLWRvd24ga2V5IHByZXNzICovDQo+ID4gICAg
-ICAgICB7IEtFX0lHTk9SRSwgMHhDNywgeyBLRVlfVk9MVU1FRE9XTiB9IH0sICAgICAgICAvKiB2
-b2x1bWUtZG93biBrZXkNCj4gcmVsZWFzZSAqLw0KPiA+ICsgICAgICAgeyBLRV9TVywgIDB4Q0Ms
-IHsgLnN3ID0geyBTV19UQUJMRVRfTU9ERSwgMSB9IH0gfSwgLyogVGFibGV0IG1vZGUgaW4gKi8N
-Cj4gPiArICAgICAgIHsgS0VfU1csICAweENELCB7IC5zdyA9IHsgU1dfVEFCTEVUX01PREUsIDAg
-fSB9IH0sIC8qIFRhYmxldCBtb2RlIG91dCAqLw0KPiA+ICAgICAgICAgeyBLRV9FTkQgfSwNCj4g
-PiAgfTsNCj4gPg0KPiA+IEBAIC04OCw2ICs5Myw3IEBAIHN0YXRpYyB2b2lkIG5vdGlmeV9oYW5k
-bGVyKGFjcGlfaGFuZGxlIGhhbmRsZSwgdTMyIGV2ZW50LA0KPiB2b2lkICpjb250ZXh0KQ0KPiA+
-DQo+ID4gIHN0YXRpYyBpbnQgaW50ZWxfdmJ0bl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpkZXZpY2UpDQo+ID4gIHsNCj4gPiArICAgICAgIHN0cnVjdCBhY3BpX2J1ZmZlciB2Z2JzX291
-dHB1dCA9IHsgQUNQSV9BTExPQ0FURV9CVUZGRVIsIE5VTEwgfTsNCj4gPiAgICAgICAgIGFjcGlf
-aGFuZGxlIGhhbmRsZSA9IEFDUElfSEFORExFKCZkZXZpY2UtPmRldik7DQo+ID4gICAgICAgICBz
-dHJ1Y3QgaW50ZWxfdmJ0bl9wcml2ICpwcml2Ow0KPiA+ICAgICAgICAgYWNwaV9zdGF0dXMgc3Rh
-dHVzOw0KPiA+IEBAIC0xMTAsNiArMTE2LDIyIEBAIHN0YXRpYyBpbnQgaW50ZWxfdmJ0bl9wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpkZXZpY2UpDQo+ID4gICAgICAgICAgICAgICAg
-IHJldHVybiBlcnI7DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiArICAgICAgIHN0YXR1cyA9IGFj
-cGlfZXZhbHVhdGVfb2JqZWN0KGhhbmRsZSwgIlZHQlMiLCBOVUxMLCAmdmdic19vdXRwdXQpOw0K
-PiA+ICsgICAgICAgLyogVkdCUyBiZWluZyBwcmVzZW50IGFuZCByZXR1cm5pbmcgc29tZXRoaW5n
-IG1lYW5zDQo+ID4gKyAgICAgICAgKiB3ZSBoYXZlIGEgdGFibGV0IG1vZGUgc3dpdGNoDQo+ID4g
-KyAgICAgICAgKi8NCj4gPiArICAgICAgIGlmIChBQ1BJX1NVQ0NFU1Moc3RhdHVzKSkgew0KPiA+
-ICsgICAgICAgICAgICAgICB1bmlvbiBhY3BpX29iamVjdCAqb2JqID0gdmdic19vdXRwdXQucG9p
-bnRlcjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlmIChvYmogJiYgb2JqLT50eXBlID09
-IEFDUElfVFlQRV9JTlRFR0VSKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaW5wdXRf
-cmVwb3J0X3N3aXRjaChwcml2LT5pbnB1dF9kZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNXX1RBQkxFVF9NT0RF
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAhKG9iai0+aW50ZWdlci52YWx1ZSAmIFRBQkxFVF9NT0RFX0ZMQUcpKTsN
-Cj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAg
-IGtmcmVlKHZnYnNfb3V0cHV0LnBvaW50ZXIpOw0KPiA+ICsNCj4gPiAgICAgICAgIHN0YXR1cyA9
-IGFjcGlfaW5zdGFsbF9ub3RpZnlfaGFuZGxlcihoYW5kbGUsDQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUNQSV9ERVZJQ0VfTk9USUZZLA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5vdGlmeV9oYW5kbGVy
-LA0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiANCj4gDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3Qg
-UmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
+On some laptop like the Dell Inspiron 7000 series
+tablet mode switch implemented in Intel ACPI,
+the events to enter and exit the tablet mode are 0xCC and 0xCD
+
+This initializes the tablet/laptop mode at the correct value
+if the system booted in tablet mode (or the vbtn module loaded
+with the device in tablet mode)
+
+CC: platform-driver-x86@vger.kernel.org
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: "Pali Rohár" <pali.rohar@gmail.com>
+CC: Darren Hart <dvhart@infradead.org>
+CC: Mario Limonciello <mario_limonciello@dell.com>
+CC: Andy Shevchenko <andy@infradead.org>
+CC: Stefan Brüns<stefan.bruens@rwth-aachen.de>
+
+Signed-off-by: Marco Martin <notmart@gmail.com>
+
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Acked-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 5fc4315..019ff21 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -26,6 +26,9 @@
+ #include <linux/suspend.h>
+ #include <acpi/acpi_bus.h>
+ 
++/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
++#define TABLET_MODE_FLAG 0x40
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+ 
+@@ -108,6 +111,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
++	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+@@ -130,6 +134,22 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return err;
+ 	}
+ 
++	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	/* VGBS being present and returning something means
++	 * we have a tablet mode switch
++	 */
++	if (ACPI_SUCCESS(status)) {
++		union acpi_object *obj = vgbs_output.pointer;
++
++		if (obj && obj->type == ACPI_TYPE_INTEGER) {
++			input_report_switch(priv->input_dev,
++								SW_TABLET_MODE,
++								!(obj->integer.value & TABLET_MODE_FLAG));
++		}
++	}
++
++	kfree(vgbs_output.pointer);
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.7.4
