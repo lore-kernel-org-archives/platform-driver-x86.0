@@ -1,32 +1,33 @@
-From: Western Union <"westerrnunion2017."@fine.ocn.ne.jp>
-Subject: Urgent Message
-Date: Mon, 29 Jan 2018 10:10:54 +0900 (JST)
-Message-ID: <2104634921.171653342.1517188254032.JavaMail.root@fine.ocn.ne.jp>
-Reply-To: westerrnunion2017@outlook.com
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [Patch v1 3/8] ACPI / LPIT: Export lpit_read_residency_count_address()
+Date: Mon, 29 Jan 2018 04:09:10 +0100
+Message-ID: <CAJZ5v0hfRKxQLzyCtUdHyRECBFmj0Gho_Jc7mrY0fC+v8t0uhA@mail.gmail.com>
+References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <1516352307-20123-4-git-send-email-rajneesh.bhardwaj@intel.com> <CAHp75VezHm3h5WRsm8ep=179qwCz=gep0hbUAcT3+qbH=_8dXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mbkd0139.ocn.ad.jp ([153.149.230.40]:47758 "EHLO
-        mbkd0139.ocn.ad.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753651AbeA2BWF (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 28 Jan 2018 20:22:05 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VezHm3h5WRsm8ep=179qwCz=gep0hbUAcT3+qbH=_8dXQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dear Western Union Customer,
- 
-You have been awarded with the sum of $250,000 USD by our office, as one of our customers who use Western Union in their daily business transaction. This award was been selected through the internet, where your e-mail address was indicated and notified. Please provide Mr. James Udo with the following details listed below so that your fund will be remited to you through Western Union.
- 
-1. Name:
-2. Address:
-3. Country:
-4. Phone Number:
-5. Occupation:
-6. Sex:
-7. Age:
- 
-Mr. James Udo E-mail: westerrnunion2017@outlook.com
- 
-As soon as these details are received and verified, your fund will be transferred to you.Thank you, for using western union.
+On Fri, Jan 26, 2018 at 10:48 AM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Jan 19, 2018 at 10:58 AM, Rajneesh Bhardwaj
+> <rajneesh.bhardwaj@intel.com> wrote:
+>> From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>>
+>> Export lpit_read_residency_count_address(), so that it can be used from
+>> drivers built as module. With the recent changes, the builtin_pci
+>> functionality of the intel_pmc_core driver is removed and now it can be
+>> built as a module to read this exported interface to calculate the PMC base
+>> address.
+>>
+>
+> This needs Ack from ACPI maintainer(s).
+>
+> Rafael, are you OK with exporting this method?
+
+I have no particular objection at this point.
