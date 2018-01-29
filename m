@@ -1,84 +1,53 @@
 From: Marco Martin <notmart@gmail.com>
-Subject: [PATCH] Support intel-vbtn based tablet mode switch
-Date: Mon, 29 Jan 2018 21:27:43 +0100
-Message-ID: <1517257663-2171-1-git-send-email-notmart@gmail.com>
+Subject: Re: [PATCH v7] Support intel-vbtn based tablet mode switch
+Date: Mon, 29 Jan 2018 21:33:20 +0100
+Message-ID: <CAD6_BoviBRVRSG++fYRZ1Pg7spMD=jS2j5zeVHTK7eTWVY3sgg@mail.gmail.com>
+References: <1517070957-2372-1-git-send-email-notmart@gmail.com>
+ <CAHp75Ve5C=AtmE1nir1nrjPv8KkdhmTLGj4A=6M5osJyidw8jg@mail.gmail.com> <e4b1efa4a7fd4024a578cd505beb8387@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e4b1efa4a7fd4024a578cd505beb8387@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: mario_limonciello@dell.com, andy@infradead.org, pali.rohar@gmail.com, dvhart@infradead.org, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, bhush94@gmail.com, notmart@gmail.com, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bhushan Shah <bhush94@gmail.com>, =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On some laptop like the Dell Inspiron 7000 series
-tablet mode switch implemented in Intel ACPI,
-the events to enter and exit the tablet mode are 0xCC and 0xCD
+On Mon, Jan 29, 2018 at 8:35 PM,  <Mario.Limonciello@dell.com> wrote:
+>> -----Original Message-----
+>> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+>> Sent: Monday, January 29, 2018 12:57 PM
+>> To: Marco Martin <notmart@gmail.com>
+>> Cc: Platform Driver <platform-driver-x86@vger.kernel.org>; Limonciello, =
+Mario
+>> <Mario_Limonciello@Dell.com>; Andy Shevchenko <andy@infradead.org>; Pali
+>> Roh=C3=A1r <pali.rohar@gmail.com>; Darren Hart <dvhart@infradead.org>; M=
+atthew
+>> Garrett <mjg59@srcf.ucam.org>; Linux Kernel Mailing List <linux-
+>> kernel@vger.kernel.org>; Bhushan Shah <bhush94@gmail.com>
+>> Subject: Re: [PATCH v7] Support intel-vbtn based tablet mode switch
+>>
+>> On Sat, Jan 27, 2018 at 6:35 PM, Marco Martin <notmart@gmail.com> wrote:
+>> > Some laptops such as Dell Inspiron 7000 series have the
+>> > tablet mode switch implemented in Intel ACPI,
+>> > the events to enter and exit the tablet mode are 0xCC and 0xCD
+>> >
+>>
+>> It doesn't apply :-(
+>
+> Marco, I can see it applies on 4.15 but it's not applying on platform-dri=
+vers-x86/testing.
+> It's most likely this commit you need to rebase on top of:
 
-This initializes the tablet/laptop mode at the correct value
-if the system booted in tablet mode (or the vbtn module loaded
-with the device in tablet mode)
+Ah, i see (i was trying on platform-drivers-x86 but master branch, sorry)
+latest version is rebased on top of it, i seen the reason it didn't
+apply was that the addition
+ to sparse_keymap was already done in 1c8284 by Stefan Br=C3=BCns (whoops :=
+)
+However still needs the initialization part, so booting or
+modprobe with the device already in tablet mode would initialize the
+correct state
 
-CC: platform-driver-x86@vger.kernel.org
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: "Pali Rohár" <pali.rohar@gmail.com>
-CC: Darren Hart <dvhart@infradead.org>
-CC: Mario Limonciello <mario_limonciello@dell.com>
-CC: Andy Shevchenko <andy@infradead.org>
-CC: Stefan Brüns<stefan.bruens@rwth-aachen.de>
-
-Signed-off-by: Marco Martin <notmart@gmail.com>
-
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Acked-by: Pali Rohár <pali.rohar@gmail.com>
----
- drivers/platform/x86/intel-vbtn.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 5fc4315..019ff21 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -26,6 +26,9 @@
- #include <linux/suspend.h>
- #include <acpi/acpi_bus.h>
- 
-+/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-+#define TABLET_MODE_FLAG 0x40
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("AceLan Kao");
- 
-@@ -108,6 +111,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static int intel_vbtn_probe(struct platform_device *device)
- {
-+	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	struct intel_vbtn_priv *priv;
- 	acpi_status status;
-@@ -130,6 +134,22 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return err;
- 	}
- 
-+	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	/* VGBS being present and returning something means
-+	 * we have a tablet mode switch
-+	 */
-+	if (ACPI_SUCCESS(status)) {
-+		union acpi_object *obj = vgbs_output.pointer;
-+
-+		if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+			input_report_switch(priv->input_dev,
-+								SW_TABLET_MODE,
-+								!(obj->integer.value & TABLET_MODE_FLAG));
-+		}
-+	}
-+
-+	kfree(vgbs_output.pointer);
-+
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
- 					     notify_handler,
--- 
-2.7.4
+--
+Marco Martin
