@@ -1,158 +1,121 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 06/74] x86/cpu/intel: Introduce macros for Intel family numbers
-Date: Mon, 29 Jan 2018 13:56:11 +0100
-Message-ID: <20180129123847.801231798@linuxfoundation.org>
-References: <20180129123847.507563674@linuxfoundation.org>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
+ support
+Date: Mon, 29 Jan 2018 16:22:07 +0000
+Message-ID: <fd59a3621e864b4a84fc69f72e0a51af@ausx13mpc120.AMER.DELL.COM>
+References: <cover.1508434513.git.mario.limonciello@dell.com>
+ <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
+ <20180105111313.23c6vjs2x3fhtvi4@pali>
+ <8e1b17a4da0d404eb36920297e408d9f@ausx13mpc120.AMER.DELL.COM>
+ <20180105144406.vifyj46b2ca34aol@pali>
+ <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
+ <20180127145101.y4rkc36kvuqpbkji@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180129123847.507563674@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Darren Hart <dvhart@infradead.org>, Dave Hansen <dave@sr71.net>, Denys Vlasenko <dvlasenk@redhat.com>, Doug Thompson <dougthompson@xmission.com>, Eduardo Valentin <edubezval@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Len Brown <lenb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Peter Zijlstra <peterz@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:32039 "EHLO
+        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751257AbeA2QWQ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 29 Jan 2018 11:22:16 -0500
+In-Reply-To: <20180127145101.y4rkc36kvuqpbkji@pali>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pali.rohar@gmail.com
+Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: Dave Hansen <dave@sr71.net>
-
-commit 970442c599b22ccd644ebfe94d1d303bf6f87c05 upstream.
-
-Problem:
-
-We have a boatload of open-coded family-6 model numbers.  Half of
-them have these model numbers in hex and the other half in
-decimal.  This makes grepping for them tons of fun, if you were
-to try.
-
-Solution:
-
-Consolidate all the magic numbers.  Put all the definitions in
-one header.
-
-The names here are closely derived from the comments describing
-the models from arch/x86/events/intel/core.c.  We could easily
-make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
-they seemed fine even with the longer versions to me.
-
-Do not take any of these names too literally, like "DESKTOP"
-or "MOBILE".  These are all colloquial names and not precise
-descriptions of everywhere a given model will show up.
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Dave Hansen <dave@sr71.net>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Doug Thompson <dougthompson@xmission.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: jacob.jun.pan@intel.com
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-edac@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Link: http://lkml.kernel.org/r/20160603001927.F2A7D828@viggo.jf.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/include/asm/intel-family.h |   68 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
---- /dev/null
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -0,0 +1,68 @@
-+#ifndef _ASM_X86_INTEL_FAMILY_H
-+#define _ASM_X86_INTEL_FAMILY_H
-+
-+/*
-+ * "Big Core" Processors (Branded as Core, Xeon, etc...)
-+ *
-+ * The "_X" parts are generally the EP and EX Xeons, or the
-+ * "Extreme" ones, like Broadwell-E.
-+ *
-+ * Things ending in "2" are usually because we have no better
-+ * name for them.  There's no processor called "WESTMERE2".
-+ */
-+
-+#define INTEL_FAM6_CORE_YONAH		0x0E
-+#define INTEL_FAM6_CORE2_MEROM		0x0F
-+#define INTEL_FAM6_CORE2_MEROM_L	0x16
-+#define INTEL_FAM6_CORE2_PENRYN		0x17
-+#define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
-+
-+#define INTEL_FAM6_NEHALEM		0x1E
-+#define INTEL_FAM6_NEHALEM_EP		0x1A
-+#define INTEL_FAM6_NEHALEM_EX		0x2E
-+#define INTEL_FAM6_WESTMERE		0x25
-+#define INTEL_FAM6_WESTMERE2		0x1F
-+#define INTEL_FAM6_WESTMERE_EP		0x2C
-+#define INTEL_FAM6_WESTMERE_EX		0x2F
-+
-+#define INTEL_FAM6_SANDYBRIDGE		0x2A
-+#define INTEL_FAM6_SANDYBRIDGE_X	0x2D
-+#define INTEL_FAM6_IVYBRIDGE		0x3A
-+#define INTEL_FAM6_IVYBRIDGE_X		0x3E
-+
-+#define INTEL_FAM6_HASWELL_CORE		0x3C
-+#define INTEL_FAM6_HASWELL_X		0x3F
-+#define INTEL_FAM6_HASWELL_ULT		0x45
-+#define INTEL_FAM6_HASWELL_GT3E		0x46
-+
-+#define INTEL_FAM6_BROADWELL_CORE	0x3D
-+#define INTEL_FAM6_BROADWELL_XEON_D	0x56
-+#define INTEL_FAM6_BROADWELL_GT3E	0x47
-+#define INTEL_FAM6_BROADWELL_X		0x4F
-+
-+#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
-+#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
-+#define INTEL_FAM6_SKYLAKE_X		0x55
-+#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
-+#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
-+
-+/* "Small Core" Processors (Atom) */
-+
-+#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
-+#define INTEL_FAM6_ATOM_LINCROFT	0x26
-+#define INTEL_FAM6_ATOM_PENWELL		0x27
-+#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
-+#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
-+#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
-+#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
-+#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
-+#define INTEL_FAM6_ATOM_MERRIFIELD1	0x4A /* Tangier */
-+#define INTEL_FAM6_ATOM_MERRIFIELD2	0x5A /* Annidale */
-+#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
-+#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
-+
-+/* Xeon Phi */
-+
-+#define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
-+
-+#endif /* _ASM_X86_INTEL_FAMILY_H */
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgSmFudWFyeSAyNywgMjAx
+OCA4OjUxIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
+bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGFuZHkuc2hldmNoZW5rb0BnbWFp
+bC5jb207IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIt
+eDg2QHZnZXIua2VybmVsLm9yZzsgbHV0b0BrZXJuZWwub3JnOw0KPiBxdWFzaXNlY0Bnb29nbGUu
+Y29tOyByandAcmp3eXNvY2tpLm5ldDsgbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsNCj4g
+Z3JlZ0Brcm9haC5jb207IGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVy
+aW5nIHN1cHBvcnQNCj4gDQo+IE9uIEZyaWRheSAwNSBKYW51YXJ5IDIwMTggMTQ6NDg6MzkgTWFy
+aW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJA
+dmdlci5rZXJuZWwub3JnIFttYWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gPiA+IG93bmVy
+QHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBhbGkgUm9ow6FyDQo+ID4gPiBTZW50OiBG
+cmlkYXksIEphbnVhcnkgNSwgMjAxOCA4OjQ0IEFNDQo+ID4gPiBUbzogTGltb25jaWVsbG8sIE1h
+cmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPiA+IENjOiBkdmhhcnRAaW5mcmFk
+ZWFkLm9yZzsgYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbTsgbGludXgtDQo+ID4gPiBrZXJuZWxA
+dmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4g
+bHV0b0BrZXJuZWwub3JnOw0KPiA+ID4gcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2Nr
+aS5uZXQ7IG1qZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7DQo+ID4gPiBncmVnQGtyb2FoLmNv
+bTsgZ25vbWVzQGx4b3JndWsudWt1dS5vcmcudWsNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVyaW5nIHN1cHBv
+cnQNCj4gPiA+DQo+ID4gPiBPbiBGcmlkYXkgMDUgSmFudWFyeSAyMDE4IDE0OjMyOjU0IE1hcmlv
+LkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJvbTogcGxhdGZvcm0tZHJp
+dmVyLXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXItDQo+
+IHg4Ni0NCj4gPiA+ID4gPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBQYWxp
+IFJvaMOhcg0KPiA+ID4gPiA+IFNlbnQ6IEZyaWRheSwgSmFudWFyeSA1LCAyMDE4IDU6MTMgQU0N
+Cj4gPiA+ID4gPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
+LmNvbT4NCj4gPiA+ID4gPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5r
+bw0KPiA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47DQo+ID4gPiA+ID4gTEtNTCA8bGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2Vy
+bmVsLm9yZzsNCj4gPiA+IEFuZHkNCj4gPiA+ID4gPiBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5v
+cmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNvY2tpLm5ldDsNCj4gPiA+ID4gPiBt
+amc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGtyb2FoLmNvbT47IEFs
+YW4gQ294DQo+ID4gPiA+ID4gPGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrPg0KPiA+ID4gPiA+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9z
+OiBBZGQgZmlsdGVyaW5nDQo+IHN1cHBvcnQNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEkga25vdyB0
+aGF0IHRoaXMgcGF0Y2ggaXMgYWxyZWFkeSBhcHBsaWVkIGFuZCBtZXJnZWQsIGJ1dCBJIHNwb3R0
+ZWQgdGhpcw0KPiA+ID4gPiA+IHByb2JsZW06DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBUaHVy
+c2RheSAxOSBPY3RvYmVyIDIwMTcgMTI6NTA6MTUgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+
+ID4gPiA+ID4gPiArLyogY2FsbHMgdGhhdCBhcmUgZXhwbGljaXRseSBibGFja2xpc3RlZCAqLw0K
+PiA+ID4gPiA+ID4gK3N0YXRpYyBzdHJ1Y3Qgc21iaW9zX2NhbGwgY2FsbF9ibGFja2xpc3RbXSA9
+IHsNCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMDEsIDA3fSwgLyogbWFudWZhY3R1cmluZyB1c2Ug
+Ki8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMDYsIDA1fSwgLyogbWFudWZhY3R1cmluZyB1c2Ug
+Ki8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMTEsIDAzfSwgLyogd3JpdGUgb25jZSAqLw0KPiA+
+ID4gPiA+ID4gKwl7MHgwMDAwLCAxMSwgMDd9LCAvKiB3cml0ZSBvbmNlICovDQo+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiBOdW1iZXJzIHByZWZpeGVkIGJ5IHplcm8gbWVhbnMgdGhhdCB0aGV5IGFyZSBp
+biBvY3RhbCBub3RhdGlvbiwgcmlnaHQ/DQo+ID4gPiA+IElzIHRoYXQgaG93IHRoZSBrZXJuZWwg
+aW50ZXJwcmV0cyBhbiBpbnRlZ2VyIHByZWZpeCBieSB6ZXJvPw0KPiA+ID4NCj4gPiA+IE5vLCB0
+aGlzIGlzIGhvdyBDIGxhbmd1YWdlIGRlZmluZSBpdC4gU2VlIGUuZy4gQzExIHN0YW5kYXJkLCBz
+ZWN0aW9uDQo+ID4gPiA2LjQuNC4xIEludGVnZXIgY29uc3RhbnRzOg0KPiA+ID4NCj4gPiA+IGRl
+Y2ltYWwtY29uc3RhbnQ6DQo+ID4gPiAJbm9uemVyby1kaWdpdA0KPiA+ID4gCWRlY2ltYWwtY29u
+c3RhbnQgZGlnaXQNCj4gPiA+DQo+ID4gPiBvY3RhbC1jb25zdGFudDoNCj4gPiA+IAkwDQo+ID4g
+PiAJb2N0YWwtY29uc3RhbnQgb2N0YWwtZGlnaXQNCj4gPiA+DQo+ID4gPiBTbyBpbiBDIGRlY2lt
+YWwgbnVtYmVyIGNhbm5vdCBzdGFydCB3aXRoIGRpZ2l0IHplcm8uDQo+ID4gPg0KPiA+ID4gSSB0
+aGluayB0aGUgcGxhY2Ugd2hlcmUgb2N0YWwgbnVtYmVycyBhcmUgdXNlZCBhcmUgaW4gcGVybWlz
+c2lvbnMgKDA3NzcpDQo+ID4gPg0KPiA+ID4gPiBJIHByZWZpeGVkIGJ5IHplcm8gZm9yIHJlYWRh
+YmlsaXR5LCB0aGV5J3JlIHN1cHBvc2VkIHRvIGJlIGRlY2ltYWwuDQo+ID4gPiA+DQo+ID4gPiA+
+ID4gVGhpcyBjYW4gbGVhZCB0byBtaXN1bmRlcnN0YW5kaW5nLCBjb25mdXNpb24gb3IgcHJvYmxl
+bXMgaW4gZnV0dXJlLi4uDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBDYW4gd2UgaGF2ZSBhbGwgbnVt
+YmVycyBlaXRoZXIgaW4gaGV4YWRlY2ltYWwgb3IgZGVjaW1hbCBub3RhdGlvbj8NCj4gPiA+ID4N
+Cj4gPiA+ID4gQ291bGQgeW91IGVsYWJvcmF0ZSBtb3JlIHdoeSB0aGlzIGlzIHByb2JsZW1hdGlj
+IHRoZSB3YXkgaXQgaXM/DQo+ID4gPg0KPiA+ID4gQ3VycmVudGx5IGl0IGlzIG5vdCBwcm9ibGVt
+IGFzIDcgaXMgc2FtZSBudW1iZXIgaW4gb2N0YWwgKDA3KSBhbmQNCj4gPiA+IGRlY2ltYWwgKDcp
+LiByZXByZXNlbnRhdGlvbi4gQnV0IGUuZy4gb2N0YWwgMDc3IGlzIDYzIGluIGRlY2ltYWwuDQo+
+ID4gPg0KPiA+ID4gPiBBcmUgeW91IG1lYW5pbmcgeW91IHdvdWxkIHJhdGhlciBzZWUgdGhpcz8N
+Cj4gPiA+ID4gCXsweDAwMDAsIDEsIDd9LCAvKiBtYW51ZmFjdHVyaW5nIHVzZSAqLw0KPiA+ID4g
+PiAJezB4MDAwMCwgNiwgNX0sIC8qIG1hbnVmYWN0dXJpbmcgdXNlICovDQo+ID4gPiA+IAl7MHgw
+MDAwLCAxMSwgM30sIC8qIHdyaXRlIG9uY2UgKi8NCj4gPiA+ID4gCXsweDAwMDAsIDExLCA3fSwg
+Lyogd3JpdGUgb25jZSAqLw0KPiA+ID4NCj4gPiA+IFllcywgdGhpcyBpcyBiZXR0ZXIuIElmIHlv
+dSBuZWVkIHRvIGFjaGlldmUgYWxpZ25tZW50IHRoZW4gdXNlIHNwYWNlcy4NCj4gPiA+IFJlYWxs
+eSwgbm90IGxlYWRpbmcgemVyb3MuDQo+ID4gPg0KPiA+ID4gPiBUaGF0IHNlZW1zIGxlc3MgcmVh
+ZGFibGUgdG8gbWUgYnV0IHNob3VsZCBpbnRlcnByZXQgdGhlIHNhbWUgd2F5Lg0KPiA+ID4NCj4g
+PiA+IEV4YW1wbGU6DQo+ID4gPg0KPiA+ID4gezB4MDAwLCAwNzcsIDd9LA0KPiA+ID4gezB4MDAw
+LCAwMDcsIDd9LA0KPiA+ID4NCj4gPiA+IGlzICoqbm90Kiogc2FtZSBhcw0KPiA+ID4NCj4gPiA+
+IHsweDAwMCwgIDc3LCA3fSwNCj4gPiA+IHsweDAwMCwgICA3LCA3fSwNCj4gPiA+DQo+ID4gPiBB
+cyBmaXJzdCBudW1iZXIgaW4gZmlyc3Qgc2VjdGlvbiBpcyAoZGVjaW1hbCkgNjMsIG5vdCAoZGVj
+aW1hbCkgNzcuDQo+ID4gPg0KPiA+ID4gPiBQZXJoYXBzIGl0IHdvdWxkIGJlIGJldHRlciBpZiB5
+b3Ugc3VibWl0IGEgcGF0Y2ggd2l0aCB3aGF0IGlzIGNsZWFyZXIgdG8NCj4gPiA+ID4geW91Lg0K
+PiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArCXsweDAwMDAsIDExLCAxMX0sIC8qIHdy
+aXRlIG9uY2UgKi8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMTksIC0xfSwgLyogZGlhZ25vc3Rp
+Y3MgKi8NCj4gPiA+ID4gPiA+ICsJLyogaGFuZGxlZCBieSBrZXJuZWw6IGRlbGwtbGFwdG9wICov
+DQo+ID4gPiA+ID4gPiArCXsweDAwMDAsIENMQVNTX0lORk8sIFNFTEVDVF9SRktJTEx9LA0KPiA+
+ID4gPiA+ID4gKwl7MHgwMDAwLCBDTEFTU19LQkRfQkFDS0xJR0hULCBTRUxFQ1RfS0JEX0JBQ0tM
+SUdIVH0sDQo+ID4gPiA+ID4gPiArfTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC0tDQo+ID4gPiA+
+ID4gUGFsaSBSb2jDoXINCj4gPiA+ID4gPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KPiA+ID4NCj4g
+PiA+IC0tDQo+ID4gPiBQYWxpIFJvaMOhcg0KPiA+ID4gcGFsaS5yb2hhckBnbWFpbC5jb20NCj4g
+Pg0KPiA+IFRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHNoYXJpbmcuICBJIHdhc24ndCBhd2FyZSBvZiB0
+aGlzLiAgSSdsbCBzZW5kIGEgcGF0Y2guDQo+IA0KPiBIaSEgRG8geW91IGhhdmUgYSBwYXRjaCBm
+b3IgaXQ/DQoNCkkgdXNlZCB0aGUgd3JvbmcgdGFnIHNvIGl0IGRpZG4ndCBhdXRvbWF0aWNhbGx5
+IENDIHlvdS4gIFNvcnJ5IGFib3V0IHRoYXQuDQpJdCdzIGhlcmU6DQoNCmh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAxNDY2NzEvDQoNCg==
