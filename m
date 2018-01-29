@@ -1,8 +1,8 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering
  support
-Date: Mon, 29 Jan 2018 16:22:07 +0000
-Message-ID: <fd59a3621e864b4a84fc69f72e0a51af@ausx13mpc120.AMER.DELL.COM>
+Date: Mon, 29 Jan 2018 17:44:24 +0100
+Message-ID: <20180129164424.yzem3xz3kt7qfxuf@pali>
 References: <cover.1508434513.git.mario.limonciello@dell.com>
  <2dfbb122aa11fa9ff73cbfc6a403b82d1bb2e7c8.1508434514.git.mario.limonciello@dell.com>
  <20180105111313.23c6vjs2x3fhtvi4@pali>
@@ -10,112 +10,197 @@ References: <cover.1508434513.git.mario.limonciello@dell.com>
  <20180105144406.vifyj46b2ca34aol@pali>
  <7f2516be75654c2ca3404298a70124cf@ausx13mpc120.AMER.DELL.COM>
  <20180127145101.y4rkc36kvuqpbkji@pali>
+ <fd59a3621e864b4a84fc69f72e0a51af@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="n7sd4eclgvc2aw2j"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa6.dell-outbound.iphmx.com ([68.232.149.229]:32039 "EHLO
-        esa6.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751257AbeA2QWQ (ORCPT
+Received: from mail-wm0-f53.google.com ([74.125.82.53]:54550 "EHLO
+        mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751072AbeA2Qo2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Jan 2018 11:22:16 -0500
-In-Reply-To: <20180127145101.y4rkc36kvuqpbkji@pali>
-Content-Language: en-US
+        Mon, 29 Jan 2018 11:44:28 -0500
+Content-Disposition: inline
+In-Reply-To: <fd59a3621e864b4a84fc69f72e0a51af@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
+To: Mario.Limonciello@dell.com
 Cc: dvhart@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, luto@kernel.org, quasisec@google.com, rjw@rjwysocki.net, mjg59@google.com, hch@lst.de, greg@kroah.com, gnomes@lxorguk.ukuu.org.uk
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgSmFudWFyeSAyNywgMjAx
-OCA4OjUxIEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERl
-bGwuY29tPg0KPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IGFuZHkuc2hldmNoZW5rb0BnbWFp
-bC5jb207IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIt
-eDg2QHZnZXIua2VybmVsLm9yZzsgbHV0b0BrZXJuZWwub3JnOw0KPiBxdWFzaXNlY0Bnb29nbGUu
-Y29tOyByandAcmp3eXNvY2tpLm5ldDsgbWpnNTlAZ29vZ2xlLmNvbTsgaGNoQGxzdC5kZTsNCj4g
-Z3JlZ0Brcm9haC5jb207IGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVy
-aW5nIHN1cHBvcnQNCj4gDQo+IE9uIEZyaWRheSAwNSBKYW51YXJ5IDIwMTggMTQ6NDg6MzkgTWFy
-aW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJA
-dmdlci5rZXJuZWwub3JnIFttYWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gPiA+IG93bmVy
-QHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBhbGkgUm9ow6FyDQo+ID4gPiBTZW50OiBG
-cmlkYXksIEphbnVhcnkgNSwgMjAxOCA4OjQ0IEFNDQo+ID4gPiBUbzogTGltb25jaWVsbG8sIE1h
-cmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPiA+IENjOiBkdmhhcnRAaW5mcmFk
-ZWFkLm9yZzsgYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbTsgbGludXgtDQo+ID4gPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4g
-bHV0b0BrZXJuZWwub3JnOw0KPiA+ID4gcXVhc2lzZWNAZ29vZ2xlLmNvbTsgcmp3QHJqd3lzb2Nr
-aS5uZXQ7IG1qZzU5QGdvb2dsZS5jb207IGhjaEBsc3QuZGU7DQo+ID4gPiBncmVnQGtyb2FoLmNv
-bTsgZ25vbWVzQGx4b3JndWsudWt1dS5vcmcudWsNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-djEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zOiBBZGQgZmlsdGVyaW5nIHN1cHBv
-cnQNCj4gPiA+DQo+ID4gPiBPbiBGcmlkYXkgMDUgSmFudWFyeSAyMDE4IDE0OjMyOjU0IE1hcmlv
-LkxpbW9uY2llbGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJvbTogcGxhdGZvcm0tZHJp
-dmVyLXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXItDQo+
-IHg4Ni0NCj4gPiA+ID4gPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBQYWxp
-IFJvaMOhcg0KPiA+ID4gPiA+IFNlbnQ6IEZyaWRheSwgSmFudWFyeSA1LCAyMDE4IDU6MTMgQU0N
-Cj4gPiA+ID4gPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxs
-LmNvbT4NCj4gPiA+ID4gPiBDYzogZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5r
-bw0KPiA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47DQo+ID4gPiA+ID4gTEtNTCA8bGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZz47IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2Vy
-bmVsLm9yZzsNCj4gPiA+IEFuZHkNCj4gPiA+ID4gPiBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5v
-cmc+OyBxdWFzaXNlY0Bnb29nbGUuY29tOyByandAcmp3eXNvY2tpLm5ldDsNCj4gPiA+ID4gPiBt
-amc1OUBnb29nbGUuY29tOyBoY2hAbHN0LmRlOyBHcmVnIEtIIDxncmVnQGtyb2FoLmNvbT47IEFs
-YW4gQ294DQo+ID4gPiA+ID4gPGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrPg0KPiA+ID4gPiA+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEwIDEyLzE1XSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9z
-OiBBZGQgZmlsdGVyaW5nDQo+IHN1cHBvcnQNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEkga25vdyB0
-aGF0IHRoaXMgcGF0Y2ggaXMgYWxyZWFkeSBhcHBsaWVkIGFuZCBtZXJnZWQsIGJ1dCBJIHNwb3R0
-ZWQgdGhpcw0KPiA+ID4gPiA+IHByb2JsZW06DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBUaHVy
-c2RheSAxOSBPY3RvYmVyIDIwMTcgMTI6NTA6MTUgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+
-ID4gPiA+ID4gPiArLyogY2FsbHMgdGhhdCBhcmUgZXhwbGljaXRseSBibGFja2xpc3RlZCAqLw0K
-PiA+ID4gPiA+ID4gK3N0YXRpYyBzdHJ1Y3Qgc21iaW9zX2NhbGwgY2FsbF9ibGFja2xpc3RbXSA9
-IHsNCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMDEsIDA3fSwgLyogbWFudWZhY3R1cmluZyB1c2Ug
-Ki8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMDYsIDA1fSwgLyogbWFudWZhY3R1cmluZyB1c2Ug
-Ki8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMTEsIDAzfSwgLyogd3JpdGUgb25jZSAqLw0KPiA+
-ID4gPiA+ID4gKwl7MHgwMDAwLCAxMSwgMDd9LCAvKiB3cml0ZSBvbmNlICovDQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiBOdW1iZXJzIHByZWZpeGVkIGJ5IHplcm8gbWVhbnMgdGhhdCB0aGV5IGFyZSBp
-biBvY3RhbCBub3RhdGlvbiwgcmlnaHQ/DQo+ID4gPiA+IElzIHRoYXQgaG93IHRoZSBrZXJuZWwg
-aW50ZXJwcmV0cyBhbiBpbnRlZ2VyIHByZWZpeCBieSB6ZXJvPw0KPiA+ID4NCj4gPiA+IE5vLCB0
-aGlzIGlzIGhvdyBDIGxhbmd1YWdlIGRlZmluZSBpdC4gU2VlIGUuZy4gQzExIHN0YW5kYXJkLCBz
-ZWN0aW9uDQo+ID4gPiA2LjQuNC4xIEludGVnZXIgY29uc3RhbnRzOg0KPiA+ID4NCj4gPiA+IGRl
-Y2ltYWwtY29uc3RhbnQ6DQo+ID4gPiAJbm9uemVyby1kaWdpdA0KPiA+ID4gCWRlY2ltYWwtY29u
-c3RhbnQgZGlnaXQNCj4gPiA+DQo+ID4gPiBvY3RhbC1jb25zdGFudDoNCj4gPiA+IAkwDQo+ID4g
-PiAJb2N0YWwtY29uc3RhbnQgb2N0YWwtZGlnaXQNCj4gPiA+DQo+ID4gPiBTbyBpbiBDIGRlY2lt
-YWwgbnVtYmVyIGNhbm5vdCBzdGFydCB3aXRoIGRpZ2l0IHplcm8uDQo+ID4gPg0KPiA+ID4gSSB0
-aGluayB0aGUgcGxhY2Ugd2hlcmUgb2N0YWwgbnVtYmVycyBhcmUgdXNlZCBhcmUgaW4gcGVybWlz
-c2lvbnMgKDA3NzcpDQo+ID4gPg0KPiA+ID4gPiBJIHByZWZpeGVkIGJ5IHplcm8gZm9yIHJlYWRh
-YmlsaXR5LCB0aGV5J3JlIHN1cHBvc2VkIHRvIGJlIGRlY2ltYWwuDQo+ID4gPiA+DQo+ID4gPiA+
-ID4gVGhpcyBjYW4gbGVhZCB0byBtaXN1bmRlcnN0YW5kaW5nLCBjb25mdXNpb24gb3IgcHJvYmxl
-bXMgaW4gZnV0dXJlLi4uDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBDYW4gd2UgaGF2ZSBhbGwgbnVt
-YmVycyBlaXRoZXIgaW4gaGV4YWRlY2ltYWwgb3IgZGVjaW1hbCBub3RhdGlvbj8NCj4gPiA+ID4N
-Cj4gPiA+ID4gQ291bGQgeW91IGVsYWJvcmF0ZSBtb3JlIHdoeSB0aGlzIGlzIHByb2JsZW1hdGlj
-IHRoZSB3YXkgaXQgaXM/DQo+ID4gPg0KPiA+ID4gQ3VycmVudGx5IGl0IGlzIG5vdCBwcm9ibGVt
-IGFzIDcgaXMgc2FtZSBudW1iZXIgaW4gb2N0YWwgKDA3KSBhbmQNCj4gPiA+IGRlY2ltYWwgKDcp
-LiByZXByZXNlbnRhdGlvbi4gQnV0IGUuZy4gb2N0YWwgMDc3IGlzIDYzIGluIGRlY2ltYWwuDQo+
-ID4gPg0KPiA+ID4gPiBBcmUgeW91IG1lYW5pbmcgeW91IHdvdWxkIHJhdGhlciBzZWUgdGhpcz8N
-Cj4gPiA+ID4gCXsweDAwMDAsIDEsIDd9LCAvKiBtYW51ZmFjdHVyaW5nIHVzZSAqLw0KPiA+ID4g
-PiAJezB4MDAwMCwgNiwgNX0sIC8qIG1hbnVmYWN0dXJpbmcgdXNlICovDQo+ID4gPiA+IAl7MHgw
-MDAwLCAxMSwgM30sIC8qIHdyaXRlIG9uY2UgKi8NCj4gPiA+ID4gCXsweDAwMDAsIDExLCA3fSwg
-Lyogd3JpdGUgb25jZSAqLw0KPiA+ID4NCj4gPiA+IFllcywgdGhpcyBpcyBiZXR0ZXIuIElmIHlv
-dSBuZWVkIHRvIGFjaGlldmUgYWxpZ25tZW50IHRoZW4gdXNlIHNwYWNlcy4NCj4gPiA+IFJlYWxs
-eSwgbm90IGxlYWRpbmcgemVyb3MuDQo+ID4gPg0KPiA+ID4gPiBUaGF0IHNlZW1zIGxlc3MgcmVh
-ZGFibGUgdG8gbWUgYnV0IHNob3VsZCBpbnRlcnByZXQgdGhlIHNhbWUgd2F5Lg0KPiA+ID4NCj4g
-PiA+IEV4YW1wbGU6DQo+ID4gPg0KPiA+ID4gezB4MDAwLCAwNzcsIDd9LA0KPiA+ID4gezB4MDAw
-LCAwMDcsIDd9LA0KPiA+ID4NCj4gPiA+IGlzICoqbm90Kiogc2FtZSBhcw0KPiA+ID4NCj4gPiA+
-IHsweDAwMCwgIDc3LCA3fSwNCj4gPiA+IHsweDAwMCwgICA3LCA3fSwNCj4gPiA+DQo+ID4gPiBB
-cyBmaXJzdCBudW1iZXIgaW4gZmlyc3Qgc2VjdGlvbiBpcyAoZGVjaW1hbCkgNjMsIG5vdCAoZGVj
-aW1hbCkgNzcuDQo+ID4gPg0KPiA+ID4gPiBQZXJoYXBzIGl0IHdvdWxkIGJlIGJldHRlciBpZiB5
-b3Ugc3VibWl0IGEgcGF0Y2ggd2l0aCB3aGF0IGlzIGNsZWFyZXIgdG8NCj4gPiA+ID4geW91Lg0K
-PiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArCXsweDAwMDAsIDExLCAxMX0sIC8qIHdy
-aXRlIG9uY2UgKi8NCj4gPiA+ID4gPiA+ICsJezB4MDAwMCwgMTksIC0xfSwgLyogZGlhZ25vc3Rp
-Y3MgKi8NCj4gPiA+ID4gPiA+ICsJLyogaGFuZGxlZCBieSBrZXJuZWw6IGRlbGwtbGFwdG9wICov
-DQo+ID4gPiA+ID4gPiArCXsweDAwMDAsIENMQVNTX0lORk8sIFNFTEVDVF9SRktJTEx9LA0KPiA+
-ID4gPiA+ID4gKwl7MHgwMDAwLCBDTEFTU19LQkRfQkFDS0xJR0hULCBTRUxFQ1RfS0JEX0JBQ0tM
-SUdIVH0sDQo+ID4gPiA+ID4gPiArfTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC0tDQo+ID4gPiA+
-ID4gUGFsaSBSb2jDoXINCj4gPiA+ID4gPiBwYWxpLnJvaGFyQGdtYWlsLmNvbQ0KPiA+ID4NCj4g
-PiA+IC0tDQo+ID4gPiBQYWxpIFJvaMOhcg0KPiA+ID4gcGFsaS5yb2hhckBnbWFpbC5jb20NCj4g
-Pg0KPiA+IFRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHNoYXJpbmcuICBJIHdhc24ndCBhd2FyZSBvZiB0
-aGlzLiAgSSdsbCBzZW5kIGEgcGF0Y2guDQo+IA0KPiBIaSEgRG8geW91IGhhdmUgYSBwYXRjaCBm
-b3IgaXQ/DQoNCkkgdXNlZCB0aGUgd3JvbmcgdGFnIHNvIGl0IGRpZG4ndCBhdXRvbWF0aWNhbGx5
-IENDIHlvdS4gIFNvcnJ5IGFib3V0IHRoYXQuDQpJdCdzIGhlcmU6DQoNCmh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAxNDY2NzEvDQoNCg==
+
+--n7sd4eclgvc2aw2j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Monday 29 January 2018 16:22:07 Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > Sent: Saturday, January 27, 2018 8:51 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
+> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; luto@kerne=
+l.org;
+> > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.de;
+> > greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
+> > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filtering=
+ support
+> >=20
+> > On Friday 05 January 2018 14:48:39 Mario.Limonciello@dell.com wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-dr=
+iver-x86-
+> > > > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
+> > > > Sent: Friday, January 5, 2018 8:44 AM
+> > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
+> > > > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> > luto@kernel.org;
+> > > > quasisec@google.com; rjw@rjwysocki.net; mjg59@google.com; hch@lst.d=
+e;
+> > > > greg@kroah.com; gnomes@lxorguk.ukuu.org.uk
+> > > > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add filte=
+ring support
+> > > >
+> > > > On Friday 05 January 2018 14:32:54 Mario.Limonciello@dell.com wrote:
+> > > > >
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: platform-driver-x86-owner@vger.kernel.org [mailto:platfor=
+m-driver-
+> > x86-
+> > > > > > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
+> > > > > > Sent: Friday, January 5, 2018 5:13 AM
+> > > > > > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > > > > > Cc: dvhart@infradead.org; Andy Shevchenko
+> > <andy.shevchenko@gmail.com>;
+> > > > > > LKML <linux-kernel@vger.kernel.org>; platform-driver-
+> > x86@vger.kernel.org;
+> > > > Andy
+> > > > > > Lutomirski <luto@kernel.org>; quasisec@google.com; rjw@rjwysock=
+i.net;
+> > > > > > mjg59@google.com; hch@lst.de; Greg KH <greg@kroah.com>; Alan Cox
+> > > > > > <gnomes@lxorguk.ukuu.org.uk>
+> > > > > > Subject: Re: [PATCH v10 12/15] platform/x86: dell-smbios: Add f=
+iltering
+> > support
+> > > > > >
+> > > > > > I know that this patch is already applied and merged, but I spo=
+tted this
+> > > > > > problem:
+> > > > > >
+> > > > > > On Thursday 19 October 2017 12:50:15 Mario Limonciello wrote:
+> > > > > > > +/* calls that are explicitly blacklisted */
+> > > > > > > +static struct smbios_call call_blacklist[] =3D {
+> > > > > > > +	{0x0000, 01, 07}, /* manufacturing use */
+> > > > > > > +	{0x0000, 06, 05}, /* manufacturing use */
+> > > > > > > +	{0x0000, 11, 03}, /* write once */
+> > > > > > > +	{0x0000, 11, 07}, /* write once */
+> > > > > >
+> > > > > > Numbers prefixed by zero means that they are in octal notation,=
+ right?
+> > > > > Is that how the kernel interprets an integer prefix by zero?
+> > > >
+> > > > No, this is how C language define it. See e.g. C11 standard, section
+> > > > 6.4.4.1 Integer constants:
+> > > >
+> > > > decimal-constant:
+> > > > 	nonzero-digit
+> > > > 	decimal-constant digit
+> > > >
+> > > > octal-constant:
+> > > > 	0
+> > > > 	octal-constant octal-digit
+> > > >
+> > > > So in C decimal number cannot start with digit zero.
+> > > >
+> > > > I think the place where octal numbers are used are in permissions (=
+0777)
+> > > >
+> > > > > I prefixed by zero for readability, they're supposed to be decima=
+l.
+> > > > >
+> > > > > > This can lead to misunderstanding, confusion or problems in fut=
+ure...
+> > > > > >
+> > > > > > Can we have all numbers either in hexadecimal or decimal notati=
+on?
+> > > > >
+> > > > > Could you elaborate more why this is problematic the way it is?
+> > > >
+> > > > Currently it is not problem as 7 is same number in octal (07) and
+> > > > decimal (7). representation. But e.g. octal 077 is 63 in decimal.
+> > > >
+> > > > > Are you meaning you would rather see this?
+> > > > > 	{0x0000, 1, 7}, /* manufacturing use */
+> > > > > 	{0x0000, 6, 5}, /* manufacturing use */
+> > > > > 	{0x0000, 11, 3}, /* write once */
+> > > > > 	{0x0000, 11, 7}, /* write once */
+> > > >
+> > > > Yes, this is better. If you need to achieve alignment then use spac=
+es.
+> > > > Really, not leading zeros.
+> > > >
+> > > > > That seems less readable to me but should interpret the same way.
+> > > >
+> > > > Example:
+> > > >
+> > > > {0x000, 077, 7},
+> > > > {0x000, 007, 7},
+> > > >
+> > > > is **not** same as
+> > > >
+> > > > {0x000,  77, 7},
+> > > > {0x000,   7, 7},
+> > > >
+> > > > As first number in first section is (decimal) 63, not (decimal) 77.
+> > > >
+> > > > > Perhaps it would be better if you submit a patch with what is cle=
+arer to
+> > > > > you.
+> > > > >
+> > > > > >
+> > > > > > > +	{0x0000, 11, 11}, /* write once */
+> > > > > > > +	{0x0000, 19, -1}, /* diagnostics */
+> > > > > > > +	/* handled by kernel: dell-laptop */
+> > > > > > > +	{0x0000, CLASS_INFO, SELECT_RFKILL},
+> > > > > > > +	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
+> > > > > > > +};
+> > > > > >
+> > > > > > --
+> > > > > > Pali Roh=C3=A1r
+> > > > > > pali.rohar@gmail.com
+> > > >
+> > > > --
+> > > > Pali Roh=C3=A1r
+> > > > pali.rohar@gmail.com
+> > >
+> > > Thanks very much for sharing.  I wasn't aware of this.  I'll send a p=
+atch.
+> >=20
+> > Hi! Do you have a patch for it?
+>=20
+> I used the wrong tag so it didn't automatically CC you.  Sorry about that.
+> It's here:
+>=20
+> https://patchwork.kernel.org/patch/10146671/
+
+Ok, looks good for me.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--n7sd4eclgvc2aw2j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWm9PZwAKCRCL8Mk9A+RD
+UtGcAKDCVvRAn1UujEpVQFx7PlOkzzTkqwCgndEYmDusYbgpZRtYDcFUL1zG/Wc=
+=L8hu
+-----END PGP SIGNATURE-----
+
+--n7sd4eclgvc2aw2j--
