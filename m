@@ -1,75 +1,61 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: Remove unused header file
-Date: Wed, 31 Jan 2018 11:50:22 +0530
-Message-ID: <1517379622-1142-1-git-send-email-rajneesh.bhardwaj@intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Allocate buffer on heap
+ rather than globally
+Date: Wed, 31 Jan 2018 10:07:58 +0100
+Message-ID: <20180131090758.v6eyj35gymlfyzhk@pali>
+References: <1517331540-13266-1-git-send-email-mario.limonciello@dell.com>
+ <20180130171745.i5wwcwr4qdbcoxhm@pali>
+ <CAHp75VcqCdEQjUCoSGz87Mb3HFomfOwKWxC7S2CjtqSAZQEpsA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga18.intel.com ([134.134.136.126]:44964 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751772AbeAaGZk (ORCPT
+Received: from mail-wr0-f194.google.com ([209.85.128.194]:34042 "EHLO
+        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752366AbeAaJIB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 Jan 2018 01:25:40 -0500
+        Wed, 31 Jan 2018 04:08:01 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcqCdEQjUCoSGz87Mb3HFomfOwKWxC7S2CjtqSAZQEpsA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 
-Recently sent patch 'platform/x86: intel_pmc_core: Remove unused EXPORTED
-API' missed to remove the header file 'arch/x86/include/asm/pmc_core.h'
-which was solely used to declare the EXPORTED API
-'intel_pmc_slp_s0_counter_read'. This patch provides the errata fix for the
-same.
+On Tuesday 30 January 2018 20:14:26 Andy Shevchenko wrote:
+> >> -static void dell_set_arguments(u32 arg0, u32 arg1, u32 arg2, u32 arg3)
+> >> +static void dell_set_arguments(struct calling_interface_buffer *buffe=
+r,
+> >> +                            u32 arg0, u32 arg1, u32 arg2, u32 arg3)
+> >
+> > Hm... this function has too many parameters :-(
+> >
+> > What about following API?
+> >
+> > static struct calling_interface_buffer dell_set_arguments(u32 arg0, u32=
+ arg1, u32 arg2, u32 arg3);
+> >
+> > It would return filled structure (not a pointer !)
+>=20
+> I do not think it's a good idea. Either we allocate request on a heap
+> and return a pointer, or we fill the struct with some data on spot.
+>=20
+> To naming:
+>=20
+> for allocation: ..._alloc_request()
+> for filling: _fill_request() / _prepare_request()
+>=20
+> or alike.
+>=20
+> _set_arguments() not good enough to me.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
----
- arch/x86/include/asm/pmc_core.h       | 27 ---------------------------
- drivers/platform/x86/intel_pmc_core.c |  1 -
- 2 files changed, 28 deletions(-)
- delete mode 100644 arch/x86/include/asm/pmc_core.h
+Ok. Then we need to stick with 5 arguments... What about name
+dell_fill_request()? E.g.
 
-diff --git a/arch/x86/include/asm/pmc_core.h b/arch/x86/include/asm/pmc_core.h
-deleted file mode 100644
-index d4855f11136d..000000000000
---- a/arch/x86/include/asm/pmc_core.h
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/*
-- * Intel Core SoC Power Management Controller Header File
-- *
-- * Copyright (c) 2016, Intel Corporation.
-- * All Rights Reserved.
-- *
-- * Authors: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-- *          Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- */
--
--#ifndef _ASM_PMC_CORE_H
--#define _ASM_PMC_CORE_H
--
--/* API to read SLP_S0_RESIDENCY counter */
--int intel_pmc_slp_s0_counter_read(u32 *data);
--
--#endif /* _ASM_PMC_CORE_H */
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 67e85ee4ab32..180c65fed55a 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -30,7 +30,6 @@
- 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
--#include <asm/pmc_core.h>
- 
- #include "intel_pmc_core.h"
- 
--- 
-2.7.4
+  struct calling_interface_buffer buffer;
+  dell_fill_request(&buffer, 0x2, 0, 0, 0);
+  ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
