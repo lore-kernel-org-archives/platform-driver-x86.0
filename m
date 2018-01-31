@@ -1,71 +1,42 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-laptop: Allocate buffer on heap rather
- than globally
-Date: Wed, 31 Jan 2018 16:46:58 +0000
-Message-ID: <bb29662337484ad8bd2350e6b68133d3@ausx13mpc120.AMER.DELL.COM>
-References: <1517331540-13266-1-git-send-email-mario.limonciello@dell.com>
- <20180130171745.i5wwcwr4qdbcoxhm@pali>
- <CAHp75VcqCdEQjUCoSGz87Mb3HFomfOwKWxC7S2CjtqSAZQEpsA@mail.gmail.com>
- <20180131090758.v6eyj35gymlfyzhk@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [Patch v1 3/8] ACPI / LPIT: Export lpit_read_residency_count_address()
+Date: Wed, 31 Jan 2018 18:47:28 +0200
+Message-ID: <CAHp75Vc6S__Ovhka5DNUhVEiybDewqM9hvnhZw_1j9VTfq3kxw@mail.gmail.com>
+References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <1516352307-20123-4-git-send-email-rajneesh.bhardwaj@intel.com>
+ <CAHp75VezHm3h5WRsm8ep=179qwCz=gep0hbUAcT3+qbH=_8dXQ@mail.gmail.com> <CAJZ5v0hfRKxQLzyCtUdHyRECBFmj0Gho_Jc7mrY0fC+v8t0uhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180131090758.v6eyj35gymlfyzhk@pali>
-Content-Language: en-US
+In-Reply-To: <CAJZ5v0hfRKxQLzyCtUdHyRECBFmj0Gho_Jc7mrY0fC+v8t0uhA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEphbnVhcnkgMzEsIDIw
-MTggMzowOCBBTQ0KPiBUbzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwu
-Y29tPg0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNv
-bT47IERhcnJlbiBIYXJ0DQo+IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IExLTUwgPGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwbGF0Zm9ybS94
-ODY6IGRlbGwtbGFwdG9wOiBBbGxvY2F0ZSBidWZmZXIgb24gaGVhcCByYXRoZXIgdGhhbg0KPiBn
-bG9iYWxseQ0KPiANCj4gT24gVHVlc2RheSAzMCBKYW51YXJ5IDIwMTggMjA6MTQ6MjYgQW5keSBT
-aGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4+IC1zdGF0aWMgdm9pZCBkZWxsX3NldF9hcmd1bWVudHMo
-dTMyIGFyZzAsIHUzMiBhcmcxLCB1MzIgYXJnMiwgdTMyIGFyZzMpDQo+ID4gPj4gK3N0YXRpYyB2
-b2lkIGRlbGxfc2V0X2FyZ3VtZW50cyhzdHJ1Y3QgY2FsbGluZ19pbnRlcmZhY2VfYnVmZmVyICpi
-dWZmZXIsDQo+ID4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICB1MzIgYXJnMCwgdTMy
-IGFyZzEsIHUzMiBhcmcyLCB1MzIgYXJnMykNCj4gPiA+DQo+ID4gPiBIbS4uLiB0aGlzIGZ1bmN0
-aW9uIGhhcyB0b28gbWFueSBwYXJhbWV0ZXJzIDotKA0KPiA+ID4NCj4gPiA+IFdoYXQgYWJvdXQg
-Zm9sbG93aW5nIEFQST8NCj4gPiA+DQo+ID4gPiBzdGF0aWMgc3RydWN0IGNhbGxpbmdfaW50ZXJm
-YWNlX2J1ZmZlciBkZWxsX3NldF9hcmd1bWVudHModTMyIGFyZzAsIHUzMiBhcmcxLA0KPiB1MzIg
-YXJnMiwgdTMyIGFyZzMpOw0KPiA+ID4NCj4gPiA+IEl0IHdvdWxkIHJldHVybiBmaWxsZWQgc3Ry
-dWN0dXJlIChub3QgYSBwb2ludGVyICEpDQo+ID4NCj4gPiBJIGRvIG5vdCB0aGluayBpdCdzIGEg
-Z29vZCBpZGVhLiBFaXRoZXIgd2UgYWxsb2NhdGUgcmVxdWVzdCBvbiBhIGhlYXANCj4gPiBhbmQg
-cmV0dXJuIGEgcG9pbnRlciwgb3Igd2UgZmlsbCB0aGUgc3RydWN0IHdpdGggc29tZSBkYXRhIG9u
-IHNwb3QuDQo+ID4NCj4gPiBUbyBuYW1pbmc6DQo+ID4NCj4gPiBmb3IgYWxsb2NhdGlvbjogLi4u
-X2FsbG9jX3JlcXVlc3QoKQ0KPiA+IGZvciBmaWxsaW5nOiBfZmlsbF9yZXF1ZXN0KCkgLyBfcHJl
-cGFyZV9yZXF1ZXN0KCkNCj4gPg0KPiA+IG9yIGFsaWtlLg0KPiA+DQo+ID4gX3NldF9hcmd1bWVu
-dHMoKSBub3QgZ29vZCBlbm91Z2ggdG8gbWUuDQo+IA0KPiBPay4gVGhlbiB3ZSBuZWVkIHRvIHN0
-aWNrIHdpdGggNSBhcmd1bWVudHMuLi4gV2hhdCBhYm91dCBuYW1lDQo+IGRlbGxfZmlsbF9yZXF1
-ZXN0KCk/IEUuZy4NCj4gDQo+ICAgc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlciBidWZm
-ZXI7DQo+ICAgZGVsbF9maWxsX3JlcXVlc3QoJmJ1ZmZlciwgMHgyLCAwLCAwLCAwKTsNCj4gICBy
-ZXQgPSBkZWxsX3NlbmRfcmVxdWVzdCgmYnVmZmVyLCBDTEFTU19JTkZPLCBTRUxFQ1RfUkZLSUxM
-KTsNCj4gDQoNClRoZSBvdGhlciBhbHRlcm5hdGl2ZSBpcyB0byBqdXN0IGRlZmluZSB0aGUgaW5w
-dXQgb2YgdGhlIHN0cnVjdHVyZSBpbW1lZGlhdGVseSB3aXRoDQphbiBpbml0aWFsaXplciwgbm8g
-bXVsdGkgYXJndW1lbnQgZmlsbGVyIGZ1bmN0aW9uLiAgTGlrZSB0aGlzOg0KDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYyBiL2RyaXZlcnMvcGxhdGZvcm0v
-eDg2L2RlbGwtbGFwdG9wLmMNCmluZGV4IGFiNTgzNzMuLmU3YTk3MWIgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jDQorKysgYi9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9kZWxsLWxhcHRvcC5jDQpAQCAtNDY5LDEzICs0NjksMTUgQEAgc3RhdGljIGludCBkZWxs
-X3Jma2lsbF9zZXQodm9pZCAqZGF0YSwgYm9vbCBibG9ja2VkKQ0KICAgICAgICBpbnQgZGlzYWJs
-ZSA9IGJsb2NrZWQgPyAxIDogMDsNCiAgICAgICAgdW5zaWduZWQgbG9uZyByYWRpbyA9ICh1bnNp
-Z25lZCBsb25nKWRhdGE7DQogICAgICAgIGludCBod3N3aXRjaF9iaXQgPSAodW5zaWduZWQgbG9u
-ZylkYXRhIC0gMTsNCi0gICAgICAgc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNlX2J1ZmZlciBidWZm
-ZXI7DQorICAgICAgIHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZmZXIgYnVmZmVyID0ge0NM
-QVNTX0lORk8sDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIFNFTEVDVF9SRktJTEwsDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHswLCAwLCAwLCAwfSwNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgezAsIDAsIDAsIDB9fTsNCiAgICAgICAgaW50IGh3c3dpdGNo
-Ow0KICAgICAgICBpbnQgc3RhdHVzOw0KICAgICAgICBpbnQgcmV0Ow0KIA0KLSAgICAgICBkZWxs
-X3NldF9hcmd1bWVudHMoJmJ1ZmZlciwgMCwgMCwgMCwgMCk7DQotICAgICAgIHJldCA9IGRlbGxf
-c2VuZF9yZXF1ZXN0KCZidWZmZXIsIENMQVNTX0lORk8sIFNFTEVDVF9SRktJTEwpOw0KKyAgICAg
-ICByZXQgPSBkZWxsX3NlbmRfcmVxdWVzdCgmYnVmZmVyKTsNCiAgICAgICAgaWYgKHJldCkNCiAg
-ICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KICAgICAgICBzdGF0dXMgPSBidWZmZXIub3V0cHV0
-WzFdOw0K
+On Mon, Jan 29, 2018 at 5:09 AM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> On Fri, Jan 26, 2018 at 10:48 AM, Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Fri, Jan 19, 2018 at 10:58 AM, Rajneesh Bhardwaj
+>> <rajneesh.bhardwaj@intel.com> wrote:
+>>> From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>>>
+>>> Export lpit_read_residency_count_address(), so that it can be used from
+>>> drivers built as module. With the recent changes, the builtin_pci
+>>> functionality of the intel_pmc_core driver is removed and now it can be
+>>> built as a module to read this exported interface to calculate the PMC base
+>>> address.
+>>>
+>>
+>> This needs Ack from ACPI maintainer(s).
+>>
+>> Rafael, are you OK with exporting this method?
+>
+> I have no particular objection at this point.
+
+I took it as an ACK.
+Tell me if I'm wrong.
+
+-- 
+With Best Regards,
+Andy Shevchenko
