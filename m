@@ -1,50 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Allocate buffer on heap rather
- than globally
-Date: Wed, 31 Jan 2018 19:15:33 +0200
-Message-ID: <CAHp75Vc5OCrKUF+c6LkqN_QtQox7P0bUb8nZEQeO5mzhc=860w@mail.gmail.com>
-References: <1517331540-13266-1-git-send-email-mario.limonciello@dell.com>
- <20180130171745.i5wwcwr4qdbcoxhm@pali> <CAHp75VcqCdEQjUCoSGz87Mb3HFomfOwKWxC7S2CjtqSAZQEpsA@mail.gmail.com>
- <20180131090758.v6eyj35gymlfyzhk@pali> <bb29662337484ad8bd2350e6b68133d3@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VcqYgDCTPqjn9F1SpAbamgPk8B7s4zYAb8csD8oFpLihw@mail.gmail.com> <20180131170639.fhmodmamu4mi6ubw@pali>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [Patch v1 6/8] x86/cpu: Add Cannonlake to Intel family
+Date: Wed, 31 Jan 2018 22:57:47 +0530
+Message-ID: <20180131172747.GA9877@raj-desk2.iind.intel.com>
+References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
+ <1516352307-20123-7-git-send-email-rajneesh.bhardwaj@intel.com>
+ <CAHp75VcsMzTtn-TD32Jyh6pennLWLjEuiAi_-LJMowENv=P2-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180131170639.fhmodmamu4mi6ubw@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:44822 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752543AbeAaRdG (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 31 Jan 2018 12:33:06 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcsMzTtn-TD32Jyh6pennLWLjEuiAi_-LJMowENv=P2-Q@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 
-On Wed, Jan 31, 2018 at 7:06 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
-> On Wednesday 31 January 2018 18:53:19 Andy Shevchenko wrote:
->> On Wed, Jan 31, 2018 at 6:46 PM,  <Mario.Limonciello@dell.com> wrote:
+On Fri, Jan 26, 2018 at 02:39:47PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 19, 2018 at 10:58 AM, Rajneesh Bhardwaj
+> <rajneesh.bhardwaj@intel.com> wrote:
+> > Add CPUID of Cannonlake (CNL) processors to Intel family list.
+> >
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: x86@kernel.org
+> 
+> Thomas, can you Ack this patch?
 
->> >> Ok. Then we need to stick with 5 arguments... What about name
->> >> dell_fill_request()? E.g.
+Sorry to bug you again, MAINTAINERS. The series depends on this patch for
+enabling Cannonlake support. Requesting your ACK / Feedback for this one.
 
->> > +       struct calling_interface_buffer buffer =3D {CLASS_INFO,
->> > +                                                 SELECT_RFKILL,
->> > +                                                 {0, 0, 0, 0},
->> > +                                                 {0, 0, 0, 0}};
->>
->> Looking to this approach I would rather provide a macro then.
->>
->> #define FILL_REQUEST(a,b,c,d,...) \ // variant FILL_RFKILL_REQUEST(a,b,c=
-,d)
->> (struct calling_interface_buffer) { \
->>  ... \
->> }
->>
->> But then it is macro(s) vs. function(s) debate.
->
-> Does not matter, I'm fine with either macro or function.
+Thank you.
 
-Mario, it's now up to you. Choose one of the option and send new version.
-Thanks!
+> 
+> > Suggested-by: Tony Luck <tony.luck@intel.com>
+> > Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+> > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> > ---
+> >  arch/x86/include/asm/intel-family.h | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> > index 35a6bc4da8ad..cf090e584202 100644
+> > --- a/arch/x86/include/asm/intel-family.h
+> > +++ b/arch/x86/include/asm/intel-family.h
+> > @@ -10,6 +10,10 @@
+> >   *
+> >   * Things ending in "2" are usually because we have no better
+> >   * name for them.  There's no processor called "SILVERMONT2".
+> > + *
+> > + * While adding a new CPUID for a new microarchitecture, add a new
+> > + * group to keep logically sorted out in chronological order. Within
+> > + * that group keep the CPUID for the variants sorted by model number.
+> >   */
+> >
+> >  #define INTEL_FAM6_CORE_YONAH          0x0E
+> > @@ -49,6 +53,8 @@
+> >  #define INTEL_FAM6_KABYLAKE_MOBILE     0x8E
+> >  #define INTEL_FAM6_KABYLAKE_DESKTOP    0x9E
+> >
+> > +#define INTEL_FAM6_CANNONLAKE_MOBILE   0x66
+> > +
+> >  /* "Small Core" Processors (Atom) */
+> >
+> >  #define INTEL_FAM6_ATOM_PINEVIEW       0x1C
+> > --
+> > 2.7.4
+> >
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Best Regards,
+Rajneesh
