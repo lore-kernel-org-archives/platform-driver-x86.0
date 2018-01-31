@@ -1,39 +1,26 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH 11/11] platform/x86: mlx-platform: Add hotplug platform driver un-registration for faulty flow
-Date: Wed, 31 Jan 2018 21:55:13 +0000
-Message-ID: <1517435713-124919-1-git-send-email-vadimp@mellanox.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 11/11] platform/x86: mlx-platform: Add hotplug platform
+ driver un-registration for faulty flow
+Date: Wed, 31 Jan 2018 12:59:32 -0800
+Message-ID: <20180131205932.GA21498@fury>
+References: <1517435713-124919-1-git-send-email-vadimp@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1517435713-124919-1-git-send-email-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add hotplug platform driver un-registration in case regmap cache
-synchronization failed. In such case hotplug platform driver registration
-should be rolled back.
+On Wed, Jan 31, 2018 at 09:55:13PM +0000, Vadim Pasternak wrote:
+> Add hotplug platform driver un-registration in case regmap cache
+> synchronization failed. In such case hotplug platform driver registration
+> should be rolled back.
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
- drivers/platform/x86/mlx-platform.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Queued up, thanks Vadim.
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 2d34aa8..1811451 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -548,10 +548,12 @@ static int __init mlxplat_init(void)
- 	regcache_mark_dirty(mlxplat_hotplug->regmap);
- 	err = regcache_sync(mlxplat_hotplug->regmap);
- 	if (err)
--		goto fail_platform_mux_register;
-+		goto fail_platform_hotplug_register;
- 
- 	return 0;
- 
-+fail_platform_hotplug_register:
-+	platform_device_unregister(priv->pdev_hotplug);
- fail_platform_mux_register:
- 	while (--i >= 0)
- 		platform_device_unregister(priv->pdev_mux[i]);
 -- 
-2.1.4
+Darren Hart
+VMware Open Source Technology Center
