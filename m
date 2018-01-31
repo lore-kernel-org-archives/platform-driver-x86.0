@@ -1,55 +1,63 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v1 1/2] platform/x86: intel-vbtn: Remove redundant
- inclusions
-Date: Wed, 31 Jan 2018 11:04:32 -0800
-Message-ID: <20180131190432.GF8676@fury>
-References: <20180131175407.18301-1-andriy.shevchenko@linux.intel.com>
- <20180131185051.GC8676@fury>
- <CAHp75VdFh06kL=4fpoKogyX6K08SyX1zkJOjzmVcGqUWFA+2Ew@mail.gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
+ changes"
+Date: Wed, 31 Jan 2018 20:44:20 +0100
+Message-ID: <20180131194420.GA5409@wunner.de>
+References: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
+ <20180125223800.GG24122@fury>
+ <20180131183925.GA8676@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:60135 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750742AbeAaToW (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 31 Jan 2018 14:44:22 -0500
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdFh06kL=4fpoKogyX6K08SyX1zkJOjzmVcGqUWFA+2Ew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20180131183925.GA8676@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
 
-On Wed, Jan 31, 2018 at 08:59:20PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 31, 2018 at 8:50 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Wed, Jan 31, 2018 at 07:54:06PM +0200, Andy Shevchenko wrote:
-> >> Some headers are not needed since the driver can be built as module.
-> >> Remove them.
-> >
-> > Removing init because it's included by module.h, and removing acpi_bus.h
-> > because it's included by acpi.h - but not because it can be built as a
-> > module - right?  Just checking, the wording in the commit msg seemed odd
-> > to me.
+On Wed, Jan 31, 2018 at 10:39:25AM -0800, Darren Hart wrote:
+> On Thu, Jan 25, 2018 at 02:38:00PM -0800, Darren Hart wrote:
+> > On Wed, Jan 24, 2018 at 07:35:45PM +0100, Lukas Wunner wrote:
+> > > Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
+> > > changes") amended this driver's ->probe hook to lock decoding of normal
+> > > (non-legacy) I/O space accesses to the integrated GPU on dual-GPU
+> > > MacBook Pros.  The lock stays in place until the driver is unbound.
+> > > 
+> > ...
+> > > 
+> > > So let's revert commit 4eebd5a4e726 please.  Users experiencing the
+> > > issue with the proprietary nvidia driver can comment out the above-
+> > > quoted problematic code as a workaround (or try updating the BIOS).
+> > > 
+> > > Cc: Petri Hodju <petrihodju@yahoo.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Bruno Prémont <bonbons@linux-vserver.org>
+> > > Cc: Andy Ritger <aritger@nvidia.com>
+> > > Cc: Ronald Tschalär <ronald@innovation.ch>
+> > 
+> > I presume we'd like to see this applied to linux-stable as well?
 > 
-> Correct. I'll rephrase this in place.
-> 
-> > These removals seem appropriate to me, but so we have it recorded here -
-> > in general, including headers that you explicitly make use of is good
-> > practice, and not depending on others to include them. But in this case,
-> > the implicit includes are reasonable expectations as they are tightly
-> > coupled with the parent include.
-> 
-> There are two classes of headers (at least?):
-> - let say "user-visible" ones, which drivers usually include like you
-> pointed above
-> - low level ones, which in most cases are not supposed to be included directly
-> 
-> So, for first class I agree with you, and acpi_bus.h in this case can
-> be considered as an example of second class.
+> I haven't heard back
 
-Agreed, acpi_bus.h is tightly coupled with acpi.h. The practice I've
-seen from others and want to discourage / avoid is including acpi.h and
-then deleting ... say...  spinlock.h because somewhere somehow acpi.h
-also pulls it in. They are not tightly coupled conceptually, so
-spinlock.h should remain in the include list if the file uses spinlocks
-directly. I think we're in violent agreement here :-)
+I did reply to your e-mail on Jan 26, quote:
+"Fine by me.  Can you add the stable designation when applying or
+ would you prefer me to respin?"
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+https://www.spinics.net/lists/platform-driver-x86/msg14690.html
+
+
+> but from what I've seen in this thread, this appears to me
+> to be in need of porting back to stable releases.
+> I'm pushing this to testing, and then shortly to for-next, and then to Linus.
+> Please let me know if this isn't what everyone is expecting.
+
+WFM, thanks!
+
+Lukas
