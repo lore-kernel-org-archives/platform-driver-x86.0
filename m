@@ -1,29 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [Patch v1 6/8] x86/cpu: Add Cannonlake to Intel family
-Date: Wed, 31 Jan 2018 20:31:04 +0200
-Message-ID: <CAHp75VdEeKgkWU8XHBoNeORu6EBrWyOEBzqA6=oR0DtP14BD6Q@mail.gmail.com>
-References: <1516352307-20123-1-git-send-email-rajneesh.bhardwaj@intel.com>
- <1516352307-20123-7-git-send-email-rajneesh.bhardwaj@intel.com>
- <CAHp75VcsMzTtn-TD32Jyh6pennLWLjEuiAi_-LJMowENv=P2-Q@mail.gmail.com>
- <20180131172747.GA9877@raj-desk2.iind.intel.com> <alpine.DEB.2.21.1801311844121.9911@nanos.tec.linutronix.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] Revert "apple-gmux: lock iGP IO to protect from vgaarb
+ changes"
+Date: Wed, 31 Jan 2018 10:39:25 -0800
+Message-ID: <20180131183925.GA8676@fury>
+References: <3671c3081a0ea3226dbb4c04e780ad7b6be0f201.1516793407.git.lukas@wunner.de>
+ <20180125223800.GG24122@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1801311844121.9911@nanos.tec.linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([65.50.211.133]:43215 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751360AbeAaSjh (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 31 Jan 2018 13:39:37 -0500
+Content-Disposition: inline
+In-Reply-To: <20180125223800.GG24122@fury>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Bruno Premont <bonbons@linux-vserver.org>, Andy Ritger <aritger@nvidia.com>, Ronald Tschalaer <ronald@innovation.ch>, Wilfried Klaebe <linux-kernel@lebenslange-mailadresse.de>
 
-On Wed, Jan 31, 2018 at 7:44 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+On Thu, Jan 25, 2018 at 02:38:00PM -0800, Darren Hart wrote:
+> On Wed, Jan 24, 2018 at 07:35:45PM +0100, Lukas Wunner wrote:
+> > Commit 4eebd5a4e726 ("apple-gmux: lock iGP IO to protect from vgaarb
+> > changes") amended this driver's ->probe hook to lock decoding of normal
+> > (non-legacy) I/O space accesses to the integrated GPU on dual-GPU
+> > MacBook Pros.  The lock stays in place until the driver is unbound.
+> > 
+> ...
+> > 
+> > So let's revert commit 4eebd5a4e726 please.  Users experiencing the
+> > issue with the proprietary nvidia driver can comment out the above-
+> > quoted problematic code as a workaround (or try updating the BIOS).
+> > 
+> > Cc: Petri Hodju <petrihodju@yahoo.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Bruno Prémont <bonbons@linux-vserver.org>
+> > Cc: Andy Ritger <aritger@nvidia.com>
+> > Cc: Ronald Tschalär <ronald@innovation.ch>
+> 
+> I presume we'd like to see this applied to linux-stable as well?
 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+I haven't heard back, but from what I've seen in this thread, this appears to me
+to be in need of porting back to stable releases. I'm pushing this to testing,
+and then shortly to for-next, and then to Linus.
 
-Thank you, Thomas!
-
-Rajneesh, please, rebase the not-yet-applied patches on top of my
-testing branch, add tags (Rafael's and Thomas') and resend.
+Please let me know if this isn't what everyone is expecting.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
