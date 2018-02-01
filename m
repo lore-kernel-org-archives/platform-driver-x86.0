@@ -1,61 +1,52 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: dvhart@infradead.org
 Subject: RE: [PATCH v3] platform/x86: mlx-platform: fix module aliases
-Date: Thu, 1 Feb 2018 06:10:39 +0000
-Message-ID: <AM4PR05MB33306D194CCCC526848EB342A2FA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <20180122142043.23705-1-ivecera@redhat.com>
+Date: Thu, 01 Feb 2018 15:32:37 -0800
+Message-ID: <AFC4153F-288F-4357-9F89-152451CC7ED4@infradead.org>
+References: <20180122142043.23705-1-ivecera@redhat.com> <AM4PR05MB33306D194CCCC526848EB342A2FA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db5eur01on0075.outbound.protection.outlook.com ([104.47.2.75]:4292
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751172AbeBAGKm (ORCPT
+Received: from merlin.infradead.org ([205.233.59.134]:58142 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751561AbeBAXcn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Feb 2018 01:10:42 -0500
-In-Reply-To: <20180122142043.23705-1-ivecera@redhat.com>
-Content-Language: en-US
+        Thu, 1 Feb 2018 18:32:43 -0500
+In-Reply-To: <AM4PR05MB33306D194CCCC526848EB342A2FA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
-Cc: =?utf-8?B?QmrDuHJuIE1vcms=?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Vadim Pasternak <vadimp@mellanox.com>, Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: =?ISO-8859-1?Q?Bj=F8rn_Mork?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSXZhbiBWZWNlcmEgW21h
-aWx0bzppdmVjZXJhQHJlZGhhdC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyMiwgMjAx
-OCA0OjIxIFBNDQo+IFRvOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBD
-YzogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgQmrDuHJuIE1vcmsgPGJq
-b3JuQG1vcmsubm8+Ow0KPiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5j
-b20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2M10gcGxhdGZvcm0veDg2OiBtbHgtcGxhdGZvcm06IGZp
-eCBtb2R1bGUgYWxpYXNlcw0KPiANCj4gTWlzc2luZyBwcmVmaXggJ3BuJyBpbiBNT0RVTEVfQUxJ
-QVMgbGluZXMgY2F1c2VzIHRoYXQgdGhlIG1vZHVsZSBpcyBub3QgbG9hZGVkDQo+IGF1dG9tYXRp
-Y2FsbHkuIFRoZSBkcml2ZXIgc2hvdWxkIHVzZSBNT0RVTEVfREVWSUNFX1RBQkxFIHRvZ2V0aGVy
-IHdpdGgNCj4gZXhpc3RpbmcgbWx4cGxhdF9kbWlfdGFibGUgaW5zdGVhZC4NCg0KRGFycmVuL0Fu
-ZHksDQpTaW5jZSBtbHgtcGxhdGZvcm0gaXMgYWJvdXQgdG8gYmUgbW9kaWZpZWQgaW4gZm9yLW5l
-eHQsIGhvdyB0byBwcm9jZWVkIG9uIHRoaXMNCnBhdGNoPyBDb3VsZCBJIHJlc2VuZCBpdCBiYXNl
-ZCBvbiB0b3Agb2YgdGhlIGxhdGVzdCB2ZXJzaW9uPyAgDQoNCj4gDQo+IENoYW5nZXM6DQo+IHYy
-IC0gY29udmVyc2lvbiB0byB1c2FnZSBvZiBNT0RVTEVfREVWSUNFX1RBQkxFICh0aGFua3MgQmrD
-uHJuKQ0KPiB2MyAtIE1PRFVMRV9ERVZJQ0VfVEFCTEUgbW92ZWQgYWZ0ZXIgbWx4cGxhdF9kbWlf
-dGFibGUgZGVjbGFyYXRpb24NCj4gDQo+IEZpeGVzOiA2NjEzZDE4ZTkwMzggKCJwbGF0Zm9ybS94
-ODY6IG1seC1wbGF0Zm9ybTogTW92ZSBtb2R1bGUgZnJvbQ0KPiBhcmNoL3g4NiIpDQo+IENjOiBW
-YWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+DQo+IENjOiBCasO4cm4gTW9yayA8
-Ympvcm5AbW9yay5ubz4NCj4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdt
-YWlsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSXZhbiBWZWNlcmEgPGl2ZWNlcmFAcmVkaGF0LmNv
-bT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZvcm0uYyB8IDcgKyst
-LS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZvcm0uYyBi
-L2RyaXZlcnMvcGxhdGZvcm0veDg2L21seC0NCj4gcGxhdGZvcm0uYw0KPiBpbmRleCA1MDQyNTZj
-MzY2MGQuLjIyY2QwMTFmNmFlZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
-bWx4LXBsYXRmb3JtLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvbWx4LXBsYXRmb3Jt
-LmMNCj4gQEAgLTI4Niw2ICsyODYsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRtaV9zeXN0ZW1f
-aWQgbWx4cGxhdF9kbWlfdGFibGVbXQ0KPiBfX2luaXRjb25zdCA9IHsNCj4gIAl7IH0NCj4gIH07
-DQo+IA0KPiArTU9EVUxFX0RFVklDRV9UQUJMRShkbWksIG1seHBsYXRfZG1pX3RhYmxlKTsNCj4g
-Kw0KPiAgc3RhdGljIGludCBfX2luaXQgbWx4cGxhdF9pbml0KHZvaWQpDQo+ICB7DQo+ICAJc3Ry
-dWN0IG1seHBsYXRfcHJpdiAqcHJpdjsNCj4gQEAgLTM3MCw4ICszNzIsMyBAQCBtb2R1bGVfZXhp
-dChtbHhwbGF0X2V4aXQpOyAgTU9EVUxFX0FVVEhPUigiVmFkaW0NCj4gUGFzdGVybmFrICh2YWRp
-bXBAbWVsbGFub3guY29tKSIpOyAgTU9EVUxFX0RFU0NSSVBUSU9OKCJNZWxsYW5veA0KPiBwbGF0
-Zm9ybSBkcml2ZXIiKTsgIE1PRFVMRV9MSUNFTlNFKCJEdWFsIEJTRC9HUEwiKTsgLQ0KPiBNT0RV
-TEVfQUxJQVMoImRtaToqOipNZWxsYW5veCo6TVNOMjQqOiIpOw0KPiAtTU9EVUxFX0FMSUFTKCJk
-bWk6KjoqTWVsbGFub3gqOk1TTjI3KjoiKTsNCj4gLU1PRFVMRV9BTElBUygiZG1pOio6Kk1lbGxh
-bm94KjpNU0IqOiIpOw0KPiAtTU9EVUxFX0FMSUFTKCJkbWk6KjoqTWVsbGFub3gqOk1TWCo6Iik7
-DQo+IC1NT0RVTEVfQUxJQVMoImRtaToqOipNZWxsYW5veCo6TVNOMjEqOiIpOw0KPiAtLQ0KPiAy
-LjEzLjYNCg0K
+
+
+On January 31, 2018 10:10:39 PM PST, Vadim Pasternak <vadimp@mellanox=2Eco=
+m> wrote:
+>
+>
+>> -----Original Message-----
+>> From: Ivan Vecera [mailto:ivecera@redhat=2Ecom]
+>> Sent: Monday, January 22, 2018 4:21 PM
+>> To: platform-driver-x86@vger=2Ekernel=2Eorg
+>> Cc: Vadim Pasternak <vadimp@mellanox=2Ecom>; Bj=C3=B8rn Mork
+><bjorn@mork=2Eno>;
+>> Andy Shevchenko <andy=2Eshevchenko@gmail=2Ecom>
+>> Subject: [PATCH v3] platform/x86: mlx-platform: fix module aliases
+>>=20
+>> Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
+>not loaded
+>> automatically=2E The driver should use MODULE_DEVICE_TABLE together
+>with
+>> existing mlxplat_dmi_table instead=2E
+>
+>Darren/Andy,
+>Since mlx-platform is about to be modified in for-next, how to proceed
+>on this
+>patch? Could I resend it based on top of the latest version? =20
+
+This patch is applied in testing already=2E
+
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
