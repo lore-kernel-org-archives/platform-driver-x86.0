@@ -1,52 +1,32 @@
-From: dvhart@infradead.org
-Subject: RE: [PATCH v3] platform/x86: mlx-platform: fix module aliases
-Date: Thu, 01 Feb 2018 15:32:37 -0800
-Message-ID: <AFC4153F-288F-4357-9F89-152451CC7ED4@infradead.org>
-References: <20180122142043.23705-1-ivecera@redhat.com> <AM4PR05MB33306D194CCCC526848EB342A2FA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v1 0/4] mlx-platform: Add support for new Mellanox systems, code improvement, fixes for msn21xx system
+Date: Fri,  2 Feb 2018 08:45:44 +0000
+Message-ID: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:58142 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751561AbeBAXcn (ORCPT
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:48844 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1750773AbeBBGtZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Feb 2018 18:32:43 -0500
-In-Reply-To: <AM4PR05MB33306D194CCCC526848EB342A2FA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+        Fri, 2 Feb 2018 01:49:25 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vadim Pasternak <vadimp@mellanox.com>, Ivan Vecera <ivecera@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: =?ISO-8859-1?Q?Bj=F8rn_Mork?= <bjorn@mork.no>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
+The patchset:
+- adds defines for bus numbers, used for system topology description;
+- fixes definition for power cables for system family msn21xx;
+- introduces support for new Mellanox systems;
 
+Vadim Pasternak (4):
+  platform/x86: mlx-platform: Use defines for bus assignment
+  platform/x86: mlx-platform: Add define for the negative bus
+  platform/x86: mlx-platform: Fix power cable setting for systems from
+    msn21xx family
+  platform/x86: mlx-platform: Add support for new Mellanox systems
 
-On January 31, 2018 10:10:39 PM PST, Vadim Pasternak <vadimp@mellanox=2Eco=
-m> wrote:
->
->
->> -----Original Message-----
->> From: Ivan Vecera [mailto:ivecera@redhat=2Ecom]
->> Sent: Monday, January 22, 2018 4:21 PM
->> To: platform-driver-x86@vger=2Ekernel=2Eorg
->> Cc: Vadim Pasternak <vadimp@mellanox=2Ecom>; Bj=C3=B8rn Mork
-><bjorn@mork=2Eno>;
->> Andy Shevchenko <andy=2Eshevchenko@gmail=2Ecom>
->> Subject: [PATCH v3] platform/x86: mlx-platform: fix module aliases
->>=20
->> Missing prefix 'pn' in MODULE_ALIAS lines causes that the module is
->not loaded
->> automatically=2E The driver should use MODULE_DEVICE_TABLE together
->with
->> existing mlxplat_dmi_table instead=2E
->
->Darren/Andy,
->Since mlx-platform is about to be modified in for-next, how to proceed
->on this
->patch? Could I resend it based on top of the latest version? =20
+ drivers/platform/x86/mlx-platform.c | 345 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 335 insertions(+), 10 deletions(-)
 
-This patch is applied in testing already=2E
-
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+-- 
+2.1.4
