@@ -1,32 +1,41 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [patch v1 0/4] mlx-platform: Add support for new Mellanox systems, code improvement, fixes for msn21xx system
-Date: Fri,  2 Feb 2018 08:45:44 +0000
-Message-ID: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
+Subject: [patch v1 2/4] platform/x86: mlx-platform: Add define for the negative bus
+Date: Fri,  2 Feb 2018 08:45:46 +0000
+Message-ID: <1517561148-38587-3-git-send-email-vadimp@mellanox.com>
+References: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:48844 "EHLO
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:48972 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1750773AbeBBGtZ (ORCPT
+        with ESMTP id S1751463AbeBBGte (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Feb 2018 01:49:25 -0500
+        Fri, 2 Feb 2018 01:49:34 -0500
+In-Reply-To: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, Vadim Pasternak <vadimp@mellanox.com>
 
-The patchset:
-- adds defines for bus numbers, used for system topology description;
-- fixes definition for power cables for system family msn21xx;
-- introduces support for new Mellanox systems;
+Add define for the negative bus Id in order to use it in case no hotplug
+device is associated with hotplug interrupt signal. In this case signal
+will be handled by mlxreg-hotplug driver, but any device will not be
+associated with this signal.
 
-Vadim Pasternak (4):
-  platform/x86: mlx-platform: Use defines for bus assignment
-  platform/x86: mlx-platform: Add define for the negative bus
-  platform/x86: mlx-platform: Fix power cable setting for systems from
-    msn21xx family
-  platform/x86: mlx-platform: Add support for new Mellanox systems
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+ drivers/platform/x86/mlx-platform.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/platform/x86/mlx-platform.c | 345 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 335 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index a1ae93d..177b40a 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -90,6 +90,7 @@
+ #define MLXPLAT_CPLD_LPC_MUX_DEVS		2
+ 
+ /* Hotplug devices adapter numbers */
++#define MLXPLAT_CPLD_NR_NONE			-1
+ #define MLXPLAT_CPLD_PSU_DEFAULT_NR		10
+ #define MLXPLAT_CPLD_FAN1_DEFAULT_NR		11
+ #define MLXPLAT_CPLD_FAN2_DEFAULT_NR		12
 -- 
 2.1.4
