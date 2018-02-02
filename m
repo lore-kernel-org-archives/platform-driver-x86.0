@@ -1,64 +1,59 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: [Patch v2 2/5] platform/x86: intel_pmc_core: Read base address from LPIT
-Date: Fri,  2 Feb 2018 19:13:34 +0530
-Message-ID: <1517579017-19935-3-git-send-email-rajneesh.bhardwaj@intel.com>
+Subject: [Patch v2 3/5] x86/cpu: Add Cannonlake to Intel family
+Date: Fri,  2 Feb 2018 19:13:35 +0530
+Message-ID: <1517579017-19935-4-git-send-email-rajneesh.bhardwaj@intel.com>
 References: <1517579017-19935-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from mga07.intel.com ([134.134.136.100]:38331 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751931AbeBBNtC (ORCPT
+        id S1751972AbeBBNtG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Feb 2018 08:49:02 -0500
+        Fri, 2 Feb 2018 08:49:06 -0500
 In-Reply-To: <1517579017-19935-1-git-send-email-rajneesh.bhardwaj@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Add CPUID of Cannonlake (CNL) processors to Intel family list.
 
-Read SLP_S0 address from ACPI LPIT table when present and use PMC
-specific SLP_S0 offset to get the base address of PMC MMIO.
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
 
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 5c401e17cfb6..bb80aed4c3c1 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -20,6 +20,7 @@
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 35a6bc4da8ad..cf090e584202 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -10,6 +10,10 @@
+  *
+  * Things ending in "2" are usually because we have no better
+  * name for them.  There's no processor called "SILVERMONT2".
++ *
++ * While adding a new CPUID for a new microarchitecture, add a new
++ * group to keep logically sorted out in chronological order. Within
++ * that group keep the CPUID for the variants sorted by model number.
+  */
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ #define INTEL_FAM6_CORE_YONAH		0x0E
+@@ -49,6 +53,8 @@
+ #define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
+ #define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
  
-+#include <linux/acpi.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-@@ -455,6 +456,7 @@ static int __init pmc_core_probe(void)
- {
- 	struct pmc_dev *pmcdev = &pmc;
- 	const struct x86_cpu_id *cpu_id;
-+	u64 slp_s0_addr;
- 	int err;
- 
- 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
-@@ -462,7 +464,12 @@ static int __init pmc_core_probe(void)
- 		return -ENODEV;
- 
- 	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
--	pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
++#define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
 +
-+	if (lpit_read_residency_count_address(&slp_s0_addr))
-+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-+	else
-+		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
-+
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
- 	if (!pmcdev->regbase)
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_PINEVIEW	0x1C
 -- 
 2.7.4
